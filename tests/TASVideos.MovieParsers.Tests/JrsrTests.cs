@@ -126,6 +126,97 @@ namespace TASVideos.MovieParsers.Tests
 		}
 
 		/// <summary>
+		/// Encodes <paramref name="contents"/> into UTF-8 and then parses it as
+		/// JRSR.
+		/// </summary>
+		private static async Task<IParseResult> ParseFromString(string contents)
+		{
+			using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
+			return await new Jrsr().Parse(reader);
+		}
+
+		[TestMethod]
+		// No events section.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!END
+", 0)]
+		// Events section may be empty.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
+!END
+", 0)]
+		// Timestamps are absolute by default.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++3333333400 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 200)]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++3333333400 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 300)]
+		// OPTION takes effect after the line in which it appears.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++3333333400 OPTION RELATIVE
++0 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 300)]
+		public async Task EventTimestamps(string contents, int expected)
+		{
+			var result = await ParseFromString(contents);
+			Assert.IsTrue(result.Success);
+			Assert.AreEqual(expected, result.Frames);
+		}
+
+		[TestMethod]
+		// Missing parameter to OPTION.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION
+!END
+")]
+		// Too many parameters to OPTION.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE ABSOLUTE
+!END
+")]
+		// Bad parameter to OPTION.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION ERROR
+!END
+")]
+		public async Task EventTimestampsError(string contents)
+		{
+			var result = await ParseFromString(contents);
+			Assert.IsFalse(result.Success);
+		}
+
+		/// <summary>
 		/// Serializes the contents of a JRSR file into a flat array of strings.
 		/// Each section name is followed by that section's lines, then a null
 		/// element. The end of the final section is marked by an additional

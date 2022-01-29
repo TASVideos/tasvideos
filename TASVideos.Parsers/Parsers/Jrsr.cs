@@ -70,6 +70,7 @@ namespace TASVideos.MovieParsers.Parsers
 			bool hasHeader = false;
 			bool missingRerecordCount = true;
 			long totalNanoSeconds = 0L;
+			bool optionRelative = false; // "By default [timestamps] are relative to initial poweron."
 			try
 			{
 				using var parser = await JrsrSectionParser.CreateAsync(file, LengthLimit);
@@ -120,6 +121,10 @@ namespace TASVideos.MovieParsers.Parsers
 							{
 								continue;
 							}
+							else if (tokens.Count < 2)
+							{
+								continue;
+							}
 
 							long timestamp;
 							if (!long.TryParse(tokens[0], out timestamp))
@@ -127,7 +132,34 @@ namespace TASVideos.MovieParsers.Parsers
 								continue;
 							}
 
-							totalNanoSeconds += timestamp;
+							if (optionRelative)
+							{
+								timestamp = totalNanoSeconds + timestamp;
+							}
+
+							totalNanoSeconds = timestamp;
+
+							var eventClass = tokens[1];
+							if (eventClass == "OPTION")
+							{
+								if (tokens.Count != 3)
+								{
+									throw new FormatException($"Bad format for {eventClass} special event");
+								}
+
+								if (tokens[2] == "RELATIVE")
+								{
+									optionRelative = true;
+								}
+								else if (tokens[2] == "ABSOLUTE")
+								{
+									optionRelative = false;
+								}
+								else
+								{
+									throw new FormatException($"Unknown {eventClass} parameter {tokens[2]}");
+								}
+							}
 						}
 					}
 
