@@ -26,20 +26,6 @@ namespace TASVideos.MovieParsers.Tests
 		}
 
 		[TestMethod]
-		[DataRow(null, null)]
-		[DataRow("", null)]
-		[DataRow(" ", null)]
-		[DataRow("NoPlus", null)]
-		[DataRow("+NoNumber", null)]
-		[DataRow("+1", 1L)]
-		[DataRow("+196064706 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28", 196064706L)]
-		public void GetTime(string line, long? expected)
-		{
-			var actual = Jrsr.GetTime(line);
-			Assert.AreEqual(expected, actual);
-		}
-
-		[TestMethod]
 		public async Task EmptyFile()
 		{
 			var result = await _jrsrParser.Parse(Embedded("emptyfile.jrsr"));

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TASVideos.Extensions;
@@ -53,10 +54,12 @@ namespace TASVideos.MovieParsers.Parsers
 	[FileExtension("jrsr")]
 	public class Jrsr : IParser
 	{
+		// Safety limit on the length of JRSR section names and lines.
+		private const int LengthLimit = 10000;
+
 		private const string FileExtension = "jrsr";
 		public async Task<IParseResult> Parse(Stream file)
 		{
-			using var reader = new StreamReader(file);
 			var result = new ParseResult
 			{
 				Region = RegionType.Ntsc,
@@ -64,67 +67,76 @@ namespace TASVideos.MovieParsers.Parsers
 				SystemCode = SystemCodes.Dos
 			};
 
-			var lines = (await reader.ReadToEndAsync()).LineSplit();
-
-			if (lines.Length == 0)
-			{
-				return new ErrorResult("File is empty.");
-			}
-
-			if (lines[0] != "JRSR")
-			{
-				return new ErrorResult("Invalid .jrsr file.");
-			}
-
 			bool hasHeader = false;
-			bool beginHeader = false;
-			bool beginEvents = false;
 			bool missingRerecordCount = true;
 			long totalNanoSeconds = 0L;
-			foreach (var line in lines)
+			try
 			{
-				if (line == "!BEGIN header")
+				using var parser = await JrsrSectionParser.CreateAsync(file, LengthLimit);
+				while (await parser.NextSection() is string sectionName)
 				{
-					beginHeader = true;
-					hasHeader = true;
-				}
-				else if (line == "!BEGIN events")
-				{
-					beginHeader = false;
-					beginEvents = true;
-				}
-				else if (line == "!BEGIN savestate")
-				{
-					return new ErrorResult("File contains a savestate");
-				}
-				else if (line.StartsWith("!BEGIN")) // DiskInfo and possibly other header sections
-				{
-					beginHeader = false;
-					beginEvents = false;
-				}
-				else if (beginHeader)
-				{
-					if (line.StartsWith(Keys.RerecordCount))
+					if (sectionName == "savestate")
 					{
-						var rerecordValue = line.GetValue().ToPositiveInt();
-						if (rerecordValue.HasValue)
+						return new ErrorResult("File contains a savestate");
+					}
+					else if (sectionName == "header")
+					{
+						// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#HeaderSection
+						hasHeader = true;
+						while (await parser.NextLine() is string line)
 						{
-							result.RerecordCount = rerecordValue.Value;
-							missingRerecordCount = false;
+							var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
+							if (tokens.Count < 1)
+							{
+								continue;
+							}
+
+							if (tokens[0] == Keys.RerecordCount)
+							{
+								if (tokens.Count < 2)
+								{
+									continue;
+								}
+
+								if (tokens[1].ToPositiveInt() is int rerecordValue)
+								{
+									result.RerecordCount = rerecordValue;
+									missingRerecordCount = false;
+								}
+							}
+							else if (tokens[0] == Keys.StartsFromSavestate)
+							{
+								result.StartType = MovieStartType.Savestate;
+							}
 						}
 					}
-					else if (line.StartsWith(Keys.StartsFromSavestate))
+					else if (sectionName == "events")
 					{
-						result.StartType = MovieStartType.Savestate;
+						// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#EventsSection
+						while (await parser.NextLine() is string line)
+						{
+							var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
+							if (tokens.Count < 1)
+							{
+								continue;
+							}
+
+							long timestamp;
+							if (!long.TryParse(tokens[0], out timestamp))
+							{
+								continue;
+							}
+
+							totalNanoSeconds += timestamp;
+						}
 					}
+
+					// initialization, diskinfo-*, others are ignored.
 				}
-				else if (beginEvents)
-				{
-					if (line.StartsWith("+"))
-					{
-						totalNanoSeconds += GetTime(line) ?? 0;
-					}
-				}
+			}
+			catch (FormatException ex)
+			{
+				return new ErrorResult(ex.Message);
 			}
 
 			if (!hasHeader)
@@ -146,34 +158,10 @@ namespace TASVideos.MovieParsers.Parsers
 			return result;
 		}
 
-		internal static long? GetTime(string str)
-		{
-			if (string.IsNullOrWhiteSpace(str))
-			{
-				return null;
-			}
-
-			if (!str.StartsWith("+"))
-			{
-				return null;
-			}
-
-			var split = str.SplitWithEmpty(" ");
-			var lineStr = split[0].Trim('+');
-
-			var result = long.TryParse(lineStr, out long val);
-			if (result)
-			{
-				return val;
-			}
-
-			return null;
-		}
-
 		private static class Keys
 		{
-			public const string RerecordCount = "+RERECORDS";
-			public const string StartsFromSavestate = "+SAVESTATEID";
+			public const string RerecordCount = "RERECORDS";
+			public const string StartsFromSavestate = "SAVESTATEID";
 		}
 	}
 
