@@ -78,11 +78,11 @@ public class Jrsr : IParser
 		bool hasRerecordCount = false;
 		long lastTimestamp = 0L;
 		long lastNonSpecialTimestamp = 0L;
-		bool optionRelative = false; // "By default [timestamps] are relative to initial poweron."
+		bool optionRelative = false; // "By default [timestamps] are relative to initial power-on."
 		try
 		{
 			using var parser = await JrsrSectionParser.CreateAsync(file, LengthLimit);
-			while (await parser.NextSection() is string sectionName)
+			while (await parser.NextSection() is { } sectionName)
 			{
 				if (sectionsSeen.Contains(sectionName))
 				{
@@ -95,10 +95,11 @@ public class Jrsr : IParser
 				{
 					return new ErrorResult("File contains a savestate");
 				}
-				else if (sectionName == "header")
+
+				if (sectionName == "header")
 				{
 					// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#HeaderSection
-					while (await parser.NextLine() is string line)
+					while (await parser.NextLine() is { } line)
 					{
 						var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
 						if (tokens.Count < 1)
@@ -120,8 +121,7 @@ public class Jrsr : IParser
 								throw new FormatException($"Bad format for {sectionName}.{tokens[0]} line");
 							}
 
-							int rerecordValue;
-							if (!int.TryParse(tokens[1], IntegerStyle, null, out rerecordValue) || rerecordValue < 0)
+							if (!int.TryParse(tokens[1], IntegerStyle, null, out var rerecordValue) || rerecordValue < 0)
 							{
 								throw new FormatException($"Invalid {sectionName}.{tokens[0]} count {tokens[1]}");
 							}
@@ -137,20 +137,20 @@ public class Jrsr : IParser
 				else if (sectionName == "events")
 				{
 					// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#EventsSection
-					while (await parser.NextLine() is string line)
+					while (await parser.NextLine() is { } line)
 					{
 						var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
 						if (tokens.Count < 1)
 						{
 							continue;
 						}
-						else if (tokens.Count < 2)
+
+						if (tokens.Count < 2)
 						{
 							throw new FormatException("Missing event timestamp and class");
 						}
 
-						long timestamp;
-						if (!long.TryParse(tokens[0], IntegerStyle, null, out timestamp) || timestamp < 0)
+						if (!long.TryParse(tokens[0], IntegerStyle, null, out var timestamp) || timestamp < 0)
 						{
 							throw new FormatException($"Cannot parse timestamp {tokens[0]}");
 						}
@@ -304,12 +304,12 @@ internal class JrsrSectionParser : IDisposable
 	// of these strings.
 	private readonly int _lengthLimit;
 
-	private bool _inSection = false;
+	private bool _inSection;
 
 	// We will need to read 1 char at a time from the stream, and also to be
 	// able to "unread" up to 1 char so that it can be read again later.
-	private char[] _readBuf = new char[1];
-	private char? _unread = null;
+	private readonly char[] _readBuf = new char[1];
+	private char? _unread;
 
 	/// <summary>
 	/// If a character was previously unread using <see cref="UnreadChar"/>,
@@ -321,24 +321,22 @@ internal class JrsrSectionParser : IDisposable
 	/// not encode a character in UTF-8.</exception>
 	private async Task<int> ReadChar()
 	{
-		if (_unread is char c)
+		if (_unread is { } c)
 		{
 			// If we previously unread a character, return it now.
 			_unread = null;
-			return (int)c;
+			return c;
 		}
-		else
+
+		// Otherwise, read a new character from _reader.
+		try
 		{
-			// Otherwise, read a new character from _reader.
-			try
-			{
-				var n = await _reader.ReadBlockAsync(_readBuf, 0, _readBuf.Length);
-				return n == 0 ? -1 : _readBuf[0];
-			}
-			catch (DecoderFallbackException ex)
-			{
-				throw new FormatException("Decode", ex);
-			}
+			var n = await _reader.ReadBlockAsync(_readBuf, 0, _readBuf.Length);
+			return n == 0 ? -1 : _readBuf[0];
+		}
+		catch (DecoderFallbackException ex)
+		{
+			throw new FormatException("Decode", ex);
 		}
 	}
 
@@ -351,7 +349,7 @@ internal class JrsrSectionParser : IDisposable
 	/// clear the unread buffer.</exception>
 	private void UnreadChar(char c)
 	{
-		if (_unread is char)
+		if (_unread is not null)
 		{
 			throw new InvalidOperationException("UnreadChar called twice without intervening ReadChar");
 		}
@@ -372,7 +370,7 @@ internal class JrsrSectionParser : IDisposable
 	/// <summary>
 	/// Creates a new instance of <see cref="JrsrSectionParser"/>.
 	/// </summary>
-	/// <param name="file">The <c>Stream</c> to read from.</param>
+	/// <param name="stream">The <c>Stream</c> to read from.</param>
 	/// <param name="lengthLimit">A limit on the length of section names and
 	/// line. Strings longer than this result in <c>FormatException</c>, as
 	/// if there had been a syntax error.</param>
@@ -852,6 +850,6 @@ internal class JrsrSectionParser : IDisposable
 		// "If $class consists only of 'A-Z' and '0-9' (capital letters and
 		// numbers) then it is either special event or reserved (error)."
 		return eventClass != string.Empty && eventClass.All(c =>
-			(c >= 'A' && c <= 'Z') || (c >= '0' && c <= '9'));
+			c is >= 'A' and <= 'Z' or >= '0' and <= '9');
 	}
 }

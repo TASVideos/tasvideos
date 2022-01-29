@@ -131,7 +131,7 @@ public class JrsrTests : BaseParserTests
 	/// </summary>
 	private static async Task<IParseResult> ParseFromString(string contents)
 	{
-		using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
+		await using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
 		return await new Jrsr().Parse(reader);
 	}
 
@@ -338,7 +338,7 @@ public class JrsrTests : BaseParserTests
 +0 OPTION ERROR
 !END
 ")]
-	// Timestamps must be nondecreasing.
+	// Timestamps must be non-decreasing.
 	[DataRow(
 @"JRSR
 !BEGIN header
@@ -347,7 +347,7 @@ public class JrsrTests : BaseParserTests
 +3333333399 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 ")]
 	// Timestamps are supposed to be non-negative, but check for
-	// nondecreasing RELATIVE timestamps as well.
+	// non-decreasing RELATIVE timestamps as well.
 	[DataRow(
 @"JRSR
 !BEGIN header
@@ -463,10 +463,10 @@ public class JrsrTests : BaseParserTests
 		// sections and the whole document are terminated by null.
 		using var parser = await JrsrSectionParser.CreateAsync(reader, lengthLimit);
 		var serialized = new List<string?>();
-		while (await parser.NextSection() is string sectionName)
+		while (await parser.NextSection() is { } sectionName)
 		{
 			serialized.Add(sectionName);
-			while (await parser.NextLine() is string line)
+			while (await parser.NextLine() is { } line)
 			{
 				serialized.Add(line);
 			}
@@ -484,7 +484,7 @@ public class JrsrTests : BaseParserTests
 	/// </summary>
 	private async Task<string?[]> SerializeFromString(string contents, int lengthLimit = 10000)
 	{
-		using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
+		await using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
 		return await Serialize(reader, lengthLimit);
 	}
 
@@ -732,7 +732,7 @@ JRSR
 
 	[TestMethod]
 	[ExpectedException(typeof(FormatException))]
-	public async Task ParserDecoderUTF16()
+	public async Task ParserDecoderUtf16()
 	{
 		// Input not encoded as UTF-8 should be an error.
 		var contents = @"JRSR
@@ -740,13 +740,13 @@ JRSR
 +line
 !END
 ";
-		using var reader = new MemoryStream(Encoding.Unicode.GetBytes(contents));
+		await using var reader = new MemoryStream(Encoding.Unicode.GetBytes(contents));
 		await Serialize(reader);
 	}
 
 	[TestMethod]
 	[ExpectedException(typeof(FormatException))]
-	public async Task ParserDecoderUTF8Error()
+	public async Task ParserDecoderUtf8Error()
 	{
 		// Input with UTF-8 encoding errors should be an error. We must
 		// paste the input together ourselves because
@@ -756,7 +756,7 @@ JRSR
 			.Concat(new byte[] { 0xed, 0xa0, 0x80 }) // UTF-8 encoding of the surrogate '\ud800'
 			.Concat(enc.GetBytes("\n!END\n"))
 			.ToArray();
-		using var reader = new MemoryStream(contents);
+		await using var reader = new MemoryStream(contents);
 		await Serialize(reader);
 	}
 
@@ -776,7 +776,7 @@ JRSR
 +line 2.1
 !END
 ";
-		using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
+		await using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
 		using var parser = await JrsrSectionParser.CreateAsync(reader, 10000);
 
 		// Cannot call NextLine before the first section.
@@ -910,6 +910,7 @@ JRSR
 	[DataRow("foo\\")]
 	public void DecodeComponentFormatException(string line)
 	{
+		// ReSharper disable once ReturnValueOfPureMethodIsNotUsed
 		JrsrSectionParser.DecodeComponent(line).ToList();
 	}
 
