@@ -8,6 +8,6 @@ public static class UiDefaults
 
 	public static SelectListItem[] DefaultEntry =
 	{
-			new () { Text = DefaultDropdownText, Value = "" }
-		};
+		new() { Text = DefaultDropdownText, Value = "" }
+	};
 }

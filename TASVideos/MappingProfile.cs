@@ -116,7 +116,7 @@ public class MappingProfile : Profile
 				{
 					DisplayName = gg.Genre!.DisplayName,
 					Code = gg.Genre.DisplayName // TODO
-					})
+				})
 				.ToList()))
 			.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
 				.Select(pf => new PublicationDisplayModel.FlagModel

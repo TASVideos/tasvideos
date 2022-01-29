@@ -64,7 +64,7 @@ public class EditModel : SubmissionBasePageModel
 		var submission = await Db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
-				{
+			{
 				SystemDisplayName = s.System!.DisplayName,
 				SystemCode = s.System.Code,
 				GameName = s.GameName,

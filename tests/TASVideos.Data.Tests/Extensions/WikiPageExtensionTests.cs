@@ -24,11 +24,11 @@ public class WikiPageExtensionTests
 	{
 		var pages = new[]
 		{
-				new WikiPage { PageName = "Parent1" },
-				new WikiPage { PageName = "Parent2" },
-				new WikiPage { PageName = "Parent2/Child1" },
-				new WikiPage { PageName = "Parent2/Child1" }
-			};
+			new WikiPage { PageName = "Parent1" },
+			new WikiPage { PageName = "Parent2" },
+			new WikiPage { PageName = "Parent2/Child1" },
+			new WikiPage { PageName = "Parent2/Child1" }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -43,13 +43,13 @@ public class WikiPageExtensionTests
 		string anotherPage = "AnotherPage";
 		var pages = new[]
 		{
-				new WikiPage { PageName = testPage },
-				new WikiPage { PageName = testPage + "/Child" },
-				new WikiPage { PageName = testPage + "/Child/Descendant" },
-				new WikiPage { PageName = anotherPage },
-				new WikiPage { PageName = anotherPage + "/Child" },
-				new WikiPage { PageName = anotherPage + "/Child/Descendant" }
-			};
+			new WikiPage { PageName = testPage },
+			new WikiPage { PageName = testPage + "/Child" },
+			new WikiPage { PageName = testPage + "/Child/Descendant" },
+			new WikiPage { PageName = anotherPage },
+			new WikiPage { PageName = anotherPage + "/Child" },
+			new WikiPage { PageName = anotherPage + "/Child/Descendant" }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -64,11 +64,11 @@ public class WikiPageExtensionTests
 		string anotherPage = "AnotherPage";
 		var pages = new[]
 		{
-				new WikiPage { PageName = testPage },
-				new WikiPage { PageName = anotherPage },
-				new WikiPage { PageName = anotherPage + "/Child" },
-				new WikiPage { PageName = anotherPage + "/Child/Descendant" }
-			};
+			new WikiPage { PageName = testPage },
+			new WikiPage { PageName = anotherPage },
+			new WikiPage { PageName = anotherPage + "/Child" },
+			new WikiPage { PageName = anotherPage + "/Child/Descendant" }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -83,12 +83,12 @@ public class WikiPageExtensionTests
 		string anotherPage = "AnotherPage";
 		var pages = new[]
 		{
-				new WikiPage { PageName = testPage + "/Child" },
-				new WikiPage { PageName = testPage + "/Child/Descendant" },
-				new WikiPage { PageName = anotherPage },
-				new WikiPage { PageName = anotherPage + "/Child" },
-				new WikiPage { PageName = anotherPage + "/Child/Descendant" }
-			};
+			new WikiPage { PageName = testPage + "/Child" },
+			new WikiPage { PageName = testPage + "/Child/Descendant" },
+			new WikiPage { PageName = anotherPage },
+			new WikiPage { PageName = anotherPage + "/Child" },
+			new WikiPage { PageName = anotherPage + "/Child/Descendant" }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -103,10 +103,10 @@ public class WikiPageExtensionTests
 
 		var pages = new[]
 		{
-				new WikiPage { PageName = testPage },
-				new WikiPage { PageName = testPage + "/Child" },
-				new WikiPage { PageName = testPage + "/Child/Descendant" }
-			};
+			new WikiPage { PageName = testPage },
+			new WikiPage { PageName = testPage + "/Child" },
+			new WikiPage { PageName = testPage + "/Child/Descendant" }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -125,11 +125,11 @@ public class WikiPageExtensionTests
 	{
 		var pages = new[]
 		{
-				new WikiPage { PageName = "Parent1" },
-				new WikiPage { PageName = "Parent2" },
-				new WikiPage { PageName = "Parent2/Child1" },
-				new WikiPage { PageName = "Parent2/Child2" }
-			};
+			new WikiPage { PageName = "Parent1" },
+			new WikiPage { PageName = "Parent2" },
+			new WikiPage { PageName = "Parent2/Child1" },
+			new WikiPage { PageName = "Parent2/Child2" }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -143,8 +143,8 @@ public class WikiPageExtensionTests
 		string parent = "Parent1";
 		var pages = new[]
 		{
-				new WikiPage { PageName = parent + "/Child1" }
-			};
+			new WikiPage { PageName = parent + "/Child1" }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -158,8 +158,8 @@ public class WikiPageExtensionTests
 		string parent = "Parent1";
 		var pages = new[]
 		{
-				new WikiPage { PageName = parent }
-			};
+			new WikiPage { PageName = parent }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -173,11 +173,11 @@ public class WikiPageExtensionTests
 		string testName = "Parent2/Child1/Descendant1";
 		var pages = new[]
 		{
-				new WikiPage { PageName = "Parent1" },
-				new WikiPage { PageName = "Parent2" },
-				new WikiPage { PageName = "Parent2/Child1" },
-				new WikiPage { PageName = testName }
-			};
+			new WikiPage { PageName = "Parent1" },
+			new WikiPage { PageName = "Parent2" },
+			new WikiPage { PageName = "Parent2/Child1" },
+			new WikiPage { PageName = testName }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -194,9 +194,9 @@ public class WikiPageExtensionTests
 
 		var pages = new[]
 		{
-				new WikiPage { PageName = testPage },
-				new WikiPage { PageName = childPage }
-			};
+			new WikiPage { PageName = testPage },
+			new WikiPage { PageName = childPage }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 
@@ -213,10 +213,10 @@ public class WikiPageExtensionTests
 
 		var pages = new[]
 		{
-				new WikiPage { PageName = parentPage },
-				new WikiPage { PageName = childPage },
-				new WikiPage { PageName = siblingPage }
-			};
+			new WikiPage { PageName = parentPage },
+			new WikiPage { PageName = childPage },
+			new WikiPage { PageName = siblingPage }
+		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
 

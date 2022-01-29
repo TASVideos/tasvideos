@@ -99,9 +99,9 @@ public static class HtmlExtensions
 
 		var acceptableContentTypes = new[]
 		{
-				"application/x-zip-compressed",
-				"application/zip"
-			};
+			"application/x-zip-compressed",
+			"application/zip"
+		};
 
 		return formFile.FileName.EndsWith(".zip")
 			&& acceptableContentTypes.Contains(formFile.ContentType);
@@ -116,15 +116,15 @@ public static class HtmlExtensions
 
 		var compressedExtensions = new[]
 		{
-				".zip", ".gz", "bz2", ".lzma", ".xz"
-			};
+			".zip", ".gz", "bz2", ".lzma", ".xz"
+		};
 
 		var compressedContentTypes = new[]
 		{
-				"application/x-zip-compressed",
-				"application/zip",
-				"applicationx-gzip"
-			};
+			"application/x-zip-compressed",
+			"application/zip",
+			"applicationx-gzip"
+		};
 
 		return compressedExtensions.Contains(Path.GetExtension(formFile.FileName))
 			|| compressedContentTypes.Contains(formFile.ContentType);
@@ -144,8 +144,8 @@ public static class HtmlExtensions
 	{
 		var validImageTypes = new[]
 		{
-				"image/png", "image/jpeg"
-			};
+			"image/png", "image/jpeg"
+		};
 
 		return validImageTypes.Contains(formFile?.ContentType);
 	}

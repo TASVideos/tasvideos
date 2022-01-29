@@ -74,13 +74,13 @@ public class FieldSelectableTests
 		var fields = new FieldSelectable($"{nameof(TestClass.String)},{nameof(TestClass.Bool)}");
 		var testList = new[]
 		{
-				new TestClass(),
-				new TestClass(), // Will be squashed by field selection
-				new TestClass
-				{
-					Bool = !TestBool
-				}
-			};
+			new TestClass(),
+			new TestClass(), // Will be squashed by field selection
+			new TestClass
+			{
+				Bool = !TestBool
+			}
+		};
 
 		var actual = testList.FieldSelect(fields).ToList();
 		Assert.AreEqual(2, actual.Count);
@@ -92,13 +92,13 @@ public class FieldSelectableTests
 		var fields = new FieldSelectable("");
 		var testList = new[]
 		{
-				new TestClass(),
-				new TestClass(), // Will be squashed by field selection
-				new TestClass
-				{
-					Bool = !TestBool
-				}
-			};
+			new TestClass(),
+			new TestClass(), // Will be squashed by field selection
+			new TestClass
+			{
+				Bool = !TestBool
+			}
+		};
 
 		var actual = testList.FieldSelect(fields).ToList();
 		Assert.AreEqual(3, actual.Count);

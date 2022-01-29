@@ -125,8 +125,8 @@ public class MovieStatistics : ViewComponent
 						Id = p.Id,
 						Title = p.Title,
 
-							// the hackiest of workarounds but just calling Time() makes it explode for hardly fathomable reasons
-							TimeSpanValue = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate!.FrameRate * 100, MidpointRounding.AwayFromZero) * 10)
+						// the hackiest of workarounds but just calling Time() makes it explode for hardly fathomable reasons
+						TimeSpanValue = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate!.FrameRate * 100, MidpointRounding.AwayFromZero) * 10)
 					})
 					.ToListAsync();
 				break;
@@ -157,8 +157,8 @@ public class MovieStatistics : ViewComponent
 						Id = p.Id,
 						Title = p.Title,
 
-							// this should use time instead of frames, but time is a massive pain to properly fetch currently
-							FloatValue = (float)p.RerecordCount / p.Frames
+						// this should use time instead of frames, but time is a massive pain to properly fetch currently
+						FloatValue = (float)p.RerecordCount / p.Frames
 					})
 					.ToListAsync();
 				break;

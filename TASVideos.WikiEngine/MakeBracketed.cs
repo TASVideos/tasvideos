@@ -59,8 +59,8 @@ public static partial class Builtins
 	{
 		return new[]
 		{
-				new Module(charStart, charEnd, module)
-			};
+			new Module(charStart, charEnd, module)
+		};
 	}
 
 	private static IEnumerable<INode> MakeFootnote(int charStart, int charEnd, string n)
@@ -81,17 +81,17 @@ public static partial class Builtins
 	{
 		return new[]
 		{
-				new Element(charStart, "a", new[] { Attr("id", "r" + n) }, Array.Empty<INode>()) { CharEnd = charStart },
-				new Element(charStart, "sup", new INode[]
+			new Element(charStart, "a", new[] { Attr("id", "r" + n) }, Array.Empty<INode>()) { CharEnd = charStart },
+			new Element(charStart, "sup", new INode[]
+			{
+				new Text(charStart, "[") { CharEnd = charStart },
+				new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new[]
 				{
-					new Text(charStart, "[") { CharEnd = charStart },
-					new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new[]
-					{
-						new Text(charStart, n) { CharEnd = charEnd }
-					}) { CharEnd = charEnd },
-					new Text(charEnd, "]") { CharEnd = charEnd }
-				}) { CharEnd = charEnd }
-			};
+					new Text(charStart, n) { CharEnd = charEnd }
+				}) { CharEnd = charEnd },
+				new Text(charEnd, "]") { CharEnd = charEnd }
+			}) { CharEnd = charEnd }
+		};
 	}
 
 	private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg" };

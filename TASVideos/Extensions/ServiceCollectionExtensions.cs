@@ -102,8 +102,8 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddPageRoute("/Forum/MoodReport", "forum/moodreport.php");
 				options.Conventions.AddPageRoute("/Permissions/Index", "/Privileges");
 
-					// Backwards compatibility with legacy links
-					options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
+				// Backwards compatibility with legacy links
+				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/t/{id:int}");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/f/{id:int}");

@@ -52,11 +52,11 @@ public static partial class Builtins
 
 		return new Element(tabset.CharStart, "div", new[] { Attr("class", parentDivClass) }, new[]
 		{
-				new Element(tabset.CharStart, "div", new[] { Attr("class", navDivClass) }, new[]
-				{
-					new Element(tabset.CharStart, "ul", new[] { Attr("class", navClass), Attr("role", "tablist") }, nav)
-				}),
-				new Element(tabset.CharStart, "div", new[] { Attr("class", tabClass) }, content)
-			});
+			new Element(tabset.CharStart, "div", new[] { Attr("class", navDivClass) }, new[]
+			{
+				new Element(tabset.CharStart, "ul", new[] { Attr("class", navClass), Attr("role", "tablist") }, nav)
+			}),
+			new Element(tabset.CharStart, "div", new[] { Attr("class", tabClass) }, content)
+		});
 	}
 }

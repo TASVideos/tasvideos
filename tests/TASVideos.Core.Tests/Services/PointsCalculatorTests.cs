@@ -22,15 +22,15 @@ public class PointsCalculatorTests
 	{
 		var publications = new[]
 		{
-				new PointsCalculator.Publication
-				{
-					Obsolete = false,
-					ClassWeight = 0,
-					RatingCount = 0,
-					AverageRating = 0,
-					AuthorCount = 1
-				}
-			};
+			new PointsCalculator.Publication
+			{
+				Obsolete = false,
+				ClassWeight = 0,
+				RatingCount = 0,
+				AverageRating = 0,
+				AuthorCount = 1
+			}
+		};
 
 		var expected = publications.Length * PlayerPointConstants.MinimumPlayerPointsForPublication;
 		var actual = PointsCalculator.PlayerPoints(publications, AverageRatingsPerMovie);
@@ -42,15 +42,15 @@ public class PointsCalculatorTests
 	{
 		var publications = new[]
 		{
-				new PointsCalculator.Publication
-				{
-					AverageRating = 4.45166667,
-					RatingCount = 6,
-					ClassWeight = 0.75,
-					Obsolete = false,
-					AuthorCount = 1
-				}
-			};
+			new PointsCalculator.Publication
+			{
+				AverageRating = 4.45166667,
+				RatingCount = 6,
+				ClassWeight = 0.75,
+				Obsolete = false,
+				AuthorCount = 1
+			}
+		};
 
 		var roundedExpected = 18.3;
 		var actual = PointsCalculator.PlayerPoints(publications, AverageRatingsPerMovie);
@@ -63,15 +63,15 @@ public class PointsCalculatorTests
 	{
 		var publications = new[]
 		{
-				new PointsCalculator.Publication
-				{
-					AverageRating = -100,
-					RatingCount = 6,
-					ClassWeight = 0.75,
-					Obsolete = false,
-					AuthorCount = 1
-				}
-			};
+			new PointsCalculator.Publication
+			{
+				AverageRating = -100,
+				RatingCount = 6,
+				ClassWeight = 0.75,
+				Obsolete = false,
+				AuthorCount = 1
+			}
+		};
 
 		var expected = PlayerPointConstants.MinimumPlayerPointsForPublication;
 		var actual = PointsCalculator.PlayerPoints(publications, AverageRatingsPerMovie);
