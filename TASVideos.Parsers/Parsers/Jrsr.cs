@@ -152,6 +152,12 @@ namespace TASVideos.MovieParsers.Parsers
 								timestamp = lastTimestamp + timestamp;
 							}
 
+							// "Events must be in time order from first to last."
+							if (timestamp < lastTimestamp)
+							{
+								throw new FormatException($"Event timestamp {timestamp} is before preceding timestamp {lastTimestamp}");
+							}
+
 							lastTimestamp = timestamp;
 
 							var eventClass = tokens[1];

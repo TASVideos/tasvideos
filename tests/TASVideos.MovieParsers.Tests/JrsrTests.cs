@@ -232,6 +232,24 @@ namespace TASVideos.MovieParsers.Tests
 +1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 !END
 ", 300)]
+		// Consecutive timestamps may be equal.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 100)]
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++1666666700 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++0 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 100)]
 		public async Task EventTimestamps(string contents, int expected)
 		{
 			var result = await ParseFromString(contents);
@@ -274,6 +292,24 @@ namespace TASVideos.MovieParsers.Tests
 !BEGIN events
 +0 OPTION ERROR
 !END
+")]
+		// Timestamps must be nondecreasing.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++3333333400 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++3333333399 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+")]
+		// Timestamps are supposed to be non-negative, but check for
+		// nondecreasing RELATIVE timestamps as well.
+		[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++3333333400 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++-1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 ")]
 		public async Task EventTimestampsError(string contents)
 		{
