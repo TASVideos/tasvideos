@@ -1,7 +1,8 @@
 ﻿@page "{handler?}/{disallowId?}"
 @model DisallowModel
-
-<h4>Disallows</h4>
+@{
+	ViewData["Title"] = "Disallows";
+}
 <label>This page manages username patterns that are not allowed during user registration</label>
 <hr />
 <form method="POST">
