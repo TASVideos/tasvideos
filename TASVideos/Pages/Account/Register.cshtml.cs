@@ -1,13 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
 
@@ -17,7 +14,6 @@ namespace TASVideos.Pages.Account;
 [IpBanCheck]
 public class RegisterModel : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
 	private readonly SignInManager _signInManager;
 	private readonly IEmailService _emailService;
 	private readonly ExternalMediaPublisher _publisher;
@@ -26,7 +22,6 @@ public class RegisterModel : BasePageModel
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
 
 	public RegisterModel(
-		ApplicationDbContext db,
 		SignInManager signInManager,
 		IEmailService emailService,
 		ExternalMediaPublisher publisher,
@@ -34,7 +29,6 @@ public class RegisterModel : BasePageModel
 		IHostEnvironment env,
 		IUserMaintenanceLogger userMaintenanceLogger)
 	{
-		_db = db;
 		_signInManager = signInManager;
 		_emailService = emailService;
 		_publisher = publisher;
@@ -103,15 +97,9 @@ public class RegisterModel : BasePageModel
 			return Page();
 		}
 
-		var disallows = await _db.UserDisallows.ToListAsync();
-		foreach (var disallow in disallows)
+		if (!await _signInManager.UsernameIsAllowed(UserName))
 		{
-			var regex = new Regex(disallow.RegexPattern);
-			if (regex.IsMatch(UserName))
-			{
-				ModelState.AddModelError(nameof(UserName), "The username is not allowed.");
-				break;
-			}
+			ModelState.AddModelError(nameof(UserName), "The username is not allowed.");
 		}
 
 		if (ModelState.IsValid)

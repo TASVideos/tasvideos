@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -82,5 +83,20 @@ public class SignInManager : SignInManager<User>
 		}
 
 		return result;
+	}
+
+	public async Task<bool> UsernameIsAllowed(string userName)
+	{
+		var disallows = await _db.UserDisallows.ToListAsync();
+		foreach (var disallow in disallows)
+		{
+			var regex = new Regex(disallow.RegexPattern);
+			if (regex.IsMatch(userName))
+			{
+				return false;
+			}
+		}
+
+		return true;
 	}
 }
