@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Linq;
 using TASVideos.Extensions;
 
 namespace TASVideos.Common.Tests.Extensions;
