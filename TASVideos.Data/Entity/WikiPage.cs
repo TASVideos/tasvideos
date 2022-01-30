@@ -110,8 +110,6 @@ public static class WikiQueryableExtensions
 
 	public static bool IsCurrent(this WikiPage? wikiPage)
 	{
-		return wikiPage != null
-			&& wikiPage.ChildId == null
-			&& wikiPage.IsDeleted == false;
+		return wikiPage is { ChildId: null, IsDeleted: false };
 	}
 }
