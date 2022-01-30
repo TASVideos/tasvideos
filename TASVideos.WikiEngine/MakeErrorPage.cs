@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using TASVideos.WikiEngine.AST;
+using System;
 
 namespace TASVideos.WikiEngine;
 
@@ -13,7 +14,7 @@ public static partial class Builtins
 	/// <returns>Human-readable document showing the markup and the error.</returns>
 	public static List<INode> MakeErrorPage(string content, NewParser.SyntaxException e)
 	{
-		INode ClassedText(int at, string content, string? clazz = null)
+		static INode ClassedText(int at, string content, string? clazz = null)
 		{
 			var ret = new Element(at, "span");
 			if (clazz != null)
@@ -54,7 +55,7 @@ public static partial class Builtins
 					Attributes = { ["class"] = "error-marker" }
 				};
 				elt.Children.Add(marker);
-				elt.Children.Add(ClassedText(charAt, line.Substring(column) + '\n'));
+				elt.Children.Add(ClassedText(charAt, string.Concat(line.AsSpan(column), "\n")));
 			}
 			else
 			{
