@@ -180,6 +180,7 @@ public class StringExtensionTests
 	[DataRow("\n", null)]
 	[DataRow("Test", "Test")]
 	[DataRow("Test\n", "Test\n")]
+	[TestMethod]
 	public void NullIfWhitespace(string s, string expected)
 	{
 		var actual = s.NullIfWhitespace();
