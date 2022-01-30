@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TASVideos.ForumEngine;
+﻿namespace TASVideos.ForumEngine;
 
 public class VideoParameters
 {
