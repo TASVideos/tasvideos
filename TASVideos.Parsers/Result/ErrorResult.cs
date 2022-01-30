@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TASVideos.MovieParsers.Result;
+﻿namespace TASVideos.MovieParsers.Result;
 
 /// <summary>
 /// An implementation of <seealso cref="IParseResult"/> that can be used when an error occurs.

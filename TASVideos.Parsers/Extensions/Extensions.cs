@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Linq;
-
-namespace TASVideos.MovieParsers.Extensions;
+﻿namespace TASVideos.MovieParsers.Extensions;
 
 internal static class Extensions
 {

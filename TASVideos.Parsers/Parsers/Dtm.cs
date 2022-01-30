@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using TASVideos.MovieParsers.Result;
+﻿using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;
 

@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using System.Xml.Linq;
 using System.Xml.XPath;
-
-using SharpCompress.Compressors;
-using SharpCompress.Compressors.Deflate;
-
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;

@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Threading.Tasks;
-using TASVideos.MovieParsers.Extensions;
+﻿using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;

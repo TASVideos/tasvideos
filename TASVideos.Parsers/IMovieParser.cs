@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using TASVideos.MovieParsers.Parsers;
 using TASVideos.MovieParsers.Result;
 

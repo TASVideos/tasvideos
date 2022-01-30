@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TASVideos.MovieParsers.Result;
+﻿namespace TASVideos.MovieParsers.Result;
 
 /// <summary>
 /// The standard implementation of <seealso cref="IParseResult"/>.
