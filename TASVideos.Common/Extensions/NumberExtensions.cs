@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Extensions;
+﻿namespace TASVideos.Extensions;
 
 public static class NumberExtensions
 {

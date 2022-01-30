@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Common;
+﻿namespace TASVideos.Common;
 
 public interface ITimeable
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Attributes;
+﻿namespace TASVideos.Attributes;
 
 /// <summary>
 /// Represents a generic group that a class or property might belong
