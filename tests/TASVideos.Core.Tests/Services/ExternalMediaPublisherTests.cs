@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Tests.Services;

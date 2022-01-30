@@ -1,14 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Tests.Base;
 
 namespace TASVideos.Core.Tests.Services;
 

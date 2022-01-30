@@ -1,11 +1,7 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
-using TASVideos.Tests.Base;
 
 namespace TASVideos.Core.Tests.Services;
 

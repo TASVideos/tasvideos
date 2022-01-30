@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace TASVideos.Core.Tests.Paging;
+﻿namespace TASVideos.Core.Tests.Paging;
 
 [TestClass]
 public class PageableTests

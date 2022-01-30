@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace TASVideos.Core.Tests.Paging;
+﻿namespace TASVideos.Core.Tests.Paging;
 
 [TestClass]
 public class FieldSelectableTests

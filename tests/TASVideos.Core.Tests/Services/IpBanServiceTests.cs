@@ -1,11 +1,7 @@
-﻿using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Tests.Base;
 
 namespace TASVideos.Core.Tests.Services;
 
