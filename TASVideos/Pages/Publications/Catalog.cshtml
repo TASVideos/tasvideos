@@ -72,7 +72,7 @@
 
 		systemModel.onchange = function() {
 			if (this.value) {
-				let xmlhttp = new XMLHttpRequest();
+				const xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {
@@ -84,7 +84,7 @@
 				xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=false&systemId=" + systemModel.value, true);
 				xmlhttp.send();
 
-				let xmlhttp2 = new XMLHttpRequest();
+				const xmlhttp2 = new XMLHttpRequest();
 				xmlhttp2.onreadystatechange = function() {
 					if (xmlhttp2.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp2.status === 200) {
@@ -117,7 +117,7 @@
 			if (this.value) {
 				createRomBtn.removeAttribute('disabled');
 
-				let xmlhttp = new XMLHttpRequest();
+				const xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {

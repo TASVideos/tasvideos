@@ -53,13 +53,13 @@
 		const baseUrl = '/Wiki/Diff?handler=DiffData';
 		const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
 
-		let xmlhttp = new XMLHttpRequest();
+		const xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 				document.getElementById("diff-view").classList.remove("d-none");
 				document.getElementById("diff-options").classList.remove("d-none");
 				if (xmlhttp.status === 200) {
-					let data = JSON.parse(xmlhttp.responseText);
+					const data = JSON.parse(xmlhttp.responseText);
 					document.getElementById("left-revision").value = data.leftMarkup;
 					document.getElementById("right-revision").value = data.rightMarkup;
 					fromRevision = revision - 1;
@@ -74,8 +74,8 @@
 	}
 
 	function generateDiff(viewType) {
-		let diffView = document.getElementById("diff-view");
-		let base = difflib.stringAsLines(document.getElementById("left-revision").value),
+		const diffView = document.getElementById("diff-view");
+		const base = difflib.stringAsLines(document.getElementById("left-revision").value),
 			newTxt = difflib.stringAsLines(document.getElementById("right-revision").value),
 			opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes(),
 			diffOutputDiv = diffView;

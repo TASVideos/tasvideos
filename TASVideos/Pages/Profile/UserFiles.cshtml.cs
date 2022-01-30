@@ -25,7 +25,7 @@ public class UserFilesModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		UserName = User!.Identity!.Name!;
+		UserName = User.Name();
 		Files = await _mapper.ProjectTo<UserFileModel>(
 			_db.UserFiles
 				.ForAuthor(UserName)

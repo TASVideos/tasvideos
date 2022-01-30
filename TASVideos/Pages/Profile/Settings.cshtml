@@ -109,7 +109,7 @@
 					const maxWidth = @AvatarRequirements.Width;
 					const maxHeight = @AvatarRequirements.Height;
 
-					var tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
+					const tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
 					if (tooBig) {
 						previewElem.classList.add('alert');
 						previewElem.classList.add('alert-danger');

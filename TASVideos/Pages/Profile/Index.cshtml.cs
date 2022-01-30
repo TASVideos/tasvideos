@@ -24,7 +24,7 @@ public class IndexModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var profile = await _userManager.GetUserProfile(User!.Identity!.Name!, true, seeRestricted);
+		var profile = await _userManager.GetUserProfile(User.Name(), true, seeRestricted);
 		if (profile == null)
 		{
 			return NotFound();

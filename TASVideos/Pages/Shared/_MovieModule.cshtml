@@ -9,9 +9,9 @@
 	}
 }
 
-@inject IAwards Awards
+@inject IAwards _awards
 @{
-	var publicationAwards = await Awards.ForPublication(Model.Id);
+	var publicationAwards = await _awards.ForPublication(Model.Id);
 }
 
 <card class="border border-primary">

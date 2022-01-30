@@ -77,14 +77,14 @@
 				elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
 			});
 
-		let cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
+		const cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
 		if (cur) {
 			cur.classList.add('table-primary');
 			cur.querySelector("button[data-to]").classList.remove("bg-info","text-dark");
 			cur.querySelector("button[data-to]").classList.add("btn-primary");
 		}
 
-		let prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
+		const prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
 		if (prev) {
 			prev.classList.add('table-info');
 			prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
@@ -109,7 +109,7 @@
 
 		const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
 
-		let xmlhttp = new XMLHttpRequest();
+		const xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = function() {
 			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 				document.getElementById("diff-view").classList.remove("d-none");
@@ -129,8 +129,8 @@
 	}
 
 	function generateDiff(viewType) {
-		let diffView = document.getElementById("diff-view");
-		let base = difflib.stringAsLines(document.getElementById("left-revision").value),
+		const diffView = document.getElementById("diff-view");
+		const base = difflib.stringAsLines(document.getElementById("left-revision").value),
 			newTxt = difflib.stringAsLines(document.getElementById("right-revision").value),
 			opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes(),
 			diffOutputDiv = diffView;

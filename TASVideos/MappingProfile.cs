@@ -69,7 +69,7 @@ public class MappingProfile : Profile
 
 		CreateMap<UserFile, UserFileModel>()
 			.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author!.UserName))
-			.ForMember(dest => dest.AuthorUserFilesCount, opt => opt.MapFrom(src => src.Author!.UserFiles.Where(uf => !uf.Hidden).Count()))
+			.ForMember(dest => dest.AuthorUserFilesCount, opt => opt.MapFrom(src => src.Author!.UserFiles.Count(uf => !uf.Hidden)))
 			.ForMember(dest => dest.FileSizeUncompressed, opt => opt.MapFrom(src => src.LogicalLength))
 			.ForMember(dest => dest.FileSizeCompressed, opt => opt.MapFrom(src => src.PhysicalLength))
 			.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))

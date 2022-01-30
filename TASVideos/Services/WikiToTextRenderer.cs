@@ -85,7 +85,7 @@ public class WikiToTextRenderer : IWikiToTextRenderer
 
 			var module = _serviceProvider.GetRequiredService(textComponent);
 			var result = await (Task<string>)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
-			w.Write(result);
+			await w.WriteAsync(result);
 		}
 
 		public string AbsoluteUrl(string url)

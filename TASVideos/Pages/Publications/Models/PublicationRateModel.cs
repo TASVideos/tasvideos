@@ -36,7 +36,7 @@ public class PublicationRateModel
 			}
 
 			var ratingNumber = AsRatingDouble(ratingString);
-			if (ratingNumber >= 0.0 && ratingNumber <= 10.0)
+			if (ratingNumber is >= 0.0 and <= 10.0)
 			{
 				return true;
 			}

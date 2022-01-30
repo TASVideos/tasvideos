@@ -123,16 +123,14 @@
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
 
 <script>
-	{
-		document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
-			const reject = '@((int)SubmissionStatus.Rejected)';
-			if (this.value === reject) {
-				document.getElementById('rejection-reason').classList.remove('d-none');
-			} else {
-				document.getElementById('rejection-reason').classList.add('d-none');
-			}
-		});
-	}
+	document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
+		const reject = '@((int)SubmissionStatus.Rejected)';
+		if (this.value === reject) {
+			document.getElementById('rejection-reason').classList.remove('d-none');
+		} else {
+			document.getElementById('rejection-reason').classList.add('d-none');
+		}
+	});
 </script>
 
 @section Scripts {

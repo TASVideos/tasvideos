@@ -47,7 +47,7 @@
 </form>
 <script>
 	function IncrementOrdinal(element) {
-		let parent = element.closest('.forum-section');
+		const parent = element.closest('.forum-section');
 		const index = parseInt(parent.dataset.index);
 
 		const last = document.querySelectorAll('.forum-section').length;
@@ -55,8 +55,8 @@
 			return;
 		}
 
-		let thisO = document.getElementById('Category_Forums_' + index + '__Ordinal');
-		let nextO = document.getElementById('Category_Forums_' + (index + 1) + '__Ordinal');
+		const thisO = document.getElementById('Category_Forums_' + index + '__Ordinal');
+		const nextO = document.getElementById('Category_Forums_' + (index + 1) + '__Ordinal');
 
 		const thisOVal = thisO.value;
 		const nextOVal = nextO.value;
@@ -64,7 +64,7 @@
 		thisO.value = nextOVal;
 		nextO.value = thisOVal;
 
-		let nextSection = document.querySelector('.forum-section[data-index="' + (index + 1) + '"]');
+		const nextSection = document.querySelector('.forum-section[data-index="' + (index + 1) + '"]');
 
 		parent.dataset.index = index + 1;
 		nextSection.dataset.index = index;
@@ -73,14 +73,14 @@
 	}
 
 	function DecrementOrdinal(element) {
-		let parent = element.closest('.forum-section');
+		const parent = element.closest('.forum-section');
 		const index = parseInt(parent.dataset.index);
 		if (index <= 0) {
 			return;
 		}
 
-		let thisO = document.getElementById('Category_Forums_' + index + '__Ordinal');
-		let prevO = document.getElementById('Category_Forums_' + (index - 1) + '__Ordinal');
+		const thisO = document.getElementById('Category_Forums_' + index + '__Ordinal');
+		const prevO = document.getElementById('Category_Forums_' + (index - 1) + '__Ordinal');
 
 		const thisOVal = thisO.value;
 		const prevOVal = prevO.value;
@@ -88,7 +88,7 @@
 		thisO.value = prevOVal;
 		prevO.value = thisOVal;
 
-		let prevSection = document.querySelector('.forum-section[data-index="' + (index - 1) + '"]');
+		const prevSection = document.querySelector('.forum-section[data-index="' + (index - 1) + '"]');
 		parent.dataset.index = index - 1;
 		prevSection.dataset.index = index;
 
@@ -96,28 +96,28 @@
 	}
 
 	function SortForums() {
-		let sections = Array.from(document.querySelectorAll('.forum-section'))
+		const sections = Array.from(document.querySelectorAll('.forum-section'))
 			.sort((a, b) => a.dataset.index - b.dataset.index);
 
-		let container = document.getElementById('forum-container');
+		const container = document.getElementById('forum-container');
 		while (container.firstChild) {
 			container.removeChild(container.firstChild);
 		}
 
 		for (const i in sections) {
-			let ord = sections[i].querySelectorAll('[id$="Ordinal"]')[0];
+			const ord = sections[i].querySelectorAll('[id$="Ordinal"]')[0];
 			ord.setAttribute('id', 'Category_Forums_' + i + '__Ordinal');
 			ord.setAttribute('name', 'Category.Forums[' + i + '].Ordinal');
 
-			let id = sections[i].querySelectorAll('[id$="Id"]')[0];
+			const id = sections[i].querySelectorAll('[id$="Id"]')[0];
 			id.setAttribute('id', 'Category_Forums_' + i + '__Id');
 			id.setAttribute('name', 'Category.Forums[' + i + '].Id');
 
-			let name = sections[i].querySelectorAll('[id$="Name"]')[0];
+			const name = sections[i].querySelectorAll('[id$="Name"]')[0];
 			name.setAttribute('id', 'Category_Forums_' + i + '__Name');
 			name.setAttribute('name', 'Category.Forums[' + i + '].Name');
 
-			let description = sections[i].querySelectorAll('[id$="Description"]')[0];
+			const description = sections[i].querySelectorAll('[id$="Description"]')[0];
 			description.setAttribute('id', 'Category_Forums_' + i + '__Description');
 			description.setAttribute('name', 'Category.Forums[' + i + '].Description');
 

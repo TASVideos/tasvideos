@@ -17,6 +17,6 @@ public class RatingsModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		Ratings = (await _userManager.GetUserRatings(User!.Identity!.Name!, includeHidden: true))!;
+		Ratings = (await _userManager.GetUserRatings(User.Name(), includeHidden: true))!;
 	}
 }

@@ -11,24 +11,22 @@
 </div>
 
 <script>
-	{
-		document.getElementById('preview-button').onclick = function () {
-			const markup = document.getElementById('@Model.ElementId').value;
-			document.getElementById('preview-container').classList.remove('d-none');
-			let xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-					if (xmlhttp.status === 200) {
-						document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
-						Prism.highlightAll();
-					} else {
-						alert("Could not generate preview");
-					}
+	document.getElementById('preview-button').onclick = function () {
+		const markup = document.getElementById('@Model.ElementId').value;
+		document.getElementById('preview-container').classList.remove('d-none');
+		const xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+				if (xmlhttp.status === 200) {
+					document.getElementById('preview-contents').innerHTML = xmlhttp.responseText;
+					Prism.highlightAll();
+				} else {
+					alert("Could not generate preview");
 				}
-			};
+			}
+		};
 
-			xmlhttp.open("POST", "@Model.PreviewPath");
-			xmlhttp.send(markup);
-		}
+		xmlhttp.open("POST", "@Model.PreviewPath");
+		xmlhttp.send(markup);
 	}
 </script>

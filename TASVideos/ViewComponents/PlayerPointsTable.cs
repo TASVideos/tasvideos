@@ -37,7 +37,10 @@ public class PlayerPointsTable : ViewComponent
 			user.Points = await _pointsService.PlayerPoints(user.Id);
 		}
 
-		var sortedPlayers = players.OrderByDescending(u => u.Points).Take(showCount);
+		var sortedPlayers = players
+			.OrderByDescending(u => u.Points)
+			.Take(showCount)
+			.ToList();
 
 		int counter = 0;
 		foreach (var user in sortedPlayers)

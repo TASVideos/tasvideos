@@ -11,8 +11,7 @@ public static class ModuleParamHelpers
 	public static readonly Dictionary<Type, IModuleParameterTypeAdapter> ParamTypeAdapters = typeof(WikiMarkup)
 		.Assembly
 		.GetTypes()
-		.Where(t => t.BaseType != null
-			&& t.BaseType.IsGenericType
+		.Where(t => t.BaseType is { IsGenericType: true }
 			&& t.BaseType.GetGenericTypeDefinition() == typeof(ModuleParameterTypeAdapter<>))
 		.ToDictionary(
 			t => t.BaseType!.GetGenericArguments()[0],

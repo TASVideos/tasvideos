@@ -53,8 +53,8 @@
 </div>
 <script>
 	document.addEventListener("DOMContentLoaded", function installButtonEvents() {
-		let buttons = document.querySelectorAll("button[data-fmt]");
-		let textArea = document.getElementById('@Model');
+		const buttons = document.querySelectorAll("button[data-fmt]");
+		const textArea = document.getElementById('@Model');
 
 		function applyFormatting(s) {
 			const ss = s.split(",");
