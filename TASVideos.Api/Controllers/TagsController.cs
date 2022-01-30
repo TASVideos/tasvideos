@@ -1,12 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Api.Filters;
+﻿using TASVideos.Api.Filters;
 using TASVideos.Api.Requests;
 using TASVideos.Core;
-using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Api.Controllers;

@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Api.Requests;
-using TASVideos.Core.Services;
+﻿using TASVideos.Api.Requests;
 
 namespace TASVideos.Api.Controllers;
 

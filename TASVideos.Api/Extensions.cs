@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace TASVideos.Api;
+﻿namespace TASVideos.Api;
 
 /// <summary>
 /// API specific extension methods.
