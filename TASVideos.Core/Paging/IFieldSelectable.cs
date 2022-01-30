@@ -45,7 +45,10 @@ public static class FieldSelectionExtensions
 			return ToExpando(obj);
 		}
 
-		var columns = fields.SplitWithEmpty(",").Select(f => f.Trim());
+		var columns = fields
+			.SplitWithEmpty(",")
+			.Select(f => f.Trim())
+			.ToList();
 		if (columns.All(string.IsNullOrWhiteSpace))
 		{
 			return ToExpando(obj);

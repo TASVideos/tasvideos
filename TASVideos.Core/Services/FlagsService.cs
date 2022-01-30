@@ -107,17 +107,17 @@ internal class FlagService : IFlagService
 
 	public async Task<FlagEditResult> Edit(int id, Flag flag)
 	{
-		var existingflag = await _db.Flags.SingleOrDefaultAsync(t => t.Id == id);
-		if (existingflag == null)
+		var existingFlag = await _db.Flags.SingleOrDefaultAsync(t => t.Id == id);
+		if (existingFlag == null)
 		{
 			return FlagEditResult.NotFound;
 		}
 
-		existingflag.Name = flag.Name;
-		existingflag.IconPath = flag.IconPath;
-		existingflag.LinkPath = flag.LinkPath;
-		existingflag.Token = flag.Token;
-		existingflag.PermissionRestriction = flag.PermissionRestriction;
+		existingFlag.Name = flag.Name;
+		existingFlag.IconPath = flag.IconPath;
+		existingFlag.LinkPath = flag.LinkPath;
+		existingFlag.Token = flag.Token;
+		existingFlag.PermissionRestriction = flag.PermissionRestriction;
 
 		try
 		{

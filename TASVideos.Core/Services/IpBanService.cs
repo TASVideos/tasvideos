@@ -23,7 +23,7 @@ public interface IIpBanService
 	/// Adds an IP Address or Address range to the ban list
 	/// </summary>
 	/// <param name="ipMask">The mask pattern to ban, can be an ipv4, ipv6, ipv4 star notion, or ipv6 CIDR notion</param>
-	/// <returns>True if the mask is parsable and successfully saved to the database, else false</returns>
+	/// <returns>True if the mask can be parsed and successfully saved to the database, else false</returns>
 	Task<bool> Add(string ipMask);
 
 	/// <summary>
