@@ -13,14 +13,13 @@ namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 public class RenderModelTests : BasePageModelTests
 {
 	private readonly Mock<IWikiPages> _mockWikiPages;
-	private readonly TestDbContext _db;
 	private readonly RenderModel _model;
 
 	public RenderModelTests()
 	{
 		_mockWikiPages = new Mock<IWikiPages>();
-		_db = TestDbContext.Create();
-		_model = new RenderModel(_mockWikiPages.Object, _db, NullLogger<RenderModel>.Instance)
+		var db = TestDbContext.Create();
+		_model = new RenderModel(_mockWikiPages.Object, db, NullLogger<RenderModel>.Instance)
 		{
 			PageContext = TestPageContext()
 		};
