@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +6,6 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.Pages.Profile.Models;
 
 namespace TASVideos.Pages.Profile;

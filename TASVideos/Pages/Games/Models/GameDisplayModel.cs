@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games.Models;
 

@@ -1,5 +1,4 @@
-﻿using System;
-using TASVideos.Core;
+﻿using TASVideos.Core;
 
 namespace TASVideos.ViewComponents;
 

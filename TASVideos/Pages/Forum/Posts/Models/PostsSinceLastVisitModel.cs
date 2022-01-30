@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using TASVideos.Core;
+﻿using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;

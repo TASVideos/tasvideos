@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using TASVideos.Extensions;
-
-namespace TASVideos.Pages;
+﻿namespace TASVideos.Pages;
 
 public static class Extensions
 {

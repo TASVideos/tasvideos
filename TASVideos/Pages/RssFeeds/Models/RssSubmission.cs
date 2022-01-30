@@ -1,5 +1,4 @@
-﻿using System;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.RssFeeds.Models;
 

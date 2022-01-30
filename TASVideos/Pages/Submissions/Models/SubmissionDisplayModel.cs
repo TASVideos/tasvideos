@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;

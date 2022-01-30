@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.PublicationClasses;

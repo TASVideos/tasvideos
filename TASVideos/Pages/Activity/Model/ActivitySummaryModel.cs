@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Pages.Activity.Model;
+﻿namespace TASVideos.Pages.Activity.Model;
 
 public class ActivitySummaryModel
 {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.ViewComponents;
+﻿namespace TASVideos.ViewComponents;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class WikiModuleAttribute : Attribute

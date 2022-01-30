@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.ViewComponents.Models;
+﻿namespace TASVideos.ViewComponents.Models;
 
 public class FirstEditionModel
 {

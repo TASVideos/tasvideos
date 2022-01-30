@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TASVideos.ViewComponents;
+﻿namespace TASVideos.ViewComponents;
 
 public class MovieHistoryModel
 {

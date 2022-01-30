@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
 
 // ReSharper disable file CompareOfFloatsByEqualityOperator

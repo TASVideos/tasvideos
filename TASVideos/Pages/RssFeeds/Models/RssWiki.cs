@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Pages.RssFeeds.Models;
+﻿namespace TASVideos.Pages.RssFeeds.Models;
 
 public class RssWiki
 {

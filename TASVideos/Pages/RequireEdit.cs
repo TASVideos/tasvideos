@@ -1,8 +1,5 @@
 ﻿using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
-
-using TASVideos.Extensions;
 
 namespace TASVideos.Pages;
 

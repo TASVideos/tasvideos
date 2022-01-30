@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using AutoMapper;
+﻿using AutoMapper;
 using TASVideos.Api.Responses;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;

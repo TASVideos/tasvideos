@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.Extensions;
 
 namespace TASVideos.Models;
 

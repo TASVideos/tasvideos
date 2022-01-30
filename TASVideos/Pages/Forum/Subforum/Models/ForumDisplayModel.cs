@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
 

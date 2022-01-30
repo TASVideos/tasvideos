@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;

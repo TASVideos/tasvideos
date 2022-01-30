@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Models;
+﻿namespace TASVideos.Models;
 
 public class PrivateMessageModel
 {
