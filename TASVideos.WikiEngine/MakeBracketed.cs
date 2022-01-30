@@ -114,7 +114,7 @@ public static partial class Builtins
 	{
 		if (text[0] == '=')
 		{
-			return "/" + text.Substring(text[1] == '/' ? 2 : 1);
+			return string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1));
 		}
 
 		return text;
@@ -129,7 +129,7 @@ public static partial class Builtins
 				return "/";
 			}
 
-			return NormalizeInternalLink("/" + text.Substring(text[1] == '/' ? 2 : 1));
+			return NormalizeInternalLink(string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1)));
 		}
 
 		if (text.StartsWith("user:"))
@@ -265,8 +265,10 @@ public static partial class Builtins
 
 	private static INode MakeImage(int charStart, int charEnd, string[] pp, int index)
 	{
-		var attrs = new List<KeyValuePair<string, string>>();
-		attrs.Add(Attr("src", NormalizeImageUrl(pp[index++])));
+		var attrs = new List<KeyValuePair<string, string>>
+		{
+			Attr("src", NormalizeImageUrl(pp[index++]))
+		};
 		StringBuilder classString = new("embed");
 		for (; index < pp.Length; index++)
 		{

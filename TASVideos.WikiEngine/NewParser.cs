@@ -971,7 +971,7 @@ public class NewParser
 
 	private static void AddIdsToHeadings(IEnumerable<INode> n)
 	{
-		IEnumerable<string> GeneratePossibleIds(IList<string> words)
+		static IEnumerable<string> GeneratePossibleIds(IList<string> words)
 		{
 			if (words.Count > 0 && (words[0] == "The" || words[0] == "A"))
 			{
