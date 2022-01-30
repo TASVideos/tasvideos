@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace TASVideos.Data.Entity;
+﻿namespace TASVideos.Data.Entity;
 
 public interface ISoftDeletable
 {

@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
-
-namespace TASVideos.Data.Entity;
+﻿namespace TASVideos.Data.Entity;
 
 public enum FileType
 {

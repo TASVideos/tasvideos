@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using TASVideos.Attributes;
+﻿using TASVideos.Attributes;
 
 namespace TASVideos.Data.Entity;
 

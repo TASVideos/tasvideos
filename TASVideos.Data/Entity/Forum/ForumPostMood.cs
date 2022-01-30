@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable UnusedMember.Global
 namespace TASVideos.Data.Entity.Forum;
 
 public enum ForumPostMood

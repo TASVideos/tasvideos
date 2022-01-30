@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace TASVideos.Data.Entity.Forum;
+﻿namespace TASVideos.Data.Entity.Forum;
 
 public class ForumTopicWatch
 {

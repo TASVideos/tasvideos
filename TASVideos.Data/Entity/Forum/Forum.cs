@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-
-namespace TASVideos.Data.Entity.Forum;
+﻿namespace TASVideos.Data.Entity.Forum;
 
 public class Forum : BaseEntity
 {

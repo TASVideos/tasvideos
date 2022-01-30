@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace TASVideos.Data.Entity.Forum;
+﻿namespace TASVideos.Data.Entity.Forum;
 
 public class ForumCategory : BaseEntity
 {

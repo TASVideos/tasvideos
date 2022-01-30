@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace TASVideos.Data.Entity;
+﻿namespace TASVideos.Data.Entity;
 
 public class Tag
 {

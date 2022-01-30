@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
-
-namespace TASVideos.Data.Entity.Game;
+﻿namespace TASVideos.Data.Entity.Game;
 
 public class GameSystemFrameRate : BaseEntity
 {

@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-
-namespace TASVideos.Data.Entity.Game;
+﻿namespace TASVideos.Data.Entity.Game;
 
 public class Genre
 {

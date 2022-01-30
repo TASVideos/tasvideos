@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TASVideos.Data.Entity.Awards;
+﻿namespace TASVideos.Data.Entity.Awards;
 
 public enum AwardType
 {

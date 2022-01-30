@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Data.Entity;
+﻿namespace TASVideos.Data.Entity;
 
 public class UserMaintenanceLog
 {
