@@ -9,12 +9,10 @@ public static class LinkConstants
 
 public static class Durations
 {
-	public const int ThirtySecondsInSeconds = 30;
 	public const int OneMinuteInSeconds = 60;
 	public const int FiveMinutesInSeconds = 60 * 5;
 	public const int OneDayInSeconds = 60 * 60 * 24;
 	public const int OneWeekInSeconds = 60 * 60 * 24 * 7;
-	public const int OneYearInSeconds = 60 * 60 * 24 * 7 * 52;
 }
 
 public static class CacheKeys
