@@ -1,9 +1,4 @@
-﻿using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.MovieParsers.Parsers;
-using TASVideos.MovieParsers.Result;
-
-namespace TASVideos.MovieParsers.Tests;
+﻿namespace TASVideos.MovieParsers.Tests;
 
 [TestClass]
 [TestCategory("OmrParsers")]

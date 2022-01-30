@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Tests;
 

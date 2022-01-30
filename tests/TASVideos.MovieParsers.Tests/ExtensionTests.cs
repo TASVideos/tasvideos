@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.MovieParsers.Extensions;
+﻿using TASVideos.MovieParsers.Extensions;
 
 namespace TASVideos.MovieParsers.Tests;
 
