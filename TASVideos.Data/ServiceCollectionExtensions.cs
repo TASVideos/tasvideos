@@ -10,7 +10,7 @@ public static class ServiceCollectionExtensions
 		AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 		return services.AddDbContext<ApplicationDbContext>(
 			options =>
-				options.UseNpgsql(connectionString, b => b.MigrationsAssembly("TASVideos.Data"))
+				options.UseNpgsql(connectionString, b => b.MigrationsAssembly("TASVideos.Data").UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery))
 					.UseSnakeCaseNamingConvention());
 	}
 }
