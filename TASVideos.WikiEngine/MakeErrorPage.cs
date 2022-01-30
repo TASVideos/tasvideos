@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using TASVideos.WikiEngine.AST;
-using System;
+﻿using TASVideos.WikiEngine.AST;
 
-namespace TASVideos.WikiEngine;
+﻿namespace TASVideos.WikiEngine;
 
 public static partial class Builtins
 {

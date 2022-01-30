@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
-namespace TASVideos.WikiEngine.AST;
+﻿namespace TASVideos.WikiEngine.AST;
 
 /// <summary>
 /// Used internally by nodes to assist them in writing output.
