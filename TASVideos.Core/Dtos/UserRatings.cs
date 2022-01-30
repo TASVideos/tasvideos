@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace TASVideos.Core.Services;
+﻿namespace TASVideos.Core.Services;
 
 /// <summary>
 /// Represents a user's ratings

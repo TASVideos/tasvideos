@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TASVideos.Data;
+﻿using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services;

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TASVideos.Core.Settings;
+﻿using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher;
 

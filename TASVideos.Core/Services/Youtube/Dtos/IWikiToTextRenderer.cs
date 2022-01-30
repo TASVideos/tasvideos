@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services.Youtube;
 

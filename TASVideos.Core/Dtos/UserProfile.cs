@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using TASVideos.Data.Entity;
 
 // TODO: Create a view model to separate presentation concerns (Display attributes)

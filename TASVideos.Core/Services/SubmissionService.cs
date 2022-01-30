@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TASVideos.Core.Settings;
+﻿using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using static TASVideos.Data.Entity.SubmissionStatus;
 

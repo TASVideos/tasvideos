@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace TASVideos.Core.Services.Email;
+﻿namespace TASVideos.Core.Services.Email;
 
 public interface IEmailSender
 {

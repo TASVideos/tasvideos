@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 // https://xmltocsharp.azurewebsites.net/
 namespace TASVideos.Core.Services.RssFeedParsers.Github;

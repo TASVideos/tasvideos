@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Core;
+﻿namespace TASVideos.Core;
 
 /// <summary>
 /// Indicates that a collection can be sorted by this property

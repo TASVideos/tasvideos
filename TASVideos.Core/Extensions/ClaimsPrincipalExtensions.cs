@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using TASVideos.Core.Extensions;
 using TASVideos.Data.Entity;
 

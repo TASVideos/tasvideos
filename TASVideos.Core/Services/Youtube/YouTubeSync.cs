@@ -1,16 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 
 namespace TASVideos.Core.Services.Youtube;
 

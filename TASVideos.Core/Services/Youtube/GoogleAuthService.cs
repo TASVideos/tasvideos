@@ -1,6 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.HttpClientExtensions;

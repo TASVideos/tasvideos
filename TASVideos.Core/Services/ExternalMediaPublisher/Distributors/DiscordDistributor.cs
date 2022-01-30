@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Threading.Tasks;
+﻿using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Settings;
 using Newtonsoft.Json;

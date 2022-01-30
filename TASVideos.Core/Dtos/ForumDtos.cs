@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using TASVideos.Data.Entity.Forum;
+﻿using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Services;
 

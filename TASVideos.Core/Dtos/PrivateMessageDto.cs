@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TASVideos.Core.Services;
+﻿namespace TASVideos.Core.Services;
 
 public class PrivateMessageDto
 {

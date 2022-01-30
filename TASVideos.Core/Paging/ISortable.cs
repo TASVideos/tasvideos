@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
-using TASVideos.Extensions;
+﻿using System.Reflection;
 
 namespace TASVideos.Core;
 

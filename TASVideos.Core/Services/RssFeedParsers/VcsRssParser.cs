@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TASVideos.Core.Services.RssFeedParsers.Github;
+﻿using TASVideos.Core.Services.RssFeedParsers.Github;
 
 namespace TASVideos.Core.Services.RssFeedParsers;
 

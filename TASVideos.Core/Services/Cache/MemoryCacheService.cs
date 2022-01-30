@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.Extensions.Caching.Memory;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services;
