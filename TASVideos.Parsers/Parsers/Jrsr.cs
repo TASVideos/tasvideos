@@ -410,37 +410,34 @@ internal class JrsrSectionParser : IDisposable
 	/// </summary>
 	private static bool IsSpace(char c)
 	{
-		switch (c)
+		return c switch
 		{
 			// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#Spaces
 			// https://repo.or.cz/jpcrr.git/blob/6ab255ce10b2dd10b0ac3ab2e2be708e0b26eeaa:/org/jpc/Misc.java#l100
 			// The tasvideos.org documentation, as of Revision 7, is
 			// missing one character from the reference implementation,
 			// "\u000c" == "\f" == form feed.
-			case '\u0009':
-			case '\u000c':
-			case '\u0020':
-			case '\u1680':
-			case '\u180e':
-			case '\u2028':
-			case '\u205f':
-			case '\u3000':
-			case '\u2000':
-			case '\u2001':
-			case '\u2002':
-			case '\u2003':
-			case '\u2004':
-			case '\u2005':
-			case '\u2006':
-			case '\u2007':
-			case '\u2008':
-			case '\u2009':
-			case '\u200a':
-				return true;
-
-			default:
-				return false;
-		}
+			'\u0009' => true,
+			'\u000c' => true,
+			'\u0020' => true,
+			'\u1680' => true,
+			'\u180e' => true,
+			'\u2028' => true,
+			'\u205f' => true,
+			'\u3000' => true,
+			'\u2000' => true,
+			'\u2001' => true,
+			'\u2002' => true,
+			'\u2003' => true,
+			'\u2004' => true,
+			'\u2005' => true,
+			'\u2006' => true,
+			'\u2007' => true,
+			'\u2008' => true,
+			'\u2009' => true,
+			'\u200a' => true,
+			_ => false
+		};
 	}
 
 	/// <summary>
@@ -449,22 +446,19 @@ internal class JrsrSectionParser : IDisposable
 	/// </summary>
 	private static bool IsLinefeed(char c)
 	{
-		switch (c)
+		return c switch
 		{
 			// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#LineFeeds
 			// https://repo.or.cz/jpcrr.git/blob/6ab255ce10b2dd10b0ac3ab2e2be708e0b26eeaa:/org/jpc/jrsr/UTFInputLineStream.java#l194
-			case '\u000a':
-			case '\u000d':
-			case '\u001c':
-			case '\u001d':
-			case '\u001e':
-			case '\u0085':
-			case '\u2029':
-				return true;
-
-			default:
-				return false;
-		}
+			'\u000a' => true,
+			'\u000d' => true,
+			'\u001c' => true,
+			'\u001d' => true,
+			'\u001e' => true,
+			'\u0085' => true,
+			'\u2029' => true,
+			_ => false
+		};
 	}
 
 	/// <summary>
@@ -806,7 +800,7 @@ internal class JrsrSectionParser : IDisposable
 					token.Append(c);
 				}
 
-				depth = depth - 1;
+				depth -= 1;
 			}
 			else if (c == '\\')
 			{
