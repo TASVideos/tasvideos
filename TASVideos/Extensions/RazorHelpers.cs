@@ -14,16 +14,26 @@ public static class RazorHelpers
 		return $"{context.Request.Path}{context.Request.QueryString}";
 	}
 
-	public static bool UserHas(this ViewDataDictionary viewData, PermissionTo permission)
+	public static IEnumerable<PermissionTo> UserPermissions(this ViewDataDictionary viewData)
 	{
 		var userPerm = viewData["UserPermissions"];
-		return userPerm != null && ((IEnumerable<PermissionTo>)userPerm).Contains(permission);
+		if (userPerm is null)
+		{
+			return Enumerable.Empty<PermissionTo>();
+		}
+
+		return (IEnumerable<PermissionTo>)userPerm;
+	}
+
+	public static bool UserHas(this ViewDataDictionary viewData, PermissionTo permission)
+	{
+		return viewData.UserPermissions().Contains(permission);
 	}
 
 	public static bool UserHasAny(this ViewDataDictionary viewData, IEnumerable<PermissionTo> permissions)
 	{
-		var userPerm = viewData["UserPermissions"];
-		return userPerm != null && permissions.Any(permission => ((IEnumerable<PermissionTo>)userPerm).Contains(permission));
+		var userPerm = viewData.UserPermissions();
+		return permissions.Any(permission => userPerm.Contains(permission));
 	}
 
 	public static string Page(this ViewContext viewContext)
