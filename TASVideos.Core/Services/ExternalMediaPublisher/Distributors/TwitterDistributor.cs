@@ -105,13 +105,13 @@ public class TwitterDistributor : IPostDistributor
 	{
 		var authorizationString = new StringBuilder();
 
-		authorizationString.Append(KVPair("oauth_consumer_key", _settings.ConsumerKey, false));
-		authorizationString.Append(KVPair("oauth_token", _settings.AccessToken, false));
-		authorizationString.Append(KVPair("oauth_signature_method", "HMAC-SHA1", false));
-		authorizationString.Append(KVPair("oauth_timestamp", timestamp, false));
-		authorizationString.Append(KVPair("oauth_nonce", nonce, false));
-		authorizationString.Append(KVPair("oauth_version", "1.0", false));
-		authorizationString.Append(KVPair("oauth_signature", signature, true));
+		authorizationString.Append(KvPair("oauth_consumer_key", _settings.ConsumerKey, false));
+		authorizationString.Append(KvPair("oauth_token", _settings.AccessToken, false));
+		authorizationString.Append(KvPair("oauth_signature_method", "HMAC-SHA1", false));
+		authorizationString.Append(KvPair("oauth_timestamp", timestamp, false));
+		authorizationString.Append(KvPair("oauth_nonce", nonce, false));
+		authorizationString.Append(KvPair("oauth_version", "1.0", false));
+		authorizationString.Append(KvPair("oauth_signature", signature, true));
 
 		return authorizationString.ToString();
 	}
@@ -121,7 +121,7 @@ public class TwitterDistributor : IPostDistributor
 		return $"{Uri.EscapeDataString(left)}={Uri.EscapeDataString(right)}";
 	}
 
-	private static string KVPair(string left, string right, bool final)
+	private static string KvPair(string left, string right, bool final)
 	{
 		return $"{Uri.EscapeDataString(left)}=\"{Uri.EscapeDataString(right)}\"{(final ? "" : ", ")}";
 	}
