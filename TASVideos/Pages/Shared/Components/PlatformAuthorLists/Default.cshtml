@@ -1,6 +1,6 @@
 ﻿@model PlatformAuthorListModel
 @{
-	var authors = Model.Publications.SelectMany(p => p.Authors).Distinct().ToList();
+	var authors = Model!.Publications.SelectMany(p => p.Authors).Distinct().ToList();
 
 	var authorsWithPus = authors.Select(author => new
 	{

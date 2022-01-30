@@ -2,7 +2,7 @@
 @{
 	// TODO: flashblock, do we need this?
 	// https://developers.google.com/youtube/player_parameters#Embedding_a_Player
-	string loopParams = Model.Loop.HasValue
+	string loopParams = Model!.Loop.HasValue
 		? $"&loop=1&end={Model.Start + Model.Loop.Value}&playlist={Model.Code}"
 		: "";
 

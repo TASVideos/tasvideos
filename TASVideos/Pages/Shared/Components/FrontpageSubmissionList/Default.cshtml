@@ -8,7 +8,7 @@
 			<th>@Html.DisplayNameFor(m => m.First().Authors)</th>
 			<th>@Html.DisplayNameFor(m => m.First().Status)</th>
 		</tr>
-		@foreach (var item in Model)
+		@foreach (var item in Model!)
 		{
 			<tr>
 				<td><timezone-convert asp-for="@item.Submitted" date-only="true" /></td>

@@ -7,7 +7,7 @@
 			<th>At</th>
 			<th>Message</th>
 		</tr>
-		@foreach (var entry in Model)
+		@foreach (var entry in Model!)
 		{
 			var result = DateTime.TryParse(entry.At, out var date);
 			string dateStr = result ? date.ToString(CultureInfo.CurrentCulture) : "";

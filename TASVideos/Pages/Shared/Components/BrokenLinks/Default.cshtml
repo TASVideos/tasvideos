@@ -5,7 +5,7 @@
 	var brokenLinks = new List<WikiPageReferral>();
 	var missingTranslations = new List<WikiPageReferral>();
 
-	foreach (var link in Model)
+	foreach (var link in Model!)
 	{
 		if (await _languages.IsLanguagePage(link.Referral))
 		{

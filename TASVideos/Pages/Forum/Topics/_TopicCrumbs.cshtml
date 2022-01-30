@@ -3,5 +3,5 @@
 <h4 class="pt-1 pb-2">
 	<a asp-page="/Forum/Index">Forum</a>
 	→
-	<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a>
+	<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model!.ForumId">@Model.ForumName</a>
 </h4>

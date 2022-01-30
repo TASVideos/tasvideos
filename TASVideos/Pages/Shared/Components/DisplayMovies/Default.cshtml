@@ -5,7 +5,7 @@
 </warning-alert>
 
 <div condition="Model.Any()">
-	<label condition="Model.Count > 1">Movies: @Model.Count</label>
+	<label condition="Model.Count > 1">Movies: @Model!.Count</label>
 	@foreach (var movie in Model)
 	{
 		<partial name="_MovieModule" model="movie"/>

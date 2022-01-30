@@ -1,5 +1,5 @@
 ﻿@model UserProfile
-@{ var lastLoggedIn = Model.LastLoggedInTimeStamp ?? DateTime.UtcNow; }
+@{ var lastLoggedIn = Model!.LastLoggedInTimeStamp ?? DateTime.UtcNow; }
 <row>
 	<div class="col-md-6">
 		<card>

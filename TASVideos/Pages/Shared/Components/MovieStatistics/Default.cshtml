@@ -1,28 +1,28 @@
 ﻿@model MovieStatisticsModel
 <warning-alert condition="!string.IsNullOrEmpty(Model.ErrorMessage)">
-    @Model.ErrorMessage
+	@Model!.ErrorMessage
 </warning-alert>
 
 <div>
-    @if (Model.MovieList.Count > 0)
-    {
-        <table>
-            <tr>
-                <th>@Model.FieldHeader</th>
-                <th>Movie</th>
-            </tr>
+	@if (Model!.MovieList.Count > 0)
+	{
+		<table>
+			<tr>
+				<th>@Model.FieldHeader</th>
+				<th>Movie</th>
+			</tr>
 
-            @foreach (var entry in Model.MovieList)
-            {
-                <tr>
-                    <td>
-                        @entry.DisplayValue
-                    </td>
-                    <td>
-                        <pub-link id="entry.Id">@entry.Title</pub-link>
-                    </td>
-                </tr>
-            }
-        </table>
-    }
+			@foreach (var entry in Model.MovieList)
+			{
+				<tr>
+					<td>
+						@entry.DisplayValue
+					</td>
+					<td>
+						<pub-link id="entry.Id">@entry.Title</pub-link>
+					</td>
+				</tr>
+			}
+		</table>
+	}
 </div>

@@ -2,7 +2,7 @@
 @{
 	string flink = ViewData["flink"]?.ToString() ?? "";
 	string footer = ViewData["footer"]?.ToString() ?? "";
-	var first = Model.FirstOrDefault();
+	var first = Model!.FirstOrDefault();
 }
 <hr />
 <row>
@@ -16,7 +16,7 @@
 						<th>Time</th>
 						<th>By</th>
 					</tr>
-					@foreach (var pub in Model)
+					@foreach (var pub in Model!)
 					{
 						<tr>
 							<td><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></td>

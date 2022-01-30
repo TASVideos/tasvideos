@@ -1,6 +1,6 @@
 ﻿@model MovieHistoryModel
 <div>
-	@foreach (var pubGroup in Model.MovieHistory.OrderByDescending(p => p.Date))
+	@foreach (var pubGroup in Model!.MovieHistory.OrderByDescending(p => p.Date))
 	{
 		<h4>@pubGroup.Date.ToShortDateString()</h4>
 		foreach (var pub in pubGroup.Pubs)

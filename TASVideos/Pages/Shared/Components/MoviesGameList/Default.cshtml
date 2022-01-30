@@ -5,7 +5,7 @@
 </warning-alert>
 
 <warning-alert condition="Model.SystemId.HasValue && string.IsNullOrWhiteSpace(Model.SystemCode)">
-	No system matching id @Model.SystemId
+	No system matching id @Model!.SystemId
 </warning-alert>
 
 <table>
@@ -13,7 +13,7 @@
 		<th>Game</th>
 		<th>Publications</th>
 	</tr>
-	@foreach (var game in Model.Games.OrderBy(g => g.Name))
+	@foreach (var game in Model!.Games.OrderBy(g => g.Name))
 	{
 		<tr>
 			<td>

@@ -1,6 +1,6 @@
 ﻿@model TopicFeedModel
 
-<div class="@(Model.RightAlign ? "right-align-topic" : "")">
+<div class="@(Model!.RightAlign ? "right-align-topic" : "")">
 	<h3 condition="!string.IsNullOrWhiteSpace(Model.Heading)" class="card-header topic-header">@Model.Heading</h3>
 	@foreach (var post in Model.Posts)
 	{

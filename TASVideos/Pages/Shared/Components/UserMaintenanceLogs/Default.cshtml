@@ -1,15 +1,15 @@
 ﻿@using TASVideos.Core
 @model TASVideos.Core.PageOf<UserMaintenanceLogEntry>
 @{
-	PagingModel pagingModel = (PagingModel)ViewData["PagingModel"];
+	var pagingModel = ViewData["PagingModel"] as PagingModel ?? new PagingModel();
 }
-<div condition="@Model.Any()">
+<div condition="@Model!.Any()">
 	<fullrow class="mt-2">
 		<partial name="_Pager" model="Model" />
 	</fullrow>
 	<table>
 		<sortable-table-head sorting="@pagingModel" model-type="typeof(UserMaintenanceLogEntry)" page-override="@ViewData["CurrentPage"]" />
-		@foreach(var entry in Model)
+		@foreach(var entry in Model!)
 		{
 			<tr>
 				<td>

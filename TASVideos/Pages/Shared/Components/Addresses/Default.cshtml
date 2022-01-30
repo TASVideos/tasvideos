@@ -1,8 +1,8 @@
 ﻿@model ICollection<AddressEntry>
 @{
-	var gameName = Model.First().GameName ?? "";
-	var gameId = Model.First().GameId;
-	var system = Model.First().System ?? "";
+	var gameName = Model!.First().GameName ?? "";
+	var gameId = Model!.First().GameId;
+	var system = Model!.First().System ?? "";
 }
 
 <h5 condition="@gameId.HasValue">
@@ -20,7 +20,7 @@
 		<td>Endian</td>
 		<td>Description</td>
 	</tr>
-	@foreach (var entry in Model)
+	@foreach (var entry in Model!)
 	{
 		<tr>
 			<td>@entry.Domain</td>

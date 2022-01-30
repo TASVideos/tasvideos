@@ -1,6 +1,6 @@
 ﻿@model ForumTopicModel.PollModel
 @{
-	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
+	int totalVotes = Model!.Options.SelectMany(m => m.Voters).Count();
 	bool canVote = false;
 	int userId = -1;
 	if (User.IsLoggedIn())

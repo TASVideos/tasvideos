@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<TASVideos.ViewComponents.Models.FirstEditionModel>
 
 @{
-	var groups = Model.GroupBy(gkey => new { gkey.PublicationClassId, gkey.PublicationClassIconPath, gkey.PublicationClassName });
+	var groups = Model!.GroupBy(gkey => new { gkey.PublicationClassId, gkey.PublicationClassIconPath, gkey.PublicationClassName });
 }
 
 @foreach (var g in groups.OrderByDescending(g => g.Key.PublicationClassId))

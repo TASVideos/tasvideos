@@ -1,6 +1,6 @@
 ﻿@model TASVideos.Pages.Forum.Topics.Models.PollCreateModel
 @{
-	bool restricted = ViewData["Restricted"] != null && (bool)ViewData["Restricted"];
+	bool restricted = ViewData["Restricted"] is true;
 }
 
 <h4 class="text-danger" condition="restricted">This poll has votes! Some options have been restricted</h4>
@@ -10,7 +10,7 @@
 		<form-group>
 			<label asp-for="Question"></label>
 			<input condition="!restricted" type="text" asp-for="Question" class="form-control" />
-			<input condition="restricted" disabled placeholder="@Model.Question" type="text" class="form-control" />
+			<input condition="restricted" disabled placeholder="@Model!.Question" type="text" class="form-control" />
 			<span asp-validation-for="Question" class="text-danger"></span>
 		</form-group>
 		<form-group>

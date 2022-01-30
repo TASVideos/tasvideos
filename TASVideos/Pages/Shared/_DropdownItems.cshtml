@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<SelectListItem>
 
-@foreach (var item in Model)
+@foreach (var item in Model!)
 {
 	<option value="@item.Value" select="@item.Selected">@item.Text</option>
 }

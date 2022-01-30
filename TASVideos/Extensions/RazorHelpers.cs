@@ -48,6 +48,17 @@ public static class RazorHelpers
 			.FirstOrDefault() ?? "";
 	}
 
+	public static int Int(this ViewDataDictionary viewData, string key)
+	{
+		var obj = viewData[key];
+		if (obj is int i)
+		{
+			return i;
+		}
+
+		return 0;
+	}
+
 	public static async Task<IHtmlContent> RenderWiki(this IViewComponentHelper component, string pageName)
 	{
 		return await component.InvokeAsync(nameof(RenderWikiPage), new { url = pageName });

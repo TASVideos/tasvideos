@@ -2,7 +2,7 @@
 @{
 	var classIconPath2X = "";
 	var classIconPath4X = "";
-	if (!string.IsNullOrWhiteSpace(Model.ClassIconPath))
+	if (!string.IsNullOrWhiteSpace(Model!.ClassIconPath))
 	{
 		classIconPath2X = $"{Model.ClassIconPath.Split('.')[0]}-2x.png";
 		classIconPath4X = $"{Model.ClassIconPath.Split('.')[0]}-4x.png";
