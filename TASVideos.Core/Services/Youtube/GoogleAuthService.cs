@@ -1,5 +1,4 @@
-﻿using System.Net.Http;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;

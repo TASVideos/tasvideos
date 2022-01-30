@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Net.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using TASVideos.Core.HttpClientExtensions;

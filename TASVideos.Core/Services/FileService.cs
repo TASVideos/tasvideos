@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services;
