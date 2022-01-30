@@ -14,7 +14,7 @@
 }
 
 @{
-	var canEdit = Model.Author == User.Name() || User.Has(PermissionTo.EditUserFiles);
+	var canEdit = Model!.Author == User.Name() || User.Has(PermissionTo.EditUserFiles);
 }
 
 <div class="card mb-3">

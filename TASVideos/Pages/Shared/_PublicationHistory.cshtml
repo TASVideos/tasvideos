@@ -1,6 +1,6 @@
 ﻿@model PublicationHistoryGroup
 
-@foreach (var node in Model.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
+@foreach (var node in Model!.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
 {
 	var highlight = node.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
 	<div class="mb-4">

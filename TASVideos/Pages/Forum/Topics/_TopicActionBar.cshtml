@@ -2,7 +2,7 @@
 <a condition="User.IsLoggedIn() && !Model.IsWatching"
    asp-page="Index"
    asp-page-handler="Watch"
-   asp-route-id="@Model.Id"
+   asp-route-id="@Model!.Id"
    class="btn bg-info text-dark btn-sm"
    title="Watch this topic">
 	<i class="fa fa-bell-slash-o"></i>
@@ -10,35 +10,35 @@
 <a condition="User.IsLoggedIn() && Model.IsWatching"
 	asp-page="Index"
 	asp-page-handler="Unwatch"
-	asp-route-id="@Model.Id"
+	asp-route-id="@Model!.Id"
 	class="btn btn-warning btn-sm"
 	title="Stop watching this topic">
 	<i class="fa fa-bell-o"></i>
 </a>
 <a permission="SetTopicType"
 	asp-page="SetType"
-	asp-route-topicId="@Model.Id"
+	asp-route-topicId="@Model!.Id"
 	class="btn btn-sm btn-warning"
 	title="Set the type of this topic (Normal/Sticky/Announcement)">
 	<i class="fa fa-bullhorn"></i>
 </a>
 <a permission="MoveTopics"
    asp-page="Move"
-   asp-route-id="@Model.Id"
+   asp-route-id="@Model!.Id"
    class="btn btn-sm btn-warning"
    title="Move this topic">
 	<i class="fa fa-arrows"></i>
 </a>
 <a permission="SplitTopics"
 	asp-page="Split"
-	asp-route-id="@Model.Id"
+	asp-route-id="@Model!.Id"
 	class="btn btn-sm btn-warning"
 	title="Split this topic">
 	<i class="fa fa-scissors"></i>
 </a>
 <a permission="MergeTopics"
 	asp-page="Merge"
-	asp-route-id="@Model.Id"
+	asp-route-id="@Model!.Id"
 	class="btn btn-sm btn-warning"
 	title="Merge this topic into an existing topic">
 	<i class="fa fa-object-group"></i>
@@ -46,12 +46,12 @@
 <form permission="LockTopics"
 	asp-page="Index"
 	asp-page-handler="Lock"
-	asp-route-id="@Model.Id"
+	asp-route-id="@Model!.Id"
 	asp-route-topictitle="@Model.Title"
 	asp-route-locked="@(!Model.IsLocked)"
 	method="POST"
 	style="display: inline">
-	<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
+	<button type="submit" class="btn @(Model!.IsLocked ? "btn-success" : "btn-warning") btn-sm">
 		<span condition="Model.IsLocked" title="Unlock this topic">
 			<i class="fa fa-unlock"></i>
 		</span>
@@ -62,7 +62,7 @@
 </form>
 <a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls)"
 	asp-page="AddEditPoll"
-	asp-route-topicId="@Model.Id"
+	asp-route-topicId="@Model!.Id"
 	class="btn btn-warning btn-sm"
 	title= "Add a poll to this topic">
 	Poll

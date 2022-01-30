@@ -1,9 +1,9 @@
 ﻿@model UserRatings
 @{
-	ViewData["Title"] = $"Ratings for {Model.UserName}";
+	ViewData["Title"] = $"Ratings for {Model!.UserName}";
 
 	// ReSharper disable once UnusedVariable
-	bool isMyPage = (bool)ViewData["IsMyPage"];
+	bool isMyPage = ViewData["IsMyPage"] as bool? ?? throw new InvalidOperationException("IsMyPage not set");
 }
 <h4>User: <profile-link username="@Model.UserName"></profile-link></h4>
 <div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">

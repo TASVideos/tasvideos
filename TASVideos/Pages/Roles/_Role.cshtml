@@ -1,7 +1,7 @@
 ﻿@model TASVideos.Pages.Roles.Models.RoleDisplayModel
 <card class="mb-2">
 	<cardbody>
-		<h5 class="card-title">@Model.Name</h5>
+		<h5 class="card-title">@Model!.Name</h5>
 		<row>
 			<div class="col-md-6">
 				<div permission="EditRoles">
@@ -41,7 +41,7 @@
 			<label class="form-control-label">No users currently have this role.</label>
 		</div>
 		<div condition="Model.Users.Count > 100">
-			<i>@Model.Users.Count Users (too many to display)</i>
+			<i>@Model!.Users.Count Users (too many to display)</i>
 		</div>
 		<div condition="Model.Users.Any() && Model.Users.Count <= 100">
 			@foreach (var user in Model.Users)

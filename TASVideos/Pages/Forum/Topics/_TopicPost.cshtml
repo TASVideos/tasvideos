@@ -1,5 +1,5 @@
 ﻿@model TASVideos.Pages.Forum.Posts.Models.ForumPostEntry
-<card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning border-2" : "border-primary") border mb-2">
+<card id="@Model!.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning border-2" : "border-primary") border mb-2">
 	<cardheader class="px-2 py-1">
 		<row class="align-items-center">
 			<div class="col-lg-2 col-md-3 col-auto">

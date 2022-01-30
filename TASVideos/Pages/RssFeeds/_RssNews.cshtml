@@ -1,7 +1,7 @@
 ﻿@model TASVideos.Pages.RssFeeds.Models.RssNews
 @{
 	var baseUrl = ViewData["BaseUrl"];
-	var postUrl = $"{baseUrl}/Forum/Posts/{Model.PostId}";
+	var postUrl = $"{baseUrl}/Forum/Posts/{Model!.PostId}";
 }
 <item>
 	<title>@Model.Subject</title>
