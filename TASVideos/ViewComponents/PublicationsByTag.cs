@@ -14,7 +14,7 @@ public class PublicationsByTag : ViewComponent
 		_tags = tags;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(int? days, int? limit)
+	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		var tags = await _tags.GetAll();
 		return View(tags);
