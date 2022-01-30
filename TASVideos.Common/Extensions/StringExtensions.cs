@@ -173,7 +173,7 @@ public static class StringExtensions
 
 	public static string LastCommaToAmpersand(this string commaString)
 	{
-		int lastComma = commaString.LastIndexOf(",");
+		int lastComma = commaString.LastIndexOf(',');
 
 		if (lastComma == -1)
 		{
