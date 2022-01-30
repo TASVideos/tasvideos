@@ -1,7 +1,5 @@
-﻿using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.WikiEngine;
 

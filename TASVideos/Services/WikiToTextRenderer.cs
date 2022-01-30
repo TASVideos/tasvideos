@@ -1,6 +1,4 @@
-﻿using System.IO;
-using Microsoft.Extensions.DependencyInjection;
-using TASVideos.Core.Services.Youtube;
+﻿using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;

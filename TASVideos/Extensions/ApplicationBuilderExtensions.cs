@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.AspNetCore.StaticFiles;
 using Serilog;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;

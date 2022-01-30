@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Diagnostics;

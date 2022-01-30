@@ -1,6 +1,4 @@
 ﻿using System.Text;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
 
 namespace TASVideos.Middleware;
 

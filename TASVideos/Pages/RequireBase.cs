@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 

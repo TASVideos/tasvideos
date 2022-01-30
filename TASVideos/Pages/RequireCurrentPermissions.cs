@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
 
 namespace TASVideos.Pages;

@@ -6,6 +6,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<UserSecretsId>aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152</UserSecretsId>
 		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
+		<ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<PropertyGroup>

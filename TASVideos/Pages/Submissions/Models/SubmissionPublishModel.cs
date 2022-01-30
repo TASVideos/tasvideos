@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Submissions.Models;
