@@ -9,7 +9,7 @@ public interface IMovieFormatDeprecator
 {
 	Task<IReadOnlyDictionary<string, DeprecatedMovieFormat?>> GetAll();
 	bool IsMovieExtension(string extension);
-	Task<bool> IsDepcrecated(string extension);
+	Task<bool> IsDeprecated(string extension);
 	Task<bool> Deprecate(string extension);
 	Task<bool> Allow(string extension);
 }
@@ -43,10 +43,10 @@ public class MovieFormatDeprecator : IMovieFormatDeprecator
 		return _parser.SupportedMovieExtensions.Any(s => s == extension);
 	}
 
-	public async Task<bool> IsDepcrecated(string extension)
+	public async Task<bool> IsDeprecated(string extension)
 	{
 		var entry = await _db.DeprecatedMovieFormats.SingleOrDefaultAsync(d => d.FileExtension == extension);
-		return entry != null ? entry.Deprecated : false;
+		return entry?.Deprecated ?? false;
 	}
 
 	public async Task<bool> Deprecate(string extension)

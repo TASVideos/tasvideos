@@ -221,7 +221,7 @@ public class EditModel : SubmissionBasePageModel
 		if (Submission.MovieFile is not null)
 		{
 			var parseResult = await _parser.ParseZip(Submission.MovieFile.OpenReadStream());
-			var deprecated = await _deprecator.IsDepcrecated("." + parseResult.FileExtension);
+			var deprecated = await _deprecator.IsDeprecated("." + parseResult.FileExtension);
 			if (deprecated)
 			{
 				ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");

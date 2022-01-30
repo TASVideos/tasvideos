@@ -75,7 +75,7 @@ public class SubmitModel : SubmissionBasePageModel
 
 		var parseResult = await _parser.ParseZip(Create.MovieFile!.OpenReadStream());
 
-		var deprecated = await _deprecator.IsDepcrecated("." + parseResult.FileExtension);
+		var deprecated = await _deprecator.IsDeprecated("." + parseResult.FileExtension);
 		if (deprecated)
 		{
 			ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");

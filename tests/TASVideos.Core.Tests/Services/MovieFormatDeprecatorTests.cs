@@ -125,7 +125,7 @@ public class MovieFormatDeprecatorTests
 
 	public async Task IsDeprecated_ReturnsFalse_IfNoEntry()
 	{
-		var actual = await _deprecator.IsDepcrecated("does not exist");
+		var actual = await _deprecator.IsDeprecated("does not exist");
 		Assert.IsFalse(actual);
 	}
 
@@ -140,7 +140,7 @@ public class MovieFormatDeprecatorTests
 		});
 		await _db.SaveChangesAsync();
 
-		var actual = await _deprecator.IsDepcrecated(ext);
+		var actual = await _deprecator.IsDeprecated(ext);
 		Assert.IsFalse(actual);
 	}
 
@@ -155,7 +155,7 @@ public class MovieFormatDeprecatorTests
 		});
 		await _db.SaveChangesAsync();
 
-		var actual = await _deprecator.IsDepcrecated(ext);
+		var actual = await _deprecator.IsDeprecated(ext);
 		Assert.IsTrue(actual);
 	}
 
