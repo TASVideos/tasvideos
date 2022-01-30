@@ -17,10 +17,10 @@ public class HtmlWriter
 	);
 
 	private readonly TextWriter _w;
-	private bool _inTagOpen = false;
+	private bool _inTagOpen;
 	private readonly Stack<string> _openTags = new();
 
-	private bool InForeignContent => _openTags.TryPeek(out var tag) && (tag == "script" || tag == "style");
+	private bool InForeignContent => _openTags.TryPeek(out var tag) && tag is "script" or "style";
 
 	public HtmlWriter(TextWriter w)
 	{
