@@ -1,7 +1,4 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-
-namespace TASVideos.WikiEngine.AST;
+﻿namespace TASVideos.WikiEngine.AST;
 
 public class Text : INode
 {
