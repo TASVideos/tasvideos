@@ -16,7 +16,7 @@ public class EditorActivity : ViewComponent
 		_db = db;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(int? maxrels)
+	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		// Legacy system supported a max days value, which isn't easily translated to the current filtering
 		// However, we currently have it set to 365 which greatly exceeds any max number
