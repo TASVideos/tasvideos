@@ -56,7 +56,7 @@ public class TagServiceTests
 
 		var result = await _tagService.GetById(id);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(code, result!.Code);
+		Assert.AreEqual(code, result.Code);
 		Assert.IsTrue(_cache.ContainsKey(TagService.TagsKey));
 	}
 

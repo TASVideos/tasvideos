@@ -33,7 +33,7 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task GetAll_Parsers_ButNoDbEntries_ReturnsAllParsers()
 	{
-		var formats = new string[] { ".test1", ".test2", ".test3" };
+		var formats = new[] { ".test1", ".test2", ".test3" };
 		_mockParser.Setup(p => p.SupportedMovieExtensions).Returns(formats);
 
 		var actual = await _deprecator.GetAll();
@@ -50,15 +50,15 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task GetAll_Parsers_SomeDbEntries_ReturnsAllParsers()
 	{
-		const string existsAndDepcreated = ".test1";
+		const string existsAndDeprecated = ".test1";
 		const string existsAndAllowed = ".test2";
 		const string notExists = ".test3";
-		var formats = new string[] { existsAndDepcreated, existsAndAllowed, notExists };
+		var formats = new[] { existsAndDeprecated, existsAndAllowed, notExists };
 		_mockParser.Setup(p => p.SupportedMovieExtensions).Returns(formats);
 
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
-			FileExtension = existsAndDepcreated,
+			FileExtension = existsAndDeprecated,
 			Deprecated = true
 		});
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
@@ -73,9 +73,9 @@ public class MovieFormatDeprecatorTests
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(formats.Length, actual.Count);
 
-		Assert.IsTrue(actual.ContainsKey(existsAndDepcreated));
-		Assert.IsNotNull(actual[existsAndDepcreated]);
-		Assert.IsTrue(actual[existsAndDepcreated]!.Deprecated);
+		Assert.IsTrue(actual.ContainsKey(existsAndDeprecated));
+		Assert.IsNotNull(actual[existsAndDeprecated]);
+		Assert.IsTrue(actual[existsAndDeprecated]!.Deprecated);
 
 		Assert.IsTrue(actual.ContainsKey(existsAndAllowed));
 		Assert.IsNotNull(actual[existsAndAllowed]);
@@ -123,6 +123,7 @@ public class MovieFormatDeprecatorTests
 
 	#region IsDeprecated
 
+	[TestMethod]
 	public async Task IsDeprecated_ReturnsFalse_IfNoEntry()
 	{
 		var actual = await _deprecator.IsDeprecated("does not exist");

@@ -56,7 +56,7 @@ public class FlagServiceTests
 
 		var result = await _flagService.GetById(id);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(token, result!.Token);
+		Assert.AreEqual(token, result.Token);
 		Assert.IsTrue(_cache.ContainsKey(FlagService.FlagsKey));
 	}
 
