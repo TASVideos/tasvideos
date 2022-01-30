@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Pages.Publications.Models;
+﻿using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 

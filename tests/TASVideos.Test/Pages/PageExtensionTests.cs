@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TASVideos.Pages;
+﻿using TASVideos.Pages;
 
 namespace TASVideos.RazorPages.Tests.Pages;
 

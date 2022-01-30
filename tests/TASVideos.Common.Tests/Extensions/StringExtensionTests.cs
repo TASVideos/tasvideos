@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using TASVideos.Extensions;
+﻿using TASVideos.Extensions;
 
 namespace TASVideos.Common.Tests.Extensions;
 
