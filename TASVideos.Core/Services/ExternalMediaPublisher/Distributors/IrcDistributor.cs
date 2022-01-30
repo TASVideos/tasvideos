@@ -97,7 +97,11 @@ public class IrcDistributor : IPostDistributor
 				if (stream.DataAvailable)
 				{
 					var inputLine = await reader.ReadLineAsync() ?? "";
-					_logger.LogDebug("<- " + inputLine);
+
+					if (_logger.IsEnabled(LogLevel.Debug))
+					{
+						_logger.LogDebug("<- {inputLine}", inputLine);
+					}
 
 					// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
 					string[] splitInput = inputLine.Split(new[] { ' ' });
