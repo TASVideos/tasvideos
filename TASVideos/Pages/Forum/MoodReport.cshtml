@@ -18,7 +18,7 @@
 				<div class="mood-box border p-2">
 					<strong>@mood.EnumDisplayName()</strong>
 					<br />
-					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="imgError(this)" />
+					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="imgError(this)" loading="lazy" />
 				</div>
 			}
 		</cardbody>
