@@ -20,7 +20,7 @@ public class ForumPostEntry
 	public string? PosterMoodUrlBase { get; set; }
 	public ForumPostMood PosterMood { get; set; }
 	public PreferredPronounTypes PosterPronouns { get; set; }
-	public IEnumerable<string> PosterRoles { get; set; } = new List<string>();
+	public IList<string> PosterRoles { get; set; } = new List<string>();
 	public string Text { get; set; } = "";
 	public string? Subject { get; set; }
 	public string? Signature { get; set; }

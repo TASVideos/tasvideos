@@ -135,6 +135,11 @@ public class IndexModel : BaseForumModel
 		{
 			post.Awards = await _awards.ForUser(post.PosterId);
 			post.PosterPlayerPoints = await _pointsService.PlayerPoints(post.PosterId);
+			var rank = PointsCalculator.PlayerRank((decimal)post.PosterPlayerPoints);
+			if (!string.IsNullOrWhiteSpace(rank))
+			{
+				post.PosterRoles.Add(rank);
+			}
 		}
 
 		if (Topic.Poll is not null)

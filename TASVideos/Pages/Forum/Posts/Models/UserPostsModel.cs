@@ -10,8 +10,9 @@ public class UserPostsModel
 	public string? Location { get; set; }
 	public string? Avatar { get; set; }
 	public string? Signature { get; set; }
+	public double PlayerPoints { get; set; }
 
-	public IEnumerable<string> Roles { get; set; } = new List<string>();
+	public IList<string> Roles { get; set; } = new List<string>();
 
 	public PageOf<Post> Posts { get; set; } = PageOf<Post>.Empty();
 

@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Core.Services;
 
-internal static class PointsCalculator
+public static class PointsCalculator
 {
 	/// <summary>
 	/// Calculates the player points a player would receive for a movie

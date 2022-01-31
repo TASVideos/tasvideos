@@ -15,13 +15,16 @@ public class UserModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IAwards _awards;
+	private readonly IPointsService _pointsService;
 
 	public UserModel(
 		ApplicationDbContext db,
-		IAwards awards)
+		IAwards awards,
+		IPointsService pointsService)
 	{
 		_db = db;
 		_awards = awards;
+		_pointsService = pointsService;
 	}
 
 	[FromRoute]
@@ -60,6 +63,13 @@ public class UserModel : BasePageModel
 
 		UserPosts = userPosts;
 		Awards = await _awards.ForUser(UserPosts.Id);
+
+		UserPosts.PlayerPoints = await _pointsService.PlayerPoints(UserPosts.Id);
+		var rank = PointsCalculator.PlayerRank((decimal)UserPosts.PlayerPoints);
+		if (!string.IsNullOrWhiteSpace(rank))
+		{
+			UserPosts.Roles.Add(rank);
+		}
 
 		bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		UserPosts.Posts = await _db.ForumPosts
