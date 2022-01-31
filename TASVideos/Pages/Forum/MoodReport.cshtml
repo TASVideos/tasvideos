@@ -6,7 +6,7 @@
 		: "Mood avatars";
 }
 <p condition="string.IsNullOrWhiteSpace(Model.UserName)">These are peoples mood avatars</p>
-@foreach (var user in Model.MoodyUsers.Where(m => m.UserName == "adelikat"))
+@foreach (var user in Model.MoodyUsers)
 {
 	<card>
 		<cardheader>
