@@ -92,7 +92,6 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddPageRoute("/Publications/Authors", "Players-List");
 				options.Conventions.AddPageRoute("/Forum/Posts/Index", "forum/p/{id:int}");
 				options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
-				options.Conventions.AddPageRoute("/Forum/MoodReport", "forum/moodreport.php");
 				options.Conventions.AddPageRoute("/Permissions/Index", "/Privileges");
 
 				// Backwards compatibility with legacy links
@@ -103,6 +102,7 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
 				options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
 				options.Conventions.AddPageRoute("/RamAddresses/LegacyList", "AddressesUp");
+				options.Conventions.AddPageRoute("/Forum/Legacy/MoodReport", "forum/moodreport.php");
 
 				options.Conventions.AddPageRoute("/RamAddresses/List", "Addresses-List");
 				options.Conventions.AddPageRoute("/RamAddresses/Index", "Addresses-{id:int}");
