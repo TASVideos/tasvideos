@@ -22,6 +22,10 @@
 	bool canClaimAsPublisher = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& ViewData.UserHas(PermissionTo.EditSubmissions)
 		&& Model.Submission.Status == SubmissionStatus.Accepted;
+
+	bool canRemoveClaim = ViewData.UserHas(PermissionTo.RemoveQueueClaim)
+		&& (Model.Submission.Status is SubmissionStatus.JudgingUnderWay or SubmissionStatus.PublicationUnderway);
+
 	string youtubeEmbedImage = "";
 	if (Model.Submission.EncodeEmbedLink is not null)
 	{
@@ -179,6 +183,7 @@
 		<div class="btn-toolbar">
 			<a condition="@canClaimAsJudge" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success mt-2 me-1">Claim</a>
 			<a condition="@canClaimAsPublisher" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForPublishing" class="btn btn-success mt-2 me-1">Claim</a>
+			<a condition="@canRemoveClaim" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="RemoveClaim" class="btn btn-warning mt-2 me-1">Remove Claim</a>
 			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary mt-2"><i class="fa fa-download"></i> Download</a>
 			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ms-1 mt-2"><i class="fa fa-comments-o"></i> Discuss and Vote</a>
 			<span permission="EditSubmissions" class="btn-separator mt-2"></span>

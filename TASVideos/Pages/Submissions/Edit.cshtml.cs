@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -409,6 +410,67 @@ public class EditModel : SubmissionBasePageModel
 		}
 
 		return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...", false);
+	}
+
+	public async Task<IActionResult> OnGetRemoveClaim()
+	{
+		if (!User.Has(PermissionTo.RemoveQueueClaim))
+		{
+			return AccessDenied();
+		}
+
+		var submission = await Db.Submissions
+			.Include(s => s.WikiContent)
+			.SingleOrDefaultAsync(s => s.Id == Id);
+
+		if (submission == null)
+		{
+			return NotFound();
+		}
+
+		if (submission.Status is not SubmissionStatus.JudgingUnderWay and not SubmissionStatus.PublicationUnderway)
+		{
+			return BadRequest("Submission is not currently claimed");
+		}
+
+		var history = new SubmissionStatusHistory
+		{
+			SubmissionId = submission.Id,
+			Status = Submission.Status
+		};
+
+		Db.SubmissionStatusHistory.Add(history);
+		if (submission.Status == SubmissionStatus.JudgingUnderWay)
+		{
+			submission.Status = SubmissionStatus.New;
+			submission.JudgeId = null;
+		}
+
+		if (submission.Status == SubmissionStatus.PublicationUnderway)
+		{
+			submission.Status = SubmissionStatus.Accepted;
+			submission.PublisherId = null;
+		}
+
+		var wikiPage = new WikiPage
+		{
+			PageName = submission.WikiContent!.PageName,
+			Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: Removing claim.",
+			RevisionMessage = "Claim Revmoed",
+			AuthorId = User.GetUserId()
+		};
+		await _wikiPages.Add(wikiPage);
+		submission.WikiContentId = wikiPage.Id;
+		var result = await ConcurrentSave(Db, "", "Unable to claim");
+		if (result)
+		{
+			await _publisher.SendSubmissionEdit(
+				$"Submission Reset to {submission.Status.EnumDisplayName()} by {User.Name()}",
+				$"{submission.Title}",
+				$"{Id}S");
+		}
+
+		return RedirectToPage("View", new { Id });
 	}
 
 	private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
