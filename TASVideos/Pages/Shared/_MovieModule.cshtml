@@ -168,9 +168,15 @@
 					   asp-route-id="@Model.Id"
 					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
 					<a permission="EditPublicationMetaData"
-					   href="/MovieMaintenanceLog?id=@Model.Id"
-					   class="btn btn-secondary btn-sm border border-warning mt-1">
+						href="/MovieMaintenanceLog?id=@Model.Id"
+						class="btn btn-secondary btn-sm border border-warning mt-1">
 						<i class="fa fa-history"></i> Logs
+					</a>
+					<a permission="Unpublish"
+						class="btn btn-danger btn-sm border border-warning mt-1"
+						asp-page="/Publications/Unpublish"
+						asp-route-id="@Model.Id">
+						<i class="fa fa-remove"></i> Unpublish
 					</a>
 				</div>
 			</div>
