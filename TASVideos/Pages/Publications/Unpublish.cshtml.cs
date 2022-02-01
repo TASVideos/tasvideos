@@ -15,17 +15,20 @@ public class UnpublishModel : BasePageModel
 	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ExternalMediaPublisher _publisher;
+	private readonly ISubmissionService _queueService;
 
 	public UnpublishModel(
 		ApplicationDbContext db,
 		IPublicationMaintenanceLogger publicationMaintenanceLogger,
 		IYoutubeSync youtubeSync,
-		ExternalMediaPublisher publisher)
+		ExternalMediaPublisher publisher,
+		ISubmissionService queueService)
 	{
 		_db = db;
 		_publicationMaintenanceLogger = publicationMaintenanceLogger;
 		_youtubeSync = youtubeSync;
 		_publisher = publisher;
+		_queueService = queueService;
 	}
 
 	[FromRoute]
@@ -35,27 +38,18 @@ public class UnpublishModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var pub = await _db.Publications
-			.Where(p => p.Id == Id)
-			.Select(p => new
-			{
-				p.Title,
-				HasAwards = p.PublicationAwards.Any()
-			})
-			.SingleOrDefaultAsync();
+		var result = await _queueService.CanUnpublish(Id);
 
-		if (pub == null)
+		switch (result.Status)
 		{
-			return NotFound();
+			case UnpublishResult.UnpublishStatus.NotFound:
+				return NotFound();
+			case UnpublishResult.UnpublishStatus.NotAllowed:
+				return BadRequest(result.ErrorMessage);
+			default:
+				Title = result.PublicationTitle;
+				return Page();
 		}
-
-		if (pub.HasAwards)
-		{
-			return BadRequest("Cannot unpublish a publication that has awards");
-		}
-
-		Title = pub.Title;
-		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()

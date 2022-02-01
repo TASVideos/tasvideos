@@ -1,15 +1,31 @@
-﻿using TASVideos.Core.Settings;
+﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Settings;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.Core.Services;
 
+// TODO: move me
 public interface ISubmissionDisplay
 {
 	SubmissionStatus Status { get; }
 	DateTime Submitted { get; }
 }
 
+// TODO: move me
+public record UnpublishResult(
+	UnpublishResult.UnpublishStatus Status,
+	string PublicationTitle,
+	string ErrorMessage)
+{
+	public enum UnpublishStatus { Success, NotFound, NotAllowed }
+
+	internal static UnpublishResult NotFound() => new(UnpublishStatus.NotFound, "", "");
+	internal static UnpublishResult Success() => new(UnpublishStatus.Success, "", "");
+}
+
+// TODO: rename this to QueueService
 public interface ISubmissionService
 {
 	/// <summary>
@@ -24,15 +40,29 @@ public interface ISubmissionService
 		bool isPublisher);
 
 	int HoursRemainingForJudging(ISubmissionDisplay submission);
+
+	/// <summary>
+	/// Returns whether or not a publication can be unpublished, does not affect the publication
+	/// </summary>
+	Task<UnpublishResult> CanUnpublish(int publicationId);
+
+	/// <summary>
+	/// Deletes a publication and returns the corresponding submission back to the submission queue
+	/// </summary>
+	Task<UnpublishResult> Unpublish(int publicationId);
 }
 
 internal class SubmissionService : ISubmissionService
 {
 	private readonly int _minimumHoursBeforeJudgment;
+	private readonly ApplicationDbContext _db;
 
-	public SubmissionService(AppSettings settings)
+	public SubmissionService(
+		AppSettings settings,
+		ApplicationDbContext db)
 	{
 		_minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
+		_db = db;
 	}
 
 	public IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
@@ -141,5 +171,37 @@ internal class SubmissionService : ISubmissionService
 		}
 
 		return 0;
+	}
+
+	public async Task<UnpublishResult> CanUnpublish(int publicationId)
+	{
+		var pub = await _db.Publications
+			.Where(p => p.Id == publicationId)
+			.Select(p => new
+			{
+				p.Title,
+				HasAwards = p.PublicationAwards.Any()
+			})
+			.SingleOrDefaultAsync();
+
+		if (pub == null)
+		{
+			return UnpublishResult.NotFound();
+		}
+
+		if (pub.HasAwards)
+		{
+			return new UnpublishResult(
+				UnpublishResult.UnpublishStatus.NotAllowed,
+				pub.Title,
+				"Cannot unpublish a publication that has awards");
+		}
+
+		return UnpublishResult.Success();
+	}
+
+	public async Task<UnpublishResult> Unpublish(int publicationId)
+	{
+		return UnpublishResult.Success();
 	}
 }
