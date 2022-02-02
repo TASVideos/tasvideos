@@ -39,15 +39,22 @@
 
 @section PageTitle {
 	<div class="container mb-2">
-		<h1 class="fs-4">@(Model.Topic.Title)</h1>
-		<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
+		<nav aria-label="breadcrumb" class="card card-header d-block mb-2">
+			<ol class="breadcrumb m-0">
+				<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
+				<li class="breadcrumb-item"><a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a></li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<h1>@(Model.Topic.Title)</h1>
+					<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
+				</li>
+			</ol>
+		</nav>
 	</div>
 }
 
 <partial Name="_ForumHeader" />
 <div class="row mb-2">
 	<div class="col-12">
-		<partial name="_TopicCrumbs" model="Model.Topic" />
 		<partial name="_TopicActionBar" model="Model.Topic" />
 		<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
 			|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
@@ -137,5 +144,14 @@
 	   class="btn btn-primary btn-sm float-end">
 		<span class="fa fa-plus"></span> Post
 	</a>
-	<partial name="_TopicCrumbs" model="Model.Topic" />
+	<nav aria-label="breadcrumb" class="card card-header d-block mb-2">
+		<ol class="breadcrumb m-0">
+			<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
+			<li class="breadcrumb-item"><a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a></li>
+			<li class="breadcrumb-item active" aria-current="page">
+				<p>@(Model.Topic.Title)</p>
+				<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</p>
+			</li>
+		</ol>
+	</nav>
 </fullrow>

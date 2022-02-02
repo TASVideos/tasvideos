@@ -29,13 +29,7 @@ a {
 }
 
 h1 {
-	margin: 0 auto;
-	padding: 5px 10px;
-	border-radius: 5px;
 	font-size: 1.25em;
-	line-height: 1.5;
-	background: var(--bs-secondary);
-	color: $bs-white;
 }
 
 h2 {
@@ -170,4 +164,14 @@ h4 {
 
 .navbar-dark .navbar-nav .nav-link {
 	color: RGBA(255,255,255,.6);
+}
+
+.breadcrumb-item {
+	white-space: nowrap;
+	font-size: 1.25em;
+	line-height: 1.25em;
+
+	&.active {
+		color: var(--bs-body-color);
+	}
 }

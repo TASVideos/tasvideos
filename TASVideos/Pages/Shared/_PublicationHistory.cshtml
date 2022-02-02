@@ -4,7 +4,7 @@
 {
 	var highlight = node.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
 	<div class="mb-4">
-		<label>Current: <strong>@node.Branch</strong></label><br />
+		<p>Current: <strong>@node.Branch</strong></p>
 		<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
 		<span>(<timezone-convert asp-for="@node.CreateTimestamp" date-only="true" />)</span>
 		@foreach (var obsoletion in node.Obsoletes)
