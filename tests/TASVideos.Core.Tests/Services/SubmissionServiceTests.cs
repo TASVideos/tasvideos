@@ -1,4 +1,5 @@
 ﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
@@ -27,7 +28,7 @@ public class SubmissionServiceTests
 	{
 		_db = TestDbContext.Create();
 		var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
-		_submissionService = new SubmissionService(settings, _db);
+		_submissionService = new SubmissionService(settings, _db, new Mock<IYoutubeSync>().Object);
 	}
 
 	[TestMethod]
@@ -305,5 +306,55 @@ public class SubmissionServiceTests
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
 		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
+	}
+
+	[TestMethod]
+	public async Task Unpublish_NotFound()
+	{
+		var result = await _submissionService.Unpublish(int.MaxValue);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotFound, result.Status);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+	}
+
+	[TestMethod]
+	public async Task Unpublish_CannotUnpublishWithAwards()
+	{
+		int publicationId = 1;
+		int awardId = 2;
+		_db.Publications.Add(new Publication
+		{
+			Id = publicationId,
+			Submission = new Submission { PublisherId = publicationId } // A quirk of InMemoryDatabase, 1:1 relationships need the other object for the .Include() to work
+		});
+		_db.PublicationAwards.Add(new PublicationAward { PublicationId = publicationId, AwardId = awardId });
+		await _db.SaveChangesAsync();
+
+		var result = await _submissionService.Unpublish(publicationId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+	}
+
+	[TestMethod]
+	public async Task Unpublish_NoObsoletedMovie_NoYoutube()
+	{
+		int publicationId = 1;
+		string publicationTitle = "Test Publication";
+		_db.Publications.Add(new Publication
+		{
+			Id = publicationId,
+			Title = publicationTitle,
+			Submission = new Submission { PublisherId = publicationId }
+		});
+		await _db.SaveChangesAsync();
+
+		var result = await _submissionService.Unpublish(publicationId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
+		Assert.AreEqual(publicationTitle, result.PublicationTitle);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
 	}
 }

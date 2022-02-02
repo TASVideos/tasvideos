@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -22,6 +23,12 @@ public record UnpublishResult(
 	public enum UnpublishStatus { Success, NotFound, NotAllowed }
 
 	internal static UnpublishResult NotFound() => new(UnpublishStatus.NotFound, "", "");
+
+	internal static UnpublishResult HasAwards(string publicationTitle) => new(
+		UnpublishStatus.NotAllowed,
+		publicationTitle,
+		"Cannot unpublish a publication that has awards");
+
 	internal static UnpublishResult Success(string publicationTitle)
 		=> new(UnpublishStatus.Success, publicationTitle, "");
 }
@@ -57,13 +64,16 @@ internal class SubmissionService : ISubmissionService
 {
 	private readonly int _minimumHoursBeforeJudgment;
 	private readonly ApplicationDbContext _db;
+	private readonly IYoutubeSync _youtubeSync;
 
 	public SubmissionService(
 		AppSettings settings,
-		ApplicationDbContext db)
+		ApplicationDbContext db,
+		IYoutubeSync youtubeSync)
 	{
 		_minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
 		_db = db;
+		_youtubeSync = youtubeSync;
 	}
 
 	public IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
@@ -192,10 +202,7 @@ internal class SubmissionService : ISubmissionService
 
 		if (pub.HasAwards)
 		{
-			return new UnpublishResult(
-				UnpublishResult.UnpublishStatus.NotAllowed,
-				pub.Title,
-				"Cannot unpublish a publication that has awards");
+			return UnpublishResult.HasAwards(pub.Title);
 		}
 
 		return UnpublishResult.Success(pub.Title);
@@ -203,6 +210,46 @@ internal class SubmissionService : ISubmissionService
 
 	public async Task<UnpublishResult> Unpublish(int publicationId)
 	{
-		return UnpublishResult.Success("");
+		var publication = await _db.Publications
+			.Include(p => p.PublicationAwards)
+			.Include(p => p.Authors)
+			.Include(p => p.Files)
+			.Include(p => p.PublicationFlags)
+			.Include(p => p.PublicationRatings)
+			.Include(p => p.PublicationTags)
+			.Include(p => p.PublicationUrls)
+			.Include(p => p.Submission)
+			.Include(p => p.ObsoletedMovies)
+			.SingleOrDefaultAsync(p => p.Id == publicationId);
+
+		if (publication == null)
+		{
+			return UnpublishResult.NotFound();
+		}
+
+		if (publication.PublicationAwards.Any())
+		{
+			return UnpublishResult.HasAwards(publication.Title);
+		}
+
+		var youtubeUrls = publication.PublicationUrls
+			.Select(pu => pu.Url)
+			.Where(url => _youtubeSync.IsYoutubeUrl(url))
+			.ToList();
+
+		// Add to submission status history
+		// Reset the submission status
+		// TVA post?
+		// Youtube sync - set urls to unlisted
+		// Youtube sync - if there was an obsoleted movie, sync it
+		publication.Authors.Clear();
+		publication.Files.Clear();
+		publication.PublicationFlags.Clear();
+		publication.PublicationRatings.Clear();
+		publication.PublicationTags.Clear();
+
+		await _db.SaveChangesAsync();
+
+		return UnpublishResult.Success(publication.Title);
 	}
 }
