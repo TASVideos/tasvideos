@@ -60,12 +60,18 @@ h4 {
 
 	&, &:focus {
 		color: var(--bs-dark);
-		background-color: var(--bs-white);
+		background-color: var(--bs-light);
 	}
 
 	&:disabled, &[readonly] {
-		background-color: var(--bs-light);
+		background-color: var(--bs-gray-400);
 	}
+}
+
+.form-select {
+	background-color: var(--bs-light);
+	color: var(--bs-dark);
+	border-color: var(--border-color);
 }
 
 .input-group-text {
