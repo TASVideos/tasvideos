@@ -30,6 +30,10 @@ a {
 
 h1 {
 	font-size: 1.25em;
+
+	.card & {
+		font-size: 1em;
+	}
 }
 
 h2 {
