@@ -22,7 +22,8 @@ public record UnpublishResult(
 	public enum UnpublishStatus { Success, NotFound, NotAllowed }
 
 	internal static UnpublishResult NotFound() => new(UnpublishStatus.NotFound, "", "");
-	internal static UnpublishResult Success() => new(UnpublishStatus.Success, "", "");
+	internal static UnpublishResult Success(string publicationTitle)
+		=> new(UnpublishStatus.Success, publicationTitle, "");
 }
 
 // TODO: rename this to QueueService
@@ -197,11 +198,11 @@ internal class SubmissionService : ISubmissionService
 				"Cannot unpublish a publication that has awards");
 		}
 
-		return UnpublishResult.Success();
+		return UnpublishResult.Success(pub.Title);
 	}
 
 	public async Task<UnpublishResult> Unpublish(int publicationId)
 	{
-		return UnpublishResult.Success();
+		return UnpublishResult.Success("");
 	}
 }

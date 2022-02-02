@@ -1,6 +1,7 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Awards;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.Core.Tests.Services;
@@ -10,6 +11,7 @@ public class SubmissionServiceTests
 {
 	private const int MinimumHoursBeforeJudgment = 72;
 	private readonly SubmissionService _submissionService;
+	private readonly TestDbContext _db;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -23,8 +25,9 @@ public class SubmissionServiceTests
 
 	public SubmissionServiceTests()
 	{
+		_db = TestDbContext.Create();
 		var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
-		_submissionService = new SubmissionService(settings);
+		_submissionService = new SubmissionService(settings, _db);
 	}
 
 	[TestMethod]
@@ -262,5 +265,45 @@ public class SubmissionServiceTests
 			Assert.AreEqual(exceptPublished.Count, result.Count);
 			Assert.IsTrue(result.SequenceEqual(exceptPublished));
 		}
+	}
+
+	[TestMethod]
+	public async Task CanUnpublish_NotFound()
+	{
+		var result = await _submissionService.CanUnpublish(int.MaxValue);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotFound, result.Status);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+	}
+
+	[TestMethod]
+	public async Task CanUnpublish_CannotUnpublishWithAwards()
+	{
+		int publicationId = 1;
+		int awardId = 2;
+		_db.Publications.Add(new Publication { Id = publicationId });
+		_db.PublicationAwards.Add(new PublicationAward { PublicationId = publicationId, AwardId = awardId });
+		await _db.SaveChangesAsync();
+
+		var result = await _submissionService.CanUnpublish(publicationId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+	}
+
+	[TestMethod]
+	public async Task CanUnpublish_Success()
+	{
+		int publicationId = 1;
+		_db.Publications.Add(new Publication { Id = publicationId, Title = "Test Publication" });
+		await _db.SaveChangesAsync();
+
+		var result = await _submissionService.CanUnpublish(publicationId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
 	}
 }
