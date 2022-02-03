@@ -349,6 +349,16 @@ public class SubmissionServiceTests
 			Title = publicationTitle,
 			Submission = new Submission { PublisherId = publicationId }
 		});
+		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = publicationId, UserId = 1 });
+		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = publicationId, UserId = 2 });
+		_db.PublicationFiles.Add(new PublicationFile { PublicationId = publicationId });
+		_db.PublicationFiles.Add(new PublicationFile { PublicationId = publicationId });
+		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = 1 });
+		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = 2 });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = publicationId, UserId = 1 });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = publicationId, UserId = 2 });
+		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 1 });
+		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 2 });
 		await _db.SaveChangesAsync();
 
 		var result = await _submissionService.Unpublish(publicationId);
@@ -356,5 +366,9 @@ public class SubmissionServiceTests
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
 		Assert.AreEqual(publicationTitle, result.PublicationTitle);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.AreEqual(0, _db.PublicationAuthors.Count(pa => pa.PublicationId == publicationId));
+		Assert.AreEqual(0, _db.PublicationFiles.Count(pf => pf.PublicationId == publicationId));
+		Assert.AreEqual(0, _db.PublicationRatings.Count(pr => pr.PublicationId == publicationId));
+		Assert.AreEqual(0, _db.PublicationTags.Count(pt => pt.PublicationId == publicationId));
 	}
 }
