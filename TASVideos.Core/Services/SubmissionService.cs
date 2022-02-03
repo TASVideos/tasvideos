@@ -238,15 +238,19 @@ internal class SubmissionService : ISubmissionService
 			.ToList();
 
 		// Add to submission status history
-		// Reset the submission status
 		// TVA post?
 		// Youtube sync - set urls to unlisted
 		// Youtube sync - if there was an obsoleted movie, sync it
+		// if obsolete movies, un-obsolete them
 		publication.Authors.Clear();
 		publication.Files.Clear();
 		publication.PublicationFlags.Clear();
 		publication.PublicationRatings.Clear();
 		publication.PublicationTags.Clear();
+
+		_db.Publications.Remove(publication);
+
+		publication.Submission!.Status = PublicationUnderway;
 
 		await _db.SaveChangesAsync();
 
