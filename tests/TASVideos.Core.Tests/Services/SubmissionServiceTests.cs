@@ -412,6 +412,11 @@ public class SubmissionServiceTests
 
 		// Youtube url should be unlisted
 		_youtubeSync.Verify(v => v.UnlistVideo(It.IsAny<string>()));
+
+		// Submission status history added for published status
+		Assert.AreEqual(1, _db.SubmissionStatusHistory.Count(sh => sh.SubmissionId == submissionId));
+		var statusHistory = _db.SubmissionStatusHistory.Single(sh => sh.SubmissionId == submissionId);
+		Assert.AreEqual(Published, statusHistory.Status);
 	}
 
 	[TestMethod]

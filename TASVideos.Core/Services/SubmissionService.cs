@@ -243,9 +243,7 @@ internal class SubmissionService : ISubmissionService
 			.Where(p => p.PublicationUrls.Any(u => _youtubeSync.IsYoutubeUrl(u.Url)))
 			.ToList();
 
-		// Add to submission status history
 		// TVA post?
-		// Youtube sync - if there was an obsoleted movie, sync it
 		publication.Authors.Clear();
 		publication.Files.Clear();
 		publication.PublicationFlags.Clear();
@@ -256,7 +254,13 @@ internal class SubmissionService : ISubmissionService
 		// Note: Cascading deletes will ensure obsoleted publications are no longer obsoleted
 		_db.Publications.Remove(publication);
 
-		publication.Submission!.Status = PublicationUnderway;
+		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory
+		{
+			SubmissionId = publication.SubmissionId,
+			Status = publication.Submission!.Status
+		});
+
+		publication.Submission.Status = PublicationUnderway;
 
 		await _db.SaveChangesAsync();
 
