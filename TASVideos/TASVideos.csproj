@@ -158,9 +158,6 @@
 		<Content Update="Pages\Forum\Topics\_TopicPost.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Forum\Topics\_TopicCrumbs.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
 		<Content Update="Pages\Forum\Topics\_Poll.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>

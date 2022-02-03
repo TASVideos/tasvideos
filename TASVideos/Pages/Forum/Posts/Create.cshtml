@@ -6,7 +6,7 @@
 
 @section PageTitle {
 	<div class="container mb-2">
-		<h1>Posting to Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId">@Model.Post.TopicTitle</a></h1>
+		<h1 class="card card-header d-block">Posting to Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId">@Model.Post.TopicTitle</a></h1>
 	</div>
 }
 <show-more max-height="0" show-text="Show previous posts" reverse>
