@@ -13,6 +13,7 @@ public class SubmissionServiceTests
 	private const int MinimumHoursBeforeJudgment = 72;
 	private readonly SubmissionService _submissionService;
 	private readonly TestDbContext _db;
+	private readonly Mock<IYoutubeSync> _youtubeSync;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -27,8 +28,9 @@ public class SubmissionServiceTests
 	public SubmissionServiceTests()
 	{
 		_db = TestDbContext.Create();
+		_youtubeSync = new Mock<IYoutubeSync>();
 		var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
-		_submissionService = new SubmissionService(settings, _db, new Mock<IYoutubeSync>().Object);
+		_submissionService = new SubmissionService(settings, _db, _youtubeSync.Object);
 	}
 
 	[TestMethod]
@@ -341,6 +343,10 @@ public class SubmissionServiceTests
 	[TestMethod]
 	public async Task Unpublish_NoObsoletedMovie_NoYoutube()
 	{
+		_youtubeSync
+			.Setup(m => m.IsYoutubeUrl(It.IsAny<string>()))
+			.Returns(true);
+
 		int publicationId = 1;
 		string publicationTitle = "Test Publication";
 
@@ -371,6 +377,12 @@ public class SubmissionServiceTests
 		_db.PublicationRatings.Add(new PublicationRating { PublicationId = publicationId, UserId = 2 });
 		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 1 });
 		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 2 });
+		_db.PublicationUrls.Add(new PublicationUrl
+		{
+			PublicationId = publicationId,
+			Type = PublicationUrlType.Streaming,
+			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+		});
 		await _db.SaveChangesAsync();
 
 		var result = await _submissionService.Unpublish(publicationId);
@@ -396,5 +408,8 @@ public class SubmissionServiceTests
 		var sub = _db.Submissions.Single(s => s.Id == submissionId);
 		Assert.AreEqual(sub.PublisherId, publisherId);
 		Assert.AreEqual(PublicationUnderway, sub.Status);
+
+		// Youtube url should be unlisted
+		_youtubeSync.Verify(v => v.UnlistVideo(It.IsAny<string>()));
 	}
 }

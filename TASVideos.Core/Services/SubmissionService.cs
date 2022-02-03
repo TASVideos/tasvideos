@@ -233,13 +233,13 @@ internal class SubmissionService : ISubmissionService
 		}
 
 		var youtubeUrls = publication.PublicationUrls
+			.ThatAreStreaming()
 			.Select(pu => pu.Url)
 			.Where(url => _youtubeSync.IsYoutubeUrl(url))
 			.ToList();
 
 		// Add to submission status history
 		// TVA post?
-		// Youtube sync - set urls to unlisted
 		// Youtube sync - if there was an obsoleted movie, sync it
 		// if obsolete movies, un-obsolete them
 		publication.Authors.Clear();
@@ -247,12 +247,18 @@ internal class SubmissionService : ISubmissionService
 		publication.PublicationFlags.Clear();
 		publication.PublicationRatings.Clear();
 		publication.PublicationTags.Clear();
+		publication.PublicationUrls.Clear();
 
 		_db.Publications.Remove(publication);
 
 		publication.Submission!.Status = PublicationUnderway;
 
 		await _db.SaveChangesAsync();
+
+		foreach (var url in youtubeUrls)
+		{
+			await _youtubeSync.UnlistVideo(url!);
+		}
 
 		return UnpublishResult.Success(publication.Title);
 	}
