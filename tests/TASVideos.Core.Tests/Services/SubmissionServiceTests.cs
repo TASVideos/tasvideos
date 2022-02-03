@@ -3,6 +3,7 @@ using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
+using TASVideos.Data.Entity.Game;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.Core.Tests.Services;
@@ -411,5 +412,76 @@ public class SubmissionServiceTests
 
 		// Youtube url should be unlisted
 		_youtubeSync.Verify(v => v.UnlistVideo(It.IsAny<string>()));
+	}
+
+	[TestMethod]
+	public async Task Unpublish_ObsoletedMovies_ResetAndSync()
+	{
+		_youtubeSync
+			.Setup(m => m.IsYoutubeUrl(It.IsAny<string>()))
+			.Returns(true);
+
+		var wikiEntry = _db.WikiPages.Add(new WikiPage { Markup = "Test" });
+		var systemEntry = _db.GameSystems.Add(new GameSystem { Code = "Test" });
+		var gameEntry = _db.Games.Add(new Game { SearchKey = "Test" });
+		var authorEntry = _db.Users.Add(new User { UserName = "Author" });
+
+		int publicationId = 1;
+		string publicationTitle = "Test Publication";
+		int obsoletedPublicationId = 10;
+
+		int publisherId = 3;
+		int submissionId = 2;
+		var submission = new Submission
+		{
+			Id = submissionId,
+			Status = Published,
+			PublisherId = publisherId
+		};
+
+		_db.Submissions.Add(submission);
+
+		_db.Publications.Add(new Publication
+		{
+			Id = obsoletedPublicationId,
+			ObsoletedById = publicationId,
+			WikiContentId = wikiEntry.Entity.Id,
+			SystemId = systemEntry.Entity.Id,
+			GameId = gameEntry.Entity.Id
+		});
+
+		_db.PublicationUrls.Add(new PublicationUrl
+		{
+			PublicationId = obsoletedPublicationId,
+			Type = PublicationUrlType.Streaming,
+			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+		});
+
+		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = obsoletedPublicationId, UserId = authorEntry.Entity.Id });
+
+		_db.Publications.Add(new Publication
+		{
+			Id = publicationId,
+			Title = publicationTitle,
+			Submission = submission,
+			SubmissionId = submissionId
+		});
+
+		await _db.SaveChangesAsync();
+		var result = await _submissionService.Unpublish(publicationId);
+
+		// Result must be correct
+		Assert.IsNotNull(result);
+		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
+		Assert.AreEqual(publicationTitle, result.PublicationTitle);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+
+		// Obsoleted movie must no longer be obsolete
+		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == obsoletedPublicationId));
+		var obsoletedMovie = _db.Publications.Single(p => p.Id == obsoletedPublicationId);
+		Assert.IsNull(obsoletedMovie.ObsoletedById);
+
+		// Obsoleted movie youtube url must be synced
+		_youtubeSync.Verify(v => v.SyncYouTubeVideo(It.IsAny<YoutubeVideo>()));
 	}
 }

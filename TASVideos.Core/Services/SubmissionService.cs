@@ -220,6 +220,7 @@ internal class SubmissionService : ISubmissionService
 			.Include(p => p.PublicationUrls)
 			.Include(p => p.Submission)
 			.Include(p => p.ObsoletedMovies)
+			.ThenInclude(o => o.PublicationUrls)
 			.SingleOrDefaultAsync(p => p.Id == publicationId);
 
 		if (publication == null)
@@ -238,10 +239,13 @@ internal class SubmissionService : ISubmissionService
 			.Where(url => _youtubeSync.IsYoutubeUrl(url))
 			.ToList();
 
+		var obsoletedPubsWithYoutube = publication.ObsoletedMovies
+			.Where(p => p.PublicationUrls.Any(u => _youtubeSync.IsYoutubeUrl(u.Url)))
+			.ToList();
+
 		// Add to submission status history
 		// TVA post?
 		// Youtube sync - if there was an obsoleted movie, sync it
-		// if obsolete movies, un-obsolete them
 		publication.Authors.Clear();
 		publication.Files.Clear();
 		publication.PublicationFlags.Clear();
@@ -249,6 +253,7 @@ internal class SubmissionService : ISubmissionService
 		publication.PublicationTags.Clear();
 		publication.PublicationUrls.Clear();
 
+		// Note: Cascading deletes will ensure obsoleted publications are no longer obsoleted
 		_db.Publications.Remove(publication);
 
 		publication.Submission!.Status = PublicationUnderway;
@@ -258,6 +263,37 @@ internal class SubmissionService : ISubmissionService
 		foreach (var url in youtubeUrls)
 		{
 			await _youtubeSync.UnlistVideo(url!);
+		}
+
+		foreach (var obsoletedPub in obsoletedPubsWithYoutube)
+		{
+			// Re-query to get all of the includes
+			// We can afford these extra trips, compared to the massive query it would be
+			// for a single trip
+			var queriedPub = await _db.Publications
+				.Include(p => p.PublicationUrls)
+				.Include(p => p.WikiContent)
+				.Include(p => p.System)
+				.Include(p => p.Game)
+				.Include(p => p.Authors)
+				.ThenInclude(pa => pa.Author)
+				.SingleAsync(p => p.Id == obsoletedPub.Id);
+
+			foreach (var url in obsoletedPub.PublicationUrls.Where(u => _youtubeSync.IsYoutubeUrl(u.Url)))
+			{
+				await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
+					queriedPub.Id,
+					queriedPub.CreateTimestamp,
+					url.Url!,
+					url.DisplayName,
+					queriedPub.Title,
+					queriedPub.WikiContent!,
+					publication.System!.Code,
+					queriedPub.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
+					queriedPub.Game!.SearchKey,
+					queriedPub.ObsoletedById
+					));
+			}
 		}
 
 		return UnpublishResult.Success(publication.Title);
