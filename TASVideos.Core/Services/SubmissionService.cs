@@ -65,15 +65,18 @@ internal class SubmissionService : ISubmissionService
 	private readonly int _minimumHoursBeforeJudgment;
 	private readonly ApplicationDbContext _db;
 	private readonly IYoutubeSync _youtubeSync;
+	private readonly ITASVideoAgent _tva;
 
 	public SubmissionService(
 		AppSettings settings,
 		ApplicationDbContext db,
-		IYoutubeSync youtubeSync)
+		IYoutubeSync youtubeSync,
+		ITASVideoAgent tva)
 	{
 		_minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
 		_db = db;
 		_youtubeSync = youtubeSync;
+		_tva = tva;
 	}
 
 	public IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
@@ -243,7 +246,6 @@ internal class SubmissionService : ISubmissionService
 			.Where(p => p.PublicationUrls.Any(u => _youtubeSync.IsYoutubeUrl(u.Url)))
 			.ToList();
 
-		// TVA post?
 		publication.Authors.Clear();
 		publication.Files.Clear();
 		publication.PublicationFlags.Clear();
@@ -262,6 +264,7 @@ internal class SubmissionService : ISubmissionService
 
 		publication.Submission.Status = PublicationUnderway;
 
+		await _tva.PostSubmissionUnpublished(publication.SubmissionId);
 		await _db.SaveChangesAsync();
 
 		foreach (var url in youtubeUrls)

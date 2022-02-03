@@ -15,6 +15,7 @@ public class SubmissionServiceTests
 	private readonly SubmissionService _submissionService;
 	private readonly TestDbContext _db;
 	private readonly Mock<IYoutubeSync> _youtubeSync;
+	private readonly Mock<ITASVideoAgent> _tva;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -30,8 +31,9 @@ public class SubmissionServiceTests
 	{
 		_db = TestDbContext.Create();
 		_youtubeSync = new Mock<IYoutubeSync>();
+		_tva = new Mock<ITASVideoAgent>();
 		var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
-		_submissionService = new SubmissionService(settings, _db, _youtubeSync.Object);
+		_submissionService = new SubmissionService(settings, _db, _youtubeSync.Object, _tva.Object);
 	}
 
 	[TestMethod]
@@ -417,6 +419,9 @@ public class SubmissionServiceTests
 		Assert.AreEqual(1, _db.SubmissionStatusHistory.Count(sh => sh.SubmissionId == submissionId));
 		var statusHistory = _db.SubmissionStatusHistory.Single(sh => sh.SubmissionId == submissionId);
 		Assert.AreEqual(Published, statusHistory.Status);
+
+		// TVA post is made
+		_tva.Verify(v => v.PostSubmissionUnpublished(submissionId));
 	}
 
 	[TestMethod]
