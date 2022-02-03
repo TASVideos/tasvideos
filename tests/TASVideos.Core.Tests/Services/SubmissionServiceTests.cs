@@ -350,11 +350,11 @@ public class SubmissionServiceTests
 			.Setup(m => m.IsYoutubeUrl(It.IsAny<string>()))
 			.Returns(true);
 
-		int publicationId = 1;
-		string publicationTitle = "Test Publication";
+		const int publicationId = 1;
+		const string publicationTitle = "Test Publication";
 
-		int publisherId = 3;
-		int submissionId = 2;
+		const int publisherId = 3;
+		const int submissionId = 2;
 		var submission = new Submission
 		{
 			Id = submissionId,
@@ -436,12 +436,12 @@ public class SubmissionServiceTests
 		var gameEntry = _db.Games.Add(new Game { SearchKey = "Test" });
 		var authorEntry = _db.Users.Add(new User { UserName = "Author" });
 
-		int publicationId = 1;
-		string publicationTitle = "Test Publication";
-		int obsoletedPublicationId = 10;
+		const int publicationId = 1;
+		const string publicationTitle = "Test Publication";
+		const int obsoletedPublicationId = 10;
 
-		int publisherId = 3;
-		int submissionId = 2;
+		const int publisherId = 3;
+		const int submissionId = 2;
 		var submission = new Submission
 		{
 			Id = submissionId,
