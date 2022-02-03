@@ -8,6 +8,7 @@ public interface ITASVideoAgent
 {
 	Task<int> PostSubmissionTopic(int submissionId, string postTitle);
 	Task PostSubmissionPublished(int submissionId, int publicationId);
+	Task PostSubmissionUnpublished(int submissionId);
 }
 
 internal class TASVideoAgent : ITASVideoAgent
@@ -100,6 +101,33 @@ internal class TASVideoAgent : ITASVideoAgent
 				Subject = SiteGlobalConstants.NewPublicationPostSubject,
 				Text = SiteGlobalConstants.NewPublicationPost.Replace("{PublicationId}", publicationId.ToString()),
 				PosterMood = ForumPostMood.Happy
+			});
+			await _db.SaveChangesAsync();
+		}
+	}
+
+	public async Task PostSubmissionUnpublished(int submissionId)
+	{
+		var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.SubmissionId == submissionId);
+
+		// We intentionally silently fail here.
+		// Otherwise we would leave publication in a partial state
+		// which would be worse than a missing forum post
+		if (topic is not null)
+		{
+			topic.ForumId = SiteGlobalConstants.WorkbenchForumId;
+			_db.ForumPosts.Add(new ForumPost
+			{
+				TopicId = topic.Id,
+				ForumId = topic.ForumId,
+				CreateUserName = SiteGlobalConstants.TASVideoAgent,
+				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
+				PosterId = SiteGlobalConstants.TASVideoAgentId,
+				EnableBbCode = true,
+				EnableHtml = false,
+				Subject = SiteGlobalConstants.UnpublishSubject,
+				Text = SiteGlobalConstants.UnpublishPost,
+				PosterMood = ForumPostMood.Puzzled
 			});
 			await _db.SaveChangesAsync();
 		}
