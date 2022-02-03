@@ -4,6 +4,13 @@
 @inject ISubmissionService _submissionService
 @{
 	ViewData["Title"] = "Submissions";
+
+	var selectAvailableYears = Model.Search.AvailableYears
+		.Select(n => new SelectListItem
+		{
+			Text = n.ToString(),
+			Value = n.ToString()
+		});
 }
 
 <div permission="SubmitMovies" class="float-end">
@@ -24,7 +31,7 @@
 	<row class="mt-2 mb-2">
 		<column md="5">
 			<label asp-for="Search.Years" class="form-control-label"></label>
-			<select asp-for="Search.Years" asp-items="Model.Search.AvailableYears" multiple class="form-control"></select>
+			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiple class="form-control"></select>
 		</column>
 		<column class="offset-md-2" md="5">
 			<label asp-for="Search.User" class="form-control-label"></label>
