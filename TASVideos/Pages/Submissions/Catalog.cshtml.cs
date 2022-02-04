@@ -120,23 +120,15 @@ public class CatalogModel : BasePageModel
 
 		if (submission.SystemFrameRateId != Catalog.SystemFrameRateId)
 		{
-			if (Catalog.SystemFrameRateId.HasValue)
+			var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId!.Value);
+			if (systemFramerate == null)
 			{
-				var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId.Value);
-				if (systemFramerate == null)
-				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Framerate Id: {Catalog.SystemFrameRateId.Value}");
-				}
-				else
-				{
-					externalMessages.Add($"Framerate changed from {submission.SystemFrameRate?.FrameRate ?? 0.0} to {systemFramerate.FrameRate}");
-					submission.SystemFrameRateId = Catalog.SystemFrameRateId.Value;
-				}
+				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Framerate Id: {Catalog.SystemFrameRateId!.Value}");
 			}
 			else
 			{
-				externalMessages.Add("Framerate removed");
-				submission.SystemFrameRateId = null;
+				externalMessages.Add($"Framerate changed from {submission.SystemFrameRate?.FrameRate ?? 0.0} to {systemFramerate.FrameRate}");
+				submission.SystemFrameRateId = Catalog.SystemFrameRateId!.Value;
 			}
 		}
 

@@ -17,5 +17,6 @@ public class SubmissionCatalogModel
 	public int? SystemId { get; set; }
 
 	[Display(Name = "System Framerate")]
+	[Required]
 	public int? SystemFrameRateId { get; set; }
 }

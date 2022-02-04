@@ -14,7 +14,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
-				<select asp-for="Catalog.SystemFrameRateId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableSystemFrameRates)" class="form-control"></select>
+				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-control"></select>
 			</form-group>
 		</div>
 		<div class="col-lg-6">
