@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;
@@ -27,6 +28,11 @@ public class UnpublishModel : BasePageModel
 
 	public string Title { get; set; } = "";
 
+	[Required]
+	[StringLength(250)]
+	[BindProperty]
+	public string Reason { get; set; } = "";
+
 	public async Task<IActionResult> OnGet()
 	{
 		var result = await _queueService.CanUnpublish(Id);
@@ -45,7 +51,11 @@ public class UnpublishModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		// TODO: ask for a reason on publication form for pub maintenance logs
+		if (!ModelState.IsValid)
+		{
+			return Page();
+		}
+
 		var result = await _queueService.Unpublish(Id);
 
 		if (result.Status == UnpublishResult.UnpublishStatus.NotFound)
@@ -62,8 +72,8 @@ public class UnpublishModel : BasePageModel
 
 		if (result.Status == UnpublishResult.UnpublishStatus.Success)
 		{
-			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), "Unpublished");
-			await _publisher.AnnounceUnpublish(result.PublicationTitle, Id);
+			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), $"Unpublished. Reaspon: {Reason}");
+			await _publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
 		}
 
 		return RedirectToPage("View", new { Id });
