@@ -34,7 +34,7 @@ public class RenderModel : BasePageModel
 
 		if (WikiHelper.IsHomePage(url))
 		{
-			if (!await UserNameExists(url))
+			if (!await UserNameExists(url) && !await _wikiPages.Exists(url))
 			{
 				return RedirectToPage("/Wiki/HomePageDoesNotExist");
 			}
