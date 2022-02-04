@@ -125,4 +125,36 @@ public class TASVideoAgentTests
 		Assert.IsTrue(actual.EnableBbCode);
 		Assert.IsTrue(actual.Text.Contains(PublicationId.ToString()));
 	}
+
+	[TestMethod]
+	public async Task PostSubmissionUnpublish_NoTopic_DoesNotPost()
+	{
+		await _tasVideoAgent.PostSubmissionUnpublished(SubmissionId);
+		var actual = await _db.ForumPosts.LastOrDefaultAsync();
+		Assert.IsNull(actual);
+	}
+
+	[TestMethod]
+	public async Task PostSubmissionUnpublish_Posts()
+	{
+		var topic = _db.ForumTopics.Add(new ForumTopic
+		{
+			Title = "Title",
+			SubmissionId = SubmissionId
+		});
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.PostSubmissionUnpublished(SubmissionId);
+		var actual = await _db.ForumPosts.LastOrDefaultAsync();
+
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(SiteGlobalConstants.WorkbenchForumId, topic.Entity.ForumId);
+		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
+		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
+		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
+		Assert.AreEqual(SiteGlobalConstants.UnpublishSubject, actual.Subject);
+		Assert.AreEqual(SiteGlobalConstants.UnpublishPost, actual.Text);
+		Assert.IsFalse(actual.EnableHtml);
+		Assert.IsTrue(actual.EnableBbCode);
+	}
 }

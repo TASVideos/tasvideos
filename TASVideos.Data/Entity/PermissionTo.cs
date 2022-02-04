@@ -118,6 +118,10 @@ public enum PermissionTo
 	[Description("The ability to deprecate an existing movie parser. When deprecated, a movie will no longer be eligible for submission")]
 	DeprecateMovieParsers = 205,
 
+	[Group("Queue Maintenance")]
+	[Description("The ability to unpublish an existing publication. Publication will be removed and the submission will be restored to the queue.")]
+	Unpublish = 299,
+
 	#endregion
 
 	#region Publication Maintenance 300

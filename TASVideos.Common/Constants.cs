@@ -43,6 +43,11 @@ The posts before this message apply to the submission, and posts after this mess
 ----
 [movie]{PublicationId}[/movie]";
 
+	public const string UnpublishSubject = "Publication Reset To Workbench";
+	public const string UnpublishPost = @"[b]This movie has been unpublished and reset to a pending submission.[/b]
+The posts after this message will continue to apply to the submission.
+";
+
 	public const string NewSubmissionPost = @"This topic is for the purpose of discussing ";
 	public const string PollQuestion = @"Vote: Did you like watching this movie? (Vote after watching!)";
 	public const string PollOptionYes = "Yes";

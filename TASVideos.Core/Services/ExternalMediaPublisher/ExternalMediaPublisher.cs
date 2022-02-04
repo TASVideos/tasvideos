@@ -95,6 +95,19 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
+	public static async Task AnnounceUnpublish(this ExternalMediaPublisher publisher, string publicationTitle, int id, string reason)
+	{
+		await publisher.Send(new Post
+		{
+			Announcement = $"{publicationTitle} REMOVED",
+			Type = PostType.Announcement,
+			Group = PostGroups.Publication,
+			Title = "Publication Removed",
+			Body = reason,
+			Link = publisher.ToAbsolute($"{id}M")
+		});
+	}
+
 	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
