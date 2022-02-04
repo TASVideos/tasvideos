@@ -52,7 +52,7 @@ public class EditUrlsModel : BasePageModel
 	public ICollection<PublicationUrl> CurrentUrls { get; set; } = new List<PublicationUrl>();
 
 	[StringLength(100)]
-	[Display(Name = "Name")]
+	[Display(Name = "Alt Title")]
 	[BindProperty]
 	public string? DisplayName { get; set; }
 
