@@ -169,7 +169,11 @@ public class EditModel : BasePageModel
 		}
 
 		SuccessStatusMessage($"User {user.UserName} updated");
-		return BasePageRedirect("List");
+
+		// If username is changed, we want to ignore the returnUrl that will be the old name
+		return userNameChange != null
+			? RedirectToPage("/Users/Profile", new { Name = user.UserName })
+			: BasePageRedirect("List");
 	}
 
 	public async Task<IActionResult> OnGetUnlock()
