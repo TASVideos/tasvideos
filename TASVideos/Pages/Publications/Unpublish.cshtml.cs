@@ -76,6 +76,6 @@ public class UnpublishModel : BasePageModel
 			await _publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
 		}
 
-		return RedirectToPage("View", new { Id });
+		return BaseRedirect("/Subs-List");
 	}
 }
