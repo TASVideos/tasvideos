@@ -15,14 +15,9 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 
 	public IEnumerable<int> Years { get; set; } = new List<int>();
 
-	public IEnumerable<SelectListItem> AvailableYears => Enumerable
+	public IEnumerable<int> AvailableYears => Enumerable
 		.Range(2000, DateTime.UtcNow.Year + 1 - 2000)
-		.OrderByDescending(n => n)
-		.Select(n => new SelectListItem
-		{
-			Text = n.ToString(),
-			Value = n.ToString()
-		});
+		.OrderByDescending(n => n).ToList();
 
 	public string? System { get; set; }
 
