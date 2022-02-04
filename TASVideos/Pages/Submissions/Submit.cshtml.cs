@@ -11,9 +11,10 @@ using TASVideos.Pages.Submissions.Models;
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.SubmitMovies)]
-public class SubmitModel : SubmissionBasePageModel
+public class SubmitModel : BasePageModel
 {
 	private readonly string _fileFieldName = $"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}";
+	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IMovieParser _parser;
@@ -21,6 +22,7 @@ public class SubmitModel : SubmissionBasePageModel
 	private readonly ITASVideoAgent _tasVideoAgent;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly IMovieFormatDeprecator _deprecator;
+	private readonly IQueueService _queueService;
 
 	public SubmitModel(
 		ApplicationDbContext db,
@@ -30,9 +32,10 @@ public class SubmitModel : SubmissionBasePageModel
 		UserManager userManager,
 		ITASVideoAgent tasVideoAgent,
 		IYoutubeSync youtubeSync,
-		IMovieFormatDeprecator deprecator)
-		: base(db)
+		IMovieFormatDeprecator deprecator,
+		IQueueService queueService)
 	{
+		_db = db;
 		_publisher = publisher;
 		_wikiPages = wikiPages;
 		_parser = parser;
@@ -40,6 +43,7 @@ public class SubmitModel : SubmissionBasePageModel
 		_tasVideoAgent = tasVideoAgent;
 		_youtubeSync = youtubeSync;
 		_deprecator = deprecator;
+		_queueService = queueService;
 	}
 
 	[BindProperty]
@@ -75,6 +79,12 @@ public class SubmitModel : SubmissionBasePageModel
 
 		var parseResult = await _parser.ParseZip(Create.MovieFile!.OpenReadStream());
 
+		if (!parseResult.Success)
+		{
+			ModelState.AddParseErrors(parseResult);
+			return Page();
+		}
+
 		var deprecated = await _deprecator.IsDeprecated("." + parseResult.FileExtension);
 		if (deprecated)
 		{
@@ -82,7 +92,11 @@ public class SubmitModel : SubmissionBasePageModel
 			return Page();
 		}
 
-		await MapParsedResult(parseResult, submission);
+		var error = await _queueService.MapParsedResult(parseResult, submission);
+		if (!string.IsNullOrWhiteSpace(error))
+		{
+			ModelState.AddModelError("", error);
+		}
 
 		if (!ModelState.IsValid)
 		{
@@ -92,12 +106,12 @@ public class SubmitModel : SubmissionBasePageModel
 		submission.MovieFile = await Create.MovieFile.ToBytes();
 		submission.Submitter = await _userManager.GetUserAsync(User);
 
-		Db.Submissions.Add(submission);
-		await Db.SaveChangesAsync();
+		_db.Submissions.Add(submission);
+		await _db.SaveChangesAsync();
 
 		await CreateSubmissionWikiPage(submission);
 
-		Db.SubmissionAuthors.AddRange(await Db.Users
+		_db.SubmissionAuthors.AddRange(await _db.Users
 			.Where(u => Create.Authors.Contains(u.UserName))
 			.Select(u => new SubmissionAuthor
 			{
@@ -111,7 +125,7 @@ public class SubmitModel : SubmissionBasePageModel
 		submission.GenerateTitle();
 
 		submission.TopicId = await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
-		await Db.SaveChangesAsync();
+		await _db.SaveChangesAsync();
 
 		await _publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S");
 
@@ -149,7 +163,7 @@ public class SubmitModel : SubmissionBasePageModel
 
 		foreach (var author in Create.Authors)
 		{
-			if (!await Db.Users.Exists(author))
+			if (!await _db.Users.Exists(author))
 			{
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}", $"Could not find user: {author}");
 			}

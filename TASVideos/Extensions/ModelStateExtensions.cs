@@ -11,7 +11,7 @@ public static class ModelStateExtensions
 		{
 			foreach (var error in parseResult.Errors)
 			{
-				modelState.AddModelError(modelPropertyName ?? "Parser", error);
+				modelState.AddModelError(modelPropertyName ?? "", error);
 			}
 		}
 	}

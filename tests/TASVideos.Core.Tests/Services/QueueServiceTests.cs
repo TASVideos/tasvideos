@@ -4,6 +4,7 @@ using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
+using TASVideos.MovieParsers.Result;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.Core.Tests.Services;
@@ -493,5 +494,95 @@ public class QueueServiceTests
 
 		// Obsoleted movie youtube url must be synced
 		_youtubeSync.Verify(v => v.SyncYouTubeVideo(It.IsAny<YoutubeVideo>()));
+	}
+
+	[TestMethod]
+	[ExpectedException(typeof(InvalidOperationException))]
+	public async Task MapParsedResult_ThrowsIfParsingIsFailed()
+	{
+		await _queueService.MapParsedResult(new TestParseResult { Success = false }, new Submission());
+	}
+
+	[TestMethod]
+	public async Task MapParsedResult_ErrorIfUnknownSystem()
+	{
+		_db.GameSystems.Add(new GameSystem { Code = "NES" });
+		await _db.SaveChangesAsync();
+
+		var actual = await _queueService.MapParsedResult(new TestParseResult { Success = true, SystemCode = "Does not exist" }, new Submission());
+
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(actual));
+	}
+
+	[TestMethod]
+	public async Task MapParsedResult_NoOverride_Success()
+	{
+		const string system = "NES";
+		const double frameRate = 60.0;
+		const RegionType region = RegionType.Ntsc;
+		const MovieStartType startType = MovieStartType.Savestate;
+		const int frames = 42069;
+		const int rerecordCount = 420;
+		const string fileExtension = ".test";
+		var entry = _db.GameSystems.Add(new GameSystem { Code = system });
+		_db.GameSystemFrameRates.Add(new GameSystemFrameRate
+		{
+			GameSystemId = entry.Entity.Id,
+			FrameRate = frameRate,
+			RegionCode = region.ToString().ToUpper()
+		});
+		await _db.SaveChangesAsync();
+
+		var parseResult = new TestParseResult
+		{
+			Success = true,
+			SystemCode = system,
+			FrameRateOverride = null,
+			Region = region,
+			StartType = startType,
+			Frames = frames,
+			RerecordCount = rerecordCount,
+			FileExtension = fileExtension
+		};
+
+		var submission = new Submission();
+
+		var actual = await _queueService.MapParsedResult(parseResult, submission);
+		Assert.IsTrue(string.IsNullOrEmpty(actual));
+		Assert.IsNotNull(submission.SystemFrameRate);
+		Assert.AreEqual(frameRate, submission.SystemFrameRate.FrameRate);
+		Assert.AreEqual(region.ToString().ToUpper(), submission.SystemFrameRate.RegionCode);
+		Assert.AreEqual((int)startType, submission.MovieStartType);
+		Assert.AreEqual(frames, submission.Frames);
+		Assert.AreEqual(rerecordCount, submission.RerecordCount);
+		Assert.AreEqual(fileExtension, submission.MovieExtension);
+		Assert.IsNotNull(submission.System);
+		Assert.AreEqual(system, submission.System.Code);
+	}
+
+	[TestMethod]
+	public async Task MapParsedResult_WithOverride_Success()
+	{
+		const string system = "NES";
+		const double frameRateOverride = 61.0;
+		const RegionType region = RegionType.Ntsc;
+		var entry = _db.GameSystems.Add(new GameSystem { Code = system });
+		await _db.SaveChangesAsync();
+		var parseResult = new TestParseResult
+		{
+			Success = true,
+			SystemCode = system,
+			FrameRateOverride = frameRateOverride,
+			Region = region
+		};
+
+		var submission = new Submission();
+
+		var actual = await _queueService.MapParsedResult(parseResult, submission);
+		Assert.IsTrue(string.IsNullOrEmpty(actual));
+		Assert.IsNotNull(submission.SystemFrameRate);
+		Assert.AreEqual(frameRateOverride, submission.SystemFrameRate.FrameRate);
+		Assert.AreEqual(region.ToString().ToUpper(), submission.SystemFrameRate.RegionCode);
+		Assert.AreEqual(entry.Entity, submission.SystemFrameRate.System);
 	}
 }
