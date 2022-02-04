@@ -42,6 +42,7 @@ public class SubmissionBasePageModel : BasePageModel
 		if (parseResult.FrameRateOverride.HasValue)
 		{
 			var frameRate = await Db.GameSystemFrameRates
+				.ForSystem(submission.System.Id)
 				.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
 
 			if (frameRate == null)
