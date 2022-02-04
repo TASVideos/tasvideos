@@ -22,9 +22,7 @@
 				{
 					<div class="input-group">
 						<input asp-for="Settings.Email" class="form-control" />
-						<div class="input-group-append">
-							<span class="input-group-text" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
-						</div>
+						<div class="input-group-text" aria-disabled="true"><span class="fa fa-check-square text-success"></span></div>
 					</div>
 				}
 				else
@@ -53,7 +51,7 @@
 		<column lg="6">
 			<form-group>
 				<label asp-for="Settings.TimeZoneId"></label>
-				<timezone-picker asp-for="Settings.TimeZoneId" class="form-control" />
+				<timezone-picker asp-for="Settings.TimeZoneId" class="form-select" />
 			</form-group>
 			<form-group>
 				<label asp-for="Settings.From"></label>
@@ -62,7 +60,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Settings.PreferredPronouns"></label>
-				<select asp-for="Settings.PreferredPronouns" asp-items="@SettingsModel.AvailablePronouns" class="form-control"></select>
+				<select asp-for="Settings.PreferredPronouns" asp-items="@SettingsModel.AvailablePronouns" class="form-select"></select>
 				<span asp-validation-for="Settings.PreferredPronouns"></span>
 			</form-group>
 		</column>
