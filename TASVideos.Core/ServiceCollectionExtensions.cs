@@ -92,7 +92,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IGoogleAuthService, GoogleAuthService>();
 		services.AddScoped<IPublicationMaintenanceLogger, PublicationMaintenanceLogger>();
 		services.AddScoped<IUserMaintenanceLogger, UserMaintenanceLogger>();
-		services.AddScoped<ISubmissionService, SubmissionService>();
+		services.AddScoped<IQueueService, QueueService>();
 
 		return services;
 	}

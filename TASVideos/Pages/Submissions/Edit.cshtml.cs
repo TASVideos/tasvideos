@@ -20,7 +20,7 @@ public class EditModel : SubmissionBasePageModel
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly ITASVideosGrue _tasvideosGrue;
 	private readonly IMovieFormatDeprecator _deprecator;
-	private readonly ISubmissionService _submissionService;
+	private readonly IQueueService _queueService;
 
 	public EditModel(
 		ApplicationDbContext db,
@@ -29,7 +29,7 @@ public class EditModel : SubmissionBasePageModel
 		ExternalMediaPublisher publisher,
 		ITASVideosGrue tasvideosGrue,
 		IMovieFormatDeprecator deprecator,
-		ISubmissionService submissionService)
+		IQueueService queueService)
 		: base(db)
 	{
 		_parser = parser;
@@ -37,7 +37,7 @@ public class EditModel : SubmissionBasePageModel
 		_publisher = publisher;
 		_tasvideosGrue = tasvideosGrue;
 		_deprecator = deprecator;
-		_submissionService = submissionService;
+		_queueService = queueService;
 	}
 
 	[FromRoute]
@@ -111,7 +111,7 @@ public class EditModel : SubmissionBasePageModel
 
 		await PopulateDropdowns();
 
-		AvailableStatuses = _submissionService.AvailableStatuses(
+		AvailableStatuses = _queueService.AvailableStatuses(
 			Submission.Status,
 			User.Permissions(),
 			Submission.CreateTimestamp,
@@ -178,7 +178,7 @@ public class EditModel : SubmissionBasePageModel
 			return NotFound();
 		}
 
-		var availableStatus = _submissionService.AvailableStatuses(
+		var availableStatus = _queueService.AvailableStatuses(
 			subInfo.CurrentStatus,
 			User.Permissions(),
 			subInfo.CreateDate,

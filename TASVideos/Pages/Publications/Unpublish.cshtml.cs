@@ -11,12 +11,12 @@ public class UnpublishModel : BasePageModel
 {
 	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
 	private readonly ExternalMediaPublisher _publisher;
-	private readonly ISubmissionService _queueService;
+	private readonly IQueueService _queueService;
 
 	public UnpublishModel(
 		IPublicationMaintenanceLogger publicationMaintenanceLogger,
 		ExternalMediaPublisher publisher,
-		ISubmissionService queueService)
+		IQueueService queueService)
 	{
 		_publicationMaintenanceLogger = publicationMaintenanceLogger;
 		_publisher = publisher;

@@ -1,5 +1,5 @@
 @page "{id}"
-@inject ISubmissionService _submissionService
+@inject IQueueService QueueService
 @model ViewModel
 @{
 	ViewData["Title"] = $"{Model.Submission.Title} - Submission #{Model.Id}";
@@ -107,8 +107,8 @@
 				</small>
 			</h4>
 			<h4 condition="Model.IsPublished" class="alert-heading">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></h4>
-			<div condition="_submissionService.HoursRemainingForJudging(Model.Submission) > 0">
-				(Available for judging in @_submissionService.HoursRemainingForJudging(Model.Submission) hours)
+			<div condition="QueueService.HoursRemainingForJudging(Model.Submission) > 0">
+				(Available for judging in @QueueService.HoursRemainingForJudging(Model.Submission) hours)
 			</div>
 			<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
 				<label asp-for="Submission.Judge"></label>:

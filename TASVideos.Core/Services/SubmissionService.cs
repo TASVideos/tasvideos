@@ -7,8 +7,7 @@ using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.Core.Services;
 
-// TODO: rename this to QueueService
-public interface ISubmissionService
+public interface IQueueService
 {
 	/// <summary>
 	/// Returns a list of all available statuses a submission could be set to
@@ -34,14 +33,14 @@ public interface ISubmissionService
 	Task<UnpublishResult> Unpublish(int publicationId);
 }
 
-internal class SubmissionService : ISubmissionService
+internal class QueueService : IQueueService
 {
 	private readonly int _minimumHoursBeforeJudgment;
 	private readonly ApplicationDbContext _db;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
 
-	public SubmissionService(
+	public QueueService(
 		AppSettings settings,
 		ApplicationDbContext db,
 		IYoutubeSync youtubeSync,
