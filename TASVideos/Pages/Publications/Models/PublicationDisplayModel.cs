@@ -33,7 +33,7 @@ public class PublicationDisplayModel
 	public IEnumerable<FileModel> MovieFileLinks => Files
 		.Where(f => f.Type == FileType.MovieFile);
 
-	public double RatingCount { get; set; }
+	public int RatingCount { get; set; }
 	public double? OverallRating { get; set; }
 
 	public class TagModel

@@ -139,10 +139,9 @@ internal class PointsService : IPointsService
 
 	private static string MovieCacheKey(int id) => MovieRatingKey + id;
 
-	private static RatingDto Rate(ICollection<Rating> ratings)
+	private static RatingDto Rate(IEnumerable<Rating> ratings)
 	{
 		var entRatings = ratings
-			.Where(r => r.Type == PublicationRatingType.Entertainment)
 			.Select(r => r.Value)
 			.ToList();
 

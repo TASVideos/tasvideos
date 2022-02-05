@@ -129,7 +129,6 @@ public class UserManager : UserManager<User>
 
 		model.Ratings = await _db.PublicationRatings
 			.ForUser(model.Id)
-			.Where(pr => pr.Type == PublicationRatingType.Entertainment)
 			.Select(pr => new UserRatings.Rating
 			{
 				PublicationId = pr.PublicationId,

@@ -16,7 +16,7 @@ public class PublicationRatingsModel
 		public string UserName { get; set; } = "";
 
 		[Display(Name = "Rating")]
-		public double? Rating { get; set; }
+		public double Rating { get; set; }
 
 		public bool IsPublic { get; set; }
 	}

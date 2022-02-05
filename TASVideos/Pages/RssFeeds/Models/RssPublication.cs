@@ -23,7 +23,6 @@ public class RssPublication
 		get
 		{
 			var all = Ratings
-				.Where(r => r.Type == PublicationRatingType.Entertainment)
 				.Select(r => r.Value)
 				.ToList();
 

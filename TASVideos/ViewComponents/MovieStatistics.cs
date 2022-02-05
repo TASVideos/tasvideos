@@ -224,7 +224,7 @@ public class MovieStatistics : ViewComponent
 						Title = p.Title,
 						FloatValue =
 						(float)Math.Round(
-							(float)p.PublicationRatings.Where(r => r.Type == PublicationRatingType.Entertainment).Average(r => r.Value))
+							(float)p.PublicationRatings.Average(r => r.Value))
 					})
 					.ToListAsync();
 				break;
@@ -239,7 +239,7 @@ public class MovieStatistics : ViewComponent
 					{
 						Id = p.Id,
 						Title = p.Title,
-						FloatValue = p.PublicationRatings.Count / 2.0
+						FloatValue = p.PublicationRatings.Count
 					})
 					.ToListAsync();
 				break;

@@ -90,7 +90,7 @@ public class MappingProfile : Profile
 		CreateMap<Publication, PublicationDisplayModel>()
 			.ForMember(dest => dest.OnlineWatchingUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Streaming && pu.Url != null).Select(pu => new PublicationDisplayModel.PublicationUrl(pu.Url!, pu.DisplayName))))
 			.ForMember(dest => dest.MirrorSiteUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Mirror && pu.Url != null).Select(pu => new PublicationDisplayModel.PublicationUrl(pu.Url!, pu.DisplayName))))
-			.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count / 2.0))
+			.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count))
 			.ForMember(dest => dest.ClassIconPath, opt => opt.MapFrom(src => src.PublicationClass!.IconPath))
 			.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
 			.ForMember(dest => dest.TopicId, opt => opt.MapFrom(src => src.Submission!.TopicId))

@@ -49,7 +49,7 @@ public class PublicationRateModel
 
 	[Display(Name = "Rating")]
 	[RatingString(ErrorMessage = "{0} must be between 0 and 10.")]
-	public string? EntertainmentRating { get; set; }
+	public string? Rating { get; set; }
 
-	public bool EntertainmentUnrated { get; set; }
+	public bool Unrated { get; set; }
 }
