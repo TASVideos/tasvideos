@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
@@ -22,6 +23,7 @@ public class EditModel : BasePageModel
 	private readonly ITASVideosGrue _tasvideosGrue;
 	private readonly IMovieFormatDeprecator _deprecator;
 	private readonly IQueueService _queueService;
+	private readonly IYoutubeSync _youtubeSync;
 
 	public EditModel(
 		ApplicationDbContext db,
@@ -30,7 +32,8 @@ public class EditModel : BasePageModel
 		ExternalMediaPublisher publisher,
 		ITASVideosGrue tasvideosGrue,
 		IMovieFormatDeprecator deprecator,
-		IQueueService queueService)
+		IQueueService queueService,
+		IYoutubeSync youtubeSync)
 	{
 		_db = db;
 		_parser = parser;
@@ -39,6 +42,7 @@ public class EditModel : BasePageModel
 		_tasvideosGrue = tasvideosGrue;
 		_deprecator = deprecator;
 		_queueService = queueService;
+		_youtubeSync = youtubeSync;
 	}
 
 	[FromRoute]
@@ -306,7 +310,7 @@ public class EditModel : BasePageModel
 		submission.EmulatorVersion = Submission.Emulator;
 		submission.Branch = Submission.Branch;
 		submission.RomName = Submission.RomName;
-		submission.EncodeEmbedLink = Submission.EncodeEmbedLink;
+		submission.EncodeEmbedLink = _youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
 		submission.Status = Submission.Status;
 		submission.AdditionalAuthors = Submission.AdditionalAuthors;
 
