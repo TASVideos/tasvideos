@@ -125,7 +125,8 @@ public class CreateModel : BaseForumModel
 				new PollCreateDto(poll.Question, poll.DaysOpen, poll.MultiSelect, poll.PollOptions));
 		}
 
-		await _publisher.AnnounceForum(
+		await _publisher.SendForum(
+			forum.Restricted,
 			$"New Topic by {User.Name()}",
 			$"{forum.ShortName}: {Topic.Title}",
 			$"Forum/Topics/{topic.Id}");
