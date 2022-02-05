@@ -32,17 +32,13 @@
 			<table class="table table-bordered">
 				<tr>
 					<th>Movie</th>
-					<th>Average</th>
-					<th>Entertainment</th>
-					<th>Tech Quality</th>
+					<th>Rating</th>
 				</tr>
-				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Average))
+				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Value))
 				{
 					<tr>
 						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
-						<td>@(Math.Round(rating.Average, 1))</td>
-						<td>@rating.Entertainment</td>
-						<td>@rating.Tech</td>
+						<td>@(Math.Round(rating.Value, 1))</td>
 					</tr>
 				}
 			</table>
@@ -51,17 +47,13 @@
 			<table class="table table-bordered">
 				<tr>
 					<th>Movie</th>
-					<th>Average</th>
-					<th>Entertainment</th>
-					<th>Tech Quality</th>
+					<th>Rating</th>
 				</tr>
-				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Average))
+				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Value))
 				{
 					<tr>
 						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
-						<td>@(Math.Round(rating.Average, 1))</td>
-						<td>@rating.Entertainment</td>
-						<td>@rating.Tech</td>
+						<td>@(Math.Round(rating.Value, 1))</td>
 					</tr>
 				}
 			</table>
