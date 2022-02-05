@@ -16,9 +16,6 @@ public class UserRatings
 		public int PublicationId { get; init; }
 		public string PublicationTitle { get; init; } = "";
 		public bool IsObsolete { get; init; }
-		public double? Entertainment { get; init; }
-		public double Tech { get; init; }
-
-		public double Average => ((Entertainment ?? 0) + (Entertainment ?? 0) + Tech) / 3.0;
+		public double Value { get; init; }
 	}
 }

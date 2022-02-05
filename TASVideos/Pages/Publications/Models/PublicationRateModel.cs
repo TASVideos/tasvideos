@@ -47,14 +47,9 @@ public class PublicationRateModel
 
 	public string Title { get; set; } = "";
 
-	[Display(Name = "Technical Rating")]
-	[RatingString(ErrorMessage = "{0} must be between 0 and 10.")]
-	public string? TechRating { get; set; }
-
-	[Display(Name = "Entertainment Rating")]
+	[Display(Name = "Rating")]
 	[RatingString(ErrorMessage = "{0} must be between 0 and 10.")]
 	public string? EntertainmentRating { get; set; }
 
-	public bool TechUnrated { get; set; }
 	public bool EntertainmentUnrated { get; set; }
 }

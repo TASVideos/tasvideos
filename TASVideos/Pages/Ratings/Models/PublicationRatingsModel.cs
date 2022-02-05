@@ -8,10 +8,6 @@ public class PublicationRatingsModel
 
 	public IEnumerable<RatingEntry> Ratings { get; set; } = new List<RatingEntry>();
 
-	public double AverageEntertainmentRating { get; set; }
-
-	public double AverageTechRating { get; set; }
-
 	public double OverallRating { get; set; }
 
 	public class RatingEntry
@@ -19,11 +15,8 @@ public class PublicationRatingsModel
 		[Display(Name = "UserName")]
 		public string UserName { get; set; } = "";
 
-		[Display(Name = "Entertainment")]
-		public double? Entertainment { get; set; }
-
-		[Display(Name = "Tech Quality")]
-		public double? TechQuality { get; set; }
+		[Display(Name = "Rating")]
+		public double? Rating { get; set; }
 
 		public bool IsPublic { get; set; }
 	}

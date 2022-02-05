@@ -32,8 +32,6 @@ public class MovieStatistics : ViewComponent
 
 		// Rating data
 		AverageRating,
-		EntertainmentRating,
-		TechnicalRating,
 		VoteCount
 	}
 
@@ -52,8 +50,6 @@ public class MovieStatistics : ViewComponent
 		["desclen"] = MovieStatisticComparison.DescriptionLength,
 		["udesclen"] = MovieStatisticComparison.SubmissionDescriptionLength,
 		["averageRating"] = MovieStatisticComparison.AverageRating,
-		["entertainmentRating"] = MovieStatisticComparison.EntertainmentRating,
-		["qualityRating"] = MovieStatisticComparison.TechnicalRating,
 		["numberOfVotes"] = MovieStatisticComparison.VoteCount
 	};
 
@@ -228,40 +224,7 @@ public class MovieStatistics : ViewComponent
 						Title = p.Title,
 						FloatValue =
 						(float)Math.Round(
-							((float)p.PublicationRatings.Where(r => r.Type == PublicationRatingType.Entertainment).Average(r => r.Value) * (2f / 3f))
-						+ ((float)p.PublicationRatings.Where(r => r.Type == PublicationRatingType.TechQuality).Average(r => r.Value) * (1f / 3f)), 2)
-					})
-					.ToListAsync();
-				break;
-
-			case MovieStatisticComparison.EntertainmentRating:
-				fieldHeader = "Entertainment rating";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
-					.Where(p => p.PublicationRatings.Count >= minimumVotes)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
-					{
-						Id = p.Id,
-						Title = p.Title,
-						FloatValue =
-						(float)Math.Round(p.PublicationRatings.Where(r => r.Type == PublicationRatingType.Entertainment).Average(r => r.Value), 2)
-					})
-					.ToListAsync();
-				break;
-
-			case MovieStatisticComparison.TechnicalRating:
-				fieldHeader = "Technical rating";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
-					.Where(p => p.PublicationRatings.Count >= minVotes)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
-					{
-						Id = p.Id,
-						Title = p.Title,
-						FloatValue =
-						(float)Math.Round(p.PublicationRatings.Where(r => r.Type == PublicationRatingType.TechQuality).Average(r => r.Value), 2)
+							(float)p.PublicationRatings.Where(r => r.Type == PublicationRatingType.Entertainment).Average(r => r.Value))
 					})
 					.ToListAsync();
 				break;

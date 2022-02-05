@@ -40,15 +40,11 @@ public class RateModel : BasePageModel
 		Rating = new PublicationRateModel
 		{
 			Title = publication.Title,
-			TechRating = ratings
-				.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality)
-				?.Value.ToString(CultureInfo.InvariantCulture),
 			EntertainmentRating = ratings
 				.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment)
 				?.Value.ToString(CultureInfo.InvariantCulture)
 		};
 
-		Rating.TechUnrated = Rating.TechRating == null;
 		Rating.EntertainmentUnrated = Rating.EntertainmentRating == null;
 
 		return Page();
@@ -68,13 +64,9 @@ public class RateModel : BasePageModel
 			.ForUser(userId)
 			.ToListAsync();
 
-		var tech = ratings
-			.SingleOrDefault(r => r.Type == PublicationRatingType.TechQuality);
-
 		var entertainment = ratings
 			.SingleOrDefault(r => r.Type == PublicationRatingType.Entertainment);
 
-		UpdateRating(tech, Id, userId, PublicationRatingType.TechQuality, PublicationRateModel.RatingString.AsRatingDouble(Rating.TechRating), Rating.TechUnrated);
 		UpdateRating(entertainment, Id, userId, PublicationRatingType.Entertainment, PublicationRateModel.RatingString.AsRatingDouble(Rating.EntertainmentRating), Rating.EntertainmentUnrated);
 
 		await _db.SaveChangesAsync();
