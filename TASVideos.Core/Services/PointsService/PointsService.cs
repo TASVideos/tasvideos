@@ -161,7 +161,7 @@ internal class PointsService : IPointsService
 		double avg = 0;
 		if (totalPublications > 0)
 		{
-			avg = await _db.PublicationRatings.CountAsync();
+			avg = await _db.PublicationRatings.CountAsync() / (double)totalPublications;
 		}
 
 		_cache.Set(AverageNumberOfRatingsKey, avg);
