@@ -36,7 +36,7 @@ public class PageHistoryModel : BasePageModel
 				{
 					Revision = wp.Revision,
 					CreateTimestamp = wp.CreateTimestamp,
-					CreateUserName = wp.CreateUserName,
+					CreateUserName = wp.Author!.UserName,
 					MinorEdit = wp.MinorEdit,
 					RevisionMessage = wp.RevisionMessage
 				})
