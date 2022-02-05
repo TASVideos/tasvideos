@@ -230,7 +230,7 @@ public class UserManager : UserManager<User>
 			model.PlayerPoints = (int)Math.Round(await _pointsService.PlayerPoints(model.Id));
 
 			model.PublishedSystems = await _db.Publications
-				.Where(p => p.Authors.Any(a => a.UserId == model.Id))
+				.ForAuthor(model.Id)
 				.Select(p => p.System!.Code)
 				.Distinct()
 				.ToListAsync();

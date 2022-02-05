@@ -162,6 +162,11 @@ public static class PublicationExtensions
 		return publications.Where(p => p.Submission!.PublisherId == userId);
 	}
 
+	public static IQueryable<Publication> ForAuthor(this IQueryable<Publication> publications, int userId)
+	{
+		return publications.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId));
+	}
+
 	public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
 	{
 		if (tokens.MovieIds.Any())

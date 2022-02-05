@@ -52,7 +52,7 @@ internal class PointsService : IPointsService
 		}
 
 		var publications = await _db.Publications
-			.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId))
+			.ForAuthor(userId)
 			.Select(p => new PublicationRatingDto
 			{
 				Id = p.Id,
