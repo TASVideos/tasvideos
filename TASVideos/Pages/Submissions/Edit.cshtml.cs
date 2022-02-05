@@ -348,7 +348,8 @@ public class EditModel : BasePageModel
 			await _db.SaveChangesAsync();
 		}
 
-		if ((submission.Status == SubmissionStatus.Rejected || submission.Status == SubmissionStatus.Cancelled) && statusHasChanged)
+		if (submission.Status is SubmissionStatus.Rejected or SubmissionStatus.Cancelled
+			&& statusHasChanged)
 		{
 			await _tasvideosGrue.RejectAndMove(submission.Id);
 		}
@@ -361,11 +362,11 @@ public class EditModel : BasePageModel
 				string statusStr = Submission.Status.ToString();
 
 				// CAPS on a judge decision
-				if (Submission.Status == SubmissionStatus.Accepted ||
-					Submission.Status == SubmissionStatus.Rejected ||
-					Submission.Status == SubmissionStatus.Cancelled ||
-					Submission.Status == SubmissionStatus.Delayed ||
-					Submission.Status == SubmissionStatus.NeedsMoreInfo)
+				if (Submission.Status is SubmissionStatus.Accepted
+					or SubmissionStatus.Rejected
+					or SubmissionStatus.Cancelled
+					or SubmissionStatus.Delayed
+					or SubmissionStatus.NeedsMoreInfo)
 				{
 					statusStr = statusStr.ToUpper();
 				}
@@ -379,9 +380,9 @@ public class EditModel : BasePageModel
 						statusStr += $" to {publicationClass}";
 					}
 				}
-				else if (Submission.Status == SubmissionStatus.NeedsMoreInfo ||
-					Submission.Status == SubmissionStatus.New ||
-					Submission.Status == SubmissionStatus.PublicationUnderway)
+				else if (Submission.Status is SubmissionStatus.NeedsMoreInfo
+						or SubmissionStatus.New
+						or SubmissionStatus.PublicationUnderway)
 				{
 					statusStr = "set to " + statusStr;
 				}
