@@ -61,8 +61,7 @@ public class IndexModel : BasePageModel
 				{
 					UserName = g.Key.UserName,
 					IsPublic = g.Key.PublicRatings,
-					Entertainment = g.FirstOrDefault(v => v.Type == PublicationRatingType.Entertainment)?.Value,
-					TechQuality = g.FirstOrDefault(v => v.Type == PublicationRatingType.TechQuality)?.Value
+					Entertainment = g.FirstOrDefault(v => v.Type == PublicationRatingType.Entertainment)?.Value
 				})
 				.ToList()
 		};
@@ -72,26 +71,9 @@ public class IndexModel : BasePageModel
 			.Select(r => r.Entertainment!.Value)
 			.ToList();
 
-		var techRatings = Publication.Ratings
-			.Where(r => r.TechQuality.HasValue)
-			.Select(r => r.TechQuality!.Value)
-			.ToList();
-
-		var overallRatings = entertainmentRatings
-			.Concat(techRatings)
-			.ToList();
-
-		Publication.AverageEntertainmentRating = entertainmentRatings.Any()
-			? Math.Round(entertainmentRatings.Average(), 2)
-			: 0;
-
-		Publication.AverageTechRating = techRatings.Any()
-			? Math.Round(techRatings.Average(), 2)
-			: 0;
-
 		// Entertainment counts 2:1 over Tech
-		Publication.OverallRating = overallRatings.Any()
-			? Math.Round(overallRatings.Average(), 2)
+		Publication.OverallRating = entertainmentRatings.Any()
+			? Math.Round(entertainmentRatings.Average(), 2)
 			: 0;
 
 		_cache.Set(CacheKeys.MovieRatingKey + Id, Publication);
