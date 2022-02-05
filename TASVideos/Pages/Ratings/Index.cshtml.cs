@@ -61,14 +61,14 @@ public class IndexModel : BasePageModel
 				{
 					UserName = g.Key.UserName,
 					IsPublic = g.Key.PublicRatings,
-					Entertainment = g.FirstOrDefault(v => v.Type == PublicationRatingType.Entertainment)?.Value
+					Rating = g.FirstOrDefault(v => v.Type == PublicationRatingType.Entertainment)?.Value
 				})
 				.ToList()
 		};
 
 		var entertainmentRatings = Publication.Ratings
-			.Where(r => r.Entertainment.HasValue)
-			.Select(r => r.Entertainment!.Value)
+			.Where(r => r.Rating.HasValue)
+			.Select(r => r.Rating!.Value)
 			.ToList();
 
 		// Entertainment counts 2:1 over Tech
