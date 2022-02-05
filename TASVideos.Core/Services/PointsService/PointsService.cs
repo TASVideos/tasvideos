@@ -60,7 +60,7 @@ internal class PointsService : IPointsService
 				ClassWeight = p.PublicationClass!.Weight,
 				AuthorCount = p.Authors.Count,
 				PublicationRatings = p.PublicationRatings
-					.Select(r => new Rating(r.Type, r.Value))
+					.Select(r => r.Value)
 					.ToList()
 			})
 			.ToListAsync();
@@ -96,7 +96,7 @@ internal class PointsService : IPointsService
 			.ForPublication(id)
 			.ThatAreNotFromAnAuthor()
 			.ThatCanBeUsedToRate()
-			.Select(r => new Rating(r.Type, r.Value))
+			.Select(r => r.Value)
 			.ToListAsync();
 
 		rating = Rate(ratings);
@@ -128,7 +128,7 @@ internal class PointsService : IPointsService
 			var cacheKey = MovieCacheKey(pub.Key);
 			var pubRatings = pub.ToList();
 			var rating = Rate(pubRatings
-				.Select(r => new Rating(r.Type, r.Value))
+				.Select(r => r.Value)
 				.ToList());
 			_cache.Set(cacheKey, rating);
 			ratings.Add(pub.Key, rating);
@@ -139,17 +139,13 @@ internal class PointsService : IPointsService
 
 	private static string MovieCacheKey(int id) => MovieRatingKey + id;
 
-	private static RatingDto Rate(IEnumerable<Rating> ratings)
+	private static RatingDto Rate(ICollection<double> ratings)
 	{
-		var entRatings = ratings
-			.Select(r => r.Value)
-			.ToList();
-
 		return new RatingDto(
-			entRatings.Any()
-				? entRatings.Average()
+			ratings.Any()
+				? ratings.Average()
 				: null,
-			entRatings.Count);
+			ratings.Count);
 	}
 
 	// total ratings / (2 * total publications)
@@ -178,8 +174,6 @@ internal class PointsService : IPointsService
 		public bool Obsolete { get; init; }
 		public double ClassWeight { get; init; }
 		public int AuthorCount { get; init; }
-		public ICollection<Rating> PublicationRatings { get; init; } = new List<Rating>();
+		public ICollection<double> PublicationRatings { get; init; } = new List<double>();
 	}
-
-	private record Rating(PublicationRatingType Type, double Value);
 }
