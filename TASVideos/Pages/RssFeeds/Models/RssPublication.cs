@@ -16,19 +16,15 @@ public class RssPublication
 	public string ScreenshotPath => Files.First(f => f.Type == FileType.Screenshot).Path;
 
 	public double RatingCount => Ratings.Count / 2.0;
-	public double RatingMin => Ratings.Any() ? Ratings.Min(r => r.Value) : 0;
-	public double RatingMax => Ratings.Any() ? Ratings.Max(r => r.Value) : 0;
+	public double RatingMin => Ratings.Any() ? Ratings.Min() : 0;
+	public double RatingMax => Ratings.Any() ? Ratings.Max() : 0;
 	public double RatingAverage
 	{
 		get
 		{
-			var all = Ratings
-				.Select(r => r.Value)
-				.ToList();
-
-			if (all.Any())
+			if (Ratings.Any())
 			{
-				return Math.Round(all.Average(), 2);
+				return Math.Round(Ratings.Average(), 2);
 			}
 
 			return 0;
@@ -39,17 +35,11 @@ public class RssPublication
 
 	internal ICollection<File> Files { get; init; } = new List<File>();
 
-	internal ICollection<Rating> Ratings { get; init; } = new List<Rating>();
+	internal ICollection<double> Ratings { get; init; } = new List<double>();
 
 	internal class File
 	{
 		public string Path { get; init; } = "";
 		public FileType Type { get; init; }
-	}
-
-	internal class Rating
-	{
-		public double Value { get; init; }
-		public PublicationRatingType Type { get; init; }
 	}
 }

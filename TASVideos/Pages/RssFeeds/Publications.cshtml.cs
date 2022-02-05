@@ -48,11 +48,7 @@ public class PublicationsModel : PageModel
 					.Select(pu => pu.Url!)
 					.ToList(),
 				Ratings = p.PublicationRatings
-					.Select(pr => new RssPublication.Rating
-					{
-						Value = pr.Value,
-						Type = pr.Type
-					})
+					.Select(pr => pr.Value)
 					.ToList()
 			})
 			.ToListAsync();
