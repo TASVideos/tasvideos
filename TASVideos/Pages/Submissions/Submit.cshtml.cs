@@ -66,17 +66,6 @@ public class SubmitModel : BasePageModel
 			return Page();
 		}
 
-		var submission = new Submission
-		{
-			GameVersion = Create.GameVersion,
-			GameName = Create.GameName,
-			Branch = Create.Branch,
-			RomName = Create.RomName,
-			EmulatorVersion = Create.Emulator,
-			EncodeEmbedLink = _youtubeSync.ConvertToEmbedLink(Create.EncodeEmbedLink),
-			AdditionalAuthors = Create.AdditionalAuthors
-		};
-
 		var parseResult = await _parser.ParseZip(Create.MovieFile!.OpenReadStream());
 
 		if (!parseResult.Success)
@@ -91,6 +80,17 @@ public class SubmitModel : BasePageModel
 			ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
 			return Page();
 		}
+
+		var submission = new Submission
+		{
+			GameVersion = Create.GameVersion,
+			GameName = Create.GameName,
+			Branch = Create.Branch,
+			RomName = Create.RomName,
+			EmulatorVersion = Create.Emulator,
+			EncodeEmbedLink = _youtubeSync.ConvertToEmbedLink(Create.EncodeEmbedLink),
+			AdditionalAuthors = Create.AdditionalAuthors
+		};
 
 		var error = await _queueService.MapParsedResult(parseResult, submission);
 		if (!string.IsNullOrWhiteSpace(error))
