@@ -22,16 +22,11 @@ public class RssPublication
 	{
 		get
 		{
-			var ent = Ratings
+			var all = Ratings
 				.Where(r => r.Type == PublicationRatingType.Entertainment)
 				.Select(r => r.Value)
 				.ToList();
 
-			var tech = Ratings
-				.Where(r => r.Type == PublicationRatingType.TechQuality)
-				.Select(r => r.Value);
-
-			var all = ent.Concat(ent).Concat(tech).ToList();
 			if (all.Any())
 			{
 				return Math.Round(all.Average(), 2);

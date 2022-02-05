@@ -146,33 +146,11 @@ internal class PointsService : IPointsService
 			.Select(r => r.Value)
 			.ToList();
 
-		var techRatings = ratings
-			.Where(r => r.Type == PublicationRatingType.TechQuality)
-			.Select(r => r.Value)
-			.ToList();
-
-		var rating = new RatingDto
-		{
-			Entertainment = entRatings.Any()
+		return new RatingDto(
+			entRatings.Any()
 				? entRatings.Average()
 				: null,
-			TechQuality = techRatings.Any()
-				? techRatings.Average()
-				: null,
-			TotalEntertainmentVotes = entRatings.Count,
-			TotalTechQualityVotes = techRatings.Count
-		};
-
-		if (entRatings.Any() || techRatings.Any())
-		{
-			// Entertainment counts 2:1 over Tech
-			rating.Overall = entRatings
-				.Concat(entRatings)
-				.Concat(techRatings)
-				.Average();
-		}
-
-		return rating;
+			entRatings.Count);
 	}
 
 	// total ratings / (2 * total publications)
@@ -188,8 +166,7 @@ internal class PointsService : IPointsService
 		double avg = 0;
 		if (totalPublications > 0)
 		{
-			var totalRatings = await _db.PublicationRatings.CountAsync();
-			avg = totalRatings / (double)(2 * totalPublications);
+			avg = await _db.PublicationRatings.CountAsync();
 		}
 
 		_cache.Set(AverageNumberOfRatingsKey, avg);
