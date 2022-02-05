@@ -2,7 +2,7 @@
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Test.Services;
+namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
 public class PointsServiceTests
