@@ -118,6 +118,7 @@ public class IndexModel : BaseForumModel
 				PosterLocation = p.Poster.From,
 				PosterRoles = p.Poster.UserRoles
 					.Where(ur => !ur.Role!.IsDefault)
+					.Where(ur => ur.Role!.Name != "Published Author")
 					.Select(ur => ur.Role!.Name)
 					.ToList(),
 				PosterJoined = p.Poster.CreateTimestamp,

@@ -51,6 +51,7 @@ public class LatestModel : BasePageModel
 				PosterName = p.Poster!.UserName,
 				PosterRoles = p.Poster.UserRoles
 					.Where(ur => !ur.Role!.IsDefault)
+					.Where(ur => ur.Role!.Name != "Published Author")
 					.Select(ur => ur.Role!.Name)
 					.ToList(),
 				PosterLocation = p.Poster.From,
