@@ -189,11 +189,7 @@ public class PublishModel : BasePageModel
 		AvailableMoviesToObsolete = await _db.Publications
 			.ThatAreCurrent()
 			.Where(p => p.SystemId == systemId)
-			.Select(p => new SelectListItem
-			{
-				Value = p.Id.ToString(),
-				Text = p.Title
-			})
+			.ToDropdown()
 			.OrderBy(p => p.Text)
 			.ToListAsync();
 	}

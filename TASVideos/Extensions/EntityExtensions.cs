@@ -93,6 +93,15 @@ public static class EntityExtensions
 		});
 	}
 
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Publication> query)
+	{
+		return query.Select(p => new SelectListItem
+		{
+			Value = p.Id.ToString(),
+			Text = p.Title
+		});
+	}
+
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
 	{
 		return query
