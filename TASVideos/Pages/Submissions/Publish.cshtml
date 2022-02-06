@@ -121,6 +121,11 @@
 		</column>
 	</row>
 	<hr />
+	<fullrow>
+		<two-column-select id-list="Submission.SelectedFlags" available-list="AvailableFlags" />
+		<two-column-select id-list="Submission.SelectedTags" available-list="AvailableTags" />
+	</fullrow>
+	<hr />
 	@await Component.RenderWiki("System/FilesEditingHelp")
 	<fullrow class="text-center">
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Publish</submit-button>

@@ -55,8 +55,8 @@ public static class EntityExtensions
 		return query
 			.Select(g => new SelectListItem
 			{
-				Value = g.Id.ToString(),
-				Text = g.DisplayName
+				Text = g.DisplayName,
+				Value = g.Id.ToString()
 			});
 	}
 
@@ -97,8 +97,8 @@ public static class EntityExtensions
 	{
 		return query.Select(p => new SelectListItem
 		{
-			Value = p.Id.ToString(),
-			Text = p.Title
+			Text = p.Title,
+			Value = p.Id.ToString()
 		});
 	}
 

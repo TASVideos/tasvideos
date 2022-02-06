@@ -135,11 +135,7 @@ public class EditModel : BasePageModel
 			.Where(p => p.ObsoletedById == null || p.Id == obsoletedById)
 			.Where(p => p.System!.Code == systemCode)
 			.Where(p => p.Id != Id)
-			.Select(p => new SelectListItem
-			{
-				Text = p.Title,
-				Value = p.Id.ToString()
-			})
+			.ToDropdown()
 			.OrderBy(p => p.Text)
 			.ToListAsync();
 		Files = await _mapper.ProjectTo<PublicationFileDisplayModel>(

@@ -56,6 +56,8 @@ public class PublishModel : BasePageModel
 	public SubmissionPublishModel Submission { get; set; } = new();
 
 	public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -76,7 +78,7 @@ public class PublishModel : BasePageModel
 
 		Submission = submission;
 
-		await PopulateAvailableMoviesToObsolete(Submission.SystemId);
+		await PopulateDropdowns(Submission.SystemId);
 		return Page();
 	}
 
@@ -89,7 +91,7 @@ public class PublishModel : BasePageModel
 
 		if (!ModelState.IsValid)
 		{
-			await PopulateAvailableMoviesToObsolete(Submission.SystemId);
+			await PopulateDropdowns(Submission.SystemId);
 			return Page();
 		}
 
@@ -129,6 +131,21 @@ public class PublishModel : BasePageModel
 		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, Submission.OnlineWatchUrlName);
 		publication.PublicationUrls.AddMirror(Submission.MirrorSiteUrl);
 		publication.Authors.CopyFromSubmission(submission.SubmissionAuthors);
+
+		publication.PublicationFlags.AddRange(Submission.SelectedFlags
+			.Select(f => new PublicationFlag
+			{
+				PublicationId = publication.Id,
+				FlagId = f
+			}));
+
+		publication.PublicationTags.AddRange(Submission.SelectedTags
+			.Select(t => new PublicationTag
+			{
+				PublicationId = publication.Id,
+				TagId = t
+			}));
+
 		_db.Publications.Add(publication);
 
 		await _db.SaveChangesAsync(); // Need an Id for the Title
@@ -184,8 +201,14 @@ public class PublishModel : BasePageModel
 		};
 	}
 
-	private async Task PopulateAvailableMoviesToObsolete(int systemId)
+	private async Task PopulateDropdowns(int systemId)
 	{
+		AvailableFlags = await _db.Flags
+			.ToDropDown(User.Permissions())
+			.ToListAsync();
+		AvailableTags = await _db.Tags
+			.ToDropdown()
+			.ToListAsync();
 		AvailableMoviesToObsolete = await _db.Publications
 			.ThatAreCurrent()
 			.Where(p => p.SystemId == systemId)
