@@ -1,5 +1,5 @@
 ﻿@model MovieStatisticsModel
-<warning-alert condition="!string.IsNullOrEmpty(Model.ErrorMessage)">
+<warning-alert condition="!string.IsNullOrEmpty(Model?.ErrorMessage)">
 	@Model!.ErrorMessage
 </warning-alert>
 

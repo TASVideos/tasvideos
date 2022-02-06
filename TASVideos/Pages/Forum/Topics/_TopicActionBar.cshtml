@@ -1,5 +1,5 @@
 ﻿@model IForumTopicActionBar
-<a condition="User.IsLoggedIn() && !Model.IsWatching"
+<a condition="User.IsLoggedIn() && !Model!.IsWatching"
    asp-page="Index"
    asp-page-handler="Watch"
    asp-route-id="@Model!.Id"

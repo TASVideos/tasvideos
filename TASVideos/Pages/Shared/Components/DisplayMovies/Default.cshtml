@@ -1,11 +1,11 @@
 ﻿@model ICollection<TASVideos.Pages.Publications.Models.PublicationDisplayModel>
 
-<warning-alert condition="!Model.Any()">
+<warning-alert condition="!Model!.Any()">
 	No movies found matching the request
 </warning-alert>
 
-<div condition="Model.Any()">
-	<label condition="Model.Count > 1">Movies: @Model!.Count</label>
+<div condition="Model!.Any()">
+	<label condition="Model!.Count > 1">Movies: @Model!.Count</label>
 	@foreach (var movie in Model)
 	{
 		<partial name="_MovieModule" model="movie"/>
