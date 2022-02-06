@@ -23,6 +23,7 @@ public class PublishModel : BasePageModel
 	private readonly UserManager _userManager;
 	private readonly IFileService _fileService;
 	private readonly IYoutubeSync _youtubeSync;
+	private readonly IQueueService _queueService;
 
 	public PublishModel(
 		ApplicationDbContext db,
@@ -33,7 +34,8 @@ public class PublishModel : BasePageModel
 		ITASVideoAgent tasVideoAgent,
 		UserManager userManager,
 		IFileService fileService,
-		IYoutubeSync youtubeSync)
+		IYoutubeSync youtubeSync,
+		IQueueService queueService)
 	{
 		_db = db;
 		_mapper = mapper;
@@ -44,6 +46,7 @@ public class PublishModel : BasePageModel
 		_userManager = userManager;
 		_fileService = fileService;
 		_youtubeSync = youtubeSync;
+		_queueService = queueService;
 	}
 
 	[FromRoute]
@@ -66,12 +69,12 @@ public class PublishModel : BasePageModel
 			return NotFound();
 		}
 
-		Submission = submission;
-
-		if (!Submission.CanPublish)
+		if (!submission.CanPublish)
 		{
 			return AccessDenied();
 		}
+
+		Submission = submission;
 
 		await PopulateAvailableMoviesToObsolete(Submission.SystemId);
 		return Page();
@@ -90,10 +93,6 @@ public class PublishModel : BasePageModel
 			return Page();
 		}
 
-		// TODO: I think this is producing joins, if the submission isn't properly cataloged then
-		// this will throw an exception, if so, use OrDefault and return NotFound()
-		// if it is doing left joins or sub-queries, then we need to null check the usages of nullable
-		// tables such as game, rom, etc and throw if those are null
 		var submission = await _db.Submissions
 			.Include(s => s.IntendedClass)
 			.Include(s => s.System)
@@ -102,8 +101,14 @@ public class PublishModel : BasePageModel
 			.Include(s => s.Rom)
 			.Include(s => s.SubmissionAuthors)
 			.ThenInclude(sa => sa.Author)
-			.SingleAsync(s => s.Id == Id);
+			.SingleOrDefaultAsync(s => s.Id == Id);
 
+		if (submission is null || !submission.CanPublish())
+		{
+			return NotFound();
+		}
+
+		var movieFileName = Submission.MovieFileName + "." + Submission.MovieExtension;
 		var publication = new Publication
 		{
 			PublicationClassId = submission.IntendedClass!.Id,
@@ -112,39 +117,18 @@ public class PublishModel : BasePageModel
 			GameId = submission.Game!.Id,
 			RomId = submission.Rom!.Id,
 			Branch = submission.Branch,
-			EmulatorVersion = Submission.EmulatorVersion,
+			EmulatorVersion = submission.EmulatorVersion,
 			Frames = submission.Frames,
 			RerecordCount = submission.RerecordCount,
-			MovieFileName = Submission.MovieFileName + "." + Submission.MovieExtension,
-			AdditionalAuthors = submission.AdditionalAuthors
+			MovieFileName = movieFileName,
+			AdditionalAuthors = submission.AdditionalAuthors,
+			Submission = submission,
+			MovieFile = await _fileService.CopyZip(submission.MovieFile, movieFileName)
 		};
 
-		publication.PublicationUrls.Add(new PublicationUrl
-		{
-			DisplayName = Submission.OnlineWatchUrlName.NullIfWhitespace(),
-			Url = Submission.OnlineWatchingUrl,
-			Type = PublicationUrlType.Streaming
-		});
-
-		publication.PublicationUrls.Add(new PublicationUrl
-		{
-			Url = Submission.MirrorSiteUrl,
-			Type = PublicationUrlType.Mirror
-		});
-
-		publication.MovieFile = await _fileService.CopyZip(
-			submission.MovieFile,
-			Submission.MovieFileName + "." + Submission.MovieExtension);
-
-		publication.Authors.AddRange(submission.SubmissionAuthors
-			.Select(sa => new PublicationAuthor
-			{
-				Publication = publication,
-				Author = sa.Author,
-				Ordinal = sa.Ordinal
-			}));
-
-		publication.Submission = submission;
+		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, Submission.OnlineWatchUrlName);
+		publication.PublicationUrls.AddMirror(Submission.MirrorSiteUrl);
+		publication.Authors.CopyFromSubmission(submission.SubmissionAuthors);
 		_db.Publications.Add(publication);
 
 		await _db.SaveChangesAsync(); // Need an Id for the Title
@@ -152,47 +136,21 @@ public class PublishModel : BasePageModel
 
 		await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
 
-		// Create a wiki page corresponding to this submission
-		var wikiPage = new WikiPage
-		{
-			RevisionMessage = $"Auto-generated from Movie #{publication.Id}",
-			PageName = LinkConstants.PublicationWikiPage + publication.Id,
-			MinorEdit = false,
-			Markup = Submission.MovieMarkup,
-			AuthorId = User.GetUserId()
-		};
-
+		// Create a wiki page corresponding to this publication
+		var wikiPage = GenerateWiki(publication.Id, Submission.MovieMarkup, User.GetUserId());
 		await _wikiPages.Add(wikiPage);
 		publication.WikiContent = wikiPage;
 
 		submission.Status = SubmissionStatus.Published;
-		var history = new SubmissionStatusHistory
-		{
-			SubmissionId = submission.Id,
-			Status = SubmissionStatus.Published
-		};
-		submission.History.Add(history);
-		_db.SubmissionStatusHistory.Add(history);
+		_db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
 
-		Publication? toObsolete = null;
 		if (Submission.MovieToObsolete.HasValue)
 		{
-			toObsolete = await _db.Publications
-				.Include(p => p.PublicationUrls)
-				.Include(p => p.WikiContent)
-				.Include(p => p.System)
-				.Include(p => p.Game)
-				.Include(p => p.Authors)
-				.ThenInclude(pa => pa.Author)
-				.SingleAsync(p => p.Id == Submission.MovieToObsolete);
-			toObsolete.ObsoletedById = publication.Id;
+			await _queueService.ObsoleteWith(Submission.MovieToObsolete.Value, publication.Id);
 		}
 
-		await _db.SaveChangesAsync();
-
 		await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId));
-
-		await _tasVideosAgent.PostSubmissionPublished(submission.Id, publication.Id);
+		await _tasVideosAgent.PostSubmissionPublished(Id, publication.Id);
 		await _publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
 
 		if (_youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
@@ -211,29 +169,19 @@ public class PublishModel : BasePageModel
 			await _youtubeSync.SyncYouTubeVideo(video);
 		}
 
-		if (toObsolete != null)
-		{
-			foreach (var url in toObsolete.PublicationUrls
-				.ThatAreStreaming()
-				.Where(pu => _youtubeSync.IsYoutubeUrl(pu.Url)))
-			{
-				var obsoleteVideo = new YoutubeVideo(
-					toObsolete.Id,
-					toObsolete.CreateTimestamp,
-					url.Url ?? "",
-					url.DisplayName,
-					toObsolete.Title,
-					toObsolete.WikiContent!,
-					toObsolete.System!.Code,
-					toObsolete.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-					toObsolete.Game!.SearchKey,
-					publication.Id);
-
-				await _youtubeSync.SyncYouTubeVideo(obsoleteVideo);
-			}
-		}
-
 		return BaseRedirect($"/{publication.Id}M");
+	}
+
+	private static WikiPage GenerateWiki(int publicationId, string markup, int userId)
+	{
+		return new WikiPage
+		{
+			RevisionMessage = $"Auto-generated from Movie #{publicationId}",
+			PageName = LinkConstants.PublicationWikiPage + publicationId,
+			MinorEdit = false,
+			Markup = markup,
+			AuthorId = userId
+		};
 	}
 
 	private async Task PopulateAvailableMoviesToObsolete(int systemId)

@@ -2,7 +2,6 @@
 using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Extensions;
 
 namespace TASVideos.Data.Entity;
 

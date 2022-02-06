@@ -1,7 +1,6 @@
 ﻿using TASVideos.Common;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Extensions;
 
 namespace TASVideos.Data.Entity;
 
@@ -142,6 +141,16 @@ public class Submission : BaseEntity, ITimeable
 
 public static class SubmissionExtensions
 {
+	public static bool CanPublish(this Submission submission)
+	{
+		return submission.SystemId > 0
+			&& submission.SystemFrameRateId > 0
+			&& submission.GameId > 0
+			&& submission.RomId > 0
+			&& submission.IntendedClassId > 0
+			&& submission.Status == SubmissionStatus.PublicationUnderway;
+	}
+
 	public static IQueryable<Submission> FilterBy(this IQueryable<Submission> query, ISubmissionFilter criteria)
 	{
 		if (!string.IsNullOrWhiteSpace(criteria.User))

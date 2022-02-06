@@ -11,3 +11,16 @@ public class PublicationAuthor
 	public int PublicationId { get; set; }
 	public virtual Publication? Publication { get; set; }
 }
+
+public static class PublicationAuthorExtensions
+{
+	public static void CopyFromSubmission(this ICollection<PublicationAuthor> authors, IEnumerable<SubmissionAuthor> subAuthors)
+	{
+		authors.AddRange(subAuthors
+			.Select(sa => new PublicationAuthor
+			{
+				Author = sa.Author,
+				Ordinal = sa.Ordinal
+			}));
+	}
+}

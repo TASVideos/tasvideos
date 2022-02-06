@@ -281,13 +281,7 @@ public class EditModel : BasePageModel
 		if (submission.Status != Submission.Status)
 		{
 			statusHasChanged = true;
-			var history = new SubmissionStatusHistory
-			{
-				SubmissionId = submission.Id,
-				Status = Submission.Status
-			};
-
-			_db.SubmissionStatusHistory.Add(history);
+			_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 			if (Submission.Status != SubmissionStatus.Rejected &&
 				Submission.Status != SubmissionStatus.Cancelled &&
@@ -443,13 +437,7 @@ public class EditModel : BasePageModel
 			return BadRequest("Submission can not be claimed");
 		}
 
-		var history = new SubmissionStatusHistory
-		{
-			SubmissionId = submission.Id,
-			Status = Submission.Status
-		};
-
-		_db.SubmissionStatusHistory.Add(history);
+		_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 		submission.Status = newStatus;
 		var wikiPage = new WikiPage

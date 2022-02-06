@@ -585,4 +585,42 @@ public class QueueServiceTests
 		Assert.AreEqual(region.ToString().ToUpper(), submission.SystemFrameRate.RegionCode);
 		Assert.AreEqual(entry.Entity, submission.SystemFrameRate.System);
 	}
+
+	[TestMethod]
+	public async Task ObsoleteWith_NoPublication_ReturnsFalse()
+	{
+		var actual = await _queueService.ObsoleteWith(int.MaxValue, int.MaxValue);
+		Assert.IsFalse(actual);
+	}
+
+	[TestMethod]
+	public async Task ObsoleteWith_Success()
+	{
+		_youtubeSync.Setup(m => m.IsYoutubeUrl(It.IsAny<string>())).Returns(true);
+		int pubToObsolete = 1;
+		int obsoletingPub = 2;
+		string youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+		string wikiMarkup = "Test";
+		_db.Publications.Add(new Publication
+		{
+			Id = pubToObsolete,
+			PublicationUrls = new List<PublicationUrl>
+			{
+				new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl }
+			},
+			WikiContent = new WikiPage { Markup = wikiMarkup },
+			System = new GameSystem { Code = "Test" },
+			Game = new Game()
+		});
+		await _db.SaveChangesAsync();
+
+		var actual = await _queueService.ObsoleteWith(pubToObsolete, obsoletingPub);
+
+		Assert.IsTrue(actual);
+		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == pubToObsolete));
+		var actualPub = _db.Publications.Single(p => p.Id == pubToObsolete);
+		Assert.AreEqual(obsoletingPub, actualPub.ObsoletedById);
+
+		_youtubeSync.Verify(v => v.SyncYouTubeVideo(It.IsAny<YoutubeVideo>()));
+	}
 }

@@ -39,6 +39,15 @@ public interface IQueueService
 	/// </summary>
 	/// <returns>The error message if an error occurred, else an empty string</returns>
 	Task<string> MapParsedResult(IParseResult parseResult, Submission submission);
+
+	/// <summary>
+	/// Obsoletes a publication with the existing publication.
+	/// In addition, it marks and syncs the obsoleted youtube videos
+	/// </summary>
+	/// <param name="publicationToObsolete">The movie to obsolete</param>
+	/// <param name="obsoletingPublicationId">The movie that obsoletes it</param>
+	/// <returns>False if publications is not found</returns>
+	Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId);
 }
 
 internal class QueueService : IQueueService
@@ -236,13 +245,7 @@ internal class QueueService : IQueueService
 
 		// Note: Cascading deletes will ensure obsoleted publications are no longer obsoleted
 		_db.Publications.Remove(publication);
-
-		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory
-		{
-			SubmissionId = publication.SubmissionId,
-			Status = publication.Submission!.Status
-		});
-
+		_db.SubmissionStatusHistory.Add(publication.SubmissionId, publication.Submission!.Status);
 		publication.Submission.Status = PublicationUnderway;
 
 		await _tva.PostSubmissionUnpublished(publication.SubmissionId);
@@ -276,7 +279,7 @@ internal class QueueService : IQueueService
 					url.DisplayName,
 					queriedPub.Title,
 					queriedPub.WikiContent!,
-					publication.System!.Code,
+					queriedPub.System!.Code,
 					queriedPub.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 					queriedPub.Game!.SearchKey,
 					queriedPub.ObsoletedById
@@ -341,5 +344,48 @@ internal class QueueService : IQueueService
 		}
 
 		return "";
+	}
+
+	public async Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId)
+	{
+		var toObsolete = await _db.Publications
+			.Include(p => p.PublicationUrls)
+			.Include(p => p.WikiContent)
+			.Include(p => p.System)
+			.Include(p => p.Game)
+			.Include(p => p.Authors)
+			.ThenInclude(pa => pa.Author)
+			.SingleOrDefaultAsync(p => p.Id == publicationToObsolete);
+
+		if (toObsolete is null)
+		{
+			return false;
+		}
+
+		toObsolete.ObsoletedById = obsoletingPublicationId;
+		await _db.SaveChangesAsync();
+
+		foreach (var url in toObsolete.PublicationUrls
+					.ThatAreStreaming()
+					.Where(pu => _youtubeSync.IsYoutubeUrl(pu.Url)))
+		{
+			var obsoleteVideo = new YoutubeVideo(
+				toObsolete.Id,
+				toObsolete.CreateTimestamp,
+				url.Url ?? "",
+				url.DisplayName,
+				toObsolete.Title,
+				toObsolete.WikiContent!,
+				toObsolete.System!.Code,
+				toObsolete.Authors
+					.OrderBy(pa => pa.Ordinal)
+					.Select(pa => pa.Author!.UserName),
+				toObsolete.Game!.SearchKey,
+				obsoletingPublicationId);
+
+			await _youtubeSync.SyncYouTubeVideo(obsoleteVideo);
+		}
+
+		return true;
 	}
 }

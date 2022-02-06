@@ -8,14 +8,6 @@ public class SubmissionPublishModel
 	[Display(Name = "Select movie to be obsoleted")]
 	public int? MovieToObsolete { get; set; }
 
-	[StringLength(50)]
-	[Display(Name = "Branch", Description = "(e.g. \"100%\" or \"princess only\"; \"any%\" can usually be omitted)")]
-	public string? Branch { get; set; }
-
-	[StringLength(50)]
-	[Display(Name = "Emulator Version", Description = "Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.")]
-	public string? EmulatorVersion { get; set; }
-
 	[Required]
 	[Display(Name = "Movie description")]
 	public string MovieMarkup { get; set; } = SiteGlobalConstants.DefaultPublicationText;
@@ -74,6 +66,10 @@ public class SubmissionPublishModel
 	public int SystemId { get; set; }
 	public int? SystemFrameRateId { get; set; }
 	public SubmissionStatus Status { get; set; }
+
+	[Display(Name = "Emulator Version")]
+	public string EmulatorVersion { get; set; } = "";
+	public string? Branch { get; set; }
 
 	public bool CanPublish => SystemId > 0
 		&& SystemFrameRateId.HasValue

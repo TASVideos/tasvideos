@@ -22,6 +22,10 @@
 					<label class="col-sm-3" asp-for="Submission.SystemRegion"></label>
 					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.SystemRegion)</span>
 				</row>
+				<row>
+					<label class="col-sm-3" asp-for="Submission.EmulatorVersion"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.EmulatorVersion)</span>
+				</row>
 			</column>
 			<column lg="6">
 				<row>
@@ -36,6 +40,10 @@
 						</a>
 					</span>
 				</row>
+				<row>
+					<label class="col-sm-3" asp-for="Submission.Branch"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.Branch)</span>
+				</row>
 			</column>
 		</row>
 	</cardbody>
@@ -49,16 +57,6 @@
 			<form-group>
 				<label asp-for="Submission.MovieToObsolete" class="form-control-label"></label>
 				<select asp-for="Submission.MovieToObsolete" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesToObsolete)" class="form-control"></select>
-			</form-group>
-			<form-group>
-				<label asp-for="Submission.Branch" class="form-control-label"></label>
-				<input type="text" asp-for="Submission.Branch" class="form-control" />
-				<span asp-validation-for="Submission.Branch" class="text-danger"></span>
-			</form-group>
-			<form-group>
-				<label asp-for="Submission.EmulatorVersion" class="form-control-label"></label>
-				<input type="text" asp-for="Submission.EmulatorVersion" class="form-control" />
-				<span asp-validation-for="Submission.EmulatorVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Submission.OnlineWatchingUrl" class="form-control-label"></label>
