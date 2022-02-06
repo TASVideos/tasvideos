@@ -73,7 +73,7 @@ public class MovieStatistics : ViewComponent
 		bool reverse = comparisonParameter.StartsWith("-");
 		if (reverse)
 		{
-			comparisonParameter = comparisonParameter.Substring(1);
+			comparisonParameter = comparisonParameter[1..];
 		}
 
 		var comparisonMetric = ParameterList.GetValueOrDefault(comparisonParameter);
