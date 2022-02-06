@@ -125,22 +125,11 @@ public class EditModel : BasePageModel
 
 	private async Task PopulateDropdowns(string systemCode, int? obsoletedById)
 	{
-		var userPermissions = User.Permissions();
 		AvailableFlags = await _db.Flags
-			.Select(f => new SelectListItem
-			{
-				Text = f.Name,
-				Value = f.Id.ToString(),
-				Disabled = f.PermissionRestriction.HasValue
-					&& !userPermissions.Contains(f.PermissionRestriction.Value)
-			})
+			.ToDropDown(User.Permissions())
 			.ToListAsync();
 		AvailableTags = await _db.Tags
-			.Select(f => new SelectListItem
-			{
-				Text = f.DisplayName,
-				Value = f.Id.ToString()
-			})
+			.ToDropdown()
 			.ToListAsync();
 		AvailableMoviesForObsoletedBy = await _db.Publications
 			.Where(p => p.ObsoletedById == null || p.Id == obsoletedById)

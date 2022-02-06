@@ -73,6 +73,26 @@ public static class EntityExtensions
 			});
 	}
 
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Flag> query, IEnumerable<PermissionTo> userPermissions)
+	{
+		return query.Select(f => new SelectListItem
+		{
+			Text = f.Name,
+			Value = f.Id.ToString(),
+			Disabled = f.PermissionRestriction.HasValue
+				&& !userPermissions.Contains(f.PermissionRestriction.Value)
+		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Tag> query)
+	{
+		return query.Select(t => new SelectListItem
+		{
+			Text = t.DisplayName,
+			Value = t.Id.ToString()
+		});
+	}
+
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
 	{
 		return query
