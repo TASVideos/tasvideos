@@ -151,10 +151,10 @@ public class IrcDistributor : IPostDistributor
 				{
 					await ConnectToServer();
 				}
-				catch (Exception e)
+				catch (Exception ex)
 				{
 					// shows the exception, sleeps for a little while and then tries to establish a new connection to the IRC server
-					_logger.LogWarning(e.ToString());
+					_logger.LogWarning("Irc Exception: {ex}", ex.ToString());
 					await Task.Delay(30000);
 				}
 			}

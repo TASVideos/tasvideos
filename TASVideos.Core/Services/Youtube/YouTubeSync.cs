@@ -100,7 +100,11 @@ internal class YouTubeSync : IYoutubeSync
 		var response = await _client.PutAsync("videos?part=status,snippet", updateRequest.ToStringContent());
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError($"[{DateTime.Now}] An error occurred syncing data to Youtube. Request: {JsonConvert.SerializeObject(updateRequest)} Response: {await response.Content.ReadAsStringAsync()}");
+			_logger.LogError(
+				"[{timestamp}] An error occurred syncing data to Youtube. Request: {request} Response: {response}",
+				DateTime.UtcNow,
+				JsonConvert.SerializeObject(updateRequest),
+				await response.Content.ReadAsStringAsync());
 		}
 	}
 
@@ -176,8 +180,11 @@ internal class YouTubeSync : IYoutubeSync
 
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError($"{DateTime.Now} An error occurred sending a request to YouTube. Request: {JsonConvert.SerializeObject(unlistRequest)}");
-			_logger.LogError($"Response: {await response.Content.ReadAsStringAsync()}");
+			_logger.LogError(
+				"{timestamp} An error occurred sending a request to YouTube. Request: {request} Response: {response}",
+				DateTime.UtcNow,
+				JsonConvert.SerializeObject(unlistRequest),
+				await response.Content.ReadAsStringAsync());
 		}
 	}
 
@@ -244,8 +251,11 @@ internal class YouTubeSync : IYoutubeSync
 		var result = await _client.GetAsync($"videos?id={videoId}&part=snippet,fileDetails");
 		if (!result.IsSuccessStatusCode)
 		{
-			_logger.LogError($"{DateTime.Now} Unable to request data for video {videoId} from YouTube");
-			_logger.LogError($"Response: {await result.Content.ReadAsStringAsync()}");
+			_logger.LogError(
+				"{timestamp} Unable to request data for video {videoId} from YouTube. Response: {response}",
+				DateTime.UtcNow,
+				videoId,
+				await result.Content.ReadAsStringAsync());
 			return null;
 		}
 

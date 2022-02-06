@@ -162,10 +162,7 @@ internal class IpBanService : IIpBanService
 		}
 	}
 
-	private void LogError(string mask)
-	{
-		_logger.LogError($"Unable to parse ban address mask {mask}");
-	}
+	private void LogError(string mask) => _logger.LogError("Unable to parse ban address mask {mask}", mask);
 }
 
 public record IpBanEntry(string Mask, string? CreateUserName, DateTime DateCreated);

@@ -16,8 +16,15 @@ internal class EmailLogger : IEmailSender
 
 	public Task SendEmail(IEmail email)
 	{
-		string message = $"Email Generated:\nRecipients: {string.Join(",", email.Recipients)}\nSubject: {email.Subject}\nMessage: {email.Message}";
-		_logger.LogInformation(message);
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation(
+				"Email Generated:\nRecipients: {recipients)}\nSubject: {subject}\nMessage: {message}",
+				string.Join(",", email.Recipients),
+				email.Subject,
+				email.Message);
+		}
+		
 		return Task.CompletedTask;
 	}
 }

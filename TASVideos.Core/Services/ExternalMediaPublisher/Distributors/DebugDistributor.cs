@@ -23,6 +23,17 @@ public class LogDistributor : IPostDistributor
 
 	public async Task Post(IPostable post)
 	{
-		await Task.Run(() => _logger.LogInformation($"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}\n{post.User}"));
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			await Task.Run(() => _logger.LogInformation(
+				"New {post.Type} message recieved\n{announcement}\n{title}\n{body}\nLink:{link}\nGroup:{group}\n{user}",
+				post.Type,
+				post.Announcement,
+				post.Title,
+				post.Body,
+				post.Link,
+				post.Group,
+				post.User));
+		}
 	}
 }

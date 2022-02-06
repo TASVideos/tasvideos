@@ -63,7 +63,10 @@ internal class GoogleAuthService : IGoogleAuthService
 		if (!response.IsSuccessStatusCode)
 		{
 			var errorResponse = await response.Content.ReadAsStringAsync();
-			_logger.LogError($"Unable to authorize google apis for clientId: {settings.ClientId}: " + errorResponse);
+			_logger.LogError(
+				"Unable to authorize google apis for clientId: {clientId}: {errorResponse}",
+				settings.ClientId,
+				errorResponse);
 			return "";
 		}
 

@@ -18,7 +18,7 @@ public class IpBanCheckAttribute : Attribute, IAsyncPageFilter
 		if (banned)
 		{
 			var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<IpBanCheckAttribute>>();
-			logger.LogWarning($"An attempt to use banned ip {ip} was made");
+			logger.LogWarning("An attempt to use banned ip {ip} was made", ip);
 			Denied(context);
 		}
 		else

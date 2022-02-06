@@ -46,7 +46,7 @@ public class RedisCacheService : ICacheService
 		}
 		catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
 		{
-			_logger.LogWarning($"Redis failure on key {key}, silently falling back to uncached");
+			_logger.LogWarning("Redis failure on key {key}, silently falling back to uncached", key);
 			value = default!;
 			return false;
 		}
@@ -62,7 +62,7 @@ public class RedisCacheService : ICacheService
 		}
 		catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
 		{
-			_logger.LogWarning($"Redis failure on setting key {key}, silently falling back and not adding to cache");
+			_logger.LogWarning("Redis failure on setting key {key}, silently falling back and not adding to cache", key);
 		}
 	}
 

@@ -27,7 +27,7 @@ public class Debouncer : IAsyncPageFilter
 				{
 					// Block request as a duplicate
 					var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Debouncer>>();
-					logger.LogWarning($"Blocked duplicate POST request {context.HttpContext.Request.Path}");
+					logger.LogWarning("Blocked duplicate POST request {path}", context.HttpContext.Request.Path);
 					return;
 				}
 

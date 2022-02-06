@@ -41,8 +41,10 @@ public sealed class DiscordDistributor : IPostDistributor
 		var response = await _client.PostAsync($"channels/{channel}/messages", messageContent);
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError($"[{DateTime.Now}] An error occurred sending a message to Discord.");
-			_logger.LogError(await response.Content.ReadAsStringAsync());
+			_logger.LogError(
+				"[{timestamp}] An error occurred sending a message to Discord. Response: {response}",
+				DateTime.UtcNow,
+				await response.Content.ReadAsStringAsync());
 		}
 	}
 

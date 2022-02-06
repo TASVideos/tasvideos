@@ -54,11 +54,13 @@ public class TwitterDistributor : IPostDistributor
 
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError($"[{DateTime.Now}] An error occurred sending a message to Twitter.");
-			_logger.LogError($"Signature Base String: {signatureBaseString}");
-			_logger.LogError($"Signature: {signature}");
-			_logger.LogError(_client.DefaultRequestHeaders.Authorization?.ToString());
-			_logger.LogError(await response.Content.ReadAsStringAsync());
+			_logger.LogError(
+				"[{timestamp}] An error occurred sending a message to Twitter. Signature Base String: {signatureBaseString} Signature: {signature} Authorization: {authorization} Response: {response}",
+				DateTime.UtcNow,
+				signatureBaseString,
+				signature,
+				_client.DefaultRequestHeaders.Authorization?.ToString(),
+				await response.Content.ReadAsStringAsync());
 		}
 	}
 
