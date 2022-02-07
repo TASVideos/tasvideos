@@ -13,6 +13,12 @@ public interface IPointsService
 	ValueTask<double> PlayerPoints(int userId);
 
 	/// <summary>
+	/// Calculates the player points that are being awarded for the given publication
+	/// If a publication with the given <see cref="publicationId"/> does not exist, 0 is returned
+	/// </summary>
+	ValueTask<double> PlayerPointsForPublication(int publicationId);
+
+	/// <summary>
 	/// Returns the averaged overall, tech, and entertainment ratings for a publication
 	/// with the given id.
 	/// </summary>
@@ -29,6 +35,7 @@ public interface IPointsService
 internal class PointsService : IPointsService
 {
 	private const string MovieRatingKey = "OverallRatingForMovie-";
+	private const string MoviePlayerPointKey = "PlayerPointsForPub-";
 	private const string PlayerPointKey = "PlayerPoints-";
 	private const string AverageNumberOfRatingsKey = "AverageNumberOfRatings";
 
@@ -84,6 +91,48 @@ internal class PointsService : IPointsService
 		return playerPoints;
 	}
 
+	public async ValueTask<double> PlayerPointsForPublication(int publicationId)
+	{
+		string cacheKey = MoviePlayerPointKey + publicationId;
+		if (_cache.TryGetValue(cacheKey, out double playerPoints))
+		{
+			return playerPoints;
+		}
+
+		var pubDto = await _db.Publications
+			.Select(p => new PublicationRatingDto
+			{
+				Id = p.Id,
+				Obsolete = p.ObsoletedById.HasValue,
+				ClassWeight = p.PublicationClass!.Weight,
+				AuthorCount = p.Authors.Count,
+				PublicationRatings = p.PublicationRatings
+					.Select(r => r.Value)
+					.ToList()
+			})
+			.SingleOrDefaultAsync(p => p.Id == publicationId);
+
+		if (pubDto is null)
+		{
+			return 0;
+		}
+
+		var publication = new PointsCalculator.Publication
+		{
+			Id = pubDto.Id,
+			Obsolete = pubDto.Obsolete,
+			ClassWeight = pubDto.ClassWeight,
+			AuthorCount = pubDto.AuthorCount,
+			RatingCount = pubDto.PublicationRatings.Count,
+			AverageRating = Rate(pubDto.PublicationRatings).Overall ?? 0
+		};
+
+		var averageRatings = await AverageNumberOfRatingsPerPublication();
+		playerPoints = PointsCalculator.PlayerPointsForMovie(publication, averageRatings);
+		_cache.Set(cacheKey, playerPoints);
+		return playerPoints;
+	}
+
 	public async ValueTask<RatingDto> PublicationRating(int id)
 	{
 		string cacheKey = MovieCacheKey(id);
@@ -105,6 +154,7 @@ internal class PointsService : IPointsService
 		return rating;
 	}
 
+	// TODO: use these cached value in player calculations
 	public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
 	{
 		var ids = publicationIds.ToList();
