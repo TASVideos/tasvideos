@@ -32,7 +32,7 @@
 				}
 			</div>
 			<h4>
-				<a asp-page="View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
+				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
 			</h4>
 		</div>
 	</cardheader>
@@ -160,7 +160,7 @@
 			<div class="col">
 				<div class="float-end">
 					<a permission="EditPublicationMetaData"
-					   asp-page="Edit"
+					   asp-page="/Publications/Edit"
 					   asp-route-id="@Model.Id"
 					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
 					<a permission="CatalogMovies"
