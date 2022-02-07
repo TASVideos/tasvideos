@@ -131,20 +131,8 @@ public class PublishModel : BasePageModel
 		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, Submission.OnlineWatchUrlName);
 		publication.PublicationUrls.AddMirror(Submission.MirrorSiteUrl);
 		publication.Authors.CopyFromSubmission(submission.SubmissionAuthors);
-
-		publication.PublicationFlags.AddRange(Submission.SelectedFlags
-			.Select(f => new PublicationFlag
-			{
-				PublicationId = publication.Id,
-				FlagId = f
-			}));
-
-		publication.PublicationTags.AddRange(Submission.SelectedTags
-			.Select(t => new PublicationTag
-			{
-				PublicationId = publication.Id,
-				TagId = t
-			}));
+		publication.PublicationFlags.AddFlags(Submission.SelectedFlags);
+		publication.PublicationTags.AddTags(Submission.SelectedTags);
 
 		_db.Publications.Add(publication);
 

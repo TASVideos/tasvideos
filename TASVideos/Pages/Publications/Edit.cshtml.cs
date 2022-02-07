@@ -215,12 +215,7 @@ public class EditModel : BasePageModel
 		_db.PublicationFlags.RemoveRange(
 			_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
 
-		publication.PublicationFlags.AddRange(model.SelectedFlags
-			.Select(f => new PublicationFlag
-			{
-				PublicationId = publication.Id,
-				FlagId = f
-			}));
+		publication.PublicationFlags.AddFlags(model.SelectedFlags);
 
 		externalMessages.AddRange((await _tagsService
 			.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags))
@@ -230,12 +225,7 @@ public class EditModel : BasePageModel
 		_db.PublicationTags.RemoveRange(
 			_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
 
-		publication.PublicationTags.AddRange(model.SelectedTags
-			.Select(t => new PublicationTag
-			{
-				PublicationId = publication.Id,
-				TagId = t
-			}));
+		publication.PublicationTags.AddTags(model.SelectedTags);
 
 		await _db.SaveChangesAsync();
 
