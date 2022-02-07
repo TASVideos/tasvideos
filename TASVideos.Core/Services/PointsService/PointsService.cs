@@ -112,7 +112,7 @@ internal class PointsService : IPointsService
 			})
 			.SingleOrDefaultAsync(p => p.Id == publicationId);
 
-		if (pubDto is null)
+		if (pubDto is null || pubDto.AuthorCount == 0)
 		{
 			return 0;
 		}
