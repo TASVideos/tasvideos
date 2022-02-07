@@ -189,10 +189,7 @@ public class EditModel : BasePageModel
 
 		publication.ObsoletedById = model.ObsoletedBy;
 		publication.EmulatorVersion = model.EmulatorVersion;
-		publication.AdditionalAuthors = string.IsNullOrWhiteSpace(model.AdditionalAuthors)
-			? null
-			: model.AdditionalAuthors;
-
+		publication.AdditionalAuthors = model.AdditionalAuthors.NullIfWhitespace();
 		publication.Authors.Clear();
 		publication.Authors.AddRange(await _db.Users
 			.Where(u => Publication.Authors.Contains(u.UserName))

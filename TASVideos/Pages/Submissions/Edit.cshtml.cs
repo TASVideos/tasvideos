@@ -306,7 +306,7 @@ public class EditModel : BasePageModel
 		submission.RomName = Submission.RomName;
 		submission.EncodeEmbedLink = _youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
 		submission.Status = Submission.Status;
-		submission.AdditionalAuthors = Submission.AdditionalAuthors;
+		submission.AdditionalAuthors = Submission.AdditionalAuthors.NullIfWhitespace();
 
 		var revision = new WikiPage
 		{
