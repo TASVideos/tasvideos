@@ -87,52 +87,6 @@ public class MappingProfile : Profile
 				})
 				.ToList()));
 
-		CreateMap<Publication, PublicationDisplayModel>()
-			.ForMember(dest => dest.OnlineWatchingUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Streaming && pu.Url != null).Select(pu => new PublicationDisplayModel.PublicationUrl(pu.Url!, pu.DisplayName))))
-			.ForMember(dest => dest.MirrorSiteUrls, opt => opt.MapFrom(src => src.PublicationUrls.Where(pu => pu.Type == PublicationUrlType.Mirror && pu.Url != null).Select(pu => new PublicationDisplayModel.PublicationUrl(pu.Url!, pu.DisplayName))))
-			.ForMember(dest => dest.RatingCount, opt => opt.MapFrom(src => src.PublicationRatings.Count))
-			.ForMember(dest => dest.ClassIconPath, opt => opt.MapFrom(src => src.PublicationClass!.IconPath))
-			.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
-			.ForMember(dest => dest.TopicId, opt => opt.MapFrom(src => src.Submission!.TopicId))
-			.ForMember(dest => dest.Files, opt => opt.MapFrom(src => src.Files
-				.Select(f => new PublicationDisplayModel.FileModel
-				{
-					Id = f.Id,
-					Path = f.Path,
-					Type = f.Type,
-					Description = f.Description
-				})
-				.ToList()))
-			.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags
-				.Select(pt => new PublicationDisplayModel.TagModel
-				{
-					DisplayName = pt.Tag!.DisplayName,
-					Code = pt.Tag.Code
-				})
-				.ToList()))
-			.ForMember(dest => dest.GenreTags, opt => opt.MapFrom(src => src.Game!.GameGenres
-				.Select(gg => new PublicationDisplayModel.TagModel
-				{
-					DisplayName = gg.Genre!.DisplayName,
-					Code = gg.Genre.DisplayName // TODO
-				})
-				.ToList()))
-			.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
-				.Select(pf => new PublicationDisplayModel.FlagModel
-				{
-					IconPath = pf.Flag!.IconPath,
-					LinkPath = pf.Flag!.LinkPath,
-					Name = pf.Flag.Name
-				})
-				.ToList()))
-			.ForMember(dest => dest.ObsoletedMovies, opt => opt.MapFrom(src => src.ObsoletedMovies
-				.Select(p => new PublicationDisplayModel.ObsoletesModel
-				{
-					Id = p.Id,
-					Title = p.Title
-				})
-				.ToList()));
-
 		CreateMap<UserFileComment, UserFileModel.UserFileCommentModel>()
 			.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User!.UserName));
 

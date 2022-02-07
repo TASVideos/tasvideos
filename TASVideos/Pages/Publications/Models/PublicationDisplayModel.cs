@@ -9,15 +9,15 @@ public class PublicationDisplayModel
 	public string GameName { get; set; } = "";
 	public DateTime CreateTimestamp { get; set; }
 	public DateTime LastUpdateTimestamp { get; set; }
-	public string? LastUpdateUser { get; set; }
-
 	public int? ObsoletedById { get; set; }
 	public string Title { get; set; } = "";
-	public string ClassIconPath { get; set; } = "";
+	public string? ClassIconPath { get; set; }
 	public string MovieFileName { get; set; } = "";
 	public int SubmissionId { get; set; }
-	public IEnumerable<PublicationUrl> OnlineWatchingUrls { get; set; } = new List<PublicationUrl>();
-	public IEnumerable<PublicationUrl> MirrorSiteUrls { get; set; } = new List<PublicationUrl>();
+
+	internal ICollection<PublicationUrl> Urls { get; set; } = new List<PublicationUrl>();
+	public IEnumerable<PublicationUrl> OnlineWatchingUrls => Urls.Where(u => u.Type == PublicationUrlType.Streaming);
+	public IEnumerable<PublicationUrl> MirrorSiteUrls => Urls.Where(u => u.Type == PublicationUrlType.Mirror);
 	public int TopicId { get; set; }
 	public string? EmulatorVersion { get; set; }
 
@@ -63,5 +63,5 @@ public class PublicationDisplayModel
 		public string Title { get; set; } = "";
 	}
 
-	public record PublicationUrl(string Url, string? DisplayName);
+	public record PublicationUrl(PublicationUrlType Type, string? Url, string? DisplayName);
 }

@@ -1,9 +1,7 @@
 ﻿using System.Net.Mime;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Pages.Publications.Models;
 
@@ -13,17 +11,10 @@ namespace TASVideos.Pages.Publications;
 public class ViewModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
-	private readonly IPointsService _pointsService;
 
-	public ViewModel(
-		ApplicationDbContext db,
-		IMapper mapper,
-		IPointsService pointsService)
+	public ViewModel(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
-		_pointsService = pointsService;
 	}
 
 	[FromRoute]
@@ -33,8 +24,8 @@ public class ViewModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publication = await _mapper
-			.ProjectTo<PublicationDisplayModel>(_db.Publications)
+		var publication = await _db.Publications
+			.ToViewModel()
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
 		if (publication == null)
@@ -43,10 +34,6 @@ public class ViewModel : BasePageModel
 		}
 
 		Publication = publication;
-
-		Publication.OverallRating = (await _pointsService.PublicationRating(Id))
-			.Overall;
-
 		return Page();
 	}
 

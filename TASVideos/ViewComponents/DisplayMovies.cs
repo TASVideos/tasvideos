@@ -13,7 +13,6 @@ namespace TASVideos.ViewComponents;
 public class DisplayMovies : ViewComponent
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 	private readonly IMovieSearchTokens _tokens;
 
 	public DisplayMovies(
@@ -22,7 +21,6 @@ public class DisplayMovies : ViewComponent
 		IMovieSearchTokens tokens)
 	{
 		_db = db;
-		_mapper = mapper;
 		_tokens = tokens;
 	}
 
@@ -66,9 +64,9 @@ public class DisplayMovies : ViewComponent
 			return View(new List<PublicationDisplayModel>());
 		}
 
-		var results = await _mapper.ProjectTo<PublicationDisplayModel>(
-			_db.Publications
-				.FilterByTokens(searchModel))
+		var results = await _db.Publications
+			.FilterByTokens(searchModel)
+			.ToViewModel()
 			.ToListAsync();
 		return View(results);
 	}

@@ -17,24 +17,10 @@ public interface IPointsService
 	/// If a publication with the given <see cref="publicationId"/> does not exist, 0 is returned
 	/// </summary>
 	ValueTask<double> PlayerPointsForPublication(int publicationId);
-
-	/// <summary>
-	/// Returns the averaged overall, tech, and entertainment ratings for a publication
-	/// with the given id.
-	/// </summary>
-	ValueTask<RatingDto> PublicationRating(int id);
-
-	/// <summary>
-	/// Returns the averaged overall, tech, and entertainment ratings for a publication
-	/// with the given set of ids
-	/// <seealso cref="PublicationRating"/>
-	/// </summary>
-	Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds);
 }
 
 internal class PointsService : IPointsService
 {
-	private const string MovieRatingKey = "OverallRatingForMovie-";
 	private const string MoviePlayerPointKey = "PlayerPointsForPub-";
 	private const string PlayerPointKey = "PlayerPoints-";
 	private const string AverageNumberOfRatingsKey = "AverageNumberOfRatings";
@@ -133,62 +119,6 @@ internal class PointsService : IPointsService
 		return playerPoints;
 	}
 
-	public async ValueTask<RatingDto> PublicationRating(int id)
-	{
-		string cacheKey = MovieCacheKey(id);
-		if (_cache.TryGetValue(cacheKey, out RatingDto rating))
-		{
-			return rating;
-		}
-
-		var ratings = await _db.PublicationRatings
-			.ForPublication(id)
-			.ThatAreNotFromAnAuthor()
-			.ThatCanBeUsedToRate()
-			.Select(r => r.Value)
-			.ToListAsync();
-
-		rating = Rate(ratings);
-
-		_cache.Set(cacheKey, rating);
-		return rating;
-	}
-
-	// TODO: use these cached value in player calculations
-	public async Task<IDictionary<int, RatingDto>> PublicationRatings(IEnumerable<int> publicationIds)
-	{
-		var ids = publicationIds.ToList();
-		var ratings = _cache
-			.GetAll<RatingDto>(ids.Select(MovieCacheKey))
-			.ToDictionary(
-				tkey => int.Parse(tkey.Key.Replace(MovieRatingKey, "")),
-				tvalue => tvalue.Value);
-
-		var publicationsToRate = ids.Where(i => !ratings.ContainsKey(i));
-
-		var ratingsByPub = (await _db.PublicationRatings
-			.Where(p => publicationsToRate.Contains(p.PublicationId))
-			.ThatAreNotFromAnAuthor()
-			.ThatCanBeUsedToRate()
-			.ToListAsync())
-			.GroupBy(gkey => gkey.PublicationId);
-
-		foreach (var pub in ratingsByPub)
-		{
-			var cacheKey = MovieCacheKey(pub.Key);
-			var pubRatings = pub.ToList();
-			var rating = Rate(pubRatings
-				.Select(r => r.Value)
-				.ToList());
-			_cache.Set(cacheKey, rating);
-			ratings.Add(pub.Key, rating);
-		}
-
-		return ratings;
-	}
-
-	private static string MovieCacheKey(int id) => MovieRatingKey + id;
-
 	private static RatingDto Rate(ICollection<double> ratings)
 	{
 		return new RatingDto(
@@ -198,7 +128,7 @@ internal class PointsService : IPointsService
 			ratings.Count);
 	}
 
-	// total ratings / (2 * total publications)
+	// total ratings / total publications
 	private async ValueTask<double> AverageNumberOfRatingsPerPublication()
 	{
 		if (_cache.TryGetValue(AverageNumberOfRatingsKey, out double playerPoints))

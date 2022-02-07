@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
@@ -14,19 +13,13 @@ namespace TASVideos.Pages.Publications;
 public class IndexModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
-	private readonly IPointsService _points;
 	private readonly IMovieSearchTokens _movieTokens;
 
 	public IndexModel(
 		ApplicationDbContext db,
-		IMapper mapper,
-		IPointsService points,
 		IMovieSearchTokens movieTokens)
 	{
 		_db = db;
-		_mapper = mapper;
-		_points = points;
 		_movieTokens = movieTokens;
 	}
 
@@ -81,18 +74,10 @@ public class IndexModel : BasePageModel
 			return BaseRedirect("Movies");
 		}
 
-		Movies = await _mapper.ProjectTo<PublicationDisplayModel>(
-			_db.Publications
-				.FilterByTokens(searchModel))
-				.ToListAsync();
-
-		var ratings = (await _points.PublicationRatings(Movies.Select(m => m.Id)))
-			.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Value.Overall);
-
-		foreach ((int key, double? value) in ratings)
-		{
-			Movies.First(m => m.Id == key).OverallRating = value;
-		}
+		Movies = await _db.Publications
+			.FilterByTokens(searchModel)
+			.ToViewModel()
+			.ToListAsync();
 
 		return Page();
 	}

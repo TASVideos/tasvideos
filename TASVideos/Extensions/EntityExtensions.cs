@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Extensions;
@@ -120,6 +121,67 @@ public static class EntityExtensions
 				Judge = s.Judge != null ? s.Judge.UserName : null,
 				Publisher = s.Publisher != null ? s.Publisher.UserName : null,
 				IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null
+			});
+	}
+
+	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query)
+	{
+		return query
+			.Select(p => new PublicationDisplayModel
+			{
+				Id = p.Id,
+				GameId = p.GameId,
+				GameName = p.Game!.DisplayName,
+				CreateTimestamp = p.CreateTimestamp,
+				LastUpdateTimestamp = p.LastUpdateTimestamp,
+				ObsoletedById = p.ObsoletedById,
+				Title = p.Title,
+				ClassIconPath = p.PublicationClass!.IconPath,
+				MovieFileName = p.MovieFileName,
+				SubmissionId = p.SubmissionId,
+				Urls = p.PublicationUrls
+					.Select(pu => new PublicationDisplayModel.PublicationUrl(pu.Type, pu.Url!, pu.DisplayName))
+					.ToList(),
+				TopicId = p.Submission!.TopicId ?? 0,
+				EmulatorVersion = p.EmulatorVersion,
+				Tags = p.PublicationTags
+					.Select(pt => new PublicationDisplayModel.TagModel
+					{
+						DisplayName = pt.Tag!.DisplayName,
+						Code = pt.Tag.Code
+					}),
+				GenreTags = p.Game!.GameGenres
+					.Select(gg => new PublicationDisplayModel.TagModel
+					{
+						DisplayName = gg.Genre!.DisplayName,
+						Code = gg.Genre.DisplayName // TODO
+					}),
+				Files = p.Files
+					.Select(f => new PublicationDisplayModel.FileModel
+					{
+						Id = f.Id,
+						Path = f.Path,
+						Type = f.Type,
+						Description = f.Description
+					}),
+				Flags = p.PublicationFlags
+					.Select(pf => new PublicationDisplayModel.FlagModel
+					{
+						IconPath = pf.Flag!.IconPath,
+						LinkPath = pf.Flag!.LinkPath,
+						Name = pf.Flag.Name
+					}),
+				ObsoletedMovies = p.ObsoletedMovies
+					.Select(o => new PublicationDisplayModel.ObsoletesModel
+					{
+						Id = o.Id,
+						Title = o.Title
+					}),
+				RatingCount = p.PublicationRatings.Count,
+				OverallRating = p.PublicationRatings
+					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
+					.Where(pr => pr.User!.UseRatings)
+					.Average(pr => pr.Value)
 			});
 	}
 }
