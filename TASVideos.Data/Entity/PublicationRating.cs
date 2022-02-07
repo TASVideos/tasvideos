@@ -29,14 +29,4 @@ public static class PublicationRatingExtensions
 	{
 		return query.Where(pr => pr.UserId == userId);
 	}
-
-	public static IQueryable<PublicationRating> ThatAreNotFromAnAuthor(this IQueryable<PublicationRating> query)
-	{
-		return query.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId));
-	}
-
-	public static IQueryable<PublicationRating> ThatCanBeUsedToRate(this IQueryable<PublicationRating> query)
-	{
-		return query.Where(pr => pr.User!.UseRatings);
-	}
 }

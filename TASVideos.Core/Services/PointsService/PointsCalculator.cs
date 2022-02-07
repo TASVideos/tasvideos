@@ -44,7 +44,7 @@ public static class PointsCalculator
 		averageRatingCount = Math.Max(averageRatingCount, 0);
 		var exp = RatingExponent(publication.RatingCount, averageRatingCount);
 
-		var rawPoints = Math.Pow(Math.Max(publication.AverageRating, 0), exp);
+		var rawPoints = Math.Pow(Math.Max(publication.AverageRating ?? 0, 0), exp);
 		var authorMultiplier = Math.Pow(publication.AuthorCount, -0.5);
 		var actual = rawPoints * authorMultiplier * publication.ClassWeight;
 
@@ -87,7 +87,7 @@ public static class PointsCalculator
 		// We still factor in obsolete movies but only at a number less than zero
 		// for the purpose of determining "former player" rank
 		public bool Obsolete { get; init; }
-		public double AverageRating { get; init; }
+		public double? AverageRating { get; init; }
 		public int RatingCount { get; init; }
 		public double ClassWeight { get; init; }
 		public int AuthorCount { get; init; }

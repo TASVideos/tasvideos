@@ -46,36 +46,15 @@ internal class PointsService : IPointsService
 
 		var publications = await _db.Publications
 			.ForAuthor(userId)
-			.Select(p => new PublicationRatingDto
-			{
-				Id = p.Id,
-				Obsolete = p.ObsoletedById.HasValue,
-				ClassWeight = p.PublicationClass!.Weight,
-				AuthorCount = p.Authors.Count,
-				PublicationRatings = p.PublicationRatings
-					.Select(r => r.Value)
-					.ToList()
-			})
+			.ToCalcPublication()
 			.ToListAsync();
 
-		var pubsForCalculation = publications
-			.Select(pub => new PointsCalculator.Publication
-			{
-				Id = pub.Id,
-				AuthorCount = pub.AuthorCount,
-				Obsolete = pub.Obsolete,
-				ClassWeight = pub.ClassWeight,
-				RatingCount = pub.PublicationRatings.Count,
-				AverageRating = Rate(pub.PublicationRatings).Overall ?? 0
-			})
-			.ToList();
-
 		var averageRatings = await AverageNumberOfRatingsPerPublication();
-		playerPoints = Math.Round(PointsCalculator.PlayerPoints(pubsForCalculation, averageRatings), 1);
+		playerPoints = Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings), 1);
 
 		_cache.Set(cacheKey, playerPoints);
 		return playerPoints;
-	}
+		}
 
 	public async ValueTask<double> PlayerPointsForPublication(int publicationId)
 	{
@@ -85,47 +64,19 @@ internal class PointsService : IPointsService
 			return playerPoints;
 		}
 
-		var pubDto = await _db.Publications
-			.Select(p => new PublicationRatingDto
-			{
-				Id = p.Id,
-				Obsolete = p.ObsoletedById.HasValue,
-				ClassWeight = p.PublicationClass!.Weight,
-				AuthorCount = p.Authors.Count,
-				PublicationRatings = p.PublicationRatings
-					.Select(r => r.Value)
-					.ToList()
-			})
+		var publication = await _db.Publications
+			.ToCalcPublication()
 			.SingleOrDefaultAsync(p => p.Id == publicationId);
 
-		if (pubDto is null || pubDto.AuthorCount == 0)
+		if (publication is null || publication.AuthorCount == 0)
 		{
 			return 0;
 		}
-
-		var publication = new PointsCalculator.Publication
-		{
-			Id = pubDto.Id,
-			Obsolete = pubDto.Obsolete,
-			ClassWeight = pubDto.ClassWeight,
-			AuthorCount = pubDto.AuthorCount,
-			RatingCount = pubDto.PublicationRatings.Count,
-			AverageRating = Rate(pubDto.PublicationRatings).Overall ?? 0
-		};
 
 		var averageRatings = await AverageNumberOfRatingsPerPublication();
 		playerPoints = PointsCalculator.PlayerPointsForMovie(publication, averageRatings);
 		_cache.Set(cacheKey, playerPoints);
 		return playerPoints;
-	}
-
-	private static RatingDto Rate(ICollection<double> ratings)
-	{
-		return new RatingDto(
-			ratings.Any()
-				? ratings.Average()
-				: null,
-			ratings.Count);
 	}
 
 	// total ratings / total publications
@@ -147,13 +98,23 @@ internal class PointsService : IPointsService
 		_cache.Set(AverageNumberOfRatingsKey, avg);
 		return avg;
 	}
+}
 
-	private class PublicationRatingDto
+internal static class PointsEntityExtensions
+{
+	public static IQueryable<PointsCalculator.Publication> ToCalcPublication(this IQueryable<Publication> query)
 	{
-		public int Id { get; init; }
-		public bool Obsolete { get; init; }
-		public double ClassWeight { get; init; }
-		public int AuthorCount { get; init; }
-		public ICollection<double> PublicationRatings { get; init; } = new List<double>();
+		return query.Select(p => new PointsCalculator.Publication
+		{
+			Id = p.Id,
+			Obsolete = p.ObsoletedById.HasValue,
+			ClassWeight = p.PublicationClass!.Weight,
+			AuthorCount = p.Authors.Count,
+			RatingCount = p.PublicationRatings.Count,
+			AverageRating = p.PublicationRatings.Count > 0 ? p.PublicationRatings
+				.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
+				.Where(pr => pr.User!.UseRatings)
+				.Average(pr => pr.Value) : null
+		});
 	}
 }
