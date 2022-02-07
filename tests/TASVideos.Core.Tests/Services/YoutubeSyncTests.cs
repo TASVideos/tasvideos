@@ -47,6 +47,18 @@ public class YoutubeSyncTests
 		Assert.AreEqual(expected, actual);
 	}
 
+	[TestMethod]
+	[DataRow(null, null)]
+	[DataRow("", null)]
+	[DataRow("https://www.youtube.com/watch?v=12345", "https://www.youtube.com/embed/12345")]
+	[DataRow("http://www.youtube.com/watch?v=12345", "https://www.youtube.com/embed/12345")]
+	[DataRow("https://www.youtube.com/embed/12345", "https://www.youtube.com/embed/12345")]
+	public void ConvertToEmbedLink(string? url, string? expected)
+	{
+		var actual = _youTubeSync.ConvertToEmbedLink(url);
+		Assert.AreEqual(expected, actual);
+	}
+
 	private class TestWikiToTextRenderer : IWikiToTextRenderer
 	{
 		public async Task<string> RenderWikiForYoutube(WikiPage page) => await Task.FromResult("");

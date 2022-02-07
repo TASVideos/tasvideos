@@ -197,10 +197,15 @@ internal class YouTubeSync : IYoutubeSync
 	{
 		if (!IsYoutubeUrl(url))
 		{
+			return url.NullIfWhitespace();
+		}
+
+		if (url!.Contains("/embed"))
+		{
 			return url;
 		}
 
-		var videoId = VideoId(url!);
+		var videoId = VideoId(url);
 
 		if (string.IsNullOrWhiteSpace(videoId))
 		{
