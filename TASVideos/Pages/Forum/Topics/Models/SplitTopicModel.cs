@@ -6,8 +6,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 {
 	public class SplitTopicModel
 	{
-		[Required]
-		[Display(Name = "Split On Post")]
+		[Display(Name = "Split Posts Starting At")]
 		public int? PostToSplitId { get; set; }
 
 		[Display(Name = "Create New Topic In")]
@@ -22,7 +21,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 		public int ForumId { get; set; }
 		public string ForumName { get; set; } = "";
 
-		public IEnumerable<Post> Posts { get; set; } = new List<Post>();
+		public IList<Post> Posts { get; set; } = new List<Post>();
 
 		public class Post
 		{
@@ -35,6 +34,7 @@ namespace TASVideos.Pages.Forum.Topics.Models
 			public int PosterId { get; set; }
 			public string PosterName { get; set; } = "";
 			public string? PosterAvatar { get; set; }
+			public bool Selected { get; set; }
 		}
 	}
 }

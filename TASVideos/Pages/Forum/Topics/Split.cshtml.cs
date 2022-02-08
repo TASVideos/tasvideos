@@ -38,34 +38,7 @@ namespace TASVideos.Pages.Forum.Topics
 
 		public async Task<IActionResult> OnGet()
 		{
-			bool seeRestricted = CanSeeRestricted;
-			Topic = await _db.ForumTopics
-				.ExcludeRestricted(seeRestricted)
-				.Where(t => t.Id == Id)
-				.Select(t => new SplitTopicModel
-				{
-					Title = t.Title,
-					SplitTopicName = "(Split from " + t.Title + ")",
-					SplitToForumId = t.Forum!.Id,
-					ForumId = t.Forum.Id,
-					ForumName = t.Forum.Name,
-					Posts = t.ForumPosts
-						.Select(p => new SplitTopicModel.Post
-						{
-							Id = p.Id,
-							PostCreateTimestamp = p.CreateTimestamp,
-							EnableBbCode = p.EnableBbCode,
-							EnableHtml = p.EnableHtml,
-							Subject = p.Subject,
-							Text = p.Text,
-							PosterId = p.PosterId,
-							PosterName = p.Poster!.UserName,
-							PosterAvatar = p.Poster.Avatar
-						})
-						.ToList()
-				})
-				.SingleOrDefaultAsync();
-
+			await PopulatePosts();
 			if (Topic == null)
 			{
 				return NotFound();
@@ -79,6 +52,7 @@ namespace TASVideos.Pages.Forum.Topics
 		{
 			if (!ModelState.IsValid)
 			{
+				await PopulatePosts();
 				await PopulateAvailableForums();
 				return Page();
 			}
@@ -104,12 +78,30 @@ namespace TASVideos.Pages.Forum.Topics
 				return NotFound();
 			}
 
-			var splitOnPost = topic.ForumPosts
-				.SingleOrDefault(p => p.Id == Topic.PostToSplitId);
+			var selectedPosts = Topic.Posts
+				.Where(tp => tp.Selected)
+				.Select(tp => tp.Id)
+				.ToList();
+			var postsToSplit = topic.ForumPosts
+				.Where(p => selectedPosts.Contains(p.Id))
+				.ToList();
 
-			if (splitOnPost == null)
+			if (!postsToSplit.Any())
 			{
-				return NotFound();
+				var splitOnPost = topic.ForumPosts
+					.SingleOrDefault(p => p.Id == Topic.PostToSplitId);
+
+				if (splitOnPost == null)
+				{
+					await PopulatePosts();
+					await PopulateAvailableForums();
+					return Page();
+				}
+
+				postsToSplit = topic.ForumPosts
+					.Where(p => p.Id == splitOnPost.Id
+						|| p.CreateTimestamp > splitOnPost.CreateTimestamp)
+					.ToList();
 			}
 
 			var newTopic = new ForumTopic
@@ -123,11 +115,7 @@ namespace TASVideos.Pages.Forum.Topics
 			_db.ForumTopics.Add(newTopic);
 			await _db.SaveChangesAsync();
 
-			var splitPosts = topic.ForumPosts
-				.Where(p => p.Id == splitOnPost.Id
-					|| p.CreateTimestamp > splitOnPost.CreateTimestamp);
-
-			foreach (var post in splitPosts)
+			foreach (var post in postsToSplit)
 			{
 				post.TopicId = newTopic.Id;
 				post.ForumId = destinationForum.Id;
@@ -144,6 +132,38 @@ namespace TASVideos.Pages.Forum.Topics
 				$"Forum/Topics/{newTopic.Id}");
 
 			return RedirectToPage("Index", new { id = newTopic.Id });
+		}
+
+		private async Task PopulatePosts()
+		{
+			bool seeRestricted = CanSeeRestricted;
+			Topic = await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.Where(t => t.Id == Id)
+				.Select(t => new SplitTopicModel
+				{
+					Title = t.Title,
+					SplitTopicName = "(Split from " + t.Title + ")",
+					SplitToForumId = t.Forum!.Id,
+					ForumId = t.Forum.Id,
+					ForumName = t.Forum.Name,
+					Posts = t.ForumPosts
+						.Select(p => new SplitTopicModel.Post
+						{
+							Id = p.Id,
+							PostCreateTimestamp = p.CreateTimestamp,
+							EnableBbCode = p.EnableBbCode,
+							EnableHtml = p.EnableHtml,
+							Subject = p.Subject,
+							Text = p.Text,
+							PosterId = p.PosterId,
+							PosterName = p.Poster!.UserName,
+							PosterAvatar = p.Poster.Avatar
+						})
+						.OrderBy(p => p.PostCreateTimestamp)
+						.ToList()
+				})
+				.SingleOrDefaultAsync();
 		}
 
 		private async Task PopulateAvailableForums()
