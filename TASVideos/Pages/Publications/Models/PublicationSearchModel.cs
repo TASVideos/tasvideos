@@ -91,6 +91,11 @@ public class PublicationSearchModel : IPublicationTokens
 			sb.Append("-Obs");
 		}
 
+		if (!string.IsNullOrWhiteSpace(SortBy))
+		{
+			sb.Append("-Sort").Append(SortBy);
+		}
+
 		return sb.ToString().Trim('-');
 	}
 }
