@@ -36,7 +36,7 @@ public class DisplayMovies : ViewComponent
 		IList<int> id,
 		IList<int> game,
 		IList<int> author,
-		string sort,
+		string? sort,
 		int? limit)
 	{
 		var tokenLookup = await _tokens.GetTokens();
@@ -47,7 +47,7 @@ public class DisplayMovies : ViewComponent
 			SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Select(c => c.ToLower()).Contains(s)),
 			ShowObsoleted = obs,
 			OnlyObsoleted = obsonly,
-			SortBy = sort,
+			SortBy = sort?.ToLower() ?? "",
 			Limit = limit,
 			Years = tokenLookup.Years.Where(year.Contains),
 			Tags = tokenLookup.Tags.Where(t => tag.Select(tt => tt.ToLower()).Contains(t)),
@@ -66,7 +66,7 @@ public class DisplayMovies : ViewComponent
 
 		var results = await _db.Publications
 			.FilterByTokens(searchModel)
-			.ToViewModel()
+			.ToViewModel(searchModel.SortBy == "y")
 			.ToListAsync();
 		return View(results);
 	}

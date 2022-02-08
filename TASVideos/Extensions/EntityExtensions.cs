@@ -124,9 +124,9 @@ public static class EntityExtensions
 			});
 	}
 
-	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query)
+	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false)
 	{
-		return query
+		var q = query
 			.Select(p => new PublicationDisplayModel
 			{
 				Id = p.Id,
@@ -183,5 +183,12 @@ public static class EntityExtensions
 					.Where(pr => pr.User!.UseRatings)
 					.Average(pr => pr.Value)
 			});
+
+		if (ratingSort)
+		{
+			q = q.OrderByDescending(p => p.OverallRating);
+		}
+
+		return q;
 	}
 }
