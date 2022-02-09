@@ -35,12 +35,13 @@ public class SplitModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		await PopulatePosts();
-		if (Topic == null)
+		var splitTopic = await PopulatePosts();
+		if (splitTopic == null)
 		{
 			return NotFound();
 		}
 
+		Topic = splitTopic;
 		await PopulateAvailableForums();
 		return Page();
 	}
@@ -120,8 +121,6 @@ public class SplitModel : BasePageModel
 
 		await _db.SaveChangesAsync();
 
-		var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
-
 		await _publisher.SendForum(
 			destinationForum.Restricted || topic.Forum!.Restricted,
 			$"Topic SPLIT by {User.Name()}",
@@ -131,10 +130,10 @@ public class SplitModel : BasePageModel
 		return RedirectToPage("Index", new { id = newTopic.Id });
 	}
 
-	private async Task PopulatePosts()
+	private async Task<SplitTopicModel?> PopulatePosts()
 	{
 		bool seeRestricted = CanSeeRestricted;
-		Topic = await _db.ForumTopics
+		return await _db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == Id)
 			.Select(t => new SplitTopicModel
@@ -167,13 +166,13 @@ public class SplitModel : BasePageModel
 	{
 		var seeRestricted = CanSeeRestricted;
 		AvailableForums = await _db.Forums
-				.ExcludeRestricted(seeRestricted)
-				.Select(f => new SelectListItem
-				{
-					Text = f.Name,
-					Value = f.Id.ToString(),
-					Selected = f.Id == Topic.ForumId
-				})
-				.ToListAsync();
+			.ExcludeRestricted(seeRestricted)
+			.Select(f => new SelectListItem
+			{
+				Text = f.Name,
+				Value = f.Id.ToString(),
+				Selected = f.Id == Topic.ForumId
+			})
+			.ToListAsync();
 	}
 }
