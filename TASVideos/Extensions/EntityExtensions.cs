@@ -181,7 +181,8 @@ public static class EntityExtensions
 				OverallRating = p.PublicationRatings
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 					.Where(pr => pr.User!.UseRatings)
-					.Average(pr => pr.Value)
+					.Average(pr => pr.Value),
+				Region = p.Rom != null ? p.Rom.Region : null
 			});
 
 		if (ratingSort)
