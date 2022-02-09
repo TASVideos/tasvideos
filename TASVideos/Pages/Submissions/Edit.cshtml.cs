@@ -225,7 +225,13 @@ public class EditModel : BasePageModel
 			: null;
 		bool intendedClassChanged = submission.IntendedClass == submissionIntendedClass;
 
-		if ((statusHasChanged || rejectionReasonChanged || intendedClassChanged) && !User.Has(PermissionTo.JudgeSubmissions))
+		bool invalidJudgeChange = !User.Has(PermissionTo.JudgeSubmissions)
+			&& ((statusHasChanged && Submission.Status is not SubmissionStatus.Cancelled or SubmissionStatus.Published or SubmissionStatus.PublicationUnderway)
+				|| rejectionReasonChanged
+				|| intendedClassChanged);
+		bool invalidPublisherChange = !User.Has(PermissionTo.PublishMovies) && statusHasChanged && Submission.Status is SubmissionStatus.Published or SubmissionStatus.PublicationUnderway;
+
+		if (invalidJudgeChange || invalidPublisherChange)
 		{
 			return AccessDenied();
 		}

@@ -14,7 +14,7 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.Status" class="form-control-label"></label>
-				<select disabled="@(!User.Has(PermissionTo.JudgeSubmissions))" class="form-control"
+				<select class="form-control"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
 			</form-group>
