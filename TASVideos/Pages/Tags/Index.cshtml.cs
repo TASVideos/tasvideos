@@ -1,28 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Tags
+namespace TASVideos.Pages.Tags;
+
+[RequirePermission(PermissionTo.TagMaintenance)]
+public class IndexModel : BasePageModel
 {
-	[RequirePermission(PermissionTo.TagMaintenance)]
-	public class IndexModel : BasePageModel
+	private readonly ITagService _tagService;
+
+	public IndexModel(ITagService tagService)
 	{
-		private readonly ITagService _tagService;
+		_tagService = tagService;
+	}
 
-		public IndexModel(ITagService tagService)
-		{
-			_tagService = tagService;
-		}
+	public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
 
-		public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
-
-		public async Task OnGet()
-		{
-			Tags = (await _tagService.GetAll())
-				.OrderBy(t => t.Code)
-				.ToList();
-		}
+	public async Task OnGet()
+	{
+		Tags = (await _tagService.GetAll())
+			.OrderBy(t => t.Code)
+			.ToList();
 	}
 }

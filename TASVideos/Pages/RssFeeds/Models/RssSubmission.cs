@@ -1,14 +1,12 @@
-﻿using System;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.RssFeeds.Models
+namespace TASVideos.Pages.RssFeeds.Models;
+
+public class RssSubmission
 {
-	public class RssSubmission
-	{
-		public int Id { get; init; }
-		public int? TopicId { get; init; }
-		public DateTime CreateTimestamp { get; init; }
-		public string Title { get; init; } = "";
-		public WikiPage Wiki { get; init; } = new ();
-	}
+	public int Id { get; init; }
+	public int? TopicId { get; init; }
+	public DateTime CreateTimestamp { get; init; }
+	public string Title { get; init; } = "";
+	public WikiPage Wiki { get; init; } = new();
 }

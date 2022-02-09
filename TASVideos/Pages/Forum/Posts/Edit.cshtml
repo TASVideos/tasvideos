@@ -2,11 +2,12 @@
 @model EditModel
 @{
 	ViewData["Title"] = $"Editing Post in Topic: {Model.Post.TopicTitle}";
+	bool isUserEdit = Model.Post.PosterId == User.GetUserId();
 }
 
 @section PageTitle {
 	<div class="container mb-2">
-		<h1>Editing Post in Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId">@Model.Post.TopicTitle</a></h1>
+		<h1 class="card card-header d-block">Editing Post in Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId">@Model.Post.TopicTitle</a></h1>
 	</div>
 }
 <show-more max-height="0" show-text="Show previous posts" reverse condition="@Model.PreviousPosts.Any()" class="mb-2">
@@ -50,10 +51,14 @@
 			<input type="text" asp-for="Post.TopicTitle" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Post.TopicTitle" class="text-danger"></span>
 		</column>
-		<column md="6">
+		<column md="4">
 			<label asp-for="Post.Mood" class="form-control-label"></label>
-			<select asp-for="Post.Mood" asp-items="@Model.Moods" class="form-control"></select>
+			<input condition="!isUserEdit" type="text" readonly asp-for="Post.Mood" class="form-control" />
+			<select condition="isUserEdit" asp-for="Post.Mood" asp-items="@Model.Moods" class="form-control"></select>
 			<span asp-validation-for="Post.Mood" class="text-danger"></span>
+		</column>
+		<column md="2">
+			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Post.Mood), Model.Post.Mood, Model.UserAvatars)" />
 		</column>
 	</row>
 	<fullrow class="mt-3">

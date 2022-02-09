@@ -3,7 +3,7 @@
 
 <row class="my-2 align-items-center">
 	<div class="col-12 text-end">
-		<small><label class="text-muted me-4"> Showing items [@(Model.Offset() + 1) - @Model.LastRow()] of @Model.RowCount</label></small>
+		<small><label class="text-muted me-4"> Showing items [@(Model.Offset() + 1) - @Model.LastRow()] of @Model!.RowCount</label></small>
 		<a asp-page="@ViewContext.Page()" class="btn btn-outline-secondary">
 			<i class="fa fa-sort"> <i class="fa fa-times-circle"></i></i>
 		</a>

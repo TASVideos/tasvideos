@@ -1,32 +1,28 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿namespace TASVideos.Data.Entity;
 
-namespace TASVideos.Data.Entity
+public class WikiPageReferral
 {
-	public class WikiPageReferral
+	public int Id { get; set; }
+
+	[StringLength(250)]
+	public string Referrer { get; set; } = "";
+
+	[StringLength(1000)]
+	public string Referral { get; set; } = "";
+
+	[StringLength(1000)]
+	public string Excerpt { get; set; } = "";
+}
+
+public static class WikiReferralQueryableExtensions
+{
+	public static IQueryable<WikiPageReferral> ThatReferTo(this IQueryable<WikiPageReferral> list, string pageName)
 	{
-		public int Id { get; set; }
-
-		[StringLength(250)]
-		public string Referrer { get; set; } = "";
-
-		[StringLength(1000)]
-		public string Referral { get; set; } = "";
-
-		[StringLength(1000)]
-		public string Excerpt { get; set; } = "";
+		return list.Where(wr => wr.Referral == pageName);
 	}
 
-	public static class WikiReferralQueryableExtensions
+	public static IQueryable<WikiPageReferral> ForPage(this IQueryable<WikiPageReferral> list, string pageName)
 	{
-		public static IQueryable<WikiPageReferral> ThatReferTo(this IQueryable<WikiPageReferral> list, string pageName)
-		{
-			return list.Where(wr => wr.Referral == pageName);
-		}
-
-		public static IQueryable<WikiPageReferral> ForPage(this IQueryable<WikiPageReferral> list, string pageName)
-		{
-			return list.Where(wr => wr.Referrer == pageName);
-		}
+		return list.Where(wr => wr.Referrer == pageName);
 	}
 }

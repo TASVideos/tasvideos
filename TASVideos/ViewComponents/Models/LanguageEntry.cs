@@ -1,9 +1,8 @@
-﻿namespace TASVideos.ViewComponents.Models
+﻿namespace TASVideos.ViewComponents.Models;
+
+public class LanguageEntry
 {
-	public class LanguageEntry
-	{
-		public string Path { get; init; } = "";
-		public string LanguageCode { get; init; } = "";
-		public string LanguageDisplayName { get; init; } = "";
-	}
+	public string Path { get; init; } = "";
+	public string LanguageCode { get; init; } = "";
+	public string LanguageDisplayName { get; init; } = "";
 }

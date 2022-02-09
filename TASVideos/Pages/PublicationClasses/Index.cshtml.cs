@@ -1,25 +1,22 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.PublicationClasses
+namespace TASVideos.Pages.PublicationClasses;
+
+[RequirePermission(PermissionTo.ClassMaintenance)]
+public class IndexModel : BasePageModel
 {
-	[RequirePermission(PermissionTo.ClassMaintenance)]
-	public class IndexModel : BasePageModel
+	private readonly IClassService _classService;
+
+	public IndexModel(IClassService classService)
 	{
-		private readonly IClassService _classService;
+		_classService = classService;
+	}
 
-		public IndexModel(IClassService classService)
-		{
-			_classService = classService;
-		}
+	public IEnumerable<PublicationClass> Classes { get; set; } = new List<PublicationClass>();
 
-		public IEnumerable<PublicationClass> Classes { get; set; } = new List<PublicationClass>();
-
-		public async Task OnGet()
-		{
-			Classes = await _classService.GetAll();
-		}
+	public async Task OnGet()
+	{
+		Classes = await _classService.GetAll();
 	}
 }

@@ -1,13 +1,13 @@
 ﻿@model WikiPage
 @{
-    var user = Model.PageName.Split('/').Skip(1).FirstOrDefault();
+	var user = Model!.PageName.Split('/').Skip(1).FirstOrDefault();
 }
 <info-alert>
-    <row>
-        <div class="col-12">
-            <h5 class="mb-0">This is a <a href="/HomePages">Homepage</a> for <profile-link username="@user"></profile-link></h5>
-            <small>By default, all registered users can create and maintain a homepage if they choose.</small>
-            <small>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</small>
-        </div>
-    </row>
+	<row>
+		<div class="col-12">
+			<h5 class="mb-0">This is a <a href="/HomePages">Homepage</a> for <profile-link username="@user"></profile-link></h5>
+			<small>By default, all registered users can create and maintain a homepage if they choose.</small>
+			<small>Note: Opinions expressed on homepages of our users are the personal opinions of those people, and don't necessarily represent the opinion of the whole TASVideos community.</small>
+		</div>
+	</row>
 </info-alert>

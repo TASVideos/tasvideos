@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿namespace TASVideos.Data.Entity.Forum;
 
-namespace TASVideos.Data.Entity.Forum
+public class ForumCategory : BaseEntity
 {
-	public class ForumCategory : BaseEntity
-	{
-		public int Id { get; set; }
-		public virtual ICollection<Forum> Forums { get; set; } = new HashSet<Forum>();
+	public int Id { get; set; }
+	public virtual ICollection<Forum> Forums { get; set; } = new HashSet<Forum>();
 
-		[Required]
-		[StringLength(30)]
-		public string Title { get; set; } = "";
+	[Required]
+	[StringLength(30)]
+	public string Title { get; set; } = "";
 
-		public int Ordinal { get; set; }
+	public int Ordinal { get; set; }
 
-		[StringLength(1000)]
-		public string? Description { get; set; }
-	}
+	[StringLength(1000)]
+	public string? Description { get; set; }
 }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="TASVideos Rules" Description="Applies to all projects in the solution" ToolsVersion="16.0">
+<RuleSet Name="TASVideos Rules" Description="Applies to all projects in the solution" ToolsVersion="17.0">
   <Rules AnalyzerId="Menees.Analyzers" RuleNamespace="Menees.Analyzers">
     <Rule Id="MEN002" Action="Hidden" />
     <Rule Id="MEN003" Action="Hidden" />
@@ -263,6 +263,7 @@
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />
+    <Rule Id="SA1000" Action="None" />
     <Rule Id="SA1009" Action="None" />
     <Rule Id="SA1011" Action="None" />
     <Rule Id="SA1101" Action="None" />
@@ -298,7 +299,7 @@
     <Rule Id="SX1309" Action="Warning" />
   </Rules>
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers.SpacingRules">
-    <Rule Id="SA1000" Action="Warning" />
+    <Rule Id="SA1000" Action="None" />
     <Rule Id="SA1001" Action="Warning" />
     <Rule Id="SA1002" Action="Warning" />
     <Rule Id="SA1003" Action="Warning" />

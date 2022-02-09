@@ -1,22 +1,19 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Core;
 
-namespace TASVideos.Pages.Games.Models
+namespace TASVideos.Pages.Games.Models;
+
+public class SystemPageOf<T> : PageOf<T>
 {
-	public class SystemPageOf<T> : PageOf<T>
+	public SystemPageOf(IEnumerable<T> items)
+		: base(items)
 	{
-		public SystemPageOf(IEnumerable<T> items)
-			: base(items)
-		{
-		}
-
-		[Display(Name = "System")]
-		public string? SystemCode { get; set; }
-
-		public string? SearchTerms { get; set; }
-
-		public static new SystemPageOf<T> Empty() => new (Enumerable.Empty<T>());
 	}
+
+	[Display(Name = "System")]
+	public string? SystemCode { get; set; }
+
+	public string? SearchTerms { get; set; }
+
+	public static new SystemPageOf<T> Empty() => new(Enumerable.Empty<T>());
 }

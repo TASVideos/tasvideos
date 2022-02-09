@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<UnmirroredMovieEntry>
 
-Total count: @Model.Count()
+Total count: @Model!.Count()
 <div class="table-container">
 	<table class="table table-striped">
 		<thead>
@@ -9,7 +9,7 @@ Total count: @Model.Count()
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var entry in Model)
+			@foreach (var entry in Model!)
 			{
 				<tr>
 					<td><pub-link id="@entry.Id">@entry.Title</pub-link></td>

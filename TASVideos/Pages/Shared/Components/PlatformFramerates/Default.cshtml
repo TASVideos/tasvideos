@@ -7,7 +7,7 @@
 			<th>@Html.DisplayNameFor(m => m.First().FrameRate)</th>
 			<th>@Html.DisplayNameFor(m => m.First().Preliminary)</th>
 		</tr>
-		@foreach (var item in Model)
+		@foreach (var item in Model!)
 		{
 			<tr class="@(item.Preliminary ? "alert-warning" : "")">
 				<td>@item.SystemCode</td>

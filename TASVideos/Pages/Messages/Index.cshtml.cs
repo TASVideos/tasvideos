@@ -1,36 +1,34 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 
-namespace TASVideos.Pages.Messages
+namespace TASVideos.Pages.Messages;
+
+[Authorize]
+public class IndexModel : BasePageModel
 {
-	[Authorize]
-	public class IndexModel : BasePageModel
+	private readonly UserManager _userManager;
+
+	public IndexModel(UserManager userManager)
 	{
-		private readonly UserManager _userManager;
+		_userManager = userManager;
+	}
 
-		public IndexModel(UserManager userManager)
+	[FromRoute]
+	public int Id { get; set; }
+
+	public PrivateMessageDto PrivateMessage { get; set; } = new();
+
+	public async Task<IActionResult> OnGet()
+	{
+		var message = await _userManager.GetMessage(User.GetUserId(), Id);
+
+		if (message == null)
 		{
-			_userManager = userManager;
+			return NotFound();
 		}
 
-		[FromRoute]
-		public int Id { get; set; }
-
-		public PrivateMessageDto PrivateMessage { get; set; } = new ();
-
-		public async Task<IActionResult> OnGet()
-		{
-			var message = await _userManager.GetMessage(User.GetUserId(), Id);
-
-			if (message == null)
-			{
-				return NotFound();
-			}
-
-			PrivateMessage = message;
-			return Page();
-		}
+		PrivateMessage = message;
+		return Page();
 	}
 }

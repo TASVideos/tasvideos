@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace TASVideos.Core.Services;
 
-namespace TASVideos.Core.Services
+public class PublicationHistoryGroup
 {
-	public class PublicationHistoryGroup
-	{
-		public int GameId { get; init; }
+	public int GameId { get; init; }
 
-		public IEnumerable<PublicationHistoryNode> Branches { get; init; } = new List<PublicationHistoryNode>();
-	}
+	public IEnumerable<PublicationHistoryNode> Branches { get; init; } = new List<PublicationHistoryNode>();
+}
 
-	public class PublicationHistoryNode
-	{
-		public int Id { get; init; }
-		public string Title { get; init; } = "";
-		public string? Branch { get; init; }
-		public DateTime CreateTimestamp { get; set; }
+public class PublicationHistoryNode
+{
+	public int Id { get; init; }
+	public string Title { get; init; } = "";
+	public string? Branch { get; init; }
+	public DateTime CreateTimestamp { get; set; }
 
-		public string? ClassIconPath { get; set; }
+	public string? ClassIconPath { get; set; }
 
-		public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
+	public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 
-		internal int? ObsoletedById { get; init; }
+	internal int? ObsoletedById { get; init; }
 
-		internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new ();
-	}
+	internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new();
 }

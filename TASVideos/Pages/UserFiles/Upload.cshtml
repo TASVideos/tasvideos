@@ -61,7 +61,7 @@
 
 	systemModel.onchange = function() {
 		if (this.value) {
-			let xmlhttp = new XMLHttpRequest();
+			const xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 					if (xmlhttp.status === 200) {

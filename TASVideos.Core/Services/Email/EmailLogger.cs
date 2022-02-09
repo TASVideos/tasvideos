@@ -1,25 +1,30 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
-namespace TASVideos.Core.Services.Email
+namespace TASVideos.Core.Services.Email;
+
+/// <summary>
+/// An implementation of <see cref="IEmailSender" /> that simply logs email content
+/// </summary>
+internal class EmailLogger : IEmailSender
 {
-	/// <summary>
-	/// An implementation of <see cref="IEmailSender" /> that simply logs email content
-	/// </summary>
-	internal class EmailLogger : IEmailSender
+	private readonly ILogger<EmailLogger> _logger;
+
+	public EmailLogger(ILogger<EmailLogger> logger)
 	{
-		private readonly ILogger<EmailLogger> _logger;
+		_logger = logger;
+	}
 
-		public EmailLogger(ILogger<EmailLogger> logger)
+	public Task SendEmail(IEmail email)
+	{
+		if (_logger.IsEnabled(LogLevel.Information))
 		{
-			_logger = logger;
+			_logger.LogInformation(
+				"Email Generated:\nRecipients: {recipients)}\nSubject: {subject}\nMessage: {message}",
+				string.Join(",", email.Recipients),
+				email.Subject,
+				email.Message);
 		}
-
-		public Task SendEmail(IEmail email)
-		{
-			string message = $"Email Generated:\nRecipients: {string.Join(",", email.Recipients)}\nSubject: {email.Subject}\nMessage: {email.Message}";
-			_logger.LogInformation(message);
-			return Task.CompletedTask;
-		}
+		
+		return Task.CompletedTask;
 	}
 }

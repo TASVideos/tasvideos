@@ -1,6 +1,6 @@
 ﻿@model TASVideos.Core.Services.PublicationHistoryNode
 @{
-	var highlight = Model.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
+	var highlight = Model!.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
 	var classIconPath2X = "";
 	var classIconPath4X = "";
 	if (Model.ClassIconPath != null)

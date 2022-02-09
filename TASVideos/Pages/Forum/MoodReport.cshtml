@@ -1,7 +1,11 @@
-﻿@page
+﻿@page "{userName?}"
 @model TASVideos.Pages.Forum.MoodReportModel
-
-<p>These are peoples mood avatars</p>
+@{
+	ViewData["Title"] = string.IsNullOrWhiteSpace(Model.UserName)
+		? "These are all user's mood avatars"
+		: "Mood avatars";
+}
+<p condition="string.IsNullOrWhiteSpace(Model.UserName)">These are peoples mood avatars</p>
 @foreach (var user in Model.MoodyUsers)
 {
 	<card>
@@ -14,7 +18,7 @@
 				<div class="mood-box border p-2">
 					<strong>@mood.EnumDisplayName()</strong>
 					<br />
-					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="imgError(this)" />
+					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="imgError(this)" loading="lazy" />
 				</div>
 			}
 		</cardbody>

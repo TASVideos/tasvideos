@@ -14,7 +14,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
-				<select asp-for="Catalog.SystemFrameRateId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableSystemFrameRates)" class="form-control"></select>
+				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-control"></select>
 			</form-group>
 		</div>
 		<div class="col-lg-6">
@@ -71,7 +71,7 @@
 
 		systemModel.onchange = function() {
 			if (this.value) {
-				let xmlhttp = new XMLHttpRequest();
+				const xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {
@@ -83,7 +83,7 @@
 				xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
 				xmlhttp.send();
 
-				let xmlhttp2 = new XMLHttpRequest();
+				const xmlhttp2 = new XMLHttpRequest();
 				xmlhttp2.onreadystatechange = function() {
 					if (xmlhttp2.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp2.status === 200) {
@@ -117,7 +117,7 @@
 				createRomBtn.removeAttribute('disabled');
 				createRomBtn.classList.remove('disabled');
 
-				let xmlhttp = new XMLHttpRequest();
+				const xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {

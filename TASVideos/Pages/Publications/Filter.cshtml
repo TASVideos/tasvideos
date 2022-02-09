@@ -2,6 +2,13 @@
 @model FilterModel
 @{
 	ViewData["Title"] = "Tool-assisted movies filter";
+	var sortItems = UiDefaults.DefaultEntry.Concat(new List<SelectListItem>
+	{
+		
+		new() { Text = "Newest to Oldest", Value = "U" },
+		new() { Text = "Oldest to Newest", Value = "V" },
+		new() { Text = "Highest Rating", Value = "Y" }
+	});
 }
 
 <form method="post">
@@ -9,40 +16,40 @@
 		<column md="4">
 			<form-group>
 				<label asp-for="Search.Classes"></label>
-				<select asp-for="Search.Classes" asp-items="Model.Tokens.Classes.Select(c => new SelectListItem(c, c))" class="form-control"></select>
+				<select asp-for="Search.Classes" size="@(Math.Min(Model.Tokens.Classes.Count(), 7).ToString())" asp-items="Model.Tokens.Classes.Select(c => new SelectListItem(c, c))" class="form-control"></select>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Years"></label>
-				<select asp-for="Search.Years" asp-items="Model.Tokens.Years.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
+				<select asp-for="Search.Years" size="@(Math.Min(Model.Tokens.Years.Count(), 7).ToString())" asp-items="Model.Tokens.Years.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Genres"></label>
-				<select asp-for="Search.Genres" asp-items="Model.Tokens.Genres.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
+				<select asp-for="Search.Genres" size="@(Math.Min(Model.Tokens.Genres.Count(), 7).ToString())" asp-items="Model.Tokens.Genres.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
 			</form-group>
 		</column>
 		<column md="4">
 			<form-group>
 				<label asp-for="Search.Flags"></label>
-				<select asp-for="Search.Flags" asp-items="Model.AvailableFlags" class="form-control"></select>
+				<select asp-for="Search.Flags" size="@(Math.Min(Model.AvailableFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.GameGroups"></label>
-				<select asp-for="Search.GameGroups" asp-items="Model.AvailableGameGroups" class="form-control"></select>
+				<select asp-for="Search.GameGroups" size="@(Math.Min(Model.AvailableGameGroups.Count(), 7).ToString())" asp-items="Model.AvailableGameGroups" class="form-control"></select>
 			</form-group>
 		</column>
 		<column md="4">
 			<form-group>
 				<label asp-for="Search.SystemCodes"></label>
-				<select asp-for="Search.SystemCodes" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).Select(c => new SelectListItem(c, c))" class="form-control"></select>
+				<select asp-for="Search.SystemCodes" size="@(Math.Min(Model.Tokens.SystemCodes.Count(), 7).ToString())" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).Select(c => new SelectListItem(c, c))" class="form-control"></select>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Tags"></label>
-				<select asp-for="Search.Tags" asp-items="Model.AvailableTags" class="form-control"></select>
+				<select asp-for="Search.Tags" size="@(Math.Min(Model.AvailableTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
 			</form-group>
 		</column>
 	</row>
 	<row>
-		<column>
+		<column md="4">
 			<form-group>
 				<div class="form-check">
 					<input class="form-check-input" type="checkbox" asp-for="Search.ShowObsoleted">
@@ -54,6 +61,12 @@
 					<input class="form-check-input" type="checkbox" asp-for="Search.OnlyObsoleted">
 					<label class="form-check-label" asp-for="Search.OnlyObsoleted"></label>
 				</div>
+			</form-group>
+		</column>
+		<column md="4">
+			<form-group>
+				<label asp-for="Search.SortBy"></label>
+				<select asp-for="Search.SortBy" asp-items="sortItems" class="form-control"></select>
 			</form-group>
 		</column>
 	</row>

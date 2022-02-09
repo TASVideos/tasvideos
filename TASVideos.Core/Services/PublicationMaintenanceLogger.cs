@@ -1,51 +1,47 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using TASVideos.Data;
+﻿using TASVideos.Data;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Core.Services
+namespace TASVideos.Core.Services;
+
+public interface IPublicationMaintenanceLogger
 {
-	public interface IPublicationMaintenanceLogger
+	Task Log(int publicationId, int userId, string log);
+	Task Log(int publicationId, int userId, IEnumerable<string> logs);
+}
+
+internal class PublicationMaintenanceLogger : IPublicationMaintenanceLogger
+{
+	private readonly ApplicationDbContext _db;
+
+	public PublicationMaintenanceLogger(ApplicationDbContext db)
 	{
-		Task Log(int publicationId, int userId, string log);
-		Task Log(int publicationId, int userId, IEnumerable<string> logs);
+		_db = db;
 	}
 
-	internal class PublicationMaintenanceLogger : IPublicationMaintenanceLogger
+	public async Task Log(int publicationId, int userId, string log)
 	{
-		private readonly ApplicationDbContext _db;
+		Add(publicationId, userId, log);
+		await _db.SaveChangesAsync();
+	}
 
-		public PublicationMaintenanceLogger(ApplicationDbContext db)
-		{
-			_db = db;
-		}
-
-		public async Task Log(int publicationId, int userId, string log)
+	public async Task Log(int publicationId, int userId, IEnumerable<string> logs)
+	{
+		foreach (var log in logs)
 		{
 			Add(publicationId, userId, log);
-			await _db.SaveChangesAsync();
 		}
 
-		public async Task Log(int publicationId, int userId, IEnumerable<string> logs)
+		await _db.SaveChangesAsync();
+	}
+
+	private void Add(int publicationId, int userId, string log)
+	{
+		_db.PublicationMaintenanceLogs.Add(new PublicationMaintenanceLog
 		{
-			foreach (var log in logs)
-			{
-				Add(publicationId, userId, log);
-			}
-
-			await _db.SaveChangesAsync();
-		}
-
-		private void Add(int publicationId, int userId, string log)
-		{
-			_db.PublicationMaintenanceLogs.Add(new PublicationMaintenanceLog
-			{
-				TimeStamp = DateTime.UtcNow,
-				PublicationId = publicationId,
-				UserId = userId,
-				Log = log
-			});
-		}
+			TimeStamp = DateTime.UtcNow,
+			PublicationId = publicationId,
+			UserId = userId,
+			Log = log
+		});
 	}
 }

@@ -1,13 +1,12 @@
 ﻿using TASVideos.Core;
 
-namespace TASVideos.Pages.Forum.Posts.Models
+namespace TASVideos.Pages.Forum.Posts.Models;
+
+public class UserPostsRequest : PagingModel
 {
-	public class UserPostsRequest : PagingModel
+	public UserPostsRequest()
 	{
-		public UserPostsRequest()
-		{
-			PageSize = ForumConstants.PostsPerPage;
-			Sort = $"-{nameof(UserPostsModel.Post.CreateTimestamp)}";
-		}
+		PageSize = ForumConstants.PostsPerPage;
+		Sort = $"-{nameof(UserPostsModel.Post.CreateTimestamp)}";
 	}
 }

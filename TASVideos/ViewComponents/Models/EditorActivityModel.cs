@@ -1,8 +1,7 @@
-﻿namespace TASVideos.ViewComponents
+﻿namespace TASVideos.ViewComponents;
+
+public class EditorActivityModel
 {
-	public class EditorActivityModel
-	{
-		public string UserName { get; init; } = "";
-		public int WikiEdits { get; init; }
-	}
+	public string UserName { get; init; } = "";
+	public int WikiEdits { get; init; }
 }

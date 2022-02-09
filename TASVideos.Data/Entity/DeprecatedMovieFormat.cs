@@ -1,14 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace TASVideos.Data.Entity;
 
-namespace TASVideos.Data.Entity
+public class DeprecatedMovieFormat : BaseEntity
 {
-	public class DeprecatedMovieFormat : BaseEntity
-	{
-		public int Id { get; set; }
+	public int Id { get; set; }
 
-		[Required]
-		public string FileExtension { get; set; } = "";
+	[Required]
+	public string FileExtension { get; set; } = "";
 
-		public bool Deprecated { get; set; } = true;
-	}
+	public bool Deprecated { get; set; } = true;
 }

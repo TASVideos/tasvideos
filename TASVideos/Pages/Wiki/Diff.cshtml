@@ -39,7 +39,7 @@
 	function generateDiff(viewType) {
 		const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
 		const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
-		let diffElem = document.getElementById('ResultMarkup');
+		const diffElem = document.getElementById('ResultMarkup');
 
 		const base = difflib.stringAsLines(leftMarkup);
 		const newTxt = difflib.stringAsLines(rightMarkup);

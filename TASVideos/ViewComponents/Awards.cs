@@ -1,24 +1,22 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.ViewComponents;
+
+[WikiModule(WikiModules.Awards)]
+public class Awards : ViewComponent
 {
-	[WikiModule(WikiModules.Awards)]
-	public class Awards : ViewComponent
+	private readonly IAwards _awards;
+
+	public Awards(IAwards awards)
 	{
-		private readonly IAwards _awards;
+		_awards = awards;
+	}
 
-		public Awards(IAwards awards)
-		{
-			_awards = awards;
-		}
-
-		public async Task<IViewComponentResult> InvokeAsync(int year)
-		{
-			var model = await _awards.ForYear(year);
-			return View(model);
-		}
+	public async Task<IViewComponentResult> InvokeAsync(int year)
+	{
+		var model = await _awards.ForYear(year);
+		return View(model);
 	}
 }

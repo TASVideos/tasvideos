@@ -1,64 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 
-using TASVideos.Extensions;
+namespace TASVideos.Core;
 
-namespace TASVideos.Core
+public interface IPaged : IPageable, ISortable
 {
-	public interface IPaged : IPageable, ISortable
+	int RowCount { get; }
+}
+
+public static class PagedExtensions
+{
+	public static int LastPage(this IPaged? paged)
 	{
-		int RowCount { get; }
+		var size = paged?.PageSize ?? 0;
+		var count = paged?.RowCount ?? 0;
+		if (count <= 0 || size <= 0)
+		{
+			return 0;
+		}
+
+		return (int)Math.Ceiling(count / (double)size);
 	}
 
-	public static class PagedExtensions
+	public static int LastRow(this IPaged? paged)
 	{
-		public static int LastPage(this IPaged? paged)
-		{
-			var size = paged?.PageSize ?? 0;
-			var count = paged?.RowCount ?? 0;
-			if (count <= 0 || size <= 0)
-			{
-				return 0;
-			}
+		var size = paged?.PageSize ?? 0;
+		var rowCount = paged?.RowCount ?? 0;
+		return Math.Min(rowCount, paged.Offset() + size);
+	}
 
-			return (int)Math.Ceiling(count / (double)size);
+	public static IDictionary<string, string> AdditionalProperties(this IPaged? paged)
+	{
+		if (paged == null)
+		{
+			return new Dictionary<string, string>();
 		}
 
-		public static int LastRow(this IPaged? paged)
-		{
-			var size = paged?.PageSize ?? 0;
-			var rowCount = paged?.RowCount ?? 0;
-			return Math.Min(rowCount, paged.Offset() + size);
-		}
+		var existing = typeof(IPaged)
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.Concat(typeof(IPaged)
+				.GetInterfaces()
+				.SelectMany(i => i.GetProperties()))
+			.ToList();
 
-		public static IDictionary<string, string> AdditionalProperties(this IPaged? paged)
-		{
-			if (paged == null)
-			{
-				return new Dictionary<string, string>();
-			}
+		var existingNames = existing.Select(p => p.Name);
 
-			var existing = typeof(IPaged)
-				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-				.Concat(typeof(IPaged)
-					.GetInterfaces()
-					.SelectMany(i => i.GetProperties()))
-				.ToList();
+		var all = paged
+			.GetType()
+			.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+			.ToList();
 
-			var existingNames = existing.Select(p => p.Name);
+		var additional = all
+			.Where(p => !existingNames.Contains(p.Name))
+			.ToList();
 
-			var all = paged
-				.GetType()
-				.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-				.ToList();
-
-			var additional = all
-				.Where(p => !existingNames.Contains(p.Name))
-				.ToList();
-
-			return additional.ToDictionary(tkey => tkey.Name, tvalue => tvalue.ToValue(paged));
-		}
+		return additional.ToDictionary(tkey => tkey.Name, tvalue => tvalue.ToValue(paged));
 	}
 }

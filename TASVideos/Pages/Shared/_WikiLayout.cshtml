@@ -1,6 +1,6 @@
 ﻿@{
 	Layout = "_Layout.cshtml";
-	WikiPage pageData = (WikiPage)ViewData["WikiPage"];
+	WikiPage pageData = ViewData["WikiPage"] as WikiPage ?? throw new InvalidOperationException("WikiPage not set");
 
 	ViewData["ActiveTab"] = pageData.PageName == "GameResources"
 		|| WikiHelper.IsGameResourcesPage(pageData.PageName)
@@ -24,7 +24,7 @@
 
 @section PageTitle {
 	<div class="container mb-2">
-		<nav aria-label="breadcrumb" class="bg-secondary" style="font-size: 1.25em; padding: 5px 10px; border-radius: 5px;">
+		<nav aria-label="breadcrumb" class="card card-header">
 			<ol class="breadcrumb m-0">
 				@{
 					var allPages = pageData.PageName.Split('/');
@@ -32,9 +32,9 @@
 					foreach (var item in allPages.Take(allPages.Length - 1))
 					{
 						runningPath += $"/{item}";
-						<li class="breadcrumb-item" style="color: #fff;"><a href="@runningPath">@item.SplitCamelCase()</a></li>
+						<li class="breadcrumb-item"><a href="@runningPath">@item.SplitCamelCase()</a></li>
 					}
-					<li class="breadcrumb-item active" aria-current="page" style="color: #fff;">@allPages.Last().SplitCamelCase()</li>
+					<li class="breadcrumb-item active" aria-current="page"><h1>@allPages.Last().SplitCamelCase()</h1></li>
 				}
 			</ol>
 		</nav>

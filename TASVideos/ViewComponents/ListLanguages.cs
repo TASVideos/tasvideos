@@ -1,70 +1,66 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.ViewComponents.Models;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.ViewComponents;
+
+[WikiModule(WikiModules.ListLanguages)]
+public class ListLanguages : ViewComponent
 {
-	[WikiModule(WikiModules.ListLanguages)]
-	public class ListLanguages : ViewComponent
+	private readonly IWikiPages _wikiPages;
+	private readonly ILanguages _languages;
+
+	public ListLanguages(ILanguages languages, IWikiPages wikiPages)
 	{
-		private readonly IWikiPages _wikiPages;
-		private readonly ILanguages _languages;
+		_languages = languages;
+		_wikiPages = wikiPages;
+	}
 
-		public ListLanguages(ILanguages languages, IWikiPages wikiPages)
+	public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, bool isTranslation)
+	{
+		if (string.IsNullOrWhiteSpace(pageData?.PageName))
 		{
-			_languages = languages;
-			_wikiPages = wikiPages;
+			return new ContentViewComponentResult("");
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, bool isTranslation)
+		string pageName = pageData.PageName;
+		if (isTranslation)
 		{
-			if (string.IsNullOrWhiteSpace(pageData?.PageName))
+			// Actual translation pages should be nested from the language page
+			if (!pageName.Contains('/'))
 			{
 				return new ContentViewComponentResult("");
 			}
 
-			string pageName = pageData.PageName;
-			if (isTranslation)
-			{
-				// Actual translation pages should be nested from the language page
-				if (!pageName.Contains('/'))
-				{
-					return new ContentViewComponentResult("");
-				}
-
-				pageName = string.Join("", pageName.Split('/').Skip(1));
-			}
-
-			var languages = (await _languages.AvailableLanguages())
-				.Select(l => new LanguageEntry
-				{
-					LanguageCode = l.Code,
-					LanguageDisplayName = l.DisplayName,
-					Path = l.Code + "/" + pageName
-				})
-				.ToList();
-
-			if (!languages.Any())
-			{
-				return new ContentViewComponentResult("");
-			}
-
-			var existingLanguages = new List<LanguageEntry>();
-			foreach (var lang in languages)
-			{
-				if (await _wikiPages.Exists(lang.Path))
-				{
-					existingLanguages.Add(lang);
-				}
-			}
-
-			return View(existingLanguages);
+			pageName = string.Join("", pageName.Split('/').Skip(1));
 		}
+
+		var languages = (await _languages.AvailableLanguages())
+			.Select(l => new LanguageEntry
+			{
+				LanguageCode = l.Code,
+				LanguageDisplayName = l.DisplayName,
+				Path = l.Code + "/" + pageName
+			})
+			.ToList();
+
+		if (!languages.Any())
+		{
+			return new ContentViewComponentResult("");
+		}
+
+		var existingLanguages = new List<LanguageEntry>();
+		foreach (var lang in languages)
+		{
+			if (await _wikiPages.Exists(lang.Path))
+			{
+				existingLanguages.Add(lang);
+			}
+		}
+
+		return View(existingLanguages);
 	}
 }

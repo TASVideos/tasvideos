@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<WikiTextChangelogModel>
 @{
-	var grouped = Model.GroupBy(m => m.CreateTimestamp.Date);
+	var grouped = Model!.GroupBy(m => m.CreateTimestamp.Date);
 }
 
 <table class="table">

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace TASVideos.Data.Entity
+namespace TASVideos.Data.Entity;
+
+public class RoleClaim : IdentityRoleClaim<int>
 {
-	public class RoleClaim : IdentityRoleClaim<int>
-	{
-	}
 }

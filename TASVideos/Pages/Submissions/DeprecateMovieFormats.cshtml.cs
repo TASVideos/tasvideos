@@ -1,63 +1,60 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Submissions
+namespace TASVideos.Pages.Submissions;
+
+[RequirePermission(PermissionTo.DeprecateMovieParsers)]
+public class DeprecateMovieFormatsModel : BasePageModel
 {
-	[RequirePermission(PermissionTo.DeprecateMovieParsers)]
-	public class DeprecateMovieFormatsModel : BasePageModel
+	private readonly IMovieFormatDeprecator _deprecator;
+	private readonly ExternalMediaPublisher _publisher;
+
+	public IReadOnlyDictionary<string, DeprecatedMovieFormat?> MovieExtensions { get; set; } = new Dictionary<string, DeprecatedMovieFormat?>();
+
+	public DeprecateMovieFormatsModel(
+		IMovieFormatDeprecator deprecator,
+		ExternalMediaPublisher publisher)
 	{
-		private readonly IMovieFormatDeprecator _deprecator;
-		private readonly ExternalMediaPublisher _publisher;
+		_deprecator = deprecator;
+		_publisher = publisher;
+	}
 
-		public IReadOnlyDictionary<string, DeprecatedMovieFormat?> MovieExtensions { get; set; } = new Dictionary<string, DeprecatedMovieFormat?>();
+	public async Task OnGet()
+	{
+		MovieExtensions = await _deprecator.GetAll();
+	}
 
-		public DeprecateMovieFormatsModel(
-			IMovieFormatDeprecator deprecator,
-			ExternalMediaPublisher publisher)
+	public async Task<IActionResult> OnPost(string extension, bool deprecate)
+	{
+		if (!_deprecator.IsMovieExtension(extension))
 		{
-			_deprecator = deprecator;
-			_publisher = publisher;
+			return BadRequest($"Invalid format {extension}");
 		}
 
-		public async Task OnGet()
+		var result = deprecate
+			? await _deprecator.Deprecate(extension)
+			: await _deprecator.Allow(extension);
+
+		if (result)
 		{
-			MovieExtensions = await _deprecator.GetAll();
+			SuccessStatusMessage($"{extension} allowed successfully");
+			await SendAnnouncement(extension, deprecate);
+		}
+		else
+		{
+			ErrorStatusMessage("Unable to save");
 		}
 
-		public async Task<IActionResult> OnPost(string extension, bool deprecate)
-		{
-			if (!_deprecator.IsMovieExtension(extension))
-			{
-				return BadRequest($"Invalid format {extension}");
-			}
+		return BasePageRedirect("DeprecateMovieFormats");
+	}
 
-			var result = deprecate
-				? await _deprecator.Deprecate(extension)
-				: await _deprecator.Allow(extension);
-
-			if (result)
-			{
-				SuccessStatusMessage($"{extension} allowed successfully");
-				await SendAnnouncement(extension, deprecate);
-			}
-			else
-			{
-				ErrorStatusMessage("Unable to save");
-			}
-
-			return BasePageRedirect("DeprecateMovieFormats");
-		}
-
-		private async Task SendAnnouncement(string extension, bool deprecate)
-		{
-			await _publisher.SendSubmissionEdit(
-				$"{extension} deprecation status set to {deprecate} by {User.Name()}",
-				"",
-				"");
-		}
+	private async Task SendAnnouncement(string extension, bool deprecate)
+	{
+		await _publisher.SendSubmissionEdit(
+			$"{extension} deprecation status set to {deprecate} by {User.Name()}",
+			"",
+			"");
 	}
 }

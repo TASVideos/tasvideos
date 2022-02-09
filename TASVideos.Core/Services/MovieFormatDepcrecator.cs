@@ -1,80 +1,102 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 
-namespace TASVideos.Core.Services
+namespace TASVideos.Core.Services;
+
+public interface IMovieFormatDeprecator
 {
-	public interface IMovieFormatDeprecator
+	Task<IReadOnlyDictionary<string, DeprecatedMovieFormat?>> GetAll();
+	bool IsMovieExtension(string extension);
+	Task<bool> IsDeprecated(string extension);
+	Task<bool> Deprecate(string extension);
+	Task<bool> Allow(string extension);
+}
+
+public class MovieFormatDeprecator : IMovieFormatDeprecator
+{
+	private readonly ApplicationDbContext _db;
+	private readonly IMovieParser _parser;
+
+	public MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser)
 	{
-		Task<IReadOnlyDictionary<string, DeprecatedMovieFormat?>> GetAll();
-		bool IsMovieExtension(string extension);
-		Task<bool> IsDepcrecated(string extension);
-		Task<bool> Deprecate(string extension);
-		Task<bool> Allow(string extension);
+		_db = db;
+		_parser = parser;
 	}
 
-	public class MovieFormatDeprecator : IMovieFormatDeprecator
+	public async Task<IReadOnlyDictionary<string, DeprecatedMovieFormat?>> GetAll()
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly IMovieParser _parser;
+		var deprecatedFormats = await _db.DeprecatedMovieFormats.ToListAsync();
+		var supportedMovieExtensions = _parser.SupportedMovieExtensions.ToList();
 
-		public MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser)
+		return (from ext in supportedMovieExtensions
+				join d in deprecatedFormats on ext equals d.FileExtension into dd
+				from d in dd.DefaultIfEmpty()
+				orderby ext
+				select new { ext, d })
+			.ToDictionary(tkey => tkey.ext, tvalue => (DeprecatedMovieFormat?)tvalue.d);
+	}
+
+	public bool IsMovieExtension(string extension)
+	{
+		return _parser.SupportedMovieExtensions.Any(s => s == extension);
+	}
+
+	public async Task<bool> IsDeprecated(string extension)
+	{
+		var entry = await _db.DeprecatedMovieFormats.SingleOrDefaultAsync(d => d.FileExtension == extension);
+		return entry?.Deprecated ?? false;
+	}
+
+	public async Task<bool> Deprecate(string extension)
+	{
+		if (!IsMovieExtension(extension))
 		{
-			_db = db;
-			_parser = parser;
+			return false;
 		}
 
-		public async Task<IReadOnlyDictionary<string, DeprecatedMovieFormat?>> GetAll()
-		{
-			var deprecatedFormats = await _db.DeprecatedMovieFormats.ToListAsync();
-			var supportedMovieExtensions = _parser.SupportedMovieExtensions.ToList();
+		var format = await _db.DeprecatedMovieFormats
+			.SingleOrDefaultAsync(f => f.FileExtension == extension);
 
-			return (from ext in supportedMovieExtensions
-					join d in deprecatedFormats on ext equals d.FileExtension into dd
-					from d in dd.DefaultIfEmpty()
-					orderby ext
-					select new { ext, d })
-				.ToDictionary(tkey => tkey.ext, tvalue => (DeprecatedMovieFormat?)tvalue.d);
-		}
-
-		public bool IsMovieExtension(string extension)
+		if (format == null)
 		{
-			return _parser.SupportedMovieExtensions.Any(s => s == extension);
-		}
-
-		public async Task<bool> IsDepcrecated(string extension)
-		{
-			var entry = await _db.DeprecatedMovieFormats.SingleOrDefaultAsync(d => d.FileExtension == extension);
-			return entry != null ? entry.Deprecated : false;
-		}
-
-		public async Task<bool> Deprecate(string extension)
-		{
-			if (!IsMovieExtension(extension))
+			_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 			{
-				return false;
-			}
+				FileExtension = extension,
+				Deprecated = true
+			});
+		}
+		else
+		{
+			format.Deprecated = true;
+		}
 
-			var format = await _db.DeprecatedMovieFormats
-				.SingleOrDefaultAsync(f => f.FileExtension == extension);
+		try
+		{
+			await _db.SaveChangesAsync();
+			return true;
+		}
+		catch (DbUpdateException)
+		{
+			return false;
+		}
+	}
 
-			if (format == null)
-			{
-				_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
-				{
-					FileExtension = extension,
-					Deprecated = true
-				});
-			}
-			else
-			{
-				format.Deprecated = true;
-			}
+	public async Task<bool> Allow(string extension)
+	{
+		if (!IsMovieExtension(extension))
+		{
+			return false;
+		}
 
+		var format = await _db.DeprecatedMovieFormats
+			.SingleOrDefaultAsync(f => f.FileExtension == extension);
+
+		// If record does not exist, no work is needed to allow it
+		if (format != null)
+		{
+			format.Deprecated = false;
 			try
 			{
 				await _db.SaveChangesAsync();
@@ -86,32 +108,6 @@ namespace TASVideos.Core.Services
 			}
 		}
 
-		public async Task<bool> Allow(string extension)
-		{
-			if (!IsMovieExtension(extension))
-			{
-				return false;
-			}
-
-			var format = await _db.DeprecatedMovieFormats
-				.SingleOrDefaultAsync(f => f.FileExtension == extension);
-
-			// If record does not exist, no work is needed to allow it
-			if (format != null)
-			{
-				format.Deprecated = false;
-				try
-				{
-					await _db.SaveChangesAsync();
-					return true;
-				}
-				catch (DbUpdateException)
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
+		return true;
 	}
 }

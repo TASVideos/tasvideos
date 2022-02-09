@@ -1,123 +1,118 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Core.Tests.Services
+namespace TASVideos.Core.Tests.Services;
+
+[TestClass]
+public class LanguagesTests
 {
-	[TestClass]
-	public class LanguagesTests
+	private const string SystemLanguageMarkup = "EN:English,ES:Español";
+
+	private readonly Mock<IWikiPages> _wikiPages;
+	private readonly Languages _languages;
+
+	public LanguagesTests()
 	{
-		private const string SystemLanguageMarkup = "EN:English,ES:Español";
+		_wikiPages = new Mock<IWikiPages>(MockBehavior.Strict);
+		_languages = new Languages(_wikiPages.Object);
+	}
 
-		private readonly Mock<IWikiPages> _wikiPages;
-		private readonly Languages _languages;
+	[TestMethod]
+	[DataRow(null, false)]
+	[DataRow("", false)]
+	[DataRow("\r \n \t", false)]
+	[DataRow("/", false)]
+	[DataRow("ES", true)]
+	[DataRow("ES/", true)]
+	[DataRow("ENFrontPage", false)]
+	[DataRow("ES/FrontPage", true)]
+	[DataRow("FrontPage", false)]
+	public async Task IsLanguagePage(string pageName, bool expected)
+	{
+		MockStandardMarkup();
+		var actual = await _languages.IsLanguagePage(pageName);
+		Assert.AreEqual(expected, actual);
+	}
 
-		public LanguagesTests()
-		{
-			_wikiPages = new Mock<IWikiPages>(MockBehavior.Strict);
-			_languages = new Languages(_wikiPages.Object);
-		}
+	[TestMethod]
+	public async Task AvailableLanguages_NoPage_ReturnsEmptyList()
+	{
+		_wikiPages
+			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
+			.ReturnsAsync((WikiPage?)null);
 
-		[TestMethod]
-		[DataRow(null, false)]
-		[DataRow("", false)]
-		[DataRow("\r \n \t", false)]
-		[DataRow("/", false)]
-		[DataRow("ES", true)]
-		[DataRow("ES/", true)]
-		[DataRow("ENFrontPage", false)]
-		[DataRow("ES/FrontPage", true)]
-		[DataRow("FrontPage", false)]
-		public async Task IsLanguagePage(string pageName, bool expected)
-		{
-			MockStandardMarkup();
-			var actual = await _languages.IsLanguagePage(pageName);
-			Assert.AreEqual(expected, actual);
-		}
+		var actual = await _languages.AvailableLanguages();
 
-		[TestMethod]
-		public async Task AvailableLanguages_NoPage_ReturnsEmptyList()
-		{
-			_wikiPages
-				.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-				.ReturnsAsync((WikiPage?)null);
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(0, actual.Count());
+	}
 
-			var actual = await _languages.AvailableLanguages();
+	[TestMethod]
+	public async Task AvailableLanguages_NoMarkup_ReturnsEmptyList()
+	{
+		_wikiPages
+			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
+			.ReturnsAsync(new WikiPage { Markup = "" });
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(0, actual.Count());
-		}
+		var actual = await _languages.AvailableLanguages();
 
-		[TestMethod]
-		public async Task AvailableLanguages_NoMarkup_ReturnsEmptyList()
-		{
-			_wikiPages
-				.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-				.ReturnsAsync(new WikiPage { Markup = "" });
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(0, actual.Count());
+	}
 
-			var actual = await _languages.AvailableLanguages();
+	[TestMethod]
+	public async Task AvailableLanguages_JunkMarkup_ReturnsJunk()
+	{
+		var junk = "RandomText";
+		_wikiPages
+			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
+			.ReturnsAsync(new WikiPage { Markup = junk });
 
-			Assert.IsNotNull(actual);
-			Assert.AreEqual(0, actual.Count());
-		}
+		var actual = await _languages.AvailableLanguages();
 
-		[TestMethod]
-		public async Task AvailableLanguages_JunkMarkup_ReturnsJunk()
-		{
-			var junk = "RandomText";
-			_wikiPages
-				.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-				.ReturnsAsync(new WikiPage { Markup = junk });
+		Assert.IsNotNull(actual);
+		var list = actual.ToList();
+		Assert.AreEqual(1, list.Count);
+		Assert.AreEqual(junk, list.Single().Code);
+		Assert.AreEqual(junk, list.Single().DisplayName);
+	}
 
-			var actual = await _languages.AvailableLanguages();
+	[TestMethod]
+	public async Task AvailableLanguages_ValidMarkup_ReturnsLanguages()
+	{
+		MockStandardMarkup();
 
-			Assert.IsNotNull(actual);
-			var list = actual.ToList();
-			Assert.AreEqual(1, list.Count);
-			Assert.AreEqual(junk, list.Single().Code);
-			Assert.AreEqual(junk, list.Single().DisplayName);
-		}
+		var actual = await _languages.AvailableLanguages();
 
-		[TestMethod]
-		public async Task AvailableLanguages_ValidMarkup_ReturnsLanguages()
-		{
-			MockStandardMarkup();
+		Assert.IsNotNull(actual);
+		var list = actual.ToList();
+		Assert.AreEqual(2, list.Count);
+		Assert.IsTrue(list.Any(l => l.Code == "EN" && l.DisplayName == "English"));
+		Assert.IsTrue(list.Any(l => l.Code == "ES" && l.DisplayName == "Español"));
+	}
 
-			var actual = await _languages.AvailableLanguages();
-
-			Assert.IsNotNull(actual);
-			var list = actual.ToList();
-			Assert.AreEqual(2, list.Count);
-			Assert.IsTrue(list.Any(l => l.Code == "EN" && l.DisplayName == "English"));
-			Assert.IsTrue(list.Any(l => l.Code == "ES" && l.DisplayName == "Español"));
-		}
-
-		[TestMethod]
-		public async Task AvailableLanguages_IgnoresTrailingDelimitersAndWhiteSpace()
-		{
-			var systemLanguageMarkup = @"
+	[TestMethod]
+	public async Task AvailableLanguages_IgnoresTrailingDelimitersAndWhiteSpace()
+	{
+		var systemLanguageMarkup = @"
 				EN : English : ,
 				ES : Español , : ";
-			_wikiPages
-				.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-				.ReturnsAsync(new WikiPage { Markup = systemLanguageMarkup });
+		_wikiPages
+			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
+			.ReturnsAsync(new WikiPage { Markup = systemLanguageMarkup });
 
-			var actual = await _languages.AvailableLanguages();
-			Assert.IsNotNull(actual);
-			var list = actual.ToList();
-			Assert.AreEqual(2, list.Count);
-			Assert.IsTrue(list.Any(l => l.Code == "EN" && l.DisplayName == "English"));
-			Assert.IsTrue(list.Any(l => l.Code == "ES" && l.DisplayName == "Español"));
-		}
+		var actual = await _languages.AvailableLanguages();
+		Assert.IsNotNull(actual);
+		var list = actual.ToList();
+		Assert.AreEqual(2, list.Count);
+		Assert.IsTrue(list.Any(l => l.Code == "EN" && l.DisplayName == "English"));
+		Assert.IsTrue(list.Any(l => l.Code == "ES" && l.DisplayName == "Español"));
+	}
 
-		private void MockStandardMarkup()
-		{
-			_wikiPages
-				.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-				.ReturnsAsync(new WikiPage { Markup = SystemLanguageMarkup });
-		}
+	private void MockStandardMarkup()
+	{
+		_wikiPages
+			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
+			.ReturnsAsync(new WikiPage { Markup = SystemLanguageMarkup });
 	}
 }

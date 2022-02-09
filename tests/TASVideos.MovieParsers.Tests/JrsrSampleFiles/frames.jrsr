@@ -3,6 +3,7 @@ JRSR
 +RERECORDS 17984
 +INITIALTIME 1000000000000
 !BEGIN events
++0 OPTION RELATIVE
 +1231487685000 org.jpc.emulator.peripheral.Keyboard KEYEDGE 205
 +1231669883178 org.jpc.emulator.peripheral.Keyboard KEYEDGE 205
 !END

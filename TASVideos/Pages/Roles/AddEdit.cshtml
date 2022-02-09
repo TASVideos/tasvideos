@@ -4,7 +4,7 @@
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Role.Name : "Create a New Role";
 }
 <delete-button
-	condition="@(Model.Id.HasValue && ViewData.UserHas(PermissionTo.DeleteRoles) && (bool)ViewData["IsInUse"])"
+	condition="@(Model.Id.HasValue && ViewData.UserHas(PermissionTo.DeleteRoles) && ViewData["IsInUse"] is true)"
 	asp-href="@($"/Roles/AddEdit/{Model.Id}/Delete")"
 	warning-message="Are you sure you want to delete this Role? This action cannot be undone!"
 	class="float-end text-center">
@@ -97,9 +97,9 @@
 		}
 
 		function syncAssignablePerms() {
-			let selectedPerms = Array.from(document.querySelectorAll('#' + selectedPermissionsListId + ' option'));
+			const selectedPerms = Array.from(document.querySelectorAll('#' + selectedPermissionsListId + ' option'));
 
-			let aggregatedAssignablePerms = Array.from(document.querySelectorAll('#' + availableAssignableListId + ' option'))
+			const aggregatedAssignablePerms = Array.from(document.querySelectorAll('#' + availableAssignableListId + ' option'))
 				.concat(Array.from(document.querySelectorAll('#' + selectedAssignableListId + ' option')));
 
 			const addedPerms = selectedPerms.filter(element =>
@@ -110,8 +110,8 @@
 				!(selectedPerms.map(e => e.value).includes(element.value))
 			);
 
-			let availAssignableElem = document.getElementById(availableAssignableListId);
-			let selectedAssignableElem = document.getElementById(selectedAssignableListId);
+			const availAssignableElem = document.getElementById(availableAssignableListId);
+			const selectedAssignableElem = document.getElementById(selectedAssignableListId);
 
 			addedPerms.forEach(element =>
 				availAssignableElem.appendChild(element.cloneNode(true))
@@ -139,7 +139,7 @@
 			const permissions = Array.from(document.querySelectorAll(selector)).map(element => element.value);
 
 			if (permissions.length > 0) {
-				let xmlhttp = new XMLHttpRequest();
+				const xmlhttp = new XMLHttpRequest();
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {

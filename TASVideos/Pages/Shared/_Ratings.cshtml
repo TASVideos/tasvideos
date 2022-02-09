@@ -1,9 +1,9 @@
 ﻿@model UserRatings
 @{
-	ViewData["Title"] = $"Ratings for {Model.UserName}";
+	ViewData["Title"] = $"Ratings for {Model!.UserName}";
 
 	// ReSharper disable once UnusedVariable
-	bool isMyPage = (bool)ViewData["IsMyPage"];
+	bool isMyPage = ViewData["IsMyPage"] as bool? ?? throw new InvalidOperationException("IsMyPage not set");
 }
 <h4>User: <profile-link username="@Model.UserName"></profile-link></h4>
 <div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">
@@ -32,17 +32,13 @@
 			<table class="table table-bordered">
 				<tr>
 					<th>Movie</th>
-					<th>Average</th>
-					<th>Entertainment</th>
-					<th>Tech Quality</th>
+					<th>Rating</th>
 				</tr>
-				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Average))
+				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Value))
 				{
 					<tr>
 						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
-						<td>@(Math.Round(rating.Average, 1))</td>
-						<td>@rating.Entertainment</td>
-						<td>@rating.Tech</td>
+						<td>@(Math.Round(rating.Value, 1))</td>
 					</tr>
 				}
 			</table>
@@ -51,17 +47,13 @@
 			<table class="table table-bordered">
 				<tr>
 					<th>Movie</th>
-					<th>Average</th>
-					<th>Entertainment</th>
-					<th>Tech Quality</th>
+					<th>Rating</th>
 				</tr>
-				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Average))
+				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Value))
 				{
 					<tr>
 						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
-						<td>@(Math.Round(rating.Average, 1))</td>
-						<td>@rating.Entertainment</td>
-						<td>@rating.Tech</td>
+						<td>@(Math.Round(rating.Value, 1))</td>
 					</tr>
 				}
 			</table>

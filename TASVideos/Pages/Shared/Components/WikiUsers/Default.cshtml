@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<WikiUserEntry>
 
-@foreach (var user in Model
+@foreach (var user in Model!
 	.OrderByDescending(u => u.PublicationCount)
 	.ThenBy(u => u.SubmissionCount))
 {

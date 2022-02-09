@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = $"{Model.Game.SystemCode} - {Model.Game.DisplayName}";
 	string wiki = LinkConstants.GameWikiPage + Model.Id;
-	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), (IEnumerable<PermissionTo>)ViewData["UserPermissions"]);
+	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), ViewData.UserPermissions());
 }
 
 <div class="float-md-end text-center mb-2" condition="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any())">

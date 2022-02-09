@@ -1,29 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Pages.Flags
+namespace TASVideos.Pages.Flags;
+
+[RequirePermission(PermissionTo.FlagMaintenance)]
+public class IndexModel : PageModel
 {
-	[RequirePermission(PermissionTo.FlagMaintenance)]
-	public class IndexModel : PageModel
+	private readonly IFlagService _flagService;
+
+	public IndexModel(IFlagService flagService)
 	{
-		private readonly IFlagService _flagService;
+		_flagService = flagService;
+	}
 
-		public IndexModel(IFlagService flagService)
-		{
-			_flagService = flagService;
-		}
+	public IEnumerable<Flag> Flags { get; set; } = new List<Flag>();
 
-		public IEnumerable<Flag> Flags { get; set; } = new List<Flag>();
-
-		public async Task OnGet()
-		{
-			Flags = (await _flagService.GetAll())
-				.OrderBy(t => t.Token)
-				.ToList();
-		}
+	public async Task OnGet()
+	{
+		Flags = (await _flagService.GetAll())
+			.OrderBy(t => t.Token)
+			.ToList();
 	}
 }

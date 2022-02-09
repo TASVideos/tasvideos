@@ -1,45 +1,42 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 
-namespace TASVideos.TagHelpers
+namespace TASVideos.TagHelpers;
+
+[HtmlTargetElement(Attributes = nameof(Permission))]
+public class PermissionTagHelper : TagHelper
 {
-	[HtmlTargetElement(Attributes = nameof(Permission))]
-	public class PermissionTagHelper : TagHelper
+	public PermissionTo Permission { get; set; }
+
+	[HtmlAttributeNotBound]
+	[ViewContext]
+	public ViewContext ViewContext { get; set; } = new();
+
+	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		public PermissionTo Permission { get; set; }
-
-		[HtmlAttributeNotBound]
-		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new ();
-
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		if (!ViewContext.ViewData.UserHas(Permission))
 		{
-			if (!ViewContext.ViewData.UserHas(Permission))
-			{
-				output.SuppressOutput();
-			}
+			output.SuppressOutput();
 		}
 	}
+}
 
-	[HtmlTargetElement(Attributes = nameof(Permissions))]
-	public class PermissionsTagHelper : TagHelper
+[HtmlTargetElement(Attributes = nameof(Permissions))]
+public class PermissionsTagHelper : TagHelper
+{
+	public PermissionTo[] Permissions { get; set; } = Array.Empty<PermissionTo>();
+
+	[HtmlAttributeNotBound]
+	[ViewContext]
+	public ViewContext ViewContext { get; set; } = new();
+
+	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		public PermissionTo[] Permissions { get; set; } = Array.Empty<PermissionTo>();
-
-		[HtmlAttributeNotBound]
-		[ViewContext]
-		public ViewContext ViewContext { get; set; } = new ();
-
-		public override void Process(TagHelperContext context, TagHelperOutput output)
+		if (!ViewContext.ViewData.UserHasAny(Permissions))
 		{
-			if (!ViewContext.ViewData.UserHasAny(Permissions))
-			{
-				output.SuppressOutput();
-			}
+			output.SuppressOutput();
 		}
 	}
 }

@@ -1,20 +1,16 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿namespace TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Data.Entity.Game
+public class GameGroup
 {
-	public class GameGroup
-	{
-		public int Id { get; set; }
+	public int Id { get; set; }
 
-		[Required]
-		[StringLength(255)]
-		public string Name { get; set; } = "";
+	[Required]
+	[StringLength(255)]
+	public string Name { get; set; } = "";
 
-		[Required]
-		[StringLength(255)]
-		public string SearchKey { get; set; } = "";
+	[Required]
+	[StringLength(255)]
+	public string SearchKey { get; set; } = "";
 
-		public ICollection<GameGameGroup> Games { get; set; } = new HashSet<GameGameGroup>();
-	}
+	public ICollection<GameGameGroup> Games { get; set; } = new HashSet<GameGameGroup>();
 }

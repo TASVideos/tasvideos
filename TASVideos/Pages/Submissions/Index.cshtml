@@ -1,9 +1,16 @@
 ﻿@page
 @using TASVideos.Pages.Submissions.Models
 @model IndexModel
-@inject ISubmissionService _submissionService
+@inject IQueueService QueueService
 @{
 	ViewData["Title"] = "Submissions";
+
+	var selectAvailableYears = Model.Search.AvailableYears
+		.Select(n => new SelectListItem
+		{
+			Text = n.ToString(),
+			Value = n.ToString()
+		});
 }
 
 <div permission="SubmitMovies" class="float-end">
@@ -24,7 +31,7 @@
 	<row class="mt-2 mb-2">
 		<column md="5">
 			<label asp-for="Search.Years" class="form-control-label"></label>
-			<select asp-for="Search.Years" asp-items="Model.Search.AvailableYears" multiple class="form-control"></select>
+			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiple class="form-control"></select>
 		</column>
 		<column class="offset-md-2" md="5">
 			<label asp-for="Search.User" class="form-control-label"></label>
@@ -44,19 +51,19 @@
 								return;
 							}
 
-							let xmlhttp = new XMLHttpRequest();
+							const xmlhttp = new XMLHttpRequest();
 
 							xmlhttp.onreadystatechange = function() {
 								if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 									if (xmlhttp.status === 200) {
-										let newSearchList = document.createElement('datalist');
+										const newSearchList = document.createElement('datalist');
 										newSearchList.id = dataListId;
 
 										const data = JSON.parse(xmlhttp.responseText);
 
 										for (const i in data) {
 											if (data.hasOwnProperty(i)) {
-												let option = document.createElement('option');
+												const option = document.createElement('option');
 												option.innerHTML = data[i];
 
 												newSearchList.appendChild(option);
@@ -109,8 +116,8 @@
 					<small condition="item.Publisher != null">
 						<br /><profile-link username="@item.Publisher"></profile-link>
 					</small>
-					<small condition="_submissionService.HoursRemainingForJudging(item) > 0">
-						<br />(Available for judging in @_submissionService.HoursRemainingForJudging(item) hours)
+					<small condition="QueueService.HoursRemainingForJudging(item) > 0">
+						<br />(Available for judging in @QueueService.HoursRemainingForJudging(item) hours)
 					</small>
 				</td>
 			</tr>

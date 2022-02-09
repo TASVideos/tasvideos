@@ -1,12 +1,12 @@
 ﻿@model MovieGeneralStatisticsModel
 
 <div>
-    <p>
-        <ul>
-            <li>Published movies: @Model.PublishedMovieCount</li>
-            <li>Total movies (including obsoleted): @Model.TotalMovieCount</li>
-            <li>Submitted movies: @Model.SubmissionCount</li>
-            <li>Published movie average rerecord count: @Model.AverageRerecordCount</li>
-        </ul>
-    </p>
+	<p>
+		<ul>
+			<li>Published movies: @Model!.PublishedMovieCount</li>
+			<li>Total movies (including obsoleted): @Model.TotalMovieCount</li>
+			<li>Submitted movies: @Model.SubmissionCount</li>
+			<li>Published movie average rerecord count: @Model.AverageRerecordCount</li>
+		</ul>
+	</p>
 </div>

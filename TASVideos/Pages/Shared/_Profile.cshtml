@@ -1,5 +1,8 @@
 ﻿@model UserProfile
-@{ var lastLoggedIn = Model.LastLoggedInTimeStamp ?? DateTime.UtcNow; }
+@{
+	var lastLoggedIn = Model!.LastLoggedInTimeStamp ?? DateTime.UtcNow;
+	string rank = PointsCalculator.PlayerRank(Model.PlayerPoints);
+}
 <row>
 	<div class="col-md-6">
 		<card>
@@ -145,7 +148,12 @@
 					<i>User has not had any Published Movies</i>
 				</div>
 				<div condition="Model.AnyPublications">
-					<p>@Html.DisplayNameFor(m => m.PlayerPoints) @Model.PlayerPoints</p>
+					<p>
+						@Html.DisplayNameFor(m => m.PlayerPoints) @Model.PlayerPoints
+						<span condition="!string.IsNullOrWhiteSpace(rank)">
+							<br />@rank
+						</span>
+					</p>
 					<p>
 						<a href="/Movies-Author@(Model.Id)">@Model.PublicationActiveCount Active</a>,
 						<a href="/Movies-Author@(Model.Id)-obs">@(Model.PublicationActiveCount + Model.PublicationObsoleteCount) Total</a> (including obsoleted)

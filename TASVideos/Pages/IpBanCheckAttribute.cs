@@ -1,53 +1,47 @@
-﻿using System;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services;
-using TASVideos.Extensions;
 
-namespace TASVideos.Pages
+namespace TASVideos.Pages;
+
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
+public class IpBanCheckAttribute : Attribute, IAsyncPageFilter
 {
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
-	public class IpBanCheckAttribute : Attribute, IAsyncPageFilter
+	public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
 	{
-		public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
+		var banService = context.HttpContext.RequestServices.GetRequiredService<IIpBanService>();
+
+		var ip = context.HttpContext.ActualIpAddress();
+		var banned = await banService.IsBanned(ip);
+
+		if (banned)
 		{
-			var banService = context.HttpContext.RequestServices.GetRequiredService<IIpBanService>();
-
-			var ip = context.HttpContext.ActualIpAddress();
-			var banned = await banService.IsBanned(ip);
-
-			if (banned)
-			{
-				var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<IpBanCheckAttribute>>();
-				logger.LogWarning($"An attempt to use banned ip {ip} was made");
-				Denied(context);
-			}
-			else
-			{
-				await next.Invoke();
-			}
+			var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<IpBanCheckAttribute>>();
+			logger.LogWarning("An attempt to use banned ip {ip} was made", ip);
+			Denied(context);
 		}
-
-		public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+		else
 		{
-			await Task.CompletedTask;
+			await next.Invoke();
 		}
+	}
 
-		protected void Denied(PageHandlerExecutingContext context)
+	public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+	{
+		await Task.CompletedTask;
+	}
+
+	protected void Denied(PageHandlerExecutingContext context)
+	{
+		if (context.HttpContext.Request.IsAjaxRequest())
 		{
-			if (context.HttpContext.Request.IsAjaxRequest())
-			{
-				context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
-				context.Result = new EmptyResult();
-			}
-			else
-			{
-				context.Result = new RedirectToPageResult("/Account/AccessDenied");
-			}
+			context.HttpContext.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+			context.Result = new EmptyResult();
+		}
+		else
+		{
+			context.Result = new RedirectToPageResult("/Account/AccessDenied");
 		}
 	}
 }

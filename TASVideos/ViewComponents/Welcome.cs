@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.ViewComponents;
+
+[WikiModule(WikiModules.Welcome)]
+public class Welcome : ViewComponent
 {
-	[WikiModule(WikiModules.Welcome)]
-	public class Welcome : ViewComponent
+	public IViewComponentResult Invoke()
 	{
-		public IViewComponentResult Invoke()
-		{
-			return View();
-		}
+		return View();
 	}
 }

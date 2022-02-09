@@ -1,46 +1,42 @@
 ﻿using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-using TASVideos.Extensions;
+namespace TASVideos.Pages;
 
-namespace TASVideos.Pages
+public class RequireEdit : RequireBase, IAsyncPageFilter
 {
-	public class RequireEdit : RequireBase, IAsyncPageFilter
+	public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
 	{
-		public async Task OnPageHandlerSelectionAsync(PageHandlerSelectedContext context)
+		await Task.CompletedTask;
+	}
+
+	public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
+	{
+		var user = context.HttpContext.User;
+
+		if (!user.IsLoggedIn())
 		{
-			await Task.CompletedTask;
+			context.Result = ReRouteToLogin(context);
+			return;
 		}
 
-		public async Task OnPageHandlerExecutionAsync(PageHandlerExecutingContext context, PageHandlerExecutionDelegate next)
+		string pageToEdit = "";
+		if (context.HttpContext.Request.QueryString.Value?.Contains("path=") ?? false)
 		{
-			var user = context.HttpContext.User;
+			pageToEdit = WebUtility.UrlDecode((context.HttpContext.Request.QueryString.Value ?? "path=").Split("path=")[1]);
+		}
 
-			if (!user.IsLoggedIn())
-			{
-				context.Result = ReRouteToLogin(context);
-				return;
-			}
+		var userPerms = await GetUserPermissions(context);
+		var canEdit = WikiHelper
+			.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms);
 
-			string pageToEdit = "";
-			if (context.HttpContext.Request.QueryString.Value?.Contains("path=") ?? false)
-			{
-				pageToEdit = WebUtility.UrlDecode((context.HttpContext.Request.QueryString.Value ?? "path=").Split("path=")[1]);
-			}
-
-			var userPerms = await GetUserPermissions(context);
-			var canEdit = WikiHelper
-				.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms);
-
-			if (canEdit)
-			{
-				await next.Invoke();
-			}
-			else
-			{
-				Denied(context);
-			}
+		if (canEdit)
+		{
+			await next.Invoke();
+		}
+		else
+		{
+			Denied(context);
 		}
 	}
 }

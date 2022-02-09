@@ -2,8 +2,8 @@
 
 <card class="mb-2">
 	<cardheader>
-		<a permission="EditCategories" asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary btn-sm border border-warning float-end"><i class="fa fa-pencil"></i> Edit</a>
-		<h4>@Model.Title</h4>
+		<a permission="EditCategories" asp-page="Edit" asp-route-id="@Model!.Id" class="btn btn-primary btn-sm border border-warning float-end"><i class="fa fa-pencil"></i> Edit</a>
+		<h4>@Model!.Title</h4>
 		@if (!string.IsNullOrWhiteSpace(Model.Description))
 		{
 			<div class="text-small">
@@ -18,7 +18,7 @@
 		</row>
 	</cardheader>
 	<cardbody class="py-0">
-		@foreach (var forum in Model.Forums
+		@foreach (var forum in Model!.Forums
 			.OrderBy(f => f.Ordinal)
 			.Where(f => ViewData.UserHas(PermissionTo.SeeRestrictedForums) || !f.Restricted))
 		{

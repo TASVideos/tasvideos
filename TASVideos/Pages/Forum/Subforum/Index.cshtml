@@ -4,18 +4,21 @@
 @{
 	ViewData["Title"] = $"{Model.Forum.Name} - Subforum";
 }
+
 @section PageTitle {
 	<div class="container mb-2">
-		<h1>@(Model.Forum.Name)</h1>
+		<nav aria-label="breadcrumb" class="card card-header">
+			<ol class="breadcrumb m-0">
+				<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
+				<li class="breadcrumb-item active" aria-current="page"><h1>@Model.Forum.Name</h1></li>
+			</ol>
+		</nav>
 	</div>
 }
 
 <partial Name="_ForumHeader" />
 <a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="ms-2 float-end btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</a>
-<a permission="CreateForumTopics" asp-page="/Forum/Topics/Create" asp-route-forumId="@Model.Forum.Id" class="float-end btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
-<h4>
-	<a asp-page="/Forum/Index">Forum</a> → @Model.Forum.Name
-</h4>
+<a permission="CreateForumTopics" asp-page="/Forum/Topics/Create" asp-route-forumId="@Model.Forum.Id" class="ms-2 float-end btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
 <div>
 	<small>@Html.Raw(Model.Forum.Description)</small>
 </div>

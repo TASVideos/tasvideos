@@ -1,23 +1,21 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.Extensions;
 
-namespace TASVideos.Models
+namespace TASVideos.Models;
+
+public class ValidWikiPageNameAttribute : ValidationAttribute
 {
-	public class ValidWikiPageNameAttribute : ValidationAttribute
+	public ValidWikiPageNameAttribute()
 	{
-		public ValidWikiPageNameAttribute()
+		ErrorMessage = "Invalid Wiki Page name.";
+	}
+
+	public override bool IsValid(object? value)
+	{
+		if (value is string str)
 		{
-			ErrorMessage = "Invalid Wiki Page name.";
+			return WikiHelper.IsValidWikiPageName(str);
 		}
 
-		public override bool IsValid(object? value)
-		{
-			if (value is string str)
-			{
-				return WikiHelper.IsValidWikiPageName(str);
-			}
-
-			return false;
-		}
+		return false;
 	}
 }

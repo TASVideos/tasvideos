@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 
-namespace TASVideos.Core.Services.Youtube
+namespace TASVideos.Core.Services.Youtube;
+
+public interface IWikiToTextRenderer
 {
-	public interface IWikiToTextRenderer
-	{
-		Task<string> RenderWikiForYoutube(WikiPage page);
-	}
+	Task<string> RenderWikiForYoutube(WikiPage page);
 }

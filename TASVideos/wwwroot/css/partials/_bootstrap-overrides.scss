@@ -29,13 +29,11 @@ a {
 }
 
 h1 {
-	margin: 0 auto;
-	padding: 5px 10px;
-	border-radius: 5px;
 	font-size: 1.25em;
-	line-height: 1.5;
-	background: var(--bs-secondary);
-	color: $bs-white;
+
+	.card & {
+		font-size: 1em;
+	}
 }
 
 h2 {
@@ -60,12 +58,18 @@ h4 {
 
 	&, &:focus {
 		color: var(--bs-dark);
-		background-color: var(--bs-white);
+		background-color: var(--bs-light);
 	}
 
 	&:disabled, &[readonly] {
-		background-color: var(--bs-light);
+		background-color: var(--bs-gray-400);
 	}
+}
+
+.form-select {
+	background-color: var(--bs-light);
+	color: var(--bs-dark);
+	border-color: var(--border-color);
 }
 
 .input-group-text {
@@ -154,6 +158,10 @@ h4 {
 	border-top-color: var(--border-separator-color);
 }
 
+.navbar {
+	font-size: 1rem;
+}
+
 .nav-tabs {
 	border-color: var(--bs-light);
 
@@ -166,4 +174,14 @@ h4 {
 
 .navbar-dark .navbar-nav .nav-link {
 	color: RGBA(255,255,255,.6);
+}
+
+.breadcrumb-item {
+	white-space: nowrap;
+	font-size: 1.25em;
+	line-height: 1.25em;
+
+	&.active {
+		color: var(--bs-body-color);
+	}
 }

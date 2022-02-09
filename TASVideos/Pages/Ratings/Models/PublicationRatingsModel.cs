@@ -1,32 +1,23 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.Ratings.Models
+namespace TASVideos.Pages.Ratings.Models;
+
+public class PublicationRatingsModel
 {
-	public class PublicationRatingsModel
+	public string PublicationTitle { get; set; } = "";
+
+	public IEnumerable<RatingEntry> Ratings { get; set; } = new List<RatingEntry>();
+
+	public double OverallRating { get; set; }
+
+	public class RatingEntry
 	{
-		public string PublicationTitle { get; set; } = "";
+		[Display(Name = "UserName")]
+		public string UserName { get; set; } = "";
 
-		public IEnumerable<RatingEntry> Ratings { get; set; } = new List<RatingEntry>();
+		[Display(Name = "Rating")]
+		public double Rating { get; set; }
 
-		public double AverageEntertainmentRating { get; set; }
-
-		public double AverageTechRating { get; set; }
-
-		public double OverallRating { get; set; }
-
-		public class RatingEntry
-		{
-			[Display(Name = "UserName")]
-			public string UserName { get; set; } = "";
-
-			[Display(Name = "Entertainment")]
-			public double? Entertainment { get; set; }
-
-			[Display(Name = "Tech Quality")]
-			public double? TechQuality { get; set; }
-
-			public bool IsPublic { get; set; }
-		}
+		public bool IsPublic { get; set; }
 	}
 }

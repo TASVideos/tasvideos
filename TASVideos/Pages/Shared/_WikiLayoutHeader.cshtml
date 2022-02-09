@@ -1,6 +1,6 @@
 ﻿@model WikiPage
 @{
-	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Name(), User.Permissions());
+	bool canEdit = WikiHelper.UserCanEditWikiPage(Model!.PageName, User.Name(), User.Permissions());
 }
 
 <!-- Eventually we will show available translations here-->

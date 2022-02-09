@@ -1,30 +1,27 @@
 ﻿using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
 
-namespace TASVideos.Middleware
+namespace TASVideos.Middleware;
+
+public class RobotHandlingMiddleware
 {
-	public class RobotHandlingMiddleware
+	// ReSharper disable once NotAccessedField.Local
+	private readonly IHostEnvironment _env;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
+	/// </summary>
+	public RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment env)
 	{
-		// ReSharper disable once NotAccessedField.Local
-		private readonly IHostEnvironment _env;
+		_env = env;
+	}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
-		/// </summary>
-		public RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment env)
+	public async Task Invoke(HttpContext context)
+	{
+		var sb = new StringBuilder();
+
+		if (_env.IsProduction())
 		{
-			_env = env;
-		}
-
-		public async Task Invoke(HttpContext context)
-		{
-			var sb = new StringBuilder();
-
-			if (_env.IsProduction())
-			{
-				sb.AppendLine(@"
+			sb.AppendLine(@"
 User-agent: *
 Disallow: /forum/
 Disallow: /movies/
@@ -40,17 +37,16 @@ Allow: /forum/
 User-agent: Fasterfox
 Disallow: /
 ");
-			}
-			else
-			{
-				sb
-					.AppendLine("User-agent: *")
-					.AppendLine("Disallow: / ");
-			}
-
-			context.Response.StatusCode = 200;
-			context.Response.ContentType = "text/plain";
-			await context.Response.WriteAsync(sb.ToString());
 		}
+		else
+		{
+			sb
+				.AppendLine("User-agent: *")
+				.AppendLine("Disallow: / ");
+		}
+
+		context.Response.StatusCode = 200;
+		context.Response.ContentType = "text/plain";
+		await context.Response.WriteAsync(sb.ToString());
 	}
 }

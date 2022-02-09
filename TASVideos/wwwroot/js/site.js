@@ -10,7 +10,7 @@ function scrollToTop() {
 	window.scroll({
 		top: 0,
 		behavior: 'smooth'
-	})
+	});
 }
 
 window.addEventListener("scroll", showHideScrollToTop);

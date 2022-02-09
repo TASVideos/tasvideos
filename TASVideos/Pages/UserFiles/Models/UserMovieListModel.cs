@@ -1,22 +1,20 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Pages.UserFiles.Models
+namespace TASVideos.Pages.UserFiles.Models;
+
+public class UserMovieListModel
 {
-	public class UserMovieListModel
-	{
-		public long Id { get; set; }
+	public long Id { get; set; }
 
-		[Display(Name = "By")]
-		public string Author { get; set; } = "";
+	[Display(Name = "By")]
+	public string Author { get; set; } = "";
 
-		[Display(Name = "Uploaded")]
-		public DateTime UploadTimestamp { get; set; }
+	[Display(Name = "Uploaded")]
+	public DateTime UploadTimestamp { get; set; }
 
-		[Display(Name = "Filename")]
-		public string FileName { get; set; } = "";
+	[Display(Name = "Filename")]
+	public string FileName { get; set; } = "";
 
-		[Display(Name = "Title")]
-		public string Title { get; set; } = "";
-	}
+	[Display(Name = "Title")]
+	public string Title { get; set; } = "";
 }

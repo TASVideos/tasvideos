@@ -1,6 +1,6 @@
 ﻿@model MoviesListModel
 @{
-	var pubGroups = Model.Movies.GroupBy(gkey => gkey.GameName, gvalue => new
+	var pubGroups = Model!.Movies.GroupBy(gkey => gkey.GameName, gvalue => new
 	{
 		gvalue.Id, gvalue.IsObsolete
 	}).ToList();

@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace TASVideos.Core.Services;
 
-namespace TASVideos.Core.Services
-{
-	public record WikiOrphan(
-		string PageName,
-		DateTime LastUpdateTimestamp,
-		string? LastUpdateUserName);
-}
+public record WikiOrphan(
+	string PageName,
+	DateTime LastUpdateTimestamp,
+	string? LastUpdateUserName);

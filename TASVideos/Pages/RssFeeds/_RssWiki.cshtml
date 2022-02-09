@@ -2,7 +2,7 @@
 @model TASVideos.Pages.RssFeeds.Models.RssWiki
 @{
 	var baseUrl = ViewData["BaseUrl"];
-	var url = $"{baseUrl}/{Model.PageName}";
+	var url = $"{baseUrl}/{Model!.PageName}";
 	string action = Model.IsNew ? "created" : "edited";
 	string title = $"{Model.PageName} {action} by {Model.Author}";
 }

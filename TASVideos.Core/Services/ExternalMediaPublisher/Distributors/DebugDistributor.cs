@@ -1,33 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
-namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+
+/// <summary>
+/// A <see cref="IPostDistributor"/> implementation that simply logs a post.
+/// </summary>
+public class LogDistributor : IPostDistributor
 {
-	/// <summary>
-	/// A <see cref="IPostDistributor"/> implementation that simply logs a post.
-	/// </summary>
-	public class LogDistributor : IPostDistributor
+	private readonly ILogger _logger;
+
+	private static readonly IEnumerable<PostType> PostTypes = Enum
+		.GetValues(typeof(PostType))
+		.OfType<PostType>()
+		.ToList();
+
+	public LogDistributor(ILogger<LogDistributor> logger)
 	{
-		private readonly ILogger _logger;
+		_logger = logger;
+	}
 
-		private static readonly IEnumerable<PostType> PostTypes = Enum
-			.GetValues(typeof(PostType))
-			.OfType<PostType>()
-			.ToList();
+	public IEnumerable<PostType> Types => PostTypes;
 
-		public LogDistributor(ILogger<LogDistributor> logger)
+	public async Task Post(IPostable post)
+	{
+		if (_logger.IsEnabled(LogLevel.Information))
 		{
-			_logger = logger;
-		}
-
-		public IEnumerable<PostType> Types => PostTypes;
-
-		public async Task Post(IPostable post)
-		{
-			await Task.Run(() => _logger.LogInformation($"New {post.Type} message recieved\n{post.Title}\n{post.Body}\nLink:{post.Link}\nGroup:{post.Group}\n{post.User}"));
+			await Task.Run(() => _logger.LogInformation(
+				"New {post.Type} message recieved\n{announcement}\n{title}\n{body}\nLink:{link}\nGroup:{group}\n{user}",
+				post.Type,
+				post.Announcement,
+				post.Title,
+				post.Body,
+				post.Link,
+				post.Group,
+				post.User));
 		}
 	}
 }

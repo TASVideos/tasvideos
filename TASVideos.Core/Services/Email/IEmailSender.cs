@@ -1,13 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿namespace TASVideos.Core.Services.Email;
 
-namespace TASVideos.Core.Services.Email
+public interface IEmailSender
 {
-	public interface IEmailSender
-	{
-		/// <summary>
-		/// Sends an email to the given recipients,
-		/// with the given subject and message
-		/// </summary>
-		Task SendEmail(IEmail email);
-	}
+	/// <summary>
+	/// Sends an email to the given recipients,
+	/// with the given subject and message
+	/// </summary>
+	Task SendEmail(IEmail email);
 }

@@ -1,6 +1,6 @@
 ﻿@model TASVideos.Core.Services.AwardAssignmentSummary
 @{
-	string awardName = $"{Model.ShortName}_{Model.Year.ToString()}";
+	string awardName = $"{Model!.ShortName}_{Model.Year.ToString()}";
 }
 <a href="/Awards/@Model.Year.ToString()#@(Model.ShortName)_@Model.Year" title="Award - @Model.Description"><img style="max-height: 48px;" 
 		 srcset="/awards/@(awardName).png .5x,

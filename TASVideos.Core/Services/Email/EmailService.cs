@@ -1,79 +1,76 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
+﻿using System.Text.Encodings.Web;
 using Microsoft.Extensions.Hosting;
 
-namespace TASVideos.Core.Services.Email
+namespace TASVideos.Core.Services.Email;
+
+public interface IEmailService
 {
-	public interface IEmailService
+	Task ResetPassword(string recipient, string link);
+	Task EmailConfirmation(string recipient, string link);
+	Task PasswordResetConfirmation(string recipient, string resetLink);
+	Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template);
+}
+
+internal class EmailService : IEmailService
+{
+	private readonly IHostEnvironment _env;
+	private readonly IEmailSender _emailSender;
+
+	public EmailService(IHostEnvironment env, IEmailSender emailSender)
 	{
-		Task ResetPassword(string recipient, string link);
-		Task EmailConfirmation(string recipient, string link);
-		Task PasswordResetConfirmation(string recipient, string resetLink);
-		Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template);
+		_env = env;
+		_emailSender = emailSender;
 	}
 
-	internal class EmailService : IEmailService
+	public async Task ResetPassword(string recipient, string link)
 	{
-		private readonly IHostEnvironment _env;
-		private readonly IEmailSender _emailSender;
-
-		public EmailService(IHostEnvironment env, IEmailSender emailSender)
+		await _emailSender.SendEmail(new SingleEmail
 		{
-			_env = env;
-			_emailSender = emailSender;
+			Recipient = recipient,
+			Subject = "TASVideos - Reset Password",
+			Message = $"Please reset your password for your TASVideos user account by clicking here: <a href='{link}'>link</a>",
+			ContainsHtml = true
+		});
+	}
+
+	public async Task EmailConfirmation(string recipient, string link)
+	{
+		await _emailSender.SendEmail(new SingleEmail
+		{
+			Recipient = recipient,
+			Subject = "TASVideos - Confirm your email",
+			Message = $"Please confirm the e-mail address for your TASVideos user account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>",
+			ContainsHtml = true
+		});
+	}
+
+	public async Task PasswordResetConfirmation(string recipient, string resetLink)
+	{
+		await _emailSender.SendEmail(new SingleEmail
+		{
+			Recipient = recipient,
+			Subject = "TASVideos - Your Password Was Changed",
+			Message = $"This email is to inform you that your TASVideos user account password was changed. If you have received this message in error, you can reset your password and reclaim your account with this <a href='{HtmlEncoder.Default.Encode(resetLink)}'>link</a>",
+			ContainsHtml = true
+		});
+	}
+
+	public async Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template)
+	{
+		var recipientsList = recipients.ToList();
+		if (!recipientsList.Any())
+		{
+			return;
 		}
 
-		public async Task ResetPassword(string recipient, string link)
+		string siteName = "TASVideos";
+		if (!_env.IsProduction())
 		{
-			await _emailSender.SendEmail(new SingleEmail
-			{
-				Recipient = recipient,
-				Subject = "TASVideos - Reset Password",
-				Message = $"Please reset your password for your TASVideos user account by clicking here: <a href='{link}'>link</a>",
-				ContainsHtml = true
-			});
+			siteName += $" - {_env.EnvironmentName} environment";
 		}
 
-		public async Task EmailConfirmation(string recipient, string link)
-		{
-			await _emailSender.SendEmail(new SingleEmail
-			{
-				Recipient = recipient,
-				Subject = "TASVideos - Confirm your email",
-				Message = $"Please confirm the e-mail address for your TASVideos user account by clicking this link: <a href='{HtmlEncoder.Default.Encode(link)}'>link</a>",
-				ContainsHtml = true
-			});
-		}
-
-		public async Task PasswordResetConfirmation(string recipient, string resetLink)
-		{
-			await _emailSender.SendEmail(new SingleEmail
-			{
-				Recipient = recipient,
-				Subject = "TASVideos - Your Password Was Changed",
-				Message = $"This email is to inform you that your TASVideos user account password was changed. If you have received this message in error, you can reset your password and reclaim your account with this <a href='{HtmlEncoder.Default.Encode(resetLink)}'>link</a>",
-				ContainsHtml = true
-			});
-		}
-
-		public async Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template)
-		{
-			var recipientsList = recipients.ToList();
-			if (!recipientsList.Any())
-			{
-				return;
-			}
-
-			string siteName = "TASVideos";
-			if (!_env.IsProduction())
-			{
-				siteName += $" - {_env.EnvironmentName} environment";
-			}
-
-			string subject = "Topic Reply Notification - " + template.TopicTitle;
-			string message = $@"Hello,
+		string subject = "Topic Reply Notification - " + template.TopicTitle;
+		string message = $@"Hello,
 
 You are receiving this email because you are watching the topic, ""{template.TopicTitle}"" at {siteName}. This topic has received a reply since your last visit. You can use the following link to view the replies made, no more notifications will be sent until you visit the topic.
 
@@ -87,19 +84,18 @@ If you no longer wish to watch this topic you can either click the ""Stop watchi
 Thanks,
 on behalf of TASVideos staff";
 
-			await _emailSender.SendEmail(new StandardEmail
-			{
-				Recipients = recipientsList,
-				Subject = subject,
-				Message = message,
-				ContainsHtml = false
-			});
-		}
+		await _emailSender.SendEmail(new StandardEmail
+		{
+			Recipients = recipientsList,
+			Subject = subject,
+			Message = message,
+			ContainsHtml = false
+		});
 	}
-
-	public record TopicReplyNotificationTemplate(
-		int PostId,
-		int TopicId,
-		string TopicTitle,
-		string BaseUrl);
 }
+
+public record TopicReplyNotificationTemplate(
+	int PostId,
+	int TopicId,
+	string TopicTitle,
+	string BaseUrl);

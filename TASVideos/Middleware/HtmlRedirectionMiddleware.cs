@@ -1,41 +1,37 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Http.Extensions;
 
-namespace TASVideos.Middleware
+namespace TASVideos.Middleware;
+
+public class HtmlRedirectionMiddleware
 {
-	public class HtmlRedirectionMiddleware
+	private readonly RequestDelegate _next;
+
+	public HtmlRedirectionMiddleware(RequestDelegate next)
 	{
-		private readonly RequestDelegate _next;
+		_next = next;
+	}
 
-		public HtmlRedirectionMiddleware(RequestDelegate next)
+	public Task Invoke(HttpContext context)
+	{
+		var request = context.Request;
+
+		var path = request.Path.Value;
+		if (path == null || !path.EndsWith(".html", StringComparison.OrdinalIgnoreCase)
+		|| string.Equals(path, "/api/index.html", StringComparison.OrdinalIgnoreCase))
 		{
-			_next = next;
+			return _next(context);
 		}
 
-		public Task Invoke(HttpContext context)
-		{
-			var request = context.Request;
+		var redirectUrl = UriHelper.BuildAbsolute(
+			request.Scheme,
+			request.Host,
+			request.PathBase,
+			new PathString(path[..^5]),
+			request.QueryString);
 
-			var path = request.Path.Value;
-			if (path == null || !path.EndsWith(".html", StringComparison.OrdinalIgnoreCase)
-			|| string.Equals(path, "/api/index.html", StringComparison.OrdinalIgnoreCase))
-			{
-				return _next(context);
-			}
+		context.Response.StatusCode = 301;
+		context.Response.Headers["Location"] = redirectUrl;
 
-			var redirectUrl = UriHelper.BuildAbsolute(
-				request.Scheme,
-				request.Host,
-				request.PathBase,
-				new PathString(path[..^5]),
-				request.QueryString);
-
-			context.Response.StatusCode = 301;
-			context.Response.Headers["Location"] = redirectUrl;
-
-			return Task.CompletedTask;
-		}
+		return Task.CompletedTask;
 	}
 }

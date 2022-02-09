@@ -5,7 +5,7 @@
 			<th>@Html.DisplayNameFor(m => m.First().UserName)</th>
 			<th>@Html.DisplayNameFor(m => m.First().WikiEdits)</th>
 		</tr>
-		@foreach (var entry in Model)
+		@foreach (var entry in Model!)
 		{
 			<tr>
 				<td>

@@ -1,89 +1,84 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.RamAddresses.Models;
 
-namespace TASVideos.Pages.RamAddresses
+namespace TASVideos.Pages.RamAddresses;
+
+public class AddressBasePageModel : BasePageModel
 {
-	public class AddressBasePageModel : BasePageModel
+	protected readonly ApplicationDbContext Db;
+
+	public AddressBasePageModel(ApplicationDbContext db)
 	{
-		protected readonly ApplicationDbContext Db;
+		Db = db;
+	}
 
-		public AddressBasePageModel(ApplicationDbContext db)
+	private static readonly IEnumerable<RamAddressType> AddressTypes = Enum
+		.GetValues<RamAddressType>();
+
+	private static readonly IEnumerable<RamAddressSigned> AddressSigned = Enum
+		.GetValues<RamAddressSigned>();
+
+	private static readonly IEnumerable<RamAddressEndian> AddressEndian = Enum
+		.GetValues<RamAddressEndian>();
+
+	public List<SelectListItem> Domains { get; set; } = new();
+
+	public List<SelectListItem> Types { get; } = AddressTypes
+		.Select(t => new SelectListItem
 		{
-			Db = db;
-		}
+			Value = ((int)t).ToString(),
+			Text = t.ToString()
+		})
+		.ToList();
 
-		private static readonly IEnumerable<RamAddressType> AddressTypes = Enum
-			.GetValues<RamAddressType>();
+	public List<SelectListItem> SignedOptions { get; } = AddressSigned
+		.Select(t => new SelectListItem
+		{
+			Value = ((int)t).ToString(),
+			Text = t.ToString()
+		})
+		.ToList();
 
-		private static readonly IEnumerable<RamAddressSigned> AddressSigned = Enum
-			.GetValues<RamAddressSigned>();
+	public List<SelectListItem> EndianOptions { get; } = AddressEndian
+		.Select(t => new SelectListItem
+		{
+			Value = ((int)t).ToString(),
+			Text = t.ToString()
+		})
+		.ToList();
 
-		private static readonly IEnumerable<RamAddressEndian> AddressEndian = Enum
-			.GetValues<RamAddressEndian>();
+	[BindProperty]
+	public AddressEditModel Address { get; set; } = new();
 
-		public List<SelectListItem> Domains { get; set; } = new ();
+	protected IActionResult RedirectToList(int gameId)
+	{
+		return BasePageRedirect("Index", new { Id = gameId });
+	}
 
-		public List<SelectListItem> Types { get; } = AddressTypes
-			.Select(t => new SelectListItem
+	protected async Task PopulateDropdowns(int systemId)
+	{
+		Domains = await Db.GameRamAddressDomains
+			.Where(d => d.GameSystemId == systemId)
+			.Select(d => new SelectListItem
 			{
-				Value = ((int)t).ToString(),
-				Text = t.ToString()
+				Text = d.Name,
+				Value = d.GameSystemId.ToString()
 			})
-			.ToList();
+			.ToListAsync();
+	}
 
-		public List<SelectListItem> SignedOptions { get; } = AddressSigned
-			.Select(t => new SelectListItem
-			{
-				Value = ((int)t).ToString(),
-				Text = t.ToString()
-			})
-			.ToList();
+	protected async Task ValidateDomain()
+	{
+		var domain = await Db.GameRamAddressDomains
+			.SingleOrDefaultAsync(d => d.Id == Address.GameRamAddressDomainId);
 
-		public List<SelectListItem> EndianOptions { get; } = AddressEndian
-			.Select(t => new SelectListItem
-			{
-				Value = ((int)t).ToString(),
-				Text = t.ToString()
-			})
-			.ToList();
-
-		[BindProperty]
-		public AddressEditModel Address { get; set; } = new ();
-
-		protected IActionResult RedirectToList(int gameId)
+		if (domain == null)
 		{
-			return BasePageRedirect("Index", new { Id = gameId });
-		}
-
-		protected async Task PopulateDropdowns(int systemId)
-		{
-			Domains = await Db.GameRamAddressDomains
-				.Where(d => d.GameSystemId == systemId)
-				.Select(d => new SelectListItem
-				{
-					Text = d.Name,
-					Value = d.GameSystemId.ToString()
-				})
-				.ToListAsync();
-		}
-
-		protected async Task ValidateDomain()
-		{
-			var domain = await Db.GameRamAddressDomains
-				.SingleOrDefaultAsync(d => d.Id == Address.GameRamAddressDomainId);
-
-			if (domain == null)
-			{
-				ModelState.AddModelError($"{nameof(Address)}.{nameof(Address.GameRamAddressDomainId)}", "Domain does not exist.");
-			}
+			ModelState.AddModelError($"{nameof(Address)}.{nameof(Address.GameRamAddressDomainId)}", "Domain does not exist.");
 		}
 	}
 }

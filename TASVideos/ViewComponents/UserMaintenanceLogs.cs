@@ -1,57 +1,53 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents
+namespace TASVideos.ViewComponents;
+
+[WikiModule(WikiModules.UserMaintenanceLogs)]
+public class UserMaintenanceLogs : ViewComponent
 {
-	[WikiModule(WikiModules.UserMaintenanceLogs)]
-	public class UserMaintenanceLogs : ViewComponent
+	private readonly ApplicationDbContext _db;
+
+	public UserMaintenanceLogs(ApplicationDbContext db)
 	{
-		private readonly ApplicationDbContext _db;
+		_db = db;
+	}
 
-		public UserMaintenanceLogs(ApplicationDbContext db)
+	public async Task<IViewComponentResult> InvokeAsync()
+	{
+		if (!HttpContext.User.Has(PermissionTo.ViewPrivateUserData))
 		{
-			_db = db;
+			return new ContentViewComponentResult("No access to this resource");
 		}
 
-		public async Task<IViewComponentResult> InvokeAsync()
+		var paging = new PagingModel
 		{
-			if (!HttpContext.User.Has(PermissionTo.ViewPrivateUserData))
-			{
-				return new ContentViewComponentResult("No access to this resource");
-			}
+			Sort = HttpContext.Request.QueryStringValue("Sort"),
+			PageSize = HttpContext.Request.QueryStringIntValue("PageSize") ?? 25,
+			CurrentPage = HttpContext.Request.QueryStringIntValue("CurrentPage") ?? 1
+		};
 
-			var paging = new PagingModel
-			{
-				Sort = HttpContext.Request.QueryStringValue("Sort"),
-				PageSize = HttpContext.Request.QueryStringIntValue("PageSize") ?? 25,
-				CurrentPage = HttpContext.Request.QueryStringIntValue("CurrentPage") ?? 1
-			};
-
-			if (string.IsNullOrWhiteSpace(paging.Sort))
-			{
-				paging.Sort = "-TimeStamp";
-			}
-
-			var logs = await _db.UserMaintenanceLogs
-				.Select(m => new UserMaintenanceLogEntry
-				{
-					User = m.User!.UserName,
-					Editor = m.Editor!.UserName,
-					TimeStamp = m.TimeStamp,
-					Log = m.Log
-				})
-				.SortedPageOf(paging);
-
-			ViewData["PagingModel"] = paging;
-			ViewData["CurrentPage"] = HttpContext.Request.Path.Value;
-			return View(logs);
+		if (string.IsNullOrWhiteSpace(paging.Sort))
+		{
+			paging.Sort = "-TimeStamp";
 		}
+
+		var logs = await _db.UserMaintenanceLogs
+			.Select(m => new UserMaintenanceLogEntry
+			{
+				User = m.User!.UserName,
+				Editor = m.Editor!.UserName,
+				TimeStamp = m.TimeStamp,
+				Log = m.Log
+			})
+			.SortedPageOf(paging);
+
+		ViewData["PagingModel"] = paging;
+		ViewData["CurrentPage"] = HttpContext.Request.Path.Value;
+		return View(logs);
 	}
 }

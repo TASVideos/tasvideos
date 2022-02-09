@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -10,46 +7,98 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics.Models;
 
-namespace TASVideos.Pages.Forum.Topics
+namespace TASVideos.Pages.Forum.Topics;
+
+[RequirePermission(PermissionTo.SplitTopics)]
+public class SplitModel : BasePageModel
 {
-	[RequirePermission(PermissionTo.SplitTopics)]
-	public class SplitModel : BasePageModel
+	private readonly ApplicationDbContext _db;
+	private readonly ExternalMediaPublisher _publisher;
+
+	public SplitModel(
+		ApplicationDbContext db,
+		ExternalMediaPublisher publisher)
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly ExternalMediaPublisher _publisher;
+		_db = db;
+		_publisher = publisher;
+	}
 
-		public SplitModel(
-			ApplicationDbContext db,
-			ExternalMediaPublisher publisher)
+	[FromRoute]
+	public int Id { get; set; }
+
+	[BindProperty]
+	public SplitTopicModel Topic { get; set; } = new();
+
+	public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
+
+	private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
+
+	public async Task<IActionResult> OnGet()
+	{
+		bool seeRestricted = CanSeeRestricted;
+		var topic = await _db.ForumTopics
+			.ExcludeRestricted(seeRestricted)
+			.Where(t => t.Id == Id)
+			.Select(t => new SplitTopicModel
+			{
+				Title = t.Title,
+				SplitTopicName = "(Split from " + t.Title + ")",
+				SplitToForumId = t.Forum!.Id,
+				ForumId = t.Forum.Id,
+				ForumName = t.Forum.Name,
+				Posts = t.ForumPosts
+					.Select(p => new SplitTopicModel.Post
+					{
+						Id = p.Id,
+						PostCreateTimestamp = p.CreateTimestamp,
+						EnableBbCode = p.EnableBbCode,
+						EnableHtml = p.EnableHtml,
+						Subject = p.Subject,
+						Text = p.Text,
+						PosterId = p.PosterId,
+						PosterName = p.Poster!.UserName,
+						PosterAvatar = p.Poster.Avatar
+					})
+					.ToList()
+			})
+			.SingleOrDefaultAsync();
+
+		if (topic == null)
 		{
-			_db = db;
-			_publisher = publisher;
-		}
-
-		[FromRoute]
-		public int Id { get; set; }
-
-		[BindProperty]
-		public SplitTopicModel Topic { get; set; } = new ();
-
-		public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
-
-		private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
-
-		public async Task<IActionResult> OnGet()
-		{
+// a
 			await PopulatePosts();
 			if (Topic == null)
 			{
 				return NotFound();
 			}
+// end a
+			return NotFound();
+		}
 
+		Topic = topic;
+		await PopulateAvailableForums();
+		return Page();
+	}
+// b
+
+	public async Task<IActionResult> OnPost()
+	{
+		if (!ModelState.IsValid)
+		{
 			await PopulateAvailableForums();
 			return Page();
 		}
 
-		public async Task<IActionResult> OnPost()
+		bool seeRestricted = CanSeeRestricted;
+		var topic = await _db.ForumTopics
+			.Include(t => t.Forum)
+			.Include(t => t.ForumPosts)
+			.ExcludeRestricted(seeRestricted)
+			.SingleOrDefaultAsync(t => t.Id == Id);
+
+		if (topic == null)
 		{
+// a
 			if (!ModelState.IsValid)
 			{
 				await PopulatePosts();
@@ -63,21 +112,21 @@ namespace TASVideos.Pages.Forum.Topics
 				.Include(t => t.ForumPosts)
 				.ExcludeRestricted(seeRestricted)
 				.SingleOrDefaultAsync(t => t.Id == Id);
+// end a
+			return NotFound();
+		}
+// b
 
-			if (topic == null)
-			{
-				return NotFound();
-			}
+		var destinationForum = await _db.Forums
+			.ExcludeRestricted(seeRestricted)
+			.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
 
-			var destinationForum = await _db.Forums
-				.ExcludeRestricted(seeRestricted)
-				.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
+		if (destinationForum == null)
+		{
+			return NotFound();
+		}
 
-			if (destinationForum == null)
-			{
-				return NotFound();
-			}
-
+// a
 			var selectedPosts = Topic.Posts
 				.Where(tp => tp.Selected)
 				.Select(tp => tp.Id)
@@ -103,37 +152,59 @@ namespace TASVideos.Pages.Forum.Topics
 						|| p.CreateTimestamp > splitOnPost.CreateTimestamp)
 					.ToList();
 			}
+// end a
+		var splitOnPost = topic.ForumPosts
+			.SingleOrDefault(p => p.Id == Topic.PostToSplitId);
 
-			var newTopic = new ForumTopic
-			{
-				Type = ForumTopicType.Regular,
-				Title = Topic.SplitTopicName,
-				PosterId = User.GetUserId(),
-				ForumId = Topic.SplitToForumId
-			};
+		if (splitOnPost == null)
+		{
+			return NotFound();
+		}
+// b
 
-			_db.ForumTopics.Add(newTopic);
-			await _db.SaveChangesAsync();
+		var newTopic = new ForumTopic
+		{
+			Type = ForumTopicType.Regular,
+			Title = Topic.SplitTopicName,
+			PosterId = User.GetUserId(),
+			ForumId = Topic.SplitToForumId
+		};
 
+		_db.ForumTopics.Add(newTopic);
+		await _db.SaveChangesAsync();
+
+// a
 			foreach (var post in postsToSplit)
 			{
 				post.TopicId = newTopic.Id;
 				post.ForumId = destinationForum.Id;
 			}
+// end a
+		var splitPosts = topic.ForumPosts
+			.Where(p => p.Id == splitOnPost.Id
+				|| p.CreateTimestamp > splitOnPost.CreateTimestamp);
 
-			await _db.SaveChangesAsync();
-
-			var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
-
-			await _publisher.SendForum(
-				destinationForum.Restricted || topic.Forum!.Restricted,
-				$"Topic SPLIT by {User.Name()}",
-				$@"""{newTopic.Title}"" from ""{Topic.Title}""",
-				$"Forum/Topics/{newTopic.Id}");
-
-			return RedirectToPage("Index", new { id = newTopic.Id });
+		foreach (var post in splitPosts)
+		{
+			post.TopicId = newTopic.Id;
+			post.ForumId = destinationForum.Id;
 		}
+// b
 
+		await _db.SaveChangesAsync();
+
+		var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
+
+		await _publisher.SendForum(
+			destinationForum.Restricted || topic.Forum!.Restricted,
+			$"Topic SPLIT by {User.Name()}",
+			$@"""{newTopic.Title}"" from ""{Topic.Title}""",
+			$"Forum/Topics/{newTopic.Id}");
+
+		return RedirectToPage("Index", new { id = newTopic.Id });
+	}
+
+// a
 		private async Task PopulatePosts()
 		{
 			bool seeRestricted = CanSeeRestricted;
@@ -179,5 +250,19 @@ namespace TASVideos.Pages.Forum.Topics
 					})
 					.ToListAsync();
 		}
+// end a
+	private async Task PopulateAvailableForums()
+	{
+		var seeRestricted = CanSeeRestricted;
+		AvailableForums = await _db.Forums
+				.ExcludeRestricted(seeRestricted)
+				.Select(f => new SelectListItem
+				{
+					Text = f.Name,
+					Value = f.Id.ToString(),
+					Selected = f.Id == Topic.ForumId
+				})
+				.ToListAsync();
+// b
 	}
 }

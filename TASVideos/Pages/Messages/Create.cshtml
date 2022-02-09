@@ -60,19 +60,19 @@
 					return;
 				}
 
-				let xmlhttp = new XMLHttpRequest();
+				const xmlhttp = new XMLHttpRequest();
 
 				xmlhttp.onreadystatechange = function() {
 					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
 						if (xmlhttp.status === 200) {
-							let newSearchList = document.createElement('datalist');
+							const newSearchList = document.createElement('datalist');
 							newSearchList.id = dataListId;
 
 							const data = JSON.parse(xmlhttp.responseText);
 
 							for (const i in data) {
 								if (data.hasOwnProperty(i)) {
-									let option = document.createElement('option');
+									const option = document.createElement('option');
 									option.innerHTML = data[i];
 
 									newSearchList.appendChild(option);

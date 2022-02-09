@@ -37,7 +37,8 @@
 					<div class="card-text text-end">
 						<small>
 							@string.Join(",", Model.UserPosts.Roles)
-							(todo points)
+							&nbsp;
+							(@Model.UserPosts.PlayerPoints)
 						</small>
 						<br />
 						<img src="@Model.UserPosts.Avatar" />
@@ -46,7 +47,7 @@
 							Joined: <timezone-convert asp-for="@Model.UserPosts.Joined" date-only="true"/><br />
 							Posts: @Model.UserPosts.Posts.RowCount
 							<span condition="!string.IsNullOrWhiteSpace(Model.UserPosts.Location)">
-                                				<br />Location: @Model.UserPosts.Location
+							<br />Location: @Model.UserPosts.Location
 							</span>
 						</small>
 					</div>

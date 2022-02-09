@@ -2,7 +2,7 @@
 @model TASVideos.Pages.RssFeeds.Models.RssPublication
 @{
 	var baseUrl = ViewData["BaseUrl"];
-	var movieUrl = $"{baseUrl}/{Model.Id}M";
+	var movieUrl = $"{baseUrl}/{Model!.Id}M";
 
 	var primaryStreaming = Model.StreamingUrls.FirstOrDefault(u => u.Contains("youtube"));
 	var secondaryStreaming = Model.StreamingUrls.Where(u => u != primaryStreaming);
@@ -11,7 +11,7 @@
 	<title>@Model.Title</title>
 	<link>@movieUrl</link>
 	<description>
-		<wiki-markup markup=@Model.Wiki.Markup page-data=@Model.Wiki></wiki-markup>
+		<wiki-markup markup="@Model.Wiki.Markup" page-data="@Model.Wiki"></wiki-markup>
 	</description>
 	@foreach (var tag in Model.TagNames)
 	{

@@ -1,110 +1,102 @@
-﻿using System;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Extensions;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using Microsoft.EntityFrameworkCore;
 
-namespace TASVideos.Core.Services
+namespace TASVideos.Core.Services;
+
+public class SignInManager : SignInManager<User>
 {
-	public class SignInManager : SignInManager<User>
+	private readonly ApplicationDbContext _db;
+	private readonly UserManager _userManager;
+
+	public SignInManager(
+		ApplicationDbContext db,
+		UserManager userManager,
+		IHttpContextAccessor contextAccessor,
+		IUserClaimsPrincipalFactory<User> claimsFactory,
+		IOptions<IdentityOptions> optionsAccessor,
+		ILogger<SignInManager<User>> logger,
+		IAuthenticationSchemeProvider schemes,
+		IUserConfirmation<User> confirmation)
+		: base(
+			userManager,
+			contextAccessor,
+			claimsFactory,
+			optionsAccessor,
+			logger,
+			schemes,
+			confirmation)
 	{
-		private readonly ApplicationDbContext _db;
-		private readonly UserManager _userManager;
+		_db = db;
+		_userManager = userManager;
+	}
 
-		public SignInManager(
-			ApplicationDbContext db,
-			UserManager userManager,
-			IHttpContextAccessor contextAccessor,
-			IUserClaimsPrincipalFactory<User> claimsFactory,
-			IOptions<IdentityOptions> optionsAccessor,
-			ILogger<SignInManager<User>> logger,
-			IAuthenticationSchemeProvider schemes,
-			IUserConfirmation<User> confirmation)
-			: base(
-				userManager,
-				contextAccessor,
-				claimsFactory,
-				optionsAccessor,
-				logger,
-				schemes,
-				confirmation)
+	public async Task<SignInResult> SignIn(string userName, string password, bool rememberMe = false)
+	{
+		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
+		if (user == null)
 		{
-			_db = db;
-			_userManager = userManager;
+			return SignInResult.Failed;
 		}
 
-		public async Task<SignInResult> SignInWithLegacySupport(string userName, string password, bool rememberMe = false)
+		var claims = await _userManager.AddUserPermissionsToClaims(user);
+		var canLogIn = claims.Permissions().Contains(PermissionTo.Login);
+
+		if (!canLogIn)
 		{
-			var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
-			if (user == null)
-			{
-				return SignInResult.Failed;
-			}
+			return SignInResult.NotAllowed;
+		}
 
-			// If no password, then try to log in with legacy method
-			if (!string.IsNullOrWhiteSpace(user.LegacyPassword))
-			{
-				using var md5 = MD5.Create();
-				var md5Result = md5.ComputeHash(Encoding.ASCII.GetBytes(AddSlashes(password)));
-				string encrypted = BitConverter.ToString(md5Result)
-					.Replace("-", "")
-					.ToLower();
+		var result = await base.PasswordSignInAsync(
+			userName,
+			password,
+			rememberMe,
+			lockoutOnFailure: true);
 
-				if (encrypted == user.LegacyPassword)
-				{
-					user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, password);
-					await _userManager.UpdateSecurityStampAsync(user);
-					user.LegacyPassword = null;
-					await _db.SaveChangesAsync();
-				}
-			}
+		if (result.Succeeded)
+		{
+			user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
+			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
 			await _userManager.AddUserPermissionsToClaims(user);
-			var result = await base.PasswordSignInAsync(
-				userName,
-				password,
-				rememberMe,
-				lockoutOnFailure: true);
-
-			if (result.Succeeded)
-			{
-				var loggedInUser = await _db.Users.SingleAsync(u => u.UserName == userName);
-				loggedInUser.LastLoggedInTimeStamp = DateTime.UtcNow;
-				await _db.SaveChangesAsync();
-			}
-
-			return result;
 		}
 
-		// Attempts to recreate the addslashes() php method
-		// phpbb2 runs this before passing a database value into the md5() method
-		// https://www.php.net/manual/en/function.addslashes.php
-		internal string AddSlashes(string str)
+		return result;
+	}
+
+	public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
+	{
+		var user = await UserManager.GetUserAsync(principal);
+		var result = await UserManager.AddPasswordAsync(user, newPassword);
+
+		if (result.Succeeded)
 		{
-			return str
-				.Replace("\"", "\\\"")
-				.Replace("'", "\\'");
+			await SignInAsync(user, isPersistent: false);
 		}
 
-		public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
+		return result;
+	}
+
+	public async Task<bool> UsernameIsAllowed(string userName)
+	{
+		var disallows = await _db.UserDisallows.ToListAsync();
+		foreach (var disallow in disallows)
 		{
-			var user = await UserManager.GetUserAsync(principal);
-			var result = await UserManager.AddPasswordAsync(user, newPassword);
-
-			if (result.Succeeded)
+			var regex = new Regex(disallow.RegexPattern);
+			if (regex.IsMatch(userName))
 			{
-				await SignInAsync(user, isPersistent: false);
+				return false;
 			}
-
-			return result;
 		}
+
+		return true;
 	}
 }
