@@ -24,35 +24,46 @@
 		<input type="text" asp-for="Topic.SplitTopicName" class="form-control" />
 		<span asp-validation-for="Topic.SplitTopicName" class="text-danger"></span>
 	</form-group>
-	<div class="border border-info">
-		<label asp-for="Topic.PostToSplitId" class="form-control-label"></label>
-		<span asp-validation-for="Topic.PostToSplitId" class="text-danger"></span>
+	<small class="text-muted">Either select one Post to start splitting at (left), or manually select the Posts to be split (right). If both are provided the manual selection will take precedence.</small>
+	<div class="border border-info p-2">
 		<small>
-			@foreach (var post in Model.Topic.Posts.OrderBy(p => p.PostCreateTimestamp))
+			<row>
+				<div class="col-2 col-md-1">
+					<label asp-for="Topic.PostToSplitId" class="form-control-label"></label>
+				</div>
+				<div class="col-2 col-md-1">
+					<label class="form-control-label">Split Selected Posts</label>
+				</div>
+			</row>
+			@for (int i = 0; i < Model.Topic.Posts.Count; i++)
 			{
-				<row>
-					<div class="col-md-1">
-						<input class="m-2 custom-radio" type="radio" value="@post.Id" name="@Html.NameFor(m =>m.Topic.PostToSplitId)" id="post_@post.Id" />
+				<row class="align-items-center">
+					<div class="col-2 col-md-1">
+						<input class="m-2" type="radio" value="@Model.Topic.Posts[i].Id" name="@Html.NameFor(m =>m.Topic.PostToSplitId)" id="post_@Model.Topic.Posts[i].Id" />
 					</div>
-					<div class="col-md-11">
+					<div class="col-2 col-md-1">
+						<input type="hidden" asp-for="@Model.Topic.Posts[i].Id" />
+						<input class="m-2" asp-for="@Model.Topic.Posts[i].Selected" />
+					</div>
+					<div class="col-md-10 mb-4 mb-md-2">
 						<card>
 							<cardheader>
 								<row>
 									<div class="col-4 border-end">
-										@post.PosterName
+										@Model.Topic.Posts[i].PosterName
 									</div>
 									<div class="col-8 pt-0 pb-0">
-										@post.Subject
+										@Model.Topic.Posts[i].Subject
 									</div>
 								</row>
 							</cardheader>
 							<cardbody>
 								<row>
 									<div class="col-4">
-										<img src="@post.PosterAvatar" />
+										<img src="@Model.Topic.Posts[i].PosterAvatar" />
 									</div>
 									<div class="col-8">
-										<forum-markup markup=@post.Text enable-html=@post.EnableHtml enable-bb-code=@post.EnableBbCode></forum-markup>
+										<forum-markup markup=@Model.Topic.Posts[i].Text enable-html=@Model.Topic.Posts[i].EnableHtml enable-bb-code=@Model.Topic.Posts[i].EnableBbCode></forum-markup>
 									</div>
 								</row>
 							</cardbody>

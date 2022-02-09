@@ -35,40 +35,13 @@ public class SplitModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		bool seeRestricted = CanSeeRestricted;
-		var topic = await _db.ForumTopics
-			.ExcludeRestricted(seeRestricted)
-			.Where(t => t.Id == Id)
-			.Select(t => new SplitTopicModel
-			{
-				Title = t.Title,
-				SplitTopicName = "(Split from " + t.Title + ")",
-				SplitToForumId = t.Forum!.Id,
-				ForumId = t.Forum.Id,
-				ForumName = t.Forum.Name,
-				Posts = t.ForumPosts
-					.Select(p => new SplitTopicModel.Post
-					{
-						Id = p.Id,
-						PostCreateTimestamp = p.CreateTimestamp,
-						EnableBbCode = p.EnableBbCode,
-						EnableHtml = p.EnableHtml,
-						Subject = p.Subject,
-						Text = p.Text,
-						PosterId = p.PosterId,
-						PosterName = p.Poster!.UserName,
-						PosterAvatar = p.Poster.Avatar
-					})
-					.ToList()
-			})
-			.SingleOrDefaultAsync();
-
-		if (topic == null)
+		var splitTopic = await PopulatePosts();
+		if (splitTopic == null)
 		{
 			return NotFound();
 		}
 
-		Topic = topic;
+		Topic = splitTopic;
 		await PopulateAvailableForums();
 		return Page();
 	}
@@ -77,6 +50,7 @@ public class SplitModel : BasePageModel
 	{
 		if (!ModelState.IsValid)
 		{
+			await PopulatePosts();
 			await PopulateAvailableForums();
 			return Page();
 		}
@@ -102,12 +76,30 @@ public class SplitModel : BasePageModel
 			return NotFound();
 		}
 
-		var splitOnPost = topic.ForumPosts
-			.SingleOrDefault(p => p.Id == Topic.PostToSplitId);
+		var selectedPosts = Topic.Posts
+			.Where(tp => tp.Selected)
+			.Select(tp => tp.Id)
+			.ToList();
+		var postsToSplit = topic.ForumPosts
+			.Where(p => selectedPosts.Contains(p.Id))
+			.ToList();
 
-		if (splitOnPost == null)
+		if (!postsToSplit.Any())
 		{
-			return NotFound();
+			var splitOnPost = topic.ForumPosts
+				.SingleOrDefault(p => p.Id == Topic.PostToSplitId);
+
+			if (splitOnPost == null)
+			{
+				await PopulatePosts();
+				await PopulateAvailableForums();
+				return Page();
+			}
+
+			postsToSplit = topic.ForumPosts
+				.Where(p => p.Id == splitOnPost.Id
+					|| p.CreateTimestamp > splitOnPost.CreateTimestamp)
+				.ToList();
 		}
 
 		var newTopic = new ForumTopic
@@ -121,19 +113,13 @@ public class SplitModel : BasePageModel
 		_db.ForumTopics.Add(newTopic);
 		await _db.SaveChangesAsync();
 
-		var splitPosts = topic.ForumPosts
-			.Where(p => p.Id == splitOnPost.Id
-				|| p.CreateTimestamp > splitOnPost.CreateTimestamp);
-
-		foreach (var post in splitPosts)
+		foreach (var post in postsToSplit)
 		{
 			post.TopicId = newTopic.Id;
 			post.ForumId = destinationForum.Id;
 		}
 
 		await _db.SaveChangesAsync();
-
-		var newForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == topic.ForumId);
 
 		await _publisher.SendForum(
 			destinationForum.Restricted || topic.Forum!.Restricted,
@@ -144,17 +130,49 @@ public class SplitModel : BasePageModel
 		return RedirectToPage("Index", new { id = newTopic.Id });
 	}
 
+	private async Task<SplitTopicModel?> PopulatePosts()
+	{
+		bool seeRestricted = CanSeeRestricted;
+		return await _db.ForumTopics
+			.ExcludeRestricted(seeRestricted)
+			.Where(t => t.Id == Id)
+			.Select(t => new SplitTopicModel
+			{
+				Title = t.Title,
+				SplitTopicName = "(Split from " + t.Title + ")",
+				SplitToForumId = t.Forum!.Id,
+				ForumId = t.Forum.Id,
+				ForumName = t.Forum.Name,
+				Posts = t.ForumPosts
+					.Select(p => new SplitTopicModel.Post
+					{
+						Id = p.Id,
+						PostCreateTimestamp = p.CreateTimestamp,
+						EnableBbCode = p.EnableBbCode,
+						EnableHtml = p.EnableHtml,
+						Subject = p.Subject,
+						Text = p.Text,
+						PosterId = p.PosterId,
+						PosterName = p.Poster!.UserName,
+						PosterAvatar = p.Poster.Avatar
+					})
+					.OrderBy(p => p.PostCreateTimestamp)
+					.ToList()
+			})
+			.SingleOrDefaultAsync();
+	}
+
 	private async Task PopulateAvailableForums()
 	{
 		var seeRestricted = CanSeeRestricted;
 		AvailableForums = await _db.Forums
-				.ExcludeRestricted(seeRestricted)
-				.Select(f => new SelectListItem
-				{
-					Text = f.Name,
-					Value = f.Id.ToString(),
-					Selected = f.Id == Topic.ForumId
-				})
-				.ToListAsync();
+			.ExcludeRestricted(seeRestricted)
+			.Select(f => new SelectListItem
+			{
+				Text = f.Name,
+				Value = f.Id.ToString(),
+				Selected = f.Id == Topic.ForumId
+			})
+			.ToListAsync();
 	}
 }
