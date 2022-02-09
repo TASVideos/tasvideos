@@ -154,13 +154,7 @@ public class EditModel : BasePageModel
 
 		var userName = User.Name();
 
-		// TODO: this is bad, an author can null out these values,
-		// but if we treat null as no choice, then we have no way to unset these values
-		if (!User.Has(PermissionTo.JudgeSubmissions))
-		{
-			Submission.PublicationClassId = null;
-		}
-		else if (Submission.PublicationClassId == null &&
+		if (Submission.PublicationClassId == null &&
 			Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
 		{
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.PublicationClassId)}", "A submission can not be accepted without a PublicationClass");
@@ -223,6 +217,19 @@ public class EditModel : BasePageModel
 			.ThenInclude(sa => sa.Author)
 			.SingleAsync(s => s.Id == Id);
 
+		bool statusHasChanged = submission.Status != Submission.Status;
+		bool submissionRejected = Submission.Status == SubmissionStatus.Rejected;
+		bool rejectionReasonChanged = submissionRejected ? submission.RejectionReasonId == Submission.RejectionReason : false;
+		var submissionIntendedClass = Submission.PublicationClassId.HasValue
+			? await _db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId.Value)
+			: null;
+		bool intendedClassChanged = submission.IntendedClass == submissionIntendedClass;
+
+		if ((statusHasChanged || rejectionReasonChanged || intendedClassChanged) && !User.Has(PermissionTo.JudgeSubmissions))
+		{
+			return AccessDenied();
+		}
+
 		if (Submission.MovieFile is not null)
 		{
 			var parseResult = await _parser.ParseZip(Submission.MovieFile.OpenReadStream());
@@ -277,10 +284,8 @@ public class EditModel : BasePageModel
 			submission.Publisher = null;
 		}
 
-		bool statusHasChanged = false;
-		if (submission.Status != Submission.Status)
+		if (statusHasChanged)
 		{
-			statusHasChanged = true;
 			_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 			if (Submission.Status != SubmissionStatus.Rejected &&
@@ -291,13 +296,15 @@ public class EditModel : BasePageModel
 			}
 		}
 
-		submission.RejectionReasonId = Submission.Status == SubmissionStatus.Rejected
-			? Submission.RejectionReason
-			: null;
+		if (rejectionReasonChanged)
+		{
+			submission.RejectionReasonId = Submission.RejectionReason;
+		}
 
-		submission.IntendedClass = Submission.PublicationClassId.HasValue
-			? await _db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId.Value)
-			: null;
+		if (intendedClassChanged)
+		{
+			submission.IntendedClass = submissionIntendedClass;
+		}
 
 		submission.GameVersion = Submission.GameVersion;
 		submission.GameName = Submission.GameName;

@@ -14,19 +14,19 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.Status" class="form-control-label"></label>
-				<select class="form-control"
+				<select disabled="@(!User.Has(PermissionTo.JudgeSubmissions))" class="form-control"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
 			</form-group>
 			<form-group id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
 				<label asp-for="Submission.RejectionReason" class="form-control-label"></label>
-				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
+				<select disabled="@(!User.Has(PermissionTo.JudgeSubmissions))" asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
 			</form-group>
 		</div>
 		<div permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)" class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
-				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
+				<select disabled="@(!User.Has(PermissionTo.JudgeSubmissions))" asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
 				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
 			</form-group>
 		</div>
