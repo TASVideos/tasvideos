@@ -27,6 +27,11 @@
 			return version ?? "";
 		}
 
+		if (string.IsNullOrWhiteSpace(version))
+		{
+			return RegionDisplay(region);
+		}
+
 		return $"{RegionDisplay(region)}, {version}";
 	}
 
