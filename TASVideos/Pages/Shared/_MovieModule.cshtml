@@ -14,6 +14,45 @@
 	var publicationAwards = await _awards.ForPublication(Model.Id);
 }
 
+@functions{
+	static string RomAndVersionDisplay(string? version, string? region)
+	{
+		string regionDisplay = RegionDisplay(region);
+		if (string.IsNullOrWhiteSpace(version) && string.IsNullOrWhiteSpace(regionDisplay))
+		{
+			return "";
+		}
+
+		if (string.IsNullOrWhiteSpace(regionDisplay))
+		{
+			return version ?? "";
+		}
+
+		if (string.IsNullOrWhiteSpace(version))
+		{
+			return regionDisplay;
+		}
+
+		return $"{regionDisplay}, {version}";
+	}
+
+	static string RegionDisplay(string? region)
+	{
+		if (string.IsNullOrWhiteSpace(region))
+		{
+			return "";
+		}
+
+		return region switch
+		{
+			"J" => "Japan",
+			"E" => "Europe",
+			"EU" => "USA/Europe",
+			_ => ""
+		};
+	}
+}
+
 <card class="border border-primary">
 	<cardheader class="bg-cardprimary p-2">
 		<div class="gx-3 clearfix">
@@ -32,7 +71,13 @@
 				}
 			</div>
 			<h4>
-				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title </span></a>
+				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">
+						@{
+							var regionAndVersion = RomAndVersionDisplay(Model.RomVersion, Model.Region);
+						}
+					<small condition="!string.IsNullOrWhiteSpace(regionAndVersion)"> (@regionAndVersion)</small>
+					@Model.Title
+				</span></a>
 			</h4>
 		</div>
 	</cardheader>

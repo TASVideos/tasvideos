@@ -35,6 +35,8 @@ public class PublicationDisplayModel
 
 	public int RatingCount { get; set; }
 	public double? OverallRating { get; set; }
+	public string? Region { get; set; }
+	public string? RomVersion { get; set; }
 
 	public class TagModel
 	{
