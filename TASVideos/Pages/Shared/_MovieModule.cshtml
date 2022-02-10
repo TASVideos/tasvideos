@@ -15,6 +15,13 @@
 }
 
 @functions{
+	static string VersionDisplay(string? version)
+	{
+		return string.IsNullOrWhiteSpace(version)
+			? ""
+			: $"v{version}";
+	}
+
 	static string RegionDisplay(string? region)
 	{
 		if (string.IsNullOrWhiteSpace(region))
@@ -51,7 +58,9 @@
 			</div>
 			<h4>
 				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">
-					<small condition="!string.IsNullOrWhiteSpace(Model.Region)">@RegionDisplay(Model.Region)</small> @Model.Title
+					<small condition="!string.IsNullOrWhiteSpace(Model.Region)">@RegionDisplay(Model.Region)</small>
+					<small condition="!string.IsNullOrWhiteSpace(Model.RomVersion)"> (@VersionDisplay(Model.RomVersion))</small>
+					@Model.Title
 				</span></a>
 			</h4>
 		</div>

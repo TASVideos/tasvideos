@@ -182,7 +182,8 @@ public static class EntityExtensions
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 					.Where(pr => pr.User!.UseRatings)
 					.Average(pr => pr.Value),
-				Region = p.Rom != null ? p.Rom.Region : null
+				Region = p.Rom != null ? p.Rom.Region : null,
+				RomVersion = p.Rom != null ? p.Rom.Version : null
 			});
 
 		if (ratingSort)
