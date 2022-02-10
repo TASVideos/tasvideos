@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
@@ -17,7 +16,6 @@ public class DisplayMovies : ViewComponent
 
 	public DisplayMovies(
 		ApplicationDbContext db,
-		IMapper mapper,
 		IMovieSearchTokens tokens)
 	{
 		_db = db;
