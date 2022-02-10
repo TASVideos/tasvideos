@@ -440,8 +440,7 @@ public class UserManager : UserManager<User>
 		{
 			"membres.lycos.fr",
 			"rphaven.org",
-			"usuarios.lycos.es",
-			"rphaven.org"
+			"usuarios.lycos.es"
 		};
 	}
 }
