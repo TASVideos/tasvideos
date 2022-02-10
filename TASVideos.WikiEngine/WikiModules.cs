@@ -7,6 +7,7 @@ public static class WikiModules
 	public const string ActiveTab = "activetab";
 	public const string Addresses = "addresses";
 	public const string Awards = "awards";
+	public const string BannedAvatarSites = "bannedavatarsites";
 	public const string BrokenLinks = "brokenlinks";
 	public const string DisplayGameName = "displaygamename";
 	public const string DisplayMiniMovie = "displayminimovie";

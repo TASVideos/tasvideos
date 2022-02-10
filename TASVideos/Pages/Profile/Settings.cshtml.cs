@@ -80,6 +80,34 @@ public class SettingsModel : BasePageModel
 		var user = await _userManager.GetUserAsync(User);
 		var currentEmail = user.Email;
 
+		var bannedSites = _userManager.BannedAvatarSites().ToList();
+		if (!string.IsNullOrWhiteSpace(user.Avatar))
+		{
+			foreach (var site in bannedSites)
+			{
+				if (user.Avatar.Contains(site))
+				{
+					ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Avatar)}", $"Using {site} to host avatars is not allowed.");
+				}
+			}
+		}
+
+		if (!string.IsNullOrWhiteSpace(Settings.MoodAvatar))
+		{
+			foreach (var site in bannedSites)
+			{
+				if (Settings.MoodAvatar.Contains(site))
+				{
+					ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.MoodAvatar)}", $"Using {site} to host avatars is not allowed.");
+				}
+			}
+		}
+
+		if (!ModelState.IsValid)
+		{
+			return Page();
+		}
+
 		if (!string.Equals(Settings.Email, currentEmail, StringComparison.CurrentCultureIgnoreCase))
 		{
 			if (exists != null)

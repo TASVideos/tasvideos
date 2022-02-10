@@ -432,4 +432,16 @@ public class UserManager : UserManager<User>
 			// Do nothing for now, this can be added manually, in the unlikely situation, that this fails
 		}
 	}
+
+	// Hardcoded for now, we can make a database table if this becomes a maintenance burden
+	public IEnumerable<string> BannedAvatarSites()
+	{
+		return new[]
+		{
+			"membres.lycos.fr",
+			"rphaven.org",
+			"usuarios.lycos.es",
+			"rphaven.org"
+		};
+	}
 }
