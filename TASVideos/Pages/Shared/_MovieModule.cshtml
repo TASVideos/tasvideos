@@ -17,22 +17,23 @@
 @functions{
 	static string RomAndVersionDisplay(string? version, string? region)
 	{
-		if (string.IsNullOrWhiteSpace(version) && string.IsNullOrWhiteSpace(region))
+		string regionDisplay = RegionDisplay(region);
+		if (string.IsNullOrWhiteSpace(version) && string.IsNullOrWhiteSpace(regionDisplay))
 		{
 			return "";
 		}
 
-		if (string.IsNullOrWhiteSpace(region))
+		if (string.IsNullOrWhiteSpace(regionDisplay))
 		{
 			return version ?? "";
 		}
 
 		if (string.IsNullOrWhiteSpace(version))
 		{
-			return RegionDisplay(region);
+			return regionDisplay;
 		}
 
-		return $"{RegionDisplay(region)}, {version}";
+		return $"{regionDisplay}, {version}";
 	}
 
 	static string RegionDisplay(string? region)
