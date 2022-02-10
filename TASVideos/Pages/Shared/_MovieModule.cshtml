@@ -19,7 +19,7 @@
 	{
 		return string.IsNullOrWhiteSpace(version)
 			? ""
-			: $"v{version}";
+			: version;
 	}
 
 	static string RegionDisplay(string? region)
