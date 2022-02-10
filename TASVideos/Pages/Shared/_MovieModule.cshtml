@@ -15,11 +15,19 @@
 }
 
 @functions{
-	static string VersionDisplay(string? version)
+	static string RomAndVersionDisplay(string? version, string? region)
 	{
-		return string.IsNullOrWhiteSpace(version)
-			? ""
-			: version;
+		if (string.IsNullOrWhiteSpace(version) && string.IsNullOrWhiteSpace(region))
+		{
+			return "";
+		}
+
+		if (string.IsNullOrWhiteSpace(region))
+		{
+			return version ?? "";
+		}
+
+		return $"{RegionDisplay(region)}, {version}";
 	}
 
 	static string RegionDisplay(string? region)
@@ -31,9 +39,9 @@
 
 		return region switch
 		{
-			"J" => "(Japan)",
-			"E" => "(Europe)",
-			"EU" => "(USA/Europe)",
+			"J" => "Japan",
+			"E" => "Europe",
+			"EU" => "USA/Europe",
 			_ => ""
 		};
 	}
@@ -58,8 +66,10 @@
 			</div>
 			<h4>
 				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">
-					<small condition="!string.IsNullOrWhiteSpace(Model.Region)">@RegionDisplay(Model.Region)</small>
-					<small condition="!string.IsNullOrWhiteSpace(Model.RomVersion)"> (@VersionDisplay(Model.RomVersion))</small>
+						@{
+							var regionAndVersion = RomAndVersionDisplay(Model.RomVersion, Model.Region);
+						}
+					<small condition="!string.IsNullOrWhiteSpace(regionAndVersion)"> (@regionAndVersion)</small>
 					@Model.Title
 				</span></a>
 			</h4>
