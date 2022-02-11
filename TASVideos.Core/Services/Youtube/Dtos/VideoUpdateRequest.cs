@@ -20,6 +20,18 @@ internal class VideoUpdateRequest
 	{
 		[JsonProperty("privacyStatus")]
 		public string PrivacyStatus { get; init; } = "public";
+
+		[JsonProperty("license")]
+		public string License { get; init; } = "youtube";
+
+		[JsonProperty("embeddable")]
+		public bool Embeddable { get; init; } = true;
+
+		[JsonProperty("publicStatsViewable")]
+		public bool PublicStatsViewable { get; init; }
+
+		[JsonProperty("madeForKids")]
+		public bool MadeForKids { get; init; }
 	}
 }
 
@@ -38,5 +50,17 @@ internal class UnlistRequest
 	{
 		[JsonProperty("privacyStatus")]
 		public string PrivacyStatus { get; init; } = "public";
+
+		[JsonProperty("license")]
+		public string License { get; init; } = "youtube";
+
+		[JsonProperty("embeddable")]
+		public bool Embeddable { get; init; } = true;
+
+		[JsonProperty("publicStatsViewable")]
+		public bool PublicStatsViewable { get; init; }
+
+		[JsonProperty("madeForKids")]
+		public bool MadeForKids { get; init; }
 	}
 }
