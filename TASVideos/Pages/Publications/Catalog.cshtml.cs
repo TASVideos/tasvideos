@@ -189,7 +189,7 @@ public class CatalogModel : BasePageModel
 
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
-		AvailableRoms = await _db.GameRoms
+		AvailableRoms = UiDefaults.DefaultEntry.Concat(await _db.GameRoms
 			.ForGame(gameId)
 			.ForSystem(systemId)
 			.OrderBy(r => r.Name)
@@ -198,7 +198,7 @@ public class CatalogModel : BasePageModel
 				Value = r.Id.ToString(),
 				Text = r.Name
 			})
-			.ToListAsync();
+			.ToListAsync());
 
 		AvailableGames = await _db.Games
 			.ForSystem(systemId)

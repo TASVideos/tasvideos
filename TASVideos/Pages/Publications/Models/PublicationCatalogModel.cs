@@ -7,6 +7,7 @@ public class PublicationCatalogModel
 	public string Title { get; set; } = "";
 
 	[Display(Name = "Rom")]
+	[Required]
 	public int RomId { get; set; }
 
 	[Display(Name = "Game")]
