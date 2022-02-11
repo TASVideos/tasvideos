@@ -5,7 +5,6 @@ using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.PublicationChain;
-using TASVideos.Core.Services.RssFeedParsers;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 
@@ -61,7 +60,6 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IPublicationHistory, PublicationHistory>();
 		services.AddScoped<IFileService, FileService>();
 		services.AddScoped<IMovieSearchTokens, MovieSearchTokens>();
-		services.AddScoped<IVcsRssParser, VcsRssParser>();
 		services.AddScoped<IIpBanService, IpBanService>();
 		services.AddScoped<ITagService, TagService>();
 		services.AddScoped<IFlagService, FlagService>();
