@@ -13,7 +13,6 @@ public static class WikiModules
 	public const string DisplayMiniMovie = "displayminimovie";
 	public const string DisplayMovies = "displaymovie";
 	public const string EditorActivity = "editoractivity";
-	public const string FeedLog = "feedlog";
 	public const string FirstEditionTas = "firsteditiontas";
 	public const string Frames = "frames";
 	public const string FrontpageSubmissionList = "frontpagesubmissionlist";
