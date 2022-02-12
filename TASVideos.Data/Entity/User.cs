@@ -41,7 +41,6 @@ public class User : IdentityUser<int>, ITrackable
 
 	public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;
 
-
 	public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 	public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
 	public virtual ICollection<PublicationAuthor> Publications { get; set; } = new HashSet<PublicationAuthor>();
