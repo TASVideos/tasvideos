@@ -26,3 +26,27 @@
 		</div>
 	}
 </div>
+<script>
+    {
+        let visitedTopics = localStorage.getItem('visitedTopics');
+        if (visitedTopics !== null){
+            visitedTopics = JSON.parse(visitedTopics);
+            let activitySubforums = document.getElementsByClassName('activity-subforum');
+            for (let i = activitySubforums.length - 1; i >= 0; i--){
+                let activityTopic = activitySubforums[i];
+                let activityJson = JSON.parse(activityTopic.dataset.activityJson);
+                let removal = true;
+                for (let topicId in activityJson){
+                    let lastVisit = visitedTopics[topicId];
+                    if (lastVisit === undefined || activityJson[topicId] >= lastVisit){
+                        removal = false;
+                        break;
+                    }
+                }
+                if (removal){
+                    activityTopic.remove();
+                }
+            }
+        }
+    }
+</script>
