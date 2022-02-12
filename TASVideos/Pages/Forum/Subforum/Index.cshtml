@@ -80,15 +80,14 @@
 
 <script>
 	{
-        let visitedTopics = localStorage.getItem('visitedTopics');
+        let visitedTopics = localStorage.getItem('VisitedTopics');
         if (visitedTopics !== null){
             visitedTopics = JSON.parse(visitedTopics);
             let activityTopics = document.getElementsByClassName('activity-topic');
-            for (let i = activityTopics.length - 1; i >= 0; i--){
-                let activityTopic = activityTopics[i];
+            for (let activityTopic of activityTopics){
                 let lastVisit = visitedTopics[activityTopic.dataset.topicId];
                 if (lastVisit !== undefined && activityTopic.dataset.activityUnix <= lastVisit){
-                    activityTopic.remove();
+                    activityTopic.classList.add('d-none');
                 }
             }
         }

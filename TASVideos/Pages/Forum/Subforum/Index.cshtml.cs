@@ -30,7 +30,7 @@ public class IndexModel : BasePageModel
 	public int Id { get; set; }
 
 	public ForumDisplayModel Forum { get; set; } = new();
-	public Dictionary<int, DateTime> ActivityTopics { get; set; }
+	public Dictionary<int, DateTime> ActivityTopics { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
