@@ -157,7 +157,7 @@
 	</nav>
 </fullrow>
 
-<script condition="@(Model.Topic.Posts.Last().CreateTimestamp > DateTime.UtcNow.AddDays(-14) && Model.Topic.Posts.CurrentPage == Model.Topic.Posts.LastPage())">
+<script condition="@(Model.Topic.Posts.Last().CreateTimestamp > DateTime.UtcNow.AddDays(-ForumConstants.DaysTopicsCountAsActive) && Model.Topic.Posts.CurrentPage == Model.Topic.Posts.LastPage())">
     {
         let topicId = '@Model.Id';
         let currentTime = Math.floor(Date.now() / 1000);

@@ -207,7 +207,7 @@ internal class ForumService : IForumService
 		}
 
 		var fullrow = await _db.ForumPosts
-			.Where(fp => fp.CreateTimestamp > DateTime.UtcNow.AddDays(-14))
+			.Where(fp => fp.CreateTimestamp > DateTime.UtcNow.AddDays(-ForumConstants.DaysTopicsCountAsActive))
 			.Select(fp => new
 			{
 				fp.Id,
