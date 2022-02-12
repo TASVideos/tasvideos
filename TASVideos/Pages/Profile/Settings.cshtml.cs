@@ -55,6 +55,7 @@ public class SettingsModel : BasePageModel
 			Avatar = user.Avatar,
 			MoodAvatar = user.MoodAvatarUrlBase,
 			PreferredPronouns = user.PreferredPronouns,
+			EmailOnPrivateMessage = user.EmailOnPrivateMessage,
 			Roles = await _db.Users
 				.Where(u => u.Id == user.Id)
 				.SelectMany(u => u.UserRoles)
@@ -130,6 +131,7 @@ public class SettingsModel : BasePageModel
 		user.Avatar = Settings.Avatar;
 		user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? Settings.MoodAvatar : null;
 		user.PreferredPronouns = Settings.PreferredPronouns;
+		user.EmailOnPrivateMessage = Settings.EmailOnPrivateMessage;
 		await _db.SaveChangesAsync();
 
 		SuccessStatusMessage("Your profile has been updated");

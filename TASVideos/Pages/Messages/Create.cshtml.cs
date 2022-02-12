@@ -141,7 +141,7 @@ public class CreateModel : BasePageModel
 
 		if (toUser.EmailOnPrivateMessage)
 		{
-			await _emailService.NewPrivateMessage("AndrewJDelikat@gmail.com", toUser.UserName);
+			await _emailService.NewPrivateMessage(toUser.Email, toUser.UserName);
 		}
 	}
 }
