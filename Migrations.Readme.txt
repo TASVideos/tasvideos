@@ -1,8 +1,8 @@
 To add a migration:
 First you must have EF cli installed (run dotnet ef to check)
 Go to the PackageManagerConsole (or powershell window)
-Change directory to the /TASVideos project, it must be here for it to access the startup logic
-dotnet ef migrations add [NameOfMigration] --project ../TASVideos.Data
+Make sure you are in the solution directory
+dotnet ef migrations add [NameOfMigration] --project ../TASVideos.Data --startup-project TASVideos
 
 Migration Best practices:
 Always inspect your migration to see if it could result in data loss!
