@@ -109,7 +109,8 @@ public class RegisterModel : BasePageModel
 				UserName = UserName,
 				Email = Email,
 				TimeZoneId = SelectedTimeZone ?? TimeZoneInfo.Utc.Id,
-				From = From
+				From = From,
+				EmailOnPrivateMessage = true
 			};
 			var result = await _signInManager.UserManager.CreateAsync(user, Password);
 			if (result.Succeeded)
