@@ -28,10 +28,12 @@
 										warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">
 							Undelete
 						</delete-button>
-						<form method="post" asp-page="/Wiki/DeletedPages" asp-page-handler="Undelete">
-							<input type="hidden" name="path" value="@item.PageName" />
-							<button type="submit" class="btn btn-primary">Undelete</button>
-						</form>
+						<span condition="!item.HasExistingRevisions">
+							<form method="post" asp-page="/Wiki/DeletedPages" asp-page-handler="Undelete">
+								<input type="hidden" name="path" value="@item.PageName" />
+								<button type="submit" class="btn btn-primary">Undelete</button>
+							</form>
+						</span>
 					}
 				</td>
 			</tr>
