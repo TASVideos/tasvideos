@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.Email;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -13,13 +14,16 @@ public class CreateModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly UserManager _userManager;
+	private readonly IEmailService _emailService;
 
 	public CreateModel(
 		ApplicationDbContext db,
-		UserManager userManager)
+		UserManager userManager,
+		IEmailService emailService)
 	{
 		_db = db;
 		_userManager = userManager;
+		_emailService = emailService;
 	}
 
 	[FromQuery]
@@ -111,15 +115,21 @@ public class CreateModel : BasePageModel
 
 	private async Task SendMessage()
 	{
-		var toUserId = await _db.Users
+		var toUser = await _db.Users
 			.Where(u => u.UserName == ToUser)
-			.Select(u => u.Id)
+			.Select(u => new
+			{
+				u.Id,
+				u.UserName,
+				u.Email,
+				u.EmailOnPrivateMessage
+			})
 			.SingleAsync();
 
 		var message = new PrivateMessage
 		{
 			FromUserId = User.GetUserId(),
-			ToUserId = toUserId,
+			ToUserId = toUser.Id,
 			Subject = Subject,
 			Text = Text,
 			IpAddress = IpAddress,
@@ -128,5 +138,10 @@ public class CreateModel : BasePageModel
 
 		_db.PrivateMessages.Add(message);
 		await _db.SaveChangesAsync();
+
+		if (toUser.EmailOnPrivateMessage)
+		{
+			await _emailService.NewPrivateMessage(toUser.Email, toUser.UserName);
+		}
 	}
 }

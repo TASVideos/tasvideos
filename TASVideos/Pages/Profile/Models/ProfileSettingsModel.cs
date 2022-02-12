@@ -35,5 +35,8 @@ public class ProfileSettingsModel
 	[Display(Name = "Preferred Pronouns")]
 	public PreferredPronounTypes PreferredPronouns { get; set; }
 
+	[Display(Name = "Email On New Private Message?")]
+	public bool EmailOnPrivateMessage { get; set; }
+
 	public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 }

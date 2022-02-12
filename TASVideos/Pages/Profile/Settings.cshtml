@@ -47,6 +47,21 @@
 					</label>
 				</div>
 			</form-group>
+			<form-group>
+				<label asp-for="Settings.EmailOnPrivateMessage"></label>
+				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+					@{
+						const string trueId = nameof(Model.Settings.EmailOnPrivateMessage) + "-true";
+						const string falseId = nameof(Model.Settings.EmailOnPrivateMessage) + "-false";
+					}
+					<label for="@trueId" class="btn btn-secondary @(Model.Settings.EmailOnPrivateMessage ? "active" : "")">
+						<input id="@trueId" type="radio" value="True" asp-for="Settings.EmailOnPrivateMessage" /> Yes
+					</label>
+					<label for="@falseId" class="btn btn-secondary @(!Model.Settings.EmailOnPrivateMessage ? "active" : "")">
+						<input id="@falseId" type="radio" value="False" asp-for="Settings.EmailOnPrivateMessage" /> No
+					</label>
+				</div>
+			</form-group>
 		</column>
 		<column lg="6">
 			<form-group>
