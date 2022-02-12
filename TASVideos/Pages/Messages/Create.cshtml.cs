@@ -121,7 +121,8 @@ public class CreateModel : BasePageModel
 			{
 				u.Id,
 				u.UserName,
-				u.Email
+				u.Email,
+				u.EmailOnPrivateMessage
 			})
 			.SingleAsync();
 
@@ -138,6 +139,9 @@ public class CreateModel : BasePageModel
 		_db.PrivateMessages.Add(message);
 		await _db.SaveChangesAsync();
 
-		await _emailService.NewPrivateMessage("AndrewJDelikat@gmail.com", toUser.UserName);
+		if (toUser.EmailOnPrivateMessage)
+		{
+			await _emailService.NewPrivateMessage("AndrewJDelikat@gmail.com", toUser.UserName);
+		}
 	}
 }
