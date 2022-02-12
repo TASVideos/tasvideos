@@ -17,7 +17,7 @@ public class MoviesByAuthor : ViewComponent
 		_db = db;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, string? newbies, bool showtiers)
+	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, string? newbies, bool showTiers)
 	{
 		if (!before.HasValue || !after.HasValue)
 		{
@@ -30,7 +30,7 @@ public class MoviesByAuthor : ViewComponent
 		var model = new MoviesByAuthorModel
 		{
 			MarkNewbies = newbieFlag == "show",
-			ShowClasses = showtiers,
+			ShowClasses = showTiers,
 			Publications = await _db.Publications
 				.ForDateRange(before.Value, after.Value)
 				.Select(p => new MoviesByAuthorModel.PublicationEntry

@@ -16,7 +16,7 @@ public class FirstEditionTas : ViewComponent
 		_db = db;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, bool splitbyplatform)
+	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, bool splitByPlatform)
 	{
 		// TODO: add publicationClass argument, default to moon,stars,
 		// we want to avoid baking in "business logic" like which classes are award eligible
@@ -25,7 +25,7 @@ public class FirstEditionTas : ViewComponent
 
 		List<FirstEditionGames> firstEditions;
 
-		if (splitbyplatform)
+		if (splitByPlatform)
 		{
 			firstEditions = await _db.Publications
 				.GroupBy(
@@ -61,7 +61,7 @@ public class FirstEditionTas : ViewComponent
 			.Where(p => p.CreateTimestamp >= afterYear)
 			.Where(p => p.CreateTimestamp < beforeYear);
 
-		if (splitbyplatform)
+		if (splitByPlatform)
 		{
 			var firstEditionIds = firstEditions.Select(f => f.GameId).ToList();
 			query = query.Where(p => firstEditionIds.Contains(p.GameId));

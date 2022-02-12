@@ -19,14 +19,14 @@ public class MovieChangeLog : ViewComponent
 		_history = history;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(int? maxdays, int? seed)
+	public async Task<IViewComponentResult> InvokeAsync(int? maxDays, int? seed)
 	{
 		if (seed.HasValue)
 		{
 			return await Seed(seed.Value);
 		}
 
-		return await MaxDays(maxdays ?? 60);
+		return await MaxDays(maxDays ?? 60);
 	}
 
 	public async Task<IViewComponentResult> Seed(int publicationId)

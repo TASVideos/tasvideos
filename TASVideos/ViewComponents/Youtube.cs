@@ -6,13 +6,13 @@ namespace TASVideos.ViewComponents;
 [WikiModule(WikiModules.Youtube)]
 public class Youtube : ViewComponent
 {
-	public IViewComponentResult Invoke(string v, int? loop, bool hidelink, bool flashblock, int? w, int? h, string? align, int? start)
+	public IViewComponentResult Invoke(string v, int? loop, bool hideLink, bool flashblock, int? w, int? h, string? align, int? start)
 	{
 		var model = new YoutubeModel
 		{
 			Code = v,
 			Loop = loop,
-			HideLink = hidelink,
+			HideLink = hideLink,
 			FlashBlock = flashblock,
 		};
 
