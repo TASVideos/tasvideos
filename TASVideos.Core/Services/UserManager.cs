@@ -443,4 +443,20 @@ public class UserManager : UserManager<User>
 			"usuarios.lycos.es"
 		};
 	}
+
+	public async Task MarkEmailConfirmed(User user)
+	{
+		if (!user.EmailConfirmed)
+		{
+			user.EmailConfirmed = true;
+			try
+			{
+				await _db.SaveChangesAsync();
+			}
+			catch (DbUpdateException)
+			{
+				// Do nothing, we do not want to block the rest of the request
+			}
+		}
+	}
 }
