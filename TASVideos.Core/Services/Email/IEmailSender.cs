@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Core.Services.Email;
 
-public interface IEmailSender
+internal interface IEmailSender
 {
 	/// <summary>
 	/// Sends an email to the given recipients,
