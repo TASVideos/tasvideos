@@ -38,7 +38,7 @@
                 let removal = true;
                 for (let topicId in activityJson){
                     let lastVisit = visitedTopics[topicId];
-                    if (lastVisit === undefined || activityJson[topicId] >= lastVisit){
+                    if (lastVisit === undefined || activityJson[topicId] > lastVisit){
                         removal = false;
                         break;
                     }

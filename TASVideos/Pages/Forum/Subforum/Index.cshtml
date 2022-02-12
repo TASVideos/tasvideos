@@ -87,7 +87,7 @@
             for (let i = activityTopics.length - 1; i >= 0; i--){
                 let activityTopic = activityTopics[i];
                 let lastVisit = visitedTopics[activityTopic.dataset.topicId];
-                if (lastVisit !== undefined && activityTopic.dataset.activityUnix < lastVisit){
+                if (lastVisit !== undefined && activityTopic.dataset.activityUnix <= lastVisit){
                     activityTopic.remove();
                 }
             }
