@@ -8,4 +8,9 @@ public static class TimeExtensions
 		double daysAgo = elapsed.TotalDays;
 		return (int)Math.Round(daysAgo);
 	}
+
+	public static long UnixTimestamp(this DateTime dateTime)
+	{
+		return ((DateTimeOffset)DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)).ToUnixTimeSeconds();
+	}
 }

@@ -155,3 +155,18 @@
 		</ol>
 	</nav>
 </fullrow>
+
+<script condition="@(Model.SaveActivity)">
+	{
+		let topicId = '@Model.Id';
+		let currentTime = Math.floor(Date.now() / 1000);
+		let visitedTopics = localStorage.getItem('VisitedTopics');
+		if (visitedTopics !== null){
+			visitedTopics = JSON.parse(visitedTopics);
+			visitedTopics[topicId] = currentTime;
+		}else{
+			visitedTopics = {[topicId]: currentTime};
+		}
+		localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+	}
+</script>

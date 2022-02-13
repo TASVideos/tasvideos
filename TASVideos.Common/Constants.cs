@@ -83,6 +83,8 @@ public static class ForumConstants
 
 	public const int WorkBenchForumId = 7;
 	public const int NewsTopicId = 8694;
+
+	public const int DaysTopicsCountAsActive = 14;
 }
 
 public static class PostGroups

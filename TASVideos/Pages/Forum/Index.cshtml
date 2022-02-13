@@ -16,6 +16,9 @@
 		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm">
 			Unanswered Posts
 		</a>
+		<a class="btn btn-secondary btn-sm" onclick="markAllPostsRead()">
+			Mark all Posts as read
+		</a>
 	</div>
 </div>
 <div class="clearfix flex-wrap d-flex d-md-block">
@@ -26,3 +29,41 @@
 		</div>
 	}
 </div>
+<script>
+	let currentTime = Math.floor(Date.now() / 1000);
+	{
+		let visitedTopics = localStorage.getItem('VisitedTopics');
+		if (visitedTopics !== null){
+			visitedTopics = JSON.parse(visitedTopics);
+		}else{
+			visitedTopics = {};
+		}
+		let activitySubforums = document.getElementsByClassName('activity-subforum');
+		for (let activityTopic of activitySubforums){
+			let activityJson = JSON.parse(activityTopic.dataset.activityJson);
+			let display = false;
+			for (let topicId in activityJson){
+				let lastVisit = visitedTopics[topicId];
+				if (lastVisit === undefined || lastVisit < activityJson[topicId]){
+					display = true;
+					break;
+				}
+			}
+			if (display){
+				activityTopic.classList.remove('d-none');
+			}
+		}
+	}
+	function markAllPostsRead(){
+		let visitedTopics = {};
+		let activitySubforums = document.getElementsByClassName('activity-subforum');
+		for (let activityTopic of activitySubforums){
+			let activityJson = JSON.parse(activityTopic.dataset.activityJson);
+			for (let topicId in activityJson){
+				visitedTopics[topicId] = currentTime;
+			}
+		}
+		localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+		location.reload();
+	}
+</script>

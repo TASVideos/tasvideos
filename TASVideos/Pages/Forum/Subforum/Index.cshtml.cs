@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -14,10 +15,12 @@ namespace TASVideos.Pages.Forum.Subforum;
 public class IndexModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
+	private readonly IForumService _forumService;
 
-	public IndexModel(ApplicationDbContext db)
+	public IndexModel(ApplicationDbContext db, IForumService forumService)
 	{
 		_db = db;
+		_forumService = forumService;
 	}
 
 	[FromQuery]
@@ -27,6 +30,7 @@ public class IndexModel : BasePageModel
 	public int Id { get; set; }
 
 	public ForumDisplayModel Forum { get; set; } = new();
+	public Dictionary<int, DateTime> ActivityTopics { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -63,6 +67,8 @@ public class IndexModel : BasePageModel
 			.OrderByDescending(ft => ft.Type)
 			.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
 			.PageOf(Search);
+
+		ActivityTopics = await _forumService.GetTopicsWithActivity(Id) ?? new Dictionary<int, DateTime>();
 
 		return Page();
 	}
