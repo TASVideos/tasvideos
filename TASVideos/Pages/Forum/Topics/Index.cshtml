@@ -158,16 +158,16 @@
 </fullrow>
 
 <script condition="@(Model.Topic.Posts.Last().CreateTimestamp > DateTime.UtcNow.AddDays(-ForumConstants.DaysTopicsCountAsActive) && Model.Topic.Posts.CurrentPage == Model.Topic.Posts.LastPage())">
-    {
-        let topicId = '@Model.Id';
-        let currentTime = Math.floor(Date.now() / 1000);
-        let visitedTopics = localStorage.getItem('VisitedTopics');
-        if (visitedTopics !== null){
-            visitedTopics = JSON.parse(visitedTopics);
-            visitedTopics[topicId] = currentTime;
-        }else{
-            visitedTopics = {[topicId]: currentTime};
-        }
-        localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
-    }
+	{
+		let topicId = '@Model.Id';
+		let currentTime = Math.floor(Date.now() / 1000);
+		let visitedTopics = localStorage.getItem('VisitedTopics');
+		if (visitedTopics !== null){
+			visitedTopics = JSON.parse(visitedTopics);
+			visitedTopics[topicId] = currentTime;
+		}else{
+			visitedTopics = {[topicId]: currentTime};
+		}
+		localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+	}
 </script>

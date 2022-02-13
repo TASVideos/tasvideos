@@ -30,40 +30,40 @@
 	}
 </div>
 <script>
-    let currentTime = Math.floor(Date.now() / 1000);
-    {
-        let visitedTopics = localStorage.getItem('VisitedTopics');
-        if (visitedTopics !== null){
-            visitedTopics = JSON.parse(visitedTopics);
+	let currentTime = Math.floor(Date.now() / 1000);
+	{
+		let visitedTopics = localStorage.getItem('VisitedTopics');
+		if (visitedTopics !== null){
+			visitedTopics = JSON.parse(visitedTopics);
 		}else{
-            visitedTopics = {};
+			visitedTopics = {};
 		}
-        let activitySubforums = document.getElementsByClassName('activity-subforum');
-        for (let activityTopic of activitySubforums){
-            let activityJson = JSON.parse(activityTopic.dataset.activityJson);
-            let display = false;
-            for (let topicId in activityJson){
-                let lastVisit = visitedTopics[topicId];
-                if (lastVisit === undefined || lastVisit < activityJson[topicId]){
-                    display = true;
-                    break;
-                }
-            }
-            if (display){
-                activityTopic.classList.remove('d-none');
-            }
-        }
-    }
-    function markAllPostsRead(){
-        let visitedTopics = {};
-        let activitySubforums = document.getElementsByClassName('activity-subforum');
-        for (let activityTopic of activitySubforums){
-            let activityJson = JSON.parse(activityTopic.dataset.activityJson);
-            for (let topicId in activityJson){
-                visitedTopics[topicId] = currentTime;
-            }
-        }
-        localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
-        location.reload();
-    }
+		let activitySubforums = document.getElementsByClassName('activity-subforum');
+		for (let activityTopic of activitySubforums){
+			let activityJson = JSON.parse(activityTopic.dataset.activityJson);
+			let display = false;
+			for (let topicId in activityJson){
+				let lastVisit = visitedTopics[topicId];
+				if (lastVisit === undefined || lastVisit < activityJson[topicId]){
+					display = true;
+					break;
+				}
+			}
+			if (display){
+				activityTopic.classList.remove('d-none');
+			}
+		}
+	}
+	function markAllPostsRead(){
+		let visitedTopics = {};
+		let activitySubforums = document.getElementsByClassName('activity-subforum');
+		for (let activityTopic of activitySubforums){
+			let activityJson = JSON.parse(activityTopic.dataset.activityJson);
+			for (let topicId in activityJson){
+				visitedTopics[topicId] = currentTime;
+			}
+		}
+		localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+		location.reload();
+	}
 </script>
