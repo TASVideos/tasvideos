@@ -19,6 +19,7 @@
 <partial Name="_ForumHeader" />
 <a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="ms-2 float-end btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 <a permission="CreateForumTopics" asp-page="/Forum/Topics/Create" asp-route-forumId="@Model.Forum.Id" class="ms-2 float-end btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
+<a class="ms-2 float-end btn btn-secondary btn-sm" onclick="markSubforumPostsRead()">Mark Posts as read</a>
 <div>
 	<small>@Html.Raw(Model.Forum.Description)</small>
 </div>
@@ -79,6 +80,7 @@
 </div>
 
 <script>
+	let currentTime = Math.floor(Date.now() / 1000);
 	{
 		let visitedTopics = localStorage.getItem('VisitedTopics');
 		if (visitedTopics !== null){
@@ -93,6 +95,20 @@
 				activityTopic.classList.remove('d-none');
 			}
 		}
+	}
+	function markSubforumPostsRead(){
+		let visitedTopics = localStorage.getItem('VisitedTopics');
+		if (visitedTopics !== null){
+			visitedTopics = JSON.parse(visitedTopics);
+		}else{
+			visitedTopics = {};
+		}
+		let activityTopics = document.getElementsByClassName('activity-topic');
+		for (let activityTopic of activityTopics){
+			visitedTopics[activityTopic.dataset.topicId] = currentTime;
+		}
+		localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+		location.reload();
 	}
 </script>
 
