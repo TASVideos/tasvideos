@@ -11,7 +11,9 @@ public interface IForumService
 	Task<PostPositionDto?> GetPostPosition(int postId, bool seeRestricted);
 	Task<ICollection<ForumCategoryDisplayDto>> GetAllCategories();
 	void CacheLatestPost(int forumId, int topicId, LatestPost post);
-	void ClearCache();
+	void CacheNewPostActivity(int forumId, int topicId, DateTime CreateTimestamp);
+	void ClearLatestPostCache();
+	void ClearTopicActivityCache();
 	Task CreatePoll(ForumTopic topic, PollCreateDto poll);
 	Task<int> CreatePost(PostCreateDto post);
 	Task<Dictionary<int, DateTime>?> GetTopicsWithActivity(int subforumId);
@@ -103,6 +105,10 @@ internal class ForumService : IForumService
 			dict[forumId] = post;
 			_cacheService.Set(LatestPostCacheKey, dict, Durations.OneDayInSeconds);
 		}
+	}
+
+	public void CacheNewPostActivity(int forumId, int topicId, DateTime CreateTimestamp)
+	{
 		if (_cacheService.TryGetValue(TopicActivityCacheKey, out Dictionary<int, Dictionary<int, DateTime>> forumActivity))
 		{
 			forumActivity.TryGetValue(forumId, out Dictionary<int, DateTime>? subforumActivity);
@@ -110,7 +116,7 @@ internal class ForumService : IForumService
 			{
 				subforumActivity = new Dictionary<int, DateTime>();
 			}
-			subforumActivity[topicId] = post.Timestamp;
+			subforumActivity[topicId] = CreateTimestamp;
 			forumActivity[forumId] = subforumActivity;
 			_cacheService.Set(TopicActivityCacheKey, forumActivity, Durations.OneDayInSeconds);
 		}
@@ -122,15 +128,19 @@ internal class ForumService : IForumService
 			{
 				dictSubforumActivity = JsonSerializer.Deserialize<Dictionary<int, string>>(jsonSubforumActivity) ?? new Dictionary<int, string>();
 			}
-			dictSubforumActivity[topicId] = post.Timestamp.UnixTimestamp().ToString();
+			dictSubforumActivity[topicId] = CreateTimestamp.UnixTimestamp().ToString();
 			jsonForumActivity[forumId] = JsonSerializer.Serialize(dictSubforumActivity);
 			_cacheService.Set(TopicActivityJsonCacheKey, jsonForumActivity, Durations.OneDayInSeconds);
 		}
 	}
 
-	public void ClearCache()
+	public void ClearLatestPostCache()
 	{
 		_cacheService.Remove(LatestPostCacheKey);
+	}
+
+	public void ClearTopicActivityCache()
+	{
 		_cacheService.Remove(TopicActivityCacheKey);
 		_cacheService.Remove(TopicActivityJsonCacheKey);
 	}
@@ -178,6 +188,7 @@ internal class ForumService : IForumService
 		_db.ForumPosts.Add(forumPost);
 		await _db.SaveChangesAsync();
 		CacheLatestPost(post.ForumId, post.TopicId, new LatestPost(forumPost.Id, forumPost.CreateTimestamp, post.PosterName));
+		CacheNewPostActivity(post.ForumId, post.TopicId, forumPost.CreateTimestamp);
 
 		if (post.WatchTopic)
 		{

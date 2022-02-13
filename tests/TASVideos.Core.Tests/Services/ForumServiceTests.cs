@@ -209,7 +209,7 @@ public class ForumServiceTests
 	{
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
 
-		_forumService.ClearCache();
+		_forumService.ClearLatestPostCache();
 
 		Assert.IsFalse(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 	}

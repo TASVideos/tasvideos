@@ -60,6 +60,7 @@ internal class TASVideosGrue : ITASVideosGrue
 				topic.ForumId,
 				topic.Id,
 				new LatestPost(entry.Entity.Id, entry.Entity.CreateTimestamp, SiteGlobalConstants.TASVideosGrue));
+			_forumService.ClearTopicActivityCache();
 		}
 	}
 

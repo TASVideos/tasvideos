@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -15,13 +16,16 @@ public class MergeModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
+	private readonly IForumService _forumService;
 
 	public MergeModel(
 		ApplicationDbContext db,
-		ExternalMediaPublisher publisher)
+		ExternalMediaPublisher publisher,
+		IForumService forumService)
 	{
 		_db = db;
 		_publisher = publisher;
+		_forumService = forumService;
 	}
 
 	[FromRoute]
@@ -106,6 +110,8 @@ public class MergeModel : BasePageModel
 		var result = await ConcurrentSave(_db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
 		if (result)
 		{
+			_forumService.ClearLatestPostCache();
+			_forumService.ClearTopicActivityCache();
 			await _publisher.SendForum(
 				originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
 				$"Topics MERGED by {User.Name()}",

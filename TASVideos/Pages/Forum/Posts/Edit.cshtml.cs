@@ -224,7 +224,8 @@ public class EditModel : BaseForumModel
 
 		if (result)
 		{
-			_forumService.ClearCache();
+			_forumService.ClearLatestPostCache();
+			_forumService.ClearTopicActivityCache();
 			await _publisher.SendForum(
 				post.Topic!.Forum!.Restricted,
 				$"{(topicDeleted ? "Topic" : "Post")} DELETED by {User.Name()}",

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -14,13 +15,16 @@ public class MoveModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
+	private readonly IForumService _forumService;
 
 	public MoveModel(
 		ApplicationDbContext db,
-		ExternalMediaPublisher publisher)
+		ExternalMediaPublisher publisher,
+		IForumService forumService)
 	{
 		_db = db;
 		_publisher = publisher;
+		_forumService = forumService;
 	}
 
 	[FromRoute]
@@ -99,6 +103,9 @@ public class MoveModel : BasePageModel
 		}
 
 		await _db.SaveChangesAsync();
+
+		_forumService.ClearLatestPostCache();
+		_forumService.ClearTopicActivityCache();
 
 		await _publisher.SendForum(
 			topicWasRestricted || forum.Restricted,
