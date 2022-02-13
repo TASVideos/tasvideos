@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles;
@@ -12,16 +14,13 @@ public class InfoModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IMapper _mapper;
-	private readonly Core.Services.IFileService _fileService;
 
 	public InfoModel(
 		ApplicationDbContext db,
-		IMapper mapper,
-		Core.Services.IFileService fileService)
+		IMapper mapper)
 	{
 		_db = db;
 		_mapper = mapper;
-		_fileService = fileService;
 	}
 
 	[FromRoute]
@@ -75,6 +74,34 @@ public class InfoModel : BasePageModel
 		file.Downloads++;
 
 		await _db.TrySaveChangesAsync();
-		return _fileService.CreateDownloadResult(file);
+		return new DownloadResult(file);
+	}
+
+	private class DownloadResult : IActionResult
+	{
+		private readonly UserFile _file;
+
+		public DownloadResult(UserFile file)
+		{
+			_file = file;
+		}
+
+		public Task ExecuteResultAsync(ActionContext context)
+		{
+			var res = context.HttpContext.Response;
+
+			res.Headers.Add("Content-Length", _file.LogicalLength.ToString());
+			if (_file.CompressionType == Compression.Gzip)
+			{
+				res.Headers.Add("Content-Encoding", "gzip");
+			}
+			res.Headers.Add("Content-Type", "application/octet-stream");
+			var contentDisposition = new ContentDispositionHeaderValue("attachment");
+			contentDisposition.SetHttpFileName(_file.FileName);
+			res.Headers.ContentDisposition = contentDisposition.ToString();
+			
+			res.StatusCode = 200;
+			return res.Body.WriteAsync(_file.Content, 0, _file.Content.Length);
+		}
 	}
 }

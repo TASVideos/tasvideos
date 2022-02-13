@@ -1,5 +1,4 @@
 ﻿using System.IO.Compression;
-using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services;
@@ -12,8 +11,6 @@ public interface IFileService
 	/// Unzips the file, and re-zips it while renaming the contained file
 	/// </summary>
 	Task<byte[]> CopyZip(byte[] zipBytes, string fileName);
-
-	Microsoft.AspNetCore.Mvc.IActionResult CreateDownloadResult(UserFile file);
 }
 
 internal class FileService : IFileService
@@ -70,39 +67,6 @@ internal class FileService : IFileService
 		}
 
 		return outStream.ToArray();
-	}
-
-	public Microsoft.AspNetCore.Mvc.IActionResult CreateDownloadResult(UserFile file)
-	{
-		return new DownloadResult(file);
-	}
-
-	private class DownloadResult : Microsoft.AspNetCore.Mvc.IActionResult
-	{
-		public UserFile File { get; init; }
-
-		public DownloadResult(UserFile file)
-		{
-			File = file;
-		}
-
-		public Task ExecuteResultAsync(ActionContext context)
-		{
-			var res = context.HttpContext.Response;
-
-			res.Headers.Add("Content-Length", File.LogicalLength.ToString());
-			if (File.CompressionType == Compression.Gzip)
-			{
-				res.Headers.Add("Content-Encoding", "gzip");
-			}
-			res.Headers.Add("Content-Type", "application/octet-stream");
-			var contentDisposition = new Microsoft.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-			contentDisposition.SetHttpFileName(File.FileName);
-			res.Headers.ContentDisposition = contentDisposition.ToString();
-			
-			res.StatusCode = 200;
-			return res.Body.WriteAsync(File.Content, 0, File.Content.Length);
-		}
 	}
 }
 
