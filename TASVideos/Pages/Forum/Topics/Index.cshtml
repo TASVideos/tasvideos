@@ -1,5 +1,4 @@
 ﻿@page "{id}"
-@using TASVideos.Core
 @using TASVideos.Data.Helpers
 @model IndexModel
 @{
@@ -157,7 +156,7 @@
 	</nav>
 </fullrow>
 
-<script condition="@(Model.Topic.Posts.Last().CreateTimestamp > DateTime.UtcNow.AddDays(-ForumConstants.DaysTopicsCountAsActive) && Model.Topic.Posts.CurrentPage == Model.Topic.Posts.LastPage())">
+<script condition="@(Model.SaveActivity)">
 	{
 		let topicId = '@Model.Id';
 		let currentTime = Math.floor(Date.now() / 1000);

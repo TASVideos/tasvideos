@@ -19,6 +19,7 @@ public class IndexModel : BaseForumModel
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IAwards _awards;
+	private readonly IForumService _forumService;
 	private readonly IPointsService _pointsService;
 	private readonly ITopicWatcher _topicWatcher;
 	private readonly IWikiPages _wikiPages;
@@ -27,6 +28,7 @@ public class IndexModel : BaseForumModel
 		ApplicationDbContext db,
 		ExternalMediaPublisher publisher,
 		IAwards awards,
+		IForumService forumService,
 		IPointsService pointsService,
 		ITopicWatcher topicWatcher,
 		IWikiPages wikiPages)
@@ -34,6 +36,7 @@ public class IndexModel : BaseForumModel
 		_db = db;
 		_publisher = publisher;
 		_awards = awards;
+		_forumService = forumService;
 		_pointsService = pointsService;
 		_topicWatcher = topicWatcher;
 		_wikiPages = wikiPages;
@@ -52,6 +55,8 @@ public class IndexModel : BaseForumModel
 	public string? EncodeEmbedLink { get; set; }
 
 	public ForumPostEntry? HighlightedPost { get; set; }
+
+	public bool SaveActivity { get; set; } = false;
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -179,6 +184,10 @@ public class IndexModel : BaseForumModel
 		{
 			await _topicWatcher.MarkSeen(Id, userId.Value);
 		}
+
+		var hasActivity = (await _forumService.GetTopicsWithActivity(Topic.ForumId))?.ContainsKey(Id) ?? false;
+		var onLastPage = Topic.Posts.CurrentPage == Topic.Posts.LastPage();
+		SaveActivity = hasActivity && onLastPage;
 
 		return Page();
 	}
