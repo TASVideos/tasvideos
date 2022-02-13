@@ -35,20 +35,22 @@
         let visitedTopics = localStorage.getItem('VisitedTopics');
         if (visitedTopics !== null){
             visitedTopics = JSON.parse(visitedTopics);
-            let activitySubforums = document.getElementsByClassName('activity-subforum');
-            for (let activityTopic of activitySubforums){
-                let activityJson = JSON.parse(activityTopic.dataset.activityJson);
-                let removal = true;
-                for (let topicId in activityJson){
-                    let lastVisit = visitedTopics[topicId];
-                    if (lastVisit === undefined || activityJson[topicId] > lastVisit){
-                        removal = false;
-                        break;
-                    }
+		}else{
+            visitedTopics = {};
+		}
+        let activitySubforums = document.getElementsByClassName('activity-subforum');
+        for (let activityTopic of activitySubforums){
+            let activityJson = JSON.parse(activityTopic.dataset.activityJson);
+            let display = false;
+            for (let topicId in activityJson){
+                let lastVisit = visitedTopics[topicId];
+                if (lastVisit === undefined || lastVisit < activityJson[topicId]){
+                    display = true;
+                    break;
                 }
-                if (removal){
-                    activityTopic.classList.add('d-none');
-                }
+            }
+            if (display){
+                activityTopic.classList.remove('d-none');
             }
         }
     }
