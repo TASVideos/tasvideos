@@ -1,10 +1,8 @@
-﻿using System.IO.Compression;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles;
@@ -14,13 +12,16 @@ public class InfoModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IMapper _mapper;
+	private readonly Core.Services.IFileService _fileService;
 
 	public InfoModel(
 		ApplicationDbContext db,
-		IMapper mapper)
+		IMapper mapper,
+		Core.Services.IFileService fileService)
 	{
 		_db = db;
 		_mapper = mapper;
+		_fileService = fileService;
 	}
 
 	[FromRoute]
@@ -74,22 +75,6 @@ public class InfoModel : BasePageModel
 		file.Downloads++;
 
 		await _db.TrySaveChangesAsync();
-
-		Stream stream;
-		if (file.CompressionType == Compression.Gzip)
-		{
-			stream = new GZipStream(
-				new MemoryStream(file.Content),
-				CompressionMode.Decompress);
-		}
-		else
-		{
-			stream = new MemoryStream(file.Content);
-		}
-
-		return new FileStreamResult(stream, "application/x-" + file.Type)
-		{
-			FileDownloadName = file.FileName
-		};
+		return _fileService.CreateDownloadResult(file);
 	}
 }
