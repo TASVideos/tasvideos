@@ -72,6 +72,7 @@ public class ResetPasswordModel : BasePageModel
 		var result = await _userManager.ResetPasswordAsync(user, code, Password);
 		if (result.Succeeded)
 		{
+			await _userManager.MarkEmailConfirmed(user);
 			return RedirectToPage("ResetPasswordConfirmation");
 		}
 
