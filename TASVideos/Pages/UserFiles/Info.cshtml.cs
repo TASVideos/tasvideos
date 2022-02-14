@@ -1,8 +1,8 @@
-﻿using System.IO.Compression;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -74,22 +74,34 @@ public class InfoModel : BasePageModel
 		file.Downloads++;
 
 		await _db.TrySaveChangesAsync();
+		return new DownloadResult(file);
+	}
 
-		Stream stream;
-		if (file.CompressionType == Compression.Gzip)
+	private class DownloadResult : IActionResult
+	{
+		private readonly UserFile _file;
+
+		public DownloadResult(UserFile file)
 		{
-			stream = new GZipStream(
-				new MemoryStream(file.Content),
-				CompressionMode.Decompress);
-		}
-		else
-		{
-			stream = new MemoryStream(file.Content);
+			_file = file;
 		}
 
-		return new FileStreamResult(stream, "application/x-" + file.Type)
+		public Task ExecuteResultAsync(ActionContext context)
 		{
-			FileDownloadName = file.FileName
-		};
+			var res = context.HttpContext.Response;
+
+			res.Headers.Add("Content-Length", _file.LogicalLength.ToString());
+			if (_file.CompressionType == Compression.Gzip)
+			{
+				res.Headers.Add("Content-Encoding", "gzip");
+			}
+			res.Headers.Add("Content-Type", "application/octet-stream");
+			var contentDisposition = new ContentDispositionHeaderValue("attachment");
+			contentDisposition.SetHttpFileName(_file.FileName);
+			res.Headers.ContentDisposition = contentDisposition.ToString();
+			
+			res.StatusCode = 200;
+			return res.Body.WriteAsync(_file.Content, 0, _file.Content.Length);
+		}
 	}
 }
