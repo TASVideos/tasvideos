@@ -350,4 +350,33 @@ public class ForumServiceTests
 		Assert.AreEqual(actual, actualLatestPost.Id);
 		Assert.AreEqual(posterName, actualLatestPost.PosterName);
 	}
+
+	[TestMethod]
+	public async Task IsTopicLocked_TopicDoesNotExist_ReturnsFalse()
+	{
+		var actual = await _forumService.IsTopicLocked(int.MaxValue);
+		Assert.IsFalse(actual);
+	}
+
+	[TestMethod]
+	public async Task IsTopicLocked_TopicExistsAndNotLocked_ReturnsFalse()
+	{
+		const int topicId = 1;
+		_db.ForumTopics.Add(new ForumTopic { Id = topicId, IsLocked = false });
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.IsTopicLocked(topicId);
+		Assert.IsFalse(actual);
+	}
+
+	[TestMethod]
+	public async Task IsTopicLocked_TopicExistsAndLocked_ReturnsTrue()
+	{
+		const int topicId = 1;
+		_db.ForumTopics.Add(new ForumTopic { Id = topicId, IsLocked = true });
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.IsTopicLocked(topicId);
+		Assert.IsTrue(actual);
+	}
 }

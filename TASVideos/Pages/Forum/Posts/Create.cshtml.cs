@@ -123,8 +123,7 @@ public class CreateModel : BaseForumModel
 		{
 			// We have to consider direct posting to this call, including "over-posting",
 			// so all of this logic is necessary
-			var isLocked = await _db.ForumTopics
-				.AnyAsync(t => t.Id == TopicId && t.IsLocked);
+			var isLocked = await _forumService.IsTopicLocked(TopicId);
 			if (isLocked && !User.Has(PermissionTo.PostInLockedTopics))
 			{
 				return AccessDenied();

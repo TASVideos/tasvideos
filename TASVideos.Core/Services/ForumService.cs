@@ -17,6 +17,7 @@ public interface IForumService
 	Task CreatePoll(ForumTopic topic, PollCreateDto poll);
 	Task<int> CreatePost(PostCreateDto post);
 	Task<Dictionary<int, DateTime>?> GetTopicsWithActivity(int subforumId);
+	Task<bool> IsTopicLocked(int topicId);
 }
 
 internal class ForumService : IForumService
@@ -290,5 +291,10 @@ internal class ForumService : IForumService
 		var forumActivity = await GetAllForumActivity();
 		forumActivity.TryGetValue(subforumId, out Dictionary<int, DateTime>? topicsWithActivity);
 		return topicsWithActivity;
+	}
+
+	public async Task<bool> IsTopicLocked(int topicId)
+	{
+		return await _db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
 	}
 }
