@@ -5,6 +5,7 @@
 			<th>@Html.DisplayNameFor(m => m.First().Position)</th>
 			<th>@Html.DisplayNameFor(m => m.First().Player)</th>
 			<th>@Html.DisplayNameFor(m => m.First().Points)</th>
+			<th>@Html.DisplayNameFor(m => m.First().Rank)</th>
 		</tr>
 		@foreach (var item in Model!)
 		{
@@ -12,6 +13,7 @@
 				<td>@item.Position</td>
 				<td>@item.Player</td>
 				<td>@item.Points</td>
+				<td>@item.Rank</td>
 			</tr>
 		}
 	</table>

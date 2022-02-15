@@ -7,10 +7,11 @@ namespace TASVideos.Core.Services;
 public interface IPointsService
 {
 	/// <summary>
-	/// Calculates the player points for the user with the given id.
-	/// If a user with the given <see cref="userId"/> does not exist, 0 is returned
+	/// Calculates the player points for the user with the given id. In addition,
+	/// the calculated player rank is returned. If a user with the given
+	/// <see cref="userId"/> does not exist, 0 is returned
 	/// </summary>
-	ValueTask<double> PlayerPoints(int userId);
+	ValueTask<(double, string)> PlayerPoints(int userId);
 
 	/// <summary>
 	/// Calculates the player points that are being awarded for the given publication
@@ -36,12 +37,12 @@ internal class PointsService : IPointsService
 		_cache = cache;
 	}
 
-	public async ValueTask<double> PlayerPoints(int userId)
+	public async ValueTask<(double, string)> PlayerPoints(int userId)
 	{
 		string cacheKey = PlayerPointKey + userId;
 		if (_cache.TryGetValue(cacheKey, out double playerPoints))
 		{
-			return playerPoints;
+			return (playerPoints, PointsCalculator.PlayerRank((decimal)playerPoints));
 		}
 
 		var publications = await _db.Publications
@@ -53,8 +54,8 @@ internal class PointsService : IPointsService
 		playerPoints = Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings), 1);
 
 		_cache.Set(cacheKey, playerPoints);
-		return playerPoints;
-		}
+		return (playerPoints, PointsCalculator.PlayerRank((decimal)playerPoints));
+	}
 
 	public async ValueTask<double> PlayerPointsForPublication(int publicationId)
 	{

@@ -227,7 +227,9 @@ public class UserManager : UserManager<User>
 				.ToListAsync();
 
 			// TODO: round to 1 digit?
-			model.PlayerPoints = (int)Math.Round(await _pointsService.PlayerPoints(model.Id));
+			var (points, rank) = await _pointsService.PlayerPoints(model.Id);
+			model.PlayerPoints = (int)Math.Round(points);
+			model.PlayerRank = rank;
 
 			model.PublishedSystems = await _db.Publications
 				.ForAuthor(model.Id)

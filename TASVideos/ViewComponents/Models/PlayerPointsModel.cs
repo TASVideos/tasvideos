@@ -15,6 +15,9 @@ public class PlayerPointsModel
 
 	[Display(Name = "Points")]
 	public double Points { get; set; } = 0.0;
+
+	[Display(Name = "Player Rank")]
+	public string Rank { get; set; } = "";
 }
 
 public class PublicationPointsModel

@@ -17,6 +17,9 @@ public class UserProfile
 	[Display(Name = "Player Points:")]
 	public int PlayerPoints { get; set; }
 
+	[Display(Name = "Player Rank")]
+	public string PlayerRank { get; set; } = "";
+
 	[Display(Name = "Joined On:")]
 	public DateTime JoinDate { get; set; }
 

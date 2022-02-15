@@ -1,7 +1,6 @@
 ﻿@model UserProfile
 @{
 	var lastLoggedIn = Model!.LastLoggedInTimeStamp ?? DateTime.UtcNow;
-	string rank = PointsCalculator.PlayerRank(Model.PlayerPoints);
 }
 <row>
 	<div class="col-md-6">
@@ -150,8 +149,8 @@
 				<div condition="Model.AnyPublications">
 					<p>
 						@Html.DisplayNameFor(m => m.PlayerPoints) @Model.PlayerPoints
-						<span condition="!string.IsNullOrWhiteSpace(rank)">
-							<br />@rank
+						<span condition="!string.IsNullOrWhiteSpace(Model.PlayerRank)">
+							<br />@Model.PlayerRank
 						</span>
 					</p>
 					<p>

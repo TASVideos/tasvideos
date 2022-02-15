@@ -8,6 +8,7 @@
 	<tr>
 		<th>User</th>
 		<th>Points</th>
+		<th>Rank</th>
 	</tr>
 	@foreach (var player in Model.Players.OrderByDescending(p => p.Points))
 	{
@@ -17,6 +18,9 @@
 			</td>
 			<td>
 				@Math.Round(player.Points)
+			</td>
+			<td>
+				@player.Rank
 			</td>
 		</tr>
 	}

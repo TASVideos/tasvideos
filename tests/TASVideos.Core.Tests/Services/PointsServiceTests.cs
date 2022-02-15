@@ -20,7 +20,7 @@ public class PointsServiceTests
 	[TestMethod]
 	public async Task PlayerPoints_NoUser_Returns0()
 	{
-		var actual = await _pointsService.PlayerPoints(int.MinValue);
+		var (actual, _) = await _pointsService.PlayerPoints(int.MinValue);
 		Assert.AreEqual(0, actual);
 	}
 
@@ -30,7 +30,7 @@ public class PointsServiceTests
 		_db.Users.Add(Player);
 		await _db.SaveChangesAsync();
 		var user = _db.Users.Single();
-		var actual = await _pointsService.PlayerPoints(user.Id);
+		var (actual, _) = await _pointsService.PlayerPoints(user.Id);
 		Assert.AreEqual(0, actual);
 	}
 
@@ -61,7 +61,7 @@ public class PointsServiceTests
 		_db.PublicationAuthors.AddRange(pa);
 		await _db.SaveChangesAsync();
 
-		var actual = await _pointsService.PlayerPoints(user.Id);
+		var (actual, _) = await _pointsService.PlayerPoints(user.Id);
 		int expected = numMovies * PlayerPointConstants.MinimumPlayerPointsForPublication;
 		Assert.AreEqual(expected, actual);
 	}

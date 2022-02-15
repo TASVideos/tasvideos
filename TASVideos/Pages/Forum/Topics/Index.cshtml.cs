@@ -140,8 +140,8 @@ public class IndexModel : BaseForumModel
 		foreach (var post in Topic.Posts)
 		{
 			post.Awards = await _awards.ForUser(post.PosterId);
-			post.PosterPlayerPoints = await _pointsService.PlayerPoints(post.PosterId);
-			var rank = PointsCalculator.PlayerRank((decimal)post.PosterPlayerPoints);
+			var (points, rank) = await _pointsService.PlayerPoints(post.PosterId);
+			post.PosterPlayerPoints = points;
 			if (!string.IsNullOrWhiteSpace(rank))
 			{
 				post.PosterRoles.Add(rank);

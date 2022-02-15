@@ -64,8 +64,8 @@ public class UserModel : BasePageModel
 		UserPosts = userPosts;
 		Awards = await _awards.ForUser(UserPosts.Id);
 
-		UserPosts.PlayerPoints = await _pointsService.PlayerPoints(UserPosts.Id);
-		var rank = PointsCalculator.PlayerRank((decimal)UserPosts.PlayerPoints);
+		var (points, rank) = await _pointsService.PlayerPoints(UserPosts.Id);
+		UserPosts.PlayerPoints = points;
 		if (!string.IsNullOrWhiteSpace(rank))
 		{
 			UserPosts.Roles.Add(rank);

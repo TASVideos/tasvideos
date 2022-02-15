@@ -34,7 +34,7 @@ public class PlayerPointsModel : BasePageModel
 
 		foreach (var user in Players)
 		{
-			user.Points = await _pointsService.PlayerPoints(user.Id);
+			(user.Points, user.Rank) = await _pointsService.PlayerPoints(user.Id);
 		}
 	}
 
@@ -43,5 +43,6 @@ public class PlayerPointsModel : BasePageModel
 		public int Id { get; set; }
 		public string UserName { get; set; } = "";
 		public double Points { get; set; }
+		public string Rank { get; set; } = "";
 	}
 }

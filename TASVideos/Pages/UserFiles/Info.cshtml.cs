@@ -95,11 +95,11 @@ public class InfoModel : BasePageModel
 			{
 				res.Headers.Add("Content-Encoding", "gzip");
 			}
+
 			res.Headers.Add("Content-Type", "application/octet-stream");
 			var contentDisposition = new ContentDispositionHeaderValue("attachment");
 			contentDisposition.SetHttpFileName(_file.FileName);
 			res.Headers.ContentDisposition = contentDisposition.ToString();
-			
 			res.StatusCode = 200;
 			return res.Body.WriteAsync(_file.Content, 0, _file.Content.Length);
 		}

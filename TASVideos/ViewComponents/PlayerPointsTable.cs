@@ -34,7 +34,7 @@ public class PlayerPointsTable : ViewComponent
 
 		foreach (var user in players)
 		{
-			user.Points = await _pointsService.PlayerPoints(user.Id);
+			(user.Points, user.Rank) = await _pointsService.PlayerPoints(user.Id);
 		}
 
 		var sortedPlayers = players
