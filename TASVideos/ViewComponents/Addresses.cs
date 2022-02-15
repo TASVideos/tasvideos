@@ -19,18 +19,18 @@ public class Addresses : ViewComponent
 	public async Task<IViewComponentResult> InvokeAsync(int addrset)
 	{
 		var model = await _db.GameRamAddresses
-				.Where(a => a.LegacySetId == addrset)
-				.Select(a => new AddressEntry(
-					a.GameRamAddressDomain!.Name,
-					a.Address,
-					a.Type.ToString(),
-					a.Signed.ToString(),
-					a.Endian.ToString(),
-					a.Description,
-					a.Game != null ? a.Game.DisplayName : null,
-					a.GameId,
-					a.Game != null ? a.Game.System!.DisplayName : null))
-				.ToListAsync();
+			.Where(a => a.LegacySetId == addrset)
+			.Select(a => new AddressEntry(
+				a.GameRamAddressDomain!.Name,
+				a.Address,
+				a.Type.ToString(),
+				a.Signed.ToString(),
+				a.Endian.ToString(),
+				a.Description,
+				a.Game != null ? a.Game.DisplayName : null,
+				a.GameId,
+				a.Game != null ? a.Game.System!.DisplayName : null))
+			.ToListAsync();
 
 		if (!model.Any())
 		{
