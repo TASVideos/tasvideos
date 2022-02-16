@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Data;
@@ -56,17 +55,7 @@ public class SettingsModel : BasePageModel
 			MoodAvatar = user.MoodAvatarUrlBase,
 			PreferredPronouns = user.PreferredPronouns,
 			EmailOnPrivateMessage = user.EmailOnPrivateMessage,
-			Roles = await _db.Users
-				.Where(u => u.Id == user.Id)
-				.SelectMany(u => u.UserRoles)
-				.Select(ur => ur.Role!)
-				.Select(r => new RoleDto
-				{
-					Id = r.Id,
-					Name = r.Name,
-					Description = r.Description
-				})
-				.ToListAsync()
+			Roles = await _userManager.UserRoles(user.Id)
 		};
 	}
 

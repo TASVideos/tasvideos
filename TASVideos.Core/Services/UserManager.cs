@@ -461,4 +461,19 @@ public class UserManager : UserManager<User>
 			}
 		}
 	}
+
+	public async Task<IEnumerable<RoleDto>> UserRoles(int userId)
+	{
+		return await _db.Users
+			.Where(u => u.Id == userId)
+			.SelectMany(u => u.UserRoles)
+			.Select(ur => ur.Role!)
+			.Select(r => new RoleDto
+			{
+				Id = r.Id,
+				Name = r.Name,
+				Description = r.Description
+			})
+			.ToListAsync();
+	}
 }
