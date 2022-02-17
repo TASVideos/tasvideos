@@ -27,6 +27,7 @@ public static class WikiModules
 	public const string MoviesGameList = "moviesgamelist";
 	public const string MoviesList = "movieslist";
 	public const string MovieStatistics = "moviestatistics";
+	public const string Nicovideo = "nicovideo";
 	public const string NoEmulator = "noemulator";
 	public const string NoGameName = "nogame";
 	public const string NoRom = "norom";

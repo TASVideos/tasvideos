@@ -1,0 +1,13 @@
+﻿@model NicovideoModel
+@{
+	var embedLink = $"//embed.nicovideo.jp/watch/{Model.Code}";
+	var fullLink = $"//www.nicovideo.jp/watch/{Model.Code}";
+	var floatClass = !string.IsNullOrWhiteSpace(Model.Align)
+		? $"pull-{Model.Align.ToLower()} mx-2"
+		: "";
+}
+<div class="@floatClass">
+	<iframe src="@embedLink" style="width: @(Model.Width)px; height: @(Model.Height)px; margin:0" allowfullscreen="true" type="text/html" class="mw-100"></iframe>
+	<br />
+	<a condition="!Model.HideLink" href="@fullLink" rel="nofollow" target="_blank">(Link to video)</a>
+</div>
