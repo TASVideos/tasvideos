@@ -1,6 +1,6 @@
 ﻿@model NicovideoModel
 @{
-	var embedLink = $"//embed.nicovideo.jp/watch/{Model.Code}"; // TODO: this doesn't work right :(
+	var embedLink = $"//embed.nicovideo.jp/watch/{Model.Code}";
 	var fullLink = $"//www.nicovideo.jp/watch/{Model.Code}";
 	var floatClass = !string.IsNullOrWhiteSpace(Model.Align)
 		? $"pull-{Model.Align.ToLower()} mx-2"
