@@ -10,6 +10,7 @@ internal class SystemCodes
 	public const string Coleco = "coleco";
 	public const string Dos = "dos";
 	public const string Ds = "ds";
+	public const string Dsi = "dsi";
 	public const string Fds = "fds";
 	public const string Flash = "flash";
 	public const string GameBoy = "gb";
