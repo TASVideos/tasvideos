@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace TASVideos.Core.Services.Youtube.Dtos;
 
@@ -7,16 +7,16 @@ namespace TASVideos.Core.Services.Youtube.Dtos;
 /// </summary>
 internal class YoutubeVideoSnippetResult
 {
-	[JsonProperty("title")]
+	[JsonPropertyName("title")]
 	public string Title { get; init; } = "";
 
-	[JsonProperty("description")]
+	[JsonPropertyName("description")]
 	public string Description { get; init; } = "";
 
-	[JsonProperty("categoryId")]
+	[JsonPropertyName("categoryId")]
 	public string CategoryId { get; init; } = "";
 
-	[JsonProperty("tags")]
+	[JsonPropertyName("tags")]
 	public ICollection<string> Tags { get; set; } = new List<string>();
 }
 
@@ -25,10 +25,10 @@ internal class YoutubeVideoSnippetResult
 /// </summary>
 public class YoutubeVideoResponse
 {
-	[JsonProperty("kind")]
+	[JsonPropertyName("kind")]
 	public string Kind { get; set; } = "";
 
-	[JsonProperty("etag")]
+	[JsonPropertyName("etag")]
 	public string Etag { get; set; } = "";
 
 	public List<YoutubeVideoResponseItem> Items { get; set; } = new();
@@ -36,33 +36,33 @@ public class YoutubeVideoResponse
 
 public class YoutubeVideoResponseItem
 {
-	[JsonProperty("id")]
+	[JsonPropertyName("id")]
 	public string Id { get; set; } = "";
 
-	[JsonProperty("kind")]
+	[JsonPropertyName("kind")]
 	public string Kind { get; set; } = "";
 
-	[JsonProperty("etag")]
+	[JsonPropertyName("etag")]
 	public string Etag { get; set; } = "";
 
-	[JsonProperty("snippet")]
+	[JsonPropertyName("snippet")]
 	public SnippetData Snippet { get; set; } = new();
 
 	public class SnippetData
 	{
-		[JsonProperty("title")]
+		[JsonPropertyName("title")]
 		public string Title { get; init; } = "";
 
-		[JsonProperty("description")]
+		[JsonPropertyName("description")]
 		public string Description { get; init; } = "";
 
-		[JsonProperty("categoryId")]
+		[JsonPropertyName("categoryId")]
 		public string CategoryId { get; init; } = "";
 
-		[JsonProperty("tags")]
+		[JsonPropertyName("tags")]
 		public ICollection<string> Tags { get; set; } = new List<string>();
 
-		[JsonProperty("channelTitle")]
+		[JsonPropertyName("channelTitle")]
 		public string ChannelTitle { get; set; } = "";
 	}
 }

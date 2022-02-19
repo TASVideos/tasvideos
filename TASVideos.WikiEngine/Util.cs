@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine;
@@ -11,15 +11,21 @@ public static class Util
 		try
 		{
 			var results = NewParser.Parse(content);
-			return JsonConvert.SerializeObject(results, Formatting.Indented);
+			return JsonSerializer.Serialize(results, new JsonSerializerOptions
+			{
+				WriteIndented = true
+			});
 		}
 		catch (NewParser.SyntaxException e)
 		{
-			return JsonConvert.SerializeObject(
+			return JsonSerializer.Serialize(
 				new
 				{
 					Error = e.Message
-				}, Formatting.Indented);
+				}, new JsonSerializerOptions
+				{
+					WriteIndented = true
+				});
 		}
 	}
 

@@ -1,15 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace TASVideos.Core.Services.Youtube.Dtos;
 
 internal class YoutubeGetResponse
 {
-	[JsonProperty("items")]
+	[JsonPropertyName("items")]
 	public ICollection<Item> Items { get; set; } = new List<Item>();
 
 	public class Item
 	{
-		[JsonProperty("snippet")]
+		[JsonPropertyName("snippet")]
 		public YoutubeVideoSnippetResult Snippet { get; set; } = new();
 	}
 }

@@ -1,7 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
-namespace TASVideos.WikiEngine.AST;
+﻿namespace TASVideos.WikiEngine.AST;
 
 public enum NodeType
 {
@@ -13,7 +10,6 @@ public enum NodeType
 
 public interface INode
 {
-	[JsonConverter(typeof(StringEnumConverter))]
 	NodeType Type { get; }
 	int CharStart { get; }
 	int CharEnd { get; set; }

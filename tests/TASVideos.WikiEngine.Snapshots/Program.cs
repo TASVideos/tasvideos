@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
@@ -27,13 +27,12 @@ if (!File.Exists(".params.json"))
 	return -1;
 }
 
-var settings = JsonConvert.DeserializeObject<Options>(File.ReadAllText(".params.json"));
+var settings = JsonSerializer.Deserialize<Options>(File.ReadAllText(".params.json"));
 if (string.IsNullOrWhiteSpace(settings?.ConnectionString) || string.IsNullOrWhiteSpace(settings.OutDir))
 {
 	Console.WriteLine("Need to set values in .params.json");
 	return -1;
 }
-
 
 var serviceProvider = new ServiceCollection()
 	.AddTasvideosData(settings.ConnectionString)

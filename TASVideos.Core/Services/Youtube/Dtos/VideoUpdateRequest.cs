@@ -1,66 +1,66 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace TASVideos.Core.Services.Youtube.Dtos;
 
 internal class VideoUpdateRequest
 {
-	[JsonProperty("kind")]
+	[JsonPropertyName("kind")]
 	public string Kind { get; init; } = "youtube#video";
 
-	[JsonProperty("id")]
+	[JsonPropertyName("id")]
 	public string VideoId { get; init; } = "";
 
-	[JsonProperty("status")]
+	[JsonPropertyName("status")]
 	public VideoStatus Status { get; init; } = new();
 
-	[JsonProperty("snippet")]
+	[JsonPropertyName("snippet")]
 	public YoutubeVideoSnippetResult Snippet { get; set; } = new();
 
 	internal class VideoStatus
 	{
-		[JsonProperty("privacyStatus")]
+		[JsonPropertyName("privacyStatus")]
 		public string PrivacyStatus { get; init; } = "public";
 
-		[JsonProperty("license")]
+		[JsonPropertyName("license")]
 		public string License { get; init; } = "youtube";
 
-		[JsonProperty("embeddable")]
+		[JsonPropertyName("embeddable")]
 		public bool Embeddable { get; init; } = true;
 
-		[JsonProperty("publicStatsViewable")]
+		[JsonPropertyName("publicStatsViewable")]
 		public bool PublicStatsViewable { get; init; }
 
-		[JsonProperty("madeForKids")]
+		[JsonPropertyName("madeForKids")]
 		public bool MadeForKids { get; init; }
 	}
 }
 
 internal class UnlistRequest
 {
-	[JsonProperty("kind")]
+	[JsonPropertyName("kind")]
 	public string Kind { get; init; } = "youtube#video";
 
-	[JsonProperty("id")]
+	[JsonPropertyName("id")]
 	public string VideoId { get; init; } = "";
 
-	[JsonProperty("status")]
+	[JsonPropertyName("status")]
 	public VideoStatus Status { get; init; } = new();
 
 	internal class VideoStatus
 	{
-		[JsonProperty("privacyStatus")]
+		[JsonPropertyName("privacyStatus")]
 		public string PrivacyStatus { get; init; } = "public";
 
-		[JsonProperty("license")]
+		[JsonPropertyName("license")]
 		public string License { get; init; } = "youtube";
 
-		[JsonProperty("embeddable")]
+		[JsonPropertyName("embeddable")]
 		public bool Embeddable { get; init; } = true;
 
-		[JsonProperty("publicStatsViewable")]
+		[JsonPropertyName("publicStatsViewable")]
 		public bool PublicStatsViewable { get; init; }
 
-		[JsonProperty("madeForKids")]
+		[JsonPropertyName("madeForKids")]
 		public bool MadeForKids { get; init; }
 	}
 }

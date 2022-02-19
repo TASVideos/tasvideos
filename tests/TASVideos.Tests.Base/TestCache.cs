@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using TASVideos.Core.Services;
 
 namespace TASVideos.Tests.Base;
@@ -8,9 +9,9 @@ namespace TASVideos.Tests.Base;
 /// </summary>
 public class TestCache : ICacheService
 {
-	private static readonly JsonSerializerSettings SerializerSettings = new()
+	private static readonly JsonSerializerOptions SerializerSettings = new()
 	{
-		ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+		ReferenceHandler = ReferenceHandler.IgnoreCycles
 	};
 
 	private readonly Dictionary<string, string> _cache = new();
@@ -19,7 +20,7 @@ public class TestCache : ICacheService
 	{
 		var result = _cache.TryGetValue(key, out string? cached);
 		value = result
-			? JsonConvert.DeserializeObject<T>(cached ?? "")!
+			? JsonSerializer.Deserialize<T>(cached ?? "")!
 			: default!;
 
 		return result;
@@ -27,7 +28,7 @@ public class TestCache : ICacheService
 
 	public void Set(string key, object? data, int? cacheTime = null)
 	{
-		var str = JsonConvert.SerializeObject(data, SerializerSettings);
+		var str = JsonSerializer.Serialize(data, SerializerSettings);
 		_cache[key] = str;
 	}
 

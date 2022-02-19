@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace TASVideos.Middleware;
 
@@ -32,7 +32,7 @@ public class ErrorHandlingMiddleware
 			string result;
 			if (env.IsDevelopment())
 			{
-				result = JsonConvert.SerializeObject(new
+				result = JsonSerializer.Serialize(new
 				{
 					Error = exception.Message,
 					exception.StackTrace,
@@ -42,7 +42,7 @@ public class ErrorHandlingMiddleware
 			}
 			else
 			{
-				result = JsonConvert.SerializeObject(new
+				result = JsonSerializer.Serialize(new
 				{
 					Errors = "An error occurred."
 				});

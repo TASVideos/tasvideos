@@ -1,15 +1,15 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace TASVideos.Core.Services.Youtube.Dtos;
 
 internal class AccessTokenResponse
 {
-	[JsonProperty("access_token")]
+	[JsonPropertyName("access_token")]
 	public string AccessToken { get; init; } = "";
 
-	[JsonProperty("expires_in")]
+	[JsonPropertyName("expires_in")]
 	public int ExpiresAt { get; init; }
 
-	[JsonProperty("scope")]
+	[JsonPropertyName("scope")]
 	public string Scope { get; init; } = "";
 }

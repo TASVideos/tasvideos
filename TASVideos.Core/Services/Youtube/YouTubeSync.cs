@@ -1,6 +1,6 @@
 using System.Globalization;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
@@ -103,7 +103,7 @@ internal class YouTubeSync : IYoutubeSync
 			_logger.LogError(
 				"[{timestamp}] An error occurred syncing data to Youtube. Request: {request} Response: {response}",
 				DateTime.UtcNow,
-				JsonConvert.SerializeObject(updateRequest),
+				JsonSerializer.Serialize(updateRequest),
 				await response.Content.ReadAsStringAsync());
 		}
 	}
@@ -183,7 +183,7 @@ internal class YouTubeSync : IYoutubeSync
 			_logger.LogError(
 				"{timestamp} An error occurred sending a request to YouTube. Request: {request} Response: {response}",
 				DateTime.UtcNow,
-				JsonConvert.SerializeObject(unlistRequest),
+				JsonSerializer.Serialize(unlistRequest),
 				await response.Content.ReadAsStringAsync());
 		}
 	}

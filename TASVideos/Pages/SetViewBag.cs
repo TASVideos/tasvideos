@@ -2,7 +2,6 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages;
@@ -23,14 +22,9 @@ public class SetPageViewBagAttribute : ResultFilterAttribute
 			viewData["VersionSha"] = VersionSha;
 
 			var user = context.HttpContext.User;
-			if (user.IsLoggedIn())
-			{
-				viewData["UserPermissions"] = user.Permissions();
-			}
-			else
-			{
-				viewData["UserPermissions"] = Enumerable.Empty<PermissionTo>();
-			}
+			viewData["UserPermissions"] = user.IsLoggedIn()
+				? user.Permissions()
+				: Enumerable.Empty<PermissionTo>();
 		}
 
 		await next.Invoke();

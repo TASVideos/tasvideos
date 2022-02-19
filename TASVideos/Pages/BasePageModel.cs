@@ -42,22 +42,16 @@ public class BasePageModel : PageModel
 
 	protected IActionResult BasePageRedirect(string page, object? routeValues = null)
 	{
-		if (!string.IsNullOrWhiteSpace(Request.ReturnUrl()))
-		{
-			return BaseReturnUrlRedirect();
-		}
-
-		return RedirectToPage(page, routeValues);
+		return !string.IsNullOrWhiteSpace(Request.ReturnUrl())
+			? BaseReturnUrlRedirect()
+			: RedirectToPage(page, routeValues);
 	}
 
 	protected IActionResult BaseRedirect(string page)
 	{
-		if (!string.IsNullOrWhiteSpace(Request.ReturnUrl()))
-		{
-			return BaseReturnUrlRedirect();
-		}
-
-		return Redirect(page);
+		return !string.IsNullOrWhiteSpace(Request.ReturnUrl())
+			? BaseReturnUrlRedirect()
+			: Redirect(page);
 	}
 
 	protected IActionResult BaseReturnUrlRedirect(string? additionalParam = null)

@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 using TASVideos.Core.Settings;
 
@@ -11,9 +12,9 @@ public class RedisCacheService : ICacheService
 	private static IDatabase _cache = null!;
 	private static Lazy<ConnectionMultiplexer>? _connection;
 	private readonly int _cacheDurationInSeconds;
-	private static readonly JsonSerializerSettings SerializerSettings = new()
+	private static readonly JsonSerializerOptions SerializerSettings = new()
 	{
-		ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+		ReferenceHandler = ReferenceHandler.IgnoreCycles
 	};
 
 	public RedisCacheService(AppSettings settings, ILogger<RedisCacheService> logger)
@@ -41,7 +42,7 @@ public class RedisCacheService : ICacheService
 				return false;
 			}
 
-			value = JsonConvert.DeserializeObject<T>(data) ?? default!;
+			value = JsonSerializer.Deserialize<T>(data) ?? default!;
 			return true;
 		}
 		catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
@@ -56,7 +57,7 @@ public class RedisCacheService : ICacheService
 	{
 		try
 		{
-			var serializedData = JsonConvert.SerializeObject(data, SerializerSettings);
+			var serializedData = JsonSerializer.Serialize(data, SerializerSettings);
 			var timeout = TimeSpan.FromSeconds(cacheTime ?? _cacheDurationInSeconds);
 			_cache.StringSet(key, serializedData, timeout);
 		}

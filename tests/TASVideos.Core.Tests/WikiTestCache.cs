@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
@@ -6,9 +7,9 @@ namespace TASVideos.Core.Tests;
 
 internal class WikiTestCache : ICacheService
 {
-	private static readonly JsonSerializerSettings SerializerSettings = new()
+	private static readonly JsonSerializerOptions SerializerSettings = new()
 	{
-		ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+		ReferenceHandler = ReferenceHandler.IgnoreCycles
 	};
 
 	private readonly Dictionary<string, string> _cache = new();
@@ -21,7 +22,7 @@ internal class WikiTestCache : ICacheService
 	public List<WikiPage> PageCache()
 	{
 		List<WikiPage> pages = _cache
-				.Select(kvp => JsonConvert.DeserializeObject<WikiPage>(kvp.Value)!)
+				.Select(kvp => JsonSerializer.Deserialize<WikiPage>(kvp.Value)!)
 				.ToList();
 
 		return pages;
@@ -39,7 +40,7 @@ internal class WikiTestCache : ICacheService
 			throw new InvalidOperationException($"data must be of type {nameof(WikiPage)}");
 		}
 
-		var serialized = JsonConvert.SerializeObject(data, SerializerSettings);
+		var serialized = JsonSerializer.Serialize(data, SerializerSettings);
 		_cache[key] = serialized;
 	}
 
@@ -47,7 +48,7 @@ internal class WikiTestCache : ICacheService
 	{
 		var result = _cache.TryGetValue(key, out string? cached);
 		value = result
-			? JsonConvert.DeserializeObject<T>(cached ?? "")!
+			? JsonSerializer.Deserialize<T>(cached ?? "")!
 			: default!;
 
 		return result;

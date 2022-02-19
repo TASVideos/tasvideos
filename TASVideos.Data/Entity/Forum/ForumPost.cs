@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity.Forum;
