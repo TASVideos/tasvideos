@@ -105,10 +105,7 @@ public class EditModel : BaseForumModel
 
 		if (Post.PosterId == User.GetUserId())
 		{
-			UserAvatars = await _db.Users
-				.Where(u => u.Id == User.GetUserId())
-				.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
-				.SingleAsync();
+			UserAvatars = await _forumService.UserAvatars(User.GetUserId());
 		}
 
 		return Page();
@@ -120,10 +117,7 @@ public class EditModel : BaseForumModel
 		{
 			if (Post.PosterId == User.GetUserId())
 			{
-				UserAvatars = await _db.Users
-					.Where(u => u.Id == User.GetUserId())
-					.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
-					.SingleAsync();
+				UserAvatars = await _forumService.UserAvatars(User.GetUserId());
 			}
 
 			return Page();

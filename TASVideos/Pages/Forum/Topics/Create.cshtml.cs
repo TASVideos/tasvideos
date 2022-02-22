@@ -6,7 +6,6 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
 using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
@@ -61,11 +60,7 @@ public class CreateModel : BaseForumModel
 		}
 
 		Topic = topic;
-		UserAvatars = await _db.Users
-			.Where(u => u.Id == User.GetUserId())
-			.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
-			.SingleAsync();
-
+		UserAvatars = await _forumService.UserAvatars(User.GetUserId());
 		return Page();
 	}
 
@@ -73,11 +68,7 @@ public class CreateModel : BaseForumModel
 	{
 		if (!ModelState.IsValid)
 		{
-			UserAvatars = await _db.Users
-				.Where(u => u.Id == User.GetUserId())
-				.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
-				.SingleAsync();
-
+			UserAvatars = await _forumService.UserAvatars(User.GetUserId());
 			return Page();
 		}
 

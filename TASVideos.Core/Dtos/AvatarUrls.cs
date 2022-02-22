@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Forum.Posts.Models;
+﻿namespace TASVideos.Core.Services;
 
 public record AvatarUrls(string? Avatar, string? MoodBase)
 {

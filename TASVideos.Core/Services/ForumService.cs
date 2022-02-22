@@ -18,6 +18,7 @@ public interface IForumService
 	Task<int> CreatePost(PostCreateDto post);
 	Task<Dictionary<int, DateTime>?> GetTopicsWithActivity(int subforumId);
 	Task<bool> IsTopicLocked(int topicId);
+	Task<AvatarUrls> UserAvatars(int userId);
 }
 
 internal class ForumService : IForumService
@@ -296,5 +297,13 @@ internal class ForumService : IForumService
 	public async Task<bool> IsTopicLocked(int topicId)
 	{
 		return await _db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
+	}
+
+	public async Task<AvatarUrls> UserAvatars(int userId)
+	{
+		return await _db.Users
+			.Where(u => u.Id == userId)
+			.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
+			.SingleAsync();
 	}
 }

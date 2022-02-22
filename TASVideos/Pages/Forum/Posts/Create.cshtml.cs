@@ -108,10 +108,7 @@ public class CreateModel : BaseForumModel
 			.Reverse()
 			.ToListAsync();
 
-		UserAvatars = await _db.Users
-			.Where(u => u.Id == User.GetUserId())
-			.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
-			.SingleAsync();
+		UserAvatars = await _forumService.UserAvatars(User.GetUserId());
 
 		return Page();
 	}
