@@ -22,8 +22,8 @@ internal class SystemCodes
 	public const string Linux = "linux";
 	public const string Lynx = "lynx";
 	public const string Msx = "msx";
-	public const string Ngb = "ngb";
 	public const string N3ds = "3ds";
+	public const string Ngb = "ngb";
 	public const string Nes = "nes";
 	public const string Odyssey2 = "o2";
 	public const string Pce = "pce";
