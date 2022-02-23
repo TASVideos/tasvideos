@@ -75,6 +75,8 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-Vs.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Wswan.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Zxs.bk2" />
+		<EmbeddedResource Include="CtmSampleFiles\2frames.ctm" />
+		<EmbeddedResource Include="CtmSampleFiles\wrongheader.ctm" />
 		<EmbeddedResource Include="DsmSampleFiles\0frames.dsm" />
 		<EmbeddedResource Include="DsmSampleFiles\2frames.dsm" />
 		<EmbeddedResource Include="DsmSampleFiles\negativererecords.dsm" />
