@@ -6,7 +6,7 @@ namespace TASVideos.MovieParsers.Parsers;
 internal class Ctm : ParserBase, IParser
 {
 	private const decimal FrameRate = 59.83122493939037M;
-	private const int CycleRate = 234;
+	private const int InputRate = 234; // Rate at which inputs are polled per second
 	public override string FileExtension => "ctm";
 
 	public async Task<IParseResult> Parse(Stream file)
@@ -31,8 +31,7 @@ internal class Ctm : ParserBase, IParser
 		br.ReadUInt64(); // Movie ID
 		br.ReadChars(32); // Author
 		result.RerecordCount = br.ReadInt32();
-		result.CycleCount = br.ReadInt64();
-		result.Frames = (int)Math.Ceiling((decimal)result.CycleCount / CycleRate * FrameRate);
+		result.Frames = (int)Math.Ceiling((decimal)br.ReadUInt64() / InputRate * FrameRate);
 
 		return await Task.FromResult(result);
 	}
