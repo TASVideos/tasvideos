@@ -5,7 +5,7 @@ namespace TASVideos.MovieParsers.Parsers;
 [FileExtension("ctm")]
 internal class Ctm : ParserBase, IParser
 {
-	private const decimal FrameRate = 59.83122493939037M;
+	private const decimal FrameRate = 268111856.0M / 4481136.0M; // shorturl.at/fgxH6
 	private const int InputRate = 234; // Rate at which inputs are polled per second
 	public override string FileExtension => "ctm";
 
