@@ -71,11 +71,7 @@ public class ListModel : BasePageModel
 		var items = await _db.Games
 			.ForSystem(systemId)
 			.OrderBy(g => g.DisplayName)
-			.Select(g => new SelectListItem
-			{
-				Value = g.Id.ToString(),
-				Text = g.DisplayName
-			})
+			.ToDropDown()
 			.ToListAsync();
 
 		if (includeEmpty)

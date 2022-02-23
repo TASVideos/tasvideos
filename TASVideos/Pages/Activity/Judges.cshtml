@@ -4,9 +4,9 @@
 
 @{
 	var total = Model.Submissions.Count;
-	var acceptedTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Published
-		|| s.Status == SubmissionStatus.Accepted
-		|| s.Status == SubmissionStatus.PublicationUnderway);
+	var acceptedTotal = Model.Submissions.Count(s => s.Status is SubmissionStatus.Published
+		or SubmissionStatus.Accepted
+		or SubmissionStatus.PublicationUnderway);
 	var rejectedTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Rejected);
 	var cancelledTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Cancelled);
 }
