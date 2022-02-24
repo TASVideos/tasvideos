@@ -89,6 +89,10 @@ internal class Bk2 : ParserBase, IParser
 				platform = SystemCodes.Arcade;
 				result.FrameRateOverride = 60.0988138974405;
 			}
+			else if (header.GetValueFor(Keys.ModeDsi).ToBool())
+			{
+				platform = SystemCodes.Dsi;
+			}
 
 			result.SystemCode = platform;
 
@@ -174,6 +178,7 @@ internal class Bk2 : ParserBase, IParser
 		public const string StartsFromSavestate = "startsfromsavestate";
 		public const string Mode32X = "is32x";
 		public const string ModeCgb = "iscgbmode";
+		public const string ModeDsi = "isdsi";
 		public const string ModeSegaCd = "issegacdmode";
 		public const string ModeGg = "isggmode";
 		public const string ModeSg = "issgmode";
