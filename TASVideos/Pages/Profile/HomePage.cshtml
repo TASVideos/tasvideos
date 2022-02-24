@@ -11,8 +11,8 @@
 @if (ViewData.UserHas(PermissionTo.EditHomePage))
 {
 	<div class="text-center">
-		<a class="btn btn-primary" asp-page="/Wiki/Edit" asp-route-path="@homePage"><i class="fa fa-pencil"></i> Edit</a>
 		<a class="btn btn-secondary" href="/@homePage"><i class="fa fa-eye"></i> Full View</a>
+		<a class="btn btn-primary" asp-page="/Wiki/Edit" asp-route-path="@homePage"><i class="fa fa-pencil"></i> Edit</a>
 	</div>
 }
 else

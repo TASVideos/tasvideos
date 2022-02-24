@@ -177,11 +177,11 @@ h4 {
 }
 
 .breadcrumb-item {
-	white-space: nowrap;
 	font-size: 1.25em;
 	line-height: 1.25em;
 
 	&.active {
 		color: var(--bs-body-color);
+		flex-grow: 1;
 	}
 }
