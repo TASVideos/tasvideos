@@ -3,17 +3,7 @@
 </small>
 <info-alert id="forum-header" class="d-none">
 	<button id="forum-header-dismiss" type="button" class="btn-close float-end" aria-label="close"></button>
-	Welcome, this is the discussion board of TASVideos.
-	Please do not fill the forums with movie requests. Enjoy your stay.
-	<br/>
-	<br/>
-	If you have a question, please read the <a href="/FAQ">Site FAQ</a> first to see if your question has already been answered.
-	<br/>
-	Be sure your posts conform to <a href="/SiteRules">Site Rules</a>
-	<br/>
-	<small>
-		We also have a <a href="https://discordapp.com/invite/GySG2b6">Discord server</a> and an IRC channel <a href="https://kiwiirc.com/nextclient/irc.libera.chat:+6697/#tasvideos">#tasvideos at irc.libera.chat...</a>
-	</small>
+	@await Component.RenderWiki("System/ForumHeader")
 	<script>
 		{
 			let forumHeader = document.getElementById("forum-header");
