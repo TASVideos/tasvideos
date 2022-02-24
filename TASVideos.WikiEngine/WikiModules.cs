@@ -23,7 +23,7 @@ public static class WikiModules
 	public const string MovieChangeLog = "moviechangelog";
 	public const string MovieMaintenanceLog = "moviemaintlog";
 	public const string MoviesByAuthor = "moviesbyplayer";
-	public const string MoviesByCategory = "moviesbycategory";
+	public const string PublicationsByTag = "publicationsbytag";
 	public const string MoviesGameList = "moviesgamelist";
 	public const string MoviesList = "movieslist";
 	public const string MovieStatistics = "moviestatistics";

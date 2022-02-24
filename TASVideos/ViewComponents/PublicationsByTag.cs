@@ -4,7 +4,7 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents;
 
-[WikiModule(WikiModules.MoviesByCategory)]
+[WikiModule(WikiModules.PublicationsByTag)]
 public class PublicationsByTag : ViewComponent
 {
 	private readonly ITagService _tags;
