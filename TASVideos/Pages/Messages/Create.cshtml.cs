@@ -41,7 +41,7 @@ public class CreateModel : BasePageModel
 	[BindProperty]
 	[Required]
 	[Display(Name = "Message Body")]
-	[StringLength(1000, MinimumLength = 5)]
+	[StringLength(10000, MinimumLength = 5)]
 	public string Text { get; set; } = "";
 
 	[BindProperty]
