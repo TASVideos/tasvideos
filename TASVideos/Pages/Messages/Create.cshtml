@@ -31,6 +31,9 @@
 			<span asp-validation-for="ToUser" class="text-danger"></span>
 		</form-group>
 	</row>
+	<fullrow>
+		<partial name="Forum/_CreatePostHelper" model="@("Text")" />
+	</fullrow>
 	<row>
 		<form-group class="col-12">
 			<label asp-for="Text" class="form-control-label"></label>
