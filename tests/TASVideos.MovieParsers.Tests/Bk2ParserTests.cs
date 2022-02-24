@@ -104,6 +104,7 @@ public class Bk2ParserTests : BaseParserTests
 	[DataRow("System-Genesis.bk2", SystemCodes.Genesis)]
 	[DataRow("System-Nds.bk2", SystemCodes.Ds)]
 	[DataRow("System-Ndsi.bk2", SystemCodes.Dsi)]
+	[DataRow("System-Msx.bk2", SystemCodes.Msx)]
 	[DataRow("System-Ngb.bk2", SystemCodes.Ngb)]
 	[DataRow("System-SegaCd.bk2", SystemCodes.SegaCd)]
 	[DataRow("System-32x.bk2", SystemCodes.X32)]

@@ -7,7 +7,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Bk2SampleFiles\System-Msx.bk2" />
 	  <None Remove="Bk2SampleFiles\System-Nds.bk2" />
+	  <None Remove="Bk2SampleFiles\System-Ndsi.bk2" />
 	  <None Remove="FbmSampleFiles\savestate.fbm" />
 	</ItemGroup>
 
@@ -53,8 +55,10 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-Gg.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Intellivision.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Lynx.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Msx.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-N64.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Nds.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Ndsi.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Nes.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Ngb.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-O2.bk2" />
