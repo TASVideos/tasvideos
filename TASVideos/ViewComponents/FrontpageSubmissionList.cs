@@ -17,7 +17,7 @@ public class FrontpageSubmissionList : ViewComponent
 		_db = db;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(int? maxrels)
+	public async Task<IViewComponentResult> InvokeAsync(int? limit)
 	{
 		// Legacy system supported a max days value, which isn't easily translated to the current filtering
 		// However, we currently have it set to 365 which greatly exceeds any max number
@@ -28,7 +28,7 @@ public class FrontpageSubmissionList : ViewComponent
 			.ThatAreActive()
 			.FilterBy(request)
 			.ByMostRecent()
-			.Take(maxrels ?? 5)
+			.Take(limit ?? 5)
 			.ToSubListEntry()
 			.ToListAsync();
 
