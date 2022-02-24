@@ -139,7 +139,7 @@ public class UploadModel : BasePageModel
 				}
 			}
 
-			userFile.Length = Math.Round(userFile.Frames / frameRate);
+			userFile.Length = userFile.Frames / frameRate;
 		}
 
 		var fileBytes = await UserFile.File.ToBytes();
