@@ -65,7 +65,7 @@
 			<div class="float-end">
 				@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 				{
-					<a href="@flag.LinkPath">
+					<a href="/@flag.LinkPath">
 						<img class="ms-1" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
 					</a>
 				}
