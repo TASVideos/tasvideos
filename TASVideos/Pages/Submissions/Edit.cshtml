@@ -11,27 +11,6 @@
 <form method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
 	<row>
-		<div class="col-lg-6">
-			<form-group>
-				<label asp-for="Submission.Status" class="form-control-label"></label>
-				<select class="form-control"
-						asp-for="Submission.Status"
-						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
-			</form-group>
-			<form-group id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
-				<label asp-for="Submission.RejectionReason" class="form-control-label"></label>
-				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
-			</form-group>
-		</div>
-		<div permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)" class="col-lg-6">
-			<form-group>
-				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
-				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
-				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
-			</form-group>
-		</div>
-	</row>
-	<row>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.MovieFile" class="form-control-label"></label>
@@ -88,6 +67,27 @@
 				<label asp-for="Submission.EncodeEmbedLink" class="form-control-label"></label>
 				<input asp-for="Submission.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.EncodeEmbedLink)" />
 				<span asp-validation-for="Submission.EncodeEmbedLink" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.Status" class="form-control-label"></label>
+				<select class="form-control"
+						asp-for="Submission.Status"
+						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
+			</form-group>
+			<form-group id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
+				<label asp-for="Submission.RejectionReason" class="form-control-label"></label>
+				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
+			</form-group>
+		</div>
+		<div permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)" class="col-lg-6">
+			<form-group>
+				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
+				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
+				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>
