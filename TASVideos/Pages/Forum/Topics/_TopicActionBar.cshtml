@@ -20,28 +20,28 @@
 	asp-route-topicId="@Model!.Id"
 	class="btn btn-sm btn-warning"
 	title="Set the type of this topic (Normal/Sticky/Announcement)">
-	<i class="fa fa-bullhorn"></i>
+	<i class="fa fa-bullhorn"></i> Set Type
 </a>
 <a permission="MoveTopics"
    asp-page="Move"
    asp-route-id="@Model!.Id"
    class="btn btn-sm btn-warning"
    title="Move this topic">
-	<i class="fa fa-arrows"></i>
+	<i class="fa fa-arrows"></i> Move
 </a>
 <a permission="SplitTopics"
 	asp-page="Split"
 	asp-route-id="@Model!.Id"
 	class="btn btn-sm btn-warning"
 	title="Split this topic">
-	<i class="fa fa-scissors"></i>
+	<i class="fa fa-scissors"></i> Split
 </a>
 <a permission="MergeTopics"
 	asp-page="Merge"
 	asp-route-id="@Model!.Id"
 	class="btn btn-sm btn-warning"
 	title="Merge this topic into an existing topic">
-	<i class="fa fa-object-group"></i>
+	<i class="fa fa-object-group"></i> Merge
 </a>
 <form permission="LockTopics"
 	asp-page="Index"
@@ -53,10 +53,10 @@
 	style="display: inline">
 	<button type="submit" class="btn @(Model!.IsLocked ? "btn-success" : "btn-warning") btn-sm">
 		<span condition="Model.IsLocked" title="Unlock this topic">
-			<i class="fa fa-unlock"></i>
+			<i class="fa fa-unlock"></i> Unlock
 		</span>
 		<span condition="!Model.IsLocked" title="Lock this topic">
-			<i class="fa fa-lock"></i>
+			<i class="fa fa-lock"></i> Lock
 		</span>
 	</button>
 </form>
@@ -64,6 +64,6 @@
 	asp-page="AddEditPoll"
 	asp-route-topicId="@Model!.Id"
 	class="btn btn-warning btn-sm"
-	title= "Add a poll to this topic">
-	Poll
+	title="Add a poll to this topic">
+	<i class="fa fa-list-ul"></i> Poll
 </a>
