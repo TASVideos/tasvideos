@@ -1,0 +1,29 @@
+.diff {
+	display: grid;
+	font-family: monospace;
+
+	.add {
+		background-color: #dfd;
+	}
+	.delete {
+		background-color: #fcc;
+		text-decoration: line-through;
+	}
+
+	.line {
+		background-color: white;
+	}
+
+	.linenumber {
+		font-weight: bold;
+		padding: 0 0.5em;
+	}
+
+	&.inline {
+		grid-template-columns: auto auto 1fr;
+	}
+
+	&.sidebyside {
+		grid-template-columns: auto 1fr auto 1fr;
+	}
+}
