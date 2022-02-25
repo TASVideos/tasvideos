@@ -27,6 +27,8 @@ public class ListLanguages : ViewComponent
 		}
 
 		string pageName = pageData.PageName;
+		var languages = new List<LanguageEntry>();
+
 		if (isTranslation)
 		{
 			// Actual translation pages should be nested from the language page
@@ -36,16 +38,24 @@ public class ListLanguages : ViewComponent
 			}
 
 			pageName = string.Join("", pageName.Split('/').Skip(1));
+
+			// Translations should also include the original link to the English version
+			languages.Add(new LanguageEntry
+			{
+				LanguageCode = "EN",
+				LanguageDisplayName = "English",
+				Path = pageName
+			});
 		}
 
-		var languages = (await _languages.AvailableLanguages())
+		languages.AddRange((await _languages.AvailableLanguages())
 			.Select(l => new LanguageEntry
 			{
 				LanguageCode = l.Code,
 				LanguageDisplayName = l.DisplayName,
 				Path = l.Code + "/" + pageName
 			})
-			.ToList();
+			.ToList());
 
 		if (!languages.Any())
 		{
