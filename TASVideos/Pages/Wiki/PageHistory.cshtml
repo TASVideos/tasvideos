@@ -134,7 +134,12 @@
 			newTxt = document.getElementById("right-revision").value,
 			diffOutputDiv = diffView;
 
-		renderDiff({ text: base }, { text: newTxt }, diffOutputDiv, !!viewType);
+		renderDiff(
+			{ text: base, name: `r${fromRevision}` },
+			{ text: newTxt, name: `r${toRevision}` },
+			diffOutputDiv,
+			!!viewType
+		);
 	}
 </script>
 

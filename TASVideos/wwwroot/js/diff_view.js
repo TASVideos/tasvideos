@@ -29,6 +29,16 @@ function renderDiff(from, to, el, inline) {
 	}
 
 	const results = [];
+	if (inline) {
+		results.push(h("div"), h("div"), h("div", { class: "header" }, `${from.name} ⇒ ${to.name}`));
+	} else {
+		results.push(
+			h("div"),
+			h("div", { class: "header" }, from.name),
+			h("div"),
+			h("div", { class: "header" }, to.name),
+		);
+	}
 
 	class LineCounter {
 		number = 0;

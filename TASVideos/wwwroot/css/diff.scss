@@ -2,12 +2,16 @@
 	display: grid;
 	font-family: monospace;
 
+	.header {
+		font-weight: bold;
+		text-align: center;
+	}
+
 	.add {
 		background-color: #dfd;
 	}
 	.delete {
 		background-color: #fcc;
-		text-decoration: line-through;
 	}
 
 	.line {
