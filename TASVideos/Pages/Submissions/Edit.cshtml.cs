@@ -352,7 +352,7 @@ public class EditModel : BasePageModel
 			await _tasvideosGrue.RejectAndMove(submission.Id);
 		}
 
-		if (!Submission.MinorEdit)
+		if (!Submission.MinorEdit || statusHasChanged) // always publish submission status changes to media
 		{
 			string title;
 			if (statusHasChanged)
