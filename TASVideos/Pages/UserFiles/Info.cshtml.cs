@@ -90,7 +90,7 @@ public class InfoModel : BasePageModel
 		{
 			var res = context.HttpContext.Response;
 
-			res.Headers.Add("Content-Length", _file.LogicalLength.ToString());
+			res.Headers.Add("Content-Length", _file.PhysicalLength.ToString());
 			if (_file.CompressionType == Compression.Gzip)
 			{
 				res.Headers.Add("Content-Encoding", "gzip");
