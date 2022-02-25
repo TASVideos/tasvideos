@@ -120,6 +120,8 @@
 			</form-group>
 		</column>
 	</row>
+	<button id="preview-button" type="button" class="btn btn-secondary"><span class="fa fa-eye"></span> Preview</button>
+	<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.MovieMarkup), "/Wiki/Preview")" />
 	<hr />
 	<fullrow>
 		<two-column-select id-list="Submission.SelectedFlags" available-list="AvailableFlags" />
