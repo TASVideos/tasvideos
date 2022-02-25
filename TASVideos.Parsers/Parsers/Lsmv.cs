@@ -73,11 +73,11 @@ internal class Lsmv : ParserBase, IParser
 						result.Region = RegionType.Pal;
 						break;
 					case "sgb_ntsc":
-						result.SystemCode = SystemCodes.Sgb;
+						result.SystemCode = SystemCodes.GameBoy;
 						result.Region = RegionType.Ntsc;
 						break;
 					case "sgb_pal":
-						result.SystemCode = SystemCodes.Sgb;
+						result.SystemCode = SystemCodes.GameBoy;
 						result.Region = RegionType.Pal;
 						break;
 					case "gdmg":

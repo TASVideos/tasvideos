@@ -72,6 +72,10 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Fds;
 			}
+			else if (header.GetValueFor(Keys.Board) == "SGB")
+			{
+				platform = SystemCodes.GameBoy;
+			}
 			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
 			{
 				platform = SystemCodes.SegaCd;
@@ -157,6 +161,7 @@ internal class Bk2 : ParserBase, IParser
 		["gen"] = SystemCodes.Genesis,
 		["sat"] = SystemCodes.Saturn,
 		["dgb"] = SystemCodes.GameBoy,
+		["sgb"] = SystemCodes.GameBoy,
 		["gb3x"] = SystemCodes.GameBoy,
 		["gb4x"] = SystemCodes.GameBoy,
 		["gbl"] = SystemCodes.GameBoy,
