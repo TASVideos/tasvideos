@@ -1,3 +1,11 @@
+/// <reference path="colors.scss" />
+/// <reference path="variables.scss" />
+:root {
+	--diff-replace: #{$diff-replace};
+	--diff-delete: #{$diff-delete};
+	--diff-insert: #{$diff-insert};
+}
+
 .diff {
 	display: grid;
 	font-family: monospace;
@@ -8,14 +16,14 @@
 	}
 
 	.add {
-		background-color: #dfd;
+		background-color: var(--diff-insert);
 	}
 	.delete {
-		background-color: #fcc;
+		background-color: var(--diff-delete);
 	}
 
 	.line {
-		background-color: white;
+		background-color: var(--tab-content-bg);
 	}
 
 	.linenumber {
