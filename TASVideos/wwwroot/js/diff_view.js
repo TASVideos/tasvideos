@@ -6,7 +6,6 @@ function renderDiff(from, to, el, inline) {
 	const d = dmp.diff_main(from.text, to.text);
 	dmp.diff_cleanupEfficiency(d);
 
-
 	function h(tag, ...args) {
 		const e = document.createElement(tag);
 		function processChildren(children) {
@@ -30,7 +29,7 @@ function renderDiff(from, to, el, inline) {
 
 	const results = [];
 	if (inline) {
-		results.push(h("div"), h("div"), h("div", { class: "header" }, `${from.name} ⇒ ${to.name}`));
+		results.push(h("div"), h("div"), h("div", { class: "header" }, from.name + "⇒" + to.name));
 	} else {
 		results.push(
 			h("div"),
@@ -108,7 +107,7 @@ function renderDiff(from, to, el, inline) {
 				} else {
 					return [
 						h("div"),
-						h("div"/*, { class: "line" } */),
+						h("div"),
 					];
 				}
 			}
@@ -123,8 +122,6 @@ function renderDiff(from, to, el, inline) {
 		for (const { 0: type, 1: text } of d) {
 			const clazz = type > 0 ? "add" : type < 0 ? "delete" : "keep";
 			const parts = text.split("\n");
-			// if (type <= 0) { oldl.start(); }
-			// if (type >= 0) { newl.start(); }
 			let first = true;
 			for (const part of parts) {
 				if (first) {
