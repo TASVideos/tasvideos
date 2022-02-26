@@ -45,7 +45,6 @@
 		let topicModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationTopicId)');
 
 		forumModel.onchange = function () {
-			console.log('forum changed');
 			const xmlhttp = new XMLHttpRequest();
 			xmlhttp.onreadystatechange = function() {
 				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
