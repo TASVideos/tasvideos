@@ -45,17 +45,8 @@
 		let topicModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationTopicId)');
 
 		forumModel.onchange = function () {
-			const xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-					if (xmlhttp.status === 200) {
-						topicModel.innerHTML = xmlhttp.responseText;
-					}
-				}
-			};
-
-			xmlhttp.open("GET", "/Forum/Topics/Merge/@(Model.Id)?handler=TopicsForForum&forumId=" + this.value, true);
-			xmlhttp.send();
+			const url = "/Forum/Topics/Merge/@(Model.Id)?handler=TopicsForForum&forumId=" + this.value;
+			fetch(url).then(r => r.text()).then(t => topicModel.innerHTML = t);
 		}
 	}
 </script>
