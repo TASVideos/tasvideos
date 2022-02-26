@@ -61,7 +61,7 @@
 	<partial name="_ValidationScriptsPartial" />
 }
 
-	<script>
+<script>
 	{
 		let systemModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)');
 		let frameRateModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemFrameRateId)');
@@ -80,7 +80,7 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp.open("GET", `/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`, true);
 				xmlhttp.send();
 
 				const xmlhttp2 = new XMLHttpRequest();
@@ -92,7 +92,7 @@
 					}
 				};
 
-				xmlhttp2.open("GET", "/Games/List/FrameRateDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
+				xmlhttp2.open("GET", `/Games/List/FrameRateDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`, true);
 				xmlhttp2.send();
 			} else {
 				Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option'))
@@ -126,7 +126,7 @@
 					}
 				};
 
-				xmlhttp.open("GET", "/Games/List/RomDropDownForGame?includeEmpty=true&gameId=" + gameModel.value, true);
+				xmlhttp.open("GET", `/Games/List/RomDropDownForGame?includeEmpty=true&gameId=${gameModel.value}`, true);
 				xmlhttp.send();
 			} else {
 				createRomBtn.setAttribute('disabled', 'disabled');
@@ -140,12 +140,12 @@
 
 		document.getElementById('create-rom').onclick = function () {
 			const gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
-			document.location = '/Games/' + gameId + '/Roms/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()';
+			document.location = `/Games/${gameId}/Roms/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()`;
 		}
 
 		document.getElementById('create-game').onclick = function () {
 			const systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
-			document.location = '/Games/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()&systemId=' + systemId;
+			document.location = `/Games/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()&systemId=${systemId}`;
 		}
 	}
 	</script>

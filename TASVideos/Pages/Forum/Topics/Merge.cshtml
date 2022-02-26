@@ -45,7 +45,7 @@
 		let topicModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationTopicId)');
 
 		forumModel.onchange = function () {
-			const url = "/Forum/Topics/Merge/@(Model.Id)?handler=TopicsForForum&forumId=" + this.value;
+			const url = `/Forum/Topics/Merge/@(Model.Id)?handler=TopicsForForum&forumId=${this.value}`;
 			fetch(url).then(r => r.text()).then(t => topicModel.innerHTML = t);
 		}
 	}

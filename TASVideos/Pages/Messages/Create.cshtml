@@ -55,7 +55,7 @@
 		let searchBox = document.getElementById('@Html.IdFor(m => m.ToUser)');
 		searchBox.onkeyup = function () {
 			const searchVal = searchBox.value.trim();
-			const dataListId = 'search-username-list-' + searchVal;
+			const dataListId = `search-username-list-${searchVal}`;
 			if (searchVal.length > 2) {
 				const existingList = document.getElementById(dataListId);
 				if (existingList) {
@@ -89,7 +89,7 @@
 				};
 
 				xmlhttp.open("GET",
-					"/Users/List/Search?partial=" + searchVal,
+					`/Users/List/Search?partial=${searchVal}`,
 					true);
 				xmlhttp.send();
 			}
@@ -98,7 +98,7 @@
 		if (document.getElementById('quote-btn')) {
 			document.getElementById('quote-btn').onclick = function () {
 				const text = document.getElementById('replying-to-text').innerHTML;
-				document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = '[quote]' + text + '[/quote]';
+				document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = `[quote]${text}[/quote]`;
 			};
 		}
 	}

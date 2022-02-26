@@ -47,7 +47,7 @@
 		<script condition="canVote">
 			Array.from(document.querySelectorAll('[name="ordinal"]'))
 				.forEach(element => {
-                    element.addEventListener('change', () => {
+					element.addEventListener('change', () => {
 						document.getElementById('vote-btn').removeAttribute('hidden');
 					});
 				});

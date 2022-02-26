@@ -97,10 +97,10 @@
 		}
 
 		function syncAssignablePerms() {
-			const selectedPerms = Array.from(document.querySelectorAll('#' + selectedPermissionsListId + ' option'));
+			const selectedPerms = Array.from(document.querySelectorAll(`#${selectedPermissionsListId} option`));
 
-			const aggregatedAssignablePerms = Array.from(document.querySelectorAll('#' + availableAssignableListId + ' option'))
-				.concat(Array.from(document.querySelectorAll('#' + selectedAssignableListId + ' option')));
+			const aggregatedAssignablePerms = Array.from(document.querySelectorAll(`#${availableAssignableListId} option`))
+				.concat(Array.from(document.querySelectorAll(`#${selectedAssignableListId} option`)));
 
 			const addedPerms = selectedPerms.filter(element =>
 				!(aggregatedAssignablePerms.map(e => e.value).includes(element.value))
@@ -118,7 +118,7 @@
 			);
 
 			removedPerms.forEach(function(elem) {
-				const id = document.querySelector('[name="' + selectedAssignablePermissionsModelId + '"][v="' + elem.value + '"]');
+				const id = document.querySelector(`[name="${selectedAssignablePermissionsModelId}"][v="${elem.value}"]`);
 				if (id) {
 					id.remove();
 				}
@@ -135,7 +135,7 @@
 		}
 
 		function showRolesCurrentlyAssignable() {
-			const selector = '[name="' + selectedAssignablePermissionsModelId + '"]';
+			const selector = `[name="${selectedAssignablePermissionsModelId}"]`;
 			const permissions = Array.from(document.querySelectorAll(selector)).map(element => element.value);
 
 			if (permissions.length > 0) {
@@ -156,12 +156,12 @@
 				let getStr = '';
 				for (const i in permissions) {
 					if (permissions.hasOwnProperty(i)) {
-						getStr += 'ids=' + permissions[i] + '&';
+						getStr += `ids=${permissions[i]}&`;
 					}
 				}
 
 				getStr = getStr.slice(0, -1);
-				getStr = "/Roles/AddEdit/" + "@(Model.Id)" + "?handler=RolesThatCanBeAssignedBy&" + getStr;
+				getStr = `/Roles/AddEdit/@(Model.Id)?handler=RolesThatCanBeAssignedBy&${getStr}`;
 				xmlhttp.open("GET", getStr, true);
 				xmlhttp.send();
 			} else {

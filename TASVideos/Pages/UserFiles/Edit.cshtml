@@ -69,7 +69,7 @@
 				}
 			};
 
-			xmlhttp.open("GET", "/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=" + systemModel.value, true);
+			xmlhttp.open("GET", `/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`, true);
 			xmlhttp.send();
 		} else {
 			Array.from(document.querySelectorAll('#@Html.IdFor(m => m.UserFile.GameId) option'))

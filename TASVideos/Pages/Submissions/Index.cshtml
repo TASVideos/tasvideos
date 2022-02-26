@@ -43,7 +43,7 @@
 					let searchBox = document.getElementById('@Html.IdFor(m => m.Search.User)');
 					searchBox.onkeyup = function () {
 						const searchVal = searchBox.value.trim();
-						const dataListId = '@Html.IdFor(m => m.Search.User)-autocomplete-' + searchVal;
+						const dataListId = `@Html.IdFor(m => m.Search.User)-autocomplete-${searchVal}`;
 						if (searchVal.length > 2) {
 							const existingList = document.getElementById(dataListId);
 							if (existingList) {
@@ -77,7 +77,7 @@
 							};
 
 							xmlhttp.open("GET",
-								"/Subs-List?partial=" + searchVal + "&handler=SearchAuthor",
+								`/Subs-List?partial=${searchVal}&handler=SearchAuthor`,
 								true);
 							xmlhttp.send();
 						}
