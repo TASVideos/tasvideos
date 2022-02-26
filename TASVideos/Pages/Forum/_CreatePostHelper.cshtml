@@ -52,7 +52,7 @@
 	<small><a href="/ForumMarkup" target="_blank">Forum Markup Usage</a></small>
 </div>
 <script>
-	document.addEventListener("DOMContentLoaded", function installButtonEvents() {
+	document.addEventListener("DOMContentLoaded", function() {
 		const buttons = document.querySelectorAll("button[data-fmt]");
 		const textArea = document.getElementById('@Model');
 
@@ -75,7 +75,7 @@
 		}
 
 		for (let i = 0; i < buttons.length; i++) {
-			buttons[i].addEventListener("click", function listener() {
+			buttons[i].addEventListener("click", function() {
 				applyFormatting(this.getAttribute("data-fmt"));
 				textArea.focus();
 			});
@@ -84,11 +84,11 @@
 		textArea.addEventListener("keydown", function listener(ev) {
 			let button;
 			if (ev.altKey) {
-				button = document.querySelector("button[data-fmt][data-akey='" + ev.key + "']");
+				button = document.querySelector(`button[data-fmt][data-akey='${ev.key}']`);
 			} else if (ev.ctrlKey && ev.shiftKey) {
-				button = document.querySelector("button[data-fmt][data-skey='" + ev.key + "']");
+				button = document.querySelector(`button[data-fmt][data-skey='${ev.key}']`);
 			} else if (ev.ctrlKey) {
-				button = document.querySelector("button[data-fmt][data-key='" + ev.key + "']");
+				button = document.querySelector(`button[data-fmt][data-key='${ev.key}']`);
 			}
 
 			if (button) {
