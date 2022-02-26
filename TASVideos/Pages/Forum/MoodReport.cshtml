@@ -18,7 +18,7 @@
 				<div class="mood-box border p-2">
 					<strong>@mood.EnumDisplayName()</strong>
 					<br />
-					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="imgError(this)" loading="lazy" />
+					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="this.src = '/images/empty.png'" loading="lazy" />
 				</div>
 			}
 		</cardbody>
@@ -33,11 +33,3 @@
 		min-width: 100px;
 	}
 </style>
-
-<script>
-	function imgError(image) {
-		image.onerror = "";
-		image.src = "/images/empty.png";
-		return true;
-	}
-</script>
