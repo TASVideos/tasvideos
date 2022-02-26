@@ -4,6 +4,7 @@ using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Account;
 
+[IpBanCheck]
 public class ResetPasswordModel : BasePageModel
 {
 	private readonly UserManager _userManager;

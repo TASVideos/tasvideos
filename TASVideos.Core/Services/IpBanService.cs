@@ -69,18 +69,21 @@ internal class IpBanService : IIpBanService
 
 	private async ValueTask<IEnumerable<IPAddressRange>> BannedIps()
 	{
-		if (_cache.TryGetValue(IpBanList, out IEnumerable<IPAddressRange> list))
+		if (_cache.TryGetValue(IpBanList, out List<IpBan> list))
 		{
-			return list;
+			return list.Select(r => ToAddressRange(r.Mask))
+				.Where(i => i is not null)
+				.ToList()!;
 		}
 
 		var rawIps = await _db.IpBans.ToListAsync();
+		_cache.Set(IpBanList, rawIps);
+
 		var parsed = rawIps
 			.Select(r => ToAddressRange(r.Mask))
 			.Where(i => i is not null)
 			.ToList();
 
-		_cache.Set(IpBanList, parsed);
 		return parsed!;
 	}
 
