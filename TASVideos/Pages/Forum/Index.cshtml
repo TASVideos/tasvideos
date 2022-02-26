@@ -33,9 +33,9 @@
 	let currentTime = Math.floor(Date.now() / 1000);
 	{
 		let visitedTopics = localStorage.getItem('VisitedTopics');
-		if (visitedTopics !== null){
+		if (visitedTopics) {
 			visitedTopics = JSON.parse(visitedTopics);
-		}else{
+		} else {
 			visitedTopics = {};
 		}
 		let activitySubforums = document.getElementsByClassName('activity-subforum');
@@ -44,7 +44,7 @@
 			let display = false;
 			for (let topicId in activityJson){
 				let lastVisit = visitedTopics[topicId];
-				if (lastVisit === undefined || lastVisit < activityJson[topicId]){
+				if (!lastVisit || lastVisit < activityJson[topicId]){
 					display = true;
 					break;
 				}
