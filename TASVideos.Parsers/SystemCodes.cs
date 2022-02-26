@@ -33,6 +33,7 @@ internal class SystemCodes
 	public const string Saturn = "saturn";
 	public const string SegaCd = "segacd";
 	public const string Sg = "sg1000";
+	public const string Sgb = "sgb";
 	public const string Sgx = "sgx";
 	public const string Sms = "sms";
 	public const string Snes = "snes";

@@ -53,6 +53,11 @@ internal class Bk2 : ParserBase, IParser
 				result.WarnNoRerecords();
 			}
 
+			if (header.GetValueFor(Keys.Pal).ToBool())
+			{
+				result.Region = RegionType.Pal;
+			}
+
 			// Some biz system ids do not match tasvideos, convert if needed
 			if (BizToTasvideosSystemIds.ContainsKey(platform))
 			{
@@ -72,9 +77,21 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Fds;
 			}
-			else if (header.GetValueFor(Keys.Board) == "SGB")
+			else if (header.GetValueFor(Keys.ModeVs).ToBool())
+			{
+				platform = SystemCodes.Arcade;
+				result.FrameRateOverride = FrameRates.Nes;
+			}
+			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
 			{
 				platform = SystemCodes.GameBoy;
+				if (result.Region == RegionType.Pal) {
+					result.FrameRateOverride = FrameRates.SnesPAL;
+				}
+				else
+				{
+					result.FrameRateOverride = FrameRates.Snes;
+				}
 			}
 			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
 			{
@@ -88,22 +105,12 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Sg;
 			}
-			else if (header.GetValueFor(Keys.ModeVs).ToBool())
-			{
-				platform = SystemCodes.Arcade;
-				result.FrameRateOverride = 60.0988138974405;
-			}
 			else if (header.GetValueFor(Keys.ModeDsi).ToBool())
 			{
 				platform = SystemCodes.Dsi;
 			}
 
 			result.SystemCode = platform;
-
-			if (header.GetValueFor(Keys.Pal).ToBool())
-			{
-				result.Region = RegionType.Pal;
-			}
 
 			if (header.GetValueFor(Keys.StartsFromSavestate).ToBool())
 			{

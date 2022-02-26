@@ -75,10 +75,12 @@ internal class Lsmv : ParserBase, IParser
 					case "sgb_ntsc":
 						result.SystemCode = SystemCodes.GameBoy;
 						result.Region = RegionType.Ntsc;
+						result.FrameRateOverride = FrameRates.Snes;
 						break;
 					case "sgb_pal":
 						result.SystemCode = SystemCodes.GameBoy;
 						result.Region = RegionType.Pal;
+						result.FrameRateOverride = FrameRates.SnesPAL;
 						break;
 					case "gdmg":
 						result.SystemCode = SystemCodes.GameBoy;
