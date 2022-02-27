@@ -43,64 +43,20 @@
 	</row>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
-		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+		<button type="submit" disabled class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
 		<a asp-page="Inbox" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>
 
 <partial name="_PreviewWindow" model="@((nameof(Model.Text), "/Forum/Preview"))" />
-
+<script src="/js/user-search.js"></script>
 <script>
-	{
-		let searchBox = document.getElementById('@Html.IdFor(m => m.ToUser)');
-		searchBox.onkeyup = function () {
-			const searchVal = searchBox.value.trim();
-			const dataListId = `search-username-list-${searchVal}`;
-			if (searchVal.length > 2) {
-				const existingList = document.getElementById(dataListId);
-				if (existingList) {
-					searchBox.setAttribute('list', dataListId);
-					return;
-				}
-
-				const xmlhttp = new XMLHttpRequest();
-
-				xmlhttp.onreadystatechange = function() {
-					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-						if (xmlhttp.status === 200) {
-							const newSearchList = document.createElement('datalist');
-							newSearchList.id = dataListId;
-
-							const data = JSON.parse(xmlhttp.responseText);
-
-							for (const i in data) {
-								if (data.hasOwnProperty(i)) {
-									const option = document.createElement('option');
-									option.innerHTML = data[i];
-
-									newSearchList.appendChild(option);
-								}
-							}
-
-							document.getElementById("create-form").appendChild(newSearchList);
-							searchBox.setAttribute('list', dataListId);
-						}
-					}
-				};
-
-				xmlhttp.open("GET",
-					`/Users/List/Search?partial=${searchVal}`,
-					true);
-				xmlhttp.send();
-			}
+	searchUsers("@Html.IdFor(m => m.ToUser)");
+	if (document.getElementById('quote-btn')) {
+		document.getElementById('quote-btn').onclick = function () {
+			const text = document.getElementById('replying-to-text').innerHTML;
+			document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = `[quote]${text}[/quote]`;
 		};
-
-		if (document.getElementById('quote-btn')) {
-			document.getElementById('quote-btn').onclick = function () {
-				const text = document.getElementById('replying-to-text').innerHTML;
-				document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = `[quote]${text}[/quote]`;
-			};
-		}
 	}
 </script>
 @section Scripts {
