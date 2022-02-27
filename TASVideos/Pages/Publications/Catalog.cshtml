@@ -26,7 +26,7 @@
 				<row>
 					<div class="col-10">
 						<select asp-for="Catalog.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
-						<span asp-validation-for="AvailableGames" class="text-danger"></span>
+						<span asp-validation-for="Catalog.GameId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
 						<button id="create-game" type="button" class="btn btn-primary">New</button>
@@ -60,91 +60,13 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/catalog.js"></script>
+	<script>
+		enableCataloging(
+			"@Html.IdFor(m => m.Catalog.SystemId)",
+			"@Html.IdFor(m => m.Catalog.SystemFrameRateId)",
+			"@Html.IdFor(m => m.Catalog.GameId)",
+			"@Html.IdFor(m => m.Catalog.RomId)",
+			"@HttpContext.CurrentPathToReturnUrl()");
+	</script>
 }
-
-<script>
-	{
-		let systemModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)');
-		let frameRateModel = document.getElementById('@Html.IdFor(m => m.Catalog.SystemFrameRateId)');
-		let gameModel = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)');
-		let romModel = document.getElementById('@Html.IdFor(m => m.Catalog.RomId)');
-		let createRomBtn = document.getElementById('create-rom');
-
-		systemModel.onchange = function() {
-			if (this.value) {
-				const xmlhttp = new XMLHttpRequest();
-				xmlhttp.onreadystatechange = function() {
-					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-						if (xmlhttp.status === 200) {
-							gameModel.innerHTML = xmlhttp.responseText;
-						}
-					}
-				};
-
-				xmlhttp.open("GET", `/Games/List/GameDropDownForSystem?includeEmpty=false&systemId=${systemModel.value}`, true);
-				xmlhttp.send();
-
-				const xmlhttp2 = new XMLHttpRequest();
-				xmlhttp2.onreadystatechange = function() {
-					if (xmlhttp2.readyState === XMLHttpRequest.DONE) {
-						if (xmlhttp2.status === 200) {
-							frameRateModel.innerHTML = xmlhttp2.responseText;
-						}
-					}
-				};
-
-				xmlhttp2.open("GET", `/Games/List/FrameRateDropDownForSystem?includeEmpty=false&systemId=${systemModel.value}`, true);
-				xmlhttp2.send();
-			} else {
-				Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.GameId) option'))
-					.forEach(element => {
-						if (element.value) element.remove();
-					});
-
-				Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.SystemFrameRateId) option'))
-					.forEach(element => {
-						if (element.value) element.remove();
-					});
-			}
-
-			Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option'))
-				.forEach(element => {
-					if (element.value) element.remove();
-				});
-		}
-
-		gameModel.onchange = function () {
-			if (this.value) {
-				createRomBtn.removeAttribute('disabled');
-
-				const xmlhttp = new XMLHttpRequest();
-				xmlhttp.onreadystatechange = function() {
-					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-						if (xmlhttp.status === 200) {
-							romModel.innerHTML = xmlhttp.responseText;
-						}
-					}
-				};
-
-				xmlhttp.open("GET", `/Games/List/RomDropDownForGame?includeEmpty=false&gameId=${gameModel.value}`, true);
-				xmlhttp.send();
-			} else {
-				createRomBtn.setAttribute('disabled', 'disabled');
-				Array.from(document.querySelectorAll('#@Html.IdFor(m => m.Catalog.RomId) option'))
-					.forEach(element => {
-						if (element.value) element.remove();
-					});
-			}
-		}
-
-		document.getElementById('create-rom').onclick = function () {
-			const gameId = document.getElementById('@Html.IdFor(m => m.Catalog.GameId)').value;
-			document.location = `/Games/${gameId}/Roms/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()`;
-		}
-
-		document.getElementById('create-game').onclick = function () {
-			const systemId = document.getElementById('@Html.IdFor(m => m.Catalog.SystemId)').value;
-			document.location = `/Games/Edit?returnUrl=@HttpContext.CurrentPathToReturnUrl()&systemId=${systemId}`;
-		}
-	}
-</script>
