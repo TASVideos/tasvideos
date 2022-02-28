@@ -13,6 +13,15 @@ function scrollToTop() {
 	});
 }
 
+function clearDropdown(elemId) {
+	Array.from(document.querySelectorAll(`#${elemId} option`))
+		.forEach(element => {
+			if (element.value) {
+				element.remove();
+			}
+		});
+}
+
 window.addEventListener("scroll", showHideScrollToTop);
 document.getElementById("button-scrolltop").addEventListener("click", scrollToTop);
 

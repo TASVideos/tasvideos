@@ -46,13 +46,4 @@
 	document.getElementById('create-game').onclick = function () {
 		document.location = `/Games/Edit?returnUrl=${returnUrl}&systemId=${systemElemId.value}`;
 	}
-
-	function clearDropdown(elemId) {
-		Array.from(document.querySelectorAll(`#${elemId} option`))
-			.forEach(element => {
-				if (element.value) {
-					element.remove();
-				}
-			});
-	}
 }
