@@ -54,32 +54,12 @@
 	</fullrow>
 </form>
 
-<script>
-	let systemModel = document.getElementById('@Html.IdFor(m => m.UserFile.SystemId)');
-	let gameModel = document.getElementById('@Html.IdFor(m => m.UserFile.GameId)');
-
-	systemModel.onchange = function() {
-		if (this.value) {
-			const xmlhttp = new XMLHttpRequest();
-			xmlhttp.onreadystatechange = function() {
-				if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-					if (xmlhttp.status === 200) {
-						gameModel.innerHTML = xmlhttp.responseText;
-					}
-				}
-			};
-
-			xmlhttp.open("GET", `/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`, true);
-			xmlhttp.send();
-		} else {
-			Array.from(document.querySelectorAll('#@Html.IdFor(m => m.UserFile.GameId) option'))
-				.forEach(element => {
-					if (element.value) element.remove();
-				});
-		}
-	}
-</script>
-
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/userfile.js"></script>
+	<script>
+		const gameId = "@Html.IdFor(m => m.UserFile.GameId)";
+		const systemId = "@Html.IdFor(m => m.UserFile.SystemId)";
+		enableUserFile(gameId, systemId);
+	</script>
 }

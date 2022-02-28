@@ -55,22 +55,12 @@
 	</fullrow>
 </form>
 
-<script>
-	const gameId = "@Html.IdFor(m => m.UserFile.GameId)";
-	let systemModel = document.getElementById('@Html.IdFor(m => m.UserFile.SystemId)');
-	let gameModel = document.getElementById(gameId);
-
-	systemModel.onchange = function() {
-		if (this.value) {
-			window.fetch(`/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`)
-				.then(r => r.text())
-				.then(d => gameModel.innerHTML = d);
-		} else {
-			clearDropdown(gameId);
-		}
-	}
-</script>
-
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/userfile.js"></script>
+	<script>
+		const gameId = "@Html.IdFor(m => m.UserFile.GameId)";
+		const systemId = "@Html.IdFor(m => m.UserFile.SystemId)";
+		enableUserFile(gameId, systemId);
+	</script>
 }
