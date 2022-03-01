@@ -28,9 +28,12 @@
 
 					formElem.appendChild(newSearchList);
 					searchBoxElem.setAttribute("list", dataListId);
-					submitBtnElem.removeAttribute("disabled");
+
+					if (submitBtnElem) {
+						submitBtnElem.removeAttribute("disabled");
+					}
 				});
-		} else {
+		} else if (submitBtnElem) {
 			submitBtnElem.setAttribute("disabled", "disabled");
 		}
 	}
