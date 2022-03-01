@@ -12,12 +12,12 @@
 
 	systemModel.onchange = function () {
 		if (this.value) {
-			window.fetch(`/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`)
+			fetch(`/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`)
 				.then(handleFetchErrors)
 				.then(r => r.text())
 				.then(t => gameModel.innerHTML = t);
 
-			window.fetch(`/Games/List/FrameRateDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`)
+			fetch(`/Games/List/FrameRateDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`)
 				.then(handleFetchErrors)
 				.then(r => r.text())
 				.then(t => frameRateModel.innerHTML = t);
@@ -32,7 +32,7 @@
 	gameModel.onchange = function () {
 		if (this.value) {
 			createRomBtn.removeAttribute('disabled');
-			window.fetch(`/Games/List/RomDropDownForGame?includeEmpty=true&gameId=${gameModel.value}`)
+			fetch(`/Games/List/RomDropDownForGame?includeEmpty=true&gameId=${gameModel.value}`)
 				.then(handleFetchErrors)
 				.then(r => r.text())
 				.then(t => romModel.innerHTML = t);

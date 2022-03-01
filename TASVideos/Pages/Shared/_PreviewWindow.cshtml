@@ -15,7 +15,7 @@
 		const markup = document.getElementById('@Model.ElementId').value;
 		document.getElementById('preview-container').classList.remove('d-none');
 
-		window.fetch("@Model.PreviewPath", { method: 'POST', body: markup})
+		fetch("@Model.PreviewPath", { method: 'POST', body: markup})
 			.then(r => {
 				if (!r.ok) {
 					alert("Could not generate preview");
