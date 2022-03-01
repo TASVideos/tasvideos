@@ -7,7 +7,7 @@
 <form method="post">
 	<input type="hidden" asp-for="Rating.Title" />
 	<row>
-		<div class="col-12 text-center text-md-start">
+		<column class="text-center text-md-start">
 			<form-group>
 				<span class="fs-4">@Html.DisplayNameFor(m => m.Rating.Rating)</span>
 				<span class="text-nowrap">
@@ -18,45 +18,7 @@
 				<input asp-for="Rating.Rating" type="number" class="form-control fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
 				<input id="entertainmentSlider" type="range" class="form-range mw-100 h-auto" style="width:15rem;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
 			</form-group>
-		</div>
-		<script>
-			function disableSubmit() {
-				const btn = document.getElementById("submit-btn");
-				btn.classList.add("disabled");
-				btn.disabled = true;
-				btn.setAttribute("aria-disabled", true);
-			}
-
-			function enableSubmit() {
-				const btn = document.getElementById("submit-btn");
-				btn.classList.remove("disabled");
-				btn.disabled = false;
-				btn.removeAttribute("aria-disabled");
-			}
-
-			function ratingConnect(checkbox, textbox, slider) {
-				checkbox.onchange = function () {
-					if (checkbox.checked) {
-						textbox.value = '';
-						disableSubmit();
-					}
-				};
-				textbox.oninput = function () {
-					slider.value = textbox.value;
-					checkbox.checked = false;
-					enableSubmit();
-				};
-				slider.oninput = function () {
-					slider.value = Math.round(Number(this.value) * 2) / 2;
-					textbox.value = slider.value;
-					checkbox.checked = false;
-					enableSubmit();
-				};
-			}
-			ratingConnect(document.getElementById('Rating_Unrated'), document.getElementById('Rating_Rating'), document.getElementById('entertainmentSlider'));
-		</script>
-	</row>
-	<row>
+		</column>
 	</row>
 	<form-button-bar>
 		<button disable="@Model.Rating.Rating == null" type="submit" class="btn btn-primary" id="submit-btn"><span class="fa fa-save"></span> Rate</button>
@@ -65,3 +27,42 @@
 </form>
 <hr />
 @await Component.RenderWiki("System/MovieRatingGuidelines")
+
+@section Scripts {
+	<script>
+		function disableSubmit() {
+			const btn = document.getElementById("submit-btn");
+			btn.classList.add("disabled");
+			btn.disabled = true;
+			btn.setAttribute("aria-disabled", true);
+		}
+
+		function enableSubmit() {
+			const btn = document.getElementById("submit-btn");
+			btn.classList.remove("disabled");
+			btn.disabled = false;
+			btn.removeAttribute("aria-disabled");
+		}
+
+		function ratingConnect(checkbox, textbox, slider) {
+			checkbox.onchange = function () {
+				if (checkbox.checked) {
+					textbox.value = '';
+					disableSubmit();
+				}
+			};
+			textbox.oninput = function () {
+				slider.value = textbox.value;
+				checkbox.checked = false;
+				enableSubmit();
+			};
+			slider.oninput = function () {
+				slider.value = Math.round(Number(this.value) * 2) / 2;
+				textbox.value = slider.value;
+				checkbox.checked = false;
+				enableSubmit();
+			};
+		}
+		ratingConnect(document.getElementById('Rating_Unrated'), document.getElementById('Rating_Rating'), document.getElementById('entertainmentSlider'));
+	</script>
+}

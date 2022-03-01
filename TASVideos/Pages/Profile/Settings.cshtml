@@ -96,51 +96,6 @@
 				@await Component.RenderWiki("System/AvatarRequirements")
 			</small>
 		</column>
-		<script>
-			{
-				let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)');
-				let previewElem = document.getElementById('avatar-preview');
-
-				document.addEventListener("DOMContentLoaded", validateAvatar);
-				avatarBoxElem.addEventListener('blur', toggleAvatarPreview);
-				document.getElementById('preview-btn').addEventListener('click', toggleAvatarPreview);
-
-				let avatarImgElem = document.getElementById('avatar-img');
-
-				function toggleAvatarPreview() {
-					const avatar = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)').value;
-					if (avatar) {
-						avatarImgElem.onload = validateAvatar;
-						avatarImgElem.src = avatar;
-					} else {
-						previewElem.classList.add('d-none');
-						preventSave(false);
-					}
-				}
-
-				function validateAvatar() {
-					const maxWidth = @AvatarRequirements.Width;
-					const maxHeight = @AvatarRequirements.Height;
-
-					const tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
-					if (tooBig) {
-						previewElem.classList.add('alert');
-						previewElem.classList.add('alert-danger');
-						preventSave(true);
-					} else {
-						previewElem.classList.remove('alert');
-						previewElem.classList.remove('alert-danger');
-						preventSave(false);
-					}
-
-					previewElem.classList.remove('d-none');
-				}
-
-				function preventSave(prevent) {
-					document.getElementById('submit-btn').disabled = prevent;
-				}
-			}
-		</script>
 	</row>
 	<row permission="UseMoodAvatars">
 		<column md="6">
@@ -166,4 +121,49 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script>
+		{
+			let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)');
+			let previewElem = document.getElementById('avatar-preview');
+
+			document.addEventListener("DOMContentLoaded", validateAvatar);
+			avatarBoxElem.addEventListener('blur', toggleAvatarPreview);
+			document.getElementById('preview-btn').addEventListener('click', toggleAvatarPreview);
+
+			let avatarImgElem = document.getElementById('avatar-img');
+
+			function toggleAvatarPreview() {
+				const avatar = document.getElementById('@Html.IdFor(m => m.Settings.Avatar)').value;
+				if (avatar) {
+					avatarImgElem.onload = validateAvatar;
+					avatarImgElem.src = avatar;
+				} else {
+					previewElem.classList.add('d-none');
+					preventSave(false);
+				}
+			}
+
+			function validateAvatar() {
+				const maxWidth = @AvatarRequirements.Width;
+				const maxHeight = @AvatarRequirements.Height;
+
+				const tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
+				if (tooBig) {
+					previewElem.classList.add('alert');
+					previewElem.classList.add('alert-danger');
+					preventSave(true);
+				} else {
+					previewElem.classList.remove('alert');
+					previewElem.classList.remove('alert-danger');
+					preventSave(false);
+				}
+
+				previewElem.classList.remove('d-none');
+			}
+
+			function preventSave(prevent) {
+				document.getElementById('submit-btn').disabled = prevent;
+			}
+		}
+	</script>
 }

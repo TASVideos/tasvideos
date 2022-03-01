@@ -36,10 +36,7 @@
 		<column class="offset-md-2" md="5">
 			<label asp-for="Search.User" class="form-control-label"></label>
 			<input autocomplete="off" asp-for="Search.User" type="text" list="@Html.IdFor(m => m.Search.User)-autocomplete" class="form-control" />
-			<script src="/js/user-search.js"></script>
-			<script>
-				searchUsers("@Html.IdFor(m => m.Search.User)");
-			</script>
+			
 			<label asp-for="Search.System" class="form-control-label"></label>
 			<select asp-for="Search.System" asp-items="Model.SystemList" class="form-control"></select>
 		</column>
@@ -80,3 +77,9 @@
 		}
 	</table>
 </div>
+@section Scripts {
+	<script src="/js/user-search.js"></script>
+	<script>
+		searchUsers("@Html.IdFor(m => m.Search.User)");
+	</script>
+}
