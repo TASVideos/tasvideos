@@ -63,87 +63,86 @@
 <input type="hidden" id="left-revision" />
 <input type="hidden" id="right-revision" />
 
-<script>
-	let fromRevision, toRevision;
-
-	function updateTableStyling() {
-		Array.from(document.querySelectorAll('tbody[data-hasrevisions] tr'))
-			.forEach(function (elem) {
-				elem.classList.remove('table-primary');
-				elem.classList.remove('table-info');
-				elem.querySelector("button[data-from]").classList.remove("btn-primary");
-				elem.querySelector("button[data-from]").classList.add("bg-info","text-dark");
-				elem.querySelector("button[data-to]").classList.remove("btn-primary");
-				elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
-			});
-
-		const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
-		if (cur) {
-			cur.classList.add('table-primary');
-			cur.querySelector("button[data-to]").classList.remove("bg-info","text-dark");
-			cur.querySelector("button[data-to]").classList.add("btn-primary");
-		}
-
-		const prev = document.querySelector(`tr[data-revision="${fromRevision}"]`);
-		if (prev) {
-			prev.classList.add('table-info');
-			prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
-			prev.querySelector("button[data-from]").classList.add("btn-primary");
-		}
-	}
-
-	function GetDiff(fromId, toId) {
-		const baseUrl = '/Wiki/Diff?handler=DiffData';
-		const path = '@Model.History.PageName';
-		if (fromId != null) {
-			fromRevision = fromId;
-		}
-		if (toId != null) {
-			toRevision = toId;
-		}
-
-		if (fromRevision == null || toRevision == null) {
-			updateTableStyling();
-			return;
-		}
-
-		const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
-
-		window.fetch(ajaxUrl)
-			.then(handleFetchErrors)
-			.then(r => r.json())
-			.then(data => {
-				document.getElementById("diff-view").classList.remove("d-none");
-				document.getElementById("diff-options").classList.remove("d-none");
-				document.getElementById("left-revision").value = data.leftMarkup;
-				document.getElementById("right-revision").value = data.rightMarkup;
-				generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
-				updateTableStyling();
-			});
-	}
-
-	function generateDiff(viewType) {
-		const diffView = document.getElementById("diff-view");
-		const base = difflib.stringAsLines(document.getElementById("left-revision").value),
-			newTxt = difflib.stringAsLines(document.getElementById("right-revision").value),
-			opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes(),
-			diffOutputDiv = diffView;
-
-		diffOutputDiv.innerHTML = "";
-
-		diffOutputDiv.appendChild(diffview.buildView({
-			baseTextLines: base,
-			newTextLines: newTxt,
-			opcodes: opcodes,
-			baseTextName: `r${fromRevision}`,
-			newTextName: `r${toRevision}`,
-			contextSize: 5,
-			viewType: viewType
-		}));
-	}
-</script>
-
 @section Scripts {
 	<script src="~/js/difflib.js"></script>
 	<script src="~/js/diffview.js"></script>
+	<script>
+		let fromRevision, toRevision;
+
+		function updateTableStyling() {
+			Array.from(document.querySelectorAll('tbody[data-hasrevisions] tr'))
+				.forEach(function (elem) {
+					elem.classList.remove('table-primary');
+					elem.classList.remove('table-info');
+					elem.querySelector("button[data-from]").classList.remove("btn-primary");
+					elem.querySelector("button[data-from]").classList.add("bg-info","text-dark");
+					elem.querySelector("button[data-to]").classList.remove("btn-primary");
+					elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
+				});
+
+			const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
+			if (cur) {
+				cur.classList.add('table-primary');
+				cur.querySelector("button[data-to]").classList.remove("bg-info","text-dark");
+				cur.querySelector("button[data-to]").classList.add("btn-primary");
+			}
+
+			const prev = document.querySelector(`tr[data-revision="${fromRevision}"]`);
+			if (prev) {
+				prev.classList.add('table-info');
+				prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
+				prev.querySelector("button[data-from]").classList.add("btn-primary");
+			}
+		}
+
+		function GetDiff(fromId, toId) {
+			const baseUrl = '/Wiki/Diff?handler=DiffData';
+			const path = '@Model.History.PageName';
+			if (fromId != null) {
+				fromRevision = fromId;
+			}
+			if (toId != null) {
+				toRevision = toId;
+			}
+
+			if (fromRevision == null || toRevision == null) {
+				updateTableStyling();
+				return;
+			}
+
+			const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
+
+			window.fetch(ajaxUrl)
+				.then(handleFetchErrors)
+				.then(r => r.json())
+				.then(data => {
+					document.getElementById("diff-view").classList.remove("d-none");
+					document.getElementById("diff-options").classList.remove("d-none");
+					document.getElementById("left-revision").value = data.leftMarkup;
+					document.getElementById("right-revision").value = data.rightMarkup;
+					generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
+					updateTableStyling();
+				});
+		}
+
+		function generateDiff(viewType) {
+			const diffView = document.getElementById("diff-view");
+			const base = difflib.stringAsLines(document.getElementById("left-revision").value),
+				newTxt = difflib.stringAsLines(document.getElementById("right-revision").value),
+				opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes(),
+				diffOutputDiv = diffView;
+
+			diffOutputDiv.innerHTML = "";
+
+			diffOutputDiv.appendChild(diffview.buildView({
+				baseTextLines: base,
+				newTextLines: newTxt,
+				opcodes: opcodes,
+				baseTextName: `r${fromRevision}`,
+				newTextName: `r${toRevision}`,
+				contextSize: 5,
+				viewType: viewType
+			}));
+		}
+	</script>
 }

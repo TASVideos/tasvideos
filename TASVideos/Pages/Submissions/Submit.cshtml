@@ -109,24 +109,23 @@
 <partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Create.Markup), "/Wiki/Preview"))" />
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script>
+		document.getElementById('prefill-btn').onclick = function () {
+			const markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
+			if (markup) {
+				return;
+			}
+
+			window.fetch("/Submissions/Submit?handler=PrefillText")
+				.then(handleFetchErrors)
+				.then(r => r.json())
+				.then(data => {
+					document.getElementById('@Html.IdFor(m => m.Create.Markup)').value = data.text;
+				});
+		};
+		document.getElementById('preview-button').addEventListener('click', function () {
+			document.getElementById('submit-btn').classList.remove('d-none');
+			document.getElementById('submit-blurb').classList.remove('d-none');
+		});
+	</script>
 }
-
-<script>
-	document.getElementById('prefill-btn').onclick = function () {
-		const markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
-		if (markup) {
-			return;
-		}
-
-		window.fetch("/Submissions/Submit?handler=PrefillText")
-			.then(handleFetchErrors)
-			.then(r => r.json())
-			.then(data => {
-				document.getElementById('@Html.IdFor(m => m.Create.Markup)').value = data.text;
-			});
-	};
-	document.getElementById('preview-button').addEventListener('click', function () {
-		document.getElementById('submit-btn').classList.remove('d-none');
-		document.getElementById('submit-blurb').classList.remove('d-none');
-	});
-</script>

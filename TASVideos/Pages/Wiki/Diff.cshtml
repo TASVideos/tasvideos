@@ -21,44 +21,43 @@
 	<div id="ResultMarkup"></div>
 </row>
 
-<script>
-	document.addEventListener("DOMContentLoaded", function () {
-		generateDiff(1, false);
-	});
-
-	Array.from(document.querySelectorAll('[name="diff-type"]'))
-		.forEach(element =>
-			element.addEventListener('click', onRadioChange)
-		);
-
-	function onRadioChange() {
-		const type = document.querySelector('[name="diff-type"]:checked').value;
-		generateDiff(parseInt(type));
-	}
-
-	function generateDiff(viewType) {
-		const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
-		const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
-		const diffElem = document.getElementById('ResultMarkup');
-
-		const base = difflib.stringAsLines(leftMarkup);
-		const newTxt = difflib.stringAsLines(rightMarkup);
-		const opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes();
-		diffElem.innerHTML = "";
-
-		diffElem.appendChild(diffview.buildView({
-			baseTextLines: base,
-			newTextLines: newTxt,
-			opcodes: opcodes,
-			baseTextName:  "r@(Model.Diff.LeftRevision)",
-			newTextName: "r@(Model.Diff.RightRevision)",
-			contextSize: 5,
-			viewType: viewType
-		}));
-	}
-</script>
-
 @section Scripts {
 	<script src="~/js/difflib.js"></script>
 	<script src="~/js/diffview.js"></script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			generateDiff(1, false);
+		});
+
+		Array.from(document.querySelectorAll('[name="diff-type"]'))
+			.forEach(element =>
+				element.addEventListener('click', onRadioChange)
+			);
+
+		function onRadioChange() {
+			const type = document.querySelector('[name="diff-type"]:checked').value;
+			generateDiff(parseInt(type));
+		}
+
+		function generateDiff(viewType) {
+			const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
+			const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
+			const diffElem = document.getElementById('ResultMarkup');
+
+			const base = difflib.stringAsLines(leftMarkup);
+			const newTxt = difflib.stringAsLines(rightMarkup);
+			const opcodes = new difflib.SequenceMatcher(base, newTxt).get_opcodes();
+			diffElem.innerHTML = "";
+
+			diffElem.appendChild(diffview.buildView({
+				baseTextLines: base,
+				newTextLines: newTxt,
+				opcodes: opcodes,
+				baseTextName:  "r@(Model.Diff.LeftRevision)",
+				newTextName: "r@(Model.Diff.RightRevision)",
+				contextSize: 5,
+				viewType: viewType
+			}));
+		}
+	</script>
 }

@@ -36,7 +36,6 @@
 		<column class="offset-md-2" md="5">
 			<label asp-for="Search.User" class="form-control-label"></label>
 			<input autocomplete="off" asp-for="Search.User" type="text" list="@Html.IdFor(m => m.Search.User)-autocomplete" class="form-control" />
-			@*TODO: Turn into a component, this is nearly the same code as the user list search box, and could come in handy in other places*@
 			<script src="/js/user-search.js"></script>
 			<script>
 				searchUsers("@Html.IdFor(m => m.Search.User)");

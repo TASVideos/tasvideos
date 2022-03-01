@@ -49,16 +49,17 @@
 </form>
 
 <partial name="_PreviewWindow" model="@((nameof(Model.Text), "/Forum/Preview"))" />
-<script src="/js/user-search.js"></script>
-<script>
-	searchUsers("@Html.IdFor(m => m.ToUser)");
-	if (document.getElementById('quote-btn')) {
-		document.getElementById('quote-btn').onclick = function () {
-			const text = document.getElementById('replying-to-text').innerHTML;
-			document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = `[quote]${text}[/quote]`;
-		};
-	}
-</script>
+
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/user-search.js"></script>
+	<script>
+		searchUsers("@Html.IdFor(m => m.ToUser)");
+		if (document.getElementById('quote-btn')) {
+			document.getElementById('quote-btn').onclick = function () {
+				const text = document.getElementById('replying-to-text').innerHTML;
+				document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = `[quote]${text}[/quote]`;
+			};
+		}
+	</script>
 }
