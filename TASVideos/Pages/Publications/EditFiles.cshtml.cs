@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -12,11 +11,6 @@ namespace TASVideos.Pages.Publications;
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class EditFilesModel : BasePageModel
 {
-	private static readonly List<FileType> PublicationFileTypes = Enum
-		.GetValues(typeof(FileType))
-		.Cast<FileType>()
-		.ToList();
-
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IMediaFileUploader _uploader;
@@ -34,15 +28,6 @@ public class EditFilesModel : BasePageModel
 		_publicationMaintenanceLogger = publicationMaintenanceLogger;
 	}
 
-	public IEnumerable<SelectListItem> AvailableTypes =
-		PublicationFileTypes
-			.Where(t => t != FileType.MovieFile)
-			.Select(t => new SelectListItem
-			{
-				Text = t.ToString(),
-				Value = ((int)t).ToString()
-			});
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -53,11 +38,8 @@ public class EditFilesModel : BasePageModel
 
 	[Required]
 	[BindProperty]
+	[Display(Name = "New Screenshot")]
 	public IFormFile? NewFile { get; set; }
-
-	[Required]
-	[BindProperty]
-	public FileType Type { get; set; }
 
 	[BindProperty]
 	[StringLength(250)]
@@ -94,13 +76,9 @@ public class EditFilesModel : BasePageModel
 			return Page();
 		}
 
-		string path = "";
-		if (Type == FileType.Screenshot)
-		{
-			path = await _uploader.UploadScreenshot(Id, NewFile!, Description);
-		}
+		var path = await _uploader.UploadScreenshot(Id, NewFile!, Description);
 
-		string log = $"Added {Type} file {path}";
+		string log = $"Added Screenshot file {path}";
 		SuccessStatusMessage(log);
 		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 		await _publisher.SendPublicationEdit(
