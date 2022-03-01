@@ -22,6 +22,14 @@ function clearDropdown(elemId) {
 		});
 }
 
+function handleFetchErrors(response) {
+	if(!response.ok) {
+		throw Error(response.statusText);
+	}
+
+	return response;
+}
+
 window.addEventListener("scroll", showHideScrollToTop);
 document.getElementById("button-scrolltop").addEventListener("click", scrollToTop);
 

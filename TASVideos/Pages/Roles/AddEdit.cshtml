@@ -149,6 +149,7 @@
 				getStr = getStr.slice(0, -1);
 				getStr = `/Roles/AddEdit/@(Model.Id)?handler=RolesThatCanBeAssignedBy&${getStr}`;
 				window.fetch(`/Roles/AddEdit/@(Model.Id)?handler=RolesThatCanBeAssignedBy&${getStr}`)
+					.then(handleFetchErrors)
 					.then(r => r.json())
 					.then(json => {
 						if (json) {

@@ -5,6 +5,7 @@
 	systemModel.onchange = function () {
 		if (this.value) {
 			window.fetch(`/Games/List/GameDropDownForSystem?includeEmpty=true&systemId=${systemModel.value}`)
+				.then(handleFetchErrors)
 				.then(r => r.text())
 				.then(d => gameModel.innerHTML = d);
 		} else {

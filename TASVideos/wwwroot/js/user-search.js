@@ -13,6 +13,7 @@
 			}
 
 			window.fetch(`/Users/List/Search/?partial=${searchVal}`)
+				.then(handleFetchErrors)
 				.then(r => r.json())
 				.then(data => {
 					const newSearchList = document.createElement("datalist");

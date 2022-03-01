@@ -16,6 +16,11 @@
 		document.getElementById('preview-container').classList.remove('d-none');
 
 		window.fetch("@Model.PreviewPath", { method: 'POST', body: markup})
+			.then(r => {
+				if (!r.ok) {
+					alert("Could not generate preview");
+				}
+			})
 			.then(r => r.text())
 			.then(d => {
 				document.getElementById('preview-contents').innerHTML = d;

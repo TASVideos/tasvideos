@@ -77,14 +77,14 @@
 				elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
 			});
 
-		const cur = document.querySelector('tr[data-revision="' + toRevision + '"]');
+		const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
 		if (cur) {
 			cur.classList.add('table-primary');
 			cur.querySelector("button[data-to]").classList.remove("bg-info","text-dark");
 			cur.querySelector("button[data-to]").classList.add("btn-primary");
 		}
 
-		const prev = document.querySelector('tr[data-revision="' + fromRevision + '"]');
+		const prev = document.querySelector(`tr[data-revision="${fromRevision}"]`);
 		if (prev) {
 			prev.classList.add('table-info');
 			prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
@@ -109,23 +109,17 @@
 
 		const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
 
-		const xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+		window.fetch(ajaxUrl)
+			.then(handleFetchErrors)
+			.then(r => r.json())
+			.then(data => {
 				document.getElementById("diff-view").classList.remove("d-none");
 				document.getElementById("diff-options").classList.remove("d-none");
-				if (xmlhttp.status === 200) {
-					const data = JSON.parse(xmlhttp.responseText);
-					document.getElementById("left-revision").value = data.leftMarkup;
-					document.getElementById("right-revision").value = data.rightMarkup;
-					generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
-					updateTableStyling();
-				}
-			}
-		};
-
-		xmlhttp.open("GET", ajaxUrl, true);
-		xmlhttp.send();
+				document.getElementById("left-revision").value = data.leftMarkup;
+				document.getElementById("right-revision").value = data.rightMarkup;
+				generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
+				updateTableStyling();
+			});
 	}
 
 	function generateDiff(viewType) {
@@ -141,8 +135,8 @@
 			baseTextLines: base,
 			newTextLines: newTxt,
 			opcodes: opcodes,
-			baseTextName: "r" + fromRevision,
-			newTextName: "r" + toRevision,
+			baseTextName: `r${fromRevision}`,
+			newTextName: `r${toRevision}`,
 			contextSize: 5,
 			viewType: viewType
 		}));
