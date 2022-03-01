@@ -114,24 +114,16 @@
 									return;
 								}
 
-								var xmlhttp = new XMLHttpRequest();
-
-								xmlhttp.onreadystatechange = function() {
-									if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-										if (xmlhttp.status === 200) {
-											if (xmlhttp.responseText === "true") {
-												markUserNameBad();
-											} else {
-												markUserNameGood();
-											}
+								window.fetch(`/Users/List?handler=VerifyUniqueUserName&userName=${userNameBox.value}`)
+									.then(handleFetchErrors)
+									.then(r => r.text())
+									.then(d => {
+										if (d === "true") {
+											markUserNameBad();
+										} else {
+											markUserNameGood();
 										}
-									}
-								};
-
-								xmlhttp.open("GET",
-									`/Users/List?handler=VerifyUniqueUserName&userName=${userNameBox.value}`,
-									true);
-								xmlhttp.send();
+									});
 							};
 						})();
 						</script>

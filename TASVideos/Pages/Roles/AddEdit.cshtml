@@ -78,116 +78,111 @@
 		<a asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>
-<script>
-	{
-		let emptyAssignableRoles = "None";
-		let selectedAssignablePermissionsModelId = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
-		let selectedPermissionsListId = 'Selected@(Html.IdFor(m => m.Role.SelectedPermissions))';
-		let availableAssignableListId = '@Html.NameFor(m => m.AvailableAssignablePermissions)';
-		let selectedAssignableListId = 'Selected@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))';
-		
-		function shouldShowAssignRoles() {
-			const hasAssign = Array.from(document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']"))
-				.length > 0;
 
-			const hasAtLastOneOtherPerm = Array.from(document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']"))
-				.length > 0;
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	<script>
+		{
+			let emptyAssignableRoles = "None";
+			let selectedAssignablePermissionsModelId = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
+			let selectedPermissionsListId = 'Selected@(Html.IdFor(m => m.Role.SelectedPermissions))';
+			let availableAssignableListId = '@Html.NameFor(m => m.AvailableAssignablePermissions)';
+			let selectedAssignableListId = 'Selected@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))';
+			
+			function shouldShowAssignRoles() {
+				const hasAssign = Array.from(document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']"))
+					.length > 0;
 
-			return hasAssign && hasAtLastOneOtherPerm;
-		}
+				const hasAtLastOneOtherPerm = Array.from(document.querySelectorAll("[name='@Html.NameFor(m => m.Role.SelectedPermissions)']"))
+					.length > 0;
 
-		function syncAssignablePerms() {
-			const selectedPerms = Array.from(document.querySelectorAll(`#${selectedPermissionsListId} option`));
+				return hasAssign && hasAtLastOneOtherPerm;
+			}
 
-			const aggregatedAssignablePerms = Array.from(document.querySelectorAll(`#${availableAssignableListId} option`))
-				.concat(Array.from(document.querySelectorAll(`#${selectedAssignableListId} option`)));
+			function syncAssignablePerms() {
+				const selectedPerms = Array.from(document.querySelectorAll(`#${selectedPermissionsListId} option`));
 
-			const addedPerms = selectedPerms.filter(element =>
-				!(aggregatedAssignablePerms.map(e => e.value).includes(element.value))
-			);
+				const aggregatedAssignablePerms = Array.from(document.querySelectorAll(`#${availableAssignableListId} option`))
+					.concat(Array.from(document.querySelectorAll(`#${selectedAssignableListId} option`)));
 
-			const removedPerms = aggregatedAssignablePerms.filter(element =>
-				!(selectedPerms.map(e => e.value).includes(element.value))
-			);
+				const addedPerms = selectedPerms.filter(element =>
+					!(aggregatedAssignablePerms.map(e => e.value).includes(element.value))
+				);
 
-			const availAssignableElem = document.getElementById(availableAssignableListId);
-			const selectedAssignableElem = document.getElementById(selectedAssignableListId);
+				const removedPerms = aggregatedAssignablePerms.filter(element =>
+					!(selectedPerms.map(e => e.value).includes(element.value))
+				);
 
-			addedPerms.forEach(element =>
-				availAssignableElem.appendChild(element.cloneNode(true))
-			);
+				const availAssignableElem = document.getElementById(availableAssignableListId);
+				const selectedAssignableElem = document.getElementById(selectedAssignableListId);
 
-			removedPerms.forEach(function(elem) {
-				const id = document.querySelector(`[name="${selectedAssignablePermissionsModelId}"][v="${elem.value}"]`);
-				if (id) {
-					id.remove();
-				}
+				addedPerms.forEach(element =>
+					availAssignableElem.appendChild(element.cloneNode(true))
+				);
+
+				removedPerms.forEach(function(elem) {
+					const id = document.querySelector(`[name="${selectedAssignablePermissionsModelId}"][v="${elem.value}"]`);
+					if (id) {
+						id.remove();
+					}
 
 
-				if (Array.from(availAssignableElem.childNodes).includes(elem)) {
-					availAssignableElem.removeChild(elem);
-				} else if (Array.from(selectedAssignableElem.childNodes).includes(elem)) {
-					selectedAssignableElem.removeChild(elem);
-				}
-			});
+					if (Array.from(availAssignableElem.childNodes).includes(elem)) {
+						availAssignableElem.removeChild(elem);
+					} else if (Array.from(selectedAssignableElem.childNodes).includes(elem)) {
+						selectedAssignableElem.removeChild(elem);
+					}
+				});
 
-			showRolesCurrentlyAssignable();
-		}
+				showRolesCurrentlyAssignable();
+			}
 
-		function showRolesCurrentlyAssignable() {
-			const selector = `[name="${selectedAssignablePermissionsModelId}"]`;
-			const permissions = Array.from(document.querySelectorAll(selector)).map(element => element.value);
+			function showRolesCurrentlyAssignable() {
+				const selector = `[name="${selectedAssignablePermissionsModelId}"]`;
+				const permissions = Array.from(document.querySelectorAll(selector)).map(element => element.value);
 
-			if (permissions.length > 0) {
-				const xmlhttp = new XMLHttpRequest();
-				xmlhttp.onreadystatechange = function() {
-					if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-						if (xmlhttp.status === 200) {
-							const data = JSON.parse(xmlhttp.responseText);
-							if (data) {
-								document.getElementById("assignable-roles").textContent = data.join(', ');
+				if (permissions.length > 0) {
+					let getStr = '';
+					for (const i in permissions) {
+						if (permissions.hasOwnProperty(i)) {
+							getStr += `ids=${permissions[i]}&`;
+						}
+					}
+
+					getStr = getStr.slice(0, -1);
+					getStr = `/Roles/AddEdit/@(Model.Id)?handler=RolesThatCanBeAssignedBy&${getStr}`;
+					window.fetch(`/Roles/AddEdit/@(Model.Id)?handler=RolesThatCanBeAssignedBy&${getStr}`)
+						.then(handleFetchErrors)
+						.then(r => r.json())
+						.then(json => {
+							if (json) {
+								document.getElementById("assignable-roles").textContent = json.join(', ');
 							} else {
 								document.getElementById("assignable-roles").textContent = emptyAssignableRoles;
 							}
-						}
-					}
-				};
-
-				let getStr = '';
-				for (const i in permissions) {
-					if (permissions.hasOwnProperty(i)) {
-						getStr += `ids=${permissions[i]}&`;
-					}
+						});
+				} else {
+					document.getElementById("assignable-roles").textContent = emptyAssignableRoles;
 				}
-
-				getStr = getStr.slice(0, -1);
-				getStr = `/Roles/AddEdit/@(Model.Id)?handler=RolesThatCanBeAssignedBy&${getStr}`;
-				xmlhttp.open("GET", getStr, true);
-				xmlhttp.send();
-			} else {
-				document.getElementById("assignable-roles").textContent = emptyAssignableRoles;
 			}
-		}
 
-		function onSelectedPermissionsChange() {
-			if (shouldShowAssignRoles()) {
-				document.getElementById('assignable-permissions-section').classList.remove('d-none');
-				syncAssignablePerms();
-			} else {
-				document.getElementById('assignable-permissions-section').classList.add('d-none');
+			function onSelectedPermissionsChange() {
+				if (shouldShowAssignRoles()) {
+					document.getElementById('assignable-permissions-section').classList.remove('d-none');
+					syncAssignablePerms();
+				} else {
+					document.getElementById('assignable-permissions-section').classList.add('d-none');
+				}
 			}
+
+			document.getElementById('@(Html.IdFor(m => m.Role.SelectedPermissions))-two-column-select')
+				.addEventListener('@Html.NameFor(m => m.Role.SelectedPermissions)Changed', onSelectedPermissionsChange);
+
+			document.addEventListener("DOMContentLoaded", onSelectedPermissionsChange);
+
+			document.getElementById('@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))-two-column-select')
+				.addEventListener('@Html.NameFor(m => m.Role.SelectedAssignablePermissions)Changed', showRolesCurrentlyAssignable);
 		}
-
-		document.getElementById('@(Html.IdFor(m => m.Role.SelectedPermissions))-two-column-select')
-			.addEventListener('@Html.NameFor(m => m.Role.SelectedPermissions)Changed', onSelectedPermissionsChange);
-
-		document.addEventListener("DOMContentLoaded", onSelectedPermissionsChange);
-
-		document.getElementById('@(Html.IdFor(m => m.Role.SelectedAssignablePermissions))-two-column-select')
-			.addEventListener('@Html.NameFor(m => m.Role.SelectedAssignablePermissions)Changed', showRolesCurrentlyAssignable);
-	}
-</script>
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
+	</script>
 }
 

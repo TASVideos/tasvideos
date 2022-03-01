@@ -13,6 +13,23 @@ function scrollToTop() {
 	});
 }
 
+function clearDropdown(elemId) {
+	Array.from(document.querySelectorAll(`#${elemId} option`))
+		.forEach(element => {
+			if (element.value) {
+				element.remove();
+			}
+		});
+}
+
+function handleFetchErrors(response) {
+	if(!response.ok) {
+		throw Error(response.statusText);
+	}
+
+	return response;
+}
+
 window.addEventListener("scroll", showHideScrollToTop);
 document.getElementById("button-scrolltop").addEventListener("click", scrollToTop);
 

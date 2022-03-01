@@ -109,32 +109,23 @@
 <partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Create.Markup), "/Wiki/Preview"))" />
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
-}
-
-<script>
-	document.getElementById('prefill-btn').onclick = function () {
-		const markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
-		if (markup) {
-			return;
-		}
-
-		const xmlhttp = new XMLHttpRequest();
-		xmlhttp.onreadystatechange = function() {
-			if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-				if (xmlhttp.status === 200) {
-					const data = JSON.parse(xmlhttp.responseText);
-					document.getElementById('@Html.IdFor(m => m.Create.Markup)').value = data.text;
-				}
+	<script>
+		document.getElementById('prefill-btn').onclick = function () {
+			const markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
+			if (markup) {
+				return;
 			}
-		};
 
-		xmlhttp.open("GET",
-			"/Submissions/Submit?handler=PrefillText",
-			true);
-		xmlhttp.send();
-	};
-	document.getElementById('preview-button').addEventListener('click', function () {
-		document.getElementById('submit-btn').classList.remove('d-none');
-		document.getElementById('submit-blurb').classList.remove('d-none');
-	});
-</script>
+			window.fetch("/Submissions/Submit?handler=PrefillText")
+				.then(handleFetchErrors)
+				.then(r => r.json())
+				.then(data => {
+					document.getElementById('@Html.IdFor(m => m.Create.Markup)').value = data.text;
+				});
+		};
+		document.getElementById('preview-button').addEventListener('click', function () {
+			document.getElementById('submit-btn').classList.remove('d-none');
+			document.getElementById('submit-blurb').classList.remove('d-none');
+		});
+	</script>
+}

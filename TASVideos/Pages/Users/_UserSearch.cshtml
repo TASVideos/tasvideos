@@ -4,55 +4,8 @@
 		<input id="search-username-box" name="name" list="search-username-list" required="required" type="search" class="form-control" placeholder="Enter a UserName" autofocus="autofocus" autocomplete="off" spellcheck="false" />
 		<button id="go-button" type="submit" class="btn btn-secondary" disabled="disabled">Go</button>
 	</div>
-	<datalist id="search-username-list"></datalist>
+	<script src="/js/user-search.js"></script>
 	<script>
-		{
-			let searchBox = document.getElementById('search-username-box');
-			searchBox.onkeyup = function () {
-				const goButton = document.getElementById('go-button');
-				const searchVal = searchBox.value.trim();
-				const dataListId = 'search-username-list-' + searchVal;
-				if (searchVal.length > 2) {
-					const existingList = document.getElementById(dataListId);
-					if (existingList) {
-						searchBox.setAttribute('list', dataListId);
-						return;
-					}
-
-					const xmlhttp = new XMLHttpRequest();
-
-					xmlhttp.onreadystatechange = function() {
-						if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-							if (xmlhttp.status === 200) {
-								const newSearchList = document.createElement('datalist');
-								newSearchList.id = dataListId;
-
-								const data = JSON.parse(xmlhttp.responseText);
-
-								for (const i in data) {
-									if (data.hasOwnProperty(i)) {
-										const option = document.createElement('option');
-										option.innerHTML = data[i];
-
-										newSearchList.appendChild(option);
-									}
-								}
-
-								document.getElementById("search-form").appendChild(newSearchList);
-								searchBox.setAttribute('list', dataListId);
-								goButton.removeAttribute('disabled');
-							}
-						}
-					};
-
-					xmlhttp.open("GET",
-						`/Users/List/Search/?partial=${searchVal}`,
-						true);
-					xmlhttp.send();
-				} else {
-					goButton.setAttribute('disabled', 'disabled');
-				}
-			};
-		}
+		searchUsers("search-username-box");
 	</script>
 </form>
