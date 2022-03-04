@@ -12,7 +12,7 @@
 				return;
 			}
 
-			window.fetch(`/Users/List/Search/?partial=${searchVal}`)
+			fetch(`/Users/List/Search/?partial=${searchVal}`)
 				.then(handleFetchErrors)
 				.then(r => r.json())
 				.then(data => {

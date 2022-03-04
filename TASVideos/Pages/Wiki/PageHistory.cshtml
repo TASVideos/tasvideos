@@ -112,7 +112,7 @@
 
 			const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
 
-			window.fetch(ajaxUrl)
+			fetch(ajaxUrl)
 				.then(handleFetchErrors)
 				.then(r => r.json())
 				.then(data => {

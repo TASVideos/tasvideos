@@ -116,7 +116,7 @@
 				return;
 			}
 
-			window.fetch("/Submissions/Submit?handler=PrefillText")
+			fetch("/Submissions/Submit?handler=PrefillText")
 				.then(handleFetchErrors)
 				.then(r => r.json())
 				.then(data => {

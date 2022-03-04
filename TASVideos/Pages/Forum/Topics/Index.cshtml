@@ -8,7 +8,7 @@
 @if (Model.HighlightedPost is not null)
 {
 	var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
-	if (!String.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
+	if (!string.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
 	{
 		description += $"\nSubject: {Model.HighlightedPost.Subject}";
 	}
@@ -155,18 +155,19 @@
 	</nav>
 	<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</p>
 </fullrow>
-
-<script condition="@(Model.SaveActivity)">
-	{
-		let topicId = '@Model.Id';
-		let currentTime = Math.floor(Date.now() / 1000);
-		let visitedTopics = localStorage.getItem('VisitedTopics');
-		if (visitedTopics !== null){
-			visitedTopics = JSON.parse(visitedTopics);
-			visitedTopics[topicId] = currentTime;
-		}else{
-			visitedTopics = {[topicId]: currentTime};
+@section Scripts {
+	<script condition="@(Model.SaveActivity)">
+		{
+			let topicId = '@Model.Id';
+			let currentTime = Math.floor(Date.now() / 1000);
+			let visitedTopics = localStorage.getItem('VisitedTopics');
+			if (visitedTopics !== null){
+				visitedTopics = JSON.parse(visitedTopics);
+				visitedTopics[topicId] = currentTime;
+			}else{
+				visitedTopics = {[topicId]: currentTime};
+			}
+			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
 		}
-		localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
-	}
-</script>
+	</script>
+}

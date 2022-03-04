@@ -78,38 +78,39 @@
 		}
 	</table>
 </div>
+<partial name="_Pager" model="Model.Forum.Topics" />
 
-<script>
-	let currentTime = Math.floor(Date.now() / 1000);
-	{
-		let visitedTopics = localStorage.getItem('VisitedTopics');
-		if (visitedTopics !== null){
-			visitedTopics = JSON.parse(visitedTopics);
-		}else{
-			visitedTopics = {};
-		}
-		let activityTopics = document.getElementsByClassName('activity-topic');
-		for (let activityTopic of activityTopics){
-			let lastVisit = visitedTopics[activityTopic.dataset.topicId];
-			if (lastVisit === undefined || lastVisit < activityTopic.dataset.activityUnix){
-				activityTopic.classList.remove('d-none');
+@section Scripts {
+	<script>
+		let currentTime = Math.floor(Date.now() / 1000);
+		{
+			let visitedTopics = localStorage.getItem('VisitedTopics');
+			if (visitedTopics !== null){
+				visitedTopics = JSON.parse(visitedTopics);
+			}else{
+				visitedTopics = {};
+			}
+			let activityTopics = document.getElementsByClassName('activity-topic');
+			for (let activityTopic of activityTopics){
+				let lastVisit = visitedTopics[activityTopic.dataset.topicId];
+				if (lastVisit === undefined || lastVisit < activityTopic.dataset.activityUnix){
+					activityTopic.classList.remove('d-none');
+				}
 			}
 		}
-	}
-	function markSubforumPostsRead(){
-		let visitedTopics = localStorage.getItem('VisitedTopics');
-		if (visitedTopics !== null){
-			visitedTopics = JSON.parse(visitedTopics);
-		}else{
-			visitedTopics = {};
+		function markSubforumPostsRead(){
+			let visitedTopics = localStorage.getItem('VisitedTopics');
+			if (visitedTopics !== null){
+				visitedTopics = JSON.parse(visitedTopics);
+			}else{
+				visitedTopics = {};
+			}
+			let activityTopics = document.getElementsByClassName('activity-topic');
+			for (let activityTopic of activityTopics){
+				visitedTopics[activityTopic.dataset.topicId] = currentTime;
+			}
+			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+			location.reload();
 		}
-		let activityTopics = document.getElementsByClassName('activity-topic');
-		for (let activityTopic of activityTopics){
-			visitedTopics[activityTopic.dataset.topicId] = currentTime;
-		}
-		localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
-		location.reload();
-	}
-</script>
-
-<partial name="_Pager" model="Model.Forum.Topics" />
+	</script>
+}

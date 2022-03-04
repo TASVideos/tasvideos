@@ -114,7 +114,7 @@
 									return;
 								}
 
-								window.fetch(`/Users/List?handler=VerifyUniqueUserName&userName=${userNameBox.value}`)
+								fetch(`/Users/List?handler=VerifyUniqueUserName&userName=${userNameBox.value}`)
 									.then(handleFetchErrors)
 									.then(r => r.text())
 									.then(d => {
