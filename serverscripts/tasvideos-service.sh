@@ -1,3 +1,4 @@
+#!/bin/bash
 ### BEGIN INIT INFO
 # Provides:             tasvideos
 # Required-Start:       mysql nginx postgresql redis-server
