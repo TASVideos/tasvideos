@@ -1,0 +1,42 @@
+/// <reference path="colors.scss" />
+/// <reference path="variables.scss" />
+:root {
+	--diff-replace: #{$diff-replace};
+	--diff-delete: #{$diff-delete};
+	--diff-insert: #{$diff-insert};
+}
+
+.diff {
+	display: grid;
+	font-family: monospace;
+
+	.header {
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.add {
+		background-color: var(--diff-insert);
+	}
+	.delete {
+		background-color: var(--diff-delete);
+	}
+
+	.line {
+		background-color: var(--tab-content-bg);
+	}
+
+	.linenumber {
+		font-weight: bold;
+		padding: 0 0.5em;
+		text-align: right;
+	}
+
+	&.inline {
+		grid-template-columns: auto auto 1fr;
+	}
+
+	&.sidebyside {
+		grid-template-columns: auto 1fr auto 1fr;
+	}
+}
