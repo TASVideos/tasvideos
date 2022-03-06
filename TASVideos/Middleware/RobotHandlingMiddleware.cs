@@ -30,6 +30,7 @@ Disallow: /media/
 Disallow: /MovieMaintenanceLog
 Disallow: /UserMaintenanceLog
 Disallow: /InternalSystem/
+Disallow: /*?revision=*
 
 User-agent: Mediapartners-Google
 Allow: /forum/
