@@ -51,34 +51,38 @@
 					<label asp-for="TimeZone"></label>
 					<label>@Model.TimeZone</label>
 					<br />
-					<div class="alert alert-info" permission="ViewPrivateUserData">
-						<label asp-for="Id"></label>
-						<label>@Model.Id</label>
-						<br />
-						<label asp-for="Email"></label>
-						<label>@Model.Email</label>
-						<br />
-						<label asp-for="EmailConfirmed" class="form-control-label"></label>
-						@if (Model.EmailConfirmed)
-						{
-							<span class="fa fa-check-square text-success"></span><span> Yes</span>
-						}
-						else
-						{
-							<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
-						}
-						<br />
-						<label asp-for="IsLockedOut" class="form-control-label"></label>
-						@if (Model.IsLockedOut)
-						{
-							<span class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
-						}
-						else
-						{
-							<span class="fa fa-check-square text-success"></span><span> Not locked</span>
-						}
-						<div>
-							<a asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning">IP Addresses used</a>
+
+					<a class="btn btn-warning btn-sm mt-1 mb-2" data-bs-toggle="collapse" href="#pii">Private Data</a>
+					<div class="collapse" id="pii">
+						<div class="alert alert-info" permission="ViewPrivateUserData">
+							<label asp-for="Id"></label>
+							<label>@Model.Id</label>
+							<br />
+							<label asp-for="Email"></label>
+							<label>@Model.Email</label>
+							<br />
+							<label asp-for="EmailConfirmed" class="form-control-label"></label>
+							@if (Model.EmailConfirmed)
+							{
+								<span class="fa fa-check-square text-success"></span><span> Yes</span>
+							}
+							else
+							{
+								<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
+							}
+							<br />
+							<label asp-for="IsLockedOut" class="form-control-label"></label>
+							@if (Model.IsLockedOut)
+							{
+								<span class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
+							}
+							else
+							{
+								<span class="fa fa-check-square text-success"></span><span> Not locked</span>
+							}
+							<div>
+								<a asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning">IP Addresses used</a>
+							</div>
 						</div>
 					</div>
 					<div class="float-end mt-2">
