@@ -373,6 +373,9 @@ public class Element : INode
 			case "noparse":
 				await WriteChildren(w, h);
 				break;
+			case "hr":
+				w.VoidTag("hr");
+				break;
 			case "google":
 				if (Options == "images")
 				{

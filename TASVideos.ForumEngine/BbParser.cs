@@ -74,12 +74,12 @@ public class BbParser
 		public enum ChildrenAllowed
 		{
 			/// <summary>
-			/// This tag can have children.
+			/// This tag can have child nodes.
 			/// </summary>
 			Yes,
 
 			/// <summary>
-			/// This tag cannot have children and potential children should be parsed as raw text.
+			/// This tag cannot have child nodes and potential children should be parsed as raw text.
 			/// </summary>
 			No,
 
@@ -87,6 +87,11 @@ public class BbParser
 			/// If this tag has a non-empty parameter, behaves like Yes, otherwise, like No.
 			/// </summary>
 			IfParam,
+
+			/// <summary>
+			/// This tag immediately self closes and cannot have children
+			/// </summary>
+			Void,
 		}
 
 		public ChildrenAllowed Children;
@@ -157,6 +162,7 @@ public class BbParser
 		{ "bgcolor", new() }, // like color
 		{ "size", new() }, // param is something relating to font size TODO: what are the values?
 		{ "noparse", new() { Children = TagInfo.ChildrenAllowed.No } },
+		{ "hr", new() { Children = TagInfo.ChildrenAllowed.Void, IsBlock = true } },
 
 		// list related stuff
 		{ "list", new() { IsBlock = true } }, // OLs have a param with value ??
@@ -246,7 +252,7 @@ public class BbParser
 				TagInfo.ChildrenAllowed.No => false,
 				TagInfo.ChildrenAllowed.IfParam => _stack.Peek().Options != "",
 				TagInfo.ChildrenAllowed.Yes => true,
-				_ => true,
+				TagInfo.ChildrenAllowed.Void => throw new Exception("Didn't expect a void tag to stay on the stack."),
 			};
 		}
 
@@ -332,6 +338,11 @@ public class BbParser
 						}
 
 						Push(e);
+
+						if (state.Children == TagInfo.ChildrenAllowed.Void)
+						{
+							_stack.Pop();
+						}
 						continue;
 					}
 					else
