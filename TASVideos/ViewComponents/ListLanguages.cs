@@ -67,7 +67,8 @@ public class ListLanguages : ViewComponent
 		var existingLanguages = new List<LanguageEntry>();
 		foreach (var lang in languages)
 		{
-			if (await _wikiPages.Exists(lang.Path))
+			if (await _wikiPages.Exists(lang.Path)
+				&& !pageData.PageName.StartsWith(lang.LanguageCode + "/"))
 			{
 				existingLanguages.Add(lang);
 			}
