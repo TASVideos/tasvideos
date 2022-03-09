@@ -37,7 +37,7 @@ public class ListLanguages : ViewComponent
 				return new ContentViewComponentResult("");
 			}
 
-			pageName = string.Join("", pageName.Split('/').Skip(1));
+			pageName = string.Join("/", pageName.Split('/').Skip(1));
 
 			// Translations should also include the original link to the English version
 			languages.Add(new LanguageEntry
