@@ -19,7 +19,7 @@ public class ListLanguages : ViewComponent
 		_wikiPages = wikiPages;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, bool isTranslation)
+	public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData)
 	{
 		if (string.IsNullOrWhiteSpace(pageData?.PageName))
 		{
@@ -28,6 +28,8 @@ public class ListLanguages : ViewComponent
 
 		string pageName = pageData.PageName;
 		var languages = new List<LanguageEntry>();
+
+		bool isTranslation = await _languages.IsLanguagePage(pageName);
 
 		if (isTranslation)
 		{
