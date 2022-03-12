@@ -33,10 +33,13 @@
 	}
 
 	.expand {
+		text-align: center;
+		border: 0;
 	}
 
 	.expanded {
 		opacity: 0.6;
+		display: none;
 	}
 
 	&.inline {

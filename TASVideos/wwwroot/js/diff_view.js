@@ -127,7 +127,7 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 			}
 
 			if (leftNumber !== line.leftLineNumber) {
-				results.push(h("div", { class: "linenumber" }, leftNumber = line.leftLineNumber));
+				results.push(h("div", { class: "linenumber" + classSuffix }, leftNumber = line.leftLineNumber));
 			} else {
 				results.push(h("div"));
 			}
@@ -135,7 +135,7 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 				pushSpans(span => span.type <= 0);
 			}
 			if (rightNumber !== line.rightLineNumber) {
-				results.push(h("div", { class: "linenumber" }, rightNumber = line.rightLineNumber));
+				results.push(h("div", { class: "linenumber" + classSuffix }, rightNumber = line.rightLineNumber));
 			} else {
 				results.push(h("div"));
 			}
@@ -146,13 +146,13 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 			const lineOrSet = condensedLines[i];
 	
 			if (Array.isArray(lineOrSet)) {
-				results.push(h("div", { class: "expand top" }));
+				results.push(h("button", { class: "expand top", type: "button" }, "..."));
 				leftNumber = undefined;
 				rightNumber = undefined;
 				for (const line of lineOrSet) {
 					pushLine(line, " expanded");
 				}
-				results.push(h("div", { class: "expand bottom" }))
+				results.push(h("button", { class: "expand bottom", type: "button" }, "..."))
 				leftNumber = undefined;
 				rightNumber = undefined;
 			} else {
@@ -163,4 +163,16 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 
 	destEl.innerHTML = "";
 	destEl.appendChild(h("div", { class: inline ? "diff inline" : "diff sidebyside" }, results));
+	destEl.children[0].addEventListener("click", (event) => {
+		const { target } = event;
+		if (!target.classList.contains("expand")) {
+			return;
+		}
+		const direction = target.classList.contains("bottom") ? "previousElementSibling" : "nextElementSibling";
+		let element = target[direction];
+		while (!element.classList.contains("expand")) {
+			element.style.display = element.style.display ? "" : "unset";
+			element = element[direction];
+		}
+	}, { passive: true });
 }
