@@ -1,6 +1,4 @@
 function renderDiff(from, to, destEl, inline, contextSize) {
-	// temp hack
-	contextSize = 3;
 	const dmp = new diff_match_patch();
 	dmp.Diff_Timeout = 0;
 	dmp.Diff_EditCost = 20;

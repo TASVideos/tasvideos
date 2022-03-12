@@ -10,8 +10,9 @@
 </div>
 <div id="diff-options" class="d-none">
 	<hr />
-	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff(1)" /> Inline</label>
-	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff(0)" /> Side by Side</label>
+	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff()" /> Inline</label>
+	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff()" /> Side by Side</label>
+	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
 </div>
 <hr />
 <div class="table-container">
@@ -120,12 +121,15 @@
 					document.getElementById("diff-options").classList.remove("d-none");
 					document.getElementById("left-revision").value = data.leftMarkup;
 					document.getElementById("right-revision").value = data.rightMarkup;
-					generateDiff(parseInt(document.querySelector('[name="diff-type"]:checked').value));
+					generateDiff();
 					updateTableStyling();
 				});
 		}
 
-		function generateDiff(viewType) {
+		function generateDiff() {
+			const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
+			const contextSize = parseInt(document.querySelector('[name="context-size"').value);
+
 			const diffView = document.getElementById("diff-view");
 			const base = document.getElementById("left-revision").value,
 				newTxt = document.getElementById("right-revision").value,
@@ -135,7 +139,8 @@
 				{ text: base, name: `r${fromRevision}` },
 				{ text: newTxt, name: `r${toRevision}` },
 				diffOutputDiv,
-				!!viewType
+				!!viewType,
+				contextSize
 			);
 		}
 	</script>

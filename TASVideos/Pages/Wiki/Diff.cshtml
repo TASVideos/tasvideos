@@ -13,8 +13,9 @@
 <a class="btn btn-secondary float-end me-2" href="/@link"><span class="fa fa-arrow-left"></span> Back to Page</a>
 <row>
 
-	<label class="me-3"><input name="diff-type" type="radio" value="1" checked="checked" /> Inline</label>
-	<label><input name="diff-type" type="radio" value="0" /> Side by Side</label>
+	<label class="me-3"><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff()" /> Inline</label>
+	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff()" /> Side by Side</label>
+	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
 </row>
 <hr />
 <row>
@@ -26,20 +27,17 @@
 	<script src="~/js/diff_view.js"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded", function () {
-			generateDiff(1, false);
+			generateDiff();
 		});
 
-		Array.from(document.querySelectorAll('[name="diff-type"]'))
-			.forEach(element =>
-				element.addEventListener('click', onRadioChange)
-			);
-
 		function onRadioChange() {
-			const type = document.querySelector('[name="diff-type"]:checked').value;
-			generateDiff(parseInt(type));
+			generateDiff();
 		}
 
-		function generateDiff(viewType) {
+		function generateDiff() {
+			const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
+			const contextSize = parseInt(document.querySelector('[name="context-size"').value);
+
 			const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
 			const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
 			const diffElem = document.getElementById('ResultMarkup');
@@ -48,7 +46,8 @@
 				{ text: leftMarkup, name: "r@(Model.Diff.LeftRevision)" },
 				{ text: rightMarkup, name: "r@(Model.Diff.RightRevision)" },
 				diffElem,
-				!!viewType
+				!!viewType,
+				contextSize
 			);
 		}
 	</script>
