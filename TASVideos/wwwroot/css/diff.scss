@@ -32,11 +32,24 @@
 		text-align: right;
 	}
 
+	.expand {
+	}
+
+	.expanded {
+		opacity: 0.6;
+	}
+
 	&.inline {
 		grid-template-columns: auto auto 1fr;
+		.expand {
+			grid-column: span 3;
+		}
 	}
 
 	&.sidebyside {
 		grid-template-columns: auto 1fr auto 1fr;
+		.expand {
+			grid-column: span 4;
+		}
 	}
 }
