@@ -144,13 +144,14 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 			const lineOrSet = condensedLines[i];
 	
 			if (Array.isArray(lineOrSet)) {
-				results.push(h("button", { class: "expand top", type: "button" }, "..."));
+				results.push(h("button", { class: "expander", type: "button" }, "⋯"));
+				results.push(h("button", { class: "contracter top", type: "button" }, "▼"));
 				leftNumber = undefined;
 				rightNumber = undefined;
 				for (const line of lineOrSet) {
 					pushLine(line, " expanded");
 				}
-				results.push(h("button", { class: "expand bottom", type: "button" }, "..."))
+				results.push(h("button", { class: "contracter bottom", type: "button" }, "▲"))
 				leftNumber = undefined;
 				rightNumber = undefined;
 			} else {
@@ -163,14 +164,30 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 	destEl.appendChild(h("div", { class: inline ? "diff inline" : "diff sidebyside" }, results));
 	destEl.children[0].addEventListener("click", (event) => {
 		const { target } = event;
-		if (!target.classList.contains("expand")) {
-			return;
-		}
-		const direction = target.classList.contains("bottom") ? "previousElementSibling" : "nextElementSibling";
-		let element = target[direction];
-		while (!element.classList.contains("expand")) {
-			element.style.display = element.style.display ? "" : "unset";
-			element = element[direction];
+		const { classList } = target;
+		if (classList.contains("expander")) {
+			target.style.display = "none";
+			let element = target;
+			while (!element.classList.contains("bottom")) {
+				element = element.nextElementSibling;
+				element.style.display = "unset";
+			}
+		} else if (classList.contains("contracter")) {
+			target.style.display = "";
+			if (classList.contains("top")) {
+				target.previousElementSibling.style.display = "";
+				let element = target;
+				while (!element.classList.contains("bottom")) {
+					element = element.nextElementSibling;
+					element.style.display = "";
+				}
+			} else {
+				let element = target;
+				while (!element.classList.contains("expander")) {
+					element = element.previousElementSibling;
+					element.style.display = "";
+				}
+			}
 		}
 	}, { passive: true });
 }
