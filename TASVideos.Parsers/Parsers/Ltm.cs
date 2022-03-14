@@ -12,7 +12,10 @@ internal class Ltm : ParserBase, IParser
 	private const string RerecordCountHeader = "rerecord_count=";
 	private const string SaveStateCountHeader = "savestate_frame_count=";
 	private const string FrameRateDenHeader = "framerate_den=";
-	private const string FrameRateNumHeader = "framerate_num";
+	private const string FrameRateNumHeader = "framerate_num=";
+	private const string VariableFramerateHeader = "variable_framerate=";
+	private const string LengthSecondsHeader = "length_sec=";
+	private const string LengthNanosecondsHeader = "length_nsec=";
 
 	public override string FileExtension => "ltm";
 
@@ -27,6 +30,9 @@ internal class Ltm : ParserBase, IParser
 
 		double? frameRateDenominator = null;
 		double? frameRateNumerator = null;
+		double? lengthSeconds = null;
+		double? lengthNanoseconds = null;
+		bool isVariableFramerate = false;
 
 		using (var reader = ReaderFactory.Open(file))
 		{
@@ -71,6 +77,18 @@ internal class Ltm : ParserBase, IParser
 							{
 								frameRateNumerator = ParseDoubleFromConfig(s);
 							}
+							else if (s.StartsWith(VariableFramerateHeader))
+							{
+								isVariableFramerate = ParseBoolFromConfig(s);
+							}
+							else if (s.StartsWith(LengthSecondsHeader))
+							{
+								lengthSeconds = ParseDoubleFromConfig(s);
+							}
+							else if (s.StartsWith(LengthNanosecondsHeader))
+							{
+								lengthNanoseconds = ParseDoubleFromConfig(s);
+							}
 						}
 
 						break;
@@ -91,7 +109,11 @@ internal class Ltm : ParserBase, IParser
 			}
 		}
 
-		if (frameRateDenominator > 0 && frameRateNumerator.HasValue)
+		if (isVariableFramerate)
+		{
+			result.FrameRateOverride = result.Frames / (lengthSeconds + (lengthNanoseconds / 1000000000.0D));
+		}
+		else if (frameRateDenominator > 0 && frameRateNumerator.HasValue)
 		{
 			result.FrameRateOverride = frameRateNumerator / frameRateDenominator;
 		}
@@ -137,8 +159,8 @@ internal class Ltm : ParserBase, IParser
 
 		if (split.Length > 1)
 		{
-			var intStr = split.Skip(1).First();
-			var result = double.TryParse(intStr, out double val);
+			var doubleStr = split.Skip(1).First();
+			var result = double.TryParse(doubleStr, out double val);
 			if (result)
 			{
 				return val;
@@ -146,6 +168,28 @@ internal class Ltm : ParserBase, IParser
 		}
 
 		return 0;
+	}
+
+	private static bool ParseBoolFromConfig(string str)
+	{
+		if (string.IsNullOrWhiteSpace(str))
+		{
+			return false;
+		}
+
+		var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+
+		if (split.Length > 1)
+		{
+			var boolStr = split.Skip(1).First();
+			var result = bool.TryParse(boolStr, out bool val);
+			if (result)
+			{
+				return val;
+			}
+		}
+
+		return false;
 	}
 
 	private static string GetPlatformValue(string str)

@@ -101,4 +101,15 @@ public class LtmTests : BaseParserTests
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		AssertNoWarningsOrErrors(result);
 	}
+
+	[TestMethod]
+	public async Task VariableFramerate()
+	{
+		var result = await _ltmParser.Parse(Embedded("variableframerate.ltm"));
+
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+		Assert.AreEqual(30.002721239119342, result.FrameRateOverride);
+		AssertNoWarningsOrErrors(result);
+	}
 }
