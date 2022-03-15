@@ -51,8 +51,7 @@
 					<label asp-for="TimeZone"></label>
 					<label>@Model.TimeZone</label>
 					<br />
-
-					<a class="btn btn-warning btn-sm mt-1 mb-2" data-bs-toggle="collapse" href="#pii">Private Data</a>
+					<a permission="ViewPrivateUserData" class="btn btn-warning btn-sm mt-1 mb-2" data-bs-toggle="collapse" href="#pii">Private Data</a>
 					<div class="collapse" id="pii">
 						<div class="alert alert-info" permission="ViewPrivateUserData">
 							<label asp-for="Id"></label>
