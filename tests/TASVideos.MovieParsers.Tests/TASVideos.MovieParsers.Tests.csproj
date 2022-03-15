@@ -147,6 +147,7 @@
 		<EmbeddedResource Include="LtmSampleFiles\noframerate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\savestate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\unknown-linuxfallback.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\variableframerate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\windows.ltm" />
 		<EmbeddedResource Include="MarSampleFiles\2frames.mar" />
 		<EmbeddedResource Include="MarSampleFiles\noframerate.mar" />
