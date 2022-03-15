@@ -1,9 +1,9 @@
-﻿@model IEnumerable<TASVideos.ViewComponents.Models.LanguageEntry>
+﻿@model IEnumerable<LanguagePage>
 
 @foreach (var l in Model!)
 {
 	<text>
-		>> <a href="/@l.Path">@l.LanguageCode | @l.LanguageDisplayName</a>
+		>> <a href="/@l.Path">@l.Code | @l.DisplayName</a>
 		<br />
 	</text>
 }

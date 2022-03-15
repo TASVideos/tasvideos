@@ -74,6 +74,11 @@ public static class RazorHelpers
 		return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, show });
 	}
 
+	public static async Task<IHtmlContent> ListLanguages(this IViewComponentHelper component, WikiPage pageData)
+	{
+		return await component.InvokeAsync(nameof(ViewComponents.ListLanguages), new { pageData });
+	}
+
 	public static async Task<IHtmlContent> HomePageHeader(this IViewComponentHelper component, WikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.HomePageHeader), new { pageData });
