@@ -1,9 +1,13 @@
 function renderDiff(from, to, destEl, inline, contextSize) {
+	function cleanCr(text) {
+		return text.replaceAll("\r", "");
+	}
+
 	const dmp = new diff_match_patch();
 	dmp.Diff_Timeout = 0;
 	dmp.Diff_EditCost = 20;
 
-	const d = dmp.diff_main(from.text, to.text);
+	const d = dmp.diff_main(cleanCr(from.text), cleanCr(to.text));
 	dmp.diff_cleanupEfficiency(d);
 
 	const allLines = [];
