@@ -13,6 +13,10 @@ internal class Lsmv : ParserBase, IParser
 	private const string SavestateAnchor = "savestate.anchor";
 	private const string Sram = "moviesram";
 
+	// hacky framerate fields, taken from platform framerates
+	private const double NtscSnesFramerate = 60.0988138974405;
+	private const double PalSnesFramerate = 50.0069789081886;
+
 	public override string FileExtension => "lsmv";
 
 	public async Task<IParseResult> Parse(Stream file)
@@ -75,12 +79,12 @@ internal class Lsmv : ParserBase, IParser
 					case "sgb_ntsc":
 						result.SystemCode = SystemCodes.GameBoy;
 						result.Region = RegionType.Ntsc;
-						result.FrameRateOverride = FrameRates.Snes;
+						result.FrameRateOverride = NtscSnesFramerate;
 						break;
 					case "sgb_pal":
 						result.SystemCode = SystemCodes.GameBoy;
 						result.Region = RegionType.Pal;
-						result.FrameRateOverride = FrameRates.SnesPAL;
+						result.FrameRateOverride = PalSnesFramerate;
 						break;
 					case "gdmg":
 						result.SystemCode = SystemCodes.GameBoy;

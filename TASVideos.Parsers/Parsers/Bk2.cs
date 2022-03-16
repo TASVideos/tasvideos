@@ -9,6 +9,11 @@ internal class Bk2 : ParserBase, IParser
 	private const string HeaderFile = "header";
 	private const string InputFile = "input log";
 
+	// hacky framerate fields, taken from platform framerates
+	private const double NtscNesFramerate = 60.0988138974405;
+	private const double NtscSnesFramerate = 60.0988138974405;
+	private const double PalSnesFramerate = 50.0069789081886;
+
 	public override string FileExtension => "bk2";
 
 	public async Task<IParseResult> Parse(Stream file)
@@ -80,17 +85,18 @@ internal class Bk2 : ParserBase, IParser
 			else if (header.GetValueFor(Keys.ModeVs).ToBool())
 			{
 				platform = SystemCodes.Arcade;
-				result.FrameRateOverride = FrameRates.Nes;
+				result.FrameRateOverride = NtscNesFramerate;
 			}
 			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
 			{
 				platform = SystemCodes.GameBoy;
-				if (result.Region == RegionType.Pal) {
-					result.FrameRateOverride = FrameRates.SnesPAL;
+				if (result.Region == RegionType.Pal)
+				{
+					result.FrameRateOverride = NtscSnesFramerate;
 				}
 				else
 				{
-					result.FrameRateOverride = FrameRates.Snes;
+					result.FrameRateOverride = PalSnesFramerate;
 				}
 			}
 			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
