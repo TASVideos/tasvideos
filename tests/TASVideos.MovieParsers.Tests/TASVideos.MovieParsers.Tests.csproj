@@ -149,6 +149,11 @@
 		<EmbeddedResource Include="LtmSampleFiles\unknown-linuxfallback.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\variableframerate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\windows.ltm" />
+		<EmbeddedResource Include="M64SampleFiles\2frames.m64" />
+		<EmbeddedResource Include="M64SampleFiles\pal.m64" />
+		<EmbeddedResource Include="M64SampleFiles\savestate.m64" />
+		<EmbeddedResource Include="M64SampleFiles\sram.m64" />
+		<EmbeddedResource Include="M64SampleFiles\wrongheader.m64" />
 		<EmbeddedResource Include="MarSampleFiles\2frames.mar" />
 		<EmbeddedResource Include="MarSampleFiles\noframerate.mar" />
 		<EmbeddedResource Include="MarSampleFiles\wrongheader.mar" />
