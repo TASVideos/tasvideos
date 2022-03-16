@@ -92,11 +92,11 @@ internal class Bk2 : ParserBase, IParser
 				platform = SystemCodes.GameBoy;
 				if (result.Region == RegionType.Pal)
 				{
-					result.FrameRateOverride = NtscSnesFramerate;
+					result.FrameRateOverride = PalSnesFramerate;
 				}
 				else
 				{
-					result.FrameRateOverride = PalSnesFramerate;
+					result.FrameRateOverride = NtscSnesFramerate;
 				}
 			}
 			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
