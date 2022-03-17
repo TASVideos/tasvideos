@@ -18,7 +18,6 @@ public static class WikiModules
 	public const string FrontpageSubmissionList = "frontpagesubmissionlist";
 	public const string GameName = "gamename";
 	public const string GameSubPages = "gamesubpages";
-	public const string ListLanguages = "listlanguages";
 	public const string MediaPosts = "mediaposts";
 	public const string MovieChangeLog = "moviechangelog";
 	public const string MovieMaintenanceLog = "moviemaintlog";
