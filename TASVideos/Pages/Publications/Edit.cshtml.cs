@@ -63,37 +63,37 @@ public class EditModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var publication = await _db.Publications
-				.Where(p => p.Id == Id)
-				.Select(p => new PublicationEditModel
-				{
-					Class = p.PublicationClass!.Name,
-					MovieFileName = p.MovieFileName,
-					ClassIconPath = p.PublicationClass.IconPath,
-					ClassLink = p.PublicationClass.Link,
-					SystemCode = p.System!.Code,
-					Title = p.Title,
-					ObsoletedBy = p.ObsoletedById,
-					Branch = p.Branch,
-					EmulatorVersion = p.EmulatorVersion,
-					AdditionalAuthors = p.AdditionalAuthors,
-					Urls = p.PublicationUrls
-						.Select(u => new PublicationUrlDisplayModel
-						{
-							Id = u.Id,
-							Url = u.Url!,
-							Type = u.Type,
-							DisplayName = u.DisplayName
-						})
-						.ToList(),
-					SelectedFlags = p.PublicationFlags
-						.Select(pf => pf.FlagId)
-						.ToList(),
-					SelectedTags = p.PublicationTags
-						.Select(pt => pt.TagId)
-						.ToList(),
-					Markup = p.WikiContent != null ? p.WikiContent.Markup : ""
-				})
-				.SingleOrDefaultAsync();
+			.Where(p => p.Id == Id)
+			.Select(p => new PublicationEditModel
+			{
+				Class = p.PublicationClass!.Name,
+				MovieFileName = p.MovieFileName,
+				ClassIconPath = p.PublicationClass.IconPath,
+				ClassLink = p.PublicationClass.Link,
+				SystemCode = p.System!.Code,
+				Title = p.Title,
+				ObsoletedBy = p.ObsoletedById,
+				Branch = p.Branch,
+				EmulatorVersion = p.EmulatorVersion,
+				AdditionalAuthors = p.AdditionalAuthors,
+				Urls = p.PublicationUrls
+					.Select(u => new PublicationUrlDisplayModel
+					{
+						Id = u.Id,
+						Url = u.Url!,
+						Type = u.Type,
+						DisplayName = u.DisplayName
+					})
+					.ToList(),
+				SelectedFlags = p.PublicationFlags
+					.Select(pf => pf.FlagId)
+					.ToList(),
+				SelectedTags = p.PublicationTags
+					.Select(pt => pt.TagId)
+					.ToList(),
+				Markup = p.WikiContent != null ? p.WikiContent.Markup : ""
+			})
+			.SingleOrDefaultAsync();
 
 		if (publication == null)
 		{
@@ -133,11 +133,12 @@ public class EditModel : BasePageModel
 			.ToListAsync();
 		AvailableMoviesForObsoletedBy = await _db.Publications
 			.Where(p => p.ObsoletedById == null || p.Id == obsoletedById)
-			.Where(p => p.System!.Code == systemCode)
+			.Where(p => p.System!.Code == systemCode || p.Id == obsoletedById)
 			.Where(p => p.Id != Id)
 			.ToDropdown()
 			.OrderBy(p => p.Text)
 			.ToListAsync();
+
 		Files = await _mapper.ProjectTo<PublicationFileDisplayModel>(
 				_db.PublicationFiles.Where(f => f.PublicationId == Id))
 			.ToListAsync();
