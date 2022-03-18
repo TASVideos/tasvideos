@@ -3,7 +3,6 @@
 	bool canEdit = WikiHelper.UserCanEditWikiPage(Model!.PageName, User.Name(), User.Permissions());
 }
 
-<!-- Eventually we will show available translations here-->
 @if (canEdit)
 {
 	<div class="text-end mb-2">
