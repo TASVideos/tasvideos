@@ -20,8 +20,6 @@ public class RenderModel : BasePageModel
 		_logger = logger;
 	}
 
-	public string Markup { get; set; } = "";
-
 	public WikiPage WikiPage { get; set; } = new();
 
 	public async Task<IActionResult> OnGet(string? url, int? revision = null)
@@ -62,7 +60,6 @@ public class RenderModel : BasePageModel
 			WikiPage = wikiPage;
 			ViewData["WikiPage"] = WikiPage;
 			ViewData["Title"] = WikiPage.PageName;
-			Markup = WikiPage.Markup;
 			return Page();
 		}
 

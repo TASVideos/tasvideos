@@ -1,6 +1,6 @@
 @page
+@model RenderModel
 @{
 	Layout = "_WikiLayout";
 }
-@model RenderModel
-<wiki-markup markup=@Model.Markup page-data=@Model.WikiPage></wiki-markup>
+<wiki-markup markup="@Model.WikiPage.Markup" page-data="@Model.WikiPage"></wiki-markup>
