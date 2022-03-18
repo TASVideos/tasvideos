@@ -166,7 +166,7 @@ public class UploadModel : BasePageModel
 		var userId = User.GetUserId();
 		StorageUsed = await _db.UserFiles
 			.Where(uf => uf.AuthorId == userId)
-			.SumAsync(uf => uf.PhysicalLength);
+			.SumAsync(uf => uf.Content.Length);
 
 		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
 			.OrderBy(s => s.Code)
