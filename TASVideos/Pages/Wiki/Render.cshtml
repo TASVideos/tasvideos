@@ -3,4 +3,10 @@
 @{
 	Layout = "_WikiLayout";
 }
+<warning-alert condition="Model.WikiPage.ChildId.HasValue">
+	<p>
+		This is an old revision of this page.<br />
+		<a href="/@Model.WikiPage.PageName">Click here</a> to see the current revision.
+	</p>
+</warning-alert>
 <wiki-markup markup="@Model.WikiPage.Markup" page-data="@Model.WikiPage"></wiki-markup>
