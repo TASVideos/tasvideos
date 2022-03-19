@@ -43,6 +43,9 @@ public class EditModel : BasePageModel
 	[Display(Name = "Available Genres")]
 	public IEnumerable<SelectListItem> AvailableGenres { get; set; } = new List<SelectListItem>();
 
+	[Display(Name = "Available Groups")]
+	public IEnumerable<SelectListItem> AvailableGroups { get; set; } = new List<SelectListItem>();
+
 	public async Task<IActionResult> OnGet()
 	{
 		if (Id.HasValue)
@@ -93,47 +96,47 @@ public class EditModel : BasePageModel
 			}
 		}
 
-		Game game;
+		var system = await _db.GameSystems
+			.SingleOrDefaultAsync(s => s.Code == Game.SystemCode);
+
+		if (system is null)
+		{
+			return BadRequest();
+		}
+
+		Game? game;
 		if (Id.HasValue)
 		{
-			var gameEntity = await _db.Games
+			game = await _db.Games
 				.Include(g => g.GameGenres)
+				.Include(g => g.GameGroups)
 				.SingleOrDefaultAsync(g => g.Id == Id.Value);
-			if (gameEntity == null)
+			if (game == null)
 			{
 				return NotFound();
 			}
 
-			game = gameEntity;
-			game.GameGenres.Clear();
 			_mapper.Map(Game, game);
+			SetGameValues(game, Game, system);
+			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
 		}
 		else
 		{
 			game = _mapper.Map<Game>(Game);
 			_db.Games.Add(game);
+			SetGameValues(game, Game, system);
+			await ConcurrentSave(_db, $"Game {game.GoodName} created", "Unable to create game");
 		}
 
-		game.GameResourcesPage = Game.GameResourcesPage;
-		game.System = await _db.GameSystems
-			.SingleOrDefaultAsync(s => s.Code == Game.SystemCode);
+		return BasePageRedirect("Index", new { game.Id });
+	}
 
-		if (game.System == null)
-		{
-			return BadRequest();
-		}
-
-		foreach (var genre in Game.Genres)
-		{
-			game.GameGenres.Add(new GameGenre
-			{
-				Game = game,
-				GenreId = genre
-			});
-		}
-
-		await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
-		return BasePageRedirect("List");
+	private static void SetGameValues(Game game, GameEditModel editModel, GameSystem system)
+	{
+		game.GameResourcesPage = editModel.GameResourcesPage;
+		game.System = system;
+		game.GameGenres.SetGenres(editModel.Genres);
+		game.GameGroups.SetGroups(editModel.Groups);
 	}
 
 	public async Task<IActionResult> OnPostDelete()
@@ -158,10 +161,17 @@ public class EditModel : BasePageModel
 	private async Task Initialize()
 	{
 		AvailableSystems = await _db.GameSystems
+			.OrderBy(s => s.Code)
 			.ToDropdown()
 			.ToListAsync();
 
 		AvailableGenres = await _db.Genres
+			.OrderBy(g => g.DisplayName)
+			.ToDropdown()
+			.ToListAsync();
+
+		AvailableGroups = await _db.GameGroups
+			.OrderBy(g => g.Name)
 			.ToDropdown()
 			.ToListAsync();
 

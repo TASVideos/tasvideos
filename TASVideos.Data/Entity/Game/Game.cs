@@ -70,4 +70,22 @@ public static class GameExtensions
 			? query.Where(g => codeList.Contains(g.System!.Code))
 			: query;
 	}
+
+	public static void SetGenres(this ICollection<GameGenre> genres, IEnumerable<int> genreIds)
+	{
+		genres.Clear();
+		genres.AddRange(genreIds.Select(g => new GameGenre
+		{
+			GenreId = g
+		}));
+	}
+
+	public static void SetGroups(this ICollection<GameGameGroup> groups, IEnumerable<int> groupIds)
+	{
+		groups.Clear();
+		groups.AddRange(groupIds.Select(g => new GameGameGroup
+		{
+			GameGroupId = g
+		}));
+	}
 }

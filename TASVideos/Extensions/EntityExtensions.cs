@@ -21,6 +21,16 @@ public static class EntityExtensions
 			});
 	}
 
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<GameGroup> query)
+	{
+		return query
+			.Select(s => new SelectListItem
+			{
+				Text = s.Name,
+				Value = s.Id.ToString()
+			});
+	}
+
 	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<GameSystem> query)
 	{
 		return query

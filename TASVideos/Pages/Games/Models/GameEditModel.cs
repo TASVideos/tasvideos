@@ -44,4 +44,7 @@ public class GameEditModel
 
 	[Display(Name = "Genres")]
 	public IEnumerable<int> Genres { get; set; } = new List<int>();
+
+	[Display(Name = "Groups")]
+	public IEnumerable<int> Groups { get; set; } = new List<int>();
 }
