@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -69,6 +70,27 @@ public class RateModel : BasePageModel
 		await _db.SaveChangesAsync();
 
 		return BasePageRedirect("/Ratings/Index", new { Id });
+	}
+
+	public async Task<IActionResult> OnPostInline()
+	{
+		Rating = await JsonSerializer.DeserializeAsync<PublicationRateModel>(Request.Body) ?? Rating;
+		ModelState.ClearValidationState(nameof(Rating));
+		if (!TryValidateModel(Rating, nameof(Rating)))
+		{
+			return new ContentResult { StatusCode = StatusCodes.Status400BadRequest };
+		}
+
+		var userId = User.GetUserId();
+		var rating = await _db.PublicationRatings
+			.ForPublication(Id)
+			.ForUser(userId)
+			.FirstOrDefaultAsync();
+		UpdateRating(rating, Id, userId, PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating), Rating.Unrated);
+
+		await _db.SaveChangesAsync();
+
+		return new ContentResult { StatusCode = StatusCodes.Status200OK };
 	}
 
 	private void UpdateRating(PublicationRating? rating, int id, int userId, double? value, bool remove)
