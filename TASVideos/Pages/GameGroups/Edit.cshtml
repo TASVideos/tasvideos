@@ -1,0 +1,36 @@
+﻿@page "{id?}"
+@model EditModel
+@{
+	ViewData["Title"] = Model.Id.HasValue
+		? $"Editing Game Group #{Model.Id} TODO"
+		: "Create a new Game Group entry";
+	string saveBtnName = Model.Id.HasValue ? "Save" : "Create";
+}
+<form-group>
+	<delete-button condition="@Model.CanDelete" asp-href="/GameGroups/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
+</form-group>
+<form method="post">
+	<row>
+		<column md="6">
+			<form-group>
+				<label asp-for="GameGroup.Name"></label>
+				<input type="text" asp-for="GameGroup.Name" class="form-control" />
+				<span asp-validation-for="GameGroup.Name" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="GameGroup.SearchKey"></label>
+				<input type="text" asp-for="GameGroup.SearchKey" class="form-control" />
+				<span asp-validation-for="GameGroup.SearchKey" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> @saveBtnName</button>
+		<a condition="@(!Model.Id.HasValue)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="Model.Id.HasValue" asp-page="Index" asp-route-id="@Model.Id!.Value" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</form-button-bar>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
