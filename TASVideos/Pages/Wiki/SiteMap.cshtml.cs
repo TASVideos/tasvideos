@@ -39,6 +39,7 @@ public class SiteMapModel : BasePageModel
 		Map = CorePages.ToList();
 		var wikiPages = _wikiPages.Query
 			.ThatAreSubpagesOf("")
+			.Where(w => !w.PageName.StartsWith("InternalSystem"))
 			.Select(w => w.PageName)
 			.ToList();
 
