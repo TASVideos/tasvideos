@@ -31,6 +31,7 @@ Disallow: /MovieMaintenanceLog
 Disallow: /UserMaintenanceLog
 Disallow: /InternalSystem/
 Disallow: /*?revision=*
+Disallow: /Wiki/Diff
 
 User-agent: Mediapartners-Google
 Allow: /forum/
