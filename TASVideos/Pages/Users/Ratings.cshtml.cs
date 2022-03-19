@@ -24,7 +24,7 @@ public class RatingsModel : BasePageModel
 	{
 		Ratings = await _userManager.GetUserRatings(
 			UserName,
-			User.Has(PermissionTo.SeePrivateRatings));
+			User.Has(PermissionTo.SeePrivateRatings) || User.Name() == UserName);
 
 		if (Ratings == null)
 		{
