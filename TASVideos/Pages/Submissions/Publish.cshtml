@@ -137,4 +137,30 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script>
+		let originalDescription = "@Html.Raw(Model.Submission.MovieMarkup)";
+		const obsoletionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieToObsolete)");
+		const descriptionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieMarkup)");
+
+		descriptionModel.onchange = function() {
+			originalDescription = descriptionModel.value;
+		}
+
+		obsoletionModel.onchange = function() {
+			if (!obsoletionModel.value) {
+				descriptionModel.value = originalDescription;
+				return;
+			}
+
+			const url = `/Submissions/Publish/@(Model.Id)?handler=ObsoletePublication&publicationId=${obsoletionModel.value}`;
+			fetch(url)
+				.then(handleFetchErrors)
+				.then(r => r.json())
+				.then(t => {
+					const oldValue = originalDescription;
+					descriptionModel.value = t.markup;
+					originalDescription = oldValue;
+				});
+		}
+	</script>
 }
