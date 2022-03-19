@@ -7,7 +7,7 @@
 <warning-alert condition="!Model.Games.Any()">
 	No Games Listed for this Game Group
 </warning-alert>
-
+<a asp-page="List" class="mb-2">See All Groups</a>
 <table condition="Model.Games.Any()" class="table table-bordered table-striped">
 	<tr>
 		<th>Game</th>

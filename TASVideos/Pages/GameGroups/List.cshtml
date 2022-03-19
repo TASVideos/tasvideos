@@ -1,0 +1,14 @@
+﻿@page
+@model ListModel
+@{
+	ViewData["Title"] = "Game Groups";
+}
+
+<ul>
+	@foreach(var group in Model.GameGroups.OrderBy(gg => gg.Name))
+	{
+		<li>
+			<a asp-page="Index" asp-route-id="@group.Id">@group.Name</a>
+		</li>
+	}
+</ul>
