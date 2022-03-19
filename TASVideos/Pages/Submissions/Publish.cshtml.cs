@@ -183,8 +183,9 @@ public class PublishModel : BasePageModel
 			.Where(p => p.Id == publicationId)
 			.Select(p => new
 			{
-				p.Id,
-				p.WikiContent!.Markup
+				p.WikiContent!.Markup,
+				Flags = p.PublicationFlags.Select(pf => pf.FlagId),
+				Tags = p.PublicationTags.Select(pt => pt.TagId)
 			})
 			.SingleOrDefaultAsync();
 
