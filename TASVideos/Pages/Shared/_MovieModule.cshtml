@@ -117,14 +117,6 @@
 						<i class="fa fa-comments-o"></i> Discuss
 					</a>
 				</div>
-				@*
-				<div>
-					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
-						<i class="fa fa-star-o"></i> @Math.Round(Model.OverallRating ?? 0, 2, MidpointRounding.AwayFromZero) / 10
-					</a>
-					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: @Model.RatingCount</a>
-				</div>
-				*@
 				<div>
 					<input condition="@canRate" id="RequestVerificationToken" type="hidden" value="@requestToken" />
 					<a condition="@canRate" asp-page="/Publications/Rate" asp-route-id="@Model.Id" onclick="toggleDisplay(@(Model.Id)); return false;" class="btn btn-success btn-sm mt-1" id="ownRating-@(Model.Id)">@ratingString</a>
