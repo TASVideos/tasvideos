@@ -36,10 +36,7 @@ FROM public.user_files uf
 WHERE uf.id NOT IN (SELECT uif.id from _user_files uif);
 
 --Trim Wiki
-DELETE FROM public.wiki_pages
-WHERE child_id is not null
-OR id NOT IN (SELECT wiki_content_id FROM publications) 
-OR id NOT IN (SELECT wiki_content_id FROM submissions);
+DELETE FROM public.wiki_pages WHERE child_id is not null;
 
 DROP TABLE IF EXISTS _wiki_pages_to_delete;
 CREATE TEMPORARY TABLE _wiki_pages_to_delete (id int primary key);
