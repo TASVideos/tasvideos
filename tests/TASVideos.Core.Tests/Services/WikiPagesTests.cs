@@ -69,8 +69,6 @@ public class WikiPagesTests
 	[DataRow("\r \n \t")]
 	public async Task Exists_NoPageName_ReturnsFalse(string pageName)
 	{
-		AddPage(pageName);
-
 		var actual = await _wikiPages.Exists(pageName);
 		Assert.IsFalse(actual);
 	}
@@ -219,8 +217,6 @@ public class WikiPagesTests
 	[DataRow("\r \n \t")]
 	public async Task Page_NoPageName_ReturnsNull(string pageName)
 	{
-		AddPage(pageName);
-
 		var actual = await _wikiPages.Page(pageName);
 		Assert.IsNull(actual);
 	}
