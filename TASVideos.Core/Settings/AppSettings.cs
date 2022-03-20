@@ -61,13 +61,15 @@ public class AppSettings
 		public string ConsumerKey { get; set; } = "";
 		public string ConsumerSecret { get; set; } = "";
 		public string AccessToken { get; set; } = "";
+		public string AccessTokenV2 { get; set; } = "";
 		public string TokenSecret { get; set; } = "";
 
 		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ApiBase)
 			&& !string.IsNullOrWhiteSpace(ConsumerKey)
 			&& !string.IsNullOrWhiteSpace(ConsumerSecret)
-			&& !string.IsNullOrWhiteSpace(AccessToken)
-			&& !string.IsNullOrWhiteSpace(TokenSecret);
+			&& !string.IsNullOrWhiteSpace(AccessTokenV2)
+			&& !string.IsNullOrWhiteSpace(TokenSecret)
+			;
 	}
 
 	public class CacheSetting
