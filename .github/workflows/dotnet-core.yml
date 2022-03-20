@@ -16,7 +16,7 @@ jobs:
     - name: Set up .NET Core 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.1
+        dotnet-version: 6.0.x
     - name: Set up .NET Core 6.0.x
       uses: actions/setup-dotnet@v1
       with:
