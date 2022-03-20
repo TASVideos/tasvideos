@@ -76,7 +76,7 @@ public class IndexModel : BasePageModel
 
 		Movies = await _db.Publications
 			.FilterByTokens(searchModel)
-			.ToViewModel(searchModel.SortBy == "y")
+			.ToViewModel(searchModel.SortBy == "y", User.GetUserId())
 			.ToListAsync();
 
 		return Page();

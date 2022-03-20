@@ -25,7 +25,7 @@ public class ViewModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var publication = await _db.Publications
-			.ToViewModel()
+			.ToViewModel(false, User.GetUserId())
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
 		if (publication == null)

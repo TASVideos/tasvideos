@@ -134,7 +134,7 @@ public static class EntityExtensions
 			});
 	}
 
-	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false)
+	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
 	{
 		var q = query
 			.Select(p => new PublicationDisplayModel
@@ -192,6 +192,11 @@ public static class EntityExtensions
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 					.Where(pr => pr.User!.UseRatings)
 					.Average(pr => pr.Value),
+				Rating = new PublicationRateModel
+				{
+					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
+					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
+				},
 				Region = p.Rom != null ? p.Rom.Region : null,
 				RomVersion = p.Rom != null ? p.Rom.Version : null
 			});
