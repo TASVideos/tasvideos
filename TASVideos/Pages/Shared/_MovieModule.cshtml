@@ -141,7 +141,7 @@
 						</div>
 					</div>
 				</div>
-				<script>
+				<script condition="@canRate">
 					function rate(pubId, unrated) {
 						let rating = {};
 						rating.Rating = document.querySelector('#rate-'+pubId+' #Rating_Rating').value;
