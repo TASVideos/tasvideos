@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IO.Compression;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
@@ -75,15 +76,24 @@ public class UploadModel : BasePageModel
 			return Page();
 		}
 
-		// Note: we calculate storage used by compressed site, so technically we should compress then check
-		// but if they are cutting it this close, it's probably going to be a problem anyway
-		// and we don't want to waste time compressing the file if we do not need to
+		// We calculate storage used by the compressed size in the upload.  This is probably going to be
+		// about the same size as what we recompress it to.
 		if (StorageUsed + UserFile.File!.Length > SiteGlobalConstants.UserFileStorageLimit)
 		{
 			ModelState.AddModelError(
 				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
 				"File exceeds your available storage space. Remove unecessary files and try again.");
 			return Page();
+		}
+
+		byte[] actualFileData;
+
+		{
+			// TODO: TO avoid zipbombs we should limit the max size of tempStream
+			var tempStream = new MemoryStream((int)UserFile.File.Length);
+			await using var gzip = new GZipStream(UserFile.File.OpenReadStream(), CompressionMode.Decompress);
+			await gzip.CopyToAsync(tempStream);
+			actualFileData = tempStream.ToArray();
 		}
 
 		var userFile = new UserFile
@@ -94,7 +104,7 @@ public class UploadModel : BasePageModel
 			SystemId = UserFile.SystemId,
 			GameId = UserFile.GameId,
 			AuthorId = User.GetUserId(),
-			LogicalLength = (int)UserFile.File.Length,
+			LogicalLength = actualFileData.Length,
 			UploadTimestamp = DateTime.UtcNow,
 			Class = SupportedSupplementalTypes.Contains(fileExt)
 				? UserFileClass.Support
@@ -106,7 +116,7 @@ public class UploadModel : BasePageModel
 
 		if (_parser.SupportedMovieExtensions.Contains(fileExt))
 		{
-			var parseResult = await _parser.ParseFile(UserFile.File.FileName, UserFile.File.OpenReadStream());
+			var parseResult = await _parser.ParseFile(UserFile.File.FileName, new MemoryStream(actualFileData, false));
 			if (!parseResult.Success)
 			{
 				ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
@@ -142,8 +152,7 @@ public class UploadModel : BasePageModel
 			userFile.Length = userFile.Frames / frameRate;
 		}
 
-		var fileBytes = await UserFile.File.ToBytes();
-		var fileResult = await _fileService.Compress(fileBytes);
+		var fileResult = await _fileService.Compress(actualFileData);
 
 		userFile.PhysicalLength = fileResult.CompressedSize;
 		userFile.CompressionType = fileResult.Type;

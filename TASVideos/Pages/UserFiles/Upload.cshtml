@@ -63,4 +63,26 @@
 		const systemId = "@Html.IdFor(m => m.UserFile.SystemId)";
 		enableUserFile(gameId, systemId);
 	</script>
+	<script src="/js/pako_deflate.min.js"></script>
+	<script>
+		"use strict";
+		{
+			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile.File)");
+			fileInput.addEventListener("input", async () => {
+				const inputFile = fileInput.files[0];
+				if (!inputFile) {
+					return;
+				}
+
+				const inputBytes = await inputFile.arrayBuffer();
+				const zippedBytes = pako.gzip(inputBytes);
+
+				const newFile = new File([zippedBytes], inputFile.name, { type: inputFile.type, lastModified: inputFile.lastModified });
+
+				const dto = new DataTransfer;
+				dto.items.add(newFile);
+				fileInput.files = dto.files;
+			});
+		}
+	</script>
 }
