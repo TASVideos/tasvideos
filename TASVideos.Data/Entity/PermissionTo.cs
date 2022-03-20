@@ -87,7 +87,7 @@ public enum PermissionTo
 	EditRamAddresses = 107,
 
 	[Group("Wiki Administration")]
-	[Description("The ability to see certain restricted pages that pertain to administration activities.")]
+	[Description("(Not used, do not assign), Was the ability to see certain restricted pages that pertain to administration activities. There are no pages that meet this criteria.")]
 	SeeAdminPages = 190,
 
 	#endregion

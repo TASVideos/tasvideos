@@ -6,7 +6,7 @@ using TASVideos.Pages.Wiki.Models;
 
 namespace TASVideos.Pages.Wiki;
 
-[RequirePermission(PermissionTo.SeeAdminPages)]
+[RequirePermission(PermissionTo.EditWikiPages)]
 public class SiteMapModel : BasePageModel
 {
 	private readonly IWikiPages _wikiPages;
