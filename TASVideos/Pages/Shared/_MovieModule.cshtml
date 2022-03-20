@@ -1,4 +1,5 @@
 ﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
 	var classIconPath2X = "";
 	var classIconPath4X = "";
@@ -7,6 +8,9 @@
 		classIconPath2X = $"{Model.ClassIconPath.Split('.')[0]}-2x.png";
 		classIconPath4X = $"{Model.ClassIconPath.Split('.')[0]}-4x.png";
 	}
+	var requestToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
+	var canRate = User.Has(PermissionTo.RateMovies);
+	var ratingString = Model.Rating.Unrated ? "Rate" : $"Rated {Model.Rating.Rating} / 10";
 }
 
 @inject IAwards _awards
@@ -114,11 +118,68 @@
 					</a>
 				</div>
 				<div>
-					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
-						<i class="fa fa-star-o"></i> @Math.Round(Model.OverallRating ?? 0, 2, MidpointRounding.AwayFromZero) / 10
+					<input condition="@canRate" id="RequestVerificationToken" type="hidden" value="@requestToken" />
+					<a condition="@canRate" asp-page="/Publications/Rate" asp-route-id="@Model.Id" onclick="toggleDisplay(@(Model.Id)); return false;" class="btn btn-success btn-sm mt-1" id="ownRating-@(Model.Id)">@ratingString</a>
+					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
+						<i class="fa fa-star-o"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
 					</a>
-					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: @Model.RatingCount</a>
+					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: <span id="ratingCount-@(Model.Id)">@Model.RatingCount</span></a>
+					<div condition="@canRate" class="mt-1 mb-0 d-none border border-primary bg-cardprimary rounded p-1" id="rate-@(Model.Id)">
+						<button class="btn btn-success btn-sm" onclick="rate(@(Model.Id),false);"><span class="fa fa-save"></span> Save</button>
+						<input asp-for="Rating.Rating" type="number" class="form-control d-inline-block btn-sm" style="width:5em;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
+						<button class="btn btn-danger btn-sm" onclick="rate(@(Model.Id),true)"><i class="fa fa-times"></i> Remove</button>
+						<div>
+						<input id="slider-@(Model.Id)" type="range" class="form-range mw-100 h-auto mt-1" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
+						</div>
+					</div>
 				</div>
+				<script condition="@canRate">
+					function rate(pubId, unrated) {
+						let rating = {};
+						rating.Rating = document.querySelector('#rate-'+pubId+' #Rating_Rating').value;
+						rating.Unrated = unrated;
+						fetch('/Publications/Rate/'+pubId+'?handler=Inline', {
+							method: 'POST',
+							body: JSON.stringify(rating),
+							headers: {
+								RequestVerificationToken:
+								document.getElementById('RequestVerificationToken').value
+							}
+						})
+							.then(r => {
+								if (!r.ok) {
+									throw Error(r.statusText);
+								}
+								return r;
+							})
+							.then(r => r.text())
+							.then(r => {
+								let update = JSON.parse(r);
+								if (unrated) {
+									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rate';
+								} else {
+									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rated '+update.Rating+' / 10';
+								}
+								document.querySelector('#ratingCount-'+pubId).innerHTML = update.RatingCount;
+								document.querySelector('#overallRating-'+pubId).innerHTML = update.OverallRating;
+								toggleDisplay(pubId);
+							})
+							.catch(e => alert("Rating failed"));
+					}
+					function toggleDisplay(pubId) {
+						ratingConnect(document.querySelector('#rate-'+pubId+' #Rating_Rating'), document.querySelector('#slider-'+pubId));
+						document.querySelector('#rate-'+pubId).classList.toggle('d-none');
+					}
+					function ratingConnect(textbox, slider) {
+						textbox.oninput = function () {
+							slider.value = textbox.value;
+						};
+						slider.oninput = function () {
+							slider.value = Math.round(Number(this.value) * 2) / 2;
+							textbox.value = slider.value;
+						};
+					}
+				</script>
 				@foreach (var award in publicationAwards.OrderByDescending(a => a.Year))
 				{
 					<partial name="_Award" model="award" />
