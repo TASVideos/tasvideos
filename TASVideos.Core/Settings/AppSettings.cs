@@ -14,6 +14,7 @@ public class AppSettings
 	public IrcConnection Irc { get; set; } = new();
 	public DiscordConnection Discord { get; set; } = new();
 	public TwitterConnection Twitter { get; set; } = new();
+	public TwitterConnectionV2 TwitterV2 { get; set; } = new();
 	public JwtSettings Jwt { get; set; } = new();
 	public GoogleAuthSettings YouTube { get; set; } = new();
 	public GmailAuthSettings Gmail { get; set; } = new();
@@ -61,14 +62,19 @@ public class AppSettings
 		public string ConsumerKey { get; set; } = "";
 		public string ConsumerSecret { get; set; } = "";
 		public string AccessToken { get; set; } = "";
-		public string AccessTokenV2 { get; set; } = "";
 		public string TokenSecret { get; set; } = "";
 
 		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ApiBase)
 			&& !string.IsNullOrWhiteSpace(ConsumerKey)
 			&& !string.IsNullOrWhiteSpace(ConsumerSecret)
-			&& !string.IsNullOrWhiteSpace(AccessTokenV2)
 			&& !string.IsNullOrWhiteSpace(TokenSecret)
+			;
+	}
+
+	public class TwitterConnectionV2
+	{
+		public string ClientId { get; set; } = "";
+		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ClientId)
 			;
 	}
 

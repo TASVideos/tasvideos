@@ -40,6 +40,11 @@ public static class ServiceCollectionExtensions
 				client.BaseAddress = new Uri("https://api.twitter.com/2/tweets");
 			});
 		services
+			.AddHttpClient(HttpClients.TwitterAuth, client =>
+			{
+				client.BaseAddress = new Uri("https://api.twitter.com/2/oauth2/token");
+			});
+		services
 			.AddHttpClient(HttpClients.GoogleAuth, client =>
 			{
 				client.BaseAddress = new Uri("https://oauth2.googleapis.com/");
