@@ -7,7 +7,7 @@ internal class Mar : ParserBase, IParser
 {
 	public override string FileExtension => "mar";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

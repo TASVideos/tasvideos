@@ -16,7 +16,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidHeader()
 	{
-		var result = await _m64Parser.Parse(Embedded("wrongheader.m64"));
+		var result = await _m64Parser.Parse(Embedded("wrongheader.m64"), EmbeddedLength("wrongheader.m64"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.IsNotNull(result.Errors);
@@ -26,7 +26,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task ValidHeader()
 	{
-		var result = await _m64Parser.Parse(Embedded("2frames.m64"));
+		var result = await _m64Parser.Parse(Embedded("2frames.m64"), EmbeddedLength("2frames.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -34,7 +34,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task System()
 	{
-		var result = await _m64Parser.Parse(Embedded("2frames.m64"));
+		var result = await _m64Parser.Parse(Embedded("2frames.m64"), EmbeddedLength("2frames.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.N64, result.SystemCode);
@@ -43,7 +43,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task RerecordCount()
 	{
-		var result = await _m64Parser.Parse(Embedded("2frames.m64"));
+		var result = await _m64Parser.Parse(Embedded("2frames.m64"), EmbeddedLength("2frames.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(1, result.RerecordCount);
@@ -52,7 +52,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task Ntsc()
 	{
-		var result = await _m64Parser.Parse(Embedded("2frames.m64"));
+		var result = await _m64Parser.Parse(Embedded("2frames.m64"), EmbeddedLength("2frames.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -61,7 +61,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task Pal()
 	{
-		var result = await _m64Parser.Parse(Embedded("pal.m64"));
+		var result = await _m64Parser.Parse(Embedded("pal.m64"), EmbeddedLength("pal.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Pal, result.Region);
@@ -70,7 +70,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task Length()
 	{
-		var result = await _m64Parser.Parse(Embedded("2frames.m64"));
+		var result = await _m64Parser.Parse(Embedded("2frames.m64"), EmbeddedLength("2frames.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(2, result.Frames);
@@ -79,7 +79,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _m64Parser.Parse(Embedded("2frames.m64"));
+		var result = await _m64Parser.Parse(Embedded("2frames.m64"), EmbeddedLength("2frames.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -88,7 +88,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task Sram()
 	{
-		var result = await _m64Parser.Parse(Embedded("sram.m64"));
+		var result = await _m64Parser.Parse(Embedded("sram.m64"), EmbeddedLength("sram.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Sram, result.StartType);
@@ -97,7 +97,7 @@ public class M64Tests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _m64Parser.Parse(Embedded("savestate.m64"));
+		var result = await _m64Parser.Parse(Embedded("savestate.m64"), EmbeddedLength("savestate.m64"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);

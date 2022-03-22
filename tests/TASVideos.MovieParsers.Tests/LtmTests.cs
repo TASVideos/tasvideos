@@ -22,7 +22,7 @@ public class LtmTests : BaseParserTests
 	[DataRow("dos.ltm", SystemCodes.Dos)]
 	public async Task SystemId(string filename, string expectedSystemCode)
 	{
-		var actual = await _ltmParser.Parse(Embedded(filename));
+		var actual = await _ltmParser.Parse(Embedded(filename), EmbeddedLength(filename));
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(expectedSystemCode, actual.SystemCode);
 	}
@@ -30,7 +30,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task Region()
 	{
-		var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
+		var result = await _ltmParser.Parse(Embedded("2frames.ltm"), EmbeddedLength("2frames.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -39,7 +39,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task FrameCount()
 	{
-		var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
+		var result = await _ltmParser.Parse(Embedded("2frames.ltm"), EmbeddedLength("2frames.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -49,7 +49,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task RerecordCount()
 	{
-		var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
+		var result = await _ltmParser.Parse(Embedded("2frames.ltm"), EmbeddedLength("2frames.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -60,7 +60,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task FrameRate()
 	{
-		var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
+		var result = await _ltmParser.Parse(Embedded("2frames.ltm"), EmbeddedLength("2frames.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -71,7 +71,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task MissingFrameRate_Defaults()
 	{
-		var result = await _ltmParser.Parse(Embedded("noframerate.ltm"));
+		var result = await _ltmParser.Parse(Embedded("noframerate.ltm"), EmbeddedLength("noframerate.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(Ltm.DefaultFrameRate, result.FrameRateOverride);
@@ -83,7 +83,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _ltmParser.Parse(Embedded("2frames.ltm"));
+		var result = await _ltmParser.Parse(Embedded("2frames.ltm"), EmbeddedLength("2frames.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -94,7 +94,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _ltmParser.Parse(Embedded("savestate.ltm"));
+		var result = await _ltmParser.Parse(Embedded("savestate.ltm"), EmbeddedLength("savestate.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
@@ -105,7 +105,7 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	public async Task VariableFramerate()
 	{
-		var result = await _ltmParser.Parse(Embedded("variableframerate.ltm"));
+		var result = await _ltmParser.Parse(Embedded("variableframerate.ltm"), EmbeddedLength("variableframerate.ltm"));
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);

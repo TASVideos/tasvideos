@@ -15,7 +15,7 @@ internal class Lsmv : ParserBase, IParser
 
 	public override string FileExtension => "lsmv";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

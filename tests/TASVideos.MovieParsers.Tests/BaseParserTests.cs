@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO.Compression;
+using System.Reflection;
 
 namespace TASVideos.MovieParsers.Tests;
 
@@ -14,7 +15,39 @@ public abstract class BaseParserTests
 			throw new InvalidOperationException($"Unable to find embedded resource {name}");
 		}
 
-		return stream;
+		return MakeTestStream(stream);
+	}
+
+	protected long EmbeddedLength(string name)
+	{
+		var stream = Assembly.GetAssembly(typeof(BaseParserTests))?.GetManifestResourceStream(ResourcesPath + name);
+		if (stream == null)
+		{
+			throw new InvalidOperationException($"Unable to find embedded resource {name}");
+		}
+
+		return stream.Length;
+	}
+
+	private Stream MakeTestStream(Stream input)
+	{
+		// Simulates real situations, as the `stream` passed to parse
+		// in the real site will always be from within a zip file.
+
+		var ms = new MemoryStream();
+
+		using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
+		{
+			var entry = zip.CreateEntry("foobar");
+			using var dest = entry.Open();
+			input.CopyTo(dest);
+		}
+		ms.Position = 0;
+
+		var zip2 = new ZipArchive(ms);
+		var movieFile = zip2.Entries[0];
+		var movieFileStream = movieFile.Open();
+		return movieFileStream;
 	}
 
 	protected static void AssertNoWarnings(IParseResult result)
