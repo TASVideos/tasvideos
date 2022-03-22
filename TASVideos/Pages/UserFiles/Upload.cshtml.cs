@@ -87,7 +87,6 @@ public class UploadModel : BasePageModel
 		}
 
 		byte[] actualFileData;
-
 		{
 			// TODO: TO avoid zipbombs we should limit the max size of tempStream
 			var tempStream = new MemoryStream((int)UserFile.File.Length);
