@@ -8,7 +8,7 @@ internal class Dsm : IParser
 {
 	private const string FileExtension = "dsm";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		using var reader = new StreamReader(file);
 		var result = new ParseResult

@@ -19,7 +19,7 @@ internal class Ltm : ParserBase, IParser
 
 	public override string FileExtension => "ltm";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

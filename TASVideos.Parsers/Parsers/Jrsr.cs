@@ -60,7 +60,7 @@ public class Jrsr : IParser
 	private const NumberStyles IntegerStyle = NumberStyles.AllowLeadingSign;
 
 	private const string FileExtension = "jrsr";
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

@@ -16,7 +16,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidHeader()
 	{
-		var result = await _marParser.Parse(Embedded("wrongheader.mar"));
+		var result = await _marParser.Parse(Embedded("wrongheader.mar"), EmbeddedLength("wrongheader.mar"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.IsNotNull(result.Errors);
@@ -26,7 +26,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task ValidHeader()
 	{
-		var result = await _marParser.Parse(Embedded("2frames.mar"));
+		var result = await _marParser.Parse(Embedded("2frames.mar"), EmbeddedLength("2frames.mar"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -34,7 +34,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task System()
 	{
-		var result = await _marParser.Parse(Embedded("2frames.mar"));
+		var result = await _marParser.Parse(Embedded("2frames.mar"), EmbeddedLength("2frames.mar"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Arcade, result.SystemCode);
@@ -43,7 +43,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task Region()
 	{
-		var result = await _marParser.Parse(Embedded("2frames.mar"));
+		var result = await _marParser.Parse(Embedded("2frames.mar"), EmbeddedLength("2frames.mar"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -52,7 +52,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task RerecordCount()
 	{
-		var result = await _marParser.Parse(Embedded("2frames.mar"));
+		var result = await _marParser.Parse(Embedded("2frames.mar"), EmbeddedLength("2frames.mar"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(33686018, result.RerecordCount);
@@ -61,7 +61,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task Length()
 	{
-		var result = await _marParser.Parse(Embedded("2frames.mar"));
+		var result = await _marParser.Parse(Embedded("2frames.mar"), EmbeddedLength("2frames.mar"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(16843009, result.Frames);
@@ -70,7 +70,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task FrameRate()
 	{
-		var result = await _marParser.Parse(Embedded("2frames.mar"));
+		var result = await _marParser.Parse(Embedded("2frames.mar"), EmbeddedLength("2frames.mar"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.IsNotNull(result.FrameRateOverride);
@@ -80,7 +80,7 @@ public class MarTests : BaseParserTests
 	[TestMethod]
 	public async Task WhenFrameRateIsZero_NoOverride()
 	{
-		var result = await _marParser.Parse(Embedded("noframerate.mar"));
+		var result = await _marParser.Parse(Embedded("noframerate.mar"), EmbeddedLength("noframerate.mar"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.IsNull(result.FrameRateOverride);

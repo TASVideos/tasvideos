@@ -16,7 +16,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidHeader()
 	{
-		var result = await _gmvParser.Parse(Embedded("wrongheader.gmv"));
+		var result = await _gmvParser.Parse(Embedded("wrongheader.gmv"), EmbeddedLength("wrongheader.gmv"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.IsNotNull(result.Errors);
@@ -26,7 +26,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task ValidHeader()
 	{
-		var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
+		var result = await _gmvParser.Parse(Embedded("2frames.gmv"), EmbeddedLength("2frames.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -34,7 +34,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task System()
 	{
-		var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
+		var result = await _gmvParser.Parse(Embedded("2frames.gmv"), EmbeddedLength("2frames.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Genesis, result.SystemCode);
@@ -43,7 +43,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task RerecordCount()
 	{
-		var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
+		var result = await _gmvParser.Parse(Embedded("2frames.gmv"), EmbeddedLength("2frames.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(10319, result.RerecordCount);
@@ -52,7 +52,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task Ntsc()
 	{
-		var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
+		var result = await _gmvParser.Parse(Embedded("2frames.gmv"), EmbeddedLength("2frames.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -61,7 +61,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task Pal()
 	{
-		var result = await _gmvParser.Parse(Embedded("pal.gmv"));
+		var result = await _gmvParser.Parse(Embedded("pal.gmv"), EmbeddedLength("pal.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Pal, result.Region);
@@ -70,7 +70,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
+		var result = await _gmvParser.Parse(Embedded("2frames.gmv"), EmbeddedLength("2frames.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -79,7 +79,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _gmvParser.Parse(Embedded("savestate.gmv"));
+		var result = await _gmvParser.Parse(Embedded("savestate.gmv"), EmbeddedLength("savestate.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
@@ -88,7 +88,7 @@ public class GmvTests : BaseParserTests
 	[TestMethod]
 	public async Task Length()
 	{
-		var result = await _gmvParser.Parse(Embedded("2frames.gmv"));
+		var result = await _gmvParser.Parse(Embedded("2frames.gmv"), EmbeddedLength("2frames.gmv"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(2, result.Frames);

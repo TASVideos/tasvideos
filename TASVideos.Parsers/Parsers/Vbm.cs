@@ -8,7 +8,7 @@ internal class Vbm : ParserBase, IParser
 {
 	public override string FileExtension => "vbm";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

@@ -11,7 +11,7 @@ internal class Bk2 : ParserBase, IParser
 
 	public override string FileExtension => "bk2";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

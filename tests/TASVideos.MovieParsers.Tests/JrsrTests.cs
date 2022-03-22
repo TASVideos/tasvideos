@@ -20,14 +20,14 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task EmptyFile()
 	{
-		var result = await _jrsrParser.Parse(Embedded("emptyfile.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("emptyfile.jrsr"), EmbeddedLength("emptyfile.jrsr"));
 		Assert.IsFalse(result.Success);
 	}
 
 	[TestMethod]
 	public async Task CorrectMagic()
 	{
-		var result = await _jrsrParser.Parse(Embedded("correctmagic.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("correctmagic.jrsr"), EmbeddedLength("correctmagic.jrsr"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(result.FileExtension, "jrsr");
 		AssertNoWarningsOrErrors(result);
@@ -36,7 +36,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task WrongLineMagic()
 	{
-		var result = await _jrsrParser.Parse(Embedded("wronglinemagic.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("wronglinemagic.jrsr"), EmbeddedLength("wronglinemagic.jrsr"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -45,7 +45,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task WrongMagic()
 	{
-		var result = await _jrsrParser.Parse(Embedded("wrongmagic.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("wrongmagic.jrsr"), EmbeddedLength("wrongmagic.jrsr"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -54,7 +54,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task NoBeginHeader()
 	{
-		var result = await _jrsrParser.Parse(Embedded("nobeginheader.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("nobeginheader.jrsr"), EmbeddedLength("nobeginheader.jrsr"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -63,7 +63,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task Rerecords()
 	{
-		var result = await _jrsrParser.Parse(Embedded("correctmagic.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("correctmagic.jrsr"), EmbeddedLength("correctmagic.jrsr"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(17984, result.RerecordCount);
 		AssertNoWarningsOrErrors(result);
@@ -72,7 +72,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _jrsrParser.Parse(Embedded("savestate.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("savestate.jrsr"), EmbeddedLength("savestate.jrsr"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		AssertNoWarningsOrErrors(result);
@@ -81,7 +81,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task ContainsSavestate_ReturnError()
 	{
-		var result = await _jrsrParser.Parse(Embedded("containssavestate.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("containssavestate.jrsr"), EmbeddedLength("containssavestate.jrsr"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -90,7 +90,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task Frames()
 	{
-		var result = await _jrsrParser.Parse(Embedded("frames.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("frames.jrsr"), EmbeddedLength("frames.jrsr"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(147789, result.Frames);
 		Assert.AreEqual(60, result.FrameRateOverride);
@@ -100,7 +100,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task MissingRerecords()
 	{
-		var result = await _jrsrParser.Parse(Embedded("missingrerecords.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("missingrerecords.jrsr"), EmbeddedLength("missingrerecords.jrsr"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
 		AssertNoErrors(result);
@@ -110,7 +110,7 @@ public class JrsrTests : BaseParserTests
 	[TestMethod]
 	public async Task NegativeRerecords()
 	{
-		var result = await _jrsrParser.Parse(Embedded("negativererecords.jrsr"));
+		var result = await _jrsrParser.Parse(Embedded("negativererecords.jrsr"), EmbeddedLength("negativererecords.jrsr"));
 		Assert.IsFalse(result.Success);
 		Assert.AreEqual(-1, result.RerecordCount, "Rerecord count assumed to be -1");
 		AssertNoWarnings(result);
@@ -124,7 +124,7 @@ public class JrsrTests : BaseParserTests
 	private static async Task<IParseResult> ParseFromString(string contents)
 	{
 		await using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
-		return await new Jrsr().Parse(reader);
+		return await new Jrsr().Parse(reader, reader.Length);
 	}
 
 	// It should be an error if RERECORDS appears more than once, even if

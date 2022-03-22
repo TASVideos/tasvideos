@@ -53,7 +53,7 @@ public sealed class MovieParser : IMovieParser
 			}
 
 			await using var movieFileStream = movieFile.Open();
-			return await parser.Parse(movieFileStream);
+			return await parser.Parse(movieFileStream, movieFile.Length);
 		}
 		catch (Exception)
 		{
@@ -71,7 +71,7 @@ public sealed class MovieParser : IMovieParser
 			var parser = GetParser(ext);
 			return parser == null
 				? Error($".{ext} files are not currently supported.")
-				: await parser.Parse(stream);
+				: await parser.Parse(stream, stream.Length);
 		}
 		catch (Exception)
 		{

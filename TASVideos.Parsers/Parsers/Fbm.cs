@@ -7,7 +7,7 @@ internal class Fbm : ParserBase, IParser
 {
 	public override string FileExtension => "fbm";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

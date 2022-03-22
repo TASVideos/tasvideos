@@ -6,14 +6,14 @@ internal class Wtf : ParserBase, IParser
 {
 	public override string FileExtension => "wtf";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Windows,
-			Frames = (int)((file.Length - 1024) / 8)
+			Frames = (int)((length - 1024) / 8)
 		};
 
 		using var br = new BinaryReader(file);
