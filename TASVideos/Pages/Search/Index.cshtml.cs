@@ -21,7 +21,7 @@ public class IndexModel : PageModel
 	}
 
 	[FromQuery]
-	[StringLength(50, MinimumLength = 5)]
+	[StringLength(100, MinimumLength = 2)]
 	[Display(Name = "Search Terms")]
 	public string SearchTerms { get; set; } = "";
 
