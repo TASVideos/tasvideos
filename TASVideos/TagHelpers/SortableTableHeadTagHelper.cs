@@ -30,12 +30,12 @@ public class SortableTableHeadTagHelper : TagHelper
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		if (Sorting == null)
+		if (Sorting is null)
 		{
 			throw new ArgumentException($"{nameof(Sorting)} can not be null");
 		}
 
-		if (ModelType == null)
+		if (ModelType is null)
 		{
 			throw new ArgumentException($"{nameof(ModelType)} can not be null");
 		}

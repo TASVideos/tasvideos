@@ -44,7 +44,7 @@ public class AddEditPollModel : BaseForumModel
 			.Where(t => t.Id == TopicId)
 			.SingleOrDefaultAsync();
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
@@ -97,7 +97,7 @@ public class AddEditPollModel : BaseForumModel
 			.Where(t => t.Id == TopicId)
 			.SingleOrDefaultAsync();
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}

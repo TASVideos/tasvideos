@@ -95,7 +95,7 @@ public class EditModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}

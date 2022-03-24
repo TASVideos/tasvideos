@@ -48,7 +48,7 @@ public class EditClassModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}
@@ -71,7 +71,7 @@ public class EditClassModel : BasePageModel
 			.Include(p => p.PublicationClass)
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}
@@ -79,7 +79,7 @@ public class EditClassModel : BasePageModel
 		var publicationClass = await _db.PublicationClasses
 			.SingleOrDefaultAsync(t => t.Id == Publication.ClassId);
 
-		if (publicationClass == null)
+		if (publicationClass is null)
 		{
 			return NotFound();
 		}

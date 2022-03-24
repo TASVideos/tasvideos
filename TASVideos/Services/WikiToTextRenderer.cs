@@ -70,14 +70,12 @@ public class WikiToTextRenderer : IWikiToTextRenderer
 
 			var invokeMethod = textComponent!.GetMethod("RenderTextAsync");
 
-			if (invokeMethod == null && textComponent.GetMethod("RenderText") != null)
+			switch (invokeMethod)
 			{
-				throw new NotImplementedException("Sync method not supported yet");
-			}
-
-			if (invokeMethod == null)
-			{
-				throw new InvalidOperationException($"Could not find an RenderText method on ViewComponent {textComponent}");
+				case null when textComponent.GetMethod("RenderText") != null:
+					throw new NotImplementedException("Sync method not supported yet");
+				case null:
+					throw new InvalidOperationException($"Could not find an RenderText method on ViewComponent {textComponent}");
 			}
 
 			var paramObject = ModuleParamHelpers

@@ -27,7 +27,7 @@ public class DelimitedQueryStringValueProvider : QueryStringValueProvider
 
 	public override ValueProviderResult GetValue(string key)
 	{
-		if (key == null)
+		if (key is null)
 		{
 			throw new ArgumentNullException(nameof(key));
 		}
@@ -74,7 +74,7 @@ public class DelimitedQueryStringValueProviderFactory : IValueProviderFactory
 	/// <inheritdoc />
 	public Task CreateValueProviderAsync(ValueProviderFactoryContext context)
 	{
-		if (context == null)
+		if (context is null)
 		{
 			throw new ArgumentNullException(nameof(context));
 		}
@@ -100,7 +100,7 @@ public static class ValueProviderFactoriesExtensions
 		var queryStringValueProviderFactory = valueProviderFactories
 			.OfType<QueryStringValueProviderFactory>()
 			.FirstOrDefault();
-		if (queryStringValueProviderFactory == null)
+		if (queryStringValueProviderFactory is null)
 		{
 			valueProviderFactories.Insert(
 				0,

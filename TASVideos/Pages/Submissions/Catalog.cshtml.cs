@@ -54,7 +54,7 @@ public class CatalogModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (catalog == null)
+		if (catalog is null)
 		{
 			return NotFound();
 		}
@@ -97,7 +97,7 @@ public class CatalogModel : BasePageModel
 			.Include(s => s.Game)
 			.Include(s => s.Rom)
 			.SingleOrDefaultAsync(s => s.Id == Id);
-		if (submission == null)
+		if (submission is null)
 		{
 			return NotFound();
 		}
@@ -107,7 +107,7 @@ public class CatalogModel : BasePageModel
 		if (submission.SystemId != Catalog.SystemId)
 		{
 			var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId!.Value);
-			if (system == null)
+			if (system is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId!.Value}");
 			}
@@ -121,7 +121,7 @@ public class CatalogModel : BasePageModel
 		if (submission.SystemFrameRateId != Catalog.SystemFrameRateId)
 		{
 			var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId!.Value);
-			if (systemFramerate == null)
+			if (systemFramerate is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Framerate Id: {Catalog.SystemFrameRateId!.Value}");
 			}
@@ -137,7 +137,7 @@ public class CatalogModel : BasePageModel
 			if (Catalog.GameId.HasValue)
 			{
 				var game = await _db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId.Value);
-				if (game == null)
+				if (game is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown Game Id: {Catalog.GameId.Value}");
 				}
@@ -159,7 +159,7 @@ public class CatalogModel : BasePageModel
 			if (Catalog.RomId.HasValue)
 			{
 				var rom = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
-				if (rom == null)
+				if (rom is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown Rom Id: {Catalog.RomId.Value}");
 				}

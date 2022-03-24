@@ -25,7 +25,7 @@ public class MoviesList : ViewComponent
 		if (!isAll)
 		{
 			system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Code == systemCode);
-			if (system == null)
+			if (system is null)
 			{
 				return View(new MoviesListModel { SystemCode = systemCode });
 			}

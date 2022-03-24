@@ -40,7 +40,7 @@ public class DiffModel : BasePageModel
 		if (FromRevision.HasValue && ToRevision.HasValue)
 		{
 			var diff = await GetPageDiff(Path, FromRevision.Value, ToRevision.Value);
-			if (diff == null)
+			if (diff is null)
 			{
 				return NotFound();
 			}
@@ -50,7 +50,7 @@ public class DiffModel : BasePageModel
 		else
 		{
 			var diff = await GetLatestPageDiff(Path);
-			if (diff == null)
+			if (diff is null)
 			{
 				return NotFound();
 			}

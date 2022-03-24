@@ -28,7 +28,7 @@ public class ViewModel : BasePageModel
 			.ToViewModel(false, User.GetUserId())
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}
@@ -44,7 +44,7 @@ public class ViewModel : BasePageModel
 			.Select(s => new { s.MovieFile, s.MovieFileName })
 			.SingleOrDefaultAsync();
 
-		if (pub == null)
+		if (pub is null)
 		{
 			return NotFound();
 		}
@@ -59,7 +59,7 @@ public class ViewModel : BasePageModel
 			.Select(pf => new { pf.FileData, pf.Path })
 			.SingleOrDefaultAsync();
 
-		if (file?.FileData == null)
+		if (file?.FileData is null)
 		{
 			return NotFound();
 		}

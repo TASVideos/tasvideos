@@ -22,7 +22,7 @@ public class ExternalMediaPublisher // DI as a singleton, pass in a hardcoded li
 
 	public async Task Send(IPostable message)
 	{
-		if (message == null)
+		if (message is null)
 		{
 			throw new ArgumentException($"{nameof(message)} can not be null");
 		}

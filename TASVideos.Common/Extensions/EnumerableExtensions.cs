@@ -29,7 +29,7 @@ public static class EnumerableExtensions
 	/// </summary>
 	public static T AtRandom<T>(this ICollection<T> collection)
 	{
-		if (collection == null)
+		if (collection is null)
 		{
 			throw new ArgumentNullException($"{nameof(collection)} can not be null");
 		}

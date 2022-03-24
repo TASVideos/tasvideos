@@ -59,7 +59,7 @@ public class MovieFormatDeprecator : IMovieFormatDeprecator
 		var format = await _db.DeprecatedMovieFormats
 			.SingleOrDefaultAsync(f => f.FileExtension == extension);
 
-		if (format == null)
+		if (format is null)
 		{
 			_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 			{

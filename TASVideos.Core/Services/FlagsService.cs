@@ -108,7 +108,7 @@ internal class FlagService : IFlagService
 	public async Task<FlagEditResult> Edit(int id, Flag flag)
 	{
 		var existingFlag = await _db.Flags.SingleOrDefaultAsync(t => t.Id == id);
-		if (existingFlag == null)
+		if (existingFlag is null)
 		{
 			return FlagEditResult.NotFound;
 		}
@@ -150,7 +150,7 @@ internal class FlagService : IFlagService
 		try
 		{
 			var flag = await _db.Flags.SingleOrDefaultAsync(t => t.Id == id);
-			if (flag == null)
+			if (flag is null)
 			{
 				return FlagDeleteResult.NotFound;
 			}

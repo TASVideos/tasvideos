@@ -42,7 +42,7 @@ public class ProfileModel : BasePageModel
 
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var profile = await _userManager.GetUserProfile(UserName, false, seeRestricted);
-		if (profile == null)
+		if (profile is null)
 		{
 			return NotFound();
 		}

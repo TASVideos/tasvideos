@@ -41,7 +41,7 @@ internal class JwtAuthenticator : IJwtAuthenticator
 		}
 
 		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
-		if (user == null)
+		if (user is null)
 		{
 			return "";
 		}

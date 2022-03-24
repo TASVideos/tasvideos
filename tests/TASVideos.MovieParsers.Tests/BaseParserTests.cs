@@ -10,7 +10,7 @@ public abstract class BaseParserTests
 	protected Stream Embedded(string name)
 	{
 		var stream = Assembly.GetAssembly(typeof(BaseParserTests))?.GetManifestResourceStream(ResourcesPath + name);
-		if (stream == null)
+		if (stream is null)
 		{
 			throw new InvalidOperationException($"Unable to find embedded resource {name}");
 		}
@@ -21,7 +21,7 @@ public abstract class BaseParserTests
 	protected long EmbeddedLength(string name)
 	{
 		var stream = Assembly.GetAssembly(typeof(BaseParserTests))?.GetManifestResourceStream(ResourcesPath + name);
-		if (stream == null)
+		if (stream is null)
 		{
 			throw new InvalidOperationException($"Unable to find embedded resource {name}");
 		}
@@ -29,7 +29,7 @@ public abstract class BaseParserTests
 		return stream.Length;
 	}
 
-	private Stream MakeTestStream(Stream input)
+	private static Stream MakeTestStream(Stream input)
 	{
 		// Simulates real situations, as the `stream` passed to parse
 		// in the real site will always be from within a zip file.
@@ -42,6 +42,7 @@ public abstract class BaseParserTests
 			using var dest = entry.Open();
 			input.CopyTo(dest);
 		}
+
 		ms.Position = 0;
 
 		var zip2 = new ZipArchive(ms);

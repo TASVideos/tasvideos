@@ -18,7 +18,7 @@ public static class ClaimsPrincipalExtensions
 
 	public static int GetUserId(this ClaimsPrincipal? user)
 	{
-		if (user == null || !user.IsLoggedIn())
+		if (user is null || !user.IsLoggedIn())
 		{
 			return -1;
 		}
@@ -29,7 +29,7 @@ public static class ClaimsPrincipalExtensions
 
 	public static IEnumerable<PermissionTo> Permissions(this ClaimsPrincipal? user)
 	{
-		if (user == null || !user.IsLoggedIn())
+		if (user is null || !user.IsLoggedIn())
 		{
 			return Enumerable.Empty<PermissionTo>();
 		}
@@ -44,7 +44,7 @@ public static class ClaimsPrincipalExtensions
 
 	public static void ReplacePermissionClaims(this ClaimsPrincipal? user, IEnumerable<Claim> permissions)
 	{
-		if (user == null || !user.IsLoggedIn())
+		if (user is null || !user.IsLoggedIn())
 		{
 			return;
 		}

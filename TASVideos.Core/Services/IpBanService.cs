@@ -134,7 +134,7 @@ internal class IpBanService : IIpBanService
 			return false;
 		}
 
-		if (ToAddressRange(ipMask) == null)
+		if (ToAddressRange(ipMask) is null)
 		{
 			return false;
 		}

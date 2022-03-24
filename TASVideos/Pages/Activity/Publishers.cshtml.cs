@@ -31,7 +31,7 @@ public class PublishersModel : PageModel
 		}
 
 		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
-		if (user == null)
+		if (user is null)
 		{
 			return NotFound();
 		}

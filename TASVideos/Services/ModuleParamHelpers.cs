@@ -68,7 +68,7 @@ public static class ModuleParamHelpers
 			pp.TryGetValue(paramCandidate.Name!, out var ppValue);
 			var result = adapter.Convert(ppValue);
 
-			if (result == null)
+			if (result is null)
 			{
 				// Conversion failed.  See if the parameter type is a failable type.
 				var needsNonNull = paramType.IsValueType && doNullableWrap

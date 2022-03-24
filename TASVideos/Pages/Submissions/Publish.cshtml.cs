@@ -66,7 +66,7 @@ public class PublishModel : BasePageModel
 				_db.Submissions.Where(s => s.Id == Id))
 			.SingleOrDefaultAsync();
 
-		if (submission == null)
+		if (submission is null)
 		{
 			return NotFound();
 		}

@@ -52,7 +52,7 @@ public class EditFilesModel : BasePageModel
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
 
-		if (title == null)
+		if (title is null)
 		{
 			return NotFound();
 		}

@@ -42,7 +42,7 @@ public class ListModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (roms == null)
+		if (roms is null)
 		{
 			return NotFound();
 		}

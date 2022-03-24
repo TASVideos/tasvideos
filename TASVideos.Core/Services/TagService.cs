@@ -101,7 +101,7 @@ internal class TagService : ITagService
 	public async Task<TagEditResult> Edit(int id, string code, string displayName)
 	{
 		var tag = await _db.Tags.SingleOrDefaultAsync(t => t.Id == id);
-		if (tag == null)
+		if (tag is null)
 		{
 			return TagEditResult.NotFound;
 		}
@@ -140,7 +140,7 @@ internal class TagService : ITagService
 		try
 		{
 			var tag = await _db.Tags.SingleOrDefaultAsync(t => t.Id == id);
-			if (tag == null)
+			if (tag is null)
 			{
 				return TagDeleteResult.NotFound;
 			}

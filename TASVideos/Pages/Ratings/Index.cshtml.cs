@@ -34,7 +34,7 @@ public class IndexModel : BasePageModel
 			.ThenInclude(r => r.User)
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}

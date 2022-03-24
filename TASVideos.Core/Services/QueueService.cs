@@ -188,7 +188,7 @@ internal class QueueService : IQueueService
 			})
 			.SingleOrDefaultAsync();
 
-		if (pub == null)
+		if (pub is null)
 		{
 			return UnpublishResult.NotFound();
 		}
@@ -216,7 +216,7 @@ internal class QueueService : IQueueService
 			.ThenInclude(o => o.PublicationUrls)
 			.SingleOrDefaultAsync(p => p.Id == publicationId);
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return UnpublishResult.NotFound();
 		}
@@ -301,7 +301,7 @@ internal class QueueService : IQueueService
 			.ForCode(parseResult.SystemCode)
 			.SingleOrDefaultAsync();
 
-		if (system == null)
+		if (system is null)
 		{
 			return $"Unknown system type of {parseResult.SystemCode}";
 		}
@@ -319,7 +319,7 @@ internal class QueueService : IQueueService
 				.ForSystem(submission.System.Id)
 				.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
 
-			if (frameRate == null)
+			if (frameRate is null)
 			{
 				frameRate = new GameSystemFrameRate
 				{

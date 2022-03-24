@@ -26,7 +26,7 @@ public class RatingsModel : BasePageModel
 			UserName,
 			User.Has(PermissionTo.SeePrivateRatings) || User.Name() == UserName);
 
-		if (Ratings == null)
+		if (Ratings is null)
 		{
 			return NotFound();
 		}

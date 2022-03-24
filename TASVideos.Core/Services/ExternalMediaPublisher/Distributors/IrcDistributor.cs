@@ -35,7 +35,7 @@ public class IrcDistributor : IPostDistributor
 	public async Task Post(IPostable post)
 	{
 		// If proper credentials were not provided, the bot was never initialized
-		if (_bot == null)
+		if (_bot is null)
 		{
 			return;
 		}

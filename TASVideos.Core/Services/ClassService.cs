@@ -88,7 +88,7 @@ internal class ClassService : IClassService
 	public async Task<ClassEditResult> Edit(int id, PublicationClass publicationClass)
 	{
 		var existingClass = await _db.PublicationClasses.SingleOrDefaultAsync(t => t.Id == id);
-		if (existingClass == null)
+		if (existingClass is null)
 		{
 			return ClassEditResult.NotFound;
 		}
@@ -129,7 +129,7 @@ internal class ClassService : IClassService
 		try
 		{
 			var existingClass = await _db.PublicationClasses.SingleOrDefaultAsync(t => t.Id == id);
-			if (existingClass == null)
+			if (existingClass is null)
 			{
 				return ClassDeleteResult.NotFound;
 			}

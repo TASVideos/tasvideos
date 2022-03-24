@@ -66,7 +66,7 @@ public class CreateModel : BaseForumModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (post == null)
+		if (post is null)
 		{
 			return NotFound();
 		}
@@ -146,7 +146,7 @@ public class CreateModel : BaseForumModel
 			.Include(t => t.Forum)
 			.SingleOrDefaultAsync(t => t.Id == TopicId);
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}

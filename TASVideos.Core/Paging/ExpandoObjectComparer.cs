@@ -21,7 +21,7 @@ internal class ExpandoObjectComparer : IEqualityComparer<ExpandoObject>
 		}
 
 		// ReferenceEquals checks the scenario of both being null
-		if (x == null || y == null)
+		if (x is null || y is null)
 		{
 			return false;
 		}
@@ -45,7 +45,7 @@ internal class ExpandoObjectComparer : IEqualityComparer<ExpandoObject>
 			var xValueItem = value ?? new object();
 			var yValueItem = yKeyValues[key];
 
-			if (yValueItem == null)
+			if (yValueItem is null)
 			{
 				return false;
 			}

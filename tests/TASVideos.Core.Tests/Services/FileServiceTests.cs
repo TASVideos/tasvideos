@@ -13,7 +13,7 @@ public class FileServiceTests
 	private Stream Embedded(string name)
 	{
 		var stream = Assembly.GetAssembly(typeof(FileServiceTests))?.GetManifestResourceStream("TASVideos.Core.Tests.Services.TestFiles." + name);
-		if (stream == null)
+		if (stream is null)
 		{
 			throw new InvalidOperationException($"Unable to find embedded resource {name}");
 		}

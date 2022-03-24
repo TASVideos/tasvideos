@@ -24,7 +24,7 @@ public class EditModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var publicationClass = await _classService.GetById(Id);
-		if (publicationClass == null)
+		if (publicationClass is null)
 		{
 			return NotFound();
 		}

@@ -46,7 +46,7 @@ internal class ForumService : IForumService
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(p => p.Id == postId);
 
-		if (post == null)
+		if (post is null)
 		{
 			return null;
 		}
@@ -224,7 +224,7 @@ internal class ForumService : IForumService
 
 		dict = raw.ToDictionary(
 			tkey => tkey.Id,
-			tvalue => tvalue.LatestPost == null ? null : new LatestPost(
+			tvalue => tvalue.LatestPost is null ? null : new LatestPost(
 				tvalue.LatestPost.Id,
 				tvalue.LatestPost.CreateTimestamp,
 				tvalue.LatestPost.UserName ?? ""));

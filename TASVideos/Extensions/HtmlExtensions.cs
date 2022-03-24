@@ -64,12 +64,12 @@ public static class HtmlExtensions
 
 	public static IHtmlContent DescriptionFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
 	{
-		if (html == null)
+		if (html is null)
 		{
 			throw new ArgumentNullException(nameof(html));
 		}
 
-		if (expression == null)
+		if (expression is null)
 		{
 			throw new ArgumentNullException(nameof(expression));
 		}
@@ -87,7 +87,7 @@ public static class HtmlExtensions
 
 	public static bool IsZip(this IFormFile? formFile)
 	{
-		if (formFile == null)
+		if (formFile is null)
 		{
 			return false;
 		}
@@ -104,7 +104,7 @@ public static class HtmlExtensions
 
 	public static bool IsCompressed(this IFormFile? formFile)
 	{
-		if (formFile == null)
+		if (formFile is null)
 		{
 			return false;
 		}
@@ -127,7 +127,7 @@ public static class HtmlExtensions
 
 	public static bool LessThanMovieSizeLimit(this IFormFile? formFile)
 	{
-		if (formFile == null)
+		if (formFile is null)
 		{
 			return true;
 		}

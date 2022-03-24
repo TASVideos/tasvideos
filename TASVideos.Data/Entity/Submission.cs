@@ -105,12 +105,12 @@ public class Submission : BaseEntity, ITimeable
 
 	public void GenerateTitle()
 	{
-		if (System == null)
+		if (System is null)
 		{
 			throw new ArgumentNullException($"{nameof(System)} can not be null.");
 		}
 
-		if (SystemFrameRate == null)
+		if (SystemFrameRate is null)
 		{
 			throw new ArgumentNullException($"{nameof(SystemFrameRate)} can not be null.");
 		}

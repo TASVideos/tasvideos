@@ -51,7 +51,7 @@ public class AdditionalMoviesModel : BasePageModel
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
 
-		if (publicationTitle == null)
+		if (publicationTitle is null)
 		{
 			return NotFound();
 		}
@@ -68,7 +68,7 @@ public class AdditionalMoviesModel : BasePageModel
 			.Select(p => new { p.Id, p.Title })
 			.SingleOrDefaultAsync();
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}

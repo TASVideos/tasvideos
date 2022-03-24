@@ -11,7 +11,7 @@ public static class StringExtensions
 	/// </summary>
 	public static string CapAndEllipse(this string? str, int limit)
 	{
-		if (str == null)
+		if (str is null)
 		{
 			return "";
 		}
@@ -41,7 +41,7 @@ public static class StringExtensions
 
 	public static string? Cap(this string? str, int limit)
 	{
-		if (str == null)
+		if (str is null)
 		{
 			return null;
 		}

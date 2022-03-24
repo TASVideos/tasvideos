@@ -71,7 +71,7 @@ public class AddEditModel : BasePageModel
 				})
 				.SingleOrDefaultAsync();
 
-			if (role == null)
+			if (role is null)
 			{
 				return NotFound();
 			}

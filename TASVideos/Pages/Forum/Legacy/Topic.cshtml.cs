@@ -35,7 +35,7 @@ public class TopicModel : BaseForumModel
 		if (P.HasValue)
 		{
 			var model = await _forumService.GetPostPosition(P.Value, User.Has(PermissionTo.SeeRestrictedForums));
-			if (model == null)
+			if (model is null)
 			{
 				return NotFound();
 			}

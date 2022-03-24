@@ -15,7 +15,7 @@ public static class HttpClientExtensions
 	{
 		var content = await response.Content.ReadAsStringAsync();
 		var result = JsonSerializer.Deserialize<T>(content);
-		if (result == null)
+		if (result is null)
 		{
 			throw new InvalidCastException($"Unable to deserialize {content} to type {typeof(T)}");
 		}

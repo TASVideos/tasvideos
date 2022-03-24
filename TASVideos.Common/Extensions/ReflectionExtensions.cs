@@ -14,7 +14,7 @@ public static class ReflectionExtensions
 	/// </summary>
 	public static string ToValue(this PropertyInfo property, object? obj)
 	{
-		if (obj == null)
+		if (obj is null)
 		{
 			return "";
 		}
@@ -23,7 +23,7 @@ public static class ReflectionExtensions
 			&& property.PropertyType.IsGenericType)
 		{
 			var val = property.GetValue(obj);
-			if (val == null)
+			if (val is null)
 			{
 				return "";
 			}

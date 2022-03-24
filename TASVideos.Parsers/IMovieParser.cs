@@ -47,7 +47,7 @@ public sealed class MovieParser : IMovieParser
 			var ext = Path.GetExtension(movieFile.Name).Trim('.').ToLower();
 
 			var parser = GetParser(ext);
-			if (parser == null)
+			if (parser is null)
 			{
 				return Error($".{ext} files are not currently supported.");
 			}
@@ -69,7 +69,7 @@ public sealed class MovieParser : IMovieParser
 			var ext = Path.GetExtension(fileName).Trim('.').ToLower();
 
 			var parser = GetParser(ext);
-			return parser == null
+			return parser is null
 				? Error($".{ext} files are not currently supported.")
 				: await parser.Parse(stream, stream.Length);
 		}
@@ -86,7 +86,7 @@ public sealed class MovieParser : IMovieParser
 			.SingleOrDefault(t => (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
 				?.Extension == ext);
 
-		if (type == null)
+		if (type is null)
 		{
 			return null;
 		}

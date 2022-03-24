@@ -107,12 +107,12 @@ public class Publication : BaseEntity, ITimeable
 			authorList = authorList.Concat(AdditionalAuthors.SplitWithEmpty(","));
 		}
 
-		if (System == null)
+		if (System is null)
 		{
 			throw new InvalidOperationException($"{nameof(System)} must not be lazy loaded!");
 		}
 
-		if (Game == null)
+		if (Game is null)
 		{
 			throw new InvalidOperationException($"{nameof(Game)} must not be lazy loaded!");
 		}
