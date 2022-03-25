@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
@@ -32,7 +33,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	private const int refreshTokenDuration = 2 * 60 * 60 - 30;	// Two hours minus thirty seconds in seconds.  How long the retrieved access token will last.
 
 	public TwitterDistributorV2 (
-		ICacheService redisCache,
+		RedisCacheService redisCache,		// Intentionally using Redis Cache here, if we need to turn Redis off, come up with a new solution.  -- Invariel, March 2022.
 		AppSettings appSettings,
 		IHttpClientFactory httpClientFactory,
 		ILogger<TwitterDistributorV2> logger)
