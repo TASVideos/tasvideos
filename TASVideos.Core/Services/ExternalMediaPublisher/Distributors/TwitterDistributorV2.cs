@@ -123,6 +123,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		formData.Add(new KeyValuePair<string, string>("refresh_token", _refreshToken!));
 		formData.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
 		formData.Add(new KeyValuePair<string, string>("client_id", _settings.ClientId));
+		formData.Add(new KeyValuePair<string, string>("scope", "offline_access tweet.write"));
 
 		var response = await _accessTokenClient.PostAsync("", new FormUrlEncodedContent(formData));
 
