@@ -4,5 +4,5 @@ namespace TASVideos.MovieParsers.Parsers;
 
 internal interface IParser
 {
-	Task<IParseResult> Parse(Stream file);
+	Task<IParseResult> Parse(Stream file, long length);
 }

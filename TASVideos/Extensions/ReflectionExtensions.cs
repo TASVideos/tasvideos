@@ -43,7 +43,7 @@ public static class ReflectionExtensions
 	/// </summary>
 	public static string EnumDisplayName(this Enum? enumValue)
 	{
-		if (enumValue == null)
+		if (enumValue is null)
 		{
 			return string.Empty;
 		}

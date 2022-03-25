@@ -90,7 +90,7 @@ public class EditModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (submission == null)
+		if (submission is null)
 		{
 			return NotFound();
 		}
@@ -160,7 +160,7 @@ public class EditModel : BasePageModel
 		{
 			Submission.PublicationClassId = null;
 		}
-		else if (Submission.PublicationClassId == null &&
+		else if (Submission.PublicationClassId is null &&
 			Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
 		{
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.PublicationClassId)}", "A submission can not be accepted without a PublicationClass");
@@ -178,7 +178,7 @@ public class EditModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (subInfo == null)
+		if (subInfo is null)
 		{
 			return NotFound();
 		}
@@ -427,7 +427,7 @@ public class EditModel : BasePageModel
 			.Include(s => s.WikiContent)
 			.SingleOrDefaultAsync(s => s.Id == Id);
 
-		if (submission == null)
+		if (submission is null)
 		{
 			return NotFound();
 		}

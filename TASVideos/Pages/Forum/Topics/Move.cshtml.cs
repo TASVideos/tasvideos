@@ -53,7 +53,7 @@ public class MoveModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
@@ -78,14 +78,14 @@ public class MoveModel : BasePageModel
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
 
 		var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
 
-		if (forum == null)
+		if (forum is null)
 		{
 			return NotFound();
 		}

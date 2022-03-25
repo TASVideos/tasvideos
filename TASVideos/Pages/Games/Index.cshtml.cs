@@ -34,7 +34,7 @@ public class IndexModel : BasePageModel
 			.ProjectTo<GameDisplayModel>(_db.Games)
 			.SingleOrDefaultAsync(g => g.Id == Id);
 
-		if (game == null)
+		if (game is null)
 		{
 			return NotFound();
 		}

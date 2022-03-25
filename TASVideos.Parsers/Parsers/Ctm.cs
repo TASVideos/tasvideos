@@ -9,7 +9,7 @@ internal class Ctm : ParserBase, IParser
 	private const int InputRate = 234; // Rate at which inputs are polled per second
 	public override string FileExtension => "ctm";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

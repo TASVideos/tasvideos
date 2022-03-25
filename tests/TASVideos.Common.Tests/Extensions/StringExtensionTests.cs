@@ -120,7 +120,7 @@ public class StringExtensionTests
 	[TestMethod]
 	public void UnicodeAwareSubstring1(string s, int i, string? expected)
 	{
-		if (expected == null)
+		if (expected is null)
 		{
 			var threw = false;
 			try
@@ -153,7 +153,7 @@ public class StringExtensionTests
 	[TestMethod]
 	public void UnicodeAwareSubstring2(string s, int i, int j, string? expected)
 	{
-		if (expected == null)
+		if (expected is null)
 		{
 			var threw = false;
 			try

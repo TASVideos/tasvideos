@@ -42,7 +42,7 @@ public class SetTypeModel : BaseForumModel
 			.Where(t => t.Id == TopicId)
 			.SingleOrDefaultAsync();
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
@@ -68,7 +68,7 @@ public class SetTypeModel : BaseForumModel
 			.Where(t => t.Id == TopicId)
 			.SingleOrDefaultAsync();
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}

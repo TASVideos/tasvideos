@@ -27,13 +27,13 @@ public class ConfirmEmailModel : BasePageModel
 
 	public async Task<IActionResult> OnGet(string? userId, string? code)
 	{
-		if (userId == null || code == null)
+		if (userId is null || code is null)
 		{
 			return Home();
 		}
 
 		var user = await _userManager.FindByIdAsync(userId);
-		if (user == null)
+		if (user is null)
 		{
 			return Home();
 		}

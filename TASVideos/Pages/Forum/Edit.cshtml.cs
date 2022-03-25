@@ -44,7 +44,7 @@ public class EditModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (category == null)
+		if (category is null)
 		{
 			return NotFound();
 		}
@@ -64,7 +64,7 @@ public class EditModel : BasePageModel
 			.Include(c => c.Forums)
 			.SingleOrDefaultAsync(c => c.Id == Id);
 
-		if (category == null)
+		if (category is null)
 		{
 			return NotFound();
 		}

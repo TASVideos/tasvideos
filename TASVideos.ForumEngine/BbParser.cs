@@ -253,6 +253,7 @@ public class BbParser
 				TagInfo.ChildrenAllowed.IfParam => _stack.Peek().Options != "",
 				TagInfo.ChildrenAllowed.Yes => true,
 				TagInfo.ChildrenAllowed.Void => throw new Exception("Didn't expect a void tag to stay on the stack."),
+				_ => throw new Exception("Unepxected enum value")
 			};
 		}
 
@@ -343,6 +344,7 @@ public class BbParser
 						{
 							_stack.Pop();
 						}
+
 						continue;
 					}
 					else

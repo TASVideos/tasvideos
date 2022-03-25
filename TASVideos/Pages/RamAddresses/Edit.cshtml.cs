@@ -54,7 +54,7 @@ public class EditModel : AddressBasePageModel
 		var address = await _db.GameRamAddresses
 			.SingleOrDefaultAsync(a => a.Id == Id);
 
-		if (address == null)
+		if (address is null)
 		{
 			return NotFound();
 		}
@@ -77,7 +77,7 @@ public class EditModel : AddressBasePageModel
 		var address = await _db.GameRamAddresses
 			.SingleOrDefaultAsync(a => a.Id == Id);
 
-		if (address == null)
+		if (address is null)
 		{
 			return NotFound();
 		}

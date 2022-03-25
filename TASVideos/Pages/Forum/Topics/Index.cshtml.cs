@@ -90,7 +90,7 @@ public class IndexModel : BaseForumModel
 			})
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
@@ -205,7 +205,7 @@ public class IndexModel : BaseForumModel
 			.ForPoll(pollId)
 			.ToListAsync();
 
-		if (pollOptions.Count == 0 || pollOptions.First().Poll == null)
+		if (pollOptions.Count == 0 || pollOptions.First().Poll is null)
 		{
 			return NotFound();
 		}
@@ -258,7 +258,7 @@ public class IndexModel : BaseForumModel
 			.Include(t => t.Forum)
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}

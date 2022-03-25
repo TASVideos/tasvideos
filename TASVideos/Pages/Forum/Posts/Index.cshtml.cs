@@ -21,7 +21,7 @@ public class IndexModel : BaseForumModel
 	public async Task<IActionResult> OnGet()
 	{
 		var model = await _forumService.GetPostPosition(Id, User.Has(PermissionTo.SeeRestrictedForums));
-		if (model == null)
+		if (model is null)
 		{
 			return NotFound();
 		}

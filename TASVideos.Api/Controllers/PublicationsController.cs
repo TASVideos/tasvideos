@@ -47,12 +47,9 @@ public class PublicationsController : Controller
 			.ProjectTo<PublicationsResponse>(_db.Publications)
 			.SingleOrDefaultAsync(p => p.Id == id);
 
-		if (pub == null)
-		{
-			return NotFound();
-		}
-
-		return Ok(pub);
+		return pub is null
+			? NotFound()
+			: Ok(pub);
 	}
 
 	/// <summary>

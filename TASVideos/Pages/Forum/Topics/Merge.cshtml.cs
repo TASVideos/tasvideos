@@ -54,7 +54,7 @@ public class MergeModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
@@ -80,7 +80,7 @@ public class MergeModel : BasePageModel
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
-		if (originalTopic == null)
+		if (originalTopic is null)
 		{
 			return NotFound();
 		}
@@ -90,7 +90,7 @@ public class MergeModel : BasePageModel
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Topic.DestinationTopicId);
 
-		if (destinationTopic == null)
+		if (destinationTopic is null)
 		{
 			return NotFound();
 		}

@@ -56,7 +56,7 @@ public class EditModel : BasePageModel
 			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 			.SingleOrDefaultAsync(f => f.Id == Id);
 
-		if (forum == null)
+		if (forum is null)
 		{
 			return NotFound();
 		}

@@ -33,7 +33,7 @@ public class IndexModel : BasePageModel
 				_db.Roles.Where(r => r.Name == role))
 			.SingleOrDefaultAsync();
 
-		if (roleModel == null)
+		if (roleModel is null)
 		{
 			return NotFound();
 		}

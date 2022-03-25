@@ -26,7 +26,7 @@ public class EditModel : BasePageModel
 	{
 		var tag = await _tagService.GetById(Id);
 
-		if (tag == null)
+		if (tag is null)
 		{
 			return NotFound();
 		}

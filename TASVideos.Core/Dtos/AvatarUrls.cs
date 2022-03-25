@@ -9,7 +9,7 @@ public record AvatarUrls(string? Avatar, string? MoodBase)
 
 	public string ToMoodUrl(ForumPostMood mood)
 	{
-		return MoodBase == null
+		return MoodBase is null
 			? ""
 			: MoodBase.Replace("$", ((int)mood).ToString());
 	}

@@ -28,7 +28,7 @@ public class RateModel : BasePageModel
 	{
 		var userId = User.GetUserId();
 		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == Id);
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}
@@ -46,7 +46,7 @@ public class RateModel : BasePageModel
 				?.Value.ToString(CultureInfo.InvariantCulture)
 		};
 
-		Rating.Unrated = Rating.Rating == null;
+		Rating.Unrated = Rating.Rating is null;
 
 		return Page();
 	}
@@ -104,7 +104,7 @@ public class RateModel : BasePageModel
 			{
 				Rating.Rating,
 				rro.RatingCount,
-				OverallRating = (rro.OverallRating == null ? 0 : (double)rro.OverallRating).ToOverallRatingString(),
+				OverallRating = (rro.OverallRating ?? 0).ToOverallRatingString(),
 			})
 			.SingleOrDefaultAsync();
 

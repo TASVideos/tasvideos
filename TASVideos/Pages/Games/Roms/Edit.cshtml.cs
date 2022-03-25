@@ -67,7 +67,7 @@ public class EditModel : BasePageModel
 			.Include(g => g.System)
 			.SingleOrDefaultAsync(g => g.Id == GameId);
 
-		if (game == null)
+		if (game is null)
 		{
 			return NotFound();
 		}
@@ -84,7 +84,7 @@ public class EditModel : BasePageModel
 			_db.GameRoms.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
 			.SingleAsync();
 
-		if (Rom == null)
+		if (Rom is null)
 		{
 			return NotFound();
 		}

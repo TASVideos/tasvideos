@@ -30,7 +30,7 @@ public static class PagedExtensions
 
 	public static IDictionary<string, string> AdditionalProperties(this IPaged? paged)
 	{
-		if (paged == null)
+		if (paged is null)
 		{
 			return new Dictionary<string, string>();
 		}

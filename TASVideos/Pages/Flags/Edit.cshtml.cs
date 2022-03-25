@@ -36,7 +36,7 @@ public class EditModel : BasePageModel
 	{
 		var flag = await _flagService.GetById(Id);
 
-		if (flag == null)
+		if (flag is null)
 		{
 			return NotFound();
 		}

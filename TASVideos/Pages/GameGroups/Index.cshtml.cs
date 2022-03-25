@@ -29,7 +29,7 @@ public class IndexModel : PageModel
 	{
 		var gameGroup = await _db.GameGroups.SingleOrDefaultAsync(gg => gg.Id == Id);
 
-		if (gameGroup == null)
+		if (gameGroup is null)
 		{
 			return NotFound();
 		}

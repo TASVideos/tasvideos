@@ -74,7 +74,7 @@ public class EditUrlsModel : BasePageModel
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
 
-		if (title == null)
+		if (title is null)
 		{
 			return NotFound();
 		}
@@ -104,7 +104,7 @@ public class EditUrlsModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}

@@ -23,7 +23,7 @@ public class IndexModel : BasePageModel
 	{
 		var message = await _userManager.GetMessage(User.GetUserId(), Id);
 
-		if (message == null)
+		if (message is null)
 		{
 			return NotFound();
 		}

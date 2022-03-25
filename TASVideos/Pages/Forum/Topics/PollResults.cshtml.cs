@@ -45,7 +45,7 @@ public class PollResultsModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (poll == null)
+		if (poll is null)
 		{
 			return NotFound();
 		}
@@ -67,7 +67,7 @@ public class PollResultsModel : BasePageModel
 			.Where(p => p.Id == Id)
 			.SingleOrDefaultAsync();
 
-		if (poll == null)
+		if (poll is null)
 		{
 			return NotFound();
 		}

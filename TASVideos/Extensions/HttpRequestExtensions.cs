@@ -10,7 +10,7 @@ public static class HttpRequestExtensions
 
 	public static bool IsAjaxRequest(this HttpRequest request)
 	{
-		if (request == null)
+		if (request is null)
 		{
 			throw new ArgumentNullException(nameof(request));
 		}
@@ -25,7 +25,7 @@ public static class HttpRequestExtensions
 
 	public static string ReturnUrl(this HttpRequest? request)
 	{
-		if (request == null)
+		if (request is null)
 		{
 			return "";
 		}
@@ -41,7 +41,7 @@ public static class HttpRequestExtensions
 
 	public static string QueryStringValue(this HttpRequest? request, string key)
 	{
-		if (request == null)
+		if (request is null)
 		{
 			return "";
 		}

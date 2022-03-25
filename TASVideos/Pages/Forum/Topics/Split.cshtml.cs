@@ -40,7 +40,7 @@ public class SplitModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var splitTopic = await PopulatePosts();
-		if (splitTopic == null)
+		if (splitTopic is null)
 		{
 			return NotFound();
 		}
@@ -66,7 +66,7 @@ public class SplitModel : BasePageModel
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
@@ -75,7 +75,7 @@ public class SplitModel : BasePageModel
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
 
-		if (destinationForum == null)
+		if (destinationForum is null)
 		{
 			return NotFound();
 		}
@@ -93,7 +93,7 @@ public class SplitModel : BasePageModel
 			var splitOnPost = topic.ForumPosts
 				.SingleOrDefault(p => p.Id == Topic.PostToSplitId);
 
-			if (splitOnPost == null)
+			if (splitOnPost is null)
 			{
 				await PopulatePosts();
 				await PopulateAvailableForums();

@@ -43,7 +43,7 @@ public class EditModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (file == null)
+		if (file is null)
 		{
 			return NotFound();
 		}
@@ -71,7 +71,7 @@ public class EditModel : BasePageModel
 		var file = await _db.UserFiles
 			.SingleOrDefaultAsync(uf => uf.Id == Id);
 
-		if (file == null)
+		if (file is null)
 		{
 			return NotFound();
 		}

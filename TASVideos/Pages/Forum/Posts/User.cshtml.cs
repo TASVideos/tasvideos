@@ -56,7 +56,7 @@ public class UserModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (userPosts == null)
+		if (userPosts is null)
 		{
 			return NotFound();
 		}

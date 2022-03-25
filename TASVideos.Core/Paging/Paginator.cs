@@ -82,12 +82,12 @@ public static class Paginator
 
 		var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
 
-		if (prop == null)
+		if (prop is null)
 		{
 			return query;
 		}
 
-		if (prop.GetCustomAttribute(typeof(SortableAttribute)) == null)
+		if (prop.GetCustomAttribute(typeof(SortableAttribute)) is null)
 		{
 			return query;
 		}
@@ -117,7 +117,7 @@ public static class Paginator
 		var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(T), property.Type);
 		var result = orderByGeneric.Invoke(null, new object[] { query, lambda });
 
-		if (result == null)
+		if (result is null)
 		{
 			return Enumerable.Empty<T>().AsQueryable();
 		}

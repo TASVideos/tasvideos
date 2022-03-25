@@ -8,7 +8,7 @@ internal class Gmv : ParserBase, IParser
 {
 	public override string FileExtension => "gmv";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{
@@ -38,7 +38,7 @@ internal class Gmv : ParserBase, IParser
 			result.StartType = MovieStartType.Savestate;
 		}
 
-		result.Frames = (int)(file.Length - 64) / 3;
+		result.Frames = (int)(length - 64) / 3;
 
 		return await Task.FromResult(result);
 	}

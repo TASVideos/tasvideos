@@ -51,7 +51,7 @@ public class EditModel : BasePageModel
 				_db.Users.Where(u => u.Id == Id))
 			.SingleOrDefaultAsync();
 
-		if (userToEdit == null)
+		if (userToEdit is null)
 		{
 			return NotFound();
 		}
@@ -70,7 +70,7 @@ public class EditModel : BasePageModel
 		}
 
 		var user = await _db.Users.Include(u => u.UserRoles).SingleOrDefaultAsync(u => u.Id == Id);
-		if (user == null)
+		if (user is null)
 		{
 			return NotFound();
 		}
@@ -179,7 +179,7 @@ public class EditModel : BasePageModel
 	public async Task<IActionResult> OnGetUnlock()
 	{
 		var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == Id);
-		if (user == null)
+		if (user is null)
 		{
 			return NotFound();
 		}
@@ -192,7 +192,7 @@ public class EditModel : BasePageModel
 
 	private async Task<IEnumerable<SelectListItem>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles)
 	{
-		if (assignedRoles == null)
+		if (assignedRoles is null)
 		{
 			throw new ArgumentException($"{nameof(assignedRoles)} can not be null");
 		}
@@ -223,7 +223,7 @@ public class EditModel : BasePageModel
 	// TODO: reduce copy-pasta
 	private async Task<IEnumerable<int>> GetAllRoleIdsUserCanAssign(int userId, IEnumerable<int> assignedRoles)
 	{
-		if (assignedRoles == null)
+		if (assignedRoles is null)
 		{
 			throw new ArgumentException($"{nameof(assignedRoles)} can not be null");
 		}

@@ -28,7 +28,7 @@ public class AddModel : AddressBasePageModel
 		var game = await _db.Games
 			.SingleOrDefaultAsync(g => g.Id == GameId);
 
-		if (game == null)
+		if (game is null)
 		{
 			return NotFound();
 		}
@@ -46,7 +46,7 @@ public class AddModel : AddressBasePageModel
 			var game = await _db.Games
 				.SingleOrDefaultAsync(g => g.Id == GameId);
 
-			if (game == null)
+			if (game is null)
 			{
 				return NotFound();
 			}

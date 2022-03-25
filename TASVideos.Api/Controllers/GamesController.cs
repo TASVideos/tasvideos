@@ -39,12 +39,9 @@ public class GamesController : Controller
 	{
 		var pub = await _mapper.ProjectTo<GamesResponse>(_db.Games)
 			.SingleOrDefaultAsync(p => p.Id == id);
-		if (pub == null)
-		{
-			return NotFound();
-		}
-
-		return Ok(pub);
+		return pub is null
+			? NotFound()
+			: Ok(pub);
 	}
 
 	/// <summary>

@@ -38,12 +38,9 @@ public class SystemsController : Controller
 			.ProjectTo<SystemsResponse>(_db.GameSystems)
 			.SingleOrDefaultAsync(p => p.Id == id);
 
-		if (system == null)
-		{
-			return NotFound();
-		}
-
-		return Ok(system);
+		return system is null
+			? NotFound()
+			: Ok(system);
 	}
 
 	/// <summary>

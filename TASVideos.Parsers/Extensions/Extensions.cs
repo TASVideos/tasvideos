@@ -7,7 +7,7 @@ internal static class Extensions
 	/// </summary>
 	public static string[] LineSplit(this string? str)
 	{
-		if (str == null)
+		if (str is null)
 		{
 			return Array.Empty<string>();
 		}
@@ -26,7 +26,7 @@ internal static class Extensions
 	/// <returns>The value if found, else an empty string.</returns>
 	public static string GetValueFor(this string[]? lines, string key)
 	{
-		if (lines == null || !lines.Any() || string.IsNullOrWhiteSpace(key))
+		if (lines is null || !lines.Any() || string.IsNullOrWhiteSpace(key))
 		{
 			return "";
 		}
@@ -137,7 +137,7 @@ internal static class Extensions
 	/// </summary>
 	public static IEnumerable<string> WithoutPipes(this IEnumerable<string>? lines)
 	{
-		return lines == null
+		return lines is null
 			? Enumerable.Empty<string>()
 			: lines.Where(i => !i.StartsWith("|"));
 	}

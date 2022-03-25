@@ -16,7 +16,7 @@ public class FbmTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidHeader()
 	{
-		var result = await _fbmParser.Parse(Embedded("wrongmarker.fbm"));
+		var result = await _fbmParser.Parse(Embedded("wrongmarker.fbm"), EmbeddedLength("wrongmarker.fbm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.IsNotNull(result.Errors);
@@ -26,7 +26,7 @@ public class FbmTests : BaseParserTests
 	[TestMethod]
 	public async Task NoInputSection()
 	{
-		var result = await _fbmParser.Parse(Embedded("missinginput.fbm"));
+		var result = await _fbmParser.Parse(Embedded("missinginput.fbm"), EmbeddedLength("missinginput.fbm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.IsNotNull(result.Errors);
@@ -36,7 +36,7 @@ public class FbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Rerecords()
 	{
-		var result = await _fbmParser.Parse(Embedded("basictest.fbm"));
+		var result = await _fbmParser.Parse(Embedded("basictest.fbm"), EmbeddedLength("basictest.fbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(12298, result.RerecordCount);
@@ -45,7 +45,7 @@ public class FbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Frames()
 	{
-		var result = await _fbmParser.Parse(Embedded("basictest.fbm"));
+		var result = await _fbmParser.Parse(Embedded("basictest.fbm"), EmbeddedLength("basictest.fbm"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		AssertNoWarningsOrErrors(result);
@@ -55,7 +55,7 @@ public class FbmTests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _fbmParser.Parse(Embedded("basictest.fbm"));
+		var result = await _fbmParser.Parse(Embedded("basictest.fbm"), EmbeddedLength("basictest.fbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -64,7 +64,7 @@ public class FbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _fbmParser.Parse(Embedded("savestate.fbm"));
+		var result = await _fbmParser.Parse(Embedded("savestate.fbm"), EmbeddedLength("savestate.fbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);

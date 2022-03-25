@@ -32,13 +32,13 @@ public class MovieChangeLog : ViewComponent
 	public async Task<IViewComponentResult> Seed(int publicationId)
 	{
 		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
-		if (publication == null)
+		if (publication is null)
 		{
 			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
 		}
 
 		var history = await _history.ForGame(publication.GameId);
-		if (history == null)
+		if (history is null)
 		{
 			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
 		}

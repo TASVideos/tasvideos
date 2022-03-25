@@ -45,7 +45,7 @@ public class IndexModel : BasePageModel
 			})
 			.SingleOrDefaultAsync(f => f.Id == Id);
 
-		if (forum == null)
+		if (forum is null)
 		{
 			return NotFound();
 		}

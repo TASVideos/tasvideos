@@ -46,7 +46,7 @@ public class ResetPasswordModel : BasePageModel
 		}
 
 		var user = await _userManager.FindByIdAsync(UserId ?? "");
-		if (user == null)
+		if (user is null)
 		{
 			return Home();
 		}
@@ -63,7 +63,7 @@ public class ResetPasswordModel : BasePageModel
 		}
 
 		var user = await _userManager.FindByEmailAsync(Email);
-		if (user == null)
+		if (user is null)
 		{
 			// Don't reveal that the user does not exist
 			return RedirectToPage("ResetPasswordConfirmation");
