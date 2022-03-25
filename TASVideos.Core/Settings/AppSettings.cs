@@ -74,6 +74,7 @@ public class AppSettings
 	public class TwitterConnectionV2
 	{
 		public string ClientId { get; set; } = "";
+		public string ClientSecret { get; set; } = "";
 		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ClientId)
 			;
 	}

@@ -1,13 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
@@ -18,7 +12,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	private readonly HttpClient _accessTokenClient;
 	private readonly AppSettings.TwitterConnectionV2 _settings;
 	private readonly ILogger<TwitterDistributorV2> _logger;
-	private readonly RedisCacheService _redisCacheService;
+	private readonly ICacheService _redisCacheService;
 
 	private string? AccessToken { 
 		get
@@ -38,7 +32,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	private const int refreshTokenDuration = 2 * 60 * 60 - 30;	// Two hours minus thirty seconds in seconds.  How long the retrieved access token will last.
 
 	public TwitterDistributorV2 (
-		RedisCacheService redisCache,
+		ICacheService redisCache,
 		AppSettings appSettings,
 		IHttpClientFactory httpClientFactory,
 		ILogger<TwitterDistributorV2> logger)
@@ -90,11 +84,11 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public async Task RefreshTokens()
 	{
-		if (_nextRefreshTime == null || DateTime.Now > _nextRefreshTime)
+		if (_nextRefreshTime == null || DateTime.UtcNow > _nextRefreshTime)
 		{
 			RetrieveCachedValues();
 
-			if (DateTime.Now > _nextRefreshTime || _accessToken == null)
+			if (DateTime.UtcNow > _nextRefreshTime || _accessToken == null)
 			{
 				await RequestTokensFromTwitter();
 
@@ -122,8 +116,11 @@ public class TwitterDistributorV2 : IPostDistributor
 		var formData = new List<KeyValuePair<string, string>>();
 		formData.Add(new KeyValuePair<string, string>("refresh_token", _refreshToken!));
 		formData.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
-		formData.Add(new KeyValuePair<string, string>("client_id", _settings.ClientId));
-		formData.Add(new KeyValuePair<string, string>("scope", "offline_access tweet.write"));
+		formData.Add(new KeyValuePair<string, string>("scope", "offline.access tweet.write"));
+
+		string basicAuthHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}"));
+
+		_accessTokenClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", basicAuthHeader);
 
 		var response = await _accessTokenClient.PostAsync("", new FormUrlEncodedContent(formData));
 
@@ -133,7 +130,7 @@ public class TwitterDistributorV2 : IPostDistributor
 
 			_accessToken = responseData!.AccessToken;
 			_refreshToken = responseData!.RefreshToken;
-			_nextRefreshTime = DateTime.Now.AddSeconds(refreshTokenDuration);
+			_nextRefreshTime = DateTime.UtcNow.AddSeconds(refreshTokenDuration);
 		}
 	}
 }
