@@ -80,7 +80,10 @@
 								<span class="fa fa-check-square text-success"></span><span> Not locked</span>
 							}
 							<div>
-								<a asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning">IP Addresses used</a>
+								<a asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning btn-sm">IP Addresses used</a>
+							</div>
+							<div>
+								<a href="/UserMaintenanceLog?User=@Model.UserName" class="btn btn-warning btn-sm mt-2">Logs</a>
 							</div>
 						</div>
 					</div>
