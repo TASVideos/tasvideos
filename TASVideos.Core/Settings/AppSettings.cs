@@ -76,6 +76,7 @@ public class AppSettings
 		public string ClientId { get; set; } = "";
 		public string ClientSecret { get; set; } = "";
 		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ClientId)
+			&& !string.IsNullOrWhiteSpace(ClientSecret)
 			;
 	}
 

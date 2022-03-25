@@ -116,7 +116,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		var formData = new List<KeyValuePair<string, string>>();
 		formData.Add(new KeyValuePair<string, string>("refresh_token", _refreshToken!));
 		formData.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
-		formData.Add(new KeyValuePair<string, string>("scope", "offline.access tweet.write"));
+		formData.Add(new KeyValuePair<string, string>("scope", "offline.access tweet.read tweet.write users.read"));
 
 		string basicAuthHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}"));
 
