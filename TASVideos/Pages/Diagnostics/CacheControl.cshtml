@@ -4,8 +4,10 @@
 @{
 	ViewData["Title"] = $"Cache Control ({Cache.GetType().Name})";
 }
-
-<a asp-page="CacheSet" class="mt-2">Set a cache value</a>
+<ul>
+	<li><a asp-page="Index">Diagnostics</a></li>
+	<li><a asp-page="CacheSet" class="mt-2">Set a cache value</a></li>
+</ul>
 <row>
 	<column md="6">
 		<button class="btn btn-primary btn-sm mb-2" id="get-cache">Get Cached value by key</button>

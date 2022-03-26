@@ -1,7 +1,9 @@
 @page
 @{ ViewData["Title"] = "Wiki Syntax Errors"; }
 @model WikiSyntaxErrorsModel
-
+<ul>
+	<li><a asp-page="Index">Diagnostics</a></li>
+</ul>
 <label class="float-end">Total: @Model.Rows.Count</label>
 <table class="table table-bordered table-striped">
 	<thead>
