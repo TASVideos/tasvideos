@@ -46,6 +46,12 @@ public class TwitterDistributorV2 : IPostDistributor
 
 		RefreshTokens().GetAwaiter();
 
+		if (string.IsNullOrWhiteSpace(AccessToken))
+		{
+			_logger.LogError("Unable to get twitter access token");
+			return;
+		}
+
 		_twitterClient.DefaultRequestHeaders.Authorization = 
 			new System.Net.Http.Headers.AuthenticationHeaderValue(
 				"Bearer",
@@ -100,7 +106,25 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public void RetrieveCachedValues()
 	{
-		var keys = _redisCacheService.GetAll<string>(new List<string>() { TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY, TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY });
+		var keys = _redisCacheService.GetAll<string>(new List<string>
+		{
+			TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY,
+			TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY
+		});
+
+		if (!keys.ContainsKey(TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY)
+			|| string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY]))
+		{
+			_logger.LogError("Unable to initialize twitter, missing value {token}", TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY);
+			return;
+		}
+
+		if (!keys.ContainsKey(TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY)
+			|| string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]))
+		{
+			_logger.LogError("Unable to initialize twitter, missing value {token}", TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY);
+			return;
+		}
 
 		_refreshToken = keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY];
 		_nextRefreshTime = DateTime.Parse(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]);

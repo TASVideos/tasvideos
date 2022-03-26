@@ -121,6 +121,7 @@ public static class ServiceCollectionExtensions
 			services.AddSingleton<ICacheService, NoCacheService>();
 		}
 
+		services.AddScoped<RedisCacheService>(); // For Twitter tokens, we specifically need redis
 		return services;
 	}
 
