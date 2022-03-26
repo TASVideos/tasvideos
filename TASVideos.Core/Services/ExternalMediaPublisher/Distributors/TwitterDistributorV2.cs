@@ -16,22 +16,11 @@ public class TwitterDistributorV2 : IPostDistributor
 	private readonly ILogger<TwitterDistributorV2> _logger;
 	private readonly ICacheService _redisCacheService;
 
-	private string? AccessToken { 
-		get
-		{
-			return _accessToken;
-		}
-		set
-		{
-			_accessToken = value;
-		}
-	}
-
 	private string? _accessToken;
 	private string? _refreshToken;
 	private DateTime? _nextRefreshTime;
 
-	private const int refreshTokenDuration = 2 * 60 * 60 - 30;	// Two hours minus thirty seconds in seconds.  How long the retrieved access token will last.
+	private const int RefreshTokenDuration = 2 * 60 * 60 - 30;	// Two hours minus thirty seconds in seconds.  How long the retrieved access token will last.
 
 	public TwitterDistributorV2 (
 		RedisCacheService redisCache,		// Intentionally using Redis Cache here, if we need to turn Redis off, come up with a new solution.  -- Invariel, March 2022.
@@ -59,7 +48,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		_twitterClient.DefaultRequestHeaders.Authorization =
 			new System.Net.Http.Headers.AuthenticationHeaderValue(
 				"Bearer",
-				AccessToken);
+				_accessToken);
 
 		var tweetData = new
 		{
@@ -141,7 +130,7 @@ public class TwitterDistributorV2 : IPostDistributor
 
 			_accessToken = responseData!.AccessToken;
 			_refreshToken = responseData!.RefreshToken;
-			_nextRefreshTime = DateTime.UtcNow.AddSeconds(refreshTokenDuration);
+			_nextRefreshTime = DateTime.UtcNow.AddSeconds(RefreshTokenDuration);
 			CacheValues();
 		}
 	}
