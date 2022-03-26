@@ -119,18 +119,16 @@ public class TwitterDistributorV2 : IPostDistributor
 			return;
 		}
 
-		if (!keys.ContainsKey(TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY)
-			|| string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]))
+		_nextRefreshTime = DateTime.UtcNow.AddDays(-1);
+		if (keys.ContainsKey(TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY)
+			&& string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]))
 		{
-			_logger.LogError("Unable to initialize twitter, missing value {token}", TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY);
-			return;
+			var result = DateTime.TryParse(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY], out var time);
+			if (result)
+			{
+				_nextRefreshTime = time;
+			}
 		}
-
-		_refreshToken = keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY];
-		var result = DateTime.TryParse(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY], out var time);
-		_nextRefreshTime = result
-			? time
-			: DateTime.UtcNow.AddDays(-1);
 	}
 
 	public void CacheValues()
