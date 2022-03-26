@@ -127,7 +127,10 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 
 		_refreshToken = keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY];
-		_nextRefreshTime = DateTime.Parse(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]);
+		var result = DateTime.TryParse(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY], out var time);
+		_nextRefreshTime = result
+			? time
+			: DateTime.UtcNow.AddDays(-1);
 	}
 
 	public void CacheValues()
