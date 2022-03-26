@@ -137,6 +137,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IPostDistributor, TwitterDistributorV2>();
 		services.AddScoped<IPostDistributor, DistributorStorage>();
 
+		services.AddScoped<TwitterDistributorV2>();
 		return services.AddTransient<ExternalMediaPublisher>();
 	}
 }
