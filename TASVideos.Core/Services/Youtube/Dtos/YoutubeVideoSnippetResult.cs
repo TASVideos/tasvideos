@@ -31,6 +31,7 @@ public class YoutubeVideoResponse
 	[JsonPropertyName("etag")]
 	public string Etag { get; set; } = "";
 
+	[JsonPropertyName("items")]
 	public List<YoutubeVideoResponseItem> Items { get; set; } = new();
 }
 
