@@ -104,6 +104,7 @@ public class TwitterDistributorV2 : IPostDistributor
 
 		_refreshToken = keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY];
 		_nextRefreshTime = DateTime.UtcNow.AddDays(-1);
+		_logger.LogError("Refresh token {token}", _refreshToken);
 		if (keys.ContainsKey(TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY)
 			&& string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]))
 		{
