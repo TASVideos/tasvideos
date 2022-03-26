@@ -93,7 +93,6 @@ public class TwitterDistributorV2 : IPostDistributor
 
 		_refreshToken = keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY];
 		_nextRefreshTime = DateTime.UtcNow.AddDays(-1);
-		_logger.LogError("Refresh token {token}", _refreshToken);
 		if (keys.ContainsKey(TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY)
 			&& string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]))
 		{
@@ -113,10 +112,12 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public async Task RequestTokensFromTwitter()
 	{
-		var formData = new List<KeyValuePair<string, string>>();
-		formData.Add(new KeyValuePair<string, string>("refresh_token", _refreshToken!));
-		formData.Add(new KeyValuePair<string, string>("grant_type", "refresh_token"));
-		formData.Add(new KeyValuePair<string, string>("scope", "offline.access tweet.read tweet.write users.read"));
+		var formData = new List<KeyValuePair<string, string>>
+		{
+			new("refresh_token", _refreshToken!),
+			new("grant_type", "refresh_token"),
+			new("scope", "offline.access tweet.read tweet.write users.read")
+		};
 
 		string basicAuthHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}"));
 
