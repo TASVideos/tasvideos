@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Settings;
 
@@ -43,21 +44,6 @@ public class TwitterDistributorV2 : IPostDistributor
 		_twitterClient = httpClientFactory.CreateClient(HttpClients.TwitterV2);
 		_accessTokenClient = httpClientFactory.CreateClient(HttpClients.TwitterAuth);
 		_logger = logger;
-
-		RefreshTokens().GetAwaiter();
-
-		if (string.IsNullOrWhiteSpace(AccessToken))
-		{
-			_logger.LogError("Unable to get twitter access token");
-			return;
-		}
-
-		_twitterClient.DefaultRequestHeaders.Authorization = 
-			new System.Net.Http.Headers.AuthenticationHeaderValue(
-				"Bearer",
-				AccessToken);
-
-		_accessTokenClient.DefaultRequestHeaders.Add("Content-Type", "application/x-www-form-urlencoded");
 	}
 
 	public IEnumerable<PostType> Types => new[] { PostType.Announcement };
@@ -70,22 +56,21 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 
 		await RefreshTokens();
+		_twitterClient.DefaultRequestHeaders.Authorization =
+			new System.Net.Http.Headers.AuthenticationHeaderValue(
+				"Bearer",
+				AccessToken);
 
-		HttpRequestMessage tweet = new HttpRequestMessage();
-		tweet.Method = HttpMethod.Post;
-
-		var tweetData = new List<KeyValuePair<string, string>>()
+		var tweetData = new
 		{
-			new KeyValuePair<string, string> ("text", post.Body)
+			text = post.Body
 		};
 
-		tweet.Content = new FormUrlEncodedContent(tweetData);
-
-		var response = await _twitterClient.SendAsync(tweet);
+		var response = await _twitterClient.PostAsync("", tweetData.ToStringContent());
 
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError($"Error sending tweet: {response.ReasonPhrase}");
+			_logger.LogError("Error sending tweet: {reasonPhrase}", response.ReasonPhrase);
 		}
 	}
 
@@ -98,8 +83,6 @@ public class TwitterDistributorV2 : IPostDistributor
 			if (DateTime.UtcNow > _nextRefreshTime || _accessToken == null)
 			{
 				await RequestTokensFromTwitter();
-
-				CacheValues();
 			}
 		}
 	}
@@ -119,6 +102,7 @@ public class TwitterDistributorV2 : IPostDistributor
 			return;
 		}
 
+		_refreshToken = keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_KEY];
 		_nextRefreshTime = DateTime.UtcNow.AddDays(-1);
 		if (keys.ContainsKey(TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY)
 			&& string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.TWITTER_REFRESH_TOKEN_TIME_KEY]))
@@ -157,6 +141,7 @@ public class TwitterDistributorV2 : IPostDistributor
 			_accessToken = responseData!.AccessToken;
 			_refreshToken = responseData!.RefreshToken;
 			_nextRefreshTime = DateTime.UtcNow.AddSeconds(refreshTokenDuration);
+			CacheValues();
 		}
 	}
 }
