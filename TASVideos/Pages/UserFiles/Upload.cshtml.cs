@@ -15,7 +15,7 @@ namespace TASVideos.Pages.UserFiles;
 [RequirePermission(PermissionTo.UploadUserFiles)]
 public class UploadModel : BasePageModel
 {
-	private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst" };
+	private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst", ".avs" };
 
 	private readonly ApplicationDbContext _db;
 	private readonly IMovieParser _parser;
