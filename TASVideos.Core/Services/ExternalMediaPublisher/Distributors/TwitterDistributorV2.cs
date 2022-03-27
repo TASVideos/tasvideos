@@ -109,8 +109,8 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public void CacheValues()
 	{
-		_redisCacheService.Set(TwitterDistributorConstants.RefreshToken, _refreshToken);
-		_redisCacheService.Set(TwitterDistributorConstants.RefreshTokenTime, _nextRefreshTime.ToString());
+		_redisCacheService.Set(TwitterDistributorConstants.RefreshToken, _refreshToken, Durations.OneWeekInSeconds);
+		_redisCacheService.Set(TwitterDistributorConstants.RefreshTokenTime, _nextRefreshTime.ToString(), Durations.OneWeekInSeconds);
 	}
 
 	public async Task RequestTokensFromTwitter()
