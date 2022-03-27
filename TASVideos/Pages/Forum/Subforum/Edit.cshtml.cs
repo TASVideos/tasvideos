@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -23,6 +24,10 @@ public class EditModel : BasePageModel
 	[BindProperty]
 	public ForumEditModel Forum { get; set; } = new();
 
+	public bool CanDelete { get; set; }
+
+	public IEnumerable<SelectListItem> AvailableCategories { get; set; } = new List<SelectListItem>();
+
 	public async Task<IActionResult> OnGet()
 	{
 		var forum = await _db.Forums
@@ -32,7 +37,9 @@ public class EditModel : BasePageModel
 			{
 				Name = f.Name,
 				Description = f.Description,
-				ShortName = f.ShortName
+				ShortName = f.ShortName,
+				CategoryId = f.CategoryId,
+				Restricted = f.Restricted
 			})
 			.SingleOrDefaultAsync();
 
@@ -42,6 +49,7 @@ public class EditModel : BasePageModel
 		}
 
 		Forum = forum;
+		await Initialize();
 		return Page();
 	}
 
@@ -49,6 +57,7 @@ public class EditModel : BasePageModel
 	{
 		if (!ModelState.IsValid)
 		{
+			await Initialize();
 			return Page();
 		}
 
@@ -64,8 +73,43 @@ public class EditModel : BasePageModel
 		forum.Name = Forum.Name;
 		forum.ShortName = Forum.ShortName;
 		forum.Description = Forum.Description;
+		forum.CategoryId = Forum.CategoryId;
+		forum.Restricted = Forum.Restricted;
 
 		await ConcurrentSave(_db, $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
 		return RedirectToPage("Index", new { id = Id });
+	}
+
+	public async Task<IActionResult> OnPostDelete()
+	{
+		if (!await CanBeDeleted())
+		{
+			return BadRequest("Cannot delete subforum that contains topics");
+		}
+
+		var subForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Id);
+		if (subForum is null)
+		{
+			return NotFound();
+		}
+
+		_db.Forums.Remove(subForum);
+
+		await ConcurrentSave(_db, $"Forum {Id} deleted successfully", $"Unable to delete Forum {Id}");
+
+		return RedirectToPage("/Forum/Index");
+	}
+
+	private async Task Initialize()
+	{
+		CanDelete = await CanBeDeleted();
+		AvailableCategories = await _db.ForumCategories
+			.ToDropdown()
+			.ToListAsync();
+	}
+
+	private async Task<bool> CanBeDeleted()
+	{
+		return !await _db.ForumTopics.AnyAsync(t => t.ForumId == Id);
 	}
 }

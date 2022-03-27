@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Submissions.Models;
@@ -111,6 +112,15 @@ public static class EntityExtensions
 			Text = p.Title,
 			Value = p.Id.ToString()
 		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<ForumCategory> query)
+	{
+		return query.Select(c => new SelectListItem
+			{
+				Text = c.Title,
+				Value = c.Id.ToString()
+			});
 	}
 
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)

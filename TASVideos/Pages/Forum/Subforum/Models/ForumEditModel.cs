@@ -16,4 +16,11 @@ public class ForumEditModel
 	[Required]
 	[StringLength(1000)]
 	public string? Description { get; set; }
+
+	[Display(Name = "Category")]
+	[Required]
+	public int CategoryId { get; set; }
+
+	[Display(Name = "Restricted Access", Description = "If set, only users with permission to restricted forums will be allowed to see this forum")]
+	public bool Restricted { get; set; }
 }

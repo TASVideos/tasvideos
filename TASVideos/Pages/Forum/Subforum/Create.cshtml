@@ -1,18 +1,10 @@
-﻿@page "{id}"
-@model EditModel
+﻿@page
+@model CreateModel
 @{
-	ViewData["Title"] = $"TASVideos Forum {Model.Forum.Name}";
+	ViewData["Title"] = "Creating New Forum";
 }
 <partial Name="_ForumHeader" />
 <div asp-validation-summary="All" class="text-danger"></div>
-<form-group>
-	<delete-button
-		condition="@Model.CanDelete"
-		asp-href="/Forum/Subforum/Edit/@Model.Id?handler=Delete"
-		class="float-end">
-		<i class="fa fa-times"></i> Delete
-	</delete-button>
-</form-group>
 <form method="post">
 	<row>
 		<column lg="6">
@@ -50,11 +42,7 @@
 		<span asp-validation-for="Forum.Description" class="text-danger"></span>
 	</fullrow>
 	<form-button-bar>
-		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
-		<a asp-page="Index" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Create</button>
+		<a asp-page="Forum/Index" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}
