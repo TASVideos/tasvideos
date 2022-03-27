@@ -90,7 +90,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		if (!keys.ContainsKey(TwitterDistributorConstants.RefreshToken)
 			|| string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.RefreshToken]))
 		{
-			_logger.LogError("Unable to initialize twitter, missing value {token}", TwitterDistributorConstants.RefreshToken);
+			_logger.LogError("Unable to initialize twitter, missing refresh token");
 			return;
 		}
 
