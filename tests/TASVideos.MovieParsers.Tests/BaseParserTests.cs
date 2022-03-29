@@ -33,7 +33,6 @@ public abstract class BaseParserTests
 	{
 		// Simulates real situations, as the `stream` passed to parse
 		// in the real site will always be from within a zip file.
-
 		var ms = new MemoryStream();
 
 		using (var zip = new ZipArchive(ms, ZipArchiveMode.Create, true))
