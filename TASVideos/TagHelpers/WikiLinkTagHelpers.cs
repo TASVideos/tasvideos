@@ -49,25 +49,25 @@ public class WikiLinkTagHelper : TagHelper
 		var submissionId = SubmissionHelper.IsRawSubmissionLink(PageName);
 		if (submissionId.HasValue)
 		{
-			pageName = $"/{submissionId}S";
+			pageName = $"{submissionId}S";
 		}
 
 		var publicationId = SubmissionHelper.IsRawPublicationLink(PageName);
 		if (publicationId.HasValue)
 		{
-			pageName = $"/{publicationId}M";
+			pageName = $"{publicationId}M";
 		}
 
 		var gameId = SubmissionHelper.IsRawGamePageLink(PageName);
 		if (gameId.HasValue)
 		{
-			pageName = $"/{gameId}G";
+			pageName = $"{gameId}G";
 		}
 
 		output.TagName = "a";
-		output.Attributes.Add("href", pageName);
+		output.Attributes.Add("href", $"/{pageName}");
 		output.Content.Clear();
-		output.Content.AppendHtml(pageName.Trim('/'));
+		output.Content.AppendHtml(pageName);
 	}
 }
 
