@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using MimeKit;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Settings;
