@@ -51,6 +51,8 @@ public class EditModel : BasePageModel
 	[BindProperty]
 	public SubmissionEditModel Submission { get; set; } = new();
 
+	public bool CanDelete { get; set; }
+
 	[Display(Name = "Status")]
 	public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
 
@@ -474,6 +476,9 @@ public class EditModel : BasePageModel
 
 	private async Task PopulateDropdowns()
 	{
+		CanDelete = User.Has(PermissionTo.DeleteSubmissions)
+			&& (await _queueService.CanDeleteSubmission(Id)).True;
+
 		AvailableClasses = await _db.PublicationClasses
 			.ToDropdown()
 			.ToListAsync();

@@ -1,0 +1,12 @@
+﻿@page "{id}"
+@model DeleteModel
+@{
+	ViewData["Title"] = $"Delete Submission: {Model.Title}";
+}
+<form method="post">
+	<danger-alert>This action cannot be done, and should only be done if there was a mistake in submission</danger-alert>
+	<form-button-bar>
+		<submit-button class="btn btn-danger"><i class="fa fa-remove"></i> Delete</submit-button>
+		<a asp-page="/Submissions/View" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i>Cancel</a>
+	</form-button-bar>
+</form> 

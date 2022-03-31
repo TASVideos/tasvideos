@@ -119,6 +119,10 @@ public enum PermissionTo
 	DeprecateMovieParsers = 205,
 
 	[Group("Queue Maintenance")]
+	[Description("The ability to delete a submission")]
+	DeleteSubmissions = 290,
+
+	[Group("Queue Maintenance")]
 	[Description("The ability to unpublish an existing publication. Publication will be removed and the submission will be restored to the queue.")]
 	Unpublish = 299,
 

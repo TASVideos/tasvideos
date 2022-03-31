@@ -1,4 +1,5 @@
 ﻿using TASVideos.Core.Settings;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher;
 
@@ -105,6 +106,18 @@ public static class ExternalMediaPublisherExtensions
 			Title = "Publication Removed",
 			Body = reason,
 			Link = publisher.ToAbsolute($"{id}M")
+		});
+	}
+
+	public static async Task AnnounceSubmissionDelete(this ExternalMediaPublisher publisher, string submissionTitle, int id)
+	{
+		await publisher.Send(new Post
+		{
+			Announcement = $"{submissionTitle} REMOVED",
+			Type = PostType.Announcement,
+			Group = PostGroups.Submission,
+			Title = "Submission Removed",
+			Link = publisher.ToAbsolute($"{id}S")
 		});
 	}
 

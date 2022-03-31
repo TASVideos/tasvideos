@@ -4,6 +4,9 @@
 @{
 	ViewData["Title"] = $"Edit Submission #{Model.Id}";
 }
+<a condition="Model.CanDelete" asp-page="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">
+	<i class="fa fa-remove"></i> Delete
+</a>
 <div class="text-danger">
 	@Html.ValidationSummary()
 </div>

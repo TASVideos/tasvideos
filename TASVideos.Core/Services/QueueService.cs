@@ -25,6 +25,16 @@ public interface IQueueService
 	int HoursRemainingForJudging(ISubmissionDisplay submission);
 
 	/// <summary>
+	/// Returns whether or not a submission can be delete, does not affect the submission
+	/// </summary>
+	Task<DeleteSubmissionResult> CanDeleteSubmission(int submissionId);
+
+	/// <summary>
+	/// Deletes a submission permanently
+	/// </summary>
+	Task<DeleteSubmissionResult> DeleteSubmission(int submissionId);
+
+	/// <summary>
 	/// Returns whether or not a publication can be unpublished, does not affect the publication
 	/// </summary>
 	Task<UnpublishResult> CanUnpublish(int publicationId);
@@ -56,17 +66,20 @@ internal class QueueService : IQueueService
 	private readonly ApplicationDbContext _db;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
+	private readonly IWikiPages _wikiPages;
 
 	public QueueService(
 		AppSettings settings,
 		ApplicationDbContext db,
 		IYoutubeSync youtubeSync,
-		ITASVideoAgent tva)
+		ITASVideoAgent tva,
+		IWikiPages wikiPages)
 	{
 		_minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
 		_db = db;
 		_youtubeSync = youtubeSync;
 		_tva = tva;
+		_wikiPages = wikiPages;
 	}
 
 	public IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
@@ -177,6 +190,80 @@ internal class QueueService : IQueueService
 		return 0;
 	}
 
+	public async Task<DeleteSubmissionResult> CanDeleteSubmission(int submissionId)
+	{
+		var sub = await _db.Submissions
+			.Where(s => s.Id == submissionId)
+			.Select(s => new
+			{
+				s.Title,
+				IsPublished = s.PublisherId.HasValue
+			})
+			.SingleOrDefaultAsync();
+
+		if (sub is null)
+		{
+			return DeleteSubmissionResult.NotFound();
+		}
+
+		if (sub.IsPublished)
+		{
+			return DeleteSubmissionResult.IsPublished(sub.Title);
+		}
+
+		return DeleteSubmissionResult.Success(sub.Title);
+	}
+
+	public async Task<DeleteSubmissionResult> DeleteSubmission(int submissionId)
+	{
+		var submission = await _db.Submissions
+			.Include(s => s.SubmissionAuthors)
+			.Include(s => s.History)
+			.Include(s => s.WikiContent)
+			.SingleOrDefaultAsync(s => s.Id == submissionId);
+
+		if (submission is null)
+		{
+			return DeleteSubmissionResult.NotFound();
+		}
+
+		if (submission.PublisherId.HasValue)
+		{
+			return DeleteSubmissionResult.IsPublished(submission.Title);
+		}
+
+		submission.SubmissionAuthors.Clear();
+		submission.History.Clear();
+		_db.Submissions.Remove(submission);
+		if (submission.TopicId.HasValue)
+		{
+			var topic = await _db.ForumTopics
+				.Include(t => t.ForumPosts)
+				.Include(t => t.Poll)
+				.ThenInclude(p => p!.PollOptions)
+				.ThenInclude(o => o.Votes)
+				.SingleAsync(t => t.Id == submission.TopicId);
+
+			_db.ForumPosts.RemoveRange(topic.ForumPosts);
+			if (topic.Poll is not null)
+			{
+				_db.ForumPollOptionVotes.RemoveRange(topic.Poll.PollOptions.SelectMany(po => po.Votes));
+				_db.ForumPollOptions.RemoveRange(topic.Poll.PollOptions);
+				_db.ForumPolls.Remove(topic.Poll);
+			}
+
+			_db.ForumTopics.Remove(topic);
+		}
+
+		await _db.SaveChangesAsync();
+		if (submission.WikiContentId.HasValue)
+		{
+			await _wikiPages.Delete(submission.WikiContent!.PageName);
+		}
+
+		return DeleteSubmissionResult.Success(submission.Title);
+	}
+
 	public async Task<UnpublishResult> CanUnpublish(int publicationId)
 	{
 		var pub = await _db.Publications
@@ -282,8 +369,7 @@ internal class QueueService : IQueueService
 					queriedPub.System!.Code,
 					queriedPub.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 					queriedPub.Game!.SearchKey,
-					queriedPub.ObsoletedById
-					));
+					queriedPub.ObsoletedById));
 			}
 		}
 
