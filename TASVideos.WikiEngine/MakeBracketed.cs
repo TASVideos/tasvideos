@@ -89,7 +89,7 @@ public static partial class Builtins
 		};
 	}
 
-	private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg" };
+	private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg", ".webp" };
 	private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//", "irc://", "user:", "#" };
 
 	// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
