@@ -49,7 +49,7 @@ public class Startup
 
 		services.AddWebOptimizer(pipeline =>
 		{
-			pipeline.AddScssBundle("/css/site.css", "/css/site.scss");
+			pipeline.AddScssBundle("/css/site-april.css", "/css/site-april.scss");
 			pipeline.AddScssBundle("/css/darkmode.css", "/css/darkmode.scss");
 			pipeline.AddScssBundle("/css/darkmode-initial.css", "/css/darkmode-initial.scss");
 		});
