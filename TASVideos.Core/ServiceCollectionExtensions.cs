@@ -101,6 +101,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IPublicationMaintenanceLogger, PublicationMaintenanceLogger>();
 		services.AddScoped<IUserMaintenanceLogger, UserMaintenanceLogger>();
 		services.AddScoped<IQueueService, QueueService>();
+		services.AddScoped<IUserFiles, UserFiles>();
 
 		return services;
 	}

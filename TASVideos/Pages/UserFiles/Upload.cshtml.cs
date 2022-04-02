@@ -1,13 +1,10 @@
-﻿using System.IO.Compression;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
-using TASVideos.MovieParsers;
 using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
@@ -15,22 +12,17 @@ namespace TASVideos.Pages.UserFiles;
 [RequirePermission(PermissionTo.UploadUserFiles)]
 public class UploadModel : BasePageModel
 {
-	private static readonly string[] SupportedSupplementalTypes = { ".lua", ".wch", ".gst", ".avs" };
-
+	private readonly IUserFiles _userFiles;
 	private readonly ApplicationDbContext _db;
-	private readonly IMovieParser _parser;
-	private readonly IFileService _fileService;
 	private readonly ExternalMediaPublisher _publisher;
 
 	public UploadModel(
+		IUserFiles userFiles,
 		ApplicationDbContext db,
-		IMovieParser parser,
-		IFileService fileService,
 		ExternalMediaPublisher publisher)
 	{
+		_userFiles = userFiles;
 		_db = db;
-		_parser = parser;
-		_fileService = fileService;
 		_publisher = publisher;
 	}
 
@@ -50,10 +42,9 @@ public class UploadModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		await Initialize();
-
 		if (!ModelState.IsValid)
 		{
+			await Initialize();
 			return Page();
 		}
 
@@ -65,10 +56,9 @@ public class UploadModel : BasePageModel
 			return Page();
 		}
 
-		var fileExt = Path.GetExtension(UserFile.File!.FileName);
+		var fileExt = UserFile.File.FileExtension();
 
-		if (!SupportedSupplementalTypes.Contains(fileExt)
-			&& !_parser.SupportedMovieExtensions.Contains(fileExt))
+		if (!await _userFiles.IsSupportedFileExtension(fileExt))
 		{
 			ModelState.AddModelError(
 				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
@@ -76,9 +66,7 @@ public class UploadModel : BasePageModel
 			return Page();
 		}
 
-		// We calculate storage used by the compressed size in the upload.  This is probably going to be
-		// about the same size as what we recompress it to.
-		if (StorageUsed + UserFile.File!.Length > SiteGlobalConstants.UserFileStorageLimit)
+		if (!await _userFiles.SpaceAvailable(User.GetUserId(), UserFile.File!.Length))
 		{
 			ModelState.AddModelError(
 				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
@@ -86,95 +74,35 @@ public class UploadModel : BasePageModel
 			return Page();
 		}
 
-		byte[] actualFileData;
+		byte[] actualFileData = await UserFile.File.ActualFileData();
+		var (id, parseResult) = await _userFiles.Upload(User.GetUserId(), new(
+			UserFile.Title,
+			UserFile.Description,
+			UserFile.SystemId,
+			UserFile.GameId,
+			actualFileData,
+			UserFile.File.FileName,
+			UserFile.Hidden));
+
+		if (parseResult is not null && !parseResult.Success)
 		{
-			// TODO: TO avoid zipbombs we should limit the max size of tempStream
-			var tempStream = new MemoryStream((int)UserFile.File.Length);
-			await using var gzip = new GZipStream(UserFile.File.OpenReadStream(), CompressionMode.Decompress);
-			await gzip.CopyToAsync(tempStream);
-			actualFileData = tempStream.ToArray();
+			ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
+			await Initialize();
+			return Page();
 		}
-
-		var userFile = new UserFile
-		{
-			Id = DateTime.UtcNow.Ticks,
-			Title = UserFile.Title,
-			Description = UserFile.Description,
-			SystemId = UserFile.SystemId,
-			GameId = UserFile.GameId,
-			AuthorId = User.GetUserId(),
-			LogicalLength = actualFileData.Length,
-			UploadTimestamp = DateTime.UtcNow,
-			Class = SupportedSupplementalTypes.Contains(fileExt)
-				? UserFileClass.Support
-				: UserFileClass.Movie,
-			Type = fileExt.Replace(".", ""),
-			FileName = UserFile.File.FileName,
-			Hidden = UserFile.Hidden
-		};
-
-		if (_parser.SupportedMovieExtensions.Contains(fileExt))
-		{
-			var parseResult = await _parser.ParseFile(UserFile.File.FileName, new MemoryStream(actualFileData, false));
-			if (!parseResult.Success)
-			{
-				ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
-				await Initialize();
-				return Page();
-			}
-
-			userFile.Rerecords = parseResult.RerecordCount;
-			userFile.Frames = parseResult.Frames;
-
-			decimal frameRate = 60.0M;
-			if (parseResult.FrameRateOverride.HasValue)
-			{
-				frameRate = (decimal)parseResult.FrameRateOverride.Value;
-			}
-			else
-			{
-				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Code == parseResult.SystemCode);
-				if (system != null)
-				{
-					var frameRateData = await _db.GameSystemFrameRates
-						.ForSystem(system.Id)
-						.ForRegion(parseResult.Region.ToString())
-						.FirstOrDefaultAsync();
-
-					if (frameRateData is not null)
-					{
-						frameRate = (decimal)frameRateData.FrameRate;
-					}
-				}
-			}
-
-			userFile.Length = userFile.Frames / frameRate;
-		}
-
-		var fileResult = await _fileService.Compress(actualFileData);
-
-		userFile.PhysicalLength = fileResult.CompressedSize;
-		userFile.CompressionType = fileResult.Type;
-		userFile.Content = fileResult.Data;
-
-		_db.UserFiles.Add(userFile);
-		await _db.SaveChangesAsync();
 
 		await _publisher.SendUserFile(
-			userFile.Hidden,
+			UserFile.Hidden,
 			$"New user file uploaded by {User.Name()}",
-			$"/UserFiles/Info/{userFile.Id}",
-			$"{userFile.Title}");
+			$"/UserFiles/Info/{id}",
+			$"{UserFile.Title}");
 
 		return BasePageRedirect("/Profile/UserFiles");
 	}
 
 	private async Task Initialize()
 	{
-		var userId = User.GetUserId();
-		StorageUsed = await _db.UserFiles
-			.Where(uf => uf.AuthorId == userId)
-			.SumAsync(uf => uf.Content.Length);
+		StorageUsed = await _userFiles.StorageUsed(User.GetUserId());
 
 		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
 			.OrderBy(s => s.Code)
