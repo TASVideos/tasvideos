@@ -54,7 +54,7 @@ public class CreateModel : BaseForumModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (topic == null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
@@ -73,7 +73,7 @@ public class CreateModel : BaseForumModel
 		}
 
 		var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == ForumId);
-		if (forum == null)
+		if (forum is null)
 		{
 			return NotFound();
 		}

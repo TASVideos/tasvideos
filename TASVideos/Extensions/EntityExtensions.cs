@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Submissions.Models;
@@ -113,6 +114,15 @@ public static class EntityExtensions
 		});
 	}
 
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<ForumCategory> query)
+	{
+		return query.Select(c => new SelectListItem
+			{
+				Text = c.Title,
+				Value = c.Id.ToString()
+			});
+	}
+
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
 	{
 		return query
@@ -134,7 +144,7 @@ public static class EntityExtensions
 			});
 	}
 
-	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false)
+	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
 	{
 		var q = query
 			.Select(p => new PublicationDisplayModel
@@ -192,6 +202,11 @@ public static class EntityExtensions
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 					.Where(pr => pr.User!.UseRatings)
 					.Average(pr => pr.Value),
+				Rating = new PublicationRateModel
+				{
+					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
+					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
+				},
 				Region = p.Rom != null ? p.Rom.Region : null,
 				RomVersion = p.Rom != null ? p.Rom.Version : null
 			});

@@ -6,7 +6,7 @@ using TASVideos.Pages.Wiki.Models;
 
 namespace TASVideos.Pages.Wiki;
 
-[RequirePermission(PermissionTo.SeeAdminPages)]
+[RequirePermission(PermissionTo.EditWikiPages)]
 public class SiteMapModel : BasePageModel
 {
 	private readonly IWikiPages _wikiPages;
@@ -39,6 +39,7 @@ public class SiteMapModel : BasePageModel
 		Map = CorePages.ToList();
 		var wikiPages = _wikiPages.Query
 			.ThatAreSubpagesOf("")
+			.Where(w => !w.PageName.StartsWith("InternalSystem"))
 			.Select(w => w.PageName)
 			.ToList();
 

@@ -8,7 +8,7 @@ internal class M64 : ParserBase, IParser
 {
 	public override string FileExtension => "m64";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

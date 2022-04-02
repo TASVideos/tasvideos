@@ -36,14 +36,23 @@ public class UserMaintenanceLogs : ViewComponent
 			paging.Sort = "-TimeStamp";
 		}
 
-		var logs = await _db.UserMaintenanceLogs
+		string user = HttpContext.Request.QueryStringValue("User");
+
+		var logsQuery = _db.UserMaintenanceLogs
 			.Select(m => new UserMaintenanceLogEntry
 			{
 				User = m.User!.UserName,
 				Editor = m.Editor!.UserName,
 				TimeStamp = m.TimeStamp,
 				Log = m.Log
-			})
+			});
+
+		if (!string.IsNullOrWhiteSpace(user))
+		{
+			logsQuery = logsQuery.Where(l => l.User == user);
+		}
+
+		var logs = await logsQuery
 			.SortedPageOf(paging);
 
 		ViewData["PagingModel"] = paging;

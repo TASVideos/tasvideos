@@ -1,0 +1,26 @@
+﻿@page
+@model CacheSetModel
+@{
+	ViewData["Title"] = "Set a cache value (only works on strings!)";
+}
+<ul>
+	<li><a asp-page="Index">Diagnostics</a></li>
+	<li><a asp-page="CacheControl" class="mt-2">Cache Control</a></li>
+</ul>
+<row>
+	<column md="6">
+		<form method="post">
+			<form-group>
+				<label asp-for="CacheEntry.Key"></label>
+				<input asp-for="CacheEntry.Key" type="text" placeholder="key" class="form-control" required />
+			</form-group>
+			<form-group>
+				<label asp-for="CacheEntry.Value"></label>
+				<input asp-for="CacheEntry.Value" type="text" placeholder="value" class="form-control" required />
+			</form-group>
+			<form-button-bar>
+				<button type="submit" class="btn btn-primary">Set</button>
+			</form-button-bar>
+		</form>
+	</column>
+</row>

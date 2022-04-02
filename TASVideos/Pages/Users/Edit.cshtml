@@ -155,19 +155,15 @@
 			</form-group>
 			<form-group>
 				<label asp-for="UserToEdit.Email" class="form-control-label"></label>
-				@if (Model.UserToEdit.EmailConfirmed)
-				{
-					<div class="input-group">
-						<label class="form-control">@Model.UserToEdit.Email</label>
-						<div class="input-group-append">
-							<span class="input-group-text" aria-hidden="true"><span class="fa fa-check-square text-success"></span></span>
-						</div>
-					</div>
-				}
-				else
-				{
+				<div class="input-group">
 					<label class="form-control">@Model.UserToEdit.Email</label>
-				}
+					<div class="input-group-append">
+						<span class="input-group-text" aria-hidden="true">
+							<i condition="Model.UserToEdit.EmailConfirmed" class="fa fa-check-square text-success"></i>
+							<i condition="!Model.UserToEdit.EmailConfirmed" class="fa fa-question text-warning" title="Email not confirmed"></i>
+						</span>
+					</div>
+				</div>
 			</form-group>
 		</div>
 	</row>

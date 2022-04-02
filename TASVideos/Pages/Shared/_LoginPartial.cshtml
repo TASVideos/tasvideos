@@ -11,28 +11,35 @@
 }
 @if (isSignedIn)
 {
-	<form asp-page="/Account/Logout" method="post" id="logoutForm" asp-antiforgery="false">
-		<navbar class="flex-wrap justify-content-end">
-			<nav-item activate="Messages">
-				<a id="Inbox" class="nav-link text-nowrap" asp-page="/Messages/Inbox">
-					<span condition="notificationCount > 0" class="badge bg-danger text-white">@notificationCount</span>
-					<span condition="notificationCount > 0" class="sr-only">unread messages</span>
-					<span class="fa fa-envelope"></span>
-				</a>
-			</nav-item>
-			<nav-item activate="Profile">
-				<a id="Manage" class="nav-link" asp-page="/Profile/Index" title="Manage">
-					<i class="fa fa-user d-inline"></i>&nbsp;@User.Name()
-				</a>
-			</nav-item>
-			<nav-item>
-				<button id="Logout" type="submit" class="btn btn-link navbar-btn nav-link text-nowrap fs-6 border-0"><i class="fa fa-sign-out"></i> Log out</button>
-			</nav-item>
-			<nav-item activate="Search">
-				<a id="Search" class="nav-link text-nowrap" asp-page="/Search/Index"><i class="fa fa-search"></i> Search</a>
-			</nav-item>
-		</navbar>
-	</form>
+    <navbar class="flex-wrap justify-content-end">
+        <nav-item activate="Messages">
+            <a id="Inbox" class="nav-link text-nowrap" asp-page="/Messages/Inbox">
+                <span condition="notificationCount > 0" class="badge bg-danger text-white">@notificationCount</span>
+                <span condition="notificationCount > 0" class="sr-only">unread messages</span>
+                <span class="fa fa-envelope"></span>
+            </a>
+        </nav-item>
+        <nav-item activate="Profile">
+            <a id="Manage" class="nav-link" asp-page="/Profile/Index" title="Manage">
+                <i class="fa fa-user d-inline"></i>&nbsp;@User.Name()
+            </a>
+        </nav-item>
+        <nav-item>
+            <form asp-page="/Account/Logout" method="post" id="logoutForm" asp-antiforgery="false">
+                <button id="Logout" type="submit" class="btn btn-link navbar-btn nav-link text-nowrap fs-6 border-0"><i class="fa fa-sign-out"></i> Log out</button>
+            </form>
+        </nav-item>
+        <nav-item activate="Search">
+            <form method="GET" action="/Search/Index">
+                <div class="input-group mt-1">
+                    <button type="submit" class="btn btn-sm border border-secondary nav-link">
+                        <i class="fa fa-search"></i>
+                    </button>
+                    <input type="text" name="SearchTerms" class="form-control" />
+                </div>
+            </form>
+        </nav-item>
+    </navbar>
 }
 else
 {
@@ -44,7 +51,14 @@ else
 			<a id="Login" class="nav-link text-nowrap" asp-page="/Account/Login" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"><i class="fa fa-sign-in"></i> Log in</a>
 		</nav-item>
 		<nav-item activate="Search">
-			<a id="Search" class="nav-link text-nowrap" asp-page="/Search/Index"><i class="fa fa-search"></i> Search</a>
+			<form method="GET" action="/Search/Index">
+				<div class="input-group mt-1">
+					<button type="submit" class="btn btn-sm border border-secondary nav-link">
+						<i class="fa fa-search"></i>
+					</button>
+					<input type="text" name="SearchTerms" class="form-control" />
+				</div>
+			</form>
 		</nav-item>
 	</navbar>
 }

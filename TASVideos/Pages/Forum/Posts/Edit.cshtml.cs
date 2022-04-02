@@ -66,7 +66,7 @@ public class EditModel : BaseForumModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (post == null)
+		if (post is null)
 		{
 			return NotFound();
 		}
@@ -131,7 +131,7 @@ public class EditModel : BaseForumModel
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
-		if (forumPost == null)
+		if (forumPost is null)
 		{
 			return NotFound();
 		}
@@ -182,7 +182,7 @@ public class EditModel : BaseForumModel
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
-		if (post == null)
+		if (post is null)
 		{
 			return NotFound();
 		}

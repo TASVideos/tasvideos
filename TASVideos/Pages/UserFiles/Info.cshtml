@@ -8,7 +8,7 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:site_name" content="TASVideos" />
 	<meta property="og:title" content="@ViewData["Title"]" />
-	@if (!String.IsNullOrWhiteSpace(Model.UserFile.Title)) {
+	@if (!string.IsNullOrWhiteSpace(Model.UserFile.Title)) {
 		<meta property="og:description" content="@(Model.UserFile.Title)" />
 	}
 	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />

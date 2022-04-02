@@ -66,7 +66,7 @@ public class PublishModel : BasePageModel
 				_db.Submissions.Where(s => s.Id == Id))
 			.SingleOrDefaultAsync();
 
-		if (submission == null)
+		if (submission is null)
 		{
 			return NotFound();
 		}
@@ -175,6 +175,26 @@ public class PublishModel : BasePageModel
 		}
 
 		return BaseRedirect($"/{publication.Id}M");
+	}
+
+	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
+	{
+		var pub = await _db.Publications
+			.Where(p => p.Id == publicationId)
+			.Select(p => new
+			{
+				p.WikiContent!.Markup,
+				Flags = p.PublicationFlags.Select(pf => pf.FlagId),
+				Tags = p.PublicationTags.Select(pt => pt.TagId)
+			})
+			.SingleOrDefaultAsync();
+
+		if (pub is null)
+		{
+			return BadRequest($"Unable to find publication with an id of {publicationId}");
+		}
+
+		return new JsonResult(pub);
 	}
 
 	private static WikiPage GenerateWiki(int publicationId, string markup, int userId)

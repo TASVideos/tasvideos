@@ -25,7 +25,7 @@ public class MovieMaintenanceLog : ViewComponent
 				.Select(p => p.Title)
 				.SingleOrDefaultAsync();
 
-			if (publicationTitle == null)
+			if (publicationTitle is null)
 			{
 				return new ContentViewComponentResult($"Publication #{publicationId} not found.");
 			}

@@ -74,7 +74,7 @@ public class ViewModel : BasePageModel
 			})
 			.SingleOrDefaultAsync();
 
-		if (submission == null)
+		if (submission is null)
 		{
 			return NotFound();
 		}
@@ -99,7 +99,7 @@ public class ViewModel : BasePageModel
 			.Select(s => s.MovieFile)
 			.SingleOrDefaultAsync();
 
-		if (submissionFile == null)
+		if (submissionFile is null)
 		{
 			return NotFound();
 		}

@@ -1,9 +1,21 @@
 ﻿@page "{handler?}"
 @model CacheControlModel
+@inject ICacheService Cache;
 @{
-	ViewData["Title"] = "Cache Control";
+	ViewData["Title"] = $"Cache Control ({Cache.GetType().Name})";
 }
-
+<ul>
+	<li><a asp-page="Index">Diagnostics</a></li>
+	<li><a asp-page="CacheSet" class="mt-2">Set a cache value</a></li>
+</ul>
+<row>
+	<column md="6">
+		<button class="btn btn-primary btn-sm mb-2" id="get-cache">Get Cached value by key</button>
+		<input type="text" class="form-control" id="get-cache-box" placeholder="key"/>
+		<textarea class="form-control mt-2" row="5" id="get-cache-valuebox" placeholder="value" readonly></textarea>
+	</column>
+</row>
+<hr />
 <row>
 	<column md="6">
 		<card>
@@ -36,3 +48,19 @@
 		</card>
 	</column>
 </row>
+
+@section Scripts {
+	<script>
+		const getCacheBtn = document.getElementById('get-cache');
+		const getCacheBox = document.getElementById('get-cache-box');
+		const cacheValueBox = document.getElementById('get-cache-valuebox');
+		getCacheBtn.onclick = function() {
+			fetch(`/Diagnostics/CacheControl?handler=CacheValue&key=${getCacheBox.value}`)
+				.then(handleFetchErrors)
+				.then(r => r.json())
+				.then(json => {
+					cacheValueBox.value = JSON.stringify(json.value);
+				});
+		}
+	</script>
+}

@@ -25,7 +25,7 @@ public class IndexModel : BasePageModel
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var profile = await _userManager.GetUserProfile(User.Name(), true, seeRestricted);
-		if (profile == null)
+		if (profile is null)
 		{
 			return NotFound();
 		}

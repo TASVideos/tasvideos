@@ -54,7 +54,7 @@ public class EditModel : BasePageModel
 				_db.Games.Where(g => g.Id == Id))
 				.SingleOrDefaultAsync();
 
-			if (game == null)
+			if (game is null)
 			{
 				return NotFound();
 			}
@@ -88,7 +88,7 @@ public class EditModel : BasePageModel
 		if (!string.IsNullOrEmpty(Game.GameResourcesPage))
 		{
 			var page = await _wikiPages.Page(Game.GameResourcesPage);
-			if (page == null)
+			if (page is null)
 			{
 				ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.GameResourcesPage)}", $"Page {Game.GameResourcesPage} not found");
 				await Initialize();
@@ -111,7 +111,7 @@ public class EditModel : BasePageModel
 				.Include(g => g.GameGenres)
 				.Include(g => g.GameGroups)
 				.SingleOrDefaultAsync(g => g.Id == Id.Value);
-			if (game == null)
+			if (game is null)
 			{
 				return NotFound();
 			}

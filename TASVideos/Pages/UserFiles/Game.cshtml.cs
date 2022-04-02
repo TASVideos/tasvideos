@@ -35,7 +35,7 @@ public class GameModel : BasePageModel
 			.ThenInclude(u => u.Author)
 			.SingleOrDefaultAsync(g => g.Id == Id);
 
-		if (game == null)
+		if (game is null)
 		{
 			return NotFound();
 		}

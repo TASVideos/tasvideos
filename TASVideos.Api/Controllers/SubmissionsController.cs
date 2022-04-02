@@ -41,12 +41,9 @@ public class SubmissionsController : Controller
 			.ProjectTo<SubmissionsResponse>(_db.Submissions)
 			.SingleOrDefaultAsync(p => p.Id == id);
 
-		if (sub == null)
-		{
-			return NotFound();
-		}
-
-		return Ok(sub);
+		return sub is null
+			? NotFound()
+			: Ok(sub);
 	}
 
 	/// <summary>

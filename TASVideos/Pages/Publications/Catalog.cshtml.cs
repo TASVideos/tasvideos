@@ -54,7 +54,7 @@ public class CatalogModel : BasePageModel
 				})
 				.SingleOrDefaultAsync();
 
-		if (catalog == null)
+		if (catalog is null)
 		{
 			return NotFound();
 		}
@@ -100,7 +100,7 @@ public class CatalogModel : BasePageModel
 			.Include(p => p.Authors)
 			.ThenInclude(pa => pa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}
@@ -110,7 +110,7 @@ public class CatalogModel : BasePageModel
 		if (publication.SystemId != Catalog.SystemId)
 		{
 			var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId);
-			if (system == null)
+			if (system is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId}");
 			}
@@ -125,7 +125,7 @@ public class CatalogModel : BasePageModel
 		if (publication.SystemFrameRateId != Catalog.SystemFrameRateId)
 		{
 			var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId);
-			if (systemFramerate == null)
+			if (systemFramerate is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Id: {Catalog.SystemFrameRateId}");
 			}
@@ -140,7 +140,7 @@ public class CatalogModel : BasePageModel
 		if (publication.GameId != Catalog.GameId)
 		{
 			var game = await _db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId);
-			if (game == null)
+			if (game is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown System Id: {Catalog.GameId}");
 			}
@@ -155,7 +155,7 @@ public class CatalogModel : BasePageModel
 		if (publication.RomId != Catalog.RomId)
 		{
 			var romHash = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId);
-			if (romHash == null)
+			if (romHash is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown System Id: {Catalog.RomId}");
 			}

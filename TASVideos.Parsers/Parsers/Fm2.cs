@@ -8,7 +8,7 @@ internal class Fm2 : IParser
 {
 	private const string FileExtension = "fm2";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		using var reader = new StreamReader(file);
 		var result = new ParseResult

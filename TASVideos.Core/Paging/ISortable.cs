@@ -74,7 +74,7 @@ public static class SortableExtensions
 	/// </summary>
 	public static bool IsValidSort(this ISortable? request, Type? response)
 	{
-		if (response == null)
+		if (response is null)
 		{
 			return false;
 		}

@@ -16,7 +16,7 @@ internal class Bk2 : ParserBase, IParser
 
 	public override string FileExtension => "bk2";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{
@@ -27,7 +27,7 @@ internal class Bk2 : ParserBase, IParser
 		var archive = new ZipArchive(file);
 
 		var headerEntry = archive.Entry(HeaderFile);
-		if (headerEntry == null)
+		if (headerEntry is null)
 		{
 			return Error($"Missing {HeaderFile}, can not parse");
 		}
@@ -133,7 +133,7 @@ internal class Bk2 : ParserBase, IParser
 		}
 
 		var inputLog = archive.Entry(InputFile);
-		if (inputLog == null)
+		if (inputLog is null)
 		{
 			return Error($"Missing {InputFile}, can not parse");
 		}

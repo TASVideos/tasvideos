@@ -46,7 +46,7 @@ public class DeletedPagesModel : BasePageModel
 
 		if (!string.IsNullOrWhiteSpace(path))
 		{
-			var result = await _wikiPages.Delete(path.Trim('/'));
+			var result = await _wikiPages.Delete(path);
 
 			if (result == -1)
 			{

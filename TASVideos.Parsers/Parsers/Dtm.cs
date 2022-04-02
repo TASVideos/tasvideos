@@ -9,7 +9,7 @@ internal class Dtm : ParserBase, IParser
 	private const decimal WiiHertz = 729000000.0M;
 	public override string FileExtension => "dtm";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{

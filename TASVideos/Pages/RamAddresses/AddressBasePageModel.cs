@@ -76,7 +76,7 @@ public class AddressBasePageModel : BasePageModel
 		var domain = await Db.GameRamAddressDomains
 			.SingleOrDefaultAsync(d => d.Id == Address.GameRamAddressDomainId);
 
-		if (domain == null)
+		if (domain is null)
 		{
 			ModelState.AddModelError($"{nameof(Address)}.{nameof(Address.GameRamAddressDomainId)}", "Domain does not exist.");
 		}

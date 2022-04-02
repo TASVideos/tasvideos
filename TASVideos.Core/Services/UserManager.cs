@@ -117,7 +117,7 @@ public class UserManager : UserManager<User>
 			})
 			.SingleOrDefaultAsync();
 
-		if (model == null)
+		if (model is null)
 		{
 			return null;
 		}
@@ -296,7 +296,7 @@ public class UserManager : UserManager<User>
 				|| (!p.DeletedForToUser && p.ToUserId == userId))
 			.SingleOrDefaultAsync(p => p.Id == id);
 
-		if (pm == null)
+		if (pm is null)
 		{
 			return null;
 		}

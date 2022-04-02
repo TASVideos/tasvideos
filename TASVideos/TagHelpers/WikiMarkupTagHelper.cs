@@ -55,7 +55,7 @@ public partial class WikiMarkup : TagHelper, IWriterHelper
 		var invokeMethod = viewComponent!.GetMethod("InvokeAsync")
 			?? viewComponent.GetMethod("Invoke");
 
-		if (invokeMethod == null)
+		if (invokeMethod is null)
 		{
 			throw new InvalidOperationException($"Could not find an Invoke method on ViewComponent {viewComponent}");
 		}

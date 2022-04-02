@@ -87,7 +87,7 @@ public enum PermissionTo
 	EditRamAddresses = 107,
 
 	[Group("Wiki Administration")]
-	[Description("The ability to see certain restricted pages that pertain to administration activities.")]
+	[Description("(Not used, do not assign), Was the ability to see certain restricted pages that pertain to administration activities. There are no pages that meet this criteria.")]
 	SeeAdminPages = 190,
 
 	#endregion
@@ -117,6 +117,10 @@ public enum PermissionTo
 	[Group("Queue Maintenance")]
 	[Description("The ability to deprecate an existing movie parser. When deprecated, a movie will no longer be eligible for submission")]
 	DeprecateMovieParsers = 205,
+
+	[Group("Queue Maintenance")]
+	[Description("The ability to delete a submission")]
+	DeleteSubmissions = 290,
 
 	[Group("Queue Maintenance")]
 	[Description("The ability to unpublish an existing publication. Publication will be removed and the submission will be restored to the queue.")]

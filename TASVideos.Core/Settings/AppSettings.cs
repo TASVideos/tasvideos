@@ -14,6 +14,7 @@ public class AppSettings
 	public IrcConnection Irc { get; set; } = new();
 	public DiscordConnection Discord { get; set; } = new();
 	public TwitterConnection Twitter { get; set; } = new();
+	public TwitterConnectionV2 TwitterV2 { get; set; } = new();
 	public JwtSettings Jwt { get; set; } = new();
 	public GoogleAuthSettings YouTube { get; set; } = new();
 	public GmailAuthSettings Gmail { get; set; } = new();
@@ -66,8 +67,17 @@ public class AppSettings
 		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ApiBase)
 			&& !string.IsNullOrWhiteSpace(ConsumerKey)
 			&& !string.IsNullOrWhiteSpace(ConsumerSecret)
-			&& !string.IsNullOrWhiteSpace(AccessToken)
-			&& !string.IsNullOrWhiteSpace(TokenSecret);
+			&& !string.IsNullOrWhiteSpace(TokenSecret)
+			;
+	}
+
+	public class TwitterConnectionV2
+	{
+		public string ClientId { get; set; } = "";
+		public string ClientSecret { get; set; } = "";
+		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ClientId)
+			&& !string.IsNullOrWhiteSpace(ClientSecret)
+			;
 	}
 
 	public class CacheSetting

@@ -57,4 +57,9 @@ public static class NumberExtensions
 
 		return $"{byteCount} bytes";
 	}
+
+	public static string ToOverallRatingString(this double overallRating)
+	{
+		return Math.Round(overallRating, 2, MidpointRounding.AwayFromZero).ToString();
+	}
 }

@@ -1,9 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System.IO.Compression;
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Data.Entity;
-
 namespace TASVideos.Extensions;
 
 public static class HtmlExtensions
@@ -64,12 +64,12 @@ public static class HtmlExtensions
 
 	public static IHtmlContent DescriptionFor<TModel, TValue>(this IHtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression)
 	{
-		if (html == null)
+		if (html is null)
 		{
 			throw new ArgumentNullException(nameof(html));
 		}
 
-		if (expression == null)
+		if (expression is null)
 		{
 			throw new ArgumentNullException(nameof(expression));
 		}
@@ -87,7 +87,7 @@ public static class HtmlExtensions
 
 	public static bool IsZip(this IFormFile? formFile)
 	{
-		if (formFile == null)
+		if (formFile is null)
 		{
 			return false;
 		}
@@ -104,7 +104,7 @@ public static class HtmlExtensions
 
 	public static bool IsCompressed(this IFormFile? formFile)
 	{
-		if (formFile == null)
+		if (formFile is null)
 		{
 			return false;
 		}
@@ -127,7 +127,7 @@ public static class HtmlExtensions
 
 	public static bool LessThanMovieSizeLimit(this IFormFile? formFile)
 	{
-		if (formFile == null)
+		if (formFile is null)
 		{
 			return true;
 		}
@@ -143,5 +143,21 @@ public static class HtmlExtensions
 		};
 
 		return validImageTypes.Contains(formFile?.ContentType);
+	}
+
+	public static string FileExtension(this IFormFile? formFile)
+	{
+		return formFile is null
+			? ""
+			: Path.GetExtension(formFile.FileName);
+	}
+
+	public static async Task<byte[]> ActualFileData(this IFormFile formFile)
+	{
+		// TODO: TO avoid zip bombs we should limit the max size of tempStream
+		var tempStream = new MemoryStream((int)formFile.Length);
+		await using var gzip = new GZipStream(formFile.OpenReadStream(), CompressionMode.Decompress);
+		await gzip.CopyToAsync(tempStream);
+		return tempStream.ToArray();
 	}
 }

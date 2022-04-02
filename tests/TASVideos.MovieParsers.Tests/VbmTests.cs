@@ -16,7 +16,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidHeader()
 	{
-		var result = await _vbmParser.Parse(Embedded("wrongheader.vbm"));
+		var result = await _vbmParser.Parse(Embedded("wrongheader.vbm"), EmbeddedLength("wrongheader.vbm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.IsNotNull(result.Errors);
@@ -26,7 +26,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task ValidHeader()
 	{
-		var result = await _vbmParser.Parse(Embedded("2frames.vbm"));
+		var result = await _vbmParser.Parse(Embedded("2frames.vbm"), EmbeddedLength("2frames.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -34,7 +34,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Ntsc()
 	{
-		var result = await _vbmParser.Parse(Embedded("2frames.vbm"));
+		var result = await _vbmParser.Parse(Embedded("2frames.vbm"), EmbeddedLength("2frames.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -43,7 +43,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task RerecordCount()
 	{
-		var result = await _vbmParser.Parse(Embedded("2frames.vbm"));
+		var result = await _vbmParser.Parse(Embedded("2frames.vbm"), EmbeddedLength("2frames.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(39098, result.RerecordCount);
@@ -52,7 +52,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Length()
 	{
-		var result = await _vbmParser.Parse(Embedded("2frames.vbm"));
+		var result = await _vbmParser.Parse(Embedded("2frames.vbm"), EmbeddedLength("2frames.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(95490, result.Frames);
@@ -61,7 +61,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _vbmParser.Parse(Embedded("2frames.vbm"));
+		var result = await _vbmParser.Parse(Embedded("2frames.vbm"), EmbeddedLength("2frames.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -70,7 +70,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _vbmParser.Parse(Embedded("savestate.vbm"));
+		var result = await _vbmParser.Parse(Embedded("savestate.vbm"), EmbeddedLength("savestate.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
@@ -79,7 +79,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Sram()
 	{
-		var result = await _vbmParser.Parse(Embedded("sram.vbm"));
+		var result = await _vbmParser.Parse(Embedded("sram.vbm"), EmbeddedLength("sram.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Sram, result.StartType);
@@ -88,7 +88,7 @@ public class VbmTests : BaseParserTests
 	[TestMethod]
 	public async Task Gba()
 	{
-		var result = await _vbmParser.Parse(Embedded("2frames.vbm"));
+		var result = await _vbmParser.Parse(Embedded("2frames.vbm"), EmbeddedLength("2frames.vbm"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Gba, result.SystemCode);

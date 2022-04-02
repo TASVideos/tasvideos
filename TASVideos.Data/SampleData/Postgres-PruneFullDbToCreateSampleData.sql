@@ -29,13 +29,11 @@ INSERT INTO _user_files
 	FROM public.user_files uf
 	WHERE uf.hidden = false
 	ORDER BY LENGTH(uf.content)
-	LIMIT 6;
+	LIMIT 10;
 
 DELETE
 FROM public.user_files uf
 WHERE uf.id NOT IN (SELECT uif.id from _user_files uif);
-
-UPDATE public.user_files SET content = E'\\000'::bytea;
 
 --Trim Wiki
 DELETE FROM public.wiki_pages WHERE child_id is not null;

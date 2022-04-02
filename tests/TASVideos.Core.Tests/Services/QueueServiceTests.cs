@@ -3,7 +3,9 @@ using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
@@ -17,6 +19,7 @@ public class QueueServiceTests
 	private readonly TestDbContext _db;
 	private readonly Mock<IYoutubeSync> _youtubeSync;
 	private readonly Mock<ITASVideoAgent> _tva;
+	private readonly Mock<IWikiPages> _wikiPages;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -33,8 +36,9 @@ public class QueueServiceTests
 		_db = TestDbContext.Create();
 		_youtubeSync = new Mock<IYoutubeSync>();
 		_tva = new Mock<ITASVideoAgent>();
+		_wikiPages = new Mock<IWikiPages>();
 		var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
-		_queueService = new QueueService(settings, _db, _youtubeSync.Object, _tva.Object);
+		_queueService = new QueueService(settings, _db, _youtubeSync.Object, _tva.Object, _wikiPages.Object);
 	}
 
 	[TestMethod]
@@ -275,6 +279,135 @@ public class QueueServiceTests
 	}
 
 	[TestMethod]
+	public async Task CanDeleteSubmission_NotFound()
+	{
+		var result = await _queueService.CanDeleteSubmission(int.MaxValue);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotFound, result.Status);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.SubmissionTitle));
+	}
+
+	[TestMethod]
+	public async Task CanDeleteSubmission_CannotDeleteIfPublished()
+	{
+		const int submissionId = 1;
+		const int publicationId = 2;
+		_db.Submissions.Add(new Submission
+		{
+			Id = 1,
+			PublisherId = publicationId
+		});
+		_db.Publications.Add(new Publication { Id = publicationId });
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.DeleteSubmission(submissionId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotAllowed, result.Status);
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.SubmissionTitle));
+	}
+
+	[TestMethod]
+	public async Task CanDeleteSubmission_Success()
+	{
+		const int submissionId = 1;
+		const string submissionTitle = "Test Submission";
+		_db.Submissions.Add(new Submission { Id = 1, Status = New, Title = submissionTitle });
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.DeleteSubmission(submissionId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.Success, result.Status);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.AreEqual(submissionTitle, result.SubmissionTitle);
+	}
+
+	[TestMethod]
+	public async Task DeleteSubmission_NotFound()
+	{
+		var result = await _queueService.DeleteSubmission(int.MaxValue);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotFound, result.Status);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.SubmissionTitle));
+	}
+
+	[TestMethod]
+	public async Task DeleteSubmission_CannotDeleteIfPublished()
+	{
+		const int submissionId = 1;
+		const int publicationId = 2;
+		_db.Submissions.Add(new Submission
+		{
+			Id = 1,
+			PublisherId = publicationId
+		});
+		_db.Publications.Add(new Publication { Id = publicationId });
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.DeleteSubmission(submissionId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotAllowed, result.Status);
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.SubmissionTitle));
+	}
+
+	[TestMethod]
+	public async Task DeleteSubmission_Success()
+	{
+		const int submissionId = 1;
+		const int topicId = 2;
+		const int pollId = 3;
+		const string submissionTitle = "Test Submission";
+		const string pageName = "Submission Page";
+		var poll = new ForumPoll { Id = pollId, TopicId = topicId };
+		var pollOptions = new ForumPollOption[]
+		{
+			new() { PollId = pollId, Votes = new ForumPollOptionVote[] { new() } },
+			new() { PollId = pollId }
+		};
+		_db.ForumPollOptions.AddRange(pollOptions);
+		poll.PollOptions.AddRange(pollOptions);
+		var topic = new ForumTopic { Id = topicId, PollId = 2, Poll = poll };
+		_db.Submissions.Add(new Submission
+		{
+			Id = 1,
+			Status = New,
+			Title = submissionTitle,
+			TopicId = topicId,
+			Topic = topic,
+			WikiContent = new WikiPage { PageName = pageName }
+		});
+		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory { SubmissionId = submissionId, Status = New });
+		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = 1 });
+		_db.ForumTopics.Add(topic);
+		_db.ForumPolls.Add(poll);
+		var post1 = new ForumPost { Topic = topic, TopicId = topicId, Text = "1" };
+		var post2 = new ForumPost { Topic = topic, TopicId = topicId, Text = "2" };
+		_db.ForumPosts.Add(post1);
+		_db.ForumPosts.Add(post2);
+		topic.ForumPosts.Add(post1);
+		topic.ForumPosts.Add(post2);
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.DeleteSubmission(submissionId);
+		Assert.IsNotNull(result);
+		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.Success, result.Status);
+		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.AreEqual(submissionTitle, result.SubmissionTitle);
+		Assert.AreEqual(0, _db.Submissions.Count());
+		Assert.AreEqual(0, _db.SubmissionStatusHistory.Count());
+		Assert.AreEqual(0, _db.SubmissionAuthors.Count());
+		Assert.AreEqual(0, _db.ForumTopics.Count());
+		Assert.AreEqual(0, _db.ForumPolls.Count());
+		Assert.AreEqual(0, _db.ForumPosts.Count());
+		Assert.AreEqual(0, _db.ForumPollOptions.Count());
+		Assert.AreEqual(0, _db.ForumPollOptionVotes.Count());
+		_wikiPages.Verify(v => v.Delete(pageName));
+	}
+
+	[TestMethod]
 	public async Task CanUnpublish_NotFound()
 	{
 		var result = await _queueService.CanUnpublish(int.MaxValue);
@@ -303,15 +436,16 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task CanUnpublish_Success()
 	{
-		int publicationId = 1;
-		_db.Publications.Add(new Publication { Id = publicationId, Title = "Test Publication" });
+		const int publicationId = 1;
+		const string publicationTitle = "Test Publication";
+		_db.Publications.Add(new Publication { Id = publicationId, Title = publicationTitle });
 		await _db.SaveChangesAsync();
 
 		var result = await _queueService.CanUnpublish(publicationId);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
+		Assert.AreEqual(publicationTitle, result.PublicationTitle);
 	}
 
 	[TestMethod]

@@ -47,7 +47,7 @@ public class CollapsableBodyTagHelper : TagHelper
 	{
 		output.TagName = "div";
 		var id = output.Attributes.FirstOrDefault(a => a.Name.ToLower() == "id");
-		if (id == null)
+		if (id is null)
 		{
 			throw new InvalidOperationException("collapsablecontent-body requires an id attribute");
 		}

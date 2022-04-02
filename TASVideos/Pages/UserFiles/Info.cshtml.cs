@@ -41,7 +41,7 @@ public class InfoModel : BasePageModel
 			.Where(userFile => userFile.Id == Id)
 			.SingleOrDefaultAsync();
 
-		if (file == null)
+		if (file is null)
 		{
 			return NotFound();
 		}
@@ -66,7 +66,7 @@ public class InfoModel : BasePageModel
 			.Where(userFile => userFile.Id == Id)
 			.SingleOrDefaultAsync();
 
-		if (file == null)
+		if (file is null)
 		{
 			return NotFound();
 		}

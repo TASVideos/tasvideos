@@ -2,9 +2,9 @@ name: .NET Core
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -13,14 +13,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Set up .NET Core 5
+    - name: Set up .NET Core 6
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.100
-    - name: Set up .NET Core 3.1.x
+        dotnet-version: 6.0.x
+    - name: Set up .NET Core 6.0.x
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.404
+        dotnet-version: 6.0.x
     - name: Install dependencies
       run: dotnet restore
     - name: Unshallow Commits

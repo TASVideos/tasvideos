@@ -30,7 +30,7 @@ public class PreviewModel : BasePageModel
 		if (Id.HasValue)
 		{
 			var pageData = await _pages.Revision(Id.Value);
-			if (pageData == null)
+			if (pageData is null)
 			{
 				return NotFound();
 			}

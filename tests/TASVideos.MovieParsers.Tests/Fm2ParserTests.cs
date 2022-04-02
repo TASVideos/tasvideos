@@ -15,7 +15,7 @@ public class Fm2ParserTests : BaseParserTests
 	[TestMethod]
 	public async Task Ntsc()
 	{
-		var result = await _fm2Parser.Parse(Embedded("ntsc.fm2"));
+		var result = await _fm2Parser.Parse(Embedded("ntsc.fm2"), EmbeddedLength("ntsc.fm2"));
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -28,7 +28,7 @@ public class Fm2ParserTests : BaseParserTests
 	[TestMethod]
 	public async Task Pal()
 	{
-		var result = await _fm2Parser.Parse(Embedded("pal.fm2"));
+		var result = await _fm2Parser.Parse(Embedded("pal.fm2"), EmbeddedLength("pal.fm2"));
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 		Assert.AreEqual(RegionType.Pal, result.Region);
@@ -41,7 +41,7 @@ public class Fm2ParserTests : BaseParserTests
 	[TestMethod]
 	public async Task Fds()
 	{
-		var result = await _fm2Parser.Parse(Embedded("fds.fm2"));
+		var result = await _fm2Parser.Parse(Embedded("fds.fm2"), EmbeddedLength("fds.fm2"));
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -54,7 +54,7 @@ public class Fm2ParserTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _fm2Parser.Parse(Embedded("savestate.fm2"));
+		var result = await _fm2Parser.Parse(Embedded("savestate.fm2"), EmbeddedLength("savestate.fm2"));
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -67,7 +67,7 @@ public class Fm2ParserTests : BaseParserTests
 	[TestMethod]
 	public async Task NoRerecords()
 	{
-		var result = await _fm2Parser.Parse(Embedded("norerecords.fm2"));
+		var result = await _fm2Parser.Parse(Embedded("norerecords.fm2"), EmbeddedLength("norerecords.fm2"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
 		Assert.IsNotNull(result.Warnings);
@@ -78,7 +78,7 @@ public class Fm2ParserTests : BaseParserTests
 	[TestMethod]
 	public async Task NegativeRerecords()
 	{
-		var result = await _fm2Parser.Parse(Embedded("negativererecords.fm2"));
+		var result = await _fm2Parser.Parse(Embedded("negativererecords.fm2"), EmbeddedLength("negativererecords.fm2"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
 		AssertNoErrors(result);

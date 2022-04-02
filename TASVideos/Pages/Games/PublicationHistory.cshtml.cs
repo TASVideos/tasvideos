@@ -35,7 +35,7 @@ public class PublicationHistoryModel : BasePageModel
 	{
 		var game = await _db.Games.SingleOrDefaultAsync(p => p.Id == Id);
 
-		if (game == null)
+		if (game is null)
 		{
 			return NotFound();
 		}

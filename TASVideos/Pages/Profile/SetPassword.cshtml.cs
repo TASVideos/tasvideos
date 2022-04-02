@@ -29,7 +29,7 @@ public class SetPasswordModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var user = await _signInManager.UserManager.GetUserAsync(User);
-		if (user == null)
+		if (user is null)
 		{
 			throw new ApplicationException($"Unable to load user with ID '{User.GetUserId()}'.");
 		}

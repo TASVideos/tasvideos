@@ -3,23 +3,25 @@
 @{ 
 	ViewData["Title"] = "Site Map";
 }
-<div class="table-container">
-	<table class="table table-striped">
-		<tr>
-			<th>@Html.DisplayNameFor(m => m.Map.First().PageName)</th>
-			<th>@Html.DisplayNameFor(m => m.Map.First().IsWiki)</th>
-			<th>@Html.DisplayNameFor(m => m.Map.First().AccessRestriction)</th>
-		</tr>
-		@foreach (var item in Model.Map.OrderBy(m => m.PageName))
+
+@foreach (var rootPage in Model.Map.GroupBy(m => m.PageName.SplitWithEmpty("/").First()))
+{
+	bool isPage = rootPage.Any(p => p.PageName == rootPage.Key);
+	bool hasSubpages = rootPage.Count() > 1;
+	<i condition="@hasSubpages" class="fa fa-plus" data-bs-toggle="collapse" href="#collapse@(rootPage.Key)" style="cursor: pointer"></i>
+	<label>
+		<a condition="@isPage" href="/@rootPage.Key">@rootPage.Key</a>
+		<span condition="@(!isPage)">@rootPage.Key</span>
+	</label>
+	<ul class="collapse" id="collapse@(rootPage.Key)">
+		@foreach(var p in rootPage.Where(p => p.PageName != rootPage.Key).OrderBy(p => p.PageName))
 		{
-			<tr>
-				<td>
-					<span Condition="@item.PageName.Contains('/')" style="padding-left: 20px;"></span>
-					<a href="/@item.PageName">@item.PageName</a>
-				</td>
-				<td>@(item.IsWiki ? "Wiki" : "Built In")</td>
-				<td>@item.AccessRestriction</td>
-			</tr>
+			<li>
+				<a href="/@p.PageName">@p.PageName</a>
+				<span condition="@(!p.IsWiki)">(Built-in)</span>
+				<span condition="@(p.AccessRestriction != "Anonymous")">Access: @p.AccessRestriction</span>
+			</li>
 		}
-	</table>
-</div>
+	</ul>
+	<br />
+}

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -27,7 +28,7 @@ public class RateModel : BasePageModel
 	{
 		var userId = User.GetUserId();
 		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == Id);
-		if (publication == null)
+		if (publication is null)
 		{
 			return NotFound();
 		}
@@ -45,7 +46,7 @@ public class RateModel : BasePageModel
 				?.Value.ToString(CultureInfo.InvariantCulture)
 		};
 
-		Rating.Unrated = Rating.Rating == null;
+		Rating.Unrated = Rating.Rating is null;
 
 		return Page();
 	}
@@ -69,6 +70,49 @@ public class RateModel : BasePageModel
 		await _db.SaveChangesAsync();
 
 		return BasePageRedirect("/Ratings/Index", new { Id });
+	}
+
+	public async Task<IActionResult> OnPostInline()
+	{
+		Rating = await JsonSerializer.DeserializeAsync<PublicationRateModel>(Request.Body) ?? Rating;
+		ModelState.ClearValidationState(nameof(Rating));
+		if (!TryValidateModel(Rating, nameof(Rating)))
+		{
+			return new ContentResult { StatusCode = StatusCodes.Status400BadRequest };
+		}
+
+		var userId = User.GetUserId();
+		var rating = await _db.PublicationRatings
+			.ForPublication(Id)
+			.ForUser(userId)
+			.FirstOrDefaultAsync();
+		UpdateRating(rating, Id, userId, PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating), Rating.Unrated);
+
+		await _db.SaveChangesAsync();
+
+		var updatedRatings = await _db.Publications
+			.Where(p => p.Id == Id)
+			.Select(p => new
+			{
+				RatingCount = p.PublicationRatings.Count,
+				OverallRating = (double?)p.PublicationRatings
+						.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
+						.Where(pr => pr.User!.UseRatings)
+						.Average(pr => pr.Value),
+			})
+			.Select(rro => new
+			{
+				Rating.Rating,
+				rro.RatingCount,
+				OverallRating = (rro.OverallRating ?? 0).ToOverallRatingString(),
+			})
+			.SingleOrDefaultAsync();
+
+		return new ContentResult
+		{
+			StatusCode = StatusCodes.Status200OK,
+			Content = JsonSerializer.Serialize(updatedRatings)
+		};
 	}
 
 	private void UpdateRating(PublicationRating? rating, int id, int userId, double? value, bool remove)

@@ -19,7 +19,7 @@ internal class Lsmv : ParserBase, IParser
 
 	public override string FileExtension => "lsmv";
 
-	public async Task<IParseResult> Parse(Stream file)
+	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new ParseResult
 		{
@@ -45,7 +45,7 @@ internal class Lsmv : ParserBase, IParser
 		}
 
 		var gameTypeFile = archive.Entry(GameType);
-		if (gameTypeFile == null)
+		if (gameTypeFile is null)
 		{
 			return Error("Could not determine the System Code");
 		}
@@ -113,7 +113,7 @@ internal class Lsmv : ParserBase, IParser
 				.LineSplit()
 				.FirstOrDefault();
 
-			if (line == null)
+			if (line is null)
 			{
 				result.WarnNoRerecords();
 			}
@@ -136,7 +136,7 @@ internal class Lsmv : ParserBase, IParser
 		}
 
 		var inputLog = archive.Entry(InputFile);
-		if (inputLog == null)
+		if (inputLog is null)
 		{
 			return Error($"Missing {InputFile}, can not parse");
 		}

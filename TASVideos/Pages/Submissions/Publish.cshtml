@@ -137,4 +137,54 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script>
+		const selectedFlagsId = "@Html.IdFor(m => m.Submission.SelectedFlags)";
+		const selectedTagsId = "@Html.IdFor(m => m.Submission.SelectedTags)";
+		let originalDescription = "@Html.Raw(Model.Submission.MovieMarkup)";
+		const obsoletionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieToObsolete)");
+		const descriptionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieMarkup)");
+		const dblClickEvent = new MouseEvent('dblclick', {
+			'view': window,
+			'bubbles': true,
+			'cancelable': true
+		});
+
+		descriptionModel.onchange = function() {
+			originalDescription = descriptionModel.value;
+		}
+
+		obsoletionModel.onchange = function() {
+			if (!obsoletionModel.value) {
+				descriptionModel.value = originalDescription;
+				return;
+			}
+
+			const url = `/Submissions/Publish/@(Model.Id)?handler=ObsoletePublication&publicationId=${obsoletionModel.value}`;
+			fetch(url)
+				.then(handleFetchErrors)
+				.then(r => r.json())
+				.then(t => {
+					const oldValue = originalDescription;
+					descriptionModel.value = t.markup;
+					originalDescription = oldValue;
+
+					document.getElementById(`${selectedFlagsId}removeAllBtn`).click();
+					document.getElementById(`${selectedTagsId}removeAllBtn`).click();
+
+					for (let i in t.flags) {
+						const flagItem = document.querySelector(`[name='AvailableFlags'] option[value="${t.flags[i]}"]`);
+						flagItem.selected = true;
+					}
+
+					document.getElementById(`${selectedFlagsId}addBtn`).click();
+
+					for (let i in t.tags) {
+						const tagItem = document.querySelector(`[name='AvailableTags'] option[value="${t.tags[i]}"]`);
+						tagItem.selected = true;
+					}
+
+					document.getElementById(`${selectedTagsId}addBtn`).click();
+				});
+		}
+	</script>
 }
