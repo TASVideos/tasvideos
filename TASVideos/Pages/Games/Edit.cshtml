@@ -9,6 +9,9 @@
 <form-group>
 	<delete-button condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
 </form-group>
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
 <form method="post">
 	<row>
 		<div class="col-lg-6">
