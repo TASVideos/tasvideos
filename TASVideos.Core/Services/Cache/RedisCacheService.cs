@@ -8,6 +8,7 @@ namespace TASVideos.Core.Services.Cache;
 
 public class RedisCacheService : ICacheService
 {
+	private readonly bool _enabled;
 	private readonly ILogger<RedisCacheService> _logger;
 	private static IDatabase _cache = null!;
 	private static Lazy<ConnectionMultiplexer>? _connection;
@@ -19,20 +20,37 @@ public class RedisCacheService : ICacheService
 
 	public RedisCacheService(AppSettings settings, ILogger<RedisCacheService> logger)
 	{
+		_logger = logger;
+
 		if (string.IsNullOrWhiteSpace(settings.CacheSettings.ConnectionString))
 		{
-			throw new ArgumentException("Redis connection not configured");
+			_logger.LogWarning("Redis connection string not set, skipping Redis initialization");
+			_enabled = false;
+			return;
 		}
 
-		_logger = logger;
-		_cacheDurationInSeconds = settings.CacheSettings.CacheDurationInSeconds;
-		_connection ??= new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(settings.CacheSettings.ConnectionString));
-		var redis = _connection.Value;
-		_cache = redis.GetDatabase();
+		try
+		{
+			_cacheDurationInSeconds = settings.CacheSettings.CacheDurationInSeconds;
+			_connection ??= new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(settings.CacheSettings.ConnectionString));
+			var redis = _connection.Value;
+			_cache = redis.GetDatabase();
+			_enabled = true;
+		}
+		catch (RedisConnectionException)
+		{
+			_enabled = false;
+		}
 	}
 
 	public bool TryGetValue<T>(string key, out T value)
 	{
+		if (!_enabled)
+		{
+			value = default!;
+			return false;
+		}
+
 		try
 		{
 			RedisValue data = _cache.StringGet(key);
@@ -55,6 +73,11 @@ public class RedisCacheService : ICacheService
 
 	public void Set(string key, object? data, int? cacheTime = null)
 	{
+		if (_enabled)
+		{
+			return;
+		}
+
 		try
 		{
 			var serializedData = JsonSerializer.Serialize(data, SerializerSettings);
@@ -69,6 +92,11 @@ public class RedisCacheService : ICacheService
 
 	public void Remove(string key)
 	{
+		if (_enabled)
+		{
+			return;
+		}
+
 		_cache.KeyDelete(key);
 	}
 }
