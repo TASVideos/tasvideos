@@ -94,6 +94,7 @@ public class EditModel : BasePageModel
 	private async Task Initialize()
 	{
 		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
 				Value = s.Id.ToString(),
