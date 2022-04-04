@@ -135,7 +135,9 @@ public static class ServiceCollectionExtensions
 
 		services.AddSingleton<IPostDistributor, IrcDistributor>();
 		services.AddScoped<IPostDistributor, DiscordDistributor>();
+#if (!DEBUG)
 		services.AddScoped<IPostDistributor, TwitterDistributorV2>();
+#endif
 		services.AddScoped<IPostDistributor, DistributorStorage>();
 
 		services.AddScoped<TwitterDistributorV2>();
