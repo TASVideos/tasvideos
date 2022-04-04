@@ -17,7 +17,7 @@
 			<form-group>
 				<label asp-for="UserFile.File" class="form-control-label"></label>
 				<input asp-for="UserFile.File" type="file" class="form-control" />
-				<span asp-validation-for="UserFile.File" class="text-danger"></span>
+				<span id="FileInputWarning" asp-validation-for="UserFile.File" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="UserFile.Title" class="form-control-label"></label>
@@ -68,6 +68,8 @@
 		"use strict";
 		{
 			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile.File)");
+			const storageAvailable = parseFloat(document.getElementById("StorageAvailable").value);
+			const fileInputWarning = document.getElementById("FileInputWarning");
 			fileInput.addEventListener("input", async () => {
 				const inputFile = fileInput.files[0];
 				if (!inputFile) {
@@ -78,10 +80,15 @@
 				const zippedBytes = pako.gzip(inputBytes);
 
 				const newFile = new File([zippedBytes], inputFile.name, { type: inputFile.type, lastModified: inputFile.lastModified });
-
-				const dto = new DataTransfer;
-				dto.items.add(newFile);
-				fileInput.files = dto.files;
+				if (newFile.size < storageAvailable) {
+					const dto = new DataTransfer;
+					dto.items.add(newFile);
+					fileInput.files = dto.files;
+					fileInputWarning.innerText = "";
+				} else {
+					fileInput.value = "";
+					fileInputWarning.innerText = "Chosen File Exceeds Quota";
+				}
 			});
 		}
 	</script>
