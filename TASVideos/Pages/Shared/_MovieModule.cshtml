@@ -172,11 +172,17 @@
 					}
 					function ratingConnect(textbox, slider) {
 						textbox.oninput = function () {
-							slider.value = textbox.value;
+							let oldValue = parseFloat(this.value);
+							let newValue = Math.min(Math.max(oldValue.toFixed(1), 0), 10);
+							if (oldValue !== parseFloat(newValue)) {
+								textbox.value = newValue;
+							}
+							slider.value = newValue;
 						};
 						slider.oninput = function () {
-							slider.value = Math.round(Number(this.value) * 2) / 2;
-							textbox.value = slider.value;
+							let newValue = Math.round(Number(this.value) * 2) / 2;
+							slider.value = newValue;
+							textbox.value = newValue;
 						};
 					}
 				</script>
