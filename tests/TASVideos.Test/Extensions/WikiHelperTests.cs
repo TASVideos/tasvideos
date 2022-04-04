@@ -42,7 +42,7 @@ public class WikiHelperTests
 	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditWikiPages }, false)]
 	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditSystemPages }, false)]
 	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditSubmissions }, true)]
-	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditPublicationMetaData }, false)]
+	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditPublicationMetaData }, false)]
 	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditGameResources }, false)]
 	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditHomePage }, false)]
 	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditWikiPages }, false)]
