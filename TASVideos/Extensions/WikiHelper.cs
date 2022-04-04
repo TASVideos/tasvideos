@@ -38,7 +38,6 @@ public static class WikiHelper
 			return userPermissions.Contains(PermissionTo.EditSubmissions);
 		}
 
-
 		if (pageName.StartsWith("GameResources/"))
 		{
 			return userPermissions.Contains(PermissionTo.EditGameResources);
