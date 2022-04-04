@@ -157,7 +157,7 @@
 								let update = JSON.parse(r);
 								if (unrated) {
 									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rate';
-								} else {
+								} else if (update.Rating !== "") {
 									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rated '+update.Rating+' / 10';
 								}
 								document.querySelector('#ratingCount-'+pubId).innerHTML = update.RatingCount;
