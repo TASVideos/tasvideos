@@ -80,9 +80,7 @@
 				<select class="form-control"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
-			</form-group>
-			<form-group id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
-				<label asp-for="Submission.RejectionReason" class="form-control-label"></label>
+				<label asp-for="Submission.RejectionReason" class="mt-3 form-control-label"></label>
 				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
 			</form-group>
 		</div>
@@ -129,12 +127,18 @@
 	<partial name="_ValidationScriptsPartial" />
 	<script>
 		document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
-			const reject = '@((int)SubmissionStatus.Rejected)';
-			if (this.value === reject) {
-				document.getElementById('rejection-reason').classList.remove('d-none');
-			} else {
-				document.getElementById('rejection-reason').classList.add('d-none');
-			}
+			this.dataset.chosen = this.value;
 		});
 	</script>
 }
+<style>
+	#Submission_Status[data-chosen='7'] ~ #Submission_RejectionReason,
+	#Submission_Status[data-chosen='7'] ~ label[for='Submission_RejectionReason'] {
+		display: block;
+	}
+
+	#Submission_Status:not([data-chosen='7']) ~ #Submission_RejectionReason,
+	#Submission_Status:not([data-chosen='7']) ~ label[for='Submission_RejectionReason'] {
+		display: none;
+	}
+</style>
