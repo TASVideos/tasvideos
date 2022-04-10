@@ -56,8 +56,6 @@ public class EditModel : BasePageModel
 	[Display(Name = "Available Tags")]
 	public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
 
-	public IEnumerable<SelectListItem> AvailableMoviesForObsoletedBy { get; set; } = new List<SelectListItem>();
-
 	public IEnumerable<PublicationFileDisplayModel> Files { get; set; } = new List<PublicationFileDisplayModel>();
 
 	public async Task<IActionResult> OnGet()
@@ -73,6 +71,7 @@ public class EditModel : BasePageModel
 				SystemCode = p.System!.Code,
 				Title = p.Title,
 				ObsoletedBy = p.ObsoletedById,
+				ObsoletedByTitle = p.ObsoletedBy != null ? p.ObsoletedBy.Title : null,
 				Branch = p.Branch,
 				EmulatorVersion = p.EmulatorVersion,
 				AdditionalAuthors = p.AdditionalAuthors,
@@ -107,7 +106,7 @@ public class EditModel : BasePageModel
 			.Select(pa => pa.Author!.UserName)
 			.ToListAsync();
 
-		await PopulateDropdowns(Publication.SystemCode, Publication.ObsoletedBy);
+		await PopulateDropdowns();
 		return Page();
 	}
 
@@ -115,7 +114,7 @@ public class EditModel : BasePageModel
 	{
 		if (!ModelState.IsValid)
 		{
-			await PopulateDropdowns(Publication.SystemCode, Publication.ObsoletedBy);
+			await PopulateDropdowns();
 			return Page();
 		}
 
@@ -123,7 +122,7 @@ public class EditModel : BasePageModel
 		return RedirectToPage("View", new { Id });
 	}
 
-	private async Task PopulateDropdowns(string systemCode, int? obsoletedById)
+	private async Task PopulateDropdowns()
 	{
 		AvailableFlags = await _db.Flags
 			.ToDropDown(User.Permissions())
@@ -131,14 +130,6 @@ public class EditModel : BasePageModel
 		AvailableTags = await _db.Tags
 			.ToDropdown()
 			.ToListAsync();
-		AvailableMoviesForObsoletedBy = await _db.Publications
-			.Where(p => p.ObsoletedById == null || p.Id == obsoletedById)
-			.Where(p => p.System!.Code == systemCode || p.Id == obsoletedById)
-			.Where(p => p.Id != Id)
-			.ToDropdown()
-			.OrderBy(p => p.Text)
-			.ToListAsync();
-
 		Files = await _mapper.ProjectTo<PublicationFileDisplayModel>(
 				_db.PublicationFiles.Where(f => f.PublicationId == Id))
 			.ToListAsync();
@@ -266,7 +257,7 @@ public class EditModel : BasePageModel
 
 		if (!model.MinorEdit)
 		{
-			foreach (var message in externalMessages)
+			foreach (var unused in externalMessages)
 			{
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
