@@ -21,7 +21,7 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddCacheService(settings.CacheSettings)
-			.AddExternalMediaPublishing(isDevelopment);
+			.AddExternalMediaPublishing(isDevelopment, settings);
 
 		// HTTP Client
 		services
@@ -126,7 +126,7 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	private static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, bool isDevelopment)
+	private static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, bool isDevelopment, AppSettings settings)
 	{
 		if (isDevelopment)
 		{
@@ -135,7 +135,12 @@ public static class ServiceCollectionExtensions
 
 		services.AddSingleton<IPostDistributor, IrcDistributor>();
 		services.AddScoped<IPostDistributor, DiscordDistributor>();
-		services.AddScoped<IPostDistributor, TwitterDistributorV2>();
+
+		if (settings.TwitterV2.IsEnabled())
+		{
+			services.AddScoped<IPostDistributor, TwitterDistributorV2>();
+		}
+
 		services.AddScoped<IPostDistributor, DistributorStorage>();
 
 		services.AddScoped<TwitterDistributorV2>();
