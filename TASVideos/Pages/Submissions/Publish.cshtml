@@ -56,7 +56,9 @@
 		<column lg="6">
 			<form-group>
 				<label asp-for="Submission.MovieToObsolete" class="form-control-label"></label>
-				<select asp-for="Submission.MovieToObsolete" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesToObsolete)" class="form-control"></select>
+				<input asp-for="Submission.MovieToObsolete" class="form-control" />
+				<span asp-validation-for="Submission.MovieToObsolete" class="text-danger"></span>
+				<span id="obsoleted-by"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Submission.OnlineWatchingUrl" class="form-control-label"></label>
@@ -159,6 +161,7 @@
 				return;
 			}
 
+			document.getElementById("obsoleted-by").innerHTML = "";
 			const url = `/Submissions/Publish/@(Model.Id)?handler=ObsoletePublication&publicationId=${obsoletionModel.value}`;
 			fetch(url)
 				.then(handleFetchErrors)
@@ -170,6 +173,7 @@
 
 					document.getElementById(`${selectedFlagsId}removeAllBtn`).click();
 					document.getElementById(`${selectedTagsId}removeAllBtn`).click();
+					document.getElementById("obsoleted-by").innerHTML = t.title ? t.title : "Unknown publication";
 
 					for (let i in t.flags) {
 						const flagItem = document.querySelector(`[name='AvailableFlags'] option[value="${t.flags[i]}"]`);
