@@ -102,6 +102,7 @@ public class PublishModel : BasePageModel
 			if (publicationToObsolete is null)
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieToObsolete)}", "Publication does not exist");
+				await PopulateDropdowns(Submission.SystemId);
 				return Page();
 			}
 		}

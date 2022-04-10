@@ -142,7 +142,7 @@
 	<script>
 		const selectedFlagsId = "@Html.IdFor(m => m.Submission.SelectedFlags)";
 		const selectedTagsId = "@Html.IdFor(m => m.Submission.SelectedTags)";
-		let originalDescription = "@Html.Raw(Model.Submission.MovieMarkup)";
+		let originalDescription = "@Model.Submission.MovieMarkup";
 		const obsoletionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieToObsolete)");
 		const descriptionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieMarkup)");
 		const dblClickEvent = new MouseEvent('dblclick', {
