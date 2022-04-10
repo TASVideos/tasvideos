@@ -53,11 +53,6 @@ public class TimeZoneConvert : TagHelper
 			{
 				dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
 			}
-
-			if (userTimeZone != null)
-			{
-				dateTime = TimeZoneInfo.ConvertTimeFromUtc(dateTime, userTimeZone);
-			}
 		}
 
 		if (userTimeZone is not null)
