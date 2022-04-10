@@ -118,8 +118,24 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
+		if (Publication.ObsoletedBy.HasValue)
+		{
+			var obsoletedBy = await _db.Publications.SingleOrDefaultAsync(p => p.Id == Publication.ObsoletedBy.Value);
+			if (obsoletedBy is null)
+			{
+				ModelState.AddModelError($"{nameof(Publication)}.{nameof(Publication.ObsoletedBy)}", "Publication does not exist");
+				return Page();
+			}
+		}
+
 		await UpdatePublication(Id, Publication);
 		return RedirectToPage("View", new { Id });
+	}
+
+	public async Task<IActionResult> OnGetTitle(int publicationId)
+	{
+		var title = (await _db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId))?.Title;
+		return new ContentResult { Content = title };
 	}
 
 	private async Task PopulateDropdowns()
