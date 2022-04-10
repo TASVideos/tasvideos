@@ -18,17 +18,20 @@ public class EditModel : BasePageModel
 	private readonly IMapper _mapper;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
+	private readonly IWikiPages _wikiPages;
 
 	public EditModel(
 		ApplicationDbContext db,
 		IMapper mapper,
 		ExternalMediaPublisher publisher,
-		IUserMaintenanceLogger userMaintenanceLogger)
+		IUserMaintenanceLogger userMaintenanceLogger,
+		IWikiPages wikiPages)
 	{
 		_db = db;
 		_mapper = mapper;
 		_publisher = publisher;
 		_userMaintenanceLogger = userMaintenanceLogger;
+		_wikiPages = wikiPages;
 	}
 
 	[FromRoute]
@@ -126,6 +129,10 @@ public class EditModel : BasePageModel
 				"",
 				$"Users/Profile/{user.UserName}");
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
+			var oldHomePage = "HomePages/" + userNameChange;
+			var newHomePage = "HomePages/" + user.UserName;
+
+			await _wikiPages.MoveAll(oldHomePage, newHomePage);
 		}
 
 		// Announce Role change

@@ -541,4 +541,29 @@ public static class WikiPageExtensions
 	{
 		return pages.Page("System/" + pageName, revisionId);
 	}
+
+	/// <summary>
+	/// Moves the given page and all subpages as well
+	/// </summary>
+	public static async Task<bool> MoveAll(this IWikiPages pages, string originalName, string destinationName)
+	{
+		var pagesToMove = await pages.Query
+			.Where(wp => wp.PageName.StartsWith(originalName))
+			.WithNoChildren()
+			.ToListAsync();
+		bool allSucceeded = true;
+		foreach (var page in pagesToMove)
+		{
+			var oldPage = page.PageName;
+			var newPage = destinationName + page.PageName[originalName.Length..];
+			var result = await pages.Move(oldPage, newPage);
+
+			if (!result)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		return allSucceeded;
+	}
 }
