@@ -30,10 +30,19 @@ public class TASVideosGrueTests
 	[TestMethod]
 	public async Task PostSubmissionRejection_TopicCreated()
 	{
+		var topicId = 1;
+		var forumId = 1;
 		var topic = _db.ForumTopics.Add(new ForumTopic
 		{
+			Id = topicId,
+			ForumId = forumId,
 			Title = "Title",
 			SubmissionId = SubmissionId
+		});
+		var post = _db.ForumPosts.Add(new ForumPost
+		{
+			TopicId = topicId,
+			ForumId = forumId,
 		});
 		await _db.SaveChangesAsync();
 
@@ -42,6 +51,7 @@ public class TASVideosGrueTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, topic.Entity.ForumId);
+		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, post.Entity.ForumId);
 		Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.CreateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);
