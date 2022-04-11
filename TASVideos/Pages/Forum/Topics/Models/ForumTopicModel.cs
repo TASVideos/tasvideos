@@ -49,6 +49,7 @@ public class ForumTopicModel : IForumTopicActionBar, IForumTopicBreadCrumb
 		public string Question { get; set; } = "";
 		public DateTime? CloseDate { get; set; }
 		public bool MultiSelect { get; set; }
+		public bool ViewPollResults { get; set; }
 
 		public IEnumerable<PollOptionModel> Options { get; set; } = new List<PollOptionModel>();
 

@@ -48,6 +48,9 @@ public class IndexModel : BaseForumModel
 	[FromQuery]
 	public TopicRequest Search { get; set; } = new();
 
+	[FromQuery]
+	public bool ViewPollResults { get; set; } = false;
+
 	public ForumTopicModel Topic { get; set; } = new();
 
 	public WikiPage? WikiPage { get; set; }
@@ -84,7 +87,8 @@ public class IndexModel : BaseForumModel
 						PollId = t.PollId.Value,
 						Question = t.Poll!.Question,
 						CloseDate = t.Poll!.CloseDate,
-						MultiSelect = t.Poll!.MultiSelect
+						MultiSelect = t.Poll!.MultiSelect,
+						ViewPollResults = ViewPollResults,
 					}
 					: null
 			})

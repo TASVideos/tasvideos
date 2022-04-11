@@ -1,6 +1,7 @@
 ﻿@model ForumTopicModel.PollModel
 @{
 	int totalVotes = Model!.Options.SelectMany(m => m.Voters).Count();
+	bool viewResults = Model.ViewPollResults;
 	bool canVote = false;
 	int userId = -1;
 	if (User.IsLoggedIn())
@@ -10,6 +11,10 @@
 		bool hasAlreadyVoted = Model.Options.Any(o => o.Voters.Any(v => v == userId));
 		bool pollIsClosed = Model.CloseDate <= DateTime.UtcNow;
 		canVote = votePermission && !hasAlreadyVoted && !pollIsClosed;
+	}
+	if (!canVote)
+	{
+		viewResults = true;
 	}
 }
 
@@ -26,14 +31,14 @@
 			}
 
 			<row class="align-items-center my-3">
-				<div class="col-12 col-md-3 col-lg-4 p-0 text-md-end">
+				<div class="col-12@(viewResults ? " col-md-3 col-lg-4 p-0 text-md-end" : "")">
 					<label for="_@option.Ordinal">
 						<span condition="option.Voters.Any(v => v == userId)" class="fa fa-check text-success"></span>
-						<span condition="canVote"><input type="@(Model.MultiSelect ? "checkbox" : "radio")" name="ordinal" id="_@option.Ordinal" value="@option.Ordinal" /></span>
+						<span condition="canVote && !viewResults"><input type="@(Model.MultiSelect ? "checkbox" : "radio")" name="ordinal" id="_@option.Ordinal" value="@option.Ordinal" /></span>
 						@option.Text
 					</label>
 				</div>
-				<div class="col-12 col-md-9 col-lg-8">
+				<div condition="viewResults" class="col-12 col-md-9 col-lg-8">
 					<row class="align-items-center justify-content-center">
 						<div class="col-6 col-md-8 col-lg-6"><span class="progress"><span class="progress-bar" role="progressbar" style="width: @(percent)%" aria-valuenow="@(percent)" aria-valuemin="0" aria-valuemax="100"></span></span></div>
 						<div class="col-3 col-md-4 col-lg-6 p-0 text-center text-md-start">
@@ -54,6 +59,16 @@
 		</script>
 		<button condition="canVote" hidden="hidden" type="submit" class="btn btn-sm btn-success" id="vote-btn">Vote!</button>
 	</form>
+	<a condition="!viewResults"
+		asp-route-ViewPollResults="True"
+		class="btn btn-sm btn-outline-info mt-2">
+		View Results
+	</a>
+	<a condition="viewResults && canVote"
+		asp-route-ViewPollResults=""
+		class="btn btn-sm btn-outline-info mt-2">
+		Return To Voting
+	</a>
 	<a condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0"
 		asp-page="PollResults"
 		asp-route-id="@Model.PollId"
