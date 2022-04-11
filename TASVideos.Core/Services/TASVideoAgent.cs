@@ -90,6 +90,14 @@ internal class TASVideoAgent : ITASVideoAgent
 		if (topic is not null)
 		{
 			topic.ForumId = SiteGlobalConstants.PublishedMoviesForumId;
+			var postsToMove = await _db.ForumPosts
+				.ForTopic(topic.Id)
+				.ToListAsync();
+			foreach (var post in postsToMove)
+			{
+				post.ForumId = SiteGlobalConstants.PublishedMoviesForumId;
+			}
+
 			_db.ForumPosts.Add(new ForumPost
 			{
 				TopicId = topic.Id,
@@ -117,6 +125,14 @@ internal class TASVideoAgent : ITASVideoAgent
 		if (topic is not null)
 		{
 			topic.ForumId = SiteGlobalConstants.WorkbenchForumId;
+			var postsToMove = await _db.ForumPosts
+				.ForTopic(topic.Id)
+				.ToListAsync();
+			foreach (var post in postsToMove)
+			{
+				post.ForumId = SiteGlobalConstants.WorkbenchForumId;
+			}
+
 			_db.ForumPosts.Add(new ForumPost
 			{
 				TopicId = topic.Id,
