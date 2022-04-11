@@ -65,6 +65,7 @@ public class QueueServiceTests
 	[DataRow(PublicationUnderway, new[] { Cancelled })]
 	[DataRow(Rejected, new SubmissionStatus[0])]
 	[DataRow(Cancelled, new[] { New })]
+	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
 	public void Submitter_BasicPerms(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
@@ -93,6 +94,7 @@ public class QueueServiceTests
 	[DataRow(PublicationUnderway, new[] { Cancelled })]
 	[DataRow(Rejected, new SubmissionStatus[0])]
 	[DataRow(Cancelled, new[] { New })]
+	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
 	public void Submitter_IsJudge(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
@@ -121,6 +123,7 @@ public class QueueServiceTests
 	[DataRow(PublicationUnderway, new[] { Cancelled })]
 	[DataRow(Rejected, new SubmissionStatus[0])]
 	[DataRow(Cancelled, new[] { New })]
+	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
 	public void Submitter_IsPublisher(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
@@ -149,6 +152,7 @@ public class QueueServiceTests
 	[DataRow(PublicationUnderway, new[] { New, JudgingUnderWay, Cancelled })]
 	[DataRow(Rejected, new[] { New, JudgingUnderWay })]
 	[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
+	[DataRow(Playground, new[] { New, JudgingUnderWay })]
 	[TestMethod]
 	public void Judge_ButNotSubmitter_BeforeAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
@@ -170,13 +174,14 @@ public class QueueServiceTests
 	}
 
 	[DataRow(New, new[] { JudgingUnderWay, Cancelled })]
-	[DataRow(Delayed, new[] { New, NeedsMoreInfo, JudgingUnderWay, Accepted, Rejected, Cancelled })]
-	[DataRow(NeedsMoreInfo, new[] { New, Delayed, JudgingUnderWay, Accepted, Rejected, Cancelled })]
-	[DataRow(JudgingUnderWay, new[] { New, Delayed, NeedsMoreInfo, Accepted, Rejected, Cancelled })]
+	[DataRow(Delayed, new[] { New, NeedsMoreInfo, JudgingUnderWay, Accepted, Rejected, Cancelled, Playground })]
+	[DataRow(NeedsMoreInfo, new[] { New, Delayed, JudgingUnderWay, Accepted, Rejected, Cancelled, Playground })]
+	[DataRow(JudgingUnderWay, new[] { New, Delayed, NeedsMoreInfo, Accepted, Rejected, Cancelled, Playground })]
 	[DataRow(Accepted, new[] { New, Delayed, NeedsMoreInfo, JudgingUnderWay, Rejected, Cancelled })]
 	[DataRow(PublicationUnderway, new[] { New, Delayed, NeedsMoreInfo, JudgingUnderWay, Accepted, Rejected, Cancelled })]
 	[DataRow(Rejected, new[] { New, JudgingUnderWay })]
 	[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
+	[DataRow(Playground, new[] { New, JudgingUnderWay })]
 	[TestMethod]
 	public void Judge_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
@@ -205,6 +210,7 @@ public class QueueServiceTests
 	[DataRow(PublicationUnderway, new[] { Accepted })]
 	[DataRow(Rejected, new SubmissionStatus[0])]
 	[DataRow(Cancelled, new SubmissionStatus[0])]
+	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
 	public void Publisher_ButNotSubmitter_BeforeAllowedJudgmentWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
@@ -233,6 +239,7 @@ public class QueueServiceTests
 	[DataRow(PublicationUnderway, new[] { Accepted })]
 	[DataRow(Rejected, new SubmissionStatus[0])]
 	[DataRow(Cancelled, new SubmissionStatus[0])]
+	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
 	public void Publisher_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{

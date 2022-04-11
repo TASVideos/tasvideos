@@ -285,9 +285,14 @@ public class EditModel : BasePageModel
 			statusHasChanged = true;
 			_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
-			if (Submission.Status != SubmissionStatus.Rejected &&
+			if (Submission.Status == SubmissionStatus.Playground)
+			{
+				submission.Topic!.ForumId = SiteGlobalConstants.PlaygroundForumId;
+			}
+			else if (Submission.Status != SubmissionStatus.Rejected &&
 				Submission.Status != SubmissionStatus.Cancelled &&
-				submission.Topic!.ForumId == SiteGlobalConstants.GrueFoodForumId)
+				(submission.Topic!.ForumId == SiteGlobalConstants.GrueFoodForumId
+				|| submission.Topic!.ForumId == SiteGlobalConstants.PlaygroundForumId))
 			{
 				submission.Topic.ForumId = SiteGlobalConstants.WorkbenchForumId;
 			}
@@ -366,7 +371,8 @@ public class EditModel : BasePageModel
 					or SubmissionStatus.Rejected
 					or SubmissionStatus.Cancelled
 					or SubmissionStatus.Delayed
-					or SubmissionStatus.NeedsMoreInfo)
+					or SubmissionStatus.NeedsMoreInfo
+					or SubmissionStatus.Playground)
 				{
 					statusStr = statusStr.ToUpper();
 				}
@@ -382,7 +388,8 @@ public class EditModel : BasePageModel
 				}
 				else if (Submission.Status is SubmissionStatus.NeedsMoreInfo
 						or SubmissionStatus.New
-						or SubmissionStatus.PublicationUnderway)
+						or SubmissionStatus.PublicationUnderway
+						or SubmissionStatus.Playground)
 				{
 					statusStr = "set to " + statusStr;
 				}
