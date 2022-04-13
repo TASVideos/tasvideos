@@ -16,7 +16,7 @@
 					@await Component.RenderWiki("System/NameChanges")
 				</div>
 			</form-group>
-			<form-group>
+			<form-group disabled>
 				<label asp-for="Settings.Email"></label>
 				@if (Model.Settings.IsEmailConfirmed)
 				{
