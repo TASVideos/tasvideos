@@ -105,10 +105,19 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionPublished_TopicCreated()
 	{
+		var topicId = 1;
+		var forumId = 1;
 		var topic = _db.ForumTopics.Add(new ForumTopic
 		{
+			Id = topicId,
+			ForumId = forumId,
 			Title = "Title",
 			SubmissionId = SubmissionId
+		});
+		var post = _db.ForumPosts.Add(new ForumPost
+		{
+			TopicId = topicId,
+			ForumId = forumId,
 		});
 		await _db.SaveChangesAsync();
 
@@ -117,6 +126,7 @@ public class TASVideoAgentTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.PublishedMoviesForumId, topic.Entity.ForumId);
+		Assert.AreEqual(SiteGlobalConstants.PublishedMoviesForumId, post.Entity.ForumId);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);

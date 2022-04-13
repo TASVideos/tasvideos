@@ -119,13 +119,14 @@ internal class QueueService : IQueueService
 			|| currentStatus == PublicationUnderway && isJudge // A judge can undo even if publication underway
 			|| isJudge && currentStatus == Delayed // Judges can set delayed -> new
 			|| isJudge && currentStatus == NeedsMoreInfo // Judges can set info -> new
-			|| (isJudge || isAuthorOrSubmitter) && currentStatus == Cancelled)
+			|| (isJudge || isAuthorOrSubmitter) && currentStatus == Cancelled
+			|| isJudge && currentStatus == Playground)
 		{
 			list.Add(New);
 		}
 
 		// A judge can claim a new run, unless they are not author or the submitter
-		if (new[] { New, JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, Rejected, PublicationUnderway, Cancelled }.Contains(currentStatus)
+		if (new[] { New, JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, Rejected, PublicationUnderway, Cancelled, Playground }.Contains(currentStatus)
 			&& canJudge
 			&& !isAuthorOrSubmitter)
 		{
@@ -174,6 +175,13 @@ internal class QueueService : IQueueService
 			&& new[] { New, JudgingUnderWay, Delayed, NeedsMoreInfo, Accepted, PublicationUnderway }.Contains(currentStatus))
 		{
 			list.Add(Cancelled);
+		}
+
+		if (new[] { JudgingUnderWay, Delayed, NeedsMoreInfo }.Contains(currentStatus)
+			&& isJudge
+			&& isAfterJudgmentWindow)
+		{
+			list.Add(Playground);
 		}
 
 		return list;

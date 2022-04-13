@@ -27,7 +27,10 @@ public enum SubmissionStatus
 	Rejected,
 
 	[Display(Name = "Cancelled")]
-	Cancelled
+	Cancelled,
+
+	[Display(Name = "Playground")]
+	Playground,
 }
 
 public static class SubmissionStatusExtensions

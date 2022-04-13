@@ -7,6 +7,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
 
@@ -24,6 +25,7 @@ public class EditModel : BasePageModel
 	private readonly IMovieFormatDeprecator _deprecator;
 	private readonly IQueueService _queueService;
 	private readonly IYoutubeSync _youtubeSync;
+	private readonly IForumService _forumService;
 
 	public EditModel(
 		ApplicationDbContext db,
@@ -33,7 +35,8 @@ public class EditModel : BasePageModel
 		ITASVideosGrue tasvideosGrue,
 		IMovieFormatDeprecator deprecator,
 		IQueueService queueService,
-		IYoutubeSync youtubeSync)
+		IYoutubeSync youtubeSync,
+		IForumService forumService)
 	{
 		_db = db;
 		_parser = parser;
@@ -43,6 +46,7 @@ public class EditModel : BasePageModel
 		_deprecator = deprecator;
 		_queueService = queueService;
 		_youtubeSync = youtubeSync;
+		_forumService = forumService;
 	}
 
 	[FromRoute]
@@ -279,17 +283,43 @@ public class EditModel : BasePageModel
 			submission.Publisher = null;
 		}
 
-		bool statusHasChanged = false;
-		if (submission.Status != Submission.Status)
+		bool statusHasChanged = submission.Status != Submission.Status;
+		bool moveTopic = false;
+		if (statusHasChanged)
 		{
-			statusHasChanged = true;
 			_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
-			if (Submission.Status != SubmissionStatus.Rejected &&
-				Submission.Status != SubmissionStatus.Cancelled &&
-				submission.Topic!.ForumId == SiteGlobalConstants.GrueFoodForumId)
+			int moveTopicTo = -1;
+
+			if (submission.Topic!.ForumId != SiteGlobalConstants.PlaygroundForumId &&
+				Submission.Status == SubmissionStatus.Playground)
 			{
-				submission.Topic.ForumId = SiteGlobalConstants.WorkbenchForumId;
+				moveTopic = true;
+				moveTopicTo = SiteGlobalConstants.PlaygroundForumId;
+			}
+			else if (submission.Topic.ForumId != SiteGlobalConstants.WorkbenchForumId &&
+				(Submission.Status == SubmissionStatus.New ||
+				Submission.Status == SubmissionStatus.Delayed ||
+				Submission.Status == SubmissionStatus.NeedsMoreInfo ||
+				Submission.Status == SubmissionStatus.JudgingUnderWay ||
+				Submission.Status == SubmissionStatus.Accepted ||
+				Submission.Status == SubmissionStatus.PublicationUnderway))
+			{
+				moveTopic = true;
+				moveTopicTo = SiteGlobalConstants.WorkbenchForumId;
+			}
+
+			// reject/cancel topic move is handled later with TVG's post
+			if (moveTopic)
+			{
+				submission.Topic.ForumId = moveTopicTo;
+				var postsToMove = await _db.ForumPosts
+					.ForTopic(submission.Topic.Id)
+					.ToListAsync();
+				foreach (var post in postsToMove)
+				{
+					post.ForumId = moveTopicTo;
+				}
 			}
 		}
 
@@ -348,6 +378,12 @@ public class EditModel : BasePageModel
 			await _db.SaveChangesAsync();
 		}
 
+		if (moveTopic)
+		{
+			_forumService.ClearLatestPostCache();
+			_forumService.ClearTopicActivityCache();
+		}
+
 		if (submission.Status is SubmissionStatus.Rejected or SubmissionStatus.Cancelled
 			&& statusHasChanged)
 		{
@@ -366,7 +402,8 @@ public class EditModel : BasePageModel
 					or SubmissionStatus.Rejected
 					or SubmissionStatus.Cancelled
 					or SubmissionStatus.Delayed
-					or SubmissionStatus.NeedsMoreInfo)
+					or SubmissionStatus.NeedsMoreInfo
+					or SubmissionStatus.Playground)
 				{
 					statusStr = statusStr.ToUpper();
 				}
@@ -382,7 +419,8 @@ public class EditModel : BasePageModel
 				}
 				else if (Submission.Status is SubmissionStatus.NeedsMoreInfo
 						or SubmissionStatus.New
-						or SubmissionStatus.PublicationUnderway)
+						or SubmissionStatus.PublicationUnderway
+						or SubmissionStatus.Playground)
 				{
 					statusStr = "set to " + statusStr;
 				}
