@@ -107,6 +107,7 @@ public class SettingsModel : BasePageModel
 			}
 
 			var setEmailResult = await _userManager.SetEmailAsync(user, Settings.Email);
+			user.EmailConfirmed = true; // For now we need to trust the user got it correct. TODO: make a workflow that involves ChangeEmail() and confirming it before changing it
 			if (!setEmailResult.Succeeded)
 			{
 				throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
