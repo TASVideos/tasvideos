@@ -75,6 +75,7 @@ public class AppSettings
 	{
 		public string ClientId { get; set; } = "";
 		public string ClientSecret { get; set; } = "";
+		public string OneTimeRefreshToken { get; set; } = "";	// RefreshToken setting is ignored if the access token file exists.
 		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ClientId)
 			&& !string.IsNullOrWhiteSpace(ClientSecret)
 			;
