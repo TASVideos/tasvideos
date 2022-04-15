@@ -18,15 +18,10 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	private TwitterTokenDetails _twitterTokenDetails = new TwitterTokenDetails();
 
-	private string? _accessToken;
-	private string? _refreshToken;
-	private DateTime? _nextAccessTokenRefreshTime;
-	private DateTime? _nextRefreshTokenRefreshTime;
-
 	private string _tokenStorageFileName;
 
-	private TimeSpan AccessTokenDuration = new TimeSpan(1, 59, 30);  // Two hours minus thirty seconds in seconds.
-	private TimeSpan RefreshTokenDuration = new TimeSpan(179, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
+	private TimeSpan AccessTokenDuration = new TimeSpan(1, 59, 30);  // Two hours minus thirty seconds.
+	private TimeSpan RefreshTokenDuration = new TimeSpan(177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
 
 	public TwitterDistributorV2(
 		AppSettings appSettings,
@@ -47,7 +42,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 
 		// If the local file doesn't exist, or if there was no data to parse, use the OneTimeRefreshToken and hope.
-		if (_twitterTokenDetails.RefreshToken == null)
+		if (_twitterTokenDetails.RefreshToken is null)
 		{
 			_twitterTokenDetails.RefreshToken = _settings.OneTimeRefreshToken;
 		}
@@ -62,7 +57,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	{
 		string tokenText = File.ReadAllText(_tokenStorageFileName);
 
-		if (tokenText != null)
+		if (tokenText is not null)
 		{
 			try
 			{
@@ -84,7 +79,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		_twitterClient.DefaultRequestHeaders.Authorization =
 			new System.Net.Http.Headers.AuthenticationHeaderValue(
 				"Bearer",
-				_accessToken);
+				_twitterTokenDetails.AccessToken);
 
 		var tweetData = new
 		{
@@ -101,11 +96,11 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public async Task RefreshTokens()
 	{
-		if (_nextRefreshTokenRefreshTime == null || DateTime.UtcNow > _nextRefreshTokenRefreshTime)
+		if (_twitterTokenDetails.RefreshTokenExpiry == DateTime.MinValue || DateTime.UtcNow > _twitterTokenDetails.RefreshTokenExpiry)
 		{
 			await RequestTokensFromTwitter(true);
 		}
-		else if (_nextAccessTokenRefreshTime == null || DateTime.UtcNow > _nextAccessTokenRefreshTime)
+		else if (_twitterTokenDetails.AccessTokenExpiry == DateTime.MinValue || DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
 		{
 			await RequestTokensFromTwitter(false);
 		}
@@ -113,10 +108,15 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public async Task RequestTokensFromTwitter(bool newRefreshToken)
 	{
+		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.RefreshToken))
+		{
+			return;
+		}
+
 		// The offline.access scope regenerates the refresh token.  Maybe the refresh token can be used multiple times before it needs refreshing itself?
 		var formData = new List<KeyValuePair<string, string>>
 		{
-			new("refresh_token", _refreshToken!),
+			new("refresh_token", _twitterTokenDetails.RefreshToken),
 			new("grant_type", "refresh_token"),
 			new("scope", $"tweet.read tweet.write users.read{(newRefreshToken ? " offline.access" : "")}")
 		};
@@ -131,21 +131,35 @@ public class TwitterDistributorV2 : IPostDistributor
 		{
 			var responseData = JsonSerializer.Deserialize<TwitterRefreshTokenResponse>(await response.Content.ReadAsStringAsync());
 
-			_accessToken = responseData!.AccessToken;
-			_nextAccessTokenRefreshTime = DateTime.UtcNow + AccessTokenDuration;
-
-			if (newRefreshToken)
+			if (responseData is null)
 			{
-				_refreshToken = responseData.RefreshToken;
-				_nextRefreshTokenRefreshTime = DateTime.UtcNow + RefreshTokenDuration;
+				_logger.LogError("Got a successful response from Twitter, but received no tokens!");
 			}
+			else
+			{
+				_twitterTokenDetails.AccessToken = responseData.AccessToken;
+				_twitterTokenDetails.AccessTokenExpiry = DateTime.UtcNow + AccessTokenDuration;
 
-			StoreValues();
+				if (newRefreshToken)
+				{
+					_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
+					_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + RefreshTokenDuration;
+				}
+
+				StoreValues();
+			}
 		}
 		else
 		{
-			_logger.LogError("Error getting {tokenType} token.  Received HTTP status code {statusCode}.", newRefreshToken ? "refresh" : "access", response.StatusCode);
-			_logger.LogError(await response.Content.ReadAsStringAsync());
+			_logger.LogError("Error getting {tokenType} token.  Received HTTP status code {statusCode}. {newline}{errorMessage}",
+				newRefreshToken ? "refresh" : "access",
+				response.StatusCode,
+				Environment.NewLine,
+				await response.Content.ReadAsStringAsync());
+
+			// Unrecoverable error, we need to generate new tokens anyways so we disable Twitter for now.
+			_twitterTokenDetails.AccessToken = "";
+			_twitterTokenDetails.RefreshToken = "";
 		}
 	}
 

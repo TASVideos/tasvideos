@@ -30,11 +30,6 @@ public static class ServiceCollectionExtensions
 				client.BaseAddress = new Uri("https://discord.com/api/v6/");
 			});
 		services
-			.AddHttpClient(HttpClients.Twitter, client =>
-			{
-				client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
-			});
-		services
 			.AddHttpClient(HttpClients.TwitterV2, client =>
 			{
 				client.BaseAddress = new Uri("https://api.twitter.com/2/tweets");
