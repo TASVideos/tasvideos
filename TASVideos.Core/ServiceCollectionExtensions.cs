@@ -122,7 +122,6 @@ public static class ServiceCollectionExtensions
 			services.AddSingleton<ICacheService, NoCacheService>();
 		}
 
-		services.AddScoped<RedisCacheService>(); // For Twitter tokens, we specifically need redis
 		return services;
 	}
 
@@ -136,14 +135,10 @@ public static class ServiceCollectionExtensions
 		services.AddSingleton<IPostDistributor, IrcDistributor>();
 		services.AddScoped<IPostDistributor, DiscordDistributor>();
 
-		if (settings.TwitterV2.IsEnabled())
-		{
-			services.AddScoped<IPostDistributor, TwitterDistributorV2>();
-		}
+		services.AddScoped<IPostDistributor, TwitterDistributorV2>();
 
 		services.AddScoped<IPostDistributor, DistributorStorage>();
 
-		services.AddScoped<TwitterDistributorV2>();
 		return services.AddTransient<ExternalMediaPublisher>();
 	}
 }
