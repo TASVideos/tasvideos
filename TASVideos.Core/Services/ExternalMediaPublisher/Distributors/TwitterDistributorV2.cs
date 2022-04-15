@@ -54,7 +54,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	{
 		string tokenText = File.ReadAllText(_tokenStorageFileName);
 
-		if (string.IsNullOrWhiteSpace(tokenText))
+		if (!string.IsNullOrWhiteSpace(tokenText))
 		{
 			try
 			{
