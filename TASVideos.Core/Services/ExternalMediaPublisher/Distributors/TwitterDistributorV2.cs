@@ -75,7 +75,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	{
 		await RefreshTokens();
 
-		if (IsEnabled())
+		if (!IsEnabled())
 		{
 			return;
 		}
