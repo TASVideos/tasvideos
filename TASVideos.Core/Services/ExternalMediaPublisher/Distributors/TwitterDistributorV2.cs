@@ -42,12 +42,11 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 
 		// If the local file doesn't exist, or if there was no data to parse, use the OneTimeRefreshToken and hope.
-		if (_twitterTokenDetails.RefreshToken is null)
+		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.RefreshToken))
 		{
 			_twitterTokenDetails.RefreshToken = _settings.OneTimeRefreshToken;
 		}
 	}
-
 
 	public IEnumerable<PostType> Types => new[] { PostType.Announcement };
 
@@ -57,11 +56,16 @@ public class TwitterDistributorV2 : IPostDistributor
 	{
 		string tokenText = File.ReadAllText(_tokenStorageFileName);
 
-		if (tokenText is not null)
+		if (string.IsNullOrWhiteSpace(tokenText))
 		{
 			try
 			{
 				_twitterTokenDetails = JsonSerializer.Deserialize<TwitterTokenDetails>(tokenText) ?? new TwitterTokenDetails();
+
+				if (DateTime.UtcNow > _twitterTokenDetails.RefreshTokenExpiry)
+				{
+					_twitterTokenDetails.RefreshToken = "";
+				}
 			}
 			catch (Exception) { }
 		}
@@ -96,17 +100,14 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public async Task RefreshTokens()
 	{
-		if (_twitterTokenDetails.RefreshTokenExpiry == DateTime.MinValue || DateTime.UtcNow > _twitterTokenDetails.RefreshTokenExpiry)
+		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken) ||
+			DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
 		{
-			await RequestTokensFromTwitter(true);
-		}
-		else if (_twitterTokenDetails.AccessTokenExpiry == DateTime.MinValue || DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
-		{
-			await RequestTokensFromTwitter(false);
+			await RequestTokensFromTwitter();
 		}
 	}
 
-	public async Task RequestTokensFromTwitter(bool newRefreshToken)
+	public async Task RequestTokensFromTwitter()
 	{
 		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.RefreshToken))
 		{
@@ -118,7 +119,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		{
 			new("refresh_token", _twitterTokenDetails.RefreshToken),
 			new("grant_type", "refresh_token"),
-			new("scope", $"tweet.read tweet.write users.read{(newRefreshToken ? " offline.access" : "")}")
+			new("scope", "tweet.read tweet.write users.read offline.access")
 		};
 
 		string basicAuthHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}"));
@@ -140,19 +141,15 @@ public class TwitterDistributorV2 : IPostDistributor
 				_twitterTokenDetails.AccessToken = responseData.AccessToken;
 				_twitterTokenDetails.AccessTokenExpiry = DateTime.UtcNow + AccessTokenDuration;
 
-				if (newRefreshToken)
-				{
-					_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
-					_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + RefreshTokenDuration;
-				}
+				_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
+				_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + RefreshTokenDuration;
 
 				StoreValues();
 			}
 		}
 		else
 		{
-			_logger.LogError("Error getting {tokenType} token.  Received HTTP status code {statusCode}. {newline}{errorMessage}",
-				newRefreshToken ? "refresh" : "access",
+			_logger.LogError("Error getting access tokens.  Received HTTP status code {statusCode}. {newline}{errorMessage}",
 				response.StatusCode,
 				Environment.NewLine,
 				await response.Content.ReadAsStringAsync());
