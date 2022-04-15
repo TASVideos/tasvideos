@@ -18,10 +18,10 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	private TwitterTokenDetails _twitterTokenDetails = new TwitterTokenDetails();
 
-	private string _tokenStorageFileName;
+	private readonly string _tokenStorageFileName;
 
-	private TimeSpan AccessTokenDuration = new TimeSpan(1, 59, 30);  // Two hours minus thirty seconds.
-	private TimeSpan RefreshTokenDuration = new TimeSpan(177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
+	private readonly TimeSpan AccessTokenDuration = new (1, 59, 30);  // Two hours minus thirty seconds.
+	private readonly TimeSpan RefreshTokenDuration = new (177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
 
 	public TwitterDistributorV2(
 		AppSettings appSettings,
