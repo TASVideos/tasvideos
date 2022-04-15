@@ -16,12 +16,12 @@ public class TwitterDistributorV2 : IPostDistributor
 	private readonly AppSettings.TwitterConnectionV2 _settings;
 	private readonly ILogger<TwitterDistributorV2> _logger;
 
-	private TwitterTokenDetails _twitterTokenDetails = new TwitterTokenDetails();
+	private TwitterTokenDetails _twitterTokenDetails = new();
 
 	private readonly string _tokenStorageFileName;
 
-	private readonly TimeSpan AccessTokenDuration = new (1, 59, 30);  // Two hours minus thirty seconds.
-	private readonly TimeSpan RefreshTokenDuration = new (177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
+	private readonly TimeSpan _accessTokenDuration = new (1, 59, 30);  // Two hours minus thirty seconds.
+	private readonly TimeSpan _refreshTokenDuration = new (177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
 
 	public TwitterDistributorV2(
 		AppSettings appSettings,
@@ -139,10 +139,10 @@ public class TwitterDistributorV2 : IPostDistributor
 			else
 			{
 				_twitterTokenDetails.AccessToken = responseData.AccessToken;
-				_twitterTokenDetails.AccessTokenExpiry = DateTime.UtcNow + AccessTokenDuration;
+				_twitterTokenDetails.AccessTokenExpiry = DateTime.UtcNow + _accessTokenDuration;
 
 				_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
-				_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + RefreshTokenDuration;
+				_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + _refreshTokenDuration;
 
 				StoreValues();
 			}
