@@ -10,8 +10,7 @@ public class ProfileSettingsModel
 
 	public bool IsEmailConfirmed { get; set; }
 
-	[Required]
-	[EmailAddress]
+	[Display(Name = "Current Email")]
 	public string Email { get; set; } = "";
 
 	[Display(Name = "Time Zone")]

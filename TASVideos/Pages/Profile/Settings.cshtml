@@ -16,22 +16,26 @@
 					@await Component.RenderWiki("System/NameChanges")
 				</div>
 			</form-group>
-			<form-group disabled>
-				<label asp-for="Settings.Email"></label>
-				@if (Model.Settings.IsEmailConfirmed)
-				{
+			@if (Model.Settings.IsEmailConfirmed)
+			{
+				<form-group disabled>
+					<label asp-for="Settings.Email"></label>
 					<div class="input-group">
 						<input asp-for="Settings.Email" class="form-control" />
 						<div class="input-group-text" aria-disabled="true"><span class="fa fa-check-square text-success"></span></div>
 					</div>
-				}
-				else
-				{
-					<input asp-for="Settings.Email" class="form-control" />
+				</form-group>
+			}
+			else
+			{
+				<form-group>
+					<div class="input-group">
+						<input asp-for="Settings.Email" readonly class="form-control"/>
+						<div class="input-group-text" aria-disabled="true" title="Email not confirmed"><span class="fa fa-exclamation text-warning"></span></div>
+					</div>
 					<button asp-page="Settings" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-				}
-				<span asp-validation-for="Settings.Email" class="text-danger"></span>
-			</form-group>
+				</form-group>
+			}
 			<form-group>
 				<label asp-for="Settings.PublicRatings"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
