@@ -41,9 +41,9 @@ public class RenderModel : BasePageModel
 		if (!WikiHelper.IsValidWikiPageName(url))
 		{
 			// Support legacy links like [adelikat] that should have been [user:adelikat]
-			if (await _wikiPages.Exists("HomePages/" + url))
+			if (await _wikiPages.Exists(LinkConstants.HomePages + url))
 			{
-				return Redirect("/HomePages/" + url);
+				return Redirect(LinkConstants.HomePages + url);
 			}
 
 			return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiEngine.Builtins.NormalizeInternalLink(url) });

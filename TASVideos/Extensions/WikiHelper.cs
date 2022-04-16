@@ -7,7 +7,6 @@ namespace TASVideos.Extensions;
 // ReSharper disable PossibleMultipleEnumeration
 public static class WikiHelper
 {
-	private const string HomePagesPrefix = "HomePages/";
 	public static bool UserCanEditWikiPage(string? pageName, string? userName, IEnumerable<PermissionTo> userPermissions)
 	{
 		if (string.IsNullOrWhiteSpace(pageName) || string.IsNullOrWhiteSpace(userName))
@@ -48,13 +47,13 @@ public static class WikiHelper
 			return userPermissions.Contains(PermissionTo.EditSystemPages);
 		}
 
-		if (pageName.StartsWith(HomePagesPrefix))
+		if (pageName.StartsWith(LinkConstants.HomePages))
 		{
 			// A home page is defined as Homepages/[UserName]
 			// If a user can exploit this fact to create an exploit
 			// then we should first reconsider rules about allowed patterns of usernames and what defines a valid wiki page
 			// before deciding to nuke this feature
-			var homepage = pageName[HomePagesPrefix.Length..].Split('/')[0];
+			var homepage = pageName[LinkConstants.HomePages.Length..].Split('/')[0];
 			if (string.Equals(homepage, userName, StringComparison.OrdinalIgnoreCase)
 				&& userPermissions.Contains(PermissionTo.EditHomePage))
 			{
@@ -77,7 +76,7 @@ public static class WikiHelper
 		string test = pageName;
 		if (IsHomePage(pageName))
 		{
-			test = pageName.Replace(HomePagesPrefix, "");
+			test = pageName.Replace(LinkConstants.HomePages, "");
 			var slashIndex = test.IndexOf('/') + 1;
 			if (slashIndex == 0)
 			{
@@ -142,7 +141,7 @@ public static class WikiHelper
 	public static bool IsHomePage(string? pageName)
 	{
 		return !string.IsNullOrWhiteSpace(pageName)
-			&& pageName.StartsWith(HomePagesPrefix);
+			&& pageName.StartsWith(LinkConstants.HomePages);
 	}
 
 	public static string ToUserName(string pageName)

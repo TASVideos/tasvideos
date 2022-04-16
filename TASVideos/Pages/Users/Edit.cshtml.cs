@@ -129,8 +129,8 @@ public class EditModel : BasePageModel
 				"",
 				$"Users/Profile/{user.UserName}");
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
-			var oldHomePage = "HomePages/" + userNameChange;
-			var newHomePage = "HomePages/" + user.UserName;
+			var oldHomePage = LinkConstants.HomePages + userNameChange;
+			var newHomePage = LinkConstants.HomePages + user.UserName;
 
 			await _wikiPages.MoveAll(oldHomePage, newHomePage);
 		}
