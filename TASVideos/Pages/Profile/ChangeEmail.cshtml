@@ -6,21 +6,25 @@
 }
 
 <form method="post">
+	<input type="hidden" asp-for="IsEmailConfirmed" />
 	<row>
 		<column lg="6">
 			<form-group>
 				<form-group>
 					<label asp-for="CurrentEmail"></label>
 					<div class="input-group">
-						<input asp-for="CurrentEmail" class="form-control" readonly />
-						<div class="input-group-text">
+						<input asp-for="CurrentEmail" class="form-control" readonly/>
+						<div condition="Model.IsEmailConfirmed" class="input-group-text">
 							<span class="fa fa-check-square text-success"></span>
+						</div>
+						<div condition="!Model.IsEmailConfirmed" class="input-group-text" aria-disabled="true" title="Email not confirmed">
+							<span class="fa fa-exclamation text-warning"></span>
 						</div>
 					</div>
 				</form-group>
 				<form-group>
 					<label asp-for="NewEmail"></label>
-					<input asp-for="NewEmail" class="form-control" />
+					<input asp-for="NewEmail" class="form-control"/>
 					<span asp-validation-for="NewEmail" class="text-danger"></span>
 				</form-group>
 			</form-group>

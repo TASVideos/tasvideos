@@ -27,6 +27,9 @@ public class ChangeEmailModel : BasePageModel
 	[Display(Name = "Current Email")]
 	public string CurrentEmail { get; set; } = "";
 
+	[BindProperty]
+	public bool IsEmailConfirmed { get; set; }
+
 	[Required]
 	[EmailAddress]
 	[BindProperty]
@@ -42,6 +45,8 @@ public class ChangeEmailModel : BasePageModel
 		}
 
 		CurrentEmail = user.Email;
+		IsEmailConfirmed = user.EmailConfirmed;
+
 		return Page();
 	}
 
