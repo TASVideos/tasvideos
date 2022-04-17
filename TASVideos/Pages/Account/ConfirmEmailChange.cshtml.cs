@@ -46,7 +46,8 @@ public class ConfirmEmailChangeModel : BasePageModel
 			return RedirectToPage("/Error");
 		}
 
+		_cache.Remove(code);
 		await _userMaintenanceLogger.Log(user.Id, $"User changed email from {IpAddress}");
-		return Page();
+		return RedirectToPage("/Profile/Settings");
 	}
 }
