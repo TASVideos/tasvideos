@@ -40,7 +40,7 @@ public class ConfirmEmailChangeModel : BasePageModel
 			return BadRequest("Unrecognized or expired code.");
 		}
 
-		var result = await _userManager.SetEmailAsync(user, newEmail);
+		var result = await _userManager.SetAndConfirmEmailAsync(user, newEmail);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");
