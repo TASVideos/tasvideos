@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Profile;
 
@@ -9,10 +10,17 @@ namespace TASVideos.Pages.Profile;
 public class ChangeEmailModel : BasePageModel
 {
 	private readonly UserManager _userManager;
+	private readonly ICacheService _cache;
+	private readonly IEmailService _emailService;
 
-	public ChangeEmailModel(UserManager userManager)
+	public ChangeEmailModel(
+		UserManager userManager,
+		ICacheService cache,
+		IEmailService emailService)
 	{
 		_userManager = userManager;
+		_cache = cache;
+		_emailService = emailService;
 	}
 
 	[BindProperty]
@@ -50,9 +58,18 @@ public class ChangeEmailModel : BasePageModel
 			return AccessDenied();
 		}
 
-		await _userManager.GenerateChangeEmailTokenAsync(user, NewEmail);
+		var token = await _userManager.GenerateChangeEmailTokenAsync(user, NewEmail);
 
-		// TODO:
-		return Home();
+		if (string.IsNullOrWhiteSpace(token))
+		{
+			return BadRequest("Error generating change email token");
+		}
+
+		_cache.Set(token, NewEmail);
+
+		var callbackUrl = Url.EmailChangeConfirmationLink(user.Id.ToString(), token, Request.Scheme);
+		await _emailService.EmailConfirmation(NewEmail!, callbackUrl);
+
+		return RedirectToPage("EmailConfirmationSent");
 	}
 }
