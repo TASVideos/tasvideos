@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
@@ -9,11 +10,16 @@ namespace TASVideos.Pages.Diagnostics;
 public class ExternalDependenciesModel : PageModel
 {
 	private readonly IGoogleAuthService _googleAuthService;
+	private readonly TwitterDistributorV2 _twitter;
 	private readonly AppSettings _settings;
 
-	public ExternalDependenciesModel(IGoogleAuthService googleAuthService, AppSettings settings)
+	public ExternalDependenciesModel(
+		IGoogleAuthService googleAuthService,
+		TwitterDistributorV2 twitter,
+		AppSettings settings)
 	{
 		_googleAuthService = googleAuthService;
+		_twitter = twitter;
 		_settings = settings;
 	}
 
@@ -51,7 +57,7 @@ public class ExternalDependenciesModel : PageModel
 		Statuses.SecureIrcEnabled = _settings.Irc.IsSecureChannelEnabled();
 		Statuses.DiscordEnabled = _settings.Discord.IsEnabled();
 		Statuses.DiscordPrivateChannelEnabled = _settings.Discord.IsPrivateChannelEnabled();
-		Statuses.TwitterEnabled = _settings.Twitter.IsEnabled();
+		Statuses.TwitterEnabled = _twitter.IsEnabled();
 	}
 
 	public class ExternalDependenciesViewModel
