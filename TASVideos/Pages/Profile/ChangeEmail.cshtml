@@ -1,0 +1,30 @@
+﻿@page
+@model ChangeEmailModel
+@{
+}
+
+<form method="post">
+	<row>
+		<column lg="6">
+			<form-group>
+				<form-group>
+					<label asp-for="CurrentEmail"></label>
+					<div class="input-group">
+						<input asp-for="CurrentEmail" class="form-control" readonly />
+						<div class="input-group-text">
+							<span class="fa fa-check-square text-success"></span>
+						</div>
+					</div>
+				</form-group>
+				<form-group>
+					<label asp-for="NewEmail"></label>
+					<input asp-for="NewEmail" class="form-control" />
+					<span asp-validation-for="NewEmail" class="text-danger"></span>
+				</form-group>
+			</form-group>
+			<form-button-bar>
+				<button type="submit" class="btn btn-primary">Send Verification Email</button>
+			</form-button-bar>
+		</column>
+	</row>
+</form>
