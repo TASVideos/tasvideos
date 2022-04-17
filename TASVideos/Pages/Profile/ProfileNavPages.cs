@@ -16,6 +16,9 @@ public static class ProfileNavPages
 	public static string ChangePassword => "ChangePassword";
 	public static string ChangePasswordNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangePassword);
 
+	public static string ChangeEmail => "ChangeEmail";
+	public static string ChangeEmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, ChangeEmail);
+
 	public static string HomePage => "HomePage";
 	public static string HomePageNavClass(ViewContext viewContext) => PageNavClass(viewContext, HomePage);
 
