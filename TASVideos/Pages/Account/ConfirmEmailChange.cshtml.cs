@@ -4,7 +4,7 @@ using TASVideos.Core.Services;
 
 namespace TASVideos.Pages.Account;
 
-[AllowAnonymous]
+[Authorize]
 public class ConfirmEmailChangeModel : BasePageModel
 {
 	private readonly UserManager _userManager;
@@ -23,15 +23,21 @@ public class ConfirmEmailChangeModel : BasePageModel
 
 	public async Task<IActionResult> OnGet(string? userId, string? code)
 	{
-		if (userId is null || code is null)
+		if (userId is null || string.IsNullOrWhiteSpace(code))
 		{
-			return Home();
+			return AccessDenied();
 		}
 
-		var user = await _userManager.FindByIdAsync(userId);
-		if (user is null)
+		var parseResult = int.TryParse(userId, out int receivedUserId);
+		if (!parseResult)
 		{
-			return Home();
+			return AccessDenied();
+		}
+
+		var user = await _userManager.GetUserAsync(User);
+		if (user.Id != receivedUserId)
+		{
+			return AccessDenied();
 		}
 
 		var cacheResult = _cache.TryGetValue(code, out string newEmail);
@@ -40,7 +46,7 @@ public class ConfirmEmailChangeModel : BasePageModel
 			return BadRequest("Unrecognized or expired code.");
 		}
 
-		var result = await _userManager.SetAndConfirmEmailAsync(user, newEmail);
+		var result = await _userManager.ChangeEmailAsync(user, newEmail, code);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");

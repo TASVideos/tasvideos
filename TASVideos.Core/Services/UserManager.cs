@@ -476,19 +476,4 @@ public class UserManager : UserManager<User>
 			})
 			.ToListAsync();
 	}
-
-	/// <summary>
-	/// Sets the user email from code and if successful, sets it to confirmed. You would think the built in code would do this.
-	/// </summary>
-	public async Task<IdentityResult> SetAndConfirmEmailAsync(User user, string newEmail)
-	{
-		var result = await SetEmailAsync(user, newEmail);
-		if (result.Succeeded)
-		{
-			user.EmailConfirmed = true;
-			await _db.SaveChangesAsync();
-		}
-
-		return result;
-	}
 }
