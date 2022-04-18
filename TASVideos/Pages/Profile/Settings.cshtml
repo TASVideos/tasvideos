@@ -16,6 +16,7 @@
 					@await Component.RenderWiki("System/NameChanges")
 				</div>
 			</form-group>
+			<a asp-page="ChangeEmail">Change Email</a>
 			@if (Model.Settings.IsEmailConfirmed)
 			{
 				<form-group disabled>
@@ -25,6 +26,7 @@
 						<div class="input-group-text" aria-disabled="true"><span class="fa fa-check-square text-success"></span></div>
 					</div>
 				</form-group>
+				
 			}
 			else
 			{
@@ -36,6 +38,7 @@
 					<button asp-page="Settings" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
 				</form-group>
 			}
+			
 			<form-group>
 				<label asp-for="Settings.PublicRatings"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
