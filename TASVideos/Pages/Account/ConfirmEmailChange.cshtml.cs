@@ -21,24 +21,14 @@ public class ConfirmEmailChangeModel : BasePageModel
 		_cache = cache;
 	}
 
-	public async Task<IActionResult> OnGet(string? userId, string? code)
+	public async Task<IActionResult> OnGet(string? code)
 	{
-		if (userId is null || string.IsNullOrWhiteSpace(code))
-		{
-			return AccessDenied();
-		}
-
-		var parseResult = int.TryParse(userId, out int receivedUserId);
-		if (!parseResult)
+		if (string.IsNullOrWhiteSpace(code))
 		{
 			return AccessDenied();
 		}
 
 		var user = await _userManager.GetUserAsync(User);
-		if (user.Id != receivedUserId)
-		{
-			return AccessDenied();
-		}
 
 		var cacheResult = _cache.TryGetValue(code, out string newEmail);
 		if (!cacheResult)

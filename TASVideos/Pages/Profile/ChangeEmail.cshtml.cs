@@ -72,7 +72,7 @@ public class ChangeEmailModel : BasePageModel
 
 		_cache.Set(token, NewEmail);
 
-		var callbackUrl = Url.EmailChangeConfirmationLink(user.Id.ToString(), token, Request.Scheme);
+		var callbackUrl = Url.EmailChangeConfirmationLink(token, Request.Scheme);
 		await _emailService.EmailConfirmation(NewEmail!, callbackUrl);
 
 		return RedirectToPage("EmailConfirmationSent");
