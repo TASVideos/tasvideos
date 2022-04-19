@@ -130,11 +130,11 @@ public static class ServiceCollectionExtensions
 		services.AddSingleton<IPostDistributor, IrcDistributor>();
 		services.AddScoped<IPostDistributor, DiscordDistributor>();
 
-		services.AddScoped<IPostDistributor, TwitterDistributorV2>();
+		services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
 
 		services.AddScoped<IPostDistributor, DistributorStorage>();
 
-		services.AddScoped<TwitterDistributorV2>();	// Required for direct Tweets.
+		services.AddSingleton<TwitterDistributorV2>();	// Required for direct Tweets.
 
 		return services.AddTransient<ExternalMediaPublisher>();
 	}

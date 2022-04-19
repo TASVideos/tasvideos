@@ -32,27 +32,32 @@ public class TwitterDistributorV2 : IPostDistributor
 		_logger = logger;
 
 		_tokenStorageFileName = Path.Combine(Path.GetTempPath(), "twitter.json");
-
-		// Try to get Twitter token information from the local file.
-		if (File.Exists(_tokenStorageFileName))
-		{
-			RetrieveTokenInformation();
-		}
-
-		// If the local file doesn't exist, or if there was no data to parse, use the OneTimeRefreshToken and hope.
-		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.RefreshToken))
-		{
-			_twitterTokenDetails.RefreshToken = _settings.OneTimeRefreshToken;
-		}
 	}
 
 	public IEnumerable<PostType> Types => new[] { PostType.Announcement };
 
-	public bool IsEnabled() => _settings.IsEnabled() && !string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken);
-
-	public void RetrieveTokenInformation()
+	public async Task<bool> IsEnabled()
 	{
-		string tokenText = File.ReadAllText(_tokenStorageFileName);
+		if (!_settings.IsEnabled())
+		{
+			return false;
+		}
+
+		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken))
+		{
+			// Try to get Twitter token information from the local file.
+			if (File.Exists(_tokenStorageFileName))
+			{
+				await RetrieveTokenInformation();
+			}
+		}
+
+		return !string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken);
+	}
+
+	public async Task RetrieveTokenInformation()
+	{
+		string tokenText = await File.ReadAllTextAsync(_tokenStorageFileName);
 
 		if (!string.IsNullOrWhiteSpace(tokenText))
 		{
@@ -73,7 +78,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	{
 		await RefreshTokens();
 
-		if (!IsEnabled())
+		if (!await IsEnabled())
 		{
 			return;
 		}
