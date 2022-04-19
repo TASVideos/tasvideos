@@ -93,7 +93,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 	}
 
-	public async Task RefreshTokens()
+	private async Task RefreshTokens()
 	{
 		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken) ||
 			DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
@@ -102,7 +102,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 	}
 
-	public async Task RequestTokensFromTwitter(bool useOneTimeRefreshToken = false)
+	private async Task RequestTokensFromTwitter(bool useOneTimeRefreshToken = false)
 	{
 		bool retVal = false;
 
@@ -117,7 +117,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 	}
 
-	public async Task<bool> RequestTokensFromTwitter (string refreshToken)
+	private async Task<bool> RequestTokensFromTwitter (string refreshToken)
 	{
 		bool retVal = false;
 
