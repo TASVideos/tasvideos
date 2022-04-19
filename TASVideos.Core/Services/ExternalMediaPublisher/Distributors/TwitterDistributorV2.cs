@@ -159,7 +159,7 @@ public class TwitterDistributorV2 : IPostDistributor
 				_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
 				_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + _refreshTokenDuration;
 
-				StoreValues();
+				await StoreValues();
 
 				retVal = true;
 			}
@@ -201,11 +201,11 @@ public class TwitterDistributorV2 : IPostDistributor
 	}
 
 	// Write the TwitterTokenDetails object to the file.
-	private void StoreValues()
+	private async Task StoreValues()
 	{
 		try
 		{
-			File.WriteAllText(_tokenStorageFileName, JsonSerializer.Serialize(_twitterTokenDetails));
+			await File.WriteAllTextAsync(_tokenStorageFileName, JsonSerializer.Serialize(_twitterTokenDetails));
 		}
 		catch (Exception ex)
 		{
