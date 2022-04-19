@@ -101,21 +101,38 @@ public class TwitterDistributorV2 : IPostDistributor
 		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken) ||
 			DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
 		{
-			await RequestTokensFromTwitter();
+			await RequestTokensFromTwitter(useOneTimeRefreshToken: true);
 		}
 	}
 
-	public async Task RequestTokensFromTwitter()
+	public async Task RequestTokensFromTwitter(bool useOneTimeRefreshToken = false)
 	{
-		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.RefreshToken))
+		bool retVal = false;
+
+		if (!useOneTimeRefreshToken)
 		{
-			return;
+			retVal = await RequestTokensFromTwitter(_twitterTokenDetails.RefreshToken);
+		}
+
+		if (!retVal || useOneTimeRefreshToken)
+		{
+			await RequestTokensFromTwitter(_settings.OneTimeRefreshToken);
+		}
+	}
+
+	public async Task<bool> RequestTokensFromTwitter (string refreshToken)
+	{
+		bool retVal = false;
+
+		if (string.IsNullOrWhiteSpace(refreshToken))
+		{
+			return false;
 		}
 
 		// The offline.access scope regenerates the refresh token.  Maybe the refresh token can be used multiple times before it needs refreshing itself?
 		var formData = new List<KeyValuePair<string, string>>
 		{
-			new("refresh_token", _twitterTokenDetails.RefreshToken),
+			new("refresh_token", refreshToken),
 			new("grant_type", "refresh_token"),
 			new("scope", "tweet.read tweet.write users.read offline.access")
 		};
@@ -142,7 +159,9 @@ public class TwitterDistributorV2 : IPostDistributor
 				_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
 				_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + _refreshTokenDuration;
 
-				StoreValues();
+				await StoreValues();
+
+				retVal = true;
 			}
 		}
 		else
@@ -156,6 +175,8 @@ public class TwitterDistributorV2 : IPostDistributor
 			_twitterTokenDetails.AccessToken = "";
 			_twitterTokenDetails.RefreshToken = "";
 		}
+
+		return retVal;
 	}
 
 	private static string GenerateTwitterMessage(IPostable post)
@@ -180,11 +201,11 @@ public class TwitterDistributorV2 : IPostDistributor
 	}
 
 	// Write the TwitterTokenDetails object to the file.
-	private void StoreValues()
+	private async Task StoreValues()
 	{
 		try
 		{
-			File.WriteAllText(_tokenStorageFileName, JsonSerializer.Serialize(_twitterTokenDetails));
+			await File.WriteAllTextAsync(_tokenStorageFileName, JsonSerializer.Serialize(_twitterTokenDetails));
 		}
 		catch (Exception ex)
 		{
