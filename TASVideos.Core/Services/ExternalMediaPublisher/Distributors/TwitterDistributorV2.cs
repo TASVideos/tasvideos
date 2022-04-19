@@ -78,10 +78,7 @@ public class TwitterDistributorV2 : IPostDistributor
 			return;
 		}
 
-		_twitterClient.DefaultRequestHeaders.Authorization =
-			new System.Net.Http.Headers.AuthenticationHeaderValue(
-				"Bearer",
-				_twitterTokenDetails.AccessToken);
+		_twitterClient.SetBearerToken(_twitterTokenDetails.AccessToken);
 
 		var tweetData = new
 		{
