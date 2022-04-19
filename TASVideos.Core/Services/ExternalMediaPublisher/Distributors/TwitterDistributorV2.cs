@@ -138,8 +138,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		};
 
 		string basicAuthHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}"));
-
-		_accessTokenClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", basicAuthHeader);
+		_accessTokenClient.SetBasicAuth(basicAuthHeader);
 
 		var response = await _accessTokenClient.PostAsync("", new FormUrlEncodedContent(formData));
 

@@ -37,4 +37,9 @@ public static class HttpClientExtensions
 	{
 		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bot", token);
 	}
+
+	public static void SetBasicAuth(this HttpClient client, string basicAuthHeader)
+	{
+		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthHeader);
+	}
 }
