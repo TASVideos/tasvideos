@@ -55,25 +55,6 @@ public class TwitterDistributorV2 : IPostDistributor
 		return !string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken);
 	}
 
-	public async Task RetrieveTokenInformation()
-	{
-		string tokenText = await File.ReadAllTextAsync(_tokenStorageFileName);
-
-		if (!string.IsNullOrWhiteSpace(tokenText))
-		{
-			try
-			{
-				_twitterTokenDetails = JsonSerializer.Deserialize<TwitterTokenDetails>(tokenText) ?? new TwitterTokenDetails();
-
-				if (DateTime.UtcNow > _twitterTokenDetails.RefreshTokenExpiry)
-				{
-					_twitterTokenDetails.RefreshToken = "";
-				}
-			}
-			catch (Exception) { }
-		}
-	}
-
 	public async Task Post(IPostable post)
 	{
 		await RefreshTokens();
@@ -95,6 +76,25 @@ public class TwitterDistributorV2 : IPostDistributor
 		if (!response.IsSuccessStatusCode)
 		{
 			_logger.LogError("Error sending tweet: {reasonPhrase}", response.ReasonPhrase);
+		}
+	}
+
+	private async Task RetrieveTokenInformation()
+	{
+		string tokenText = await File.ReadAllTextAsync(_tokenStorageFileName);
+
+		if (!string.IsNullOrWhiteSpace(tokenText))
+		{
+			try
+			{
+				_twitterTokenDetails = JsonSerializer.Deserialize<TwitterTokenDetails>(tokenText) ?? new TwitterTokenDetails();
+
+				if (DateTime.UtcNow > _twitterTokenDetails.RefreshTokenExpiry)
+				{
+					_twitterTokenDetails.RefreshToken = "";
+				}
+			}
+			catch (Exception) { }
 		}
 	}
 
