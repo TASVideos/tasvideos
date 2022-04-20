@@ -9,6 +9,9 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
 public class TwitterDistributorV2 : IPostDistributor
 {
+	private static System.Timers.Timer? _timer = null;
+	private static readonly object TimeLock = new();
+
 	private readonly HttpClient _twitterClient;
 	private readonly HttpClient _accessTokenClient;
 	private readonly AppSettings.TwitterConnectionV2 _settings;
@@ -32,6 +35,30 @@ public class TwitterDistributorV2 : IPostDistributor
 		_logger = logger;
 
 		_tokenStorageFileName = Path.Combine(Path.GetTempPath(), "twitter.json");
+
+		lock (TimeLock)
+		{
+			if (_timer is null)
+			{
+				_timer = new System.Timers.Timer();
+				_timer.Elapsed += (_, _) =>
+				{
+					try
+					{
+						// TODO: this should be information not warning
+						_logger.LogWarning("Automatically refreshing twitter tokens on a timer");
+						RequestTokensFromTwitter().Wait();
+					}
+					catch (Exception ex)
+					{
+						_logger.LogError("An error occured getting twitter tokens from timer ex: {ex}", ex);
+					}
+				};
+				_timer.Interval = Durations.OneHourInMilliseconds;
+				_timer.AutoReset = true;
+				_timer.Start();
+			}
+		}
 	}
 
 	public IEnumerable<PostType> Types => new[] { PostType.Announcement };
@@ -57,7 +84,7 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public async Task Post(IPostable post)
 	{
-		await RefreshTokens();
+		await RefreshTokensIfExpired();
 
 		if (!await IsEnabled())
 		{
@@ -98,25 +125,19 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 	}
 
-	private async Task RefreshTokens()
+	private async Task RefreshTokensIfExpired()
 	{
 		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken) ||
 			DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
 		{
-			await RequestTokensFromTwitter(useOneTimeRefreshToken: true);
+			await RequestTokensFromTwitter();
 		}
 	}
 
-	private async Task RequestTokensFromTwitter(bool useOneTimeRefreshToken = false)
+	private async Task RequestTokensFromTwitter()
 	{
-		bool retVal = false;
-
-		if (!useOneTimeRefreshToken)
-		{
-			retVal = await RequestTokensFromTwitter(_twitterTokenDetails.RefreshToken);
-		}
-
-		if (!retVal || useOneTimeRefreshToken)
+		var refreshResult = await RequestTokensFromTwitter(_twitterTokenDetails.RefreshToken);
+		if (!refreshResult)
 		{
 			await RequestTokensFromTwitter(_settings.OneTimeRefreshToken);
 		}

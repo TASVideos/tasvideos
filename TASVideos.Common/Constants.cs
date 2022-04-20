@@ -15,6 +15,7 @@ public static class Durations
 	public const int OneDayInSeconds = 60 * 60 * 24;
 	public const int OneWeekInSeconds = 60 * 60 * 24 * 7;
 	public const int OneYearInSeconds = 60 * 60 * 24 * 365;
+	public const int OneHourInMilliseconds = 60 * 60 * 1000;
 }
 
 public static class CacheKeys
