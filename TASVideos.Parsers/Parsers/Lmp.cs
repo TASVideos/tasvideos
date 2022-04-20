@@ -1,5 +1,4 @@
-﻿using TASVideos.MovieParsers.Extensions;
-using TASVideos.MovieParsers.Result;
+﻿using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;
 
