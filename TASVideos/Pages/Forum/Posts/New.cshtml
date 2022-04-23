@@ -29,11 +29,10 @@
 					<timezone-convert asp-for="@post.CreateTimestamp"/>
 				</td>
 				<td>
-					<small>
-						<profile-link username="@post.PosterName"></profile-link>
-					</small>
+						<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa fa-bookmark-o"></i> @post.PosterName</a>
+						
+					
 					<br />
-					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa fa-bookmark-o"></i></a>
 					<small class="d-none d-md-inline-block">
 						@post.Text.CapAndEllipse(50)
 					</small>
