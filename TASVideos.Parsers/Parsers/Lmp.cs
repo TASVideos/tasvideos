@@ -9,7 +9,7 @@ internal class Lmp : ParserBase, IParser
 
 	private delegate bool TryParseLmp(byte[] movie, ref int frames);
 
-	private static readonly TryParseLmp[] _lmpParsers = new TryParseLmp[]
+	private static readonly TryParseLmp[] LmpParsers =
 	{
 		// order is important here to minimize false detections
 		// especially the last 3, which are impossible to always detect correctly
@@ -291,7 +291,7 @@ internal class Lmp : ParserBase, IParser
 		 */
 
 		var movie = new byte[length];
-		file.Read(movie, 0, (int)length);
+		await file.ReadAsync(movie, 0, (int)length);
 
 		if (movie[length - 1] != 0x80) // fixme: this might be ok if there is a source port footer (not easy to detect however)
 		{
@@ -299,7 +299,7 @@ internal class Lmp : ParserBase, IParser
 		}
 
 		int frames = -1;
-		foreach (var tryParseLmp in _lmpParsers)
+		foreach (var tryParseLmp in LmpParsers)
 		{
 			if (tryParseLmp(movie, ref frames))
 			{
