@@ -15,7 +15,10 @@
 		@foreach (var item in Model.DeletedPages.OrderByDescending(m => m.PageName))
 		{
 			<tr>
-				<td>@item.PageName</td>
+				<td>
+					<a condition="!item.HasExistingRevisions" asp-page="/Wiki/RenderDeleted" asp-route-url="@item.PageName">@item.PageName</a>
+					<span condition="item.HasExistingRevisions">@item.PageName</span>
+				</td>
 				<td>@item.RevisionCount</td>
 				<td>
 					<a condition="@item.HasExistingRevisions" href="/@item.PageName">@item.PageName</a>
