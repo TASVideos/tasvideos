@@ -9,39 +9,32 @@
 	<fullrow>
 		<partial name="_Pager" model="Model.Posts" />
 	</fullrow>
-	@*@foreach (var post in Model.Posts)
-	{
-		<fullrow class="pt-2">
-			<small>
-				<a asp-page="/Forum/Index">Forum</a> →
-				<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a> →
-				<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicTitle</a>
-			</small>
-		</fullrow>
-		<partial name="Forum/Topics/_TopicPost" model="post" />
-	}*@
 	<table class="table table-sm">
 		<tr>
-			<th>Forum</th>
+			<th class="d-none d-md-table-cell">Forum</th>
 			<th>Topic</th>
-			<th>Author</th>
+			<th>Posted At</th>
 			<th>Post</th>
 		</tr>
 		@foreach (var post in Model.Posts)
 		{
 			<tr>
-				<td>
+				<td class="d-none d-md-table-cell">
 					<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a>
 				</td>
 				<td>
 					<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicTitle</a>
 				</td>
 				<td>
-					<profile-link username="@post.PosterName"></profile-link>
+					<timezone-convert asp-for="@post.CreateTimestamp"/>
 				</td>
 				<td>
-					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id">→</a>
 					<small>
+						<profile-link username="@post.PosterName"></profile-link>
+					</small>
+					<br />
+					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa fa-bookmark-o"></i></a>
+					<small class="d-none d-md-inline-block">
 						@post.Text.CapAndEllipse(50)
 					</small>
 				</td>

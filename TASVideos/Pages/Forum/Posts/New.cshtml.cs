@@ -77,7 +77,7 @@ public class NewModel : BasePageModel
 				PosterMood = p.PosterMood,
 				PosterPronouns = p.Poster.PreferredPronouns
 			})
-			.OrderBy(p => p.CreateTimestamp)
+			.OrderByDescending(p => p.CreateTimestamp)
 			.PageOf(Search);
 
 		foreach (var post in Posts)
