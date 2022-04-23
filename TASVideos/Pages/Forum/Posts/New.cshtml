@@ -29,9 +29,7 @@
 					<timezone-convert asp-for="@post.CreateTimestamp"/>
 				</td>
 				<td>
-						<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa fa-bookmark-o"></i> @post.PosterName</a>
-						
-					
+					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa fa-bookmark-o"></i> @post.PosterName</a>
 					<br />
 					<small class="d-none d-md-inline-block">
 						@post.Text.CapAndEllipse(50)
@@ -40,7 +38,6 @@
 			</tr>
 		}
 	</table>
-
 	<fullrow class="mt-2">
 		<partial name="_Pager" model="Model.Posts" />
 	</fullrow>

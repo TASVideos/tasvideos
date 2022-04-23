@@ -33,7 +33,7 @@ public class NewModel : BasePageModel
 		}
 	}
 
-	public PageOf<PostsSinceLastVisitModel> Posts { get; set; } = PageOf<PostsSinceLastVisitModel>.Empty();
+	public PageOf<LatestPostsModel> Posts { get; set; } = PageOf<LatestPostsModel>.Empty();
 
 	public async Task OnGet()
 	{
@@ -43,7 +43,7 @@ public class NewModel : BasePageModel
 		Posts = await _db.ForumPosts
 			.ExcludeRestricted(allowRestricted)
 			.Since(since)
-			.Select(p => new PostsSinceLastVisitModel
+			.Select(p => new LatestPostsModel
 			{
 				Id = p.Id,
 				CreateTimestamp = p.CreateTimestamp,

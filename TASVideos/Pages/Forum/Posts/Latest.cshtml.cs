@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core;
-using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -13,14 +12,10 @@ namespace TASVideos.Pages.Forum.Posts;
 public class LatestModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IAwards _awards;
 
-	public LatestModel(
-		ApplicationDbContext db,
-		IAwards awards)
+	public LatestModel(ApplicationDbContext db)
 	{
 		_db = db;
-		_awards = awards;
 	}
 
 	[FromQuery]
@@ -38,37 +33,14 @@ public class LatestModel : BasePageModel
 			{
 				Id = p.Id,
 				CreateTimestamp = p.CreateTimestamp,
-				LastUpdateTimestamp = p.LastUpdateTimestamp,
-				EnableBbCode = p.EnableBbCode,
-				EnableHtml = p.EnableHtml,
 				Text = p.Text,
-				Subject = p.Subject,
 				TopicId = p.TopicId ?? 0,
 				TopicTitle = p.Topic!.Title,
 				ForumId = p.Topic.ForumId,
 				ForumName = p.Topic!.Forum!.Name,
-				PosterId = p.PosterId,
-				PosterName = p.Poster!.UserName,
-				PosterRoles = p.Poster.UserRoles
-					.Where(ur => !ur.Role!.IsDefault)
-					.Where(ur => ur.Role!.Name != "Published Author")
-					.Select(ur => ur.Role!.Name)
-					.ToList(),
-				PosterLocation = p.Poster.From,
-				Signature = p.Poster.Signature,
-				PosterAvatar = p.Poster.Avatar,
-				PosterJoined = p.Poster.CreateTimestamp,
-				PosterPostCount = p.Poster.Posts.Count,
-				PosterMoodUrlBase = p.Poster.MoodAvatarUrlBase,
-				PosterMood = p.PosterMood,
-				PosterPronouns = p.Poster.PreferredPronouns
+				PosterName = p.Poster!.UserName
 			})
 			.OrderByDescending(p => p.CreateTimestamp)
 			.PageOf(Search);
-
-		foreach (var post in Posts)
-		{
-			post.Awards = await _awards.ForUser(post.PosterId);
-		}
 	}
 }
