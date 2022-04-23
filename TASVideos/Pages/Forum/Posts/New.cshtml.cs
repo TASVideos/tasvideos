@@ -28,7 +28,15 @@ public class NewModel : BasePageModel
 	}
 
 	[FromQuery]
-	public PagingModel Search { get; set; } = new();
+	public NewPagingModel Search { get; set; } = new();
+
+	public class NewPagingModel : PagingModel
+	{
+		public NewPagingModel()
+		{
+			PageSize = 25;
+		}
+	}
 
 	public PageOf<PostsSinceLastVisitModel> Posts { get; set; } = PageOf<PostsSinceLastVisitModel>.Empty();
 

@@ -9,7 +9,7 @@
 	<fullrow>
 		<partial name="_Pager" model="Model.Posts" />
 	</fullrow>
-	@foreach (var post in Model.Posts)
+	@*@foreach (var post in Model.Posts)
 	{
 		<fullrow class="pt-2">
 			<small>
@@ -19,7 +19,36 @@
 			</small>
 		</fullrow>
 		<partial name="Forum/Topics/_TopicPost" model="post" />
-	}
+	}*@
+	<table class="table table-sm">
+		<tr>
+			<th>Forum</th>
+			<th>Topic</th>
+			<th>Author</th>
+			<th>Post</th>
+		</tr>
+		@foreach (var post in Model.Posts)
+		{
+			<tr>
+				<td>
+					<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a>
+				</td>
+				<td>
+					<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicTitle</a>
+				</td>
+				<td>
+					<profile-link username="@post.PosterName"></profile-link>
+				</td>
+				<td>
+					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id">→</a>
+					<small>
+						@post.Text.CapAndEllipse(50)
+					</small>
+				</td>
+			</tr>
+		}
+	</table>
+
 	<fullrow class="mt-2">
 		<partial name="_Pager" model="Model.Posts" />
 	</fullrow>
