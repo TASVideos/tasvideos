@@ -50,10 +50,3 @@ public class ForumPostEntry
 		return currentAvatar;
 	}
 }
-
-public class PostsSinceLastVisitModel : ForumPostEntry
-{
-	public string TopicTitle { get; set; } = "";
-	public int ForumId { get; set; }
-	public string ForumName { get; set; } = "";
-}
