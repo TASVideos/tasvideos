@@ -47,6 +47,6 @@
 	}
 
 	document.getElementById('create-game').onclick = function () {
-		document.location = `/Games/Edit?returnUrl=${returnUrl}&systemId=${systemElemId.value}`;
+		document.location = `/Games/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
 	}
 }
