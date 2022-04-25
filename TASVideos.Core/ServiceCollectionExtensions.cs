@@ -71,6 +71,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IClassService, ClassService>();
 		services.AddScoped<IMovieFormatDeprecator, MovieFormatDeprecator>();
 		services.AddScoped<IForumService, ForumService>();
+		services.AddScoped<IGameSystemService, GameSystemService>();
 
 		services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 

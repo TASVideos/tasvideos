@@ -1,0 +1,35 @@
+﻿@page
+@model CreateModel
+@{
+	ViewData["Title"] = "Creating a new Game System";
+}
+
+<form method="post">
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="System.Id"></label>
+				<input type="text" asp-for="System.Id" class="form-control"/>
+				<span asp-validation-for="System.Id" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="System.Code"></label>
+				<input type="text" asp-for="System.Code" class="form-control"/>
+				<span asp-validation-for="System.Code" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="System.DisplayName"></label>
+				<input type="text" asp-for="System.DisplayName" class="form-control"/>
+				<span asp-validation-for="System.DisplayName" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a asp-page="Index" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

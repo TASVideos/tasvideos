@@ -170,6 +170,10 @@ public enum PermissionTo
 	[Description("The ability to add, edit, and remove the publication classes")]
 	ClassMaintenance = 392,
 
+	[Group("Publication Maintenance")]
+	[Description("The ability to add, edit, and remove game systems")]
+	GameSystemMaintenance = 393,
+
 	#endregion
 
 	#region Forum Moderation 400
