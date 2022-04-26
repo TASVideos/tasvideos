@@ -14,6 +14,7 @@ namespace TASVideos.Pages.Search;
 public class AdvancedModel : PageModel
 {
 	public const int PageSize = 10;
+	public const int PageSizeSingle = 50;
 	private readonly ApplicationDbContext _db;
 
 	public AdvancedModel(ApplicationDbContext db)
@@ -32,6 +33,22 @@ public class AdvancedModel : PageModel
 	public List<PageSearchModel> PageResults { get; set; } = new();
 	public List<PostSearchModel> PostResults { get; set; } = new();
 	public List<GameSearchModel> GameResults { get; set; } = new();
+
+	[FromQuery]
+	[Display(Name = "Search Wiki")]
+	public bool PageSearch { get; set; } = false;
+
+	[FromQuery]
+	[Display(Name = "Search Forum Posts")]
+	public bool PostSearch { get; set; } = false;
+
+	[FromQuery]
+	[Display(Name = "Search Games")]
+	public bool GameSearch { get; set; } = true;
+
+	public int DisplayPageSize { get; set; } = PageSize;
+	public bool EnablePrev { get; set; } = false;
+	public bool EnableNext { get; set; } = false;
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -60,41 +77,59 @@ public class AdvancedModel : PageModel
 		if (!string.IsNullOrWhiteSpace(SearchTerms))
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-			var skip = PageSize * (PageNumber - 1);
+			DisplayPageSize = PageSize;
+			if (new[] { PageSearch, PostSearch, GameSearch }.Count(b => b) == 1)
+			{
+				DisplayPageSize = PageSizeSingle;
+			}
+
+			var skip = DisplayPageSize * (PageNumber - 1);
 			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 
-			PageResults = await _db.WikiPages
-				.ThatAreNotDeleted()
-				.WithNoChildren()
-				.Where(w => Regex.IsMatch(w.PageName, SearchTerms))
-				.OrderBy(w => w.PageName)
-				.Skip(skip)
-				.Take(PageSize + 1)
-				.Select(w => new PageSearchModel(w.Markup.Substring(0, Math.Min(60, w.Markup.Length)), w.PageName))
-				.ToListAsync();
+			if (PageSearch)
+			{
+				PageResults = await _db.WikiPages
+					.ThatAreNotDeleted()
+					.WithNoChildren()
+					.Where(w => Regex.IsMatch(w.PageName, SearchTerms))
+					.OrderBy(w => w.PageName)
+					.Skip(skip)
+					.Take(DisplayPageSize + 1)
+					.Select(w => new PageSearchModel(w.Markup.Substring(0, Math.Min(60, w.Markup.Length)), w.PageName))
+					.ToListAsync();
+			}
 
-			PostResults = await _db.ForumPosts
+			if (PostSearch)
+			{
+				PostResults = await _db.ForumPosts
 				.ExcludeRestricted(seeRestricted)
 				.Where(p => Regex.IsMatch(p.Text, "(^|[^A-Za-z])" + SearchTerms))
 				.OrderByDescending(p => p.CreateTimestamp)
 				.Skip(skip)
-				.Take(PageSize + 1)
+				.Take(DisplayPageSize + 1)
 				.Select(p => new PostSearchModel(
 					p.Text,
 					Regex.Match(p.Text, "(^|[^A-Za-z])" + SearchTerms, RegexOptions.IgnoreCase).Index,
 					p.Topic!.Title,
 					p.Id))
 				.ToListAsync();
+			}
 
-			GameResults = await _db.Games
+			if (GameSearch)
+			{
+				GameResults = await _db.Games
 				.Where(g => Regex.IsMatch(g.DisplayName, "(^|[^A-Za-z])" + SearchTerms))
 				.OrderByDescending(g => g.Publications.Count)
 				.ThenByDescending(g => g.Submissions.Count)
 				.ThenBy(g => g.DisplayName)
 				.Skip(skip)
-				.Take(PageSize + 1)
+				.Take(DisplayPageSize + 1)
 				.Select(g => new GameSearchModel(g.Id, g.System!.Code, g.DisplayName))
 				.ToListAsync();
+			}
+
+			EnablePrev = PageNumber > 1;
+			EnableNext = PageResults.Count > DisplayPageSize || PostResults.Count > DisplayPageSize || GameResults.Count > DisplayPageSize;
 		}
 
 		return Page();

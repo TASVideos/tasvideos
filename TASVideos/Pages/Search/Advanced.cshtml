@@ -15,9 +15,43 @@
 				<input type="text" asp-for="SearchTerms" class="form-control" />
 				<span condition="PageContext.HttpContext.Request.QueryString.HasValue" asp-validation-for="SearchTerms" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<div>
+					<input asp-for="PageSearch" />
+					<label asp-for="PageSearch"></label>
+				</div>
+				<div>
+					<input asp-for="PostSearch" />
+					<label asp-for="PostSearch"></label>
+				</div>
+				<div>
+					<input asp-for="GameSearch" />
+					<label asp-for="GameSearch"></label>
+				</div>
+			</form-group>
 			<button type="submit" class="btn btn-primary">Search</button>
-			<a condition="Model.PageNumber > 1" asp-page="/Search/Advanced" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber - 1)">Prev</a>
-			<a condition="Model.PageResults.Count > AdvancedModel.PageSize || Model.PostResults.Count > AdvancedModel.PageSize || Model.GameResults.Count > AdvancedModel.PageSize" asp-page="/Search/Advanced" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber + 1)">Next</a>
+			<a condition="Model.EnablePrev"
+				asp-page="/Search/Advanced"
+				class="btn btn-secondary"
+				asp-route-SearchTerms="@Model.SearchTerms"
+				asp-route-PageNumber="@(Model.PageNumber - 1)"
+				asp-route-PageSearch="@Model.PageSearch"
+				asp-route-PostSearch="@Model.PostSearch"
+				asp-route-GameSearch="@Model.GameSearch">
+				Prev
+			</a>
+			<a condition="!Model.EnablePrev" disable class="btn btn-secondary">Prev</a>
+			<a condition="Model.EnableNext"
+				asp-page="/Search/Advanced"
+				class="btn btn-secondary"
+				asp-route-SearchTerms="@Model.SearchTerms"
+				asp-route-PageNumber="@(Model.PageNumber + 1)"
+				asp-route-PageSearch="@Model.PageSearch"
+				asp-route-PostSearch="@Model.PostSearch"
+				asp-route-GameSearch="@Model.GameSearch">
+				Next
+			</a>
+			<a condition="!Model.EnableNext" disable class="btn btn-secondary">Next</a>
 		</column>
 	</row>
 </form>
@@ -27,7 +61,7 @@
 	<h4>Game Results:</h4>
 	<div class="table-container">
 		<table class="table table-striped table-bordered">
-			@foreach (var result in Model.GameResults.Take(AdvancedModel.PageSize))
+			@foreach (var result in Model.GameResults.Take(Model.DisplayPageSize))
 			{
 				<tr>
 					<td>
@@ -48,7 +82,7 @@
 				<th>Page</th>
 				<td>Content</td>
 			</tr>
-			@foreach (var result in Model.PageResults.Take(AdvancedModel.PageSize))
+			@foreach (var result in Model.PageResults.Take(Model.DisplayPageSize))
 			{
 				<tr>
 					<td>
@@ -72,7 +106,7 @@
 				<th>Post</th>
 				<td>Content</td>
 			</tr>
-			@foreach (var result in Model.PostResults.Take(AdvancedModel.PageSize))
+			@foreach (var result in Model.PostResults.Take(Model.DisplayPageSize))
 			{
 				<tr>
 					<td>
