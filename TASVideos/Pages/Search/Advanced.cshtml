@@ -17,36 +17,40 @@
 			</form-group>
 			<form-group>
 				<div>
+					<input asp-for="GameSearch" />
+					<label asp-for="GameSearch"></label>
+				</div>
+				<div>
 					<input asp-for="PageSearch" />
 					<label asp-for="PageSearch"></label>
+				</div>
+				<div>
+					<input asp-for="TopicSearch" />
+					<label asp-for="TopicSearch"></label>
 				</div>
 				<div>
 					<input asp-for="PostSearch" />
 					<label asp-for="PostSearch"></label>
 				</div>
-				<div>
-					<input asp-for="GameSearch" />
-					<label asp-for="GameSearch"></label>
-				</div>
 			</form-group>
 			<button type="submit" class="btn btn-primary">Search</button>
 			<a condition="Model.EnablePrev"
-				asp-page="/Search/Advanced"
 				class="btn btn-secondary"
 				asp-route-SearchTerms="@Model.SearchTerms"
 				asp-route-PageNumber="@(Model.PageNumber - 1)"
 				asp-route-PageSearch="@Model.PageSearch"
+				asp-route-TopicSearch="@Model.TopicSearch"
 				asp-route-PostSearch="@Model.PostSearch"
 				asp-route-GameSearch="@Model.GameSearch">
 				Prev
 			</a>
 			<a condition="!Model.EnablePrev" disable class="btn btn-secondary">Prev</a>
 			<a condition="Model.EnableNext"
-				asp-page="/Search/Advanced"
 				class="btn btn-secondary"
 				asp-route-SearchTerms="@Model.SearchTerms"
 				asp-route-PageNumber="@(Model.PageNumber + 1)"
 				asp-route-PageSearch="@Model.PageSearch"
+				asp-route-TopicSearch="@Model.TopicSearch"
 				asp-route-PostSearch="@Model.PostSearch"
 				asp-route-GameSearch="@Model.GameSearch">
 				Next
@@ -55,9 +59,9 @@
 		</column>
 	</row>
 </form>
+<br />
 
 <div condition="Model.GameResults.Any()">
-	<hr />
 	<h4>Game Results:</h4>
 	<div class="table-container">
 		<table class="table table-striped table-bordered">
@@ -74,7 +78,6 @@
 </div>
 
 <div condition="Model.PageResults.Any()">
-	<hr />
 	<h4>Wiki Results:</h4>
 	<div class="table-container">
 		<table class="table table-striped table-bordered">
@@ -97,8 +100,30 @@
 	</div>
 </div>
 
+<div condition="Model.TopicResults.Any()">
+	<h4>Topic Results:</h4>
+	<div class="table-container">
+		<table class="table table-striped table-bordered">
+			<tr>
+				<td>Subforum</td>
+				<th>Topic</th>
+			</tr>
+			@foreach (var result in Model.TopicResults.Take(Model.DisplayPageSize))
+			{
+				<tr>
+					<td>
+						@result.SubforumName
+					</td>
+					<td>
+						<a href="/Forum/Topics/@result.TopicId">@result.TopicName</a>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+</div>
+
 <div condition="Model.PostResults.Any()">
-	<hr />
 	<h4>Post Results:</h4>
 	<div class="table-container">
 		<table class="table table-striped table-bordered">

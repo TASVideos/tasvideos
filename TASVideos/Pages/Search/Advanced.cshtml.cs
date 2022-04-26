@@ -31,12 +31,17 @@ public class AdvancedModel : PageModel
 	public int PageNumber { get; set; } = 1;
 
 	public List<PageSearchModel> PageResults { get; set; } = new();
+	public List<TopicSearchModel> TopicResults { get; set; } = new();
 	public List<PostSearchModel> PostResults { get; set; } = new();
 	public List<GameSearchModel> GameResults { get; set; } = new();
 
 	[FromQuery]
 	[Display(Name = "Search Wiki")]
 	public bool PageSearch { get; set; } = false;
+
+	[FromQuery]
+	[Display(Name = "Search Forum Topics")]
+	public bool TopicSearch { get; set; } = false;
 
 	[FromQuery]
 	[Display(Name = "Search Forum Posts")]
@@ -78,7 +83,7 @@ public class AdvancedModel : PageModel
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			DisplayPageSize = PageSize;
-			if (new[] { PageSearch, PostSearch, GameSearch }.Count(b => b) == 1)
+			if (new[] { PageSearch, TopicSearch, PostSearch, GameSearch }.Count(b => b) == 1)
 			{
 				DisplayPageSize = PageSizeSingle;
 			}
@@ -97,6 +102,22 @@ public class AdvancedModel : PageModel
 					.Take(DisplayPageSize + 1)
 					.Select(w => new PageSearchModel(w.Markup.Substring(0, Math.Min(60, w.Markup.Length)), w.PageName))
 					.ToListAsync();
+			}
+
+			if (TopicSearch)
+			{
+				TopicResults = await _db.ForumTopics
+				.ExcludeRestricted(seeRestricted)
+				.Where(t => t.ForumId != SiteGlobalConstants.WorkbenchForumId && t.ForumId != SiteGlobalConstants.PlaygroundForumId && t.ForumId != SiteGlobalConstants.PublishedMoviesForumId && t.ForumId != SiteGlobalConstants.GrueFoodForumId)
+				.Where(t => Regex.IsMatch(t.Title, "(^|[^A-Za-z])" + SearchTerms))
+				.OrderByDescending(t => t.CreateTimestamp)
+				.Skip(skip)
+				.Take(DisplayPageSize + 1)
+				.Select(t => new TopicSearchModel(
+					t.Title,
+					t.Id,
+					t.Forum!.Name))
+				.ToListAsync();
 			}
 
 			if (PostSearch)
@@ -129,13 +150,14 @@ public class AdvancedModel : PageModel
 			}
 
 			EnablePrev = PageNumber > 1;
-			EnableNext = PageResults.Count > DisplayPageSize || PostResults.Count > DisplayPageSize || GameResults.Count > DisplayPageSize;
+			EnableNext = new[] { PageResults.Count, TopicResults.Count, PostResults.Count, GameResults.Count }.Any(c => c > DisplayPageSize);
 		}
 
 		return Page();
 	}
 
 	public record PageSearchModel(string Text, string PageName);
+	public record TopicSearchModel(string TopicName, int TopicId, string SubforumName);
 	public record PostSearchModel(string Text, int Index, string TopicName, int PostId);
 	public record GameSearchModel(int Id, string SystemCode, string DisplayName);
 }
