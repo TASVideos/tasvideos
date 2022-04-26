@@ -290,8 +290,8 @@ internal class Lmp : ParserBase, IParser
 		 * as the header doesn't give an easy answer to the variant used
 		 */
 
-		var movie = new byte[length];
-		await file.ReadAsync(movie, 0, (int)length);
+		using var br = new BinaryReader(file);
+		var movie = br.ReadBytes((int)length);
 
 		if (movie[length - 1] != 0x80) // fixme: this might be ok if there is a source port footer (not easy to detect however)
 		{
