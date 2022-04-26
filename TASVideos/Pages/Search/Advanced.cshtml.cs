@@ -57,12 +57,6 @@ public class AdvancedModel : PageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		if (!_db.Database.IsNpgsql())
-		{
-			ModelState.AddModelError("", "This feature is not currently available.");
-			return BadRequest(ModelState);
-		}
-
 		if (!ModelState.IsValid)
 		{
 			return Page();
