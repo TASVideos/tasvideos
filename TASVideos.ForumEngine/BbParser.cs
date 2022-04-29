@@ -120,6 +120,11 @@ public class BbParser
 		/// If true, the tag will be rendered as block level content, and we should try to do some HTML-ish whitespace elision on it.
 		/// </summary>
 		public bool IsBlock;
+
+		/// <summary>
+		/// If set, this tag can only appear directly nested under another tag.
+		/// </summary>
+		public string? RequiredParent;
 	}
 
 	private static readonly Dictionary<string, TagInfo> KnownTags = new()
@@ -166,12 +171,12 @@ public class BbParser
 
 		// list related stuff
 		{ "list", new() { IsBlock = true } }, // OLs have a param with value ??
-		{ "*", new() { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate, IsBlock = true } },
+		{ "*", new() { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate, IsBlock = true, RequiredParent = "list" } },
 
 		// tables
 		{ "table", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
-		{ "tr", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
-		{ "td", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
+		{ "tr", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "table" } },
+		{ "td", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "tr" } },
 	};
 
 	private static readonly HashSet<string> KnownNonEmptyHtmlTags = new()
@@ -296,7 +301,7 @@ public class BbParser
 						options = options[1..^1];
 					}
 
-					if (KnownTags.TryGetValue(name, out var state))
+					if (KnownTags.TryGetValue(name, out var state) && state.RequiredParent == null || state.RequiredParent == _stack.Peek().Name)
 					{
 						var e = new Element { Name = name, Options = options };
 						FlushText();
