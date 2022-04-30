@@ -301,7 +301,7 @@ public class BbParser
 						options = options[1..^1];
 					}
 
-					if (KnownTags.TryGetValue(name, out var state) && state.RequiredParent == null || state.RequiredParent == _stack.Peek().Name)
+					if (KnownTags.TryGetValue(name, out var state) && (state.RequiredParent == null || state.RequiredParent == _stack.Peek().Name))
 					{
 						var e = new Element { Name = name, Options = options };
 						FlushText();
