@@ -45,8 +45,7 @@ public class TwitterDistributorV2 : IPostDistributor
 				{
 					try
 					{
-						// TODO: this should be information not warning
-						_logger.LogWarning("Automatically refreshing twitter tokens on a timer");
+						_logger.LogInformation("Automatically refreshing twitter tokens on a timer");
 						RequestTokensFromTwitter().Wait();
 					}
 					catch (Exception ex)
