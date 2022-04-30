@@ -17,9 +17,9 @@ public class DisplayMiniMovie : ViewComponent
 		_db = db;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(string? tier, IList<string> flags)
+	public async Task<IViewComponentResult> InvokeAsync(string? pubClass, IList<string> flags)
 	{
-		var candidateIds = await FrontPageMovieCandidates(tier, flags);
+		var candidateIds = await FrontPageMovieCandidates(pubClass, flags);
 		var id = candidateIds.ToList().AtRandom();
 		var movie = await GetPublicationMiniMovie(id);
 		return View(movie);
