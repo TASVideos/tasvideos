@@ -21,7 +21,7 @@ public static class WikiModules
 	public const string MediaPosts = "mediaposts";
 	public const string MovieChangeLog = "moviechangelog";
 	public const string MovieMaintenanceLog = "moviemaintlog";
-	public const string MoviesByAuthor = "moviesbyplayer";
+	public const string MoviesByAuthor = "moviesbyauthor";
 	public const string PublicationsByTag = "publicationsbytag";
 	public const string MoviesGameList = "moviesgamelist";
 	public const string MoviesList = "movieslist";
