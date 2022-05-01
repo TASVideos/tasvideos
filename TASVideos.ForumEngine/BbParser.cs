@@ -266,6 +266,30 @@ public class BbParser
 		return true;
 	}
 
+	private bool TagHasValidParent(string nextTag, TagInfo nextTagInfo, out Element popTo)
+	{
+		var stackCopy = _stack.ToList();
+
+		int popThrough;
+		if (nextTagInfo.SelfNesting == TagInfo.SelfNestingAllowed.No)
+		{
+			// Try to pop a matching tag
+			popThrough = stackCopy.FindIndex(e => e.Name == nextTag);
+		}
+		else if (nextTagInfo.SelfNesting == TagInfo.SelfNestingAllowed.NoImmediate)
+		{
+			// Try to pop a matching tag, but only at this level
+			popThrough = stackCopy[0].Name == nextTag ? 0 : -1;
+		}
+		else
+		{
+			popThrough = -1;
+		}
+
+		popTo = stackCopy[popThrough + 1];
+		return nextTagInfo.RequiredParent == null || nextTagInfo.RequiredParent == popTo.Name;		
+	}
+
 	private void ParseLoop()
 	{
 		while (_index < _input.Length)
@@ -301,38 +325,14 @@ public class BbParser
 						options = options[1..^1];
 					}
 
-					if (KnownTags.TryGetValue(name, out var state) && (state.RequiredParent == null || state.RequiredParent == _stack.Peek().Name))
+					if (KnownTags.TryGetValue(name, out var state) && TagHasValidParent(name, state, out var popTo))
 					{
 						var e = new Element { Name = name, Options = options };
 						FlushText();
 						_index += m.Length;
-						if (state.SelfNesting == TagInfo.SelfNestingAllowed.No)
-						{
-							// try to pop a matching tag
-							foreach (var node in _stack)
-							{
-								if (node.Name == name)
-								{
-									while (true)
-									{
-										if (_stack.Pop().Name == name)
-										{
-											break;
-										}
-									}
 
-									break;
-								}
-							}
-						}
-						else if (state.SelfNesting == TagInfo.SelfNestingAllowed.NoImmediate)
-						{
-							// try to pop a matching tag but only at this level
-							if (_stack.Peek().Name == name)
-							{
-								_stack.Pop();
-							}
-						}
+						while (_stack.Peek() != popTo)
+							_stack.Pop();
 
 						if (state.IsBlock)
 						{
