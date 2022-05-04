@@ -2,6 +2,7 @@
 
 namespace TASVideos.MovieParsers.Parsers;
 
+[FileExtension("wtf")]
 internal class Wtf : ParserBase, IParser
 {
 	public override string FileExtension => "wtf";
