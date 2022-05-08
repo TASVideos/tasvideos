@@ -287,7 +287,7 @@ public class BbParser
 		}
 
 		popTo = stackCopy[popThrough + 1];
-		return nextTagInfo.RequiredParent == null || nextTagInfo.RequiredParent == popTo.Name;		
+		return nextTagInfo.RequiredParent == null || nextTagInfo.RequiredParent == popTo.Name;
 	}
 
 	private void ParseLoop()
@@ -332,7 +332,9 @@ public class BbParser
 						_index += m.Length;
 
 						while (_stack.Peek() != popTo)
+						{
 							_stack.Pop();
+						}
 
 						if (state.IsBlock)
 						{
