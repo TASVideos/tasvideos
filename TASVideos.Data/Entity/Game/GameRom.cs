@@ -14,15 +14,15 @@ public class GameRom : BaseEntity
 
 	public int GameId { get; set; }
 	public virtual Game? Game { get; set; }
+	public int? SystemId { get; set; }
+	public virtual GameSystem? System { get; set; }
 
 	public ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 	public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 
-	[Required]
 	[StringLength(32)]
 	public string Md5 { get; set; } = "";
 
-	[Required]
 	[StringLength(40)]
 	public string Sha1 { get; set; } = "";
 
