@@ -51,7 +51,7 @@ internal class GameSystemService : IGameSystemService
 
 	public async Task<bool> InUse(int id)
 	{
-		if (await _db.Games.AnyAsync(g => g.SystemId == id))
+		if (await _db.GameRoms.AnyAsync(r => r.SystemId == id))
 		{
 			return true;
 		}
