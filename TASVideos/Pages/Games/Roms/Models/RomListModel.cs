@@ -8,9 +8,6 @@ public class RomListModel
 	[Display(Name = "Game")]
 	public string GameDisplayName { get; set; } = "";
 
-	[Display(Name = "System")]
-	public string SystemCode { get; set; } = "";
-
 	public IEnumerable<RomEntry> Roms { get; set; } = new List<RomEntry>();
 
 	public class RomEntry
@@ -35,5 +32,8 @@ public class RomListModel
 
 		[Display(Name = "Type")]
 		public RomTypes RomType { get; set; }
+
+		[Display(Name = "System")]
+		public string SystemCode { get; set; } = "";
 	}
 }
