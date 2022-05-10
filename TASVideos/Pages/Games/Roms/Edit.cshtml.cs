@@ -165,12 +165,12 @@ public class EditModel : BasePageModel
 		if (!await CanBeDeleted())
 		{
 			ErrorStatusMessage($"Unable to delete Rom {Id}, rom is used by a publication or submission.");
-			return BasePageRedirect("List");
+			return BasePageRedirect("List", new { gameId = GameId });
 		}
 
 		_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
 		await ConcurrentSave(_db, $"Rom {Id} deleted", $"Unable to delete Rom {Id}");
-		return BasePageRedirect("List");
+		return BasePageRedirect("List", new { gameId = GameId });
 	}
 
 	private async Task<bool> CanBeDeleted()
