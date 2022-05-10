@@ -38,6 +38,9 @@ public class EditModel : BasePageModel
 	[FromRoute]
 	public int? Id { get; set; }
 
+	[FromQuery]
+	public int? SystemId { get; set; }
+
 	[BindProperty]
 	public RomEditModel Rom { get; set; } = new();
 
@@ -74,6 +77,18 @@ public class EditModel : BasePageModel
 			.OrderBy(s => s.Code)
 			.ToDropdown()
 			.ToListAsync();
+
+		if (SystemId.HasValue)
+		{
+			var systemCode = await _db.GameSystems
+				.Where(s => s.Id == SystemId)
+				.Select(s => s.Code)
+				.SingleOrDefaultAsync();
+			if (systemCode is not null)
+			{
+				Rom.SystemCode = systemCode;
+			}
+		}
 
 		if (!Id.HasValue)
 		{

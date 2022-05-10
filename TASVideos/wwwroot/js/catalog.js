@@ -32,7 +32,7 @@
 	gameModel.onchange = function () {
 		if (this.value) {
 			createRomBtn.removeAttribute('disabled');
-			fetch(`/Games/List/RomDropDownForGame?includeEmpty=true&gameId=${gameModel.value}`)
+			fetch(`/Games/List/RomDropDownForGame?includeEmpty=true&gameId=${gameModel.value}&systemId=${systemModel.value}`)
 				.then(handleFetchErrors)
 				.then(r => r.text())
 				.then(t => romModel.innerHTML = t);
@@ -43,10 +43,10 @@
 	}
 
 	document.getElementById('create-rom').onclick = function () {
-		document.location = `/Games/${gameModel.value}/Roms/Edit?returnUrl=${returnUrl}`;
+		document.location = `/Games/${gameModel.value}/Roms/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
 	}
 
 	document.getElementById('create-game').onclick = function () {
-		document.location = `/Games/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
+		document.location = `/Games/Edit?returnUrl=${returnUrl}`;
 	}
 }

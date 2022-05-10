@@ -86,10 +86,11 @@ public class ListModel : BasePageModel
 		};
 	}
 
-	public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, bool includeEmpty)
+	public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, int systemId, bool includeEmpty)
 	{
 		var items = await _db.GameRoms
 			.ForGame(gameId)
+			.ForSystem(systemId)
 			.OrderBy(r => r.Name)
 			.Select(r => new SelectListItem
 			{
