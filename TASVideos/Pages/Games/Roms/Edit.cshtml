@@ -25,6 +25,11 @@
 	<row>
 		<div class="col-lg-6">
 			<form-group>
+				<label asp-for="Rom.SystemCode"></label>
+				<select asp-for="Rom.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Rom.SystemCode" class="text-danger"></span>
+			</form-group>
+			<form-group>
 				<label asp-for="Rom.Name"></label>
 				<input type="text" asp-for="Rom.Name" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Rom.Name" class="text-danger"></span>

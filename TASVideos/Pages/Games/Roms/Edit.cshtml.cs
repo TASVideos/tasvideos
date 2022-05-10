@@ -48,6 +48,7 @@ public class EditModel : BasePageModel
 	public string GameName { get; set; } = "";
 
 	public bool CanDelete { get; set; }
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
 
 	public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]
@@ -74,6 +75,11 @@ public class EditModel : BasePageModel
 
 		GameName = game.DisplayName;
 		SystemCode = game.System!.Code;
+
+		AvailableSystems = await _db.GameSystems
+			.OrderBy(s => s.Code)
+			.ToDropdown()
+			.ToListAsync();
 
 		if (!Id.HasValue)
 		{
@@ -102,16 +108,26 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
+		var system = await _db.GameSystems
+			.SingleOrDefaultAsync(s => s.Code == Rom.SystemCode);
+
+		if (system is null)
+		{
+			return BadRequest();
+		}
+
 		GameRom rom;
 		if (Id.HasValue)
 		{
 			rom = await _db.GameRoms.SingleAsync(r => r.Id == Id.Value);
+			rom.System = system;
 			_mapper.Map(Rom, rom);
 		}
 		else
 		{
 			rom = _mapper.Map<GameRom>(Rom);
 			rom.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
+			rom.System = system;
 			_db.GameRoms.Add(rom);
 		}
 

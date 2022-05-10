@@ -36,7 +36,9 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.GameGroups.Select(ggr => ggr.GameGroupId)));
 		CreateMap<GameEditModel, Game>();
 
-		CreateMap<GameRom, RomEditModel>().ReverseMap();
+		CreateMap<GameRom, RomEditModel>()
+			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
+			.ReverseMap();
 
 		CreateMap<Role, RoleDisplayModel>()
 			.ForMember(
