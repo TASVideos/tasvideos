@@ -48,6 +48,6 @@ public static class RomExtensions
 
 	public static IQueryable<GameRom> ForSystem(this IQueryable<GameRom> query, int systemId)
 	{
-		return query.Where(g => g.Game!.SystemId == systemId);
+		return query.Where(g => g.SystemId == systemId);
 	}
 }
