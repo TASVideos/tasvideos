@@ -8,5 +8,4 @@ public record AddressEntry(
 	string Endian,
 	string Description,
 	string? GameName,
-	int? GameId,
-	string? System);
+	int? GameId);
