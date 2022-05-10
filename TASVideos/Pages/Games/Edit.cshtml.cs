@@ -31,14 +31,10 @@ public class EditModel : BasePageModel
 	[FromRoute]
 	public int? Id { get; set; }
 
-	[FromQuery]
-	public int? SystemId { get; set; }
-
 	[BindProperty]
 	public GameEditModel Game { get; set; } = new();
 
 	public bool CanDelete { get; set; }
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 
 	[Display(Name = "Available Genres")]
 	public IEnumerable<SelectListItem> AvailableGenres { get; set; } = new List<SelectListItem>();
@@ -60,17 +56,6 @@ public class EditModel : BasePageModel
 			}
 
 			Game = game;
-		}
-		else if (SystemId.HasValue)
-		{
-			var systemCode = await _db.GameSystems
-				.Where(s => s.Id == SystemId)
-				.Select(s => s.Code)
-				.SingleOrDefaultAsync();
-			if (systemCode is not null)
-			{
-				Game.SystemCode = systemCode;
-			}
 		}
 
 		await Initialize();
@@ -96,14 +81,6 @@ public class EditModel : BasePageModel
 			}
 		}
 
-		var system = await _db.GameSystems
-			.SingleOrDefaultAsync(s => s.Code == Game.SystemCode);
-
-		if (system is null)
-		{
-			return BadRequest();
-		}
-
 		Game? game;
 		if (Id.HasValue)
 		{
@@ -117,24 +94,23 @@ public class EditModel : BasePageModel
 			}
 
 			_mapper.Map(Game, game);
-			SetGameValues(game, Game, system);
+			SetGameValues(game, Game);
 			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
 		}
 		else
 		{
 			game = _mapper.Map<Game>(Game);
 			_db.Games.Add(game);
-			SetGameValues(game, Game, system);
+			SetGameValues(game, Game);
 			await ConcurrentSave(_db, $"Game {game.GoodName} created", "Unable to create game");
 		}
 
 		return BasePageRedirect("Index", new { game.Id });
 	}
 
-	private static void SetGameValues(Game game, GameEditModel editModel, GameSystem system)
+	private static void SetGameValues(Game game, GameEditModel editModel)
 	{
 		game.GameResourcesPage = editModel.GameResourcesPage;
-		game.System = system;
 		game.GameGenres.SetGenres(editModel.Genres);
 		game.GameGroups.SetGroups(editModel.Groups);
 	}
@@ -160,11 +136,6 @@ public class EditModel : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableSystems = await _db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropdown()
-			.ToListAsync();
-
 		AvailableGenres = await _db.Genres
 			.OrderBy(g => g.DisplayName)
 			.ToDropdown()

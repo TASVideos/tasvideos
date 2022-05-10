@@ -5,11 +5,6 @@ namespace TASVideos.Pages.Games.Models;
 public class GameEditModel
 {
 	[Required]
-	[Display(Name = "System")]
-	[StringLength(8)]
-	public string SystemCode { get; set; } = "";
-
-	[Required]
 	[Display(Name = "GoodTools Name")]
 	[StringLength(250)]
 	public string GoodName { get; set; } = "";
