@@ -252,12 +252,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			entity.Property(e => e.Obsolete).HasDefaultValue(false);
 		});
 
-		builder.Entity<GameRom>(entity =>
-		{
-			entity.HasIndex(e => e.Md5).IsUnique();
-			entity.HasIndex(e => e.Sha1).IsUnique();
-		});
-
 		builder.Entity<SubmissionAuthor>(entity =>
 		{
 			entity.HasKey(e => new { e.UserId, e.SubmissionId });
