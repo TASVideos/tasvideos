@@ -42,9 +42,6 @@ public class EditModel : BasePageModel
 	public RomEditModel Rom { get; set; } = new();
 
 	[BindProperty]
-	public string SystemCode { get; set; } = "";
-
-	[BindProperty]
 	public string GameName { get; set; } = "";
 
 	public bool CanDelete { get; set; }
@@ -64,9 +61,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games
-			.Include(g => g.System)
-			.SingleOrDefaultAsync(g => g.Id == GameId);
+		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
 
 		if (game is null)
 		{
@@ -74,7 +69,6 @@ public class EditModel : BasePageModel
 		}
 
 		GameName = game.DisplayName;
-		SystemCode = game.System!.Code;
 
 		AvailableSystems = await _db.GameSystems
 			.OrderBy(s => s.Code)
