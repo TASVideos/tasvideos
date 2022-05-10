@@ -61,7 +61,7 @@
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
 		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="/Games/Roms/List" class="btn btn-secondary" asp-route-gameId="@Model.GameId"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>
 
