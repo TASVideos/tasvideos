@@ -16,7 +16,6 @@ public class UserFileIndexModel
 	{
 		public int GameId { get; set; }
 		public string GameName { get; set; } = "";
-		public string SystemCode { get; set; } = "";
 		public DateTime Latest => Dates.Max();
 
 		internal IEnumerable<DateTime> Dates { get; set; } = new List<DateTime>();

@@ -45,13 +45,11 @@ public class IndexModel : BasePageModel
 				.ToListAsync(),
 			GamesWithMovies = await _db.Games
 				.Where(g => g.UserFiles.Any(uf => !uf.Hidden))
-				.OrderBy(g => g.System!.Code)
-				.ThenBy(g => g.DisplayName)
+				.OrderBy(g => g.DisplayName)
 				.Select(g => new UserFileIndexModel.GameWithMovie
 				{
 					GameId = g.Id,
 					GameName = g.DisplayName,
-					SystemCode = g.System!.Code,
 					Dates = g.UserFiles.Select(uf => uf.UploadTimestamp).ToList()
 				})
 				.ToListAsync()
