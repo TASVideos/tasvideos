@@ -76,7 +76,7 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.FileSizeCompressed, opt => opt.MapFrom(src => src.PhysicalLength))
 			.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
 			.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
-			.ForMember(dest => dest.GameSystem, opt => opt.MapFrom(src => src.Game != null ? src.Game.System!.Code : ""))
+			.ForMember(dest => dest.GameSystem, opt => opt.MapFrom(src => src.System!.Code))
 			.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""))
 			.ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments
 				.Select(c => new UserFileModel.UserFileCommentModel
