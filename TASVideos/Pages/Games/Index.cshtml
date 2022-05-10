@@ -35,7 +35,7 @@
 				<row>
 					<column md="6">
 						<ul>
-							<li>Platforms: @string.Join(", ", Model.Game.Roms.Select(rom => rom.SystemCode))</li>
+							<li>Platforms: @string.Join(", ", Model.Game.Roms.Select(rom => rom.SystemCode).Distinct())</li>
 							<li>Abbreviation: @Model.Game.Abbreviation</li>
 							<li>Display Name: @Model.Game.DisplayName</li>
 							<li>GoodTools Name: @Model.Game.GoodName</li>
