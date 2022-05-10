@@ -19,14 +19,12 @@ public class IndexModel : PageModel
 	public int Id { get; set; }
 
 	public string GameName { get; set; } = "";
-	public string SystemCode { get; set; } = "";
 
 	public IEnumerable<GameRamAddress> Addresses { get; set; } = new List<GameRamAddress>();
 
 	public async Task<IActionResult> OnGet()
 	{
 		var game = await _db.Games
-			.Include(g => g.System)
 			.Where(g => g.Id == Id)
 			.SingleOrDefaultAsync();
 
@@ -36,7 +34,6 @@ public class IndexModel : PageModel
 		}
 
 		GameName = game.DisplayName;
-		SystemCode = game.System!.Code;
 
 		Addresses = await _db.GameRamAddresses
 			.Include(r => r.GameRamAddressDomain)
