@@ -32,11 +32,13 @@
 	gameModel.onchange = function () {
 		if (this.value) {
 			createRomBtn.removeAttribute('disabled');
+			createRomBtn.classList.remove('disabled');
 			fetch(`/Games/List/RomDropDownForGame?includeEmpty=true&gameId=${gameModel.value}&systemId=${systemModel.value}`)
 				.then(handleFetchErrors)
 				.then(r => r.text())
 				.then(t => romModel.innerHTML = t);
 		} else {
+			createRomBtn.classList.add('disabled');
 			createRomBtn.setAttribute('disabled', 'disabled');
 			clearDropdown(romElemId);
 		}
