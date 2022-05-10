@@ -73,11 +73,11 @@ public class IndexModel : PageModel
 				.ToListAsync();
 
 			GameResults = await _db.Games
-				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation + " || " + g.System!.Code).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
+				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.OrderBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(PageSize + 1)
-				.Select(g => new GameSearchModel(g.Id, g.System!.Code, g.DisplayName))
+				.Select(g => new GameSearchModel(g.Id, g.DisplayName))
 				.ToListAsync();
 		}
 
@@ -86,5 +86,5 @@ public class IndexModel : PageModel
 
 	public record PageSearchModel(string Highlight, string PageName);
 	public record PostSearchModel(string Highlight, string TopicName, int PostId);
-	public record GameSearchModel(int Id, string SystemCode, string DisplayName);
+	public record GameSearchModel(int Id, string DisplayName);
 }

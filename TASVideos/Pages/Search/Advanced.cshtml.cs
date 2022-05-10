@@ -139,7 +139,7 @@ public class AdvancedModel : PageModel
 				.ThenBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(DisplayPageSize + 1)
-				.Select(g => new GameSearchModel(g.Id, g.System!.Code, g.DisplayName))
+				.Select(g => new GameSearchModel(g.Id, g.DisplayName))
 				.ToListAsync();
 			}
 
@@ -153,5 +153,5 @@ public class AdvancedModel : PageModel
 	public record PageSearchModel(string Text, string PageName);
 	public record TopicSearchModel(string TopicName, int TopicId, string SubforumName);
 	public record PostSearchModel(string Text, int Index, string TopicName, int PostId);
-	public record GameSearchModel(int Id, string SystemCode, string DisplayName);
+	public record GameSearchModel(int Id, string DisplayName);
 }
