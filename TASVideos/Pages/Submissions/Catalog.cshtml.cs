@@ -245,7 +245,6 @@ public class CatalogModel : BasePageModel
 					})
 					.ToListAsync();
 			}
-
 		}
 
 		AvailableSystems = await _db.GameSystems
