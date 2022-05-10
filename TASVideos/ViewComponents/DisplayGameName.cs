@@ -25,14 +25,12 @@ public class DisplayGameName : ViewComponent
 
 		var games = await _db.Games
 			.Where(g => gid.Contains(g.Id))
-			.Include(g => g.System)
 			.OrderBy(d => d)
 			.ToListAsync();
 
 		var displayNames = games
-			.OrderBy(g => g.System!.Code)
-			.ThenBy(g => g.DisplayName)
-			.Select(g => $"{g.System!.Code} {g.DisplayName}");
+			.OrderBy(g => g.DisplayName)
+			.Select(g => $"{g.DisplayName}");
 
 		return new ContentViewComponentResult(string.Join(", ", displayNames));
 	}
