@@ -53,13 +53,13 @@ public static class GameExtensions
 
 	public static IQueryable<Game> ForSystem(this IQueryable<Game> query, int systemId)
 	{
-		return query.Where(g => g.Roms.Any(r => r.SystemId == systemId));
+		return query.Where(g => g.Roms.Count == 0 || g.Roms.Any(r => r.SystemId == systemId));
 	}
 
 	public static IQueryable<Game> ForSystemCode(this IQueryable<Game> query, string? code)
 	{
 		return !string.IsNullOrWhiteSpace(code)
-			? query.Where(g => g.Roms.Any(r => r.System!.Code == code))
+			? query.Where(g => g.Roms.Count == 0 || g.Roms.Any(r => r.System!.Code == code))
 			: query;
 	}
 
@@ -67,7 +67,7 @@ public static class GameExtensions
 	{
 		var codeList = codes.ToList();
 		return codeList.Any()
-			? query.Where(g => codeList.Intersect(g.Roms.Select(r => r.System!.Code)).Any())
+			? query.Where(g => g.Roms.Select(r => r.System!.Code).Any(c => codeList.Contains(c)))
 			: query;
 	}
 
