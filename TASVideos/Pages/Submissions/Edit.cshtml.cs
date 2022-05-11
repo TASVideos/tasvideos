@@ -227,6 +227,7 @@ public class EditModel : BasePageModel
 			.Include(s => s.SystemFrameRate)
 			.Include(s => s.SubmissionAuthors)
 			.ThenInclude(sa => sa.Author)
+			.Include(s => s.Game)
 			.SingleAsync(s => s.Id == Id);
 
 		if (Submission.MovieFile is not null)

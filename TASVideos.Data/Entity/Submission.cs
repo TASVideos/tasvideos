@@ -125,8 +125,14 @@ public class Submission : BaseEntity, ITimeable
 			authorList = authorList.Concat(AdditionalAuthors.SplitWithEmpty(","));
 		}
 
+		var gameName = GameName;
+		if (Game is not null)
+		{
+			gameName = Game.DisplayName;
+		}
+
 		Title =
-		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System.Code} {GameName}"
+		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System.Code} {gameName}"
 			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}
