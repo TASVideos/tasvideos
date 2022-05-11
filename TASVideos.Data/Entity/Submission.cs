@@ -131,6 +131,11 @@ public class Submission : BaseEntity, ITimeable
 			gameName = Game.DisplayName;
 		}
 
+		if (Rom is not null && !string.IsNullOrWhiteSpace(Rom.TitleOverride))
+		{
+			gameName = Rom.TitleOverride;
+		}
+
 		Title =
 		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System.Code} {gameName}"
 			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")

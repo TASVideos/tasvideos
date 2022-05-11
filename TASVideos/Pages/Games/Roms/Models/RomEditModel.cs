@@ -38,4 +38,8 @@ public class RomEditModel
 
 	[Required]
 	public RomTypes Type { get; set; }
+
+	[StringLength(255)]
+	[Display(Name = "Title Override")]
+	public string? TitleOverride { get; set; }
 }

@@ -117,8 +117,14 @@ public class Publication : BaseEntity, ITimeable
 			throw new InvalidOperationException($"{nameof(Game)} must not be lazy loaded!");
 		}
 
+		var gameName = Game.DisplayName;
+		if (Rom is not null && !string.IsNullOrWhiteSpace(Rom.TitleOverride))
+		{
+			gameName = Rom.TitleOverride;
+		}
+
 		Title =
-			$"{System.Code} {Game.DisplayName}"
+			$"{System.Code} {gameName}"
 			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")
 			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
