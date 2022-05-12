@@ -45,10 +45,12 @@ public class CrossGameObsoletions : ViewComponent
 				{
 					if (allGroups.ContainsKey(entry1))
 					{
+						addedGames.Add(entry2);
 						allGroups[entry1].Add(entry2);
 					}
 					else if (allGroups.ContainsKey(entry2))
 					{
+						addedGames.Add(entry1);
 						allGroups[entry2].Add(entry1);
 					}
 					else
@@ -57,6 +59,8 @@ public class CrossGameObsoletions : ViewComponent
 						{
 							if (v.Contains(entry1) || v.Contains(entry2))
 							{
+								addedGames.Add(entry1);
+								addedGames.Add(entry2);
 								v.Add(entry1);
 								v.Add(entry2);
 								break;
