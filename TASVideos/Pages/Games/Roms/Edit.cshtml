@@ -16,14 +16,17 @@
 	<delete-button condition="@Model.CanDelete"
 				   asp-href="@deleteLink"
 				   class="float-end">Delete</delete-button>
-	<h4>System: @Model.SystemCode</h4>
 	<h4>Game: @Model.GameName</h4>
 </form-group>
 <form method="post">
 	<input type="hidden" asp-for="GameName" />
-	<input type="hidden" asp-for="SystemCode" />
 	<row>
 		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Rom.SystemCode"></label>
+				<select asp-for="Rom.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Rom.SystemCode" class="text-danger"></span>
+			</form-group>
 			<form-group>
 				<label asp-for="Rom.Name"></label>
 				<input type="text" asp-for="Rom.Name" class="form-control" autocomplete="off" />

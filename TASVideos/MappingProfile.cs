@@ -31,12 +31,14 @@ public class MappingProfile : Profile
 		CreateMap<WikiPage, UserWikiEditHistoryModel>();
 
 		CreateMap<Game, GameEditModel>()
-			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.GenreId)))
 			.ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.GameGroups.Select(ggr => ggr.GameGroupId)));
-		CreateMap<GameEditModel, Game>();
+		CreateMap<GameEditModel, Game>()
+			.ForMember(dest => dest.SystemId, opt => opt.MapFrom(src => 1)); // TODO: Delete this line when SystemId column is removed
 
-		CreateMap<GameRom, RomEditModel>().ReverseMap();
+		CreateMap<GameRom, RomEditModel>()
+			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
+			.ReverseMap();
 
 		CreateMap<Role, RoleDisplayModel>()
 			.ForMember(
@@ -75,7 +77,7 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.FileSizeCompressed, opt => opt.MapFrom(src => src.PhysicalLength))
 			.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
 			.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
-			.ForMember(dest => dest.GameSystem, opt => opt.MapFrom(src => src.Game != null ? src.Game.System!.Code : ""))
+			.ForMember(dest => dest.GameSystem, opt => opt.MapFrom(src => src.System!.Code))
 			.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""))
 			.ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments
 				.Select(c => new UserFileModel.UserFileCommentModel
@@ -92,7 +94,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User!.UserName));
 
 		CreateMap<Game, GameDisplayModel>()
-			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
 			.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.Roms))
 			.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)))
@@ -101,7 +102,8 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SubmissionCount, opt => opt.MapFrom(src => src.Submissions.Count))
 			.ForMember(dest => dest.UserFilesCount, opt => opt.MapFrom(src => src.UserFiles.Count(uf => !uf.Hidden)));
 
-		CreateMap<GameRom, GameDisplayModel.Rom>();
+		CreateMap<GameRom, GameDisplayModel.Rom>()
+			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
 		CreateMap<GameGroup, GameDisplayModel.GameGroup>();
 
 		CreateMap<PublicationFile, PublicationFileDisplayModel>();

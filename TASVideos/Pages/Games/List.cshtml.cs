@@ -86,10 +86,11 @@ public class ListModel : BasePageModel
 		};
 	}
 
-	public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, bool includeEmpty)
+	public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, int systemId, bool includeEmpty)
 	{
 		var items = await _db.GameRoms
 			.ForGame(gameId)
+			.ForSystem(systemId)
 			.OrderBy(r => r.Name)
 			.Select(r => new SelectListItem
 			{
@@ -118,12 +119,11 @@ public class ListModel : BasePageModel
 			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
-				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation + " || " + g.System!.Code).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
+				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
-					SystemCode = g.System!.Code
 				})
 				.SortedPageOf(paging);
 		}
@@ -135,7 +135,6 @@ public class ListModel : BasePageModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
-					SystemCode = g.System!.Code
 				})
 				.SortedPageOf(paging);
 		}

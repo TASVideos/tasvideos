@@ -2,14 +2,10 @@
 @{
 	var gameName = Model!.First().GameName ?? "";
 	var gameId = Model!.First().GameId;
-	var system = Model!.First().System ?? "";
 }
 
 <h5 condition="@gameId.HasValue">
 	<a href="/@(gameId)G">@gameName</a>
-</h5>
-<h5 condition="!string.IsNullOrWhiteSpace(system)">
-	System: @system
 </h5>
 <table class="table table-sm table-striped">
 	<tr>

@@ -62,7 +62,7 @@ public class CatalogModel : BasePageModel
 		Catalog = catalog;
 		if (GameId.HasValue)
 		{
-			var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId && g.SystemId == Catalog.SystemId);
+			var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
 			if (game is not null)
 			{
 				Catalog.GameId = game.Id;
@@ -70,7 +70,7 @@ public class CatalogModel : BasePageModel
 				// We only want to pre-populate the Rom if a valid Game was provided
 				if (RomId.HasValue)
 				{
-					var rom = await _db.GameRoms.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId);
+					var rom = await _db.GameRoms.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
 					if (rom is not null)
 					{
 						Catalog.RomId = rom.Id;
