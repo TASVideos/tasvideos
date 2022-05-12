@@ -63,7 +63,7 @@ public enum PermissionTo
 	EditGameResources = 101,
 
 	[Group("Wiki")]
-	[Description("The ability to edit System Wiki pages. These pages are more fundamental to the site behavior whan basic wiki pages.")]
+	[Description("The ability to edit System Wiki pages. These pages are more fundamental to the site behavior than basic wiki pages.")]
 	EditSystemPages = 102,
 
 	[Group("Wiki")]
