@@ -10,6 +10,7 @@
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().DisplayName)</th>
+		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().TitleOverride)</th>
 		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().Version)</th>
 		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().Region)</th>
 		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().RomType)</th>
@@ -22,6 +23,7 @@
 	{
 		<tr>
 			<td>@rom.DisplayName</td>
+			<td>@rom.TitleOverride</td>
 			<td>@rom.Version</td>
 			<td>@rom.Region</td>
 			<td>@rom.RomType</td>

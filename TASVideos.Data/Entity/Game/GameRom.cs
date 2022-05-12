@@ -37,6 +37,9 @@ public class GameRom : BaseEntity
 
 	[StringLength(50)]
 	public string? Version { get; set; }
+
+	[StringLength(255)]
+	public string? TitleOverride { get; set; }
 }
 
 public static class RomExtensions

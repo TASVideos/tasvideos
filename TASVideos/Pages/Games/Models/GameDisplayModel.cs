@@ -24,6 +24,7 @@ public class GameDisplayModel
 		public string? Region { get; set; }
 		public string? Version { get; set; }
 		public string? SystemCode { get; set; }
+		public string? TitleOverride { get; set; }
 	}
 
 	public ICollection<GameGroup> GameGroups { get; set; } = new List<GameGroup>();

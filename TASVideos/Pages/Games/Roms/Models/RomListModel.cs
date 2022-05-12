@@ -35,5 +35,8 @@ public class RomListModel
 
 		[Display(Name = "System")]
 		public string SystemCode { get; set; } = "";
+
+		[Display(Name = "Title Override")]
+		public string? TitleOverride { get; set; }
 	}
 }

@@ -96,6 +96,8 @@ public class CatalogModel : BasePageModel
 			.Include(s => s.SystemFrameRate)
 			.Include(s => s.Game)
 			.Include(s => s.Rom)
+			.Include(s => s.SubmissionAuthors)
+			.ThenInclude(sa => sa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
 		if (submission is null)
 		{
@@ -115,6 +117,7 @@ public class CatalogModel : BasePageModel
 			{
 				externalMessages.Add($"System changed from {submission.System?.Code ?? ""} to {system.Code}");
 				submission.SystemId = Catalog.SystemId!.Value;
+				submission.System = system;
 			}
 		}
 
@@ -129,6 +132,7 @@ public class CatalogModel : BasePageModel
 			{
 				externalMessages.Add($"Framerate changed from {submission.SystemFrameRate?.FrameRate ?? 0.0} to {systemFramerate.FrameRate}");
 				submission.SystemFrameRateId = Catalog.SystemFrameRateId!.Value;
+				submission.SystemFrameRate = systemFramerate;
 			}
 		}
 
@@ -145,12 +149,14 @@ public class CatalogModel : BasePageModel
 				{
 					externalMessages.Add($"Game changed from {submission.Game?.DisplayName ?? "\"\""} to {game.DisplayName}");
 					submission.GameId = Catalog.GameId.Value;
+					submission.Game = game;
 				}
 			}
 			else if (submission.GameId.HasValue)
 			{
 				externalMessages.Add("Game removed");
 				submission.GameId = null;
+				submission.Game = null;
 			}
 		}
 
@@ -167,12 +173,14 @@ public class CatalogModel : BasePageModel
 				{
 					externalMessages.Add($"Rom Hash changed from {submission.Rom?.Name ?? "\"\""} to {rom.Name}");
 					submission.RomId = Catalog.RomId.Value;
+					submission.Rom = rom;
 				}
 			}
 			else
 			{
 				externalMessages.Add("Rom removed");
 				submission.RomId = null;
+				submission.Rom = null;
 			}
 		}
 
@@ -181,6 +189,8 @@ public class CatalogModel : BasePageModel
 			await PopulateCatalogDropDowns();
 			return Page();
 		}
+
+		submission.GenerateTitle();
 
 		var result = await ConcurrentSave(_db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
 		if (result)

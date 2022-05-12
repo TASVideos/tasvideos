@@ -37,6 +37,7 @@ public class ListModel : BasePageModel
 					Region = r.Region,
 					RomType = r.Type,
 					SystemCode = r.System!.Code,
+					TitleOverride = r.TitleOverride,
 				})
 				.ToList()
 			})

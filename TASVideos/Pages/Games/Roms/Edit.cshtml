@@ -50,6 +50,11 @@
 				<span asp-validation-for="Rom.Type" class="text-danger"></span>
 			</form-group>
 			<form-group>
+				<label asp-for="Rom.TitleOverride"></label>
+				<input type="text" asp-for="Rom.TitleOverride" class="form-control" />
+				<span asp-validation-for="Rom.TitleOverride" class="text-danger"></span>
+			</form-group>
+			<form-group>
 				<label asp-for="Rom.Version"></label>
 				<input type="text" asp-for="Rom.Version" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Rom.Version" class="text-danger"></span>
