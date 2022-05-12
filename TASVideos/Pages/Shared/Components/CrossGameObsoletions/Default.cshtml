@@ -1,0 +1,17 @@
+﻿@model TASVideos.ViewComponents.Models.CrossGameObsoletionsModel
+
+<h4>Cross Game Obsoletions</h4>
+	@foreach (var group in Model.AllObsoletionGroups)
+	{
+		<ul>
+		<li>
+			<game-link id="group.Key.Id">@group.Key.Title</game-link>
+		</li>
+		@foreach (var entry in group.Value)
+		{
+			<li>
+				<game-link id="entry.Id">@entry.Title</game-link>
+			</li>
+		}
+		</ul>
+	}
