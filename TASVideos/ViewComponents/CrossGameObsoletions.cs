@@ -22,6 +22,7 @@ public class CrossGameObsoletions : ViewComponent
 		var obsoletionList = await _db.Publications
 			.Include(p => p.ObsoletedBy)
 			.Include(p => p.Game)
+			.Where(p => p.ObsoletedBy != null)
 			.Select(p => new
 			{
 				p.GameId,
