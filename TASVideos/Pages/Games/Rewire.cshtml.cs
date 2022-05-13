@@ -25,7 +25,7 @@ public class RewireModel : BasePageModel
 	[Display(Name = "Into Game Id")]
 	public int? IntoGameId { get; set; }
 
-	public bool ValidIds { get; set; } = false;
+	public bool ValidIds { get; set; }
 
 	public RewireEntry? FromGame { get; set; }
 	public RewireEntry? IntoGame { get; set; }
@@ -102,22 +102,22 @@ public class RewireModel : BasePageModel
 					.Include(g => g.UserFiles)
 					.Where(g => g.Id == FromGameId)
 					.SingleAsync();
-				foreach (var pub in rewireGames!.Publications)
+				foreach (var pub in rewireGames.Publications)
 				{
 					pub.GameId = intoGameId;
 				}
 
-				foreach (var sub in rewireGames!.Submissions)
+				foreach (var sub in rewireGames.Submissions)
 				{
 					sub.GameId = intoGameId;
 				}
 
-				foreach (var rom in rewireGames!.Roms)
+				foreach (var rom in rewireGames.Roms)
 				{
 					rom.GameId = intoGameId;
 				}
 
-				foreach (var userfile in rewireGames!.UserFiles)
+				foreach (var userfile in rewireGames.UserFiles)
 				{
 					userfile.GameId = intoGameId;
 				}
