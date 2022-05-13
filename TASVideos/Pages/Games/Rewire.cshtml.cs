@@ -61,7 +61,7 @@ public class RewireModel : BasePageModel
 					Roms = g.Roms.Select(r => new Entry(r.Id, r.Name)).ToList(),
 					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
 				})
-				.FirstOrDefaultAsync();
+				.SingleAsync();
 			FromGame!.RamAddresses = await _db.GameRamAddresses
 				.Where(a => a.GameId == FromGameId)
 				.Select(a => new Entry(a.Id, a.Address.ToString()))
@@ -77,7 +77,7 @@ public class RewireModel : BasePageModel
 					Roms = g.Roms.Select(r => new Entry(r.Id, r.Name)).ToList(),
 					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
 				})
-				.FirstOrDefaultAsync();
+				.SingleAsync();
 			IntoGame!.RamAddresses = await _db.GameRamAddresses
 				.Where(a => a.GameId == IntoGameId)
 				.Select(a => new Entry(a.Id, a.Address.ToString()))
@@ -101,7 +101,7 @@ public class RewireModel : BasePageModel
 					.Include(g => g.Roms)
 					.Include(g => g.UserFiles)
 					.Where(g => g.Id == FromGameId)
-					.FirstOrDefaultAsync();
+					.SingleAsync();
 				foreach (var pub in rewireGames!.Publications)
 				{
 					pub.GameId = intoGameId;
