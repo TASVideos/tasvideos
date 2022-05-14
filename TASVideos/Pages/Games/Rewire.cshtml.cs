@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games;
 
@@ -95,41 +96,41 @@ public class RewireModel : BasePageModel
 			if (ValidIds)
 			{
 				int intoGameId = (int)IntoGameId;
-				var rewireGames = await _db.Games
-					.Include(g => g.Publications)
-					.Include(g => g.Submissions)
-					.Include(g => g.Roms)
-					.Include(g => g.UserFiles)
-					.Where(g => g.Id == FromGameId)
-					.SingleAsync();
-				foreach (var pub in rewireGames.Publications)
-				{
-					pub.GameId = intoGameId;
-				}
 
-				foreach (var sub in rewireGames.Submissions)
-				{
-					sub.GameId = intoGameId;
-				}
+				var rewirePublications = await _db.Publications
+					.Where(p => p.GameId == FromGameId)
+					.Select(p => new Publication { Id = p.Id })
+					.ToListAsync();
+				_db.Publications.AttachRange(rewirePublications);
+				rewirePublications.ForEach(p => p.GameId = intoGameId);
 
-				foreach (var rom in rewireGames.Roms)
-				{
-					rom.GameId = intoGameId;
-				}
+				var rewireSubmissions = await _db.Submissions
+					.Where(s => s.GameId == FromGameId)
+					.Select(s => new Submission { Id = s.Id })
+					.ToListAsync();
+				_db.Submissions.AttachRange(rewireSubmissions);
+				rewireSubmissions.ForEach(s => s.GameId = intoGameId);
 
-				foreach (var userfile in rewireGames.UserFiles)
-				{
-					userfile.GameId = intoGameId;
-				}
+				var rewireRoms = await _db.GameRoms
+					.Where(r => r.GameId == FromGameId)
+					.Select(r => new GameRom { Id = r.Id })
+					.ToListAsync();
+				_db.GameRoms.AttachRange(rewireRoms);
+				rewireRoms.ForEach(r => r.GameId = intoGameId);
+
+				var rewireUserfiles = await _db.UserFiles
+					.Where(u => u.GameId == FromGameId)
+					.Select(u => new UserFile { Id = u.Id })
+					.ToListAsync();
+				_db.UserFiles.AttachRange(rewireUserfiles);
+				rewireUserfiles.ForEach(u => u.GameId = intoGameId);
 
 				var rewireRamAddresses = await _db.GameRamAddresses
-				.Where(a => a.GameId == FromGameId)
-				.ToListAsync();
-
-				foreach (var address in rewireRamAddresses)
-				{
-					address.GameId = intoGameId;
-				}
+					.Where(a => a.GameId == FromGameId)
+					.Select(a => new GameRamAddress { Id = a.Id })
+					.ToListAsync();
+				_db.GameRamAddresses.AttachRange(rewireRamAddresses);
+				rewireRamAddresses.ForEach(a => a.GameId = intoGameId);
 
 				await ConcurrentSave(_db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
 			}
