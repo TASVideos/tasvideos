@@ -1,0 +1,181 @@
+﻿@page
+@model TASVideos.Pages.Games.RewireModel
+@{
+	ViewData["Title"] = "Rewire Games";
+}
+<form method="get">
+	<row>
+		<div class="col-auto">
+			<form-group>
+				<label asp-for="FromGameId" class="form-control-label"></label>
+				<input asp-for="FromGameId" class="form-control" />
+			</form-group>
+		</div>
+		<div class="col-auto">
+			<row>
+			<div class="col-auto">
+				<span class="fs-1">→</span>
+			</div>
+			<div class="col-auto">
+				<form-group>
+					<label asp-for="IntoGameId" class="form-control-label"></label>
+					<input asp-for="IntoGameId" class="form-control" />
+				</form-group>
+			</div>
+			</row>
+		</div>
+	</row>
+	<button type="submit" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
+</form>
+<div condition="Model.ValidIds" class="mt-3">
+	@{
+		var gameNameDifference = Model.FromGame!.Game!.Title != Model.IntoGame!.Game!.Title;
+	}
+	<card class="mb-2">
+		<cardheader>
+			<row>
+				<div class="col-6">
+					<h3>From Game</h3>
+					<h4><game-link id="@Model.FromGame.Game.Id">@Model.FromGame!.Game!.Title</game-link></h4>
+				</div>
+				<div class="col-6">
+					<h3>Into Game</h3>
+					<h4><game-link id="@Model.IntoGame.Game.Id">@Model.IntoGame!.Game!.Title</game-link></h4>
+				</div>
+			</row>
+		</cardheader>
+		<cardbody>
+			<row>
+				<div class="col-6">
+					<h4>Publications</h4>
+					<ul>
+						@foreach (var pub in Model.FromGame.Publications!)
+						{
+							<li>
+								<pub-link id="@pub.Id">@pub.Title</pub-link><span condition="@string.IsNullOrEmpty(pub.RomName) && gameNameDifference" class="text-danger"> Title will change!</span>
+							</li>
+						}
+					</ul>
+				</div>
+				<div class="col-6">
+					<h4>Publications</h4>
+					<ul>
+						@foreach (var pub in Model.IntoGame.Publications!)
+						{
+							<li>
+								<pub-link id="@pub.Id">@pub.Title</pub-link>
+							</li>
+						}
+					</ul>
+				</div>
+			</row>
+			<row>
+				<column></column>
+				<div class="col-6">
+					<h4>Submissions</h4>
+					<ul>
+						@foreach (var sub in Model.FromGame.Submissions!)
+						{
+							<li>
+								<sub-link id="@sub.Id">@sub.Title</sub-link><span condition="@string.IsNullOrEmpty(sub.RomName) && gameNameDifference" class="text-danger"> Title will change!</span>
+							</li>
+						}
+					</ul>
+				</div>
+				<div class="col-6">
+					<h4>Submissions</h4>
+					<ul>
+						@foreach (var sub in Model.IntoGame.Submissions!)
+						{
+							<li>
+								<sub-link id="@sub.Id">@sub.Title</sub-link>
+							</li>
+						}
+					</ul>
+				</div>
+			</row>
+			<row>
+				<column></column>
+				<div class="col-6">
+					<h4>
+						<a condition="Model.FromGame.Roms!.Any()" asp-page="/Games/Roms/List" asp-route-gameId="@Model.FromGameId">Roms</a>
+						<span condition="!Model.FromGame.Roms!.Any()">Roms</span>
+					</h4>
+					<ul>
+						@foreach (var rom in Model.FromGame.Roms!)
+						{
+							<li>@rom.Title</li>
+						}
+					</ul>
+				</div>
+				<div class="col-6">
+					<h4>
+						<a condition="Model.IntoGame.Roms!.Any()" asp-page="/Games/Roms/List" asp-route-gameId="@Model.IntoGameId">Roms</a>
+						<span condition="!Model.IntoGame.Roms!.Any()">Roms</span>
+					</h4>
+					<ul>
+						@foreach (var rom in Model.IntoGame.Roms!)
+						{
+							<li>@rom.Title</li>
+						}
+					</ul>
+				</div>
+			</row>
+			<row>
+				<column></column>
+				<div class="col-6">
+					<h4>Userfiles</h4>
+					<ul>
+						@foreach (var userfile in Model.FromGame.Userfiles!)
+						{
+							<li><a asp-page="/UserFiles/Info" asp-route-id="@userfile.Id">#@userfile.Id - @userfile.Title</a></li>
+						}
+					</ul>
+				</div>
+				<div class="col-6">
+					<h4>Userfiles</h4>
+					<ul>
+						@foreach (var userfile in Model.IntoGame.Userfiles!)
+						{
+							<li><a asp-page="/UserFiles/Info" asp-route-id="@userfile.Id">#@userfile.Id - @userfile.Title</a></li>
+						}
+					</ul>
+				</div>
+			</row>
+			<row>
+				<column></column>
+				<div class="col-6">
+					<h4>
+						<a condition="Model.FromGame.RamAddresses!.Any()" asp-page="/RamAddresses/Index" asp-route-id="@Model.FromGameId">Ram Addresses</a>
+						<span condition="!Model.FromGame.RamAddresses!.Any()">Ram Addresses</span>
+					</h4>
+					<ul>
+						@foreach (var address in Model.FromGame.RamAddresses!)
+						{
+							<li>@address.Title</li>
+						}
+					</ul>
+				</div>
+				<div class="col-6">
+					<h4>
+						<a condition="Model.IntoGame.RamAddresses!.Any()" asp-page="/RamAddresses/Index" asp-route-id="@Model.IntoGameId">Ram Addresses</a>
+						<span condition="!Model.IntoGame.RamAddresses!.Any()">Ram Addresses</span>
+					</h4>
+					<ul>
+						@foreach (var address in Model.IntoGame.RamAddresses!)
+						{
+							<li>@address.Title</li>
+						}
+					</ul>
+				</div>
+			</row>
+		</cardbody>
+	</card>
+	<form method="post">
+		<input type="hidden" asp-for="FromGameId" />
+		<input type="hidden" asp-for="IntoGameId" />
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary"><i class="fa fa fa-wrench"></i> Rewire</button>
+		</div>
+	</form>
+</div>
