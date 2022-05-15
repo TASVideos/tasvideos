@@ -186,4 +186,14 @@ public class StringExtensionTests
 		var actual = s.NullIfWhitespace();
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	[DataRow(null, null, null, "")]
+	[DataRow("Foo", "Foo", "Bar", "Bar")]
+	[DataRow("FooFoo", "Foo", "Bar", "BarFoo")]
+	public void ReplaceFirst(string text, string search, string replace, string expected)
+	{
+		var actual = text.ReplaceFirst(search, replace);
+		Assert.AreEqual(expected, actual);
+	}
 }

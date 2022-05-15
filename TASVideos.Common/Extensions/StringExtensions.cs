@@ -202,4 +202,23 @@ public static class StringExtensions
 			? null
 			: s;
 	}
+
+	/// <summary>
+	/// Replaces the first occurrence of the given string.
+	/// </summary>
+	public static string ReplaceFirst(this string? text, string search, string replace)
+	{
+		if (text is null)
+		{
+			return "";
+		}
+
+		int pos = text.IndexOf(search);
+		if (pos < 0)
+		{
+			return text;
+		}
+
+		return string.Concat(text.AsSpan(0, pos), replace, text.AsSpan(pos + search.Length));
+	}
 }
