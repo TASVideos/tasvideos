@@ -59,7 +59,7 @@ public class BbParser
 			)?
 		", RegexOptions.IgnorePatternWhitespace);
 
-	private static readonly Regex BlockTrimAfterEntering = new("\\G[ \t]*\r?\n?");
+	private static readonly Regex BlockTrimAfterEntering = new("\\G[ \t]*\r?\n");
 	private static readonly Regex BlockTrimAfterLeaving = new("\\G[ \t]*\r?\n?");
 
 	// The old system does support attributes in html tags, but only a few that we probably don't want,
