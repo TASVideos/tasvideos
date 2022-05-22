@@ -72,6 +72,7 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-SegaCd.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Sg.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Sgb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Sgb-Snes.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Sgx.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Sms.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Snes.bk2" />
