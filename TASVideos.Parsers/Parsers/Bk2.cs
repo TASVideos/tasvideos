@@ -89,7 +89,7 @@ internal class Bk2 : ParserBase, IParser
 			}
 			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
 			{
-				platform = SystemCodes.GameBoy;
+				platform = SystemCodes.Sgb;
 				if (result.Region == RegionType.Pal)
 				{
 					result.FrameRateOverride = PalSnesFramerate;
@@ -174,7 +174,6 @@ internal class Bk2 : ParserBase, IParser
 		["gen"] = SystemCodes.Genesis,
 		["sat"] = SystemCodes.Saturn,
 		["dgb"] = SystemCodes.GameBoy,
-		["sgb"] = SystemCodes.GameBoy,
 		["gb3x"] = SystemCodes.GameBoy,
 		["gb4x"] = SystemCodes.GameBoy,
 		["gbl"] = SystemCodes.GameBoy,
