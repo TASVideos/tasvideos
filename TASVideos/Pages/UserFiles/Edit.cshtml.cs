@@ -94,6 +94,7 @@ public class EditModel : BasePageModel
 	private async Task Initialize()
 	{
 		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
 				Value = s.Id.ToString(),
@@ -102,8 +103,7 @@ public class EditModel : BasePageModel
 			.ToListAsync());
 
 		AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
-			.OrderBy(g => g.SystemId)
-			.ThenBy(g => g.DisplayName)
+			.OrderBy(g => g.DisplayName)
 			.ToDropDown()
 			.ToListAsync());
 	}

@@ -38,16 +38,17 @@ public class EditModel : BasePageModel
 	[FromRoute]
 	public int? Id { get; set; }
 
-	[BindProperty]
-	public RomEditModel Rom { get; set; } = new();
+	[FromQuery]
+	public int? SystemId { get; set; }
 
 	[BindProperty]
-	public string SystemCode { get; set; } = "";
+	public RomEditModel Rom { get; set; } = new();
 
 	[BindProperty]
 	public string GameName { get; set; } = "";
 
 	public bool CanDelete { get; set; }
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
 
 	public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]
@@ -63,9 +64,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games
-			.Include(g => g.System)
-			.SingleOrDefaultAsync(g => g.Id == GameId);
+		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
 
 		if (game is null)
 		{
@@ -73,7 +72,23 @@ public class EditModel : BasePageModel
 		}
 
 		GameName = game.DisplayName;
-		SystemCode = game.System!.Code;
+
+		AvailableSystems = await _db.GameSystems
+			.OrderBy(s => s.Code)
+			.ToDropdown()
+			.ToListAsync();
+
+		if (SystemId.HasValue)
+		{
+			var systemCode = await _db.GameSystems
+				.Where(s => s.Id == SystemId)
+				.Select(s => s.Code)
+				.SingleOrDefaultAsync();
+			if (systemCode is not null)
+			{
+				Rom.SystemCode = systemCode;
+			}
+		}
 
 		if (!Id.HasValue)
 		{
@@ -102,16 +117,26 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
+		var system = await _db.GameSystems
+			.SingleOrDefaultAsync(s => s.Code == Rom.SystemCode);
+
+		if (system is null)
+		{
+			return BadRequest();
+		}
+
 		GameRom rom;
 		if (Id.HasValue)
 		{
 			rom = await _db.GameRoms.SingleAsync(r => r.Id == Id.Value);
+			rom.System = system;
 			_mapper.Map(Rom, rom);
 		}
 		else
 		{
 			rom = _mapper.Map<GameRom>(Rom);
 			rom.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
+			rom.System = system;
 			_db.GameRoms.Add(rom);
 		}
 
@@ -140,12 +165,12 @@ public class EditModel : BasePageModel
 		if (!await CanBeDeleted())
 		{
 			ErrorStatusMessage($"Unable to delete Rom {Id}, rom is used by a publication or submission.");
-			return BasePageRedirect("List");
+			return BasePageRedirect("List", new { gameId = GameId });
 		}
 
 		_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
 		await ConcurrentSave(_db, $"Rom {Id} deleted", $"Unable to delete Rom {Id}");
-		return BasePageRedirect("List");
+		return BasePageRedirect("List", new { gameId = GameId });
 	}
 
 	private async Task<bool> CanBeDeleted()

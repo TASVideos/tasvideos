@@ -1,0 +1,35 @@
+﻿@page "{id}/{handler?}"
+@model EditModel
+@{
+	ViewData["Title"] = $"Editing System: {Model.System.Id} {Model.System.Code}";
+}
+<div class="text-end">
+	<delete-button condition="!Model.InUse"
+					asp-href="/Systems/Edit/@(Model.System.Id)/Delete"
+					warning-message="Are you sure you want to remove this system?">
+		Delete
+	</delete-button>
+	<span condition="Model.InUse">System in Use</span>
+</div>
+<form method="post">
+	<row>
+		<column lg="6">
+			<label asp-for="System.Code"></label>
+			<input type="text" asp-for="System.Code" class="form-control" />
+			<span asp-validation-for="System.Code" class="text-danger"></span>
+		</column>
+		<column lg="6" class="mt-lg-0 mt-3">
+			<label asp-for="System.DisplayName"></label>
+			<input type="text" asp-for="System.DisplayName" class="form-control" />
+			<span asp-validation-for="System.DisplayName" class="text-danger"></span>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a class="btn btn-secondary" asp-page="Index"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

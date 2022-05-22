@@ -86,7 +86,21 @@
 		<div class="col-lg-6">
 			<form-group>
 				<label asp-for="Publication.ObsoletedBy"></label>
-				<select asp-for="Publication.ObsoletedBy" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableMoviesForObsoletedBy)" class="form-control"></select>
+				<input asp-for="Publication.ObsoletedBy" class="form-control" />
+				<span id="obsoleted-by">@Model.Publication.ObsoletedByTitle</span>
+				<script>
+					const obsoletedByBox = document.getElementById("@Html.IdFor(m => m.Publication.ObsoletedBy)");
+					const titleSpan = document.getElementById("obsoleted-by");
+					obsoletedByBox.onchange = function() {
+						const url = `/Publications/Edit/@Model.Id?handler=Title&publicationId=${this.value}`;
+						fetch(url)
+							.then(handleFetchErrors)
+							.then(r => r.text())
+							.then(r => {
+								titleSpan.innerHTML = r ? r : "Unknown publication Id";
+							});
+					}
+				</script>
 				<span asp-validation-for="Publication.ObsoletedBy" class="text-danger"></span>
 			</form-group>
 			<form-group>

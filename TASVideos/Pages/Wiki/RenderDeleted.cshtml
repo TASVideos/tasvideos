@@ -1,0 +1,29 @@
+﻿@page
+@model RenderDeletedModel
+@{
+	ViewData["Title"] = $"Viewing Deleted Page: {Model.WikiPage.PageName}";
+}
+<h4>Revision: @Model.WikiPage.Revision</h4>
+
+<ul>
+	<li>
+		Revision: @Model.WikiPage.Revision
+	</li>
+	<li>
+		Latest? @((!Model.WikiPage.ChildId.HasValue).ToYesNo())
+	</li>
+	<li>
+		Author: <profile-link username="@Model.WikiPage.Author!.UserName"></profile-link>
+	</li>
+	<li>
+		Revision Message: @Model.WikiPage.RevisionMessage
+	</li>
+	<li>
+		Minor Edit? @Model.WikiPage.MinorEdit.ToYesNo()
+	</li>
+</ul>
+
+<h4>Markup</h4>
+<info-alert>
+	@Model.WikiPage.Markup
+</info-alert>

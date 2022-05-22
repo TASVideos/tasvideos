@@ -3,7 +3,7 @@
 	var pageId = ViewData.UniqueId();
 
 	var parent = ViewData["Parent"]?.ToString();
-	var pageGrouping = Model!.GroupBy(tkey => tkey.Replace(parent + "/", "").Split('/').FirstOrDefault());
+	var pageGrouping = Model.GroupBy(tkey => tkey.ReplaceFirst(parent + "/", "").Split('/').FirstOrDefault());
 
 	var show = (bool)(ViewData["show"] ?? false);
 }

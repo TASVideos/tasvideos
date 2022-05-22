@@ -8,7 +8,6 @@ public class GameDisplayModel
 	public string DisplayName { get; set; } = "";
 	public string? Abbreviation { get; set; }
 	public string? ScreenshotUrl { get; set; }
-	public string? SystemCode { get; set; }
 	public string GoodName { get; set; } = "";
 	public string? GameResourcesPage { get; set; }
 
@@ -24,6 +23,8 @@ public class GameDisplayModel
 		public string Name { get; set; } = "";
 		public string? Region { get; set; }
 		public string? Version { get; set; }
+		public string? SystemCode { get; set; }
+		public string? TitleOverride { get; set; }
 	}
 
 	public ICollection<GameGroup> GameGroups { get; set; } = new List<GameGroup>();

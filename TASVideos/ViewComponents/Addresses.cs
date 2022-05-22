@@ -28,8 +28,7 @@ public class Addresses : ViewComponent
 				a.Endian.ToString(),
 				a.Description,
 				a.Game != null ? a.Game.DisplayName : null,
-				a.GameId,
-				a.Game != null ? a.Game.System!.DisplayName : null))
+				a.GameId))
 			.ToListAsync();
 
 		if (!model.Any())

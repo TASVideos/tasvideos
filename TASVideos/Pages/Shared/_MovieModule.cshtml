@@ -157,7 +157,7 @@
 								let update = JSON.parse(r);
 								if (unrated) {
 									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rate';
-								} else {
+								} else if (update.Rating !== "") {
 									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rated '+update.Rating+' / 10';
 								}
 								document.querySelector('#ratingCount-'+pubId).innerHTML = update.RatingCount;
@@ -189,7 +189,7 @@
 				<fullrow>
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>
-				<div><small>Published on @Model.CreateTimestamp.Date.ToShortDateString()</small></div>
+				<div><small>Published <timezone-convert asp-for="@Model.CreateTimestamp.Date" in-line="true" /></small></div>
 			</div>
 		</row>
 		<row condition="Model.ObsoletedMovies.Any()" class="my-2 gx-3">

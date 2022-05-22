@@ -1,0 +1,28 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Game Systems List";
+}
+
+<a permission="GameSystemMaintenance" class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
+<table class="table table-bordered table-striped table-sm">
+	<tr>
+		<th>Id</th>
+		<th>Code</th>
+		<th>Display Name</th>
+		<th></th>
+	</tr>
+	@foreach (var system in Model.Systems)
+	{
+		<tr>
+			<td>@system.Id</td>
+			<td>@system.Code</td>
+			<td>@system.DisplayName</td>
+			<td>
+				<a permission="GameSystemMaintenance" class="btn btn-primary" asp-page="Edit" asp-route-id="@system.Id">
+					<i class="fa fa-pencil"></i> Edit
+				</a>
+			</td>
+		</tr>
+	}
+</table>

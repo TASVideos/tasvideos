@@ -27,7 +27,7 @@
 	<form-button-bar>
 		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> @saveBtnName</button>
 		<a condition="@(!Model.Id.HasValue)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-		<a condition="Model.Id.HasValue" asp-page="Index" asp-route-id="@Model.Id!.Value" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="Model.Id.HasValue" asp-page="Index" asp-route-id="@Model.Id ?? 0" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>
 </form>
 

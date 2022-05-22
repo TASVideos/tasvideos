@@ -23,7 +23,7 @@ public class DisplayMovies : ViewComponent
 	}
 
 	public async Task<IViewComponentResult> InvokeAsync(
-		IList<string> tier,
+		IList<string> pubClass,
 		IList<string> systemCode,
 		bool obs,
 		bool obsOnly,
@@ -41,7 +41,7 @@ public class DisplayMovies : ViewComponent
 
 		var searchModel = new PublicationSearchModel
 		{
-			Classes = tokenLookup.Classes.Where(c => tier.Select(tt => tt.ToLower()).Contains(c)),
+			Classes = tokenLookup.Classes.Where(c => pubClass.Select(tt => tt.ToLower()).Contains(c)),
 			SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Select(c => c.ToLower()).Contains(s)),
 			ShowObsoleted = obs,
 			OnlyObsoleted = obsOnly,

@@ -7,6 +7,9 @@
 <small>
 	@await Component.RenderWiki("System/SearchTerms")
 </small>
+<small>
+	For exact phrase searching try the <a asp-page="Advanced">Advanced Search</a>.
+</small>
 <form method="get">
 	<row class="mt-3">
 		<column lg="6">
@@ -31,7 +34,7 @@
 			{
 				<tr>
 					<td>
-						<a asp-page="/Games/Index" asp-route-id="@result.Id">@result.SystemCode @result.DisplayName</a>
+						<a asp-page="/Games/Index" asp-route-id="@result.Id">@result.DisplayName</a>
 					</td>
 				</tr>
 			}

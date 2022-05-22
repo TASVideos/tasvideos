@@ -7,14 +7,12 @@
 	<table class="table table-striped table-bordered">
 		<tr>
 			<th>Game</th>
-			<th>System</th>
 			<th></th>
 		</tr>
-		@foreach (var entry in Model.Entries.OrderBy(e => e.SystemCode).ThenBy(e => e.GameName))
+		@foreach (var entry in Model.Entries.OrderBy(e => e.GameName))
 		{
 			<tr>
 				<td>@entry.GameName</td>
-				<td>@entry.SystemCode</td>
 				<td>
 					<a asp-page="Index" asp-route-id="@entry.GameId" class="btn btn-secondary"><i class="fa fa-eye"></i> View</a>
 					<a asp-page="Edit" asp-route-id="@entry.GameId" permission="EditRamAddresses" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>

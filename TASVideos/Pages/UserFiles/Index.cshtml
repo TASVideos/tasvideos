@@ -48,7 +48,7 @@
 				@foreach (var game in Model.Data.GamesWithMovies)
 				{
 					<div>
-						<a asp-page="Game" asp-route-id="@game.GameId">@game.SystemCode @game.GameName</a>
+						<a asp-page="Game" asp-route-id="@game.GameId">@game.GameName</a>
 						<small>(latest <timezone-convert asp-for="@game.Latest"/>)</small>
 					</div>
 				}

@@ -26,6 +26,7 @@
 
 @{
 	var used = Model;
+	var available = SiteGlobalConstants.UserFileStorageLimit - used;
 	var usedPercent = Math.Round(used / (double)SiteGlobalConstants.UserFileStorageLimit * 100, 1);
 }
 
@@ -33,6 +34,7 @@
 <span class="pull-end">Limit @SiteGlobalConstants.UserFileStorageLimit.ToSizeString()</span>
 
 <div class="progress">
+	<input id="StorageAvailable" type="hidden" value=@available />
 	<div class="progress-bar progress-bar-striped bg-@ProgressColor(usedPercent)" role="progressbar" style="width: @(usedPercent)%;" aria-valuenow="@(usedPercent)" aria-valuemin="0" aria-valuemax="100">
 		@(usedPercent)%
 	</div>

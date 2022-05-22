@@ -202,7 +202,7 @@
 </card>
 <hr />
 <small>
-	Last Edited by @Model.Submission.LastUpdateUser on @Model.Submission.LastUpdateTimestamp
+	Last Edited by @Model.Submission.LastUpdateUser <timezone-convert asp-for="@Model.Submission.LastUpdateTimestamp" in-line="true" />
 </small>
 <br />
 <a asp-page="/Wiki/PageHistory"

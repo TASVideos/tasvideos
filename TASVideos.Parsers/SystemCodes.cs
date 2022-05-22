@@ -8,6 +8,7 @@ internal class SystemCodes
 	public const string Atari7800 = "a7800";
 	public const string C64 = "c64";
 	public const string Coleco = "coleco";
+	public const string Doom = "doom";
 	public const string Dos = "dos";
 	public const string Ds = "ds";
 	public const string Dsi = "dsi";

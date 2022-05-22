@@ -23,6 +23,8 @@ public class WikiHelperTests
 	[DataRow("SandBox", "TestUser", new[] { EditHomePage }, true)]
 	[DataRow("SandBox", "TestUser", new[] { EditGameResources }, true)]
 	[DataRow("SandBox", "TestUser", new[] { EditSystemPages }, true)]
+	[DataRow("SandBox", "TestUser", new[] { EditSubmissions }, true)]
+	[DataRow("SandBox", "TestUser", new[] { EditPublicationMetaData }, true)]
 	[DataRow("GameResources", "TestUser", new[] { EditGameResources }, false)]
 	[DataRow("GameResources/NES", "TestUser", new[] { EditGameResources }, true)]
 	[DataRow("/GameResources/NES", "TestUser", new[] { EditGameResources }, true)]
@@ -35,6 +37,18 @@ public class WikiHelperTests
 	[DataRow("HomePages/TestUser", "TestUser", new[] { EditHomePage }, true)]
 	[DataRow("HomePages/TestUser/Subpage", "TestUser", new[] { EditHomePage }, true)]
 	[DataRow("HomePages/ADifferentUser", "TestUser", new[] { EditHomePage }, false)]
+	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditGameResources }, false)]
+	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditHomePage }, false)]
+	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditWikiPages }, false)]
+	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditSystemPages }, false)]
+	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditSubmissions }, true)]
+	[DataRow("InternalSystem/SubmissionContent/S1", "TestUser", new[] { EditPublicationMetaData }, false)]
+	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditGameResources }, false)]
+	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditHomePage }, false)]
+	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditWikiPages }, false)]
+	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditSystemPages }, false)]
+	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditSubmissions }, false)]
+	[DataRow("InternalSystem/PublicationContent/M1", "TestUser", new[] { EditPublicationMetaData }, true)]
 	public void UserCanEditWikiPage(
 		string pageName,
 		string userName,

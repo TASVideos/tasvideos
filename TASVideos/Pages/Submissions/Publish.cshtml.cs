@@ -55,7 +55,6 @@ public class PublishModel : BasePageModel
 	[BindProperty]
 	public SubmissionPublishModel Submission { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableMoviesToObsolete { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
 
@@ -93,6 +92,19 @@ public class PublishModel : BasePageModel
 		{
 			await PopulateDropdowns(Submission.SystemId);
 			return Page();
+		}
+
+		int? publicationToObsolete = null;
+		if (Submission.MovieToObsolete.HasValue)
+		{
+			publicationToObsolete = (await _db.Publications
+				.SingleOrDefaultAsync(p => p.Id == Submission.MovieToObsolete.Value))?.Id;
+			if (publicationToObsolete is null)
+			{
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieToObsolete)}", "Publication does not exist");
+				await PopulateDropdowns(Submission.SystemId);
+				return Page();
+			}
 		}
 
 		var submission = await _db.Submissions
@@ -149,9 +161,9 @@ public class PublishModel : BasePageModel
 		submission.Status = SubmissionStatus.Published;
 		_db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
 
-		if (Submission.MovieToObsolete.HasValue)
+		if (publicationToObsolete.HasValue)
 		{
-			await _queueService.ObsoleteWith(Submission.MovieToObsolete.Value, publication.Id);
+			await _queueService.ObsoleteWith(publicationToObsolete.Value, publication.Id);
 		}
 
 		await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId));
@@ -183,6 +195,7 @@ public class PublishModel : BasePageModel
 			.Where(p => p.Id == publicationId)
 			.Select(p => new
 			{
+				p.Title,
 				p.WikiContent!.Markup,
 				Flags = p.PublicationFlags.Select(pf => pf.FlagId),
 				Tags = p.PublicationTags.Select(pt => pt.TagId)
@@ -216,12 +229,6 @@ public class PublishModel : BasePageModel
 			.ToListAsync();
 		AvailableTags = await _db.Tags
 			.ToDropdown()
-			.ToListAsync();
-		AvailableMoviesToObsolete = await _db.Publications
-			.ThatAreCurrent()
-			.Where(p => p.SystemId == systemId)
-			.ToDropdown()
-			.OrderBy(p => p.Text)
 			.ToListAsync();
 	}
 }

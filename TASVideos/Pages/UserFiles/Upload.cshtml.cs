@@ -114,8 +114,7 @@ public class UploadModel : BasePageModel
 			.ToListAsync());
 
 		AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
-			.OrderBy(g => g.SystemId)
-			.ThenBy(g => g.DisplayName)
+			.OrderBy(g => g.DisplayName)
 			.ToDropDown()
 			.ToListAsync());
 	}

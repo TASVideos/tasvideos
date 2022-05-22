@@ -23,7 +23,6 @@
 			<label asp-for="Subject" class="form-control-label"></label>
 			<input type="text" asp-for="Subject" list="search-username-list" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
-			<datalist id="search-username-list"></datalist>
 		</form-group>
 		<form-group class="col-lg-6">
 			<label asp-for="ToUser" class="form-control-label"></label>
@@ -43,7 +42,7 @@
 	</row>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
-		<button type="submit" disable="@string.IsNullOrWhiteSpace(Model.ToUser)" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+		<button type="submit" @(string.IsNullOrWhiteSpace(Model.ToUser) ? "disabled" : "") class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
 		<a asp-page="Inbox" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>

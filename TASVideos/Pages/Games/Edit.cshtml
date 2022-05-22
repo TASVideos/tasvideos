@@ -16,11 +16,6 @@
 	<row>
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Game.SystemCode"></label>
-				<select asp-for="Game.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="Game.SystemCode" class="text-danger"></span>
-			</form-group>
-			<form-group>
 				<label asp-for="Game.GoodName"></label>
 				<input type="text" asp-for="Game.GoodName" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Game.GoodName" class="text-danger"></span>

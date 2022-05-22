@@ -66,9 +66,7 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
-		var exists = await _userManager.FindByEmailAsync(Settings.Email);
 		var user = await _userManager.GetUserAsync(User);
-		var currentEmail = user.Email;
 
 		var bannedSites = _userManager.BannedAvatarSites().ToList();
 		if (!string.IsNullOrWhiteSpace(user.Avatar))
@@ -96,21 +94,6 @@ public class SettingsModel : BasePageModel
 		if (!ModelState.IsValid)
 		{
 			return Page();
-		}
-
-		if (!string.Equals(Settings.Email, currentEmail, StringComparison.CurrentCultureIgnoreCase))
-		{
-			if (exists != null)
-			{
-				ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Email)}", "This email cannot be used.");
-				return Page();
-			}
-
-			var setEmailResult = await _userManager.SetEmailAsync(user, Settings.Email);
-			if (!setEmailResult.Succeeded)
-			{
-				throw new ApplicationException($"Unexpected error occurred setting email for user with ID '{user.Id}'.");
-			}
 		}
 
 		user.TimeZoneId = Settings.TimeZoneId;

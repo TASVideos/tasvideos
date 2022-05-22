@@ -11,6 +11,8 @@
 	  <None Remove="Bk2SampleFiles\System-Nds.bk2" />
 	  <None Remove="Bk2SampleFiles\System-Ndsi.bk2" />
 	  <None Remove="FbmSampleFiles\savestate.fbm" />
+	  <None Remove="LmpSampleFiles\doesnotendin80.lmp" />
+	  <None Remove="LmpSampleFiles\doom.lmp" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -118,6 +120,8 @@
 		<EmbeddedResource Include="JrsrSampleFiles\savestate.jrsr" />
 		<EmbeddedResource Include="JrsrSampleFiles\wronglinemagic.jrsr" />
 		<EmbeddedResource Include="JrsrSampleFiles\wrongmagic.jrsr" />
+		<EmbeddedResource Include="LmpSampleFiles\doesnotendin80.lmp" />
+		<EmbeddedResource Include="LmpSampleFiles\doom.lmp" />
 		<EmbeddedResource Include="LsmvSampleFiles\0frameswithsub.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\2frameswithsub.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\emptyrerecordentry.lsmv" />

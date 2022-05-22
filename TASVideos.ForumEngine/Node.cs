@@ -422,6 +422,9 @@ public class Element : INode
 							pp.Height = height;
 						}
 
+						// Bit of a hack:  Since the videowriter uses the htmlwriter's base writer, we need to get it into
+						// the right state first
+						w.Text("");
 						WriteVideo.Write(w.BaseWriter, pp);
 					}
 

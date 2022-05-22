@@ -650,6 +650,41 @@ public class WikiPagesTests
 
 	#endregion
 
+	#region MoveAll
+
+	[TestMethod]
+	public async Task MoveAll_MultiplePages()
+	{
+		const string existingPageName = "ExistingPage";
+		const string newPageName = "NewPageName";
+		const string subPage = "Sub";
+		const string link = "AnotherPage";
+		string newSubPage = $"{newPageName}/{subPage}";
+		var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]" };
+		var existingSubPage = new WikiPage { PageName = $"{existingPageName}/{subPage}" };
+		_db.WikiPages.Add(existingPage);
+		_db.WikiPages.Add(existingSubPage);
+		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = existingPageName, Referral = link });
+		await _db.SaveChangesAsync();
+		_cache.AddPage(existingPage);
+		_cache.AddPage(existingSubPage);
+
+		var actual = await _wikiPages.MoveAll(existingPageName, newPageName);
+		Assert.IsTrue(actual);
+		Assert.AreEqual(2, _db.WikiPages.Count());
+		Assert.AreEqual(1, _db.WikiPages.Count(wp => wp.PageName == newPageName));
+		Assert.AreEqual(1, _db.WikiPages.Count(wp => wp.PageName == newSubPage));
+		Assert.AreEqual(2, _cache.PageCache().Count);
+		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newPageName));
+		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newSubPage));
+
+		Assert.AreEqual(1, _db.WikiReferrals.Count());
+		Assert.AreEqual(newPageName, _db.WikiReferrals.Single().Referrer);
+		Assert.AreEqual(link, _db.WikiReferrals.Single().Referral);
+	}
+
+	#endregion
+
 	#region Delete Page
 
 	[TestMethod]

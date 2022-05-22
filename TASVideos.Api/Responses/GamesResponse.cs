@@ -15,9 +15,6 @@ public class GamesResponse
 	public IEnumerable<GameRom> Roms { get; init; } = new List<GameRom>();
 
 	[Sortable]
-	public string SystemCode { get; init; } = "";
-
-	[Sortable]
 	public string GoodName { get; init; } = "";
 
 	[Sortable]
@@ -44,5 +41,6 @@ public class GamesResponse
 		public RomTypes Type { get; init; }
 		public string Region { get; init; } = "";
 		public string Version { get; init; } = "";
+		public string SystemCode { get; init; } = "";
 	}
 }

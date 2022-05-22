@@ -14,15 +14,15 @@ public class GameRom : BaseEntity
 
 	public int GameId { get; set; }
 	public virtual Game? Game { get; set; }
+	public int? SystemId { get; set; }
+	public virtual GameSystem? System { get; set; }
 
 	public ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 	public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 
-	[Required]
 	[StringLength(32)]
 	public string Md5 { get; set; } = "";
 
-	[Required]
 	[StringLength(40)]
 	public string Sha1 { get; set; } = "";
 
@@ -37,6 +37,9 @@ public class GameRom : BaseEntity
 
 	[StringLength(50)]
 	public string? Version { get; set; }
+
+	[StringLength(255)]
+	public string? TitleOverride { get; set; }
 }
 
 public static class RomExtensions
@@ -48,6 +51,6 @@ public static class RomExtensions
 
 	public static IQueryable<GameRom> ForSystem(this IQueryable<GameRom> query, int systemId)
 	{
-		return query.Where(g => g.Game!.SystemId == systemId);
+		return query.Where(g => g.SystemId == systemId);
 	}
 }

@@ -964,6 +964,15 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("citext")
                         .HasColumnName("sha1");
 
+                    b.Property<int?>("SystemId")
+                        .HasColumnType("integer")
+                        .HasColumnName("system_id");
+
+                    b.Property<string>("TitleOverride")
+                        .HasMaxLength(255)
+                        .HasColumnType("citext")
+                        .HasColumnName("title_override");
+
                     b.Property<int>("Type")
                         .HasColumnType("integer")
                         .HasColumnName("type");
@@ -979,13 +988,8 @@ namespace TASVideos.Data.Migrations
                     b.HasIndex("GameId")
                         .HasDatabaseName("ix_game_roms_game_id");
 
-                    b.HasIndex("Md5")
-                        .IsUnique()
-                        .HasDatabaseName("ix_game_roms_md5");
-
-                    b.HasIndex("Sha1")
-                        .IsUnique()
-                        .HasDatabaseName("ix_game_roms_sha1");
+                    b.HasIndex("SystemId")
+                        .HasDatabaseName("ix_game_roms_system_id");
 
                     b.ToTable("game_roms", (string)null);
                 });
@@ -3053,7 +3057,14 @@ namespace TASVideos.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_game_roms_games_game_id");
 
+                    b.HasOne("TASVideos.Data.Entity.Game.GameSystem", "System")
+                        .WithMany("GameRoms")
+                        .HasForeignKey("SystemId")
+                        .HasConstraintName("fk_game_roms_game_systems_system_id");
+
                     b.Navigation("Game");
+
+                    b.Navigation("System");
                 });
 
             modelBuilder.Entity("TASVideos.Data.Entity.Game.GameSystemFrameRate", b =>
@@ -3587,6 +3598,8 @@ namespace TASVideos.Data.Migrations
 
             modelBuilder.Entity("TASVideos.Data.Entity.Game.GameSystem", b =>
                 {
+                    b.Navigation("GameRoms");
+
                     b.Navigation("Games");
 
                     b.Navigation("Publications");

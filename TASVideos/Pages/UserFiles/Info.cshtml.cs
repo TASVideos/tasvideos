@@ -36,7 +36,6 @@ public class InfoModel : BasePageModel
 			.Include(uf => uf.Author)
 			.ThenInclude(a => a!.UserFiles)
 			.Include(uf => uf.Game)
-			.ThenInclude(g => g!.System)
 			.Include(uf => uf.System)
 			.Where(userFile => userFile.Id == Id)
 			.SingleOrDefaultAsync();

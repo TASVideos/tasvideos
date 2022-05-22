@@ -26,7 +26,6 @@ public class ListModel : BasePageModel
 			.Select(g => new RomListModel
 			{
 				GameDisplayName = g.DisplayName,
-				SystemCode = g.System!.Code,
 				Roms = g.Roms
 				.Select(r => new RomListModel.RomEntry
 				{
@@ -36,7 +35,9 @@ public class ListModel : BasePageModel
 					Sha1 = r.Sha1,
 					Version = r.Version,
 					Region = r.Region,
-					RomType = r.Type
+					RomType = r.Type,
+					SystemCode = r.System!.Code,
+					TitleOverride = r.TitleOverride,
 				})
 				.ToList()
 			})

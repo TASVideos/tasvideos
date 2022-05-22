@@ -3,53 +3,94 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using TASVideos.Core.HttpClientExtensions;
-using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
 public class TwitterDistributorV2 : IPostDistributor
 {
+	private static System.Timers.Timer? _timer = null;
+	private static readonly object TimeLock = new();
+
 	private readonly HttpClient _twitterClient;
 	private readonly HttpClient _accessTokenClient;
 	private readonly AppSettings.TwitterConnectionV2 _settings;
 	private readonly ILogger<TwitterDistributorV2> _logger;
-	private readonly ICacheService _redisCacheService;
 
-	private string? _accessToken;
-	private string? _refreshToken;
-	private DateTime? _nextRefreshTime;
+	private TwitterTokenDetails _twitterTokenDetails = new();
 
-	private const int RefreshTokenDuration = 2 * 60 * 60 - 30;	// Two hours minus thirty seconds in seconds.  How long the retrieved access token will last.
+	private readonly string _tokenStorageFileName;
 
-	public TwitterDistributorV2 (
-		// Intentionally using Redis Cache here, if we need to turn Redis off, come up with a new solution.  -- Invariel, March 2022.
-		RedisCacheService redisCache,
+	private readonly TimeSpan _accessTokenDuration = new (1, 59, 30);  // Two hours minus thirty seconds.
+	private readonly TimeSpan _refreshTokenDuration = new (177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
+
+	public TwitterDistributorV2(
 		AppSettings appSettings,
 		IHttpClientFactory httpClientFactory,
 		ILogger<TwitterDistributorV2> logger)
 	{
-		_redisCacheService = redisCache;
 		_settings = appSettings.TwitterV2;
 		_twitterClient = httpClientFactory.CreateClient(HttpClients.TwitterV2);
 		_accessTokenClient = httpClientFactory.CreateClient(HttpClients.TwitterAuth);
 		_logger = logger;
+
+		_tokenStorageFileName = Path.Combine(Path.GetTempPath(), "twitter.json");
+
+		lock (TimeLock)
+		{
+			if (_timer is null)
+			{
+				_timer = new System.Timers.Timer();
+				_timer.Elapsed += (_, _) =>
+				{
+					try
+					{
+						_logger.LogInformation("Automatically refreshing twitter tokens on a timer");
+						RequestTokensFromTwitter().Wait();
+					}
+					catch (Exception ex)
+					{
+						_logger.LogError("An error occured getting twitter tokens from timer ex: {ex}", ex);
+					}
+				};
+				_timer.Interval = Durations.OneHourInMilliseconds;
+				_timer.AutoReset = true;
+				_timer.Start();
+			}
+		}
 	}
 
 	public IEnumerable<PostType> Types => new[] { PostType.Announcement };
 
-	public async Task Post(IPostable post)
+	public async Task<bool> IsEnabled()
 	{
 		if (!_settings.IsEnabled())
+		{
+			return false;
+		}
+
+		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken))
+		{
+			// Try to get Twitter token information from the local file.
+			if (File.Exists(_tokenStorageFileName))
+			{
+				await RetrieveTokenInformation();
+			}
+		}
+
+		return !string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken);
+	}
+
+	public async Task Post(IPostable post)
+	{
+		await RefreshTokensIfExpired();
+
+		if (!await IsEnabled())
 		{
 			return;
 		}
 
-		await RefreshTokens();
-		_twitterClient.DefaultRequestHeaders.Authorization =
-			new System.Net.Http.Headers.AuthenticationHeaderValue(
-				"Bearer",
-				_accessToken);
+		_twitterClient.SetBearerToken(_twitterTokenDetails.AccessToken);
 
 		var tweetData = new
 		{
@@ -64,65 +105,62 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 	}
 
-	public async Task RefreshTokens()
+	private async Task RetrieveTokenInformation()
 	{
-		if (_nextRefreshTime == null || DateTime.UtcNow > _nextRefreshTime)
-		{
-			RetrieveCachedValues();
+		string tokenText = await File.ReadAllTextAsync(_tokenStorageFileName);
 
-			if (DateTime.UtcNow > _nextRefreshTime || _accessToken == null)
+		if (!string.IsNullOrWhiteSpace(tokenText))
+		{
+			try
 			{
-				await RequestTokensFromTwitter();
+				_twitterTokenDetails = JsonSerializer.Deserialize<TwitterTokenDetails>(tokenText) ?? new TwitterTokenDetails();
+
+				if (DateTime.UtcNow > _twitterTokenDetails.RefreshTokenExpiry)
+				{
+					_twitterTokenDetails.RefreshToken = "";
+				}
 			}
+			catch (Exception) { }
 		}
 	}
 
-	public void RetrieveCachedValues()
+	private async Task RefreshTokensIfExpired()
 	{
-		var keys = _redisCacheService.GetAll<string>(new List<string>
+		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken) ||
+			DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
 		{
-			TwitterDistributorConstants.RefreshToken,
-			TwitterDistributorConstants.RefreshTokenTime
-		});
-
-		if (!keys.ContainsKey(TwitterDistributorConstants.RefreshToken)
-			|| string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.RefreshToken]))
-		{
-			_logger.LogError("Unable to initialize twitter, missing refresh token");
-			return;
-		}
-
-		_refreshToken = keys[TwitterDistributorConstants.RefreshToken];
-		_nextRefreshTime = DateTime.UtcNow.AddDays(-1);
-		if (keys.ContainsKey(TwitterDistributorConstants.RefreshTokenTime)
-			&& string.IsNullOrWhiteSpace(keys[TwitterDistributorConstants.RefreshTokenTime]))
-		{
-			var result = DateTime.TryParse(keys[TwitterDistributorConstants.RefreshTokenTime], out var time);
-			if (result)
-			{
-				_nextRefreshTime = time;
-			}
+			await RequestTokensFromTwitter();
 		}
 	}
 
-	public void CacheValues()
+	private async Task RequestTokensFromTwitter()
 	{
-		_redisCacheService.Set(TwitterDistributorConstants.RefreshToken, _refreshToken, Durations.OneYearInSeconds);
-		_redisCacheService.Set(TwitterDistributorConstants.RefreshTokenTime, _nextRefreshTime.ToString(), Durations.OneYearInSeconds);
+		var refreshResult = await RequestTokensFromTwitter(_twitterTokenDetails.RefreshToken);
+		if (!refreshResult)
+		{
+			await RequestTokensFromTwitter(_settings.OneTimeRefreshToken);
+		}
 	}
 
-	public async Task RequestTokensFromTwitter()
+	private async Task<bool> RequestTokensFromTwitter (string refreshToken)
 	{
+		bool retVal = false;
+
+		if (string.IsNullOrWhiteSpace(refreshToken))
+		{
+			return false;
+		}
+
+		// The offline.access scope regenerates the refresh token.  Maybe the refresh token can be used multiple times before it needs refreshing itself?
 		var formData = new List<KeyValuePair<string, string>>
 		{
-			new("refresh_token", _refreshToken!),
+			new("refresh_token", refreshToken),
 			new("grant_type", "refresh_token"),
-			new("scope", "offline.access tweet.read tweet.write users.read")
+			new("scope", "tweet.read tweet.write users.read offline.access")
 		};
 
 		string basicAuthHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes($"{_settings.ClientId}:{_settings.ClientSecret}"));
-
-		_accessTokenClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", basicAuthHeader);
+		_accessTokenClient.SetBasicAuth(basicAuthHeader);
 
 		var response = await _accessTokenClient.PostAsync("", new FormUrlEncodedContent(formData));
 
@@ -130,11 +168,36 @@ public class TwitterDistributorV2 : IPostDistributor
 		{
 			var responseData = JsonSerializer.Deserialize<TwitterRefreshTokenResponse>(await response.Content.ReadAsStringAsync());
 
-			_accessToken = responseData!.AccessToken;
-			_refreshToken = responseData.RefreshToken;
-			_nextRefreshTime = DateTime.UtcNow.AddSeconds(RefreshTokenDuration);
-			CacheValues();
+			if (responseData is null)
+			{
+				_logger.LogError("Got a successful response from Twitter, but received no tokens!");
+			}
+			else
+			{
+				_twitterTokenDetails.AccessToken = responseData.AccessToken;
+				_twitterTokenDetails.AccessTokenExpiry = DateTime.UtcNow + _accessTokenDuration;
+
+				_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
+				_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + _refreshTokenDuration;
+
+				await StoreValues();
+
+				retVal = true;
+			}
 		}
+		else
+		{
+			_logger.LogError("Error getting access tokens.  Received HTTP status code {statusCode}. {newline}{errorMessage}",
+				response.StatusCode,
+				Environment.NewLine,
+				await response.Content.ReadAsStringAsync());
+
+			// Unrecoverable error, we need to generate new tokens anyways so we disable Twitter for now.
+			_twitterTokenDetails.AccessToken = "";
+			_twitterTokenDetails.RefreshToken = "";
+		}
+
+		return retVal;
 	}
 
 	private static string GenerateTwitterMessage(IPostable post)
@@ -157,12 +220,19 @@ public class TwitterDistributorV2 : IPostDistributor
 
 		return body;
 	}
-}
 
-public class TwitterDistributorConstants
-{
-	public static string RefreshToken = "TwitterRefreshToken";
-	public static string RefreshTokenTime = "TwitterRefreshTokenTime";
+	// Write the TwitterTokenDetails object to the file.
+	private async Task StoreValues()
+	{
+		try
+		{
+			await File.WriteAllTextAsync(_tokenStorageFileName, JsonSerializer.Serialize(_twitterTokenDetails));
+		}
+		catch (Exception ex)
+		{
+			_logger.LogError("Critical error writing Twitter access token details to the temporary file. Additional information: {message}", ex.Message);
+		}
+	}
 }
 
 public class TwitterRefreshTokenResponse
@@ -172,4 +242,16 @@ public class TwitterRefreshTokenResponse
 
 	[JsonPropertyName("refresh_token")]
 	public string RefreshToken { get; set; } = "";
+}
+
+public class TwitterTokenDetails
+{
+	[JsonPropertyName("access_token")]
+	public string AccessToken { get; set; } = "";
+	[JsonPropertyName("access_token_expiry")]
+	public DateTime AccessTokenExpiry { get; set; } = DateTime.MinValue;
+	[JsonPropertyName("refresh_token")]
+	public string RefreshToken { get; set; } = "";
+	[JsonPropertyName("refresh_token_expiry")]
+	public DateTime RefreshTokenExpiry { get; set; } = DateTime.MinValue;
 }

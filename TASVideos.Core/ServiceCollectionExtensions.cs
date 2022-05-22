@@ -30,11 +30,6 @@ public static class ServiceCollectionExtensions
 				client.BaseAddress = new Uri("https://discord.com/api/v6/");
 			});
 		services
-			.AddHttpClient(HttpClients.Twitter, client =>
-			{
-				client.BaseAddress = new Uri("https://api.twitter.com/1.1/");
-			});
-		services
 			.AddHttpClient(HttpClients.TwitterV2, client =>
 			{
 				client.BaseAddress = new Uri("https://api.twitter.com/2/tweets");
@@ -76,6 +71,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IClassService, ClassService>();
 		services.AddScoped<IMovieFormatDeprecator, MovieFormatDeprecator>();
 		services.AddScoped<IForumService, ForumService>();
+		services.AddScoped<IGameSystemService, GameSystemService>();
 
 		services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 
@@ -122,7 +118,6 @@ public static class ServiceCollectionExtensions
 			services.AddSingleton<ICacheService, NoCacheService>();
 		}
 
-		services.AddScoped<RedisCacheService>(); // For Twitter tokens, we specifically need redis
 		return services;
 	}
 
@@ -135,10 +130,13 @@ public static class ServiceCollectionExtensions
 
 		services.AddSingleton<IPostDistributor, IrcDistributor>();
 		services.AddScoped<IPostDistributor, DiscordDistributor>();
-		services.AddScoped<IPostDistributor, TwitterDistributorV2>();
+
+		services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
+
 		services.AddScoped<IPostDistributor, DistributorStorage>();
 
-		services.AddScoped<TwitterDistributorV2>();
+		services.AddSingleton<TwitterDistributorV2>();	// Required for direct Tweets.
+
 		return services.AddTransient<ExternalMediaPublisher>();
 	}
 }

@@ -5,6 +5,7 @@ public static class LinkConstants
 	public const string SubmissionWikiPage = "InternalSystem/SubmissionContent/S";
 	public const string PublicationWikiPage = "InternalSystem/PublicationContent/M";
 	public const string GameWikiPage = "InternalSystem/GameContent/G";
+	public const string HomePages = "HomePages/";
 }
 
 public static class Durations
@@ -14,6 +15,7 @@ public static class Durations
 	public const int OneDayInSeconds = 60 * 60 * 24;
 	public const int OneWeekInSeconds = 60 * 60 * 24 * 7;
 	public const int OneYearInSeconds = 60 * 60 * 24 * 365;
+	public const int OneHourInMilliseconds = 60 * 60 * 1000;
 }
 
 public static class CacheKeys
@@ -36,6 +38,7 @@ public static class SiteGlobalConstants
 	public const int GrueFoodForumId = 24;
 	public const int WorkbenchForumId = 7;
 	public const int PublishedMoviesForumId = 16;
+	public const int PlaygroundForumId = 74;
 
 	public const string NewPublicationPostSubject = "Movie published";
 	public const string NewPublicationPost = @"[b]This movie has been published.[/b]

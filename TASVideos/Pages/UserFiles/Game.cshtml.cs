@@ -30,7 +30,6 @@ public class GameModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var game = await _db.Games
-			.Include(g => g.System)
 			.Include(g => g.UserFiles)
 			.ThenInclude(u => u.Author)
 			.SingleOrDefaultAsync(g => g.Id == Id);
@@ -43,7 +42,6 @@ public class GameModel : BasePageModel
 		Game = new GameFileModel
 		{
 			GameId = game.Id,
-			SystemCode = game.System!.Code,
 			GameName = game.DisplayName,
 			Files = game.UserFiles
 				.Where(uf => !uf.Hidden)

@@ -6,6 +6,11 @@ namespace TASVideos.Pages.Games.Roms.Models;
 public class RomEditModel
 {
 	[Required]
+	[Display(Name = "System")]
+	[StringLength(8)]
+	public string SystemCode { get; set; } = "";
+
+	[Required]
 	[StringLength(255)]
 	[Display(Name = "Name")]
 	public string Name { get; set; } = "";
@@ -33,4 +38,8 @@ public class RomEditModel
 
 	[Required]
 	public RomTypes Type { get; set; }
+
+	[StringLength(255)]
+	[Display(Name = "Title Override")]
+	public string? TitleOverride { get; set; }
 }

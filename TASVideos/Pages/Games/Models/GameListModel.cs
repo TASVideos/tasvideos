@@ -9,9 +9,6 @@ public class GameListModel
 	[Display(Name = "Id")]
 	public int Id { get; set; }
 
-	[Display(Name = "System")]
-	public string SystemCode { get; set; } = "";
-
 	[Sortable]
 	[Display(Name = "Name")]
 	public string DisplayName { get; set; } = "";

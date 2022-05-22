@@ -20,12 +20,12 @@ public class ListModel : PageModel
 	{
 		Entries = await _db.GameRamAddresses
 			.Where(r => r.GameId.HasValue)
-			.Select(r => new RamAddressListEntry(r.Game!.Id, r.Game.DisplayName, r.Game!.System!.Code))
+			.Select(r => new RamAddressListEntry(r.Game!.Id, r.Game.DisplayName))
 			.Distinct()
 			.ToListAsync();
 
 		return Page();
 	}
 
-	public record RamAddressListEntry(int GameId, string GameName, string SystemCode);
+	public record RamAddressListEntry(int GameId, string GameName);
 }

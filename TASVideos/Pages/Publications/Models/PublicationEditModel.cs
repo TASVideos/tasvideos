@@ -26,6 +26,8 @@ public class PublicationEditModel
 	[Display(Name = "Obsoleted By")]
 	public int? ObsoletedBy { get; set; }
 
+	public string? ObsoletedByTitle { get; set; }
+
 	[StringLength(50)]
 	[Display(Name = "Emulator Version")]
 	public string? EmulatorVersion { get; set; }

@@ -44,6 +44,14 @@ internal class TASVideosGrue : ITASVideosGrue
 		if (topic is not null)
 		{
 			topic.ForumId = SiteGlobalConstants.GrueFoodForumId;
+			var postsToMove = await _db.ForumPosts
+				.ForTopic(topic.Id)
+				.ToListAsync();
+			foreach (var post in postsToMove)
+			{
+				post.ForumId = SiteGlobalConstants.GrueFoodForumId;
+			}
+
 			var entry = _db.ForumPosts.Add(new ForumPost
 			{
 				TopicId = topic.Id,

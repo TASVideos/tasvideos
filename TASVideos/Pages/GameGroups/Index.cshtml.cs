@@ -42,11 +42,11 @@ public class IndexModel : PageModel
 			{
 				Id = g.Id,
 				Name = g.DisplayName,
-				SystemCode = g.System!.Code,
 				PublicationCount = g.Publications.Count,
 				SubmissionsCount = g.Submissions.Count,
 				GameResourcesPage = g.GameResourcesPage
 			})
+			.OrderBy(g => g.Name)
 			.ToListAsync();
 
 		return Page();

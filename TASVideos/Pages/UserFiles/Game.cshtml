@@ -2,7 +2,7 @@
 @model GameModel
 
 @{
-	ViewData["Title"] = $"Movie for {Model.Game.SystemCode} {Model.Game.GameName}";
+	ViewData["Title"] = $"Movies for {Model.Game.GameName}";
 }
 
 @foreach (var file in Model.Game.Files)

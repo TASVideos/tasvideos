@@ -63,7 +63,7 @@ public enum PermissionTo
 	EditGameResources = 101,
 
 	[Group("Wiki")]
-	[Description("The ability to edit System Wiki pages. These pages are more fundamental to the site behavior whan basic wiki pages.")]
+	[Description("The ability to edit System Wiki pages. These pages are more fundamental to the site behavior than basic wiki pages.")]
 	EditSystemPages = 102,
 
 	[Group("Wiki")]
@@ -169,6 +169,14 @@ public enum PermissionTo
 	[Group("Publication Maintenance")]
 	[Description("The ability to add, edit, and remove the publication classes")]
 	ClassMaintenance = 392,
+
+	[Group("Publication Maintenance")]
+	[Description("The ability to add, edit, and remove game systems")]
+	GameSystemMaintenance = 393,
+
+	[Group("Publication Maintenance")]
+	[Description("The ability to rewire games into other games")]
+	RewireGames = 394,
 
 	#endregion
 

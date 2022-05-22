@@ -4,7 +4,7 @@
 @{
 	ViewData["Title"] = "Home Page";
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
-	var homePage = $"HomePages/{User.Name()}";
+	var homePage = $"{LinkConstants.HomePages}{User.Name()}";
 	bool pageExists = await _wikiPages.Exists(homePage);
 }
 <br />

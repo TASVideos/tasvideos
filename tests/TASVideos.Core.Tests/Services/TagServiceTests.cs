@@ -27,7 +27,7 @@ public class TagServiceTests
 	}
 
 	[TestMethod]
-	public async Task GetAll_CachesAndReturnsEmpty()
+	public async Task GetAll_CachesAndReturns()
 	{
 		_db.Add(new Tag());
 		await _db.SaveChangesAsync();
@@ -85,7 +85,7 @@ public class TagServiceTests
 	}
 
 	[TestMethod]
-	public async Task InUse_Exists_ReturnsFalse()
+	public async Task InUse_Exists_ReturnsTrue()
 	{
 		const int tagId = 1;
 		const int publicationId = 1;
@@ -164,7 +164,7 @@ public class TagServiceTests
 	[TestMethod]
 	public async Task Edit_NotFound_DoesNotFlushCache()
 	{
-		var id = 1;
+		const int id = 1;
 		_db.Tags.Add(new Tag { Id = id });
 		await _db.SaveChangesAsync();
 		_cache.Set(TagService.TagsKey, new object());
@@ -229,7 +229,7 @@ public class TagServiceTests
 	}
 
 	[TestMethod]
-	public async Task Delete_InUse_FlushesNotCache()
+	public async Task Delete_InUse_DoesNotFlushCache()
 	{
 		const int tagId = 1;
 		const int publicationId = 1;
@@ -246,7 +246,7 @@ public class TagServiceTests
 	}
 
 	[TestMethod]
-	public async Task Delete_ConcurrencyError_FlushesNotCache()
+	public async Task Delete_ConcurrencyError_DoesNotFlushCache()
 	{
 		const int id = 1;
 		_db.Tags.Add(new Tag { Id = 1 });

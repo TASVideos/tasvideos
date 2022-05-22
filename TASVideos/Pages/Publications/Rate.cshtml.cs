@@ -82,11 +82,12 @@ public class RateModel : BasePageModel
 		}
 
 		var userId = User.GetUserId();
-		var rating = await _db.PublicationRatings
+		var ratingObject = await _db.PublicationRatings
 			.ForPublication(Id)
 			.ForUser(userId)
 			.FirstOrDefaultAsync();
-		UpdateRating(rating, Id, userId, PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating), Rating.Unrated);
+		var ratingValue = PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating);
+		UpdateRating(ratingObject, Id, userId, ratingValue, Rating.Unrated);
 
 		await _db.SaveChangesAsync();
 
@@ -102,7 +103,7 @@ public class RateModel : BasePageModel
 			})
 			.Select(rro => new
 			{
-				Rating.Rating,
+				Rating = ratingValue.ToString(),
 				rro.RatingCount,
 				OverallRating = (rro.OverallRating ?? 0).ToOverallRatingString(),
 			})

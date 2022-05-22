@@ -17,19 +17,19 @@ public class PlatformAuthorLists : ViewComponent
 		_db = db;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(bool showTiers, DateTime? before, DateTime? after, IList<int> platforms)
+	public async Task<IViewComponentResult> InvokeAsync(bool showClassIcons, DateTime? before, DateTime? after, IList<int> platforms)
 	{
-		if (!before.HasValue || !after.HasValue || platforms.Count == 0)
+		if (!before.HasValue || !after.HasValue)
 		{
 			return new ContentViewComponentResult("Invalid parameters.");
 		}
 
 		var model = new PlatformAuthorListModel
 		{
-			ShowClasses = showTiers,
+			ShowClasses = showClassIcons,
 			Publications = await _db.Publications
 				.ForDateRange(before.Value, after.Value)
-				.Where(p => platforms.Contains(p.SystemId))
+				.Where(p => !platforms.Any() || platforms.Contains(p.SystemId))
 				.Select(p => new PlatformAuthorListModel.PublicationEntry
 				{
 					Id = p.Id,

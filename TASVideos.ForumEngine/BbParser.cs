@@ -59,7 +59,7 @@ public class BbParser
 			)?
 		", RegexOptions.IgnorePatternWhitespace);
 
-	private static readonly Regex BlockTrimAfterEntering = new("\\G[ \t]*\r?\n?");
+	private static readonly Regex BlockTrimAfterEntering = new("\\G[ \t]*\r?\n");
 	private static readonly Regex BlockTrimAfterLeaving = new("\\G[ \t]*\r?\n?");
 
 	// The old system does support attributes in html tags, but only a few that we probably don't want,
@@ -120,6 +120,11 @@ public class BbParser
 		/// If true, the tag will be rendered as block level content, and we should try to do some HTML-ish whitespace elision on it.
 		/// </summary>
 		public bool IsBlock;
+
+		/// <summary>
+		/// If set, this tag can only appear directly nested under another tag.
+		/// </summary>
+		public string? RequiredParent;
 	}
 
 	private static readonly Dictionary<string, TagInfo> KnownTags = new()
@@ -166,12 +171,12 @@ public class BbParser
 
 		// list related stuff
 		{ "list", new() { IsBlock = true } }, // OLs have a param with value ??
-		{ "*", new() { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate, IsBlock = true } },
+		{ "*", new() { SelfNesting = TagInfo.SelfNestingAllowed.NoImmediate, IsBlock = true, RequiredParent = "list" } },
 
 		// tables
 		{ "table", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
-		{ "tr", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
-		{ "td", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
+		{ "tr", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "table" } },
+		{ "td", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "tr" } },
 	};
 
 	private static readonly HashSet<string> KnownNonEmptyHtmlTags = new()
@@ -261,6 +266,30 @@ public class BbParser
 		return true;
 	}
 
+	private bool TagHasValidParent(string nextTag, TagInfo nextTagInfo, out Element popTo)
+	{
+		var stackCopy = _stack.ToList();
+
+		int popThrough;
+		if (nextTagInfo.SelfNesting == TagInfo.SelfNestingAllowed.No)
+		{
+			// Try to pop a matching tag
+			popThrough = stackCopy.FindIndex(e => e.Name == nextTag);
+		}
+		else if (nextTagInfo.SelfNesting == TagInfo.SelfNestingAllowed.NoImmediate)
+		{
+			// Try to pop a matching tag, but only at this level
+			popThrough = stackCopy[0].Name == nextTag ? 0 : -1;
+		}
+		else
+		{
+			popThrough = -1;
+		}
+
+		popTo = stackCopy[popThrough + 1];
+		return nextTagInfo.RequiredParent == null || nextTagInfo.RequiredParent == popTo.Name;
+	}
+
 	private void ParseLoop()
 	{
 		while (_index < _input.Length)
@@ -296,37 +325,15 @@ public class BbParser
 						options = options[1..^1];
 					}
 
-					if (KnownTags.TryGetValue(name, out var state))
+					if (KnownTags.TryGetValue(name, out var state) && TagHasValidParent(name, state, out var popTo))
 					{
 						var e = new Element { Name = name, Options = options };
 						FlushText();
 						_index += m.Length;
-						if (state.SelfNesting == TagInfo.SelfNestingAllowed.No)
-						{
-							// try to pop a matching tag
-							foreach (var node in _stack)
-							{
-								if (node.Name == name)
-								{
-									while (true)
-									{
-										if (_stack.Pop().Name == name)
-										{
-											break;
-										}
-									}
 
-									break;
-								}
-							}
-						}
-						else if (state.SelfNesting == TagInfo.SelfNestingAllowed.NoImmediate)
+						while (_stack.Peek() != popTo)
 						{
-							// try to pop a matching tag but only at this level
-							if (_stack.Peek().Name == name)
-							{
-								_stack.Pop();
-							}
+							_stack.Pop();
 						}
 
 						if (state.IsBlock)

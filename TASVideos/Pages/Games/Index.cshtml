@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model IndexModel
 @{
-	ViewData["Title"] = $"{Model.Game.SystemCode} - {Model.Game.DisplayName}";
+	ViewData["Title"] = $"{Model.Game.DisplayName}";
 	string wiki = LinkConstants.GameWikiPage + Model.Id;
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), ViewData.UserPermissions());
 }
@@ -35,7 +35,7 @@
 				<row>
 					<column md="6">
 						<ul>
-							<li>Platform: @Model.Game.SystemCode</li>
+							<li>Platforms: @string.Join(", ", Model.Game.Roms.Select(rom => rom.SystemCode).Distinct())</li>
 							<li>Abbreviation: @Model.Game.Abbreviation</li>
 							<li>Display Name: @Model.Game.DisplayName</li>
 							<li>GoodTools Name: @Model.Game.GoodName</li>
@@ -143,20 +143,24 @@
 		<tr>
 			<th>Type</th>
 			<th>Name</th>
+			<th>Title Override</th>
 			<th>Region</th>
 			<th>Version</th>
 			<th>Sha1</th>
 			<th>Md5</th>
+			<th>Platform</th>
 		</tr>
 		@foreach (var rom in Model.Game.Roms)
 		{
 			<tr>
 				<td>@rom.Type.ToString()</td>
 				<td>@rom.Name</td>
+				<td>@rom.TitleOverride</td>
 				<td>@rom.Region</td>
 				<td>@rom.Version</td>
 				<td>@rom.Sha1</td>
 				<td>@rom.Md5</td>
+				<td>@rom.SystemCode</td>
 			</tr>
 		}
 	</table>
