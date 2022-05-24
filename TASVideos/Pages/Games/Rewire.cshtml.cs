@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -11,11 +12,14 @@ namespace TASVideos.Pages.Games;
 public class RewireModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
+	private readonly ExternalMediaPublisher _publisher;
 
 	public RewireModel(
-		ApplicationDbContext db)
+		ApplicationDbContext db,
+		ExternalMediaPublisher publisher)
 	{
 		_db = db;
+		_publisher = publisher;
 	}
 
 	[FromQuery]
@@ -132,7 +136,11 @@ public class RewireModel : BasePageModel
 				_db.GameRamAddresses.AttachRange(rewireRamAddresses);
 				rewireRamAddresses.ForEach(a => a.GameId = intoGameId);
 
-				await ConcurrentSave(_db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
+				var result = await ConcurrentSave(_db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
+				if (result)
+				{
+					await _publisher.SendGameManagement($"{IntoGameId}G edited by {User.Name()}", $"Rewired {FromGameId}G into {IntoGameId}G", $"{IntoGameId}G");
+				}
 			}
 		}
 

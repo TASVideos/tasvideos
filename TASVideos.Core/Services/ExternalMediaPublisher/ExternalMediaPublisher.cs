@@ -186,4 +186,16 @@ public static class ExternalMediaPublisherExtensions
 			Link = publisher.ToAbsolute(relativeLink)
 		});
 	}
+
+	public static async Task SendGameManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+	{
+		await publisher.Send(new Post
+		{
+			Type = PostType.General,
+			Group = PostGroups.Game,
+			Title = title,
+			Body = body,
+			Link = publisher.ToAbsolute(relativeLink)
+		});
+	}
 }
