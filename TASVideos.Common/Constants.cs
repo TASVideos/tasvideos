@@ -99,6 +99,7 @@ public static class PostGroups
 	public const string UserManagement = "UserManagement";
 	public const string UserFiles = "UserFiles";
 	public const string Publication = "Publication";
+	public const string Game = "Game";
 }
 
 // TODO: this is bootstrap specific, maybe it should go in the MVC project
