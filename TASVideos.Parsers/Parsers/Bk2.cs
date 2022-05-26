@@ -9,11 +9,6 @@ internal class Bk2 : ParserBase, IParser
 	private const string HeaderFile = "header";
 	private const string InputFile = "input log";
 
-	// hacky framerate fields, taken from platform framerates
-	private const double NtscNesFramerate = 60.0988138974405;
-	private const double NtscSnesFramerate = 60.0988138974405;
-	private const double PalSnesFramerate = 50.0069789081886;
-
 	public override string FileExtension => "bk2";
 
 	public async Task<IParseResult> Parse(Stream file, long length)
@@ -58,11 +53,6 @@ internal class Bk2 : ParserBase, IParser
 				result.WarnNoRerecords();
 			}
 
-			if (header.GetValueFor(Keys.Pal).ToBool())
-			{
-				result.Region = RegionType.Pal;
-			}
-
 			// Some biz system ids do not match tasvideos, convert if needed
 			if (BizToTasvideosSystemIds.ContainsKey(platform))
 			{
@@ -82,23 +72,6 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Fds;
 			}
-			else if (header.GetValueFor(Keys.ModeVs).ToBool())
-			{
-				platform = SystemCodes.Arcade;
-				result.FrameRateOverride = NtscNesFramerate;
-			}
-			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
-			{
-				platform = SystemCodes.GameBoy;
-				if (result.Region == RegionType.Pal)
-				{
-					result.FrameRateOverride = PalSnesFramerate;
-				}
-				else
-				{
-					result.FrameRateOverride = NtscSnesFramerate;
-				}
-			}
 			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
 			{
 				platform = SystemCodes.SegaCd;
@@ -111,12 +84,22 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Sg;
 			}
+			else if (header.GetValueFor(Keys.ModeVs).ToBool())
+			{
+				platform = SystemCodes.Arcade;
+				result.FrameRateOverride = 60.0988138974405;
+			}
 			else if (header.GetValueFor(Keys.ModeDsi).ToBool())
 			{
 				platform = SystemCodes.Dsi;
 			}
 
 			result.SystemCode = platform;
+
+			if (header.GetValueFor(Keys.Pal).ToBool())
+			{
+				result.Region = RegionType.Pal;
+			}
 
 			if (header.GetValueFor(Keys.StartsFromSavestate).ToBool())
 			{
@@ -174,7 +157,6 @@ internal class Bk2 : ParserBase, IParser
 		["gen"] = SystemCodes.Genesis,
 		["sat"] = SystemCodes.Saturn,
 		["dgb"] = SystemCodes.GameBoy,
-		["sgb"] = SystemCodes.GameBoy,
 		["gb3x"] = SystemCodes.GameBoy,
 		["gb4x"] = SystemCodes.GameBoy,
 		["gbl"] = SystemCodes.GameBoy,

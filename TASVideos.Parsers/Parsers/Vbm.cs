@@ -48,6 +48,10 @@ internal class Vbm : ParserBase, IParser
 		{
 			result.SystemCode = SystemCodes.Gbc;
 		}
+		else if (system.Bit(2))
+		{
+			result.SystemCode = SystemCodes.Sgb;
+		}
 		else
 		{
 			result.SystemCode = SystemCodes.GameBoy;
