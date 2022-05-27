@@ -10,6 +10,12 @@ namespace TASVideos.ForumEngine;
 public interface IWriterHelper
 {
 	/// <summary>
+	/// Get the title (display name) of a game.
+	/// </summary>
+	/// <returns>`null` if not found</returns>
+	Task<string?> GetGameTitle(int id);
+
+	/// <summary>
 	/// Get the title of a movie.
 	/// </summary>
 	/// <returns>`null` if not found</returns>
@@ -24,6 +30,7 @@ public interface IWriterHelper
 
 public class NullWriterHelper : IWriterHelper
 {
+	public Task<string?> GetGameTitle(int id) => Task.FromResult<string?>(null);
 	public Task<string?> GetMovieTitle(int id) => Task.FromResult<string?>(null);
 	public Task<string?> GetSubmissionTitle(int id) => Task.FromResult<string?>(null);
 
@@ -283,6 +290,13 @@ public class Element : INode
 				break;
 			case "post":
 				await WriteHref(w, h, s => "/Forum/Posts/" + s, async s => "Post #" + s);
+				break;
+			case "game":
+				await WriteHref(
+					w,
+					h,
+					s => "/" + s + "G",
+					async s => (int.TryParse(s, out var id) ? await h.GetGameTitle(id) : null) ?? "Game #" + s);
 				break;
 			case "movie":
 				await WriteHref(
