@@ -21,10 +21,10 @@ public class GameRom : BaseEntity
 	public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 
 	[StringLength(32)]
-	public string Md5 { get; set; } = "";
+	public string? Md5 { get; set; }
 
 	[StringLength(40)]
-	public string Sha1 { get; set; } = "";
+	public string? Sha1 { get; set; }
 
 	[Required]
 	[StringLength(255)]

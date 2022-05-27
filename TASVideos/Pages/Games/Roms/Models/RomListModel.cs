@@ -19,10 +19,10 @@ public class RomListModel
 		public string DisplayName { get; set; } = "";
 
 		[Display(Name = "Md5")]
-		public string Md5 { get; set; } = "";
+		public string? Md5 { get; set; }
 
 		[Display(Name = "Sha1")]
-		public string Sha1 { get; set; } = "";
+		public string? Sha1 { get; set; }
 
 		[Display(Name = "Version")]
 		public string? Version { get; set; }
