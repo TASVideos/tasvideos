@@ -155,6 +155,7 @@ public class BbParser
 		{ "google", new() { Children = TagInfo.ChildrenAllowed.No } }, // search query in body.  optional param `images`
 		{ "thread", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like url, but the link is a number
 		{ "post", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
+		{ "game", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
 		{ "movie", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
 		{ "submission", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
 		{ "userfile", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
