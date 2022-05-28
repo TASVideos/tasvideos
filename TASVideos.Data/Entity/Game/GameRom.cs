@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity.Game;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace TASVideos.Data.Entity.Game;
 
 public enum RomTypes
 {
@@ -8,6 +10,7 @@ public enum RomTypes
 	Bad
 }
 
+[Table("game_versions")]
 public class GameRom : BaseEntity
 {
 	public int Id { get; set; }
