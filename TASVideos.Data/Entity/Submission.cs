@@ -69,7 +69,7 @@ public class Submission : BaseEntity, ITimeable
 	public string? EncodeEmbedLink { get; set; }
 
 	[StringLength(100)]
-	public string? GameVersion { get; set; }
+	public string? SubmittedGameVersion { get; set; }
 
 	[StringLength(100)]
 	public string? GameName { get; set; }

@@ -74,7 +74,7 @@ public class EditModel : BasePageModel
 				SystemDisplayName = s.System!.DisplayName,
 				SystemCode = s.System.Code,
 				GameName = s.GameName,
-				GameVersion = s.GameVersion,
+				GameVersion = s.SubmittedGameVersion,
 				RomName = s.RomName,
 				Branch = s.Branch,
 				Emulator = s.EmulatorVersion,
@@ -333,7 +333,7 @@ public class EditModel : BasePageModel
 			? await _db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId.Value)
 			: null;
 
-		submission.GameVersion = Submission.GameVersion;
+		submission.SubmittedGameVersion = Submission.GameVersion;
 		submission.GameName = Submission.GameName;
 		submission.EmulatorVersion = Submission.Emulator;
 		submission.Branch = Submission.Branch;

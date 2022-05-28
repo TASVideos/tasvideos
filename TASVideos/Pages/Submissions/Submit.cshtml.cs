@@ -83,7 +83,7 @@ public class SubmitModel : BasePageModel
 
 		var submission = new Submission
 		{
-			GameVersion = Create.GameVersion,
+			SubmittedGameVersion = Create.GameVersion,
 			GameName = Create.GameName,
 			Branch = Create.Branch,
 			RomName = Create.RomName,
