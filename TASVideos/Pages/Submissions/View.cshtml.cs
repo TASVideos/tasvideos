@@ -40,7 +40,7 @@ public class ViewModel : BasePageModel
 				SystemDisplayName = s.System!.DisplayName,
 				SystemCode = s.System.Code,
 				GameName = s.GameId != null ? s.Game!.DisplayName : s.GameName,
-				GameVersion = s.GameVersion,
+				GameVersion = s.SubmittedGameVersion,
 				RomName = s.RomName,
 				Branch = s.Branch,
 				Emulator = s.EmulatorVersion,
@@ -60,7 +60,7 @@ public class ViewModel : BasePageModel
 				SystemId = s.SystemId,
 				SystemFrameRateId = s.SystemFrameRateId,
 				GameId = s.GameId,
-				RomId = s.RomId,
+				RomId = s.GameVersionId,
 				RejectionReasonDisplay = s.RejectionReasonId.HasValue
 					? s.RejectionReason!.DisplayName
 					: null,

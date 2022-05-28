@@ -112,7 +112,7 @@ public class PublishModel : BasePageModel
 			.Include(s => s.System)
 			.Include(s => s.SystemFrameRate)
 			.Include(s => s.Game)
-			.Include(s => s.Rom)
+			.Include(s => s.GameVersion)
 			.Include(s => s.SubmissionAuthors)
 			.ThenInclude(sa => sa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
@@ -129,7 +129,7 @@ public class PublishModel : BasePageModel
 			SystemId = submission.System!.Id,
 			SystemFrameRateId = submission.SystemFrameRate!.Id,
 			GameId = submission.Game!.Id,
-			RomId = submission.Rom!.Id,
+			GameVersionId = submission.GameVersion!.Id,
 			Branch = submission.Branch,
 			EmulatorVersion = submission.EmulatorVersion,
 			Frames = submission.Frames,

@@ -47,7 +47,7 @@ public class CatalogModel : BasePageModel
 				.Select(p => new PublicationCatalogModel
 				{
 					Title = p.Title,
-					RomId = p.RomId,
+					RomId = p.GameVersionId,
 					GameId = p.GameId,
 					SystemId = p.SystemId,
 					SystemFrameRateId = p.SystemFrameRateId
@@ -70,7 +70,7 @@ public class CatalogModel : BasePageModel
 				// We only want to pre-populate the Rom if a valid Game was provided
 				if (RomId.HasValue)
 				{
-					var rom = await _db.GameRoms.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
+					var rom = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
 					if (rom is not null)
 					{
 						Catalog.RomId = rom.Id;
@@ -96,7 +96,7 @@ public class CatalogModel : BasePageModel
 			.Include(p => p.System)
 			.Include(p => p.SystemFrameRate)
 			.Include(p => p.Game)
-			.Include(p => p.Rom)
+			.Include(p => p.GameVersion)
 			.Include(p => p.Authors)
 			.ThenInclude(pa => pa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
@@ -152,18 +152,18 @@ public class CatalogModel : BasePageModel
 			}
 		}
 
-		if (publication.RomId != Catalog.RomId)
+		if (publication.GameVersionId != Catalog.RomId)
 		{
-			var romHash = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId);
+			var romHash = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.RomId);
 			if (romHash is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown System Id: {Catalog.RomId}");
 			}
 			else
 			{
-				externalMessages.Add($"Rom Hash changed from {publication.Rom!.Name} to {romHash.Name}");
-				publication.RomId = Catalog.RomId;
-				publication.Rom = romHash;
+				externalMessages.Add($"Rom Hash changed from {publication.GameVersion!.Name} to {romHash.Name}");
+				publication.GameVersionId = Catalog.RomId;
+				publication.GameVersion = romHash;
 			}
 
 			if (!ModelState.IsValid)
@@ -189,7 +189,7 @@ public class CatalogModel : BasePageModel
 
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
-		AvailableRoms = UiDefaults.DefaultEntry.Concat(await _db.GameRoms
+		AvailableRoms = UiDefaults.DefaultEntry.Concat(await _db.GameVersions
 			.ForGame(gameId)
 			.ForSystem(systemId)
 			.OrderBy(r => r.Name)

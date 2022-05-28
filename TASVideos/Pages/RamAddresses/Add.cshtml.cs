@@ -26,7 +26,7 @@ public class AddModel : AddressBasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var game = await _db.Games
-			.Include(g => g.Roms)
+			.Include(g => g.GameVersions)
 			.SingleOrDefaultAsync(g => g.Id == GameId);
 
 		if (game is null)
@@ -44,7 +44,7 @@ public class AddModel : AddressBasePageModel
 			.FirstOrDefaultAsync();
 		if (systemId == 0)
 		{
-			systemId = game.Roms.FirstOrDefault()?.SystemId ?? 1;
+			systemId = game.GameVersions.FirstOrDefault()?.SystemId ?? 1;
 		}
 
 		SystemId = systemId;
@@ -72,7 +72,7 @@ public class AddModel : AddressBasePageModel
 			.FirstOrDefaultAsync();
 			if (systemId == 0)
 			{
-				systemId = game.Roms.FirstOrDefault()?.SystemId ?? 1;
+				systemId = game.GameVersions.FirstOrDefault()?.SystemId ?? 1;
 			}
 
 			SystemId = systemId;

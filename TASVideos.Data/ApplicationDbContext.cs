@@ -60,7 +60,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	public DbSet<Genre> Genres { get; set; } = null!;
 	public DbSet<GameSystem> GameSystems { get; set; } = null!;
 	public DbSet<GameSystemFrameRate> GameSystemFrameRates { get; set; } = null!;
-	public DbSet<GameRom> GameRoms { get; set; } = null!;
+	public DbSet<GameVersion> GameVersions { get; set; } = null!;
 	public DbSet<GameGroup> GameGroups { get; set; } = null!;
 	public DbSet<GameGameGroup> GameGameGroups { get; set; } = null!;
 	public DbSet<GameRamAddressDomain> GameRamAddressDomains { get; set; } = null!;
@@ -270,7 +270,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 				.WithMany(s => s.Publications)
 				.OnDelete(DeleteBehavior.Restrict);
 
-			entity.HasOne(p => p.Rom)
+			entity.HasOne(p => p.GameVersion)
 				.WithMany(r => r.Publications)
 				.OnDelete(DeleteBehavior.Restrict);
 

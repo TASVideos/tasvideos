@@ -96,7 +96,7 @@ public class EditModel : BasePageModel
 		}
 
 		Rom = await _mapper.ProjectTo<RomEditModel>(
-			_db.GameRoms.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
+			_db.GameVersions.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
 			.SingleAsync();
 
 		if (Rom is null)
@@ -125,19 +125,19 @@ public class EditModel : BasePageModel
 			return BadRequest();
 		}
 
-		GameRom rom;
+		GameVersion version;
 		if (Id.HasValue)
 		{
-			rom = await _db.GameRoms.SingleAsync(r => r.Id == Id.Value);
-			rom.System = system;
-			_mapper.Map(Rom, rom);
+			version = await _db.GameVersions.SingleAsync(r => r.Id == Id.Value);
+			version.System = system;
+			_mapper.Map(Rom, version);
 		}
 		else
 		{
-			rom = _mapper.Map<GameRom>(Rom);
-			rom.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
-			rom.System = system;
-			_db.GameRoms.Add(rom);
+			version = _mapper.Map<GameVersion>(Rom);
+			version.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
+			version.System = system;
+			_db.GameVersions.Add(version);
 		}
 
 		try
@@ -152,7 +152,7 @@ public class EditModel : BasePageModel
 
 		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 			? RedirectToPage("List", new { gameId = GameId })
-			: BaseReturnUrlRedirect($"?GameId={GameId}&RomId={rom.Id}");
+			: BaseReturnUrlRedirect($"?GameId={GameId}&RomId={version.Id}");
 	}
 
 	public async Task<IActionResult> OnPostDelete()
@@ -168,14 +168,14 @@ public class EditModel : BasePageModel
 			return BasePageRedirect("List", new { gameId = GameId });
 		}
 
-		_db.GameRoms.Attach(new GameRom { Id = Id ?? 0 }).State = EntityState.Deleted;
+		_db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
 		await ConcurrentSave(_db, $"Rom {Id} deleted", $"Unable to delete Rom {Id}");
 		return BasePageRedirect("List", new { gameId = GameId });
 	}
 
 	private async Task<bool> CanBeDeleted()
 	{
-		return !await _db.Submissions.AnyAsync(s => s.Rom!.Id == Id)
-				&& !await _db.Publications.AnyAsync(p => p.Rom!.Id == Id);
+		return !await _db.Submissions.AnyAsync(s => s.GameVersion!.Id == Id)
+				&& !await _db.Publications.AnyAsync(p => p.GameVersion!.Id == Id);
 	}
 }

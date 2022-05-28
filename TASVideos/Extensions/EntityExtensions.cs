@@ -207,8 +207,8 @@ public static class EntityExtensions
 					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
 					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
 				},
-				Region = p.Rom != null ? p.Rom.Region : null,
-				RomVersion = p.Rom != null ? p.Rom.Version : null
+				Region = p.GameVersion != null ? p.GameVersion.Region : null,
+				RomVersion = p.GameVersion != null ? p.GameVersion.Version : null
 			});
 
 		if (ratingSort)

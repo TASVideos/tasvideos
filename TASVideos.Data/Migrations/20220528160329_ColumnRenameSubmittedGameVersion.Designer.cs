@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NpgsqlTypes;
@@ -13,9 +14,10 @@ using TASVideos.Data;
 namespace TASVideos.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220528160329_ColumnRenameSubmittedGameVersion")]
+    partial class ColumnRenameSubmittedGameVersion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -912,6 +914,86 @@ namespace TASVideos.Data.Migrations
                     b.ToTable("game_ram_address_domains", (string)null);
                 });
 
+            modelBuilder.Entity("TASVideos.Data.Entity.Game.GameRom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreateTimestamp")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("create_timestamp");
+
+                    b.Property<string>("CreateUserName")
+                        .HasColumnType("citext")
+                        .HasColumnName("create_user_name");
+
+                    b.Property<int>("GameId")
+                        .HasColumnType("integer")
+                        .HasColumnName("game_id");
+
+                    b.Property<DateTime>("LastUpdateTimestamp")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("last_update_timestamp");
+
+                    b.Property<string>("LastUpdateUserName")
+                        .HasColumnType("citext")
+                        .HasColumnName("last_update_user_name");
+
+                    b.Property<string>("Md5")
+                        .HasMaxLength(32)
+                        .HasColumnType("citext")
+                        .HasColumnName("md5");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("citext")
+                        .HasColumnName("name");
+
+                    b.Property<string>("Region")
+                        .HasMaxLength(50)
+                        .HasColumnType("citext")
+                        .HasColumnName("region");
+
+                    b.Property<string>("Sha1")
+                        .HasMaxLength(40)
+                        .HasColumnType("citext")
+                        .HasColumnName("sha1");
+
+                    b.Property<int?>("SystemId")
+                        .HasColumnType("integer")
+                        .HasColumnName("system_id");
+
+                    b.Property<string>("TitleOverride")
+                        .HasMaxLength(255)
+                        .HasColumnType("citext")
+                        .HasColumnName("title_override");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("integer")
+                        .HasColumnName("type");
+
+                    b.Property<string>("Version")
+                        .HasMaxLength(50)
+                        .HasColumnType("citext")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_game_versions");
+
+                    b.HasIndex("GameId")
+                        .HasDatabaseName("ix_game_versions_game_id");
+
+                    b.HasIndex("SystemId")
+                        .HasDatabaseName("ix_game_versions_system_id");
+
+                    b.ToTable("game_versions", (string)null);
+                });
+
             modelBuilder.Entity("TASVideos.Data.Entity.Game.GameSystem", b =>
                 {
                     b.Property<int>("Id")
@@ -1013,86 +1095,6 @@ namespace TASVideos.Data.Migrations
                         .HasDatabaseName("ix_game_system_frame_rates_game_system_id");
 
                     b.ToTable("game_system_frame_rates", (string)null);
-                });
-
-            modelBuilder.Entity("TASVideos.Data.Entity.Game.GameVersion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasColumnName("id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreateTimestamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("create_timestamp");
-
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
-                    b.Property<int>("GameId")
-                        .HasColumnType("integer")
-                        .HasColumnName("game_id");
-
-                    b.Property<DateTime>("LastUpdateTimestamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
-
-                    b.Property<string>("Md5")
-                        .HasMaxLength(32)
-                        .HasColumnType("citext")
-                        .HasColumnName("md5");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("citext")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Region")
-                        .HasMaxLength(50)
-                        .HasColumnType("citext")
-                        .HasColumnName("region");
-
-                    b.Property<string>("Sha1")
-                        .HasMaxLength(40)
-                        .HasColumnType("citext")
-                        .HasColumnName("sha1");
-
-                    b.Property<int?>("SystemId")
-                        .HasColumnType("integer")
-                        .HasColumnName("system_id");
-
-                    b.Property<string>("TitleOverride")
-                        .HasMaxLength(255)
-                        .HasColumnType("citext")
-                        .HasColumnName("title_override");
-
-                    b.Property<int>("Type")
-                        .HasColumnType("integer")
-                        .HasColumnName("type");
-
-                    b.Property<string>("Version")
-                        .HasMaxLength(50)
-                        .HasColumnType("citext")
-                        .HasColumnName("version");
-
-                    b.HasKey("Id")
-                        .HasName("pk_game_versions");
-
-                    b.HasIndex("GameId")
-                        .HasDatabaseName("ix_game_versions_game_id");
-
-                    b.HasIndex("SystemId")
-                        .HasDatabaseName("ix_game_versions_system_id");
-
-                    b.ToTable("game_versions", (string)null);
                 });
 
             modelBuilder.Entity("TASVideos.Data.Entity.Game.Genre", b =>
@@ -1350,10 +1352,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("game_id");
 
-                    b.Property<int>("GameVersionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("game_version_id");
-
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
@@ -1384,6 +1382,10 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("rerecord_count");
 
+                    b.Property<int>("RomId")
+                        .HasColumnType("integer")
+                        .HasColumnName("rom_id");
+
                     b.Property<int>("SubmissionId")
                         .HasColumnType("integer")
                         .HasColumnName("submission_id");
@@ -1411,14 +1413,14 @@ namespace TASVideos.Data.Migrations
                     b.HasIndex("GameId")
                         .HasDatabaseName("ix_publications_game_id");
 
-                    b.HasIndex("GameVersionId")
-                        .HasDatabaseName("ix_publications_game_version_id");
-
                     b.HasIndex("ObsoletedById")
                         .HasDatabaseName("ix_publications_obsoleted_by_id");
 
                     b.HasIndex("PublicationClassId")
                         .HasDatabaseName("ix_publications_publication_class_id");
+
+                    b.HasIndex("RomId")
+                        .HasDatabaseName("ix_publications_rom_id");
 
                     b.HasIndex("SubmissionId")
                         .IsUnique()
@@ -1912,10 +1914,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("citext")
                         .HasColumnName("game_name");
 
-                    b.Property<int?>("GameVersionId")
-                        .HasColumnType("integer")
-                        .HasColumnName("game_version_id");
-
                     b.Property<decimal>("ImportedTime")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("numeric(16,4)")
@@ -1974,6 +1972,10 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("rerecord_count");
 
+                    b.Property<int?>("RomId")
+                        .HasColumnType("integer")
+                        .HasColumnName("rom_id");
+
                     b.Property<string>("RomName")
                         .HasMaxLength(250)
                         .HasColumnType("citext")
@@ -2019,9 +2021,6 @@ namespace TASVideos.Data.Migrations
                     b.HasIndex("GameId")
                         .HasDatabaseName("ix_submissions_game_id");
 
-                    b.HasIndex("GameVersionId")
-                        .HasDatabaseName("ix_submissions_game_version_id");
-
                     b.HasIndex("IntendedClassId")
                         .HasDatabaseName("ix_submissions_intended_class_id");
 
@@ -2033,6 +2032,9 @@ namespace TASVideos.Data.Migrations
 
                     b.HasIndex("RejectionReasonId")
                         .HasDatabaseName("ix_submissions_rejection_reason_id");
+
+                    b.HasIndex("RomId")
+                        .HasDatabaseName("ix_submissions_rom_id");
 
                     b.HasIndex("Status")
                         .HasDatabaseName("ix_submissions_status");
@@ -3046,6 +3048,25 @@ namespace TASVideos.Data.Migrations
                     b.Navigation("System");
                 });
 
+            modelBuilder.Entity("TASVideos.Data.Entity.Game.GameRom", b =>
+                {
+                    b.HasOne("TASVideos.Data.Entity.Game.Game", "Game")
+                        .WithMany("Roms")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_game_versions_games_game_id");
+
+                    b.HasOne("TASVideos.Data.Entity.Game.GameSystem", "System")
+                        .WithMany("GameRoms")
+                        .HasForeignKey("SystemId")
+                        .HasConstraintName("fk_game_versions_game_systems_system_id");
+
+                    b.Navigation("Game");
+
+                    b.Navigation("System");
+                });
+
             modelBuilder.Entity("TASVideos.Data.Entity.Game.GameSystemFrameRate", b =>
                 {
                     b.HasOne("TASVideos.Data.Entity.Game.GameSystem", "System")
@@ -3054,25 +3075,6 @@ namespace TASVideos.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired()
                         .HasConstraintName("fk_game_system_frame_rates_game_systems_game_system_id");
-
-                    b.Navigation("System");
-                });
-
-            modelBuilder.Entity("TASVideos.Data.Entity.Game.GameVersion", b =>
-                {
-                    b.HasOne("TASVideos.Data.Entity.Game.Game", "Game")
-                        .WithMany("GameVersions")
-                        .HasForeignKey("GameId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_game_versions_games_game_id");
-
-                    b.HasOne("TASVideos.Data.Entity.Game.GameSystem", "System")
-                        .WithMany("GameVersions")
-                        .HasForeignKey("SystemId")
-                        .HasConstraintName("fk_game_versions_game_systems_system_id");
-
-                    b.Navigation("Game");
 
                     b.Navigation("System");
                 });
@@ -3107,13 +3109,6 @@ namespace TASVideos.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_publications_games_game_id");
 
-                    b.HasOne("TASVideos.Data.Entity.Game.GameVersion", "GameVersion")
-                        .WithMany("Publications")
-                        .HasForeignKey("GameVersionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired()
-                        .HasConstraintName("fk_publications_game_versions_game_version_id");
-
                     b.HasOne("TASVideos.Data.Entity.Publication", "ObsoletedBy")
                         .WithMany("ObsoletedMovies")
                         .HasForeignKey("ObsoletedById")
@@ -3126,6 +3121,13 @@ namespace TASVideos.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_publications_publication_classes_publication_class_id");
+
+                    b.HasOne("TASVideos.Data.Entity.Game.GameRom", "Rom")
+                        .WithMany("Publications")
+                        .HasForeignKey("RomId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_publications_game_versions_rom_id");
 
                     b.HasOne("TASVideos.Data.Entity.Submission", "Submission")
                         .WithOne("Publication")
@@ -3155,11 +3157,11 @@ namespace TASVideos.Data.Migrations
 
                     b.Navigation("Game");
 
-                    b.Navigation("GameVersion");
-
                     b.Navigation("ObsoletedBy");
 
                     b.Navigation("PublicationClass");
+
+                    b.Navigation("Rom");
 
                     b.Navigation("Submission");
 
@@ -3328,11 +3330,6 @@ namespace TASVideos.Data.Migrations
                         .HasForeignKey("GameId")
                         .HasConstraintName("fk_submissions_games_game_id");
 
-                    b.HasOne("TASVideos.Data.Entity.Game.GameVersion", "GameVersion")
-                        .WithMany("Submissions")
-                        .HasForeignKey("GameVersionId")
-                        .HasConstraintName("fk_submissions_game_versions_game_version_id");
-
                     b.HasOne("TASVideos.Data.Entity.PublicationClass", "IntendedClass")
                         .WithMany()
                         .HasForeignKey("IntendedClassId")
@@ -3352,6 +3349,11 @@ namespace TASVideos.Data.Migrations
                         .WithMany()
                         .HasForeignKey("RejectionReasonId")
                         .HasConstraintName("fk_submissions_submission_rejection_reasons_rejection_reason_id");
+
+                    b.HasOne("TASVideos.Data.Entity.Game.GameRom", "Rom")
+                        .WithMany("Submissions")
+                        .HasForeignKey("RomId")
+                        .HasConstraintName("fk_submissions_game_versions_rom_id");
 
                     b.HasOne("TASVideos.Data.Entity.User", "Submitter")
                         .WithMany()
@@ -3375,8 +3377,6 @@ namespace TASVideos.Data.Migrations
 
                     b.Navigation("Game");
 
-                    b.Navigation("GameVersion");
-
                     b.Navigation("IntendedClass");
 
                     b.Navigation("Judge");
@@ -3384,6 +3384,8 @@ namespace TASVideos.Data.Migrations
                     b.Navigation("Publisher");
 
                     b.Navigation("RejectionReason");
+
+                    b.Navigation("Rom");
 
                     b.Navigation("Submitter");
 
@@ -3573,9 +3575,9 @@ namespace TASVideos.Data.Migrations
 
                     b.Navigation("GameGroups");
 
-                    b.Navigation("GameVersions");
-
                     b.Navigation("Publications");
+
+                    b.Navigation("Roms");
 
                     b.Navigation("Submissions");
 
@@ -3587,9 +3589,16 @@ namespace TASVideos.Data.Migrations
                     b.Navigation("Games");
                 });
 
+            modelBuilder.Entity("TASVideos.Data.Entity.Game.GameRom", b =>
+                {
+                    b.Navigation("Publications");
+
+                    b.Navigation("Submissions");
+                });
+
             modelBuilder.Entity("TASVideos.Data.Entity.Game.GameSystem", b =>
                 {
-                    b.Navigation("GameVersions");
+                    b.Navigation("GameRoms");
 
                     b.Navigation("Games");
 
@@ -3598,13 +3607,6 @@ namespace TASVideos.Data.Migrations
                     b.Navigation("Submissions");
 
                     b.Navigation("SystemFrameRates");
-                });
-
-            modelBuilder.Entity("TASVideos.Data.Entity.Game.GameVersion", b =>
-                {
-                    b.Navigation("Publications");
-
-                    b.Navigation("Submissions");
                 });
 
             modelBuilder.Entity("TASVideos.Data.Entity.Game.Genre", b =>
