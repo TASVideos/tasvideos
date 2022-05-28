@@ -228,7 +228,7 @@ public class EditModel : BasePageModel
 			.Include(s => s.SubmissionAuthors)
 			.ThenInclude(sa => sa.Author)
 			.Include(s => s.Game)
-			.Include(s => s.Rom)
+			.Include(s => s.GameVersion)
 			.SingleAsync(s => s.Id == Id);
 
 		if (Submission.MovieFile is not null)

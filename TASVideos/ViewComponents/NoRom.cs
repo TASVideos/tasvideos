@@ -21,12 +21,12 @@ public class NoRom : ViewComponent
 		var model = new MissingRomModel
 		{
 			Publications = await _db.Publications
-				.Where(p => p.RomId == -1)
+				.Where(p => p.GameVersionId == -1)
 				.OrderBy(p => p.Id)
 				.Select(p => new MissingRomModel.Entry(p.Id, p.Title))
 				.ToListAsync(),
 			Submissions = await _db.Submissions
-				.Where(s => s.RomId == null || s.RomId < 1)
+				.Where(s => s.GameVersionId == null || s.GameVersionId < 1)
 				.OrderBy(p => p.Id)
 				.Select(s => new MissingRomModel.Entry(s.Id, s.Title))
 				.ToListAsync()

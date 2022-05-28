@@ -60,7 +60,7 @@ public class ViewModel : BasePageModel
 				SystemId = s.SystemId,
 				SystemFrameRateId = s.SystemFrameRateId,
 				GameId = s.GameId,
-				RomId = s.RomId,
+				RomId = s.GameVersionId,
 				RejectionReasonDisplay = s.RejectionReasonId.HasValue
 					? s.RejectionReason!.DisplayName
 					: null,

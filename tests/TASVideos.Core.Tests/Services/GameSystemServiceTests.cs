@@ -100,7 +100,7 @@ public class GameSystemServiceTests
 		const int systemId = 1;
 		const int gameRomId = 1;
 		_db.GameSystems.Add(new GameSystem { Id = systemId });
-		_db.GameRoms.Add(new GameRom { Id = gameRomId, SystemId = systemId });
+		_db.GameVersions.Add(new GameVersion { Id = gameRomId, SystemId = systemId });
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.InUse(systemId);

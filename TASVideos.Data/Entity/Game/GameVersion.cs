@@ -10,8 +10,7 @@ public enum RomTypes
 	Bad
 }
 
-[Table("game_versions")]
-public class GameRom : BaseEntity
+public class GameVersion : BaseEntity
 {
 	public int Id { get; set; }
 
@@ -47,12 +46,12 @@ public class GameRom : BaseEntity
 
 public static class RomExtensions
 {
-	public static IQueryable<GameRom> ForGame(this IQueryable<GameRom> query, int gameId)
+	public static IQueryable<GameVersion> ForGame(this IQueryable<GameVersion> query, int gameId)
 	{
 		return query.Where(g => g.GameId == gameId);
 	}
 
-	public static IQueryable<GameRom> ForSystem(this IQueryable<GameRom> query, int systemId)
+	public static IQueryable<GameVersion> ForSystem(this IQueryable<GameVersion> query, int systemId)
 	{
 		return query.Where(g => g.SystemId == systemId);
 	}

@@ -47,7 +47,7 @@ public class CatalogModel : BasePageModel
 			.Select(s => new SubmissionCatalogModel
 			{
 				Title = s.Title,
-				RomId = s.RomId,
+				RomId = s.GameVersionId,
 				GameId = s.GameId,
 				SystemId = s.SystemId,
 				SystemFrameRateId = s.SystemFrameRateId
@@ -70,7 +70,7 @@ public class CatalogModel : BasePageModel
 				// We only want to pre-populate the Rom if a valid Game was provided
 				if (RomId.HasValue)
 				{
-					var rom = await _db.GameRoms.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
+					var rom = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
 					if (rom is not null)
 					{
 						Catalog.RomId = rom.Id;
@@ -95,7 +95,7 @@ public class CatalogModel : BasePageModel
 			.Include(s => s.System)
 			.Include(s => s.SystemFrameRate)
 			.Include(s => s.Game)
-			.Include(s => s.Rom)
+			.Include(s => s.GameVersion)
 			.Include(s => s.SubmissionAuthors)
 			.ThenInclude(sa => sa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
@@ -160,27 +160,27 @@ public class CatalogModel : BasePageModel
 			}
 		}
 
-		if (submission.RomId != Catalog.RomId)
+		if (submission.GameVersionId != Catalog.RomId)
 		{
 			if (Catalog.RomId.HasValue)
 			{
-				var rom = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
+				var rom = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
 				if (rom is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown Rom Id: {Catalog.RomId.Value}");
 				}
 				else
 				{
-					externalMessages.Add($"Rom Hash changed from {submission.Rom?.Name ?? "\"\""} to {rom.Name}");
-					submission.RomId = Catalog.RomId.Value;
-					submission.Rom = rom;
+					externalMessages.Add($"Rom Hash changed from {submission.GameVersion?.Name ?? "\"\""} to {rom.Name}");
+					submission.GameVersionId = Catalog.RomId.Value;
+					submission.GameVersion = rom;
 				}
 			}
 			else
 			{
 				externalMessages.Add("Rom removed");
-				submission.RomId = null;
-				submission.Rom = null;
+				submission.GameVersionId = null;
+				submission.GameVersion = null;
 			}
 		}
 
@@ -213,7 +213,7 @@ public class CatalogModel : BasePageModel
 				.ToDropDown()
 				.ToListAsync();
 
-			AvailableRoms = await _db.GameRoms
+			AvailableRoms = await _db.GameVersions
 				.OrderBy(r => r.Name)
 				.Select(r => new SelectListItem
 				{
@@ -232,7 +232,7 @@ public class CatalogModel : BasePageModel
 
 			if (Catalog.GameId.HasValue)
 			{
-				AvailableRoms = await _db.GameRoms
+				AvailableRoms = await _db.GameVersions
 					.ForSystem((int)Catalog.SystemId)
 					.ForGame((int)Catalog.GameId)
 					.OrderBy(r => r.Name)
@@ -245,7 +245,7 @@ public class CatalogModel : BasePageModel
 			}
 			else
 			{
-				AvailableRoms = await _db.GameRoms
+				AvailableRoms = await _db.GameVersions
 					.ForSystem((int)Catalog.SystemId)
 					.OrderBy(r => r.Name)
 					.Select(r => new SelectListItem

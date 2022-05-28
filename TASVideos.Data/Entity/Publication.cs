@@ -55,8 +55,8 @@ public class Publication : BaseEntity, ITimeable
 	public int SystemFrameRateId { get; set; }
 	public virtual GameSystemFrameRate? SystemFrameRate { get; set; }
 
-	public int RomId { get; set; }
-	public virtual GameRom? Rom { get; set; }
+	public int GameVersionId { get; set; }
+	public virtual GameVersion? GameVersion { get; set; }
 
 	public int PublicationClassId { get; set; }
 	public virtual PublicationClass? PublicationClass { get; set; }
@@ -118,9 +118,9 @@ public class Publication : BaseEntity, ITimeable
 		}
 
 		var gameName = Game.DisplayName;
-		if (Rom is not null && !string.IsNullOrWhiteSpace(Rom.TitleOverride))
+		if (GameVersion is not null && !string.IsNullOrWhiteSpace(GameVersion.TitleOverride))
 		{
-			gameName = Rom.TitleOverride;
+			gameName = GameVersion.TitleOverride;
 		}
 
 		Title =

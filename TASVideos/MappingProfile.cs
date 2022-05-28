@@ -36,7 +36,7 @@ public class MappingProfile : Profile
 		CreateMap<GameEditModel, Game>()
 			.ForMember(dest => dest.SystemId, opt => opt.MapFrom(src => 1)); // TODO: Delete this line when SystemId column is removed
 
-		CreateMap<GameRom, RomEditModel>()
+		CreateMap<GameVersion, RomEditModel>()
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 			.ReverseMap();
 
@@ -95,14 +95,14 @@ public class MappingProfile : Profile
 
 		CreateMap<Game, GameDisplayModel>()
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
-			.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.Roms))
+			.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.GameVersions))
 			.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)))
 			.ForMember(dest => dest.PublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById == null)))
 			.ForMember(dest => dest.ObsoletePublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById != null)))
 			.ForMember(dest => dest.SubmissionCount, opt => opt.MapFrom(src => src.Submissions.Count))
 			.ForMember(dest => dest.UserFilesCount, opt => opt.MapFrom(src => src.UserFiles.Count(uf => !uf.Hidden)));
 
-		CreateMap<GameRom, GameDisplayModel.Rom>()
+		CreateMap<GameVersion, GameDisplayModel.Rom>()
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
 		CreateMap<GameGroup, GameDisplayModel.GameGroup>();
 
@@ -115,8 +115,8 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SystemRegion, opt => opt.MapFrom(src => src.SystemFrameRate!.RegionCode + " " + src.SystemFrameRate.FrameRate))
 			.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game!.DisplayName))
 			.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
-			.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.RomId ?? 0))
-			.ForMember(dest => dest.Rom, opt => opt.MapFrom(src => src.Rom!.Name))
+			.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.GameVersionId ?? 0))
+			.ForMember(dest => dest.Rom, opt => opt.MapFrom(src => src.GameVersion!.Name))
 			.ForMember(dest => dest.PublicationClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : ""));
 
 		// API
@@ -149,7 +149,7 @@ public class MappingProfile : Profile
 		CreateMap<GameSystemFrameRate, SystemsResponse.FrameRates>();
 
 		CreateMap<Game, GamesResponse>();
-		CreateMap<GameRom, GamesResponse.GameRom>();
+		CreateMap<GameVersion, GamesResponse.GameRom>();
 
 		CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
 		CreateMap<GameRamAddress, AddressEditModel>()

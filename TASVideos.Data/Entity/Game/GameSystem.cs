@@ -10,7 +10,7 @@ public class GameSystem : BaseEntity
 	public virtual ICollection<GameSystemFrameRate> SystemFrameRates { get; set; } = new HashSet<GameSystemFrameRate>();
 
 	public virtual ICollection<Game> Games { get; set; } = new HashSet<Game>();
-	public virtual ICollection<GameRom> GameRoms { get; set; } = new HashSet<GameRom>();
+	public virtual ICollection<GameVersion> GameVersions { get; set; } = new HashSet<GameVersion>();
 
 	public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 	public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();

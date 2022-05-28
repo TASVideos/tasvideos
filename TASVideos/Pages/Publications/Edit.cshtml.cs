@@ -163,7 +163,7 @@ public class EditModel : BasePageModel
 			.Include(p => p.System)
 			.Include(p => p.SystemFrameRate)
 			.Include(p => p.Game)
-			.Include(p => p.Rom)
+			.Include(p => p.GameVersion)
 			.Include(p => p.Authors)
 			.ThenInclude(pa => pa.Author)
 			.SingleOrDefaultAsync(p => p.Id == id);

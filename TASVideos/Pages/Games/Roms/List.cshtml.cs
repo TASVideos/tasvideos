@@ -26,7 +26,7 @@ public class ListModel : BasePageModel
 			.Select(g => new RomListModel
 			{
 				GameDisplayName = g.DisplayName,
-				Roms = g.Roms
+				Roms = g.GameVersions
 				.Select(r => new RomListModel.RomEntry
 				{
 					Id = r.Id,
