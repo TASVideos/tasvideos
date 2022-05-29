@@ -14,7 +14,7 @@ public class GameVersion : BaseEntity
 
 	public int GameId { get; set; }
 	public virtual Game? Game { get; set; }
-	public int? SystemId { get; set; }
+	public int SystemId { get; set; }
 	public virtual GameSystem? System { get; set; }
 
 	public ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
