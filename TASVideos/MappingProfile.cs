@@ -36,7 +36,7 @@ public class MappingProfile : Profile
 		CreateMap<GameEditModel, Game>()
 			.ForMember(dest => dest.SystemId, opt => opt.MapFrom(src => 1)); // TODO: Delete this line when SystemId column is removed
 
-		CreateMap<GameVersion, RomEditModel>()
+		CreateMap<GameVersion, VersionEditModel>()
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 			.ReverseMap();
 
@@ -95,7 +95,7 @@ public class MappingProfile : Profile
 
 		CreateMap<Game, GameDisplayModel>()
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
-			.ForMember(dest => dest.Roms, opt => opt.MapFrom(src => src.GameVersions))
+			.ForMember(dest => dest.Versions, opt => opt.MapFrom(src => src.GameVersions))
 			.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)))
 			.ForMember(dest => dest.PublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById == null)))
 			.ForMember(dest => dest.ObsoletePublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById != null)))
@@ -149,7 +149,7 @@ public class MappingProfile : Profile
 		CreateMap<GameSystemFrameRate, SystemsResponse.FrameRates>();
 
 		CreateMap<Game, GamesResponse>();
-		CreateMap<GameVersion, GamesResponse.GameRom>();
+		CreateMap<GameVersion, GamesResponse.GameVersion>();
 
 		CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
 		CreateMap<GameRamAddress, AddressEditModel>()

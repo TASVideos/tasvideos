@@ -3,7 +3,7 @@ using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games.Versions.Models;
 
-public class RomEditModel
+public class VersionEditModel
 {
 	[Required]
 	[Display(Name = "System")]

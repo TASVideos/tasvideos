@@ -12,7 +12,7 @@ public class GamesResponse
 	[Sortable]
 	public int Id { get; init; }
 
-	public IEnumerable<GameRom> Roms { get; init; } = new List<GameRom>();
+	public IEnumerable<GameVersion> Versions { get; init; } = new List<GameVersion>();
 
 	[Sortable]
 	public string GoodName { get; init; } = "";
@@ -32,7 +32,7 @@ public class GamesResponse
 	[Sortable]
 	public string ScreenshotUrl { get; init; } = "";
 
-	public class GameRom
+	public class GameVersion
 	{
 		public int Id { get; init; }
 		public string Md5 { get; init; } = "";

@@ -2,7 +2,7 @@
 @model EditModel
 @{
 	ViewData["Title"] = Model.Id.HasValue
-		? $"Editing Game Version #{Model.Id} {Model.Rom.Name}"
+		? $"Editing Game Version #{Model.Id} {Model.Version.Name}"
 		: "Create A New Game Version Entry";
 	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
 	string returnUrl = HttpContext.Request.ReturnUrl();
@@ -23,46 +23,46 @@
 	<row>
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Rom.SystemCode"></label>
-				<select asp-for="Rom.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="Rom.SystemCode" class="text-danger"></span>
+				<label asp-for="Version.SystemCode"></label>
+				<select asp-for="Version.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Version.SystemCode" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Rom.Name"></label>
-				<input type="text" asp-for="Rom.Name" class="form-control" autocomplete="off" />
-				<span asp-validation-for="Rom.Name" class="text-danger"></span>
+				<label asp-for="Version.Name"></label>
+				<input type="text" asp-for="Version.Name" class="form-control" autocomplete="off" />
+				<span asp-validation-for="Version.Name" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Rom.Md5"></label>
-				<input type="text" asp-for="Rom.Md5" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Rom.Md5" class="text-danger"></span>
+				<label asp-for="Version.Md5"></label>
+				<input type="text" asp-for="Version.Md5" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Version.Md5" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Rom.Sha1"></label>
-				<input type="text" asp-for="Rom.Sha1" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Rom.Sha1" class="text-danger"></span>
+				<label asp-for="Version.Sha1"></label>
+				<input type="text" asp-for="Version.Sha1" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Version.Sha1" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Rom.Type"></label>
-				<select asp-for="Rom.Type" asp-items="@Model.AvailableRomTypes.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="Rom.Type" class="text-danger"></span>
+				<label asp-for="Version.Type"></label>
+				<select asp-for="Version.Type" asp-items="@Model.AvailableVersionTypes.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Version.Type" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Rom.TitleOverride"></label>
-				<input type="text" asp-for="Rom.TitleOverride" class="form-control" />
-				<span asp-validation-for="Rom.TitleOverride" class="text-danger"></span>
+				<label asp-for="Version.TitleOverride"></label>
+				<input type="text" asp-for="Version.TitleOverride" class="form-control" />
+				<span asp-validation-for="Version.TitleOverride" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Rom.Version"></label>
-				<input type="text" asp-for="Rom.Version" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Rom.Version" class="text-danger"></span>
+				<label asp-for="Version.Version"></label>
+				<input type="text" asp-for="Version.Version" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Version.Version" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Rom.Region"></label>
-				<select asp-for="Rom.Region" asp-items="@Model.AvailableRegionTypes" class="form-control"></select>
-				<span asp-validation-for="Rom.Region" class="text-danger"></span>
+				<label asp-for="Version.Region"></label>
+				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes" class="form-control"></select>
+				<span asp-validation-for="Version.Region" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>

@@ -13,7 +13,7 @@ public class GameDisplayModel
 
 	public IEnumerable<string> Genres { get; set; } = new List<string>();
 
-	public ICollection<GameVersion> Roms { get; set; } = new List<GameVersion>();
+	public ICollection<GameVersion> Versions { get; set; } = new List<GameVersion>();
 	public class GameVersion
 	{
 		public VersionTypes Type { get; set; }

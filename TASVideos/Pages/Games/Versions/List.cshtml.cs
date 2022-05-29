@@ -17,17 +17,17 @@ public class ListModel : BasePageModel
 	[FromRoute]
 	public int GameId { get; set; }
 
-	public RomListModel Roms { get; set; } = new();
+	public VersionListModel Roms { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
 		var roms = await _db.Games
 			.Where(g => g.Id == GameId)
-			.Select(g => new RomListModel
+			.Select(g => new VersionListModel
 			{
 				GameDisplayName = g.DisplayName,
 				Roms = g.GameVersions
-				.Select(r => new RomListModel.RomEntry
+				.Select(r => new VersionListModel.RomEntry
 				{
 					Id = r.Id,
 					DisplayName = r.Name,

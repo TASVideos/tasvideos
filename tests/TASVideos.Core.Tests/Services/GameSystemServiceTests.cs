@@ -95,7 +95,7 @@ public class GameSystemServiceTests
 	}
 
 	[TestMethod]
-	public async Task InUse_GameRomExists_ReturnsTrue()
+	public async Task InUse_GameVersionExists_ReturnsTrue()
 	{
 		const int systemId = 1;
 		const int gameRomId = 1;

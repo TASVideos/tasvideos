@@ -12,7 +12,7 @@ namespace TASVideos.Pages.Games.Versions;
 [RequirePermission(PermissionTo.CatalogMovies)]
 public class EditModel : BasePageModel
 {
-	private static readonly IEnumerable<SelectListItem> RomTypes = Enum
+	private static readonly IEnumerable<SelectListItem> VersionTypes = Enum
 		.GetValues(typeof(VersionTypes))
 		.Cast<VersionTypes>()
 		.Select(r => new SelectListItem
@@ -42,14 +42,14 @@ public class EditModel : BasePageModel
 	public int? SystemId { get; set; }
 
 	[BindProperty]
-	public RomEditModel Rom { get; set; } = new();
+	public VersionEditModel Version { get; set; } = new();
 
 	[BindProperty]
 	public string GameName { get; set; } = "";
 
 	public bool CanDelete { get; set; }
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
-	public IEnumerable<SelectListItem> AvailableRomTypes => RomTypes;
+	public IEnumerable<SelectListItem> AvailableVersionTypes => VersionTypes;
 
 	public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]
 	{
@@ -86,7 +86,7 @@ public class EditModel : BasePageModel
 				.SingleOrDefaultAsync();
 			if (systemCode is not null)
 			{
-				Rom.SystemCode = systemCode;
+				Version.SystemCode = systemCode;
 			}
 		}
 
@@ -95,11 +95,11 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		Rom = await _mapper.ProjectTo<RomEditModel>(
+		Version = await _mapper.ProjectTo<VersionEditModel>(
 			_db.GameVersions.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
 			.SingleAsync();
 
-		if (Rom is null)
+		if (Version is null)
 		{
 			return NotFound();
 		}
@@ -118,7 +118,7 @@ public class EditModel : BasePageModel
 		}
 
 		var system = await _db.GameSystems
-			.SingleOrDefaultAsync(s => s.Code == Rom.SystemCode);
+			.SingleOrDefaultAsync(s => s.Code == Version.SystemCode);
 
 		if (system is null)
 		{
@@ -130,11 +130,11 @@ public class EditModel : BasePageModel
 		{
 			version = await _db.GameVersions.SingleAsync(r => r.Id == Id.Value);
 			version.System = system;
-			_mapper.Map(Rom, version);
+			_mapper.Map(Version, version);
 		}
 		else
 		{
-			version = _mapper.Map<GameVersion>(Rom);
+			version = _mapper.Map<GameVersion>(Version);
 			version.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
 			version.System = system;
 			_db.GameVersions.Add(version);
