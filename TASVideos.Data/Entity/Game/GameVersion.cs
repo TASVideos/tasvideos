@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace TASVideos.Data.Entity.Game;
+﻿namespace TASVideos.Data.Entity.Game;
 
 public enum RomTypes
 {
