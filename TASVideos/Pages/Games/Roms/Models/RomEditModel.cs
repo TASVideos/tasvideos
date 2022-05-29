@@ -35,7 +35,7 @@ public class RomEditModel
 	public string? Region { get; set; }
 
 	[Required]
-	public RomTypes Type { get; set; }
+	public VersionTypes Type { get; set; }
 
 	[StringLength(255)]
 	[Display(Name = "Title Override")]

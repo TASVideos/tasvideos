@@ -38,7 +38,7 @@ public class GamesResponse
 		public string Md5 { get; init; } = "";
 		public string Sha1 { get; init; } = "";
 		public string Name { get; init; } = "";
-		public RomTypes Type { get; init; }
+		public VersionTypes Type { get; init; }
 		public string Region { get; init; } = "";
 		public string Version { get; init; } = "";
 		public string SystemCode { get; init; } = "";

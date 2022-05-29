@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Data.Entity.Game;
 
-public enum RomTypes
+public enum VersionTypes
 {
 	Unknown,
 	Good,
@@ -30,7 +30,7 @@ public class GameVersion : BaseEntity
 	[StringLength(255)]
 	public string Name { get; set; } = "";
 
-	public RomTypes Type { get; set; }
+	public VersionTypes Type { get; set; }
 
 	[StringLength(50)]
 	public string? Region { get; set; }

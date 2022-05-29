@@ -35,7 +35,7 @@ public class ListModel : BasePageModel
 					Sha1 = r.Sha1,
 					Version = r.Version,
 					Region = r.Region,
-					RomType = r.Type,
+					VersionType = r.Type,
 					SystemCode = r.System!.Code,
 					TitleOverride = r.TitleOverride,
 				})

@@ -31,7 +31,7 @@ public class RomListModel
 		public string? Region { get; set; }
 
 		[Display(Name = "Type")]
-		public RomTypes RomType { get; set; }
+		public VersionTypes VersionType { get; set; }
 
 		[Display(Name = "System")]
 		public string SystemCode { get; set; } = "";

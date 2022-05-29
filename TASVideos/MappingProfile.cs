@@ -102,7 +102,7 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SubmissionCount, opt => opt.MapFrom(src => src.Submissions.Count))
 			.ForMember(dest => dest.UserFilesCount, opt => opt.MapFrom(src => src.UserFiles.Count(uf => !uf.Hidden)));
 
-		CreateMap<GameVersion, GameDisplayModel.Rom>()
+		CreateMap<GameVersion, GameDisplayModel.GameVersion>()
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
 		CreateMap<GameGroup, GameDisplayModel.GameGroup>();
 

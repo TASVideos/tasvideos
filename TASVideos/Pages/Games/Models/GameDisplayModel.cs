@@ -13,10 +13,10 @@ public class GameDisplayModel
 
 	public IEnumerable<string> Genres { get; set; } = new List<string>();
 
-	public ICollection<Rom> Roms { get; set; } = new List<Rom>();
-	public class Rom
+	public ICollection<GameVersion> Roms { get; set; } = new List<GameVersion>();
+	public class GameVersion
 	{
-		public RomTypes Type { get; set; }
+		public VersionTypes Type { get; set; }
 		public int Id { get; set; }
 		public string Md5 { get; set; } = "";
 		public string Sha1 { get; set; } = "";

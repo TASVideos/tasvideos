@@ -13,8 +13,8 @@ namespace TASVideos.Pages.Games.Roms;
 public class EditModel : BasePageModel
 {
 	private static readonly IEnumerable<SelectListItem> RomTypes = Enum
-		.GetValues(typeof(RomTypes))
-		.Cast<RomTypes>()
+		.GetValues(typeof(VersionTypes))
+		.Cast<VersionTypes>()
 		.Select(r => new SelectListItem
 		{
 			Text = r.ToString(),
