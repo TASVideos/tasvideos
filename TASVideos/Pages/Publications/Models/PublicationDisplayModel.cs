@@ -35,7 +35,7 @@ public class PublicationDisplayModel
 
 	public int RatingCount { get; set; }
 	public double? OverallRating { get; set; }
-	public PublicationRateModel Rating { get; set; } = new PublicationRateModel();
+	public PublicationRateModel Rating { get; set; } = new();
 	public string? Region { get; set; }
 	public string? RomVersion { get; set; }
 
