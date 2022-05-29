@@ -23,8 +23,7 @@ public class Submission : BaseEntity, ITimeable
 	public int? TopicId { get; set; }
 	public virtual ForumTopic? Topic { get; set; }
 
-	// TODO: don't make this nullable! Need to fix the importer for this to work
-	public int? SubmitterId { get; set; }
+	public int SubmitterId { get; set; }
 	public virtual User? Submitter { get; set; }
 
 	public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
