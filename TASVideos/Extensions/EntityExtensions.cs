@@ -208,7 +208,7 @@ public static class EntityExtensions
 					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
 				},
 				Region = p.GameVersion != null ? p.GameVersion.Region : null,
-				RomVersion = p.GameVersion != null ? p.GameVersion.Version : null
+				GameVersion = p.GameVersion != null ? p.GameVersion.Version : null
 			});
 
 		if (ratingSort)
