@@ -102,9 +102,9 @@
 						<span condition="!Model.FromGame.Versions!.Any()">Roms</span>
 					</h4>
 					<ul>
-						@foreach (var rom in Model.FromGame.Versions!)
+						@foreach (var version in Model.FromGame.Versions!)
 						{
-							<li>@rom.Title</li>
+							<li>@version.Title</li>
 						}
 					</ul>
 				</div>
