@@ -9,9 +9,6 @@ public class Game : BaseEntity
 	public int Id { get; set; }
 	public virtual ICollection<GameVersion> GameVersions { get; set; } = new HashSet<GameVersion>();
 
-	public int SystemId { get; set; }
-	public virtual GameSystem? System { get; set; }
-
 	public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 	public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 	public virtual ICollection<GameGenre> GameGenres { get; set; } = new HashSet<GameGenre>();
