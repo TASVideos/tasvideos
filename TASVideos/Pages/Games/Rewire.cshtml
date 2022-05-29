@@ -52,7 +52,7 @@
 						@foreach (var pub in Model.FromGame.Publications!)
 						{
 							<li>
-								<pub-link id="@pub.Id">@pub.Title</pub-link><span condition="@string.IsNullOrEmpty(pub.RomName) && gameNameDifference" class="text-danger"> Title will change!</span>
+								<pub-link id="@pub.Id">@pub.Title</pub-link><span condition="@string.IsNullOrEmpty(pub.VersionName) && gameNameDifference" class="text-danger"> Title will change!</span>
 							</li>
 						}
 					</ul>
@@ -77,7 +77,7 @@
 						@foreach (var sub in Model.FromGame.Submissions!)
 						{
 							<li>
-								<sub-link id="@sub.Id">@sub.Title</sub-link><span condition="@string.IsNullOrEmpty(sub.RomName) && gameNameDifference" class="text-danger"> Title will change!</span>
+								<sub-link id="@sub.Id">@sub.Title</sub-link><span condition="@string.IsNullOrEmpty(sub.VersionName) && gameNameDifference" class="text-danger"> Title will change!</span>
 							</li>
 						}
 					</ul>
@@ -98,11 +98,11 @@
 				<column></column>
 				<div class="col-6">
 					<h4>
-						<a condition="Model.FromGame.Roms!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.FromGameId">Roms</a>
-						<span condition="!Model.FromGame.Roms!.Any()">Roms</span>
+						<a condition="Model.FromGame.Versions!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.FromGameId">Roms</a>
+						<span condition="!Model.FromGame.Versions!.Any()">Roms</span>
 					</h4>
 					<ul>
-						@foreach (var rom in Model.FromGame.Roms!)
+						@foreach (var rom in Model.FromGame.Versions!)
 						{
 							<li>@rom.Title</li>
 						}
@@ -110,11 +110,11 @@
 				</div>
 				<div class="col-6">
 					<h4>
-						<a condition="Model.IntoGame.Roms!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.IntoGameId">Roms</a>
-						<span condition="!Model.IntoGame.Roms!.Any()">Roms</span>
+						<a condition="Model.IntoGame.Versions!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.IntoGameId">Roms</a>
+						<span condition="!Model.IntoGame.Versions!.Any()">Roms</span>
 					</h4>
 					<ul>
-						@foreach (var rom in Model.IntoGame.Roms!)
+						@foreach (var rom in Model.IntoGame.Versions!)
 						{
 							<li>@rom.Title</li>
 						}
