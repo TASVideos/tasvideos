@@ -98,7 +98,7 @@
 				<column></column>
 				<div class="col-6">
 					<h4>
-						<a condition="Model.FromGame.Roms!.Any()" asp-page="/Games/Roms/List" asp-route-gameId="@Model.FromGameId">Roms</a>
+						<a condition="Model.FromGame.Roms!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.FromGameId">Roms</a>
 						<span condition="!Model.FromGame.Roms!.Any()">Roms</span>
 					</h4>
 					<ul>
@@ -110,7 +110,7 @@
 				</div>
 				<div class="col-6">
 					<h4>
-						<a condition="Model.IntoGame.Roms!.Any()" asp-page="/Games/Roms/List" asp-route-gameId="@Model.IntoGameId">Roms</a>
+						<a condition="Model.IntoGame.Roms!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.IntoGameId">Roms</a>
 						<span condition="!Model.IntoGame.Roms!.Any()">Roms</span>
 					</h4>
 					<ul>

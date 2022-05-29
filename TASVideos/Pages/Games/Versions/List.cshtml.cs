@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Pages.Games.Roms.Models;
+using TASVideos.Pages.Games.Versions.Models;
 
-namespace TASVideos.Pages.Games.Roms;
+namespace TASVideos.Pages.Games.Versions;
 
 public class ListModel : BasePageModel
 {

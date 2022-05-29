@@ -5,7 +5,7 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 using TASVideos.Pages.Games.Models;
-using TASVideos.Pages.Games.Roms.Models;
+using TASVideos.Pages.Games.Versions.Models;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.RamAddresses.Models;
 using TASVideos.Pages.Roles.Models;

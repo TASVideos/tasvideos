@@ -1,7 +1,7 @@
-﻿@page "/Games/{gameId}/Roms/List"
+﻿@page "/Games/{gameId}/Versions/List"
 @model ListModel
 @{
-	ViewData["Title"] = $"Rom Hashes for {Model.Roms.GameDisplayName}";
+	ViewData["Title"] = $"Versions for {Model.Roms.GameDisplayName}";
 }
 
 <h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.Roms.GameDisplayName</a></h4>
@@ -19,19 +19,19 @@
 		<th>@Html.DisplayNameFor(m => m.Roms.Roms.First().SystemCode)</th>
 		<th>Actions</th>
 	</tr>
-	@foreach (var rom in Model.Roms.Roms.OrderBy(r => r.DisplayName))
+	@foreach (var version in Model.Roms.Roms.OrderBy(r => r.DisplayName))
 	{
 		<tr>
-			<td>@rom.DisplayName</td>
-			<td>@rom.TitleOverride</td>
-			<td>@rom.Version</td>
-			<td>@rom.Region</td>
-			<td>@rom.VersionType</td>
-			<td>@rom.Md5</td>
-			<td>@rom.Sha1</td>
-			<td>@rom.SystemCode</td>
+			<td>@version.DisplayName</td>
+			<td>@version.TitleOverride</td>
+			<td>@version.Version</td>
+			<td>@version.Region</td>
+			<td>@version.VersionType</td>
+			<td>@version.Md5</td>
+			<td>@version.Sha1</td>
+			<td>@version.SystemCode</td>
 			<td>
-				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@rom.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
 			</td>
 		</tr>
 	}

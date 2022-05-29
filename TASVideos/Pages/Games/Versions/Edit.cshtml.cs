@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Roms.Models;
+using TASVideos.Pages.Games.Versions.Models;
 
-namespace TASVideos.Pages.Games.Roms;
+namespace TASVideos.Pages.Games.Versions;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
 public class EditModel : BasePageModel

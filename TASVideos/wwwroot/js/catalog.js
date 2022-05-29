@@ -45,7 +45,7 @@
 	}
 
 	document.getElementById('create-rom').onclick = function () {
-		document.location = `/Games/${gameModel.value}/Roms/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
+		document.location = `/Games/${gameModel.value}/Versions/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
 	}
 
 	document.getElementById('create-game').onclick = function () {
