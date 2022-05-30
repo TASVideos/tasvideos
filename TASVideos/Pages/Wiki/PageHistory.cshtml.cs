@@ -20,7 +20,15 @@ public class PageHistoryModel : BasePageModel
 	[FromQuery]
 	public string? Path { get; set; }
 
+	[FromQuery]
+	public int? FromRevision { get; set; }
+
+	[FromQuery]
+	public int? ToRevision { get; set; }
+
 	public WikiHistoryModel History { get; set; } = new();
+
+	public WikiDiffModel Diff { get; set; } = new();
 
 	public async Task OnGet()
 	{
@@ -41,6 +49,38 @@ public class PageHistoryModel : BasePageModel
 					RevisionMessage = wp.RevisionMessage
 				})
 				.ToListAsync()
+		};
+
+		if (FromRevision.HasValue && ToRevision.HasValue)
+		{
+			var diff = await GetPageDiff(Path, FromRevision.Value, ToRevision.Value);
+			if (diff is not null)
+			{
+				Diff = diff;
+			}
+		}
+	}
+
+	private async Task<WikiDiffModel?> GetPageDiff(string pageName, int fromRevision, int toRevision)
+	{
+		var revisions = await _wikiPages.Query
+			.ForPage(pageName)
+			.Where(wp => wp.Revision == fromRevision
+				|| wp.Revision == toRevision)
+			.ToListAsync();
+
+		if (revisions.Count != (fromRevision == toRevision ? 1 : 2))
+		{
+			return null;
+		}
+
+		return new WikiDiffModel
+		{
+			PageName = pageName,
+			LeftRevision = fromRevision,
+			RightRevision = toRevision,
+			LeftMarkup = revisions.Single(wp => wp.Revision == fromRevision).Markup,
+			RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
 		};
 	}
 }
