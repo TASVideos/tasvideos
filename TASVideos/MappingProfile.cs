@@ -33,6 +33,7 @@ public class MappingProfile : Profile
 		CreateMap<Game, GameEditModel>()
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.GenreId)))
 			.ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.GameGroups.Select(ggr => ggr.GameGroupId)));
+		CreateMap<GameEditModel, Game>();
 
 		CreateMap<GameVersion, VersionEditModel>()
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
