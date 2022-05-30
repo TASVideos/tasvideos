@@ -30,6 +30,9 @@ public class PageHistoryModel : BasePageModel
 
 	public WikiDiffModel Diff { get; set; } = new();
 
+	[FromQuery]
+	public bool? Latest { get; set; }
+
 	public async Task OnGet()
 	{
 		Path = Path?.Trim('/') ?? "";
@@ -50,6 +53,13 @@ public class PageHistoryModel : BasePageModel
 				})
 				.ToListAsync()
 		};
+
+		if (Latest == true)
+		{
+			var (from, to) = await GetLatestRevisions(Path);
+			FromRevision = from;
+			ToRevision = to;
+		}
 
 		if (FromRevision.HasValue && ToRevision.HasValue)
 		{
@@ -82,5 +92,26 @@ public class PageHistoryModel : BasePageModel
 			LeftMarkup = revisions.Single(wp => wp.Revision == fromRevision).Markup,
 			RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
 		};
+	}
+
+	private async Task<(int? from, int? to)> GetLatestRevisions(string pageName)
+	{
+		var revisions = await _wikiPages.Query
+			.ForPage(pageName)
+			.ThatAreNotDeleted()
+			.OrderByDescending(wp => wp.Revision)
+			.Select(wp => wp.Revision)
+			.Take(2)
+			.ToListAsync();
+
+		if (!revisions.Any())
+		{
+			return (null, null);
+		}
+
+		// If count is 1, it must be a new page with no history, so compare against nothing
+		return revisions.Count == 1
+			? (1, 1)
+			: (revisions[1], revisions[0]);
 	}
 }
