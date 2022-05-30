@@ -7,7 +7,7 @@
 }
 
 <div class="float-md-end text-center mb-2" condition="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any())">
-	<img class="img-fluid" src="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) ? Model.Game.ScreenshotUrl : $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Screenshot.Path}")" />
+	<img class="img-fluid" src="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) ? Model.Game.ScreenshotUrl : $"~/media/{Model.Movies.First().Screenshot.Path}")" />
 </div>
 <row>
 	<div class="col-12 col-xl-6 mb-2">
