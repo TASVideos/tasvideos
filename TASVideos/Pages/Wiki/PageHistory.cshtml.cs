@@ -86,9 +86,6 @@ public class PageHistoryModel : BasePageModel
 
 		return new WikiDiffModel
 		{
-			PageName = pageName,
-			LeftRevision = fromRevision,
-			RightRevision = toRevision,
 			LeftMarkup = revisions.Single(wp => wp.Revision == fromRevision).Markup,
 			RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
 		};

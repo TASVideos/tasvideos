@@ -89,12 +89,14 @@
 							</a>
 							<button
 								class="@DiffBtnStyles(@revision.Revision, true)"
-								data-from="true" onClick="diffBtnClicked(@revision.Revision, null)">
+								data-from="true"
+								onClick="diffBtnClicked(@revision.Revision, null)">
 								From
 							</button>
 							<button
 								class="@DiffBtnStyles(@revision.Revision, false)"
-								data-to="true" onClick="diffBtnClicked(null, @revision.Revision)">
+								data-to="true" 
+								onClick="diffBtnClicked(null, @revision.Revision)">
 								To
 							</button>
 						</div>
@@ -136,8 +138,8 @@
 			const diffElem = document.getElementById('diff-view');
 
 			renderDiff(
-				{ text: leftMarkup, name: "r@(Model.Diff.LeftRevision)" },
-				{ text: rightMarkup, name: "r@(Model.Diff.RightRevision)" },
+				{ text: leftMarkup, name: "r@(Model.FromRevision ?? 0)" },
+				{ text: rightMarkup, name: "r@(Model.ToRevision ?? 0)" },
 				diffElem,
 				!!viewType,
 				contextSize
