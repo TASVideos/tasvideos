@@ -1,14 +1,50 @@
 @page
+@using TASVideos.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model PageHistoryModel
 
 @{
 	ViewData["Title"] = "Page History For " + Model.History.PageName;
+	bool hasDiff = Model.FromRevision.HasValue && Model.ToRevision.HasValue;
 }
+
+@functions{
+	string RowStyles(int revision)
+	{
+		if (revision == Model.FromRevision)
+		{
+			return "table-info";
+		}
+
+		if (revision == Model.ToRevision)
+		{
+			return "table-primary";
+		}
+
+		return "";
+	}
+
+	string DiffBtnStyles(int revision, bool isFrom)
+	{
+		if (isFrom && revision == Model.FromRevision)
+		{
+			return "btn btn-primary btn-sm";
+		}
+
+		if (!isFrom && revision == Model.ToRevision)
+		{
+			return "btn btn-primary btn-sm";
+		}
+
+		return "btn bg-info text-dark btn-sm";
+	}
+}
+
 <a class="btn btn-secondary" href="/@WikiHelper.ProcessLink(Model.History.PageName)"><span class="fa fa-arrow-left"></span> Back to Page</a>
-<div id="diff-view" class="d-none mt-3 border border-secondary">
+<div id="diff-view" class="mt-3 border border-secondary">
 
 </div>
-<div id="diff-options" class="d-none">
+<div id="diff-options" condition="hasDiff">
 	<hr />
 	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff()" /> Inline</label>
 	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff()" /> Side by Side</label>
@@ -34,7 +70,7 @@
 			{
 				var revision = revisions[i];
 				var previousId = i < revisions.Count - 1 ? revisions[i + 1].Revision : (int?)null;
-				<tr data-revision="@revision.Revision">
+				<tr data-revision="@revision.Revision" class="@RowStyles(revision.Revision)">
 					<td><a href="/@(Model.History.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
 					<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
 					<td>@revision.CreateUserName</td>
@@ -42,9 +78,27 @@
 					<td>@revision.RevisionMessage</td>
 					<td style="min-width: 100px">
 						<div class="btn-group" role="button" aria-label="diff picker">
-							<button disabled="@(!previousId.HasValue)" class="btn btn-secondary btn-sm" onclick="GetDiff(@previousId, @revision.Revision)">Prev</button>
-							<button class="btn bg-info text-dark btn-sm" data-from="true" onClick="GetDiff(@revision.Revision, null)">From</button>
-							<button class="btn bg-info text-dark btn-sm" data-to="true" onClick="GetDiff(null, @revision.Revision)">To</button>
+							<a
+								condition="previousId.HasValue"
+								class="btn btn-secondary btn-sm"
+								asp-page="/Wiki/PageHistory"
+								asp-route-path="@Model.Path"
+								asp-route-fromRevision="@previousId"
+								asp-route-toRevision="@revision.Revision">
+								Prev
+							</a>
+							<button
+								class="@DiffBtnStyles(@revision.Revision, true)"
+								data-from="true"
+								onClick="diffBtnClicked(@revision.Revision, null)">
+								From
+							</button>
+							<button
+								class="@DiffBtnStyles(@revision.Revision, false)"
+								data-to="true" 
+								onClick="diffBtnClicked(null, @revision.Revision)">
+								To
+							</button>
 						</div>
 					</td>
 					<td>
@@ -61,14 +115,53 @@
 		</tbody>
 	</table>
 </div>
-<input type="hidden" id="left-revision" />
-<input type="hidden" id="right-revision" />
+<input type="hidden" asp-for="Diff.LeftMarkup" rows="8" class="form-control" />
+<input type="hidden" asp-for="Diff.RightMarkup" rows="8" class="form-control" />
 
 @section Scripts {
 	<script src="~/js/diff_match_patch.js"></script>
 	<script src="~/js/diff_view.js"></script>
 	<script>
+		
+		window.addEventListener('load', function() {
+			if (@hasDiff.ToString().ToLower()) {
+				generateDiff();
+			}
+		});
+
+		function generateDiff() {
+			const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
+			const contextSize = parseInt(document.querySelector('[name="context-size"').value);
+
+			const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
+			const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
+			const diffElem = document.getElementById('diff-view');
+
+			renderDiff(
+				{ text: leftMarkup, name: "r@(Model.FromRevision ?? 0)" },
+				{ text: rightMarkup, name: "r@(Model.ToRevision ?? 0)" },
+				diffElem,
+				!!viewType,
+				contextSize
+			);
+		}
+
 		let fromRevision, toRevision;
+		function diffBtnClicked(from, to) {
+			if (from) {
+				fromRevision = from;
+			}
+
+			if (to) {
+				toRevision = to;
+			}
+
+			if (fromRevision && toRevision) {
+				window.location = `/Wiki/PageHistory?path=@Model.Path&fromRevision=${fromRevision}&toRevision=${toRevision}`;
+			} else {
+				updateTableStyling();
+			}
+		}
 
 		function updateTableStyling() {
 			Array.from(document.querySelectorAll('tbody[data-hasrevisions] tr'))
@@ -80,7 +173,7 @@
 					elem.querySelector("button[data-to]").classList.remove("btn-primary");
 					elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
 				});
-
+		
 			const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
 			if (cur) {
 				cur.classList.add('table-primary');
@@ -94,54 +187,6 @@
 				prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
 				prev.querySelector("button[data-from]").classList.add("btn-primary");
 			}
-		}
-
-		function GetDiff(fromId, toId) {
-			const baseUrl = '/Wiki/Diff?handler=DiffData';
-			const path = '@Model.History.PageName';
-			if (fromId != null) {
-				fromRevision = fromId;
-			}
-			if (toId != null) {
-				toRevision = toId;
-			}
-
-			if (fromRevision == null || toRevision == null) {
-				updateTableStyling();
-				return;
-			}
-
-			const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + fromRevision + '&toRevision=' + toRevision;
-
-			fetch(ajaxUrl)
-				.then(handleFetchErrors)
-				.then(r => r.json())
-				.then(data => {
-					document.getElementById("diff-view").classList.remove("d-none");
-					document.getElementById("diff-options").classList.remove("d-none");
-					document.getElementById("left-revision").value = data.leftMarkup;
-					document.getElementById("right-revision").value = data.rightMarkup;
-					generateDiff();
-					updateTableStyling();
-				});
-		}
-
-		function generateDiff() {
-			const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
-			const contextSize = parseInt(document.querySelector('[name="context-size"').value);
-
-			const diffView = document.getElementById("diff-view");
-			const base = document.getElementById("left-revision").value,
-				newTxt = document.getElementById("right-revision").value,
-				diffOutputDiv = diffView;
-
-			renderDiff(
-				{ text: base, name: `r${fromRevision}` },
-				{ text: newTxt, name: `r${toRevision}` },
-				diffOutputDiv,
-				!!viewType,
-				contextSize
-			);
 		}
 	</script>
 }

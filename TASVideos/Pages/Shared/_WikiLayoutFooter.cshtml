@@ -41,6 +41,6 @@ else
 	<i class="fa fa-times"></i> Delete
 </delete-button>
 <a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@Model.PageName"><i class="fa fa-history"></i> Page History</a>
-<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/Diff" asp-route-path="@Model.PageName">Latest diff</a>
+<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@Model.PageName" asp-route-latest="true">Latest diff</a>
 <a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@Model.PageName">List referrers</a>
 <a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/ViewSource" asp-route-path="@Model.PageName"><i class="fa fa-paragraph"></i> View Source</a>
