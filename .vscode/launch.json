@@ -29,7 +29,7 @@
 			"console": "internalConsole"
 		},
 		{
-			"name": "TASVideos",
+			"name": "TASVideos (Generate Sample Data)",
 			"type": "coreclr",
 			"request": "launch",
 			"preLaunchTask": "build",
@@ -56,6 +56,39 @@
 			"env": {
 				"ASPNETCORE_ENVIRONMENT": "Development",
 				"StartupStrategy": "Sample"
+			},
+			"sourceFileMap": {
+				"/Views": "${workspaceFolder}/Views"
+			}
+		},
+		{
+			"name": "TASVideos (Sample Data No Recreate)",
+			"type": "coreclr",
+			"request": "launch",
+			"preLaunchTask": "build",
+			// If you have changed target frameworks, make sure to update the program path.
+			"program": "${workspaceFolder}/TASVideos/bin/Debug/net6.0/TASVideos.dll",
+			"args": [],
+			"cwd": "${workspaceFolder}/TASVideos",
+			"stopAtEntry": false,
+			"internalConsoleOptions": "openOnSessionStart",
+			"launchBrowser": {
+				"enabled": true,
+				"args": "${auto-detect-url}",
+				"windows": {
+					"command": "cmd.exe",
+					"args": "/C start ${auto-detect-url}"
+				},
+				"osx": {
+					"command": "open"
+				},
+				"linux": {
+					"command": "xdg-open"
+				}
+			},
+			"env": {
+				"ASPNETCORE_ENVIRONMENT": "Development",
+				"StartupStrategy": "Minimal"
 			},
 			"sourceFileMap": {
 				"/Views": "${workspaceFolder}/Views"
