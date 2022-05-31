@@ -9,6 +9,12 @@
 		or SubmissionStatus.PublicationUnderway);
 	var rejectedTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Rejected);
 	var cancelledTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Cancelled);
+	var orders = new Dictionary<SubmissionStatus, int>
+	{
+		{ SubmissionStatus.JudgingUnderWay, 3 },
+		{ SubmissionStatus.Delayed, 2 },
+		{ SubmissionStatus.NeedsMoreInfo, 1 }
+	};
 }
 
 <p>Submissions judged by <profile-link username="@Model.UserName"></profile-link></p>
@@ -25,7 +31,9 @@ Cancelled: @cancelledTotal (@cancelledTotal.ToPercent(total)%)
 			<th>Submission</th>
 			<th>Decision</th>
 		</tr>
-		@foreach (var sub in Model.Submissions.OrderBy(s => s.Status).ThenByDescending(s => s.Id))
+		@foreach (var sub in Model.Submissions
+			.OrderByDescending(s => orders.GetValueOrDefault(s.Status, 0))
+			.ThenByDescending(s => s.Id))
 		{
 			<tr>
 				<td>
