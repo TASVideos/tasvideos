@@ -6,6 +6,7 @@
 @{
 	ViewData["Title"] = "Page History For " + Model.History.PageName;
 	bool hasDiff = Model.FromRevision.HasValue && Model.ToRevision.HasValue;
+	var canEdit = WikiHelper.UserCanEditWikiPage(Model.Path, User.Name(), User.Permissions());
 }
 
 @functions{
@@ -111,7 +112,7 @@
 							class="btn-sm">
 							<i class="fa fa-remove"></i>
 						</delete-button>
-						<form asp-page-handler="RollbackLatest">
+						<form asp-page-handler="RollbackLatest" condition="canEdit">
 							<input type="hidden" asp-for="Path" />
 							<input type="hidden" name="previousRevision" value="@(164)" />
 							<button condition="i == 0 && revision.Revision > 1" type="submit" class="btn btn-sm btn-warning" title="Rollback this revision"><i class="fa fa-undo"></i></button>
