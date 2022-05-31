@@ -134,6 +134,46 @@ public class EditModel : BasePageModel
 		return BaseRedirect("/" + page.PageName);
 	}
 
+	public async Task<IActionResult> OnPostRollbackLatest()
+	{
+		var latestRevision = await _wikiPages.Page(Path);
+		if (latestRevision is null)
+		{
+			return NotFound();
+		}
+
+		if (latestRevision.Revision == 1)
+		{
+			return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
+		}
+
+		var previousRevision = await _wikiPages.Query
+			.Where(wp => wp.PageName == Path)
+			.ThatAreNotCurrent()
+			.OrderByDescending(wp => wp.Revision)
+			.FirstOrDefaultAsync();
+
+		if (previousRevision is null)
+		{
+			return NotFound();
+		}
+
+		var rollBackRevision = new WikiPage
+		{
+			PageName = Path!,
+			RevisionMessage = $"Rolling back Revision {latestRevision.Revision} \"{latestRevision.RevisionMessage}\"",
+			Markup = previousRevision.Markup,
+			AuthorId = User.GetUserId(),
+			MinorEdit = false
+		};
+
+		await _wikiPages.Add(rollBackRevision);
+
+		// TOOD: announce
+
+		return BasePageRedirect("PageHistory", new { Path, Latest = true });
+	}
+
 	private async Task<bool> UserNameExists(string path)
 	{
 		var userName = WikiHelper.ToUserName(path);

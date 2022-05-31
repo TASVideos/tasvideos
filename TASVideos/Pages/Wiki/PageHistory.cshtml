@@ -112,8 +112,7 @@
 							class="btn-sm">
 							<i class="fa fa-remove"></i>
 						</delete-button>
-						<form asp-page-handler="RollbackLatest" condition="canEdit">
-							<input type="hidden" asp-for="Path" />
+						<form asp-page="/Wiki/Edit" asp-page-handler="RollbackLatest" asp-route-path="@Model.Path" condition="canEdit">
 							<input type="hidden" name="previousRevision" value="@(164)" />
 							<button condition="i == 0 && revision.Revision > 1" type="submit" class="btn btn-sm btn-warning" title="Rollback this revision"><i class="fa fa-undo"></i></button>
 						</form>

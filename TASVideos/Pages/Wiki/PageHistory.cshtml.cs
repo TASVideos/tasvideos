@@ -71,52 +71,6 @@ public class PageHistoryModel : BasePageModel
 		}
 	}
 
-	public async Task<IActionResult> OnPostRollbackLatest(string path)
-	{
-		// TODO: it is more complex than this
-		if (!User.Has(PermissionTo.EditWikiPages))
-		{
-			return AccessDenied();
-		}
-
-		var latestRevision = await _wikiPages.Page(path);
-		if (latestRevision is null)
-		{
-			return NotFound();
-		}
-
-		if (latestRevision.Revision == 1)
-		{
-			return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
-		}
-
-		var previousRevision = await _wikiPages.Query
-			.Where(wp => wp.PageName == path)
-			.ThatAreNotCurrent()
-			.OrderByDescending(wp => wp.Revision)
-			.FirstOrDefaultAsync();
-
-		if (previousRevision is null)
-		{
-			return NotFound();
-		}
-
-		var rollBackRevision = new WikiPage
-		{
-			PageName = path,
-			RevisionMessage = $"Rolling back Revision {latestRevision.Revision} \"{latestRevision.RevisionMessage}\"",
-			Markup = previousRevision.Markup,
-			AuthorId = User.GetUserId(),
-			MinorEdit = false
-		};
-
-		await _wikiPages.Add(rollBackRevision);
-
-		// TOOD: announce
-
-		return BasePageRedirect("PageHistory", new { Path = path, Latest = true });
-	}
-
 	private async Task<WikiDiffModel?> GetPageDiff(string pageName, int fromRevision, int toRevision)
 	{
 		var revisions = await _wikiPages.Query
