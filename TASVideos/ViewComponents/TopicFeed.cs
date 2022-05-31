@@ -20,7 +20,7 @@ public class TopicFeed : ViewComponent
 		_mapper = mapper;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(int? l, int t, bool right, string? heading, bool hideContent)
+	public async Task<IViewComponentResult> InvokeAsync(int? l, int t, bool right, string? heading, bool hideContent, string wikiLink)
 	{
 		int limit = l ?? 5;
 		int topicId = t;
@@ -30,6 +30,7 @@ public class TopicFeed : ViewComponent
 			RightAlign = right,
 			Heading = heading,
 			HideContent = hideContent,
+			WikiLink = wikiLink,
 			Posts = await _mapper.ProjectTo<TopicFeedModel.TopicPost>(
 					_db.ForumPosts
 					.ForTopic(topicId)
