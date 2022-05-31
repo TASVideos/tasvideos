@@ -125,10 +125,7 @@ public class EditModel : BasePageModel
 
 		if (page.Revision == 1 || !PageToEdit.MinorEdit)
 		{
-			await _publisher.SendGeneralWiki(
-				$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
-				$"{PageToEdit.RevisionMessage}",
-				Path);
+			await Announce(page);
 		}
 
 		return BaseRedirect("/" + page.PageName);
@@ -168,8 +165,7 @@ public class EditModel : BasePageModel
 		};
 
 		await _wikiPages.Add(rollBackRevision);
-
-		// TOOD: announce
+		await Announce(rollBackRevision);
 
 		return BasePageRedirect("PageHistory", new { Path, Latest = true });
 	}
@@ -178,5 +174,13 @@ public class EditModel : BasePageModel
 	{
 		var userName = WikiHelper.ToUserName(path);
 		return await _db.Users.Exists(userName);
+	}
+
+	private async Task Announce(WikiPage page)
+	{
+		await _publisher.SendGeneralWiki(
+			$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
+			$"{PageToEdit.RevisionMessage}",
+			Path!);
 	}
 }
