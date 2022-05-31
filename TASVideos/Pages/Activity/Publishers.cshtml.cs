@@ -42,7 +42,9 @@ public class PublishersModel : PageModel
 			.Select(s => new MovieEntryModel
 			{
 				Id = s.Id,
-				Title = s.Title
+				CreateTimestamp = s.CreateTimestamp,
+				Title = s.Title,
+				Class = s.PublicationClass!.Name
 			})
 			.ToListAsync();
 
