@@ -180,7 +180,7 @@ public class EditModel : BasePageModel
 	{
 		await _publisher.SendGeneralWiki(
 			$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
-			$"{PageToEdit.RevisionMessage}",
+			$"{page.RevisionMessage}",
 			Path!);
 	}
 }
