@@ -6,6 +6,7 @@
 @{
 	ViewData["Title"] = "Page History For " + Model.History.PageName;
 	bool hasDiff = Model.FromRevision.HasValue && Model.ToRevision.HasValue;
+	var canEdit = WikiHelper.UserCanEditWikiPage(Model.Path, User.Name(), User.Permissions());
 }
 
 @functions{
@@ -99,9 +100,11 @@
 								onClick="diffBtnClicked(null, @revision.Revision)">
 								To
 							</button>
+							
 						</div>
 					</td>
 					<td>
+						
 						<delete-button
 							permission="DeleteWikiPages"
 							asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.History.PageName)&revision=@revision.Revision"
@@ -109,6 +112,10 @@
 							class="btn-sm">
 							<i class="fa fa-remove"></i>
 						</delete-button>
+						<form asp-page="/Wiki/Edit" asp-page-handler="RollbackLatest" asp-route-path="@Model.Path" condition="canEdit">
+							<input type="hidden" name="previousRevision" value="@(164)" />
+							<button condition="i == 0 && revision.Revision > 1" type="submit" class="btn btn-sm btn-warning" title="Rollback this revision"><i class="fa fa-undo"></i></button>
+						</form>
 					</td>
 				</tr>
 			}

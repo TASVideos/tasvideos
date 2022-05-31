@@ -40,6 +40,11 @@ public static class WikiQueryableExtensions
 		return list.Where(wp => wp.ChildId == null);
 	}
 
+	public static IQueryable<WikiPage> ThatAreNotCurrent(this IQueryable<WikiPage> list)
+	{
+		return list.Where(wp => wp.ChildId != null);
+	}
+
 	public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
 	{
 		return list.Where(w => w.PageName == pageName);
