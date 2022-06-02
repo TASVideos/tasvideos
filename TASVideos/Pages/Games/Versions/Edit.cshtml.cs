@@ -142,7 +142,7 @@ public class EditModel : BasePageModel
 
 		try
 		{
-			await ConcurrentSave(_db, $"Rom {Id} updated", $"Unable to update Rom {Id}");
+			await ConcurrentSave(_db, $"Game Version {Id} updated", $"Unable to update Game Version {Id}");
 		}
 		catch (DbUpdateException ex)
 		{
