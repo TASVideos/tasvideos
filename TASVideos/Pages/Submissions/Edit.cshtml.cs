@@ -66,7 +66,6 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		// TODO: set up auto-mapper and use ProjectTo<>
 		var submission = await _db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
