@@ -47,7 +47,7 @@ public class CatalogModel : BasePageModel
 			.Select(s => new SubmissionCatalogModel
 			{
 				Title = s.Title,
-				RomId = s.GameVersionId,
+				GameVersionId = s.GameVersionId,
 				GameId = s.GameId,
 				SystemId = s.SystemId,
 				SystemFrameRateId = s.SystemFrameRateId
@@ -73,7 +73,7 @@ public class CatalogModel : BasePageModel
 					var rom = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
 					if (rom is not null)
 					{
-						Catalog.RomId = rom.Id;
+						Catalog.GameVersionId = rom.Id;
 					}
 				}
 			}
@@ -160,19 +160,19 @@ public class CatalogModel : BasePageModel
 			}
 		}
 
-		if (submission.GameVersionId != Catalog.RomId)
+		if (submission.GameVersionId != Catalog.GameVersionId)
 		{
-			if (Catalog.RomId.HasValue)
+			if (Catalog.GameVersionId.HasValue)
 			{
-				var rom = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
+				var rom = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId.Value);
 				if (rom is null)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown Rom Id: {Catalog.RomId.Value}");
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown Rom Id: {Catalog.GameVersionId.Value}");
 				}
 				else
 				{
 					externalMessages.Add($"Rom Hash changed from {submission.GameVersion?.Name ?? "\"\""} to {rom.Name}");
-					submission.GameVersionId = Catalog.RomId.Value;
+					submission.GameVersionId = Catalog.GameVersionId.Value;
 					submission.GameVersion = rom;
 				}
 			}

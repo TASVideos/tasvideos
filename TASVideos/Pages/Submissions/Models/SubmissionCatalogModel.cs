@@ -7,7 +7,7 @@ public class SubmissionCatalogModel
 	public string Title { get; set; } = "";
 
 	[Display(Name = "Rom")]
-	public int? RomId { get; set; }
+	public int? GameVersionId { get; set; }
 
 	[Display(Name = "Game")]
 	public int? GameId { get; set; }
