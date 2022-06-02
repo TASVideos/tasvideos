@@ -21,9 +21,6 @@ public class MappingProfile : Profile
 {
 	public MappingProfile()
 	{
-		CreateMap<SubmissionCatalogModel, Submission>();
-		CreateMap<PublicationCatalogModel, Publication>();
-
 		CreateMap<User, UserEditModel>()
 			.ForMember(dest => dest.IsLockedOut, opt => opt.MapFrom(src => src.LockoutEnabled && src.LockoutEnd.HasValue))
 			.ForMember(dest => dest.SelectedRoles, opt => opt.MapFrom(src => src.UserRoles.Select(ur => ur.RoleId).ToList()));
