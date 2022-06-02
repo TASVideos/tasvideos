@@ -52,9 +52,9 @@ public class SubmissionPublishModel
 	public string? Game { get; set; }
 	public int GameId { get; set; }
 
-	[Display(Name = "Rom")]
-	public string? Rom { get; set; }
-	public int RomId { get; set; }
+	[Display(Name = "Game Version")]
+	public string? GameVersion { get; set; }
+	public int VersionId { get; set; }
 
 	[Display(Name = "PublicationClass")]
 	public string? PublicationClass { get; set; }
@@ -80,7 +80,7 @@ public class SubmissionPublishModel
 	public bool CanPublish => SystemId > 0
 		&& SystemFrameRateId.HasValue
 		&& GameId > 0
-		&& RomId > 0
+		&& VersionId > 0
 		&& !string.IsNullOrEmpty(PublicationClass)
 		&& Status == SubmissionStatus.PublicationUnderway;
 }

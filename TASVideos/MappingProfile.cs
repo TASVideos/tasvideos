@@ -114,8 +114,8 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SystemRegion, opt => opt.MapFrom(src => src.SystemFrameRate!.RegionCode + " " + src.SystemFrameRate.FrameRate))
 			.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game!.DisplayName))
 			.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
-			.ForMember(dest => dest.RomId, opt => opt.MapFrom(src => src.GameVersionId ?? 0))
-			.ForMember(dest => dest.Rom, opt => opt.MapFrom(src => src.GameVersion!.Name))
+			.ForMember(dest => dest.VersionId, opt => opt.MapFrom(src => src.GameVersionId ?? 0))
+			.ForMember(dest => dest.GameVersion, opt => opt.MapFrom(src => src.GameVersion!.Name))
 			.ForMember(dest => dest.PublicationClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : ""));
 
 		// API
