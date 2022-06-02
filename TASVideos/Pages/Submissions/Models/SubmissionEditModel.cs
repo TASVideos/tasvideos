@@ -24,11 +24,6 @@ public class SubmissionEditModel
 	[Display(Name = "Reason")]
 	public int? RejectionReason { get; set; }
 
-	public bool IsCataloged => SystemId.HasValue
-		&& SystemFrameRateId.HasValue
-		&& GameId > 0
-		&& RomId > 0;
-
 	[Display(Name = "Start Type")]
 	public MovieStartType? StartType { get; set; }
 
@@ -90,17 +85,11 @@ public class SubmissionEditModel
 	[Display(Name = "Publisher")]
 	public string? Publisher { get; set; }
 
-	public string? RejectionReasonDisplay { get; set; }
-
 	[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; set; }
 
 	public string Title { get; set; } = "";
 
-	public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;
-
 	internal int? SystemId { get; set; }
-	internal int? SystemFrameRateId { get; set; }
 	internal int? GameId { get; set; }
-	internal int? RomId { get; set; }
 }
