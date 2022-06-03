@@ -6,12 +6,12 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents;
 
-[WikiModule(WikiModules.NoRom)]
-public class NoRom : ViewComponent
+[WikiModule(WikiModules.NoGameVersion)]
+public class NoGameVersion : ViewComponent
 {
 	private readonly ApplicationDbContext _db;
 
-	public NoRom(ApplicationDbContext db)
+	public NoGameVersion(ApplicationDbContext db)
 	{
 		_db = db;
 	}

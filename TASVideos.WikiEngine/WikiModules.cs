@@ -30,7 +30,7 @@ public static class WikiModules
 	public const string Nicovideo = "nicovideo";
 	public const string NoEmulator = "noemulator";
 	public const string NoGameName = "nogame";
-	public const string NoRom = "norom";
+	public const string NoGameVersion = "nogameversion";
 	public const string PlatformAuthorList = "platformtaserlists";
 	public const string PlatformFramerates = "platformframerates";
 	public const string PlayerPointsTable = "playerpointstable";
