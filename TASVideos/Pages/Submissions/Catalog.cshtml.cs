@@ -167,18 +167,18 @@ public class CatalogModel : BasePageModel
 				var rom = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId.Value);
 				if (rom is null)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown Rom Id: {Catalog.GameVersionId.Value}");
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown Game Version Id: {Catalog.GameVersionId.Value}");
 				}
 				else
 				{
-					externalMessages.Add($"Rom Hash changed from {submission.GameVersion?.Name ?? "\"\""} to {rom.Name}");
+					externalMessages.Add($"Game Version changed from {submission.GameVersion?.Name ?? "\"\""} to {rom.Name}");
 					submission.GameVersionId = Catalog.GameVersionId.Value;
 					submission.GameVersion = rom;
 				}
 			}
 			else
 			{
-				externalMessages.Add("Rom removed");
+				externalMessages.Add("Game Version removed");
 				submission.GameVersionId = null;
 				submission.GameVersion = null;
 			}
