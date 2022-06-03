@@ -30,7 +30,7 @@ public class CatalogModel : BasePageModel
 	public int? GameId { get; set; }
 
 	[FromQuery]
-	public int? RomId { get; set; }
+	public int? GameVersionId { get; set; }
 
 	[BindProperty]
 	public PublicationCatalogModel Catalog { get; set; } = new();
@@ -68,9 +68,9 @@ public class CatalogModel : BasePageModel
 				Catalog.GameId = game.Id;
 
 				// We only want to pre-populate the Game Version if a valid Game was provided
-				if (RomId.HasValue)
+				if (GameVersionId.HasValue)
 				{
-					var gameVersion = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
+					var gameVersion = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
 					if (gameVersion is not null)
 					{
 						Catalog.GameVersionId = gameVersion.Id;

@@ -152,7 +152,7 @@ public class EditModel : BasePageModel
 
 		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 			? RedirectToPage("List", new { gameId = GameId })
-			: BaseReturnUrlRedirect($"?GameId={GameId}&RomId={version.Id}");
+			: BaseReturnUrlRedirect($"?GameId={GameId}&GameVersionId={version.Id}");
 	}
 
 	public async Task<IActionResult> OnPostDelete()
