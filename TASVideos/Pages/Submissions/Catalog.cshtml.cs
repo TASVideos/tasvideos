@@ -35,7 +35,7 @@ public class CatalogModel : BasePageModel
 	[BindProperty]
 	public SubmissionCatalogModel Catalog { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableVersions { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
@@ -67,7 +67,7 @@ public class CatalogModel : BasePageModel
 			{
 				Catalog.GameId = game.Id;
 
-				// We only want to pre-populate the Rom if a valid Game was provided
+				// We only want to pre-populate the Game Version if a valid Game was provided
 				if (GameVersionId.HasValue)
 				{
 					var rom = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
@@ -213,7 +213,7 @@ public class CatalogModel : BasePageModel
 				.ToDropDown()
 				.ToListAsync();
 
-			AvailableRoms = await _db.GameVersions
+			AvailableVersions = await _db.GameVersions
 				.OrderBy(r => r.Name)
 				.Select(r => new SelectListItem
 				{
@@ -232,7 +232,7 @@ public class CatalogModel : BasePageModel
 
 			if (Catalog.GameId.HasValue)
 			{
-				AvailableRoms = await _db.GameVersions
+				AvailableVersions = await _db.GameVersions
 					.ForSystem((int)Catalog.SystemId)
 					.ForGame((int)Catalog.GameId)
 					.OrderBy(r => r.Name)
@@ -245,7 +245,7 @@ public class CatalogModel : BasePageModel
 			}
 			else
 			{
-				AvailableRoms = await _db.GameVersions
+				AvailableVersions = await _db.GameVersions
 					.ForSystem((int)Catalog.SystemId)
 					.OrderBy(r => r.Name)
 					.Select(r => new SelectListItem

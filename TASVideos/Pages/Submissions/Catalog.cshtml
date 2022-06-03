@@ -37,7 +37,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameVersionId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableRoms)" class="form-control"></select>
+						<select asp-for="Catalog.GameVersionId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableVersions)" class="form-control"></select>
 					</div>
 					<div class="col-2">
 						<button 
