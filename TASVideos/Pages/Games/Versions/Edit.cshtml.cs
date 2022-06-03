@@ -169,7 +169,7 @@ public class EditModel : BasePageModel
 		}
 
 		_db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(_db, $"Rom {Id} deleted", $"Unable to delete Rom {Id}");
+		await ConcurrentSave(_db, $"Game Version {Id} deleted", $"Unable to delete Game Version {Id}");
 		return BasePageRedirect("List", new { gameId = GameId });
 	}
 

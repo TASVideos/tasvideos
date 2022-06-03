@@ -31,7 +31,7 @@ public class SubmissionsResponse
 	public int? GameId { get; init; }
 
 	[Sortable]
-	public int? RomId { get; init; }
+	public int? GameVersionId { get; init; }
 
 	[Sortable]
 	public string SystemCode { get; init; } = "";
