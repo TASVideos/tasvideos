@@ -35,7 +35,7 @@ public class CatalogModel : BasePageModel
 	[BindProperty]
 	public PublicationCatalogModel Catalog { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableVersions { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
@@ -189,7 +189,7 @@ public class CatalogModel : BasePageModel
 
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
-		AvailableRoms = UiDefaults.DefaultEntry.Concat(await _db.GameVersions
+		AvailableVersions = UiDefaults.DefaultEntry.Concat(await _db.GameVersions
 			.ForGame(gameId)
 			.ForSystem(systemId)
 			.OrderBy(r => r.Name)

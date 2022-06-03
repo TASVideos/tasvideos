@@ -39,7 +39,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameVersionId" asp-items="@Model.AvailableRoms" class="form-control"></select>
+						<select asp-for="Catalog.GameVersionId" asp-items="@Model.AvailableVersions" class="form-control"></select>
 						<span asp-validation-for="Catalog.GameVersionId" class="text-danger"></span>
 					</div>
 					<div class="col-2">

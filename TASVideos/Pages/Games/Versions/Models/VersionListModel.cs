@@ -8,9 +8,9 @@ public class VersionListModel
 	[Display(Name = "Game")]
 	public string GameDisplayName { get; set; } = "";
 
-	public IEnumerable<RomEntry> Roms { get; set; } = new List<RomEntry>();
+	public IEnumerable<VersionEntry> Versions { get; set; } = new List<VersionEntry>();
 
-	public class RomEntry
+	public class VersionEntry
 	{
 		[Display(Name = "Id")]
 		public int Id { get; set; }

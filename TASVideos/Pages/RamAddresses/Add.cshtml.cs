@@ -35,8 +35,8 @@ public class AddModel : AddressBasePageModel
 		}
 
 		// HACK: Games no longer have a System, so this takes the System from existing Addresses of the Game
-		// If there are none it takes the first Rom and gets the System from there.
-		// The correct solution would be to rework the RAM Addresses system to be assigned to a Rom instead of a Game.
+		// If there are none it takes the first Game Version and gets the System from there.
+		// The correct solution would be to rework the RAM Addresses system to be assigned to a Game Version instead of a Game.
 		// This would also require rewiring all existing RAM Addresses in the database.
 		var systemId = await _db.GameRamAddresses
 			.Where(a => a.GameId == GameId)

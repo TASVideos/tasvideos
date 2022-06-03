@@ -17,7 +17,7 @@ public class ListModel : BasePageModel
 	[FromRoute]
 	public int GameId { get; set; }
 
-	public VersionListModel Roms { get; set; } = new();
+	public VersionListModel Versions { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -26,8 +26,8 @@ public class ListModel : BasePageModel
 			.Select(g => new VersionListModel
 			{
 				GameDisplayName = g.DisplayName,
-				Roms = g.GameVersions
-				.Select(r => new VersionListModel.RomEntry
+				Versions = g.GameVersions
+				.Select(r => new VersionListModel.VersionEntry
 				{
 					Id = r.Id,
 					DisplayName = r.Name,
@@ -48,7 +48,7 @@ public class ListModel : BasePageModel
 			return NotFound();
 		}
 
-		Roms = roms;
+		Versions = roms;
 		return Page();
 	}
 }
