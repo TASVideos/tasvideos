@@ -98,8 +98,8 @@
 				<column></column>
 				<div class="col-6">
 					<h4>
-						<a condition="Model.FromGame.Versions!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.FromGameId">Roms</a>
-						<span condition="!Model.FromGame.Versions!.Any()">Roms</span>
+						<a condition="Model.FromGame.Versions!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.FromGameId">Versions</a>
+						<span condition="!Model.FromGame.Versions!.Any()">Versions</span>
 					</h4>
 					<ul>
 						@foreach (var version in Model.FromGame.Versions!)
@@ -110,8 +110,8 @@
 				</div>
 				<div class="col-6">
 					<h4>
-						<a condition="Model.IntoGame.Versions!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.IntoGameId">Roms</a>
-						<span condition="!Model.IntoGame.Versions!.Any()">Roms</span>
+						<a condition="Model.IntoGame.Versions!.Any()" asp-page="/Games/Versions/List" asp-route-gameId="@Model.IntoGameId">Versions</a>
+						<span condition="!Model.IntoGame.Versions!.Any()">Versions</span>
 					</h4>
 					<ul>
 						@foreach (var rom in Model.IntoGame.Versions!)

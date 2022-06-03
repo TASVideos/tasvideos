@@ -164,7 +164,7 @@ public class EditModel : BasePageModel
 
 		if (!await CanBeDeleted())
 		{
-			ErrorStatusMessage($"Unable to delete Rom {Id}, rom is used by a publication or submission.");
+			ErrorStatusMessage($"Unable to delete Game Version {Id}, rom is used by a publication or submission.");
 			return BasePageRedirect("List", new { gameId = GameId });
 		}
 

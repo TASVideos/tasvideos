@@ -115,12 +115,12 @@ public class RewireModel : BasePageModel
 				_db.Submissions.AttachRange(rewireSubmissions);
 				rewireSubmissions.ForEach(s => s.GameId = intoGameId);
 
-				var rewireRoms = await _db.GameVersions
+				var rewireVersions = await _db.GameVersions
 					.Where(r => r.GameId == FromGameId)
 					.Select(r => new GameVersion { Id = r.Id })
 					.ToListAsync();
-				_db.GameVersions.AttachRange(rewireRoms);
-				rewireRoms.ForEach(r => r.GameId = intoGameId);
+				_db.GameVersions.AttachRange(rewireVersions);
+				rewireVersions.ForEach(r => r.GameId = intoGameId);
 
 				var rewireUserfiles = await _db.UserFiles
 					.Where(u => u.GameId == FromGameId)
