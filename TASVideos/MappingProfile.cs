@@ -115,23 +115,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.GameVersion, opt => opt.MapFrom(src => src.GameVersion!.Name))
 			.ForMember(dest => dest.PublicationClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : ""));
 
-		// API
-		CreateMap<Publication, PublicationsResponse>()
-			.ForMember(dest => dest.Class, opt => opt.MapFrom(src => src.PublicationClass!.Name))
-			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
-			.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate!.FrameRate))
-			.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName).ToList()))
-			.ForMember(dest => dest.Tags, opt => opt.MapFrom(src => src.PublicationTags.Select(a => a.Tag!.Code).ToList()))
-			.ForMember(dest => dest.Flags, opt => opt.MapFrom(src => src.PublicationFlags
-				.Select(a => a.Flag!.Token)
-				.ToList()))
-			.ForMember(dest => dest.Urls, opt => opt.MapFrom(src => src.PublicationUrls
-				.Select(u => u.Url)
-				.ToList()))
-			.ForMember(dest => dest.FilePaths, opt => opt.MapFrom(src => src.Files
-				.Select(u => u.Path)
-				.ToList()));
-
 		CreateMap<Submission, SubmissionsResponse>()
 			.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(a => a.Author!.UserName).ToList()))
 			.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))

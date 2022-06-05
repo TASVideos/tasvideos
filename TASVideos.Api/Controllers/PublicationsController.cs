@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Core;
@@ -22,15 +21,13 @@ namespace TASVideos.Api.Controllers;
 public class PublicationsController : Controller
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="PublicationsController"/> class.
 	/// </summary>
-	public PublicationsController(ApplicationDbContext db, IMapper mapper)
+	public PublicationsController(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	/// <summary>
@@ -43,8 +40,8 @@ public class PublicationsController : Controller
 	[ProducesResponseType(typeof(PublicationsResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var pub = await _mapper
-			.ProjectTo<PublicationsResponse>(_db.Publications)
+		var pub = await _db.Publications
+			.ToPublicationsResponse()
 			.SingleOrDefaultAsync(p => p.Id == id);
 
 		return pub is null
@@ -62,12 +59,11 @@ public class PublicationsController : Controller
 	[ProducesResponseType(typeof(IEnumerable<PublicationsResponse>), 200)]
 	public async Task<IActionResult> GetAll([FromQuery] PublicationsRequest request)
 	{
-		var pubs = (await _mapper
-			.ProjectTo<PublicationsResponse>(
-				_db.Publications
-				.FilterByTokens(request))
+		var pubs = (await _db.Publications
+			.FilterByTokens(request)
 			.SortBy(request)
 			.Paginate(request)
+			.ToPublicationsResponse()
 			.ToListAsync())
 			.FieldSelect(request);
 		return Ok(pubs);
