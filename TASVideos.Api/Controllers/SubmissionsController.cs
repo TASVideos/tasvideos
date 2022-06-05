@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Core;
@@ -16,15 +15,13 @@ namespace TASVideos.Api.Controllers;
 public class SubmissionsController : Controller
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SubmissionsController"/> class.
 	/// </summary>
-	public SubmissionsController(ApplicationDbContext db, IMapper mapper)
+	public SubmissionsController(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	/// <summary>
@@ -37,8 +34,8 @@ public class SubmissionsController : Controller
 	[ProducesResponseType(typeof(SubmissionsResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var sub = await _mapper
-			.ProjectTo<SubmissionsResponse>(_db.Submissions)
+		var sub = await _db.Submissions
+			.ToSubmissionsResponse()
 			.SingleOrDefaultAsync(p => p.Id == id);
 
 		return sub is null
@@ -56,11 +53,11 @@ public class SubmissionsController : Controller
 	[ProducesResponseType(typeof(IEnumerable<SubmissionsResponse>), 200)]
 	public async Task<IActionResult> GetAll([FromQuery] SubmissionsRequest request)
 	{
-		var subs = (await _mapper.ProjectTo<SubmissionsResponse>(
-			_db.Submissions
-				.FilterBy(request))
+		var subs = (await _db.Submissions
+			.FilterBy(request)
 			.SortBy(request)
 			.Paginate(request)
+			.ToSubmissionsResponse()
 			.ToListAsync())
 			.FieldSelect(request);
 

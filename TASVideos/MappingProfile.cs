@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using TASVideos.Api.Responses;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
@@ -114,15 +113,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.VersionId, opt => opt.MapFrom(src => src.GameVersionId ?? 0))
 			.ForMember(dest => dest.GameVersion, opt => opt.MapFrom(src => src.GameVersion!.Name))
 			.ForMember(dest => dest.PublicationClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : ""));
-
-		CreateMap<Submission, SubmissionsResponse>()
-			.ForMember(dest => dest.Authors, opt => opt.MapFrom(src => src.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(a => a.Author!.UserName).ToList()))
-			.ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()))
-			.ForMember(dest => dest.IntendedClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : null))
-			.ForMember(dest => dest.Judge, opt => opt.MapFrom(src => src.Judge != null ? src.Judge.UserName : null))
-			.ForMember(dest => dest.Publisher, opt => opt.MapFrom(src => src.Publisher != null ? src.Publisher!.UserName : null))
-			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System != null ? src.System.Code : null))
-			.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate != null ? src.SystemFrameRate.FrameRate : (double?)null));
 
 		CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
 		CreateMap<GameRamAddress, AddressEditModel>()

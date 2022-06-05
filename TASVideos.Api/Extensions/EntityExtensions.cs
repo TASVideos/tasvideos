@@ -79,4 +79,48 @@ internal static class EntityExtensions
 				.Select(f => f.Path)
 		});
 	}
+
+	public static IQueryable<SubmissionsResponse> ToSubmissionsResponse(this IQueryable<Submission> query)
+	{
+		return query.Select(s => new SubmissionsResponse
+		{
+			Id = s.Id,
+			Title = s.Title,
+			IntendedClass = s.IntendedClass != null
+				? s.IntendedClass.Name
+				: null,
+			Judge = s.Judge != null
+				? s.Judge.UserName
+				: null,
+			Publisher = s.Publisher != null
+				? s.Publisher.UserName
+				: null,
+			Status = s.Status.ToString(),
+			MovieExtension = s.MovieExtension,
+			GameId = s.GameId,
+			GameName = s.Game != null
+				? s.Game.DisplayName
+				: null,
+			GameVersionId = s.GameVersionId,
+			GameVersion = s.GameVersion != null
+				? s.GameVersion.Name
+				: null,
+			SystemCode = s.System != null
+				? s.System.Code
+				: null,
+			SystemFrameRate = s.SystemFrameRate != null
+				? s.SystemFrameRate.FrameRate
+				: null,
+			Frames = s.Frames,
+			RerecordCount = s.RerecordCount,
+			EncodeEmbedLink = s.EncodeEmbedLink,
+			Branch = s.Branch,
+			RomName = s.RomName,
+			EmulatorVersion = s.EmulatorVersion,
+			MovieStartType = s.MovieStartType,
+			Authors = s.SubmissionAuthors
+				.OrderBy(s => s.Ordinal)
+				.Select(a => a.Author!.UserName)
+		});
+	}
 }
