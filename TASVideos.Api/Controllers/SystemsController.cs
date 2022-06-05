@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Api.Responses;
 using TASVideos.Data;
 
@@ -13,15 +12,13 @@ namespace TASVideos.Api.Controllers;
 public class SystemsController : Controller
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SystemsController"/> class.
 	/// </summary>
-	public SystemsController(ApplicationDbContext db, IMapper mapper)
+	public SystemsController(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	/// <summary>
@@ -34,8 +31,8 @@ public class SystemsController : Controller
 	[ProducesResponseType(typeof(SystemsResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var system = await _mapper
-			.ProjectTo<SystemsResponse>(_db.GameSystems)
+		var system = await _db.GameSystems
+			.ToSystemsResponse()
 			.SingleOrDefaultAsync(p => p.Id == id);
 
 		return system is null
@@ -56,8 +53,8 @@ public class SystemsController : Controller
 			return BadRequest(ModelState);
 		}
 
-		var systems = await _mapper
-			.ProjectTo<SystemsResponse>(_db.GameSystems)
+		var systems = await _db.GameSystems
+			.ToSystemsResponse()
 			.ToListAsync();
 
 		return Ok(systems);
