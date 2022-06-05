@@ -42,7 +42,7 @@ public class GameVersion : BaseEntity
 	public string? TitleOverride { get; set; }
 }
 
-public static class RomExtensions
+public static class GameVersionExtensions
 {
 	public static IQueryable<GameVersion> ForGame(this IQueryable<GameVersion> query, int gameId)
 	{

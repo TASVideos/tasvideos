@@ -33,7 +33,7 @@ public class PublicationsResponse
 	public int GameId { get; init; }
 
 	[Sortable]
-	public int RomId { get; init; }
+	public int GameVersionId { get; init; }
 
 	[Sortable]
 	public int ObsoletedById { get; init; }

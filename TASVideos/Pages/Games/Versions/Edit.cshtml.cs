@@ -152,7 +152,7 @@ public class EditModel : BasePageModel
 
 		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 			? RedirectToPage("List", new { gameId = GameId })
-			: BaseReturnUrlRedirect($"?GameId={GameId}&RomId={version.Id}");
+			: BaseReturnUrlRedirect($"?GameId={GameId}&GameVersionId={version.Id}");
 	}
 
 	public async Task<IActionResult> OnPostDelete()
@@ -164,12 +164,12 @@ public class EditModel : BasePageModel
 
 		if (!await CanBeDeleted())
 		{
-			ErrorStatusMessage($"Unable to delete Rom {Id}, rom is used by a publication or submission.");
+			ErrorStatusMessage($"Unable to delete Game Version {Id}, version is used by a publication or submission.");
 			return BasePageRedirect("List", new { gameId = GameId });
 		}
 
 		_db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(_db, $"Rom {Id} deleted", $"Unable to delete Rom {Id}");
+		await ConcurrentSave(_db, $"Game Version {Id} deleted", $"Unable to delete Game Version {Id}");
 		return BasePageRedirect("List", new { gameId = GameId });
 	}
 
