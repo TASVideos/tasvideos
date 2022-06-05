@@ -141,12 +141,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System != null ? src.System.Code : null))
 			.ForMember(dest => dest.SystemFrameRate, opt => opt.MapFrom(src => src.SystemFrameRate != null ? src.SystemFrameRate.FrameRate : (double?)null));
 
-		CreateMap<GameSystem, SystemsResponse>();
-		CreateMap<GameSystemFrameRate, SystemsResponse.FrameRates>();
-
-		CreateMap<Game, GamesResponse>();
-		CreateMap<GameVersion, GamesResponse.GameVersion>();
-
 		CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
 		CreateMap<GameRamAddress, AddressEditModel>()
 			.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
