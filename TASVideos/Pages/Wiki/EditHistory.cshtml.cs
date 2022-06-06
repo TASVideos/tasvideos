@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
@@ -12,12 +11,10 @@ namespace TASVideos.Pages.Wiki;
 public class EditHistoryModel : BasePageModel
 {
 	private readonly IWikiPages _wikiPages;
-	private readonly IMapper _mapper;
 
-	public EditHistoryModel(IWikiPages wikiPages, IMapper mapper)
+	public EditHistoryModel(IWikiPages wikiPages)
 	{
 		_wikiPages = wikiPages;
-		_mapper = mapper;
 	}
 
 	[FromRoute]
@@ -30,11 +27,18 @@ public class EditHistoryModel : BasePageModel
 		History = new UserWikiEditHistoryModel
 		{
 			UserName = UserName,
-			Edits = await _mapper.ProjectTo<UserWikiEditHistoryModel.EditEntry>(
-				_wikiPages.Query
-					.ThatAreNotDeleted()
-					.CreatedBy(UserName)
-					.ByMostRecent())
+			Edits = await _wikiPages.Query
+				.ThatAreNotDeleted()
+				.CreatedBy(UserName)
+				.ByMostRecent()
+				.Select(wp => new UserWikiEditHistoryModel.EditEntry
+				{
+					Revision = wp.Revision,
+					CreateTimestamp = wp.CreateTimestamp,
+					PageName = wp.PageName,
+					MinorEdit = wp.MinorEdit,
+					RevisionMessage = wp.RevisionMessage
+				})
 				.ToListAsync()
 		};
 	}

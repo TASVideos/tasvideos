@@ -19,8 +19,6 @@ public class MappingProfile : Profile
 {
 	public MappingProfile()
 	{
-		CreateMap<WikiPage, UserWikiEditHistoryModel>();
-
 		CreateMap<Game, GameEditModel>()
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.GenreId)))
 			.ForMember(dest => dest.Groups, opt => opt.MapFrom(src => src.GameGroups.Select(ggr => ggr.GameGroupId)));
