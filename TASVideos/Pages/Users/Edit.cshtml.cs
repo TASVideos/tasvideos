@@ -15,20 +15,17 @@ namespace TASVideos.Pages.Users;
 public class EditModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
 	private readonly IWikiPages _wikiPages;
 
 	public EditModel(
 		ApplicationDbContext db,
-		IMapper mapper,
 		ExternalMediaPublisher publisher,
 		IUserMaintenanceLogger userMaintenanceLogger,
 		IWikiPages wikiPages)
 	{
 		_db = db;
-		_mapper = mapper;
 		_publisher = publisher;
 		_userMaintenanceLogger = userMaintenanceLogger;
 		_wikiPages = wikiPages;
@@ -50,8 +47,9 @@ public class EditModel : BasePageModel
 			return RedirectToPage("/Profile/Settings");
 		}
 
-		var userToEdit = await _mapper.ProjectTo<UserEditModel>(
-				_db.Users.Where(u => u.Id == Id))
+		var userToEdit = await _db.Users
+			.Where(u => u.Id == Id)
+			.ToUserEditModel()
 			.SingleOrDefaultAsync();
 
 		if (userToEdit is null)

@@ -10,7 +10,6 @@ using TASVideos.Pages.RamAddresses.Models;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.UserFiles.Models;
-using TASVideos.Pages.Users.Models;
 using TASVideos.Pages.Wiki.Models;
 using TASVideos.ViewComponents;
 
@@ -20,10 +19,6 @@ public class MappingProfile : Profile
 {
 	public MappingProfile()
 	{
-		CreateMap<User, UserEditModel>()
-			.ForMember(dest => dest.IsLockedOut, opt => opt.MapFrom(src => src.LockoutEnabled && src.LockoutEnd.HasValue))
-			.ForMember(dest => dest.SelectedRoles, opt => opt.MapFrom(src => src.UserRoles.Select(ur => ur.RoleId).ToList()));
-
 		CreateMap<WikiPage, UserWikiEditHistoryModel>();
 
 		CreateMap<Game, GameEditModel>()

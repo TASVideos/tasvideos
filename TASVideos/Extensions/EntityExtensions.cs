@@ -4,6 +4,7 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Extensions;
 
@@ -217,5 +218,24 @@ public static class EntityExtensions
 		}
 
 		return q;
+	}
+
+	public static IQueryable<UserEditModel> ToUserEditModel(this IQueryable<User> query)
+	{
+		return query.Select(u => new UserEditModel
+		{
+			UserName = u.UserName,
+			TimezoneId = u.TimeZoneId,
+			From = u.From,
+			SelectedRoles = u.UserRoles.Select(ur => ur.RoleId),
+			CreateTimestamp = u.CreateTimestamp,
+			LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
+			Email = u.Email,
+			EmailConfirmed = u.EmailConfirmed,
+			IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+			Signature = u.Signature,
+			Avatar = u.Avatar,
+			MoodAvatarUrlBase = u.MoodAvatarUrlBase
+		});
 	}
 }
