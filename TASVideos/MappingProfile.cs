@@ -4,7 +4,6 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Models;
 using TASVideos.Pages.Games.Versions.Models;
-using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.RamAddresses.Models;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.Wiki.Models;
@@ -40,8 +39,6 @@ public class MappingProfile : Profile
 		CreateMap<GameVersion, GameDisplayModel.GameVersion>()
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
 		CreateMap<GameGroup, GameDisplayModel.GameGroup>();
-
-		CreateMap<PublicationFile, PublicationFileDisplayModel>();
 
 		CreateMap<Submission, SubmissionPublishModel>()
 			.ForMember(dest => dest.Markup, opt => opt.MapFrom(src => src.WikiContent!.Markup))
