@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,16 +15,13 @@ public class EditModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
-	private readonly IMapper _mapper;
 
 	public EditModel(
 		ApplicationDbContext db,
-		IWikiPages wikiPages,
-		IMapper mapper)
+		IWikiPages wikiPages)
 	{
 		_db = db;
 		_wikiPages = wikiPages;
-		_mapper = mapper;
 	}
 
 	[FromRoute]
@@ -46,8 +42,20 @@ public class EditModel : BasePageModel
 	{
 		if (Id.HasValue)
 		{
-			var game = await _mapper.ProjectTo<GameEditModel>(
-				_db.Games.Where(g => g.Id == Id))
+			var game = await _db.Games
+				.Where(g => g.Id == Id)
+				.Select(g => new GameEditModel
+				{
+					GoodName = g.GoodName,
+					DisplayName = g.DisplayName,
+					Abbreviation = g.Abbreviation,
+					SearchKey = g.SearchKey,
+					YoutubeTags = g.YoutubeTags,
+					ScreenshotUrl = g.ScreenshotUrl,
+					GameResourcesPage = g.GameResourcesPage,
+					Genres = g.GameGenres.Select(gg => gg.GenreId),
+					Groups = g.GameGroups.Select(gg => gg.GameGroupId)
+				})
 				.SingleOrDefaultAsync();
 
 			if (game is null)
@@ -93,13 +101,28 @@ public class EditModel : BasePageModel
 				return NotFound();
 			}
 
-			_mapper.Map(Game, game);
+			game.GoodName = Game.GoodName;
+			game.DisplayName = Game.DisplayName;
+			game.Abbreviation = Game.Abbreviation;
+			game.SearchKey = Game.SearchKey;
+			game.YoutubeTags = Game.YoutubeTags;
+			game.ScreenshotUrl = Game.ScreenshotUrl;
+			game.GameResourcesPage = Game.GameResourcesPage;
 			SetGameValues(game, Game);
 			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
 		}
 		else
 		{
-			game = _mapper.Map<Game>(Game);
+			game = new Game
+			{
+				GoodName = Game.GoodName,
+				DisplayName = Game.DisplayName,
+				Abbreviation = Game.Abbreviation,
+				SearchKey = Game.SearchKey,
+				YoutubeTags = Game.YoutubeTags,
+				ScreenshotUrl = Game.ScreenshotUrl,
+				GameResourcesPage = Game.GameResourcesPage
+			};
 			_db.Games.Add(game);
 			SetGameValues(game, Game);
 			await ConcurrentSave(_db, $"Game {game.GoodName} created", "Unable to create game");
