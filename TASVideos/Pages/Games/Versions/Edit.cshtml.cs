@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -22,14 +21,10 @@ public class EditModel : BasePageModel
 		});
 
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
-	public EditModel(
-		ApplicationDbContext db,
-		IMapper mapper)
+	public EditModel(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	[FromRoute]
@@ -95,8 +90,19 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var version = await _mapper.ProjectTo<VersionEditModel>(
-			_db.GameVersions.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
+		var version = await _db.GameVersions
+			.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
+			.Select(v => new VersionEditModel
+			{
+				SystemCode = v.System!.Code,
+				Name = v.Name,
+				Md5 = v.Md5,
+				Sha1 = v.Sha1,
+				Version = v.Version,
+				Region = v.Region,
+				Type = v.Type,
+				TitleOverride = v.TitleOverride
+			})
 			.SingleOrDefaultAsync();
 
 		if (version is null)
@@ -131,14 +137,29 @@ public class EditModel : BasePageModel
 		if (Id.HasValue)
 		{
 			version = await _db.GameVersions.SingleAsync(r => r.Id == Id.Value);
+			version.Name = Version.Name;
+			version.Md5 = Version.Md5;
+			version.Sha1 = Version.Sha1;
+			version.Version = Version.Version;
+			version.Region = Version.Region;
+			version.Type = Version.Type;
+			version.TitleOverride = Version.TitleOverride;
 			version.System = system;
-			_mapper.Map(Version, version);
 		}
 		else
 		{
-			version = _mapper.Map<GameVersion>(Version);
-			version.Game = await _db.Games.SingleAsync(g => g.Id == GameId);
-			version.System = system;
+			version = new GameVersion
+			{
+				Name = Version.Name,
+				Md5 = Version.Md5,
+				Sha1 = Version.Sha1,
+				Version = Version.Version,
+				Region = Version.Region,
+				Type = Version.Type,
+				TitleOverride = Version.TitleOverride,
+				Game = await _db.Games.SingleAsync(g => g.Id == GameId),
+				System = system
+			};
 			_db.GameVersions.Add(version);
 		}
 
