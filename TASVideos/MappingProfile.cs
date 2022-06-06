@@ -3,8 +3,6 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Models;
 using TASVideos.Pages.Games.Versions.Models;
-using TASVideos.Pages.RamAddresses.Models;
-using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.Wiki.Models;
 
 namespace TASVideos;
@@ -22,20 +20,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 			.ReverseMap();
 
-		CreateMap<Submission, SubmissionPublishModel>()
-			.ForMember(dest => dest.Markup, opt => opt.MapFrom(src => src.WikiContent!.Markup))
-			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
-			.ForMember(dest => dest.SystemId, opt => opt.MapFrom(src => src.SystemId ?? 0))
-			.ForMember(dest => dest.SystemRegion, opt => opt.MapFrom(src => src.SystemFrameRate!.RegionCode + " " + src.SystemFrameRate.FrameRate))
-			.ForMember(dest => dest.Game, opt => opt.MapFrom(src => src.Game!.DisplayName))
-			.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.GameId ?? 0))
-			.ForMember(dest => dest.VersionId, opt => opt.MapFrom(src => src.GameVersionId ?? 0))
-			.ForMember(dest => dest.GameVersion, opt => opt.MapFrom(src => src.GameVersion!.Name))
-			.ForMember(dest => dest.PublicationClass, opt => opt.MapFrom(src => src.IntendedClass != null ? src.IntendedClass.Name : ""));
-
 		CreateMap<WikiPage, UserWikiEditHistoryModel.EditEntry>();
-		CreateMap<GameRamAddress, AddressEditModel>()
-			.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game!.DisplayName))
-			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
 	}
 }

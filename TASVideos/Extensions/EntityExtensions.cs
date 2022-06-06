@@ -328,4 +328,28 @@ public static class EntityExtensions
 				.First(u => u.Type == PublicationUrlType.Streaming).Url
 		});
 	}
+
+	public static IQueryable<SubmissionPublishModel> ToPublishModel(this IQueryable<Submission> submissions)
+	{
+		return submissions.Select(s => new SubmissionPublishModel
+		{
+			Markup = s.WikiContent!.Markup,
+			SystemCode = s.System!.Code,
+			SystemRegion = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,
+			Game = s.Game!.DisplayName,
+			GameId = s.GameId ?? 0,
+			GameVersion = s.GameVersion!.Name,
+			VersionId = s.GameVersionId ?? 0,
+			PublicationClass = s.IntendedClass != null
+				? s.IntendedClass.Name
+				: "",
+			MovieExtension = s.MovieExtension,
+			Title = s.Title,
+			SystemId = s.SystemId ?? 0,
+			SystemFrameRateId = s.SystemFrameRateId,
+			Status = s.Status,
+			EmulatorVersion = s.EmulatorVersion,
+			Branch = s.Branch
+		});
+	}
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
@@ -15,7 +14,6 @@ namespace TASVideos.Pages.Submissions;
 public class PublishModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IWikiPages _wikiPages;
 	private readonly IMediaFileUploader _uploader;
@@ -27,7 +25,6 @@ public class PublishModel : BasePageModel
 
 	public PublishModel(
 		ApplicationDbContext db,
-		IMapper mapper,
 		ExternalMediaPublisher publisher,
 		IWikiPages wikiPages,
 		IMediaFileUploader uploader,
@@ -38,7 +35,6 @@ public class PublishModel : BasePageModel
 		IQueueService queueService)
 	{
 		_db = db;
-		_mapper = mapper;
 		_publisher = publisher;
 		_wikiPages = wikiPages;
 		_uploader = uploader;
@@ -60,9 +56,9 @@ public class PublishModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var submission = await _mapper
-			.ProjectTo<SubmissionPublishModel>(
-				_db.Submissions.Where(s => s.Id == Id))
+		var submission = await _db.Submissions
+			.Where(s => s.Id == Id)
+			.ToPublishModel()
 			.SingleOrDefaultAsync();
 
 		if (submission is null)
