@@ -136,6 +136,7 @@ public class Element : INode
 		w.Attribute("href", href);
 		if (Options != "")
 		{
+			w.Attribute("title", await transformUrlText(Options));
 			await WriteChildren(w, h);
 		}
 		else
