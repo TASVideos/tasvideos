@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -13,16 +12,13 @@ namespace TASVideos.Pages.UserFiles;
 public class IndexModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 	private readonly ExternalMediaPublisher _publisher;
 
 	public IndexModel(
 		ApplicationDbContext db,
-		IMapper mapper,
 		ExternalMediaPublisher publisher)
 	{
 		_db = db;
-		_mapper = mapper;
 		_publisher = publisher;
 	}
 
@@ -37,11 +33,11 @@ public class IndexModel : BasePageModel
 				.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp).Select(
 					uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 				.ToListAsync(),
-			LatestMovies = await _mapper.ProjectTo<UserMovieListModel>(
-				_db.UserFiles
-					.ThatArePublic()
-					.ByRecentlyUploaded())
-					.Take(10)
+			LatestMovies = await _db.UserFiles
+				.ThatArePublic()
+				.ByRecentlyUploaded()
+				.ToUserMovieListModel()
+				.Take(10)
 				.ToListAsync(),
 			GamesWithMovies = await _db.Games
 				.Where(g => g.UserFiles.Any(uf => !uf.Hidden))

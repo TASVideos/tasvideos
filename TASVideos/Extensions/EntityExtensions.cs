@@ -2,9 +2,11 @@
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Models;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Pages.UserFiles.Models;
 using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Extensions;
@@ -255,6 +257,54 @@ public static class EntityExtensions
 				Id = ur.UserId,
 				UserName = ur.User!.UserName
 			}).ToList()
+		});
+	}
+
+	public static IQueryable<UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles)
+	{
+		return userFiles.Select(uf => new UserFileModel
+		{
+			Id = uf.Id,
+			Class = uf.Class,
+			Title = uf.Title,
+			Description = uf.Description,
+			UploadTimestamp = uf.UploadTimestamp,
+			Author = uf.Author!.UserName,
+			AuthorUserFilesCount = uf.Author!.UserFiles.Count(auf => !auf.Hidden),
+			Views = uf.Views,
+			Downloads = uf.Downloads,
+			Hidden = uf.Hidden,
+			FileName = uf.FileName,
+			FileSizeUncompressed = uf.LogicalLength,
+			FileSizeCompressed = uf.PhysicalLength,
+			GameId = uf.GameId,
+			GameName = uf.Game != null
+				? uf.Game.DisplayName
+				: "",
+			GameSystem = uf.System != null
+				? uf.System.Code
+				: "",
+			Comments = uf.Comments
+				.Select(c => new UserFileModel.UserFileCommentModel
+				{
+					Id = c.Id,
+					Text = c.Text,
+					CreationTimeStamp = c.CreationTimeStamp,
+					UserId = c.UserId,
+					UserName = c.User!.UserName
+				})
+		});
+	}
+
+	public static IQueryable<UserMovieListModel> ToUserMovieListModel(this IQueryable<UserFile> userFiles)
+	{
+		return userFiles.Select(uf => new UserMovieListModel
+		{
+			Id = uf.Id,
+			Author = uf.Author!.UserName,
+			UploadTimestamp = uf.UploadTimestamp,
+			FileName = uf.FileName,
+			Title = uf.Title
 		});
 	}
 }

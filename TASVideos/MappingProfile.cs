@@ -2,14 +2,11 @@
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Models;
 using TASVideos.Pages.Games.Models;
 using TASVideos.Pages.Games.Versions.Models;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.RamAddresses.Models;
-using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
-using TASVideos.Pages.UserFiles.Models;
 using TASVideos.Pages.Wiki.Models;
 using TASVideos.ViewComponents;
 
@@ -30,32 +27,6 @@ public class MappingProfile : Profile
 
 		CreateMap<ForumPost, TopicFeedModel.TopicPost>()
 			.ForMember(dest => dest.PosterName, opt => opt.MapFrom(src => src.Poster!.UserName));
-
-		CreateMap<UserFile, UserMovieListModel>()
-			.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author!.UserName));
-
-		CreateMap<UserFile, UserFileModel>()
-			.ForMember(dest => dest.Author, opt => opt.MapFrom(src => src.Author!.UserName))
-			.ForMember(dest => dest.AuthorUserFilesCount, opt => opt.MapFrom(src => src.Author!.UserFiles.Count(uf => !uf.Hidden)))
-			.ForMember(dest => dest.FileSizeUncompressed, opt => opt.MapFrom(src => src.LogicalLength))
-			.ForMember(dest => dest.FileSizeCompressed, opt => opt.MapFrom(src => src.PhysicalLength))
-			.ForMember(dest => dest.GameId, opt => opt.MapFrom(src => src.Game != null ? src.Game.Id : (int?)null))
-			.ForMember(dest => dest.GameName, opt => opt.MapFrom(src => src.Game != null ? src.Game.DisplayName : ""))
-			.ForMember(dest => dest.GameSystem, opt => opt.MapFrom(src => src.System!.Code))
-			.ForMember(dest => dest.System, opt => opt.MapFrom(src => src.System != null ? src.System.DisplayName : ""))
-			.ForMember(dest => dest.Comments, opt => opt.MapFrom(src => src.Comments
-				.Select(c => new UserFileModel.UserFileCommentModel
-				{
-					Id = c.Id,
-					Text = c.Text,
-					CreationTimeStamp = c.CreationTimeStamp,
-					UserId = c.UserId,
-					UserName = c.User!.UserName
-				})
-				.ToList()));
-
-		CreateMap<UserFileComment, UserFileModel.UserFileCommentModel>()
-			.ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User!.UserName));
 
 		CreateMap<Game, GameDisplayModel>()
 			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
