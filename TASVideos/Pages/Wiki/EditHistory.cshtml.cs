@@ -20,26 +20,22 @@ public class EditHistoryModel : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public UserWikiEditHistoryModel History { get; set; } = new();
+	public IEnumerable<UserWikiEditHistoryModel> History { get; set; } = new List<UserWikiEditHistoryModel>();
 
 	public async Task OnGet()
 	{
-		History = new UserWikiEditHistoryModel
-		{
-			UserName = UserName,
-			Edits = await _wikiPages.Query
-				.ThatAreNotDeleted()
-				.CreatedBy(UserName)
-				.ByMostRecent()
-				.Select(wp => new UserWikiEditHistoryModel.EditEntry
-				{
-					Revision = wp.Revision,
-					CreateTimestamp = wp.CreateTimestamp,
-					PageName = wp.PageName,
-					MinorEdit = wp.MinorEdit,
-					RevisionMessage = wp.RevisionMessage
-				})
-				.ToListAsync()
-		};
+		History = await _wikiPages.Query
+			.ThatAreNotDeleted()
+			.CreatedBy(UserName)
+			.ByMostRecent()
+			.Select(wp => new UserWikiEditHistoryModel
+			{
+				Revision = wp.Revision,
+				CreateTimestamp = wp.CreateTimestamp,
+				PageName = wp.PageName,
+				MinorEdit = wp.MinorEdit,
+				RevisionMessage = wp.RevisionMessage
+			})
+			.ToListAsync();
 	}
 }
