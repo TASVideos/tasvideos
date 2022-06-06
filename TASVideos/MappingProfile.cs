@@ -28,30 +28,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 			.ReverseMap();
 
-		CreateMap<Role, RoleDisplayModel>()
-			.ForMember(
-				dest => dest.Permissions,
-				opt => opt.MapFrom(src =>
-					src.RolePermission
-						.Select(rp => rp.PermissionId)
-						.ToList()))
-			.ForMember(
-				dest => dest.Links,
-				opt => opt.MapFrom(src =>
-					src.RoleLinks
-						.Select(rl => rl.Link)
-						.ToList()))
-			.ForMember(
-				dest => dest.Users,
-				opt => opt.MapFrom(src =>
-					src.UserRole
-						.Select(ur => new RoleDisplayModel.UserWithRole
-						{
-							Id = ur.UserId,
-							UserName = ur.User!.UserName
-						})
-						.ToList()));
-
 		CreateMap<ForumPost, TopicFeedModel.TopicPost>()
 			.ForMember(dest => dest.PosterName, opt => opt.MapFrom(src => src.Poster!.UserName));
 

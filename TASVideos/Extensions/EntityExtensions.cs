@@ -3,6 +3,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Publications.Models;
+using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.Users.Models;
 
@@ -236,6 +237,24 @@ public static class EntityExtensions
 			Signature = u.Signature,
 			Avatar = u.Avatar,
 			MoodAvatarUrlBase = u.MoodAvatarUrlBase
+		});
+	}
+
+	public static IQueryable<RoleDisplayModel> ToRoleDisplayModel(this IQueryable<Role> roles)
+	{
+		return roles.Select(r => new RoleDisplayModel
+		{
+			IsDefault = r.IsDefault,
+			Id = r.Id,
+			Name = r.Name,
+			Description = r.Description,
+			Permissions = r.RolePermission.Select(rp => rp.PermissionId),
+			Links = r.RoleLinks.Select(rl => rl.Link),
+			Users = r.UserRole.Select(ur => new RoleDisplayModel.UserWithRole
+			{
+				Id = ur.UserId,
+				UserName = ur.User!.UserName
+			}).ToList()
 		});
 	}
 }
