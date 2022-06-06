@@ -95,14 +95,16 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		Version = await _mapper.ProjectTo<VersionEditModel>(
+		var version = await _mapper.ProjectTo<VersionEditModel>(
 			_db.GameVersions.Where(r => r.Id == Id.Value && r.Game!.Id == GameId))
-			.SingleAsync();
+			.SingleOrDefaultAsync();
 
-		if (Version is null)
+		if (version is null)
 		{
 			return NotFound();
 		}
+
+		Version = version;
 
 		CanDelete = await CanBeDeleted();
 
