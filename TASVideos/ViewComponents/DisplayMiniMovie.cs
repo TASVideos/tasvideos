@@ -52,20 +52,7 @@ public class DisplayMiniMovie : ViewComponent
 		if (id != 0)
 		{
 			return await _db.Publications
-				.Select(p => new MiniMovieModel
-				{
-					Id = p.Id,
-					Title = p.Title,
-					Screenshot = p.Files
-						.Where(f => f.Type == FileType.Screenshot)
-						.Select(f => new MiniMovieModel.ScreenshotFile
-						{
-							Path = f.Path,
-							Description = f.Description
-						})
-						.First(),
-					OnlineWatchingUrl = p.PublicationUrls.First(u => u.Type == PublicationUrlType.Streaming).Url
-				})
+				.ToMiniMovieModel()
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}
 

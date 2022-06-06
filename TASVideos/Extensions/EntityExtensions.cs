@@ -8,6 +8,7 @@ using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.UserFiles.Models;
 using TASVideos.Pages.Users.Models;
+using TASVideos.ViewComponents;
 
 namespace TASVideos.Extensions;
 
@@ -305,6 +306,26 @@ public static class EntityExtensions
 			UploadTimestamp = uf.UploadTimestamp,
 			FileName = uf.FileName,
 			Title = uf.Title
+		});
+	}
+
+	public static IQueryable<MiniMovieModel> ToMiniMovieModel(this IQueryable<Publication> publications)
+	{
+		return publications.Select(p => new MiniMovieModel
+		{
+			Id = p.Id,
+			Title = p.Title,
+			Branch = p.Branch ?? "",
+			Screenshot = p.Files
+				.Where(f => f.Type == FileType.Screenshot)
+				.Select(f => new MiniMovieModel.ScreenshotFile
+				{
+					Path = f.Path,
+					Description = f.Description
+				})
+				.First(),
+			OnlineWatchingUrl = p.PublicationUrls
+				.First(u => u.Type == PublicationUrlType.Streaming).Url
 		});
 	}
 }
