@@ -22,19 +22,6 @@ public class MappingProfile : Profile
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))
 			.ReverseMap();
 
-		CreateMap<Game, GameDisplayModel>()
-			.ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.GameGenres.Select(gg => gg.Genre!.DisplayName)))
-			.ForMember(dest => dest.Versions, opt => opt.MapFrom(src => src.GameVersions))
-			.ForMember(dest => dest.GameGroups, opt => opt.MapFrom(src => src.GameGroups.Select(gg => gg.GameGroup)))
-			.ForMember(dest => dest.PublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById == null)))
-			.ForMember(dest => dest.ObsoletePublicationCount, opt => opt.MapFrom(src => src.Publications.Count(p => p.ObsoletedById != null)))
-			.ForMember(dest => dest.SubmissionCount, opt => opt.MapFrom(src => src.Submissions.Count))
-			.ForMember(dest => dest.UserFilesCount, opt => opt.MapFrom(src => src.UserFiles.Count(uf => !uf.Hidden)));
-
-		CreateMap<GameVersion, GameDisplayModel.GameVersion>()
-			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code));
-		CreateMap<GameGroup, GameDisplayModel.GameGroup>();
-
 		CreateMap<Submission, SubmissionPublishModel>()
 			.ForMember(dest => dest.Markup, opt => opt.MapFrom(src => src.WikiContent!.Markup))
 			.ForMember(dest => dest.SystemCode, opt => opt.MapFrom(src => src.System!.Code))

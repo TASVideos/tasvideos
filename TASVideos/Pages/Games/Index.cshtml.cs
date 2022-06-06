@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -12,12 +11,10 @@ namespace TASVideos.Pages.Games;
 public class IndexModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
-	public IndexModel(ApplicationDbContext db, IMapper mapper)
+	public IndexModel(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	[FromRoute]
@@ -29,8 +26,38 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _mapper
-			.ProjectTo<GameDisplayModel>(_db.Games)
+		var game = await _db.Games
+			.Select(g => new GameDisplayModel
+			{
+				Id = g.Id,
+				DisplayName = g.DisplayName,
+				Abbreviation = g.Abbreviation,
+				ScreenshotUrl = g.ScreenshotUrl,
+				GoodName = g.GoodName,
+				GameResourcesPage = g.GameResourcesPage,
+				Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
+				Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion
+				{
+					Type = gv.Type,
+					Id = gv.Id,
+					Md5 = gv.Md5,
+					Sha1 = gv.Sha1,
+					Name = gv.Name,
+					Region = gv.Region,
+					Version = gv.Version,
+					SystemCode = gv.System!.Code,
+					TitleOverride = gv.TitleOverride
+				}).ToList(),
+				GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
+				{
+					Id = gg.GameId,
+					Name = gg.Game!.DisplayName
+				}).ToList(),
+				PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
+				ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
+				SubmissionCount = g.Submissions.Count,
+				UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
+			})
 			.SingleOrDefaultAsync(g => g.Id == Id);
 
 		if (game is null)
