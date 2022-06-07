@@ -132,6 +132,8 @@ public class AddEditModel : BasePageModel
 			return BasePageRedirect("List");
 		}
 
+		var roleLinks = await _db.RoleLinks.Where(rl => rl.RoleId == Id.Value).ToListAsync();
+		_db.RoleLinks.RemoveRange(roleLinks);
 		_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
 
 		var result = await ConcurrentSave(_db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
