@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Api.Requests;
 using TASVideos.Api.Responses;
 using TASVideos.Core;
@@ -16,15 +15,13 @@ namespace TASVideos.Api.Controllers;
 public class GamesController : Controller
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="GamesController"/> class.
 	/// </summary>
-	public GamesController(ApplicationDbContext db, IMapper mapper)
+	public GamesController(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	/// <summary>
@@ -37,7 +34,8 @@ public class GamesController : Controller
 	[ProducesResponseType(typeof(GamesResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var pub = await _mapper.ProjectTo<GamesResponse>(_db.Games)
+		var pub = await _db.Games
+			.ToGamesResponse()
 			.SingleOrDefaultAsync(p => p.Id == id);
 		return pub is null
 			? NotFound()
@@ -54,8 +52,8 @@ public class GamesController : Controller
 	[ProducesResponseType(typeof(IEnumerable<GamesResponse>), 200)]
 	public async Task<IActionResult> GetAll([FromQuery] GamesRequest request)
 	{
-		var games = (await _mapper.ProjectTo<GamesResponse>(
-			_db.Games.ForSystemCodes(request.SystemCodes))
+		var games = (await _db.Games.ForSystemCodes(request.SystemCodes)
+			.ToGamesResponse()
 			.SortBy(request)
 			.Paginate(request)
 			.ToListAsync())

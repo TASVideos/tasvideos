@@ -17,5 +17,6 @@ public class SystemsResponse
 		public double FrameRate { get; init; }
 		public string RegionCode { get; init; } = "";
 		public bool Preliminary { get; init; }
+		public bool Obsolete { get; init; }
 	}
 }

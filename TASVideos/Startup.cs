@@ -27,7 +27,6 @@ public class Startup
 			.AddRequestLocalization()
 			.AddCookieConfiguration()
 			.AddGzipCompression(Settings)
-			.AddAutoMapperWithProjections()
 			.AddSwagger(Settings)
 			.AddTextModules();
 

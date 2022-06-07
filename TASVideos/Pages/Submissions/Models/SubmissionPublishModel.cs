@@ -74,7 +74,7 @@ public class SubmissionPublishModel
 	public SubmissionStatus Status { get; set; }
 
 	[Display(Name = "Emulator Version")]
-	public string EmulatorVersion { get; set; } = "";
+	public string? EmulatorVersion { get; set; }
 	public string? Branch { get; set; }
 
 	public bool CanPublish => SystemId > 0

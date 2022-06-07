@@ -15,10 +15,10 @@ public class PublicationsResponse
 	public string Title { get; init; } = "";
 
 	[Sortable]
-	public string Branch { get; init; } = "";
+	public string? Branch { get; init; } = "";
 
 	[Sortable]
-	public string EmulatorVersion { get; init; } = "";
+	public string? EmulatorVersion { get; init; } = "";
 
 	[Sortable]
 	public string Class { get; init; } = "";
@@ -36,7 +36,7 @@ public class PublicationsResponse
 	public int GameVersionId { get; init; }
 
 	[Sortable]
-	public int ObsoletedById { get; init; }
+	public int? ObsoletedById { get; init; }
 
 	[Sortable]
 	public int Frames { get; init; }
