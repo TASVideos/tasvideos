@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = "Game Groups";
 }
-<a asp-page="/Games/List" class="btn btn-primary mb-3 float-end mr-5">Game Groups</a>
+<a asp-page="/Games/List" class="btn btn-primary mb-3 float-end mr-5">Games</a>
 <a class="float-end btn btn-primary me-1" permission="CatalogMovies" asp-page="Edit"><i class="fa fa-plus"></i> Create</a>
 <ul>
 	@foreach(var group in Model.GameGroups.OrderBy(gg => gg.Name))
