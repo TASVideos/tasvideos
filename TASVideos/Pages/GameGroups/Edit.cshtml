@@ -2,7 +2,7 @@
 @model EditModel
 @{
 	ViewData["Title"] = Model.Id.HasValue
-		? $"Editing Game Group #{Model.Id} TODO"
+		? $"Editing Game Group #{Model.Id} {Model.GameGroup.Name}"
 		: "Create a new Game Group entry";
 	string saveBtnName = Model.Id.HasValue ? "Save" : "Create";
 }
@@ -27,7 +27,7 @@
 	<form-button-bar>
 		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> @saveBtnName</button>
 		<a condition="@(!Model.Id.HasValue)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-		<a condition="Model.Id.HasValue" asp-page="Index" asp-route-id="@Model.Id ?? 0" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="Model.Id.HasValue" asp-page="Index" asp-route-id="@(Model.Id ?? 0)" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>
 </form>
 
