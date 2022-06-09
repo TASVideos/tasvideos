@@ -82,6 +82,11 @@ public class PublicationSearchModel : IPublicationTokens
 			sb.Append('-').Append(string.Join("-", GameGroups.Select(gg => $"group{gg}")));
 		}
 
+		if (Authors.Any())
+		{
+			sb.Append('-').Append(string.Join("-", Authors.Select(a => $"author{a}")));
+		}
+
 		if (OnlyObsoleted && !IsEmpty)
 		{
 			sb.Append("-ObsOnly");
