@@ -30,12 +30,12 @@ public class CatalogModel : BasePageModel
 	public int? GameId { get; set; }
 
 	[FromQuery]
-	public int? RomId { get; set; }
+	public int? GameVersionId { get; set; }
 
 	[BindProperty]
 	public SubmissionCatalogModel Catalog { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableRoms { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableVersions { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
@@ -47,7 +47,7 @@ public class CatalogModel : BasePageModel
 			.Select(s => new SubmissionCatalogModel
 			{
 				Title = s.Title,
-				RomId = s.RomId,
+				GameVersionId = s.GameVersionId,
 				GameId = s.GameId,
 				SystemId = s.SystemId,
 				SystemFrameRateId = s.SystemFrameRateId
@@ -67,13 +67,13 @@ public class CatalogModel : BasePageModel
 			{
 				Catalog.GameId = game.Id;
 
-				// We only want to pre-populate the Rom if a valid Game was provided
-				if (RomId.HasValue)
+				// We only want to pre-populate the Game Version if a valid Game was provided
+				if (GameVersionId.HasValue)
 				{
-					var rom = await _db.GameRoms.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == RomId && r.SystemId == Catalog.SystemId);
+					var rom = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
 					if (rom is not null)
 					{
-						Catalog.RomId = rom.Id;
+						Catalog.GameVersionId = rom.Id;
 					}
 				}
 			}
@@ -95,7 +95,7 @@ public class CatalogModel : BasePageModel
 			.Include(s => s.System)
 			.Include(s => s.SystemFrameRate)
 			.Include(s => s.Game)
-			.Include(s => s.Rom)
+			.Include(s => s.GameVersion)
 			.Include(s => s.SubmissionAuthors)
 			.ThenInclude(sa => sa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
@@ -160,27 +160,27 @@ public class CatalogModel : BasePageModel
 			}
 		}
 
-		if (submission.RomId != Catalog.RomId)
+		if (submission.GameVersionId != Catalog.GameVersionId)
 		{
-			if (Catalog.RomId.HasValue)
+			if (Catalog.GameVersionId.HasValue)
 			{
-				var rom = await _db.GameRoms.SingleOrDefaultAsync(s => s.Id == Catalog.RomId.Value);
+				var rom = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId.Value);
 				if (rom is null)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.RomId)}", $"Unknown Rom Id: {Catalog.RomId.Value}");
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown Game Version Id: {Catalog.GameVersionId.Value}");
 				}
 				else
 				{
-					externalMessages.Add($"Rom Hash changed from {submission.Rom?.Name ?? "\"\""} to {rom.Name}");
-					submission.RomId = Catalog.RomId.Value;
-					submission.Rom = rom;
+					externalMessages.Add($"Game Version changed from {submission.GameVersion?.Name ?? "\"\""} to {rom.Name}");
+					submission.GameVersionId = Catalog.GameVersionId.Value;
+					submission.GameVersion = rom;
 				}
 			}
 			else
 			{
-				externalMessages.Add("Rom removed");
-				submission.RomId = null;
-				submission.Rom = null;
+				externalMessages.Add("Game Version removed");
+				submission.GameVersionId = null;
+				submission.GameVersion = null;
 			}
 		}
 
@@ -213,7 +213,7 @@ public class CatalogModel : BasePageModel
 				.ToDropDown()
 				.ToListAsync();
 
-			AvailableRoms = await _db.GameRoms
+			AvailableVersions = await _db.GameVersions
 				.OrderBy(r => r.Name)
 				.Select(r => new SelectListItem
 				{
@@ -232,7 +232,7 @@ public class CatalogModel : BasePageModel
 
 			if (Catalog.GameId.HasValue)
 			{
-				AvailableRoms = await _db.GameRoms
+				AvailableVersions = await _db.GameVersions
 					.ForSystem((int)Catalog.SystemId)
 					.ForGame((int)Catalog.GameId)
 					.OrderBy(r => r.Name)
@@ -245,7 +245,7 @@ public class CatalogModel : BasePageModel
 			}
 			else
 			{
-				AvailableRoms = await _db.GameRoms
+				AvailableVersions = await _db.GameVersions
 					.ForSystem((int)Catalog.SystemId)
 					.OrderBy(r => r.Name)
 					.Select(r => new SelectListItem

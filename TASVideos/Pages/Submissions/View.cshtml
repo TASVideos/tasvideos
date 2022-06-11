@@ -211,8 +211,9 @@
 	<i class="fa fa-history"></i> Page History
 </a>
 <a
-	asp-page="/Wiki/Diff"
+	asp-page="/Wiki/PageHistory"
 	asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
+	asp-route-latest="true"
 	class="btn bg-info text-dark btn-sm">
 	Latest diff
 </a>

@@ -38,15 +38,15 @@ public class RewireModel : BasePageModel
 	public class RewireEntry
 	{
 		public Entry? Game;
-		public ICollection<EntryWithRom>? Publications;
-		public ICollection<EntryWithRom>? Submissions;
-		public ICollection<Entry>? Roms;
+		public ICollection<EntryWithVersion>? Publications;
+		public ICollection<EntryWithVersion>? Submissions;
+		public ICollection<Entry>? Versions;
 		public ICollection<EntryLong>? Userfiles;
 		public ICollection<Entry>? RamAddresses;
 	}
 
 	public record Entry(int Id, string Title);
-	public record EntryWithRom(int Id, string Title, string? RomName);
+	public record EntryWithVersion(int Id, string Title, string? VersionName);
 	public record EntryLong(long Id, string Title);
 
 	public async Task OnGet()
@@ -61,9 +61,9 @@ public class RewireModel : BasePageModel
 				.Select(g => new RewireEntry
 				{
 					Game = new Entry(g.Id, g.DisplayName),
-					Publications = g.Publications.Select(p => new EntryWithRom(p.Id, p.Title, p.Rom == null ? null : p.Rom.TitleOverride)).ToList(),
-					Submissions = g.Submissions.Select(s => new EntryWithRom(s.Id, s.Title, s.Rom == null ? null : s.Rom.TitleOverride)).ToList(),
-					Roms = g.Roms.Select(r => new Entry(r.Id, r.Name)).ToList(),
+					Publications = g.Publications.Select(p => new EntryWithVersion(p.Id, p.Title, p.GameVersion == null ? null : p.GameVersion.TitleOverride)).ToList(),
+					Submissions = g.Submissions.Select(s => new EntryWithVersion(s.Id, s.Title, s.GameVersion == null ? null : s.GameVersion.TitleOverride)).ToList(),
+					Versions = g.GameVersions.Select(r => new Entry(r.Id, r.Name)).ToList(),
 					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
 				})
 				.SingleAsync();
@@ -77,9 +77,9 @@ public class RewireModel : BasePageModel
 				.Select(g => new RewireEntry
 				{
 					Game = new Entry(g.Id, g.DisplayName),
-					Publications = g.Publications.Select(p => new EntryWithRom(p.Id, p.Title, p.Rom == null ? null : p.Rom.TitleOverride)).ToList(),
-					Submissions = g.Submissions.Select(s => new EntryWithRom(s.Id, s.Title, s.Rom == null ? null : s.Rom.TitleOverride)).ToList(),
-					Roms = g.Roms.Select(r => new Entry(r.Id, r.Name)).ToList(),
+					Publications = g.Publications.Select(p => new EntryWithVersion(p.Id, p.Title, p.GameVersion == null ? null : p.GameVersion.TitleOverride)).ToList(),
+					Submissions = g.Submissions.Select(s => new EntryWithVersion(s.Id, s.Title, s.GameVersion == null ? null : s.GameVersion.TitleOverride)).ToList(),
+					Versions = g.GameVersions.Select(r => new Entry(r.Id, r.Name)).ToList(),
 					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
 				})
 				.SingleAsync();
@@ -115,12 +115,12 @@ public class RewireModel : BasePageModel
 				_db.Submissions.AttachRange(rewireSubmissions);
 				rewireSubmissions.ForEach(s => s.GameId = intoGameId);
 
-				var rewireRoms = await _db.GameRoms
+				var rewireVersions = await _db.GameVersions
 					.Where(r => r.GameId == FromGameId)
-					.Select(r => new GameRom { Id = r.Id })
+					.Select(r => new GameVersion { Id = r.Id })
 					.ToListAsync();
-				_db.GameRoms.AttachRange(rewireRoms);
-				rewireRoms.ForEach(r => r.GameId = intoGameId);
+				_db.GameVersions.AttachRange(rewireVersions);
+				rewireVersions.ForEach(r => r.GameId = intoGameId);
 
 				var rewireUserfiles = await _db.UserFiles
 					.Where(u => u.GameId == FromGameId)

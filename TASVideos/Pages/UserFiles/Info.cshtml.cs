@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
@@ -13,14 +12,11 @@ namespace TASVideos.Pages.UserFiles;
 public class InfoModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
 	public InfoModel(
-		ApplicationDbContext db,
-		IMapper mapper)
+		ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	[FromRoute]
@@ -31,13 +27,8 @@ public class InfoModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var file = await _db.UserFiles
-			.Include(uf => uf.Comments)
-			.ThenInclude(c => c.User)
-			.Include(uf => uf.Author)
-			.ThenInclude(a => a!.UserFiles)
-			.Include(uf => uf.Game)
-			.Include(uf => uf.System)
 			.Where(userFile => userFile.Id == Id)
+			.ToUserFileModel()
 			.SingleOrDefaultAsync();
 
 		if (file is null)
@@ -45,12 +36,7 @@ public class InfoModel : BasePageModel
 			return NotFound();
 		}
 
-		UserFile = _mapper.Map<UserFileModel>(file);
-
-		// TODO: why is this necessary? The mapper configuration works with ProjectTo, why not here?
-		UserFile.Comments = file.Comments
-			.Select(_mapper.Map<UserFileModel.UserFileCommentModel>)
-			.ToList();
+		UserFile = file;
 
 		file.Views++;
 

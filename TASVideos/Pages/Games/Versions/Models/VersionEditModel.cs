@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Pages.Games.Roms.Models;
+namespace TASVideos.Pages.Games.Versions.Models;
 
-public class RomEditModel
+public class VersionEditModel
 {
 	[Required]
 	[Display(Name = "System")]
@@ -35,7 +35,7 @@ public class RomEditModel
 	public string? Region { get; set; }
 
 	[Required]
-	public RomTypes Type { get; set; }
+	public VersionTypes Type { get; set; }
 
 	[StringLength(255)]
 	[Display(Name = "Title Override")]

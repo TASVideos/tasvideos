@@ -10,7 +10,7 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	public bool IsCataloged => SystemId.HasValue
 		&& SystemFrameRateId.HasValue
 		&& GameId > 0
-		&& RomId > 0;
+		&& GameVersionId > 0;
 
 	[Display(Name = "Start Type")]
 	public MovieStartType? StartType { get; set; }
@@ -88,5 +88,5 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 
 	internal int? SystemId { get; set; }
 	internal int? SystemFrameRateId { get; set; }
-	internal int? RomId { get; set; }
+	internal int? GameVersionId { get; set; }
 }

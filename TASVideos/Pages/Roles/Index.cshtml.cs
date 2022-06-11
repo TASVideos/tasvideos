@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
@@ -11,12 +10,10 @@ namespace TASVideos.Pages.Roles;
 public class IndexModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
-	public IndexModel(ApplicationDbContext db, IMapper mapper)
+	public IndexModel(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	public RoleDisplayModel Role { get; set; } = new();
@@ -28,9 +25,9 @@ public class IndexModel : BasePageModel
 			return BasePageRedirect("/Roles/List");
 		}
 
-		var roleModel = await _mapper
-			.ProjectTo<RoleDisplayModel>(
-				_db.Roles.Where(r => r.Name == role))
+		var roleModel = await _db.Roles
+			.Where(r => r.Name == role)
+			.ToRoleDisplayModel()
 			.SingleOrDefaultAsync();
 
 		if (roleModel is null)

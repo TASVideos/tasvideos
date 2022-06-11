@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -12,13 +11,11 @@ namespace TASVideos.Pages.RamAddresses;
 public class EditModel : AddressBasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
-	public EditModel(ApplicationDbContext db, IMapper mapper)
+	public EditModel(ApplicationDbContext db)
 		: base(db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	[FromRoute]
@@ -26,10 +23,21 @@ public class EditModel : AddressBasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var address = await _mapper.ProjectTo<AddressEditModel>(_db.GameRamAddresses
-			.Include(r => r.System)
-			.Include(r => r.Game)
-			.Where(r => r.Id == Id))
+		var address = await _db.GameRamAddresses
+			.Where(r => r.Id == Id)
+			.Select(r => new AddressEditModel
+			{
+				GameRamAddressDomainId = r.GameRamAddressDomainId,
+				Address = r.Address,
+				Type = r.Type,
+				Signed = r.Signed,
+				Endian = r.Endian,
+				Description = r.Description,
+				GameId = r.GameId ?? 0,
+				GameName = r.Game!.DisplayName,
+				SystemCode = r.System!.Code,
+				SystemId = r.SystemId
+			})
 			.SingleOrDefaultAsync();
 
 		if (address is null)

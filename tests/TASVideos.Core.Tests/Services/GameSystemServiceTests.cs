@@ -95,12 +95,12 @@ public class GameSystemServiceTests
 	}
 
 	[TestMethod]
-	public async Task InUse_GameRomExists_ReturnsTrue()
+	public async Task InUse_GameVersionExists_ReturnsTrue()
 	{
 		const int systemId = 1;
-		const int gameRomId = 1;
+		const int gameVersionId = 1;
 		_db.GameSystems.Add(new GameSystem { Id = systemId });
-		_db.GameRoms.Add(new GameRom { Id = gameRomId, SystemId = systemId });
+		_db.GameVersions.Add(new GameVersion { Id = gameVersionId, SystemId = systemId });
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.InUse(systemId);

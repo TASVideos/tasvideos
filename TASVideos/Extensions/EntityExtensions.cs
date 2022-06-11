@@ -2,8 +2,14 @@
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
+using TASVideos.Models;
+using TASVideos.Pages.Games.Versions.Models;
 using TASVideos.Pages.Publications.Models;
+using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
+using TASVideos.Pages.UserFiles.Models;
+using TASVideos.Pages.Users.Models;
+using TASVideos.ViewComponents;
 
 namespace TASVideos.Extensions;
 
@@ -207,8 +213,8 @@ public static class EntityExtensions
 					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
 					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
 				},
-				Region = p.Rom != null ? p.Rom.Region : null,
-				RomVersion = p.Rom != null ? p.Rom.Version : null
+				Region = p.GameVersion != null ? p.GameVersion.Region : null,
+				GameVersion = p.GameVersion != null ? p.GameVersion.Version : null
 			});
 
 		if (ratingSort)
@@ -217,5 +223,134 @@ public static class EntityExtensions
 		}
 
 		return q;
+	}
+
+	public static IQueryable<UserEditModel> ToUserEditModel(this IQueryable<User> query)
+	{
+		return query.Select(u => new UserEditModel
+		{
+			UserName = u.UserName,
+			TimezoneId = u.TimeZoneId,
+			From = u.From,
+			SelectedRoles = u.UserRoles.Select(ur => ur.RoleId),
+			CreateTimestamp = u.CreateTimestamp,
+			LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
+			Email = u.Email,
+			EmailConfirmed = u.EmailConfirmed,
+			IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+			Signature = u.Signature,
+			Avatar = u.Avatar,
+			MoodAvatarUrlBase = u.MoodAvatarUrlBase
+		});
+	}
+
+	public static IQueryable<RoleDisplayModel> ToRoleDisplayModel(this IQueryable<Role> roles)
+	{
+		return roles.Select(r => new RoleDisplayModel
+		{
+			IsDefault = r.IsDefault,
+			Id = r.Id,
+			Name = r.Name,
+			Description = r.Description,
+			Permissions = r.RolePermission.Select(rp => rp.PermissionId),
+			Links = r.RoleLinks.Select(rl => rl.Link),
+			Users = r.UserRole.Select(ur => new RoleDisplayModel.UserWithRole
+			{
+				Id = ur.UserId,
+				UserName = ur.User!.UserName
+			}).ToList()
+		});
+	}
+
+	public static IQueryable<UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles)
+	{
+		return userFiles.Select(uf => new UserFileModel
+		{
+			Id = uf.Id,
+			Class = uf.Class,
+			Title = uf.Title,
+			Description = uf.Description,
+			UploadTimestamp = uf.UploadTimestamp,
+			Author = uf.Author!.UserName,
+			AuthorUserFilesCount = uf.Author!.UserFiles.Count(auf => !auf.Hidden),
+			Views = uf.Views,
+			Downloads = uf.Downloads,
+			Hidden = uf.Hidden,
+			FileName = uf.FileName,
+			FileSizeUncompressed = uf.LogicalLength,
+			FileSizeCompressed = uf.PhysicalLength,
+			GameId = uf.GameId,
+			GameName = uf.Game != null
+				? uf.Game.DisplayName
+				: "",
+			GameSystem = uf.System != null
+				? uf.System.Code
+				: "",
+			Comments = uf.Comments
+				.Select(c => new UserFileModel.UserFileCommentModel
+				{
+					Id = c.Id,
+					Text = c.Text,
+					CreationTimeStamp = c.CreationTimeStamp,
+					UserId = c.UserId,
+					UserName = c.User!.UserName
+				})
+		});
+	}
+
+	public static IQueryable<UserMovieListModel> ToUserMovieListModel(this IQueryable<UserFile> userFiles)
+	{
+		return userFiles.Select(uf => new UserMovieListModel
+		{
+			Id = uf.Id,
+			Author = uf.Author!.UserName,
+			UploadTimestamp = uf.UploadTimestamp,
+			FileName = uf.FileName,
+			Title = uf.Title
+		});
+	}
+
+	public static IQueryable<MiniMovieModel> ToMiniMovieModel(this IQueryable<Publication> publications)
+	{
+		return publications.Select(p => new MiniMovieModel
+		{
+			Id = p.Id,
+			Title = p.Title,
+			Branch = p.Branch ?? "",
+			Screenshot = p.Files
+				.Where(f => f.Type == FileType.Screenshot)
+				.Select(f => new MiniMovieModel.ScreenshotFile
+				{
+					Path = f.Path,
+					Description = f.Description
+				})
+				.First(),
+			OnlineWatchingUrl = p.PublicationUrls
+				.First(u => u.Type == PublicationUrlType.Streaming).Url
+		});
+	}
+
+	public static IQueryable<SubmissionPublishModel> ToPublishModel(this IQueryable<Submission> submissions)
+	{
+		return submissions.Select(s => new SubmissionPublishModel
+		{
+			Markup = s.WikiContent!.Markup,
+			SystemCode = s.System!.Code,
+			SystemRegion = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,
+			Game = s.Game!.DisplayName,
+			GameId = s.GameId ?? 0,
+			GameVersion = s.GameVersion!.Name,
+			VersionId = s.GameVersionId ?? 0,
+			PublicationClass = s.IntendedClass != null
+				? s.IntendedClass.Name
+				: "",
+			MovieExtension = s.MovieExtension,
+			Title = s.Title,
+			SystemId = s.SystemId ?? 0,
+			SystemFrameRateId = s.SystemFrameRateId,
+			Status = s.Status,
+			EmulatorVersion = s.EmulatorVersion,
+			Branch = s.Branch
+		});
 	}
 }

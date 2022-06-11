@@ -12,13 +12,13 @@
 	<table class="table table-striped">
 		<tbody>
 			<tr>
-				<th>@Html.DisplayNameFor(m => m.History.Edits.First().PageName)</th>
-				<th>@Html.DisplayNameFor(m => m.History.Edits.First().CreateTimestamp)</th>
-				<th>@Html.DisplayNameFor(m => m.History.Edits.First().MinorEdit)</th>
-				<th>@Html.DisplayNameFor(m => m.History.Edits.First().RevisionMessage)</th>
+				<th>@Html.DisplayNameFor(m => m.History.First().PageName)</th>
+				<th>@Html.DisplayNameFor(m => m.History.First().CreateTimestamp)</th>
+				<th>@Html.DisplayNameFor(m => m.History.First().MinorEdit)</th>
+				<th>@Html.DisplayNameFor(m => m.History.First().RevisionMessage)</th>
 				<th>Actions</th>
 			</tr>
-			@foreach (var revision in Model.History.Edits)
+			@foreach (var revision in Model.History)
 			{
 				<tr>
 					<td><a href="/@(revision.PageName)?revision=@revision.Revision">@revision.PageName r@(revision.Revision)</a></td>

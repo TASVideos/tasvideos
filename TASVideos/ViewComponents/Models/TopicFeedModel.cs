@@ -5,6 +5,7 @@ public class TopicFeedModel
 	public string? Heading { get; set; }
 	public bool RightAlign { get; set; }
 	public bool HideContent { get; set; }
+	public string? WikiLink { get; set; }
 
 	public IEnumerable<TopicPost> Posts { get; set; } = new List<TopicPost>();
 

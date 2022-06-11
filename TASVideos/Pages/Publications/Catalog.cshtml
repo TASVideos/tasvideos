@@ -35,15 +35,15 @@
 			</form-group>
 			<form-group>
 				<fullrow>
-					<label asp-for="Catalog.RomId" class="form-control-label"></label>
+					<label asp-for="Catalog.GameVersionId" class="form-control-label"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.RomId" asp-items="@Model.AvailableRoms" class="form-control"></select>
-						<span asp-validation-for="Catalog.RomId" class="text-danger"></span>
+						<select asp-for="Catalog.GameVersionId" asp-items="@Model.AvailableVersions" class="form-control"></select>
+						<span asp-validation-for="Catalog.GameVersionId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
-						<button id="create-rom" type="button" class="btn btn-primary">New</button>
+						<button id="create-version" type="button" class="btn btn-primary">New</button>
 					</div>
 				</row>
 			</form-group>
@@ -66,7 +66,7 @@
 			"@Html.IdFor(m => m.Catalog.SystemId)",
 			"@Html.IdFor(m => m.Catalog.SystemFrameRateId)",
 			"@Html.IdFor(m => m.Catalog.GameId)",
-			"@Html.IdFor(m => m.Catalog.RomId)",
+			"@Html.IdFor(m => m.Catalog.GameVersionId)",
 			"@HttpContext.CurrentPathToReturnUrl()");
 	</script>
 }

@@ -43,6 +43,8 @@ public class FilterModel : BasePageModel
 
 	public IEnumerable<SelectListItem> AvailableGameGroups { get; set; } = new List<SelectListItem>();
 
+	public IEnumerable<SelectListItem> AvailableAuthors { get; set; } = new List<SelectListItem>();
+
 	public async Task<IActionResult> OnGet()
 	{
 		Tokens = await _movieTokens.GetTokens();
@@ -67,6 +69,14 @@ public class FilterModel : BasePageModel
 				Text = gg.Name
 			})
 			.OrderBy(gg => gg.Text)
+			.ToListAsync();
+		AvailableAuthors = await _db.Users
+			.ThatArePublishedAuthors()
+			.Select(u => new SelectListItem
+			{
+				Value = u.Id.ToString(),
+				Text = u.UserName
+			})
 			.ToListAsync();
 		return Page();
 	}

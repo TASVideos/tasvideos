@@ -33,10 +33,10 @@
 					<span class="col-sm-9"><a asp-page="/Games/Index" asp-route-id="@Model.Submission.GameId">@Html.DisplayFor(m => m.Submission.Game)</a></span>
 				</row>
 				<row>
-					<label class="col-sm-3" asp-for="Submission.Rom"></label>
+					<label class="col-sm-3" asp-for="Submission.GameVersion"></label>
 					<span class="col-sm-9">
-						<a asp-page="/Games/Roms/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-id="@Model.Submission.RomId">
-							<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.Rom)</span>
+						<a asp-page="/Games/Versions/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-id="@Model.Submission.VersionId">
+							<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.GameVersion)</span>
 						</a>
 					</span>
 				</row>

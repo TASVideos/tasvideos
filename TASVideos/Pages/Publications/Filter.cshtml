@@ -36,6 +36,10 @@
 				<label asp-for="Search.GameGroups"></label>
 				<select asp-for="Search.GameGroups" size="@(Math.Min(Model.AvailableGameGroups.Count(), 7).ToString())" asp-items="Model.AvailableGameGroups" class="form-control"></select>
 			</form-group>
+			<form-group>
+				<label asp-for="Search.Authors"></label>
+				<select asp-for="Search.Authors" asp-items="Model.AvailableAuthors" class="form-control"></select>
+			</form-group>
 		</column>
 		<column md="4">
 			<form-group>

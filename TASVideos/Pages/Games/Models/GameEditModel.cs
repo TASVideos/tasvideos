@@ -17,12 +17,12 @@ public class GameEditModel
 	[Required]
 	[StringLength(8)]
 	[Display(Name = "Abbreviation")]
-	public string Abbreviation { get; set; } = "";
+	public string? Abbreviation { get; set; }
 
 	[Required]
 	[StringLength(64)]
 	[Display(Name = "Search Key")]
-	public string SearchKey { get; set; } = "";
+	public string? SearchKey { get; set; }
 
 	[Required]
 	[StringLength(250)]

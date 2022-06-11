@@ -3,7 +3,7 @@
 @{
 	var classIconPath2X = "";
 	var classIconPath4X = "";
-	if (!string.IsNullOrWhiteSpace(Model!.ClassIconPath))
+	if (!string.IsNullOrWhiteSpace(Model.ClassIconPath))
 	{
 		classIconPath2X = $"{Model.ClassIconPath.Split('.')[0]}-2x.png";
 		classIconPath4X = $"{Model.ClassIconPath.Split('.')[0]}-4x.png";
@@ -19,7 +19,7 @@
 }
 
 @functions{
-	static string RomAndVersionDisplay(string? version, string? region)
+	static string VersionDisplay(string? version, string? region)
 	{
 		string regionDisplay = RegionDisplay(region);
 		if (string.IsNullOrWhiteSpace(version) && string.IsNullOrWhiteSpace(regionDisplay))
@@ -77,7 +77,7 @@
 			<h4>
 				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">
 						@{
-							var regionAndVersion = RomAndVersionDisplay(Model.RomVersion, Model.Region);
+							var regionAndVersion = VersionDisplay(Model.GameVersion, Model.Region);
 						}
 					<small condition="!string.IsNullOrWhiteSpace(regionAndVersion)"> (@regionAndVersion)</small>
 					@Model.Title

@@ -86,9 +86,9 @@ public class ListModel : BasePageModel
 		};
 	}
 
-	public async Task<IActionResult> OnGetRomDropDownForGame(int gameId, int systemId, bool includeEmpty)
+	public async Task<IActionResult> OnGetVersionDropDownForGame(int gameId, int systemId, bool includeEmpty)
 	{
-		var items = await _db.GameRoms
+		var items = await _db.GameVersions
 			.ForGame(gameId)
 			.ForSystem(systemId)
 			.OrderBy(r => r.Name)

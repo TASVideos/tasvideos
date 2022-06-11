@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -11,12 +10,10 @@ namespace TASVideos.Pages.Profile;
 public class UserFilesModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 
-	public UserFilesModel(ApplicationDbContext db, IMapper mapper)
+	public UserFilesModel(ApplicationDbContext db)
 	{
 		_db = db;
-		_mapper = mapper;
 	}
 
 	public string UserName { get; set; } = "";
@@ -26,11 +23,11 @@ public class UserFilesModel : BasePageModel
 	public async Task OnGet()
 	{
 		UserName = User.Name();
-		Files = await _mapper.ProjectTo<UserFileModel>(
-			_db.UserFiles
-				.ForAuthor(UserName)
-				.FilterByHidden(includeHidden: true))
-				.OrderByDescending(uf => uf.UploadTimestamp)
+		Files = await _db.UserFiles
+			.ForAuthor(UserName)
+			.FilterByHidden(includeHidden: true)
+			.OrderByDescending(uf => uf.UploadTimestamp)
+			.ToUserFileModel()
 			.ToListAsync();
 	}
 }

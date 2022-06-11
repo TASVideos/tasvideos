@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Pages.Games.Roms.Models;
+namespace TASVideos.Pages.Games.Versions.Models;
 
-public class RomListModel
+public class VersionListModel
 {
 	[Display(Name = "Game")]
 	public string GameDisplayName { get; set; } = "";
 
-	public IEnumerable<RomEntry> Roms { get; set; } = new List<RomEntry>();
+	public IEnumerable<VersionEntry> Versions { get; set; } = new List<VersionEntry>();
 
-	public class RomEntry
+	public class VersionEntry
 	{
 		[Display(Name = "Id")]
 		public int Id { get; set; }
@@ -31,7 +31,7 @@ public class RomListModel
 		public string? Region { get; set; }
 
 		[Display(Name = "Type")]
-		public RomTypes RomType { get; set; }
+		public VersionTypes VersionType { get; set; }
 
 		[Display(Name = "System")]
 		public string SystemCode { get; set; } = "";

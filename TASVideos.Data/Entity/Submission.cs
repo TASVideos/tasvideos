@@ -23,8 +23,7 @@ public class Submission : BaseEntity, ITimeable
 	public int? TopicId { get; set; }
 	public virtual ForumTopic? Topic { get; set; }
 
-	// TODO: don't make this nullable! Need to fix the importer for this to work
-	public int? SubmitterId { get; set; }
+	public int SubmitterId { get; set; }
 	public virtual User? Submitter { get; set; }
 
 	public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
@@ -49,8 +48,8 @@ public class Submission : BaseEntity, ITimeable
 	public int? GameId { get; set; }
 	public virtual Game.Game? Game { get; set; }
 
-	public int? RomId { get; set; }
-	public virtual GameRom? Rom { get; set; }
+	public int? GameVersionId { get; set; }
+	public virtual GameVersion? GameVersion { get; set; }
 
 	// Metadata parsed from movie file
 	public int? SystemId { get; set; }
@@ -69,7 +68,7 @@ public class Submission : BaseEntity, ITimeable
 	public string? EncodeEmbedLink { get; set; }
 
 	[StringLength(100)]
-	public string? GameVersion { get; set; }
+	public string? SubmittedGameVersion { get; set; }
 
 	[StringLength(100)]
 	public string? GameName { get; set; }
@@ -131,9 +130,9 @@ public class Submission : BaseEntity, ITimeable
 			gameName = Game.DisplayName;
 		}
 
-		if (Rom is not null && !string.IsNullOrWhiteSpace(Rom.TitleOverride))
+		if (GameVersion is not null && !string.IsNullOrWhiteSpace(GameVersion.TitleOverride))
 		{
-			gameName = Rom.TitleOverride;
+			gameName = GameVersion.TitleOverride;
 		}
 
 		Title =
@@ -157,7 +156,7 @@ public static class SubmissionExtensions
 		return submission.SystemId > 0
 			&& submission.SystemFrameRateId > 0
 			&& submission.GameId > 0
-			&& submission.RomId > 0
+			&& submission.GameVersionId > 0
 			&& submission.IntendedClassId > 0
 			&& submission.Status == SubmissionStatus.PublicationUnderway;
 	}

@@ -12,7 +12,7 @@ public class GamesResponse
 	[Sortable]
 	public int Id { get; init; }
 
-	public IEnumerable<GameRom> Roms { get; init; } = new List<GameRom>();
+	public IEnumerable<GameVersion> Versions { get; init; } = new List<GameVersion>();
 
 	[Sortable]
 	public string GoodName { get; init; } = "";
@@ -21,26 +21,26 @@ public class GamesResponse
 	public string DisplayName { get; init; } = "";
 
 	[Sortable]
-	public string Abbreviation { get; init; } = "";
+	public string? Abbreviation { get; init; } = "";
 
 	[Sortable]
-	public string SearchKey { get; init; } = "";
+	public string? SearchKey { get; init; } = "";
 
 	[Sortable]
 	public string YoutubeTags { get; init; } = "";
 
 	[Sortable]
-	public string ScreenshotUrl { get; init; } = "";
+	public string? ScreenshotUrl { get; init; } = "";
 
-	public class GameRom
+	public class GameVersion
 	{
 		public int Id { get; init; }
-		public string Md5 { get; init; } = "";
-		public string Sha1 { get; init; } = "";
+		public string? Md5 { get; init; } = "";
+		public string? Sha1 { get; init; } = "";
 		public string Name { get; init; } = "";
-		public RomTypes Type { get; init; }
-		public string Region { get; init; } = "";
-		public string Version { get; init; } = "";
+		public VersionTypes Type { get; init; }
+		public string? Region { get; init; } = "";
+		public string? Version { get; init; } = "";
 		public string SystemCode { get; init; } = "";
 	}
 }

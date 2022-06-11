@@ -35,7 +35,7 @@
 				<row>
 					<column md="6">
 						<ul>
-							<li>Platforms: @string.Join(", ", Model.Game.Roms.Select(rom => rom.SystemCode).Distinct())</li>
+							<li>Platforms: @string.Join(", ", Model.Game.Versions.Select(v => v.SystemCode).Distinct())</li>
 							<li>Abbreviation: @Model.Game.Abbreviation</li>
 							<li>Display Name: @Model.Game.DisplayName</li>
 							<li>GoodTools Name: @Model.Game.GoodName</li>
@@ -129,16 +129,16 @@
 <h4>
 	Game Versions
 	<a permission="CatalogMovies"
-	   asp-page="/Games/Roms/List"
+	   asp-page="/Games/Versions/List"
 	   asp-route-gameId="@Model.Game.Id"
 	   asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
 	   class="float-end btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
 </h4>
 
-<alert type="warning" condition="!Model.Game.Roms.Any()" class="mt-3">
+<alert type="warning" condition="!Model.Game.Versions.Any()" class="mt-3">
 	No records.
 </alert>
-<div condition="Model.Game.Roms.Any()" class="table-container">
+<div condition="Model.Game.Versions.Any()" class="table-container">
 	<table class="table table-striped">
 		<tr>
 			<th>Type</th>
@@ -150,7 +150,7 @@
 			<th>Md5</th>
 			<th>Platform</th>
 		</tr>
-		@foreach (var rom in Model.Game.Roms)
+		@foreach (var rom in Model.Game.Versions)
 		{
 			<tr>
 				<td>@rom.Type.ToString()</td>

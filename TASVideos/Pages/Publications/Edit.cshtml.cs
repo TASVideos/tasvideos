@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +15,6 @@ namespace TASVideos.Pages.Publications;
 public class EditModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IMapper _mapper;
 	private readonly IWikiPages _wikiPages;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly ITagService _tagsService;
@@ -26,7 +24,6 @@ public class EditModel : BasePageModel
 
 	public EditModel(
 		ApplicationDbContext db,
-		IMapper mapper,
 		ExternalMediaPublisher publisher,
 		IWikiPages wikiPages,
 		ITagService tagsService,
@@ -35,7 +32,6 @@ public class EditModel : BasePageModel
 		IYoutubeSync youtubeSync)
 	{
 		_db = db;
-		_mapper = mapper;
 		_wikiPages = wikiPages;
 		_publisher = publisher;
 		_tagsService = tagsService;
@@ -146,8 +142,15 @@ public class EditModel : BasePageModel
 		AvailableTags = await _db.Tags
 			.ToDropdown()
 			.ToListAsync();
-		Files = await _mapper.ProjectTo<PublicationFileDisplayModel>(
-				_db.PublicationFiles.Where(f => f.PublicationId == Id))
+		Files = await _db.PublicationFiles
+			.Where(f => f.PublicationId == Id)
+			.Select(f => new PublicationFileDisplayModel
+			{
+				Id = f.Id,
+				Path = f.Path,
+				Type = f.Type,
+				Description = f.Description
+			})
 			.ToListAsync();
 	}
 
@@ -163,7 +166,7 @@ public class EditModel : BasePageModel
 			.Include(p => p.System)
 			.Include(p => p.SystemFrameRate)
 			.Include(p => p.Game)
-			.Include(p => p.Rom)
+			.Include(p => p.GameVersion)
 			.Include(p => p.Authors)
 			.ThenInclude(pa => pa.Author)
 			.SingleOrDefaultAsync(p => p.Id == id);

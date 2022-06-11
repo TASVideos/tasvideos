@@ -149,11 +149,6 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	public static IServiceCollection AddAutoMapperWithProjections(this IServiceCollection services)
-	{
-		return services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-	}
-
 	public static IServiceCollection AddSwagger(this IServiceCollection services, AppSettings settings)
 	{
 		services.AddAuthentication(x =>

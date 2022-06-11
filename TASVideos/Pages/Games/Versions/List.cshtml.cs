@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
-using TASVideos.Pages.Games.Roms.Models;
+using TASVideos.Pages.Games.Versions.Models;
 
-namespace TASVideos.Pages.Games.Roms;
+namespace TASVideos.Pages.Games.Versions;
 
 public class ListModel : BasePageModel
 {
@@ -17,17 +17,17 @@ public class ListModel : BasePageModel
 	[FromRoute]
 	public int GameId { get; set; }
 
-	public RomListModel Roms { get; set; } = new();
+	public VersionListModel Versions { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
 		var roms = await _db.Games
 			.Where(g => g.Id == GameId)
-			.Select(g => new RomListModel
+			.Select(g => new VersionListModel
 			{
 				GameDisplayName = g.DisplayName,
-				Roms = g.Roms
-				.Select(r => new RomListModel.RomEntry
+				Versions = g.GameVersions
+				.Select(r => new VersionListModel.VersionEntry
 				{
 					Id = r.Id,
 					DisplayName = r.Name,
@@ -35,7 +35,7 @@ public class ListModel : BasePageModel
 					Sha1 = r.Sha1,
 					Version = r.Version,
 					Region = r.Region,
-					RomType = r.Type,
+					VersionType = r.Type,
 					SystemCode = r.System!.Code,
 					TitleOverride = r.TitleOverride,
 				})
@@ -48,7 +48,7 @@ public class ListModel : BasePageModel
 			return NotFound();
 		}
 
-		Roms = roms;
+		Versions = roms;
 		return Page();
 	}
 }

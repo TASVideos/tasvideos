@@ -1,0 +1,78 @@
+﻿@page "/Games/{gameId}/Versions/Edit/{id?}/{handler?}"
+@model EditModel
+@{
+	ViewData["Title"] = Model.Id.HasValue
+		? $"Editing Game Version #{Model.Id} {Model.Version.Name}"
+		: "Create A New Game Version Entry";
+	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
+	string returnUrl = HttpContext.Request.ReturnUrl();
+}
+
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
+
+<form-group>
+	<delete-button condition="@Model.CanDelete"
+				   asp-href="@deleteLink"
+				   class="float-end">Delete</delete-button>
+	<h4>Game: @Model.GameName</h4>
+</form-group>
+<form method="post">
+	<input type="hidden" asp-for="GameName" />
+	<row>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Version.SystemCode"></label>
+				<select asp-for="Version.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Version.SystemCode" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Version.Name"></label>
+				<input type="text" asp-for="Version.Name" class="form-control" autocomplete="off" />
+				<span asp-validation-for="Version.Name" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Version.Md5"></label>
+				<input type="text" asp-for="Version.Md5" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Version.Md5" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Version.Sha1"></label>
+				<input type="text" asp-for="Version.Sha1" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Version.Sha1" class="text-danger"></span>
+			</form-group>
+		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Version.Type"></label>
+				<select asp-for="Version.Type" asp-items="@Model.AvailableVersionTypes.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Version.Type" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Version.TitleOverride"></label>
+				<input type="text" asp-for="Version.TitleOverride" class="form-control" />
+				<span asp-validation-for="Version.TitleOverride" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Version.Version"></label>
+				<input type="text" asp-for="Version.Version" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Version.Version" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Version.Region"></label>
+				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes" class="form-control"></select>
+				<span asp-validation-for="Version.Region" class="text-danger"></span>
+			</form-group>
+		</div>
+	</row>
+	<div class="text-center">
+		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
+		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="/Games/Versions/List" class="btn btn-secondary" asp-route-gameId="@Model.GameId"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

@@ -6,7 +6,8 @@
 		(!string.IsNullOrWhiteSpace(Model.Games.SearchTerms) ? " - " + $@"""{Model.Games.SearchTerms}""" : string.Empty);
 }
 
-<a asp-page="Edit" permission="CatalogMovies" class="btn btn-primary mb-3 float-end"><i class="fa fa-plus"></i> Create</a>
+<a asp-page="/GameGroups/List" class="btn btn-primary mb-3 float-end mr-5">Game Groups</a>
+<a asp-page="Edit" permission="CatalogMovies" class="btn btn-primary mb-3 float-end me-1"><i class="fa fa-plus"></i> Create</a>
 <a asp-page="Rewire" permission="RewireGames" class="btn btn-primary mb-3 float-end me-1"><i class="fa fa-wrench"></i> Rewire</a>
 <form class="row">
 	<div class="col-lg-5 col-12 mb-1">
@@ -38,7 +39,7 @@
 			<td>
 				<a asp-page="Index" asp-route-id="@game.Id" class="btn btn-sm btn-secondary"><i class="fa fa-eye"></i> View</a>
 				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@game.Id" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Edit</a>
-				<a asp-page="Roms/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm"><i class="fa fa-pencil"></i> Roms</a>
+				<a asp-page="Versions/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm"><i class="fa fa-pencil"></i> Versions</a>
 			</td>
 		</tr>
 	}
