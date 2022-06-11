@@ -225,6 +225,11 @@ internal class Ltm : ParserBase, IParser
 			return SystemCodes.Windows;
 		}
 
+		if (string.Equals(SystemCodes.Pc98, str, StringComparison.InvariantCultureIgnoreCase))
+		{
+			return SystemCodes.Pc98;
+		}
+
 		return SystemCodes.Linux;
 	}
 }
