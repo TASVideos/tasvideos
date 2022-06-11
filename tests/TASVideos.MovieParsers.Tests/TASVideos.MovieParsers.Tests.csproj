@@ -150,6 +150,7 @@
 		<EmbeddedResource Include="LtmSampleFiles\flash.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\linux.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\noframerate.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\pc98.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\savestate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\unknown-linuxfallback.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\variableframerate.ltm" />
