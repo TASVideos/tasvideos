@@ -33,6 +33,7 @@ internal class Bk2 : ParserBase, IParser
 		}
 
 		int? vBlankCount;
+		string clockRate;
 		string core;
 
 		await using (var stream = headerEntry.Open())
@@ -129,6 +130,7 @@ internal class Bk2 : ParserBase, IParser
 
 			vBlankCount = header.GetValueFor(Keys.VBlankCount).ToPositiveInt();
 			result.CycleCount = header.GetValueFor(Keys.CycleCount).ToPositiveLong();
+			clockRate = header.GetValueFor(Keys.ClockRate);
 			core = header.GetValueFor(Keys.Core).ToLower();
 		}
 
@@ -144,13 +146,24 @@ internal class Bk2 : ParserBase, IParser
 			.LineSplit()
 			.PipeCount();
 
-		if (result.CycleCount.HasValue && CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
+		if (result.CycleCount.HasValue)
 		{
-			var seconds = result.CycleCount.Value / (double)cyclesPerFrame;
-			result.FrameRateOverride = result.Frames / seconds;
+			if (ValidClockRates.Contains(clockRate))
+			{
+				var seconds = result.CycleCount.Value / double.Parse(clockRate);
+				result.FrameRateOverride = result.Frames / seconds;
+			}
+			else if (CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
+			{
+				var seconds = result.CycleCount.Value / (double)cyclesPerFrame;
+				result.FrameRateOverride = result.Frames / seconds;
+			}
+			else
+			{
+				return Error($"Missing or invalid {Keys.ClockRate}, could not parse movie time (is {nameof(ValidClockRates)} up-to-date?)");
+			}
 		}
-
-		if (core == "subneshawk")
+		else if (core == "subneshawk")
 		{
 			if (!vBlankCount.HasValue)
 			{
@@ -163,10 +176,21 @@ internal class Bk2 : ParserBase, IParser
 		return result;
 	}
 
+	// before 2.8, clock rate had to be determined by the core used
+	// only subgbhawk and gambatte used cycle based time at this time
 	private static readonly Dictionary<string, int> CycleBasedCores = new()
 	{
 		["subgbhawk"] = 4194304,
-		["gambatte"] = 2097152
+		["gambatte"] = 2097152,
+	};
+
+	private static readonly IReadOnlyList<string> ValidClockRates = new[]
+	{
+		"4194304", // subgbhawk
+		"2097152", // gambatte, sameboy
+		"5369318.18181818", // subneshawk (NTSC)
+		"5320342.5", // subneshawk (PAL/Dendy)
+		"33868800", // nymashock
 	};
 
 	private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new()
@@ -202,6 +226,7 @@ internal class Bk2 : ParserBase, IParser
 		public const string ModeVs = "isvs";
 		public const string VBlankCount = "vblankcount";
 		public const string CycleCount = "cyclecount";
+		public const string ClockRate = "clockrate";
 		public const string Core = "core";
 	}
 }
