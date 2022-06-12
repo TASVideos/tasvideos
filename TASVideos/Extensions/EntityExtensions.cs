@@ -286,6 +286,12 @@ public static class EntityExtensions
 			GameSystem = uf.System != null
 				? uf.System.Code
 				: "",
+			System = uf.System != null
+				? uf.System.DisplayName
+				: "",
+			Length = uf.Length,
+			Frames = uf.Frames,
+			Rerecords = uf.Rerecords,
 			Comments = uf.Comments
 				.Select(c => new UserFileModel.UserFileCommentModel
 				{
