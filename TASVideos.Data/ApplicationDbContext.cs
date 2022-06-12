@@ -285,13 +285,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			entity.HasIndex(e => e.GameId);
 		});
 
-		builder.Entity<Genre>(entity =>
-		{
-			entity.Property(e => e.Id)
-				.ValueGeneratedNever()
-				.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
-		});
-
 		builder.Entity<Flag>(entity =>
 		{
 			entity.Property(e => e.Id)
