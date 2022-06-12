@@ -34,7 +34,7 @@ public class GenreServicesTests
 		const int gameId = 2;
 		_db.Add(new Genre { Id = genreId });
 		_db.Add(new Game { Id = gameId });
-		_db.Add(new GameGenre { GameId = gameId, GenreId = gameId });
+		_db.Add(new GameGenre { GameId = gameId, GenreId = genreId });
 		await _db.SaveChangesAsync();
 
 		var result = await _genreService.GetAll();
@@ -62,7 +62,7 @@ public class GenreServicesTests
 		const string displayName = "Test";
 		_db.Genres.Add(new Genre { Id = genreId, DisplayName = displayName });
 		_db.Add(new Game { Id = gameId });
-		_db.Add(new GameGenre { GameId = gameId, GenreId = gameId });
+		_db.Add(new GameGenre { GameId = gameId, GenreId = genreId });
 		await _db.SaveChangesAsync();
 
 		var result = await _genreService.GetById(genreId);

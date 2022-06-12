@@ -55,7 +55,7 @@ internal class GenreService : IGenreService
 
 	public async Task<bool> InUse(int id)
 	{
-		return await _db.GameGenres.AnyAsync(gg => gg.GameId == id);
+		return await _db.GameGenres.AnyAsync(gg => gg.GenreId == id);
 	}
 
 	public async Task<int?> Add(string displayName)
