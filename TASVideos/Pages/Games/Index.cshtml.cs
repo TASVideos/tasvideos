@@ -50,7 +50,7 @@ public class IndexModel : BasePageModel
 				}).ToList(),
 				GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
 				{
-					Id = gg.GameId,
+					Id = gg.GameGroupId,
 					Name = gg.Game!.DisplayName
 				}).ToList(),
 				PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
