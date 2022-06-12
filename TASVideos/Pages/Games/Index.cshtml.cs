@@ -51,7 +51,7 @@ public class IndexModel : BasePageModel
 				GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
 				{
 					Id = gg.GameGroupId,
-					Name = gg.Game!.DisplayName
+					Name = gg.GameGroup!.Name
 				}).ToList(),
 				PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
 				ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
