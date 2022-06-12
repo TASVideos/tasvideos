@@ -25,7 +25,7 @@
 		<a id="Welcome" class="nav-link" href="/WelcomeToTASVideos">About</a>
 	</nav-item>
 	<nav-dropdown id="AdminDropdown" activate="Admin"
-				  permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles, PermissionTo.TagMaintenance, PermissionTo.CatalogMovies }">
+				  permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles, PermissionTo.TagMaintenance, PermissionTo.CatalogMovies, PermissionTo.GameSystemMaintenance }">
 		<a id="MediaPosts" class="dropdown-item" href="/MediaPosts">Media Posts</a>
 		<a id="Users" permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers }" class="dropdown-item" asp-page="/Users/List">Users</a>
 		<a id="Roles" class="dropdown-item" asp-page="/Roles/List">Roles</a>
@@ -34,7 +34,8 @@
 		<a id="TagMaintenance" permission="TagMaintenance" class="dropdown-item" asp-page="/Tags/Index">Tag Maintenance</a>
 		<a id="FlagMaintenance" permission="FlagMaintenance" class="dropdown-item" asp-page="/Flags/Index">Flag Maintenance</a>
 		<a id="GenreMaintenance" permission="TagMaintenance" class="dropdown-item" asp-page="/Genres/Index">Genre Maintenance</a>
-		<a id="TierMaintenance" Permission="ClassMaintenance" class="dropdown-item" asp-page="/PublicationClasses/Index">Class Maintenance</a>
+		<a id="TierMaintenance" permission="ClassMaintenance" class="dropdown-item" asp-page="/PublicationClasses/Index">Class Maintenance</a>
+		<a id="Systems" permission="GameSystemMaintenance" class="dropdown-item" asp-page="/Systems/Index">Systems</a>
 	</nav-dropdown>
 	<nav-dropdown id="WikiDropdown" activate="Wiki"
 				  permissions="new[] { PermissionTo.EditWikiPages, PermissionTo.EditSystemPages, PermissionTo.MoveWikiPages, PermissionTo.DeleteWikiPages }">
