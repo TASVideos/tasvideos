@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Data;
 using TASVideos.WikiEngine;
 
@@ -11,44 +9,15 @@ namespace TASVideos.ViewComponents;
 public class MovieChangeLog : ViewComponent
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IPublicationHistory _history;
 
-	public MovieChangeLog(ApplicationDbContext db, IPublicationHistory history)
+	public MovieChangeLog(ApplicationDbContext db)
 	{
 		_db = db;
-		_history = history;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(int? maxDays, int? seed)
+	public async Task<IViewComponentResult> InvokeAsync(int? maxDays)
 	{
-		if (seed.HasValue)
-		{
-			return await Seed(seed.Value);
-		}
-
-		return await MaxDays(maxDays ?? 60);
-	}
-
-	public async Task<IViewComponentResult> Seed(int publicationId)
-	{
-		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
-		if (publication is null)
-		{
-			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
-		}
-
-		var history = await _history.ForGame(publication.GameId);
-		if (history is null)
-		{
-			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
-		}
-
-		return View("Seed", history);
-	}
-
-	public async Task<IViewComponentResult> MaxDays(int maxDays)
-	{
-		var movieHistory = await GetRecentPublications(maxDays);
+		var movieHistory = await GetRecentPublications(maxDays ?? 60);
 
 		// merge movie history entries so every date holds multiple publications (as applicable)
 		var mergedHistoryModel = new MovieHistoryModel
@@ -75,13 +44,13 @@ public class MovieChangeLog : ViewComponent
 				Date = p.CreateTimestamp.Date,
 				Pubs = new List<MovieHistoryModel.PublicationEntry>
 				{
-						new ()
-						{
-							Id = p.Id,
-							Name = p.Title,
-							IsNewGame = p.Game != null && p.Game.Publications.FirstOrDefault() == p,
-							IsNewBranch = p.ObsoletedMovies.Count == 0
-						}
+					new ()
+					{
+						Id = p.Id,
+						Name = p.Title,
+						IsNewGame = p.Game != null && p.Game.Publications.FirstOrDefault() == p,
+						IsNewBranch = p.ObsoletedMovies.Count == 0
+					}
 				}
 			})
 			.ToListAsync();
