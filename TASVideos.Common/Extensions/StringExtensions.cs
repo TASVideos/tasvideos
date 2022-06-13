@@ -221,4 +221,14 @@ public static class StringExtensions
 
 		return string.Concat(text.AsSpan(0, pos), replace, text.AsSpan(pos + search.Length));
 	}
+
+	public static string PascalToCamelCase(this string str)
+	{
+		if (string.IsNullOrWhiteSpace(str))
+		{
+			return str;
+		}
+
+		return char.ToLowerInvariant(str[0]) + str[1..];
+	}
 }

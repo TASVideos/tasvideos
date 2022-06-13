@@ -64,7 +64,7 @@ public static class FieldSelectionExtensions
 				.FirstOrDefault(p => string.Equals(p.Name, column, StringComparison.CurrentCultureIgnoreCase));
 			if (property is not null)
 			{
-				dict[property.Name] = property.GetValue(obj);
+				dict[property.Name.PascalToCamelCase()] = property.GetValue(obj);
 			}
 		}
 
@@ -80,7 +80,7 @@ public static class FieldSelectionExtensions
 		{
 			foreach (var property in obj.GetType().GetProperties())
 			{
-				dictionary.Add(property.Name, property.GetValue(obj));
+				dictionary.Add(property.Name.PascalToCamelCase(), property.GetValue(obj));
 			}
 		}
 

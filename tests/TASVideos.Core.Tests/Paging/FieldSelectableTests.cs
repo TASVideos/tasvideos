@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Core.Tests.Paging;
+﻿using TASVideos.Extensions;
+
+namespace TASVideos.Core.Tests.Paging;
 
 [TestClass]
 public class FieldSelectableTests
@@ -18,48 +20,48 @@ public class FieldSelectableTests
 		var actual = testClass.FieldSelect(fields);
 		var dic = (IDictionary<string, object?>)actual;
 		Assert.AreEqual(3, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
-		Assert.AreEqual(dic[nameof(TestClass.Int)], TestInt);
-		Assert.AreEqual(dic[nameof(TestClass.Bool)], TestBool);
+		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
+		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
+		Assert.AreEqual(dic[nameof(TestClass.Bool).PascalToCamelCase()], TestBool);
 	}
 
 	[TestMethod]
 	public void FieldSelectable_Single_SingleSelect_ReturnsSingle()
 	{
 		var testClass = new TestClass();
-		var actual = testClass.FieldSelect(nameof(TestClass.String));
+		var actual = testClass.FieldSelect(nameof(TestClass.StringValue).PascalToCamelCase());
 		var dic = (IDictionary<string, object?>)actual;
 		Assert.AreEqual(1, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
+		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
 
-		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Int)));
-		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool)));
+		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Int).PascalToCamelCase()));
+		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool).PascalToCamelCase()));
 	}
 
 	[TestMethod]
 	public void FieldSelectable_Single_DoubleSelect_ReturnsDouble()
 	{
-		string fields = $"{nameof(TestClass.String)},{nameof(TestClass.Int)}";
+		string fields = $"{nameof(TestClass.StringValue)},{nameof(TestClass.Int)}";
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(fields);
 		var dic = (IDictionary<string, object?>)actual;
 		Assert.AreEqual(2, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
-		Assert.AreEqual(dic[nameof(TestClass.Int)], TestInt);
+		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
+		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
 
-		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool)));
+		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool).PascalToCamelCase()));
 	}
 
 	[TestMethod]
 	public void FieldSelectable_Single_DoubleSelect_CanHaveSpaces_ReturnsDouble()
 	{
-		string fields = $" {nameof(TestClass.String)} , {nameof(TestClass.Int)} ";
+		string fields = $" {nameof(TestClass.StringValue)} , {nameof(TestClass.Int)} ";
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(fields);
 		var dic = (IDictionary<string, object?>)actual;
 		Assert.AreEqual(2, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.String)], TestString);
-		Assert.AreEqual(dic[nameof(TestClass.Int)], TestInt);
+		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
+		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
 
 		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool)));
 	}
@@ -67,7 +69,7 @@ public class FieldSelectableTests
 	[TestMethod]
 	public void FieldSelectable_Multi_Distinct()
 	{
-		var fields = new FieldSelectable($"{nameof(TestClass.String)},{nameof(TestClass.Bool)}");
+		var fields = new FieldSelectable($"{nameof(TestClass.StringValue)},{nameof(TestClass.Bool)}");
 		var testList = new[]
 		{
 			new TestClass(),
@@ -112,7 +114,7 @@ public class FieldSelectableTests
 
 	private class TestClass
 	{
-		public string String { get; init; } = TestString;
+		public string StringValue { get; init; } = TestString;
 		public int Int { get; init; } = TestInt;
 		public bool Bool { get; init; } = TestBool;
 	}
