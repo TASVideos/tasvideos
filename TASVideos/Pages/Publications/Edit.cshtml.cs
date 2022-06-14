@@ -268,7 +268,7 @@ public class EditModel : BasePageModel
 					publication.WikiContent,
 					publication.System!.Code,
 					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
-					publication.Game!.SearchKey,
+					publication.Game!.YoutubeTags,
 					publication.ObsoletedById));
 			}
 		}
