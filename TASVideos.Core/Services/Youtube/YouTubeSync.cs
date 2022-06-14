@@ -278,7 +278,7 @@ public record YoutubeVideo(
 	WikiPage WikiPage,
 	string SystemCode,
 	IEnumerable<string> Authors,
-	string? SearchKey,
+	string? YoutubeTags,
 	int? ObsoletedBy)
 {
 	public IEnumerable<string> Tags
@@ -288,9 +288,9 @@ public record YoutubeVideo(
 			var tags = new[] { SystemCode }
 				.Concat(Authors);
 
-			if (!string.IsNullOrWhiteSpace(SearchKey))
+			if (!string.IsNullOrWhiteSpace(YoutubeTags))
 			{
-				tags = tags.Concat(SearchKey.SplitWithEmpty("-"));
+				tags = tags.Concat(YoutubeTags.SplitWithEmpty("-"));
 			}
 
 			tags = tags.Select(t => t.ToLower()).Distinct();

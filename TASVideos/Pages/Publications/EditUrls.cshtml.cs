@@ -99,7 +99,7 @@ public class EditUrlsModel : BasePageModel
 				SystemCode = p.System!.Code,
 				p.WikiContent,
 				Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-				p.Game!.SearchKey,
+				p.Game!.YoutubeTags,
 				p.ObsoletedById
 			})
 			.SingleOrDefaultAsync();
@@ -152,7 +152,7 @@ public class EditUrlsModel : BasePageModel
 					publication.WikiContent!,
 					publication.SystemCode,
 					publication.Authors,
-					publication.SearchKey,
+					publication.YoutubeTags,
 					publication.ObsoletedById);
 				await _youtubeSync.SyncYouTubeVideo(video);
 			}
