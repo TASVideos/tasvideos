@@ -20,11 +20,6 @@ public class GameEditModel
 	public string? Abbreviation { get; set; }
 
 	[Required]
-	[StringLength(64)]
-	[Display(Name = "Search Key")]
-	public string? SearchKey { get; set; }
-
-	[Required]
 	[StringLength(250)]
 	[Display(Name = "Youtube Tags")]
 	public string YoutubeTags { get; set; } = "";

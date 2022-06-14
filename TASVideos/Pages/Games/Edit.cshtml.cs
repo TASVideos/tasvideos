@@ -53,7 +53,6 @@ public class EditModel : BasePageModel
 					GoodName = g.GoodName,
 					DisplayName = g.DisplayName,
 					Abbreviation = g.Abbreviation,
-					SearchKey = g.SearchKey,
 					YoutubeTags = g.YoutubeTags,
 					ScreenshotUrl = g.ScreenshotUrl,
 					GameResourcesPage = g.GameResourcesPage,
@@ -108,7 +107,6 @@ public class EditModel : BasePageModel
 			game.GoodName = Game.GoodName;
 			game.DisplayName = Game.DisplayName;
 			game.Abbreviation = Game.Abbreviation;
-			game.SearchKey = Game.SearchKey;
 			game.YoutubeTags = Game.YoutubeTags;
 			game.ScreenshotUrl = Game.ScreenshotUrl;
 			game.GameResourcesPage = Game.GameResourcesPage;
@@ -127,7 +125,6 @@ public class EditModel : BasePageModel
 				GoodName = Game.GoodName,
 				DisplayName = Game.DisplayName,
 				Abbreviation = Game.Abbreviation,
-				SearchKey = Game.SearchKey,
 				YoutubeTags = Game.YoutubeTags,
 				ScreenshotUrl = Game.ScreenshotUrl,
 				GameResourcesPage = Game.GameResourcesPage

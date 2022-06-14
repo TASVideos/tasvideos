@@ -27,9 +27,6 @@ public class Game : BaseEntity
 	[StringLength(8)]
 	public string? Abbreviation { get; set; }
 
-	[StringLength(64)]
-	public string? SearchKey { get; set; }
-
 	[Required]
 	[StringLength(250)]
 	public string YoutubeTags { get; set; } = "";
