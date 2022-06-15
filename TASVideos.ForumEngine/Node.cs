@@ -315,9 +315,6 @@ public class Element : INode
 			case "userfile":
 				await WriteHref(w, h, s => "/userfiles/info/" + s, async s => "User movie #" + s);
 				break;
-			case "wip":
-				await WriteHref(w, h, s => "/userfiles/info/" + s, async s => "WIP #" + s);
-				break;
 			case "wiki":
 				await WriteHref(w, h, s => "/" + s, async s => "Wiki: " + s);
 				break;
