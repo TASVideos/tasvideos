@@ -575,7 +575,7 @@ public class QueueServiceTests
 
 		var wikiEntry = _db.WikiPages.Add(new WikiPage { Markup = "Test" });
 		var systemEntry = _db.GameSystems.Add(new GameSystem { Code = "Test" });
-		var gameEntry = _db.Games.Add(new Game { YoutubeTags = "Test" });
+		var gameEntry = _db.Games.Add(new Game());
 		var authorEntry = _db.Users.Add(new User { UserName = "Author" });
 
 		const int publicationId = 1;

@@ -99,7 +99,6 @@ public class EditUrlsModel : BasePageModel
 				SystemCode = p.System!.Code,
 				p.WikiContent,
 				Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-				p.Game!.YoutubeTags,
 				p.ObsoletedById
 			})
 			.SingleOrDefaultAsync();
