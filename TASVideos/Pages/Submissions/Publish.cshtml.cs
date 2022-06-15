@@ -177,7 +177,6 @@ public class PublishModel : BasePageModel
 				wikiPage,
 				submission.System.Code,
 				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-				submission.Game.YoutubeTags,
 				null);
 			await _youtubeSync.SyncYouTubeVideo(video);
 		}

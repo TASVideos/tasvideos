@@ -152,7 +152,6 @@ public class EditUrlsModel : BasePageModel
 					publication.WikiContent!,
 					publication.SystemCode,
 					publication.Authors,
-					publication.YoutubeTags,
 					publication.ObsoletedById);
 				await _youtubeSync.SyncYouTubeVideo(video);
 			}
