@@ -376,7 +376,6 @@ internal class QueueService : IQueueService
 					queriedPub.WikiContent!,
 					queriedPub.System!.Code,
 					queriedPub.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
-					queriedPub.Game!.YoutubeTags,
 					queriedPub.ObsoletedById));
 			}
 		}
@@ -474,7 +473,6 @@ internal class QueueService : IQueueService
 				toObsolete.Authors
 					.OrderBy(pa => pa.Ordinal)
 					.Select(pa => pa.Author!.UserName),
-				toObsolete.Game!.YoutubeTags,
 				obsoletingPublicationId);
 
 			await _youtubeSync.SyncYouTubeVideo(obsoleteVideo);

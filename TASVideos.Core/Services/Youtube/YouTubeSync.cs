@@ -278,23 +278,11 @@ public record YoutubeVideo(
 	WikiPage WikiPage,
 	string SystemCode,
 	IEnumerable<string> Authors,
-	string? YoutubeTags,
 	int? ObsoletedBy)
 {
-	public IEnumerable<string> Tags
-	{
-		get
-		{
-			var tags = new[] { SystemCode }
-				.Concat(Authors);
-
-			if (!string.IsNullOrWhiteSpace(YoutubeTags))
-			{
-				tags = tags.Concat(YoutubeTags.SplitWithEmpty("-"));
-			}
-
-			tags = tags.Select(t => t.ToLower()).Distinct();
-			return tags;
-		}
-	}
+	public IEnumerable<string> Tags =>
+		new[] { SystemCode }
+			.Concat(Authors)
+			.Select(t => t.ToLower())
+			.Distinct();
 }
