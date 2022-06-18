@@ -30,6 +30,27 @@
 	</div>
 </form>
 
+<h4>System Framerates</h4>
+<table class="table table-sm table-bordered">
+	<tr>
+		<th>Framerate</th>
+		<th>Region</th>
+		<th>Preliminary</th>
+		<th>Obsolete</th>
+	</tr>
+	@foreach (var rate in Model.System.SystemFrameRates
+		.OrderBy(r => r.Obsolete)
+		.ThenBy(r => r.FrameRate))
+	{
+		<tr class="@(rate.Obsolete ? "table-info" : "")">
+			<td>@rate.FrameRate</td>
+			<td>@rate.RegionCode</td>
+			<td>@rate.Preliminary</td>
+			<td>@rate.Obsolete</td>
+		</tr>
+	}
+</table>
+
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 }
