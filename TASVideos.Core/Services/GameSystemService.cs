@@ -16,6 +16,7 @@ public interface IGameSystemService
 	Task<SystemEditResult> Add(int id, string code, string displayName);
 	Task<SystemEditResult> Edit(int id, string code, string displayName);
 	Task<SystemDeleteResult> Delete(int id);
+	Task FlushCache();
 }
 
 internal class GameSystemService : IGameSystemService
@@ -191,5 +192,11 @@ internal class GameSystemService : IGameSystemService
 		}
 
 		return SystemDeleteResult.Success;
+	}
+
+	public async Task FlushCache()
+	{
+		_cache.Remove(SystemsKey);
+		await GetAll();
 	}
 }

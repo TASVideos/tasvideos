@@ -15,12 +15,12 @@
 	<row>
 		<column lg="6">
 			<label asp-for="System.Code"></label>
-			<input type="text" asp-for="System.Code" class="form-control" />
+			<input type="text" asp-for="System.Code" class="form-control"/>
 			<span asp-validation-for="System.Code" class="text-danger"></span>
 		</column>
 		<column lg="6" class="mt-lg-0 mt-3">
 			<label asp-for="System.DisplayName"></label>
-			<input type="text" asp-for="System.DisplayName" class="form-control" />
+			<input type="text" asp-for="System.DisplayName" class="form-control"/>
 			<span asp-validation-for="System.DisplayName" class="text-danger"></span>
 		</column>
 	</row>
@@ -30,6 +30,7 @@
 	</div>
 </form>
 
+<a class="btn btn-primary float-end mb-2" asp-page="CreateFramerate" asp-route-systemId="@Model.Id">Create</a>
 <h4>System Framerates</h4>
 <table class="table table-sm table-bordered">
 	<tr>
