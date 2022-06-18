@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Systems;
 
+[RequirePermission(PermissionTo.GameSystemMaintenance)]
 public class CreateFramerateModel : BasePageModel
 {
 	private readonly IGameSystemService _systemService;
