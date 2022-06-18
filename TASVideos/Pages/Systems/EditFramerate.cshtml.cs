@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Systems;
 
+[RequirePermission(PermissionTo.GameSystemMaintenance)]
 public class EditFramerateModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
