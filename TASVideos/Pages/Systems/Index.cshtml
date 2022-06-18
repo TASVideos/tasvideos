@@ -10,6 +10,7 @@
 		<th>Id</th>
 		<th>Code</th>
 		<th>Display Name</th>
+		<th>Framerates</th>
 		<th></th>
 	</tr>
 	@foreach (var system in Model.Systems)
@@ -18,6 +19,18 @@
 			<td>@system.Id</td>
 			<td>@system.Code</td>
 			<td>@system.DisplayName</td>
+			<td>
+				@foreach(var rate in system.SystemFrameRates
+					.Where(sf => !sf.Obsolete)
+					.OrderBy(sf => sf.FrameRate))
+				{
+					<div>@rate.FrameRate</div>
+				}
+				
+				<div condition="system.SystemFrameRates.Any(sf => sf.Obsolete)">
+					(@system.SystemFrameRates.Count(sf => sf.Obsolete) obsolete)
+				</div>
+			</td>
 			<td>
 				<a permission="GameSystemMaintenance" class="btn btn-primary" asp-page="Edit" asp-route-id="@system.Id">
 					<i class="fa fa-pencil"></i> Edit
