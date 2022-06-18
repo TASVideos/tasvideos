@@ -13,6 +13,7 @@ public class SystemsResponse
 
 	public class FrameRates
 	{
+		public int Id { get; init; }
 		public double FrameRate { get; init; }
 		public string RegionCode { get; init; } = "";
 		public bool Preliminary { get; init; }

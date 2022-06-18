@@ -38,6 +38,7 @@
 		<th>Region</th>
 		<th>Preliminary</th>
 		<th>Obsolete</th>
+		<th>Actions</th>
 	</tr>
 	@foreach (var rate in Model.System.SystemFrameRates
 		.OrderBy(r => r.Obsolete)
@@ -48,6 +49,7 @@
 			<td>@rate.RegionCode</td>
 			<td>@rate.Preliminary</td>
 			<td>@rate.Obsolete</td>
+			<td><a class="btn btn-sm btn-danger" asp-page="EditFrameRate" asp-route-id="@rate.Id">Edit</a></td>
 		</tr>
 	}
 </table>

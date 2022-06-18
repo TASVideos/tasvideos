@@ -46,6 +46,7 @@ internal class GameSystemService : IGameSystemService
 				DisplayName = s.DisplayName,
 				SystemFrameRates = s.SystemFrameRates.Select(sf => new SystemsResponse.FrameRates
 				{
+					Id = sf.Id,
 					FrameRate = sf.FrameRate,
 					RegionCode = sf.RegionCode,
 					Preliminary = sf.Preliminary,
