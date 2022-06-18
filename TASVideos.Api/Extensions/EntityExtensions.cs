@@ -31,23 +31,6 @@ internal static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<SystemsResponse> ToSystemsResponse(this IQueryable<GameSystem> query)
-	{
-		return query.Select(q => new SystemsResponse
-		{
-			Id = q.Id,
-			Code = q.Code,
-			DisplayName = q.DisplayName,
-			SystemFrameRates = q.SystemFrameRates.Select(sf => new SystemsResponse.FrameRates
-			{
-				FrameRate = sf.FrameRate,
-				RegionCode = sf.RegionCode,
-				Preliminary = sf.Preliminary,
-				Obsolete = sf.Obsolete
-			})
-		});
-	}
-
 	public static IQueryable<PublicationsResponse> ToPublicationsResponse(this IQueryable<Publication> query)
 	{
 		return query.Select(p => new PublicationsResponse

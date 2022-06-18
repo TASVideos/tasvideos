@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Api.Responses;
-using TASVideos.Data;
-
-namespace TASVideos.Api.Controllers;
+﻿namespace TASVideos.Api.Controllers;
 
 /// <summary>
 /// The game systems supported by TASVideos.
@@ -11,12 +7,12 @@ namespace TASVideos.Api.Controllers;
 [Route("api/v1/[controller]")]
 public class SystemsController : Controller
 {
-	private readonly ApplicationDbContext _db;
+	private readonly IGameSystemService _db;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="SystemsController"/> class.
 	/// </summary>
-	public SystemsController(ApplicationDbContext db)
+	public SystemsController(IGameSystemService db)
 	{
 		_db = db;
 	}
@@ -31,9 +27,8 @@ public class SystemsController : Controller
 	[ProducesResponseType(typeof(SystemsResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var system = await _db.GameSystems
-			.ToSystemsResponse()
-			.SingleOrDefaultAsync(p => p.Id == id);
+		var system = (await _db.GetAll())
+			.SingleOrDefault(p => p.Id == id);
 
 		return system is null
 			? NotFound()
@@ -53,10 +48,6 @@ public class SystemsController : Controller
 			return BadRequest(ModelState);
 		}
 
-		var systems = await _db.GameSystems
-			.ToSystemsResponse()
-			.ToListAsync();
-
-		return Ok(systems);
+		return Ok(await _db.GetAll());
 	}
 }

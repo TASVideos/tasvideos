@@ -1,8 +1,7 @@
-﻿#pragma warning disable 1591
-namespace TASVideos.Api.Responses;
+﻿namespace TASVideos.Core.Services;
 
 /// <summary>
-/// Represents game systems returns by the systems endpoint.
+/// Represents a game system including the framerates associated with this system
 /// </summary>
 public class SystemsResponse
 {

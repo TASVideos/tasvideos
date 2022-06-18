@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity.Game;
-
 namespace TASVideos.Pages.Systems;
 
 [AllowAnonymous]
@@ -14,7 +12,7 @@ public class IndexModel : BasePageModel
 		_systemService = systemService;
 	}
 
-	public IEnumerable<GameSystem> Systems { get; set; } = new List<GameSystem>();
+	public IEnumerable<SystemsResponse> Systems { get; set; } = new List<SystemsResponse>();
 
 	public async Task OnGet()
 	{
