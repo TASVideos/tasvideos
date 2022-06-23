@@ -42,6 +42,7 @@ public class GameModel : BasePageModel
 			Files = game.UserFiles
 				.Where(uf => !uf.Hidden)
 				.AsQueryable()
+				.OrderByDescending(uf => uf.UploadTimestamp)
 				.ToUserFileModel()
 				.ToList()
 		};

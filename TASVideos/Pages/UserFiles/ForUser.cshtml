@@ -5,9 +5,11 @@
 	ViewData["Title"] = "User Files for " + Model.UserName;
 }
 
-<a asp-page="Index" class="btn btn-secondary btn-sm mb-2">All User Files</a>
-<profile-link class="btn btn-secondary btn-sm mb-2" username="@Model.UserName"><i class="fa fa-user-o"></i> Profile for @Model.UserName</profile-link>
-<a asp-page="/UserFiles/Upload" class="btn btn-secondary btn-sm float-end"><i class="fa fa-upload"></i> Upload</a>
+<a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
+<div class="float-end">
+	<a asp-page="Index" class="btn btn-secondary">All User Files</a>
+	<profile-link class="btn btn-secondary" username="@Model.UserName"><i class="fa fa-user-o"></i> Profile for @Model.UserName</profile-link>
+</div>
 <partial name="_Pager" model="Model.Files" />
 
 @foreach (var file in Model.Files)
