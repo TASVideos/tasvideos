@@ -15,12 +15,10 @@
 
 <div permission="SubmitMovies" class="float-end">
 	<div class="mb-1">
-		<a asp-page="Submit" class="btn btn-primary">Submit a Movie</a>
+		<a asp-page="Submit" class="btn btn-primary"><i class="fa fa-upload"></i> Submit a Movie</a>
 	</div>
 	<div>
-		<a asp-page="Index" asp-route-user="@User.Name()" class="btn btn-secondary">
-			My Submissions
-		</a>
+		<a asp-page="Index" asp-route-user="@User.Name()" class="btn btn-secondary">My Submissions</a>
 	</div>
 </div>
 
