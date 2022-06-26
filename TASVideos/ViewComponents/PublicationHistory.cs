@@ -33,6 +33,7 @@ public class PublicationHistory : ViewComponent
 			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
 		}
 
+		ViewData["Highlight"] = publicationId;
 		return View(history);
 	}
 }
