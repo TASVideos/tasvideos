@@ -71,12 +71,8 @@ internal class FlagService : IFlagService
 
 	public async Task<FlagEditResult> Add(Flag flag)
 	{
-		// No auto-increment, due to legacy importing, need to re-add this
-		var newId = (await _db.Flags.Select(f => f.Id).MaxAsync()) + 1;
-
 		_db.Flags.Add(new Flag
 		{
-			Id = newId,
 			Name = flag.Name,
 			IconPath = flag.IconPath,
 			LinkPath = flag.LinkPath,

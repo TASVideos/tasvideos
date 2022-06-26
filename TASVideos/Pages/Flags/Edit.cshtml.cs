@@ -58,7 +58,7 @@ public class EditModel : BasePageModel
 		{
 			default:
 			case FlagEditResult.Success:
-				SuccessStatusMessage("Tag successfully updated.");
+				SuccessStatusMessage("Flag successfully updated.");
 				return BasePageRedirect("Index");
 			case FlagEditResult.NotFound:
 				return NotFound();
@@ -67,7 +67,7 @@ public class EditModel : BasePageModel
 				ClearStatusMessage();
 				return Page();
 			case FlagEditResult.Fail:
-				ErrorStatusMessage($"Unable to delete Tag {Id}, the tag may have already been deleted or updated.");
+				ErrorStatusMessage($"Unable to delete Flag {Id}, the tag may have already been deleted or updated.");
 				return Page();
 		}
 	}

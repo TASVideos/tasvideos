@@ -287,10 +287,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<Flag>(entity =>
 		{
-			entity.Property(e => e.Id)
-				.ValueGeneratedNever()
-				.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
-
 			entity.HasIndex(e => e.Token).IsUnique();
 		});
 
