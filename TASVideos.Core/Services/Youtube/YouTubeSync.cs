@@ -120,7 +120,7 @@ internal class YouTubeSync : IYoutubeSync
 
 		var items = new List<YoutubeVideoResponseItem>();
 
-		var batches = videoIds.Batch(BatchSize);
+		var batches = videoIds.Chunk(BatchSize);
 		foreach (var batch in batches)
 		{
 			var newItems = await GetBatchPublicInfo(batch.ToList());
