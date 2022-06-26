@@ -217,11 +217,11 @@
 						Game:<br />
 						<game-link id="@Model.GameId" class="ms-2">@Model.GameName</game-link>
 					</span>
-					<span condition="Model.GenreTags.Any()">
+					<span condition="Model.GameGenres.Any()">
 						<br />Genres:<br />
-						@foreach (var genre in Model.GenreTags)
+						@foreach (var genre in Model.GameGenres)
 						{
-							<a href="/Movies-@genre.Code" class="ms-2">@genre.DisplayName</a><br />
+							<a href="/Movies-@genre" class="ms-2">@genre</a><br />
 						}
 					</span>
 				</small>

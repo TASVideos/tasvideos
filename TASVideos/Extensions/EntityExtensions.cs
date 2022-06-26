@@ -176,12 +176,7 @@ public static class EntityExtensions
 						DisplayName = pt.Tag!.DisplayName,
 						Code = pt.Tag.Code
 					}),
-				GenreTags = p.Game!.GameGenres
-					.Select(gg => new PublicationDisplayModel.TagModel
-					{
-						DisplayName = gg.Genre!.DisplayName,
-						Code = gg.Genre.DisplayName // TODO
-					}),
+				GameGenres = p.Game!.GameGenres.Select(gg => gg.Genre!.DisplayName),
 				Files = p.Files
 					.Select(f => new PublicationDisplayModel.FileModel
 					{
