@@ -29,7 +29,7 @@ INSERT INTO _user_files
 	FROM public.user_files uf
 	WHERE uf.hidden = false
 	ORDER BY LENGTH(uf.content)
-	LIMIT 10;
+	LIMIT 50;
 
 DELETE
 FROM public.user_files uf
@@ -37,19 +37,6 @@ WHERE uf.id NOT IN (SELECT uif.id from _user_files uif);
 
 --Trim Wiki
 DELETE FROM public.wiki_pages WHERE child_id is not null;
-
-DROP TABLE IF EXISTS _wiki_pages_to_delete;
-CREATE TEMPORARY TABLE _wiki_pages_to_delete (id int primary key);
-INSERT INTO _wiki_pages_to_delete
-	SELECT id
-	FROM public.wiki_pages
-	WHERE is_deleted = true and child_id IS NOT NULL
-	OR (page_name NOT LIKE 'InternalSystem%' AND LENGTH(markup) < 18);
-	
-DELETE
-FROM public.wiki_pages wp
-WHERE wp.id IN (SELECT twp.id from _wiki_pages_to_delete twp);
-
 UPDATE public.wiki_pages SET markup = '[TODO]: Wiped as sample data' WHERE LENGTH(markup) > 1500 AND page_name <> 'Movies';
 
 DELETE FROM public.wiki_referrals; --TODO: maybe only delete referrals for deleted wiki pages and preserve existing
@@ -57,7 +44,6 @@ DELETE FROM public.wiki_referrals; --TODO: maybe only delete referrals for delet
 --Clear User data
 DELETE FROM public.forum_topic_watches;
 UPDATE public.users SET signature = NULL;
-UPDATE public.users SET legacy_password = NULL; --We don't want this data public
 DELETE FROM public.private_messages;
 
  --Trim Publications and Submissions
