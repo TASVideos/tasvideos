@@ -120,10 +120,9 @@
 				<div>
 					<input condition="@canRate" id="RequestVerificationToken" type="hidden" value="@requestToken" />
 					<a condition="@canRate" asp-page="/Publications/Rate" asp-route-id="@Model.Id" onclick="toggleDisplay(@(Model.Id)); return false;" class="btn btn-success btn-sm mt-1" id="ownRating-@(Model.Id)">@ratingString</a>
-					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
+					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
 						<i class="fa fa-star-o"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
 					</a>
-					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: <span id="ratingCount-@(Model.Id)">@Model.RatingCount</span></a>
 					<div condition="@canRate" class="mt-1 mb-0 d-none border border-primary bg-cardprimary rounded p-1" id="rate-@(Model.Id)">
 						<button class="btn btn-success btn-sm" onclick="rate(@(Model.Id),false);"><span class="fa fa-save"></span> Save</button>
 						<input asp-for="Rating.Rating" type="number" class="form-control d-inline-block btn-sm" style="width:5em;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
