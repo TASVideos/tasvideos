@@ -137,7 +137,10 @@ public class Element : INode
 		if (Options != "")
 		{
 			if (transformUrlText != null)
+			{
 				w.Attribute("title", await transformUrlText(Options));
+			}
+
 			await WriteChildren(w, h);
 		}
 		else
@@ -145,7 +148,10 @@ public class Element : INode
 			// these were all parsed as ChildTagsIfParam, so we're guaranteed to have zero or one text children.
 			var text = Children.Cast<Text>().SingleOrDefault()?.Content ?? "";
 			if (transformUrlText != null)
+			{
 				text = await transformUrlText(text);
+			}
+
 			w.Text(text);
 		}
 
