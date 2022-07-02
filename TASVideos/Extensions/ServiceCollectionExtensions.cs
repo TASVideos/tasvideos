@@ -132,6 +132,7 @@ public static class ServiceCollectionExtensions
 
 	public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)
 	{
+		services.Configure<PasswordHasherOptions>(options => options.IterationCount = 720_000);
 		services.AddIdentity<User, Role>(config =>
 			{
 				config.SignIn.RequireConfirmedEmail = env.IsProduction() || env.IsStaging();
@@ -142,7 +143,7 @@ public static class ServiceCollectionExtensions
 				config.Password.RequiredUniqueChars = 4;
 				config.User.RequireUniqueEmail = true;
 				config.User.AllowedUserNameCharacters += "āâãáéëöú£ "; // The space is intentional
-				})
+			})
 			.AddEntityFrameworkStores<ApplicationDbContext>()
 			.AddDefaultTokenProviders();
 
