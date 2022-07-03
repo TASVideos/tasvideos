@@ -71,7 +71,7 @@
 
 		if (lowered.Contains("nicovideo"))
 		{
-			return "on Nicovideo";
+			return "on Niconico";
 		}
 
 		return "";
@@ -127,7 +127,6 @@
 							<i class="fa fa-external-link"></i> Watch @(!string.IsNullOrWhiteSpace(url.DisplayName) ? $"{url.DisplayName}" : StreamingSiteDisplay(url.Url))
 						</a>
 					}
-					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				</div>
 				<div>
 					<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
@@ -270,9 +269,18 @@
 				</small>
 			</div>
 			<div class="col-auto">
-				<small condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
-					Emulator Version:<br /><span class="ms-2">@Model.EmulatorVersion</span>
+				<small>
+					Emulator:
+					<div condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
+						<span class="ms-2">@Model.EmulatorVersion</span>
+					</div>
+					<div>
+						<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="ms-2">
+							<i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))
+						</a>
+					</div>
 				</small>
+				
 			</div>
 			<div condition="Model.MovieFileLinks.Any()" class="col-auto">
 				<small>
