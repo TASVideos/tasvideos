@@ -124,7 +124,7 @@
 					@foreach (var url in Model.OnlineWatchingUrls)
 					{
 						<a href="@url.Url" class="btn btn-primary btn-sm mt-1" target="_blank">
-							<i class="fa fa-external-link"></i> Watch @(!string.IsNullOrWhiteSpace(url.DisplayName) ? $"{url.DisplayName}" : "") @StreamingSiteDisplay(url.Url)
+							<i class="fa fa-external-link"></i> Watch @(!string.IsNullOrWhiteSpace(url.DisplayName) ? $"{url.DisplayName}" : StreamingSiteDisplay(url.Url))
 						</a>
 					}
 					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
