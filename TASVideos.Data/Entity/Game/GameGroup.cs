@@ -12,5 +12,8 @@ public class GameGroup
 	[StringLength(255)]
 	public string SearchKey { get; set; } = "";
 
+	[StringLength(2000)]
+	public string? Description { get; set; }
+
 	public ICollection<GameGameGroup> Games { get; set; } = new HashSet<GameGameGroup>();
 }

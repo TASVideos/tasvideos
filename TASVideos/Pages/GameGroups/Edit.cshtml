@@ -22,6 +22,11 @@
 				<input type="text" asp-for="GameGroup.SearchKey" class="form-control" />
 				<span asp-validation-for="GameGroup.SearchKey" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<label asp-for="GameGroup.Description"></label>
+				<textarea asp-for="GameGroup.Description" class="form-control" rows="4"></textarea>
+				<span asp-validation-for="GameGroup.Description" class="text-danger"></span>
+			</form-group>
 		</column>
 	</row>
 	<form-button-bar>

@@ -34,7 +34,8 @@ public class EditModel : BasePageModel
 				.Select(gg => new GameGroupEditModel
 				{
 					Name = gg.Name,
-					SearchKey = gg.SearchKey
+					SearchKey = gg.SearchKey,
+					Description = gg.Description
 				})
 				.SingleOrDefaultAsync();
 
@@ -72,6 +73,7 @@ public class EditModel : BasePageModel
 
 			gameGroup.Name = GameGroup.Name;
 			gameGroup.SearchKey = GameGroup.SearchKey;
+			gameGroup.Description = GameGroup.Description;
 		}
 		else
 		{

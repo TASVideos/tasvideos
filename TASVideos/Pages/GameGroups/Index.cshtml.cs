@@ -19,6 +19,7 @@ public class IndexModel : PageModel
 	public IEnumerable<GameListEntry> Games { get; set; } = new List<GameListEntry>();
 
 	public string Name { get; set; } = "";
+	public string? Description { get; set; }
 
 	public IndexModel(ApplicationDbContext db)
 	{
@@ -35,6 +36,7 @@ public class IndexModel : PageModel
 		}
 
 		Name = gameGroup.Name;
+		Description = gameGroup.Description;
 
 		Games = await _db.Games
 			.ForGroup(Id)
