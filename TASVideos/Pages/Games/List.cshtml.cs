@@ -41,6 +41,7 @@ public class ListModel : BasePageModel
 		}
 
 		SystemList = await _db.GameSystems
+			.OrderBy(s => s.Code)
 			.ToDropdown()
 			.ToListAsync();
 
