@@ -22,20 +22,6 @@ public  class DifferentialVideoCreationService : IDifferentialVideoCreationServi
 		_db = db;
 	}
 
-	public async Task<IParseResult> InformationAsync(string fileName, Stream stream)
-	{
-		var result = await _parser.ParseFile(fileName, stream);
-		switch (result.FileExtension)
-		{
-			case ".fm2":
-				//add support for each with inheritence, infinite if for now.
-			default:
-				break;
-
-		}
-		return result;
-	}
-
 	/// <summary>
 	/// Provides a dictionary of two timestamps. The first being the time in which the Video shows a deviation from the previous submission.
 	/// the second being the duration the deviation occures.
@@ -102,7 +88,7 @@ public  class DifferentialVideoCreationService : IDifferentialVideoCreationServi
 				if (RelevantBatch(frames, i, deviationForChangeWeCareAbout))
 				{
 					timesWeCareAbout.Add(new TimeSpan(0, 0, Convert.ToInt32((i - deviationForChangeWeCareAbout) * newRecord?.FrameRateOverride ?? 60)),
-										 new TimeSpan(0, 0, Convert.ToInt32((i + deviationForChangeWeCareAbout) * newRecord?.FrameRateOverride ?? 60)));
+							     new TimeSpan(0, 0, Convert.ToInt32((i + deviationForChangeWeCareAbout) * newRecord?.FrameRateOverride ?? 60)));
 				}
 			}
 
