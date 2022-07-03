@@ -3,6 +3,9 @@
 	<nav-item activate="Home">
 		<a id="Home" class="nav-link" href="/">Home</a>
 	</nav-item>
+	<nav-item activate="Games">
+		<a id="Games" class="nav-link" asp-page="/Games/List">Games</a>
+	</nav-item>
 	<nav-dropdown id="MoviesDropdown" activate="Movies">
 		<a id="Publications" class="dropdown-item" href="/Movies">Publications</a>
 		<a id="Submissions" class="dropdown-item" asp-page="/Submissions/Index">Submissions</a>
@@ -26,12 +29,11 @@
 		<a id="Welcome" class="nav-link" href="/WelcomeToTASVideos">About</a>
 	</nav-item>
 	<nav-dropdown id="AdminDropdown" activate="Admin"
-				  permissions="new[] { ViewPrivateUserData, EditUsers, EditRoles, TagMaintenance, CatalogMovies, GameSystemMaintenance }">
+				  permissions="new[] { ViewPrivateUserData, EditUsers, EditRoles, TagMaintenance, GameSystemMaintenance }">
 		<a id="MediaPosts" class="dropdown-item" href="/MediaPosts">Media Posts</a>
 		<a id="Users" permissions="new[] { ViewPrivateUserData, EditUsers }" class="dropdown-item" asp-page="/Users/List">Users</a>
 		<a id="Roles" class="dropdown-item" asp-page="/Roles/List">Roles</a>
 		<a id="Permissions" class="dropdown-item" asp-page="/Permissions/Index">Permissions</a>
-		<a id="Games" permission="CatalogMovies" class="dropdown-item" asp-page="/Games/List">Games</a>
 		<a id="TagMaintenance" permission="TagMaintenance" class="dropdown-item" asp-page="/Tags/Index">Tag Maintenance</a>
 		<a id="FlagMaintenance" permission="FlagMaintenance" class="dropdown-item" asp-page="/Flags/Index">Flag Maintenance</a>
 		<a id="GenreMaintenance" permission="TagMaintenance" class="dropdown-item" asp-page="/Genres/Index">Genre Maintenance</a>
