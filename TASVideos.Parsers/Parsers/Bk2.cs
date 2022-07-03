@@ -14,6 +14,16 @@ internal class Bk2 : ParserBase, IParser
 	private const double NtscSnesFramerate = 60.0988138974405;
 	private const double PalSnesFramerate = 50.0069789081886;
 
+	protected virtual string[] InvalidArchiveEntries => new[]
+	{
+		"greenzonesettings.txt",
+		"laglog",
+		"markers.txt",
+		"clientsettings.json",
+		"session.txt",
+		"greenzone"
+	};
+
 	public override string FileExtension => "bk2";
 
 	public async Task<IParseResult> Parse(Stream file, long length)
@@ -25,6 +35,14 @@ internal class Bk2 : ParserBase, IParser
 		};
 
 		var archive = new ZipArchive(file);
+
+		foreach (var entry in InvalidArchiveEntries)
+		{
+			if (archive.HasEntry(entry))
+			{
+				return Error($"Invalid {FileExtension}, cannot contain a {entry} file");
+			}
+		}
 
 		var headerEntry = archive.Entry(HeaderFile);
 		if (headerEntry is null)

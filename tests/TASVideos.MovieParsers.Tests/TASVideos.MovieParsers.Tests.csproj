@@ -26,6 +26,7 @@
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NegativeCycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\greenzone.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\MissingHeader.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\MissingInputLog.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\NoFileExts.bk2" />

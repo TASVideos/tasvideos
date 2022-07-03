@@ -237,4 +237,14 @@ public class Bk2ParserTests : BaseParserTests
 		Assert.AreEqual(30, result.Frames);
 		Assert.AreEqual(60, result.FrameRateOverride);
 	}
+
+	[TestMethod]
+	public async Task ContainsGreenZone_Error()
+	{
+		var result = await _bk2Parser.Parse(Embedded("greenzone.bk2"), EmbeddedLength("greenzone.bk2"));
+
+		Assert.IsFalse(result.Success);
+		AssertNoWarnings(result);
+		Assert.IsTrue(result.Errors.Any());
+	}
 }
