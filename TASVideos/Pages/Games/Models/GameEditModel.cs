@@ -5,11 +5,6 @@ namespace TASVideos.Pages.Games.Models;
 public class GameEditModel
 {
 	[Required]
-	[Display(Name = "GoodTools Name")]
-	[StringLength(250)]
-	public string GoodName { get; set; } = "";
-
-	[Required]
 	[StringLength(100)]
 	[Display(Name = "Display Name")]
 	public string DisplayName { get; set; } = "";

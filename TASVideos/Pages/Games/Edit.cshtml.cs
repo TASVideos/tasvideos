@@ -50,7 +50,6 @@ public class EditModel : BasePageModel
 				.Where(g => g.Id == Id)
 				.Select(g => new GameEditModel
 				{
-					GoodName = g.GoodName,
 					DisplayName = g.DisplayName,
 					Abbreviation = g.Abbreviation,
 					YoutubeTags = g.YoutubeTags,
@@ -104,7 +103,6 @@ public class EditModel : BasePageModel
 				return NotFound();
 			}
 
-			game.GoodName = Game.GoodName;
 			game.DisplayName = Game.DisplayName;
 			game.Abbreviation = Game.Abbreviation;
 			game.YoutubeTags = Game.YoutubeTags;
@@ -122,7 +120,6 @@ public class EditModel : BasePageModel
 		{
 			game = new Game
 			{
-				GoodName = Game.GoodName,
 				DisplayName = Game.DisplayName,
 				Abbreviation = Game.Abbreviation,
 				YoutubeTags = Game.YoutubeTags,

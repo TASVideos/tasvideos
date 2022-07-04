@@ -16,11 +16,6 @@
 	<row>
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Game.GoodName"></label>
-				<input type="text" asp-for="Game.GoodName" class="form-control" autocomplete="off" />
-				<span asp-validation-for="Game.GoodName" class="text-danger"></span>
-			</form-group>
-			<form-group>
 				<label asp-for="Game.DisplayName"></label>
 				<input type="text" asp-for="Game.DisplayName" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Game.DisplayName" class="text-danger"></span>
@@ -29,6 +24,16 @@
 				<label asp-for="Game.Abbreviation"></label>
 				<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Game.Abbreviation" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Game.GameResourcesPage"></label>
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">@(Request.ToBaseUrl())/</span>
+					</div>
+					<input type="text" asp-for="Game.GameResourcesPage" class="form-control" autocomplete="off" spellcheck="false" />
+				</div>
+				<span asp-validation-for="Game.GameResourcesPage" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-lg-6">
@@ -41,16 +46,6 @@
 				<label asp-for="Game.ScreenshotUrl"></label>
 				<input type="text" asp-for="Game.ScreenshotUrl" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Game.ScreenshotUrl" class="text-danger"></span>
-			</form-group>
-			<form-group>
-				<label asp-for="Game.GameResourcesPage"></label>
-				<div class="input-group">
-					<div class="input-group-prepend">
-						<span class="input-group-text">@(Request.ToBaseUrl())/</span>
-					</div>
-					<input type="text" asp-for="Game.GameResourcesPage" class="form-control" autocomplete="off" spellcheck="false" />
-				</div>
-				<span asp-validation-for="Game.GameResourcesPage" class="text-danger"></span>
 			</form-group>
 		</div>
 	</row>

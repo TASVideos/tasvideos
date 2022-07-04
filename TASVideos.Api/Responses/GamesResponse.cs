@@ -15,9 +15,6 @@ public class GamesResponse
 	public IEnumerable<GameVersion> Versions { get; init; } = new List<GameVersion>();
 
 	[Sortable]
-	public string GoodName { get; init; } = "";
-
-	[Sortable]
 	public string DisplayName { get; init; } = "";
 
 	[Sortable]

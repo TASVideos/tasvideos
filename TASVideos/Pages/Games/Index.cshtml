@@ -38,7 +38,6 @@
 							<li>Platforms: @string.Join(", ", Model.Game.Versions.Select(v => v.SystemCode).Distinct())</li>
 							<li>Abbreviation: @Model.Game.Abbreviation</li>
 							<li>Display Name: @Model.Game.DisplayName</li>
-							<li>GoodTools Name: @Model.Game.GoodName</li>
 							<li>Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
 							<li condition="Model.Game.GameGroups.Any()">
 								Game Groups:<br />
