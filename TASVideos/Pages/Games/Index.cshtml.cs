@@ -18,7 +18,7 @@ public class IndexModel : BasePageModel
 	}
 
 	[FromRoute]
-	public string Id { get; set; }
+	public string Id { get; set; } = "";
 
 	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
