@@ -50,10 +50,8 @@ public class EditModel : BasePageModel
 				.Where(g => g.Id == Id)
 				.Select(g => new GameEditModel
 				{
-					GoodName = g.GoodName,
 					DisplayName = g.DisplayName,
 					Abbreviation = g.Abbreviation,
-					SearchKey = g.SearchKey,
 					YoutubeTags = g.YoutubeTags,
 					ScreenshotUrl = g.ScreenshotUrl,
 					GameResourcesPage = g.GameResourcesPage,
@@ -105,10 +103,8 @@ public class EditModel : BasePageModel
 				return NotFound();
 			}
 
-			game.GoodName = Game.GoodName;
 			game.DisplayName = Game.DisplayName;
 			game.Abbreviation = Game.Abbreviation;
-			game.SearchKey = Game.SearchKey;
 			game.YoutubeTags = Game.YoutubeTags;
 			game.ScreenshotUrl = Game.ScreenshotUrl;
 			game.GameResourcesPage = Game.GameResourcesPage;
@@ -124,10 +120,8 @@ public class EditModel : BasePageModel
 		{
 			game = new Game
 			{
-				GoodName = Game.GoodName,
 				DisplayName = Game.DisplayName,
 				Abbreviation = Game.Abbreviation,
-				SearchKey = Game.SearchKey,
 				YoutubeTags = Game.YoutubeTags,
 				ScreenshotUrl = Game.ScreenshotUrl,
 				GameResourcesPage = Game.GameResourcesPage

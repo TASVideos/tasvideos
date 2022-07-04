@@ -120,7 +120,7 @@ public class ListModel : BasePageModel
 			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
-				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
+				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.YoutubeTags + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,

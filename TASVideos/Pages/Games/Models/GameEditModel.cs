@@ -5,11 +5,6 @@ namespace TASVideos.Pages.Games.Models;
 public class GameEditModel
 {
 	[Required]
-	[Display(Name = "GoodTools Name")]
-	[StringLength(250)]
-	public string GoodName { get; set; } = "";
-
-	[Required]
 	[StringLength(100)]
 	[Display(Name = "Display Name")]
 	public string DisplayName { get; set; } = "";
@@ -18,11 +13,6 @@ public class GameEditModel
 	[StringLength(8)]
 	[Display(Name = "Abbreviation")]
 	public string? Abbreviation { get; set; }
-
-	[Required]
-	[StringLength(64)]
-	[Display(Name = "Search Key")]
-	public string? SearchKey { get; set; }
 
 	[Required]
 	[StringLength(250)]

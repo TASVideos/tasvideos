@@ -73,7 +73,7 @@ public class IndexModel : PageModel
 				.ToListAsync();
 
 			GameResults = await _db.Games
-				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
+				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.YoutubeTags + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.OrderBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(PageSize + 1)

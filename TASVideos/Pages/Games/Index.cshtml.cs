@@ -33,7 +33,6 @@ public class IndexModel : BasePageModel
 				DisplayName = g.DisplayName,
 				Abbreviation = g.Abbreviation,
 				ScreenshotUrl = g.ScreenshotUrl,
-				GoodName = g.GoodName,
 				GameResourcesPage = g.GameResourcesPage,
 				Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
 				Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion

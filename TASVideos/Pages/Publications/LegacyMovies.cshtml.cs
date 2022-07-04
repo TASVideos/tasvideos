@@ -42,7 +42,7 @@ public class LegacyMoviesModel : PageModel
 		if (!string.IsNullOrWhiteSpace(Name))
 		{
 			// Movies.cgi only supported a single game name
-			var game = await _db.Games.FirstOrDefaultAsync(g => g.DisplayName == Name || g.GoodName == Name);
+			var game = await _db.Games.FirstOrDefaultAsync(g => g.DisplayName == Name || g.Abbreviation == Name);
 			if (game is not null)
 			{
 				tokens.Add(game.Id + "G");

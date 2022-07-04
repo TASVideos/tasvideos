@@ -11,10 +11,8 @@ internal static class EntityExtensions
 		return query.Select(q => new GamesResponse
 		{
 			Id = q.Id,
-			GoodName = q.GoodName,
 			DisplayName = q.DisplayName,
 			Abbreviation = q.Abbreviation,
-			SearchKey = q.SearchKey,
 			YoutubeTags = q.YoutubeTags,
 			ScreenshotUrl = q.ScreenshotUrl,
 			Versions = q.GameVersions.Select(gv => new GamesResponse.GameVersion
