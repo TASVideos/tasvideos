@@ -36,6 +36,7 @@
 					<td>
 						<a asp-page="/Games/Index" asp-route-id="@result.Id">@result.DisplayName</a>
 					</td>
+					<td>@string.Join(",", result.Systems.Distinct())</td>
 				</tr>
 			}
 		</table>
