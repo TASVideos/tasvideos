@@ -3,7 +3,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
-using TASVideos.Pages.Games.Versions.Models;
+using TASVideos.Pages.Games.Models;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
@@ -352,6 +352,40 @@ public static class EntityExtensions
 			Status = s.Status,
 			EmulatorVersion = s.EmulatorVersion,
 			Branch = s.Branch
+		});
+	}
+
+	public static IQueryable<GameDisplayModel> ToGameDisplayModel(this IQueryable<Game> games)
+	{
+		return games.Select(g => new GameDisplayModel
+		{
+			Id = g.Id,
+			DisplayName = g.DisplayName,
+			Abbreviation = g.Abbreviation,
+			ScreenshotUrl = g.ScreenshotUrl,
+			GameResourcesPage = g.GameResourcesPage,
+			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
+			Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion
+			{
+				Type = gv.Type,
+				Id = gv.Id,
+				Md5 = gv.Md5,
+				Sha1 = gv.Sha1,
+				Name = gv.Name,
+				Region = gv.Region,
+				Version = gv.Version,
+				SystemCode = gv.System!.Code,
+				TitleOverride = gv.TitleOverride
+			}).ToList(),
+			GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
+			{
+				Id = gg.GameGroupId,
+				Name = gg.GameGroup!.Name
+			}).ToList(),
+			PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
+			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
+			SubmissionCount = g.Submissions.Count,
+			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
 		});
 	}
 }

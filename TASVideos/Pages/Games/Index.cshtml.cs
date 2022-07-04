@@ -27,36 +27,7 @@ public class IndexModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var game = await _db.Games
-			.Select(g => new GameDisplayModel
-			{
-				Id = g.Id,
-				DisplayName = g.DisplayName,
-				Abbreviation = g.Abbreviation,
-				ScreenshotUrl = g.ScreenshotUrl,
-				GameResourcesPage = g.GameResourcesPage,
-				Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
-				Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion
-				{
-					Type = gv.Type,
-					Id = gv.Id,
-					Md5 = gv.Md5,
-					Sha1 = gv.Sha1,
-					Name = gv.Name,
-					Region = gv.Region,
-					Version = gv.Version,
-					SystemCode = gv.System!.Code,
-					TitleOverride = gv.TitleOverride
-				}).ToList(),
-				GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
-				{
-					Id = gg.GameGroupId,
-					Name = gg.GameGroup!.Name
-				}).ToList(),
-				PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
-				ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
-				SubmissionCount = g.Submissions.Count,
-				UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
-			})
+			.ToGameDisplayModel()
 			.SingleOrDefaultAsync(g => g.Id == Id);
 
 		if (game is null)
