@@ -124,7 +124,10 @@
 				@if (ViewData["WikiPage"] is null)
 				{
 					var path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
-					<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
+					if (path != "Wiki/PageDoesNotExist")
+					{
+						<a class="btn bg-info text-dark btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
+					}
 				}
 			</p>
 				
