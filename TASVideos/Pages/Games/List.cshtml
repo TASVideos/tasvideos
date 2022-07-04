@@ -10,21 +10,29 @@
 <a asp-page="Edit" permission="CatalogMovies" class="btn btn-primary mb-3 float-end me-1"><i class="fa fa-plus"></i> Create</a>
 <a asp-page="Rewire" permission="RewireGames" class="btn btn-primary mb-3 float-end me-1"><i class="fa fa-wrench"></i> Rewire</a>
 <form class="row">
-	<div class="col-lg-5 col-12 mb-1">
+	<div class="col-lg-8 col-12 mb-1">
 		<div class="input-group">
 			<label asp-for="SearchTerms" class="input-group-text"></label>
 			<input type="text" asp-for="SearchTerms" class="form-control" />
 		</div>
 		<span asp-validation-for="SearchTerms" class="text-danger"></span>
 	</div>
-	<div class="col-lg-5 col-12 mb-1">
+	<div class="col-2 mb-1">
+		<button type="Submit" class="btn btn-secondary">Go</button>
+	</div>
+</form>
+<form class="row">
+	<div class="col-lg-4 col-12 mb-1">
 		<div class="input-group">
 			<label asp-for="@Model.Games.SystemCode" class="input-group-text"></label>
 			<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control"></select>
 		</div>
 	</div>
-	<div class="col-2">
-		<button type="Submit" class="btn btn-secondary">Go</button>
+	<div class="col-lg-4 col-12 mb-1">
+		<div class="input-group">
+			<label asp-for="@Model.Games.Letter" class="input-group-text"></label>
+			<select asp-items="@Model.LetterList" asp-for="@Model.Games.Letter" name="Letter" class="form-control"></select>
+		</div>
 	</div>
 </form>
 

@@ -32,6 +32,8 @@ public class ListModel : BasePageModel
 
 	public List<SelectListItem> SystemList { get; set; } = new();
 
+	public List<SelectListItem> LetterList { get; set; } = new();
+
 	public async Task OnGet()
 	{
 		if (ModelState.IsValid)
@@ -46,6 +48,15 @@ public class ListModel : BasePageModel
 			.ToListAsync();
 
 		SystemList.Insert(0, new SelectListItem { Text = "All", Value = "" });
+
+		LetterList = await _db.Games
+			.Select(g => g.DisplayName.Substring(0, 1))
+			.Distinct()
+			.OrderBy(l => l)
+			.ToDropdown()
+			.ToListAsync();
+
+		LetterList.Insert(0, new SelectListItem { Text = "All", Value = "" });
 	}
 
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
@@ -120,6 +131,7 @@ public class ListModel : BasePageModel
 			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
+				.ForLetter(paging.Letter)
 				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.YoutubeTags + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
 				.Select(g => new GameListModel
 				{
@@ -132,6 +144,7 @@ public class ListModel : BasePageModel
 		{
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
+				.ForLetter(paging.Letter)
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
