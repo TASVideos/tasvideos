@@ -77,7 +77,11 @@ public class IndexModel : PageModel
 				.OrderBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(PageSize + 1)
-				.Select(g => new GameSearchModel(g.Id, g.DisplayName, g.GameVersions.Select(v => v.System!.Code)))
+				.Select(g => new GameSearchModel(
+					g.Id,
+					g.DisplayName,
+					g.GameVersions.Select(v => v.System!.Code),
+					g.GameGroups.Select(gg => new GameGroupResult(gg.GameGroupId, gg.GameGroup!.Name))))
 				.ToListAsync();
 		}
 
@@ -86,5 +90,6 @@ public class IndexModel : PageModel
 
 	public record PageSearchModel(string Highlight, string PageName);
 	public record PostSearchModel(string Highlight, string TopicName, int PostId);
-	public record GameSearchModel(int Id, string DisplayName, IEnumerable<string> Systems);
+	public record GameSearchModel(int Id, string DisplayName, IEnumerable<string> Systems, IEnumerable<GameGroupResult> Groups);
+	public record GameGroupResult(int Id, string Name);
 }
