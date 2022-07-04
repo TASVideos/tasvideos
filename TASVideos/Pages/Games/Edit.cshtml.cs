@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -15,13 +16,16 @@ public class EditModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
+	private readonly ExternalMediaPublisher _publisher;
 
 	public EditModel(
 		ApplicationDbContext db,
-		IWikiPages wikiPages)
+		IWikiPages wikiPages,
+		ExternalMediaPublisher publisher)
 	{
 		_db = db;
 		_wikiPages = wikiPages;
+		_publisher = publisher;
 	}
 
 	[FromRoute]
@@ -109,7 +113,12 @@ public class EditModel : BasePageModel
 			game.ScreenshotUrl = Game.ScreenshotUrl;
 			game.GameResourcesPage = Game.GameResourcesPage;
 			SetGameValues(game, Game);
-			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
+			var saveMessage = $"Game {game.DisplayName} updated";
+			var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to update Game {Id}");
+			if (saveResult)
+			{
+				await _publisher.SendGameManagement(saveMessage, "", $"{Id}G");
+			}
 		}
 		else
 		{
@@ -125,7 +134,12 @@ public class EditModel : BasePageModel
 			};
 			_db.Games.Add(game);
 			SetGameValues(game, Game);
-			await ConcurrentSave(_db, $"Game {game.GoodName} created", "Unable to create game");
+			var saveMessage = $"Game {game.DisplayName} created";
+			var saveResult = await ConcurrentSave(_db, saveMessage, "Unable to create game");
+			if (saveResult)
+			{
+				await _publisher.SendGameManagement(saveMessage, "", $"{game.Id}G");
+			}
 		}
 
 		return BasePageRedirect("Index", new { game.Id });
@@ -151,8 +165,19 @@ public class EditModel : BasePageModel
 			return BasePageRedirect("List");
 		}
 
-		_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(_db, $"Game {Id} deleted", $"Unable to delete Game {Id}");
+		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == Id);
+		if (game is null)
+		{
+			return NotFound();
+		}
+
+		_db.Games.Remove(game);
+		var saveMessage = $"Game #{Id} {game.DisplayName} deleted";
+		var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to delete Game {Id}");
+		if (saveResult)
+		{
+			await _publisher.SendGameManagement(saveMessage, "", $"{Id}G");
+		}
 
 		return BasePageRedirect("List");
 	}
