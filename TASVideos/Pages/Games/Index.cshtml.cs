@@ -18,7 +18,9 @@ public class IndexModel : BasePageModel
 	}
 
 	[FromRoute]
-	public int Id { get; set; }
+	public string Id { get; set; } = "";
+
+	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
 	public GameDisplayModel Game { get; set; } = new();
 
@@ -26,9 +28,15 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games
-			.ToGameDisplayModel()
-			.SingleOrDefaultAsync(g => g.Id == Id);
+		var query = _db.Games.ToGameDisplayModel();
+
+		query = ParsedId > 0
+			? query.Where(g => g.Id == ParsedId)
+			: query.Where(g => g.Abbreviation == Id);
+
+		// TODO: abbreviations need to be unique, then we can use Single here
+		var game = await query
+			.FirstOrDefaultAsync();
 
 		if (game is null)
 		{
@@ -37,7 +45,7 @@ public class IndexModel : BasePageModel
 
 		Game = game;
 		Movies = await _db.Publications
-			.Where(p => p.GameId == Id && p.ObsoletedById == null)
+			.Where(p => p.GameId == Game.Id && p.ObsoletedById == null)
 			.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
 			.ThenBy(p => p.Frames)
 			.ToMiniMovieModel()

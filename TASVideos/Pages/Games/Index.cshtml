@@ -35,6 +35,7 @@
 				<row>
 					<column md="6">
 						<ul>
+							<li>Id: @Model.Game.Id</li>
 							<li>Platforms: @string.Join(", ", Model.Game.Versions.Select(v => v.SystemCode).Distinct())</li>
 							<li>Abbreviation: @Model.Game.Abbreviation</li>
 							<li>Display Name: @Model.Game.DisplayName</li>
