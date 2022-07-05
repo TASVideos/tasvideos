@@ -56,7 +56,7 @@ public class ListModel : BasePageModel
 			.ToDropdown()
 			.ToListAsync();
 
-		LetterList.Insert(0, new SelectListItem { Text = "All", Value = "" });
+		LetterList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
 	}
 
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
@@ -156,6 +156,7 @@ public class ListModel : BasePageModel
 		return new SystemPageOf<GameListModel>(data)
 		{
 			SystemCode = paging.SystemCode,
+			Letter = paging.Letter,
 			SearchTerms = paging.SearchTerms,
 			PageSize = data.PageSize,
 			CurrentPage = data.CurrentPage,
