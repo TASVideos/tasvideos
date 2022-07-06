@@ -179,7 +179,6 @@
 								} else if (update.Rating !== "") {
 									document.querySelector(`#ownRating-${pubId}`).innerHTML = `Rated ${update.Rating} / 10`;
 								}
-								document.querySelector(`#ratingCount-${pubId}`).innerHTML = update.RatingCount;
 								document.querySelector(`#overallRating-${pubId}`).innerHTML = update.OverallRating;
 								toggleDisplay(pubId);
 							})
