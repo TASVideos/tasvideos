@@ -154,10 +154,10 @@
 				</div>
 				<script condition="@canRate">
 					function rate(pubId, unrated) {
-						let rating = {};
-						rating.Rating = document.querySelector('#rate-'+pubId+' #Rating_Rating').value;
+						const rating = {};
+						rating.Rating = document.querySelector(`#rate-${pubId} #Rating_Rating`).value;
 						rating.Unrated = unrated;
-						fetch('/Publications/Rate/'+pubId+'?handler=Inline', {
+						fetch(`/Publications/Rate/${pubId}?handler=Inline`, {
 							method: 'POST',
 							body: JSON.stringify(rating),
 							headers: {
@@ -173,21 +173,21 @@
 							})
 							.then(r => r.text())
 							.then(r => {
-								let update = JSON.parse(r);
+								const update = JSON.parse(r);
 								if (unrated) {
-									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rate';
+									document.querySelector(`#ownRating-${pubId}`).innerHTML = 'Rate';
 								} else if (update.Rating !== "") {
-									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rated '+update.Rating+' / 10';
+									document.querySelector(`#ownRating-${pubId}`).innerHTML = `Rated ${update.Rating} / 10`;
 								}
-								document.querySelector('#ratingCount-'+pubId).innerHTML = update.RatingCount;
-								document.querySelector('#overallRating-'+pubId).innerHTML = update.OverallRating;
+								document.querySelector(`#ratingCount-${pubId}`).innerHTML = update.RatingCount;
+								document.querySelector(`#overallRating-${pubId}`).innerHTML = update.OverallRating;
 								toggleDisplay(pubId);
 							})
 							.catch(e => alert("Rating failed"));
 					}
 					function toggleDisplay(pubId) {
-						ratingConnect(document.querySelector('#rate-'+pubId+' #Rating_Rating'), document.querySelector('#slider-'+pubId));
-						document.querySelector('#rate-'+pubId).classList.toggle('d-none');
+						ratingConnect(document.querySelector(`#rate-${pubId} #Rating_Rating`), document.querySelector(`#slider-${pubId}`));
+						document.querySelector(`#rate-${pubId}`).classList.toggle('d-none');
 					}
 					function ratingConnect(textbox, slider) {
 						textbox.oninput = function () {
