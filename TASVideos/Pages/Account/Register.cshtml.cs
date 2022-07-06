@@ -56,12 +56,14 @@ public class RegisterModel : BasePageModel
 
 	[BindProperty]
 	[Required]
-	[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
+	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
 	[Display(Name = "Password")]
 	public string Password { get; set; } = "";
 
 	[BindProperty]
+	[Required]
+	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
 	[Display(Name = "Confirm password")]
 	public string ConfirmPassword { get; set; } = "";
