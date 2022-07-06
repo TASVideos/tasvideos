@@ -10,6 +10,9 @@ public class SubmissionsResponse
 	public int Id { get; init; }
 
 	[Sortable]
+	public int? PublicationId { get; init; }
+
+	[Sortable]
 	public string Title { get; init; } = "";
 
 	[Sortable]
@@ -65,6 +68,9 @@ public class SubmissionsResponse
 
 	[Sortable]
 	public int? MovieStartType { get; init; }
+
+	[Sortable]
+	public string? AdditionalAuthors { get; init; }
 
 	public IEnumerable<string> Authors { get; init; } = new List<string>();
 }

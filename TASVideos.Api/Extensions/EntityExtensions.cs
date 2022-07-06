@@ -47,6 +47,7 @@ internal static class EntityExtensions
 			RerecordCount = p.RerecordCount,
 			SystemFrameRate = p.SystemFrameRate!.FrameRate,
 			MovieFileName = p.MovieFileName,
+			AdditionalAuthors = p.AdditionalAuthors,
 			Authors = p.Authors
 				.OrderBy(pa => pa.Ordinal)
 				.Select(a => a.Author!.UserName),
@@ -66,6 +67,9 @@ internal static class EntityExtensions
 		return query.Select(s => new SubmissionsResponse
 		{
 			Id = s.Id,
+			PublicationId = s.Publication != null
+				? s.Publication.Id
+				: null,
 			Title = s.Title,
 			IntendedClass = s.IntendedClass != null
 				? s.IntendedClass.Name
@@ -100,8 +104,9 @@ internal static class EntityExtensions
 			EmulatorVersion = s.EmulatorVersion,
 			MovieStartType = s.MovieStartType,
 			Authors = s.SubmissionAuthors
-				.OrderBy(s => s.Ordinal)
-				.Select(a => a.Author!.UserName)
+				.OrderBy(a => a.Ordinal)
+				.Select(a => a.Author!.UserName),
+			AdditionalAuthors = s.AdditionalAuthors
 		});
 	}
 }
