@@ -29,9 +29,11 @@ public class TimeZonePickerTagHelper : TagHelper
 		output.Attributes.Add("id", modelName);
 		output.Attributes.Add("name", modelName);
 
+		var now = DateTime.UtcNow;
+
 		var groups = TimeZoneInfo
 			.GetSystemTimeZones()
-			.Select(t => t.BaseUtcOffset)
+			.Select(t => t.GetUtcOffset(now))
 			.Distinct()
 			.ToList();
 
@@ -39,11 +41,11 @@ public class TimeZonePickerTagHelper : TagHelper
 			.GetSystemTimeZones()
 			.Select(t => new
 			{
-				t.BaseUtcOffset,
+				UtcOffset = t.GetUtcOffset(now),
 				t.Id,
 				Selected = t.Id == modelValue
 			})
-			.OrderBy(t => t.BaseUtcOffset)
+			.OrderBy(t => t.UtcOffset)
 			.ThenBy(t => t.Id)
 			.ToList();
 
@@ -52,12 +54,12 @@ public class TimeZonePickerTagHelper : TagHelper
 		{
 			output.Content.AppendHtml($"<optgroup {Attr("label", optgroup.ToString())}>");
 
-			var options = availableTimezones.Where(t => t.BaseUtcOffset == optgroup);
+			var options = availableTimezones.Where(t => t.UtcOffset == optgroup);
 
 			foreach (var option in options)
 			{
 				output.Content.AppendHtml(
-					$@"<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.BaseUtcOffset.TotalMinutes.ToString())}>
+					$@"<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.UtcOffset.TotalMinutes.ToString())}>
 							{Text(option.Id)}
 						</option>
 					");
