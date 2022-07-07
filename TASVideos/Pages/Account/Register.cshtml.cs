@@ -37,6 +37,7 @@ public class RegisterModel : BasePageModel
 		_userMaintenanceLogger = userMaintenanceLogger;
 	}
 
+	[Required]
 	[BindProperty]
 	[Display(Name = "Time Zone")]
 	public string? SelectedTimeZone { get; set; }

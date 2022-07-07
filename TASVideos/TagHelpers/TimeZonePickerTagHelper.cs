@@ -22,10 +22,6 @@ public class TimeZonePickerTagHelper : TagHelper
 
 		var modelName = For.Name;
 		var modelValue = (string)For.ModelExplorer.Model;
-		if (string.IsNullOrWhiteSpace(modelValue))
-		{
-			modelValue = TimeZoneInfo.Utc.Id;
-		}
 
 		output.TagMode = TagMode.StartTagAndEndTag;
 
@@ -51,6 +47,7 @@ public class TimeZonePickerTagHelper : TagHelper
 			.ThenBy(t => t.Id)
 			.ToList();
 
+		output.Content.AppendHtml($"<option value=\"\">{UiDefaults.DefaultDropdownText}</option>");
 		foreach (var optgroup in groups)
 		{
 			output.Content.AppendHtml($"<optgroup {Attr("label", optgroup.ToString())}>");
@@ -59,8 +56,8 @@ public class TimeZonePickerTagHelper : TagHelper
 
 			foreach (var option in options)
 			{
-				output.Content.AppendHtml($@"
-						<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.BaseUtcOffset.TotalMinutes.ToString())}>
+				output.Content.AppendHtml(
+					$@"<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.BaseUtcOffset.TotalMinutes.ToString())}>
 							{Text(option.Id)}
 						</option>
 					");
