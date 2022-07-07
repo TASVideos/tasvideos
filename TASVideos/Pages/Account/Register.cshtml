@@ -38,6 +38,7 @@
 			<form-group>
 				<label asp-for="SelectedTimeZone"></label>
 				<timezone-picker asp-for="SelectedTimeZone" class="form-control" />
+				<span asp-validation-for="SelectedTimeZone" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="From"></label>
@@ -69,9 +70,12 @@
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 	<script>
 		{
-			const timezoneOffset = 0 - new Date().getTimezoneOffset();
-			let timezone = document.querySelector(`[data-offset="${timezoneOffset}"]`);
-			timezone.setAttribute('selected', 'selected');
+			// Auto-fill timezone if not set
+			if (!document.querySelector("#SelectedTimeZone option:checked").value) {
+				const timezoneOffset = 0 - new Date().getTimezoneOffset();
+				let timezone = document.querySelector(`[data-offset="${timezoneOffset}"]`);
+				timezone.setAttribute('selected', 'selected');
+			}
 		}
 	</script>
 }
