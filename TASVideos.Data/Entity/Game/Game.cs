@@ -60,13 +60,6 @@ public static class GameExtensions
 			: query;
 	}
 
-	public static IQueryable<Game> ForLetter(this IQueryable<Game> query, string? code)
-	{
-		return !string.IsNullOrWhiteSpace(code)
-			? query.Where(g => g.DisplayName.Substring(0, 1) == code)
-			: query;
-	}
-
 	public static void SetGenres(this ICollection<GameGenre> genres, IEnumerable<int> genreIds)
 	{
 		genres.Clear();
