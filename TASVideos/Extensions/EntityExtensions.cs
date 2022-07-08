@@ -245,7 +245,8 @@ public static class EntityExtensions
 			IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
 			Signature = u.Signature,
 			Avatar = u.Avatar,
-			MoodAvatarUrlBase = u.MoodAvatarUrlBase
+			MoodAvatarUrlBase = u.MoodAvatarUrlBase,
+			UseRatings = u.UseRatings
 		});
 	}
 

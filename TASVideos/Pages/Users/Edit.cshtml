@@ -6,6 +6,7 @@
 
 <h4>@ViewData["Title"]</h4>
 <hr />
+<div asp-validation-summary="All" class="text-danger"></div>
 <form asp-route="Edit">
 	<fullrow>
 		<form-group condition="Model.UserToEdit.IsLockedOut">
@@ -166,6 +167,16 @@
 				</div>
 			</form-group>
 		</div>
+	</row>
+	<row>
+		<column md="6">
+			<form-group>
+				<input type="checkbox" class="forum-check-input" asp-for="UserToEdit.UseRatings" />
+				<label class="form-check-label" asp-for="UserToEdit.UseRatings"></label>
+				<br />
+				(@Html.DescriptionFor(m => m.UserToEdit.UseRatings))
+			</form-group>
+		</column>
 	</row>
 	<two-column-select id-list="UserToEdit.SelectedRoles" available-list="AvailableRoles" />
 	@await Component.RenderWiki("System/UserEditRole")
