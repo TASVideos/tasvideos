@@ -13,6 +13,9 @@ public class SystemPageOf<T> : PageOf<T>
 	[Display(Name = "System")]
 	public string? SystemCode { get; set; }
 
+	[Display(Name = "Starts with")]
+	public string? Letter { get; set; }
+
 	public string? SearchTerms { get; set; }
 
 	public static new SystemPageOf<T> Empty() => new(Enumerable.Empty<T>());

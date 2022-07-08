@@ -6,11 +6,13 @@ public class GameListRequest : PagingModel
 {
 	public GameListRequest()
 	{
-		PageSize = 25;
+		PageSize = 50;
 		Sort = "DisplayName";
 	}
 
 	public string? SystemCode { get; set; }
+
+	public string? Letter { get; set; }
 
 	public string? SearchTerms { get; set; }
 }
