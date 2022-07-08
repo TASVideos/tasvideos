@@ -4,9 +4,7 @@
 	var pagingModel = ViewData["PagingModel"] as PagingModel ?? new PagingModel();
 }
 <div condition="@Model!.Any()">
-	<fullrow class="mt-2">
-		<partial name="_Pager" model="Model" />
-	</fullrow>
+	<partial name="_Pager" model="Model" />
 	<table>
 		<sortable-table-head sorting="@pagingModel" model-type="typeof(UserMaintenanceLogEntry)" page-override="@ViewData["CurrentPage"]" />
 		@foreach(var entry in Model!)
@@ -27,4 +25,5 @@
 			</tr>
 		}
 	</table>
+	<partial name="_Pager" model="Model" />
 </div>
