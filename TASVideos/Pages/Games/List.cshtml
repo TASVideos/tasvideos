@@ -3,6 +3,7 @@
 @{
 	ViewData["Title"] = "Game List" +
 		(!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? " - " + Model.Games.SystemCode : string.Empty) +
+		(!string.IsNullOrWhiteSpace(Model.Games.Letter) ? " - " + Model.Games.Letter : string.Empty) +
 		(!string.IsNullOrWhiteSpace(Model.Games.SearchTerms) ? " - " + $@"""{Model.Games.SearchTerms}""" : string.Empty);
 }
 
