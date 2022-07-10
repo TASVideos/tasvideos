@@ -178,6 +178,10 @@
 			</form-group>
 		</column>
 	</row>
+	<full-row>
+		<label asp-for="UserToEdit.ModeratorComments"></label>
+		<textarea asp-for="UserToEdit.ModeratorComments" class="form-control" rows="5"></textarea>
+	</full-row>
 	<two-column-select id-list="UserToEdit.SelectedRoles" available-list="AvailableRoles" />
 	@await Component.RenderWiki("System/UserEditRole")
 	<hr />

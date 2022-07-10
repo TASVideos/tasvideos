@@ -39,6 +39,8 @@ public class User : IdentityUser<int>, ITrackable
 	/// </summary>
 	public bool UseRatings { get; set; } = true;
 
+	public string? ModeratorComments { get; set; }
+
 	public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;
 
 	public bool EmailOnPrivateMessage { get; set; }

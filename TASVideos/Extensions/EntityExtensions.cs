@@ -246,7 +246,8 @@ public static class EntityExtensions
 			Signature = u.Signature,
 			Avatar = u.Avatar,
 			MoodAvatarUrlBase = u.MoodAvatarUrlBase,
-			UseRatings = u.UseRatings
+			UseRatings = u.UseRatings,
+			ModeratorComments = u.ModeratorComments
 		});
 	}
 
