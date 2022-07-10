@@ -42,7 +42,7 @@ public class UserProfile
 	[Display(Name = "Ratings Public?")]
 	public bool PublicRatings { get; set; }
 
-	[Display(Name = "TimeZone:")]
+	[Display(Name = "Time Zone:")]
 	public string? TimeZone { get; set; }
 
 	[Display(Name = "Preferred Pronouns:")]
