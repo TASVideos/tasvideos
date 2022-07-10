@@ -90,13 +90,13 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
 				options.Conventions.AddPageRoute("/Publications/View", "{id:int}M");
 				options.Conventions.AddPageRoute("/Publications/Authors", "Players-List");
-				options.Conventions.AddPageRoute("/Forum/Posts/Index", "forum/p/{id:int}");
 				options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
 				options.Conventions.AddPageRoute("/Permissions/Index", "/Privileges");
 
 				// Backwards compatibility with legacy links
 				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/t/{id:int}");
+				options.Conventions.AddPageRoute("/Forum/Legacy/Post", "forum/p/{id:int}");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/f/{id:int}");
 				options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
