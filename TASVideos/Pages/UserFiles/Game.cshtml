@@ -2,8 +2,15 @@
 @model GameModel
 
 @{
-	ViewData["Title"] = $"Movies for {Model.Game.GameName}";
+	ViewData["Title"] = $"User Files for {Model.Game.GameName}";
 }
+
+<div class="mb-2">
+	<a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
+	<div class="float-end">
+		<a asp-page="Index" class="btn btn-secondary">All User Files</a>
+	</div>
+</div>
 
 @foreach (var file in Model.Game.Files)
 {
