@@ -269,7 +269,7 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles)
+	public static IQueryable<UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles, bool hideComments = true)
 	{
 		return userFiles.Select(uf => new UserFileModel
 		{
@@ -307,7 +307,8 @@ public static class EntityExtensions
 					CreationTimeStamp = c.CreationTimeStamp,
 					UserId = c.UserId,
 					UserName = c.User!.UserName
-				})
+				}),
+			HideComments = hideComments
 		});
 	}
 

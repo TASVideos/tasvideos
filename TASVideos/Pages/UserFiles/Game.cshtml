@@ -7,9 +7,7 @@
 
 <div class="mb-2">
 	<a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
-	<div class="float-end">
-		<a asp-page="Index" class="btn btn-secondary">All User Files</a>
-	</div>
+	<a asp-page="Index" class="btn btn-secondary float-end">All User Files</a>
 </div>
 
 @foreach (var file in Model.Game.Files)
