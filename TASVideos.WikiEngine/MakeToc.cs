@@ -21,6 +21,7 @@ public static partial class Builtins
 		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "toc" } };
 		var stack = new Stack<Element>();
 		stack.Push(ret);
+		stack.Push(new Element(charStart, "div") { Attributes = { ["class"] = "card-header" } });
 
 		var pos = (headings.Min(h => (int?)(h.Tag[1] - '0')) ?? 2) - 1; // if the biggest heading is h3 or h4, make that the top level
 
