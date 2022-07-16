@@ -91,6 +91,11 @@ public static class UserFileExtensions
 		return query.Where(q => q.Class == UserFileClass.Movie);
 	}
 
+	public static IQueryable<UserFile> ThatAreSupport(this IQueryable<UserFile> query)
+	{
+		return query.Where(q => q.Class == UserFileClass.Support);
+	}
+
 	public static IQueryable<UserFile> ByRecentlyUploaded(this IQueryable<UserFile> query)
 	{
 		return query.OrderByDescending(q => q.UploadTimestamp);
@@ -99,5 +104,10 @@ public static class UserFileExtensions
 	public static IQueryable<UserFile> ForAuthor(this IQueryable<UserFile> query, string userName)
 	{
 		return query.Where(q => q.Author!.UserName == userName);
+	}
+
+	public static IQueryable<UserFile> ForGame(this IQueryable<UserFile> query, int gameId)
+	{
+		return query.Where(q => q.GameId == gameId);
 	}
 }

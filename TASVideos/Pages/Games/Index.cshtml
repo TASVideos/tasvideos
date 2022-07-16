@@ -124,6 +124,17 @@
 			</li>
 		</ul>
 	</column>
+	<column md="6" condition="Model.WatchFiles.Any()">
+		<label>Watch files</label>
+		<ul>
+			@foreach (var wch in Model.WatchFiles)
+			{
+				<li>
+					<a asp-page="/UserFiles/Info" asp-route-id="@wch.Id">@wch.FileName</a>
+				</li>
+			}
+		</ul>
+	</column>
 </row>
 <hr />
 <h4>

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Games.Models;
 using TASVideos.ViewComponents;
 
@@ -25,6 +26,8 @@ public class IndexModel : BasePageModel
 	public GameDisplayModel Game { get; set; } = new();
 
 	public IEnumerable<MiniMovieModel> Movies { get; set; } = new List<MiniMovieModel>();
+
+	public IReadOnlyCollection<WatchFile> WatchFiles { get; set; } = new List<WatchFile>();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -51,6 +54,17 @@ public class IndexModel : BasePageModel
 			.ToMiniMovieModel()
 			.ToListAsync();
 
+		WatchFiles = await _db.UserFiles
+			.ForGame(Game.Id)
+			.FilterByHidden(false)
+			.ThatAreSupport()
+			.Where(u => u.FileName.EndsWith(".wch"))
+			.Select(u => new WatchFile(u.Id, u.FileName))
+			.ToListAsync();
+
 		return Page();
 	}
+
+	// TODO: move me
+	public record WatchFile(long Id, string FileName);
 }
