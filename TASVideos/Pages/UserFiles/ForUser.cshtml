@@ -2,14 +2,12 @@
 @model ForUserModel
 
 @{
-	ViewData["Title"] = "User Files for " + Model.UserName;
+	ViewData["Title"] = "User Files from " + Model.UserName;
 }
 
 <a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
-<div class="float-end">
-	<a asp-page="Index" class="btn btn-secondary">All User Files</a>
-	<profile-link class="btn btn-secondary" username="@Model.UserName"><i class="fa fa-user-o"></i> Profile for @Model.UserName</profile-link>
-</div>
+<a asp-page="Index" class="btn btn-secondary float-end">All User Files</a>
+
 <partial name="_Pager" model="Model.Files" />
 
 @foreach (var file in Model.Files)
