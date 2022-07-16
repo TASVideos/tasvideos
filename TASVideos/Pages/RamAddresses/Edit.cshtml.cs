@@ -53,6 +53,8 @@ public class EditModel : AddressBasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
+		return AccessDenied();
+
 		if (!ModelState.IsValid)
 		{
 			await PopulateDropdowns(Address.SystemId);
@@ -82,6 +84,7 @@ public class EditModel : AddressBasePageModel
 
 	public async Task<IActionResult> OnPostDelete()
 	{
+		return AccessDenied();
 		var address = await _db.GameRamAddresses
 			.SingleOrDefaultAsync(a => a.Id == Id);
 

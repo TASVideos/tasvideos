@@ -4,6 +4,9 @@
 	ViewData["Title"] = $"Viewing RAM Addresses for {Model.GameName}";
 }
 
+<warning-alert>
+	Ram address support will be removed from TASVideos. For applicable systems, a .wch file will be generated to replace see the <a asp-page="/Forums/Topics/Index" asp-route-id="23443">discussion topic</a> for details
+</warning-alert>
 @functions
 {
 	string FormatAddress(long address)
@@ -36,7 +39,6 @@
 			<th>Signed</th>
 			<th>Endian</th>
 			<th>Description</th>
-			<th>Actions</th>
 		</tr>
 		@foreach (var address in Model.Addresses.OrderBy(a => a.Address))
 		{
@@ -47,18 +49,7 @@
 				<td>@address.Signed</td>
 				<td>@address.Endian</td>
 				<td>@address.Description</td>
-				<td>
-					<a asp-page="/RamAddresses/Edit" asp-route-id="@address.Id" class="btn btn-primary btn-sm"><i fa fa-pencil></i> Edit</a>
-					<delete-button
-						permission="EditRamAddresses"
-						asp-href="/RamAddresses/Edit/@(address.Id)?handler=Delete"
-						warning-message="Are you sure you want to delete this address?"
-						class="btn-sm">
-						<i class="fa fa-remove"></i>
-					</delete-button>
-				</td>
 			</tr>
 		}
 	</table>
 </div>
-<a asp-page="Add" asp-route-gameId="@Model.Id" class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>

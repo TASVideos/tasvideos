@@ -55,6 +55,7 @@ public class AddModel : AddressBasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
+		return AccessDenied();
 		if (!ModelState.IsValid)
 		{
 			var game = await _db.Games

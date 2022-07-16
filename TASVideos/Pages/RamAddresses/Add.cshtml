@@ -4,6 +4,9 @@
 	ViewData["Title"] = $"Adding RAM Addresses for {Model.Address.FormattedAddress} ({Model.Address.SystemCode} {Model.Address.GameName})";
 }
 
+<warning-alert>
+	Ram address support will be removed from TASVideos. For applicable systems, a .wch file will be generated to replace see the <a asp-page="/Forums/Topics/Index" asp-route-id="23443">discussion topic</a> for details
+</warning-alert>
 <form method="post">
 	<input type="hidden" asp-for="GameId" />
 	<input type="hidden" asp-for="SystemId" />
@@ -45,7 +48,6 @@
 		</column>
 	</row>
 	<form-button-bar>
-		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
 		<a asp-page="/RamAddresses/Index" asp-route-id="@Model.GameId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>
 </form>
