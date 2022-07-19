@@ -80,9 +80,9 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddFolderApplicationModelConvention(
 					"/",
 					model => model.Filters.Add(new SetPageViewBagAttribute()));
-				options.Conventions.AddFolderApplicationModelConvention(
-					"/",
-					model => model.Filters.Add(new Debouncer()));
+				//options.Conventions.AddFolderApplicationModelConvention(
+				//	"/",
+				//	model => model.Filters.Add(new Debouncer()));
 				options.Conventions.AddPageRoute("/Games/Index", "{id:int}G");
 				options.Conventions.AddPageRoute("/Submissions/Index", "Subs-{query}");
 				options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");

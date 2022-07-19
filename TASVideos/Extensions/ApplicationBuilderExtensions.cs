@@ -19,6 +19,7 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostEnvironment env)
 	{
+		/*
 		if (env.IsDevelopment())
 		{
 			app.UseDeveloperExceptionPage();
@@ -27,6 +28,9 @@ public static class ApplicationBuilderExtensions
 		{
 			app.UseExceptionHandler("/Error");
 		}
+		*/
+		app.UseExceptionHandler("/Error");
+		app.UseStatusCodePagesWithReExecute("/Error");
 
 		// TODO: we want to use some middle ware so we can dynamically decide to return json for the API
 		// However, registering this in combination with the pages above causes a request to happen a second time

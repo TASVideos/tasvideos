@@ -1,5 +1,7 @@
 ﻿@page
+@model ErrorModel
 @{
 	ViewData["Title"] = "System Error";
 }
 @await Component.RenderWiki("System/Error")
+<pre>@Model.RecoveredFormData</pre>
