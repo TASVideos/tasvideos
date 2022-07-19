@@ -5,7 +5,6 @@ namespace TASVideos.WikiEngine;
 public static class WikiModules
 {
 	public const string ActiveTab = "activetab";
-	public const string Addresses = "addresses";
 	public const string Awards = "awards";
 	public const string BannedAvatarSites = "bannedavatarsites";
 	public const string BrokenLinks = "brokenlinks";
