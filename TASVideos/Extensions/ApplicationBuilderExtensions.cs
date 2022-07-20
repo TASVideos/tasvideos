@@ -19,16 +19,6 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostEnvironment env)
 	{
-		/*
-		if (env.IsDevelopment())
-		{
-			app.UseDeveloperExceptionPage();
-		}
-		else
-		{
-			app.UseExceptionHandler("/Error");
-		}
-		*/
 		app.UseExceptionHandler("/Error");
 		app.UseStatusCodePagesWithReExecute("/Error");
 

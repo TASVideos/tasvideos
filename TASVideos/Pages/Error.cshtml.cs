@@ -1,29 +1,53 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Text;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Primitives;
 
 namespace TASVideos.Pages;
 
 [IgnoreAntiforgeryToken]
 public class ErrorModel : PageModel
 {
-	public string RecoveredFormData { get; set; } = "";
+	private readonly IHostEnvironment _env;
+	public ErrorModel(IHostEnvironment env)
+	{
+		_env = env;
+	}
+
+	public string StatusCodeString { get; set; } = "";
+	public string ExceptionMessage { get; set; } = "";
+	public List<KeyValuePair<string, StringValues>> RecoveredFormData { get; set; } = new();
 	public void OnGet()
 	{
-		RecoveredFormData = $"Status Code {Response.StatusCode}";
+		HandleStatusCode();
+		HandleException();
 	}
 
 	public void OnPost()
 	{
-		var stringBuilder = new StringBuilder();
-		stringBuilder.AppendLine($"Status Code {Response.StatusCode}");
-		stringBuilder.AppendLine("========");
-		foreach (var kvp in Request.Form)
-		{
-			stringBuilder.AppendLine($"{kvp.Key}: {kvp.Value}");
-			stringBuilder.AppendLine("========");
-		}
+		HandleStatusCode();
+		HandleException();
+		HandleFormData();
+	}
 
-		RecoveredFormData = stringBuilder.ToString();
+	private void HandleStatusCode()
+	{
+		StatusCodeString = $"Status Code {Response.StatusCode} - {ReasonPhrases.GetReasonPhrase(Response.StatusCode)}";
+	}
+
+	private void HandleException()
+	{
+		if (_env.IsDevelopment())
+		{
+			var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+			ExceptionMessage = exceptionHandlerPathFeature?.Error.ToString() ?? "";
+		}
+	}
+
+	private void HandleFormData()
+	{
+		RecoveredFormData.AddRange(Request.Form
+			.Where(kvp => kvp.Key != "__RequestVerificationToken"));
 	}
 }
