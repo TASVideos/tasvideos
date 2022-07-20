@@ -101,11 +101,7 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/f/{id:int}");
 				options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
 				options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
-				options.Conventions.AddPageRoute("/RamAddresses/LegacyList", "AddressesUp");
 				options.Conventions.AddPageRoute("/Forum/Legacy/MoodReport", "forum/moodreport.php");
-
-				options.Conventions.AddPageRoute("/RamAddresses/List", "Addresses-List");
-				options.Conventions.AddPageRoute("/RamAddresses/Index", "Addresses-{id:int}");
 
 				options.Conventions.AddPageRoute("/RssFeeds/Publications", "/publications.rss");
 				options.Conventions.AddPageRoute("/RssFeeds/Submissions", "/submissions.rss");

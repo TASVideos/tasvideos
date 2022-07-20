@@ -5,36 +5,16 @@ public enum RamAddressType
 {
 	Byte,
 	Word,
-
-	[Display(Name = "Double Word")]
 	DWord,
 	Float,
-
-	[Display(Name = "Fixed Point 12.4")]
 	Q12_4,
-
-	[Display(Name = "Fixed Point 20.12")]
 	Q20_12,
-
-	[Display(Name = "Fixed Point 20.4")]
 	Q20_4,
-
-	[Display(Name = "Fixed Point 28.4")]
 	Q28_4,
-
-	[Display(Name = "Fixed Point 8.8")]
 	Q8_8,
-
-	[Display(Name = "Fixed Point 16.8")]
 	Q16_8,
-
-	[Display(Name = "Fixed Point 24.8")]
 	Q24_8,
-
-	[Display(Name = "Fixed Point 16.16")]
 	Q16_16,
-
-	[Display(Name = "3 Byte")]
 	ThreeByte
 }
 

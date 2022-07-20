@@ -142,33 +142,6 @@
 					</ul>
 				</div>
 			</row>
-			<row>
-				<column></column>
-				<div class="col-6">
-					<h4>
-						<a condition="Model.FromGame.RamAddresses!.Any()" asp-page="/RamAddresses/Index" asp-route-id="@Model.FromGameId">Ram Addresses</a>
-						<span condition="!Model.FromGame.RamAddresses!.Any()">Ram Addresses</span>
-					</h4>
-					<ul>
-						@foreach (var address in Model.FromGame.RamAddresses!)
-						{
-							<li>@address.Title</li>
-						}
-					</ul>
-				</div>
-				<div class="col-6">
-					<h4>
-						<a condition="Model.IntoGame.RamAddresses!.Any()" asp-page="/RamAddresses/Index" asp-route-id="@Model.IntoGameId">Ram Addresses</a>
-						<span condition="!Model.IntoGame.RamAddresses!.Any()">Ram Addresses</span>
-					</h4>
-					<ul>
-						@foreach (var address in Model.IntoGame.RamAddresses!)
-						{
-							<li>@address.Title</li>
-						}
-					</ul>
-				</div>
-			</row>
 		</cardbody>
 	</card>
 	<form method="post">

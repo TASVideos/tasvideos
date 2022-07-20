@@ -42,7 +42,6 @@ public class RewireModel : BasePageModel
 		public ICollection<EntryWithVersion>? Submissions;
 		public ICollection<Entry>? Versions;
 		public ICollection<EntryLong>? Userfiles;
-		public ICollection<Entry>? RamAddresses;
 	}
 
 	public record Entry(int Id, string Title);
@@ -67,10 +66,6 @@ public class RewireModel : BasePageModel
 					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
 				})
 				.SingleAsync();
-			FromGame!.RamAddresses = await _db.GameRamAddresses
-				.Where(a => a.GameId == FromGameId)
-				.Select(a => new Entry(a.Id, a.Address.ToString()))
-				.ToListAsync();
 
 			IntoGame = await _db.Games
 				.Where(g => g.Id == IntoGameId)
@@ -83,10 +78,6 @@ public class RewireModel : BasePageModel
 					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
 				})
 				.SingleAsync();
-			IntoGame!.RamAddresses = await _db.GameRamAddresses
-				.Where(a => a.GameId == IntoGameId)
-				.Select(a => new Entry(a.Id, a.Address.ToString()))
-				.ToListAsync();
 		}
 	}
 
@@ -128,13 +119,6 @@ public class RewireModel : BasePageModel
 					.ToListAsync();
 				_db.UserFiles.AttachRange(rewireUserfiles);
 				rewireUserfiles.ForEach(u => u.GameId = intoGameId);
-
-				var rewireRamAddresses = await _db.GameRamAddresses
-					.Where(a => a.GameId == FromGameId)
-					.Select(a => new GameRamAddress { Id = a.Id })
-					.ToListAsync();
-				_db.GameRamAddresses.AttachRange(rewireRamAddresses);
-				rewireRamAddresses.ForEach(a => a.GameId = intoGameId);
 
 				var result = await ConcurrentSave(_db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
 				if (result)
