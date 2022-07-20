@@ -18,10 +18,18 @@ public static partial class Builtins
 			.Cast<Element>()
 			.ToList();
 
-		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "toc" } };
+		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "card" } };
+		var header = new Element(charStart, "div") { Attributes = { ["class"] = "card-header" } };
+		var strong = new Element(charStart, "strong");
+		strong.Children.Add(new Text(charStart, "Table of contents"));
+		header.Children.Add(strong);
+		ret.Children.Add(header);
+		var body = new Element(charStart, "div") { Attributes = { ["class"] = "card-body" } };
+		ret.Children.Add(body);
 		var stack = new Stack<Element>();
 		stack.Push(ret);
-		stack.Push(new Element(charStart, "div") { Attributes = { ["class"] = "card-header" } });
+		stack.Push(header);
+		stack.Push(body);
 
 		var pos = (headings.Min(h => (int?)(h.Tag[1] - '0')) ?? 2) - 1; // if the biggest heading is h3 or h4, make that the top level
 
