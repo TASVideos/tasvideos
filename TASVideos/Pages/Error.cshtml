@@ -1,5 +1,32 @@
 ﻿@page
+@model ErrorModel
 @{
 	ViewData["Title"] = "System Error";
 }
 @await Component.RenderWiki("System/Error")
+<hr />
+<h5>@Model.StatusCodeString</h5>
+<div condition="!string.IsNullOrEmpty(Model.ExceptionMessage)">
+	<span>Exception:</span>
+	<pre>@Model.ExceptionMessage</pre>
+</div>
+<div condition="Model.RecoveredFormData.Count != 0">
+	<span>Submitted Form Data:</span>
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Key</th>
+				<th scope="col">Value</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var kvp in Model.RecoveredFormData!)
+			{
+			<tr>
+				<th scope="row">@kvp.Key</th>
+				<td><pre style="white-space: pre-wrap;">@kvp.Value</pre></td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>
