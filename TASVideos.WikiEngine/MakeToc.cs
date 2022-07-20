@@ -18,11 +18,11 @@ public static partial class Builtins
 			.Cast<Element>()
 			.ToList();
 
-		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "card" } };
-		var header = new Element(charStart, "div") { Attributes = { ["class"] = "card-header" } };
 		var strong = new Element(charStart, "strong");
 		strong.Children.Add(new Text(charStart, "Table of contents"));
+		var header = new Element(charStart, "div") { Attributes = { ["class"] = "card-header" } };
 		header.Children.Add(strong);
+		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "card" } };
 		ret.Children.Add(header);
 		
 		var stack = new Stack<Element>();
