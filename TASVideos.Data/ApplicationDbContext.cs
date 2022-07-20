@@ -63,8 +63,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	public DbSet<GameVersion> GameVersions { get; set; } = null!;
 	public DbSet<GameGroup> GameGroups { get; set; } = null!;
 	public DbSet<GameGameGroup> GameGameGroups { get; set; } = null!;
-	public DbSet<GameRamAddressDomain> GameRamAddressDomains { get; set; } = null!;
-	public DbSet<GameRamAddress> GameRamAddresses { get; set; } = null!;
 
 	// Forum tables
 	public DbSet<ForumCategory> ForumCategories { get; set; } = null!;
