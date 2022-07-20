@@ -82,10 +82,6 @@ public enum PermissionTo
 	[Description("The ability to see wiki pages/revisions that were deleted.")]
 	SeeDeletedWikiPages = 106,
 
-	[Group("Wiki")]
-	[Description("The ability to add/edit/remove ram addresses.")]
-	EditRamAddresses = 107,
-
 	[Group("Wiki Administration")]
 	[Description("(Not used, do not assign), Was the ability to see certain restricted pages that pertain to administration activities. There are no pages that meet this criteria.")]
 	SeeAdminPages = 190,
