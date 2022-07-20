@@ -24,9 +24,10 @@ public static partial class Builtins
 		strong.Children.Add(new Text(charStart, "Table of contents"));
 		header.Children.Add(strong);
 		ret.Children.Add(header);
+		
+		var stack = new Stack<Element>();
 		var body = new Element(charStart, "div") { Attributes = { ["class"] = "card-body" } };
 		ret.Children.Add(body);
-		var stack = new Stack<Element>();
 		stack.Push(body);
 
 		var pos = (headings.Min(h => (int?)(h.Tag[1] - '0')) ?? 2) - 1; // if the biggest heading is h3 or h4, make that the top level
