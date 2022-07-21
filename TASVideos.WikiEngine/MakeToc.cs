@@ -22,7 +22,7 @@ public static partial class Builtins
 		strong.Children.Add(new Text(charStart, "Table of contents"));
 		var header = new Element(charStart, "div") { Attributes = { ["class"] = "card-header" } };
 		header.Children.Add(strong);
-		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "card" } };
+		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "card mb-2" } };
 		ret.Children.Add(header);
 		
 		var stack = new Stack<Element>();
