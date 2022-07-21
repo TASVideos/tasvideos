@@ -24,7 +24,7 @@ public static partial class Builtins
 		header.Children.Add(strong);
 		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "card mb-2" } };
 		ret.Children.Add(header);
-		
+
 		var stack = new Stack<Element>();
 		var body = new Element(charStart, "div") { Attributes = { ["class"] = "card-body" } };
 		ret.Children.Add(body);
