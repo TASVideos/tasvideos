@@ -249,7 +249,7 @@ public class Element : INode
 
 					// "text" is not a supported language for prism,
 					// so it will just get the same text formatting as languages, but no syntax highlighting.
-					var lang = osplit.Length > 0 ? osplit[^1] : "text";
+					var lang = PrismNames.FixLanguage(osplit.Length > 0 ? osplit[^1] : "text");
 
 					if (lang != "text")
 					{
