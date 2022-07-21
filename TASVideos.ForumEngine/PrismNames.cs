@@ -1,19 +1,15 @@
-namespace TASVideos.ForumEngine;
+﻿namespace TASVideos.ForumEngine;
 
 public static class PrismNames
 {
 	public static string FixLanguage(string s)
 	{
-		switch (s)
+		return s switch
 		{
-			case "bat":
-				return "batch";
-			case "sh":
-				return "shell";
-			case "c++":
-				return "cpp";
-			default:
-				return s;
-		}
+			"bat" => "batch",
+			"sh" => "shell",
+			"c++" => "cpp",
+			_ => s
+		};
 	}
 }
