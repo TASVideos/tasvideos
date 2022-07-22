@@ -3,6 +3,8 @@
 @model EditModel
 @{
 	ViewData["Title"] = $"Edit Submission #{Model.Id}";
+	var canEditPublicationClass = User.Has(PermissionTo.JudgeSubmissions)
+		&& Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted);
 }
 <a condition="Model.CanDelete" asp-page="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">
 	<i class="fa fa-remove"></i> Delete
@@ -86,13 +88,14 @@
 				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
 			</form-group>
 		</div>
-		<div permission="JudgeSubmissions" condition="Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted)" class="col-lg-6">
+		<div condition="canEditPublicationClass" class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
 				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
 				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
 			</form-group>
 		</div>
+		<input type="hidden" asp-for="Submission.PublicationClassId" condition="!canEditPublicationClass" />
 	</row>
 	<fullrow>
 		<form-group>
