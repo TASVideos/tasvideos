@@ -2,10 +2,11 @@
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Pages.Forum.Models;
 
 namespace TASVideos.Pages.Forum.Posts.Models;
 
-public class ForumPostEntry
+public class ForumPostEntry : IForumPostEntry
 {
 	public int Id { get; set; }
 	public int TopicId { get; set; }
