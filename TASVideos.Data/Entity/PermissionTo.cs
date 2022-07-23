@@ -174,6 +174,10 @@ public enum PermissionTo
 	[Description("The ability to rewire games into other games")]
 	RewireGames = 394,
 
+	[Group("Publication Maintenance")]
+	[Description("The ability to add, edit, and remove the rejection reasons used on submissions")]
+	RejectionReasonMaintenance = 395,
+
 	#endregion
 
 	#region Forum Moderation 400

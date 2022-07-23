@@ -1,0 +1,47 @@
+﻿@page "{handler?}"
+@model IndexModel
+@{
+	ViewData["Title"] = "Reasons used for Submission Rejection";
+}
+@await Component.RenderWiki("System/RejectionReasonsHeader")
+<table class="table">
+	<tr>
+		<th>Reasons</th>
+		<th>Submission Count</th>
+	</tr>
+	@foreach (var reason in Model.Reasons.OrderByDescending(m => m.SubmissionCount))
+	{
+		<tr>
+			<td>
+				<delete-button
+					permission="RejectionReasonMaintenance"
+					condition="@reason.SubmissionCount == 0" asp-href="/Submissions/RejectionReasons/Index?handler=Delete&id=@reason.Id">
+					<i class="fa fa-remove"></i>
+				</delete-button>
+				@reason.Reason
+			</td>
+			<td>
+				<a asp-page="Reason" asp-route-id="@reason.Id">@reason.SubmissionCount</a>
+			</td>
+		</tr>
+	}
+</table>
+
+<div permission="RejectionReasonMaintenance">
+	<hr />
+	<h4>Create a New Rejection Reason</h4>
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<form method="post">
+		<row>
+			<column md="6">
+				<label for="displayName">New Reason</label>
+				<input id="displayName" name="displayName" type="text" class="form-control"/>
+				<form-button-bar>
+					<button type="submit" class="btn btn-primary">
+						<i class="fa fa-plus"></i> Create
+					</button>
+				</form-button-bar>
+			</column>
+		</row>
+	</form>
+</div>

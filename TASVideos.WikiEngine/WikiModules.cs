@@ -35,7 +35,6 @@ public static class WikiModules
 	public const string PlayerPointsTable = "playerpointstable";
 	public const string PublicationHistory = "publicationhistory";
 	public const string PublicationPoints = "publicationpoints";
-	public const string RejectedSubmissions = "rejectedsubmissions";
 	public const string SupportedMovieTypes = "supportedmovietypes";
 	public const string TabularMovieList = "tabularmovielist";
 	public const string TimeSinceDate = "timesincedate";

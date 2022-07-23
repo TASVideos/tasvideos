@@ -7,4 +7,6 @@ public class SubmissionRejectionReason
 	[Required]
 	[StringLength(100)]
 	public string DisplayName { get; set; } = "";
+
+	public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 }

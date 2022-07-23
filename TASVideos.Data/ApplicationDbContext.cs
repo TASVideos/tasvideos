@@ -356,10 +356,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<SubmissionRejectionReason>(entity =>
 		{
-			entity.Property(e => e.Id)
-				.ValueGeneratedNever()
-				.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
-
 			entity.HasIndex(e => e.DisplayName).IsUnique();
 		});
 
