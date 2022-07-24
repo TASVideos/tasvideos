@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -23,10 +23,13 @@ public class IndexModel : BasePageModel
 		_movieTokens = movieTokens;
 	}
 
+	[FromQuery]
+	public PublicationRequest Paging { get; set; } = new();
+
 	[FromRoute]
 	public string Query { get; set; } = "";
 
-	public IEnumerable<PublicationDisplayModel> Movies { get; set; } = new List<PublicationDisplayModel>();
+	public PageOf<PublicationDisplayModel> Movies { get; set; } = PageOf<PublicationDisplayModel>.Empty();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -77,7 +80,7 @@ public class IndexModel : BasePageModel
 		Movies = await _db.Publications
 			.FilterByTokens(searchModel)
 			.ToViewModel(searchModel.SortBy == "y", User.GetUserId())
-			.ToListAsync();
+			.PageOf(Paging);
 
 		return Page();
 	}
