@@ -17,6 +17,7 @@ DELETE FROM public.ip_bans;
 DELETE FROM public.media_posts;
 DELETE FROM public.user_disallows;
 DELETE FROM public."__EFMigrationsHistory";
+
 -- Trim user files
 DELETE FROM public.user_file_comments;
 
@@ -46,40 +47,20 @@ DELETE
 FROM public.publication_ratings pr
 WHERE (SELECT public_ratings from users WHERE id = pr.user_id) = false;
 
-
  --Trim Publications and Submissions
 TRUNCATE TABLE publication_maintenance_logs;
 
-DROP TABLE IF EXISTS _submissions;
-CREATE TEMPORARY TABLE _submissions (id int primary key, wiki_content_id int);
-
-INSERT INTO _submissions
-	SELECT s.id, s.wiki_content_id
-	FROM public.submissions s;
-
-UPDATE forum_topics
-	SET submission_id = null
-	FROM forum_topics f
-	LEFT JOIN _submissions isu on f.submission_id = isu.id
-	WHERE isu.id IS NULL;
-
-DELETE
-FROM public.wiki_pages wp
-WHERE wp.id NOT IN (SELECT wiki_content_id from _submissions)
-AND wp.page_name LIKE 'InternalSystem/SubmissionContent/S%';
-
-DELETE
-FROM public.submission_authors sa
-WHERE sa.submission_id NOT IN (SELECT Id from _submissions);
-
-DELETE
-FROM public.submission_status_history ssh
-WHERE ssh.submission_id NOT IN (SELECT id from _submissions);
+--Terrible hack, but without it, resulting script can be run due to fk containts on obsoleted_by_id, need to investigate
+DELETE FROM public.publications WHERE obsoleted_by_id is not null;
 
 UPDATE public.publications SET movie_file = E'\\000'::bytea;
 UPDATE public.submissions SET movie_file = E'\\000'::bytea;
 
 --Trim down forum data
+
+--Terrible hack, but without it, the resulting script can't be run due to fk constraints, need to investigate
+UPDATE forum_topics SET submission_id = null;
+
 DROP TABLE IF EXISTS _topics;
 CREATE TEMPORARY TABLE _topics (id int primary key);
 INSERT INTO _topics
