@@ -9,7 +9,7 @@ public enum FlagDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IFlagService
 {
-	Task<ICollection<Flag>> GetAll();
+	Task<IReadOnlyCollection<Flag>> GetAll();
 	Task<Flag?> GetById(int id);
 	Task<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
@@ -30,7 +30,7 @@ internal class FlagService : IFlagService
 		_cache = cache;
 	}
 
-	public async Task<ICollection<Flag>> GetAll()
+	public async Task<IReadOnlyCollection<Flag>> GetAll()
 	{
 		if (_cache.TryGetValue(FlagsKey, out List<Flag> flags))
 		{

@@ -19,7 +19,7 @@ public class IpsModel : PageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public ICollection<string> Ips { get; set; } = new List<string>();
+	public IReadOnlyCollection<string> Ips { get; set; } = new List<string>();
 
 	public async Task<IActionResult> OnGet()
 	{

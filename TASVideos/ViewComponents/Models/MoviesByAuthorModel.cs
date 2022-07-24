@@ -5,9 +5,9 @@ public class MoviesByAuthorModel
 	public bool MarkNewbies { get; set; }
 	public bool ShowClasses { get; set; }
 
-	public ICollection<string> NewbieAuthors { get; set; } = new List<string>();
+	public IReadOnlyCollection<string> NewbieAuthors { get; set; } = new List<string>();
 
-	public ICollection<PublicationEntry> Publications { get; set; } = new List<PublicationEntry>();
+	public IReadOnlyCollection<PublicationEntry> Publications { get; set; } = new List<PublicationEntry>();
 
 	public class PublicationEntry
 	{

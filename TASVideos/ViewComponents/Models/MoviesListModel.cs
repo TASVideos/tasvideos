@@ -5,7 +5,7 @@ public class MoviesListModel
 	public string? SystemCode { get; init; }
 	public string? SystemName { get; init; }
 
-	public ICollection<MovieEntry> Movies { get; init; } = new List<MovieEntry>();
+	public IReadOnlyCollection<MovieEntry> Movies { get; init; } = new List<MovieEntry>();
 
 	public class MovieEntry
 	{

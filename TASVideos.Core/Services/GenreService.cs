@@ -11,7 +11,7 @@ public enum GenreChangeResult { Success, Fail, NotFound, InUse }
 
 public interface IGenreService
 {
-	ValueTask<ICollection<GenreDto>> GetAll();
+	ValueTask<IReadOnlyCollection<GenreDto>> GetAll();
 	ValueTask<GenreDto?> GetById(int id);
 	Task<bool> InUse(int id);
 	Task<int?> Add(string displayName);
@@ -33,7 +33,7 @@ internal class GenreService : IGenreService
 		_logger = logger;
 	}
 
-	public async ValueTask<ICollection<GenreDto>> GetAll()
+	public async ValueTask<IReadOnlyCollection<GenreDto>> GetAll()
 	{
 		if (_cache.TryGetValue(CacheKey, out List<GenreDto> genres))
 		{

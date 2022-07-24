@@ -31,7 +31,7 @@ public class AdditionalMoviesModel : BasePageModel
 	[BindProperty]
 	public string PublicationTitle { get; set; } = "";
 
-	public ICollection<PublicationFileModel> AvailableMovieFiles { get; set; } = new List<PublicationFileModel>();
+	public IReadOnlyCollection<PublicationFileModel> AvailableMovieFiles { get; set; } = new List<PublicationFileModel>();
 
 	[Required]
 	[BindProperty]

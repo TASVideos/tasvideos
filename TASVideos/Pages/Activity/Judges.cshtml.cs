@@ -21,7 +21,7 @@ public class JudgesModel : PageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public ICollection<SubmissionEntryModel> Submissions { get; set; } = new List<SubmissionEntryModel>();
+	public IReadOnlyCollection<SubmissionEntryModel> Submissions { get; set; } = new List<SubmissionEntryModel>();
 
 	public async Task OnGet()
 	{

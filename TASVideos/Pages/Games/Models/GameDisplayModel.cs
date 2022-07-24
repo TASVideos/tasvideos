@@ -12,7 +12,7 @@ public class GameDisplayModel
 
 	public IEnumerable<string> Genres { get; set; } = new List<string>();
 
-	public ICollection<GameVersion> Versions { get; set; } = new List<GameVersion>();
+	public IReadOnlyCollection<GameVersion> Versions { get; set; } = new List<GameVersion>();
 	public class GameVersion
 	{
 		public VersionTypes Type { get; set; }
@@ -26,7 +26,7 @@ public class GameDisplayModel
 		public string? TitleOverride { get; set; }
 	}
 
-	public ICollection<GameGroup> GameGroups { get; set; } = new List<GameGroup>();
+	public IReadOnlyCollection<GameGroup> GameGroups { get; set; } = new List<GameGroup>();
 
 	public class GameGroup
 	{

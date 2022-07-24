@@ -9,7 +9,7 @@ public enum SystemDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IGameSystemService
 {
-	ValueTask<ICollection<SystemsResponse>> GetAll();
+	ValueTask<IReadOnlyCollection<SystemsResponse>> GetAll();
 	ValueTask<SystemsResponse?> GetById(int id);
 	Task<bool> InUse(int id);
 	ValueTask<int> NextId();
@@ -31,7 +31,7 @@ internal class GameSystemService : IGameSystemService
 		_cache = cache;
 	}
 
-	public async ValueTask<ICollection<SystemsResponse>> GetAll()
+	public async ValueTask<IReadOnlyCollection<SystemsResponse>> GetAll()
 	{
 		if (_cache.TryGetValue(SystemsKey, out List<SystemsResponse> systems))
 		{

@@ -2,7 +2,7 @@
 
 public static class Extensions
 {
-	public static ICollection<string> ToTokens(this string? routeQuery)
+	public static IReadOnlyCollection<string> ToTokens(this string? routeQuery)
 	{
 		if (string.IsNullOrWhiteSpace(routeQuery))
 		{
@@ -23,7 +23,7 @@ public static class Extensions
 	/// <param name="source">The list to search.</param>
 	/// <param name="suffix">The suffix (case in-sensitive) to parse.</param>
 	/// <returns>A list of ints that were able to be parsed from the list.</returns>
-	public static ICollection<int> ToIdList(this IEnumerable<string> source, char suffix)
+	public static IReadOnlyCollection<int> ToIdList(this IEnumerable<string> source, char suffix)
 	{
 		return source
 			.Where(t => t.ToLower().EndsWith(char.ToLower(suffix)))
@@ -38,7 +38,7 @@ public static class Extensions
 	/// <param name="source">The list to search.</param>
 	/// <param name="prefix">The suffix (case in-sensitive) to parse.</param>
 	/// <returns>A list of ints that were able to be parsed from the list.</returns>
-	public static ICollection<int> ToIdListPrefix(this IEnumerable<string> source, string prefix)
+	public static IReadOnlyCollection<int> ToIdListPrefix(this IEnumerable<string> source, string prefix)
 	{
 		return source
 			.Where(t => t.ToLower().StartsWith(prefix.ToLower()))

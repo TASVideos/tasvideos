@@ -15,7 +15,7 @@ public class PublicationDisplayModel
 	public string MovieFileName { get; set; } = "";
 	public int SubmissionId { get; set; }
 
-	internal ICollection<PublicationUrl> Urls { get; set; } = new List<PublicationUrl>();
+	internal IReadOnlyCollection<PublicationUrl> Urls { get; set; } = new List<PublicationUrl>();
 	public IEnumerable<PublicationUrl> OnlineWatchingUrls => Urls.Where(u => u.Type == PublicationUrlType.Streaming);
 	public IEnumerable<PublicationUrl> MirrorSiteUrls => Urls.Where(u => u.Type == PublicationUrlType.Mirror);
 	public int TopicId { get; set; }

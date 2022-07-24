@@ -25,8 +25,8 @@ public class EditFramerateModel : BasePageModel
 	[BindProperty]
 	public FrameRateEditModel FrameRate { get; set; } = new();
 
-	public ICollection<UsageEntry> PublicationEntries = new List<UsageEntry>();
-	public ICollection<UsageEntry> SubmissionEntries = new List<UsageEntry>();
+	public IReadOnlyCollection<UsageEntry> PublicationEntries = new List<UsageEntry>();
+	public IReadOnlyCollection<UsageEntry> SubmissionEntries = new List<UsageEntry>();
 
 	public bool InUse => PublicationEntries.Any() || SubmissionEntries.Any();
 

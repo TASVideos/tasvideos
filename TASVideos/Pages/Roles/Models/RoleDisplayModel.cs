@@ -21,7 +21,7 @@ public class RoleDisplayModel
 	public IEnumerable<string> Links { get; set; } = new List<string>();
 
 	[Display(Name = "Users with this Role")]
-	public ICollection<UserWithRole> Users { get; set; } = new List<UserWithRole>();
+	public IReadOnlyCollection<UserWithRole> Users { get; set; } = new List<UserWithRole>();
 
 	public class UserWithRole
 	{

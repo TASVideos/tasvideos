@@ -9,7 +9,7 @@ public enum TagDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface ITagService
 {
-	ValueTask<ICollection<Tag>> GetAll();
+	ValueTask<IReadOnlyCollection<Tag>> GetAll();
 	ValueTask<Tag?> GetById(int id);
 	ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
@@ -30,7 +30,7 @@ internal class TagService : ITagService
 		_cache = cache;
 	}
 
-	public async ValueTask<ICollection<Tag>> GetAll()
+	public async ValueTask<IReadOnlyCollection<Tag>> GetAll()
 	{
 		if (_cache.TryGetValue(TagsKey, out List<Tag> tags))
 		{

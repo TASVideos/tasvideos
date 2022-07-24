@@ -130,7 +130,7 @@ internal class YouTubeSync : IYoutubeSync
 		return items;
 	}
 
-	private async Task<IEnumerable<YoutubeVideoResponseItem>> GetBatchPublicInfo(ICollection<string> videoIds)
+	private async Task<IEnumerable<YoutubeVideoResponseItem>> GetBatchPublicInfo(IReadOnlyCollection<string> videoIds)
 	{
 		if (videoIds.Count > BatchSize)
 		{

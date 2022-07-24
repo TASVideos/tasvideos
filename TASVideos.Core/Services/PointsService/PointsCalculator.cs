@@ -8,7 +8,7 @@ internal static class PointsCalculator
 	/// <param name="publications">The rating data for a given movie</param>
 	/// <param name="averageRatingsPerMovie">The average number of ratings a movie receives, across the entire site</param>
 	/// <returns>The player points calculated</returns>
-	public static double PlayerPoints(ICollection<Publication> publications, double averageRatingsPerMovie)
+	public static double PlayerPoints(IReadOnlyCollection<Publication> publications, double averageRatingsPerMovie)
 	{
 		if (!publications.Any())
 		{

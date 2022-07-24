@@ -9,7 +9,7 @@ namespace TASVideos.Core.Services;
 public interface IForumService
 {
 	Task<PostPositionDto?> GetPostPosition(int postId, bool seeRestricted);
-	Task<ICollection<ForumCategoryDisplayDto>> GetAllCategories();
+	Task<IReadOnlyCollection<ForumCategoryDisplayDto>> GetAllCategories();
 	void CacheLatestPost(int forumId, int topicId, LatestPost post);
 	void CacheNewPostActivity(int forumId, int topicId, DateTime createTimestamp);
 	void ClearLatestPostCache();
@@ -62,7 +62,7 @@ internal class ForumService : IForumService
 			post.TopicId ?? 0);
 	}
 
-	public async Task<ICollection<ForumCategoryDisplayDto>> GetAllCategories()
+	public async Task<IReadOnlyCollection<ForumCategoryDisplayDto>> GetAllCategories()
 	{
 		var latestPostMappings = await GetAllLatestPosts();
 		var dto = await _db.ForumCategories

@@ -9,7 +9,7 @@ public enum ClassDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IClassService
 {
-	ValueTask<ICollection<PublicationClass>> GetAll();
+	ValueTask<IReadOnlyCollection<PublicationClass>> GetAll();
 	ValueTask<PublicationClass?> GetById(int id);
 	Task<bool> InUse(int id);
 	Task<(int? id, ClassEditResult)> Add(PublicationClass publicationClass);
@@ -29,7 +29,7 @@ internal class ClassService : IClassService
 		_cache = cache;
 	}
 
-	public async ValueTask<ICollection<PublicationClass>> GetAll()
+	public async ValueTask<IReadOnlyCollection<PublicationClass>> GetAll()
 	{
 		if (_cache.TryGetValue(ClassesKey, out List<PublicationClass> classes))
 		{

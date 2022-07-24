@@ -44,7 +44,7 @@ public class WikiSyntaxErrorsModel : PageModel
 		}
 	}
 
-	public ICollection<Row> Rows { get; set; } = new List<Row>();
+	public IReadOnlyCollection<Row> Rows { get; set; } = new List<Row>();
 
 	public async Task<IActionResult> OnGet()
 	{

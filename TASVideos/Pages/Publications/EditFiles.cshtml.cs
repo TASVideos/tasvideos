@@ -34,7 +34,7 @@ public class EditFilesModel : BasePageModel
 	[BindProperty]
 	public string Title { get; set; } = "";
 
-	public ICollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
+	public IReadOnlyCollection<PublicationFile> Files { get; set; } = new List<PublicationFile>();
 
 	[Required]
 	[BindProperty]
