@@ -85,6 +85,7 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 
 	public int? TopicId { get; set; }
 	public int? GameId { get; set; }
+	public string? Warnings { get; set; }
 
 	internal int? SystemId { get; set; }
 	internal int? SystemFrameRateId { get; set; }

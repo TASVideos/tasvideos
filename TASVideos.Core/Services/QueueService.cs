@@ -404,6 +404,11 @@ internal class QueueService : IQueueService
 		submission.RerecordCount = parseResult.RerecordCount;
 		submission.MovieExtension = parseResult.FileExtension;
 		submission.System = system;
+		var warnings = parseResult.Warnings.ToList();
+		if (warnings.Any())
+		{
+			submission.Warnings = string.Join(",", warnings);
+		}
 
 		if (parseResult.FrameRateOverride.HasValue)
 		{

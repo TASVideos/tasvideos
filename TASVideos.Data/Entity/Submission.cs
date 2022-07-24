@@ -146,7 +146,7 @@ public class Submission : BaseEntity, ITimeable
 	public decimal ImportedTime { get; set; }
 
 	[StringLength(4096)]
-	public string? LegacyAlerts { get; set; }
+	public string? Warnings { get; set; }
 }
 
 public static class SubmissionExtensions

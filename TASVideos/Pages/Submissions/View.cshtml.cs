@@ -70,7 +70,8 @@ public class ViewModel : BasePageModel
 					.Select(sa => sa.Author!.UserName)
 					.ToList(),
 				AdditionalAuthors = s.AdditionalAuthors,
-				TopicId = s.TopicId
+				TopicId = s.TopicId,
+				Warnings = s.Warnings
 			})
 			.SingleOrDefaultAsync();
 

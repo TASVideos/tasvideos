@@ -168,9 +168,11 @@
 					</small>
 				</td>
 			</tr>
-			<tr condition="Model.Submission.GameId.HasValue">
-				<th>Game</th>
-				<td><game-link id="Model.Submission.GameId!.Value">@Model.Submission.GameName</game-link></td>
+			<tr condition="Model.Submission.GameId.HasValue || !string.IsNullOrWhiteSpace(Model.Submission.Warnings)">
+				<th condition="Model.Submission.GameId.HasValue">Game</th>
+				<td condition="Model.Submission.GameId.HasValue"><game-link id="Model.Submission.GameId!.Value">@Model.Submission.GameName</game-link></td>
+				<th condition="!string.IsNullOrWhiteSpace(Model.Submission.Warnings)">Warnings</th>
+				<td condition="!string.IsNullOrWhiteSpace(Model.Submission.Warnings)">@Model.Submission.Warnings</td>
 			</tr>
 		</table>
 		<small>
