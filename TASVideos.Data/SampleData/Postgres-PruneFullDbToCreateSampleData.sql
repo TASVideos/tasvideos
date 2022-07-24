@@ -13,8 +13,6 @@
 --		Run
 --		gzip sample-data.sql.gz and replace temp file
 
-DELETE FROM public.game_ram_address_domains;
-DELETE FROM public.game_ram_addresses;
 DELETE FROM public.ip_bans;
 DELETE FROM public.media_posts;
 DELETE FROM public.user_disallows;
@@ -57,18 +55,13 @@ CREATE TEMPORARY TABLE _submissions (id int primary key, wiki_content_id int);
 
 INSERT INTO _submissions
 	SELECT s.id, s.wiki_content_id
-	FROM public.submissions s
-	JOIN _publications p on s.id = p.submission_id;
+	FROM public.submissions s;
 
 UPDATE forum_topics
 	SET submission_id = null
 	FROM forum_topics f
 	LEFT JOIN _submissions isu on f.submission_id = isu.id
 	WHERE isu.id IS NULL;
-
-DELETE
-FROM public.submissions s
-WHERE s.id NOT IN (SELECT id from _submissions);
 
 DELETE
 FROM public.wiki_pages wp
