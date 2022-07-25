@@ -21,7 +21,7 @@ public class GamesResponse
 	public string? Abbreviation { get; init; } = "";
 
 	[Sortable]
-	public string YoutubeTags { get; init; } = "";
+	public string Aliases { get; init; } = "";
 
 	[Sortable]
 	public string? ScreenshotUrl { get; init; } = "";

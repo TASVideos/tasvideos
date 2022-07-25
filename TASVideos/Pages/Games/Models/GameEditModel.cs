@@ -16,8 +16,8 @@ public class GameEditModel
 
 	[Required]
 	[StringLength(250)]
-	[Display(Name = "Youtube Tags")]
-	public string YoutubeTags { get; set; } = "";
+	[Display(Name = "Aliases")]
+	public string Aliases { get; set; } = "";
 
 	[StringLength(250)]
 	[Display(Name = "Screenshot Url")]

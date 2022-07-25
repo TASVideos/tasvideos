@@ -24,7 +24,7 @@ public class Game : BaseEntity
 
 	[Required]
 	[StringLength(250)]
-	public string YoutubeTags { get; set; } = "";
+	public string Aliases { get; set; } = "";
 
 	[StringLength(250)]
 	public string? ScreenshotUrl { get; set; }

@@ -132,7 +132,7 @@ public class ListModel : BasePageModel
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
 				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
-				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.YoutubeTags + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
+				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,

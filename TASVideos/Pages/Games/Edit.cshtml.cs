@@ -52,7 +52,7 @@ public class EditModel : BasePageModel
 				{
 					DisplayName = g.DisplayName,
 					Abbreviation = g.Abbreviation,
-					YoutubeTags = g.YoutubeTags,
+					Aliases = g.Aliases,
 					ScreenshotUrl = g.ScreenshotUrl,
 					GameResourcesPage = g.GameResourcesPage,
 					Genres = g.GameGenres.Select(gg => gg.GenreId),
@@ -105,7 +105,7 @@ public class EditModel : BasePageModel
 
 			game.DisplayName = Game.DisplayName;
 			game.Abbreviation = Game.Abbreviation;
-			game.YoutubeTags = Game.YoutubeTags;
+			game.Aliases = Game.Aliases;
 			game.ScreenshotUrl = Game.ScreenshotUrl;
 			game.GameResourcesPage = Game.GameResourcesPage;
 			SetGameValues(game, Game);
@@ -122,7 +122,7 @@ public class EditModel : BasePageModel
 			{
 				DisplayName = Game.DisplayName,
 				Abbreviation = Game.Abbreviation,
-				YoutubeTags = Game.YoutubeTags,
+				Aliases = Game.Aliases,
 				ScreenshotUrl = Game.ScreenshotUrl,
 				GameResourcesPage = Game.GameResourcesPage
 			};

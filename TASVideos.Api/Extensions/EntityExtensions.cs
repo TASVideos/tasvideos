@@ -13,7 +13,7 @@ internal static class EntityExtensions
 			Id = q.Id,
 			DisplayName = q.DisplayName,
 			Abbreviation = q.Abbreviation,
-			YoutubeTags = q.YoutubeTags,
+			Aliases = q.Aliases,
 			ScreenshotUrl = q.ScreenshotUrl,
 			Versions = q.GameVersions.Select(gv => new GamesResponse.GameVersion
 			{
