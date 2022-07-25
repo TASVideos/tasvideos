@@ -193,7 +193,7 @@ public class CatalogModel : BasePageModel
 		submission.GenerateTitle();
 
 		var result = await ConcurrentSave(_db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
-		if (result)
+		if (result && !Catalog.MinorEdit)
 		{
 			await _publisher.SendSubmissionEdit(
 				$"{Id}S Catalog edited by {User.Name()}",

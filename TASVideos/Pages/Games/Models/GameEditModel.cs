@@ -32,4 +32,6 @@ public class GameEditModel
 
 	[Display(Name = "Groups")]
 	public IEnumerable<int> Groups { get; set; } = new List<int>();
+
+	public bool MinorEdit { get; set; }
 }

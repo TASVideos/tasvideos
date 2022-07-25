@@ -176,7 +176,7 @@ public class CatalogModel : BasePageModel
 		publication.GenerateTitle();
 
 		var result = await ConcurrentSave(_db, $"{Id}M catalog updated", $"Unable to save {Id}M catalog");
-		if (result)
+		if (result && !Catalog.MinorEdit)
 		{
 			await _publisher.SendPublicationEdit(
 				$"{Id}M Catalog edited by {User.Name()}",

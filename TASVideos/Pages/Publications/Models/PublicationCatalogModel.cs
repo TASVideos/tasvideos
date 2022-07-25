@@ -21,4 +21,6 @@ public class PublicationCatalogModel
 	[Required]
 	[Display(Name = "System Framerate")]
 	public int SystemFrameRateId { get; set; }
+
+	public bool MinorEdit { get; set; }
 }

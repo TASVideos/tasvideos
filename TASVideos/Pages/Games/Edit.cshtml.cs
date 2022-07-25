@@ -111,7 +111,7 @@ public class EditModel : BasePageModel
 			SetGameValues(game, Game);
 			var saveMessage = $"Game {game.DisplayName} updated";
 			var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to update Game {Id}");
-			if (saveResult)
+			if (saveResult && !Game.MinorEdit)
 			{
 				await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{Id}G");
 			}
@@ -130,7 +130,7 @@ public class EditModel : BasePageModel
 			SetGameValues(game, Game);
 			var saveMessage = $"Game {game.DisplayName} created";
 			var saveResult = await ConcurrentSave(_db, saveMessage, "Unable to create game");
-			if (saveResult)
+			if (saveResult && !Game.MinorEdit)
 			{
 				await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{game.Id}G");
 			}
