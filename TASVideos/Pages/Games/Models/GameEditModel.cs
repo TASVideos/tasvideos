@@ -14,10 +14,9 @@ public class GameEditModel
 	[Display(Name = "Abbreviation")]
 	public string? Abbreviation { get; set; }
 
-	[Required]
 	[StringLength(250)]
 	[Display(Name = "Aliases")]
-	public string Aliases { get; set; } = "";
+	public string? Aliases { get; set; }
 
 	[StringLength(250)]
 	[Display(Name = "Screenshot Url")]

@@ -22,9 +22,8 @@ public class Game : BaseEntity
 	[StringLength(24)]
 	public string? Abbreviation { get; set; }
 
-	[Required]
 	[StringLength(250)]
-	public string Aliases { get; set; } = "";
+	public string? Aliases { get; set; }
 
 	[StringLength(250)]
 	public string? ScreenshotUrl { get; set; }
