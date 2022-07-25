@@ -19,7 +19,7 @@ public class Game : BaseEntity
 	[StringLength(100)]
 	public string DisplayName { get; set; } = "";
 
-	[StringLength(8)]
+	[StringLength(24)]
 	public string? Abbreviation { get; set; }
 
 	[Required]
