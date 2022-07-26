@@ -9,24 +9,31 @@
 		.GroupBy(m => m.Group);
 }
 
-<h4>@ViewData["Title"]</h4>
 <p>These are a list of site permissions that are allocated to site roles</p>
-@foreach (var entry in toc)
-{
-	<ul>
-		<li>
-			@entry.Key
+
+<div class="card mb-2">
+	<cardheader>
+		<h4>@ViewData["Title"]</h4>
+	</cardheader>
+	<cardbody>
+		@foreach (var entry in toc)
+		{
 			<ul>
-				@foreach (var item in entry)
-				{
-					<li>
-						<a href="#@item.Name">@item.Name</a>
-					</li>
-				}
+				<li>
+					@entry.Key
+					<ul>
+						@foreach (var item in entry)
+						{
+							<li>
+								<a href="#@item.Name">@item.Name</a>
+							</li>
+						}
+					</ul>
+				</li>
 			</ul>
-		</li>
-	</ul>
-}
+		}
+	</cardbody>
+</div>
 
 <table class="table table-bordered table-striped">
 	<tr>
