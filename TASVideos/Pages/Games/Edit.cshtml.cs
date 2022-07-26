@@ -86,9 +86,18 @@ public class EditModel : BasePageModel
 			if (page is null)
 			{
 				ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.GameResourcesPage)}", $"Page {Game.GameResourcesPage} not found");
-				await Initialize();
-				return Page();
 			}
+		}
+
+		if (await _db.Games.AnyAsync(g => g.Abbreviation == Game.Abbreviation))
+		{
+			ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.Abbreviation)}", $"Abbreviation {Game.Abbreviation} already exists");
+		}
+
+		if (!ModelState.IsValid)
+		{
+			await Initialize();
+			return Page();
 		}
 
 		Game? game;
