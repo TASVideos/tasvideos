@@ -5,14 +5,22 @@
 	var x = Model.Roles.OrderBy(m => m.Permissions.Count()).Select(r => r.Name).GroupBy(m => m);
 }
 
-<h4>@ViewData["Title"]</h4>
 <p>These are a list of the site roles</p>
 <hr />
 <p condition="User.IsLoggedIn()">See the <a asp-page="/Permissions/Index">Permission List</a> for details on individual permissions</p>
-@foreach (var item in Model.Roles.OrderBy(m => m.Permissions.Count()).Select(r => r.Name))
-{
-	<li><a href="#@item">@item</a></li>
-}
+
+<div class="card mb-2">
+	<cardheader>
+		<h4>@ViewData["Title"]</h4>
+	</cardheader>
+	<cardbody>
+		@foreach (var item in Model.Roles.OrderBy(m => m.Permissions.Count()).Select(r => r.Name))
+		{
+			<li><a href="#@item">@item</a></li>
+		}
+	</cardbody>
+</div>
+
 @foreach (var role in Model.Roles.OrderBy(m => m.Permissions.Count()))
 {
 	<partial name="_Role", model="role" />
