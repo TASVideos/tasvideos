@@ -46,7 +46,7 @@ public class WikiLink : ViewComponent
 			var title = await GetPublicationTitle(id.Value);
 			if (!string.IsNullOrWhiteSpace(title))
 			{
-				model.DisplayText = $"[{id.Value}]" + title;
+				model.DisplayText = $"[{id.Value}] " + title;
 			}
 		}
 

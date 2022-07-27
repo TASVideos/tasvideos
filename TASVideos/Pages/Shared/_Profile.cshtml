@@ -4,24 +4,32 @@
 }
 <row>
 	<div class="col-md-6">
-		<card>
+		<card class="mb-2">
 			<cardheader>
-				<h4>
-					<a condition="User.IsLoggedIn() && User.Name() != Model.UserName"
-					   asp-page="/Messages/Create"
-					   asp-route-defaultToUser="@Model.UserName"
-					   class="btn btn-secondary btn-sm">
-						<i class="fa fa-envelope"></i> PM
-					</a>
-					<a permission="EditUsers"
-					   asp-page="/Users/Edit"
-					   asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"
-					   asp-route-id="@Model.Id"
-					   class="btn btn-primary btn-sm border border-warning">
-						<i class="fa fa-pencil"></i> Edit
-					</a>
-					@Model.UserName
-				</h4>
+				<row>
+					<div class="col">
+						<h4>
+							@Model.UserName
+						</h4>
+					</div>
+					<div class="col">
+						<div class="float-end">
+							<a condition="User.IsLoggedIn() && User.Name() != Model.UserName"
+							asp-page="/Messages/Create"
+							asp-route-defaultToUser="@Model.UserName"
+							class="btn btn-secondary btn-sm">
+								<i class="fa fa-envelope"></i> PM
+							</a>
+							<a permission="EditUsers"
+							asp-page="/Users/Edit"
+							asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"
+							asp-route-id="@Model.Id"
+							class="btn btn-primary btn-sm border border-warning">
+								<i class="fa fa-pencil"></i> Edit
+							</a>
+						</div>
+					</div>
+				</row>
 			</cardheader>
 			<cardbody>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" class="float-end" />
@@ -99,7 +107,7 @@
 				<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
 			</div>
 		</card>
-		<card>
+		<card class="mb-2">
 			<cardheader><h4>Roles</h4></cardheader>
 			<cardbody>
 				@if (Model.Roles.Any())
@@ -116,19 +124,19 @@
 				}
 			</cardbody>
 		</card>
-		<card>
+		<card class="mb-2">
 			<cardheader condition="Model.Judgments.TotalJudgments > 0"><h4>Judgments</h4></cardheader>
 			<cardbody>
 				<p>Total movies judged: <a asp-page="/Activity/Judges" asp-route-username="@Model.UserName">@Model.Judgments.TotalJudgments</a></p>
 			</cardbody>
 		</card>
-		<card>
+		<card class="mb-2">
 			<cardheader condition="Model.Publishing.TotalPublished > 0"><h4>Publishing</h4></cardheader>
 			<cardbody>
 				<p>Total movies published: <a asp-page="/Activity/Publishers" asp-route-username="@Model.UserName">@Model.Publishing.TotalPublished</a></p>
 			</cardbody>
 		</card>
-		<card condition="Model.WikiEdits.TotalEdits > 0">
+		<card class="mb-2" condition="Model.WikiEdits.TotalEdits > 0">
 			<cardheader><h4>Wiki</h4></cardheader>
 			<cardbody>
 				<div>
@@ -146,7 +154,7 @@
 		</card>
 	</div>
 	<div class="col-md-6">
-		<card class="text-start text-md-end">
+		<card class="text-start text-md-end mb-2">
 			<cardheader><h4>Publications</h4></cardheader>
 			<cardbody>
 				<div condition="!Model.AnyPublications" class="card-text">
@@ -167,7 +175,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-start text-md-end">
+		<card class="text-start text-md-end mb-2">
 			<cardheader><h4>Submissions</h4></cardheader>
 			<cardbody>
 				<div condition="Model.SubmissionCount == 0" class="card-text">
@@ -197,7 +205,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-start text-md-end">
+		<card class="text-start text-md-end mb-2">
 			<cardheader><h4>Ratings</h4></cardheader>
 			<cardbody>
 				<a class="btn btn-warning btn-sm" a asp-page="/Users/Ratings" asp-route-userName="@Model.UserName">See Ratings</a>
@@ -215,7 +223,7 @@
 				</div>
 			</cardbody>
 		</card>
-		<card class="text-start text-md-end" condition="Model.UserFiles.Total > 0">
+		<card class="text-start text-md-end mb-2" condition="Model.UserFiles.Total > 0">
 			<cardheader>
 				<h4>User Files</h4>
 			</cardheader>
