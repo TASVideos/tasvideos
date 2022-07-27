@@ -3,24 +3,17 @@
 @model PublishersModel
 
 @{
-	var counts = new Dictionary<string, int>();
 	var total = Model.Publications.Count();
-	var classes = Model.Publications
-		.Select(p => p.Class)
-		.Distinct();
-	foreach (var c in classes)
-	{
-		counts.Add(c, Model.Publications
-			.Select(p => p)
-			.Where(p => p.Class == c)
-			.Count());
-	}
+
+	var classCounts = Model.Publications
+		.GroupBy(p => p.Class)
+		.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Count());
 }
 
 <p>Movies published by <profile-link username="@Model.UserName"></profile-link></p>
 <hr />
 <label>Total: @total</label>
-@foreach (var c in counts)
+@foreach (var c in classCounts)
 {
 	<div>@c.Key: @c.Value</div>
 }
