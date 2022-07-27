@@ -37,11 +37,11 @@ public class RewireModel : BasePageModel
 
 	public class RewireEntry
 	{
-		public Entry? Game;
-		public ICollection<EntryWithVersion>? Publications;
-		public ICollection<EntryWithVersion>? Submissions;
-		public ICollection<Entry>? Versions;
-		public ICollection<EntryLong>? Userfiles;
+		public Entry? Game { get; set; }
+		public ICollection<EntryWithVersion>? Publications { get; set; }
+		public ICollection<EntryWithVersion>? Submissions { get; set; }
+		public ICollection<Entry>? Versions { get; set; }
+		public ICollection<EntryLong>? Userfiles { get; set; }
 	}
 
 	public record Entry(int Id, string Title);
