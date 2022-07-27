@@ -2,8 +2,23 @@
 @{ ViewData["Title"] = $"Publisher Activity for {Model.UserName}"; }
 @model PublishersModel
 
+@{
+	var total = Model.Publications.Count();
+
+	var classCounts = Model.Publications
+		.GroupBy(p => p.Class)
+		.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Count());
+}
+
 <p>Movies published by <profile-link username="@Model.UserName"></profile-link></p>
 <hr />
+<label>Total: @total</label>
+@foreach (var c in classCounts)
+{
+	<div>@c.Key: @c.Value</div>
+}
+<hr />
+
 <div class="table-container">
 	<table class="table table-striped">
 		<tr>
