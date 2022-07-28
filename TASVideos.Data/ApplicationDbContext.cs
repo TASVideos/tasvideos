@@ -106,12 +106,19 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 								.Where(e => e.State == EntityState.Added)
 								.ToArray();
 
-		this.EnsureAutoHistory();
+		this.EnsureAutoHistory(() => new CustomAutoHistory()
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		});
 		var result = base.SaveChanges(acceptAllChangesOnSuccess);
 
 		// after "SaveChanges" added enties now have gotten valid ids (if it was necessary)
 		// and the history for them can be ensured and be saved with another "SaveChanges"
-		this.EnsureAddedHistory(addedEntities);
+		this.EnsureAddedHistory(
+			() => new CustomAutoHistory()
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		}, addedEntities);
 		result += base.SaveChanges(acceptAllChangesOnSuccess);
 
 		ChangeTracker.AutoDetectChangesEnabled = true;
@@ -132,13 +139,21 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 								.Where(e => e.State == EntityState.Added)
 								.ToArray();
 
-		this.EnsureAutoHistory();
+		this.EnsureAutoHistory(() => new CustomAutoHistory()
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		});
 		var result = await base.SaveChangesAsync(cancellationToken);
 
 		// after "SaveChanges" added enties now have gotten valid ids (if it was necessary)
 		// and the history for them can be ensured and be saved with another "SaveChanges"
-		this.EnsureAddedHistory(addedEntities);
+		this.EnsureAddedHistory(
+			() => new CustomAutoHistory()
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		}, addedEntities);
 		result += await base.SaveChangesAsync(CancellationToken.None);
+
 		return result;
 	}
 
@@ -458,7 +473,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			entity.HasIndex(e => e.FileExtension).IsUnique();
 		});
 
-		builder.EnableAutoHistory();
+		builder.EnableAutoHistory<CustomAutoHistory>(o =>
+		{
+			o.LimitChangedLength = false;
+		});
 	}
 
 	private void PerformTrackingUpdates()

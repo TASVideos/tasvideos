@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using TASVideos.Data.Entity;
 
-namespace TASVideos.Core.Extensions;
+namespace TASVideos;
 
 public static class ClaimsExtensions
 {
