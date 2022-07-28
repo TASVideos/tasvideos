@@ -27,6 +27,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		_httpContext = httpContextAccessor;
 	}
 
+	public DbSet<AutoHistory> AutoHistory { get; set; } = null!;
+
 	public DbSet<RolePermission> RolePermission { get; set; } = null!;
 	public DbSet<WikiPage> WikiPages { get; set; } = null!;
 	public DbSet<WikiPageReferral> WikiReferrals { get; set; } = null!;
@@ -94,16 +96,50 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		PerformTrackingUpdates();
 
 		ChangeTracker.AutoDetectChangesEnabled = false;
+
+		// remember added entries,
+		// before EF Core is assigning valid Ids (it does on save changes,
+		// when ids equal zero) and setting their state to
+		// Unchanged (it does on every save changes)
+		var addedEntities = ChangeTracker
+								.Entries()
+								.Where(e => e.State == EntityState.Added)
+								.ToArray();
+
+		this.EnsureAutoHistory();
 		var result = base.SaveChanges(acceptAllChangesOnSuccess);
+
+		// after "SaveChanges" added enties now have gotten valid ids (if it was necessary)
+		// and the history for them can be ensured and be saved with another "SaveChanges"
+		this.EnsureAddedHistory(addedEntities);
+		result += base.SaveChanges(acceptAllChangesOnSuccess);
+
 		ChangeTracker.AutoDetectChangesEnabled = true;
 
 		return result;
 	}
 
-	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		PerformTrackingUpdates();
-		return base.SaveChangesAsync(cancellationToken);
+
+		// remember added entries,
+		// before EF Core is assigning valid Ids (it does on save changes,
+		// when ids equal zero) and setting their state to
+		// Unchanged (it does on every save changes)
+		var addedEntities = ChangeTracker
+								.Entries()
+								.Where(e => e.State == EntityState.Added)
+								.ToArray();
+
+		this.EnsureAutoHistory();
+		var result = await base.SaveChangesAsync(cancellationToken);
+
+		// after "SaveChanges" added enties now have gotten valid ids (if it was necessary)
+		// and the history for them can be ensured and be saved with another "SaveChanges"
+		this.EnsureAddedHistory(addedEntities);
+		result += await base.SaveChangesAsync(CancellationToken.None);
+		return result;
 	}
 
 	/// <summary>
@@ -421,6 +457,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		{
 			entity.HasIndex(e => e.FileExtension).IsUnique();
 		});
+
+		builder.EnableAutoHistory();
 	}
 
 	private void PerformTrackingUpdates()
