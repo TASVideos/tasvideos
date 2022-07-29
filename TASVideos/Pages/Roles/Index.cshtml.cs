@@ -25,8 +25,9 @@ public class IndexModel : BasePageModel
 			return BasePageRedirect("/Roles/List");
 		}
 
+		role = role.Replace(" ", "");
 		var roleModel = await _db.Roles
-			.Where(r => r.Name == role)
+			.Where(r => r.Name.Replace(" ", "") == role)
 			.ToRoleDisplayModel()
 			.SingleOrDefaultAsync();
 
