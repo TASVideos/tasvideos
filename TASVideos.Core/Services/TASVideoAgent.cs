@@ -18,16 +18,11 @@ internal class TASVideoAgent : ITASVideoAgent
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IForumService _forumService;
-	private readonly IWikiPages _wikiPages;
 
-	public TASVideoAgent(
-		ApplicationDbContext db,
-		IForumService forumService,
-		IWikiPages wikiPages)
+	public TASVideoAgent(ApplicationDbContext db, IForumService forumService)
 	{
 		_db = db;
 		_forumService = forumService;
-		_wikiPages = wikiPages;
 	}
 
 	public async Task<int> PostSubmissionTopic(int submissionId, string title)
@@ -166,18 +161,18 @@ internal class TASVideoAgent : ITASVideoAgent
 			return;
 		}
 
-		var welcomePage = await _wikiPages.Page("System/TVAMessages/NewUserWelcome");
-		if (welcomePage is null)
+		var welcomePost = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == 515865);
+		if (welcomePost is null)
 		{
 			return;
 		}
-
+		// 515865
 		_db.PrivateMessages.Add(new PrivateMessage
 		{
 			FromUserId = SiteGlobalConstants.TASVideoAgentId,
 			ToUserId = user.Id,
 			Subject = "Welcome to TASVideos",
-			Text = welcomePage.Markup
+			Text = welcomePost.Text.Replace("[[username]]", user.UserName)
 		});
 		await _db.SaveChangesAsync();
 	}
