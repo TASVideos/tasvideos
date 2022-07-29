@@ -1,0 +1,59 @@
+﻿@model string
+<div class="btn-group mt-1 mb-1">
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="__,__" data-key="b"><strong>b</strong></button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="'',''" data-key="i"><i>i</i></button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="---,---" data-key="k"><s>s</s></button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="((,))"><small>sm</small></button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="{{,}}">tt</button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="----,">ruler</button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="[user:@User.Name()]: ," data-akey="u">user</button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="[module:youtube|v=,]">youtube</button>
+	<button type="button" class="btn bg-info text-dark btn-sm border-dark" tabindex="-1" data-fmt="[module:frames|amount=,]">frames</button>
+</div>
+<script>
+	document.addEventListener("DOMContentLoaded", function() {
+		const buttons = document.querySelectorAll("button[data-fmt]");
+		const textArea = document.getElementById('@Model');
+
+		function applyFormatting(s) {
+			const ss = s.split(",");
+			let val = textArea.value;
+			const i = textArea.selectionStart;
+			const j = textArea.selectionEnd;
+			if (val.slice(i - ss[0].length, i) === ss[0] && val.slice(j, j + ss[1].length) === ss[1]) {
+				val = val.slice(0, i - ss[0].length) + val.slice(i, j) + val.slice(j + ss[1].length);
+				textArea.value = val;
+				textArea.selectionStart = i - ss[0].length;
+				textArea.selectionEnd = j - ss[0].length;
+			} else {
+				val = val.slice(0, i) + ss[0] + val.slice(i, j) + ss[1] + val.slice(j);
+				textArea.value = val;
+				textArea.selectionStart = i + ss[0].length;
+				textArea.selectionEnd = j + ss[0].length;
+			}
+		}
+
+		for (let i = 0; i < buttons.length; i++) {
+			buttons[i].addEventListener("click", function() {
+				applyFormatting(this.getAttribute("data-fmt"));
+				textArea.focus();
+			});
+		}
+
+		textArea.addEventListener("keydown", function listener(ev) {
+			let button;
+			if (ev.altKey) {
+				button = document.querySelector(`button[data-fmt][data-akey='${ev.key}']`);
+			} else if (ev.ctrlKey && ev.shiftKey) {
+				button = document.querySelector(`button[data-fmt][data-skey='${ev.key}']`);
+			} else if (ev.ctrlKey) {
+				button = document.querySelector(`button[data-fmt][data-key='${ev.key}']`);
+			}
+
+			if (button) {
+				ev.preventDefault();
+				applyFormatting(button.getAttribute("data-fmt"));
+			}
+		});
+	});
+</script>

@@ -228,5 +228,8 @@
 		<Content Update="Pages\Users\Ratings.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
+		<Content Update="Pages\Wiki\_WikiEditHelper.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
 	</ItemGroup>
 </Project>

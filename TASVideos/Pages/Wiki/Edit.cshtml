@@ -7,6 +7,9 @@
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="POST">
 	<input type="hidden" asp-for="PageToEdit.EditStart" />
+	<fullrow class="mt-3">
+		<partial name="_WikiEditHelper" model="@("PageToEdit_Markup")" />
+	</fullrow>
 	<form-group>
 		<textarea asp-for="PageToEdit.Markup" class="form-control wiki-edit" rows="20"></textarea>
 		<span asp-validation-for="PageToEdit.Markup" class="text-danger"></span>
