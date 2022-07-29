@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Services;
@@ -9,17 +10,24 @@ public interface ITASVideoAgent
 	Task<int> PostSubmissionTopic(int submissionId, string postTitle);
 	Task PostSubmissionPublished(int submissionId, int publicationId);
 	Task PostSubmissionUnpublished(int submissionId);
+
+	Task SendWelcomeMessage(int userId);
 }
 
 internal class TASVideoAgent : ITASVideoAgent
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IForumService _forumService;
+	private readonly IWikiPages _wikiPages;
 
-	public TASVideoAgent(ApplicationDbContext db, IForumService forumService)
+	public TASVideoAgent(
+		ApplicationDbContext db,
+		IForumService forumService,
+		IWikiPages wikiPages)
 	{
 		_db = db;
 		_forumService = forumService;
+		_wikiPages = wikiPages;
 	}
 
 	public async Task<int> PostSubmissionTopic(int submissionId, string title)
@@ -148,5 +156,29 @@ internal class TASVideoAgent : ITASVideoAgent
 			});
 			await _db.SaveChangesAsync();
 		}
+	}
+
+	public async Task SendWelcomeMessage(int userId)
+	{
+		var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
+		if (user is null)
+		{
+			return;
+		}
+
+		var welcomePage = await _wikiPages.Page("System/TVAMessages/NewUserWelcome");
+		if (welcomePage is null)
+		{
+			return;
+		}
+
+		_db.PrivateMessages.Add(new PrivateMessage
+		{
+			FromUserId = SiteGlobalConstants.TASVideoAgentId,
+			ToUserId = user.Id,
+			Subject = "Welcome to TASVideos",
+			Text = welcomePage.Markup
+		});
+		await _db.SaveChangesAsync();
 	}
 }
