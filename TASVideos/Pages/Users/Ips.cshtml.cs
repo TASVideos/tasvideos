@@ -19,7 +19,9 @@ public class IpsModel : PageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public IReadOnlyCollection<string> Ips { get; set; } = new List<string>();
+	public IReadOnlyCollection<IpEntry> Ips { get; set; } = new List<IpEntry>();
+
+	public record IpEntry(string IpAddress, DateTime UsedOn);
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -32,21 +34,21 @@ public class IpsModel : PageModel
 		var postIps = await _db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
 			.Where(p => p.IpAddress != null)
-			.Select(p => p.IpAddress ?? "")
+			.Select(p => new IpEntry(p.IpAddress ?? "", p.LastUpdateTimestamp))
 			.Distinct()
 			.ToListAsync();
 
 		var pmIps = await _db.PrivateMessages
 			.Where(p => p.FromUserId == user.Id)
 			.Where(p => p.IpAddress != null)
-			.Select(p => p.IpAddress ?? "")
+			.Select(p => new IpEntry(p.IpAddress ?? "", p.LastUpdateTimestamp))
 			.Distinct()
 			.ToListAsync();
 
 		var voteIps = await _db.ForumPollOptionVotes
 			.Where(v => v.UserId == user.Id)
 			.Where(p => p.IpAddress != null)
-			.Select(p => p.IpAddress ?? "")
+			.Select(p => new IpEntry(p.IpAddress ?? "", p.CreateTimestamp))
 			.Distinct()
 			.ToListAsync();
 
