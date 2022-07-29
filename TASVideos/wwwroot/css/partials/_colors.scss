@@ -23,7 +23,7 @@ $diff-insert: #9e9;
 
 //custom banner and site background colors
 $banner: #110931;
-$tasvideos-bg: $bs-gray-200;
+$tasvideos-bg: #edf1f4;
 $tasvideos-bg-gradient: #c2d4fc;
 $tasvideos-bg-dark: #1c1d2b;
 $tasvideos-bg-gradient-dark: #311a59;
@@ -49,6 +49,10 @@ $card-primary: #acd;
 $card-primary-dark: #214354;
 $card-secondary: #cde;
 $card-secondary-dark: #112132;
+$card-header: $bs-gray-300;
+$card-body: $bs-gray-200;
+$card-header-dark: $bs-dark;
+$card-body-dark: $bs-table-striped-bg-dark;
 $card-link-hover-rgb: 9, 30, 66;
 $text-muted-dark: #818a92;
 $module-error-color: #f8d7da;

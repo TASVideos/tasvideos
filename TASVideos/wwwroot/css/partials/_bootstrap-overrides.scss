@@ -143,7 +143,11 @@ h4 {
 }
 
 .card:not(.bg-info):not(.bg-danger):not(.bg-success):not(.bg-warning):not(.bg-light):not(.bg-dark) .card-header {
-	background-color: var(--bs-gray-200);
+	background-color: var(--cardheader);
+}
+
+.card:not(.bg-info):not(.bg-danger):not(.bg-success):not(.bg-warning):not(.bg-light):not(.bg-dark) .card-body {
+	background-color: var(--cardbody);
 }
 
 .modal-content {

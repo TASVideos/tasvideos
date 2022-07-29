@@ -4,6 +4,8 @@
 :root {
 	--cardprimary: #{$card-primary};
 	--cardsecondary: #{$card-secondary};
+	--cardheader: #{$card-header};
+	--cardbody: #{$card-body};
 	--tasvideos-bg: #{$tasvideos-bg};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
 	--tab-content-bg: #{$bs-white};
@@ -128,7 +130,7 @@ article.wiki, .postbody {
 
 .forum-signature {
 	font-style: italic;
-	background-color: var(--bs-gray-200);
+	background-color: var(--cardheader);
 	border-top: solid 1px var(--bs-gray-400);
 	padding: .5rem;
 }
@@ -173,7 +175,7 @@ article.wiki, .postbody {
 figure {
 	margin: 0.75rem;
 	padding: .25rem;
-	background-color: var(--bs-gray-200);
+	background-color: var(--cardheader);
 	border-radius: 0.25rem;
 	border: 1px dashed var(--bs-gray-700);
 }
@@ -233,7 +235,7 @@ figure {
 }
 
 .topic-header {
-	background-color: var(--bs-gray-200);
+	background-color: var(--cardheader);
 }
 
 /* Firefox fix for file inputs */
@@ -306,6 +308,10 @@ figure {
 	transform: translate(0);
 }
 
+.card {
+	border: 1px solid var(--border-color);
+}
+
 .card-header {
 	h1, h2, h3, h4, h5, h6 {
 		margin-bottom: 0;
@@ -337,10 +343,6 @@ figure {
 	border: 1px solid var(--border-color);
 	border-radius: 5px;
 	margin-top: 15px;
-
-	&:last-child {
-		border: none;
-	}
 
 	.card {
 		border: none;
