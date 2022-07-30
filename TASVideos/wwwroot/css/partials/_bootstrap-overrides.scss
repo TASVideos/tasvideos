@@ -195,3 +195,13 @@ h4 {
 		flex-grow: 1;
 	}
 }
+
+.dropdown-menu {
+	color: $bs-gray-800;
+	background-color: $bs-gray-100;
+	border-color: rgba(var(--bs-secondary-rgb), .15);
+}
+
+.dropdown-item:hover {
+	background-color: rgba(var(--bs-secondary-rgb), .06);
+}

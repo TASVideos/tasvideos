@@ -75,11 +75,17 @@ a, .nav-link {
 .dropdown-menu {
 	color: $bs-gray-300;
 	background-color: $bs-gray-800;
-	border-color: rgba(0, 0, 0, .15);
+	border-color: rgba(var(--bs-secondary-rgb), .2);
 }
 
 .dropdown-item {
 	color: $bs-gray-300;
+	background-color: $bs-gray-800;
+
+	&:hover {
+		color: $bs-gray-300;
+		background-color: rgba(var(--bs-secondary-rgb), .2);
+	}
 }
 
 .site-icon {
