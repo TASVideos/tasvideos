@@ -161,12 +161,12 @@ internal class TASVideoAgent : ITASVideoAgent
 			return;
 		}
 
-		var welcomePost = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == 515865);
+		var welcomePost = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == SiteGlobalConstants.WelcomeToTasvideosPostId);
 		if (welcomePost is null)
 		{
 			return;
 		}
-		// 515865
+
 		_db.PrivateMessages.Add(new PrivateMessage
 		{
 			FromUserId = SiteGlobalConstants.TASVideoAgentId,
