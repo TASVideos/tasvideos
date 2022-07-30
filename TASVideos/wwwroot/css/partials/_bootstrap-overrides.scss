@@ -167,12 +167,18 @@ h4 {
 }
 
 .nav-tabs {
-	border-color: var(--bs-light);
+	border-bottom: 1px solid var(--border-color);
 
 	.nav-item.show .nav-link, .nav-link.active {
 		color: var(--bs-dark);
-		background-color: var(--bs-white);
-		border-color: var(--bs-light) var(--bs-light) var(--bs-white);
+		background-color: var(--tab-content-bg);
+		border: 1px solid var(--border-color);
+		border-color: var(--border-color) var(--border-color) var(--tab-content-bg);
+	}
+
+	.nav-link:not(.active) {
+		background-color: var(--cardbody);
+		border: 1px solid var(--border-color);
 	}
 }
 

@@ -8,7 +8,7 @@
 	--cardbody: #{$card-body};
 	--tasvideos-bg: #{$tasvideos-bg};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
-	--tab-content-bg: #{$bs-white};
+	--tab-content-bg: #{$bs-gray-100};
 }
 
 body {
@@ -224,6 +224,9 @@ figure {
 
 .tab-content {
 	background-color: var(--tab-content-bg);
+    border-left: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .tab-pane {

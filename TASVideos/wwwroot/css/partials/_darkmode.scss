@@ -35,6 +35,14 @@ a, .nav-link {
 	color: #{$primary-dark};
 }
 
+.nav-tabs {
+	.nav-link:not(.active) {
+		background-color: var(--cardheader);
+		border: 1px solid var(--border-color);
+		border-color: var(--tab-content-bg) var(--tab-content-bg) var(--border-color)
+	}
+}
+
 .table {
 	color: $bs-gray-100;
 	border-color: $bs-gray-700;
