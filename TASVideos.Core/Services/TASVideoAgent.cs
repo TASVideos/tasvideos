@@ -172,7 +172,8 @@ internal class TASVideoAgent : ITASVideoAgent
 			FromUserId = SiteGlobalConstants.TASVideoAgentId,
 			ToUserId = user.Id,
 			Subject = "Welcome to TASVideos",
-			Text = welcomePost.Text.Replace("[[username]]", user.UserName)
+			Text = welcomePost.Text.Replace("[[username]]", user.UserName),
+			EnableBbCode = true
 		});
 		await _db.SaveChangesAsync();
 	}
