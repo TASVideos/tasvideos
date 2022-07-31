@@ -12,17 +12,20 @@ public class ConfirmEmailModel : BasePageModel
 	private readonly SignInManager _signInManager;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
+	private readonly ITASVideoAgent _tasVideoAgent;
 
 	public ConfirmEmailModel(
 		UserManager userManager,
 		SignInManager signInManager,
 		ExternalMediaPublisher publisher,
-		IUserMaintenanceLogger userMaintenanceLogger)
+		IUserMaintenanceLogger userMaintenanceLogger,
+		ITASVideoAgent tasVideoAgent)
 	{
 		_userManager = userManager;
 		_signInManager = signInManager;
 		_publisher = publisher;
 		_userMaintenanceLogger = userMaintenanceLogger;
+		_tasVideoAgent = tasVideoAgent;
 	}
 
 	public async Task<IActionResult> OnGet(string? userId, string? code)
@@ -58,6 +61,7 @@ public class ConfirmEmailModel : BasePageModel
 			"",
 			$"Users/Profile/{user.UserName}");
 		await _userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
+		await _tasVideoAgent.SendWelcomeMessage(user.Id);
 		return Page();
 	}
 }

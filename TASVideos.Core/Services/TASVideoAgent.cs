@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Services;
@@ -9,6 +10,8 @@ public interface ITASVideoAgent
 	Task<int> PostSubmissionTopic(int submissionId, string postTitle);
 	Task PostSubmissionPublished(int submissionId, int publicationId);
 	Task PostSubmissionUnpublished(int submissionId);
+
+	Task SendWelcomeMessage(int userId);
 }
 
 internal class TASVideoAgent : ITASVideoAgent
@@ -148,5 +151,30 @@ internal class TASVideoAgent : ITASVideoAgent
 			});
 			await _db.SaveChangesAsync();
 		}
+	}
+
+	public async Task SendWelcomeMessage(int userId)
+	{
+		var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
+		if (user is null)
+		{
+			return;
+		}
+
+		var welcomePost = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == SiteGlobalConstants.WelcomeToTasvideosPostId);
+		if (welcomePost is null)
+		{
+			return;
+		}
+
+		_db.PrivateMessages.Add(new PrivateMessage
+		{
+			FromUserId = SiteGlobalConstants.TASVideoAgentId,
+			ToUserId = user.Id,
+			Subject = "Welcome to TASVideos",
+			Text = welcomePost.Text.Replace("[[username]]", user.UserName),
+			EnableBbCode = true
+		});
+		await _db.SaveChangesAsync();
 	}
 }

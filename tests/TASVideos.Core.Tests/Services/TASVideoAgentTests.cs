@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Tests.Services;
@@ -166,5 +167,49 @@ public class TASVideoAgentTests
 		Assert.AreEqual(SiteGlobalConstants.UnpublishPost, actual.Text);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsTrue(actual.EnableBbCode);
+	}
+
+	[TestMethod]
+	public async Task SendWelcomeMessage_UserNotFound_NoMessageSent()
+	{
+		const int notExists = int.MaxValue;
+		await _tasVideoAgent.SendWelcomeMessage(notExists);
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendWelcomeMessage_PostNotFound_NoMessageSent()
+	{
+		var entry = _db.Users.Add(new User());
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendWelcomeMessage(entry.Entity.Id);
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendWelcomeMessage_Success()
+	{
+		const string userName = "TestUser";
+		const string template = "Welcome [[username]]";
+		var userEntry = _db.Users.Add(new User { UserName = userName });
+		_db.ForumPosts.Add(new ForumPost
+		{
+			Id = SiteGlobalConstants.WelcomeToTasvideosPostId,
+			Text = template
+		});
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendWelcomeMessage(userEntry.Entity.Id);
+
+		Assert.AreEqual(1, _db.PrivateMessages.Count());
+		var message = _db.PrivateMessages.Single();
+		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, message.FromUserId);
+		Assert.AreEqual(userEntry.Entity.Id, message.ToUserId);
+		Assert.IsTrue(message.EnableBbCode);
+		Assert.IsFalse(message.EnableHtml);
+		Assert.IsTrue(message.Text.Contains(userEntry.Entity.UserName));
 	}
 }
