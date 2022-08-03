@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity.Game;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TASVideos.Data.Entity.Game;
 
 public enum VersionTypes
 {
@@ -8,6 +10,7 @@ public enum VersionTypes
 	Bad
 }
 
+[ExcludeFromHistory]
 public class GameVersion : BaseEntity
 {
 	public int Id { get; set; }

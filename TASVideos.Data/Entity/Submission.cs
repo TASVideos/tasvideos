@@ -1,4 +1,5 @@
-﻿using TASVideos.Common;
+﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Common;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 
@@ -13,6 +14,7 @@ public interface ISubmissionFilter
 	IEnumerable<int> GameIds { get; }
 }
 
+[ExcludeFromHistory]
 public class Submission : BaseEntity, ITimeable
 {
 	public int Id { get; set; }

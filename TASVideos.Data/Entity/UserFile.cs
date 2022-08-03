@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TASVideos.Data.Entity;
 
 public enum UserFileClass
 {
@@ -15,6 +17,7 @@ public enum Compression
 	Gzip
 }
 
+[ExcludeFromHistory]
 public class UserFile
 {
 	public long Id { get; set; }

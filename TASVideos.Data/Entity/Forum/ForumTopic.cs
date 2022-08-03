@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity.Forum;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TASVideos.Data.Entity.Forum;
 
 public enum ForumTopicType
 {
@@ -7,6 +9,7 @@ public enum ForumTopicType
 	Announcement = 2
 }
 
+[ExcludeFromHistory]
 public class ForumTopic : BaseEntity
 {
 	public int Id { get; set; }

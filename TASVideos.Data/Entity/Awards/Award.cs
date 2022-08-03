@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity.Awards;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TASVideos.Data.Entity.Awards;
 
 public enum AwardType
 {
@@ -6,6 +8,7 @@ public enum AwardType
 	Movie
 }
 
+[ExcludeFromHistory]
 public class Award
 {
 	public int Id { get; set; }
