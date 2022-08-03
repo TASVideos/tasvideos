@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity.Game;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace TASVideos.Data.Entity.Game;
+
+[ExcludeFromHistory]
 public class GameGenre
 {
 	public int GameId { get; set; }

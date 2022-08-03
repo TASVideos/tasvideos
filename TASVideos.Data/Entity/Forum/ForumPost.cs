@@ -1,8 +1,10 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity.Forum;
 
+[ExcludeFromHistory]
 public class ForumPost : BaseEntity
 {
 	public int Id { get; set; }

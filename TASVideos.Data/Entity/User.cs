@@ -6,6 +6,7 @@ using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Data.Entity;
 
+[ExcludeFromHistory]
 public class User : IdentityUser<int>, ITrackable
 {
 	public DateTime? LastLoggedInTimeStamp { get; set; }

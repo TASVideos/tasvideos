@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace TASVideos.Data.Entity;
+
+[ExcludeFromHistory]
 public class PublicationTag
 {
 	public int PublicationId { get; set; }

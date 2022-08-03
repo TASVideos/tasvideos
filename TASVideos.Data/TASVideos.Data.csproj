@@ -16,6 +16,7 @@
 	<ItemGroup>
 		<PackageReference Include="EFCore.NamingConventions" Version="6.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.AutoHistory" Version="6.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.6">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

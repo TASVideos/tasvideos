@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TASVideos.Data.Entity;
 
 public interface ITrackable
 {
@@ -11,10 +13,14 @@ public interface ITrackable
 
 public class BaseEntity : ITrackable
 {
+	[ExcludeFromHistory]
 	public DateTime CreateTimestamp { get; set; }
+	[ExcludeFromHistory]
 	public string? CreateUserName { get; set; }
 
+	[ExcludeFromHistory]
 	public DateTime LastUpdateTimestamp { get; set; }
+	[ExcludeFromHistory]
 	public string? LastUpdateUserName { get; set; }
 }
 
