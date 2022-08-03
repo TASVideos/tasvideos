@@ -1,12 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TASVideos.Data.Entity.Game;
+﻿namespace TASVideos.Data.Entity.Game;
 
 /// <summary>
 /// Represents a Game
 /// This is the central reference point for all site content
 /// </summary>
-[ExcludeFromHistory]
 public class Game : BaseEntity
 {
 	public int Id { get; set; }
