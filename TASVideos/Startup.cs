@@ -36,7 +36,7 @@ public class Startup
 			: Settings.ConnectionStrings.PostgresConnection;
 
 		services
-			.AddTasvideosData(dbConnection)
+			.AddTasvideosData(Environment, dbConnection)
 			.AddTasvideosCore<WikiToTextRenderer>(Environment.IsDevelopment(), Settings)
 			.AddMovieParser();
 
