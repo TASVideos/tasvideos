@@ -475,7 +475,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.EnableAutoHistory<CustomAutoHistory>(o =>
 		{
+#pragma warning disable EF1001 // Internal EF Core API usage.
 			o.LimitChangedLength = false;
+#pragma warning restore EF1001 // Internal EF Core API usage.
 		});
 	}
 
