@@ -12,4 +12,6 @@
 			clearDropdown(gameId);
 		}
 	}
+
+	systemModel.onchange();
 }
