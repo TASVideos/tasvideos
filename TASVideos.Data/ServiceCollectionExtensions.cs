@@ -6,7 +6,7 @@ namespace TASVideos.Data;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddTasvideosData(this IServiceCollection services, IHostEnvironment env, string connectionString)
+	public static IServiceCollection AddTasvideosData(this IServiceCollection services, bool isDevelopment, string connectionString)
 	{
 		AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 		return services.AddDbContext<ApplicationDbContext>(
@@ -15,7 +15,7 @@ public static class ServiceCollectionExtensions
 				options.UseNpgsql(connectionString, b => b.MigrationsAssembly("TASVideos.Data").UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery))
 					.UseSnakeCaseNamingConvention();
 
-				if (env.IsDevelopment())
+				if (isDevelopment)
 				{
 					options.EnableSensitiveDataLogging(); // NEVER do this in production
 				}

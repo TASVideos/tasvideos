@@ -44,7 +44,9 @@ internal class Bk2 : ParserBase, IParser
 			}
 		}
 
-		var headerEntry = archive.Entry(HeaderFile);
+		// guard against branch header files, which have a number in their name
+		var headerEntry = archive.Entries.SingleOrDefault(
+			e => e.Name.ToLower().StartsWith(HeaderFile) && !e.Name.Any(c => char.IsDigit(c)));
 		if (headerEntry is null)
 		{
 			return Error($"Missing {HeaderFile}, can not parse");
