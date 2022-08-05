@@ -169,6 +169,7 @@
 		<EmbeddedResource Include="OmrSampleFiles\pal.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\savestate.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\svi.omr" />
+		<EmbeddedResource Include="TasprojSampleFiles\branch.tasproj" />
 		<EmbeddedResource Include="VbmSampleFiles\2frames.vbm" />
 		<EmbeddedResource Include="VbmSampleFiles\gb.vbm" />
 		<EmbeddedResource Include="VbmSampleFiles\gbc.vbm" />

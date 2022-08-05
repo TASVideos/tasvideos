@@ -35,7 +35,7 @@ if (string.IsNullOrWhiteSpace(settings?.ConnectionString) || string.IsNullOrWhit
 }
 
 var serviceProvider = new ServiceCollection()
-	.AddTasvideosData(settings.ConnectionString)
+	.AddTasvideosDataForTesting(settings.ConnectionString)
 	.BuildServiceProvider();
 
 var context = serviceProvider.GetRequiredService<ApplicationDbContext>();
