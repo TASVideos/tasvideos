@@ -8,7 +8,7 @@
 <h5>@Model.StatusCodeString</h5>
 <div condition="!string.IsNullOrEmpty(Model.ExceptionMessage)">
 	<span>Exception:</span>
-	<pre>@Model.ExceptionMessage</pre>
+	<pre>@Model.ExceptionMessage.ReplaceLineEndings("\n")</pre>
 </div>
 <div condition="Model.RecoveredFormData.Count != 0">
 	<span>Submitted Form Data:</span>
