@@ -155,6 +155,10 @@ public enum PermissionTo
 	CreateAdditionalMovieFiles = 306,
 
 	[Group("Publication Maintenance")]
+	[Description("The ability to create and modify publication awards")]
+	CreateAwards = 307,
+
+	[Group("Publication Maintenance")]
 	[Description("The ability to add, edit, and remove the tags used for publications")]
 	TagMaintenance = 390,
 

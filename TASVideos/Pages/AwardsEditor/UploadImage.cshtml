@@ -1,0 +1,49 @@
+﻿@page "{year}"
+@model UploadImageModel
+@{
+	ViewData["Title"] = $"Upload Award Image for Year {Model.Year}";
+	string returnUrl = HttpContext.Request.ReturnUrl();
+}
+
+<form method="post" enctype="multipart/form-data">
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<row>
+		<column md="6">
+			<form-group>
+				<label asp-for="ImageToUpload.Award"></label>
+				<select asp-for="ImageToUpload.Award" asp-items="Model.AvailableAwardCategories" class="form-control"></select>
+				<span asp-validation-for="ImageToUpload.Award" class="text-danger"></span>
+			</form-group>
+		</column>
+		<column md="6">
+			<partial name="_ImagePreview" model="@(Html.IdFor(m => m.ImageToUpload.Award), Model.Year)" />
+		</column>
+	</row>
+	<row>
+		<column md="6">
+			<form-group>
+				<div><small>Note: filename will be auto-generated with the pattern {shortname}_@(Model.Year).png</small></div>
+				<label asp-for="ImageToUpload.BaseImage"></label>
+				<input asp-for="ImageToUpload.BaseImage" class="form-control"/>
+				<span asp-validation-for="ImageToUpload.BaseImage" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
+				<label asp-for="ImageToUpload.BaseImage2X"></label>
+				<input asp-for="ImageToUpload.BaseImage2X" class="form-control"/>
+				<span asp-validation-for="ImageToUpload.BaseImage2X" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
+				<label asp-for="ImageToUpload.BaseImage4X"></label>
+				<input asp-for="ImageToUpload.BaseImage4X" class="form-control"/>
+				<span asp-validation-for="ImageToUpload.BaseImage4X" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</button>
+		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="Index" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</form-button-bar>
+</form>

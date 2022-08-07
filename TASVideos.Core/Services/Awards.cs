@@ -24,6 +24,21 @@ public interface IAwards
 	ValueTask<IEnumerable<AwardAssignment>> ForYear(int year);
 
 	/// <summary>
+	/// Adds an award for the given year
+	/// </summary>
+	/// <returns>False if the award cannot be added.</returns>
+	Task<bool> AddAwardCategory(AwardType type, string shortName, string description);
+
+	Task<bool> CategoryExists(string shortName);
+
+	IQueryable<Award> AwardCategories();
+
+	Task AssignUserAward(string shortName, int year, IEnumerable<int> userIds);
+	Task AssignPublicationAward(string shortName, int year, IEnumerable<int> publicationIds);
+
+	Task Revoke(AwardAssignment award);
+
+	/// <summary>
 	/// Clears the awards cache
 	/// </summary>
 	Task FlushCache();
@@ -50,7 +65,7 @@ internal class Awards : IAwards
 			.Where(a => a.Users.Select(u => u.Id).Contains(userId))
 			.SelectMany(a => a.Users
 				.Where(u => u.Id == userId)
-				.Select(u => new AwardAssignmentSummary(a.ShortName, a.Description, a.Year)))
+				.Select(_ => new AwardAssignmentSummary(a.ShortName, a.Description, a.Year)))
 			.ToList();
 	}
 
@@ -70,6 +85,99 @@ internal class Awards : IAwards
 		return allAwards
 			.Where(a => a.Year == year)
 			.ToList();
+	}
+
+	public async Task<bool> AddAwardCategory(AwardType type, string shortName, string description)
+	{
+		if (await _db.Awards.AnyAsync(a => a.ShortName == shortName))
+		{
+			return false;
+		}
+
+		_db.Awards.Add(new Award
+		{
+			Type = type,
+			ShortName = shortName,
+			Description = description
+		});
+		await _db.SaveChangesAsync();
+
+		return true;
+	}
+
+	public Task<bool> CategoryExists(string shortName)
+	{
+		return _db.Awards.AnyAsync(a => EF.Functions.Like(a.ShortName, shortName));
+	}
+
+	public IQueryable<Award> AwardCategories() => _db.Awards.AsQueryable();
+
+	public async Task AssignUserAward(string shortName, int year, IEnumerable<int> userIds)
+	{
+		var award = await _db.Awards.SingleAsync(a => a.ShortName == shortName);
+
+		var existingUsers = await _db.UserAwards
+			.Where(ua => ua.Year == year
+				&& ua.Award!.ShortName == shortName
+				&& userIds.Contains(ua.UserId))
+			.Select(pa => pa.UserId)
+			.ToListAsync();
+
+		_db.UserAwards.AddRange(userIds
+			.Except(existingUsers)
+			.Select(u => new UserAward
+			{
+				Year = year,
+				UserId = u,
+				AwardId = award.Id
+			}));
+		await _db.SaveChangesAsync();
+		await FlushCache();
+	}
+
+	public async Task AssignPublicationAward(string shortName, int year, IEnumerable<int> publicationIds)
+	{
+		var pubIds = publicationIds.ToList();
+		var award = await _db.Awards.SingleAsync(a => a.ShortName == shortName);
+
+		var existingPubs = await _db.PublicationAwards
+			.Where(pa => pa.Year == year
+				&& pa.Award!.ShortName == shortName
+				&& pubIds.Contains(pa.PublicationId))
+			.Select(pa => pa.PublicationId)
+			.ToListAsync();
+
+		_db.PublicationAwards.AddRange(pubIds
+			.Except(existingPubs)
+			.Select(u => new PublicationAward
+			{
+				Year = year,
+				PublicationId = u,
+				AwardId = award.Id
+			}));
+
+		await _db.SaveChangesAsync();
+		await FlushCache();
+	}
+
+	public async Task Revoke(AwardAssignment award)
+	{
+		var userIdsToRemove = award.Users.Select(u => u.Id);
+		var userAwardsToRemove = await _db.UserAwards
+			.Where(ua => userIdsToRemove.Contains(ua.UserId))
+			.ToListAsync();
+
+		_db.UserAwards.RemoveRange(userAwardsToRemove);
+
+		var pubIdsToRemove = award.Publications.Select(p => p.Id);
+		var pubAwardsToRemove = await _db.PublicationAwards
+			.Where(pa => pubIdsToRemove.Contains(pa.PublicationId))
+			.ToListAsync();
+
+		_db.PublicationAwards.RemoveRange(pubAwardsToRemove);
+
+		await _db.SaveChangesAsync();
+		await FlushCache();
 	}
 
 	public async Task FlushCache()
@@ -115,7 +223,7 @@ internal class Awards : IAwards
 				Description = g.Key.Description + " of " + g.Key.Year,
 				Year = g.Key.Year,
 				Type = AwardType.User,
-				Publications = Enumerable.Empty<AwardAssignment.Publication>(),
+				Publications = Array.Empty<AwardAssignment.Publication>(),
 				Users = g.ToList()
 			})
 			.ToList();

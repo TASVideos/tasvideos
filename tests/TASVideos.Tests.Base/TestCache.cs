@@ -16,6 +16,12 @@ public class TestCache : ICacheService
 
 	private readonly Dictionary<string, string> _cache = new();
 
+	public T Get<T>(string key)
+	{
+		var json = _cache[key];
+		return JsonSerializer.Deserialize<T>(json)!;
+	}
+
 	public bool TryGetValue<T>(string key, out T value)
 	{
 		var result = _cache.TryGetValue(key, out string? cached);

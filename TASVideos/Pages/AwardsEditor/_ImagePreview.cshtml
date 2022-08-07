@@ -1,0 +1,14 @@
+@model (string Id, int Year)
+
+<img id="award-image" src="" onerror="this.src = '/images/empty.png'" />
+<script>
+	const year = @Model.Year;
+	const awardDropdown = document.getElementById('@Model.Id');
+	awardDropdown.onchange = function () {
+		const path = `/awards/${this.value}_${year}.png`;
+		const imgElem = document.getElementById('award-image');
+		imgElem.src = path;
+	}
+
+	awardDropdown.onchange();
+</script>

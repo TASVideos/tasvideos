@@ -1,0 +1,38 @@
+﻿@page "{year}/{handler?}"
+@model AssignModel
+@{
+	ViewData["Title"] = $"Assign an Award for Year {Model.Year}";
+	string returnUrl = HttpContext.Request.ReturnUrl();
+}
+
+<form method="post">
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<a condition="@((bool?)ViewData["ShowUpload"] == true)" asp-page="UploadImage" asp-route-year="@Model.Year" class="btn btn-primary mb-2"><i class="fa fa-upload"></i> Upload</a>
+	<row>
+		<column md="5">
+			<form-group>
+				<label asp-for="AwardToAssign.Award"></label>
+				<select asp-for="AwardToAssign.Award" asp-items="Model.AvailableAwardCategories" class="form-control"></select>
+				<span asp-validation-for="AwardToAssign.Award" class="text-danger"></span>
+			</form-group>
+		</column>
+		<column md="5" class="offset-md-2">
+			<partial name="_ImagePreview" model="@(Html.IdFor(m => m.AwardToAssign.Award), Model.Year)" />
+		</column>
+	</row>
+	<fullrow>
+		<form-group>
+			<two-column-select id-list="AwardToAssign.Users" available-list="@Model.AvailableUsers"/>
+		</form-group>
+	</fullrow>
+	<fullrow>
+		<form-group>
+			<two-column-select id-list="AwardToAssign.Publications" available-list="@Model.AvailablePublications"/>
+		</form-group>
+	</fullrow>
+	<form-button-bar>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Assign</button>
+		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</form-button-bar>
+</form>
