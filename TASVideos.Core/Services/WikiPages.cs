@@ -139,6 +139,7 @@ internal class WikiPages : IWikiPages
 
 	public async Task<IEnumerable<WikiPageReferral>> BrokenLinks() => (await _db.WikiReferrals
 			.Where(wr => wr.Referrer != "SandBox")
+			.Where(wr => !wr.Referrer.StartsWith("HomePages/Bisqwit/InitialWikiPages")) // Historical pages with legacy links
 			.Where(wr => !_db.WikiPages.Any(wp => wp.PageName == wr.Referral))
 			.Where(wr => !wr.Referral.StartsWith("Subs-"))
 			.Where(wr => !wr.Referral.StartsWith("Movies-"))
