@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.BanIpAddresses)]
-public class IpBanModel : PageModel
+public class IpBanModel : BasePageModel
 {
 	private readonly IIpBanService _banService;
 

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -9,7 +8,7 @@ using TASVideos.Pages.Activity.Model;
 namespace TASVideos.Pages.Activity;
 
 [AllowAnonymous]
-public class JudgesModel : PageModel
+public class JudgesModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 

@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Groups.Models;
 
-namespace TASVideos.Pages.GamesGroups;
+namespace TASVideos.Pages.GameGroups;
 
 [AllowAnonymous]
-public class IndexModel : PageModel
+public class IndexModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 

@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -11,7 +10,7 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Search;
 
 [AllowAnonymous]
-public class AdvancedModel : PageModel
+public class AdvancedModel : BasePageModel
 {
 	public const int PageSize = 10;
 	public const int PageSizeSingle = 50;

@@ -1,13 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 
 namespace TASVideos.Pages.GameGroups;
 
 [AllowAnonymous]
-public class ListModel : PageModel
+public class ListModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 

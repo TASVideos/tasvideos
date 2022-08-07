@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Flags;
 
 [RequirePermission(PermissionTo.FlagMaintenance)]
-public class IndexModel : PageModel
+public class IndexModel : BasePageModel
 {
 	private readonly IFlagService _flagService;
 

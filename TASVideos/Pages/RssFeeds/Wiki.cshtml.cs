@@ -9,7 +9,7 @@ using TASVideos.Pages.RssFeeds.Models;
 namespace TASVideos.Pages.RssFeeds;
 
 [ResponseCache(Duration = 1200)]
-public class WikiModel : PageModel
+public class WikiModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 

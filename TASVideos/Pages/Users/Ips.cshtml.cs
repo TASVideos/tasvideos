@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -7,7 +6,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.ViewPrivateUserData)]
-public class IpsModel : PageModel
+public class IpsModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 

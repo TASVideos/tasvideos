@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
@@ -8,7 +7,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class WikiSyntaxErrorsModel : PageModel
+public class WikiSyntaxErrorsModel : BasePageModel
 {
 	private readonly IWikiPages _wikiPages;
 

@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Data.Entity;
@@ -8,7 +7,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class SendTweetModel : PageModel
+public class SendTweetModel : BasePageModel
 {
 	private readonly TwitterDistributorV2 _twitterDistributor;
 

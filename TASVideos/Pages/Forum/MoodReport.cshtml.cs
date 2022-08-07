@@ -1,14 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum;
 
-public class MoodReportModel : PageModel
+public class MoodReportModel : BasePageModel
 {
 	public static readonly IEnumerable<ForumPostMood> Moods = Enum
 		.GetValues(typeof(ForumPostMood))
