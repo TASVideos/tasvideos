@@ -86,7 +86,6 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");
 				options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
 				options.Conventions.AddPageRoute("/Publications/View", "{id:int}M");
-				options.Conventions.AddPageRoute("/Publications/Authors", "Players-List");
 				options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
 				options.Conventions.AddPageRoute("/Permissions/Index", "/Privileges");
 
