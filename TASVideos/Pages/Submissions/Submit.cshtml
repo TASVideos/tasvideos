@@ -84,6 +84,7 @@
 			<span>
 				@await Component.RenderWiki("System/SubmissionImportant")
 			</span>
+			<partial name="_WikiEditHelper" model="@("Create_Markup")" />
 			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit"></textarea>
 			<span asp-validation-for="Create.Markup" class="text-danger"></span>
 			<div>

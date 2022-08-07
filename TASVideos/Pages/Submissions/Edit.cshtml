@@ -97,6 +97,9 @@
 		</div>
 		<input type="hidden" asp-for="Submission.PublicationClassId" condition="!canEditPublicationClass" />
 	</row>
+	<fullrow class="mt-3">
+		<partial name="_WikiEditHelper" model="@("Submission_Markup")" />
+	</fullrow>
 	<fullrow>
 		<form-group>
 			<label asp-for="Submission.Markup" class="form-control-label"></label>
