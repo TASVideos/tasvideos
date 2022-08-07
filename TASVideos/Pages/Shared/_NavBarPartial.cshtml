@@ -29,7 +29,7 @@
 		<a id="Welcome" class="nav-link" href="/WelcomeToTASVideos">About</a>
 	</nav-item>
 	<nav-dropdown id="AdminDropdown" activate="Admin"
-				  permissions="new[] { ViewPrivateUserData, EditUsers, EditRoles, TagMaintenance, GameSystemMaintenance }">
+				  permissions="new[] { ViewPrivateUserData, EditUsers, EditRoles, TagMaintenance, GameSystemMaintenance, CreateAwards }">
 		<a id="MediaPosts" class="dropdown-item" href="/MediaPosts">Media Posts</a>
 		<a id="Users" permissions="new[] { ViewPrivateUserData, EditUsers }" class="dropdown-item" asp-page="/Users/List">Users</a>
 		<a id="Roles" class="dropdown-item" asp-page="/Roles/List">Roles</a>
@@ -38,6 +38,7 @@
 		<a id="FlagMaintenance" permission="FlagMaintenance" class="dropdown-item" asp-page="/Flags/Index">Flag Maintenance</a>
 		<a id="GenreMaintenance" permission="TagMaintenance" class="dropdown-item" asp-page="/Genres/Index">Genre Maintenance</a>
 		<a id="TierMaintenance" permission="ClassMaintenance" class="dropdown-item" asp-page="/PublicationClasses/Index">Class Maintenance</a>
+		<a id="AwardsEditor" permission="CreateAwards" class="dropdown-item" asp-page="/AwardsEditor/Index">Awards Editor</a>
 		<a id="Systems" permission="GameSystemMaintenance" class="dropdown-item" asp-page="/Systems/Index">Systems</a>
 	</nav-dropdown>
 	<nav-dropdown id="WikiDropdown" activate="Wiki"
