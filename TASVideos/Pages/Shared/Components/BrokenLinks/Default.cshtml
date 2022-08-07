@@ -27,7 +27,7 @@
 				<th>Linked From</th>
 				<th>Excerpt</th>
 			</tr>
-			@foreach (var link in brokenLinks)
+			@foreach (var link in brokenLinks.OrderBy(b => b.Referrer))
 			{
 				<tr>
 					<td style="max-width: 400px; overflow-x: auto"><a href="/@WikiHelper.ProcessLink(link.Referral)">@Html.Encode(WikiHelper.ProcessLink(link.Referral))</a></td>
