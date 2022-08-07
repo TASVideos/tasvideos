@@ -7,7 +7,7 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.AwardsEditor;
 
-[RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
+[RequirePermission(PermissionTo.CreateAwards)]
 public class AssignModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;

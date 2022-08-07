@@ -6,7 +6,7 @@ using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Pages.AwardsEditor;
 
-[RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
+[RequirePermission(PermissionTo.CreateAwards)]
 public class IndexModel : BasePageModel
 {
 	private static readonly IEnumerable<AwardType> AwardTypes = Enum

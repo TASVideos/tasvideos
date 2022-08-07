@@ -7,7 +7,7 @@ using TASVideos.Pages.AwardsEditor.Models;
 
 namespace TASVideos.Pages.AwardsEditor;
 
-[RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
+[RequirePermission(PermissionTo.CreateAwards)]
 public class CreateCategoryModel : BasePageModel
 {
 	private static readonly IEnumerable<AwardType> AwardTypes = Enum

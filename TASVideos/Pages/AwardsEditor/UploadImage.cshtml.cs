@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.AwardsEditor.Models;
 
 namespace TASVideos.Pages.AwardsEditor;
 
+[RequirePermission(PermissionTo.CreateAwards)]
 public class UploadImageModel : BasePageModel
 {
 	private readonly IMediaFileUploader _mediaFileUploader;

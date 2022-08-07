@@ -8,7 +8,7 @@ using TASVideos.Pages.AwardsEditor.Models;
 
 namespace TASVideos.Pages.AwardsEditor;
 
-[RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
+[RequirePermission(PermissionTo.CreateAwards)]
 public class ListCategoryModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
