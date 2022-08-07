@@ -42,7 +42,7 @@ public class BrokenLinks : ViewComponent
 			.ToList();
 
 		// These are okay
-		var generalExceptions = new[] { "frontpage", "api", "feos" };
+		var generalExceptions = new[] { "frontpage", "api" };
 
 		var generalPages = corePages
 			.Where(c => !c.HasRoute)
