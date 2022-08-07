@@ -145,9 +145,9 @@ internal class WikiPages : IWikiPages
 			.Where(wr => !wr.Referral.StartsWith("Movies-"))
 			.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
 			.ToListAsync())
-		.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral).HasValue)
-		.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral).HasValue)
-		.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral).HasValue);
+		.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral.Split('?')[0]).HasValue)
+		.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral.Split('?')[0]).HasValue)
+		.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral.Split('?')[0]).HasValue);
 
 	public async Task<bool> Exists(string? pageName, bool includeDeleted = false)
 	{
