@@ -50,6 +50,13 @@ public class BrokenLinks : ViewComponent
 			.Concat(generalExceptions)
 			.ToList();
 
+		var rssFeeds = generalPages
+			.Where(p => p.StartsWith("rssfeeds/"))
+			.Select(p => p.Replace("rssfeeds/", "") + ".rss")
+			.ToList();
+
+		generalPages = generalPages.Concat(rssFeeds).ToList();
+
 		// These should be updated one day, but there are far too many for now
 		var tempRoutedExceptions = new[] { "forum/t", "forum/f", "forum/p" };
 
