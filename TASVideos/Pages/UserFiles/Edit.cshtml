@@ -24,6 +24,9 @@
 				<span asp-validation-for="UserFile.Title" class="text-danger"></span>
 			</form-group>
 			<form-group>
+				<div>
+					<partial name="_WikiEditHelper" model="@("UserFile_Description")"/>
+				</div>
 				<label asp-for="UserFile.Description" class="form-control-label"></label>
 				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit"></textarea>
 				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
