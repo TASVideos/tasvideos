@@ -89,7 +89,7 @@ public class EditModel : BasePageModel
 			}
 		}
 
-		if (await _db.Games.AnyAsync(g => g.Id != Id && g.Abbreviation == Game.Abbreviation))
+		if (Game.Abbreviation != null && await _db.Games.AnyAsync(g => g.Id != Id && g.Abbreviation == Game.Abbreviation))
 		{
 			ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.Abbreviation)}", $"Abbreviation {Game.Abbreviation} already exists");
 		}
