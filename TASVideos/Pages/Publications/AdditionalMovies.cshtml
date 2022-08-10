@@ -45,7 +45,7 @@
 			</form-group>
 			<form-group>
 				<label asp-for="AdditionalMovieFile"></label>
-				<input type="file" asp-for="AdditionalMovieFile" class="form-control"/>
+				<input asp-for="AdditionalMovieFile" class="form-control"/>
 				<div>@Html.DescriptionFor(m => m.AdditionalMovieFile)</div>
 				<span asp-validation-for="AdditionalMovieFile" class="text-danger"></span>
 			</form-group>

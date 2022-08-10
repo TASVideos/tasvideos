@@ -23,7 +23,7 @@
 		<column lg="6">
 			<form-group>
 				<label asp-for="Create.MovieFile" class="form-control-label"></label>
-				<input type="file" asp-for="Create.MovieFile" class="form-control" />
+				<input asp-for="Create.MovieFile" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Create.MovieFile)</div>
 				<span asp-validation-for="Create.MovieFile" class="text-danger"></span>
 			</form-group>

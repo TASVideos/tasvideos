@@ -19,7 +19,7 @@
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
 			<form-group>
 				<label asp-for="Submission.MovieFile" class="form-control-label"></label>
-				<input type="file" asp-for="Submission.MovieFile" class="form-control" />
+				<input asp-for="Submission.MovieFile" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Submission.MovieFile)</div>
 				<span asp-validation-for="Submission.MovieFile" class="text-danger"></span>
 			</form-group>
