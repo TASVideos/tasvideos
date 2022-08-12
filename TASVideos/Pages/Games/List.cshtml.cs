@@ -137,6 +137,7 @@ public class ListModel : BasePageModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
+					Systems = g.GameVersions.Select(v => v.System!.Code)
 				})
 				.SortedPageOf(paging);
 		}
@@ -149,6 +150,7 @@ public class ListModel : BasePageModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
+					Systems = g.GameVersions.Select(v => v.System!.Code)
 				})
 				.SortedPageOf(paging);
 		}
