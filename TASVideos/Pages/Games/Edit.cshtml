@@ -1,4 +1,5 @@
 ﻿@page "{id?}"
+@using TASVideos.Data.Entity.Game
 @model EditModel
 @{
 	ViewData["Title"] = Model.Id.HasValue
@@ -22,7 +23,16 @@
 			</form-group>
 			<form-group>
 				<label asp-for="Game.Abbreviation"></label>
-				<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
+				<div class="input-group">
+					<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
+					<a
+						asp-page="/Wiki/Referrers"
+						asp-route-path="Games/@Model.Game.Abbreviation"
+						asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()"
+						class="input-group-text btn btn-primary">
+						Referrers
+					</a>
+				</div>
 				<span asp-validation-for="Game.Abbreviation" class="text-danger"></span>
 			</form-group>
 			<form-group>
