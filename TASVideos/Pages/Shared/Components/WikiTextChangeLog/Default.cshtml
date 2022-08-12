@@ -18,8 +18,12 @@
 		</tr>
 		foreach (var item in group)
 		{
+			var isHomePage = item.PageName.StartsWith("HomePages");
 			<tr>
-				<td><a href="/@item.PageName">@item.PageName</a> <small>(r@(item.Revision))</small></td>
+				<td>
+					<i class="fa fa-home" condition="isHomePage"></i>
+					<a href="/@item.PageName">@item.PageName</a> <small>(r@(item.Revision))</small>
+				</td>
 				<td>@item.Author</td>
 				<td>@item.RevisionMessage @(item.MinorEdit ? "(Minor edit)" : "")</td>
 				<td>@item.CreateTimestamp.ToShortTimeString()</td>
