@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.RegularExpressions;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Helpers;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Core.Services;
@@ -137,17 +137,15 @@ internal class WikiPages : IWikiPages
 				wp.LastUpdateUserName ?? wp.CreateUserName))
 			.ToListAsync();
 
-	public async Task<IEnumerable<WikiPageReferral>> BrokenLinks() => (await _db.WikiReferrals
-			.Where(wr => wr.Referrer != "SandBox")
-			.Where(wr => !wr.Referrer.StartsWith("HomePages/Bisqwit/InitialWikiPages")) // Historical pages with legacy links
-			.Where(wr => !_db.WikiPages.Any(wp => wp.ChildId == null && wp.IsDeleted == false && wp.PageName == wr.Referral))
-			.Where(wr => !wr.Referral.StartsWith("Subs-"))
-			.Where(wr => !wr.Referral.StartsWith("Movies-"))
-			.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
-			.ToListAsync())
-		.Where(wr => !SubmissionHelper.IsSubmissionLink(wr.Referral.Split('?')[0]).HasValue)
-		.Where(wr => !SubmissionHelper.IsPublicationLink(wr.Referral.Split('?')[0]).HasValue)
-		.Where(wr => !SubmissionHelper.IsGamePageLink(wr.Referral.Split('?')[0]).HasValue);
+	public async Task<IEnumerable<WikiPageReferral>> BrokenLinks() => await _db.WikiReferrals
+		.Where(wr => !Regex.IsMatch(wr.Referral, "(^[0-9]+)([GMS])"))
+		.Where(wr => wr.Referrer != "SandBox")
+		.Where(wr => !wr.Referrer.StartsWith("HomePages/Bisqwit/InitialWikiPages")) // Historical pages with legacy links
+		.Where(wr => !_db.WikiPages.Any(wp => wp.ChildId == null && wp.IsDeleted == false && wp.PageName == wr.Referral))
+		.Where(wr => !wr.Referral.StartsWith("Subs-"))
+		.Where(wr => !wr.Referral.StartsWith("Movies-"))
+		.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
+		.ToListAsync();
 
 	public async Task<bool> Exists(string? pageName, bool includeDeleted = false)
 	{
