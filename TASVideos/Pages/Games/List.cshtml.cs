@@ -21,7 +21,7 @@ public class ListModel : BasePageModel
 	}
 
 	[FromQuery]
-	[StringLength(50, MinimumLength = 5)]
+	[StringLength(50, MinimumLength = 3)]
 	[Display(Name = "Search")]
 	public string? SearchTerms { get; set; }
 
