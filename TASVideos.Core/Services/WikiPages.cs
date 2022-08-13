@@ -141,7 +141,18 @@ internal class WikiPages : IWikiPages
 		.Where(wr => !Regex.IsMatch(wr.Referral, "(^[0-9]+)([GMS])"))
 		.Where(wr => wr.Referrer != "SandBox")
 		.Where(wr => !wr.Referrer.StartsWith("HomePages/Bisqwit/InitialWikiPages")) // Historical pages with legacy links
-		.Where(wr => !_db.WikiPages.Any(wp => wp.ChildId == null && wp.IsDeleted == false && wp.PageName == wr.Referral))
+		// It is incomprehensible why we need this Where() as it should be redundant to the one below, but the one below returns false positive for random pages for reasons I can't figure out
+		// It isn't an EF thing, as I get the results in postgres and the generated query looks correct, but this works, as silly as it looks
+		.Where(wr => !_db.WikiPages
+			.Any(wp => wp.ChildId == null
+				&& wp.IsDeleted == false
+				&& wp.PageName == wr.Referral))
+		.Where(wr => !_db.WikiPages
+			.Any(wp => wp.ChildId == null
+				&& wp.IsDeleted == false
+				&& wp.PageName == (wr.Referral.IndexOf("?") > -1
+					? wr.Referral.Substring(0, wr.Referral.IndexOf("?"))
+					: wr.Referral)))
 		.Where(wr => !wr.Referral.StartsWith("Subs-"))
 		.Where(wr => !wr.Referral.StartsWith("Movies-"))
 		.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
