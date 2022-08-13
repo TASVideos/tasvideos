@@ -106,6 +106,7 @@ public class EditModel : BaseForumModel
 		if (Post.PosterId == User.GetUserId())
 		{
 			UserAvatars = await _forumService.UserAvatars(User.GetUserId());
+			MinorEdit = true;
 		}
 
 		return Page();
