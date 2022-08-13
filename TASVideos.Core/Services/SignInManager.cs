@@ -98,4 +98,15 @@ public class SignInManager : SignInManager<User>
 
 		return true;
 	}
+
+	public async Task<bool> EmailExists(string email)
+	{
+		if (string.IsNullOrWhiteSpace(email))
+		{
+			return false;
+		}
+
+		var baseEmail = email.Split('+')[0]; // Strip off alias
+		return await _db.Users.AnyAsync(u => EF.Functions.Like(u.Email, email));
+	}
 }

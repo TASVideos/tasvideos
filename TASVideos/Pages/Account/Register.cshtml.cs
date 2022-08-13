@@ -48,7 +48,6 @@ public class RegisterModel : BasePageModel
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
-	[RegularExpression(@"[^+]+", ErrorMessage = "Email pattern not allowed.")]
 	[BindProperty]
 	[Required]
 	[EmailAddress]
@@ -103,6 +102,11 @@ public class RegisterModel : BasePageModel
 		if (!await _signInManager.UsernameIsAllowed(UserName))
 		{
 			ModelState.AddModelError(nameof(UserName), "The username is not allowed.");
+		}
+
+		if (await _signInManager.EmailExists(Email))
+		{
+			ModelState.AddModelError(nameof(Email), "Email is already taken.");
 		}
 
 		if (ModelState.IsValid)
