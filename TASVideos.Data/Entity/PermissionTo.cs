@@ -159,6 +159,10 @@ public enum PermissionTo
 	CreateAwards = 307,
 
 	[Group("Publication Maintenance")]
+	[Description("The ability to delete a game entry")]
+	DeleteGameEntries = 308,
+
+	[Group("Publication Maintenance")]
 	[Description("The ability to add, edit, and remove the tags used for publications")]
 	TagMaintenance = 390,
 

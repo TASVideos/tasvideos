@@ -8,7 +8,7 @@
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 <form-group>
-	<delete-button condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
+	<delete-button permission="DeleteGameEntries" condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
 </form-group>
 <div class="text-danger">
 	@Html.ValidationSummary()

@@ -162,6 +162,11 @@ public class EditModel : BasePageModel
 			return NotFound();
 		}
 
+		if (!User.Has(PermissionTo.DeleteGameEntries))
+		{
+			return AccessDenied();
+		}
+
 		if (!await CanBeDeleted())
 		{
 			ErrorStatusMessage($"Unable to delete Game {Id}, game is used by a publication or submission.");
