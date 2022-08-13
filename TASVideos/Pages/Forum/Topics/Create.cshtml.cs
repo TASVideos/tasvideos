@@ -61,6 +61,13 @@ public class CreateModel : BaseForumModel
 
 		Topic = topic;
 		UserAvatars = await _forumService.UserAvatars(User.GetUserId());
+
+		var user = await _userManager.GetUserAsync(User);
+		if (user.AutoWatchTopic != null && user.AutoWatchTopic != UserPreference.Auto)
+		{
+			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
+		}
+
 		return Page();
 	}
 
