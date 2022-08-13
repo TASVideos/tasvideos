@@ -36,6 +36,16 @@ public class SettingsModel : BasePageModel
 		})
 		.ToList();
 
+	public static readonly IEnumerable<SelectListItem> AvailableUserPreferenceTypes = Enum
+		.GetValues(typeof(UserPreference))
+		.Cast<UserPreference>()
+		.Select(m => new SelectListItem
+		{
+			Value = ((int)m).ToString(),
+			Text = m.EnumDisplayName()
+		})
+		.ToList();
+
 	[BindProperty]
 	public ProfileSettingsModel Settings { get; set; } = new();
 
@@ -55,7 +65,8 @@ public class SettingsModel : BasePageModel
 			MoodAvatar = user.MoodAvatarUrlBase,
 			PreferredPronouns = user.PreferredPronouns,
 			EmailOnPrivateMessage = user.EmailOnPrivateMessage,
-			Roles = await _userManager.UserRoles(user.Id)
+			Roles = await _userManager.UserRoles(user.Id),
+			AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto
 		};
 	}
 
@@ -104,6 +115,7 @@ public class SettingsModel : BasePageModel
 		user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? Settings.MoodAvatar : null;
 		user.PreferredPronouns = Settings.PreferredPronouns;
 		user.EmailOnPrivateMessage = Settings.EmailOnPrivateMessage;
+		user.AutoWatchTopic = Settings.AutoWatchTopic;
 		await _db.SaveChangesAsync();
 
 		SuccessStatusMessage("Your profile has been updated");
