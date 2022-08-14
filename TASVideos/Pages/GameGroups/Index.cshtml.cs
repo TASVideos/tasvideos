@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Groups.Models;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TASVideos.Pages.GameGroups;
 
@@ -13,7 +14,9 @@ public class IndexModel : BasePageModel
 	private readonly ApplicationDbContext _db;
 
 	[FromRoute]
-	public int Id { get; set; }
+	public string Id { get; set; } = "";
+
+	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
 	public IEnumerable<GameListEntry> Games { get; set; } = new List<GameListEntry>();
 
@@ -28,7 +31,13 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var gameGroup = await _db.GameGroups.SingleOrDefaultAsync(gg => gg.Id == Id);
+		var query = ParsedId > 0
+			? _db.GameGroups.Where(g => g.Id == ParsedId)
+			: _db.GameGroups.Where(g => g.SearchKey == Id);
+
+		// TODO: abbreviations need to be unique, then we can use Single here
+		var gameGroup = await query
+			.FirstOrDefaultAsync();
 
 		if (gameGroup is null)
 		{
@@ -40,7 +49,7 @@ public class IndexModel : BasePageModel
 		Key = gameGroup.SearchKey;
 
 		Games = await _db.Games
-			.ForGroup(Id)
+			.ForGroup(gameGroup.Id)
 			.Select(g => new GameListEntry
 			{
 				Id = g.Id,
