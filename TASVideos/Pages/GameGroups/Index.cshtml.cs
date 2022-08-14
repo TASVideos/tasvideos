@@ -19,6 +19,7 @@ public class IndexModel : BasePageModel
 
 	public string Name { get; set; } = "";
 	public string? Description { get; set; }
+	public string Key { get; set; } = "";
 
 	public IndexModel(ApplicationDbContext db)
 	{
@@ -36,6 +37,7 @@ public class IndexModel : BasePageModel
 
 		Name = gameGroup.Name;
 		Description = gameGroup.Description;
+		Key = gameGroup.SearchKey;
 
 		Games = await _db.Games
 			.ForGroup(Id)
