@@ -34,7 +34,7 @@ public class EditModel : BasePageModel
 				.Select(gg => new GameGroupEditModel
 				{
 					Name = gg.Name,
-					SearchKey = gg.SearchKey,
+					Abbreviation = gg.Abbreviation,
 					Description = gg.Description
 				})
 				.SingleOrDefaultAsync();
@@ -72,7 +72,7 @@ public class EditModel : BasePageModel
 			}
 
 			gameGroup.Name = GameGroup.Name;
-			gameGroup.SearchKey = GameGroup.SearchKey;
+			gameGroup.Abbreviation = GameGroup.Abbreviation;
 			gameGroup.Description = GameGroup.Description;
 		}
 		else
@@ -80,7 +80,7 @@ public class EditModel : BasePageModel
 			gameGroup = new GameGroup
 			{
 				Name = GameGroup.Name,
-				SearchKey = GameGroup.SearchKey
+				Abbreviation = GameGroup.Abbreviation
 			};
 			_db.GameGroups.Add(gameGroup);
 		}

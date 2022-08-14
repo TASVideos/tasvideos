@@ -33,7 +33,7 @@ public class IndexModel : BasePageModel
 	{
 		var query = ParsedId > 0
 			? _db.GameGroups.Where(g => g.Id == ParsedId)
-			: _db.GameGroups.Where(g => g.SearchKey == Id);
+			: _db.GameGroups.Where(g => g.Abbreviation == Id);
 
 		// TODO: abbreviations need to be unique, then we can use Single here
 		var gameGroup = await query
@@ -46,7 +46,7 @@ public class IndexModel : BasePageModel
 
 		Name = gameGroup.Name;
 		Description = gameGroup.Description;
-		Key = gameGroup.SearchKey;
+		Key = gameGroup.Abbreviation;
 
 		Games = await _db.Games
 			.ForGroup(gameGroup.Id)

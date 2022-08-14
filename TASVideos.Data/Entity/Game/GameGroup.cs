@@ -13,7 +13,7 @@ public class GameGroup
 
 	[Required]
 	[StringLength(255)]
-	public string SearchKey { get; set; } = "";
+	public string Abbreviation { get; set; } = "";
 
 	[StringLength(2000)]
 	public string? Description { get; set; }
