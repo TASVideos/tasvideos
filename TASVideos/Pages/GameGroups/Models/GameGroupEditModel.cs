@@ -8,6 +8,8 @@ public class GameGroupEditModel
 	[StringLength(255)]
 	public string Name { get; set; } = "";
 
+	// TODO: actually rename the column
+	[Display(Name = "Abbreviation")]
 	[Required]
 	[StringLength(255)]
 	public string SearchKey { get; set; } = "";
