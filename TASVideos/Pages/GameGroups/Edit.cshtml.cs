@@ -59,6 +59,16 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
+		if (GameGroup.Abbreviation != null && await _db.GameGroups.AnyAsync(g => g.Id != Id && g.Abbreviation == GameGroup.Abbreviation))
+		{
+			ModelState.AddModelError($"{nameof(GameGroup)}.{nameof(GameGroup.Abbreviation)}", $"Abbreviation {GameGroup.Abbreviation} already exists");
+		}
+
+		if (!ModelState.IsValid)
+		{
+			return Page();
+		}
+
 		GameGroup? gameGroup;
 		if (Id.HasValue)
 		{

@@ -10,7 +10,6 @@ public class GameEditModel
 	public string DisplayName { get; set; } = "";
 
 	[StringLength(24)]
-	[Display(Name = "Abbreviation")]
 	public string? Abbreviation { get; set; }
 
 	[StringLength(250)]
