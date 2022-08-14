@@ -6,6 +6,11 @@ using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Data.Entity;
 
+public enum UserPreference
+{
+	Auto = 0, Always, Never
+}
+
 [ExcludeFromHistory]
 public class User : IdentityUser<int>, ITrackable
 {
@@ -45,6 +50,8 @@ public class User : IdentityUser<int>, ITrackable
 	public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;
 
 	public bool EmailOnPrivateMessage { get; set; }
+
+	public UserPreference? AutoWatchTopic { get; set; }
 
 	public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 	public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();

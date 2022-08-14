@@ -92,6 +92,13 @@ public class CreateModel : BaseForumModel
 
 		WatchTopic = await _topicWatcher.IsWatchingTopic(TopicId, User.GetUserId());
 
+		// Override default behavior if user setting demands it, even if they were already watching the topic
+		var user = await _userManager.GetUserAsync(User);
+		if (user.AutoWatchTopic != null && user.AutoWatchTopic != UserPreference.Auto)
+		{
+			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
+		}
+
 		PreviousPosts = await _db.ForumPosts
 			.ForTopic(TopicId)
 			.Select(fp => new MiniPostModel
