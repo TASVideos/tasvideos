@@ -19,7 +19,15 @@
 			</form-group>
 			<form-group>
 				<label asp-for="GameGroup.SearchKey"></label>
-				<input type="text" asp-for="GameGroup.SearchKey" class="form-control" />
+				<div class="input-group">
+					<input type="text" asp-for="GameGroup.SearchKey" class="form-control" />
+					<a asp-page="/Wiki/Referrers"
+					   asp-route-path="GameGroups/@Model.GameGroup.SearchKey"
+					   asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()"
+					   class="input-group-text btn btn-primary">
+						Referrers
+					</a>
+				</div>
 				<span asp-validation-for="GameGroup.SearchKey" class="text-danger"></span>
 			</form-group>
 			<form-group>
