@@ -1,45 +1,10 @@
-﻿@model IEnumerable<WikiPageReferral>
+﻿@model IReadOnlyCollection<WikiPageReferral>
 @inject ILanguages _languages
 
-@{
-	var brokenLinks = new List<WikiPageReferral>();
-	var missingTranslations = new List<WikiPageReferral>();
-
-	foreach (var link in Model!)
-	{
-		if (await _languages.IsLanguagePage(link.Referral))
-		{
-			missingTranslations.Add(link);
-		}
-		else
-		{
-			brokenLinks.Add(link);
-		}
-	}
-}
-
-<label class="float-end">Total: @brokenLinks.Count</label>
-<div class="table-container">
-	<table class="table table-striped">
-		<tbody>
-			<tr>
-				<th>Page</th>
-				<th>Linked From</th>
-				<th>Excerpt</th>
-			</tr>
-			@foreach (var link in brokenLinks.OrderBy(b => b.Referrer))
-			{
-				<tr>
-					<td style="max-width: 400px; overflow-x: auto"><a href="/@WikiHelper.ProcessLink(link.Referral)">@Html.Encode(WikiHelper.ProcessLink(link.Referral))</a></td>
-					<td><a href="/@WikiHelper.ProcessLink(link.Referrer)">@WikiHelper.ProcessLink(link.Referrer)</a></td>
-					<td><i>@link.Excerpt</i></td>
-				</tr>
-			}
-		</tbody>
-	</table>
+<div>
+	<label>Total: @Model.Count</label>
 </div>
 
-<label class="float-end">Total: @missingTranslations.Count</label>
 <div class="table-container">
 	<table class="table table-striped">
 		<tbody>
@@ -48,7 +13,7 @@
 				<th>Linked From</th>
 				<th>Excerpt</th>
 			</tr>
-			@foreach (var link in missingTranslations)
+			@foreach (var link in Model.OrderBy(b => b.Referrer))
 			{
 				<tr>
 					<td style="max-width: 400px; overflow-x: auto"><a href="/@WikiHelper.ProcessLink(link.Referral)">@Html.Encode(WikiHelper.ProcessLink(link.Referral))</a></td>
