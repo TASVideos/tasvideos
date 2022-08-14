@@ -419,6 +419,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		builder.Entity<GameGroup>(entity =>
 		{
 			entity.HasIndex(e => e.Name).IsUnique();
+			entity.HasIndex(e => e.Abbreviation).IsUnique();
 		});
 
 		builder.Entity<Game>(entity =>
