@@ -58,7 +58,7 @@ public class BrokenLinks : ViewComponent
 		generalPages = generalPages.Concat(rssFeeds).ToList();
 
 		// These should be updated one day, but there are far too many for now
-		var tempRoutedExceptions = new[] { "forum/p" };
+		var tempRoutedExceptions = new[] { "forum/p/" };
 
 		// For pages with routes, assume anything added to the end is okay
 		var routedPages = corePages
