@@ -1,6 +1,20 @@
-﻿@model MovieHistoryModel
+﻿@using TASVideos.Core
+@model PageOf<MovieHistoryModel.MovieHistoryEntry>
+<partial name="_Pager" model="Model" />
+@{
+	var mergedHistoryModel = new MovieHistoryModel
+	{
+		MovieHistory = Model
+			.GroupBy(gkey => gkey.Date)
+			.Select(group => new MovieHistoryModel.MovieHistoryEntry
+			{
+				Date = group.Key,
+				Pubs = group.SelectMany(item => item.Pubs).Distinct().ToList()
+			}).ToList()
+	};
+}
 <div>
-	@foreach (var pubGroup in Model!.MovieHistory.OrderByDescending(p => p.Date))
+	@foreach (var pubGroup in mergedHistoryModel.MovieHistory.OrderByDescending(p => p.Date))
 	{
 		<h4>@pubGroup.Date.ToShortDateString()</h4>
 		foreach (var pub in pubGroup.Pubs)
