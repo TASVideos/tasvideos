@@ -84,21 +84,4 @@ public class IndexModel : BasePageModel
 			User = Search.User
 		};
 	}
-
-	public async Task<IActionResult> OnGetSearchAuthor(string partial)
-	{
-		if (string.IsNullOrWhiteSpace(partial) || partial.Length < 3)
-		{
-			return new JsonResult(Array.Empty<string>());
-		}
-
-		var upper = partial.ToUpper();
-		var result = await _db.Users
-			.ThatHaveSubmissions()
-			.ThatPartiallyMatch(upper)
-			.Select(u => u.UserName)
-			.ToListAsync();
-
-		return new JsonResult(result);
-	}
 }
