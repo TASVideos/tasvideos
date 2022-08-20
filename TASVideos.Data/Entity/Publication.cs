@@ -243,6 +243,8 @@ public static class PublicationExtensions
 				"v" => query.OrderBy(p => p.CreateTimestamp),
 				"u" => query.OrderByDescending(p => p.CreateTimestamp),
 				_ => query
+					.OrderBy(p => p.System!.Code)
+					.ThenBy(p => p.Game!.DisplayName)
 			};
 		}
 		else
