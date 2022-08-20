@@ -16,30 +16,12 @@
 		<partial name="_TopicMiniPost" model="post" />
 	}
 </show-more>
-<div class="alert alert-light p-0">
-	<card>
-		<cardheader>
-			<row>
-				<div class="col-4 border-end">
-					<h5>@Model.Post.PosterName</h5>
-				</div>
-				<div class="col-8 pt-0 pb-0">
-					<small>
-						Posted: <timezone-convert asp-for="@Model.Post.CreateTimestamp" />
-						<span condition="!Model.Post.IsFirstPost && !string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
-					</small>
-				</div>
-			</row>
-		</cardheader>
-		<cardbody>
-			<forum-markup markup=@Model.Post.Text enable-bb-code=@Model.Post.EnableBbCode enable-html=@Model.Post.EnableHtml></forum-markup>
-		</cardbody>
-	</card>
-</div>
-<hr />
+
 <form method="post">
 	<input type="hidden" asp-for="Post.EnableBbCode" />
 	<input type="hidden" asp-for="Post.EnableHtml" />
+	<input type="hidden" asp-for="Post.OriginalText" />
+
 	<row>
 		<column condition="!Model.Post.IsFirstPost" md="6">
 			<label asp-for="Post.Subject" class="form-control-label"></label>
@@ -72,12 +54,39 @@
 		<input asp-for="MinorEdit" />
 		<label asp-for="MinorEdit"></label>
 	</fullrow>
-	<form-button-bar>
+	<form-button-bar class="mb-2">
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
 		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
 		<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>
 </form>
+<div class="alert alert-light p-0">
+	<card>
+		<cardheader>
+			<row>
+				<div class="col-4 border-end">
+					<h5>@Model.Post.PosterName</h5>
+				</div>
+				<div class="col-8 pt-0 pb-0">
+					<small>
+						Posted: <timezone-convert asp-for="@Model.Post.CreateTimestamp" />
+						<span condition="!Model.Post.IsFirstPost && !string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
+					</small>
+				</div>
+			</row>
+		</cardheader>
+		<cardbody>
+			<partial name="_Diff" model="@((Html.IdFor(m => m.Post.OriginalText), Html.IdFor(m => m.Post.Text)))" />
+			<script>
+				window.addEventListener('load', function () {
+					const rightMarkupElem = document.getElementById('@Html.IdFor(m => m.Post.Text)');
+					rightMarkupElem.addEventListener('change', generateDiff);
+					rightMarkupElem.addEventListener('keyup', generateDiff);
+				});
+			</script>
+		</cardbody>
+	</card>
+</div>
 <partial name="_PreviewWindow" model="@(("Post_Text", "/Forum/Preview"))" />
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
