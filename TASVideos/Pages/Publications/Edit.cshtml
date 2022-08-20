@@ -37,7 +37,10 @@
 		<th>Description</th>
 	</tr>
 	<tr>
-		<td><strong>@Model.Publication.MovieFileName</strong></td>
+		<td>
+			<a Permission="ReplacePrimaryMovieFile" class="btn btn-warning" asp-page="PrimaryMovie" asp-route-id="@Model.Id">Replace</a>
+			<strong>@Model.Publication.MovieFileName</strong>
+		</td>
 		<td>Primary Movie File</td>
 		<td></td>
 	</tr>

@@ -1,0 +1,95 @@
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Data;
+using TASVideos.Data.Entity;
+
+namespace TASVideos.Pages.Publications;
+
+[RequirePermission(PermissionTo.ReplacePrimaryMovieFile)]
+public class PrimaryMoviesModel : BasePageModel
+{
+	private readonly ApplicationDbContext _db;
+	private readonly ExternalMediaPublisher _publisher;
+	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
+
+	public PrimaryMoviesModel(
+		ApplicationDbContext db,
+		ExternalMediaPublisher publisher,
+		IPublicationMaintenanceLogger publicationMaintenanceLogger)
+	{
+		_db = db;
+		_publisher = publisher;
+		_publicationMaintenanceLogger = publicationMaintenanceLogger;
+	}
+
+	[FromRoute]
+	public int Id { get; set; }
+
+	[BindProperty]
+	public string PublicationTitle { get; set; } = "";
+
+	public string OriginalFileName { get; set; } = "";
+
+	[Required]
+	[BindProperty]
+	[Display(Name = "Primary Movie File", Description = "Your movie packed in a ZIP file (max size: 150k)")]
+	public IFormFile? PrimaryMovieFile { get; set; }
+
+	[Required]
+	[BindProperty]
+	public string? Reason { get; set; }
+
+	public async Task<IActionResult> OnGet()
+	{
+		var publication = await _db.Publications
+			.Where(p => p.Id == Id)
+			.Select(p => new { p.Title, p.MovieFileName })
+			.SingleOrDefaultAsync();
+
+		if (publication is null)
+		{
+			return NotFound();
+		}
+
+		PublicationTitle = publication.Title;
+		OriginalFileName = publication.MovieFileName;
+		return Page();
+	}
+
+	public async Task<IActionResult> OnPost()
+	{
+		var publication = await _db.Publications
+			.Where(p => p.Id == Id)
+			.SingleOrDefaultAsync();
+
+		if (publication is null)
+		{
+			return NotFound();
+		}
+
+		if (!ModelState.IsValid)
+		{
+			PublicationTitle = publication.Title;
+			OriginalFileName = publication.MovieFileName;
+			return Page();
+		}
+
+		string log = $"Replaced Primary movie file from {publication.MovieFileName} to {PrimaryMovieFile!.FileName} for reason: {Reason}";
+		publication.MovieFileName = PrimaryMovieFile.FileName;
+		publication.MovieFile = await PrimaryMovieFile.ToBytes();
+		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+		var result = await ConcurrentSave(_db, log, "Unable to add file");
+		if (result)
+		{
+			await _publisher.SendPublicationEdit(
+				$"{Id}M publication primary movie file changed by {User.Name()}",
+				$"{log} | {PublicationTitle}",
+				$"{Id}M");
+		}
+
+		return RedirectToPage("Edit", new { Id });
+	}
+}

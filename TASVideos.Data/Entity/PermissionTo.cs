@@ -163,6 +163,10 @@ public enum PermissionTo
 	DeleteGameEntries = 308,
 
 	[Group("Publication Maintenance")]
+	[Description("The ability to replace the primary movie file for a publciation")]
+	ReplacePrimaryMovieFile = 309,
+
+	[Group("Publication Maintenance")]
 	[Description("The ability to add, edit, and remove the tags used for publications")]
 	TagMaintenance = 390,
 

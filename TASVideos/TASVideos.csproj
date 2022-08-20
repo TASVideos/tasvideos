@@ -96,6 +96,9 @@
 		<Content Update="Pages\Forum\Topics\_PollCreate.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
+		<Content Update="Pages\Publications\PrimaryMovie.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
 		<Content Update="Pages\Publications\EditFiles.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
