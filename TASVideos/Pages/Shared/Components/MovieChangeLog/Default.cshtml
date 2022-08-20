@@ -11,13 +11,26 @@
 			}).ToList();
 }
 
-<div>
-	@foreach (var pubGroup in mergedHistoryModel.OrderByDescending(p => p.Date))
-	{
-		<h4>@pubGroup.Date.ToShortDateString()</h4>
-		foreach (var pub in pubGroup.Pubs)
+@foreach (var pubGroup in mergedHistoryModel.OrderByDescending(p => p.Date))
+{
+	<h4>@pubGroup.Date.ToShortDateString()</h4>
+	<fullrow>
+		@foreach (var pub in pubGroup.Pubs)
 		{
+			var classIconPath2X = "";
+			var classIconPath4X = "";
+			if (!string.IsNullOrWhiteSpace(pub.ClassIconPath))
+			{
+				classIconPath2X = $"{pub.ClassIconPath.Split('.')[0]}-2x.png";
+				classIconPath4X = $"{pub.ClassIconPath.Split('.')[0]}-4x.png";
+			}
 			<div class="ms-2">
+				<div class="float-start" condition="!string.IsNullOrWhiteSpace(pub.ClassIconPath)">
+					<img class="me-1" width="18" src="/@classIconPath2X"
+					 srcset="/@pub.ClassIconPath .5x,
+					/@classIconPath2X 1x,
+					/@classIconPath4X 2x" />
+				</div>
 				<pub-link id="pub.Id">@pub.Name</pub-link>
 				@if (pub.IsNewGame)
 				{
@@ -34,5 +47,6 @@
 				<br />
 			</div>
 		}
-	}
-</div>
+	</fullrow>
+	
+}

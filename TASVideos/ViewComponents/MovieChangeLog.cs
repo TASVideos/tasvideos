@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.WikiEngine;
@@ -15,7 +16,7 @@ public class MovieChangeLog : ViewComponent
 		_db = db;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync()
+	public async Task<IViewComponentResult> InvokeAsync(string pubClass)
 	{
 		var paging = new PagingModel
 		{
@@ -23,7 +24,15 @@ public class MovieChangeLog : ViewComponent
 			CurrentPage = HttpContext.Request.QueryStringIntValue("CurrentPage") ?? 1
 		};
 
-		var model = await _db.Publications
+		var query = _db.Publications.AsQueryable();
+
+		var publicationClass = await _db.PublicationClasses.FirstOrDefaultAsync(c => c.Name == pubClass);
+		if (publicationClass is not null)
+		{
+			query = query.Where(p => p.PublicationClassId == publicationClass.Id);
+		}
+
+		var model = await query
 			.OrderByDescending(p => p.CreateTimestamp)
 			.Select(p => new MovieHistoryModel
 			{
@@ -35,7 +44,8 @@ public class MovieChangeLog : ViewComponent
 						Id = p.Id,
 						Name = p.Title,
 						IsNewGame = p.Game != null && p.Game.Publications.FirstOrDefault() == p,
-						IsNewBranch = p.ObsoletedMovies.Count == 0
+						IsNewBranch = p.ObsoletedMovies.Count == 0,
+						ClassIconPath = p.PublicationClass!.IconPath
 					}
 				}
 			})
