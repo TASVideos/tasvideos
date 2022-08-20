@@ -2,13 +2,8 @@
 
 public class MovieHistoryModel
 {
-	public IReadOnlyCollection<MovieHistoryEntry> MovieHistory { get; init; } = new List<MovieHistoryEntry>();
-
-	public class MovieHistoryEntry
-	{
-		public DateTime Date { get; init; }
-		public IReadOnlyCollection<PublicationEntry> Pubs { get; init; } = new List<PublicationEntry>();
-	}
+	public DateTime Date { get; init; }
+	public IReadOnlyCollection<PublicationEntry> Pubs { get; init; } = new List<PublicationEntry>();
 
 	public class PublicationEntry
 	{
