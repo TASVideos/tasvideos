@@ -20,6 +20,3 @@ Goals of this project include:
 # Try it out!
 Wiki page for setting up local development: https://github.com/TASVideos/tasvideos/wiki/Local-Development-Setup
 
-Current demo website: https://staging.tasvideos.org/
-
-This website updates with production days once a day, and updates with the latest code twice a day.
