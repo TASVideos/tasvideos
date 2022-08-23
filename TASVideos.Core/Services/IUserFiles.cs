@@ -27,7 +27,6 @@ public interface IUserFiles
 	/// <summary>
 	/// Uploads a file for the user to user files
 	/// </summary>
-	/// <exception cref="InvalidOperationException">Thrown if space is not available <seealso cref="SpaceAvailable"/></exception>
 	/// <returns>The id of the saved file and an <seealso cref="IParseResult"/> if the file is a movie type</returns>
 	Task<(long id, IParseResult? parseResult)> Upload(int userId, UserFileUpload file);
 }
@@ -76,11 +75,6 @@ internal class UserFiles : IUserFiles
 
 	public async Task<(long, IParseResult?)> Upload(int userId, UserFileUpload file)
 	{
-		if (!await SpaceAvailable(userId, file.FileData.Length))
-		{
-			throw new InvalidOperationException($"Not enough space available to upload file {file.FileName}");
-		}
-
 		var fileExt = Path.GetExtension(file.FileName);
 		var userFile = new UserFile
 		{
