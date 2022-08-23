@@ -19,10 +19,11 @@
 		foreach (var item in group)
 		{
 			var isHomePage = item.PageName.StartsWith("HomePages");
+			var pageName = WikiHelper.ProcessLink(item.PageName);
 			<tr>
 				<td>
 					<i class="fa fa-home" condition="isHomePage"></i>
-					<a href="/@item.PageName">@item.PageName</a> <small>(r@(item.Revision))</small>
+					<a href="/@pageName">@pageName</a> <small>(r@(item.Revision))</small>
 				</td>
 				<td>@item.Author</td>
 				<td>@item.RevisionMessage @(item.MinorEdit ? "(Minor edit)" : "")</td>
