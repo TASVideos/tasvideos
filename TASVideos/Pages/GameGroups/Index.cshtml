@@ -3,7 +3,7 @@
 @{
 	ViewData["Title"] = $"Games for Group: {Model.Name}";
 }
-<label class="mb-2">Abbreviation: @Model.Key</label>
+<label class="mb-2">Abbreviation: @Model.Abbreviation</label>
 <warning-alert condition="!Model.Games.Any()">
 	No Games Listed for this Game Group
 </warning-alert>
