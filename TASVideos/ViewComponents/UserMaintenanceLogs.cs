@@ -24,12 +24,7 @@ public class UserMaintenanceLogs : ViewComponent
 			return new ContentViewComponentResult("No access to this resource");
 		}
 
-		var paging = new PagingModel
-		{
-			Sort = HttpContext.Request.QueryStringValue("Sort"),
-			PageSize = HttpContext.Request.QueryStringIntValue("PageSize") ?? 25,
-			CurrentPage = HttpContext.Request.QueryStringIntValue("CurrentPage") ?? 1
-		};
+		var paging = this.GetPagingModel();
 
 		if (string.IsNullOrWhiteSpace(paging.Sort))
 		{
@@ -55,8 +50,7 @@ public class UserMaintenanceLogs : ViewComponent
 		var logs = await logsQuery
 			.SortedPageOf(paging);
 
-		ViewData["PagingModel"] = paging;
-		ViewData["CurrentPage"] = HttpContext.Request.Path.Value;
+		this.SetPagingToViewData(paging);
 		return View(logs);
 	}
 }

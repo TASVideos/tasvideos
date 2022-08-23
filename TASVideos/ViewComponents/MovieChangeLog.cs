@@ -18,11 +18,7 @@ public class MovieChangeLog : ViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync(string pubClass)
 	{
-		var paging = new PagingModel
-		{
-			PageSize = HttpContext.Request.QueryStringIntValue("PageSize") ?? 25,
-			CurrentPage = HttpContext.Request.QueryStringIntValue("CurrentPage") ?? 1
-		};
+		var paging = this.GetPagingModel();
 
 		var query = _db.Publications.AsQueryable();
 
@@ -51,8 +47,7 @@ public class MovieChangeLog : ViewComponent
 			})
 			.PageOf(paging);
 
-		ViewData["PagingModel"] = paging;
-		ViewData["CurrentPage"] = HttpContext.Request.Path.Value;
+		this.SetPagingToViewData(paging);
 		return View("Default", model);
 	}
 }

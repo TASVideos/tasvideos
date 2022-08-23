@@ -1,8 +1,10 @@
-﻿@model IEnumerable<WikiTextChangelogModel>
+﻿@using TASVideos.Core
+@model TASVideos.Core.PageOf<WikiTextChangelogModel>
 @{
-	var grouped = Model!.GroupBy(m => m.CreateTimestamp.Date);
+	var grouped = Model.GroupBy(m => m.CreateTimestamp.Date);
 }
 
+<partial name="_Pager" model="Model" />
 <table class="table">
 	<tr>
 		<th>Page</th>

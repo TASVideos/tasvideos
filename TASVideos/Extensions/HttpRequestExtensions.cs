@@ -1,5 +1,7 @@
-﻿using System.Net;
+﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Net;
 using System.Web;
+using TASVideos.Core;
 
 namespace TASVideos.Extensions;
 
@@ -99,5 +101,11 @@ public static class HttpRequestExtensions
 	public static string ToUrl(this HttpRequest request)
 	{
 		return $"https://{request.Host}{request.PathBase}{request.Path}";
+	}
+
+	public static void AddPaging(this ViewDataDictionary viewData, PagingModel paging, string currentPage)
+	{
+		viewData["PagingModel"] = paging;
+		viewData["CurrentPage"] = currentPage;
 	}
 }
