@@ -22,6 +22,7 @@ public class ProfileSettingsModel
 	[Display(Name = "Location")]
 	public string? From { get; set; }
 
+	[StringLength(1000)]
 	public string? Signature { get; set; }
 
 	[Url]
