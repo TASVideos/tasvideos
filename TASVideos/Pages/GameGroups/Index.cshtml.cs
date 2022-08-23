@@ -22,7 +22,7 @@ public class IndexModel : BasePageModel
 
 	public string Name { get; set; } = "";
 	public string? Description { get; set; }
-	public string Key { get; set; } = "";
+	public string? Abbreviation { get; set; }
 
 	public IndexModel(ApplicationDbContext db)
 	{
@@ -46,7 +46,7 @@ public class IndexModel : BasePageModel
 
 		Name = gameGroup.Name;
 		Description = gameGroup.Description;
-		Key = gameGroup.Abbreviation;
+		Abbreviation = gameGroup.Abbreviation;
 
 		Games = await _db.Games
 			.ForGroup(gameGroup.Id)
