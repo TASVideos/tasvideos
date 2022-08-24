@@ -77,15 +77,15 @@ public class PrimaryMoviesModel : BasePageModel
 			return Page();
 		}
 
-		string log = $"Replaced Primary movie file from {publication.MovieFileName} to {PrimaryMovieFile!.FileName} for reason: {Reason}";
-		publication.MovieFileName = PrimaryMovieFile.FileName;
+		string log = $"Primary movie file replaced, Reason: {Reason}";
+		publication.MovieFileName = PrimaryMovieFile!.FileName;
 		publication.MovieFile = await PrimaryMovieFile.ToBytes();
 		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 		var result = await ConcurrentSave(_db, log, "Unable to add file");
 		if (result)
 		{
 			await _publisher.SendPublicationEdit(
-				$"{Id}M publication primary movie file changed by {User.Name()}",
+				$"{Id}M edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",
 				$"{Id}M");
 		}
