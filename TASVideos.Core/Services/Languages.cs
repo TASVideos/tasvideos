@@ -2,7 +2,6 @@
 
 public interface ILanguages
 {
-	Task<bool> IsLanguagePage(string? pageName);
 	Task<IEnumerable<LanguagePage>> GetTranslations(string pageName);
 }
 
@@ -13,26 +12,6 @@ internal class Languages : ILanguages
 	public Languages(IWikiPages wikiPages)
 	{
 		_wikiPages = wikiPages;
-	}
-
-	public async Task<bool> IsLanguagePage(string? pageName)
-	{
-		if (string.IsNullOrWhiteSpace(pageName))
-		{
-			return false;
-		}
-
-		string trimmed = pageName.Trim('/');
-
-		if (string.IsNullOrEmpty(trimmed))
-		{
-			return false;
-		}
-
-		var languages = await AvailableLanguages();
-
-		return languages.Any(l => trimmed.StartsWith(l.Code + "/")
-			|| l.Code == trimmed);
 	}
 
 	public async Task<IEnumerable<LanguagePage>> GetTranslations(string pageName)
@@ -74,6 +53,26 @@ internal class Languages : ILanguages
 		}
 
 		return existingLanguages;
+	}
+
+	internal async Task<bool> IsLanguagePage(string? pageName)
+	{
+		if (string.IsNullOrWhiteSpace(pageName))
+		{
+			return false;
+		}
+
+		string trimmed = pageName.Trim('/');
+
+		if (string.IsNullOrEmpty(trimmed))
+		{
+			return false;
+		}
+
+		var languages = await AvailableLanguages();
+
+		return languages.Any(l => trimmed.StartsWith(l.Code + "/")
+			|| l.Code == trimmed);
 	}
 
 	internal async Task<IEnumerable<Language>> AvailableLanguages()
