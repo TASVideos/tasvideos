@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Settings;
 using TASVideos.Core.HttpClientExtensions;

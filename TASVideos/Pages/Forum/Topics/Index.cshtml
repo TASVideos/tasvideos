@@ -24,7 +24,7 @@
 {
 	@section Header {
 		@{
-			var firstPost = @Model.Topic.Posts.FirstOrDefault();
+			var firstPost = Model.Topic.Posts.FirstOrDefault();
 			var ogTitle = firstPost is not null ? $"Topic by {firstPost.PosterName}" : "Forum Topic";
 			var ogImage = firstPost is not null ? firstPost.GetCurrentAvatar() : $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png";
 		}

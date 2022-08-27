@@ -8,7 +8,7 @@
 	var show = (bool)(ViewData["show"] ?? false);
 }
 
-<div condition="@Model!.Any()" class="card">
+<div condition="@Model.Any()" class="card">
 	<div class="card-header">
 		<collapsablecontent-header body-id="collapse-content-@pageId">
 			<i class="fa fa-chevron-circle-down"></i> <strong>Subpages for @ViewData["Parent"]?.ToString().SplitCamelCase()</strong>

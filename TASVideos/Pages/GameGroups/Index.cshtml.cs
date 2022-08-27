@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Groups.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TASVideos.Pages.GameGroups;
 

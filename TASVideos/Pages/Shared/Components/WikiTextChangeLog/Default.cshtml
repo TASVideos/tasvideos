@@ -1,5 +1,4 @@
-﻿@using TASVideos.Core
-@model TASVideos.Core.PageOf<WikiTextChangelogModel>
+﻿@model TASVideos.Core.PageOf<WikiTextChangelogModel>
 @{
 	var grouped = Model.GroupBy(m => m.CreateTimestamp.Date);
 }
