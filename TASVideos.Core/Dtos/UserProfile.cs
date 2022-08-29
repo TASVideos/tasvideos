@@ -58,6 +58,8 @@ public class UserProfile
 	[DisplayName("Locked Out Status")]
 	public bool IsLockedOut { get; set; }
 
+	public string? ModeratorComments { get; set; }
+
 	public int PublicationActiveCount { get; set; }
 	public int PublicationObsoleteCount { get; set; }
 	public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;

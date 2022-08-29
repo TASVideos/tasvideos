@@ -198,6 +198,7 @@ public class UserManager : UserManager<User>
 				Email = u.Email,
 				EmailConfirmed = u.EmailConfirmed,
 				PreferredPronouns = u.PreferredPronouns,
+				ModeratorComments = u.ModeratorComments,
 				Roles = u.UserRoles
 					.Select(ur => new RoleDto
 					{

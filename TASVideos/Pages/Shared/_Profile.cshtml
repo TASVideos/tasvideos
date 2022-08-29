@@ -123,6 +123,10 @@
 					<div class="alert alert-danger">This user has no Roles</div>
 				}
 			</cardbody>
+			<cardfooter permission="ViewPrivateUserData" condition="!string.IsNullOrWhiteSpace(Model.ModeratorComments)">
+				<label>Moderator Comments</label><br />
+				<small>@Model.ModeratorComments</small>
+			</cardfooter>
 		</card>
 		<card class="mb-2">
 			<cardheader condition="Model.Judgments.TotalJudgments > 0"><h4>Judgments</h4></cardheader>
