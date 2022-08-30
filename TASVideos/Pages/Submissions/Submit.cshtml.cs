@@ -112,7 +112,7 @@ public class SubmitModel : BasePageModel
 		await CreateSubmissionWikiPage(submission);
 
 		_db.SubmissionAuthors.AddRange(await _db.Users
-			.Where(u => Create.Authors.Contains(u.UserName))
+			.ForUsers(Create.Authors)
 			.Select(u => new SubmissionAuthor
 			{
 				SubmissionId = submission.Id,

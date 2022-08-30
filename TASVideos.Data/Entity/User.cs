@@ -141,4 +141,9 @@ public static class UserExtensions
 	{
 		return query.Where(u => u.UserRoles.Any(ur => ur.Role!.Name == role));
 	}
+
+	public static IQueryable<User> ForUsers(this IQueryable<User> query, IEnumerable<string> users)
+	{
+		return query.Where(u => users.Contains(u.UserName));
+	}
 }

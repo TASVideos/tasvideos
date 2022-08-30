@@ -359,7 +359,7 @@ public class EditModel : BasePageModel
 
 		submission.SubmissionAuthors.Clear();
 		submission.SubmissionAuthors.AddRange(await _db.Users
-			.Where(u => Submission.Authors.Contains(u.UserName))
+			.ForUsers(Submission.Authors)
 			.Select(u => new SubmissionAuthor
 			{
 				SubmissionId = submission.Id,

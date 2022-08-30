@@ -204,7 +204,7 @@ public class EditModel : BasePageModel
 		publication.AdditionalAuthors = model.AdditionalAuthors.NullIfWhitespace();
 		publication.Authors.Clear();
 		publication.Authors.AddRange(await _db.Users
-			.Where(u => Publication.Authors.Contains(u.UserName))
+			.ForUsers(Publication.Authors)
 			.Select(u => new PublicationAuthor
 			{
 				PublicationId = publication.Id,
