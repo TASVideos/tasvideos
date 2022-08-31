@@ -139,7 +139,7 @@
 				<th>@Html.DisplayNameFor(m => m.Submission.FrameCount)</th>
 				<td>
 					@Model.Submission.FrameCount
-					<small>(@Html.DisplayNameFor(m => m.Submission.CycleCount) @Model.Submission.CycleCount)</small>
+					<small condition="Model.Submission.CycleCount.HasValue">(@Html.DisplayNameFor(m => m.Submission.CycleCount) @Model.Submission.CycleCount)</small>
 				</td>
 			</tr>
 			<tr>
