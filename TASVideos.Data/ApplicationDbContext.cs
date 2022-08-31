@@ -106,16 +106,16 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 								.Where(e => e.State == EntityState.Added)
 								.ToArray();
 
-		this.EnsureAutoHistory(() => new CustomAutoHistory()
+		this.EnsureAutoHistory(() => new CustomAutoHistory
 		{
 			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 		});
 		var result = base.SaveChanges(acceptAllChangesOnSuccess);
 
-		// after "SaveChanges" added enties now have gotten valid ids (if it was necessary)
+		// after "SaveChanges" added entities now have gotten valid ids (if it was necessary)
 		// and the history for them can be ensured and be saved with another "SaveChanges"
 		this.EnsureAddedHistory(
-			() => new CustomAutoHistory()
+			() => new CustomAutoHistory
 		{
 			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 		}, addedEntities);
@@ -139,16 +139,16 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 								.Where(e => e.State == EntityState.Added)
 								.ToArray();
 
-		this.EnsureAutoHistory(() => new CustomAutoHistory()
+		this.EnsureAutoHistory(() => new CustomAutoHistory
 		{
 			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 		});
 		var result = await base.SaveChangesAsync(cancellationToken);
 
-		// after "SaveChanges" added enties now have gotten valid ids (if it was necessary)
+		// after "SaveChanges" added entities now have gotten valid ids (if it was necessary)
 		// and the history for them can be ensured and be saved with another "SaveChanges"
 		this.EnsureAddedHistory(
-			() => new CustomAutoHistory()
+			() => new CustomAutoHistory
 		{
 			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 		}, addedEntities);
