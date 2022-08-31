@@ -149,6 +149,8 @@ public class Submission : BaseEntity, ITimeable
 
 	[StringLength(4096)]
 	public string? Warnings { get; set; }
+
+	public long? CycleCount { get; set; }
 }
 
 public static class SubmissionExtensions

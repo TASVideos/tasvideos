@@ -137,7 +137,10 @@
 				<th>@Html.DisplayNameFor(m => m.Submission.GameVersion)</th>
 				<td>@Model.Submission.GameVersion</td>
 				<th>@Html.DisplayNameFor(m => m.Submission.FrameCount)</th>
-				<td>@Model.Submission.FrameCount</td>
+				<td>
+					@Model.Submission.FrameCount
+					<small>(@Html.DisplayNameFor(m => m.Submission.CycleCount) @Model.Submission.CycleCount)</small>
+				</td>
 			</tr>
 			<tr>
 				<th>@Html.DisplayNameFor(m => m.Submission.RomName)</th>

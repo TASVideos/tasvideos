@@ -45,6 +45,9 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	[Display(Name = "Frame Count")]
 	public int FrameCount { get; set; }
 
+	[Display(Name = "Cycle Count")]
+	public long? CycleCount { get; set; }
+
 	[Display(Name = "Frame Rate")]
 	public double FrameRate { get; set; }
 
