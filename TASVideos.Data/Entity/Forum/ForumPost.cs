@@ -27,6 +27,8 @@ public class ForumPost : BaseEntity
 	[Required]
 	public string Text { get; set; } = "";
 
+	public DateTime? PostEditedTimestamp { get; set; }
+
 	public bool EnableHtml { get; set; }
 	public bool EnableBbCode { get; set; }
 

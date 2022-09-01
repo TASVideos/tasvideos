@@ -134,6 +134,7 @@ public class IndexModel : BaseForumModel
 				PosterPostCount = p.Poster.Posts.Count,
 				PosterMood = p.PosterMood,
 				Text = p.Text,
+				PostEditedTimestamp = p.PostEditedTimestamp,
 				Subject = p.Subject,
 				Signature = p.Poster.Signature,
 				IsLastPost = p.Id == Topic.LastPostId

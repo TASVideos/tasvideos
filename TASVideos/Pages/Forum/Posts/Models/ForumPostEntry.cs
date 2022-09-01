@@ -23,6 +23,7 @@ public class ForumPostEntry : IForumPostEntry
 	public PreferredPronounTypes PosterPronouns { get; set; }
 	public IList<string> PosterRoles { get; set; } = new List<string>();
 	public string Text { get; set; } = "";
+	public DateTime? PostEditedTimestamp { get; set; }
 	public string? Subject { get; set; }
 	public string? Signature { get; set; }
 

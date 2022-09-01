@@ -161,6 +161,8 @@ public class EditModel : BaseForumModel
 		forumPost.Text = Post.Text;
 		forumPost.PosterMood = Post.Mood;
 
+		forumPost.PostEditedTimestamp = DateTime.UtcNow;
+
 		var result = await ConcurrentSave(_db, $"Post {Id} edited", "Unable to edit post");
 		if (result && !MinorEdit)
 		{

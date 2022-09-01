@@ -9,7 +9,7 @@
 					   class="float-start text-decoration-none text-dark">
 						<i class="fa fa-bookmark-o"></i>
 						Posted: <timezone-convert asp-for="@Model.CreateTimestamp" />
-						<span condition="@(Model.CreateTimestamp != Model.LastUpdateTimestamp)"><br />(Edited: <timezone-convert asp-for="@Model.LastUpdateTimestamp" />)</span>
+						<span condition="@(Model.PostEditedTimestamp != null)">@{var postEditedTimestamp = (DateTime)Model.PostEditedTimestamp!;}<br />(Edited: <timezone-convert asp-for="@postEditedTimestamp" />)</span>
 					</a>
 				</small>
 			</div>
