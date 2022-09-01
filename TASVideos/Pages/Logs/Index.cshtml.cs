@@ -34,6 +34,7 @@ public class IndexModel : BasePageModel
 			.Select(h => new LogEntry
 			{
 				RowId = h.RowId,
+				UserId = h.UserId,
 				Created = h.Created,
 				TableName = h.TableName,
 				Changed = h.Changed,
@@ -68,6 +69,9 @@ public class IndexModel : BasePageModel
 	{
 		[Sortable]
 		public string RowId { get; init; } = "";
+
+		[Sortable]
+		public int UserId { get; init; }
 
 		[Sortable]
 		public DateTime Created { get; init; } = DateTime.UtcNow;

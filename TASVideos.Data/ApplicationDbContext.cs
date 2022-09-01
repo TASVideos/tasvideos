@@ -27,7 +27,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		_httpContext = httpContextAccessor;
 	}
 
-	public DbSet<AutoHistory> AutoHistory { get; set; } = null!;
+	public DbSet<CustomAutoHistory> AutoHistory { get; set; } = null!;
 
 	public DbSet<RolePermission> RolePermission { get; set; } = null!;
 	public DbSet<WikiPage> WikiPages { get; set; } = null!;
