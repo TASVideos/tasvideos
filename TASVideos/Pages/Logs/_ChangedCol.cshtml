@@ -1,0 +1,31 @@
+﻿@model (string Changed, Microsoft.EntityFrameworkCore.EntityState Kind)
+@using System.Text.Json
+@using Microsoft.EntityFrameworkCore
+
+@{
+	string before = "";
+	string after = "";
+	var options = new JsonSerializerOptions { WriteIndented = true };
+}
+
+@if (Model.Kind == EntityState.Modified)
+{
+	var temp = JsonSerializer.Deserialize<IndexModel.ModifiedEntry>(Model.Changed);
+	before = JsonSerializer.Serialize(temp!.Before, options);
+	after = JsonSerializer.Serialize(temp.After, options);
+}
+else if (Model.Kind == EntityState.Added)
+{
+	var temp = JsonSerializer.Deserialize<object>(Model.Changed);
+	after = JsonSerializer.Serialize(temp, options);
+}
+else if (Model.Kind == EntityState.Deleted)
+{
+	var temp = JsonSerializer.Deserialize<object>(Model.Changed);
+	before = JsonSerializer.Serialize(temp, options);
+}
+
+<td class="change">
+	<input class="before" type="hidden" value="@before" />
+	<input class="after" type="hidden" value="@after" />
+</td>

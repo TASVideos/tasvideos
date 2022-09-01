@@ -7,6 +7,7 @@
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 <form-group>
+	<a class="btn btn-primary" asp-page="/Logs/Index" asp-route-table="Games" asp-route-rowId="@Model.Id" >History</a>
 	<delete-button permission="DeleteGameEntries" condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
 </form-group>
 <div class="text-danger">
