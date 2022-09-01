@@ -16,6 +16,7 @@ public class UserPagePost : IForumPostEntry
 	public bool EnableBbCode { get; set; }
 	public bool EnableHtml { get; set; }
 	public string Text { get; set; } = "";
+	public DateTime? PostEditedTimestamp { get; }
 	public string? Subject { get; set; }
 	public int TopicId { get; set; }
 	public string TopicTitle { get; set; } = "";

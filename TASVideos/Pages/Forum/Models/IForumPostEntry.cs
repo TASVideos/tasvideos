@@ -16,6 +16,7 @@ public interface IForumPostEntry
 	public bool IsEditable { get; }
 	public bool IsDeletable { get; }
 	public string Text { get; }
+	public DateTime? PostEditedTimestamp { get; }
 	public bool EnableHtml { get; }
 	public bool EnableBbCode { get; }
 	public ForumPostMood PosterMood { get; }
