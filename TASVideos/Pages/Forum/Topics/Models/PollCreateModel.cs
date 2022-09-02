@@ -9,6 +9,7 @@ public class PollCreateModel
 	public string? Question { get; set; }
 
 	[Display(Name = "Days to Run for", Description = "0 or empty for a never-ending poll")]
+	[Range(0, 365)]
 	public int? DaysOpen { get; set; }
 
 	[Display(Name = "Allow Multiple Selections")]
