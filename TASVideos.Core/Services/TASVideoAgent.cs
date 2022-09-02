@@ -12,6 +12,9 @@ public interface ITASVideoAgent
 	Task PostSubmissionUnpublished(int submissionId);
 
 	Task SendWelcomeMessage(int userId);
+	Task SendAutoAssignedRole(int userId, string roleName);
+	Task SendPublishedAuthorRole(int userId, string roleName, string publicationTitle);
+
 }
 
 internal class TASVideoAgent : ITASVideoAgent
@@ -153,7 +156,28 @@ internal class TASVideoAgent : ITASVideoAgent
 		}
 	}
 
-	public async Task SendWelcomeMessage(int userId)
+	public Task SendWelcomeMessage(int userId)
+	{
+		return SendPm(userId, SiteGlobalConstants.WelcomeToTasvideosPostId, t => t);
+	}
+
+	public Task SendAutoAssignedRole(int userId, string roleName)
+	{
+		return SendPm(
+			userId,
+			SiteGlobalConstants.AutoAssignedRolePostId,
+			t => t.Replace("[[role]]", roleName));
+	}
+
+	public Task SendPublishedAuthorRole(int userId, string roleName, string publicationTitle)
+	{
+		return SendPm(
+			userId,
+			SiteGlobalConstants.PublishedAuthorRoleAddedPostId,
+			t => t.Replace("[[role]]", roleName).Replace("[[publicationTitle]]", publicationTitle));
+	}
+
+	private async Task SendPm(int userId, int postId, Func<string, string> processTemplate)
 	{
 		var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
 		if (user is null)
@@ -161,8 +185,8 @@ internal class TASVideoAgent : ITASVideoAgent
 			return;
 		}
 
-		var welcomePost = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == SiteGlobalConstants.WelcomeToTasvideosPostId);
-		if (welcomePost is null)
+		var post = await _db.ForumPosts.SingleOrDefaultAsync(p => p.Id == postId);
+		if (post is null)
 		{
 			return;
 		}
@@ -171,8 +195,8 @@ internal class TASVideoAgent : ITASVideoAgent
 		{
 			FromUserId = SiteGlobalConstants.TASVideoAgentId,
 			ToUserId = user.Id,
-			Subject = "Welcome to TASVideos",
-			Text = welcomePost.Text.Replace("[[username]]", user.UserName),
+			Subject = post.Subject,
+			Text = processTemplate(post.Text).Replace("[[username]]", user.UserName),
 			EnableBbCode = true
 		});
 		await _db.SaveChangesAsync();

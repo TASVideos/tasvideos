@@ -162,7 +162,7 @@ public class PublishModel : BasePageModel
 			await _queueService.ObsoleteWith(publicationToObsolete.Value, publication.Id);
 		}
 
-		await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId));
+		await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
 		await _tasVideosAgent.PostSubmissionPublished(Id, publication.Id);
 		await _publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
 

@@ -14,6 +14,7 @@ public class UserManager : UserManager<User>
 	private readonly ICacheService _cache;
 	private readonly IPointsService _pointsService;
 	private readonly IWikiPages _wikiPages;
+	private readonly ITASVideoAgent _tasVideoAgent;
 
 	// Holy dependencies, batman
 	public UserManager(
@@ -21,6 +22,7 @@ public class UserManager : UserManager<User>
 		ICacheService cache,
 		IPointsService pointsService,
 		IWikiPages wikiPages,
+		ITASVideoAgent tasVideoAgent,
 		IUserStore<User> store,
 		IOptions<IdentityOptions> optionsAccessor,
 		IPasswordHasher<User> passwordHasher,
@@ -45,6 +47,7 @@ public class UserManager : UserManager<User>
 		_db = db;
 		_pointsService = pointsService;
 		_wikiPages = wikiPages;
+		_tasVideoAgent = tasVideoAgent;
 	}
 
 	// Clears the user claims, and adds a distinct list of user permissions
@@ -371,6 +374,8 @@ public class UserManager : UserManager<User>
 				{
 					// Do nothing for now, this can be added manually, in the unlikely situation, that this fails
 				}
+
+				await _tasVideoAgent.SendAutoAssignedRole(userId, role.Name);
 			}
 		}
 	}
@@ -380,7 +385,7 @@ public class UserManager : UserManager<User>
 	/// that the user does not already have. Note that the role won't assigned
 	/// if the user already has all permissions assigned to that role
 	/// </summary>
-	public async Task AssignAutoAssignableRolesByPublication(IEnumerable<int> userIds)
+	public async Task AssignAutoAssignableRolesByPublication(IEnumerable<int> userIds, string publicationTitle)
 	{
 		var ids = userIds.ToList();
 
@@ -420,9 +425,9 @@ public class UserManager : UserManager<User>
 						UserId = userId,
 						RoleId = role.Id
 					});
-
-
 				}
+
+				await _tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
 			}
 		}
 
