@@ -146,6 +146,7 @@
 		<EmbeddedResource Include="LsmvSampleFiles\savestate.anchor.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\savestate.lsmv" />
 		<EmbeddedResource Include="LtmSampleFiles\2frames.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\arcade.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\dos.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\flash-extrachars-linuxfallback.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\flash.ltm" />
