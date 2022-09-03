@@ -82,11 +82,14 @@ public static class UserFileExtensions
 		return query.Where(q => !q.Hidden);
 	}
 
-	public static IQueryable<UserFile> FilterByHidden(this IQueryable<UserFile> query, bool includeHidden)
+	public static IQueryable<UserFile> HideIfNotAuthor(this IQueryable<UserFile> query, int userId)
 	{
-		return includeHidden
-			? query
-			: query.Where(userFile => !userFile.Hidden);
+		return query.Where(uf => !uf.Hidden || uf.AuthorId == userId);
+	}
+
+	public static IEnumerable<UserFile> HideIfNotAuthor(this IEnumerable<UserFile> query, int userId)
+	{
+		return query.Where(uf => !uf.Hidden || uf.AuthorId == userId);
 	}
 
 	public static IQueryable<UserFile> ThatAreMovies(this IQueryable<UserFile> query)

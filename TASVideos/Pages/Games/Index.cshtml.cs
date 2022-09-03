@@ -56,7 +56,7 @@ public class IndexModel : BasePageModel
 
 		WatchFiles = await _db.UserFiles
 			.ForGame(Game.Id)
-			.FilterByHidden(false)
+			.Where(u => !u.Hidden)
 			.Where(u => u.Type == "wch")
 			.Select(u => new WatchFile(u.Id, u.FileName))
 			.ToListAsync();

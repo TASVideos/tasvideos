@@ -25,7 +25,6 @@ public class UserFilesModel : BasePageModel
 		UserName = User.Name();
 		Files = await _db.UserFiles
 			.ForAuthor(UserName)
-			.FilterByHidden(includeHidden: true)
 			.OrderByDescending(uf => uf.UploadTimestamp)
 			.ToUserFileModel()
 			.ToListAsync();

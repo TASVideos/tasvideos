@@ -29,7 +29,7 @@ public class ForUserModel : BasePageModel
 	{
 		Files = await _db.UserFiles
 			.ForAuthor(UserName)
-			.FilterByHidden(includeHidden: false)
+			.HideIfNotAuthor(User.GetUserId())
 			.OrderByDescending(uf => uf.UploadTimestamp)
 			.ToUserFileModel()
 			.PageOf(Search);
