@@ -16,23 +16,14 @@ public class Game : BaseEntity
 	public virtual ICollection<GameGameGroup> GameGroups { get; set; } = new HashSet<GameGameGroup>();
 
 	[Required]
-	[StringLength(250)]
-	[Description("Good Set or some other official naming convention")]
-	public string GoodName { get; set; } = "";
-
-	[Required]
 	[StringLength(100)]
 	public string DisplayName { get; set; } = "";
 
-	[StringLength(8)]
+	[StringLength(24)]
 	public string? Abbreviation { get; set; }
 
-	[StringLength(64)]
-	public string? SearchKey { get; set; }
-
-	[Required]
 	[StringLength(250)]
-	public string YoutubeTags { get; set; } = "";
+	public string? Aliases { get; set; }
 
 	[StringLength(250)]
 	public string? ScreenshotUrl { get; set; }

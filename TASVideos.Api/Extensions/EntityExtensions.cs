@@ -11,11 +11,9 @@ internal static class EntityExtensions
 		return query.Select(q => new GamesResponse
 		{
 			Id = q.Id,
-			GoodName = q.GoodName,
 			DisplayName = q.DisplayName,
 			Abbreviation = q.Abbreviation,
-			SearchKey = q.SearchKey,
-			YoutubeTags = q.YoutubeTags,
+			Aliases = q.Aliases,
 			ScreenshotUrl = q.ScreenshotUrl,
 			Versions = q.GameVersions.Select(gv => new GamesResponse.GameVersion
 			{
@@ -27,23 +25,6 @@ internal static class EntityExtensions
 				Region = gv.Region,
 				Version = gv.Version,
 				SystemCode = gv.System!.Code
-			})
-		});
-	}
-
-	public static IQueryable<SystemsResponse> ToSystemsResponse(this IQueryable<GameSystem> query)
-	{
-		return query.Select(q => new SystemsResponse
-		{
-			Id = q.Id,
-			Code = q.Code,
-			DisplayName = q.DisplayName,
-			SystemFrameRates = q.SystemFrameRates.Select(sf => new SystemsResponse.FrameRates
-			{
-				FrameRate = sf.FrameRate,
-				RegionCode = sf.RegionCode,
-				Preliminary = sf.Preliminary,
-				Obsolete = sf.Obsolete
 			})
 		});
 	}
@@ -66,6 +47,7 @@ internal static class EntityExtensions
 			RerecordCount = p.RerecordCount,
 			SystemFrameRate = p.SystemFrameRate!.FrameRate,
 			MovieFileName = p.MovieFileName,
+			AdditionalAuthors = p.AdditionalAuthors,
 			Authors = p.Authors
 				.OrderBy(pa => pa.Ordinal)
 				.Select(a => a.Author!.UserName),
@@ -85,6 +67,9 @@ internal static class EntityExtensions
 		return query.Select(s => new SubmissionsResponse
 		{
 			Id = s.Id,
+			PublicationId = s.Publication != null
+				? s.Publication.Id
+				: null,
 			Title = s.Title,
 			IntendedClass = s.IntendedClass != null
 				? s.IntendedClass.Name
@@ -119,8 +104,9 @@ internal static class EntityExtensions
 			EmulatorVersion = s.EmulatorVersion,
 			MovieStartType = s.MovieStartType,
 			Authors = s.SubmissionAuthors
-				.OrderBy(s => s.Ordinal)
-				.Select(a => a.Author!.UserName)
+				.OrderBy(a => a.Ordinal)
+				.Select(a => a.Author!.UserName),
+			AdditionalAuthors = s.AdditionalAuthors
 		});
 	}
 }

@@ -1374,7 +1374,6 @@ public class WikiPagesTests
 
 	[TestMethod]
 	[DataRow("MediaPosts")]
-	[DataRow("System")]
 	[DataRow("InternalSystem")]
 	public async Task Orphans_CorePages_NotConsideredOrphans(string page)
 	{
@@ -1393,6 +1392,18 @@ public class WikiPagesTests
 	public async Task BrokenLinks_NoReferrers_ReturnsEmptyList()
 	{
 		var actual = await _wikiPages.BrokenLinks();
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(0, actual.Count());
+	}
+
+	[TestMethod]
+	public async Task BrokenLinks_DoesNotConsiderLinksFromSandBox()
+	{
+		_db.WikiReferrals.Add(new WikiPageReferral { Referral = "DoesNotExist", Referrer = "SandBox" });
+		await _db.SaveChangesAsync();
+
+		var actual = await _wikiPages.BrokenLinks();
+
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(0, actual.Count());
 	}
@@ -1435,13 +1446,8 @@ public class WikiPagesTests
 	}
 
 	[TestMethod]
-	[DataRow("FrontPage")]
-	[DataRow("Players-List")]
 	[DataRow("Subs-")]
 	[DataRow("Movies-")]
-	[DataRow("forum")]
-	[DataRow("userfiles")]
-	[DataRow("Activity")]
 	public async Task BrokenLinks_CorePages_NotConsideredBrokenLinks(string referral)
 	{
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = "Page", Referral = referral });

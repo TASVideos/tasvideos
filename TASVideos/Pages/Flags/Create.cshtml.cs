@@ -10,7 +10,7 @@ public class CreateModel : BasePageModel
 {
 	private readonly IFlagService _flagService;
 
-	public ICollection<SelectListItem> AvailablePermissions { get; } = UiDefaults.DefaultEntry.Concat(PermissionUtil
+	public IReadOnlyCollection<SelectListItem> AvailablePermissions { get; } = UiDefaults.DefaultEntry.Concat(PermissionUtil
 		.AllPermissions()
 		.Select(p => new SelectListItem
 		{

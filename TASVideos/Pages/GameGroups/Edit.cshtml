@@ -18,9 +18,22 @@
 				<span asp-validation-for="GameGroup.Name" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="GameGroup.SearchKey"></label>
-				<input type="text" asp-for="GameGroup.SearchKey" class="form-control" />
-				<span asp-validation-for="GameGroup.SearchKey" class="text-danger"></span>
+				<label asp-for="GameGroup.Abbreviation"></label>
+				<div class="input-group">
+					<input type="text" asp-for="GameGroup.Abbreviation" class="form-control" />
+					<a asp-page="/Wiki/Referrers"
+					   asp-route-path="GameGroups/@Model.GameGroup.Abbreviation"
+					   asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()"
+					   class="input-group-text btn btn-primary">
+						Referrers
+					</a>
+				</div>
+				<span asp-validation-for="GameGroup.Abbreviation" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="GameGroup.Description"></label>
+				<textarea asp-for="GameGroup.Description" class="form-control" rows="4"></textarea>
+				<span asp-validation-for="GameGroup.Description" class="text-danger"></span>
 			</form-group>
 		</column>
 	</row>

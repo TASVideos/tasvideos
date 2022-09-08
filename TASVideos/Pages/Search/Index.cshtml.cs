@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -10,7 +9,7 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Search;
 
 [AllowAnonymous]
-public class IndexModel : PageModel
+public class IndexModel : BasePageModel
 {
 	public const int PageSize = 10;
 	private readonly ApplicationDbContext _db;
@@ -73,11 +72,15 @@ public class IndexModel : PageModel
 				.ToListAsync();
 
 			GameResults = await _db.Games
-				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.GoodName + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
+				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.OrderBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(PageSize + 1)
-				.Select(g => new GameSearchModel(g.Id, g.DisplayName))
+				.Select(g => new GameSearchModel(
+					g.Id,
+					g.DisplayName,
+					g.GameVersions.Select(v => v.System!.Code),
+					g.GameGroups.Select(gg => new GameGroupResult(gg.GameGroupId, gg.GameGroup!.Name))))
 				.ToListAsync();
 		}
 
@@ -86,5 +89,6 @@ public class IndexModel : PageModel
 
 	public record PageSearchModel(string Highlight, string PageName);
 	public record PostSearchModel(string Highlight, string TopicName, int PostId);
-	public record GameSearchModel(int Id, string DisplayName);
+	public record GameSearchModel(int Id, string DisplayName, IEnumerable<string> Systems, IEnumerable<GameGroupResult> Groups);
+	public record GameGroupResult(int Id, string Name);
 }

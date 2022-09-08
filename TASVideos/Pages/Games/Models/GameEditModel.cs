@@ -5,29 +5,16 @@ namespace TASVideos.Pages.Games.Models;
 public class GameEditModel
 {
 	[Required]
-	[Display(Name = "GoodTools Name")]
-	[StringLength(250)]
-	public string GoodName { get; set; } = "";
-
-	[Required]
 	[StringLength(100)]
 	[Display(Name = "Display Name")]
 	public string DisplayName { get; set; } = "";
 
-	[Required]
-	[StringLength(8)]
-	[Display(Name = "Abbreviation")]
+	[StringLength(24)]
 	public string? Abbreviation { get; set; }
 
-	[Required]
-	[StringLength(64)]
-	[Display(Name = "Search Key")]
-	public string? SearchKey { get; set; }
-
-	[Required]
 	[StringLength(250)]
-	[Display(Name = "Youtube Tags")]
-	public string YoutubeTags { get; set; } = "";
+	[Display(Name = "Aliases")]
+	public string? Aliases { get; set; }
 
 	[StringLength(250)]
 	[Display(Name = "Screenshot Url")]
@@ -42,4 +29,6 @@ public class GameEditModel
 
 	[Display(Name = "Groups")]
 	public IEnumerable<int> Groups { get; set; } = new List<int>();
+
+	public bool MinorEdit { get; set; }
 }

@@ -4,7 +4,7 @@
 	ViewData["Title"] = "Site Map";
 }
 
-@foreach (var rootPage in Model.Map.GroupBy(m => m.PageName.SplitWithEmpty("/").First()))
+@foreach (var rootPage in Model.Map.GroupBy(m => m.PageName.SplitWithEmpty("/").First()).OrderBy(g => g.Key))
 {
 	bool isPage = rootPage.Any(p => p.PageName == rootPage.Key);
 	bool hasSubpages = rootPage.Count() > 1;

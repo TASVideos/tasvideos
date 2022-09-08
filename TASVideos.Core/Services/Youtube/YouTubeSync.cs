@@ -120,7 +120,7 @@ internal class YouTubeSync : IYoutubeSync
 
 		var items = new List<YoutubeVideoResponseItem>();
 
-		var batches = videoIds.Batch(BatchSize);
+		var batches = videoIds.Chunk(BatchSize);
 		foreach (var batch in batches)
 		{
 			var newItems = await GetBatchPublicInfo(batch.ToList());
@@ -130,7 +130,7 @@ internal class YouTubeSync : IYoutubeSync
 		return items;
 	}
 
-	private async Task<IEnumerable<YoutubeVideoResponseItem>> GetBatchPublicInfo(ICollection<string> videoIds)
+	private async Task<IEnumerable<YoutubeVideoResponseItem>> GetBatchPublicInfo(IReadOnlyCollection<string> videoIds)
 	{
 		if (videoIds.Count > BatchSize)
 		{
@@ -278,23 +278,11 @@ public record YoutubeVideo(
 	WikiPage WikiPage,
 	string SystemCode,
 	IEnumerable<string> Authors,
-	string? SearchKey,
 	int? ObsoletedBy)
 {
-	public IEnumerable<string> Tags
-	{
-		get
-		{
-			var tags = new[] { SystemCode }
-				.Concat(Authors);
-
-			if (!string.IsNullOrWhiteSpace(SearchKey))
-			{
-				tags = tags.Concat(SearchKey.SplitWithEmpty("-"));
-			}
-
-			tags = tags.Select(t => t.ToLower()).Distinct();
-			return tags;
-		}
-	}
+	public IEnumerable<string> Tags =>
+		new[] { SystemCode }
+			.Concat(Authors)
+			.Select(t => t.ToLower())
+			.Distinct();
 }

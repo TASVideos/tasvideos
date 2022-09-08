@@ -13,9 +13,15 @@
 	<div class="mb-4">
 		<p>Current: <strong>@node.Branch</strong></p>
 		<img style="width: 18px" condition="!string.IsNullOrWhiteSpace(node.ClassIconPath)" src="/@classIconPath2X"
-			 srcset="/@node.ClassIconPath 1x,
+			srcset="/@node.ClassIconPath 1x,
 			 /@classIconPath2X 2x,
 			 /@classIconPath4X 4x"/>
+		@foreach (var flag in node.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
+		{
+			<a href="/@flag.LinkPath">
+				<img class="ms-1" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
+			</a>
+		}
 		<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
 		<span>(<timezone-convert asp-for="@node.CreateTimestamp" date-only="true" />)</span>
 		@foreach (var obsoletion in node.Obsoletes)

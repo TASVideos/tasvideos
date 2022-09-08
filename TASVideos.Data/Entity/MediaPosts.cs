@@ -1,8 +1,11 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TASVideos.Data.Entity;
 
 /// <summary>
 /// Data storage for an external media post (such as Irc, Discord).
 /// </summary>
+[ExcludeFromHistory]
 public class MediaPost : BaseEntity
 {
 	public int Id { get; set; }

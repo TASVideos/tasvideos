@@ -28,7 +28,7 @@ public class TagsController : Controller
 	/// <response code="200">Returns a tag.</response>
 	/// <response code="400">The request parameters are invalid.</response>
 	/// <response code="404">A tag with the given id was not found.</response>
-	[HttpGet("id")]
+	[HttpGet("{id}")]
 	public async Task<IActionResult> GetById(int id)
 	{
 		var tag = await _tagService.GetById(id);

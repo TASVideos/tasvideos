@@ -2,7 +2,7 @@
 @model TASVideos.Pages.RssFeeds.Models.RssSubmission
 @{
 	var baseUrl = ViewData["BaseUrl"];
-	var subUrl = $"{baseUrl}/{Model!.Id}S";
+	var subUrl = $"{baseUrl}/{Model.Id}S";
 }
 <item>
 	<title>@Model.Title</title>

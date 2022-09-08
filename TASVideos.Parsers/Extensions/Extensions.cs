@@ -151,6 +151,11 @@ internal static class Extensions
 		return archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(name));
 	}
 
+	public static bool HasEntry(this ZipArchive archive, string name)
+	{
+		return archive.Entries.Any(e => e.Name.ToLower() == name.ToLower());
+	}
+
 	// Returns a boolean indicating whether or not the given git is set in the given byte
 	public static bool Bit(this byte b, int index)
 	{

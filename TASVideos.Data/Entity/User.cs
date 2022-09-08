@@ -6,6 +6,12 @@ using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Data.Entity;
 
+public enum UserPreference
+{
+	Auto = 0, Always, Never
+}
+
+[ExcludeFromHistory]
 public class User : IdentityUser<int>, ITrackable
 {
 	public DateTime? LastLoggedInTimeStamp { get; set; }
@@ -39,9 +45,13 @@ public class User : IdentityUser<int>, ITrackable
 	/// </summary>
 	public bool UseRatings { get; set; } = true;
 
+	public string? ModeratorComments { get; set; }
+
 	public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;
 
 	public bool EmailOnPrivateMessage { get; set; }
+
+	public UserPreference? AutoWatchTopic { get; set; }
 
 	public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 	public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
@@ -130,5 +140,10 @@ public static class UserExtensions
 	public static IQueryable<User> ThatHaveRole(this IQueryable<User> query, string role)
 	{
 		return query.Where(u => u.UserRoles.Any(ur => ur.Role!.Name == role));
+	}
+
+	public static IQueryable<User> ForUsers(this IQueryable<User> query, IEnumerable<string> users)
+	{
+		return query.Where(u => users.Contains(u.UserName));
 	}
 }

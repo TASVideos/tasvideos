@@ -1,0 +1,80 @@
+﻿@page "{id}/{handler?}/{systemId?}"
+@model EditFramerateModel
+@{
+	ViewData["Title"]
+		= $"Editing Framerate: {Model.FrameRate.SystemCode} {Model.FrameRate.RegionCode} {Model.FrameRate.FrameRate}";
+}
+
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
+
+<div class="pull-right" condition = "Model.InUse">
+	This entry cannot be deleted because it is in use
+</div>
+
+<div class="pull-right" condition = "!Model.InUse">
+	<delete-button asp-href="/Systems/EditFramerate/@(Model.Id)/Delete/@Model.FrameRate.SystemId">
+		Delete
+	</delete-button>
+</div>
+
+<div condition="Model.PublicationEntries.Any()">
+	<h4>Publications using this framerate</h4>
+	<ul>
+		@foreach (var pub in Model.PublicationEntries)
+		{
+			<li>
+				<pub-link id="@pub.Id">@pub.Title</pub-link>
+			</li>
+		}
+	</ul>
+</div>
+
+<div condition="Model.SubmissionEntries.Any()">
+	<h4>Submissions using this framerate</h4>
+	<ul>
+		@foreach (var sub in Model.SubmissionEntries)
+		{
+			<li>
+				<sub-link id="@sub.Id">@sub.Title</sub-link>
+			</li>
+		}
+	</ul>
+</div>
+
+<form method="post">
+	<input type="hidden" asp-for="FrameRate.SystemId" />
+	<input type="hidden" asp-for="FrameRate.SystemCode" />
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="FrameRate.FrameRate"></label>
+				<input asp-for="FrameRate.FrameRate" class="form-control"/>
+				<span asp-validation-for="FrameRate" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="FrameRate.RegionCode"></label>
+				<input asp-for="FrameRate.RegionCode" class="form-control"/>
+				<span asp-validation-for="FrameRate.RegionCode" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label>Indicates that the framerate is provisional for now and not intended to be an accurate value</label>
+				<div class="form-check">
+					<label asp-for="FrameRate.Preliminary" class="form-check-label"></label>
+					<input asp-for="FrameRate.Preliminary" type="checkbox" class="form-check-input"/>
+				</div>
+			</form-group>
+			<form-group>
+				<div class="form-check">
+					<label asp-for="FrameRate.Obsolete" class="form-check-label"></label>
+					<input asp-for="FrameRate.Obsolete" type="checkbox" class="form-check-input"/>
+				</div>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a class="btn btn-secondary" asp-page="Edit" asp-route-id="@Model.FrameRate.SystemId"><i class="fa fa-times"></i> Cancel</a>
+	</form-button-bar>
+</form>

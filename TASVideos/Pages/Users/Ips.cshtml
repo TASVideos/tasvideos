@@ -2,17 +2,23 @@
 @model IpsModel
 @{
 	ViewData["Title"] = $"Ip addresses used by {Model.UserName}";
+	var ipList = Model.Ips
+		.GroupBy(i => i.IpAddress)
+		.Select(i => new { Ip = i.Key, UsedOn = i.Max(ii => ii.UsedOn) })
+		.ToList();
 }
 
 <table class="table table-sm table-bordered table-striped">
 	<tr>
-		<th>IP Address (total: @Model.Ips.Count)</th>
+		<th>IP Address (total: @ipList.Count)</th>
+		<th>Last Used</th>
 		<th></th>
 	</tr>
-	@foreach (var ip in Model.Ips.OrderBy(i => i))
+	@foreach (var ip in ipList.OrderByDescending(i => i.UsedOn))
 	{
 		<tr>
-			<td>@ip</td>
+			<td>@ip.Ip</td>
+			<td>@ip.UsedOn</td>
 			<td>
 				<a permission="BanIpAddresses" asp-page="/Users/IpBan" asp-route-banIp="@ip" class="btn btn-danger">Ban</a>
 			</td>

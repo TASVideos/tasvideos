@@ -27,6 +27,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		_httpContext = httpContextAccessor;
 	}
 
+	public DbSet<CustomAutoHistory> AutoHistory { get; set; } = null!;
+
 	public DbSet<RolePermission> RolePermission { get; set; } = null!;
 	public DbSet<WikiPage> WikiPages { get; set; } = null!;
 	public DbSet<WikiPageReferral> WikiReferrals { get; set; } = null!;
@@ -63,8 +65,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	public DbSet<GameVersion> GameVersions { get; set; } = null!;
 	public DbSet<GameGroup> GameGroups { get; set; } = null!;
 	public DbSet<GameGameGroup> GameGameGroups { get; set; } = null!;
-	public DbSet<GameRamAddressDomain> GameRamAddressDomains { get; set; } = null!;
-	public DbSet<GameRamAddress> GameRamAddresses { get; set; } = null!;
 
 	// Forum tables
 	public DbSet<ForumCategory> ForumCategories { get; set; } = null!;
@@ -96,16 +96,65 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		PerformTrackingUpdates();
 
 		ChangeTracker.AutoDetectChangesEnabled = false;
+
+		// remember added entries,
+		// before EF Core is assigning valid Ids (it does on save changes,
+		// when ids equal zero) and setting their state to
+		// Unchanged (it does on every save changes)
+		var addedEntities = ChangeTracker
+								.Entries()
+								.Where(e => e.State == EntityState.Added)
+								.ToArray();
+
+		this.EnsureAutoHistory(() => new CustomAutoHistory
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		});
 		var result = base.SaveChanges(acceptAllChangesOnSuccess);
+
+		// after "SaveChanges" added entities now have gotten valid ids (if it was necessary)
+		// and the history for them can be ensured and be saved with another "SaveChanges"
+		this.EnsureAddedHistory(
+			() => new CustomAutoHistory
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		}, addedEntities);
+		result += base.SaveChanges(acceptAllChangesOnSuccess);
+
 		ChangeTracker.AutoDetectChangesEnabled = true;
 
 		return result;
 	}
 
-	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		PerformTrackingUpdates();
-		return base.SaveChangesAsync(cancellationToken);
+
+		// remember added entries,
+		// before EF Core is assigning valid Ids (it does on save changes,
+		// when ids equal zero) and setting their state to
+		// Unchanged (it does on every save changes)
+		var addedEntities = ChangeTracker
+								.Entries()
+								.Where(e => e.State == EntityState.Added)
+								.ToArray();
+
+		this.EnsureAutoHistory(() => new CustomAutoHistory
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		});
+		var result = await base.SaveChangesAsync(cancellationToken);
+
+		// after "SaveChanges" added entities now have gotten valid ids (if it was necessary)
+		// and the history for them can be ensured and be saved with another "SaveChanges"
+		this.EnsureAddedHistory(
+			() => new CustomAutoHistory
+		{
+			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+		}, addedEntities);
+		result += await base.SaveChangesAsync(CancellationToken.None);
+
+		return result;
 	}
 
 	/// <summary>
@@ -285,19 +334,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			entity.HasIndex(e => e.GameId);
 		});
 
-		builder.Entity<Genre>(entity =>
-		{
-			entity.Property(e => e.Id)
-				.ValueGeneratedNever()
-				.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
-		});
-
 		builder.Entity<Flag>(entity =>
 		{
-			entity.Property(e => e.Id)
-				.ValueGeneratedNever()
-				.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
-
 			entity.HasIndex(e => e.Token).IsUnique();
 		});
 
@@ -369,10 +407,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<SubmissionRejectionReason>(entity =>
 		{
-			entity.Property(e => e.Id)
-				.ValueGeneratedNever()
-				.HasAnnotation("DatabaseGenerated", DatabaseGeneratedOption.None);
-
 			entity.HasIndex(e => e.DisplayName).IsUnique();
 		});
 
@@ -384,8 +418,13 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<GameGroup>(entity =>
 		{
-			entity.HasIndex(e => e.Name)
-				.IsUnique();
+			entity.HasIndex(e => e.Name).IsUnique();
+			entity.HasIndex(e => e.Abbreviation).IsUnique();
+		});
+
+		builder.Entity<Game>(entity =>
+		{
+			entity.HasIndex(e => e.Abbreviation).IsUnique();
 		});
 
 		builder.Entity<ForumPost>(entity =>
@@ -433,6 +472,13 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		builder.Entity<DeprecatedMovieFormat>(entity =>
 		{
 			entity.HasIndex(e => e.FileExtension).IsUnique();
+		});
+
+		builder.EnableAutoHistory<CustomAutoHistory>(o =>
+		{
+#pragma warning disable EF1001 // Internal EF Core API usage.
+			o.LimitChangedLength = false;
+#pragma warning restore EF1001 // Internal EF Core API usage.
 		});
 	}
 

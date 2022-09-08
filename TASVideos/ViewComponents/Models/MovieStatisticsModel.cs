@@ -7,7 +7,7 @@ public class MovieStatisticsModel
 {
 	public string ErrorMessage { get; init; } = "";
 	public string FieldHeader { get; init; } = "";
-	public ICollection<MovieStatisticsEntry> MovieList { get; init; } = new List<MovieStatisticsEntry>();
+	public IReadOnlyCollection<MovieStatisticsEntry> MovieList { get; init; } = new List<MovieStatisticsEntry>();
 
 	public class MovieStatisticsEntry
 	{

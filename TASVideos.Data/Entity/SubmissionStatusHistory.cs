@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace TASVideos.Data.Entity;
 
+[ExcludeFromHistory]
 public class SubmissionStatusHistory : BaseEntity
 {
 	public int Id { get; set; }

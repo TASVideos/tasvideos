@@ -7,73 +7,12 @@
 
 <hr class="mt-1" />
 <fullrow>
-	<partial name="_Pager" model="Model.UserPosts.Posts" />
+	<partial name="_Pager" model="Model.Posts" />
 </fullrow>
-@foreach (var post in Model.UserPosts.Posts)
+@foreach (var post in Model.Posts)
 {
-	<card id="@post.Id">
-		<cardheader>
-			<row>
-				<div class="col-4 border-end">
-					<h5>@Model.UserName</h5>
-				</div>
-				<div class="col-8 pt-0 pb-0">
-					<small style="display: inline-block">
-						<a href="/Forum/Posts/@(post.Id)" title="Link to this post" class="float-start"><i class="fa fa-bookmark-o"></i></a>
-						Posted: @post.CreateTimestamp
-						<span condition="!string.IsNullOrWhiteSpace(post.Subject)">Post subject: @post.Subject</span>
-					</small>
-					<small class="pull-end">
-						<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@Html.Raw(post.ForumName)</a>
-						→
-						<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicTitle</a>
-					</small>
-				</div>
-			</row>
-		</cardheader>
-		<cardbody>
-			<row>
-				<div class="col-4">
-					<div class="card-text text-end">
-						<small>
-							@string.Join(",", Model.UserPosts.Roles)
-							&nbsp;
-							(@Model.UserPosts.PlayerPoints)
-						</small>
-						<br />
-						<img src="@Model.UserPosts.Avatar" />
-						<br />
-						<small>
-							Joined: <timezone-convert asp-for="@Model.UserPosts.Joined" date-only="true"/><br />
-							Posts: @Model.UserPosts.Posts.RowCount
-							<span condition="!string.IsNullOrWhiteSpace(Model.UserPosts.Location)">
-							<br />Location: @Model.UserPosts.Location
-							</span>
-						</small>
-					</div>
-				</div>
-				<div class="col-8">
-					<forum-markup markup=@post.Text enable-html=@post.EnableHtml enable-bb-code=@post.EnableBbCode></forum-markup>
-				</div>
-			</row>
-		</cardbody>
-		<cardfooter>
-			<fullrow>
-				<small condition="!string.IsNullOrWhiteSpace(Model.UserPosts.Signature)" style="font-style: italic">
-					<forum-markup markup=@Model.UserPosts.Signature enable-bb-code="true"></forum-markup>
-				</small>
-				<br />
-				<profile-link class="btn bg-info text-dark btn-sm" username="@Model.UserName">Profile</profile-link>
-				<div class="float-end">
-					@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
-					{
-						<partial name="_Award" model="award" />
-					}
-				</div>
-			</fullrow>
-		</cardfooter>
-	</card>
+	<partial name="Forum/Topics/_TopicPost" model="post" />
 }
 <fullrow class="mt-2">
-	<partial name="_Pager" model="Model.UserPosts.Posts" />
+	<partial name="_Pager" model="Model.Posts" />
 </fullrow>

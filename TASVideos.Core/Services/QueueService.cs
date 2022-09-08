@@ -376,7 +376,6 @@ internal class QueueService : IQueueService
 					queriedPub.WikiContent!,
 					queriedPub.System!.Code,
 					queriedPub.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
-					queriedPub.Game!.SearchKey,
 					queriedPub.ObsoletedById));
 			}
 		}
@@ -405,6 +404,12 @@ internal class QueueService : IQueueService
 		submission.RerecordCount = parseResult.RerecordCount;
 		submission.MovieExtension = parseResult.FileExtension;
 		submission.System = system;
+		submission.CycleCount = parseResult.CycleCount;
+		var warnings = parseResult.Warnings.ToList();
+		if (warnings.Any())
+		{
+			submission.Warnings = string.Join(",", warnings);
+		}
 
 		if (parseResult.FrameRateOverride.HasValue)
 		{
@@ -474,7 +479,6 @@ internal class QueueService : IQueueService
 				toObsolete.Authors
 					.OrderBy(pa => pa.Ordinal)
 					.Select(pa => pa.Author!.UserName),
-				toObsolete.Game!.SearchKey,
 				obsoletingPublicationId);
 
 			await _youtubeSync.SyncYouTubeVideo(obsoleteVideo);

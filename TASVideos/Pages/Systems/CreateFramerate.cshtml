@@ -1,0 +1,37 @@
+﻿@page "/Systems/{systemId}/CreateFramerate"
+@model CreateFramerateModel
+@{
+	ViewData["Title"] = $"Creating a Framerate for System: {Model.SystemCode}";
+}
+
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
+<form method="post">
+	<input type="hidden" asp-for="SystemCode"/>
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="FrameRate"></label>
+				<input asp-for="FrameRate" class="form-control"/>
+				<span asp-validation-for="FrameRate" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="RegionCode"></label>
+				<input asp-for="RegionCode" class="form-control"/>
+				<span asp-validation-for="RegionCode" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label>Indicates that the framerate is provisional for now and not intended to be an accurate value</label>
+				<div class="form-check">
+					<label asp-for="Preliminary" class="form-check-label"></label>
+					<input asp-for="Preliminary" type="checkbox" class="form-check-input"/>
+				</div>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a class="btn btn-secondary" asp-page="Edit" asp-route-id="@Model.SystemId"><i class="fa fa-times"></i> Cancel</a>
+	</form-button-bar>
+</form>

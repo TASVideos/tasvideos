@@ -82,10 +82,6 @@ public enum PermissionTo
 	[Description("The ability to see wiki pages/revisions that were deleted.")]
 	SeeDeletedWikiPages = 106,
 
-	[Group("Wiki")]
-	[Description("The ability to add/edit/remove ram addresses.")]
-	EditRamAddresses = 107,
-
 	[Group("Wiki Administration")]
 	[Description("(Not used, do not assign), Was the ability to see certain restricted pages that pertain to administration activities. There are no pages that meet this criteria.")]
 	SeeAdminPages = 190,
@@ -159,6 +155,18 @@ public enum PermissionTo
 	CreateAdditionalMovieFiles = 306,
 
 	[Group("Publication Maintenance")]
+	[Description("The ability to create and modify publication awards")]
+	CreateAwards = 307,
+
+	[Group("Publication Maintenance")]
+	[Description("The ability to delete a game entry")]
+	DeleteGameEntries = 308,
+
+	[Group("Publication Maintenance")]
+	[Description("The ability to replace the primary movie file for a publciation")]
+	ReplacePrimaryMovieFile = 309,
+
+	[Group("Publication Maintenance")]
 	[Description("The ability to add, edit, and remove the tags used for publications")]
 	TagMaintenance = 390,
 
@@ -177,6 +185,10 @@ public enum PermissionTo
 	[Group("Publication Maintenance")]
 	[Description("The ability to rewire games into other games")]
 	RewireGames = 394,
+
+	[Group("Publication Maintenance")]
+	[Description("The ability to add, edit, and remove the rejection reasons used on submissions")]
+	RejectionReasonMaintenance = 395,
 
 	#endregion
 

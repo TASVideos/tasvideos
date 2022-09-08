@@ -92,6 +92,8 @@ public class EditModel : BasePageModel
 		user.Signature = UserToEdit.Signature;
 		user.Avatar = UserToEdit.Avatar;
 		user.MoodAvatarUrlBase = UserToEdit.MoodAvatarUrlBase;
+		user.UseRatings = UserToEdit.UseRatings;
+		user.ModeratorComments = UserToEdit.ModeratorComments;
 
 		var currentRoles = await _db.UserRoles
 			.Where(ur => ur.User == user)

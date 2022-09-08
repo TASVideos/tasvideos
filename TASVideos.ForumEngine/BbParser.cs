@@ -159,7 +159,6 @@ public class BbParser
 		{ "movie", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
 		{ "submission", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
 		{ "userfile", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread
-		{ "wip", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread (in fact, identical to userfile except for text output)
 		{ "wiki", new() { Children = TagInfo.ChildrenAllowed.IfParam } }, // like thread, but the link is a page name
 
 		// other stuff

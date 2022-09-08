@@ -7,16 +7,16 @@ namespace TASVideos.Core.Services;
 public enum SystemEditResult { Success, Fail, NotFound, DuplicateCode, DuplicateId }
 public enum SystemDeleteResult { Success, Fail, NotFound, InUse }
 
-
 public interface IGameSystemService
 {
-	ValueTask<ICollection<GameSystem>> GetAll();
-	ValueTask<GameSystem?> GetById(int id);
+	ValueTask<IReadOnlyCollection<SystemsResponse>> GetAll();
+	ValueTask<SystemsResponse?> GetById(int id);
 	Task<bool> InUse(int id);
 	ValueTask<int> NextId();
 	Task<SystemEditResult> Add(int id, string code, string displayName);
 	Task<SystemEditResult> Edit(int id, string code, string displayName);
 	Task<SystemDeleteResult> Delete(int id);
+	Task FlushCache();
 }
 
 internal class GameSystemService : IGameSystemService
@@ -31,19 +31,34 @@ internal class GameSystemService : IGameSystemService
 		_cache = cache;
 	}
 
-	public async ValueTask<ICollection<GameSystem>> GetAll()
+	public async ValueTask<IReadOnlyCollection<SystemsResponse>> GetAll()
 	{
-		if (_cache.TryGetValue(SystemsKey, out List<GameSystem> systems))
+		if (_cache.TryGetValue(SystemsKey, out List<SystemsResponse> systems))
 		{
 			return systems;
 		}
 
-		systems = await _db.GameSystems.ToListAsync();
+		systems = await _db.GameSystems
+			.Select(s => new SystemsResponse
+			{
+				Id = s.Id,
+				Code = s.Code,
+				DisplayName = s.DisplayName,
+				SystemFrameRates = s.SystemFrameRates.Select(sf => new SystemsResponse.FrameRates
+				{
+					Id = sf.Id,
+					FrameRate = sf.FrameRate,
+					RegionCode = sf.RegionCode,
+					Preliminary = sf.Preliminary,
+					Obsolete = sf.Obsolete
+				})
+			})
+			.ToListAsync();
 		_cache.Set(SystemsKey, systems);
 		return systems;
 	}
 
-	public async ValueTask<GameSystem?> GetById(int id)
+	public async ValueTask<SystemsResponse?> GetById(int id)
 	{
 		var systems = await GetAll();
 		return systems.SingleOrDefault(s => s.Id == id);
@@ -178,5 +193,11 @@ internal class GameSystemService : IGameSystemService
 		}
 
 		return SystemDeleteResult.Success;
+	}
+
+	public async Task FlushCache()
+	{
+		_cache.Remove(SystemsKey);
+		await GetAll();
 	}
 }

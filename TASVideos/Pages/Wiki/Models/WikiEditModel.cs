@@ -9,6 +9,8 @@ public class WikiEditModel
 	[Required]
 	public string Markup { get; set; } = "";
 
+	public string OriginalMarkup => Markup;
+
 	[Display(Name = "Minor Edit")]
 	public bool MinorEdit { get; set; }
 

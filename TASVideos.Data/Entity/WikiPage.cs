@@ -1,8 +1,10 @@
 ﻿using System.Text.Json.Serialization;
+using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity;
 
+[ExcludeFromHistory]
 public class WikiPage : BaseEntity, ISoftDeletable
 {
 	public int Id { get; set; }

@@ -28,7 +28,7 @@ public class InfoModel : BasePageModel
 	{
 		var file = await _db.UserFiles
 			.Where(userFile => userFile.Id == Id)
-			.ToUserFileModel()
+			.ToUserFileModel(false)
 			.SingleOrDefaultAsync();
 
 		if (file is null)

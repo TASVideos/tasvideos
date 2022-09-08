@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Systems;
 
@@ -19,7 +18,7 @@ public class EditModel : BasePageModel
 	public int Id { get; set; }
 
 	[BindProperty]
-	public GameSystem System { get; set; } = new();
+	public SystemsResponse System { get; set; } = new();
 
 	public bool InUse { get; set; } = true;
 

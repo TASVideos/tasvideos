@@ -31,6 +31,7 @@ public class UserFileModel
 	public int Rerecords { get; set; }
 
 	public IEnumerable<UserFileCommentModel> Comments { get; set; } = new List<UserFileCommentModel>();
+	public bool HideComments { get; set; }
 
 	public class UserFileCommentModel
 	{

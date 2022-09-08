@@ -42,7 +42,7 @@ public class UserProfile
 	[Display(Name = "Ratings Public?")]
 	public bool PublicRatings { get; set; }
 
-	[Display(Name = "TimeZone:")]
+	[Display(Name = "Time Zone:")]
 	public string? TimeZone { get; set; }
 
 	[Display(Name = "Preferred Pronouns:")]
@@ -57,6 +57,8 @@ public class UserProfile
 
 	[DisplayName("Locked Out Status")]
 	public bool IsLockedOut { get; set; }
+
+	public string? ModeratorComments { get; set; }
 
 	public int PublicationActiveCount { get; set; }
 	public int PublicationObsoleteCount { get; set; }

@@ -1,10 +1,13 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace TASVideos.Data.Entity;
 
 public enum PublicationRatingType
 {
 	Entertainment, TechQuality
 }
 
+[ExcludeFromHistory]
 public class PublicationRating
 {
 	public int UserId { get; set; }

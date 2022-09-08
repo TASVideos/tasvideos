@@ -39,6 +39,9 @@ public static class SiteGlobalConstants
 	public const int WorkbenchForumId = 7;
 	public const int PublishedMoviesForumId = 16;
 	public const int PlaygroundForumId = 74;
+	public const int WelcomeToTasvideosPostId = 515883;
+	public const int PublishedAuthorRoleAddedPostId = 516348;
+	public const int AutoAssignedRolePostId = 516349;
 
 	public const string NewPublicationPostSubject = "Movie published";
 	public const string NewPublicationPost = @"[b]This movie has been published.[/b]
@@ -60,7 +63,7 @@ The posts after this message will continue to apply to the submission.
 
 	public const string DefaultPublicationText = "''[TODO]: describe this movie here''";
 
-	public const int MaximumMovieSize = 500 * 1024;
+	public const int MaximumMovieSize = 2048 * 1024;
 	public const int UserFileStorageLimit = 1000 * 1000 * 50; // 50 MB
 }
 

@@ -22,7 +22,7 @@ public class YoutubeUploadersModel : BasePageModel
 		_cache = cache;
 	}
 
-	public ICollection<YoutubeRecord> Videos { get; set; } = new List<YoutubeRecord>();
+	public IReadOnlyCollection<YoutubeRecord> Videos { get; set; } = new List<YoutubeRecord>();
 
 	public async Task<IActionResult> OnGet()
 	{

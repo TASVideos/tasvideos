@@ -23,14 +23,6 @@ public class CollapsableHeaderTagHelper : TagHelper
 				<a class='collapsed' data-bs-toggle='collapse' {Attr("href", "#" + BodyId)} aria-expanded='false' aria-controls='collapse1' role='button'>
 					{content}
 				</a>
-				<a
-					data-bs-toggle='collapse'
-					class='collapsed btn btn-default btn-xs text-end'
-					{Attr("href", "#" + BodyId)}
-					{Attr("aria-label", $"Expand/Collapse {BodyId}")}
-					aria-expanded='false'
-					role='button'
-				>
 					<i class='fa' aria-hidden='true'></i>
 					<span class='sr-only'>Expand/Collapse {Text(BodyId)}</span>
 				</a>

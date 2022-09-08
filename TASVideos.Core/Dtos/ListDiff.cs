@@ -4,7 +4,7 @@ namespace TASVideos.Core.Services;
 
 public class ListDiff
 {
-	public ListDiff(ICollection<string> currentItems, ICollection<string> newItems)
+	public ListDiff(IReadOnlyCollection<string> currentItems, ICollection<string> newItems)
 	{
 		Added = newItems.Except(currentItems).ToImmutableList();
 		Removed = currentItems.Except(newItems).ToImmutableList();

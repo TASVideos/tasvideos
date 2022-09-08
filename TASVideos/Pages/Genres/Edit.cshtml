@@ -1,0 +1,33 @@
+﻿@page "{id}/{handler?}"
+@model EditModel
+@{
+	ViewData["Title"] = $"Editing Genre: {Model.Genre.DisplayName}";
+}
+
+<div class="text-end">
+	<delete-button condition="!Model.InUse"
+				   asp-href="/Genres/Edit/@(Model.Id)/Delete"
+				   warning-message="Are you sure you want to remove this genre?">
+		Delete
+	</delete-button>
+	<span condition="Model.InUse">
+		Genre in Use
+	</span>
+</div>
+<form method="post">
+	<row>
+		<column lg="6" class="mt-lg-0 mt-3">
+			<label asp-for="Genre.DisplayName"></label>
+			<input type="text" asp-for="Genre.DisplayName" class="form-control" />
+			<span asp-validation-for="Genre.DisplayName" class="text-danger"></span>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a class="btn btn-secondary" asp-page="Index"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

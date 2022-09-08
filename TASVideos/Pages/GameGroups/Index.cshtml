@@ -1,14 +1,22 @@
 ﻿@page "{id}"
-@model TASVideos.Pages.GamesGroups.IndexModel
+@model IndexModel
 @{
 	ViewData["Title"] = $"Games for Group: {Model.Name}";
 }
-
+<label class="mb-2">Abbreviation: @Model.Abbreviation</label>
 <warning-alert condition="!Model.Games.Any()">
 	No Games Listed for this Game Group
 </warning-alert>
-<a asp-page="List" class="mb-2">See All Groups</a>
-<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary mb-3 float-end" permission="CatalogMovies"><i class="fa fa-pencil"></i> Edit</a>
+<row>
+	<column>
+		<a asp-page="List" class="mb-2">See All Groups</a>
+		<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary mb-3 float-end" permission="CatalogMovies"><i class="fa fa-pencil"></i> Edit</a>
+	</column>
+</row>
+<card condition="!string.IsNullOrWhiteSpace(Model.Description)" class="mb-2">
+	<cardheader>Description</cardheader>
+	<cardbody>@Model.Description</cardbody>
+</card>
 <table condition="Model.Games.Any()" class="table table-bordered table-striped">
 	<tr>
 		<th>Game</th>

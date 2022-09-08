@@ -15,19 +15,13 @@ public class GamesResponse
 	public IEnumerable<GameVersion> Versions { get; init; } = new List<GameVersion>();
 
 	[Sortable]
-	public string GoodName { get; init; } = "";
-
-	[Sortable]
 	public string DisplayName { get; init; } = "";
 
 	[Sortable]
 	public string? Abbreviation { get; init; } = "";
 
 	[Sortable]
-	public string? SearchKey { get; init; } = "";
-
-	[Sortable]
-	public string YoutubeTags { get; init; } = "";
+	public string? Aliases { get; init; }
 
 	[Sortable]
 	public string? ScreenshotUrl { get; init; } = "";

@@ -13,6 +13,8 @@ public class GameListModel
 	[Display(Name = "Name")]
 	public string DisplayName { get; set; } = "";
 
+	public IEnumerable<string> Systems { get; set; } = new List<string>();
+
 	// Dummy to generate column header
 	[Display(Name = "Actions")]
 	public object? Actions { get; set; }

@@ -22,6 +22,7 @@ public class ProfileSettingsModel
 	[Display(Name = "Location")]
 	public string? From { get; set; }
 
+	[StringLength(1000)]
 	public string? Signature { get; set; }
 
 	[Url]
@@ -36,6 +37,9 @@ public class ProfileSettingsModel
 
 	[Display(Name = "Email On New Private Message?")]
 	public bool EmailOnPrivateMessage { get; set; }
+
+	[Display(Name = "Automatically Watch Topics When Posting")]
+	public UserPreference AutoWatchTopic { get; set; }
 
 	public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 }

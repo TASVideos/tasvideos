@@ -16,7 +16,7 @@
 				"ASPNETCORE_preventHostingStartup": "True",
 				"ASPNETCORE_ENVIRONMENT": "Development",
 				"StartupStrategy": "Sample",
-				"UseSampleDatabase": true
+				"UseSampleDatabase": "true"
 			}
 		},
 		"Dev (Sample Data No Recreate)": {
@@ -27,7 +27,7 @@
 				"ASPNETCORE_preventHostingStartup": "True",
 				"ASPNETCORE_ENVIRONMENT": "Development",
 				"StartupStrategy": "Minimal",
-				"UseSampleDatabase": true
+				"UseSampleDatabase": "true"
 			}
 		},
 		"Dev (Migrate)": {

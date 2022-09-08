@@ -55,6 +55,27 @@
 			_ => ""
 		};
 	}
+
+	static string StreamingSiteDisplay(string? onlineWatchingUrl)
+	{
+		if (string.IsNullOrWhiteSpace(onlineWatchingUrl))
+		{
+			return "";
+		}
+
+		var lowered = onlineWatchingUrl.ToLower();
+		if (lowered.Contains("youtube"))
+		{
+			return " on YouTube";
+		}
+
+		if (lowered.Contains("nicovideo"))
+		{
+			return " on Niconico";
+		}
+
+		return "";
+	}
 }
 
 <card class="border border-primary">
@@ -103,10 +124,9 @@
 					@foreach (var url in Model.OnlineWatchingUrls)
 					{
 						<a href="@url.Url" class="btn btn-primary btn-sm mt-1" target="_blank">
-							<i class="fa fa-external-link"></i> Watch @(!string.IsNullOrWhiteSpace(url.DisplayName) ? $"{url.DisplayName}" : "")
+							<i class="fa fa-external-link"></i> Watch @(!string.IsNullOrWhiteSpace(url.DisplayName) ? $"{url.DisplayName}" : StreamingSiteDisplay(url.Url))
 						</a>
 					}
-					<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mt-1"><i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))</a>
 				</div>
 				<div>
 					<a asp-page="/Submissions/View" asp-route-id="@Model.SubmissionId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
@@ -120,10 +140,9 @@
 				<div>
 					<input condition="@canRate" id="RequestVerificationToken" type="hidden" value="@requestToken" />
 					<a condition="@canRate" asp-page="/Publications/Rate" asp-route-id="@Model.Id" onclick="toggleDisplay(@(Model.Id)); return false;" class="btn btn-success btn-sm mt-1" id="ownRating-@(Model.Id)">@ratingString</a>
-					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
+					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
 						<i class="fa fa-star-o"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
 					</a>
-					<a asp-page="/Ratings/Index" asp-route-id="@Model.Id" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-list-ul"></i> Votes: <span id="ratingCount-@(Model.Id)">@Model.RatingCount</span></a>
 					<div condition="@canRate" class="mt-1 mb-0 d-none border border-primary bg-cardprimary rounded p-1" id="rate-@(Model.Id)">
 						<button class="btn btn-success btn-sm" onclick="rate(@(Model.Id),false);"><span class="fa fa-save"></span> Save</button>
 						<input asp-for="Rating.Rating" type="number" class="form-control d-inline-block btn-sm" style="width:5em;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
@@ -135,10 +154,10 @@
 				</div>
 				<script condition="@canRate">
 					function rate(pubId, unrated) {
-						let rating = {};
-						rating.Rating = document.querySelector('#rate-'+pubId+' #Rating_Rating').value;
+						const rating = {};
+						rating.Rating = document.querySelector(`#rate-${pubId} #Rating_Rating`).value;
 						rating.Unrated = unrated;
-						fetch('/Publications/Rate/'+pubId+'?handler=Inline', {
+						fetch(`/Publications/Rate/${pubId}?handler=Inline`, {
 							method: 'POST',
 							body: JSON.stringify(rating),
 							headers: {
@@ -154,21 +173,20 @@
 							})
 							.then(r => r.text())
 							.then(r => {
-								let update = JSON.parse(r);
+								const update = JSON.parse(r);
 								if (unrated) {
-									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rate';
+									document.querySelector(`#ownRating-${pubId}`).innerHTML = 'Rate';
 								} else if (update.Rating !== "") {
-									document.querySelector('#ownRating-'+pubId).innerHTML = 'Rated '+update.Rating+' / 10';
+									document.querySelector(`#ownRating-${pubId}`).innerHTML = `Rated ${update.Rating} / 10`;
 								}
-								document.querySelector('#ratingCount-'+pubId).innerHTML = update.RatingCount;
-								document.querySelector('#overallRating-'+pubId).innerHTML = update.OverallRating;
+								document.querySelector(`#overallRating-${pubId}`).innerHTML = update.OverallRating;
 								toggleDisplay(pubId);
 							})
 							.catch(e => alert("Rating failed"));
 					}
 					function toggleDisplay(pubId) {
-						ratingConnect(document.querySelector('#rate-'+pubId+' #Rating_Rating'), document.querySelector('#slider-'+pubId));
-						document.querySelector('#rate-'+pubId).classList.toggle('d-none');
+						ratingConnect(document.querySelector(`#rate-${pubId} #Rating_Rating`), document.querySelector(`#slider-${pubId}`));
+						document.querySelector(`#rate-${pubId}`).classList.toggle('d-none');
 					}
 					function ratingConnect(textbox, slider) {
 						textbox.oninput = function () {
@@ -217,11 +235,11 @@
 						Game:<br />
 						<game-link id="@Model.GameId" class="ms-2">@Model.GameName</game-link>
 					</span>
-					<span condition="Model.GenreTags.Any()">
+					<span condition="Model.GameGenres.Any()">
 						<br />Genres:<br />
-						@foreach (var genre in Model.GenreTags)
+						@foreach (var genre in Model.GameGenres)
 						{
-							<a href="/Movies-@genre.Code" class="ms-2">@genre.DisplayName</a><br />
+							<a href="/Movies-@genre" class="ms-2">@genre</a><br />
 						}
 					</span>
 				</small>
@@ -250,9 +268,18 @@
 				</small>
 			</div>
 			<div class="col-auto">
-				<small condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
-					Emulator Version:<br /><span class="ms-2">@Model.EmulatorVersion</span>
+				<small>
+					Emulator Replay:
+					<div condition="!string.IsNullOrWhiteSpace(Model.EmulatorVersion)">
+						<span class="ms-2">@Model.EmulatorVersion</span>
+					</div>
+					<div>
+						<a asp-page="/Publications/View" asp-page-handler="Download" asp-route-id="@Model.Id" class="ms-2">
+							<i class="fa fa-download"></i> Download (@System.IO.Path.GetExtension(Model.MovieFileName))
+						</a>
+					</div>
 				</small>
+				
 			</div>
 			<div condition="Model.MovieFileLinks.Any()" class="col-auto">
 				<small>

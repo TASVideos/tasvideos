@@ -80,32 +80,24 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddFolderApplicationModelConvention(
 					"/",
 					model => model.Filters.Add(new SetPageViewBagAttribute()));
-				options.Conventions.AddFolderApplicationModelConvention(
-					"/",
-					model => model.Filters.Add(new Debouncer()));
 				options.Conventions.AddPageRoute("/Games/Index", "{id:int}G");
 				options.Conventions.AddPageRoute("/Submissions/Index", "Subs-{query}");
 				options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
 				options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");
 				options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
 				options.Conventions.AddPageRoute("/Publications/View", "{id:int}M");
-				options.Conventions.AddPageRoute("/Publications/Authors", "Players-List");
-				options.Conventions.AddPageRoute("/Forum/Posts/Index", "forum/p/{id:int}");
 				options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
 				options.Conventions.AddPageRoute("/Permissions/Index", "/Privileges");
 
 				// Backwards compatibility with legacy links
 				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/t/{id:int}");
+				options.Conventions.AddPageRoute("/Forum/Legacy/Post", "forum/p/{id:int}");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
 				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/f/{id:int}");
 				options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
 				options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
-				options.Conventions.AddPageRoute("/RamAddresses/LegacyList", "AddressesUp");
 				options.Conventions.AddPageRoute("/Forum/Legacy/MoodReport", "forum/moodreport.php");
-
-				options.Conventions.AddPageRoute("/RamAddresses/List", "Addresses-List");
-				options.Conventions.AddPageRoute("/RamAddresses/Index", "Addresses-{id:int}");
 
 				options.Conventions.AddPageRoute("/RssFeeds/Publications", "/publications.rss");
 				options.Conventions.AddPageRoute("/RssFeeds/Submissions", "/submissions.rss");
@@ -132,6 +124,7 @@ public static class ServiceCollectionExtensions
 
 	public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)
 	{
+		services.Configure<PasswordHasherOptions>(options => options.IterationCount = 720_000);
 		services.AddIdentity<User, Role>(config =>
 			{
 				config.SignIn.RequireConfirmedEmail = env.IsProduction() || env.IsStaging();
@@ -142,7 +135,7 @@ public static class ServiceCollectionExtensions
 				config.Password.RequiredUniqueChars = 4;
 				config.User.RequireUniqueEmail = true;
 				config.User.AllowedUserNameCharacters += "āâãáéëöú£ "; // The space is intentional
-				})
+			})
 			.AddEntityFrameworkStores<ApplicationDbContext>()
 			.AddDefaultTokenProviders();
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Tests.Services;
@@ -166,5 +167,150 @@ public class TASVideoAgentTests
 		Assert.AreEqual(SiteGlobalConstants.UnpublishPost, actual.Text);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsTrue(actual.EnableBbCode);
+	}
+
+	[TestMethod]
+	public async Task SendWelcomeMessage_UserNotFound_NoMessageSent()
+	{
+		const int notExists = int.MaxValue;
+		await _tasVideoAgent.SendWelcomeMessage(notExists);
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendWelcomeMessage_PostNotFound_NoMessageSent()
+	{
+		var entry = _db.Users.Add(new User());
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendWelcomeMessage(entry.Entity.Id);
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendWelcomeMessage_Success()
+	{
+		const string userName = "TestUser";
+		const string template = "Welcome [[username]]";
+		const string subject = "Test";
+		var userEntry = _db.Users.Add(new User { UserName = userName });
+		_db.ForumPosts.Add(new ForumPost
+		{
+			Id = SiteGlobalConstants.WelcomeToTasvideosPostId,
+			Text = template,
+			Subject = subject
+		});
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendWelcomeMessage(userEntry.Entity.Id);
+
+		Assert.AreEqual(1, _db.PrivateMessages.Count());
+		var message = _db.PrivateMessages.Single();
+		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, message.FromUserId);
+		Assert.AreEqual(userEntry.Entity.Id, message.ToUserId);
+		Assert.IsTrue(message.EnableBbCode);
+		Assert.IsFalse(message.EnableHtml);
+		Assert.IsTrue(message.Text.Contains(userEntry.Entity.UserName));
+		Assert.AreEqual(subject, message.Subject);
+	}
+
+	[TestMethod]
+	public async Task SendAutoAssignedRole_UserNotFound_NoMessageSent()
+	{
+		const int notExists = int.MaxValue;
+		await _tasVideoAgent.SendAutoAssignedRole(notExists, "");
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendAutoAssignedRole_PostNotFound_NoMessageSent()
+	{
+		var entry = _db.Users.Add(new User());
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendAutoAssignedRole(entry.Entity.Id, "");
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendAutoAssignedRole_Success()
+	{
+		const string userName = "TestUser";
+		const string template = "Congratulations on [[publicationTitle]]. You have been assigned [[role]]";
+		const string roleName = "Test Forum User";
+		const string subject = "Test";
+		var userEntry = _db.Users.Add(new User { UserName = userName });
+		_db.ForumPosts.Add(new ForumPost
+		{
+			Id = SiteGlobalConstants.AutoAssignedRolePostId,
+			Text = template,
+			Subject = subject
+		});
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendAutoAssignedRole(userEntry.Entity.Id, roleName);
+
+		Assert.AreEqual(1, _db.PrivateMessages.Count());
+		var message = _db.PrivateMessages.Single();
+		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, message.FromUserId);
+		Assert.AreEqual(userEntry.Entity.Id, message.ToUserId);
+		Assert.IsTrue(message.EnableBbCode);
+		Assert.IsFalse(message.EnableHtml);
+		Assert.IsTrue(message.Text.Contains(roleName));
+		Assert.AreEqual(subject, message.Subject);
+	}
+
+	[TestMethod]
+	public async Task SendPublishedAuthorRole_UserNotFound_NoMessageSent()
+	{
+		const int notExists = int.MaxValue;
+		await _tasVideoAgent.SendPublishedAuthorRole(notExists, "", "");
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendPublishedAuthorRole_PostNotFound_NoMessageSent()
+	{
+		var entry = _db.Users.Add(new User());
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendPublishedAuthorRole(entry.Entity.Id, "", "");
+
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
+	}
+
+	[TestMethod]
+	public async Task SendPublishedAuthorRole_Success()
+	{
+		const string userName = "TestUser";
+		const string template = "Congratulations on [[publicationTitle]]. You have been assigned [[role]]";
+		const string subject = "Test";
+		const string roleName = "Test Role";
+		const string publicationTitle = "Test in 1:00";
+		var userEntry = _db.Users.Add(new User { UserName = userName });
+		_db.ForumPosts.Add(new ForumPost
+		{
+			Id = SiteGlobalConstants.PublishedAuthorRoleAddedPostId,
+			Text = template,
+			Subject = subject
+		});
+		await _db.SaveChangesAsync();
+
+		await _tasVideoAgent.SendPublishedAuthorRole(userEntry.Entity.Id, roleName, publicationTitle);
+
+		Assert.AreEqual(1, _db.PrivateMessages.Count());
+		var message = _db.PrivateMessages.Single();
+		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, message.FromUserId);
+		Assert.AreEqual(userEntry.Entity.Id, message.ToUserId);
+		Assert.IsTrue(message.EnableBbCode);
+		Assert.IsFalse(message.EnableHtml);
+		Assert.IsTrue(message.Text.Contains(roleName));
+		Assert.IsTrue(message.Text.Contains(publicationTitle));
+		Assert.AreEqual(subject, message.Subject);
 	}
 }

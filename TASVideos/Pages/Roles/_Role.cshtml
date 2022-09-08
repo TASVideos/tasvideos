@@ -1,7 +1,10 @@
 ﻿@model TASVideos.Pages.Roles.Models.RoleDisplayModel
+@{
+	var groupedPermissions = Model.Permissions.GroupBy(p => p.Group());
+}
 <card class="mb-2">
 	<cardbody>
-		<h5 class="card-title">@Model!.Name</h5>
+		<h5 id="@Model.Name" class="card-title">@Model.Name</h5>
 		<row>
 			<div class="col-md-6">
 				<div permission="EditRoles">
@@ -21,9 +24,17 @@
 					</a>
 				</strong>
 				<br />
-				@foreach (var permission in Model.Permissions)
+				@foreach (var permissionGroup in groupedPermissions)
 				{
-					<div class="ml-md-0 ml-sm-4">@permission.ToString().SplitCamelCase()</div>
+					<div class="ml-md-0 ml-sm-4">
+						@permissionGroup.Key
+						<ul>
+							@foreach (var permission in permissionGroup.OrderBy(g => g.ToString()))
+							{
+								<li>@permission.ToString().SplitCamelCase()</li>
+							}
+						</ul>
+					</div>
 				}
 			</div>
 			<div condition="@Model.Links.Any()" class="col-lg-3 col-md-12">

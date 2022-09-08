@@ -7,6 +7,6 @@ public class UserPostsRequest : PagingModel
 	public UserPostsRequest()
 	{
 		PageSize = ForumConstants.PostsPerPage;
-		Sort = $"-{nameof(UserPostsModel.Post.CreateTimestamp)}";
+		Sort = $"-{nameof(UserPagePost.CreateTimestamp)}";
 	}
 }

@@ -51,10 +51,14 @@
 		</div>
 	</row>
 	<hr />
-	<fullrow class="text-center">
+	<form-button-bar>
 		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
 		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
-	</fullrow>
+		<div class="form-check-inline">
+			<label asp-for="Catalog.MinorEdit" class="form-check-label"></label>
+			<input asp-for="Catalog.MinorEdit" type="checkbox" class="form-check-input"/>
+		</div>
+	</form-button-bar>
 </form>
 
 @section Scripts {

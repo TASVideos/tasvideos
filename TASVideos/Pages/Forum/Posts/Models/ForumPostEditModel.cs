@@ -26,6 +26,8 @@ public class ForumPostEditModel
 	[Required]
 	public string Text { get; set; } = "";
 
+	public string OriginalText => Text;
+
 	public bool IsFirstPost { get; set; }
 
 	public ForumPostMood Mood { get; set; } = ForumPostMood.Normal;

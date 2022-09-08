@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,20 @@ public class RateModel : BasePageModel
 	[BindProperty]
 	public PublicationRateModel Rating { get; set; } = new();
 
+	public IEnumerable<RatingEntry> AllRatings = new List<RatingEntry>();
+	public double OverallRating { get; set; }
+
+	public IEnumerable<RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
+		? AllRatings
+		: AllRatings.Where(r => r.IsPublic || r.UserName == User.Name());
+
 	public async Task<IActionResult> OnGet()
 	{
 		var userId = User.GetUserId();
-		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == Id);
+		var publication = await _db.Publications
+			.Include(p => p.PublicationRatings)
+			.ThenInclude(r => r.User)
+			.SingleOrDefaultAsync(p => p.Id == Id);
 		if (publication is null)
 		{
 			return NotFound();
@@ -48,7 +59,32 @@ public class RateModel : BasePageModel
 
 		Rating.Unrated = Rating.Rating is null;
 
+		AllRatings = publication.PublicationRatings
+			.Select(pr => new RatingEntry
+			{
+				UserName = pr.User!.UserName,
+				IsPublic = pr.User!.PublicRatings,
+				Rating = pr.Value
+			})
+			.ToList();
+
+		OverallRating = AllRatings.Any()
+			? Math.Round(AllRatings.Select(r => r.Rating).Average(), 2)
+			: 0;
+
 		return Page();
+	}
+
+	// TODO:  Move me
+	public class RatingEntry
+	{
+		[Display(Name = "UserName")]
+		public string UserName { get; init; } = "";
+
+		[Display(Name = "Rating")]
+		public double Rating { get; init; }
+
+		public bool IsPublic { get; init; }
 	}
 
 	public async Task<IActionResult> OnPost()
@@ -67,9 +103,9 @@ public class RateModel : BasePageModel
 
 		UpdateRating(rating, Id, userId, PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating), Rating.Unrated);
 
-		await _db.SaveChangesAsync();
+		await ConcurrentSave(_db, $"{Rating.Title} successfully rated.", $"Unable to rate {Rating.Title}");
 
-		return BasePageRedirect("/Ratings/Index", new { Id });
+		return BasePageRedirect("/Publications/Rate", new { Id });
 	}
 
 	public async Task<IActionResult> OnPostInline()

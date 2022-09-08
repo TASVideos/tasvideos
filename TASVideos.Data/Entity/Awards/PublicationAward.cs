@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity.Awards;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace TASVideos.Data.Entity.Awards;
+
+[ExcludeFromHistory]
 public class PublicationAward
 {
 	public int Id { get; set; }

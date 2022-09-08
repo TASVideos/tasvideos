@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 
 using TASVideos.Attributes;
@@ -54,9 +55,15 @@ public static class ReflectionExtensions
 
 	public static string DisplayName(this PropertyInfo propertyInfo)
 	{
-		var displayAttr = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
-		return displayAttr is not null
-			? displayAttr.DisplayName
+		var displayNameAttribute = propertyInfo.GetCustomAttribute<DisplayNameAttribute>();
+		if (displayNameAttribute is not null)
+		{
+			return displayNameAttribute.DisplayName;
+		}
+
+		var displayAttribute = propertyInfo.GetCustomAttribute<DisplayAttribute>();
+		return displayAttribute is not null
+			? displayAttribute.Name ?? ""
 			: propertyInfo.Name;
 	}
 }

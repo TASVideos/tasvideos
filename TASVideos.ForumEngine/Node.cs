@@ -129,20 +129,30 @@ public class Element : INode
 		}
 	}
 
-	private async Task WriteHref(HtmlWriter w, IWriterHelper h, Func<string, string> transformUrl, Func<string, Task<string>> transformUrlText)
+	private async Task WriteHref(HtmlWriter w, IWriterHelper h, Func<string, string> transformUrl, Func<string, Task<string>>? transformUrlText)
 	{
 		w.OpenTag("a");
 		var href = transformUrl(Options != "" ? Options : GetChildText());
 		w.Attribute("href", href);
 		if (Options != "")
 		{
+			if (transformUrlText != null)
+			{
+				w.Attribute("title", await transformUrlText(Options));
+			}
+
 			await WriteChildren(w, h);
 		}
 		else
 		{
 			// these were all parsed as ChildTagsIfParam, so we're guaranteed to have zero or one text children.
 			var text = Children.Cast<Text>().SingleOrDefault()?.Content ?? "";
-			w.Text(await transformUrlText(text));
+			if (transformUrlText != null)
+			{
+				text = await transformUrlText(text);
+			}
+
+			w.Text(text);
 		}
 
 		w.CloseTag("a");
@@ -239,7 +249,7 @@ public class Element : INode
 
 					// "text" is not a supported language for prism,
 					// so it will just get the same text formatting as languages, but no syntax highlighting.
-					var lang = osplit.Length > 0 ? osplit[^1] : "text";
+					var lang = PrismNames.FixLanguage(osplit.Length > 0 ? osplit[^1] : "text");
 
 					if (lang != "text")
 					{
@@ -280,10 +290,10 @@ public class Element : INode
 
 				break;
 			case "url":
-				await WriteHref(w, h, s => s, async s => s);
+				await WriteHref(w, h, s => s, null);
 				break;
 			case "email":
-				await WriteHref(w, h, s => "mailto:" + s, async s => s);
+				await WriteHref(w, h, s => "mailto:" + s, null);
 				break;
 			case "thread":
 				await WriteHref(w, h, s => "/Forum/Topics/" + s, async s => "Thread #" + s);
@@ -314,9 +324,6 @@ public class Element : INode
 				break;
 			case "userfile":
 				await WriteHref(w, h, s => "/userfiles/info/" + s, async s => "User movie #" + s);
-				break;
-			case "wip":
-				await WriteHref(w, h, s => "/userfiles/info/" + s, async s => "WIP #" + s);
 				break;
 			case "wiki":
 				await WriteHref(w, h, s => "/" + s, async s => "Wiki: " + s);

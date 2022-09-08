@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
@@ -7,7 +6,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class ExternalDependenciesModel : PageModel
+public class ExternalDependenciesModel : BasePageModel
 {
 	private readonly IGoogleAuthService _googleAuthService;
 	private readonly TwitterDistributorV2 _twitter;

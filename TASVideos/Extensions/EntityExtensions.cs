@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
-using TASVideos.Pages.Games.Versions.Models;
+using TASVideos.Pages.Games.Models;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
@@ -18,6 +19,16 @@ namespace TASVideos.Extensions;
 /// </summary>
 public static class EntityExtensions
 {
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<string> query)
+	{
+		return query
+			.Select(s => new SelectListItem
+			{
+				Text = s,
+				Value = s
+			});
+	}
+
 	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Genre> query)
 	{
 		return query
@@ -93,22 +104,26 @@ public static class EntityExtensions
 
 	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Flag> query, IEnumerable<PermissionTo> userPermissions)
 	{
-		return query.Select(f => new SelectListItem
-		{
-			Text = f.Name,
-			Value = f.Id.ToString(),
-			Disabled = f.PermissionRestriction.HasValue
-				&& !userPermissions.Contains(f.PermissionRestriction.Value)
-		});
+		return query
+			.OrderBy(f => f.Name)
+			.Select(f => new SelectListItem
+			{
+				Text = f.Name,
+				Value = f.Id.ToString(),
+				Disabled = f.PermissionRestriction.HasValue
+					&& !userPermissions.Contains(f.PermissionRestriction.Value)
+			});
 	}
 
 	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Tag> query)
 	{
-		return query.Select(t => new SelectListItem
-		{
-			Text = t.DisplayName,
-			Value = t.Id.ToString()
-		});
+		return query
+			.OrderBy(t => t.DisplayName)
+			.Select(t => new SelectListItem
+			{
+				Text = t.DisplayName,
+				Value = t.Id.ToString()
+			});
 	}
 
 	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Publication> query)
@@ -127,6 +142,24 @@ public static class EntityExtensions
 				Text = c.Title,
 				Value = c.Id.ToString()
 			});
+	}
+
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<User> query)
+	{
+		return query.Select(u => new SelectListItem
+		{
+			Value = u.Id.ToString(),
+			Text = u.UserName
+		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Award> query, int year)
+	{
+		return query.Select(a => new SelectListItem
+		{
+			Value = a.ShortName,
+			Text = a.Description + " for " + year
+		});
 	}
 
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
@@ -176,12 +209,7 @@ public static class EntityExtensions
 						DisplayName = pt.Tag!.DisplayName,
 						Code = pt.Tag.Code
 					}),
-				GenreTags = p.Game!.GameGenres
-					.Select(gg => new PublicationDisplayModel.TagModel
-					{
-						DisplayName = gg.Genre!.DisplayName,
-						Code = gg.Genre.DisplayName // TODO
-					}),
+				GameGenres = p.Game!.GameGenres.Select(gg => gg.Genre!.DisplayName),
 				Files = p.Files
 					.Select(f => new PublicationDisplayModel.FileModel
 					{
@@ -240,7 +268,9 @@ public static class EntityExtensions
 			IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
 			Signature = u.Signature,
 			Avatar = u.Avatar,
-			MoodAvatarUrlBase = u.MoodAvatarUrlBase
+			MoodAvatarUrlBase = u.MoodAvatarUrlBase,
+			UseRatings = u.UseRatings,
+			ModeratorComments = u.ModeratorComments
 		});
 	}
 
@@ -262,7 +292,7 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles)
+	public static IQueryable<UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles, bool hideComments = true)
 	{
 		return userFiles.Select(uf => new UserFileModel
 		{
@@ -286,6 +316,12 @@ public static class EntityExtensions
 			GameSystem = uf.System != null
 				? uf.System.Code
 				: "",
+			System = uf.System != null
+				? uf.System.DisplayName
+				: "",
+			Length = uf.Length,
+			Frames = uf.Frames,
+			Rerecords = uf.Rerecords,
 			Comments = uf.Comments
 				.Select(c => new UserFileModel.UserFileCommentModel
 				{
@@ -294,7 +330,8 @@ public static class EntityExtensions
 					CreationTimeStamp = c.CreationTimeStamp,
 					UserId = c.UserId,
 					UserName = c.User!.UserName
-				})
+				}),
+			HideComments = hideComments
 		});
 	}
 
@@ -351,6 +388,40 @@ public static class EntityExtensions
 			Status = s.Status,
 			EmulatorVersion = s.EmulatorVersion,
 			Branch = s.Branch
+		});
+	}
+
+	public static IQueryable<GameDisplayModel> ToGameDisplayModel(this IQueryable<Game> games)
+	{
+		return games.Select(g => new GameDisplayModel
+		{
+			Id = g.Id,
+			DisplayName = g.DisplayName,
+			Abbreviation = g.Abbreviation,
+			ScreenshotUrl = g.ScreenshotUrl,
+			GameResourcesPage = g.GameResourcesPage,
+			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
+			Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion
+			{
+				Type = gv.Type,
+				Id = gv.Id,
+				Md5 = gv.Md5,
+				Sha1 = gv.Sha1,
+				Name = gv.Name,
+				Region = gv.Region,
+				Version = gv.Version,
+				SystemCode = gv.System!.Code,
+				TitleOverride = gv.TitleOverride
+			}).ToList(),
+			GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
+			{
+				Id = gg.GameGroupId,
+				Name = gg.GameGroup!.Name
+			}).ToList(),
+			PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
+			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
+			SubmissionCount = g.Submissions.Count,
+			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
 		});
 	}
 }

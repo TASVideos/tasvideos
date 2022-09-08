@@ -2,7 +2,7 @@
 @model InfoModel
 
 @{
-	ViewData["Title"] = $"User movie #{Model.Id}";
+	ViewData["Title"] = $"User File #{Model.Id}";
 }
 @section Header {
 	<meta property="og:type" content="website" />
@@ -14,4 +14,10 @@
 	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
 	<meta property="og:image" content="@($"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png")" />
 }
+
+<div class="mb-2">
+	<a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
+	<a asp-page="Index" class="btn btn-secondary float-end">All User Files</a>
+</div>
+
 <partial name="_UserFileInfo" model="Model.UserFile" />

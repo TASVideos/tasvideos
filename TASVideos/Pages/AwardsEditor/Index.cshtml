@@ -1,0 +1,96 @@
+﻿@page "{year?}"
+@using TASVideos.Data.Entity.Awards
+@model IndexModel
+@{
+	ViewData["Title"] = $"Awards Editor for {Model.Year}";
+	string status = DateTime.UtcNow.Year - Model.Year!.Value > 1
+		? "Closed"
+		: "Open";
+}
+
+<h4>
+	<a
+		condition="Model.Year > 2007"
+		class="btn btn-secondary"
+		asp-page="Index"
+		asp-route-year="@(Model.Year - 1)">
+		<i class="fa fa-arrow-left"></i>
+	</a>
+	<a
+		condition="Model.Year < DateTime.UtcNow.Year"
+		class="btn btn-secondary"
+		asp-page="Index"
+		asp-route-year="@(Model.Year + 1)">
+		<i class="fa fa-arrow-right"></i>
+	</a>
+	Award Status: @status
+	<a asp-page="ListCategories" class="btn btn-primary pull-right" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()">List Award Categories</a>
+</h4>
+
+<br/>
+<h4>Current Awards</h4>
+<table class="table">
+	<tr>
+		<th>Image</th>
+		<th>Short Name</th>
+		<th>Description</th>
+		<th>Type</th>
+		<th>Assigned</th>
+		<th></th>
+	</tr>
+	@foreach (var assignment in Model.Assignments.OrderBy(a => a.Type))
+	{
+		<tr>
+			<td>
+				<partial name="Shared/_Award" model="@assignment" />
+			</td>
+			<td>@assignment.ShortName</td>
+			<td>@assignment.Description</td>
+			<td>@assignment.Type</td>
+			<td>
+				@if (assignment.Publications.Any() || assignment.Users.Any())
+				{
+					if (assignment.Type == AwardType.User)
+					{
+						foreach (var user in assignment.Users)
+						{
+							<profile-link username="@user.UserName"></profile-link><br/>
+						}
+					}
+					
+					if (assignment.Type == AwardType.Movie)
+					{
+						foreach (var pub in assignment.Publications)
+						{
+							<pub-link id="@pub.Id">@pub.Title</pub-link><br/>
+						}
+					}
+				}
+				else
+				{
+					<span>Unassigned</span>
+				}
+			</td>
+			<td>
+				<delete-button
+					condition="@(status == "Open")"
+					asp-href="Assign/@(assignment.Year)?handler=Revoke&shortName=@(assignment.ShortName)"
+					warning-message="Are you sure you want to delete revoke this award to all recipients?"
+					class="float-end"><i class="fa fa-remove"></i></delete-button>
+			</td>
+		</tr>
+	}
+</table>
+
+<hr />
+<row>
+	<column md="6">
+		<h4>Assign An Award</h4>
+		<a class="btn btn-primary" asp-page="Assign" asp-route-year="@Model.Year" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"><i class="fa fa-plus"></i> Assign</a>
+	</column>
+	<column md="6">
+		<h4>Upload an Award Image</h4>
+		<a asp-page="UploadImage" asp-route-year="@Model.Year" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
+	</column>
+</row>
+

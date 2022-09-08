@@ -45,6 +45,9 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	[Display(Name = "Frame Count")]
 	public int FrameCount { get; set; }
 
+	[Display(Name = "Cycle Count")]
+	public long? CycleCount { get; set; }
+
 	[Display(Name = "Frame Rate")]
 	public double FrameRate { get; set; }
 
@@ -85,6 +88,7 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 
 	public int? TopicId { get; set; }
 	public int? GameId { get; set; }
+	public string? Warnings { get; set; }
 
 	internal int? SystemId { get; set; }
 	internal int? SystemFrameRateId { get; set; }

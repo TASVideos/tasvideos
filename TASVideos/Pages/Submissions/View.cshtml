@@ -137,7 +137,10 @@
 				<th>@Html.DisplayNameFor(m => m.Submission.GameVersion)</th>
 				<td>@Model.Submission.GameVersion</td>
 				<th>@Html.DisplayNameFor(m => m.Submission.FrameCount)</th>
-				<td>@Model.Submission.FrameCount</td>
+				<td>
+					@Model.Submission.FrameCount
+					<small condition="Model.Submission.CycleCount.HasValue">(@Html.DisplayNameFor(m => m.Submission.CycleCount) @Model.Submission.CycleCount)</small>
+				</td>
 			</tr>
 			<tr>
 				<th>@Html.DisplayNameFor(m => m.Submission.RomName)</th>
@@ -168,9 +171,11 @@
 					</small>
 				</td>
 			</tr>
-			<tr condition="Model.Submission.GameId.HasValue">
-				<th>Game</th>
-				<td><game-link id="Model.Submission.GameId!.Value">@Model.Submission.GameName</game-link></td>
+			<tr condition="Model.Submission.GameId.HasValue || !string.IsNullOrWhiteSpace(Model.Submission.Warnings)">
+				<th condition="Model.Submission.GameId.HasValue">Game</th>
+				<td condition="Model.Submission.GameId.HasValue"><game-link id="Model.Submission.GameId!.Value">@Model.Submission.GameName</game-link></td>
+				<th condition="!string.IsNullOrWhiteSpace(Model.Submission.Warnings)">Warnings</th>
+				<td condition="!string.IsNullOrWhiteSpace(Model.Submission.Warnings)">@Model.Submission.Warnings</td>
 			</tr>
 		</table>
 		<small>
@@ -216,10 +221,4 @@
 	asp-route-latest="true"
 	class="btn bg-info text-dark btn-sm">
 	Latest diff
-</a>
-<a
-	asp-page="/Wiki/Referrers"
-	asp-route-path="@($"{Model.Id}S")"
-	class="btn bg-info text-dark btn-sm">
-	List Referrers
 </a>

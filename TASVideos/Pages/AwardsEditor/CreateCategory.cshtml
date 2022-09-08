@@ -1,0 +1,49 @@
+﻿@page
+@model CreateCategoryModel
+@{
+	ViewData["Title"] = "Create a New Award Category";
+}
+
+<form method="post" enctype="multipart/form-data">
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<row>
+		<column md="6">
+			<form-group>
+				<label asp-for="AwardCategory.Type"></label>
+				<select asp-for="AwardCategory.Type" asp-items="Model.AvailableAwardTypes" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<label asp-for="AwardCategory.ShortName"></label>
+				<input asp-for="AwardCategory.ShortName" class="form-control"/>
+				<span asp-validation-for="AwardCategory.ShortName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="AwardCategory.Description"></label>
+				<input asp-for="AwardCategory.Description" class="form-control"/>
+				<span asp-validation-for="AwardCategory.Description" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<div><small>Note: filename will be auto-generated with the pattern {shortname}_xxxx.png</small></div>
+				<label asp-for="AwardCategory.BaseImage"></label>
+				<input asp-for="AwardCategory.BaseImage" class="form-control"/>
+				<span asp-validation-for="AwardCategory.BaseImage" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
+				<label asp-for="AwardCategory.BaseImage2X"></label>
+				<input asp-for="AwardCategory.BaseImage2X" class="form-control"/>
+				<span asp-validation-for="AwardCategory.BaseImage2X" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
+				<label asp-for="AwardCategory.BaseImage4X"></label>
+				<input asp-for="AwardCategory.BaseImage4X" class="form-control"/>
+				<span asp-validation-for="AwardCategory.BaseImage4X" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Create</button>
+		<a class="btn btn-secondary" asp-page="ListCategories">Cancel</a>
+	</form-button-bar>
+</form>

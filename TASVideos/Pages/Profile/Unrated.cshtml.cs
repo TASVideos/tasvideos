@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -8,7 +7,7 @@ using TASVideos.Pages.Profile.Models;
 namespace TASVideos.Pages.Profile;
 
 [RequirePermission(PermissionTo.RateMovies)]
-public class UnratedModel : PageModel
+public class UnratedModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 

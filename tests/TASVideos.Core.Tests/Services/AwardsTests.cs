@@ -9,13 +9,15 @@ public class AwardsTests
 {
 	private readonly IAwards _awards;
 	private readonly TestDbContext _db;
+	private readonly TestCache _cache;
 
 	private static readonly int CurrentYear = DateTime.UtcNow.Year;
 
 	public AwardsTests()
 	{
 		_db = TestDbContext.Create();
-		_awards = new Awards(_db, new NoCacheService());
+		_cache = new TestCache();
+		_awards = new Awards(_db, _cache);
 	}
 
 	[TestMethod]
@@ -84,6 +86,50 @@ public class AwardsTests
 	}
 
 	[TestMethod]
+	public async Task ForPublication_PublicationDoesNotExist_ReturnsEmptyList()
+	{
+		var actual = await _awards.ForPublication(int.MaxValue);
+
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(0, actual.Count());
+	}
+
+	[TestMethod]
+	public async Task ForPublication_PublicationAward_ReturnsAward()
+	{
+		var user = CreateUser();
+		var pub = CreatePublication(user);
+		var award = CreatePublicationAward();
+		GivePublicationAnAward(pub, award);
+
+		var actual = await _awards.ForPublication(pub.Id);
+
+		Assert.IsNotNull(actual);
+		var list = actual.ToList();
+		Assert.AreEqual(1, list.Count);
+		var actualPubAward = list.Single();
+		Assert.AreEqual(award.ShortName, actualPubAward.ShortName);
+		Assert.AreEqual(CurrentYear, actualPubAward.Year);
+		Assert.IsTrue(actualPubAward.Description.Contains(CurrentYear.ToString()));
+	}
+
+	[TestMethod]
+	public async Task ForPublication_PublicationAwardForPublication_ReturnsNoAward()
+	{
+		var publicationAward = CreatePublicationAward();
+		var author = CreateUser();
+		var pub = CreatePublication(author);
+		GivePublicationAnAward(pub, publicationAward);
+
+		var pubWithNoAward = CreatePublication(author);
+
+		var actual = await _awards.ForPublication(pubWithNoAward.Id);
+
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(0, actual.Count());
+	}
+
+	[TestMethod]
 	public async Task ForUser_AuthorOfTwoPublicationsWithIdenticalAward_ReturnsTwoAwards()
 	{
 		var publicationAward = CreatePublicationAward();
@@ -97,6 +143,19 @@ public class AwardsTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(2, actual.Count());
+	}
+
+	[TestMethod]
+	public async Task ForPublication_AuthorHasAWard_ReturnsNoAward()
+	{
+		var author = CreateUser();
+		var pub = CreatePublication(author);
+		var award = CreateAuthorAward();
+		GiveUserAnAward(author, award);
+
+		var actual = await _awards.ForPublication(pub.Id);
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(0, actual.Count());
 	}
 
 	[TestMethod]
@@ -168,6 +227,177 @@ public class AwardsTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(0, actual.Count());
+	}
+
+	[TestMethod]
+	public async Task AddAwardCategory_ShortNameExists_ReturnsFalse()
+	{
+		const string existingAward = "existing_short_name";
+		_db.Awards.Add(new Award { ShortName = existingAward });
+		await _db.SaveChangesAsync();
+
+		var actual = await _awards.AddAwardCategory(AwardType.User, existingAward, "");
+		Assert.IsFalse(actual);
+		Assert.AreEqual(1, _db.Awards.Count());
+	}
+
+	[TestMethod]
+	public async Task AddAwardCategory_Successful_ReturnsTrue()
+	{
+		const AwardType awardType = AwardType.User;
+		const string shortName = "short_name";
+		const string description = "Description";
+
+		var actual = await _awards.AddAwardCategory(awardType, shortName, description);
+
+		Assert.IsTrue(actual);
+		Assert.AreEqual(1, _db.Awards.Count());
+		var actualAward = _db.Awards.Single();
+		Assert.AreEqual(awardType, actualAward.Type);
+		Assert.AreEqual(shortName, actualAward.ShortName);
+		Assert.AreEqual(description, actualAward.Description);
+	}
+
+	[TestMethod]
+	[DataRow("short_name", "short_name", true)]
+	[DataRow("Short_name", "short_name", true)]
+	[DataRow("short_name", "shortname", false)]
+	public async Task CategoryExists(string shortName, string requestedShortName, bool expected)
+	{
+		_db.Awards.Add(new Award { ShortName = shortName });
+		await _db.SaveChangesAsync();
+
+		var actual = await _awards.CategoryExists(requestedShortName);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[ExpectedException(typeof(InvalidOperationException))]
+	public async Task AssignUserAward_NotFound_throws()
+	{
+		await _awards.AssignUserAward("DoesNotExist", 1, Enumerable.Empty<int>());
+	}
+
+	[TestMethod]
+	public async Task AssignUserAward_Successful_FlushesCache()
+	{
+		var user = CreateUser();
+		var award = CreateAuthorAward();
+		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new() { ShortName = "PreviouslyCached" } });
+
+		int year = DateTime.UtcNow.Year - 1;
+		await _awards.AssignUserAward(
+			award.ShortName,
+			year,
+			new[] { user.Id });
+
+		Assert.AreEqual(1, _db.UserAwards.Count());
+		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
+		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
+		Assert.AreEqual(1, cache.Count);
+		var cachedAward = cache.Single();
+		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
+		Assert.AreEqual(year, cachedAward.Year);
+	}
+
+	[TestMethod]
+	public async Task AssignUserAward_IgnoredExistingAssignments()
+	{
+		var author = CreateUser();
+		var award = CreateAuthorAward();
+		GiveUserAnAward(author, award);
+
+		await _awards.AssignUserAward(
+			award.ShortName,
+			CurrentYear,
+			new[] { author.Id });
+
+		Assert.AreEqual(1, _db.UserAwards.Count());
+		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
+		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
+		Assert.AreEqual(1, cache.Count);
+		var cachedAward = cache.Single();
+		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
+		Assert.AreEqual(CurrentYear, cachedAward.Year);
+	}
+
+	[TestMethod]
+	[ExpectedException(typeof(InvalidOperationException))]
+	public async Task AssignPublicationAward_NotFound_throws()
+	{
+		await _awards.AssignPublicationAward("DoesNotExist", 1, Enumerable.Empty<int>());
+	}
+
+	[TestMethod]
+	public async Task AssignPublicationAward_Successful_FlushesCache()
+	{
+		var author = CreateUser();
+		var pub = CreatePublication(author);
+		var award = CreatePublicationAward();
+		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new() { ShortName = "PreviouslyCached" } });
+
+		int year = DateTime.UtcNow.Year - 1;
+		await _awards.AssignPublicationAward(
+			award.ShortName,
+			year,
+			new[] { pub.Id });
+
+		Assert.AreEqual(1, _db.PublicationAwards.Count());
+		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
+		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
+		Assert.AreEqual(1, cache.Count);
+		var cachedAward = cache.Single();
+		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
+		Assert.AreEqual(year, cachedAward.Year);
+	}
+
+	[TestMethod]
+	public async Task AssignPublicationAward_IgnoredExistingAssignments()
+	{
+		var author = CreateUser();
+		var pub = CreatePublication(author);
+		var award = CreatePublicationAward();
+		GivePublicationAnAward(pub, award);
+
+		await _awards.AssignPublicationAward(
+			award.ShortName,
+			CurrentYear,
+			new[] { pub.Id });
+
+		Assert.AreEqual(1, _db.PublicationAwards.Count());
+		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
+		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
+		Assert.AreEqual(1, cache.Count);
+		var cachedAward = cache.Single();
+		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
+		Assert.AreEqual(CurrentYear, cachedAward.Year);
+	}
+
+	[TestMethod]
+	public async Task Revoke_Success_FlushesCache()
+	{
+		_cache.Set(CacheKeys.AwardsCache, new object());
+		var user = CreateUser();
+		var award = CreateAuthorAward();
+		GiveUserAnAward(user, award);
+
+		var assignment = new AwardAssignment
+		{
+			ShortName = award.ShortName,
+			Year = CurrentYear,
+			Users = new List<AwardAssignment.User>
+			{
+				new(user.Id, user.UserName)
+			}
+		};
+
+		await _awards.Revoke(assignment);
+
+		Assert.AreEqual(0, _db.UserAwards.Count());
+		Assert.AreEqual(0, _db.PublicationAwards.Count());
+		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
+		var awardCache = _cache.Get<List<AwardAssignment>>(CacheKeys.AwardsCache);
+		Assert.AreEqual(0, awardCache.Count);
 	}
 
 	private User CreateUser()

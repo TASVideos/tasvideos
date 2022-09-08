@@ -55,7 +55,7 @@ public class CrossGameObsoletions : ViewComponent
 					}
 					else
 					{
-						foreach ((var k, var v) in allGroups)
+						foreach (var (k, v) in allGroups)
 						{
 							if (v.Contains(entry1) || v.Contains(entry2))
 							{

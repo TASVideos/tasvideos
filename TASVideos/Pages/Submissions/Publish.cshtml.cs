@@ -162,7 +162,7 @@ public class PublishModel : BasePageModel
 			await _queueService.ObsoleteWith(publicationToObsolete.Value, publication.Id);
 		}
 
-		await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId));
+		await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
 		await _tasVideosAgent.PostSubmissionPublished(Id, publication.Id);
 		await _publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
 
@@ -177,7 +177,6 @@ public class PublishModel : BasePageModel
 				wikiPage,
 				submission.System.Code,
 				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-				submission.Game.SearchKey,
 				null);
 			await _youtubeSync.SyncYouTubeVideo(video);
 		}

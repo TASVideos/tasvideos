@@ -1,0 +1,29 @@
+﻿@model (string LeftMarkupId, string RightMarkupId)
+<div id="diff-view" class="mt-3 border border-secondary d-none">
+</div>
+<div id="diff-options" class="d-none">
+	<hr />
+	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff()" /> Inline</label>
+	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff()" /> Side by Side</label>
+	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
+</div>
+
+<script src="~/js/diff_match_patch.js"></script>
+<script src="~/js/diff_view.js"></script>
+<script>
+	function generateDiff() {
+		const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
+		const contextSize = parseInt(document.querySelector('[name="context-size"').value);
+		const diffElem = document.getElementById('diff-view');
+		diffElem.classList.remove('d-none');
+		document.getElementById('diff-options').classList.remove('d-none');
+
+		renderDiff(
+			{ text: document.getElementById('@Model.LeftMarkupId').value, name: "Previous" },
+			{ text: document.getElementById('@Model.RightMarkupId').value, name: "Current" },
+			diffElem,
+			!!viewType,
+			contextSize
+		);
+	}
+</script>

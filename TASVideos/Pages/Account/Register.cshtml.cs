@@ -37,6 +37,7 @@ public class RegisterModel : BasePageModel
 		_userMaintenanceLogger = userMaintenanceLogger;
 	}
 
+	[Required]
 	[BindProperty]
 	[Display(Name = "Time Zone")]
 	public string? SelectedTimeZone { get; set; }
@@ -47,7 +48,6 @@ public class RegisterModel : BasePageModel
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
-	[RegularExpression(@"[^+]+", ErrorMessage = "Email pattern not allowed.")]
 	[BindProperty]
 	[Required]
 	[EmailAddress]
@@ -56,12 +56,14 @@ public class RegisterModel : BasePageModel
 
 	[BindProperty]
 	[Required]
-	[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
+	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
 	[Display(Name = "Password")]
 	public string Password { get; set; } = "";
 
 	[BindProperty]
+	[Required]
+	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
 	[Display(Name = "Confirm password")]
 	public string ConfirmPassword { get; set; } = "";
@@ -100,6 +102,11 @@ public class RegisterModel : BasePageModel
 		if (!await _signInManager.UsernameIsAllowed(UserName))
 		{
 			ModelState.AddModelError(nameof(UserName), "The username is not allowed.");
+		}
+
+		if (await _signInManager.EmailExists(Email))
+		{
+			ModelState.AddModelError(nameof(Email), "Email is already taken.");
 		}
 
 		if (ModelState.IsValid)

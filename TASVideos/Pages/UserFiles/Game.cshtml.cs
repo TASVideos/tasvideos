@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
@@ -40,8 +41,9 @@ public class GameModel : BasePageModel
 			GameId = game.Id,
 			GameName = game.DisplayName,
 			Files = game.UserFiles
-				.Where(uf => !uf.Hidden)
+				.HideIfNotAuthor(User.GetUserId())
 				.AsQueryable()
+				.OrderByDescending(uf => uf.UploadTimestamp)
 				.ToUserFileModel()
 				.ToList()
 		};

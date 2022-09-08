@@ -1,0 +1,34 @@
+﻿@page "{id}"
+@model PrimaryMoviesModel
+@{
+	ViewData["Title"] = $"Primary Movie File For {Model.PublicationTitle}";
+}
+
+<p>Original File: @Model.OriginalFileName</p>
+<form method="post" enctype="multipart/form-data">
+	<input type="hidden" asp-for="PublicationTitle" />
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="Reason"></label>
+				<div>Note: The reason will be used for announcements but not stored in the database</div>
+				<input asp-for="Reason" class="form-control" />
+				<span asp-validation-for="Reason" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="PrimaryMovieFile"></label>
+				<div>@Html.DescriptionFor(m => m.PrimaryMovieFile)</div>
+				<input asp-for="PrimaryMovieFile" class="form-control" />
+				<span asp-validation-for="PrimaryMovieFile" class="text-danger"></span>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Update</submit-button>
+		<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back To Edit</a>
+	</form-button-bar>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

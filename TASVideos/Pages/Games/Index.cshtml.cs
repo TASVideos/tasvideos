@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.Games.Models;
 using TASVideos.ViewComponents;
 
@@ -18,47 +19,27 @@ public class IndexModel : BasePageModel
 	}
 
 	[FromRoute]
-	public int Id { get; set; }
+	public string Id { get; set; } = "";
+
+	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
 	public GameDisplayModel Game { get; set; } = new();
 
 	public IEnumerable<MiniMovieModel> Movies { get; set; } = new List<MiniMovieModel>();
 
+	public IReadOnlyCollection<WatchFile> WatchFiles { get; set; } = new List<WatchFile>();
+
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games
-			.Select(g => new GameDisplayModel
-			{
-				Id = g.Id,
-				DisplayName = g.DisplayName,
-				Abbreviation = g.Abbreviation,
-				ScreenshotUrl = g.ScreenshotUrl,
-				GoodName = g.GoodName,
-				GameResourcesPage = g.GameResourcesPage,
-				Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
-				Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion
-				{
-					Type = gv.Type,
-					Id = gv.Id,
-					Md5 = gv.Md5,
-					Sha1 = gv.Sha1,
-					Name = gv.Name,
-					Region = gv.Region,
-					Version = gv.Version,
-					SystemCode = gv.System!.Code,
-					TitleOverride = gv.TitleOverride
-				}).ToList(),
-				GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
-				{
-					Id = gg.GameId,
-					Name = gg.Game!.DisplayName
-				}).ToList(),
-				PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
-				ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
-				SubmissionCount = g.Submissions.Count,
-				UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
-			})
-			.SingleOrDefaultAsync(g => g.Id == Id);
+		var query = _db.Games.ToGameDisplayModel();
+
+		query = ParsedId > 0
+			? query.Where(g => g.Id == ParsedId)
+			: query.Where(g => g.Abbreviation == Id);
+
+		// TODO: abbreviations need to be unique, then we can use Single here
+		var game = await query
+			.FirstOrDefaultAsync();
 
 		if (game is null)
 		{
@@ -67,12 +48,22 @@ public class IndexModel : BasePageModel
 
 		Game = game;
 		Movies = await _db.Publications
-			.Where(p => p.GameId == Id && p.ObsoletedById == null)
+			.Where(p => p.GameId == Game.Id && p.ObsoletedById == null)
 			.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
 			.ThenBy(p => p.Frames)
 			.ToMiniMovieModel()
 			.ToListAsync();
 
+		WatchFiles = await _db.UserFiles
+			.ForGame(Game.Id)
+			.Where(u => !u.Hidden)
+			.Where(u => u.Type == "wch")
+			.Select(u => new WatchFile(u.Id, u.FileName))
+			.ToListAsync();
+
 		return Page();
 	}
+
+	// TODO: move me
+	public record WatchFile(long Id, string FileName);
 }

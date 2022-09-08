@@ -34,7 +34,8 @@ public class EditModel : BasePageModel
 				.Select(gg => new GameGroupEditModel
 				{
 					Name = gg.Name,
-					SearchKey = gg.SearchKey
+					Abbreviation = gg.Abbreviation,
+					Description = gg.Description
 				})
 				.SingleOrDefaultAsync();
 
@@ -58,6 +59,16 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
+		if (GameGroup.Abbreviation != null && await _db.GameGroups.AnyAsync(g => g.Id != Id && g.Abbreviation == GameGroup.Abbreviation))
+		{
+			ModelState.AddModelError($"{nameof(GameGroup)}.{nameof(GameGroup.Abbreviation)}", $"Abbreviation {GameGroup.Abbreviation} already exists");
+		}
+
+		if (!ModelState.IsValid)
+		{
+			return Page();
+		}
+
 		GameGroup? gameGroup;
 		if (Id.HasValue)
 		{
@@ -71,14 +82,15 @@ public class EditModel : BasePageModel
 			}
 
 			gameGroup.Name = GameGroup.Name;
-			gameGroup.SearchKey = GameGroup.SearchKey;
+			gameGroup.Abbreviation = GameGroup.Abbreviation;
+			gameGroup.Description = GameGroup.Description;
 		}
 		else
 		{
 			gameGroup = new GameGroup
 			{
 				Name = GameGroup.Name,
-				SearchKey = GameGroup.SearchKey
+				Abbreviation = GameGroup.Abbreviation
 			};
 			_db.GameGroups.Add(gameGroup);
 		}

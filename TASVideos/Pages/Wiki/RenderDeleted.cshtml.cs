@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
@@ -7,7 +6,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.SeeDeletedWikiPages)]
-public class RenderDeletedModel : PageModel
+public class RenderDeletedModel : BasePageModel
 {
 	private readonly IWikiPages _wikiPages;
 

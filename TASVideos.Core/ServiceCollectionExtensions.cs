@@ -68,6 +68,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IIpBanService, IpBanService>();
 		services.AddScoped<ITagService, TagService>();
 		services.AddScoped<IFlagService, FlagService>();
+		services.AddScoped<IGenreService, GenreService>();
 		services.AddScoped<IClassService, ClassService>();
 		services.AddScoped<IMovieFormatDeprecator, MovieFormatDeprecator>();
 		services.AddScoped<IForumService, ForumService>();

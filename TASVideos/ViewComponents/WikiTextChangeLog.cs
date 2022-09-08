@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
@@ -16,18 +16,19 @@ public class WikiTextChangeLog : ViewComponent
 		_wikiPages = wikiPages;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(bool includeMinors, int? limit)
+	public async Task<IViewComponentResult> InvokeAsync(bool includeMinors)
 	{
-		var results = await GetWikiChangeLog(limit ?? 50, includeMinors);
+		var paging = this.GetPagingModel(100);
+		var results = await GetWikiChangeLog(paging, includeMinors);
+		this.SetPagingToViewData(paging);
 		return View(results);
 	}
 
-	private async Task<IEnumerable<WikiTextChangelogModel>> GetWikiChangeLog(int limit, bool includeMinorEdits)
+	private async Task<PageOf<WikiTextChangelogModel>> GetWikiChangeLog(PagingModel paging, bool includeMinorEdits)
 	{
 		var query = _wikiPages.Query
 			.ThatAreNotDeleted()
-			.ByMostRecent()
-			.Take(limit);
+			.ByMostRecent();
 
 		if (!includeMinorEdits)
 		{
@@ -44,6 +45,6 @@ public class WikiTextChangeLog : ViewComponent
 				MinorEdit = wp.MinorEdit,
 				RevisionMessage = wp.RevisionMessage
 			})
-			.ToListAsync();
+			.PageOf(paging);
 	}
 }

@@ -174,23 +174,6 @@ public class UserFilesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(InvalidOperationException))]
-	public async Task Upload_Throws_IfSpaceNotAvailable()
-	{
-		const int userId = 1;
-		_db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			AuthorId = userId,
-			Content = new byte[SiteGlobalConstants.UserFileStorageLimit],
-			CompressionType = Compression.None
-		});
-		await _db.SaveChangesAsync();
-
-		await _userFiles.Upload(userId, new("title", "desc", null, null, new byte[] { 0xFF }, "script.lua", true));
-	}
-
-	[TestMethod]
 	public async Task Upload_SupplementalFile_Success()
 	{
 		const int userId = 1;

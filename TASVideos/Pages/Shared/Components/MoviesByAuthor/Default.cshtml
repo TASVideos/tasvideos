@@ -1,9 +1,11 @@
 ﻿@model TASVideos.ViewComponents.Models.MoviesByAuthorModel
 
 @{
-	var authors = Model!.Publications.SelectMany(p => p.Authors).Distinct().ToList();
+	var authors = Model.NewbieAuthors.Any()
+		? Model.NewbieAuthors
+		: Model.Publications.SelectMany(p => p.Authors).Distinct().ToList();
 
-	var authorsWithPus = authors.Select(author => new
+	var authorsWithPubs = authors.Select(author => new
 	{
 		Name = author,
 		Pubs = Model.Publications.Where(p => p.Authors.Any(a => a == author)).ToList()
@@ -15,7 +17,7 @@
 </div>
 
 <div condition="Model.Publications.Any()">
-	@foreach (var author in authorsWithPus.OrderByDescending(a => a.Pubs.Count).ThenBy(a => a.Name))
+	@foreach (var author in authorsWithPubs.OrderByDescending(a => a.Pubs.Count).ThenBy(a => a.Name))
 	{
 		<card>
 			<cardheader>
@@ -43,6 +45,5 @@
 				</ul>
 			</cardbody>
 		</card>
-
 	}
 </div>

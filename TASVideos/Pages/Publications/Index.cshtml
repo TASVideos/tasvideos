@@ -5,12 +5,17 @@
 }
 
 <a asp-page="Filter" class="btn btn-primary mb-2">Filter</a>
-
+<fullrow class="mt-2">
+	<partial name="_Pager" model="Model.Movies" />
+</fullrow>
 @foreach (var movie in Model.Movies)
 {
 	<partial name="_MovieModule" model="movie" />
 	<br />
 }
+<fullrow class="mt-2">
+	<partial name="_Pager" model="Model.Movies" />
+</fullrow>
 <div class="text-muted">
-    @await Component.RenderWiki("System/MovieLinkInstruction")
+	@await Component.RenderWiki("System/MovieLinkInstruction")
 </div>

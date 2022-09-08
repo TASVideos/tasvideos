@@ -233,9 +233,9 @@ public class Element : INodeWithChildren
 			case "a":
 				if (Attributes.TryGetValue("href", out var href))
 				{
-					writer.Write(" (");
+					writer.Write(" ( ");
 					writer.Write(ctx.Helper.AbsoluteUrl(href).Replace(" ", "%20"));
-					writer.Write(')');
+					writer.Write(" )");
 				}
 
 				break;

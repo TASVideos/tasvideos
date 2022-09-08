@@ -1,0 +1,37 @@
+﻿@page "{hander?}"
+@model ListCategoryModel
+@{
+	ViewData["Title"] = "Award Categories";
+}
+
+<a asp-page="CreateCategory" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Create</a>
+<a asp-page="Index" asp-route-year="@DateTime.UtcNow.Year" class="btn btn-primary pull-right">Awards Editor</a>
+<table class="table table-sm table-striped">
+	<tr>
+		<th>Base Icon</th>
+		<th>Type</th>
+		<th>Short Name</th>
+		<th>Description</th>
+		<th>In Use</th>
+	</tr>
+	@foreach (var cat in Model.Categories.OrderBy(c => c.Type).ThenBy(c => c.ShortName))
+	{
+		<tr>
+			<td>
+				<img style="max-height: 48px;" 
+					srcset="/awards/@(cat.ShortName)_xxxx.png .5x,
+		 /awards/@(cat.ShortName)_xxxx-2x.png 1x,
+		 /awards/@(cat.ShortName)_xxxx-4x.png 2x"
+					src="/awards/@(cat.ShortName)-2x.png" alt="@cat.Description" loading="lazy" />
+			</td>
+			<td>@cat.Type</td>
+			<td>@cat.ShortName</td>
+			<td>@cat.Description</td>
+			<td>
+				<i class="fa fa-check text-success" condition="cat.InUse"></i>
+				@cat.InUse
+				<delete-button condition="@(!cat.InUse)" asp-href="ListCategories?handler=Delete&id=@cat.Id" class="float-end">Delete</delete-button>
+			</td>
+		</tr>
+	}
+</table>

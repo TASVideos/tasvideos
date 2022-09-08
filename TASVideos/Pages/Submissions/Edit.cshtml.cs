@@ -299,12 +299,12 @@ public class EditModel : BasePageModel
 				moveTopicTo = SiteGlobalConstants.PlaygroundForumId;
 			}
 			else if (submission.Topic.ForumId != SiteGlobalConstants.WorkbenchForumId &&
-				(Submission.Status == SubmissionStatus.New ||
-				Submission.Status == SubmissionStatus.Delayed ||
-				Submission.Status == SubmissionStatus.NeedsMoreInfo ||
-				Submission.Status == SubmissionStatus.JudgingUnderWay ||
-				Submission.Status == SubmissionStatus.Accepted ||
-				Submission.Status == SubmissionStatus.PublicationUnderway))
+				(Submission.Status is SubmissionStatus.New
+					or SubmissionStatus.Delayed
+					or SubmissionStatus.NeedsMoreInfo
+					or SubmissionStatus.JudgingUnderWay
+					or SubmissionStatus.Accepted
+					or SubmissionStatus.PublicationUnderway))
 			{
 				moveTopic = true;
 				moveTopicTo = SiteGlobalConstants.WorkbenchForumId;
@@ -359,7 +359,7 @@ public class EditModel : BasePageModel
 
 		submission.SubmissionAuthors.Clear();
 		submission.SubmissionAuthors.AddRange(await _db.Users
-			.Where(u => Submission.Authors.Contains(u.UserName))
+			.ForUsers(Submission.Authors)
 			.Select(u => new SubmissionAuthor
 			{
 				SubmissionId = submission.Id,

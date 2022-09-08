@@ -37,7 +37,10 @@
 		<th>Description</th>
 	</tr>
 	<tr>
-		<td><strong>@Model.Publication.MovieFileName</strong></td>
+		<td>
+			<a Permission="ReplacePrimaryMovieFile" class="btn btn-warning" asp-page="PrimaryMovie" asp-route-id="@Model.Id">Replace</a>
+			<strong>@Model.Publication.MovieFileName</strong>
+		</td>
 		<td>Primary Movie File</td>
 		<td></td>
 	</tr>
@@ -120,6 +123,9 @@
 	<two-column-select id-list="Publication.SelectedTags" available-list="AvailableTags" />
 	@await Component.RenderWiki("System/ClassEditingHelp")
 	<hr />
+	<fullrow class="mt-3">
+		<partial name="_WikiEditHelper" model="@("Publication_Markup")" />
+	</fullrow>
 	<fullrow>
 		<form-group>
 			<label asp-for="Publication.Markup" class="form-control-label"></label>

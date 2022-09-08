@@ -13,7 +13,7 @@ public class IndexModel : BasePageModel
 		_forumService = forumService;
 	}
 
-	public ICollection<ForumCategoryDisplayDto> Categories { get; set; } = new List<ForumCategoryDisplayDto>();
+	public IReadOnlyCollection<ForumCategoryDisplayDto> Categories { get; set; } = new List<ForumCategoryDisplayDto>();
 
 	public async Task OnGet()
 	{

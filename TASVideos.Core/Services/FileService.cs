@@ -61,6 +61,10 @@ internal class FileService : IFileService
 		using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
 		{
 			var fileInArchive = archive.CreateEntry(fileName, CompressionLevel.Optimal);
+			// set Unix permissions UserRead | UserWrite | GroupRead | OtherRead
+			// this is needed as CreateEntry will 0 the ExternalAttributes field
+			// in .NET 7 this could be removed, see https://github.com/dotnet/runtime/commit/bce94154f24e2ae83e5597881029d4f1ba428b60
+			fileInArchive.ExternalAttributes = (0x100 | 0x80 | 0x20 | 0x2) << 16;
 			await using var entryStream = fileInArchive.Open();
 			await using var fileToCompressStream = new MemoryStream(fileBytes);
 			await fileToCompressStream.CopyToAsync(entryStream);

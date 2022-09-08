@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
@@ -26,6 +27,7 @@ public interface IPublicationTokens
 	int? Limit { get; }
 }
 
+[ExcludeFromHistory]
 public class Publication : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
@@ -241,6 +243,8 @@ public static class PublicationExtensions
 				"v" => query.OrderBy(p => p.CreateTimestamp),
 				"u" => query.OrderByDescending(p => p.CreateTimestamp),
 				_ => query
+					.OrderBy(p => p.System!.Code)
+					.ThenBy(p => p.Game!.DisplayName)
 			};
 		}
 		else

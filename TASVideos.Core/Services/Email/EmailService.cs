@@ -79,24 +79,22 @@ internal class EmailService : IEmailService
 		string subject = "Topic Reply Notification - " + template.TopicTitle;
 		string message = $@"Hello,
 
-You are receiving this email because you are watching the topic, ""{template.TopicTitle}"" at {siteName}. This topic has received a reply since your last visit. You can use the following link to view the replies made, no more notifications will be sent until you visit the topic.
+<a href=""{template.BaseUrl}/Forum/Posts/{template.PostId}"">A new post</a> has been sent to the {siteName} forum topic <a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}"">{template.TopicTitle}</a> since your last visit.
 
-{template.BaseUrl}/Forum/Posts/{template.PostId}
-
-If you no longer wish to watch this topic you can either click the ""Stop watching this topic link"" found at the top of the topic above, or by clicking the following link:
-
-{template.BaseUrl}/Forum/Topics/20848?handler=Unwatch
-
---
+Notification emails for this topic will not be sent until you visit it.
+<hr />
+<p><a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}?handler=Unwatch"">Stop this topic from notifying you</a></p>
+<p>To stop all topic notification emails, follow <a href=""{template.BaseUrl}/Profile/WatchedTopics"">this link</a> and press ""Stop Watching All"".</p>
+<hr />
 Thanks,
-on behalf of TASVideos staff";
+TASVideos staff";
 
 		await _emailSender.SendEmail(new StandardEmail
 		{
 			Recipients = recipientsList,
 			Subject = subject,
 			Message = message,
-			ContainsHtml = false
+			ContainsHtml = true
 		});
 	}
 

@@ -26,6 +26,7 @@
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-InvalidCycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NegativeCycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\greenzone.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\MissingHeader.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\MissingInputLog.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\NoFileExts.bk2" />
@@ -145,11 +146,13 @@
 		<EmbeddedResource Include="LsmvSampleFiles\savestate.anchor.lsmv" />
 		<EmbeddedResource Include="LsmvSampleFiles\savestate.lsmv" />
 		<EmbeddedResource Include="LtmSampleFiles\2frames.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\arcade.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\dos.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\flash-extrachars-linuxfallback.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\flash.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\linux.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\noframerate.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\pc98.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\savestate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\unknown-linuxfallback.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\variableframerate.ltm" />
@@ -167,6 +170,7 @@
 		<EmbeddedResource Include="OmrSampleFiles\pal.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\savestate.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\svi.omr" />
+		<EmbeddedResource Include="TasprojSampleFiles\branch.tasproj" />
 		<EmbeddedResource Include="VbmSampleFiles\2frames.vbm" />
 		<EmbeddedResource Include="VbmSampleFiles\gb.vbm" />
 		<EmbeddedResource Include="VbmSampleFiles\gbc.vbm" />
@@ -184,10 +188,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
-		<PackageReference Include="Moq" Version="4.16.1" />
-		<PackageReference Include="MSTest.TestAdapter" Version="2.2.8" />
-		<PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+		<PackageReference Include="Moq" Version="4.18.1" />
+		<PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
+		<PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

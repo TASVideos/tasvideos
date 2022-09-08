@@ -31,11 +31,11 @@ public class RssPublication
 		}
 	}
 
-	public ICollection<string> StreamingUrls { get; init; } = new List<string>();
+	public IReadOnlyCollection<string> StreamingUrls { get; init; } = new List<string>();
 
-	internal ICollection<File> Files { get; init; } = new List<File>();
+	internal IReadOnlyCollection<File> Files { get; init; } = new List<File>();
 
-	internal ICollection<double> Ratings { get; init; } = new List<double>();
+	internal IReadOnlyCollection<double> Ratings { get; init; } = new List<double>();
 
 	internal class File
 	{

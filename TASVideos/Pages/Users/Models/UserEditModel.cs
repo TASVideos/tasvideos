@@ -40,4 +40,10 @@ public class UserEditModel
 	public string? MoodAvatarUrlBase { get; set; }
 
 	public string? OriginalUserName => UserName;
+
+	[Display(Name = "Use Ratings", Description = "If unchecked, the user's publication ratings will not be used when calculating average rating")]
+	public bool UseRatings { get; set; }
+
+	[Display(Name = "Moderator Comments")]
+	public string? ModeratorComments { get; set; }
 }

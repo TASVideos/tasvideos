@@ -57,7 +57,7 @@ public class ForumTopicModel : IForumTopicActionBar, IForumTopicBreadCrumb
 		{
 			public string Text { get; set; } = "";
 			public int Ordinal { get; set; }
-			public ICollection<int> Voters { get; set; } = new List<int>();
+			public IReadOnlyCollection<int> Voters { get; set; } = new List<int>();
 		}
 	}
 }

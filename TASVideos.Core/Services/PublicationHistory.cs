@@ -40,7 +40,10 @@ internal class PublicationHistory : IPublicationHistory
 				Branch = p.Branch,
 				CreateTimestamp = p.CreateTimestamp,
 				ObsoletedById = p.ObsoletedById,
-				ClassIconPath = p.PublicationClass!.IconPath
+				ClassIconPath = p.PublicationClass!.IconPath,
+				Flags = p.PublicationFlags
+					.Select(pf => new PublicationHistoryNode.FlagEntry(
+						pf.Flag!.IconPath, pf.Flag!.LinkPath, pf.Flag!.Name))
 			})
 			.ToListAsync();
 

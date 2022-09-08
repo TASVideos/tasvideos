@@ -9,7 +9,7 @@ public enum FlagDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IFlagService
 {
-	Task<ICollection<Flag>> GetAll();
+	Task<IReadOnlyCollection<Flag>> GetAll();
 	Task<Flag?> GetById(int id);
 	Task<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
@@ -30,7 +30,7 @@ internal class FlagService : IFlagService
 		_cache = cache;
 	}
 
-	public async Task<ICollection<Flag>> GetAll()
+	public async Task<IReadOnlyCollection<Flag>> GetAll()
 	{
 		if (_cache.TryGetValue(FlagsKey, out List<Flag> flags))
 		{
@@ -71,12 +71,8 @@ internal class FlagService : IFlagService
 
 	public async Task<FlagEditResult> Add(Flag flag)
 	{
-		// No auto-increment, due to legacy importing, need to re-add this
-		var newId = (await _db.Flags.Select(f => f.Id).MaxAsync()) + 1;
-
 		_db.Flags.Add(new Flag
 		{
-			Id = newId,
 			Name = flag.Name,
 			IconPath = flag.IconPath,
 			LinkPath = flag.LinkPath,

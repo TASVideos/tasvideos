@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity.Forum;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace TASVideos.Data.Entity.Forum;
+
+[ExcludeFromHistory]
 public class ForumPoll : BaseEntity
 {
 	public int Id { get; set; }

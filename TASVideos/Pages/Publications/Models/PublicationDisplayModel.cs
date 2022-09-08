@@ -15,14 +15,14 @@ public class PublicationDisplayModel
 	public string MovieFileName { get; set; } = "";
 	public int SubmissionId { get; set; }
 
-	internal ICollection<PublicationUrl> Urls { get; set; } = new List<PublicationUrl>();
+	internal IReadOnlyCollection<PublicationUrl> Urls { get; set; } = new List<PublicationUrl>();
 	public IEnumerable<PublicationUrl> OnlineWatchingUrls => Urls.Where(u => u.Type == PublicationUrlType.Streaming);
 	public IEnumerable<PublicationUrl> MirrorSiteUrls => Urls.Where(u => u.Type == PublicationUrlType.Mirror);
 	public int TopicId { get; set; }
 	public string? EmulatorVersion { get; set; }
 
 	public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
-	public IEnumerable<TagModel> GenreTags { get; set; } = new List<TagModel>();
+	public IEnumerable<string> GameGenres { get; set; } = new List<string>();
 	public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
 	public IEnumerable<FlagModel> Flags { get; set; } = new List<FlagModel>();
 

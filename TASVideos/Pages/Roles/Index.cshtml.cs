@@ -16,17 +16,21 @@ public class IndexModel : BasePageModel
 		_db = db;
 	}
 
-	public RoleDisplayModel Role { get; set; } = new();
+	public RoleDisplayModel RoleViewModel { get; set; } = new();
 
-	public async Task<IActionResult> OnGet(string role)
+	[FromRoute]
+	public string Role { get; set; } = "";
+
+	public async Task<IActionResult> OnGet()
 	{
-		if (string.IsNullOrWhiteSpace(role))
+		if (string.IsNullOrWhiteSpace(Role))
 		{
 			return BasePageRedirect("/Roles/List");
 		}
 
+		Role = Role.Replace(" ", "");
 		var roleModel = await _db.Roles
-			.Where(r => r.Name == role)
+			.Where(r => r.Name.Replace(" ", "") == Role)
 			.ToRoleDisplayModel()
 			.SingleOrDefaultAsync();
 
@@ -35,7 +39,7 @@ public class IndexModel : BasePageModel
 			return NotFound();
 		}
 
-		Role = roleModel;
+		RoleViewModel = roleModel;
 		return Page();
 	}
 }

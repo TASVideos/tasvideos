@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -15,13 +16,16 @@ public class EditModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
+	private readonly ExternalMediaPublisher _publisher;
 
 	public EditModel(
 		ApplicationDbContext db,
-		IWikiPages wikiPages)
+		IWikiPages wikiPages,
+		ExternalMediaPublisher publisher)
 	{
 		_db = db;
 		_wikiPages = wikiPages;
+		_publisher = publisher;
 	}
 
 	[FromRoute]
@@ -46,11 +50,9 @@ public class EditModel : BasePageModel
 				.Where(g => g.Id == Id)
 				.Select(g => new GameEditModel
 				{
-					GoodName = g.GoodName,
 					DisplayName = g.DisplayName,
 					Abbreviation = g.Abbreviation,
-					SearchKey = g.SearchKey,
-					YoutubeTags = g.YoutubeTags,
+					Aliases = g.Aliases,
 					ScreenshotUrl = g.ScreenshotUrl,
 					GameResourcesPage = g.GameResourcesPage,
 					Genres = g.GameGenres.Select(gg => gg.GenreId),
@@ -84,9 +86,18 @@ public class EditModel : BasePageModel
 			if (page is null)
 			{
 				ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.GameResourcesPage)}", $"Page {Game.GameResourcesPage} not found");
-				await Initialize();
-				return Page();
 			}
+		}
+
+		if (Game.Abbreviation != null && await _db.Games.AnyAsync(g => g.Id != Id && g.Abbreviation == Game.Abbreviation))
+		{
+			ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.Abbreviation)}", $"Abbreviation {Game.Abbreviation} already exists");
+		}
+
+		if (!ModelState.IsValid)
+		{
+			await Initialize();
+			return Page();
 		}
 
 		Game? game;
@@ -101,31 +112,37 @@ public class EditModel : BasePageModel
 				return NotFound();
 			}
 
-			game.GoodName = Game.GoodName;
 			game.DisplayName = Game.DisplayName;
 			game.Abbreviation = Game.Abbreviation;
-			game.SearchKey = Game.SearchKey;
-			game.YoutubeTags = Game.YoutubeTags;
+			game.Aliases = Game.Aliases;
 			game.ScreenshotUrl = Game.ScreenshotUrl;
 			game.GameResourcesPage = Game.GameResourcesPage;
 			SetGameValues(game, Game);
-			await ConcurrentSave(_db, $"Game {Id} updated", $"Unable to update Game {Id}");
+			var saveMessage = $"Game {game.DisplayName} updated";
+			var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to update Game {Id}");
+			if (saveResult && !Game.MinorEdit)
+			{
+				await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{Id}G");
+			}
 		}
 		else
 		{
 			game = new Game
 			{
-				GoodName = Game.GoodName,
 				DisplayName = Game.DisplayName,
 				Abbreviation = Game.Abbreviation,
-				SearchKey = Game.SearchKey,
-				YoutubeTags = Game.YoutubeTags,
+				Aliases = Game.Aliases,
 				ScreenshotUrl = Game.ScreenshotUrl,
 				GameResourcesPage = Game.GameResourcesPage
 			};
 			_db.Games.Add(game);
 			SetGameValues(game, Game);
-			await ConcurrentSave(_db, $"Game {game.GoodName} created", "Unable to create game");
+			var saveMessage = $"Game {game.DisplayName} created";
+			var saveResult = await ConcurrentSave(_db, saveMessage, "Unable to create game");
+			if (saveResult && !Game.MinorEdit)
+			{
+				await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{game.Id}G");
+			}
 		}
 
 		return BasePageRedirect("Index", new { game.Id });
@@ -145,14 +162,30 @@ public class EditModel : BasePageModel
 			return NotFound();
 		}
 
+		if (!User.Has(PermissionTo.DeleteGameEntries))
+		{
+			return AccessDenied();
+		}
+
 		if (!await CanBeDeleted())
 		{
 			ErrorStatusMessage($"Unable to delete Game {Id}, game is used by a publication or submission.");
 			return BasePageRedirect("List");
 		}
 
-		_db.Games.Attach(new Game { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(_db, $"Game {Id} deleted", $"Unable to delete Game {Id}");
+		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == Id);
+		if (game is null)
+		{
+			return NotFound();
+		}
+
+		_db.Games.Remove(game);
+		var saveMessage = $"Game #{Id} {game.DisplayName} deleted";
+		var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to delete Game {Id}");
+		if (saveResult)
+		{
+			await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{Id}G");
+		}
 
 		return BasePageRedirect("List");
 	}

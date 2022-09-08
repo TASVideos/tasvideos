@@ -7,7 +7,8 @@
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 <form-group>
-	<delete-button condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
+	<a class="btn btn-primary" asp-page="/Logs/Index" asp-route-table="Games" asp-route-rowId="@Model.Id" >History</a>
+	<delete-button permission="DeleteGameEntries" condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
 </form-group>
 <div class="text-danger">
 	@Html.ValidationSummary()
@@ -16,36 +17,23 @@
 	<row>
 		<div class="col-lg-6">
 			<form-group>
-				<label asp-for="Game.GoodName"></label>
-				<input type="text" asp-for="Game.GoodName" class="form-control" autocomplete="off" />
-				<span asp-validation-for="Game.GoodName" class="text-danger"></span>
-			</form-group>
-			<form-group>
 				<label asp-for="Game.DisplayName"></label>
 				<input type="text" asp-for="Game.DisplayName" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Game.DisplayName" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Game.Abbreviation"></label>
-				<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
+				<div class="input-group">
+					<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
+					<a
+						asp-page="/Wiki/Referrers"
+						asp-route-path="Games/@Model.Game.Abbreviation"
+						asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()"
+						class="input-group-text btn btn-primary">
+						Referrers
+					</a>
+				</div>
 				<span asp-validation-for="Game.Abbreviation" class="text-danger"></span>
-			</form-group>
-		</div>
-		<div class="col-lg-6">
-			<form-group>
-				<label asp-for="Game.SearchKey"></label>
-				<input type="text" asp-for="Game.SearchKey" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Game.SearchKey" class="text-danger"></span>
-			</form-group>
-			<form-group>
-				<label asp-for="Game.YoutubeTags"></label>
-				<input type="text" asp-for="Game.YoutubeTags" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Game.YoutubeTags" class="text-danger"></span>
-			</form-group>
-			<form-group>
-				<label asp-for="Game.ScreenshotUrl"></label>
-				<input type="text" asp-for="Game.ScreenshotUrl" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Game.ScreenshotUrl" class="text-danger"></span>
 			</form-group>
 			<form-group>
 				<label asp-for="Game.GameResourcesPage"></label>
@@ -58,6 +46,18 @@
 				<span asp-validation-for="Game.GameResourcesPage" class="text-danger"></span>
 			</form-group>
 		</div>
+		<div class="col-lg-6">
+			<form-group>
+				<label asp-for="Game.Aliases"></label>
+				<input type="text" asp-for="Game.Aliases" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Game.Aliases" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Game.ScreenshotUrl"></label>
+				<input type="text" asp-for="Game.ScreenshotUrl" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Game.ScreenshotUrl" class="text-danger"></span>
+			</form-group>
+		</div>
 	</row>
 	<two-column-select id-list="Game.Genres" available-list="@Model.AvailableGenres"/>
 	<two-column-select id-list="Game.Groups" available-list="@Model.AvailableGroups"/>
@@ -66,6 +66,10 @@
 		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
 		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<div class="form-check-inline">
+			<label asp-for="Game.MinorEdit" class="form-check-label"></label>
+			<input asp-for="Game.MinorEdit" type="checkbox" class="form-check-input"/>
+		</div>
 	</div>
 </form>
 

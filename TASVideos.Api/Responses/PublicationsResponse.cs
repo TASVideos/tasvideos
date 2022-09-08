@@ -50,6 +50,9 @@ public class PublicationsResponse
 	[Sortable]
 	public string MovieFileName { get; init; } = "";
 
+	[Sortable]
+	public string? AdditionalAuthors { get; init; }
+
 	public IEnumerable<string> Authors { get; init; } = Array.Empty<string>();
 	public IEnumerable<string> Tags { get; init; } = Array.Empty<string>();
 	public IEnumerable<string> Flags { get; init; } = Array.Empty<string>();

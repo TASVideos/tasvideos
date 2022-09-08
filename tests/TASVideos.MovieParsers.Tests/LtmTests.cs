@@ -16,10 +16,12 @@ public class LtmTests : BaseParserTests
 	[TestMethod]
 	[DataRow("linux.ltm", SystemCodes.Linux)]
 	[DataRow("flash.ltm", SystemCodes.Flash)]
+	[DataRow("arcade.ltm", SystemCodes.Arcade)]
 	[DataRow("flash-extrachars-linuxfallback.ltm", SystemCodes.Linux)]
 	[DataRow("unknown-linuxfallback.ltm", SystemCodes.Linux)]
 	[DataRow("windows.ltm", SystemCodes.Windows)]
 	[DataRow("dos.ltm", SystemCodes.Dos)]
+	[DataRow("pc98.ltm", SystemCodes.Pc98)]
 	public async Task SystemId(string filename, string expectedSystemCode)
 	{
 		var actual = await _ltmParser.Parse(Embedded(filename), EmbeddedLength(filename));

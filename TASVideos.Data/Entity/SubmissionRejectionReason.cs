@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using Microsoft.EntityFrameworkCore;
 
+namespace TASVideos.Data.Entity;
+
+[ExcludeFromHistory]
 public class SubmissionRejectionReason
 {
 	public int Id { get; set; }
@@ -7,4 +10,6 @@ public class SubmissionRejectionReason
 	[Required]
 	[StringLength(100)]
 	public string DisplayName { get; set; } = "";
+
+	public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 }

@@ -1,0 +1,25 @@
+﻿@page
+@model IndexModel
+@{
+	ViewData["Title"] = "Genre List";
+}
+<a class="btn btn-primary float-end mb-3" asp-page="Create" Permission="TagMaintenance"><i class="fa fa-plus"></i> Create</a>
+<table class="table table-bordered table-striped table-sm">
+	<tr>
+		<th>Display Name</th>
+		<th>Game Count</th>
+		<th></th>
+	</tr>
+	@foreach (var genre in Model.Genres)
+	{
+		<tr>
+			<td>@genre.DisplayName</td>
+			<td>@genre.GameCount</td>
+			<td>
+				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@genre.Id">
+					<i class="fa fa-pencil"></i> Edit
+				</a>
+			</td>
+		</tr>
+	}
+</table>

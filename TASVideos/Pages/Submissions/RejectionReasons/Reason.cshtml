@@ -1,0 +1,12 @@
+﻿@page "{id}"
+@model ReasonModel
+@{
+	ViewData["Title"] = $"Submissions that were Rejected for reason: {Model.RejectionReason}";
+}
+
+<ul>
+	@foreach (var sub in Model.Submissions.OrderBy(s => s.SubmissionId))
+	{
+		<li><sub-link id="@sub.SubmissionId">@sub.SubmissionTitle</sub-link></li>
+	}
+</ul>

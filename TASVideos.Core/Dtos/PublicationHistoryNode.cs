@@ -16,9 +16,13 @@ public class PublicationHistoryNode
 
 	public string? ClassIconPath { get; set; }
 
+	public IEnumerable<FlagEntry> Flags { get; set; } = new List<FlagEntry>();
+
 	public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 
 	internal int? ObsoletedById { get; init; }
 
 	internal List<PublicationHistoryNode> ObsoleteList { get; set; } = new();
+
+	public record FlagEntry(string? IconPath, string? LinkPath, string Name);
 }
