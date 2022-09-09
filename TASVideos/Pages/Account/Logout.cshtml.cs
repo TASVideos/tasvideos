@@ -15,6 +15,11 @@ public class LogoutModel : BasePageModel
 		_signInManager = signInManager;
 	}
 
+	public IActionResult OnGet()
+	{
+		return Login();
+	}
+
 	public async Task<IActionResult> OnPost()
 	{
 		var user = await _signInManager.UserManager.GetUserAsync(User);
