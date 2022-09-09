@@ -51,6 +51,7 @@ public class Startup
 			pipeline.AddScssBundle("/css/site.css", "/css/site.scss");
 			pipeline.AddScssBundle("/css/darkmode.css", "/css/darkmode.scss");
 			pipeline.AddScssBundle("/css/darkmode-initial.css", "/css/darkmode-initial.scss");
+			pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
 		});
 	}
 
