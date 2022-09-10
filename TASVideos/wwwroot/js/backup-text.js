@@ -5,9 +5,9 @@
 // id: "backup-restore-button" | button to restore data
 
 function convertSecondsToRelativeTime(seconds) {
-    const minutes = Math.ceil(seconds / 60);
-    const hours = Math.ceil(seconds / (60 * 60));
-    const days = Math.ceil(seconds / (60 * 60 * 24));
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(seconds / (60 * 60));
+    const days = Math.floor(seconds / (60 * 60 * 24));
     if (seconds < 5) {
         return "a few seconds ago";
     }
