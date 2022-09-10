@@ -17,7 +17,7 @@
 <danger-alert dismissible="true" condition="parseErrors">
 	@await Component.RenderWiki("System/SubmissionZipFailure")
 </danger-alert>
-<form method="post" enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data" class="backup-form">
 	<row>
 		<column lg="6">
 			<form-group>
@@ -84,8 +84,12 @@
 				@await Component.RenderWiki("System/SubmissionImportant")
 			</span>
 			<partial name="_WikiEditHelper" model="@("Create_Markup")" />
-			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit"></textarea>
+			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission"></textarea>
 			<span asp-validation-for="Create.Markup" class="text-danger"></span>
+			<fullrow id="backup-restore" class="d-none mt-2">
+				<button id="backup-restore-button" type="button" class="btn btn-secondary" onclick="restoreContent()">Restore Text</button>
+				<label class="text-muted">from <span id="backup-time"></span></label>
+			</fullrow>
 			<div>
 				<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
 			</div>
@@ -128,4 +132,5 @@
 			document.getElementById('submit-blurb').classList.remove('d-none');
 		});
 	</script>
+	<script src="~/js/backup-text.js"></script>
 }
