@@ -90,8 +90,8 @@ internal class YouTubeSync : IYoutubeSync
 			VideoId = videoId,
 			Snippet = new()
 			{
-				Title = title,
-				Description = description,
+				Title = title.FormatForYouTube(),
+				Description = description.FormatForYouTube(),
 				CategoryId = videoDetails.CategoryId,
 				Tags = BaseTags.Concat(video.Tags).ToList()
 			}
