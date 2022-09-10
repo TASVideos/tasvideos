@@ -231,4 +231,12 @@ public static class StringExtensions
 
 		return char.ToLowerInvariant(str[0]) + str[1..];
 	}
+
+	/// <summary>
+	/// Replaces the characters &lt; and &gt; with their fullwidth versions ＜ and ＞, because YouTube doesn't allow the regular symbols in titles and descriptions.
+	/// </summary>
+	public static string FormatForYouTube(this string s)
+	{
+		return s.Replace('<', '＜').Replace('>', '＞');
+	}
 }
