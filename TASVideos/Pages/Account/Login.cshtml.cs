@@ -31,9 +31,16 @@ public class LoginModel : BasePageModel
 	[Display(Name = "Remember me?")]
 	public bool RememberMe { get; set; }
 
-	public async Task OnGet()
+	public async Task<IActionResult> OnGet()
 	{
+		var user = await _signInManager.UserManager.GetUserAsync(User);
+		if (user != null)
+		{
+			return BaseReturnUrlRedirect();
+		}
+
 		await HttpContext.SignOutAsync();
+		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()
