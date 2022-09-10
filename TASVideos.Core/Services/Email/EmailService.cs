@@ -6,6 +6,7 @@ namespace TASVideos.Core.Services.Email;
 
 public interface IEmailService
 {
+	Task SendEmail(string recipient, string subject, string message);
 	Task ResetPassword(string recipient, string link);
 	Task EmailConfirmation(string recipient, string link);
 	Task PasswordResetConfirmation(string recipient, string resetLink);
@@ -27,6 +28,17 @@ internal class EmailService : IEmailService
 		_env = env;
 		_emailSender = emailSender;
 		_baseUrl = appSettings.BaseUrl;
+	}
+
+	public async Task SendEmail(string recipient, string subject, string message)
+	{
+		await _emailSender.SendEmail(new SingleEmail
+		{
+			Recipient = recipient,
+			Subject = subject,
+			Message = message,
+			ContainsHtml = false
+		});
 	}
 
 	public async Task ResetPassword(string recipient, string link)

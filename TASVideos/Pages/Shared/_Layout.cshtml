@@ -16,6 +16,10 @@
 		  integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw=="
 		  crossorigin="anonymous"
 		  referrerpolicy="no-referrer" />
+	@if (this.Model.HttpContext.Request.Path.ToString().TrimStart('/').StartsWith("Forum/"))
+	{
+		<link rel="stylesheet" href="/css/forum.css" />
+	}
 
 	<script src="~/js/site-head.js"></script>
 

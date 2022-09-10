@@ -16,6 +16,12 @@ public interface IWriterHelper
 	Task<string?> GetGameTitle(int id);
 
 	/// <summary>
+	/// Get the title (name) of a game gruop.
+	/// </summary>
+	/// <returns>`null` if not found</returns>
+	Task<string?> GetGameGroupTitle(int id);
+
+	/// <summary>
 	/// Get the title of a movie.
 	/// </summary>
 	/// <returns>`null` if not found</returns>
@@ -31,6 +37,7 @@ public interface IWriterHelper
 public class NullWriterHelper : IWriterHelper
 {
 	public Task<string?> GetGameTitle(int id) => Task.FromResult<string?>(null);
+	public Task<string?> GetGameGroupTitle(int id) => Task.FromResult<string?>(null);
 	public Task<string?> GetMovieTitle(int id) => Task.FromResult<string?>(null);
 	public Task<string?> GetSubmissionTitle(int id) => Task.FromResult<string?>(null);
 
@@ -307,6 +314,13 @@ public class Element : INode
 					h,
 					s => "/" + s + "G",
 					async s => (int.TryParse(s, out var id) ? await h.GetGameTitle(id) : null) ?? "Game #" + s);
+				break;
+			case "gamegroup":
+				await WriteHref(
+					w,
+					h,
+					s => "/GameGroups/" + s,
+					async s => (int.TryParse(s, out var id) ? await h.GetGameGroupTitle(id) : null) ?? "Game group #" + s);
 				break;
 			case "movie":
 				await WriteHref(

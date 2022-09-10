@@ -53,6 +53,7 @@ public class IndexModel : BasePageModel
 			{
 				Id = g.Id,
 				Name = g.DisplayName,
+				Systems = g.GameVersions.Select(v => v.System!.Code),
 				PublicationCount = g.Publications.Count,
 				SubmissionsCount = g.Submissions.Count,
 				GameResourcesPage = g.GameResourcesPage

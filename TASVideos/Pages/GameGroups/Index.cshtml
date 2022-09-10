@@ -20,6 +20,7 @@
 <table condition="Model.Games.Any()" class="table table-bordered table-striped">
 	<tr>
 		<th>Game</th>
+		<th>Systems</th>
 		<th>Publications</th>
 		<th>Submissions</th>
 		<th>Resource Page</th>
@@ -31,6 +32,9 @@
 				<game-link id="game.Id">
 					@game.Name
 				</game-link>
+			</td>
+			<td>
+				@string.Join(", ", game.Systems.Distinct())
 			</td>
 			<td>
 				<a href="/Movies-@(game.Id)G">
