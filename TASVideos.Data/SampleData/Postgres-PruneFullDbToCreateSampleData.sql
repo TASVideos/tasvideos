@@ -133,6 +133,8 @@ INSERT INTO _active_users
 	SELECT u.id
 	FROM public.users u
 	WHERE EXISTS (SELECT 1 FROM public.user_awards ua WHERE ua.user_id = u.id)
+	OR u.id = 505 --TVA
+	OR u.id = 3788 --TASVideosGrue
 	OR EXISTS (SELECT 1 FROM public.user_files uf WHERE uf.author_id = u.id)
 	OR EXISTS (SELECT 1 FROM public.submissions s WHERE s.publisher_id = u.id)
 	OR EXISTS (SELECT 1 FROM public.submissions s WHERE s.judge_id = u.id)
