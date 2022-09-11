@@ -425,9 +425,9 @@ public class UserManager : UserManager<User>
 						UserId = userId,
 						RoleId = role.Id
 					});
-				}
 
-				await _tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
+					await _tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
+				}
 			}
 		}
 
