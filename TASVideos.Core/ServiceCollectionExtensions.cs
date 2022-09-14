@@ -76,9 +76,9 @@ public static class ServiceCollectionExtensions
 
 		services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 
-		if (settings.Gmail.IsEnabled())
+		if (settings.Email.IsEnabled())
 		{
-			services.AddTransient<IEmailSender, GmailSender>();
+			services.AddTransient<IEmailSender, SmtpSender>();
 		}
 		else
 		{

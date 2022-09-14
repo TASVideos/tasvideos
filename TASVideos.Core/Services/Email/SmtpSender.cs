@@ -3,56 +3,43 @@ using MailKit.Security;
 using MimeKit;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.Email;
 
 /// <summary>
 /// An implementation of <see cref="IEmailSender"/> that uses a configured SMTP server
+/// and user/password authentication
 /// </summary>
-internal class GmailSender : IEmailSender
+internal class SmtpSender : IEmailSender
 {
 	private readonly IHostEnvironment _env;
-	private readonly AppSettings _settings;
-	private readonly ILogger<GmailSender> _logger;
-	private readonly IGoogleAuthService _googleAuthService;
+	private readonly AppSettings.EmailBasicAuthSettings _settings;
+	private readonly ILogger<SmtpSender> _logger;
 
-	public GmailSender(IHostEnvironment env,
+	public SmtpSender(
+		IHostEnvironment env,
 		AppSettings settings,
-		ILogger<GmailSender> logger,
-		IGoogleAuthService googleAuthService)
+		ILogger<SmtpSender> logger)
 	{
 		_env = env;
-		_settings = settings;
+		_settings = settings.Email;
 		_logger = logger;
-		_googleAuthService = googleAuthService;
 	}
 
 	public async Task SendEmail(IEmail email)
 	{
-		if (!_settings.Gmail.IsEnabled())
+		if (!_settings.IsEnabled())
 		{
 			_logger.LogWarning("Attempting to send email without email address configured");
-			return;
-		}
-
-		var token = await _googleAuthService.GetGmailAccessToken();
-
-		if (string.IsNullOrWhiteSpace(token))
-		{
-			_logger.LogError("Unable to acquire get gmail token, skipping email: subject: {subject} message: {message}", email.Subject, email.Message);
 			return;
 		}
 
 		try
 		{
 			using var client = new SmtpClient();
-			await client.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-
-			// use the access token
-			var oauth2 = new SaslMechanismOAuth2(_settings.Gmail.From, token);
-			await client.AuthenticateAsync(oauth2);
+			await client.ConnectAsync(_settings.SmtpServer, _settings.SmtpServerPort, SecureSocketOptions.StartTls);
+			await client.AuthenticateAsync(_settings.Email, _settings.Password);
 			var message = BccList(email);
 			await client.SendAsync(message);
 			await client.DisconnectAsync(true);
@@ -68,7 +55,7 @@ internal class GmailSender : IEmailSender
 		var recipients = email.Recipients.ToList();
 		var from = _env.IsProduction() ? "noreply" : $"TASVideos {_env.EnvironmentName} environment noreply";
 		var message = new MimeMessage();
-		message.From.Add(new MailboxAddress(from, _settings.Gmail.From));
+		message.From.Add(new MailboxAddress(from, _settings.Email));
 
 		if (recipients.Count == 1)
 		{
@@ -94,7 +81,6 @@ internal class GmailSender : IEmailSender
 		}
 
 		message.Body = bodyBuilder.ToMessageBody();
-
 		message.Subject = email.Subject;
 
 		return message;
