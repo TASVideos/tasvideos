@@ -22,7 +22,7 @@ public class BaseForumModel : BasePageModel
 		.Select(m => new SelectListItem
 		{
 			Value = ((int)m).ToString(),
-			Text = m.EnumDisplayName(),
+			Text = $"{(int)m}: {m.EnumDisplayName()}",
 			Group = m >= ForumPostMood.AltNormal ? AltGroup : StandardGroup
 		})
 		.ToList();
