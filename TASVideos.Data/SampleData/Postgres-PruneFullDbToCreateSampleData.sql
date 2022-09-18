@@ -34,6 +34,19 @@ DELETE
 FROM public.user_files uf
 WHERE uf.id NOT IN (SELECT uif.id from _user_files uif);
 
+--Sync potentially out of sync pub/sub wiki pages before attempting to prune, else FK errors
+UPDATE publications
+SET wiki_content_id = wiki_pages.child_id
+FROM wiki_pages
+WHERE publications.wiki_content_id = wiki_pages.id
+AND wiki_pages.child_id is not null;
+
+UPDATE submissions
+SET wiki_content_id = wiki_pages.child_id
+FROM wiki_pages
+WHERE submissions.wiki_content_id = wiki_pages.id
+AND wiki_pages.child_id is not null;
+
 --Trim Wiki
 DELETE FROM public.wiki_pages WHERE child_id is not null;
 UPDATE public.wiki_pages SET markup = '[TODO]: Wiped as sample data' WHERE LENGTH(markup) > 1500 AND page_name <> 'Movies';
