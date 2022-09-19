@@ -207,7 +207,7 @@
 				<fullrow>
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>
-				<div><small>Published <timezone-convert asp-for="@Model.CreateTimestamp.Date" in-line="true" /></small></div>
+				<div><small>Published <timezone-convert asp-for="@Model.CreateTimestamp" in-line="true" /></small></div>
 			</div>
 		</row>
 		<row condition="Model.ObsoletedMovies.Any()" class="my-2 gx-3">
