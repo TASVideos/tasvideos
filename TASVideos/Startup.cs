@@ -65,7 +65,6 @@ public class Startup
 			.UseGzipCompression(Settings)
 			.UseWebOptimizer()
 			.UseStaticFilesWithExtensionMapping()
-			.UseAuthorization()
 			.UseAuthentication()
 			.UseSwaggerUi(Environment)
 			.UseLogging()
