@@ -2,8 +2,7 @@
 	Layout = "_Layout.cshtml";
 	WikiPage pageData = ViewData["WikiPage"] as WikiPage ?? throw new InvalidOperationException("WikiPage not set");
 
-	ViewData["ActiveTab"] = pageData.PageName == "GameResources"
-		|| WikiHelper.IsGameResourcesPage(pageData.PageName)
+	ViewData["ActiveTab"] = WikiHelper.IsGameResourcesPage(pageData.PageName)
 		? "Game Resources"
 		: pageData.PageName;
 }
