@@ -26,7 +26,13 @@
 					<td>@revision.MinorEdit</td>
 					<td>@revision.RevisionMessage</td>
 					<td>
-						<button class="btn btn-primary" onclick="GetDiff('@revision.PageName', @revision.Revision)">Diff</button>
+						<a
+							class="btn btn-primary"
+							asp-page="PageHistory"
+							asp-route-path="@revision.PageName"
+							asp-route-fromRevision="@(revision.Revision - 1)"
+							asp-route-toRevision="@revision.Revision"
+							>Diff</a>
 						<delete-button permission="DeleteWikiPages"
 									   asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(revision.PageName)&revision=@revision.Revision"
 									   warning-message="Are you sure you want to delete this revision?">
@@ -46,46 +52,3 @@
 	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff()" /> Side by Side</label>
 	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
 </div>
-
-@section Scripts {
-	<script src="~/js/diff_match_patch.js"></script>
-	<script src="~/js/diff_view.js"></script>
-	<script>
-		let fromRevision, toRevision;
-
-		function GetDiff(path, revision) {
-			const baseUrl = '/Wiki/Diff?handler=DiffData';
-			const ajaxUrl = baseUrl + '&path=' + path + '&fromRevision=' + (revision - 1) + '&toRevision=' + revision;
-			fetch(ajaxUrl)
-				.then(handleFetchErrors)
-				.then(r => r.json())
-				.then(data => {
-					document.getElementById("diff-view").classList.remove("d-none");
-					document.getElementById("diff-options").classList.remove("d-none");
-					document.getElementById("left-revision").value = data.leftMarkup;
-					document.getElementById("right-revision").value = data.rightMarkup;
-					fromRevision = revision - 1;
-					toRevision = revision;
-					generateDiff();
-				});
-		}
-
-		function generateDiff() {
-			const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
-			const contextSize = parseInt(document.querySelector('[name="context-size"').value);
-
-			const diffView = document.getElementById("diff-view");
-			const base = document.getElementById("left-revision").value,
-				newTxt = document.getElementById("right-revision").value,
-				diffOutputDiv = diffView;
-
-			renderDiff(
-				{ text: base, name: `r${fromRevision}` },
-				{ text: newTxt, name: `r${toRevision}` },
-				diffOutputDiv,
-				!!viewType,
-				contextSize
-			);
-		}
-	</script>
-}
