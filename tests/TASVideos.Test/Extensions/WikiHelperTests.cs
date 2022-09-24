@@ -58,7 +58,7 @@ public class WikiHelperTests
 		var actual = WikiHelper.UserCanEditWikiPage(
 			pageName,
 			userName,
-			userPermissions);
+			userPermissions.ToList());
 
 		Assert.AreEqual(expected, actual);
 	}

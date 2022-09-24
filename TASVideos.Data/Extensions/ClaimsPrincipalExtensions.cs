@@ -26,11 +26,11 @@ public static class ClaimsPrincipalExtensions
 			.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
 	}
 
-	public static IEnumerable<PermissionTo> Permissions(this ClaimsPrincipal? user)
+	public static IReadOnlyCollection<PermissionTo> Permissions(this ClaimsPrincipal? user)
 	{
 		if (user is null || !user.IsLoggedIn())
 		{
-			return Enumerable.Empty<PermissionTo>();
+			return Array.Empty<PermissionTo>();
 		}
 
 		return user.Claims.Permissions();

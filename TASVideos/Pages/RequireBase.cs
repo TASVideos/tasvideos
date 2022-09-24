@@ -33,7 +33,7 @@ public class RequireBase : Attribute
 		}
 	}
 
-	protected async Task<IEnumerable<PermissionTo>> GetUserPermissions(PageHandlerExecutingContext context)
+	protected async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissions(PageHandlerExecutingContext context)
 	{
 		// On Post calls, we are potentially changing data, which could be malicious
 		// Let's take the database hit to get the most recent permissions rather than relying
