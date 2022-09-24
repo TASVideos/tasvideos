@@ -50,6 +50,12 @@
 				"StartupStrategy": "Minimal"
 			}
 		},
+		"Development": {
+			"commandName": "Project",
+			"environmentVariables": {
+				"ASPNETCORE_ENVIRONMENT": "Development"
+			}
+		},
 		"Staging": {
 			"commandName": "Project",
 			"environmentVariables": {
@@ -59,7 +65,7 @@
 		"Production": {
 			"commandName": "Project",
 			"environmentVariables": {
-				"ASPNETCORE_ENVIRONMENT": "Staging"
+				"ASPNETCORE_ENVIRONMENT": "Production"
 			}
 		}
 	}
