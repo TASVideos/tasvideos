@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions;
