@@ -14,16 +14,8 @@ public static class RazorHelpers
 		return $"{context.Request.Path}{context.Request.QueryString}";
 	}
 
-	public static IEnumerable<PermissionTo> UserPermissions(this ViewDataDictionary viewData)
-	{
-		var userPerm = viewData["UserPermissions"];
-		if (userPerm is null)
-		{
-			return Enumerable.Empty<PermissionTo>();
-		}
-
-		return (IEnumerable<PermissionTo>)userPerm;
-	}
+	public static IReadOnlyCollection<PermissionTo> UserPermissions(this ViewDataDictionary viewData)
+		=> viewData["UserPermissions"] as IReadOnlyCollection<PermissionTo> ?? Array.Empty<PermissionTo>();
 
 	public static bool UserHas(this ViewDataDictionary viewData, PermissionTo permission)
 	{
