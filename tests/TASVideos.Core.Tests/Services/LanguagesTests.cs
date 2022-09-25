@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
@@ -14,7 +15,7 @@ public class LanguagesTests
 	public LanguagesTests()
 	{
 		_wikiPages = new Mock<IWikiPages>(MockBehavior.Strict);
-		_languages = new Languages(_wikiPages.Object);
+		_languages = new Languages(_wikiPages.Object, new NoCacheService());
 	}
 
 	[TestMethod]
@@ -114,8 +115,7 @@ public class LanguagesTests
 	{
 		const string page = "TestPage";
 		MockStandardMarkup();
-		_wikiPages.Setup(m => m.Exists($"FR/{page}", false)).ReturnsAsync(false);
-		_wikiPages.Setup(m => m.Exists($"ES/{page}", false)).ReturnsAsync(false);
+		_wikiPages.Setup(m => m.Query).Returns(Array.Empty<WikiPage>().AsAsyncQueryable());
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
@@ -127,8 +127,11 @@ public class LanguagesTests
 	{
 		const string page = "TestPage";
 		MockStandardMarkup();
-		_wikiPages.Setup(m => m.Exists($"FR/{page}", false)).ReturnsAsync(true);
-		_wikiPages.Setup(m => m.Exists($"ES/{page}", false)).ReturnsAsync(true);
+		_wikiPages.Setup(m => m.Query).Returns(new WikiPage[]
+		{
+			new() { PageName = $"FR/{page}" },
+			new() { PageName = $"ES/{page}" }
+		}.AsAsyncQueryable());
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
@@ -142,9 +145,13 @@ public class LanguagesTests
 		const string lang = "FR";
 		const string translation = lang + "/" + mainPage;
 		MockStandardMarkup();
-		_wikiPages.Setup(m => m.Exists(mainPage, false)).ReturnsAsync(true);
-		_wikiPages.Setup(m => m.Exists(translation, false)).ReturnsAsync(true);
-		_wikiPages.Setup(m => m.Exists($"ES/{mainPage}", false)).ReturnsAsync(true);
+
+		_wikiPages.Setup(m => m.Query).Returns(new WikiPage[]
+		{
+			new() { PageName = mainPage },
+			new() { PageName = translation },
+			new() { PageName = $"ES/{mainPage}" }
+		}.AsAsyncQueryable());
 
 		var result = await _languages.GetTranslations(translation);
 		Assert.IsNotNull(result);
