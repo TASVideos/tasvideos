@@ -24,7 +24,7 @@ public class SetPageViewBagAttribute : ResultFilterAttribute
 			var user = context.HttpContext.User;
 			viewData["UserPermissions"] = user.IsLoggedIn()
 				? user.Permissions()
-				: Enumerable.Empty<PermissionTo>();
+				: Array.Empty<PermissionTo>();
 		}
 
 		await next.Invoke();
