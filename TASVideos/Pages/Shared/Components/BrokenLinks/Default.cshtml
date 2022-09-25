@@ -1,13 +1,13 @@
 ﻿@model IReadOnlyCollection<WikiPageReferral>
-@inject ILanguages _languages
 
-<div>
-	<label>Total: @Model.Count</label>
-</div>
-
-<div class="table-container">
-	<table class="table table-striped">
-		<tbody>
+@if (Model.Any())
+{
+	<div>
+		<label>Total: @Model.Count</label>
+	</div>
+	<div class="table-container">
+		<table class="table table-striped">
+			<tbody>
 			<tr>
 				<th>Page</th>
 				<th>Linked From</th>
@@ -21,6 +21,14 @@
 					<td><i>@link.Excerpt</i></td>
 				</tr>
 			}
-		</tbody>
-	</table>
-</div>
+			</tbody>
+		</table>
+	</div>
+}
+else
+{
+	<info-alert>
+		No Broken Links to Display
+	</info-alert>
+}
+

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using TASVideos.Core.Services;
+using TASVideos.Data.Entity;
 using TASVideos.Pages;
 using TASVideos.Pages.Wiki;
 using TASVideos.WikiEngine;
@@ -74,6 +75,28 @@ public class BrokenLinks : ViewComponent
 			.Where(b => !routedPages.Any(r => b.Referral.ToLowerInvariant().StartsWith(r)))
 			.ToList();
 
-		return View(filtered);
+		return View(await FilterRevisionLinks(filtered));
+	}
+
+	// Hack for the inability to strip query strings from wiki page referrals
+	// This assumes there are not many of these, and so the performance hit is minor!
+	private async Task<IReadOnlyCollection<WikiPageReferral>> FilterRevisionLinks(IReadOnlyCollection<WikiPageReferral> filtered)
+	{
+		var revisionLinks = filtered
+			.Where(b => b.Referral.Contains("?revision"))
+			.ToList();
+		var existingRevisionLinks = new List<string>();
+		foreach (var link in revisionLinks)
+		{
+			var page = link.Referral.Split('?')[0];
+			if (await _wikiPages.Exists(page))
+			{
+				existingRevisionLinks.Add(link.Referral);
+			}
+		}
+
+		return filtered
+			.Where(f => !existingRevisionLinks.Contains(f.Referral))
+			.ToList();
 	}
 }
