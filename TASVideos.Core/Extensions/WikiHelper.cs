@@ -3,9 +3,10 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions;
 
+// ReSharper disable PossibleMultipleEnumeration
 public static class WikiHelper
 {
-	public static bool UserCanEditWikiPage(string? pageName, string? userName, IReadOnlyCollection<PermissionTo> userPermissions)
+	public static bool UserCanEditWikiPage(string? pageName, string? userName, IEnumerable<PermissionTo> userPermissions)
 	{
 		if (string.IsNullOrWhiteSpace(pageName) || string.IsNullOrWhiteSpace(userName))
 		{

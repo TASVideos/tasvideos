@@ -71,7 +71,7 @@ public class UserManager : UserManager<User>
 	/// <summary>
 	/// Returns a list of all permissions of the <seea cref="User"/> with the given id
 	/// </summary>
-	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId)
+	public async Task<IEnumerable<PermissionTo>> GetUserPermissionsById(int userId)
 	{
 		return await _db.Users
 			.Where(u => u.Id == userId)

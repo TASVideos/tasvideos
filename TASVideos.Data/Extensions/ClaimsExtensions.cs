@@ -5,7 +5,7 @@ namespace TASVideos;
 
 public static class ClaimsExtensions
 {
-	public static IReadOnlyCollection<PermissionTo> Permissions(this IEnumerable<Claim> claims)
+	public static IEnumerable<PermissionTo> Permissions(this IEnumerable<Claim> claims)
 	{
 		return claims
 			.Where(c => c.Type == CustomClaimTypes.Permission)

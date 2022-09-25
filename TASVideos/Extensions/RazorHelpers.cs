@@ -14,15 +14,15 @@ public static class RazorHelpers
 		return $"{context.Request.Path}{context.Request.QueryString}";
 	}
 
-	public static IReadOnlyCollection<PermissionTo> UserPermissions(this ViewDataDictionary viewData)
+	public static IEnumerable<PermissionTo> UserPermissions(this ViewDataDictionary viewData)
 	{
 		var userPerm = viewData["UserPermissions"];
 		if (userPerm is null)
 		{
-			return Array.Empty<PermissionTo>();
+			return Enumerable.Empty<PermissionTo>();
 		}
 
-		return (IReadOnlyCollection<PermissionTo>)userPerm;
+		return (IEnumerable<PermissionTo>)userPerm;
 	}
 
 	public static bool UserHas(this ViewDataDictionary viewData, PermissionTo permission)
