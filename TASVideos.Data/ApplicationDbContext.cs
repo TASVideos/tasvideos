@@ -326,6 +326,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			entity.HasMany(p => p.ObsoletedMovies)
 				.WithOne(p => p.ObsoletedBy!)
 				.OnDelete(DeleteBehavior.Restrict);
+
+			entity.HasIndex(e => e.MovieFileName).IsUnique();
 		});
 
 		builder.Entity<GameGenre>(entity =>
