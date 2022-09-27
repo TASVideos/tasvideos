@@ -48,7 +48,7 @@ internal class AsyncQueryProvider<T> : IQueryProvider
 	public IQueryable<TElement> CreateQuery<TElement>(Expression expression) =>
 		new AsyncQueryable<TElement>(_source.CreateQuery<TElement>(expression));
 
-	public object Execute(Expression expression) => Execute<T>(expression);
+	public object Execute(Expression expression) => Execute<T>(expression)!;
 
 	public TResult Execute<TResult>(Expression expression) =>
 		_source.Execute<TResult>(expression);
