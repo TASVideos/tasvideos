@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
+using static TASVideos.ViewComponents.MovieStatisticsModel;
 
 namespace TASVideos.ViewComponents;
 
@@ -78,8 +79,9 @@ public class MovieStatistics : ViewComponent
 		var comparisonMetric = ParameterList.GetValueOrDefault(comp);
 		string fieldHeader;
 
-		List<MovieStatisticsModel.MovieStatisticsEntry> movieList;
 		IQueryable<Publication> query = _db.Publications.ThatAreCurrent();
+		IQueryable<MovieStatisticsEntry> statQuery;
+
 		switch (comparisonMetric)
 		{
 			case MovieStatisticComparison.None:
@@ -108,128 +110,111 @@ public class MovieStatistics : ViewComponent
 
 			case MovieStatisticComparison.Length:
 				fieldHeader = "Length";
-				movieList = await query
+				statQuery = query
 					.Where(p => p.System != null && p.SystemFrameRate != null)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsTimeSpanEntry
+					.OrderBy(p => p.Frames / p.SystemFrameRate!.FrameRate)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
 
 						// the hackiest of workarounds but just calling Time() makes it explode for hardly fathomable reasons
-						TimeSpanValue = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate!.FrameRate * 100, MidpointRounding.AwayFromZero) * 10)
-					})
-					.ToListAsync();
+						Value = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate!.FrameRate * 100, MidpointRounding.AwayFromZero) * 10)
+					});
 				break;
 
 			case MovieStatisticComparison.Rerecords:
 				fieldHeader = "Rerecords";
-				movieList = await query
+				statQuery = query
 					.Where(p => p.RerecordCount > 0)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
+					.OrderBy(p => p.RerecordCount, reverse)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
-						IntValue = p.RerecordCount
-					})
-					.ToListAsync();
+						Value = p.RerecordCount
+					});
 				break;
-
 			case MovieStatisticComparison.RerecordsPerLength:
 				fieldHeader = "Rerecords per frame";
-				movieList = await query
+				statQuery = query
 					.Where(p => p.RerecordCount > 0)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
+					.OrderBy(p => (double)p.RerecordCount / p.Frames, reverse)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
 
 						// this should use time instead of frames, but time is a massive pain to properly fetch currently
-						FloatValue = (float)p.RerecordCount / p.Frames
-					})
-					.ToListAsync();
+						Value = (double)p.RerecordCount / p.Frames
+					});
 				break;
-
 			case MovieStatisticComparison.DaysPublished:
 				fieldHeader = "Days";
-				movieList = await query
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
+				statQuery = query
+					.OrderBy(p => (DateTime.UtcNow - p.CreateTimestamp).TotalDays, reverse)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
-						IntValue = (int)Math.Round((DateTime.UtcNow - p.CreateTimestamp).TotalDays)
-					})
-					.ToListAsync();
+						Value = (int)Math.Round((DateTime.UtcNow - p.CreateTimestamp).TotalDays)
+					});
 				break;
 			case MovieStatisticComparison.DescriptionLength:
 				fieldHeader = "Characters";
-				movieList = await query
+				statQuery = query
 					.Where(p => p.WikiContent != null)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
+					.OrderBy(p => p.WikiContent!.Markup.Length, reverse)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
-						IntValue = p.WikiContent!.Markup.Length
-					})
-					.ToListAsync();
+						Value = p.WikiContent!.Markup.Length
+					});
 				break;
-
 			case MovieStatisticComparison.SubmissionDescriptionLength:
 				fieldHeader = "Characters";
-				movieList = await query
+				statQuery = query
 					.Where(p => p.Submission != null && p.Submission.WikiContent != null)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
+					.OrderBy(p => p.Submission!.WikiContent!.Markup.Length, reverse)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
-						IntValue = p.Submission!.WikiContent!.Markup.Length
-					})
-					.ToListAsync();
+						Value = p.Submission!.WikiContent!.Markup.Length
+					});
 				break;
-
 			case MovieStatisticComparison.AverageRating:
 				fieldHeader = "Rating";
-				movieList = await query
+				statQuery = query
 					.Where(p => p.PublicationRatings.Count >= minimumVotes)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
+					.OrderBy(p => p.PublicationRatings.Average(r => r.Value), true)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
-						FloatValue =
-						(float)Math.Round(
-							(float)p.PublicationRatings.Average(r => r.Value))
-					})
-					.ToListAsync();
+						Value = Math.Round(p.PublicationRatings.Average(r => r.Value))
+					});
 				break;
-
 			case MovieStatisticComparison.VoteCount:
 				fieldHeader = "Ratings";
-				movieList = await query
+				statQuery = query
 					.Where(p => p.CreateTimestamp <= minimumAgeTime)
-					.Select(p =>
-					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
+					.OrderBy(p => p.PublicationRatings.Count, reverse)
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
-						FloatValue = p.PublicationRatings.Count
-					})
-					.ToListAsync();
+						Value = p.PublicationRatings.Count
+					});
 				break;
 		}
 
-		var orderedList = reverse
-						? movieList.OrderByDescending(p => p.Comparable).Take(count).ToList()
-						: movieList.OrderBy(p => p.Comparable).Take(count).ToList();
+		List<MovieStatisticsEntry> movieList = await statQuery.Take(count).ToListAsync();
 
 		var model = new MovieStatisticsModel
 		{
-			MovieList = orderedList,
+			MovieList = movieList,
 			FieldHeader = fieldHeader
 		};
 

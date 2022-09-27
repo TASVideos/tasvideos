@@ -13,28 +13,21 @@ public class MovieStatisticsModel
 	{
 		public int Id { get; init; }
 		public string Title { get; init; } = "";
-		public virtual string DisplayValue => Id.ToString();
-		public virtual IComparable Comparable => Id;
-	}
+		public object Value { get; init; } = new();
 
-	public class MovieStatisticsIntEntry : MovieStatisticsEntry
-	{
-		public int IntValue { get; init; }
-		public override string DisplayValue => IntValue.ToString();
-		public override IComparable Comparable => IntValue;
-	}
+		public string? DisplayString()
+		{
+			if (Value is TimeSpan t)
+			{
+				return t.ToStringWithOptionalDaysAndHours();
+			}
 
-	public class MovieStatisticsFloatEntry : MovieStatisticsEntry
-	{
-		public double FloatValue { get; init; }
-		public override string DisplayValue => FloatValue.ToString(CultureInfo.InvariantCulture);
-		public override IComparable Comparable => FloatValue;
-	}
+			if (Value is double f)
+			{
+				return f.ToString(CultureInfo.CurrentCulture);
+			}
 
-	public class MovieStatisticsTimeSpanEntry : MovieStatisticsEntry
-	{
-		public TimeSpan TimeSpanValue { get; init; }
-		public override string DisplayValue => TimeSpanValue.ToStringWithOptionalDaysAndHours();
-		public override IComparable Comparable => TimeSpanValue;
+			return Value.ToString();
+		}
 	}
 }
