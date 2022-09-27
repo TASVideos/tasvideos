@@ -62,29 +62,28 @@ public class MovieStatistics : ViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync(string? comp, int? minAge, int? minVotes, int? top)
 	{
-		string comparisonParameter = comp ?? string.Empty;
+		comp ??= string.Empty;
 		int count = top ?? 10;
 
 		// these are only used for rating statistics
 		int minimumVotes = minVotes ?? 1;
-		int minimumAge = minAge ?? 0;
-		DateTime minimumAgeTime = DateTime.UtcNow.AddDays(-minimumAge);
+		DateTime minimumAgeTime = DateTime.UtcNow.AddDays(-(minAge ?? 0));
 
-		bool reverse = comparisonParameter.StartsWith("-");
+		bool reverse = comp.StartsWith("-");
 		if (reverse)
 		{
-			comparisonParameter = comparisonParameter[1..];
+			comp = comp[1..];
 		}
 
-		var comparisonMetric = ParameterList.GetValueOrDefault(comparisonParameter);
+		var comparisonMetric = ParameterList.GetValueOrDefault(comp);
 		string fieldHeader;
 
 		List<MovieStatisticsModel.MovieStatisticsEntry> movieList;
-
+		IQueryable<Publication> query = _db.Publications.ThatAreCurrent();
 		switch (comparisonMetric)
 		{
 			case MovieStatisticComparison.None:
-				var generalModel = new MovieGeneralStatisticsModel()
+				var generalModel = new MovieGeneralStatisticsModel
 				{
 					PublishedMovieCount = await _db.Publications.ThatAreCurrent().CountAsync(),
 					TotalMovieCount = await _db.Publications.CountAsync(),
@@ -94,22 +93,22 @@ public class MovieStatistics : ViewComponent
 				return View("General", generalModel);
 
 			default:
-				// debugging: sort by publication id
-				fieldHeader = "Publication";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
-					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
+			case MovieStatisticComparison.EncodeLength:
+			case MovieStatisticComparison.EncodeSize:
+			case MovieStatisticComparison.EncodeRatio:
+			case MovieStatisticComparison.EncodeLengthRatio:
+			case MovieStatisticComparison.LongestEnding:
+
+				// currently unable to fetch encode data
+				return View(
+					new MovieStatisticsModel
 					{
-						Id = p.Id,
-						Title = p.Title,
-					})
-					.ToListAsync();
-				break;
+						ErrorMessage = "Could not display statistics for given parameter: " + comp
+					});
 
 			case MovieStatisticComparison.Length:
 				fieldHeader = "Length";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Where(p => p.System != null && p.SystemFrameRate != null)
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsTimeSpanEntry
@@ -125,8 +124,7 @@ public class MovieStatistics : ViewComponent
 
 			case MovieStatisticComparison.Rerecords:
 				fieldHeader = "Rerecords";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Where(p => p.RerecordCount > 0)
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
@@ -140,8 +138,7 @@ public class MovieStatistics : ViewComponent
 
 			case MovieStatisticComparison.RerecordsPerLength:
 				fieldHeader = "Rerecords per frame";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Where(p => p.RerecordCount > 0)
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
@@ -157,8 +154,7 @@ public class MovieStatistics : ViewComponent
 
 			case MovieStatisticComparison.DaysPublished:
 				fieldHeader = "Days";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
 					{
@@ -168,24 +164,9 @@ public class MovieStatistics : ViewComponent
 					})
 					.ToListAsync();
 				break;
-
-			case MovieStatisticComparison.EncodeLength:
-			case MovieStatisticComparison.EncodeSize:
-			case MovieStatisticComparison.EncodeRatio:
-			case MovieStatisticComparison.EncodeLengthRatio:
-			case MovieStatisticComparison.LongestEnding:
-
-				// currently unable to fetch encode data
-				return View(
-					new MovieStatisticsModel()
-					{
-						ErrorMessage = "Could not display statistics for given parameter: " + comparisonParameter
-					});
-
 			case MovieStatisticComparison.DescriptionLength:
 				fieldHeader = "Characters";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Where(p => p.WikiContent != null)
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
@@ -199,8 +180,7 @@ public class MovieStatistics : ViewComponent
 
 			case MovieStatisticComparison.SubmissionDescriptionLength:
 				fieldHeader = "Characters";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Where(p => p.Submission != null && p.Submission.WikiContent != null)
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsIntEntry
@@ -214,8 +194,7 @@ public class MovieStatistics : ViewComponent
 
 			case MovieStatisticComparison.AverageRating:
 				fieldHeader = "Rating";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Where(p => p.PublicationRatings.Count >= minimumVotes)
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
@@ -231,8 +210,7 @@ public class MovieStatistics : ViewComponent
 
 			case MovieStatisticComparison.VoteCount:
 				fieldHeader = "Ratings";
-				movieList = await _db.Publications
-					.ThatAreCurrent()
+				movieList = await query
 					.Where(p => p.CreateTimestamp <= minimumAgeTime)
 					.Select(p =>
 					(MovieStatisticsModel.MovieStatisticsEntry)new MovieStatisticsModel.MovieStatisticsFloatEntry
