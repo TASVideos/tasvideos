@@ -263,10 +263,7 @@ internal class QueueService : IQueueService
 		}
 
 		await _db.SaveChangesAsync();
-		if (submission.WikiContentId.HasValue)
-		{
-			await _wikiPages.Delete(WikiHelper.ToSubmissionWikiPageName(submissionId));
-		}
+		await _wikiPages.Delete(WikiHelper.ToSubmissionWikiPageName(submissionId));
 
 		return DeleteSubmissionResult.Success(submission.Title);
 	}

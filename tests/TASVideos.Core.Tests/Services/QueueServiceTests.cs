@@ -367,7 +367,6 @@ public class QueueServiceTests
 		const int topicId = 2;
 		const int pollId = 3;
 		const string submissionTitle = "Test Submission";
-		const string pageName = "Submission Page";
 		var poll = new ForumPoll { Id = pollId, TopicId = topicId };
 		var pollOptions = new ForumPollOption[]
 		{
@@ -379,12 +378,11 @@ public class QueueServiceTests
 		var topic = new ForumTopic { Id = topicId, PollId = 2, Poll = poll };
 		_db.Submissions.Add(new Submission
 		{
-			Id = 1,
+			Id = submissionId,
 			Status = New,
 			Title = submissionTitle,
 			TopicId = topicId,
 			Topic = topic,
-			WikiContent = new WikiPage { PageName = pageName }
 		});
 		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory { SubmissionId = submissionId, Status = New });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = 1 });
@@ -411,7 +409,7 @@ public class QueueServiceTests
 		Assert.AreEqual(0, _db.ForumPosts.Count());
 		Assert.AreEqual(0, _db.ForumPollOptions.Count());
 		Assert.AreEqual(0, _db.ForumPollOptionVotes.Count());
-		_wikiPages.Verify(v => v.Delete(pageName));
+		_wikiPages.Verify(v => v.Delete(WikiHelper.ToSubmissionWikiPageName(1)));
 	}
 
 	[TestMethod]
