@@ -163,25 +163,34 @@ public class MovieStatistics : ViewComponent
 			case MovieStatisticComparison.DescriptionLength:
 				fieldHeader = "Characters";
 				statQuery = query
-					.Where(p => p.WikiContent != null)
-					.OrderBy(p => p.WikiContent!.Markup.Length, reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Join(
+						_db.WikiPages.ThatAreNotDeleted().WithNoChildren(),
+						p => LinkConstants.PublicationWikiPage + p.Id,
+						wp => wp.PageName,
+						(p, wp) => new { p, wp })
+					.OrderBy(join => join.wp.Markup.Length, reverse)
+					.Select(join => new MovieStatisticsEntry
 					{
-						Id = p.Id,
-						Title = p.Title,
-						Value = p.WikiContent!.Markup.Length
+						Id = join.p.Id,
+						Title = join.p.Title,
+						Value = join.wp.Markup.Length
 					});
 				break;
 			case MovieStatisticComparison.SubmissionDescriptionLength:
 				fieldHeader = "Characters";
 				statQuery = query
-					.Where(p => p.Submission != null && p.Submission.WikiContent != null)
-					.OrderBy(p => p.Submission!.WikiContent!.Markup.Length, reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Where(p => p.Submission != null)
+					.Join(
+						_db.WikiPages.ThatAreNotDeleted().WithNoChildren(),
+						p => LinkConstants.SubmissionWikiPage + p.SubmissionId,
+						wp => wp.PageName,
+						(p, wp) => new { p, wp })
+					.OrderBy(join => join.wp.Markup.Length, reverse)
+					.Select(join => new MovieStatisticsEntry
 					{
-						Id = p.Id,
-						Title = p.Title,
-						Value = p.Submission!.WikiContent!.Markup.Length
+						Id = join.p.Id,
+						Title = join.p.Title,
+						Value = join.wp.Markup.Length
 					});
 				break;
 			case MovieStatisticComparison.AverageRating:
