@@ -112,7 +112,7 @@ public class MovieStatistics : ViewComponent
 				fieldHeader = "Length";
 				statQuery = query
 					.Where(p => p.System != null && p.SystemFrameRate != null)
-					.OrderBy(p => p.Frames / p.SystemFrameRate!.FrameRate)
+					.OrderBy(p => p.Frames / p.SystemFrameRate!.FrameRate, reverse)
 					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
