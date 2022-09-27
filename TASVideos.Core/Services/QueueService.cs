@@ -361,6 +361,8 @@ internal class QueueService : IQueueService
 				.ThenInclude(pa => pa.Author)
 				.SingleAsync(p => p.Id == obsoletedPub.Id);
 
+			var obsoletedWiki = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(queriedPub.Id));
+
 			foreach (var url in obsoletedPub.PublicationUrls.Where(u => _youtubeSync.IsYoutubeUrl(u.Url)))
 			{
 				await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
@@ -369,7 +371,7 @@ internal class QueueService : IQueueService
 					url.Url!,
 					url.DisplayName,
 					queriedPub.Title,
-					queriedPub.WikiContent!,
+					obsoletedWiki!,
 					queriedPub.System!.Code,
 					queriedPub.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 					queriedPub.ObsoletedById));

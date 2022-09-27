@@ -595,7 +595,6 @@ public class QueueServiceTests
 		{
 			Id = obsoletedPublicationId,
 			ObsoletedById = publicationId,
-			WikiContentId = wikiEntry.Entity.Id,
 			SystemId = systemEntry.Entity.Id,
 			GameId = gameEntry.Entity.Id
 		});
