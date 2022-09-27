@@ -227,7 +227,6 @@ internal class QueueService : IQueueService
 		var submission = await _db.Submissions
 			.Include(s => s.SubmissionAuthors)
 			.Include(s => s.History)
-			.Include(s => s.WikiContent)
 			.SingleOrDefaultAsync(s => s.Id == submissionId);
 
 		if (submission is null)
@@ -266,7 +265,7 @@ internal class QueueService : IQueueService
 		await _db.SaveChangesAsync();
 		if (submission.WikiContentId.HasValue)
 		{
-			await _wikiPages.Delete(submission.WikiContent!.PageName);
+			await _wikiPages.Delete(WikiHelper.ToSubmissionWikiPageName(submissionId));
 		}
 
 		return DeleteSubmissionResult.Success(submission.Title);
@@ -449,7 +448,6 @@ internal class QueueService : IQueueService
 	{
 		var toObsolete = await _db.Publications
 			.Include(p => p.PublicationUrls)
-			.Include(p => p.WikiContent)
 			.Include(p => p.System)
 			.Include(p => p.Game)
 			.Include(p => p.Authors)
@@ -460,6 +458,9 @@ internal class QueueService : IQueueService
 		{
 			return false;
 		}
+
+		var pageName = WikiHelper.ToPublicationWikiPageName(toObsolete.Id);
+		var wikiPage = await _wikiPages.Page(pageName);
 
 		toObsolete.ObsoletedById = obsoletingPublicationId;
 		await _db.SaveChangesAsync();
@@ -474,7 +475,7 @@ internal class QueueService : IQueueService
 				url.Url ?? "",
 				url.DisplayName,
 				toObsolete.Title,
-				toObsolete.WikiContent!,
+				wikiPage!,
 				toObsolete.System!.Code,
 				toObsolete.Authors
 					.OrderBy(pa => pa.Ordinal)

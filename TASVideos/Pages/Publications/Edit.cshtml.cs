@@ -85,8 +85,7 @@ public class EditModel : BasePageModel
 					.ToList(),
 				SelectedTags = p.PublicationTags
 					.Select(pt => pt.TagId)
-					.ToList(),
-				Markup = p.WikiContent != null ? p.WikiContent.Markup : ""
+					.ToList()
 			})
 			.SingleOrDefaultAsync();
 
@@ -94,6 +93,8 @@ public class EditModel : BasePageModel
 		{
 			return NotFound();
 		}
+
+		publication.Markup = (await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(Id)))?.Markup ?? "";
 
 		Publication = publication;
 		Publication.Authors = await _db.PublicationAuthors
@@ -242,7 +243,7 @@ public class EditModel : BasePageModel
 		{
 			var revision = new WikiPage
 			{
-				PageName = $"{LinkConstants.PublicationWikiPage}{id}",
+				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,

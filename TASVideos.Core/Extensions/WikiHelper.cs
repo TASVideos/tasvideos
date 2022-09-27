@@ -175,10 +175,10 @@ public static class WikiHelper
 			return null;
 		}
 
-		if (pageName.StartsWith("InternalSystem/PublicationContent/M"))
+		if (pageName.StartsWith(LinkConstants.PublicationWikiPage))
 		{
 			var result = int.TryParse(
-				pageName.Replace("InternalSystem/PublicationContent/M", ""), out int id);
+				pageName.Replace(LinkConstants.PublicationWikiPage, ""), out int id);
 
 			if (result)
 			{
@@ -196,10 +196,10 @@ public static class WikiHelper
 			return null;
 		}
 
-		if (pageName.StartsWith("InternalSystem/SubmissionContent/S"))
+		if (pageName.StartsWith(LinkConstants.SubmissionWikiPage))
 		{
 			var result = int.TryParse(
-				pageName.Replace("InternalSystem/SubmissionContent/S", ""), out int id);
+				pageName.Replace(LinkConstants.SubmissionWikiPage, ""), out int id);
 
 			if (result)
 			{
@@ -232,6 +232,12 @@ public static class WikiHelper
 
 		return link;
 	}
+
+	public static string ToPublicationWikiPageName(int publicationId)
+		=> $"{LinkConstants.PublicationWikiPage}{publicationId}";
+
+	public static string ToSubmissionWikiPageName(int submissionId)
+		=> $"{LinkConstants.SubmissionWikiPage}{submissionId}";
 
 	private static bool IsInternalSubmissionLink(string link)
 	{
