@@ -354,7 +354,6 @@ internal class QueueService : IQueueService
 			// for a single trip
 			var queriedPub = await _db.Publications
 				.Include(p => p.PublicationUrls)
-				.Include(p => p.WikiContent)
 				.Include(p => p.System)
 				.Include(p => p.Game)
 				.Include(p => p.Authors)
