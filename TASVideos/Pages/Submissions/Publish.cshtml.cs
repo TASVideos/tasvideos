@@ -184,14 +184,21 @@ public class PublishModel : BasePageModel
 		return BaseRedirect($"/{publication.Id}M");
 	}
 
+	private class ObsoletePublicationResult
+	{
+		public string Title { get; init; } = "";
+		public string Markup { get; set; } = "";
+		public IEnumerable<int> Flags { get; init; } = new List<int>();
+		public IEnumerable<int> Tags { get; init; } = new List<int>();
+	}
+
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
 	{
 		var pub = await _db.Publications
 			.Where(p => p.Id == publicationId)
-			.Select(p => new
+			.Select(p => new ObsoletePublicationResult
 			{
-				p.Title,
-				p.WikiContent!.Markup,
+				Title = p.Title,
 				Flags = p.PublicationFlags.Select(pf => pf.FlagId),
 				Tags = p.PublicationTags.Select(pt => pt.TagId)
 			})
@@ -202,6 +209,9 @@ public class PublishModel : BasePageModel
 			return BadRequest($"Unable to find publication with an id of {publicationId}");
 		}
 
+		var page = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
+		pub.Markup = page!.Markup;
+
 		return new JsonResult(pub);
 	}
 
@@ -210,7 +220,7 @@ public class PublishModel : BasePageModel
 		return new WikiPage
 		{
 			RevisionMessage = $"Auto-generated from Movie #{publicationId}",
-			PageName = LinkConstants.PublicationWikiPage + publicationId,
+			PageName = WikiHelper.ToPublicationWikiPageName(publicationId),
 			MinorEdit = false,
 			Markup = markup,
 			AuthorId = userId
