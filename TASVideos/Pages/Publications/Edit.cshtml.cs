@@ -163,7 +163,6 @@ public class EditModel : BasePageModel
 			.Include(p => p.PublicationUrls)
 			.Include(p => p.PublicationTags)
 			.Include(p => p.PublicationFlags)
-			.Include(p => p.WikiContent)
 			.Include(p => p.System)
 			.Include(p => p.SystemFrameRate)
 			.Include(p => p.Game)
@@ -239,7 +238,9 @@ public class EditModel : BasePageModel
 
 		await _db.SaveChangesAsync();
 
-		if (model.Markup != publication.WikiContent!.Markup)
+		var existingWikiPage = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(Id));
+
+		if (model.Markup != existingWikiPage!.Markup)
 		{
 			var revision = new WikiPage
 			{
