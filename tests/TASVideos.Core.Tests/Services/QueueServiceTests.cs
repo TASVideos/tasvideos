@@ -746,9 +746,13 @@ public class QueueServiceTests
 			{
 				new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl }
 			},
-			WikiContent = new WikiPage { Markup = wikiMarkup },
 			System = new GameSystem { Code = "Test" },
 			Game = new Game()
+		});
+		_db.WikiPages.Add(new WikiPage
+		{
+			PageName = WikiHelper.ToPublicationWikiPageName(pubToObsolete),
+			Markup = wikiMarkup
 		});
 		await _db.SaveChangesAsync();
 
