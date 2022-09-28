@@ -155,17 +155,19 @@
 	</nav>
 	<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</p>
 </fullrow>
+
+<span condition="@(Model.SaveActivity)" id="serverUnixTime" class="d-none">@DateTime.UtcNow.UnixTimestamp()</span>
 @section Scripts {
 	<script condition="@(Model.SaveActivity)">
 		{
 			let topicId = '@Model.Id';
-			let currentTime = Math.floor(Date.now() / 1000);
+			let currentTime = Number(document.getElementById('serverUnixTime').textContent);
 			let visitedTopics = localStorage.getItem('VisitedTopics');
-			if (visitedTopics !== null){
+			if (visitedTopics !== null) {
 				visitedTopics = JSON.parse(visitedTopics);
 				visitedTopics[topicId] = currentTime;
-			}else{
-				visitedTopics = {[topicId]: currentTime};
+			} else {
+				visitedTopics = { [topicId]: currentTime };
 			}
 			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
 		}
