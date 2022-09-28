@@ -32,17 +32,14 @@
 		changeColumns.forEach(function (elem) {
 			var before = elem.querySelector('.before');
 			var after = elem.querySelector('.after');
-			generateDiff(elem, before.value, after.value);
-		});
 
-		function generateDiff(diffElem, before, after) {
 			renderDiff(
-				{ text: before, name: "Before" },
-				{ text: after, name: "After" },
-				diffElem,
+				{ text: before.value, name: "Before" },
+				{ text: after.value, name: "After" },
+				elem,
 				true,
 				1
 			);
-		}
+		});
 	</script>
 }
