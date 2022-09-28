@@ -17,6 +17,7 @@ public class EditUrlsModel : BasePageModel
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
+	private readonly IWikiPages _wikiPages;
 
 	private static readonly List<PublicationUrlType> PublicationUrlTypes = Enum
 		.GetValues(typeof(PublicationUrlType))
@@ -27,12 +28,14 @@ public class EditUrlsModel : BasePageModel
 		ApplicationDbContext db,
 		ExternalMediaPublisher publisher,
 		IYoutubeSync youtubeSync,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger)
+		IPublicationMaintenanceLogger publicationMaintenanceLogger,
+		IWikiPages wikiPages)
 	{
 		_db = db;
 		_publisher = publisher;
 		_youtubeSync = youtubeSync;
 		_publicationMaintenanceLogger = publicationMaintenanceLogger;
+		_wikiPages = wikiPages;
 	}
 
 	public IEnumerable<SelectListItem> AvailableTypes =
@@ -97,7 +100,6 @@ public class EditUrlsModel : BasePageModel
 				p.CreateTimestamp,
 				p.PublicationUrls,
 				SystemCode = p.System!.Code,
-				p.WikiContent,
 				Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 				p.ObsoletedById
 			})
@@ -107,6 +109,8 @@ public class EditUrlsModel : BasePageModel
 		{
 			return NotFound();
 		}
+
+		var publicationWiki = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(Id));
 
 		CurrentUrls = publication.PublicationUrls;
 
@@ -148,7 +152,7 @@ public class EditUrlsModel : BasePageModel
 					PublicationUrl,
 					DisplayName,
 					publication.Title,
-					publication.WikiContent!,
+					publicationWiki!,
 					publication.SystemCode,
 					publication.Authors,
 					publication.ObsoletedById);
