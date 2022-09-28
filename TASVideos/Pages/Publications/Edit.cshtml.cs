@@ -267,7 +267,7 @@ public class EditModel : BasePageModel
 					url.Url!,
 					url.DisplayName,
 					publication.Title,
-					publication.WikiContent,
+					existingWikiPage,
 					publication.System!.Code,
 					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 					publication.ObsoletedById));
