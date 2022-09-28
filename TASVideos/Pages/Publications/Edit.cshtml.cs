@@ -94,7 +94,7 @@ public class EditModel : BasePageModel
 			return NotFound();
 		}
 
-		publication.Markup = (await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(Id)))?.Markup ?? "";
+		publication.Markup = (await _wikiPages.PublicationPage(Id))?.Markup ?? "";
 
 		Publication = publication;
 		Publication.Authors = await _db.PublicationAuthors
@@ -238,7 +238,7 @@ public class EditModel : BasePageModel
 
 		await _db.SaveChangesAsync();
 
-		var existingWikiPage = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(Id));
+		var existingWikiPage = await _wikiPages.PublicationPage(Id);
 
 		if (model.Markup != existingWikiPage!.Markup)
 		{

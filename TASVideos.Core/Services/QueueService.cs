@@ -360,7 +360,7 @@ internal class QueueService : IQueueService
 				.ThenInclude(pa => pa.Author)
 				.SingleAsync(p => p.Id == obsoletedPub.Id);
 
-			var obsoletedWiki = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(queriedPub.Id));
+			var obsoletedWiki = await _wikiPages.PublicationPage(queriedPub.Id);
 
 			foreach (var url in obsoletedPub.PublicationUrls.Where(u => _youtubeSync.IsYoutubeUrl(u.Url)))
 			{

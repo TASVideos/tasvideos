@@ -110,7 +110,7 @@ public class EditUrlsModel : BasePageModel
 			return NotFound();
 		}
 
-		var publicationWiki = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(Id));
+		var publicationWiki = await _wikiPages.PublicationPage(Id);
 
 		CurrentUrls = publication.PublicationUrls;
 

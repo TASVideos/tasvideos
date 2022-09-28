@@ -209,7 +209,7 @@ public class PublishModel : BasePageModel
 			return BadRequest($"Unable to find publication with an id of {publicationId}");
 		}
 
-		var page = await _wikiPages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
+		var page = await _wikiPages.PublicationPage(publicationId);
 		pub.Markup = page!.Markup;
 
 		return new JsonResult(pub);

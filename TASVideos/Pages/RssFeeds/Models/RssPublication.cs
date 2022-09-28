@@ -4,7 +4,7 @@ namespace TASVideos.Pages.RssFeeds.Models;
 
 public class RssPublication
 {
-	public WikiPage Wiki { get; init; } = new();
+	public WikiPage Wiki { get; set; } = new();
 
 	public int Id { get; init; }
 	public DateTime CreateTimestamp { get; init; }

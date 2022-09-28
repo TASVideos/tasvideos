@@ -559,4 +559,9 @@ public static class WikiPageExtensions
 
 		return allSucceeded;
 	}
+
+	public static async Task<WikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
+	{
+		return await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
+	}
 }
