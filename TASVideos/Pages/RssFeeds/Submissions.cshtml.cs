@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -13,12 +14,15 @@ namespace TASVideos.Pages.RssFeeds;
 public class SubmissionsModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
+	private readonly IWikiPages _wikiPages;
 
 	public SubmissionsModel(
 		ApplicationDbContext db,
+		IWikiPages wikiPages,
 		AppSettings settings)
 	{
 		_db = db;
+		_wikiPages = wikiPages;
 		BaseUrl = settings.BaseUrl;
 	}
 
@@ -36,10 +40,14 @@ public class SubmissionsModel : BasePageModel
 				TopicId = s.TopicId,
 				CreateTimestamp = s.CreateTimestamp,
 				Title = s.Title,
-				Wiki = s.WikiContent!
 			})
 			.Take(10)
 			.ToListAsync();
+
+		foreach (var sub in Submissions)
+		{
+			sub.Wiki = (await _wikiPages.SubmissionPage(sub.Id))!;
+		}
 
 		PageResult pageResult = Page();
 		pageResult.ContentType = "application/rss+xml; charset=utf-8";

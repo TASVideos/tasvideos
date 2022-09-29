@@ -8,5 +8,5 @@ public class RssSubmission
 	public int? TopicId { get; init; }
 	public DateTime CreateTimestamp { get; init; }
 	public string Title { get; init; } = "";
-	public WikiPage Wiki { get; init; } = new();
+	public WikiPage Wiki { get; set; } = new();
 }
