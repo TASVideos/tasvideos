@@ -80,9 +80,10 @@
 </div>
 <partial name="_Pager" model="Model.Forum.Topics" />
 
+<span id="serverUnixTime" class="d-none">@DateTime.UtcNow.UnixTimestamp()</span>
 @section Scripts {
 	<script>
-		let currentTime = Math.floor(Date.now() / 1000);
+		let currentTime = Number(document.getElementById('serverUnixTime').textContent);
 		{
 			let visitedTopics = localStorage.getItem('VisitedTopics');
 			if (visitedTopics !== null){
