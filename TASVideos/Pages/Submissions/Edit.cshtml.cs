@@ -82,11 +82,8 @@ public class EditModel : BasePageModel
 				RerecordCount = s.RerecordCount,
 				CreateTimestamp = s.CreateTimestamp,
 				Submitter = s.Submitter!.UserName,
-				LastUpdateTimestamp = s.WikiContent!.LastUpdateTimestamp,
-				LastUpdateUser = s.WikiContent.LastUpdateUserName,
 				Status = s.Status,
 				EncodeEmbedLink = s.EncodeEmbedLink,
-				Markup = s.WikiContent.Markup,
 				Judge = s.Judge != null ? s.Judge.UserName : "",
 				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
 				PublicationClassId = s.IntendedClassId,
@@ -101,6 +98,10 @@ public class EditModel : BasePageModel
 		}
 
 		Submission = submission;
+		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
+		Submission.LastUpdateTimestamp = submissionPage.LastUpdateTimestamp;
+		Submission.LastUpdateUser = submissionPage.LastUpdateUserName;
+		Submission.Markup = submissionPage.Markup;
 		Submission.Authors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == Id)
 			.OrderBy(sa => sa.Ordinal)

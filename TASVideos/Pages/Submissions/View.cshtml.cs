@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;
@@ -13,10 +14,12 @@ namespace TASVideos.Pages.Submissions;
 public class ViewModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
+	private readonly IWikiPages _wikiPages;
 
-	public ViewModel(ApplicationDbContext db)
+	public ViewModel(ApplicationDbContext db, IWikiPages wikiPages)
 	{
 		_db = db;
+		_wikiPages = wikiPages;
 	}
 
 	[FromRoute]
@@ -49,8 +52,6 @@ public class ViewModel : BasePageModel
 				RerecordCount = s.RerecordCount,
 				Submitted = s.CreateTimestamp,
 				Submitter = s.Submitter!.UserName,
-				LastUpdateTimestamp = s.WikiContent!.LastUpdateTimestamp,
-				LastUpdateUser = s.WikiContent.LastUpdateUserName,
 				Status = s.Status,
 				EncodeEmbedLink = s.EncodeEmbedLink,
 				Judge = s.Judge != null ? s.Judge.UserName : "",
@@ -82,6 +83,9 @@ public class ViewModel : BasePageModel
 		}
 
 		Submission = submission;
+		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
+		Submission.LastUpdateTimestamp = submissionPage.LastUpdateTimestamp;
+		Submission.LastUpdateUser = submissionPage.LastUpdateUserName;
 		CanEdit = !string.IsNullOrWhiteSpace(User.Name())
 			&& (User.Name() == Submission.Submitter
 				|| Submission.Authors.Contains(User.Name()));
