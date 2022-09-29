@@ -67,9 +67,6 @@ public class Publication : BaseEntity, ITimeable
 	public virtual Submission? Submission { get; set; }
 	public virtual ICollection<PublicationAuthor> Authors { get; set; } = new HashSet<PublicationAuthor>();
 
-	public int? WikiContentId { get; set; } // making this non-nullable is a catch-22 when creating a publication, the wiki needs a publication id and the publication needs a wiki id
-	public virtual WikiPage? WikiContent { get; set; }
-
 	[Required]
 	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 

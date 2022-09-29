@@ -356,8 +356,6 @@ public class EditModel : BasePageModel
 			throw new InvalidOperationException("Unable to save wiki revision!");
 		}
 
-		submission.WikiContentId = revision.Id;
-
 		submission.SubmissionAuthors.Clear();
 		submission.SubmissionAuthors.AddRange(await _db.Users
 			.ForUsers(Submission.Authors)
@@ -481,15 +479,13 @@ public class EditModel : BasePageModel
 		_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 		submission.Status = newStatus;
-		var wikiPage = new WikiPage
+		await _wikiPages.Add(new WikiPage
 		{
 			PageName = submissionPage.PageName,
 			Markup = submissionPage.Markup += $"\n----\n[user:{User.Name()}]: {message}",
 			RevisionMessage = $"Claimed for {action}",
 			AuthorId = User.GetUserId()
-		};
-		await _wikiPages.Add(wikiPage);
-		submission.WikiContentId = wikiPage.Id;
+		});
 
 		if (isJudge)
 		{

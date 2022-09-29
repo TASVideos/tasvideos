@@ -242,18 +242,14 @@ public class EditModel : BasePageModel
 
 		if (model.Markup != existingWikiPage!.Markup)
 		{
-			var revision = new WikiPage
+			await _wikiPages.Add(new WikiPage
 			{
 				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,
 				AuthorId = User.GetUserId()
-			};
-
-			await _wikiPages.Add(revision);
-			publication.WikiContentId = revision.Id;
-			publication.WikiContent = revision;
+			});
 			externalMessages.Add("Description updated");
 		}
 

@@ -19,9 +19,6 @@ public class Submission : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
 
-	public int? WikiContentId { get; set; }
-	public virtual WikiPage? WikiContent { get; set; }
-
 	public int? TopicId { get; set; }
 	public virtual ForumTopic? Topic { get; set; }
 

@@ -153,7 +153,6 @@ public class PublishModel : BasePageModel
 		// Create a wiki page corresponding to this publication
 		var wikiPage = GenerateWiki(publication.Id, Submission.MovieMarkup, User.GetUserId());
 		await _wikiPages.Add(wikiPage);
-		publication.WikiContent = wikiPage;
 
 		submission.Status = SubmissionStatus.Published;
 		_db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);

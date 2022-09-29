@@ -109,7 +109,14 @@ public class SubmitModel : BasePageModel
 		_db.Submissions.Add(submission);
 		await _db.SaveChangesAsync();
 
-		await CreateSubmissionWikiPage(submission);
+		await _wikiPages.Add(new WikiPage
+		{
+			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
+			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
+			Markup = Create.Markup,
+			MinorEdit = false,
+			AuthorId = User.GetUserId()
+		});
 
 		_db.SubmissionAuthors.AddRange(await _db.Users
 			.ForUsers(Create.Authors)
@@ -168,19 +175,5 @@ public class SubmitModel : BasePageModel
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}", $"Could not find user: {author}");
 			}
 		}
-	}
-
-	private async Task CreateSubmissionWikiPage(Submission submission)
-	{
-		var revision = new WikiPage
-		{
-			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
-			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-			Markup = Create.Markup,
-			MinorEdit = false,
-			AuthorId = User.GetUserId()
-		};
-		await _wikiPages.Add(revision);
-		submission.WikiContent = revision;
 	}
 }
