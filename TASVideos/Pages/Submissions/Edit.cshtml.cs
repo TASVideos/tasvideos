@@ -465,9 +465,7 @@ public class EditModel : BasePageModel
 
 	private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
 	{
-		var submission = await _db.Submissions
-			.Include(s => s.WikiContent)
-			.SingleOrDefaultAsync(s => s.Id == Id);
+		var submission = await _db.Submissions.SingleOrDefaultAsync(s => s.Id == Id);
 
 		if (submission is null)
 		{
@@ -479,13 +477,14 @@ public class EditModel : BasePageModel
 			return BadRequest("Submission can not be claimed");
 		}
 
+		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
 		_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 		submission.Status = newStatus;
 		var wikiPage = new WikiPage
 		{
-			PageName = submission.WikiContent!.PageName,
-			Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: {message}",
+			PageName = submissionPage.PageName,
+			Markup = submissionPage.Markup += $"\n----\n[user:{User.Name()}]: {message}",
 			RevisionMessage = $"Claimed for {action}",
 			AuthorId = User.GetUserId()
 		};
