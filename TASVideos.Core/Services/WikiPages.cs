@@ -564,4 +564,9 @@ public static class WikiPageExtensions
 	{
 		return await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
 	}
+
+	public static async Task<WikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
+	{
+		return await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
+	}
 }

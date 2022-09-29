@@ -371,7 +371,6 @@ public static class EntityExtensions
 	{
 		return submissions.Select(s => new SubmissionPublishModel
 		{
-			Markup = s.WikiContent!.Markup,
 			SystemCode = s.System!.Code,
 			SystemRegion = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,
 			Game = s.Game!.DisplayName,

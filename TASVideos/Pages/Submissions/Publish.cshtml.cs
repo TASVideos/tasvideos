@@ -72,6 +72,7 @@ public class PublishModel : BasePageModel
 		}
 
 		Submission = submission;
+		Submission.Markup = (await _wikiPages.SubmissionPage(Id))!.Markup;
 
 		await PopulateDropdowns(Submission.SystemId);
 		return Page();
