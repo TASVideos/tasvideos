@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using TASVideos.Data.Entity;
 
@@ -102,5 +103,42 @@ public class PublicationSearchModel : IPublicationTokens
 		}
 
 		return sb.ToString().Trim('-');
+	}
+
+	public static PublicationSearchModel FromTokens(IReadOnlyCollection<string> tokens, IPublicationTokens tokenLookup)
+	{
+		var limitStr = tokens
+			.Where(t => t.StartsWith("limit"))
+			.Select(t => t.Replace("limit", ""))
+			.FirstOrDefault();
+		int? limit = null;
+		if (int.TryParse(limitStr, out int l))
+		{
+			limit = l;
+		}
+
+		return new PublicationSearchModel
+		{
+			Classes = tokenLookup.Classes.Where(tokens.Contains),
+			SystemCodes = tokenLookup.SystemCodes.Where(tokens.Contains),
+			ShowObsoleted = tokens.Contains("obs"),
+			OnlyObsoleted = tokens.Contains("obsonly"),
+			SortBy = tokens.Where(t => t.StartsWith("sort")).Select(t => t.Replace("sort", "")).FirstOrDefault() ?? "",
+			Limit = limit,
+			Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
+			Tags = tokenLookup.Tags.Where(tokens.Contains),
+			Genres = tokenLookup.Genres.Where(tokens.Contains),
+			Flags = tokenLookup.Flags.Where(tokens.Contains),
+			MovieIds = tokens.ToIdList('m'),
+			Games = tokens.ToIdList('g'),
+			GameGroups = tokens.ToIdListPrefix("group"),
+			Authors = tokens
+				.Where(t => t.ToLower().Contains("author"))
+				.Select(t => t.ToLower().Replace("author", ""))
+				.Select(t => int.TryParse(t, out var temp) ? temp : (int?)null)
+				.Where(t => t.HasValue)
+				.Select(t => t!.Value)
+				.ToList()
+		};
 	}
 }

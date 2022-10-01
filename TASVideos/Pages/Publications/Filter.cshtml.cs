@@ -35,6 +35,9 @@ public class FilterModel : BasePageModel
 		Years = Enumerable.Empty<int>()
 	};
 
+	[FromQuery]
+	public string Query { get; set; } = "";
+
 	public IPublicationTokens Tokens { get; set; } = null!;
 
 	public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
@@ -48,6 +51,9 @@ public class FilterModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		Tokens = await _movieTokens.GetTokens();
+		var tokensFromQuery = Query.ToTokens();
+		Search = PublicationSearchModel.FromTokens(tokensFromQuery, Tokens);
+
 		AvailableTags = (await _tagService.GetAll())
 			.Select(t => new SelectListItem
 			{
