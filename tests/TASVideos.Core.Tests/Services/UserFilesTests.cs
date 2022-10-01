@@ -153,24 +153,24 @@ public class UserFilesTests
 	}
 
 	[TestMethod]
-	public async Task IsSupportedFileExtension_SupportedIfParserSupports()
+	public async Task SupportedFileExtensions_SupportedIfParserSupports()
 	{
 		const string fileExt = ".test";
 		_parser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { fileExt });
 
-		var actual = await _userFiles.IsSupportedFileExtension(fileExt);
-		Assert.IsTrue(actual);
+		var actual = await _userFiles.SupportedFileExtensions();
+		Assert.IsTrue(actual.Contains(fileExt));
 	}
 
 	[TestMethod]
-	public async Task IsSupportedFileExtension_SupportedIfSupplemental()
+	public async Task SupportedFileExtensions_SupportedIfSupplemental()
 	{
 		const string fileExt = ".lua";
 		_wikiPages.Setup(m => m.Page(It.IsAny<string>(), null))
 			.ReturnsAsync(new WikiPage { Markup = fileExt + ", .nothing" });
 
-		var actual = await _userFiles.IsSupportedFileExtension(fileExt);
-		Assert.IsTrue(actual);
+		var actual = await _userFiles.SupportedFileExtensions();
+		Assert.IsTrue(actual.Contains(fileExt));
 	}
 
 	[TestMethod]

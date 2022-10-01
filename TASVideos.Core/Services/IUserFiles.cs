@@ -20,9 +20,9 @@ public interface IUserFiles
 	Task<bool> SpaceAvailable(int userId, long fileLength);
 
 	/// <summary>
-	/// Returns a value indicating whether or not the given file extension can be uploaded to user files
+	/// Returns a collection of file extensions that can be uploaded to user files
 	/// </summary>
-	Task<bool> IsSupportedFileExtension(string fileExtension);
+	Task<IReadOnlyCollection<string>> SupportedFileExtensions();
 
 	/// <summary>
 	/// Uploads a file for the user to user files
@@ -67,10 +67,11 @@ internal class UserFiles : IUserFiles
 		return storageUsed + fileLength <= SiteGlobalConstants.UserFileStorageLimit;
 	}
 
-	public async Task<bool> IsSupportedFileExtension(string fileExtension)
+	public async Task<IReadOnlyCollection<string>> SupportedFileExtensions()
 	{
-		return (await SupportedSupplementalFiles()).Contains(fileExtension)
-			|| _parser.SupportedMovieExtensions.Contains(fileExtension);
+		return _parser.SupportedMovieExtensions
+			.Concat(await SupportedSupplementalFiles())
+			.ToList();
 	}
 
 	public async Task<(long, IParseResult?)> Upload(int userId, UserFileUpload file)
