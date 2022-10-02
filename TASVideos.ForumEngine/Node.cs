@@ -244,7 +244,7 @@ public class Element : INode
 					if (osplit.Length == 2)
 					{
 						w.OpenTag("a");
-						w.Attribute("class", "btn bg-info text-dark code-download");
+						w.Attribute("class", "btn btn-info text-dark code-download");
 						w.Attribute("href", "data:text/plain," + Uri.EscapeDataString(GetChildText()));
 						w.Attribute("download", Options);
 						w.Text("Download ");
