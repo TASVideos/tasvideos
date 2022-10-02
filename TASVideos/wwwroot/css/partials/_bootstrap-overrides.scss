@@ -12,6 +12,10 @@
 	--bs-warning-rgb: #{$warning-rgb};
 	--bs-info: #{$info};
 	--bs-info-rgb: #{$info-rgb};
+	--bs-info-hover: #{$info-dark};
+	--bs-success: #{$success};
+	--bs-success-rgb: #{$success-rgb};
+	--bs-success-hover: #{$success-dark};
 	--border-color: #{$bs-gray-400};
 	--border-separator-color: #{$bs-gray-300};
 }
@@ -104,6 +108,26 @@ h4 {
 			border-color: var(--bs-secondary-hover);
 		}
 	}
+
+	&-info {
+		background-color: var(--bs-info);
+		border-color: var(--bs-info);
+
+		.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:focus, &:active, &:hover, &:active:focus, .show > &.dropdown-toggle {
+			background-color: var(--bs-info-hover);
+			border-color: var(--bs-info-hover);
+		}
+	}
+
+	&-success {
+		background-color: var(--bs-success);
+		border-color: var(--bs-success);
+
+		.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:focus, &:active, &:hover, &:active:focus, .show > &.dropdown-toggle {
+			background-color: var(--bs-success-hover);
+			border-color: var(--bs-success-hover);
+		}
+	}
 }
 
 .btn-check:active + .btn-primary:focus, .btn-check:checked + .btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show > .btn-primary.dropdown-toggle:focus, .btn-primary:hover {
@@ -112,6 +136,14 @@ h4 {
 
 .btn-check:active + .btn-secondary:focus, .btn-check:checked + .btn-secondary:focus, .btn-secondary.active:focus, .btn-secondary:active:focus, .show > .btn-secondary.dropdown-toggle:focus, .btn-secondary:hover {
 	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-secondary-rgb), 50%);
+}
+
+.btn-check:active + .btn-info:focus, .btn-check:checked + .btn-info:focus, .btn-info.active:focus, .btn-info:active:focus, .show > .btn-info.dropdown-toggle:focus, .btn-info:hover {
+	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-info-rgb), 50%);
+}
+
+.btn-check:active + .btn-success:focus, .btn-check:checked + .btn-success:focus, .btn-success.active:focus, .btn-success:active:focus, .show > .btn-success.dropdown-toggle:focus, .btn-success:hover {
+	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-success-rgb), 50%);
 }
 
 /* Card Link */
