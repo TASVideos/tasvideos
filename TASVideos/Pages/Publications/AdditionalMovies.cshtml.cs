@@ -5,6 +5,7 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Publications;
 
@@ -14,15 +15,18 @@ public class AdditionalMoviesModel : BasePageModel
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
+	private readonly IMovieParser _parser;
 
 	public AdditionalMoviesModel(
 		ApplicationDbContext db,
 		ExternalMediaPublisher publisher,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger)
+		IPublicationMaintenanceLogger publicationMaintenanceLogger,
+		IMovieParser parser)
 	{
 		_db = db;
 		_publisher = publisher;
 		_publicationMaintenanceLogger = publicationMaintenanceLogger;
+		_parser = parser;
 	}
 
 	[FromRoute]
@@ -87,6 +91,15 @@ public class AdditionalMoviesModel : BasePageModel
 
 		if (!ModelState.IsValid)
 		{
+			PublicationTitle = publication.Title;
+			await PopulateAvailableMovieFiles();
+			return Page();
+		}
+
+		var parseResult = await _parser.ParseZip(AdditionalMovieFile!.OpenReadStream());
+		if (!parseResult.Success)
+		{
+			ModelState.AddParseErrors(parseResult);
 			PublicationTitle = publication.Title;
 			await PopulateAvailableMovieFiles();
 			return Page();
