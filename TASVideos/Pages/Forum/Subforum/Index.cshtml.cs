@@ -57,12 +57,12 @@ public class IndexModel : BasePageModel
 			{
 				Id = ft.Id,
 				Title = ft.Title,
-				CreateUserName = ft.CreateUserName,
+				CreateUserName = ft.Poster!.UserName,
 				CreateTimestamp = ft.CreateTimestamp,
 				Type = ft.Type,
 				IsLocked = ft.IsLocked,
 				PostCount = ft.ForumPosts.Count,
-				LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
+				LastPost = ft.ForumPosts.FirstOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
 			})
 			.OrderByDescending(ft => ft.Type)
 			.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)

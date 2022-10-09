@@ -40,7 +40,7 @@ public class WikiTextChangeLog : ViewComponent
 			{
 				PageName = wp.PageName,
 				Revision = wp.Revision,
-				Author = wp.CreateUserName,
+				Author = wp.Author!.UserName,
 				CreateTimestamp = wp.CreateTimestamp,
 				MinorEdit = wp.MinorEdit,
 				RevisionMessage = wp.RevisionMessage

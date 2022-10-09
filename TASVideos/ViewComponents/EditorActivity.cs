@@ -23,7 +23,7 @@ public class EditorActivity : ViewComponent
 		// And submissions are frequent enough to not worry about too stale submissions showing up on the front page
 		var subs = await _db.WikiPages
 			.ThatAreNotDeleted()
-			.GroupBy(g => g.CreateUserName)
+			.GroupBy(g => g.Author!.UserName)
 			.Select(w => new EditorActivityModel
 			{
 				UserName = w.Key ?? "",

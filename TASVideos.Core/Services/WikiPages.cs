@@ -84,13 +84,13 @@ public interface IWikiPages
 	/// by any other wiki page. These pages are effectively "orphans"
 	/// since they can navigated to
 	/// </summary>
-	Task<IEnumerable<WikiOrphan>> Orphans();
+	Task<IReadOnlyCollection<WikiOrphan>> Orphans();
 
 	/// <summary>
 	/// Returns a collection of wiki links that do not go to a page
 	/// that exists. These links are considered broken and in need of fixing
 	/// </summary>
-	Task<IEnumerable<WikiPageReferral>> BrokenLinks();
+	Task<IReadOnlyCollection<WikiPageReferral>> BrokenLinks();
 }
 
 // TODO: handle DbConcurrency exceptions
@@ -124,7 +124,7 @@ internal class WikiPages : IWikiPages
 		_cache.Remove($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}");
 
 
-	public async Task<IEnumerable<WikiOrphan>> Orphans() => await _db.WikiPages
+	public async Task<IReadOnlyCollection<WikiOrphan>> Orphans() => await _db.WikiPages
 			.ThatAreNotDeleted()
 			.WithNoChildren()
 			.Where(wp => wp.PageName != "MediaPosts") // Linked by the navbar
@@ -134,10 +134,10 @@ internal class WikiPages : IWikiPages
 			.Select(wp => new WikiOrphan(
 				wp.PageName,
 				wp.LastUpdateTimestamp,
-				wp.LastUpdateUserName ?? wp.CreateUserName))
+				wp.Author!.UserName))
 			.ToListAsync();
 
-	public async Task<IEnumerable<WikiPageReferral>> BrokenLinks() => await _db.WikiReferrals
+	public async Task<IReadOnlyCollection<WikiPageReferral>> BrokenLinks() => await _db.WikiReferrals
 		.Where(wr => !Regex.IsMatch(wr.Referral, "(^[0-9]+)([GMS])"))
 		.Where(wr => wr.Referrer != "SandBox")
 		.Where(wr => !wr.Referrer.StartsWith("HomePages/Bisqwit/InitialWikiPages")) // Historical pages with legacy links

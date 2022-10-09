@@ -32,7 +32,7 @@ public class WikiModel : BasePageModel
 				PageName = wp.PageName,
 				PubDate = wp.LastUpdateTimestamp,
 				IsNew = wp.Revision == 1,
-				Author = wp.CreateUserName ?? ""
+				Author = wp.Author!.UserName
 			})
 			.Take(10)
 			.ToListAsync();
