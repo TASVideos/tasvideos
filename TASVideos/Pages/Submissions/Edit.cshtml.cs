@@ -482,7 +482,7 @@ public class EditModel : BasePageModel
 		await _wikiPages.Add(new WikiPage
 		{
 			PageName = submissionPage.PageName,
-			Markup = submissionPage.Markup += $"\n----\n[user:{User.Name()}]: {message}",
+			Markup = submissionPage.Markup + $"\n----\n[user:{User.Name()}]: {message}",
 			RevisionMessage = $"Claimed for {action}",
 			AuthorId = User.GetUserId()
 		});
