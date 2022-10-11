@@ -274,13 +274,10 @@ public class EditModel : BasePageModel
 
 		if (!model.MinorEdit)
 		{
-			foreach (var unused in externalMessages)
-			{
-				await _publisher.SendPublicationEdit(
-					$"{Id}M edited by {User.Name()}",
-					$"{string.Join(", ", externalMessages)} | {publication.Title}",
-					$"{Id}M");
-			}
+			await _publisher.SendPublicationEdit(
+				$"{Id}M edited by {User.Name()}",
+				$"{string.Join(", ", externalMessages)} | {publication.Title}",
+				$"{Id}M");
 		}
 	}
 }
