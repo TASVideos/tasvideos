@@ -25,7 +25,11 @@
 		<row class="py-1 border-bottom border-card align-items-center">
 				<div class="col-8">
 					<strong>
-						<span condition="@(!string.IsNullOrEmpty(forum.ActivityTopics))"><i class="fa fa-file text-warning activity-subforum d-none" data-activity-json="@forum.ActivityTopics"></i></span>
+						<a condition="@(!string.IsNullOrEmpty(forum.ActivityPostsCreated) || !string.IsNullOrEmpty(forum.ActivityPostsEdited))" class="text-decoration-none">
+							<i class="fa fa-file activity-subforum d-none"
+							data-activity-posts-created="@forum.ActivityPostsCreated"
+						    data-activity-posts-edited="@forum.ActivityPostsEdited"></i>
+						</a>
 						<a asp-page="/Forum/Subforum/Index" asp-route-id="@forum.Id">@forum.Name</a>
 					</strong>
 				<div class="ps-3">

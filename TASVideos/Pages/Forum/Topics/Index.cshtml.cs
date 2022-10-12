@@ -190,9 +190,7 @@ public class IndexModel : BaseForumModel
 			await _topicWatcher.MarkSeen(Id, userId.Value);
 		}
 
-		var hasActivity = (await _forumService.GetTopicsWithActivity(Topic.ForumId))?.ContainsKey(Id) ?? false;
-		var onLastPage = Topic.Posts.CurrentPage == Topic.Posts.LastPage();
-		SaveActivity = hasActivity && onLastPage;
+		SaveActivity = (await _forumService.Get2PostActivityOfTopics(Topic.ForumId)).ContainsKey(Id);
 
 		return Page();
 	}

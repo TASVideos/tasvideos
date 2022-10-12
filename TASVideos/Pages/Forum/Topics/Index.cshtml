@@ -160,6 +160,23 @@
 @section Scripts {
 	<script condition="@(Model.SaveActivity)">
 		{
+			let currentTime = Number(document.getElementById('serverUnixTime').textContent);
+			let activityPosts = document.getElementsByClassName('activity-post');
+			let visitedPosts = localStorage.getItem('VisitedPosts');
+			visitedPosts = JSON.parse(visitedPosts) ?? {};
+			for (let i = 0; i < activityPosts.length; i++) {
+				let lastVisit = visitedPosts[activityPosts[i].dataset.postId];
+				if (lastVisit === undefined || lastVisit < activityPosts[i].dataset.unixCreated) {
+					activityPosts[i].classList.add('text-warning');
+				} else if (activityPosts[i].dataset.unixEdited && lastVisit < activityPosts[i].dataset.unixEdited) {
+					activityPosts[i].classList.add('text-info');
+				}
+				visitedPosts[activityPosts[i].dataset.postId] = currentTime;
+			}
+			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
+		}
+		/*
+		{
 			let topicId = '@Model.Id';
 			let currentTime = Number(document.getElementById('serverUnixTime').textContent);
 			let visitedTopics = localStorage.getItem('VisitedTopics');
@@ -171,5 +188,6 @@
 			}
 			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
 		}
+		*/
 	</script>
 }

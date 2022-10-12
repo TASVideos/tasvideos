@@ -7,7 +7,7 @@
 					<a href="/Forum/Posts/@(Model.Id)"
 					   title="Link to this post"
 					   class="float-start text-decoration-none text-dark">
-						<i class="fa fa-bookmark-o"></i>
+						<i class="fa fa-bookmark @(Model.CreateTimestamp > DateTime.UtcNow.AddDays(-ForumConstants.DaysTopicsCountAsActive) || Model.PostEditedTimestamp > DateTime.UtcNow.AddDays(-ForumConstants.DaysTopicsCountAsActive) ? "activity-post" : "")" data-post-id="@Model.Id" data-unix-created="@Model.CreateTimestamp.UnixTimestamp()" data-unix-edited="@Model.PostEditedTimestamp?.UnixTimestamp()"></i>
 						Posted: <timezone-convert asp-for="@Model.CreateTimestamp" />
 						<span condition="@(Model.PostEditedTimestamp != null)">@{var postEditedTimestamp = (DateTime)Model.PostEditedTimestamp!;}<br />(Edited: <timezone-convert asp-for="@postEditedTimestamp" />)</span>
 					</a>
