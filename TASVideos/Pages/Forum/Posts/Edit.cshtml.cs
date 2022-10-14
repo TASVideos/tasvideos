@@ -166,7 +166,7 @@ public class EditModel : BaseForumModel
 		var result = await ConcurrentSave(_db, $"Post {Id} edited", "Unable to edit post");
 		if (result && !MinorEdit)
 		{
-			_forumService.CacheEditedPostActivity2(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
+			_forumService.CacheEditedPostActivity(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
 
 			await _publisher.SendForum(
 				forumPost.Topic!.Forum!.Restricted,
