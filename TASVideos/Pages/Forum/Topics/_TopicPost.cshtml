@@ -1,6 +1,6 @@
 ﻿@model TASVideos.Pages.Forum.Models.IForumPostEntry
 @{
-	DateTime minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysTopicsCountAsActive);
+	DateTime minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysPostsCountAsActive);
 	bool isCreateActivity = Model.CreateTimestamp > minimumDate;
 	bool isEditActivity = Model.PostEditedTimestamp > minimumDate;
 	string addClass = (isCreateActivity || isEditActivity) ? "activity-post" : "";
