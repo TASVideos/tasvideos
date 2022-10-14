@@ -82,6 +82,7 @@ internal class TASVideoAgent : ITASVideoAgent
 			topic.Id,
 			new LatestPost(post.Id, post.CreateTimestamp, SiteGlobalConstants.TASVideoAgent));
 		_forumService.CacheNewPostActivity(post.ForumId, topic.Id, post.CreateTimestamp);
+		_forumService.CacheNewPostActivity2(post.ForumId, topic.Id, post.Id, post.CreateTimestamp);
 
 		return topic.Id;
 	}
