@@ -72,6 +72,21 @@
 					activitySubforum.parentElement.setAttribute('href', '/Forum/Posts/' + firstPostId);
 				}
 			}
+
+			// clean up localStorage
+			let allActivityPostIds = new Set();
+			for (let activitySubforum of activitySubforums) {
+				let activityPostsCreated = JSON.parse(activitySubforum.dataset.activityPostsCreated);
+				for (let postId in activityPostsCreated) {
+					allActivityPostIds.add(postId);
+				}
+				let activityPostsEdited = JSON.parse(activitySubforum.dataset.activityPostsEdited);
+				for (let postId in activityPostsEdited) {
+					allActivityPostIds.add(postId);
+				}
+			}
+			Object.keys(visitedPosts).filter(postId => !allActivityPostIds.has(postId)).forEach(postId => delete visitedPosts[postId]);
+			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
 		}
 		function markAllPostsRead() {
 			let visitedPosts = localStorage.getItem('VisitedPosts');
