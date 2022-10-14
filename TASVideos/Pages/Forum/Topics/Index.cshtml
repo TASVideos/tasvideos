@@ -175,19 +175,5 @@
 			}
 			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
 		}
-		/*
-		{
-			let topicId = '@Model.Id';
-			let currentTime = Number(document.getElementById('serverUnixTime').textContent);
-			let visitedTopics = localStorage.getItem('VisitedTopics');
-			if (visitedTopics !== null) {
-				visitedTopics = JSON.parse(visitedTopics);
-				visitedTopics[topicId] = currentTime;
-			} else {
-				visitedTopics = { [topicId]: currentTime };
-			}
-			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
-		}
-		*/
 	</script>
 }

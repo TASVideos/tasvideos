@@ -68,7 +68,7 @@ public class IndexModel : BasePageModel
 			.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
 			.PageOf(Search);
 
-		ActivityTopics = await _forumService.Get2PostActivityOfTopics2(Id);
+		ActivityTopics = await _forumService.GetPostActivityOfSubforum(Id);
 
 		return Page();
 	}

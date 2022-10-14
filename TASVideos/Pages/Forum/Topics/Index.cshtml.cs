@@ -190,7 +190,7 @@ public class IndexModel : BaseForumModel
 			await _topicWatcher.MarkSeen(Id, userId.Value);
 		}
 
-		SaveActivity = (await _forumService.Get2PostActivityOfTopics2(Topic.ForumId)).ContainsKey(Id);
+		SaveActivity = (await _forumService.GetPostActivityOfSubforum(Topic.ForumId)).ContainsKey(Id);
 
 		return Page();
 	}
