@@ -5,7 +5,7 @@ namespace TASVideos.ViewComponents;
 
 public class GameResourcesFooter : ViewComponent
 {
-	public IViewComponentResult Invoke(WikiPage pageData)
+	public IViewComponentResult Invoke(IWikiPage pageData)
 	{
 		return View(pageData);
 	}

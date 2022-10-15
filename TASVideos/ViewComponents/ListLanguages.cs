@@ -14,7 +14,7 @@ public class ListLanguages : ViewComponent
 		_languages = languages;
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData)
+	public async Task<IViewComponentResult> InvokeAsync(IWikiPage? pageData)
 	{
 		if (string.IsNullOrWhiteSpace(pageData?.PageName))
 		{

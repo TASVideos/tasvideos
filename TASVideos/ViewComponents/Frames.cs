@@ -33,7 +33,7 @@ public class Frames : ViewComponent
 		return model.Time().ToStringWithOptionalDaysAndHours();
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, double? fps, int amount)
+	public async Task<IViewComponentResult> InvokeAsync(IWikiPage? pageData, double? fps, int amount)
 	{
 		var model = new Timeable
 		{

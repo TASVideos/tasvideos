@@ -4,8 +4,17 @@ using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity;
 
+public interface IWikiPage
+{
+	string PageName { get; }
+	string Markup { get; }
+	int Revision { get; }
+	int? AuthorId { get; }
+	bool IsCurrent();
+}
+
 [ExcludeFromHistory]
-public class WikiPage : BaseEntity, ISoftDeletable
+public class WikiPage : BaseEntity, IWikiPage, ISoftDeletable
 {
 	public int Id { get; set; }
 
@@ -33,6 +42,8 @@ public class WikiPage : BaseEntity, ISoftDeletable
 
 	public int? AuthorId { get; set; }
 	public virtual User? Author { get; set; }
+
+	public bool IsCurrent() => !ChildId.HasValue;
 }
 
 public static class WikiQueryableExtensions
