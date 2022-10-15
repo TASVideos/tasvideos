@@ -13,7 +13,7 @@ public class ListParents : ViewComponent
 		_wikiPages = wikiPages;
 	}
 
-	public IViewComponentResult Invoke(WikiPage pageData)
+	public IViewComponentResult Invoke(IWikiPage pageData)
 	{
 		var subpages = _wikiPages.Query
 				.ThatAreParentsOf(pageData.PageName)

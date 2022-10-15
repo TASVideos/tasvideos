@@ -13,7 +13,7 @@ public class ListSubPages : ViewComponent
 		_wikiPages = wikiPages;
 	}
 
-	public IViewComponentResult Invoke(WikiPage pageData, bool show)
+	public IViewComponentResult Invoke(IWikiPage pageData, bool show)
 	{
 		if (string.IsNullOrWhiteSpace(pageData.PageName))
 		{
