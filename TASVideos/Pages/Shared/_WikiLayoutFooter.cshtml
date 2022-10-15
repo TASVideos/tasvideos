@@ -1,4 +1,4 @@
-﻿@model WikiPage
+﻿@model IWikiPage
 @{
 	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Name(), User.Permissions());
 }
@@ -18,7 +18,7 @@ else
 
 <hr />
 <small>
-	@Model.PageName last edited by @Model.LastUpdateUserName <timezone-convert asp-for="@Model.LastUpdateTimestamp" in-line="true" />
+	@Model.PageName last edited by @Model.AuthorName <timezone-convert asp-for="@Model.CreateTimestamp" in-line="true" />
 </small>
 <br />
 
@@ -43,4 +43,4 @@ else
 <a class="btn btn-info text-dark btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@Model.PageName"><i class="fa fa-history"></i> Page History</a>
 <a class="btn btn-info text-dark btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@Model.PageName" asp-route-latest="true">Latest diff</a>
 <a class="btn btn-info text-dark btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@Model.PageName">List referrers</a>
-<a class="btn btn-info text-dark btn-sm" asp-page="/Wiki/ViewSource" asp-route-path="@Model.PageName" asp-route-revision="@(Model.ChildId.HasValue ? Model.Revision : null)"><i class="fa fa-paragraph"></i> View Source</a>
+<a class="btn btn-info text-dark btn-sm" asp-page="/Wiki/ViewSource" asp-route-path="@Model.PageName" asp-route-revision="@(Model.IsCurrent() ? null : Model.Revision)"><i class="fa fa-paragraph"></i> View Source</a>

@@ -9,8 +9,11 @@ public interface IWikiPage
 	string PageName { get; }
 	string Markup { get; }
 	int Revision { get; }
+	string? RevisionMessage { get; }
 	int? AuthorId { get; }
+	public string? AuthorName { get; }
 	bool IsCurrent();
+	DateTime CreateTimestamp { get; }
 }
 
 [ExcludeFromHistory]
@@ -44,6 +47,7 @@ public class WikiPage : BaseEntity, IWikiPage, ISoftDeletable
 	public virtual User? Author { get; set; }
 
 	public bool IsCurrent() => !ChildId.HasValue;
+	public string? AuthorName => Author?.UserName;
 }
 
 public static class WikiQueryableExtensions

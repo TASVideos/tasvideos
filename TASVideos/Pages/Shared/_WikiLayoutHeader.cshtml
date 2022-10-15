@@ -1,4 +1,4 @@
-﻿@model WikiPage
+﻿@model IWikiPage
 @{
 	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Name(), User.Permissions());
 }

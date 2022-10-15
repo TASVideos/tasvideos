@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IWikiPage
+@{
 	var user = Model.PageName.Split('/').Skip(1).FirstOrDefault();
 }
 <info-alert>

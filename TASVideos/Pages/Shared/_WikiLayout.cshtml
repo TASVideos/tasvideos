@@ -1,6 +1,6 @@
 ﻿@{
 	Layout = "_Layout.cshtml";
-	WikiPage pageData = ViewData["WikiPage"] as WikiPage ?? throw new InvalidOperationException("WikiPage not set");
+	IWikiPage pageData = ViewData["WikiPage"] as IWikiPage ?? throw new InvalidOperationException("WikiPage not set");
 
 	ViewData["ActiveTab"] = WikiHelper.IsGameResourcesPage(pageData.PageName)
 		? "Game Resources"
@@ -9,8 +9,9 @@
 @section Header {
 	@{
 		var description = "";
-		if (pageData.Author is not null && pageData.RevisionMessage is not null) {
-			description = $"Last Edited By {pageData.Author.UserName} - {pageData.RevisionMessage}";
+		if (pageData.AuthorName is not null && pageData.RevisionMessage is not null)
+		{
+			description = $"Last Edited By {pageData.AuthorName} - {pageData.RevisionMessage}";
 		}
 	}
 	<meta property="og:type" content="website" />
