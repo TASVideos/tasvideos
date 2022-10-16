@@ -39,12 +39,6 @@ public interface IWikiPages
 	ValueTask<IWikiPage?> Page(string? pageName, int? revisionId = null);
 
 	/// <summary>
-	/// Returns details about a Wiki page with the given id
-	/// </summary>
-	/// <returns>A model representing the Wiki page if it exists else null</returns>
-	Task<WikiPage?> Revision(int dbId);
-
-	/// <summary>
 	/// Creates a new revision of a wiki page.
 	/// If the create timestamp is less than the latest revision, the revision will nto be added
 	/// </summary>
@@ -223,20 +217,6 @@ internal class WikiPages : IWikiPages
 		if (page is not null && page.IsCurrent())
 		{
 			this[pageName] = page;
-		}
-
-		return page;
-	}
-
-	public async Task<WikiPage?> Revision(int dbId)
-	{
-		var page = await _db.WikiPages
-			.ThatAreNotDeleted()
-			.FirstOrDefaultAsync(w => w.Id == dbId);
-
-		if (page is not null && page.IsCurrent())
-		{
-			this[page.PageName] = page;
 		}
 
 		return page;

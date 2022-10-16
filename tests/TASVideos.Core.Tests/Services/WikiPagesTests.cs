@@ -431,46 +431,6 @@ public class WikiPagesTests
 
 	#endregion
 
-	#region Revision
-
-	[TestMethod]
-	public async Task Revision_Exists_ReturnsPage()
-	{
-		string existingPage = "Exists";
-		AddPage(existingPage);
-		AddPage(existingPage);
-		var id = AddPage(existingPage);
-
-		var actual = await _wikiPages.Revision(id);
-		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, _cache.PageCache().Count);
-		Assert.AreEqual(existingPage, actual.PageName);
-	}
-
-	[TestMethod]
-	public async Task Revision_DoesNotExist_ReturnsNull()
-	{
-		var actual = await _wikiPages.Revision(int.MinValue);
-		Assert.IsNull(actual);
-	}
-
-	[TestMethod]
-	public async Task Revision_OldRevision_DoesNotAddToCache()
-	{
-		string existingPage = "InCache";
-		var page1 = new WikiPage { Id = 1, PageName = existingPage, ChildId = 2 };
-		var page2 = new WikiPage { Id = 2, PageName = existingPage };
-		_db.WikiPages.Add(page1);
-		_db.WikiPages.Add(page2);
-		await _db.SaveChangesAsync();
-
-		var actual = await _wikiPages.Revision(1);
-		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, _cache.PageCache().Count);
-	}
-
-	#endregion
-
 	#region Move
 
 	[TestMethod]
@@ -1299,7 +1259,7 @@ public class WikiPagesTests
 	{
 		var actual = await _wikiPages.Orphans();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -1309,7 +1269,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -1327,7 +1287,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]

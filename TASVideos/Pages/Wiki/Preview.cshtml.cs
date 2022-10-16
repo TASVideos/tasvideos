@@ -20,16 +20,16 @@ public class PreviewModel : BasePageModel
 	public string Markup { get; set; } = "";
 
 	[FromQuery]
-	public int? Id { get; set; }
+	public string? Path { get; set; }
 
 	public IWikiPage PageData { get; set; } = null!;
 
 	public async Task<IActionResult> OnPost()
 	{
 		Markup = await new StreamReader(Request.Body, Encoding.UTF8).ReadToEndAsync();
-		if (Id.HasValue)
+		if (Path is not null)
 		{
-			var pageData = await _pages.Revision(Id.Value);
+			var pageData = await _pages.Page(Path);
 			if (pageData is null)
 			{
 				return NotFound();
