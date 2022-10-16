@@ -22,7 +22,7 @@ public class Frames : ViewComponent
 		_cache = cache;
 	}
 
-	public async Task<string> RenderTextAsync(WikiPage? pageData, double? fps, int amount)
+	public async Task<string> RenderTextAsync(IWikiPage? pageData, double? fps, int amount)
 	{
 		var model = new Timeable
 		{
