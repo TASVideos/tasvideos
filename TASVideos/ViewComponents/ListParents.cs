@@ -16,8 +16,8 @@ public class ListParents : ViewComponent
 	public IViewComponentResult Invoke(IWikiPage pageData)
 	{
 		var subpages = _wikiPages.Query
-				.ThatAreParentsOf(pageData.PageName)
-				.ToList();
+			.ThatAreParentsOf(pageData.PageName)
+			.ToList();
 
 		return View(subpages);
 	}

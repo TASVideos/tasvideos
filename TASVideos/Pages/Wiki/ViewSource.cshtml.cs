@@ -21,7 +21,7 @@ public class ViewSourceModel : BasePageModel
 	[FromQuery]
 	public int? Revision { get; set; }
 
-	public WikiPage WikiPage { get; set; } = new();
+	public IWikiPage WikiPage { get; set; } = null!;
 
 	public async Task<IActionResult> OnGet()
 	{

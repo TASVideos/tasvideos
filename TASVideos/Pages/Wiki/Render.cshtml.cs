@@ -20,7 +20,7 @@ public class RenderModel : BasePageModel
 		_logger = logger;
 	}
 
-	public WikiPage WikiPage { get; set; } = new();
+	public IWikiPage WikiPage { get; set; } = null!;
 
 	public async Task<IActionResult> OnGet(string? url, int? revision = null)
 	{

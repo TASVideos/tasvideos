@@ -22,7 +22,7 @@ public class PreviewModel : BasePageModel
 	[FromQuery]
 	public int? Id { get; set; }
 
-	public WikiPage PageData { get; set; } = new();
+	public IWikiPage PageData { get; set; } = null!;
 
 	public async Task<IActionResult> OnPost()
 	{

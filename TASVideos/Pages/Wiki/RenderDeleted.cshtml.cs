@@ -15,7 +15,7 @@ public class RenderDeletedModel : BasePageModel
 		_wikiPages = wikiPages;
 	}
 
-	public WikiPage WikiPage { get; set; } = new();
+	public IWikiPage WikiPage { get; set; } = null!;
 
 	public async Task<IActionResult> OnGet(string? url, int? revision = null)
 	{
@@ -29,14 +29,9 @@ public class RenderDeletedModel : BasePageModel
 			.ThatAreDeleted()
 			.Where(wp => wp.PageName == url);
 
-		if (revision.HasValue)
-		{
-			query = query.Where(wp => wp.Revision == revision);
-		}
-		else
-		{
-			query = query.WithNoChildren();
-		}
+		query = revision.HasValue
+			? query.Where(wp => wp.Revision == revision)
+			: query.WithNoChildren();
 
 		var page = await query.FirstOrDefaultAsync();
 		if (page is null)
