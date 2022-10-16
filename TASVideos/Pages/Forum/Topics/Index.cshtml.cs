@@ -53,7 +53,7 @@ public class IndexModel : BaseForumModel
 
 	public ForumTopicModel Topic { get; set; } = new();
 
-	public WikiPage? WikiPage { get; set; }
+	public IWikiPage? WikiPage { get; set; }
 
 	public string? EncodeEmbedLink { get; set; }
 
