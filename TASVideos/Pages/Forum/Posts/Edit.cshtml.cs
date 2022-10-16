@@ -164,13 +164,18 @@ public class EditModel : BaseForumModel
 		forumPost.PostEditedTimestamp = DateTime.UtcNow;
 
 		var result = await ConcurrentSave(_db, $"Post {Id} edited", "Unable to edit post");
-		if (result && !MinorEdit)
+		if (result)
 		{
-			await _publisher.SendForum(
-				forumPost.Topic!.Forum!.Restricted,
-				$"Post edited by {User.Name()}",
-				$"{forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title}",
-				$"Forum/Posts/{Id}");
+			_forumService.CacheEditedPostActivity(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
+
+			if (!MinorEdit)
+			{
+				await _publisher.SendForum(
+					forumPost.Topic!.Forum!.Restricted,
+					$"Post edited by {User.Name()}",
+					$"{forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title}",
+					$"Forum/Posts/{Id}");
+			}
 		}
 
 		return BaseRedirect($"/Forum/Posts/{Id}");

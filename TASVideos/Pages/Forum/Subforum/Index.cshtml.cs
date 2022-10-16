@@ -30,7 +30,7 @@ public class IndexModel : BasePageModel
 	public int Id { get; set; }
 
 	public ForumDisplayModel Forum { get; set; } = new();
-	public Dictionary<int, DateTime> ActivityTopics { get; set; } = new();
+	public Dictionary<int, (string, string)> ActivityTopics { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -68,7 +68,7 @@ public class IndexModel : BasePageModel
 			.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
 			.PageOf(Search);
 
-		ActivityTopics = await _forumService.GetTopicsWithActivity(Id) ?? new Dictionary<int, DateTime>();
+		ActivityTopics = await _forumService.GetPostActivityOfSubforum(Id);
 
 		return Page();
 	}
