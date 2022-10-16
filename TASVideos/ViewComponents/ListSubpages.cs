@@ -1,16 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents;
 
 public class ListSubPages : ViewComponent
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly ApplicationDbContext _db;
 
-	public ListSubPages(IWikiPages wikiPages)
+	public ListSubPages(ApplicationDbContext db)
 	{
-		_wikiPages = wikiPages;
+		_db = db;
 	}
 
 	public IViewComponentResult Invoke(IWikiPage pageData, bool show)
@@ -20,7 +20,7 @@ public class ListSubPages : ViewComponent
 			return Content("");
 		}
 
-		var subpages = _wikiPages.Query
+		var subpages = _db.WikiPages
 			.ThatAreSubpagesOf(pageData.PageName)
 			.Select(w => w.PageName)
 			.ToList();
