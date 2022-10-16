@@ -99,8 +99,8 @@ public class EditModel : BasePageModel
 
 		Submission = submission;
 		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
-		Submission.LastUpdateTimestamp = submissionPage.LastUpdateTimestamp;
-		Submission.LastUpdateUser = submissionPage.LastUpdateUserName;
+		Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
+		Submission.LastUpdateUser = submissionPage.AuthorName;
 		Submission.Markup = submissionPage.Markup;
 		Submission.Authors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == Id)

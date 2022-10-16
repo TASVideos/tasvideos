@@ -36,7 +36,7 @@ public interface IWikiPages
 	/// Else the latest revision is returned
 	/// </summary>
 	/// <returns>A model representing the Wiki page if it exists else null</returns>
-	ValueTask<WikiPage?> Page(string? pageName, int? revisionId = null);
+	ValueTask<IWikiPage?> Page(string? pageName, int? revisionId = null);
 
 	/// <summary>
 	/// Returns details about a Wiki page with the given id
@@ -192,7 +192,7 @@ internal class WikiPages : IWikiPages
 		return page is not null;
 	}
 
-	public async ValueTask<WikiPage?> Page(string? pageName, int? revisionId = null)
+	public async ValueTask<IWikiPage?> Page(string? pageName, int? revisionId = null)
 	{
 		if (string.IsNullOrWhiteSpace(pageName))
 		{
@@ -542,7 +542,7 @@ public static class WikiPageExtensions
 	/// Returns a System page with the given page suffix
 	/// <example>SystemPage("Languages") will return the page System/Languages</example>
 	/// </summary>
-	public static ValueTask<WikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
+	public static ValueTask<IWikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
 	{
 		return pages.Page("System/" + pageName, revisionId);
 	}
@@ -572,12 +572,12 @@ public static class WikiPageExtensions
 		return allSucceeded;
 	}
 
-	public static async Task<WikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
+	public static async Task<IWikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
 	{
 		return await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
 	}
 
-	public static async Task<WikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
+	public static async Task<IWikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
 	{
 		return await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
 	}

@@ -31,8 +31,6 @@ public class EditModel : BasePageModel
 	[BindProperty]
 	public WikiEditModel PageToEdit { get; set; } = new();
 
-	public int? Id { get; set; }
-
 	public async Task<IActionResult> OnGet()
 	{
 		Path = Path?.Trim('/');
@@ -57,7 +55,6 @@ public class EditModel : BasePageModel
 		{
 			Markup = page?.Markup ?? ""
 		};
-		Id = page?.Id;
 
 		return Page();
 	}
