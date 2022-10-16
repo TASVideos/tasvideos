@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services;
@@ -11,11 +12,16 @@ public interface ILanguages
 internal class Languages : ILanguages
 {
 	internal const string TranslationsCacheKey = "Translations-";
+	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
 	private readonly ICacheService _cache;
 
-	public Languages(IWikiPages wikiPages, ICacheService cache)
+	public Languages(
+		ApplicationDbContext db,
+		IWikiPages wikiPages,
+		ICacheService cache)
 	{
+		_db = db;
 		_wikiPages = wikiPages;
 		_cache = cache;
 	}
@@ -65,7 +71,7 @@ internal class Languages : ILanguages
 			.Where(l => !pageName.StartsWith(l.Code + "/"))
 			.Select(l => l.Path)
 			.ToList();
-		var existingPages = await _wikiPages.Query
+		var existingPages = await _db.WikiPages
 			.WithNoChildren()
 			.ThatAreNotDeleted()
 			.Where(wp => existingLanguagePages.Contains(wp.PageName))
@@ -98,9 +104,7 @@ internal class Languages : ILanguages
 
 	internal async Task<IEnumerable<Language>> AvailableLanguages()
 	{
-		var languagesMarkup = (await _wikiPages
-				.SystemPage("Languages"))
-			?.Markup;
+		var languagesMarkup = (await _wikiPages.SystemPage("Languages"))?.Markup;
 
 		if (string.IsNullOrWhiteSpace(languagesMarkup))
 		{
