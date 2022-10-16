@@ -15,6 +15,7 @@ public interface IWikiPage
 	bool IsCurrent();
 	DateTime CreateTimestamp { get; }
 	bool MinorEdit { get; }
+	void SetPageName(string newPageName);
 }
 
 [ExcludeFromHistory]
@@ -49,6 +50,7 @@ public class WikiPage : BaseEntity, IWikiPage, ISoftDeletable
 
 	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
 	public string? AuthorName => Author?.UserName ?? CreateUserName;
+	public void SetPageName(string newPageName) => PageName = newPageName;
 }
 
 public static class WikiQueryableExtensions

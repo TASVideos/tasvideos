@@ -113,7 +113,7 @@ internal class WikiPages : IWikiPages
 
 	public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
 
-	private WikiPage? this[string pageName]
+	private IWikiPage? this[string pageName]
 	{
 		get
 		{
@@ -195,7 +195,7 @@ internal class WikiPages : IWikiPages
 
 		pageName = pageName.Trim('/');
 
-		WikiPage? page = null;
+		IWikiPage? page = null;
 		if (!revisionId.HasValue)
 		{
 			page = this[pageName];
@@ -333,7 +333,7 @@ internal class WikiPages : IWikiPages
 		if (cachedRevision is not null)
 		{
 			RemovePageFromCache(originalName);
-			cachedRevision.PageName = destinationName;
+			cachedRevision.SetPageName(destinationName);
 			_cache.Set(destinationName, cachedRevision);
 		}
 
