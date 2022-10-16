@@ -29,7 +29,7 @@ public partial class WikiMarkup : TagHelper, IWriterHelper
 	public ViewContext ViewContext { get; set; } = new();
 
 	public string Markup { get; set; } = "";
-	public WikiPage PageData { get; set; } = new();
+	public IWikiPage? PageData { get; set; }
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
@@ -46,6 +46,11 @@ public partial class WikiMarkup : TagHelper, IWriterHelper
 
 	async Task IWriterHelper.RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 	{
+		if (PageData is null)
+		{
+			throw new ArgumentNullException($"{nameof(PageData)} cannot be null.");
+		}
+
 		var componentExists = ModuleParamHelpers.ViewComponents.TryGetValue(name, out Type? viewComponent);
 		if (!componentExists)
 		{

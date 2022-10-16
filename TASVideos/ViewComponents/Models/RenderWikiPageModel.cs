@@ -6,5 +6,5 @@ public class RenderWikiPageModel
 {
 	public string Markup { get; init; } = "";
 
-	public WikiPage PageData { get; init; } = new();
+	public IWikiPage PageData { get; init; } = null!;
 }
