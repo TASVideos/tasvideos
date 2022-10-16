@@ -154,7 +154,7 @@ public class EditModel : BasePageModel
 		return await _db.Users.Exists(userName);
 	}
 
-	private async Task Announce(WikiPage page)
+	private async Task Announce(IWikiPage page)
 	{
 		await _publisher.SendGeneralWiki(
 			$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
