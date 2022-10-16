@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core;
-using TASVideos.Core.Services;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
@@ -9,11 +9,11 @@ namespace TASVideos.ViewComponents;
 [WikiModule(WikiModules.WikiTextChangeLog)]
 public class WikiTextChangeLog : ViewComponent
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly ApplicationDbContext _db;
 
-	public WikiTextChangeLog(IWikiPages wikiPages)
+	public WikiTextChangeLog(ApplicationDbContext db)
 	{
-		_wikiPages = wikiPages;
+		_db = db;
 	}
 
 	public async Task<IViewComponentResult> InvokeAsync(bool includeMinors)
@@ -26,7 +26,7 @@ public class WikiTextChangeLog : ViewComponent
 
 	private async Task<PageOf<WikiTextChangelogModel>> GetWikiChangeLog(PagingModel paging, bool includeMinorEdits)
 	{
-		var query = _wikiPages.Query
+		var query = _db.WikiPages
 			.ThatAreNotDeleted()
 			.ByMostRecent();
 
