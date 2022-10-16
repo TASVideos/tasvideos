@@ -119,7 +119,7 @@ public class EditModel : BasePageModel
 			return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
 		}
 
-		var previousRevision = await _wikiPages.Query
+		var previousRevision = await _db.WikiPages
 			.Where(wp => wp.PageName == Path)
 			.ThatAreNotCurrent()
 			.OrderByDescending(wp => wp.Revision)
