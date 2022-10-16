@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Wiki;
@@ -8,11 +8,11 @@ namespace TASVideos.Pages.Wiki;
 [RequirePermission(PermissionTo.SeeDeletedWikiPages)]
 public class RenderDeletedModel : BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly ApplicationDbContext _db;
 
-	public RenderDeletedModel(IWikiPages wikiPages)
+	public RenderDeletedModel(ApplicationDbContext db)
 	{
-		_wikiPages = wikiPages;
+		_db = db;
 	}
 
 	public IWikiPage WikiPage { get; set; } = null!;
@@ -24,7 +24,7 @@ public class RenderDeletedModel : BasePageModel
 			return NotFound();
 		}
 
-		var query = _wikiPages.Query
+		var query = _db.WikiPages
 			.Include(wp => wp.Author)
 			.ThatAreDeleted()
 			.Where(wp => wp.PageName == url);
