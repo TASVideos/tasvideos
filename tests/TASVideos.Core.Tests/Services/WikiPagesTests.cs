@@ -230,9 +230,9 @@ public class WikiPagesTests
 	{
 		string newPage = "New Page";
 		string anotherPage = "AnotherPage";
-		var result = await _wikiPages.Add(new WikiPage { PageName = newPage, Markup = $"[{anotherPage}]" });
+		var result = await _wikiPages.Add(new WikiCreateRequest { PageName = newPage, Markup = $"[{anotherPage}]" });
 
-		Assert.IsTrue(result);
+		Assert.IsNotNull(result);
 		Assert.AreEqual(1, _db.WikiPages.Count());
 		Assert.AreEqual(newPage, _db.WikiPages.Single().PageName);
 		Assert.AreEqual(1, _db.WikiPages.Single().Revision);
@@ -253,22 +253,22 @@ public class WikiPagesTests
 	public async Task Add_OverridesTimestampWithCurrent()
 	{
 		var origTime = DateTime.UtcNow.AddHours(-1);
-		var revision = new WikiPage { PageName = "Test", CreateTimestamp = origTime };
+		var revision = new WikiCreateRequest { PageName = "Test", CreateTimestamp = origTime };
 		var result = await _wikiPages.Add(revision);
-		Assert.IsTrue(result);
-		Assert.IsTrue(revision.CreateTimestamp > origTime);
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.CreateTimestamp > origTime);
 	}
 
 	[TestMethod]
 	public async Task Add_NewPage_TimestampConflict_ReturnsFalse()
 	{
 		const string pageName = "TestPage";
-		var firstToStartEditing = new WikiPage { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-2) };
-		var secondToStartEditing = new WikiPage { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-1) };
+		var firstToStartEditing = new WikiCreateRequest { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-2) };
+		var secondToStartEditing = new WikiCreateRequest { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-1) };
 		await _wikiPages.Add(secondToStartEditing);
 
 		var result = await _wikiPages.Add(firstToStartEditing);
-		Assert.IsFalse(result);
+		Assert.IsNull(result);
 	}
 
 	[TestMethod]
@@ -283,14 +283,14 @@ public class WikiPagesTests
 		await _db.SaveChangesAsync();
 		_cache.AddPage(existingPage);
 
-		var result = await _wikiPages.Add(new WikiPage
+		var result = await _wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = existingPageName,
 			Markup = $"[{newLink}]",
 			CreateTimestamp = DateTime.UtcNow
 		});
 
-		Assert.IsTrue(result);
+		Assert.IsNotNull(result);
 		Assert.AreEqual(2, _db.WikiPages.Count());
 		var previous = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId != null);
 		var current = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId == null);
@@ -327,14 +327,14 @@ public class WikiPagesTests
 		await _db.SaveChangesAsync();
 		_cache.AddPage(revision1);
 
-		var result = await _wikiPages.Add(new WikiPage
+		var result = await _wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = pageName,
 			Markup = $"[{revision3Link}]",
 			CreateTimestamp = DateTime.UtcNow
 		});
 
-		Assert.IsTrue(result);
+		Assert.IsNotNull(result);
 		Assert.AreEqual(3, _db.WikiPages.Count());
 
 		var first = _db.WikiPages.OrderBy(wp => wp.Id).First();
@@ -373,9 +373,9 @@ public class WikiPagesTests
 		await _db.SaveChangesAsync();
 		_cache.AddPage(revision1);
 
-		var result = await _wikiPages.Add(new WikiPage { PageName = pageName, Markup = $"[{revision4Link}]", CreateTimestamp = DateTime.UtcNow });
+		var result = await _wikiPages.Add(new WikiCreateRequest { PageName = pageName, Markup = $"[{revision4Link}]", CreateTimestamp = DateTime.UtcNow });
 
-		Assert.IsTrue(result);
+		Assert.IsNotNull(result);
 		Assert.AreEqual(4, _db.WikiPages.Count());
 
 		var first = _db.WikiPages.OrderBy(wp => wp.Id).First();
@@ -397,10 +397,10 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Add_ConcurrencyError_ReturnsFalse()
 	{
-		var revision = new WikiPage { PageName = "Test" };
+		var revision = new WikiCreateRequest { PageName = "Test" };
 		_db.CreateConcurrentUpdateConflict();
 		var result = await _wikiPages.Add(revision);
-		Assert.IsFalse(result);
+		Assert.IsNull(result);
 	}
 
 	[TestMethod]
@@ -410,19 +410,23 @@ public class WikiPagesTests
 	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task Add_NoPageName_Throws(string pageName)
 	{
-		await _wikiPages.Add(new WikiPage { PageName = pageName });
+		await _wikiPages.Add(new WikiCreateRequest { PageName = pageName });
 	}
 
 	[TestMethod]
 	public async Task Add_SelfReference_DoesNotCrash()
 	{
-		var author = new User { UserName = "Test" };
-		var wiki = new WikiPage { PageName = "TestPage" };
+		var author = new User { Id = 1, UserName = "Test" };
+		var wiki = new WikiPage { PageName = "TestPage", AuthorId = author.Id };
 		author.WikiRevisions.Add(wiki);
 		wiki.Author = author;
 
-		var result = await _wikiPages.Add(wiki);
-		Assert.IsTrue(result);
+		var result = await _wikiPages.Add(new WikiCreateRequest
+		{
+			PageName = wiki.PageName,
+			AuthorId = wiki.AuthorId!.Value
+		});
+		Assert.IsNotNull(result);
 	}
 
 	#endregion

@@ -85,7 +85,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var page = new WikiPage
+		var page = new WikiCreateRequest
 		{
 			CreateTimestamp = PageToEdit.EditStart,
 			PageName = Path.Trim('/'),
@@ -95,15 +95,15 @@ public class EditModel : BasePageModel
 			AuthorId = User.GetUserId()
 		};
 		var result = await _wikiPages.Add(page);
-		if (!result)
+		if (result is null)
 		{
 			ModelState.AddModelError("", "Unable to save. The content on this page may have been modified by another user.");
 			return Page();
 		}
 
-		if (page.Revision == 1 || !PageToEdit.MinorEdit)
+		if (result.Revision == 1 || !PageToEdit.MinorEdit)
 		{
-			await Announce(page);
+			await Announce(result);
 		}
 
 		return BaseRedirect("/" + page.PageName);
@@ -133,7 +133,7 @@ public class EditModel : BasePageModel
 			return NotFound();
 		}
 
-		var rollBackRevision = new WikiPage
+		var rollBackRevision = new WikiCreateRequest
 		{
 			PageName = Path!,
 			RevisionMessage = $"Rolling back Revision {latestRevision.Revision} \"{latestRevision.RevisionMessage}\"",
@@ -142,8 +142,11 @@ public class EditModel : BasePageModel
 			MinorEdit = false
 		};
 
-		await _wikiPages.Add(rollBackRevision);
-		await Announce(rollBackRevision);
+		var result = await _wikiPages.Add(rollBackRevision);
+		if (result is not null)
+		{
+			await Announce(result);
+		}
 
 		return BasePageRedirect("PageHistory", new { Path, Latest = true });
 	}

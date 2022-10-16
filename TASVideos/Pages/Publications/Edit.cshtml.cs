@@ -242,7 +242,7 @@ public class EditModel : BasePageModel
 
 		if (model.Markup != existingWikiPage!.Markup)
 		{
-			await _wikiPages.Add(new WikiPage
+			await _wikiPages.Add(new WikiCreateRequest
 			{
 				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,

@@ -174,7 +174,7 @@ public class PublishModel : BasePageModel
 				Submission.OnlineWatchingUrl,
 				Submission.OnlineWatchUrlName,
 				publication.Title,
-				wikiPage,
+				wikiPage.ToWikiPage(),
 				submission.System.Code,
 				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 				null);
@@ -215,9 +215,9 @@ public class PublishModel : BasePageModel
 		return new JsonResult(pub);
 	}
 
-	private static WikiPage GenerateWiki(int publicationId, string markup, int userId)
+	private static WikiCreateRequest GenerateWiki(int publicationId, string markup, int userId)
 	{
-		return new WikiPage
+		return new WikiCreateRequest
 		{
 			RevisionMessage = $"Auto-generated from Movie #{publicationId}",
 			PageName = WikiHelper.ToPublicationWikiPageName(publicationId),

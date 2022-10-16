@@ -6,6 +6,16 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Core.Services;
 
+public record WikiCreateRequest
+{
+	public string PageName { get; init; } = "";
+	public string Markup { get; init; } = "";
+	public string? RevisionMessage { get; init; }
+	public int AuthorId { get; init; }
+	public bool MinorEdit { get; init; } = false;
+	public DateTime CreateTimestamp { get; init; } = DateTime.UtcNow;
+}
+
 public interface IWikiPages
 {
 	/// <summary>
@@ -38,8 +48,8 @@ public interface IWikiPages
 	/// Creates a new revision of a wiki page.
 	/// If the create timestamp is less than the latest revision, the revision will nto be added
 	/// </summary>
-	/// <return>true if the revision as successfully added, false if it was unable to add</return>
-	Task<bool> Add(WikiPage revision);
+	/// <return>The resulting wiki page revision if successfully added, null if it was unable to add</return>
+	Task<IWikiPage?> Add(WikiCreateRequest revision);
 
 	/// <summary>
 	/// Renames the given wiki page to the destination name
@@ -232,7 +242,7 @@ internal class WikiPages : IWikiPages
 		return page;
 	}
 
-	public async Task<bool> Add(WikiPage revision)
+	public async Task<IWikiPage?> Add(WikiCreateRequest revision)
 	{
 		if (string.IsNullOrWhiteSpace(revision.PageName))
 		{
@@ -249,15 +259,17 @@ internal class WikiPages : IWikiPages
 			&& currentRevision is not null
 			&& revision.CreateTimestamp < currentRevision.CreateTimestamp)
 		{
-			return false;
+			return null;
 		}
 
-		revision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
-		_db.WikiPages.Add(revision);
+		var newRevision = revision.ToWikiPage();
+
+		newRevision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
+		_db.WikiPages.Add(newRevision);
 
 		if (currentRevision is not null)
 		{
-			currentRevision.Child = revision;
+			currentRevision.Child = newRevision;
 
 			// We can assume the "current" revision is the latest
 			// We might have a deleted revision after it
@@ -265,7 +277,7 @@ internal class WikiPages : IWikiPages
 				.ForPage(revision.PageName)
 				.MaxAsync(r => r.Revision);
 
-			revision.Revision = maxRevision + 1;
+			newRevision.Revision = maxRevision + 1;
 		}
 
 		try
@@ -274,12 +286,12 @@ internal class WikiPages : IWikiPages
 		}
 		catch (DbUpdateConcurrencyException)
 		{
-			return false;
+			return null;
 		}
 
 		ClearCache(revision.PageName);
-		this[revision.PageName] = revision;
-		return true;
+		this[revision.PageName] = newRevision;
+		return newRevision;
 	}
 
 	public async Task<bool> Move(string originalName, string destinationName)
@@ -568,5 +580,19 @@ public static class WikiPageExtensions
 	public static async Task<WikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
 	{
 		return await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
+	}
+
+	public static WikiPage ToWikiPage(this WikiCreateRequest revision)
+	{
+		return new WikiPage
+		{
+			PageName = revision.PageName,
+			Markup = revision.Markup,
+			RevisionMessage = revision.RevisionMessage,
+			AuthorId = revision.AuthorId,
+			CreateTimestamp = revision.CreateTimestamp,
+			MinorEdit = revision.MinorEdit,
+			Revision = 1
+		};
 	}
 }

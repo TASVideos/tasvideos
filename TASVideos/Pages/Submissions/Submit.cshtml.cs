@@ -109,7 +109,7 @@ public class SubmitModel : BasePageModel
 		_db.Submissions.Add(submission);
 		await _db.SaveChangesAsync();
 
-		await _wikiPages.Add(new WikiPage
+		await _wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
