@@ -275,7 +275,7 @@ public record YoutubeVideo(
 	string Url,
 	string? UrlDisplayName,
 	string Title,
-	WikiPage WikiPage,
+	IWikiPage WikiPage,
 	string SystemCode,
 	IEnumerable<string> Authors,
 	int? ObsoletedBy)
