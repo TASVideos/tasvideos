@@ -248,7 +248,7 @@ public class UserManager : UserManager<User>
 				.Distinct()
 				.ToList();
 
-			var wikiEdits = await _wikiPages.Query
+			var wikiEdits = await _db.WikiPages
 				.ThatAreNotDeleted()
 				.CreatedBy(model.UserName)
 				.Select(w => new { w.CreateTimestamp })
