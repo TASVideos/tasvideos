@@ -174,7 +174,7 @@ internal class WikiPages : IWikiPages
 		var page = await query
 			.SingleOrDefaultAsync(wp => wp.PageName == pageName);
 
-		if (page.IsCurrent())
+		if (page is not null && page.IsCurrent())
 		{
 			this[pageName] = page;
 		}
@@ -210,7 +210,7 @@ internal class WikiPages : IWikiPages
 				? w.Revision == revisionId
 				: w.ChildId == null);
 
-		if (page.IsCurrent())
+		if (page is not null && page.IsCurrent())
 		{
 			this[pageName] = page;
 		}
@@ -224,9 +224,9 @@ internal class WikiPages : IWikiPages
 			.ThatAreNotDeleted()
 			.FirstOrDefaultAsync(w => w.Id == dbId);
 
-		if (page.IsCurrent())
+		if (page is not null && page.IsCurrent())
 		{
-			this[page!.PageName] = page;
+			this[page.PageName] = page;
 		}
 
 		return page;

@@ -14,6 +14,7 @@ public interface IWikiPage
 	public string? AuthorName { get; }
 	bool IsCurrent();
 	DateTime CreateTimestamp { get; }
+	bool MinorEdit { get; }
 }
 
 [ExcludeFromHistory]
@@ -46,7 +47,7 @@ public class WikiPage : BaseEntity, IWikiPage, ISoftDeletable
 	public int? AuthorId { get; set; }
 	public virtual User? Author { get; set; }
 
-	public bool IsCurrent() => !ChildId.HasValue;
+	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
 	public string? AuthorName => Author?.UserName ?? CreateUserName;
 }
 

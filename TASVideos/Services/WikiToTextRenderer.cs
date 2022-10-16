@@ -17,7 +17,7 @@ public class WikiToTextRenderer : IWikiToTextRenderer
 		_serviceProvider = serviceProvider;
 	}
 
-	public async Task<string> RenderWikiForYoutube(WikiPage page)
+	public async Task<string> RenderWikiForYoutube(IWikiPage page)
 	{
 		var sw = new StringWriter();
 		await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(_settings.BaseUrl, _serviceProvider, page));
@@ -28,9 +28,9 @@ public class WikiToTextRenderer : IWikiToTextRenderer
 	{
 		private readonly string _host;
 		private readonly IServiceProvider _serviceProvider;
-		private readonly WikiPage _wikiPage;
+		private readonly IWikiPage _wikiPage;
 
-		public WriterHelper(string host, IServiceProvider serviceProvider, WikiPage wikiPage)
+		public WriterHelper(string host, IServiceProvider serviceProvider, IWikiPage wikiPage)
 		{
 			_host = host;
 			_serviceProvider = serviceProvider;

@@ -61,6 +61,6 @@ public class YoutubeSyncTests
 
 	private class TestWikiToTextRenderer : IWikiToTextRenderer
 	{
-		public async Task<string> RenderWikiForYoutube(WikiPage page) => await Task.FromResult("");
+		public async Task<string> RenderWikiForYoutube(IWikiPage page) => await Task.FromResult("");
 	}
 }
