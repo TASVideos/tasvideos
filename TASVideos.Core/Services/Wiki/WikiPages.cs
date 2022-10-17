@@ -452,7 +452,7 @@ internal class WikiPages : IWikiPages
 			wikiPage.IsDeleted = true;
 
 			// Update referrers if latest revision
-			if (wikiPage.Child == null)
+			if (wikiPage.Child is null)
 			{
 				var referrers = await _db.WikiReferrals
 					.ForPage(pageName)
@@ -467,16 +467,16 @@ internal class WikiPages : IWikiPages
 			{
 				// Set the previous page as current, if there is one
 				var newCurrent = _db.WikiPages
+					.Include(wp => wp.Author)
 					.ThatAreNotDeleted()
 					.ForPage(pageName)
-					.ToWikiResult()
 					.OrderByDescending(wp => wp.Revision)
 					.FirstOrDefault();
 
 				if (newCurrent is not null)
 				{
 					newCurrent.ChildId = null;
-					this[pageName] = newCurrent;
+					this[pageName] = newCurrent.ToWikiResult();
 					await GenerateReferrals(pageName, newCurrent.Markup);
 				}
 			}
