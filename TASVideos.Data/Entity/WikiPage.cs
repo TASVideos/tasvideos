@@ -11,7 +11,7 @@ public interface IWikiPage
 	int Revision { get; }
 	string? RevisionMessage { get; }
 	int? AuthorId { get; }
-	public string? AuthorName { get; }
+	string? AuthorName { get; }
 	bool IsCurrent();
 	DateTime CreateTimestamp { get; }
 	bool MinorEdit { get; }
