@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki;
 using TASVideos.Tests.Base;

@@ -4,7 +4,7 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.Core.Services;
+namespace TASVideos.Core.Services.Wiki;
 
 public class WikiCreateRequest
 {
@@ -29,7 +29,7 @@ public class WikiResult : IWikiPage
 	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
 	public DateTime CreateTimestamp { get; init; }
 	public bool MinorEdit { get; init; }
-	
+
 	internal int? ChildId { get; set; }
 	internal bool IsDeleted { get; set; }
 
