@@ -23,7 +23,7 @@ public interface IWikiPages
 	/// Note that this this should be avoided in favor of other methods
 	/// when possible since this property does not take advantage of caching
 	/// </summary>
-	IQueryable<WikiPage> Query { get; }
+	IQueryable<IWikiPage> Query { get; }
 
 	/// <summary>
 	/// Returns whether or not any revision of the given page exists
@@ -53,6 +53,11 @@ public interface IWikiPages
 	/// <returns>Whether or not the move was successful.
 	/// If false, a conflict was detected and no data was modified</returns>
 	Task<bool> Move(string originalName, string destinationName);
+
+	/// <summary>
+	/// Moves the given page and all subpages as well
+	/// </summary>
+	Task<bool> MoveAll(string originalName, string destinationName);
 
 	/// <summary>
 	/// Performs a soft delete on all revisions of the given page name,
@@ -111,7 +116,7 @@ internal class WikiPages : IWikiPages
 		_cache = cache;
 	}
 
-	public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
+	public IQueryable<IWikiPage> Query => _db.WikiPages.AsQueryable();
 
 	private IWikiPage? this[string pageName]
 	{
@@ -340,6 +345,28 @@ internal class WikiPages : IWikiPages
 		return true;
 	}
 
+	public async Task<bool> MoveAll(string originalName, string destinationName)
+	{
+		var pagesToMove = await _db.WikiPages
+			.Where(wp => wp.PageName.StartsWith(originalName))
+			.WithNoChildren()
+			.ToListAsync();
+		bool allSucceeded = true;
+		foreach (var page in pagesToMove)
+		{
+			var oldPage = page.PageName;
+			var newPage = destinationName + page.PageName[originalName.Length..];
+			var result = await Move(oldPage, newPage);
+
+			if (!result)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		return allSucceeded;
+	}
+
 	public async Task<int> Delete(string pageName)
 	{
 		pageName = pageName.Trim('/');
@@ -525,31 +552,6 @@ public static class WikiPageExtensions
 	public static ValueTask<IWikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
 	{
 		return pages.Page("System/" + pageName, revisionId);
-	}
-
-	/// <summary>
-	/// Moves the given page and all subpages as well
-	/// </summary>
-	public static async Task<bool> MoveAll(this IWikiPages pages, string originalName, string destinationName)
-	{
-		var pagesToMove = await pages.Query
-			.Where(wp => wp.PageName.StartsWith(originalName))
-			.WithNoChildren()
-			.ToListAsync();
-		bool allSucceeded = true;
-		foreach (var page in pagesToMove)
-		{
-			var oldPage = page.PageName;
-			var newPage = destinationName + page.PageName[originalName.Length..];
-			var result = await pages.Move(oldPage, newPage);
-
-			if (!result)
-			{
-				allSucceeded = false;
-			}
-		}
-
-		return allSucceeded;
 	}
 
 	public static async Task<IWikiPage?> PublicationPage(this IWikiPages pages, int publicationId)

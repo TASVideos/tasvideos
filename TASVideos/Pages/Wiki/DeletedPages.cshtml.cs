@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
 
@@ -11,13 +12,16 @@ namespace TASVideos.Pages.Wiki;
 public class DeletedPagesModel : BasePageModel
 {
 	private readonly ExternalMediaPublisher _publisher;
+	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
 
 	public DeletedPagesModel(
 		ExternalMediaPublisher publisher,
+		ApplicationDbContext db,
 		IWikiPages wikiPages)
 	{
 		_publisher = publisher;
+		_db = db;
 		_wikiPages = wikiPages;
 	}
 
@@ -25,14 +29,14 @@ public class DeletedPagesModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		DeletedPages = await _wikiPages.Query
+		DeletedPages = await _db.WikiPages
 			.ThatAreDeleted()
 			.GroupBy(tkey => tkey.PageName)
 			.Select(record => new DeletedWikiPageDisplayModel
 			{
 				PageName = record.Key,
 				RevisionCount = record.Count(),
-				HasExistingRevisions = _wikiPages.Query.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+				HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
 			})
 			.ToListAsync();
 	}

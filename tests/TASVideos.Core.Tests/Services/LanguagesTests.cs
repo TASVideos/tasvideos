@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
@@ -9,13 +8,15 @@ public class LanguagesTests
 {
 	private const string SystemLanguageMarkup = "FR:French,ES:Español";
 
+	private readonly TestDbContext _db;
 	private readonly Mock<IWikiPages> _wikiPages;
 	private readonly Languages _languages;
 
 	public LanguagesTests()
 	{
+		_db = TestDbContext.Create();
 		_wikiPages = new Mock<IWikiPages>(MockBehavior.Strict);
-		_languages = new Languages(_wikiPages.Object, new NoCacheService());
+		_languages = new Languages(_db, _wikiPages.Object, new NoCacheService());
 	}
 
 	[TestMethod]
@@ -115,7 +116,6 @@ public class LanguagesTests
 	{
 		const string page = "TestPage";
 		MockStandardMarkup();
-		_wikiPages.Setup(m => m.Query).Returns(Array.Empty<WikiPage>().AsAsyncQueryable());
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
@@ -127,11 +127,10 @@ public class LanguagesTests
 	{
 		const string page = "TestPage";
 		MockStandardMarkup();
-		_wikiPages.Setup(m => m.Query).Returns(new WikiPage[]
-		{
-			new() { PageName = $"FR/{page}" },
-			new() { PageName = $"ES/{page}" }
-		}.AsAsyncQueryable());
+		_db.WikiPages.AddRange(
+			new WikiPage { PageName = $"FR/{page}" },
+			new WikiPage { PageName = $"ES/{page}" });
+		await _db.SaveChangesAsync();
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
@@ -146,12 +145,11 @@ public class LanguagesTests
 		const string translation = lang + "/" + mainPage;
 		MockStandardMarkup();
 
-		_wikiPages.Setup(m => m.Query).Returns(new WikiPage[]
-		{
-			new() { PageName = mainPage },
-			new() { PageName = translation },
-			new() { PageName = $"ES/{mainPage}" }
-		}.AsAsyncQueryable());
+		_db.WikiPages.AddRange(
+			new WikiPage { PageName = mainPage },
+			new WikiPage { PageName = translation },
+			new WikiPage { PageName = $"ES/{mainPage}" });
+		await _db.SaveChangesAsync();
 
 		var result = await _languages.GetTranslations(translation);
 		Assert.IsNotNull(result);

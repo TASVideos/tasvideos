@@ -173,7 +173,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.Page(pageName);
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(1, actual.Revision);
-		Assert.IsNull(actual.IsCurrent());
+		Assert.IsTrue(actual.IsCurrent());
 		Assert.AreEqual(pageName, actual.PageName);
 	}
 
@@ -193,7 +193,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.Page(pageName);
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(1, actual.Revision);
-		Assert.IsNull(actual.IsCurrent());
+		Assert.IsTrue(actual.IsCurrent());
 		Assert.AreEqual(pageName, actual.PageName);
 	}
 
