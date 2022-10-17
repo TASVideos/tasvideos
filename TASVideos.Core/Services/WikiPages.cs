@@ -6,7 +6,7 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Core.Services;
 
-public record WikiCreateRequest
+public class WikiCreateRequest
 {
 	public string PageName { get; init; } = "";
 	public string Markup { get; init; } = "";
