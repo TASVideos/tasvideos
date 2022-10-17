@@ -1115,9 +1115,10 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_DeletedPage_UndeletesPage()
 	{
-		string pageName = "Deleted";
-		string link = "AnotherPage";
-		var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
+		var entry = _db.Users.Add(new User { Id = 1 });
+		const string pageName = "Deleted";
+		const string link = "AnotherPage";
+		var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true, Author = entry.Entity, AuthorId = entry.Entity.Id };
 		_db.WikiPages.Add(page);
 		await _db.SaveChangesAsync();
 
@@ -1133,11 +1134,18 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_OnlyLatestIsDeleted_SetsLatestToCurrent()
 	{
-		string pageName = "Exists";
-		string oldLink = "OldLink";
-		string newLink = "NewLink";
-		var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{oldLink}]" };
-		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{newLink}]", IsDeleted = true };
+		var entry = _db.Users.Add(new User { Id = 1 });
+		const string pageName = "Exists";
+		const string oldLink = "OldLink";
+		const string newLink = "NewLink";
+		var revision1 = new WikiPage
+		{
+			PageName = pageName, Revision = 1, Markup = $"[{oldLink}]", Author = entry.Entity, AuthorId = entry.Entity.Id
+		};
+		var revision2 = new WikiPage
+		{
+			PageName = pageName, Revision = 2, Markup = $"[{newLink}]", IsDeleted = true, Author = entry.Entity, AuthorId = entry.Entity.Id
+		};
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = oldLink });
@@ -1178,13 +1186,14 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_Last2Deleted_SetsLatestToCurrent()
 	{
-		string pageName = "Exists";
-		string link1 = "Link1";
-		string link2 = "Link2";
-		string link3 = "Link3";
-		var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{link1}]" };
-		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link2}]", IsDeleted = true };
-		var revision3 = new WikiPage { PageName = pageName, Revision = 3, Markup = $"[{link3}]", IsDeleted = true };
+		var entry = _db.Users.Add(new User { Id = 1 });
+		const string pageName = "Exists";
+		const string link1 = "Link1";
+		const string link2 = "Link2";
+		const string link3 = "Link3";
+		var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{link1}]", Author = entry.Entity, AuthorId = entry.Entity.Id };
+		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link2}]", IsDeleted = true, Author = entry.Entity, AuthorId = entry.Entity.Id };
+		var revision3 = new WikiPage { PageName = pageName, Revision = 3, Markup = $"[{link3}]", IsDeleted = true, Author = entry.Entity, AuthorId = entry.Entity.Id };
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
 		_db.WikiPages.Add(revision3);
@@ -1231,11 +1240,12 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_2DeletedRevisions_BothUndeleted()
 	{
-		string pageName = "Deleted";
-		string link1 = "AnotherPage";
-		string link2 = "YetAnotherPage";
-		var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{link1}]", IsDeleted = true };
-		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link2}]", IsDeleted = true };
+		var entry = _db.Users.Add(new User());
+		const string pageName = "Deleted";
+		const string link1 = "AnotherPage";
+		const string link2 = "YetAnotherPage";
+		var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{link1}]", IsDeleted = true, Author = entry.Entity, AuthorId = entry.Entity.Id };
+		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link2}]", IsDeleted = true, Author = entry.Entity, AuthorId = entry.Entity.Id };
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
 		await _db.SaveChangesAsync();
@@ -1292,9 +1302,10 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_TrimsSlashes()
 	{
+		var entry = _db.Users.Add(new User());
 		const string pageName = "Deleted";
 		const string link = "AnotherPage";
-		var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
+		var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true, Author = entry.Entity, AuthorId = entry.Entity.Id };
 		_db.WikiPages.Add(page);
 		await _db.SaveChangesAsync();
 
