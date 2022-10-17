@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
@@ -760,9 +761,12 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeletePage_1Revision_RevisionDeleted()
 	{
-		string pageName = "Exists";
-		string link = "AnotherPage";
-		var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
+		const string pageName = "Exists";
+		const string link = "AnotherPage";
+		var existingPage = new WikiPage
+		{
+			PageName = pageName, Markup = $"[{link}]", AuthorId = 1, Author = new User()
+		};
 		_db.WikiPages.Add(existingPage);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
 		await _db.SaveChangesAsync();
@@ -781,10 +785,10 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeletePage_2Revisions_AllRevisionsDeleted()
 	{
-		string pageName = "Exists";
-		string link = "AnotherPage";
+		const string pageName = "Exists";
+		const string link = "AnotherPage";
 		var revision1 = new WikiPage { PageName = pageName, Revision = 1 };
-		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link}]" };
+		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{link}]", AuthorId = 1, Author = new User() };
 
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
@@ -807,9 +811,9 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeletePage_ConcurrencyConflict_DoesNotDelete()
 	{
-		string pageName = "Exists";
-		string link = "AnotherPage";
-		var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
+		const string pageName = "Exists";
+		const string link = "AnotherPage";
+		var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]", AuthorId = 1, Author = new User() };
 		_db.WikiPages.Add(existingPage);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
 		await _db.SaveChangesAsync();
@@ -830,7 +834,7 @@ public class WikiPagesTests
 	{
 		string pageName = "Exists";
 		string link = "AnotherPage";
-		var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]" };
+		var existingPage = new WikiPage { PageName = pageName, Markup = $"[{link}]", AuthorId = 1, Author = new User() };
 		_db.WikiPages.Add(existingPage);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
 		await _db.SaveChangesAsync();
@@ -902,11 +906,20 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeleteRevision_DeletingCurrent_SetsPreviousToCurrent()
 	{
-		string existingPageName = "Exists";
-		string oldLink = "OldPage";
-		string newLink = "NewPage";
-		var currentRevision = new WikiPage { PageName = existingPageName, Revision = 2, ChildId = null, Markup = $"[{newLink}]" };
-		var previousRevision = new WikiPage { PageName = existingPageName, Revision = 1, Child = currentRevision, Markup = $"[{oldLink}]" };
+		const int authorId = 1;
+		var entry = _db.Users.Add(new User { Id = authorId, UserName = "Test User" });
+
+		const string existingPageName = "Exists";
+		const string oldLink = "OldPage";
+		const string newLink = "NewPage";
+		var currentRevision = new WikiPage
+		{
+			PageName = existingPageName, Revision = 2, ChildId = null, Markup = $"[{newLink}]", AuthorId = authorId, Author = entry.Entity
+		};
+		var previousRevision = new WikiPage
+		{
+			PageName = existingPageName, Revision = 1, Child = currentRevision, Markup = $"[{oldLink}]", AuthorId = authorId, Author = entry.Entity
+		};
 		_db.WikiPages.Add(previousRevision);
 		_db.WikiPages.Add(currentRevision);
 		await _db.SaveChangesAsync();
@@ -946,12 +959,12 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeleteRevision_DeleteCurrentWhenAlreadyALaterDeletedRevision()
 	{
-		string pageName = "Exists";
-		string revision1Link = "Link1";
-		string revision2Link = "Link2";
-		string revision3Link = "Link3";
+		const string pageName = "Exists";
+		const string revision1Link = "Link1";
+		const string revision2Link = "Link2";
+		const string revision3Link = "Link3";
 		var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{revision1Link}]" };
-		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{revision2Link}]" };
+		var revision2 = new WikiPage { PageName = pageName, Revision = 2, Markup = $"[{revision2Link}]", AuthorId = 1, Author = new User() };
 		var revision3 = new WikiPage { PageName = pageName, Revision = 3, IsDeleted = true, Markup = $"[{revision3Link}]" };
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
@@ -1006,7 +1019,7 @@ public class WikiPagesTests
 		string revision3Link = "Link3";
 		var revision1 = new WikiPage { PageName = pageName, Revision = 1, Markup = $"[{revision1Link}]" };
 		var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, Markup = $"[{revision2Link}]" };
-		var revision3 = new WikiPage { PageName = pageName, Revision = 3, Markup = $"[{revision3Link}]" };
+		var revision3 = new WikiPage { PageName = pageName, Revision = 3, Markup = $"[{revision3Link}]", AuthorId = 1, Author = new User() };
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
 		_db.WikiPages.Add(revision3);
@@ -1261,8 +1274,8 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_ConcurrencyConflict_DoesNotUndelete()
 	{
-		string pageName = "Deleted";
-		string link = "AnotherPage";
+		const string pageName = "Deleted";
+		const string link = "AnotherPage";
 		var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
 		_db.WikiPages.Add(page);
 		await _db.SaveChangesAsync();
@@ -1279,8 +1292,8 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_TrimsSlashes()
 	{
-		string pageName = "Deleted";
-		string link = "AnotherPage";
+		const string pageName = "Deleted";
+		const string link = "AnotherPage";
 		var page = new WikiPage { PageName = pageName, Markup = $"[{link}]", IsDeleted = true };
 		_db.WikiPages.Add(page);
 		await _db.SaveChangesAsync();
@@ -1521,7 +1534,8 @@ public class WikiPagesTests
 
 	private int AddPage(string name, bool isDeleted = false, bool cache = false)
 	{
-		var wp = new WikiPage { PageName = name, IsDeleted = isDeleted };
+		User author = _db.Users.FirstOrDefault() ?? new User { Id = 1, UserName = $"Test User from {nameof(AddPage)}" };
+		var wp = new WikiPage { PageName = name, IsDeleted = isDeleted, AuthorId = author.Id, Author = author };
 		_db.Add(wp);
 		_db.SaveChanges();
 
