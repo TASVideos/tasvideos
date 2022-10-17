@@ -13,7 +13,7 @@
 		Latest? @(Model.WikiPage.IsCurrent().ToYesNo())
 	</li>
 	<li>
-		Author: <profile-link username="@Model.WikiPage.AuthorName"></profile-link>
+		Author: <profile-link username="@Model.WikiPage.Author!.UserName"></profile-link>
 	</li>
 	<li>
 		Revision Message: @Model.WikiPage.RevisionMessage

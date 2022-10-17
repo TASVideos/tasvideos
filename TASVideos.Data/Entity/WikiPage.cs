@@ -35,7 +35,6 @@ public class WikiPage : BaseEntity, ISoftDeletable
 	public virtual User? Author { get; set; }
 
 	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
-	public string? AuthorName => Author?.UserName ?? CreateUserName;
 }
 
 public static class WikiQueryableExtensions
