@@ -228,11 +228,18 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Add_NewPage()
 	{
-		string newPage = "New Page";
-		string anotherPage = "AnotherPage";
-		var result = await _wikiPages.Add(new WikiCreateRequest { PageName = newPage, Markup = $"[{anotherPage}]" });
+		const string newPage = "New Page";
+		const string anotherPage = "AnotherPage";
+		const int authorId = 1;
+		const string authorName = "TestAuthor";
+		_db.Users.Add(new User { Id = authorId, UserName = authorName });
+		await _db.SaveChangesAsync();
+
+		var result = await _wikiPages.Add(new WikiCreateRequest { PageName = newPage, Markup = $"[{anotherPage}]", AuthorId = authorId });
 
 		Assert.IsNotNull(result);
+		Assert.AreEqual(authorName, result.AuthorName);
+		Assert.AreEqual(newPage, result.PageName);
 		Assert.AreEqual(1, _db.WikiPages.Count());
 		Assert.AreEqual(newPage, _db.WikiPages.Single().PageName);
 		Assert.AreEqual(1, _db.WikiPages.Single().Revision);
@@ -250,21 +257,47 @@ public class WikiPagesTests
 	}
 
 	[TestMethod]
+	[ExpectedException(typeof(InvalidOperationException))]
+	public async Task Add_UserDoesNotExist_Throws()
+	{
+		var revision = new WikiCreateRequest { PageName = "Test", AuthorId = int.MaxValue };
+		await _wikiPages.Add(revision);
+	}
+
+	[TestMethod]
 	public async Task Add_OverridesTimestampWithCurrent()
 	{
+		const int authorId = 1;
+		const string authorName = "TestAuthor";
+		_db.Users.Add(new User { Id = authorId, UserName = authorName });
+		await _db.SaveChangesAsync();
 		var origTime = DateTime.UtcNow.AddHours(-1);
-		var revision = new WikiCreateRequest { PageName = "Test", CreateTimestamp = origTime };
+		var revision = new WikiCreateRequest { PageName = "Test", CreateTimestamp = origTime, AuthorId = authorId };
+
 		var result = await _wikiPages.Add(revision);
+
 		Assert.IsNotNull(result);
+		Assert.AreEqual(authorName, result.AuthorName);
 		Assert.IsTrue(result.CreateTimestamp > origTime);
 	}
 
 	[TestMethod]
-	public async Task Add_NewPage_TimestampConflict_ReturnsFalse()
+	public async Task Add_NewPage_TimestampConflict_ReturnsNull()
 	{
+		const int authorId = 1;
+		const string authorName = "TestAuthor";
+		_db.Users.Add(new User { Id = authorId, UserName = authorName });
+		await _db.SaveChangesAsync();
 		const string pageName = "TestPage";
-		var firstToStartEditing = new WikiCreateRequest { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-2) };
-		var secondToStartEditing = new WikiCreateRequest { PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-1) };
+		var firstToStartEditing = new WikiCreateRequest
+		{
+			PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-2), AuthorId = authorId
+		};
+		var secondToStartEditing = new WikiCreateRequest
+		{
+			PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-1), AuthorId = authorId
+		};
+
 		await _wikiPages.Add(secondToStartEditing);
 
 		var result = await _wikiPages.Add(firstToStartEditing);
@@ -274,11 +307,20 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Add_RevisionToExistingPage()
 	{
-		string oldLink = "OldPage";
-		string newLink = "NewLink";
-		string existingPageName = "Existing Page";
-		_db.WikiReferrals.Add(new WikiPageReferral { Excerpt = $"[{oldLink}]", Referral = oldLink, Referrer = existingPageName });
-		var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{oldLink}]" };
+		const int authorId = 1;
+		const string authorName = "TestAuthor";
+		_db.Users.Add(new User { Id = authorId, UserName = authorName });
+		const string oldLink = "OldPage";
+		const string newLink = "NewLink";
+		const string existingPageName = "Existing Page";
+		_db.WikiReferrals.Add(new WikiPageReferral
+		{
+			Excerpt = $"[{oldLink}]", Referral = oldLink, Referrer = existingPageName
+		});
+		var existingPage = new WikiPage
+		{
+			PageName = existingPageName, Markup = $"[{oldLink}]", AuthorId = authorId
+		};
 		_db.WikiPages.Add(existingPage);
 		await _db.SaveChangesAsync();
 		_cache.AddPage(existingPage);
@@ -287,10 +329,13 @@ public class WikiPagesTests
 		{
 			PageName = existingPageName,
 			Markup = $"[{newLink}]",
-			CreateTimestamp = DateTime.UtcNow
+			CreateTimestamp = DateTime.UtcNow,
+			AuthorId = authorId
 		});
 
 		Assert.IsNotNull(result);
+		Assert.AreEqual(existingPageName, result.PageName);
+		Assert.AreEqual(authorName, result.AuthorName);
 		Assert.AreEqual(2, _db.WikiPages.Count());
 		var previous = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId != null);
 		var current = _db.WikiPages.SingleOrDefault(wp => wp.PageName == existingPageName && wp.ChildId == null);
@@ -303,7 +348,7 @@ public class WikiPagesTests
 		Assert.IsNull(current.ChildId);
 
 		Assert.AreEqual(1, _cache.PageCache().Count);
-		Assert.AreEqual(current.Id, _cache.PageCache().Single().Id);
+		Assert.AreEqual(current.Revision, _cache.PageCache().Single().Revision);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
 		Assert.AreEqual(existingPageName, _db.WikiReferrals.Single().Referrer);
@@ -313,14 +358,18 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Add_RevisionToPageWithLatestRevisionDeleted()
 	{
+		const int authorId = 1;
+		const string authorName = "TestAuthor";
+		_db.Users.Add(new User { Id = authorId, UserName = authorName });
+
 		// Revision 1 - Not deleted, no child id
 		// Revision 2 - Deleted, no child id
-		string pageName = "Page";
-		string revision1Link = "Link1";
-		string revision2Link = "Link2";
-		string revision3Link = "Link3";
-		var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Markup = $"[{revision1Link}]" };
-		var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null, Markup = $"[{revision2Link}]" };
+		const string pageName = "Page";
+		const string revision1Link = "Link1";
+		const string revision2Link = "Link2";
+		const string revision3Link = "Link3";
+		var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Markup = $"[{revision1Link}]", AuthorId = authorId };
+		var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null, Markup = $"[{revision2Link}]", AuthorId = authorId };
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = revision1Link });
@@ -331,7 +380,8 @@ public class WikiPagesTests
 		{
 			PageName = pageName,
 			Markup = $"[{revision3Link}]",
-			CreateTimestamp = DateTime.UtcNow
+			CreateTimestamp = DateTime.UtcNow,
+			AuthorId = authorId
 		});
 
 		Assert.IsNotNull(result);
@@ -346,7 +396,7 @@ public class WikiPagesTests
 		Assert.IsNull(latest.ChildId);
 
 		Assert.AreEqual(1, _cache.PageCache().Count);
-		Assert.AreEqual(3, _cache.PageCache().Single().Revision);
+		Assert.AreEqual(latest.Markup, _cache.PageCache().Single().Markup);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
 		Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
@@ -356,16 +406,20 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Add_RevisionToPageWithLatestTwoRevisionsDeleted()
 	{
+		const int authorId = 1;
+		const string authorName = "TestAuthor";
+		_db.Users.Add(new User { Id = authorId, UserName = authorName });
+
 		// Revision 1 - Not deleted, no child id
 		// Revision 2 - Deleted, no child id
-		string pageName = "Page";
-		string revision1Link = "Link1";
-		string revision2Link = "Link2";
-		string revision3Link = "Link3";
-		string revision4Link = "Link4";
-		var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Markup = $"[{revision1Link}]" };
-		var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null, Markup = $"[{revision2Link}]" };
-		var revision3 = new WikiPage { PageName = pageName, Revision = 3, IsDeleted = true, ChildId = null, Markup = $"[{revision3Link}]" };
+		const string pageName = "Page";
+		const string revision1Link = "Link1";
+		const string revision2Link = "Link2";
+		const string revision3Link = "Link3";
+		const string revision4Link = "Link4";
+		var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Markup = $"[{revision1Link}]", AuthorId = authorId };
+		var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null, Markup = $"[{revision2Link}]", AuthorId = authorId };
+		var revision3 = new WikiPage { PageName = pageName, Revision = 3, IsDeleted = true, ChildId = null, Markup = $"[{revision3Link}]", AuthorId = authorId };
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);
 		_db.WikiPages.Add(revision3);
@@ -373,7 +427,7 @@ public class WikiPagesTests
 		await _db.SaveChangesAsync();
 		_cache.AddPage(revision1);
 
-		var result = await _wikiPages.Add(new WikiCreateRequest { PageName = pageName, Markup = $"[{revision4Link}]", CreateTimestamp = DateTime.UtcNow });
+		var result = await _wikiPages.Add(new WikiCreateRequest { PageName = pageName, Markup = $"[{revision4Link}]", CreateTimestamp = DateTime.UtcNow, AuthorId = authorId });
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(4, _db.WikiPages.Count());
@@ -395,10 +449,14 @@ public class WikiPagesTests
 	}
 
 	[TestMethod]
-	public async Task Add_ConcurrencyError_ReturnsFalse()
+	public async Task Add_ConcurrencyError_ReturnsNull()
 	{
-		var revision = new WikiCreateRequest { PageName = "Test" };
+		const int authorId = 1;
+		_db.Users.Add(new User { Id = authorId });
+		await _db.SaveChangesAsync();
+		var revision = new WikiCreateRequest { PageName = "Test", AuthorId = 1 };
 		_db.CreateConcurrentUpdateConflict();
+
 		var result = await _wikiPages.Add(revision);
 		Assert.IsNull(result);
 	}
@@ -417,16 +475,54 @@ public class WikiPagesTests
 	public async Task Add_SelfReference_DoesNotCrash()
 	{
 		var author = new User { Id = 1, UserName = "Test" };
+		_db.Users.Add(author);
 		var wiki = new WikiPage { PageName = "TestPage", AuthorId = author.Id };
 		author.WikiRevisions.Add(wiki);
 		wiki.Author = author;
+		await _db.SaveChangesAsync();
 
 		var result = await _wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = wiki.PageName,
 			AuthorId = wiki.AuthorId!.Value
 		});
+
 		Assert.IsNotNull(result);
+	}
+
+	[TestMethod]
+	public async Task Add_DifferentAuthors()
+	{
+		const int author1Id = 1;
+		const string author1Name = "Test User 1";
+		_db.Users.Add(new User { Id = author1Id, UserName = author1Name });
+		const int author2Id = 2;
+		const string author2Name = "Test User 2";
+		_db.Users.Add(new User { Id = author2Id, UserName = author2Name });
+		await _db.SaveChangesAsync();
+
+		const string pageName = "TestPage";
+
+		var result1 = await _wikiPages.Add(new WikiCreateRequest
+		{
+			PageName = pageName,
+			AuthorId = author1Id
+		});
+		var result2 = await _wikiPages.Add(new WikiCreateRequest
+		{
+			PageName = pageName,
+			AuthorId = author2Id
+		});
+
+		Assert.IsNotNull(result1);
+		Assert.AreEqual(result1.PageName, pageName);
+		Assert.AreEqual(result1.AuthorId, author1Id);
+		Assert.AreEqual(result1.AuthorName, author1Name);
+
+		Assert.IsNotNull(result2);
+		Assert.AreEqual(result2.PageName, pageName);
+		Assert.AreEqual(result2.AuthorId, author2Id);
+		Assert.AreEqual(result2.AuthorName, author2Name);
 	}
 
 	#endregion

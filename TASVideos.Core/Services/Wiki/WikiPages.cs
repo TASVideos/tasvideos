@@ -59,7 +59,7 @@ public interface IWikiPages
 	/// If the create timestamp is less than the latest revision, the revision will nto be added
 	/// </summary>
 	/// <return>The resulting wiki page revision if successfully added, null if it was unable to add</return>
-	Task<IWikiPage?> Add(WikiCreateRequest revision);
+	Task<IWikiPage?> Add(WikiCreateRequest addRequest);
 
 	/// <summary>
 	/// Renames the given wiki page to the destination name
@@ -132,7 +132,7 @@ internal class WikiPages : IWikiPages
 		_cache = cache;
 	}
 
-	private IWikiPage? this[string pageName]
+	private WikiResult? this[string pageName]
 	{
 		get
 		{
@@ -140,7 +140,10 @@ internal class WikiPages : IWikiPages
 			return page;
 		}
 
-		set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
+		set
+		{
+			_cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
+		}
 	}
 
 	private void RemovePageFromCache(string pageName) =>
@@ -215,7 +218,7 @@ internal class WikiPages : IWikiPages
 
 		pageName = pageName.Trim('/');
 
-		IWikiPage? page = null;
+		WikiResult? page = null;
 		if (!revisionId.HasValue)
 		{
 			page = this[pageName];
@@ -243,27 +246,33 @@ internal class WikiPages : IWikiPages
 		return page;
 	}
 
-	public async Task<IWikiPage?> Add(WikiCreateRequest revision)
+	public async Task<IWikiPage?> Add(WikiCreateRequest addRequest)
 	{
-		if (string.IsNullOrWhiteSpace(revision.PageName))
+		if (string.IsNullOrWhiteSpace(addRequest.PageName))
 		{
-			throw new InvalidOperationException($"{nameof(revision.PageName)} must have a value.");
+			throw new InvalidOperationException($"{nameof(addRequest.PageName)} must have a value.");
 		}
 
 		var currentRevision = await _db.WikiPages
-			.ForPage(revision.PageName)
+			.ForPage(addRequest.PageName)
 			.ThatAreNotDeleted()
 			.WithNoChildren()
 			.SingleOrDefaultAsync();
 
-		if (revision.CreateTimestamp != DateTime.MinValue
+		if (addRequest.CreateTimestamp != DateTime.MinValue
 			&& currentRevision is not null
-			&& revision.CreateTimestamp < currentRevision.CreateTimestamp)
+			&& addRequest.CreateTimestamp < currentRevision.CreateTimestamp)
 		{
 			return null;
 		}
 
-		var newRevision = revision.ToWikiPage();
+		var author = await _db.Users.SingleOrDefaultAsync(u => u.Id == addRequest.AuthorId);
+		if (author is null)
+		{
+			throw new InvalidOperationException($"A user with the id of {addRequest.AuthorId}");
+		}
+
+		var newRevision = addRequest.ToWikiPage(author);
 
 		newRevision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
 		_db.WikiPages.Add(newRevision);
@@ -275,7 +284,7 @@ internal class WikiPages : IWikiPages
 			// We can assume the "current" revision is the latest
 			// We might have a deleted revision after it
 			var maxRevision = await _db.WikiPages
-				.ForPage(revision.PageName)
+				.ForPage(addRequest.PageName)
 				.MaxAsync(r => r.Revision);
 
 			newRevision.Revision = maxRevision + 1;
@@ -283,16 +292,16 @@ internal class WikiPages : IWikiPages
 
 		try
 		{
-			await GenerateReferrals(revision.PageName, revision.Markup);
+			await GenerateReferrals(addRequest.PageName, addRequest.Markup);
 		}
 		catch (DbUpdateConcurrencyException)
 		{
 			return null;
 		}
 
-		ClearCache(revision.PageName);
+		ClearCache(addRequest.PageName);
 		var result = newRevision.ToWikiResult();
-		this[revision.PageName] = result;
+		this[addRequest.PageName] = result;
 		return result;
 	}
 
@@ -582,7 +591,7 @@ public static class WikiPageExtensions
 		return await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
 	}
 
-	public static WikiPage ToWikiPage(this WikiCreateRequest revision)
+	public static WikiPage ToWikiPage(this WikiCreateRequest revision, User user)
 	{
 		return new WikiPage
 		{
@@ -592,7 +601,8 @@ public static class WikiPageExtensions
 			AuthorId = revision.AuthorId,
 			CreateTimestamp = revision.CreateTimestamp,
 			MinorEdit = revision.MinorEdit,
-			Revision = 1
+			Revision = 1,
+			Author = user
 		};
 	}
 
