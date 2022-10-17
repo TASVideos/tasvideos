@@ -167,7 +167,7 @@ public class UserFilesTests
 	{
 		const string fileExt = ".lua";
 		_wikiPages.Setup(m => m.Page(It.IsAny<string>(), null))
-			.ReturnsAsync(new WikiPage { Markup = fileExt + ", .nothing" });
+			.ReturnsAsync(new WikiResult { Markup = fileExt + ", .nothing" });
 
 		var actual = await _userFiles.SupportedFileExtensions();
 		Assert.IsTrue(actual.Contains(fileExt));
@@ -189,7 +189,7 @@ public class UserFilesTests
 			.ReturnsAsync(new CompressedFile(100, 99, Compression.Gzip, fileData));
 		_wikiPages
 			.Setup(m => m.Page(It.IsAny<string>(), null))
-			.ReturnsAsync(new WikiPage { Markup = ".lua" });
+			.ReturnsAsync(new WikiResult { Markup = ".lua" });
 
 		var (id, parseResult) = await _userFiles.Upload(userId, new(title, desc, systemId, gameId, fileData, fileName, hidden));
 
@@ -251,7 +251,7 @@ public class UserFilesTests
 		string[] extensions = { ".lua", ".wch" };
 		_wikiPages
 			.Setup(m => m.Page(It.IsAny<string>(), null))
-			.ReturnsAsync(new WikiPage { Markup = markup });
+			.ReturnsAsync(new WikiResult { Markup = markup });
 
 		var actual = await _userFiles.SupportedSupplementalFiles();
 		Assert.IsNotNull(actual);

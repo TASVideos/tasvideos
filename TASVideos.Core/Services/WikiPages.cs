@@ -16,6 +16,29 @@ public class WikiCreateRequest
 	public DateTime CreateTimestamp { get; init; } = DateTime.UtcNow;
 }
 
+public class WikiResult : IWikiPage
+{
+	private string _pageName = "";
+
+	public string PageName { get => _pageName; init => _pageName = value; }
+	public string Markup { get; init; } = "";
+	public int Revision { get; init; }
+	public string? RevisionMessage { get; init; }
+	public int? AuthorId { get; init; }
+	public string? AuthorName { get; init; }
+	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
+	public DateTime CreateTimestamp { get; init; }
+	public bool MinorEdit { get; init; }
+	
+	internal int? ChildId { get; set; }
+	internal bool IsDeleted { get; set; }
+
+	internal void SetPageName(string newPageName)
+	{
+		_pageName = newPageName;
+	}
+}
+
 public interface IWikiPages
 {
 	/// <summary>
@@ -113,7 +136,7 @@ internal class WikiPages : IWikiPages
 	{
 		get
 		{
-			_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiPage page);
+			_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiResult page);
 			return page;
 		}
 
@@ -172,6 +195,7 @@ internal class WikiPages : IWikiPages
 		}
 
 		var page = await query
+			.ToWikiResult()
 			.SingleOrDefaultAsync(wp => wp.PageName == pageName);
 
 		if (page is not null && page.IsCurrent())
@@ -206,6 +230,7 @@ internal class WikiPages : IWikiPages
 			.ForPage(pageName)
 			.ThatAreNotDeleted()
 			.OrderByDescending(wp => wp.Revision)
+			.ToWikiResult()
 			.FirstOrDefaultAsync(w => revisionId != null
 				? w.Revision == revisionId
 				: w.ChildId == null);
@@ -266,8 +291,9 @@ internal class WikiPages : IWikiPages
 		}
 
 		ClearCache(revision.PageName);
-		this[revision.PageName] = newRevision;
-		return newRevision;
+		var result = newRevision.ToWikiResult();
+		this[revision.PageName] = result;
+		return result;
 	}
 
 	public async Task<bool> Move(string originalName, string destinationName)
@@ -329,7 +355,7 @@ internal class WikiPages : IWikiPages
 		if (cachedRevision is not null)
 		{
 			RemovePageFromCache(originalName);
-			cachedRevision.SetPageName(destinationName);
+			((WikiResult)cachedRevision).SetPageName(destinationName);
 			_cache.Set(destinationName, cachedRevision);
 		}
 
@@ -434,6 +460,7 @@ internal class WikiPages : IWikiPages
 				var newCurrent = _db.WikiPages
 					.ThatAreNotDeleted()
 					.ForPage(pageName)
+					.ToWikiResult()
 					.OrderByDescending(wp => wp.Revision)
 					.FirstOrDefault();
 
@@ -489,7 +516,7 @@ internal class WikiPages : IWikiPages
 			}
 
 			ClearCache(pageName);
-			this[pageName] = current;
+			this[pageName] = current.ToWikiResult();
 		}
 
 		return true;
@@ -566,6 +593,45 @@ public static class WikiPageExtensions
 			CreateTimestamp = revision.CreateTimestamp,
 			MinorEdit = revision.MinorEdit,
 			Revision = 1
+		};
+	}
+
+	public static IQueryable<WikiResult> ToWikiResult(this IQueryable<WikiPage> query)
+	{
+		return query.Select(wp => new WikiResult
+		{
+			PageName = wp.PageName,
+			Markup = wp.Markup,
+			Revision = wp.Revision,
+			RevisionMessage = wp.RevisionMessage,
+			AuthorId = wp.AuthorId,
+			AuthorName = wp.Author!.UserName,
+			CreateTimestamp = wp.CreateTimestamp,
+			MinorEdit = wp.MinorEdit,
+			ChildId = wp.ChildId,
+			IsDeleted = wp.IsDeleted
+		});
+	}
+
+	public static WikiResult ToWikiResult(this WikiPage wp)
+	{
+		if (wp.Author is null)
+		{
+			throw new ArgumentNullException($"{nameof(wp.Author)} cannot be null.");
+		}
+
+		return new WikiResult
+		{
+			PageName = wp.PageName,
+			Markup = wp.Markup,
+			Revision = wp.Revision,
+			RevisionMessage = wp.RevisionMessage,
+			AuthorId = wp.AuthorId,
+			AuthorName = wp.Author.UserName,
+			CreateTimestamp = wp.CreateTimestamp,
+			MinorEdit = wp.MinorEdit,
+			ChildId = wp.ChildId,
+			IsDeleted = wp.IsDeleted
 		};
 	}
 }

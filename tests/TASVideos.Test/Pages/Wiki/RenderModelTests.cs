@@ -44,7 +44,7 @@ public class RenderModelTests : BasePageModelTests
 		const string existingPage = "Test";
 		_mockWikiPages
 			.Setup(m => m.Page(existingPage, null))
-			.ReturnsAsync(new WikiPage { PageName = existingPage });
+			.ReturnsAsync(new WikiResult { PageName = existingPage });
 
 		var result = await _model.OnGet(existingPage);
 

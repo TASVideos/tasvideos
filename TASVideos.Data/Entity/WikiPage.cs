@@ -15,11 +15,10 @@ public interface IWikiPage
 	bool IsCurrent();
 	DateTime CreateTimestamp { get; }
 	bool MinorEdit { get; }
-	void SetPageName(string newPageName);
 }
 
 [ExcludeFromHistory]
-public class WikiPage : BaseEntity, IWikiPage, ISoftDeletable
+public class WikiPage : BaseEntity, ISoftDeletable
 {
 	public int Id { get; set; }
 

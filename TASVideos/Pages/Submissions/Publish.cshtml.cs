@@ -152,7 +152,7 @@ public class PublishModel : BasePageModel
 
 		// Create a wiki page corresponding to this publication
 		var wikiPage = GenerateWiki(publication.Id, Submission.MovieMarkup, User.GetUserId());
-		await _wikiPages.Add(wikiPage);
+		var addedWikiPage = await _wikiPages.Add(wikiPage);
 
 		submission.Status = SubmissionStatus.Published;
 		_db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
@@ -174,7 +174,7 @@ public class PublishModel : BasePageModel
 				Submission.OnlineWatchingUrl,
 				Submission.OnlineWatchUrlName,
 				publication.Title,
-				wikiPage.ToWikiPage(),
+				addedWikiPage!,
 				submission.System.Code,
 				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 				null);

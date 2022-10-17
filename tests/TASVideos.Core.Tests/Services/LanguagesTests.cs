@@ -41,7 +41,7 @@ public class LanguagesTests
 	{
 		_wikiPages
 			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync((WikiPage?)null);
+			.ReturnsAsync((IWikiPage?)null);
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -54,7 +54,7 @@ public class LanguagesTests
 	{
 		_wikiPages
 			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = "" });
+			.ReturnsAsync(new WikiResult { Markup = "" });
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -68,7 +68,7 @@ public class LanguagesTests
 		var junk = "RandomText";
 		_wikiPages
 			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = junk });
+			.ReturnsAsync(new WikiResult { Markup = junk });
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -101,7 +101,7 @@ public class LanguagesTests
 				ES : Español , : ";
 		_wikiPages
 			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = systemLanguageMarkup });
+			.ReturnsAsync(new WikiResult { Markup = systemLanguageMarkup });
 
 		var actual = await _languages.AvailableLanguages();
 		Assert.IsNotNull(actual);
@@ -163,6 +163,6 @@ public class LanguagesTests
 	{
 		_wikiPages
 			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = SystemLanguageMarkup });
+			.ReturnsAsync(new WikiResult { Markup = SystemLanguageMarkup });
 	}
 }
