@@ -140,10 +140,7 @@ internal class WikiPages : IWikiPages
 			return page;
 		}
 
-		set
-		{
-			_cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
-		}
+		set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
 	}
 
 	private void RemovePageFromCache(string pageName) =>
