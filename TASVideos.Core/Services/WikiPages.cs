@@ -19,13 +19,6 @@ public record WikiCreateRequest
 public interface IWikiPages
 {
 	/// <summary>
-	/// Gets a queryable for doing dynamic select statements.
-	/// Note that this this should be avoided in favor of other methods
-	/// when possible since this property does not take advantage of caching
-	/// </summary>
-	IQueryable<IWikiPage> Query { get; }
-
-	/// <summary>
 	/// Returns whether or not any revision of the given page exists
 	/// </summary>
 	Task<bool> Exists(string? pageName, bool includeDeleted = false);
@@ -115,8 +108,6 @@ internal class WikiPages : IWikiPages
 		_db = db;
 		_cache = cache;
 	}
-
-	public IQueryable<IWikiPage> Query => _db.WikiPages.AsQueryable();
 
 	private IWikiPage? this[string pageName]
 	{
