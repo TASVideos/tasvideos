@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.ViewComponents;
 

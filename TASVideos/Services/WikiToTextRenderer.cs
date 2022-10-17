@@ -1,6 +1,6 @@
-﻿using TASVideos.Core.Services.Youtube;
+﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 

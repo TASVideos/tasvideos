@@ -1,4 +1,5 @@
-﻿@model IEnumerable<IWikiPage>
+﻿@using TASVideos.TagHelpers
+@model IEnumerable<TASVideos.Core.Services.Wiki.IWikiPage>
 
 <div class="alert alert-info" condition="@Model.Any()">
 	<label>Parents:</label>

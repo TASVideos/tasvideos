@@ -1,4 +1,5 @@
-﻿@model IWikiPage
+﻿@using TASVideos.TagHelpers
+@model TASVideos.Core.Services.Wiki.IWikiPage
 @{
 	var user = Model.PageName.Split('/').Skip(1).FirstOrDefault();
 }

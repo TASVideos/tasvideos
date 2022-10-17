@@ -4,19 +4,6 @@ using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity;
 
-public interface IWikiPage
-{
-	string PageName { get; }
-	string Markup { get; }
-	int Revision { get; }
-	string? RevisionMessage { get; }
-	int? AuthorId { get; }
-	string? AuthorName { get; }
-	bool IsCurrent();
-	DateTime CreateTimestamp { get; }
-	bool MinorEdit { get; }
-}
-
 [ExcludeFromHistory]
 public class WikiPage : BaseEntity, ISoftDeletable
 {
@@ -49,7 +36,6 @@ public class WikiPage : BaseEntity, ISoftDeletable
 
 	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
 	public string? AuthorName => Author?.UserName ?? CreateUserName;
-	public void SetPageName(string newPageName) => PageName = newPageName;
 }
 
 public static class WikiQueryableExtensions

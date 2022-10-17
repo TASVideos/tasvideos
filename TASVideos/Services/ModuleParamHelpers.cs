@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Namotion.Reflection;
-using TASVideos.Data.Entity;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.TagHelpers;
 using TASVideos.ViewComponents;
 

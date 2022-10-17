@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.ViewComponents;
 

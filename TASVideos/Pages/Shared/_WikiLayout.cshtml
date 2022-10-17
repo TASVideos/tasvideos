@@ -1,4 +1,6 @@
-﻿@{
+﻿@using TASVideos.Core.Services.Wiki
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@{
 	Layout = "_Layout.cshtml";
 	IWikiPage pageData = ViewData["WikiPage"] as IWikiPage ?? throw new InvalidOperationException("WikiPage not set");
 

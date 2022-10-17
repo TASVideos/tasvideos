@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
 
