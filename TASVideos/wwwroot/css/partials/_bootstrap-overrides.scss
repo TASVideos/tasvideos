@@ -112,10 +112,12 @@ h4 {
 	&-info {
 		background-color: var(--bs-info);
 		border-color: var(--bs-info);
+		color: #fff;
 
 		.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:focus, &:active, &:hover, &:active:focus, .show > &.dropdown-toggle {
 			background-color: var(--bs-info-hover);
 			border-color: var(--bs-info-hover);
+			color: #fff;
 		}
 	}
 

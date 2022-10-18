@@ -188,7 +188,7 @@
 			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ms-1 mt-2"><i class="fa fa-comments-o"></i> Discuss and Vote</a>
 			<span permission="EditSubmissions" class="btn-separator mt-2"></span>
 			<a condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary border border-warning mt-2"><i class="fa fa-pencil"></i> Edit</a>
-			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="ms-1 btn btn-info text-dark border border-warning mt-2"><i class="fa fa-book"></i> Catalog</a>
+			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="ms-1 btn btn-info border border-warning mt-2"><i class="fa fa-book"></i> Catalog</a>
 			<a condition="@canPublish" asp-page="Publish" asp-route-id="@Model.Id" class="ms-1 btn btn-warning mt-2">Publish</a>
 			<span class="btn-separator mt-2"></span>
 			<a asp-page="Index" class="btn btn-secondary mt-2"><i class="fa fa-arrow-left"></i> Back to Queue</a>
@@ -212,13 +212,13 @@
 <br />
 <a asp-page="/Wiki/PageHistory"
    asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
-   class="btn btn-info text-dark btn-sm">
+   class="btn btn-info btn-sm">
 	<i class="fa fa-history"></i> Page History
 </a>
 <a
 	asp-page="/Wiki/PageHistory"
 	asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
 	asp-route-latest="true"
-	class="btn btn-info text-dark btn-sm">
+	class="btn btn-info btn-sm">
 	Latest diff
 </a>

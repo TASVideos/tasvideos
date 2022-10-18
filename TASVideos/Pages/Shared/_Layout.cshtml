@@ -130,7 +130,7 @@
 					var path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
 					if (path != "Wiki/PageDoesNotExist")
 					{
-						<a class="btn btn-info text-dark btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
+						<a class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
 					}
 				}
 			</p>
