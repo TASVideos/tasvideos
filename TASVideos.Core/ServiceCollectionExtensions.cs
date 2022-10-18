@@ -7,6 +7,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
+using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core;
 

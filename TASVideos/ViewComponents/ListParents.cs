@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.ViewComponents;
 
 public class ListParents : ViewComponent
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly ApplicationDbContext _db;
 
-	public ListParents(IWikiPages wikiPages)
+	public ListParents(ApplicationDbContext db)
 	{
-		_wikiPages = wikiPages;
+		_db = db;
 	}
 
-	public IViewComponentResult Invoke(WikiPage pageData)
+	public IViewComponentResult Invoke(IWikiPage pageData)
 	{
-		var subpages = _wikiPages.Query
-				.ThatAreParentsOf(pageData.PageName)
-				.ToList();
+		var subpages = _db.WikiPages
+			.ThatAreParentsOf(pageData.PageName)
+			.ToList();
 
 		return View(subpages);
 	}

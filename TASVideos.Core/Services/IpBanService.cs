@@ -63,7 +63,7 @@ internal class IpBanService : IIpBanService
 	public async Task<IEnumerable<IpBanEntry>> GetAll()
 	{
 		return await _db.IpBans
-			.Select(b => new IpBanEntry(b.Mask, b.CreateUserName, b.CreateTimestamp))
+			.Select(b => new IpBanEntry(b.Mask, b.CreateTimestamp))
 			.ToListAsync();
 	}
 
@@ -168,4 +168,4 @@ internal class IpBanService : IIpBanService
 	private void LogError(string mask) => _logger.LogError("Unable to parse ban address mask {mask}", mask);
 }
 
-public record IpBanEntry(string Mask, string? CreateUserName, DateTime DateCreated);
+public record IpBanEntry(string Mask, DateTime DateCreated);

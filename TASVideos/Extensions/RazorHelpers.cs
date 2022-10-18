@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.ViewComponents;
 
@@ -56,42 +57,42 @@ public static class RazorHelpers
 		return await component.InvokeAsync(nameof(RenderWikiPage), new { url = pageName });
 	}
 
-	public static async Task<IHtmlContent> ListParents(this IViewComponentHelper component, WikiPage pageData)
+	public static async Task<IHtmlContent> ListParents(this IViewComponentHelper component, IWikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
 	}
 
-	public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, WikiPage pageData, bool show)
+	public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, IWikiPage pageData, bool show)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, show });
 	}
 
-	public static async Task<IHtmlContent> ListLanguages(this IViewComponentHelper component, WikiPage pageData)
+	public static async Task<IHtmlContent> ListLanguages(this IViewComponentHelper component, IWikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.ListLanguages), new { pageData });
 	}
 
-	public static async Task<IHtmlContent> HomePageHeader(this IViewComponentHelper component, WikiPage pageData)
+	public static async Task<IHtmlContent> HomePageHeader(this IViewComponentHelper component, IWikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.HomePageHeader), new { pageData });
 	}
 
-	public static async Task<IHtmlContent> GameResourcesHeader(this IViewComponentHelper component, WikiPage pageData)
+	public static async Task<IHtmlContent> GameResourcesHeader(this IViewComponentHelper component, IWikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.GameResourcesHeader), new { pageData });
 	}
 
-	public static async Task<IHtmlContent> GameResourcesFooter(this IViewComponentHelper component, WikiPage pageData)
+	public static async Task<IHtmlContent> GameResourcesFooter(this IViewComponentHelper component, IWikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.GameResourcesFooter), new { pageData });
 	}
 
-	public static async Task<IHtmlContent> SystemPageHeader(this IViewComponentHelper component, WikiPage pageData)
+	public static async Task<IHtmlContent> SystemPageHeader(this IViewComponentHelper component, IWikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.SystemPageHeader), new { pageData });
 	}
 
-	public static async Task<IHtmlContent> SystemPageFooter(this IViewComponentHelper component, WikiPage pageData)
+	public static async Task<IHtmlContent> SystemPageFooter(this IViewComponentHelper component, IWikiPage pageData)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.SystemPageFooter), new { pageData });
 	}

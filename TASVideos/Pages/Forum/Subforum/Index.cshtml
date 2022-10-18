@@ -35,7 +35,12 @@
 					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fw-bold text-warning"><i class="fa fa-bullhorn"></i> Announcement: </span>
 					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fw-bold text-info"><i class="fa fa-sticky-note"></i> Sticky: </span>
 					<span condition="@topic.IsLocked" class="text-danger"><i class="fa fa-lock"></i></span>
-					<span condition="@(Model.ActivityTopics.ContainsKey(topic.Id))"><i class="fa fa-file text-warning activity-topic d-none" data-topic-id="@topic.Id" data-activity-unix="@(Model.ActivityTopics[topic.Id].UnixTimestamp())"></i></span>
+					<a condition="@(Model.ActivityTopics.ContainsKey(topic.Id))" class="text-decoration-none">
+						<i class="fa fa-file activity-topic d-none"
+						data-topic-id="@topic.Id"
+						data-activity-posts-created="@Model.ActivityTopics[topic.Id].Item1"
+					    data-activity-posts-edited="@Model.ActivityTopics[topic.Id].Item2"></i>
+					</a>
 					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
 					<div class="ms-2">
 						@{
@@ -44,20 +49,20 @@
 							{
 								for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++)
 								{
-									<text>
-										<a asp-page="/Forum/Topics/Index"
+										<text>
+											<a asp-page="/Forum/Topics/Index"
 										   asp-route-id="@topic.Id"
 										   asp-route-CurrentPage="@pageNumber"
 										   asp-route-PageSize="@ForumConstants.PostsPerPage"
 										   asp-route-Sort="CreateTimestamp"
 										   class="btn btn-outline-primary btn-sm mt-1">
-											@pageNumber
-										</a>
-									</text>
+												@pageNumber
+											</a>
+										</text>
 									if (totalPages > 5 && pageNumber == 2)
 									{
 										pageNumber = totalPages - 2;
-										<text><span>…</span></text>
+											<text><span>…</span></text>
 									}
 								}
 							}
@@ -85,32 +90,58 @@
 	<script>
 		let currentTime = Number(document.getElementById('serverUnixTime').textContent);
 		{
-			let visitedTopics = localStorage.getItem('VisitedTopics');
-			if (visitedTopics !== null){
-				visitedTopics = JSON.parse(visitedTopics);
-			}else{
-				visitedTopics = {};
-			}
+			let visitedPosts = localStorage.getItem('VisitedPosts');
+			visitedPosts = JSON.parse(visitedPosts) ?? {};
 			let activityTopics = document.getElementsByClassName('activity-topic');
-			for (let activityTopic of activityTopics){
-				let lastVisit = visitedTopics[activityTopic.dataset.topicId];
-				if (lastVisit === undefined || lastVisit < activityTopic.dataset.activityUnix){
+			for (let activityTopic of activityTopics) {
+				let displayClass;
+				let firstPostId, firstPostDate;
+				let activityPostsCreated = JSON.parse(activityTopic.dataset.activityPostsCreated);
+				for (let postId in activityPostsCreated) {
+					let lastVisit = visitedPosts[postId];
+					if (!lastVisit || lastVisit < activityPostsCreated[postId]) {
+						displayClass = 'text-warning';
+						if (!firstPostId || activityPostsCreated[postId] < firstPostDate) {
+							firstPostId = postId;
+							firstPostDate = activityPostsCreated[postId];
+						}
+					}
+				}
+				if (!displayClass) {
+					let activityPostsEdited = JSON.parse(activityTopic.dataset.activityPostsEdited);
+					for (let postId in activityPostsEdited) {
+						let lastVisit = visitedPosts[postId];
+						if (!lastVisit || lastVisit < activityPostsEdited[postId]) {
+							displayClass = 'text-info';
+							if (!firstPostId || activityPostsEdited[postId] < firstPostDate) {
+								firstPostId = postId;
+								firstPostDate = activityPostsEdited[postId];
+							}
+						}
+					}
+				}
+				if (displayClass) {
+					activityTopic.classList.add(displayClass);
 					activityTopic.classList.remove('d-none');
+					activityTopic.parentElement.setAttribute('href', '/Forum/Posts/' + firstPostId);
 				}
 			}
 		}
 		function markSubforumPostsRead(){
-			let visitedTopics = localStorage.getItem('VisitedTopics');
-			if (visitedTopics !== null){
-				visitedTopics = JSON.parse(visitedTopics);
-			}else{
-				visitedTopics = {};
-			}
+			let visitedPosts = localStorage.getItem('VisitedPosts');
+			visitedPosts = JSON.parse(visitedPosts) ?? {};
 			let activityTopics = document.getElementsByClassName('activity-topic');
-			for (let activityTopic of activityTopics){
-				visitedTopics[activityTopic.dataset.topicId] = currentTime;
+			for (let activityTopic of activityTopics) {
+				let activityPostsCreated = JSON.parse(activityTopic.dataset.activityPostsCreated);
+				for (let postId in activityPostsCreated) {
+					visitedPosts[postId] = currentTime;
+				}
+				let activityPostsEdited = JSON.parse(activityTopic.dataset.activityPostsEdited);
+				for (let postId in activityPostsEdited) {
+					visitedPosts[postId] = currentTime;
+				}
 			}
-			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
 			location.reload();
 		}
 	</script>

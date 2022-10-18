@@ -3,7 +3,7 @@
 @{
 	Layout = "_WikiLayout";
 }
-<warning-alert condition="Model.WikiPage.ChildId.HasValue">
+<warning-alert condition="!Model.WikiPage.IsCurrent()">
 	<p>
 		This is an old revision of this page.<br />
 		<a href="/@Model.WikiPage.PageName">Click here</a> to see the current revision.

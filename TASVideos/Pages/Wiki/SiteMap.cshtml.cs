@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core.Services;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
 
@@ -9,7 +9,7 @@ namespace TASVideos.Pages.Wiki;
 [RequirePermission(PermissionTo.EditWikiPages)]
 public class SiteMapModel : BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly ApplicationDbContext _db;
 
 	private static readonly List<SiteMapEntry> CorePages = Assembly
 		.GetAssembly(typeof(SiteMapModel))
@@ -27,9 +27,9 @@ public class SiteMapModel : BasePageModel
 		})
 		.ToList();
 
-	public SiteMapModel(IWikiPages wikiPages)
+	public SiteMapModel(ApplicationDbContext db)
 	{
-		_wikiPages = wikiPages;
+		_db = db;
 	}
 
 	public List<SiteMapEntry> Map { get; set; } = new();
@@ -37,7 +37,7 @@ public class SiteMapModel : BasePageModel
 	public void OnGet()
 	{
 		Map = CorePages.ToList();
-		var wikiPages = _wikiPages.Query
+		var wikiPages = _db.WikiPages
 			.ThatAreSubpagesOf("")
 			.Where(w => !w.PageName.StartsWith("InternalSystem"))
 			.Select(w => w.PageName)

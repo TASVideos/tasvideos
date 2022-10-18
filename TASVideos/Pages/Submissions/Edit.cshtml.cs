@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -99,8 +100,8 @@ public class EditModel : BasePageModel
 
 		Submission = submission;
 		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
-		Submission.LastUpdateTimestamp = submissionPage.LastUpdateTimestamp;
-		Submission.LastUpdateUser = submissionPage.LastUpdateUserName;
+		Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
+		Submission.LastUpdateUser = submissionPage.AuthorName;
 		Submission.Markup = submissionPage.Markup;
 		Submission.Authors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == Id)
@@ -342,7 +343,7 @@ public class EditModel : BasePageModel
 		submission.Status = Submission.Status;
 		submission.AdditionalAuthors = Submission.AdditionalAuthors.NullIfWhitespace();
 
-		var revision = new WikiPage
+		var revision = new WikiCreateRequest
 		{
 			PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
 			Markup = Submission.Markup,
@@ -351,7 +352,7 @@ public class EditModel : BasePageModel
 			AuthorId = User.GetUserId()
 		};
 		var addResult = await _wikiPages.Add(revision);
-		if (!addResult)
+		if (addResult is null)
 		{
 			throw new InvalidOperationException("Unable to save wiki revision!");
 		}
@@ -479,10 +480,10 @@ public class EditModel : BasePageModel
 		_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 		submission.Status = newStatus;
-		await _wikiPages.Add(new WikiPage
+		await _wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = submissionPage.PageName,
-			Markup = submissionPage.Markup += $"\n----\n[user:{User.Name()}]: {message}",
+			Markup = submissionPage.Markup + $"\n----\n[user:{User.Name()}]: {message}",
 			RevisionMessage = $"Claimed for {action}",
 			AuthorId = User.GetUserId()
 		});

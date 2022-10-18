@@ -17,6 +17,7 @@ DELETE FROM public.ip_bans;
 DELETE FROM public.media_posts;
 DELETE FROM public.user_disallows;
 DELETE FROM public."__EFMigrationsHistory";
+DELETE FROM public.auto_history;
 
 -- Trim user files
 DELETE FROM public.user_file_comments;

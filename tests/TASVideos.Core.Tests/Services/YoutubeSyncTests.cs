@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging.Abstractions;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -61,6 +61,6 @@ public class YoutubeSyncTests
 
 	private class TestWikiToTextRenderer : IWikiToTextRenderer
 	{
-		public async Task<string> RenderWikiForYoutube(WikiPage page) => await Task.FromResult("");
+		public async Task<string> RenderWikiForYoutube(IWikiPage page) => await Task.FromResult("");
 	}
 }

@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data.Entity;
+using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.ViewComponents;
 
 public class HomePageHeader : ViewComponent
 {
-	public IViewComponentResult Invoke(WikiPage pageData)
+	public IViewComponentResult Invoke(IWikiPage pageData)
 	{
 		return View(pageData);
 	}

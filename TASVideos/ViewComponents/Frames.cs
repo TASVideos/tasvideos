@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Common;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents;
@@ -22,7 +22,7 @@ public class Frames : ViewComponent
 		_cache = cache;
 	}
 
-	public async Task<string> RenderTextAsync(WikiPage? pageData, double? fps, int amount)
+	public async Task<string> RenderTextAsync(IWikiPage? pageData, double? fps, int amount)
 	{
 		var model = new Timeable
 		{
@@ -33,7 +33,7 @@ public class Frames : ViewComponent
 		return model.Time().ToStringWithOptionalDaysAndHours();
 	}
 
-	public async Task<IViewComponentResult> InvokeAsync(WikiPage? pageData, double? fps, int amount)
+	public async Task<IViewComponentResult> InvokeAsync(IWikiPage? pageData, double? fps, int amount)
 	{
 		var model = new Timeable
 		{

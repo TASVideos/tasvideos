@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -152,7 +153,7 @@ public class PublishModel : BasePageModel
 
 		// Create a wiki page corresponding to this publication
 		var wikiPage = GenerateWiki(publication.Id, Submission.MovieMarkup, User.GetUserId());
-		await _wikiPages.Add(wikiPage);
+		var addedWikiPage = await _wikiPages.Add(wikiPage);
 
 		submission.Status = SubmissionStatus.Published;
 		_db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
@@ -174,7 +175,7 @@ public class PublishModel : BasePageModel
 				Submission.OnlineWatchingUrl,
 				Submission.OnlineWatchUrlName,
 				publication.Title,
-				wikiPage,
+				addedWikiPage!,
 				submission.System.Code,
 				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 				null);
@@ -215,9 +216,9 @@ public class PublishModel : BasePageModel
 		return new JsonResult(pub);
 	}
 
-	private static WikiPage GenerateWiki(int publicationId, string markup, int userId)
+	private static WikiCreateRequest GenerateWiki(int publicationId, string markup, int userId)
 	{
-		return new WikiPage
+		return new WikiCreateRequest
 		{
 			RevisionMessage = $"Auto-generated from Movie #{publicationId}",
 			PageName = WikiHelper.ToPublicationWikiPageName(publicationId),
