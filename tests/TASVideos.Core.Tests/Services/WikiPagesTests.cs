@@ -1476,7 +1476,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	#endregion
@@ -1488,7 +1488,7 @@ public class WikiPagesTests
 	{
 		var actual = await _wikiPages.BrokenLinks();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -1500,7 +1500,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -1514,7 +1514,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -1549,7 +1549,7 @@ public class WikiPagesTests
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	#endregion
