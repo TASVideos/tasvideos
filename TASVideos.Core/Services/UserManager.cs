@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -14,7 +13,6 @@ public class UserManager : UserManager<User>
 	private readonly ApplicationDbContext _db;
 	private readonly ICacheService _cache;
 	private readonly IPointsService _pointsService;
-	private readonly IWikiPages _wikiPages;
 	private readonly ITASVideoAgent _tasVideoAgent;
 
 	// Holy dependencies, batman
@@ -22,7 +20,6 @@ public class UserManager : UserManager<User>
 		ApplicationDbContext db,
 		ICacheService cache,
 		IPointsService pointsService,
-		IWikiPages wikiPages,
 		ITASVideoAgent tasVideoAgent,
 		IUserStore<User> store,
 		IOptions<IdentityOptions> optionsAccessor,
@@ -47,7 +44,6 @@ public class UserManager : UserManager<User>
 		_cache = cache;
 		_db = db;
 		_pointsService = pointsService;
-		_wikiPages = wikiPages;
 		_tasVideoAgent = tasVideoAgent;
 	}
 
