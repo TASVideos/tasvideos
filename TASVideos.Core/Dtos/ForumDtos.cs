@@ -20,7 +20,8 @@ public class ForumCategoryDisplayDto
 		public string Name { get; init; } = "";
 		public string? Description { get; init; }
 		public LatestPost? LastPost { get; set; }
-		public string ActivityTopics { get; set; } = "";
+		public string ActivityPostsCreated { get; set; } = "";
+		public string ActivityPostsEdited { get; set; } = "";
 	}
 }
 

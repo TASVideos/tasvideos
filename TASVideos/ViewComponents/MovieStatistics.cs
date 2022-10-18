@@ -197,12 +197,12 @@ public class MovieStatistics : ViewComponent
 				fieldHeader = "Rating";
 				statQuery = query
 					.Where(p => p.PublicationRatings.Count >= minimumVotes)
-					.OrderBy(p => p.PublicationRatings.Average(r => r.Value), true)
+					.OrderBy(p => p.PublicationRatings.Average(r => r.Value), reverse)
 					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
-						Value = Math.Round(p.PublicationRatings.Average(r => r.Value))
+						Value = Math.Round(p.PublicationRatings.Average(r => r.Value), 2, MidpointRounding.AwayFromZero)
 					});
 				break;
 			case MovieStatisticComparison.VoteCount:

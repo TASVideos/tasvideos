@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -109,7 +110,7 @@ public class SubmitModel : BasePageModel
 		_db.Submissions.Add(submission);
 		await _db.SaveChangesAsync();
 
-		await _wikiPages.Add(new WikiPage
+		await _wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",

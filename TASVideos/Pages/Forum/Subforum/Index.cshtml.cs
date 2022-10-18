@@ -30,7 +30,7 @@ public class IndexModel : BasePageModel
 	public int Id { get; set; }
 
 	public ForumDisplayModel Forum { get; set; } = new();
-	public Dictionary<int, DateTime> ActivityTopics { get; set; } = new();
+	public Dictionary<int, (string, string)> ActivityTopics { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -57,18 +57,18 @@ public class IndexModel : BasePageModel
 			{
 				Id = ft.Id,
 				Title = ft.Title,
-				CreateUserName = ft.CreateUserName,
+				CreateUserName = ft.Poster!.UserName,
 				CreateTimestamp = ft.CreateTimestamp,
 				Type = ft.Type,
 				IsLocked = ft.IsLocked,
 				PostCount = ft.ForumPosts.Count,
-				LastPost = ft.ForumPosts.SingleOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
+				LastPost = ft.ForumPosts.FirstOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
 			})
 			.OrderByDescending(ft => ft.Type)
 			.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
 			.PageOf(Search);
 
-		ActivityTopics = await _forumService.GetTopicsWithActivity(Id) ?? new Dictionary<int, DateTime>();
+		ActivityTopics = await _forumService.GetPostActivityOfSubforum(Id);
 
 		return Page();
 	}

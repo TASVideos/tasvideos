@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
@@ -11,12 +10,10 @@ namespace TASVideos.ViewComponents;
 public class GameSubPages : ViewComponent
 {
 	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
 
-	public GameSubPages(ApplicationDbContext db, IWikiPages wikiPages)
+	public GameSubPages(ApplicationDbContext db)
 	{
 		_db = db;
-		_wikiPages = wikiPages;
 	}
 
 	public async Task<IViewComponentResult> InvokeAsync()
@@ -31,7 +28,7 @@ public class GameSubPages : ViewComponent
 		var systems = await _db.GameSystems.ToListAsync();
 		var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-		var pages = _wikiPages.Query
+		var pages = _db.WikiPages
 			.ThatAreNotDeleted()
 			.WithNoChildren()
 			.Where(wp => gameResourceSystems.Contains(wp.PageName))

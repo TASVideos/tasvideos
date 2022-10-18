@@ -81,7 +81,7 @@ internal class TASVideoAgent : ITASVideoAgent
 			ForumConstants.WorkBenchForumId,
 			topic.Id,
 			new LatestPost(post.Id, post.CreateTimestamp, SiteGlobalConstants.TASVideoAgent));
-		_forumService.CacheNewPostActivity(post.ForumId, topic.Id, post.CreateTimestamp);
+		_forumService.CacheNewPostActivity(post.ForumId, topic.Id, post.Id, post.CreateTimestamp);
 
 		return topic.Id;
 	}
@@ -118,6 +118,9 @@ internal class TASVideoAgent : ITASVideoAgent
 				PosterMood = ForumPostMood.Happy
 			});
 			await _db.SaveChangesAsync();
+
+			_forumService.ClearLatestPostCache();
+			_forumService.ClearTopicActivityCache();
 		}
 	}
 
@@ -153,6 +156,9 @@ internal class TASVideoAgent : ITASVideoAgent
 				PosterMood = ForumPostMood.Puzzled
 			});
 			await _db.SaveChangesAsync();
+
+			_forumService.ClearLatestPostCache();
+			_forumService.ClearTopicActivityCache();
 		}
 	}
 

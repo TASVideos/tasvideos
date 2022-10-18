@@ -43,7 +43,7 @@
 </form>
 
 <partial name="_Diff" model="@((Html.IdFor(m => m.PageToEdit.OriginalMarkup), Html.IdFor(m => m.PageToEdit.Markup)))" />
-<partial name="_PreviewWindow" model="@(("PageToEdit_Markup", "/Wiki/Preview?Id=" + Model.Id))" />
+<partial name="_PreviewWindow" model="@(("PageToEdit_Markup", "/Wiki/Preview?Id=" + Model.Path))" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
