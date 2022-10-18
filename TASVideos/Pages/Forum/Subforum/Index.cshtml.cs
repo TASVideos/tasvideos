@@ -62,10 +62,18 @@ public class IndexModel : BasePageModel
 				Type = ft.Type,
 				IsLocked = ft.IsLocked,
 				PostCount = ft.ForumPosts.Count,
-				LastPost = ft.ForumPosts.FirstOrDefault(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
+				LastPost = ft.ForumPosts
+					.Where(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
+					.Select(fp => new ForumDisplayModel.Todo
+					{
+						Id = fp.Id,
+						CreateTimestamp = fp.CreateTimestamp,
+						PosterName = fp.Poster!.UserName
+					})
+					.FirstOrDefault()
 			})
 			.OrderByDescending(ft => ft.Type)
-			.ThenByDescending(ft => ft.LastPost != null ? ft.LastPost.Id : 0)
+			.ThenByDescending(ft => ft.LastPost!.Id) // The database does not enforce it, but we can assume a topic will always have at least one post
 			.PageOf(Search);
 
 		ActivityTopics = await _forumService.GetPostActivityOfSubforum(Id);
