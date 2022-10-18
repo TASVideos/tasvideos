@@ -614,7 +614,7 @@ public class WikiPagesTests
 		var origPage = new WikiPage { PageName = origPageName, Markup = $"[{origLink}]", Author = entry.Entity, AuthorId = entry.Entity.Id };
 
 		_db.WikiPages.Add(origPage);
-		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink});
+		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = origPageName, Referral = origLink });
 		await _db.SaveChangesAsync();
 		_cache.Set(origPageName, origPage.ToWikiResult());
 
@@ -722,7 +722,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task MoveAll_MultiplePages()
 	{
-		var entry = _db.Users.Add(new User{ Id = 1 });
+		var entry = _db.Users.Add(new User { Id = 1 });
 		const string existingPageName = "ExistingPage";
 		const string newPageName = "NewPageName";
 		const string subPage = "Sub";
