@@ -64,7 +64,7 @@ public class IndexModel : BasePageModel
 				PostCount = ft.ForumPosts.Count,
 				LastPost = ft.ForumPosts
 					.Where(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
-					.Select(fp => new ForumDisplayModel.Todo
+					.Select(fp => new ForumDisplayModel.LastPostEntry
 					{
 						Id = fp.Id,
 						CreateTimestamp = fp.CreateTimestamp,

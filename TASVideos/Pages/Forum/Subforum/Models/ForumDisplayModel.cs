@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
 
@@ -39,13 +38,13 @@ public class ForumDisplayModel
 		public bool IsLocked { get; set; }
 
 		[TableIgnore]
-		public Todo? LastPost { get; set; }
+		public LastPostEntry? LastPost { get; set; }
 
 		[DisplayName("Last Post")]
 		public string? Dummy { get; set; }
 	}
 
-	public class Todo
+	public class LastPostEntry
 	{
 		public int Id { get; set; }
 		public string? PosterName { get; set; }
