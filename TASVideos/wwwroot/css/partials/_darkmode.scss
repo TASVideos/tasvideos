@@ -112,10 +112,3 @@ body {
 	}
 }
 
-.btn-info {
-	color: var(--bs-dark);
-
-	.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:focus, &:active, &:hover, &:active:focus, .show > &.dropdown-toggle {
-		color: var(--bs-dark);
-	}
-}
