@@ -176,7 +176,6 @@ public class RateModel : BasePageModel
 				{
 					PublicationId = id,
 					UserId = userId,
-					Type = PublicationRatingType.Entertainment,
 					Value = Math.Round(value.Value, 1)
 				});
 			}

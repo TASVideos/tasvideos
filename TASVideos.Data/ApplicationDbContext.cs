@@ -355,9 +355,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<PublicationRating>(entity =>
 		{
-			entity.HasKey(e => new { e.UserId, e.PublicationId, e.Type });
+			entity.HasKey(e => new { e.UserId, e.PublicationId });
 			entity.HasIndex(e => e.PublicationId);
-			entity.HasIndex(e => new { e.UserId, e.PublicationId, e.Type })
+			entity.HasIndex(e => new { e.UserId, e.PublicationId })
 				.IsUnique();
 		});
 
