@@ -31,6 +31,7 @@ public class TestDbContext : ApplicationDbContext
 		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
 			.UseInMemoryDatabase("TestDb")
 			.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
+			.EnableSensitiveDataLogging()
 			.Options;
 
 		var testHttpContext = new TestHttpContextAccessor();
