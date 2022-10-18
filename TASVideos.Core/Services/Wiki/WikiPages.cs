@@ -4,17 +4,43 @@ using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.Core.Services;
+namespace TASVideos.Core.Services.Wiki;
+
+public class WikiCreateRequest
+{
+	public string PageName { get; init; } = "";
+	public string Markup { get; init; } = "";
+	public string? RevisionMessage { get; init; }
+	public int AuthorId { get; init; }
+	public bool MinorEdit { get; init; } = false;
+	public DateTime CreateTimestamp { get; init; } = DateTime.UtcNow;
+}
+
+public class WikiResult : IWikiPage
+{
+	private string _pageName = "";
+
+	public string PageName { get => _pageName; init => _pageName = value; }
+	public string Markup { get; init; } = "";
+	public int Revision { get; init; }
+	public string? RevisionMessage { get; init; }
+	public int? AuthorId { get; init; }
+	public string? AuthorName { get; init; }
+	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
+	public DateTime CreateTimestamp { get; init; }
+	public bool MinorEdit { get; init; }
+
+	internal int? ChildId { get; set; }
+	internal bool IsDeleted { get; set; }
+
+	internal void SetPageName(string newPageName)
+	{
+		_pageName = newPageName;
+	}
+}
 
 public interface IWikiPages
 {
-	/// <summary>
-	/// Gets a queryable for doing dynamic select statements.
-	/// Note that this this should be avoided in favor of other methods
-	/// when possible since this property does not take advantage of caching
-	/// </summary>
-	IQueryable<WikiPage> Query { get; }
-
 	/// <summary>
 	/// Returns whether or not any revision of the given page exists
 	/// </summary>
@@ -26,20 +52,14 @@ public interface IWikiPages
 	/// Else the latest revision is returned
 	/// </summary>
 	/// <returns>A model representing the Wiki page if it exists else null</returns>
-	ValueTask<WikiPage?> Page(string? pageName, int? revisionId = null);
-
-	/// <summary>
-	/// Returns details about a Wiki page with the given id
-	/// </summary>
-	/// <returns>A model representing the Wiki page if it exists else null</returns>
-	Task<WikiPage?> Revision(int dbId);
+	ValueTask<IWikiPage?> Page(string? pageName, int? revisionId = null);
 
 	/// <summary>
 	/// Creates a new revision of a wiki page.
 	/// If the create timestamp is less than the latest revision, the revision will nto be added
 	/// </summary>
-	/// <return>true if the revision as successfully added, false if it was unable to add</return>
-	Task<bool> Add(WikiPage revision);
+	/// <return>The resulting wiki page revision if successfully added, null if it was unable to add</return>
+	Task<IWikiPage?> Add(WikiCreateRequest addRequest);
 
 	/// <summary>
 	/// Renames the given wiki page to the destination name
@@ -49,6 +69,11 @@ public interface IWikiPages
 	/// <returns>Whether or not the move was successful.
 	/// If false, a conflict was detected and no data was modified</returns>
 	Task<bool> Move(string originalName, string destinationName);
+
+	/// <summary>
+	/// Moves the given page and all subpages as well
+	/// </summary>
+	Task<bool> MoveAll(string originalName, string destinationName);
 
 	/// <summary>
 	/// Performs a soft delete on all revisions of the given page name,
@@ -107,13 +132,11 @@ internal class WikiPages : IWikiPages
 		_cache = cache;
 	}
 
-	public IQueryable<WikiPage> Query => _db.WikiPages.AsQueryable();
-
-	private WikiPage? this[string pageName]
+	private WikiResult? this[string pageName]
 	{
 		get
 		{
-			_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiPage page);
+			_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiResult page);
 			return page;
 		}
 
@@ -172,9 +195,10 @@ internal class WikiPages : IWikiPages
 		}
 
 		var page = await query
+			.ToWikiResult()
 			.SingleOrDefaultAsync(wp => wp.PageName == pageName);
 
-		if (page.IsCurrent())
+		if (page is not null && page.IsCurrent())
 		{
 			this[pageName] = page;
 		}
@@ -182,7 +206,7 @@ internal class WikiPages : IWikiPages
 		return page is not null;
 	}
 
-	public async ValueTask<WikiPage?> Page(string? pageName, int? revisionId = null)
+	public async ValueTask<IWikiPage?> Page(string? pageName, int? revisionId = null)
 	{
 		if (string.IsNullOrWhiteSpace(pageName))
 		{
@@ -191,7 +215,7 @@ internal class WikiPages : IWikiPages
 
 		pageName = pageName.Trim('/');
 
-		WikiPage? page = null;
+		WikiResult? page = null;
 		if (!revisionId.HasValue)
 		{
 			page = this[pageName];
@@ -206,11 +230,12 @@ internal class WikiPages : IWikiPages
 			.ForPage(pageName)
 			.ThatAreNotDeleted()
 			.OrderByDescending(wp => wp.Revision)
+			.ToWikiResult()
 			.FirstOrDefaultAsync(w => revisionId != null
 				? w.Revision == revisionId
 				: w.ChildId == null);
 
-		if (page.IsCurrent())
+		if (page is not null && page.IsCurrent())
 		{
 			this[pageName] = page;
 		}
@@ -218,68 +243,63 @@ internal class WikiPages : IWikiPages
 		return page;
 	}
 
-	public async Task<WikiPage?> Revision(int dbId)
+	public async Task<IWikiPage?> Add(WikiCreateRequest addRequest)
 	{
-		var page = await _db.WikiPages
-			.ThatAreNotDeleted()
-			.FirstOrDefaultAsync(w => w.Id == dbId);
-
-		if (page.IsCurrent())
+		if (string.IsNullOrWhiteSpace(addRequest.PageName))
 		{
-			this[page!.PageName] = page;
-		}
-
-		return page;
-	}
-
-	public async Task<bool> Add(WikiPage revision)
-	{
-		if (string.IsNullOrWhiteSpace(revision.PageName))
-		{
-			throw new InvalidOperationException($"{nameof(revision.PageName)} must have a value.");
+			throw new InvalidOperationException($"{nameof(addRequest.PageName)} must have a value.");
 		}
 
 		var currentRevision = await _db.WikiPages
-			.ForPage(revision.PageName)
+			.ForPage(addRequest.PageName)
 			.ThatAreNotDeleted()
 			.WithNoChildren()
 			.SingleOrDefaultAsync();
 
-		if (revision.CreateTimestamp != DateTime.MinValue
+		if (addRequest.CreateTimestamp != DateTime.MinValue
 			&& currentRevision is not null
-			&& revision.CreateTimestamp < currentRevision.CreateTimestamp)
+			&& addRequest.CreateTimestamp < currentRevision.CreateTimestamp)
 		{
-			return false;
+			return null;
 		}
 
-		revision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
-		_db.WikiPages.Add(revision);
+		var author = await _db.Users.SingleOrDefaultAsync(u => u.Id == addRequest.AuthorId);
+		if (author is null)
+		{
+			throw new InvalidOperationException($"A user with the id of {addRequest.AuthorId}");
+		}
+
+		var newRevision = addRequest.ToWikiPage(author);
+
+		newRevision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
+		_db.WikiPages.Add(newRevision);
 
 		if (currentRevision is not null)
 		{
-			currentRevision.Child = revision;
+			currentRevision.Child = newRevision;
 
 			// We can assume the "current" revision is the latest
 			// We might have a deleted revision after it
 			var maxRevision = await _db.WikiPages
-				.ForPage(revision.PageName)
+				.ForPage(addRequest.PageName)
 				.MaxAsync(r => r.Revision);
 
-			revision.Revision = maxRevision + 1;
+			newRevision.Revision = maxRevision + 1;
 		}
 
 		try
 		{
-			await GenerateReferrals(revision.PageName, revision.Markup);
+			await GenerateReferrals(addRequest.PageName, addRequest.Markup);
 		}
 		catch (DbUpdateConcurrencyException)
 		{
-			return false;
+			return null;
 		}
 
-		ClearCache(revision.PageName);
-		this[revision.PageName] = revision;
-		return true;
+		ClearCache(addRequest.PageName);
+		var result = newRevision.ToWikiResult();
+		this[addRequest.PageName] = result;
+		return result;
 	}
 
 	public async Task<bool> Move(string originalName, string destinationName)
@@ -341,11 +361,33 @@ internal class WikiPages : IWikiPages
 		if (cachedRevision is not null)
 		{
 			RemovePageFromCache(originalName);
-			cachedRevision.PageName = destinationName;
+			((WikiResult)cachedRevision).SetPageName(destinationName);
 			_cache.Set(destinationName, cachedRevision);
 		}
 
 		return true;
+	}
+
+	public async Task<bool> MoveAll(string originalName, string destinationName)
+	{
+		var pagesToMove = await _db.WikiPages
+			.Where(wp => wp.PageName.StartsWith(originalName))
+			.WithNoChildren()
+			.ToListAsync();
+		bool allSucceeded = true;
+		foreach (var page in pagesToMove)
+		{
+			var oldPage = page.PageName;
+			var newPage = destinationName + page.PageName[originalName.Length..];
+			var result = await Move(oldPage, newPage);
+
+			if (!result)
+			{
+				allSucceeded = false;
+			}
+		}
+
+		return allSucceeded;
 	}
 
 	public async Task<int> Delete(string pageName)
@@ -407,7 +449,7 @@ internal class WikiPages : IWikiPages
 			wikiPage.IsDeleted = true;
 
 			// Update referrers if latest revision
-			if (wikiPage.Child == null)
+			if (wikiPage.Child is null)
 			{
 				var referrers = await _db.WikiReferrals
 					.ForPage(pageName)
@@ -422,6 +464,7 @@ internal class WikiPages : IWikiPages
 			{
 				// Set the previous page as current, if there is one
 				var newCurrent = _db.WikiPages
+					.Include(wp => wp.Author)
 					.ThatAreNotDeleted()
 					.ForPage(pageName)
 					.OrderByDescending(wp => wp.Revision)
@@ -430,7 +473,7 @@ internal class WikiPages : IWikiPages
 				if (newCurrent is not null)
 				{
 					newCurrent.ChildId = null;
-					this[pageName] = newCurrent;
+					this[pageName] = newCurrent.ToWikiResult();
 					await GenerateReferrals(pageName, newCurrent.Markup);
 				}
 			}
@@ -479,7 +522,7 @@ internal class WikiPages : IWikiPages
 			}
 
 			ClearCache(pageName);
-			this[pageName] = current;
+			this[pageName] = current.ToWikiResult();
 		}
 
 		return true;
@@ -530,43 +573,72 @@ public static class WikiPageExtensions
 	/// Returns a System page with the given page suffix
 	/// <example>SystemPage("Languages") will return the page System/Languages</example>
 	/// </summary>
-	public static ValueTask<WikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
+	public static ValueTask<IWikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
 	{
 		return pages.Page("System/" + pageName, revisionId);
 	}
 
-	/// <summary>
-	/// Moves the given page and all subpages as well
-	/// </summary>
-	public static async Task<bool> MoveAll(this IWikiPages pages, string originalName, string destinationName)
-	{
-		var pagesToMove = await pages.Query
-			.Where(wp => wp.PageName.StartsWith(originalName))
-			.WithNoChildren()
-			.ToListAsync();
-		bool allSucceeded = true;
-		foreach (var page in pagesToMove)
-		{
-			var oldPage = page.PageName;
-			var newPage = destinationName + page.PageName[originalName.Length..];
-			var result = await pages.Move(oldPage, newPage);
-
-			if (!result)
-			{
-				allSucceeded = false;
-			}
-		}
-
-		return allSucceeded;
-	}
-
-	public static async Task<WikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
+	public static async Task<IWikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
 	{
 		return await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
 	}
 
-	public static async Task<WikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
+	public static async Task<IWikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
 	{
 		return await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
+	}
+
+	public static WikiPage ToWikiPage(this WikiCreateRequest revision, User user)
+	{
+		return new WikiPage
+		{
+			PageName = revision.PageName,
+			Markup = revision.Markup,
+			RevisionMessage = revision.RevisionMessage,
+			AuthorId = revision.AuthorId,
+			CreateTimestamp = revision.CreateTimestamp,
+			MinorEdit = revision.MinorEdit,
+			Revision = 1,
+			Author = user
+		};
+	}
+
+	public static IQueryable<WikiResult> ToWikiResult(this IQueryable<WikiPage> query)
+	{
+		return query.Select(wp => new WikiResult
+		{
+			PageName = wp.PageName,
+			Markup = wp.Markup,
+			Revision = wp.Revision,
+			RevisionMessage = wp.RevisionMessage,
+			AuthorId = wp.AuthorId,
+			AuthorName = wp.Author!.UserName,
+			CreateTimestamp = wp.CreateTimestamp,
+			MinorEdit = wp.MinorEdit,
+			ChildId = wp.ChildId,
+			IsDeleted = wp.IsDeleted
+		});
+	}
+
+	public static WikiResult ToWikiResult(this WikiPage wp)
+	{
+		if (wp.Author is null)
+		{
+			throw new ArgumentNullException($"{nameof(wp.Author)} cannot be null.");
+		}
+
+		return new WikiResult
+		{
+			PageName = wp.PageName,
+			Markup = wp.Markup,
+			Revision = wp.Revision,
+			RevisionMessage = wp.RevisionMessage,
+			AuthorId = wp.AuthorId,
+			AuthorName = wp.Author.UserName,
+			CreateTimestamp = wp.CreateTimestamp,
+			MinorEdit = wp.MinorEdit,
+			ChildId = wp.ChildId,
+			IsDeleted = wp.IsDeleted
+		};
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Extensions;
@@ -121,17 +122,17 @@ public static class WikiHelper
 			.First();
 	}
 
-	public static bool IsHomePage(this WikiPage page)
+	public static bool IsHomePage(this IWikiPage page)
 	{
 		return IsHomePage(page.PageName);
 	}
 
-	public static bool IsSystemPage(this WikiPage page)
+	public static bool IsSystemPage(this IWikiPage page)
 	{
 		return IsSystemPage(page.PageName);
 	}
 
-	public static bool IsGameResourcesPage(this WikiPage page)
+	public static bool IsGameResourcesPage(this IWikiPage page)
 	{
 		return IsGameResourcesPage(page.PageName);
 	}

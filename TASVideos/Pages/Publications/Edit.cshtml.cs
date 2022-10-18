@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -242,7 +243,7 @@ public class EditModel : BasePageModel
 
 		if (model.Markup != existingWikiPage!.Markup)
 		{
-			await _wikiPages.Add(new WikiPage
+			await _wikiPages.Add(new WikiCreateRequest
 			{
 				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,

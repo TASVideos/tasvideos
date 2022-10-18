@@ -228,13 +228,6 @@ public class WikiPageExtensionTests
 	#region IsCurrent
 
 	[TestMethod]
-	public void IsCurrent_NullSafe()
-	{
-		var actual = ((WikiPage?)null).IsCurrent();
-		Assert.IsFalse(actual);
-	}
-
-	[TestMethod]
 	public void IsCurrent_Current_ReturnsTrue()
 	{
 		var actual = new WikiPage { ChildId = null, IsDeleted = false }.IsCurrent();

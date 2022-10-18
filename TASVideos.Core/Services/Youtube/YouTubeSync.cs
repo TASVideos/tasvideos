@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.HttpClientExtensions;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
@@ -275,7 +276,7 @@ public record YoutubeVideo(
 	string Url,
 	string? UrlDisplayName,
 	string Title,
-	WikiPage WikiPage,
+	IWikiPage WikiPage,
 	string SystemCode,
 	IEnumerable<string> Authors,
 	int? ObsoletedBy)

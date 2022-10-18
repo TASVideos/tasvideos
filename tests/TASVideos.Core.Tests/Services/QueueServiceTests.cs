@@ -1,4 +1,5 @@
 ﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
@@ -571,7 +572,7 @@ public class QueueServiceTests
 			.Setup(m => m.IsYoutubeUrl(It.IsAny<string>()))
 			.Returns(true);
 
-		var wikiEntry = _db.WikiPages.Add(new WikiPage { Markup = "Test" });
+		_db.WikiPages.Add(new WikiPage { Markup = "Test" });
 		var systemEntry = _db.GameSystems.Add(new GameSystem { Code = "Test" });
 		var gameEntry = _db.Games.Add(new Game());
 		var authorEntry = _db.Users.Add(new User { UserName = "Author" });

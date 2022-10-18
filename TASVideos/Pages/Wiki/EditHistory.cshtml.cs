@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
 
@@ -10,11 +10,11 @@ namespace TASVideos.Pages.Wiki;
 [AllowAnonymous]
 public class EditHistoryModel : BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly ApplicationDbContext _db;
 
-	public EditHistoryModel(IWikiPages wikiPages)
+	public EditHistoryModel(ApplicationDbContext db)
 	{
-		_wikiPages = wikiPages;
+		_db = db;
 	}
 
 	[FromRoute]
@@ -24,7 +24,7 @@ public class EditHistoryModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		History = await _wikiPages.Query
+		History = await _db.WikiPages
 			.ThatAreNotDeleted()
 			.CreatedBy(UserName)
 			.ByMostRecent()

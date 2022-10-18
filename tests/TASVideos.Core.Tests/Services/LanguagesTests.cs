@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
@@ -9,13 +9,15 @@ public class LanguagesTests
 {
 	private const string SystemLanguageMarkup = "FR:French,ES:Español";
 
+	private readonly TestDbContext _db;
 	private readonly Mock<IWikiPages> _wikiPages;
 	private readonly Languages _languages;
 
 	public LanguagesTests()
 	{
+		_db = TestDbContext.Create();
 		_wikiPages = new Mock<IWikiPages>(MockBehavior.Strict);
-		_languages = new Languages(_wikiPages.Object, new NoCacheService());
+		_languages = new Languages(_db, _wikiPages.Object, new NoCacheService());
 	}
 
 	[TestMethod]
@@ -40,7 +42,7 @@ public class LanguagesTests
 	{
 		_wikiPages
 			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync((WikiPage?)null);
+			.ReturnsAsync((IWikiPage?)null);
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -53,7 +55,7 @@ public class LanguagesTests
 	{
 		_wikiPages
 			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = "" });
+			.ReturnsAsync(new WikiResult { Markup = "" });
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -67,7 +69,7 @@ public class LanguagesTests
 		var junk = "RandomText";
 		_wikiPages
 			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = junk });
+			.ReturnsAsync(new WikiResult { Markup = junk });
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -100,7 +102,7 @@ public class LanguagesTests
 				ES : Español , : ";
 		_wikiPages
 			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = systemLanguageMarkup });
+			.ReturnsAsync(new WikiResult { Markup = systemLanguageMarkup });
 
 		var actual = await _languages.AvailableLanguages();
 		Assert.IsNotNull(actual);
@@ -115,7 +117,6 @@ public class LanguagesTests
 	{
 		const string page = "TestPage";
 		MockStandardMarkup();
-		_wikiPages.Setup(m => m.Query).Returns(Array.Empty<WikiPage>().AsAsyncQueryable());
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
@@ -127,11 +128,10 @@ public class LanguagesTests
 	{
 		const string page = "TestPage";
 		MockStandardMarkup();
-		_wikiPages.Setup(m => m.Query).Returns(new WikiPage[]
-		{
-			new() { PageName = $"FR/{page}" },
-			new() { PageName = $"ES/{page}" }
-		}.AsAsyncQueryable());
+		_db.WikiPages.AddRange(
+			new WikiPage { PageName = $"FR/{page}" },
+			new WikiPage { PageName = $"ES/{page}" });
+		await _db.SaveChangesAsync();
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
@@ -146,12 +146,11 @@ public class LanguagesTests
 		const string translation = lang + "/" + mainPage;
 		MockStandardMarkup();
 
-		_wikiPages.Setup(m => m.Query).Returns(new WikiPage[]
-		{
-			new() { PageName = mainPage },
-			new() { PageName = translation },
-			new() { PageName = $"ES/{mainPage}" }
-		}.AsAsyncQueryable());
+		_db.WikiPages.AddRange(
+			new WikiPage { PageName = mainPage },
+			new WikiPage { PageName = translation },
+			new WikiPage { PageName = $"ES/{mainPage}" });
+		await _db.SaveChangesAsync();
 
 		var result = await _languages.GetTranslations(translation);
 		Assert.IsNotNull(result);
@@ -165,6 +164,6 @@ public class LanguagesTests
 	{
 		_wikiPages
 			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-			.ReturnsAsync(new WikiPage { Markup = SystemLanguageMarkup });
+			.ReturnsAsync(new WikiResult { Markup = SystemLanguageMarkup });
 	}
 }

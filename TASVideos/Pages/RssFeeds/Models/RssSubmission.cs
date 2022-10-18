@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.RssFeeds.Models;
 
@@ -8,5 +8,5 @@ public class RssSubmission
 	public int? TopicId { get; init; }
 	public DateTime CreateTimestamp { get; init; }
 	public string Title { get; init; } = "";
-	public WikiPage Wiki { get; set; } = new();
+	public IWikiPage Wiki { get; set; } = null!;
 }
