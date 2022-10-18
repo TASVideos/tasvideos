@@ -30,8 +30,8 @@ public class TASVideosGrueTests
 	[TestMethod]
 	public async Task PostSubmissionRejection_TopicCreated()
 	{
-		var topicId = 1;
-		var forumId = 1;
+		const int topicId = 1;
+		const int forumId = 1;
 		var topic = _db.ForumTopics.Add(new ForumTopic
 		{
 			Id = topicId,
@@ -52,8 +52,6 @@ public class TASVideosGrueTests
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, topic.Entity.ForumId);
 		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, post.Entity.ForumId);
-		Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.CreateUserName);
-		Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);
 		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, actual.ForumId);
 		Assert.IsFalse(actual.EnableHtml);
@@ -78,8 +76,6 @@ public class TASVideosGrueTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, topic.Entity.ForumId);
-		Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.CreateUserName);
-		Assert.AreEqual(SiteGlobalConstants.TASVideosGrue, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsFalse(actual.EnableBbCode);

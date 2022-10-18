@@ -165,18 +165,3 @@ UPDATE public.users
 		time_zone_iD = 'UTC';
 
 TRUNCATE TABLE public.user_claims;
-
---Update call tracking columns, we do not want to expose these
-DO $$
-DECLARE execute_query text;
-BEGIN
-	DROP TABLE IF EXISTS _tracking_columns;
-	CREATE TEMPORARY TABLE _tracking_columns (col citext, tab citext);
-	INSERT INTO _tracking_columns
-	SELECT
-		column_name, table_name
-	FROM information_schema.columns
-	WHERE column_name = 'create_user_name';
-	execute_query := (SELECT string_agg('UPDATE ' || tab || ' SET ' || col || ' = ''a''', ';') FROM _tracking_columns);
-	EXECUTE(execute_query);
-END $$;

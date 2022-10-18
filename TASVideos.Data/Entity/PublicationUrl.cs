@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TASVideos.Data.Entity;
+﻿namespace TASVideos.Data.Entity;
 
 public enum PublicationUrlType { Streaming, Mirror }
 
-[ExcludeFromHistory]
 public class PublicationUrl : BaseEntity
 {
 	public int Id { get; set; }

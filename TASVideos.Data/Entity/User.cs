@@ -11,7 +11,6 @@ public enum UserPreference
 	Auto = 0, Always, Never
 }
 
-[ExcludeFromHistory]
 public class User : IdentityUser<int>, ITrackable
 {
 	public DateTime? LastLoggedInTimeStamp { get; set; }
@@ -21,9 +20,7 @@ public class User : IdentityUser<int>, ITrackable
 	public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 	public DateTime CreateTimestamp { get; set; } = DateTime.UtcNow;
-	public string? CreateUserName { get; set; }
 	public DateTime LastUpdateTimestamp { get; set; } = DateTime.UtcNow;
-	public string? LastUpdateUserName { get; set; }
 
 	[StringLength(250)]
 	public string? Avatar { get; set; }

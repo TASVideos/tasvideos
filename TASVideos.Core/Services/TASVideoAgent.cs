@@ -32,7 +32,6 @@ internal class TASVideoAgent : ITASVideoAgent
 	{
 		var poll = new ForumPoll
 		{
-			CreateUserName = SiteGlobalConstants.TASVideoAgent,
 			Question = SiteGlobalConstants.PollQuestion,
 			PollOptions = new ForumPollOption[]
 			{
@@ -45,8 +44,6 @@ internal class TASVideoAgent : ITASVideoAgent
 		// Create Topic in workbench
 		var topic = new ForumTopic
 		{
-			CreateUserName = SiteGlobalConstants.TASVideoAgent,
-			LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 			ForumId = ForumConstants.WorkBenchForumId,
 			Title = title,
 			PosterId = SiteGlobalConstants.TASVideoAgentId,
@@ -57,8 +54,6 @@ internal class TASVideoAgent : ITASVideoAgent
 		// Create first post
 		var post = new ForumPost
 		{
-			CreateUserName = SiteGlobalConstants.TASVideoAgent,
-			LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 			Topic = topic,
 			ForumId = ForumConstants.WorkBenchForumId,
 			PosterId = SiteGlobalConstants.TASVideoAgentId,
@@ -74,7 +69,6 @@ internal class TASVideoAgent : ITASVideoAgent
 		await _db.SaveChangesAsync();
 
 		poll.TopicId = topic.Id;
-		poll.LastUpdateUserName = SiteGlobalConstants.TASVideoAgent; // Necessary for LastUpdatedUser to not change
 		await _db.SaveChangesAsync();
 
 		_forumService.CacheLatestPost(
@@ -108,8 +102,6 @@ internal class TASVideoAgent : ITASVideoAgent
 			{
 				TopicId = topic.Id,
 				ForumId = topic.ForumId,
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 				PosterId = SiteGlobalConstants.TASVideoAgentId,
 				EnableBbCode = true,
 				EnableHtml = false,
@@ -146,8 +138,6 @@ internal class TASVideoAgent : ITASVideoAgent
 			{
 				TopicId = topic.Id,
 				ForumId = topic.ForumId,
-				CreateUserName = SiteGlobalConstants.TASVideoAgent,
-				LastUpdateUserName = SiteGlobalConstants.TASVideoAgent,
 				PosterId = SiteGlobalConstants.TASVideoAgentId,
 				EnableBbCode = true,
 				EnableHtml = false,

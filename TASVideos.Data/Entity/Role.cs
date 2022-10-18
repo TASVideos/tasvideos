@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class Role : IdentityRole<int>, ITrackable
 {
 	/// <summary>
@@ -29,10 +27,8 @@ public class Role : IdentityRole<int>, ITrackable
 	public bool AutoAssignPublications { get; set; }
 
 	public DateTime CreateTimestamp { get; set; }
-	public string? CreateUserName { get; set; }
 
 	public DateTime LastUpdateTimestamp { get; set; }
-	public string? LastUpdateUserName { get; set; }
 
 	public virtual ICollection<RolePermission> RolePermission { get; set; } = new HashSet<RolePermission>();
 	public virtual ICollection<UserRole> UserRole { get; set; } = new HashSet<UserRole>();

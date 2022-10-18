@@ -1,9 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿namespace TASVideos.Data.Entity;
 
-namespace TASVideos.Data.Entity;
-
-[ExcludeFromHistory]
-public class Flag : BaseEntity
+public class Flag
 {
 	public int Id { get; set; }
 

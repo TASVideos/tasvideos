@@ -5,23 +5,16 @@ namespace TASVideos.Data.Entity;
 public interface ITrackable
 {
 	DateTime CreateTimestamp { get; set; }
-	string? CreateUserName { get; set; }
-
 	DateTime LastUpdateTimestamp { get; set; }
-	string? LastUpdateUserName { get; set; }
 }
 
 public class BaseEntity : ITrackable
 {
 	[ExcludeFromHistory]
 	public DateTime CreateTimestamp { get; set; }
-	[ExcludeFromHistory]
-	public string? CreateUserName { get; set; }
 
 	[ExcludeFromHistory]
 	public DateTime LastUpdateTimestamp { get; set; }
-	[ExcludeFromHistory]
-	public string? LastUpdateUserName { get; set; }
 }
 
 public static class TrackableQueryableExtensions

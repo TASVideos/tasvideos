@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
@@ -27,7 +26,6 @@ public interface IPublicationTokens
 	int? Limit { get; }
 }
 
-[ExcludeFromHistory]
 public class Publication : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
