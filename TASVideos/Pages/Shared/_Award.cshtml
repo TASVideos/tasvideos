@@ -1,9 +1,24 @@
 ﻿@model TASVideos.Core.Services.IAwardAssignmentSummary
 @{
 	string awardName = $"{Model.ShortName}_{Model.Year.ToString()}";
+	string pageGroup = ViewContext.PageGroup();
 }
-<a href="/Awards/@Model.Year.ToString()#@(Model.ShortName)_@Model.Year" title="Award - @Model.Description"><img style="max-height: 48px;" 
+@if (pageGroup == "Users" || pageGroup == "Profile")
+{
+	<a href="/Awards/@Model.Year.ToString()#@(Model.ShortName)_@Model.Year" title="Award - @Model.Description">
+		<img style="max-height: 92px;"
+		 srcset="/awards/@(awardName).png 1x,
+		 /awards/@(awardName)-2x.png 2x,
+		 /awards/@(awardName)-4x.png 4x"
+		 src="/awards/@(awardName).png" alt="@Model.Description" loading="lazy" />
+	</a>
+}
+else {
+	<a href="/Awards/@Model.Year.ToString()#@(Model.ShortName)_@Model.Year" title="Award - @Model.Description">
+		<img style="max-height: 48px;"
 		 srcset="/awards/@(awardName).png .5x,
 		 /awards/@(awardName)-2x.png 1x,
 		 /awards/@(awardName)-4x.png 2x"
-		 src="/awards/@(awardName)-2x.png" alt="@Model.Description" loading="lazy" /></a>
+		 src="/awards/@(awardName)-2x.png" alt="@Model.Description" loading="lazy" />
+	</a>
+}
