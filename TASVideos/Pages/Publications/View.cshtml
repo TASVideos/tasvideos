@@ -24,13 +24,13 @@
 <br />
 <a asp-page="/Wiki/PageHistory"
    asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
-   class="btn btn-info text-dark btn-sm">
+   class="btn btn-info btn-sm">
 	<span class="fa fa-history"></span> Page History
 </a>
 <a
 	asp-page="/Wiki/PageHistory"
 	asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
 	asp-route-latest="true"
-	class="btn btn-info text-dark btn-sm">
+	class="btn btn-info btn-sm">
 	Latest diff
 </a>
