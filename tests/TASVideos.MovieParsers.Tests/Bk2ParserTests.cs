@@ -154,9 +154,9 @@ public class Bk2ParserTests : BaseParserTests
 	}
 
 	[TestMethod]
-	public async Task SubNes_ReportsCorrectFrameCount()
+	public async Task SubNes_LegacyReportsCorrectFrameCount()
 	{
-		var result = await _bk2Parser.Parse(Embedded("SubNes.bk2"), EmbeddedLength("SubNes.bk2"));
+		var result = await _bk2Parser.Parse(Embedded("SubNesLegacy.bk2"), EmbeddedLength("SubNesLegacy.bk2"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual("nes", result.SystemCode);
 		Assert.AreEqual(12, result.Frames);
@@ -164,9 +164,9 @@ public class Bk2ParserTests : BaseParserTests
 	}
 
 	[TestMethod]
-	public async Task SubNes_MissingVBlank_Error()
+	public async Task SubNes_LegacyMissingVBlank_Error()
 	{
-		var result = await _bk2Parser.Parse(Embedded("SubNesMissingVBlank.bk2"), EmbeddedLength("SubNesMissingVBlank.bk2"));
+		var result = await _bk2Parser.Parse(Embedded("SubNesMissingVBlankLegacy.bk2"), EmbeddedLength("SubNesMissingVBlankLegacy.bk2"));
 
 		Assert.IsFalse(result.Success);
 		Assert.IsNotNull(result.Errors);
@@ -174,9 +174,43 @@ public class Bk2ParserTests : BaseParserTests
 	}
 
 	[TestMethod]
-	public async Task SubNes_NegativeVBlank_Error()
+	public async Task SubNes_LegacyNegativeVBlank_Error()
 	{
-		var result = await _bk2Parser.Parse(Embedded("SubNesNegativeVBlank.bk2"), EmbeddedLength("SubNesNegativeVBlank.bk2"));
+		var result = await _bk2Parser.Parse(Embedded("SubNesNegativeVBlankLegacy.bk2"), EmbeddedLength("SubNesNegativeVBlankLegacy.bk2"));
+
+		Assert.IsFalse(result.Success);
+		Assert.IsNotNull(result.Errors);
+		Assert.IsTrue(result.Errors.Any());
+	}
+
+	[TestMethod]
+	public async Task SubNes_UsesCycleCount()
+	{
+		var result = await _bk2Parser.Parse(Embedded("SubNes.bk2"), EmbeddedLength("SubNes.bk2"));
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("nes", result.SystemCode);
+		Assert.AreEqual(660, result.Frames);
+		Assert.AreEqual(60, result.FrameRateOverride);
+		Assert.AreEqual(59062500, result.CycleCount);
+		AssertNoWarningsOrErrors(result);
+	}
+
+	[TestMethod]
+	public async Task SubNes_CommaSeparatorParsedCorrectly()
+	{
+		var result = await _bk2Parser.Parse(Embedded("SubNesCommaSeparatorClockRate.bk2"), EmbeddedLength("SubNesCommaSeparatorClockRate.bk2"));
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("nes", result.SystemCode);
+		Assert.AreEqual(660, result.Frames);
+		Assert.AreEqual(60, result.FrameRateOverride);
+		Assert.AreEqual(59062500, result.CycleCount);
+		AssertNoWarningsOrErrors(result);
+	}
+
+	[TestMethod]
+	public async Task SubNes_InvalidClockRate_Error()
+	{
+		var result = await _bk2Parser.Parse(Embedded("SubNesInvalidClockRate.bk2"), EmbeddedLength("SubNesInvalidClockRate.bk2"));
 
 		Assert.IsFalse(result.Success);
 		Assert.IsNotNull(result.Errors);
@@ -192,6 +226,7 @@ public class Bk2ParserTests : BaseParserTests
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(30, result.Frames);
 		Assert.AreEqual(60, result.FrameRateOverride);
+		Assert.AreEqual(1048576, result.CycleCount);
 	}
 
 	[TestMethod]
@@ -203,6 +238,7 @@ public class Bk2ParserTests : BaseParserTests
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(30, result.Frames);
 		Assert.IsNull(result.FrameRateOverride);
+		Assert.IsNull(result.CycleCount);
 	}
 
 	[TestMethod]
@@ -214,6 +250,7 @@ public class Bk2ParserTests : BaseParserTests
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(30, result.Frames);
 		Assert.IsNull(result.FrameRateOverride);
+		Assert.IsNull(result.CycleCount);
 	}
 
 	[TestMethod]
@@ -225,6 +262,7 @@ public class Bk2ParserTests : BaseParserTests
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(30, result.Frames);
 		Assert.IsNull(result.FrameRateOverride);
+		Assert.IsNull(result.CycleCount);
 	}
 
 	[TestMethod]
@@ -236,6 +274,7 @@ public class Bk2ParserTests : BaseParserTests
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(30, result.Frames);
 		Assert.AreEqual(60, result.FrameRateOverride);
+		Assert.AreEqual(2097152, result.CycleCount);
 	}
 
 	[TestMethod]

@@ -38,8 +38,11 @@
 		<EmbeddedResource Include="Bk2SampleFiles\sram.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\SubGbHawk-CycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\SubNes.bk2" />
-		<EmbeddedResource Include="Bk2SampleFiles\SubNesMissingVBlank.bk2" />
-		<EmbeddedResource Include="Bk2SampleFiles\SubNesNegativeVBlank.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesCommaSeparatorClockRate.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesInvalidClockRate.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesLegacy.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesLegacyMissingVBlank.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesLegacyNegativeVBlank.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-32x.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-A2600.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-A7800.bk2" />
