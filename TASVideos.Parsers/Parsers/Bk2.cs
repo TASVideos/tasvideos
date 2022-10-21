@@ -1,4 +1,5 @@
-﻿using TASVideos.MovieParsers.Extensions;
+﻿using System.Globalization;
+using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;
@@ -150,7 +151,7 @@ internal class Bk2 : ParserBase, IParser
 
 			vBlankCount = header.GetValueFor(Keys.VBlankCount).ToPositiveInt();
 			result.CycleCount = header.GetValueFor(Keys.CycleCount).ToPositiveLong();
-			clockRate = header.GetValueFor(Keys.ClockRate);
+			clockRate = header.GetValueFor(Keys.ClockRate).Replace(',', '.');
 			core = header.GetValueFor(Keys.Core).ToLower();
 		}
 
@@ -170,7 +171,7 @@ internal class Bk2 : ParserBase, IParser
 		{
 			if (ValidClockRates.Contains(clockRate))
 			{
-				var seconds = result.CycleCount.Value / double.Parse(clockRate);
+				var seconds = result.CycleCount.Value / double.Parse(clockRate, CultureInfo.InvariantCulture);
 				result.FrameRateOverride = result.Frames / seconds;
 			}
 			else if (CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
