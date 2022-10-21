@@ -29,14 +29,12 @@
 		<nav aria-label="breadcrumb" class="card card-header">
 			<ol class="breadcrumb m-0">
 				@{
-					var allPages = pageData.PageName.Split('/');
-					var runningPath = "";
-					foreach (var item in allPages.Take(allPages.Length - 1))
+					var allPages = pageData.PageName.SplitPathCamelCase().Split(" / ");
+					for (int i = 0; i < allPages.Length - 1; i++)
 					{
-						runningPath += $"/{item}";
-						<li class="breadcrumb-item"><a href="@runningPath">@item.SplitCamelCase()</a></li>
+						<li class="breadcrumb-item"><a href="@('/' + string.Join('/', (allPages.Take(i+1))).RemoveAllSpaces())">@allPages[i]</a></li>
 					}
-					<li class="breadcrumb-item active" aria-current="page"><h1>@allPages.Last().SplitCamelCase()</h1></li>
+					<li class="breadcrumb-item active" aria-current="page"><h1>@allPages.Last()</h1></li>
 				}
 			</ol>
 		</nav>

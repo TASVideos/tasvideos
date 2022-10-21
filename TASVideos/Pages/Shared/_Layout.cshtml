@@ -100,7 +100,7 @@
 		var title = ViewData["Title"]?.ToString();
 		if (ViewData["WikiPage"] != null)
 		{
-			title = title.SplitCamelCase();
+			title = title.SplitPathCamelCase();
 		}
 	}
 	@if (IsSectionDefined("PageTitle"))
