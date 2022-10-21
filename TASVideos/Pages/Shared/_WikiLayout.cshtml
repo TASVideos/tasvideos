@@ -7,6 +7,8 @@
 	ViewData["ActiveTab"] = WikiHelper.IsGameResourcesPage(pageData.PageName)
 		? "Game Resources"
 		: pageData.PageName;
+
+	bool isHomePage = WikiHelper.IsHomePage(pageData.PageName);
 }
 @section Header {
 	@{
@@ -31,12 +33,16 @@
 				@{
 					var allPages = pageData.PageName.Split('/');
 					var runningPath = "";
-					foreach (var item in allPages.Take(allPages.Length - 1))
+					for(int i = 0; i < allPages.Length - 1; i++) 
 					{
-						runningPath += $"/{item}";
-						<li class="breadcrumb-item"><a href="@runningPath">@item.SplitCamelCase()</a></li>
+						var item = allPages[i];
+						runningPath += $"/{allPages[i]}";
+						// Don't split usernames e.g. Home Pages/CamelCaseUser/An Example
+						var itemName = isHomePage && i == 1 ? item : item.SplitCamelCase();
+						<li class="breadcrumb-item"><a href="@runningPath">@itemName</a></li>
 					}
-					<li class="breadcrumb-item active" aria-current="page"><h1>@allPages.Last().SplitCamelCase()</h1></li>
+					var pageTitle = isHomePage && allPages.Length == 2 ? allPages.Last() : @allPages.Last().SplitCamelCase();
+					<li class="breadcrumb-item active" aria-current="page"><h1>@pageTitle</h1></li>
 				}
 			</ol>
 		</nav>

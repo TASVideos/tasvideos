@@ -51,6 +51,18 @@ public static class StringExtensions
 			: str[..limit];
 	}
 
+	public static string SplitCamelCase(this string? str, bool isHomePage)
+	{
+		if (!isHomePage || string.IsNullOrEmpty(str))
+		{
+			return SplitCamelCase(str);
+		}
+
+		// Don't split usernames on homepages
+		// Username will be in the second slot e.g. Home Pages/CamelCaseUser/An Example
+		return string.Join("/", str.Split("/").Select((item, i) => i == 1 ? item : item.SplitCamelCase()));
+	}
+
 	/// <summary>
 	/// Takes a string and adds spaces between words,
 	/// As well as forward slashes
