@@ -96,7 +96,7 @@
 			for (let activityTopic of activityTopics) {
 				let displayClass;
 				let firstPostId, firstPostDate;
-				let activityPostsCreated = JSON.parse(activityTopic.dataset.activityPostsCreated);
+				let activityPostsCreated = activityTopic.dataset.activityPostsCreated ? JSON.parse(activityTopic.dataset.activityPostsCreated) : {};
 				for (let postId in activityPostsCreated) {
 					let lastVisit = visitedPosts[postId];
 					if (!lastVisit || lastVisit < activityPostsCreated[postId]) {
@@ -108,7 +108,7 @@
 					}
 				}
 				if (!displayClass) {
-					let activityPostsEdited = JSON.parse(activityTopic.dataset.activityPostsEdited);
+					let activityPostsEdited = activityTopic.dataset.activityPostsEdited ? JSON.parse(activityTopic.dataset.activityPostsEdited) : {};
 					for (let postId in activityPostsEdited) {
 						let lastVisit = visitedPosts[postId];
 						if (!lastVisit || lastVisit < activityPostsEdited[postId]) {
@@ -132,11 +132,11 @@
 			visitedPosts = JSON.parse(visitedPosts) ?? {};
 			let activityTopics = document.getElementsByClassName('activity-topic');
 			for (let activityTopic of activityTopics) {
-				let activityPostsCreated = JSON.parse(activityTopic.dataset.activityPostsCreated);
+				let activityPostsCreated = activityTopic.dataset.activityPostsCreated ? JSON.parse(activityTopic.dataset.activityPostsCreated) : {};
 				for (let postId in activityPostsCreated) {
 					visitedPosts[postId] = currentTime;
 				}
-				let activityPostsEdited = JSON.parse(activityTopic.dataset.activityPostsEdited);
+				let activityPostsEdited = activityTopic.dataset.activityPostsEdited ? JSON.parse(activityTopic.dataset.activityPostsEdited) : {};
 				for (let postId in activityPostsEdited) {
 					visitedPosts[postId] = currentTime;
 				}

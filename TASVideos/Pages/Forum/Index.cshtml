@@ -42,7 +42,7 @@
 			for (let activitySubforum of activitySubforums) {
 				let displayClass;
 				let firstPostId, firstPostDate;
-				let activityPostsCreated = JSON.parse(activitySubforum.dataset.activityPostsCreated);
+				let activityPostsCreated = activitySubforum.dataset.activityPostsCreated ? JSON.parse(activitySubforum.dataset.activityPostsCreated) : {};
 				for (let postId in activityPostsCreated) {
 					let lastVisit = visitedPosts[postId];
 					if (!lastVisit || lastVisit < activityPostsCreated[postId]) {
@@ -54,7 +54,7 @@
 					}
 				}
 				if (!displayClass) {
-					let activityPostsEdited = JSON.parse(activitySubforum.dataset.activityPostsEdited);
+					let activityPostsEdited = activitySubforum.dataset.activityPostsEdited ? JSON.parse(activitySubforum.dataset.activityPostsEdited) : {};
 					for (let postId in activityPostsEdited) {
 						let lastVisit = visitedPosts[postId];
 						if (!lastVisit || lastVisit < activityPostsEdited[postId]) {
@@ -76,11 +76,11 @@
 			// clean up localStorage
 			let allActivityPostIds = new Set();
 			for (let activitySubforum of activitySubforums) {
-				let activityPostsCreated = JSON.parse(activitySubforum.dataset.activityPostsCreated);
+				let activityPostsCreated = activitySubforum.dataset.activityPostsCreated ? JSON.parse(activitySubforum.dataset.activityPostsCreated) : {};
 				for (let postId in activityPostsCreated) {
 					allActivityPostIds.add(postId);
 				}
-				let activityPostsEdited = JSON.parse(activitySubforum.dataset.activityPostsEdited);
+				let activityPostsEdited = activitySubforum.dataset.activityPostsEdited ? JSON.parse(activitySubforum.dataset.activityPostsEdited) : {};
 				for (let postId in activityPostsEdited) {
 					allActivityPostIds.add(postId);
 				}
@@ -93,11 +93,11 @@
 			visitedPosts = JSON.parse(visitedPosts) ?? {};
 			let activitySubforums = document.getElementsByClassName('activity-subforum');
 			for (let activitySubforum of activitySubforums) {
-				let activityPostsCreated = JSON.parse(activitySubforum.dataset.activityPostsCreated);
+				let activityPostsCreated = activitySubforum.dataset.activityPostsCreated ? JSON.parse(activitySubforum.dataset.activityPostsCreated) : {};
 				for (let postId in activityPostsCreated) {
 					visitedPosts[postId] = currentTime;
 				}
-				let activityPostsEdited = JSON.parse(activitySubforum.dataset.activityPostsEdited);
+				let activityPostsEdited = activitySubforum.dataset.activityPostsEdited ? JSON.parse(activitySubforum.dataset.activityPostsEdited) : {};
 				for (let postId in activityPostsEdited) {
 					visitedPosts[postId] = currentTime;
 				}
