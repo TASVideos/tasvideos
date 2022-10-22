@@ -35,7 +35,7 @@ public static class ModuleParamHelpers
 		TextWriter w,
 		string name,
 		MethodInfo invokeMethod,
-		IWikiPage pageData,
+		IWikiPage? pageData,
 		IReadOnlyDictionary<string, string> pp)
 	{
 		var paramObject = new Dictionary<string, object?>(StringComparer.OrdinalIgnoreCase)
