@@ -41,11 +41,6 @@ public partial class WikiMarkup : TagHelper, IWriterHelper
 
 	async Task IWriterHelper.RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 	{
-		if (PageData is null)
-		{
-			throw new ArgumentNullException($"{nameof(PageData)} cannot be null.");
-		}
-
 		var componentExists = ModuleParamHelpers.ViewComponents.TryGetValue(name, out Type? viewComponent);
 		if (!componentExists)
 		{
