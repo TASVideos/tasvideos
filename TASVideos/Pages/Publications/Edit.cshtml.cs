@@ -238,12 +238,12 @@ public class EditModel : BasePageModel
 		publication.PublicationTags.AddTags(model.SelectedTags);
 
 		await _db.SaveChangesAsync();
-
 		var existingWikiPage = await _wikiPages.PublicationPage(Id);
+		IWikiPage? pageToSync = existingWikiPage;
 
 		if (model.Markup != existingWikiPage!.Markup)
 		{
-			await _wikiPages.Add(new WikiCreateRequest
+			pageToSync = await _wikiPages.Add(new WikiCreateRequest
 			{
 				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,
@@ -264,7 +264,7 @@ public class EditModel : BasePageModel
 					url.Url!,
 					url.DisplayName,
 					publication.Title,
-					existingWikiPage,
+					pageToSync!,
 					publication.System!.Code,
 					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 					publication.ObsoletedById));
