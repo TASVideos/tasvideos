@@ -9,7 +9,7 @@
 
 	const validNames = new Set;
 	const nameLists = new Map;
-	const getCurrentValue = () => searchBoxElem.value.trim();
+	const getCurrentValue = () => searchBoxElem.value;
 
 	function maybeEnableSubmit() {
 		if (submitBtnElem) {
