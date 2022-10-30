@@ -11,6 +11,10 @@
 	var requestToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
 	var canRate = User.Has(PermissionTo.RateMovies);
 	var ratingString = Model.Rating.Unrated ? "Rate" : $"Rated {Model.Rating.Rating} / 10";
+	var temp = Model.OnlineWatchingUrls.ToList();
+	var preferredWatchUrl = temp.Count == 1
+		? temp[0]
+		: temp.FirstOrDefault(t => t.Url?.Contains("youtube") ?? false);
 }
 
 @inject IAwards _awards
@@ -114,11 +118,13 @@
 		<row class="bg-cardsecondary gx-3 py-2">
 			<div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
 				<div>
+					<a @(preferredWatchUrl != null ? $"href={preferredWatchUrl.Url}" : null)>
 					<img src="~/media/@Model.Screenshot.Path"
 						 alt="@Model.Screenshot.Description"
 						 title="@Model.Screenshot.Description"
 						 class="w-100 pixelart-image"
 						 loading="lazy" />
+					</a>
 				</div>
 				<div>
 					@foreach (var url in Model.OnlineWatchingUrls)
