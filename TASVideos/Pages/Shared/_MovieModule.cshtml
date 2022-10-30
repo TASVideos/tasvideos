@@ -86,7 +86,7 @@
 	<cardheader class="bg-cardprimary p-2">
 		<div class="gx-3 clearfix">
 			<div class="float-start" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
-				<img  class="me-1" width="18" src="/@classIconPath2X"
+				<img class="me-1" width="18" src="/@classIconPath2X"
 					srcset="/@Model.ClassIconPath .5x,
 					/@classIconPath2X 1x,
 					/@classIconPath4X 2x" />
@@ -118,7 +118,7 @@
 		<row class="bg-cardsecondary gx-3 py-2">
 			<div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
 				<div>
-					<a @(preferredWatchUrl != null ? $"href={preferredWatchUrl.Url}" : null)>
+					<a @(preferredWatchUrl != null ? $"href={preferredWatchUrl.Url} target=_blank" : null)>
 					<img src="~/media/@Model.Screenshot.Path"
 						 alt="@Model.Screenshot.Description"
 						 title="@Model.Screenshot.Description"
