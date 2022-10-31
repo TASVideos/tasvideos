@@ -89,17 +89,28 @@ internal class EmailService : IEmailService
 		}
 
 		string subject = "Topic Reply Notification - " + template.TopicTitle;
-		string message = $@"Hello,
-
-<a href=""{template.BaseUrl}/Forum/Posts/{template.PostId}"">A new post</a> has been sent to the {siteName} forum topic <a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}"">{template.TopicTitle}</a> since your last visit.
-
-Notification emails for this topic will not be sent until you visit it.
+		string message = $@"<p>
+    Hello,<br>
+    <br>
+    The {siteName} forum topic ""{template.TopicTitle}"" has received a new post since your last visit.
+</p>
+<p>
+    <a href=""{template.BaseUrl}/Forum/Posts/{template.PostId}"">{template.BaseUrl}/Forum/Posts/{template.PostId}</a>
+</p>
+<p>
+    No more notification emails for this topic will be sent until you visit it.<br>
+    If the post was moved or deleted you can find the topic <a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}"">here</a>.
+</p>
 <hr />
-<p><a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}?handler=Unwatch"">Stop this topic from notifying you</a></p>
-<p>To stop all topic notification emails, follow <a href=""{template.BaseUrl}/Profile/WatchedTopics"">this link</a> and press ""Stop Watching All"".</p>
+<p>
+    To stop this particular topic from notifying you, visit <a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}?handler=Unwatch"">this link</a>.<br>
+    To stop all topic notification emails, visit <a href=""{template.BaseUrl}/Profile/WatchedTopics"">this link</a> and press ""Stop Watching All"".
+</p>
 <hr />
-Thanks,
-TASVideos staff";
+<p>
+    Thanks,<br>
+    TASVideos staff
+</p>";
 
 		await _emailSender.SendEmail(new StandardEmail
 		{
