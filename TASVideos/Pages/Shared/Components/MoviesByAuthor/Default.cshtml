@@ -1,7 +1,7 @@
 ﻿@model TASVideos.ViewComponents.Models.MoviesByAuthorModel
 
 @{
-	var authors = Model.NewbieAuthors.Any()
+	var authors = Model.NewbieAuthors.Any() && !Model.MarkNewbies
 		? Model.NewbieAuthors
 		: Model.Publications.SelectMany(p => p.Authors).Distinct().ToList();
 
