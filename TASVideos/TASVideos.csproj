@@ -225,6 +225,9 @@
 		<Content Update="Pages\UserFiles\ForUser.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
+		<Content Update="Pages\UserFiles\Uncataloged.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
 		<Content Update="Pages\UserFiles\Index.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>

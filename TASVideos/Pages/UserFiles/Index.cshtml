@@ -22,6 +22,19 @@
 				}
 			</cardbody>
 		</card>
+		<card>
+			<cardheader>
+				Recent Uncataloged Files <a class="btn btn-primary btn-sm" asp-page="Uncataloged">See all</a>
+			</cardheader>
+			<cardbody>
+				@foreach (var file in Model.Data.UncatalogedFiles.OrderBy(u => u.SystemCode).ThenByDescending(uf => uf.UploadTimestamp))
+				{
+					<span condition="@file.SystemCode is not null">@file.SystemCode</span>
+					<a asp-page="Info" asp-route-id="@file.Id">@file.FileName by @file.Author</a>
+					<span>(<timezone-convert asp-for="@file.UploadTimestamp" />)</span><br />
+				}
+			</cardbody>
+		</card>
 	</div>
 	<div class="col-md-6">
 		<card>

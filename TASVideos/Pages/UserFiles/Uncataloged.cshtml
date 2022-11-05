@@ -1,0 +1,30 @@
+﻿@page
+@model Uncataloged
+
+@{
+	ViewData["Title"] = $"Uncataloged User Files ({Model.Files.Count})";
+	var grouped = Model.Files.GroupBy(f => f.SystemCode);
+}
+
+<div class="mb-2">
+	<a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
+	<a asp-page="Index" class="btn btn-secondary float-end">All User Files</a>
+</div>
+
+@foreach (var group in grouped
+	.OrderBy(f => f.Key == null)
+	.ThenBy(f  => f.Key))
+{
+	<card>
+		<cardheader>
+			@(group.Key ?? "No System") (@group.Count())
+		</cardheader>
+		<cardbody>
+			@foreach (var file in group.OrderByDescending(g => g.UploadTimestamp))
+			{
+				<a asp-page="Info" asp-route-id="@file.Id">@file.FileName</a> <span>by @file.Author</span>
+				<span>(<timezone-convert asp-for="@file.UploadTimestamp" />)</span><br />
+			}
+		</cardbody>
+	</card>
+}
