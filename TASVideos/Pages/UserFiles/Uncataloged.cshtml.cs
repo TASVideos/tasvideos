@@ -26,6 +26,7 @@ public class Uncataloged : BasePageModel
 	{
 		Files = await _db.UserFiles
 			.Where(uf => !uf.Hidden)
+			.Where(uf => uf.GameId == null)
 			.Select(uf => new UncatalogedViewModel
 			{
 				Id = uf.Id,
