@@ -14,12 +14,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="wwwroot\.well-known\**">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-
-	<ItemGroup>
 		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
 	</ItemGroup>
 
