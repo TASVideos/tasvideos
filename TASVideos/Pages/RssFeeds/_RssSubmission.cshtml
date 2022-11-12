@@ -8,7 +8,9 @@
 	<title>@Model.Title</title>
 	<link>@subUrl</link>
 	<description>
-		<wiki-markup markup="@Model.Wiki.Markup" page-data="@Model.Wiki"></wiki-markup>
+		<html-encode>
+			<wiki-markup markup="@Model.Wiki.Markup" page-data="@Model.Wiki"></wiki-markup>
+		</html-encode>
 	</description>
 	<comments condition="@Model.TopicId.HasValue">@(baseUrl)/Forum/Topics/@Model.TopicId</comments>
 	<enclosure url="@(subUrl)?handler=Download" />
