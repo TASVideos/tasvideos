@@ -44,7 +44,7 @@ public class ExternalDependenciesModel : BasePageModel
 		Statuses.SecureIrcEnabled = _settings.Irc.IsSecureChannelEnabled();
 		Statuses.DiscordEnabled = _settings.Discord.IsEnabled();
 		Statuses.DiscordPrivateChannelEnabled = _settings.Discord.IsPrivateChannelEnabled();
-		Statuses.TwitterEnabled = await _twitter.IsEnabled();
+		Statuses.TwitterEnabled = _twitter.IsEnabled();
 	}
 
 	public class ExternalDependenciesViewModel
