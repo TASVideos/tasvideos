@@ -45,6 +45,7 @@ public class LoginModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
+		UserName = UserName.Trim();
 		if (!ModelState.IsValid)
 		{
 			return Page();
