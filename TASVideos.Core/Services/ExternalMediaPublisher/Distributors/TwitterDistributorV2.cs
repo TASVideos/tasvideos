@@ -108,6 +108,11 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	private void RetrieveTokenInformation()
 	{
+		if (!File.Exists(_tokenStorageFileName))
+		{
+			_logger.LogWarning("{_tokenStorageFileName} not found, twitter is likely not to work", _tokenStorageFileName);
+		}
+
 		string tokenText = File.ReadAllText(_tokenStorageFileName);
 
 		if (!string.IsNullOrWhiteSpace(tokenText))
