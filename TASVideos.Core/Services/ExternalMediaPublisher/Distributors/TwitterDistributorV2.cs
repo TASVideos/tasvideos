@@ -111,6 +111,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		if (!File.Exists(_tokenStorageFileName))
 		{
 			_logger.LogWarning("{_tokenStorageFileName} not found, twitter is likely not to work", _tokenStorageFileName);
+			return;
 		}
 
 		string tokenText = File.ReadAllText(_tokenStorageFileName);
