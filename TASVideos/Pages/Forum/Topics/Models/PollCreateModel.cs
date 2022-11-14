@@ -6,7 +6,6 @@ public class PollCreateModel
 {
 	[Display(Name = "Question")]
 	[StringLength(200, MinimumLength = 8)]
-	[Required]
 	public string? Question { get; set; }
 
 	[Display(Name = "Days to Run for", Description = "0 or empty for a never-ending poll")]
