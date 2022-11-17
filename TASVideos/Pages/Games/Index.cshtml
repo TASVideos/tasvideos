@@ -112,7 +112,7 @@
 					</a>)
 				</span>
 			</li>
-			<li>
+			<li condition="Model.Game.PublicationCount > 0">
 				<a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
 			</li>
 			<li>
