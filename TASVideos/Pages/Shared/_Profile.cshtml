@@ -128,14 +128,14 @@
 				<small>@Model.ModeratorComments</small>
 			</cardfooter>
 		</card>
-		<card class="mb-2">
-			<cardheader condition="Model.Judgments.TotalJudgments > 0"><h4>Judgments</h4></cardheader>
+		<card condition="Model.Judgments.TotalJudgments > 0" class="mb-2">
+			<cardheader><h4>Judgments</h4></cardheader>
 			<cardbody>
 				<p>Total movies judged: <a asp-page="/Activity/Judges" asp-route-username="@Model.UserName">@Model.Judgments.TotalJudgments</a></p>
 			</cardbody>
 		</card>
-		<card class="mb-2">
-			<cardheader condition="Model.Publishing.TotalPublished > 0"><h4>Publishing</h4></cardheader>
+		<card condition="Model.Publishing.TotalPublished > 0" class="mb-2">
+			<cardheader><h4>Publishing</h4></cardheader>
 			<cardbody>
 				<p>Total movies published: <a asp-page="/Activity/Publishers" asp-route-username="@Model.UserName">@Model.Publishing.TotalPublished</a></p>
 			</cardbody>
