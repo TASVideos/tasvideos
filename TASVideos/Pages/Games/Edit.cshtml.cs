@@ -208,7 +208,8 @@ public class EditModel : BasePageModel
 	private async Task<bool> CanBeDeleted()
 	{
 		return Id > 0
-			&& !await _db.Submissions.AnyAsync(s => s.Game!.Id == Id)
-			&& !await _db.Publications.AnyAsync(p => p.Game!.Id == Id);
+			&& !await _db.Submissions.AnyAsync(s => s.GameId == Id)
+			&& !await _db.Publications.AnyAsync(p => p.GameId == Id)
+			&& !await _db.UserFiles.AnyAsync(u => u.GameId == Id);
 	}
 }
