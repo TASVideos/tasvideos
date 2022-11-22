@@ -15,6 +15,47 @@ internal class Bk2 : ParserBase, IParser
 	private const double NtscSnesFramerate = 60.0988138974405;
 	private const double PalSnesFramerate = 50.0069789081886;
 
+	private static int GetFrameCount(StreamReader reader)
+	{
+		var frames = 0;
+
+		while (!reader.EndOfStream)
+		{
+			var c = reader.Read();
+
+			if (c is not '\r' and not '\n')
+			{
+				if (c is '|')
+				{
+					frames++;
+				}
+
+				while (!reader.EndOfStream)
+				{
+					c = reader.Read();
+
+					if (c is not '\r' and not '\n')
+					{
+						continue;
+					}
+
+					if (c is '\r' && reader.Peek() is '\n')
+					{
+						reader.Read();
+					}
+
+					break;
+				}
+			}
+			else if (c is '\r' && reader.Peek() is '\n')
+			{
+				reader.Read();
+			}
+		}
+
+		return frames;
+	}
+
 	protected virtual string[] InvalidArchiveEntries => new[]
 	{
 		"greenzonesettings.txt",
@@ -163,9 +204,7 @@ internal class Bk2 : ParserBase, IParser
 
 		await using var inputStream = inputLog.Open();
 		using var inputReader = new StreamReader(inputStream);
-		result.Frames = (await inputReader.ReadToEndAsync())
-			.LineSplit()
-			.PipeCount();
+		result.Frames = GetFrameCount(inputReader);
 
 		if (result.CycleCount.HasValue)
 		{
