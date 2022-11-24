@@ -10,7 +10,6 @@ internal class Fm2 : IParser
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		using var reader = new StreamReader(file);
 		var result = new ParseResult
 		{
 			Region = RegionType.Ntsc,
@@ -18,10 +17,7 @@ internal class Fm2 : IParser
 			SystemCode = SystemCodes.Nes
 		};
 
-		var lines = (await reader.ReadToEndAsync()).LineSplit();
-		var header = lines
-			.WithoutPipes()
-			.ToArray();
+		(var header, result.Frames) = await file.PipeBasedMovieHeaderAndFrameCount();
 
 		if (header.GetValueFor(Keys.Fds).ToBool())
 		{
@@ -47,8 +43,6 @@ internal class Fm2 : IParser
 		{
 			result.StartType = MovieStartType.Savestate;
 		}
-
-		result.Frames = lines.PipeCount();
 
 		return result;
 	}

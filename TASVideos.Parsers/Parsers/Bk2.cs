@@ -15,53 +15,6 @@ internal class Bk2 : ParserBase, IParser
 	private const double NtscSnesFramerate = 60.0988138974405;
 	private const double PalSnesFramerate = 50.0069789081886;
 
-	// This could be implemented with (await reader.ReadToEndAsync()).LineSplit().PipeCount();
-	// However, this ends up reading the entire (uncompressed!) Input Log.txt file into a string
-	// If the Input Log.txt is >1GB big, it will end being "too big", as .NET disallows a single
-	// object being larger than 2GB (also, note .NET strings are UTF16 rather than UTF8)
-	// This method is used instead to figure out the frame count without loading the entire input log
-	// into memory. Might be faster too (although speed is probably not significant in most cases anyway)
-	private static int GetFrameCount(StreamReader reader)
-	{
-		var frames = 0;
-
-		while (!reader.EndOfStream)
-		{
-			var c = reader.Read();
-
-			if (c is not '\r' and not '\n')
-			{
-				if (c is '|')
-				{
-					frames++;
-				}
-
-				while (!reader.EndOfStream)
-				{
-					c = reader.Read();
-
-					if (c is not '\r' and not '\n')
-					{
-						continue;
-					}
-
-					if (c is '\r' && reader.Peek() is '\n')
-					{
-						reader.Read();
-					}
-
-					break;
-				}
-			}
-			else if (c is '\r' && reader.Peek() is '\n')
-			{
-				reader.Read();
-			}
-		}
-
-		return frames;
-	}
-
 	protected virtual string[] InvalidArchiveEntries => new[]
 	{
 		"greenzonesettings.txt",
@@ -209,8 +162,7 @@ internal class Bk2 : ParserBase, IParser
 		}
 
 		await using var inputStream = inputLog.Open();
-		using var inputReader = new StreamReader(inputStream);
-		result.Frames = GetFrameCount(inputReader);
+		(_, result.Frames) = await inputStream.PipeBasedMovieHeaderAndFrameCount();
 
 		if (result.CycleCount.HasValue)
 		{

@@ -10,7 +10,6 @@ internal class Dsm : IParser
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		using var reader = new StreamReader(file);
 		var result = new ParseResult
 		{
 			Region = RegionType.Ntsc,
@@ -18,12 +17,7 @@ internal class Dsm : IParser
 			SystemCode = SystemCodes.Ds
 		};
 
-		var lines = (await reader.ReadToEndAsync()).LineSplit();
-		var header = lines
-			.WithoutPipes()
-			.ToArray();
-
-		result.Frames = lines.PipeCount();
+		(var header, result.Frames) = await file.PipeBasedMovieHeaderAndFrameCount();
 
 		int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToPositiveInt();
 		if (rerecordVal.HasValue)
