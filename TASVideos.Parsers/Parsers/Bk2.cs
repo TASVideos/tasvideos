@@ -162,10 +162,7 @@ internal class Bk2 : ParserBase, IParser
 		}
 
 		await using var inputStream = inputLog.Open();
-		using var inputReader = new StreamReader(inputStream);
-		result.Frames = (await inputReader.ReadToEndAsync())
-			.LineSplit()
-			.PipeCount();
+		(_, result.Frames) = await inputStream.PipeBasedMovieHeaderAndFrameCount();
 
 		if (result.CycleCount.HasValue)
 		{
