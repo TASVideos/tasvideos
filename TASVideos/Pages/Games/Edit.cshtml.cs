@@ -75,7 +75,7 @@ public class EditModel : BasePageModel
 	public async Task<IActionResult> OnPost()
 	{
 		Game.DisplayName = Game.DisplayName.Trim();
-		Game.Abbreviation = Game.DisplayName.Trim();
+		Game.Abbreviation = Game.Abbreviation.Trim();
 		if (!ModelState.IsValid)
 		{
 			await Initialize();
