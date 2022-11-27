@@ -76,6 +76,9 @@ public class EditModel : BasePageModel
 	{
 		Game.DisplayName = Game.DisplayName.Trim();
 		Game.Abbreviation = Game.Abbreviation?.Trim();
+		Game.GameResourcesPage = Game.GameResourcesPage?.Trim().Trim('/');
+		Game.Aliases = Game.Aliases?.Trim().Replace(", ", ",");
+
 		if (!ModelState.IsValid)
 		{
 			await Initialize();
