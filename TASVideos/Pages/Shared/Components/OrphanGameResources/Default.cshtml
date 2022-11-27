@@ -8,7 +8,7 @@
 		@foreach (var orphan in Model.OrderBy(m => m))
 		{
 			<li>
-				<a href="/@orphan">@orphan.Replace("GameResources/", "")</a>
+				<a href="/@orphan">@orphan</a>
 			</li>
 		}
 	</ul>
