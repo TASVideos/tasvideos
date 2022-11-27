@@ -2,7 +2,7 @@
 using TASVideos.Core.Services.Wiki;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents;
+namespace TASVideos.ViewComponents.TODO;
 
 [WikiModule(WikiModules.WikiOrphans)]
 public class WikiOrphans : ViewComponent

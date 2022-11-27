@@ -4,7 +4,7 @@ using TASVideos.Data;
 using TASVideos.ViewComponents.Models;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents;
+namespace TASVideos.ViewComponents.TODO;
 
 [WikiModule(WikiModules.NoEmulator)]
 public class NoEmulator : ViewComponent

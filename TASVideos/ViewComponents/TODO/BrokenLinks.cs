@@ -7,7 +7,7 @@ using TASVideos.Pages;
 using TASVideos.Pages.Wiki;
 using TASVideos.WikiEngine;
 
-namespace TASVideos.ViewComponents;
+namespace TASVideos.ViewComponents.TODO;
 
 [WikiModule(WikiModules.BrokenLinks)]
 public class BrokenLinks : ViewComponent
