@@ -164,7 +164,7 @@ public class MovieStatistics : ViewComponent
 				fieldHeader = "Characters";
 				statQuery = query
 					.Join(
-						_db.WikiPages.ThatAreNotDeleted().WithNoChildren(),
+						_db.WikiPages.ThatAreNotDeleted().ThatAreCurrent(),
 						p => LinkConstants.PublicationWikiPage + p.Id,
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })
@@ -181,7 +181,7 @@ public class MovieStatistics : ViewComponent
 				statQuery = query
 					.Where(p => p.Submission != null)
 					.Join(
-						_db.WikiPages.ThatAreNotDeleted().WithNoChildren(),
+						_db.WikiPages.ThatAreNotDeleted().ThatAreCurrent(),
 						p => LinkConstants.SubmissionWikiPage + p.SubmissionId,
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })

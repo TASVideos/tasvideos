@@ -31,7 +31,7 @@ public class RenderDeletedModel : BasePageModel
 
 		query = revision.HasValue
 			? query.Where(wp => wp.Revision == revision)
-			: query.WithNoChildren();
+			: query.ThatAreCurrent();
 
 		var page = await query.FirstOrDefaultAsync();
 		if (page is null)

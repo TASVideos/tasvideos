@@ -51,7 +51,7 @@ public class IndexModel : BasePageModel
 			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 			PageResults = await _db.WikiPages
 				.ThatAreNotDeleted()
-				.WithNoChildren()
+				.ThatAreCurrent()
 				.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.OrderByDescending(w => EF.Functions.ToTsVector(w.Markup).Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.Skip(skip)

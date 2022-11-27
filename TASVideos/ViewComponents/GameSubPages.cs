@@ -30,7 +30,7 @@ public class GameSubPages : ViewComponent
 
 		var pages = _db.WikiPages
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Where(wp => gameResourceSystems.Contains(wp.PageName))
 			.Select(wp => wp.PageName)
 			.ToList();

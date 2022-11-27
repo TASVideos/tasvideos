@@ -49,7 +49,7 @@ public class WikiSyntaxErrorsModel : BasePageModel
 	{
 		var pages = await _db.WikiPages
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Select(p => new
 			{
 				p.PageName,

@@ -940,7 +940,7 @@ public class WikiPagesTests
 		Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
 		var current = _db.WikiPages
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Single();
 
 		Assert.AreEqual(existingPageName, current.PageName);
@@ -990,7 +990,7 @@ public class WikiPagesTests
 		Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
 		var current = _db.WikiPages
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Single();
 
 		Assert.AreEqual(pageName, current.PageName);
@@ -1045,7 +1045,7 @@ public class WikiPagesTests
 		Assert.AreEqual(2, _db.WikiPages.ThatAreDeleted().Count());
 		var current = _db.WikiPages
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Single();
 
 		Assert.AreEqual(pageName, current.PageName);

@@ -149,7 +149,7 @@ internal class WikiPages : IWikiPages
 
 	public async Task<IReadOnlyCollection<WikiOrphan>> Orphans() => await _db.WikiPages
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Where(wp => wp.PageName != "MediaPosts") // Linked by the navbar
 			.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
 			.Where(wp => !wp.PageName.StartsWith("InternalSystem")) // These by design aren't orphans they are directly used in the system
@@ -187,7 +187,7 @@ internal class WikiPages : IWikiPages
 		}
 
 		var query = _db.WikiPages
-			.WithNoChildren();
+			.ThatAreCurrent();
 
 		if (!includeDeleted)
 		{
@@ -253,7 +253,7 @@ internal class WikiPages : IWikiPages
 		var currentRevision = await _db.WikiPages
 			.ForPage(addRequest.PageName)
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.SingleOrDefaultAsync();
 
 		if (addRequest.CreateTimestamp != DateTime.MinValue
@@ -372,7 +372,7 @@ internal class WikiPages : IWikiPages
 	{
 		var pagesToMove = await _db.WikiPages
 			.Where(wp => wp.PageName.StartsWith(originalName))
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.ToListAsync();
 		bool allSucceeded = true;
 		foreach (var page in pagesToMove)

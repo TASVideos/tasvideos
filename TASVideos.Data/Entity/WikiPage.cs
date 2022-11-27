@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 
@@ -39,7 +40,7 @@ public class WikiPage : BaseEntity, ISoftDeletable
 
 public static class WikiQueryableExtensions
 {
-	public static IQueryable<WikiPage> WithNoChildren(this IQueryable<WikiPage> list)
+	public static IQueryable<WikiPage> ThatAreCurrent(this IQueryable<WikiPage> list)
 	{
 		return list.Where(wp => wp.ChildId == null);
 	}
@@ -47,6 +48,18 @@ public static class WikiQueryableExtensions
 	public static IQueryable<WikiPage> ThatAreNotCurrent(this IQueryable<WikiPage> list)
 	{
 		return list.Where(wp => wp.ChildId != null);
+	}
+
+	/// <summary>
+	/// Filters to pages at a specific indentaiton level
+	/// Foo = 1
+	/// Foo/Bar = 2
+	/// Foo/Bar/Baz = 3
+	/// </summary>
+	public static IQueryable<WikiPage> ForPageLevel(this IQueryable<WikiPage> list, int indentationLevel)
+	{
+		int slashCount = indentationLevel - 1;
+		return list.Where(wp => Regex.IsMatch(wp.PageName, $"^[^\\/]+(\\/[^\\/]+){{{slashCount}}}$"));
 	}
 
 	public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
@@ -82,7 +95,7 @@ public static class WikiQueryableExtensions
 		pageName = (pageName ?? "").Trim('/');
 		query = query
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Where(wp => wp.PageName != pageName);
 
 		if (!string.IsNullOrWhiteSpace(pageName))
@@ -112,7 +125,7 @@ public static class WikiQueryableExtensions
 
 		return query
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Where(wp => wp.PageName != pageName)
 			.Where(wp => pageName.StartsWith(wp.PageName + "/"));
 	}

@@ -53,7 +53,7 @@ string? filter = null;
 
 var query = context.WikiPages
 	.ThatAreNotDeleted()
-	.WithNoChildren();
+	.ThatAreCurrent();
 if (filter != null)
 {
 	query = query.Where(wp => wp.PageName.Contains(filter));

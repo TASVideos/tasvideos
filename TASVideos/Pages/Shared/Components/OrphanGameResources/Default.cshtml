@@ -1,0 +1,23 @@
+﻿@model IReadOnlyCollection<string>
+<p>These pages are game resources for specific games but not assicated with at least 1 game entry<br />
+If a game entry does not exist for them, it should be created and the page attached</p>
+@if (Model.Any())
+{
+	<div>
+		<label>Total: @Model.Count</label>
+	</div>
+	<ul>
+		@foreach (var orphan in Model.OrderBy(m => m))
+		{
+			<li>
+				<a href="/@orphan">@orphan.Replace("GameResources/", "")</a>
+			</li>
+		}
+	</ul>
+}
+else
+{
+	<info-alert>
+		No Orphans to Display
+	</info-alert>
+}

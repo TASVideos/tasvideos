@@ -88,7 +88,7 @@ public class AdvancedModel : BasePageModel
 			{
 				PageResults = await _db.WikiPages
 					.ThatAreNotDeleted()
-					.WithNoChildren()
+					.ThatAreCurrent()
 					.Where(w => Regex.IsMatch(w.PageName, SearchTerms))
 					.OrderBy(w => w.PageName)
 					.Skip(skip)

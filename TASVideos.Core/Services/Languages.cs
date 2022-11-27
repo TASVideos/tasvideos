@@ -73,7 +73,7 @@ internal class Languages : ILanguages
 			.Select(l => l.Path)
 			.ToList();
 		var existingPages = await _db.WikiPages
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.ThatAreNotDeleted()
 			.Where(wp => existingLanguagePages.Contains(wp.PageName))
 			.Select(wp => wp.PageName)
