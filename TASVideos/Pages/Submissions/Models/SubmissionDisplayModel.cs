@@ -18,7 +18,7 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	[Display(Name = "For Publication Class")]
 	public string? ClassName { get; set; }
 
-	[Display(Name = "Console")]
+	[Display(Name = "System")]
 	public string? SystemDisplayName { get; set; }
 
 	public string? SystemCode { get; set; }
