@@ -23,43 +23,6 @@
 }
 
 @functions{
-	static string VersionDisplay(string? version, string? region)
-	{
-		string regionDisplay = RegionDisplay(region);
-		if (string.IsNullOrWhiteSpace(version) && string.IsNullOrWhiteSpace(regionDisplay))
-		{
-			return "";
-		}
-
-		if (string.IsNullOrWhiteSpace(regionDisplay))
-		{
-			return version ?? "";
-		}
-
-		if (string.IsNullOrWhiteSpace(version))
-		{
-			return regionDisplay;
-		}
-
-		return $"{regionDisplay}, {version}";
-	}
-
-	static string RegionDisplay(string? region)
-	{
-		if (string.IsNullOrWhiteSpace(region))
-		{
-			return "";
-		}
-
-		return region switch
-		{
-			"J" => "Japan",
-			"E" => "Europe",
-			"EU" => "USA/Europe",
-			_ => ""
-		};
-	}
-
 	static string StreamingSiteDisplay(string? onlineWatchingUrl)
 	{
 		if (string.IsNullOrWhiteSpace(onlineWatchingUrl))
@@ -100,13 +63,7 @@
 				}
 			</div>
 			<h4>
-				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">
-						@{
-							var regionAndVersion = VersionDisplay(Model.GameVersion, Model.Region);
-						}
-					<small condition="!string.IsNullOrWhiteSpace(regionAndVersion)"> (@regionAndVersion)</small>
-					@Model.Title
-				</span></a>
+				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a>
 			</h4>
 		</div>
 	</cardheader>
