@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.ViewComponents.Models;
 using TASVideos.WikiEngine;
 
@@ -27,6 +28,7 @@ public class NoGame : ViewComponent
 				.ToListAsync(),
 			Submissions = await _db.Submissions
 				.Where(s => s.GameId == null || s.GameId < 1)
+				.ThatAreInActive()
 				.OrderBy(p => p.Id)
 				.Select(s => new MissingModel.Entry(s.Id, s.Title))
 				.ToListAsync()

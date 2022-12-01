@@ -201,6 +201,14 @@ public static class SubmissionExtensions
 			&& s.Status != SubmissionStatus.Rejected);
 	}
 
+	public static IQueryable<Submission> ThatAreInActive(this IQueryable<Submission> query)
+	{
+		return query.Where(s => s.Status == SubmissionStatus.Published
+			|| s.Status == SubmissionStatus.Playground
+			|| s.Status == SubmissionStatus.Cancelled
+			|| s.Status == SubmissionStatus.Rejected);
+	}
+
 	public static IQueryable<Submission> ThatAreRejected(this IQueryable<Submission> query)
 	{
 		return query.Where(s => s.Status == SubmissionStatus.Rejected);
