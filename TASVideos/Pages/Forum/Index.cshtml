@@ -6,18 +6,18 @@
 
 <div class="clearfix">
 	<partial Name="_ForumHeader" />
-	<a asp-page="/Forum/Subforum/Create" permission="EditForums" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create</a>
-	<div class="float-end pb-2">
-		<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm">
+	<a asp-page="/Forum/Subforum/Create" permission="EditForums" class="btn btn-primary btn-sm mb-1"><i class="fa fa-plus"></i> Create</a>
+	<div class="float-end mb-1">
+		<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm mb-1">
 			Latest Posts
 		</a>
-		<a asp-page="/Forum/Posts/New" condition="@User.IsLoggedIn()" class="btn btn-secondary btn-sm">
+		<a asp-page="/Forum/Posts/New" condition="@User.IsLoggedIn()" class="btn btn-secondary btn-sm mb-1">
 			Posts since last visit
 		</a>
-		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm">
+		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm mb-1">
 			Unanswered Posts
 		</a>
-		<a class="btn btn-secondary btn-sm" onclick="markAllPostsRead()">
+		<a class="btn btn-secondary btn-sm mb-1" onclick="markAllPostsRead()">
 			Mark all Posts as read
 		</a>
 	</div>
