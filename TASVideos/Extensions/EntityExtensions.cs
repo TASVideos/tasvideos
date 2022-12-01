@@ -241,8 +241,6 @@ public static class EntityExtensions
 					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
 					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
 				},
-				Region = p.GameVersion != null ? p.GameVersion.Region : null,
-				GameVersion = p.GameVersion != null ? p.GameVersion.Version : null
 			});
 
 		if (ratingSort)
