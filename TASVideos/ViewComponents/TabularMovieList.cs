@@ -56,7 +56,7 @@ public class TabularMovieList : ViewComponent
 				Frames = p.Frames,
 				FrameRate = p.SystemFrameRate!.FrameRate,
 				System = p.System!.Code,
-				Game = p.Game!.DisplayName,
+				Game = p.GameVersion != null && !string.IsNullOrEmpty(p.GameVersion.TitleOverride) ? p.GameVersion.TitleOverride : p.Game!.DisplayName,
 				Branch = p.Branch,
 				Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 				AdditionalAuthors = p.AdditionalAuthors,
