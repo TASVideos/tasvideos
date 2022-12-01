@@ -397,6 +397,7 @@ public static class EntityExtensions
 			Id = g.Id,
 			DisplayName = g.DisplayName,
 			Abbreviation = g.Abbreviation,
+			Aliases = g.Aliases,
 			ScreenshotUrl = g.ScreenshotUrl,
 			GameResourcesPage = g.GameResourcesPage,
 			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),

@@ -37,9 +37,10 @@
 						<ul>
 							<li>Id: @Model.Game.Id</li>
 							<li>Platforms: @string.Join(", ", Model.Game.Versions.Select(v => v.SystemCode).Distinct())</li>
-							<li>Abbreviation: @Model.Game.Abbreviation</li>
+							<li condition="!string.IsNullOrWhiteSpace(Model.Game.Abbreviation)">Abbreviation: @Model.Game.Abbreviation</li>
+							<li condition="!string.IsNullOrWhiteSpace(Model.Game.Aliases)">Aliases: @Model.Game.Aliases</li>
 							<li>Display Name: @Model.Game.DisplayName</li>
-							<li>Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
+							<li condition="!string.IsNullOrWhiteSpace(Model.Game.GameResourcesPage)">Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
 							<li condition="Model.Game.GameGroups.Any()">
 								Game Groups:<br />
 								<ul>
