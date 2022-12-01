@@ -210,10 +210,10 @@
 				}
 			</div>
 			<div class="col-md">
+				<div class="pb-2 text-muted"><small>Published <timezone-convert asp-for="@Model.CreateTimestamp" in-line="true" date-only="true" relative-time="false" /></small></div>
 				<fullrow>
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>
-				<div><small>Published <timezone-convert asp-for="@Model.CreateTimestamp" in-line="true" /></small></div>
 			</div>
 		</row>
 		<row condition="Model.ObsoletedMovies.Any()" class="my-2 gx-3">
