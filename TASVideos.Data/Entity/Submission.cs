@@ -196,6 +196,7 @@ public static class SubmissionExtensions
 	public static IQueryable<Submission> ThatAreActive(this IQueryable<Submission> query)
 	{
 		return query.Where(s => s.Status != SubmissionStatus.Published
+			&& s.Status != SubmissionStatus.Playground
 			&& s.Status != SubmissionStatus.Cancelled
 			&& s.Status != SubmissionStatus.Rejected);
 	}
