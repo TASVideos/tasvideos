@@ -7,18 +7,18 @@
 <a permission="GameSystemMaintenance" class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
 <table class="table table-bordered table-striped table-sm">
 	<tr>
-		<th>Id</th>
-		<th>Code</th>
 		<th>Display Name</th>
+		<th>Code</th>
+		<th>Id</th>
 		<th>Framerates</th>
 		<th></th>
 	</tr>
 	@foreach (var system in Model.Systems)
 	{
 		<tr>
-			<td>@system.Id</td>
-			<td>@system.Code</td>
 			<td>@system.DisplayName</td>
+			<td>@system.Code</td>
+			<td>@system.Id</td>
 			<td>
 				@foreach(var rate in system.SystemFrameRates
 					.Where(sf => !sf.Obsolete)

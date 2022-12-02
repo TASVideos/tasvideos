@@ -17,7 +17,7 @@ public class IndexModel : BasePageModel
 	public async Task OnGet()
 	{
 		Systems = (await _systemService.GetAll())
-			.OrderBy(s => s.Id)
+			.OrderBy(s => s.DisplayName)
 			.ToList();
 	}
 }
