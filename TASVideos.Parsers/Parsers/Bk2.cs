@@ -53,6 +53,7 @@ internal class Bk2 : ParserBase, IParser
 			return Error($"Missing {HeaderFile}, can not parse");
 		}
 
+		long? vsyncAttoseconds;
 		int? vBlankCount;
 		string clockRate;
 		string core;
@@ -137,6 +138,14 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Dsi;
 			}
+			else if (header.GetValueFor(Keys.ModeDd).ToBool())
+			{
+				platform = SystemCodes.N64Dd;
+			}
+			else if (header.GetValueFor(Keys.ModeJaguarCd).ToBool())
+			{
+				platform = SystemCodes.JaguarCd;
+			}
 
 			result.SystemCode = platform;
 
@@ -149,6 +158,7 @@ internal class Bk2 : ParserBase, IParser
 				result.StartType = MovieStartType.Sram;
 			}
 
+			vsyncAttoseconds = header.GetValueFor(Keys.VsyncAttoseconds).ToPositiveLong();
 			vBlankCount = header.GetValueFor(Keys.VBlankCount).ToPositiveInt();
 			result.CycleCount = header.GetValueFor(Keys.CycleCount).ToPositiveLong();
 			clockRate = header.GetValueFor(Keys.ClockRate).Replace(',', '.');
@@ -189,6 +199,16 @@ internal class Bk2 : ParserBase, IParser
 			}
 
 			result.Frames = vBlankCount.Value;
+		}
+		else if (core == "mame")
+		{
+			if (!vsyncAttoseconds.HasValue)
+			{
+				return Error($"Missing {Keys.VsyncAttoseconds}, could not parse movie time");
+			}
+
+			const decimal attosecondsInSecond = 1000000000000000000;
+			result.FrameRateOverride = (double)(attosecondsInSecond / vsyncAttoseconds.Value);
 		}
 
 		return result;
@@ -237,7 +257,9 @@ internal class Bk2 : ParserBase, IParser
 		public const string StartsFromSavestate = "startsfromsavestate";
 		public const string Mode32X = "is32x";
 		public const string ModeCgb = "iscgbmode";
+		public const string ModeDd = "isdd";
 		public const string ModeDsi = "isdsi";
+		public const string ModeJaguarCd = "isjaguarcd";
 		public const string ModeSegaCd = "issegacdmode";
 		public const string ModeGg = "isggmode";
 		public const string ModeSg = "issgmode";
@@ -245,6 +267,7 @@ internal class Bk2 : ParserBase, IParser
 		public const string VBlankCount = "vblankcount";
 		public const string CycleCount = "cyclecount";
 		public const string ClockRate = "clockrate";
+		public const string VsyncAttoseconds = "vsyncattoseconds";
 		public const string Core = "core";
 	}
 }
