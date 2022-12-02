@@ -87,8 +87,11 @@ public class Bk2ParserTests : BaseParserTests
 	[DataRow("System-A2600.bk2", SystemCodes.Atari2600)]
 	[DataRow("System-A7800.bk2", SystemCodes.Atari7800)]
 	[DataRow("System-AppleII.bk2", SystemCodes.AppleII)]
+	[DataRow("System-Arcade.bk2", SystemCodes.Arcade)]
 	[DataRow("System-C64.bk2", SystemCodes.C64)]
 	[DataRow("System-Intellivision.bk2", SystemCodes.Intellivision)]
+	[DataRow("System-Jaguar.bk2", SystemCodes.Jaguar)]
+	[DataRow("System-JaguarCd.bk2", SystemCodes.JaguarCd)]
 	[DataRow("System-Lynx.bk2", SystemCodes.Lynx)]
 	[DataRow("System-Nes.bk2", SystemCodes.Nes)]
 	[DataRow("System-Fds.bk2", SystemCodes.Fds)]
@@ -106,7 +109,7 @@ public class Bk2ParserTests : BaseParserTests
 	[DataRow("System-Nds.bk2", SystemCodes.Ds)]
 	[DataRow("System-Ndsi.bk2", SystemCodes.Dsi)]
 	[DataRow("System-Msx.bk2", SystemCodes.Msx)]
-	[DataRow("System-Ngb.bk2", SystemCodes.Ngb)]
+	[DataRow("System-Ngp.bk2", SystemCodes.Ngp)]
 	[DataRow("System-SegaCd.bk2", SystemCodes.SegaCd)]
 	[DataRow("System-32x.bk2", SystemCodes.X32)]
 	[DataRow("System-Sms.bk2", SystemCodes.Sms)]
@@ -119,6 +122,8 @@ public class Bk2ParserTests : BaseParserTests
 	[DataRow("System-Sgx.bk2", SystemCodes.Sgx)]
 	[DataRow("System-Snes.bk2", SystemCodes.Snes)]
 	[DataRow("System-Saturn.bk2", SystemCodes.Saturn)]
+	[DataRow("System-Ti83.bk2", SystemCodes.Ti83)]
+	[DataRow("System-Tic80.bk2", SystemCodes.Tic80)]
 	[DataRow("System-Uze.bk2", SystemCodes.UzeBox)]
 	[DataRow("System-Vb.bk2", SystemCodes.VirtualBoy)]
 	[DataRow("System-Wswan.bk2", SystemCodes.WSwan)]
@@ -275,6 +280,37 @@ public class Bk2ParserTests : BaseParserTests
 		Assert.AreEqual(30, result.Frames);
 		Assert.AreEqual(60, result.FrameRateOverride);
 		Assert.AreEqual(2097152, result.CycleCount);
+	}
+
+	[TestMethod]
+	public async Task Mame_NegativeVsyncAttoseconds_Error()
+	{
+		var result = await _bk2Parser.Parse(Embedded("Mame-NegativeVsyncAttoseconds.bk2"), EmbeddedLength("Mame-NegativeVsyncAttoseconds.bk2"));
+
+		Assert.IsFalse(result.Success);
+		Assert.IsNotNull(result.Errors);
+		Assert.IsTrue(result.Errors.Any());
+	}
+
+	[TestMethod]
+	public async Task Mame_MissingVsyncAttoseconds_Error()
+	{
+		var result = await _bk2Parser.Parse(Embedded("Mame-NoVsyncAttoseconds.bk2"), EmbeddedLength("Mame-NoVsyncAttoseconds.bk2"));
+
+		Assert.IsFalse(result.Success);
+		Assert.IsNotNull(result.Errors);
+		Assert.IsTrue(result.Errors.Any());
+	}
+
+	[TestMethod]
+	public async Task Mame_UsesVsyncAttoseconds()
+	{
+		var result = await _bk2Parser.Parse(Embedded("Mame-VsyncAttoseconds.bk2"), EmbeddedLength("Mame-VsyncAttoseconds.bk2"));
+
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(30, result.Frames);
+		Assert.AreEqual(64, result.FrameRateOverride);
 	}
 
 	[TestMethod]
