@@ -30,7 +30,7 @@
 		<media:community>
 			<media:starRating average="@Model.RatingAverage" count="@Model.RatingCount" min="@Model.RatingMin" max="@Model.RatingMax" />
 		</media:community>
-		<guid>@movieUrl</guid>
-		<pubDate>@Model.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
 	</media:group>
+	<guid>@movieUrl</guid>
+	<pubDate>@Model.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
 </item>
