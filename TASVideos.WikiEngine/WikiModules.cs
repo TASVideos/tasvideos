@@ -40,6 +40,7 @@ public static class WikiModules
 	public const string TabularMovieList = "tabularmovielist";
 	public const string TimeSinceDate = "timesincedate";
 	public const string TopicFeed = "topicfeed";
+	public const string UncatalogedTopics = "uncatalogedtopics";
 	public const string UnmirroredMovies = "unmirroredmovies";
 	public const string UserGetWikiName = "usergetwikiname";
 	public const string UserMaintenanceLogs = "usermaintlog";

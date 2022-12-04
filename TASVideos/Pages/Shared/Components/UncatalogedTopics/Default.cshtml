@@ -1,0 +1,34 @@
+﻿@model IReadOnlyCollection<TASVideos.ViewComponents.Models.UncatalogedTopic>
+@{
+	var grouped = Model.GroupBy(m => m.ForumName);
+}
+<h4>Total: @Model.Count</h4>
+<div condition="Model.Any()">
+	@foreach (var forum in grouped.OrderBy(m => m.Key))
+	{
+		<card>
+			<cardheader>
+				@forum.Key (@forum.Count())
+			</cardheader>
+			<cardbody>
+				@foreach (var topic in forum)
+				{
+					<ul class="breadcrumb m-0">
+						<li class="mt-1">
+							<a
+								permission="CatalogMovies"
+								asp-page="/Forum/Topics/Catalog"
+								asp-route-id="@topic.Id"
+								asp-route-returnUrl="@ViewContext.HttpContext.CurrentPathToReturnUrl()"
+								class="btn btn-sm btn-primary">Catalog</a>
+							<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">@(topic.Title)</a>
+						</li>
+					</ul>
+				}
+			</cardbody>
+		</card>
+	}
+</div>
+<div condition="!Model.Any()">
+	<info-alert>No uncataloged topics</info-alert>
+</div>

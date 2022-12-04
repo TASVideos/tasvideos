@@ -36,17 +36,25 @@ public class ForumTopic : BaseEntity
 
 	public int? SubmissionId { get; set; }
 	public virtual Submission? Submission { get; set; }
+
+	public int? GameId { get; set; }
+	public virtual Game.Game? Game { get; set; }
 }
 
 public static class ForumTopicQueryableExtensions
 {
-	public static IQueryable<ForumTopic> ExcludeRestricted(this IQueryable<ForumTopic> list, bool seeRestricted)
+	public static IQueryable<ForumTopic> ExcludeRestricted(this IQueryable<ForumTopic> query, bool seeRestricted)
 	{
-		return list.Where(f => seeRestricted || !f.Forum!.Restricted);
+		return query.Where(f => seeRestricted || !f.Forum!.Restricted);
 	}
 
-	public static IQueryable<ForumTopic> ForForum(this IQueryable<ForumTopic> list, int forumId)
+	public static IQueryable<ForumTopic> ForForum(this IQueryable<ForumTopic> query, int forumId)
 	{
-		return list.Where(t => t.ForumId == forumId);
+		return query.Where(t => t.ForumId == forumId);
+	}
+
+	public static IQueryable<ForumTopic> ForGame(this IQueryable<ForumTopic> query, int gameId)
+	{
+		return query.Where(t => t.GameId == gameId);
 	}
 }

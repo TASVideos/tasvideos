@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Games.Models;
 using TASVideos.ViewComponents;
 
@@ -30,6 +31,8 @@ public class IndexModel : BasePageModel
 	public List<TabMiniMovieModel> Movies { get; set; } = new List<TabMiniMovieModel>();
 
 	public IReadOnlyCollection<WatchFile> WatchFiles { get; set; } = new List<WatchFile>();
+
+	public IReadOnlyCollection<TopicEntry> Topics { get; set; } = new List<TopicEntry>();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -93,9 +96,15 @@ public class IndexModel : BasePageModel
 			.Select(u => new WatchFile(u.Id, u.FileName))
 			.ToListAsync();
 
+		Topics = await _db.ForumTopics
+			.ForGame(Game.Id)
+			.Select(t => new TopicEntry(t.Id, t.Title))
+			.ToListAsync();
+
 		return Page();
 	}
 
 	// TODO: move me
 	public record WatchFile(long Id, string FileName);
+	public record TopicEntry(int Id, string Title);
 }
