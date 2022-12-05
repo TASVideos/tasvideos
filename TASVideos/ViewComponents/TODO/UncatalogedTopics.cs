@@ -18,9 +18,23 @@ public class UncatalogedTopics : ViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var topics = await _db.ForumTopics
+		int? forumId = null;
+		string forumIdStr = HttpContext.Request.QueryStringValue("forumId");
+		if (int.TryParse(forumIdStr, out var f))
+		{
+			forumId = f;
+		}
+
+		var query = _db.ForumTopics
 			.Where(t => t.Forum!.Category!.Id == SiteGlobalConstants.GamesForumCategory)
-			.Where(t => t.GameId == null)
+			.Where(t => t.GameId == null);
+
+		if (forumId.HasValue)
+		{
+			query = query.Where(t => t.ForumId == forumId.Value);
+		}
+
+		var topics = await query
 			.Select(t => new UncatalogedTopic
 			{
 				Id = t.Id,

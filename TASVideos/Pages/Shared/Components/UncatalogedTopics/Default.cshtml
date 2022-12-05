@@ -11,7 +11,7 @@
 				@forum.Key (@forum.Count())
 			</cardheader>
 			<cardbody>
-				@foreach (var topic in forum)
+				@foreach (var topic in forum.OrderBy(t => t.Title))
 				{
 					<ul class="breadcrumb m-0">
 						<li class="mt-1">
