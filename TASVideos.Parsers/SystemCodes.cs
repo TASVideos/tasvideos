@@ -25,6 +25,7 @@ internal class SystemCodes
 	public const string JaguarCd = "jaguarcd";
 	public const string Linux = "linux";
 	public const string Lynx = "lynx";
+	public const string MacOs = "macos";
 	public const string Msx = "msx";
 	public const string N3ds = "3ds";
 	public const string N64 = "n64";
@@ -36,6 +37,7 @@ internal class SystemCodes
 	public const string Pce = "pce";
 	public const string PceCd = "pcecd";
 	public const string Pcfx = "pcfx";
+	public const string Pico8 = "pico8";
 	public const string Saturn = "saturn";
 	public const string SegaCd = "segacd";
 	public const string Sg = "sg1000";
