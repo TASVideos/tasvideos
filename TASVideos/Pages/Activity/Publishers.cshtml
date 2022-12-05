@@ -2,6 +2,14 @@
 @{ ViewData["Title"] = $"Publisher Activity for {Model.UserName}"; }
 @model PublishersModel
 
+@section PageTitle {
+	<div class="container mb-2">
+		<h1 class="card card-header d-block">
+			Publisher <a asp-page="/Activity/Index">Activity</a> for @Model.UserName
+		</h1>
+	</div>
+}
+
 @{
 	var total = Model.Publications.Count();
 
