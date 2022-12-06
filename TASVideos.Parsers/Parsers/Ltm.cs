@@ -210,9 +210,9 @@ internal class Ltm : ParserBase, IParser
 
 	private static string CalculatePlatform(string str)
 	{
-		if (string.Equals(SystemCodes.Flash, str, StringComparison.InvariantCultureIgnoreCase))
+		if (string.Equals(SystemCodes.Arcade, str, StringComparison.InvariantCultureIgnoreCase))
 		{
-			return SystemCodes.Flash;
+			return SystemCodes.Arcade;
 		}
 
 		if (string.Equals(SystemCodes.Dos, str, StringComparison.InvariantCultureIgnoreCase))
@@ -220,9 +220,14 @@ internal class Ltm : ParserBase, IParser
 			return SystemCodes.Dos;
 		}
 
-		if (string.Equals(SystemCodes.Windows, str, StringComparison.InvariantCultureIgnoreCase))
+		if (string.Equals(SystemCodes.Flash, str, StringComparison.InvariantCultureIgnoreCase))
 		{
-			return SystemCodes.Windows;
+			return SystemCodes.Flash;
+		}
+
+		if (string.Equals(SystemCodes.MacOs, str, StringComparison.InvariantCultureIgnoreCase))
+		{
+			return SystemCodes.MacOs;
 		}
 
 		if (string.Equals(SystemCodes.Pc98, str, StringComparison.InvariantCultureIgnoreCase))
@@ -230,9 +235,14 @@ internal class Ltm : ParserBase, IParser
 			return SystemCodes.Pc98;
 		}
 
-		if (string.Equals(SystemCodes.Arcade, str, StringComparison.InvariantCultureIgnoreCase))
+		if (string.Equals(SystemCodes.Pico8, str, StringComparison.InvariantCultureIgnoreCase))
 		{
-			return SystemCodes.Arcade;
+			return SystemCodes.Pico8;
+		}
+
+		if (string.Equals(SystemCodes.Windows, str, StringComparison.InvariantCultureIgnoreCase))
+		{
+			return SystemCodes.Windows;
 		}
 
 		return SystemCodes.Linux;
