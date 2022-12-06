@@ -60,10 +60,16 @@
 		</span>
 	</button>
 </form>
-<a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls)"
+<a permission="CreateForumPolls"
 	asp-page="AddEditPoll"
 	asp-route-topicId="@Model.Id"
 	class="btn btn-warning btn-sm"
 	title="Add a poll to this topic">
 	<i class="fa fa-list-ul"></i> Poll
+</a>
+<a permission="CatalogMovies"
+	asp-page="Catalog"
+	asp-route-id="@Model.Id"
+	class="btn btn-sm btn-info border border-warning">
+	<i class="fa fa-book"></i> Catalog
 </a>
