@@ -66,6 +66,7 @@ The posts after this message will continue to apply to the submission.
 	public const int UserFileStorageLimit = 1000 * 1000 * 50; // 50 MB
 
 	public const int GamesForumCategory = 5;
+	public const int OtherGamesForum = 5;
 }
 
 public static class PlayerPointConstants
