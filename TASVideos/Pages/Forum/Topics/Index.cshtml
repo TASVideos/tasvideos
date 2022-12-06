@@ -1,9 +1,6 @@
 ﻿@page "{id}"
 @using TASVideos.Data.Helpers
 @model IndexModel
-@{
-	ViewData["Title"] = $"{Model.Topic.Title} - Topic {Model.Topic.Id}";
-}
 
 @if (Model.HighlightedPost is not null)
 {
@@ -44,9 +41,19 @@
 				<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
 				<li class="breadcrumb-item"><a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a></li>
 				<li class="breadcrumb-item active" aria-current="page">
-					<h1>@(Model.Topic.Title)</h1>
+					<h1>
+						@(Model.Topic.Title)
+						<span
+							condition="Model.Topic.GameId.HasValue"
+							class="float-end">
+							Game: <a asp-page="/Games/Index" asp-route-id="@Model.Topic.GameId">
+								@Model.Topic.GameName
+							</a>
+						</span>
+					</h1>
 				</li>
 			</ol>
+			
 		</nav>
 		<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
 	</div>

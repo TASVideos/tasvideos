@@ -82,6 +82,8 @@ public class IndexModel : BaseForumModel
 				IsLocked = t.IsLocked,
 				LastPostId = t.ForumPosts.Any() ? t.ForumPosts.Max(p => p.Id) : -1,
 				SubmissionId = t.SubmissionId,
+				GameId = t.GameId,
+				GameName = t.Game != null ? t.Game.DisplayName : null,
 				Poll = t.PollId.HasValue
 					? new ForumTopicModel.PollModel
 					{
