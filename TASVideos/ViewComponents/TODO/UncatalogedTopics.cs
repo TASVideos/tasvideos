@@ -27,6 +27,7 @@ public class UncatalogedTopics : ViewComponent
 
 		var query = _db.ForumTopics
 			.Where(t => t.Forum!.Category!.Id == SiteGlobalConstants.GamesForumCategory)
+			.Where(t => !t.Title.ToLower().Contains("wishlist"))
 			.Where(t => t.GameId == null);
 
 		if (forumId.HasValue)
