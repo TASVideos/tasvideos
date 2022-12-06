@@ -4,6 +4,39 @@
 	string footer = ViewData["footer"]?.ToString() ?? "";
 	var first = Model.FirstOrDefault();
 }
+<row>
+	<div class="list-group col-12 col-lg-8">
+		@foreach (var pub in Model)
+		{
+			<pub-link id="pub.Id" class="list-group-item list-group-item-action list-group-item-primary">
+				<div class="d-flex w-100 justify-content-between">
+					<div class="d-flex align-items-center">
+						<div style="width: 100px; height: 80px;" class="text-center">
+							<img src="/media/@pub.Screenshot.Path" style="max-height: 100%" class="img-fluid" />
+						</div>
+						<div class="mx-3">
+							<row class="align-items-center">
+								<div class="col-auto px-1">
+									<span class="fs-6 badge bg-info">@(pub.Time().ToStringWithOptionalDaysAndHours())</span>
+								</div>
+								<div class="col-auto px-1">
+									<span class="text-muted">@pub.System</span>
+								</div>
+								<div class="col-auto px-1">
+									<span class="fs-5">@pub.Game</span>
+								</div>
+							</row>
+							<fullrow>
+								<span class="text-black mt-auto">by <author-list authors="pub.Authors" additional-authors="@pub.AdditionalAuthors"></author-list></span>
+							</fullrow>
+						</div>
+					</div>
+					<small><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></small>
+				</div>
+			</pub-link>
+		}
+	</div>
+</row>
 <hr />
 <row>
 	<div class="col-lg-9 col-md-8">
