@@ -1,6 +1,9 @@
 ﻿@page "{id}"
 @using TASVideos.Data.Helpers
 @model IndexModel
+@{
+	ViewData["Title"] = $"{Model.Topic.Title} - Topic {Model.Topic.Id}";
+}
 
 @if (Model.HighlightedPost is not null)
 {
