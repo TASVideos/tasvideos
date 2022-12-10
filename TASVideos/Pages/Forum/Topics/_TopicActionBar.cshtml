@@ -68,6 +68,7 @@
 	<i class="fa fa-list-ul"></i> Poll
 </a>
 <a permission="CatalogMovies"
+   condition="@Model.CategoryId == SiteGlobalConstants.GamesForumCategory"
 	asp-page="Catalog"
 	asp-route-id="@Model.Id"
 	class="btn btn-sm btn-info border border-warning">

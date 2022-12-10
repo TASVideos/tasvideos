@@ -11,6 +11,7 @@ public interface IForumTopicActionBar
 	bool IsWatching { get; }
 	string Title { get; }
 	bool AnyVotes { get; }
+	int CategoryId { get; }
 }
 
 public class ForumTopicModel : IForumTopicActionBar
@@ -35,6 +36,7 @@ public class ForumTopicModel : IForumTopicActionBar
 
 	public int? GameId { get; set; }
 	public string? GameName { get; set; }
+	public int CategoryId { get; set; }
 
 	public class PollModel
 	{

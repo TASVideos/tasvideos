@@ -84,6 +84,7 @@ public class IndexModel : BaseForumModel
 				SubmissionId = t.SubmissionId,
 				GameId = t.GameId,
 				GameName = t.Game != null ? t.Game.DisplayName : null,
+				CategoryId = t.Forum!.CategoryId,
 				Poll = t.PollId.HasValue
 					? new ForumTopicModel.PollModel
 					{
