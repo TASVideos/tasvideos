@@ -68,6 +68,11 @@ public class MergeModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
+		if (Topic.DestinationTopicId == Id)
+		{
+			ModelState.AddModelError($"{nameof(Topic)}.{nameof(Topic.DestinationTopicId)}", "Cannot merge topic into itself!");
+		}
+
 		if (!ModelState.IsValid)
 		{
 			await PopulateAvailableForums();
@@ -154,6 +159,7 @@ public class MergeModel : BasePageModel
 		return await _db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.ForForum(forumId)
+			.Where(t => t.Id != Id)
 			.Select(t => new SelectListItem
 			{
 				Text = t.Title,
