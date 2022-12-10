@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MailKit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
@@ -17,15 +19,18 @@ public class EditModel : BasePageModel
 	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
 	private readonly ExternalMediaPublisher _publisher;
+	private readonly string _baseUrl;
 
 	public EditModel(
 		ApplicationDbContext db,
 		IWikiPages wikiPages,
-		ExternalMediaPublisher publisher)
+		ExternalMediaPublisher publisher,
+		AppSettings settings)
 	{
 		_db = db;
 		_wikiPages = wikiPages;
 		_publisher = publisher;
+		_baseUrl = settings.BaseUrl;
 	}
 
 	[FromRoute]
@@ -76,7 +81,10 @@ public class EditModel : BasePageModel
 	{
 		Game.DisplayName = Game.DisplayName.Trim();
 		Game.Abbreviation = Game.Abbreviation?.Trim();
-		Game.GameResourcesPage = Game.GameResourcesPage?.Trim().Trim('/');
+		Game.GameResourcesPage = Game.GameResourcesPage
+			?.Replace(_baseUrl, "")
+			.Trim()
+			.Trim('/');
 		Game.Aliases = Game.Aliases?.Trim().Replace(", ", ",");
 
 		if (!ModelState.IsValid)
