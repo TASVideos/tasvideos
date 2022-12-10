@@ -24,7 +24,7 @@ public class SubmissionCreateModel
 	[StringLength(100)]
 	public string RomName { get; set; } = "";
 
-	[Display(Name = "Emulator and version", Description = "Example: BizHawk 2.5")]
+	[Display(Name = "Emulator and version", Description = "Example: BizHawk 2.8.0")]
 	[StringLength(50)]
 	public string? Emulator { get; set; }
 
