@@ -30,6 +30,7 @@ public static class WikiModules
 	public const string NoEmulator = "noemulator";
 	public const string NoGameName = "nogame";
 	public const string NoGameVersion = "nogameversion";
+	public const string NoGameGenre = "nogamegenres";
 	public const string OrphanGameResources = "orphangameresources";
 	public const string PlatformAuthorList = "platformtaserlists";
 	public const string PlatformFramerates = "platformframerates";
