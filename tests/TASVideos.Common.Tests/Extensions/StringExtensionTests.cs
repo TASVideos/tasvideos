@@ -54,6 +54,10 @@ public class StringExtensionTests
 	}
 
 	[TestMethod]
+	[DataRow(null, "")]
+	[DataRow("", "")]
+	[DataRow("\r \n \t", "\r \n \t")]
+	[DataRow(" ", " ")]
 	[DataRow("GameResources/NES/SuperMarioBros", "Game Resources / NES / Super Mario Bros")]
 	[DataRow("HomePages/adelikat", "Home Pages / adelikat")]
 	[DataRow("HomePages/Adelikat", "Home Pages / Adelikat")]
@@ -61,8 +65,8 @@ public class StringExtensionTests
 	[DataRow("HomePages/UserNameWithCamelCase", "Home Pages / UserNameWithCamelCase")]
 	[DataRow("HomePages/UserNameWithCamelCase/Subpage", "Home Pages / UserNameWithCamelCase / Subpage")]
 	[DataRow("HomePages/UserNameWithCamelCase/SubPage", "Home Pages / UserNameWithCamelCase / Sub Page")]
-	[DataRow("HomePages/Sonic 2", "HomePages / Sonic 2")]
-	[DataRow("HomePages/Sonic 2/SubPage", "HomePages / Sonic 2 / Sub Page")]
+	[DataRow("HomePages/Sonic 2", "Home Pages / Sonic 2")]
+	[DataRow("HomePages/Sonic 2/SubPage", "Home Pages / Sonic 2 / Sub Page")]
 	public void SplitPathCamelCase_Tests(string str, string expected)
 	{
 		var actual = str.SplitPathCamelCase();

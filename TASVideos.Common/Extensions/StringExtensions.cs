@@ -86,16 +86,26 @@ public static class StringExtensions
 	/// </summary>
 	public static string SplitPathCamelCase(this string? str)
 	{
-		string split = SplitCamelCase(str);
-
-		if (split.StartsWith("Home Pages / "))
+		if (str is null)
 		{
-			string[] retSplit = split.Split(" / ");
-			retSplit[1] = retSplit[1].RemoveAllSpaces();
-			split = string.Join(" / ", retSplit);
+			return "";
 		}
 
-		return split;
+		if (str.StartsWith("HomePages/"))
+		{
+			var pathFragments = str.SplitWithEmpty("/");
+			for (int i = 0; i < pathFragments.Length; i++)
+			{
+				if (i != 1)
+				{
+					pathFragments[i] = SplitCamelCase(pathFragments[i]);
+				}
+			}
+
+			return string.Join(" / ", pathFragments);
+		}
+
+		return SplitCamelCase(str);
 	}
 
 	/// <summary>
