@@ -152,7 +152,7 @@ public class SubmitModel : BasePageModel
 			.Where(a => !string.IsNullOrWhiteSpace(a))
 			.ToList();
 
-		if (!Create.Authors.Any())
+		if (!Create.Authors.Any() && string.IsNullOrWhiteSpace(Create.AdditionalAuthors))
 		{
 			ModelState.AddModelError(
 				$"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}",
