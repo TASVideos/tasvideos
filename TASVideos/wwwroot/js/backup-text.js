@@ -3,7 +3,6 @@
 // id: "backup-time"           | where the time will be put
 // id: "backup-restore"        | surrounding element hidden by default to display when backup exists
 // id: "backup-restore-button" | button to restore data
-
 function convertSecondsToRelativeTime(seconds) {
 	const minutes = Math.floor(seconds / 60);
 	const hours = Math.floor(seconds / (60 * 60));
@@ -11,27 +10,32 @@ function convertSecondsToRelativeTime(seconds) {
 	if (seconds < 5) {
 		return "a few seconds ago";
 	}
-	else if (seconds < 60) {
+
+	if (seconds < 60) {
 		return `${seconds} seconds ago`;
 	}
-	else if (minutes < 2) {
+
+	if (minutes < 2) {
 		return "1 minute ago";
 	}
-	else if (minutes < 60) {
+
+	if (minutes < 60) {
 		return `${minutes} minutes ago`;
 	}
-	else if (hours < 2) {
+
+	if (hours < 2) {
 		return "1 hour ago";
 	}
-	else if (hours < 24) {
+
+	if (hours < 24) {
 		return `${hours} hours ago`;
 	}
-	else if (days < 2) {
+
+	if (days < 2) {
 		return "1 day ago";
 	}
-	else {
-		return `${days} days ago`;
-	}
+
+	return `${days} days ago`;
 }
 
 const textarea = document.querySelector('textarea.backup-content');
