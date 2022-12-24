@@ -1,9 +1,14 @@
 ﻿@model TASVideos.Core.Services.IAwardAssignmentSummary
 @{
 	string awardName = $"{Model.ShortName}_{Model.Year.ToString()}";
+	int maxHeight = ViewContext.PageGroup() is "Users" or "Profile"
+		? 92
+		: 48;
 }
-<a href="/Awards/@Model.Year.ToString()#@(Model.ShortName)_@Model.Year" title="Award - @Model.Description"><img style="max-height: 48px;" 
-		 srcset="/awards/@(awardName).png .5x,
-		 /awards/@(awardName)-2x.png 1x,
-		 /awards/@(awardName)-4x.png 2x"
-		 src="/awards/@(awardName)-2x.png" alt="@Model.Description" loading="lazy" /></a>
+
+<a href="/Awards/@Model.Year.ToString()#@(Model.ShortName)_@Model.Year" title="Award - @Model.Description">
+	<img style="max-height: @(maxHeight)px;"
+		srcset="/awards/@(awardName).png 1x,
+	 /awards/@(awardName)-2x.png 2x,
+	 /awards/@(awardName)-4x.png 4x"
+		src="/awards/@(awardName).png" alt="@Model.Description" loading="lazy" /></a>
