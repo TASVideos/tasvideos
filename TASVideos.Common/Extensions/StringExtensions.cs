@@ -91,21 +91,21 @@ public static class StringExtensions
 			return "";
 		}
 
-		if (str.StartsWith("HomePages/"))
+		if (!str.StartsWith("HomePages/"))
 		{
-			var pathFragments = str.SplitWithEmpty("/");
-			for (int i = 0; i < pathFragments.Length; i++)
-			{
-				if (i != 1)
-				{
-					pathFragments[i] = SplitCamelCase(pathFragments[i]);
-				}
-			}
-
-			return string.Join(" / ", pathFragments);
+			return SplitCamelCase(str);
 		}
 
-		return SplitCamelCase(str);
+		var pathFragments = str.SplitWithEmpty("/");
+		for (int i = 0; i < pathFragments.Length; i++)
+		{
+			if (i != 1)
+			{
+				pathFragments[i] = SplitCamelCase(pathFragments[i]);
+			}
+		}
+
+		return string.Join(" / ", pathFragments);
 	}
 
 	/// <summary>
