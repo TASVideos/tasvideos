@@ -61,6 +61,8 @@ public class StringExtensionTests
 	[DataRow("HomePages/UserNameWithCamelCase", "Home Pages / UserNameWithCamelCase")]
 	[DataRow("HomePages/UserNameWithCamelCase/Subpage", "Home Pages / UserNameWithCamelCase / Subpage")]
 	[DataRow("HomePages/UserNameWithCamelCase/SubPage", "Home Pages / UserNameWithCamelCase / Sub Page")]
+	[DataRow("HomePages/Sonic 2", "HomePages / Sonic 2")]
+	[DataRow("HomePages/Sonic 2/SubPage", "HomePages / Sonic 2 / Sub Page")]
 	public void SplitPathCamelCase_Tests(string str, string expected)
 	{
 		var actual = str.SplitPathCamelCase();
