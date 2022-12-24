@@ -81,6 +81,34 @@ public static class StringExtensions
 	}
 
 	/// <summary>
+	/// Uses <see cref="SplitCamelCase"/> to split the string,
+	/// but also checks for a HomePages path and undoes the split for the usernames in the path.
+	/// </summary>
+	public static string SplitPathCamelCase(this string? str)
+	{
+		if (str is null)
+		{
+			return "";
+		}
+
+		if (!str.StartsWith("HomePages/"))
+		{
+			return SplitCamelCase(str);
+		}
+
+		var pathFragments = str.SplitWithEmpty("/");
+		for (int i = 0; i < pathFragments.Length; i++)
+		{
+			if (i != 1)
+			{
+				pathFragments[i] = SplitCamelCase(pathFragments[i]);
+			}
+		}
+
+		return string.Join(" / ", pathFragments);
+	}
+
+	/// <summary>
 	/// Takes a comma separated string and returns a list of values.
 	/// </summary>
 	public static IEnumerable<string> CsvToStrings(this string? param)
@@ -122,11 +150,18 @@ public static class StringExtensions
 		return str.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
 	}
 
+	private static readonly Regex SplitCamelCaseRegex = new(@"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])");
 	private static string SplitCamelCaseInternal(this string? str)
 	{
 		return !string.IsNullOrWhiteSpace(str)
-			? Regex.Replace(str, @"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])", "$1$2$3$4$5 ")
+			? SplitCamelCaseRegex.Replace(str, "$1$2$3$4$5 ")
 			: "";
+	}
+
+	private static readonly Regex SpaceRegex = new(@" +");
+	public static string RemoveAllSpaces(this string? str)
+	{
+		return SpaceRegex.Replace(str ?? "", "");
 	}
 
 	public static string UnicodeAwareSubstring(this string s, int startIndex)
