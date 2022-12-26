@@ -42,9 +42,8 @@ public class IndexModel : BasePageModel
 			? query.Where(g => g.Id == ParsedId)
 			: query.Where(g => g.Abbreviation == Id);
 
-		// TODO: abbreviations need to be unique, then we can use Single here
 		var game = await query
-			.FirstOrDefaultAsync();
+			.SingleOrDefaultAsync();
 
 		if (game is null)
 		{
