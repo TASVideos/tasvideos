@@ -52,12 +52,15 @@ public class IndexModel : BasePageModel
 			{
 				Id = g.Id,
 				Name = g.DisplayName,
-				Systems = g.GameVersions.Select(v => v.System!.Code),
+				Systems = g.GameVersions
+					.Select(v => v.System!.Code)
+					.Distinct()
+					.OrderBy(s => s)
+					.ToList(),
 				PublicationCount = g.Publications.Count,
 				SubmissionsCount = g.Submissions.Count,
 				GameResourcesPage = g.GameResourcesPage
 			})
-			.OrderBy(g => g.Name)
 			.ToListAsync();
 
 		return Page();

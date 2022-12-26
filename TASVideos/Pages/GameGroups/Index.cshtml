@@ -25,7 +25,7 @@
 		<th>Submissions</th>
 		<th>Resource Page</th>
 	</tr>
-	@foreach (var game in Model.Games)
+	@foreach (var game in Model.Games.OrderBy(g => g.Name).ThenBy(g => g.SystemsString()))
 	{
 		<tr>
 			<td>
@@ -34,7 +34,7 @@
 				</game-link>
 			</td>
 			<td>
-				@string.Join(", ", game.Systems.Distinct())
+				@game.SystemsString()
 			</td>
 			<td>
 				<a href="/Movies-@(game.Id)G">
