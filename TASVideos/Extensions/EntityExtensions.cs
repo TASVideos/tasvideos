@@ -422,4 +422,26 @@ public static class EntityExtensions
 			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
 		});
 	}
+
+	public static IQueryable<RoleEditModel> ToRoleEditModel(this IQueryable<Role> query)
+	{
+		return query.Select(r => new RoleEditModel
+		{
+			Name = r.Name,
+			IsDefault = r.IsDefault,
+			Description = r.Description,
+			AutoAssignPostCount = r.AutoAssignPostCount,
+			AutoAssignPublications = r.AutoAssignPublications,
+			Links = r.RoleLinks
+				.Select(rl => rl.Link)
+				.ToList(),
+			SelectedPermissions = r.RolePermission
+				.Select(rp => (int)rp.PermissionId)
+				.ToList(),
+			SelectedAssignablePermissions = r.RolePermission
+				.Where(rp => rp.CanAssign)
+				.Select(rp => (int)rp.PermissionId)
+				.ToList()
+		});
+	}
 }

@@ -26,6 +26,9 @@ public class AddEditModel : BasePageModel
 	[FromRoute]
 	public int? Id { get; set; }
 
+	[FromQuery]
+	public int? CopyFrom { get; set; }
+
 	[BindProperty]
 	public RoleEditModel Role { get; set; } = new();
 
@@ -51,24 +54,7 @@ public class AddEditModel : BasePageModel
 		{
 			var role = await _db.Roles
 				.Where(r => r.Id == Id.Value)
-				.Select(r => new RoleEditModel
-				{
-					Name = r.Name,
-					IsDefault = r.IsDefault,
-					Description = r.Description,
-					AutoAssignPostCount = r.AutoAssignPostCount,
-					AutoAssignPublications = r.AutoAssignPublications,
-					Links = r.RoleLinks
-						.Select(rl => rl.Link)
-						.ToList(),
-					SelectedPermissions = r.RolePermission
-						.Select(rp => (int)rp.PermissionId)
-						.ToList(),
-					SelectedAssignablePermissions = r.RolePermission
-						.Where(rp => rp.CanAssign)
-						.Select(rp => (int)rp.PermissionId)
-						.ToList()
-				})
+				.ToRoleEditModel()
 				.SingleOrDefaultAsync();
 
 			if (role is null)
@@ -82,6 +68,19 @@ public class AddEditModel : BasePageModel
 		}
 		else
 		{
+			if (CopyFrom.HasValue)
+			{
+				var role = await _db.Roles
+					.Where(r => r.Id == CopyFrom.Value)
+					.ToRoleEditModel()
+					.SingleOrDefaultAsync();
+				if (role is not null)
+				{
+					role.Name += " (Copied From)";
+					Role = role;
+				}
+			}
+
 			ViewData["IsInUse"] = false;
 		}
 
