@@ -27,19 +27,7 @@
 	<link rel="alternate" href="/submissions.rss" type="application/rss+xml" title="TASVideos RSS Submission Feed">
 	<link rel="alternate" href="/publications.rss" type="application/rss+xml" title="TASVideos RSS Publication Feed">
 	<link rel="alternate" href="/wiki.rss" type="application/rss+xml" title="TASVideos RSS Wiki Feed">
-
-	@if (IsSectionDefined("Header"))
-	{
-		@await RenderSectionAsync("Header")
-	}
-	else
-	{
-		<meta property="og:type" content="website" />
-		<meta property="og:title" content="TASVideos" />
-		<meta property="og:description" content="Tool-assisted game movies - When human skills are just not enough" />
-		<meta property="og:url" content="@Context.Request.ToUrl()" />
-		<meta property="og:image" content="@($"{Context.Request.ToBaseUrl()}/images/logo-embed.png")" />
-	}
+	<partial name="_MetaTags" />
 </head>
 <body>
 	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">

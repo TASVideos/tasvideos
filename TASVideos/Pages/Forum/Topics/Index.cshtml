@@ -3,37 +3,33 @@
 @model IndexModel
 @{
 	ViewData["Title"] = $"{Model.Topic.Title} - Topic {Model.Topic.Id}";
-}
-
-@if (Model.HighlightedPost is not null)
-{
-	var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
-	if (!string.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
+	if (Model.HighlightedPost is not null)
 	{
-		description += $"\nSubject: {Model.HighlightedPost.Subject}";
-	}
-	@section Header {
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="TASVideos" />
-		<meta property="og:title" content="@($"Post by {Model.HighlightedPost.PosterName}")" />
-		<meta property="og:description" content="@description" />
-		<meta property="og:url" content="@($"{HttpContext.Request.ToBaseUrl()}/Forum/Posts/{Model.HighlightedPost.Id}")" />
-		<meta property="og:image" content="@Model.HighlightedPost.GetCurrentAvatar()" />
-	}
-} else
-{
-	@section Header {
-		@{
-			var firstPost = Model.Topic.Posts.FirstOrDefault();
-			var ogTitle = firstPost is not null ? $"Topic by {firstPost.PosterName}" : "Forum Topic";
-			var ogImage = firstPost is not null ? firstPost.GetCurrentAvatar() : $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png";
+		var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
+		if (!string.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
+		{
+			description += $"\nSubject: {Model.HighlightedPost.Subject}";
 		}
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="TASVideos" />
-		<meta property="og:title" content="@ogTitle" />
-		<meta property="og:description" content="@($"{Model.Topic.ForumName} → {Model.Topic.Title}")" />
-		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
-		<meta property="og:image" content="@ogImage" />
+
+		ViewData.SetMetaTags(new MetaTagModel
+		{
+			Title = $"Post by {Model.HighlightedPost.PosterName}",
+			Description = description,
+			RelativeUrl = $"/Forum/Posts/{Model.HighlightedPost.Id}",
+			Image = Model.HighlightedPost.GetCurrentAvatar()
+		});
+	}
+	else
+	{
+		var firstPost = Model.Topic.Posts.FirstOrDefault();
+		ViewData.SetMetaTags(new MetaTagModel
+		{
+			Title = firstPost is not null
+				? $"Topic by {firstPost.PosterName}"
+				: "Forum Topic",
+			Description = $"{Model.Topic.ForumName} → {Model.Topic.Title}",
+			Image = firstPost?.GetCurrentAvatar()
+		});
 	}
 }
 

@@ -1,5 +1,7 @@
 @page "{id}"
 @inject IQueueService QueueService
+@using TASVideos.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ViewModel
 @{
 	ViewData["Title"] = $"{Model.Submission.Title} - Submission #{Model.Id}";
@@ -21,12 +23,18 @@
 	bool canClaimAsPublisher = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& ViewData.UserHas(PermissionTo.EditSubmissions)
 		&& Model.Submission.Status == SubmissionStatus.Accepted;
-	string youtubeEmbedImage = "";
-	if (Model.Submission.EncodeEmbedLink is not null)
+
+	var youtubeEmbedImage = Model.Submission.EncodeEmbedLink is not null
+		? "https://i.ytimg.com/vi/" + Model.Submission.EncodeEmbedLink.Split('/').Last() + "/hqdefault.jpg"
+		: null;
+
+	ViewData.SetMetaTags(new MetaTagModel
 	{
-		youtubeEmbedImage = "https://i.ytimg.com/vi/" + Model.Submission.EncodeEmbedLink.Split('/').Last() + "/hqdefault.jpg";
-	}
-	string openGraphEmbedImage = string.IsNullOrWhiteSpace(youtubeEmbedImage) ? $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png" : youtubeEmbedImage;
+		Title = Model.Submission.Title,
+		Description = $"Submission #{Model.Id} from {Model.Submission.Submitted.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}", 
+		Image = youtubeEmbedImage,
+		UseTwitterCard = !string.IsNullOrWhiteSpace(youtubeEmbedImage)
+	});
 }
 
 @functions{
@@ -46,18 +54,6 @@
 			case SubmissionStatus.Delayed:
 				return "warning";
 		}
-	}
-}
-
-@section Header {
-	<meta property="og:type" content="website" />
-	<meta property="og:site_name" content="TASVideos" />
-	<meta property="og:title" content="@(Model.Submission.Title)" />
-	<meta property="og:description" content="@($"Submission #{Model.Id} from {Model.Submission.Submitted.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}")" />
-	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
-	<meta property="og:image" content="@openGraphEmbedImage" />
-	@if (!string.IsNullOrWhiteSpace(youtubeEmbedImage)) {
-		<meta property="twitter:card" content="summary_large_image" />
 	}
 }
 

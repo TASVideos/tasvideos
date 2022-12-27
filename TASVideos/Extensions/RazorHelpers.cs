@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Extensions;
@@ -100,5 +101,10 @@ public static class RazorHelpers
 	public static string UniqueId(this ViewDataDictionary viewData)
 	{
 		return "_" + Guid.NewGuid().ToString().Replace("-", "").ToLower();
+	}
+
+	public static void SetMetaTags(this ViewDataDictionary viewData, MetaTagModel metaTags)
+	{
+		viewData["MetaTags"] = metaTags;
 	}
 }

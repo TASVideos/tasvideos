@@ -7,21 +7,14 @@
 	ViewData["ActiveTab"] = WikiHelper.IsGameResourcesPage(pageData.PageName)
 		? "Game Resources"
 		: pageData.PageName;
-}
-@section Header {
-	@{
-		var description = "";
-		if (pageData.AuthorName is not null && pageData.RevisionMessage is not null)
-		{
-			description = $"Last Edited By {pageData.AuthorName} - {pageData.RevisionMessage}";
-		}
-	}
-	<meta property="og:type" content="website" />
-	<meta property="og:site_name" content="TASVideos" />
-	<meta property="og:title" content="@pageData.PageName" />
-	<meta property="og:description" content="@description" />
-	<meta property="og:url" content="@Context.Request.ToUrl()" />
-	<meta property="og:image" content="@($"{Context.Request.ToBaseUrl()}/images/logo-embed.png")" />
+
+	ViewData.SetMetaTags(new MetaTagModel
+	{
+		Title = pageData.PageName,
+		Description = pageData.AuthorName is not null && pageData.RevisionMessage is not null
+			? $"Last Edited By {pageData.AuthorName} - {pageData.RevisionMessage}"
+			: null
+	});
 }
 
 @section PageTitle {
