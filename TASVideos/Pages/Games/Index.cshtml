@@ -4,10 +4,20 @@
 	ViewData["Title"] = $"{Model.Game.DisplayName}";
 	string wiki = LinkConstants.GameWikiPage + Model.Game.Id;
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), ViewData.UserPermissions());
+	string? url = !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any()
+		? !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl)
+			? Model.Game.ScreenshotUrl
+			: $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Movie.Screenshot.Path}"
+		: null;
+	ViewData.SetMetaTags(new MetaTagModel
+	{
+		Title = Model.Game.DisplayName,
+		Image = url
+	});
 }
 
-<div class="float-md-end text-center mb-2" condition="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any())">
-	<img class="img-fluid" src="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) ? Model.Game.ScreenshotUrl : $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Movie.Screenshot.Path}")" />
+<div class="float-md-end text-center mb-2" condition="url is not null">
+	<img class="img-fluid" src="@url" />
 </div>
 <row>
 	<div class="col-12 col-xl-6 mb-2">
