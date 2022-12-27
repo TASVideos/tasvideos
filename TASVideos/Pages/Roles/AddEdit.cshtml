@@ -1,17 +1,15 @@
 ﻿@page "{id?}/{handler?}"
 @model AddEditModel
 @{
+	bool canDelete = Model.Id.HasValue && ViewData.UserHas(PermissionTo.DeleteRoles) && ViewData["IsInUse"] is true;
 	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Role.Name : "Create a New Role";
 }
-<delete-button
-	condition="@(Model.Id.HasValue && ViewData.UserHas(PermissionTo.DeleteRoles) && ViewData["IsInUse"] is true)"
+<delete-button condition="canDelete"
 	asp-href="@($"/Roles/AddEdit/{Model.Id}/Delete")"
-	warning-message="Are you sure you want to delete this Role? This action cannot be undone!"
-	class="float-end text-center">
+	warning-message="Are you sure you want to delete this Role? This action cannot be undone!">
 	Delete
 </delete-button>
-<h4>@ViewData["Title"]</h4>
-<hr />
+<hr condition="canDelete" />
 <form asp-route="Edit">
 	<row>
 		<column lg="5">
