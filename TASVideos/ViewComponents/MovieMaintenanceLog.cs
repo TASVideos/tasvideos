@@ -30,8 +30,8 @@ public class MovieMaintenanceLog : ViewComponent
 				return new ContentViewComponentResult($"Publication #{publicationId} not found.");
 			}
 
-			ViewData["title"] = publicationTitle;
-			ViewData["id"] = publicationId;
+			ViewData["pubTitle"] = publicationTitle;
+			ViewData["pubId"] = publicationId;
 
 			var entries = await _db.PublicationMaintenanceLogs
 				.Where(l => l.PublicationId == publicationId)
