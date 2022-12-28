@@ -3,6 +3,7 @@
 @{
 	ViewData.SetTitle("Profile Settings");
 	ViewData.AddActivePage(ProfileNavPages.Settings);
+	string trueId, falseId;
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
@@ -42,8 +43,8 @@
 				<label asp-for="Settings.PublicRatings"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
 					@{
-						const string trueId = nameof(Model.Settings.PublicRatings) + "-true";
-						const string falseId = nameof(Model.Settings.PublicRatings) + "-false";
+						trueId = nameof(Model.Settings.PublicRatings) + "-true";
+						falseId = nameof(Model.Settings.PublicRatings) + "-false";
 					}
 					<label for="@trueId" class="btn btn-secondary @(Model.Settings.PublicRatings ? "active" : "")">
 						<input id="@trueId" type="radio" value="True" asp-for="Settings.PublicRatings" /> Yes
@@ -57,8 +58,8 @@
 				<label asp-for="Settings.EmailOnPrivateMessage"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
 					@{
-						const string trueId = nameof(Model.Settings.EmailOnPrivateMessage) + "-true";
-						const string falseId = nameof(Model.Settings.EmailOnPrivateMessage) + "-false";
+						trueId = nameof(Model.Settings.EmailOnPrivateMessage) + "-true";
+						falseId = nameof(Model.Settings.EmailOnPrivateMessage) + "-false";
 					}
 					<label for="@trueId" class="btn btn-secondary @(Model.Settings.EmailOnPrivateMessage ? "active" : "")">
 						<input id="@trueId" type="radio" value="True" asp-for="Settings.EmailOnPrivateMessage" /> Yes
