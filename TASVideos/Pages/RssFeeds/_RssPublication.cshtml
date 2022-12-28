@@ -1,7 +1,8 @@
 ﻿@using System.Globalization
+@inject AppSettings Settings
 @model TASVideos.Pages.RssFeeds.Models.RssPublication
 @{
-	var baseUrl = ViewData["BaseUrl"];
+	var baseUrl = Settings.BaseUrl;
 	var movieUrl = $"{baseUrl}/{Model.Id}M";
 
 	var primaryStreaming = Model.StreamingUrls.FirstOrDefault(u => u.Contains("youtube"));

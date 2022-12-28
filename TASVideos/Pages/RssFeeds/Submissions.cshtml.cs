@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.RssFeeds.Models;
@@ -18,16 +17,13 @@ public class SubmissionsModel : BasePageModel
 
 	public SubmissionsModel(
 		ApplicationDbContext db,
-		IWikiPages wikiPages,
-		AppSettings settings)
+		IWikiPages wikiPages)
 	{
 		_db = db;
 		_wikiPages = wikiPages;
-		BaseUrl = settings.BaseUrl;
 	}
 
 	public List<RssSubmission> Submissions { get; set; } = new();
-	public string BaseUrl { get; set; }
 	public async Task<IActionResult> OnGet()
 	{
 		var filter = SubmissionSearchRequest.Default;

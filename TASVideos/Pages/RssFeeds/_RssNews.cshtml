@@ -1,6 +1,7 @@
 ﻿@model TASVideos.Pages.RssFeeds.Models.RssNews
+@inject AppSettings Settings
 @{
-	var baseUrl = ViewData["BaseUrl"];
+	var baseUrl = Settings.BaseUrl;
 	var postUrl = $"{baseUrl}/Forum/Posts/{Model.PostId}";
 }
 <item>

@@ -1,7 +1,8 @@
 ﻿@using System.Globalization
+@inject AppSettings Settings
 @model TASVideos.Pages.RssFeeds.Models.RssWiki
 @{
-	var baseUrl = ViewData["BaseUrl"];
+	var baseUrl = Settings.BaseUrl;
 	var url = $"{baseUrl}/{Model.PageName}";
 	string action = Model.IsNew ? "created" : "edited";
 	string title = $"{Model.PageName} {action} by {Model.Author}";

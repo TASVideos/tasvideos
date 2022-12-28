@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.RssFeeds.Models;
@@ -17,16 +16,13 @@ public class PublicationsModel : BasePageModel
 
 	public PublicationsModel(
 		ApplicationDbContext db,
-		IWikiPages wikiPages,
-		AppSettings settings)
+		IWikiPages wikiPages)
 	{
 		_db = db;
 		_wikiPages = wikiPages;
-		BaseUrl = settings.BaseUrl;
 	}
 
 	public List<RssPublication> Publications { get; set; } = new();
-	public string BaseUrl { get; set; }
 	public async Task<IActionResult> OnGet()
 	{
 		var minTimestamp = DateTime.UtcNow.AddDays(-60);
