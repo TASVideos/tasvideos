@@ -2,7 +2,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @{
 	Layout = "_Layout.cshtml";
-	IWikiPage pageData = ViewData["WikiPage"] as IWikiPage ?? throw new InvalidOperationException("WikiPage not set");
+	IWikiPage pageData = ViewData.GetWikiPage() ?? throw new InvalidOperationException("WikiPage not set");
 
 	ViewData["ActiveTab"] = WikiHelper.IsGameResourcesPage(pageData.PageName)
 		? "Game Resources"

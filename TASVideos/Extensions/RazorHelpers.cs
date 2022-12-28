@@ -112,4 +112,14 @@ public static class RazorHelpers
 	{
 		viewData["Title"] = title;
 	}
+
+	public static IWikiPage? GetWikiPage(this ViewDataDictionary viewData)
+	{
+		return viewData["WikiPage"] as IWikiPage;
+	}
+
+	public static void SetWikiPage(this ViewDataDictionary viewData, IWikiPage wikiPage)
+	{
+		viewData["WikiPage"] = wikiPage;
+	}
 }

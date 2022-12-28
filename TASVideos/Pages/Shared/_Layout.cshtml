@@ -86,7 +86,7 @@
 
 	@{
 		var title = ViewData["Title"]?.ToString();
-		if (ViewData["WikiPage"] != null)
+		if (ViewData.GetWikiPage() is not null)
 		{
 			title = title.SplitPathCamelCase();
 		}
@@ -113,7 +113,7 @@
 		<row class="justify-content-start align-items-center">
 			<p class="col-auto my-auto">
 				&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/TASVideos/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a> - <a href="/api">API</a>
-				@if (ViewData["WikiPage"] is null)
+				@if (ViewData.GetWikiPage() is null)
 				{
 					var path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
 					if (path != "Wiki/PageDoesNotExist")

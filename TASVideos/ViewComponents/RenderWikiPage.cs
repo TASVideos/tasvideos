@@ -31,7 +31,7 @@ public class RenderWikiPage : ViewComponent
 				Markup = existingPage.Markup,
 				PageData = existingPage
 			};
-			ViewData["WikiPage"] = existingPage;
+			ViewData.SetWikiPage(existingPage);
 			ViewData.SetTitle(existingPage.PageName);
 			ViewData["Layout"] = null;
 			return View(model);
