@@ -2,7 +2,7 @@
 @model UserFilesModel
 
 @{
-	ViewData["Title"] = "My Files";
+	ViewData.SetTitle("My Files");
 	ViewData.AddActivePage(ProfileNavPages.UserFiles);
 	var used = Model.Files.Sum(f => f.FileSizeCompressed);
 }

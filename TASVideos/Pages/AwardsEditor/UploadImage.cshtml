@@ -1,7 +1,7 @@
 ﻿@page "{year}"
 @model UploadImageModel
 @{
-	ViewData["Title"] = $"Upload Award Image for Year {Model.Year}";
+	ViewData.SetTitle($"Upload Award Image for Year {Model.Year}");
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 

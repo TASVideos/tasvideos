@@ -1,7 +1,7 @@
 ﻿@page "{forumId}/{handler?}"
 @model CreateModel
 @{
-	ViewData["Title"] = $"Creating topic for: {Model.Topic.ForumName}";
+	ViewData.SetTitle($"Creating topic for: {Model.Topic.ForumName}");
 }
 <partial Name="_ForumHeader" />
 <h4>Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.Topic.ForumName</a></h4>

@@ -3,7 +3,7 @@
 @model IndexModel
 @inject IQueueService QueueService
 @{
-	ViewData["Title"] = "Submissions";
+	ViewData.SetTitle("Submissions");
 
 	var selectAvailableYears = Model.Search.AvailableYears
 		.Select(n => new SelectListItem

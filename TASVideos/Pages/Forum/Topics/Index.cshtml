@@ -2,7 +2,7 @@
 @using TASVideos.Data.Helpers
 @model IndexModel
 @{
-	ViewData["Title"] = $"{Model.Topic.Title} - Topic {Model.Topic.Id}";
+	ViewData.SetTitle($"{Model.Topic.Title} - Topic {Model.Topic.Id}");
 	if (Model.HighlightedPost is not null)
 	{
 		var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";

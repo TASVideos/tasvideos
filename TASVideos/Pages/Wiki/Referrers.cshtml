@@ -2,7 +2,7 @@
 @model ReferrersModel
 @{
 	string link = WikiHelper.ProcessLink(ViewData["PageName"]?.ToString() ?? "");
-	ViewData["Title"] = $"Referrers for {link}";
+	ViewData.SetTitle($"Referrers for {link}");
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 

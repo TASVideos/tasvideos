@@ -1,7 +1,7 @@
 ﻿@page "{userName}"
 @model PublishersModel
 @{
-	ViewData["Title"] = $"Publisher Activity for {Model.UserName}";
+	ViewData.SetTitle($"Publisher Activity for {Model.UserName}");
 }
 @section PageTitle {
 	<div class="container mb-2">

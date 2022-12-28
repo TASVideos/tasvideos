@@ -1,7 +1,7 @@
 ﻿@page "{id}/{handler?}/{publicationFileId?}"
 @model AdditionalMoviesModel
 @{
-	ViewData["Title"] = $"Additional Movie Files For {Model.PublicationTitle}";
+	ViewData.SetTitle($"Additional Movie Files For {Model.PublicationTitle}");
 }
 
 <h4>Additional Movie Files:</h4>

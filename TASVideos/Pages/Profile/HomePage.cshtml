@@ -5,7 +5,7 @@
 @inject IWikiPages WikiPages
 
 @{
-	ViewData["Title"] = "Home Page";
+	ViewData.SetTitle("Home Page");
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
 	var homePage = $"{LinkConstants.HomePages}{User.Name()}";
 	bool pageExists = await WikiPages.Exists(homePage);

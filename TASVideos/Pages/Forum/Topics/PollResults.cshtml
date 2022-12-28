@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model PollResultsModel
 @{
-	ViewData["Title"] = $"Poll Results for {Model.Poll.TopicTitle}";
+	ViewData.SetTitle($"Poll Results for {Model.Poll.TopicTitle}");
 }
 <partial Name="_ForumHeader" />
 <div>

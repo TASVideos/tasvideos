@@ -2,7 +2,7 @@
 @model GameModel
 
 @{
-	ViewData["Title"] = $"User Files for {Model.Game.GameName}";
+	ViewData.SetTitle($"User Files for {Model.Game.GameName}");
 }
 
 <div class="mb-2">

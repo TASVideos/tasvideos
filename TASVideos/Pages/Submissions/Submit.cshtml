@@ -2,7 +2,7 @@
 @using TASVideos.Data.Helpers
 @model SubmitModel
 @{
-	ViewData["Title"] = "Submit Movie";
+	ViewData.SetTitle("Submit Movie");
 	// ReSharper disable once UnusedVariable
 	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
 	var parseErrors = !notSupportedError && ViewData.ModelState.Keys.Any(e => e == "Parser");

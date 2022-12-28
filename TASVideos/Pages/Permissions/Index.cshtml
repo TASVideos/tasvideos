@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = "Permission List";
+	ViewData.SetTitle("Permission List");
 	var toc = Model.Permissions
 		.OrderBy(m => m.Group)
 		.ThenBy(m => m.Id)

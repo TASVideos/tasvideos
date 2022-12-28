@@ -2,7 +2,7 @@
 @model CacheControlModel
 @inject ICacheService Cache;
 @{
-	ViewData["Title"] = $"Cache Control ({Cache.GetType().Name})";
+	ViewData.SetTitle($"Cache Control ({Cache.GetType().Name})");
 }
 <ul>
 	<li><a asp-page="Index">Diagnostics</a></li>

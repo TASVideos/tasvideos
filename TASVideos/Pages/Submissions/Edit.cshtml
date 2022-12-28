@@ -2,7 +2,7 @@
 @using TASVideos.Data.Helpers
 @model EditModel
 @{
-	ViewData["Title"] = $"Edit Submission #{Model.Id}";
+	ViewData.SetTitle($"Edit Submission #{Model.Id}");
 	var canEditPublicationClass = User.Has(PermissionTo.JudgeSubmissions)
 		&& Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted);
 }

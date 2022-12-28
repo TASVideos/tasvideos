@@ -1,7 +1,7 @@
 ﻿@page "{userName}"
 @model JudgesModel
 @{
-	ViewData["Title"] = $"Judge Activity for {Model.UserName}";
+	ViewData.SetTitle($"Judge Activity for {Model.UserName}");
 }
 @section PageTitle {
 	<div class="container mb-2">

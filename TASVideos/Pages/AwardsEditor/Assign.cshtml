@@ -1,7 +1,7 @@
 ﻿@page "{year}/{handler?}"
 @model AssignModel
 @{
-	ViewData["Title"] = $"Assign an Award for Year {Model.Year}";
+	ViewData.SetTitle($"Assign an Award for Year {Model.Year}");
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 

@@ -1,7 +1,7 @@
 ﻿@page
 @model SaveboxModel
 @{
-	ViewData["Title"] = $"Saved messages for {User.Name()}";
+	ViewData.SetTitle($"Saved messages for {User.Name()}");
 }
 
 <a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>

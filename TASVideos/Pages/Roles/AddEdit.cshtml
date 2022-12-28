@@ -2,7 +2,7 @@
 @model AddEditModel
 @{
 	bool canDelete = Model.Id.HasValue && ViewData.UserHas(PermissionTo.DeleteRoles) && ViewData["IsInUse"] is true;
-	ViewData["Title"] = Model.Id.HasValue ? "Modifying Role: " + Model.Role.Name : "Create a New Role";
+	ViewData.SetTitle(Model.Id.HasValue ? "Modifying Role: " + Model.Role.Name : "Create a New Role");
 }
 <delete-button condition="canDelete"
 	asp-href="@($"/Roles/AddEdit/{Model.Id}/Delete")"

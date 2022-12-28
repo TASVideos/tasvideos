@@ -1,7 +1,7 @@
 ﻿@page "{userName}"
 @model UserModel
 @{
-	ViewData["Title"] = $"Posts for {Model.UserName}";
+	ViewData.SetTitle($"Posts for {Model.UserName}");
 }
 <partial Name="_ForumHeader" />
 

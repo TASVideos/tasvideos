@@ -1,7 +1,7 @@
 ﻿@page "{topicId}"
 @model CreateModel
 @{
-	ViewData["Title"] = $"Posting to Topic: {Model.Post.TopicTitle}";
+	ViewData.SetTitle($"Posting to Topic: {Model.Post.TopicTitle}");
 }
 
 @section PageTitle {

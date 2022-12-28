@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model EditModel
 @{
-	ViewData["Title"] = $"TASVideos Forum Category {Model.Category.Title}";
+	ViewData.SetTitle($"TASVideos Forum Category {Model.Category.Title}");
 }
 <form method="post">
 	<row>

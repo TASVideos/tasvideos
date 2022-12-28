@@ -1,7 +1,7 @@
 ﻿@page
 @model RenderDeletedModel
 @{
-	ViewData["Title"] = $"Viewing Deleted Page: {Model.WikiPage.PageName}";
+	ViewData.SetTitle($"Viewing Deleted Page: {Model.WikiPage.PageName}");
 }
 <h4>Revision: @Model.WikiPage.Revision</h4>
 

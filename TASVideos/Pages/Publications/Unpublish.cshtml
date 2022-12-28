@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model UnpublishModel
 @{
-	ViewData["Title"] = $"Unpublish Movie #{Model.Id}";
+	ViewData.SetTitle($"Unpublish Movie #{Model.Id}");
 }
 
 <form method="post">

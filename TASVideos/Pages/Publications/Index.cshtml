@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = $"Tool-assisted movies ({Model.Movies.Count()})";
+	ViewData.SetTitle($"Tool-assisted movies ({Model.Movies.Count()})");
 }
 
 <a asp-page="Filter" asp-route-query="@Model.Query" class="btn btn-primary mb-2">Filter</a>

@@ -1,9 +1,9 @@
 ﻿@page "{userName?}"
 @model TASVideos.Pages.Forum.MoodReportModel
 @{
-	ViewData["Title"] = string.IsNullOrWhiteSpace(Model.UserName)
+	ViewData.SetTitle(string.IsNullOrWhiteSpace(Model.UserName)
 		? "These are all user's mood avatars"
-		: "Mood avatars";
+		: "Mood avatars");
 }
 <p condition="string.IsNullOrWhiteSpace(Model.UserName)">These are peoples mood avatars</p>
 @foreach (var user in Model.MoodyUsers)

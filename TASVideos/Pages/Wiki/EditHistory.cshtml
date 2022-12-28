@@ -2,7 +2,7 @@
 @model EditHistoryModel
 
 @{
-	ViewData["Title"] = "Edit History For User " + Model.UserName;
+	ViewData.SetTitle("Edit History For User " + Model.UserName);
 }
 <h4>Edits by <a href="@WikiEngine.Builtins.NormalizeInternalLink("/HomePages/" + Model.UserName)">@Model.UserName</a></h4>
 <div class="table-container">

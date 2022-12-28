@@ -2,7 +2,7 @@
 @using TASVideos.Data.Entity.Forum
 @model IndexModel
 @{
-	ViewData["Title"] = $"{Model.Forum.Name} - Subforum";
+	ViewData.SetTitle($"{Model.Forum.Name} - Subforum");
 }
 
 @section PageTitle {

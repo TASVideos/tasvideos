@@ -1,7 +1,7 @@
 ﻿@page "/Games/{gameId}/Versions/List"
 @model ListModel
 @{
-	ViewData["Title"] = $"Versions for {Model.Versions.GameDisplayName}";
+	ViewData.SetTitle($"Versions for {Model.Versions.GameDisplayName}");
 }
 
 <h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.Versions.GameDisplayName</a></h4>

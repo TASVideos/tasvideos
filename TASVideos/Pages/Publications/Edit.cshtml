@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model EditModel
 @{
-	ViewData["Title"] = $"Edit Movie #{Model.Id}";
+	ViewData.SetTitle($"Edit Movie #{Model.Id}");
 	var classIconPath2X = "";
 	var classIconPath4X = "";
 	if (Model.Publication.ClassIconPath != null)

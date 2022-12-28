@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model MergeModel
 @{
-	ViewData["Title"] = $"Merging Topic: {Model.Topic.Title}";
+	ViewData.SetTitle($"Merging Topic: {Model.Topic.Title}");
 }
 <partial Name="_ForumHeader" />
 <h4>

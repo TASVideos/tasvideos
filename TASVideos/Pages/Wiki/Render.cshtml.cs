@@ -59,7 +59,7 @@ public class RenderModel : BasePageModel
 
 			WikiPage = wikiPage;
 			ViewData["WikiPage"] = WikiPage;
-			ViewData["Title"] = WikiPage.PageName;
+			ViewData.SetTitle(WikiPage.PageName);
 			return Page();
 		}
 

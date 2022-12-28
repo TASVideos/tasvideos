@@ -32,7 +32,7 @@ public class RenderWikiPage : ViewComponent
 				PageData = existingPage
 			};
 			ViewData["WikiPage"] = existingPage;
-			ViewData["Title"] = existingPage.PageName;
+			ViewData.SetTitle(existingPage.PageName);
 			ViewData["Layout"] = null;
 			return View(model);
 		}

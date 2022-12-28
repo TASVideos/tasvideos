@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ViewModel
 @{
-	ViewData["Title"] = $"{Model.Submission.Title} - Submission #{Model.Id}";
+	ViewData.SetTitle($"{Model.Submission.Title} - Submission #{Model.Id}");
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
 	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));

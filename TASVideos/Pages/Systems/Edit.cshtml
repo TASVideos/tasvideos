@@ -1,7 +1,7 @@
 ﻿@page "{id}/{handler?}"
 @model EditModel
 @{
-	ViewData["Title"] = $"Editing System: {Model.System.Id} {Model.System.Code}";
+	ViewData.SetTitle($"Editing System: {Model.System.Id} {Model.System.Code}");
 }
 <div class="text-end">
 	<delete-button condition="!Model.InUse"

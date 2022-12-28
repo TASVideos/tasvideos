@@ -2,7 +2,7 @@
 @model EditModel
 
 @{
-	ViewData["Title"] = $"Edit User file {Model.Id}";
+	ViewData.SetTitle($"Edit User file {Model.Id}");
 	string cancelUrl = PageContext.HttpContext.Request.ReturnUrl();
 	if (string.IsNullOrWhiteSpace(cancelUrl))
 	{

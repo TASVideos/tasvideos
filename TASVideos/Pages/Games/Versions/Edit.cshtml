@@ -1,9 +1,9 @@
 ﻿@page "/Games/{gameId}/Versions/Edit/{id?}/{handler?}"
 @model EditModel
 @{
-	ViewData["Title"] = Model.Id.HasValue
+	ViewData.SetTitle(Model.Id.HasValue
 		? $"Editing Game Version #{Model.Id} {Model.Version.Name}"
-		: "Create A New Game Version Entry";
+		: "Create A New Game Version Entry");
 	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }

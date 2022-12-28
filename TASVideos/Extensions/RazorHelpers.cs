@@ -107,4 +107,9 @@ public static class RazorHelpers
 	{
 		viewData["MetaTags"] = metaTags;
 	}
+
+	public static void SetTitle(this ViewDataDictionary viewData, string title)
+	{
+		viewData["Title"] = title;
+	}
 }

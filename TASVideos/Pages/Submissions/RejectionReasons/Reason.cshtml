@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model ReasonModel
 @{
-	ViewData["Title"] = $"Submissions that were Rejected for reason: {Model.RejectionReason}";
+	ViewData.SetTitle($"Submissions that were Rejected for reason: {Model.RejectionReason}");
 }
 
 <ul>

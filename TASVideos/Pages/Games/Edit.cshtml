@@ -1,9 +1,9 @@
 ﻿@page "{id?}"
 @model EditModel
 @{
-	ViewData["Title"] = Model.Id.HasValue
+	ViewData.SetTitle(Model.Id.HasValue
 	? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
-		: "Create a new Game entry";
+		: "Create a new Game entry");
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 <form-group>

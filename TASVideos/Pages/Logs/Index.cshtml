@@ -1,7 +1,7 @@
 ﻿@page "{table?}/{rowId?}"
 @model IndexModel
 @{
-	ViewData["Title"] = !string.IsNullOrWhiteSpace(Model.Table) ? $"History for {Model.Table}" : "All History";
+	ViewData.SetTitle(!string.IsNullOrWhiteSpace(Model.Table) ? $"History for {Model.Table}" : "All History");
 }
 
 <partial name="_Pager" model="Model.History" />

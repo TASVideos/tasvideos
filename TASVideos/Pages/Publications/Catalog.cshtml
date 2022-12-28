@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model CatalogModel
 @{
-	ViewData["Title"] = $"Set Catalogging Information for {Model.Catalog.Title}";
+	ViewData.SetTitle($"Set Catalogging Information for {Model.Catalog.Title}");
 }
 
 <form method="post">

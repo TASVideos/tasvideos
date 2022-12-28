@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model IndexModel
 @{
-	ViewData["Title"] = $"{Model.Game.DisplayName}";
+	ViewData.SetTitle($"{Model.Game.DisplayName}");
 	string wiki = LinkConstants.GameWikiPage + Model.Game.Id;
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), ViewData.UserPermissions());
 	string? url = !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any()

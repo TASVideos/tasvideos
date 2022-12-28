@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model PublishModel
 @{
-	ViewData["Title"] = $"Publishing Submission {Model.Submission.Title}";
+	ViewData.SetTitle($"Publishing Submission {Model.Submission.Title}");
 }
 <card>
 	<cardbody>
