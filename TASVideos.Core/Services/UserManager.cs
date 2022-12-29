@@ -489,9 +489,31 @@ public class UserManager : UserManager<User>
 	/// </summary>
 	public async Task UserNameChanged(User user, string oldName)
 	{
+		// Move home page and subpages
 		var oldHomePage = LinkConstants.HomePages + oldName;
 		var newHomePage = LinkConstants.HomePages + user.UserName;
-
 		await _wikiPages.MoveAll(oldHomePage, newHomePage);
+
+		// Update submission titles
+		var subsToUpdate = await _db.Submissions
+			.IncludeTitleTables()
+			.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == user.Id))
+			.ToListAsync();
+		foreach (var sub in subsToUpdate)
+		{
+			sub.GenerateTitle();
+		}
+
+		// Update publication titles
+		var pubsToUpdate = await _db.Publications
+			.IncludeTitleTables()
+			.Where(p => p.Authors.Any(pa => pa.UserId == user.Id))
+			.ToListAsync();
+		foreach (var pub in pubsToUpdate)
+		{
+			pub.GenerateTitle();
+		}
+
+		await _db.SaveChangesAsync();
 	}
 }

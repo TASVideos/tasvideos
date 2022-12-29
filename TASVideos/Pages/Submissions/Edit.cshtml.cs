@@ -221,15 +221,10 @@ public class EditModel : BasePageModel
 		}
 
 		var submission = await _db.Submissions
+			.IncludeTitleTables()
 			.Include(s => s.Topic)
 			.Include(s => s.Judge)
 			.Include(s => s.Publisher)
-			.Include(s => s.System)
-			.Include(s => s.SystemFrameRate)
-			.Include(s => s.SubmissionAuthors)
-			.ThenInclude(sa => sa.Author)
-			.Include(s => s.Game)
-			.Include(s => s.GameVersion)
 			.SingleAsync(s => s.Id == Id);
 
 		if (Submission.MovieFile is not null)

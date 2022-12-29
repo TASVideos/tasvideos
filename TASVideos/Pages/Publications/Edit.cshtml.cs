@@ -161,15 +161,10 @@ public class EditModel : BasePageModel
 		var externalMessages = new List<string>();
 
 		var publication = await _db.Publications
+			.IncludeTitleTables()
 			.Include(p => p.PublicationUrls)
 			.Include(p => p.PublicationTags)
 			.Include(p => p.PublicationFlags)
-			.Include(p => p.System)
-			.Include(p => p.SystemFrameRate)
-			.Include(p => p.Game)
-			.Include(p => p.GameVersion)
-			.Include(p => p.Authors)
-			.ThenInclude(pa => pa.Author)
 			.SingleOrDefaultAsync(p => p.Id == id);
 
 		if (publication is null)

@@ -218,4 +218,18 @@ public static class SubmissionExtensions
 	{
 		return query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
 	}
+
+	/// <summary>
+	/// Includes all the necessary sub-tables in order to generate a title
+	/// </summary>
+	public static IQueryable<Submission> IncludeTitleTables(this DbSet<Submission> query)
+	{
+		return query
+			.Include(s => s.SubmissionAuthors)
+			.ThenInclude(sa => sa.Author)
+			.Include(s => s.System)
+			.Include(s => s.SystemFrameRate)
+			.Include(s => s.Game)
+			.Include(s => s.GameVersion);
+	}
 }

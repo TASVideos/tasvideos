@@ -106,13 +106,8 @@ public class PublishModel : BasePageModel
 		}
 
 		var submission = await _db.Submissions
+			.IncludeTitleTables()
 			.Include(s => s.IntendedClass)
-			.Include(s => s.System)
-			.Include(s => s.SystemFrameRate)
-			.Include(s => s.Game)
-			.Include(s => s.GameVersion)
-			.Include(s => s.SubmissionAuthors)
-			.ThenInclude(sa => sa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
 
 		if (submission is null || !submission.CanPublish())

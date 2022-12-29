@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations.Schema;
 using TASVideos.Common;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Game;
@@ -255,5 +256,16 @@ public static class PublicationExtensions
 		}
 
 		return query;
+	}
+
+	public static IQueryable<Publication> IncludeTitleTables(this DbSet<Publication> query)
+	{
+		return query
+			.Include(p => p.Authors)
+			.ThenInclude(pa => pa.Author)
+			.Include(p => p.System)
+			.Include(p => p.SystemFrameRate)
+			.Include(p => p.Game)
+			.Include(p => p.GameVersion);
 	}
 }
