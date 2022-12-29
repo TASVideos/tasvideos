@@ -67,7 +67,10 @@ internal class TopicWatcher : ITopicWatcher
 		return await _db.ForumTopicWatches
 			.ForUser(userId)
 			.Select(tw => new WatchedTopic(
-				tw.ForumTopic!.CreateTimestamp,
+				tw.ForumTopic!.ForumPosts
+					.Where(fp => fp.Id == tw.ForumTopic.ForumPosts.Max(fpp => fpp.Id))
+					.Select(fp => fp.CreateTimestamp)
+					.First(),
 				tw.IsNotified,
 				tw.ForumTopic.ForumId,
 				tw.ForumTopic!.Forum!.Name,
@@ -199,7 +202,7 @@ internal class TopicWatcher : ITopicWatcher
 /// Represents a watched forum topic
 /// </summary>
 public record WatchedTopic(
-	DateTime TopicCreateTimestamp,
+	DateTime LastPostTimestamp,
 	bool IsNotified,
 	int ForumId,
 	string ForumTitle,

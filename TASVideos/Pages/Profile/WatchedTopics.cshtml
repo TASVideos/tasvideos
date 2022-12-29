@@ -18,11 +18,12 @@
 		<tr>
 			<th>Forum</th>
 			<th>Topic</th>
+			<th>Last Posted On</th>
 			<th>Stop Watching</th>
 		</tr>
 		@foreach (var watch in Model.Watches
 		   .OrderBy(tw => !tw.IsNotified)
-		   .ThenByDescending(tw => tw.TopicCreateTimestamp))
+		   .ThenByDescending(tw => tw.LastPostTimestamp))
 		{
 			<tr style="@(watch.IsNotified ? "font-style: italic" : "")">
 				<td>
@@ -31,6 +32,9 @@
 				<td>
 					<i condition="watch.IsNotified" title="This topic has new replies" class="fa fa-exclamation"></i>
 					<a asp-page="/Forum/Topics/Index" asp-route-id="@watch.TopicId">@watch.TopicTitle</a>
+				</td>
+				<td>
+					<timezone-convert asp-for="@watch.LastPostTimestamp" date-only="true" />
 				</td>
 				<td>
 					<delete-button warning-message="Are you sure you want to stop watching this topic?"
