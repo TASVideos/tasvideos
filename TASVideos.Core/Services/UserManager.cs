@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -14,6 +15,7 @@ public class UserManager : UserManager<User>
 	private readonly ICacheService _cache;
 	private readonly IPointsService _pointsService;
 	private readonly ITASVideoAgent _tasVideoAgent;
+	private readonly IWikiPages _wikiPages;
 
 	// Holy dependencies, batman
 	public UserManager(
@@ -21,6 +23,7 @@ public class UserManager : UserManager<User>
 		ICacheService cache,
 		IPointsService pointsService,
 		ITASVideoAgent tasVideoAgent,
+		IWikiPages wikiPages,
 		IUserStore<User> store,
 		IOptions<IdentityOptions> optionsAccessor,
 		IPasswordHasher<User> passwordHasher,
@@ -45,6 +48,7 @@ public class UserManager : UserManager<User>
 		_db = db;
 		_pointsService = pointsService;
 		_tasVideoAgent = tasVideoAgent;
+		_wikiPages = wikiPages;
 	}
 
 	// Clears the user claims, and adds a distinct list of user permissions
@@ -478,5 +482,16 @@ public class UserManager : UserManager<User>
 				Description = r.Description
 			})
 			.ToListAsync();
+	}
+
+	/// <summary>
+	/// Performs all the necessary updates after a user's name has been changed
+	/// </summary>
+	public async Task UserNameChanged(User user, string oldName)
+	{
+		var oldHomePage = LinkConstants.HomePages + oldName;
+		var newHomePage = LinkConstants.HomePages + user.UserName;
+
+		await _wikiPages.MoveAll(oldHomePage, newHomePage);
 	}
 }

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Users.Models;
@@ -17,18 +16,18 @@ public class EditModel : BasePageModel
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
-	private readonly IWikiPages _wikiPages;
+	private readonly UserManager _userManager;
 
 	public EditModel(
 		ApplicationDbContext db,
 		ExternalMediaPublisher publisher,
 		IUserMaintenanceLogger userMaintenanceLogger,
-		IWikiPages wikiPages)
+		UserManager userManager)
 	{
 		_db = db;
 		_publisher = publisher;
 		_userMaintenanceLogger = userMaintenanceLogger;
-		_wikiPages = wikiPages;
+		_userManager = userManager;
 	}
 
 	[FromRoute]
@@ -129,10 +128,7 @@ public class EditModel : BasePageModel
 				"",
 				$"Users/Profile/{user.UserName}");
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
-			var oldHomePage = LinkConstants.HomePages + userNameChange;
-			var newHomePage = LinkConstants.HomePages + user.UserName;
-
-			await _wikiPages.MoveAll(oldHomePage, newHomePage);
+			await _userManager.UserNameChanged(user, userNameChange);
 		}
 
 		// Announce Role change
