@@ -3,19 +3,9 @@
 @foreach (var node in Model.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
 {
 	var highlight = node.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
-	var classIconPath2X = "";
-	var classIconPath4X = "";
-	if (node.ClassIconPath != null)
-	{
-		classIconPath2X = $"{node.ClassIconPath.Split('.')[0]}-2x.png";
-		classIconPath4X = $"{node.ClassIconPath.Split('.')[0]}-4x.png";
-	}
 	<div class="mb-4">
 		<p>Current: <strong>@node.Branch</strong></p>
-		<img style="width: 18px" condition="!string.IsNullOrWhiteSpace(node.ClassIconPath)" src="/@classIconPath2X"
-			srcset="/@node.ClassIconPath 1x,
-			 /@classIconPath2X 2x,
-			 /@classIconPath4X 4x"/>
+		<icon path="@node.ClassIconPath" />
 		@foreach (var flag in node.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 		{
 			<a href="/@flag.LinkPath">

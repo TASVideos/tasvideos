@@ -1,5 +1,4 @@
 ﻿@model IEnumerable<TASVideos.ViewComponents.Models.FirstEditionModel>
-
 @{
 	var groups = Model.GroupBy(gkey => new { gkey.PublicationClassId, gkey.PublicationClassIconPath, gkey.PublicationClassName });
 }
@@ -9,15 +8,7 @@
 	<card>
 		<cardheader>
 			<a href="/@g.Key.PublicationClassName">
-				@if (g.Key.PublicationClassIconPath != null)
-				{
-					var classIconPath2X = $"{g.Key.PublicationClassIconPath.Split('.')[0]}-2x.png";
-					var classIconPath4X = $"{g.Key.PublicationClassIconPath.Split('.')[0]}-4x.png";
-					<img style="width: 18px" src="/@classIconPath2X"
-						 srcset="/@g.Key.PublicationClassIconPath .5x,
-						/@classIconPath2X 1x,
-						/@classIconPath4X 2x" />
-				}
+				<icon path="@g.Key.PublicationClassIconPath"></icon>
 				<strong>@g.Key.PublicationClassName</strong>
 			</a>
 			&nbsp;(@g.Count())

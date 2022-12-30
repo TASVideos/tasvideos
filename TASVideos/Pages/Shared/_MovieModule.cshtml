@@ -1,13 +1,6 @@
 ﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
-	var classIconPath2X = "";
-	var classIconPath4X = "";
-	if (!string.IsNullOrWhiteSpace(Model.ClassIconPath))
-	{
-		classIconPath2X = $"{Model.ClassIconPath.Split('.')[0]}-2x.png";
-		classIconPath4X = $"{Model.ClassIconPath.Split('.')[0]}-4x.png";
-	}
 	var requestToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
 	var canRate = User.Has(PermissionTo.RateMovies);
 	var ratingString = Model.Rating.Unrated ? "Rate" : $"Rated {Model.Rating.Rating} / 10";
@@ -49,10 +42,7 @@
 	<cardheader class="bg-cardprimary p-2">
 		<div class="gx-3 clearfix">
 			<div class="float-start" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
-				<img class="me-1" width="18" src="/@classIconPath2X"
-					srcset="/@Model.ClassIconPath .5x,
-					/@classIconPath2X 1x,
-					/@classIconPath4X 2x" />
+				<icon path="@Model.ClassIconPath" />
 			</div>
 			<div class="float-end">
 				@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
