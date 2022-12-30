@@ -218,72 +218,74 @@ public class UserManager : UserManager<User>
 			})
 			.SingleOrDefaultAsync(u => u.UserName == userName);
 
-		if (model is not null)
+		if (model is null)
 		{
-			model.HasHomePage = await _wikiPages.Exists(LinkConstants.HomePages + model.UserName);
+			return null;
+		}
 
-			model.Submissions = await _db.Submissions
-				.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id)
-					|| s.Submitter != null && s.SubmitterId == model.Id)
-				.GroupBy(s => s.Status)
-				.Select(g => new UserProfile.SubmissionEntry
-				{
-					Status = g.Key,
-					Count = g.Count()
-				})
-				.ToListAsync();
+		model.HasHomePage = await _wikiPages.Exists(LinkConstants.HomePages + model.UserName);
 
-			// TODO: round to 1 digit?
-			var (points, rank) = await _pointsService.PlayerPoints(model.Id);
-			model.PlayerPoints = (int)Math.Round(points);
-			model.PlayerRank = rank;
+		model.Submissions = await _db.Submissions
+			.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id)
+				|| s.Submitter != null && s.SubmitterId == model.Id)
+			.GroupBy(s => s.Status)
+			.Select(g => new UserProfile.SubmissionEntry
+			{
+				Status = g.Key,
+				Count = g.Count()
+			})
+			.ToListAsync();
 
-			model.PublishedSystems = await _db.Publications
-				.ForAuthor(model.Id)
-				.Select(p => p.System!.Code)
+		// TODO: round to 1 digit?
+		var (points, rank) = await _pointsService.PlayerPoints(model.Id);
+		model.PlayerPoints = (int)Math.Round(points);
+		model.PlayerRank = rank;
+
+		model.PublishedSystems = await _db.Publications
+			.ForAuthor(model.Id)
+			.Select(p => p.System!.Code)
+			.Distinct()
+			.ToListAsync();
+
+		model.UserFiles.Systems = _db.UserFiles
+			.Where(uf => uf.AuthorId == model.Id)
+			.Where(uf => includeHiddenUserFiles || !uf.Hidden)
+			.Select(uf => uf.System!.Code)
+			.Distinct()
+			.ToList();
+
+		var wikiEdits = await _db.WikiPages
+			.ThatAreNotDeleted()
+			.CreatedBy(model.UserName)
+			.Select(w => new { w.CreateTimestamp })
+			.ToListAsync();
+
+		if (wikiEdits.Any())
+		{
+			model.WikiEdits.TotalEdits = wikiEdits.Count;
+			model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimestamp);
+			model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimestamp);
+		}
+
+		model.Publishing = new()
+		{
+			TotalPublished = await _db.Submissions
+				.CountAsync(s => s.PublisherId == model.Id)
+		};
+
+		model.Judgments = new()
+		{
+			TotalJudgments = await _db.Submissions
+				.CountAsync(s => s.JudgeId == model.Id)
+		};
+
+		if (model.PublicRatings)
+		{
+			model.Ratings.TotalMoviesRated = await _db.PublicationRatings
+				.Where(p => p.Publication!.ObsoletedById == null)
+				.Where(p => p.UserId == model.Id)
 				.Distinct()
-				.ToListAsync();
-
-			model.UserFiles.Systems = _db.UserFiles
-				.Where(uf => uf.AuthorId == model.Id)
-				.Where(uf => includeHiddenUserFiles || !uf.Hidden)
-				.Select(uf => uf.System!.Code)
-				.Distinct()
-				.ToList();
-
-			var wikiEdits = await _db.WikiPages
-				.ThatAreNotDeleted()
-				.CreatedBy(model.UserName)
-				.Select(w => new { w.CreateTimestamp })
-				.ToListAsync();
-
-			if (wikiEdits.Any())
-			{
-				model.WikiEdits.TotalEdits = wikiEdits.Count;
-				model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimestamp);
-				model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimestamp);
-			}
-
-			model.Publishing = new()
-			{
-				TotalPublished = await _db.Submissions
-					.CountAsync(s => s.PublisherId == model.Id)
-			};
-
-			model.Judgments = new()
-			{
-				TotalJudgments = await _db.Submissions
-					.CountAsync(s => s.JudgeId == model.Id)
-			};
-
-			if (model.PublicRatings)
-			{
-				model.Ratings.TotalMoviesRated = await _db.PublicationRatings
-					.Where(p => p.Publication!.ObsoletedById == null)
-					.Where(p => p.UserId == model.Id)
-					.Distinct()
-					.CountAsync();
-			}
+				.CountAsync();
 		}
 
 		return model;
