@@ -179,17 +179,14 @@ internal class Ltm : ParserBase, IParser
 
 		var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
 
-		if (split.Length > 1)
+		if (split.Length <= 1)
 		{
-			var boolStr = split.Skip(1).First();
-			var result = bool.TryParse(boolStr, out bool val);
-			if (result)
-			{
-				return val;
-			}
+			return false;
 		}
 
-		return false;
+		var boolStr = split.Skip(1).First();
+		var result = bool.TryParse(boolStr, out bool val);
+		return result && val;
 	}
 
 	private static string GetPlatformValue(string str)

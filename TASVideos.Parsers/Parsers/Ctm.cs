@@ -15,7 +15,7 @@ internal class Ctm : ParserBase, IParser
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,
-			SystemCode = SystemCodes.N3ds,
+			SystemCode = SystemCodes.N3ds
 		};
 
 		using var br = new BinaryReader(file);

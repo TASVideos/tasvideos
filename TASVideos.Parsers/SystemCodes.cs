@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.MovieParsers;
 
-internal class SystemCodes
+internal static class SystemCodes
 {
 	public const string AppleII = "appleii";
 	public const string Arcade = "arcade";

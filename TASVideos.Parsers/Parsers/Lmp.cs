@@ -29,12 +29,7 @@ internal class Lmp : ParserBase, IParser
 			return false;
 		}
 
-		if ((len - headerLen - 1) % inputLen != 0)
-		{
-			return false;
-		}
-
-		return true;
+		return (len - headerLen - 1) % inputLen == 0;
 	}
 
 	private static int CalcFrames(int len, int headerLen, int inputLen, int playerCount)
@@ -98,13 +93,13 @@ internal class Lmp : ParserBase, IParser
 			}
 		}
 
-		if (players > 0)
+		if (players == 0)
 		{
-			frames = CalcFrames(movie.Length, 13, 4, players);
-			return true;
+			return false;
 		}
 
-		return false;
+		frames = CalcFrames(movie.Length, 13, 4, players);
+		return true;
 	}
 
 	private static bool TryParseDoomClassic(byte[] movie, ref int frames)

@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace TASVideos.MovieParsers.Extensions;
+﻿namespace TASVideos.MovieParsers.Extensions;
 
 internal static class Extensions
 {
@@ -76,12 +74,14 @@ internal static class Extensions
 	public static int? ToPositiveInt(this string val)
 	{
 		var result = int.TryParse(val, out var parsedVal);
-		if (result)
+		if (!result)
 		{
-			if (parsedVal >= 0)
-			{
-				return parsedVal;
-			}
+			return null;
+		}
+
+		if (parsedVal >= 0)
+		{
+			return parsedVal;
 		}
 
 		return null;
@@ -94,12 +94,14 @@ internal static class Extensions
 	public static long? ToPositiveLong(this string val)
 	{
 		var result = long.TryParse(val, out var parsedVal);
-		if (result)
+		if (!result)
 		{
-			if (parsedVal >= 0)
-			{
-				return parsedVal;
-			}
+			return null;
+		}
+
+		if (parsedVal >= 0)
+		{
+			return parsedVal;
 		}
 
 		return null;
@@ -122,26 +124,6 @@ internal static class Extensions
 		}
 
 		return string.Equals(val, "true", StringComparison.InvariantCultureIgnoreCase);
-	}
-
-	/// <summary>
-	/// Returns the number of lines that start with a | which indicates
-	/// an input frame in many movie formats.
-	/// </summary>
-	public static int PipeCount(this IEnumerable<string>? lines)
-	{
-		return lines?.Count(i => i.StartsWith("|")) ?? 0;
-	}
-
-	/// <summary>
-	/// Returns lines that do not begin with a | which indicates
-	/// a header line in many movie formats.
-	/// </summary>
-	public static IEnumerable<string> WithoutPipes(this IEnumerable<string>? lines)
-	{
-		return lines is null
-			? Enumerable.Empty<string>()
-			: lines.Where(i => !i.StartsWith("|"));
 	}
 
 	/// <summary>

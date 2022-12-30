@@ -113,14 +113,9 @@ internal class Bk2 : ParserBase, IParser
 			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
 			{
 				platform = SystemCodes.Sgb;
-				if (result.Region == RegionType.Pal)
-				{
-					result.FrameRateOverride = PalSnesFramerate;
-				}
-				else
-				{
-					result.FrameRateOverride = NtscSnesFramerate;
-				}
+				result.FrameRateOverride = result.Region == RegionType.Pal
+					? PalSnesFramerate
+					: NtscSnesFramerate;
 			}
 			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
 			{

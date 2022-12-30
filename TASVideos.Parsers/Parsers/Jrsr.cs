@@ -651,7 +651,8 @@ internal class JrsrSectionParser : IDisposable
 			{
 				throw new FormatException("Unexpected end of file");
 			}
-			else if (IsLinefeed((char)c))
+
+			if (IsLinefeed((char)c))
 			{
 				// Blank lines are ignored.
 			}
@@ -665,7 +666,8 @@ internal class JrsrSectionParser : IDisposable
 					{
 						throw new FormatException("Unexpected end of file");
 					}
-					else if (IsLinefeed((char)cc))
+
+					if (IsLinefeed((char)cc))
 					{
 						break;
 					}
