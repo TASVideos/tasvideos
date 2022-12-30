@@ -34,7 +34,8 @@
 			<cardbody>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" class="float-end" />
 				<div class="card-text">
-					<a href="/HomePages/@Model.UserName">Homepage</a>
+					<a condition="Model.HasHomePage" href="/HomePages/@Model.UserName">Homepage</a>
+					<small condition="!Model.HasHomePage">(No Home Page)</small>
 					<br />
 					<label asp-for="JoinDate"></label>
 					<label><timezone-convert asp-for="@Model.JoinDate" date-only="true" /></label>

@@ -220,6 +220,8 @@ public class UserManager : UserManager<User>
 
 		if (model is not null)
 		{
+			model.HasHomePage = await _wikiPages.Exists(LinkConstants.HomePages + model.UserName);
+
 			model.Submissions = await _db.Submissions
 				.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id)
 					|| s.Submitter != null && s.SubmitterId == model.Id)

@@ -62,6 +62,7 @@ public class UserProfile
 
 	public int PublicationActiveCount { get; set; }
 	public int PublicationObsoleteCount { get; set; }
+	public bool HasHomePage { get; set; }
 	public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
 	public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
 
