@@ -211,7 +211,7 @@ public class UserManager : UserManager<User>
 						Description = ur.Role.Description
 					})
 					.ToList(),
-				UserFiles = new UserProfile.UserFileSummary
+				UserFiles = new()
 				{
 					Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
 				}
@@ -262,13 +262,13 @@ public class UserManager : UserManager<User>
 				model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimestamp);
 			}
 
-			model.Publishing = new UserProfile.PublishingSummary
+			model.Publishing = new()
 			{
 				TotalPublished = await _db.Submissions
 					.CountAsync(s => s.PublisherId == model.Id)
 			};
 
-			model.Judgments = new UserProfile.JudgingSummary
+			model.Judgments = new()
 			{
 				TotalJudgments = await _db.Submissions
 					.CountAsync(s => s.JudgeId == model.Id)
