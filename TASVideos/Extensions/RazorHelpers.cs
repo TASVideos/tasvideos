@@ -58,11 +58,6 @@ public static class RazorHelpers
 		return await component.InvokeAsync(nameof(RenderWikiPage), new { url = pageName });
 	}
 
-	public static async Task<IHtmlContent> ListParents(this IViewComponentHelper component, IWikiPage pageData)
-	{
-		return await component.InvokeAsync(nameof(ViewComponents.ListParents), new { pageData });
-	}
-
 	public static async Task<IHtmlContent> ListSubPages(this IViewComponentHelper component, IWikiPage pageData, bool show)
 	{
 		return await component.InvokeAsync(nameof(ViewComponents.ListSubPages), new { pageData, show });
