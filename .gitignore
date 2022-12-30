@@ -1,5 +1,6 @@
 *.user
 .vs/**
+.idea/**
 **/bin/**
 **/obj/**
 **/Release/**
