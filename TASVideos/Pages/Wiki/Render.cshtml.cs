@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
@@ -24,7 +25,7 @@ public class RenderModel : BasePageModel
 
 	public async Task<IActionResult> OnGet(string? url, int? revision = null)
 	{
-		url = url?.Trim('/') ?? "";
+		url = WebUtility.UrlDecode(url?.Trim('/') ?? "");
 		if (url.ToLower() == "frontpage")
 		{
 			return Redirect("/");
