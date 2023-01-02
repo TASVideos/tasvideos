@@ -38,15 +38,17 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task UserWatches_ReturnsUserWatches()
 	{
-		int user1Id = 1;
-		int user2Id = 2;
-		int topic1Id = 1;
-		int topic2Id = 2;
+		const int user1Id = 1;
+		const int user2Id = 2;
+		const int topic1Id = 1;
+		const int topic2Id = 2;
 		_db.Users.Add(new User { Id = user1Id });
 		_db.Users.Add(new User { Id = user2Id });
 		var forum = new Forum { Id = 1 };
 		_db.ForumTopics.Add(new ForumTopic { Id = topic1Id, ForumId = forum.Id, Forum = forum });
 		_db.ForumTopics.Add(new ForumTopic { Id = topic2Id, ForumId = forum.Id, Forum = forum });
+		_db.ForumPosts.Add(new ForumPost { TopicId = topic1Id });
+		_db.ForumPosts.Add(new ForumPost { TopicId = topic2Id });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = topic1Id, UserId = user1Id });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = topic2Id, UserId = user1Id });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = 1, UserId = user2Id });
