@@ -36,7 +36,7 @@ public partial class WikiMarkup : TagHelper, IWriterHelper
 
 	bool IWriterHelper.CheckCondition(string condition)
 	{
-		return HtmlExtensions.WikiCondition(ViewContext, condition);
+		return ViewContext.WikiCondition(condition);
 	}
 
 	async Task IWriterHelper.RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
