@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
@@ -102,9 +103,14 @@ public class EditModel : BasePageModel
 			})
 			.ToListAsync());
 
-		AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
-			.OrderBy(g => g.DisplayName)
-			.ToDropDown()
-			.ToListAsync());
+		AvailableGames = UiDefaults.DefaultEntry;
+		if (UserFile.SystemId.HasValue)
+		{
+			AvailableGames = AvailableGames.Concat(await _db.Games
+				.ForSystem(UserFile.SystemId.Value)
+				.OrderBy(g => g.DisplayName)
+				.ToDropDown()
+				.ToListAsync());
+		}
 	}
 }
