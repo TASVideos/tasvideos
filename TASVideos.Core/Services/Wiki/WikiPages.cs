@@ -277,14 +277,16 @@ internal class WikiPages : IWikiPages
 		if (currentRevision is not null)
 		{
 			currentRevision.Child = newRevision;
-
-			// We can assume the "current" revision is the latest
-			// We might have a deleted revision after it
-			var maxRevision = await _db.WikiPages
-				.ForPage(addRequest.PageName)
-				.MaxAsync(r => r.Revision);
-
-			newRevision.Revision = maxRevision + 1;
+		}
+		
+		// We cannot assume the "current" revision is the latest
+		// We might have a deleted revision after it
+		var maxRevision = await _db.WikiPages
+			.ForPage(addRequest.PageName)
+			.MaxAsync(r => (int?)r.Revision);
+		if (maxRevision.HasValue)
+		{
+			newRevision.Revision = maxRevision.Value + 1;
 		}
 
 		try

@@ -526,6 +526,28 @@ public class WikiPagesTests
 		Assert.AreEqual(result2.AuthorName, author2Name);
 	}
 
+	[TestMethod]
+	public async Task Add_WhenOnlyDeletedRevision_SuccessfullyAdds()
+	{
+		const string existingPage = "New Page";
+		const int authorId = 1;
+		const string authorName = "TestAuthor";
+		_db.Users.Add(new User { Id = authorId, UserName = authorName });
+		_db.WikiPages.Add(new WikiPage
+		{
+			AuthorId = authorId,
+			PageName = existingPage,
+			IsDeleted = true
+		});
+		await _db.SaveChangesAsync();
+
+		var result = await _wikiPages.Add(new WikiCreateRequest { PageName = existingPage, AuthorId = authorId });
+		Assert.IsNotNull(result);
+		Assert.AreEqual(2, result.Revision);
+		Assert.AreEqual(existingPage, result.PageName);
+		Assert.AreEqual(authorId, result.AuthorId);
+	}
+
 	#endregion
 
 	#region Move
