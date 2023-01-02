@@ -76,6 +76,22 @@ public static class HttpRequestExtensions
 		return null;
 	}
 
+	public static bool? QueryStringBoolValue(this HttpRequest? request, string key)
+	{
+		var val = request.QueryStringValue(key);
+		if (string.IsNullOrWhiteSpace(val))
+		{
+			return null;
+		}
+
+		if (bool.TryParse(val, out bool parsedBool))
+		{
+			return parsedBool;
+		}
+
+		return null;
+	}
+
 	public static IPAddress? ActualIpAddress(this HttpContext context)
 	{
 		var forwardedIp = context.Request.Headers["X-Forwarded-For"];

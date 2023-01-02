@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using TASVideos.Core;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -116,5 +117,10 @@ public static class RazorHelpers
 	public static void SetWikiPage(this ViewDataDictionary viewData, IWikiPage wikiPage)
 	{
 		viewData["WikiPage"] = wikiPage;
+	}
+
+	public static PagingModel GetPagingModel(this ViewDataDictionary viewData)
+	{
+		return viewData["PagingModel"] as PagingModel ?? new PagingModel();
 	}
 }
