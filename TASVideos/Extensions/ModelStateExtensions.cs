@@ -7,12 +7,14 @@ public static class ModelStateExtensions
 {
 	public static void AddParseErrors(this ModelStateDictionary modelState, IParseResult parseResult, string? modelPropertyName = null)
 	{
-		if (!parseResult.Success)
+		if (parseResult.Success)
 		{
-			foreach (var error in parseResult.Errors)
-			{
-				modelState.AddModelError(modelPropertyName ?? "", error);
-			}
+			return;
+		}
+
+		foreach (var error in parseResult.Errors)
+		{
+			modelState.AddModelError(modelPropertyName ?? "", error);
 		}
 	}
 }
