@@ -12,7 +12,7 @@ public class WikiCreateRequest
 	public string Markup { get; init; } = "";
 	public string? RevisionMessage { get; init; }
 	public int AuthorId { get; init; }
-	public bool MinorEdit { get; init; } = false;
+	public bool MinorEdit { get; init; }
 	public DateTime CreateTimestamp { get; init; } = DateTime.UtcNow;
 }
 
@@ -363,7 +363,7 @@ internal class WikiPages : IWikiPages
 		if (cachedRevision is not null)
 		{
 			RemovePageFromCache(originalName);
-			((WikiResult)cachedRevision).SetPageName(destinationName);
+			cachedRevision.SetPageName(destinationName);
 			_cache.Set(destinationName, cachedRevision);
 		}
 
