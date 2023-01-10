@@ -17,6 +17,7 @@
 <danger-alert dismissible="true" condition="parseErrors">
 	@await Component.RenderWiki("System/SubmissionZipFailure")
 </danger-alert>
+<span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form method="post" enctype="multipart/form-data" class="backup-form">
 	<row>
 		<column lg="6">

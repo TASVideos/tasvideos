@@ -1,8 +1,9 @@
-﻿// class: "backup-form"        | surrounding form
-// class: "backup-content"     | textarea to save text from, needs a data-backup-key attribute
-// id: "backup-time"           | where the time will be put
-// id: "backup-restore"        | surrounding element hidden by default to display when backup exists
-// id: "backup-restore-button" | button to restore data
+﻿// class: "backup-form"                 | surrounding form
+// class: "backup-content"              | textarea to save text from, needs a data-backup-key attribute
+// id: "backup-time"                    | where the time will be put
+// id: "backup-restore"				    | surrounding element hidden by default to display when backup exists
+// id: "backup-restore-button"	        | button to restore data
+// id: "backup-submission-determinator" | span whose value only changes when a form submission went through (e.g. post count), it's used to determine whether a previous saved backup is deleted or not
 function convertSecondsToRelativeTime(seconds) {
 	const minutes = Math.floor(seconds / 60);
 	const hours = Math.floor(seconds / (60 * 60));
@@ -39,20 +40,29 @@ function convertSecondsToRelativeTime(seconds) {
 }
 
 const textarea = document.querySelector('textarea.backup-content');
+const submissionDeterminator = document.getElementById('backup-submission-determinator').innerHTML;
 const backupKey = textarea.dataset.backupKey;
 localStorage.removeItem(backupKey + '-restore');
 
 let backupData = localStorage.getItem(backupKey);
 if (backupData) {
 	let backupObject = JSON.parse(backupData);
-	document.getElementById('backup-time').innerText = convertSecondsToRelativeTime(Math.floor(Date.now() / 1000) - backupObject.date);
-	localStorage.setItem(backupKey + '-restore', backupData);
-	document.getElementById('backup-restore').classList.remove('d-none');
+	if (submissionDeterminator === backupObject.submissionDeterminator) {
+		document.getElementById('backup-time').innerText = convertSecondsToRelativeTime(Math.floor(Date.now() / 1000) - backupObject.date);
+		localStorage.setItem(backupKey + '-restore', backupData);
+		document.getElementById('backup-restore').classList.remove('d-none');
+	} else {
+		localStorage.removeItem(backupKey);
+    }
 }
 
 function backupContent() {
 	if (textarea.value) {
-		let backupObject = JSON.stringify({ content: textarea.value, date: Math.floor(Date.now() / 1000) });
+		let backupObject = JSON.stringify({
+			content: textarea.value,
+			date: Math.floor(Date.now() / 1000),
+			submissionDeterminator: submissionDeterminator
+		});
 		localStorage.setItem(backupKey, backupObject)
 	}
 }
@@ -67,10 +77,3 @@ function restoreContent() {
 	}
 }
 restoreButton.onclick = restoreContent;
-
-const form = document.querySelector('form.backup-form');
-function deleteBackup() {
-	localStorage.removeItem(backupKey);
-	localStorage.removeItem(backupKey + '-restore');
-}
-form.onsubmit = deleteBackup;

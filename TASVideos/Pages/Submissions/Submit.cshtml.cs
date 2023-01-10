@@ -6,6 +6,7 @@ using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
 
@@ -50,12 +51,19 @@ public class SubmitModel : BasePageModel
 	[BindProperty]
 	public SubmissionCreateModel Create { get; set; } = new();
 
-	public void OnGet()
+	public string BackupSubmissionDeterminator { get; set; } = "";
+
+	public async Task OnGet()
 	{
 		Create = new SubmissionCreateModel
 		{
 			Authors = new List<string> { User.Name() }
 		};
+
+		BackupSubmissionDeterminator = (await _db.Submissions
+			.Where(s => s.SubmitterId == User.GetUserId())
+			.CountAsync())
+			.ToString();
 	}
 
 	public async Task<IActionResult> OnPost()
