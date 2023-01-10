@@ -43,6 +43,12 @@ const textarea = document.querySelector('textarea.backup-content');
 const submissionDeterminator = document.getElementById('backup-submission-determinator').innerHTML;
 const backupKey = textarea.dataset.backupKey;
 localStorage.removeItem(backupKey + '-restore');
+const restoreButton = document.getElementById('backup-restore-button');
+
+function updateRestoreButtonDisabledState() {
+	restoreButton.disabled = !!textarea.value;
+}
+textarea.oninput = updateRestoreButtonDisabledState;
 
 let backupData = localStorage.getItem(backupKey);
 if (backupData) {
@@ -50,6 +56,7 @@ if (backupData) {
 	if (submissionDeterminator === backupObject.submissionDeterminator) {
 		document.getElementById('backup-time').innerText = convertSecondsToRelativeTime(Math.floor(Date.now() / 1000) - backupObject.date);
 		localStorage.setItem(backupKey + '-restore', backupData);
+		updateRestoreButtonDisabledState();
 		document.getElementById('backup-restore').classList.remove('d-none');
 	} else {
 		localStorage.removeItem(backupKey);
@@ -72,12 +79,11 @@ document.onvisibilitychange = () => {
 	}
 };
 
-const restoreButton = document.getElementById('backup-restore-button');
 function restoreContent() {
 	let backupObject = JSON.parse(localStorage.getItem(backupKey + '-restore'));
 	if (backupObject && !textarea.value) {
 		textarea.value = backupObject.content;
-		backupContent();
+		updateRestoreButtonDisabledState();
 	}
 }
 restoreButton.onclick = restoreContent;
