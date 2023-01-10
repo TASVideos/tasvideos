@@ -1,8 +1,8 @@
 ﻿// class: "backup-form"                 | surrounding form
 // class: "backup-content"              | textarea to save text from, needs a data-backup-key attribute
 // id: "backup-time"                    | where the time will be put
-// id: "backup-restore"				    | surrounding element hidden by default to display when backup exists
-// id: "backup-restore-button"	        | button to restore data
+// id: "backup-restore"                 | surrounding element hidden by default to display when backup exists
+// id: "backup-restore-button"          | button to restore data
 // id: "backup-submission-determinator" | span whose value only changes when a form submission went through (e.g. post count), it's used to determine whether a previous saved backup is deleted or not
 function convertSecondsToRelativeTime(seconds) {
 	const minutes = Math.floor(seconds / 60);
@@ -53,7 +53,7 @@ if (backupData) {
 		document.getElementById('backup-restore').classList.remove('d-none');
 	} else {
 		localStorage.removeItem(backupKey);
-    }
+	}
 }
 
 function backupContent() {
