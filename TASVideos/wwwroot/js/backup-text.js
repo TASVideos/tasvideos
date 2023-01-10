@@ -66,7 +66,11 @@ function backupContent() {
 		localStorage.setItem(backupKey, backupObject)
 	}
 }
-setInterval(backupContent, 5000);
+document.onvisibilitychange = () => {
+	if (document.visibilityState === 'hidden') {
+		backupContent();
+	}
+};
 
 const restoreButton = document.getElementById('backup-restore-button');
 function restoreContent() {
