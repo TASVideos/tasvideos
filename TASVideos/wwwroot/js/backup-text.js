@@ -1,5 +1,4 @@
-﻿// class: "backup-form"                 | surrounding form
-// class: "backup-content"              | textarea to save text from, needs a data-backup-key attribute
+﻿// class: "backup-content"              | textarea to save text from, needs a data-backup-key attribute
 // id: "backup-time"                    | where the time will be put
 // id: "backup-restore"                 | surrounding element hidden by default to display when backup exists
 // id: "backup-restore-button"          | button to restore data

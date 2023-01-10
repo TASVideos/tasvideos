@@ -7,7 +7,7 @@
 <h4>Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.Topic.ForumName</a></h4>
 <div asp-validation-summary="All" class="text-danger"></div>
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
-<form method="post" class="backup-form">
+<form method="post">
 	<div permission="CreateForumPolls">
 		<button id="add-poll-btn" type="button" class="btn btn-primary btn-sm">Add Poll</button>
 		<div id="poll-container" class="alert alert-dark d-none">
