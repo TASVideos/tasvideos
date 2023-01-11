@@ -42,6 +42,8 @@ public class CreateModel : BaseForumModel
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
 
+	public string BackupSubmissionDeterminator { get; set; } = "";
+
 	public async Task<IActionResult> OnGet()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
@@ -67,6 +69,12 @@ public class CreateModel : BaseForumModel
 		{
 			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
 		}
+
+		BackupSubmissionDeterminator = (await _db.ForumTopics
+			.ForForum(ForumId)
+			.Where(f => f.PosterId == User.GetUserId())
+			.CountAsync())
+			.ToString();
 
 		return Page();
 	}
