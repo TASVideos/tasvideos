@@ -82,7 +82,7 @@
 					return;
 				}
 
-				const ext = fileInput.files[0].name.split('.')[1];
+				const ext = (s => s.substring(s.lastIndexOf('.') + 1))(fileInput.files[0].name);
 				if (ext) {
 					if (supportedFileExtensions.includes(ext)) {
 						fileInputWarning.innerText = "";
