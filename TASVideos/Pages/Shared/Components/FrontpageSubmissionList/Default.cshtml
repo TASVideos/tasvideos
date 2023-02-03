@@ -1,4 +1,51 @@
 ﻿@model IEnumerable<TASVideos.Pages.Submissions.Models.SubmissionListEntry>
+<row>
+	<div class="list-group col-12 col-lg-8">
+		@foreach (var sub in Model)
+		{
+			<sub-link id="sub.Id" class="list-group-item list-group-item-action list-group-item-secondary p-2">
+				<div class="d-flex w-100 align-items-center">
+					<div class="mx-3 w-100">
+						<row class="align-items-center">
+							<div class="col-auto px-1 fs-sm-5 d-flex">
+								<span class="badge bg-info">@(sub.Time().ToStringWithOptionalDaysAndHours())</span>
+							</div>
+							<div class="col-auto px-1">
+								<span class="text-muted">@sub.System</span>
+							</div>
+							<div class="col-auto px-1 ms-auto">
+								<row class="justify-content-end">
+									<small class="col-12 text-muted text-end"><timezone-convert asp-for="@sub.Submitted" date-only="true" /></small>
+								</row>
+							</div>
+						</row>
+						<row class="align-items-center">
+							<div class="col-auto px-1">
+								<span class="fs-6 fs-sm-5 text-black">@sub.GameName</span><span condition="!string.IsNullOrEmpty(sub.Branch)" class="fs-6 fs-sm-5 text-black"> "@sub.Branch"</span>
+							</div>
+							<div class="col-auto ms-auto text-end">
+								<row>
+									<div class="col-auto pe-0">
+										<small class="col-auto">Status:</small>
+									</div>
+									<div class="col-auto px-1">
+										<small class="col-auto">@sub.Status.EnumDisplayName()</small>
+									</div>
+								</row>
+							</div>
+						</row>
+						<row>
+							<div class="col-12 px-1">
+								<span class="text-black mt-auto">by <author-list authors="sub.Authors" additional-authors="@sub.AdditionalAuthors"></author-list></span>
+							</div>
+						</row>
+					</div>
+				</div>
+			</sub-link>
+		}
+	</div>
+</row>
+<hr />
 <div class="table-container">
 	<table class="table table-striped table-bordered table-sm">
 		<tr>
