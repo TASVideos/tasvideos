@@ -19,6 +19,13 @@
 	--bs-success-hover: #{$success-dark};
 	--border-color: #{$bs-gray-400};
 	--border-separator-color: #{$bs-gray-300};
+	--bs-primary-text: #{$bs-primary-text};
+	--bs-primary-bg-subtle: #{$bs-primary-bg-subtle};
+	--bs-primary-border-subtle: #{$bs-primary-border-subtle};
+	--bs-secondary-text: #{$bs-secondary-text};
+	--bs-secondary-bg-subtle: #{$bs-secondary-bg-subtle};
+	--bs-secondary-border-subtle: #{$bs-secondary-border-subtle};
+	--bs-emphasis-color: #{$bs-emphasis-color};
 }
 
 a {
@@ -218,5 +225,42 @@ h4 {
 	&.active {
 		color: var(--bs-body-color);
 		flex-grow: 1;
+	}
+}
+
+.list-group-item {
+	color: var(--bs-list-group-color);
+	background-color: var(--bs-list-group-bg);
+	border: 1px solid var(--bs-list-group-border-color);
+
+	&-action:focus, &:hover {
+		color: var(--bs-list-group-action-hover-color);
+		background-color: var(--bs-list-group-action-hover-bg);
+	}
+
+	&-primary {
+		--bs-list-group-color: var(--bs-primary-text);
+		--bs-list-group-bg: var(--bs-primary-bg-subtle);
+		--bs-list-group-border-color: var(--bs-primary-border-subtle);
+
+		&.list-group-item-action:focus, &.list-group-item-action:hover {
+			color: var(--bs-list-group-action-hover-color);
+			background-color: var(--bs-list-group-action-hover-bg);
+			--bs-list-group-action-hover-color: var(--bs-emphasis-color);
+			--bs-list-group-action-hover-bg: var(--bs-primary-border-subtle);
+		}
+	}
+
+	&-secondary {
+		--bs-list-group-color: var(--bs-secondary-text);
+		--bs-list-group-bg: var(--bs-secondary-bg-subtle);
+		--bs-list-group-border-color: var(--bs-secondary-border-subtle);
+
+		&.list-group-item-action:focus, &.list-group-item-action:hover {
+			color: var(--bs-list-group-action-hover-color);
+			background-color: var(--bs-list-group-action-hover-bg);
+			--bs-list-group-action-hover-color: var(--bs-emphasis-color);
+			--bs-list-group-action-hover-bg: var(--bs-secondary-border-subtle);
+		}
 	}
 }

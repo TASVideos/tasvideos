@@ -27,6 +27,13 @@
 	--diff-replace: #{$diff-replace-dark};
 	--diff-delete: #{$diff-delete-dark};
 	--diff-insert: #{$diff-insert-dark};
+	--bs-primary-text: #{$bs-primary-text-dark};
+	--bs-primary-bg-subtle: #{$bs-primary-bg-subtle-dark};
+	--bs-primary-border-subtle: #{$bs-primary-border-subtle-dark};
+	--bs-secondary-text: #{$bs-secondary-text-dark};
+	--bs-secondary-bg-subtle: #{$bs-secondary-bg-subtle-dark};
+	--bs-secondary-border-subtle: #{$bs-secondary-border-subtle-dark};
+	--bs-emphasis-color: #{$bs-emphasis-color-dark};
 	color-scheme: dark;
 }
 
