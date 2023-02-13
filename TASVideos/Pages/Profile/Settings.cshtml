@@ -120,10 +120,13 @@
 			</small>
 		</column>
 	</row>
-	<fullrow class="mt-3">
-		<label asp-for="Settings.Signature"></label>
-		<textarea asp-for="Settings.Signature" class="form-control" rows="5"></textarea>
-	</fullrow>
+	@if (Model.Settings.Roles.Where(role => role.Name == "Experienced Forum User").Count() != 0)
+	{
+		<fullrow class="mt-3">
+			<label asp-for="Settings.Signature"></label>
+			<textarea asp-for="Settings.Signature" class="form-control" rows="5"></textarea>
+		</fullrow>
+	}
 	<hr />
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-secondary">Save</button>
