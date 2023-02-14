@@ -110,12 +110,16 @@ public class SettingsModel : BasePageModel
 		user.TimeZoneId = Settings.TimeZoneId;
 		user.PublicRatings = Settings.PublicRatings;
 		user.From = Settings.From;
-		user.Signature = Settings.Signature;
 		user.Avatar = Settings.Avatar;
 		user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? Settings.MoodAvatar : null;
 		user.PreferredPronouns = Settings.PreferredPronouns;
 		user.EmailOnPrivateMessage = Settings.EmailOnPrivateMessage;
 		user.AutoWatchTopic = Settings.AutoWatchTopic;
+		if (User.Has(PermissionTo.EditSignature))
+		{
+			user.Signature = Settings.Signature;
+		}
+
 		await _db.SaveChangesAsync();
 
 		SuccessStatusMessage("Your profile has been updated");
