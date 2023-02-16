@@ -47,6 +47,10 @@ public enum PermissionTo
 	Login = 14,
 
 	[Group("User")]
+	[Description("The ability for a user to edit their signature.")]
+	EditSignature = 15,
+
+	[Group("User")]
 	[Description("The ability to send private messages.")]
 	SendPrivateMessages = 20,
 
