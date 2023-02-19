@@ -179,6 +179,7 @@ public class Element : INode
 			case "table":
 			case "tr":
 			case "td":
+			case "th":
 				await WriteSimpleTag(w, h, Name);
 				break;
 			case "*":
