@@ -232,4 +232,20 @@ public class WikiHelperTests
 		var actual = WikiHelper.ProcessLink(pageName);
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	[DataRow("", "")]
+	[DataRow(" ", " ")]
+	[DataRow("/", "/")]
+	[DataRow("/Test", "/Test")]
+	[DataRow("HomePages", "HomePages")]
+	[DataRow("HomePages/TestUser", "HomePages/TestUser")]
+	[DataRow("HomePages/User With Space", "HomePages/User%20With%20Space")]
+	[DataRow("HomePages/User With Space/AndMore", "HomePages/User%20With%20Space/AndMore")]
+	[DataRow("HomePages/[^_^]", "HomePages/%5B%5E_%5E%5D")]
+	public void EscapeUserName(string pageName, string expected)
+	{
+		var actual = WikiHelper.EscapeUserName(pageName);
+		Assert.AreEqual(expected, actual);
+	}
 }
