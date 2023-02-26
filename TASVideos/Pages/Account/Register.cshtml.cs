@@ -134,7 +134,7 @@ public class RegisterModel : BasePageModel
 				await _publisher.SendUserManagement(
 					$"New User registered! {user.UserName}",
 					"",
-					$"Users/Profile/{user.UserName}");
+					$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 				await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 				await _emailService.EmailConfirmation(Email, callbackUrl);
 
