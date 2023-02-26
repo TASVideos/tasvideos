@@ -113,7 +113,7 @@ public class DeletedPagesModel : BasePageModel
 		await _publisher.SendGeneralWiki(
 				$"Page {path} UNDELETED by {User.Name()}",
 				"",
-				path);
+				WikiHelper.EscapeUserName(path));
 
 		return BaseRedirect("/" + path);
 	}

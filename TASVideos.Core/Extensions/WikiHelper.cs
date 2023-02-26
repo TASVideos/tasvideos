@@ -157,6 +157,21 @@ public static class WikiHelper
 			.First();
 	}
 
+	public static string EscapeUserName(string pageName)
+	{
+		if (!IsHomePage(pageName))
+		{
+			return pageName;
+		}
+		string[] splitPage = pageName.Trim('/').Split('/');
+		if (splitPage.Length >= 2)
+		{
+			splitPage[1] = Uri.EscapeDataString(splitPage[1]);
+		}
+
+		return string.Join('/', splitPage);
+	}
+
 	public static bool IsSystemPage(string? pageName)
 	{
 		return !string.IsNullOrWhiteSpace(pageName)

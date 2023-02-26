@@ -76,7 +76,7 @@ public class MoveModel : BasePageModel
 		await _publisher.SendGeneralWiki(
 			$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Name()}",
 			"",
-			Move.DestinationPageName);
+			WikiHelper.EscapeUserName(Move.DestinationPageName));
 
 		return BaseRedirect("/" + Move.DestinationPageName);
 	}
