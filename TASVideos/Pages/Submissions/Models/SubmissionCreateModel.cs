@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Models;
+using TASVideos.Models.ValidationAttributes;
 
 namespace TASVideos.Pages.Submissions.Models;
 
@@ -46,4 +47,12 @@ public class SubmissionCreateModel
 	[Required]
 	[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 500k)")]
 	public IFormFile? MovieFile { get; set; }
+
+	[Required]
+	[MustBeTrue(ErrorMessage = "You must read and agree to the rules.")]
+	public bool AgreeToRules { get; set; }
+
+	[Required]
+	[MustBeTrue(ErrorMessage = "You must agree to the license.")]
+	public bool AgreeToLicense { get; set; }
 }
