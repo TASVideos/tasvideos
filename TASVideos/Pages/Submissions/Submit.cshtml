@@ -96,18 +96,26 @@
 			</div>
 		</form-group>
 	</fullrow>
-	<fullrow class="text-center mb-1 fs-6">
-		<input asp-for="Create.AgreeToRules" class="form-check-input" />
-		<label asp-for="Create.AgreeToRules" class="form-check-label">I have read and agree to the TASVideos <a href="/MovieRules">Movie Rules</a>.</label>
-		<br />
-		<span asp-validation-for="Create.AgreeToRules" class="text-danger"></span>
-	</fullrow>
-	<fullrow class="text-center mb-3 fs-6">
-		<input asp-for="Create.AgreeToLicense" class="form-check-input" />
-		<label asp-for="Create.AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
-		<br />
-		<span asp-validation-for="Create.AgreeToLicense" class="text-danger"></span>
-	</fullrow>
+	<row class="text-center justify-content-center mb-1 fs-6">
+		<div class="col-auto">
+			<div class="form-check">
+				<input asp-for="Create.AgreeToRules" class="form-check-input" />
+				<label asp-for="Create.AgreeToRules" class="form-check-label">I have read and agree to the TASVideos <a href="/MovieRules">Movie Rules</a>.</label>
+				<br />
+				<span asp-validation-for="Create.AgreeToRules" class="text-danger"></span>
+			</div>
+		</div>
+	</row>
+	<row class="text-center justify-content-center mb-3 fs-6">
+		<div class="col-auto">
+			<div class="form-check">
+				<input asp-for="Create.AgreeToLicense" class="form-check-input" />
+				<label asp-for="Create.AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
+				<br />
+				<span asp-validation-for="Create.AgreeToLicense" class="text-danger"></span>
+			</div>
+		</div>
+	</row>
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
 		<submit-button id="submit-btn" class="btn btn-primary border border-warning @(Model.Create.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
