@@ -49,7 +49,7 @@ public class SubmissionCreateModel
 	public IFormFile? MovieFile { get; set; }
 
 	[Required]
-	[MustBeTrue(ErrorMessage = "You must read and agree to the instructions.")]
+	[MustBeTrue(ErrorMessage = "You must read and follow the instructions.")]
 	public bool AgreeToInstructions { get; set; }
 
 	[Required]
