@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Publications.Models;
@@ -46,6 +46,7 @@ public class PublicationEditModel
 	[Display(Name = "Minor Edit")]
 	public bool MinorEdit { get; set; }
 
+	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
 	public IEnumerable<PublicationUrlDisplayModel> Urls { get; set; } = new List<PublicationUrlDisplayModel>();

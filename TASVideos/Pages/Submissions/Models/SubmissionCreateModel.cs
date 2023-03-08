@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TASVideos.Core.Services;
 using TASVideos.Models;
 
 namespace TASVideos.Pages.Submissions.Models;
@@ -40,6 +41,7 @@ public class SubmissionCreateModel
 	public string? AdditionalAuthors { get; set; }
 
 	[Required]
+	[DoNotTrim]
 	[Display(Name = "Comments and explanations")]
 	public string Markup { get; set; } = "";
 

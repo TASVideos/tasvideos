@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;
 
@@ -6,6 +7,7 @@ namespace TASVideos.Pages.Submissions.Models;
 
 public class SubmissionEditModel
 {
+	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
 	[StringLength(1000)]
