@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
-using System.ComponentModel.DataAnnotations;
 
-namespace TASVideos.Core.Services;
+namespace TASVideos.Models;
 
 public class TrimStringModelBinder : IModelBinder
 {

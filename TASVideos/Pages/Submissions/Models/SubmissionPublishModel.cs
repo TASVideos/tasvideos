@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.Submissions.Models;
 

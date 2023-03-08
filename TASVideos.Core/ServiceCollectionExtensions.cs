@@ -17,10 +17,7 @@ public static class ServiceCollectionExtensions
 	{
 		services.AddScoped<IWikiToTextRenderer, T>();
 		services
-			.AddControllers(options =>
-			{
-				options.ModelBinderProviders.Insert(0, new TrimStringModelBinderProvider());
-			})
+			.AddControllers()
 			.AddApplicationPart(typeof(IJwtAuthenticator).Assembly);
 
 		services

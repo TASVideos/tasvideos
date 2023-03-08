@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services;
+﻿namespace TASVideos.Models;
 
 [AttributeUsage(AttributeTargets.Property)]
 public class DoNotTrimAttribute : Attribute
