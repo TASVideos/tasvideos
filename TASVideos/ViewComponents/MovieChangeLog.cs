@@ -39,7 +39,7 @@ public class MovieChangeLog : ViewComponent
 					{
 						Id = p.Id,
 						Name = p.Title,
-						IsNewGame = p.Game != null && p.Game.Publications.FirstOrDefault() == p,
+						IsNewGame = p.Game != null && p.Game.Publications.OrderBy(gp => gp.CreateTimestamp).FirstOrDefault() == p,
 						IsNewBranch = p.ObsoletedMovies.Count == 0,
 						ClassIconPath = p.PublicationClass!.IconPath
 					}
