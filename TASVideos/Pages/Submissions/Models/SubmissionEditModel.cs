@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions.Models;
 
 public class SubmissionEditModel
 {
+	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
 	[StringLength(1000)]

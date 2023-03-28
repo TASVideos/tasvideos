@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.Submissions.Models;
 
@@ -9,6 +10,7 @@ public class SubmissionPublishModel
 	public int? MovieToObsolete { get; set; }
 
 	[Required]
+	[DoNotTrim]
 	[Display(Name = "Movie description")]
 	public string MovieMarkup { get; set; } = SiteGlobalConstants.DefaultPublicationText;
 
@@ -39,6 +41,7 @@ public class SubmissionPublishModel
 	[Display(Name = "Description", Description = "Caption, describe what happens in the screenshot")]
 	public string? ScreenshotDescription { get; set; }
 
+	[DoNotTrim]
 	[Display(Name = "Submission description (for quoting, reference, etc)")]
 	public string? Markup { get; set; }
 

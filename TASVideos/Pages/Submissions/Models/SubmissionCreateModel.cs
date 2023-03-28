@@ -41,6 +41,7 @@ public class SubmissionCreateModel
 	public string? AdditionalAuthors { get; set; }
 
 	[Required]
+	[DoNotTrim]
 	[Display(Name = "Comments and explanations")]
 	public string Markup { get; set; } = "";
 

@@ -107,7 +107,11 @@ public static class ServiceCollectionExtensions
 			.AddRazorRuntimeCompilation();
 
 		services.AddHttpContext();
-		services.AddMvc(options => options.ValueProviderFactories.AddDelimitedValueProviderFactory('|'));
+		services.AddMvc(options =>
+		{
+			options.ValueProviderFactories.AddDelimitedValueProviderFactory('|');
+			options.ModelBinderProviders.Insert(0, new TrimStringModelBinderProvider());
+		});
 
 		return services;
 	}
