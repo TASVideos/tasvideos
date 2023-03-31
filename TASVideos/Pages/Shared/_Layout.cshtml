@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject ICacheService _cacheService
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8" />
@@ -30,10 +31,10 @@
 	<partial name="_MetaTags" />
 </head>
 <body>
-	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
+	<nav id="banner" class="navbar navbar-expand-md navbar-dark pb-0">
 		<div class="container-fluid">
 			<div class="site-banner w-100 overflow-hidden position-absolute start-0 top-0">
-				<picture>
+				<picture style="filter: hue-rotate(50deg)">
 					<source srcset="/images/tasvideosbg.avif" type="image/avif">
 					<source srcset="/images/tasvideosbg.webp" type="image/webp">
 					<img src="/images/tasvideosbg.jpg">
@@ -41,6 +42,12 @@
 			</div>
 			<a id="icon" asp-page="/Index">
 				<picture>
+					<img class="site-icon" src="/images/logo-april-2x.png"
+						 srcset="/images/logo-april.png .5x,
+							/images/logo-april-2x.png 1x,
+							/images/logo-april-4x.png 2x" loading="lazy">
+				</picture>
+@*				<picture>
 					<source srcset="/images/logo-light.webp .5x,
 							/images/logo-light-2x.webp 1x,
 							/images/logo-light-4x.webp 2x"
@@ -59,12 +66,12 @@
 						 srcset="/images/logo-dark.png .5x,
 							/images/logo-dark-2x.png 1x,
 							/images/logo-dark-4x.png 2x" loading="lazy">
-				</picture>
+				</picture>*@
 			</a>
 			<a id="mantra" asp-page="/Index">
-				<div id="brand">TASVideos</div>
-				<div id="mantra-1">Tool-assisted game movies</div>
-				<div id="mantra-2">When human skills are just not enough</div>
+				<div id="brand">ACEVideos</div>
+				<div id="mantra-1">Arbitrary code game movies</div>
+				<div id="mantra-2">When human code is just not enough</div>
 			</a>
 			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
@@ -83,7 +90,13 @@
 			</div>
 		</div>
 	</nav>
-
+	@{
+		_cacheService.TryGetValue("april-2023-text", out string aprilText);
+		aprilText ??= string.Empty;
+	}
+	<div class="container d-flex align-items-center justify-content-center" style="min-height: 2rem;">
+		@Html.Raw(aprilText)
+	</div>
 	@{
 		var title = ViewData["Title"]?.ToString();
 		if (ViewData.GetWikiPage() is not null)

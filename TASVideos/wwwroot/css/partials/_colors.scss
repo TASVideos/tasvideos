@@ -13,8 +13,8 @@ $bs-dark-rgb: 33, 37, 41;
 $bs-table-striped-bg-dark: #2c3034;
 $bs-table-active-bg-dark: #373b3e;
 $bs-table-hover-bg-dark: #323539;
-$bs-primary-text: #0a58ca;
-$bs-primary-text-dark: #6ea8fe;
+$bs-primary-text: #ca0a0a;
+$bs-primary-text-dark: #fe6e6e;
 $bs-primary-bg-subtle: #cfe2ff;
 $bs-primary-bg-subtle-dark: #031633;
 $bs-primary-border-subtle: #9ec5fe;
@@ -36,16 +36,16 @@ $diff-insert: #9e9;
 //custom tasvideos colors
 
 //custom banner and site background colors
-$banner: #110931;
-$tasvideos-bg: $bs-gray-200;
-$tasvideos-bg-gradient: #c2d4fc;
-$tasvideos-bg-dark: #1c1d2b;
+$banner: #290422;
+$tasvideos-bg: #efe9e9;
+$tasvideos-bg-gradient: #fcc2c2;
+$tasvideos-bg-dark: #2c1d1d;
 $tasvideos-bg-gradient-dark: #311a59;
 
 //custom theme colors and semantic button/border colors
-$primary: #105cb6;
-$primary-rgb: 16, 92, 182;
-$primary-dark: #5099f1;
+$primary: #b61010;
+$primary-rgb: 182, 16, 16;
+$primary-dark: #f15050;
 $primary-dark-rgb: 72, 147, 239;
 $secondary: #6a37a0;
 $secondary-rgb: 106, 55, 160;
@@ -63,10 +63,10 @@ $success: #198754;
 $success-rgb: 25, 135, 84;
 $success-dark: #157347;
 $success-dark-rgb: 21, 115, 71;
-$card-primary: #acd;
-$card-primary-dark: #214354;
-$card-secondary: #cde;
-$card-secondary-dark: #112132;
+$card-primary: #daa;
+$card-primary-dark: #542121;
+$card-secondary: #eed7cc;
+$card-secondary-dark: #321111;
 $card-link-hover-rgb: 9, 30, 66;
 $text-muted-dark: #818a92;
 $module-error-color: #f8d7da;

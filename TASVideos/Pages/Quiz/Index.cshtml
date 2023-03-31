@@ -1,0 +1,921 @@
+﻿@page
+@model TASVideos.Pages.Quiz.IndexModel
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+	var requestToken = Antiforgery.GetAndStoreTokens(HttpContext).RequestToken;
+	ViewData.SetTitle("Quiz");
+	ViewData.SetMetaTags(new MetaTagModel
+			{
+				Title = "Quiz",
+				Description = "This quiz will test your knowledge of this site.",
+				Image = $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed-april.png"
+			});
+}
+<div condition="@(!string.IsNullOrEmpty(Model.Error))">
+	<h3>Oh no.</h3>
+</div>
+<div condition="@(User.Name() == "Masterjun")">
+	<script>
+		function setCache() {
+			fetch(`/Quiz/Index?handler=Cache`, {
+				method: 'POST',
+				body: document.getElementById('cacheTextArea').value,
+				headers: {
+					RequestVerificationToken:
+						document.getElementById('RequestVerificationToken').value
+				}
+			}).then((response) => {
+				if (!response.ok) {
+					return response.text();
+				}
+			}).then((text) => {
+				if (text) {
+					alert(text);
+				} else {
+					location.reload();
+				}
+			});
+		}
+		function setCacheText() {
+			fetch(`/Quiz/Index?handler=CacheText`, {
+				method: 'POST',
+				body: document.getElementById('cacheTextArea').value,
+				headers: {
+					RequestVerificationToken:
+						document.getElementById('RequestVerificationToken').value
+				}
+			}).then((response) => {
+				if (!response.ok) {
+					return response.text();
+				}
+			}).then((text) => {
+				if (text) {
+					alert(text);
+				} else {
+					location.reload();
+				}
+			});
+		}
+	</script>
+	<div>
+		<textarea id="cacheTextArea" class="form-control" rows="15">@Model.QuizState</textarea>
+	</div>
+	<div>
+		<button class="btn btn-primary fw-bold my-3" onclick="setCache();">Set Cache</button>
+		<button class="btn btn-primary fw-bold my-3" onclick="setCacheText();">Set TOP TEXT Cache</button>
+		<button class="btn btn-primary fw-bold my-3" onclick="localStorage.removeItem(aprilStorageKey); location.reload();">Refresh</button>
+		<button class="btn btn-primary fw-bold my-3" onclick="localStorage.setItem(aprilStorageKey, JSON.stringify(@(@"{""question"":12,""q"":{""1"":""26"",""2"":[""4635"",4514],""3"":[""2329"",2638],""4"":[""2"",0],""5"":""Speedrun"",""6"":""6"",""7"":[""86.8"",""29.3""],""8"":""JIF"",""9"":""Lever"",""10"":""Agree"",""11"":""30.9""}}"))); location.reload();">Fill</button>
+	</div>
+</div>
+<div condition="@(string.IsNullOrEmpty(Model.Error))">
+	<style>
+		.april-text {
+			font-size: 1.4em;
+			margin-bottom: 0;
+		}
+
+		.form-range::-webkit-slider-thumb, .form-range::-moz-range-thumb {
+			background-color: var(--bs-warning)
+		}
+	</style>
+	<script>
+		var visitPage = Date.now();
+		function showId(id) {
+			document.getElementById(id).classList.remove("d-none");
+		}
+		function hideId(id) {
+			document.getElementById(id).classList.add("d-none");
+		}
+		function showStats() {
+			document.getElementById('final-stats').classList.remove("d-none");
+			for (let i = 1; i <= 11; i++) {
+				document.getElementById(`question-${i}-input`).classList.add("d-none");
+				document.getElementById(`question-${i}`).classList.remove("d-none");
+				document.getElementById(`question-${i}-stats`).classList.remove("d-none");
+				[...document.getElementsByClassName('next-button')].forEach(element => element.classList.add("d-none"));
+			}
+		}
+	</script>
+	<div class="text-center">
+		<span id="april-timer" class="text-danger fs-3 d-none">20.0</span>
+	</div>
+	<div id="intro" class="d-none">
+		<h3>Welcome to the <span class="text-warning">Quiz</span>, @User.Name()!</h3>
+		<div>
+			<p class="april-text">This quiz will test your knowledge of this site.</p>
+			<br />
+			<p class="april-text">There have been dangerously many AI advances lately. This quiz is to be taken by a human.</p>
+			<p class="april-text">So first, <span class="text-primary">verify</span> you are a human:</p>
+		</div>
+		<button class="btn btn-primary fw-bold mt-3" onclick="showId('captcha'); this.classList.add('d-none');">Verify</button>
+	</div>
+	<div id="captcha" class="d-none">
+		<link rel="stylesheet" type="text/css" href="https://www.gstatic.com/recaptcha/releases/vpEprwpCoBMgy-fvZET0Mz6L/styles__ltr.css" />
+		<div class="mt-3" style="width: 400px; height: 580px;">
+			<div id="rc-imageselect" aria-modal="true" role="dialog" style="background-color: #aaa;">
+				<div class="rc-imageselect-response-field"></div><span class="rc-imageselect-tabloop-begin"
+																   tabindex="0"></span>
+				<div class="rc-imageselect-payload">
+					<div class="rc-imageselect-instructions">
+						<div class="rc-imageselect-desc-wrapper" style="height: 112px;">
+							<div class="rc-imageselect-desc-no-canonical" style="width: 352px; font-size: 16px;">
+								Select all
+								squares with <strong style="font-size: 28px;">suboptimal input</strong>
+							</div>
+						</div>
+						<div class="rc-imageselect-progress"></div>
+					</div>
+					<div class="rc-imageselect-challenge">
+						<div id="rc-imageselect-target" class="rc-imageselect-target" dir="ltr" role="presentation"
+							 aria-hidden="true">
+							<table class="rc-imageselect-table-44">
+								<tbody>
+									<tr>
+										<td role="button" tabindex="4" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:0%; left: 0%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="5" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:0%; left: -100%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="6" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:0%; left: -200%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="7" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:0%; left: -300%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td role="button" tabindex="8" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-100%; left: 0%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="9" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-100%; left: -100%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="10" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-100%; left: -200%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="11" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-100%; left: -300%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td role="button" tabindex="12" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-200%; left: 0%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="13" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-200%; left: -100%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="14" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-200%; left: -200%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="15" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-200%; left: -300%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+									</tr>
+									<tr>
+										<td role="button" tabindex="16" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-300%; left: 0%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="17" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-300%; left: -100%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="18" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-300%; left: -200%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+										<td role="button" tabindex="19" class="rc-imageselect-tile"
+											aria-label="Image challenge" onclick="this.classList.toggle('rc-imageselect-tileselected');">
+											<div class="rc-image-tile-target">
+												<div class="rc-image-tile-wrapper" style="width: 95px; height: 95px">
+													<img class="rc-image-tile-44"
+														 src="images/input.png"
+														 alt="" style="top:-300%; left: -300%">
+													<div class="rc-image-tile-overlay"></div>
+												</div>
+												<div class="rc-imageselect-checkbox"></div>
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="rc-imageselect-incorrect-response" style="display:none">Please try again</div>
+					<div aria-live="polite">
+						<div class="rc-imageselect-error-select-more" style="display:none">
+							Please select all matching
+							images.
+						</div>
+						<div class="rc-imageselect-error-dynamic-more" style="display:none">
+							Please also check the new
+							images.
+						</div>
+						<div class="rc-imageselect-error-select-something" style="display:none">
+							Please select around the
+							object, or reload if there are none.
+						</div>
+					</div>
+				</div>
+				<div class="rc-footer">
+					<div class="rc-separator"></div>
+					<div class="rc-controls">
+						<div class="primary-controls">
+							<div class="rc-buttons">
+								<div class="button-holder reload-button-holder">
+									<button class="rc-button goog-inline-block rc-button-reload" title="Get a new challenge"
+											value="" id="recaptcha-reload-button" tabindex="3"></button>
+								</div>
+								<div class="button-holder audio-button-holder">
+									<button class="rc-button goog-inline-block rc-button-audio" title="Get an audio challenge"
+											value="" id="recaptcha-audio-button" tabindex="1"></button>
+								</div>
+								<div class="button-holder image-button-holder">
+									<button class="rc-button goog-inline-block rc-button-image" title="Get a visual challenge"
+											value="" style="display: none;" id="recaptcha-image-button" tabindex="0"></button>
+								</div>
+								<div class="button-holder help-button-holder">
+									<button class="rc-button goog-inline-block rc-button-help" title="Help" value=""
+											id="recaptcha-help-button" tabindex="2"></button>
+								</div>
+								<div class="button-holder undo-button-holder">
+									<button class="rc-button goog-inline-block rc-button-undo" title="Undo" value=""
+											style="display: none;" id="recaptcha-undo-button" tabindex="0"></button>
+								</div>
+							</div>
+							<div class="verify-button-holder">
+								<button class="rc-button-default goog-inline-block" title=""
+										value="" id="recaptcha-verify-button" tabindex="0"
+										onclick="if (document.getElementsByClassName('rc-imageselect-tileselected').length > 0) { setQ(0); showId('captcha-answer'); hideId('captcha'); hideId('intro'); }">
+									Verify
+								</button>
+							</div>
+						</div>
+						<div class="rc-challenge-help" style="display:none" tabindex="0"></div>
+					</div>
+				</div><span class="rc-imageselect-tabloop-end" tabindex="0"></span>
+			</div>
+		</div>
+	</div>
+	<div id="captcha-answer" class="d-none mt-3">
+		<p class="april-text">Wrong answer.</p>
+		<p class="april-text">Good.
+		<p class="april-text">Only <span class="text-primary">humans</span> fail this task.</p>
+		<br />
+		<p class="april-text">Let's start the quiz. Once you start you will have <span class="text-warning">20 seconds</span> to answer each question.</p>
+		<p class="april-text">Oh and you will only be able to take this quiz <span class="text-warning">once</span>.</p>
+		<button class="btn btn-primary fw-bold mt-3" onclick="setQ(1); showId('question-1'); hideId('captcha-answer'); resetAndStartTimer();">Start</button>
+	</div>
+	<div id="final-stats" class="d-none">
+		<h3>These are the <span class="text-warning">Quiz</span> results.</h3>
+		<span class="april-text">Your score was <span class="april-score text-warning"></span>/11.</span><br />
+	</div>
+	<div id="question-1" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 1</h3>
+			<p class="april-text">On this site we aim for speed. How many frames long is the currently fastest active publication?</p>
+		</div>
+		<script>
+			function toTime(frms) {
+				const seconds = (Math.round((Math.abs(frms) / 60.185) * 100)) / 100;
+				const integerPart = Math.floor(seconds);
+				const fractionalPart = (seconds - integerPart).toFixed(2).slice(2);
+				const integerString = integerPart.toString().padStart(2, '0');
+				const minus = frms < 0 ? "-" : "";
+				return `${minus}00:${integerString}.${fractionalPart}`;
+			}
+		</script>
+		<div id="question-1-input" class="card-body">
+			<h3><span id="q1-range-number" class="text-warning">?</span> frames, with a time of <span id="q1-range-time" class="text-warning">?</span></h3>
+			<input id="q1-data" type="range" class="form-range" min="-1" max="69" step="1" oninput="document.getElementById('q1-submit').disabled=false;document.getElementById('q1-range-number').innerHTML=this.value;document.getElementById('q1-range-time').innerHTML=toTime(Number(this.value));">
+			<button id="q1-submit" class="btn btn-warning fw-bold mt-2" disabled onclick="answerQ(1,document.getElementById('q1-data').value); showId('question-1-stats'); hideId('question-1-input'); pauseTimer();">Submit</button>
+		</div>
+		<div id="question-1-stats" class="d-none card-body">
+			<div id="question-1-correct" class="d-none"><span class="april-text text-success"><span class="q1-answer"></span> frames was the correct answer.</span></div>
+			<div id="question-1-wrong" class="d-none"><span class="april-text text-danger"><span class="q1-answer"></span> frames was the wrong answer.</span></div>
+			<br />
+			<div>
+				<span class="april-text">With <span class="text-success">13 frames</span>, the shortest publication is <a href="/4567M">NES Super Mario Bros. 3 "game end glitch" by OnehundredthCoin in 00:00.22</a>.</span><br />
+				<span class="april-text"><span id="q1-below">@Model.Q1Below</span> people guessed too low.</span><br />
+				<span class="april-text"><span id="q1-correct">@Model.Q1Correct</span> people guessed correctly.</span><br />
+				<span class="april-text"><span id="q1-above">@Model.Q1Above</span> people guessed too high.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-2'); hideId('question-1'); hideId('question-1-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-2" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 2</h3>
+			<p class="april-text">How many published movies do we have? (Current + Obsoleted)</p>
+		</div>
+		<div id="question-2-input" class="card-body">
+			<h3><span id="q2-range-number" class="text-warning">?</span> publications</h3>
+			<input id="q2-data" type="range" class="form-range" min="@Model.Q2Min" max="@Model.Q2Max" step="1" oninput="document.getElementById('q2-submit').disabled=false;document.getElementById('q2-range-number').innerHTML=this.value;">
+			<button id="q2-submit" class="btn btn-warning fw-bold mt-2" disabled onclick="answerQ(2,[document.getElementById('q2-data').value, @Model.Q2Answer]); showId('question-2-stats'); hideId('question-2-input'); pauseTimer();">Submit</button>
+		</div>
+		<div id="question-2-stats" class="d-none card-body">
+			<div id="question-2-correct" class="d-none"><span class="april-text text-success"><span class="q2-answer"></span> publications was the correct answer.</span></div>
+			<div id="question-2-close" class="d-none"><span class="april-text text-success"><span class="q2-answer"></span> publications was close enough.</span></div>
+			<div id="question-2-wrong" class="d-none"><span class="april-text text-danger"><span class="q2-answer"></span> publications was the wrong answer.</span></div>
+			<br />
+			<div>
+				<span class="april-text">There are <span class="text-success">@Model.Q2Answer</span> publications.</span><br />
+				<span class="april-text"><span id="q2-below">@Model.Q2Below</span> people guessed too low.</span><br />
+				<span class="april-text"><span id="q2-close">@Model.Q2Close</span> people guessed close enough, within 100 publications. (Of which <span id="q2-correct">@Model.Q2Correct</span> people guessed exactly right.)</span><br />
+				<span class="april-text"><span id="q2-above">@Model.Q2Above</span> people guessed too high.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-3'); hideId('question-2'); hideId('question-2-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-3" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 3</h3>
+			<p class="april-text">What is the total amount of rejected and cancelled submissions on the site?</p>
+		</div>
+		<div id="question-3-input" class="card-body">
+			<h3><span id="q3-range-number" class="text-warning">?</span> rejected & cancelled submissions</h3>
+			<input id="q3-data" type="range" class="form-range" min="@Model.Q3Min" max="@Model.Q3Max" step="1" oninput="document.getElementById('q3-submit').disabled=false;document.getElementById('q3-range-number').innerHTML=this.value;">
+			<button id="q3-submit" class="btn btn-warning fw-bold mt-2" disabled onclick="answerQ(3,[document.getElementById('q3-data').value, @Model.Q3Answer]); showId('question-3-stats'); hideId('question-3-input'); pauseTimer();">Submit</button>
+		</div>
+		<div id="question-3-stats" class="d-none card-body">
+			<div id="question-3-correct" class="d-none"><span class="april-text text-success"><span class="q3-answer"></span> submissions was the correct answer.</span></div>
+			<div id="question-3-close" class="d-none"><span class="april-text text-success"><span class="q3-answer"></span> submissions was close enough.</span></div>
+			<div id="question-3-wrong" class="d-none"><span class="april-text text-danger"><span class="q3-answer"></span> submissions was the wrong answer.</span></div>
+			<br />
+			<div>
+				<span class="april-text">There are <span class="text-success">@Model.Q3Answer</span> submissions.</span><br />
+				<span class="april-text"><span id="q3-below">@Model.Q3Below</span> people guessed too low.</span><br />
+				<span class="april-text"><span id="q3-close">@Model.Q3Close</span> people guessed close enough, within 100 submissions. (Of which <span id="q3-correct">@Model.Q3Correct</span> people guessed exactly right.)</span><br />
+				<span class="april-text"><span id="q3-above">@Model.Q3Above</span> people guessed too high.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-4'); hideId('question-3'); hideId('question-3-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-4" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 4</h3>
+			<p class="april-text">How many submissions were submitted since the start of April First UTC?</p>
+		</div>
+		<div id="question-4-input" class="card-body">
+			<h3><span id="q4-range-number" class="text-warning">?</span> submissions</h3>
+			<input id="q4-data" type="range" class="form-range" min="0" max="@Model.Q4Max" step="1" oninput="document.getElementById('q4-submit').disabled=false;document.getElementById('q4-range-number').innerHTML=this.value;">
+			<button id="q4-submit" class="btn btn-warning fw-bold mt-2" disabled onclick="answerQ(4,[document.getElementById('q4-data').value, @Model.Q4Answer]); showId('question-4-stats'); hideId('question-4-input'); pauseTimer();">Submit</button>
+		</div>
+		<div id="question-4-stats" class="d-none card-body">
+			<div id="question-4-correct" class="d-none"><span class="april-text text-success"><span class="q4-answer"></span> submissions was the correct answer.</span></div>
+			<div id="question-4-wrong" class="d-none"><span class="april-text text-danger"><span class="q4-answer"></span> submissions was the wrong answer.</span></div>
+			<br />
+			<div>
+				<span class="april-text">Exactly <span class="text-success">@Model.Q4Answer</span> submissions were submitted since the start of April First UTC.</span><br />
+				<span class="april-text"><span id="q4-below">@Model.Q4Below</span> people guessed too low.</span><br />
+				<span class="april-text"><span id="q4-correct">@Model.Q4Correct</span> people guessed correctly.</span><br />
+				<span class="april-text"><span id="q4-above">@Model.Q4Above</span> people guessed too high.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-5'); hideId('question-4'); hideId('question-4-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-5" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 5</h3>
+			<p class="april-text">What does the S in TAS stand for?</p>
+		</div>
+		<div id="question-5-input" class="card-body">
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(5,'Speedrun'); showId('question-5-stats'); hideId('question-5-input'); pauseTimer();">Speedrun</button>
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(5,'Superplay'); showId('question-5-stats'); hideId('question-5-input'); pauseTimer();">Superplay</button>
+		</div>
+		<div id="question-5-stats" class="d-none card-body">
+			<div>
+				<span class="april-text">You answered <span class="q5-answer text-warning"></span>.</span><br />
+				<br />
+				<span class="april-text"><span id="q5-speedrun">@Model.Q5Speedrun</span> people answered <span class="fw-bold">Speedrun</span>.</span><br />
+				<span class="april-text"><span id="q5-superplay">@Model.Q5Superplay</span> people answered <span class="fw-bold">Superplay</span>.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-6'); hideId('question-5'); hideId('question-5-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-6" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question <span id="q6-range-number" class="text-warning">?</span></h3>
+			<p class="april-text">Which question number is this?</p>
+		</div>
+		<div id="question-6-input" class="card-body">
+			<input id="q6-data" type="range" class="form-range" min="1" max="8" step="1" value="1" oninput="document.getElementById('q6-submit').disabled=false;document.getElementById('q6-range-number').innerHTML=this.value;">
+			<button id="q6-submit" class="btn btn-warning fw-bold mt-2" disabled onclick="answerQ(6,document.getElementById('q6-data').value); showId('question-6-stats'); hideId('question-6-input'); pauseTimer();">Submit</button>
+		</div>
+		<div id="question-6-stats" class="d-none card-body">
+			<div>
+				<span class="april-text">You guessed Question <span class="q6-answer"></span>.</span><br />
+				<br />
+				<span class="april-text"><span id="q6-correct">@Model.Q6Correct</span> people guessed Question 6 correctly.</span><br />
+				<span class="april-text"><span id="q6-wrong">@Model.Q6Wrong</span> people guessed wrong.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-7'); hideId('question-6'); hideId('question-6-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-7" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 7</h3>
+			<p class="april-text">How many seconds have you been on this page?</p>
+		</div>
+		<div id="question-7-input" class="card-body">
+			<h3><span id="q7-range-number" class="text-warning">?</span> seconds</h3>
+			<input id="q7-data" type="range" class="form-range" min="0" max="3000" value="0" oninput="document.getElementById('q7-submit').disabled=false;document.getElementById('q7-range-number').innerHTML=(Number(this.value)/10).toFixed(1);">
+			<button id="q7-submit" class="btn btn-warning fw-bold mt-2" disabled onclick="answerQ(7,[(Number(document.getElementById('q7-data').value)/10).toFixed(1), ((Date.now() - visitPage)/1000).toFixed(1)]); showId('question-7-stats'); hideId('question-7-input'); pauseTimer();">Submit</button>
+		</div>
+		<div id="question-7-stats" class="d-none card-body">
+			<div id="question-7-correct" class="d-none"><span class="april-text text-success"><span class="q7-answer"></span> seconds exactly right, wow!</span></div>
+			<div id="question-7-close" class="d-none"><span class="april-text text-success"><span class="q7-answer"></span> seconds is close enough.</span></div>
+			<div id="question-7-wrong" class="d-none"><span class="april-text text-danger"><span class="q7-answer"></span> seconds is the wrong answer.</span></div>
+			<br />
+			<div>
+				<span class="april-text">You answered after being on this page for <span class="q7-trueanswer text-success"></span> seconds.</span><br />
+				<span class="april-text"><span id="q7-below">@Model.Q7Below</span> people guessed too low.</span><br />
+				<span class="april-text"><span id="q7-close">@Model.Q7Close</span> people guessed close enough, within 10 seconds. (Of which <span id="q7-correct">@Model.Q7Correct</span> people guessed exactly right.)</span><br />
+				<span class="april-text"><span id="q7-above">@Model.Q7Above</span> people guessed too high.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-8'); hideId('question-7'); hideId('question-7-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-8" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 8</h3>
+			<p class="april-text">How do you pronounce GIF?</p>
+		</div>
+		<div id="question-8-input" class="card-body">
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(8,'GIF'); showId('question-8-stats'); hideId('question-8-input'); pauseTimer();">GIF</button>
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(8,'JIF'); showId('question-8-stats'); hideId('question-8-input'); pauseTimer();">JIF</button>
+		</div>
+		<div id="question-8-stats" class="d-none card-body">
+			<div>
+				<span class="april-text">You answered <span class="q8-answer text-warning"></span>.</span><br />
+				<br />
+				<span class="april-text"><span id="q8-gif">@Model.Q8GIF</span> people answered <span class="fw-bold">GIF</span>.</span><br />
+				<span class="april-text"><span id="q8-jif">@Model.Q8JIF</span> people answered <span class="fw-bold">JIF</span>.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-9'); hideId('question-8'); hideId('question-8-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-9" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 9</h3>
+			<p class="april-text">A trolley is heading towards 5 people. You can pull a lever to divert it to the other track, where there is 1 person instead. What do you do?</p>
+		</div>
+		<div id="question-9-input" class="card-body">
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(9,'Lever'); showId('question-9-stats'); hideId('question-9-input'); pauseTimer();">Pull the lever</button>
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(9,'Nothing'); showId('question-9-stats'); hideId('question-9-input'); pauseTimer();">Do nothing</button>
+		</div>
+		<div id="question-9-stats" class="d-none card-body">
+			<div>
+				<span class="april-text">You answered to <span class="q9-answer text-warning"></span>.</span><br />
+				<br />
+				<span class="april-text"><span id="q9-lever">@Model.Q9Lever</span> people answered to <span class="fw-bold">pull the lever</span>.</span><br />
+				<span class="april-text"><span id="q9-nothing">@Model.Q9Nothing</span> people answered to <span class="fw-bold">do nothing</span>.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-10'); hideId('question-9'); hideId('question-9-stats'); resetAndStartTimer();">Next Question</button>
+		</div>
+	</div>
+
+	<div id="question-10" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 10</h3>
+			<p class="april-text">Do you like cookies?</p>
+		</div>
+		<div id="question-10-input" class="card-body">
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(10,'Consent'); showId('question-10-stats'); hideId('question-10-input'); pauseTimer();">Consent</button>
+			<button class="btn btn-warning fw-bold mt-2" onclick="answerQ(10,'Agree'); showId('question-10-stats'); hideId('question-10-input'); pauseTimer();">I agree to the terms and conditions</button>
+			<button class="btn btn-link text-warning text-decoration-none fw-bold mt-2" onclick="answerQ(10,'Reject'); showId('question-10-stats'); hideId('question-10-input'); pauseTimer();">Reject all</button>
+		</div>
+		<div id="question-10-stats" class="d-none card-body">
+			<div>
+				<span class="april-text">You answered to <span class="q10-answer text-warning"></span>.</span><br />
+				<br />
+				<span class="april-text"><span id="q10-consent">@Model.Q10Consent</span> people answered to <span class="fw-bold">consent</span>.</span><br />
+				<span class="april-text"><span id="q10-agree">@Model.Q10Agree</span> people answered to <span class="fw-bold">agree to the terms and conditions</span>.</span><br />
+				<span class="april-text"><span id="q10-reject">@Model.Q10Reject</span> people answered to <span class="fw-bold">reject all</span>.</span>
+			</div>
+			<button class="next-button btn btn-warning fw-bold mt-3" onclick="showId('question-11'); hideId('question-10'); hideId('question-10-stats'); q11timer(); resetAndStartTimer();">Continue to the Final Question</button>
+		</div>
+	</div>
+	<input id="RequestVerificationToken" type="hidden" value="@requestToken" />
+
+	<div id="question-11" class="d-none mt-3 card">
+		<div class="card-header">
+			<h3>Question 11</h3>
+			<p class="april-text">Ever wondered what happens if you let the time run out?</p>
+		</div>
+		<script>
+			var q11time = Date.now();
+			function q11timer() {
+				q11time = Date.now();
+				setTimeout(() => document.getElementById('q11-btn').innerHTML = 'Yes', 20000);
+			}
+		</script>
+		<div id="question-11-input" class="card-body">
+			<button id="q11-btn" class="btn btn-warning fw-bold mt-2" onclick="answerQ(11,((Date.now() - q11time)/1000).toFixed(1)); showId('question-11-stats'); showScore(); showId('outro'); hideId('question-11-input'); pauseTimer();">No</button>
+		</div>
+		<div id="question-11-stats" class="d-none card-body">
+			<div>
+
+				<span class="april-text">You <span class="q11-answer text-warning"></span> the time run out.</span><br />
+				<br />
+				<span class="april-text"><span id="q11-wait">@Model.Q11Wait</span> people <span class="fw-bold">let</span> the time run out.</span><br />
+				<span class="april-text"><span id="q11-nowait">@Model.Q11NoWait</span> people <span class="fw-bold">did not let</span> the time run out.</span>
+			</div>
+		</div>
+	</div>
+	<div id="outro" class="d-none mt-3">
+		<div>
+			<span class="april-text">Thank you for taking this quiz.</span><br />
+			<span class="april-text">Your score is <span class="april-score text-warning"></span>/11. Congratulations!</span><br />
+			<br />
+			<span class="april-text">You can now view all results again. They will update as more people complete the quiz.</span>
+		</div>
+		<button class="next-button btn btn-warning fw-bold mt-3" onclick="hideId('question-11'); hideId('question-11-stats'); hideId('outro'); hideTimer(); showStats();">Show results</button>
+	</div>
+
+
+	<script>
+		const aprilStorageKey = "april-2023-quiz";
+		let quizState = localStorage.getItem(aprilStorageKey);
+		function save() {
+			localStorage.setItem(aprilStorageKey, JSON.stringify(quizState));
+		}
+		function setQ(qno) {
+			quizState.question = qno;
+			save();
+		}
+		function showScore() {
+			let score = 0;
+			for (let i = 1; i <= 11; i++) {
+				score += updateResults(i, 0);
+			}
+			[...document.getElementsByClassName("april-score")].forEach(element => element.innerHTML = score);
+		}
+		function updateResults(qno, add = 1) {
+			let plusscore = 0;
+			data = quizState.q[qno];
+			if (data !== undefined) {
+				if (qno == 1) {
+					[...document.getElementsByClassName("q1-answer")].forEach(element => element.innerHTML = data);
+					if (data < 13) {
+						showId("question-1-wrong");
+						document.getElementById("q1-below").innerHTML = Number(document.getElementById("q1-below").innerHTML) + add;
+					} else if (data == 13) {
+						plusscore++;
+						showId("question-1-correct");
+						document.getElementById("q1-correct").innerHTML = Number(document.getElementById("q1-correct").innerHTML) + add;
+					} else if (data > 13) {
+						showId("question-1-wrong");
+						document.getElementById("q1-above").innerHTML = Number(document.getElementById("q1-above").innerHTML) + add;
+					}
+				}
+				if (qno == 2) {
+					[...document.getElementsByClassName("q2-answer")].forEach(element => element.innerHTML = data[0]);
+					if (data[0] < data[1] - 100) {
+						showId("question-2-wrong");
+						document.getElementById("q2-below").innerHTML = Number(document.getElementById("q2-below").innerHTML) + add;
+					} else if (data[0] == data[1]) {
+						plusscore++;
+						showId("question-2-correct");
+						document.getElementById("q2-correct").innerHTML = Number(document.getElementById("q2-correct").innerHTML) + add;
+						document.getElementById("q2-close").innerHTML = Number(document.getElementById("q2-close").innerHTML) + add;
+					} else if (data[0] >= data[1] - 100 && data[0] <= data[1] + 100) {
+						plusscore++;
+						showId("question-2-close");
+						document.getElementById("q2-close").innerHTML = Number(document.getElementById("q2-close").innerHTML) + add;
+					} else if (data[0] > data[1] + 100) {
+						showId("question-2-wrong");
+						document.getElementById("q2-above").innerHTML = Number(document.getElementById("q2-above").innerHTML) + add;
+					}
+				}
+				if (qno == 3) {
+					[...document.getElementsByClassName("q3-answer")].forEach(element => element.innerHTML = data[0]);
+					if (data[0] < data[1] - 100) {
+						showId("question-3-wrong");
+						document.getElementById("q3-below").innerHTML = Number(document.getElementById("q3-below").innerHTML) + add;
+					} else if (data[0] == data[1]) {
+						plusscore++;
+						showId("question-3-correct");
+						document.getElementById("q3-correct").innerHTML = Number(document.getElementById("q3-correct").innerHTML) + add;
+						document.getElementById("q3-close").innerHTML = Number(document.getElementById("q3-close").innerHTML) + add;
+					} else if (data[0] >= data[1] - 100 && data[0] <= data[1] + 100) {
+						plusscore++;
+						showId("question-3-close");
+						document.getElementById("q3-close").innerHTML = Number(document.getElementById("q3-close").innerHTML) + add;
+					} else if (data[0] > data[1] + 100) {
+						showId("question-3-wrong");
+						document.getElementById("q3-above").innerHTML = Number(document.getElementById("q3-above").innerHTML) + add;
+					}
+				}
+				if (qno == 4) {
+					[...document.getElementsByClassName("q4-answer")].forEach(element => element.innerHTML = data[0]);
+					if (data[0] < data[1]) {
+						showId("question-4-wrong");
+						document.getElementById("q4-below").innerHTML = Number(document.getElementById("q4-below").innerHTML) + add;
+					} else if (data[0] == data[1]) {
+						plusscore++;
+						showId("question-4-correct");
+						document.getElementById("q4-correct").innerHTML = Number(document.getElementById("q4-correct").innerHTML) + add;
+					} else if (data[0] > data[1]) {
+						showId("question-4-wrong");
+						document.getElementById("q4-above").innerHTML = Number(document.getElementById("q4-above").innerHTML) + add;
+					}
+				}
+				if (qno == 5) {
+					plusscore++;
+					[...document.getElementsByClassName("q5-answer")].forEach(element => element.innerHTML = data);
+					if (data == "Speedrun") {
+						document.getElementById("q5-speedrun").innerHTML = Number(document.getElementById("q5-speedrun").innerHTML) + add;
+					} else if (data == "Superplay") {
+						document.getElementById("q5-superplay").innerHTML = Number(document.getElementById("q5-superplay").innerHTML) + add;
+					}
+				}
+				if (qno == 6) {
+					document.getElementById("q6-range-number").innerHTML = 6;
+					if (data[0] == 6) {
+						plusscore++;
+						[...document.getElementsByClassName("q6-answer")].forEach(element => { element.innerHTML = data; element.classList.add("text-success"); });
+						document.getElementById("q6-correct").innerHTML = Number(document.getElementById("q6-correct").innerHTML) + add;
+					} else {
+						[...document.getElementsByClassName("q6-answer")].forEach(element => { element.innerHTML = data; element.classList.add("text-danger"); });
+						document.getElementById("q6-wrong").innerHTML = Number(document.getElementById("q6-wrong").innerHTML) + add;
+					}
+				}
+				if (qno == 7) {
+					[...document.getElementsByClassName("q7-answer")].forEach(element => element.innerHTML = data[0]);
+					[...document.getElementsByClassName("q7-trueanswer")].forEach(element => element.innerHTML = data[1]);
+					let ans = Number(data[0]);
+					let trueans = Number(data[1]);
+					if (ans < trueans - 10) {
+						showId("question-7-wrong");
+						document.getElementById("q7-below").innerHTML = Number(document.getElementById("q7-below").innerHTML) + add;
+					} else if (ans == trueans) {
+						plusscore++;
+						showId("question-7-correct");
+						document.getElementById("q7-correct").innerHTML = Number(document.getElementById("q7-correct").innerHTML) + add;
+						document.getElementById("q7-close").innerHTML = Number(document.getElementById("q7-close").innerHTML) + add;
+					} else if (ans >= trueans - 10 && ans <= trueans + 10) {
+						plusscore++;
+						showId("question-7-close");
+						document.getElementById("q7-close").innerHTML = Number(document.getElementById("q7-close").innerHTML) + add;
+					} else if (ans > trueans + 10) {
+						showId("question-7-wrong");
+						document.getElementById("q7-above").innerHTML = Number(document.getElementById("q7-above").innerHTML) + add;
+					}
+				}
+				if (qno == 8) {
+					plusscore++;
+					[...document.getElementsByClassName("q8-answer")].forEach(element => element.innerHTML = data);
+					if (data == "GIF") {
+						document.getElementById("q8-gif").innerHTML = Number(document.getElementById("q8-gif").innerHTML) + add;
+					} else if (data == "JIF") {
+						document.getElementById("q8-jif").innerHTML = Number(document.getElementById("q8-jif").innerHTML) + add;
+					}
+				}
+				if (qno == 9) {
+					plusscore++;
+					let answer = data == "Lever" ? "pull the lever" : data == "Nothing" ? "do nothing" : data;
+					[...document.getElementsByClassName("q9-answer")].forEach(element => element.innerHTML = answer);
+					if (data == "Lever") {
+						document.getElementById("q9-lever").innerHTML = Number(document.getElementById("q9-lever").innerHTML) + add;
+					} else if (data == "Nothing") {
+						document.getElementById("q9-nothing").innerHTML = Number(document.getElementById("q9-nothing").innerHTML) + add;
+					}
+				}
+				if (qno == 10) {
+					plusscore++;
+					let answer = data == "Consent" ? "consent" : data == "Agree" ? "agree to the terms and conditions" : data == "Reject" ? "reject all" : data;
+					[...document.getElementsByClassName("q10-answer")].forEach(element => element.innerHTML = answer);
+					if (data == "Consent") {
+						document.getElementById("q10-consent").innerHTML = Number(document.getElementById("q10-consent").innerHTML) + add;
+					} else if (data == "Agree") {
+						document.getElementById("q10-agree").innerHTML = Number(document.getElementById("q10-agree").innerHTML) + add;
+					} else if (data == "Reject") {
+						document.getElementById("q10-reject").innerHTML = Number(document.getElementById("q10-reject").innerHTML) + add;
+					}
+				}
+				if (qno == 11) {
+					plusscore++;
+					let answernum = Number(data);
+					let answer = answernum < 20 ? "did not let" : "let";
+					[...document.getElementsByClassName("q11-answer")].forEach(element => element.innerHTML = answer);
+					if (answernum < 20) {
+						document.getElementById("q11-nowait").innerHTML = Number(document.getElementById("q11-nowait").innerHTML) + add;
+					} else if (answernum >= 20) {
+						document.getElementById("q11-wait").innerHTML = Number(document.getElementById("q11-wait").innerHTML) + add;
+					}
+				}
+			}
+			return plusscore;
+		}
+		function sendData() {
+			fetch(`/Quiz/Index?handler=Answers`, {
+				method: 'POST',
+				body: JSON.stringify(quizState.q),
+				headers: {
+					RequestVerificationToken:
+						document.getElementById('RequestVerificationToken').value
+				}
+			});
+		}
+		function answerQ(qno, data) {
+			quizState.q[qno] = data;
+			quizState.question = qno + 1;
+			save();
+			updateResults(qno);
+			if (qno == 11) {
+				sendData();
+			}
+		}
+		var timerStart = Date.now();
+		var timerString = "20.0";
+		var timerId;
+		function resetAndStartTimer() {
+			timerStart = Date.now();
+			timerId = setInterval(() => {
+				let s = (Date.now() - timerStart) / 1000;
+				if (s > 20) {
+					timerStart = Date.now() - 15000;
+					s = (Date.now() - timerStart) / 1000;
+				}
+				document.getElementById("april-timer").innerHTML = (20 - s).toFixed(1);
+				document.getElementById("april-timer").classList.remove('d-none');
+			}, 100);
+		}
+		function pauseTimer() {
+			clearInterval(timerId);
+		}
+		function hideTimer() {
+			document.getElementById("april-timer").classList.add('d-none');
+		}
+		document.addEventListener("DOMContentLoaded", function () {
+			if (quizState) {
+				quizState = JSON.parse(quizState);
+			} else {
+				quizState = {};
+			}
+			let q = parseInt(quizState.question);
+			if (isNaN(q) || q < -1 || q > 12) {
+				quizState.question = -1;
+			} else {
+				quizState.question = q;
+			}
+			if (!quizState.q) {
+				quizState.q = {};
+			}
+			save();
+			showScore();
+			if (q == 0) {
+				showId("captcha-answer");
+			} else if (q >= 1 && q <= 11) {
+				showId("question-" + q);
+				resetAndStartTimer();
+			} else if (q == 12) {
+				showStats();
+			} else {
+				showId("intro");
+			}
+		});
+	</script>
+</div>
