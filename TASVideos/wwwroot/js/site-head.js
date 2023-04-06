@@ -1,16 +1,8 @@
 ﻿function forceDarkMode() {
-	const darkModeStylesheet = document.getElementById("style-dark");
-	if (!darkModeStylesheet) {
-		removeAutoDarkMode();
+	removeAutoDarkMode();
+	document.getElementById("style-dark").disabled = false;
 
-		const newElement = document.createElement("link");
-		newElement.rel = "stylesheet";
-		newElement.id = "style-dark";
-		newElement.href = "/css/darkmode.css";
-		document.head.appendChild(newElement);
-
-		localStorage.setItem("style-dark", "true");
-	}
+	localStorage.setItem("style-dark", "true");
 }
 
 function forceLightMode() {
@@ -21,32 +13,18 @@ function forceLightMode() {
 }
 
 function autoDarkMode() {
-	const initialDarkModeStylesheet = document.getElementById("style-dark-initial");
-	if (!initialDarkModeStylesheet) {
-		removeForcedDarkMode();
+	removeForcedDarkMode();
+	document.getElementById("style-dark-initial").disabled = false;
 
-		const newElement = document.createElement("link");
-		newElement.rel = "stylesheet";
-		newElement.id = "style-dark-initial";
-		newElement.href = "/css/darkmode-initial.css";
-		document.head.appendChild(newElement);
-
-		localStorage.removeItem("style-dark");
-	}
+	localStorage.removeItem("style-dark");
 }
 
 function removeForcedDarkMode() {
-	const darkModeStylesheet = document.getElementById("style-dark");
-	if (darkModeStylesheet) {
-		darkModeStylesheet.parentElement.removeChild(darkModeStylesheet);
-	}
+	document.getElementById("style-dark").disabled = true;
 }
 
 function removeAutoDarkMode() {
-	const initialDarkModeStylesheet = document.getElementById("style-dark-initial");
-	if (initialDarkModeStylesheet) {
-		initialDarkModeStylesheet.parentElement.removeChild(initialDarkModeStylesheet);
-	}
+	document.getElementById("style-dark-initial").disabled = true;
 }
 
 if (localStorage.getItem("style-dark") !== null) {
