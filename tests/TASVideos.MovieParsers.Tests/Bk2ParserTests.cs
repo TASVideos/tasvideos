@@ -88,6 +88,7 @@ public class Bk2ParserTests : BaseParserTests
 	[DataRow("System-A7800.bk2", SystemCodes.Atari7800)]
 	[DataRow("System-AppleII.bk2", SystemCodes.AppleII)]
 	[DataRow("System-Arcade.bk2", SystemCodes.Arcade)]
+	[DataRow("System-Bsx.bk2", SystemCodes.BSX)]
 	[DataRow("System-C64.bk2", SystemCodes.C64)]
 	[DataRow("System-Intellivision.bk2", SystemCodes.Intellivision)]
 	[DataRow("System-Jaguar.bk2", SystemCodes.Jaguar)]
