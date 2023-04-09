@@ -1,7 +1,7 @@
 ﻿@page
 @model AuthorsModel
 @{
-	ViewData["Title"] = "Published Authors";
+	ViewData.SetTitle("Published Authors");
 }
 
 <cache enabled="@(!User.IsLoggedIn())" expires-after="@TimeSpan.FromSeconds(60)">

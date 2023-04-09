@@ -179,10 +179,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<bool>("Deprecated")
                         .HasColumnType("boolean")
                         .HasColumnName("deprecated");
@@ -195,10 +191,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.HasKey("Id")
                         .HasName("pk_deprecated_movie_formats");
@@ -219,26 +211,10 @@ namespace TASVideos.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreateTimestamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("create_timestamp");
-
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("IconPath")
                         .HasMaxLength(48)
                         .HasColumnType("citext")
                         .HasColumnName("icon_path");
-
-                    b.Property<DateTime>("LastUpdateTimestamp")
-                        .HasColumnType("timestamp without time zone")
-                        .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("LinkPath")
                         .HasMaxLength(48)
@@ -288,10 +264,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("citext")
@@ -300,10 +272,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -347,10 +315,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("citext")
@@ -359,10 +323,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<int>("Ordinal")
                         .HasColumnType("integer")
@@ -397,17 +357,9 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<bool>("MultiSelect")
                         .HasColumnType("boolean")
@@ -442,17 +394,9 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<int>("Ordinal")
                         .HasColumnType("integer")
@@ -528,10 +472,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<bool>("EnableBbCode")
                         .HasColumnType("boolean")
                         .HasColumnName("enable_bb_code");
@@ -552,10 +492,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<DateTime?>("PostEditedTimestamp")
                         .HasColumnType("timestamp without time zone")
@@ -630,13 +566,13 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<int>("ForumId")
                         .HasColumnType("integer")
                         .HasColumnName("forum_id");
+
+                    b.Property<int?>("GameId")
+                        .HasColumnType("integer")
+                        .HasColumnName("game_id");
 
                     b.Property<bool>("IsLocked")
                         .HasColumnType("boolean")
@@ -645,10 +581,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<int?>("PollId")
                         .HasColumnType("integer")
@@ -677,6 +609,9 @@ namespace TASVideos.Data.Migrations
 
                     b.HasIndex("ForumId")
                         .HasDatabaseName("ix_forum_topics_forum_id");
+
+                    b.HasIndex("GameId")
+                        .HasDatabaseName("ix_forum_topics_game_id");
 
                     b.HasIndex("PollId")
                         .IsUnique()
@@ -738,10 +673,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -756,10 +687,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("ScreenshotUrl")
                         .HasMaxLength(250)
@@ -876,10 +803,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("DisplayName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -889,10 +812,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.HasKey("Id")
                         .HasName("pk_game_systems");
@@ -917,10 +836,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<double>("FrameRate")
                         .HasColumnType("double precision")
                         .HasColumnName("frame_rate");
@@ -932,10 +847,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<bool>("Obsolete")
                         .ValueGeneratedOnAdd()
@@ -975,10 +886,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<int>("GameId")
                         .HasColumnType("integer")
                         .HasColumnName("game_id");
@@ -986,10 +893,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("Md5")
                         .HasMaxLength(32)
@@ -1076,17 +979,9 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("Mask")
                         .IsRequired()
@@ -1123,10 +1018,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("Group")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -1136,10 +1027,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("Link")
                         .IsRequired()
@@ -1184,10 +1071,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<bool>("DeletedForFromUser")
                         .HasColumnType("boolean")
                         .HasColumnName("deleted_for_from_user");
@@ -1216,10 +1099,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<DateTime?>("ReadOn")
                         .HasColumnType("timestamp without time zone")
@@ -1282,10 +1161,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("EmulatorVersion")
                         .HasMaxLength(50)
                         .HasColumnType("citext")
@@ -1306,10 +1181,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<byte[]>("MovieFile")
                         .IsRequired()
@@ -1350,10 +1221,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("citext")
                         .HasColumnName("title");
 
-                    b.Property<int?>("WikiContentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("wiki_content_id");
-
                     b.HasKey("Id")
                         .HasName("pk_publications");
 
@@ -1362,6 +1229,10 @@ namespace TASVideos.Data.Migrations
 
                     b.HasIndex("GameVersionId")
                         .HasDatabaseName("ix_publications_game_version_id");
+
+                    b.HasIndex("MovieFileName")
+                        .IsUnique()
+                        .HasDatabaseName("ix_publications_movie_file_name");
 
                     b.HasIndex("ObsoletedById")
                         .HasDatabaseName("ix_publications_obsoleted_by_id");
@@ -1378,9 +1249,6 @@ namespace TASVideos.Data.Migrations
 
                     b.HasIndex("SystemId")
                         .HasDatabaseName("ix_publications_system_id");
-
-                    b.HasIndex("WikiContentId")
-                        .HasDatabaseName("ix_publications_wiki_content_id");
 
                     b.ToTable("publications", (string)null);
                 });
@@ -1459,10 +1327,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("Description")
                         .HasMaxLength(250)
                         .HasColumnType("citext")
@@ -1475,10 +1339,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("Path")
                         .IsRequired()
@@ -1573,23 +1433,19 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("publication_id");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("integer")
-                        .HasColumnName("type");
-
                     b.Property<double>("Value")
                         .HasColumnType("double precision")
                         .HasColumnName("value");
 
-                    b.HasKey("UserId", "PublicationId", "Type")
+                    b.HasKey("UserId", "PublicationId")
                         .HasName("pk_publication_ratings");
 
                     b.HasIndex("PublicationId")
                         .HasDatabaseName("ix_publication_ratings_publication_id");
 
-                    b.HasIndex("UserId", "PublicationId", "Type")
+                    b.HasIndex("UserId", "PublicationId")
                         .IsUnique()
-                        .HasDatabaseName("ix_publication_ratings_user_id_publication_id_type");
+                        .HasDatabaseName("ix_publication_ratings_user_id_publication_id");
 
                     b.ToTable("publication_ratings", (string)null);
                 });
@@ -1629,10 +1485,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("DisplayName")
                         .HasMaxLength(100)
                         .HasColumnType("citext")
@@ -1641,10 +1493,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<int>("PublicationId")
                         .HasColumnType("integer")
@@ -1697,10 +1545,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(300)
@@ -1714,10 +1558,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("Name")
                         .HasColumnType("citext")
@@ -1834,10 +1674,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<long?>("CycleCount")
                         .HasColumnType("bigint")
                         .HasColumnName("cycle_count");
@@ -1886,10 +1722,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<decimal>("LegacyTime")
                         .ValueGeneratedOnAdd()
@@ -1962,10 +1794,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("citext")
                         .HasColumnName("warnings");
 
-                    b.Property<int?>("WikiContentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("wiki_content_id");
-
                     b.HasKey("Id")
                         .HasName("pk_submissions");
 
@@ -1998,9 +1826,6 @@ namespace TASVideos.Data.Migrations
 
                     b.HasIndex("SystemId")
                         .HasDatabaseName("ix_submissions_system_id");
-
-                    b.HasIndex("WikiContentId")
-                        .HasDatabaseName("ix_submissions_wiki_content_id");
 
                     b.ToTable("submissions", (string)null);
                 });
@@ -2066,17 +1891,9 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<int>("Status")
                         .HasColumnType("integer")
@@ -2156,10 +1973,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<string>("Email")
                         .HasColumnType("citext")
                         .HasColumnName("email");
@@ -2184,10 +1997,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean")
@@ -2314,17 +2123,9 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("RegexPattern")
                         .IsRequired()
@@ -2638,10 +2439,6 @@ namespace TASVideos.Data.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("create_timestamp");
 
-                    b.Property<string>("CreateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("create_user_name");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
@@ -2649,10 +2446,6 @@ namespace TASVideos.Data.Migrations
                     b.Property<DateTime>("LastUpdateTimestamp")
                         .HasColumnType("timestamp without time zone")
                         .HasColumnName("last_update_timestamp");
-
-                    b.Property<string>("LastUpdateUserName")
-                        .HasColumnType("citext")
-                        .HasColumnName("last_update_user_name");
 
                     b.Property<string>("Markup")
                         .IsRequired()
@@ -2870,6 +2663,11 @@ namespace TASVideos.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_forum_topics_forums_forum_id");
 
+                    b.HasOne("TASVideos.Data.Entity.Game.Game", "Game")
+                        .WithMany()
+                        .HasForeignKey("GameId")
+                        .HasConstraintName("fk_forum_topics_games_game_id");
+
                     b.HasOne("TASVideos.Data.Entity.Forum.ForumPoll", "Poll")
                         .WithOne("Topic")
                         .HasForeignKey("TASVideos.Data.Entity.Forum.ForumTopic", "PollId")
@@ -2888,6 +2686,8 @@ namespace TASVideos.Data.Migrations
                         .HasConstraintName("fk_forum_topics_submissions_submission_id1");
 
                     b.Navigation("Forum");
+
+                    b.Navigation("Game");
 
                     b.Navigation("Poll");
 
@@ -3063,11 +2863,6 @@ namespace TASVideos.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_publications_game_systems_system_id");
 
-                    b.HasOne("TASVideos.Data.Entity.WikiPage", "WikiContent")
-                        .WithMany()
-                        .HasForeignKey("WikiContentId")
-                        .HasConstraintName("fk_publications_wiki_pages_wiki_content_id");
-
                     b.Navigation("Game");
 
                     b.Navigation("GameVersion");
@@ -3081,8 +2876,6 @@ namespace TASVideos.Data.Migrations
                     b.Navigation("System");
 
                     b.Navigation("SystemFrameRate");
-
-                    b.Navigation("WikiContent");
                 });
 
             modelBuilder.Entity("TASVideos.Data.Entity.PublicationAuthor", b =>
@@ -3287,11 +3080,6 @@ namespace TASVideos.Data.Migrations
                         .HasForeignKey("SystemId")
                         .HasConstraintName("fk_submissions_game_systems_system_id");
 
-                    b.HasOne("TASVideos.Data.Entity.WikiPage", "WikiContent")
-                        .WithMany()
-                        .HasForeignKey("WikiContentId")
-                        .HasConstraintName("fk_submissions_wiki_pages_wiki_content_id");
-
                     b.Navigation("Game");
 
                     b.Navigation("GameVersion");
@@ -3309,8 +3097,6 @@ namespace TASVideos.Data.Migrations
                     b.Navigation("System");
 
                     b.Navigation("SystemFrameRate");
-
-                    b.Navigation("WikiContent");
                 });
 
             modelBuilder.Entity("TASVideos.Data.Entity.SubmissionAuthor", b =>

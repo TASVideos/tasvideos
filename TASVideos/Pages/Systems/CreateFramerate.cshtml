@@ -1,7 +1,7 @@
 ﻿@page "/Systems/{systemId}/CreateFramerate"
 @model CreateFramerateModel
 @{
-	ViewData["Title"] = $"Creating a Framerate for System: {Model.SystemCode}";
+	ViewData.SetTitle($"Creating a Framerate for System: {Model.SystemCode}");
 }
 
 <div class="text-danger">

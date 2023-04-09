@@ -2,21 +2,17 @@
 @model InfoModel
 
 @{
-	ViewData["Title"] = $"User File #{Model.Id}";
-}
-@section Header {
-	<meta property="og:type" content="website" />
-	<meta property="og:site_name" content="TASVideos" />
-	<meta property="og:title" content="@ViewData["Title"]" />
-	@if (!string.IsNullOrWhiteSpace(Model.UserFile.Title)) {
-		<meta property="og:description" content="@(Model.UserFile.Title)" />
-	}
-	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
-	<meta property="og:image" content="@($"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png")" />
+	ViewData.SetTitle($"User File #{Model.Id}");
+	ViewData.SetMetaTags(new MetaTagModel
+	{
+		Title = ViewData["Title"]?.ToString(),
+		Description = Model.UserFile.Title
+	});
 }
 
 <div class="mb-2">
 	<a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
+	<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="btn btn-primary">Catalog</a>
 	<a asp-page="Index" class="btn btn-secondary float-end">All User Files</a>
 </div>
 

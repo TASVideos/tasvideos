@@ -1,19 +1,25 @@
 ﻿@model TASVideos.Pages.Forum.Models.IForumPostEntry
+@{
+	DateTime minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysPostsCountAsActive);
+	bool isCreateActivity = Model.CreateTimestamp > minimumDate;
+	bool isEditActivity = Model.PostEditedTimestamp > minimumDate;
+	string addClass = (isCreateActivity || isEditActivity) ? "activity-post" : "";
+}
 <card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning border-2" : "border-primary") border mb-2">
 	<cardheader class="px-2 py-1">
 		<row class="align-items-center">
-			<div class="col-lg-2 col-md-3 col-auto">
+			<div class="col-auto">
 				<small>
 					<a href="/Forum/Posts/@(Model.Id)"
 					   title="Link to this post"
 					   class="float-start text-decoration-none text-dark">
-						<i class="fa fa-bookmark-o"></i>
+						<i class="fa fa-bookmark @addClass" data-post-id="@Model.Id" data-unix-created="@(isCreateActivity ? Model.CreateTimestamp.UnixTimestamp() : "")" data-unix-edited="@(isEditActivity ? Model.PostEditedTimestamp?.UnixTimestamp() : "")"></i>
 						Posted: <timezone-convert asp-for="@Model.CreateTimestamp" />
 						<span condition="@(Model.PostEditedTimestamp != null)">@{var postEditedTimestamp = (DateTime)Model.PostEditedTimestamp!;}<br />(Edited: <timezone-convert asp-for="@postEditedTimestamp" />)</span>
 					</a>
 				</small>
 			</div>
-			<div condition="!string.IsNullOrWhiteSpace(Model.Subject)" class="col-auto col-md order-last order-md-0">
+			<div condition="!string.IsNullOrWhiteSpace(Model.Subject)" class="col-auto">
 				<small>
 					Post subject: @Model.Subject
 				</small>

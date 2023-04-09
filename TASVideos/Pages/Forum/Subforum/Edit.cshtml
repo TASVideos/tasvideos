@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model EditModel
 @{
-	ViewData["Title"] = $"TASVideos Forum {Model.Forum.Name}";
+	ViewData.SetTitle($"TASVideos Forum {Model.Forum.Name}");
 }
 <partial Name="_ForumHeader" />
 <div asp-validation-summary="All" class="text-danger"></div>

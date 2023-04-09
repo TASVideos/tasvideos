@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki.Models;
 
@@ -76,7 +76,7 @@ public class MoveModel : BasePageModel
 		await _publisher.SendGeneralWiki(
 			$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Name()}",
 			"",
-			Move.DestinationPageName);
+			WikiHelper.EscapeUserName(Move.DestinationPageName));
 
 		return BaseRedirect("/" + Move.DestinationPageName);
 	}

@@ -14,8 +14,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 {
 	private readonly IHttpContextAccessor? _httpContext;
 
-	internal const string SystemUser = "admin@tasvideos.org";
-
 	public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 		: base(options)
 	{
@@ -326,6 +324,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			entity.HasMany(p => p.ObsoletedMovies)
 				.WithOne(p => p.ObsoletedBy!)
 				.OnDelete(DeleteBehavior.Restrict);
+
+			entity.HasIndex(e => e.MovieFileName).IsUnique();
 		});
 
 		builder.Entity<GameGenre>(entity =>
@@ -353,9 +353,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<PublicationRating>(entity =>
 		{
-			entity.HasKey(e => new { e.UserId, e.PublicationId, e.Type });
+			entity.HasKey(e => new { e.UserId, e.PublicationId });
 			entity.HasIndex(e => e.PublicationId);
-			entity.HasIndex(e => new { e.UserId, e.PublicationId, e.Type })
+			entity.HasIndex(e => new { e.UserId, e.PublicationId })
 				.IsUnique();
 		});
 
@@ -497,19 +497,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 					trackable.CreateTimestamp = DateTime.UtcNow;
 				}
 
-				if (string.IsNullOrWhiteSpace(trackable.CreateUserName))
-				{
-					trackable.CreateUserName = GetUser();
-				}
-
 				if (trackable.LastUpdateTimestamp.Year == 1)
 				{
 					trackable.LastUpdateTimestamp = trackable.CreateTimestamp;
-				}
-
-				if (string.IsNullOrWhiteSpace(trackable.LastUpdateUserName))
-				{
-					trackable.LastUpdateUserName = GetUser();
 				}
 			}
 		}
@@ -523,16 +513,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 				{
 					trackable.LastUpdateTimestamp = DateTime.UtcNow;
 				}
-
-				if (!IsModified(entry, nameof(ITrackable.LastUpdateUserName)))
-				{
-					trackable.LastUpdateUserName = GetUser();
-				}
 			}
 		}
 	}
-
-	private string GetUser() => _httpContext?.HttpContext?.User.Identity?.Name ?? SystemUser;
 
 	private static bool IsModified(EntityEntry entry, string propertyName)
 		=> entry.Properties

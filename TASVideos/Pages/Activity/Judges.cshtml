@@ -1,6 +1,15 @@
 ﻿@page "{userName}"
-@{ ViewData["Title"] = $"Judge Activity for {Model.UserName}"; }
 @model JudgesModel
+@{
+	ViewData.SetTitle($"Judge Activity for {Model.UserName}");
+}
+@section PageTitle {
+	<div class="container mb-2">
+		<h1 class="card card-header d-block">
+			Judge <a asp-page="/Activity/Index">Activity</a> for @Model.UserName
+		</h1>
+	</div>
+}
 
 @{
 	var total = Model.Submissions.Count;
@@ -9,6 +18,7 @@
 		or SubmissionStatus.PublicationUnderway);
 	var rejectedTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Rejected);
 	var cancelledTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Cancelled);
+	var playgroundTotal = Model.Submissions.Count(s => s.Status == SubmissionStatus.Playground);
 	var orders = new Dictionary<SubmissionStatus, int>
 	{
 		{ SubmissionStatus.JudgingUnderWay, 3 },
@@ -23,6 +33,7 @@
 <div>Accepted: @acceptedTotal (@acceptedTotal.ToPercent(total)%)</div>
 <div>Rejected: @rejectedTotal (@rejectedTotal.ToPercent(total)%)</div>
 <div>Cancelled: @cancelledTotal (@cancelledTotal.ToPercent(total)%)</div>
+<div>Playground: @playgroundTotal (@playgroundTotal.ToPercent(total)%)</div>
 <hr />
 <div class="table-container">
 	<table class="table table-striped">

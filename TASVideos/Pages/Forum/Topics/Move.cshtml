@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model MoveModel
 @{
-	ViewData["Title"] = $"Moving Topic: {Model.Topic.TopicTitle}";
+	ViewData.SetTitle($"Moving Topic: {Model.Topic.TopicTitle}");
 }
 <partial Name="_ForumHeader" />
 <h4>

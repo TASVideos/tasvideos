@@ -1,23 +1,23 @@
 ﻿@page
 @model IndexModel
 @{
-	ViewData["Title"] = "Forum";
+	ViewData.SetTitle("Forum");
 }
 
 <div class="clearfix">
 	<partial Name="_ForumHeader" />
-	<a asp-page="/Forum/Subforum/Create" permission="EditForums" class="btn btn-primary btn-sm"><i class="fa fa-plus"></i> Create</a>
-	<div class="float-end pb-2">
-		<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm">
+	<a asp-page="/Forum/Subforum/Create" permission="EditForums" class="btn btn-primary btn-sm mb-1"><i class="fa fa-plus"></i> Create</a>
+	<div class="float-end mb-1">
+		<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm mb-1">
 			Latest Posts
 		</a>
-		<a asp-page="/Forum/Posts/New" condition="@User.IsLoggedIn()" class="btn btn-secondary btn-sm">
+		<a asp-page="/Forum/Posts/New" condition="@User.IsLoggedIn()" class="btn btn-secondary btn-sm mb-1">
 			Posts since last visit
 		</a>
-		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm">
+		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm mb-1">
 			Unanswered Posts
 		</a>
-		<a class="btn btn-secondary btn-sm" onclick="markAllPostsRead()">
+		<a class="btn btn-secondary btn-sm mb-1" onclick="markAllPostsRead()">
 			Mark all Posts as read
 		</a>
 	</div>
@@ -31,42 +31,78 @@
 	}
 </div>
 
+<span id="serverUnixTime" class="d-none">@DateTime.UtcNow.UnixTimestamp()</span>
 @section Scripts {
 	<script>
-		let currentTime = Math.floor(Date.now() / 1000);
+		let currentTime = Number(document.getElementById('serverUnixTime').textContent);
 		{
-			let visitedTopics = localStorage.getItem('VisitedTopics');
-			if (visitedTopics) {
-				visitedTopics = JSON.parse(visitedTopics);
-			} else {
-				visitedTopics = {};
-			}
+			let visitedPosts = localStorage.getItem('VisitedPosts');
+			visitedPosts = JSON.parse(visitedPosts) ?? {};
 			let activitySubforums = document.getElementsByClassName('activity-subforum');
-			for (let activityTopic of activitySubforums){
-				let activityJson = JSON.parse(activityTopic.dataset.activityJson);
-				let display = false;
-				for (let topicId in activityJson){
-					let lastVisit = visitedTopics[topicId];
-					if (!lastVisit || lastVisit < activityJson[topicId]){
-						display = true;
-						break;
+			for (let activitySubforum of activitySubforums) {
+				let displayClass;
+				let firstPostId, firstPostDate;
+				let activityPostsCreated = activitySubforum.dataset.activityPostsCreated ? JSON.parse(activitySubforum.dataset.activityPostsCreated) : {};
+				for (let postId in activityPostsCreated) {
+					let lastVisit = visitedPosts[postId];
+					if (!lastVisit || lastVisit < activityPostsCreated[postId]) {
+						displayClass = 'text-warning';
+						if (!firstPostId || activityPostsCreated[postId] < firstPostDate) {
+							firstPostId = postId;
+							firstPostDate = activityPostsCreated[postId];
+						}
 					}
 				}
-				if (display){
-					activityTopic.classList.remove('d-none');
+				if (!displayClass) {
+					let activityPostsEdited = activitySubforum.dataset.activityPostsEdited ? JSON.parse(activitySubforum.dataset.activityPostsEdited) : {};
+					for (let postId in activityPostsEdited) {
+						let lastVisit = visitedPosts[postId];
+						if (!lastVisit || lastVisit < activityPostsEdited[postId]) {
+							displayClass = 'text-info';
+							if (!firstPostId || activityPostsEdited[postId] < firstPostDate) {
+								firstPostId = postId;
+								firstPostDate = activityPostsEdited[postId];
+							}
+						}
+					}
+				}
+				if (displayClass) {
+					activitySubforum.classList.add(displayClass);
+					activitySubforum.classList.remove('d-none');
+					activitySubforum.parentElement.setAttribute('href', '/Forum/Posts/' + firstPostId);
 				}
 			}
+
+			// clean up localStorage
+			let allActivityPostIds = new Set();
+			for (let activitySubforum of activitySubforums) {
+				let activityPostsCreated = activitySubforum.dataset.activityPostsCreated ? JSON.parse(activitySubforum.dataset.activityPostsCreated) : {};
+				for (let postId in activityPostsCreated) {
+					allActivityPostIds.add(postId);
+				}
+				let activityPostsEdited = activitySubforum.dataset.activityPostsEdited ? JSON.parse(activitySubforum.dataset.activityPostsEdited) : {};
+				for (let postId in activityPostsEdited) {
+					allActivityPostIds.add(postId);
+				}
+			}
+			Object.keys(visitedPosts).filter(postId => !allActivityPostIds.has(postId)).forEach(postId => delete visitedPosts[postId]);
+			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
 		}
-		function markAllPostsRead(){
-			let visitedTopics = {};
+		function markAllPostsRead() {
+			let visitedPosts = localStorage.getItem('VisitedPosts');
+			visitedPosts = JSON.parse(visitedPosts) ?? {};
 			let activitySubforums = document.getElementsByClassName('activity-subforum');
-			for (let activityTopic of activitySubforums){
-				let activityJson = JSON.parse(activityTopic.dataset.activityJson);
-				for (let topicId in activityJson){
-					visitedTopics[topicId] = currentTime;
+			for (let activitySubforum of activitySubforums) {
+				let activityPostsCreated = activitySubforum.dataset.activityPostsCreated ? JSON.parse(activitySubforum.dataset.activityPostsCreated) : {};
+				for (let postId in activityPostsCreated) {
+					visitedPosts[postId] = currentTime;
+				}
+				let activityPostsEdited = activitySubforum.dataset.activityPostsEdited ? JSON.parse(activitySubforum.dataset.activityPostsEdited) : {};
+				for (let postId in activityPostsEdited) {
+					visitedPosts[postId] = currentTime;
 				}
 			}
-			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
 			location.reload();
 		}
 	</script>

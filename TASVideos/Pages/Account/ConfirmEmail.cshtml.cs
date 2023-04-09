@@ -59,7 +59,7 @@ public class ConfirmEmailModel : BasePageModel
 		await _publisher.SendUserManagement(
 			$"User {user.UserName} activated",
 			"",
-			$"Users/Profile/{user.UserName}");
+			$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 		await _userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
 		await _tasVideoAgent.SendWelcomeMessage(user.Id);
 		return Page();

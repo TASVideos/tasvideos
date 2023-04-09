@@ -2,8 +2,7 @@
 @using TASVideos.Data.Helpers
 @model SubmitModel
 @{
-	ViewData["Title"] = "Submit Movie";
-	// ReSharper disable once UnusedVariable
+	ViewData.SetTitle("Submit Movie");
 	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
 	var parseErrors = !notSupportedError && ViewData.ModelState.Keys.Any(e => e == "Parser");
 }
@@ -18,6 +17,7 @@
 <danger-alert dismissible="true" condition="parseErrors">
 	@await Component.RenderWiki("System/SubmissionZipFailure")
 </danger-alert>
+<span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form method="post" enctype="multipart/form-data">
 	<row>
 		<column lg="6">
@@ -85,25 +85,40 @@
 				@await Component.RenderWiki("System/SubmissionImportant")
 			</span>
 			<partial name="_WikiEditHelper" model="@("Create_Markup")" />
-			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit"></textarea>
+			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission"></textarea>
 			<span asp-validation-for="Create.Markup" class="text-danger"></span>
+			<fullrow id="backup-restore" class="d-none mt-2">
+				<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>
+				<label class="text-muted">from <span id="backup-time"></span></label>
+			</fullrow>
 			<div>
 				<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
 			</div>
 		</form-group>
 	</fullrow>
-	<hr />
+	<row class="text-center justify-content-center mb-1 fs-6">
+		<div class="col-auto">
+			<div class="form-check">
+				<input asp-for="Create.AgreeToInstructions" class="form-check-input" />
+				<label asp-for="Create.AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
+				<br />
+				<span asp-validation-for="Create.AgreeToInstructions" class="text-danger"></span>
+			</div>
+		</div>
+	</row>
+	<row class="text-center justify-content-center mb-3 fs-6">
+		<div class="col-auto">
+			<div class="form-check">
+				<input asp-for="Create.AgreeToLicense" class="form-check-input" />
+				<label asp-for="Create.AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
+				<br />
+				<span asp-validation-for="Create.AgreeToLicense" class="text-danger"></span>
+			</div>
+		</div>
+	</row>
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
 		<submit-button id="submit-btn" class="btn btn-primary border border-warning @(Model.Create.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
-		<br />
-		<br />
-		<div id="submit-blurb" class="text-center alert-info d-none" role="alert">
-			<div>@await Component.RenderWiki("System/SubmissionWarning")</div>
-			<label class="small alert-info">
-				@await Component.RenderWiki("System/WikiEditNote")
-			</label>
-		</div>
 	</fullrow>
 </form>
 
@@ -126,7 +141,7 @@
 		};
 		document.getElementById('preview-button').addEventListener('click', function () {
 			document.getElementById('submit-btn').classList.remove('d-none');
-			document.getElementById('submit-blurb').classList.remove('d-none');
 		});
 	</script>
+	<script src="~/js/backup-text.js"></script>
 }

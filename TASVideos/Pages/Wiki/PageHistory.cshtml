@@ -4,7 +4,7 @@
 @model PageHistoryModel
 
 @{
-	ViewData["Title"] = "Page History For " + Model.History.PageName;
+	ViewData.SetTitle("Page History For " + Model.History.PageName);
 	bool hasDiff = Model.FromRevision.HasValue && Model.ToRevision.HasValue;
 	var canEdit = WikiHelper.UserCanEditWikiPage(Model.Path, User.Name(), User.Permissions());
 }
@@ -37,7 +37,7 @@
 			return "btn btn-primary btn-sm";
 		}
 
-		return "btn bg-info text-dark btn-sm";
+		return "btn btn-info btn-sm";
 	}
 }
 
@@ -176,22 +176,22 @@
 					elem.classList.remove('table-primary');
 					elem.classList.remove('table-info');
 					elem.querySelector("button[data-from]").classList.remove("btn-primary");
-					elem.querySelector("button[data-from]").classList.add("bg-info","text-dark");
+					elem.querySelector("button[data-from]").classList.add("btn-info");
 					elem.querySelector("button[data-to]").classList.remove("btn-primary");
-					elem.querySelector("button[data-to]").classList.add("bg-info","text-dark");
+					elem.querySelector("button[data-to]").classList.add("btn-info");
 				});
 		
 			const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
 			if (cur) {
 				cur.classList.add('table-primary');
-				cur.querySelector("button[data-to]").classList.remove("bg-info","text-dark");
+				cur.querySelector("button[data-to]").classList.remove("btn-info");
 				cur.querySelector("button[data-to]").classList.add("btn-primary");
 			}
 
 			const prev = document.querySelector(`tr[data-revision="${fromRevision}"]`);
 			if (prev) {
 				prev.classList.add('table-info');
-				prev.querySelector("button[data-from]").classList.remove("bg-info","text-dark");
+				prev.querySelector("button[data-from]").classList.remove("btn-info");
 				prev.querySelector("button[data-from]").classList.add("btn-primary");
 			}
 		}

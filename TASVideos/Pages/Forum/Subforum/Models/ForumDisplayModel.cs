@@ -38,9 +38,16 @@ public class ForumDisplayModel
 		public bool IsLocked { get; set; }
 
 		[TableIgnore]
-		public ForumPost? LastPost { get; set; }
+		public LastPostEntry? LastPost { get; set; }
 
 		[DisplayName("Last Post")]
 		public string? Dummy { get; set; }
+	}
+
+	public class LastPostEntry
+	{
+		public int Id { get; set; }
+		public string? PosterName { get; set; }
+		public DateTime CreateTimestamp { get; set; }
 	}
 }

@@ -1,4 +1,5 @@
-﻿@model WikiPage
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model TASVideos.Core.Services.Wiki.IWikiPage
 @{
 	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Name(), User.Permissions());
 }

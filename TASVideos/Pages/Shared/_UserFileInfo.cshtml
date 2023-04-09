@@ -26,7 +26,7 @@
 				<delete-button
 					class="btn-sm border border-warning",
 					warning-message="Are you sure you want to delete this file?"
-					asp-href="/UserFiles?handler=Delete&fileId=@Model.Id&returnUrl=@Context.CurrentPathToReturnUrl()"
+					asp-href="/UserFiles?handler=Delete&fileId=@Model.Id&returnUrl=/UserFiles"
 				>
 					<i class="fa fa-remove"></i>
 				</delete-button>
@@ -70,7 +70,7 @@
 					<a asp-page="/UserFiles/Info" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-secondary">
 						<i class="fa fa-download"></i> Download (@Model.FileSizeUncompressed.ToSizeString())
 					</a>
-					<a asp-page="/UserFiles/Info" asp-route-id="@Model.Id" class="btn btn-secondary">
+					<a condition="@(ViewContext.Page() != "/UserFiles/Info")" asp-page="/UserFiles/Info" asp-route-id="@Model.Id" class="btn btn-secondary">
 						<i class="fa fa-info-circle"></i> Information
 					</a>
 				</div>

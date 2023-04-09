@@ -1,7 +1,7 @@
 ﻿@page "{topicId}"
 @model CreateModel
 @{
-	ViewData["Title"] = $"Posting to Topic: {Model.Post.TopicTitle}";
+	ViewData.SetTitle($"Posting to Topic: {Model.Post.TopicTitle}");
 }
 
 @section PageTitle {
@@ -16,6 +16,7 @@
 	}
 </show-more>
 <br />
+<span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form method="POST">
 	<input type="hidden" asp-for="Post.TopicTitle" />
 	<row>
@@ -40,9 +41,13 @@
 		<partial name="_CreatePostHelper" model="@("Post_Text")" />
 	</fullrow>
 	<form-group>
-		<textarea asp-for="Post.Text" class="form-control" rows="20"></textarea>
+		<textarea asp-for="Post.Text" class="form-control backup-content" rows="20" data-backup-key="backup-post-@Model.TopicId"></textarea>
 		<span asp-validation-for="Post.Text" class="text-danger"></span>
 	</form-group>
+	<fullrow id="backup-restore" class="d-none">
+		<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>
+		<label class="text-muted">from <span id="backup-time"></span></label>
+	</fullrow>
 	<fullrow class="mt-3">
 		<input asp-for="WatchTopic" />
 		<label asp-for="WatchTopic"></label>
@@ -58,4 +63,5 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script src="~/js/backup-text.js"></script>
 }

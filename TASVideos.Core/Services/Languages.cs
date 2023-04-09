@@ -1,4 +1,9 @@
-﻿namespace TASVideos.Core.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.Wiki;
+using TASVideos.Data;
+using TASVideos.Data.Entity;
+
+namespace TASVideos.Core.Services;
 
 public interface ILanguages
 {
@@ -7,14 +12,35 @@ public interface ILanguages
 
 internal class Languages : ILanguages
 {
+	internal const string TranslationsCacheKey = "Translations-";
+	private readonly ApplicationDbContext _db;
 	private readonly IWikiPages _wikiPages;
+	private readonly ICacheService _cache;
 
-	public Languages(IWikiPages wikiPages)
+	public Languages(
+		ApplicationDbContext db,
+		IWikiPages wikiPages,
+		ICacheService cache)
 	{
+		_db = db;
 		_wikiPages = wikiPages;
+		_cache = cache;
 	}
 
 	public async Task<IEnumerable<LanguagePage>> GetTranslations(string pageName)
+	{
+		var key = TranslationsCacheKey + pageName;
+		if (_cache.TryGetValue(key, out IEnumerable<LanguagePage> languages))
+		{
+			return languages;
+		}
+
+		languages = await GetTranslationsInternal(pageName);
+		_cache.Set(key, languages, Durations.FiveMinutesInSeconds);
+		return languages;
+	}
+
+	private async Task<IEnumerable<LanguagePage>> GetTranslationsInternal(string pageName)
 	{
 		string subPage = pageName;
 		var languages = new List<LanguagePage>();
@@ -42,17 +68,19 @@ internal class Languages : ILanguages
 			return Enumerable.Empty<LanguagePage>();
 		}
 
-		var existingLanguages = new List<LanguagePage>();
-		foreach (var lang in languages)
-		{
-			if (await _wikiPages.Exists(lang.Path)
-				&& !pageName.StartsWith(lang.Code + "/"))
-			{
-				existingLanguages.Add(lang);
-			}
-		}
+		var existingLanguagePages = languages
+			.Where(l => !pageName.StartsWith(l.Code + "/"))
+			.Select(l => l.Path)
+			.ToList();
+		var existingPages = await _db.WikiPages
+			.ThatAreCurrent()
+			.ThatAreNotDeleted()
+			.Where(wp => existingLanguagePages.Contains(wp.PageName))
+			.Select(wp => wp.PageName)
+			.ToListAsync();
 
-		return existingLanguages;
+		return languages
+			.Where(l => existingPages.Contains(l.Path));
 	}
 
 	internal async Task<bool> IsLanguagePage(string? pageName)
@@ -77,9 +105,7 @@ internal class Languages : ILanguages
 
 	internal async Task<IEnumerable<Language>> AvailableLanguages()
 	{
-		var languagesMarkup = (await _wikiPages
-				.SystemPage("Languages"))
-			?.Markup;
+		var languagesMarkup = (await _wikiPages.SystemPage("Languages"))?.Markup;
 
 		if (string.IsNullOrWhiteSpace(languagesMarkup))
 		{

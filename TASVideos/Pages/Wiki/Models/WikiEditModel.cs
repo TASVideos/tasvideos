@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.Wiki.Models;
 
@@ -7,6 +8,7 @@ public class WikiEditModel
 	public DateTime EditStart { get; set; } = DateTime.UtcNow;
 
 	[Required]
+	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
 	public string OriginalMarkup => Markup;

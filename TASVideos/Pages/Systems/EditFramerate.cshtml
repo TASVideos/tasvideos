@@ -1,8 +1,8 @@
 ﻿@page "{id}/{handler?}/{systemId?}"
 @model EditFramerateModel
 @{
-	ViewData["Title"]
-		= $"Editing Framerate: {Model.FrameRate.SystemCode} {Model.FrameRate.RegionCode} {Model.FrameRate.FrameRate}";
+	ViewData.SetTitle(
+		$"Editing Framerate: {Model.FrameRate.SystemCode} {Model.FrameRate.RegionCode} {Model.FrameRate.FrameRate}");
 }
 
 <div class="text-danger">

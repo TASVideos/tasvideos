@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 
@@ -9,11 +9,11 @@ namespace TASVideos.Pages.Diagnostics;
 [RequirePermission(PermissionTo.SeeDiagnostics)]
 public class WikiSyntaxErrorsModel : BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly ApplicationDbContext _db;
 
-	public WikiSyntaxErrorsModel(IWikiPages wikiPages)
+	public WikiSyntaxErrorsModel(ApplicationDbContext db)
 	{
-		_wikiPages = wikiPages;
+		_db = db;
 	}
 
 	public class Row
@@ -47,9 +47,9 @@ public class WikiSyntaxErrorsModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var pages = await _wikiPages.Query
+		var pages = await _db.WikiPages
 			.ThatAreNotDeleted()
-			.WithNoChildren()
+			.ThatAreCurrent()
 			.Select(p => new
 			{
 				p.PageName,

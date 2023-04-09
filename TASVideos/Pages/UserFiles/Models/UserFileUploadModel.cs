@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles.Models;
 
@@ -11,6 +12,7 @@ public class UserFileUploadModel
 	public string Title { get; set; } = "";
 
 	[Required]
+	[DoNotTrim]
 	public string Description { get; set; } = "";
 
 	[Display(Name = "System")]

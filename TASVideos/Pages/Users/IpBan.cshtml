@@ -1,6 +1,6 @@
 ﻿@page "{handler?}"
 @model IpBanModel
-@{ ViewData["Title"] = "Banned Ip Addresses"; }
+@{ ViewData.SetTitle("Banned Ip Addresses"); }
 
 <form method="POST">
 	<row>
@@ -24,7 +24,6 @@
 <table class="table table-sm table-striped table-bordered">
 	<tr>
 		<th>Ip Address</th>
-		<td>Created By</td>
 		<td>Created At</td>
 		<td></td>
 	</tr>
@@ -32,9 +31,6 @@
 	{
 		<tr>
 			<td>@Model.BannedIps[i].Mask</td>
-			<td>
-				<profile-link username="@Model.BannedIps[i].CreateUserName"></profile-link>
-			</td>
 			<td>
 				<timezone-convert asp-for="BannedIps[i].DateCreated" />
 			</td>

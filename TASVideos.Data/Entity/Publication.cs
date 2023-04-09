@@ -27,7 +27,6 @@ public interface IPublicationTokens
 	int? Limit { get; }
 }
 
-[ExcludeFromHistory]
 public class Publication : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
@@ -66,9 +65,6 @@ public class Publication : BaseEntity, ITimeable
 	public int SubmissionId { get; set; }
 	public virtual Submission? Submission { get; set; }
 	public virtual ICollection<PublicationAuthor> Authors { get; set; } = new HashSet<PublicationAuthor>();
-
-	public int? WikiContentId { get; set; } // making this non-nullable is a catch-22 when creating a publication, the wiki needs a publication id and the publication needs a wiki id
-	public virtual WikiPage? WikiContent { get; set; }
 
 	[Required]
 	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
@@ -260,5 +256,16 @@ public static class PublicationExtensions
 		}
 
 		return query;
+	}
+
+	public static IQueryable<Publication> IncludeTitleTables(this DbSet<Publication> query)
+	{
+		return query
+			.Include(p => p.Authors)
+			.ThenInclude(pa => pa.Author)
+			.Include(p => p.System)
+			.Include(p => p.SystemFrameRate)
+			.Include(p => p.Game)
+			.Include(p => p.GameVersion);
 	}
 }

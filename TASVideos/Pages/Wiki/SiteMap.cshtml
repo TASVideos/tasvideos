@@ -1,7 +1,7 @@
 @page
 @model SiteMapModel
 @{ 
-	ViewData["Title"] = "Site Map";
+	ViewData.SetTitle("Site Map");
 }
 
 @foreach (var rootPage in Model.Map.GroupBy(m => m.PageName.SplitWithEmpty("/").First()).OrderBy(g => g.Key))

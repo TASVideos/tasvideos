@@ -1,7 +1,8 @@
 ﻿@using System.Globalization
+@inject AppSettings Settings
 @model (string Title, string Link)
 @{
-	var baseUrl = ViewData["BaseUrl"];
+	var baseUrl = Settings.BaseUrl;
 }
 <title>@Model.Title</title>
 <link>@(baseUrl)/@Model.Link</link>

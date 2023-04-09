@@ -1,7 +1,7 @@
 ﻿@page "{id}/{handler?}"
 @model EditModel
 @{
-	ViewData["Title"] = $"Editing Flag: {Model.Flag.Token}";
+	ViewData.SetTitle($"Editing Flag: {Model.Flag.Token}");
 }
 
 <div class="text-end">

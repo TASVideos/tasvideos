@@ -74,12 +74,14 @@ internal static class Extensions
 	public static int? ToPositiveInt(this string val)
 	{
 		var result = int.TryParse(val, out var parsedVal);
-		if (result)
+		if (!result)
 		{
-			if (parsedVal >= 0)
-			{
-				return parsedVal;
-			}
+			return null;
+		}
+
+		if (parsedVal >= 0)
+		{
+			return parsedVal;
 		}
 
 		return null;
@@ -92,12 +94,14 @@ internal static class Extensions
 	public static long? ToPositiveLong(this string val)
 	{
 		var result = long.TryParse(val, out var parsedVal);
-		if (result)
+		if (!result)
 		{
-			if (parsedVal >= 0)
-			{
-				return parsedVal;
-			}
+			return null;
+		}
+
+		if (parsedVal >= 0)
+		{
+			return parsedVal;
 		}
 
 		return null;
@@ -123,26 +127,6 @@ internal static class Extensions
 	}
 
 	/// <summary>
-	/// Returns the number of lines that start with a | which indicates
-	/// an input frame in many movie formats.
-	/// </summary>
-	public static int PipeCount(this IEnumerable<string>? lines)
-	{
-		return lines?.Count(i => i.StartsWith("|")) ?? 0;
-	}
-
-	/// <summary>
-	/// Returns lines that do not begin with a | which indicates
-	/// a header line in many movie formats.
-	/// </summary>
-	public static IEnumerable<string> WithoutPipes(this IEnumerable<string>? lines)
-	{
-		return lines is null
-			? Enumerable.Empty<string>()
-			: lines.Where(i => !i.StartsWith("|"));
-	}
-
-	/// <summary>
 	/// Gets a file that matches or starts with the given name
 	/// with a case insensitive match.
 	/// </summary>
@@ -160,5 +144,39 @@ internal static class Extensions
 	public static bool Bit(this byte b, int index)
 	{
 		return (b & (1 << index)) != 0;
+	}
+
+	/// <summary>
+	/// Returns the header and frame count for a given stream of an input log. A frame here
+	/// is defined as every line which starts with '|'. The header likewise is every line
+	/// that is not a frame. Normally, this could be implemented with a combination of
+	/// (await reader.ReadToEndAsync()).LineSplit() with .WithoutPipes() and .PipeCount().
+	/// However, this ends up reading the entire (possibly decompressed) input log into a string.
+	/// If the input log is >1GB big (assuming UTF8), it will end being "too big", as .NET disallows
+	/// a single object being larger than 2GB (also, note .NET strings are UTF16 rather than UTF8).
+	/// This method is used instead to figure out the frame count without loading the entire input log into memory.
+	/// </summary>
+	/// <param name="stream">stream of an input log</param>
+	/// <returns>header and frame count</returns>
+	public static async Task<(string[], int)> PipeBasedMovieHeaderAndFrameCount(this Stream stream)
+	{
+		using var reader = new StreamReader(stream);
+		var frames = 0;
+		var header = new List<string>();
+
+		string? line;
+		while ((line = await reader.ReadLineAsync()) is not null)
+		{
+			if (line.StartsWith('|'))
+			{
+				frames++;
+			}
+			else
+			{
+				header.Add(line);
+			}
+		}
+
+		return (header.ToArray(), frames);
 	}
 }

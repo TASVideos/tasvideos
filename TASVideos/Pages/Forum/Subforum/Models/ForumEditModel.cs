@@ -13,7 +13,6 @@ public class ForumEditModel
 	[Display(Name = "Short Name", Description = "Used for IRC notifications and other external posts")]
 	public string ShortName { get; set; } = "";
 
-	[Required]
 	[StringLength(1000)]
 	public string? Description { get; set; }
 

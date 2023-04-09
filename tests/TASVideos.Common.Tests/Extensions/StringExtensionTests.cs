@@ -47,13 +47,29 @@ public class StringExtensionTests
 	[DataRow("TASVideos", "TASVideos")]
 	[DataRow("NumbersGet1Space", "Numbers Get 1 Space")]
 	[DataRow("Special.Characters.Get.Spaces", "Special . Characters . Get . Spaces")]
+	public void SplitCamelCase_Tests(string str, string expected)
+	{
+		var actual = str.SplitCamelCase();
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[DataRow(null, "")]
+	[DataRow("", "")]
+	[DataRow("\r \n \t", "\r \n \t")]
+	[DataRow(" ", " ")]
 	[DataRow("GameResources/NES/SuperMarioBros", "Game Resources / NES / Super Mario Bros")]
 	[DataRow("HomePages/adelikat", "Home Pages / adelikat")]
 	[DataRow("HomePages/Adelikat", "Home Pages / Adelikat")]
 	[DataRow("HomePages/[^_^]", "Home Pages / [^_^]")]
-	public void SplitCamelCase_Tests(string str, string expected)
+	[DataRow("HomePages/UserNameWithCamelCase", "Home Pages / UserNameWithCamelCase")]
+	[DataRow("HomePages/UserNameWithCamelCase/Subpage", "Home Pages / UserNameWithCamelCase / Subpage")]
+	[DataRow("HomePages/UserNameWithCamelCase/SubPage", "Home Pages / UserNameWithCamelCase / Sub Page")]
+	[DataRow("HomePages/Sonic 2", "Home Pages / Sonic 2")]
+	[DataRow("HomePages/Sonic 2/SubPage", "Home Pages / Sonic 2 / Sub Page")]
+	public void SplitPathCamelCase_Tests(string str, string expected)
 	{
-		var actual = str.SplitCamelCase();
+		var actual = str.SplitPathCamelCase();
 		Assert.AreEqual(expected, actual);
 	}
 

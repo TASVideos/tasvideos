@@ -86,6 +86,11 @@ public class RegisterModel : BasePageModel
 			ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
 		}
 
+		if (UserName.Contains(' '))
+		{
+			ModelState.AddModelError(nameof(UserName), "Usernames cannot contain spaces");
+		}
+
 		string encodedResponse = Request.Form["g-recaptcha-response"];
 		bool isCaptchaValid = await _reCaptchaService.VerifyAsync(encodedResponse);
 
@@ -129,7 +134,7 @@ public class RegisterModel : BasePageModel
 				await _publisher.SendUserManagement(
 					$"New User registered! {user.UserName}",
 					"",
-					$"Users/Profile/{user.UserName}");
+					$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 				await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 				await _emailService.EmailConfirmation(Email, callbackUrl);
 

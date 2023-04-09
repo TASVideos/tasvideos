@@ -9,15 +9,11 @@ public interface IGoogleAuthService
 {
 	bool IsYoutubeEnabled();
 	Task<string> GetYoutubeAccessToken();
-
-	bool IsGmailEnabled();
-	Task<string> GetGmailAccessToken();
 }
 
 internal class GoogleAuthService : IGoogleAuthService
 {
 	private const string YoutubeCacheKey = "GoogleAuthAccessTokenCacheForYoutube";
-	private const string GmailCacheKey = "GoogleAuthAccessTokenCacheForGmail";
 	private readonly HttpClient _client;
 	private readonly ICacheService _cache;
 	private readonly AppSettings _settings;
@@ -39,10 +35,6 @@ internal class GoogleAuthService : IGoogleAuthService
 	public bool IsYoutubeEnabled() => _settings.YouTube.IsEnabled();
 
 	public async Task<string> GetYoutubeAccessToken() => await GetAccessToken(_settings.YouTube, YoutubeCacheKey);
-
-	public bool IsGmailEnabled() => _settings.Gmail.IsEnabled();
-
-	public async Task<string> GetGmailAccessToken() => await GetAccessToken(_settings.Gmail, GmailCacheKey);
 
 	private async Task<string> GetAccessToken(AppSettings.GoogleAuthSettings settings, string cacheKey)
 	{

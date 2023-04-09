@@ -3,7 +3,7 @@
 @model LoggingModel
 @inject ILogger<LoggingModel> _logger;
 @{
-	ViewData["Title"] = "Loggging";
+	ViewData.SetTitle("Loggging");
 }
 <ul>
 	<li><a asp-page="Index">Diagnostics</a></li>

@@ -1,7 +1,7 @@
 ﻿@page "{role?}"
 @model IndexModel
 @{
-	ViewData["Title"] = "Role - " + Model.RoleViewModel.Name;
+	ViewData.SetTitle("Role - " + Model.RoleViewModel.Name);
 }
 
 <a class="btn btn-secondary mb-2" asp-page="List">All Roles</a>

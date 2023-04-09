@@ -35,6 +35,8 @@ public class UploadModel : BasePageModel
 
 	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 
+	public IReadOnlyCollection<string> SupportedFileExtensions { get; set; } = new List<string>();
+
 	public async Task OnGet()
 	{
 		await Initialize();
@@ -50,6 +52,7 @@ public class UploadModel : BasePageModel
 
 		if (UserFile.File.IsCompressed())
 		{
+			await Initialize();
 			ModelState.AddModelError(
 				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
 				"Compressed files are not supported.");
@@ -58,8 +61,9 @@ public class UploadModel : BasePageModel
 
 		var fileExt = UserFile.File.FileExtension();
 
-		if (!await _userFiles.IsSupportedFileExtension(fileExt))
+		if (!(await _userFiles.SupportedFileExtensions()).Contains(fileExt))
 		{
+			await Initialize();
 			ModelState.AddModelError(
 				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
 				$"Unsupported file type: {fileExt}");
@@ -68,6 +72,7 @@ public class UploadModel : BasePageModel
 
 		if (!await _userFiles.SpaceAvailable(User.GetUserId(), UserFile.File!.Length))
 		{
+			await Initialize();
 			ModelState.AddModelError(
 				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
 				"File exceeds your available storage space. Remove unecessary files and try again.");
@@ -86,8 +91,8 @@ public class UploadModel : BasePageModel
 
 		if (parseResult is not null && !parseResult.Success)
 		{
-			ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
 			await Initialize();
+			ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
 			return Page();
 		}
 
@@ -102,6 +107,10 @@ public class UploadModel : BasePageModel
 
 	private async Task Initialize()
 	{
+		SupportedFileExtensions = (await _userFiles.SupportedFileExtensions())
+			.Select(s => s.Replace(".", ""))
+			.ToList();
+
 		StorageUsed = await _userFiles.StorageUsed(User.GetUserId());
 
 		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems

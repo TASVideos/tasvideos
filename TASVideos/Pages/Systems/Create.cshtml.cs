@@ -38,7 +38,7 @@ public class CreateModel : BasePageModel
 			default:
 			case SystemEditResult.Success:
 				SuccessStatusMessage($"System {System.Code} successfully created.");
-				return BasePageRedirect("Index");
+				return BasePageRedirect("Edit", new { System.Id });
 			case SystemEditResult.DuplicateId:
 				ModelState.AddModelError($"{nameof(System)}.{nameof(System.Id)}", $"{nameof(System.Id)} {System.Id} already exists");
 				ClearStatusMessage();

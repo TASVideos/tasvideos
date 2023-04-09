@@ -12,8 +12,20 @@
 	--bs-warning-rgb: #{$warning-rgb};
 	--bs-info: #{$info};
 	--bs-info-rgb: #{$info-rgb};
+	--bs-info-hover: #{$info-dark};
+	--bs-info-text: #{$bs-white};
+	--bs-success: #{$success};
+	--bs-success-rgb: #{$success-rgb};
+	--bs-success-hover: #{$success-dark};
 	--border-color: #{$bs-gray-400};
 	--border-separator-color: #{$bs-gray-300};
+	--bs-primary-text: #{$bs-primary-text};
+	--bs-primary-bg-subtle: #{$card-secondary};
+	--bs-primary-border-subtle: #{$card-primary};
+	--bs-secondary-text: #{$bs-secondary-text};
+	--bs-secondary-bg-subtle: #{$bs-secondary-bg-subtle};
+	--bs-secondary-border-subtle: #{$bs-secondary-border-subtle};
+	--bs-emphasis-color: #{$bs-emphasis-color};
 }
 
 a {
@@ -104,6 +116,28 @@ h4 {
 			border-color: var(--bs-secondary-hover);
 		}
 	}
+
+	&-info {
+		background-color: var(--bs-info);
+		border-color: var(--bs-info);
+		color: var(--bs-info-text);
+
+		.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:focus, &:active, &:hover, &:active:focus, .show > &.dropdown-toggle {
+			background-color: var(--bs-info-hover);
+			border-color: var(--bs-info-hover);
+			color: var(--bs-info-text);
+		}
+	}
+
+	&-success {
+		background-color: var(--bs-success);
+		border-color: var(--bs-success);
+
+		.btn-check:focus + &, .btn-check:active + &, .btn-check:checked + &, &.active, &:focus, &:active, &:hover, &:active:focus, .show > &.dropdown-toggle {
+			background-color: var(--bs-success-hover);
+			border-color: var(--bs-success-hover);
+		}
+	}
 }
 
 .btn-check:active + .btn-primary:focus, .btn-check:checked + .btn-primary:focus, .btn-primary.active:focus, .btn-primary:active:focus, .show > .btn-primary.dropdown-toggle:focus, .btn-primary:hover {
@@ -112,6 +146,14 @@ h4 {
 
 .btn-check:active + .btn-secondary:focus, .btn-check:checked + .btn-secondary:focus, .btn-secondary.active:focus, .btn-secondary:active:focus, .show > .btn-secondary.dropdown-toggle:focus, .btn-secondary:hover {
 	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-secondary-rgb), 50%);
+}
+
+.btn-check:active + .btn-info:focus, .btn-check:checked + .btn-info:focus, .btn-info.active:focus, .btn-info:active:focus, .show > .btn-info.dropdown-toggle:focus, .btn-info:hover {
+	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-info-rgb), 50%);
+}
+
+.btn-check:active + .btn-success:focus, .btn-check:checked + .btn-success:focus, .btn-success.active:focus, .btn-success:active:focus, .show > .btn-success.dropdown-toggle:focus, .btn-success:hover {
+	box-shadow: 0 0 0 0.25rem RGBA(var(--bs-success-rgb), 50%);
 }
 
 /* Card Link */
@@ -183,5 +225,42 @@ h4 {
 	&.active {
 		color: var(--bs-body-color);
 		flex-grow: 1;
+	}
+}
+
+.list-group-item {
+	color: var(--bs-list-group-color);
+	background-color: var(--bs-list-group-bg);
+	border: 1px solid var(--bs-list-group-border-color);
+
+	&-action:focus, &:hover {
+		color: var(--bs-list-group-action-hover-color);
+		background-color: var(--bs-list-group-action-hover-bg);
+	}
+
+	&-primary {
+		--bs-list-group-color: var(--bs-primary-text);
+		--bs-list-group-bg: var(--bs-primary-bg-subtle);
+		--bs-list-group-border-color: var(--bs-primary-border-subtle);
+
+		&.list-group-item-action:focus, &.list-group-item-action:hover {
+			color: var(--bs-list-group-action-hover-color);
+			background-color: var(--bs-list-group-action-hover-bg);
+			--bs-list-group-action-hover-color: var(--bs-emphasis-color);
+			--bs-list-group-action-hover-bg: var(--bs-primary-border-subtle);
+		}
+	}
+
+	&-secondary {
+		--bs-list-group-color: var(--bs-secondary-text);
+		--bs-list-group-bg: var(--bs-secondary-bg-subtle);
+		--bs-list-group-border-color: var(--bs-secondary-border-subtle);
+
+		&.list-group-item-action:focus, &.list-group-item-action:hover {
+			color: var(--bs-list-group-action-hover-color);
+			background-color: var(--bs-list-group-action-hover-bg);
+			--bs-list-group-action-hover-color: var(--bs-emphasis-color);
+			--bs-list-group-action-hover-bg: var(--bs-secondary-border-subtle);
+		}
 	}
 }

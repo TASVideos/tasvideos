@@ -1,0 +1,19 @@
+﻿@{
+	var obj = ViewData["MetaTags"];
+	var model = obj as MetaTagModel ?? MetaTagModel.Default;
+
+	var title = model.Title ?? "TASVideos";
+	var description = model.Description ?? "Tool-assisted game movies - When human skills are just not enough";
+	var url = model.RelativeUrl != null
+		? Context.Request.ToBaseUrl() + model.RelativeUrl
+		: Context.Request.ToUrl();
+	var image = model.Image ?? $"{Context.Request.ToBaseUrl()}/images/logo-embed.png";
+}
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="TASVideos"/>
+<meta property="og:title" content="@title" />
+<meta property="og:description" content="@description" />
+<meta property="og:url" content="@url" />
+<meta property="og:image" content="@image" />
+<meta condition="model.UseTwitterCard"
+	property="twitter:card" content="summary_large_image" />

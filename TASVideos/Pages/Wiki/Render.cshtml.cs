@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -20,11 +21,11 @@ public class RenderModel : BasePageModel
 		_logger = logger;
 	}
 
-	public WikiPage WikiPage { get; set; } = new();
+	public IWikiPage WikiPage { get; set; } = null!;
 
 	public async Task<IActionResult> OnGet(string? url, int? revision = null)
 	{
-		url = url?.Trim('/') ?? "";
+		url = WebUtility.UrlDecode(url?.Trim('/') ?? "");
 		if (url.ToLower() == "frontpage")
 		{
 			return Redirect("/");
@@ -58,8 +59,8 @@ public class RenderModel : BasePageModel
 			}
 
 			WikiPage = wikiPage;
-			ViewData["WikiPage"] = WikiPage;
-			ViewData["Title"] = WikiPage.PageName;
+			ViewData.SetWikiPage(WikiPage);
+			ViewData.SetTitle(WikiPage.PageName);
 			return Page();
 		}
 

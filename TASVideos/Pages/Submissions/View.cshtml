@@ -1,12 +1,13 @@
 @page "{id}"
 @inject IQueueService QueueService
+@using TASVideos.TagHelpers
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ViewModel
 @{
-	ViewData["Title"] = $"{Model.Submission.Title} - Submission #{Model.Id}";
+	ViewData.SetTitle($"{Model.Submission.Title} - Submission #{Model.Id}");
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
 	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
-	bool hasJudgeOrPublisher = !string.IsNullOrWhiteSpace(Model.Submission.Judge) || !string.IsNullOrWhiteSpace(Model.Submission.Publisher);
 	bool showPublicationClass = !string.IsNullOrWhiteSpace(Model.Submission.ClassName) && Model.Submission.Status != SubmissionStatus.Rejected && Model.Submission.ClassName != "Standard";
 	bool canPublish = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
@@ -22,12 +23,18 @@
 	bool canClaimAsPublisher = ViewData.UserHas(PermissionTo.PublishMovies)
 		&& ViewData.UserHas(PermissionTo.EditSubmissions)
 		&& Model.Submission.Status == SubmissionStatus.Accepted;
-	string youtubeEmbedImage = "";
-	if (Model.Submission.EncodeEmbedLink is not null)
+
+	var youtubeEmbedImage = Model.Submission.EncodeEmbedLink is not null
+		? "https://i.ytimg.com/vi/" + Model.Submission.EncodeEmbedLink.Split('/').Last() + "/hqdefault.jpg"
+		: null;
+
+	ViewData.SetMetaTags(new MetaTagModel
 	{
-		youtubeEmbedImage = "https://i.ytimg.com/vi/" + Model.Submission.EncodeEmbedLink.Split('/').Last() + "/hqdefault.jpg";
-	}
-	string openGraphEmbedImage = string.IsNullOrWhiteSpace(youtubeEmbedImage) ? $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png" : youtubeEmbedImage;
+		Title = Model.Submission.Title,
+		Description = $"Submission #{Model.Id} from {Model.Submission.Submitted.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}", 
+		Image = youtubeEmbedImage,
+		UseTwitterCard = !string.IsNullOrWhiteSpace(youtubeEmbedImage)
+	});
 }
 
 @functions{
@@ -47,18 +54,6 @@
 			case SubmissionStatus.Delayed:
 				return "warning";
 		}
-	}
-}
-
-@section Header {
-	<meta property="og:type" content="website" />
-	<meta property="og:site_name" content="TASVideos" />
-	<meta property="og:title" content="@(Model.Submission.Title)" />
-	<meta property="og:description" content="@($"Submission #{Model.Id} from {Model.Submission.Submitted.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}")" />
-	<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
-	<meta property="og:image" content="@openGraphEmbedImage" />
-	@if (!string.IsNullOrWhiteSpace(youtubeEmbedImage)) {
-		<meta property="twitter:card" content="summary_large_image" />
 	}
 }
 
@@ -188,7 +183,7 @@
 			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary ms-1 mt-2"><i class="fa fa-comments-o"></i> Discuss and Vote</a>
 			<span permission="EditSubmissions" class="btn-separator mt-2"></span>
 			<a condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary border border-warning mt-2"><i class="fa fa-pencil"></i> Edit</a>
-			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="ms-1 btn bg-info text-dark border border-warning mt-2"><i class="fa fa-book"></i> Catalog</a>
+			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="ms-1 btn btn-info border border-warning mt-2"><i class="fa fa-book"></i> Catalog</a>
 			<a condition="@canPublish" asp-page="Publish" asp-route-id="@Model.Id" class="ms-1 btn btn-warning mt-2">Publish</a>
 			<span class="btn-separator mt-2"></span>
 			<a asp-page="Index" class="btn btn-secondary mt-2"><i class="fa fa-arrow-left"></i> Back to Queue</a>
@@ -212,13 +207,13 @@
 <br />
 <a asp-page="/Wiki/PageHistory"
    asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
-   class="btn bg-info text-dark btn-sm">
+   class="btn btn-info btn-sm">
 	<i class="fa fa-history"></i> Page History
 </a>
 <a
 	asp-page="/Wiki/PageHistory"
 	asp-route-path="@(LinkConstants.SubmissionWikiPage + Model.Id)"
 	asp-route-latest="true"
-	class="btn bg-info text-dark btn-sm">
+	class="btn btn-info btn-sm">
 	Latest diff
 </a>

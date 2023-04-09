@@ -39,32 +39,19 @@ public class ExternalDependenciesModel : BasePageModel
 			}
 		}
 
-		Statuses.GmailEnabled = _googleAuthService.IsGmailEnabled();
-		if (Statuses.GmailEnabled)
-		{
-			try
-			{
-				Statuses.GmailAccessSuccessful = !string.IsNullOrWhiteSpace(await _googleAuthService.GetGmailAccessToken());
-			}
-			catch
-			{
-				// Do nothing;
-			}
-		}
-
+		Statuses.EmailEnabled = _settings.Email.IsEnabled();
 		Statuses.IrcEnabled = _settings.Irc.IsEnabled();
 		Statuses.SecureIrcEnabled = _settings.Irc.IsSecureChannelEnabled();
 		Statuses.DiscordEnabled = _settings.Discord.IsEnabled();
 		Statuses.DiscordPrivateChannelEnabled = _settings.Discord.IsPrivateChannelEnabled();
-		Statuses.TwitterEnabled = await _twitter.IsEnabled();
+		Statuses.TwitterEnabled = _twitter.IsEnabled();
 	}
 
 	public class ExternalDependenciesViewModel
 	{
 		public bool YoutubeEnabled { get; set; }
 		public bool? YoutubeAccessSuccessful { get; set; }
-		public bool GmailEnabled { get; set; }
-		public bool? GmailAccessSuccessful { get; set; }
+		public bool EmailEnabled { get; set; }
 		public bool IrcEnabled { get; set; }
 		public bool SecureIrcEnabled { get; set; }
 		public bool DiscordEnabled { get; set; }

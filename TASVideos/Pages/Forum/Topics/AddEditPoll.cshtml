@@ -2,7 +2,7 @@
 @model AddEditPollModel
 @{
 	var mode = Model.PollId.HasValue ? "Edit" : "Add";
-	ViewData["Title"] = $"{mode}ing Poll for Topic {Model.TopicTitle}";
+	ViewData.SetTitle($"{mode}ing Poll for Topic {Model.TopicTitle}");
 	ViewData["Restricted"] = Model.AnyVotes;
 }
 
@@ -15,3 +15,6 @@
 		<a asp-page="Index" asp-route-id="@Model.TopicId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

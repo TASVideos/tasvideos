@@ -1,7 +1,7 @@
 ﻿@page "/Users/{userName}/Ips"
 @model IpsModel
 @{
-	ViewData["Title"] = $"Ip addresses used by {Model.UserName}";
+	ViewData.SetTitle($"Ip addresses used by {Model.UserName}");
 	var ipList = Model.Ips
 		.GroupBy(i => i.IpAddress)
 		.Select(i => new { Ip = i.Key, UsedOn = i.Max(ii => ii.UsedOn) })

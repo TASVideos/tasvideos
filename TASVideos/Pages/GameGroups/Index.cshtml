@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model IndexModel
 @{
-	ViewData["Title"] = $"Games for Group: {Model.Name}";
+	ViewData.SetTitle($"Games for Group: {Model.Name}");
 }
 <label class="mb-2">Abbreviation: @Model.Abbreviation</label>
 <warning-alert condition="!Model.Games.Any()">
@@ -9,7 +9,7 @@
 </warning-alert>
 <row>
 	<column>
-		<a asp-page="List" class="mb-2">See All Groups</a>
+		<a asp-page="List" class="btn btn-secondary mb-3 ms-1 float-end">All Groups</a>
 		<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary mb-3 float-end" permission="CatalogMovies"><i class="fa fa-pencil"></i> Edit</a>
 	</column>
 </row>
@@ -25,7 +25,7 @@
 		<th>Submissions</th>
 		<th>Resource Page</th>
 	</tr>
-	@foreach (var game in Model.Games)
+	@foreach (var game in Model.Games.OrderBy(g => g.Name).ThenBy(g => g.SystemsString()))
 	{
 		<tr>
 			<td>
@@ -34,7 +34,7 @@
 				</game-link>
 			</td>
 			<td>
-				@string.Join(", ", game.Systems.Distinct())
+				@game.SystemsString()
 			</td>
 			<td>
 				<a href="/Movies-@(game.Id)G">
@@ -42,7 +42,9 @@
 				</a>
 			</td>
 			<td>
-				@game.SubmissionsCount
+				<a href="/Subs-List?GameId=@(game.Id)">
+					@game.SubmissionsCount
+				</a>
 			</td>
 			<td>
 				<a href="/@game.GameResourcesPage">

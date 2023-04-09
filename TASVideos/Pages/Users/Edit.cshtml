@@ -1,11 +1,8 @@
 ﻿@page "{id}"
 @model EditModel
 @{
-	ViewData["Title"] = $"Editing User: {Model.UserToEdit.UserName}";
+	ViewData.SetTitle($"Editing User: {Model.UserToEdit.UserName}");
 }
-
-<h4>@ViewData["Title"]</h4>
-<hr />
 <div asp-validation-summary="All" class="text-danger"></div>
 <form asp-route="Edit">
 	<fullrow>

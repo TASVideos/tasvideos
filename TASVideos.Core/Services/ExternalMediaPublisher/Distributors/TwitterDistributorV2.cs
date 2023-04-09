@@ -35,6 +35,7 @@ public class TwitterDistributorV2 : IPostDistributor
 		_logger = logger;
 
 		_tokenStorageFileName = Path.Combine(Path.GetTempPath(), "twitter.json");
+		RetrieveTokenInformation();
 
 		lock (TimeLock)
 		{
@@ -62,7 +63,7 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	public IEnumerable<PostType> Types => new[] { PostType.Announcement };
 
-	public async Task<bool> IsEnabled()
+	public bool IsEnabled()
 	{
 		if (!_settings.IsEnabled())
 		{
@@ -74,7 +75,7 @@ public class TwitterDistributorV2 : IPostDistributor
 			// Try to get Twitter token information from the local file.
 			if (File.Exists(_tokenStorageFileName))
 			{
-				await RetrieveTokenInformation();
+				RetrieveTokenInformation();
 			}
 		}
 
@@ -85,7 +86,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	{
 		await RefreshTokensIfExpired();
 
-		if (!await IsEnabled())
+		if (!IsEnabled())
 		{
 			return;
 		}
@@ -105,9 +106,15 @@ public class TwitterDistributorV2 : IPostDistributor
 		}
 	}
 
-	private async Task RetrieveTokenInformation()
+	private void RetrieveTokenInformation()
 	{
-		string tokenText = await File.ReadAllTextAsync(_tokenStorageFileName);
+		if (!File.Exists(_tokenStorageFileName))
+		{
+			_logger.LogWarning("{_tokenStorageFileName} not found, twitter is likely not to work", _tokenStorageFileName);
+			return;
+		}
+
+		string tokenText = File.ReadAllText(_tokenStorageFileName);
 
 		if (!string.IsNullOrWhiteSpace(tokenText))
 		{

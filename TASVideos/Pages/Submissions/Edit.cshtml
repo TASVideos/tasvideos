@@ -2,7 +2,7 @@
 @using TASVideos.Data.Helpers
 @model EditModel
 @{
-	ViewData["Title"] = $"Edit Submission #{Model.Id}";
+	ViewData.SetTitle($"Edit Submission #{Model.Id}");
 	var canEditPublicationClass = User.Has(PermissionTo.JudgeSubmissions)
 		&& Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted);
 }
@@ -105,6 +105,7 @@
 			<label asp-for="Submission.Markup" class="form-control-label"></label>
 			<textarea asp-for="Submission.Markup" rows="12" class="form-control"></textarea>
 			<span asp-validation-for="Submission.Markup" class="text-danger"></span>
+			@await Component.RenderWiki("System/WikiEditHelp")
 		</form-group>
 	</fullrow>
 	<row>

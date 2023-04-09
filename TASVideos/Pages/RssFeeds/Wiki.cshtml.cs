@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.RssFeeds.Models;
@@ -13,14 +12,12 @@ public class WikiModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 
-	public WikiModel(ApplicationDbContext db, AppSettings settings)
+	public WikiModel(ApplicationDbContext db)
 	{
 		_db = db;
-		BaseUrl = settings.BaseUrl;
 	}
 
 	public List<RssWiki> WikiEdits { get; set; } = new();
-	public string BaseUrl { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -32,7 +29,7 @@ public class WikiModel : BasePageModel
 				PageName = wp.PageName,
 				PubDate = wp.LastUpdateTimestamp,
 				IsNew = wp.Revision == 1,
-				Author = wp.CreateUserName ?? ""
+				Author = wp.Author!.UserName
 			})
 			.Take(10)
 			.ToListAsync();

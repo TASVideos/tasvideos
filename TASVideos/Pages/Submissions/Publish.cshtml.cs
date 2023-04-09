@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -72,6 +73,7 @@ public class PublishModel : BasePageModel
 		}
 
 		Submission = submission;
+		Submission.Markup = (await _wikiPages.SubmissionPage(Id))!.Markup;
 
 		await PopulateDropdowns(Submission.SystemId);
 		return Page();
@@ -104,13 +106,8 @@ public class PublishModel : BasePageModel
 		}
 
 		var submission = await _db.Submissions
+			.IncludeTitleTables()
 			.Include(s => s.IntendedClass)
-			.Include(s => s.System)
-			.Include(s => s.SystemFrameRate)
-			.Include(s => s.Game)
-			.Include(s => s.GameVersion)
-			.Include(s => s.SubmissionAuthors)
-			.ThenInclude(sa => sa.Author)
 			.SingleOrDefaultAsync(s => s.Id == Id);
 
 		if (submission is null || !submission.CanPublish())
@@ -151,8 +148,7 @@ public class PublishModel : BasePageModel
 
 		// Create a wiki page corresponding to this publication
 		var wikiPage = GenerateWiki(publication.Id, Submission.MovieMarkup, User.GetUserId());
-		await _wikiPages.Add(wikiPage);
-		publication.WikiContent = wikiPage;
+		var addedWikiPage = await _wikiPages.Add(wikiPage);
 
 		submission.Status = SubmissionStatus.Published;
 		_db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
@@ -174,7 +170,7 @@ public class PublishModel : BasePageModel
 				Submission.OnlineWatchingUrl,
 				Submission.OnlineWatchUrlName,
 				publication.Title,
-				wikiPage,
+				addedWikiPage!,
 				submission.System.Code,
 				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 				null);
@@ -184,14 +180,21 @@ public class PublishModel : BasePageModel
 		return BaseRedirect($"/{publication.Id}M");
 	}
 
+	private class ObsoletePublicationResult
+	{
+		public string Title { get; init; } = "";
+		public string Markup { get; set; } = "";
+		public IEnumerable<int> Flags { get; init; } = new List<int>();
+		public IEnumerable<int> Tags { get; init; } = new List<int>();
+	}
+
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
 	{
 		var pub = await _db.Publications
 			.Where(p => p.Id == publicationId)
-			.Select(p => new
+			.Select(p => new ObsoletePublicationResult
 			{
-				p.Title,
-				p.WikiContent!.Markup,
+				Title = p.Title,
 				Flags = p.PublicationFlags.Select(pf => pf.FlagId),
 				Tags = p.PublicationTags.Select(pt => pt.TagId)
 			})
@@ -202,15 +205,18 @@ public class PublishModel : BasePageModel
 			return BadRequest($"Unable to find publication with an id of {publicationId}");
 		}
 
+		var page = await _wikiPages.PublicationPage(publicationId);
+		pub.Markup = page!.Markup;
+
 		return new JsonResult(pub);
 	}
 
-	private static WikiPage GenerateWiki(int publicationId, string markup, int userId)
+	private static WikiCreateRequest GenerateWiki(int publicationId, string markup, int userId)
 	{
-		return new WikiPage
+		return new WikiCreateRequest
 		{
 			RevisionMessage = $"Auto-generated from Movie #{publicationId}",
-			PageName = LinkConstants.PublicationWikiPage + publicationId,
+			PageName = WikiHelper.ToPublicationWikiPageName(publicationId),
 			MinorEdit = false,
 			Markup = markup,
 			AuthorId = userId

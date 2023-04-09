@@ -1,0 +1,41 @@
+﻿@page "{id}"
+@model CatalogModel
+@{
+	ViewData.SetTitle($"Set Catalogging Information for Topic {Model.Title}");
+	string returnUrl = HttpContext.Request.ReturnUrl();
+}
+
+<form method="post">
+	<input asp-for="Title" type="hidden" />
+	<row>
+		<column md="6">
+			<form-group>
+				<label asp-for="SystemId">System</label>
+				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<label asp-for="GameId">Game</label>
+				<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+			</form-group>
+		</column>
+	</row>
+
+	<form-button-bar>
+		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="Index" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</form-button-bar>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/catalog.js"></script>
+	<script>
+		enableCataloging(
+			"@Html.IdFor(m => m.SystemId)",
+			"dummy",
+			"@Html.IdFor(m => m.GameId)",
+			"dummy",
+			"@HttpContext.CurrentPathToReturnUrl()");
+	</script>
+}

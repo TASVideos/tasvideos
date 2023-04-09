@@ -1,7 +1,7 @@
 ﻿@page "{handler?}"
 @model IndexModel
 @{
-	ViewData["Title"] = "Reasons used for Submission Rejection";
+	ViewData.SetTitle("Reasons used for Submission Rejection");
 }
 @await Component.RenderWiki("System/RejectionReasonsHeader")
 <table class="table">

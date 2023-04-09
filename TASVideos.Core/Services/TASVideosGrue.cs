@@ -56,8 +56,6 @@ internal class TASVideosGrue : ITASVideosGrue
 			{
 				TopicId = topic.Id,
 				ForumId = topic.ForumId,
-				CreateUserName = SiteGlobalConstants.TASVideosGrue,
-				LastUpdateUserName = SiteGlobalConstants.TASVideosGrue,
 				PosterId = SiteGlobalConstants.TASVideosGrueId,
 				Text = RejectionMessage(topic.CreateTimestamp),
 				PosterMood = ForumPostMood.Normal

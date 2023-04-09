@@ -27,6 +27,9 @@
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NegativeCycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\Gambatte-NoCycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\greenzone.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\Mame-NegativeVsyncAttoseconds.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\Mame-NoVsyncAttoseconds.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\Mame-VsyncAttoseconds.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\MissingHeader.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\MissingInputLog.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\NoFileExts.bk2" />
@@ -38,12 +41,16 @@
 		<EmbeddedResource Include="Bk2SampleFiles\sram.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\SubGbHawk-CycleCount.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\SubNes.bk2" />
-		<EmbeddedResource Include="Bk2SampleFiles\SubNesMissingVBlank.bk2" />
-		<EmbeddedResource Include="Bk2SampleFiles\SubNesNegativeVBlank.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesCommaSeparatorClockRate.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesInvalidClockRate.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesLegacy.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesLegacyMissingVBlank.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\SubNesLegacyNegativeVBlank.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-32x.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-A2600.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-A7800.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-AppleII.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Arcade.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-C64.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Coleco.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Dgb.bk2" />
@@ -57,13 +64,16 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-Genesis.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Gg.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Intellivision.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Jaguar.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-JaguarCd.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Lynx.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Msx.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-N64.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-N64Dd.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Nds.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Ndsi.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Nes.bk2" />
-		<EmbeddedResource Include="Bk2SampleFiles\System-Ngb.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Ngp.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-O2.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Pce.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-PceCd.bk2" />
@@ -77,6 +87,8 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-Sgx.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Sms.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Snes.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Ti83.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Tic80.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Uze.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Vb.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Vectrex.bk2" />
@@ -151,8 +163,10 @@
 		<EmbeddedResource Include="LtmSampleFiles\flash-extrachars-linuxfallback.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\flash.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\linux.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\macos.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\noframerate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\pc98.ltm" />
+		<EmbeddedResource Include="LtmSampleFiles\pico8.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\savestate.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\unknown-linuxfallback.ltm" />
 		<EmbeddedResource Include="LtmSampleFiles\variableframerate.ltm" />
@@ -188,8 +202,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-		<PackageReference Include="Moq" Version="4.18.1" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
+		<PackageReference Include="Moq" Version="4.18.2" />
 		<PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
 		<PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
 		<PackageReference Include="StyleCop.Analyzers" Version="1.1.118">

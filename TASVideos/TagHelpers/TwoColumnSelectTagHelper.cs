@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿using System.Collections;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using static TASVideos.TagHelpers.TagHelperExtensions;
 
 namespace TASVideos.TagHelpers;
@@ -259,7 +253,7 @@ public class TwoColumnSelectTagHelper : TagHelper
 					let tmpAry = [];
 					let selectedValue = elem[elem.selectedIndex] != undefined ? elem[elem.selectedIndex] : null
 					for (let i = 0; i < elem.options.length;i++) tmpAry.push(elem.options[i]);
-					tmpAry.sort(function(a, b){{ return (parseInt(a.value) < parseInt(b.value)) ? -1 : 1; }});
+					tmpAry.sort(function(a, b){{ return (a.innerText < b.innerText) ? -1 : 1; }});
 					while (elem.options.length > 0) elem.options[0] = null;
 					for (let i = 0; i < tmpAry.length; i++) {{
 						elem.options[i] = tmpAry[i];
@@ -267,6 +261,8 @@ public class TwoColumnSelectTagHelper : TagHelper
 
 					return;
 				}}
+
+				sortLists();
 			}}
 			</script>";
 

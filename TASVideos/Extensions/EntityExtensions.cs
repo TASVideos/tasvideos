@@ -241,8 +241,6 @@ public static class EntityExtensions
 					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
 					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
 				},
-				Region = p.GameVersion != null ? p.GameVersion.Region : null,
-				GameVersion = p.GameVersion != null ? p.GameVersion.Version : null
 			});
 
 		if (ratingSort)
@@ -371,7 +369,6 @@ public static class EntityExtensions
 	{
 		return submissions.Select(s => new SubmissionPublishModel
 		{
-			Markup = s.WikiContent!.Markup,
 			SystemCode = s.System!.Code,
 			SystemRegion = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,
 			Game = s.Game!.DisplayName,
@@ -398,6 +395,7 @@ public static class EntityExtensions
 			Id = g.Id,
 			DisplayName = g.DisplayName,
 			Abbreviation = g.Abbreviation,
+			Aliases = g.Aliases,
 			ScreenshotUrl = g.ScreenshotUrl,
 			GameResourcesPage = g.GameResourcesPage,
 			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
@@ -422,6 +420,28 @@ public static class EntityExtensions
 			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
 			SubmissionCount = g.Submissions.Count,
 			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
+		});
+	}
+
+	public static IQueryable<RoleEditModel> ToRoleEditModel(this IQueryable<Role> query)
+	{
+		return query.Select(r => new RoleEditModel
+		{
+			Name = r.Name,
+			IsDefault = r.IsDefault,
+			Description = r.Description,
+			AutoAssignPostCount = r.AutoAssignPostCount,
+			AutoAssignPublications = r.AutoAssignPublications,
+			Links = r.RoleLinks
+				.Select(rl => rl.Link)
+				.ToList(),
+			SelectedPermissions = r.RolePermission
+				.Select(rp => (int)rp.PermissionId)
+				.ToList(),
+			SelectedAssignablePermissions = r.RolePermission
+				.Where(rp => rp.CanAssign)
+				.Select(rp => (int)rp.PermissionId)
+				.ToList()
 		});
 	}
 }

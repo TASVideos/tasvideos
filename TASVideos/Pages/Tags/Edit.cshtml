@@ -1,7 +1,7 @@
 ﻿@page "{id}/{handler?}"
 @model EditModel
 @{
-	ViewData["Title"] = $"Editing Tag: {Model.Tag.Code}";
+	ViewData.SetTitle($"Editing Tag: {Model.Tag.Code}");
 }
 
 <div class="text-end">

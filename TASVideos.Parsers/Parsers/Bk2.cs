@@ -1,4 +1,5 @@
-﻿using TASVideos.MovieParsers.Extensions;
+﻿using System.Globalization;
+using TASVideos.MovieParsers.Extensions;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;
@@ -52,6 +53,7 @@ internal class Bk2 : ParserBase, IParser
 			return Error($"Missing {HeaderFile}, can not parse");
 		}
 
+		long? vsyncAttoseconds;
 		int? vBlankCount;
 		string clockRate;
 		string core;
@@ -111,14 +113,9 @@ internal class Bk2 : ParserBase, IParser
 			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
 			{
 				platform = SystemCodes.Sgb;
-				if (result.Region == RegionType.Pal)
-				{
-					result.FrameRateOverride = PalSnesFramerate;
-				}
-				else
-				{
-					result.FrameRateOverride = NtscSnesFramerate;
-				}
+				result.FrameRateOverride = result.Region == RegionType.Pal
+					? PalSnesFramerate
+					: NtscSnesFramerate;
 			}
 			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
 			{
@@ -136,6 +133,14 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Dsi;
 			}
+			else if (header.GetValueFor(Keys.ModeDd).ToBool())
+			{
+				platform = SystemCodes.N64Dd;
+			}
+			else if (header.GetValueFor(Keys.ModeJaguarCd).ToBool())
+			{
+				platform = SystemCodes.JaguarCd;
+			}
 
 			result.SystemCode = platform;
 
@@ -148,9 +153,10 @@ internal class Bk2 : ParserBase, IParser
 				result.StartType = MovieStartType.Sram;
 			}
 
+			vsyncAttoseconds = header.GetValueFor(Keys.VsyncAttoseconds).ToPositiveLong();
 			vBlankCount = header.GetValueFor(Keys.VBlankCount).ToPositiveInt();
 			result.CycleCount = header.GetValueFor(Keys.CycleCount).ToPositiveLong();
-			clockRate = header.GetValueFor(Keys.ClockRate);
+			clockRate = header.GetValueFor(Keys.ClockRate).Replace(',', '.');
 			core = header.GetValueFor(Keys.Core).ToLower();
 		}
 
@@ -161,16 +167,13 @@ internal class Bk2 : ParserBase, IParser
 		}
 
 		await using var inputStream = inputLog.Open();
-		using var inputReader = new StreamReader(inputStream);
-		result.Frames = (await inputReader.ReadToEndAsync())
-			.LineSplit()
-			.PipeCount();
+		(_, result.Frames) = await inputStream.PipeBasedMovieHeaderAndFrameCount();
 
 		if (result.CycleCount.HasValue)
 		{
 			if (ValidClockRates.Contains(clockRate))
 			{
-				var seconds = result.CycleCount.Value / double.Parse(clockRate);
+				var seconds = result.CycleCount.Value / double.Parse(clockRate, CultureInfo.InvariantCulture);
 				result.FrameRateOverride = result.Frames / seconds;
 			}
 			else if (CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
@@ -191,6 +194,16 @@ internal class Bk2 : ParserBase, IParser
 			}
 
 			result.Frames = vBlankCount.Value;
+		}
+		else if (core == "mame")
+		{
+			if (!vsyncAttoseconds.HasValue)
+			{
+				return Error($"Missing {Keys.VsyncAttoseconds}, could not parse movie time");
+			}
+
+			const decimal attosecondsInSecond = 1000000000000000000;
+			result.FrameRateOverride = (double)(attosecondsInSecond / vsyncAttoseconds.Value);
 		}
 
 		return result;
@@ -239,7 +252,9 @@ internal class Bk2 : ParserBase, IParser
 		public const string StartsFromSavestate = "startsfromsavestate";
 		public const string Mode32X = "is32x";
 		public const string ModeCgb = "iscgbmode";
+		public const string ModeDd = "isdd";
 		public const string ModeDsi = "isdsi";
+		public const string ModeJaguarCd = "isjaguarcd";
 		public const string ModeSegaCd = "issegacdmode";
 		public const string ModeGg = "isggmode";
 		public const string ModeSg = "issgmode";
@@ -247,6 +262,7 @@ internal class Bk2 : ParserBase, IParser
 		public const string VBlankCount = "vblankcount";
 		public const string CycleCount = "cyclecount";
 		public const string ClockRate = "clockrate";
+		public const string VsyncAttoseconds = "vsyncattoseconds";
 		public const string Core = "core";
 	}
 }

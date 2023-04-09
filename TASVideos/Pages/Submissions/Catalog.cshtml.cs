@@ -92,12 +92,7 @@ public class CatalogModel : BasePageModel
 		}
 
 		var submission = await _db.Submissions
-			.Include(s => s.System)
-			.Include(s => s.SystemFrameRate)
-			.Include(s => s.Game)
-			.Include(s => s.GameVersion)
-			.Include(s => s.SubmissionAuthors)
-			.ThenInclude(sa => sa.Author)
+			.IncludeTitleTables()
 			.SingleOrDefaultAsync(s => s.Id == Id);
 		if (submission is null)
 		{

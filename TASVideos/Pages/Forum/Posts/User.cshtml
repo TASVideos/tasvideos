@@ -1,7 +1,7 @@
 ﻿@page "{userName}"
 @model UserModel
 @{
-	ViewData["Title"] = $"Posts for {Model.UserName}";
+	ViewData.SetTitle($"Posts for {Model.UserName}");
 }
 <partial Name="_ForumHeader" />
 
@@ -11,6 +11,17 @@
 </fullrow>
 @foreach (var post in Model.Posts)
 {
+	<div class="container mt-3">
+		<nav aria-label="breadcrumb" class="d-block">
+			<ol class="breadcrumb m-0">
+				<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
+				<li class="breadcrumb-item"><a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a></li>
+				<li class="breadcrumb-item active" aria-current="page">
+					<a href="/Forum/Posts/@post.Id">@post.TopicTitle</a>
+				</li>
+			</ol>
+		</nav>
+	</div>
 	<partial name="Forum/Topics/_TopicPost" model="post" />
 }
 <fullrow class="mt-2">

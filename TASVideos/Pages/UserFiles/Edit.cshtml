@@ -2,7 +2,7 @@
 @model EditModel
 
 @{
-	ViewData["Title"] = $"Edit User file {Model.Id}";
+	ViewData.SetTitle($"Edit User file {Model.Id}");
 	string cancelUrl = PageContext.HttpContext.Request.ReturnUrl();
 	if (string.IsNullOrWhiteSpace(cancelUrl))
 	{
@@ -30,6 +30,7 @@
 				<label asp-for="UserFile.Description" class="form-control-label"></label>
 				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit"></textarea>
 				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
+				@await Component.RenderWiki("System/WikiEditHelp")
 			</form-group>
 			<form-group>
 				<div class="form-check">

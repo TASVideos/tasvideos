@@ -1,7 +1,7 @@
 ﻿@page "{table?}/{rowId?}"
 @model IndexModel
 @{
-	ViewData["Title"] = !string.IsNullOrWhiteSpace(Model.Table) ? $"History for {Model.Table}" : "All History";
+	ViewData.SetTitle(!string.IsNullOrWhiteSpace(Model.Table) ? $"History for {Model.Table}" : "All History");
 }
 
 <partial name="_Pager" model="Model.History" />
@@ -32,17 +32,14 @@
 		changeColumns.forEach(function (elem) {
 			var before = elem.querySelector('.before');
 			var after = elem.querySelector('.after');
-			generateDiff(elem, before.value, after.value);
-		});
 
-		function generateDiff(diffElem, before, after) {
 			renderDiff(
-				{ text: before, name: "Before" },
-				{ text: after, name: "After" },
-				diffElem,
+				{ text: before.value, name: "Before" },
+				{ text: after.value, name: "After" },
+				elem,
 				true,
 				1
 			);
-		}
+		});
 	</script>
 }

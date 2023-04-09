@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model PublicationHistoryModel
 @{
-	ViewData["Title"] = $"Publication History of {Model.Game.DisplayName}";
+	ViewData.SetTitle($"Publication History of {Model.Game.DisplayName}");
 	ViewData["Highlight"] = Model.Highlight;
 	ViewData["HighlightClass"] = "fw-bold fst-italic border border-info p-1";
 }

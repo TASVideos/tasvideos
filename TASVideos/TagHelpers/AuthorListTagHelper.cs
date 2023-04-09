@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using TASVideos.Extensions;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers;
 

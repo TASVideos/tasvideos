@@ -2,38 +2,34 @@
 @using TASVideos.Data.Helpers
 @model IndexModel
 @{
-	ViewData["Title"] = $"{Model.Topic.Title} - Topic {Model.Topic.Id}";
-}
-
-@if (Model.HighlightedPost is not null)
-{
-	var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
-	if (!string.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
+	ViewData.SetTitle($"{Model.Topic.Title} - Topic {Model.Topic.Id}");
+	if (Model.HighlightedPost is not null)
 	{
-		description += $"\nSubject: {Model.HighlightedPost.Subject}";
-	}
-	@section Header {
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="TASVideos" />
-		<meta property="og:title" content="@($"Post by {Model.HighlightedPost.PosterName}")" />
-		<meta property="og:description" content="@description" />
-		<meta property="og:url" content="@($"{HttpContext.Request.ToBaseUrl()}/Forum/Posts/{Model.HighlightedPost.Id}")" />
-		<meta property="og:image" content="@Model.HighlightedPost.GetCurrentAvatar()" />
-	}
-} else
-{
-	@section Header {
-		@{
-			var firstPost = Model.Topic.Posts.FirstOrDefault();
-			var ogTitle = firstPost is not null ? $"Topic by {firstPost.PosterName}" : "Forum Topic";
-			var ogImage = firstPost is not null ? firstPost.GetCurrentAvatar() : $"{HttpContext.Request.ToBaseUrl()}/images/logo-embed.png";
+		var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
+		if (!string.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
+		{
+			description += $"\nSubject: {Model.HighlightedPost.Subject}";
 		}
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="TASVideos" />
-		<meta property="og:title" content="@ogTitle" />
-		<meta property="og:description" content="@($"{Model.Topic.ForumName} → {Model.Topic.Title}")" />
-		<meta property="og:url" content="@HttpContext.Request.ToUrl()" />
-		<meta property="og:image" content="@ogImage" />
+
+		ViewData.SetMetaTags(new MetaTagModel
+		{
+			Title = $"Post by {Model.HighlightedPost.PosterName}",
+			Description = description,
+			RelativeUrl = $"/Forum/Posts/{Model.HighlightedPost.Id}",
+			Image = Model.HighlightedPost.GetCurrentAvatar()
+		});
+	}
+	else
+	{
+		var firstPost = Model.Topic.Posts.FirstOrDefault();
+		ViewData.SetMetaTags(new MetaTagModel
+		{
+			Title = firstPost is not null
+				? $"Topic by {firstPost.PosterName}"
+				: "Forum Topic",
+			Description = $"{Model.Topic.ForumName} → {Model.Topic.Title}",
+			Image = firstPost?.GetCurrentAvatar()
+		});
 	}
 }
 
@@ -44,9 +40,19 @@
 				<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
 				<li class="breadcrumb-item"><a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a></li>
 				<li class="breadcrumb-item active" aria-current="page">
-					<h1>@(Model.Topic.Title)</h1>
+					<h1>
+						@(Model.Topic.Title)
+						<span
+							condition="Model.Topic.GameId.HasValue"
+							class="float-end">
+							Game: <a asp-page="/Games/Index" asp-route-id="@Model.Topic.GameId">
+								@Model.Topic.GameName
+							</a>
+						</span>
+					</h1>
 				</li>
 			</ol>
+			
 		</nav>
 		<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
 	</div>
@@ -155,19 +161,25 @@
 	</nav>
 	<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</p>
 </fullrow>
+
+<span condition="@(Model.SaveActivity)" id="serverUnixTime" class="d-none">@DateTime.UtcNow.UnixTimestamp()</span>
 @section Scripts {
 	<script condition="@(Model.SaveActivity)">
 		{
-			let topicId = '@Model.Id';
-			let currentTime = Math.floor(Date.now() / 1000);
-			let visitedTopics = localStorage.getItem('VisitedTopics');
-			if (visitedTopics !== null){
-				visitedTopics = JSON.parse(visitedTopics);
-				visitedTopics[topicId] = currentTime;
-			}else{
-				visitedTopics = {[topicId]: currentTime};
+			let currentTime = Number(document.getElementById('serverUnixTime').textContent);
+			let activityPosts = document.getElementsByClassName('activity-post');
+			let visitedPosts = localStorage.getItem('VisitedPosts');
+			visitedPosts = JSON.parse(visitedPosts) ?? {};
+			for (let i = 0; i < activityPosts.length; i++) {
+				let lastVisit = visitedPosts[activityPosts[i].dataset.postId];
+				if (activityPosts[i].dataset.unixCreated && (lastVisit === undefined || lastVisit < activityPosts[i].dataset.unixCreated)) {
+					activityPosts[i].classList.add('text-warning');
+				} else if (activityPosts[i].dataset.unixEdited && (lastVisit === undefined || lastVisit < activityPosts[i].dataset.unixEdited)) {
+					activityPosts[i].classList.add('text-info');
+				}
+				visitedPosts[activityPosts[i].dataset.postId] = currentTime;
 			}
-			localStorage.setItem('VisitedTopics', JSON.stringify(visitedTopics));
+			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
 		}
 	</script>
 }

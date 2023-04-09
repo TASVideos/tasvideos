@@ -1,7 +1,7 @@
 ﻿@page
 @model LatestModel
 @{
-	ViewData["Title"] = "Latest Forum Posts";
+	ViewData.SetTitle("Latest Forum Posts");
 }
 
 <div condition="@Model.Posts.Any()">

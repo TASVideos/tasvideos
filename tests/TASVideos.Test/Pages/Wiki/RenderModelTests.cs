@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 using TASVideos.Tests.Base;
 
@@ -44,9 +43,24 @@ public class RenderModelTests : BasePageModelTests
 		const string existingPage = "Test";
 		_mockWikiPages
 			.Setup(m => m.Page(existingPage, null))
-			.ReturnsAsync(new WikiPage { PageName = existingPage });
+			.ReturnsAsync(new WikiResult { PageName = existingPage });
 
 		var result = await _model.OnGet(existingPage);
+
+		Assert.IsNotNull(result);
+		Assert.IsInstanceOfType(result, typeof(PageResult));
+	}
+
+	[TestMethod]
+	public async Task Render_WhenUrlEncoded_FindsPage()
+	{
+		const string existingPage = "Foo/Bar";
+		_mockWikiPages
+			.Setup(m => m.Page(existingPage, null))
+			.ReturnsAsync(new WikiResult { PageName = existingPage });
+		var encoded = System.Net.WebUtility.UrlEncode(existingPage);
+
+		var result = await _model.OnGet(encoded);
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(PageResult));

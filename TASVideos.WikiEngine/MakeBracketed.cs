@@ -201,12 +201,16 @@ public static partial class Builtins
 		var pp = text.Split('|');
 		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 		{
-			return new[] { MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1)) };
+			return new[] { MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _)) };
 		}
 
 		if (IsImage(pp[0]))
 		{
-			return new[] { MakeImage(charStart, charEnd, pp, 0) };
+			var node = MakeImage(charStart, charEnd, pp, 0, out var unusedParams);
+			if (!unusedParams)
+			{
+				return new[] { node };
+			}
 		}
 
 		if (IsLink(pp[0]))
@@ -258,8 +262,9 @@ public static partial class Builtins
 		return new Element(charStart, "a", attrs, new[] { child }) { CharEnd = charEnd };
 	}
 
-	private static INode MakeImage(int charStart, int charEnd, string[] pp, int index)
+	private static INode MakeImage(int charStart, int charEnd, string[] pp, int index, out bool unusedParams)
 	{
+		unusedParams = false;
 		var attrs = new List<KeyValuePair<string, string>>
 		{
 			Attr("src", NormalizeImageUrl(pp[index++]))
@@ -291,6 +296,10 @@ public static partial class Builtins
 			else if (s.StartsWith("w="))
 			{
 				attrs.Add(Attr("width", s[2..]));
+			}
+			else
+			{
+				unusedParams = true;
 			}
 		}
 

@@ -70,6 +70,12 @@ public class PrimaryMoviesModel : BasePageModel
 			return NotFound();
 		}
 
+		var exists = await _db.Publications.AnyAsync(p => p.Id != publication.Id && p.MovieFileName == PrimaryMovieFile!.FileName);
+		if (exists)
+		{
+			ModelState.AddModelError(nameof(PrimaryMovieFile), $"A publication with the filename {PrimaryMovieFile!.FileName} already exists.");
+		}
+
 		if (!ModelState.IsValid)
 		{
 			PublicationTitle = publication.Title;
@@ -80,10 +86,11 @@ public class PrimaryMoviesModel : BasePageModel
 		string log = $"Primary movie file replaced, Reason: {Reason}";
 		publication.MovieFileName = PrimaryMovieFile!.FileName;
 		publication.MovieFile = await PrimaryMovieFile.ToBytes();
-		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+
 		var result = await ConcurrentSave(_db, log, "Unable to add file");
 		if (result)
 		{
+			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",

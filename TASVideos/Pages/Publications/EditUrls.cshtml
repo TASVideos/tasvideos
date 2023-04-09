@@ -1,7 +1,7 @@
 ﻿@page "{id}/{handler?}/{publicationUrlId?}"
 @model EditUrlsModel
 @{
-	ViewData["Title"] = $"Edit Urls for {Model.Title}";
+	ViewData.SetTitle($"Edit Urls for {Model.Title}");
 }
 
 <h4>Urls</h4>

@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.MovieParsers;
 
-internal class SystemCodes
+internal static class SystemCodes
 {
 	public const string AppleII = "appleii";
 	public const string Arcade = "arcade";
@@ -21,18 +21,23 @@ internal class SystemCodes
 	public const string Genesis = "genesis";
 	public const string Gg = "gg";
 	public const string Intellivision = "intv";
+	public const string Jaguar = "jaguar";
+	public const string JaguarCd = "jaguarcd";
 	public const string Linux = "linux";
 	public const string Lynx = "lynx";
+	public const string MacOs = "macos";
 	public const string Msx = "msx";
 	public const string N3ds = "3ds";
-	public const string N64 = "N64";
-	public const string Ngb = "ngb";
+	public const string N64 = "n64";
+	public const string N64Dd = "n64dd";
 	public const string Nes = "nes";
+	public const string Ngp = "ngp";
 	public const string Odyssey2 = "o2";
 	public const string Pc98 = "pc98";
 	public const string Pce = "pce";
 	public const string PceCd = "pcecd";
 	public const string Pcfx = "pcfx";
+	public const string Pico8 = "pico8";
 	public const string Saturn = "saturn";
 	public const string SegaCd = "segacd";
 	public const string Sg = "sg1000";
@@ -41,6 +46,8 @@ internal class SystemCodes
 	public const string Sms = "sms";
 	public const string Snes = "snes";
 	public const string Svi = "svi3x8";
+	public const string Ti83 = "ti83";
+	public const string Tic80 = "tic80";
 	public const string UzeBox = "uzebox";
 	public const string VirtualBoy = "vboy";
 	public const string Wii = "wii";

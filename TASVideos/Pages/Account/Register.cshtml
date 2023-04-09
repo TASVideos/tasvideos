@@ -2,11 +2,8 @@
 @addTagHelper *, AspNetCore.ReCaptcha
 @model RegisterModel
 @{
-	ViewData["Title"] = "Register";
+	ViewData.SetTitle("Register");
 }
-
-
-<h2>@ViewData["Title"]</h2>
 <h4>Create a new account.</h4>
 <hr />
 <div asp-validation-summary="All" class="text-danger"></div>

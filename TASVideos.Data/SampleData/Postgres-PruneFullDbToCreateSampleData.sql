@@ -17,6 +17,7 @@ DELETE FROM public.ip_bans;
 DELETE FROM public.media_posts;
 DELETE FROM public.user_disallows;
 DELETE FROM public."__EFMigrationsHistory";
+DELETE FROM public.auto_history;
 
 -- Trim user files
 DELETE FROM public.user_file_comments;
@@ -133,6 +134,8 @@ INSERT INTO _active_users
 	SELECT u.id
 	FROM public.users u
 	WHERE EXISTS (SELECT 1 FROM public.user_awards ua WHERE ua.user_id = u.id)
+	OR u.id = 505 --TVA
+	OR u.id = 3788 --TASVideosGrue
 	OR EXISTS (SELECT 1 FROM public.user_files uf WHERE uf.author_id = u.id)
 	OR EXISTS (SELECT 1 FROM public.submissions s WHERE s.publisher_id = u.id)
 	OR EXISTS (SELECT 1 FROM public.submissions s WHERE s.judge_id = u.id)
@@ -162,18 +165,3 @@ UPDATE public.users
 		time_zone_iD = 'UTC';
 
 TRUNCATE TABLE public.user_claims;
-
---Update call tracking columns, we do not want to expose these
-DO $$
-DECLARE execute_query text;
-BEGIN
-	DROP TABLE IF EXISTS _tracking_columns;
-	CREATE TEMPORARY TABLE _tracking_columns (col citext, tab citext);
-	INSERT INTO _tracking_columns
-	SELECT
-		column_name, table_name
-	FROM information_schema.columns
-	WHERE column_name = 'create_user_name';
-	execute_query := (SELECT string_agg('UPDATE ' || tab || ' SET ' || col || ' = ''a''', ';') FROM _tracking_columns);
-	EXECUTE(execute_query);
-END $$;

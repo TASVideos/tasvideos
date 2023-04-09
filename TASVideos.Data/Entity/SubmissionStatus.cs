@@ -37,9 +37,9 @@ public static class SubmissionStatusExtensions
 {
 	public static bool CanBeJudged(this SubmissionStatus status)
 	{
-		return status == SubmissionStatus.New
-			|| status == SubmissionStatus.Delayed
-			|| status == SubmissionStatus.NeedsMoreInfo
-			|| status == SubmissionStatus.JudgingUnderWay;
+		return status is SubmissionStatus.New
+			or SubmissionStatus.Delayed
+			or SubmissionStatus.NeedsMoreInfo
+			or SubmissionStatus.JudgingUnderWay;
 	}
 }

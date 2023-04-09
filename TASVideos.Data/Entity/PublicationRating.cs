@@ -2,11 +2,6 @@
 
 namespace TASVideos.Data.Entity;
 
-public enum PublicationRatingType
-{
-	Entertainment, TechQuality
-}
-
 [ExcludeFromHistory]
 public class PublicationRating
 {
@@ -15,8 +10,6 @@ public class PublicationRating
 
 	public int PublicationId { get; set; }
 	public virtual Publication? Publication { get; set; }
-
-	public PublicationRatingType Type { get; set; }
 
 	public double Value { get; set; }
 }

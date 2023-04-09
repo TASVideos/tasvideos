@@ -24,7 +24,6 @@ public static class CacheKeys
 	public const string AwardsCache = "AwardsCache";
 	public const string UnreadMessageCount = "UnreadMessageCountCache-";
 	public const string MovieTokens = "MovieTokenData";
-	public const string MovieRatingKey = "OverallRatingForMovieViewModel-";
 }
 
 // These perform site functions, maybe they should be in the database?
@@ -65,6 +64,9 @@ The posts after this message will continue to apply to the submission.
 
 	public const int MaximumMovieSize = 2048 * 1024;
 	public const int UserFileStorageLimit = 1000 * 1000 * 50; // 50 MB
+
+	public const int GamesForumCategory = 5;
+	public const int OtherGamesForum = 5;
 }
 
 public static class PlayerPointConstants
@@ -91,7 +93,7 @@ public static class ForumConstants
 	public const int WorkBenchForumId = 7;
 	public const int NewsTopicId = 8694;
 
-	public const int DaysTopicsCountAsActive = 14;
+	public const int DaysPostsCountAsActive = 14;
 }
 
 public static class PostGroups

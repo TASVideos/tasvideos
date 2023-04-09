@@ -82,6 +82,6 @@ public class CreateFramerateModel : BasePageModel
 			$"Unable to create Framerate for {SystemCode}");
 		await _systemService.FlushCache();
 
-		return BasePageRedirect("Index");
+		return BasePageRedirect("Edit", new { Id = SystemId });
 	}
 }

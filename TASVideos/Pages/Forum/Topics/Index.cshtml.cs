@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
@@ -53,7 +54,7 @@ public class IndexModel : BaseForumModel
 
 	public ForumTopicModel Topic { get; set; } = new();
 
-	public WikiPage? WikiPage { get; set; }
+	public IWikiPage? WikiPage { get; set; }
 
 	public string? EncodeEmbedLink { get; set; }
 
@@ -81,6 +82,9 @@ public class IndexModel : BaseForumModel
 				IsLocked = t.IsLocked,
 				LastPostId = t.ForumPosts.Any() ? t.ForumPosts.Max(p => p.Id) : -1,
 				SubmissionId = t.SubmissionId,
+				GameId = t.GameId,
+				GameName = t.Game != null ? t.Game.DisplayName : null,
+				CategoryId = t.Forum!.CategoryId,
 				Poll = t.PollId.HasValue
 					? new ForumTopicModel.PollModel
 					{
@@ -190,9 +194,7 @@ public class IndexModel : BaseForumModel
 			await _topicWatcher.MarkSeen(Id, userId.Value);
 		}
 
-		var hasActivity = (await _forumService.GetTopicsWithActivity(Topic.ForumId))?.ContainsKey(Id) ?? false;
-		var onLastPage = Topic.Posts.CurrentPage == Topic.Posts.LastPage();
-		SaveActivity = hasActivity && onLastPage;
+		SaveActivity = (await _forumService.GetPostActivityOfSubforum(Topic.ForumId)).ContainsKey(Id);
 
 		return Page();
 	}

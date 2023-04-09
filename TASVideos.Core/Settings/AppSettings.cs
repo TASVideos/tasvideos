@@ -17,7 +17,7 @@ public class AppSettings
 	public TwitterConnectionV2 TwitterV2 { get; set; } = new();
 	public JwtSettings Jwt { get; set; } = new();
 	public GoogleAuthSettings YouTube { get; set; } = new();
-	public GmailAuthSettings Gmail { get; set; } = new();
+	public EmailBasicAuthSettings Email { get; set; } = new();
 
 	public string StartupStrategy { get; set; } = "";
 	public bool UseSampleDatabase { get; set; }
@@ -112,13 +112,18 @@ public class AppSettings
 			&& !string.IsNullOrWhiteSpace(RefreshToken);
 	}
 
-	public class GmailAuthSettings : GoogleAuthSettings
+	public class EmailBasicAuthSettings
 	{
-		public string From { get; set; } = "";
+		public string SmtpServer { get; set; } = "";
+		public int SmtpServerPort { get; set; } = 587;
+		public string Email { get; set; } = "";
+		public string Password { get; set; } = "";
 
-		public override bool IsEnabled()
+		public bool IsEnabled()
 		{
-			return !string.IsNullOrWhiteSpace(From) && base.IsEnabled();
+			return !string.IsNullOrWhiteSpace(Email)
+				&& !string.IsNullOrWhiteSpace(Password)
+				&& !string.IsNullOrWhiteSpace(SmtpServer);
 		}
 	}
 }

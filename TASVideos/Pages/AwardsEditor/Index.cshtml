@@ -2,7 +2,7 @@
 @using TASVideos.Data.Entity.Awards
 @model IndexModel
 @{
-	ViewData["Title"] = $"Awards Editor for {Model.Year}";
+	ViewData.SetTitle($"Awards Editor for {Model.Year}");
 	string status = DateTime.UtcNow.Year - Model.Year!.Value > 1
 		? "Closed"
 		: "Open";

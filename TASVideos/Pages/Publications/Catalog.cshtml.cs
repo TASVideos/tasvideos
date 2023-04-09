@@ -93,12 +93,7 @@ public class CatalogModel : BasePageModel
 		}
 
 		var publication = await _db.Publications
-			.Include(p => p.System)
-			.Include(p => p.SystemFrameRate)
-			.Include(p => p.Game)
-			.Include(p => p.GameVersion)
-			.Include(p => p.Authors)
-			.ThenInclude(pa => pa.Author)
+			.IncludeTitleTables()
 			.SingleOrDefaultAsync(s => s.Id == Id);
 		if (publication is null)
 		{

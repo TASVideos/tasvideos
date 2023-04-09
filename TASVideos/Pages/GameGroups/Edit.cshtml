@@ -1,9 +1,9 @@
 ﻿@page "{id?}"
 @model EditModel
 @{
-	ViewData["Title"] = Model.Id.HasValue
+	ViewData.SetTitle(Model.Id.HasValue
 		? $"Editing Game Group #{Model.Id} {Model.GameGroup.Name}"
-		: "Create a new Game Group entry";
+		: "Create a new Game Group entry");
 	string saveBtnName = Model.Id.HasValue ? "Save" : "Create";
 }
 <form-group>

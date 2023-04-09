@@ -1,0 +1,21 @@
+﻿@model IReadOnlyCollection<string>
+@if (Model.Any())
+{
+	<div>
+		<label>Total: @Model.Count</label>
+	</div>
+	<ul>
+		@foreach (var orphan in Model.OrderBy(m => m))
+		{
+			<li>
+				<a href="/@orphan">@orphan</a>
+			</li>
+		}
+	</ul>
+}
+else
+{
+	<info-alert>
+		No Orphans to Display
+	</info-alert>
+}

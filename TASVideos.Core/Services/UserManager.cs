@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -13,16 +14,16 @@ public class UserManager : UserManager<User>
 	private readonly ApplicationDbContext _db;
 	private readonly ICacheService _cache;
 	private readonly IPointsService _pointsService;
-	private readonly IWikiPages _wikiPages;
 	private readonly ITASVideoAgent _tasVideoAgent;
+	private readonly IWikiPages _wikiPages;
 
 	// Holy dependencies, batman
 	public UserManager(
 		ApplicationDbContext db,
 		ICacheService cache,
 		IPointsService pointsService,
-		IWikiPages wikiPages,
 		ITASVideoAgent tasVideoAgent,
+		IWikiPages wikiPages,
 		IUserStore<User> store,
 		IOptions<IdentityOptions> optionsAccessor,
 		IPasswordHasher<User> passwordHasher,
@@ -46,8 +47,8 @@ public class UserManager : UserManager<User>
 		_cache = cache;
 		_db = db;
 		_pointsService = pointsService;
-		_wikiPages = wikiPages;
 		_tasVideoAgent = tasVideoAgent;
+		_wikiPages = wikiPages;
 	}
 
 	// Clears the user claims, and adds a distinct list of user permissions
@@ -71,7 +72,7 @@ public class UserManager : UserManager<User>
 	/// <summary>
 	/// Returns a list of all permissions of the <seea cref="User"/> with the given id
 	/// </summary>
-	public async Task<IEnumerable<PermissionTo>> GetUserPermissionsById(int userId)
+	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId)
 	{
 		return await _db.Users
 			.Where(u => u.Id == userId)
@@ -210,77 +211,81 @@ public class UserManager : UserManager<User>
 						Description = ur.Role.Description
 					})
 					.ToList(),
-				UserFiles = new UserProfile.UserFileSummary
+				UserFiles = new()
 				{
 					Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
 				}
 			})
 			.SingleOrDefaultAsync(u => u.UserName == userName);
 
-		if (model is not null)
+		if (model is null)
 		{
-			model.Submissions = await _db.Submissions
-				.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id)
-					|| s.Submitter != null && s.SubmitterId == model.Id)
-				.GroupBy(s => s.Status)
-				.Select(g => new UserProfile.SubmissionEntry
-				{
-					Status = g.Key,
-					Count = g.Count()
-				})
-				.ToListAsync();
+			return null;
+		}
 
-			// TODO: round to 1 digit?
-			var (points, rank) = await _pointsService.PlayerPoints(model.Id);
-			model.PlayerPoints = (int)Math.Round(points);
-			model.PlayerRank = rank;
+		model.HasHomePage = await _wikiPages.Exists(LinkConstants.HomePages + model.UserName);
 
-			model.PublishedSystems = await _db.Publications
-				.ForAuthor(model.Id)
-				.Select(p => p.System!.Code)
+		model.Submissions = await _db.Submissions
+			.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id)
+				|| s.Submitter != null && s.SubmitterId == model.Id)
+			.GroupBy(s => s.Status)
+			.Select(g => new UserProfile.SubmissionEntry
+			{
+				Status = g.Key,
+				Count = g.Count()
+			})
+			.ToListAsync();
+
+		// TODO: round to 1 digit?
+		var (points, rank) = await _pointsService.PlayerPoints(model.Id);
+		model.PlayerPoints = (int)Math.Round(points);
+		model.PlayerRank = rank;
+
+		model.PublishedSystems = await _db.Publications
+			.ForAuthor(model.Id)
+			.Select(p => p.System!.Code)
+			.Distinct()
+			.ToListAsync();
+
+		model.UserFiles.Systems = _db.UserFiles
+			.Where(uf => uf.AuthorId == model.Id)
+			.Where(uf => includeHiddenUserFiles || !uf.Hidden)
+			.Select(uf => uf.System!.Code)
+			.Distinct()
+			.ToList();
+
+		var wikiEdits = await _db.WikiPages
+			.ThatAreNotDeleted()
+			.CreatedBy(model.UserName)
+			.Select(w => new { w.CreateTimestamp })
+			.ToListAsync();
+
+		if (wikiEdits.Any())
+		{
+			model.WikiEdits.TotalEdits = wikiEdits.Count;
+			model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimestamp);
+			model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimestamp);
+		}
+
+		model.Publishing = new()
+		{
+			TotalPublished = await _db.Submissions
+				.CountAsync(s => s.PublisherId == model.Id)
+		};
+
+		model.Judgments = new()
+		{
+			TotalJudgments = await _db.Submissions
+				.CountAsync(s => s.JudgeId == model.Id)
+		};
+
+		if (model.PublicRatings)
+		{
+			model.Ratings.TotalMoviesRated = await _db.PublicationRatings
+				.Where(p => p.Publication!.ObsoletedById == null)
+				.Where(p => p.UserId == model.Id)
 				.Distinct()
-				.ToListAsync();
-
-			model.UserFiles.Systems = _db.UserFiles
-				.Where(uf => uf.AuthorId == model.Id)
-				.Where(uf => includeHiddenUserFiles || !uf.Hidden)
-				.Select(uf => uf.System!.Code)
-				.Distinct()
-				.ToList();
-
-			var wikiEdits = await _wikiPages.Query
-				.ThatAreNotDeleted()
-				.CreatedBy(model.UserName)
-				.Select(w => new { w.CreateTimestamp })
-				.ToListAsync();
-
-			if (wikiEdits.Any())
-			{
-				model.WikiEdits.TotalEdits = wikiEdits.Count;
-				model.WikiEdits.FirstEdit = wikiEdits.Min(w => w.CreateTimestamp);
-				model.WikiEdits.LastEdit = wikiEdits.Max(w => w.CreateTimestamp);
-			}
-
-			model.Publishing = new UserProfile.PublishingSummary
-			{
-				TotalPublished = await _db.Submissions
-					.CountAsync(s => s.PublisherId == model.Id)
-			};
-
-			model.Judgments = new UserProfile.JudgingSummary
-			{
-				TotalJudgments = await _db.Submissions
-					.CountAsync(s => s.JudgeId == model.Id)
-			};
-
-			if (model.PublicRatings)
-			{
-				model.Ratings.TotalMoviesRated = await _db.PublicationRatings
-					.Where(p => p.Publication!.ObsoletedById == null)
-					.Where(p => p.UserId == model.Id)
-					.Distinct()
-					.CountAsync();
-			}
+				.CountAsync();
 		}
 
 		return model;
@@ -425,9 +430,9 @@ public class UserManager : UserManager<User>
 						UserId = userId,
 						RoleId = role.Id
 					});
-				}
 
-				await _tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
+					await _tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
+				}
 			}
 		}
 
@@ -481,5 +486,38 @@ public class UserManager : UserManager<User>
 				Description = r.Description
 			})
 			.ToListAsync();
+	}
+
+	/// <summary>
+	/// Performs all the necessary updates after a user's name has been changed
+	/// </summary>
+	public async Task UserNameChanged(User user, string oldName)
+	{
+		// Move home page and subpages
+		var oldHomePage = LinkConstants.HomePages + oldName;
+		var newHomePage = LinkConstants.HomePages + user.UserName;
+		await _wikiPages.MoveAll(oldHomePage, newHomePage);
+
+		// Update submission titles
+		var subsToUpdate = await _db.Submissions
+			.IncludeTitleTables()
+			.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == user.Id))
+			.ToListAsync();
+		foreach (var sub in subsToUpdate)
+		{
+			sub.GenerateTitle();
+		}
+
+		// Update publication titles
+		var pubsToUpdate = await _db.Publications
+			.IncludeTitleTables()
+			.Where(p => p.Authors.Any(pa => pa.UserId == user.Id))
+			.ToListAsync();
+		foreach (var pub in pubsToUpdate)
+		{
+			pub.GenerateTitle();
+		}
+
+		await _db.SaveChangesAsync();
 	}
 }

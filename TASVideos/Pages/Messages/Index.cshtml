@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model IndexModel
 @{
-	ViewData["Title"] = $"Message from {Model.PrivateMessage.FromUserName}";
+	ViewData.SetTitle($"Message from {Model.PrivateMessage.FromUserName}");
 }
 
 <div class="mb-2">

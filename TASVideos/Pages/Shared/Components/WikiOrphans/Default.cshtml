@@ -1,12 +1,13 @@
-﻿@model IEnumerable<TASVideos.Core.Services.WikiOrphan>
+﻿@model IReadOnlyCollection<TASVideos.Core.Services.WikiOrphan>
 
-<div>
-	<label>Total: @Model.Count()</label>
-</div>
-
-<div class="table-container">
-	<table class="table table-striped">
-		<tbody>
+@if (Model.Any())
+{
+	<div>
+		<label>Total: @Model.Count</label>
+	</div>
+	<div class="table-container">
+		<table class="table table-striped">
+			<tbody>
 			<tr>
 				<th>Last Modified</th>
 				<th>Page</th>
@@ -22,6 +23,13 @@
 					<td>@orphan.LastUpdateUserName</td>
 				</tr>
 			}
-		</tbody>
-	</table>
-</div>
+			</tbody>
+		</table>
+	</div>
+}
+else
+{
+	<info-alert>
+		No Orphans to Display
+	</info-alert>
+}

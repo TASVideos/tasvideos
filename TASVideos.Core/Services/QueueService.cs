@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
@@ -227,7 +228,6 @@ internal class QueueService : IQueueService
 		var submission = await _db.Submissions
 			.Include(s => s.SubmissionAuthors)
 			.Include(s => s.History)
-			.Include(s => s.WikiContent)
 			.SingleOrDefaultAsync(s => s.Id == submissionId);
 
 		if (submission is null)
@@ -264,10 +264,7 @@ internal class QueueService : IQueueService
 		}
 
 		await _db.SaveChangesAsync();
-		if (submission.WikiContentId.HasValue)
-		{
-			await _wikiPages.Delete(submission.WikiContent!.PageName);
-		}
+		await _wikiPages.Delete(WikiHelper.ToSubmissionWikiPageName(submissionId));
 
 		return DeleteSubmissionResult.Success(submission.Title);
 	}
@@ -358,12 +355,13 @@ internal class QueueService : IQueueService
 			// for a single trip
 			var queriedPub = await _db.Publications
 				.Include(p => p.PublicationUrls)
-				.Include(p => p.WikiContent)
 				.Include(p => p.System)
 				.Include(p => p.Game)
 				.Include(p => p.Authors)
 				.ThenInclude(pa => pa.Author)
 				.SingleAsync(p => p.Id == obsoletedPub.Id);
+
+			var obsoletedWiki = await _wikiPages.PublicationPage(queriedPub.Id);
 
 			foreach (var url in obsoletedPub.PublicationUrls.Where(u => _youtubeSync.IsYoutubeUrl(u.Url)))
 			{
@@ -373,7 +371,7 @@ internal class QueueService : IQueueService
 					url.Url!,
 					url.DisplayName,
 					queriedPub.Title,
-					queriedPub.WikiContent!,
+					obsoletedWiki!,
 					queriedPub.System!.Code,
 					queriedPub.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 					queriedPub.ObsoletedById));
@@ -449,7 +447,6 @@ internal class QueueService : IQueueService
 	{
 		var toObsolete = await _db.Publications
 			.Include(p => p.PublicationUrls)
-			.Include(p => p.WikiContent)
 			.Include(p => p.System)
 			.Include(p => p.Game)
 			.Include(p => p.Authors)
@@ -460,6 +457,9 @@ internal class QueueService : IQueueService
 		{
 			return false;
 		}
+
+		var pageName = WikiHelper.ToPublicationWikiPageName(toObsolete.Id);
+		var wikiPage = await _wikiPages.Page(pageName);
 
 		toObsolete.ObsoletedById = obsoletingPublicationId;
 		await _db.SaveChangesAsync();
@@ -474,7 +474,7 @@ internal class QueueService : IQueueService
 				url.Url ?? "",
 				url.DisplayName,
 				toObsolete.Title,
-				toObsolete.WikiContent!,
+				wikiPage!,
 				toObsolete.System!.Code,
 				toObsolete.Authors
 					.OrderBy(pa => pa.Ordinal)

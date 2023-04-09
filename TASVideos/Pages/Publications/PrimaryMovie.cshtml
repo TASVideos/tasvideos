@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model PrimaryMoviesModel
 @{
-	ViewData["Title"] = $"Primary Movie File For {Model.PublicationTitle}";
+	ViewData.SetTitle($"Primary Movie File For {Model.PublicationTitle}");
 }
 
 <p>Original File: @Model.OriginalFileName</p>

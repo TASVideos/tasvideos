@@ -1,7 +1,7 @@
 ﻿@page
 @model UnansweredModel
 @{
-	ViewData["Title"] = "Unanswered Posts";
+	ViewData.SetTitle("Unanswered Posts");
 }
 <partial Name="_ForumHeader" />
 <partial name="_Pager" model="Model.Posts" />

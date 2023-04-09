@@ -1,10 +1,11 @@
-﻿using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.RssFeeds.Models;
 
 public class RssPublication
 {
-	public WikiPage Wiki { get; init; } = new();
+	public IWikiPage Wiki { get; set; } = null!;
 
 	public int Id { get; init; }
 	public DateTime CreateTimestamp { get; init; }

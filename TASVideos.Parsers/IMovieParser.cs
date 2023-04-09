@@ -58,7 +58,7 @@ public sealed class MovieParser : IMovieParser
 		catch (Exception)
 		{
 			// TODO: do we want to log here? or catch at a higher layer?
-			return Error("An general error occured while processing the movie file.");
+			return Error("A general error occured while processing the movie file.");
 		}
 	}
 
@@ -76,7 +76,7 @@ public sealed class MovieParser : IMovieParser
 		catch (Exception)
 		{
 			// TODO: do we want to log here? or catch at a higher layer?
-			return Error("An general error occured while processing the movie file.");
+			return Error("A general error occured while processing the movie file.");
 		}
 	}
 

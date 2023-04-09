@@ -1,7 +1,7 @@
 ﻿@page "{id}/{handler?}/{publicationFileId?}"
 @model AdditionalMoviesModel
 @{
-	ViewData["Title"] = $"Additional Movie Files For {Model.PublicationTitle}";
+	ViewData.SetTitle($"Additional Movie Files For {Model.PublicationTitle}");
 }
 
 <h4>Additional Movie Files:</h4>
@@ -21,7 +21,7 @@
 					<td>@file.Description</td>
 					<td>
 						<delete-button warning-message="Are you sure you want to remove this movie file?"
-									   asp-href="/Publications/AdditionalMovies/@Model.Id/Delete/@file.Id">
+							asp-href="/Publications/AdditionalMovies/@Model.Id/Delete/@file.Id">
 							<span class="fa fa-times"></span> Delete
 						</delete-button>
 					</td>
@@ -34,6 +34,9 @@
 <hr />
 <h4>Add a movie file</h4>
 <hr />
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
 <form method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="PublicationTitle" />
 	<row>

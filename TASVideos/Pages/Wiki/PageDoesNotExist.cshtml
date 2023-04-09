@@ -1,6 +1,6 @@
 @page
 @{
-	ViewData["Title"] = "DoesNotExist";
+	ViewData.SetTitle("DoesNotExist");
 	var url = PageContext.HttpContext.Request.Query["url"].ToString().Trim('/');
 	bool canEdit = WikiHelper.UserCanEditWikiPage(url, User.Name(), User.Permissions());
 	HttpContext.Response.StatusCode = 404;

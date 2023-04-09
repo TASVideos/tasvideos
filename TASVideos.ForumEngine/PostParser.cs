@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.ForumEngine;
 
-public class PostParser
+public static class PostParser
 {
 	public static Element Parse(string text, bool enableBbCode, bool enableHtml)
 	{

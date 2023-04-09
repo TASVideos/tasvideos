@@ -1,0 +1,56 @@
+﻿@page "{id}"
+@model CatalogModel
+@{
+	ViewData.SetTitle($"Set Catalogging for Userfile {Model.Id}");
+}
+<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
+<ul>
+	<li>
+		UserFile: <a asp-page="Info" asp-route-id="@Model.Id">@Model.UserFile.Filename</a>
+	</li>
+	<li>
+		Author: <profile-link username="@Model.UserFile.AuthorName"></profile-link>
+	</li>
+</ul>
+<form method="post">
+	<input type="hidden" asp-for="UserFile.Filename" />
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
+				<select asp-for="UserFile.SystemId" asp-items="Model.AvailableSystems" class="form-control"></select>
+			</form-group>
+			<form-group>
+				<fullrow>
+					<label asp-for="UserFile.GameId" class="form-control-label"></label>
+				</fullrow>
+				<row>
+					<div class="col-10">
+						<select asp-for="UserFile.GameId" asp-items="Model.AvailableGames" class="form-control"></select>
+					</div>
+					<div class="col-2">
+						<button id="create-game" type="button" class="btn btn-primary">New</button>
+					</div>
+				</row>
+			</form-group>
+		</column>
+	</row>
+	<form-button-bar>
+		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Update</button>
+		<a class="btn btn-secondary" asp-page="Info" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
+	</form-button-bar>
+</form>
+<div id="dummy" class="d-none"></div>
+<div id="create-version" class="d-none"></div>
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/catalog.js"></script>
+	<script>
+		enableCataloging(
+			"@Html.IdFor(m => m.UserFile.SystemId)",
+			"dummy",
+			"@Html.IdFor(m => m.UserFile.GameId)",
+			"dummy",
+			"@HttpContext.CurrentPathToReturnUrl()");
+	</script>
+}

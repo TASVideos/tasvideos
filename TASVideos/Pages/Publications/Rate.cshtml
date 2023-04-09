@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model RateModel
 @{
-	ViewData["Title"] = $"Movie #{Model.Id} - {Model.Rating.Title}";
+	ViewData.SetTitle($"Movie #{Model.Id} - {Model.Rating.Title}");
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">

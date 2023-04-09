@@ -2,7 +2,7 @@
 @model ForUserModel
 
 @{
-	ViewData["Title"] = "User Files from " + Model.UserName;
+	ViewData.SetTitle("User Files from " + Model.UserName);
 }
 
 <a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>

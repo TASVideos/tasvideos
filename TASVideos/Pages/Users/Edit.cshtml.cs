@@ -16,18 +16,18 @@ public class EditModel : BasePageModel
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
-	private readonly IWikiPages _wikiPages;
+	private readonly UserManager _userManager;
 
 	public EditModel(
 		ApplicationDbContext db,
 		ExternalMediaPublisher publisher,
 		IUserMaintenanceLogger userMaintenanceLogger,
-		IWikiPages wikiPages)
+		UserManager userManager)
 	{
 		_db = db;
 		_publisher = publisher;
 		_userMaintenanceLogger = userMaintenanceLogger;
-		_wikiPages = wikiPages;
+		_userManager = userManager;
 	}
 
 	[FromRoute]
@@ -126,12 +126,9 @@ public class EditModel : BasePageModel
 			await _publisher.SendUserManagement(
 				message,
 				"",
-				$"Users/Profile/{user.UserName}");
+				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
-			var oldHomePage = LinkConstants.HomePages + userNameChange;
-			var newHomePage = LinkConstants.HomePages + user.UserName;
-
-			await _wikiPages.MoveAll(oldHomePage, newHomePage);
+			await _userManager.UserNameChanged(user, userNameChange);
 		}
 
 		// Announce Role change
@@ -170,7 +167,7 @@ public class EditModel : BasePageModel
 			await _publisher.SendUserManagement(
 				$"User {user.UserName} edited by {User.Name()}",
 				message,
-				$"Users/Profile/{user.UserName}");
+				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 		}
 

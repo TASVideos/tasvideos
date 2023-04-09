@@ -8,7 +8,12 @@
 		<row>
 			<div class="col-md-6">
 				<div permission="EditRoles">
-					<a asp-page="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m border border-warning"><i class="fa fa-pencil"></i> Edit</a>
+					<a asp-page="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m border border-warning">
+						<i class="fa fa-pencil"></i> Edit
+					</a>
+					<a asp-page="AddEdit" asp-route-copyFrom="@Model.Id" class="btn btn-secondary mb-m border border-warning">
+						<i class="fa fa-plus"></i> Copy From
+					</a>
 				</div>
 				<span>@Model.Description</span>
 				<div condition="Model.IsDefault">

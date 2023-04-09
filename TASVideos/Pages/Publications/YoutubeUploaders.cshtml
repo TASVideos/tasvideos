@@ -4,7 +4,7 @@
 @{
 	const string tvc = "TASVideosChannel";
 
-	ViewData["Title"] = "Youtube Uploaders";
+	ViewData.SetTitle("Youtube Uploaders");
 	var groups = Model.Videos
 		.GroupBy(g => g.ChannelTitle)
 		.OrderByDescending(g => g.Count())

@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model SplitModel
 @{
-	ViewData["Title"] = $"Splitting Topic: {Model.Topic.Title}";
+	ViewData.SetTitle($"Splitting Topic: {Model.Topic.Title}");
 }
 <partial Name="_ForumHeader" />
 <h4>

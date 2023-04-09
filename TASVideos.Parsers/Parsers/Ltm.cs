@@ -179,17 +179,14 @@ internal class Ltm : ParserBase, IParser
 
 		var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
 
-		if (split.Length > 1)
+		if (split.Length <= 1)
 		{
-			var boolStr = split.Skip(1).First();
-			var result = bool.TryParse(boolStr, out bool val);
-			if (result)
-			{
-				return val;
-			}
+			return false;
 		}
 
-		return false;
+		var boolStr = split.Skip(1).First();
+		var result = bool.TryParse(boolStr, out bool val);
+		return result && val;
 	}
 
 	private static string GetPlatformValue(string str)
@@ -210,9 +207,9 @@ internal class Ltm : ParserBase, IParser
 
 	private static string CalculatePlatform(string str)
 	{
-		if (string.Equals(SystemCodes.Flash, str, StringComparison.InvariantCultureIgnoreCase))
+		if (string.Equals(SystemCodes.Arcade, str, StringComparison.InvariantCultureIgnoreCase))
 		{
-			return SystemCodes.Flash;
+			return SystemCodes.Arcade;
 		}
 
 		if (string.Equals(SystemCodes.Dos, str, StringComparison.InvariantCultureIgnoreCase))
@@ -220,9 +217,14 @@ internal class Ltm : ParserBase, IParser
 			return SystemCodes.Dos;
 		}
 
-		if (string.Equals(SystemCodes.Windows, str, StringComparison.InvariantCultureIgnoreCase))
+		if (string.Equals(SystemCodes.Flash, str, StringComparison.InvariantCultureIgnoreCase))
 		{
-			return SystemCodes.Windows;
+			return SystemCodes.Flash;
+		}
+
+		if (string.Equals(SystemCodes.MacOs, str, StringComparison.InvariantCultureIgnoreCase))
+		{
+			return SystemCodes.MacOs;
 		}
 
 		if (string.Equals(SystemCodes.Pc98, str, StringComparison.InvariantCultureIgnoreCase))
@@ -230,9 +232,14 @@ internal class Ltm : ParserBase, IParser
 			return SystemCodes.Pc98;
 		}
 
-		if (string.Equals(SystemCodes.Arcade, str, StringComparison.InvariantCultureIgnoreCase))
+		if (string.Equals(SystemCodes.Pico8, str, StringComparison.InvariantCultureIgnoreCase))
 		{
-			return SystemCodes.Arcade;
+			return SystemCodes.Pico8;
+		}
+
+		if (string.Equals(SystemCodes.Windows, str, StringComparison.InvariantCultureIgnoreCase))
+		{
+			return SystemCodes.Windows;
 		}
 
 		return SystemCodes.Linux;

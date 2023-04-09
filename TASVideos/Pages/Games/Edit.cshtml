@@ -1,9 +1,9 @@
 ﻿@page "{id?}"
 @model EditModel
 @{
-	ViewData["Title"] = Model.Id.HasValue
+	ViewData.SetTitle(Model.Id.HasValue
 	? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
-		: "Create a new Game entry";
+		: "Create a new Game entry");
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 <form-group>
@@ -24,7 +24,7 @@
 			<form-group>
 				<label asp-for="Game.Abbreviation"></label>
 				<div class="input-group">
-					<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" />
+					<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" style="text-transform: lowercase;" />
 					<a
 						asp-page="/Wiki/Referrers"
 						asp-route-path="Games/@Model.Game.Abbreviation"

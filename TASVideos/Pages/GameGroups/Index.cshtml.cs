@@ -34,9 +34,8 @@ public class IndexModel : BasePageModel
 			? _db.GameGroups.Where(g => g.Id == ParsedId)
 			: _db.GameGroups.Where(g => g.Abbreviation == Id);
 
-		// TODO: abbreviations need to be unique, then we can use Single here
 		var gameGroup = await query
-			.FirstOrDefaultAsync();
+			.SingleOrDefaultAsync();
 
 		if (gameGroup is null)
 		{
@@ -53,12 +52,15 @@ public class IndexModel : BasePageModel
 			{
 				Id = g.Id,
 				Name = g.DisplayName,
-				Systems = g.GameVersions.Select(v => v.System!.Code),
+				Systems = g.GameVersions
+					.Select(v => v.System!.Code)
+					.Distinct()
+					.OrderBy(s => s)
+					.ToList(),
 				PublicationCount = g.Publications.Count,
 				SubmissionsCount = g.Submissions.Count,
 				GameResourcesPage = g.GameResourcesPage
 			})
-			.OrderBy(g => g.Name)
 			.ToListAsync();
 
 		return Page();

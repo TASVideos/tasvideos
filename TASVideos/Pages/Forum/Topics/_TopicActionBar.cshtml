@@ -3,7 +3,7 @@
    asp-page="Index"
    asp-page-handler="Watch"
    asp-route-id="@Model.Id"
-   class="btn bg-info text-dark btn-sm"
+   class="btn btn-info btn-sm"
    title="Watch this topic">
 	<i class="fa fa-bell-slash-o"></i>
 </a>
@@ -60,10 +60,17 @@
 		</span>
 	</button>
 </form>
-<a condition="@ViewData.UserHas(PermissionTo.CreateForumPolls)"
+<a permission="CreateForumPolls"
 	asp-page="AddEditPoll"
 	asp-route-topicId="@Model.Id"
 	class="btn btn-warning btn-sm"
 	title="Add a poll to this topic">
 	<i class="fa fa-list-ul"></i> Poll
+</a>
+<a permission="CatalogMovies"
+   condition="@Model.CategoryId == SiteGlobalConstants.GamesForumCategory"
+	asp-page="Catalog"
+	asp-route-id="@Model.Id"
+	class="btn btn-sm btn-info border border-warning">
+	<i class="fa fa-book"></i> Catalog
 </a>

@@ -2,7 +2,7 @@
 @model UploadModel
 
 @{
-	ViewData["Title"] = "Upload a User file";
+	ViewData.SetTitle("Upload a User file");
 }
 
 <info-alert dismissible="true">
@@ -17,6 +17,7 @@
 			<form-group>
 				<label asp-for="UserFile.File" class="form-control-label"></label>
 				<input asp-for="UserFile.File" class="form-control" />
+				<small>Valid file types: @string.Join(", ", Model.SupportedFileExtensions)</small><br />
 				<span id="FileInputWarning" asp-validation-for="UserFile.File" class="text-danger"></span>
 			</form-group>
 			<form-group>
@@ -68,15 +69,28 @@
 	</script>
 	<script src="/js/pako_deflate.min.js"></script>
 	<script>
+		
 		"use strict";
 		{
 			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile.File)");
 			const storageAvailable = parseFloat(document.getElementById("StorageAvailable").value);
+			const supportedFileExtensions = '@string.Join(",", Model.SupportedFileExtensions)'.split(',');
 			const fileInputWarning = document.getElementById("FileInputWarning");
 			fileInput.addEventListener("input", async () => {
 				const inputFile = fileInput.files[0];
 				if (!inputFile) {
 					return;
+				}
+
+				const ext = (s => s.substring(s.lastIndexOf('.') + 1))(fileInput.files[0].name);
+				if (ext) {
+					if (supportedFileExtensions.includes(ext)) {
+						fileInputWarning.innerText = "";
+					} else {
+						fileInput.value = "";
+						fileInputWarning.innerText = `Invalid file extension: ${ext}`;
+						return;
+					}
 				}
 
 				const inputBytes = await inputFile.arrayBuffer();

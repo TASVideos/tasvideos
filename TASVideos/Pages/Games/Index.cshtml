@@ -1,13 +1,23 @@
 ﻿@page "{id}"
 @model IndexModel
 @{
-	ViewData["Title"] = $"{Model.Game.DisplayName}";
-	string wiki = LinkConstants.GameWikiPage + Model.Id;
+	ViewData.SetTitle($"{Model.Game.DisplayName}");
+	string wiki = LinkConstants.GameWikiPage + Model.Game.Id;
 	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), ViewData.UserPermissions());
+	string? url = !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any()
+		? !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl)
+			? Model.Game.ScreenshotUrl
+			: $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Movie.Screenshot.Path}"
+		: null;
+	ViewData.SetMetaTags(new MetaTagModel
+	{
+		Title = Model.Game.DisplayName,
+		Image = url
+	});
 }
 
-<div class="float-md-end text-center mb-2" condition="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any())">
-	<img class="img-fluid" src="@(!string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) ? Model.Game.ScreenshotUrl : $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Screenshot.Path}")" />
+<div class="float-md-end text-center mb-2" condition="url is not null">
+	<img class="img-fluid" src="@url" />
 </div>
 <row>
 	<div class="col-12 col-xl-6 mb-2">
@@ -37,9 +47,20 @@
 						<ul>
 							<li>Id: @Model.Game.Id</li>
 							<li>Platforms: @string.Join(", ", Model.Game.Versions.Select(v => v.SystemCode).Distinct())</li>
-							<li>Abbreviation: @Model.Game.Abbreviation</li>
+							<li condition="!string.IsNullOrWhiteSpace(Model.Game.Abbreviation)">Abbreviation: @Model.Game.Abbreviation</li>
 							<li>Display Name: @Model.Game.DisplayName</li>
-							<li>Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
+							<li condition="!string.IsNullOrWhiteSpace(Model.Game.GameResourcesPage)">Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
+							<li condition="Model.Topics.Any()">
+								Discussions:<br />
+								<ul>
+									@foreach (var topic in Model.Topics)
+									{
+										<li>
+											<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">@topic.Title</a>
+										</li>
+									}
+								</ul>
+							</li>
 							<li condition="Model.Game.GameGroups.Any()">
 								Game Groups:<br />
 								<ul>
@@ -56,6 +77,10 @@
 						</ul>
 					</column>
 					<column md="6">
+						<label condition="!string.IsNullOrWhiteSpace(Model.Game.Aliases)">Aliases:</label>
+						<ul condition="!string.IsNullOrWhiteSpace(Model.Game.Aliases)">
+							<li>@Model.Game.Aliases</li>
+						</ul>
 						<label>Genres:</label>
 						<ul>
 							@foreach (var genre in Model.Game.Genres)
@@ -80,7 +105,10 @@
 			@foreach (var movie in Model.Movies)
 			{
 				<li class="nav-item">
-					<a class="nav-link@(movie==Model.Movies.First() ? " active" : "")@(string.IsNullOrWhiteSpace(movie.Branch) ? "" : " fw-bold")" href="#tab-@(movie.Id)M" data-bs-toggle="tab">@(string.IsNullOrWhiteSpace(movie.Branch) ? "(baseline)" : $@"""{movie.Branch}""")</a>
+					<a class="nav-link@(movie==Model.Movies.First() ? " active" : "")" href="#tab-@(movie.Movie.Id)M" data-bs-toggle="tab">
+						<span condition="!string.IsNullOrEmpty(movie.TabTitleRegular)">@movie.TabTitleRegular</span>
+						<span condition="!string.IsNullOrEmpty(movie.TabTitleBold)" class="fw-bold">"@(movie.TabTitleBold)"</span>
+					</a>
 				</li>
 			}
 		</ul>
@@ -88,12 +116,12 @@
 	<div class="tab-content">
 		@foreach (var movie in Model.Movies)
 		{
-			<div id="tab-@(movie.Id)M" class="tab-pane@(movie==Model.Movies.First() ? " active" : " fade")">
-				<partial name="Components/DisplayMiniMovie/Default" model="movie" />
+			<div id="tab-@(movie.Movie.Id)M" class="tab-pane@(movie==Model.Movies.First() ? " active" : " fade")">
+				<partial name="Components/DisplayMiniMovie/Default" model="movie.Movie" />
 			</div>
 		}
 	</div>
-	<small condition="@Model.Movies.Any(m => string.IsNullOrWhiteSpace(m.Branch))" class="text-muted">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
+	<small condition="@Model.Movies.Where(m => string.IsNullOrWhiteSpace(m.Movie.Branch)).Count() == 1" class="text-muted">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
 </div>
 <hr />
 <row>
@@ -109,7 +137,7 @@
 					</a>)
 				</span>
 			</li>
-			<li>
+			<li condition="Model.Game.PublicationCount > 0">
 				<a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
 			</li>
 			<li>

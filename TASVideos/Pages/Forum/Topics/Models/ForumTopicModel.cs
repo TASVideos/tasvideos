@@ -11,19 +11,10 @@ public interface IForumTopicActionBar
 	bool IsWatching { get; }
 	string Title { get; }
 	bool AnyVotes { get; }
+	int CategoryId { get; }
 }
 
-public interface IForumTopicBreadCrumb
-{
-	int Id { get; }
-	string Title { get; }
-	bool IsLocked { get; }
-	int ForumId { get; }
-	string ForumName { get; }
-	ForumTopicType Type { get; }
-}
-
-public class ForumTopicModel : IForumTopicActionBar, IForumTopicBreadCrumb
+public class ForumTopicModel : IForumTopicActionBar
 {
 	public int Id { get; set; }
 	public int LastPostId { get; set; }
@@ -42,6 +33,10 @@ public class ForumTopicModel : IForumTopicActionBar, IForumTopicBreadCrumb
 
 	public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
 	public PollModel? Poll { get; set; }
+
+	public int? GameId { get; set; }
+	public string? GameName { get; set; }
+	public int CategoryId { get; set; }
 
 	public class PollModel
 	{

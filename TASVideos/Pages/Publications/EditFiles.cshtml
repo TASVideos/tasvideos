@@ -1,7 +1,7 @@
 ﻿@page "{id}/{handler?}/{publicationFileId?}"
 @model EditFilesModel
 @{
-	ViewData["Title"] = $"Edit Files for {Model.Title}";
+	ViewData.SetTitle($"Edit Files for {Model.Title}");
 }
 
 <h4>Files</h4>

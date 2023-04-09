@@ -12,7 +12,7 @@ public static class TagHelperExtensions
 	public static void AddCssClass(this TagHelperOutput output, string className)
 	{
 		var existingClass = output.Attributes.FirstOrDefault(a => a.Name == "class");
-		if (existingClass != null)
+		if (existingClass is not null)
 		{
 			output.Attributes.Remove(existingClass);
 			output.Attributes.Add(new TagHelperAttribute("class", existingClass.Value + " " + className));

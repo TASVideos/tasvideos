@@ -29,8 +29,6 @@ public class TASVideoAgentTests
 		var actual = await _db.ForumPosts.LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
 		Assert.IsTrue(actual.Text.Contains(SubmissionId.ToString()));
 		Assert.IsFalse(actual.EnableHtml);
@@ -44,8 +42,6 @@ public class TASVideoAgentTests
 		var actual = await _db.ForumTopics.LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
 		Assert.AreEqual(SubmissionId, actual.SubmissionId);
 		Assert.AreEqual(SubmissionTitle, actual.Title);
@@ -59,8 +55,6 @@ public class TASVideoAgentTests
 		var actual = await _db.ForumPolls.LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.PollQuestion, actual.Question);
 	}
 
@@ -128,8 +122,6 @@ public class TASVideoAgentTests
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.PublishedMoviesForumId, topic.Entity.ForumId);
 		Assert.AreEqual(SiteGlobalConstants.PublishedMoviesForumId, post.Entity.ForumId);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
 		Assert.AreEqual(SiteGlobalConstants.NewPublicationPostSubject, actual.Subject);
 		Assert.IsFalse(actual.EnableHtml);
@@ -160,8 +152,6 @@ public class TASVideoAgentTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.WorkbenchForumId, topic.Entity.ForumId);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.CreateUserName);
-		Assert.AreEqual(SiteGlobalConstants.TASVideoAgent, actual.LastUpdateUserName);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
 		Assert.AreEqual(SiteGlobalConstants.UnpublishSubject, actual.Subject);
 		Assert.AreEqual(SiteGlobalConstants.UnpublishPost, actual.Text);

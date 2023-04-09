@@ -1,6 +1,6 @@
 @page
 @{
-	ViewData["Title"] = "NotFound";
+	ViewData.SetTitle("NotFound");
 	var possibleUrl = PageContext.HttpContext.Request.Query["possibleUrl"].ToString().Trim();
 	HttpContext.Response.StatusCode = 404;
 }

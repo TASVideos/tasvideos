@@ -19,9 +19,6 @@ public class Submission : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
 
-	public int? WikiContentId { get; set; }
-	public virtual WikiPage? WikiContent { get; set; }
-
 	public int? TopicId { get; set; }
 	public virtual ForumTopic? Topic { get; set; }
 
@@ -199,8 +196,17 @@ public static class SubmissionExtensions
 	public static IQueryable<Submission> ThatAreActive(this IQueryable<Submission> query)
 	{
 		return query.Where(s => s.Status != SubmissionStatus.Published
+			&& s.Status != SubmissionStatus.Playground
 			&& s.Status != SubmissionStatus.Cancelled
 			&& s.Status != SubmissionStatus.Rejected);
+	}
+
+	public static IQueryable<Submission> ThatAreInActive(this IQueryable<Submission> query)
+	{
+		return query.Where(s => s.Status == SubmissionStatus.Published
+			|| s.Status == SubmissionStatus.Playground
+			|| s.Status == SubmissionStatus.Cancelled
+			|| s.Status == SubmissionStatus.Rejected);
 	}
 
 	public static IQueryable<Submission> ThatAreRejected(this IQueryable<Submission> query)
@@ -211,5 +217,19 @@ public static class SubmissionExtensions
 	public static IQueryable<Submission> ThatHaveBeenJudgedBy(this IQueryable<Submission> query, string userName)
 	{
 		return query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
+	}
+
+	/// <summary>
+	/// Includes all the necessary sub-tables in order to generate a title
+	/// </summary>
+	public static IQueryable<Submission> IncludeTitleTables(this DbSet<Submission> query)
+	{
+		return query
+			.Include(s => s.SubmissionAuthors)
+			.ThenInclude(sa => sa.Author)
+			.Include(s => s.System)
+			.Include(s => s.SystemFrameRate)
+			.Include(s => s.Game)
+			.Include(s => s.GameVersion);
 	}
 }

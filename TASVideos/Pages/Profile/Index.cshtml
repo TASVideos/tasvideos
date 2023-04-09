@@ -2,7 +2,7 @@
 @model IndexModel
 @{
 	ViewData.AddActivePage(ProfileNavPages.Index);
-	ViewData["Title"] = "My Profile";
+	ViewData.SetTitle("My Profile");
 }
 <warning-alert Condition="!Model.Profile.EmailConfirmed">
 	<h5>Your email is not confirmed!</h5>

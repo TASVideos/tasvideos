@@ -1,9 +1,9 @@
 ﻿@page "/Games/{gameId}/Versions/Edit/{id?}/{handler?}"
 @model EditModel
 @{
-	ViewData["Title"] = Model.Id.HasValue
+	ViewData.SetTitle(Model.Id.HasValue
 		? $"Editing Game Version #{Model.Id} {Model.Version.Name}"
-		: "Create A New Game Version Entry";
+		: "Create A New Game Version Entry");
 	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
@@ -33,14 +33,14 @@
 				<span asp-validation-for="Version.Name" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="Version.Md5"></label>
-				<input type="text" asp-for="Version.Md5" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Version.Md5" class="text-danger"></span>
-			</form-group>
-			<form-group>
 				<label asp-for="Version.Sha1"></label>
 				<input type="text" asp-for="Version.Sha1" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Version.Sha1" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Version.Md5"></label>
+				<input type="text" asp-for="Version.Md5" class="form-control" autocomplete="off" spellcheck="false" />
+				<span asp-validation-for="Version.Md5" class="text-danger"></span>
 			</form-group>
 		</div>
 		<div class="col-lg-6">

@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Extensions;
+﻿using System.Linq.Expressions;
+
+namespace TASVideos.Extensions;
 
 public static class EnumerableExtensions
 {
@@ -47,5 +49,15 @@ public static class EnumerableExtensions
 		{
 			collection.Add(value);
 		}
+	}
+
+	/// <summary>
+	/// An overload of OrderBy that will call OrderByDescending depending on the <see cref="descending"/> param
+	/// </summary>
+	public static IOrderedQueryable<TSource> OrderBy<TSource, TKey>(this IQueryable<TSource> source, Expression<Func<TSource, TKey>> keySelector, bool descending)
+	{
+		return descending
+			? source.OrderByDescending(keySelector)
+			: source.OrderBy(keySelector);
 	}
 }

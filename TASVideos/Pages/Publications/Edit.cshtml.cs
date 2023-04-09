@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -85,8 +86,7 @@ public class EditModel : BasePageModel
 					.ToList(),
 				SelectedTags = p.PublicationTags
 					.Select(pt => pt.TagId)
-					.ToList(),
-				Markup = p.WikiContent != null ? p.WikiContent.Markup : ""
+					.ToList()
 			})
 			.SingleOrDefaultAsync();
 
@@ -94,6 +94,8 @@ public class EditModel : BasePageModel
 		{
 			return NotFound();
 		}
+
+		publication.Markup = (await _wikiPages.PublicationPage(Id))?.Markup ?? "";
 
 		Publication = publication;
 		Publication.Authors = await _db.PublicationAuthors
@@ -159,16 +161,10 @@ public class EditModel : BasePageModel
 		var externalMessages = new List<string>();
 
 		var publication = await _db.Publications
+			.IncludeTitleTables()
 			.Include(p => p.PublicationUrls)
 			.Include(p => p.PublicationTags)
 			.Include(p => p.PublicationFlags)
-			.Include(p => p.WikiContent)
-			.Include(p => p.System)
-			.Include(p => p.SystemFrameRate)
-			.Include(p => p.Game)
-			.Include(p => p.GameVersion)
-			.Include(p => p.Authors)
-			.ThenInclude(pa => pa.Author)
 			.SingleOrDefaultAsync(p => p.Id == id);
 
 		if (publication is null)
@@ -237,21 +233,19 @@ public class EditModel : BasePageModel
 		publication.PublicationTags.AddTags(model.SelectedTags);
 
 		await _db.SaveChangesAsync();
+		var existingWikiPage = await _wikiPages.PublicationPage(Id);
+		IWikiPage? pageToSync = existingWikiPage;
 
-		if (model.Markup != publication.WikiContent!.Markup)
+		if (model.Markup != existingWikiPage!.Markup)
 		{
-			var revision = new WikiPage
+			pageToSync = await _wikiPages.Add(new WikiCreateRequest
 			{
-				PageName = $"{LinkConstants.PublicationWikiPage}{id}",
+				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,
 				MinorEdit = model.MinorEdit,
 				RevisionMessage = model.RevisionMessage,
 				AuthorId = User.GetUserId()
-			};
-
-			await _wikiPages.Add(revision);
-			publication.WikiContentId = revision.Id;
-			publication.WikiContent = revision;
+			});
 			externalMessages.Add("Description updated");
 		}
 
@@ -265,7 +259,7 @@ public class EditModel : BasePageModel
 					url.Url!,
 					url.DisplayName,
 					publication.Title,
-					publication.WikiContent,
+					pageToSync!,
 					publication.System!.Code,
 					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
 					publication.ObsoletedById));
@@ -276,13 +270,10 @@ public class EditModel : BasePageModel
 
 		if (!model.MinorEdit)
 		{
-			foreach (var unused in externalMessages)
-			{
-				await _publisher.SendPublicationEdit(
-					$"{Id}M edited by {User.Name()}",
-					$"{string.Join(", ", externalMessages)} | {publication.Title}",
-					$"{Id}M");
-			}
+			await _publisher.SendPublicationEdit(
+				$"{Id}M edited by {User.Name()}",
+				$"{string.Join(", ", externalMessages)} | {publication.Title}",
+				$"{Id}M");
 		}
 	}
 }

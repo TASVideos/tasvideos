@@ -7,6 +7,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
+using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core;
 
@@ -76,9 +77,9 @@ public static class ServiceCollectionExtensions
 
 		services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 
-		if (settings.Gmail.IsEnabled())
+		if (settings.Email.IsEnabled())
 		{
-			services.AddTransient<IEmailSender, GmailSender>();
+			services.AddTransient<IEmailSender, SmtpSender>();
 		}
 		else
 		{

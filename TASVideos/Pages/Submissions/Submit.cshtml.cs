@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -49,12 +50,19 @@ public class SubmitModel : BasePageModel
 	[BindProperty]
 	public SubmissionCreateModel Create { get; set; } = new();
 
-	public void OnGet()
+	public string BackupSubmissionDeterminator { get; set; } = "";
+
+	public async Task OnGet()
 	{
 		Create = new SubmissionCreateModel
 		{
 			Authors = new List<string> { User.Name() }
 		};
+
+		BackupSubmissionDeterminator = (await _db.Submissions
+			.Where(s => s.SubmitterId == User.GetUserId())
+			.CountAsync())
+			.ToString();
 	}
 
 	public async Task<IActionResult> OnPost()
@@ -109,7 +117,14 @@ public class SubmitModel : BasePageModel
 		_db.Submissions.Add(submission);
 		await _db.SaveChangesAsync();
 
-		await CreateSubmissionWikiPage(submission);
+		await _wikiPages.Add(new WikiCreateRequest
+		{
+			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
+			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
+			Markup = Create.Markup,
+			MinorEdit = false,
+			AuthorId = User.GetUserId()
+		});
 
 		_db.SubmissionAuthors.AddRange(await _db.Users
 			.ForUsers(Create.Authors)
@@ -144,7 +159,7 @@ public class SubmitModel : BasePageModel
 			.Where(a => !string.IsNullOrWhiteSpace(a))
 			.ToList();
 
-		if (!Create.Authors.Any())
+		if (!Create.Authors.Any() && string.IsNullOrWhiteSpace(Create.AdditionalAuthors))
 		{
 			ModelState.AddModelError(
 				$"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}",
@@ -168,19 +183,5 @@ public class SubmitModel : BasePageModel
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}", $"Could not find user: {author}");
 			}
 		}
-	}
-
-	private async Task CreateSubmissionWikiPage(Submission submission)
-	{
-		var revision = new WikiPage
-		{
-			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
-			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-			Markup = Create.Markup,
-			MinorEdit = false,
-			AuthorId = User.GetUserId()
-		};
-		await _wikiPages.Add(revision);
-		submission.WikiContent = revision;
 	}
 }

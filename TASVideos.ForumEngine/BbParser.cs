@@ -178,6 +178,7 @@ public class BbParser
 		{ "table", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true } },
 		{ "tr", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "table" } },
 		{ "td", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "tr" } },
+		{ "th", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "tr" } },
 	};
 
 	private static readonly HashSet<string> KnownNonEmptyHtmlTags = new()

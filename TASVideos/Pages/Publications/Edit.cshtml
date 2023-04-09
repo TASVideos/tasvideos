@@ -1,14 +1,7 @@
 ﻿@page "{id}"
 @model EditModel
 @{
-	ViewData["Title"] = $"Edit Movie #{Model.Id}";
-	var classIconPath2X = "";
-	var classIconPath4X = "";
-	if (Model.Publication.ClassIconPath != null)
-	{
-		classIconPath2X = $"{Model.Publication.ClassIconPath.Split('.')[0]}-2x.png";
-		classIconPath4X = $"{Model.Publication.ClassIconPath.Split('.')[0]}-4x.png";
-	}
+	ViewData.SetTitle($"Edit Movie #{Model.Id}");
 }
 @section PageTitle {
 	<div class="container mb-2">
@@ -19,10 +12,7 @@
 <fullrow class="mt-2">
 	<label asp-for="Publication.Class"></label>:
 	<a condition="!string.IsNullOrWhiteSpace(Model.Publication.ClassIconPath)" href="/@Model.Publication.ClassLink">
-		<img style="width: 18px" src="/@classIconPath2X"
-			 srcset="/@Model.Publication.ClassIconPath .5x,
-			 /@classIconPath2X 1x,
-			 /@classIconPath4X 2x"/>
+		<icon path="@Model.Publication.ClassIconPath" />
 	</a>
 	<label class="form-control-label">@Model.Publication.Class</label>
 	<a permission="SetPublicationClass" class="btn btn-secondary btn-sm" asp-page="EditClass" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
@@ -131,6 +121,7 @@
 			<label asp-for="Publication.Markup" class="form-control-label"></label>
 			<textarea asp-for="Publication.Markup" rows="6" class="form-control"></textarea>
 			<span asp-validation-for="Publication.Markup" class="text-danger"></span>
+			@await Component.RenderWiki("System/WikiEditHelp")
 		</form-group>
 	</fullrow>
 	<row>

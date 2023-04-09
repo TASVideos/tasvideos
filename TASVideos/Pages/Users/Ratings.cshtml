@@ -1,7 +1,7 @@
 ﻿@page "{userName}"
 @model RatingsModel
 @{
-	ViewData["Title"] = $"Ratings for {Model.UserName}";
+	ViewData.SetTitle($"Ratings for {Model.UserName}");
 	ViewData["IsMyPage"] = User.IsLoggedIn() && User.Name() == Model.UserName;
 }
 <partial name="_Ratings" model="Model.Ratings" />

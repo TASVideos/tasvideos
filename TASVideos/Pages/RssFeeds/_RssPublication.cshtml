@@ -1,7 +1,8 @@
 ﻿@using System.Globalization
+@inject AppSettings Settings
 @model TASVideos.Pages.RssFeeds.Models.RssPublication
 @{
-	var baseUrl = ViewData["BaseUrl"];
+	var baseUrl = Settings.BaseUrl;
 	var movieUrl = $"{baseUrl}/{Model.Id}M";
 
 	var primaryStreaming = Model.StreamingUrls.FirstOrDefault(u => u.Contains("youtube"));
@@ -11,7 +12,9 @@
 	<title>@Model.Title</title>
 	<link>@movieUrl</link>
 	<description>
-		<wiki-markup markup="@Model.Wiki.Markup" page-data="@Model.Wiki"></wiki-markup>
+		<html-encode>
+			<wiki-markup markup="@Model.Wiki.Markup" page-data="@Model.Wiki"></wiki-markup>
+		</html-encode>
 	</description>
 	@foreach (var tag in Model.TagNames)
 	{
@@ -19,7 +22,7 @@
 	}
 	<media:group>
 		<media:content url="@(movieUrl)?handler=Download" fileSize="@Model.MovieFileSize" type="application/zip" medium="document" />
-		<media:thumbnail url="@(baseUrl)/@Model.ScreenshotPath" />
+		<media:thumbnail url="@(baseUrl)/media/@Model.ScreenshotPath" />
 		@foreach (var url in secondaryStreaming)
 		{
 			<media:content url="@url" type="video" medium="video" />
@@ -28,7 +31,7 @@
 		<media:community>
 			<media:starRating average="@Model.RatingAverage" count="@Model.RatingCount" min="@Model.RatingMin" max="@Model.RatingMax" />
 		</media:community>
-		<guid>@movieUrl</guid>
-		<pubDate>@Model.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
 	</media:group>
+	<guid>@movieUrl</guid>
+	<pubDate>@Model.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
 </item>

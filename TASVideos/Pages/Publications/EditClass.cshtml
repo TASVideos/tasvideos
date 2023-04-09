@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model EditClassModel
 @{
-	ViewData["Title"] = $"Edit PublicationClass for {Model.Publication.Title}";
+	ViewData.SetTitle($"Edit PublicationClass for {Model.Publication.Title}");
 }
 
 <form method="post">

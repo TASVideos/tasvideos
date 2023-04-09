@@ -2,7 +2,6 @@
 
 namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class Tag
 {
 	public int Id { get; set; }

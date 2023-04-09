@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -82,11 +83,8 @@ public class EditModel : BasePageModel
 				RerecordCount = s.RerecordCount,
 				CreateTimestamp = s.CreateTimestamp,
 				Submitter = s.Submitter!.UserName,
-				LastUpdateTimestamp = s.WikiContent!.LastUpdateTimestamp,
-				LastUpdateUser = s.WikiContent.LastUpdateUserName,
 				Status = s.Status,
 				EncodeEmbedLink = s.EncodeEmbedLink,
-				Markup = s.WikiContent.Markup,
 				Judge = s.Judge != null ? s.Judge.UserName : "",
 				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
 				PublicationClassId = s.IntendedClassId,
@@ -101,6 +99,10 @@ public class EditModel : BasePageModel
 		}
 
 		Submission = submission;
+		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
+		Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
+		Submission.LastUpdateUser = submissionPage.AuthorName;
+		Submission.Markup = submissionPage.Markup;
 		Submission.Authors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == Id)
 			.OrderBy(sa => sa.Ordinal)
@@ -219,15 +221,10 @@ public class EditModel : BasePageModel
 		}
 
 		var submission = await _db.Submissions
+			.IncludeTitleTables()
 			.Include(s => s.Topic)
 			.Include(s => s.Judge)
 			.Include(s => s.Publisher)
-			.Include(s => s.System)
-			.Include(s => s.SystemFrameRate)
-			.Include(s => s.SubmissionAuthors)
-			.ThenInclude(sa => sa.Author)
-			.Include(s => s.Game)
-			.Include(s => s.GameVersion)
 			.SingleAsync(s => s.Id == Id);
 
 		if (Submission.MovieFile is not null)
@@ -341,7 +338,7 @@ public class EditModel : BasePageModel
 		submission.Status = Submission.Status;
 		submission.AdditionalAuthors = Submission.AdditionalAuthors.NullIfWhitespace();
 
-		var revision = new WikiPage
+		var revision = new WikiCreateRequest
 		{
 			PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
 			Markup = Submission.Markup,
@@ -350,12 +347,10 @@ public class EditModel : BasePageModel
 			AuthorId = User.GetUserId()
 		};
 		var addResult = await _wikiPages.Add(revision);
-		if (!addResult)
+		if (addResult is null)
 		{
 			throw new InvalidOperationException("Unable to save wiki revision!");
 		}
-
-		submission.WikiContentId = revision.Id;
 
 		submission.SubmissionAuthors.Clear();
 		submission.SubmissionAuthors.AddRange(await _db.Users
@@ -464,9 +459,7 @@ public class EditModel : BasePageModel
 
 	private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
 	{
-		var submission = await _db.Submissions
-			.Include(s => s.WikiContent)
-			.SingleOrDefaultAsync(s => s.Id == Id);
+		var submission = await _db.Submissions.SingleOrDefaultAsync(s => s.Id == Id);
 
 		if (submission is null)
 		{
@@ -478,18 +471,17 @@ public class EditModel : BasePageModel
 			return BadRequest("Submission can not be claimed");
 		}
 
+		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
 		_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 		submission.Status = newStatus;
-		var wikiPage = new WikiPage
+		await _wikiPages.Add(new WikiCreateRequest
 		{
-			PageName = submission.WikiContent!.PageName,
-			Markup = submission.WikiContent.Markup += $"\n----\n[user:{User.Name()}]: {message}",
+			PageName = submissionPage.PageName,
+			Markup = submissionPage.Markup + $"\n----\n[user:{User.Name()}]: {message}",
 			RevisionMessage = $"Claimed for {action}",
 			AuthorId = User.GetUserId()
-		};
-		await _wikiPages.Add(wikiPage);
-		submission.WikiContentId = wikiPage.Id;
+		});
 
 		if (isJudge)
 		{

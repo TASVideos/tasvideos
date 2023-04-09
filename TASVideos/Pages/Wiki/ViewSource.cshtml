@@ -1,12 +1,12 @@
 @page
 @model ViewSourceModel
 @{
-	ViewData["Title"] = "View Page Source";
+	ViewData.SetTitle("View Page Source");
 }
 <div>
 	<small>
 		Revision @Model.Revision (current)<br />
-		Last Updated by @(Model.WikiPage.CreateUserName ?? "Unknown") <timezone-convert asp-for="@Model.WikiPage.CreateTimestamp" in-line="true" /> 
+		Last Updated by @(Model.WikiPage.AuthorName ?? "Unknown") <timezone-convert asp-for="@Model.WikiPage.CreateTimestamp" in-line="true" /> 
 	</small>
 </div>
 <div>

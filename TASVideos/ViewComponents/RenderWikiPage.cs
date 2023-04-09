@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.ViewComponents;
 
@@ -31,8 +31,8 @@ public class RenderWikiPage : ViewComponent
 				Markup = existingPage.Markup,
 				PageData = existingPage
 			};
-			ViewData["WikiPage"] = existingPage;
-			ViewData["Title"] = existingPage.PageName;
+			ViewData.SetWikiPage(existingPage);
+			ViewData.SetTitle(existingPage.PageName);
 			ViewData["Layout"] = null;
 			return View(model);
 		}

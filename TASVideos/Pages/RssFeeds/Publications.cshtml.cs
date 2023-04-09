@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Settings;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.RssFeeds.Models;
@@ -12,17 +12,17 @@ namespace TASVideos.Pages.RssFeeds;
 public class PublicationsModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
+	private readonly IWikiPages _wikiPages;
 
 	public PublicationsModel(
 		ApplicationDbContext db,
-		AppSettings settings)
+		IWikiPages wikiPages)
 	{
 		_db = db;
-		BaseUrl = settings.BaseUrl;
+		_wikiPages = wikiPages;
 	}
 
 	public List<RssPublication> Publications { get; set; } = new();
-	public string BaseUrl { get; set; }
 	public async Task<IActionResult> OnGet()
 	{
 		var minTimestamp = DateTime.UtcNow.AddDays(-60);
@@ -35,7 +35,6 @@ public class PublicationsModel : BasePageModel
 				MovieFileSize = p.MovieFile.Length,
 				CreateTimestamp = p.CreateTimestamp,
 				Title = p.Title,
-				Wiki = p.WikiContent!,
 				TagNames = p.PublicationTags.Select(pt => pt.Tag!.DisplayName).ToList(),
 				Files = p.Files.Select(pf => new RssPublication.File
 				{
@@ -52,6 +51,11 @@ public class PublicationsModel : BasePageModel
 					.ToList()
 			})
 			.ToListAsync();
+
+		foreach (var pub in Publications)
+		{
+			pub.Wiki = (await _wikiPages.PublicationPage(pub.Id))!;
+		}
 
 		PageResult pageResult = Page();
 		pageResult.ContentType = "application/rss+xml; charset=utf-8";
