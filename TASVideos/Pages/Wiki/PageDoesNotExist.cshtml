@@ -5,7 +5,7 @@
 	bool canEdit = WikiHelper.UserCanEditWikiPage(url, User.Name(), User.Permissions());
 	HttpContext.Response.StatusCode = 404;
 }
-<h2>This page does not yet exist.</h2>
+<h2>The page you were looking for does not yet exist.</h2>
 <p>Click <a asp-page="/Search/Index" asp-route-searchTerms="@url">search</a> to check for alternative titles or spellings</p>
 Want to create it?
 <br />
@@ -36,4 +36,4 @@ Want to create it?
 </ul>
 
 <p>When creating new pages, always ensure that there is some other page that links to the newly created page. Otherwise your page will just become a <a href="/WikiOrphans">wiki orphan</a> that will be quickly forgotten.</p>
-<p>Click here to see <a asp-page="/Wiki/Referrers" asp-route-path="@url">Referrers</a></p>
+<p><a asp-page="/Wiki/Referrers" asp-route-path="@url">Click here</a> to find referrers in this wiki, <a href="javascript:history.back()">here</a> to go back 2 steps to the referrer, or <a href="/@url">here</a> go back 1 step and get redirected again.</p>
