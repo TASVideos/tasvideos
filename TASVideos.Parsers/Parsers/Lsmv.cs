@@ -129,7 +129,9 @@ internal class Lsmv : ParserBase, IParser
 			result.WarnNoRerecords();
 		}
 
-		var inputLog = archive.Entry(InputFile);
+		// guard against extra branch input files, which have a number in their name
+		var inputLog = archive.Entries.SingleOrDefault(
+			e => e.Name.ToLower().StartsWith(InputFile) && !e.Name.Any(char.IsDigit));
 		if (inputLog is null)
 		{
 			return Error($"Missing {InputFile}, can not parse");
