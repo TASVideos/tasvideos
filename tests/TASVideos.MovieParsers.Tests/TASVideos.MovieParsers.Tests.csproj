@@ -51,6 +51,7 @@
 		<EmbeddedResource Include="Bk2SampleFiles\System-A7800.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-AppleII.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Arcade.bk2" />
+		<EmbeddedResource Include="Bk2SampleFiles\System-Bsx.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-C64.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Coleco.bk2" />
 		<EmbeddedResource Include="Bk2SampleFiles\System-Dgb.bk2" />
