@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
@@ -77,7 +78,7 @@ public class EditFramerateModel : BasePageModel
 		frameRate.Preliminary = FrameRate.Preliminary;
 		frameRate.Obsolete = FrameRate.Obsolete;
 
-		var displayName = $"{FrameRate.SystemCode} {FrameRate.RegionCode} {FrameRate.FrameRate}";
+		var displayName = $"{FrameRate.SystemCode} {FrameRate.RegionCode} {FrameRate.FrameRate.ToString(CultureInfo.InvariantCulture)}";
 		await ConcurrentSave(
 			_db,
 			$"FrameRate {displayName} updated.",
