@@ -1,4 +1,5 @@
-﻿using SharpCompress.Readers;
+﻿using System.Globalization;
+using SharpCompress.Readers;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;
@@ -160,7 +161,7 @@ internal class Ltm : ParserBase, IParser
 		if (split.Length > 1)
 		{
 			var doubleStr = split.Skip(1).First();
-			var result = double.TryParse(doubleStr, out double val);
+			var result = double.TryParse(doubleStr, NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out double val);
 			if (result)
 			{
 				return val;
