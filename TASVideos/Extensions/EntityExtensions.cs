@@ -169,7 +169,7 @@ public static class EntityExtensions
 			{
 				Id = s.Id,
 				System = s.System!.Code,
-				GameName = s.GameName,
+				GameName = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
 				Frames = s.Frames,
 				FrameRate = s.SystemFrameRate!.FrameRate,
 				Branch = s.Branch,
