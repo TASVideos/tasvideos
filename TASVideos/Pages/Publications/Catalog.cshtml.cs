@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -126,7 +127,7 @@ public class CatalogModel : BasePageModel
 			}
 			else if (publication.SystemFrameRateId != Catalog.SystemFrameRateId)
 			{
-				externalMessages.Add($"Framerate changed from {publication.SystemFrameRate!.FrameRate} to {systemFramerate.FrameRate}");
+				externalMessages.Add($"Framerate changed from {publication.SystemFrameRate!.FrameRate.ToString(CultureInfo.InvariantCulture)} to {systemFramerate.FrameRate.ToString(CultureInfo.InvariantCulture)}");
 				publication.SystemFrameRateId = Catalog.SystemFrameRateId;
 				publication.SystemFrameRate = systemFramerate;
 			}

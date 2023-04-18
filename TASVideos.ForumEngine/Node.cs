@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Web;
 using TASVideos.Common;
 
@@ -350,7 +351,7 @@ public class Element : INode
 					var fps = 60.0;
 					if (ss.Length > 1)
 					{
-						double.TryParse(ss[1], out fps);
+						double.TryParse(ss[1], NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out fps);
 					}
 
 					if (fps <= 0)
@@ -393,10 +394,10 @@ public class Element : INode
 
 				// TODO: More fully featured anti-style injection
 				var sizeStr = Options.Split(';')[0];
-				if (double.TryParse(sizeStr, out var sizeDouble))
+				if (double.TryParse(sizeStr, NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out var sizeDouble))
 				{
 					// default font size of the old site was 12px, so if size was given without a unit, divide by 12 and use em
-					w.Attribute("style", $"font-size: {sizeDouble / 12}em");
+					w.Attribute("style", $"font-size: {(sizeDouble / 12).ToString(CultureInfo.InvariantCulture)}em");
 				}
 				else
 				{
