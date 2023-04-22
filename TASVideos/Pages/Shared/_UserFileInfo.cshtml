@@ -1,18 +1,4 @@
 ﻿@model UserFileModel
-
-@functions
-{
-	string FormatTime(TimeSpan timeSpan)
-	{
-		var format =
-			timeSpan.TotalDays >= 1 ? @"d\:hh\:mm\:ss\.ff" :
-			timeSpan.TotalHours >= 1 ? @"h\:mm\:ss\.ff" :
-			@"mm\:ss\.ff";
-
-		return timeSpan.ToString(format);
-	}
-}
-
 @{
 	var canEdit = Model.Author == User.Name() || User.Has(PermissionTo.EditUserFiles);
 }
@@ -39,7 +25,7 @@
 				@Model.FileName
 
 				<div condition="@(Model.IsMovie)">
-					In @FormatTime(Model.Time) (@Model.Frames frames), @Model.Rerecords rerecords
+					In @Model.Time.ToStringWithOptionalDaysAndHours() (@Model.Frames frames), @Model.Rerecords rerecords
 				</div>
 
 				<div condition="@(Model.GameId.HasValue)">

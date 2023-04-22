@@ -23,7 +23,7 @@ public class UserFileModel
 	public string? System { get; set; }
 
 	// Only relevant to Movies
-	public TimeSpan Time => TimeSpan.FromSeconds((double)Length);
+	public TimeSpan Time => TimeSpan.FromSeconds(Math.Round((double)Length, 2, MidpointRounding.AwayFromZero));
 	public bool IsMovie => Class == UserFileClass.Movie;
 
 	public decimal Length { get; set; }
