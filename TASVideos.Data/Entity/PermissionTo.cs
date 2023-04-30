@@ -296,7 +296,11 @@ public enum PermissionTo
 
 	[Group("Admin")]
 	[Description("The ability to see high level application and server information such as diagnostics stats and other sensitive information")]
-	SeeDiagnostics = 9001
+	SeeDiagnostics = 9001,
+
+	[Group("Email")]
+	[Description("The ability to see user's emails")]
+	SeeEmails = 9002
 
 	#endregion
 }

@@ -66,8 +66,10 @@
 							<label asp-for="Id"></label>
 							<label>@Model.Id</label>
 							<br />
-							<label asp-for="Email"></label>
-							<label>@Model.Email</label>
+							<div permission="SeeEmails">
+								<label asp-for="Email"></label>
+								<label>@Model.Email</label>
+							</div>
 							<br />
 							<label asp-for="EmailConfirmed" class="form-control-label"></label>
 							@if (Model.EmailConfirmed)
