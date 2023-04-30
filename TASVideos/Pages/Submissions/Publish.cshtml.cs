@@ -184,7 +184,6 @@ public class PublishModel : BasePageModel
 	{
 		public string Title { get; init; } = "";
 		public string Markup { get; set; } = "";
-		public IEnumerable<int> Flags { get; init; } = new List<int>();
 		public IEnumerable<int> Tags { get; init; } = new List<int>();
 	}
 
@@ -195,7 +194,6 @@ public class PublishModel : BasePageModel
 			.Select(p => new ObsoletePublicationResult
 			{
 				Title = p.Title,
-				Flags = p.PublicationFlags.Select(pf => pf.FlagId),
 				Tags = p.PublicationTags.Select(pt => pt.TagId)
 			})
 			.SingleOrDefaultAsync();
