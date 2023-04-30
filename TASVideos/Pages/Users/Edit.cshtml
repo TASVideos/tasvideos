@@ -151,7 +151,7 @@
 				<label asp-for="UserToEdit.TimezoneId" class="form-control-label"></label>
 				<timezone-picker asp-for="UserToEdit.TimezoneId" class="form-control" />
 			</form-group>
-			<form-group>
+			<form-group permission="SeeEmails">
 				<label asp-for="UserToEdit.Email" class="form-control-label"></label>
 				<div class="input-group">
 					<label class="form-control">@Model.UserToEdit.Email</label>
