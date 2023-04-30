@@ -168,10 +168,10 @@ public static class EntityExtensions
 			.Select(s => new SubmissionListEntry
 			{
 				Id = s.Id,
-				System = s.System!.Code,
+				System = s.System != null ? s.System!.Code : "Unknown",
 				GameName = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
 				Frames = s.Frames,
-				FrameRate = s.SystemFrameRate!.FrameRate,
+				FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,
 				Branch = s.Branch,
 				Authors = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName),
 				AdditionalAuthors = s.AdditionalAuthors,
