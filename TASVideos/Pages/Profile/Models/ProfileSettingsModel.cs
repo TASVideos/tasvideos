@@ -26,6 +26,7 @@ public class ProfileSettingsModel
 	public string? Signature { get; set; }
 
 	[Url]
+	[Display(Name = "Avatar URL")]
 	public string? Avatar { get; set; }
 
 	[Url]
