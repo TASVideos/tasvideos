@@ -96,12 +96,14 @@
 		<label asp-for="Settings.Avatar"></label>
 		<input type="text" asp-for="Settings.Avatar" class="form-control" />
 	</fullrow>
-	<fullrow class="mt-2" id="avatar-preview" show="!string.IsNullOrWhiteSpace(Model.Settings.Avatar)">
-		<label>Preview</label>
-		<button id="preview-btn" type="button" class="btn btn-secondary btn-sm">
-			<span class="fa fa-refresh"></span>
-		</button><br />
-		<img id="avatar-img" src="@Model.Settings.Avatar" class="float-start m-2" />
+	<fullrow class="mt-2" id="avatar-preview">
+		<div show="!string.IsNullOrWhiteSpace(Model.Settings.Avatar)" class="float-end">
+			<button id="preview-btn" type="button" class="btn btn-secondary btn-sm m-2">
+				<span class="fa fa-refresh"></span>
+			</button>
+			<label>Preview</label><br />
+			<img id="avatar-img" src="@Model.Settings.Avatar" class="m-2" />
+		</div>
 		<small>
 			@await Component.RenderWiki("System/AvatarRequirements")
 		</small>
