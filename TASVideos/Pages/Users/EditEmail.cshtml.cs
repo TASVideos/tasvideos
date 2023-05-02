@@ -82,6 +82,7 @@ public class EditEmailModel : BasePageModel
 
 		user.Email = UserToEdit.Email;
 		user.EmailConfirmed = UserToEdit.EmailConfirmed;
+		user.NormalizedEmail = _signInManager.UserManager.NormalizeEmail(user.Email);
 
 		var result = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
 		if (result)
