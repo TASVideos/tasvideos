@@ -32,13 +32,18 @@ public class UserFileModel
 
 	public IEnumerable<UserFileCommentModel> Comments { get; set; } = new List<UserFileCommentModel>();
 	public bool HideComments { get; set; }
+	public Compression CompressionType { get; set; }
+	public byte[] Content { get; set; } = Array.Empty<byte>();
+	public string ContentPreview { get; set; } = "";
+
+	public string Extension => (FileName ?? "").ToLower().Split('.').Last();
 
 	public class UserFileCommentModel
 	{
-		public int Id { get; set; }
-		public string Text { get; set; } = "";
-		public DateTime CreationTimeStamp { get; set; }
-		public int UserId { get; set; }
-		public string UserName { get; set; } = "";
+		public int Id { get; init; }
+		public string Text { get; init; } = "";
+		public DateTime CreationTimeStamp { get; init; }
+		public int UserId { get; init; }
+		public string UserName { get; init; } = "";
 	}
 }

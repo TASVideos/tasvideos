@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
+using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -11,12 +12,16 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class InfoModel : BasePageModel
 {
+	private static string[] _previewableExtensions = { "wch", "lua" };
+
 	private readonly ApplicationDbContext _db;
+	private readonly IFileService _fileService;
 
 	public InfoModel(
-		ApplicationDbContext db)
+		ApplicationDbContext db, IFileService fileService)
 	{
 		_db = db;
+		_fileService = fileService;
 	}
 
 	[FromRoute]
@@ -37,6 +42,23 @@ public class InfoModel : BasePageModel
 		}
 
 		UserFile = file;
+
+		if (UserFile.Class == UserFileClass.Support && _previewableExtensions.Contains(UserFile.Extension))
+		{
+			// We are going back to the database on purpose here, because it is important to never query the entire file when getting lists of files, only when getting a single file
+			var entity = await _db.UserFiles.FindAsync(UserFile.Id);
+			UserFile.Content = entity!.Content;
+			UserFile.CompressionType = entity.CompressionType;
+
+			if (UserFile.CompressionType == Compression.Gzip)
+			{
+				UserFile.ContentPreview = await _fileService.DecompressGzipToString(UserFile.Content);
+			}
+			else
+			{
+				UserFile.ContentPreview = System.Text.Encoding.UTF8.GetString(UserFile.Content, 0, UserFile.Content.Length);
+			}
+		}
 
 		file.Views++;
 

@@ -6,6 +6,7 @@ namespace TASVideos.Core.Services;
 public interface IFileService
 {
 	Task<CompressedFile> Compress(byte[] contents);
+	Task<string> DecompressGzipToString(byte[] contents);
 
 	/// <summary>
 	/// Unzips the file, and re-zips it while renaming the contained file
@@ -45,6 +46,14 @@ internal class FileService : IFileService
 			contents);
 	}
 
+	public async Task<string> DecompressGzipToString(byte[] contents)
+	{
+		await using var ms = new MemoryStream(contents);
+		await using var gz = new SharpCompress.Compressors.Deflate.GZipStream(ms, SharpCompress.Compressors.CompressionMode.Decompress);
+		using var unzip = new StreamReader(gz);
+		return await unzip.ReadToEndAsync();
+	}
+	
 	public async Task<byte[]> CopyZip(byte[] zipBytes, string fileName)
 	{
 		await using var submissionFileStream = new MemoryStream(zipBytes);
