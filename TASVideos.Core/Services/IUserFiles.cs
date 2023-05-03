@@ -75,7 +75,7 @@ internal class UserFiles : IUserFiles
 			.ToList();
 	}
 
-	public async Task<(long?, IParseResult)> Upload(int userId, UserFileUpload file)
+	public async Task<(long?, IParseResult?)> Upload(int userId, UserFileUpload file)
 	{
 		var fileExt = Path.GetExtension(file.FileName);
 		var userFile = new UserFile
