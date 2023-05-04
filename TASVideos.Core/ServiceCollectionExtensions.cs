@@ -130,7 +130,7 @@ public static class ServiceCollectionExtensions
 			services.AddSingleton<IPostDistributor, LogDistributor>();
 		}
 
-		services.AddSingleton<IPostDistributor, IrcDistributor>();
+		//services.AddSingleton<IPostDistributor, IrcDistributor>();
 		//services.AddScoped<IPostDistributor, DiscordDistributor>();
 
 		//services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
