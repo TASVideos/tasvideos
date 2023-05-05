@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
 		services
 			.AddHttpClient(HttpClients.Discord, client =>
 			{
-				client.BaseAddress = new Uri("https://discord.com/api/v6/");
+				client.BaseAddress = new Uri("https://discord.com/api/v10/");
 			});
 		services
 			.AddHttpClient(HttpClients.TwitterV2, client =>
@@ -131,7 +131,7 @@ public static class ServiceCollectionExtensions
 		}
 
 		services.AddSingleton<IPostDistributor, IrcDistributor>();
-		//services.AddScoped<IPostDistributor, DiscordDistributor>();
+		services.AddScoped<IPostDistributor, DiscordDistributor>();
 
 		//services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
 
