@@ -25,7 +25,7 @@ public class AppSettings
 	// Minimum number of hours before a judge can set a submission to accepted/rejected
 	public int MinimumHoursBeforeJudgment { get; set; }
 
-	public class IrcConnection : DistributorConnection
+	public class IrcConnection
 	{
 		public string Server { get; set; } = "";
 		public string Channel { get; set; } = "";
@@ -34,8 +34,7 @@ public class AppSettings
 		public string Nick { get; set; } = "";
 		public string Password { get; set; } = "";
 
-		public bool IsEnabled() => Disable != true
-			&& !string.IsNullOrWhiteSpace(Server)
+		public bool IsEnabled() => !string.IsNullOrWhiteSpace(Server)
 			&& !string.IsNullOrWhiteSpace(Channel)
 			&& Port > 0
 			&& !string.IsNullOrWhiteSpace(Nick)
@@ -44,21 +43,20 @@ public class AppSettings
 		public bool IsSecureChannelEnabled() => IsEnabled() && !string.IsNullOrWhiteSpace(SecureChannel);
 	}
 
-	public class DiscordConnection : DistributorConnection
+	public class DiscordConnection
 	{
 		public string AccessToken { get; set; } = "";
 		public string PublicChannelId { get; set; } = "";
 		public string PrivateChannelId { get; set; } = "";
 
-		public bool IsEnabled() => Disable != true
-			&& !string.IsNullOrWhiteSpace(AccessToken)
+		public bool IsEnabled() => !string.IsNullOrWhiteSpace(AccessToken)
 			&& !string.IsNullOrWhiteSpace(PublicChannelId);
 
 		public bool IsPrivateChannelEnabled() => IsEnabled()
 			&& !string.IsNullOrWhiteSpace(PrivateChannelId);
 	}
 
-	public class TwitterConnection : DistributorConnection
+	public class TwitterConnection
 	{
 		public string ApiBase { get; set; } = "";
 		public string ConsumerKey { get; set; } = "";
@@ -66,26 +64,21 @@ public class AppSettings
 		public string AccessToken { get; set; } = "";
 		public string TokenSecret { get; set; } = "";
 
-		public bool IsEnabled() => Disable != true
-			&& !string.IsNullOrWhiteSpace(ApiBase)
+		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ApiBase)
 			&& !string.IsNullOrWhiteSpace(ConsumerKey)
 			&& !string.IsNullOrWhiteSpace(ConsumerSecret)
-			&& !string.IsNullOrWhiteSpace(TokenSecret);
+			&& !string.IsNullOrWhiteSpace(TokenSecret)
+			;
 	}
 
-	public class TwitterConnectionV2 : DistributorConnection
+	public class TwitterConnectionV2
 	{
 		public string ClientId { get; set; } = "";
 		public string ClientSecret { get; set; } = "";
 		public string OneTimeRefreshToken { get; set; } = "";	// RefreshToken setting is ignored if the access token file exists.
-		public bool IsEnabled() => Disable != true
-			&& !string.IsNullOrWhiteSpace(ClientId)
-			&& !string.IsNullOrWhiteSpace(ClientSecret);
-	}
-	
-	public class DistributorConnection
-	{
-		public bool? Disable { get; set; }
+		public bool IsEnabled() => !string.IsNullOrWhiteSpace(ClientId)
+			&& !string.IsNullOrWhiteSpace(ClientSecret)
+			;
 	}
 
 	public class CacheSetting

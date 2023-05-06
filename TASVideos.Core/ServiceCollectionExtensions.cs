@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
 
 		services
 			.AddCacheService(settings.CacheSettings)
-			.AddExternalMediaPublishing(settings, isDevelopment);
+			.AddExternalMediaPublishing(isDevelopment);
 
 		// HTTP Client
 		services
@@ -123,30 +123,22 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	private static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, AppSettings settings, bool isDevelopment)
+	private static IServiceCollection AddExternalMediaPublishing(this IServiceCollection services, bool isDevelopment)
 	{
 		if (isDevelopment)
 		{
 			services.AddSingleton<IPostDistributor, LogDistributor>();
 		}
 
-		if (settings.Irc.IsEnabled())
-		{
-			services.AddSingleton<IPostDistributor, IrcDistributor>();
-		}
-		
-		if (settings.Discord.IsEnabled())
-		{
-			services.AddScoped<IPostDistributor, DiscordDistributor>();
-		}
-		
-		if (settings.TwitterV2.IsEnabled())
-		{
-			services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
-			services.AddSingleton<TwitterDistributorV2>();	// Required for direct Tweets.
-		}
+		services.AddSingleton<IPostDistributor, IrcDistributor>();
+		services.AddScoped<IPostDistributor, DiscordDistributor>();
+
+		//services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
 
 		services.AddScoped<IPostDistributor, DistributorStorage>();
+
+		//services.AddSingleton<TwitterDistributorV2>();	// Required for direct Tweets.
+
 		return services.AddTransient<ExternalMediaPublisher>();
 	}
 }
