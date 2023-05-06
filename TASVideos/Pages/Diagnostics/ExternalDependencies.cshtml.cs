@@ -9,16 +9,13 @@ namespace TASVideos.Pages.Diagnostics;
 public class ExternalDependenciesModel : BasePageModel
 {
 	private readonly IGoogleAuthService _googleAuthService;
-	private readonly TwitterDistributorV2 _twitter;
 	private readonly AppSettings _settings;
 
 	public ExternalDependenciesModel(
 		IGoogleAuthService googleAuthService,
-		TwitterDistributorV2 twitter,
 		AppSettings settings)
 	{
 		_googleAuthService = googleAuthService;
-		_twitter = twitter;
 		_settings = settings;
 	}
 
@@ -44,7 +41,8 @@ public class ExternalDependenciesModel : BasePageModel
 		Statuses.SecureIrcEnabled = _settings.Irc.IsSecureChannelEnabled();
 		Statuses.DiscordEnabled = _settings.Discord.IsEnabled();
 		Statuses.DiscordPrivateChannelEnabled = _settings.Discord.IsPrivateChannelEnabled();
-		Statuses.TwitterEnabled = _twitter.IsEnabled();
+		var twitter = HttpContext.RequestServices.GetService<TwitterDistributorV2>();
+		Statuses.TwitterEnabled = twitter != null && twitter.IsEnabled();
 	}
 
 	public class ExternalDependenciesViewModel
