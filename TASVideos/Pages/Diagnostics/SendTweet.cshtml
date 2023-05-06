@@ -6,6 +6,7 @@
 <ul>
 	<li><a asp-page="Index">Diagnostics</a></li>
 </ul>
+<div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
 	<label asp-for="Text"></label>
 	<textarea asp-for="Text" rows="10" class="form-control" maxlength="280"></textarea>

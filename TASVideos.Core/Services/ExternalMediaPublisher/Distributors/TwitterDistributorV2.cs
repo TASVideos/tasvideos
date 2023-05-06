@@ -12,14 +12,14 @@ public class TwitterDistributorV2 : IPostDistributor
 	private static System.Timers.Timer? _timer = null;
 	private static readonly object TimeLock = new();
 
-	private readonly HttpClient _twitterClient;
-	private readonly HttpClient _accessTokenClient;
+	private readonly HttpClient _twitterClient = null!;
+	private readonly HttpClient _accessTokenClient = null!;
 	private readonly AppSettings.TwitterConnectionV2 _settings;
-	private readonly ILogger<TwitterDistributorV2> _logger;
+	private readonly ILogger<TwitterDistributorV2> _logger = null!;
 
 	private TwitterTokenDetails _twitterTokenDetails = new();
 
-	private readonly string _tokenStorageFileName;
+	private readonly string _tokenStorageFileName = null!;
 
 	private readonly TimeSpan _accessTokenDuration = new (1, 59, 30);  // Two hours minus thirty seconds.
 	private readonly TimeSpan _refreshTokenDuration = new (177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
@@ -30,6 +30,11 @@ public class TwitterDistributorV2 : IPostDistributor
 		ILogger<TwitterDistributorV2> logger)
 	{
 		_settings = appSettings.TwitterV2;
+		if (!_settings.IsEnabled())
+		{
+			return;
+		}
+		
 		_twitterClient = httpClientFactory.CreateClient(HttpClients.TwitterV2);
 		_accessTokenClient = httpClientFactory.CreateClient(HttpClients.TwitterAuth);
 		_logger = logger;

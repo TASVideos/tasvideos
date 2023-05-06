@@ -17,10 +17,8 @@ public class IrcDistributor : IPostDistributor
 		ILogger<IrcDistributor> logger)
 	{
 		_settings = settings.Irc;
-
-		if (string.IsNullOrWhiteSpace(settings.Irc.Password))
+		if (!_settings.IsEnabled())
 		{
-			logger.Log(LogLevel.Warning, "Irc bot password not provided. Bot initialization skipped");
 			return;
 		}
 
