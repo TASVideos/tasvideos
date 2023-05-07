@@ -238,8 +238,8 @@ public static class PublicationExtensions
 			{
 				"v" => query.OrderBy(p => p.CreateTimestamp),
 				"u" => query.OrderByDescending(p => p.CreateTimestamp),
-				"s" => query.OrderBy(p => p.Frames / p.SystemFrameRate!.FrameRate),
-				"l" => query.OrderByDescending(p => p.Frames / p.SystemFrameRate!.FrameRate),
+				"s" => query.OrderBy(p => p.Frames / (p.SystemFrameRate == null ? 60 : p.SystemFrameRate.FrameRate)),
+				"l" => query.OrderByDescending(p => p.Frames / (p.SystemFrameRate == null ? 60 : p.SystemFrameRate.FrameRate)),
 				_ => query
 					.OrderBy(p => p.System!.Code)
 					.ThenBy(p => p.Game!.DisplayName)
