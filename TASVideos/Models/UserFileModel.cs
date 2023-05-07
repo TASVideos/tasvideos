@@ -11,7 +11,6 @@ public class UserFileModel
 	public DateTime UploadTimestamp { get; set; }
 	public string Author { get; set; } = "";
 	public int AuthorUserFilesCount { get; set; }
-	public int Views { get; set; }
 	public int Downloads { get; set; }
 	public bool Hidden { get; set; }
 	public string? FileName { get; set; }

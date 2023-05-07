@@ -60,10 +60,6 @@ public class InfoModel : BasePageModel
 			}
 		}
 
-		file.Views++;
-
-		await _db.TrySaveChangesAsync();
-
 		return Page();
 	}
 

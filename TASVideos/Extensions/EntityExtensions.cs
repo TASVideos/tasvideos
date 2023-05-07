@@ -301,7 +301,6 @@ public static class EntityExtensions
 			UploadTimestamp = uf.UploadTimestamp,
 			Author = uf.Author!.UserName,
 			AuthorUserFilesCount = uf.Author!.UserFiles.Count(auf => !auf.Hidden),
-			Views = uf.Views,
 			Downloads = uf.Downloads,
 			Hidden = uf.Hidden,
 			FileName = uf.FileName,

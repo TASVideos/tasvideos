@@ -66,8 +66,6 @@ public class UserFile
 
 	public string? Warnings { get; set; }
 
-	public int Views { get; set; }
-
 	public int Downloads { get; set; }
 
 	public Compression CompressionType { get; set; }
