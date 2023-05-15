@@ -24,4 +24,6 @@ public class ForumWriterHelper : IWriterHelper
 	public async Task<string?> GetGameTitle(int id) => (await _db.Games.FirstOrDefaultAsync(s => s.Id == id))?.DisplayName;
 
 	public async Task<string?> GetGameGroupTitle(int id) => (await _db.GameGroups.FirstOrDefaultAsync(s => s.Id == id))?.Name;
+
+	public async Task<string?> GetTopicTitle(int id) => (await _db.ForumTopics.FirstOrDefaultAsync(s => s.Id == id))?.Title;
 }

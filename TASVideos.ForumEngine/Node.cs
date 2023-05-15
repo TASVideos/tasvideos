@@ -17,7 +17,7 @@ public interface IWriterHelper
 	Task<string?> GetGameTitle(int id);
 
 	/// <summary>
-	/// Get the title (name) of a game gruop.
+	/// Get the title (name) of a game group.
 	/// </summary>
 	/// <returns>`null` if not found</returns>
 	Task<string?> GetGameGroupTitle(int id);
@@ -33,6 +33,12 @@ public interface IWriterHelper
 	/// </summary>
 	/// <returns>`null` if not found</returns>
 	Task<string?> GetSubmissionTitle(int id);
+
+	/// <summary>
+	/// Get the title of a topic.
+	/// </summary>
+	/// <returns>`null` if not found</returns>
+	Task<string?> GetTopicTitle(int id);
 }
 
 public class NullWriterHelper : IWriterHelper
@@ -41,6 +47,7 @@ public class NullWriterHelper : IWriterHelper
 	public Task<string?> GetGameGroupTitle(int id) => Task.FromResult<string?>(null);
 	public Task<string?> GetMovieTitle(int id) => Task.FromResult<string?>(null);
 	public Task<string?> GetSubmissionTitle(int id) => Task.FromResult<string?>(null);
+	public Task<string?> GetTopicTitle(int id) => Task.FromResult<string?>(null);
 
 	private NullWriterHelper()
 	{
@@ -305,7 +312,11 @@ public class Element : INode
 				await WriteHref(w, h, s => "mailto:" + s, null);
 				break;
 			case "thread":
-				await WriteHref(w, h, s => "/Forum/Topics/" + s, async s => "Thread #" + s);
+				await WriteHref(
+					w,
+					h,
+					url => "/Forum/Topics/" + url,
+					async text => (int.TryParse(text, out var id) ? $"Thread #{text}: {await h.GetTopicTitle(id)}" : null) ?? "Thread #" + text);
 				break;
 			case "post":
 				await WriteHref(w, h, s => "/Forum/Posts/" + s, async s => "Post #" + s);

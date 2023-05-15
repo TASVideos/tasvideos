@@ -69,10 +69,12 @@ public class BbParserTests
 	}
 
 	[TestMethod]
-	public async Task Thread()
+	public async Task Thread_UsesTopicTitle()
 	{
+		const string topicTitle = "Discussion about Unit Testing";
+		_testWriterHelper.SetTopicTitle(topicTitle);
 		const string input = "[thread]23745[/thread]";
-		const string expected = "<a href=\"/Forum/Topics/23745\">Thread #23745</a>";
+		const string expected = $"<a href=\"/Forum/Topics/23745\">Thread #23745: {topicTitle}</a>";
 
 		var actual = await ParseBbcodeString(input);
 		Assert.AreEqual(expected, actual);
