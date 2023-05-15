@@ -7,12 +7,14 @@ namespace TASVideos.ForumEngineTests;
 [TestClass]
 public class BbParserTests
 {
-	private static async Task<string> ParseBbcodeString(string input)
+	private readonly TestWriterHelper _testWriterHelper = new();
+
+	private async Task<string> ParseBbcodeString(string input)
 	{
 		var elem = BbParser.Parse(input, false, true);
 		await using var writer = new StringWriter();
 		var htmlWriter = new HtmlWriter(writer);
-		await elem.WriteHtml(htmlWriter, new TestWriterHelper());
+		await elem.WriteHtml(htmlWriter, _testWriterHelper);
 		return writer.ToString();
 	}
 
@@ -61,6 +63,64 @@ public class BbParserTests
 	{
 		const string input = "[wiki]ArticleIndex[/wiki]";
 		const string expected = "<a href=\"/ArticleIndex\">Wiki: ArticleIndex</a>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task Thread()
+	{
+		const string input = "[thread]23745[/thread]";
+		const string expected = "<a href=\"/Forum/Topics/23745\">Thread #23745</a>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task Submission_UsesSubmissionTitle()
+	{
+		const string submission1Title = "Test Sub in 0:04:20.00";
+		_testWriterHelper.SetSubmissionTitle(submission1Title);
+		const string input = "[submission]1[/submission]";
+		const string expected = $"<a href=\"/1S\">{submission1Title}</a>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task Movie_UsesPublicationTitle()
+	{
+		const string publication1Title = "Test Pub in 0:04:20.00";
+		_testWriterHelper.SetPublicationTitle(publication1Title);
+		const string input = "[movie]1[/movie]";
+		const string expected = $"<a href=\"/1M\">{publication1Title}</a>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task Game_UsesGameTitle()
+	{
+		const string gameTitle = "Test Game";
+		_testWriterHelper.SetGameTitle(gameTitle);
+		const string input = "[game]1[/game]";
+		const string expected = $"<a href=\"/1G\">{gameTitle}</a>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task GameGroup_UsesGameGroupTitle()
+	{
+		const string gameGroupTitle = "Test Game Group";
+		_testWriterHelper.SetGameGroupTitle(gameGroupTitle);
+		const string input = "[gamegroup]1[/gamegroup]";
+		const string expected = $"<a href=\"/GameGroups/1\">{gameGroupTitle}</a>";
 
 		var actual = await ParseBbcodeString(input);
 		Assert.AreEqual(expected, actual);
