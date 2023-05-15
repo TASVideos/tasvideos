@@ -296,7 +296,7 @@ internal class ForumService : IForumService
 								.Where(fffr => fffr.PostEditedTimestamp != null && fffr.PostEditedTimestamp > minimumDate)
 								.ToDictionary(
 									tttkey => tttkey.Id,
-									tttvalue => ((DateTime)tttvalue.PostEditedTimestamp).UnixTimestamp()))
+									tttvalue => ((DateTime)tttvalue.PostEditedTimestamp!).UnixTimestamp()))
 						)));
 
 		_cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDayInSeconds);
@@ -344,7 +344,7 @@ internal class ForumService : IForumService
 						.Where(ffr => ffr.PostEditedTimestamp != null && ffr.PostEditedTimestamp > minimumDate)
 						.ToDictionary(
 							ttkey => ttkey.Id,
-							ttvalue => ((DateTime)ttvalue.PostEditedTimestamp).UnixTimestamp()))
+							ttvalue => ((DateTime)ttvalue.PostEditedTimestamp!).UnixTimestamp()))
 				));
 
 		_cacheService.Set(PostActivityOfSubforumsCacheKey, subforumActivity, Durations.OneDayInSeconds);
