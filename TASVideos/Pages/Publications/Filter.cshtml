@@ -4,9 +4,10 @@
 	ViewData.SetTitle("Tool-assisted movies filter");
 	var sortItems = UiDefaults.DefaultEntry.Concat(new List<SelectListItem>
 	{
-		
 		new() { Text = "Newest to Oldest", Value = "U" },
 		new() { Text = "Oldest to Newest", Value = "V" },
+		new() { Text = "Shortest to Longest", Value = "S" },
+		new() { Text = "Longest to Shortest", Value = "L" },
 		new() { Text = "Highest Rating", Value = "Y" }
 	});
 }
