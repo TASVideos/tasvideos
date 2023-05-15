@@ -174,7 +174,7 @@ internal class ForumService : IForumService
 		{
 			TopicId = topic.Id,
 			Question = pollDto.Question ?? "",
-			CloseDate = pollDto.DaysOpen.HasValue
+			CloseDate = pollDto.DaysOpen > 0
 				? DateTime.UtcNow.AddDays(pollDto.DaysOpen.Value)
 				: null,
 			MultiSelect = pollDto.MultiSelect,
