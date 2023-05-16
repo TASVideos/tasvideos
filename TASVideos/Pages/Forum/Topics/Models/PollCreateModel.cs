@@ -26,4 +26,8 @@ public class PollCreateModel
 	public bool OptionsAreValid =>
 		PollOptions.Count(o => !string.IsNullOrWhiteSpace(o)) > 1
 		&& PollOptions.All(o => o.Length <= 250);
+
+	public bool HasAnyField => !string.IsNullOrWhiteSpace(Question)
+		|| DaysOpen.HasValue
+		|| PollOptions.Any(o => !string.IsNullOrWhiteSpace(o));
 }

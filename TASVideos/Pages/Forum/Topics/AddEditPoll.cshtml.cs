@@ -76,14 +76,19 @@ public class AddEditPollModel : BaseForumModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (!ModelState.IsValid)
+		if (string.IsNullOrEmpty(Poll.Question))
 		{
-			return Page();
+			ModelState.AddModelError($"{nameof(Poll.Question)}", "The Question field is required.");
 		}
 
 		if (!Poll.OptionsAreValid)
 		{
 			ModelState.AddModelError($"{nameof(Poll.PollOptions)}", "Invalid poll options");
+			return Page();
+		}
+
+		if (!ModelState.IsValid)
+		{
 			return Page();
 		}
 

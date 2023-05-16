@@ -37,6 +37,9 @@ public class CreateModel : BaseForumModel
 	public TopicCreateModel Topic { get; set; } = new();
 
 	[BindProperty]
+	public PollCreateModel Poll { get; set; } = new();
+
+	[BindProperty]
 	[DisplayName("Watch Topic for Replies")]
 	public bool WatchTopic { get; set; } = true;
 
@@ -79,8 +82,22 @@ public class CreateModel : BaseForumModel
 		return Page();
 	}
 
-	public async Task<IActionResult> OnPost(PollCreateModel poll)
+	public async Task<IActionResult> OnPost()
 	{
+		if (Poll.HasAnyField)
+		{
+			if (string.IsNullOrEmpty(Poll.Question))
+			{
+				ModelState.AddModelError($"{nameof(Poll.Question)}", "The Question field is required.");
+			}
+
+			if (!Poll.OptionsAreValid)
+			{
+				ModelState.AddModelError($"{nameof(Poll.PollOptions)}", "Invalid poll options");
+				return Page();
+			}
+		}
+
 		if (!ModelState.IsValid)
 		{
 			UserAvatars = await _forumService.UserAvatars(User.GetUserId());
@@ -124,11 +141,11 @@ public class CreateModel : BaseForumModel
 			IpAddress,
 			WatchTopic));
 
-		if (User.Has(PermissionTo.CreateForumPolls) && poll.IsValid)
+		if (User.Has(PermissionTo.CreateForumPolls) && Poll.IsValid)
 		{
 			await _forumService.CreatePoll(
 				topic,
-				new PollCreateDto(poll.Question, poll.DaysOpen, poll.MultiSelect, poll.PollOptions));
+				new PollCreateDto(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
 		}
 
 		await _publisher.SendForum(
