@@ -41,7 +41,7 @@ public class FieldSelectableTests
 	[TestMethod]
 	public void FieldSelectable_Single_DoubleSelect_ReturnsDouble()
 	{
-		string fields = $"{nameof(TestClass.StringValue)},{nameof(TestClass.Int)}";
+		const string fields = $"{nameof(TestClass.StringValue)},{nameof(TestClass.Int)}";
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(fields);
 		var dic = (IDictionary<string, object?>)actual;
@@ -55,7 +55,7 @@ public class FieldSelectableTests
 	[TestMethod]
 	public void FieldSelectable_Single_DoubleSelect_CanHaveSpaces_ReturnsDouble()
 	{
-		string fields = $" {nameof(TestClass.StringValue)} , {nameof(TestClass.Int)} ";
+		const string fields = $" {nameof(TestClass.StringValue)} , {nameof(TestClass.Int)} ";
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(fields);
 		var dic = (IDictionary<string, object?>)actual;

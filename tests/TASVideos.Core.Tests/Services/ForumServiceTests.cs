@@ -31,8 +31,8 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetPostPosition_UnableToSeeRestrictedPost_ReturnsNull()
 	{
-		int forumId = 1;
-		int topicId = 1;
+		const int forumId = 1;
+		const int topicId = 1;
 		var forum = new Forum { Id = forumId, Restricted = true };
 		_db.Forums.Add(forum);
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forumId });
@@ -46,8 +46,8 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetPostPosition_ValidPost_ReturnsPosition()
 	{
-		int forumId = 1;
-		int topicId = 1;
+		const int forumId = 1;
+		const int topicId = 1;
 		var forum = new Forum { Id = forumId, Restricted = false };
 		_db.Forums.Add(forum);
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forumId });
@@ -63,11 +63,11 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetAllLatestPosts_SinglePost()
 	{
-		int posterId = 1;
-		string posterName = "Test";
-		int forumId = 1;
-		int topicId = 2;
-		int postId = 3;
+		const int posterId = 1;
+		const string posterName = "Test";
+		const int forumId = 1;
+		const int topicId = 2;
+		const int postId = 3;
 		DateTime postDate = DateTime.UtcNow;
 		_db.Users.Add(new User { Id = posterId, UserName = posterName });
 		_db.Forums.Add(new Forum { Id = forumId });
@@ -98,15 +98,15 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetAllLatestPosts_MultiplePost_GetsLatest()
 	{
-		int poster1Id = 1;
-		string poster1Name = "Test";
-		int poster2Id = 10;
-		string poster2Name = "Test2";
+		const int poster1Id = 1;
+		const string poster1Name = "Test";
+		const int poster2Id = 10;
+		const string poster2Name = "Test2";
 
-		int forumId = 1;
-		int topicId = 2;
-		int post1Id = 3;
-		int post2Id = 4;
+		const int forumId = 1;
+		const int topicId = 2;
+		const int post1Id = 3;
+		const int post2Id = 4;
 		DateTime post1Date = DateTime.UtcNow.AddDays(-2);
 		DateTime post2Date = DateTime.UtcNow.AddDays(-1);
 		_db.Users.Add(new User { Id = poster1Id, UserName = poster1Name });
@@ -150,9 +150,9 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetAllLatestPosts_NoPosts_ReturnsNull()
 	{
-		int posterId = 1;
-		string posterName = "Test";
-		int forumId = 1;
+		const int posterId = 1;
+		const string posterName = "Test";
+		const int forumId = 1;
 		_db.Users.Add(new User { Id = posterId, UserName = posterName });
 		_db.Forums.Add(new Forum { Id = forumId });
 		await _db.SaveChangesAsync();
@@ -176,20 +176,20 @@ public class ForumServiceTests
 	[TestMethod]
 	public void CacheLatestPost_UpdatesCache()
 	{
-		int forumId = 1;
-		int topicId = 1;
-		int oldPostId = 1;
+		const int forumId = 1;
+		const int topicId = 1;
+		const int oldPostId = 1;
 		DateTime oldPostTime = DateTime.UtcNow.AddDays(-1);
-		string oldPoster = "OldPoster";
+		const string oldPoster = "OldPoster";
 		var mapping = new Dictionary<int, LatestPost?>
 		{
 			[forumId] = new(oldPostId, oldPostTime, oldPoster)
 		};
 		_cache.Set(ForumService.LatestPostCacheKey, mapping);
 
-		int newPostId = 2;
+		const int newPostId = 2;
 		DateTime newPostTime = DateTime.UtcNow;
-		string newPoster = "NewPoster";
+		const string newPoster = "NewPoster";
 
 		_forumService.CacheLatestPost(forumId, topicId, new LatestPost(newPostId, newPostTime, newPoster));
 
@@ -217,17 +217,17 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task CreatePoll_AddsPollToTopic()
 	{
-		int topicId = 2;
+		const int topicId = 2;
 		var topic = new ForumTopic { Id = topicId };
 		_db.ForumTopics.Add(topic);
 		await _db.SaveChangesAsync();
 
-		string question = "Is this a question?";
-		int daysOpen = 5;
-		bool multiSelect = false;
-		var option1 = "1";
-		var option2 = "2";
-		var option3 = "3";
+		const string question = "Is this a question?";
+		const int daysOpen = 5;
+		const bool multiSelect = false;
+		const string option1 = "1";
+		const string option2 = "2";
+		const string option3 = "3";
 		var options = new List<string> { option1, option2, option3 };
 		var poll = new PollCreateDto(question, daysOpen, multiSelect, options);
 
@@ -253,15 +253,15 @@ public class ForumServiceTests
 	public async Task CreatePostWithNoWatch_CreatesPost()
 	{
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
-		int forumId = 1;
-		int topicId = 2;
-		string subject = "Test Subject";
-		string postText = "This is a post";
-		int posterId = 3;
-		string posterName = "Test User";
-		var mood = ForumPostMood.Normal;
-		string ipAddress = "8.8.8.8";
-		bool watchTopic = false;
+		const int forumId = 1;
+		const int topicId = 2;
+		const string subject = "Test Subject";
+		const string postText = "This is a post";
+		const int posterId = 3;
+		const string posterName = "Test User";
+		const ForumPostMood mood = ForumPostMood.Normal;
+		const string ipAddress = "8.8.8.8";
+		const bool watchTopic = false;
 		var dto = new PostCreateDto(
 			forumId,
 			topicId,
@@ -304,15 +304,15 @@ public class ForumServiceTests
 	public async Task CreatePostWithWatch_CreatesPost()
 	{
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
-		int forumId = 1;
-		int topicId = 2;
-		string subject = "Test Subject";
-		string postText = "This is a post";
-		int posterId = 3;
-		string posterName = "Test User";
-		var mood = ForumPostMood.Normal;
-		string ipAddress = "8.8.8.8";
-		bool watchTopic = true;
+		const int forumId = 1;
+		const int topicId = 2;
+		const string subject = "Test Subject";
+		const string postText = "This is a post";
+		const int posterId = 3;
+		const string posterName = "Test User";
+		const ForumPostMood mood = ForumPostMood.Normal;
+		const string ipAddress = "8.8.8.8";
+		const bool watchTopic = true;
 		var dto = new PostCreateDto(
 			forumId,
 			topicId,

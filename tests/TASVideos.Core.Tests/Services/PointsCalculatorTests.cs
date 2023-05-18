@@ -49,7 +49,7 @@ public class PointsCalculatorTests
 			}
 		};
 
-		var roundedExpected = 18.3;
+		const double roundedExpected = 18.3;
 		var actual = PointsCalculator.PlayerPoints(publications, AverageRatingsPerMovie);
 		var roundedActual = Math.Round(actual, 1); // Close enough
 		Assert.AreEqual(roundedExpected, roundedActual);
@@ -70,7 +70,7 @@ public class PointsCalculatorTests
 			}
 		};
 
-		var expected = PlayerPointConstants.MinimumPlayerPointsForPublication;
+		const int expected = PlayerPointConstants.MinimumPlayerPointsForPublication;
 		var actual = PointsCalculator.PlayerPoints(publications, AverageRatingsPerMovie);
 		Assert.AreEqual(expected, actual);
 	}

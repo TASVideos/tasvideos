@@ -37,7 +37,7 @@ public class PointsServiceTests
 	[TestMethod]
 	public async Task PlayerPoints_NoRatings_MinimumPointsReturned()
 	{
-		int numMovies = 2;
+		const int numMovies = 2;
 
 		_db.Users.Add(Player);
 		var publicationClass = new PublicationClass { Weight = 1, Name = "Test" };
@@ -62,7 +62,7 @@ public class PointsServiceTests
 		await _db.SaveChangesAsync();
 
 		var (actual, _) = await _pointsService.PlayerPoints(user.Id);
-		int expected = numMovies * PlayerPointConstants.MinimumPlayerPointsForPublication;
+		const int expected = numMovies * PlayerPointConstants.MinimumPlayerPointsForPublication;
 		Assert.AreEqual(expected, actual);
 	}
 }

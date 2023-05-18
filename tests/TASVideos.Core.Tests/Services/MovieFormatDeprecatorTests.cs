@@ -133,7 +133,7 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task IsDeprecated_ReturnsFalse_IfFalseEntry()
 	{
-		string ext = "test";
+		const string ext = "test";
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = ext,
@@ -148,7 +148,7 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task IsDeprecated_ReturnsTrue_IfTrueEntry()
 	{
-		string ext = "test";
+		const string ext = "test";
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = ext,

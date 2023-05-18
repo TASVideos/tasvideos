@@ -16,7 +16,7 @@ public class ReflectionExtensionTests
 	[TestMethod]
 	public void Description_ReturnsDescription()
 	{
-		TestEnum e = TestEnum.Zero;
+		const TestEnum e = TestEnum.Zero;
 		var actual = e.Description();
 		Assert.AreEqual("00", actual);
 	}
@@ -24,7 +24,7 @@ public class ReflectionExtensionTests
 	[TestMethod]
 	public void Description_DisplayReturnsDisplayDescription()
 	{
-		TestEnum e = TestEnum.One;
+		const TestEnum e = TestEnum.One;
 		var actual = e.Description();
 		Assert.AreEqual("01", actual);
 	}
@@ -32,7 +32,7 @@ public class ReflectionExtensionTests
 	[TestMethod]
 	public void Description_Display_NoAttributes_ReturnsName()
 	{
-		TestEnum e = TestEnum.Two;
+		const TestEnum e = TestEnum.Two;
 		var actual = e.Description();
 		Assert.AreEqual("", actual);
 	}
@@ -48,7 +48,7 @@ public class ReflectionExtensionTests
 	[TestMethod]
 	public void EnumDisplayName_DisplayReturnDisplay()
 	{
-		TestEnum e = TestEnum.One;
+		const TestEnum e = TestEnum.One;
 		var actual = e.EnumDisplayName();
 		Assert.AreEqual("The One", actual);
 	}
@@ -56,7 +56,7 @@ public class ReflectionExtensionTests
 	[TestMethod]
 	public void EnumDisplayName_NoAttribute_ReturnsToString()
 	{
-		TestEnum e = TestEnum.Two;
+		const TestEnum e = TestEnum.Two;
 		var actual = e.EnumDisplayName();
 		Assert.AreEqual("Two", actual);
 	}

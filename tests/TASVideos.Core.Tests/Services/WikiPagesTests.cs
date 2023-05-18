@@ -23,7 +23,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Exists_PageExists_ReturnsTrue()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Exists(existingPage);
@@ -35,7 +35,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Exists_PageDoesNotExist_ReturnsFalse()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Exists("DoesNotExist");
@@ -45,7 +45,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Exists_OnlyDeletedExists_IncludeDeleted_ReturnsTrue()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Exists(existingPage, includeDeleted: true);
@@ -56,7 +56,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Exists_OnlyDeletedExists_DoNotIncludeDeleted_ReturnFalse()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Exists(existingPage);
@@ -77,7 +77,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Exists_TrailingSlash_StillReturnsTrue()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Exists("/" + existingPage + "/");
@@ -93,7 +93,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_PageExists_ReturnsPage()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Page(existingPage);
@@ -106,7 +106,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_CaseInsensitive_CachesCorrectPage()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage, cache: true);
 
 		var actual = await _wikiPages.Page(existingPage.ToUpper());
@@ -119,7 +119,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_PageDoesNotExist_ReturnsNull()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Page("DoesNotExist");
@@ -129,7 +129,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_PreviousRevision_ReturnsPage()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		_db.WikiPages.Add(new WikiPage { PageName = existingPage, Markup = "", Revision = 1, ChildId = 2 });
 		_db.WikiPages.Add(new WikiPage { PageName = existingPage, Markup = "", Revision = 2, ChildId = null });
 		await _db.SaveChangesAsync();
@@ -141,7 +141,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_OnlyDeletedExists_ReturnsNull()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Page(existingPage);
@@ -152,7 +152,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_TrimsTrailingSlashes()
 	{
-		string existingPage = "Exists";
+		const string existingPage = "Exists";
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Page("/" + existingPage + "/");
@@ -163,7 +163,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_LatestRevisionIsDeleted_PreviousConsideredCurrent()
 	{
-		string pageName = "Page";
+		const string pageName = "Page";
 		var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Author = new User() };
 		var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null };
 		_db.WikiPages.Add(revision1);
@@ -181,7 +181,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Page_LatestTwoRevisionsDeleted_PreviousConsideredCurrent()
 	{
-		string pageName = "Page";
+		const string pageName = "Page";
 		var revision1 = new WikiPage { PageName = pageName, Revision = 1, IsDeleted = false, ChildId = null, Author = new User() };
 		var revision2 = new WikiPage { PageName = pageName, Revision = 2, IsDeleted = true, ChildId = null };
 		var revision3 = new WikiPage { PageName = pageName, Revision = 3, IsDeleted = true, ChildId = null };
@@ -202,7 +202,7 @@ public class WikiPagesTests
 	public async Task Page_MultipleCurrent_PickMostRecent()
 	{
 		// This scenario should never happen, but if it does, we want to get the latest revision
-		string page = "Duplicate";
+		const string page = "Duplicate";
 		_db.WikiPages.Add(new WikiPage { PageName = page, Revision = 1, IsDeleted = false, ChildId = null });
 		_db.WikiPages.Add(new WikiPage { PageName = page, Revision = 2, IsDeleted = false, ChildId = null });
 		await _db.SaveChangesAsync();
@@ -566,7 +566,7 @@ public class WikiPagesTests
 	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task Move_DestinationExists_Throws()
 	{
-		string existingPage = "InCache";
+		const string existingPage = "InCache";
 		AddPage(existingPage);
 		await _wikiPages.Move("Original Page", existingPage);
 	}
@@ -640,7 +640,7 @@ public class WikiPagesTests
 		await _db.SaveChangesAsync();
 		_cache.Set(origPageName, origPage.ToWikiResult());
 
-		string destPageName = "Dest";
+		const string destPageName = "Dest";
 
 		_db.CreateUpdateConflict();
 
@@ -670,7 +670,7 @@ public class WikiPagesTests
 		await _db.SaveChangesAsync();
 		_cache.Set(origPageName, origPage.ToWikiResult());
 
-		string destPageName = "Dest";
+		const string destPageName = "Dest";
 
 		_db.CreateConcurrentUpdateConflict();
 
@@ -749,7 +749,7 @@ public class WikiPagesTests
 		const string newPageName = "NewPageName";
 		const string subPage = "Sub";
 		const string link = "AnotherPage";
-		string newSubPage = $"{newPageName}/{subPage}";
+		const string newSubPage = $"{newPageName}/{subPage}";
 		var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]", Author = entry.Entity, AuthorId = entry.Entity.Id };
 		var existingSubPage = new WikiPage { PageName = $"{existingPageName}/{subPage}", Author = entry.Entity, AuthorId = entry.Entity.Id };
 		_db.WikiPages.Add(existingPage);
@@ -780,8 +780,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeletePage_PageDoesNotExist_NothingHappens()
 	{
-		string doesNotExist = "DoesNotExist";
-		await _wikiPages.Delete(doesNotExist);
+		await _wikiPages.Delete("DoesNotExist");
 
 		Assert.AreEqual(0, _db.WikiPages.Count());
 		Assert.AreEqual(0, _cache.PageCache().Count);
@@ -911,7 +910,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeleteRevision_DoesNotExist_NothingHappens()
 	{
-		string pageName = "Exists";
+		const string pageName = "Exists";
 		AddPage(pageName, cache: true);
 
 		await _wikiPages.Delete(pageName, int.MaxValue);
@@ -923,7 +922,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task DeleteRevision_AlreadyDeleted_NothingHappens()
 	{
-		string pageName = "Exists";
+		const string pageName = "Exists";
 		AddPage(pageName, isDeleted: true);
 
 		await _wikiPages.Delete(pageName, 1);
@@ -1135,7 +1134,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Undelete_ExistingPageThatIsNotDeleted_NothingHappens()
 	{
-		string pageName = "Exists";
+		const string pageName = "Exists";
 		AddPage(pageName, isDeleted: false, cache: true);
 
 		var actual = await _wikiPages.Undelete(pageName);
@@ -1368,8 +1367,8 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task SystemPage_Exists_ReturnsPage()
 	{
-		var suffix = "Exists";
-		var systemPageName = "System/" + suffix;
+		const string suffix = "Exists";
+		const string systemPageName = "System/" + suffix;
 		var page = new WikiPage { PageName = systemPageName };
 		_db.WikiPages.Add(page);
 		await _db.SaveChangesAsync();
@@ -1382,8 +1381,8 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task SystemPage_DoesNotExists_ReturnsNull()
 	{
-		var suffix = "Exists";
-		var systemPageName = "System/" + suffix;
+		const string suffix = "Exists";
+		const string systemPageName = "System/" + suffix;
 		var page = new WikiPage { PageName = systemPageName };
 		_db.WikiPages.Add(page);
 		await _db.SaveChangesAsync();
@@ -1429,8 +1428,8 @@ public class WikiPagesTests
 	public async Task Orphans_NoOrphans_ReturnsEmptyList()
 	{
 		// Two pages, that properly link each other
-		string parent = "Parent";
-		string child = "Child";
+		const string parent = "Parent";
+		const string child = "Child";
 		AddPage(parent);
 		AddPage(child);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = parent, Referral = child });
@@ -1446,7 +1445,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Orphans_PageWithNoReferrers_ReturnsAsOrphan()
 	{
-		string orphan = "Orphan";
+		const string orphan = "Orphan";
 		AddPage(orphan);
 
 		var actual = await _wikiPages.Orphans();
@@ -1460,7 +1459,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Orphans_ReferrersExistButNotForPage_ReturnsAsOrphan()
 	{
-		string orphan = "Orphan";
+		const string orphan = "Orphan";
 		AddPage(orphan);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = "Parent", Referral = "Not" + orphan });
 		await _db.SaveChangesAsync();
@@ -1476,7 +1475,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task Orphans_Subpages_NotConsideredOrphans()
 	{
-		string parent = "Parent";
+		const string parent = "Parent";
 		AddPage(parent);
 		AddPage(parent + "/Child");
 
@@ -1528,7 +1527,7 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task BrokenLinks_NoBrokenLinks_ReturnsEmptyList()
 	{
-		string page = "Parent";
+		const string page = "Parent";
 		AddPage(page);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referral = "Parent", Referrer = "AnotherPage" });
 		await _db.SaveChangesAsync();
@@ -1542,8 +1541,8 @@ public class WikiPagesTests
 	[TestMethod]
 	public async Task BrokenLinks_BrokenLink_ReturnsBrokenLink()
 	{
-		string page = "PageWithLink";
-		string doesNotExist = "DoesNotExist";
+		const string page = "PageWithLink";
+		const string doesNotExist = "DoesNotExist";
 		AddPage(page);
 		_db.WikiReferrals.Add(new WikiPageReferral
 		{

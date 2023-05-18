@@ -66,7 +66,7 @@ public class LanguagesTests
 	[TestMethod]
 	public async Task AvailableLanguages_JunkMarkup_ReturnsJunk()
 	{
-		var junk = "RandomText";
+		const string junk = "RandomText";
 		_wikiPages
 			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
 			.ReturnsAsync(new WikiResult { Markup = junk });
@@ -97,7 +97,7 @@ public class LanguagesTests
 	[TestMethod]
 	public async Task AvailableLanguages_IgnoresTrailingDelimitersAndWhiteSpace()
 	{
-		var systemLanguageMarkup = @"
+		const string systemLanguageMarkup = @"
 				FR : French : ,
 				ES : Español , : ";
 		_wikiPages

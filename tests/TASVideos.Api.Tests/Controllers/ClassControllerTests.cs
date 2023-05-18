@@ -82,7 +82,7 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task Create_Success_Returns201()
 	{
-		int createdId = 1;
+		const int createdId = 1;
 		_mockClassService
 			.Setup(m => m.Add(It.IsAny<PublicationClass>()))
 			.ReturnsAsync((createdId, ClassEditResult.Success));

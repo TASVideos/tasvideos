@@ -159,7 +159,7 @@ public class ClassServiceTests
 	[TestMethod]
 	public async Task Edit_NotFound_DoesNotFlushCache()
 	{
-		var id = 1;
+		const int id = 1;
 		_db.PublicationClasses.Add(new PublicationClass { Id = id });
 		await _db.SaveChangesAsync();
 		_cache.Set(ClassService.ClassesKey, new object());

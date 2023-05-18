@@ -90,9 +90,9 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task NotifyNewPost_NotifiesOtherUsers()
 	{
-		int watcher = 1;
-		int poster = 2;
-		string posterEmail = "a@b.com";
+		const int watcher = 1;
+		const int poster = 2;
+		const string posterEmail = "a@b.com";
 		_db.Users.Add(new User { Id = watcher, Email = posterEmail });
 		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
@@ -118,9 +118,9 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task NotifyNewPost_WhenNotified_IsNotified_IsFalse()
 	{
-		int watcher = 1;
-		int poster = 2;
-		string posterEmail = "a@b.com";
+		const int watcher = 1;
+		const int poster = 2;
+		const string posterEmail = "a@b.com";
 		_db.Users.Add(new User { Id = watcher, Email = posterEmail });
 		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
@@ -144,8 +144,8 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task MarkSeen_IsNotifiedFalse()
 	{
-		int userId = 1;
-		int topicId = 1;
+		const int userId = 1;
+		const int topicId = 1;
 		_db.Users.Add(new User { Id = userId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
@@ -165,8 +165,8 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task WatchTopic_AddsWatch_IfNoneExist()
 	{
-		int userId = 1;
-		int topicId = 1;
+		const int userId = 1;
+		const int topicId = 1;
 		_db.Users.Add(new User { Id = userId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		await _db.SaveChangesAsync();
@@ -181,8 +181,8 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task WatchTopic_DoesNotAdd_IfAlreadyExists()
 	{
-		int userId = 1;
-		int topicId = 1;
+		const int userId = 1;
+		const int topicId = 1;
 		_db.Users.Add(new User { Id = userId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
@@ -197,8 +197,8 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task WatchTopic_DoesNotAddRestricted_IfUserCanNotSeeRestricted()
 	{
-		int userId = 1;
-		int topicId = 1;
+		const int userId = 1;
+		const int topicId = 1;
 		_db.Users.Add(new User { Id = userId });
 		var forum = new Forum { Id = 1, Restricted = true };
 		_db.Forums.Add(forum);
@@ -213,8 +213,8 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task UnwatchTopic_RemovesTopic()
 	{
-		int userId = 1;
-		int topicId = 1;
+		const int userId = 1;
+		const int topicId = 1;
 		_db.Users.Add(new User { Id = userId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
@@ -228,9 +228,9 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task UnwatchAllTopics_RemovesAllTopics()
 	{
-		int userId = 1;
-		int topic1Id = 1;
-		int topic2Id = 2;
+		const int userId = 1;
+		const int topic1Id = 1;
+		const int topic2Id = 2;
 		_db.Users.Add(new User { Id = userId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topic1Id });
 		_db.ForumTopics.Add(new ForumTopic { Id = topic2Id });

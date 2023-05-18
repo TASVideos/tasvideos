@@ -37,9 +37,9 @@ public class InternalWikiLink
 	[TestMethod]
 	public void GetReferrals_Anchors_AreNotReturned()
 	{
-		var link = "MovieRules";
-		var anchor = "#GameChoice";
-		var content = $"[{link}{anchor}]";
+		const string link = "MovieRules";
+		const string anchor = "#GameChoice";
+		const string content = $"[{link}{anchor}]";
 
 		var actual = Util.GetReferrals(content);
 
@@ -54,7 +54,7 @@ public class InternalWikiLink
 	{
 		// Creates an implicit link to itself that is anchored
 		// This is not considered a referral
-		var content = "[#GameChoice]";
+		const string content = "[#GameChoice]";
 
 		var actual = Util.GetReferrals(content);
 		Assert.IsNotNull(actual);
@@ -72,8 +72,8 @@ public class InternalWikiLink
 	[TestMethod]
 	public void GetReferrals_MultipleLinks_ReturnsAllLinks()
 	{
-		string link1 = "Link1";
-		string link2 = "Link2";
+		const string link1 = "Link1";
+		const string link2 = "Link2";
 
 		var actual = Util.GetReferrals($"[{link1}] [{link2}]");
 

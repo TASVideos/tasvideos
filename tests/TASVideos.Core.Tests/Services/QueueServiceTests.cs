@@ -426,8 +426,8 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task CanUnpublish_CannotUnpublishWithAwards()
 	{
-		int publicationId = 1;
-		int awardId = 2;
+		const int publicationId = 1;
+		const int awardId = 2;
 		_db.Publications.Add(new Publication { Id = publicationId });
 		_db.PublicationAwards.Add(new PublicationAward { PublicationId = publicationId, AwardId = awardId });
 		await _db.SaveChangesAsync();
@@ -467,8 +467,8 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task Unpublish_CannotUnpublishWithAwards()
 	{
-		int publicationId = 1;
-		int awardId = 2;
+		const int publicationId = 1;
+		const int awardId = 2;
 		_db.Publications.Add(new Publication
 		{
 			Id = publicationId,
@@ -736,10 +736,10 @@ public class QueueServiceTests
 	public async Task ObsoleteWith_Success()
 	{
 		_youtubeSync.Setup(m => m.IsYoutubeUrl(It.IsAny<string>())).Returns(true);
-		int pubToObsolete = 1;
-		int obsoletingPub = 2;
-		string youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
-		string wikiMarkup = "Test";
+		const int pubToObsolete = 1;
+		const int obsoletingPub = 2;
+		const string youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+		const string wikiMarkup = "Test";
 		_db.Publications.Add(new Publication
 		{
 			Id = pubToObsolete,

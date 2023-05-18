@@ -81,7 +81,7 @@ public class PagedTests
 	[TestMethod]
 	public void Paged_AdditionalProperties_StringParameter()
 	{
-		var filterVal = "Test";
+		const string filterVal = "Test";
 		var paged = new TestPagedModel(1, 1, 1)
 		{
 			StringFilter = filterVal

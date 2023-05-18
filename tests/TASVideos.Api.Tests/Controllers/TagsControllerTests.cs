@@ -60,7 +60,7 @@ public sealed class TagsControllerTests : IDisposable
 	[TestMethod]
 	public async Task Create_Success_Returns201()
 	{
-		int createdId = 1;
+		const int createdId = 1;
 		_mockTagService
 			.Setup(m => m.Add(It.IsAny<string>(), It.IsAny<string>()))
 			.ReturnsAsync((createdId, TagEditResult.Success));

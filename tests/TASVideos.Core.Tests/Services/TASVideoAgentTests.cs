@@ -100,8 +100,8 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionPublished_TopicCreated()
 	{
-		var topicId = 1;
-		var forumId = 1;
+		const int topicId = 1;
+		const int forumId = 1;
 		var topic = _db.ForumTopics.Add(new ForumTopic
 		{
 			Id = topicId,
