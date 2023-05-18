@@ -21,7 +21,7 @@ internal class UserMaintenanceLogger : IUserMaintenanceLogger
 	{
 		editorId ??= SiteGlobalConstants.TASVideoAgentId;
 
-		_db.UserMaintenanceLogs.Add(new UserMaintenanceLog()
+		_db.UserMaintenanceLogs.Add(new UserMaintenanceLog
 		{
 			UserId = userId,
 			EditorId = editorId,

@@ -1,0 +1,52 @@
+﻿@page "{id}"
+@model NukeModel
+@{
+	ViewData.SetTitle($"Anonymizing User: {Model.Profile.UserName}");
+}
+<danger-alert>
+	<p>Welcome to the danger zone! This will anonymize this account</p>
+	<p>This is intended for GDPR and other privacy removal regulations<br />This action cannot be undone!!</p>
+</danger-alert>
+The follow actions will occur:
+<ul>
+	<li>The username and email will be changed to the below values</li>
+	<li>The password will be set to null</li>
+	<li>From, Last Logged in, Avatars, and Signature profile fields will be set to null</li>
+	<li>Joined date will be set to Unix 0 (Jan 1 1970)</li>
+	<li>All Roles will be removed</li>
+	<li>All Ip addresses stored in the database for this user will be set to null</li>
+	<li>User maintenance logs for this user will be deleted (a new record will be added simply saying that the account was anonymized)</li>
+	<li>All publication and submission titles will be updated to reflect the new username</li>
+</ul>
+
+Important manual steps to take before this action
+<ul>
+	<li>Approval of the request from the user</li>
+	<li>Confirm the user is who they claim to be</li>
+	<li>Search for user homepages and rename them, and/or update data accordingly (consider edit history as well</li>
+</ul>
+<form method="post">
+	<row>
+		<column md="6">
+			<form-group>
+				<label asp-for="Profile.UserName"></label>
+				<input readonly asp-for="Profile.UserName" class="form-control" />
+			</form-group>
+		</column>
+		<column md="6">
+			<form-group>
+				<label asp-for="Profile.AnonymousUserName"></label>
+				<input readonly asp-for="Profile.AnonymousUserName" class="form-control" />
+			</form-group>
+			<form-group>
+				<label asp-for="Profile.AnonymousEmail"></label>
+				<input readonly asp-for="Profile.AnonymousEmail" class="form-control" />
+			</form-group>
+		</column>
+	</row>
+	<hr/>
+	<div class="text-center">
+		<button id="submit-btn" type="submit" class="btn btn-danger"><i class="fa fa-trash-can"></i> Anonymize</button>
+		<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>

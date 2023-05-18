@@ -5,6 +5,10 @@
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form asp-route="Edit">
+	<a condition="ViewData.UserHas(PermissionTo.SeeEmails) && ViewData.UserHas(PermissionTo.EditUsers)"
+		asp-page="Nuke"
+		asp-route-id="@Model.Id"
+		class="btn btn-danger float-end"><i class="fa fa-trash-can"></i> Anonymize User</a>
 	<fullrow>
 		<form-group condition="Model.UserToEdit.IsLockedOut">
 			<label asp-for="UserToEdit.IsLockedOut" class="form-control-label"></label>

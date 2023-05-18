@@ -219,6 +219,11 @@ public static class SubmissionExtensions
 		return query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
 	}
 
+	public static IQueryable<Submission> ForAuthor(this IQueryable<Submission> submissions, int userId)
+	{
+		return submissions.Where(p => p.SubmissionAuthors.Select(pa => pa.UserId).Contains(userId));
+	}
+
 	/// <summary>
 	/// Includes all the necessary sub-tables in order to generate a title
 	/// </summary>
