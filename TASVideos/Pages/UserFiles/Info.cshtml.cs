@@ -12,7 +12,7 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class InfoModel : BasePageModel
 {
-	private static string[] _previewableExtensions = { "wch", "lua" };
+	private static readonly string[] PreviewableExtensions = { "wch", "lua" };
 
 	private readonly ApplicationDbContext _db;
 	private readonly IFileService _fileService;
@@ -43,7 +43,7 @@ public class InfoModel : BasePageModel
 
 		UserFile = file;
 
-		if (UserFile.Class == UserFileClass.Support && _previewableExtensions.Contains(UserFile.Extension))
+		if (UserFile.Class == UserFileClass.Support && PreviewableExtensions.Contains(UserFile.Extension))
 		{
 			// We are going back to the database on purpose here, because it is important to never query the entire file when getting lists of files, only when getting a single file
 			var entity = await _db.UserFiles.FindAsync(UserFile.Id);
@@ -80,7 +80,7 @@ public class InfoModel : BasePageModel
 		return new DownloadResult(file);
 	}
 
-	private class DownloadResult : IActionResult
+	internal class DownloadResult : IActionResult
 	{
 		private readonly UserFile _file;
 
