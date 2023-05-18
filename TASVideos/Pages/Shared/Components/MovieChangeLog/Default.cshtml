@@ -17,8 +17,8 @@
 	<fullrow>
 		@foreach (var pub in pubGroup.Pubs)
 		{
-			<div class="ms-2">
-				<div class="float-start" condition="!string.IsNullOrWhiteSpace(pub.ClassIconPath)">
+			<div class="ms-2 mt-1">
+				<div class="float-start me-2" condition="!string.IsNullOrWhiteSpace(pub.ClassIconPath)">
 					<icon path="@pub.ClassIconPath" />
 				</div>
 				<pub-link id="pub.Id">@pub.Name</pub-link>
