@@ -162,6 +162,7 @@ UPDATE public.users
 		email = 'tasvideos@example.com', --We don't want these public, but a valid email address is necessary for many user operations
 		normalized_email = null, -- We don't want to make these public either
 		last_logged_in_time_stamp = NOW(),
-		time_zone_iD = 'UTC';
+		time_zone_iD = 'UTC',
+		moderator_comments = null;
 
 TRUNCATE TABLE public.user_claims;
