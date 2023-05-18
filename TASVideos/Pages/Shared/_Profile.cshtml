@@ -1,6 +1,7 @@
 ﻿@model UserProfile
 @{
 	var lastLoggedIn = Model.LastLoggedInTimeStamp ?? DateTime.UtcNow;
+	bool canViewPrivateData = User.Has(PermissionTo.ViewPrivateUserData) || Model.Id == User.GetUserId();
 }
 <row>
 	<div class="col-md-6">
@@ -57,14 +58,14 @@
 						</a>
 					</label>
 					<br />
-					<label asp-for="TimeZone"></label>
-					<label>@Model.TimeZone</label>
-					<br />
-					<a permission="ViewPrivateUserData" class="btn btn-warning btn-sm mt-1 mb-2" data-bs-toggle="collapse" href="#pii">Private Data</a>
+					<a condition="canViewPrivateData" class="btn btn-warning btn-sm mt-1 mb-2" data-bs-toggle="collapse" href="#pii">Private Data</a>
 					<div class="collapse" id="pii">
-						<div class="alert alert-info" permission="ViewPrivateUserData">
+						<div class="alert alert-info" condition="canViewPrivateData">
 							<label asp-for="Id"></label>
 							<label>@Model.Id</label>
+							<br />
+							<label asp-for="TimeZone"></label>
+							<label>@Model.TimeZone</label>
 							<br />
 							<div permission="SeeEmails">
 								<label asp-for="Email"></label>
@@ -91,10 +92,10 @@
 								<span class="fa fa-check-square text-success"></span><span> Not locked</span>
 							}
 							<div>
-								<a asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning btn-sm">IP Addresses used</a>
+								<a permission="ViewPrivateUserData" asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning btn-sm">IP Addresses used</a>
 							</div>
 							<div>
-								<a href="/UserMaintenanceLog?User=@Model.UserName" class="btn btn-warning btn-sm mt-2">Logs</a>
+								<a permission="ViewPrivateUserData" href="/UserMaintenanceLog?User=@Model.UserName" class="btn btn-warning btn-sm mt-2">Logs</a>
 							</div>
 						</div>
 					</div>
