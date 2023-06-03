@@ -34,7 +34,7 @@ public class SubmissionCreateModel
 	public string? EncodeEmbedLink { get; set; }
 
 	[Display(Name = "Author(s)")]
-	[AtLeastOne(ErrorMessage = "A submission must have at least one author")]
+	[MinLength(1)]
 	public IList<string> Authors { get; set; } = new List<string>();
 
 	[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]

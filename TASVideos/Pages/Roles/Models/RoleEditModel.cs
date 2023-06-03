@@ -27,7 +27,7 @@ public class RoleEditModel
 	[Display(Name = "Auto-assign on Publication", Description = "If set, the user will automatically be assigned this role when they have a movie published.")]
 	public bool AutoAssignPublications { get; set; }
 
-	[AtLeastOne(ErrorMessage = "At least one permission is required.")]
+	[MinLength(1)]
 	[Display(Name = "Selected Permissions")]
 	public IEnumerable<int> SelectedPermissions { get; set; } = new List<int>();
 
