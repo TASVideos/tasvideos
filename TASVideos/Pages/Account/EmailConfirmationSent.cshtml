@@ -1,6 +1,35 @@
 ﻿@page
+@addTagHelper *, AspNetCore.ReCaptcha
+@model EmailConfirmationSentModel
 @{
 	ViewData.SetTitle("Email Sent");
 }
 
 <p>To complete the registration process look for an email in your inbox that will provide further instructions.</p>
+
+<p>In case you didn't receive any email, please enter your username and email below and we will resend it to you.</p>
+
+<form method="post">
+	<row>
+		<column md="6">
+			<form-group>
+				<label asp-for="UserName"></label>
+				<input asp-for="UserName" class="form-control" autocomplete="username" />
+				<span asp-validation-for="UserName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="Email"></label>
+				<input asp-for="Email" class="form-control" autocomplete="off" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</form-group>
+			<environment exclude="Development">
+				<form-group>
+					<recaptcha />
+				</form-group>
+			</environment>
+		</column>
+	</row>
+	<div class="text-center">
+		<button type="submit" class="btn btn-secondary">Resend Confirmation Email</button>
+	</div>
+</form>

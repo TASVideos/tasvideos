@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
+using TASVideos.Data;
 
 namespace TASVideos.Pages.Account;
 
@@ -11,10 +13,17 @@ namespace TASVideos.Pages.Account;
 public class LoginModel : BasePageModel
 {
 	private readonly SignInManager _signInManager;
+	private readonly UserManager _userManager;
+	private readonly ApplicationDbContext _db;
 
-	public LoginModel(SignInManager signInManager)
+	public LoginModel(
+		SignInManager signInManager,
+		UserManager userManager,
+		ApplicationDbContext db)
 	{
 		_signInManager = signInManager;
+		_userManager = userManager;
+		_db = db;
 	}
 
 	[BindProperty]
@@ -56,6 +65,12 @@ public class LoginModel : BasePageModel
 		if (result.Succeeded)
 		{
 			return BaseReturnUrlRedirect();
+		}
+
+		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
+		if (user != null && !await _userManager.IsEmailConfirmedAsync(user))
+		{
+			return RedirectToPage("/Account/EmailConfirmationSent");
 		}
 
 		if (result.IsLockedOut)

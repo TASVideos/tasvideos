@@ -109,4 +109,14 @@ public class SignInManager : SignInManager<User>
 		var baseEmail = email.Split('+')[0]; // Strip off alias
 		return await _db.Users.AnyAsync(u => EF.Functions.Like(u.Email, baseEmail));
 	}
+
+	public async Task<bool> EmailAndUserNameMatch(string username, string email)
+	{
+		if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username))
+		{
+			return false;
+		}
+
+		return await _db.Users.AnyAsync(u => u.Email == email && u.UserName == username);
+	}
 }
