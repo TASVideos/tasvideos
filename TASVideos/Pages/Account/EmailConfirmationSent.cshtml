@@ -5,9 +5,7 @@
 	ViewData.SetTitle("Email Sent");
 }
 
-<p>To complete the registration process look for an email in your inbox that will provide further instructions.</p>
-
-<p>In case you didn't receive any email, please enter your username and email below and we will resend it to you.</p>
+@await Component.RenderWiki("System/EmailConfirmationSentMessage")
 
 <form method="post">
 	<row>

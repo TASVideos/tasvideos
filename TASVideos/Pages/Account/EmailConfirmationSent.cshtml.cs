@@ -36,34 +36,31 @@ public class EmailConfirmationSentModel : BasePageModel
 	[EmailAddress]
 	[Display(Name = "Email")]
 	public string Email { get; set; } = "";
+	public IActionResult OnGet()
+	{
+		if (User.IsLoggedIn())
+		{
+			return BaseReturnUrlRedirect();
+		}
+
+		return Page();
+	}
+
 	public async Task<IActionResult> OnPost()
 	{
-		if (!await _signInManager.EmailAndUserNameMatch(UserName, Email))
+		if (await _signInManager.EmailAndUserNameMatch(UserName, Email))
 		{
-			ModelState.AddModelError(nameof(Email), "Username and email entered do not match. Please try again.");
-		}
-
-		if (!ModelState.IsValid)
-		{
-			return Page();
-		}
-
-		if (ModelState.IsValid)
-		{
-			var user = _db.Users.Where(u => u.Email == Email && u.UserName == UserName).FirstOrDefault();
-			if (user != null)
+			var user = _db.Users.SingleOrDefault(u => u.Email == Email && u.UserName == UserName);
+			if (user is not null)
 			{
 				var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
 				var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 
 				await _emailService.EmailConfirmation(Email, callbackUrl);
-
-				return _signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
-					? RedirectToPage("EmailConfirmationSent")
-					: BaseReturnUrlRedirect();
 			}
 		}
 
+		SuccessStatusMessage("Email resend received");
 		return Page();
 	}
 }
