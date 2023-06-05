@@ -2,9 +2,7 @@
 using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 using TASVideos.WikiEngine;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace TASVideos.ViewComponents;
 

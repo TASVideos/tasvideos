@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-
 using TASVideos.Data;
 using TASVideos.WikiEngine;
 using static TASVideos.Data.Entity.PublicationUrlType;

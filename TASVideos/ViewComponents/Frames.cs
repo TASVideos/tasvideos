@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Common;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;

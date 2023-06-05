@@ -1,7 +1,6 @@
 ﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Publications.Models;
 

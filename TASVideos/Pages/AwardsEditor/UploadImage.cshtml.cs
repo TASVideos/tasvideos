@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.AwardsEditor.Models;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Data;
 using TASVideos.WikiEngine;

@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Data;
 using TASVideos.Pages.Roles.Models;
 
