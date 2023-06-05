@@ -51,7 +51,7 @@ public class EmailConfirmationSentModel : BasePageModel
 		if (await _signInManager.EmailAndUserNameMatch(UserName, Email))
 		{
 			var user = _db.Users.SingleOrDefault(u => u.Email == Email && u.UserName == UserName);
-			if (user is not null)
+			if (user is not null && !user.EmailConfirmed)
 			{
 				var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
 				var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
