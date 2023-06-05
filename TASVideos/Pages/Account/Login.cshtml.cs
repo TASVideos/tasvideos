@@ -46,7 +46,7 @@ public class LoginModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var user = await _signInManager.UserManager.GetUserAsync(User);
-		if (user != null)
+		if (user is not null)
 		{
 			return BaseReturnUrlRedirect();
 		}
