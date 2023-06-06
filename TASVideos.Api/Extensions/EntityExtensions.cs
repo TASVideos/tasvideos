@@ -1,6 +1,4 @@
-﻿using TASVideos.Api.Responses;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Api;
 

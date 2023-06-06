@@ -1,6 +1,4 @@
-﻿using TASVideos.Api.Requests;
-
-namespace TASVideos.Api.Controllers;
+﻿namespace TASVideos.Api.Controllers;
 
 /// <summary>
 /// Users and user actions

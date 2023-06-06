@@ -1,11 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Api.Requests;
-using TASVideos.Api.Responses;
-using TASVideos.Core;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Api.Controllers;
+﻿namespace TASVideos.Api.Controllers;
 
 /// <summary>
 /// The submissions of TASVideos.

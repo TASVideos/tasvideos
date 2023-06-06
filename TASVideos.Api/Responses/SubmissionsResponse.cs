@@ -1,6 +1,4 @@
-﻿using TASVideos.Core;
-
-#pragma warning disable 1591
+﻿#pragma warning disable 1591
 
 namespace TASVideos.Api.Responses;
 

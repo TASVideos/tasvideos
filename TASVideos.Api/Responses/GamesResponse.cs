@@ -1,5 +1,4 @@
-﻿using TASVideos.Core;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 
 #pragma warning disable 1591
 namespace TASVideos.Api.Responses;

@@ -1,6 +1,4 @@
-﻿using TASVideos.Data.Entity;
-
-namespace TASVideos.Api.Requests;
+﻿namespace TASVideos.Api.Requests;
 
 /// <summary>
 /// Represents the filtering criteria for the publications endpoint.

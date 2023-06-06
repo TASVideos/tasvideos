@@ -1,6 +1,4 @@
 ﻿using TASVideos.Api.Filters;
-using TASVideos.Api.Requests;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Api.Controllers;
 

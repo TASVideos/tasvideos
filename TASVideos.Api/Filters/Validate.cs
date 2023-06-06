@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using TASVideos.Api.Requests;
-using TASVideos.Core;
 
 namespace TASVideos.Api;
 
