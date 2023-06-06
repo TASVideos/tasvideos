@@ -1,7 +1,4 @@
-﻿using TASVideos.MovieParsers.Extensions;
-using TASVideos.MovieParsers.Result;
-
-namespace TASVideos.MovieParsers.Parsers;
+﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("lsmv")]
 internal class Lsmv : ParserBase, IParser

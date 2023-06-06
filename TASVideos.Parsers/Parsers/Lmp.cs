@@ -1,6 +1,4 @@
-﻿using TASVideos.MovieParsers.Result;
-
-namespace TASVideos.MovieParsers.Parsers;
+﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("lmp")]
 internal class Lmp : ParserBase, IParser

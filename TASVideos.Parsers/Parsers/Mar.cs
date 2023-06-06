@@ -1,6 +1,4 @@
-﻿using TASVideos.MovieParsers.Result;
-
-namespace TASVideos.MovieParsers.Parsers;
+﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("mar")]
 internal class Mar : ParserBase, IParser

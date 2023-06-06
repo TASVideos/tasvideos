@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using SharpCompress.Readers;
-using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;
 

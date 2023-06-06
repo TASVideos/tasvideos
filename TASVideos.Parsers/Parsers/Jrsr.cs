@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Text;
-using TASVideos.MovieParsers.Result;
 
 /*
  * https://tasvideos.org/EmulatorResources/JPC/JRSRFormat

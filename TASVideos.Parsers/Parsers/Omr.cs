@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers.Parsers;
 

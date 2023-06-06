@@ -1,7 +1,4 @@
-﻿using TASVideos.MovieParsers.Extensions;
-using TASVideos.MovieParsers.Result;
-
-namespace TASVideos.MovieParsers.Parsers;
+﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("m64")]
 internal class M64 : ParserBase, IParser

@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using TASVideos.MovieParsers.Parsers;
-using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.MovieParsers;
 
