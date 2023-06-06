@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data;
-using TASVideos.Data.Entity.Game;
-
-namespace TASVideos.Core.Services;
+﻿namespace TASVideos.Core.Services;
 
 public enum SystemEditResult { Success, Fail, NotFound, DuplicateCode, DuplicateId }
 public enum SystemDeleteResult { Success, Fail, NotFound, InUse }

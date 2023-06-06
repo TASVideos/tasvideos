@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services.Email;
+﻿using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
-using TASVideos.Data;
-using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Services;
 

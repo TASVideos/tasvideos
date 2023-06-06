@@ -5,7 +5,6 @@ using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services.Youtube;
 

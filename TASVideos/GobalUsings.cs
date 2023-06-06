@@ -1,2 +1,2 @@
-﻿global using TASVideos.Extensions;
-global using Microsoft.EntityFrameworkCore;
+﻿global using Microsoft.EntityFrameworkCore;
+global using TASVideos.Extensions;

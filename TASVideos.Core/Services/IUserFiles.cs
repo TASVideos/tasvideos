@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services.Wiki;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 

@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data;
-
-namespace TASVideos.Core.Services.PublicationChain;
+﻿namespace TASVideos.Core.Services.PublicationChain;
 
 public interface IPublicationHistory
 {

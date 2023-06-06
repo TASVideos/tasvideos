@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Core.Services;
+﻿namespace TASVideos.Core.Services;
 
 public enum TagEditResult { Success, Fail, NotFound, DuplicateCode }
 public enum TagDeleteResult { Success, Fail, NotFound, InUse }

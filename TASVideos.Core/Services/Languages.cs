@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services.Wiki;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core.Services;
 

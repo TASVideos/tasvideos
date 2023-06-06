@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using TASVideos.Core.Settings;
-using TASVideos.Data;
 using SharpCompress.Compressors;
 
 namespace TASVideos.Core.Data;

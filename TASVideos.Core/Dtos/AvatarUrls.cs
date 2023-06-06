@@ -1,6 +1,4 @@
-﻿using TASVideos.Data.Entity.Forum;
-
-namespace TASVideos.Core.Services;
+﻿namespace TASVideos.Core.Services;
 
 public record AvatarUrls(string? Avatar, string? MoodBase)
 {

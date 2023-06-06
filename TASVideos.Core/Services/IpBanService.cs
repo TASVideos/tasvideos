@@ -1,9 +1,6 @@
 ﻿using System.Net;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NetTools;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services;
 

@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data;
-using TASVideos.ForumEngine;
+﻿using TASVideos.ForumEngine;
 
 namespace TASVideos.Core.Services;
 

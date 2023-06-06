@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using TASVideos.Data;
-using TASVideos.Data.Entity.Game;
+﻿using Microsoft.Extensions.Logging;
 
 namespace TASVideos.Core.Services;
 

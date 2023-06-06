@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using TASVideos.Data.Entity;
 
 // TODO: Create a view model to separate presentation concerns (Display attributes)
 namespace TASVideos.Core.Services;

@@ -1,7 +1,4 @@
-﻿using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+﻿namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
 public class DistributorStorage : IPostDistributor
 {
