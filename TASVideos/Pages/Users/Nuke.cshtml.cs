@@ -92,15 +92,6 @@ public class NukeModel : BasePageModel
 			.ToListAsync();
 		_db.UserRoles.RemoveRange(roles);
 
-		var pms = await _db.PrivateMessages
-			.Where(pm => pm.FromUserId == user.Id)
-			.ToListAsync();
-
-		foreach (var pm in pms)
-		{
-			pm.IpAddress = null;
-		}
-
 		var votes = await _db.ForumPollOptionVotes
 			.Where(v => v.UserId == user.Id)
 			.ToListAsync();

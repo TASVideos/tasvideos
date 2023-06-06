@@ -131,7 +131,6 @@ public class CreateModel : BasePageModel
 			ToUserId = toUser.Id,
 			Subject = Subject,
 			Text = Text,
-			IpAddress = IpAddress,
 			EnableBbCode = true
 		};
 

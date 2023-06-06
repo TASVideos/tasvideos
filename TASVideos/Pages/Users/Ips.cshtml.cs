@@ -36,13 +36,6 @@ public class IpsModel : BasePageModel
 			.Distinct()
 			.ToListAsync();
 
-		var pmIps = await _db.PrivateMessages
-			.Where(p => p.FromUserId == user.Id)
-			.Where(p => p.IpAddress != null)
-			.Select(p => new IpEntry(p.IpAddress ?? "", p.LastUpdateTimestamp))
-			.Distinct()
-			.ToListAsync();
-
 		var voteIps = await _db.ForumPollOptionVotes
 			.Where(v => v.UserId == user.Id)
 			.Where(p => p.IpAddress != null)
@@ -51,7 +44,6 @@ public class IpsModel : BasePageModel
 			.ToListAsync();
 
 		Ips = postIps
-			.Concat(pmIps)
 			.Concat(voteIps)
 			.Distinct()
 			.ToList();

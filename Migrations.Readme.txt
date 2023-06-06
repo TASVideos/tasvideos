@@ -1,5 +1,5 @@
 To add a migration:
-First you must have EF cli installed (run dotnet ef to check)
+First you must have EF cli installed (run dotnet ef to check) to install: dotnet tool install --global dotnet-ef
 Go to the PackageManagerConsole (or powershell window)
 Make sure you are in the solution directory
 dotnet ef migrations add [NameOfMigration] --project TASVideos.Data --startup-project TASVideos

@@ -11,9 +11,6 @@ public class PrivateMessage : BaseEntity
 	public int ToUserId { get; set; }
 	public virtual User? ToUser { get; set; }
 
-	[StringLength(50)]
-	public string? IpAddress { get; set; }
-
 	[StringLength(500)]
 	public string? Subject { get; set; }
 
