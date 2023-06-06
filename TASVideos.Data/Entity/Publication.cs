@@ -1,10 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
-using TASVideos.Common;
-using TASVideos.Data.Entity.Awards;
-using TASVideos.Data.Entity.Game;
-
-namespace TASVideos.Data.Entity;
+﻿namespace TASVideos.Data.Entity;
 
 /// <summary>
 /// Represents filter criteria for filtering publications.

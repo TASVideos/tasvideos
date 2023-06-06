@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TASVideos.Data.Entity.Awards;
+﻿namespace TASVideos.Data.Entity.Awards;
 
 [ExcludeFromHistory]
 public class UserAward

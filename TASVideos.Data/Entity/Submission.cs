@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Common;
-using TASVideos.Data.Entity.Forum;
-using TASVideos.Data.Entity.Game;
-
-namespace TASVideos.Data.Entity;
+﻿namespace TASVideos.Data.Entity;
 
 public interface ISubmissionFilter
 {

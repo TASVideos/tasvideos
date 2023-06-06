@@ -1,6 +1,5 @@
 ﻿using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
-using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity;

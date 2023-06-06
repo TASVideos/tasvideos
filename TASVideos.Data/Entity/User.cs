@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity.Awards;
-using TASVideos.Data.Entity.Forum;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace TASVideos.Data.Entity;
 

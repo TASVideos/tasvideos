@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TASVideos.Data.Entity.Game;
+﻿namespace TASVideos.Data.Entity.Game;
 
 /// <summary>
 /// Represents the system that a game runs on, such as NES, SNES, Commodore 64, PSX, etc

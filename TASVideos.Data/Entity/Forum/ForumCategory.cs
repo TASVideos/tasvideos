@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TASVideos.Data.Entity.Forum;
+﻿namespace TASVideos.Data.Entity.Forum;
 
 [ExcludeFromHistory]
 public class ForumCategory : BaseEntity

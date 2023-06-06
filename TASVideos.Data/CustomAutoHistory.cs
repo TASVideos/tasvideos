@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace TASVideos.Data;
+﻿namespace TASVideos.Data;
 
 public class CustomAutoHistory : AutoHistory
 {

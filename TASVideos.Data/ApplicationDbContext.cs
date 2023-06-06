@@ -1,12 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Awards;
-using TASVideos.Data.Entity.Forum;
-using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data;
 

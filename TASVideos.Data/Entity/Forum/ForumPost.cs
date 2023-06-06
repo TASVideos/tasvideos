@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Microsoft.EntityFrameworkCore;
 using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity.Forum;
