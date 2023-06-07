@@ -23,13 +23,7 @@ public class GameModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games
-			.Include(g => g.UserFiles)
-			.ThenInclude(g => g.System)
-			.Include(g => g.UserFiles)
-			.ThenInclude(u => u.Author)
-			.SingleOrDefaultAsync(g => g.Id == Id);
-
+		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == Id);
 		if (game is null)
 		{
 			return NotFound();
@@ -39,7 +33,8 @@ public class GameModel : BasePageModel
 		{
 			GameId = game.Id,
 			GameName = game.DisplayName,
-			Files = game.UserFiles
+			Files = _db.UserFiles
+				.ForGame(game.Id)
 				.HideIfNotAuthor(User.GetUserId())
 				.AsQueryable()
 				.OrderByDescending(uf => uf.UploadTimestamp)
