@@ -87,14 +87,14 @@
 					   asp-page="/Forum/Topics/Index"
 					   asp-route-id="@Model.TopicId"
 					   class="btn btn-secondary btn-sm mt-1">
-						<i class="fa fa-comments-o"></i> Discuss
+						<i class="fa-regular fa-comments"></i> Discuss
 					</a>
 				</div>
 				<div>
 					<input condition="@canRate" id="RequestVerificationToken" type="hidden" value="@requestToken" />
 					<a condition="@canRate" asp-page="/Publications/Rate" asp-route-id="@Model.Id" onclick="toggleDisplay(@(Model.Id)); return false;" class="btn btn-success btn-sm mt-1" id="ownRating-@(Model.Id)">@ratingString</a>
 					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
-						<i class="fa fa-star-o"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
+						<i class="fa-regular fa-star"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
 					</a>
 					<div condition="@canRate" class="mt-1 mb-0 d-none border border-primary bg-cardprimary rounded p-1" id="rate-@(Model.Id)">
 						<button class="btn btn-success btn-sm" onclick="rate(@(Model.Id),false);"><span class="fa fa-save"></span> Save</button>
