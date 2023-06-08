@@ -390,7 +390,7 @@ public class EditModel : BasePageModel
 			string title;
 			if (statusHasChanged)
 			{
-				string statusStr = Submission.Status.ToString();
+				string statusStr = Submission.Status.EnumDisplayName();
 
 				// CAPS on a judge decision
 				if (Submission.Status is SubmissionStatus.Accepted
