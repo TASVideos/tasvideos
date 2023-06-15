@@ -41,7 +41,7 @@
 		<partial name="_CreatePostHelper" model="@("Post_Text")" />
 	</fullrow>
 	<form-group>
-		<textarea asp-for="Post.Text" class="form-control backup-content" rows="20" data-backup-key="backup-post-@Model.TopicId"></textarea>
+		<textarea asp-for="Post.Text" class="form-control backup-content" rows="20" data-backup-key="backup-post-@Model.TopicId" data-tempfixme></textarea>
 		<span asp-validation-for="Post.Text" class="text-danger"></span>
 	</form-group>
 	<fullrow id="backup-restore" class="d-none">
@@ -64,4 +64,5 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script src="~/js/backup-text.js"></script>
+	<script src="~/js/syntax-highlight-forum.js" type="module"></script>
 }
