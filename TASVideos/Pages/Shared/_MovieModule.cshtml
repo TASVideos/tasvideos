@@ -197,13 +197,26 @@
 					</span>
 				</small>
 			</div>
-			<div condition="Model.Tags.Any()" class="col-auto">
+			<div condition="@Model.GameVersionId > 0 || Model.Tags.Any()" class="col-auto">
 				<small>
-					Tags:<br />
-					@foreach (var tag in Model.Tags)
-					{
-						<a href="/Movies-@tag.Code" class="ms-2">@tag.DisplayName</a><br />
-					}
+					<span condition="Model.GameVersionId > 0 ">
+						Game Version:<br />
+						<a
+							asp-page="/Games/Versions/View" 
+							asp-route-id="@Model.GameVersionId" 
+							asp-route-gameid="@Model.GameId"
+							asp-route-returnUrl="@ViewData["ReturnUrl"]">
+							@Model.GameVersionName
+						</a><br />
+					</span>
+					<span condition="Model.Tags.Any()">
+						Tags:<br />
+						@foreach (var tag in Model.Tags)
+						{
+							<a href="/Movies-@tag.Code" class="ms-2">@tag.DisplayName</a>
+							<br />
+						}
+					</span>
 				</small>
 			</div>
 			<div class="col-auto">

@@ -191,6 +191,8 @@ public static class EntityExtensions
 				Id = p.Id,
 				GameId = p.GameId,
 				GameName = p.Game!.DisplayName,
+				GameVersionId = p.GameVersionId,
+				GameVersionName = p.GameVersion!.Name,
 				CreateTimestamp = p.CreateTimestamp,
 				LastUpdateTimestamp = p.LastUpdateTimestamp,
 				ObsoletedById = p.ObsoletedById,

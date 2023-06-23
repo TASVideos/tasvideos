@@ -130,7 +130,18 @@
 			</tr>
 			<tr>
 				<th>@Html.DisplayNameFor(m => m.Submission.GameVersion)</th>
-				<td>@Model.Submission.GameVersion</td>
+				<td>
+					<span condition="@Model.Submission.GameVersionId.HasValue">
+						<a
+							asp-page="/Games/Versions/View" 
+							asp-route-id="@Model.Submission.GameVersionId" 
+							asp-route-gameid="@Model.Submission.GameId"
+						   asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()">
+							@Model.Submission.GameVersion
+						</a>
+					</span>
+					<span condition="@(!Model.Submission.GameVersionId.HasValue)">@Model.Submission.GameVersion</span>
+				</td>
 				<th>@Html.DisplayNameFor(m => m.Submission.FrameCount)</th>
 				<td>
 					@Model.Submission.FrameCount

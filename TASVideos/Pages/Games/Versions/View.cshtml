@@ -1,0 +1,69 @@
+﻿@page "/Games/{gameId}/Versions/View/{id?}"
+@model ViewModel
+@{
+	ViewData.SetTitle($"Game Version #{Model.Id} {Model.Version.Name}");
+	string returnUrl = HttpContext.Request.ReturnUrl();
+}
+
+<div class="mb-2">
+	<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Back</a>
+	<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="/Games/Versions/List" class="btn btn-secondary" asp-route-gameId="@Model.GameId"><i class="fa fa-arrow-left"></i> Back</a>
+</div>
+<h4 class="mb-3">
+	<label asp-for="GameName" class="form-control-label"></label>
+	<game-link id="@Model.GameId">@Model.GameName</game-link>
+</h4>
+<row>
+	<column md="6">
+		<div class="info-entry">
+			<label asp-for="Version.SystemCode"></label>
+			<label>@Model.Version.SystemCode</label>
+		</div>
+		<div class="info-entry">
+			<label asp-for="Version.Name"></label>
+			<label>@Model.Version.Name</label>
+		</div>
+		<div class="info-entry">
+			<label asp-for="Version.Type"></label>
+			<label>@Model.Version.Type</label>
+		</div>
+		<div class="info-entry">
+			<label asp-for="Version.TitleOverride"></label>
+			<label>@Model.Version.TitleOverride</label>
+		</div>
+		<div class="info-entry">
+			<label asp-for="Version.Version"></label>
+			<label>@Model.Version.Version</label>
+		</div>
+		<div class="info-entry">
+			<label asp-for="Version.Region"></label>
+			<label>@Model.Version.Region</label>
+		</div>
+	</column>
+	<column md="6">
+		<div class="info-entry">
+			<label asp-for="Version.Sha1"></label>
+			<label>@Model.Version.Sha1</label>
+		</div>
+		<div class="info-entry">
+			<label asp-for="Version.Md5"></label>
+			<label>@Model.Version.Md5</label>
+		</div>
+	</column>
+</row>
+
+<style>
+	.info-entry {
+		margin-bottom: .5rem;
+	}
+	
+	.info-entry > label:first-child {
+		min-width: 100px;
+		font-weight: bold;
+	}
+	
+	.info-entry > label:last-child:empty::after {
+		content: "N/A";
+		opacity: 0.5;
+	}
+</style>

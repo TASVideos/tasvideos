@@ -65,6 +65,7 @@ public class DisplayMovies : ViewComponent
 			.FilterByTokens(searchModel)
 			.ToViewModel(searchModel.SortBy == "y")
 			.ToListAsync();
+		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return View(results);
 	}
 }

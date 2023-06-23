@@ -46,7 +46,7 @@ public class IndexModel : BasePageModel
 			.FilterByTokens(searchModel)
 			.ToViewModel(searchModel.SortBy == "y", User.GetUserId())
 			.PageOf(Paging);
-
+		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return Page();
 	}
 }

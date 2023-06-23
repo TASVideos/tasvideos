@@ -33,6 +33,7 @@ public class ViewModel : BasePageModel
 		}
 
 		Publication = publication;
+		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return Page();
 	}
 

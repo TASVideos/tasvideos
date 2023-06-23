@@ -7,6 +7,8 @@ public class PublicationDisplayModel
 	public int Id { get; set; }
 	public int GameId { get; set; }
 	public string GameName { get; set; } = "";
+	public int GameVersionId { get; set; }
+	public string GameVersionName { get; set; } = "";
 	public DateTime CreateTimestamp { get; set; }
 	public DateTime LastUpdateTimestamp { get; set; }
 	public int? ObsoletedById { get; set; }

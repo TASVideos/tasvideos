@@ -92,5 +92,5 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 
 	internal int? SystemId { get; set; }
 	internal int? SystemFrameRateId { get; set; }
-	internal int? GameVersionId { get; set; }
+	public int? GameVersionId { get; set; }
 }
