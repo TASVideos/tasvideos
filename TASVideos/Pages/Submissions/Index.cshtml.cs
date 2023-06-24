@@ -80,6 +80,7 @@ public class IndexModel : BasePageModel
 			Years = Search.Years,
 			StatusFilter = Search.StatusFilter,
 			System = Search.System,
+			GameId = Search.GameId,
 			User = Search.User
 		};
 	}

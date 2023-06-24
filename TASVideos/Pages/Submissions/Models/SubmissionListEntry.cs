@@ -65,5 +65,7 @@ public class SubmissionPageOf<T> : PageOf<T>
 	public string? System { get; set; }
 	public string? User { get; set; }
 
+	public string? GameId { get; set; }
+
 	public static new SubmissionPageOf<T> Empty() => new(Enumerable.Empty<T>());
 }
