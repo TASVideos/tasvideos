@@ -12,7 +12,7 @@
 			<th>@Html.DisplayNameFor(m => m.DeletedPages.First().HasExistingRevisions)</th>
 			<th>Actions</th>
 		</tr>
-		@foreach (var item in Model.DeletedPages.OrderByDescending(m => m.PageName))
+		@foreach (var item in Model.DeletedPages.OrderBy(m => m.PageName))
 		{
 			<tr>
 				<td>
