@@ -158,7 +158,10 @@
 				<th>@Html.DisplayNameFor(m => m.Submission.Branch)</th>
 				<td>@Model.Submission.Branch</td>
 				<th>@Html.DisplayNameFor(m => m.Submission.RerecordCount)</th>
-				<td>@Model.Submission.RerecordCount</td>
+				<td>@(Model.Submission.RerecordCount > 0
+					? Model.Submission.RerecordCount
+					: "Unknown")
+				</td>
 			</tr>
 			<tr>
 				<th><label asp-for="Submission.StartType"></label></th>

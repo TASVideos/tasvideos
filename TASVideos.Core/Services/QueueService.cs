@@ -400,6 +400,7 @@ internal class QueueService : IQueueService
 		submission.System = system;
 		submission.CycleCount = parseResult.CycleCount;
 		var warnings = parseResult.Warnings.ToList();
+		submission.Warnings = null;
 		if (warnings.Any())
 		{
 			submission.Warnings = string.Join(",", warnings);
