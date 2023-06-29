@@ -109,19 +109,20 @@
 	</alert>
 	@RenderBody()
 	<hr/>
-	<footer class="mb-3">
+		<footer class="mb-3">
+			@if (ViewData.GetWikiPage() is null)
+			{
+				var path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
+				if (path != "Wiki/PageDoesNotExist")
+				{
+					<a class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
+					<hr />
+				}
+			}
 		<button id="button-scrolltop" class="d-none position-fixed px-3 py-1 m-2 bottom-0 end-0 btn btn-primary fa fa-caret-up"></button>
 		<row class="justify-content-start align-items-center">
 			<p class="col-auto my-auto">
 				&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/TASVideos/tasvideos/commit/@ViewData["VersionSha"]">v@(ViewData["Version"])</a> - <a href="/api">API</a>
-				@if (ViewData.GetWikiPage() is null)
-				{
-					var path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
-					if (path != "Wiki/PageDoesNotExist")
-					{
-						<a class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
-					}
-				}
 			</p>
 				
 		</row>
