@@ -42,7 +42,7 @@
 	</row>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
-		<button type="submit" @(string.IsNullOrWhiteSpace(Model.ToUser) ? "disabled" : "") class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+		<button type="submit" @(string.IsNullOrWhiteSpace(Model.ToUser) ? "disabled" : "") class="btn btn-primary"><i class="fa fa-save"></i> Send</button>
 		<a asp-page="Inbox" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>
