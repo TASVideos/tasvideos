@@ -10,7 +10,16 @@ public class Redirect : ViewComponent
 	{
 		HttpContext context = ViewContext.HttpContext;
 
-		context.Response.Redirect("/" + page);
+		string redirectValue = context.Request.Query["redirect"];
+
+		if (redirectValue == "no")
+		{
+			return Content("Redirects to: " + page);
+		}
+		else
+		{
+			context.Response.Redirect("/" + page + "?redirect=no");
+		}
 
 		return Content("");
 	}
