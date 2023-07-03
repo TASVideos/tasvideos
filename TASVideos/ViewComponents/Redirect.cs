@@ -10,7 +10,7 @@ public class Redirect : ViewComponent
 	{
 		HttpContext context = ViewContext.HttpContext;
 
-		context.Response.Redirect(page);
+		context.Response.Redirect("/" + page);
 
 		return Content("");
 	}
