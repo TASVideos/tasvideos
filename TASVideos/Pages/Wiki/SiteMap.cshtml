@@ -3,25 +3,49 @@
 @{ 
 	ViewData.SetTitle("Site Map");
 }
-
+<div>
+	<label class="float-end"><input id="only-wiki-checkbox" type="checkbox" /> Only Wiki Pages</label>
+</div>
 @foreach (var rootPage in Model.Map.GroupBy(m => m.PageName.SplitWithEmpty("/").First()).OrderBy(g => g.Key))
 {
 	bool isPage = rootPage.Any(p => p.PageName == rootPage.Key);
 	bool hasSubpages = rootPage.Count() > 1;
-	<i condition="@hasSubpages" class="fa fa-plus" data-bs-toggle="collapse" href="#collapse@(rootPage.Key)" style="cursor: pointer"></i>
-	<label>
-		<a condition="@isPage" href="/@rootPage.Key">@rootPage.Key</a>
-		<span condition="@(!isPage)">@rootPage.Key</span>
-	</label>
-	<ul class="collapse" id="collapse@(rootPage.Key)">
-		@foreach(var p in rootPage.Where(p => p.PageName != rootPage.Key).OrderBy(p => p.PageName))
-		{
-			<li>
-				<a href="/@p.PageName">@p.PageName</a>
-				<span condition="@(!p.IsWiki)">(Built-in)</span>
-				<span condition="@(p.AccessRestriction != "Anonymous")">Access: @p.AccessRestriction</span>
-			</li>
-		}
-	</ul>
-	<br />
+	bool isWiki = rootPage.Any(p => p.IsWiki);
+	<div class="@(isWiki ? "wiki" : "developed")">
+		<i condition="@hasSubpages" class="fa fa-plus" data-bs-toggle="collapse" href="#collapse@(rootPage.Key)" style="cursor: pointer"></i>
+		<label>
+			<a condition="@isPage" href="/@rootPage.Key">@rootPage.Key</a>
+			<span condition="@(!isPage)">@rootPage.Key</span>
+		</label>
+		<ul class="collapse" id="collapse@(rootPage.Key)">
+			@foreach(var p in rootPage.Where(p => p.PageName != rootPage.Key).OrderBy(p => p.PageName))
+			{
+				<li class="@(p.IsWiki ? "wiki" : "developed")">
+					<a href="/@p.PageName">@p.PageName</a>
+					<span condition="@(!p.IsWiki)">(Built-in)</span>
+					<span condition="@(p.AccessRestriction != "Anonymous")">Access: @p.AccessRestriction</span>
+				</li>
+			}
+		</ul>
+		<br />
+	</div>
 }
+
+<script>
+	const onlyWikiCheckbox = document.getElementById('only-wiki-checkbox')
+	onlyWikiCheckbox.addEventListener('click', (e) => {
+		let hide = false
+		if (onlyWikiCheckbox.checked) {
+			hide = true
+		}
+		
+		Array.from(document.querySelectorAll('.developed')).forEach(e => {
+			if (hide) {
+				e.classList.add('d-none')
+			} else {
+				e.classList.remove('d-none');
+			}
+			
+		})
+	})
+</script>
