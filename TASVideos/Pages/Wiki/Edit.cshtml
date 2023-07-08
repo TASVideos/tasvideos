@@ -14,7 +14,7 @@
 	<form-group>
 		<textarea asp-for="PageToEdit.Markup" class="form-control wiki-edit" rows="20"></textarea>
 		<span asp-validation-for="PageToEdit.Markup" class="text-danger"></span>
-		@await Component.RenderWiki("System/WikiEditHelp")
+		@await Component.RenderWiki(SystemWiki.WikiEditHelp)
 	</form-group>
 	<form-group class="col-12">
 		<label asp-for="PageToEdit.RevisionMessage" class="form-control-label"></label>
@@ -37,7 +37,7 @@
 	</div>
 	<div class="text-center alert-info mt-2" role="alert">
 		<label class="alert-info">
-			@await Component.RenderWiki("System/WikiEditNote")
+			@await Component.RenderWiki(SystemWiki.WikiEditNote)
 		</label>
 	</div>
 </form>

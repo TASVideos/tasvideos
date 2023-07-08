@@ -7,15 +7,15 @@
 	var parseErrors = !notSupportedError && ViewData.ModelState.Keys.Any(e => e == "Parser");
 }
 <info-alert dismissible="true">
-	@await Component.RenderWiki("System/SubmitMovieHeader")
+	@await Component.RenderWiki(SystemWiki.SubmitMovieHeader)
 </info-alert>
 <hr />
 <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 <warning-alert dismissible="true" condition="notSupportedError">
-	@await Component.RenderWiki("System/SupportedMovieTypes")
+	@await Component.RenderWiki(SystemWiki.SupportedMovieTypes)
 </warning-alert>
 <danger-alert dismissible="true" condition="parseErrors">
-	@await Component.RenderWiki("System/SubmissionZipFailure")
+	@await Component.RenderWiki(SystemWiki.SubmissionZipFailure)
 </danger-alert>
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form method="post" enctype="multipart/form-data">
@@ -82,7 +82,7 @@
 		<form-group>
 			<label asp-for="Create.Markup" class="form-control-label"></label>
 			<span>
-				@await Component.RenderWiki("System/SubmissionImportant")
+				@await Component.RenderWiki(SystemWiki.SubmissionImportant)
 			</span>
 			<partial name="_WikiEditHelper" model="@("Create_Markup")" />
 			<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission"></textarea>

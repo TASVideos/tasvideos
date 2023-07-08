@@ -3,7 +3,7 @@
 </small>
 <info-alert id="forum-header" class="d-none">
 	<button id="forum-header-dismiss" type="button" class="btn-close float-end" aria-label="close"></button>
-	@await Component.RenderWiki("System/ForumHeader")
+	@await Component.RenderWiki(SystemWiki.ForumHeader)
 	<script>
 		{
 			let forumHeader = document.getElementById("forum-header");

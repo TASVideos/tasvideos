@@ -186,7 +186,7 @@
 		<textarea asp-for="UserToEdit.ModeratorComments" class="form-control" rows="5"></textarea>
 	</full-row>
 	<two-column-select id-list="UserToEdit.SelectedRoles" available-list="AvailableRoles" />
-	@await Component.RenderWiki("System/UserEditRole")
+	@await Component.RenderWiki(SystemWiki.UserEditRole)
 	<hr />
 	<row>
 		<column md="5">

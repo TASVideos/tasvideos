@@ -111,7 +111,7 @@
 	</row>
 	<two-column-select id-list="Publication.SelectedFlags" available-list="AvailableFlags" />
 	<two-column-select id-list="Publication.SelectedTags" available-list="AvailableTags" />
-	@await Component.RenderWiki("System/ClassEditingHelp")
+	@await Component.RenderWiki(SystemWiki.ClassEditingHelp)
 	<hr />
 	<fullrow class="mt-3">
 		<partial name="_WikiEditHelper" model="@("Publication_Markup")" />
@@ -121,7 +121,7 @@
 			<label asp-for="Publication.Markup" class="form-control-label"></label>
 			<textarea asp-for="Publication.Markup" rows="6" class="form-control"></textarea>
 			<span asp-validation-for="Publication.Markup" class="text-danger"></span>
-			@await Component.RenderWiki("System/WikiEditHelp")
+			@await Component.RenderWiki(SystemWiki.WikiEditHelp)
 		</form-group>
 	</fullrow>
 	<row>

@@ -2,11 +2,11 @@
 @section PageTitle {
 }
 @{
-	bool canEdit = WikiHelper.UserCanEditWikiPage("System/FrontPage", User.Name(), User.Permissions());
+	bool canEdit = WikiHelper.UserCanEditWikiPage(SystemWiki.FrontPage, User.Name(), User.Permissions());
 }
 
 <cache enabled="@(!User.IsLoggedIn())" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">
-	@await Component.RenderWiki("System/FrontPage")
+	@await Component.RenderWiki(SystemWiki.FrontPage)
 </cache>
 <a condition="@canEdit"
    asp-page="/Wiki/Edit"

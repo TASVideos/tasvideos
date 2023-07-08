@@ -30,7 +30,7 @@
 				<label asp-for="UserFile.Description" class="form-control-label"></label>
 				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit"></textarea>
 				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
-				@await Component.RenderWiki("System/WikiEditHelp")
+				@await Component.RenderWiki(SystemWiki.WikiEditHelp)
 			</form-group>
 			<form-group>
 				<div class="form-check">
@@ -52,7 +52,7 @@
 		</column>
 	</row>
 	<fullrow class="text-center">
-		@await Component.RenderWiki("System/WikiEditNote")
+		@await Component.RenderWiki(SystemWiki.WikiEditNote)
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
 		<a href="@cancelUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</fullrow>

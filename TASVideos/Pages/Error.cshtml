@@ -3,7 +3,7 @@
 @{
 	ViewData.SetTitle("System Error");
 }
-@await Component.RenderWiki("System/Error")
+@await Component.RenderWiki(SystemWiki.Error)
 <hr />
 <h5>@Model.StatusCodeString</h5>
 <div condition="!string.IsNullOrEmpty(Model.ExceptionMessage)">

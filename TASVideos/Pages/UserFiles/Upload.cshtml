@@ -6,7 +6,7 @@
 }
 
 <info-alert dismissible="true">
-	@await Component.RenderWiki("System/UserFileUploadHeader")
+	@await Component.RenderWiki(SystemWiki.UserFileUploadHeader)
 </info-alert>
 
 <partial name="Shared/_StorageUsed" model="Model.StorageUsed" />
@@ -53,7 +53,7 @@
 		</column>
 	</row>
 	<fullrow class="text-center">
-		@await Component.RenderWiki("System/WikiEditNote")
+		@await Component.RenderWiki(SystemWiki.WikiEditNote)
 		<submit-button class="btn btn-primary"><i class="fa fa-upload"></i> Upload</submit-button>
 		<a href="/Profile/UserFiles" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</fullrow>
