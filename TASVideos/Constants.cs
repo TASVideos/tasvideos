@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TASVideos;
 
@@ -45,4 +46,10 @@ public static class SystemWiki
 	public const string WelcomeText = "System/WelcomeText";
 	public const string WikiEditHelp = "System/WikiEditHelp";
 	public const string WikiEditNote = "System/WikiEditNote";
+
+	public static readonly HashSet<string> Pages = typeof(SystemWiki)
+		.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+		.Where(fi => fi.IsLiteral && !fi.IsInitOnly)
+		.Select(fi => fi.GetRawConstantValue()?.ToString() ?? "")
+		.ToHashSet(StringComparer.InvariantCultureIgnoreCase);
 }

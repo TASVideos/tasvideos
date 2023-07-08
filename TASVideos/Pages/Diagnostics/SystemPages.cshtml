@@ -1,0 +1,29 @@
+@page
+@{ ViewData.SetTitle("System Wiki Pages Used By the Site Code"); }
+@model SystemPagesModel
+<ul>
+	<li><a asp-page="Index">Diagnostics</a></li>
+</ul>
+<label class="float-end">Total: @Model.SystemPages.Count</label>
+<table class="table table-bordered table-striped">
+	<thead>
+		<tr>
+			<th>Page Name</th>
+			<th>Exists</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var p in Model.SystemPages.OrderBy(p => p.Exists).ThenBy(p => p.Name))
+		{
+			<tr>
+				<td>
+					<wiki-link page-name="@p.Name"></wiki-link>
+				<td>
+				<td>
+					<i condition="p.Exists" class="text-success fa fa-check"></i>
+					<i condition="!p.Exists" class="text-danger fa fa-exclamation"></i>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
