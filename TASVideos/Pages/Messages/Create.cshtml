@@ -25,9 +25,14 @@
 			<span asp-validation-for="Subject" class="text-danger"></span>
 		</form-group>
 		<form-group class="col-lg-6">
-			<label asp-for="ToUser" class="form-control-label"></label>
-			<input type="text" asp-for="ToUser" class="form-control" autocomplete="off" placeholder="@Html.DescriptionFor(m => m.ToUser)" />
-			<span asp-validation-for="ToUser" class="text-danger"></span>
+			<div id="user-form-group" class="mb-2">
+				<label asp-for="ToUser" class="form-control-label"></label>
+				<input type="text" asp-for="ToUser" class="form-control" autocomplete="off" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
+				<span asp-validation-for="ToUser" class="text-danger"></span>
+			</div>
+			<label for="group-select">To Group</label>
+			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" class="form-control" asp-items="@Model.AvailableGroupRoles">
+			</select>
 		</form-group>
 	</row>
 	<fullrow>
@@ -53,12 +58,33 @@
 	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/user-search.js"></script>
 	<script>
-		searchUsers("@Html.IdFor(m => m.ToUser)");
+		const userBoxElemId = '@Html.IdFor(m => m.ToUser)';
+		const userFormGroup = document.getElementById('user-form-group');
+		const userBox = document.getElementById(userBoxElemId);
+		const formSubmitBtn = userBox
+			.closest('form')
+			.querySelector("button[type='Submit']");
+
+		searchUsers(userBoxElemId);
 		if (document.getElementById('quote-btn')) {
 			document.getElementById('quote-btn').onclick = function () {
 				const text = document.getElementById('replying-to-text').innerHTML;
 				document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = `[quote]${text}[/quote]`;
 			};
 		}
+
+		const groupSelect = document.getElementById('group-select');
+		groupSelect.addEventListener('change', () => {
+			if (groupSelect.value) {
+				userBox.value = groupSelect.value;
+				formSubmitBtn.removeAttribute('disabled');
+
+				userFormGroup.classList.add('d-none');
+			} else {
+				userBox.value = '';
+				userFormGroup.classList.remove('d-none');
+				formSubmitBtn.setAttribute('disabled', 'disabled');
+			}
+		});
 	</script>
 }

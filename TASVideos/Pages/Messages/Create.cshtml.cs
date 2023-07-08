@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
-using TASVideos.Core.Services.Email;
-using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
 
@@ -11,18 +10,15 @@ namespace TASVideos.Pages.Messages;
 [RequirePermission(PermissionTo.SendPrivateMessages)]
 public class CreateModel : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
+	private readonly IPrivateMessageService _privateMessageService;
 	private readonly UserManager _userManager;
-	private readonly IEmailService _emailService;
 
 	public CreateModel(
-		ApplicationDbContext db,
 		UserManager userManager,
-		IEmailService emailService)
+		IPrivateMessageService privateMessageService)
 	{
-		_db = db;
 		_userManager = userManager;
-		_emailService = emailService;
+		_privateMessageService = privateMessageService;
 	}
 
 	[FromQuery]
@@ -50,12 +46,14 @@ public class CreateModel : BasePageModel
 
 	public PrivateMessageModel? ReplyingTo { get; set; }
 
+	public IEnumerable<SelectListItem> AvailableGroupRoles { get; set; } = new List<SelectListItem>();
+
 	public bool IsReply => ReplyingTo is not null;
 
 	public async Task OnGet()
 	{
 		await SetReplyingTo();
-
+		await SetAvailableGroupRoles();
 		ToUser = DefaultToUser ?? "";
 		if (IsReply)
 		{
@@ -74,20 +72,40 @@ public class CreateModel : BasePageModel
 		if (!ModelState.IsValid)
 		{
 			await SetReplyingTo();
+			await SetAvailableGroupRoles();
 			return Page();
 		}
 
-		var exists = await _db.Users.Exists(ToUser);
-		if (!exists)
+		var allowedRoles = await _privateMessageService.AllowedRoles();
+		if (allowedRoles.Contains(ToUser))
 		{
-			ModelState.AddModelError(nameof(ToUser), "User does not exist");
-			await SetReplyingTo();
-			return Page();
+			await _privateMessageService.SendMessageToRole(User.GetUserId(), ToUser, Subject, Text);
 		}
+		else
+		{
+			var exists = await _userManager.Exists(ToUser);
+			if (!exists)
+			{
+				ModelState.AddModelError(nameof(ToUser), "User does not exist");
+				await SetReplyingTo();
+				return Page();
+			}
 
-		await SendMessage();
+			await _privateMessageService.SendMessage(User.GetUserId(), ToUser, Subject, Text);
+		}
 
 		return BasePageRedirect("Inbox");
+	}
+
+	private async Task SetAvailableGroupRoles()
+	{
+		AvailableGroupRoles = UiDefaults.DefaultEntry
+			.Concat((await _privateMessageService.AllowedRoles())
+			.Select(m => new SelectListItem
+			{
+				Text = m,
+				Value = m
+			}));
 	}
 
 	private async Task SetReplyingTo()
@@ -95,7 +113,7 @@ public class CreateModel : BasePageModel
 		if (ReplyTo > 0)
 		{
 			var message = await _userManager.GetMessage(User.GetUserId(), ReplyTo.Value);
-			if (message != null)
+			if (message is not null)
 			{
 				DefaultToUser = message.FromUserName;
 				ReplyingTo = new PrivateMessageModel
@@ -109,37 +127,6 @@ public class CreateModel : BasePageModel
 					ToUserId = message.ToUserId
 				};
 			}
-		}
-	}
-
-	private async Task SendMessage()
-	{
-		var toUser = await _db.Users
-			.Where(u => u.UserName == ToUser)
-			.Select(u => new
-			{
-				u.Id,
-				u.UserName,
-				u.Email,
-				u.EmailOnPrivateMessage
-			})
-			.SingleAsync();
-
-		var message = new PrivateMessage
-		{
-			FromUserId = User.GetUserId(),
-			ToUserId = toUser.Id,
-			Subject = Subject,
-			Text = Text,
-			EnableBbCode = true
-		};
-
-		_db.PrivateMessages.Add(message);
-		await _db.SaveChangesAsync();
-
-		if (toUser.EmailOnPrivateMessage)
-		{
-			await _emailService.NewPrivateMessage(toUser.Email, toUser.UserName);
 		}
 	}
 }

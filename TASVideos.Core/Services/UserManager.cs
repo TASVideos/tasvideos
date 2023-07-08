@@ -517,4 +517,6 @@ public class UserManager : UserManager<User>
 
 		await _db.SaveChangesAsync();
 	}
+
+	public Task<bool> Exists(string userName) => _db.Users.Exists(userName);
 }
