@@ -483,6 +483,7 @@ internal class WikiPages : IWikiPages
 	{
 		pageName = pageName.Trim('/');
 		var allRevisions = await _db.WikiPages
+			.Include(r => r.Author)
 			.ForPage(pageName)
 			.ToListAsync();
 
