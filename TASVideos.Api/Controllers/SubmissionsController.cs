@@ -48,9 +48,9 @@ public class SubmissionsController : Controller
 	{
 		var subs = (await _db.Submissions
 			.FilterBy(request)
+			.ToSubmissionsResponse()
 			.SortBy(request)
 			.Paginate(request)
-			.ToSubmissionsResponse()
 			.ToListAsync())
 			.FieldSelect(request);
 
