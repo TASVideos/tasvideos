@@ -54,9 +54,9 @@ public class PublicationsController : Controller
 	{
 		var pubs = (await _db.Publications
 			.FilterByTokens(request)
+			.ToPublicationsResponse()
 			.SortBy(request)
 			.Paginate(request)
-			.ToPublicationsResponse()
 			.ToListAsync())
 			.FieldSelect(request);
 		return Ok(pubs);
