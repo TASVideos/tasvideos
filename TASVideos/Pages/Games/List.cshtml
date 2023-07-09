@@ -37,6 +37,14 @@
 						</div>
 					</div>
 				</div>
+				<div class="row mb-1">
+					<div class="col-5 mb-1">
+						<div class="input-group">
+							<label asp-for="@Model.Games.Genre" class="input-group-text"></label>
+							<select asp-for="@Model.Games.Genre" asp-items="@Model.GenreList" name="Genre" class="form-control"></select>
+						</div>
+					</div>
+				</div>
 			</form>
 		</div>
 		<div class="col">

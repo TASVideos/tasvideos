@@ -14,7 +14,11 @@
 	{
 		<tr>
 			<td>@genre.DisplayName</td>
-			<td>@genre.GameCount</td>
+			<td>
+				<a href="/Games/List?Genre=@genre.DisplayName">
+					@genre.GameCount
+				</a>
+			</td>
 			<td>
 				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@genre.Id">
 					<i class="fa fa-pencil"></i> Edit

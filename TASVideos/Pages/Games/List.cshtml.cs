@@ -33,6 +33,8 @@ public class ListModel : BasePageModel
 
 	public List<SelectListItem> LetterList { get; set; } = new();
 
+	public List<SelectListItem> GenreList { get; set; } = new();
+
 	public async Task OnGet()
 	{
 		if (ModelState.IsValid)
@@ -56,6 +58,15 @@ public class ListModel : BasePageModel
 			.ToListAsync();
 
 		LetterList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
+
+		GenreList = await _db.Genres
+			.Select(g => g.DisplayName)
+			.Distinct()
+			.OrderBy(l => l)
+			.ToDropdown()
+			.ToListAsync();
+
+		GenreList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
 	}
 
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
@@ -145,6 +156,7 @@ public class ListModel : BasePageModel
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
 				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
+				.ForGenre(paging.Genre)
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
@@ -158,6 +170,7 @@ public class ListModel : BasePageModel
 		{
 			SystemCode = paging.SystemCode,
 			Letter = paging.Letter,
+			Genre = paging.Genre,
 			SearchTerms = paging.SearchTerms,
 			PageSize = data.PageSize,
 			CurrentPage = data.CurrentPage,
