@@ -16,5 +16,7 @@ public class GameListRequest : PagingModel
 
 	public string? Genre { get; set; }
 
+	public string? Group { get; set; }
+
 	public string? SearchTerms { get; set; }
 }

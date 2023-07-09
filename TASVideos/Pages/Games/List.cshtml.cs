@@ -35,6 +35,8 @@ public class ListModel : BasePageModel
 
 	public List<SelectListItem> GenreList { get; set; } = new();
 
+	public List<SelectListItem> GroupList { get; set; } = new();
+
 	public async Task OnGet()
 	{
 		if (ModelState.IsValid)
@@ -67,6 +69,15 @@ public class ListModel : BasePageModel
 			.ToListAsync();
 
 		GenreList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
+
+		GroupList = await _db.GameGroups
+			.Select(g => g.Name)
+			.Distinct()
+			.OrderBy(l => l)
+			.ToDropdown()
+			.ToListAsync();
+
+		GroupList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
 	}
 
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
@@ -141,6 +152,8 @@ public class ListModel : BasePageModel
 			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
+				.ForGenre(paging.Genre)
+				.ForGroup(paging.Group)
 				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
 				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
 				.Select(g => new GameListModel
@@ -155,8 +168,9 @@ public class ListModel : BasePageModel
 		{
 			data = await _db.Games
 				.ForSystemCode(paging.SystemCode)
-				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
 				.ForGenre(paging.Genre)
+				.ForGroup(paging.Group)
+				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
@@ -171,6 +185,7 @@ public class ListModel : BasePageModel
 			SystemCode = paging.SystemCode,
 			Letter = paging.Letter,
 			Genre = paging.Genre,
+			Group = paging.Group,
 			SearchTerms = paging.SearchTerms,
 			PageSize = data.PageSize,
 			CurrentPage = data.CurrentPage,
