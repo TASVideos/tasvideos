@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -120,6 +120,7 @@
 		<EmbeddedResource Include="Fm2SampleFiles\ntsc.fm2" />
 		<EmbeddedResource Include="Fm2SampleFiles\pal.fm2" />
 		<EmbeddedResource Include="Fm2SampleFiles\savestate.fm2" />
+		<EmbeddedResource Include="GbmvSampleFiles\GBAHawk_NewHeaderValues.gbmv" />
 		<EmbeddedResource Include="GmvSampleFiles\2frames.gmv" />
 		<EmbeddedResource Include="GmvSampleFiles\pal.gmv" />
 		<EmbeddedResource Include="GmvSampleFiles\savestate.gmv" />
