@@ -59,6 +59,20 @@ public static class GameExtensions
 			: query;
 	}
 
+	public static IQueryable<Game> ForGenre(this IQueryable<Game> query, string? genre)
+	{
+		return !string.IsNullOrWhiteSpace(genre)
+			? query.Where(g => g.GameGenres.Any(gg => gg.Genre!.DisplayName == genre))
+			: query;
+	}
+
+	public static IQueryable<Game> ForGroup(this IQueryable<Game> query, string? group)
+	{
+		return !string.IsNullOrWhiteSpace(group)
+			? query.Where(g => g.GameGroups.Any(gg => gg.GameGroup!.Name == group))
+			: query;
+	}
+
 	public static void SetGenres(this ICollection<GameGenre> genres, IEnumerable<int> genreIds)
 	{
 		genres.Clear();
