@@ -12,6 +12,4 @@
 			clearDropdown(gameId);
 		}
 	}
-
-	systemModel.onchange();
 }
