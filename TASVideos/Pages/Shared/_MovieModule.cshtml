@@ -42,7 +42,7 @@
 	<cardheader class="bg-cardprimary p-2">
 		<div class="gx-3 clearfix">
 			<div class="float-start me-2" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
-				<icon path="@Model.ClassIconPath" />
+				<icon path="@Model.ClassIconPath" title="@Model.Class" />
 			</div>
 			<div class="float-end">
 				@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
