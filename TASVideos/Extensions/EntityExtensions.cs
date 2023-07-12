@@ -197,6 +197,7 @@ public static class EntityExtensions
 				LastUpdateTimestamp = p.LastUpdateTimestamp,
 				ObsoletedById = p.ObsoletedById,
 				Title = p.Title,
+				Class = p.PublicationClass!.Name,
 				ClassIconPath = p.PublicationClass!.IconPath,
 				MovieFileName = p.MovieFileName,
 				SubmissionId = p.SubmissionId,
