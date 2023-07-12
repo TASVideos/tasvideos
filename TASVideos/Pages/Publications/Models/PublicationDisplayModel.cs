@@ -13,6 +13,7 @@ public class PublicationDisplayModel
 	public DateTime LastUpdateTimestamp { get; set; }
 	public int? ObsoletedById { get; set; }
 	public string Title { get; set; } = "";
+	public string Class { get; set; } = "";
 	public string? ClassIconPath { get; set; }
 	public string MovieFileName { get; set; } = "";
 	public int SubmissionId { get; set; }
