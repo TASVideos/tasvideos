@@ -48,14 +48,20 @@ public class AppSettings
 	{
 		public string AccessToken { get; set; } = "";
 		public string PublicChannelId { get; set; } = "";
+		public string PublicTasChannelId { get; set; } = "";
+		public string PublicGameChannelId { get; set; } = "";
 		public string PrivateChannelId { get; set; } = "";
+		public string PrivateUserChannelId { get; set; } = "";
 
 		public bool IsEnabled() => Disable != true
 			&& !string.IsNullOrWhiteSpace(AccessToken)
-			&& !string.IsNullOrWhiteSpace(PublicChannelId);
+			&& !string.IsNullOrWhiteSpace(PublicChannelId)
+			&& !string.IsNullOrWhiteSpace(PublicTasChannelId)
+			&& !string.IsNullOrWhiteSpace(PublicGameChannelId);
 
 		public bool IsPrivateChannelEnabled() => IsEnabled()
-			&& !string.IsNullOrWhiteSpace(PrivateChannelId);
+			&& !string.IsNullOrWhiteSpace(PrivateChannelId)
+			&& !string.IsNullOrWhiteSpace(PrivateUserChannelId);
 	}
 
 	public class TwitterConnection : DistributorConnection

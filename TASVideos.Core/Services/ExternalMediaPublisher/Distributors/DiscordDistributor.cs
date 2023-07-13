@@ -34,9 +34,36 @@ public sealed class DiscordDistributor : IPostDistributor
 
 		var messageContent = new DiscordMessage(post).ToStringContent();
 
-		string channel = post.Type == PostType.Administrative
-			? _settings.PrivateChannelId
-			: _settings.PublicChannelId;
+		string channel;
+
+		if (post.Type == PostType.Administrative)
+		{
+			if (post.Group == PostGroups.UserManagement)
+			{
+				channel = _settings.PrivateUserChannelId;
+			}
+			else
+			{
+				channel = _settings.PrivateChannelId;
+			}
+		}
+		else
+		{
+			if (post.Group == PostGroups.Game)
+			{
+				channel = _settings.PublicGameChannelId;
+			}
+			else if (post.Group == PostGroups.Publication
+				|| post.Group == PostGroups.Submission
+				|| post.Group == PostGroups.UserFiles)
+			{
+				channel = _settings.PublicTasChannelId;
+			}
+			else
+			{
+				channel = _settings.PublicChannelId;
+			}
+		}
 
 		var response = await _client.PostAsync($"channels/{channel}/messages", messageContent);
 		if (!response.IsSuccessStatusCode)
