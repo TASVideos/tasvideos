@@ -1,4 +1,4 @@
-﻿@page "{id?}"
+@page "{id?}"
 @model EditModel
 @{
 	string saveBtnName;
@@ -41,9 +41,13 @@
 				<span asp-validation-for="GameGroup.Abbreviation" class="text-danger"></span>
 			</form-group>
 			<form-group>
-				<label asp-for="GameGroup.Description"></label>
-				<textarea asp-for="GameGroup.Description" class="form-control" rows="4"></textarea>
+				<div>
+					<partial name="_WikiEditHelper" model="@("GameGroup_Description")" />
+				</div>
+				<label asp-for="GameGroup.Description" class="form-control-label"></label>
+				<textarea asp-for="GameGroup.Description" rows="4" class="form-control wiki-edit"></textarea>
 				<span asp-validation-for="GameGroup.Description" class="text-danger"></span>
+				@await Component.RenderWiki(SystemWiki.WikiEditHelp)
 			</form-group>
 		</column>
 	</row>
