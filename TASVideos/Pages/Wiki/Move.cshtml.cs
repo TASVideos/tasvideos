@@ -77,7 +77,7 @@ public class MoveModel : BasePageModel
 		{
 			PageName = Move.DestinationPageName,
 			Markup = "what do I put here",
-			MinorEdit = false,
+			MinorEdit = true,
 			RevisionMessage = $"Page moved from {Move.OriginalPageName} to {Move.DestinationPageName}",
 			AuthorId = User.GetUserId()
 		};
