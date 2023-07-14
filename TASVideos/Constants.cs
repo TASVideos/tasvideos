@@ -39,7 +39,7 @@ public static class SystemWiki
 	public const string SubmissionImportant = "System/SubmissionImportant";
 	public const string SubmissionZipFailure = "System/SubmissionZipFailure";
 	public const string SubmitMovieHeader = "System/SubmitMovieHeader";
-	public const string SupportedMovieTypes= "System/SupportedMovieTypes";
+	public const string SupportedMovieTypes = "System/SupportedMovieTypes";
 	public const string SystemFooter = "System/SystemFooter";
 	public const string UserEditRole = "System/UserEditRole";
 	public const string UserFileUploadHeader = "System/UserFileUploadHeader";
