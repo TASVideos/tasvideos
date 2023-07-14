@@ -252,7 +252,7 @@
 					Additional Downloads:<br />
 					@foreach (var file in Model.MovieFileLinks)
 					{
-						<a class="ms-2" title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-fileId="@file.Id">(@file.Description)</a>
+						<a class="ms-2" title="@file.Path" asp-page="/Publications/View" asp-page-handler="DownloadAdditional" asp-route-id="@Model.Id" asp-route-fileId="@file.Id">(@file.Description)</a>
 					}
 				</small>
 			</div>
