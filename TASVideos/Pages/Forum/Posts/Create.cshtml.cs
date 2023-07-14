@@ -87,7 +87,7 @@ public class CreateModel : BaseForumModel
 
 			if (qPost != null)
 			{
-				Post.Text = $"[quote=\"{qPost.Poster!.UserName}\"]{qPost.Text}[/quote]";
+				Post.Text = $"[quote=\"[post={QuoteId}]⇈[/post] {qPost.Poster!.UserName}\"]{qPost.Text}[/quote]";
 			}
 		}
 
