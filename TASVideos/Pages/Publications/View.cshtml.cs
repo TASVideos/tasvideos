@@ -55,6 +55,7 @@ public class ViewModel : BasePageModel
 	public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
 	{
 		var file = await _db.PublicationFiles
+			.Where(pf => pf.PublicationId == Id)
 			.Where(pf => pf.Id == fileId)
 			.Select(pf => new { pf.FileData, pf.Path })
 			.SingleOrDefaultAsync();
