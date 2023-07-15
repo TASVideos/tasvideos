@@ -190,7 +190,7 @@ public class CatalogModel : BasePageModel
 		var result = await ConcurrentSave(_db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
 		if (result && !Catalog.MinorEdit)
 		{
-			await _publisher.SendSubmissionEdit(
+			await _publisher.SendGameManagement(
 				$"{Id}S Catalog edited by {User.Name()}",
 				$"{string.Join(", ", externalMessages)} | {submission.Title}",
 				$"{Id}S");
