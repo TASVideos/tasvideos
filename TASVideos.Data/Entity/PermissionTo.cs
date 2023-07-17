@@ -299,7 +299,7 @@ public enum PermissionTo
 	SeeDiagnostics = 9001,
 
 	[Group("Email")]
-	[Description("The ability to see user's emails")]
+	[Description("The ability to see a user's email address")]
 	SeeEmails = 9002
 
 	#endregion
