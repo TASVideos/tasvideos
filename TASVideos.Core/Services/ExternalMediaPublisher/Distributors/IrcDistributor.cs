@@ -101,7 +101,7 @@ public class IrcDistributor : IPostDistributor
 					}
 
 					// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
-					string[] splitInput = inputLine.Split(new[] { ' ' });
+					string[] splitInput = inputLine.Split(' ');
 
 					if (splitInput[0] == "PING")
 					{
