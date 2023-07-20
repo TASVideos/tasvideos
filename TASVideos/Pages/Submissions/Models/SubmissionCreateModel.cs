@@ -37,7 +37,7 @@ public class SubmissionCreateModel
 	[MinLength(1)]
 	public IList<string> Authors { get; set; } = new List<string>();
 
-	[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+	[Display(Name = "External Coauthors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; set; }
 
 	[Required]

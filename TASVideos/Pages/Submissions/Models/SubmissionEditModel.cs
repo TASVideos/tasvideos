@@ -63,7 +63,7 @@ public class SubmissionEditModel
 
 	public int RerecordCount { get; set; }
 
-	[Display(Name = "Author")]
+	[Display(Name = "Author(s)")]
 	public IEnumerable<string> Authors { get; set; } = new List<string>();
 
 	[Display(Name = "Submitter")]
@@ -87,7 +87,7 @@ public class SubmissionEditModel
 	[Display(Name = "Publisher")]
 	public string? Publisher { get; set; }
 
-	[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+	[Display(Name = "External Coauthors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; set; }
 
 	public string Title { get; set; } = "";
