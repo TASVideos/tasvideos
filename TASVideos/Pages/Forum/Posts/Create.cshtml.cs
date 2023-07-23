@@ -85,9 +85,9 @@ public class CreateModel : BaseForumModel
 				.Where(p => p.Id == QuoteId)
 				.SingleOrDefaultAsync();
 
-			if (qPost != null)
+			if (qPost is not null)
 			{
-				Post.Text = $"[quote=\"{qPost.Poster!.UserName}\"]{qPost.Text}[/quote]";
+				Post.Text = $"[quote=\"[post={QuoteId}][/post] {qPost.Poster!.UserName}\"]{qPost.Text}[/quote]";
 			}
 		}
 
