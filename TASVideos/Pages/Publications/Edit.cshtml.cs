@@ -191,7 +191,7 @@ public class EditModel : BasePageModel
 
 		if (publication.AdditionalAuthors != model.AdditionalAuthors)
 		{
-			externalMessages.Add($"Changed additional authors from \"{publication.AdditionalAuthors}\" to \"{model.AdditionalAuthors}\"");
+			externalMessages.Add($"Changed external authors from \"{publication.AdditionalAuthors}\" to \"{model.AdditionalAuthors}\"");
 		}
 
 		publication.ObsoletedById = model.ObsoletedBy;

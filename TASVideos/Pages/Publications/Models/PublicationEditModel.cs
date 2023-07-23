@@ -12,7 +12,7 @@ public class PublicationEditModel
 
 	public string MovieFileName { get; set; } = "";
 
-	[Display(Name = "Additional Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; set; }
 
 	[Display(Name = "Author")]
