@@ -7,36 +7,36 @@ using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
-public class TwitterDistributorV2 : IPostDistributor
+public class XDistributorV2 : IPostDistributor
 {
 	private static System.Timers.Timer? _timer = null;
 	private static readonly object TimeLock = new();
 
-	private readonly HttpClient _twitterClient = null!;
+	private readonly HttpClient _xClient = null!;
 	private readonly HttpClient _accessTokenClient = null!;
-	private readonly AppSettings.TwitterConnectionV2 _settings;
-	private readonly ILogger<TwitterDistributorV2> _logger = null!;
+	private readonly AppSettings.XConnectionV2 _settings;
+	private readonly ILogger<XDistributorV2> _logger = null!;
 
-	private TwitterTokenDetails _twitterTokenDetails = new();
+	private XTokenDetails _xTokenDetails = new();
 
 	private readonly string _tokenStorageFileName = null!;
 
 	private readonly TimeSpan _accessTokenDuration = new (1, 59, 30);  // Two hours minus thirty seconds.
 	private readonly TimeSpan _refreshTokenDuration = new (177, 12, 0, 0); // Refresh tokens last "six months", so this is just a bit less than that.
 
-	public TwitterDistributorV2(
+	public XDistributorV2(
 		AppSettings appSettings,
 		IHttpClientFactory httpClientFactory,
-		ILogger<TwitterDistributorV2> logger)
+		ILogger<XDistributorV2> logger)
 	{
-		_settings = appSettings.TwitterV2;
+		_settings = appSettings.XV2;
 		if (!_settings.IsEnabled())
 		{
 			return;
 		}
 		
-		_twitterClient = httpClientFactory.CreateClient(HttpClients.TwitterV2);
-		_accessTokenClient = httpClientFactory.CreateClient(HttpClients.TwitterAuth);
+		_xClient = httpClientFactory.CreateClient(HttpClients.XV2);
+		_accessTokenClient = httpClientFactory.CreateClient(HttpClients.XAuth);
 		_logger = logger;
 
 		_tokenStorageFileName = Path.Combine(Path.GetTempPath(), "twitter.json");
@@ -51,12 +51,12 @@ public class TwitterDistributorV2 : IPostDistributor
 				{
 					try
 					{
-						_logger.LogInformation("Automatically refreshing twitter tokens on a timer");
-						RequestTokensFromTwitter().Wait();
+						_logger.LogInformation("Automatically refreshing x tokens on a timer");
+						RequestTokensFromX().Wait();
 					}
 					catch (Exception ex)
 					{
-						_logger.LogError("An error occured getting twitter tokens from timer ex: {ex}", ex);
+						_logger.LogError("An error occured getting x tokens from timer ex: {ex}", ex);
 					}
 				};
 				_timer.Interval = Durations.OneHourInMilliseconds;
@@ -75,16 +75,16 @@ public class TwitterDistributorV2 : IPostDistributor
 			return false;
 		}
 
-		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken))
+		if (string.IsNullOrWhiteSpace(_xTokenDetails.AccessToken))
 		{
-			// Try to get Twitter token information from the local file.
+			// Try to get X token information from the local file.
 			if (File.Exists(_tokenStorageFileName))
 			{
 				RetrieveTokenInformation();
 			}
 		}
 
-		return !string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken);
+		return !string.IsNullOrWhiteSpace(_xTokenDetails.AccessToken);
 	}
 
 	public async Task Post(IPostable post)
@@ -96,14 +96,14 @@ public class TwitterDistributorV2 : IPostDistributor
 			return;
 		}
 
-		_twitterClient.SetBearerToken(_twitterTokenDetails.AccessToken);
+		_xClient.SetBearerToken(_xTokenDetails.AccessToken);
 
 		var tweetData = new
 		{
-			text = GenerateTwitterMessage(post)
+			text = GenerateXMessage(post)
 		};
 
-		var response = await _twitterClient.PostAsync("", tweetData.ToStringContent());
+		var response = await _xClient.PostAsync("", tweetData.ToStringContent());
 
 		if (!response.IsSuccessStatusCode)
 		{
@@ -115,7 +115,7 @@ public class TwitterDistributorV2 : IPostDistributor
 	{
 		if (!File.Exists(_tokenStorageFileName))
 		{
-			_logger.LogWarning("{_tokenStorageFileName} not found, twitter is likely not to work", _tokenStorageFileName);
+			_logger.LogWarning("{_tokenStorageFileName} not found, x is likely not to work", _tokenStorageFileName);
 			return;
 		}
 
@@ -125,11 +125,11 @@ public class TwitterDistributorV2 : IPostDistributor
 		{
 			try
 			{
-				_twitterTokenDetails = JsonSerializer.Deserialize<TwitterTokenDetails>(tokenText) ?? new TwitterTokenDetails();
+				_xTokenDetails = JsonSerializer.Deserialize<XTokenDetails>(tokenText) ?? new XTokenDetails();
 
-				if (DateTime.UtcNow > _twitterTokenDetails.RefreshTokenExpiry)
+				if (DateTime.UtcNow > _xTokenDetails.RefreshTokenExpiry)
 				{
-					_twitterTokenDetails.RefreshToken = "";
+					_xTokenDetails.RefreshToken = "";
 				}
 			}
 			catch (Exception) { }
@@ -138,23 +138,23 @@ public class TwitterDistributorV2 : IPostDistributor
 
 	private async Task RefreshTokensIfExpired()
 	{
-		if (string.IsNullOrWhiteSpace(_twitterTokenDetails.AccessToken) ||
-			DateTime.UtcNow > _twitterTokenDetails.AccessTokenExpiry)
+		if (string.IsNullOrWhiteSpace(_xTokenDetails.AccessToken) ||
+			DateTime.UtcNow > _xTokenDetails.AccessTokenExpiry)
 		{
-			await RequestTokensFromTwitter();
+			await RequestTokensFromX();
 		}
 	}
 
-	private async Task RequestTokensFromTwitter()
+	private async Task RequestTokensFromX()
 	{
-		var refreshResult = await RequestTokensFromTwitter(_twitterTokenDetails.RefreshToken);
+		var refreshResult = await RequestTokensFromX(_xTokenDetails.RefreshToken);
 		if (!refreshResult)
 		{
-			await RequestTokensFromTwitter(_settings.OneTimeRefreshToken);
+			await RequestTokensFromX(_settings.OneTimeRefreshToken);
 		}
 	}
 
-	private async Task<bool> RequestTokensFromTwitter (string refreshToken)
+	private async Task<bool> RequestTokensFromX (string refreshToken)
 	{
 		bool retVal = false;
 
@@ -178,19 +178,19 @@ public class TwitterDistributorV2 : IPostDistributor
 
 		if (response.IsSuccessStatusCode)
 		{
-			var responseData = JsonSerializer.Deserialize<TwitterRefreshTokenResponse>(await response.Content.ReadAsStringAsync());
+			var responseData = JsonSerializer.Deserialize<XRefreshTokenResponse>(await response.Content.ReadAsStringAsync());
 
 			if (responseData is null)
 			{
-				_logger.LogError("Got a successful response from Twitter, but received no tokens!");
+				_logger.LogError("Got a successful response from X, but received no tokens!");
 			}
 			else
 			{
-				_twitterTokenDetails.AccessToken = responseData.AccessToken;
-				_twitterTokenDetails.AccessTokenExpiry = DateTime.UtcNow + _accessTokenDuration;
+				_xTokenDetails.AccessToken = responseData.AccessToken;
+				_xTokenDetails.AccessTokenExpiry = DateTime.UtcNow + _accessTokenDuration;
 
-				_twitterTokenDetails.RefreshToken = responseData.RefreshToken;
-				_twitterTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + _refreshTokenDuration;
+				_xTokenDetails.RefreshToken = responseData.RefreshToken;
+				_xTokenDetails.RefreshTokenExpiry = DateTime.UtcNow + _refreshTokenDuration;
 
 				await StoreValues();
 
@@ -204,15 +204,15 @@ public class TwitterDistributorV2 : IPostDistributor
 				Environment.NewLine,
 				await response.Content.ReadAsStringAsync());
 
-			// Unrecoverable error, we need to generate new tokens anyways so we disable Twitter for now.
-			_twitterTokenDetails.AccessToken = "";
-			_twitterTokenDetails.RefreshToken = "";
+			// Unrecoverable error, we need to generate new tokens anyways so we disable X for now.
+			_xTokenDetails.AccessToken = "";
+			_xTokenDetails.RefreshToken = "";
 		}
 
 		return retVal;
 	}
 
-	private static string GenerateTwitterMessage(IPostable post)
+	private static string GenerateXMessage(IPostable post)
 	{
 		var hasLink = !string.IsNullOrWhiteSpace(post.Link);
 		
@@ -223,7 +223,7 @@ public class TwitterDistributorV2 : IPostDistributor
 			_ => post.Body
 		};
 
-		body = body.Cap(280 - (hasLink ? 25 : 0)) ?? ""; // Twitter always makes links 23, make it 25 just in case
+		body = body.Cap(280 - (hasLink ? 25 : 0)) ?? ""; // X always makes links 23, make it 25 just in case
 		
 		if (hasLink)
 		{
@@ -233,21 +233,21 @@ public class TwitterDistributorV2 : IPostDistributor
 		return body;
 	}
 
-	// Write the TwitterTokenDetails object to the file.
+	// Write the XTokenDetails object to the file.
 	private async Task StoreValues()
 	{
 		try
 		{
-			await File.WriteAllTextAsync(_tokenStorageFileName, JsonSerializer.Serialize(_twitterTokenDetails));
+			await File.WriteAllTextAsync(_tokenStorageFileName, JsonSerializer.Serialize(_xTokenDetails));
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError("Critical error writing Twitter access token details to the temporary file. Additional information: {message}", ex.Message);
+			_logger.LogError("Critical error writing X access token details to the temporary file. Additional information: {message}", ex.Message);
 		}
 	}
 }
 
-public class TwitterRefreshTokenResponse
+public class XRefreshTokenResponse
 {
 	[JsonPropertyName("access_token")]
 	public string AccessToken { get; set; } = "";
@@ -256,7 +256,7 @@ public class TwitterRefreshTokenResponse
 	public string RefreshToken { get; set; } = "";
 }
 
-public class TwitterTokenDetails
+public class XTokenDetails
 {
 	[JsonPropertyName("access_token")]
 	public string AccessToken { get; set; } = "";

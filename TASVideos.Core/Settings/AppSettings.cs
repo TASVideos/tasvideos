@@ -13,8 +13,8 @@ public class AppSettings
 
 	public IrcConnection Irc { get; set; } = new();
 	public DiscordConnection Discord { get; set; } = new();
-	public TwitterConnection Twitter { get; set; } = new();
-	public TwitterConnectionV2 TwitterV2 { get; set; } = new();
+	public XConnection X { get; set; } = new();
+	public XConnectionV2 XV2 { get; set; } = new();
 	public JwtSettings Jwt { get; set; } = new();
 	public GoogleAuthSettings YouTube { get; set; } = new();
 	public EmailBasicAuthSettings Email { get; set; } = new();
@@ -64,7 +64,7 @@ public class AppSettings
 			&& !string.IsNullOrWhiteSpace(PrivateUserChannelId);
 	}
 
-	public class TwitterConnection : DistributorConnection
+	public class XConnection : DistributorConnection
 	{
 		public string ApiBase { get; set; } = "";
 		public string ConsumerKey { get; set; } = "";
@@ -79,7 +79,7 @@ public class AppSettings
 			&& !string.IsNullOrWhiteSpace(TokenSecret);
 	}
 
-	public class TwitterConnectionV2 : DistributorConnection
+	public class XConnectionV2 : DistributorConnection
 	{
 		public string ClientId { get; set; } = "";
 		public string ClientSecret { get; set; } = "";

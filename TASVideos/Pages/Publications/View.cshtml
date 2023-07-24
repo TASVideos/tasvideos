@@ -7,7 +7,7 @@
 		Title = Model.Publication.Title,
 		Description = $"Publication [{Model.Id}] from {Model.Publication.CreateTimestamp.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}",
 		Image = $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Publication.Screenshot.Path}",
-		UseTwitterCard = true
+		UseXCard = true
 	});
 }
 

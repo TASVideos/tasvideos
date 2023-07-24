@@ -16,23 +16,23 @@ public class SendTweetModel : BasePageModel
 
 	public void OnGet()
 	{
-		var twitter = HttpContext.RequestServices.GetService<TwitterDistributorV2>();
-		if (twitter is null || !twitter.IsEnabled())
+		var x = HttpContext.RequestServices.GetService<XDistributorV2>();
+		if (x is null || !x.IsEnabled())
 		{
-			ModelState.AddModelError("", "Twitter is not enabled");
+			ModelState.AddModelError("", "X is not enabled");
 		}
 	}
 
 	public async Task<IActionResult> OnPost()
 	{
-		var twitter = HttpContext.RequestServices.GetService<TwitterDistributorV2>();
-		if (twitter is null || !twitter.IsEnabled())
+		var x = HttpContext.RequestServices.GetService<XDistributorV2>();
+		if (x is null || !x.IsEnabled())
 		{
-			ModelState.AddModelError("", "Twitter is not enabled");
+			ModelState.AddModelError("", "X is not enabled");
 			return Page();
 		}
 
-		await twitter.Post(new Post
+		await x.Post(new Post
 		{
 			Body = Text,
 			Title = "Test Message"

@@ -31,12 +31,12 @@ public static class ServiceCollectionExtensions
 				client.BaseAddress = new Uri("https://discord.com/api/v10/");
 			});
 		services
-			.AddHttpClient(HttpClients.TwitterV2, client =>
+			.AddHttpClient(HttpClients.XV2, client =>
 			{
 				client.BaseAddress = new Uri("https://api.twitter.com/2/tweets");
 			});
 		services
-			.AddHttpClient(HttpClients.TwitterAuth, client =>
+			.AddHttpClient(HttpClients.XAuth, client =>
 			{
 				client.BaseAddress = new Uri("https://api.twitter.com/2/oauth2/token");
 			});
@@ -141,10 +141,10 @@ public static class ServiceCollectionExtensions
 			services.AddScoped<IPostDistributor, DiscordDistributor>();
 		}
 		
-		if (settings.TwitterV2.IsEnabled())
+		if (settings.XV2.IsEnabled())
 		{
-			services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
-			services.AddSingleton<TwitterDistributorV2>();	// Required for direct Tweets.
+			services.AddSingleton<IPostDistributor, XDistributorV2>();
+			services.AddSingleton<XDistributorV2>();	// Required for direct Tweets.
 		}
 
 		services.AddScoped<IPostDistributor, DistributorStorage>();
