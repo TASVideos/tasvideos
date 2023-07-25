@@ -1,5 +1,5 @@
 //bootstrap defined colors
-$bs-white: #fff;
+/*$bs-white: #fff;
 $bs-gray-100: #f8f9fa;
 $bs-gray-100-rgb: 248,249,250;
 $bs-gray-200: #e9ecef;
@@ -26,7 +26,7 @@ $bs-secondary-bg-subtle-dark: #212529;
 $bs-secondary-border-subtle: #e9ecef;
 $bs-secondary-border-subtle-dark: #495057;
 $bs-emphasis-color: #000;
-$bs-emphasis-color-dark: #fff;
+$bs-emphasis-color-dark: #fff;*/
 
 //diff library defined colors
 $diff-replace: #fd8;
@@ -37,13 +37,15 @@ $diff-insert: #9e9;
 
 //custom banner and site background colors
 $banner: #110931;
-$tasvideos-bg: $bs-gray-200;
+$tasvideos-bg: #e9ecef;
 $tasvideos-bg-gradient: #c2d4fc;
 $tasvideos-bg-dark: #1c1d2b;
-$tasvideos-bg-gradient-dark: #311a59;
+$tasvideos-bg-gradient-dark: #110931;
+
+$card-bg-color: #2c3034;
 
 //custom theme colors and semantic button/border colors
-$primary: #105cb6;
+/*$primary: #105cb6;
 $primary-rgb: 16, 92, 182;
 $primary-dark: #5099f1;
 $primary-dark-rgb: 72, 147, 239;
@@ -62,7 +64,7 @@ $info-dark-rgb: 6, 123, 147;
 $success: #198754;
 $success-rgb: 25, 135, 84;
 $success-dark: #157347;
-$success-dark-rgb: 21, 115, 71;
+$success-dark-rgb: 21, 115, 71;*/
 $card-primary: #acd;
 $card-primary-dark: #214354;
 $card-secondary: #cde;

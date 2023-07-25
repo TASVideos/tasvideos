@@ -1,35 +1,43 @@
-﻿function forceDarkMode() {
-	removeAutoDarkMode();
-	document.getElementById("style-dark").disabled = false;
+﻿
+const getStoredTheme = () => localStorage.getItem('theme')
+const setStoredTheme = theme => localStorage.setItem('theme', theme)
 
-	localStorage.setItem("style-dark", "true");
+const getPreferredTheme = () => {
+    const storedTheme = getStoredTheme()
+    if (storedTheme) {
+        return storedTheme
+    }
+
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
-function forceLightMode() {
-	removeForcedDarkMode();
-	removeAutoDarkMode();
-
-	localStorage.setItem("style-dark", "false");
+const setTheme = theme => {
+    if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.setAttribute('data-bs-theme', 'dark')
+        setStoredTheme('dark')
+    } else {
+        document.documentElement.setAttribute('data-bs-theme', theme)
+        setStoredTheme(theme)
+    }
 }
 
-function autoDarkMode() {
-	removeForcedDarkMode();
-	document.getElementById("style-dark-initial").disabled = false;
+setTheme(getPreferredTheme())
 
-	localStorage.removeItem("style-dark");
-}
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    const storedTheme = getStoredTheme()
+    if (storedTheme !== 'light' && storedTheme !== 'dark') {
+        setTheme(getPreferredTheme())
+    }
+})
 
-function removeForcedDarkMode() {
-	document.getElementById("style-dark").disabled = true;
-}
-
-function removeAutoDarkMode() {
-	document.getElementById("style-dark-initial").disabled = true;
-}
-
-if (localStorage.getItem("style-dark") !== null) {
-	removeAutoDarkMode();
-	if (localStorage.getItem("style-dark") === "true") {
-		forceDarkMode();
-	}
-}
+window.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-bs-theme-value]')
+        .forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const theme = toggle.getAttribute('data-bs-theme-value')
+                setStoredTheme(theme)
+                setTheme(theme)
+                showActiveTheme(theme, true)
+            })
+        })
+})

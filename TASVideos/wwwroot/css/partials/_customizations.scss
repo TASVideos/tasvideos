@@ -6,12 +6,23 @@
 	--cardsecondary: #{$card-secondary};
 	--tasvideos-bg: #{$tasvideos-bg};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
-	--tab-content-bg: #{$bs-white};
+	--tab-content-bg: #{$white};
+}
+@include color-mode(dark) {
+	--cardprimary: #{$card-primary-dark};
+	--cardsecondary: #{$card-secondary-dark};
+	--tasvideos-bg: #{$tasvideos-bg-dark};
+	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient-dark};
 }
 
 body {
 	font-size: 14px;
 	background: var(--tasvideos-bg) linear-gradient(var(--tasvideos-bg-gradient) 0, var(--tasvideos-bg) 250px) repeat-x;
+}
+@include color-mode(dark) {
+	body {
+		background: var(--tasvideos-bg) linear-gradient(var(--tasvideos-bg-gradient) $banner-height, var(--tasvideos-bg) 735px) repeat-x;
+	}
 }
 
 .btn-separator::after {
@@ -233,9 +244,9 @@ figure {
 	font-weight: bold;
 }
 
-.topic-header {
+/*.topic-header {
 	background-color: var(--bs-gray-200);
-}
+}*/
 
 /* Firefox fix for file inputs */
 @-moz-document url-prefix() {
@@ -263,7 +274,6 @@ figure {
 		display: none;
 	}
 }
-
 #banner {
 	background: $banner;
 
@@ -271,16 +281,34 @@ figure {
 		z-index: 1;
 	}
 }
+@include color-mode(dark) {
+	.site-icon {
+		left: -2rem;
+		top: -.75rem;
+
+		&-light {
+			display: none;
+		}
+
+		&-dark {
+			display: block;
+		}
+	}
+
+	#banner {
+		background: none;
+	}
+}
 
 #brand {
-	color: $bs-gray-100;
+	color: $gray-100;
 	font-size: 17px;
 }
 
 #mantra {
 	font-weight: bold;
 	z-index: 1;
-	color: $bs-gray-100;
+	color: $gray-100;
 	text-decoration: none;
 
 	&-1 {
@@ -302,6 +330,13 @@ figure {
 .site-banner {
 	height: 100%;
 }
+@include color-mode(dark) {
+	.site-banner {
+		height: $banner-height;
+		background: $banner;
+		z-index: -1;
+	}
+}
 
 .fa {
 	transform: translate(0);
@@ -310,6 +345,16 @@ figure {
 .card-header {
 	h1, h2, h3, h4, h5, h6 {
 		margin-bottom: 0;
+	}
+}
+@include color-mode(dark) {
+	.card {
+		background-color: $card-bg-color;
+		border: 2px solid rgba(255, 255, 255, .125);
+
+		&-header {
+			border-bottom: 2px solid rgba(255, 255, 255, .125);
+		}
 	}
 }
 

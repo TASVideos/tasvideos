@@ -14,6 +14,27 @@ $theme-colors: map-merge($theme-colors, $custom-colors);
 @import "../bootstrap/scss/mixins";
 @import "../bootstrap/scss/utilities";
 
+// Add a custom color to new theme maps
+
+// Light mode
+$custom-colors-text: ("pub": #0a58ca);
+$custom-colors-bg-subtle: ("pub": #cde);
+$custom-colors-border-subtle: ("pub": #acd);
+
+$theme-colors-text: map-merge($theme-colors-text, $custom-colors-text);
+$theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, $custom-colors-bg-subtle);
+$theme-colors-border-subtle: map-merge($theme-colors-border-subtle, $custom-colors-border-subtle);
+
+// Dark mode
+$custom-colors-text-dark: ("pub": #6ea8fe);
+$custom-colors-bg-subtle-dark: ("pub": #112132);
+$custom-colors-border-subtle-dark: ("pub": #214354);
+
+$theme-colors-text-dark: map-merge($theme-colors-text-dark, $custom-colors-text-dark);
+$theme-colors-bg-subtle-dark: map-merge($theme-colors-bg-subtle-dark, $custom-colors-bg-subtle-dark);
+$theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, $custom-colors-border-subtle-dark);
+
+
 @import "../bootstrap/scss/root";
 @import "../bootstrap/scss/reboot";
 @import "../bootstrap/scss/type";

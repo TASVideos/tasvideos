@@ -1,6 +1,8 @@
-﻿@import "partials/colors";
+﻿@import "bootstrap";
+
+@import "partials/colors";
 @import "partials/variables";
-@import "partials/bootstrap-overrides";
+@import "partials/bootstrap-overrides-new";
 @import "partials/customizations";
 @import "partials/_prism";
 @import "diff";
