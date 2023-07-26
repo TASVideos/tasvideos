@@ -30,6 +30,15 @@ h4 {
     font-size: 1.5em;
 }
 
+
+.btn {
+	font-size: .875rem;
+
+	&-sm {
+		font-size: .750rem;
+	}
+}
+
 .navbar {
     font-size: 1rem;
 }

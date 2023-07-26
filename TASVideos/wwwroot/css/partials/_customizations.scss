@@ -6,13 +6,26 @@
 	--cardsecondary: #{$card-secondary};
 	--tasvideos-bg: #{$tasvideos-bg};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
-	--tab-content-bg: #{$white};
+
+	.card {
+		--bs-card-cap-bg: var(--bs-gray-200);
+	}
 }
 @include color-mode(dark) {
 	--cardprimary: #{$card-primary-dark};
 	--cardsecondary: #{$card-secondary-dark};
 	--tasvideos-bg: #{$tasvideos-bg-dark};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient-dark};
+	--bs-body-color: #f8f9fa;
+	--bs-body-color-rgb: rgb(248,249,250);
+
+	.card {
+		--bs-card-cap-bg: #212529;
+	}
+
+	.table {
+		--bs-table-striped-bg: #2c3034;
+	}
 }
 
 body {
@@ -140,14 +153,12 @@ article.wiki, .postbody {
 
 .forum-signature {
 	font-style: italic;
-	background-color: var(--bs-gray-200);
-	border-top: solid 1px var(--bs-gray-400);
+	background-color: var(--bs-card-cap-bg);
 	padding: .5rem;
 }
 
 .forum-profile-section {
-	border-right: solid 1px var(--bs-gray-200);
-	padding-right: 0;
+	background-color: var(--bs-card-cap-bg);
 }
 
 .forum-post-highlight {
@@ -185,7 +196,7 @@ article.wiki, .postbody {
 figure {
 	margin: 0.75rem;
 	padding: .25rem;
-	background-color: var(--bs-gray-200);
+	background-color: var(--bs-card-cap-bg);
 	border-radius: 0.25rem;
 	border: 1px dashed var(--bs-gray-700);
 }
@@ -233,7 +244,9 @@ figure {
 }
 
 .tab-content {
-	background-color: var(--tab-content-bg);
+	background-color: var(--bs-body-bg);
+	border: var(--bs-border-width) solid transparent;
+	border-color: var(--bs-body-bg) var(--bs-border-color) var(--bs-border-color);
 }
 
 .tab-pane {
@@ -375,10 +388,6 @@ figure {
 	padding: 3px;
 }
 
-.border-card {
-	border-color: var(--bs-gray-400) !important;
-}
-
 .right-align-topic {
 	border: 1px solid var(--border-color);
 	border-radius: 5px;
@@ -416,7 +425,7 @@ tt {
 }
 
 tt, code, kbd, pre, samp, .wiki blockquote {
-	background: var(--bs-gray-400);
+	background: var(--bs-body-bg);
 }
 
 tt, code, kbd, pre, samp, dt, .wiki blockquote {
