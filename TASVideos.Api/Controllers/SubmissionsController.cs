@@ -20,7 +20,7 @@ public class SubmissionsController : Controller
 	/// <summary>
 	/// Returns a submission with the given id.
 	/// </summary>
-	/// <response code="200">Returns the list of publications.</response>
+	/// <response code="200">Returns the list of submissions.</response>
 	/// <response code="400">The request parameters are invalid.</response>
 	/// <response code="404">A submission with the given id was not found.</response>
 	[HttpGet("{id}")]
@@ -37,9 +37,9 @@ public class SubmissionsController : Controller
 	}
 
 	/// <summary>
-	/// Returns a list of publications, filtered by the given criteria.
+	/// Returns a list of submissions, filtered by the given criteria.
 	/// </summary>
-	/// <response code="200">Returns the list of publications.</response>
+	/// <response code="200">Returns the list of submissions.</response>
 	/// <response code="400">The request parameters are invalid.</response>
 	[HttpGet]
 	[Validate]
