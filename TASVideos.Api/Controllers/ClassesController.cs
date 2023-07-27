@@ -47,7 +47,7 @@ public class ClassesController : Controller
 	}
 
 	/// <summary>
-	/// Creates a new publication class
+	/// Creates a new publication class.
 	/// </summary>
 	/// <response code="201">The publication class was created successfully.</response>
 	/// <response code="400">The request parameters are invalid.</response>
@@ -77,7 +77,7 @@ public class ClassesController : Controller
 	}
 
 	/// <summary>
-	/// Updates an existing publication class
+	/// Updates an existing publication class.
 	/// </summary>
 	/// <response code="200">The class was updated.</response>
 	/// <response code="400">The request parameters are invalid.</response>
@@ -109,7 +109,7 @@ public class ClassesController : Controller
 	}
 
 	/// <summary>
-	/// Deletes an existing publication publication class
+	/// Deletes an existing publication class.
 	/// </summary>
 	/// <response code="200">The class was deleted successfully.</response>
 	/// <response code="400">The request parameters are invalid.</response>
