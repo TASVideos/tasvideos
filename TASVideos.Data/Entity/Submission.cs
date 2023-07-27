@@ -7,6 +7,7 @@ public interface ISubmissionFilter
 	IEnumerable<string> Systems { get; }
 	string? User { get; }
 	IEnumerable<int> GameIds { get; }
+	int? StartType { get; }
 }
 
 [ExcludeFromHistory]
@@ -183,6 +184,11 @@ public static class SubmissionExtensions
 		if (criteria.GameIds.Any())
 		{
 			query = query.Where(s => criteria.GameIds.Contains(s.GameId ?? 0));
+		}
+
+		if (criteria.StartType.HasValue)
+		{
+			query = query.Where(s => s.MovieStartType == criteria.StartType);
 		}
 
 		return query;

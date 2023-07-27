@@ -35,6 +35,11 @@ public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 	/// </summary>
 	public string? Games { get; init; }
 
+	/// <summary>
+	/// Gets the start type of the movie. 0 = Power On, 1 = Sram, 2 = Savestate
+	/// </summary>
+	public int? StartType { get; init; }
+
 	IEnumerable<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear);
 
 	IEnumerable<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)

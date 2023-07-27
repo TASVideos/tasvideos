@@ -24,6 +24,8 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 
 	public string? GameId { get; set; }
 
+	public int? StartType { get; set; }
+
 	[Display(Name = "Status Filter")]
 	public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 
