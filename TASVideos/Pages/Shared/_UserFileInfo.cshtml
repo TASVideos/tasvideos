@@ -26,9 +26,9 @@
 			</span>
 		</h4>
 	</cardheader>
-	<cardbody class="px-2 py-0">
-		<row class="gx-3">
-			<div class="col px-3 py-3" style="background-color: var(--bs-gray-200)">
+	<cardheader>
+		<row>
+			<div class="col px-3 pb-2">
 				@Model.FileName
 
 				<div condition="@(Model.IsMovie)">
@@ -68,6 +68,8 @@
 				</div>
 			</div>
 		</row>
+	</cardheader>
+	<cardbody class="px-2 py-0">
 
 		<div class="col d-flex flex-column py-2 px-2" condition="@(!string.IsNullOrEmpty(Model.Description))">
 				<wiki-markup markup=@Model.Description></wiki-markup>
@@ -130,7 +132,7 @@
 	}
 
 	<div class="card border-primary border mb-2" permission="CreateForumPosts">
-		<cardheader style="background-color: var(--bs-gray-200)">
+		<cardheader>
 			<h4>Comment:</h4>
 		</cardheader>
 		<cardbody>
