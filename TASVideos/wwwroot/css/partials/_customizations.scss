@@ -13,6 +13,10 @@
 	.card {
 		--bs-card-cap-bg: var(--bs-gray-200);
 	}
+
+	pre {
+		--bs-card-cap-bg: var(--bs-white);
+	}
 }
 @include color-mode(dark) {
 	--bs-publication: var(--bs-publication-border-subtle);
@@ -24,7 +28,7 @@
 	--bs-link-color: #5099f1;
 	--bs-link-color-rgb: 80,153,241;
 
-	.card, figure {
+	.card, figure, pre {
 		--bs-card-cap-bg: #212529;
 	}
 
