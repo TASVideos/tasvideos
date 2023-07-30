@@ -52,9 +52,9 @@
 		<a id="DeletedPages" permission="SeeDeletedWikiPages" asp-page="/Wiki/DeletedPages" class="dropdown-item">Deleted Pages</a>
 	</nav-dropdown>
 	<nav-dropdown id="DarkDropdown" activate='<i class="fa fa-adjust"></i>'>
-		<button id="Dark" class="dropdown-item" onclick="setTheme('dark')"><i class="fa-regular fa-moon"></i> Dark</button>
-		<button id="Light" class="dropdown-item" onclick="setTheme('light')"><i class="fa-regular fa-sun"></i> Light</button>
-		<button id="Auto" class="dropdown-item" onclick="setTheme('auto')">Auto</button>
+		<button id="Dark" class="dropdown-item" onclick="forceDarkMode()"><i class="fa-regular fa-moon"></i> Dark</button>
+		<button id="Light" class="dropdown-item" onclick="forceLightMode()"><i class="fa-regular fa-sun"></i> Light</button>
+		<button id="Auto" class="dropdown-item" onclick="autoDarkMode()">Auto</button>
 	</nav-dropdown>
 	
 </navbar>

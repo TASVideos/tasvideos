@@ -57,13 +57,7 @@ pre[class*="language-"] {
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-	background: var(--bs-card-cap-bg);
-}
-:not(.card-body) > .wiki {
-	:not(pre) > code[class*="language-"],
-	pre[class*="language-"] {
-		background: var(--bs-body-bg);
-	}
+	background: #f5f2f0;
 }
 
 /* Inline code */

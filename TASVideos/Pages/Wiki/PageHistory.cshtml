@@ -29,12 +29,12 @@
 	{
 		if (isFrom && revision == Model.FromRevision)
 		{
-			return "btn btn-info btn-sm active";
+			return "btn btn-primary btn-sm";
 		}
 
 		if (!isFrom && revision == Model.ToRevision)
 		{
-			return "btn btn-info btn-sm active";
+			return "btn btn-primary btn-sm";
 		}
 
 		return "btn btn-info btn-sm";
@@ -53,7 +53,7 @@
 </div>
 <hr />
 <div class="table-container">
-	<table class="table table-sm">
+	<table class="table table-striped table-light table-sm">
 		<thead>
 			<tr>
 				<th>@Html.DisplayNameFor(m => m.History.Revisions.First().Revision)</th>
@@ -175,20 +175,24 @@
 				.forEach(function (elem) {
 					elem.classList.remove('table-primary');
 					elem.classList.remove('table-info');
-					elem.querySelector("button[data-from]").classList.remove("active");
-					elem.querySelector("button[data-to]").classList.remove("active");
+					elem.querySelector("button[data-from]").classList.remove("btn-primary");
+					elem.querySelector("button[data-from]").classList.add("btn-info");
+					elem.querySelector("button[data-to]").classList.remove("btn-primary");
+					elem.querySelector("button[data-to]").classList.add("btn-info");
 				});
 		
 			const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
 			if (cur) {
 				cur.classList.add('table-primary');
-				cur.querySelector("button[data-to]").classList.add("active");
+				cur.querySelector("button[data-to]").classList.remove("btn-info");
+				cur.querySelector("button[data-to]").classList.add("btn-primary");
 			}
 
 			const prev = document.querySelector(`tr[data-revision="${fromRevision}"]`);
 			if (prev) {
 				prev.classList.add('table-info');
-				prev.querySelector("button[data-from]").classList.add("active");
+				prev.querySelector("button[data-from]").classList.remove("btn-info");
+				prev.querySelector("button[data-from]").classList.add("btn-primary");
 			}
 		}
 	</script>

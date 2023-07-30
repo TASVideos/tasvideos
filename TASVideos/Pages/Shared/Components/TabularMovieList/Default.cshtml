@@ -9,7 +9,7 @@
 		<div class="list-group">
 			@foreach (var pub in Model)
 			{
-				<pub-link id="pub.Id" class="list-group-item list-group-item-action list-group-item-publication p-2">
+				<pub-link id="pub.Id" class="list-group-item list-group-item-action list-group-item-primary p-2">
 					<div class="d-flex w-100 align-items-center">
 						<div class="text-center col-2 col-xl-1">
 							<img src="/media/@pub.Screenshot.Path" style="max-height: 100%" class="img-fluid" />
@@ -20,20 +20,20 @@
 									<span class="badge bg-info">@(pub.Time().ToStringWithOptionalDaysAndHours())</span>
 								</div>
 								<div class="col-auto px-1">
-									<span class="text-body-tertiary">@pub.System</span>
+									<span class="text-muted">@pub.System</span>
 								</div>
 								<div class="col-auto ms-auto">
-									<small class="text-body-tertiary"><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></small>
+									<small class="text-muted"><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></small>
 								</div>
 							</row>
 							<row class="align-items-center">
 								<div class="col-auto px-1">
-									<span class="fs-6 fs-sm-5">@pub.Game</span><span condition="!string.IsNullOrEmpty(pub.Branch)" class="fs-6 fs-sm-5 text-body-emphasis"> "@pub.Branch"</span>
+									<span class="fs-6 fs-sm-5">@pub.Game</span><span condition="!string.IsNullOrEmpty(pub.Branch)" class="fs-6 fs-sm-5 text-dark"> "@pub.Branch"</span>
 								</div>
 							</row>
 							<row>
 								<div class="col-12 px-1">
-									<span class="text-body-emphasis mt-auto">by <author-list authors="pub.Authors" additional-authors="@pub.AdditionalAuthors"></author-list></span>
+									<span class="text-dark mt-auto">by <author-list authors="pub.Authors" additional-authors="@pub.AdditionalAuthors"></author-list></span>
 								</div>
 							</row>
 						</div>

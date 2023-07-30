@@ -2,11 +2,11 @@
 
 <div condition="Model != null" class="clearfix">
 	<div class="card minimovie">
-		<div class="card-header bg-publication">
+		<div class="card-header bg-cardprimary">
 			<h5><span class="float-end badge bg-info">Featured</span></h5>
-			<h4><pub-link id="Model!.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model!.Title</span></pub-link></h4>
+			<h4><pub-link id="Model!.Id" class="text-decoration-none"><span class="text-dark">@Model!.Title</span></pub-link></h4>
 		</div>
-		<div class="card-body bg-publication-subtle">
+		<div class="card-body bg-cardsecondary">
 			<pub-link id="Model.Id">
 				<div class="float-start pe-3 pb-1" style="max-width: 80%">
 					<img class="w-100 pixelart-image pb-1" src="~/media/@Model.Screenshot.Path" alt="@Model.Screenshot.Description" />

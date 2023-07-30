@@ -5,14 +5,14 @@
 	bool isEditActivity = Model.PostEditedTimestamp > minimumDate;
 	string addClass = (isCreateActivity || isEditActivity) ? "activity-post" : "";
 }
-<card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning-subtle border-2" : "border-primary-subtle") border mb-2">
+<card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning border-2" : "border-primary") border mb-2">
 	<cardheader class="px-2 py-1">
 		<row class="align-items-center">
 			<div class="col-auto">
 				<small>
 					<a href="/Forum/Posts/@(Model.Id)"
 					   title="Link to this post"
-					   class="float-start text-decoration-none text-body">
+					   class="float-start text-decoration-none text-dark">
 						<i class="fa fa-bookmark @addClass" data-post-id="@Model.Id" data-unix-created="@(isCreateActivity ? Model.CreateTimestamp.UnixTimestamp() : "")" data-unix-edited="@(isEditActivity ? Model.PostEditedTimestamp?.UnixTimestamp() : "")"></i>
 						Posted: <timezone-convert asp-for="@Model.CreateTimestamp" />
 						<span condition="@(Model.PostEditedTimestamp != null)">@{var postEditedTimestamp = (DateTime)Model.PostEditedTimestamp!;}<br />(Edited: <timezone-convert asp-for="@postEditedTimestamp" />)</span>
@@ -56,7 +56,7 @@
 	</cardheader>
 	<cardbody class="px-2 py-0">
 		<row class="gx-3">
-			<div class="forum-profile-section col-lg-2 col-md-3 py-2">
+			<div class="col-lg-2 col-md-3 py-2" style="background-color: var(--bs-gray-200)">
 				<row class="gx-0">
 					<div class="col-10 col-md-12">
 						<row class="my-auto my-md-0 h-100 justify-content-center align-items-center">
@@ -65,7 +65,7 @@
 									<h6 class="col-auto col-md-12 ms-2 ms-md-0 me-auto my-0">
 										<profile-link username="@Model.PosterName"></profile-link>
 									</h6>
-									<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-body-tertiary col-auto col-md-12" style="line-height: 22px;">@Html.DisplayFor(m => m.PosterPronouns)</small>
+									<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-muted col-auto col-md-12" style="line-height: 22px;">@Html.DisplayFor(m => m.PosterPronouns)</small>
 								</row>
 								<div class="ms-2 ms-md-0" style="line-height: 1">
 									<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')).OrderBy(s => s))
@@ -97,7 +97,7 @@
 				<div class="mb-auto">
 					<forum-markup markup=@Model.Text enable-html=@Model.EnableHtml enable-bb-code=@Model.EnableBbCode></forum-markup>
 				</div>
-				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="forum-signature mt-2 text-body-tertiary lh-sm d-none d-md-block">
+				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="forum-signature mt-2 text-muted lh-sm d-none d-md-block">
 					<small>
 						<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
 					</small>

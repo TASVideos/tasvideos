@@ -1,0 +1,121 @@
+/// <reference path="colors.scss" />
+/// <reference path="variables.scss" />
+
+:root {
+	--tasvideos-bg: #{$tasvideos-bg-dark};
+	--bs-body-color: #{$bs-gray-100};
+	--border-color: #{$bs-gray-700};
+	--border-separator-color: #{$bs-gray-700};
+	--cardprimary: #{$card-primary-dark};
+	--cardsecondary: #{$card-secondary-dark};
+	--bs-warning: #{$warning-dark};
+	--bs-warning-rgb: #{$warning-dark-rgb};
+	--bs-info: #{$info-dark};
+	--bs-info-rgb: #{$info-dark-rgb};
+	--bs-info-hover: #{$info};
+	--bs-dark: #{$bs-gray-100};
+	--bs-dark-rgb: #{$bs-gray-100-rgb};
+	--bs-light: #{$bs-dark};
+	--bs-light-rgb: #{$bs-dark-rgb};
+	--bs-white: #{$bs-dark};
+	--bs-white-rgb: #{$bs-dark-rgb};
+	--bs-border-light: #{$bs-gray-700};
+	--bs-gray-200: #{$bs-dark};
+	--bs-gray-400: #{$bs-gray-800};
+	--tasvideos-bg-gradient: #{$banner};
+	--tab-content-bg: #{$bs-table-striped-bg-dark};
+	--diff-replace: #{$diff-replace-dark};
+	--diff-delete: #{$diff-delete-dark};
+	--diff-insert: #{$diff-insert-dark};
+	--bs-primary-text: #{$bs-primary-text-dark};
+	--bs-primary-bg-subtle: #{$card-secondary-dark};
+	--bs-primary-border-subtle: #{$card-primary-dark};
+	--bs-secondary-text: #{$bs-secondary-text-dark};
+	--bs-secondary-bg-subtle: #{$bs-secondary-bg-subtle-dark};
+	--bs-secondary-border-subtle: #{$bs-secondary-border-subtle-dark};
+	--bs-emphasis-color: #{$bs-emphasis-color-dark};
+	color-scheme: dark;
+}
+
+a, .nav-link {
+	color: #{$primary-dark};
+}
+
+.table {
+	color: $bs-gray-100;
+	border-color: $bs-gray-700;
+	--bs-table-bg: #{$bs-dark};
+	--bs-table-striped-bg: #{$bs-table-striped-bg-dark};
+	--bs-table-striped-color: #{$bs-white};
+	--bs-table-active-bg: #{$bs-table-active-bg-dark};
+	--bs-table-active-color: #{$bs-white};
+	--bs-table-hover-bg: #{$bs-table-hover-bg-dark};
+	--bs-table-hover-color: #{$bs-white};
+}
+
+.alert {
+	&-info, &-dark, &-success {
+		color: $bs-gray-100;
+		background-color: $card-secondary-dark;
+		border-color: $card-primary-dark;
+	}
+}
+
+.card {
+	background-color: $bs-table-striped-bg-dark;
+	border: 2px solid rgba(255, 255, 255, .125);
+
+	&-header {
+		border-bottom: 2px solid rgba(255, 255, 255, .125);
+	}
+}
+
+.dropdown-menu {
+	color: $bs-gray-300;
+	background-color: $bs-gray-800;
+	border-color: rgba(0, 0, 0, .15);
+}
+
+.dropdown-item {
+	color: $bs-gray-300;
+}
+
+.site-icon {
+	left: -2rem;
+	top: -.75rem;
+
+	&-light {
+		display: none;
+	}
+
+	&-dark {
+		display: block;
+	}
+}
+
+.text-muted {
+	color: $text-muted-dark!important;
+}
+
+body {
+	background: var(--tasvideos-bg) linear-gradient(var(--tasvideos-bg-gradient) $banner-height, var(--tasvideos-bg) 735px) repeat-x;
+}
+
+#banner {
+	background: none;
+}
+
+.site-banner {
+	height: $banner-height;
+	background: $banner;
+	z-index: -1;
+}
+
+.btn-close {
+	filter: invert(1) grayscale(100%) brightness(200%);
+
+	&-white {
+		filter: none;
+	}
+}
+

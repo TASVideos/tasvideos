@@ -10,7 +10,7 @@
 	}
 }
 
-<div class="card border-primary-subtle border mb-2">
+<div class="card border-primary border mb-2">
 	<cardheader>
 		<h4 class="mt-2">
 			#@Model.Id <span condition="Model.Hidden"><i>(unlisted)</i> </span>- @Model.Title
@@ -26,9 +26,9 @@
 			</span>
 		</h4>
 	</cardheader>
-	<cardheader>
-		<row>
-			<div class="col px-3 pb-2">
+	<cardbody class="px-2 py-0">
+		<row class="gx-3">
+			<div class="col px-3 py-3" style="background-color: var(--bs-gray-200)">
 				@Model.FileName
 
 				<div condition="@(Model.IsMovie)">
@@ -46,7 +46,7 @@
 					System: @Model.System
 				</div>
 
-				<div class="text-body-tertiary">
+				<div class="text-muted">
 					<div>
 						<span condition="@(Model.Comments.Any())">
 							@Model.Comments.Count() comment@(Model.Comments.Count() == 1 ? "" : "s"),
@@ -68,8 +68,6 @@
 				</div>
 			</div>
 		</row>
-	</cardheader>
-	<cardbody class="px-2 py-0">
 
 		<div class="col d-flex flex-column py-2 px-2" condition="@(!string.IsNullOrEmpty(Model.Description))">
 				<wiki-markup markup=@Model.Description></wiki-markup>
@@ -82,14 +80,14 @@
 <div condition="@(!Model.HideComments)">
 	@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 	{
-		<div class="card border-primary-subtle border mb-2" condition="@(Model.Comments.Any())">
+		<div class="card border-primary border mb-2" condition="@(Model.Comments.Any())">
 			<cardheader>
 				<row>
 					<div class="col">
 						<h6>
 							<profile-link username="@comment.UserName"></profile-link>
 						</h6>
-						<div class="text-body-tertiary">
+						<div class="text-muted">
 							<timezone-convert asp-for="@comment.CreationTimeStamp" in-line="true" />
 						</div>
 					</div>
@@ -131,8 +129,8 @@
 		</div>
 	}
 
-	<div class="card border-primary-subtle border mb-2" permission="CreateForumPosts">
-		<cardheader>
+	<div class="card border-primary border mb-2" permission="CreateForumPosts">
+		<cardheader style="background-color: var(--bs-gray-200)">
 			<h4>Comment:</h4>
 		</cardheader>
 		<cardbody>
