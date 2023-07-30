@@ -59,6 +59,12 @@ pre[class*="language-"] {
 pre[class*="language-"] {
 	background: var(--bs-body-bg);
 }
+.card > :not(pre) > code[class*="language-"],
+.card > pre[class*="language-"]
+.postbody > :not(pre) > code[class*="language-"],
+.postbody > pre[class*="language-"] {
+	background: var(--bs-card-cap-bg);
+}
 
 /* Inline code */
 :not(pre) > code[class*="language-"] {
