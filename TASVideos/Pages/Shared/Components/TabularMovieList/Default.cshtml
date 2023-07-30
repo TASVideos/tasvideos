@@ -20,10 +20,10 @@
 									<span class="badge bg-info">@(pub.Time().ToStringWithOptionalDaysAndHours())</span>
 								</div>
 								<div class="col-auto px-1">
-									<span class="text-body-secondary">@pub.System</span>
+									<span class="text-body-tertiary">@pub.System</span>
 								</div>
 								<div class="col-auto ms-auto">
-									<small class="text-body-secondary"><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></small>
+									<small class="text-body-tertiary"><timezone-convert asp-for="@pub.CreateTimestamp" date-only="true" /></small>
 								</div>
 							</row>
 							<row class="align-items-center">

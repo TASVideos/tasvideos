@@ -65,7 +65,7 @@
 									<h6 class="col-auto col-md-12 ms-2 ms-md-0 me-auto my-0">
 										<profile-link username="@Model.PosterName"></profile-link>
 									</h6>
-									<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-muted col-auto col-md-12" style="line-height: 22px;">@Html.DisplayFor(m => m.PosterPronouns)</small>
+									<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-body-tertiary col-auto col-md-12" style="line-height: 22px;">@Html.DisplayFor(m => m.PosterPronouns)</small>
 								</row>
 								<div class="ms-2 ms-md-0" style="line-height: 1">
 									<small>@string.Join(", ", Model.PosterRoles.Select(s => s.Replace(' ', '\u00A0')).OrderBy(s => s))
@@ -97,7 +97,7 @@
 				<div class="mb-auto">
 					<forum-markup markup=@Model.Text enable-html=@Model.EnableHtml enable-bb-code=@Model.EnableBbCode></forum-markup>
 				</div>
-				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="forum-signature mt-2 text-muted lh-sm d-none d-md-block">
+				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="forum-signature mt-2 text-body-tertiary lh-sm d-none d-md-block">
 					<small>
 						<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
 					</small>

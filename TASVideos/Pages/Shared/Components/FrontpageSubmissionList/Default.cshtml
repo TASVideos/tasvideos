@@ -12,11 +12,11 @@
 									<span class="badge bg-info">@(sub.Time().ToStringWithOptionalDaysAndHours())</span>
 								</div>
 								<div class="col-auto px-1">
-									<span class="text-muted">@sub.System</span>
+									<span class="text-body-tertiary">@sub.System</span>
 								</div>
 								<div class="col-auto px-1 ms-auto">
 									<row class="justify-content-end">
-										<small class="col-12 text-muted text-end"><timezone-convert asp-for="@sub.Submitted" date-only="true" /></small>
+										<small class="col-12 text-body-tertiary text-end"><timezone-convert asp-for="@sub.Submitted" date-only="true" /></small>
 									</row>
 								</div>
 							</row>

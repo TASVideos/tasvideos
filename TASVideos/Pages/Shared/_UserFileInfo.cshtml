@@ -46,7 +46,7 @@
 					System: @Model.System
 				</div>
 
-				<div class="text-muted">
+				<div class="text-body-tertiary">
 					<div>
 						<span condition="@(Model.Comments.Any())">
 							@Model.Comments.Count() comment@(Model.Comments.Count() == 1 ? "" : "s"),
@@ -89,7 +89,7 @@
 						<h6>
 							<profile-link username="@comment.UserName"></profile-link>
 						</h6>
-						<div class="text-muted">
+						<div class="text-body-tertiary">
 							<timezone-convert asp-for="@comment.CreationTimeStamp" in-line="true" />
 						</div>
 					</div>

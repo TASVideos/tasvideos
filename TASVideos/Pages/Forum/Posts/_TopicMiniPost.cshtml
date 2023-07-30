@@ -4,7 +4,7 @@
 		<row>
 			<div class="col-auto"><timezone-convert asp-for="@Model.CreateTimestamp" /></div>
 			<div class="col-auto fw-bold">@Model.PosterName</div>
-			<div condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="col-auto text-muted">@Html.DisplayFor(m => m.PosterPronouns)</div>
+			<div condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="col-auto text-body-tertiary">@Html.DisplayFor(m => m.PosterPronouns)</div>
 		</row>
 	</cardheader>
 	<cardbody>
