@@ -3,8 +3,6 @@
 /// <reference path="variables.scss" />
 
 :root {
-	--cardprimary: #{$card-primary};
-	--cardsecondary: #{$card-secondary};
 	--tasvideos-bg: #{$tasvideos-bg};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
 	--bs-link-color: #0d6efd;
@@ -17,8 +15,8 @@
 	}
 }
 @include color-mode(dark) {
-	--cardprimary: #{$card-primary-dark};
-	--cardsecondary: #{$card-secondary-dark};
+	--bs-publication: var(--bs-publication-border-subtle);
+	--bs-publication-rgb: 33,67,84;
 	--tasvideos-bg: #{$tasvideos-bg-dark};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient-dark};
 	--bs-body-color: #f8f9fa;
@@ -26,7 +24,7 @@
 	--bs-link-color: #5099f1;
 	--bs-link-color-rgb: 80,153,241;
 
-	.card {
+	.card, figure {
 		--bs-card-cap-bg: #212529;
 	}
 
@@ -45,7 +43,6 @@
 			--bs-table-border-color: var(--bs-border-color);
 		}
 	}
-
 }
 
 a {
@@ -386,14 +383,6 @@ figure {
 	}
 }
 
-.bg-cardprimary {
-	background-color: var(--cardprimary) !important;
-}
-
-.bg-cardsecondary {
-	background-color: var(--cardsecondary) !important;
-}
-
 .site-icon {
 	position: absolute;
 	left: -3.5rem;
@@ -492,13 +481,13 @@ figure {
 .card-userinfo {
 	font-size: .75rem;
 	display: inline-block;
-	border: solid 1px var(--cardsecondary);
+	border: solid 1px var(--bs-publication-bg-subtle);
 	margin: 3px;
 	border-radius: 3px;
 }
 
 .card-header-userinfo {
-	background-color: var(--cardsecondary);
+	background-color: var(--bs-publication-bg-subtle);
 	padding: 3px;
 }
 
@@ -561,7 +550,7 @@ dt, .wiki blockquote {
 }
 
 dt {
-	background: var(--cardprimary);
+	background: var(--bs-publication);
 }
 
 .wiki blockquote {
