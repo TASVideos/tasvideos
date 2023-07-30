@@ -1,6 +1,11 @@
-﻿@import "partials/colors";
+﻿@import "../lib/bootstrap/scss/functions";
+@import "../lib/bootstrap/scss/variables";
+@import "../lib/bootstrap/scss/variables-dark";
+@import "../lib/bootstrap/scss/mixins";
+
+@import "partials/colors";
 @import "partials/variables";
-@import "partials/bootstrap-overrides";
 @import "partials/customizations";
-@import "partials/_prism";
+@import "partials/prism";
+@import "partials/prism-dark";
 @import "diff";

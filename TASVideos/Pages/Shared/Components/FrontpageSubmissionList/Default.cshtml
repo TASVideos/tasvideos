@@ -4,7 +4,7 @@
 		<div class="list-group">
 			@foreach (var sub in Model)
 			{
-				<sub-link id="sub.Id" class="list-group-item list-group-item-action list-group-item-secondary p-2">
+				<sub-link id="sub.Id" class="list-group-item list-group-item-action list-group-item-body p-2">
 					<div class="d-flex w-100 align-items-center">
 						<div class="px-2 w-100">
 							<row class="align-items-center">
@@ -12,17 +12,17 @@
 									<span class="badge bg-info">@(sub.Time().ToStringWithOptionalDaysAndHours())</span>
 								</div>
 								<div class="col-auto px-1">
-									<span class="text-muted">@sub.System</span>
+									<span class="text-body-tertiary">@sub.System</span>
 								</div>
 								<div class="col-auto px-1 ms-auto">
 									<row class="justify-content-end">
-										<small class="col-12 text-muted text-end"><timezone-convert asp-for="@sub.Submitted" date-only="true" /></small>
+										<small class="col-12 text-body-tertiary text-end"><timezone-convert asp-for="@sub.Submitted" date-only="true" /></small>
 									</row>
 								</div>
 							</row>
 							<row class="align-items-center">
 								<div class="col-auto px-1">
-									<span class="fs-6 fs-sm-5 text-dark">@sub.GameName</span><span condition="!string.IsNullOrEmpty(sub.Branch)" class="fs-6 fs-sm-5 text-dark"> "@sub.Branch"</span>
+									<span class="fs-6 fs-sm-5">@sub.GameName</span><span condition="!string.IsNullOrEmpty(sub.Branch)" class="fs-6 fs-sm-5"> "@sub.Branch"</span>
 								</div>
 								<div class="col-auto ms-auto text-end">
 									<row>
@@ -37,7 +37,7 @@
 							</row>
 							<row>
 								<div class="col-12 px-1">
-									<span class="text-dark mt-auto">by <author-list authors="sub.Authors" additional-authors="@sub.AdditionalAuthors"></author-list></span>
+									<span class="mt-auto">by <author-list authors="sub.Authors" additional-authors="@sub.AdditionalAuthors"></author-list></span>
 								</div>
 							</row>
 						</div>

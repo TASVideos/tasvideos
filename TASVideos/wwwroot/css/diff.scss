@@ -5,6 +5,11 @@
 	--diff-delete: #{$diff-delete};
 	--diff-insert: #{$diff-insert};
 }
+@include color-mode(dark) {
+	--diff-replace: #{$diff-replace-dark};
+	--diff-delete: #{$diff-delete-dark};
+	--diff-insert: #{$diff-insert-dark};
+}
 
 .diff {
 	display: grid;
@@ -18,12 +23,13 @@
 	.add {
 		background-color: var(--diff-insert);
 	}
+
 	.delete {
 		background-color: var(--diff-delete);
 	}
 
 	.line {
-		background-color: var(--tab-content-bg);
+		background-color: var(--bs-body-bg);
 	}
 
 	.linenumber {
@@ -53,6 +59,7 @@
 
 	&.inline {
 		grid-template-columns: auto auto 1fr;
+
 		button {
 			grid-column: span 3;
 		}
@@ -60,6 +67,7 @@
 
 	&.sidebyside {
 		grid-template-columns: auto 1fr auto 1fr;
+
 		button {
 			grid-column: span 4;
 		}
