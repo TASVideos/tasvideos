@@ -7,18 +7,27 @@ const getPreferredTheme = () => {
     if (storedTheme) {
         return storedTheme
     }
+    const oldStoredTheme = localStorage.getItem('style-dark')
+    if (oldStoredTheme) {
+        localStorage.removeItem('style-dark')
+        if (oldStoredTheme === 'true') {
+            return 'dark'
+        }
+        else if (oldStoredTheme === 'false') {
+            return 'light'
+        }
+    }
 
-    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    return 'auto'
 }
 
 const setTheme = theme => {
     if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.setAttribute('data-bs-theme', 'dark')
-        setStoredTheme('dark')
     } else {
         document.documentElement.setAttribute('data-bs-theme', theme)
-        setStoredTheme(theme)
     }
+    setStoredTheme(theme)
 }
 
 setTheme(getPreferredTheme())
@@ -28,16 +37,4 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
     if (storedTheme !== 'light' && storedTheme !== 'dark') {
         setTheme(getPreferredTheme())
     }
-})
-
-window.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('[data-bs-theme-value]')
-        .forEach(toggle => {
-            toggle.addEventListener('click', () => {
-                const theme = toggle.getAttribute('data-bs-theme-value')
-                setStoredTheme(theme)
-                setTheme(theme)
-                showActiveTheme(theme, true)
-            })
-        })
 })
