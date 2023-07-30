@@ -1,22 +1,22 @@
-@import "../bootstrap/scss/functions";
+@import "../lib/bootstrap/scss/functions";
 
 $primary: #105cb6;
 $secondary: #6a37a0;
 $info: #067b93;
 $warning: #ffa000;
 
-@import "../bootstrap/scss/variables";
-@import "../bootstrap/scss/variables-dark";
+@import "../lib/bootstrap/scss/variables";
+@import "../lib/bootstrap/scss/variables-dark";
 
 $custom-colors: ( "publication": #acd, "silver": #666 );
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
 
-@import "../bootstrap/scss/maps";
+@import "../lib/bootstrap/scss/maps";
 $utilities-bg-subtle: map-merge( $utilities-bg-subtle, ( "publication-subtle": var(--bs-publication-bg-subtle)));
 
-@import "../bootstrap/scss/mixins";
-@import "../bootstrap/scss/utilities";
+@import "../lib/bootstrap/scss/mixins";
+@import "../lib/bootstrap/scss/utilities";
 
 $theme-colors-text: map-merge($theme-colors-text, ("publication": #0a58ca));
 $theme-colors-bg-subtle: map-merge($theme-colors-bg-subtle, ("publication": #cde));
@@ -29,37 +29,37 @@ $theme-colors-border-subtle-dark: map-merge($theme-colors-border-subtle-dark, ("
 $utilities: map-merge( $utilities, ( "font-size": map-merge( map-get($utilities, "font-size"), ( responsive: true ) ) ) );
 
 
-@import "../bootstrap/scss/root";
-@import "../bootstrap/scss/reboot";
-@import "../bootstrap/scss/type";
-@import "../bootstrap/scss/images";
-@import "../bootstrap/scss/containers";
-@import "../bootstrap/scss/grid";
-@import "../bootstrap/scss/tables";
-@import "../bootstrap/scss/forms";
-@import "../bootstrap/scss/buttons";
-@import "../bootstrap/scss/transitions";
-@import "../bootstrap/scss/dropdown";
-@import "../bootstrap/scss/button-group";
-@import "../bootstrap/scss/nav";
-@import "../bootstrap/scss/navbar";
-@import "../bootstrap/scss/card";
-@import "../bootstrap/scss/accordion";
-@import "../bootstrap/scss/breadcrumb";
-@import "../bootstrap/scss/pagination";
-@import "../bootstrap/scss/badge";
-@import "../bootstrap/scss/alert";
-@import "../bootstrap/scss/progress";
-@import "../bootstrap/scss/list-group";
-@import "../bootstrap/scss/close";
-@import "../bootstrap/scss/toasts";
-@import "../bootstrap/scss/modal";
-@import "../bootstrap/scss/tooltip";
-@import "../bootstrap/scss/popover";
-@import "../bootstrap/scss/carousel";
-@import "../bootstrap/scss/spinners";
-@import "../bootstrap/scss/offcanvas";
-@import "../bootstrap/scss/placeholders";
-@import "../bootstrap/scss/helpers";
+@import "../lib/bootstrap/scss/root";
+@import "../lib/bootstrap/scss/reboot";
+@import "../lib/bootstrap/scss/type";
+@import "../lib/bootstrap/scss/images";
+@import "../lib/bootstrap/scss/containers";
+@import "../lib/bootstrap/scss/grid";
+@import "../lib/bootstrap/scss/tables";
+@import "../lib/bootstrap/scss/forms";
+@import "../lib/bootstrap/scss/buttons";
+@import "../lib/bootstrap/scss/transitions";
+@import "../lib/bootstrap/scss/dropdown";
+@import "../lib/bootstrap/scss/button-group";
+@import "../lib/bootstrap/scss/nav";
+@import "../lib/bootstrap/scss/navbar";
+@import "../lib/bootstrap/scss/card";
+@import "../lib/bootstrap/scss/accordion";
+@import "../lib/bootstrap/scss/breadcrumb";
+@import "../lib/bootstrap/scss/pagination";
+@import "../lib/bootstrap/scss/badge";
+@import "../lib/bootstrap/scss/alert";
+@import "../lib/bootstrap/scss/progress";
+@import "../lib/bootstrap/scss/list-group";
+@import "../lib/bootstrap/scss/close";
+@import "../lib/bootstrap/scss/toasts";
+@import "../lib/bootstrap/scss/modal";
+@import "../lib/bootstrap/scss/tooltip";
+@import "../lib/bootstrap/scss/popover";
+@import "../lib/bootstrap/scss/carousel";
+@import "../lib/bootstrap/scss/spinners";
+@import "../lib/bootstrap/scss/offcanvas";
+@import "../lib/bootstrap/scss/placeholders";
+@import "../lib/bootstrap/scss/helpers";
 
-@import "../bootstrap/scss/utilities/api";
+@import "../lib/bootstrap/scss/utilities/api";
