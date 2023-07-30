@@ -10,7 +10,7 @@
 	}
 }
 
-<div class="card border-primary border mb-2">
+<div class="card border-primary-subtle border mb-2">
 	<cardheader>
 		<h4 class="mt-2">
 			#@Model.Id <span condition="Model.Hidden"><i>(unlisted)</i> </span>- @Model.Title
@@ -82,7 +82,7 @@
 <div condition="@(!Model.HideComments)">
 	@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 	{
-		<div class="card border-primary border mb-2" condition="@(Model.Comments.Any())">
+		<div class="card border-primary-subtle border mb-2" condition="@(Model.Comments.Any())">
 			<cardheader>
 				<row>
 					<div class="col">
@@ -131,7 +131,7 @@
 		</div>
 	}
 
-	<div class="card border-primary border mb-2" permission="CreateForumPosts">
+	<div class="card border-primary-subtle border mb-2" permission="CreateForumPosts">
 		<cardheader>
 			<h4>Comment:</h4>
 		</cardheader>

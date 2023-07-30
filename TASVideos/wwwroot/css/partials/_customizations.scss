@@ -139,7 +139,6 @@ article.wiki, .postbody {
 
 .error-code {
 	border: 2px solid var(--bs-danger);
-	background-color: var(--bs-white);
 	padding: 20px;
 
 	.info {
@@ -154,7 +153,7 @@ article.wiki, .postbody {
 
 	span {
 		position: absolute;
-		background-color: var(--bs-white);
+		background-color: var(--bs-body-color);
 		padding: 4px;
 		border: 1px solid var(--bs-danger);
 		color: var(--bs-danger);
@@ -178,7 +177,7 @@ article.wiki, .postbody {
 }
 
 .forum-post-highlight {
-	box-shadow: var(--bs-gray-400) 0px 8px 16px;
+	box-shadow: var(--bs-border-color) 0px 8px 16px;
 }
 
 .pixelart-image {

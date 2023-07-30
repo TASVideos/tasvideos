@@ -5,7 +5,7 @@
 	bool isEditActivity = Model.PostEditedTimestamp > minimumDate;
 	string addClass = (isCreateActivity || isEditActivity) ? "activity-post" : "";
 }
-<card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning border-2" : "border-primary") border mb-2">
+<card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning-subtle border-2" : "border-primary-subtle") border mb-2">
 	<cardheader class="px-2 py-1">
 		<row class="align-items-center">
 			<div class="col-auto">
