@@ -7,8 +7,10 @@
 	--cardsecondary: #{$card-secondary};
 	--tasvideos-bg: #{$tasvideos-bg};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient};
-	//--bs-warning: #{$warning};
-	//--bs-warning-rgb: #{$warning-rgb};
+	--bs-link-color: #0d6efd;
+	--bs-link-color-rgb: 13,110,253;
+	--bs-link-hover-color: #0a58ca;
+	--bs-link-hover-color-rgb: 10,88,202;
 
 	.card {
 		--bs-card-cap-bg: var(--bs-gray-200);
@@ -20,9 +22,9 @@
 	--tasvideos-bg: #{$tasvideos-bg-dark};
 	--tasvideos-bg-gradient: #{$tasvideos-bg-gradient-dark};
 	--bs-body-color: #f8f9fa;
-	--bs-body-color-rgb: rgb(248,249,250);
-	/*--bs-info: #{$info-dark};
-	--bs-info-rgb: #{$info-dark-rgb};*/
+	--bs-body-color-rgb: 248,249,250;
+	--bs-link-color: #5099f1;
+	--bs-link-color-rgb: 80,153,241;
 
 	.card {
 		--bs-card-cap-bg: #212529;
