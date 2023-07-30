@@ -39,7 +39,7 @@
 }
 
 <card class="border border-primary">
-	<cardheader class="bg-cardprimary p-2">
+	<cardheader class="bg-publication p-2">
 		<div class="gx-3 clearfix">
 			<div class="float-start me-2" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
 				<icon path="@Model.ClassIconPath" title="@Model.Class" />
@@ -53,16 +53,16 @@
 				}
 			</div>
 			<h4>
-				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-dark">@Model.Title</span></a>
+				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Title</span></a>
 			</h4>
 		</div>
 	</cardheader>
 	<cardbody class="px-2 py-0">
-		<div condition="@Model.ObsoletedById.HasValue" class="col card-subtitle text-dark my-2">
+		<div condition="@Model.ObsoletedById.HasValue" class="col card-subtitle my-2">
 			<b>This movie has been obsoleted!</b><br />
-			<pub-link id="Model.ObsoletedById!.Value" class="btn bg-dark text-white btn-sm">Obsoleting Movie</pub-link>
+			<pub-link id="Model.ObsoletedById!.Value" class="btn btn-silver btn-sm">Obsoleting Movie</pub-link>
 		</div>
-		<row class="bg-cardsecondary gx-3 py-2">
+		<row class="bg-publication-subtle gx-3 py-2">
 			<div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
 				<div>
 					<a @(preferredWatchUrl != null ? $"href={preferredWatchUrl.Url} target=_blank" : null)>
@@ -96,7 +96,7 @@
 					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
 						<i class="fa-regular fa-star"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
 					</a>
-					<div condition="@canRate" class="mt-1 mb-0 d-none border border-primary bg-cardprimary rounded p-1" id="rate-@(Model.Id)">
+					<div condition="@canRate" class="mt-1 mb-0 d-none border border-primary bg-publication rounded p-1" id="rate-@(Model.Id)">
 						<button class="btn btn-success btn-sm" onclick="rate(@(Model.Id),false);"><span class="fa fa-save"></span> Save</button>
 						<input asp-for="Rating.Rating" type="number" class="form-control d-inline-block btn-sm" style="width:5em;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
 						<button class="btn btn-danger btn-sm" onclick="rate(@(Model.Id),true)"><i class="fa fa-times"></i> Remove</button>
@@ -157,7 +157,7 @@
 				}
 			</div>
 			<div class="col-md">
-				<div class="pb-2 text-muted"><small>Published <timezone-convert asp-for="@Model.CreateTimestamp" in-line="true" date-only="true" relative-time="false" /></small></div>
+				<div class="pb-2 text-body-tertiary"><small>Published <timezone-convert asp-for="@Model.CreateTimestamp" in-line="true" date-only="true" relative-time="false" /></small></div>
 				<fullrow>
 					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>

@@ -1,75 +1,21 @@
-//bootstrap defined colors
-$bs-white: #fff;
-$bs-gray-100: #f8f9fa;
-$bs-gray-100-rgb: 248,249,250;
-$bs-gray-200: #e9ecef;
-$bs-gray-300: #dee2e6;
-$bs-gray-400: #ced4da;
-$bs-gray-600: #6c757d;
-$bs-gray-700: #495057;
-$bs-gray-800: #343a40;
-$bs-dark: #212529;
-$bs-dark-rgb: 33, 37, 41;
-$bs-table-striped-bg-dark: #2c3034;
-$bs-table-active-bg-dark: #373b3e;
-$bs-table-hover-bg-dark: #323539;
-$bs-primary-text: #0a58ca;
-$bs-primary-text-dark: #6ea8fe;
-$bs-primary-bg-subtle: #cfe2ff;
-$bs-primary-bg-subtle-dark: #031633;
-$bs-primary-border-subtle: #9ec5fe;
-$bs-primary-border-subtle-dark: #084298;
-$bs-secondary-text: #6c757d;
-$bs-secondary-text-dark: #dee2e6;
-$bs-secondary-bg-subtle: #f8f9fa;
-$bs-secondary-bg-subtle-dark: #212529;
-$bs-secondary-border-subtle: #e9ecef;
-$bs-secondary-border-subtle-dark: #495057;
-$bs-emphasis-color: #000;
-$bs-emphasis-color-dark: #fff;
+//custom tasvideos colors
+
+//custom banner and site background colors
+$banner: #110931;
+$tasvideos-bg: #e9ecef;
+$tasvideos-bg-gradient: #c2d4fc;
+$tasvideos-bg-dark: #1c1d2b;
+$tasvideos-bg-gradient-dark: #110931;
+
+$card-bg-color: #2c3034;
+
+$card-link-hover-rgb: 9, 30, 66;
+$module-error-color: #f8d7da;
 
 //diff library defined colors
 $diff-replace: #fd8;
 $diff-delete: #f8cece;
 $diff-insert: #9e9;
-
-//custom tasvideos colors
-
-//custom banner and site background colors
-$banner: #110931;
-$tasvideos-bg: $bs-gray-200;
-$tasvideos-bg-gradient: #c2d4fc;
-$tasvideos-bg-dark: #1c1d2b;
-$tasvideos-bg-gradient-dark: #311a59;
-
-//custom theme colors and semantic button/border colors
-$primary: #105cb6;
-$primary-rgb: 16, 92, 182;
-$primary-dark: #5099f1;
-$primary-dark-rgb: 72, 147, 239;
-$secondary: #6a37a0;
-$secondary-rgb: 106, 55, 160;
-$secondary-dark: #925fc8;
-$secondary-dark-rgb: 146, 95, 200;
-$warning: #ffa000;
-$warning-rgb: 255, 160, 0;
-$warning-dark: #ffc107;
-$warning-dark-rgb: 255, 193, 7;
-$info: #065e6f;
-$info-rgb: 6, 94, 111;
-$info-dark: #067b93;
-$info-dark-rgb: 6, 123, 147;
-$success: #198754;
-$success-rgb: 25, 135, 84;
-$success-dark: #157347;
-$success-dark-rgb: 21, 115, 71;
-$card-primary: #acd;
-$card-primary-dark: #214354;
-$card-secondary: #cde;
-$card-secondary-dark: #112132;
-$card-link-hover-rgb: 9, 30, 66;
-$text-muted-dark: #818a92;
-$module-error-color: #f8d7da;
 
 //custom diff dark mode colors
 $diff-replace-dark: #dba400;
