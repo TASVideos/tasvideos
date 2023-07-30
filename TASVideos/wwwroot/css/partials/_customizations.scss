@@ -442,7 +442,12 @@ tt {
 }
 
 tt, code, kbd, pre, samp, .wiki blockquote {
-	background: var(--bs-body-bg);
+	background: var(--bs-card-cap-bg);
+}
+:not(.card-body) > .wiki {
+	tt, code, kbd, pre, samp, .wiki blockquote {
+		background: var(--bs-body-bg);
+	}
 }
 
 tt, code, kbd, pre, samp, dt, .wiki blockquote {
