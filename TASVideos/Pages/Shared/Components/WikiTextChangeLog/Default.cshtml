@@ -33,7 +33,6 @@
 					<a
 						asp-page="/Wiki/PageHistory"
 						asp-route-path="@item.PageName"
-						asp-route-latest="true"
 						asp-route-fromRevision="@(item.Revision - 1)"
 						asp-route-toRevision="@item.Revision"
 						class="btn btn-secondary">
