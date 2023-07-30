@@ -8,7 +8,7 @@ $warning: #ffa000;
 @import "../bootstrap/scss/variables";
 @import "../bootstrap/scss/variables-dark";
 
-$custom-colors: ( "publication": #acd, "silver": #888 );
+$custom-colors: ( "publication": #acd, "silver": #666 );
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
 
