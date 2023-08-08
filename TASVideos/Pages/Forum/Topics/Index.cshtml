@@ -115,10 +115,10 @@
 		<cardheader>
 			<row class="align-items-center row">
 				<span class="col-auto fs-5">Submission Text</span>
-				<sub-link class="col-auto btn btn-secondary btn-sm" id="@Topic.SubmissionId.Value"><i class="fa fa-info-circle"></i> Full Submission Page</sub-link>
-				@if (PublicationId is not null)
+				<sub-link class="col-auto btn btn-secondary btn-sm" id="@Model.Topic.SubmissionId.Value"><i class="fa fa-info-circle"></i> Full Submission Page</sub-link>
+				@if (Model.PublicationId is not null)
 				{
-					<pub-link class="col-auto btn btn-secondary btn-sm" id="@PublicationId.Value">Publication Page</pub-link>
+					<pub-link class="col-auto btn btn-secondary btn-sm" id="@Model.PublicationId.Value">Publication Page</pub-link>
 				}
 			</row>
 		</cardheader>
