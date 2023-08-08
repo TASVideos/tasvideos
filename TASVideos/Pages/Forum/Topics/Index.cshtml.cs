@@ -61,6 +61,8 @@ public class IndexModel : BaseForumModel
 
 	public bool SaveActivity { get; set; } = false;
 
+	public int? PublicationId { get; set; }
+
 	public async Task<IActionResult> OnGet()
 	{
 		int? userId = User.IsLoggedIn()
@@ -106,10 +108,11 @@ public class IndexModel : BaseForumModel
 		if (Topic.SubmissionId.HasValue)
 		{
 			WikiPage = await _wikiPages.Page(LinkConstants.SubmissionWikiPage + Topic.SubmissionId.Value);
-			EncodeEmbedLink = await _db.Submissions
+			var sub = await _db.Submissions
 				.Where(s => s.Id == Topic.SubmissionId.Value)
-				.Select(s => s.EncodeEmbedLink)
 				.SingleOrDefaultAsync();
+			EncodeEmbedLink = sub.EncodeEmbedLink;
+			PublicationId = sub.Publication?.Id;
 		}
 
 		Topic.Posts = await _db.ForumPosts
