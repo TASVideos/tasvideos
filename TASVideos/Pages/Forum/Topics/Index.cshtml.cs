@@ -56,6 +56,7 @@ public class IndexModel : BaseForumModel
 	public IWikiPage? WikiPage { get; set; }
 
 	public string? EncodeEmbedLink { get; set; }
+	public int? PublicationId { get; set; }
 
 	public ForumPostEntry? HighlightedPost { get; set; }
 
@@ -106,10 +107,16 @@ public class IndexModel : BaseForumModel
 		if (Topic.SubmissionId.HasValue)
 		{
 			WikiPage = await _wikiPages.Page(LinkConstants.SubmissionWikiPage + Topic.SubmissionId.Value);
-			EncodeEmbedLink = await _db.Submissions
+			var sub = await _db.Submissions
 				.Where(s => s.Id == Topic.SubmissionId.Value)
-				.Select(s => s.EncodeEmbedLink)
+				.Select(s => new { s.EncodeEmbedLink, PublicationId = s.Publication != null ? s.Publication.Id : (int?)null })
 				.SingleOrDefaultAsync();
+
+			if (sub is not null)
+			{
+				EncodeEmbedLink = sub.EncodeEmbedLink;
+				PublicationId = sub.PublicationId;
+			}
 		}
 
 		Topic.Posts = await _db.ForumPosts
