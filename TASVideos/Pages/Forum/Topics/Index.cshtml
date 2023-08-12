@@ -77,8 +77,7 @@
 	<partial name="_Poll" model="Model.Topic.Poll" />
 }
 
-@*TODO: WikiPage is generic but the html assumes it will be a submission*@
-@if (Model.WikiPage is not null)
+@if (Model.WikiPage is not null && Model.Topic.SubmissionId.HasValue)
 {
 	<div condition="@(!string.IsNullOrWhiteSpace(Model.EncodeEmbedLink))" class="d-flex justify-content-center">
 		<div class="col-12 col-lg-6">
@@ -115,7 +114,7 @@
 		<cardheader>
 			<row class="align-items-center row">
 				<span class="col-auto fs-5">Submission Text</span>
-				<sub-link class="col-auto btn btn-secondary btn-sm" id="@SubmissionHelper.SubmissionId(Model.WikiPage.PageName)"><i class="fa fa-info-circle"></i> Full Submission Page</sub-link>
+				<sub-link class="col-auto btn btn-secondary btn-sm" id="@Model.Topic.SubmissionId.Value"><i class="fa fa-info-circle"></i> Full Submission Page</sub-link>
 			</row>
 		</cardheader>
 		<show-more max-height="38rem">
