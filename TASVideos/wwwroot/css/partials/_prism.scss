@@ -9,7 +9,6 @@ http://prismjs.com/download.html?themes=prism&languages=markup+css+clike+javascr
 code[class*="language-"],
 pre[class*="language-"] {
 	color: black;
-	background: none;
 	text-shadow: 0 1px white;
 	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 	text-align: left;
@@ -53,17 +52,6 @@ pre[class*="language-"] {
 	padding: 1em;
 	margin: .5em 0;
 	overflow: auto;
-}
-
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
-	background: var(--bs-card-cap-bg);
-}
-:not(.card-body) > .wiki {
-	:not(pre) > code[class*="language-"],
-	pre[class*="language-"] {
-		background: var(--bs-body-bg);
-	}
 }
 
 /* Inline code */
