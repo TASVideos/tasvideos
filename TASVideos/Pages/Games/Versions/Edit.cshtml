@@ -53,6 +53,23 @@
 				<input type="text" asp-for="Version.Md5" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Version.Md5" class="text-danger"></span>
 			</form-group>
+			<form-group>
+				<div id="hash-drop-area" role="button" class="border border-silver rounded p-2 text-body-tertiary">
+					<row class="align-items-center mb-1">
+						<div class="col-auto">
+							<i class="fa-solid fa-calculator fa-xl"></i>
+						</div>
+						<div class="col ps-0">
+							<span>Drag and drop a file here to automatically calculate SHA-1 and MD5 hashes. This is done locally in your browser, without uploading the file.</span>
+						</div>
+					</row>
+					<fullrow>
+						<div class="d-none progress" role="progressbar">
+							<div id="hash-progress" class="progress-bar progress-bar-striped" style="width: 0%"></div>
+						</div>
+					</fullrow>
+				</div>
+			</form-group>
 		</div>
 		<div class="col-lg-6">
 			<form-group>
@@ -83,7 +100,94 @@
 		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="/Games/Versions/List" class="btn btn-secondary" asp-route-gameId="@Model.GameId"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>
+<input id="hash-input" type="file" class="d-none" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script>
+		let dropArea = document.getElementById('hash-drop-area');
+		let hashInput = document.getElementById('hash-input');
+		let hashProgress = document.getElementById('hash-progress');
+		let sha1Input = document.getElementById('@Html.IdFor(model => model.Version.Sha1)');
+		let md5Input = document.getElementById('@Html.IdFor(model => model.Version.Md5)');
+		function dropEnterStyle() {
+			dropArea.classList.add('border-secondary');
+			dropArea.classList.remove('border-silver');
+		}
+		function dropLeaveStyle() {
+			dropArea.classList.add('border-silver');
+			dropArea.classList.remove('border-secondary');
+		}
+		function calculateHashes(file) {
+			let sha1 = CryptoJS.algo.SHA1.create();
+			let md5 = CryptoJS.algo.MD5.create();
+			let fileSize = file.size;
+			let chunkSize = 16 * 1024 * 1024;
+			let offset = 0;
+
+			if (fileSize > chunkSize) {
+				hashProgress.style.width = '0%';
+				hashProgress.parentElement.classList.remove('d-none');
+			}
+
+			let reader = new FileReader();
+			reader.onload = function () {
+				offset += reader.result.length;
+				sha1.update(CryptoJS.enc.Latin1.parse(reader.result));
+				md5.update(CryptoJS.enc.Latin1.parse(reader.result));
+				hashProgress.style.width = `${Math.ceil((offset / fileSize) * 100)}%`;
+				if (offset >= fileSize) {
+					let sha1hash = sha1.finalize();
+					let md5hash = md5.finalize();
+					sha1Input.value = sha1hash.toString(CryptoJS.enc.Hex);
+					md5Input.value = md5hash.toString(CryptoJS.enc.Hex);
+					setTimeout(() => { hashProgress.parentElement.classList.add('d-none'); }, 600);
+					return;
+				}
+				readNext();
+			};
+
+			function readNext() {
+				let fileSlice = file.slice(offset, offset + chunkSize);
+				reader.readAsBinaryString(fileSlice);
+			}
+			readNext();
+		}
+		hashInput.addEventListener('change', (e) => {
+			calculateHashes(e.currentTarget.files[0]);
+		});
+		dropArea.addEventListener('click', (e) => {
+			hashInput.click();
+		});
+		dropArea.addEventListener('dragover', (e) => {
+			e.preventDefault();
+		});
+		let dropCount = 0;
+		dropArea.addEventListener('dragenter', (e) => {
+			if (dropCount == 0) {
+				dropEnterStyle();
+			}
+			dropCount++;
+		});
+		dropArea.addEventListener('dragleave', (e) => {
+			dropCount--;
+			if (dropCount == 0) {
+				dropLeaveStyle();
+			}
+		})
+		dropArea.addEventListener('drop', (e) => {
+			e.preventDefault();
+			dropLeaveStyle();
+			dropCount = 0;
+			if (e.dataTransfer.items) {
+				for (let item of e.dataTransfer.items) {
+					if (item.kind == 'file') {
+						calculateHashes(item.getAsFile());
+						break;
+					}
+				}
+			}
+		});
+	</script>
 }
