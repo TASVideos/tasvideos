@@ -71,4 +71,7 @@ public class SubmissionsResponse
 	public string? AdditionalAuthors { get; init; }
 
 	public IEnumerable<string> Authors { get; init; } = new List<string>();
+
+	[Sortable]
+	public DateTime CreateTimestamp { get; init; }
 }

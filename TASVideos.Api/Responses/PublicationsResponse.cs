@@ -51,6 +51,9 @@ public class PublicationsResponse
 	[Sortable]
 	public string? AdditionalAuthors { get; init; }
 
+	[Sortable]
+	public DateTime CreateTimestamp { get; init; }
+
 	public IEnumerable<string> Authors { get; init; } = Array.Empty<string>();
 	public IEnumerable<string> Tags { get; init; } = Array.Empty<string>();
 	public IEnumerable<string> Flags { get; init; } = Array.Empty<string>();

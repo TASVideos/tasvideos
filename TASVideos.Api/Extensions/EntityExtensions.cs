@@ -46,6 +46,7 @@ internal static class EntityExtensions
 			SystemFrameRate = p.SystemFrameRate!.FrameRate,
 			MovieFileName = p.MovieFileName,
 			AdditionalAuthors = p.AdditionalAuthors,
+			CreateTimestamp = p.CreateTimestamp,
 			Authors = p.Authors
 				.OrderBy(pa => pa.Ordinal)
 				.Select(a => a.Author!.UserName),
@@ -104,7 +105,8 @@ internal static class EntityExtensions
 			Authors = s.SubmissionAuthors
 				.OrderBy(a => a.Ordinal)
 				.Select(a => a.Author!.UserName),
-			AdditionalAuthors = s.AdditionalAuthors
+			AdditionalAuthors = s.AdditionalAuthors,
+			CreateTimestamp = s.CreateTimestamp
 		});
 	}
 }
