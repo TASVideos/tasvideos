@@ -9,13 +9,18 @@
 	--bs-link-color-rgb: 13,110,253;
 	--bs-link-hover-color: #0a58ca;
 	--bs-link-hover-color-rgb: 10,88,202;
+	--code-bg: var(--bs-body-bg);
 
 	.card {
 		--bs-card-cap-bg: var(--bs-gray-200);
 	}
 
-	pre {
-		--bs-card-cap-bg: var(--bs-white);
+	.card, .tab-content {
+		--code-bg: var(--bs-gray-200);
+
+		figure {
+			--code-bg: var(--bs-body-bg);
+		}
 	}
 }
 @include color-mode(dark) {
@@ -28,8 +33,20 @@
 	--bs-link-color: #5099f1;
 	--bs-link-color-rgb: 80,153,241;
 
-	.card, figure, pre {
+	.card {
 		--bs-card-cap-bg: #212529;
+	}
+
+	.card {
+		--code-bg: var(--bs-body-bg);
+
+		figure {
+			--code-bg: var(--bs-tertiary-bg);
+		}
+	}
+
+	.tab-content {
+		--code-bg: var(--bs-tertiary-bg);
 	}
 
 	.table {
@@ -542,12 +559,7 @@ tt {
 }
 
 tt, code, kbd, pre, samp, .wiki blockquote {
-	background: var(--bs-card-cap-bg);
-}
-:not(.card-body) > .wiki {
-	tt, code, kbd, pre, samp, .wiki blockquote {
-		background: var(--bs-body-bg);
-	}
+	background: var(--code-bg);
 }
 
 tt, code, kbd, pre, samp, dt, .wiki blockquote {
