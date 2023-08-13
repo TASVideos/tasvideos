@@ -21,6 +21,10 @@
 					<label asp-for="GameSearch"></label>
 				</div>
 				<div>
+					<input asp-for="PublicationSearch" />
+					<label asp-for="PublicationSearch"></label>
+				</div>
+				<div>
 					<input asp-for="PageSearch" />
 					<label asp-for="PageSearch"></label>
 				</div>
@@ -41,6 +45,7 @@
 				asp-route-PageSearch="@Model.PageSearch"
 				asp-route-TopicSearch="@Model.TopicSearch"
 				asp-route-PostSearch="@Model.PostSearch"
+				asp-route-PostSearch="@Model.PublicationSearch"
 				asp-route-GameSearch="@Model.GameSearch">
 				Prev
 			</a>
@@ -52,6 +57,7 @@
 				asp-route-PageSearch="@Model.PageSearch"
 				asp-route-TopicSearch="@Model.TopicSearch"
 				asp-route-PostSearch="@Model.PostSearch"
+				asp-route-PostSearch="@Model.PublicationSearch"
 				asp-route-GameSearch="@Model.GameSearch">
 				Next
 			</a>
@@ -70,6 +76,22 @@
 				<tr>
 					<td>
 						<a asp-page="/Games/Index" asp-route-id="@result.Id">@result.DisplayName</a>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+</div>
+
+<div condition="Model.PublicationResults.Any()">
+	<h4>Publication Results:</h4>
+	<div class="table-container">
+		<table class="table table-striped table-bordered">
+			@foreach (var result in Model.PublicationResults.Take(Model.DisplayPageSize))
+			{
+				<tr>
+					<td>
+						<a href="/@(result.Id)M">@result.Title</a>
 					</td>
 				</tr>
 			}

@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Search;
 
@@ -32,6 +34,7 @@ public class AdvancedModel : BasePageModel
 	public List<TopicSearchModel> TopicResults { get; set; } = new();
 	public List<PostSearchModel> PostResults { get; set; } = new();
 	public List<GameSearchModel> GameResults { get; set; } = new();
+	public List<PublicationSearchModel> PublicationResults { get; set; } = new();
 
 	[FromQuery]
 	[Display(Name = "Search Wiki")]
@@ -44,6 +47,10 @@ public class AdvancedModel : BasePageModel
 	[FromQuery]
 	[Display(Name = "Search Forum Posts")]
 	public bool PostSearch { get; set; } = false;
+
+	[FromQuery]
+	[Display(Name = "Search Publications")]
+	public bool PublicationSearch { get; set; } = true;
 
 	[FromQuery]
 	[Display(Name = "Search Games")]
@@ -141,8 +148,19 @@ public class AdvancedModel : BasePageModel
 				.ToListAsync();
 			}
 
+			if (PublicationSearch)
+			{
+				PublicationResults = await _db.Publications
+				.Where(p => Regex.IsMatch(p.Title, "(^|[^A-Za-z])" + SearchTerms))
+				.OrderBy(p => p.Title)
+				.Skip(skip)
+				.Take(DisplayPageSize + 1)
+				.Select(p => new PublicationSearchModel(p.Id, p.Title))
+				.ToListAsync();
+			}
+
 			EnablePrev = PageNumber > 1;
-			EnableNext = new[] { PageResults.Count, TopicResults.Count, PostResults.Count, GameResults.Count }.Any(c => c > DisplayPageSize);
+			EnableNext = new[] { PageResults.Count, TopicResults.Count, PostResults.Count, GameResults.Count, PublicationResults.Count }.Any(c => c > DisplayPageSize);
 		}
 
 		return Page();
@@ -152,4 +170,5 @@ public class AdvancedModel : BasePageModel
 	public record TopicSearchModel(string TopicName, int TopicId, string SubforumName);
 	public record PostSearchModel(string Text, int Index, string TopicName, int PostId);
 	public record GameSearchModel(int Id, string DisplayName);
+	public record PublicationSearchModel(int Id, string Title);
 }
