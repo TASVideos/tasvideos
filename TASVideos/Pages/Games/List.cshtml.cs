@@ -155,7 +155,7 @@ public class ListModel : BasePageModel
 				.ForGenre(paging.Genre)
 				.ForGroup(paging.Group)
 				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
-				.Where(g => EF.Functions.ToTsVector(g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery(paging.SearchTerms)))
+				.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", paging.SearchTerms)))
 				.Select(g => new GameListModel
 				{
 					Id = g.Id,
