@@ -11,14 +11,14 @@ public class ForumServiceTests
 	private readonly ForumService _forumService;
 	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
-	private readonly Mock<ITopicWatcher> _topicWatcher;
+	private readonly ITopicWatcher _topicWatcher;
 
 	public ForumServiceTests()
 	{
 		_db = TestDbContext.Create();
 		_cache = new TestCache();
-		_topicWatcher = new Mock<ITopicWatcher>();
-		_forumService = new ForumService(_db, _cache, _topicWatcher.Object);
+		_topicWatcher = Substitute.For<ITopicWatcher>();
+		_forumService = new ForumService(_db, _cache, _topicWatcher);
 	}
 
 	[TestMethod]
@@ -287,7 +287,7 @@ public class ForumServiceTests
 		Assert.AreEqual(ipAddress, actualPost.IpAddress);
 
 		// Must have no watches
-		_topicWatcher.Verify(v => v.UnwatchTopic(It.IsAny<int>(), It.IsAny<int>()));
+		await _topicWatcher.Received(1).UnwatchTopic(Arg.Any<int>(), Arg.Any<int>());
 
 		// Cache must be updated
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
@@ -338,7 +338,7 @@ public class ForumServiceTests
 		Assert.AreEqual(ipAddress, actualPost.IpAddress);
 
 		// Must add a watch
-		_topicWatcher.Verify(v => v.WatchTopic(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<bool>()));
+		await _topicWatcher.Received(1).WatchTopic(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>());
 
 		// Cache must be updated
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));

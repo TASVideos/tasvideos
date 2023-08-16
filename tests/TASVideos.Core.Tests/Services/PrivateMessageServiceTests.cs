@@ -8,14 +8,14 @@ namespace TASVideos.Core.Tests.Services;
 public class PrivateMessageServiceTests
 {
 	private readonly TestDbContext _db;
-	private readonly Mock<IEmailService> _emailService;
+	private readonly IEmailService _emailService;
 	private readonly PrivateMessageService _privateMessageService;
 
 	public PrivateMessageServiceTests()
 	{
 		_db = TestDbContext.Create();
-		_emailService = new Mock<IEmailService>();
-		_privateMessageService = new PrivateMessageService(_db, _emailService.Object);
+		_emailService = Substitute.For<IEmailService>();
+		_privateMessageService = new PrivateMessageService(_db, _emailService);
 	}
 
 	[TestMethod]
@@ -54,7 +54,7 @@ public class PrivateMessageServiceTests
 		Assert.AreEqual(toUserId, pm.ToUserId);
 		Assert.AreEqual(subject, pm.Subject);
 		Assert.AreEqual(text, pm.Text);
-		_emailService.Verify(m => m.NewPrivateMessage(toUserEmail, toUserName), Times.Once);
+		await _emailService.Received(1).NewPrivateMessage(toUserEmail, toUserName);
 	}
 
 	[TestMethod]
@@ -85,6 +85,6 @@ public class PrivateMessageServiceTests
 		Assert.AreEqual(toUserId, pm.ToUserId);
 		Assert.AreEqual(subject, pm.Subject);
 		Assert.AreEqual(text, pm.Text);
-		_emailService.Verify(m => m.NewPrivateMessage(toUserEmail, toUserName), Times.Never);
+		await _emailService.DidNotReceive().NewPrivateMessage(toUserEmail, toUserName);
 	}
 }

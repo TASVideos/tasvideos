@@ -10,14 +10,14 @@ namespace TASVideos.Api.Tests.Controllers;
 [TestClass]
 public sealed class ClassControllerTests : IDisposable
 {
-	private readonly Mock<IClassService> _mockClassService;
+	private readonly IClassService _mockClassService;
 	private readonly ClassesController _classesController;
 
 	public ClassControllerTests()
 	{
-		_mockClassService = new Mock<IClassService>();
+		_mockClassService = Substitute.For<IClassService>();
 		var httpContext = new DefaultHttpContext();
-		_classesController = new ClassesController(_mockClassService.Object)
+		_classesController = new ClassesController(_mockClassService)
 		{
 			ControllerContext = new ControllerContext
 			{
@@ -29,9 +29,7 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task GetAll_NoData_Returns200()
 	{
-		_mockClassService
-			.Setup(m => m.GetAll())
-			.ReturnsAsync(new List<PublicationClass>());
+		_mockClassService.GetAll().Returns(new List<PublicationClass>());
 
 		var result = await _classesController.GetAll();
 		Assert.IsNotNull(result);
@@ -46,9 +44,8 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task GetById_NotFound()
 	{
-		_mockClassService
-			.Setup(m => m.GetById(It.IsAny<int>()))
-			.ReturnsAsync((PublicationClass?)null);
+		_mockClassService.GetById(Arg.Any<int>()).Returns((PublicationClass?)null);
+
 		var result = await _classesController.GetById(int.MaxValue);
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
@@ -63,8 +60,8 @@ public sealed class ClassControllerTests : IDisposable
 		const string icon = "icon";
 		const double weight = 1;
 		_mockClassService
-			.Setup(m => m.GetById(It.IsAny<int>()))
-			.ReturnsAsync(new PublicationClass { Name = name, Link = link, IconPath = icon, Weight = weight });
+			.GetById(Arg.Any<int>())
+			.Returns(new PublicationClass { Name = name, Link = link, IconPath = icon, Weight = weight });
 
 		var result = await _classesController.GetById(1);
 		Assert.IsNotNull(result);
@@ -83,9 +80,7 @@ public sealed class ClassControllerTests : IDisposable
 	public async Task Create_Success_Returns201()
 	{
 		const int createdId = 1;
-		_mockClassService
-			.Setup(m => m.Add(It.IsAny<PublicationClass>()))
-			.ReturnsAsync((createdId, ClassEditResult.Success));
+		_mockClassService.Add(Arg.Any<PublicationClass>()).Returns((createdId, ClassEditResult.Success));
 
 		var result = await _classesController.Create(new ClassAddEditRequest());
 
@@ -99,9 +94,7 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task Create_Duplicate_Returns409()
 	{
-		_mockClassService
-			.Setup(m => m.Add(It.IsAny<PublicationClass>()))
-			.ReturnsAsync((1, ClassEditResult.DuplicateName));
+		_mockClassService.Add(Arg.Any<PublicationClass>()).Returns((1, ClassEditResult.DuplicateName));
 
 		var result = await _classesController.Create(new ClassAddEditRequest());
 
@@ -118,9 +111,7 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task Create_Fail_Returns400()
 	{
-		_mockClassService
-			.Setup(m => m.Add(It.IsAny<PublicationClass>()))
-			.ReturnsAsync((1, ClassEditResult.Fail));
+		_mockClassService.Add(Arg.Any<PublicationClass>()).Returns((1, ClassEditResult.Fail));
 
 		var result = await _classesController.Create(new ClassAddEditRequest());
 
@@ -133,8 +124,8 @@ public sealed class ClassControllerTests : IDisposable
 	public async Task Update_Success_Returns200()
 	{
 		_mockClassService
-			.Setup(m => m.Edit(It.IsAny<int>(), It.IsAny<PublicationClass>()))
-			.ReturnsAsync(ClassEditResult.Success);
+			.Edit(Arg.Any<int>(), Arg.Any<PublicationClass>())
+			.Returns(ClassEditResult.Success);
 
 		var result = await _classesController.Update(1, new ClassAddEditRequest());
 
@@ -147,8 +138,8 @@ public sealed class ClassControllerTests : IDisposable
 	public async Task Update_NotFound_Returns404()
 	{
 		_mockClassService
-			.Setup(m => m.Edit(It.IsAny<int>(), It.IsAny<PublicationClass>()))
-			.ReturnsAsync(ClassEditResult.NotFound);
+			.Edit(Arg.Any<int>(), Arg.Any<PublicationClass>())
+			.Returns(ClassEditResult.NotFound);
 
 		var result = await _classesController.Update(1, new ClassAddEditRequest());
 
@@ -161,8 +152,8 @@ public sealed class ClassControllerTests : IDisposable
 	public async Task Update_Duplicate_Returns409()
 	{
 		_mockClassService
-			.Setup(m => m.Edit(It.IsAny<int>(), It.IsAny<PublicationClass>()))
-			.ReturnsAsync(ClassEditResult.DuplicateName);
+			.Edit(Arg.Any<int>(), Arg.Any<PublicationClass>())
+			.Returns(ClassEditResult.DuplicateName);
 
 		var result = await _classesController.Update(1, new ClassAddEditRequest());
 
@@ -179,9 +170,7 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task Delete_Success_Returns200()
 	{
-		_mockClassService
-			.Setup(m => m.Delete(It.IsAny<int>()))
-			.ReturnsAsync(ClassDeleteResult.Success);
+		_mockClassService.Delete(Arg.Any<int>()).Returns(ClassDeleteResult.Success);
 
 		var result = await _classesController.Delete(1);
 
@@ -193,9 +182,7 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task Delete_NotFound_Returns404()
 	{
-		_mockClassService
-			.Setup(m => m.Delete(It.IsAny<int>()))
-			.ReturnsAsync(ClassDeleteResult.NotFound);
+		_mockClassService.Delete(Arg.Any<int>()).Returns(ClassDeleteResult.NotFound);
 
 		var result = await _classesController.Delete(1);
 
@@ -207,9 +194,7 @@ public sealed class ClassControllerTests : IDisposable
 	[TestMethod]
 	public async Task Delete_InUse_Returns409()
 	{
-		_mockClassService
-			.Setup(m => m.Delete(It.IsAny<int>()))
-			.ReturnsAsync(ClassDeleteResult.InUse);
+		_mockClassService.Delete(Arg.Any<int>()).Returns(ClassDeleteResult.InUse);
 
 		var result = await _classesController.Delete(1);
 

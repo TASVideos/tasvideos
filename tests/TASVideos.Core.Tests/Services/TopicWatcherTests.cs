@@ -9,7 +9,7 @@ namespace TASVideos.Core.Tests.Services;
 [TestClass]
 public class TopicWatcherTests
 {
-	private readonly Mock<IEmailService> _mockEmailService;
+	private readonly IEmailService _mockEmailService;
 	private readonly TestDbContext _db;
 
 	private readonly ITopicWatcher _topicWatcher;
@@ -17,13 +17,13 @@ public class TopicWatcherTests
 	public TopicWatcherTests()
 	{
 		_db = TestDbContext.Create();
-		_mockEmailService = new Mock<IEmailService>();
+		_mockEmailService = Substitute.For<IEmailService>();
 		var settings = new AppSettings
 		{
 			BaseUrl = "http://example.com"
 		};
 
-		_topicWatcher = new TopicWatcher(_mockEmailService.Object, _db, settings);
+		_topicWatcher = new TopicWatcher(_mockEmailService, _db, settings);
 	}
 
 	[TestMethod]
@@ -77,14 +77,10 @@ public class TopicWatcherTests
 			IsNotified = false
 		});
 		await _db.SaveChangesAsync();
-		_mockEmailService
-			.Setup(m => m.TopicReplyNotification(It.IsAny<IEnumerable<string>>(), It.IsAny<TopicReplyNotificationTemplate>()));
 
 		await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", 1));
 
-		_mockEmailService.Verify(
-			v => v.TopicReplyNotification(It.IsAny<IEnumerable<string>>(), It.IsAny<TopicReplyNotificationTemplate>()),
-			Times.Never);
+		await _mockEmailService.DidNotReceive().TopicReplyNotification(Arg.Any<IEnumerable<string>>(), Arg.Any<TopicReplyNotificationTemplate>());
 	}
 
 	[TestMethod]
@@ -103,16 +99,9 @@ public class TopicWatcherTests
 		});
 		await _db.SaveChangesAsync();
 
-		var recipients = new List<string> { posterEmail }.AsEnumerable();
-		var template = new TopicReplyNotificationTemplate(0, 0, "", "");
-		_mockEmailService
-			.Setup(m => m.TopicReplyNotification(recipients, template));
-
 		await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", poster));
 
-		_mockEmailService.Verify(
-			v => v.TopicReplyNotification(It.IsAny<IEnumerable<string>>(), It.IsAny<TopicReplyNotificationTemplate>()),
-			Times.Once);
+		await _mockEmailService.Received(1).TopicReplyNotification(Arg.Any<IEnumerable<string>>(), Arg.Any<TopicReplyNotificationTemplate>());
 	}
 
 	[TestMethod]
@@ -130,11 +119,6 @@ public class TopicWatcherTests
 			IsNotified = false
 		});
 		await _db.SaveChangesAsync();
-
-		var recipients = new List<string> { posterEmail }.AsEnumerable();
-		var template = new TopicReplyNotificationTemplate(0, 0, "", "");
-		_mockEmailService
-			.Setup(m => m.TopicReplyNotification(recipients, template));
 
 		await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", poster));
 

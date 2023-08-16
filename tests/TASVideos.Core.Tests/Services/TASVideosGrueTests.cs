@@ -15,8 +15,8 @@ public class TASVideosGrueTests
 	public TASVideosGrueTests()
 	{
 		_db = TestDbContext.Create();
-		var mockForumService = new Mock<IForumService>();
-		_tasVideosGrue = new TASVideosGrue(_db, mockForumService.Object);
+		var mockForumService = Substitute.For<IForumService>();
+		_tasVideosGrue = new TASVideosGrue(_db, mockForumService);
 	}
 
 	[TestMethod]

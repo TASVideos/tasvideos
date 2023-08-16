@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 using TASVideos.Tests.Base;
@@ -11,14 +10,14 @@ namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 [TestClass]
 public class RenderModelTests : BasePageModelTests
 {
-	private readonly Mock<IWikiPages> _mockWikiPages;
+	private readonly IWikiPages _mockWikiPages;
 	private readonly RenderModel _model;
 
 	public RenderModelTests()
 	{
-		_mockWikiPages = new Mock<IWikiPages>();
+		_mockWikiPages = Substitute.For<IWikiPages>();
 		var db = TestDbContext.Create();
-		_model = new RenderModel(_mockWikiPages.Object, db, NullLogger<RenderModel>.Instance)
+		_model = new RenderModel(_mockWikiPages, db, NullLogger<RenderModel>.Instance)
 		{
 			PageContext = TestPageContext()
 		};
@@ -41,9 +40,7 @@ public class RenderModelTests : BasePageModelTests
 	public async Task Render_ExistingPage_FindsPage()
 	{
 		const string existingPage = "Test";
-		_mockWikiPages
-			.Setup(m => m.Page(existingPage, null))
-			.ReturnsAsync(new WikiResult { PageName = existingPage });
+		_mockWikiPages.Page(existingPage, null).Returns(new WikiResult { PageName = existingPage });
 
 		var result = await _model.OnGet(existingPage);
 
@@ -55,9 +52,7 @@ public class RenderModelTests : BasePageModelTests
 	public async Task Render_WhenUrlEncoded_FindsPage()
 	{
 		const string existingPage = "Foo/Bar";
-		_mockWikiPages
-			.Setup(m => m.Page(existingPage, null))
-			.ReturnsAsync(new WikiResult { PageName = existingPage });
+		_mockWikiPages.Page(existingPage, null).Returns(new WikiResult { PageName = existingPage });
 		var encoded = System.Net.WebUtility.UrlEncode(existingPage);
 
 		var result = await _model.OnGet(encoded);

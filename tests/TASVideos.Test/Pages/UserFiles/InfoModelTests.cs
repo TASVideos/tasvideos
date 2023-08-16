@@ -1,6 +1,5 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.UserFiles;
@@ -16,9 +15,9 @@ internal class InfoModelTests
 
 	public InfoModelTests()
 	{
-		var fileService = new Mock<IFileService>();
+		var fileService = Substitute.For<IFileService>();
 		_db = TestDbContext.Create();
-		_page = new InfoModel(_db, fileService.Object);
+		_page = new InfoModel(_db, fileService);
 	}
 
 	[TestMethod]

@@ -10,22 +10,18 @@ namespace TASVideos.Core.Tests.Services;
 public class UserFilesTests
 {
 	private readonly TestDbContext _db;
-	private readonly Mock<IFileService> _fileService;
-	private readonly Mock<IMovieParser> _parser;
-	private readonly Mock<IWikiPages> _wikiPages;
+	private readonly IFileService _fileService;
+	private readonly IMovieParser _parser;
+	private readonly IWikiPages _wikiPages;
 	private readonly UserFiles _userFiles;
 
 	public UserFilesTests()
 	{
 		_db = TestDbContext.Create();
-		_parser = new Mock<IMovieParser>();
-		_fileService = new Mock<IFileService>();
-		_wikiPages = new Mock<IWikiPages>();
-		_userFiles = new UserFiles(
-			_db,
-			_parser.Object,
-			_fileService.Object,
-			_wikiPages.Object);
+		_parser = Substitute.For<IMovieParser>();
+		_fileService = Substitute.For<IFileService>();
+		_wikiPages = Substitute.For<IWikiPages>();
+		_userFiles = new UserFiles(_db, _parser, _fileService, _wikiPages);
 	}
 
 	[TestMethod]
@@ -157,7 +153,7 @@ public class UserFilesTests
 	public async Task SupportedFileExtensions_SupportedIfParserSupports()
 	{
 		const string fileExt = ".test";
-		_parser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { fileExt });
+		_parser.SupportedMovieExtensions.Returns(new[] { fileExt });
 
 		var actual = await _userFiles.SupportedFileExtensions();
 		Assert.IsTrue(actual.Contains(fileExt));
@@ -167,8 +163,7 @@ public class UserFilesTests
 	public async Task SupportedFileExtensions_SupportedIfSupplemental()
 	{
 		const string fileExt = ".lua";
-		_wikiPages.Setup(m => m.Page(It.IsAny<string>(), null))
-			.ReturnsAsync(new WikiResult { Markup = fileExt + ", .nothing" });
+		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = fileExt + ", .nothing" });
 
 		var actual = await _userFiles.SupportedFileExtensions();
 		Assert.IsTrue(actual.Contains(fileExt));
@@ -185,12 +180,8 @@ public class UserFilesTests
 		const int gameId = 3;
 		const string fileName = "script.lua";
 		const bool hidden = true;
-		_fileService
-			.Setup(m => m.Compress(It.IsAny<byte[]>()))
-			.ReturnsAsync(new CompressedFile(100, 99, Compression.Gzip, fileData));
-		_wikiPages
-			.Setup(m => m.Page(It.IsAny<string>(), null))
-			.ReturnsAsync(new WikiResult { Markup = ".lua" });
+		_fileService.Compress(Arg.Any<byte[]>()).Returns(new CompressedFile(100, 99, Compression.Gzip, fileData));
+		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = ".lua" });
 
 		var (id, parseResult) = await _userFiles.Upload(userId, new(title, desc, systemId, gameId, fileData, fileName, hidden));
 
@@ -218,15 +209,9 @@ public class UserFilesTests
 		const int gameId = 3;
 		const string fileName = "movie.bk2";
 		const bool hidden = true;
-		_fileService
-			.Setup(m => m.Compress(It.IsAny<byte[]>()))
-			.ReturnsAsync(new CompressedFile(100, 99, Compression.Gzip, fileData));
-		_parser
-			.Setup(m => m.SupportedMovieExtensions)
-			.Returns(new[] { ".bk2" });
-		_parser
-			.Setup(m => m.ParseFile(It.IsAny<string>(), It.IsAny<Stream>()))
-			.ReturnsAsync(new TestParseResult());
+		_fileService.Compress(Arg.Any<byte[]>()).Returns(new CompressedFile(100, 99, Compression.Gzip, fileData));
+		_parser.SupportedMovieExtensions.Returns(new[] { ".bk2" });
+		_parser.ParseFile(Arg.Any<string>(), Arg.Any<Stream>()).Returns(new TestParseResult());
 
 		var (id, parseResult) = await _userFiles.Upload(userId, new(title, desc, systemId, gameId, fileData, fileName, hidden));
 
@@ -250,9 +235,7 @@ public class UserFilesTests
 	public async Task SupportedSupplementalFiles(string markup)
 	{
 		string[] extensions = { ".lua", ".wch" };
-		_wikiPages
-			.Setup(m => m.Page(It.IsAny<string>(), null))
-			.ReturnsAsync(new WikiResult { Markup = markup });
+		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = markup });
 
 		var actual = await _userFiles.SupportedSupplementalFiles();
 		Assert.IsNotNull(actual);

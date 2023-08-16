@@ -10,14 +10,14 @@ public class LanguagesTests
 	private const string SystemLanguageMarkup = "FR:French,ES:Español";
 
 	private readonly TestDbContext _db;
-	private readonly Mock<IWikiPages> _wikiPages;
+	private readonly IWikiPages _wikiPages;
 	private readonly Languages _languages;
 
 	public LanguagesTests()
 	{
 		_db = TestDbContext.Create();
-		_wikiPages = new Mock<IWikiPages>(MockBehavior.Strict);
-		_languages = new Languages(_db, _wikiPages.Object, new NoCacheService());
+		_wikiPages = Substitute.For<IWikiPages>();
+		_languages = new Languages(_db, _wikiPages, new NoCacheService());
 	}
 
 	[TestMethod]
@@ -40,9 +40,7 @@ public class LanguagesTests
 	[TestMethod]
 	public async Task AvailableLanguages_NoPage_ReturnsEmptyList()
 	{
-		_wikiPages
-			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync((IWikiPage?)null);
+		_wikiPages.Page(Arg.Any<string>()).Returns((IWikiPage?)null);
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -53,9 +51,7 @@ public class LanguagesTests
 	[TestMethod]
 	public async Task AvailableLanguages_NoMarkup_ReturnsEmptyList()
 	{
-		_wikiPages
-			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync(new WikiResult { Markup = "" });
+		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = "" });
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -67,9 +63,7 @@ public class LanguagesTests
 	public async Task AvailableLanguages_JunkMarkup_ReturnsJunk()
 	{
 		const string junk = "RandomText";
-		_wikiPages
-			.Setup(w => w.Page(It.IsAny<string>(), It.IsAny<int?>()))
-			.ReturnsAsync(new WikiResult { Markup = junk });
+		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = junk });
 
 		var actual = await _languages.AvailableLanguages();
 
@@ -100,9 +94,7 @@ public class LanguagesTests
 		const string systemLanguageMarkup = @"
 				FR : French : ,
 				ES : Español , : ";
-		_wikiPages
-			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-			.ReturnsAsync(new WikiResult { Markup = systemLanguageMarkup });
+		_wikiPages.Page("System/Languages").Returns(new WikiResult { Markup = systemLanguageMarkup });
 
 		var actual = await _languages.AvailableLanguages();
 		Assert.IsNotNull(actual);
@@ -162,8 +154,6 @@ public class LanguagesTests
 
 	private void MockStandardMarkup()
 	{
-		_wikiPages
-			.Setup(w => w.Page("System/Languages", It.IsAny<int?>()))
-			.ReturnsAsync(new WikiResult { Markup = SystemLanguageMarkup });
+		_wikiPages.Page("System/Languages").Returns(new WikiResult { Markup = SystemLanguageMarkup });
 	}
 }

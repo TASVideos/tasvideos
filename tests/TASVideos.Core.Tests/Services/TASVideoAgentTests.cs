@@ -18,8 +18,8 @@ public class TASVideoAgentTests
 	public TASVideoAgentTests()
 	{
 		_db = TestDbContext.Create();
-		var mockForumService = new Mock<IForumService>();
-		_tasVideoAgent = new TASVideoAgent(_db, mockForumService.Object);
+		var mockForumService = Substitute.For<IForumService>();
+		_tasVideoAgent = new TASVideoAgent(_db, mockForumService);
 	}
 
 	[TestMethod]

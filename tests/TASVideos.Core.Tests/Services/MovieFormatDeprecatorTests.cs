@@ -9,13 +9,13 @@ public class MovieFormatDeprecatorTests
 {
 	private readonly TestDbContext _db;
 	private readonly MovieFormatDeprecator _deprecator;
-	private readonly Mock<IMovieParser> _mockParser;
+	private readonly IMovieParser _mockParser;
 
 	public MovieFormatDeprecatorTests()
 	{
 		_db = TestDbContext.Create();
-		_mockParser = new Mock<IMovieParser>();
-		_deprecator = new MovieFormatDeprecator(_db, _mockParser.Object);
+		_mockParser = Substitute.For<IMovieParser>();
+		_deprecator = new MovieFormatDeprecator(_db, _mockParser);
 	}
 
 	#region GetAll
@@ -23,7 +23,7 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task GetAll_NoEntries_ReturnsEmptyList()
 	{
-		_mockParser.Setup(p => p.SupportedMovieExtensions).Returns(Enumerable.Empty<string>());
+		_mockParser.SupportedMovieExtensions.Returns(Enumerable.Empty<string>());
 
 		var actual = await _deprecator.GetAll();
 		Assert.IsNotNull(actual);
@@ -34,7 +34,7 @@ public class MovieFormatDeprecatorTests
 	public async Task GetAll_Parsers_ButNoDbEntries_ReturnsAllParsers()
 	{
 		var formats = new[] { ".test1", ".test2", ".test3" };
-		_mockParser.Setup(p => p.SupportedMovieExtensions).Returns(formats);
+		_mockParser.SupportedMovieExtensions.Returns(formats);
 
 		var actual = await _deprecator.GetAll();
 		Assert.IsNotNull(actual);
@@ -54,7 +54,7 @@ public class MovieFormatDeprecatorTests
 		const string existsAndAllowed = ".test2";
 		const string notExists = ".test3";
 		var formats = new[] { existsAndDeprecated, existsAndAllowed, notExists };
-		_mockParser.Setup(p => p.SupportedMovieExtensions).Returns(formats);
+		_mockParser.SupportedMovieExtensions.Returns(formats);
 
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
@@ -93,7 +93,7 @@ public class MovieFormatDeprecatorTests
 	public void IsMovieExtension_Exists_ReturnsTrue()
 	{
 		const string existingExtension = ".test";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingExtension });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingExtension });
 
 		var actual = _deprecator.IsMovieExtension(existingExtension);
 		Assert.IsTrue(actual);
@@ -103,7 +103,7 @@ public class MovieFormatDeprecatorTests
 	public void IsMovieExtension_NotExists_ReturnsFalse()
 	{
 		const string existingExtension = ".test";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingExtension });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingExtension });
 
 		var actual = _deprecator.IsMovieExtension("not exists");
 		Assert.IsFalse(actual);
@@ -113,7 +113,7 @@ public class MovieFormatDeprecatorTests
 	public void IsMovieExtension_CaseSensitive()
 	{
 		const string existingExtension = ".TEST";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingExtension });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingExtension });
 
 		var actual = _deprecator.IsMovieExtension(existingExtension.ToLower());
 		Assert.IsFalse(actual);
@@ -167,7 +167,7 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task Allow_InvalidFormat_ReturnsFalse()
 	{
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { ".test1" });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { ".test1" });
 
 		var actual = await _deprecator.Allow("invalid");
 		Assert.IsFalse(actual);
@@ -178,7 +178,7 @@ public class MovieFormatDeprecatorTests
 	public async Task Allow_ConcurrentUpdateConflict_ReturnsFalse()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -195,7 +195,7 @@ public class MovieFormatDeprecatorTests
 	public async Task Allow_UpdateConflict_ReturnsFalse()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -212,7 +212,7 @@ public class MovieFormatDeprecatorTests
 	public async Task Allow_NoDbRecord_ReturnsTrue()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
 
 		var actual = await _deprecator.Allow(existingFormat);
 		Assert.IsTrue(actual);
@@ -223,7 +223,8 @@ public class MovieFormatDeprecatorTests
 	public async Task Allow_ExistsAndDeprecated_Allows()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
+
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -243,7 +244,8 @@ public class MovieFormatDeprecatorTests
 	public async Task Allow_ExistsAndAllowed_Allows()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
+
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -266,7 +268,7 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task Deprecate_InvalidFormat_ReturnsFalse()
 	{
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { ".test1" });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { ".test1" });
 
 		var actual = await _deprecator.Deprecate("invalid");
 		Assert.IsFalse(actual);
@@ -277,7 +279,8 @@ public class MovieFormatDeprecatorTests
 	public async Task Deprecate_ConcurrentUpdateConflict_ReturnsFalse()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
+
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -294,7 +297,7 @@ public class MovieFormatDeprecatorTests
 	public async Task Deprecate_UpdateConflict_ReturnsFalse()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -311,7 +314,7 @@ public class MovieFormatDeprecatorTests
 	public async Task Deprecate_DbRecordExistsAndAllowed_Deprecates()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -331,7 +334,7 @@ public class MovieFormatDeprecatorTests
 	public async Task Deprecate_DbRecordExistsAndDeprecated_Deprecates()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
 		_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 		{
 			FileExtension = existingFormat,
@@ -351,7 +354,7 @@ public class MovieFormatDeprecatorTests
 	public async Task Deprecate_NoDbRecord_Adds()
 	{
 		const string existingFormat = ".test1";
-		_mockParser.Setup(m => m.SupportedMovieExtensions).Returns(new[] { existingFormat });
+		_mockParser.SupportedMovieExtensions.Returns(new[] { existingFormat });
 
 		var actual = await _deprecator.Deprecate(existingFormat);
 		Assert.IsTrue(actual);

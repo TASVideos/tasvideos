@@ -10,23 +10,15 @@ public abstract class BaseParserTests
 	protected Stream Embedded(string name)
 	{
 		var stream = Assembly.GetAssembly(typeof(BaseParserTests))?.GetManifestResourceStream(ResourcesPath + name);
-		if (stream is null)
-		{
-			throw new InvalidOperationException($"Unable to find embedded resource {name}");
-		}
-
-		return MakeTestStream(stream);
+		return stream is null
+			? throw new InvalidOperationException($"Unable to find embedded resource {name}")
+			: MakeTestStream(stream);
 	}
 
 	protected long EmbeddedLength(string name)
 	{
 		var stream = Assembly.GetAssembly(typeof(BaseParserTests))?.GetManifestResourceStream(ResourcesPath + name);
-		if (stream is null)
-		{
-			throw new InvalidOperationException($"Unable to find embedded resource {name}");
-		}
-
-		return stream.Length;
+		return stream?.Length ?? throw new InvalidOperationException($"Unable to find embedded resource {name}");
 	}
 
 	private static Stream MakeTestStream(Stream input)

@@ -18,9 +18,9 @@ public class QueueServiceTests
 	private const int MinimumHoursBeforeJudgment = 72;
 	private readonly QueueService _queueService;
 	private readonly TestDbContext _db;
-	private readonly Mock<IYoutubeSync> _youtubeSync;
-	private readonly Mock<ITASVideoAgent> _tva;
-	private readonly Mock<IWikiPages> _wikiPages;
+	private readonly IYoutubeSync _youtubeSync;
+	private readonly ITASVideoAgent _tva;
+	private readonly IWikiPages _wikiPages;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -35,11 +35,11 @@ public class QueueServiceTests
 	public QueueServiceTests()
 	{
 		_db = TestDbContext.Create();
-		_youtubeSync = new Mock<IYoutubeSync>();
-		_tva = new Mock<ITASVideoAgent>();
-		_wikiPages = new Mock<IWikiPages>();
+		_youtubeSync = Substitute.For<IYoutubeSync>();
+		_tva = Substitute.For<ITASVideoAgent>();
+		_wikiPages = Substitute.For<IWikiPages>();
 		var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
-		_queueService = new QueueService(settings, _db, _youtubeSync.Object, _tva.Object, _wikiPages.Object);
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages);
 	}
 
 	[TestMethod]
@@ -410,7 +410,7 @@ public class QueueServiceTests
 		Assert.AreEqual(0, _db.ForumPosts.Count());
 		Assert.AreEqual(0, _db.ForumPollOptions.Count());
 		Assert.AreEqual(0, _db.ForumPollOptionVotes.Count());
-		_wikiPages.Verify(v => v.Delete(WikiHelper.ToSubmissionWikiPageName(1)));
+		await _wikiPages.Received(1).Delete(WikiHelper.ToSubmissionWikiPageName(1));
 	}
 
 	[TestMethod]
@@ -487,9 +487,7 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task Unpublish_NoObsoletedMovie_NoYoutube()
 	{
-		_youtubeSync
-			.Setup(m => m.IsYoutubeUrl(It.IsAny<string>()))
-			.Returns(true);
+		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 
 		const int publicationId = 1;
 		const string publicationTitle = "Test Publication";
@@ -554,7 +552,7 @@ public class QueueServiceTests
 		Assert.AreEqual(PublicationUnderway, sub.Status);
 
 		// Youtube url should be unlisted
-		_youtubeSync.Verify(v => v.UnlistVideo(It.IsAny<string>()));
+		await _youtubeSync.Received(1).UnlistVideo(Arg.Any<string>());
 
 		// Submission status history added for published status
 		Assert.AreEqual(1, _db.SubmissionStatusHistory.Count(sh => sh.SubmissionId == submissionId));
@@ -562,15 +560,13 @@ public class QueueServiceTests
 		Assert.AreEqual(Published, statusHistory.Status);
 
 		// TVA post is made
-		_tva.Verify(v => v.PostSubmissionUnpublished(submissionId));
+		await _tva.Received(1).PostSubmissionUnpublished(submissionId);
 	}
 
 	[TestMethod]
 	public async Task Unpublish_ObsoletedMovies_ResetAndSync()
 	{
-		_youtubeSync
-			.Setup(m => m.IsYoutubeUrl(It.IsAny<string>()))
-			.Returns(true);
+		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 
 		_db.WikiPages.Add(new WikiPage { Markup = "Test" });
 		var systemEntry = _db.GameSystems.Add(new GameSystem { Code = "Test" });
@@ -632,7 +628,7 @@ public class QueueServiceTests
 		Assert.IsNull(obsoletedMovie.ObsoletedById);
 
 		// Obsoleted movie youtube url must be synced
-		_youtubeSync.Verify(v => v.SyncYouTubeVideo(It.IsAny<YoutubeVideo>()));
+		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}
 
 	[TestMethod]
@@ -735,7 +731,7 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task ObsoleteWith_Success()
 	{
-		_youtubeSync.Setup(m => m.IsYoutubeUrl(It.IsAny<string>())).Returns(true);
+		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 		const int pubToObsolete = 1;
 		const int obsoletingPub = 2;
 		const string youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
@@ -764,6 +760,6 @@ public class QueueServiceTests
 		var actualPub = _db.Publications.Single(p => p.Id == pubToObsolete);
 		Assert.AreEqual(obsoletingPub, actualPub.ObsoletedById);
 
-		_youtubeSync.Verify(v => v.SyncYouTubeVideo(It.IsAny<YoutubeVideo>()));
+		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}
 }

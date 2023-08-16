@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
+﻿using System.Net;
+using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
@@ -10,11 +11,44 @@ public class YoutubeSyncTests
 {
 	private readonly YouTubeSync _youTubeSync;
 
+	private class MockHttpMessageHandler : HttpMessageHandler
+	{
+		private readonly string _response;
+		private readonly HttpStatusCode _statusCode;
+
+		public MockHttpMessageHandler(string response, HttpStatusCode statusCode)
+		{
+			_response = response;
+			_statusCode = statusCode;
+		}
+
+		protected override async Task<HttpResponseMessage> SendAsync(
+			HttpRequestMessage request,
+			CancellationToken cancellationToken)
+		{
+			return await Task.FromResult(new HttpResponseMessage
+			{
+				StatusCode = _statusCode,
+				Content = new StringContent(_response)
+			});
+		}
+	}
+
+	private static IHttpClientFactory HttpClientFactoryMockCreate()
+	{
+		var messageHandler = new MockHttpMessageHandler("TEST VALUE", HttpStatusCode.OK);
+		var httpClient = new HttpClient(messageHandler);
+
+		var factory = Substitute.For<IHttpClientFactory>();
+		factory.CreateClient(HttpClients.Youtube).Returns(httpClient);
+		return factory;
+	}
+
 	public YoutubeSyncTests()
 	{
-		var clientFactoryMock = HttpClientFactoryMock.Create();
-		var mockAuth = new Mock<IGoogleAuthService>();
-		_youTubeSync = new(clientFactoryMock.Object, mockAuth.Object, new TestWikiToTextRenderer(), new AppSettings(), NullLogger<YouTubeSync>.Instance);
+		var clientFactoryMock = HttpClientFactoryMockCreate();
+		var mockAuth = Substitute.For<IGoogleAuthService>();
+		_youTubeSync = new(clientFactoryMock, mockAuth, new TestWikiToTextRenderer(), new AppSettings(), NullLogger<YouTubeSync>.Instance);
 	}
 
 	[TestMethod]
