@@ -60,7 +60,7 @@ public class RedisCacheService : ICacheService
 				return false;
 			}
 
-			value = JsonSerializer.Deserialize<T>(data) ?? default!;
+			value = JsonSerializer.Deserialize<T>(data!) ?? default!;
 			return true;
 		}
 		catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
