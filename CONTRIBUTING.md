@@ -4,7 +4,7 @@ Welcome! The TASVideos staff have set up links here to help guide new developers
 
 ## Directing Contributions
 
-Please feel free to file issues for any bugs observed! The maintainers will aim to confirm and mark them with a milestone based on their severity. We also welcome creating PRs directly if the solution is readily available and a maintainer will review the pull request and merge it. Developers who submit more complex or frequent PRs are encouraged to join the [site discord](http://tasvideos.org/DiscordServer.html) and ask for a site developer role. Any contributions will be [licensed under GPL v3](LICENSE).
+Please feel free to file issues for any bugs observed! The maintainers will aim to confirm and mark them with a milestone based on their severity. We also welcome creating PRs directly if the solution is readily available and a maintainer will review the pull request and merge it. Developers who submit more complex or frequent PRs are encouraged to join the [site discord](https://tasvideos.org/LiveChat) and ask for a site developer role. Any contributions will be [licensed under GPL v3](LICENSE).
 
 If a security issue is found please instead follow our [security policy](SECURITY.md) to disclose the issue.
 
@@ -18,7 +18,7 @@ See [Local Development Setup](https://github.com/TASVideos/tasvideos/wiki/Local-
 
 ## Code Style
 
-The codebase uses the K&R indentation style of placing braces on their own line at the same level of indentation as their header function. It uses tabs for indentation including in HTML in CSHTML where it acts as a single space when parsed by web browsers. Otherwise, code style should generally follow conventions for .NET 5 and C#.
+The codebase uses the [Allman style](https://en.wikipedia.org/wiki/Indentation_style#Allman_style), placing braces on their own line. It uses tabs for indentation including in HTML in CSHTML where it acts as a single space when parsed by web browsers. Otherwise, code style should generally follow conventions for .NET 5 and C#.
 
 ## Site Design
 
