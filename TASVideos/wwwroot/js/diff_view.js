@@ -4,7 +4,7 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 	}
 
 	const dmp = new diff_match_patch();
-	dmp.Diff_Timeout = 0;
+	dmp.Diff_Timeout = 5;
 	dmp.Diff_EditCost = 20;
 
 	const d = dmp.diff_main(cleanCr(from.text), cleanCr(to.text));
