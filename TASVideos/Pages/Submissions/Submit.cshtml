@@ -46,7 +46,7 @@
 		<column lg="6">
 			<form-group>
 				<label asp-for="Create.GameVersion" class="form-control-label"></label>
-				<select asp-for="Create.GameVersion" asp-items="@SubmissionHelper.GameVersionOptions" class="form-control"></select>
+				<input asp-for="Create.GameVersion" class="form-control" placeholder="USA v1.0" />
 				<span asp-validation-for="Create.GameVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>
