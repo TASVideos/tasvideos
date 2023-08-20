@@ -8,6 +8,7 @@ namespace TASVideos.Pages.Submissions.Models;
 public class SubmissionEditModel
 {
 	[DoNotTrim]
+	[Display(Name = "Comments and explanations")]
 	public string Markup { get; set; } = "";
 
 	[StringLength(1000)]
