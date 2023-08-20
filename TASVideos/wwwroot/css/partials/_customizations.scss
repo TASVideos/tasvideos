@@ -586,3 +586,28 @@ pre code {
 .form-check-input {
     --bs-border-color: var(--bs-gray-600);
 }
+
+.extlink {
+	&::after {
+		content: "\f08e";
+		padding-left: 1rem;
+		padding-right: 1.25rem;
+		-webkit-font-smoothing: antialiased;
+		display: var(--fa-display,inline-block);
+		font-style: normal;
+		font-variant: normal;
+		text-rendering: auto;
+		font-family: var(--fa-style-family,"Font Awesome 6 Free");
+		font-weight: var(--fa-style,900);
+	}
+}
+
+.extlink[href^="https://en.wikipedia.org"], .extlink[href^="http://en.wikipedia.org"] {
+	/* nominative use of Wikimedia Foundation trademark; artwork available under CC BY-SA 3.0 courtesy of User:Nohat on WP and Philip Metschan */
+	background: url("https://upload.wikimedia.org/wikipedia/commons/5/55/Wikipedia_affiliative_mark.png") right -0.2em bottom 0.1em / 1.5em no-repeat;
+	
+
+	&::after {
+		content: '';
+	}
+}
