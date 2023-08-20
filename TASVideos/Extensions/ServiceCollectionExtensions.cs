@@ -138,7 +138,7 @@ public static class ServiceCollectionExtensions
 				config.Password.RequireNonAlphanumeric = false;
 				config.Password.RequiredUniqueChars = 4;
 				config.User.RequireUniqueEmail = true;
-				config.User.AllowedUserNameCharacters += "āâãáéëöú£ "; // The space is intentional
+				config.User.AllowedUserNameCharacters += "āâãáéëöú£"; // The space is intentional
 			})
 			.AddEntityFrameworkStores<ApplicationDbContext>()
 			.AddDefaultTokenProviders();

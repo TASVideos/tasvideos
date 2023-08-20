@@ -53,11 +53,12 @@ public class LoginModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		UserName = UserName.Trim();
 		if (!ModelState.IsValid)
 		{
 			return Page();
 		}
+
+		UserName = UserName.Trim().Replace(" ", "_");
 
 		var result = await _signInManager.SignIn(UserName, Password, RememberMe);
 
