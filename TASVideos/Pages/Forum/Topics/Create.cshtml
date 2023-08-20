@@ -63,7 +63,7 @@
 		<partial name="_CreatePostHelper" model="@("Topic_Post")" />
 	</fullrow>
 	<form-group>
-		<textarea asp-for="Topic.Post" class="form-control backup-content" rows="20" data-backup-key="backup-topic-@Model.ForumId"></textarea>
+		<textarea asp-for="Topic.Post" class="form-control backup-content" rows="20" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
 		<span asp-validation-for="Topic.Post" class="text-danger"></span>
 	</form-group>
 	<fullrow id="backup-restore" class="d-none">

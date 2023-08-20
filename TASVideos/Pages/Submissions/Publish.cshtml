@@ -112,7 +112,7 @@
 			<partial name="_WikiEditHelper" model="@("Submission_MovieMarkup")" />
 			<form-group>
 				<label asp-for="Submission.MovieMarkup" class="form-control-label"></label>
-				<textarea asp-for="Submission.MovieMarkup" class="form-control" rows="10"></textarea>
+				<textarea asp-for="Submission.MovieMarkup" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Submission.MovieMarkup" class="text-danger"></span>
 			</form-group>
 		</column>

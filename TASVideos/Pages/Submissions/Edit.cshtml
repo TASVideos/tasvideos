@@ -103,7 +103,7 @@
 	<fullrow>
 		<form-group>
 			<label asp-for="Submission.Markup" class="form-control-label"></label>
-			<textarea asp-for="Submission.Markup" rows="12" class="form-control"></textarea>
+			<textarea asp-for="Submission.Markup" rows="12" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Submission.Markup" class="text-danger"></span>
 			@await Component.RenderWiki(SystemWiki.WikiEditHelp)
 		</form-group>
