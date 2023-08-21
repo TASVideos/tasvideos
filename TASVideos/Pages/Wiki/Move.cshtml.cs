@@ -72,11 +72,13 @@ public class MoveModel : BasePageModel
 			ModelState.AddModelError("", "Unable to move page, the page may have been modified during the saving of this operation.");
 			return Page();
 		}
-  
-  		await _wikiPages.Add(new WikiCreateRequest
+
+		var page = await _wikiPages.Page(Move.DestinationPageName);
+
+		await _wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = Move.DestinationPageName,
-			Markup = "what do I put here",
+			Markup = page?.Markup ?? "",
 			MinorEdit = false,
 			RevisionMessage = $"Page moved from {Move.OriginalPageName} to {Move.DestinationPageName}",
 			AuthorId = User.GetUserId()
