@@ -205,14 +205,23 @@ public class Jrsr : IParser
 				// initialization, diskinfo-*, others are ignored.
 			}
 
-			// "When computing movie length, it is customary to ignore all
-			// special events."
-			if (lastNonSpecialTimestamp > 0)
+			checked
 			{
-				checked
+				// Get total duration in seconds.
+				// "When computing movie length, it is
+				// customary to ignore all special events."
+				double duration = (double)lastNonSpecialTimestamp / 1e9;
+
+				// Compute an integer number of frames,
+				// assuming a frame rate close to 60 fps.
+				result.Frames = (int)Math.Floor(duration * 60.0);
+
+				// Fine-tune the frame rate to yield the
+				// correct total duration when the frame count
+				// is divided by it.
+				if (duration > 0.0)
 				{
-					result.Frames = (int)(lastNonSpecialTimestamp / 16666667);
-					result.FrameRateOverride = result.Frames / (lastNonSpecialTimestamp / 1000000000L);
+					result.FrameRateOverride = (double)result.Frames / duration;
 				}
 			}
 		}
