@@ -219,6 +219,7 @@ public class EditModel : BasePageModel
 					&& assignedRoleList.Any() // EF Core 2.1 issue, needs this or a user with no assigned roles blows up
 					&& assignedRoleList.Contains(r.Id)
 			})
+			.OrderBy(s => s.Text)
 			.ToListAsync();
 	}
 
