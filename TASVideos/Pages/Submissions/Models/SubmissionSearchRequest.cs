@@ -26,7 +26,7 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 
 	public int? StartType { get; set; }
 
-	[Display(Name = "Status Filter")]
+	[Display(Name = "Statuses")]
 	public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 
 	public static IEnumerable<SubmissionStatus> Default => new List<SubmissionStatus>
