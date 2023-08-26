@@ -14,18 +14,19 @@ public class SelectImproverTagHelper : TagHelper
 	<div id=""{SelectId}_buttons"" class=""onclick-focusinput px-2 py-2"">
 		<span id=""{SelectId}_noselection"" class=""text-body-tertiary onclick-focusinput px-1"">No selection</span>
 	</div>
-	<input id=""{SelectId}_input"" class=""d-none form-control"" placeholder=""Search"" />
-	<div id=""{SelectId}_list"" class=""list-group mt-1 overflow-auto"" style=""max-height: {ListHeight};""></div>
+	<input id=""{SelectId}_input"" class=""d-none form-control"" placeholder=""Search"" autocomplete=""off"" />
+	<div id=""{SelectId}_list"" class=""list-group mt-1 overflow-auto border"" style=""max-height: {ListHeight};""></div>
 </div>
 <script>
 	function toggle(multiSelect, buttons, list, value) {{
-		let element = [...list.querySelectorAll('a')].find(el => el.dataset.value === value);
+		let element = [...list.querySelectorAll('input')].find(el => el.dataset.value === value);
 		let option = [...multiSelect.options].find(option => option.value === value);
 		let button = [...buttons.querySelectorAll('button')].find(button => button.dataset.value === value);
 		let isSelected = option.selected;
 		if (isSelected) {{
 			option.selected = false;
-			element.classList.remove('active');
+			multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
+			element.checked = false;
 			button.classList.add('d-none');
 			if (![...multiSelect.options].some(option => option.selected)) {{
 				buttons.querySelector('span').classList.remove('d-none');
@@ -33,7 +34,8 @@ public class SelectImproverTagHelper : TagHelper
 		}}
 		else {{
 			option.selected = true;
-			element.classList.add('active');
+			multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
+			element.checked = true;
 			button.classList.remove('d-none');
 			buttons.querySelector('span').classList.add('d-none');
 		}}
@@ -47,15 +49,21 @@ public class SelectImproverTagHelper : TagHelper
 		div.classList.remove('d-none');
 		let input = document.getElementById(multiSelectId + '_input');
 		for (var option of multiSelect.options) {{
-			let entry = document.createElement('a');
-			entry.classList.add('list-group-item', 'list-group-item-action', 'py-1');
+			let entry = document.createElement('div');
+			entry.classList.add('list-group-item', 'list-group-item-action', 'px-1');
+			let label = document.createElement('label');
+			label.classList.add('form-check-label', 'stretched-link')
+			let checkbox = document.createElement('input');
+			checkbox.type = 'checkbox';
+			checkbox.classList.add('form-check-input', 'ms-1', 'me-2');
 			if (option.selected) {{
-				entry.classList.add('active');
+				checkbox.checked = true;
 			}}
-			entry.style.cursor = 'pointer';
-			entry.innerText = option.text;
-			entry.dataset.value = option.value;
-			entry.addEventListener('click', (e) => {{ toggle(multiSelect, buttons, list, e.currentTarget.dataset.value); }});
+			checkbox.dataset.value = option.value;
+			checkbox.addEventListener('change', (e) => {{ toggle(multiSelect, buttons, list, e.currentTarget.dataset.value) }});
+			label.appendChild(checkbox)
+			label.append(option.text);
+			entry.appendChild(label);
 			list.appendChild(entry);
 
 			let button = document.createElement('button');
@@ -86,12 +94,12 @@ public class SelectImproverTagHelper : TagHelper
 		}});
 		input.addEventListener('input', (e) => {{
 			let searchValue = input.value;
-			for (let entry of list.querySelectorAll('a')) {{
+			for (let entry of list.querySelectorAll('label')) {{
 				if (entry.innerText.includes(searchValue)) {{
-					entry.classList.remove('d-none');
+					entry.parentNode.classList.remove('d-none');
 				}}
 				else {{
-					entry.classList.add('d-none');
+					entry.parentNode.classList.add('d-none');
 				}}
 			}}
 		}});
