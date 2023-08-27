@@ -41,8 +41,10 @@ public class SelectImproverTagHelper : TagHelper
 		}}
 		if ([...multiSelect.options].some(option => !option.selected)) {{
 			buttons.querySelector('a').querySelector('i').classList.replace('fa-minus', 'fa-plus');
+			buttons.querySelector('a').title = 'Select All';
 		}} else {{
 			buttons.querySelector('a').querySelector('i').classList.replace('fa-plus', 'fa-minus');
+			buttons.querySelector('a').title = 'Deselect All';
 		}}
 	}}
 	function initialize(multiSelectId) {{
@@ -100,6 +102,7 @@ public class SelectImproverTagHelper : TagHelper
 		toggleAllIcon.classList.add('fa', 'fa-sm');
 		toggleAllIcon.classList.add(anyNotSelected ? 'fa-plus' : 'fa-minus');
 		buttons.querySelector('a').appendChild(toggleAllIcon);
+		buttons.querySelector('a').title = anyNotSelected ? 'Select All' : 'Deselect All';
 		buttons.querySelector('a').addEventListener('click', (e) => {{
 			let notSelected = [...multiSelect.options].filter(option => !option.selected);
 			if (notSelected.length === 0) {{
