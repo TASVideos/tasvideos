@@ -22,12 +22,14 @@
 	</row>
 	<fullrow>
 		<form-group>
-			<two-column-select id-list="AwardToAssign.Users" available-list="@Model.AvailableUsers"/>
+			<select asp-for="AwardToAssign.Users" size="@(Math.Min(Model.AwardToAssign.Users.Count(), 7).ToString())" asp-items="Model.AvailableUsers" class="form-control"></select>
+			<select-improver select-id="@Html.IdFor(m => m.AwardToAssign.Users)"></select-improver>
 		</form-group>
 	</fullrow>
 	<fullrow>
 		<form-group>
-			<two-column-select id-list="AwardToAssign.Publications" available-list="@Model.AvailablePublications"/>
+			<select asp-for="AwardToAssign.Publications" size="@(Math.Min(Model.AwardToAssign.Publications.Count(), 7).ToString())" asp-items="Model.AvailablePublications" class="form-control"></select>
+			<select-improver select-id="@Html.IdFor(m => m.AwardToAssign.Publications)"></select-improver>
 		</form-group>
 	</fullrow>
 	<form-button-bar>
