@@ -12,7 +12,8 @@ public class SelectImproverTagHelper : TagHelper
 		output.Content.SetHtmlContent(@$"
 <div id=""{SelectId}_div"" class=""d-none border bg-body rounded-2 onclick-focusinput"" style=""cursor: text;"">
 	<div id=""{SelectId}_buttons"" class=""onclick-focusinput px-2 py-2"">
-		<span id=""{SelectId}_noselection"" class=""text-body-tertiary onclick-focusinput px-1"">No selection</span>
+		<span class=""text-body-tertiary onclick-focusinput px-1"">No selection</span>
+		<a class=""btn btn-sm btn-outline-silver float-end py-0 px-1""></a>
 	</div>
 	<input id=""{SelectId}_input"" class=""d-none form-control"" placeholder=""Search"" autocomplete=""off"" />
 	<div id=""{SelectId}_list"" class=""list-group mt-1 overflow-auto border"" style=""max-height: {ListHeight};""></div>
@@ -31,13 +32,19 @@ public class SelectImproverTagHelper : TagHelper
 			if (![...multiSelect.options].some(option => option.selected)) {{
 				buttons.querySelector('span').classList.remove('d-none');
 			}}
-		}}
-		else {{
+		}} else {{
 			option.selected = true;
 			multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
 			element.checked = true;
 			button.classList.remove('d-none');
 			buttons.querySelector('span').classList.add('d-none');
+		}}
+		if ([...multiSelect.options].some(option => !option.selected)) {{
+			buttons.querySelector('a').querySelector('i').classList.replace('fa-minus', 'fa-plus');
+			buttons.querySelector('a').title = 'Select All';
+		}} else {{
+			buttons.querySelector('a').querySelector('i').classList.replace('fa-plus', 'fa-minus');
+			buttons.querySelector('a').title = 'Deselect All';
 		}}
 	}}
 	function initialize(multiSelectId) {{
@@ -48,6 +55,7 @@ public class SelectImproverTagHelper : TagHelper
 		let div = document.getElementById(multiSelectId + '_div');
 		div.classList.remove('d-none');
 		let input = document.getElementById(multiSelectId + '_input');
+		let anyNotSelected = false;
 		for (var option of multiSelect.options) {{
 			let entry = document.createElement('div');
 			entry.classList.add('list-group-item', 'list-group-item-action', 'px-1');
@@ -68,7 +76,7 @@ public class SelectImproverTagHelper : TagHelper
 
 			let button = document.createElement('button');
 			button.type = 'button';
-			button.classList.add('btn', 'btn-primary', 'btn-sm', 'm-1');
+			button.classList.add('btn', 'btn-primary', 'btn-sm', 'mb-1', 'me-1');
 			button.dataset.value = option.value;
 			if (option.selected) {{
 				buttons.querySelector('span').classList.add('d-none');
@@ -85,7 +93,28 @@ public class SelectImproverTagHelper : TagHelper
 			button.appendChild(buttonSpanX);
 
 			buttons.appendChild(button);
+
+			if (!option.selected) {{
+				anyNotSelected = true;
+			}}
 		}}
+		let toggleAllIcon = document.createElement('i');
+		toggleAllIcon.classList.add('fa', 'fa-sm');
+		toggleAllIcon.classList.add(anyNotSelected ? 'fa-plus' : 'fa-minus');
+		buttons.querySelector('a').appendChild(toggleAllIcon);
+		buttons.querySelector('a').title = anyNotSelected ? 'Select All' : 'Deselect All';
+		buttons.querySelector('a').addEventListener('click', (e) => {{
+			let notSelected = [...multiSelect.options].filter(option => !option.selected);
+			if (notSelected.length === 0) {{
+				for (let option of multiSelect.options) {{
+					toggle(multiSelect, buttons, list, option.value);
+				}}
+			}} else {{
+				for (let option of notSelected) {{
+					toggle(multiSelect, buttons, list, option.value);
+				}}
+			}}
+		}});
 		div.addEventListener('click', (e) => {{
 			if (e.target.classList.contains('onclick-focusinput')) {{
 				input.classList.remove('d-none');
@@ -97,8 +126,7 @@ public class SelectImproverTagHelper : TagHelper
 			for (let entry of list.querySelectorAll('label')) {{
 				if (entry.innerText.toLowerCase().includes(searchValue)) {{
 					entry.parentNode.classList.remove('d-none');
-				}}
-				else {{
+				}} else {{
 					entry.parentNode.classList.add('d-none');
 				}}
 			}}
