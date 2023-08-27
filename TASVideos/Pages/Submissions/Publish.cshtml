@@ -127,8 +127,10 @@
 	<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.MovieMarkup), "/Wiki/Preview")" />
 	<hr />
 	<fullrow>
-		<two-column-select id-list="Submission.SelectedFlags" available-list="AvailableFlags" />
-		<two-column-select id-list="Submission.SelectedTags" available-list="AvailableTags" />
+		<select asp-for="Submission.SelectedFlags" size="@(Math.Min(Model.Submission.SelectedFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
+		<select-improver select-id="@Html.IdFor(m => m.Submission.SelectedFlags)"></select-improver>
+		<select asp-for="Submission.SelectedTags" size="@(Math.Min(Model.Submission.SelectedTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
+		<select-improver select-id="@Html.IdFor(m => m.Submission.SelectedTags)"></select-improver>
 	</fullrow>
 	<hr />
 	@await Component.RenderWiki(SystemWiki.FilesEditingHelp)

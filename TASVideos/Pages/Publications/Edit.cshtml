@@ -109,8 +109,10 @@
 			</form-group>
 		</div>
 	</row>
-	<two-column-select id-list="Publication.SelectedFlags" available-list="AvailableFlags" />
-	<two-column-select id-list="Publication.SelectedTags" available-list="AvailableTags" />
+	<select asp-for="Publication.SelectedFlags" size="@(Math.Min(Model.Publication.SelectedFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
+	<select-improver select-id="@Html.IdFor(m => m.Publication.SelectedFlags)"></select-improver>
+	<select asp-for="Publication.SelectedTags" size="@(Math.Min(Model.Publication.SelectedTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
+	<select-improver select-id="@Html.IdFor(m => m.Publication.SelectedTags)"></select-improver>
 	@await Component.RenderWiki(SystemWiki.ClassEditingHelp)
 	<hr />
 	<fullrow class="mt-3">
