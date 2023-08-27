@@ -74,7 +74,7 @@ public class PublishModel : BasePageModel
 		Submission = submission;
 		Submission.Markup = (await _wikiPages.SubmissionPage(Id))!.Markup;
 
-		await PopulateDropdowns(Submission.SystemId);
+		await PopulateDropdowns();
 		return Page();
 	}
 
@@ -87,7 +87,7 @@ public class PublishModel : BasePageModel
 
 		if (!ModelState.IsValid)
 		{
-			await PopulateDropdowns(Submission.SystemId);
+			await PopulateDropdowns();
 			return Page();
 		}
 
@@ -99,7 +99,7 @@ public class PublishModel : BasePageModel
 			if (publicationToObsolete is null)
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieToObsolete)}", "Publication does not exist");
-				await PopulateDropdowns(Submission.SystemId);
+				await PopulateDropdowns();
 				return Page();
 			}
 		}
@@ -220,7 +220,7 @@ public class PublishModel : BasePageModel
 		};
 	}
 
-	private async Task PopulateDropdowns(int systemId)
+	private async Task PopulateDropdowns()
 	{
 		AvailableFlags = await _db.Flags
 			.ToDropDown(User.Permissions())
