@@ -6,7 +6,6 @@ namespace TASVideos.Pages.Submissions.Models;
 
 public class SubmissionCreateModel
 {
-	[Required]
 	[Display(Name = "Game Version", Description = "Example: USA")]
 	[StringLength(20)]
 	public string GameVersion { get; set; } = "";
