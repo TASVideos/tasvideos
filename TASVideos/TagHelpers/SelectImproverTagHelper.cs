@@ -93,9 +93,9 @@ public class SelectImproverTagHelper : TagHelper
 			}}
 		}});
 		input.addEventListener('input', (e) => {{
-			let searchValue = input.value;
+			let searchValue = input.value.toLowerCase();
 			for (let entry of list.querySelectorAll('label')) {{
-				if (entry.innerText.includes(searchValue)) {{
+				if (entry.innerText.toLowerCase().includes(searchValue)) {{
 					entry.parentNode.classList.remove('d-none');
 				}}
 				else {{
