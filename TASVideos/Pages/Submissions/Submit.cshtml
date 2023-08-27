@@ -46,7 +46,7 @@
 		<column lg="6">
 			<form-group>
 				<label asp-for="Create.GameVersion" class="form-control-label"></label>
-				<input asp-for="Create.GameVersion" class="form-control" placeholder="USA v1.0" />
+				<input asp-for="Create.GameVersion" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.GameVersion)" />
 				<span asp-validation-for="Create.GameVersion" class="text-danger"></span>
 			</form-group>
 			<form-group>
