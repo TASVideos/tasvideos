@@ -277,15 +277,15 @@ public class JrsrTests : BaseParserTests
 +35791394133333330 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
 !END
 ", 0x7fffffff)]
-		[DataRow(
-	@"JRSR
-	!BEGIN header
-	!BEGIN events
-	+0 OPTION RELATIVE
-	+35791394133333329 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
-	+1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
-	!END
-	", 0x7fffffff)]
+	[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++35791394133333329 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 0x7fffffff)]
 	public async Task EventTimestamps(string contents, int expected)
 	{
 		var result = await ParseFromString(contents);
