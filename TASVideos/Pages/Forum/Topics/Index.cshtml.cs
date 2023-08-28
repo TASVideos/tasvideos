@@ -190,9 +190,9 @@ public class IndexModel : BaseForumModel
 		foreach (var post in Topic.Posts)
 		{
 			post.IsEditable = User.Has(PermissionTo.EditForumPosts)
-				|| (userId.HasValue && post.PosterId == userId.Value);
+				|| (userId.HasValue && post.PosterId == userId.Value && !topic.IsLocked);
 			post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)
-				|| (userId.HasValue && post.PosterId == userId && post.IsLastPost);
+				|| (userId.HasValue && post.PosterId == userId && post.IsLastPost && !topic.IsLocked);
 		}
 
 		if (userId.HasValue)
