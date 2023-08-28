@@ -45,6 +45,7 @@ public class AddEditModel : BasePageModel
 				Value = ((int)p).ToString(),
 				Text = p.EnumDisplayName()
 			})
+			.OrderBy(s => s.Text)
 			.ToList();
 
 	public async Task<IActionResult> OnGet()
@@ -161,7 +162,7 @@ public class AddEditModel : BasePageModel
 			{
 				Text = ((PermissionTo)sp).ToString(),
 				Value = sp.ToString()
-			});
+			}).OrderBy(sp => sp.Text);
 	}
 
 	private async Task AddUpdateRole(RoleEditModel model)

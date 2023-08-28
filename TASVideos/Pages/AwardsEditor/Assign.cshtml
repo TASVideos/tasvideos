@@ -23,13 +23,11 @@
 	<fullrow>
 		<form-group>
 			<select asp-for="AwardToAssign.Users" size="@(Math.Min(Model.AwardToAssign.Users.Count(), 7).ToString())" asp-items="Model.AvailableUsers" class="form-control"></select>
-			<select-improver select-id="@Html.IdFor(m => m.AwardToAssign.Users)"></select-improver>
 		</form-group>
 	</fullrow>
 	<fullrow>
 		<form-group>
 			<select asp-for="AwardToAssign.Publications" size="@(Math.Min(Model.AwardToAssign.Publications.Count(), 7).ToString())" asp-items="Model.AvailablePublications" class="form-control"></select>
-			<select-improver select-id="@Html.IdFor(m => m.AwardToAssign.Publications)"></select-improver>
 		</form-group>
 	</fullrow>
 	<form-button-bar>
@@ -38,3 +36,11 @@
 		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>
 </form>
+
+@section Scripts {
+	<script src="/js/select-improver.js"></script>
+	<script>
+		engageSelectImprover('@Html.IdFor(m => m.AwardToAssign.Users)');
+		engageSelectImprover('@Html.IdFor(m => m.AwardToAssign.Publications)');
+	</script>
+}

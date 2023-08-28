@@ -110,9 +110,7 @@
 		</div>
 	</row>
 	<select asp-for="Publication.SelectedFlags" size="@(Math.Min(Model.Publication.SelectedFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
-	<select-improver select-id="@Html.IdFor(m => m.Publication.SelectedFlags)"></select-improver>
 	<select asp-for="Publication.SelectedTags" size="@(Math.Min(Model.Publication.SelectedTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
-	<select-improver select-id="@Html.IdFor(m => m.Publication.SelectedTags)"></select-improver>
 	@await Component.RenderWiki(SystemWiki.ClassEditingHelp)
 	<hr />
 	<fullrow class="mt-3">
@@ -152,4 +150,9 @@
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/select-improver.js"></script>
+	<script>
+		engageSelectImprover('@Html.IdFor(m => m.Publication.SelectedFlags)');
+		engageSelectImprover('@Html.IdFor(m => m.Publication.SelectedTags)');
+	</script>
 }

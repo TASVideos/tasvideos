@@ -18,46 +18,38 @@
 			<form-group>
 				<label asp-for="Search.Classes"></label>
 				<select asp-for="Search.Classes" size="@(Math.Min(Model.Tokens.Classes.Count(), 7).ToString())" asp-items="Model.Tokens.Classes.Select(c => new SelectListItem(c, c))" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.Classes)"></select-improver>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Years"></label>
 				<select asp-for="Search.Years" size="@(Math.Min(Model.Tokens.Years.Count(), 7).ToString())" asp-items="Model.Tokens.Years.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.Years)"></select-improver>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Genres"></label>
 				<select asp-for="Search.Genres" size="@(Math.Min(Model.Tokens.Genres.Count(), 7).ToString())" asp-items="Model.Tokens.Genres.Select(c => new SelectListItem(c.ToString(), c.ToString()))" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.Genres)"></select-improver>
 			</form-group>
 		</column>
 		<column md="4">
 			<form-group>
 				<label asp-for="Search.Flags"></label>
 				<select asp-for="Search.Flags" size="@(Math.Min(Model.AvailableFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.Flags)"></select-improver>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.GameGroups"></label>
 				<select asp-for="Search.GameGroups" size="@(Math.Min(Model.AvailableGameGroups.Count(), 7).ToString())" asp-items="Model.AvailableGameGroups" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.GameGroups)"></select-improver>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Authors"></label>
 				<select asp-for="Search.Authors" asp-items="Model.AvailableAuthors" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.Authors)"></select-improver>
 			</form-group>
 		</column>
 		<column md="4">
 			<form-group>
 				<label asp-for="Search.SystemCodes"></label>
 				<select asp-for="Search.SystemCodes" size="@(Math.Min(Model.Tokens.SystemCodes.Count(), 7).ToString())" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).Select(c => new SelectListItem(c, c))" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.SystemCodes)"></select-improver>
 			</form-group>
 			<form-group>
 				<label asp-for="Search.Tags"></label>
 				<select asp-for="Search.Tags" size="@(Math.Min(Model.AvailableTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
-				<select-improver select-id="@Html.IdFor(m => m.Search.Tags)"></select-improver>
 			</form-group>
 		</column>
 	</row>
@@ -88,7 +80,17 @@
 	</form-button-bar>
 </form>
 
+<script src="/js/select-improver.js"></script>
 <script>
+	engageSelectImprover('@Html.IdFor(m => m.Search.Classes)');
+	engageSelectImprover('@Html.IdFor(m => m.Search.Years)');
+	engageSelectImprover('@Html.IdFor(m => m.Search.Genres)');
+	engageSelectImprover('@Html.IdFor(m => m.Search.Flags)');
+	engageSelectImprover('@Html.IdFor(m => m.Search.GameGroups)');
+	engageSelectImprover('@Html.IdFor(m => m.Search.Authors)');
+	engageSelectImprover('@Html.IdFor(m => m.Search.SystemCodes)');
+	engageSelectImprover('@Html.IdFor(m => m.Search.Tags)');
+
 	window.addEventListener('load', validateForm);
 	const classes = document.getElementById('@Html.IdFor(m => m.Search.Classes)');
 	const years = document.getElementById('@Html.IdFor(m => m.Search.Years)');

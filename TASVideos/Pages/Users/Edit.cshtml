@@ -188,7 +188,6 @@
 	<hr />
 	<label asp-for="UserToEdit.SelectedRoles"></label>
 	<select asp-for="UserToEdit.SelectedRoles" size="@(Math.Min(Model.AvailableRoles.Count(), 7).ToString())" asp-items="Model.AvailableRoles" class="form-control"></select>
-	<select-improver select-id="@Html.IdFor(m => m.UserToEdit.SelectedRoles)"></select-improver>
 	@await Component.RenderWiki(SystemWiki.UserEditRole)
 	<row>
 		<column md="5">
@@ -217,3 +216,10 @@
 		<a asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</div>
 </form>
+
+@section Scripts {
+	<script src="/js/select-improver.js"></script>
+	<script>
+		engageSelectImprover('@Html.IdFor(m => m.UserToEdit.SelectedRoles)');
+	</script>
+}

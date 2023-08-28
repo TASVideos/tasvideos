@@ -27,10 +27,10 @@ public class RoleEditModel
 	public bool AutoAssignPublications { get; set; }
 
 	[MinLength(1)]
-	[Display(Name = "Selected Permissions")]
+	[Display(Name = "Permissions")]
 	public IEnumerable<int> SelectedPermissions { get; set; } = new List<int>();
 
-	[Display(Name = "Selected Assignable Permissions")]
+	[Display(Name = "Assignable Permissions")]
 	public IEnumerable<int> SelectedAssignablePermissions { get; set; } = new List<int>();
 
 	[Display(Name = "Related Links")]

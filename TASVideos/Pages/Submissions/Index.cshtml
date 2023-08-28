@@ -29,12 +29,10 @@
 		<div class="col-12 col-md-6">
 			<label asp-for="Search.StatusFilter" class="form-control-label"></label>
 			<select asp-for="Search.StatusFilter" asp-items="Model.AvailableStatuses" class="form-control"></select>
-			<select-improver select-id="@Html.IdFor(m => m.Search.StatusFilter)"></select-improver>
 		</div>
 		<div class="col-12 col-md-6">
 			<label asp-for="Search.Years" class="form-control-label"></label>
 			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiple class="form-control"></select>
-			<select-improver select-id="@Html.IdFor(m => m.Search.Years)" list-height="188px"></select-improver>
 			<label asp-for="Search.User" class="form-control-label"></label>
 			<input autocomplete="off" asp-for="Search.User" type="text" list="@Html.IdFor(m => m.Search.User)-autocomplete" class="form-control" />
 
@@ -81,7 +79,10 @@
 <partial name="_Pager" model="Model.Submissions" />
 @section Scripts {
 	<script src="/js/user-search.js"></script>
+	<script src="/js/select-improver.js"></script>
 	<script>
+		engageSelectImprover('@Html.IdFor(m => m.Search.StatusFilter)');
+		engageSelectImprover('@Html.IdFor(m => m.Search.Years)');
 		searchUsers("@Html.IdFor(m => m.Search.User)");
 	</script>
 }
