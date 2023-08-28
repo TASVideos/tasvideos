@@ -268,25 +268,24 @@ public class JrsrTests : BaseParserTests
 +1 SAVESTATE aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab 1
 !END
 ", 0)]
-	// TODO: disabling these because it failed, and I"m not sure what the expected value should actually be, I think the parser is behaving correctly
-	// Just short of overflow in frame count. 35791394849161215 is
-	// (2**31) * 16666667 - 1.
-//	[DataRow(
-//@"JRSR
-//!BEGIN header
-//!BEGIN events
-//+35791394849161215 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
-//!END
-//", 0x7fffffff)]
-	//	[DataRow(
-	//@"JRSR
-	//!BEGIN header
-	//!BEGIN events
-	//+0 OPTION RELATIVE
-	//+35791394849161214 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
-	//+1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
-	//!END
-	//", 0x7fffffff)]
+	// Just short of overflow in frame count. 35791394133333330 is
+	// (2**31) / (60 / 1000000000) rounded down.
+	[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++35791394133333330 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 0x7fffffff)]
+	[DataRow(
+@"JRSR
+!BEGIN header
+!BEGIN events
++0 OPTION RELATIVE
++35791394133333329 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
++1 org.jpc.emulator.peripheral.Keyboard KEYEDGE 28
+!END
+", 0x7fffffff)]
 	public async Task EventTimestamps(string contents, int expected)
 	{
 		var result = await ParseFromString(contents);
