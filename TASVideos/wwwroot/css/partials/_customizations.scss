@@ -589,6 +589,7 @@ pre code {
 
 .extlink {
 	&::after {
+		font-size: 0.75rem;
 		content: "\f08e";
 		padding: 0 0.25rem;
 		-webkit-font-smoothing: antialiased;
