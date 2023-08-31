@@ -89,7 +89,8 @@ public class EditModel : BasePageModel
 			gameGroup = new GameGroup
 			{
 				Name = GameGroup.Name,
-				Abbreviation = GameGroup.Abbreviation
+				Abbreviation = GameGroup.Abbreviation,
+				Description = GameGroup.Description
 			};
 			_db.GameGroups.Add(gameGroup);
 		}
