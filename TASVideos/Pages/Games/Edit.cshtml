@@ -59,8 +59,14 @@
 			</form-group>
 		</div>
 	</row>
-	<select asp-for="Game.Genres" size="@(Math.Min(Model.Game.Genres.Count(), 7).ToString())" asp-items="Model.AvailableGenres" class="form-control"></select>
-	<select asp-for="Game.Groups" size="@(Math.Min(Model.Game.Groups.Count(), 7).ToString())" asp-items="Model.AvailableGroups" class="form-control"></select>
+	<form-group>
+		<label asp-for="Game.Genres"></label>
+		<select asp-for="Game.Genres" size="@(Math.Min(Model.Game.Genres.Count(), 7).ToString())" asp-items="Model.AvailableGenres" class="form-control"></select>
+	</form-group>
+	<form-group>
+		<label asp-for="Game.Groups"></label>
+		<select asp-for="Game.Groups" size="@(Math.Min(Model.Game.Groups.Count(), 7).ToString())" asp-items="Model.AvailableGroups" class="form-control"></select>
+	</form-group>
 	<hr />
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>

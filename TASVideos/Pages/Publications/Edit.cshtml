@@ -109,8 +109,14 @@
 			</form-group>
 		</div>
 	</row>
-	<select asp-for="Publication.SelectedFlags" size="@(Math.Min(Model.Publication.SelectedFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
-	<select asp-for="Publication.SelectedTags" size="@(Math.Min(Model.Publication.SelectedTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
+	<form-group>
+		<label asp-for="Publication.SelectedFlags"></label>
+		<select asp-for="Publication.SelectedFlags" size="@(Math.Min(Model.Publication.SelectedFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
+	</form-group>
+	<form-group>
+		<label asp-for="Publication.SelectedTags"></label>
+		<select asp-for="Publication.SelectedTags" size="@(Math.Min(Model.Publication.SelectedTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
+	</form-group>
 	@await Component.RenderWiki(SystemWiki.ClassEditingHelp)
 	<hr />
 	<fullrow class="mt-3">
