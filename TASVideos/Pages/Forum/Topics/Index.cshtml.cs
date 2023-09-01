@@ -76,6 +76,7 @@ public class IndexModel : BaseForumModel
 				Id = t.Id,
 				IsWatching = userId.HasValue && t.ForumTopicWatches.Any(ft => ft.UserId == userId.Value),
 				Title = t.Title,
+				Restricted = t.Forum!.Restricted,
 				Type = t.Type,
 				ForumId = t.ForumId,
 				ForumName = t.Forum!.Name,
@@ -125,6 +126,7 @@ public class IndexModel : BaseForumModel
 			{
 				Id = p.Id,
 				TopicId = Id,
+				Restricted =topic.Restricted,
 				EnableHtml = p.EnableHtml,
 				EnableBbCode = p.EnableBbCode,
 				PosterId = p.PosterId,

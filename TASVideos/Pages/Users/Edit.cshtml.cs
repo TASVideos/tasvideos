@@ -12,17 +12,20 @@ namespace TASVideos.Pages.Users;
 [RequirePermission(PermissionTo.EditUsers)]
 public class EditModel : BasePageModel
 {
+	private readonly IRoleService _roleService;
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
 	private readonly UserManager _userManager;
 
 	public EditModel(
+		IRoleService roleService,
 		ApplicationDbContext db,
 		ExternalMediaPublisher publisher,
 		IUserMaintenanceLogger userMaintenanceLogger,
 		UserManager userManager)
 	{
+		_roleService = roleService;
 		_db = db;
 		_publisher = publisher;
 		_userMaintenanceLogger = userMaintenanceLogger;
@@ -56,15 +59,17 @@ public class EditModel : BasePageModel
 		}
 
 		UserToEdit = userToEdit;
-		AvailableRoles = await GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
+		var roles = await _roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
+		AvailableRoles = roles.ToDropDown();
 		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()
 	{
+		var roles = await _roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
 		if (!ModelState.IsValid)
 		{
-			AvailableRoles = await GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
+			AvailableRoles = roles.ToDropDown();
 			return Page();
 		}
 
@@ -75,7 +80,7 @@ public class EditModel : BasePageModel
 		}
 
 		// Double check user can assign all new the roles they are requesting to assign
-		var rolesThatUserCanAssign = await GetAllRoleIdsUserCanAssign(User.GetUserId(), user.UserRoles.Select(ur => ur.RoleId));
+		var rolesThatUserCanAssign = roles.Select(r => r.Id);
 		if (UserToEdit.SelectedRoles.Except(rolesThatUserCanAssign).Any())
 		{
 			return AccessDenied();
@@ -190,60 +195,5 @@ public class EditModel : BasePageModel
 		await ConcurrentSave(_db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
 
 		return BaseReturnUrlRedirect();
-	}
-
-	private async Task<IEnumerable<SelectListItem>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles)
-	{
-		if (assignedRoles is null)
-		{
-			throw new ArgumentException($"{nameof(assignedRoles)} can not be null");
-		}
-
-		var assignedRoleList = assignedRoles.ToList();
-		var assignablePermissions = await _db.Users
-			.Where(u => u.Id == userId)
-			.SelectMany(u => u.UserRoles)
-			.SelectMany(ur => ur.Role!.RolePermission)
-			.Where(rp => rp.CanAssign)
-			.Select(rp => rp.PermissionId)
-			.ToListAsync();
-
-		return await _db.Roles
-			.Where(r => r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
-				|| assignedRoleList.Contains(r.Id))
-			.Select(r => new SelectListItem
-			{
-				Value = r.Id.ToString(),
-				Text = r.Name,
-				Disabled = !r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
-					&& assignedRoleList.Any() // EF Core 2.1 issue, needs this or a user with no assigned roles blows up
-					&& assignedRoleList.Contains(r.Id)
-			})
-			.OrderBy(s => s.Text)
-			.ToListAsync();
-	}
-
-	// TODO: reduce copy-pasta
-	private async Task<IEnumerable<int>> GetAllRoleIdsUserCanAssign(int userId, IEnumerable<int> assignedRoles)
-	{
-		if (assignedRoles is null)
-		{
-			throw new ArgumentException($"{nameof(assignedRoles)} can not be null");
-		}
-
-		var assignedRoleList = assignedRoles.ToList();
-		var assignablePermissions = await _db.Users
-			.Where(u => u.Id == userId)
-			.SelectMany(u => u.UserRoles)
-			.SelectMany(ur => ur.Role!.RolePermission)
-			.Where(rp => rp.CanAssign)
-			.Select(rp => rp.PermissionId)
-			.ToListAsync();
-
-		return await _db.Roles
-			.Where(r => r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
-				|| assignedRoleList.Contains(r.Id))
-			.Select(r => r.Id)
-			.ToListAsync();
 	}
 }

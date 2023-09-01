@@ -75,6 +75,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IForumService, ForumService>();
 		services.AddScoped<IGameSystemService, GameSystemService>();
 		services.AddScoped<IPrivateMessageService, PrivateMessageService>();
+		services.AddScoped<IRoleService, RoleService>();
 
 		services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 

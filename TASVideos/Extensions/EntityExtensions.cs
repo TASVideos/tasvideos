@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
@@ -159,6 +160,16 @@ public static class EntityExtensions
 		{
 			Value = a.ShortName,
 			Text = a.Description + " for " + year
+		});
+	}
+
+	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<AssignableRole> roles)
+	{
+		return roles.Select(r => new SelectListItem
+		{
+			Value = r.Id.ToString(),
+			Text = r.Name,
+			Disabled = r.Disabled
 		});
 	}
 

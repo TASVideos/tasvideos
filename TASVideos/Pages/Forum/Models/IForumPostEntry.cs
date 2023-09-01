@@ -8,6 +8,7 @@ public interface IForumPostEntry
 {
 	public int Id { get; }
 	public bool Highlight { get; }
+	public bool Restricted { get; }
 	public DateTime CreateTimestamp { get; }
 	public DateTime LastUpdateTimestamp { get; }
 	public string? Subject { get; }

@@ -195,6 +195,8 @@ public class DeleteButtonTagHelper : TagHelper
 
 	public string WarningMessage { get; set; } = "Are you sure you want to delete this record?";
 
+	public string ActionName { get; set; } = "Delete";
+
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
 		var existingClassAttr = output.Attributes.FirstOrDefault(a => a.Name == "class");
@@ -226,7 +228,7 @@ public class DeleteButtonTagHelper : TagHelper
 			<div class='modal-footer'>
 				<form action='{WebUtility.UrlDecode(AspHref)}' method='post'>
 					{antiForgeryToken}
-					<button type='submit' class='text-center btn btn-danger'>Delete</button>
+					<button type='submit' class='text-center btn btn-danger'>{ActionName}</button>
 				</form>
 				<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancel</button>
 			</div>

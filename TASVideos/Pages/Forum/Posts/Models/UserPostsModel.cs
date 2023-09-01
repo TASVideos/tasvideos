@@ -15,6 +15,7 @@ public class UserPagePost : IForumPostEntry
 	public DateTime LastUpdateTimestamp { get; set; }
 	public bool EnableBbCode { get; set; }
 	public bool EnableHtml { get; set; }
+	public bool Restricted { get; set; }
 	public string Text { get; set; } = "";
 	public DateTime? PostEditedTimestamp { get; }
 	public string? Subject { get; set; }

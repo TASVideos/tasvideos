@@ -20,15 +20,18 @@ public class EditModel : BaseForumModel
 	private readonly ApplicationDbContext _db;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IForumService _forumService;
+	private readonly IRoleService _roleService;
 
 	public EditModel(
 		ApplicationDbContext db,
 		ExternalMediaPublisher publisher,
-		IForumService forumService)
+		IForumService forumService,
+		IRoleService roleService)
 	{
 		_db = db;
 		_publisher = publisher;
 		_forumService = forumService;
+		_roleService = roleService;
 	}
 
 	[FromRoute]
@@ -39,7 +42,7 @@ public class EditModel : BaseForumModel
 
 	[BindProperty]
 	[DisplayName("Minor Edit")]
-	public bool MinorEdit { get; set; } = false;
+	public bool MinorEdit { get; set; }
 	public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = new List<MiniPostModel>();
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
@@ -237,5 +240,58 @@ public class EditModel : BaseForumModel
 		return topicDeleted
 			? BasePageRedirect("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
 			: BasePageRedirect("/Forum/Topics/Index", new { id = post.TopicId });
+	}
+
+	public async Task<IActionResult> OnPostSpam()
+	{
+		var post = await _db.ForumPosts
+			.Include(p => p.Poster)
+			.Include(p => p.Topic)
+			.Include(p => p.Topic!.Forum)
+			.ExcludeRestricted(seeRestricted: false) // Intentionally not allowing spamming on restricted forums
+			.SingleOrDefaultAsync(p => p.Id == Id);
+
+		if (post is null)
+		{
+			return NotFound();
+		}
+
+		if (!User.Has(PermissionTo.DeleteForumPosts) || !User.Has(PermissionTo.AssignRoles))
+		{
+			return AccessDenied();
+		}
+
+		var postCount = await _db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
+
+		var oldTopicId = post.TopicId;
+		var oldForumId = post.Topic!.ForumId;
+		var oldTopicTitle = post.Topic.Title;
+		var oldForumShortName = post.Topic.Forum!.ShortName;
+		post.TopicId = SiteGlobalConstants.SpamTopicId;
+		var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
+
+		bool topicDeleted = false;
+		if (postCount == 1)
+		{
+			var topic = await _db.ForumTopics.SingleAsync(t => t.Id == post.TopicId);
+			_db.ForumTopics.Remove(topic);
+			topicDeleted = true;
+		}
+
+		if (result)
+		{
+			_forumService.ClearLatestPostCache();
+			_forumService.ClearTopicActivityCache();
+			await _roleService.RemoveRolesFromUser(post.PosterId);
+			await _publisher.SendForum(
+				false,
+				$"{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM, and user {post.Poster!.UserName} banned by {User.Name()}",
+				$"{oldForumShortName}: {oldTopicTitle}",
+				topicDeleted ? "" : $"Forum/Topics/{oldTopicId}");
+		}
+
+		return topicDeleted
+			? BasePageRedirect("/Forum/Subforum/Index", new { id = oldForumId })
+			: BasePageRedirect("/Forum/Topics/Index", new { id = oldTopicId });
 	}
 }

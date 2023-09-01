@@ -74,6 +74,7 @@ public class UserModel : BasePageModel
 				LastUpdateTimestamp = p.LastUpdateTimestamp,
 				EnableHtml = p.EnableHtml,
 				EnableBbCode = p.EnableBbCode,
+				Restricted = p.Topic!.Forum!.Restricted,
 				Text = p.Text,
 				Subject = p.Subject,
 				TopicId = p.TopicId ?? 0,

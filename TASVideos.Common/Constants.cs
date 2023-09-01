@@ -41,6 +41,7 @@ public static class SiteGlobalConstants
 	public const int WelcomeToTasvideosPostId = 515883;
 	public const int PublishedAuthorRoleAddedPostId = 516348;
 	public const int AutoAssignedRolePostId = 516349;
+	public const int SpamTopicId = 13101;
 
 	public const string NewPublicationPostSubject = "Movie published";
 	public const string NewPublicationPost = @"[b]This movie has been published.[/b]

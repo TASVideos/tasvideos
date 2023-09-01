@@ -12,12 +12,14 @@ public interface IForumTopicActionBar
 	string Title { get; }
 	bool AnyVotes { get; }
 	int CategoryId { get; }
+	bool Restricted { get; }
 }
 
 public class ForumTopicModel : IForumTopicActionBar
 {
 	public int Id { get; set; }
 	public int LastPostId { get; set; }
+	public bool Restricted { get; set; }
 
 	public bool IsWatching { get; set; }
 	public bool IsLocked { get; set; }

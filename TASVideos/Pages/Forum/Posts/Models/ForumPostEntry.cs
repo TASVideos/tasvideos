@@ -11,6 +11,7 @@ public class ForumPostEntry : IForumPostEntry
 	public int Id { get; set; }
 	public int TopicId { get; set; }
 	public bool Highlight { get; set; }
+	public bool Restricted { get; set; }
 	public int PosterId { get; set; }
 	public string PosterName { get; set; } = "";
 	public string? PosterAvatar { get; set; }
