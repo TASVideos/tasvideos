@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -12,13 +13,16 @@ namespace TASVideos.Pages.Roles;
 public class AddEditModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
+	private readonly IRoleService _roleService;
 	private readonly ExternalMediaPublisher _publisher;
 
 	public AddEditModel(
 		ApplicationDbContext db,
+		IRoleService roleService,
 		ExternalMediaPublisher publisher)
 	{
 		_db = db;
+		_roleService = roleService;
 		_publisher = publisher;
 	}
 
@@ -27,6 +31,8 @@ public class AddEditModel : BasePageModel
 
 	[FromQuery]
 	public int? CopyFrom { get; set; }
+
+	public bool IsInUse { get; set; }
 
 	[BindProperty]
 	public RoleEditModel Role { get; set; } = new();
@@ -63,7 +69,7 @@ public class AddEditModel : BasePageModel
 			}
 
 			Role = role;
-			ViewData["IsInUse"] = !await IsInUse(Id.Value);
+			IsInUse = !await _roleService.IsInUse(Id.Value);
 			SetAvailableAssignablePermissions();
 		}
 		else
@@ -81,7 +87,7 @@ public class AddEditModel : BasePageModel
 				}
 			}
 
-			ViewData["IsInUse"] = false;
+			IsInUse = false;
 		}
 
 		return Page();
@@ -125,7 +131,7 @@ public class AddEditModel : BasePageModel
 			return AccessDenied();
 		}
 
-		if (await IsInUse(Id.Value))
+		if (await _roleService.IsInUse(Id.Value))
 		{
 			ErrorStatusMessage($"Role {Id} cannot be deleted because it is in use by at least 1 user");
 			return BasePageRedirect("List");
@@ -147,11 +153,7 @@ public class AddEditModel : BasePageModel
 
 	public async Task<IActionResult> OnGetRolesThatCanBeAssignedBy(int[] ids)
 	{
-		var result = await _db.Roles
-			.ThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p))
-			.Select(r => r.Name)
-			.ToListAsync();
-
+		var result = await _roleService.GetRolesThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p));
 		return new JsonResult(result);
 	}
 
@@ -209,10 +211,5 @@ public class AddEditModel : BasePageModel
 			Link = rl,
 			Role = role
 		}));
-	}
-
-	private async Task<bool> IsInUse(int roleId)
-	{
-		return await _db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
 	}
 }

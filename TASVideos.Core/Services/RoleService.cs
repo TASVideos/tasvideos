@@ -5,6 +5,8 @@ public interface IRoleService
 {
 	Task<IEnumerable<AssignableRole>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles);
 	Task RemoveRolesFromUser(int userId);
+	Task<bool> IsInUse(int roleId);
+	Task<IReadOnlyCollection<string>> GetRolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds);
 }
 
 public record AssignableRole(int Id, string Name, bool Disabled);
@@ -65,5 +67,18 @@ internal class RoleService : IRoleService
 		{
 			// Eat it for now
 		}
+	}
+
+	public async Task<bool> IsInUse(int roleId)
+	{
+		return await _db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
+	}
+
+	public async Task<IReadOnlyCollection<string>> GetRolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds)
+	{
+		return await _db.Roles
+			.ThatCanBeAssignedBy(permissionIds)
+			.Select(r => r.Name)
+			.ToListAsync();
 	}
 }
