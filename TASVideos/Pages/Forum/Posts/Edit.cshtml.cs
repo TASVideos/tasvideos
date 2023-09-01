@@ -246,6 +246,8 @@ public class EditModel : BaseForumModel
 	{
 		var post = await _db.ForumPosts
 			.Include(p => p.Poster)
+			.ThenInclude(p => p!.UserRoles)
+			.ThenInclude(ur => ur.Role)
 			.Include(p => p.Topic)
 			.Include(p => p.Topic!.Forum)
 			.ExcludeRestricted(seeRestricted: false) // Intentionally not allowing spamming on restricted forums
@@ -257,6 +259,11 @@ public class EditModel : BaseForumModel
 		}
 
 		if (!User.Has(PermissionTo.DeleteForumPosts) || !User.Has(PermissionTo.AssignRoles))
+		{
+			return AccessDenied();
+		}
+
+		if (post.Poster!.UserRoles.SelectMany(ur => ur.Role!.RolePermission).Any(rp => rp.PermissionId == PermissionTo.AssignRoles))
 		{
 			return AccessDenied();
 		}
