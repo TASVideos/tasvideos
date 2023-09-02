@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Xml.Linq;
 using System.Xml.XPath;
 
@@ -56,15 +56,58 @@ internal class Omr : ParserBase, IParser
 
 		var seconds = ConvertTimestamp(lengthTimestamp);
 
-		result.Frames = (int)Math.Ceiling(seconds * (result.Region == RegionType.Pal ? 50.1589758045661 : 59.9227510135505));
+		result.Frames = (int)Math.Round(seconds * (result.Region == RegionType.Pal ? 50.1589758045661 : 59.9227510135505));
 
-		var system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/children/item/children/item"))
-			.Cast<XElement>()
-			.First(x => x.Descendants().Any(d => d.Name == "name" && d.Value == "type"))
-			.Descendants()
-			.First(x => x.Name == "data")
-			.Value
-			.ToLower();
+		var version = "";
+
+		version = ((IEnumerable)replay.XPathEvaluate("//snapshots/item"))
+				.Cast<XElement>()
+				.Attributes()
+				.First(x => x.Name == "version")
+				.Value;
+
+		var system = "";
+
+		if(Convert.ToInt16(version) >= 4)
+		{
+			var confversion = "";
+
+			confversion = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config"))
+				.Cast<XElement>()
+				.Attributes()
+				.First(x => x.Name == "version")
+				.Value;
+
+			if(Convert.ToInt16(confversion) >= 6)
+			{
+				system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/msxconfig/info"))
+					.Cast<XElement>()
+					.Descendants()
+					.First(x => x.Name == "type")
+					.Value
+					.ToLower();
+			}
+			else
+			{
+				system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/children/item/children/item"))
+					.Cast<XElement>()
+					.First(x => x.Descendants().Any(d => d.Name == "name" && d.Value == "type"))
+					.Descendants()
+					.First(x => x.Name == "data")
+					.Value
+					.ToLower();
+			}
+		}
+		else
+		{
+			system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/children/item/children/item"))
+				.Cast<XElement>()
+				.First(x => x.Descendants().Any(d => d.Name == "name" && d.Value == "type"))
+				.Descendants()
+				.First(x => x.Name == "data")
+				.Value
+				.ToLower();
+		}
 
 		if (system.StartsWith("svi"))
 		{
@@ -73,6 +116,10 @@ internal class Omr : ParserBase, IParser
 		else if (system.StartsWith("coleco"))
 		{
 			result.SystemCode = SystemCodes.Coleco;
+		}
+		else if (system.StartsWith("sg-1000"))
+		{
+			result.SystemCode = SystemCodes.Sg;
 		}
 
 		return result;
