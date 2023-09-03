@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
@@ -182,10 +182,14 @@
 		<EmbeddedResource Include="MarSampleFiles\noframerate.mar" />
 		<EmbeddedResource Include="MarSampleFiles\wrongheader.mar" />
 		<EmbeddedResource Include="OmrSampleFiles\2seconds.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\msxnewerformat.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\coleco.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\coleconewerformat.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\pal.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\savestate.omr" />
 		<EmbeddedResource Include="OmrSampleFiles\svi.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\svinewerformat.omr" />
+		<EmbeddedResource Include="OmrSampleFiles\sg1000.omr" />
 		<EmbeddedResource Include="TasprojSampleFiles\branch.tasproj" />
 		<EmbeddedResource Include="VbmSampleFiles\2frames.vbm" />
 		<EmbeddedResource Include="VbmSampleFiles\gb.vbm" />

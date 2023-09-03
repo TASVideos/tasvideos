@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Tests;
+namespace TASVideos.MovieParsers.Tests;
 
 [TestClass]
 [TestCategory("OmrParsers")]
@@ -23,9 +23,27 @@ public class OmrTests : BaseParserTests
 	}
 
 	[TestMethod]
+	public async Task SystemMsxNewerFormat()
+	{
+		var result = await _omrParser.Parse(Embedded("msxnewerformat.omr"), EmbeddedLength("msxnewerformat.omr"));
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(SystemCodes.Msx, result.SystemCode);
+	}
+
+	[TestMethod]
 	public async Task SystemSvi()
 	{
 		var result = await _omrParser.Parse(Embedded("svi.omr"), EmbeddedLength("svi.omr"));
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(SystemCodes.Svi, result.SystemCode);
+	}
+
+	[TestMethod]
+	public async Task SystemSviNewerFormat()
+	{
+		var result = await _omrParser.Parse(Embedded("svinewerformat.omr"), EmbeddedLength("svinewerformat.omr"));
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Svi, result.SystemCode);
@@ -38,6 +56,24 @@ public class OmrTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Coleco, result.SystemCode);
+	}
+
+	[TestMethod]
+	public async Task SystemColecoNewerFormat()
+	{
+		var result = await _omrParser.Parse(Embedded("coleconewerformat.omr"), EmbeddedLength("coleconewerformat.omr"));
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(SystemCodes.Coleco, result.SystemCode);
+	}
+
+	[TestMethod]
+	public async Task SystemSg()
+	{
+		var result = await _omrParser.Parse(Embedded("sg1000.omr"), EmbeddedLength("sg1000.omr"));
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(SystemCodes.Sg, result.SystemCode);
 	}
 
 	[TestMethod]
