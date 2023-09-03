@@ -31,7 +31,8 @@
 }
 
 function engageSelectImprover(multiSelectId, maxHeight = '250px') {
-	let initialHtmlToAdd = `
+	const initialHtmlToAddElem = document.createElement('div');
+	initialHtmlToAddElem.innerHTML = `
 <div id='${multiSelectId}_div' class='d-none border bg-body rounded-2 onclick-focusinput' style='cursor: text;'>
 	<div id='${multiSelectId}_buttons' class='onclick-focusinput px-2 pt-2 pb-1'>
 		<span class='text-body-tertiary onclick-focusinput px-1'>No selection</span>
@@ -41,16 +42,18 @@ function engageSelectImprover(multiSelectId, maxHeight = '250px') {
 	<div id='${multiSelectId}_list' class='list-group mt-1 overflow-auto border' style='max-height: ${maxHeight};'></div>
 </div>
 `;
-	let multiSelect = document.getElementById(multiSelectId);
+	const multiSelect = document.getElementById(multiSelectId);
 	multiSelect.classList.add('d-none');
+
+	// defensively deleting the improved html, if it already exists?
 	let div = document.getElementById(multiSelectId + '_div');
 	div?.remove();
-	multiSelect.insertAdjacentHTML('afterend', initialHtmlToAdd);
-	div = document.getElementById(multiSelectId + '_div');
-	let list = document.getElementById(multiSelectId + '_list');
-	let buttons = document.getElementById(multiSelectId + '_buttons');
+
+	div = initialHtmlToAddElem.querySelector(`#${multiSelectId}_div`);
+	let list = initialHtmlToAddElem.querySelector(`#${multiSelectId}_list`);
+	let buttons = initialHtmlToAddElem.querySelector(`#${multiSelectId}_buttons`);
 	div.classList.remove('d-none');
-	let input = document.getElementById(multiSelectId + '_input');
+	let input = initialHtmlToAddElem.querySelector(`#${multiSelectId}_input`);
 	let anyNotSelected = false;
 	for (var option of multiSelect.options) {
 		let entry = document.createElement('div');
@@ -142,4 +145,6 @@ function engageSelectImprover(multiSelectId, maxHeight = '250px') {
 			input.classList.add('d-none');
 		}
 	});
+
+	multiSelect.insertAdjacentHTML('afterend', initialHtmlToAddElem.innerHTML);
 }
