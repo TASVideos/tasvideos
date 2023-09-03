@@ -126,7 +126,7 @@ public class IndexModel : BaseForumModel
 			{
 				Id = p.Id,
 				TopicId = Id,
-				Restricted =topic.Restricted,
+				Restricted = topic.Restricted,
 				EnableHtml = p.EnableHtml,
 				EnableBbCode = p.EnableBbCode,
 				PosterId = p.PosterId,
