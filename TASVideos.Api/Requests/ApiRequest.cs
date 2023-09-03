@@ -16,16 +16,15 @@ public class ApiRequest : IFieldSelectable, ISortable, IPageable
 	public int? PageSize { get; init; } = 100;
 
 	/// <summary>
-	/// Gets the page to start returning records
-	/// If not specified an offset of 1 will be used.
+	/// Gets the page to start returning records.
+	/// If not specified then an offset of 1 will be used.
 	/// </summary>
 	public int? CurrentPage { get; init; } = 1;
 
 	/// <summary>
 	/// Gets the fields to sort by.
 	/// If multiple sort parameters, the list should be comma separated.
-	/// Use - to indicate a descending sort.
-	/// A + can optionally be used to indicate an ascending sort.
+	/// Precede the parameter with a + or - to sort ascending or descending respectively.
 	/// If not specified then a default sort will be used.
 	/// </summary>
 	[StringLength(200)]
@@ -34,7 +33,7 @@ public class ApiRequest : IFieldSelectable, ISortable, IPageable
 	/// <summary>
 	/// Gets the fields to return.
 	/// If multiple, fields must be comma separated.
-	/// If not specified, then all fields will be returned.
+	/// If not specified then all fields will be returned.
 	/// </summary>
 	[StringLength(200)]
 	public string? Fields { get; init; }
