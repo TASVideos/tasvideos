@@ -98,6 +98,7 @@ public class UploadModel : BasePageModel
 		await _publisher.SendUserFile(
 			UserFile.Hidden,
 			$"New user file uploaded by {User.Name()}",
+			$"New [user file]({{0}}) uploaded by {User.Name()}",
 			$"/UserFiles/Info/{id}",
 			$"{UserFile.Title}");
 

@@ -81,8 +81,17 @@ public sealed class DiscordDistributor : IPostDistributor
 		public DiscordMessage(IPostable post)
 		{
 			var body = string.IsNullOrWhiteSpace(post.Body) ? "" : $" ({post.Body})";
-			var link = string.IsNullOrWhiteSpace(post.Link) ? "" : post.Type == PostType.Announcement ? $" {post.Link}" : $" <{post.Link}>";
-			Content = $"{post.Title}{body}{link}";
+			if (string.IsNullOrWhiteSpace(post.Link))
+			{
+				Content = $"{post.Title}{body}";
+			}
+			else
+			{
+				var link = post.Type == PostType.Announcement ? post.Link : $"<{post.Link}>";
+				Content = string.IsNullOrWhiteSpace(post.FormattedTitle)
+					? $"{post.Title}{body} {link}"
+					: $"{string.Format(post.FormattedTitle, link)}{body}";
+			}
 		}
 
 		[JsonPropertyName("content")]

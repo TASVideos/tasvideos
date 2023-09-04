@@ -92,6 +92,7 @@ public class PrimaryMoviesModel : BasePageModel
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
+				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",
 				$"{Id}M");
 		}

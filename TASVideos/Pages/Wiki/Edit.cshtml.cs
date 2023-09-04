@@ -157,6 +157,7 @@ public class EditModel : BasePageModel
 	{
 		await _publisher.SendGeneralWiki(
 			$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
+			$"Page [{Path}]({{0}}) {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"{page.RevisionMessage}",
 			WikiHelper.EscapeUserName(Path!));
 	}

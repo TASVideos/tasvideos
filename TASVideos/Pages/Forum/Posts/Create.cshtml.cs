@@ -192,6 +192,7 @@ public class CreateModel : BaseForumModel
 		{
 			await _publisher.AnnounceForum(
 				$"News Post by {user.UserName}{mood}",
+				$"[News Post]({{0}}) by {user.UserName}{mood}",
 				$"{topic.Forum.ShortName}: {topic.Title}{subject}",
 				$"Forum/Posts/{id}");
 		}
@@ -200,6 +201,7 @@ public class CreateModel : BaseForumModel
 			await _publisher.SendForum(
 				topic.Forum.Restricted,
 				$"New Post by {user.UserName}{mood}",
+				$"[New Post]({{0}}) by {user.UserName}{mood}",
 				$"{topic.Forum.ShortName}: {topic.Title}{subject}",
 				$"Forum/Posts/{id}");
 		}

@@ -82,6 +82,7 @@ public class EditFilesModel : BasePageModel
 		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 		await _publisher.SendPublicationEdit(
 			$"{Id}M edited by {User.Name()}",
+			$"[{Id}M]({{0}}) edited by {User.Name()}",
 			$"{log} | {Title}",
 			$"{Id}M");
 
@@ -99,6 +100,7 @@ public class EditFilesModel : BasePageModel
 			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
+				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log}",
 				$"{Id}M");
 		}

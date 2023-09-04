@@ -175,6 +175,7 @@ public class CatalogModel : BasePageModel
 		{
 			await _publisher.SendGameManagement(
 				$"{Id}M Catalog edited by {User.Name()}",
+				$"[{Id}M]({{0}}) Catalog edited by {User.Name()}",
 				$"{string.Join(", ", externalMessages)} | {publication.Title}",
 				$"{Id}M");
 		}

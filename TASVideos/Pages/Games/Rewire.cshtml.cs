@@ -122,7 +122,11 @@ public class RewireModel : BasePageModel
 				var result = await ConcurrentSave(_db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
 				if (result)
 				{
-					await _publisher.SendGameManagement($"{IntoGameId}G edited by {User.Name()}", $"Rewired {FromGameId}G into {IntoGameId}G", $"{IntoGameId}G");
+					await _publisher.SendGameManagement(
+						$"{IntoGameId}G edited by {User.Name()}",
+						$"[{IntoGameId}G]({{0}}) edited by {User.Name()}",
+						$"Rewired {FromGameId}G into {IntoGameId}G",
+						$"{IntoGameId}G");
 				}
 			}
 		}

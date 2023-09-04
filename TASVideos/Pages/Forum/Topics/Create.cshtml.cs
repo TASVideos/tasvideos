@@ -150,6 +150,7 @@ public class CreateModel : BaseForumModel
 		await _publisher.SendForum(
 			forum.Restricted,
 			$"New Topic by {User.Name()}",
+			$"[New Topic]({{0}}) by {User.Name()}",
 			$"{forum.ShortName}: {Topic.Title}",
 			$"Forum/Topics/{topic.Id}");
 

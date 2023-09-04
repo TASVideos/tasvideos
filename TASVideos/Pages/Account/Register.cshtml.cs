@@ -128,6 +128,7 @@ public class RegisterModel : BasePageModel
 				await _signInManager.SignInAsync(user, isPersistent: false);
 				await _publisher.SendUserManagement(
 					$"New User registered! {user.UserName}",
+					$"New User registered! [{user.UserName}]({{0}})",
 					"",
 					$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 				await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");

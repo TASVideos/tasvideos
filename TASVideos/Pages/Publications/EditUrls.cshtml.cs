@@ -141,6 +141,7 @@ public class EditUrlsModel : BasePageModel
 		{
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
+				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"Added {UrlType} url | {Title}",
 				$"{Id}M");
 
@@ -178,6 +179,7 @@ public class EditUrlsModel : BasePageModel
 			{
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
+					$"[{Id}M]({{0}}) edited by {User.Name()}",
 					$"Deleted {url.Type} url",
 					$"{Id}M");
 

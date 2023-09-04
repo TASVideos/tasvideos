@@ -129,6 +129,7 @@ public class EditModel : BasePageModel
 			string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
 			await _publisher.SendUserManagement(
 				message,
+				$"Username {userNameChange} changed to [{user.UserName}]({{0}}) by {User.Name()}",
 				"",
 				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
@@ -170,6 +171,7 @@ public class EditModel : BasePageModel
 
 			await _publisher.SendUserManagement(
 				$"User {user.UserName} edited by {User.Name()}",
+				$"User [{user.UserName}]({{0}}) edited by {User.Name()}",
 				message,
 				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());

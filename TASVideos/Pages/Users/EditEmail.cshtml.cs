@@ -88,7 +88,11 @@ public class EditEmailModel : BasePageModel
 		{
 			var message = $"User {user.UserName} email changed by {User.Name()}";
 			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
-			await _publisher.SendUserManagement(message, "", $"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
+			await _publisher.SendUserManagement(
+				message,
+				$"User [{user.UserName}]({{0}}) email changed by {User.Name()}",
+				"",
+				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
 			SuccessStatusMessage($"User {user.UserName} email changed by {User.Name()}");
 		}
 

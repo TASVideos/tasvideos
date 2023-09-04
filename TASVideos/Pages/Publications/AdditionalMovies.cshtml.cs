@@ -122,6 +122,7 @@ public class AdditionalMoviesModel : BasePageModel
 		{
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
+				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",
 				$"{Id}M");
 		}
@@ -146,6 +147,7 @@ public class AdditionalMoviesModel : BasePageModel
 			{
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
+					$"[{Id}M]({{0}}) edited by {User.Name()}",
 					$"{log}",
 					$"{Id}M");
 			}
