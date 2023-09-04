@@ -133,7 +133,11 @@ public class EditModel : BasePageModel
 			var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to update Game {Id}");
 			if (saveResult && !Game.MinorEdit)
 			{
-				await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{Id}G");
+				await _publisher.SendGameManagement(
+					$"{saveMessage} by {User.Name()}",
+					$"Game [{game.DisplayName}]({{0}}) updated by {User.Name()}",
+					"",
+					$"{Id}G");
 			}
 		}
 		else
@@ -152,7 +156,11 @@ public class EditModel : BasePageModel
 			var saveResult = await ConcurrentSave(_db, saveMessage, "Unable to create game");
 			if (saveResult && !Game.MinorEdit)
 			{
-				await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{game.Id}G");
+				await _publisher.SendGameManagement(
+					$"{saveMessage} by {User.Name()}",
+					$"Game [{game.DisplayName}]({{0}}) created by {User.Name()}",
+					"",
+					$"{game.Id}G");
 			}
 		}
 
@@ -195,7 +203,11 @@ public class EditModel : BasePageModel
 		var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to delete Game {Id}");
 		if (saveResult)
 		{
-			await _publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", $"{Id}G");
+			await _publisher.SendGameManagement(
+				$"{saveMessage} by {User.Name()}",
+				"",
+				"",
+				"");
 		}
 
 		return BasePageRedirect("List");

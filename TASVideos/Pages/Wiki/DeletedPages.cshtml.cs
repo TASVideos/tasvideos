@@ -59,6 +59,7 @@ public class DeletedPagesModel : BasePageModel
 
 			await _publisher.SendGeneralWiki(
 				$"Page {path} DELETED by {User.Name()}",
+				"",
 				$"{result} revisions",
 				"");
 		}
@@ -83,6 +84,7 @@ public class DeletedPagesModel : BasePageModel
 
 		await _publisher.SendGeneralWiki(
 				$"Revision {revision} of {path} DELETED by {User.Name()}",
+				"",
 				"",
 				"");
 
@@ -111,6 +113,7 @@ public class DeletedPagesModel : BasePageModel
 
 		await _publisher.SendGeneralWiki(
 				$"Page {path} UNDELETED by {User.Name()}",
+				$"Page [{path}]({{0}}) UNDELETED by {User.Name()}",
 				"",
 				WikiHelper.EscapeUserName(path));
 

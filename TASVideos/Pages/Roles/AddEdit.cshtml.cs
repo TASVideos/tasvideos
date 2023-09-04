@@ -145,7 +145,8 @@ public class AddEditModel : BasePageModel
 			await _publisher.SendUserManagement(
 				$"Role {Id} deleted by {User.Name()}",
 				"",
-				"Roles/List");
+				"",
+				"");
 		}
 
 		return BasePageRedirect("List");
@@ -179,6 +180,7 @@ public class AddEditModel : BasePageModel
 
 			await _publisher.SendUserManagement(
 				$"Role {model.Name} updated by {User.Name()}",
+				$"Role [{model.Name}]({{0}}) updated by {User.Name()}",
 				"",
 				$"Roles/{model.Name}");
 		}
@@ -188,6 +190,7 @@ public class AddEditModel : BasePageModel
 			_db.Roles.Attach(role);
 			await _publisher.SendUserManagement(
 				$"New Role {model.Name} added by {User.Name()}",
+				$"New Role [{model.Name}]({{0}}) added by {User.Name()}",
 				"",
 				$"Roles/{model.Name}");
 		}

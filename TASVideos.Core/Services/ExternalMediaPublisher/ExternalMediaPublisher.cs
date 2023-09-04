@@ -41,7 +41,7 @@ public class ExternalMediaPublisher // DI as a singleton, pass in a hardcoded li
 
 public static class ExternalMediaPublisherExtensions
 {
-	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string relativeLink, string body)
+	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string formattedTitle, string relativeLink, string body)
 	{
 		await publisher.Send(new Post
 		{
@@ -51,6 +51,7 @@ public static class ExternalMediaPublisherExtensions
 				: PostType.General,
 			Group = PostGroups.UserFiles,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
@@ -64,12 +65,13 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
 			Title = $"New Submission! Go and see {title}",
+			FormattedTitle = $"New Submission! Go and see [{title}]({{0}})",
 			Body = "",
 			Link = publisher.ToAbsolute(relativeLink)
 		});
 	}
 
-	public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+	public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -77,6 +79,7 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.General,
 			Group = PostGroups.Submission,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
@@ -90,6 +93,7 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
 			Title = $"New movie published! Go and see {title}",
+			FormattedTitle = $"New movie published! Go and see [{title}]({{0}})",
 			Body = "",
 			Link = publisher.ToAbsolute(relativeLink)
 		});
@@ -103,6 +107,7 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.Announcement,
 			Group = PostGroups.Publication,
 			Title = "Publication Removed",
+			FormattedTitle = "[Publication]({0}) Removed",
 			Body = reason,
 			Link = publisher.ToAbsolute($"{id}M")
 		});
@@ -116,11 +121,12 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
 			Title = "Submission Removed",
+			FormattedTitle = "[Submission]({0}) Removed",
 			Link = publisher.ToAbsolute($"{id}S")
 		});
 	}
 
-	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -128,12 +134,13 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
 	}
 
-	public static async Task AnnounceForum(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+	public static async Task AnnounceForum(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -141,12 +148,13 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.Announcement,
 			Group = PostGroups.Forum,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
 	}
 
-	public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string body, string relativeLink)
+	public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -155,12 +163,13 @@ public static class ExternalMediaPublisherExtensions
 				: PostType.General,
 			Group = PostGroups.Forum,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
 	}
 
-	public static async Task SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+	public static async Task SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -168,12 +177,13 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.General,
 			Group = PostGroups.Wiki,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
 	}
 
-	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -181,18 +191,20 @@ public static class ExternalMediaPublisherExtensions
 			Type = PostType.Administrative,
 			Group = PostGroups.UserManagement,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
 	}
 
-	public static async Task SendGameManagement(this ExternalMediaPublisher publisher, string title, string body, string relativeLink)
+	public static async Task SendGameManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
 			Type = PostType.General,
 			Group = PostGroups.Game,
 			Title = title,
+			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});

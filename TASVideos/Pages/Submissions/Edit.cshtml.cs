@@ -388,6 +388,7 @@ public class EditModel : BasePageModel
 		if (!Submission.MinorEdit || statusHasChanged) // always publish submission status changes to media
 		{
 			string title;
+			string formattedTitle;
 			if (statusHasChanged)
 			{
 				string statusStr = Submission.Status.EnumDisplayName();
@@ -421,14 +422,17 @@ public class EditModel : BasePageModel
 				}
 
 				title = $"Submission {statusStr} by {userName}";
+				formattedTitle = $"[Submission]({{0}}) {statusStr} by {userName}";
 			}
 			else
 			{
 				title = $"Submission edited by {userName}";
+				formattedTitle = $"[Submission]({{0}}) edited by {userName}";
 			}
 
 			await _publisher.SendSubmissionEdit(
 				title,
+				formattedTitle,
 				submission.Title,
 				$"{Id}S");
 		}
@@ -497,6 +501,7 @@ public class EditModel : BasePageModel
 			string statusPrefix = newStatus == SubmissionStatus.JudgingUnderWay ? "" : "set to ";
 			await _publisher.SendSubmissionEdit(
 				$"Submission {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}",
+				$"[Submission]({{0}}) {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}",
 				$"{submission.Title}",
 				$"{Id}S");
 		}

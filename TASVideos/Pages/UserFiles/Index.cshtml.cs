@@ -102,6 +102,7 @@ public class IndexModel : BasePageModel
 				await _publisher.SendUserFile(
 					userFile.Hidden,
 					$@"New user file comment by {User.Name()}",
+					$@"New [user file]({{0}}) comment by {User.Name()}",
 					$"UserFiles/Info/{fileId}",
 					$"{userFile.Title}");
 			}
@@ -129,6 +130,7 @@ public class IndexModel : BasePageModel
 					await _publisher.SendUserFile(
 						fileComment.UserFile!.Hidden,
 						$"User file comment edited by {User.Name()}",
+						$@"[User file]({{0}}) comment edited by {User.Name()}",
 						$"UserFiles/Info/{fileComment.UserFile.Id}",
 						$"{fileComment.UserFile!.Title}");
 				}
@@ -156,6 +158,7 @@ public class IndexModel : BasePageModel
 					await _publisher.SendUserFile(
 						fileComment.UserFile!.Hidden,
 						$"User file comment DELETED by {User.Name()}",
+						$"[User file]({{0}}) comment DELETED by {User.Name()}",
 						$"UserFiles/Info/{fileComment.UserFile.Id}",
 						$"{fileComment.UserFile!.Title}");
 				}

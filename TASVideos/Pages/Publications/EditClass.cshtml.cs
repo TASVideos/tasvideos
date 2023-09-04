@@ -96,6 +96,7 @@ public class EditClassModel : BasePageModel
 			{
 				await _publisher.SendPublicationEdit(
 					$"{log} by {User.Name()}",
+					$"[{Id}M]({{0}}) Class changed from {originalClass} to {publicationClass.Name} by {User.Name()}",
 					Title,
 					$"{Id}M");
 			}

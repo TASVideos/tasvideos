@@ -58,6 +58,7 @@ public class ConfirmEmailModel : BasePageModel
 		await _signInManager.SignInAsync(user, isPersistent: false);
 		await _publisher.SendUserManagement(
 			$"User {user.UserName} activated",
+			$"User [{user.UserName}]({{0}}) activated",
 			"",
 			$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 		await _userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");

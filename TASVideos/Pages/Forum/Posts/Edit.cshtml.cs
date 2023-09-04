@@ -175,6 +175,7 @@ public class EditModel : BaseForumModel
 				await _publisher.SendForum(
 					forumPost.Topic!.Forum!.Restricted,
 					$"Post edited by {User.Name()}",
+					$"[Post]({{0}}) edited by {User.Name()}",
 					$"{forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title}",
 					$"Forum/Posts/{Id}");
 			}
@@ -233,6 +234,7 @@ public class EditModel : BaseForumModel
 			await _publisher.SendForum(
 				post.Topic!.Forum!.Restricted,
 				$"{(topicDeleted ? "Topic" : "Post")} DELETED by {User.Name()}",
+				$"[{(topicDeleted ? "Topic" : "Post")} DELETED]({{0}}) by {User.Name()}",
 				$"{post.Topic!.Forum!.ShortName}: {post.Topic.Title}",
 				topicDeleted ? "" : $"Forum/Topics/{post.Topic.Id}");
 		}
@@ -293,6 +295,7 @@ public class EditModel : BaseForumModel
 			await _publisher.SendForum(
 				false,
 				$"{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM, and user {post.Poster!.UserName} banned by {User.Name()}",
+				$"[{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM]({{0}}), and user {post.Poster!.UserName} banned by {User.Name()}",
 				$"{oldForumShortName}: {oldTopicTitle}",
 				topicDeleted ? "" : $"Forum/Topics/{oldTopicId}");
 		}

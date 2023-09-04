@@ -54,6 +54,7 @@ public class DeprecateMovieFormatsModel : BasePageModel
 	{
 		await _publisher.SendSubmissionEdit(
 			$"{extension} deprecation status set to {deprecate} by {User.Name()}",
+			$"[{extension}]({{0}}) deprecation status set to {deprecate} by {User.Name()}",
 			"",
 			"");
 	}

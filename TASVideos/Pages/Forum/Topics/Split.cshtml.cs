@@ -130,6 +130,7 @@ public class SplitModel : BasePageModel
 		await _publisher.SendForum(
 			destinationForum.Restricted || topic.Forum!.Restricted,
 			$"Topic SPLIT by {User.Name()}",
+			$"[Topic]({{0}}) SPLIT by {User.Name()}",
 			$@"""{newTopic.Title}"" from ""{Topic.Title}""",
 			$"Forum/Topics/{newTopic.Id}");
 
