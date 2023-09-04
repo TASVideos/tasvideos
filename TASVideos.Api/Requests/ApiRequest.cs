@@ -3,30 +3,29 @@
 namespace TASVideos.Api.Requests;
 
 /// <summary>
-/// Represents a standard api request.
+/// Represents a standard API request.
 /// Supports sorting, paging, and field selection parameters.
 /// </summary>
 public class ApiRequest : IFieldSelectable, ISortable, IPageable
 {
 	/// <summary>
 	/// Gets the total number of records to return.
-	/// If not specified then a default number of records will be returned.
+	/// If not specified, then a default number of records will be returned.
 	/// </summary>
 	[Range(1, ApiConstants.MaxPageSize)]
 	public int? PageSize { get; init; } = 100;
 
 	/// <summary>
-	/// Gets the page to start returning records
-	/// If not specified an offset of 1 will be used.
+	/// Gets the page to start returning records.
+	/// If not specified, then an offset of 1 will be used.
 	/// </summary>
 	public int? CurrentPage { get; init; } = 1;
 
 	/// <summary>
 	/// Gets the fields to sort by.
 	/// If multiple sort parameters, the list should be comma separated.
-	/// Use - to indicate a descending sort.
-	/// A + can optionally be used to indicate an ascending sort.
-	/// If not specified then a default sort will be used.
+	/// Precede the parameter with a + or - to sort ascending or descending respectively.
+	/// If not specified, then a default sort will be used.
 	/// </summary>
 	[StringLength(200)]
 	public string? Sort { get; init; }
