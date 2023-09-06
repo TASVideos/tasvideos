@@ -57,6 +57,12 @@
 	}
 }
 
+@section PageTitle {
+	<div class="container mb-2">
+		<h1 class="card card-header d-block">@($"Submission {Model.Submission.Title}")</h1>
+	</div>
+}
+
 <row class="mt-2">
 	<div class="col-lg-6" condition="hasEncode">
 		@*Boilerplate bootstrap stuff *@
