@@ -65,6 +65,7 @@ function engageSelectImprover(multiSelectId, maxHeight = '250px') {
 		}
 		if (option.disabled) {
 			checkbox.disabled = true;
+			entry.classList.add('disabled');
 		}
 
 		checkbox.dataset.value = option.value;
