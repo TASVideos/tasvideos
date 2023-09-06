@@ -63,6 +63,9 @@ function engageSelectImprover(multiSelectId, maxHeight = '250px') {
 		if (option.selected) {
 			checkbox.checked = true;
 		}
+		if (option.disabled) {
+			checkbox.disabled = true;
+		}
 
 		checkbox.dataset.value = option.value;
 		checkbox.addEventListener('change', (e) => {
@@ -82,6 +85,9 @@ function engageSelectImprover(multiSelectId, maxHeight = '250px') {
 			buttons.querySelector('span').classList.add('d-none');
 		} else {
 			button.classList.add('d-none');
+		}
+		if (option.disabled) {
+			button.disabled = true;
 		}
 
 		button.addEventListener('click', (e) => {
