@@ -37,6 +37,11 @@ public static class ViewDataDictionaryExtensions
 		viewData["Title"] = title;
 	}
 
+	public static void SetHeading(this ViewDataDictionary viewData, string heading)
+	{
+		viewData["Heading"] = heading;
+	}
+
 	public static IWikiPage? GetWikiPage(this ViewDataDictionary viewData)
 	{
 		return viewData["WikiPage"] as IWikiPage;

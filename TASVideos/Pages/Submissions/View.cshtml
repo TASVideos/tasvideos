@@ -3,6 +3,7 @@
 @model ViewModel
 @{
 	ViewData.SetTitle($"{Model.Submission.Title} - Submission #{Model.Id}");
+	ViewData.SetHeading($"Submission {Model.Submission.Title}");
 	ViewData["NavigationId"] = Model.Id;
 	ViewData["NavigationSuffix"] = "S";
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
