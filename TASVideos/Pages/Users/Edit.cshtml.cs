@@ -80,7 +80,7 @@ public class EditModel : BasePageModel
 		}
 
 		// Double check user can assign all new the roles they are requesting to assign
-		var rolesThatUserCanAssign = roles.Select(r => r.Id).ToList();
+		var rolesThatUserCanAssign = roles.Where(r => !r.Disabled).Select(r => r.Id).ToList();
 		if (UserToEdit.SelectedRoles.Except(rolesThatUserCanAssign).Any())
 		{
 			return AccessDenied();
