@@ -80,7 +80,7 @@ public class EditModel : BasePageModel
 		}
 
 		// Double check user can assign all new the roles they are requesting to assign
-		var rolesThatUserCanAssign = roles.Select(r => r.Id);
+		var rolesThatUserCanAssign = roles.Select(r => r.Id).ToList();
 		if (UserToEdit.SelectedRoles.Except(rolesThatUserCanAssign).Any())
 		{
 			return AccessDenied();
@@ -100,7 +100,7 @@ public class EditModel : BasePageModel
 		user.ModeratorComments = UserToEdit.ModeratorComments;
 
 		var currentRoles = await _db.UserRoles
-			.Where(ur => ur.User == user)
+			.Where(ur => ur.User == user && rolesThatUserCanAssign.Contains(ur.RoleId))
 			.ToListAsync();
 
 		_db.UserRoles.RemoveRange(currentRoles);
