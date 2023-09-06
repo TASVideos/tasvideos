@@ -96,8 +96,21 @@
 	}
 	else
 	{
+		int? prev = null;
+		int? next = null;
+		if (User.Has(PermissionTo.CatalogMovies) && ViewData["NavigationId"] is int && ViewData["NavigationSuffix"] is string)
+		{
+			var id = ViewData.Int("NavigationId");
+			prev = id > 1 ? id - 1 : null;
+			next = id + 1;
+		}
+
 		<div class="container mb-2">
-			<h1 class="card card-header d-block">@title</h1>
+			<h1 class="card card-header d-block">
+				<a condition="prev.HasValue" href="@(prev + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-left"></i></a>
+				<span>@title</span>
+				<a condition="next.HasValue" class="float-end" href="@(next + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-right"></i></a>
+			</h1>
 		</div>
 	}
 

@@ -75,7 +75,7 @@ public class IndexModel : BasePageModel
 
 		Movies = movies
 			.Select(m => new TabMiniMovieModel(
-				movies.Where(mm => mm.Branch == m.Branch).Count() > 1 ? m.GameTitle : string.IsNullOrEmpty(m.Branch) ? "(baseline)" : "",
+				movies.Count(mm => mm.Branch == m.Branch) > 1 ? m.GameTitle : string.IsNullOrEmpty(m.Branch) ? "(baseline)" : "",
 				m.Branch,
 				new MiniMovieModel
 				{

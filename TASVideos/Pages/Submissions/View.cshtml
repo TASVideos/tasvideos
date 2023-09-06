@@ -1,10 +1,10 @@
 @page "{id}"
 @inject IQueueService QueueService
-@using TASVideos.TagHelpers
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ViewModel
 @{
 	ViewData.SetTitle($"{Model.Submission.Title} - Submission #{Model.Id}");
+	ViewData["NavigationId"] = Model.Id;
+	ViewData["NavigationSuffix"] = "S";
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
 	bool canEdit = ViewData.UserHas(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && ViewData.UserHas(PermissionTo.SubmitMovies));
@@ -55,12 +55,6 @@
 				return "warning";
 		}
 	}
-}
-
-@section PageTitle {
-	<div class="container mb-2">
-		<h1 class="card card-header d-block">@($"Submission {Model.Submission.Title}")</h1>
-	</div>
 }
 
 <row class="mt-2">

@@ -14,6 +14,12 @@
 		Title = Model.Game.DisplayName,
 		Image = url
 	});
+
+	if (int.TryParse(Model.Id, out int id))
+	{
+		ViewData["NavigationId"] = id;
+		ViewData["NavigationSuffix"] = "G";
+	}
 }
 
 <div class="float-md-end text-center mb-2" condition="url is not null">
@@ -121,7 +127,7 @@
 			</div>
 		}
 	</div>
-	<small condition="@Model.Movies.Where(m => string.IsNullOrWhiteSpace(m.Movie.Branch)).Count() == 1" class="text-body-tertiary">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
+	<small condition="@(Model.Movies.Count(m => string.IsNullOrWhiteSpace(m.Movie.Branch)) == 1)" class="text-body-tertiary">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
 </div>
 <hr />
 <row>
