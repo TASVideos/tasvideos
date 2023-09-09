@@ -44,7 +44,7 @@
 						class="btn btn-primary btn-sm border border-warning">
 						<i class="fa fa-pencil"></i> Edit
 					</a>
-					<delete-button condition="!Model.Restricted && User.Has(PermissionTo.DeleteForumPosts) && User.Has(PermissionTo.AssignRoles)"
+					<delete-button condition="!Model.Restricted && User.Has(PermissionTo.DeleteForumPosts) && User.Has(PermissionTo.AssignRoles) && Model.PosterId != User.GetUserId()"
 								   asp-href="@($"/Forum/Posts/Edit/{Model.Id}?handler=Spam")"
 									warning-message="Are you sure you want to mark this post as spam and ban this user?"
 									action-name="Spam"

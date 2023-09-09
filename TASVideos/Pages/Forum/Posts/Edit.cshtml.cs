@@ -277,7 +277,6 @@ public class EditModel : BaseForumModel
 		var oldTopicTitle = post.Topic.Title;
 		var oldForumShortName = post.Topic.Forum!.ShortName;
 		post.TopicId = SiteGlobalConstants.SpamTopicId;
-		var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
 
 		bool topicDeleted = false;
 		if (postCount == 1)
@@ -286,6 +285,8 @@ public class EditModel : BaseForumModel
 			_db.ForumTopics.Remove(topic);
 			topicDeleted = true;
 		}
+
+		var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
 
 		if (result)
 		{

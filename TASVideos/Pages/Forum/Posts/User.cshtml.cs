@@ -81,7 +81,8 @@ public class UserModel : BasePageModel
 				TopicTitle = p.Topic!.Title,
 				ForumId = p.Topic.ForumId,
 				ForumName = p.Topic!.Forum!.Name,
-				PosterMood = p.PosterMood
+				PosterMood = p.PosterMood,
+				PosterId = p.PosterId
 			})
 			.SortedPageOf(Search);
 

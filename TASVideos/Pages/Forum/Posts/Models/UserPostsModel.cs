@@ -31,6 +31,7 @@ public class UserPagePost : IForumPostEntry
 	public bool IsDeletable => false;
 
 	// Fill with user info
+	public int PosterId { get; set; }
 	public string PosterName { get; set; } = "";
 	public string? Signature { get; set; }
 	public int PosterPostCount { get; set; }

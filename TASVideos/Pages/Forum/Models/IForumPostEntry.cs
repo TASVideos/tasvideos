@@ -23,6 +23,7 @@ public interface IForumPostEntry
 	public ForumPostMood PosterMood { get; }
 
 	// Poster
+	public int PosterId { get; }
 	public string PosterName { get; }
 	public int PosterPostCount { get; }
 	public string? PosterLocation { get; }
