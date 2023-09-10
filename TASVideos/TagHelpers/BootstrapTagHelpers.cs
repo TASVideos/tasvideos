@@ -95,16 +95,6 @@ public class ColumnTagHelper : TagHelper
 	}
 }
 
-// TODO: rename me
-public class FormGroupTagHelper : TagHelper
-{
-	public override void Process(TagHelperContext context, TagHelperOutput output)
-	{
-		output.TagName = "fieldset";
-		output.AddCssClass("mb-3");
-	}
-}
-
 public class CardTagHelper : TagHelper
 {
 	public override void Process(TagHelperContext context, TagHelperOutput output)

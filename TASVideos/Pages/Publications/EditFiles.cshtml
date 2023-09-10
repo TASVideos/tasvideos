@@ -34,16 +34,16 @@
 	<input type="hidden" asp-for="Title" />
 	<row>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="NewFile"></label>
 				<input asp-for="NewFile" class="form-control" />
 				<span asp-validation-for="NewFile" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 			<form-group id="description-group">
 				<label asp-for="Description"></label>
 				<input type="text" asp-for="Description" class="form-control" />
 				<span asp-validation-for="Description" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 			<div class="text-center mt-3">
 				<submit-button class="btn btn-primary"><span class="fa fa-plus"></span> Add</submit-button>
 				<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back To Edit</a>

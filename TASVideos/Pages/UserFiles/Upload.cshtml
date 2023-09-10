@@ -14,42 +14,42 @@
 <form method="post" enctype="multipart/form-data">
 	<row>
 		<column>
-			<form-group>
+			<fieldset>
 				<label asp-for="UserFile.File" class="form-control-label"></label>
 				<input asp-for="UserFile.File" class="form-control" />
 				<small>Valid file types: @string.Join(", ", Model.SupportedFileExtensions)</small><br />
 				<span id="FileInputWarning" asp-validation-for="UserFile.File" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="UserFile.Title" class="form-control-label"></label>
 				<input asp-for="UserFile.Title" type="text" class="form-control" />
 				<span asp-validation-for="UserFile.Title" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<div>
 					<partial name="_WikiEditHelper" model="@("UserFile_Description")"/>
 				</div>
 				<label asp-for="UserFile.Description" class="form-control-label"></label>
 				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" asp-for="UserFile.Hidden">
 					<label class="form-check-label form-control-label" asp-for="UserFile.Hidden"></label>
 				</div>
-			</form-group>
+			</fieldset>
 			<hr />
-			<form-group>
+			<fieldset>
 				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
 				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
 				<span asp-validation-for="UserFile.SystemId" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="UserFile.GameId" class="form-control-label"></label>
 				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
 				<span asp-validation-for="UserFile.GameId" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<fullrow class="text-center">

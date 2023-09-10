@@ -9,18 +9,18 @@
 	<input type="hidden" asp-for="PublicationTitle" />
 	<row>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Reason"></label>
 				<div>Note: The reason will be used for announcements but not stored in the database</div>
 				<input asp-for="Reason" class="form-control" />
 				<span asp-validation-for="Reason" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="PrimaryMovieFile"></label>
 				<div>@Html.DescriptionFor(m => m.PrimaryMovieFile)</div>
 				<input asp-for="PrimaryMovieFile" class="form-control" />
 				<span asp-validation-for="PrimaryMovieFile" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>

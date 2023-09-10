@@ -17,83 +17,83 @@
 	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
 	<row>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.MovieFile" class="form-control-label"></label>
 				<input asp-for="Submission.MovieFile" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Submission.MovieFile)</div>
 				<span asp-validation-for="Submission.MovieFile" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.Authors" class="form-control-label"></label>
 				<string-list asp-for="Submission.Authors" />
 				<span asp-validation-for="Submission.Authors" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.AdditionalAuthors" class="form-control-label"></label>
 				<input asp-for="Submission.AdditionalAuthors" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Submission.AdditionalAuthors)</div>
 				<span asp-validation-for="Submission.AdditionalAuthors" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
 	<row>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.GameVersion" class="form-control-label"></label>
 				<input asp-for="Submission.GameVersion" class="form-control" placeholder="USA v1.0" />
 				<span asp-validation-for="Submission.GameVersion" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.GameName" class="form-control-label"></label>
 				<input asp-for="Submission.GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.GameName)" />
 				<span asp-validation-for="Submission.GameName" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.Emulator" class="form-control-label"></label>
 				<input asp-for="Submission.Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Emulator)" />
 				<div>@Html.DescriptionFor(m => m.Submission.Emulator)</div>
 				<span asp-validation-for="Submission.Emulator" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.Branch" class="form-control-label"></label>
 				<input asp-for="Submission.Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Branch)" />
 				<span asp-validation-for="Submission.Branch" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.RomName" class="form-control-label"></label>
 				<input asp-for="Submission.RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.RomName)" />
 				<span asp-validation-for="Submission.RomName" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.EncodeEmbedLink" class="form-control-label"></label>
 				<input asp-for="Submission.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.EncodeEmbedLink)" />
 				<span asp-validation-for="Submission.EncodeEmbedLink" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
 	<row>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.Status" class="form-control-label"></label>
 				<select class="form-control"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
-			</form-group>
-			<form-group id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
+			</fieldset>
+			<fieldset id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
 				<label asp-for="Submission.RejectionReason" class="form-control-label"></label>
 				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-control"></select>
-			</form-group>
+			</fieldset>
 		</div>
 		<div condition="canEditPublicationClass" class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
 				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-control"></select>
 				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 		<input type="hidden" asp-for="Submission.PublicationClassId" condition="!canEditPublicationClass" />
 	</row>
@@ -101,16 +101,16 @@
 		<partial name="_WikiEditHelper" model="@("Submission_Markup")" />
 	</fullrow>
 	<fullrow>
-		<form-group>
+		<fieldset>
 			<label asp-for="Submission.Markup" class="form-control-label"></label>
 			<textarea asp-for="Submission.Markup" rows="12" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Submission.Markup" class="text-danger"></span>
 			@await Component.RenderWiki(SystemWiki.WikiEditHelp)
-		</form-group>
+		</fieldset>
 	</fullrow>
 	<row>
 		<div class="col-12">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.RevisionMessage" class="form-control-label"></label>
 				<div class="input-group">
 					<input asp-for="Submission.RevisionMessage" class="form-control" />
@@ -120,7 +120,7 @@
 					</div>
 				</div>
 				<span asp-validation-for="Submission.RevisionMessage" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
 	<fullrow class="text-center">

@@ -54,28 +54,28 @@
 	<row>
 		<input type="hidden" asp-for="Submission.MovieExtension" />
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.MovieToObsolete" class="form-control-label"></label>
 				<input asp-for="Submission.MovieToObsolete" class="form-control" />
 				<span asp-validation-for="Submission.MovieToObsolete" class="text-danger"></span>
 				<span id="obsoleted-by"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.OnlineWatchingUrl" class="form-control-label"></label>
 				<input type="text" asp-for="Submission.OnlineWatchingUrl" class="form-control" />
 				<span asp-validation-for="Submission.OnlineWatchingUrl" class="text-danger"></span>
 				<label asp-for="Submission.OnlineWatchUrlName" class="form-control-label"></label>
 				<input type="text" asp-for="Submission.OnlineWatchUrlName" class="form-control"/>
 				<span asp-validation-for="Submission.OnlineWatchUrlName" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.MirrorSiteUrl" class="form-control-label"></label>
 				<input type="text" asp-for="Submission.MirrorSiteUrl" class="form-control" />
 				<span asp-validation-for="Submission.MirrorSiteUrl" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.MovieFileName" class="form-control-label"></label>
 				<div class="input-group">
 					<input type="text" asp-for="Submission.MovieFileName" class="form-control" />
@@ -87,8 +87,8 @@
 				</div>
 				<div>@Html.DescriptionFor(m => m.Submission.MovieFileName)</div>
 				<span asp-validation-for="Submission.MovieFileName" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.Screenshot" class="form-control-label"></label>
 				<input asp-for="Submission.Screenshot" class="form-control" />
 				<span>
@@ -97,44 +97,44 @@
 					(Please read <a href="/PublisherGuidelines">Publisher guidelines</a> for guidelines regarding screenshot selection.)
 				</span>
 				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Submission.ScreenshotDescription"></label>
 				<input asp-for="Submission.ScreenshotDescription" type="text" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Submission.ScreenshotDescription)</div>
 				<span asp-validation-for="Submission.ScreenshotDescription" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<hr />
 	<row>
 		<column lg="6">
 			<partial name="_WikiEditHelper" model="@("Submission_MovieMarkup")" />
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.MovieMarkup" class="form-control-label"></label>
 				<textarea asp-for="Submission.MovieMarkup" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Submission.MovieMarkup" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Submission.Markup" class="form-control-label"></label>
 				<textarea readonly class="form-control" rows="10" asp-for="Submission.Markup"></textarea>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<button id="preview-button" type="button" class="btn btn-secondary"><span class="fa fa-eye"></span> Preview</button>
 	<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.MovieMarkup), "/Wiki/Preview")" />
 	<hr />
 	<fullrow>
-		<form-group>
+		<fieldset>
 			<label asp-for="Submission.SelectedFlags"></label>
 			<select asp-for="Submission.SelectedFlags" size="@(Math.Min(Model.Submission.SelectedFlags.Count(), 7).ToString())" asp-items="Model.AvailableFlags" class="form-control"></select>
-		</form-group>
-		<form-group>
+		</fieldset>
+		<fieldset>
 			<label asp-for="Submission.SelectedTags"></label>
 			<select asp-for="Submission.SelectedTags" size="@(Math.Min(Model.Submission.SelectedTags.Count(), 7).ToString())" asp-items="Model.AvailableTags" class="form-control"></select>
-		</form-group>
+		</fieldset>
 	</fullrow>
 	<hr />
 	@await Component.RenderWiki(SystemWiki.FilesEditingHelp)

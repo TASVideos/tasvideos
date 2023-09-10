@@ -9,14 +9,14 @@
 	<input asp-for="Title" type="hidden" />
 	<row>
 		<column md="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="SystemId">System</label>
 				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="GameId">Game</label>
 				<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 

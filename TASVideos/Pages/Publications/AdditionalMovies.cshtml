@@ -41,17 +41,17 @@
 	<input type="hidden" asp-for="PublicationTitle" />
 	<row>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="DisplayName"></label>
 				<input type="text" asp-for="DisplayName" maxlength="50" class="form-control" />
 				<span asp-validation-for="DisplayName" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="AdditionalMovieFile"></label>
 				<input asp-for="AdditionalMovieFile" class="form-control"/>
 				<div>@Html.DescriptionFor(m => m.AdditionalMovieFile)</div>
 				<span asp-validation-for="AdditionalMovieFile" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 			<div class="text-center mt-3">
 				<submit-button class="btn btn-primary"><span class="fa fa-plus"></span> Add</submit-button>
 				<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back To Edit</a>

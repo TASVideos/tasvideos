@@ -8,7 +8,7 @@
 	<input type="hidden" asp-for="Rating.Title" />
 	<row>
 		<column class="text-center text-md-start">
-			<form-group>
+			<fieldset>
 				<span class="fs-4">@Html.DisplayNameFor(m => m.Rating.Rating)</span>
 				<span class="text-nowrap">
 					( <input asp-for="Rating.Unrated" />
@@ -17,7 +17,7 @@
 				<br />
 				<input asp-for="Rating.Rating" type="number" class="form-control fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
 				<input id="entertainmentSlider" type="range" class="form-range mw-100 h-auto" style="width:15rem;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>

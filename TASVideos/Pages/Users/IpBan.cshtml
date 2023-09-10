@@ -5,11 +5,11 @@
 <form method="POST">
 	<row>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="IpAddressToBan"></label>
 				<input asp-for="IpAddressToBan" type="text" class="form-control" />
 				<span asp-validation-for="IpAddressToBan" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 			<submit-button class="btn btn-primary">Add</submit-button>
 		</column>
 		<column lg="6">

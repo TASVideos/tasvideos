@@ -23,37 +23,37 @@
 	@Html.ValidationSummary()
 </div>
 
-<form-group>
+<fieldset>
 	<delete-button condition="@Model.CanDelete"
 				   asp-href="@deleteLink"
 				   class="float-end">Delete</delete-button>
 	<h4>Game: @Model.GameName</h4>
-</form-group>
+</fieldset>
 <form method="post">
 	<input type="hidden" asp-for="GameName" />
 	<row>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Version.SystemCode"></label>
 				<select asp-for="Version.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
 				<span asp-validation-for="Version.SystemCode" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Version.Name"></label>
 				<input type="text" asp-for="Version.Name" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Version.Name" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Version.Sha1"></label>
 				<input type="text" asp-for="Version.Sha1" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Version.Sha1" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Version.Md5"></label>
 				<input type="text" asp-for="Version.Md5" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Version.Md5" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<div id="hash-drop-area" role="button" class="border border-silver rounded p-2 text-body-tertiary">
 					<row class="align-items-center mb-1">
 						<div class="col-auto">
@@ -69,29 +69,29 @@
 						</div>
 					</fullrow>
 				</div>
-			</form-group>
+			</fieldset>
 		</div>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Version.Type"></label>
 				<select asp-for="Version.Type" asp-items="@Model.AvailableVersionTypes.OrderBy(s => s.Value)" class="form-control"></select>
 				<span asp-validation-for="Version.Type" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Version.TitleOverride"></label>
 				<input type="text" asp-for="Version.TitleOverride" class="form-control" />
 				<span asp-validation-for="Version.TitleOverride" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Version.Version"></label>
 				<input type="text" asp-for="Version.Version" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Version.Version" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Version.Region"></label>
 				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes" class="form-control"></select>
 				<span asp-validation-for="Version.Region" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
 	<div class="text-center">

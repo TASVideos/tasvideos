@@ -9,37 +9,36 @@
 <form method="post">
 	<row>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Settings.Username"></label>
 				<input asp-for="Settings.Username" class="form-control" disabled />
 				<div class="text-warning">
 					@await Component.RenderWiki(SystemWiki.NameChanges)
 				</div>
-			</form-group>
+			</fieldset>
 			<a asp-page="ChangeEmail">Change Email</a>
 			@if (Model.Settings.IsEmailConfirmed)
 			{
-				<form-group disabled>
+				<fieldset disabled>
 					<label asp-for="Settings.Email"></label>
 					<div class="input-group">
 						<input asp-for="Settings.Email" class="form-control" />
 						<div class="input-group-text" aria-disabled="true"><span class="fa fa-check-square text-success"></span></div>
 					</div>
-				</form-group>
-				
+				</fieldset>
 			}
 			else
 			{
-				<form-group>
+				<fieldset>
 					<div class="input-group">
 						<input asp-for="Settings.Email" readonly class="form-control"/>
 						<div class="input-group-text" aria-disabled="true" title="Email not confirmed"><span class="fa fa-exclamation text-warning"></span></div>
 					</div>
 					<button asp-page="Settings" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
-				</form-group>
+				</fieldset>
 			}
 			
-			<form-group>
+			<fieldset>
 				<label asp-for="Settings.PublicRatings"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
 					@{
@@ -53,8 +52,8 @@
 						<input id="@falseId" type="radio" value="False" asp-for="Settings.PublicRatings" /> No
 					</label>
 				</div>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Settings.EmailOnPrivateMessage"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
 					@{
@@ -68,27 +67,27 @@
 						<input id="@falseId" type="radio" value="False" asp-for="Settings.EmailOnPrivateMessage" /> No
 					</label>
 				</div>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Settings.AutoWatchTopic"></label>
 				<select asp-for="Settings.AutoWatchTopic" asp-items="@SettingsModel.AvailableUserPreferenceTypes" class="form-control"></select>
-			</form-group>
+			</fieldset>
 		</column>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Settings.TimeZoneId"></label>
 				<timezone-picker asp-for="Settings.TimeZoneId" class="form-select" />
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Settings.From"></label>
 				<input asp-for="Settings.From" class="form-control" />
 				<span asp-validation-for="Settings.From"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Settings.PreferredPronouns"></label>
 				<select asp-for="Settings.PreferredPronouns" asp-items="@SettingsModel.AvailablePronouns" class="form-select"></select>
 				<span asp-validation-for="Settings.PreferredPronouns"></span>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<hr />

@@ -8,11 +8,11 @@
 	<input type="hidden" asp-for="Title" />
 	<row>
 		<div class="col-lg-4 col-sm-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Publication.ClassId"></label>
 				<select class="form-control" asp-for="Publication.ClassId" asp-items="@Model.AvailableClasses"></select>
 				<span asp-validation-for="Publication.ClassId" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
 	<div class="text-center mt-3">

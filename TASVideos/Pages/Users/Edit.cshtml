@@ -10,27 +10,27 @@
 		asp-route-id="@Model.Id"
 		class="btn btn-danger float-end"><i class="fa fa-trash-can"></i> Anonymize User</a>
 	<fullrow>
-		<form-group condition="Model.UserToEdit.IsLockedOut">
+		<fieldset condition="Model.UserToEdit.IsLockedOut">
 			<label asp-for="UserToEdit.IsLockedOut" class="form-control-label"></label>
 			<div>
 				<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
 				<a class="btn btn-secondary" asp-page="Edit" asp-page-handler="Unlock" asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
 			</div>
-		</form-group>
-		<form-group condition="!Model.UserToEdit.IsLockedOut">
+		</fieldset>
+		<fieldset condition="!Model.UserToEdit.IsLockedOut">
 			<label asp-for="UserToEdit.IsLockedOut" class="form-control-label"></label>
 			<div>
 				<span class="fa fa-check-square text-success"></span> Not locked
 			</div>
-		</form-group>
+		</fieldset>
 	</fullrow>
 	<row>
 		<div class="col-md-5">
-			<form-group>
+			<fieldset>
 				<label asp-for="UserToEdit.CreateTimestamp" class="form-control-label"></label>
 				<div><timezone-convert asp-for="@Model.UserToEdit.CreateTimestamp"/></div>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="UserToEdit.UserName" class="form-control-label"></label>
 				@if (ViewData.UserHas(PermissionTo.EditUsersUserName))
 				{
@@ -139,23 +139,23 @@
 						<input type="hidden" asp-for="UserToEdit.UserName" />
 					</div>
 				}
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="UserToEdit.From" class="form-control-label"></label>
 				<input asp-for="UserToEdit.From" type="text" class="form-control" />
 				<span asp-validation-for="UserToEdit.From" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 		<div class="offset-md-2 col-md-5">
-			<form-group>
+			<fieldset>
 				<label asp-for="UserToEdit.LastLoggedInTimeStamp" class="form-control-label"></label>
 				<div>@Html.DisplayFor(m => m.UserToEdit.LastLoggedInTimeStamp)</div>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="UserToEdit.TimezoneId" class="form-control-label"></label>
 				<timezone-picker asp-for="UserToEdit.TimezoneId" class="form-control" />
-			</form-group>
-			<form-group permission="SeeEmails">
+			</fieldset>
+			<fieldset permission="SeeEmails">
 				<label asp-for="UserToEdit.Email" class="form-control-label"></label>
 				<div class="input-group">
 					<label class="form-control">@Model.UserToEdit.Email</label>
@@ -168,17 +168,17 @@
 				</div>
 				<a asp-page="EditEmail" asp-route-id="@Model.Id" class="btn btn-danger mt-2">Edit</a>
 				<label>(also allows manually setting the email confirmed value)</label>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
 	<row>
 		<column md="6">
-			<form-group>
+			<fieldset>
 				<input type="checkbox" class="forum-check-input" asp-for="UserToEdit.UseRatings" />
 				<label class="form-check-label" asp-for="UserToEdit.UseRatings"></label>
 				<br />
 				(@Html.DescriptionFor(m => m.UserToEdit.UseRatings))
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<full-row>

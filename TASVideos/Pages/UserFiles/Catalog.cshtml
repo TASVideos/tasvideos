@@ -16,11 +16,11 @@
 	<input type="hidden" asp-for="UserFile.Filename" />
 	<row>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
 				<select asp-for="UserFile.SystemId" asp-items="Model.AvailableSystems" class="form-control"></select>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<fullrow>
 					<label asp-for="UserFile.GameId" class="form-control-label"></label>
 				</fullrow>
@@ -32,7 +32,7 @@
 						<button id="create-game" type="button" class="btn btn-primary">New</button>
 					</div>
 				</row>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>

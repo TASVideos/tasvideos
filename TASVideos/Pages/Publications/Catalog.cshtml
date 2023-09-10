@@ -7,19 +7,19 @@
 <form method="post">
 	<row>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Catalog.SystemId" class="form-control-label"></label>
 				<select asp-for="Catalog.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
 				<span asp-validation-for="Catalog.SystemId" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
 				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-control"></select>
 				<span asp-validation-for="Catalog.SystemFrameRateId" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<fullrow>
 					<label asp-for="Catalog.GameId" class="form-control-label"></label>
 				</fullrow>
@@ -32,8 +32,8 @@
 						<button id="create-game" type="button" class="btn btn-primary">New</button>
 					</div>
 				</row>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<fullrow>
 					<label asp-for="Catalog.GameVersionId" class="form-control-label"></label>
 				</fullrow>
@@ -46,7 +46,7 @@
 						<button id="create-version" type="button" class="btn btn-primary">New</button>
 					</div>
 				</row>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
 	<hr/>

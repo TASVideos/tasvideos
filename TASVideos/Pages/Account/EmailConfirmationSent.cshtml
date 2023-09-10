@@ -10,20 +10,20 @@
 <form method="post">
 	<row>
 		<column md="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="UserName"></label>
 				<input asp-for="UserName" class="form-control" autocomplete="username" />
 				<span asp-validation-for="UserName" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Email"></label>
 				<input asp-for="Email" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Email" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 			<environment exclude="Development">
-				<form-group>
+				<fieldset>
 					<recaptcha />
-				</form-group>
+				</fieldset>
 			</environment>
 		</column>
 	</row>

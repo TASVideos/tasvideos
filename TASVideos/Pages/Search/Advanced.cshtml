@@ -10,12 +10,12 @@
 <form method="get">
 	<row class="mt-3">
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="SearchTerms"></label>
 				<input type="text" asp-for="SearchTerms" class="form-control" />
 				<span condition="PageContext.HttpContext.Request.QueryString.HasValue" asp-validation-for="SearchTerms" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<div>
 					<input asp-for="GameSearch" />
 					<label asp-for="GameSearch"></label>
@@ -36,7 +36,7 @@
 					<input asp-for="PostSearch" />
 					<label asp-for="PostSearch"></label>
 				</div>
-			</form-group>
+			</fieldset>
 			<button type="submit" class="btn btn-primary">Search</button>
 			<a condition="Model.EnablePrev"
 				class="btn btn-secondary"

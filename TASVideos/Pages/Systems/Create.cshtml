@@ -7,21 +7,21 @@
 <form method="post">
 	<row>
 		<column lg="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="System.Id"></label>
 				<input type="text" asp-for="System.Id" class="form-control"/>
 				<span asp-validation-for="System.Id" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="System.Code"></label>
 				<input type="text" asp-for="System.Code" class="form-control"/>
 				<span asp-validation-for="System.Code" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="System.DisplayName"></label>
 				<input type="text" asp-for="System.DisplayName" class="form-control"/>
 				<span asp-validation-for="System.DisplayName" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>

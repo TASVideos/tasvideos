@@ -16,18 +16,18 @@
 		iconClass = "fa fa-plus";
 	}
 }
-<form-group>
+<fieldset>
 	<delete-button condition="@Model.CanDelete" asp-href="/GameGroups/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
-</form-group>
+</fieldset>
 <form method="post">
 	<row>
 		<column md="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="GameGroup.Name"></label>
 				<input type="text" asp-for="GameGroup.Name" class="form-control" />
 				<span asp-validation-for="GameGroup.Name" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="GameGroup.Abbreviation"></label>
 				<div class="input-group">
 					<input type="text" asp-for="GameGroup.Abbreviation" class="form-control" />
@@ -39,8 +39,8 @@
 					</a>
 				</div>
 				<span asp-validation-for="GameGroup.Abbreviation" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<div>
 					<partial name="_WikiEditHelper" model="@("GameGroup_Description")" />
 				</div>
@@ -48,7 +48,7 @@
 				<textarea asp-for="GameGroup.Description" rows="4" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="GameGroup.Description" class="text-danger"></span>
 				@await Component.RenderWiki(SystemWiki.WikiEditHelp)
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>

@@ -9,11 +9,11 @@
 	<div asp-validation-summary="All" class="text-danger"></div>
 	<row>
 		<column md="6">
-			<form-group>
+			<fieldset>
 				<label asp-for="ImageToUpload.Award"></label>
 				<select asp-for="ImageToUpload.Award" asp-items="Model.AvailableAwardCategories" class="form-control"></select>
 				<span asp-validation-for="ImageToUpload.Award" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 		<column md="6">
 			<partial name="_ImagePreview" model="@(Html.IdFor(m => m.ImageToUpload.Award), Model.Year)" />
@@ -21,24 +21,24 @@
 	</row>
 	<row>
 		<column md="6">
-			<form-group>
+			<fieldset>
 				<div><small>Note: filename will be auto-generated with the pattern {shortname}_@(Model.Year).png</small></div>
 				<label asp-for="ImageToUpload.BaseImage"></label>
 				<input asp-for="ImageToUpload.BaseImage" class="form-control"/>
 				<span asp-validation-for="ImageToUpload.BaseImage" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
 				<label asp-for="ImageToUpload.BaseImage2X"></label>
 				<input asp-for="ImageToUpload.BaseImage2X" class="form-control"/>
 				<span asp-validation-for="ImageToUpload.BaseImage2X" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
 				<label asp-for="ImageToUpload.BaseImage4X"></label>
 				<input asp-for="ImageToUpload.BaseImage4X" class="form-control"/>
 				<span asp-validation-for="ImageToUpload.BaseImage4X" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>

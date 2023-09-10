@@ -6,22 +6,22 @@
 		: "Create a new Game entry");
 	string returnUrl = HttpContext.Request.ReturnUrl();
 }
-<form-group>
+<fieldset>
 	<a class="btn btn-primary" asp-page="/Logs/Index" asp-route-table="Games" asp-route-rowId="@Model.Id" >History</a>
 	<delete-button permission="DeleteGameEntries" condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
-</form-group>
+</fieldset>
 <div class="text-danger">
 	@Html.ValidationSummary()
 </div>
 <form method="post">
 	<row>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Game.DisplayName"></label>
 				<input type="text" asp-for="Game.DisplayName" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Game.DisplayName" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Game.Abbreviation"></label>
 				<div class="input-group">
 					<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" style="text-transform: lowercase;" />
@@ -34,8 +34,8 @@
 					</a>
 				</div>
 				<span asp-validation-for="Game.Abbreviation" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Game.GameResourcesPage"></label>
 				<div class="input-group">
 					<div class="input-group-prepend">
@@ -44,29 +44,29 @@
 					<input type="text" asp-for="Game.GameResourcesPage" class="form-control" autocomplete="off" spellcheck="false" />
 				</div>
 				<span asp-validation-for="Game.GameResourcesPage" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 		<div class="col-lg-6">
-			<form-group>
+			<fieldset>
 				<label asp-for="Game.Aliases"></label>
 				<input type="text" asp-for="Game.Aliases" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Game.Aliases" class="text-danger"></span>
-			</form-group>
-			<form-group>
+			</fieldset>
+			<fieldset>
 				<label asp-for="Game.ScreenshotUrl"></label>
 				<input type="text" asp-for="Game.ScreenshotUrl" class="form-control" autocomplete="off" spellcheck="false" />
 				<span asp-validation-for="Game.ScreenshotUrl" class="text-danger"></span>
-			</form-group>
+			</fieldset>
 		</div>
 	</row>
-	<form-group>
+	<fieldset>
 		<label asp-for="Game.Genres"></label>
 		<select asp-for="Game.Genres" size="@(Math.Min(Model.Game.Genres.Count(), 7).ToString())" asp-items="Model.AvailableGenres" class="form-control"></select>
-	</form-group>
-	<form-group>
+	</fieldset>
+	<fieldset>
 		<label asp-for="Game.Groups"></label>
 		<select asp-for="Game.Groups" size="@(Math.Min(Model.Game.Groups.Count(), 7).ToString())" asp-items="Model.AvailableGroups" class="form-control"></select>
-	</form-group>
+	</fieldset>
 	<hr />
 	<div class="text-center">
 		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>

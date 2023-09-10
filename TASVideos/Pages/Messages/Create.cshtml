@@ -23,7 +23,7 @@
 			<label asp-for="Subject" class="form-control-label"></label>
 			<input type="text" asp-for="Subject" list="search-username-list" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
-		</form-group>
+		</fieldset>
 		<form-group class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser" class="form-control-label"></label>
@@ -33,7 +33,7 @@
 			<label for="group-select">To Group</label>
 			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" class="form-control" asp-items="@Model.AvailableGroupRoles">
 			</select>
-		</form-group>
+		</fieldset>
 	</row>
 	<fullrow>
 		<partial name="Forum/_CreatePostHelper" model="@("Text")" />
@@ -43,7 +43,7 @@
 			<label asp-for="Text" class="form-control-label"></label>
 			<textarea asp-for="Text" class="form-control" rows="20"></textarea>
 			<span asp-validation-for="Text" class="text-danger"></span>
-		</form-group>
+		</fieldset>
 	</row>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
