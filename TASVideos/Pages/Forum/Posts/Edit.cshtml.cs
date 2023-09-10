@@ -281,7 +281,7 @@ public class EditModel : BaseForumModel
 		bool topicDeleted = false;
 		if (postCount == 1)
 		{
-			var topic = await _db.ForumTopics.SingleAsync(t => t.Id == post.TopicId);
+			var topic = await _db.ForumTopics.SingleAsync(t => t.Id == oldTopicId);
 			_db.ForumTopics.Remove(topic);
 			topicDeleted = true;
 		}
