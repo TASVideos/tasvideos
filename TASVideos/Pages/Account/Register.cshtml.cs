@@ -114,7 +114,7 @@ public class RegisterModel : BasePageModel
 
 		if (!_userManager.IsPasswordAllowed(UserName, Email, Password))
 		{
-			ModelState.AddModelError(nameof(Password), "This password is not allowed, please ensure your password is sufficiently diffent from your username and/or email");
+			ModelState.AddModelError(nameof(Password), "This password is not allowed, please ensure your password is sufficiently different from your username and/or email");
 		}
 
 		if (ModelState.IsValid)
