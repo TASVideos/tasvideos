@@ -519,4 +519,28 @@ public class UserManager : UserManager<User>
 	}
 
 	public Task<bool> Exists(string userName) => _db.Users.Exists(userName);
+
+	/// <summary>
+	/// Attempts to prevent some really basic bad behaviors such as same username as password, because people do these things
+	/// Note that this does not enforce any password requirements, only compares it to username, and email
+	/// </summary>
+	public bool IsPasswordAllowed(string? userName, string? email, string? password)
+	{
+		if (userName == password)
+		{
+			return false;
+		}
+
+		if (email == password)
+		{
+			return false;
+		}
+
+		if (email?.Split('@').First() == password)
+		{
+			return false;
+		}
+
+		return true;
+	}
 }

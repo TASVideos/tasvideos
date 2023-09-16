@@ -15,6 +15,7 @@ namespace TASVideos.Pages.Account;
 public class RegisterModel : BasePageModel
 {
 	private readonly SignInManager _signInManager;
+	private readonly UserManager _userManager;
 	private readonly IEmailService _emailService;
 	private readonly ExternalMediaPublisher _publisher;
 	private readonly IReCaptchaService _reCaptchaService;
@@ -23,6 +24,7 @@ public class RegisterModel : BasePageModel
 
 	public RegisterModel(
 		SignInManager signInManager,
+		UserManager userManager,
 		IEmailService emailService,
 		ExternalMediaPublisher publisher,
 		IReCaptchaService reCaptchaService,
@@ -30,6 +32,7 @@ public class RegisterModel : BasePageModel
 		IUserMaintenanceLogger userMaintenanceLogger)
 	{
 		_signInManager = signInManager;
+		_userManager = userManager;
 		_emailService = emailService;
 		_publisher = publisher;
 		_reCaptchaService = reCaptchaService;
@@ -107,6 +110,11 @@ public class RegisterModel : BasePageModel
 		if (await _signInManager.EmailExists(Email))
 		{
 			ModelState.AddModelError(nameof(Email), "Email is already taken.");
+		}
+
+		if (!_userManager.IsPasswordAllowed(UserName, Email, Password))
+		{
+			ModelState.AddModelError(nameof(Password), "This password is not allowed, please ensure your password is sufficiently diffent from your username and/or email");
 		}
 
 		if (ModelState.IsValid)

@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services;
-using TASVideos.Core.Services.Email;
+﻿using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;

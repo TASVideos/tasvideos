@@ -11,13 +11,16 @@ public class ChangePasswordModel : BasePageModel
 {
 	private readonly IEmailService _emailService;
 	private readonly SignInManager _signInManager;
+	private readonly UserManager _userManager;
 
 	public ChangePasswordModel(
+		IEmailService emailService,
 		SignInManager signInManager,
-		IEmailService emailService)
+		UserManager userManager)
 	{
 		_emailService = emailService;
 		_signInManager = signInManager;
+		_userManager = userManager;
 	}
 
 	[BindProperty]
@@ -62,6 +65,16 @@ public class ChangePasswordModel : BasePageModel
 		}
 
 		var user = await _signInManager.UserManager.GetUserAsync(User);
+
+		if (!_userManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
+		{
+			ModelState.AddModelError(nameof(NewPassword), "This password is not allowed, please ensure your password is sufficiently diffent from your username and/or email");
+		}
+
+		if (!ModelState.IsValid)
+		{
+			return Page();
+		}
 
 		var changePasswordResult = await _signInManager.UserManager.ChangePasswordAsync(user, OldPassword, NewPassword);
 		if (!changePasswordResult.Succeeded)

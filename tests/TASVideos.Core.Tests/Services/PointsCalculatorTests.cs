@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services;
-
-namespace TASVideos.Core.Tests.Services;
+﻿namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
 public class PointsCalculatorTests

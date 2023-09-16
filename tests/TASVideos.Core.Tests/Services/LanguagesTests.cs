@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;

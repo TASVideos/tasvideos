@@ -1,6 +1,5 @@
 ﻿using System.IO.Compression;
 using System.Reflection;
-using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;

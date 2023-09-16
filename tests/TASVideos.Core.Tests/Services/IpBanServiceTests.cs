@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using Microsoft.Extensions.Logging.Abstractions;
-using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
