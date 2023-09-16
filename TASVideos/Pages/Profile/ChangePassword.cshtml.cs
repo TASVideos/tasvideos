@@ -68,7 +68,7 @@ public class ChangePasswordModel : BasePageModel
 
 		if (!_userManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
 		{
-			ModelState.AddModelError(nameof(NewPassword), "This password is not allowed, please ensure your password is sufficiently diffent from your username and/or email");
+			ModelState.AddModelError(nameof(NewPassword), "This password is not allowed, please ensure your password is sufficiently different from your username and/or email");
 		}
 
 		if (!ModelState.IsValid)
