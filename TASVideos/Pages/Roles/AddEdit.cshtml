@@ -63,7 +63,7 @@
 		<label asp-for="Role.SelectedPermissions" class="form-control-label"></label>
 		<select asp-for="Role.SelectedPermissions" size="@(Math.Min(Model.Role.SelectedPermissions.Count(), 7).ToString())" asp-items="Model.AvailablePermissions" class="form-control"></select>
 	</fieldset>
-	<form-group class="d-none" id="assignable-permissions-section">
+	<fieldset class="d-none" id="assignable-permissions-section">
 		<label asp-for="Role.SelectedAssignablePermissions" class="form-control-label"></label>
 		<select asp-for="Role.SelectedAssignablePermissions" size="@(Math.Min(Model.Role.SelectedAssignablePermissions.Count(), 7).ToString())" asp-items="Model.AvailableAssignablePermissions" class="form-control"></select>
 		<row class="mt-3">
