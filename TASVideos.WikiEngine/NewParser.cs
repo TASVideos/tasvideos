@@ -884,7 +884,7 @@ public class NewParser
 			var e = new Element(_index, "code");
 			if (lang != "")
 			{
-				e.Attributes["class"] = "language-" + lang;
+				e.Attributes["class"] = "language-" + PrismNames.FixLanguage(lang);
 			}
 
 			e.Children.Add(new Text(_index, EatSrcEmbedText()) { CharEnd = _index });
