@@ -11,7 +11,7 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class InfoModel : BasePageModel
 {
-	private static readonly string[] PreviewableExtensions = { "wch", "lua" };
+	private static readonly string[] PreviewableExtensions = { "avs", "bat", "lua", "sh", "wch" };
 
 	private readonly ApplicationDbContext _db;
 	private readonly IFileService _fileService;
