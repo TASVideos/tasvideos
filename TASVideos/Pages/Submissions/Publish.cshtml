@@ -155,11 +155,6 @@
 		let originalDescription = "@Model.Submission.MovieMarkup";
 		const obsoletionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieToObsolete)");
 		const descriptionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieMarkup)");
-		const dblClickEvent = new MouseEvent('dblclick', {
-			'view': window,
-			'bubbles': true,
-			'cancelable': true
-		});
 
 		descriptionModel.onchange = function() {
 			originalDescription = descriptionModel.value;
@@ -181,15 +176,12 @@
 					descriptionModel.value = t.markup;
 					originalDescription = oldValue;
 
-					document.getElementById(`${selectedTagsId}removeAllBtn`).click();
 					document.getElementById("obsoleted-by").innerHTML = t.title ? t.title : "Unknown publication";
 
-					for (let i in t.tags) {
-						const tagItem = document.querySelector(`[name='AvailableTags'] option[value="${t.tags[i]}"]`);
-						tagItem.selected = true;
+					for (let option of document.querySelectorAll(`#${selectedTagsId} option`)) {
+						option.selected = t.tags.includes(Number(option.value));
 					}
-
-					document.getElementById(`${selectedTagsId}addBtn`).click();
+					engageSelectImprover('@Html.IdFor(m => m.Submission.SelectedTags)');
 				});
 		}
 	</script>
