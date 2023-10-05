@@ -277,6 +277,7 @@ public class EditModel : BaseForumModel
 		var oldTopicTitle = post.Topic.Title;
 		var oldForumShortName = post.Topic.Forum!.ShortName;
 		post.TopicId = SiteGlobalConstants.SpamTopicId;
+		post.ForumId = SiteGlobalConstants.SpamForumId;
 
 		bool topicDeleted = false;
 		if (postCount == 1)
