@@ -19,12 +19,12 @@
 
 <form method="POST" id="create-form">
 	<row>
-		<form-group class="col-lg-6">
+		<fieldset class="col-lg-6">
 			<label asp-for="Subject" class="form-control-label"></label>
 			<input type="text" asp-for="Subject" list="search-username-list" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
 		</fieldset>
-		<form-group class="col-lg-6">
+		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser" class="form-control-label"></label>
 				<input type="text" asp-for="ToUser" class="form-control" autocomplete="off" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
@@ -39,7 +39,7 @@
 		<partial name="Forum/_CreatePostHelper" model="@("Text")" />
 	</fullrow>
 	<row>
-		<form-group class="col-12">
+		<fieldset class="col-12">
 			<label asp-for="Text" class="form-control-label"></label>
 			<textarea asp-for="Text" class="form-control" rows="20"></textarea>
 			<span asp-validation-for="Text" class="text-danger"></span>

@@ -13,7 +13,7 @@
 <form method="post">
 	<input type="hidden" asp-for="Topic.TopicTitle" />
 	<input type="hidden" asp-for="Topic.ForumName" />
-	<form-group class="col-lg-6">
+	<fieldset class="col-lg-6">
 		<label asp-for="Topic.ForumId" class="form-control-label"></label>
 		<select asp-for="Topic.ForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-control"></select>
 		<span asp-validation-for="Topic.ForumId" class="text-danger"></span>
