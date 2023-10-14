@@ -8,6 +8,7 @@ internal static class SystemCodes
 	public const string Atari7800 = "a7800";
 	public const string BSX = "bsx";
 	public const string C64 = "c64";
+	public const string Cdi = "cdi";
 	public const string Coleco = "coleco";
 	public const string Doom = "doom";
 	public const string Dos = "dos";
@@ -54,6 +55,7 @@ internal static class SystemCodes
 	public const string Wii = "wii";
 	public const string Windows = "windows";
 	public const string WSwan = "wswan";
+	public const string X1 = "x1";
 	public const string X32 = "32x";
 	public const string Vectrex = "vec";
 	public const string ZxSpectrum = "zxs";
