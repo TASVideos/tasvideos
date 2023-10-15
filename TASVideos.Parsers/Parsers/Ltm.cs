@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Reflection;
 using SharpCompress.Readers;
 
 namespace TASVideos.MovieParsers.Parsers;
@@ -202,44 +203,14 @@ internal class Ltm : ParserBase, IParser
 			return "";
 		}
 
-		return split[0].Trim();
+		return split[0].Trim().ToLowerInvariant();
 	}
 
 	private static string CalculatePlatform(string str)
 	{
-		if (string.Equals(SystemCodes.Arcade, str, StringComparison.InvariantCultureIgnoreCase))
+		if (typeof(SystemCodes).GetFields().Select(f => f.GetValue(f)).Contains(str))
 		{
-			return SystemCodes.Arcade;
-		}
-
-		if (string.Equals(SystemCodes.Dos, str, StringComparison.InvariantCultureIgnoreCase))
-		{
-			return SystemCodes.Dos;
-		}
-
-		if (string.Equals(SystemCodes.Flash, str, StringComparison.InvariantCultureIgnoreCase))
-		{
-			return SystemCodes.Flash;
-		}
-
-		if (string.Equals(SystemCodes.MacOs, str, StringComparison.InvariantCultureIgnoreCase))
-		{
-			return SystemCodes.MacOs;
-		}
-
-		if (string.Equals(SystemCodes.Pc98, str, StringComparison.InvariantCultureIgnoreCase))
-		{
-			return SystemCodes.Pc98;
-		}
-
-		if (string.Equals(SystemCodes.Pico8, str, StringComparison.InvariantCultureIgnoreCase))
-		{
-			return SystemCodes.Pico8;
-		}
-
-		if (string.Equals(SystemCodes.Windows, str, StringComparison.InvariantCultureIgnoreCase))
-		{
-			return SystemCodes.Windows;
+			return str;
 		}
 
 		return SystemCodes.Linux;
