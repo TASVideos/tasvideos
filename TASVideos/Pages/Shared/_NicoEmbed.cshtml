@@ -1,0 +1,11 @@
+﻿@model string
+@{
+	var code = Model.Split('/').Last();
+	var embedLink = $"//embed.nicovideo.jp/watch/{code}";
+	var fullLink = $"//www.nicovideo.jp/watch/{code}";
+}
+<div>
+	<iframe src="@embedLink" style="width: 728px; height: 410px;" allowfullscreen="true" type="text/html" class="mw-100"></iframe>
+	<br />
+	<a href="@fullLink" rel="nofollow" target="_blank">(Link to video)</a>
+</div>
