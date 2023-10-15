@@ -80,8 +80,10 @@
 @if (Model.WikiPage is not null && Model.Topic.SubmissionId.HasValue)
 {
 	<div condition="@(!string.IsNullOrWhiteSpace(Model.EncodeEmbedLink))" class="d-flex justify-content-center">
+		@{ bool isNicoEmbed = Model.EncodeEmbedLink!.Contains("nicovideo"); }
 		<div class="col-12 col-lg-6">
-			<partial name="_YoutubeEmbed" model="Model.EncodeEmbedLink" />
+			<partial condition="!isNicoEmbed" name="_YoutubeEmbed" model="Model.EncodeEmbedLink" />
+			<partial condition="isNicoEmbed" name="_NicoEmbed" model="Model.EncodeEmbedLink" />
 		</div>
 	</div>
 	<card class="mt-2 mb-2">
