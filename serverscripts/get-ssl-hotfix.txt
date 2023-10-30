@@ -1,0 +1,13 @@
+GetSSL Hotfix
+
+Search for "checking DNS"
+Scroll back up to the line reading rr=${2}
+Change that line to read rr=_acme-challenge.${2}
+
+This will force the script to specifically look for the record called _acme-challenge on our GoDaddy registrar.
+
+Then, running sudo ./getssl tasvideos.org should cause the script to read from the correct location, so that they can verify our TXT value.
+
+Then, certs should work again.
+
+-- Invariel, 2023.  See you again in 2025. 
