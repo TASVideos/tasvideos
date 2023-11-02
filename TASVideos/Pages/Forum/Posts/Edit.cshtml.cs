@@ -295,7 +295,7 @@ public class EditModel : BaseForumModel
 			_forumService.ClearTopicActivityCache();
 			await _roleService.RemoveRolesFromUser(post.PosterId);
 			await _publisher.SendForum(
-				false,
+				true,
 				$"{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM, and user {post.Poster!.UserName} banned by {User.Name()}",
 				$"[{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM]({{0}}), and user {post.Poster!.UserName} banned by {User.Name()}",
 				$"{oldForumShortName}: {oldTopicTitle}",
