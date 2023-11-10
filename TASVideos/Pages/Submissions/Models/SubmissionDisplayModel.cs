@@ -26,6 +26,9 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	[Display(Name = "Game Name")]
 	public string? GameName { get; set; }
 
+	[Display(Name = "Submitted Game Name")]
+	public string? SubmittedGameName { get; set; }
+
 	[Display(Name = "Game Version")]
 	public string? GameVersion { get; set; }
 
