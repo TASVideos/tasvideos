@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.IO;
 
 namespace TASVideos.MovieParsers.Parsers;
 
@@ -7,6 +8,7 @@ internal class Bk2 : ParserBase, IParser
 {
 	private const string HeaderFile = "header";
 	private const string InputFile = "input log";
+	private const string CommentFile = "comments";
 
 	// hacky framerate fields, taken from platform framerates
 	private const double NtscNesFramerate = 60.0988138974405;
@@ -166,6 +168,18 @@ internal class Bk2 : ParserBase, IParser
 
 		await using var inputStream = inputLog.Open();
 		(_, result.Frames) = await inputStream.PipeBasedMovieHeaderAndFrameCount();
+
+		var commentEntry = archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(CommentFile));
+		if (commentEntry is not null)
+		{
+			await using var commentStream = commentEntry.Open();
+			using var reader = new StreamReader(commentStream);
+			var annotations = await reader.ReadToEndAsync();
+			if (!string.IsNullOrWhiteSpace(annotations))
+			{
+				result.Annotations = annotations;
+			}
+		}
 
 		if (result.CycleCount.HasValue)
 		{

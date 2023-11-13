@@ -1,4 +1,6 @@
-﻿namespace TASVideos.MovieParsers.Tests;
+﻿using TASVideos.Extensions;
+
+namespace TASVideos.MovieParsers.Tests;
 
 [TestClass]
 [TestCategory("LtmParsers")]
@@ -29,6 +31,16 @@ public class LtmTests : BaseParserTests
 		var actual = await _ltmParser.Parse(Embedded(filename), EmbeddedLength(filename));
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(expectedSystemCode, actual.SystemCode);
+	}
+
+	[TestMethod]
+	public async Task Annotations()
+	{
+		var result = await _ltmParser.Parse(Embedded("annotations.ltm"), EmbeddedLength("annotations.ltm"));
+		Assert.IsTrue(result.Success);
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.Annotations));
+		var lines = result.Annotations.SplitWithEmpty("\n");
+		Assert.AreEqual(2, lines.Length);
 	}
 
 	[TestMethod]

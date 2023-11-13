@@ -613,25 +613,29 @@ fieldset {
 .sub-info {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	.sub-info-cell {
-		background-color: var(--bs-tertiary-bg);
-		border: 1px solid var(--bs-light-border-subtle);
-		padding: 0.5em 1em;
+	
+}
 
-		label {
-			font-weight: bold;
-		}
+.sub-info-cell {
+	background-color: var(--bs-tertiary-bg);
+	border: 1px solid var(--bs-light-border-subtle);
+	padding: 0.5em 1em;
+
+	label {
+		font-weight: bold;
 	}
 }
 
 @media screen and (min-width: 769px) {
-	.sub-info-cell {
-		&:nth-child(n + 4) {
-			border-top: none;
-		}
+	.sub-info {
+		.sub-info-cell {
+			&:nth-child(n + 4) {
+				border-top: none;
+			}
 
-		&:nth-child(3n + 3), &:nth-child(3n + 2) {
-			border-left: none;
+			&:nth-child(3n + 3), &:nth-child(3n + 2) {
+				border-left: none;
+			}
 		}
 	}
 }

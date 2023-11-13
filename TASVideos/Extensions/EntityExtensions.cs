@@ -342,7 +342,8 @@ public static class EntityExtensions
 					UserId = c.UserId,
 					UserName = c.User!.UserName
 				}),
-			HideComments = hideComments
+			HideComments = hideComments,
+			Annotations = uf.Annotations
 		});
 	}
 

@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Reflection;
+using System.Text;
 using SharpCompress.Readers;
 
 namespace TASVideos.MovieParsers.Parsers;
@@ -95,14 +96,20 @@ internal class Ltm : ParserBase, IParser
 						break;
 					case "annotations.txt":
 						string? line;
+						var sb = new StringBuilder();
 						while ((line = await textReader.ReadLineAsync()) != null)
 						{
 							if (line.ToLower().StartsWith("platform:"))
 							{
 								result.SystemCode = CalculatePlatform(GetPlatformValue(line));
 							}
+							else
+							{
+								sb.AppendLine(line);
+							}
 						}
 
+						result.Annotations = sb.ToString();
 						break;
 				}
 

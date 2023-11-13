@@ -1,4 +1,6 @@
-﻿namespace TASVideos.MovieParsers.Tests;
+﻿using TASVideos.Extensions;
+
+namespace TASVideos.MovieParsers.Tests;
 
 [TestClass]
 [TestCategory("BK2Parsers")]
@@ -322,5 +324,16 @@ public class Bk2ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.IsTrue(result.Errors.Any());
+	}
+
+	[TestMethod]
+	public async Task Comments_ParseAsAnnotations()
+	{
+		var result = await _bk2Parser.Parse(Embedded("comments.bk2"), EmbeddedLength("comments.bk2"));
+
+		Assert.IsTrue(result.Success);
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.Annotations));
+		var lines = result.Annotations.SplitWithEmpty("\n");
+		Assert.AreEqual(2, lines.Length);
 	}
 }

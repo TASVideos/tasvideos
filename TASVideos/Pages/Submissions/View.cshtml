@@ -172,6 +172,18 @@
 				<div>@Model.Submission.RomName</div>
 			</div>
 		</div>
+	
+		<div class="sub-info-cell mb-2">
+			<label>
+				<a class="collapsed text-body" data-bs-toggle="collapse" href="#collapse-content-annotations">
+					<i class="fa fa-chevron-circle-down"></i> Annotations
+				</a>
+			</label>
+			<pre id="collapse-content-annotations" class="collapse">
+				@Model.Submission.Annotations
+			</pre>
+		</div>
+
 		<small>
 			Submitted by @Model.Submission.Submitter on @Model.Submission.Submitted
 		</small>

@@ -15,4 +15,5 @@ internal class TestParseResult : IParseResult
 	public MovieStartType StartType { get; set; }
 	public double? FrameRateOverride { get; set; }
 	public long? CycleCount { get; set; }
+	public string? Annotations { get; set; }
 }

@@ -254,5 +254,6 @@ public class UserFilesTests
 		public MovieStartType StartType => MovieStartType.PowerOn;
 		public double? FrameRateOverride => null;
 		public long? CycleCount => null;
+		public string? Annotations => null;
 	}
 }

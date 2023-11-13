@@ -81,6 +81,8 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	[Display(Name = "Publisher")]
 	public string? Publisher { get; set; }
 
+	public string? Annotations { get; set; }
+
 	public string? RejectionReasonDisplay { get; set; }
 
 	public string Title { get; set; } = "";

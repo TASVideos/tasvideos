@@ -102,6 +102,10 @@ internal class UserFiles : IUserFiles
 			}
 			userFile.Rerecords = parseResult.RerecordCount;
 			userFile.Frames = parseResult.Frames;
+			if (!string.IsNullOrWhiteSpace(parseResult.Annotations))
+			{
+				userFile.Annotations = parseResult.Annotations;
+			}
 
 			decimal frameRate = 60.0M;
 			if (parseResult.FrameRateOverride.HasValue)

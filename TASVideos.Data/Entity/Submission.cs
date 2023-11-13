@@ -95,6 +95,8 @@ public class Submission : BaseEntity, ITimeable
 	[Required]
 	public string Title { get; set; } = "";
 
+	public string? Annotations { get; set; }
+
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? 0;
 
 	public void GenerateTitle()

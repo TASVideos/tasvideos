@@ -70,16 +70,23 @@
 		</row>
 	</cardheader>
 	<cardbody class="px-2 py-0">
-
 		<div class="col d-flex flex-column py-2 px-2" condition="@(!string.IsNullOrEmpty(Model.Description))">
-				<wiki-markup markup=@Model.Description></wiki-markup>
+			<wiki-markup markup=@Model.Description></wiki-markup>
 		</div>
 	</cardbody>
+</div>
+<div condition="!string.IsNullOrWhiteSpace(Model.Annotations)" class="mb-2">
+	<card>
+		<cardheader><h4>Annotations</h4></cardheader>
+		<cardbody>
+			@Model.Annotations
+		</cardbody>
+	</card>
 </div>
 <div condition="!string.IsNullOrWhiteSpace(Model.ContentPreview)">
 	<wiki-markup markup="@ToMarkup(Model.ContentPreview, Model.Extension)"></wiki-markup>
 </div>
-<div condition="@(!Model.HideComments)">
+<div condition="!Model.HideComments">
 	@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 	{
 		<div class="card border-primary-subtle border mb-2" condition="@(Model.Comments.Any())">

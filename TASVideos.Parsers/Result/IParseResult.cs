@@ -68,4 +68,9 @@ public interface IParseResult
 	/// Gets the cycle count provided in the movie file, if available. Only certain formats store this information.
 	/// </summary>
 	long? CycleCount { get; }
+
+	/// <summary>
+	/// Gets the annotations. These can be general comments, or other user entered descriptions supported by the file format.
+	/// </summary>
+	string? Annotations { get; }
 }

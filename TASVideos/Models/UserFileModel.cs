@@ -36,6 +36,7 @@ public class UserFileModel
 	public string ContentPreview { get; set; } = "";
 
 	public string Extension => (FileName ?? "").ToLower().Split('.').Last();
+	public string? Annotations { get; set; }
 
 	public class UserFileCommentModel
 	{

@@ -73,7 +73,8 @@ public class ViewModel : BasePageModel
 				AdditionalAuthors = s.AdditionalAuthors,
 				TopicId = s.TopicId,
 				Warnings = s.Warnings,
-				CycleCount = s.CycleCount
+				CycleCount = s.CycleCount,
+				Annotations = s.Annotations
 			})
 			.SingleOrDefaultAsync();
 

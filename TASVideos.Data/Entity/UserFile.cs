@@ -68,6 +68,8 @@ public class UserFile
 
 	public Compression CompressionType { get; set; }
 
+	public string? Annotations { get; set; }
+
 	public virtual ICollection<UserFileComment> Comments { get; set; } = new List<UserFileComment>();
 }
 
