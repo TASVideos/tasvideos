@@ -36,10 +36,10 @@
 				</div>
 
 				<div condition="@(Model.GameId.HasValue)">
-					Game: <a href="/Games/@Model.GameId">@Model.GameName</a>
-					<span condition="!string.IsNullOrWhiteSpace(Model.GameSystem)">
-						(@(Model.GameSystem))
-					</span>
+					Game: <a href="/Games/@Model.GameId">@Model.GameName</a> (
+						<span condition="!string.IsNullOrWhiteSpace(Model.GameSystem)">@(Model.GameSystem),</span>
+						<a href="/UserFiles/Game/@Model.GameId">see all files</a>
+					)
 				</div>
 
 				<div condition="@(!Model.GameId.HasValue && !string.IsNullOrWhiteSpace(Model.System))">
@@ -54,7 +54,7 @@
 						@Model.Downloads download@(Model.Downloads == 1 ? "" : "s")
 					</div>
 					<div>
-						Uploaded <timezone-convert asp-for="@Model.UploadTimestamp" /> by <profile-link username="@Model.Author"></profile-link> (<a href="/UserFiles/ForUser/@Model.Author">@Model.AuthorUserFilesCount</a> files)
+						Uploaded <timezone-convert asp-for="@Model.UploadTimestamp" /> by <profile-link username="@Model.Author"></profile-link> (<a href="/UserFiles/ForUser/@Model.Author">see all @Model.AuthorUserFilesCount files</a>)
 					</div>
 				</div>
 
