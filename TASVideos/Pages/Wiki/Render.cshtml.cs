@@ -64,13 +64,6 @@ public class RenderModel : BasePageModel
 			return Page();
 		}
 
-		var homePage = await _wikiPages.Page("HomePages/" + url);
-		if (homePage != null)
-		{
-			// We redirected on invalid url homepages, now we have to do the same for valid ones
-			return Redirect("/HomePages/" + url);
-		}
-
 		// Account for garbage revision values
 		if (revision.HasValue && await _wikiPages.Exists(url))
 		{
