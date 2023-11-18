@@ -141,12 +141,6 @@ public static class ServiceCollectionExtensions
 		{
 			services.AddScoped<IPostDistributor, DiscordDistributor>();
 		}
-		
-		if (settings.TwitterV2.IsEnabled())
-		{
-			services.AddSingleton<IPostDistributor, TwitterDistributorV2>();
-			services.AddSingleton<TwitterDistributorV2>();	// Required for direct Tweets.
-		}
 
 		services.AddScoped<IPostDistributor, DistributorStorage>();
 		return services.AddTransient<ExternalMediaPublisher>();

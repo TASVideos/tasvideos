@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Core.Services.Youtube;
+﻿using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 
@@ -41,8 +40,6 @@ public class ExternalDependenciesModel : BasePageModel
 		Statuses.SecureIrcEnabled = _settings.Irc.IsSecureChannelEnabled();
 		Statuses.DiscordEnabled = _settings.Discord.IsEnabled();
 		Statuses.DiscordPrivateChannelEnabled = _settings.Discord.IsPrivateChannelEnabled();
-		var twitter = HttpContext.RequestServices.GetService<TwitterDistributorV2>();
-		Statuses.TwitterEnabled = twitter != null && twitter.IsEnabled();
 	}
 
 	public class ExternalDependenciesViewModel
@@ -54,6 +51,5 @@ public class ExternalDependenciesModel : BasePageModel
 		public bool SecureIrcEnabled { get; set; }
 		public bool DiscordEnabled { get; set; }
 		public bool DiscordPrivateChannelEnabled { get; set; }
-		public bool TwitterEnabled { get; set; }
 	}
 }

@@ -13,8 +13,7 @@ public class AppSettings
 
 	public IrcConnection Irc { get; set; } = new();
 	public DiscordConnection Discord { get; set; } = new();
-	public TwitterConnection Twitter { get; set; } = new();
-	public TwitterConnectionV2 TwitterV2 { get; set; } = new();
+
 	public JwtSettings Jwt { get; set; } = new();
 	public GoogleAuthSettings YouTube { get; set; } = new();
 	public EmailBasicAuthSettings Email { get; set; } = new();
@@ -64,31 +63,6 @@ public class AppSettings
 			&& !string.IsNullOrWhiteSpace(PrivateUserChannelId);
 	}
 
-	public class TwitterConnection : DistributorConnection
-	{
-		public string ApiBase { get; set; } = "";
-		public string ConsumerKey { get; set; } = "";
-		public string ConsumerSecret { get; set; } = "";
-		public string AccessToken { get; set; } = "";
-		public string TokenSecret { get; set; } = "";
-
-		public bool IsEnabled() => Disable != true
-			&& !string.IsNullOrWhiteSpace(ApiBase)
-			&& !string.IsNullOrWhiteSpace(ConsumerKey)
-			&& !string.IsNullOrWhiteSpace(ConsumerSecret)
-			&& !string.IsNullOrWhiteSpace(TokenSecret);
-	}
-
-	public class TwitterConnectionV2 : DistributorConnection
-	{
-		public string ClientId { get; set; } = "";
-		public string ClientSecret { get; set; } = "";
-		public string OneTimeRefreshToken { get; set; } = "";	// RefreshToken setting is ignored if the access token file exists.
-		public bool IsEnabled() => Disable != true
-			&& !string.IsNullOrWhiteSpace(ClientId)
-			&& !string.IsNullOrWhiteSpace(ClientSecret);
-	}
-	
 	public class DistributorConnection
 	{
 		public bool? Disable { get; set; }
