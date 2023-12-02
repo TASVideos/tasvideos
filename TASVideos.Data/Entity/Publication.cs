@@ -87,6 +87,9 @@ public class Publication : BaseEntity, ITimeable
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");
 
+	public int? GameGoalId { get; set; }
+	public virtual GameGoal? GameGoal { get; set; }
+
 	public void GenerateTitle()
 	{
 		var authorList = Authors

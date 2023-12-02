@@ -99,6 +99,9 @@ public class Submission : BaseEntity, ITimeable
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? 0;
 
+	public int? GameGoalId { get; set; }
+	public virtual GameGoal? GameGoal { get; set; }
+
 	public void GenerateTitle()
 	{
 		if (System is null)

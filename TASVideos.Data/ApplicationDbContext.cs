@@ -57,6 +57,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	public DbSet<GameVersion> GameVersions { get; set; } = null!;
 	public DbSet<GameGroup> GameGroups { get; set; } = null!;
 	public DbSet<GameGameGroup> GameGameGroups { get; set; } = null!;
+	public DbSet<Goal> Goals { get; set; } = null!;
+	public DbSet<GameGoal> GameGoals { get; set; } = null!;
 
 	// Forum tables
 	public DbSet<ForumCategory> ForumCategories { get; set; } = null!;
@@ -408,6 +410,11 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		{
 			entity.HasKey(e => new { e.GameId, e.GameGroupId });
 			entity.HasIndex(e => e.GameId);
+		});
+
+		builder.Entity<Goal>(entity =>
+		{
+			entity.HasIndex(e => e.DisplayName).IsUnique();
 		});
 
 		builder.Entity<GameGroup>(entity =>

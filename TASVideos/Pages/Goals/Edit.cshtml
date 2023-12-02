@@ -1,0 +1,34 @@
+﻿@page "{id}/{handler?}"
+@model EditModel
+@{
+	ViewData.SetTitle($"Editing Goal {Model.Goal.DisplayName}");
+}
+
+<div class="text-end">
+	<delete-button condition="!Model.InUse"
+				   asp-href="/Goals/Edit/@(Model.Goal.Id)/Delete"
+				   warning-message="Are you sure you want to remove this goal?">
+		Delete
+	</delete-button>
+	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Goal.DisplayName">
+		Goal in Use
+	</a>
+</div>
+
+<form method="post">
+	<row>
+		<column lg="6" class="mt-lg-0 mt-3">
+			<label asp-for="Goal.DisplayName"></label>
+			<input type="text" asp-for="Goal.DisplayName" class="form-control" />
+			<span asp-validation-for="Goal.DisplayName" class="text-danger"></span>
+		</column>
+	</row>
+	<div class="text-center mt-3">
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<a class="btn btn-secondary" asp-page="Index"><i class="fa fa-times"></i> Cancel</a>
+	</div>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

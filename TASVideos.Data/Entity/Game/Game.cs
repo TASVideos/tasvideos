@@ -14,6 +14,7 @@ public class Game : BaseEntity
 	public virtual ICollection<GameGenre> GameGenres { get; set; } = new HashSet<GameGenre>();
 	public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
 	public virtual ICollection<GameGameGroup> GameGroups { get; set; } = new HashSet<GameGameGroup>();
+	public virtual ICollection<GameGoal> GameGoals { get; set; } = new HashSet<GameGoal>();
 
 	[Required]
 	[StringLength(100)]
