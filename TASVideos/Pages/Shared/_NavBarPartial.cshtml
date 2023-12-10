@@ -1,60 +1,60 @@
 @using static TASVideos.Data.Entity.PermissionTo;
 <navbar class="flex-wrap me-2 me-md-0 fw-bold">
 	<nav-item activate="Home">
-		<a id="Home" class="nav-link" href="/">Home</a>
+		<a class="nav-link" href="/">Home</a>
 	</nav-item>
 	<nav-item activate="Games">
-		<a id="Games" class="nav-link" asp-page="/Games/List">Games</a>
+		<a class="nav-link" asp-page="/Games/List">Games</a>
 	</nav-item>
-	<nav-dropdown id="MoviesDropdown" activate="Movies">
-		<a id="Classes" class="dropdown-item" href="/Class">Movie Classes</a>
-		<a id="Publications" class="dropdown-item" href="/Movies">Publications</a>
-		<a id="Submissions" class="dropdown-item" asp-page="/Submissions/Index">Submissions</a>
-		<a id="Userfiles" class="dropdown-item" href="/Userfiles">User Files</a>
+	<nav-dropdown activate="Movies">
+		<a class="dropdown-item" href="/Class">Movie Classes</a>
+		<a class="dropdown-item" href="/Movies">Publications</a>
+		<a class="dropdown-item" asp-page="/Submissions/Index">Submissions</a>
+		<a class="dropdown-item" href="/Userfiles">User Files</a>
 	</nav-dropdown>
 	<nav-item activate="Forum">
-		<a id="Forum" class="nav-link" asp-page="/Forum/Index">Forum</a>
+		<a class="nav-link" asp-page="/Forum/Index">Forum</a>
 	</nav-item>
 	<nav-item activate="LiveChat">
-		<a id="LiveChat" class="nav-link" href="/LiveChat">Chat</a>
+		<a class="nav-link" href="/LiveChat">Chat</a>
 	</nav-item>
-	<nav-dropdown id="ArticlesDropdown" activate="Articles">
-		<a id="Articles" class="dropdown-item" href="/ArticleIndex">Article Index</a>
-		<a id="GameResources" class="dropdown-item" href="/GameResources">Game Resources</a>
-		<a id="Emulators" class="dropdown-item" href="/EmulatorResources">Emulators</a>
+	<nav-dropdown activate="Articles">
+		<a class="dropdown-item" href="/ArticleIndex">Article Index</a>
+		<a class="dropdown-item" href="/GameResources">Game Resources</a>
+		<a class="dropdown-item" href="/EmulatorResources">Emulators</a>
 	</nav-dropdown>
 	<nav-item activate="Staff">
-		<a id="Staff" class="nav-link" href="/Staff">Staff</a>
+		<a class="nav-link" href="/Staff">Staff</a>
 	</nav-item>
 	<nav-item activate="WelcomeToTASVideos">
-		<a id="Welcome" class="nav-link" href="/WelcomeToTASVideos">About</a>
+		<a class="nav-link" href="/WelcomeToTASVideos">About</a>
 	</nav-item>
-	<nav-dropdown id="AdminDropdown" activate="Admin"
+	<nav-dropdown activate="Admin"
 				  permissions="new[] { ViewPrivateUserData, EditUsers, EditRoles, TagMaintenance, GameSystemMaintenance, CreateAwards }">
-		<a id="MediaPosts" class="dropdown-item" href="/MediaPosts">Media Posts</a>
-		<a id="Users" permissions="new[] { ViewPrivateUserData, EditUsers }" class="dropdown-item" asp-page="/Users/List">Users</a>
-		<a id="Roles" class="dropdown-item" asp-page="/Roles/List">Roles</a>
-		<a id="Permissions" class="dropdown-item" asp-page="/Permissions/Index">Permissions</a>
-		<a id="TagMaintenance" permission="TagMaintenance" class="dropdown-item" asp-page="/Tags/Index">Tag Maintenance</a>
-		<a id="FlagMaintenance" permission="FlagMaintenance" class="dropdown-item" asp-page="/Flags/Index">Flag Maintenance</a>
-		<a id="GenreMaintenance" permission="TagMaintenance" class="dropdown-item" asp-page="/Genres/Index">Genre Maintenance</a>
-		<a id="TierMaintenance" permission="ClassMaintenance" class="dropdown-item" asp-page="/PublicationClasses/Index">Class Maintenance</a>
-		<a id="AwardsEditor" permission="CreateAwards" class="dropdown-item" asp-page="/AwardsEditor/Index">Awards Editor</a>
-		<a id="Systems" permission="GameSystemMaintenance" class="dropdown-item" asp-page="/Systems/Index">Systems</a>
+		<a class="dropdown-item" href="/MediaPosts">Media Posts</a>
+		<a permissions="new[] { ViewPrivateUserData, EditUsers }" class="dropdown-item" asp-page="/Users/List">Users</a>
+		<a class="dropdown-item" asp-page="/Roles/List">Roles</a>
+		<a class="dropdown-item" asp-page="/Permissions/Index">Permissions</a>
+		<a permission="TagMaintenance" class="dropdown-item" asp-page="/Tags/Index">Tag Maintenance</a>
+		<a permission="FlagMaintenance" class="dropdown-item" asp-page="/Flags/Index">Flag Maintenance</a>
+		<a permission="TagMaintenance" class="dropdown-item" asp-page="/Genres/Index">Genre Maintenance</a>
+		<a permission="ClassMaintenance" class="dropdown-item" asp-page="/PublicationClasses/Index">Class Maintenance</a>
+		<a permission="CreateAwards" class="dropdown-item" asp-page="/AwardsEditor/Index">Awards Editor</a>
+		<a permission="GameSystemMaintenance" class="dropdown-item" asp-page="/Systems/Index">Systems</a>
 	</nav-dropdown>
-	<nav-dropdown id="WikiDropdown" activate="Wiki"
+	<nav-dropdown activate="Wiki"
 				  permissions="new[] { EditWikiPages, EditSystemPages, MoveWikiPages, DeleteWikiPages }">
-		<a id="SandBox" class="dropdown-item" href="/SandBox">SandBox</a>
-		<a id="RecentChanges" class="dropdown-item" href="/RecentChanges">Recent Changes</a>
-		<a id="Orphans" class="dropdown-item" href="/WikiOrphans">Orphans</a>
-		<a id="Todo" class="dropdown-item" href="/TODO">To Do</a>
-		<a id="SystemPages" class="dropdown-item" href="/System">System Pages</a>
-		<a id="DeletedPages" permission="SeeDeletedWikiPages" asp-page="/Wiki/DeletedPages" class="dropdown-item">Deleted Pages</a>
+		<a class="dropdown-item" href="/SandBox">SandBox</a>
+		<a class="dropdown-item" href="/RecentChanges">Recent Changes</a>
+		<a class="dropdown-item" href="/WikiOrphans">Orphans</a>
+		<a class="dropdown-item" href="/TODO">To Do</a>
+		<a class="dropdown-item" href="/System">System Pages</a>
+		<a permission="SeeDeletedWikiPages" asp-page="/Wiki/DeletedPages" class="dropdown-item">Deleted Pages</a>
 	</nav-dropdown>
-	<nav-dropdown id="DarkDropdown" activate='<i class="fa fa-adjust"></i>'>
-		<button id="Dark" class="dropdown-item" onclick="setTheme('dark')"><i class="fa-regular fa-moon"></i> Dark</button>
-		<button id="Light" class="dropdown-item" onclick="setTheme('light')"><i class="fa-regular fa-sun"></i> Light</button>
-		<button id="Auto" class="dropdown-item" onclick="setTheme('auto')">Auto</button>
+	<nav-dropdown activate='<i class="fa fa-adjust"></i>'>
+		<button class="dropdown-item" onclick="setTheme('dark')"><i class="fa-regular fa-moon"></i> Dark</button>
+		<button class="dropdown-item" onclick="setTheme('light')"><i class="fa-regular fa-sun"></i> Light</button>
+		<button class="dropdown-item" onclick="setTheme('auto')">Auto</button>
 	</nav-dropdown>
 	
 </navbar>
