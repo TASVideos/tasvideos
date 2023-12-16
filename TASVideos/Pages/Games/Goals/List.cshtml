@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Goals for {Model.GameDisplayName}");
 }
 
-<h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a></h4>
+<h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a> <a asp-page="/Goals/Index" class="float-end"><small>See All Goals</small></a></h4>
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.Goals.First().DisplayName)</th>
