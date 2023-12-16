@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Data;
 
 namespace TASVideos.Pages.Goals;
