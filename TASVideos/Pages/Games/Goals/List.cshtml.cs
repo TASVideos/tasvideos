@@ -109,9 +109,12 @@ public class ListModel : BasePageModel
 			return NotFound();
 		}
 
-		if (gameGoal.Goal!.DisplayName == newGoalName)
+		var oldGoalName = gameGoal.Goal!.DisplayName;
+
+		if (gameGoal.Goal.DisplayName.ToLower() == newGoalName.ToLower())
 		{
-			SuccessStatusMessage("Goal updated successfully.");
+			gameGoal.Goal.DisplayName = newGoalName;
+			await ConcurrentSave(_db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
 			return BackToList();
 		}
 
@@ -126,8 +129,6 @@ public class ListModel : BasePageModel
 			ErrorStatusMessage($"Cannot change goal to {newGoalName} because it already exists.");
 			return BackToList();
 		}
-
-		var oldGoalName = gameGoal.Goal.DisplayName;
 
 		// Reuse an identical goal if it exists
 		var goal = await _db.Goals.FirstOrDefaultAsync(g => g.DisplayName.ToLower() == newGoalName!.ToLower());
