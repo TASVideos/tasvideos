@@ -47,6 +47,20 @@
 					</div>
 				</row>
 			</fieldset>
+			<fieldset>
+				<fullrow>
+					<label asp-for="Catalog.GameGoalId" class="form-control-label"></label>
+				</fullrow>
+				<row>
+					<div class="col-10">
+						<select asp-for="Catalog.GameGoalId" asp-items="@Model.AvailableGoals" class="form-control"></select>
+						<span asp-validation-for="Catalog.GameGoalId" class="text-danger"></span>
+					</div>
+					<div class="col-2">
+						<button id="create-version" type="button" class="btn btn-primary">New</button>
+					</div>
+				</row>
+			</fieldset>
 		</div>
 	</row>
 	<hr/>

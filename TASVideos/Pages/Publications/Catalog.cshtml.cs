@@ -39,6 +39,7 @@ public class CatalogModel : BasePageModel
 	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGoals { get; set; } = new List<SelectListItem>();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -218,6 +219,15 @@ public class CatalogModel : BasePageModel
 		AvailableSystemFrameRates = await _db.GameSystemFrameRates
 			.ForSystem(systemId)
 			.ToDropDown()
+			.ToListAsync();
+
+		AvailableGoals = await _db.GameGoals
+			.Where(gg => gg.GameId == gameId)
+			.Select(gg => new SelectListItem
+			{
+				Value = gg.Id.ToString(),
+				Text = gg.Goal!.DisplayName
+			})
 			.ToListAsync();
 	}
 }

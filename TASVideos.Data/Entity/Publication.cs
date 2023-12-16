@@ -118,9 +118,15 @@ public class Publication : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
+		string goal = GameGoal!.Goal!.DisplayName;
+		if (goal == "baseline")
+		{
+			goal = "";
+		}
+
 		Title =
 			$"{System.Code} {gameName}"
-			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")
+			+ $" \"{goal}\""
 			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}
@@ -265,6 +271,8 @@ public static class PublicationExtensions
 			.Include(p => p.System)
 			.Include(p => p.SystemFrameRate)
 			.Include(p => p.Game)
-			.Include(p => p.GameVersion);
+			.Include(p => p.GameVersion)
+			.Include(p => p.GameGoal)
+			.ThenInclude(gg => gg!.Goal);
 	}
 }

@@ -1,0 +1,67 @@
+﻿@page "/Games/{gameId}/Goals/List"
+@model ListModel
+@{
+	ViewData.SetTitle($"Goals for {Model.GameDisplayName}");
+}
+
+<h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a></h4>
+<table class="table table-bordered table-striped">
+	<tr>
+		<th>@Html.DisplayNameFor(m => m.Goals.First().DisplayName)</th>
+		<th>Publications</th>
+		<th>Submissions</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (var goal in Model.Goals
+		.OrderByDescending(g => g.DisplayName == "baseline")
+		.ThenByDescending(g => g.Publications.Any(p => !p.Obs))
+		.ThenBy(g => g.DisplayName.Length)
+		.ThenBy(g => g.DisplayName))
+	{
+		var canDelete = !goal.Publications.Any() && !goal.Submissions.Any();
+		<tr>
+			<td condition="@(goal.Id == Model.GoalToEdit && goal.DisplayName != "baseline")">
+				<form method="post" class="d-flex gap-2" asp-page-handler="Edit">
+					<input type="hidden" name="gameGoalId" value="@Model.GoalToEdit" />
+					<input type="text" name="newGoalName" class="form-control" value="@goal.DisplayName" />
+					<button type="submit" class="btn btn-secondary">Save</button>
+				</form>
+			</td>
+			<td condition="@(goal.Id != Model.GoalToEdit || goal.DisplayName == "baseline")">
+				@goal.DisplayName</td>
+			<td>
+				@foreach (var pub in goal.Publications.OrderBy(p => p.Obs).ThenByDescending(p => p.Id))
+				{
+					<small condition="pub.Obs">(Obsolete)</small>
+					<pub-link id="@pub.Id">
+						@pub.Title
+					</pub-link><br />
+				}
+			</td>
+			<td>
+				@foreach (var sub in goal.Submissions.OrderByDescending(s => s.Id))
+				{
+					<sub-link id="@sub.Id">@sub.Title</sub-link><br />
+				}
+			</td>
+			<td>
+				<div class="btn-toolbar">
+					<a asp-page="List" asp-route-goalToEdit="@goal.Id" permission="CatalogMovies" condition="@(goal.Id != Model.GoalToEdit && goal.DisplayName != "baseline")" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+					<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGroupId="@goal.Id" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+				</div>
+			</td>
+		</tr>
+	}
+	<tr>
+		<form method="post">
+			<td colspan="3">
+				<input name="goalToCreate" required class="form-control" />
+			</td>
+			<td>
+				<button id="submit" type="submit" class="btn btn-primary">
+					<i class="fa fa-plus"></i> Create
+				</button>
+			</td>
+		</form>
+	</tr>
+</table>

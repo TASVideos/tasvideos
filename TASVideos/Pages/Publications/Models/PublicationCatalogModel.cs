@@ -11,6 +11,10 @@ public class PublicationCatalogModel
 	public int GameVersionId { get; set; }
 
 	[Required]
+	[Display(Name = "Goal")]
+	public int GameGoalId { get; set; }
+
+	[Required]
 	[Display(Name = "Game")]
 	public int GameId { get; set; }
 
