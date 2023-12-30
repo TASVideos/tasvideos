@@ -126,7 +126,7 @@ public class Publication : BaseEntity, ITimeable
 
 		Title =
 			$"{System.Code} {gameName}"
-			+ $" \"{goal}\""
+			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
 			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}

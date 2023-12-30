@@ -148,6 +148,21 @@ public class CatalogModel : BasePageModel
 			}
 		}
 
+		if (publication.GameGoalId != Catalog.GameGoalId)
+		{
+			var gameGoal = await _db.GameGoals.Include(gg => gg.Goal).SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
+			if (gameGoal is null)
+			{
+				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
+			}
+			else
+			{
+				externalMessages.Add($"Game Goal changed from {publication.GameGoal.Goal.DisplayName} to {gameGoal.Goal!.DisplayName}");
+				publication.GameGoalId = Catalog.GameGoalId;
+				publication.GameGoal = gameGoal;
+			}
+		}
+
 		if (publication.GameVersionId != Catalog.GameVersionId)
 		{
 			var gameVersion = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId);
