@@ -129,7 +129,8 @@ public class PublishModel : BasePageModel
 			MovieFileName = movieFileName,
 			AdditionalAuthors = submission.AdditionalAuthors,
 			Submission = submission,
-			MovieFile = await _fileService.CopyZip(submission.MovieFile, movieFileName)
+			MovieFile = await _fileService.CopyZip(submission.MovieFile, movieFileName),
+			GameGoalId = submission.GameGoalId
 		};
 
 		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, Submission.OnlineWatchUrlName);
