@@ -48,6 +48,20 @@
 					</div>
 				</row>
 			</fieldset>
+			<fieldset>
+				<fullrow>
+					<label asp-for="Catalog.GameGoalId" class="form-control-label"></label>
+				</fullrow>
+				<row>
+					<div class="col-10">
+						<select asp-for="Catalog.GameGoalId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGoals)" class="form-control"></select>
+						<span asp-validation-for="Catalog.GameGoalId" class="text-danger"></span>
+					</div>
+					<div class="col-2">
+						<button id="create-goal" type="button" class="btn btn-primary">New</button>
+					</div>
+				</row>
+			</fieldset>
 		</div>
 	</row>
 	<hr />
@@ -70,6 +84,7 @@
 			"@Html.IdFor(m => m.Catalog.SystemFrameRateId)",
 			"@Html.IdFor(m => m.Catalog.GameId)",
 			"@Html.IdFor(m => m.Catalog.GameVersionId)",
+			"@Html.IdFor(m => m.Catalog.GameGoalId)",
 			"@HttpContext.CurrentPathToReturnUrl()");
 	</script>
 }

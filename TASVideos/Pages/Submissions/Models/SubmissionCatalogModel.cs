@@ -20,5 +20,8 @@ public class SubmissionCatalogModel
 	[Required]
 	public int? SystemFrameRateId { get; set; }
 
+	[Display(Name = "Goal")]
+	public int? GameGoalId { get; set; }
+
 	public bool MinorEdit { get; set; }
 }

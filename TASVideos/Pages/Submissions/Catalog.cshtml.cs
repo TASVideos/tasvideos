@@ -1,11 +1,13 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Org.BouncyCastle.Cms;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Submissions.Models;
+using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -39,6 +41,7 @@ public class CatalogModel : BasePageModel
 	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGoals { get; set; } = new List<SelectListItem>();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -50,7 +53,8 @@ public class CatalogModel : BasePageModel
 				GameVersionId = s.GameVersionId,
 				GameId = s.GameId,
 				SystemId = s.SystemId,
-				SystemFrameRateId = s.SystemFrameRateId
+				SystemFrameRateId = s.SystemFrameRateId,
+				GameGoalId = s.GameGoalId
 			})
 			.SingleOrDefaultAsync();
 
@@ -152,6 +156,30 @@ public class CatalogModel : BasePageModel
 				externalMessages.Add("Game removed");
 				submission.GameId = null;
 				submission.Game = null;
+			}
+		}
+
+		if (submission.GameGoalId != Catalog.GameGoalId)
+		{
+			if (Catalog.GameGoalId.HasValue)
+			{
+				var gameGoal = await _db.GameGoals.Include(gg => gg.Goal).SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
+				if (gameGoal is null)
+				{
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
+				}
+				else
+				{
+					externalMessages.Add($"Game Goal changed from {submission.GameGoal?.Goal?.DisplayName ?? "\"\""} to {gameGoal.Goal!.DisplayName}");
+					submission.GameGoalId = Catalog.GameGoalId;
+					submission.GameGoal = gameGoal;
+				}
+			}
+			else
+			{
+				externalMessages.Add("Game Goal removed");
+				submission.GameGoalId = null;
+				submission.GameGoal = null;
 			}
 		}
 
@@ -266,6 +294,17 @@ public class CatalogModel : BasePageModel
 			? await _db.GameSystemFrameRates
 				.ForSystem(Catalog.SystemId.Value)
 				.ToDropDown()
+				.ToListAsync()
+			: new List<SelectListItem>();
+
+		AvailableGoals = Catalog.GameId.HasValue
+			? await _db.GameGoals
+				.Where(gg => gg.GameId == Catalog.GameId)
+				.Select(gg => new SelectListItem
+				{
+					Value = gg.Id.ToString(),
+					Text = gg.Goal!.DisplayName
+				})
 				.ToListAsync()
 			: new List<SelectListItem>();
 	}

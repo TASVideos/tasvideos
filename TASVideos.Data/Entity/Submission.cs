@@ -135,9 +135,17 @@ public class Submission : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
+		string? goal = GameGoal?.Goal?.DisplayName;
+		goal = goal switch
+		{
+			null => Branch,
+			"baseline" => null,
+			_ => goal
+		};
+
 		Title =
 		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System.Code} {gameName}"
-			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")
+			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}
 
@@ -241,6 +249,9 @@ public static class SubmissionExtensions
 			.Include(s => s.System)
 			.Include(s => s.SystemFrameRate)
 			.Include(s => s.Game)
-			.Include(s => s.GameVersion);
+			.Include(s => s.GameVersion)
+			.Include(s => s.GameGoal)
+			.Include(gg => gg.GameGoal)
+			.ThenInclude(gg => gg.Goal);
 	}
 }

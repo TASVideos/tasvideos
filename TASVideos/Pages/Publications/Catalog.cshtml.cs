@@ -51,7 +51,8 @@ public class CatalogModel : BasePageModel
 					GameVersionId = p.GameVersionId,
 					GameId = p.GameId,
 					SystemId = p.SystemId,
-					SystemFrameRateId = p.SystemFrameRateId
+					SystemFrameRateId = p.SystemFrameRateId,
+					GameGoalId = p.GameGoalId!.Value
 				})
 				.SingleOrDefaultAsync();
 
