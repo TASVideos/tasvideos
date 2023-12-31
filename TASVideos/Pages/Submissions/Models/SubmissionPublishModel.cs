@@ -75,6 +75,7 @@ public class SubmissionPublishModel
 	public int SystemId { get; set; }
 	public int? SystemFrameRateId { get; set; }
 	public SubmissionStatus Status { get; set; }
+	public int? GameGoalId { get; set; }
 
 	[Display(Name = "Emulator Version")]
 	public string? EmulatorVersion { get; set; }
@@ -84,6 +85,7 @@ public class SubmissionPublishModel
 		&& SystemFrameRateId.HasValue
 		&& GameId > 0
 		&& VersionId > 0
+		&& GameGoalId > 0
 		&& !string.IsNullOrEmpty(PublicationClass)
 		&& Status == SubmissionStatus.PublicationUnderway;
 }

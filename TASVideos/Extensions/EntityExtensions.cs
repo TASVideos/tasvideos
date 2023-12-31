@@ -400,7 +400,8 @@ public static class EntityExtensions
 			SystemFrameRateId = s.SystemFrameRateId,
 			Status = s.Status,
 			EmulatorVersion = s.EmulatorVersion,
-			Branch = s.Branch
+			Branch = s.Branch,
+			GameGoalId = s.GameGoalId
 		});
 	}
 
