@@ -33,7 +33,9 @@ internal static class EntityExtensions
 		{
 			Id = p.Id,
 			Title = p.Title,
-			Branch = p.Branch,
+			Branch = p.GameGoal!.Goal!.DisplayName,
+			Goal = p.GameGoal!.Goal.DisplayName,
+			GameGoalId = p.GameGoalId ?? -1,
 			EmulatorVersion = p.EmulatorVersion,
 			Class = p.PublicationClass!.Name,
 			SystemCode = p.System!.Code,
@@ -70,6 +72,9 @@ internal static class EntityExtensions
 				? s.Publication.Id
 				: null,
 			Title = s.Title,
+			Goal = s.GameGoal != null
+				? s.GameGoal.Goal!.DisplayName
+				: null,
 			IntendedClass = s.IntendedClass != null
 				? s.IntendedClass.Name
 				: null,

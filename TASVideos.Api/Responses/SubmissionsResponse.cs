@@ -57,6 +57,7 @@ public class SubmissionsResponse
 
 	[Sortable]
 	public string? Branch { get; init; }
+	public string? Goal { get; init; }
 
 	[Sortable]
 	public string? RomName { get; init; }
