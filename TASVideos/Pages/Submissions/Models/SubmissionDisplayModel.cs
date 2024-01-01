@@ -38,6 +38,8 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	[Display(Name = "Branch")]
 	public string? Branch { get; set; }
 
+	public string? Goal { get; set; }
+
 	[Display(Name = "Emulator")]
 	public string? Emulator { get; set; }
 
