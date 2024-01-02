@@ -20,7 +20,10 @@ public class PublicationHistoryTests
 		Id = 1,
 		GameId = Smb.Id,
 		Title = "Smb in less than 5 minutes",
-		Branch = "Warps",
+		GameGoal = new GameGoal
+		{
+			Goal = new Goal { DisplayName = "Warps" }
+		},
 		PublicationClass = PublicationClass
 	};
 
@@ -29,7 +32,10 @@ public class PublicationHistoryTests
 		Id = 2,
 		GameId = Smb.Id,
 		Title = "Smb in 5 minutes",
-		Branch = "Warps",
+		GameGoal = new GameGoal
+		{
+			Goal = new Goal { DisplayName = "Warps" }
+		},
 		ObsoletedById = SmbWarps.Id,
 		PublicationClass = PublicationClass
 	};
@@ -39,17 +45,23 @@ public class PublicationHistoryTests
 		Id = 3,
 		GameId = Smb.Id,
 		Title = "Smb in 5.5 minutes",
-		Branch = "Warps",
+		GameGoal = new GameGoal
+		{
+			Goal = new Goal { DisplayName = "Warps" }
+		},
 		ObsoletedById = SmbWarpsObsolete.Id,
 		PublicationClass = PublicationClass
 	};
 
-	private static Publication SmbWarpsObsoleteBranch => new()
+	private static Publication SmbWarpsObsoleteGoal => new()
 	{
 		Id = 4,
 		GameId = Smb.Id,
 		Title = "Smb in 6 minutes without using glitches",
-		Branch = "Warps",
+		GameGoal = new GameGoal
+		{
+			Goal = new Goal { DisplayName = "Warps" }
+		},
 		ObsoletedById = SmbWarps.Id,
 		PublicationClass = PublicationClass
 	};
@@ -59,7 +71,10 @@ public class PublicationHistoryTests
 		Id = 10,
 		GameId = Smb.Id,
 		Title = "Smb in about 20 minutes",
-		Branch = "No Warps",
+		GameGoal = new GameGoal
+		{
+			Goal = new Goal { DisplayName = "No Warps" }
+		},
 		PublicationClass = PublicationClass
 	};
 
@@ -68,7 +83,10 @@ public class PublicationHistoryTests
 		Id = 20,
 		GameId = Smb2j.Id,
 		Title = "Smb2j in about 8 minutes",
-		Branch = "Warps",
+		GameGoal = new GameGoal
+		{
+			Goal = new Goal { DisplayName = "Warps" }
+		},
 		PublicationClass = PublicationClass
 	};
 
@@ -99,15 +117,15 @@ public class PublicationHistoryTests
 	}
 
 	[TestMethod]
-	public async Task ForGame_NoPublications_BranchesEmpty()
+	public async Task ForGame_NoPublications_GoalsEmpty()
 	{
 		_db.Add(Smb);
 		await _db.SaveChangesAsync();
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
-		Assert.AreEqual(0, actual.Branches.Count());
+		Assert.IsNotNull(actual.Goals);
+		Assert.AreEqual(0, actual.Goals.Count());
 	}
 
 	[TestMethod]
@@ -125,11 +143,11 @@ public class PublicationHistoryTests
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(Smb.Id, actual.GameId);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(1, branchList.Count);
-		Assert.AreEqual(SmbWarps.Id, branchList.Single().Id);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(1, goalList.Count);
+		Assert.AreEqual(SmbWarps.Id, goalList.Single().Id);
 	}
 
 	[TestMethod]
@@ -141,15 +159,15 @@ public class PublicationHistoryTests
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(1, branchList.Count);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(1, goalList.Count);
 
-		var movie = branchList.Single();
+		var movie = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, movie.Id);
 		Assert.AreEqual(SmbWarps.Title, movie.Title);
-		Assert.AreEqual(SmbWarps.Branch, movie.Branch);
+		Assert.AreEqual(SmbWarps.GameGoal!.Goal!.DisplayName, movie.Goal);
 	}
 
 	[TestMethod]
@@ -161,18 +179,18 @@ public class PublicationHistoryTests
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(1, branchList.Count);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(1, goalList.Count);
 
-		var movie = branchList.Single();
+		var movie = goalList.Single();
 		Assert.IsNotNull(movie.Obsoletes);
 		Assert.AreEqual(0, movie.Obsoletes.Count());
 	}
 
 	[TestMethod]
-	public async Task ForGame_MultiBranch_ResultMatches()
+	public async Task ForGame_MultiGoal_ResultMatches()
 	{
 		_db.Add(Smb);
 		_db.Add(SmbWarps);
@@ -181,30 +199,30 @@ public class PublicationHistoryTests
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(2, branchList.Count);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(2, goalList.Count);
 
-		Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarps.Branch));
-		Assert.AreEqual(1, branchList.Count(b => b.Branch == SmbWarpless.Branch));
+		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarps.GameGoal!.Goal!.DisplayName));
+		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarpless.GameGoal!.Goal!.DisplayName));
 	}
 
 	[TestMethod]
-	public async Task ForGame_ObsoleteBranch_NotParentNode()
+	public async Task ForGame_ObsoleteGoal_NotParentNode()
 	{
 		_db.Add(Smb);
 		_db.Add(SmbWarps);
-		_db.Add(SmbWarpsObsoleteBranch);
+		_db.Add(SmbWarpsObsoleteGoal);
 		await _db.SaveChangesAsync();
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(1, branchList.Count);
-		Assert.AreEqual(SmbWarps.Branch, branchList.Single().Branch);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(1, goalList.Count);
+		Assert.AreEqual(SmbWarps.GameGoal!.Goal!.DisplayName, goalList.Single().Goal);
 	}
 
 	[TestMethod]
@@ -217,12 +235,12 @@ public class PublicationHistoryTests
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(1, branchList.Count);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(1, goalList.Count);
 
-		var currentPub = branchList.Single();
+		var currentPub = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, currentPub.Id);
 
 		Assert.IsNotNull(currentPub.Obsoletes);
@@ -238,24 +256,24 @@ public class PublicationHistoryTests
 		_db.Add(Smb);
 		_db.Add(SmbWarps);
 		_db.Add(SmbWarpsObsolete);
-		_db.Add(SmbWarpsObsoleteBranch);
+		_db.Add(SmbWarpsObsoleteGoal);
 		await _db.SaveChangesAsync();
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(1, branchList.Count);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(1, goalList.Count);
 
-		var currentPub = branchList.Single();
+		var currentPub = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, currentPub.Id);
 
 		Assert.IsNotNull(currentPub.Obsoletes);
 		var obsoletes = currentPub.Obsoletes.ToList();
 		Assert.AreEqual(2, obsoletes.Count);
 		Assert.AreEqual(1, obsoletes.Count(o => o.Id == SmbWarpsObsolete.Id));
-		Assert.AreEqual(1, obsoletes.Count(o => o.Id == SmbWarpsObsoleteBranch.Id));
+		Assert.AreEqual(1, obsoletes.Count(o => o.Id == SmbWarpsObsoleteGoal.Id));
 	}
 
 	[TestMethod]
@@ -269,12 +287,12 @@ public class PublicationHistoryTests
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Branches);
+		Assert.IsNotNull(actual.Goals);
 
-		var branchList = actual.Branches.ToList();
-		Assert.AreEqual(1, branchList.Count);
+		var goalList = actual.Goals.ToList();
+		Assert.AreEqual(1, goalList.Count);
 
-		var currentPub = branchList.Single();
+		var currentPub = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, currentPub.Id);
 
 		Assert.IsNotNull(currentPub.Obsoletes);
