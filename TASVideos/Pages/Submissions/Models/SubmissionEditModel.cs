@@ -47,7 +47,7 @@ public class SubmissionEditModel
 	[Display(Name = "ROM filename")]
 	public string? RomName { get; set; }
 
-	[Display(Name = "Branch")]
+	[Display(Name = "Goal")]
 	public string? Branch { get; set; }
 
 	[Display(Name = "Emulator", Description = "Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.")]

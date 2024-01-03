@@ -58,7 +58,7 @@ public class IndexModel : BasePageModel
 			{
 				p.Id,
 				p.Title,
-				Branch = p.Branch ?? "",
+				Goal = p.GameGoal!.Goal!.DisplayName,
 				Screenshot = p.Files
 				.Where(f => f.Type == FileType.Screenshot)
 				.Select(f => new MiniMovieModel.ScreenshotFile
@@ -75,13 +75,13 @@ public class IndexModel : BasePageModel
 
 		Movies = movies
 			.Select(m => new TabMiniMovieModel(
-				movies.Count(mm => mm.Branch == m.Branch) > 1 ? m.GameTitle : string.IsNullOrEmpty(m.Branch) ? "(baseline)" : "",
-				m.Branch,
+				movies.Count(mm => mm.Goal == m.Goal) > 1 ? m.GameTitle : m.Goal,
+				m.Goal,
 				new MiniMovieModel
 				{
 					Id = m.Id,
 					Title = m.Title,
-					Branch = m.Branch,
+					Goal = m.Goal,
 					Screenshot = m.Screenshot,
 					OnlineWatchingUrl = m.OnlineWatchingUrl,
 				}))

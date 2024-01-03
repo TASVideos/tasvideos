@@ -367,7 +367,7 @@ public static class EntityExtensions
 		{
 			Id = p.Id,
 			Title = p.Title,
-			Branch = p.Branch ?? "",
+			Goal = p.GameGoal!.Goal!.DisplayName,
 			Screenshot = p.Files
 				.Where(f => f.Type == FileType.Screenshot)
 				.Select(f => new MiniMovieModel.ScreenshotFile

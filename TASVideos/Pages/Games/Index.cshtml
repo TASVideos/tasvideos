@@ -109,7 +109,7 @@
 			</div>
 		}
 	</div>
-	<small condition="@(Model.Movies.Count(m => string.IsNullOrWhiteSpace(m.Movie.Branch)) == 1)" class="text-body-tertiary">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
+	<small condition="@(Model.Movies.Any(m => m.Movie.Goal == "baseline"))" class="text-body-tertiary">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
 </div>
 <hr />
 <row>
