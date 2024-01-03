@@ -75,7 +75,7 @@ public class IndexModel : BasePageModel
 
 		Movies = movies
 			.Select(m => new TabMiniMovieModel(
-				movies.Count(mm => mm.Goal == m.Goal) > 1 ? m.GameTitle : m.Goal,
+				movies.Count(mm => mm.Goal == m.Goal) > 1 ? m.GameTitle : "",
 				m.Goal,
 				new MiniMovieModel
 				{
