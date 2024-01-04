@@ -53,10 +53,13 @@
 	</row>
 	<fullrow class="text-center">
 		@await Component.RenderWiki(SystemWiki.WikiEditNote)
+		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
 		<a href="@cancelUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</fullrow>
 </form>
+
+<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.UserFile.Description), "/Wiki/Preview")" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
