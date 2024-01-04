@@ -68,7 +68,6 @@ public class EditModel : BasePageModel
 				Title = p.Title,
 				ObsoletedBy = p.ObsoletedById,
 				ObsoletedByTitle = p.ObsoletedBy != null ? p.ObsoletedBy.Title : null,
-				Branch = p.Branch,
 				EmulatorVersion = p.EmulatorVersion,
 				AdditionalAuthors = p.AdditionalAuthors,
 				Urls = p.PublicationUrls
@@ -176,13 +175,6 @@ public class EditModel : BasePageModel
 			.Where(a => !string.IsNullOrWhiteSpace(a))
 			.ToList();
 		Publication.Authors = pubAuthors;
-
-		if (publication.Branch != model.Branch)
-		{
-			externalMessages.Add($"Changed branch from \"{publication.Branch}\" to \"{model.Branch}\"");
-		}
-
-		publication.Branch = model.Branch;
 
 		if (publication.ObsoletedById != model.ObsoletedBy)
 		{

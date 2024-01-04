@@ -32,8 +32,6 @@ public class PublicationEditModel
 	[Display(Name = "Emulator Version")]
 	public string? EmulatorVersion { get; set; }
 
-	public string? Branch { get; set; }
-
 	[Display(Name = "Selected Flags")]
 	public IEnumerable<int> SelectedFlags { get; set; } = new List<int>();
 
