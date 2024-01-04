@@ -13,7 +13,7 @@
 
 	function maybeEnableSubmit() {
 		if (submitBtnElem) {
-			submitBtnElem.disabled = !validNames.has(getCurrentValue().toUpperCase());
+			submitBtnElem.disabled = !validNames.has(getCurrentValue().toUpperCase()) && getCurrentValue().length > 0;
 		}
 	}
 	function updateDataList(names) {
