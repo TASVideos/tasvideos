@@ -448,6 +448,8 @@ public class UserManager : UserManager<User>
 	{
 		return new[]
 		{
+			"cdn.discordapp.com",
+			"media.discordapp.net",
 			"membres.lycos.fr",
 			"rphaven.org",
 			"usuarios.lycos.es"
