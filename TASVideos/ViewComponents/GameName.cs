@@ -23,10 +23,9 @@ public class GameName : ViewComponent
 		{
 			var system = await _db.GameSystems
 				.SingleOrDefaultAsync(s => s.Code == path.SystemGameResourcePath());
-			if (system is not null)
-			{
-				gameList.Add(new GameNameModel { System = system.DisplayName });
-			}
+			gameList.Add(new GameNameModel { System = system is not null
+				? system.DisplayName
+				: "various" });
 		}
 		else
 		{
