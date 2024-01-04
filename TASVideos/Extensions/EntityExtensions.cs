@@ -259,7 +259,9 @@ public static class EntityExtensions
 
 		if (ratingSort)
 		{
-			q = q.OrderByDescending(p => p.OverallRating);
+			q = q
+				.OrderByDescending(p => p.OverallRating ?? 0)
+				.ThenByDescending(p => p.RatingCount);
 		}
 
 		return q;
