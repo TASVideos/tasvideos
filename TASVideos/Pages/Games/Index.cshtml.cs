@@ -52,7 +52,7 @@ public class IndexModel : BasePageModel
 		Game = game;
 		var movies = await _db.Publications
 			.Where(p => p.GameId == Game.Id && p.ObsoletedById == null)
-			.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
+			.OrderBy(p => p.GameGoal!.Goal!.DisplayName.Length)
 			.ThenBy(p => p.Frames)
 			.Select(p => new
 			{
