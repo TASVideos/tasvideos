@@ -260,17 +260,4 @@
 	.language-html .token.punctuation {
 		color: #808080;
 	}
-	/*********************************************************
-* Line highlighting
-*/
-	pre[class*="language-"] > code[class*="language-"] {
-		position: relative;
-		z-index: 1;
-	}
-
-	.line-highlight.line-highlight {
-		background: #f7ebc6;
-		box-shadow: inset 5px 0 0 #f7d87c;
-		z-index: 0;
-	}
 }
