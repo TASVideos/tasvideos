@@ -30,7 +30,7 @@ public class IndexModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var query = _db.AutoHistory
-			.GroupJoin(_db.Users, outerKey => outerKey.UserId, innerKey => innerKey.Id, (h, user) => new {h, user})
+			.GroupJoin(_db.Users, outerKey => outerKey.UserId, innerKey => innerKey.Id, (h, user) => new { h, user })
 			.SelectMany(g => g.user.DefaultIfEmpty(), (g, user) => new LogEntry
 			{
 				RowId = g.h.RowId,
