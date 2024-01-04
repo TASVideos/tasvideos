@@ -30,14 +30,15 @@ public class IndexModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var query = _db.AutoHistory
-			.Select(h => new LogEntry
+			.GroupJoin(_db.Users, outerKey => outerKey.UserId, innerKey => innerKey.Id, (h, user) => new {h, user})
+			.SelectMany(g => g.user.DefaultIfEmpty(), (g, user) => new LogEntry
 			{
-				RowId = h.RowId,
-				UserId = h.UserId,
-				Created = h.Created,
-				TableName = h.TableName,
-				Changed = h.Changed,
-				Kind = h.Kind,
+				RowId = g.h.RowId,
+				UserName = user == null ? "Unknown_User" : user.UserName,
+				Created = g.h.Created,
+				TableName = g.h.TableName,
+				Changed = g.h.Changed,
+				Kind = g.h.Kind,
 			});
 
 		if (!string.IsNullOrWhiteSpace(Table))
@@ -70,7 +71,7 @@ public class IndexModel : BasePageModel
 		public string RowId { get; init; } = "";
 
 		[Sortable]
-		public int UserId { get; init; }
+		public string UserName { get; init; }
 
 		[Sortable]
 		public DateTime Created { get; init; } = DateTime.UtcNow;
