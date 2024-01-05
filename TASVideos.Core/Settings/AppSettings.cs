@@ -11,6 +11,8 @@ public class AppSettings
 
 	public Connections ConnectionStrings { get; set; } = new();
 
+	public SubmissionRateLimit SubmissionRate { get; set; } = new ();
+
 	public IrcConnection Irc { get; set; } = new();
 	public DiscordConnection Discord { get; set; } = new();
 
@@ -23,6 +25,13 @@ public class AppSettings
 
 	// Minimum number of hours before a judge can set a submission to accepted/rejected
 	public int MinimumHoursBeforeJudgment { get; set; }
+
+	// User is only allowed to submit X submissions in Y days
+	public class SubmissionRateLimit
+	{
+		public int Submissions { get; set; }
+		public int Days { get; set; }
+	}
 
 	public class IrcConnection : DistributorConnection
 	{
