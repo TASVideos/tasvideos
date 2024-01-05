@@ -71,7 +71,7 @@ public class SubmitModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (!SubmissionAllowed(User.GetUserId()))
+		if (!await SubmissionAllowed(User.GetUserId()))
 		{
 			return RedirectToPage("/Submissions/Submit");
 		}
@@ -206,10 +206,13 @@ public class SubmitModel : BasePageModel
 		_earliestTimestamp.AddDays(_settings.SubmissionRate.Days)
 	};
 
-	public bool SubmissionAllowed(int userId)
+	public async Task<bool> SubmissionAllowed(int userId)
 	{
-		var subs = _db.Submissions.Where(s => s.Submitter != null && s.SubmitterId == userId
-				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days));
+		var subs = await _db.Submissions
+			.Where(s => s.Submitter != null
+				&& s.SubmitterId == userId
+				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days))
+			.ToListAsync();
 		_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
 		return subs.Count() < _settings.SubmissionRate.Submissions;
 	}
