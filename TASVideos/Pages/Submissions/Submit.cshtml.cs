@@ -71,6 +71,11 @@ public class SubmitModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
+		if (!SubmissionAllowed(User.GetUserId()))
+		{
+			return RedirectToPage("/Submissions/Submit");
+		}
+
 		await ValidateModel();
 
 		if (!ModelState.IsValid)
