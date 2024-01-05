@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Goals.Models;
 
@@ -71,7 +72,7 @@ public class ListModel : BasePageModel
 		}
 
 		// Reuse an identical goal if it exists
-		var goal = await _db.Goals.FirstOrDefaultAsync(g => g.DisplayName.ToLower() == goalToCreate!.ToLower());
+		var goal = await _db.Goals.FirstOrDefaultAsync(g => g.DisplayName.ToLower() == goalToCreate.ToLower());
 		if (goal is null)
 		{
 			goal = new Goal { DisplayName = goalToCreate! };
@@ -134,11 +135,11 @@ public class ListModel : BasePageModel
 		var goal = await _db.Goals.FirstOrDefaultAsync(g => g.DisplayName.ToLower() == newGoalName!.ToLower());
 		if (goal is null)
 		{
-			goal = new Goal { DisplayName = newGoalName! };
+			goal = new Goal { DisplayName = newGoalName };
 			_db.Goals.Add(goal);
 		}
 
-		// Remove old goal if it is now orphand
+		// Remove old goal if it is now orphaned
 		var orphanedGoal = await _db.Goals.FirstOrDefaultAsync(g => g.Id == gameGoal.GoalId && g.GameGoals.Count() == 1);
 		if (orphanedGoal is not null)
 		{
@@ -148,6 +149,25 @@ public class ListModel : BasePageModel
 		gameGoal.Goal = goal;
 
 		await ConcurrentSave(_db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
+
+		// Update publication and submission titles
+		if (gameGoal.Goal.DisplayName != "baseline")
+		{
+			var pubs = await _db.Publications.IncludeTitleTables().Where(p => p.GameGoal!.GoalId == gameGoal.GoalId).ToListAsync();
+			foreach (var pub in pubs)
+			{
+				pub.GenerateTitle();
+			}
+
+			var subs = await _db.Submissions.IncludeTitleTables().Where(s => s.GameGoal!.GoalId == gameGoal.GoalId).ToListAsync();
+			foreach (var sub in subs)
+			{
+				sub.GenerateTitle();
+			}
+
+			await _db.SaveChangesAsync();
+		}
+
 		return BackToList();
 	}
 

@@ -50,6 +50,26 @@ public class EditModel : BasePageModel
 
 		goal.DisplayName = Goal.DisplayName;
 		await ConcurrentSave(_db, "Goal edited successfully", "Unable to edit goal");
+
+		// TODO: this is copy pasta of Games/Goals/List
+		// Update publication and submission titles
+		if (goal.DisplayName != "baseline")
+		{
+			var pubs = await _db.Publications.IncludeTitleTables().Where(p => p.GameGoal!.GoalId == goal.Id).ToListAsync();
+			foreach (var pub in pubs)
+			{
+				pub.GenerateTitle();
+			}
+
+			var subs = await _db.Submissions.IncludeTitleTables().Where(s => s.GameGoal!.GoalId == goal.Id).ToListAsync();
+			foreach (var sub in subs)
+			{
+				sub.GenerateTitle();
+			}
+
+			await _db.SaveChangesAsync();
+		}
+
 		return BasePageRedirect("Index");
 	}
 
