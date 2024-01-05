@@ -196,6 +196,7 @@ public class SubmitModel : BasePageModel
 
 	public string[] Notice(int userId) => new string[]
 	{
+		"Sorry, you can not submit at this time.",
 		"We limit submissions to " +
 		_settings.SubmissionRate.Submissions +
 		" in " +

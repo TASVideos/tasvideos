@@ -14,8 +14,10 @@
 	{
 		<info-alert>
 			<row>
-				<div class="col-12">@notice[0]</div>
-				<div class="col-12">@notice[1]</div>
+				@foreach (var n in notice)
+				{
+					<div class="col-12">@n</div>
+				}
 			</row>
 		</info-alert>
 	}
