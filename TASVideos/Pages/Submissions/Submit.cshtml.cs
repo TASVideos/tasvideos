@@ -202,12 +202,9 @@ public class SubmitModel : BasePageModel
 
 	public bool SubmissionAllowed(int userId)
 	{
-		_earliestTimestamp = _db.Submissions
-			.Where(s => s.Submitter != null && s.SubmitterId == userId)
-			.OrderByDescending(s => s.CreateTimestamp)
-			.ToList()
-			.ElementAt(_settings.SubmissionRate.Submissions - 1)
-			.CreateTimestamp;
-		return _earliestTimestamp < DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days);
+		var subs = _db.Submissions.Where(s => s.Submitter != null && s.SubmitterId == userId
+				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days));
+		_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
+		return subs.Count() < _settings.SubmissionRate.Submissions;
 	}
 }
