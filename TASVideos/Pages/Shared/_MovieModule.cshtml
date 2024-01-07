@@ -221,14 +221,24 @@
 			</div>
 			<div class="col-auto">
 				<small condition="Model.MirrorSiteUrls.Any()">
-					A/V files:<br />
+					Video Downloads:<br />
 					<span condition="Model.MirrorSiteUrls.Any()">
 						@foreach (var url in Model.MirrorSiteUrls)
 						{
-							<a href="@url.Url" class="ms-2">
-								@(string.IsNullOrWhiteSpace(url.DisplayName) ? "A/V file" : url.DisplayName) via Mirror
-								<br/>
-							</a>
+							string text = System.IO.Path.GetExtension(url.Url!).Replace(".", "").ToUpper();
+							if (text == "MKV")
+							{
+								text = "High Quality " + text;
+							}
+							else if (text == "MP4")
+							{
+								text = "Compatibility " + text;
+							}
+							if (!string.IsNullOrEmpty(url.DisplayName))
+							{
+								text = text + $" ({url.DisplayName})";
+							}
+							<a href="@url.Url" class="ms-2">@text<br/></a>
 						}
 					</span>
 				</small>
