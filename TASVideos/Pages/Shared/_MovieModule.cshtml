@@ -225,7 +225,7 @@
 					<span condition="Model.MirrorSiteUrls.Any()">
 						@foreach (var url in Model.MirrorSiteUrls)
 						{
-							string text = System.IO.Path.GetExtension(url.Url!).Replace(".", "").ToUpper();
+							var text = System.IO.Path.GetExtension(url.Url!).Replace(".", "").ToUpper();
 							if (text == "MKV")
 							{
 								text = "High Quality " + text;
