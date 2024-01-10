@@ -34,7 +34,7 @@ internal class PublicationHistory : IPublicationHistory
 			{
 				Id = p.Id,
 				Title = p.Title,
-				Goal = p.GameGoal!.Goal!.DisplayName,
+				Goal = p.GameGoal!.DisplayName,
 				CreateTimestamp = p.CreateTimestamp,
 				ObsoletedById = p.ObsoletedById,
 				ClassIconPath = p.PublicationClass!.IconPath,

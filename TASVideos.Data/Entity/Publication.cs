@@ -118,7 +118,7 @@ public class Publication : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
-		string goal = GameGoal!.Goal!.DisplayName;
+		string goal = GameGoal!.DisplayName;
 		if (goal == "baseline")
 		{
 			goal = "";
@@ -272,7 +272,6 @@ public static class PublicationExtensions
 			.Include(p => p.SystemFrameRate)
 			.Include(p => p.Game)
 			.Include(p => p.GameVersion)
-			.Include(p => p.GameGoal)
-			.ThenInclude(gg => gg!.Goal);
+			.Include(p => p.GameGoal);
 	}
 }

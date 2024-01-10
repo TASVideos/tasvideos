@@ -20,10 +20,7 @@ public class PublicationHistoryTests
 		Id = 1,
 		GameId = Smb.Id,
 		Title = "Smb in less than 5 minutes",
-		GameGoal = new GameGoal
-		{
-			Goal = new Goal { DisplayName = "Warps" }
-		},
+		GameGoal = new GameGoal { DisplayName = "Warps" },
 		PublicationClass = PublicationClass
 	};
 
@@ -32,10 +29,7 @@ public class PublicationHistoryTests
 		Id = 2,
 		GameId = Smb.Id,
 		Title = "Smb in 5 minutes",
-		GameGoal = new GameGoal
-		{
-			Goal = new Goal { DisplayName = "Warps" }
-		},
+		GameGoal = new GameGoal { DisplayName = "Warps" },
 		ObsoletedById = SmbWarps.Id,
 		PublicationClass = PublicationClass
 	};
@@ -45,10 +39,7 @@ public class PublicationHistoryTests
 		Id = 3,
 		GameId = Smb.Id,
 		Title = "Smb in 5.5 minutes",
-		GameGoal = new GameGoal
-		{
-			Goal = new Goal { DisplayName = "Warps" }
-		},
+		GameGoal = new GameGoal { DisplayName = "Warps" },
 		ObsoletedById = SmbWarpsObsolete.Id,
 		PublicationClass = PublicationClass
 	};
@@ -58,10 +49,7 @@ public class PublicationHistoryTests
 		Id = 4,
 		GameId = Smb.Id,
 		Title = "Smb in 6 minutes without using glitches",
-		GameGoal = new GameGoal
-		{
-			Goal = new Goal { DisplayName = "Warps" }
-		},
+		GameGoal = new GameGoal { DisplayName = "Warps" },
 		ObsoletedById = SmbWarps.Id,
 		PublicationClass = PublicationClass
 	};
@@ -71,10 +59,7 @@ public class PublicationHistoryTests
 		Id = 10,
 		GameId = Smb.Id,
 		Title = "Smb in about 20 minutes",
-		GameGoal = new GameGoal
-		{
-			Goal = new Goal { DisplayName = "No Warps" }
-		},
+		GameGoal = new GameGoal { DisplayName = "No Warps" },
 		PublicationClass = PublicationClass
 	};
 
@@ -83,10 +68,7 @@ public class PublicationHistoryTests
 		Id = 20,
 		GameId = Smb2j.Id,
 		Title = "Smb2j in about 8 minutes",
-		GameGoal = new GameGoal
-		{
-			Goal = new Goal { DisplayName = "Warps" }
-		},
+		GameGoal = new GameGoal { DisplayName = "Warps" },
 		PublicationClass = PublicationClass
 	};
 
@@ -167,7 +149,7 @@ public class PublicationHistoryTests
 		var movie = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, movie.Id);
 		Assert.AreEqual(SmbWarps.Title, movie.Title);
-		Assert.AreEqual(SmbWarps.GameGoal!.Goal!.DisplayName, movie.Goal);
+		Assert.AreEqual(SmbWarps.GameGoal!.DisplayName, movie.Goal);
 	}
 
 	[TestMethod]
@@ -204,8 +186,8 @@ public class PublicationHistoryTests
 		var goalList = actual.Goals.ToList();
 		Assert.AreEqual(2, goalList.Count);
 
-		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarps.GameGoal!.Goal!.DisplayName));
-		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarpless.GameGoal!.Goal!.DisplayName));
+		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarps.GameGoal!.DisplayName));
+		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarpless.GameGoal!.DisplayName));
 	}
 
 	[TestMethod]
@@ -222,7 +204,7 @@ public class PublicationHistoryTests
 
 		var goalList = actual.Goals.ToList();
 		Assert.AreEqual(1, goalList.Count);
-		Assert.AreEqual(SmbWarps.GameGoal!.Goal!.DisplayName, goalList.Single().Goal);
+		Assert.AreEqual(SmbWarps.GameGoal!.DisplayName, goalList.Single().Goal);
 	}
 
 	[TestMethod]

@@ -1,13 +1,11 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Org.BouncyCastle.Cms;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Submissions.Models;
-using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -163,14 +161,14 @@ public class CatalogModel : BasePageModel
 		{
 			if (Catalog.GameGoalId.HasValue)
 			{
-				var gameGoal = await _db.GameGoals.Include(gg => gg.Goal).SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
+				var gameGoal = await _db.GameGoals.SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
 				if (gameGoal is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
 				}
 				else
 				{
-					externalMessages.Add($"Game Goal changed from {submission.GameGoal?.Goal?.DisplayName ?? "\"\""} to {gameGoal.Goal!.DisplayName}");
+					externalMessages.Add($"Game Goal changed from {submission.GameGoal?.DisplayName ?? "\"\""} to {gameGoal.DisplayName}");
 					submission.GameGoalId = Catalog.GameGoalId;
 					submission.GameGoal = gameGoal;
 				}
@@ -303,7 +301,7 @@ public class CatalogModel : BasePageModel
 				.Select(gg => new SelectListItem
 				{
 					Value = gg.Id.ToString(),
-					Text = gg.Goal!.DisplayName
+					Text = gg.DisplayName
 				})
 				.ToListAsync()
 			: new List<SelectListItem>();

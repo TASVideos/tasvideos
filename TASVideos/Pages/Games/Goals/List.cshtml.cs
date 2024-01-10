@@ -46,7 +46,7 @@ public class ListModel : BasePageModel
 			.Select(gg => new GoalListModel
 			{
 				Id = gg.Id,
-				DisplayName = gg.Goal!.DisplayName,
+				DisplayName = gg.DisplayName,
 				Publications = gg.Publications
 					.Select(p => new GoalListModel.PublicationEntry(p.Id, p.Title, p.ObsoletedById.HasValue)),
 				Submissions = gg.Submissions
@@ -65,24 +65,16 @@ public class ListModel : BasePageModel
 			return BackToList();
 		}
 
-		if (await _db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.Goal!.DisplayName == goalToCreate))
+		if (await _db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == goalToCreate))
 		{
 			ErrorStatusMessage($"Cannot create goal {goalToCreate} because it already exists.");
 			return BackToList();
 		}
 
-		// Reuse an identical goal if it exists
-		var goal = await _db.Goals.FirstOrDefaultAsync(g => g.DisplayName.ToLower() == goalToCreate.ToLower());
-		if (goal is null)
-		{
-			goal = new Goal { DisplayName = goalToCreate! };
-			_db.Goals.Add(goal);
-		}
-
 		_db.GameGoals.Add(new GameGoal
 		{
 			GameId = GameId,
-			Goal = goal
+			DisplayName = goalToCreate
 		});
 
 		await ConcurrentSave(_db, $"Goal {goalToCreate} created successfully", $"Unable to create goal {goalToCreate}");
@@ -91,7 +83,7 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnPostEdit(int gameGoalId, string? newGoalName)
 	{
-		if (!User.Has(Data.Entity.PermissionTo.CatalogMovies))
+		if (!User.Has(PermissionTo.CatalogMovies))
 		{
 			return AccessDenied();
 		}
@@ -103,63 +95,47 @@ public class ListModel : BasePageModel
 		}
 
 		var gameGoal = await _db.GameGoals
-			.Include(gg => gg.Goal)
 			.SingleOrDefaultAsync(gg => gg.Id == gameGoalId);
 		if (gameGoal is null)
 		{
 			return NotFound();
 		}
 
-		var oldGoalName = gameGoal.Goal!.DisplayName;
+		var oldGoalName = gameGoal.DisplayName;
 
-		if (gameGoal.Goal.DisplayName.ToLower() == newGoalName.ToLower())
+		if (gameGoal.DisplayName.ToLower() == newGoalName.ToLower())
 		{
-			gameGoal.Goal.DisplayName = newGoalName;
+			gameGoal.DisplayName = newGoalName;
 			await ConcurrentSave(_db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
 			return BackToList();
 		}
 
-		if (gameGoal.Goal!.DisplayName == "baseline")
+		if (gameGoal.DisplayName == "baseline")
 		{
 			ErrorStatusMessage("Cannot edit baseline goal.");
 			return BackToList();
 		}
 
-		if (await _db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.Goal!.DisplayName == newGoalName))
+		if (await _db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == newGoalName))
 		{
 			ErrorStatusMessage($"Cannot change goal to {newGoalName} because it already exists.");
 			return BackToList();
 		}
 
-		// Reuse an identical goal if it exists
-		var goal = await _db.Goals.FirstOrDefaultAsync(g => g.DisplayName.ToLower() == newGoalName!.ToLower());
-		if (goal is null)
-		{
-			goal = new Goal { DisplayName = newGoalName };
-			_db.Goals.Add(goal);
-		}
-
-		// Remove old goal if it is now orphaned
-		var orphanedGoal = await _db.Goals.FirstOrDefaultAsync(g => g.Id == gameGoal.GoalId && g.GameGoals.Count() == 1);
-		if (orphanedGoal is not null)
-		{
-			_db.Goals.Remove(orphanedGoal);
-		}
-
-		gameGoal.Goal = goal;
+		gameGoal.DisplayName = newGoalName;
 
 		await ConcurrentSave(_db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
 
 		// Update publication and submission titles
-		if (gameGoal.Goal.DisplayName != "baseline")
+		if (gameGoal.DisplayName != "baseline")
 		{
-			var pubs = await _db.Publications.IncludeTitleTables().Where(p => p.GameGoal!.GoalId == gameGoal.GoalId).ToListAsync();
+			var pubs = await _db.Publications.IncludeTitleTables().Where(p => p.GameGoalId == gameGoal.Id).ToListAsync();
 			foreach (var pub in pubs)
 			{
 				pub.GenerateTitle();
 			}
 
-			var subs = await _db.Submissions.IncludeTitleTables().Where(s => s.GameGoal!.GoalId == gameGoal.GoalId).ToListAsync();
+			var subs = await _db.Submissions.IncludeTitleTables().Where(s => s.GameGoalId == gameGoal.Id).ToListAsync();
 			foreach (var sub in subs)
 			{
 				sub.GenerateTitle();

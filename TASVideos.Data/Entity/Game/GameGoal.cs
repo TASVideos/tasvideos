@@ -6,8 +6,9 @@ public class GameGoal
 	public int GameId { get; set; }
 	public virtual Game? Game { get; set; }
 
-	public int GoalId { get; set; }
-	public virtual Goal? Goal { get; set; }
+	[Required]
+	[StringLength(50)]
+	public string DisplayName { get; set; } = "";
 
 	public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 	public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();

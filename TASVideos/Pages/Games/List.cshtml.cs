@@ -148,11 +148,11 @@ public class ListModel : BasePageModel
 	{
 		var items = await _db.GameGoals
 			.Where(gg => gg.GameId == gameId)
-			.OrderBy(gg => gg.Goal!.DisplayName)
+			.OrderBy(gg => gg.DisplayName)
 			.Select(gg => new SelectListItem
 			{
 				Value = gg.Id.ToString(),
-				Text = gg.Goal!.DisplayName
+				Text = gg.DisplayName
 			})
 			.ToListAsync();
 

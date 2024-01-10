@@ -47,7 +47,7 @@ public class ViewModel : BasePageModel
 				RomName = s.RomName,
 				Branch = s.Branch,
 				Goal = s.GameGoal != null
-					? s.GameGoal!.Goal!.DisplayName
+					? s.GameGoal!.DisplayName
 					: null,
 				Emulator = s.EmulatorVersion,
 				FrameCount = s.Frames,

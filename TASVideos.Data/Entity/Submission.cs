@@ -135,7 +135,7 @@ public class Submission : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
-		string? goal = GameGoal?.Goal?.DisplayName;
+		string? goal = GameGoal?.DisplayName;
 		goal = goal switch
 		{
 			null => Branch,
@@ -251,7 +251,6 @@ public static class SubmissionExtensions
 			.Include(s => s.Game)
 			.Include(s => s.GameVersion)
 			.Include(s => s.GameGoal)
-			.Include(gg => gg.GameGoal)
-			.ThenInclude(gg => gg.Goal);
+			.Include(gg => gg.GameGoal);
 	}
 }

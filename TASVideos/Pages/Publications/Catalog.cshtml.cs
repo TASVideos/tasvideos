@@ -151,14 +151,14 @@ public class CatalogModel : BasePageModel
 
 		if (publication.GameGoalId != Catalog.GameGoalId)
 		{
-			var gameGoal = await _db.GameGoals.Include(gg => gg.Goal).SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
+			var gameGoal = await _db.GameGoals.SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
 			if (gameGoal is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
 			}
 			else
 			{
-				externalMessages.Add($"Game Goal changed from {publication.GameGoal.Goal.DisplayName} to {gameGoal.Goal!.DisplayName}");
+				externalMessages.Add($"Game Goal changed from {publication.GameGoal!.DisplayName} to {gameGoal.DisplayName}");
 				publication.GameGoalId = Catalog.GameGoalId;
 				publication.GameGoal = gameGoal;
 			}
@@ -242,7 +242,7 @@ public class CatalogModel : BasePageModel
 			.Select(gg => new SelectListItem
 			{
 				Value = gg.Id.ToString(),
-				Text = gg.Goal!.DisplayName
+				Text = gg.DisplayName
 			})
 			.ToListAsync();
 	}
