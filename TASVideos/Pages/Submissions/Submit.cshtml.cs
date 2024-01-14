@@ -3,6 +3,7 @@ using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
+using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
@@ -23,6 +24,8 @@ public class SubmitModel : BasePageModel
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly IMovieFormatDeprecator _deprecator;
 	private readonly IQueueService _queueService;
+	private readonly AppSettings _settings;
+	private DateTime _earliestTimestamp;
 
 	public SubmitModel(
 		ApplicationDbContext db,
@@ -33,7 +36,8 @@ public class SubmitModel : BasePageModel
 		ITASVideoAgent tasVideoAgent,
 		IYoutubeSync youtubeSync,
 		IMovieFormatDeprecator deprecator,
-		IQueueService queueService)
+		IQueueService queueService,
+		AppSettings settings)
 	{
 		_db = db;
 		_publisher = publisher;
@@ -44,6 +48,7 @@ public class SubmitModel : BasePageModel
 		_youtubeSync = youtubeSync;
 		_deprecator = deprecator;
 		_queueService = queueService;
+		_settings = settings;
 	}
 
 	[BindProperty]
@@ -66,6 +71,11 @@ public class SubmitModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
+		if (!await SubmissionAllowed(User.GetUserId()))
+		{
+			return RedirectToPage("/Submissions/Submit");
+		}
+
 		await ValidateModel();
 
 		if (!ModelState.IsValid)
@@ -182,5 +192,28 @@ public class SubmitModel : BasePageModel
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}", $"Could not find user: {author}");
 			}
 		}
+	}
+
+	public string[] Notice(int userId) => new string[]
+	{
+		"Sorry, you can not submit at this time.",
+		"We limit submissions to " +
+		_settings.SubmissionRate.Submissions +
+		" in " +
+		_settings.SubmissionRate.Days +
+		" days per user. ",
+		"You will be able to submit again on " +
+		_earliestTimestamp.AddDays(_settings.SubmissionRate.Days)
+	};
+
+	public async Task<bool> SubmissionAllowed(int userId)
+	{
+		var subs = await _db.Submissions
+			.Where(s => s.Submitter != null
+				&& s.SubmitterId == userId
+				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days))
+			.ToListAsync();
+		_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
+		return subs.Count() < _settings.SubmissionRate.Submissions;
 	}
 }
