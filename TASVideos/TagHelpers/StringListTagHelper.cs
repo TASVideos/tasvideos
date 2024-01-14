@@ -47,7 +47,7 @@ $@"<div class='author-row row mb-1' data-index='{i}'>
 		}
 
 		output.Content.AppendHtml(
-$@"<button {Attr("id", modelId + "-add-btn")} class='string-list-add-btn btn btn-secondary' type='button'><i class='fa fa-plus-square'></i></button>");
+$"<button {Attr("id", modelId + "-add-btn")} class='string-list-add-btn btn btn-secondary' type='button'><i class='fa fa-plus-square'></i></button>");
 
 		output.Content.AppendHtml(
 $@"<script>

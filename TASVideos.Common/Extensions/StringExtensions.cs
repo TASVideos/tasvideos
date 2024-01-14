@@ -158,7 +158,7 @@ public static class StringExtensions
 			: "";
 	}
 
-	private static readonly Regex SpaceRegex = new(@" +");
+	private static readonly Regex SpaceRegex = new(" +");
 	public static string RemoveAllSpaces(this string? str)
 	{
 		return SpaceRegex.Replace(str ?? "", "");

@@ -33,9 +33,9 @@
 	</div>
 </form>
 <script>
-	"use strict"
-	const emailConfirmedBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.EmailConfirmed)')
+	"use strict";
+	const emailConfirmedBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.EmailConfirmed)');
 	document
 		.getElementById('@Html.IdFor(m => m.UserToEdit.Email)')
-		.addEventListener('change', () => { emailConfirmedBox.checked = false })
+		.addEventListener('change', () => { emailConfirmedBox.checked = false });
 </script>

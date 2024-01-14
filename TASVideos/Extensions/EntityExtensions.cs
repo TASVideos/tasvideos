@@ -253,7 +253,7 @@ public static class EntityExtensions
 				Rating = new PublicationRateModel
 				{
 					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
-					Unrated = !p.PublicationRatings.Any(pr => pr.UserId == userId)
+					Unrated = p.PublicationRatings.All(pr => pr.UserId != userId)
 				},
 			});
 

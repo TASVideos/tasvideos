@@ -164,8 +164,7 @@ internal static class Extensions
 		var frames = 0;
 		var header = new List<string>();
 
-		string? line;
-		while ((line = await reader.ReadLineAsync()) is not null)
+		while (await reader.ReadLineAsync() is { } line)
 		{
 			if (line.StartsWith('|'))
 			{

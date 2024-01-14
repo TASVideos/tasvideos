@@ -58,7 +58,7 @@ public class UserFile
 	public virtual Game.Game? Game { get; set; }
 
 	public int? SystemId { get; set; }
-	public virtual Game.GameSystem? System { get; set; }
+	public virtual GameSystem? System { get; set; }
 
 	public bool Hidden { get; set; }
 

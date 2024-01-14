@@ -1,12 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Search;
 
@@ -57,8 +55,8 @@ public class AdvancedModel : BasePageModel
 	public bool GameSearch { get; set; } = true;
 
 	public int DisplayPageSize { get; set; } = PageSize;
-	public bool EnablePrev { get; set; } = false;
-	public bool EnableNext { get; set; } = false;
+	public bool EnablePrev { get; set; }
+	public bool EnableNext { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{

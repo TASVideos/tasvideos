@@ -163,8 +163,7 @@ public static class SubmissionExtensions
 {
 	public static bool CanPublish(this Submission submission)
 	{
-		return submission.SystemId > 0
-			&& submission.SystemFrameRateId > 0
+		return submission is { SystemId: > 0, SystemFrameRateId: > 0 }
 			&& submission.GameId > 0
 			&& submission.GameVersionId > 0
 			&& submission.IntendedClassId > 0

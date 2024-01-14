@@ -194,7 +194,7 @@ public class SubmitModel : BasePageModel
 		}
 	}
 
-	public string[] Notice(int userId) => new string[]
+	public string[] Notice(int userId) => new[]
 	{
 		"Sorry, you can not submit at this time.",
 		"We limit submissions to " +
@@ -214,6 +214,6 @@ public class SubmitModel : BasePageModel
 				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days))
 			.ToListAsync();
 		_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
-		return subs.Count() < _settings.SubmissionRate.Submissions;
+		return subs.Count < _settings.SubmissionRate.Submissions;
 	}
 }

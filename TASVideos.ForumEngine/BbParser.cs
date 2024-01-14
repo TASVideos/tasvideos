@@ -301,8 +301,7 @@ public class BbParser
 				if (_allowBb
 					&& ChildrenExpected()
 					&& (m = Url.Match(_input, _index)).Success
-					&& !_stack.Any(element => element.Name == "url")
-				)
+					&& _stack.All(element => element.Name != "url"))
 				{
 					FlushText();
 					Push(new Element { Name = "url" });

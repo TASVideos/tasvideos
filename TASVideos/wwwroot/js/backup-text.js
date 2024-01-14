@@ -65,12 +65,12 @@
 
 	function backupContent() {
 		if (textarea.value) {
-			let backupObject = JSON.stringify({
+			const backupObject = JSON.stringify({
 				content: textarea.value,
 				date: Math.floor(Date.now() / 1000),
 				submissionDeterminator: submissionDeterminator
 			});
-			localStorage.setItem(backupKey, backupObject)
+			localStorage.setItem(backupKey, backupObject);
 		}
 	}
 	document.onvisibilitychange = () => {
@@ -80,11 +80,12 @@
 	};
 
 	function restoreContent() {
-		let backupObject = JSON.parse(localStorage.getItem(backupKey + '-restore'));
+		const backupObject = JSON.parse(localStorage.getItem(backupKey + '-restore'));
 		if (backupObject && !textarea.value) {
 			textarea.value = backupObject.content;
 			updateRestoreButtonDisabledState();
 		}
 	}
+
 	restoreButton.onclick = restoreContent;
 }

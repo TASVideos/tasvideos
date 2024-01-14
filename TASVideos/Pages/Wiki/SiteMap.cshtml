@@ -32,20 +32,20 @@
 }
 
 <script>
-	const onlyWikiCheckbox = document.getElementById('only-wiki-checkbox')
+	const onlyWikiCheckbox = document.getElementById('only-wiki-checkbox');
 	onlyWikiCheckbox.addEventListener('click', (e) => {
-		let hide = false
+		let hide = false;
 		if (onlyWikiCheckbox.checked) {
-			hide = true
+			hide = true;
 		}
 		
 		Array.from(document.querySelectorAll('.developed')).forEach(e => {
 			if (hide) {
-				e.classList.add('d-none')
+				e.classList.add('d-none');
 			} else {
 				e.classList.remove('d-none');
 			}
 			
-		})
-	})
+		});
+	});
 </script>

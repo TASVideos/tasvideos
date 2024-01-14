@@ -22,7 +22,7 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 				rightLineNumber,
 				spans,
 				important: spans.some(s => s.type),
-				distance: 99999999,
+				distance: 99999999
 			});
 		}
 		for (const { 0: type, 1: text } of d) {
@@ -155,7 +155,7 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 				for (const line of lineOrSet) {
 					pushLine(line, " expanded");
 				}
-				results.push(h("button", { class: "contracter bottom", type: "button" }, "▲"))
+				results.push(h("button", { class: "contracter bottom", type: "button" }, "▲"));
 				leftNumber = undefined;
 				rightNumber = undefined;
 			} else {

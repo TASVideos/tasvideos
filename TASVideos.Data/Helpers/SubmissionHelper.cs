@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace TASVideos.Data.Helpers;
+﻿namespace TASVideos.Data.Helpers;
 
 public static class SubmissionHelper
 {

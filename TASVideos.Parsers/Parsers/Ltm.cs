@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Reflection;
 using System.Text;
 using SharpCompress.Readers;
 
@@ -50,8 +49,7 @@ internal class Ltm : ParserBase, IParser
 				switch (reader.Entry.Key)
 				{
 					case "config.ini":
-						string? s;
-						while ((s = await textReader.ReadLineAsync()) != null)
+						while (await textReader.ReadLineAsync() is { } s)
 						{
 							if (s.StartsWith(FrameCountHeader))
 							{
@@ -95,9 +93,8 @@ internal class Ltm : ParserBase, IParser
 
 						break;
 					case "annotations.txt":
-						string? line;
 						var sb = new StringBuilder();
-						while ((line = await textReader.ReadLineAsync()) != null)
+						while (await textReader.ReadLineAsync() is { } line)
 						{
 							if (line.ToLower().StartsWith("platform:"))
 							{

@@ -56,8 +56,8 @@ The posts before this message apply to the submission, and posts after this mess
 The posts after this message will continue to apply to the submission.
 ";
 
-	public const string NewSubmissionPost = @"This topic is for the purpose of discussing ";
-	public const string PollQuestion = @"Vote: Did you like watching this movie? (Vote after watching!)";
+	public const string NewSubmissionPost = "This topic is for the purpose of discussing ";
+	public const string PollQuestion = "Vote: Did you like watching this movie? (Vote after watching!)";
 	public const string PollOptionYes = "Yes";
 	public const string PollOptionNo = "No";
 	public const string PollOptionsMeh = "Meh";

@@ -58,27 +58,23 @@ internal class Omr : ParserBase, IParser
 
 		result.Frames = (int)Math.Round(seconds * (result.Region == RegionType.Pal ? 50.1589758045661 : 59.9227510135505));
 
-		var version = "";
+		var version = ((IEnumerable)replay.XPathEvaluate("//snapshots/item"))
+			.Cast<XElement>()
+			.Attributes()
+			.First(x => x.Name == "version")
+			.Value;
 
-		version = ((IEnumerable)replay.XPathEvaluate("//snapshots/item"))
-				.Cast<XElement>()
-				.Attributes()
-				.First(x => x.Name == "version")
-				.Value;
-
-		var system = "";
+		string system;
 
 		if(Convert.ToInt16(version) >= 4)
 		{
-			var confversion = "";
-
-			confversion = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config"))
+			var confVersion = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config"))
 				.Cast<XElement>()
 				.Attributes()
 				.First(x => x.Name == "version")
 				.Value;
 
-			if(Convert.ToInt16(confversion) >= 6)
+			if(Convert.ToInt16(confVersion) >= 6)
 			{
 				system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/msxconfig/info"))
 					.Cast<XElement>()

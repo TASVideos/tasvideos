@@ -38,14 +38,9 @@ public sealed class DiscordDistributor : IPostDistributor
 
 		if (post.Type == PostType.Administrative)
 		{
-			if (post.Group == PostGroups.UserManagement)
-			{
-				channel = _settings.PrivateUserChannelId;
-			}
-			else
-			{
-				channel = _settings.PrivateChannelId;
-			}
+			channel = post.Group == PostGroups.UserManagement
+				? _settings.PrivateUserChannelId
+				: _settings.PrivateChannelId;
 		}
 		else
 		{
@@ -53,9 +48,9 @@ public sealed class DiscordDistributor : IPostDistributor
 			{
 				channel = _settings.PublicGameChannelId;
 			}
-			else if (post.Group == PostGroups.Publication
-				|| post.Group == PostGroups.Submission
-				|| post.Group == PostGroups.UserFiles)
+			else if (post.Group is PostGroups.Publication
+					or PostGroups.Submission
+					or PostGroups.UserFiles)
 			{
 				channel = _settings.PublicTasChannelId;
 			}

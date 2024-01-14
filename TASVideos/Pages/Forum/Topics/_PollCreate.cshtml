@@ -10,7 +10,7 @@
 		<fieldset>
 			<label asp-for="Question"></label>
 			<input condition="!restricted" type="text" asp-for="Question" class="form-control" />
-			<input condition="restricted" disabled placeholder="@Model!.Question" type="text" class="form-control" />
+			<input condition="restricted" disabled placeholder="@Model.Question" type="text" class="form-control" />
 			<span asp-validation-for="Question" class="text-danger"></span>
 		</fieldset>
 		<fieldset>

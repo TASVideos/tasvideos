@@ -21,7 +21,7 @@
 	if (!player) {
 		window.onYouTubeIframeAPIReady = () => {
 			player = new YT.Player('ytplayer', {
-				videoId: "@Model!.Split('/').Last()"
+				videoId: "@Model.Split('/').Last()"
 			});
 		}
 	}

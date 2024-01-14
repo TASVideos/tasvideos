@@ -10,6 +10,6 @@ public abstract class ModuleParameterTypeAdapter<T> : IModuleParameterTypeAdapte
 	public abstract T Convert(string? input);
 	object? IModuleParameterTypeAdapter.Convert(string? input)
 	{
-		return (object?)Convert(input);
+		return Convert(input);
 	}
 }
