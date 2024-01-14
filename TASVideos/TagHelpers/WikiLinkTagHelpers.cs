@@ -78,7 +78,7 @@ public class ProfileLinkTagHelper : AnchorTagHelper
 	{
 	}
 
-	public string Username { get; set; } = "";
+	public string? Username { get; set; }
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
@@ -86,7 +86,7 @@ public class ProfileLinkTagHelper : AnchorTagHelper
 		if (innerContent.IsEmptyOrWhiteSpace)
 		{
 			output.Content.Clear();
-			output.Content.Append(Username);
+			output.Content.Append(Username ?? "");
 		}
 
 		output.TagName = "a";
