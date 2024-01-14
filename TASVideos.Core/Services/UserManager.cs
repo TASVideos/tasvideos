@@ -48,7 +48,7 @@ public class UserManager : UserManager<User>
 		_wikiPages = wikiPages;
 	}
 
-	// Clears the user claims, and adds a distinct list of user permissions
+	// Clears the user claims, and adds a distinct list of user permissions,
 	// so they can be stored and retrieved from their cookie
 	public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)
 	{
@@ -81,7 +81,7 @@ public class UserManager : UserManager<User>
 	}
 
 	/// <summary>
-	/// Returns the the number of unread <see cref="PrivateMessage"/>
+	/// Returns the number of unread <see cref="PrivateMessage"/>
 	/// for the given <see cref="User" />
 	/// </summary>
 	public async ValueTask<int> GetUnreadMessageCount(int userId)
@@ -307,7 +307,7 @@ public class UserManager : UserManager<User>
 			return null;
 		}
 
-		// If it is the recipient and the message is not deleted
+		// If it is the recipient and the message are not deleted
 		if (!pm.ReadOn.HasValue && pm.ToUserId == userId)
 		{
 			pm.ReadOn = DateTime.UtcNow;
@@ -333,7 +333,7 @@ public class UserManager : UserManager<User>
 	/// <summary>
 	/// Assigns any roles to the user that have an auto-assign post count
 	/// property, that the user does not already have. Note that the role
-	/// won't assigned if the user already has all permissions assigned to that role
+	/// won't be assigned if the user already has all permissions assigned to that role
 	/// </summary>
 	public async Task AssignAutoAssignableRolesByPost(int userId)
 	{
@@ -357,7 +357,7 @@ public class UserManager : UserManager<User>
 				.Select(rp => rp.PermissionId)
 				.ToList();
 
-			// If the new role has any permission the user does not have
+			// If the new role has any permissions that the user does not have,
 			// then assign the role. Indirectly this also ensures that
 			// the user will not already have the role
 			if (newRolePermissions.Any(p => !userPermissions.Contains(p)))
@@ -384,7 +384,7 @@ public class UserManager : UserManager<User>
 
 	/// <summary>
 	/// Assigns any roles to the user that have auto-assign publication set to true,
-	/// that the user does not already have. Note that the role won't assigned
+	/// that the user does not already have. Note that the role won't be assigned
 	/// if the user already has all permissions assigned to that role
 	/// </summary>
 	public async Task AssignAutoAssignableRolesByPublication(IEnumerable<int> userIds, string publicationTitle)
@@ -417,7 +417,7 @@ public class UserManager : UserManager<User>
 					.Select(rp => rp.PermissionId)
 					.ToList();
 
-				// If the new role has any permission the user does not have
+				// If the new role has any permission that the user does not have,
 				// then assign the role. Indirectly this also ensures that
 				// the user will not already have the role
 				if (newRolePermissions.Any(p => !userPermissions.Contains(p)))

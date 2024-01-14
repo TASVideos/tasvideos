@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Core.Services.Email;
 
 /// <summary>
-/// Represents an email that can be send to an <see cref="IEmailSender"/>
+/// Represents an email that can be sent to an <see cref="IEmailSender"/>
 /// </summary>
 public interface IEmail
 {
@@ -21,7 +21,7 @@ public interface IEmail
 	string Message { get; }
 
 	/// <summary>
-	/// Gets a value indicating whether or not the <see cref="Message" /> contains HTML content
+	/// Gets a value indicating whether the <see cref="Message" /> contains HTML content
 	/// </summary>
 	bool ContainsHtml { get; }
 }

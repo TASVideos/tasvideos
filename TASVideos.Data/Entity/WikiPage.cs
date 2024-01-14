@@ -88,7 +88,7 @@ public static class WikiQueryableExtensions
 	/// </summary>
 	/// <param name="query">The query to filter.</param>
 	/// <seealso cref="WikiPage"/>
-	/// <param name="pageName">The name of the page to get sub pages from.</param>
+	/// <param name="pageName">The name of the page to get Subpages from.</param>
 	public static IQueryable<WikiPage> ThatAreSubpagesOf(this IQueryable<WikiPage> query, string? pageName)
 	{
 		pageName = (pageName ?? "").Trim('/');

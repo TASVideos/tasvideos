@@ -45,7 +45,7 @@ public static class DbInitializer
 		}
 	}
 
-	// Adds optional sample data for testing purposes (would not be apart of a production release)
+	// Adds optional sample data for testing purposes (would not be a part of a production release)
 	private static async Task GenerateDevSampleData(DbContext context)
 	{
 		var sql = await GetSampleDataScript();

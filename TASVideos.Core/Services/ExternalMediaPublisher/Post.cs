@@ -17,7 +17,7 @@ public interface IPostable
 	string Title { get; }
 	
 	/// <summary>
-	/// Gets the post title with markdown formatting.
+	/// Gets the post title with Markdown formatting.
 	/// Optionally may include "{0}" to be replaced with the <see cref="Link"/>.
 	/// </summary>
 	string FormattedTitle { get; }

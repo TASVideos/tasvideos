@@ -71,7 +71,7 @@
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 	<script>
 		{
-			// Auto-fill timezone if not set
+			// Autofill timezone if not set
 			if (!document.querySelector("#SelectedTimeZone option:checked").value) {
 				const timezoneOffset = 0 - new Date().getTimezoneOffset();
 				let timezone = document.querySelector(`[data-offset="${timezoneOffset}"]`);

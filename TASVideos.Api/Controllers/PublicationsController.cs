@@ -1,6 +1,6 @@
 ﻿/*
  * General API TODOs:
- * Field selection is purely post processing and returns distinct objects,
+ * Field selection is purely post-processing and returns distinct objects,
  * so the record count might be less than the requested count
  * how do we document this? or do we want to try to do dynamic queryable field selection?
  */

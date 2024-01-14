@@ -37,7 +37,7 @@ internal class Dtm : ParserBase, IParser
 			result.StartType = MovieStartType.Savestate;
 		}
 
-		result.Frames = (int)br.ReadInt64(); // Legacy .dtm format did not have ticks, so we need to fallback to vi count
+		result.Frames = (int)br.ReadInt64(); // Legacy .dtm format did not have ticks, so we need to fall back to vi count
 		br.ReadInt64();
 		br.ReadInt64(); // Lag count
 		br.ReadInt64(); // Reserved

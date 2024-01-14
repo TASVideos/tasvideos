@@ -18,7 +18,7 @@ public interface ISortable
 public static class SortableExtensions
 {
 	/// <summary>
-	/// Returns whether or not the given parameter is specified.
+	/// Returns whether the given parameter is specified.
 	/// </summary>
 	public static bool IsSortingParam(this ISortable? sortable, string? param)
 	{
@@ -42,7 +42,7 @@ public static class SortableExtensions
 	}
 
 	/// <summary>
-	/// Returns whether or not the given parameter is specified and
+	/// Returns whether the given parameter is specified and
 	/// is specified as a descending sort.
 	/// </summary>
 	public static bool IsDescending(this ISortable? sortable, string? param)
@@ -68,7 +68,7 @@ public static class SortableExtensions
 	}
 
 	/// <summary>
-	/// Returns whether or not the requested sort is valid based on the destination response
+	/// Returns whether the requested sort is valid based on the destination response
 	/// The sorting is valid if all parameters match properties in the response, and that
 	/// those properties are declared as sortable.
 	/// </summary>

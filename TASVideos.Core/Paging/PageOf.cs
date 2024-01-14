@@ -23,7 +23,7 @@ public class PageOf<T> : IPaged, IEnumerable<T>
 }
 
 /// <summary>
-/// Represents all of the data necessary to create a paged query.
+/// Represents all the data necessary to create a paged query.
 /// </summary>
 public class PagingModel : ISortable, IPageable
 {

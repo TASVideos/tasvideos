@@ -33,7 +33,7 @@ public class User : IdentityUser<int>, ITrackable
 	public string? MoodAvatarUrlBase { get; set; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether or not to use
+	/// Gets or sets a value indicating whether to use
 	/// the user's ratings when calculating a publication's average rating.
 	/// </summary>
 	public bool UseRatings { get; set; } = true;

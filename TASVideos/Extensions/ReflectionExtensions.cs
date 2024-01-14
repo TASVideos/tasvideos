@@ -37,7 +37,7 @@ public static class ReflectionExtensions
 	}
 
 	/// <summary>
-	/// Returns the DisplayAttribute value of a Enum if exists
+	/// Returns the DisplayAttribute value of an Enum if exists
 	/// Else it will return the name of the enum
 	/// If the value is null, an empty string will be returned
 	/// </summary>

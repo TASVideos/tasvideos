@@ -4,7 +4,7 @@
 namespace TASVideos.Api.Responses;
 
 /// <summary>
-/// Represents a game returned by the games endpoint.
+/// Represents a game returned by the Games endpoint.
 /// </summary>
 public class GamesResponse
 {

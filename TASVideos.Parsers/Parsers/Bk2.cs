@@ -222,7 +222,7 @@ internal class Bk2 : ParserBase, IParser
 	}
 
 	// before 2.8, clock rate had to be determined by the core used
-	// only subgbhawk and gambatte used cycle based time at this time
+	// only SubGbHawk and gambatte used cycle based time at this time
 	private static readonly Dictionary<string, int> CycleBasedCores = new()
 	{
 		["subgbhawk"] = 4194304,
@@ -231,11 +231,11 @@ internal class Bk2 : ParserBase, IParser
 
 	private static readonly IReadOnlyList<string> ValidClockRates = new[]
 	{
-		"4194304", // subgbhawk
-		"2097152", // gambatte, sameboy
-		"5369318.18181818", // subneshawk (NTSC)
-		"5320342.5", // subneshawk (PAL/Dendy)
-		"33868800", // nymashock
+		"4194304", // SubGbHawk
+		"2097152", // gambatte, SameBoy
+		"5369318.18181818", // SubNesHawk (NTSC)
+		"5320342.5", // SubNesHawk (PAL/Dendy)
+		"33868800", // NymaShock
 	};
 
 	private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new()

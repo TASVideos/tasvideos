@@ -34,8 +34,8 @@ internal class TASVideosGrue : ITASVideosGrue
 	{
 		var topic = await _db.ForumTopics.SingleOrDefaultAsync(f => f.SubmissionId == submissionId);
 
-		// We intentionally silently fail here.
-		// Otherwise we would leave submission rejection in a partial state
+		// We intentionally silently fail here,
+		// otherwise we would leave submission rejection in a partial state
 		// which would be worse than a missing forum post
 		if (topic is not null)
 		{

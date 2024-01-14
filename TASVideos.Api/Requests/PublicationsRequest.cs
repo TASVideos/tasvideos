@@ -46,12 +46,12 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 	public string? AuthorIds { get; init; }
 
 	/// <summary>
-	/// Gets a value indicating whether or not to show obsoleted in addition to current movies.
+	/// Gets a value indicating whether to show obsoleted in addition to current movies.
 	/// </summary>
 	public bool ShowObsoleted { get; init; }
 
 	/// <summary>
-	/// Gets a value indicating whether or not to only show obsoleted movies (and exclude current)
+	/// Gets a value indicating whether to only show obsoleted movies (and exclude current)
 	/// </summary>
 	public bool OnlyObsoleted { get; init; }
 

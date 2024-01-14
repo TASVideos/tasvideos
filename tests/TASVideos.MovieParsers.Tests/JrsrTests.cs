@@ -498,7 +498,7 @@ null)]
 ", "foo", null,
 "bar", null,
 null)]
-	// Uniqueness of section names is not checked a the JrsrSectionParser
+	// Uniqueness of section names is not checked by the JrsrSectionParser
 	// level.
 	[DataRow(
 @"JRSR

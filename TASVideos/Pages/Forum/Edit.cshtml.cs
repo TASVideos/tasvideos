@@ -72,7 +72,7 @@ public class EditModel : BasePageModel
 
 		foreach (var forum in category.Forums)
 		{
-			// This is a n squared problem but we don't anticipate enough forums in a single category to be a performance issue
+			// This is an n squared problem, but we don't anticipate enough forums in a single category to be a performance issue
 			// This could be optimized away by joining model.Forums against category.Forums then looping
 			var forumModel = Category.Forums.Single(f => f.Id == forum.Id);
 			forum.Ordinal = forumModel.Ordinal;

@@ -160,7 +160,7 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 						var vid = pp.Path[prefix.Length..];
 						if (vid.Length > 0)
 						{
-							// Retain everything after the prefix, which is an identifer and optional filename.
+							// Retain everything after the prefix, which is an identifier and optional filename.
 							DoTemplate(w, ArchiveOrg, width, height, vid);
 							break;
 						}

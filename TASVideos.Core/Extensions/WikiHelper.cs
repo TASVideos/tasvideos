@@ -226,7 +226,7 @@ public static class WikiHelper
 	}
 
 	/// <summary>
-	/// Fixes Internal system page links to be their public counter parts ex: InternalSystem/SubmissionContent/S4084 to 4084S.
+	/// Fixes Internal system page links to be their public counterparts ex: InternalSystem/SubmissionContent/S4084 to 4084S.
 	/// </summary>
 	public static string ProcessLink(string link)
 	{

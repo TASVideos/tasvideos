@@ -7,7 +7,7 @@
 public interface IParseResult
 {
 	/// <summary>
-	/// Gets a value indicating whether or not the movie was successfully parsed
+	/// Gets a value indicating whether the movie was successfully parsed
 	/// If not successful the <see cref="Errors"/> property will contain at least one error.
 	/// </summary>
 	bool Success { get; }

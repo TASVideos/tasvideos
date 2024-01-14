@@ -118,8 +118,8 @@ public class NukeModel : BasePageModel
 		await _db.SaveChangesAsync();
 
 		// The simple solution to having the correct data for pubs and subs is to save changes first
-		// This is a repeatable process so we aren't worried about partial successes
-		// And this is very rare so we aren't as worried about about speed
+		// This is a repeatable process, so we aren't worried about partial successes
+		// And this is very rare, so we aren't as worried about speed
 		var pubs = await _db.Publications
 			.IncludeTitleTables()
 			.ForAuthor(user.Id)

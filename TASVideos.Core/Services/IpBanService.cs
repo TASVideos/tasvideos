@@ -7,7 +7,7 @@ namespace TASVideos.Core.Services;
 public interface IIpBanService
 {
 	/// <summary>
-	/// Returns a value indicating whether or not the ip address is currently banned.
+	/// Returns a value indicating whether the ip address is currently banned.
 	/// </summary>
 	ValueTask<bool> IsBanned(IPAddress? ipAddress);
 

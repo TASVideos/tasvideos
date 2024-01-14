@@ -47,7 +47,7 @@ public class DisplayMiniMovie : ViewComponent
 
 	private async Task<MiniMovieModel?> GetPublicationMiniMovie(int id)
 	{
-		// TODO: id == 0 means there are no publications, which is an out of the box problem only, make this scenario more clear and simpler
+		// TODO: id == 0 means there are no publications, which is an out-of-the-box problem only, make this scenario more clear and simpler
 		if (id != 0)
 		{
 			return await _db.Publications

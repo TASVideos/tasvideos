@@ -28,7 +28,7 @@ public interface INode
 	string InnerText(IWriterHelper h);
 
 	/// <summary>
-	/// Debugging output of all of the data in this node.
+	/// Debugging output of all the data in this node.
 	/// </summary>
 	void DumpContentDescriptive(TextWriter w, string padding);
 

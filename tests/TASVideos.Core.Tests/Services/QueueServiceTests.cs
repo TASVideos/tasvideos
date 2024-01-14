@@ -550,7 +550,7 @@ public class QueueServiceTests
 		Assert.AreEqual(sub.PublisherId, publisherId);
 		Assert.AreEqual(PublicationUnderway, sub.Status);
 
-		// Youtube url should be unlisted
+		// YouTube url should be unlisted
 		await _youtubeSync.Received(1).UnlistVideo(Arg.Any<string>());
 
 		// Submission status history added for published status
@@ -626,7 +626,7 @@ public class QueueServiceTests
 		var obsoletedMovie = _db.Publications.Single(p => p.Id == obsoletedPublicationId);
 		Assert.IsNull(obsoletedMovie.ObsoletedById);
 
-		// Obsoleted movie youtube url must be synced
+		// Obsoleted movie YouTube url must be synced
 		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}
 

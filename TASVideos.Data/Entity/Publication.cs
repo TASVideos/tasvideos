@@ -76,7 +76,7 @@ public class Publication : BaseEntity, ITimeable
 	public int RerecordCount { get; set; }
 
 	/// <summary>
-	/// Gets or sets Any author's that are not a user. If they are a user, they should linked, and not listed here.
+	/// Gets or sets Any author's that are not a user. If they are a user, they should be linked, and not listed here.
 	/// </summary>
 	[StringLength(200)]
 	public string? AdditionalAuthors { get; set; }

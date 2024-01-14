@@ -12,7 +12,7 @@ public interface IUserFiles
 	Task<int> StorageUsed(int userId);
 
 	/// <summary>
-	/// Calculates whether or not the given file will exceed the maximum limit for the user
+	/// Calculates whether the given file will exceed the maximum limit for the user
 	/// </summary>
 	Task<bool> SpaceAvailable(int userId, long fileLength);
 

@@ -22,7 +22,7 @@ public interface IQueueService
 	int HoursRemainingForJudging(ISubmissionDisplay submission);
 
 	/// <summary>
-	/// Returns whether or not a submission can be delete, does not affect the submission
+	/// Returns whether a submission can be deleted, does not affect the submission
 	/// </summary>
 	Task<DeleteSubmissionResult> CanDeleteSubmission(int submissionId);
 
@@ -32,7 +32,7 @@ public interface IQueueService
 	Task<DeleteSubmissionResult> DeleteSubmission(int submissionId);
 
 	/// <summary>
-	/// Returns whether or not a publication can be unpublished, does not affect the publication
+	/// Returns whether a publication can be unpublished, does not affect the publication
 	/// </summary>
 	Task<UnpublishResult> CanUnpublish(int publicationId);
 
@@ -49,7 +49,7 @@ public interface IQueueService
 
 	/// <summary>
 	/// Obsoletes a publication with the existing publication.
-	/// In addition, it marks and syncs the obsoleted youtube videos
+	/// In addition, it marks and syncs the obsoleted YouTube videos
 	/// </summary>
 	/// <param name="publicationToObsolete">The movie to obsolete</param>
 	/// <param name="obsoletingPublicationId">The movie that obsoletes it</param>
@@ -346,7 +346,7 @@ internal class QueueService : IQueueService
 
 		foreach (var obsoletedPub in obsoletedPubsWithYoutube)
 		{
-			// Re-query to get all of the includes
+			// Re-query to get all the includes
 			// We can afford these extra trips, compared to the massive query it would be
 			// for a single trip
 			var queriedPub = await _db.Publications

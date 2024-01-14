@@ -164,9 +164,9 @@ internal class TopicWatcher : ITopicWatcher
 				// Do nothing
 				// 1) if a watch is already removed, we are done
 				// 2) if a watch was updated (for instance, someone posted in the topic),
-				//        there isn't much we can do other than reload the page anyway with an error
+				//        there isn't much we can do other than reload the page anyway with an error.
 				//        An error would only be modestly helpful anyway, and wouldn't save clicks
-				//        However, this would be an nice to have one day
+				//        However, this would be a nice to have one day
 			}
 		}
 	}

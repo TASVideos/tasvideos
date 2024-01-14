@@ -28,7 +28,7 @@ public class RequirePermissionAttribute : ActionFilterAttribute
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether or not to allow the user as long as only one permission is available,
+	/// Gets a value indicating whether to allow the user as long as only one permission is available,
 	/// else all declared permissions are required
 	/// </summary>
 	public bool MatchAny { get; }

@@ -172,7 +172,7 @@ internal class Lmp : ParserBase, IParser
 
 	private static bool TryParseOldHexen(byte[] movie, ref int frames)
 	{
-		// Hexen demo and Hexen 1.0 has a 11 byte header, and 6 bytes per input
+		// Hexen demo and Hexen 1.0 has an 11 byte header, and 6 bytes per input
 		if (!CheckSizeSanity(movie.Length, 11, 6))
 		{
 			return false;
@@ -279,7 +279,7 @@ internal class Lmp : ParserBase, IParser
 		/* A lmp consists of a header, inputs, and a terminator byte
 		 * the size of the header and each input depends on the game used
 		 * the terminator byte is always 0x80 (note: source ports might have a footer after)
-		 * a bit of heuristics are needed here to detect the variant used
+		 * a bit of heuristics is needed here to detect the variant used
 		 * as the header doesn't give an easy answer to the variant used
 		 */
 

@@ -19,7 +19,7 @@ internal static class Extensions
 
 	/// <summary>
 	/// Searches through a list of strings that represents a space separated
-	/// key/value pair, for the given key (case insensitive and returns the value.
+	/// key/value pair, for the given key (case-insensitive and returns the value).
 	/// </summary>
 	/// <param name="lines">The key/value pairs to search.</param>
 	/// <param name="key">The key to search for.</param>
@@ -110,7 +110,7 @@ internal static class Extensions
 	/// <summary>
 	/// Parses the given string as a boolean.
 	/// </summary>
-	/// <returns>True if value is a case insensitive true, or a 1.</returns>
+	/// <returns>True if value is a case-insensitive true, or a 1.</returns>
 	public static bool ToBool(this string val)
 	{
 		if (string.IsNullOrWhiteSpace(val))
@@ -128,7 +128,7 @@ internal static class Extensions
 
 	/// <summary>
 	/// Gets a file that matches or starts with the given name
-	/// with a case insensitive match.
+	/// with a case-insensitive match.
 	/// </summary>
 	public static ZipArchiveEntry? Entry(this ZipArchive archive, string name)
 	{
@@ -140,7 +140,7 @@ internal static class Extensions
 		return archive.Entries.Any(e => e.Name.ToLower() == name.ToLower());
 	}
 
-	// Returns a boolean indicating whether or not the given git is set in the given byte
+	// Returns a boolean indicating whether the given git is set in the given byte
 	public static bool Bit(this byte b, int index)
 	{
 		return (b & (1 << index)) != 0;

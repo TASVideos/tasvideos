@@ -2,7 +2,7 @@
 namespace TASVideos.Api.Responses;
 
 /// <summary>
-/// Represents a publication returned by the publications endpoint.
+/// Represents a publication returned by the Publications endpoint.
 /// </summary>
 public class PublicationsResponse
 {

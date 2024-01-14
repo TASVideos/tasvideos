@@ -39,7 +39,7 @@ public class WikiResult : IWikiPage
 public interface IWikiPages
 {
 	/// <summary>
-	/// Returns whether or not any revision of the given page exists
+	/// Returns whether any revision of the given page exists
 	/// </summary>
 	Task<bool> Exists(string? pageName, bool includeDeleted = false);
 
@@ -53,7 +53,7 @@ public interface IWikiPages
 
 	/// <summary>
 	/// Creates a new revision of a wiki page.
-	/// If the create timestamp is less than the latest revision, the revision will nto be added
+	/// If the created timestamp is less than the latest revision, the revision will not be added
 	/// </summary>
 	/// <return>The resulting wiki page revision if successfully added, null if it was unable to add</return>
 	Task<IWikiPage?> Add(WikiCreateRequest addRequest);
@@ -63,7 +63,7 @@ public interface IWikiPages
 	/// All revisions are renamed to the new page
 	/// and <seealso cref="WikiPageReferral" /> entries are updated
 	/// </summary>
-	/// <returns>Whether or not the move was successful.
+	/// <returns>Whether the move was successful.
 	/// If false, a conflict was detected and no data was modified</returns>
 	Task<bool> Move(string originalName, string destinationName);
 
@@ -83,7 +83,7 @@ public interface IWikiPages
 
 	/// <summary>
 	/// Performs a soft delete on a single revision of a <see cref="WikiPage"/>
-	/// If the revision is latest revisions, then <see cref="WikiPageReferral"/>
+	/// If the revision is the latest revision, then <see cref="WikiPageReferral"/>
 	/// will be removed where the given page name is a referrer
 	/// </summary>
 	Task Delete(string pageName, int revision);
@@ -92,7 +92,7 @@ public interface IWikiPages
 	/// Restores all revisions of the given page.
 	/// If a current revision is restored, <seealso cref="WikiPageReferral" /> entries are updated.
 	/// </summary>
-	/// /// <returns>Whether or not the undelete was successful.
+	/// /// <returns>Whether undelete was successful.
 	/// If false, a conflict was detected and no data was modified</returns>
 	Task<bool> Undelete(string pageName);
 
@@ -102,9 +102,9 @@ public interface IWikiPages
 	Task FlushCache();
 
 	/// <summary>
-	/// Returns a collection of wiki pages that are not not linked
+	/// Returns a collection of wiki pages that are not linked
 	/// by any other wiki page. These pages are effectively "orphans"
-	/// since they can navigated to
+	/// since they cannot be navigated to
 	/// </summary>
 	Task<IReadOnlyCollection<WikiOrphan>> Orphans();
 
@@ -312,7 +312,7 @@ internal class WikiPages : IWikiPages
 		destinationName = destinationName.Trim('/');
 
 		// TODO: support moving a page to a deleted page
-		// Revision ids would have to be adjusted but it could be done
+		// Revision ids would have to be adjusted, but it could be done
 		if (await Exists(destinationName, includeDeleted: true))
 		{
 			throw new InvalidOperationException($"Cannot move {originalName} to {destinationName} because {destinationName} already exists.");
@@ -327,7 +327,7 @@ internal class WikiPages : IWikiPages
 			revision.PageName = destinationName;
 		}
 
-		// Update all Referrals
+		// Update all Referrals.
 		// Referrals can be safely updated since the new page still has the original content
 		// and any links on them are still correctly referring to other pages
 		var existingReferrals = await _db.WikiReferrals
@@ -352,9 +352,9 @@ internal class WikiPages : IWikiPages
 
 		// Note that we can not update Referrers since the wiki pages will
 		// still physically refer to the original page. Those links are
-		// broken and it is important to keep them listed as broken so they
+		// broken, and it is important to keep them listed as broken, so they
 		// can show up in the Broken Links module for editors to see and fix.
-		// Anyone doing a move operation should know to check broken links afterwards
+		// Anyone doing a move operation should know to check broken links afterward
 
 		var cachedRevision = this[originalName];
 		if (cachedRevision is not null)

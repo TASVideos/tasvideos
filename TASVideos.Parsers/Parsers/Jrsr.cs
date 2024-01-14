@@ -316,7 +316,7 @@ internal class JrsrSectionParser : IDisposable
 
 	/// <summary>
 	/// If a character was previously unread using <see cref="UnreadChar"/>,
-	/// returns it an clears the unread buffer. Otherwise, reads and returns
+	/// returns it and clears the unread buffer. Otherwise, reads and returns
 	/// the next character from <see cref="_reader"/>. Returns -1 at the end
 	/// of the stream.
 	/// </summary>
@@ -730,7 +730,7 @@ internal class JrsrSectionParser : IDisposable
 	*/
 
 	/// <summary>
-	/// Returns an iterator over the tokens of of a line in "component"
+	/// Returns an iterator over the tokens of a line in "component"
 	/// format.
 	/// </summary>
 	/// <exception name="FormatException">The line has unbalanced
@@ -796,7 +796,7 @@ internal class JrsrSectionParser : IDisposable
 				else if (depth == 1)
 				{
 					// This right parenthesis terminates the current token,
-					// which was begin by a left parenthesis.
+					// which was begun by a left parenthesis.
 					if (token.Length > 0)
 					{
 						yield return token.ToString();
