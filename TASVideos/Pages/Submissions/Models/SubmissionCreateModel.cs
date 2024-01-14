@@ -15,7 +15,7 @@ public class SubmissionCreateModel
 	[StringLength(100)]
 	public string GameName { get; set; } = "";
 
-	[Display(Name = "Branch Name", Description = "Example: 100% or princess only; any% can usually be omitted")]
+	[Display(Name = "Goal Name", Description = "Example: 100% or princess only; any% can usually be omitted")]
 	[StringLength(50)]
 	public string? Branch { get; set; }
 

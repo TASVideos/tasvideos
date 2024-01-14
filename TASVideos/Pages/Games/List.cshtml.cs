@@ -144,6 +144,30 @@ public class ListModel : BasePageModel
 		};
 	}
 
+	public async Task<IActionResult> OnGetGameGoalDropDownForGame(int gameId, bool includeEmpty)
+	{
+		var items = await _db.GameGoals
+			.Where(gg => gg.GameId == gameId)
+			.OrderBy(gg => gg.DisplayName)
+			.Select(gg => new SelectListItem
+			{
+				Value = gg.Id.ToString(),
+				Text = gg.DisplayName
+			})
+			.ToListAsync();
+
+		if (includeEmpty)
+		{
+			items = UiDefaults.DefaultEntry.Concat(items).ToList();
+		}
+
+		return new PartialViewResult
+		{
+			ViewName = "_DropdownItems",
+			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+		};
+	}
+
 	private async Task<SystemPageOf<GameListModel>> GetPageOfGames(GameListRequest paging)
 	{
 		PageOf<GameListModel> data;

@@ -4,14 +4,14 @@ public class PublicationHistoryGroup
 {
 	public int GameId { get; init; }
 
-	public IEnumerable<PublicationHistoryNode> Branches { get; init; } = new List<PublicationHistoryNode>();
+	public IEnumerable<PublicationHistoryNode> Goals { get; init; } = new List<PublicationHistoryNode>();
 }
 
 public class PublicationHistoryNode
 {
 	public int Id { get; init; }
 	public string Title { get; init; } = "";
-	public string? Branch { get; init; }
+	public string? Goal { get; init; }
 	public DateTime CreateTimestamp { get; set; }
 
 	public string? ClassIconPath { get; set; }

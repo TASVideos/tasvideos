@@ -52,13 +52,13 @@ public class IndexModel : BasePageModel
 		Game = game;
 		var movies = await _db.Publications
 			.Where(p => p.GameId == Game.Id && p.ObsoletedById == null)
-			.OrderBy(p => p.Branch == null ? -1 : p.Branch.Length)
+			.OrderBy(p => p.GameGoal!.DisplayName.Length)
 			.ThenBy(p => p.Frames)
 			.Select(p => new
 			{
 				p.Id,
 				p.Title,
-				Branch = p.Branch ?? "",
+				Goal = p.GameGoal!.DisplayName,
 				Screenshot = p.Files
 				.Where(f => f.Type == FileType.Screenshot)
 				.Select(f => new MiniMovieModel.ScreenshotFile
@@ -75,13 +75,13 @@ public class IndexModel : BasePageModel
 
 		Movies = movies
 			.Select(m => new TabMiniMovieModel(
-				movies.Count(mm => mm.Branch == m.Branch) > 1 ? m.GameTitle : string.IsNullOrEmpty(m.Branch) ? "(baseline)" : "",
-				m.Branch,
+				movies.Count(mm => mm.Goal == m.Goal) > 1 ? m.GameTitle : "",
+				m.Goal,
 				new MiniMovieModel
 				{
 					Id = m.Id,
 					Title = m.Title,
-					Branch = m.Branch,
+					Goal = m.Goal,
 					Screenshot = m.Screenshot,
 					OnlineWatchingUrl = m.OnlineWatchingUrl,
 				}))

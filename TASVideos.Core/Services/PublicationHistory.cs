@@ -34,7 +34,7 @@ internal class PublicationHistory : IPublicationHistory
 			{
 				Id = p.Id,
 				Title = p.Title,
-				Branch = p.Branch,
+				Goal = p.GameGoal!.DisplayName,
 				CreateTimestamp = p.CreateTimestamp,
 				ObsoletedById = p.ObsoletedById,
 				ClassIconPath = p.PublicationClass!.IconPath,
@@ -54,7 +54,7 @@ internal class PublicationHistory : IPublicationHistory
 		return new PublicationHistoryGroup
 		{
 			GameId = gameId,
-			Branches = publications
+			Goals = publications
 				.Where(p => !p.ObsoletedById.HasValue)
 				.ToList()
 		};

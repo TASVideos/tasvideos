@@ -122,14 +122,14 @@ public class PublishModel : BasePageModel
 			SystemFrameRateId = submission.SystemFrameRate!.Id,
 			GameId = submission.Game!.Id,
 			GameVersionId = submission.GameVersion!.Id,
-			Branch = submission.Branch,
 			EmulatorVersion = submission.EmulatorVersion,
 			Frames = submission.Frames,
 			RerecordCount = submission.RerecordCount,
 			MovieFileName = movieFileName,
 			AdditionalAuthors = submission.AdditionalAuthors,
 			Submission = submission,
-			MovieFile = await _fileService.CopyZip(submission.MovieFile, movieFileName)
+			MovieFile = await _fileService.CopyZip(submission.MovieFile, movieFileName),
+			GameGoalId = submission.GameGoalId
 		};
 
 		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, Submission.OnlineWatchUrlName);

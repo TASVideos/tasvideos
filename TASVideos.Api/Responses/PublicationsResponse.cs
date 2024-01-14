@@ -12,8 +12,11 @@ public class PublicationsResponse
 	[Sortable]
 	public string Title { get; init; } = "";
 
+	// Left in for backwards compatibility
 	[Sortable]
 	public string? Branch { get; init; } = "";
+	public string Goal { get; init; } = "";
+	public int GameGoalId { get; init; }
 
 	[Sortable]
 	public string? EmulatorVersion { get; init; } = "";

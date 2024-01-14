@@ -39,6 +39,7 @@ public class CatalogModel : BasePageModel
 	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGoals { get; set; } = new List<SelectListItem>();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -50,7 +51,8 @@ public class CatalogModel : BasePageModel
 					GameVersionId = p.GameVersionId,
 					GameId = p.GameId,
 					SystemId = p.SystemId,
-					SystemFrameRateId = p.SystemFrameRateId
+					SystemFrameRateId = p.SystemFrameRateId,
+					GameGoalId = p.GameGoalId!.Value
 				})
 				.SingleOrDefaultAsync();
 
@@ -147,6 +149,21 @@ public class CatalogModel : BasePageModel
 			}
 		}
 
+		if (publication.GameGoalId != Catalog.GameGoalId)
+		{
+			var gameGoal = await _db.GameGoals.SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
+			if (gameGoal is null)
+			{
+				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
+			}
+			else
+			{
+				externalMessages.Add($"Game Goal changed from {publication.GameGoal!.DisplayName} to {gameGoal.DisplayName}");
+				publication.GameGoalId = Catalog.GameGoalId;
+				publication.GameGoal = gameGoal;
+			}
+		}
+
 		if (publication.GameVersionId != Catalog.GameVersionId)
 		{
 			var gameVersion = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId);
@@ -218,6 +235,15 @@ public class CatalogModel : BasePageModel
 		AvailableSystemFrameRates = await _db.GameSystemFrameRates
 			.ForSystem(systemId)
 			.ToDropDown()
+			.ToListAsync();
+
+		AvailableGoals = await _db.GameGoals
+			.Where(gg => gg.GameId == gameId)
+			.Select(gg => new SelectListItem
+			{
+				Value = gg.Id.ToString(),
+				Text = gg.DisplayName
+			})
 			.ToListAsync();
 	}
 }

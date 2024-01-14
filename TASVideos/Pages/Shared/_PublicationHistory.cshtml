@@ -1,10 +1,10 @@
 ﻿@model PublicationHistoryGroup
 
-@foreach (var node in Model.Branches.OrderBy(b => string.IsNullOrWhiteSpace(b.Branch)))
+@foreach (var node in Model.Goals.OrderBy(b => string.IsNullOrWhiteSpace(b.Goal)))
 {
 	var highlight = node.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
 	<div class="mb-4">
-		<p>Current: <strong>@node.Branch</strong></p>
+		<p>Current: <strong>@node.Goal</strong></p>
 		<icon path="@node.ClassIconPath" />
 		@foreach (var flag in node.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 		{

@@ -87,6 +87,9 @@ public class Publication : BaseEntity, ITimeable
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");
 
+	public int? GameGoalId { get; set; }
+	public virtual GameGoal? GameGoal { get; set; }
+
 	public void GenerateTitle()
 	{
 		var authorList = Authors
@@ -115,9 +118,15 @@ public class Publication : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
+		string goal = GameGoal!.DisplayName;
+		if (goal == "baseline")
+		{
+			goal = "";
+		}
+
 		Title =
 			$"{System.Code} {gameName}"
-			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")
+			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
 			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}
@@ -262,6 +271,7 @@ public static class PublicationExtensions
 			.Include(p => p.System)
 			.Include(p => p.SystemFrameRate)
 			.Include(p => p.Game)
-			.Include(p => p.GameVersion);
+			.Include(p => p.GameVersion)
+			.Include(p => p.GameGoal);
 	}
 }

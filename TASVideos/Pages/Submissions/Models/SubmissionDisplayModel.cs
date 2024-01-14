@@ -35,8 +35,10 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	[Display(Name = "ROM Filename")]
 	public string? RomName { get; set; }
 
-	[Display(Name = "Branch")]
+	[Display(Name = "Goal")]
 	public string? Branch { get; set; }
+
+	public string? Goal { get; set; }
 
 	[Display(Name = "Emulator")]
 	public string? Emulator { get; set; }

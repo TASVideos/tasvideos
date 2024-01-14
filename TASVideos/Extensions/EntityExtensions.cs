@@ -367,7 +367,7 @@ public static class EntityExtensions
 		{
 			Id = p.Id,
 			Title = p.Title,
-			Branch = p.Branch ?? "",
+			Goal = p.GameGoal!.DisplayName,
 			Screenshot = p.Files
 				.Where(f => f.Type == FileType.Screenshot)
 				.Select(f => new MiniMovieModel.ScreenshotFile
@@ -400,7 +400,8 @@ public static class EntityExtensions
 			SystemFrameRateId = s.SystemFrameRateId,
 			Status = s.Status,
 			EmulatorVersion = s.EmulatorVersion,
-			Branch = s.Branch
+			Branch = s.Branch,
+			GameGoalId = s.GameGoalId
 		});
 	}
 

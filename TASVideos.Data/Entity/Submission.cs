@@ -99,6 +99,9 @@ public class Submission : BaseEntity, ITimeable
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? 0;
 
+	public int? GameGoalId { get; set; }
+	public virtual GameGoal? GameGoal { get; set; }
+
 	public void GenerateTitle()
 	{
 		if (System is null)
@@ -132,9 +135,17 @@ public class Submission : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
+		string? goal = GameGoal?.DisplayName;
+		goal = goal switch
+		{
+			null => Branch,
+			"baseline" => null,
+			_ => goal
+		};
+
 		Title =
 		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System.Code} {gameName}"
-			+ (!string.IsNullOrWhiteSpace(Branch) ? $" \"{Branch}\"" : "")
+			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}
 
@@ -238,6 +249,8 @@ public static class SubmissionExtensions
 			.Include(s => s.System)
 			.Include(s => s.SystemFrameRate)
 			.Include(s => s.Game)
-			.Include(s => s.GameVersion);
+			.Include(s => s.GameVersion)
+			.Include(s => s.GameGoal)
+			.Include(gg => gg.GameGoal);
 	}
 }
