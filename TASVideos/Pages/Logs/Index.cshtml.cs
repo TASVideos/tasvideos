@@ -71,7 +71,7 @@ public class IndexModel : BasePageModel
 		public string RowId { get; init; } = "";
 
 		[Sortable]
-		public string UserName { get; init; }
+		public string UserName { get; init; } = "";
 
 		[Sortable]
 		public DateTime Created { get; init; } = DateTime.UtcNow;
