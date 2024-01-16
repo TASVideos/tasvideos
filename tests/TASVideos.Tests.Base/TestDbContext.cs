@@ -136,7 +136,7 @@ internal class TestUpdateEntry : IUpdateEntry
 		throw new NotImplementedException();
 	}
 
-	public void SetStoreGeneratedValue(IProperty property, object? value)
+	public void SetStoreGeneratedValue(IProperty property, object? value, bool setModified = true)
 	{
 	}
 
@@ -159,6 +159,8 @@ internal class TestUpdateEntry : IUpdateEntry
 	{
 		throw new NotImplementedException();
 	}
+
+	public DbContext Context => null!;
 
 	// ReSharper disable once UnassignedGetOnlyAutoProperty
 	public IEntityType EntityType => null!;

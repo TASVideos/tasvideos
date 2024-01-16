@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
 		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="IPAddressRange" Version="6.0.0" />
-		<PackageReference Include="MailKit" Version="3.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.6" />
-		<PackageReference Include="StackExchange.Redis" Version="2.6.122" />
+		<PackageReference Include="MailKit" Version="4.3.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+		<PackageReference Include="StackExchange.Redis" Version="2.7.10" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
 	</ItemGroup>
 	<ItemGroup>
