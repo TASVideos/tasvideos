@@ -213,7 +213,10 @@ public class SubmitModel : BasePageModel
 				&& s.SubmitterId == userId
 				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days))
 			.ToListAsync();
-		_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
+		if (subs.Count > 0)
+		{
+			_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
+		}
 		return subs.Count < _settings.SubmissionRate.Submissions;
 	}
 }
