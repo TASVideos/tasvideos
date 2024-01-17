@@ -217,6 +217,7 @@ public class SubmitModel : BasePageModel
 		{
 			_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
 		}
+
 		return subs.Count < _settings.SubmissionRate.Submissions;
 	}
 }
