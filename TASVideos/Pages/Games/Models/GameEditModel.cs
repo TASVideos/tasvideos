@@ -17,7 +17,7 @@ public class GameEditModel
 	public string? Aliases { get; set; }
 
 	[StringLength(250)]
-	[Display(Name = "Screenshot Url")]
+	[Display(Name = "Screenshot URL")]
 	public string? ScreenshotUrl { get; set; }
 
 	[StringLength(300)]

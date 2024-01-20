@@ -177,7 +177,7 @@ public class EditUrlsModel : BasePageModel
 			logwording = new string[2] { "Change", "change" };
 		}
 
-		string log = $"{logwording[0]}ed {DisplayName} {UrlType} url {PublicationUrl}";
+		string log = $"{logwording[0]}ed {DisplayName} {UrlType} URL {PublicationUrl}";
 		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 		var result = await ConcurrentSave(_db, log, $"Unable to {logwording[1]} URL.");
 		if (result)
@@ -185,7 +185,7 @@ public class EditUrlsModel : BasePageModel
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
-				$"{logwording[0]}ed {UrlType} url | {Title}",
+				$"{logwording[0]}ed {UrlType} URL | {Title}",
 				$"{Id}M");
 
 			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))

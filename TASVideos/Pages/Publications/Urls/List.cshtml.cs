@@ -46,7 +46,7 @@ public class ListUrlsModel : BasePageModel
 	[Required]
 	[BindProperty]
 	[Url]
-	[Display(Name = "Url")]
+	[Display(Name = "URL")]
 	public string PublicationUrl { get; set; } = "";
 
 	[Required]
@@ -82,15 +82,15 @@ public class ListUrlsModel : BasePageModel
 		if (url != null)
 		{
 			_db.PublicationUrls.Remove(url);
-			string log = $"Deleted {url.DisplayName} {url.Type} url {url.Url}";
+			string log = $"Deleted {url.DisplayName} {url.Type} URL {url.Url}";
 			await _publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
-			var result = await ConcurrentSave(_db, log, "Unable to remove url.");
+			var result = await ConcurrentSave(_db, log, "Unable to remove URL.");
 			if (result)
 			{
 				await _publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
 					$"[{Id}M]({{0}}) edited by {User.Name()}",
-					$"Deleted {url.Type} url",
+					$"Deleted {url.Type} URL",
 					$"{Id}M");
 
 				await _youtubeSync.UnlistVideo(url.Url!);
