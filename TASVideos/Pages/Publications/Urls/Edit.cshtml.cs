@@ -157,7 +157,7 @@ public class EditUrlsModel : BasePageModel
 			url.Type = UrlType;
 			url.Url = CurrentUrl;
 
-			logWording = new[] { "Add", "add" };
+			logWording = new[] { "Chang", "chang" };
 		}
 		else
 		{
@@ -169,7 +169,7 @@ public class EditUrlsModel : BasePageModel
 				DisplayName = DisplayName
 			});
 
-			logWording = new[] { "Change", "change" };
+			logWording = new[] { "Add", "add" };
 		}
 
 		string log = $"{logWording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";

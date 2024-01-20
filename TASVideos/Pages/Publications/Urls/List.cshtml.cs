@@ -38,22 +38,6 @@ public class ListUrlsModel : BasePageModel
 
 	public ICollection<PublicationUrl> CurrentUrls { get; set; } = new List<PublicationUrl>();
 
-	[StringLength(100)]
-	[Display(Name = "Alt Title")]
-	[BindProperty]
-	public string? DisplayName { get; set; }
-
-	[Required]
-	[BindProperty]
-	[Url]
-	[Display(Name = "URL")]
-	public string PublicationUrl { get; set; } = "";
-
-	[Required]
-	[BindProperty]
-	[Display(Name = "Type")]
-	public PublicationUrlType UrlType { get; set; }
-
 	public async Task<IActionResult> OnGet()
 	{
 		var title = await _db.Publications
