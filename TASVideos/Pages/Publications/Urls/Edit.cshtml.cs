@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
@@ -7,9 +7,6 @@ using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Versions.Models;
-using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Pages.Publications.Urls;
 
@@ -99,8 +96,7 @@ public class EditUrlsModel : BasePageModel
 		}
 
 		var url = CurrentUrls
-			.Where(u => u.Id == UrlId.Value)
-			.SingleOrDefault();
+			.SingleOrDefault(u => u.Id == UrlId.Value);
 
 		if (url is null || url.Url is null)
 		{
@@ -149,20 +145,19 @@ public class EditUrlsModel : BasePageModel
 			return Page();
 		}
 
-		string[] logwording;
+		string[] logWording;
 
 		if (UrlId.HasValue)
 		{
 			var url = CurrentUrls
-				.Where(u => u.Id == UrlId.Value)
-				.Single();
+				.Single(u => u.Id == UrlId.Value);
 
 			url.PublicationId = PublicationId;
 			url.DisplayName = DisplayName;
 			url.Type = UrlType;
 			url.Url = CurrentUrl;
 
-			logwording = new string[2] { "Add", "add" };
+			logWording = new[] { "Add", "add" };
 		}
 		else
 		{
@@ -174,18 +169,18 @@ public class EditUrlsModel : BasePageModel
 				DisplayName = DisplayName
 			});
 
-			logwording = new string[2] { "Change", "change" };
+			logWording = new[] { "Change", "change" };
 		}
 
-		string log = $"{logwording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";
+		string log = $"{logWording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";
 		await _publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
-		var result = await ConcurrentSave(_db, log, $"Unable to {logwording[1]} URL.");
+		var result = await ConcurrentSave(_db, log, $"Unable to {logWording[1]} URL.");
 		if (result)
 		{
 			await _publisher.SendPublicationEdit(
 				$"{PublicationId}M edited by {User.Name()}",
 				$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
-				$"{logwording[0]}ed {UrlType} URL | {Title}",
+				$"{logWording[0]}ed {UrlType} URL | {Title}",
 				$"{PublicationId}M");
 
 			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(CurrentUrl))
