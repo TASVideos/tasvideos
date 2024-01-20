@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -33,7 +30,6 @@ public class ListUrlsModel : BasePageModel
 	[FromRoute]
 	public int PublicationId { get; set; }
 
-	[BindProperty]
 	public string Title { get; set; } = "";
 
 	public ICollection<PublicationUrl> CurrentUrls { get; set; } = new List<PublicationUrl>();
