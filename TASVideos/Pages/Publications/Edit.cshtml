@@ -54,7 +54,7 @@
 		<th>URL</th>
 		<th>Name</th>
 	</tr>
-	@foreach (var url in Model.Publication.Urls.OrderBy(f => f.Type))
+	@foreach (var url in Model.Publication.Urls.OrderBy(f => f.Type).ThenBy(f => f.DisplayName))
 	{
 		<tr>
 			<td>@url.Type</td>

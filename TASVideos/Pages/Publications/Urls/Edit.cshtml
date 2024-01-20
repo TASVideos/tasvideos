@@ -1,11 +1,11 @@
-﻿@page "/Publications/{id}/Urls/Edit/{publicationUrlId?}/{handler?}"
+﻿@page "/Publications/{publicationId}/Urls/Edit/{urlId?}/{handler?}"
 @model EditUrlsModel
 @{
 	string saveBtnName;
 	string iconClass;
-	if (Model.publicationUrlId.HasValue)
+	if (Model.UrlId.HasValue)
 	{
-		ViewData.SetTitle($"Editing URL #{Model.publicationUrlId} for {Model.Title}");
+		ViewData.SetTitle($"Editing URL #{Model.UrlId} for {Model.Title}");
 		saveBtnName = "Save";
 		iconClass = "fa fa-save";
 	}
@@ -27,9 +27,9 @@
                 <span asp-validation-for="UrlType" class="text-danger"></span>
             </fieldset>
 			<fieldset>
-				<label asp-for="PublicationUrl"></label>
-				<input type="text" asp-for="PublicationUrl" class="form-control" />
-				<span asp-validation-for="PublicationUrl" class="text-danger"></span>
+				<label asp-for="CurrentUrl"></label>
+				<input type="text" asp-for="CurrentUrl" class="form-control" />
+				<span asp-validation-for="CurrentUrl" class="text-danger"></span>
 			</fieldset>
             <fieldset>
                 <label asp-for="DisplayName"></label>
@@ -38,7 +38,7 @@
             </fieldset>
 			<div class="text-center mt-3">
 				<submit-button class="btn btn-primary"><span class="@iconClass"></span> @saveBtnName</submit-button>
-				<a asp-page="List" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-times"></span> Cancel</a>
+				<a asp-page="List" asp-route-PublicationId="@Model.PublicationId" class="btn btn-secondary"><span class="fa fa-times"></span> Cancel</a>
 			</div>
 		</column>
 	</row>

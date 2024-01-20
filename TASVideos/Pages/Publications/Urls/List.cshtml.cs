@@ -31,7 +31,7 @@ public class ListUrlsModel : BasePageModel
 	}
 
 	[FromRoute]
-	public int Id { get; set; }
+	public int PublicationId { get; set; }
 
 	[BindProperty]
 	public string Title { get; set; } = "";
@@ -57,7 +57,7 @@ public class ListUrlsModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var title = await _db.Publications
-			.Where(p => p.Id == Id)
+			.Where(p => p.Id == PublicationId)
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
 
@@ -68,16 +68,16 @@ public class ListUrlsModel : BasePageModel
 
 		Title = title;
 		CurrentUrls = await _db.PublicationUrls
-			.Where(u => u.PublicationId == Id)
+			.Where(u => u.PublicationId == PublicationId)
 			.ToListAsync();
 
 		return Page();
 	}
 
-	public async Task<IActionResult> OnPostDelete(int publicationUrlId)
+	public async Task<IActionResult> OnPostDelete(int urlId)
 	{
 		var url = await _db.PublicationUrls
-			.SingleOrDefaultAsync(pf => pf.Id == publicationUrlId);
+			.SingleOrDefaultAsync(pf => pf.Id == urlId);
 
 		if (url != null)
 		{
@@ -88,15 +88,15 @@ public class ListUrlsModel : BasePageModel
 			if (result)
 			{
 				await _publisher.SendPublicationEdit(
-					$"{Id}M edited by {User.Name()}",
-					$"[{Id}M]({{0}}) edited by {User.Name()}",
+					$"{PublicationId}M edited by {User.Name()}",
+					$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
 					$"Deleted {url.Type} URL",
-					$"{Id}M");
+					$"{PublicationId}M");
 
 				await _youtubeSync.UnlistVideo(url.Url!);
 			}
 		}
 
-		return RedirectToPage("List", new { Id });
+		return RedirectToPage("List", new { PublicationId });
 	}
 }

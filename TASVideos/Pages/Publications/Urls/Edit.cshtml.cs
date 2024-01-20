@@ -50,10 +50,10 @@ public class EditUrlsModel : BasePageModel
 			});
 
 	[FromRoute]
-	public int Id { get; set; }
+	public int PublicationId { get; set; }
 
 	[FromRoute]
-	public int? publicationUrlId { get; set; }
+	public int? UrlId { get; set; }
 
 	[BindProperty]
 	public string Title { get; set; } = "";
@@ -69,7 +69,7 @@ public class EditUrlsModel : BasePageModel
 	[BindProperty]
 	[Url]
 	[Display(Name = "URL")]
-	public string PublicationUrl { get; set; } = "";
+	public string CurrentUrl { get; set; } = "";
 
 	[Required]
 	[BindProperty]
@@ -79,7 +79,7 @@ public class EditUrlsModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var title = await _db.Publications
-			.Where(p => p.Id == Id)
+			.Where(p => p.Id == PublicationId)
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
 
@@ -90,16 +90,16 @@ public class EditUrlsModel : BasePageModel
 
 		Title = title;
 		CurrentUrls = await _db.PublicationUrls
-			.Where(u => u.PublicationId == Id)
+			.Where(u => u.PublicationId == PublicationId)
 			.ToListAsync();
 
-		if (!publicationUrlId.HasValue)
+		if (!UrlId.HasValue)
 		{
 			return Page();
 		}
 
 		var url = CurrentUrls
-			.Where(u => u.Id == publicationUrlId.Value)
+			.Where(u => u.Id == UrlId.Value)
 			.SingleOrDefault();
 
 		if (url is null || url.Url is null)
@@ -107,10 +107,10 @@ public class EditUrlsModel : BasePageModel
 			return NotFound();
 		}
 
-		Id = url.PublicationId;
+		PublicationId = url.PublicationId;
 		DisplayName = url.DisplayName;
 		UrlType = url.Type;
-		PublicationUrl = url.Url;
+		CurrentUrl = url.Url;
 
 		return Page();
 	}
@@ -118,7 +118,7 @@ public class EditUrlsModel : BasePageModel
 	public async Task<IActionResult> OnPost()
 	{
 		var publication = await _db.Publications
-			.Where(p => p.Id == Id)
+			.Where(p => p.Id == PublicationId)
 			.Select(p => new
 			{
 				Title,
@@ -135,13 +135,13 @@ public class EditUrlsModel : BasePageModel
 			return NotFound();
 		}
 
-		var publicationWiki = await _wikiPages.PublicationPage(Id);
+		var publicationWiki = await _wikiPages.PublicationPage(PublicationId);
 
 		CurrentUrls = publication.PublicationUrls;
 
-		if (!publicationUrlId.HasValue && CurrentUrls.Any(u => u.Type == UrlType && u.Url == PublicationUrl))
+		if (!UrlId.HasValue && CurrentUrls.Any(u => u.Type == UrlType && u.Url == CurrentUrl))
 		{
-			ModelState.AddModelError($"{nameof(PublicationUrl)}", $"The {UrlType} URL: {PublicationUrl} already exists");
+			ModelState.AddModelError($"{nameof(CurrentUrl)}", $"The {UrlType} URL: {CurrentUrl} already exists");
 		}
 
 		if (!ModelState.IsValid)
@@ -151,16 +151,16 @@ public class EditUrlsModel : BasePageModel
 
 		string[] logwording;
 
-		if (publicationUrlId.HasValue)
+		if (UrlId.HasValue)
 		{
 			var url = CurrentUrls
-				.Where(u => u.Id == publicationUrlId.Value)
+				.Where(u => u.Id == UrlId.Value)
 				.Single();
 
-			url.PublicationId = Id;
+			url.PublicationId = PublicationId;
 			url.DisplayName = DisplayName;
 			url.Type = UrlType;
-			url.Url = PublicationUrl;
+			url.Url = CurrentUrl;
 
 			logwording = new string[2] { "Add", "add" };
 		}
@@ -168,8 +168,8 @@ public class EditUrlsModel : BasePageModel
 		{
 			_db.PublicationUrls.Add(new PublicationUrl
 			{
-				PublicationId = Id,
-				Url = PublicationUrl,
+				PublicationId = PublicationId,
+				Url = CurrentUrl,
 				Type = UrlType,
 				DisplayName = DisplayName
 			});
@@ -177,23 +177,23 @@ public class EditUrlsModel : BasePageModel
 			logwording = new string[2] { "Change", "change" };
 		}
 
-		string log = $"{logwording[0]}ed {DisplayName} {UrlType} URL {PublicationUrl}";
-		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+		string log = $"{logwording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";
+		await _publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
 		var result = await ConcurrentSave(_db, log, $"Unable to {logwording[1]} URL.");
 		if (result)
 		{
 			await _publisher.SendPublicationEdit(
-				$"{Id}M edited by {User.Name()}",
-				$"[{Id}M]({{0}}) edited by {User.Name()}",
+				$"{PublicationId}M edited by {User.Name()}",
+				$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
 				$"{logwording[0]}ed {UrlType} URL | {Title}",
-				$"{Id}M");
+				$"{PublicationId}M");
 
-			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
+			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(CurrentUrl))
 			{
 				YoutubeVideo video = new(
-					Id,
+					PublicationId,
 					publication.CreateTimestamp,
-					PublicationUrl,
+					CurrentUrl,
 					DisplayName,
 					publication.Title,
 					publicationWiki!,
@@ -204,6 +204,6 @@ public class EditUrlsModel : BasePageModel
 			}
 		}
 
-		return RedirectToPage("List", new { Id });
+		return RedirectToPage("List", new { PublicationId });
 	}
 }
