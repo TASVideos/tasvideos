@@ -52,7 +52,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Api.Tests", "test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.Tests.Base", "tests\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj", "{D4940FE4-3543-4BF1-B3F6-1B959A4DECC2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.ForumEngineTests", "tests\TASVideos.ForumEngineTests\TASVideos.ForumEngineTests.csproj", "{319BC843-E209-4783-A91B-9B3E5A83C661}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.ForumEngineTests", "tests\TASVideos.ForumEngineTests\TASVideos.ForumEngineTests.csproj", "{319BC843-E209-4783-A91B-9B3E5A83C661}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
