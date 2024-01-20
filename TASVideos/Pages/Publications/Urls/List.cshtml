@@ -1,0 +1,51 @@
+﻿@page "/Publications/{id}/Urls/List/{publicationUrlId?}/{handler?}"
+@model ListUrlsModel
+@{
+	ViewData.SetTitle($"URLs for {Model.Title}");
+}
+
+<h4>Movie: <pub-link id="Model.Id">@Model.Title</pub-link></h4>
+<a asp-page="Edit"
+   permission="EditPublicationFiles"
+   asp-route-Id="@Model.Id"
+   class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
+<hr />
+<row condition="Model.CurrentUrls.Any()">
+	<table class="table table-bordered table-striped">
+        <tr>
+            <th>Type</th>
+            <th>Url</th>
+			<th>Name</th>
+			<th>Actions</th>
+		</tr>
+		@foreach (var url in Model.CurrentUrls.OrderBy(u => u.Type))
+		{
+            <tr>
+                <td>@url.Type</td>
+                <td>@url.Url</td>
+				<td>@url.DisplayName</td>
+                <td>
+                    <a asp-page="Edit"
+                       permission="EditPublicationFiles"
+                       asp-route-publicationUrlId="@url.Id"
+                       asp-route-Id="@Model.Id"
+                       class="btn btn-primary">
+					   <i class="fa fa-pencil"></i> Edit
+				   </a>
+					<delete-button warning-message="Are you sure you want to remove this url?"
+								   asp-href="/Publications/@Model.Id/Urls/List/@url.Id/Delete">
+						<span class="fa fa-times"></span> Delete
+					</delete-button>
+				</td>
+			</tr>
+		}
+	</table>
+</row>
+<div class="text-center mt-3">
+	<a permission="EditPublicationMetaData"
+	   asp-page="/Publications/Edit"
+	   asp-route-id="@Model.Id"
+	   class="btn btn-secondary">
+	   <span class="fa fa-arrow-left"></span> Back To Edit
+   </a>
+</div>

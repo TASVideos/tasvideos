@@ -1,0 +1,49 @@
+﻿@page "/Publications/{id}/Urls/Edit/{publicationUrlId?}/{handler?}"
+@model EditUrlsModel
+@{
+	string saveBtnName;
+	string iconClass;
+	if (Model.publicationUrlId.HasValue)
+	{
+		ViewData.SetTitle($"Editing URL #{Model.publicationUrlId} for {Model.Title}");
+		saveBtnName = "Save";
+		iconClass = "fa fa-save";
+	}
+	else
+	{
+		ViewData.SetTitle("Add A New URL");
+		saveBtnName = "Add";
+		iconClass = "fa fa-plus";
+	}
+}
+
+<form method="post">
+	<input type="hidden" asp-for="Title" />
+	<row>
+        <column lg="6">
+            <fieldset>
+                <label asp-for="UrlType"></label>
+                <select asp-for="UrlType" asp-items="Model.AvailableTypes" class="form-control"></select>
+                <span asp-validation-for="UrlType" class="text-danger"></span>
+            </fieldset>
+			<fieldset>
+				<label asp-for="PublicationUrl"></label>
+				<input type="text" asp-for="PublicationUrl" class="form-control" />
+				<span asp-validation-for="PublicationUrl" class="text-danger"></span>
+			</fieldset>
+            <fieldset>
+                <label asp-for="DisplayName"></label>
+                <input type="text" asp-for="DisplayName" class="form-control" />
+                <span asp-validation-for="DisplayName" class="text-danger"></span>
+            </fieldset>
+			<div class="text-center mt-3">
+				<submit-button class="btn btn-primary"><span class="@iconClass"></span> @saveBtnName</submit-button>
+				<a asp-page="List" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-times"></span> Cancel</a>
+			</div>
+		</column>
+	</row>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
@@ -7,8 +7,11 @@ using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
+using TASVideos.Pages.Games.Versions.Models;
+using static TASVideos.Core.Services.AwardAssignment;
 
-namespace TASVideos.Pages.Publications;
+namespace TASVideos.Pages.Publications.Urls;
 
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class EditUrlsModel : BasePageModel
@@ -49,6 +52,9 @@ public class EditUrlsModel : BasePageModel
 	[FromRoute]
 	public int Id { get; set; }
 
+	[FromRoute]
+	public int? publicationUrlId { get; set; }
+
 	[BindProperty]
 	public string Title { get; set; } = "";
 
@@ -62,7 +68,7 @@ public class EditUrlsModel : BasePageModel
 	[Required]
 	[BindProperty]
 	[Url]
-	[Display(Name = "Url")]
+	[Display(Name = "URL")]
 	public string PublicationUrl { get; set; } = "";
 
 	[Required]
@@ -86,6 +92,25 @@ public class EditUrlsModel : BasePageModel
 		CurrentUrls = await _db.PublicationUrls
 			.Where(u => u.PublicationId == Id)
 			.ToListAsync();
+
+		if (!publicationUrlId.HasValue)
+		{
+			return Page();
+		}
+
+		var url = CurrentUrls
+			.Where(u => u.Id == publicationUrlId.Value)
+			.SingleOrDefault();
+
+		if (url is null || url.Url is null)
+		{
+			return NotFound();
+		}
+
+		Id = url.PublicationId;
+		DisplayName = url.DisplayName;
+		UrlType = url.Type;
+		PublicationUrl = url.Url;
 
 		return Page();
 	}
@@ -114,9 +139,9 @@ public class EditUrlsModel : BasePageModel
 
 		CurrentUrls = publication.PublicationUrls;
 
-		if (CurrentUrls.Any(u => u.Type == UrlType && u.Url == PublicationUrl))
+		if (!publicationUrlId.HasValue && CurrentUrls.Any(u => u.Type == UrlType && u.Url == PublicationUrl))
 		{
-			ModelState.AddModelError($"{nameof(PublicationUrl)}", $"The {UrlType} url: {PublicationUrl} already exists");
+			ModelState.AddModelError($"{nameof(PublicationUrl)}", $"The {UrlType} URL: {PublicationUrl} already exists");
 		}
 
 		if (!ModelState.IsValid)
@@ -124,25 +149,43 @@ public class EditUrlsModel : BasePageModel
 			return Page();
 		}
 
-		var publicationUrl = new PublicationUrl
+		string[] logwording;
+
+		if (publicationUrlId.HasValue)
 		{
-			PublicationId = Id,
-			Url = PublicationUrl,
-			Type = UrlType,
-			DisplayName = DisplayName
-		};
+			var url = CurrentUrls
+				.Where(u => u.Id == publicationUrlId.Value)
+				.Single();
 
-		_db.PublicationUrls.Add(publicationUrl);
+			url.PublicationId = Id;
+			url.DisplayName = DisplayName;
+			url.Type = UrlType;
+			url.Url = PublicationUrl;
 
-		string log = $"Added {DisplayName} {UrlType} url {PublicationUrl}";
+			logwording = new string[2] { "Add", "add" };
+		}
+		else
+		{
+			_db.PublicationUrls.Add(new PublicationUrl
+			{
+				PublicationId = Id,
+				Url = PublicationUrl,
+				Type = UrlType,
+				DisplayName = DisplayName
+			});
+
+			logwording = new string[2] { "Change", "change" };
+		}
+
+		string log = $"{logwording[0]}ed {DisplayName} {UrlType} url {PublicationUrl}";
 		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-		var result = await ConcurrentSave(_db, log, "Unable to add url.");
+		var result = await ConcurrentSave(_db, log, $"Unable to {logwording[1]} URL.");
 		if (result)
 		{
 			await _publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
-				$"Added {UrlType} url | {Title}",
+				$"{logwording[0]}ed {UrlType} url | {Title}",
 				$"{Id}M");
 
 			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(PublicationUrl))
@@ -161,32 +204,6 @@ public class EditUrlsModel : BasePageModel
 			}
 		}
 
-		return RedirectToPage("EditUrls", new { Id });
-	}
-
-	public async Task<IActionResult> OnPostDelete(int publicationUrlId)
-	{
-		var url = await _db.PublicationUrls
-			.SingleOrDefaultAsync(pf => pf.Id == publicationUrlId);
-
-		if (url != null)
-		{
-			_db.PublicationUrls.Remove(url);
-			string log = $"Deleted {url.DisplayName} {url.Type} url {url.Url}";
-			await _publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
-			var result = await ConcurrentSave(_db, log, "Unable to remove url.");
-			if (result)
-			{
-				await _publisher.SendPublicationEdit(
-					$"{Id}M edited by {User.Name()}",
-					$"[{Id}M]({{0}}) edited by {User.Name()}",
-					$"Deleted {url.Type} url",
-					$"{Id}M");
-
-				await _youtubeSync.UnlistVideo(url.Url!);
-			}
-		}
-
-		return RedirectToPage("EditUrls", new { Id });
+		return RedirectToPage("List", new { Id });
 	}
 }
