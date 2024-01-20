@@ -139,7 +139,7 @@ public class EditUrlsModel : BasePageModel
 
 		CurrentUrls = publication.PublicationUrls;
 
-		if (!UrlId.HasValue && CurrentUrls.Any(u => u.Type == UrlType && u.Url == CurrentUrl))
+		if (CurrentUrls.Any(u => u.Type == UrlType && u.Url == CurrentUrl && u.Id != UrlId))
 		{
 			ModelState.AddModelError($"{nameof(CurrentUrl)}", $"The {UrlType} URL: {CurrentUrl} already exists");
 		}
