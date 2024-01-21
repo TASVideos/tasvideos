@@ -44,19 +44,22 @@
 	}
 </table>
 <hr />
-<a permission="EditPublicationFiles" asp-page="EditUrls" asp-route-id="@Model.Id" class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
+<a permission="EditPublicationFiles"
+   asp-page="Urls/List"
+   asp-route-publicationId="@Model.Id"
+   class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
 <table class="table table-bordered table-sm">
 	<tr>
-		<th>Name</th>
-		<th>Url</th>
 		<th>Type</th>
+		<th>URL</th>
+		<th>Name</th>
 	</tr>
-	@foreach (var url in Model.Publication.Urls.OrderBy(f => f.Type))
+	@foreach (var url in Model.Publication.Urls.OrderBy(f => f.Type).ThenBy(f => f.DisplayName))
 	{
 		<tr>
-			<td>@url.DisplayName</td>
-			<td><a href="@url.Url">@url.Url</a></td>
 			<td>@url.Type</td>
+			<td><a href="@url.Url">@url.Url</a></td>
+			<td>@url.DisplayName</td>
 		</tr>
 	}
 </table>
