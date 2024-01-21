@@ -12,17 +12,17 @@ public class VersionEditModel
 
 	[Required]
 	[StringLength(255)]
-	[Display(Name = "Name")]
+	[Display(Name = "File Name")]
 	public string Name { get; set; } = "";
 
 	[RegularExpression("^[A-Fa-f0-9]*$")]
 	[StringLength(32, MinimumLength = 32)]
-	[Display(Name = "Md5")]
+	[Display(Name = "MD5")]
 	public string? Md5 { get; set; }
 
 	[RegularExpression("^[A-Fa-f0-9]*$")]
 	[StringLength(40, MinimumLength = 40)]
-	[Display(Name = "Sha1")]
+	[Display(Name = "SHA1")]
 	public string? Sha1 { get; set; }
 
 	[StringLength(50)]

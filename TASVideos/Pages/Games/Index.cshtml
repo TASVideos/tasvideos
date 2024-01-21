@@ -170,7 +170,7 @@
 <table condition="Model.Game.Versions.Any()" class="table table-responsive table-sm">
 	<tr>
 		<th>Type</th>
-		<th>Name</th>
+		<th>File Name</th>
 		<th>Title Override</th>
 		<th>Region</th>
 		<th>Version</th>
@@ -187,8 +187,8 @@
 			<td>@rom.Version</td>
 			<td>@rom.SystemCode</td>
 			<td>
-				<div condition="!string.IsNullOrWhiteSpace(rom.Sha1)" class="text-nowrap">Sha1: @rom.Sha1</div>
-				<div condition="!string.IsNullOrWhiteSpace(rom.Md5)" class="text-nowrap">Md5: @rom.Md5</div>
+				<div condition="!string.IsNullOrWhiteSpace(rom.Sha1)" class="text-break"><b>SHA1:</b> @rom.Sha1</div>
+				<div condition="!string.IsNullOrWhiteSpace(rom.Md5)" class="text-break"><b>MD5:</b> @rom.Md5</div>
 			</td>
 		</tr>
 	}

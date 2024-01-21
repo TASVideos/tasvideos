@@ -14,8 +14,7 @@
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Version)</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Region)</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().VersionType)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Md5)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Sha1)</th>
+		<th>Hashes</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().SystemCode)</th>
 		<th>Actions</th>
 	</tr>
@@ -27,11 +26,17 @@
 			<td>@version.Version</td>
 			<td>@version.Region</td>
 			<td>@version.VersionType</td>
-			<td>@version.Md5</td>
-			<td>@version.Sha1</td>
+			<td>
+				<div condition="!string.IsNullOrWhiteSpace(version.Sha1)" class="text-break">
+					<b>@Html.DisplayNameFor(m => m.Versions.Versions.First().Sha1):</b> @version.Sha1
+				</div>
+				<div condition="!string.IsNullOrWhiteSpace(version.Md5)" class="text-break">
+					<b>@Html.DisplayNameFor(m => m.Versions.Versions.First().Md5):</b> @version.Md5
+				</div>
+			</td>
 			<td>@version.SystemCode</td>
 			<td>
-				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edit</a>
 			</td>
 		</tr>
 	}

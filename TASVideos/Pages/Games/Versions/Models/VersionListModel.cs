@@ -15,13 +15,13 @@ public class VersionListModel
 		[Display(Name = "Id")]
 		public int Id { get; set; }
 
-		[Display(Name = "Name")]
+		[Display(Name = "File Name")]
 		public string DisplayName { get; set; } = "";
 
-		[Display(Name = "Md5")]
+		[Display(Name = "MD5")]
 		public string? Md5 { get; set; }
 
-		[Display(Name = "Sha1")]
+		[Display(Name = "SHA1")]
 		public string? Sha1 { get; set; }
 
 		[Display(Name = "Version")]
