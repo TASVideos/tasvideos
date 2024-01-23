@@ -40,6 +40,14 @@ public class WikiLink : ViewComponent
 				titleText = $"[{id.Value}] " + title;
 			}
 		}
+		else if ((id = SubmissionHelper.IsGamePageLink(href)).HasValue)
+		{
+			var title = await GetGameTitle(id.Value);
+			if (!string.IsNullOrWhiteSpace(title))
+			{
+				titleText = title;
+			}
+		}
 
 		if (titleText != null)
 		{
@@ -75,5 +83,12 @@ public class WikiLink : ViewComponent
 		return (await _db.Submissions
 			.Select(s => new { s.Id, s.Title })
 			.SingleOrDefaultAsync(s => s.Id == id))?.Title;
+	}
+
+	private async Task<string?> GetGameTitle(int id)
+	{
+		return (await _db.Games
+			.Select(g => new { g.Id, g.DisplayName })
+			.SingleOrDefaultAsync(g => g.Id == id))?.DisplayName;
 	}
 }
