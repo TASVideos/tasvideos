@@ -17,26 +17,19 @@ public class WikiLink : ViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync(string href, string? displayText)
 	{
-		var model = new WikiLinkModel
-		{
-			Href = href,
-			DisplayText = string.IsNullOrWhiteSpace(displayText)
-				? href[1..] // almost always want to chop off the leading '/'
-				: displayText
-		};
-
 		int? id;
+		string? titleText = null;
 
-		if (model.DisplayText.StartsWith("user:"))
+		if (displayText?.StartsWith("user:") == true)
 		{
-			model.DisplayText = model.DisplayText[5..];
+			displayText = displayText[5..];
 		}
 		else if ((id = SubmissionHelper.IsSubmissionLink(href)).HasValue)
 		{
 			var title = await GetSubmissionTitle(id.Value);
 			if (!string.IsNullOrWhiteSpace(title))
 			{
-				model.DisplayText = title;
+				titleText = title;
 			}
 		}
 		else if ((id = SubmissionHelper.IsPublicationLink(href)).HasValue)
@@ -44,11 +37,30 @@ public class WikiLink : ViewComponent
 			var title = await GetPublicationTitle(id.Value);
 			if (!string.IsNullOrWhiteSpace(title))
 			{
-				model.DisplayText = $"[{id.Value}] " + title;
+				titleText = $"[{id.Value}] " + title;
 			}
 		}
 
-		return View(model);
+		if (titleText != null)
+		{
+			if (string.IsNullOrWhiteSpace(displayText))
+			{
+				displayText = titleText;
+				titleText = null;
+			}
+		}
+
+		if (string.IsNullOrWhiteSpace(displayText))
+		{
+			displayText = href[1..];
+		}
+
+		return View(new WikiLinkModel
+		{
+			Href = href,
+			DisplayText = displayText,
+			Title = titleText,
+		});
 	}
 
 	private async Task<string?> GetPublicationTitle(int id)
