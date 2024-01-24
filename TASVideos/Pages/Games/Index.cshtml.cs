@@ -52,7 +52,7 @@ public class IndexModel : BasePageModel
 		Game = game;
 		var movies = await _db.Publications
 			.Where(p => p.GameId == Game.Id && p.ObsoletedById == null)
-			.OrderBy(p => p.GameGoal!.DisplayName.Length)
+			.OrderBy(p => p.GameGoal!.DisplayName == "baseline" ? -1 : p.GameGoal!.DisplayName.Length)
 			.ThenBy(p => p.Frames)
 			.Select(p => new
 			{
@@ -75,8 +75,14 @@ public class IndexModel : BasePageModel
 
 		Movies = movies
 			.Select(m => new TabMiniMovieModel(
-				movies.Count(mm => mm.Goal == m.Goal) > 1 ? m.GameTitle : "",
-				m.Goal,
+				movies.Count(mm => mm.Goal == m.Goal) > 1
+					? m.GameTitle
+					: m.Goal == "baseline"
+					? "(baseline)"
+					: "",
+				m.Goal == "baseline"
+					? ""
+					: m.Goal,
 				new MiniMovieModel
 				{
 					Id = m.Id,
