@@ -227,14 +227,14 @@ public static partial class Builtins
 		{
 			if (pp.Length >= 2)
 			{
-				// same as the IsLink(pp[0]) && pp.Length >= 2 case, except add the '=' because it was implicitly resolved to an internal link
-				return new[] { MakeLink(charStart, charEnd, NormalizeUrl("=" + pp[0]), new Text(charStart, pp[1]) { CharEnd = charEnd }) };
+				// These need DB lookup for title attributes in some cases
+				return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[1]);
 			}
 
 			// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 			// DB lookup will be required for links like [4022S], so use __wikiLink
 			// TODO:  __wikilink should probably be its own AST type??
-			return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[0]);
+			return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]));
 		}
 
 		// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
