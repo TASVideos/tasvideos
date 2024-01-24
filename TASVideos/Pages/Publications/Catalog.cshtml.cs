@@ -143,7 +143,7 @@ public class CatalogModel : BasePageModel
 			}
 			else
 			{
-				externalMessages.Add($"Game changed from {publication.Game!.DisplayName} to {game.DisplayName}");
+				externalMessages.Add($"Game changed from \"{publication.Game!.DisplayName}\" to \"{game.DisplayName}\"");
 				publication.GameId = Catalog.GameId;
 				publication.Game = game;
 			}
@@ -158,7 +158,7 @@ public class CatalogModel : BasePageModel
 			}
 			else
 			{
-				externalMessages.Add($"Game Goal changed from {publication.GameGoal!.DisplayName} to {gameGoal.DisplayName}");
+				externalMessages.Add($"Game Goal changed from \"{publication.GameGoal!.DisplayName}\" to \"{gameGoal.DisplayName}\"");
 				publication.GameGoalId = Catalog.GameGoalId;
 				publication.GameGoal = gameGoal;
 			}
@@ -173,7 +173,7 @@ public class CatalogModel : BasePageModel
 			}
 			else
 			{
-				externalMessages.Add($"Game Version changed from {publication.GameVersion!.Name} to {gameVersion.Name}");
+				externalMessages.Add($"Game Version changed from \"{publication.GameVersion!.Name}\" to \"{gameVersion.Name}\"");
 				publication.GameVersionId = Catalog.GameVersionId;
 				publication.GameVersion = gameVersion;
 			}

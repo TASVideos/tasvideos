@@ -389,6 +389,7 @@ public class EditModel : BasePageModel
 		{
 			string title;
 			string formattedTitle;
+			string separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
 			if (statusHasChanged)
 			{
 				string statusStr = Submission.Status.EnumDisplayName();
@@ -422,18 +423,18 @@ public class EditModel : BasePageModel
 				}
 
 				title = $"Submission {statusStr} by {userName}";
-				formattedTitle = $"[Submission]({{0}}) {statusStr} by {userName}";
+				formattedTitle = $"[{Id}S]({{0}}) {statusStr} by {userName}";
 			}
 			else
 			{
 				title = $"Submission edited by {userName}";
-				formattedTitle = $"[Submission]({{0}}) edited by {userName}";
+				formattedTitle = $"[{Id}S]({{0}}) edited by {userName}";
 			}
 
 			await _publisher.SendSubmissionEdit(
 				title,
 				formattedTitle,
-				submission.Title,
+				$"{Submission.RevisionMessage}{separator}{submission.Title}",
 				$"{Id}S");
 		}
 
