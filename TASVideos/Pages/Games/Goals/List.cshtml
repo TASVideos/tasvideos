@@ -6,7 +6,7 @@
 }
 
 <h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a>
-	<a condition="!string.IsNullOrWhiteSpace(returnUrl)" asp-page="/Goals/Index" class="btn btn-secondary mb-2 float-end"><span class="fa fa-arrow-left"></span> Back</a>
+	<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary mb-2 float-end"><span class="fa fa-arrow-left"></span> Back</a>
 </h4>
 <table class="table table-bordered table-striped">
 	<tr>
@@ -33,24 +33,32 @@
 			<td condition="@(goal.Id != Model.GoalToEdit || goal.DisplayName == "baseline")">
 				@goal.DisplayName</td>
 			<td>
-				@foreach (var pub in goal.Publications.OrderBy(p => p.Obs).ThenByDescending(p => p.Id))
-				{
-					<small condition="pub.Obs">(Obsolete)</small>
-					<pub-link id="@pub.Id">
-						@pub.Title
-					</pub-link><br />
-				}
+				<ul>
+					@foreach (var pub in goal.Publications.OrderBy(p => p.Obs).ThenByDescending(p => p.Id))
+					{
+						<li>
+							<small condition="pub.Obs">(Obsolete)</small>
+							<pub-link id="@pub.Id">
+								[@pub.Id] @pub.Title
+							</pub-link>
+						</li>
+					}
+				</ul>
 			</td>
 			<td>
-				@foreach (var sub in goal.Submissions.OrderByDescending(s => s.Id))
-				{
-					<sub-link id="@sub.Id">@sub.Title</sub-link><br />
-				}
+				<ul>
+					@foreach (var sub in goal.Submissions.OrderByDescending(s => s.Id))
+					{
+						<li>
+							<sub-link id="@sub.Id">@sub.Title</sub-link>
+						</li>
+					}
+				</ul>
 			</td>
 			<td>
 				<div class="btn-toolbar">
-					<a asp-page="List" asp-route-goalToEdit="@goal.Id" permission="CatalogMovies" condition="@(goal.Id != Model.GoalToEdit && goal.DisplayName != "baseline")" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-					<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGroupId="@goal.Id" class="btn btn-danger"><i class="fa fa-remove"></i></a>
+					<a asp-page="List" asp-route-goalToEdit="@goal.Id" permission="CatalogMovies" condition="@(goal.Id != Model.GoalToEdit && goal.DisplayName != "baseline")" asp-route-gameId="@Model.GameId" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+					<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGroupId="@goal.Id" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
 				</div>
 			</td>
 		</tr>

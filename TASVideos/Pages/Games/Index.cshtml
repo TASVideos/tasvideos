@@ -125,9 +125,6 @@
 					</a>)
 				</span>
 			</li>
-			<li condition="Model.Game.PublicationCount > 0">
-				<a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
-			</li>
 			<li>
 				<a href="/Subs-List?GameId=@(Model.Game.Id)">
 					@Model.Game.SubmissionCount Submissions
@@ -137,7 +134,15 @@
 				<a href="/UserFiles/Game/@(Model.Game.Id)">
 					@Model.Game.UserFilesCount User Files
 				</a>
-			</li>
+            </li>
+            <li condition="Model.Game.PublicationCount > 0">
+                <a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
+            </li>
+            <li>
+				<a href="/Games/@(Model.Game.Id)/Goals/List">
+                    Goals
+                </a>
+            </li>
 		</ul>
 	</column>
 	<column md="6" condition="Model.WatchFiles.Any()">
