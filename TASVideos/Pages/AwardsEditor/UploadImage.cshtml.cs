@@ -57,8 +57,9 @@ public class UploadImageModel : BasePageModel
 	private async Task Initialize()
 	{
 		AvailableAwardCategories = UiDefaults.DefaultEntry.Concat(await _awards.AwardCategories()
-				.ToDropdown(Year)
-				.ToListAsync())
+			.OrderBy(c => c.Description)
+			.ToDropdown(Year)
+			.ToListAsync())
 			.ToList();
 	}
 }

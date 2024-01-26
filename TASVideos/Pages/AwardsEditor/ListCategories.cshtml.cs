@@ -33,6 +33,7 @@ public class ListCategoryModel : BasePageModel
 				InUse = _db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
 					|| _db.UserAwards.Any(ua => ua.AwardId == a.Id)
 			})
+			.OrderBy(c => c.Description)
 			.ToListAsync();
 		return Page();
 	}
