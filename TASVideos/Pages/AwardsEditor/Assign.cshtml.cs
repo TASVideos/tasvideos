@@ -105,6 +105,7 @@ public class AssignModel : BasePageModel
 	private async Task Initialize()
 	{
 		AvailableAwardCategories = UiDefaults.DefaultEntry.Concat(await _awards.AwardCategories()
+			.OrderBy(c => c.Description)
 			.ToDropdown(Year)
 			.ToListAsync())
 			.ToList();
