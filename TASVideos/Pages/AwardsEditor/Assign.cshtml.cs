@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Pages.AwardsEditor;
 
@@ -49,6 +50,21 @@ public class AssignModel : BasePageModel
 			ModelState.AddModelError("", "Cannot assign both a user and a publication to an award.");
 		}
 
+		var type = _awards.AwardCategories()
+			.Where(c => c.ShortName == AwardToAssign.Award)
+			.Single()
+			.Type;
+
+		if (type == AwardType.Movie && AwardToAssign.Users.Any())
+		{
+			ModelState.AddModelError("", "Cannot assign a publication award to a user.");
+		}
+
+		if (type == AwardType.User && AwardToAssign.Publications.Any())
+		{
+			ModelState.AddModelError("", "Cannot assign a user award to a publication.");
+		}
+
 		if (!ModelState.IsValid)
 		{
 			await Initialize();
@@ -86,11 +102,11 @@ public class AssignModel : BasePageModel
 		return BasePageRedirect("Index", new { DateTime.UtcNow.Year });
 	}
 
-	public async Task<IActionResult> OnPostRevoke(string shortName)
+	public async Task<IActionResult> OnPostRevoke(string shortName, AwardType type)
 	{
 		var awardToRevoke = (await _awards
 			.ForYear(Year))
-			.SingleOrDefault(a => a.ShortName == shortName);
+			.SingleOrDefault(a => a.ShortName == shortName && a.Type == type);
 
 		if (awardToRevoke is null)
 		{

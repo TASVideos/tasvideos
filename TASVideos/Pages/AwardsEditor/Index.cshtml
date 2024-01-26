@@ -24,7 +24,7 @@
 		<i class="fa fa-arrow-right"></i>
 	</a>
 	Award Status: @status
-	<a asp-page="ListCategories" class="btn btn-primary float-end" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()">List Award Categories</a>
+	<a asp-page="ListCategories" class="btn btn-secondary float-end" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()">List Award Categories</a>
 </h4>
 
 <hr />
@@ -43,21 +43,21 @@
 <h4>Current Awards</h4>
 <table class="table">
 	<tr>
+		<th>Description</th>
 		<th>Image</th>
 		<th>Short Name</th>
-		<th>Description</th>
 		<th>Type</th>
 		<th>Assigned</th>
 		<th></th>
 	</tr>
-	@foreach (var assignment in Model.Assignments.OrderBy(a => a.Type))
+	@foreach (var assignment in Model.Assignments.OrderBy(a => a.Description))
 	{
 		<tr>
+			<td>@assignment.Description</td>
 			<td>
 				<partial name="Shared/_Award" model="@assignment" />
 			</td>
 			<td>@assignment.ShortName</td>
-			<td>@assignment.Description</td>
 			<td>@assignment.Type</td>
 			<td>
 				@if (assignment.Publications.Any() || assignment.Users.Any())
@@ -86,7 +86,7 @@
 			<td>
 				<delete-button
 					condition="@(status == "Open")"
-					asp-href="Assign/@(assignment.Year)?handler=Revoke&shortName=@(assignment.ShortName)"
+					asp-href="Assign/@(assignment.Year)?handler=Revoke&shortName=@(assignment.ShortName)&type=@(assignment.Type)"
 					warning-message="Are you sure you want to delete revoke this award to all recipients?"
 					class="float-end"><i class="fa fa-remove"></i></delete-button>
 			</td>
