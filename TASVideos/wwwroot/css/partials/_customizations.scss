@@ -356,6 +356,10 @@ figure {
 		text-align: right;
 	}
 
+	.fontsize {
+		font-size: clamp(8px, var(--fs), 32px);
+	}
+
 	.warning {
 		border: 2px solid var(--bs-danger);
 		border-radius: 2px;
