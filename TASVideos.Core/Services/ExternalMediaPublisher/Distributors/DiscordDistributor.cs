@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Settings;
 using TASVideos.Core.HttpClientExtensions;
-using System.Text.RegularExpressions;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
@@ -73,26 +72,20 @@ public sealed class DiscordDistributor : IPostDistributor
 
 	private class DiscordMessage
 	{
-		private readonly Regex CharacterToBeEscaped = new Regex(@"([\\_*~#\-`<>|])");
-		private const string EscapeRule = @"\$1";
-
 		// Generate the Discord message letting Discord take care of the Embed from Open Graph Metadata
 		public DiscordMessage(IPostable post)
 		{
-			var body = CharacterToBeEscaped.Replace(post.Body, EscapeRule);
-			var title = CharacterToBeEscaped.Replace(post.Title, EscapeRule);
-			var formattedTitle = CharacterToBeEscaped.Replace(post.FormattedTitle, EscapeRule);
-			body = string.IsNullOrWhiteSpace(body) ? "" : $" ({body})";
+			var body = string.IsNullOrWhiteSpace(post.Body) ? "" : $" ({post.Body})";
 			if (string.IsNullOrWhiteSpace(post.Link))
 			{
-				Content = $"{title}{body}";
+				Content = $"{post.Title}{body}";
 			}
 			else
 			{
 				var link = post.Type == PostType.Announcement ? post.Link : $"<{post.Link}>";
-				Content = string.IsNullOrWhiteSpace(formattedTitle)
-					? $"{title}{body} {link}"
-					: $"{string.Format(formattedTitle, link)}{body}";
+				Content = string.IsNullOrWhiteSpace(post.FormattedTitle)
+					? $"{post.Title}{body} {link}"
+					: $"{string.Format(post.FormattedTitle, link)}{body}";
 			}
 		}
 
