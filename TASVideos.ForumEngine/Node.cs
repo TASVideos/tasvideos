@@ -403,16 +403,18 @@ public class Element : INode
 			case "size":
 				w.OpenTag("span");
 
+				w.Attribute("class", "fontsize");
+
 				// TODO: More fully featured anti-style injection
 				var sizeStr = Options.Split(';')[0];
 				if (double.TryParse(sizeStr, NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out var sizeDouble))
 				{
 					// default font size of the old site was 12px, so if size was given without a unit, divide by 12 and use em
-					w.Attribute("style", $"font-size: {(sizeDouble / 12).ToString(CultureInfo.InvariantCulture)}em");
+					w.Attribute("style", $"--fs: {(sizeDouble / 12).ToString(CultureInfo.InvariantCulture)}em");
 				}
 				else
 				{
-					w.Attribute("style", $"font-size: {sizeStr}");
+					w.Attribute("style", $"--fs: {sizeStr}");
 				}
 
 				await WriteChildren(w, h);
