@@ -77,12 +77,12 @@
 </div>
 
 <div condition="!string.IsNullOrWhiteSpace(Model.Annotations)" class="mb-2">
-	<div class="card border-primary-subtle border mb-2">
+	<card class="border-primary-subtle border mb-2">
 		<cardheader><h4>Annotations</h4></cardheader>
 		<cardbody>
 			<pre style="white-space: pre-wrap">@Model.Annotations</pre>
 		</cardbody>
-	</div>
+	</card>
 </div>
 
 <div condition="!string.IsNullOrWhiteSpace(Model.ContentPreview)">
