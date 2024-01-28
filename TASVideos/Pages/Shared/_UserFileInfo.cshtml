@@ -75,14 +75,16 @@
 		</div>
 	</cardbody>
 </div>
+
 <div condition="!string.IsNullOrWhiteSpace(Model.Annotations)" class="mb-2">
-	<card>
+	<div class="card border-primary-subtle border mb-2">
 		<cardheader><h4>Annotations</h4></cardheader>
 		<cardbody>
-			@Model.Annotations
+			<pre style="white-space: pre-wrap">@Model.Annotations</pre>
 		</cardbody>
-	</card>
+	</div>
 </div>
+
 <div condition="!string.IsNullOrWhiteSpace(Model.ContentPreview)">
 	<wiki-markup markup="@ToMarkup(Model.ContentPreview, Model.Extension)"></wiki-markup>
 </div>
