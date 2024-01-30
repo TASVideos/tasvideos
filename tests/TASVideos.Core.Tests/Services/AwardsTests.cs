@@ -382,6 +382,7 @@ public class AwardsTests
 
 		var assignment = new AwardAssignment
 		{
+			AwardId = award.Id,
 			ShortName = award.ShortName,
 			Year = CurrentYear,
 			Users = new List<AwardAssignment.User>
