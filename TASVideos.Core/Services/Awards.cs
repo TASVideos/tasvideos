@@ -160,16 +160,14 @@ internal class Awards : IAwards
 
 	public async Task Revoke(AwardAssignment award)
 	{
-		var userIdsToRemove = award.Users.Select(u => u.Id);
 		var userAwardsToRemove = await _db.UserAwards
-			.Where(ua => userIdsToRemove.Contains(ua.UserId))
+			.Where(ua => ua.Award!.Id == award.AwardId && ua.Year == award.Year)
 			.ToListAsync();
 
 		_db.UserAwards.RemoveRange(userAwardsToRemove);
 
-		var pubIdsToRemove = award.Publications.Select(p => p.Id);
 		var pubAwardsToRemove = await _db.PublicationAwards
-			.Where(pa => pubIdsToRemove.Contains(pa.PublicationId))
+			.Where(pa => pa.Award!.Id == award.AwardId && pa.Year == award.Year)
 			.ToListAsync();
 
 		_db.PublicationAwards.RemoveRange(pubAwardsToRemove);
@@ -194,6 +192,7 @@ internal class Awards : IAwards
 		var userLists = await _db.UserAwards
 			.Select(ua => new
 			{
+				AwardId = ua.Award!.Id,
 				ua.Award!.Description,
 				ua.Award.ShortName,
 				ua.Year,
@@ -206,6 +205,7 @@ internal class Awards : IAwards
 			.GroupBy(
 				gkey => new
 				{
+					gkey.AwardId,
 					gkey.Description,
 					gkey.ShortName,
 					gkey.Year
@@ -217,6 +217,7 @@ internal class Awards : IAwards
 				})
 			.Select(g => new AwardAssignment
 			{
+				AwardId = g.Key.AwardId,
 				ShortName = g.Key.ShortName,
 				Description = g.Key.Description + " of " + g.Key.Year,
 				Year = g.Key.Year,
@@ -229,6 +230,7 @@ internal class Awards : IAwards
 		var pubLists = await _db.PublicationAwards
 			.Select(pa => new
 			{
+				AwardId = pa.Award!.Id,
 				pa.Award!.Description,
 				pa.Award.ShortName,
 				pa.Year,
@@ -242,6 +244,7 @@ internal class Awards : IAwards
 			.GroupBy(
 				gkey => new
 				{
+					gkey.AwardId,
 					gkey.Description,
 					gkey.ShortName,
 					gkey.Year
@@ -261,6 +264,7 @@ internal class Awards : IAwards
 				})
 			.Select(g => new AwardAssignment
 			{
+				AwardId = g.Key.AwardId,
 				ShortName = g.Key.ShortName,
 				Description = g.Key.Description + " of " + g.Key.Year,
 				Year = g.Key.Year,

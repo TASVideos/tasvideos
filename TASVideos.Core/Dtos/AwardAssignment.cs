@@ -16,6 +16,7 @@ public interface IAwardAssignmentSummary
 /// </summary>
 public class AwardAssignment : IAwardAssignmentSummary
 {
+	public int AwardId { get; set; }
 	public string ShortName { get; set; } = "";
 	public string Description { get; set; } = "";
 	public int Year { get; set; }
