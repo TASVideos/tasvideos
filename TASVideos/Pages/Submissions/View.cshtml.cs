@@ -77,7 +77,8 @@ public class ViewModel : BasePageModel
 				TopicId = s.TopicId,
 				Warnings = s.Warnings,
 				CycleCount = s.CycleCount,
-				Annotations = s.Annotations
+				Annotations = s.Annotations,
+				GameGoalId = s.GameGoalId
 			})
 			.SingleOrDefaultAsync();
 
