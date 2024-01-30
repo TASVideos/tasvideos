@@ -10,7 +10,7 @@
 	}
 }
 
-<div class="card border-primary-subtle border mb-2">
+<card class="border-primary-subtle border mb-2">
 	<cardheader>
 		<h4 class="mt-2">
 			#@Model.Id <span condition="Model.Hidden"><i>(unlisted)</i> </span>- @Model.Title
@@ -74,22 +74,24 @@
 			<wiki-markup markup=@Model.Description></wiki-markup>
 		</div>
 	</cardbody>
-</div>
+</card>
+
 <div condition="!string.IsNullOrWhiteSpace(Model.Annotations)" class="mb-2">
-	<card>
+	<card class="border-primary-subtle border mb-2">
 		<cardheader><h4>Annotations</h4></cardheader>
 		<cardbody>
-			@Model.Annotations
+			<pre class="annotations-text">@Model.Annotations</pre>
 		</cardbody>
 	</card>
 </div>
+
 <div condition="!string.IsNullOrWhiteSpace(Model.ContentPreview)">
 	<wiki-markup markup="@ToMarkup(Model.ContentPreview, Model.Extension)"></wiki-markup>
 </div>
 <div condition="!Model.HideComments">
 	@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 	{
-		<div class="card border-primary-subtle border mb-2" condition="@(Model.Comments.Any())">
+		<card class="border-primary-subtle border mb-2" condition="@(Model.Comments.Any())">
 			<cardheader>
 				<row>
 					<div class="col">
@@ -135,10 +137,10 @@
 					</form>
 				</div>
 			</cardbody>
-		</div>
+		</card>
 	}
 
-	<div class="card border-primary-subtle border mb-2" permission="CreateForumPosts">
+	<card class="border-primary-subtle border mb-2" permission="CreateForumPosts">
 		<cardheader>
 			<h4>Comment:</h4>
 		</cardheader>
@@ -150,5 +152,11 @@
 				<button type="submit" class="btn btn-primary mt-3 mb-3"><i class="fa fa-plus"></i> Post</button>
 			</form>
 		</cardbody>
-	</div>
+	</card>
 </div>
+
+<style>
+	.annotations-text {
+		white-space: pre-wrap;
+	}
+</style>
