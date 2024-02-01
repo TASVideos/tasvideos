@@ -50,10 +50,10 @@ public class AssignModel : BasePageModel
 			ModelState.AddModelError("", "Cannot assign both a user and a publication to an award.");
 		}
 
-		var type = _awards.AwardCategories()
+		var type = await _awards.AwardCategories()
 			.Where(c => c.ShortName == AwardToAssign.Award)
-			.Single()
-			.Type;
+			.Select(c => c.Type)
+			.SingleAsync();
 
 		if (type == AwardType.Movie && AwardToAssign.Users.Any())
 		{
