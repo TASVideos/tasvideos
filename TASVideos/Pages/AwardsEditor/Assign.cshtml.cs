@@ -50,6 +50,7 @@ public class AssignModel : BasePageModel
 			ModelState.AddModelError("", "Cannot assign both a user and a publication to an award.");
 		}
 
+		// TODO: rework this logic, CategoryExists() has almost the same query
 		var type = await _awards.AwardCategories()
 			.Where(c => c.ShortName == AwardToAssign.Award)
 			.Select(c => c.Type)
