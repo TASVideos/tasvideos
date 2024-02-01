@@ -71,8 +71,9 @@ public class IndexModel : BasePageModel
 				.ToListAsync();
 
 			GameResults = await _db.Games
-				.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", SearchTerms)))
-				.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).RankCoverDensity(EF.Functions.WebSearchToTsQuery("simple", SearchTerms), NpgsqlTsRankingNormalization.DivideByLength))
+				.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", SearchTerms)))
+				.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ")).ToStripped().Rank(EF.Functions.WebSearchToTsQuery("simple", SearchTerms), NpgsqlTsRankingNormalization.DivideByLength))
+					.ThenBy(g => g.DisplayName.Length)
 					.ThenBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(PageSize + 1)
