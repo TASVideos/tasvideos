@@ -1,8 +1,8 @@
 #!/bin/bash
 ### BEGIN INIT INFO
 # Provides:             tasvideos
-# Required-Start:       mysql nginx postgresql redis-server
-# Required-Stop:        mysql nginx postgresql redis-server
+# Required-Start:       nginx postgresql redis-server
+# Required-Stop:        nginx postgresql redis-server
 # Should-Start:         $local_fs $network
 # Should-Stop:          $local_fs $network
 # Default-Start:        3 4 5
@@ -60,14 +60,13 @@ start() {
 stop() {
   if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
     echo 'Website not running' >&2
-    return 1
+  else
+    echo 'Stopping website...' >&2
+
+    su -c "start-stop-daemon -K -p \"$PIDFILE\"" $WWW_USER
+    rm -f "$PIDFILE"
+    echo 'Website stopped.' >&2
   fi
-
-  echo 'Stopping website...' >&2
-
-  su -c "start-stop-daemon -K -p \"$PIDFILE\"" $WWW_USER
-  rm -f "$PIDFILE"
-  echo 'Website stopped.' >&2
 }
 
 # Grab code from Git and publish (compile) it.
@@ -78,6 +77,8 @@ build() {
 # Move files from the live site directory to a temp directory.
 # Move the published files into the live site directory.
 deploy() {
+  echo 'Start deploy.'
+
   # mv old code into temp location
   mv $ACTIVE_DIRECTORY $TEMP_DIRECTORY
 
@@ -87,17 +88,13 @@ deploy() {
   # recreate symlinks
   ln -s $MEDIA_SYMLINK_DIRECTORY $ACTIVE_MEDIA_LOCATION
   ln -s $SAMPLEDATA_SYMLINK_DIRECTORY $ACTIVE_SAMPLEDATA_LOCATION
+
+  echo 'Deploy complete.'
 }
 
 # Delete the temp directory.
 cleanup() {
   rm -rf $TEMP_DIRECTORY
-}
-
-# Copy script files (.js and .css) into the live directories.
-copy_scripts() {
-  # TODO: Write this code.
-  echo 'Script not done.'
 }
 
 case "$1" in
@@ -110,14 +107,25 @@ case "$1" in
   restart)
     stop && start
     ;;
-  build)
+  build-only)
+    build
+    ;;
+  build-stop-deploy)
+    build && stop && deploy
+    ;;
+  update-website)
     build && stop && deploy && start && cleanup
     ;;
-  update-scripts)
-    copy_scripts
+  commands)
+    echo start - Start the website without updating
+    echo stop - Stop the website
+    echo restart - Stop and Start the website without updating
+    echo update-website - Full update.  Pulls latest code, and restarts the site \(Recommended\)
+    echo build-only - Pulls the latest code and compiles without affecting the state of the website
+    echo build-stop-deploy - Brings the website down. Pulls the latest code and moves it to the website folder but does not restart the website \(Not Recommended\)
     ;;
   *)
-    echo "Usage: $0 {build|restart|start|stop|update-scripts}"
+    echo "Usage: $0 {start|stop|restart|update-website|build-only|build-stop-deploy}"
 esac
 
 EC=$?
