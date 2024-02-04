@@ -203,15 +203,17 @@ public class EditModel : BasePageModel
 
 		publication.GenerateTitle();
 
+		List<int> editableFlags = await _db.Flags
+			.Where(f => f.PermissionRestriction.HasValue && User.Permissions().Contains(f.PermissionRestriction.Value))
+			.Select(f => f.Id)
+			.ToListAsync();
+		List<PublicationFlag> existingEditablePublicationFlags = publication.PublicationFlags.Where(pf => editableFlags.Contains(pf.FlagId)).ToList();
+		List<int> selectedEditableFlagIds = model.SelectedFlags.Intersect(editableFlags).ToList();
+		publication.PublicationFlags = publication.PublicationFlags.Except(existingEditablePublicationFlags).ToList();
+		publication.PublicationFlags.AddFlags(selectedEditableFlagIds);
 		externalMessages.AddRange((await _flagsService
-			.GetDiff(publication.PublicationFlags.Select(p => p.FlagId), model.SelectedFlags))
+			.GetDiff(existingEditablePublicationFlags.Select(p => p.FlagId), selectedEditableFlagIds))
 			.ToMessages("flags"));
-
-		publication.PublicationFlags.Clear();
-		_db.PublicationFlags.RemoveRange(
-			_db.PublicationFlags.Where(pf => pf.PublicationId == publication.Id));
-
-		publication.PublicationFlags.AddFlags(model.SelectedFlags);
 
 		externalMessages.AddRange((await _tagsService
 			.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags))
