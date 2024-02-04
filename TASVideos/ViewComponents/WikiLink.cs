@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Helpers;
 using TASVideos.WikiEngine;
@@ -6,6 +7,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.WikiLink)]
+[TextModule]
 public class WikiLink : ViewComponent
 {
 	private readonly ApplicationDbContext _db;
@@ -16,6 +18,17 @@ public class WikiLink : ViewComponent
 	}
 
 	public async Task<IViewComponentResult> InvokeAsync(string href, string? displayText)
+	{
+		return View(await InvokeInternal(href, displayText));
+	}
+
+	public async Task<string> RenderTextAsync(IWikiPage? pageData, string href, string? displayText)
+	{
+		WikiLinkModel wikiLinkModel = await InvokeInternal(href, displayText);
+		return wikiLinkModel.DisplayText;
+	}
+
+	private async Task<WikiLinkModel> InvokeInternal(string href, string? displayText)
 	{
 		int? id;
 		string? titleText = null;
@@ -63,12 +76,12 @@ public class WikiLink : ViewComponent
 			displayText = href[1..];
 		}
 
-		return View(new WikiLinkModel
+		return new WikiLinkModel
 		{
 			Href = href,
 			DisplayText = displayText,
 			Title = titleText,
-		});
+		};
 	}
 
 	private async Task<string?> GetPublicationTitle(int id)
