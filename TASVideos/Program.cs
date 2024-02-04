@@ -16,7 +16,7 @@ public class Program
 			var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
 			var configuration = new ConfigurationBuilder()
 				.AddJsonFile("appsettings.json")
-				.AddJsonFile($"appsettings.{env.EnvironmentName ?? "Development"}.json", true)
+				.AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
 				.Build();
 			Log.Logger = new LoggerConfiguration()
 				.ReadFrom.Configuration(configuration)
