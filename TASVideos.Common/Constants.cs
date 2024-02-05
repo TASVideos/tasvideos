@@ -6,6 +6,7 @@ public static class LinkConstants
 	public const string PublicationWikiPage = "InternalSystem/PublicationContent/M";
 	public const string GameWikiPage = "InternalSystem/GameContent/G";
 	public const string HomePages = "HomePages/";
+	public const string ExhibitionWikiPage = "InternalSystem/ExhibitionContent/E";
 }
 
 public static class Durations

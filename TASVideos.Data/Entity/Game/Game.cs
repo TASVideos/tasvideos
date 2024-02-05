@@ -15,6 +15,7 @@ public class Game : BaseEntity
 	public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
 	public virtual ICollection<GameGameGroup> GameGroups { get; set; } = new HashSet<GameGameGroup>();
 	public virtual ICollection<GameGoal> GameGoals { get; set; } = new HashSet<GameGoal>();
+	public virtual ICollection<Exhibition.Exhibition> Exhibitions { get; set; } = new HashSet<Exhibition.Exhibition>();
 
 	[StringLength(100)]
 	public string DisplayName { get; set; } = "";

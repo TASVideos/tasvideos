@@ -1,0 +1,76 @@
+﻿@page "{id}/{handler?}/{exhibitionUrlId?}"
+@model TASVideos.Pages.Exhibitions.EditUrlsModel
+@{
+	ViewData.SetTitle($"Edit Urls for Exhibition #{Model.Id}");
+}
+
+@foreach (var url in Model.Urls)
+{
+	{
+		Model.RelevantUrl = url;
+	}
+	<hr />
+	<form method="post">
+		<input type="hidden" asp-for="RelevantUrl.Id" />
+		<row>
+			<column lg="6">
+				<form-group>
+					<label asp-for="RelevantUrl.DisplayName"></label>
+					<input type="text" asp-for="RelevantUrl.DisplayName" class="form-control" />
+					<span asp-validation-for="RelevantUrl.DisplayName" class="text-danger"></span>
+				</form-group>
+				<form-group>
+					<label asp-for="RelevantUrl.Url"></label>
+					<input type="text" asp-for="RelevantUrl.Url" class="form-control" />
+					<span asp-validation-for="RelevantUrl.Url" class="text-danger"></span>
+				</form-group>
+				<form-group>
+					<label asp-for="RelevantUrl.Type"></label>
+					<select asp-for="RelevantUrl.Type" asp-items="Model.AvailableTypes" class="form-control"></select>
+					<span asp-validation-for="RelevantUrl.Type" class="text-danger"></span>
+				</form-group>
+				<div class="text-center mt-3">
+					<submit-button class="btn btn-primary"><span class="fa fa-save"></span> Save</submit-button>
+				</div>
+			</column>
+		</row>
+	</form>
+	<delete-button warning-message="Are you sure you want to remove this url?"
+				   asp-href="/Exhibitions/EditUrls/@Model.Id/Delete/@url.Id">
+		<span class="fa fa-times"></span> Delete
+	</delete-button>
+}
+
+@{
+	Model.RelevantUrl = new();
+}
+<hr />
+<form method="post">
+	<input type="hidden" asp-for="RelevantUrl.Id" />
+	<row>
+		<column lg="6">
+			<form-group>
+				<label asp-for="RelevantUrl.DisplayName"></label>
+				<input type="text" asp-for="RelevantUrl.DisplayName" class="form-control" />
+				<span asp-validation-for="RelevantUrl.DisplayName" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="RelevantUrl.Url"></label>
+				<input type="text" asp-for="RelevantUrl.Url" class="form-control" />
+				<span asp-validation-for="RelevantUrl.Url" class="text-danger"></span>
+			</form-group>
+			<form-group>
+				<label asp-for="RelevantUrl.Type"></label>
+				<select asp-for="RelevantUrl.Type" asp-items="Model.AvailableTypes" class="form-control"></select>
+				<span asp-validation-for="RelevantUrl.Type" class="text-danger"></span>
+			</form-group>
+			<div class="text-center mt-3">
+				<submit-button class="btn btn-primary"><span class="fa fa-plus"></span> Add</submit-button>
+			</div>
+		</column>
+	</row>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}
