@@ -1,0 +1,13 @@
+﻿@page
+@model TASVideos.Pages.Exhibitions.ListModel
+
+@section PageTitle { }
+
+<a asp-page="/Exhibitions/Create" class="btn btn-primary mb-2"><span class="fa fa-plus"></span> Create Exhibition</a>
+
+@foreach(var exibition in Model.Exhibitions)
+{
+	<div class="mb-2">
+		<partial name="_ExhibitionCard" model="exibition" />
+	</div>
+}

@@ -48,6 +48,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	public DbSet<PublicationAward> PublicationAwards { get; set; } = null!;
 	public DbSet<UserAward> UserAwards { get; set; } = null!;
 
+	public DbSet<Exhibition> Exhibitions { get; set; } = null!;
+	public DbSet<ExhibitionUrl> ExhibitionUrls { get; set; } = null!;
+	public DbSet<ExhibitionFile> ExhibitionFiles { get; set; } = null!;
+
 	// Game tables
 	public DbSet<Game> Games { get; set; } = null!;
 	public DbSet<GameGenre> GameGenres { get; set; } = null!;

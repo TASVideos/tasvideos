@@ -105,6 +105,7 @@ public class User : IdentityUser<int>, ITrackable
 	public virtual ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = [];
 
 	public virtual ICollection<WikiPage> WikiRevisions { get; set; } = [];
+	public virtual ICollection<Exhibition.Exhibition> Exhibitions { get; set; } = [];
 }
 
 public enum PreferredPronounTypes

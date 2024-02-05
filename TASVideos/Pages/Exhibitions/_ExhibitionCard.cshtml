@@ -1,0 +1,75 @@
+﻿@model TASVideos.Pages.Exhibitions.Models.ExhibitionDisplayModel
+
+<div class="card">
+	<div class="card-header bg-publication">
+		<h4>
+			<a asp-page="/Exhibitions/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Title</span></a>
+		</h4>
+	</div>
+	<div class="px-2 py-0 card-body">
+		<row class="bg-publication-subtle gx-3 py-2">
+			<div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
+				<img class="w-100 pixelart-image" src="/media/4540M.png" />
+				<div>
+					@foreach (var url in Model.Urls.Where(u => u.Type == Data.Entity.Exhibition.ExhibitionUrlType.Streaming))
+					{
+						<a href="@url.Url" class="btn btn-primary btn-sm mt-1" target="_blank">
+							<i class="fa fa-external-link"></i> Watch @(!string.IsNullOrWhiteSpace(url.DisplayName) ? $"{url.DisplayName}" : "")
+						</a>
+					}
+				</div>
+			</div>
+			<div class="col">
+				<small class="text-body-tertiary"><timezone-convert asp-for="@Model.ExhibitionTimestamp" date-only="true" relative-time="false" /></small>
+
+				@await Component.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
+			</div>
+		</row>
+		<row class="gx-3 py-2">
+			@if (Model.Games.Count > 0)
+			{
+				<div class="col-auto">
+					<span>Game(s):</span>
+					<ul>
+						@foreach (var game in Model.Games)
+						{
+							<li><game-link id="game.Id">@game.DisplayName</game-link></li>
+						}
+					</ul>
+				</div>
+			}
+			@if (Model.Contributors.Count > 0)
+			{
+				<div class="col-auto">
+					<span>Contributor(s):</span>
+					<ul>
+						@foreach (var contributor in Model.Contributors)
+						{
+							<li><profile-link username="@contributor.UserName"></profile-link></li>
+						}
+					</ul>
+				</div>
+			}
+			@if (Model.Urls.Any(u => u.Type != Data.Entity.Exhibition.ExhibitionUrlType.Streaming))
+			{
+				<div class="col-auto">
+					<span>URL(s):</span>
+					<ul>
+						@foreach (var url in Model.Urls.Where(u => u.Type != Data.Entity.Exhibition.ExhibitionUrlType.Streaming))
+						{
+							<li><a href="@url.Url">@(!string.IsNullOrEmpty(url.DisplayName) ? url.DisplayName : url.Url)</a></li>
+						}
+					</ul>
+				</div>
+			}
+			<div class="col">
+				<div class="float-end">
+					<a permission="EditPublicationMetaData"
+					   asp-page="/Exhibitions/Edit"
+					   asp-route-id="@Model.Id"
+					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
+				</div>
+			</div>
+		</row>
+	</div>
+</div>
