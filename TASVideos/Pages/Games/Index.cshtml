@@ -104,7 +104,7 @@
 	<div class="tab-content">
 		@foreach (var movie in Model.Movies)
 		{
-			<div id="tab-@(movie.Movie.Id)M" class="tab-pane@(movie==Model.Movies.First() ? " active" : " fade")">
+			<div id="tab-@(movie.Movie.Id)M" class="tab-pane fade@(movie==Model.Movies.First() ? " active show" : "")">
 				<partial name="Components/DisplayMiniMovie/Default" model="movie.Movie" />
 			</div>
 		}
