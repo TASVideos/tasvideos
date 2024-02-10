@@ -19,7 +19,7 @@ namespace TASVideos.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "6.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
@@ -1745,7 +1745,7 @@ namespace TASVideos.Data.Migrations
 
                     b.Property<decimal>("ImportedTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(16, 4)")
+                        .HasColumnType("numeric(16,4)")
                         .HasDefaultValue(0m)
                         .HasColumnName("imported_time");
 
@@ -1763,7 +1763,7 @@ namespace TASVideos.Data.Migrations
 
                     b.Property<decimal>("LegacyTime")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("decimal(16, 4)")
+                        .HasColumnType("numeric(16,4)")
                         .HasDefaultValue(0m)
                         .HasColumnName("legacy_time");
 
@@ -2239,7 +2239,7 @@ namespace TASVideos.Data.Migrations
                         .HasColumnName("hidden");
 
                     b.Property<decimal>("Length")
-                        .HasColumnType("decimal(10, 3)")
+                        .HasColumnType("numeric(10,3)")
                         .HasColumnName("length");
 
                     b.Property<int>("LogicalLength")
@@ -2724,7 +2724,7 @@ namespace TASVideos.Data.Migrations
                     b.HasOne("TASVideos.Data.Entity.Submission", "Submission")
                         .WithOne("Topic")
                         .HasForeignKey("TASVideos.Data.Entity.Forum.ForumTopic", "SubmissionId")
-                        .HasConstraintName("fk_forum_topics_submissions_submission_id");
+                        .HasConstraintName("fk_forum_topics_submissions_submission_id1");
 
                     b.Navigation("Forum");
 
