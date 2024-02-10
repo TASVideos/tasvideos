@@ -15,7 +15,6 @@ ACTIVE_USER=tasvideos
 HOME_DIR=/home/tasvideos
 ENVIRONMENT_FILE=/home/tasvideos/environment.txt
 
-DOTNET_RUNTIME=/usr/bin/dotnet
 GIT_PULL_LOCATION=$HOME_DIR/tasvideos
 
 MEDIA_SYMLINK_DIRECTORY=$HOME_DIR/website/static-files/media
@@ -36,48 +35,51 @@ unset runlevel
 
 # Start the TASVideos website.
 start() {
-  if [ -f $PIDFILE ] && kill -0 $(cat $PIDFILE); then
-    echo 'Service already running or was not stopped correctly.' >&2
-    return 1
+  if [ -f \"$PIDFILE\" ] && kill -0 "$(cat \"$PIDFILE\")"; then
+    echo 'Service already running or was not stopped correctly.'
+    echo 'Attempting to stop the service.'
+    stop
   fi
 
-  if [ -f $ENVIRONMENT_FILE ]; then
-    ENV=`cat $ENVIRONMENT_FILE`
+  if [ -f \"$ENVIRONMENT_FILE\" ]; then
+    ENV=$(cat \"$ENVIRONMENT_FILE\")
   else
-    ENV=Staging
+    ENV=Production
   fi
 
-  echo 'Starting TASVideos website with' $ENV 'profile.' >&2
+  echo 'Starting TASVideos website with' "$ENV" 'profile.'
 
-  su -c "start-stop-daemon -SbmCv -x /usr/bin/nohup -p \"$PIDFILE_TEMP\" -d \"$ACTIVE_DIRECTORY\" -- ./TASVideos --urls \"http://127.0.0.1:5000\" --environment \"$ENV\" --StartupStrategy \"Migrate\" -c \"Release\"" $ACTIVE_USER
+  su -c "start-stop-daemon -SbmCv -p \"$PIDFILE_TEMP\" -d \"$ACTIVE_DIRECTORY\" -x \"./TASVideos\" -- --urls \"http://127.0.0.1:5000\" --environment $ENV --StartupStrategy Migrate -c Release" $ACTIVE_USER
+
   cp $PIDFILE_TEMP $PIDFILE
   chown root:root $PIDFILE
 
-  echo 'Website started.' >&2
+  echo 'Website started.'
 }
 
 # Stop the TASVideos website.
 stop() {
-  if [ ! -f "$PIDFILE" ] || ! kill -0 $(cat "$PIDFILE"); then
-    echo 'Website not running' >&2
+  if [ ! -f "$PIDFILE" ] || ! kill -0 "$(cat "$PIDFILE")"; then
+    echo 'Website not running'
   else
-    echo 'Stopping website...' >&2
+    echo 'Stopping website...'
 
-    su -c "start-stop-daemon -K -p \"$PIDFILE\"" $WWW_USER
+    su -c "start-stop-daemon -K -p \"$PIDFILE\" -u \"$ACTIVE_USER\" --retry 5"
     rm -f "$PIDFILE"
-    echo 'Website stopped.' >&2
+
+    echo 'Website stopped.'
   fi
 }
 
 # Grab code from Git and publish (compile) it.
 build() {
-  su -c "cd $GIT_PULL_LOCATION && git fetch --tags --force && git pull && dotnet publish . -c Release -o $BUILD_DIRECTORY" $ACTIVE_USER
+  su -c "cd \"$GIT_PULL_LOCATION\" && git fetch --tags --force && git pull && dotnet publish . -c Release -o \"$BUILD_DIRECTORY\"" $ACTIVE_USER
 }
 
 # Move files from the live site directory to a temp directory.
 # Move the published files into the live site directory.
 deploy() {
-  echo 'Start deploy.'
+  echo 'Starting deployment.'
 
   # mv old code into temp location
   mv $ACTIVE_DIRECTORY $TEMP_DIRECTORY
@@ -110,28 +112,24 @@ case "$1" in
   build-only)
     build
     ;;
-  build-stop-deploy)
-    build && stop && deploy
-    ;;
   update-website)
-    build && stop && deploy && start && cleanup
+    build && deploy && cleanup && echo 'Now restart the service.'
     ;;
   commands)
     echo start - Start the website without updating
     echo stop - Stop the website
     echo restart - Stop and Start the website without updating
-    echo update-website - Full update.  Pulls latest code, and restarts the site \(Recommended\)
+    echo update-website - Full update.  Pulls latest code and builds it.  Restart the service afterwards. \(Recommended\)
     echo build-only - Pulls the latest code and compiles without affecting the state of the website
-    echo build-stop-deploy - Brings the website down. Pulls the latest code and moves it to the website folder but does not restart the website \(Not Recommended\)
     ;;
   *)
-    echo "Usage: $0 {start|stop|restart|update-website|build-only|build-stop-deploy}"
+    echo "Usage: $0 {start|stop|restart|update-website|build-only|commands}"
 esac
 
 EC=$?
 
 if [ $EC -ne 0 ]; then
-  echo 'Error code' $EC 'received during' $1 '. Some step failed.'
+  echo 'Error code' $EC 'received during' "$1" '. Some step failed.'
 fi
 
 export runlevel=$TMP_SAVE_runlevel_VAR
