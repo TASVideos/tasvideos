@@ -35,11 +35,9 @@ unset runlevel
 
 # Start the TASVideos website.
 start() {
-  if [ -f \"$PIDFILE\" ] && kill -0 "$(cat \"$PIDFILE\")"; then
-    echo 'Service already running or was not stopped correctly.'
-    echo 'Attempting to stop the service.'
-    stop
-  fi
+  echo 'Start()'
+
+  stop
 
   if [ -f \"$ENVIRONMENT_FILE\" ]; then
     ENV=$(cat \"$ENVIRONMENT_FILE\")
@@ -59,6 +57,8 @@ start() {
 
 # Stop the TASVideos website.
 stop() {
+  echo 'Stop()'
+
   if [ ! -f "$PIDFILE" ] || ! kill -0 "$(cat "$PIDFILE")"; then
     echo 'Website not running'
   else
@@ -73,7 +73,16 @@ stop() {
 
 # Grab code from Git and publish (compile) it.
 build() {
+  echo 'Build()'
+
   su -c "cd \"$GIT_PULL_LOCATION\" && git fetch --tags --force && git pull && dotnet publish . -c Release -o \"$BUILD_DIRECTORY\"" $ACTIVE_USER
+}
+
+restart() {
+  echo 'Restart()'
+  
+  stop
+  start
 }
 
 # Move files from the live site directory to a temp directory.
@@ -107,23 +116,27 @@ case "$1" in
     stop
     ;;
   restart)
-    stop && start
+    restart
+    ;;
+  reload)
+    build
+    stop
+    deploy
+    cleanup
+    start
     ;;
   build-only)
     build
-    ;;
-  update-website)
-    build && deploy && cleanup && echo 'Now restart the service.'
     ;;
   commands)
     echo start - Start the website without updating
     echo stop - Stop the website
     echo restart - Stop and Start the website without updating
-    echo update-website - Full update.  Pulls latest code and builds it.  Restart the service afterwards. \(Recommended\)
+    echo reload - Full update.  Pulls latest code and builds it.  Should restart the service afterwards. \(Recommended\)
     echo build-only - Pulls the latest code and compiles without affecting the state of the website
     ;;
   *)
-    echo "Usage: $0 {start|stop|restart|update-website|build-only|commands}"
+    echo "Usage: $0 {start|stop|restart|reload|build-only|commands}"
 esac
 
 EC=$?
