@@ -65,6 +65,6 @@
 	}
 
 	gameGoalBtn.onclick = function () {
-		document.location = `/Games/${gameModel.value}/Goals/List?goalToEdit=${gameGoalModel.value}&returnUrl=${returnUrl}`;
+		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${returnUrl}`;
 	}
 }

@@ -22,12 +22,15 @@
 		.ThenBy(g => g.DisplayName))
 	{
 		var canDelete = !goal.Publications.Any() && !goal.Submissions.Any();
-		<tr>
+		<tr id="@goal.Id">
 			<td condition="@(goal.Id == Model.GoalToEdit && goal.DisplayName != "baseline")">
 				<form method="post" class="d-flex gap-2" asp-page-handler="Edit">
-					<input type="hidden" name="gameGoalId" value="@Model.GoalToEdit" />
-					<input type="text" name="newGoalName" class="form-control" value="@goal.DisplayName" />
-					<button type="submit" class="btn btn-secondary">Save</button>
+					<column>
+						<input type="hidden" name="gameGoalId" value="@Model.GoalToEdit" />
+						<input type="text" name="newGoalName" class="form-control" value="@goal.DisplayName" />
+						<button type="submit" class="btn btn-primary btn-sm mt-1"><i class="fa fa-save"></i> Save</button>
+						<a asp-page="List" asp-fragment="@goal.Id" asp-route-gameId="@Model.GameId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-times"></i> Cancel</a>
+					</column>
 				</form>
 			</td>
 			<td condition="@(goal.Id != Model.GoalToEdit || goal.DisplayName == "baseline")">
@@ -57,7 +60,15 @@
 			</td>
 			<td>
 				<div class="btn-toolbar">
-					<a asp-page="List" asp-route-goalToEdit="@goal.Id" permission="CatalogMovies" condition="@(goal.Id != Model.GoalToEdit && goal.DisplayName != "baseline")" asp-route-gameId="@Model.GameId" class="btn btn-sm btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+					<a asp-page="List"
+					   asp-fragment="@goal.Id"
+					   asp-route-gameId="@Model.GameId"
+					   asp-route-goalToEdit="@goal.Id"
+					   permission="CatalogMovies"
+					   condition="@(goal.Id != Model.GoalToEdit && goal.DisplayName != "baseline")"
+					   class="btn btn-sm btn-primary">
+					   <i class="fa fa-pencil"></i> Edit
+					</a>
 					<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGroupId="@goal.Id" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
 				</div>
 			</td>
