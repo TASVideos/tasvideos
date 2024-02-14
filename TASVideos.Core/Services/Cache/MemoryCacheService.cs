@@ -26,8 +26,6 @@ public class MemoryCacheService : ICacheService
 
 	public void Set(string key, object? data, int? cacheTime)
 	{
-		using var entry = _cache.CreateEntry(key);
-		entry.Value = data;
 		_cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? _settings.CacheSettings.CacheDurationInSeconds));
 	}
 }
