@@ -6,6 +6,7 @@ namespace TASVideos.Pages.Users.Models;
 public class UserEditModel
 {
 	[DisplayName("User Name")]
+	[StringLength(50)]
 	public string? UserName { get; set; }
 
 	[Required]

@@ -47,7 +47,7 @@ public class RegisterModel : BasePageModel
 
 	[BindProperty]
 	[Required]
-	[StringLength(256)]
+	[StringLength(50)]
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 

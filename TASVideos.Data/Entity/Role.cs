@@ -4,6 +4,13 @@ namespace TASVideos.Data.Entity;
 
 public class Role : IdentityRole<int>, ITrackable
 {
+	[StringLength(50)]
+	public new string Name
+	{
+		get => base.Name!;
+		set => base.Name = value;
+	}
+
 	/// <summary>
 	/// Gets or sets a value indicating whether the role is automatically assigned to new users.
 	/// </summary>

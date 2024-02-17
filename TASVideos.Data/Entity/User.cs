@@ -9,6 +9,20 @@ public enum UserPreference
 
 public class User : IdentityUser<int>, ITrackable
 {
+	[StringLength(50)]
+	public new string UserName
+	{
+		get => base.UserName!;
+		set => base.UserName = value;
+	}
+
+	[StringLength(50)]
+	public new string NormalizedUserName
+	{
+		get => base.NormalizedUserName!;
+		set => base.NormalizedUserName = value;
+	}
+
 	public DateTime? LastLoggedInTimeStamp { get; set; }
 
 	[Required]

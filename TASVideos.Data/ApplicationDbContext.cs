@@ -183,6 +183,11 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			builder.HasPostgresExtension("pg_trgm");
 		}
 
+		builder.Entity<Award>(entity =>
+		{
+			entity.HasIndex(e => e.ShortName).IsUnique();
+		});
+
 		builder.Entity<User>(entity =>
 		{
 			entity.HasIndex(e => e.NormalizedUserName).IsUnique();
