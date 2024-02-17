@@ -247,7 +247,7 @@ internal class ForumService : IForumService
 			tvalue => tvalue.LatestPost is null ? null : new LatestPost(
 				tvalue.LatestPost.Id,
 				tvalue.LatestPost.CreateTimestamp,
-				tvalue.LatestPost.UserName ?? ""));
+				tvalue.LatestPost.UserName));
 
 		_cacheService.Set(LatestPostCacheKey, dict, Durations.OneDayInSeconds);
 

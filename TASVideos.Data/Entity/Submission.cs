@@ -38,6 +38,8 @@ public class Submission : BaseEntity, ITimeable
 	[Required]
 	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
+	[StringLength(8)]
+
 	public string? MovieExtension { get; set; }
 
 	public int? GameId { get; set; }
@@ -93,6 +95,7 @@ public class Submission : BaseEntity, ITimeable
 	/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01.
 	/// </summary>
 	[Required]
+	[StringLength(500)]
 	public string Title { get; set; } = "";
 
 	public string? Annotations { get; set; }

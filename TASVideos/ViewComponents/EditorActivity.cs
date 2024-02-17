@@ -25,7 +25,7 @@ public class EditorActivity : ViewComponent
 			.GroupBy(g => g.Author!.UserName)
 			.Select(w => new EditorActivityModel
 			{
-				UserName = w.Key ?? "",
+				UserName = w.Key,
 				WikiEdits = w.Count()
 			})
 			.OrderByDescending(m => m.WikiEdits)

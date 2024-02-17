@@ -23,6 +23,20 @@ public class User : IdentityUser<int>, ITrackable
 		set => base.NormalizedUserName = value;
 	}
 
+	[StringLength(100)]
+	public new string Email
+	{
+		get => base.Email!;
+		set => base.Email = value;
+	}
+
+	[StringLength(100)]
+	public new string NormalizedEmail
+	{
+		get => base.NormalizedEmail!;
+		set => base.NormalizedEmail = value;
+	}
+
 	public DateTime? LastLoggedInTimeStamp { get; set; }
 
 	[Required]
@@ -52,6 +66,7 @@ public class User : IdentityUser<int>, ITrackable
 	/// </summary>
 	public bool UseRatings { get; set; } = true;
 
+	[StringLength(1024)]
 	public string? ModeratorComments { get; set; }
 
 	public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;

@@ -64,6 +64,7 @@ public class Publication : BaseEntity, ITimeable
 	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
 	[Required]
+	[StringLength(200)]
 	public string MovieFileName { get; set; } = "";
 
 	[StringLength(50)]
@@ -83,6 +84,7 @@ public class Publication : BaseEntity, ITimeable
 
 	// De-normalized name for easy recreation
 	[Required]
+	[StringLength(500)]
 	public string Title { get; set; } = "";
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");

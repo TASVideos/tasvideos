@@ -7,6 +7,8 @@ public class PublicationMaintenanceLog
 
 	public DateTime TimeStamp { get; set; }
 
+	[StringLength(1024)]
+
 	public string Log { get; set; } = "";
 
 	public int PublicationId { get; set; }
