@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Tests.Base;
 
@@ -83,6 +84,26 @@ public class TestDbContext : ApplicationDbContext
 	public void CreateConcurrentUpdateConflict()
 	{
 		_dbConcurrentUpdateConflict = true;
+	}
+
+	public EntityEntry<User> AddUser(string userName)
+	{
+		return AddUser(0, userName);
+	}
+
+	public EntityEntry<User> AddUser(int id, string userName)
+	{
+		var email = userName + "@example.com";
+		var user = new User
+		{
+			Id = id,
+			UserName = userName,
+			NormalizedUserName = userName.ToUpper(),
+			Email = email,
+			NormalizedEmail = email.ToUpper()
+		};
+
+		return Users.Add(user);
 	}
 
 	private class TestHttpContextAccessor : IHttpContextAccessor

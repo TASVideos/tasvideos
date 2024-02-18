@@ -37,7 +37,7 @@ public sealed class UserManagerTests : IDisposable
 	[DataRow("test", "doesNotExist", false)]
 	public async Task Exists(string userToAdd, string userToLookup, bool expected)
 	{
-		_db.Users.Add(new User { UserName = userToAdd });
+		_db.AddUser(userToAdd);
 		await _db.SaveChangesAsync();
 
 		var actual = await _userManager.Exists(userToLookup);

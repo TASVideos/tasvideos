@@ -361,7 +361,7 @@ public class AwardsTests
 		await _awards.AssignPublicationAward(
 			award.ShortName,
 			CurrentYear,
-			new[] { pub.Id });
+			[pub.Id]);
 
 		Assert.AreEqual(1, _db.PublicationAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
@@ -402,7 +402,7 @@ public class AwardsTests
 
 	private User CreateUser()
 	{
-		var user = new User { UserName = "TestUser" + Guid.NewGuid() };
+		var user = _db.AddUser("TestUser" + Guid.NewGuid()).Entity;
 		_db.Users.Add(user);
 		_db.SaveChanges();
 		return user;

@@ -1,5 +1,4 @@
-﻿using TASVideos.Data;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -7,8 +6,8 @@ namespace TASVideos.Core.Tests.Services;
 public class PointsServiceTests
 {
 	private readonly IPointsService _pointsService;
-	private readonly ApplicationDbContext _db;
-	private static User Player => new () { UserName = "Player" };
+	private readonly TestDbContext _db;
+	private static string Author => "Player";
 
 	public PointsServiceTests()
 	{
@@ -26,7 +25,7 @@ public class PointsServiceTests
 	[TestMethod]
 	public async Task PlayerPoints_UserWithNoMovies_Returns0()
 	{
-		_db.Users.Add(Player);
+		_db.AddUser(1, Author);
 		await _db.SaveChangesAsync();
 		var user = _db.Users.Single();
 		var (actual, _) = await _pointsService.PlayerPoints(user.Id);
@@ -38,7 +37,7 @@ public class PointsServiceTests
 	{
 		const int numMovies = 2;
 
-		_db.Users.Add(Player);
+		_db.AddUser(1, Author);
 		var publicationClass = new PublicationClass { Weight = 1, Name = "Test" };
 		_db.PublicationClasses.Add(publicationClass);
 		for (int i = 0; i < numMovies; i++)

@@ -20,8 +20,8 @@ public class UserMaintenanceLoggerTests
 		const int userId = 1;
 		const int editorId = 2;
 		const string logMessage = "Test";
-		_db.Users.Add(new User { Id = userId });
-		_db.Users.Add(new User { Id = editorId });
+		_db.AddUser(userId, "_");
+		_db.AddUser(editorId, "__");
 		await _db.SaveChangesAsync();
 
 		await _publicationMaintenanceLogger.Log(userId, logMessage, editorId);

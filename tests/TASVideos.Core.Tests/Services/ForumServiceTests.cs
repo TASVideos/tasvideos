@@ -68,7 +68,7 @@ public class ForumServiceTests
 		const int topicId = 2;
 		const int postId = 3;
 		DateTime postDate = DateTime.UtcNow;
-		_db.Users.Add(new User { Id = posterId, UserName = posterName });
+		_db.AddUser(posterId, posterName);
 		_db.Forums.Add(new Forum { Id = forumId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumPosts.Add(new ForumPost
@@ -108,8 +108,8 @@ public class ForumServiceTests
 		const int post2Id = 4;
 		DateTime post1Date = DateTime.UtcNow.AddDays(-2);
 		DateTime post2Date = DateTime.UtcNow.AddDays(-1);
-		_db.Users.Add(new User { Id = poster1Id, UserName = poster1Name });
-		_db.Users.Add(new User { Id = poster2Id, UserName = poster2Name });
+		_db.AddUser(poster1Id, poster1Name);
+		_db.AddUser(poster2Id, poster2Name);
 		_db.Forums.Add(new Forum { Id = forumId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumPosts.Add(new ForumPost
@@ -152,7 +152,7 @@ public class ForumServiceTests
 		const int posterId = 1;
 		const string posterName = "Test";
 		const int forumId = 1;
-		_db.Users.Add(new User { Id = posterId, UserName = posterName });
+		_db.AddUser(posterId, posterName);
 		_db.Forums.Add(new Forum { Id = forumId });
 		await _db.SaveChangesAsync();
 

@@ -170,7 +170,7 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task SendWelcomeMessage_PostNotFound_NoMessageSent()
 	{
-		var entry = _db.Users.Add(new User());
+		var entry = _db.AddUser("_");
 		await _db.SaveChangesAsync();
 
 		await _tasVideoAgent.SendWelcomeMessage(entry.Entity.Id);
@@ -184,7 +184,7 @@ public class TASVideoAgentTests
 		const string userName = "TestUser";
 		const string template = "Welcome [[username]]";
 		const string subject = "Test";
-		var userEntry = _db.Users.Add(new User { UserName = userName });
+		var userEntry = _db.AddUser(userName);
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = SiteGlobalConstants.WelcomeToTasvideosPostId,
@@ -217,7 +217,7 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task SendAutoAssignedRole_PostNotFound_NoMessageSent()
 	{
-		var entry = _db.Users.Add(new User());
+		var entry = _db.AddUser("_");
 		await _db.SaveChangesAsync();
 
 		await _tasVideoAgent.SendAutoAssignedRole(entry.Entity.Id, "");
@@ -232,7 +232,7 @@ public class TASVideoAgentTests
 		const string template = "Congratulations on [[publicationTitle]]. You have been assigned [[role]]";
 		const string roleName = "Test Forum User";
 		const string subject = "Test";
-		var userEntry = _db.Users.Add(new User { UserName = userName });
+		var userEntry = _db.AddUser(userName);
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = SiteGlobalConstants.AutoAssignedRolePostId,
@@ -265,7 +265,7 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task SendPublishedAuthorRole_PostNotFound_NoMessageSent()
 	{
-		var entry = _db.Users.Add(new User());
+		var entry = _db.AddUser("_");
 		await _db.SaveChangesAsync();
 
 		await _tasVideoAgent.SendPublishedAuthorRole(entry.Entity.Id, "", "");
@@ -281,7 +281,7 @@ public class TASVideoAgentTests
 		const string subject = "Test";
 		const string roleName = "Test Role";
 		const string publicationTitle = "Test in 1:00";
-		var userEntry = _db.Users.Add(new User { UserName = userName });
+		var userEntry = _db.AddUser(userName);
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = SiteGlobalConstants.PublishedAuthorRoleAddedPostId,

@@ -21,7 +21,7 @@ public class PublicationMaintenanceLoggerTests
 		const int userId = 2;
 		const string logMessage = "Test";
 		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		await _db.SaveChangesAsync();
 
 		await _publicationMaintenanceLogger.Log(publicationId, userId, logMessage);
@@ -41,17 +41,13 @@ public class PublicationMaintenanceLoggerTests
 		const string message1 = "Test1";
 		const string message2 = "Test2";
 		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		await _db.SaveChangesAsync();
 
 		await _publicationMaintenanceLogger.Log(publicationId, userId, new[] { message1, message2 });
 		var logs = _db.PublicationMaintenanceLogs.ToList();
 		Assert.AreEqual(2, logs.Count);
-		Assert.IsTrue(logs.Any(l => l.PublicationId == publicationId
-			&& l.UserId == userId
-			&& l.Log == message1));
-		Assert.IsTrue(logs.Any(l => l.PublicationId == publicationId
-			&& l.UserId == userId
-			&& l.Log == message2));
+		Assert.IsTrue(logs.Any(l => l is { PublicationId: publicationId, UserId: userId, Log: message1 }));
+		Assert.IsTrue(logs.Any(l => l is { PublicationId: publicationId, UserId: userId, Log: message2 }));
 	}
 }

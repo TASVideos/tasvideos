@@ -39,10 +39,12 @@ public class PrivateMessageServiceTests
 		{
 			Id = toUserId,
 			UserName = toUserName,
+			NormalizedEmail = toUserName,
 			EmailOnPrivateMessage = toUserEmailOnPm,
-			Email = toUserEmail
+			Email = toUserEmail,
+			NormalizedUserName = toUserEmail
 		});
-		_db.Users.Add(new User { Id = fromUserId, UserName = "_" });
+		_db.AddUser(fromUserId, "_");
 		await _db.SaveChangesAsync();
 
 		await _privateMessageService.SendMessage(fromUserId, toUserName, subject, text);
@@ -70,10 +72,12 @@ public class PrivateMessageServiceTests
 		{
 			Id = toUserId,
 			UserName = toUserName,
+			NormalizedUserName = toUserName,
 			EmailOnPrivateMessage = toUserEmailOnPm,
-			Email = toUserEmail
+			Email = toUserEmail,
+			NormalizedEmail = toUserEmail
 		});
-		_db.Users.Add(new User { Id = fromUserId, UserName = "_" });
+		_db.AddUser(fromUserId, "_");
 		await _db.SaveChangesAsync();
 
 		await _privateMessageService.SendMessage(fromUserId, toUserName, subject, text);

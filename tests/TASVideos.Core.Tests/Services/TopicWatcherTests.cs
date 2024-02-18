@@ -2,6 +2,7 @@
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
+using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -41,8 +42,8 @@ public class TopicWatcherTests
 		const int user2Id = 2;
 		const int topic1Id = 1;
 		const int topic2Id = 2;
-		_db.Users.Add(new User { Id = user1Id });
-		_db.Users.Add(new User { Id = user2Id });
+		_db.AddUser(user1Id, "_");
+		_db.AddUser(user2Id, "__");
 		var forum = new Forum { Id = 1 };
 		_db.ForumTopics.Add(new ForumTopic { Id = topic1Id, ForumId = forum.Id, Forum = forum });
 		_db.ForumTopics.Add(new ForumTopic { Id = topic2Id, ForumId = forum.Id, Forum = forum });
@@ -67,7 +68,7 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task NotifyNewPost_DoesNotNotifyPoster()
 	{
-		_db.Users.Add(new User { Id = 1 });
+		_db.AddUser(1, "_");
 		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
 		{
@@ -88,7 +89,7 @@ public class TopicWatcherTests
 		const int watcher = 1;
 		const int poster = 2;
 		const string posterEmail = "a@b.com";
-		_db.Users.Add(new User { Id = watcher, Email = posterEmail });
+		_db.AddUser(watcher, posterEmail);
 		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
 		{
@@ -109,7 +110,7 @@ public class TopicWatcherTests
 		const int watcher = 1;
 		const int poster = 2;
 		const string posterEmail = "a@b.com";
-		_db.Users.Add(new User { Id = watcher, Email = posterEmail });
+		_db.AddUser(watcher, posterEmail);
 		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
 		{
@@ -129,7 +130,7 @@ public class TopicWatcherTests
 	{
 		const int userId = 1;
 		const int topicId = 1;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
 		{
@@ -150,7 +151,7 @@ public class TopicWatcherTests
 	{
 		const int userId = 1;
 		const int topicId = 1;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		await _db.SaveChangesAsync();
 
@@ -166,7 +167,7 @@ public class TopicWatcherTests
 	{
 		const int userId = 1;
 		const int topicId = 1;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
 		await _db.SaveChangesAsync();
@@ -182,7 +183,7 @@ public class TopicWatcherTests
 	{
 		const int userId = 1;
 		const int topicId = 1;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		var forum = new Forum { Id = 1, Restricted = true };
 		_db.Forums.Add(forum);
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forum.Id });
@@ -198,7 +199,7 @@ public class TopicWatcherTests
 	{
 		const int userId = 1;
 		const int topicId = 1;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
 		await _db.SaveChangesAsync();
@@ -214,7 +215,7 @@ public class TopicWatcherTests
 		const int userId = 1;
 		const int topic1Id = 1;
 		const int topic2Id = 2;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.ForumTopics.Add(new ForumTopic { Id = topic1Id });
 		_db.ForumTopics.Add(new ForumTopic { Id = topic2Id });
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic1Id });

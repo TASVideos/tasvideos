@@ -35,7 +35,7 @@ public class UserFilesTests
 	{
 		const int userId = 1;
 		const int fileSize = 100;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.UserFiles.Add(new UserFile
 		{
 			AuthorId = userId,
@@ -58,7 +58,7 @@ public class UserFilesTests
 	{
 		const int userId = 1;
 		const int fileSize = 100;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.UserFiles.Add(new UserFile
 		{
 			AuthorId = userId,
@@ -81,7 +81,7 @@ public class UserFilesTests
 	{
 		const int userId = 1;
 		const int fileSize = 100;
-		_db.Users.Add(new User { Id = userId });
+		_db.AddUser(userId, "_");
 		_db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
