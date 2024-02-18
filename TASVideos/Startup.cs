@@ -17,7 +17,7 @@ public class Startup
 	public IConfiguration Configuration { get; }
 	public IWebHostEnvironment Environment { get; }
 
-	private AppSettings Settings => Configuration.Get<AppSettings>();
+	private AppSettings Settings => Configuration.Get<AppSettings>()!;
 
 	public void ConfigureServices(IServiceCollection services)
 	{

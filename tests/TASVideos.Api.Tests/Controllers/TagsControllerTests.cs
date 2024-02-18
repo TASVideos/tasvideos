@@ -69,7 +69,7 @@ public sealed class TagsControllerTests : IDisposable
 		Assert.IsInstanceOfType(result, typeof(CreatedResult));
 		var createdResult = (CreatedResult)result;
 		Assert.AreEqual(201, createdResult.StatusCode);
-		Assert.IsTrue(createdResult.Location.Contains(createdId.ToString()));
+		Assert.IsTrue((createdResult.Location ?? "").Contains(createdId.ToString()));
 	}
 
 	[TestMethod]

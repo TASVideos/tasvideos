@@ -16,7 +16,7 @@ public class MemoryCacheService : ICacheService
 
 	public bool TryGetValue<T>(string key, out T value)
 	{
-		return _cache.TryGetValue(key, out value);
+		return _cache.TryGetValue(key, out value!);
 	}
 
 	public void Remove(string key)
