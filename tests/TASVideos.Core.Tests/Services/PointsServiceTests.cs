@@ -5,7 +5,7 @@ namespace TASVideos.Core.Tests.Services;
 [TestClass]
 public class PointsServiceTests
 {
-	private readonly IPointsService _pointsService;
+	private readonly PointsService _pointsService;
 	private readonly TestDbContext _db;
 	private static string Author => "Player";
 

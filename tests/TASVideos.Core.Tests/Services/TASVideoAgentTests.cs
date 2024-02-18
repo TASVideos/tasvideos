@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Tests.Services;
@@ -11,7 +10,7 @@ public class TASVideoAgentTests
 	private const string SubmissionTitle = "Test Title";
 	private const int PublicationId = 1;
 
-	private readonly ITASVideoAgent _tasVideoAgent;
+	private readonly TASVideoAgent _tasVideoAgent;
 	private readonly TestDbContext _db;
 
 	public TASVideoAgentTests()

@@ -38,10 +38,10 @@ public class DelimitedQueryStringValueProvider : QueryStringValueProvider
 			return ValueProviderResult.None;
 		}
 
-		if (values.Any(x => Delimiters.Any(x.Contains)))
+		if (values.Any(x => Delimiters.Any((x ?? "").Contains)))
 		{
 			var stringValues = new StringValues(values
-				.SelectMany(x => x.Split(Delimiters, StringSplitOptions.RemoveEmptyEntries))
+				.SelectMany(x => (x ?? "").Split(Delimiters, StringSplitOptions.RemoveEmptyEntries))
 				.ToArray());
 			return new ValueProviderResult(stringValues, _culture);
 		}

@@ -6,7 +6,7 @@ namespace TASVideos.Core.Tests.Services;
 [TestClass]
 public class WikiPagesTests
 {
-	private readonly IWikiPages _wikiPages;
+	private readonly WikiPages _wikiPages;
 	private readonly TestDbContext _db;
 	private readonly WikiTestCache _cache;
 
