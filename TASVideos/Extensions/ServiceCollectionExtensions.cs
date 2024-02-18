@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<AppSettings>(configuration);
-		var settings = configuration.Get<AppSettings>();
+		var settings = configuration.Get<AppSettings>()!;
 		return services.AddSingleton(settings);
 	}
 

@@ -90,7 +90,11 @@ public class EditModel : BasePageModel
 			? user.UserName
 			: null;
 
-		user.UserName = UserToEdit.UserName;
+		if (UserToEdit.UserName is not null)
+		{
+			user.UserName = UserToEdit.UserName;
+		}
+
 		user.TimeZoneId = UserToEdit.TimezoneId;
 		user.From = UserToEdit.From;
 		user.Signature = UserToEdit.Signature;

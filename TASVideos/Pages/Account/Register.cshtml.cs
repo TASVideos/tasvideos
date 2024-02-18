@@ -89,7 +89,7 @@ public class RegisterModel : BasePageModel
 			ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
 		}
 
-		string encodedResponse = Request.Form["g-recaptcha-response"];
+		var encodedResponse = Request.Form["g-recaptcha-response"];
 		bool isCaptchaValid = await _reCaptchaService.VerifyAsync(encodedResponse);
 
 		if (!_env.IsDevelopment() && !isCaptchaValid)
