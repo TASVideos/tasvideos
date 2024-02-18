@@ -28,7 +28,7 @@ public class ConfirmEmailChangeModel : BasePageModel
 			return AccessDenied();
 		}
 
-		var user = await _userManager.GetUserAsync(User);
+		var user = await _userManager.GetRequiredUser(User);
 
 		var cacheResult = _cache.TryGetValue(code, out string newEmail);
 		if (!cacheResult)

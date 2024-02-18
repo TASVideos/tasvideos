@@ -23,7 +23,7 @@ public class RequireCurrentPermissions : Attribute, IAsyncPageFilter
 		if (user.IsLoggedIn())
 		{
 			var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager>();
-			var userEntity = await userManager.GetUserAsync(user);
+			var userEntity = await userManager.GetRequiredUser(user);
 			var claims = await userManager.AddUserPermissionsToClaims(userEntity);
 
 			user.ReplacePermissionClaims(claims);

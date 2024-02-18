@@ -46,7 +46,7 @@ public class ChangePasswordModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await _signInManager.UserManager.GetUserAsync(User);
+		var user = await _signInManager.GetRequiredUser(User);
 
 		var hasPassword = await _signInManager.UserManager.HasPasswordAsync(user);
 		if (!hasPassword)
@@ -64,7 +64,7 @@ public class ChangePasswordModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _signInManager.UserManager.GetUserAsync(User);
+		var user = await _signInManager.GetRequiredUser(User);
 
 		if (!_userManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
 		{

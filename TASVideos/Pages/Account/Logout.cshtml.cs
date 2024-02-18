@@ -22,9 +22,7 @@ public class LogoutModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		var user = await _signInManager.UserManager.GetUserAsync(User);
-		await _signInManager.UserManager.RemoveClaimsAsync(user, User.Claims);
-		await _signInManager.SignOutAsync();
+		await _signInManager.Logout(User);
 		return Login();
 	}
 }

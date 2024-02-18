@@ -48,6 +48,11 @@ public class UserManager : UserManager<User>
 		_wikiPages = wikiPages;
 	}
 
+	public async Task<User> GetRequiredUser(ClaimsPrincipal user)
+	{
+		return await base.GetUserAsync(user) ?? throw new InvalidOperationException($"Unknown user {user?.Identity?.Name}");
+	}
+
 	// Clears the user claims, and adds a distinct list of user permissions,
 	// so they can be stored and retrieved from their cookie
 	public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)

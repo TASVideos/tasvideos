@@ -79,7 +79,7 @@ public class EditEmailModel : BasePageModel
 			return Page();
 		}
 
-		user.Email = UserToEdit.Email;
+		user.Email = UserToEdit.Email!;
 		user.EmailConfirmed = UserToEdit.EmailConfirmed;
 		user.NormalizedEmail = _signInManager.UserManager.NormalizeEmail(user.Email);
 

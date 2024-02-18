@@ -37,7 +37,7 @@ public class NewModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		var user = await _userManager.GetUserAsync(User);
+		var user = await _userManager.GetRequiredUser(User);
 		var allowRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var since = user.LastLoggedInTimeStamp ?? DateTime.UtcNow;
 		Posts = await _db.ForumPosts

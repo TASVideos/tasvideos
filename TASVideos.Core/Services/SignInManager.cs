@@ -70,7 +70,7 @@ public class SignInManager : SignInManager<User>
 
 	public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
 	{
-		var user = await UserManager.GetUserAsync(principal);
+		var user = await _userManager.GetRequiredUser(principal);
 		var result = await UserManager.AddPasswordAsync(user, newPassword);
 
 		if (result.Succeeded)
@@ -115,5 +115,17 @@ public class SignInManager : SignInManager<User>
 		}
 
 		return await _db.Users.AnyAsync(u => u.Email == email && u.UserName == username);
+	}
+
+	public async Task<User> GetRequiredUser(ClaimsPrincipal user)
+	{
+		return await _userManager.GetRequiredUser(user);
+	}
+
+	public async Task Logout(ClaimsPrincipal user)
+	{
+		var u = await _userManager.GetRequiredUser(user);
+		await _userManager.RemoveClaimsAsync(u, user.Claims);
+		await SignOutAsync();
 	}
 }

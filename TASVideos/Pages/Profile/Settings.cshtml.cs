@@ -51,7 +51,7 @@ public class SettingsModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		var user = await _userManager.GetUserAsync(User);
+		var user = await _userManager.GetRequiredUser(User);
 		Settings = new ProfileSettingsModel
 		{
 			Username = user.UserName,
@@ -77,7 +77,7 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _userManager.GetUserAsync(User);
+		var user = await _userManager.GetRequiredUser(User);
 
 		var bannedSites = _userManager.BannedAvatarSites().ToList();
 		if (!string.IsNullOrWhiteSpace(user.Avatar))
@@ -133,7 +133,7 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _userManager.GetUserAsync(User);
+		var user = await _userManager.GetRequiredUser(User);
 
 		var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);

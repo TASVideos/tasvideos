@@ -94,7 +94,7 @@ public class CreateModel : BaseForumModel
 		WatchTopic = await _topicWatcher.IsWatchingTopic(TopicId, User.GetUserId());
 
 		// Override default behavior if user setting demands it, even if they were already watching the topic
-		var user = await _userManager.GetUserAsync(User);
+		var user = await _userManager.GetRequiredUser(User);
 		if (user.AutoWatchTopic != null && user.AutoWatchTopic != UserPreference.Auto)
 		{
 			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
@@ -129,7 +129,7 @@ public class CreateModel : BaseForumModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		var user = await _userManager.GetUserAsync(User);
+		var user = await _userManager.GetRequiredUser(User);
 		if (!ModelState.IsValid)
 		{
 			// We have to consider direct posting to this call, including "over-posting",
