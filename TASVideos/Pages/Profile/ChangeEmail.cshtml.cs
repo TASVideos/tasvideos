@@ -63,7 +63,7 @@ public class ChangeEmailModel : BasePageModel
 			return AccessDenied();
 		}
 
-		var token = await _userManager.GenerateChangeEmailTokenAsync(user, NewEmail);
+		var token = await _userManager.GenerateChangeEmailTokenAsync(user, NewEmail!);
 
 		if (string.IsNullOrWhiteSpace(token))
 		{
