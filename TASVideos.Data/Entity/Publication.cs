@@ -68,9 +68,6 @@ public class Publication : BaseEntity, ITimeable
 	public string MovieFileName { get; set; } = "";
 
 	[StringLength(50)]
-	public string? Branch { get; set; }
-
-	[StringLength(50)]
 	public string? EmulatorVersion { get; set; }
 
 	public int Frames { get; set; }
