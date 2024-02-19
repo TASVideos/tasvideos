@@ -160,7 +160,7 @@ UPDATE public.users
 	SET signature = NULL,
 		password_hash = 'AQAAAAEAACcQAAAAEJ0432uxp/JdMT51+b1SqQRq52JyKAiumPqKr/LO7Z73Kctz/eu5GZLonouiGmo0ww==', -- We don't want to make the real password public
 		email = 'tasvideos@example.com', --We don't want these public, but a valid email address is necessary for many user operations
-		normalized_email = 'TASVIDEOS@example.com, -- We don't want to make these public either
+		normalized_email = 'TASVIDEOS@example.com', -- We don't want to make these public either
 		last_logged_in_time_stamp = NOW(),
 		time_zone_iD = 'UTC',
 		moderator_comments = null;
