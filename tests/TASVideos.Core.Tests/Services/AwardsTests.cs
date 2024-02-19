@@ -6,7 +6,7 @@ namespace TASVideos.Core.Tests.Services;
 [TestClass]
 public class AwardsTests
 {
-	private readonly IAwards _awards;
+	private readonly Awards _awards;
 	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 

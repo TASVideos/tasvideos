@@ -7,7 +7,7 @@ namespace TASVideos.Core.Tests.Services;
 [TestClass]
 public class PublicationHistoryTests
 {
-	private readonly IPublicationHistory _publicationHistory;
+	private readonly PublicationHistory _publicationHistory;
 	private readonly TestDbContext _db;
 
 	#region Test Data

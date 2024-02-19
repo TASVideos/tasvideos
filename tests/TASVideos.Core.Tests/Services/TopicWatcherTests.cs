@@ -1,8 +1,6 @@
 ﻿using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using static TASVideos.Core.Services.AwardAssignment;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -12,7 +10,7 @@ public class TopicWatcherTests
 	private readonly IEmailService _mockEmailService;
 	private readonly TestDbContext _db;
 
-	private readonly ITopicWatcher _topicWatcher;
+	private readonly TopicWatcher _topicWatcher;
 
 	public TopicWatcherTests()
 	{

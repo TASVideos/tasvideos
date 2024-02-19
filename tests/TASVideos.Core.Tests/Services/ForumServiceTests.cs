@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Tests.Services;
@@ -233,7 +232,9 @@ public class ForumServiceTests
 		await _forumService.CreatePoll(topic, poll);
 
 		Assert.AreEqual(1, _db.ForumTopics.Count(t => t.Id == topicId));
-		var actualTopic = await _db.ForumTopics.SingleOrDefaultAsync(t => t.Id == topic.Id);
+		var actualTopic = await _db.ForumTopics
+			.Include(f => f.Poll)
+			.ThenInclude(p => p!.PollOptions).SingleOrDefaultAsync(t => t.Id == topic.Id);
 		Assert.IsNotNull(actualTopic);
 		Assert.IsNotNull(actualTopic.Poll);
 		Assert.AreEqual(question, actualTopic.Poll.Question);
