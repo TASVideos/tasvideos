@@ -137,7 +137,7 @@ public static class ServiceCollectionExtensions
 				config.Password.RequireLowercase = false;
 				config.Password.RequireNonAlphanumeric = false;
 				config.Password.RequiredUniqueChars = 4;
-				config.User.RequireUniqueEmail = true;
+				config.User.RequireUniqueEmail = env.IsProduction() || env.IsStaging();
 				config.User.AllowedUserNameCharacters += "āàâãáäéèëêíîïóôöúüûý£ŉçÑñ";
 			})
 			.AddEntityFrameworkStores<ApplicationDbContext>()
