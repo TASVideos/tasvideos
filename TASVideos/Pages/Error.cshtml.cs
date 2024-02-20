@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Primitives;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages;
 
@@ -38,7 +39,7 @@ public class ErrorModel : PageModel
 
 	private void HandleException()
 	{
-		if (_env.IsDevelopment())
+		if (_env.IsDevelopment() || User.Has(PermissionTo.SeeDiagnostics))
 		{
 			var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 			ExceptionMessage = exceptionHandlerPathFeature?.Error.ToString() ?? "";
