@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Models;
@@ -15,9 +17,12 @@ public class UserFilesModel : BasePageModel
 		_db = db;
 	}
 
+	[FromQuery]
+	public PagingModel Search { get; set; } = new();
+
 	public string UserName { get; set; } = "";
 
-	public IEnumerable<UserFileModel> Files { get; set; } = new List<UserFileModel>();
+	public PageOf<UserFileModel> Files { get; set; } = PageOf<UserFileModel>.Empty();
 
 	public async Task OnGet()
 	{
@@ -26,6 +31,6 @@ public class UserFilesModel : BasePageModel
 			.ForAuthor(UserName)
 			.OrderByDescending(uf => uf.UploadTimestamp)
 			.ToUserFileModel()
-			.ToListAsync();
+			.PageOf(Search);
 	}
 }

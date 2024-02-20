@@ -14,7 +14,9 @@
 <hr />
 <partial name="_StorageUsed" model="used" />
 
+<partial name="_Pager" model="Model.Files" />
 @foreach (var file in Model.Files)
 {
 	<partial name="_UserFileInfo" model="file" />
 }
+<partial name="_Pager" model="Model.Files" />
