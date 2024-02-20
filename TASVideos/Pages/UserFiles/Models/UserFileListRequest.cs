@@ -8,6 +8,6 @@ public class UserFileListRequest : PagingModel
 	public UserFileListRequest()
 	{
 		PageSize = 50;
-		Sort = $"-{nameof(UserFile.UploadTimestamp)}";
+		Sort = $"-{nameof(UserFileListModel.UploadTimestamp)}";
 	}
 }
