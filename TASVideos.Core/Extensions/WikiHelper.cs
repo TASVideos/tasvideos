@@ -254,6 +254,9 @@ public static class WikiHelper
 	public static string ToSubmissionWikiPageName(int submissionId)
 		=> $"{LinkConstants.SubmissionWikiPage}{submissionId}";
 
+	public static string ToExhibitionWikiPageName(int exhibitionId)
+		=> $"{LinkConstants.ExhibitionWikiPage}{exhibitionId}";
+
 	private static bool IsInternalSubmissionLink(string link)
 	{
 		return !string.IsNullOrWhiteSpace(link)

@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Exhibitions.Drafts.Models;
 public class ExhibitionDraftCreateModel
 {
 	public string Title { get; set; } = "";
-	public DateTime ExhibitionTimestamp { get; set; }
+	public DateTime ExhibitionTimestamp { get; set; } = DateTime.UtcNow;
 	public List<int> Games { get; set; } = [];
 	public List<int> Contributors { get; set; } = [];
 
@@ -16,10 +16,12 @@ public class ExhibitionDraftCreateModel
 	public IFormFile? MovieFile { get; set; }
 	public string? MovieFileDescription { get; set; }
 
-	public List<ExhibitionDraftCreateUrlModel> StreamingUrls { get; set; } = [];
+	public List<ExhibitionDraftCreateUrlModel> Urls { get; set; } = [new()];
 
 	[DoNotTrim]
 	public string Markup { get; set; } = "";
+
+	public bool AgreeToLicense { get; set; }
 
 	public class ExhibitionDraftCreateUrlModel
 	{

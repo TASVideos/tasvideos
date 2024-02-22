@@ -1,28 +1,27 @@
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Exhibition;
 using TASVideos.MovieParsers;
-using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Exhibitions.Drafts.Models;
-using TASVideos.Pages.Exhibitions.Models;
 
 namespace TASVideos.Pages.Exhibitions.Drafts;
 
-public class CreateModel : PageModel
+public class CreateModel : BasePageModel
 {
 	private readonly ApplicationDbContext _db;
 	private readonly IMediaFileUploader _uploader;
 	private readonly IMovieParser _parser;
-	public CreateModel(ApplicationDbContext db, IMediaFileUploader uploader, IMovieParser parser)
+	private readonly IWikiPages _wikiPages;
+	public CreateModel(ApplicationDbContext db, IMediaFileUploader uploader, IMovieParser parser, IWikiPages wikiPages)
 	{
 		_db = db;
 		_uploader = uploader;
 		_parser = parser;
+		_wikiPages = wikiPages;
 	}
 
 	[BindProperty]
@@ -80,6 +79,16 @@ public class CreateModel : PageModel
 			});
 		}
 
+		foreach (var url in Exhibition.Urls)
+		{
+			exhibition.Urls.Add(new ExhibitionUrl
+			{
+				Type = url.Type,
+				DisplayName = url.DisplayName,
+				Url = url.Url,
+			});
+		}
+
 		await _db.Exhibitions.AddAsync(exhibition);
 
 		await _db.SaveChangesAsync();
@@ -89,7 +98,17 @@ public class CreateModel : PageModel
 			await _uploader.UploadExhibitionScreenshot(exhibition.Id, Exhibition.Screenshot, Exhibition.ScreenshotDescription);
 		}
 
-		return Page();
+		var wikiPage = new WikiCreateRequest
+		{
+			RevisionMessage = $"Auto-generated from Exhibition #{exhibition.Id}",
+			PageName = WikiHelper.ToExhibitionWikiPageName(exhibition.Id),
+			MinorEdit = false,
+			Markup = Exhibition.Markup,
+			AuthorId = User.GetUserId()
+		};
+		var addedWikiPage = await _wikiPages.Add(wikiPage);
+
+		return RedirectToPage("View", new { exhibition.Id });
 	}
 
 	private async Task PopulateDropdowns()
