@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TASVideos.Data.Entity.Exhibition;
 
-public enum FileType
+public enum ExhibitionFileType
 {
 	Screenshot, MovieFile
 }
@@ -18,7 +18,7 @@ public class ExhibitionFile
 	public virtual Exhibition? Exhibition { get; set; }
 
 	public string Path { get; set; } = "";
-	public FileType Type { get; set; }
+	public ExhibitionFileType Type { get; set; }
 	public string? Description { get; set; }
 	public byte[]? FileData { get; set; }
 }

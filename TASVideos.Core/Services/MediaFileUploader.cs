@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using TASVideos.Data.Entity.Exhibition;
 
 namespace TASVideos.Core.Services;
 
 public interface IMediaFileUploader
 {
 	Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
+	Task<string> UploadExhibitionScreenshot(int exhibitionId, IFormFile screenshot, string? description);
 	Task<DeletedFile?> DeleteFile(int publicationFileId);
 	Task UploadAwardImage(IFormFile image, IFormFile image2X, IFormFile image4X, string shortName, int? year = null);
 	void DeleteAwardImage(string fileName);
@@ -60,6 +62,52 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		}
 
 		await db.SaveChangesAsync();
+		return screenshotFileName;
+	}
+
+	public async Task<string> UploadExhibitionScreenshot(int exhibitionId, IFormFile screenshot, string? description)
+	{
+		await using var memoryStream = new MemoryStream();
+		await screenshot.CopyToAsync(memoryStream);
+		var screenshotBytes = memoryStream.ToArray();
+
+		string screenshotFileName = $"exhibition_{exhibitionId}{Path.GetExtension(screenshot.FileName)}";
+		string screenshotPath = Path.Combine(_env.WebRootPath, MediaLocation, screenshotFileName);
+
+		var screenShotExists = File.Exists(screenshotPath);
+		await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
+
+		List<ExhibitionFile> exhibitionFiles = [];
+		if (screenShotExists)
+		{
+			// Should never be more than 1, but just in case
+			exhibitionFiles = await _db.ExhibitionFiles
+				.Where(pf => pf.ExhibitionId == exhibitionId && pf.Path == screenshotFileName)
+				.ToListAsync();
+		}
+
+		if (screenShotExists && exhibitionFiles.Any())
+		{
+			foreach (var file in exhibitionFiles)
+			{
+				if (file.Description != description)
+				{
+					file.Description = description;
+				}
+			}
+		}
+		else
+		{
+			_db.ExhibitionFiles.Add(new ExhibitionFile
+			{
+				ExhibitionId = exhibitionId,
+				Path = screenshotFileName,
+				Type = ExhibitionFileType.Screenshot,
+				Description = description
+			});
+		}
+
+		await _db.SaveChangesAsync();
 		return screenshotFileName;
 	}
 

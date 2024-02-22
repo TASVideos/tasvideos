@@ -16,7 +16,7 @@ public class ExhibitionCreateModel
 	public class ExhibitionFileCreateModel
 	{
 		public string Path { get; set; } = "";
-		public FileType Type { get; set; }
+		public ExhibitionFileType Type { get; set; }
 		public string Description { get; set; } = "";
 	}
 

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TASVideos.Data.Entity.Exhibition;
+﻿namespace TASVideos.Data.Entity.Exhibition;
 public enum ExhibitionUrlType { Streaming, External }
 public class ExhibitionUrl
 {
