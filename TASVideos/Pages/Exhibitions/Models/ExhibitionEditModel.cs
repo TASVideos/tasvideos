@@ -16,7 +16,7 @@ public class ExhibitionEditModel
 	public class ExhibitionFileDisplayModel
 	{
 		public string Path { get; set; } = "";
-		public FileType Type { get; set; }
+		public ExhibitionFileType Type { get; set; }
 		public string Description { get; set; } = "";
 	}
 
