@@ -6,6 +6,8 @@ public interface ITASVideoAgent
 	Task PostSubmissionPublished(int submissionId, int publicationId);
 	Task PostSubmissionUnpublished(int submissionId);
 
+	Task<int> PostExhibitionTopic(int exhibitionId, string title);
+
 	Task SendWelcomeMessage(int userId);
 	Task SendAutoAssignedRole(int userId, string roleName);
 	Task SendPublishedAuthorRole(int userId, string roleName, string publicationTitle);
@@ -136,6 +138,41 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 			forumService.ClearLatestPostCache();
 			forumService.ClearTopicActivityCache();
 		}
+	}
+
+	public async Task<int> PostExhibitionTopic(int exhibitionId, string title)
+	{
+		// Create Topic in workbench
+		var topic = new ForumTopic
+		{
+			ForumId = ForumConstants.ExhibitionsForumId,
+			Title = title,
+			PosterId = SiteGlobalConstants.TASVideoAgentId
+		};
+
+		// Create first post
+		var post = new ForumPost
+		{
+			Topic = topic,
+			ForumId = ForumConstants.ExhibitionsForumId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId,
+			Text = SiteGlobalConstants.NewSubmissionPost + $"[exhibitiondraft]{exhibitionId}[/exhibitiondraft]",
+			EnableHtml = false,
+			EnableBbCode = true,
+			PosterMood = ForumPostMood.Normal
+		};
+
+		_db.ForumTopics.Add(topic);
+		_db.ForumPosts.Add(post);
+		await _db.SaveChangesAsync();
+
+		_forumService.CacheLatestPost(
+			ForumConstants.WorkBenchForumId,
+			topic.Id,
+			new LatestPost(post.Id, post.CreateTimestamp, SiteGlobalConstants.TASVideoAgent));
+		_forumService.CacheNewPostActivity(post.ForumId, topic.Id, post.Id, post.CreateTimestamp);
+
+		return topic.Id;
 	}
 
 	public Task SendWelcomeMessage(int userId)

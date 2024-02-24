@@ -98,6 +98,8 @@ public static class ForumConstants
 	public const int WorkBenchForumId = 7;
 	public const int NewsTopicId = 8694;
 
+	public const int ExhibitionsForumId = 75;
+
 	public const int DaysPostsCountAsActive = 14;
 }
 
