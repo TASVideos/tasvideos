@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Exhibition;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Exhibitions.Drafts.Models;
@@ -16,12 +17,19 @@ public class CreateModel : BasePageModel
 	private readonly IMediaFileUploader _uploader;
 	private readonly IMovieParser _parser;
 	private readonly IWikiPages _wikiPages;
-	public CreateModel(ApplicationDbContext db, IMediaFileUploader uploader, IMovieParser parser, IWikiPages wikiPages)
+	private readonly ITASVideoAgent _tasVideoAgent;
+	public CreateModel(
+		ApplicationDbContext db,
+		IMediaFileUploader uploader,
+		IMovieParser parser,
+		IWikiPages wikiPages,
+		ITASVideoAgent tasVideoAgent)
 	{
 		_db = db;
 		_uploader = uploader;
 		_parser = parser;
 		_wikiPages = wikiPages;
+		_tasVideoAgent = tasVideoAgent;
 	}
 
 	[BindProperty]
@@ -107,6 +115,9 @@ public class CreateModel : BasePageModel
 			AuthorId = User.GetUserId()
 		};
 		var addedWikiPage = await _wikiPages.Add(wikiPage);
+
+		exhibition.TopicId = await _tasVideoAgent.PostExhibitionTopic(exhibition.Id, $"D{exhibition.Id}: {exhibition.Title}");
+		await _db.SaveChangesAsync();
 
 		return RedirectToPage("View", new { exhibition.Id });
 	}

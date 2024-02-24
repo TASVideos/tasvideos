@@ -1,0 +1,59 @@
+﻿@page "{id}"
+@model TASVideos.Pages.Exhibitions.Drafts.ViewModel
+@{
+	ViewData.SetTitle($"D{Model.Id}: {Model.Exhibition.Title} - Exhibition D{Model.Id}");
+	ViewData.SetHeading($"Exhibition D{Model.Id}: {Model.Exhibition.Title}");
+}
+
+<h5>Title</h5>
+<p>@Model.Exhibition.Title</p>
+<h5>Forum Topic</h5>
+<p>
+	<a condition="@Model.Exhibition.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Exhibition.TopicId">Forum Topic</a>
+</p>
+<h5>Created</h5>
+<p><timezone-convert asp-for="@Model.Exhibition.CreateTimestamp" relative-time="false" /></p>
+<h5>Exhbition Timestamp</h5>
+<p><timezone-convert asp-for="@Model.Exhibition.ExhibitionTimestamp" relative-time="false" /></p>
+<h5>Description</h5>
+@await Component.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
+<h5>Contributors</h5>
+<p>
+	@foreach (var user in Model.Exhibition.Contributors)
+	{
+		<profile-link username="@user.UserName">@user.UserName</profile-link>
+		<br />
+	}
+</p>
+<h5>Games</h5>
+<p>
+	@foreach (var game in Model.Exhibition.Games)
+	{
+		<game-link id="game.Id">@game.DisplayName</game-link>
+		<br />
+	}
+</p>
+<h5>Urls</h5>
+<p>
+	@foreach (var url in Model.Exhibition.Urls)
+	{
+		<span>@url.Type: </span>
+		if (!string.IsNullOrEmpty(url.DisplayName))
+		{
+			<a href="@url.Url">@url.DisplayName</a>
+		}
+		else
+		{
+			<a href="@url.Url">@url.Url</a>
+		}
+		<br />
+	}
+</p>
+<h5>Files</h5>
+<p>
+	@foreach (var file in Model.Exhibition.Files)
+	{
+		<span>@file.Type: @file.Path @(string.IsNullOrEmpty(file.Description) ? "" : $"({file.Description})")</span>
+		<br />
+	}
+</p>

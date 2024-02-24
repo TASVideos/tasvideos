@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using TASVideos.Data.Entity.Exhibition;
 using TASVideos.Models;
+using TASVideos.Models.ValidationAttributes;
 
 namespace TASVideos.Pages.Exhibitions.Drafts.Models;
 
@@ -21,6 +22,7 @@ public class ExhibitionDraftCreateModel
 	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
+	[MustBeTrue]
 	public bool AgreeToLicense { get; set; }
 
 	public class ExhibitionDraftCreateUrlModel
