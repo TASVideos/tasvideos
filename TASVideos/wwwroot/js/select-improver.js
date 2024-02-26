@@ -1,13 +1,13 @@
 ﻿function createButtonElement(text, value) {
-	let button = document.createElement('button');
+	const button = document.createElement('button');
 	button.type = 'button';
 	button.classList.add('btn', 'btn-primary', 'btn-sm', 'mb-1', 'me-1');
 	button.dataset.value = value;
 
-	let buttonSpanText = document.createElement('span');
+	const buttonSpanText = document.createElement('span');
 	buttonSpanText.innerText = text;
 	button.appendChild(buttonSpanText);
-	let buttonSpanX = document.createElement('span');
+	const buttonSpanX = document.createElement('span');
 	buttonSpanX.innerText = '✕';
 	buttonSpanX.classList.add('ps-1');
 	button.appendChild(buttonSpanX);
@@ -18,7 +18,7 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 	let element;
 	let buttonsBefore = 0;
 	for (let option of optionsList) {
-		let input = option.querySelector('input');
+		const input = option.querySelector('input');
 		if (input.dataset.value === value) {
 			element = input;
 			break;
@@ -59,20 +59,20 @@ function renderVirtualScroll(list, optionsList, visibleHeight) {
 	const firstElementHeight = 39;
 	const otherElementsHeight = 38;
 	
-	let scrollPosition = list.scrollTop;
+	const scrollPosition = list.scrollTop;
 
-	let optionsListVisible = optionsList.filter(option => option.dataset.visible === String(true));
+	const optionsListVisible = optionsList.filter(option => option.dataset.visible === String(true));
 	list.innerHTML = '';
 
-	let topIndex = scrollPosition < firstElementHeight ? 0 : Math.floor((scrollPosition - firstElementHeight) / otherElementsHeight) + 1;
-	let topSpaceHeight = topIndex == 0 ? 0 : firstElementHeight + (topIndex - 1) * otherElementsHeight;
+	const topIndex = scrollPosition < firstElementHeight ? 0 : Math.floor((scrollPosition - firstElementHeight) / otherElementsHeight) + 1;
+	const topSpaceHeight = topIndex == 0 ? 0 : firstElementHeight + (topIndex - 1) * otherElementsHeight;
 	let bottomIndex = (scrollPosition + visibleHeight) < firstElementHeight ? 0 : Math.floor(((scrollPosition + visibleHeight) - firstElementHeight) / otherElementsHeight) + 1;
 	if (bottomIndex > optionsListVisible.length - 1) { bottomIndex = optionsListVisible.length - 1; }
-	let bottomSpaceHeight = ((optionsListVisible.length - 1) - bottomIndex) * otherElementsHeight;
+	const bottomSpaceHeight = ((optionsListVisible.length - 1) - bottomIndex) * otherElementsHeight;
 
-	let topSpace = document.createElement('div');
+	const topSpace = document.createElement('div');
 	topSpace.style.height = topSpaceHeight + 'px';
-	let bottomSpace = document.createElement('div');
+	const bottomSpace = document.createElement('div');
 	bottomSpace.style.height = bottomSpaceHeight + 'px';
 	list.appendChild(topSpace);
 	for (let i = topIndex; i <= bottomIndex; i++) {
@@ -177,7 +177,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		toggleSelectOption(multiSelect, buttons, optionsList, e.target.dataset.value);
 	});
 	buttons.addEventListener('click', (e) => {
-		let button = e.target.closest('button');
+		const button = e.target.closest('button');
 		if (button) {
 			toggleSelectOption(multiSelect, buttons, optionsList, button.dataset.value);
 		}
