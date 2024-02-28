@@ -9,6 +9,7 @@ public class UserFileUploadModel
 	public IFormFile? File { get; set; }
 
 	[Required]
+	[StringLength(255)]
 	public string Title { get; set; } = "";
 
 	[Required]

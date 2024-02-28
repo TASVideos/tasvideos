@@ -6,6 +6,7 @@ namespace TASVideos.Pages.UserFiles.Models;
 public class UserFileEditModel
 {
 	[Required]
+	[StringLength(255)]
 	public string Title { get; set; } = "";
 
 	[Required]
