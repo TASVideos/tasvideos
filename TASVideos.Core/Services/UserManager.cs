@@ -550,4 +550,10 @@ public class UserManager : UserManager<User>
 
 		return true;
 	}
+
+	public void ClearCustomLocaleCache(int userId)
+	{
+		_cache.Remove(CacheKeys.UsersWithCustomLocale);
+		_cache.Remove(CacheKeys.CustomUserLocalePrefix + userId);
+	}
 }

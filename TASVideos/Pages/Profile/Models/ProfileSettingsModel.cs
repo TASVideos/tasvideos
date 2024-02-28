@@ -42,5 +42,14 @@ public class ProfileSettingsModel
 	[Display(Name = "Automatically Watch Topics When Posting")]
 	public UserPreference AutoWatchTopic { get; set; }
 
+	[Display(Name = "Date Format")]
+	public UserDateFormat UserDateFormat { get; set; }
+
+	[Display(Name = "Time Format")]
+	public UserTimeFormat UserTimeFormat { get; set; }
+
+	[Display(Name = "Decimal Format")]
+	public UserDecimalFormat UserDecimalFormat { get; set; }
+
 	public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
 }

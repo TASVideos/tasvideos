@@ -46,6 +46,36 @@ public class SettingsModel : BasePageModel
 		})
 		.ToList();
 
+	public static readonly IEnumerable<SelectListItem> AvailableDateFormats = Enum
+		.GetValues(typeof(UserDateFormat))
+		.Cast<UserDateFormat>()
+		.Select(m => new SelectListItem
+		{
+			Value = ((int)m).ToString(),
+			Text = m.EnumDisplayName()
+		})
+		.ToList();
+
+	public static readonly IEnumerable<SelectListItem> AvailableTimeFormats = Enum
+		.GetValues(typeof(UserTimeFormat))
+		.Cast<UserTimeFormat>()
+		.Select(m => new SelectListItem
+		{
+			Value = ((int)m).ToString(),
+			Text = m.EnumDisplayName()
+		})
+		.ToList();
+
+	public static readonly IEnumerable<SelectListItem> AvailableDecimalFormats = Enum
+		.GetValues(typeof(UserDecimalFormat))
+		.Cast<UserDecimalFormat>()
+		.Select(m => new SelectListItem
+		{
+			Value = ((int)m).ToString(),
+			Text = m.EnumDisplayName()
+		})
+		.ToList();
+
 	[BindProperty]
 	public ProfileSettingsModel Settings { get; set; } = new();
 
@@ -66,7 +96,10 @@ public class SettingsModel : BasePageModel
 			PreferredPronouns = user.PreferredPronouns,
 			EmailOnPrivateMessage = user.EmailOnPrivateMessage,
 			Roles = await _userManager.UserRoles(user.Id),
-			AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto
+			AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto,
+			UserDateFormat = user.DateFormat,
+			UserTimeFormat = user.TimeFormat,
+			UserDecimalFormat = user.DecimalFormat,
 		};
 	}
 
@@ -107,6 +140,8 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
+		bool hasUserCustomLocaleChanged = user.DateFormat != Settings.UserDateFormat || user.TimeFormat != Settings.UserTimeFormat || user.DecimalFormat != Settings.UserDecimalFormat;
+
 		user.TimeZoneId = Settings.TimeZoneId;
 		user.PublicRatings = Settings.PublicRatings;
 		user.From = Settings.From;
@@ -115,12 +150,20 @@ public class SettingsModel : BasePageModel
 		user.PreferredPronouns = Settings.PreferredPronouns;
 		user.EmailOnPrivateMessage = Settings.EmailOnPrivateMessage;
 		user.AutoWatchTopic = Settings.AutoWatchTopic;
+		user.DateFormat = Settings.UserDateFormat;
+		user.TimeFormat = Settings.UserTimeFormat;
+		user.DecimalFormat = Settings.UserDecimalFormat;
 		if (User.Has(PermissionTo.EditSignature))
 		{
 			user.Signature = Settings.Signature;
 		}
 
 		await _db.SaveChangesAsync();
+
+		if (hasUserCustomLocaleChanged)
+		{
+			_userManager.ClearCustomLocaleCache(User.GetUserId());
+		}
 
 		SuccessStatusMessage("Your profile has been updated");
 		return BasePageRedirect("Settings");

@@ -24,6 +24,8 @@ public static class CacheKeys
 	public const string AwardsCache = "AwardsCache";
 	public const string UnreadMessageCount = "UnreadMessageCountCache-";
 	public const string MovieTokens = "MovieTokenData";
+	public const string UsersWithCustomLocale = "UsersWithCustomLocale";
+	public const string CustomUserLocalePrefix = "CustomUserLocale-";
 }
 
 // These perform site functions, maybe they should be in the database?
