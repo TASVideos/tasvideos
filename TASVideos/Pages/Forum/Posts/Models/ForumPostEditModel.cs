@@ -20,7 +20,7 @@ public class ForumPostEditModel
 	[StringLength(500)]
 	public string TopicTitle { get; set; } = "";
 
-	[StringLength(500)]
+	[StringLength(150)]
 	public string? Subject { get; set; }
 
 	[Required]
