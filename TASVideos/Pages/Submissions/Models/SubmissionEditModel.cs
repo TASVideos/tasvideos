@@ -39,6 +39,7 @@ public class SubmissionEditModel
 	public string? SystemCode { get; set; }
 
 	[Display(Name = "Game name")]
+	[Required]
 	public string? GameName { get; set; }
 
 	[Display(Name = "Game Version")]
