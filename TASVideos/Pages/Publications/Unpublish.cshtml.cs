@@ -28,7 +28,6 @@ public class UnpublishModel : BasePageModel
 
 	public string Title { get; set; } = "";
 
-	[Required]
 	[StringLength(250)]
 	[BindProperty]
 	public string Reason { get; set; } = "";

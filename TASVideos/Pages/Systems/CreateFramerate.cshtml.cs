@@ -29,7 +29,6 @@ public class CreateFramerateModel : BasePageModel
 	public double FrameRate { get; set; }
 
 	[BindProperty]
-	[Required]
 	[StringLength(8)]
 	public string RegionCode { get; set; } = "";
 

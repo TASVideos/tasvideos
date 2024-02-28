@@ -7,7 +7,6 @@ namespace TASVideos.Pages.Roles.Models;
 /// </summary>
 public class RoleEditModel
 {
-	[Required]
 	[StringLength(50)]
 	[Display(Name = "Name")]
 	public string Name { get; set; } = "";
@@ -15,7 +14,6 @@ public class RoleEditModel
 	[Display(Name = "Default", Description = "Default roles are given to all new users when they register")]
 	public bool IsDefault { get; set; }
 
-	[Required]
 	[StringLength(300)]
 	public string Description { get; set; } = "";
 

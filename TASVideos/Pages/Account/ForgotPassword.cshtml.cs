@@ -19,7 +19,6 @@ public class ForgotPasswordModel : BasePageModel
 	}
 
 	[BindProperty]
-	[Required]
 	[EmailAddress]
 	public string Email { get; set; } = "";
 

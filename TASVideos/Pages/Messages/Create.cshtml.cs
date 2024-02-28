@@ -28,19 +28,16 @@ public class CreateModel : BasePageModel
 	public string? DefaultToUser { get; set; }
 
 	[BindProperty]
-	[Required]
 	[Display(Name = "Subject")]
 	[StringLength(100, MinimumLength = 3)]
 	public string Subject { get; set; } = "";
 
 	[BindProperty]
-	[Required]
 	[Display(Name = "Message Body")]
 	[StringLength(10000, MinimumLength = 5)]
 	public string Text { get; set; } = "";
 
 	[BindProperty]
-	[Required]
 	[Display(Name = "Username", Description = "Enter a UserName")]
 	public string ToUser { get; set; } = "";
 

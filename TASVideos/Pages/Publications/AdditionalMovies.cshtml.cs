@@ -36,7 +36,6 @@ public class AdditionalMoviesModel : BasePageModel
 
 	public IReadOnlyCollection<PublicationFileModel> AvailableMovieFiles { get; set; } = new List<PublicationFileModel>();
 
-	[Required]
 	[BindProperty]
 	[StringLength(50)]
 	[Display(Name = "Display Name")]

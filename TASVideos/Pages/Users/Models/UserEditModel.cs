@@ -9,7 +9,6 @@ public class UserEditModel
 	[StringLength(50)]
 	public string? UserName { get; set; }
 
-	[Required]
 	[DisplayName("Time Zone")]
 	public string TimezoneId { get; set; } = TimeZoneInfo.Utc.Id;
 

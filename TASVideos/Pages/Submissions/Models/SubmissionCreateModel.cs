@@ -10,7 +10,6 @@ public class SubmissionCreateModel
 	[StringLength(20)]
 	public string GameVersion { get; set; } = "";
 
-	[Required]
 	[Display(Name = "Game Name", Description = "Example: Mega Man 2")]
 	[StringLength(100)]
 	public string GameName { get; set; } = "";
@@ -19,7 +18,6 @@ public class SubmissionCreateModel
 	[StringLength(50)]
 	public string? Branch { get; set; }
 
-	[Required]
 	[Display(Name = "ROM filename", Description = "Example: Mega Man II (U) [!].nes")]
 	[StringLength(100)]
 	public string RomName { get; set; } = "";
@@ -39,7 +37,6 @@ public class SubmissionCreateModel
 	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; set; }
 
-	[Required]
 	[DoNotTrim]
 	[Display(Name = "Comments and explanations")]
 	public string Markup { get; set; } = "";
@@ -48,11 +45,9 @@ public class SubmissionCreateModel
 	[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 500k)")]
 	public IFormFile? MovieFile { get; set; }
 
-	[Required]
 	[MustBeTrue(ErrorMessage = "You must read and follow the instructions.")]
 	public bool AgreeToInstructions { get; set; }
 
-	[Required]
 	[MustBeTrue(ErrorMessage = "You must agree to the license.")]
 	public bool AgreeToLicense { get; set; }
 }

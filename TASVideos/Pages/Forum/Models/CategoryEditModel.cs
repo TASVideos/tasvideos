@@ -4,7 +4,6 @@ namespace TASVideos.Pages.Forum.Models;
 
 public class CategoryEditModel
 {
-	[Required]
 	[StringLength(30)]
 	public string Title { get; set; } = "";
 
@@ -16,7 +15,6 @@ public class CategoryEditModel
 	{
 		public int Id { get; set; }
 
-		[Required]
 		[StringLength(50)]
 		public string Name { get; set; } = "";
 

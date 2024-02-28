@@ -7,7 +7,6 @@ public class WikiEditModel
 {
 	public DateTime EditStart { get; set; } = DateTime.UtcNow;
 
-	[Required]
 	[DoNotTrim]
 	public string Markup { get; set; } = "";
 

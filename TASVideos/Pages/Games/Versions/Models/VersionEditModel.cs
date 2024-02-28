@@ -5,12 +5,10 @@ namespace TASVideos.Pages.Games.Versions.Models;
 
 public class VersionEditModel
 {
-	[Required]
 	[Display(Name = "System")]
 	[StringLength(8)]
 	public string SystemCode { get; set; } = "";
 
-	[Required]
 	[StringLength(255)]
 	[Display(Name = "Name")]
 	public string Name { get; set; } = "";
@@ -34,7 +32,6 @@ public class VersionEditModel
 	[Display(Name = "Region")]
 	public string? Region { get; set; }
 
-	[Required]
 	public VersionTypes Type { get; set; }
 
 	[StringLength(255)]

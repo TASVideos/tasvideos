@@ -23,7 +23,6 @@ public class ForumPostEditModel
 	[StringLength(150)]
 	public string? Subject { get; set; }
 
-	[Required]
 	public string Text { get; set; } = "";
 
 	public string OriginalText => Text;

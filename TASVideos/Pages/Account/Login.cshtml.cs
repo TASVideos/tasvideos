@@ -26,12 +26,10 @@ public class LoginModel : BasePageModel
 	}
 
 	[BindProperty]
-	[Required]
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
 	[BindProperty]
-	[Required]
 	[DataType(DataType.Password)]
 	public string Password { get; set; } = "";
 

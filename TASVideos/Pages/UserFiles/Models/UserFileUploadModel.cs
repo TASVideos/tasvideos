@@ -8,11 +8,9 @@ public class UserFileUploadModel
 	[Required]
 	public IFormFile? File { get; set; }
 
-	[Required]
 	[StringLength(255)]
 	public string Title { get; set; } = "";
 
-	[Required]
 	[DoNotTrim]
 	public string Description { get; set; } = "";
 
