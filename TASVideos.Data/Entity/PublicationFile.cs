@@ -13,7 +13,6 @@ public class PublicationFile : BaseEntity
 	public int PublicationId { get; set; }
 	public virtual Publication? Publication { get; set; }
 
-	[Required]
 	[StringLength(250)]
 	public string Path { get; set; } = "";
 	public FileType Type { get; set; }

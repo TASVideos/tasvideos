@@ -14,7 +14,6 @@ public class PrivateMessage : BaseEntity
 	[StringLength(500)]
 	public string? Subject { get; set; }
 
-	[Required]
 	public string Text { get; set; } = "";
 
 	public bool EnableHtml { get; set; }

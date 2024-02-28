@@ -39,7 +39,6 @@ public class User : IdentityUser<int>, ITrackable
 
 	public DateTime? LastLoggedInTimeStamp { get; set; }
 
-	[Required]
 	[StringLength(250)]
 	public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 

@@ -8,7 +8,6 @@ public class ForumPoll : BaseEntity
 	public int TopicId { get; set; }
 	public virtual ForumTopic? Topic { get; set; }
 
-	[Required]
 	[StringLength(500)]
 	public string Question { get; set; } = "";
 

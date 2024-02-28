@@ -5,11 +5,9 @@ public class ForumPollOption : BaseEntity
 {
 	public int Id { get; set; }
 
-	[Required]
 	[StringLength(250)]
 	public string Text { get; set; } = "";
 
-	[Required]
 	public int Ordinal { get; set; }
 
 	public int PollId { get; set; }

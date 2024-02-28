@@ -26,7 +26,6 @@ public class GameVersion : BaseEntity
 	[StringLength(40)]
 	public string? Sha1 { get; set; }
 
-	[Required]
 	[StringLength(255)]
 	public string Name { get; set; } = "";
 

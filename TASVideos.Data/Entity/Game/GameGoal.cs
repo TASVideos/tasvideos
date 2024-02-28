@@ -6,7 +6,6 @@ public class GameGoal
 	public int GameId { get; set; }
 	public virtual Game? Game { get; set; }
 
-	[Required]
 	[StringLength(50)]
 	public string DisplayName { get; set; } = "";
 
