@@ -15,17 +15,14 @@ public class SendEmail : BasePageModel
 		_emailService = emailService;
 	}
 
-	[Required]
 	[StringLength(100, MinimumLength = 1)]
 	[BindProperty]
 	public string To { get; set; } = "";
 
-	[Required]
 	[StringLength(100, MinimumLength = 1)]
 	[BindProperty]
 	public string Subject { get; set; } = "";
 
-	[Required]
 	[StringLength(280, MinimumLength = 1)]
 	[BindProperty]
 	public string Text { get; set; } = "";

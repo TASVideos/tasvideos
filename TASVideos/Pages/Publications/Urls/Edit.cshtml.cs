@@ -62,13 +62,11 @@ public class EditUrlsModel : BasePageModel
 	[BindProperty]
 	public string? DisplayName { get; set; }
 
-	[Required]
 	[BindProperty]
 	[Url]
 	[Display(Name = "URL")]
 	public string CurrentUrl { get; set; } = "";
 
-	[Required]
 	[BindProperty]
 	[Display(Name = "Type")]
 	public PublicationUrlType UrlType { get; set; }

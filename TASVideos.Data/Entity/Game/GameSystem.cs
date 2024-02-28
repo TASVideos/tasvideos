@@ -15,11 +15,9 @@ public class GameSystem : BaseEntity
 	public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
 	public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
 
-	[Required]
 	[StringLength(8)]
 	public string Code { get; set; } = "";
 
-	[Required]
 	[StringLength(100)]
 	public string DisplayName { get; set; } = "";
 }

@@ -4,7 +4,6 @@ namespace TASVideos.Pages.Games.Models;
 
 public class GameEditModel
 {
-	[Required]
 	[StringLength(100)]
 	[Display(Name = "Display Name")]
 	public string DisplayName { get; set; } = "";

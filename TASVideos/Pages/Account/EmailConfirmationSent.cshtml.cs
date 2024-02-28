@@ -26,13 +26,11 @@ public class EmailConfirmationSentModel : BasePageModel
 	}
 
 	[BindProperty]
-	[Required]
 	[StringLength(256)]
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
 	[BindProperty]
-	[Required]
 	[EmailAddress]
 	[Display(Name = "Email")]
 	public string Email { get; set; } = "";

@@ -4,7 +4,6 @@ public class Flag
 {
 	public int Id { get; set; }
 
-	[Required]
 	[StringLength(32)]
 	public string Name { get; set; } = "";
 
@@ -14,7 +13,6 @@ public class Flag
 	[StringLength(48)]
 	public string? LinkPath { get; set; }
 
-	[Required]
 	[StringLength(24)]
 	public string Token { get; set; } = "";
 

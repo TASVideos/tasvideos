@@ -60,10 +60,8 @@ public class Publication : BaseEntity, ITimeable
 	public virtual Submission? Submission { get; set; }
 	public virtual ICollection<PublicationAuthor> Authors { get; set; } = new HashSet<PublicationAuthor>();
 
-	[Required]
 	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
-	[Required]
 	[StringLength(200)]
 	public string MovieFileName { get; set; } = "";
 
@@ -80,7 +78,6 @@ public class Publication : BaseEntity, ITimeable
 	public string? AdditionalAuthors { get; set; }
 
 	// De-normalized name for easy recreation
-	[Required]
 	[StringLength(500)]
 	public string Title { get; set; } = "";
 

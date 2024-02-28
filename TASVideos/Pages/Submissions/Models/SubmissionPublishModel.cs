@@ -9,17 +9,14 @@ public class SubmissionPublishModel
 	[Display(Name = "Select movie to be obsoleted")]
 	public int? MovieToObsolete { get; set; }
 
-	[Required]
 	[DoNotTrim]
 	[Display(Name = "Movie description")]
 	public string MovieMarkup { get; set; } = SiteGlobalConstants.DefaultPublicationText;
 
-	[Required]
 	[Display(Name = "Movie Filename", Description = "Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.")]
 	public string MovieFileName { get; set; } = "";
 
 	[Url]
-	[Required]
 	[Display(Name = "Online-watching URL")]
 	[StringLength(500)]
 	public string OnlineWatchingUrl { get; set; } = "";
@@ -29,7 +26,6 @@ public class SubmissionPublishModel
 	public string? OnlineWatchUrlName { get; set; }
 
 	[Url]
-	[Required]
 	[Display(Name = "Mirror site URL")]
 	[StringLength(500)]
 	public string MirrorSiteUrl { get; set; } = "";

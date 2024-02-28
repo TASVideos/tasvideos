@@ -11,11 +11,9 @@ public class Forum : BaseEntity
 	public virtual ICollection<ForumTopic> ForumTopics { get; set; } = new HashSet<ForumTopic>();
 	public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
 
-	[Required]
 	[StringLength(50)]
 	public string Name { get; set; } = "";
 
-	[Required]
 	[StringLength(10)]
 	public string ShortName { get; set; } = "";
 

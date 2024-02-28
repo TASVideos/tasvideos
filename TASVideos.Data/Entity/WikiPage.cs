@@ -9,11 +9,9 @@ public class WikiPage : BaseEntity, ISoftDeletable
 {
 	public int Id { get; set; }
 
-	[Required]
 	[StringLength(250)]
 	public string PageName { get; set; } = "";
 
-	[Required]
 	public string Markup { get; set; } = "";
 
 	public int Revision { get; set; } = 1;

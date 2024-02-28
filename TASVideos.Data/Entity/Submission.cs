@@ -35,7 +35,6 @@ public class Submission : BaseEntity, ITimeable
 	public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
 	public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
 
-	[Required]
 	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
 
 	[StringLength(8)]
@@ -94,7 +93,6 @@ public class Submission : BaseEntity, ITimeable
 	/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
 	/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01.
 	/// </summary>
-	[Required]
 	[StringLength(500)]
 	public string Title { get; set; } = "";
 

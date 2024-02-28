@@ -16,12 +16,10 @@ public class ResetPasswordModel : BasePageModel
 	}
 
 	[BindProperty]
-	[Required]
 	[EmailAddress]
 	public string Email { get; set; } = "";
 
 	[BindProperty]
-	[Required]
 	[Display(Name = "New password")]
 	[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]

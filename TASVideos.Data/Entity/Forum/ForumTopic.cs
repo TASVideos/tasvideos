@@ -18,7 +18,6 @@ public class ForumTopic : BaseEntity
 	public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
 	public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = new HashSet<ForumTopicWatch>();
 
-	[Required]
 	[StringLength(500)]
 	public string Title { get; set; } = "";
 

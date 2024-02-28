@@ -129,7 +129,6 @@ public class EditFramerateModel : BasePageModel
 		public string SystemCode { get; init; } = "";
 		public double FrameRate { get; init; }
 
-		[Required]
 		[StringLength(8)]
 		public string RegionCode { get; init; } = "";
 		public bool Preliminary { get; init; }

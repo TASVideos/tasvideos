@@ -6,23 +6,18 @@ public class PublicationCatalogModel
 {
 	public string Title { get; set; } = "";
 
-	[Required]
 	[Display(Name = "Game Version")]
 	public int GameVersionId { get; set; }
 
-	[Required]
 	[Display(Name = "Goal")]
 	public int GameGoalId { get; set; }
 
-	[Required]
 	[Display(Name = "Game")]
 	public int GameId { get; set; }
 
-	[Required]
 	[Display(Name = "System")]
 	public int SystemId { get; set; }
 
-	[Required]
 	[Display(Name = "System Framerate")]
 	public int SystemFrameRateId { get; set; }
 

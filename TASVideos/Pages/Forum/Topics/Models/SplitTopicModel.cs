@@ -10,7 +10,6 @@ public class SplitTopicModel
 	[Display(Name = "Create New Topic In")]
 	public int SplitToForumId { get; set; }
 
-	[Required]
 	[Display(Name = "New Topic Name")]
 	public string SplitTopicName { get; set; } = "";
 

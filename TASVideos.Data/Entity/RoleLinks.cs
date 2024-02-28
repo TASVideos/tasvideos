@@ -5,7 +5,6 @@ public class RoleLink
 {
 	public int Id { get; set; }
 
-	[Required]
 	[StringLength(300)]
 	public string Link { get; set; } = "";
 

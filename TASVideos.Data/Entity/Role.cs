@@ -16,7 +16,6 @@ public class Role : IdentityRole<int>, ITrackable
 	/// </summary>
 	public bool IsDefault { get; set; }
 
-	[Required]
 	[StringLength(300)]
 	public string Description { get; set; } = "";
 

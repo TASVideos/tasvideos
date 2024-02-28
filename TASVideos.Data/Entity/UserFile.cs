@@ -23,16 +23,13 @@ public class UserFile
 	public int AuthorId { get; set; }
 	public virtual User? Author { get; set; }
 
-	[Required]
 	[StringLength(255)]
 	public string FileName { get; set; } = "";
 
-	[Required]
 	public byte[] Content { get; set; } = Array.Empty<byte>();
 
 	public UserFileClass Class { get; set; }
 
-	[Required]
 	[StringLength(16)]
 	public string Type { get; set; } = "";
 
@@ -44,7 +41,6 @@ public class UserFile
 
 	public int Rerecords { get; set; }
 
-	[Required]
 	[StringLength(255)]
 	public string Title { get; set; } = "";
 
