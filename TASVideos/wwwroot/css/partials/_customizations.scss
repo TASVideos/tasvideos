@@ -107,7 +107,7 @@ h4 {
 	}
 }
 
-.form-control {
+.form-control, .form-select {
 	font-size: .875rem;
 
 	&:disabled, &[readonly] {
