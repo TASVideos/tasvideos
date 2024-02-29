@@ -74,6 +74,10 @@ public class User : IdentityUser<int>, ITrackable
 
 	public UserPreference? AutoWatchTopic { get; set; }
 
+	public UserDateFormat DateFormat { get; set; } = UserDateFormat.Auto;
+	public UserTimeFormat TimeFormat { get; set; } = UserTimeFormat.Auto;
+	public UserDecimalFormat DecimalFormat { get; set; } = UserDecimalFormat.Auto;
+
 	public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
 	public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
 	public virtual ICollection<PublicationAuthor> Publications { get; set; } = new HashSet<PublicationAuthor>();
@@ -129,6 +133,54 @@ public enum PreferredPronounTypes
 	Other
 }
 
+public enum UserDateFormat
+{
+	[Display(Name = "Automatic")]
+	Auto = 0,
+
+	[Display(Name = "yyyy-MM-dd (2024-02-29)")]
+	YMMDD,
+
+	[Display(Name = "dd/MM/yyyy (29/02/2024)")]
+	DDMMY,
+
+	[Display(Name = "dd.MM.yyyy (29.02.2024)")]
+	DDMMYDot,
+
+	[Display(Name = "d/M/yyyy (29/2/2024)")]
+	DMY,
+
+	[Display(Name = "MM/dd/yyyy (02/29/2024)")]
+	MMDDY,
+
+	[Display(Name = "M/d/yyyy (2/29/2024)")]
+	MDY,
+}
+
+public enum UserTimeFormat
+{
+	[Display(Name = "Automatic")]
+	Auto = 0,
+
+	[Display(Name = "24-hour clock (17:35)")]
+	Clock24Hour,
+
+	[Display(Name = "12-hour clock (5:35 PM)")]
+	Clock12Hour
+}
+
+public enum UserDecimalFormat
+{
+	[Display(Name = "Automatic")]
+	Auto = 0,
+
+	[Display(Name = "Dot (1.23)")]
+	Dot,
+
+	[Display(Name = "Comma (1,23)")]
+	Comma
+}
+
 public static class UserExtensions
 {
 	public static async Task<bool> Exists(this IQueryable<User> query, string userName)
@@ -166,5 +218,10 @@ public static class UserExtensions
 	public static IQueryable<User> ForUsers(this IQueryable<User> query, IEnumerable<string> users)
 	{
 		return query.Where(u => users.Contains(u.UserName));
+	}
+
+	public static IQueryable<User> ThatHaveCustomLocale(this IQueryable<User> query)
+	{
+		return query.Where(u => u.DateFormat != UserDateFormat.Auto || u.TimeFormat != UserTimeFormat.Auto || u.DecimalFormat != UserDecimalFormat.Auto);
 	}
 }

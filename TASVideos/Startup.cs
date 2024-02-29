@@ -2,6 +2,7 @@
 using TASVideos.Core;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
+using TASVideos.Middleware;
 using TASVideos.Services;
 
 namespace TASVideos;
@@ -65,6 +66,7 @@ public class Startup
 			.UseWebOptimizer()
 			.UseStaticFilesWithExtensionMapping()
 			.UseAuthentication()
+			.UseMiddleware<CustomLocalizationMiddleware>()
 			.UseSwaggerUi(Environment)
 			.UseLogging()
 			.UseMvcWithOptions(env);
