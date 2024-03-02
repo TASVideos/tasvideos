@@ -11,7 +11,7 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class InfoModel : BasePageModel
 {
-	private static readonly string[] PreviewableExtensions = { "avs", "bat", "lua", "sh", "wch" };
+	private static readonly string[] PreviewableExtensions = ["avs", "bat", "lua", "sh", "wch"];
 
 	private readonly ApplicationDbContext _db;
 	private readonly IFileService _fileService;
@@ -79,31 +79,24 @@ public class InfoModel : BasePageModel
 		return new DownloadResult(file);
 	}
 
-	internal class DownloadResult : IActionResult
+	internal class DownloadResult(UserFile file) : IActionResult
 	{
-		private readonly UserFile _file;
-
-		public DownloadResult(UserFile file)
-		{
-			_file = file;
-		}
-
 		public Task ExecuteResultAsync(ActionContext context)
 		{
 			var res = context.HttpContext.Response;
 
-			res.Headers.Append("Content-Length", _file.Content.Length.ToString());
-			if (_file.CompressionType == Compression.Gzip)
+			res.Headers.Append("Content-Length", file.Content.Length.ToString());
+			if (file.CompressionType == Compression.Gzip)
 			{
 				res.Headers.Append("Content-Encoding", "gzip");
 			}
 
 			res.Headers.Append("Content-Type", "application/octet-stream");
 			var contentDisposition = new ContentDispositionHeaderValue("attachment");
-			contentDisposition.SetHttpFileName(_file.FileName);
+			contentDisposition.SetHttpFileName(file.FileName);
 			res.Headers.ContentDisposition = contentDisposition.ToString();
 			res.StatusCode = 200;
-			return res.Body.WriteAsync(_file.Content, 0, _file.Content.Length);
+			return res.Body.WriteAsync(file.Content, 0, file.Content.Length);
 		}
 	}
 }
