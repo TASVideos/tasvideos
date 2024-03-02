@@ -148,7 +148,7 @@
 			<form method="POST" asp-page="/UserFiles/Index" asp-route-handler="Comment" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()">
 				<input type="hidden" name="fileId" value="@Model.Id "/>
 				<label class="form-control-label"></label>
-				<textarea class="form-control" name="comment"></textarea>
+				<textarea class="form-control" name="comment" maxlength="3500"></textarea>
 				<button type="submit" class="btn btn-primary mt-3 mb-3"><i class="fa fa-plus"></i> Post</button>
 			</form>
 		</cardbody>
