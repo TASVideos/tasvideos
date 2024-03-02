@@ -46,6 +46,7 @@ public class WikiPagesTests
 	{
 		const string existingPage = "Exists";
 		AddPage(existingPage, isDeleted: true);
+		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Exists(existingPage, includeDeleted: true);
 		Assert.AreEqual(0, _cache.PageCache().Count, "Cache should have no records");

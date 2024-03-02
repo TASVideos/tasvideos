@@ -48,7 +48,7 @@ public static class WikiQueryableExtensions
 	}
 
 	/// <summary>
-	/// Filters to pages at a specific indentaiton level
+	/// Filters to pages at a specific indentation level
 	/// Foo = 1
 	/// Foo/Bar = 2
 	/// Foo/Bar/Baz = 3

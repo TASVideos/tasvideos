@@ -193,7 +193,7 @@ internal class WikiPages : IWikiPages
 
 		var page = await query
 			.ToWikiResult()
-			.SingleOrDefaultAsync(wp => wp.PageName == pageName);
+			.FirstOrDefaultAsync(wp => wp.PageName == pageName);
 
 		if (page is not null && page.IsCurrent())
 		{

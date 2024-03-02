@@ -3,6 +3,7 @@
 @{
 	ViewData.SetTitle($"Moving: {Model.Move.OriginalPageName}");
 }
+<div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
 	<input type="hidden" asp-for="Move.OriginalPageName" />
 	<row>
