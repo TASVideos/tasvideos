@@ -15,10 +15,7 @@ public class UserFileComment
 	public int? ParentId { get; set; }
 	public virtual UserFileComment? Parent { get; set; }
 
-	[StringLength(255)]
-	public string? Title { get; set; }
-
-
+	[StringLength(3500)]
 	public string Text { get; set; } = "";
 
 	public DateTime CreationTimeStamp { get; set; }

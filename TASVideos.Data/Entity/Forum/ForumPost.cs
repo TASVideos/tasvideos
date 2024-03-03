@@ -20,7 +20,7 @@ public class ForumPost : BaseEntity
 	[StringLength(50)]
 	public string? IpAddress { get; set; }
 
-	[StringLength(500)]
+	[StringLength(150)]
 	public string? Subject { get; set; }
 
 	public string Text { get; set; } = "";

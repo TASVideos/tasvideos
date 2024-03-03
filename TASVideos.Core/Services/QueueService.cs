@@ -399,12 +399,12 @@ internal class QueueService : IQueueService
 		submission.MovieExtension = parseResult.FileExtension;
 		submission.System = system;
 		submission.CycleCount = parseResult.CycleCount;
-		submission.Annotations = parseResult.Annotations;
+		submission.Annotations = parseResult.Annotations.CapAndEllipse(3500);
 		var warnings = parseResult.Warnings.ToList();
 		submission.Warnings = null;
 		if (warnings.Any())
 		{
-			submission.Warnings = string.Join(",", warnings);
+			submission.Warnings = string.Join(",", warnings).Cap(500);
 		}
 
 		if (parseResult.FrameRateOverride.HasValue)

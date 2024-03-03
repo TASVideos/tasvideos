@@ -96,6 +96,7 @@ public class Submission : BaseEntity, ITimeable
 	[StringLength(500)]
 	public string Title { get; set; } = "";
 
+	[StringLength(3500)]
 	public string? Annotations { get; set; }
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? 0;
@@ -154,7 +155,7 @@ public class Submission : BaseEntity, ITimeable
 	public decimal LegacyTime { get; set; }
 	public decimal ImportedTime { get; set; }
 
-	[StringLength(4096)]
+	[StringLength(500)]
 	public string? Warnings { get; set; }
 
 	public long? CycleCount { get; set; }

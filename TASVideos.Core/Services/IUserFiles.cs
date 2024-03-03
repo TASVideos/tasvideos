@@ -104,7 +104,7 @@ internal class UserFiles : IUserFiles
 			userFile.Frames = parseResult.Frames;
 			if (!string.IsNullOrWhiteSpace(parseResult.Annotations))
 			{
-				userFile.Annotations = parseResult.Annotations;
+				userFile.Annotations = parseResult.Annotations.CapAndEllipse(3500);
 			}
 
 			decimal frameRate = 60.0M;

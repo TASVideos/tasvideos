@@ -58,12 +58,11 @@ public class UserFile
 
 	public bool Hidden { get; set; }
 
-	public string? Warnings { get; set; }
-
 	public int Downloads { get; set; }
 
 	public Compression CompressionType { get; set; }
 
+	[StringLength(3500)]
 	public string? Annotations { get; set; }
 
 	public virtual ICollection<UserFileComment> Comments { get; set; } = new List<UserFileComment>();
