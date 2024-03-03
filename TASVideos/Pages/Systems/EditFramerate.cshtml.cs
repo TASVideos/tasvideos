@@ -81,7 +81,7 @@ public class EditFramerateModel : BasePageModel
 		await ConcurrentSave(
 			_db,
 			$"FrameRate {displayName} updated.",
-			$"Unable to updated {displayName} due to an unknown error");
+			$"Unable to update {displayName} due to an unknown error");
 		await _gameSystemService.FlushCache();
 		return BasePageRedirect("Edit", new { Id = FrameRate.SystemId });
 	}

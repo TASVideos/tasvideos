@@ -8,7 +8,7 @@ public class SubmissionCreateModel
 {
 	[Display(Name = "Game Version", Description = "Example: USA")]
 	[StringLength(20)]
-	public string GameVersion { get; set; } = "";
+	public string? GameVersion { get; set; }
 
 	[Display(Name = "Game Name", Description = "Example: Mega Man 2")]
 	[StringLength(100)]

@@ -13,6 +13,9 @@ internal class Bk2 : ParserBase, IParser
 	private const double NtscNesFramerate = 60.0988138974405;
 	private const double NtscSnesFramerate = 60.0988138974405;
 	private const double PalSnesFramerate = 50.0069789081886;
+	// mednafen values to match current octoshock
+	private const double NtscPsxFramerate = 59.94006013870239;
+	private const double PalPsxFramerate = 50.00028192996979;
 
 	protected virtual string[] InvalidArchiveEntries => new[]
 	{
@@ -178,6 +181,14 @@ internal class Bk2 : ParserBase, IParser
 			{
 				result.Annotations = annotations;
 			}
+		}
+
+		// TASVideos.Core\Services\QueueService.cs line 433 implies we only ever have a list of framerates for cores with framerate overrides, but it doesn't distinguish by core. nymashock has cycle count but octoshock has to rely on mednafen framerates for now. so we override with a constant for octoshock, to prevent picking random wrong values from nymashock overrides
+		if (core == "octoshock")
+		{
+			result.FrameRateOverride = result.Region == RegionType.Pal
+				? PalPsxFramerate
+				: NtscPsxFramerate;
 		}
 
 		if (result.CycleCount.HasValue)
