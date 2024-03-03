@@ -204,7 +204,7 @@ public class EditModel : BasePageModel
 		publication.GenerateTitle();
 
 		List<int> editableFlags = await _db.Flags
-			.Where(f => f.PermissionRestriction.HasValue && User.Permissions().Contains(f.PermissionRestriction.Value))
+			.Where(f => f.PermissionRestriction.HasValue && User.Permissions().Contains(f.PermissionRestriction.Value) || f.PermissionRestriction == null)
 			.Select(f => f.Id)
 			.ToListAsync();
 		List<PublicationFlag> existingEditablePublicationFlags = publication.PublicationFlags.Where(pf => editableFlags.Contains(pf.FlagId)).ToList();
