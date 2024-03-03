@@ -183,7 +183,7 @@ internal class Bk2 : ParserBase, IParser
 			}
 		}
 
-		// TASVideos.Core\Services\QueueService.cs line 433 implies we only ever have a list of framerates for cores with framerate overrides, but it doesn't distinguish by core. nymashock has cycle count but octoshock has to rely on mednafen framerates for now. so we override with a constant for octoshock, to prevent picking random wrong values from nymashock overrides
+		// We only ever have a list of framerates for cores with framerate overrides, but it doesn't distinguish by core. nymashock has cycle count but octoshock has to rely on mednafen framerates for now. so we override with a constant for octoshock, to prevent picking random wrong values from nymashock overrides
 		if (core == "octoshock")
 		{
 			result.FrameRateOverride = result.Region == RegionType.Pal
