@@ -6,15 +6,16 @@ using TASVideos.Core.Data;
 // Do not remove this class and use top-level design without ensuring EF migrations can still run
 
 var builder = WebApplication.CreateBuilder(args);
-	//.UseStartup<Startup>()
-	//.UseSerilog()
-	//.ConfigureAppConfiguration((hostContext, builder) =>
-	//{
-	//	// We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
-	//	// This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.AddUserSecrets<T>() will not work.
-	//	// Manually specify the secret id (matching the csproj) here as a workaround.
-	//	builder.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
-	//});
+
+//.UseStartup<Startup>()
+
+builder.WebHost.UseSerilog();
+
+// We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
+// This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.Configuration.AddUserSecrets<T>() will not work.
+// Manually specify the secret id (matching the csproj) here as a workaround.
+builder.Configuration.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
