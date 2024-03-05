@@ -7,8 +7,6 @@ using TASVideos.Data;
 using TASVideos.Middleware;
 using TASVideos.Services;
 
-// Do not remove this class and use top-level design without ensuring EF migrations can still run
-
 var builder = WebApplication.CreateBuilder(args);
 
 AppSettings settings = builder.Configuration.Get<AppSettings>()!;
