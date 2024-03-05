@@ -4,6 +4,7 @@ using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Data;
+using TASVideos.Middleware;
 using TASVideos.Services;
 
 // Do not remove this class and use top-level design without ensuring EF migrations can still run
@@ -50,26 +51,23 @@ builder.Configuration.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-6
 
 var app = builder.Build();
 
-/*
-app
-	.UseRobots()
-	.UseMiddleware<Middleware.HtmlRedirectionMiddleware>()
-	.UseRequestLocalization()
-	.UseExceptionHandlers(env)
-	.UseGzipCompression(Settings)
-	.UseWebOptimizer()
-	.UseStaticFilesWithExtensionMapping()
-	.UseAuthentication()
-	.UseMiddleware<CustomLocalizationMiddleware>()
-	.UseSwaggerUi(Environment)
-	.UseLogging()
-	.UseMvcWithOptions(env);
+app.UseRobots();
+app.UseMiddleware<HtmlRedirectionMiddleware>();
+app.UseRequestLocalization();
+app.UseExceptionHandlers(app.Environment);
+app.UseGzipCompression(settings);
+app.UseWebOptimizer();
+app.UseStaticFilesWithExtensionMapping();
+app.UseAuthentication();
+app.UseMiddleware<CustomLocalizationMiddleware>();
+app.UseSwaggerUi(app.Environment);
+app.UseLogging();
+app.UseMvcWithOptions(app.Environment);
 
-if (env.IsDevelopment())
+if (app.Environment.IsDevelopment())
 {
 	app.UseHttpsRedirection();
 }
-*/
 
 using (var scope = app.Services.CreateScope())
 {
