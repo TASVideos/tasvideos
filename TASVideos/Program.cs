@@ -69,17 +69,16 @@ if (app.Environment.IsDevelopment())
 	app.UseHttpsRedirection();
 }
 
+var configuration = new ConfigurationBuilder()
+	.AddJsonFile("appsettings.json")
+	.AddJsonFile($"appsettings.{app.Environment.EnvironmentName}.json", true)
+	.Build();
+Log.Logger = new LoggerConfiguration()
+	.ReadFrom.Configuration(configuration)
+	.CreateLogger();
+
 using (var scope = app.Services.CreateScope())
 {
-	var env = scope.ServiceProvider.GetRequiredService<IHostEnvironment>();
-	var configuration = new ConfigurationBuilder()
-		.AddJsonFile("appsettings.json")
-		.AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
-		.Build();
-	Log.Logger = new LoggerConfiguration()
-		.ReadFrom.Configuration(configuration)
-		.CreateLogger();
-
 	var services = scope.ServiceProvider;
 
 	await DbInitializer.InitializeDatabase(services);
