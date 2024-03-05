@@ -10,23 +10,23 @@ using TASVideos.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-AppSettings Settings = builder.Configuration.Get<AppSettings>()!;
+AppSettings settings = builder.Configuration.Get<AppSettings>()!;
 
 // Mvc Project Services
 builder.Services.AddAppSettings(builder.Configuration);
 builder.Services.AddRequestLocalization();
 builder.Services.AddCookieConfiguration();
-builder.Services.AddGzipCompression(Settings);
-builder.Services.AddSwagger(Settings);
+builder.Services.AddGzipCompression(settings);
+builder.Services.AddSwagger(settings);
 builder.Services.AddTextModules();
 
 // Internal Libraries
-string dbConnection = Settings.UseSampleDatabase
-	? Settings.ConnectionStrings.PostgresSampleDataConnection
-	: Settings.ConnectionStrings.PostgresConnection;
+string dbConnection = settings.UseSampleDatabase
+	? settings.ConnectionStrings.PostgresSampleDataConnection
+	: settings.ConnectionStrings.PostgresConnection;
 
 builder.Services.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection);
-builder.Services.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), Settings);
+builder.Services.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), settings);
 builder.Services.AddMovieParser();
 
 // 3rd Party
