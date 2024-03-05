@@ -1,47 +1,45 @@
-﻿using Microsoft.AspNetCore;
+﻿using AspNetCore.ReCaptcha;
 using Serilog;
-using TASVideos;
+using TASVideos.Core;
 using TASVideos.Core.Data;
+using TASVideos.Core.Settings;
+using TASVideos.Data;
+using TASVideos.Services;
 
 // Do not remove this class and use top-level design without ensuring EF migrations can still run
 
 var builder = WebApplication.CreateBuilder(args);
 
-/*
-AppSettings Settings => Configuration.Get<AppSettings>()!
+AppSettings Settings = builder.Configuration.Get<AppSettings>()!;
 
 // Mvc Project Services
-services
-	.AddAppSettings(Configuration)
-	.AddRequestLocalization()
-	.AddCookieConfiguration()
-	.AddGzipCompression(Settings)
-	.AddSwagger(Settings)
-	.AddTextModules();
+builder.Services.AddAppSettings(builder.Configuration);
+builder.Services.AddRequestLocalization();
+builder.Services.AddCookieConfiguration();
+builder.Services.AddGzipCompression(Settings);
+builder.Services.AddSwagger(Settings);
+builder.Services.AddTextModules();
 
 // Internal Libraries
 string dbConnection = Settings.UseSampleDatabase
 	? Settings.ConnectionStrings.PostgresSampleDataConnection
 	: Settings.ConnectionStrings.PostgresConnection;
 
-services
-	.AddTasvideosData(Environment.IsDevelopment(), dbConnection)
-	.AddTasvideosCore<WikiToTextRenderer>(Environment.IsDevelopment(), Settings)
-	.AddMovieParser();
+builder.Services.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection);
+builder.Services.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), Settings);
+builder.Services.AddMovieParser();
 
 // 3rd Party
-services
-	.AddMvcWithOptions(Environment)
-	.AddIdentity(Environment)
-	.AddReCaptcha(Configuration.GetSection("ReCaptcha"));
+builder.Services.AddMvcWithOptions(builder.Environment);
+builder.Services.AddIdentity(builder.Environment);
+builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
 
-services.AddWebOptimizer(pipeline =>
+builder.Services.AddWebOptimizer(pipeline =>
 {
 	pipeline.AddScssBundle("/css/bootstrap.css", "/css/bootstrap.scss");
 	pipeline.AddScssBundle("/css/site.css", "/css/site.scss");
 	pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
 });
-*/
 
 builder.WebHost.UseSerilog();
 
