@@ -13,6 +13,7 @@ internal class Bk2 : ParserBase, IParser
 	private const double NtscNesFramerate = 60.0988138974405;
 	private const double NtscSnesFramerate = 60.0988138974405;
 	private const double PalSnesFramerate = 50.0069789081886;
+
 	// mednafen values to match current octoshock
 	private const double NtscPsxFramerate = 59.94006013870239;
 	private const double PalPsxFramerate = 50.00028192996979;
