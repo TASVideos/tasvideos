@@ -12,33 +12,35 @@ var builder = WebApplication.CreateBuilder(args);
 AppSettings settings = builder.Configuration.Get<AppSettings>()!;
 
 // Mvc Project Services
-builder.Services.AddAppSettings(builder.Configuration);
-builder.Services.AddRequestLocalization();
-builder.Services.AddCookieConfiguration();
-builder.Services.AddGzipCompression(settings);
-builder.Services.AddSwagger(settings);
-builder.Services.AddTextModules();
+builder.Services
+	.AddAppSettings(builder.Configuration)
+	.AddRequestLocalization()
+	.AddCookieConfiguration()
+	.AddGzipCompression(settings)
+	.AddSwagger(settings)
+	.AddTextModules();
 
 // Internal Libraries
 string dbConnection = settings.UseSampleDatabase
 	? settings.ConnectionStrings.PostgresSampleDataConnection
 	: settings.ConnectionStrings.PostgresConnection;
 
-builder.Services.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection);
-builder.Services.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), settings);
-builder.Services.AddMovieParser();
+builder.Services
+	.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection)
+	.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), settings)
+	.AddMovieParser();
 
 // 3rd Party
-builder.Services.AddMvcWithOptions(builder.Environment);
-builder.Services.AddIdentity(builder.Environment);
-builder.Services.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"));
-
-builder.Services.AddWebOptimizer(pipeline =>
-{
-	pipeline.AddScssBundle("/css/bootstrap.css", "/css/bootstrap.scss");
-	pipeline.AddScssBundle("/css/site.css", "/css/site.scss");
-	pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
-});
+builder.Services
+	.AddMvcWithOptions(builder.Environment)
+	.AddIdentity(builder.Environment)
+	.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"))
+	.AddWebOptimizer(pipeline =>
+	{
+		pipeline.AddScssBundle("/css/bootstrap.css", "/css/bootstrap.scss");
+		pipeline.AddScssBundle("/css/site.css", "/css/site.scss");
+		pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
+	});
 
 builder.WebHost.UseSerilog();
 
@@ -49,18 +51,18 @@ builder.Configuration.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-6
 
 var app = builder.Build();
 
-app.UseRobots();
-app.UseMiddleware<HtmlRedirectionMiddleware>();
-app.UseRequestLocalization();
-app.UseExceptionHandlers(app.Environment);
-app.UseGzipCompression(settings);
-app.UseWebOptimizer();
-app.UseStaticFilesWithExtensionMapping();
-app.UseAuthentication();
-app.UseMiddleware<CustomLocalizationMiddleware>();
-app.UseSwaggerUi(app.Environment);
-app.UseLogging();
-app.UseMvcWithOptions(app.Environment);
+app.UseRobots()
+	.UseMiddleware<HtmlRedirectionMiddleware>()
+	.UseRequestLocalization()
+	.UseExceptionHandlers(app.Environment)
+	.UseGzipCompression(settings)
+	.UseWebOptimizer()
+	.UseStaticFilesWithExtensionMapping()
+	.UseAuthentication()
+	.UseMiddleware<CustomLocalizationMiddleware>()
+	.UseSwaggerUi(app.Environment)
+	.UseLogging()
+	.UseMvcWithOptions(app.Environment);
 
 if (app.Environment.IsDevelopment())
 {
