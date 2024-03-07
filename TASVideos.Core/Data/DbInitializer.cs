@@ -32,6 +32,7 @@ public static class DbInitializer
 	{
 		await context.Database.EnsureDeletedAsync();
 
+		// create db without filling schema
 		IRelationalDatabaseCreator creator = context.GetService<IRelationalDatabaseCreator>();
 		await creator.CreateAsync();
 
