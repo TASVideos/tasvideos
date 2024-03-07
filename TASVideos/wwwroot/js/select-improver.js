@@ -14,11 +14,11 @@
 
 	return button;
 }
-function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEvent = true) {
+function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEvent = true, option = null) {
 	let element;
 	let buttonsBefore = 0;
-	for (let option of optionsList) {
-		const input = option.querySelector('input');
+	for (let o of optionsList) {
+		const input = o.querySelector('input');
 		if (input.dataset.value === value) {
 			element = input;
 			break;
@@ -27,9 +27,9 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 			buttonsBefore++;
 		}
 	}
-	const option = [...multiSelect.options].find(o => o.value === value);
-	const isSelected = option.selected;
-	if (isSelected) {
+
+	option = option || [...multiSelect.options].find(o => o.value === value);
+	if (option.selected) {
 		option.selected = false;
 		element.checked = false;
 		buttons.querySelector(`button[data-value='${value}']`).remove();
@@ -148,17 +148,20 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	buttons.querySelector('a').appendChild(toggleAllIcon);
 	buttons.querySelector('a').title = anyNotSelected ? 'Select All' : 'Deselect All';
 	buttons.querySelector('a').addEventListener('click', () => {
+		const a = getTicks();
 		const notSelected = [...multiSelect.options].filter(o => !o.selected);
 		if (notSelected.length) {
 			for (let o of notSelected) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, false);
+				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o);
 			}
 		} else {
 			for (let o of multiSelect.options) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, false);
+				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o);
 			}
 		}
 		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
+		const b = getTicks();
+		console.log('ms', b - a);
 	});
 	div.addEventListener('click', (e) => {
 		if (e.target.classList.contains('onclick-focusinput')) {
@@ -189,4 +192,13 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	});
 	list.addEventListener('scroll', (e) => renderVirtualScroll(e.target, optionsList, maxHeight - 2));
 	list.dispatchEvent(new Event('scroll'));
+}
+
+
+function getTicks() {
+	var d = new Date();
+	var dStart = new Date(1970, 1, 1);
+	var dateDifference = ((d.getTime() - dStart.getTime()));
+	console.log(dateDifference); // 15198588000000000
+	return dateDifference;
 }
