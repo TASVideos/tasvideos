@@ -44,12 +44,13 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 		buttons.querySelector('span').classList.add('d-none');
 	}
 
+	const a = buttons.querySelector('a');
 	if ([...multiSelect.options].some(o => !o.selected)) {
-		buttons.querySelector('a').querySelector('i').classList.replace('fa-minus', 'fa-plus');
-		buttons.querySelector('a').title = 'Select All';
+		a.querySelector('i').classList.replace('fa-minus', 'fa-plus');
+		a.title = 'Select All';
 	} else {
-		buttons.querySelector('a').querySelector('i').classList.replace('fa-plus', 'fa-minus');
-		buttons.querySelector('a').title = 'Deselect All';
+		a.querySelector('i').classList.replace('fa-plus', 'fa-minus');
+		a.title = 'Deselect All';
 	}
 
 	if (dispatchEvent) {
