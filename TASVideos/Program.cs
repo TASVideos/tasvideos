@@ -42,7 +42,7 @@ builder.Services
 		pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
 	});
 
-builder.WebHost.UseSerilog();
+builder.Host.UseSerilog();
 
 // We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
 // This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.Configuration.AddUserSecrets<T>() will not work.
