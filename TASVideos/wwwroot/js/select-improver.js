@@ -14,7 +14,7 @@
 
 	return button;
 }
-function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEvent = true, option = null, anySelected = null) {
+function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEvent = true, option = null, anySelected = null, anyNotSelected = null) {
 	let element;
 	let buttonsBefore = 0;
 	for (let o of optionsList) {
@@ -45,7 +45,8 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 	}
 
 	const a = buttons.querySelector('a');
-	if ([...multiSelect.options].some(o => !o.selected)) {
+	anyNotSelected = anyNotSelected || [...multiSelect.options].some(o => !o.selected);
+	if (anyNotSelected) {
 		a.querySelector('i').classList.replace('fa-minus', 'fa-plus');
 		a.title = 'Select All';
 	} else {
@@ -154,13 +155,14 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		const options = [...multiSelect.options];
 		const notSelected = options.filter(o => !o.selected);
 		const anySelected = options.some(o => o.selected);
+		const anyNotSelected = options.some(o => !o.selected);
 		if (notSelected.length) {
 			for (let o of notSelected) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected, anyNotSelected);
 			}
 		} else {
 			for (let o of multiSelect.options) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected, anyNotSelected);
 			}
 		}
 		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
@@ -203,6 +205,5 @@ function getTicks() {
 	var d = new Date();
 	var dStart = new Date(1970, 1, 1);
 	var dateDifference = ((d.getTime() - dStart.getTime()));
-	console.log(dateDifference); // 15198588000000000
 	return dateDifference;
 }
