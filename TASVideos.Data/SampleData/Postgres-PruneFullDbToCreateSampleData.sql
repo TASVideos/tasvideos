@@ -6,17 +6,16 @@
 --		Select Plain as the Format
 --		Select UTF8 as the encoding
 --		In the Dump options tab
---			Click data only - Yes
+--			Click data only - No
 --			Schema only - No
 --			Use column inserts - Yes
 --			Use Insert Commands - Yes
 --		Run
---		gzip sample-data.sql.gz and replace temp file
+--		gzip sample-data.sql and replace temp file
 
 DELETE FROM public.ip_bans;
 DELETE FROM public.media_posts;
 DELETE FROM public.user_disallows;
-DELETE FROM public."__EFMigrationsHistory";
 DELETE FROM public.auto_history;
 
 -- Trim user files

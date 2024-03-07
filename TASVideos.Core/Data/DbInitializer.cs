@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using Npgsql;
 using TASVideos.Core.Settings;
 using SharpCompress.Compressors;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace TASVideos.Core.Data;
 
@@ -29,9 +31,14 @@ public static class DbInitializer
 	private static async Task SampleStrategy(DbContext context)
 	{
 		await context.Database.EnsureDeletedAsync();
-		await context.Database.MigrateAsync();
+
+		// create db without filling schema
+		IRelationalDatabaseCreator creator = context.GetService<IRelationalDatabaseCreator>();
+		await creator.CreateAsync();
 
 		await GenerateDevSampleData(context);
+
+		await context.Database.MigrateAsync();
 
 		// https://github.com/npgsql/npgsql/issues/2366
 		// For NpgSql specifically, if we drop and create SCHEMA while running the application
