@@ -14,7 +14,7 @@
 
 	return button;
 }
-function toggleSelectOption(multiSelect, buttons, inputList, value, dispatchEvent = true, option = null, anySelected = null) {
+function toggleSelectOption(multiSelect, buttons, inputList, value, option = null, anySelected = null) {
 	let element;
 	let buttonsBefore = 0;
 	for (let input of inputList) {
@@ -52,10 +52,6 @@ function updateSelectAllToggle(multiSelect, buttons) {
 	} else {
 		a.querySelector('i').classList.replace('fa-plus', 'fa-minus');
 		a.title = 'Deselect All';
-	}
-
-	if (dispatchEvent) {
-		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
 	}
 }
 
@@ -161,11 +157,11 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 
 		if (notSelected.length) {
 			for (let o of notSelected) {
-				toggleSelectOption(multiSelect, buttons, inputList, o.value, true, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, anySelected);
 			}
 		} else {
 			for (let o of multiSelect.options) {
-				toggleSelectOption(multiSelect, buttons, inputList, o.value, true, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, anySelected);
 			}
 		}
 		updateSelectAllToggle(multiSelect, buttons);
