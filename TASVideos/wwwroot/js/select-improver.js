@@ -1,24 +1,23 @@
 ﻿function createButtonElement(text, value) {
-	let button = document.createElement('button');
+	const button = document.createElement('button');
 	button.type = 'button';
 	button.classList.add('btn', 'btn-primary', 'btn-sm', 'mb-1', 'me-1');
 	button.dataset.value = value;
 
-	let buttonSpanText = document.createElement('span');
+	const buttonSpanText = document.createElement('span');
 	buttonSpanText.innerText = text;
 	button.appendChild(buttonSpanText);
-	let buttonSpanX = document.createElement('span');
+	const buttonSpanX = document.createElement('span');
 	buttonSpanX.innerText = '✕';
 	buttonSpanX.classList.add('ps-1');
 	button.appendChild(buttonSpanX);
 
 	return button;
 }
-function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEvent = true) {
+function toggleSelectOption(multiSelect, buttons, inputList, value, option = null, updateCaption = true) {
 	let element;
 	let buttonsBefore = 0;
-	for (let option of optionsList) {
-		let input = option.querySelector('input');
+	for (let input of inputList) {
 		if (input.dataset.value === value) {
 			element = input;
 			break;
@@ -27,14 +26,17 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 			buttonsBefore++;
 		}
 	}
-	const option = [...multiSelect.options].find(o => o.value === value);
-	const isSelected = option.selected;
-	if (isSelected) {
+
+	option = option || [...multiSelect.options].find(o => o.value === value);
+	if (option.selected) {
 		option.selected = false;
 		element.checked = false;
 		buttons.querySelector(`button[data-value='${value}']`).remove();
-		if (![...multiSelect.options].some(o => o.selected)) {
-			buttons.querySelector('span').classList.remove('d-none');
+		if (updateCaption) {
+			const anySelected = [...multiSelect.options].some(o => o.selected);
+			if (!anySelected) {
+				buttons.querySelector('span').classList.remove('d-none');
+			}
 		}
 	} else {
 		option.selected = true;
@@ -42,37 +44,37 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 		buttons.insertBefore(createButtonElement(option.text, option.value), buttons.querySelectorAll('button')[buttonsBefore]);
 		buttons.querySelector('span').classList.add('d-none');
 	}
+}
 
-	if ([...multiSelect.options].some(o => !o.selected)) {
-		buttons.querySelector('a').querySelector('i').classList.replace('fa-minus', 'fa-plus');
-		buttons.querySelector('a').title = 'Select All';
+function updateSelectAllToggle(multiSelect, buttons) {
+	const a = buttons.querySelector('a');
+	if ([...multiSelect.options].some(o => !o.selected && !o.disabled)) {
+		a.querySelector('i').classList.replace('fa-minus', 'fa-plus');
+		a.title = 'Select All';
 	} else {
-		buttons.querySelector('a').querySelector('i').classList.replace('fa-plus', 'fa-minus');
-		buttons.querySelector('a').title = 'Deselect All';
-	}
-
-	if (dispatchEvent) {
-		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
+		a.querySelector('i').classList.replace('fa-plus', 'fa-minus');
+		a.title = 'Deselect All';
 	}
 }
+
 function renderVirtualScroll(list, optionsList, visibleHeight) {
 	const firstElementHeight = 39;
 	const otherElementsHeight = 38;
 	
-	let scrollPosition = list.scrollTop;
+	const scrollPosition = list.scrollTop;
 
-	let optionsListVisible = optionsList.filter(option => option.dataset.visible === String(true));
+	const optionsListVisible = optionsList.filter(option => option.dataset.visible === String(true));
 	list.innerHTML = '';
 
-	let topIndex = scrollPosition < firstElementHeight ? 0 : Math.floor((scrollPosition - firstElementHeight) / otherElementsHeight) + 1;
-	let topSpaceHeight = topIndex == 0 ? 0 : firstElementHeight + (topIndex - 1) * otherElementsHeight;
+	const topIndex = scrollPosition < firstElementHeight ? 0 : Math.floor((scrollPosition - firstElementHeight) / otherElementsHeight) + 1;
+	const topSpaceHeight = topIndex == 0 ? 0 : firstElementHeight + (topIndex - 1) * otherElementsHeight;
 	let bottomIndex = (scrollPosition + visibleHeight) < firstElementHeight ? 0 : Math.floor(((scrollPosition + visibleHeight) - firstElementHeight) / otherElementsHeight) + 1;
 	if (bottomIndex > optionsListVisible.length - 1) { bottomIndex = optionsListVisible.length - 1; }
-	let bottomSpaceHeight = ((optionsListVisible.length - 1) - bottomIndex) * otherElementsHeight;
+	const bottomSpaceHeight = ((optionsListVisible.length - 1) - bottomIndex) * otherElementsHeight;
 
-	let topSpace = document.createElement('div');
+	const topSpace = document.createElement('div');
 	topSpace.style.height = topSpaceHeight + 'px';
-	let bottomSpace = document.createElement('div');
+	const bottomSpace = document.createElement('div');
 	bottomSpace.style.height = bottomSpaceHeight + 'px';
 	list.appendChild(topSpace);
 	for (let i = topIndex; i <= bottomIndex; i++) {
@@ -102,6 +104,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	div.classList.remove('d-none');
 	let input = document.getElementById(multiSelectId + '_input');
 	let optionsList = [];
+	let inputList = [];
 	let anyNotSelected = false;
 
 	let entry = document.createElement('div');
@@ -128,6 +131,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		checkbox.dataset.value = option.value;
 		label.append(option.text);
 		optionsList.push(newEntry);
+		inputList.push(checkbox);
 
 		if (option.selected) {
 			let button = createButtonElement(option.text, option.value);
@@ -148,16 +152,27 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	buttons.querySelector('a').appendChild(toggleAllIcon);
 	buttons.querySelector('a').title = anyNotSelected ? 'Select All' : 'Deselect All';
 	buttons.querySelector('a').addEventListener('click', () => {
-		const notSelected = [...multiSelect.options].filter(o => !o.selected);
+		const options = [...multiSelect.options];
+		const notSelected = options.filter(o => !o.selected && !o.disabled);
+
 		if (notSelected.length) {
 			for (let o of notSelected) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, false);
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, false);
 			}
+			
+			buttons.querySelector('span').classList.add('d-none');
 		} else {
-			for (let o of multiSelect.options) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, false);
+			for (let o of options.filter(o => !o.disabled)) {
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, false);
+			}
+
+			const anySelected = options.some(o => o.selected);
+			if (!anySelected) {
+				buttons.querySelector('span').classList.remove('d-none');
 			}
 		}
+
+		updateSelectAllToggle(multiSelect, buttons);
 		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
 	});
 	div.addEventListener('click', (e) => {
@@ -174,12 +189,16 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		list.dispatchEvent(new Event('scroll'));
 	});
 	list.addEventListener('change', (e) => {
-		toggleSelectOption(multiSelect, buttons, optionsList, e.target.dataset.value);
+		toggleSelectOption(multiSelect, buttons, inputList, e.target.dataset.value);
+		updateSelectAllToggle(multiSelect, buttons);
+		multiSelect.dispatchEvent(new Event('change'));
 	});
 	buttons.addEventListener('click', (e) => {
-		let button = e.target.closest('button');
+		const button = e.target.closest('button');
 		if (button) {
-			toggleSelectOption(multiSelect, buttons, optionsList, button.dataset.value);
+			toggleSelectOption(multiSelect, buttons, inputList, button.dataset.value);
+			updateSelectAllToggle(multiSelect, buttons);
+			multiSelect.dispatchEvent(new Event('change'));
 		}
 	});
 	input.addEventListener('focusout', () => {
