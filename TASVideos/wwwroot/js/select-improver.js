@@ -48,7 +48,7 @@ function toggleSelectOption(multiSelect, buttons, inputList, value, option = nul
 
 function updateSelectAllToggle(multiSelect, buttons) {
 	const a = buttons.querySelector('a');
-	if ([...multiSelect.options].some(o => !o.selected)) {
+	if ([...multiSelect.options].some(o => !o.selected && !o.disabled)) {
 		a.querySelector('i').classList.replace('fa-minus', 'fa-plus');
 		a.title = 'Select All';
 	} else {
@@ -154,7 +154,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	buttons.querySelector('a').addEventListener('click', () => {
 		const a = getTicks();
 		const options = [...multiSelect.options];
-		const notSelected = options.filter(o => !o.selected);
+		const notSelected = options.filter(o => !o.selected && !o.disabled);
 
 		if (notSelected.length) {
 			for (let o of notSelected) {
@@ -163,11 +163,14 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 			
 			buttons.querySelector('span').classList.add('d-none');
 		} else {
-			for (let o of multiSelect.options) {
+			for (let o of options.filter(o => !o.disabled)) {
 				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, false);
 			}
 
-			buttons.querySelector('span').classList.remove('d-none');
+			const anySelected = options.some(o => o.selected);
+			if (!anySelected) {
+				buttons.querySelector('span').classList.remove('d-none');
+			}
 		}
 
 		updateSelectAllToggle(multiSelect, buttons);
