@@ -152,7 +152,6 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	buttons.querySelector('a').appendChild(toggleAllIcon);
 	buttons.querySelector('a').title = anyNotSelected ? 'Select All' : 'Deselect All';
 	buttons.querySelector('a').addEventListener('click', () => {
-		const a = getTicks();
 		const options = [...multiSelect.options];
 		const notSelected = options.filter(o => !o.selected && !o.disabled);
 
@@ -175,8 +174,6 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 
 		updateSelectAllToggle(multiSelect, buttons);
 		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
-		const b = getTicks();
-		console.log('ms', b - a);
 	});
 	div.addEventListener('click', (e) => {
 		if (e.target.classList.contains('onclick-focusinput')) {
@@ -211,12 +208,4 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	});
 	list.addEventListener('scroll', (e) => renderVirtualScroll(e.target, optionsList, maxHeight - 2));
 	list.dispatchEvent(new Event('scroll'));
-}
-
-
-function getTicks() {
-	var d = new Date();
-	var dStart = new Date(1970, 1, 1);
-	var dateDifference = ((d.getTime() - dStart.getTime()));
-	return dateDifference;
 }
