@@ -43,7 +43,10 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 		buttons.insertBefore(createButtonElement(option.text, option.value), buttons.querySelectorAll('button')[buttonsBefore]);
 		buttons.querySelector('span').classList.add('d-none');
 	}
+}
 
+function updateSelectAllToggle(multiSelect, buttons)
+{
 	const a = buttons.querySelector('a');
 	if ([...multiSelect.options].some(o => !o.selected)) {
 		a.querySelector('i').classList.replace('fa-minus', 'fa-plus');
@@ -57,6 +60,7 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
 	}
 }
+
 function renderVirtualScroll(list, optionsList, visibleHeight) {
 	const firstElementHeight = 39;
 	const otherElementsHeight = 38;
@@ -154,6 +158,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		const options = [...multiSelect.options];
 		const notSelected = options.filter(o => !o.selected);
 		const anySelected = options.some(o => o.selected);
+
 		if (notSelected.length) {
 			for (let o of notSelected) {
 				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected);
@@ -163,6 +168,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected);
 			}
 		}
+		updateSelectAllToggle(multiSelect, buttons);
 		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
 		const b = getTicks();
 		console.log('ms', b - a);
@@ -182,11 +188,13 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	});
 	list.addEventListener('change', (e) => {
 		toggleSelectOption(multiSelect, buttons, optionsList, e.target.dataset.value);
+		updateSelectAllToggle(multiSelect, buttons);
 	});
 	buttons.addEventListener('click', (e) => {
 		const button = e.target.closest('button');
 		if (button) {
 			toggleSelectOption(multiSelect, buttons, optionsList, button.dataset.value);
+			updateSelectAllToggle(multiSelect, buttons);
 		}
 	});
 	input.addEventListener('focusout', () => {
