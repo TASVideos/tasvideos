@@ -14,11 +14,10 @@
 
 	return button;
 }
-function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEvent = true, option = null, anySelected = null) {
+function toggleSelectOption(multiSelect, buttons, inputList, value, dispatchEvent = true, option = null, anySelected = null) {
 	let element;
 	let buttonsBefore = 0;
-	for (let o of optionsList) {
-		const input = o.querySelector('input');
+	for (let input of inputList) {
 		if (input.dataset.value === value) {
 			element = input;
 			break;
@@ -107,6 +106,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	div.classList.remove('d-none');
 	let input = document.getElementById(multiSelectId + '_input');
 	let optionsList = [];
+	let inputList = [];
 	let anyNotSelected = false;
 
 	let entry = document.createElement('div');
@@ -133,6 +133,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		checkbox.dataset.value = option.value;
 		label.append(option.text);
 		optionsList.push(newEntry);
+		inputList.push(checkbox);
 
 		if (option.selected) {
 			let button = createButtonElement(option.text, option.value);
@@ -160,11 +161,11 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 
 		if (notSelected.length) {
 			for (let o of notSelected) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, true, o, anySelected);
 			}
 		} else {
 			for (let o of multiSelect.options) {
-				toggleSelectOption(multiSelect, buttons, optionsList, o.value, true, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, true, o, anySelected);
 			}
 		}
 		updateSelectAllToggle(multiSelect, buttons);
@@ -186,13 +187,13 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		list.dispatchEvent(new Event('scroll'));
 	});
 	list.addEventListener('change', (e) => {
-		toggleSelectOption(multiSelect, buttons, optionsList, e.target.dataset.value);
+		toggleSelectOption(multiSelect, buttons, inputList, e.target.dataset.value);
 		updateSelectAllToggle(multiSelect, buttons);
 	});
 	buttons.addEventListener('click', (e) => {
 		const button = e.target.closest('button');
 		if (button) {
-			toggleSelectOption(multiSelect, buttons, optionsList, button.dataset.value);
+			toggleSelectOption(multiSelect, buttons, inputList, button.dataset.value);
 			updateSelectAllToggle(multiSelect, buttons);
 		}
 	});
