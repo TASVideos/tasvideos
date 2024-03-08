@@ -14,7 +14,7 @@
 
 	return button;
 }
-function toggleSelectOption(multiSelect, buttons, inputList, value, option = null, anySelected = null) {
+function toggleSelectOption(multiSelect, buttons, inputList, value, option = null, updateCaption = true) {
 	let element;
 	let buttonsBefore = 0;
 	for (let input of inputList) {
@@ -32,9 +32,11 @@ function toggleSelectOption(multiSelect, buttons, inputList, value, option = nul
 		option.selected = false;
 		element.checked = false;
 		buttons.querySelector(`button[data-value='${value}']`).remove();
-		anySelected = anySelected || [...multiSelect.options].some(o => o.selected);
-		if (!anySelected) {
-			buttons.querySelector('span').classList.remove('d-none');
+		if (updateCaption) {
+			const anySelected = [...multiSelect.options].some(o => o.selected);
+			if (!anySelected) {
+				buttons.querySelector('span').classList.remove('d-none');
+			}
 		}
 	} else {
 		option.selected = true;
@@ -157,13 +159,18 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 
 		if (notSelected.length) {
 			for (let o of notSelected) {
-				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, false);
 			}
+			
+			buttons.querySelector('span').classList.add('d-none');
 		} else {
 			for (let o of multiSelect.options) {
-				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, anySelected);
+				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, false);
 			}
+
+			buttons.querySelector('span').classList.remove('d-none');
 		}
+
 		updateSelectAllToggle(multiSelect, buttons);
 		multiSelect.dispatchEvent(new Event('change')); // somewhat hacky way to support external event listeners
 		const b = getTicks();
