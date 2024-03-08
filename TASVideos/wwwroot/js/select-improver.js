@@ -191,14 +191,12 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 	list.addEventListener('change', (e) => {
 		toggleSelectOption(multiSelect, buttons, inputList, e.target.dataset.value);
 		updateSelectAllToggle(multiSelect, buttons);
-		list.dispatchEvent(new Event('scroll'));
 	});
 	buttons.addEventListener('click', (e) => {
 		const button = e.target.closest('button');
 		if (button) {
 			toggleSelectOption(multiSelect, buttons, inputList, button.dataset.value);
 			updateSelectAllToggle(multiSelect, buttons);
-			list.dispatchEvent(new Event('scroll'));
 		}
 	});
 	input.addEventListener('focusout', () => {
