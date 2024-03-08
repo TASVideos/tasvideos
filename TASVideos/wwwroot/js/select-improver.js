@@ -45,8 +45,7 @@ function toggleSelectOption(multiSelect, buttons, optionsList, value, dispatchEv
 	}
 }
 
-function updateSelectAllToggle(multiSelect, buttons)
-{
+function updateSelectAllToggle(multiSelect, buttons) {
 	const a = buttons.querySelector('a');
 	if ([...multiSelect.options].some(o => !o.selected)) {
 		a.querySelector('i').classList.replace('fa-minus', 'fa-plus');
