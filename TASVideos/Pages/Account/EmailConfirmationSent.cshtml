@@ -7,7 +7,7 @@
 
 @await Component.RenderWiki(SystemWiki.EmailConfirmationSentMessage)
 
-<form method="post">
+<form method="post" id="email-confirmation-form">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -20,14 +20,22 @@
 				<input asp-for="Email" class="form-control" autocomplete="off" />
 				<span asp-validation-for="Email" class="text-danger"></span>
 			</fieldset>
-			<environment exclude="Development">
-				<fieldset>
-					<recaptcha />
-				</fieldset>
-			</environment>
 		</column>
 	</row>
 	<div class="text-center">
-		<button type="submit" class="btn btn-secondary">Resend Confirmation Email</button>
+		<environment exclude="Development">
+			<recaptcha class-name="btn btn-secondary" callback="onSubmit" text="Resend Confirmation Email"/>
+		</environment>
+		<environment include="Development">
+			<button type="submit" class="btn btn-secondary">Resend Confirmation Email</button>
+		</environment>
 	</div>
 </form>
+
+@section Scripts {
+	<script>
+	function onSubmit() {
+		document.getElementById("email-confirmation-form").submit();
+	}
+	</script>
+}
