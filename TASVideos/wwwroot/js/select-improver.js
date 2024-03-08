@@ -155,7 +155,6 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 		const a = getTicks();
 		const options = [...multiSelect.options];
 		const notSelected = options.filter(o => !o.selected);
-		const anySelected = options.some(o => o.selected);
 
 		if (notSelected.length) {
 			for (let o of notSelected) {
