@@ -7,7 +7,7 @@
 <h4>Create a new account.</h4>
 <hr />
 <div asp-validation-summary="All" class="text-danger"></div>
-<form method="post">
+<form method="post" id="register-form">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -53,15 +53,15 @@
 				Also make sure you've read the <a href="/SiteRules">Site Rules</a>.<br/>
 				Your data will be stored according to our <a href="/System/PrivacyPolicy">Privacy Policy</a>.
 			</fieldset>
-			<environment exclude="Development">
-				<fieldset>
-					<recaptcha />
-				</fieldset>
-			</environment>
 		</column>
 	</row>
 	<div class="text-center">
-		<button type="submit" class="btn btn-secondary">Register</button>
+		<environment exclude="Development">
+			<recaptcha class-name="btn btn-secondary" callback="onSubmit" text="Register"/>
+		</environment>
+		<environment include="Development">
+			<button type="submit" class="btn btn-secondary">Register</button>
+		</environment>
 	</div>
 </form>
 
@@ -77,4 +77,9 @@
 			timezone.setAttribute('selected', 'selected');
 		}
 	</script>
+	<script>
+	function onSubmit() {
+		document.getElementById("register-form").submit();
+	}
+    </script>
 }
