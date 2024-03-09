@@ -9,6 +9,11 @@ using TASVideos.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
+// This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.Configuration.AddUserSecrets<T>() will not work.
+// Manually specify the secret id (matching the csproj) here as a workaround.
+builder.Configuration.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
+
 AppSettings settings = builder.Configuration.Get<AppSettings>()!;
 
 // Mvc Project Services
@@ -43,11 +48,6 @@ builder.Services
 	});
 
 builder.Host.UseSerilog();
-
-// We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
-// This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.Configuration.AddUserSecrets<T>() will not work.
-// Manually specify the secret id (matching the csproj) here as a workaround.
-builder.Configuration.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
 
 var app = builder.Build();
 
