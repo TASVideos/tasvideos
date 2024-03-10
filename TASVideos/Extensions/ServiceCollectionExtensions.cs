@@ -122,6 +122,11 @@ public static class ServiceCollectionExtensions
 			})
 			.AddRazorRuntimeCompilation();
 
+		services.AddAntiforgery(options =>
+		{
+			options.Cookie.SameSite = SameSiteMode.Lax;
+		});
+
 		services.AddHttpContext();
 		services.AddMvc(options =>
 		{
