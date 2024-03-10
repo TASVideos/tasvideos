@@ -9,7 +9,7 @@
 @foreach (var rootPage in Model.Map.GroupBy(m => m.PageName.SplitWithEmpty("/").First()).OrderBy(g => g.Key))
 {
 	bool isPage = rootPage.Any(p => p.PageName == rootPage.Key);
-	bool hasSubpages = rootPage.Count() > 1;
+	bool hasSubpages = rootPage.Count(p => p.PageName != rootPage.Key) > 0;
 	bool isWiki = rootPage.Any(p => p.IsWiki);
 	<div class="@(isWiki ? "wiki" : "developed")">
 		<i condition="@hasSubpages" class="fa fa-plus" data-bs-toggle="collapse" href="#collapse@(rootPage.Key)" style="cursor: pointer"></i>
@@ -27,9 +27,27 @@
 				</li>
 			}
 		</ul>
-		<br />
 	</div>
 }
+
+<br/>
+<h4>Aliases</h4>
+<caption>These are alternate names by design and the preferred urls for linking</caption>
+<ul>
+	@foreach (var kvp in TASVideos.Extensions.ServiceCollectionExtensions.Aliases)
+	{
+		<li>@kvp.Value <small>(maps to @kvp.Key)</small></li>
+	}
+</ul>
+<br />
+<h4>Legacy Redirects</h4>
+<caption>These pages are left in for legacy links, they should not be used, and should be replaced when seen.</caption>
+<ul>
+	@foreach (var kvp in TASVideos.Extensions.ServiceCollectionExtensions.LegacyRedirects)
+	{
+		<li>@kvp.Value</li>
+	}
+</ul>
 
 <script>
 	const onlyWikiCheckbox = document.getElementById('only-wiki-checkbox');

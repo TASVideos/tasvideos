@@ -20,6 +20,35 @@ namespace TASVideos.Extensions;
 
 public static class ServiceCollectionExtensions
 {
+	// TODO: move these to a more appropriate place
+	public static readonly List<KeyValuePair<string, string>> Aliases =
+	[
+		new("/Games/Index", "{id:int}G"),
+		new("/Submissions/Index", "Subs-{query}"),
+		new("/Submissions/Index", "Subs-List"),
+		new("/Submissions/View", "{id:int}S"),
+		new("/Publications/Index", "Movies-{query}"),
+		new("/Publications/View", "{id:int}M"),
+		new("/RssFeeds/Publications", "/publications.rss"),
+		new("/RssFeeds/Submissions", "/submissions.rss"),
+		new("/RssFeeds/Wiki", "/wiki.rss"),
+		new ("/RssFeeds/News", "/news.rss")
+	];
+
+	public static readonly List<KeyValuePair<string, string>> LegacyRedirects =
+	[
+		new("/Forum/Legacy/Topic", "forum/viewtopic.php"),
+		new("/Forum/Legacy/Topic", "forum/t/{id:int}"),
+		new("/Forum/Legacy/Post", "forum/p/{id:int}"),
+		new("/Forum/Legacy/Forum", "forum/viewforum.php"),
+		new("/Forum/Legacy/Forum", "forum/f/{id:int}"),
+		new("/Submissions/LegacyQueue", "queue.cgi"),
+		new("/Publications/LegacyMovies", "movies.cgi"),
+		new("/Forum/Legacy/MoodReport", "forum/moodreport.php"),
+		new("/Wiki/Legacy/Privileges", "Privileges"),
+		new("/Wiki/Legacy/SubmitMovie", "SubmitMovie")
+	];
+
 	public static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.Configure<AppSettings>(configuration);
@@ -80,29 +109,16 @@ public static class ServiceCollectionExtensions
 				options.Conventions.AddFolderApplicationModelConvention(
 					"/",
 					model => model.Filters.Add(new SetPageViewBagAttribute()));
-				options.Conventions.AddPageRoute("/Games/Index", "{id:int}G");
-				options.Conventions.AddPageRoute("/Submissions/Index", "Subs-{query}");
-				options.Conventions.AddPageRoute("/Submissions/Index", "Subs-List");
-				options.Conventions.AddPageRoute("/Submissions/View", "{id:int}S");
-				options.Conventions.AddPageRoute("/Publications/Index", "Movies-{query}");
-				options.Conventions.AddPageRoute("/Publications/View", "{id:int}M");
-				options.Conventions.AddPageRoute("/Submissions/Submit", "SubmitMovie");
-				options.Conventions.AddPageRoute("/Permissions/Index", "/Privileges");
 
-				// Backwards compatibility with legacy links
-				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/viewtopic.php");
-				options.Conventions.AddPageRoute("/Forum/Legacy/Topic", "forum/t/{id:int}");
-				options.Conventions.AddPageRoute("/Forum/Legacy/Post", "forum/p/{id:int}");
-				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/viewforum.php");
-				options.Conventions.AddPageRoute("/Forum/Legacy/Forum", "forum/f/{id:int}");
-				options.Conventions.AddPageRoute("/Submissions/LegacyQueue", "queue.cgi");
-				options.Conventions.AddPageRoute("/Publications/LegacyMovies", "movies.cgi");
-				options.Conventions.AddPageRoute("/Forum/Legacy/MoodReport", "forum/moodreport.php");
+				foreach (var alias in Aliases)
+				{
+					options.Conventions.AddPageRoute(alias.Key, alias.Value);
+				}
 
-				options.Conventions.AddPageRoute("/RssFeeds/Publications", "/publications.rss");
-				options.Conventions.AddPageRoute("/RssFeeds/Submissions", "/submissions.rss");
-				options.Conventions.AddPageRoute("/RssFeeds/Wiki", "/wiki.rss");
-				options.Conventions.AddPageRoute("/RssFeeds/News", "/news.rss");
+				foreach (var redirect in LegacyRedirects)
+				{
+					options.Conventions.AddPageRoute(redirect.Key, redirect.Value);
+				}
 			})
 			.AddRazorRuntimeCompilation();
 
