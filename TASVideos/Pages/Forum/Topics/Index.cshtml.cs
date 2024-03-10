@@ -139,7 +139,10 @@ public class IndexModel : BaseForumModel
 				PosterLocation = p.Poster.From,
 				PosterRoles = p.Poster.UserRoles
 					.Where(ur => !ur.Role!.IsDefault)
+
+					// TODO: these violate separation of concerns, the code should not be aware of the specifics of what roles exist, as those can be any value a user chooses
 					.Where(ur => ur.Role!.Name != "Published Author")
+					.Where(ur => ur.Role!.Name != "Experienced Forum User")
 					.Select(ur => ur.Role!.Name)
 					.ToList(),
 				PosterJoined = p.Poster.CreateTimestamp,
