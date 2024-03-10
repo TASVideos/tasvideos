@@ -110,14 +110,12 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _userManager.GetRequiredUser(User);
-
 		var bannedSites = _userManager.BannedAvatarSites().ToList();
-		if (!string.IsNullOrWhiteSpace(user.Avatar))
+		if (!string.IsNullOrWhiteSpace(Settings.Avatar))
 		{
 			foreach (var site in bannedSites)
 			{
-				if (user.Avatar.Contains(site))
+				if (Settings.Avatar.Contains(site))
 				{
 					ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Avatar)}", $"Using {site} to host avatars is not allowed.");
 				}
@@ -139,6 +137,8 @@ public class SettingsModel : BasePageModel
 		{
 			return Page();
 		}
+
+		var user = await _userManager.GetRequiredUser(User);
 
 		bool hasUserCustomLocaleChanged = user.DateFormat != Settings.UserDateFormat || user.TimeFormat != Settings.UserTimeFormat || user.DecimalFormat != Settings.UserDecimalFormat;
 
