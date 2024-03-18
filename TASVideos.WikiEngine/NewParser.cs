@@ -2,7 +2,7 @@
 
 namespace TASVideos.WikiEngine;
 
-public class NewParser
+public partial class NewParser
 {
 	public class SyntaxException(string msg, int textLocation) : Exception(msg)
 	{
@@ -299,7 +299,7 @@ public class NewParser
 			if (e.Type == NodeType.Element)
 			{
 				var tag = ((Element)e).Tag;
-				if (tag == "htabs" || tag == "vtabs")
+				if (tag is "htabs" or "vtabs")
 				{
 					return false;
 				}
@@ -470,30 +470,7 @@ public class NewParser
 		_parsingInline = false;
 	}
 
-	private static readonly Regex Url = new(@"\G
-			https?:\/\/
-			(
-				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
-				|
-				%[A-Fa-f0-9]{2}
-			)+
-			(
-				\?
-				(
-					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
-					|
-					%[A-Fa-f0-9]{2}
-				)+
-			)?
-			(
-				\#
-				(
-					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
-					|
-					%[A-Fa-f0-9]{2}
-				)+
-			)?
-		", RegexOptions.IgnorePatternWhitespace);
+	private static readonly Regex Url = UrlRegex();
 
 	private void ParseInlineText()
 	{
@@ -957,7 +934,7 @@ public class NewParser
 			e => Builtins.MakeToc(n, e.CharStart));
 	}
 
-	private static readonly Regex AllowedIdChars = new("[^a-zA-Z0-9 ]+");
+	private static readonly Regex AllowedIdChars = AllowedIdCharsRegex();
 
 	private static void AddIdsToHeadings(IEnumerable<INode> n)
 	{
@@ -1020,4 +997,34 @@ public class NewParser
 		ReplacePees(p._output);
 		return p._output;
 	}
+
+	[GeneratedRegex("""
+		\G
+		https?:\/\/
+		(
+			[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+			|
+			%[A-Fa-f0-9]{2}
+		)+
+		(
+			\?
+			(
+				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+				|
+				%[A-Fa-f0-9]{2}
+			)+
+		)?
+		(
+			\#
+			(
+				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+				|
+				%[A-Fa-f0-9]{2}
+			)+
+		)?
+		""", RegexOptions.IgnorePatternWhitespace)]
+	private static partial Regex UrlRegex();
+
+	[GeneratedRegex("[^a-zA-Z0-9 ]+")]
+	private static partial Regex AllowedIdCharsRegex();
 }

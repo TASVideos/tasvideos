@@ -221,6 +221,7 @@ public partial class Element : INodeWithChildren
 
 	[GeneratedRegex("^[a-z0-9]+$")]
 	private static partial Regex AllowedTagNamesRegex();
+
 	[GeneratedRegex("^[a-z\\-]+$")]
 	private static partial Regex AllowedAttributeNamesRegex();
 }

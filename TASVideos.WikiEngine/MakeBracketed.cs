@@ -4,9 +4,9 @@ namespace TASVideos.WikiEngine;
 
 public static partial class Builtins
 {
-	private static readonly Regex Footnote = new(@"^(\d+)$");
-	private static readonly Regex FootnoteLink = new(@"^#(\d+)$");
-	private static readonly Regex RealModule = new("^module:(.*)$");
+	private static readonly Regex Footnote = FootnoteRegex();
+	private static readonly Regex FootnoteLink = FootnoteLinkRegex();
+	private static readonly Regex RealModule = RealModuleRegex();
 
 	/// <summary>
 	/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:].
@@ -72,21 +72,23 @@ public static partial class Builtins
 		];
 	}
 
-	private static IEnumerable<INode> MakeFootnoteLink(int charStart, int charEnd, string n)
+	private static Element[] MakeFootnoteLink(int charStart, int charEnd, string n)
 	{
-		return new[]
-		{
-			new Element(charStart, "a", [Attr("id", "r" + n)], Array.Empty<INode>()) { CharEnd = charStart },
-			new Element(charStart, "sup",
-			[
-				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("href", "#" + n)], new[]
-				{
-					new Text(charStart, n) { CharEnd = charEnd }
-				}) { CharEnd = charEnd },
-				new Text(charEnd, "]") { CharEnd = charEnd }
-			]) { CharEnd = charEnd }
-		};
+		return
+		[
+			new Element(charStart, "a", [Attr("id", "r" + n)], []) { CharEnd = charStart },
+			new Element(
+				charStart,
+				"sup",
+				[
+					new Text(charStart, "[") { CharEnd = charStart },
+					new Element(charStart, "a", [Attr("href", "#" + n)], new[]
+					{
+						new Text(charStart, n) { CharEnd = charEnd }
+					}) { CharEnd = charEnd },
+					new Text(charEnd, "]") { CharEnd = charEnd }
+				]) { CharEnd = charEnd }
+		];
 	}
 
 	private static readonly string[] ImageSuffixes = [".svg", ".png", ".gif", ".jpg", ".jpeg", ".webp"];
@@ -94,7 +96,7 @@ public static partial class Builtins
 
 	// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 	// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
-	private static readonly Regex ImplicitWikiLink = new(@"^[A-Za-z0-9._/#\- ]+(\|.+)?$");
+	private static readonly Regex ImplicitWikiLink = ImplicitWikiLinkRegex();
 	private static bool IsLink(string text)
 	{
 		return LinkPrefixes.Any(text.StartsWith);
@@ -107,19 +109,16 @@ public static partial class Builtins
 
 	private static string NormalizeImageUrl(string text)
 	{
-		if (text[0] == '=')
-		{
-			return string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1));
-		}
-
-		return text;
+		return text[0] == '='
+			? string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1))
+			: text;
 	}
 
 	private static string NormalizeUrl(string text)
 	{
 		if (text[0] == '=')
 		{
-			if (text == "=" || text == "=/")
+			if (text is "=" or "=/")
 			{
 				return "/";
 			}
@@ -167,13 +166,13 @@ public static partial class Builtins
 			// TODO: What should be done if a username actually ends in .html?
 			if (i == ss.Length - 1 && s.EndsWith(".html", StringComparison.OrdinalIgnoreCase))
 			{
-				s = s.Substring(0, s.Length - 5);
+				s = s[..^5];
 			}
 
 			// Ditto TODO
 			if (i == ss.Length - 1 && s.EndsWith(".cgi", StringComparison.OrdinalIgnoreCase))
 			{
-				s = s.Substring(0, s.Length - 4);
+				s = s[..^4];
 			}
 
 			ss[i] = s;
@@ -262,7 +261,7 @@ public static partial class Builtins
 		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };
 	}
 
-	private static INode MakeImage(int charStart, int charEnd, string[] pp, int index, out bool unusedParams)
+	private static Element MakeImage(int charStart, int charEnd, string[] pp, int index, out bool unusedParams)
 	{
 		unusedParams = false;
 		var attrs = new List<KeyValuePair<string, string>>
@@ -309,4 +308,16 @@ public static partial class Builtins
 
 		return new Element(charStart, "img", attrs, Array.Empty<INode>()) { CharEnd = charEnd };
 	}
+
+	[GeneratedRegex(@"^(\d+)$")]
+	private static partial Regex FootnoteRegex();
+
+	[GeneratedRegex(@"^#(\d+)$")]
+	private static partial Regex FootnoteLinkRegex();
+
+	[GeneratedRegex("^module:(.*)$")]
+	private static partial Regex RealModuleRegex();
+
+	[GeneratedRegex(@"^[A-Za-z0-9._/#\- ]+(\|.+)?$")]
+	private static partial Regex ImplicitWikiLinkRegex();
 }

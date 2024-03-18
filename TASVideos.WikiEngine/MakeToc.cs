@@ -4,9 +4,9 @@ namespace TASVideos.WikiEngine;
 
 public static partial class Builtins
 {
+	// h1, h5, h6 are not involved in TOC generation
 	internal static readonly HashSet<string> TocHeadings =
 	[
-		// h1, h5, h6 are not involved in TOC generation
 		"h2",
 		"h3",
 		"h4"

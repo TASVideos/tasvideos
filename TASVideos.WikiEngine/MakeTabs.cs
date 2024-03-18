@@ -6,12 +6,13 @@ public static partial class Builtins
 {
 	public static INode MakeTabs(Element tabset)
 	{
+		const string liClass = "nav-item";
+		const string aClass = "nav-link";
+
 		// TODO: Fix up CharEnds
 		var parentDivClass = tabset.Tag == "htabs" ? "row" : "";
 		var navDivClass = tabset.Tag == "htabs" ? "col-md-3" : "";
 		var navClass = tabset.Tag == "htabs" ? "nav nav-pills nav-stacked" : "nav nav-tabs";
-		var liClass = "nav-item";
-		var aClass = "nav-link";
 		var tabClass = tabset.Tag == "htabs" ? "tab-content col-md-9" : "tab-content";
 		var nav = new List<INode>();
 		var content = new List<INode>();
