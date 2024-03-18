@@ -6,15 +6,8 @@ using TASVideos.Pages.UserFiles.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class Uncataloged : BasePageModel
+public class Uncataloged(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public Uncataloged(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IReadOnlyCollection<UncatalogedViewModel> Files { get; set; } = new List<UncatalogedViewModel>();
 
 	[FromRoute]
@@ -22,7 +15,7 @@ public class Uncataloged : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		Files = await _db.UserFiles
+		Files = await db.UserFiles
 			.Where(uf => !uf.Hidden)
 			.Where(uf => uf.GameId == null)
 			.Select(uf => new UncatalogedViewModel

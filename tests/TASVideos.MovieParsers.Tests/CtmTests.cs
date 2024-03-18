@@ -4,14 +4,9 @@
 [TestCategory("CtmParsers")]
 public class CtmTests : BaseParserTests
 {
-	private readonly Ctm _ctmParser;
+	private readonly Ctm _ctmParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.CtmSampleFiles.";
-
-	public CtmTests()
-	{
-		_ctmParser = new Ctm();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

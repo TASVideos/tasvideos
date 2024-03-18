@@ -8,15 +8,8 @@ namespace TASVideos.Pages.Messages;
 
 [Authorize]
 [IgnoreAntiforgeryToken]
-public class InboxModel : BasePageModel
+public class InboxModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public InboxModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int? Id { get; set; }
 
@@ -25,7 +18,7 @@ public class InboxModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		Messages = await _db.PrivateMessages
+		Messages = await db.PrivateMessages
 			.ToUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.ThatAreNotToUserSaved()
@@ -47,7 +40,7 @@ public class InboxModel : BasePageModel
 			return NotFound();
 		}
 
-		var message = await _db.PrivateMessages
+		var message = await db.PrivateMessages
 			.ToUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.SingleOrDefaultAsync(pm => pm.Id == Id);
@@ -55,7 +48,7 @@ public class InboxModel : BasePageModel
 		if (message is not null)
 		{
 			message.SavedForToUser = true;
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 
 		return BasePageRedirect("Savebox");
@@ -68,7 +61,7 @@ public class InboxModel : BasePageModel
 			return NotFound();
 		}
 
-		var message = await _db.PrivateMessages
+		var message = await db.PrivateMessages
 			.ToUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.SingleOrDefaultAsync(pm => pm.Id == Id);
@@ -76,7 +69,7 @@ public class InboxModel : BasePageModel
 		if (message is not null)
 		{
 			message.DeletedForToUser = true;
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 
 		return BasePageRedirect("Inbox");

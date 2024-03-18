@@ -8,17 +8,8 @@ using TASVideos.Pages.Forum.Topics.Models;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.CreateForumPolls)]
-public class AddEditPollModel : BaseForumModel
+public class AddEditPollModel(ApplicationDbContext db, IForumService forumService) : BaseForumModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IForumService _forumService;
-
-	public AddEditPollModel(ApplicationDbContext db, IForumService forumService)
-	{
-		_db = db;
-		_forumService = forumService;
-	}
-
 	[FromRoute]
 	public int TopicId { get; set; }
 
@@ -35,7 +26,7 @@ public class AddEditPollModel : BaseForumModel
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Include(t => t.Poll)
 			.ThenInclude(p => p!.PollOptions)
 			.ThenInclude(o => o.Votes)
@@ -93,7 +84,7 @@ public class AddEditPollModel : BaseForumModel
 
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Include(t => t.Poll)
 			.ThenInclude(p => p!.PollOptions)
 			.ThenInclude(o => o.Votes)
@@ -127,11 +118,11 @@ public class AddEditPollModel : BaseForumModel
 					}));
 			}
 
-			await ConcurrentSave(_db, "Poll edited", "Unable to clear existing poll");
+			await ConcurrentSave(db, "Poll edited", "Unable to clear existing poll");
 		}
 		else
 		{
-			await _forumService.CreatePoll(
+			await forumService.CreatePoll(
 				topic,
 				new PollCreateDto(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
 		}

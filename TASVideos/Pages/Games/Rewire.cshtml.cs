@@ -8,19 +8,11 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Games;
 
 [RequirePermission(PermissionTo.RewireGames)]
-public class RewireModel : BasePageModel
+public class RewireModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-
-	public RewireModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher)
-	{
-		_db = db;
-		_publisher = publisher;
-	}
-
 	[FromQuery]
 	[Display(Name = "From Game Id")]
 	public int? FromGameId { get; set; }
@@ -49,12 +41,12 @@ public class RewireModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		ValidIds = await _db.Games
+		ValidIds = await db.Games
 			.Where(g => g.Id == FromGameId || g.Id == IntoGameId)
 			.CountAsync() == 2;
 		if (ValidIds)
 		{
-			FromGame = await _db.Games
+			FromGame = await db.Games
 				.Where(g => g.Id == FromGameId)
 				.Select(g => new RewireEntry
 				{
@@ -66,7 +58,7 @@ public class RewireModel : BasePageModel
 				})
 				.SingleAsync();
 
-			IntoGame = await _db.Games
+			IntoGame = await db.Games
 				.Where(g => g.Id == IntoGameId)
 				.Select(g => new RewireEntry
 				{
@@ -84,45 +76,45 @@ public class RewireModel : BasePageModel
 	{
 		if (FromGameId is not null && IntoGameId is not null)
 		{
-			ValidIds = await _db.Games
+			ValidIds = await db.Games
 				.Where(g => g.Id == FromGameId || g.Id == IntoGameId)
 				.CountAsync() == 2;
 			if (ValidIds)
 			{
 				int intoGameId = (int)IntoGameId;
 
-				var rewirePublications = await _db.Publications
+				var rewirePublications = await db.Publications
 					.Where(p => p.GameId == FromGameId)
 					.Select(p => new Publication { Id = p.Id })
 					.ToListAsync();
-				_db.Publications.AttachRange(rewirePublications);
+				db.Publications.AttachRange(rewirePublications);
 				rewirePublications.ForEach(p => p.GameId = intoGameId);
 
-				var rewireSubmissions = await _db.Submissions
+				var rewireSubmissions = await db.Submissions
 					.Where(s => s.GameId == FromGameId)
 					.Select(s => new Submission { Id = s.Id })
 					.ToListAsync();
-				_db.Submissions.AttachRange(rewireSubmissions);
+				db.Submissions.AttachRange(rewireSubmissions);
 				rewireSubmissions.ForEach(s => s.GameId = intoGameId);
 
-				var rewireVersions = await _db.GameVersions
+				var rewireVersions = await db.GameVersions
 					.Where(r => r.GameId == FromGameId)
 					.Select(r => new GameVersion { Id = r.Id })
 					.ToListAsync();
-				_db.GameVersions.AttachRange(rewireVersions);
+				db.GameVersions.AttachRange(rewireVersions);
 				rewireVersions.ForEach(r => r.GameId = intoGameId);
 
-				var rewireUserfiles = await _db.UserFiles
+				var rewireUserfiles = await db.UserFiles
 					.Where(u => u.GameId == FromGameId)
 					.Select(u => new UserFile { Id = u.Id })
 					.ToListAsync();
-				_db.UserFiles.AttachRange(rewireUserfiles);
+				db.UserFiles.AttachRange(rewireUserfiles);
 				rewireUserfiles.ForEach(u => u.GameId = intoGameId);
 
-				var result = await ConcurrentSave(_db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
+				var result = await ConcurrentSave(db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
 				if (result)
 				{
-					await _publisher.SendGameManagement(
+					await publisher.SendGameManagement(
 						$"{IntoGameId}G edited by {User.Name()}",
 						$"[{IntoGameId}G]({{0}}) edited by {User.Name()}",
 						$"Rewired {FromGameId}G into {IntoGameId}G",

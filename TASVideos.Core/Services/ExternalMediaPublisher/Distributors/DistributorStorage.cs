@@ -1,24 +1,17 @@
 ﻿namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
-public class DistributorStorage : IPostDistributor
+public class DistributorStorage(ApplicationDbContext db) : IPostDistributor
 {
 	private static readonly IEnumerable<PostType> PostTypes = Enum
 		.GetValues(typeof(PostType))
 		.OfType<PostType>()
 		.ToList();
 
-	private readonly ApplicationDbContext _db;
-
-	public DistributorStorage(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IEnumerable<PostType> Types => PostTypes;
 
 	public async Task Post(IPostable post)
 	{
-		_db.MediaPosts.Add(new MediaPost
+		db.MediaPosts.Add(new MediaPost
 		{
 			Title = post.Title.Cap(512)!,
 			Link = post.Link.Cap(255)!,
@@ -27,6 +20,6 @@ public class DistributorStorage : IPostDistributor
 			Type = post.Type.ToString().Cap(100)!,
 			User = post.User.Cap(100)!
 		});
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 	}
 }

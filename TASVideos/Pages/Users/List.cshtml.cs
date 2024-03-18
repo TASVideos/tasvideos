@@ -9,19 +9,10 @@ using TASVideos.Pages.Users.Models;
 namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
-public class ListModel : BasePageModel
+public class ListModel(
+	ApplicationDbContext db,
+	ICacheService cache) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public ListModel(
-		ApplicationDbContext db,
-		ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
-
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
@@ -34,7 +25,7 @@ public class ListModel : BasePageModel
 			Search.Sort = $"-{nameof(UserListModel.CreateTimestamp)}";
 		}
 
-		Users = await _db.Users
+		Users = await db.Users
 			.Select(u => new UserListModel
 			{
 				Id = u.Id,
@@ -65,7 +56,7 @@ public class ListModel : BasePageModel
 			return new JsonResult(false);
 		}
 
-		var exists = await _db.Users.Exists(userName);
+		var exists = await db.Users.Exists(userName);
 		return new JsonResult(exists);
 	}
 
@@ -74,17 +65,17 @@ public class ListModel : BasePageModel
 		var upper = partialUserName.ToUpper();
 		var cacheKey = nameof(GetUsersByPartial) + upper;
 
-		if (_cache.TryGetValue(cacheKey, out List<string> list))
+		if (cache.TryGetValue(cacheKey, out List<string> list))
 		{
 			return list;
 		}
 
-		list = await _db.Users
+		list = await db.Users
 			.ThatPartiallyMatch(upper)
 			.Select(u => u.UserName)
 			.ToListAsync();
 
-		_cache.Set(cacheKey, list, Durations.OneMinuteInSeconds);
+		cache.Set(cacheKey, list, Durations.OneMinuteInSeconds);
 
 		return list;
 	}

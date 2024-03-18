@@ -7,18 +7,14 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher;
 /// Such as IRC, Discord, Twitter, etc. via a collection of
 /// <see cref="IPostDistributor"/> instances that will deliver posts to specific resources.
 /// </summary>
-public class ExternalMediaPublisher // DI as a singleton, pass in a hardcoded list of IMessagingProvider implementations, config drive which implementations to use
+public class
+	ExternalMediaPublisher // DI as a singleton, pass in a hardcoded list of IMessagingProvider implementations, config drive which implementations to use
+	(AppSettings appSettings, IEnumerable<IPostDistributor> providers)
 {
-	private readonly string _baseUrl; // The site base url, will be combined to relative links to provide absolute links to distributors
-
-	public ExternalMediaPublisher(AppSettings appSettings, IEnumerable<IPostDistributor> providers)
-	{
-		_baseUrl = appSettings.BaseUrl.TrimEnd('/');
-		Providers = providers.ToList();
-	}
+	private readonly string _baseUrl = appSettings.BaseUrl.TrimEnd('/'); // The site base url, will be combined to relative links to provide absolute links to distributors
 
 	// Calling code will likely not know or care the list, but doesn't hurt to expose it
-	public IEnumerable<IPostDistributor> Providers { get; }
+	public IEnumerable<IPostDistributor> Providers { get; } = providers.ToList();
 
 	public async Task Send(IPostable message)
 	{

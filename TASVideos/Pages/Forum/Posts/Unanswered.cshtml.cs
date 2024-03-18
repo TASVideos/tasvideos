@@ -9,15 +9,8 @@ using TASVideos.Pages.Forum.Posts.Models;
 namespace TASVideos.Pages.Forum.Posts;
 
 [AllowAnonymous]
-public class UnansweredModel : BasePageModel
+public class UnansweredModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public UnansweredModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
@@ -25,7 +18,7 @@ public class UnansweredModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		Posts = await _db.ForumTopics
+		Posts = await db.ForumTopics
 			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 			.Where(t => t.ForumPosts.Count == 1)
 			.Select(t => new UnansweredPostsModel

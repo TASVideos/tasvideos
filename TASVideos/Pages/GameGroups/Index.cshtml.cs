@@ -7,10 +7,8 @@ using TASVideos.Pages.Games.Groups.Models;
 namespace TASVideos.Pages.GameGroups;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
 	[FromRoute]
 	public string Id { get; set; } = "";
 
@@ -22,16 +20,11 @@ public class IndexModel : BasePageModel
 	public string? Description { get; set; }
 	public string? Abbreviation { get; set; }
 
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IActionResult> OnGet()
 	{
 		var query = ParsedId > 0
-			? _db.GameGroups.Where(g => g.Id == ParsedId)
-			: _db.GameGroups.Where(g => g.Abbreviation == Id);
+			? db.GameGroups.Where(g => g.Id == ParsedId)
+			: db.GameGroups.Where(g => g.Abbreviation == Id);
 
 		var gameGroup = await query
 			.SingleOrDefaultAsync();
@@ -45,7 +38,7 @@ public class IndexModel : BasePageModel
 		Description = gameGroup.Description;
 		Abbreviation = gameGroup.Abbreviation;
 
-		Games = await _db.Games
+		Games = await db.Games
 			.ForGroup(gameGroup.Id)
 			.Select(g => new GameListEntry
 			{

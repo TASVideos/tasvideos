@@ -7,15 +7,8 @@ namespace TASVideos.Pages.Publications;
 
 // Handles legacy movies.cgi links
 [AllowAnonymous]
-public class LegacyMoviesModel : PageModel
+public class LegacyMoviesModel(ApplicationDbContext db) : PageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public LegacyMoviesModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public string? Name { get; set; }
 
@@ -41,7 +34,7 @@ public class LegacyMoviesModel : PageModel
 		if (!string.IsNullOrWhiteSpace(Name))
 		{
 			// Movies.cgi only supported a single game name
-			var game = await _db.Games.FirstOrDefaultAsync(g => g.DisplayName == Name || g.Abbreviation == Name);
+			var game = await db.Games.FirstOrDefaultAsync(g => g.DisplayName == Name || g.Abbreviation == Name);
 			if (game is not null)
 			{
 				tokens.Add(game.Id + "G");

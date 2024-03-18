@@ -9,25 +9,13 @@ using TASVideos.MovieParsers;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
-public class AdditionalMoviesModel : BasePageModel
+public class AdditionalMoviesModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IPublicationMaintenanceLogger publicationMaintenanceLogger,
+	IMovieParser parser)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-	private readonly IMovieParser _parser;
-
-	public AdditionalMoviesModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger,
-		IMovieParser parser)
-	{
-		_db = db;
-		_publisher = publisher;
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-		_parser = parser;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -48,7 +36,7 @@ public class AdditionalMoviesModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publicationTitle = await _db.Publications
+		var publicationTitle = await db.Publications
 			.Where(p => p.Id == Id)
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
@@ -65,7 +53,7 @@ public class AdditionalMoviesModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Where(p => p.Id == Id)
 			.Select(p => new { p.Id, p.Title })
 			.SingleOrDefaultAsync();
@@ -94,7 +82,7 @@ public class AdditionalMoviesModel : BasePageModel
 			return Page();
 		}
 
-		var parseResult = await _parser.ParseZip(AdditionalMovieFile!.OpenReadStream());
+		var parseResult = await parser.ParseZip(AdditionalMovieFile!.OpenReadStream());
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
@@ -112,14 +100,14 @@ public class AdditionalMoviesModel : BasePageModel
 			FileData = await AdditionalMovieFile.ToBytes()
 		};
 
-		_db.PublicationFiles.Add(publicationFile);
+		db.PublicationFiles.Add(publicationFile);
 
 		string log = $"Added new movie file: {DisplayName}";
-		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-		var result = await ConcurrentSave(_db, log, "Unable to add file");
+		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+		var result = await ConcurrentSave(db, log, "Unable to add file");
 		if (result)
 		{
-			await _publisher.SendPublicationEdit(
+			await publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",
@@ -131,20 +119,20 @@ public class AdditionalMoviesModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete(int publicationFileId)
 	{
-		var file = await _db.PublicationFiles
+		var file = await db.PublicationFiles
 			.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
 
 		if (file != null)
 		{
-			_db.PublicationFiles.Remove(file);
+			db.PublicationFiles.Remove(file);
 
 			string log = $"Removed movie file {file.Path}";
-			await _publicationMaintenanceLogger.Log(file.PublicationId, User.GetUserId(), log);
-			var result = await ConcurrentSave(_db, log, "Unable to delete file");
+			await publicationMaintenanceLogger.Log(file.PublicationId, User.GetUserId(), log);
+			var result = await ConcurrentSave(db, log, "Unable to delete file");
 
 			if (result)
 			{
-				await _publisher.SendPublicationEdit(
+				await publisher.SendPublicationEdit(
 					$"{Id}M edited by {User.Name()}",
 					$"[{Id}M]({{0}}) edited by {User.Name()}",
 					$"{log}",
@@ -157,7 +145,7 @@ public class AdditionalMoviesModel : BasePageModel
 
 	private async Task PopulateAvailableMovieFiles()
 	{
-		AvailableMovieFiles = await _db.PublicationFiles
+		AvailableMovieFiles = await db.PublicationFiles
 			.ThatAreMovieFiles()
 			.ForPublication(Id)
 			.Select(pf => new PublicationFileModel

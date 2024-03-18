@@ -8,17 +8,9 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Systems;
 
 [RequirePermission(PermissionTo.GameSystemMaintenance)]
-public class EditFramerateModel : BasePageModel
+public class EditFramerateModel(ApplicationDbContext db, IGameSystemService gameSystemService)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IGameSystemService _gameSystemService;
-
-	public EditFramerateModel(ApplicationDbContext db, IGameSystemService gameSystemService)
-	{
-		_db = db;
-		_gameSystemService = gameSystemService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -32,7 +24,7 @@ public class EditFramerateModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var frameRate = await _db.GameSystemFrameRates
+		var frameRate = await db.GameSystemFrameRates
 			.Where(sf => sf.Id == Id)
 			.Select(sf => new FrameRateEditModel
 			{
@@ -63,7 +55,7 @@ public class EditFramerateModel : BasePageModel
 			return Page();
 		}
 
-		var frameRate = await _db.GameSystemFrameRates
+		var frameRate = await db.GameSystemFrameRates
 			.Include(sf => sf.System)
 			.SingleOrDefaultAsync(sf => sf.Id == Id);
 
@@ -79,16 +71,16 @@ public class EditFramerateModel : BasePageModel
 
 		var displayName = $"{FrameRate.SystemCode} {FrameRate.RegionCode} {FrameRate.FrameRate.ToString(CultureInfo.InvariantCulture)}";
 		await ConcurrentSave(
-			_db,
+			db,
 			$"FrameRate {displayName} updated.",
 			$"Unable to update {displayName} due to an unknown error");
-		await _gameSystemService.FlushCache();
+		await gameSystemService.FlushCache();
 		return BasePageRedirect("Edit", new { Id = FrameRate.SystemId });
 	}
 
 	public async Task<IActionResult> OnPostDelete(int systemId)
 	{
-		var frameRate = await _db.GameSystemFrameRates
+		var frameRate = await db.GameSystemFrameRates
 			.Include(sf => sf.System)
 			.SingleOrDefaultAsync(sf => sf.Id == Id);
 
@@ -103,20 +95,20 @@ public class EditFramerateModel : BasePageModel
 			return BadRequest("Unable to delete a Framerate that is in use.");
 		}
 
-		_db.GameSystemFrameRates.Remove(frameRate);
-		await ConcurrentSave(_db, $"FrameRate {Id} deleted", $"Unable to delete FrameRate {Id}");
+		db.GameSystemFrameRates.Remove(frameRate);
+		await ConcurrentSave(db, $"FrameRate {Id} deleted", $"Unable to delete FrameRate {Id}");
 
 		return BasePageRedirect("Edit", new { Id = systemId });
 	}
 
 	private async Task PopulateUsages()
 	{
-		PublicationEntries = await _db.Publications
+		PublicationEntries = await db.Publications
 			.Where(p => p.SystemFrameRateId == Id)
 			.Select(p => new UsageEntry(p.Id, p.Title))
 			.ToListAsync();
 
-		SubmissionEntries = await _db.Submissions
+		SubmissionEntries = await db.Submissions
 			.Where(s => s.SystemFrameRateId == Id)
 			.Select(s => new UsageEntry(s.Id, s.Title))
 			.ToListAsync();

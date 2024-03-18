@@ -16,32 +16,23 @@ public interface IPointsService
 	ValueTask<double> PlayerPointsForPublication(int publicationId);
 }
 
-internal class PointsService : IPointsService
+internal class PointsService(
+	ApplicationDbContext db,
+	ICacheService cache) : IPointsService
 {
 	private const string MoviePlayerPointKey = "PlayerPointsForPub-";
 	private const string PlayerPointKey = "PlayerPoints-";
 	private const string AverageNumberOfRatingsKey = "AverageNumberOfRatings";
 
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public PointsService(
-		ApplicationDbContext db,
-		ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
-
 	public async ValueTask<(double, string)> PlayerPoints(int userId)
 	{
 		string cacheKey = PlayerPointKey + userId;
-		if (_cache.TryGetValue(cacheKey, out double playerPoints))
+		if (cache.TryGetValue(cacheKey, out double playerPoints))
 		{
 			return (playerPoints, PointsCalculator.PlayerRank((decimal)playerPoints));
 		}
 
-		var publications = await _db.Publications
+		var publications = await db.Publications
 			.ForAuthor(userId)
 			.ToCalcPublication()
 			.ToListAsync();
@@ -49,19 +40,19 @@ internal class PointsService : IPointsService
 		var averageRatings = await AverageNumberOfRatingsPerPublication();
 		playerPoints = Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings), 1);
 
-		_cache.Set(cacheKey, playerPoints);
+		cache.Set(cacheKey, playerPoints);
 		return (playerPoints, PointsCalculator.PlayerRank((decimal)playerPoints));
 	}
 
 	public async ValueTask<double> PlayerPointsForPublication(int publicationId)
 	{
 		string cacheKey = MoviePlayerPointKey + publicationId;
-		if (_cache.TryGetValue(cacheKey, out double playerPoints))
+		if (cache.TryGetValue(cacheKey, out double playerPoints))
 		{
 			return playerPoints;
 		}
 
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.ToCalcPublication()
 			.SingleOrDefaultAsync(p => p.Id == publicationId);
 
@@ -72,27 +63,27 @@ internal class PointsService : IPointsService
 
 		var averageRatings = await AverageNumberOfRatingsPerPublication();
 		playerPoints = PointsCalculator.PlayerPointsForMovie(publication, averageRatings);
-		_cache.Set(cacheKey, playerPoints);
+		cache.Set(cacheKey, playerPoints);
 		return playerPoints;
 	}
 
 	// total ratings / total publications
 	private async ValueTask<double> AverageNumberOfRatingsPerPublication()
 	{
-		if (_cache.TryGetValue(AverageNumberOfRatingsKey, out double playerPoints))
+		if (cache.TryGetValue(AverageNumberOfRatingsKey, out double playerPoints))
 		{
 			return playerPoints;
 		}
 
-		var totalPublications = await _db.Publications.CountAsync();
+		var totalPublications = await db.Publications.CountAsync();
 
 		double avg = 0;
 		if (totalPublications > 0)
 		{
-			avg = await _db.PublicationRatings.CountAsync() / (double)totalPublications;
+			avg = await db.PublicationRatings.CountAsync() / (double)totalPublications;
 		}
 
-		_cache.Set(AverageNumberOfRatingsKey, avg);
+		cache.Set(AverageNumberOfRatingsKey, avg);
 		return avg;
 	}
 }

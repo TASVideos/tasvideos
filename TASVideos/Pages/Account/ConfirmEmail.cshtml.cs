@@ -6,28 +6,14 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
-public class ConfirmEmailModel : BasePageModel
+public class ConfirmEmailModel(
+	UserManager userManager,
+	SignInManager signInManager,
+	ExternalMediaPublisher publisher,
+	IUserMaintenanceLogger userMaintenanceLogger,
+	ITASVideoAgent tasVideoAgent)
+	: BasePageModel
 {
-	private readonly UserManager _userManager;
-	private readonly SignInManager _signInManager;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
-	private readonly ITASVideoAgent _tasVideoAgent;
-
-	public ConfirmEmailModel(
-		UserManager userManager,
-		SignInManager signInManager,
-		ExternalMediaPublisher publisher,
-		IUserMaintenanceLogger userMaintenanceLogger,
-		ITASVideoAgent tasVideoAgent)
-	{
-		_userManager = userManager;
-		_signInManager = signInManager;
-		_publisher = publisher;
-		_userMaintenanceLogger = userMaintenanceLogger;
-		_tasVideoAgent = tasVideoAgent;
-	}
-
 	public async Task<IActionResult> OnGet(string? userId, string? code)
 	{
 		if (userId is null || code is null)
@@ -35,7 +21,7 @@ public class ConfirmEmailModel : BasePageModel
 			return Home();
 		}
 
-		var user = await _userManager.FindByIdAsync(userId);
+		var user = await userManager.FindByIdAsync(userId);
 		if (user is null)
 		{
 			return Home();
@@ -47,22 +33,22 @@ public class ConfirmEmailModel : BasePageModel
 			return Home();
 		}
 
-		var result = await _userManager.ConfirmEmailAsync(user, code);
+		var result = await userManager.ConfirmEmailAsync(user, code);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");
 		}
 
-		await _userManager.AddStandardRoles(user.Id);
-		await _userManager.AddUserPermissionsToClaims(user);
-		await _signInManager.SignInAsync(user, isPersistent: false);
-		await _publisher.SendUserManagement(
+		await userManager.AddStandardRoles(user.Id);
+		await userManager.AddUserPermissionsToClaims(user);
+		await signInManager.SignInAsync(user, isPersistent: false);
+		await publisher.SendUserManagement(
 			$"User {user.UserName} activated",
 			$"User [{user.UserName}]({{0}}) activated",
 			"",
 			$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
-		await _userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
-		await _tasVideoAgent.SendWelcomeMessage(user.Id);
+		await userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
+		await tasVideoAgent.SendWelcomeMessage(user.Id);
 		return Page();
 	}
 }

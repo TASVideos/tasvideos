@@ -7,15 +7,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.MoviesByAuthor)]
-public class MoviesByAuthor : ViewComponent
+public class MoviesByAuthor(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public MoviesByAuthor(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, string? newbies, bool showTiers)
 	{
 		if (!before.HasValue || !after.HasValue)
@@ -30,7 +23,7 @@ public class MoviesByAuthor : ViewComponent
 		{
 			MarkNewbies = newbieFlag == "show",
 			ShowClasses = showTiers,
-			Publications = await _db.Publications
+			Publications = await db.Publications
 				.ForDateRange(before.Value, after.Value)
 				.Select(p => new MoviesByAuthorModel.PublicationEntry
 				{
@@ -44,7 +37,7 @@ public class MoviesByAuthor : ViewComponent
 
 		if (newbiesOnly || model.MarkNewbies)
 		{
-			model.NewbieAuthors = await _db.Users
+			model.NewbieAuthors = await db.Users
 				.ThatArePublishedAuthors()
 				.Where(u => u.Publications
 					.OrderBy(p => p.Publication!.CreateTimestamp)

@@ -12,34 +12,16 @@ namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
 [IpBanCheck]
-public class RegisterModel : BasePageModel
+public class RegisterModel(
+	SignInManager signInManager,
+	UserManager userManager,
+	IEmailService emailService,
+	ExternalMediaPublisher publisher,
+	IReCaptchaService reCaptchaService,
+	IHostEnvironment env,
+	IUserMaintenanceLogger userMaintenanceLogger)
+	: BasePageModel
 {
-	private readonly SignInManager _signInManager;
-	private readonly UserManager _userManager;
-	private readonly IEmailService _emailService;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IReCaptchaService _reCaptchaService;
-	private readonly IHostEnvironment _env;
-	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
-
-	public RegisterModel(
-		SignInManager signInManager,
-		UserManager userManager,
-		IEmailService emailService,
-		ExternalMediaPublisher publisher,
-		IReCaptchaService reCaptchaService,
-		IHostEnvironment env,
-		IUserMaintenanceLogger userMaintenanceLogger)
-	{
-		_signInManager = signInManager;
-		_userManager = userManager;
-		_emailService = emailService;
-		_publisher = publisher;
-		_reCaptchaService = reCaptchaService;
-		_env = env;
-		_userMaintenanceLogger = userMaintenanceLogger;
-	}
-
 	[Required]
 	[BindProperty]
 	[Display(Name = "Time Zone")]
@@ -85,9 +67,9 @@ public class RegisterModel : BasePageModel
 		}
 
 		var encodedResponse = Request.Form["g-recaptcha-response"];
-		bool isCaptchaValid = await _reCaptchaService.VerifyAsync(encodedResponse);
+		bool isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
 
-		if (!_env.IsDevelopment() && !isCaptchaValid)
+		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
 			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
 		}
@@ -97,17 +79,17 @@ public class RegisterModel : BasePageModel
 			return Page();
 		}
 
-		if (!await _signInManager.UsernameIsAllowed(UserName))
+		if (!await signInManager.UsernameIsAllowed(UserName))
 		{
 			ModelState.AddModelError(nameof(UserName), "The username is not allowed.");
 		}
 
-		if (await _signInManager.EmailExists(Email))
+		if (await signInManager.EmailExists(Email))
 		{
 			ModelState.AddModelError(nameof(Email), "Email is already taken.");
 		}
 
-		if (!_userManager.IsPasswordAllowed(UserName, Email, Password))
+		if (!userManager.IsPasswordAllowed(UserName, Email, Password))
 		{
 			ModelState.AddModelError(nameof(Password), "This password is not allowed, please ensure your password is sufficiently different from your username and/or email");
 		}
@@ -122,22 +104,22 @@ public class RegisterModel : BasePageModel
 				From = From,
 				EmailOnPrivateMessage = true
 			};
-			var result = await _signInManager.UserManager.CreateAsync(user, Password);
+			var result = await signInManager.UserManager.CreateAsync(user, Password);
 			if (result.Succeeded)
 			{
-				var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+				var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
 				var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 
-				await _signInManager.SignInAsync(user, isPersistent: false);
-				await _publisher.SendUserManagement(
+				await signInManager.SignInAsync(user, isPersistent: false);
+				await publisher.SendUserManagement(
 					$"New User registered! {user.UserName}",
 					$"New User registered! [{user.UserName}]({{0}})",
 					"",
 					$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
-				await _userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
-				await _emailService.EmailConfirmation(Email, callbackUrl);
+				await userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
+				await emailService.EmailConfirmation(Email, callbackUrl);
 
-				return _signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
+				return signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
 					? RedirectToPage("EmailConfirmationSent")
 					: BaseReturnUrlRedirect();
 			}

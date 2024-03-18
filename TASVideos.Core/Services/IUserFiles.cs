@@ -28,29 +28,18 @@ public interface IUserFiles
 	Task<(long? id, IParseResult? parseResult)> Upload(int userId, UserFileUpload file);
 }
 
-internal class UserFiles : IUserFiles
+internal class UserFiles(
+	ApplicationDbContext db,
+	IMovieParser parser,
+	IFileService fileService,
+	IWikiPages wikiPages)
+	: IUserFiles
 {
 	private const string SupplementalUserFileExtensionsPage = "SupplementalUserFileExtensions";
-	private readonly ApplicationDbContext _db;
-	private readonly IMovieParser _parser;
-	private readonly IFileService _fileService;
-	private readonly IWikiPages _wikiPages;
-
-	public UserFiles(
-		ApplicationDbContext db,
-		IMovieParser parser,
-		IFileService fileService,
-		IWikiPages wikiPages)
-	{
-		_db = db;
-		_parser = parser;
-		_fileService = fileService;
-		_wikiPages = wikiPages;
-	}
 
 	public async Task<int> StorageUsed(int userId)
 	{
-		return await _db.UserFiles
+		return await db.UserFiles
 			.Where(uf => uf.AuthorId == userId)
 			.SumAsync(uf => uf.Content.Length);
 	}
@@ -66,7 +55,7 @@ internal class UserFiles : IUserFiles
 
 	public async Task<IReadOnlyCollection<string>> SupportedFileExtensions()
 	{
-		return _parser.SupportedMovieExtensions
+		return parser.SupportedMovieExtensions
 			.Concat(await SupportedSupplementalFiles())
 			.ToList();
 	}
@@ -93,9 +82,9 @@ internal class UserFiles : IUserFiles
 		};
 
 		IParseResult? parseResult = null;
-		if (_parser.SupportedMovieExtensions.Contains(fileExt))
+		if (parser.SupportedMovieExtensions.Contains(fileExt))
 		{
-			parseResult = await _parser.ParseFile(file.FileName, new MemoryStream(file.FileData, false));
+			parseResult = await parser.ParseFile(file.FileName, new MemoryStream(file.FileData, false));
 			if (parseResult.Errors.Any())
 			{
 				return (null, parseResult);
@@ -114,10 +103,10 @@ internal class UserFiles : IUserFiles
 			}
 			else
 			{
-				var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Code == parseResult.SystemCode);
+				var system = await db.GameSystems.SingleOrDefaultAsync(s => s.Code == parseResult.SystemCode);
 				if (system != null)
 				{
-					var frameRateData = await _db.GameSystemFrameRates
+					var frameRateData = await db.GameSystemFrameRates
 						.ForSystem(system.Id)
 						.ForRegion(parseResult.Region.ToString())
 						.FirstOrDefaultAsync();
@@ -132,20 +121,20 @@ internal class UserFiles : IUserFiles
 			userFile.Length = userFile.Frames / frameRate;
 		}
 
-		var fileResult = await _fileService.Compress(file.FileData);
+		var fileResult = await fileService.Compress(file.FileData);
 
 		userFile.PhysicalLength = fileResult.CompressedSize;
 		userFile.CompressionType = fileResult.Type;
 		userFile.Content = fileResult.Data;
 
-		_db.UserFiles.Add(userFile);
-		await _db.SaveChangesAsync();
+		db.UserFiles.Add(userFile);
+		await db.SaveChangesAsync();
 		return (userFile.Id, parseResult);
 	}
 
 	internal async Task<IEnumerable<string>> SupportedSupplementalFiles()
 	{
-		var page = await _wikiPages.SystemPage(SupplementalUserFileExtensionsPage);
+		var page = await wikiPages.SystemPage(SupplementalUserFileExtensionsPage);
 		if (page is null)
 		{
 			return Enumerable.Empty<string>();

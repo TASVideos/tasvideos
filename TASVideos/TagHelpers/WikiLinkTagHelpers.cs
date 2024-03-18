@@ -71,13 +71,8 @@ public class WikiLinkTagHelper : TagHelper
 }
 
 [HtmlTargetElement("profile-link")]
-public class ProfileLinkTagHelper : AnchorTagHelper
+public class ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : AnchorTagHelper(htmlGenerator)
 {
-	public ProfileLinkTagHelper(IHtmlGenerator htmlGenerator)
-		: base(htmlGenerator)
-	{
-	}
-
 	public string? Username { get; set; }
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)

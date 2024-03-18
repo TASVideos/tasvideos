@@ -7,15 +7,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.MediaPosts)]
-public class MediaPosts : ViewComponent
+public class MediaPosts(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public MediaPosts(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(int? days, int? limit)
 	{
 		var startDate = DateTime.UtcNow.AddDays(-(days ?? 7));
@@ -28,7 +21,7 @@ public class MediaPosts : ViewComponent
 	{
 		var canSeeRestricted = UserClaimsPrincipal.Has(PermissionTo.SeeRestrictedForums);
 
-		return await _db.MediaPosts
+		return await db.MediaPosts
 			.Since(startDate)
 			.Where(m => canSeeRestricted || m.Type != PostType.Critical.ToString())
 			.Where(m => canSeeRestricted || m.Type != PostType.Administrative.ToString())

@@ -20,12 +20,7 @@ public class ScreenshotEntry
 	public string Description { get; init; } = "";
 }
 
-public class ScreenshotPageOf<T> : PageOf<T>
+public class ScreenshotPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 {
-	public ScreenshotPageOf(IEnumerable<T> items)
-		: base(items)
-	{
-	}
-
 	public bool? OnlyDescriptions { get; set; }
 }

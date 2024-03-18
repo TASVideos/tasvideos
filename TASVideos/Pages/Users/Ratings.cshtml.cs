@@ -6,15 +6,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
-public class RatingsModel : BasePageModel
+public class RatingsModel(UserManager userManager) : BasePageModel
 {
-	private readonly UserManager _userManager;
-
-	public RatingsModel(UserManager userManager)
-	{
-		_userManager = userManager;
-	}
-
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
@@ -22,7 +15,7 @@ public class RatingsModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		Ratings = await _userManager.GetUserRatings(
+		Ratings = await userManager.GetUserRatings(
 			UserName,
 			User.Has(PermissionTo.SeePrivateRatings) || User.Name() == UserName);
 

@@ -9,15 +9,8 @@ using TASVideos.ViewComponents;
 namespace TASVideos.Pages.Games;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public string Id { get; set; } = "";
 
@@ -35,7 +28,7 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var query = _db.Games.ToGameDisplayModel();
+		var query = db.Games.ToGameDisplayModel();
 
 		query = ParsedId > 0
 			? query.Where(g => g.Id == ParsedId)
@@ -50,7 +43,7 @@ public class IndexModel : BasePageModel
 		}
 
 		Game = game;
-		var movies = await _db.Publications
+		var movies = await db.Publications
 			.Where(p => p.GameId == Game.Id && p.ObsoletedById == null)
 			.OrderBy(p => p.GameGoal!.DisplayName == "baseline" ? -1 : p.GameGoal!.DisplayName.Length)
 			.ThenBy(p => p.Frames)
@@ -93,14 +86,14 @@ public class IndexModel : BasePageModel
 				}))
 			.ToList();
 
-		WatchFiles = await _db.UserFiles
+		WatchFiles = await db.UserFiles
 			.ForGame(Game.Id)
 			.Where(u => !u.Hidden)
 			.Where(u => u.Type == "wch")
 			.Select(u => new WatchFile(u.Id, u.FileName))
 			.ToListAsync();
 
-		Topics = await _db.ForumTopics
+		Topics = await db.ForumTopics
 			.ForGame(Game.Id)
 			.Select(t => new TopicEntry(t.Id, t.Title))
 			.ToListAsync();

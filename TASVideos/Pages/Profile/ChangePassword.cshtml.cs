@@ -7,22 +7,12 @@ using TASVideos.Core.Services.Email;
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class ChangePasswordModel : BasePageModel
+public class ChangePasswordModel(
+	IEmailService emailService,
+	SignInManager signInManager,
+	UserManager userManager)
+	: BasePageModel
 {
-	private readonly IEmailService _emailService;
-	private readonly SignInManager _signInManager;
-	private readonly UserManager _userManager;
-
-	public ChangePasswordModel(
-		IEmailService emailService,
-		SignInManager signInManager,
-		UserManager userManager)
-	{
-		_emailService = emailService;
-		_signInManager = signInManager;
-		_userManager = userManager;
-	}
-
 	[BindProperty]
 	[DataType(DataType.Password)]
 	[Display(Name = "Current password")]
@@ -43,9 +33,9 @@ public class ChangePasswordModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await _signInManager.GetRequiredUser(User);
+		var user = await signInManager.GetRequiredUser(User);
 
-		var hasPassword = await _signInManager.UserManager.HasPasswordAsync(user);
+		var hasPassword = await signInManager.UserManager.HasPasswordAsync(user);
 		if (!hasPassword)
 		{
 			return RedirectToPage("SetPassword");
@@ -61,9 +51,9 @@ public class ChangePasswordModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _signInManager.GetRequiredUser(User);
+		var user = await signInManager.GetRequiredUser(User);
 
-		if (!_userManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
+		if (!userManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
 		{
 			ModelState.AddModelError(nameof(NewPassword), "This password is not allowed, please ensure your password is sufficiently different from your username and/or email");
 		}
@@ -73,17 +63,17 @@ public class ChangePasswordModel : BasePageModel
 			return Page();
 		}
 
-		var changePasswordResult = await _signInManager.UserManager.ChangePasswordAsync(user, OldPassword, NewPassword);
+		var changePasswordResult = await signInManager.UserManager.ChangePasswordAsync(user, OldPassword, NewPassword);
 		if (!changePasswordResult.Succeeded)
 		{
 			AddErrors(changePasswordResult);
 			return Page();
 		}
 
-		await _signInManager.SignInAsync(user, isPersistent: false);
-		var code = await _signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
+		await signInManager.SignInAsync(user, isPersistent: false);
+		var code = await signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
 		var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
-		await _emailService.PasswordResetConfirmation(user.Email, callbackUrl);
+		await emailService.PasswordResetConfirmation(user.Email, callbackUrl);
 		SuccessStatusMessage("Your password has been changed.");
 		return BasePageRedirect("Index");
 	}

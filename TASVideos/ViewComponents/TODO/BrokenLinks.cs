@@ -10,7 +10,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents.TODO;
 
 [WikiModule(WikiModules.BrokenLinks)]
-public class BrokenLinks : ViewComponent
+public class BrokenLinks(IWikiPages wikiPages) : ViewComponent
 {
 	private record PageEntry(string Name, bool HasRoute);
 
@@ -24,13 +24,6 @@ public class BrokenLinks : ViewComponent
 					.Replace(".", "/") + "/"
 				+ t.Name.Replace("Model", ""), t.GetProperties().Any(p => p.HasAttribute<FromRouteAttribute>())))
 		.ToList();
-
-	private readonly IWikiPages _wikiPages;
-
-	public BrokenLinks(IWikiPages wikiPages)
-	{
-		_wikiPages = wikiPages;
-	}
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
@@ -68,7 +61,7 @@ public class BrokenLinks : ViewComponent
 			.Concat(tempRoutedExceptions)
 			.ToList();
 
-		var brokenLinks = await _wikiPages.BrokenLinks();
+		var brokenLinks = await wikiPages.BrokenLinks();
 
 		var filtered = brokenLinks
 			.Where(b => !generalPages.Contains(b.Referral.Split('?')[0].ToLowerInvariant()))
@@ -89,7 +82,7 @@ public class BrokenLinks : ViewComponent
 		foreach (var link in revisionLinks)
 		{
 			var page = link.Referral.Split('?')[0];
-			if (await _wikiPages.Exists(page))
+			if (await wikiPages.Exists(page))
 			{
 				existingRevisionLinks.Add(link.Referral);
 			}

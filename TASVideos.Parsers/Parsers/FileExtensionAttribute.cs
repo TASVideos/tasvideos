@@ -5,12 +5,7 @@
 /// indicate which file extension it is capable of parsing.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-internal class FileExtensionAttribute : Attribute
+internal class FileExtensionAttribute(string extension) : Attribute
 {
-	public FileExtensionAttribute(string extension)
-	{
-		Extension = extension;
-	}
-
-	public string Extension { get; }
+	public string Extension { get; } = extension;
 }

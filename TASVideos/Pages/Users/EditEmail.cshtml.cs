@@ -8,25 +8,13 @@ using TASVideos.Pages.Users.Models;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(matchAny: false, PermissionTo.SeeEmails, PermissionTo.EditUsers)]
-public class EditEmailModel : BasePageModel
+public class EditEmailModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IUserMaintenanceLogger userMaintenanceLogger,
+	SignInManager signInManager)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
-	private readonly SignInManager _signInManager;
-
-	public EditEmailModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IUserMaintenanceLogger userMaintenanceLogger,
-		SignInManager signInManager)
-	{
-		_db = db;
-		_publisher = publisher;
-		_userMaintenanceLogger = userMaintenanceLogger;
-		_signInManager = signInManager;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -40,7 +28,7 @@ public class EditEmailModel : BasePageModel
 			return RedirectToPage("/Profile/Settings");
 		}
 
-		var userToEdit = await _db.Users
+		var userToEdit = await db.Users
 			.Where(u => u.Id == Id)
 			.Select(u => new UserEmailEditModel
 			{
@@ -66,14 +54,14 @@ public class EditEmailModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == Id);
+		var user = await db.Users.SingleOrDefaultAsync(u => u.Id == Id);
 		if (user is null)
 		{
 			return NotFound();
 		}
 
 		if (!string.Equals(UserToEdit.Email, user.Email, StringComparison.InvariantCultureIgnoreCase)
-			&& await _signInManager.EmailExists(UserToEdit.Email!))
+			&& await signInManager.EmailExists(UserToEdit.Email!))
 		{
 			ModelState.AddModelError($"{nameof(UserToEdit)}.{nameof(UserToEdit.Email)}", "Email already exists.");
 			return Page();
@@ -81,14 +69,14 @@ public class EditEmailModel : BasePageModel
 
 		user.Email = UserToEdit.Email!;
 		user.EmailConfirmed = UserToEdit.EmailConfirmed;
-		user.NormalizedEmail = _signInManager.UserManager.NormalizeEmail(user.Email);
+		user.NormalizedEmail = signInManager.UserManager.NormalizeEmail(user.Email);
 
-		var result = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
+		var result = await ConcurrentSave(db, "", $"Unable to update user data for {user.UserName}");
 		if (result)
 		{
 			var message = $"User {user.UserName} email changed by {User.Name()}";
-			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
-			await _publisher.SendUserManagement(
+			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
+			await publisher.SendUserManagement(
 				message,
 				$"User [{user.UserName}]({{0}}) email changed by {User.Name()}",
 				"",

@@ -3,29 +3,20 @@ using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services;
 
-public class MemoryCacheService : ICacheService
+public class MemoryCacheService(IMemoryCache cache, AppSettings settings) : ICacheService
 {
-	private readonly IMemoryCache _cache;
-	private readonly AppSettings _settings;
-
-	public MemoryCacheService(IMemoryCache cache, AppSettings settings)
-	{
-		_cache = cache;
-		_settings = settings;
-	}
-
 	public bool TryGetValue<T>(string key, out T value)
 	{
-		return _cache.TryGetValue(key, out value!);
+		return cache.TryGetValue(key, out value!);
 	}
 
 	public void Remove(string key)
 	{
-		_cache.Remove(key);
+		cache.Remove(key);
 	}
 
 	public void Set(string key, object? data, int? cacheTime)
 	{
-		_cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? _settings.CacheSettings.CacheDurationInSeconds));
+		cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? settings.CacheSettings.CacheDurationInSeconds));
 	}
 }

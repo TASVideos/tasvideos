@@ -7,20 +7,13 @@ using TASVideos.Pages.RssFeeds.Models;
 namespace TASVideos.Pages.RssFeeds;
 
 [ResponseCache(Duration = 1200)]
-public class WikiModel : BasePageModel
+public class WikiModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public WikiModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public List<RssWiki> WikiEdits { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
-		WikiEdits = await _db.WikiPages
+		WikiEdits = await db.WikiPages
 			.ByMostRecent()
 			.Select(wp => new RssWiki
 			{

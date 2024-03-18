@@ -4,14 +4,9 @@
 [TestCategory("WtfParsers")]
 public class WtfTests : BaseParserTests
 {
-	private readonly Wtf _wtfParser;
+	private readonly Wtf _wtfParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.WtfSampleFiles.";
-
-	public WtfTests()
-	{
-		_wtfParser = new Wtf();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

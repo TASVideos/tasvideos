@@ -8,17 +8,8 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Systems;
 
 [RequirePermission(PermissionTo.GameSystemMaintenance)]
-public class CreateFramerateModel : BasePageModel
+public class CreateFramerateModel(IGameSystemService systemService, ApplicationDbContext db) : BasePageModel
 {
-	private readonly IGameSystemService _systemService;
-	private readonly ApplicationDbContext _db;
-
-	public CreateFramerateModel(IGameSystemService systemService, ApplicationDbContext db)
-	{
-		_systemService = systemService;
-		_db = db;
-	}
-
 	[FromRoute]
 	public int SystemId { get; set; }
 
@@ -40,7 +31,7 @@ public class CreateFramerateModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var system = await _systemService.GetById(SystemId);
+		var system = await systemService.GetById(SystemId);
 
 		if (system is null)
 		{
@@ -59,14 +50,14 @@ public class CreateFramerateModel : BasePageModel
 			return Page();
 		}
 
-		var system = await _systemService.GetById(SystemId);
+		var system = await systemService.GetById(SystemId);
 
 		if (system is null)
 		{
 			return NotFound();
 		}
 
-		_db.Add(new GameSystemFrameRate
+		db.Add(new GameSystemFrameRate
 		{
 			GameSystemId = SystemId,
 			FrameRate = FrameRate,
@@ -76,10 +67,10 @@ public class CreateFramerateModel : BasePageModel
 		});
 
 		await ConcurrentSave(
-			_db,
+			db,
 			$"Framerate successfully created for {SystemCode}",
 			$"Unable to create Framerate for {SystemCode}");
-		await _systemService.FlushCache();
+		await systemService.FlushCache();
 
 		return BasePageRedirect("Edit", new { Id = SystemId });
 	}

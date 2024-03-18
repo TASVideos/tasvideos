@@ -6,15 +6,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Submissions.RejectionReasons;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public record RejectionRecord(int Id, string Reason, int SubmissionCount);
 	public IEnumerable<RejectionRecord> Reasons { get; set; } = new List<RejectionRecord>();
 
@@ -30,7 +23,7 @@ public class IndexModel : BasePageModel
 			return AccessDenied();
 		}
 
-		if (await _db.SubmissionRejectionReasons
+		if (await db.SubmissionRejectionReasons
 				.AnyAsync(r => r.DisplayName == displayName))
 		{
 			ModelState.AddModelError("displayName", $"{displayName} already exists");
@@ -38,12 +31,12 @@ public class IndexModel : BasePageModel
 			return Page();
 		}
 
-		_db.SubmissionRejectionReasons.Add(new SubmissionRejectionReason
+		db.SubmissionRejectionReasons.Add(new SubmissionRejectionReason
 		{
 			DisplayName = displayName
 		});
 
-		await ConcurrentSave(_db, $"reason: {displayName} created successfully", $"Unable to save reason: {displayName}");
+		await ConcurrentSave(db, $"reason: {displayName} created successfully", $"Unable to save reason: {displayName}");
 		return BasePageRedirect("Index");
 	}
 
@@ -54,21 +47,21 @@ public class IndexModel : BasePageModel
 			return AccessDenied();
 		}
 
-		var reason = await _db.SubmissionRejectionReasons.SingleOrDefaultAsync(r => r.Id == id);
+		var reason = await db.SubmissionRejectionReasons.SingleOrDefaultAsync(r => r.Id == id);
 		if (reason is null)
 		{
 			return NotFound();
 		}
 
-		_db.SubmissionRejectionReasons.Remove(reason);
-		await ConcurrentSave(_db, $"reason: {reason.DisplayName} deleted successfully", $"Unable to delete reason: {reason.DisplayName}");
+		db.SubmissionRejectionReasons.Remove(reason);
+		await ConcurrentSave(db, $"reason: {reason.DisplayName} deleted successfully", $"Unable to delete reason: {reason.DisplayName}");
 
 		return BasePageRedirect("Index");
 	}
 
 	private async Task Initialize()
 	{
-		Reasons = await _db.SubmissionRejectionReasons
+		Reasons = await db.SubmissionRejectionReasons
 			.Select(r => new RejectionRecord(r.Id, r.DisplayName, r.Submissions.Count))
 			.ToListAsync();
 	}

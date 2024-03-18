@@ -10,28 +10,14 @@ using TASVideos.Pages.Users.Models;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditUsers)]
-public class EditModel : BasePageModel
+public class EditModel(
+	IRoleService roleService,
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IUserMaintenanceLogger userMaintenanceLogger,
+	UserManager userManager)
+	: BasePageModel
 {
-	private readonly IRoleService _roleService;
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
-	private readonly UserManager _userManager;
-
-	public EditModel(
-		IRoleService roleService,
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IUserMaintenanceLogger userMaintenanceLogger,
-		UserManager userManager)
-	{
-		_roleService = roleService;
-		_db = db;
-		_publisher = publisher;
-		_userMaintenanceLogger = userMaintenanceLogger;
-		_userManager = userManager;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -48,7 +34,7 @@ public class EditModel : BasePageModel
 			return RedirectToPage("/Profile/Settings");
 		}
 
-		var userToEdit = await _db.Users
+		var userToEdit = await db.Users
 			.Where(u => u.Id == Id)
 			.ToUserEditModel()
 			.SingleOrDefaultAsync();
@@ -59,21 +45,21 @@ public class EditModel : BasePageModel
 		}
 
 		UserToEdit = userToEdit;
-		var roles = await _roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
+		var roles = await roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
 		AvailableRoles = roles.ToDropDown();
 		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()
 	{
-		var roles = await _roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
+		var roles = await roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
 		if (!ModelState.IsValid)
 		{
 			AvailableRoles = roles.ToDropDown();
 			return Page();
 		}
 
-		var user = await _db.Users.Include(u => u.UserRoles).SingleOrDefaultAsync(u => u.Id == Id);
+		var user = await db.Users.Include(u => u.UserRoles).SingleOrDefaultAsync(u => u.Id == Id);
 		if (user is null)
 		{
 			return NotFound();
@@ -103,26 +89,26 @@ public class EditModel : BasePageModel
 		user.UseRatings = UserToEdit.UseRatings;
 		user.ModeratorComments = UserToEdit.ModeratorComments;
 
-		var currentRoles = await _db.UserRoles
+		var currentRoles = await db.UserRoles
 			.Where(ur => ur.User == user && rolesThatUserCanAssign.Contains(ur.RoleId))
 			.ToListAsync();
 
-		_db.UserRoles.RemoveRange(currentRoles);
+		db.UserRoles.RemoveRange(currentRoles);
 
-		var result = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
+		var result = await ConcurrentSave(db, "", $"Unable to update user data for {user.UserName}");
 		if (!result)
 		{
 			return BasePageRedirect("List");
 		}
 
-		_db.UserRoles.AddRange(UserToEdit.SelectedRoles
+		db.UserRoles.AddRange(UserToEdit.SelectedRoles
 			.Select(r => new UserRole
 			{
 				User = user,
 				RoleId = r
 			}));
 
-		var saveResult2 = await ConcurrentSave(_db, "", $"Unable to update user data for {user.UserName}");
+		var saveResult2 = await ConcurrentSave(db, "", $"Unable to update user data for {user.UserName}");
 		if (!saveResult2)
 		{
 			return BasePageRedirect("List");
@@ -131,17 +117,17 @@ public class EditModel : BasePageModel
 		if (userNameChange != null)
 		{
 			string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
-			await _publisher.SendUserManagement(
+			await publisher.SendUserManagement(
 				message,
 				$"Username {userNameChange} changed to [{user.UserName}]({{0}}) by {User.Name()}",
 				"",
 				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
-			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
-			await _userManager.UserNameChanged(user, userNameChange);
+			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
+			await userManager.UserNameChanged(user, userNameChange);
 		}
 
 		// Announce Role change
-		var allRoles = await _db.Roles.ToListAsync();
+		var allRoles = await db.Roles.ToListAsync();
 		var currentRoleIds = currentRoles.Select(r => r.RoleId).ToList();
 		var newRoleIds = UserToEdit.SelectedRoles.ToList();
 		var addedRoles = allRoles
@@ -173,12 +159,12 @@ public class EditModel : BasePageModel
 				message += "Removed roles: " + string.Join(", ", removedRoles);
 			}
 
-			await _publisher.SendUserManagement(
+			await publisher.SendUserManagement(
 				$"User {user.UserName} edited by {User.Name()}",
 				$"User [{user.UserName}]({{0}}) edited by {User.Name()}",
 				message,
 				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
-			await _userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
+			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 		}
 
 		SuccessStatusMessage($"User {user.UserName} updated");
@@ -191,14 +177,14 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGetUnlock()
 	{
-		var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == Id);
+		var user = await db.Users.SingleOrDefaultAsync(u => u.Id == Id);
 		if (user is null)
 		{
 			return NotFound();
 		}
 
 		user.LockoutEnd = null;
-		await ConcurrentSave(_db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
+		await ConcurrentSave(db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
 
 		return BaseReturnUrlRedirect();
 	}

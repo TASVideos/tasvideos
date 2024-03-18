@@ -7,15 +7,8 @@ using TASVideos.Pages.Games.Goals.Models;
 
 namespace TASVideos.Pages.Games.Goals;
 
-public class ListModel : BasePageModel
+public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ListModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[Display(Name = "Game")]
 	public string GameDisplayName { get; set; } = "";
 
@@ -29,7 +22,7 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var gameDisplayName = await _db.Games
+		var gameDisplayName = await db.Games
 			.Where(g => g.Id == GameId).
 			Select(g => g.DisplayName)
 			.SingleOrDefaultAsync();
@@ -41,7 +34,7 @@ public class ListModel : BasePageModel
 
 		GameDisplayName = gameDisplayName;
 
-		Goals = await _db.GameGoals
+		Goals = await db.GameGoals
 			.Where(gg => gg.GameId == GameId)
 			.Select(gg => new GoalListModel
 			{
@@ -65,19 +58,19 @@ public class ListModel : BasePageModel
 			return BackToList();
 		}
 
-		if (await _db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == goalToCreate))
+		if (await db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == goalToCreate))
 		{
 			ErrorStatusMessage($"Cannot create goal {goalToCreate} because it already exists.");
 			return BackToList();
 		}
 
-		_db.GameGoals.Add(new GameGoal
+		db.GameGoals.Add(new GameGoal
 		{
 			GameId = GameId,
 			DisplayName = goalToCreate
 		});
 
-		await ConcurrentSave(_db, $"Goal {goalToCreate} created successfully", $"Unable to create goal {goalToCreate}");
+		await ConcurrentSave(db, $"Goal {goalToCreate} created successfully", $"Unable to create goal {goalToCreate}");
 		return BackToList();
 	}
 
@@ -94,7 +87,7 @@ public class ListModel : BasePageModel
 			return BackToList();
 		}
 
-		var gameGoal = await _db.GameGoals
+		var gameGoal = await db.GameGoals
 			.SingleOrDefaultAsync(gg => gg.Id == gameGoalId);
 		if (gameGoal is null)
 		{
@@ -106,7 +99,7 @@ public class ListModel : BasePageModel
 		if (gameGoal.DisplayName.ToLower() == newGoalName.ToLower())
 		{
 			gameGoal.DisplayName = newGoalName;
-			await ConcurrentSave(_db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
+			await ConcurrentSave(db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
 			return BackToList();
 		}
 
@@ -116,7 +109,7 @@ public class ListModel : BasePageModel
 			return BackToList();
 		}
 
-		if (await _db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == newGoalName))
+		if (await db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == newGoalName))
 		{
 			ErrorStatusMessage($"Cannot change goal to {newGoalName} because it already exists.");
 			return BackToList();
@@ -124,24 +117,24 @@ public class ListModel : BasePageModel
 
 		gameGoal.DisplayName = newGoalName;
 
-		await ConcurrentSave(_db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
+		await ConcurrentSave(db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
 
 		// Update publication and submission titles
 		if (gameGoal.DisplayName != "baseline")
 		{
-			var pubs = await _db.Publications.IncludeTitleTables().Where(p => p.GameGoalId == gameGoal.Id).ToListAsync();
+			var pubs = await db.Publications.IncludeTitleTables().Where(p => p.GameGoalId == gameGoal.Id).ToListAsync();
 			foreach (var pub in pubs)
 			{
 				pub.GenerateTitle();
 			}
 
-			var subs = await _db.Submissions.IncludeTitleTables().Where(s => s.GameGoalId == gameGoal.Id).ToListAsync();
+			var subs = await db.Submissions.IncludeTitleTables().Where(s => s.GameGoalId == gameGoal.Id).ToListAsync();
 			foreach (var sub in subs)
 			{
 				sub.GenerateTitle();
 			}
 
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 
 		return BackToList();
@@ -149,20 +142,20 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnGetDelete(int gameGroupId)
 	{
-		if (await _db.Publications.AnyAsync(p => p.GameGoalId == gameGroupId))
+		if (await db.Publications.AnyAsync(p => p.GameGoalId == gameGroupId))
 		{
 			ErrorStatusMessage("Game Group can not be deleted because it is associated with one or more publications.");
 			return BackToList();
 		}
 
-		if (await _db.Publications.AnyAsync(p => p.GameGoalId == gameGroupId))
+		if (await db.Publications.AnyAsync(p => p.GameGoalId == gameGroupId))
 		{
 			ErrorStatusMessage("Game Group can not be deleted because it is associated with one or more submissions.");
 			return BackToList();
 		}
 
-		_db.GameGoals.Attach(new GameGoal { Id = gameGroupId }).State = EntityState.Deleted;
-		await ConcurrentSave(_db, $"Game Group {gameGroupId} deleted", $"Unable to delete Game Group {gameGroupId}");
+		db.GameGoals.Attach(new GameGoal { Id = gameGroupId }).State = EntityState.Deleted;
+		await ConcurrentSave(db, $"Game Group {gameGroupId} deleted", $"Unable to delete Game Group {gameGroupId}");
 
 		return BackToList();
 	}

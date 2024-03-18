@@ -8,19 +8,11 @@ using TASVideos.Models;
 namespace TASVideos.Pages.Messages;
 
 [RequirePermission(PermissionTo.SendPrivateMessages)]
-public class CreateModel : BasePageModel
+public class CreateModel(
+	UserManager userManager,
+	IPrivateMessageService privateMessageService)
+	: BasePageModel
 {
-	private readonly IPrivateMessageService _privateMessageService;
-	private readonly UserManager _userManager;
-
-	public CreateModel(
-		UserManager userManager,
-		IPrivateMessageService privateMessageService)
-	{
-		_userManager = userManager;
-		_privateMessageService = privateMessageService;
-	}
-
 	[FromQuery]
 	public int? ReplyTo { get; set; }
 
@@ -73,14 +65,14 @@ public class CreateModel : BasePageModel
 			return Page();
 		}
 
-		var allowedRoles = await _privateMessageService.AllowedRoles();
+		var allowedRoles = await privateMessageService.AllowedRoles();
 		if (allowedRoles.Contains(ToUser))
 		{
-			await _privateMessageService.SendMessageToRole(User.GetUserId(), ToUser, Subject, Text);
+			await privateMessageService.SendMessageToRole(User.GetUserId(), ToUser, Subject, Text);
 		}
 		else
 		{
-			var exists = await _userManager.Exists(ToUser);
+			var exists = await userManager.Exists(ToUser);
 			if (!exists)
 			{
 				ModelState.AddModelError(nameof(ToUser), "User does not exist");
@@ -88,7 +80,7 @@ public class CreateModel : BasePageModel
 				return Page();
 			}
 
-			await _privateMessageService.SendMessage(User.GetUserId(), ToUser, Subject, Text);
+			await privateMessageService.SendMessage(User.GetUserId(), ToUser, Subject, Text);
 		}
 
 		return BasePageRedirect("Inbox");
@@ -97,7 +89,7 @@ public class CreateModel : BasePageModel
 	private async Task SetAvailableGroupRoles()
 	{
 		AvailableGroupRoles = UiDefaults.DefaultEntry
-			.Concat((await _privateMessageService.AllowedRoles())
+			.Concat((await privateMessageService.AllowedRoles())
 			.Select(m => new SelectListItem
 			{
 				Text = m,
@@ -109,7 +101,7 @@ public class CreateModel : BasePageModel
 	{
 		if (ReplyTo > 0)
 		{
-			var message = await _userManager.GetMessage(User.GetUserId(), ReplyTo.Value);
+			var message = await userManager.GetMessage(User.GetUserId(), ReplyTo.Value);
 			if (message is not null)
 			{
 				DefaultToUser = message.FromUserName;

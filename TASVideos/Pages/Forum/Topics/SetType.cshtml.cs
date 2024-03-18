@@ -6,16 +6,8 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.SetTopicType)]
-public class SetTypeModel : BaseForumModel
+public class SetTypeModel(ApplicationDbContext db) : BaseForumModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public SetTypeModel(
-		ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int TopicId { get; set; }
 
@@ -35,7 +27,7 @@ public class SetTypeModel : BaseForumModel
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == TopicId)
@@ -62,7 +54,7 @@ public class SetTypeModel : BaseForumModel
 
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == TopicId)
 			.SingleOrDefaultAsync();
@@ -74,7 +66,7 @@ public class SetTypeModel : BaseForumModel
 
 		topic.Type = Type;
 
-		await ConcurrentSave(_db, $"Topic set to {Type}", "Unable to set the topic type");
+		await ConcurrentSave(db, $"Topic set to {Type}", "Unable to set the topic type");
 		return RedirectToPage("Index", new { topic.Id });
 	}
 }

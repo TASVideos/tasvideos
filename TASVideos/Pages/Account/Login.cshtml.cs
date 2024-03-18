@@ -9,22 +9,12 @@ namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
 [IpBanCheck]
-public class LoginModel : BasePageModel
+public class LoginModel(
+	SignInManager signInManager,
+	ApplicationDbContext db,
+	IHostEnvironment env)
+	: BasePageModel
 {
-	private readonly SignInManager _signInManager;
-	private readonly ApplicationDbContext _db;
-	private readonly IHostEnvironment _env;
-
-	public LoginModel(
-		SignInManager signInManager,
-		ApplicationDbContext db,
-		IHostEnvironment env)
-	{
-		_signInManager = signInManager;
-		_db = db;
-		_env = env;
-	}
-
 	[BindProperty]
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
@@ -39,7 +29,7 @@ public class LoginModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await _signInManager.UserManager.GetUserAsync(User);
+		var user = await signInManager.UserManager.GetUserAsync(User);
 		if (user is not null)
 		{
 			return BaseReturnUrlRedirect();
@@ -58,15 +48,15 @@ public class LoginModel : BasePageModel
 
 		UserName = UserName.Trim().Replace(" ", "_");
 
-		var result = await _signInManager.SignIn(UserName, Password, RememberMe);
+		var result = await signInManager.SignIn(UserName, Password, RememberMe);
 
 		if (result.Succeeded)
 		{
 			return BaseReturnUrlRedirect();
 		}
 
-		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
-		if (user is not null && !await _signInManager.UserManager.IsEmailConfirmedAsync(user) && !_env.IsDevelopment())
+		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
+		if (user is not null && !await signInManager.UserManager.IsEmailConfirmedAsync(user) && !env.IsDevelopment())
 		{
 			return RedirectToPage("/Account/EmailConfirmationSent");
 		}

@@ -4,13 +4,8 @@
 [TestCategory("TasprojParsers")]
 public class TasprojParserTests : BaseParserTests
 {
-	private readonly Tasproj _tasprojParser;
+	private readonly Tasproj _tasprojParser = new();
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.TasprojSampleFiles.";
-
-	public TasprojParserTests()
-	{
-		_tasprojParser = new Tasproj();
-	}
 
 	[TestMethod]
 	public async Task ContainsBranch_NoError()

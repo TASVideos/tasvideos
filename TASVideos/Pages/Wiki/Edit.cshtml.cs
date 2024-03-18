@@ -8,22 +8,12 @@ using TASVideos.Pages.Wiki.Models;
 namespace TASVideos.Pages.Wiki;
 
 [RequireEdit]
-public class EditModel : BasePageModel
+public class EditModel(
+	IWikiPages wikiPages,
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher)
+	: BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-
-	public EditModel(
-		IWikiPages wikiPages,
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher)
-	{
-		_wikiPages = wikiPages;
-		_db = db;
-		_publisher = publisher;
-	}
-
 	[FromQuery]
 	public string? Path { get; set; }
 
@@ -48,7 +38,7 @@ public class EditModel : BasePageModel
 			return NotFound();
 		}
 
-		var page = await _wikiPages.Page(Path);
+		var page = await wikiPages.Page(Path);
 
 		PageToEdit = new WikiEditModel
 		{
@@ -90,7 +80,7 @@ public class EditModel : BasePageModel
 			RevisionMessage = PageToEdit.RevisionMessage,
 			AuthorId = User.GetUserId()
 		};
-		var result = await _wikiPages.Add(page);
+		var result = await wikiPages.Add(page);
 		if (result is null)
 		{
 			ModelState.AddModelError("", "Unable to save. The content on this page may have been modified by another user.");
@@ -107,7 +97,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnPostRollbackLatest()
 	{
-		var latestRevision = await _wikiPages.Page(Path);
+		var latestRevision = await wikiPages.Page(Path);
 		if (latestRevision is null)
 		{
 			return NotFound();
@@ -118,7 +108,7 @@ public class EditModel : BasePageModel
 			return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
 		}
 
-		var previousRevision = await _db.WikiPages
+		var previousRevision = await db.WikiPages
 			.Where(wp => wp.PageName == Path)
 			.ThatAreNotCurrent()
 			.OrderByDescending(wp => wp.Revision)
@@ -138,7 +128,7 @@ public class EditModel : BasePageModel
 			MinorEdit = false
 		};
 
-		var result = await _wikiPages.Add(rollBackRevision);
+		var result = await wikiPages.Add(rollBackRevision);
 		if (result is not null)
 		{
 			await Announce(result);
@@ -150,12 +140,12 @@ public class EditModel : BasePageModel
 	private async Task<bool> UserNameExists(string path)
 	{
 		var userName = WikiHelper.ToUserName(path);
-		return await _db.Users.Exists(userName);
+		return await db.Users.Exists(userName);
 	}
 
 	private async Task Announce(IWikiPage page)
 	{
-		await _publisher.SendGeneralWiki(
+		await publisher.SendGeneralWiki(
 			$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"Page [{Path}]({{0}}) {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"{page.RevisionMessage}",

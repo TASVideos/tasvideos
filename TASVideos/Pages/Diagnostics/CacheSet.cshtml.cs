@@ -5,15 +5,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class CacheSetModel : BasePageModel
+public class CacheSetModel(ICacheService cache) : BasePageModel
 {
-	private readonly ICacheService _cache;
-
-	public CacheSetModel(ICacheService cache)
-	{
-		_cache = cache;
-	}
-
 	[BindProperty]
 	public CacheRequest CacheEntry { get; set; } = new("", "");
 
@@ -23,7 +16,7 @@ public class CacheSetModel : BasePageModel
 
 	public IActionResult OnPost()
 	{
-		_cache.Set(CacheEntry.Key, CacheEntry.Value);
+		cache.Set(CacheEntry.Key, CacheEntry.Value);
 		return RedirectToPage("CacheControl");
 	}
 

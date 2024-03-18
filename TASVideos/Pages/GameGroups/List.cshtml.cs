@@ -5,20 +5,13 @@ using TASVideos.Data;
 namespace TASVideos.Pages.GameGroups;
 
 [AllowAnonymous]
-public class ListModel : BasePageModel
+public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ListModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IEnumerable<GroupListEntry> GameGroups { get; set; } = new List<GroupListEntry>();
 
 	public async Task<IActionResult> OnGet()
 	{
-		GameGroups = await _db.GameGroups
+		GameGroups = await db.GameGroups
 			.Select(gg => new GroupListEntry(gg.Id, gg.Name))
 			.ToListAsync();
 

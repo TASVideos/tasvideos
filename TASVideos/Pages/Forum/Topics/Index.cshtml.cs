@@ -14,34 +14,16 @@ namespace TASVideos.Pages.Forum.Topics;
 
 [AllowAnonymous]
 [RequireCurrentPermissions]
-public class IndexModel : BaseForumModel
+public class IndexModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IAwards awards,
+	IForumService forumService,
+	IPointsService pointsService,
+	ITopicWatcher topicWatcher,
+	IWikiPages wikiPages)
+	: BaseForumModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IAwards _awards;
-	private readonly IForumService _forumService;
-	private readonly IPointsService _pointsService;
-	private readonly ITopicWatcher _topicWatcher;
-	private readonly IWikiPages _wikiPages;
-
-	public IndexModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IAwards awards,
-		IForumService forumService,
-		IPointsService pointsService,
-		ITopicWatcher topicWatcher,
-		IWikiPages wikiPages)
-	{
-		_db = db;
-		_publisher = publisher;
-		_awards = awards;
-		_forumService = forumService;
-		_pointsService = pointsService;
-		_topicWatcher = topicWatcher;
-		_wikiPages = wikiPages;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -69,7 +51,7 @@ public class IndexModel : BaseForumModel
 			: null;
 
 		bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Select(t => new ForumTopicModel
 			{
@@ -107,8 +89,8 @@ public class IndexModel : BaseForumModel
 		Topic = topic;
 		if (Topic.SubmissionId.HasValue)
 		{
-			WikiPage = await _wikiPages.Page(LinkConstants.SubmissionWikiPage + Topic.SubmissionId.Value);
-			var sub = await _db.Submissions
+			WikiPage = await wikiPages.Page(LinkConstants.SubmissionWikiPage + Topic.SubmissionId.Value);
+			var sub = await db.Submissions
 				.Where(s => s.Id == Topic.SubmissionId.Value)
 				.Select(s => new { s.EncodeEmbedLink, PublicationId = s.Publication != null ? s.Publication.Id : (int?)null })
 				.SingleOrDefaultAsync();
@@ -120,7 +102,7 @@ public class IndexModel : BaseForumModel
 			}
 		}
 
-		Topic.Posts = await _db.ForumPosts
+		Topic.Posts = await db.ForumPosts
 			.ForTopic(Id)
 			.Select(p => new ForumPostEntry
 			{
@@ -159,8 +141,8 @@ public class IndexModel : BaseForumModel
 
 		foreach (var post in Topic.Posts)
 		{
-			post.Awards = await _awards.ForUser(post.PosterId);
-			var (points, rank) = await _pointsService.PlayerPoints(post.PosterId);
+			post.Awards = await awards.ForUser(post.PosterId);
+			var (points, rank) = await pointsService.PlayerPoints(post.PosterId);
 			post.PosterPlayerPoints = points;
 			if (!string.IsNullOrWhiteSpace(rank))
 			{
@@ -170,7 +152,7 @@ public class IndexModel : BaseForumModel
 
 		if (Topic.Poll is not null)
 		{
-			Topic.Poll.Options = await _db.ForumPollOptions
+			Topic.Poll.Options = await db.ForumPollOptions
 				.ForPoll(Topic.Poll.PollId)
 				.Select(o => new ForumTopicModel.PollModel.PollOptionModel
 				{
@@ -204,10 +186,10 @@ public class IndexModel : BaseForumModel
 
 		if (userId.HasValue)
 		{
-			await _topicWatcher.MarkSeen(Id, userId.Value);
+			await topicWatcher.MarkSeen(Id, userId.Value);
 		}
 
-		SaveActivity = (await _forumService.GetPostActivityOfSubforum(Topic.ForumId)).ContainsKey(Id);
+		SaveActivity = (await forumService.GetPostActivityOfSubforum(Topic.ForumId)).ContainsKey(Id);
 
 		return Page();
 	}
@@ -219,7 +201,7 @@ public class IndexModel : BaseForumModel
 			return AccessDenied();
 		}
 
-		var pollOptions = await _db.ForumPollOptions
+		var pollOptions = await db.ForumPollOptions
 			.Include(o => o.Poll)
 			.Include(o => o.Votes)
 			.ForPoll(pollId)
@@ -264,7 +246,7 @@ public class IndexModel : BaseForumModel
 					CreateTimestamp = nowTimestamp,
 					IpAddress = IpAddress
 				});
-				await _db.SaveChangesAsync();
+				await db.SaveChangesAsync();
 			}
 		}
 
@@ -274,7 +256,7 @@ public class IndexModel : BaseForumModel
 	public async Task<IActionResult> OnPostLock(string topicTitle, bool locked)
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
@@ -288,10 +270,10 @@ public class IndexModel : BaseForumModel
 			topic.IsLocked = locked;
 
 			var lockedState = locked ? "LOCKED" : "UNLOCKED";
-			var result = await ConcurrentSave(_db, $"Topic set to locked {lockedState}", $"Unable to set status of {lockedState}");
+			var result = await ConcurrentSave(db, $"Topic set to locked {lockedState}", $"Unable to set status of {lockedState}");
 			if (result)
 			{
-				await _publisher.SendForum(
+				await publisher.SendForum(
 					topic.Forum!.Restricted,
 					$"Topic {lockedState} by {User.Name()}",
 					$"[Topic]({{0}}) {lockedState} by {User.Name()}",
@@ -310,7 +292,7 @@ public class IndexModel : BaseForumModel
 			return AccessDenied();
 		}
 
-		await _topicWatcher.WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
+		await topicWatcher.WatchTopic(Id, User.GetUserId(), User.Has(PermissionTo.SeeRestrictedForums));
 		return RedirectToTopic();
 	}
 
@@ -321,7 +303,7 @@ public class IndexModel : BaseForumModel
 			return AccessDenied();
 		}
 
-		await _topicWatcher.UnwatchTopic(Id, User.GetUserId());
+		await topicWatcher.UnwatchTopic(Id, User.GetUserId());
 		return RedirectToTopic();
 	}
 

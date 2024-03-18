@@ -9,22 +9,12 @@ using TASVideos.Pages.Publications.Models;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.SetPublicationClass)]
-public class EditClassModel : BasePageModel
+public class EditClassModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IPublicationMaintenanceLogger publicationMaintenanceLogger)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-
-	public EditClassModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger)
-	{
-		_db = db;
-		_publisher = publisher;
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -38,7 +28,7 @@ public class EditClassModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Where(p => p.Id == Id)
 			.Select(p => new PublicationClassEditModel
 			{
@@ -66,7 +56,7 @@ public class EditClassModel : BasePageModel
 			return Page();
 		}
 
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Include(p => p.PublicationClass)
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
@@ -75,7 +65,7 @@ public class EditClassModel : BasePageModel
 			return NotFound();
 		}
 
-		var publicationClass = await _db.PublicationClasses
+		var publicationClass = await db.PublicationClasses
 			.SingleOrDefaultAsync(t => t.Id == Publication.ClassId);
 
 		if (publicationClass is null)
@@ -89,12 +79,12 @@ public class EditClassModel : BasePageModel
 			publication.PublicationClassId = Publication.ClassId;
 
 			var log = $"{Id}M Class changed from {originalClass} to {publicationClass.Name}";
-			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 
-			var result = await ConcurrentSave(_db, log, "Unable to update Publication Class");
+			var result = await ConcurrentSave(db, log, "Unable to update Publication Class");
 			if (result)
 			{
-				await _publisher.SendPublicationEdit(
+				await publisher.SendPublicationEdit(
 					$"{log} by {User.Name()}",
 					$"[{Id}M]({{0}}) Class changed from {originalClass} to {publicationClass.Name} by {User.Name()}",
 					Title,
@@ -107,7 +97,7 @@ public class EditClassModel : BasePageModel
 
 	private async Task PopulateAvailableClasses()
 	{
-		AvailableClasses = await _db.PublicationClasses
+		AvailableClasses = await db.PublicationClasses
 			.ToDropdown()
 			.ToListAsync();
 	}

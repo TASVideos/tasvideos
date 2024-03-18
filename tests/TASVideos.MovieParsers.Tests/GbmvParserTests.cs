@@ -4,13 +4,8 @@
 [TestCategory("GbmvParsers")]
 public class GbmvParserTests : BaseParserTests
 {
-	private readonly Gbmv _gbmvParser;
+	private readonly Gbmv _gbmvParser = new();
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.GbmvSampleFiles.";
-
-	public GbmvParserTests()
-	{
-		_gbmvParser = new Gbmv();
-	}
 
 	[TestMethod]
 	public async Task GBAHawk_NewHeaderValues()

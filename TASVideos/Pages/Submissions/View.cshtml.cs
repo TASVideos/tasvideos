@@ -10,17 +10,8 @@ using TASVideos.Pages.Submissions.Models;
 namespace TASVideos.Pages.Submissions;
 
 [AllowAnonymous]
-public class ViewModel : BasePageModel
+public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-
-	public ViewModel(ApplicationDbContext db, IWikiPages wikiPages)
-	{
-		_db = db;
-		_wikiPages = wikiPages;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -34,7 +25,7 @@ public class ViewModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var submission = await _db.Submissions
+		var submission = await db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => new SubmissionDisplayModel // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
 			{
@@ -88,7 +79,7 @@ public class ViewModel : BasePageModel
 		}
 
 		Submission = submission;
-		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
+		var submissionPage = (await wikiPages.SubmissionPage(Id))!;
 		Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
 		Submission.LastUpdateUser = submissionPage.AuthorName;
 		CanEdit = !string.IsNullOrWhiteSpace(User.Name())
@@ -97,7 +88,7 @@ public class ViewModel : BasePageModel
 
 		if (Submission.Status == SubmissionStatus.Published)
 		{
-			PublicationId = (await _db.Publications.SingleOrDefaultAsync(p => p.SubmissionId == Id))?.Id ?? 0;
+			PublicationId = (await db.Publications.SingleOrDefaultAsync(p => p.SubmissionId == Id))?.Id ?? 0;
 		}
 
 		return Page();
@@ -105,7 +96,7 @@ public class ViewModel : BasePageModel
 
 	public async Task<IActionResult> OnGetDownload()
 	{
-		var submissionFile = await _db.Submissions
+		var submissionFile = await db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => s.MovieFile)
 			.SingleOrDefaultAsync();

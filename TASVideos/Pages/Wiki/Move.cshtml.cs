@@ -7,19 +7,10 @@ using TASVideos.Pages.Wiki.Models;
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.MoveWikiPages)]
-public class MoveModel : BasePageModel
+public class MoveModel(
+	IWikiPages wikiPages,
+	ExternalMediaPublisher publisher) : BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
-	private readonly ExternalMediaPublisher _publisher;
-
-	public MoveModel(
-		IWikiPages wikiPages,
-		ExternalMediaPublisher publisher)
-	{
-		_wikiPages = wikiPages;
-		_publisher = publisher;
-	}
-
 	[FromQuery]
 	public string? Path { get; set; }
 
@@ -31,7 +22,7 @@ public class MoveModel : BasePageModel
 		if (!string.IsNullOrWhiteSpace(Path))
 		{
 			Path = Path.Trim('/');
-			if (await _wikiPages.Exists(Path))
+			if (await wikiPages.Exists(Path))
 			{
 				Move = new WikiMoveModel
 				{
@@ -55,7 +46,7 @@ public class MoveModel : BasePageModel
 		Move.OriginalPageName = Move.OriginalPageName.Trim('/');
 		Move.DestinationPageName = Move.DestinationPageName.Trim('/');
 
-		if (await _wikiPages.Exists(Move.DestinationPageName, includeDeleted: true))
+		if (await wikiPages.Exists(Move.DestinationPageName, includeDeleted: true))
 		{
 			ModelState.AddModelError("Move.DestinationPageName", "The destination page already exists.");
 		}
@@ -65,7 +56,7 @@ public class MoveModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _wikiPages.Move(Move.OriginalPageName, Move.DestinationPageName);
+		var result = await wikiPages.Move(Move.OriginalPageName, Move.DestinationPageName);
 
 		if (!result)
 		{
@@ -73,7 +64,7 @@ public class MoveModel : BasePageModel
 			return Page();
 		}
 
-		await _publisher.SendGeneralWiki(
+		await publisher.SendGeneralWiki(
 			$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Name()}",
 			$"Page {Move.OriginalPageName} moved to [{Move.DestinationPageName}]({{0}}) by {User.Name()}",
 			"",

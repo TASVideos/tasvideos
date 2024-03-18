@@ -2,15 +2,10 @@
 
 namespace TASVideos.WikiEngine.AST;
 
-public class InternalLinkInfo
+public class InternalLinkInfo(string link, string excerpt)
 {
-	public string Link { get; set; }
-	public string Excerpt { get; set; }
-	public InternalLinkInfo(string link, string excerpt)
-	{
-		Link = link;
-		Excerpt = excerpt;
-	}
+	public string Link { get; set; } = link;
+	public string Excerpt { get; set; } = excerpt;
 }
 
 public static class NodeUtils

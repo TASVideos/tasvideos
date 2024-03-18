@@ -7,7 +7,7 @@ using static TASVideos.ViewComponents.MovieStatisticsModel;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.MovieStatistics)]
-public class MovieStatistics : ViewComponent
+public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 {
 	public enum MovieStatisticComparison
 	{
@@ -53,13 +53,6 @@ public class MovieStatistics : ViewComponent
 		["numberOfVotes"] = MovieStatisticComparison.VoteCount
 	};
 
-	private readonly ApplicationDbContext _db;
-
-	public MovieStatistics(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(string? comp, int? minAge, int? minVotes, int? top)
 	{
 		comp ??= string.Empty;
@@ -78,7 +71,7 @@ public class MovieStatistics : ViewComponent
 		var comparisonMetric = ParameterList.GetValueOrDefault(comp);
 		string fieldHeader;
 
-		IQueryable<Publication> query = _db.Publications.ThatAreCurrent();
+		IQueryable<Publication> query = db.Publications.ThatAreCurrent();
 		IQueryable<MovieStatisticsEntry> statQuery;
 
 		switch (comparisonMetric)
@@ -86,10 +79,10 @@ public class MovieStatistics : ViewComponent
 			case MovieStatisticComparison.None:
 				var generalModel = new MovieGeneralStatisticsModel
 				{
-					PublishedMovieCount = await _db.Publications.ThatAreCurrent().CountAsync(),
-					TotalMovieCount = await _db.Publications.CountAsync(),
-					SubmissionCount = await _db.Submissions.CountAsync(),
-					AverageRerecordCount = (int)await _db.Publications.AverageAsync(p => p.RerecordCount),
+					PublishedMovieCount = await db.Publications.ThatAreCurrent().CountAsync(),
+					TotalMovieCount = await db.Publications.CountAsync(),
+					SubmissionCount = await db.Submissions.CountAsync(),
+					AverageRerecordCount = (int)await db.Publications.AverageAsync(p => p.RerecordCount),
 				};
 				return View("General", generalModel);
 
@@ -163,7 +156,7 @@ public class MovieStatistics : ViewComponent
 				fieldHeader = "Characters";
 				statQuery = query
 					.Join(
-						_db.WikiPages.ThatAreNotDeleted().ThatAreCurrent(),
+						db.WikiPages.ThatAreNotDeleted().ThatAreCurrent(),
 						p => LinkConstants.PublicationWikiPage + p.Id,
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })
@@ -180,7 +173,7 @@ public class MovieStatistics : ViewComponent
 				statQuery = query
 					.Where(p => p.Submission != null)
 					.Join(
-						_db.WikiPages.ThatAreNotDeleted().ThatAreCurrent(),
+						db.WikiPages.ThatAreNotDeleted().ThatAreCurrent(),
 						p => LinkConstants.SubmissionWikiPage + p.SubmissionId,
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })

@@ -105,38 +105,22 @@ public class PagedTests
 		Assert.AreEqual("1|2|3", actual[nameof(EnumerablePagedModel.IdList)]);
 	}
 
-	private class Paged : IPaged
+	private class Paged(int rowCount, int? pageSize, int? currentPage) : IPaged
 	{
-		public Paged(int rowCount, int? pageSize, int? currentPage)
-		{
-			RowCount = rowCount;
-			PageSize = pageSize;
-			CurrentPage = currentPage;
-		}
-
-		public int RowCount { get; }
-		public int? PageSize { get; }
-		public int? CurrentPage { get; }
+		public int RowCount { get; } = rowCount;
+		public int? PageSize { get; } = pageSize;
+		public int? CurrentPage { get; } = currentPage;
 		public string Sort => "";
 	}
 
-	private class TestPagedModel : Paged
+	private class TestPagedModel(int rowCount, int? pageSize, int? currentPage) : Paged(rowCount, pageSize, currentPage)
 	{
-		public TestPagedModel(int rowCount, int? pageSize, int? currentPage)
-			: base(rowCount, pageSize, currentPage)
-		{
-		}
-
 		public string StringFilter { get; init; } = "";
 	}
 
-	private class EnumerablePagedModel : Paged
+	private class EnumerablePagedModel(int rowCount, int? pageSize, int? currentPage)
+		: Paged(rowCount, pageSize, currentPage)
 	{
-		public EnumerablePagedModel(int rowCount, int? pageSize, int? currentPage)
-			: base(rowCount, pageSize, currentPage)
-		{
-		}
-
 		// ReSharper disable once UnusedAutoPropertyAccessor.Local
 		public IEnumerable<int> IdList { get; init; } = new List<int>();
 	}

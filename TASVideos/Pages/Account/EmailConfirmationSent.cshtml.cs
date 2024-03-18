@@ -9,22 +9,12 @@ namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
 [IpBanCheck]
-public class EmailConfirmationSentModel : BasePageModel
+public class EmailConfirmationSentModel(
+	SignInManager signInManager,
+	ApplicationDbContext db,
+	IEmailService emailService)
+	: BasePageModel
 {
-	private readonly SignInManager _signInManager;
-	private readonly ApplicationDbContext _db;
-	private readonly IEmailService _emailService;
-
-	public EmailConfirmationSentModel(
-		SignInManager signInManager,
-		ApplicationDbContext db,
-		IEmailService emailService)
-	{
-		_signInManager = signInManager;
-		_db = db;
-		_emailService = emailService;
-	}
-
 	[BindProperty]
 	[StringLength(256)]
 	[Display(Name = "User Name")]
@@ -46,15 +36,15 @@ public class EmailConfirmationSentModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (await _signInManager.EmailAndUserNameMatch(UserName, Email))
+		if (await signInManager.EmailAndUserNameMatch(UserName, Email))
 		{
-			var user = _db.Users.SingleOrDefault(u => u.Email == Email && u.UserName == UserName);
+			var user = db.Users.SingleOrDefault(u => u.Email == Email && u.UserName == UserName);
 			if (user is not null && !user.EmailConfirmed)
 			{
-				var token = await _signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+				var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
 				var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 
-				await _emailService.EmailConfirmation(Email, callbackUrl);
+				await emailService.EmailConfirmation(Email, callbackUrl);
 			}
 		}
 

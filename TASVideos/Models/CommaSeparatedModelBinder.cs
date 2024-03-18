@@ -6,24 +6,17 @@ namespace TASVideos.Models;
 
 // TODO: cleanup and break up
 // https://github.com/aspnet/Mvc/issues/6215
-public class DelimitedQueryStringValueProvider : QueryStringValueProvider
+public class DelimitedQueryStringValueProvider(
+	BindingSource bindingSource,
+	IQueryCollection values,
+	CultureInfo culture,
+	char[] delimiters)
+	: QueryStringValueProvider(bindingSource, values, culture)
 {
-	private readonly CultureInfo _culture;
-	private readonly IQueryCollection _queryCollection;
+	private readonly CultureInfo _culture = culture;
+	private readonly IQueryCollection _queryCollection = values;
 
-	public DelimitedQueryStringValueProvider(
-		BindingSource bindingSource,
-		IQueryCollection values,
-		CultureInfo culture,
-		char[] delimiters)
-		: base(bindingSource, values, culture)
-	{
-		_queryCollection = values;
-		_culture = culture;
-		Delimiters = delimiters;
-	}
-
-	public char[] Delimiters { get; }
+	public char[] Delimiters { get; } = delimiters;
 
 	public override ValueProviderResult GetValue(string key)
 	{
@@ -54,21 +47,16 @@ public class DelimitedQueryStringValueProvider : QueryStringValueProvider
 /// A <see cref="IValueProviderFactory"/> that creates <see cref="IValueProvider"/> instances that
 /// read optionally delimited values from the request query-string.
 /// </summary>
-public class DelimitedQueryStringValueProviderFactory : IValueProviderFactory
+public class DelimitedQueryStringValueProviderFactory(params char[] delimiters) : IValueProviderFactory
 {
 	private static readonly char[] DefaultDelimiters = { ',' };
-	private readonly char[] _delimiters;
+	private readonly char[] _delimiters = delimiters.Length == 0
+		? DefaultDelimiters
+		: delimiters;
 
 	public DelimitedQueryStringValueProviderFactory()
 		: this(DefaultDelimiters)
 	{
-	}
-
-	public DelimitedQueryStringValueProviderFactory(params char[] delimiters)
-	{
-		_delimiters = delimiters.Length == 0
-			? DefaultDelimiters
-			: delimiters;
 	}
 
 	/// <inheritdoc />

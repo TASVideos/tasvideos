@@ -6,15 +6,8 @@ using TASVideos.Pages.Forum.Topics.Models;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.SeePollResults)]
-public class PollResultsModel : BasePageModel
+public class PollResultsModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public PollResultsModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -22,7 +15,7 @@ public class PollResultsModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var poll = await _db.ForumPolls
+		var poll = await db.ForumPolls
 			.Where(p => p.Id == Id)
 			.Select(p => new PollResultModel
 			{
@@ -60,7 +53,7 @@ public class PollResultsModel : BasePageModel
 			return AccessDenied();
 		}
 
-		var poll = await _db.ForumPolls
+		var poll = await db.ForumPolls
 			.Include(p => p.PollOptions)
 			.ThenInclude(o => o.Votes)
 			.Where(p => p.Id == Id)
@@ -76,9 +69,9 @@ public class PollResultsModel : BasePageModel
 			.Where(v => v.UserId == userId)
 			.ToList();
 
-		_db.ForumPollOptionVotes.RemoveRange(votes);
+		db.ForumPollOptionVotes.RemoveRange(votes);
 
-		await ConcurrentSave(_db, "Poll reset", "Unable to reset poll");
+		await ConcurrentSave(db, "Poll reset", "Unable to reset poll");
 		return RedirectToPage("PollResults", new { Id });
 	}
 }

@@ -6,15 +6,8 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Genres;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
-public class CreateModel : BasePageModel
+public class CreateModel(IGenreService genreService) : BasePageModel
 {
-	private readonly IGenreService _genreService;
-
-	public CreateModel(IGenreService genreService)
-	{
-		_genreService = genreService;
-	}
-
 	[BindProperty]
 	public Genre Genre { get; set; } = new();
 
@@ -25,7 +18,7 @@ public class CreateModel : BasePageModel
 			return Page();
 		}
 
-		var id = await _genreService.Add(Genre.DisplayName);
+		var id = await genreService.Add(Genre.DisplayName);
 
 		if (id.HasValue)
 		{

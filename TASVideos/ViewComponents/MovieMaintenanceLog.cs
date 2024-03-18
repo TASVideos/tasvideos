@@ -6,20 +6,13 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.MovieMaintenanceLog)]
-public class MovieMaintenanceLog : ViewComponent
+public class MovieMaintenanceLog(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public MovieMaintenanceLog(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		if (int.TryParse(Request.Query["id"], out int publicationId))
 		{
-			var publicationTitle = await _db.Publications
+			var publicationTitle = await db.Publications
 				.Where(p => p.Id == publicationId)
 				.Select(p => p.Title)
 				.SingleOrDefaultAsync();
@@ -32,7 +25,7 @@ public class MovieMaintenanceLog : ViewComponent
 			ViewData["pubTitle"] = publicationTitle;
 			ViewData["pubId"] = publicationId;
 
-			var entries = await _db.PublicationMaintenanceLogs
+			var entries = await db.PublicationMaintenanceLogs
 				.Where(l => l.PublicationId == publicationId)
 				.Select(l => new PublicationMaintenanceLogEntry(l.Log, l.User!.UserName, l.TimeStamp))
 				.ToListAsync();
@@ -44,7 +37,7 @@ public class MovieMaintenanceLog : ViewComponent
 		int.TryParse(Request.Query["begin"], out int begin);
 		ViewData["next"] = begin + pageSize;
 
-		IEnumerable<IGrouping<ParentPublicationMaintenanceEntry, PublicationMaintenanceLogEntry>> globalEntries = (await _db.PublicationMaintenanceLogs
+		IEnumerable<IGrouping<ParentPublicationMaintenanceEntry, PublicationMaintenanceLogEntry>> globalEntries = (await db.PublicationMaintenanceLogs
 			.OrderByDescending(l => l.TimeStamp)
 			.Skip(begin)
 			.Take(pageSize)

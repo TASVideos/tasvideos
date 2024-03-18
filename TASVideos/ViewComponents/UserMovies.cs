@@ -6,20 +6,13 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.UserMovies)]
-public class UserMovies : ViewComponent
+public class UserMovies(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public UserMovies(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(int? limit)
 	{
 		var count = limit ?? 5;
 
-		var userMovies = await _db.UserFiles
+		var userMovies = await db.UserFiles
 			.ThatAreMovies()
 			.ThatArePublic()
 			.ByRecentlyUploaded()

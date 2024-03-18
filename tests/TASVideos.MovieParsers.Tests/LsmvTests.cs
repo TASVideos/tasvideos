@@ -4,14 +4,9 @@
 [TestCategory("LsmvParsers")]
 public class LsmvTests : BaseParserTests
 {
-	private readonly Lsmv _lsmvParser;
+	private readonly Lsmv _lsmvParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.LsmvSampleFiles.";
-
-	public LsmvTests()
-	{
-		_lsmvParser = new Lsmv();
-	}
 
 	[TestMethod]
 	public async Task Errors()

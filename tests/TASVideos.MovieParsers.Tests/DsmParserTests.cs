@@ -4,13 +4,8 @@
 [TestCategory("DsmParsers")]
 public class DsmParserTests : BaseParserTests
 {
-	private readonly Dsm _dsmParser;
+	private readonly Dsm _dsmParser = new();
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.DsmSampleFiles.";
-
-	public DsmParserTests()
-	{
-		_dsmParser = new Dsm();
-	}
 
 	[TestMethod]
 	public async Task System()

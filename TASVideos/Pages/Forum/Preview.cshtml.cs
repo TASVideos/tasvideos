@@ -8,15 +8,8 @@ namespace TASVideos.Pages.Forum;
 
 [RequirePermission(PermissionTo.CreateForumPosts)]
 [IgnoreAntiforgeryToken]
-public class PreviewModel : BasePageModel
+public class PreviewModel(IWriterHelper helper) : BasePageModel
 {
-	private readonly IWriterHelper _helper;
-
-	public PreviewModel(IWriterHelper helper)
-	{
-		_helper = helper;
-	}
-
 	public async Task<IActionResult> OnPost()
 	{
 		var text = await new StreamReader(Request.Body, Encoding.UTF8).ReadToEndAsync();
@@ -31,7 +24,7 @@ public class PreviewModel : BasePageModel
 		var htmlWriter = new HtmlWriter(writer);
 		htmlWriter.OpenTag("div");
 		htmlWriter.Attribute("class", "postbody");
-		await parsed.WriteHtml(htmlWriter, _helper);
+		await parsed.WriteHtml(htmlWriter, helper);
 		htmlWriter.CloseTag("div");
 		htmlWriter.AssertFinished();
 		return writer.ToString();

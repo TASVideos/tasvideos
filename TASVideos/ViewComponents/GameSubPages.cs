@@ -6,15 +6,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.GameSubPages)]
-public class GameSubPages : ViewComponent
+public class GameSubPages(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public GameSubPages(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		var model = await GetGameResourcesSubPages();
@@ -24,10 +17,10 @@ public class GameSubPages : ViewComponent
 	private async Task<IEnumerable<GameSubpageModel>> GetGameResourcesSubPages()
 	{
 		// TODO: cache this
-		var systems = await _db.GameSystems.ToListAsync();
+		var systems = await db.GameSystems.ToListAsync();
 		var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-		var pages = _db.WikiPages
+		var pages = db.WikiPages
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
 			.Where(wp => gameResourceSystems.Contains(wp.PageName))

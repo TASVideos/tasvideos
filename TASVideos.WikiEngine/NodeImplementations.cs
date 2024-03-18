@@ -1,16 +1,11 @@
 ﻿namespace TASVideos.WikiEngine.AST;
 
-public class Text : INode
+public class Text(int charStart, string content) : INode
 {
 	public NodeType Type => NodeType.Text;
-	public string Content { get; }
-	public int CharStart { get; }
+	public string Content { get; } = content;
+	public int CharStart { get; } = charStart;
 	public int CharEnd { get; set; }
-	public Text(int charStart, string content)
-	{
-		CharStart = charStart;
-		Content = content;
-	}
 
 	public Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 	{
@@ -309,18 +304,13 @@ public class Element : INodeWithChildren
 	}
 }
 
-public class IfModule : INodeWithChildren
+public class IfModule(int charStart, string condition) : INodeWithChildren
 {
 	public NodeType Type => NodeType.IfModule;
 	public List<INode> Children { get; private set; } = new();
-	public string Condition { get; }
-	public int CharStart { get; }
+	public string Condition { get; } = condition;
+	public int CharStart { get; } = charStart;
 	public int CharEnd { get; set; }
-	public IfModule(int charStart, string condition)
-	{
-		CharStart = charStart;
-		Condition = condition;
-	}
 
 	public IfModule(int charStart, string condition, IEnumerable<INode> children)
 		: this(charStart, condition)

@@ -4,13 +4,8 @@
 [TestCategory("BK2Parsers")]
 public class Fm2ParserTests : BaseParserTests
 {
-	private readonly Fm2 _fm2Parser;
+	private readonly Fm2 _fm2Parser = new();
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.Fm2SampleFiles.";
-
-	public Fm2ParserTests()
-	{
-		_fm2Parser = new Fm2();
-	}
 
 	[TestMethod]
 	public async Task Ntsc()

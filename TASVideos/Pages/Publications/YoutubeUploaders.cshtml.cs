@@ -7,25 +7,16 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.EditPublicationMetaData)]
-public class YoutubeUploadersModel : BasePageModel
+public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtubeSync, ICacheService cache)
+	: BasePageModel
 {
 	private const string CachePrefix = "YoutubeUploaders-";
-	private readonly ApplicationDbContext _db;
-	private readonly IYoutubeSync _youtubeSync;
-	private readonly ICacheService _cache;
-
-	public YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtubeSync, ICacheService cache)
-	{
-		_db = db;
-		_youtubeSync = youtubeSync;
-		_cache = cache;
-	}
 
 	public IReadOnlyCollection<YoutubeRecord> Videos { get; set; } = new List<YoutubeRecord>();
 
 	public async Task<IActionResult> OnGet()
 	{
-		var raw = await _db.PublicationUrls
+		var raw = await db.PublicationUrls
 			.ThatAreStreaming()
 			.Where(u => u.PublicationId > 0)
 			.Select(u => new
@@ -37,8 +28,8 @@ public class YoutubeUploadersModel : BasePageModel
 			.ToListAsync();
 
 		Videos = raw
-			.Where(r => _youtubeSync.IsYoutubeUrl(r.Url))
-			.Select(u => new YoutubeRecord(u.PublicationId, _youtubeSync.VideoId(u.Url!), u.IsObsolete))
+			.Where(r => youtubeSync.IsYoutubeUrl(r.Url))
+			.Select(u => new YoutubeRecord(u.PublicationId, youtubeSync.VideoId(u.Url!), u.IsObsolete))
 			.Distinct()
 			.ToList();
 
@@ -48,7 +39,7 @@ public class YoutubeUploadersModel : BasePageModel
 			.Where(v => string.IsNullOrWhiteSpace(v.ChannelTitle))
 			.ToList();
 
-		var mapping = (await _youtubeSync
+		var mapping = (await youtubeSync
 			.GetPublicInfo(uncachedVideos.Select(v => v.VideoId)))
 			.ToDictionary(tkey => tkey.Id);
 
@@ -58,7 +49,7 @@ public class YoutubeUploadersModel : BasePageModel
 			if (result)
 			{
 				record.ChannelTitle = val!.Snippet.ChannelTitle;
-				_cache.Set(CachePrefix + record.VideoId, record.ChannelTitle, Durations.OneDayInSeconds);
+				cache.Set(CachePrefix + record.VideoId, record.ChannelTitle, Durations.OneDayInSeconds);
 			}
 		}
 
@@ -69,7 +60,7 @@ public class YoutubeUploadersModel : BasePageModel
 	{
 		foreach (var record in records)
 		{
-			var result = _cache.TryGetValue(CachePrefix + record.VideoId, out string val);
+			var result = cache.TryGetValue(CachePrefix + record.VideoId, out string val);
 			if (result)
 			{
 				record.ChannelTitle = val;

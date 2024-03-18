@@ -13,23 +13,14 @@ public interface IPrivateMessageService
 	Task<string[]> AllowedRoles();
 }
 
-internal class PrivateMessageService : IPrivateMessageService
+internal class PrivateMessageService(ApplicationDbContext db, IEmailService emailService) : IPrivateMessageService
 {
 	// TODO: this does not belong in code, move to a system wiki page, or database table
 	private static readonly string[] AllowedBulkRoles = { "site admin", "moderator" };
 
-	private readonly ApplicationDbContext _db;
-	private readonly IEmailService _emailService;
-
-	public PrivateMessageService(ApplicationDbContext db, IEmailService emailService)
-	{
-		_db = db;
-		_emailService = emailService;
-	}
-
 	public async Task SendMessage(int fromUserId, string toUserName, string subject, string text)
 	{
-		var toUser = await _db.Users
+		var toUser = await db.Users
 			.Where(u => u.UserName == toUserName)
 			.Select(u => new
 			{
@@ -54,12 +45,12 @@ internal class PrivateMessageService : IPrivateMessageService
 			EnableBbCode = true
 		};
 
-		_db.PrivateMessages.Add(message);
-		await _db.SaveChangesAsync();
+		db.PrivateMessages.Add(message);
+		await db.SaveChangesAsync();
 
 		if (toUser.EmailOnPrivateMessage)
 		{
-			await _emailService.NewPrivateMessage(toUser.Email, toUser.UserName);
+			await emailService.NewPrivateMessage(toUser.Email, toUser.UserName);
 		}
 	}
 
@@ -73,7 +64,7 @@ internal class PrivateMessageService : IPrivateMessageService
 			return;
 		}
 
-		var role = await _db.Roles
+		var role = await db.Roles
 			.Where(r => r.Name.ToLower() == roleName)
 			.SingleOrDefaultAsync();
 
@@ -82,7 +73,7 @@ internal class PrivateMessageService : IPrivateMessageService
 			return;
 		}
 
-		var users = await _db.Users
+		var users = await db.Users
 			.Where(u => u.UserRoles.Any(ur => ur.RoleId == role.Id))
 			.ToListAsync();
 

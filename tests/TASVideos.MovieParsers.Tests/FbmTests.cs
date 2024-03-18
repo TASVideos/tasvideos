@@ -4,14 +4,9 @@
 [TestCategory("FbmParsers")]
 public class FbmTests : BaseParserTests
 {
-	private readonly Fbm _fbmParser;
+	private readonly Fbm _fbmParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.FbmSampleFiles.";
-
-	public FbmTests()
-	{
-		_fbmParser = new Fbm();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

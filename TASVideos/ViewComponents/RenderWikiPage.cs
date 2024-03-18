@@ -4,16 +4,8 @@ using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.ViewComponents;
 
-public class RenderWikiPage : ViewComponent
+public class RenderWikiPage(IWikiPages wikiPages) : ViewComponent
 {
-	private readonly IWikiPages _wikiPages;
-
-	public RenderWikiPage(
-		IWikiPages wikiPages)
-	{
-		_wikiPages = wikiPages;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(string? url, int? revision = null)
 	{
 		url = url?.Trim('/') ?? "";
@@ -22,7 +14,7 @@ public class RenderWikiPage : ViewComponent
 			return new ContentViewComponentResult("");
 		}
 
-		var existingPage = await _wikiPages.Page(url, revision);
+		var existingPage = await wikiPages.Page(url, revision);
 
 		if (existingPage is not null)
 		{

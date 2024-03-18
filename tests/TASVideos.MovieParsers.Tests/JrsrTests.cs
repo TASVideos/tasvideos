@@ -9,13 +9,8 @@ namespace TASVideos.MovieParsers.Tests;
 [TestCategory("JrsrParsers")]
 public class JrsrTests : BaseParserTests
 {
-	private readonly Jrsr _jrsrParser;
+	private readonly Jrsr _jrsrParser = new();
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.JrsrSampleFiles.";
-
-	public JrsrTests()
-	{
-		_jrsrParser = new Jrsr();
-	}
 
 	[TestMethod]
 	public async Task EmptyFile()

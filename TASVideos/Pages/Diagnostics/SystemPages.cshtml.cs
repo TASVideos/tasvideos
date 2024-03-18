@@ -5,15 +5,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class SystemPagesModel : BasePageModel
+public class SystemPagesModel(IWikiPages wikiPages) : BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
-
-	public SystemPagesModel(IWikiPages wikiPages)
-	{
-		_wikiPages = wikiPages;
-	}
-
 	public record SystemPage(string Name, bool Exists);
 	public List<SystemPage> SystemPages { get; set; } = new List<SystemPage>();
 
@@ -21,7 +14,7 @@ public class SystemPagesModel : BasePageModel
 	{
 		foreach (var page in SystemWiki.Pages)
 		{
-			var exists = await _wikiPages.Exists(page);
+			var exists = await wikiPages.Exists(page);
 			SystemPages.Add(new SystemPage(page, exists));
 		}
 

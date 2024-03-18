@@ -5,20 +5,13 @@ namespace TASVideos.Core.Services.Email;
 /// <summary>
 /// An implementation of <see cref="IEmailSender" /> that simply logs email content
 /// </summary>
-internal class EmailLogger : IEmailSender
+internal class EmailLogger(ILogger<EmailLogger> logger) : IEmailSender
 {
-	private readonly ILogger<EmailLogger> _logger;
-
-	public EmailLogger(ILogger<EmailLogger> logger)
-	{
-		_logger = logger;
-	}
-
 	public Task SendEmail(IEmail email)
 	{
-		if (_logger.IsEnabled(LogLevel.Information))
+		if (logger.IsEnabled(LogLevel.Information))
 		{
-			_logger.LogInformation(
+			logger.LogInformation(
 				"Email Generated:\nRecipients: {recipients)}\nSubject: {subject}\nMessage: {message}",
 				string.Join(",", email.Recipients),
 				email.Subject,

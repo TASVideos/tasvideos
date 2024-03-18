@@ -19,31 +19,19 @@ public interface IYoutubeSync
 	Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds);
 }
 
-internal class YouTubeSync : IYoutubeSync
+internal class YouTubeSync(
+	IHttpClientFactory httpClientFactory,
+	IGoogleAuthService googleAuthService,
+	IWikiToTextRenderer textRenderer,
+	AppSettings settings,
+	ILogger<YouTubeSync> logger)
+	: IYoutubeSync
 {
 	private const int YoutubeTitleMaxLength = 100;
 	private const int BatchSize = 50;
 	private static readonly string[] BaseTags = { "TAS", "TASVideos", "Tool-Assisted", "Video Game" };
-	private readonly HttpClient _client;
-	private readonly IGoogleAuthService _googleAuthService;
-	private readonly IWikiToTextRenderer _textRenderer;
-	private readonly AppSettings _settings;
-	private readonly ILogger<YouTubeSync> _logger;
-
-	public YouTubeSync(
-		IHttpClientFactory httpClientFactory,
-		IGoogleAuthService googleAuthService,
-		IWikiToTextRenderer textRenderer,
-		AppSettings settings,
-		ILogger<YouTubeSync> logger)
-	{
-		_client = httpClientFactory.CreateClient(HttpClients.Youtube)
-			?? throw new InvalidOperationException($"Unable to initalize {HttpClients.Youtube} client");
-		_googleAuthService = googleAuthService;
-		_textRenderer = textRenderer;
-		_settings = settings;
-		_logger = logger;
-	}
+	private readonly HttpClient _client = httpClientFactory.CreateClient(HttpClients.Youtube)
+		?? throw new InvalidOperationException($"Unable to initalize {HttpClients.Youtube} client");
 
 	public async Task SyncYouTubeVideo(YoutubeVideo video)
 	{
@@ -52,7 +40,7 @@ internal class YouTubeSync : IYoutubeSync
 			return;
 		}
 
-		if (!_googleAuthService.IsYoutubeEnabled())
+		if (!googleAuthService.IsYoutubeEnabled())
 		{
 			return;
 		}
@@ -66,14 +54,14 @@ internal class YouTubeSync : IYoutubeSync
 
 		await SetAccessToken();
 
-		var descriptionBase = $"This is a tool-assisted speedrun. For more information, see {_settings.BaseUrl}/{video.Id}M";
+		var descriptionBase = $"This is a tool-assisted speedrun. For more information, see {settings.BaseUrl}/{video.Id}M";
 		if (video.ObsoletedBy.HasValue)
 		{
-			descriptionBase += $"\n\nThis movie has been obsoleted by {_settings.BaseUrl}/{video.ObsoletedBy.Value}M";
+			descriptionBase += $"\n\nThis movie has been obsoleted by {settings.BaseUrl}/{video.ObsoletedBy.Value}M";
 		}
 
 		descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
-		var renderedDescription = await _textRenderer.RenderWikiForYoutube(video.WikiPage);
+		var renderedDescription = await textRenderer.RenderWikiForYoutube(video.WikiPage);
 
 		var obsoleteStr = video.ObsoletedBy.HasValue ? "[Obsoleted] " : "";
 		var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $"[{video.UrlDisplayName}] " : "";
@@ -100,7 +88,7 @@ internal class YouTubeSync : IYoutubeSync
 		var response = await _client.PutAsync("videos?part=status,snippet", updateRequest.ToStringContent());
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError(
+			logger.LogError(
 				"[{timestamp}] An error occurred syncing data to Youtube. Request: {request} Response: {response}",
 				DateTime.UtcNow,
 				JsonSerializer.Serialize(updateRequest),
@@ -111,7 +99,7 @@ internal class YouTubeSync : IYoutubeSync
 	public async Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds)
 	{
 
-		if (!_googleAuthService.IsYoutubeEnabled())
+		if (!googleAuthService.IsYoutubeEnabled())
 		{
 			return Enumerable.Empty<YoutubeVideoResponseItem>();
 		}
@@ -154,7 +142,7 @@ internal class YouTubeSync : IYoutubeSync
 			return;
 		}
 
-		if (!_googleAuthService.IsYoutubeEnabled())
+		if (!googleAuthService.IsYoutubeEnabled())
 		{
 			return;
 		}
@@ -180,7 +168,7 @@ internal class YouTubeSync : IYoutubeSync
 
 		if (!response.IsSuccessStatusCode)
 		{
-			_logger.LogError(
+			logger.LogError(
 				"{timestamp} An error occurred sending a request to YouTube. Request: {request} Response: {response}",
 				DateTime.UtcNow,
 				JsonSerializer.Serialize(unlistRequest),
@@ -243,7 +231,7 @@ internal class YouTubeSync : IYoutubeSync
 
 	private async Task SetAccessToken()
 	{
-		var accessToken = await _googleAuthService.GetYoutubeAccessToken();
+		var accessToken = await googleAuthService.GetYoutubeAccessToken();
 		_client.SetBearerToken(accessToken);
 	}
 
@@ -256,7 +244,7 @@ internal class YouTubeSync : IYoutubeSync
 		var result = await _client.GetAsync($"videos?id={videoId}&part=snippet,fileDetails");
 		if (!result.IsSuccessStatusCode)
 		{
-			_logger.LogError(
+			logger.LogError(
 				"{timestamp} Unable to request data for video {videoId} from YouTube. Response: {response}",
 				DateTime.UtcNow,
 				videoId,

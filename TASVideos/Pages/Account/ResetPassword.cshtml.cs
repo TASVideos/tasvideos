@@ -5,16 +5,8 @@ using TASVideos.Core.Services;
 namespace TASVideos.Pages.Account;
 
 [IpBanCheck]
-public class ResetPasswordModel : BasePageModel
+public class ResetPasswordModel(UserManager userManager) : BasePageModel
 {
-	private readonly UserManager _userManager;
-
-	public ResetPasswordModel(
-		UserManager userManager)
-	{
-		_userManager = userManager;
-	}
-
 	[BindProperty]
 	[EmailAddress]
 	public string Email { get; set; } = "";
@@ -44,7 +36,7 @@ public class ResetPasswordModel : BasePageModel
 			return Home();
 		}
 
-		var user = await _userManager.FindByIdAsync(UserId ?? "");
+		var user = await userManager.FindByIdAsync(UserId ?? "");
 		if (user is null)
 		{
 			return Home();
@@ -61,7 +53,7 @@ public class ResetPasswordModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _userManager.FindByEmailAsync(Email);
+		var user = await userManager.FindByEmailAsync(Email);
 		if (user is null)
 		{
 			// Don't reveal that the user does not exist
@@ -69,10 +61,10 @@ public class ResetPasswordModel : BasePageModel
 		}
 
 		var code = Code ?? "";
-		var result = await _userManager.ResetPasswordAsync(user, code, Password);
+		var result = await userManager.ResetPasswordAsync(user, code, Password);
 		if (result.Succeeded)
 		{
-			await _userManager.MarkEmailConfirmed(user);
+			await userManager.MarkEmailConfirmed(user);
 			return RedirectToPage("ResetPasswordConfirmation");
 		}
 

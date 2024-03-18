@@ -5,20 +5,13 @@ using TASVideos.Pages.Roles.Models;
 namespace TASVideos.Pages.Roles;
 
 [AllowAnonymous]
-public class ListModel : BasePageModel
+public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ListModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IEnumerable<RoleDisplayModel> Roles { get; set; } = new List<RoleDisplayModel>();
 
 	public async Task OnGet()
 	{
-		Roles = await _db.Roles
+		Roles = await db.Roles
 			.ToRoleDisplayModel()
 			.ToListAsync();
 	}

@@ -8,25 +8,13 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Publications.Urls;
 
 [RequirePermission(PermissionTo.EditPublicationFiles)]
-public class ListUrlsModel : BasePageModel
+public class ListUrlsModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IYoutubeSync youtubeSync,
+	IPublicationMaintenanceLogger publicationMaintenanceLogger)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IYoutubeSync _youtubeSync;
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-
-	public ListUrlsModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IYoutubeSync youtubeSync,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger)
-	{
-		_db = db;
-		_publisher = publisher;
-		_youtubeSync = youtubeSync;
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-	}
-
 	[FromRoute]
 	public int PublicationId { get; set; }
 
@@ -36,7 +24,7 @@ public class ListUrlsModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var title = await _db.Publications
+		var title = await db.Publications
 			.Where(p => p.Id == PublicationId)
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
@@ -47,7 +35,7 @@ public class ListUrlsModel : BasePageModel
 		}
 
 		Title = title;
-		CurrentUrls = await _db.PublicationUrls
+		CurrentUrls = await db.PublicationUrls
 			.Where(u => u.PublicationId == PublicationId)
 			.ToListAsync();
 
@@ -56,24 +44,24 @@ public class ListUrlsModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete(int urlId)
 	{
-		var url = await _db.PublicationUrls
+		var url = await db.PublicationUrls
 			.SingleOrDefaultAsync(pf => pf.Id == urlId);
 
 		if (url != null)
 		{
-			_db.PublicationUrls.Remove(url);
+			db.PublicationUrls.Remove(url);
 			string log = $"Deleted {url.DisplayName} {url.Type} URL {url.Url}";
-			await _publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
-			var result = await ConcurrentSave(_db, log, "Unable to remove URL.");
+			await publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
+			var result = await ConcurrentSave(db, log, "Unable to remove URL.");
 			if (result)
 			{
-				await _publisher.SendPublicationEdit(
+				await publisher.SendPublicationEdit(
 					$"{PublicationId}M edited by {User.Name()}",
 					$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
 					$"Deleted {url.Type} URL",
 					$"{PublicationId}M");
 
-				await _youtubeSync.UnlistVideo(url.Url!);
+				await youtubeSync.UnlistVideo(url.Url!);
 			}
 		}
 

@@ -8,15 +8,8 @@ namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.WikiLink)]
 [TextModule]
-public class WikiLink : ViewComponent
+public class WikiLink(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public WikiLink(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(string href, string? displayText)
 	{
 		return View(await InvokeInternal(href, displayText));
@@ -86,21 +79,21 @@ public class WikiLink : ViewComponent
 
 	private async Task<string?> GetPublicationTitle(int id)
 	{
-		return (await _db.Publications
+		return (await db.Publications
 			.Select(s => new { s.Id, s.Title })
 			.SingleOrDefaultAsync(s => s.Id == id))?.Title;
 	}
 
 	private async Task<string?> GetSubmissionTitle(int id)
 	{
-		return (await _db.Submissions
+		return (await db.Submissions
 			.Select(s => new { s.Id, s.Title })
 			.SingleOrDefaultAsync(s => s.Id == id))?.Title;
 	}
 
 	private async Task<string?> GetGameTitle(int id)
 	{
-		return (await _db.Games
+		return (await db.Games
 			.Select(g => new { g.Id, g.DisplayName })
 			.SingleOrDefaultAsync(g => g.Id == id))?.DisplayName;
 	}

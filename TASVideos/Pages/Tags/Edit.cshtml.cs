@@ -5,15 +5,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Tags;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
-public class EditModel : BasePageModel
+public class EditModel(ITagService tagService) : BasePageModel
 {
-	private readonly ITagService _tagService;
-
-	public EditModel(ITagService tagService)
-	{
-		_tagService = tagService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -24,7 +17,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var tag = await _tagService.GetById(Id);
+		var tag = await tagService.GetById(Id);
 
 		if (tag is null)
 		{
@@ -32,7 +25,7 @@ public class EditModel : BasePageModel
 		}
 
 		Tag = tag;
-		InUse = await _tagService.InUse(Id);
+		InUse = await tagService.InUse(Id);
 		return Page();
 	}
 
@@ -43,7 +36,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _tagService.Edit(Id, Tag.Code, Tag.DisplayName);
+		var result = await tagService.Edit(Id, Tag.Code, Tag.DisplayName);
 		switch (result)
 		{
 			default:
@@ -64,7 +57,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete()
 	{
-		var result = await _tagService.Delete(Id);
+		var result = await tagService.Delete(Id);
 		switch (result)
 		{
 			case TagDeleteResult.InUse:

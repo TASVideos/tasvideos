@@ -7,21 +7,15 @@ using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
 
-public class ListModel : PageModel
+public class ListModel(ApplicationDbContext db) : PageModel
 {
-	private readonly ApplicationDbContext _db;
-	public ListModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public UserFileListRequest Search { get; set; } = new();
 
 	public PageOf<UserFileListModel> UserFiles { get; set; } = PageOf<UserFileListModel>.Empty();
 	public async Task OnGet()
 	{
-		UserFiles = await _db.UserFiles
+		UserFiles = await db.UserFiles
 			.ThatArePublic()
 			.ByRecentlyUploaded()
 			.Select(uf => new UserFileListModel

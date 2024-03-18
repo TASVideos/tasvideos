@@ -10,22 +10,12 @@ using TASVideos.Pages.Forum.Topics.Models;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.MoveTopics)]
-public class MoveModel : BasePageModel
+public class MoveModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IForumService forumService)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IForumService _forumService;
-
-	public MoveModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IForumService forumService)
-	{
-		_db = db;
-		_publisher = publisher;
-		_forumService = forumService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -40,7 +30,7 @@ public class MoveModel : BasePageModel
 	{
 		var seeRestricted = CanSeeRestricted;
 
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Where(t => t.Id == Id)
 			.Include(t => t.Forum)
 			.ExcludeRestricted(seeRestricted)
@@ -72,7 +62,7 @@ public class MoveModel : BasePageModel
 		}
 
 		var seeRestricted = CanSeeRestricted;
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
@@ -82,7 +72,7 @@ public class MoveModel : BasePageModel
 			return NotFound();
 		}
 
-		var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
+		var forum = await db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
 
 		if (forum is null)
 		{
@@ -92,7 +82,7 @@ public class MoveModel : BasePageModel
 		var topicWasRestricted = topic.Forum?.Restricted ?? false;
 		topic.ForumId = Topic.ForumId;
 
-		var postsToMove = await _db.ForumPosts
+		var postsToMove = await db.ForumPosts
 			.ForTopic(topic.Id)
 			.ToListAsync();
 
@@ -101,12 +91,12 @@ public class MoveModel : BasePageModel
 			post.ForumId = forum.Id;
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
-		_forumService.ClearLatestPostCache();
-		_forumService.ClearTopicActivityCache();
+		forumService.ClearLatestPostCache();
+		forumService.ClearTopicActivityCache();
 
-		await _publisher.SendForum(
+		await publisher.SendForum(
 			topicWasRestricted || forum.Restricted,
 			$"Topic MOVED by {User.Name()}",
 			$"[Topic]({{0}}) MOVED by {User.Name()}",
@@ -118,7 +108,7 @@ public class MoveModel : BasePageModel
 
 	private async Task PopulateAvailableForums()
 	{
-		AvailableForums = await _db.Forums
+		AvailableForums = await db.Forums
 			.ExcludeRestricted(CanSeeRestricted)
 			.Select(f => new SelectListItem
 			{

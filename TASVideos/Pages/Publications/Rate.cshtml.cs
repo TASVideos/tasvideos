@@ -9,15 +9,8 @@ using TASVideos.Pages.Publications.Models;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.RateMovies)]
-public class RateModel : BasePageModel
+public class RateModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public RateModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -34,7 +27,7 @@ public class RateModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var userId = User.GetUserId();
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Include(p => p.PublicationRatings)
 			.ThenInclude(r => r.User)
 			.SingleOrDefaultAsync(p => p.Id == Id);
@@ -43,7 +36,7 @@ public class RateModel : BasePageModel
 			return NotFound();
 		}
 
-		var ratings = await _db.PublicationRatings
+		var ratings = await db.PublicationRatings
 			.ForPublication(Id)
 			.ForUser(userId)
 			.ToListAsync();
@@ -95,14 +88,14 @@ public class RateModel : BasePageModel
 
 		var userId = User.GetUserId();
 
-		var rating = await _db.PublicationRatings
+		var rating = await db.PublicationRatings
 			.ForPublication(Id)
 			.ForUser(userId)
 			.FirstOrDefaultAsync();
 
 		UpdateRating(rating, Id, userId, PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating), Rating.Unrated);
 
-		await ConcurrentSave(_db, $"{Rating.Title} successfully rated.", $"Unable to rate {Rating.Title}");
+		await ConcurrentSave(db, $"{Rating.Title} successfully rated.", $"Unable to rate {Rating.Title}");
 
 		return BasePageRedirect("/Publications/Rate", new { Id });
 	}
@@ -117,16 +110,16 @@ public class RateModel : BasePageModel
 		}
 
 		var userId = User.GetUserId();
-		var ratingObject = await _db.PublicationRatings
+		var ratingObject = await db.PublicationRatings
 			.ForPublication(Id)
 			.ForUser(userId)
 			.FirstOrDefaultAsync();
 		var ratingValue = PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating);
 		UpdateRating(ratingObject, Id, userId, ratingValue, Rating.Unrated);
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
-		var updatedRatings = await _db.Publications
+		var updatedRatings = await db.Publications
 			.Where(p => p.Id == Id)
 			.Select(p => new
 			{
@@ -158,7 +151,7 @@ public class RateModel : BasePageModel
 			if (remove)
 			{
 				// Remove
-				_db.PublicationRatings.Remove(rating);
+				db.PublicationRatings.Remove(rating);
 			}
 			else if (value.HasValue)
 			{
@@ -171,7 +164,7 @@ public class RateModel : BasePageModel
 			if (value.HasValue && !remove)
 			{
 				// Add
-				_db.PublicationRatings.Add(new PublicationRating
+				db.PublicationRatings.Add(new PublicationRating
 				{
 					PublicationId = id,
 					UserId = userId,

@@ -5,15 +5,8 @@ using TASVideos.Data;
 namespace TASVideos.Pages.Submissions.RejectionReasons;
 
 [AllowAnonymous]
-public class ReasonModel : BasePageModel
+public class ReasonModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ReasonModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -22,14 +15,14 @@ public class ReasonModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var reason = await _db.SubmissionRejectionReasons.SingleOrDefaultAsync(r => r.Id == Id);
+		var reason = await db.SubmissionRejectionReasons.SingleOrDefaultAsync(r => r.Id == Id);
 		if (reason is null)
 		{
 			return NotFound();
 		}
 
 		RejectionReason = reason.DisplayName;
-		Submissions = await _db.Submissions
+		Submissions = await db.Submissions
 			.Where(s => s.RejectionReasonId == Id)
 			.Select(s => new SubmissionEntry(s.Id, s.Title))
 			.ToListAsync();

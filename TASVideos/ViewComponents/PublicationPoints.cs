@@ -7,20 +7,11 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.PublicationPoints)]
-public class PublicationPoints : ViewComponent
+public class PublicationPoints(ApplicationDbContext db, IPointsService pointsService) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IPointsService _pointsService;
-
-	public PublicationPoints(ApplicationDbContext db, IPointsService pointsService)
-	{
-		_db = db;
-		_pointsService = pointsService;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var publications = await _db.Publications
+		var publications = await db.Publications
 			.ThatAreCurrent()
 			.Select(p => new PublicationPointsModel
 			{
@@ -31,7 +22,7 @@ public class PublicationPoints : ViewComponent
 
 		foreach (var pub in publications)
 		{
-			pub.Points = await _pointsService.PlayerPointsForPublication(pub.Id);
+			pub.Points = await pointsService.PlayerPointsForPublication(pub.Id);
 		}
 
 		var sortedPublications = publications

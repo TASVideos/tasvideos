@@ -6,12 +6,7 @@ namespace TASVideos.Data.Tests.QueryableExtensions;
 [TestClass]
 public class WikiPageExtensionTests
 {
-	private readonly TestDbContext _db;
-
-	public WikiPageExtensionTests()
-	{
-		_db = TestDbContext.Create();
-	}
+	private readonly TestDbContext _db = TestDbContext.Create();
 
 	#region ThatAreSubpagesOf
 

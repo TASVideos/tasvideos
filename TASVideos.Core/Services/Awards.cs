@@ -42,19 +42,10 @@ public interface IAwards
 	Task FlushCache();
 }
 
-internal class Awards : IAwards
+internal class Awards(
+	ApplicationDbContext db,
+	ICacheService cache) : IAwards
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public Awards(
-		ApplicationDbContext db,
-		ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
-
 	public async ValueTask<IEnumerable<AwardAssignmentSummary>> ForUser(int userId)
 	{
 		var allAwards = await AllAwards();
@@ -87,41 +78,41 @@ internal class Awards : IAwards
 
 	public async Task<bool> AddAwardCategory(AwardType type, string shortName, string description)
 	{
-		if (await _db.Awards.AnyAsync(a => a.ShortName == shortName))
+		if (await db.Awards.AnyAsync(a => a.ShortName == shortName))
 		{
 			return false;
 		}
 
-		_db.Awards.Add(new Award
+		db.Awards.Add(new Award
 		{
 			Type = type,
 			ShortName = shortName,
 			Description = description
 		});
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
 		return true;
 	}
 
 	public Task<bool> CategoryExists(string shortName)
 	{
-		return _db.Awards.AnyAsync(a => EF.Functions.Like(a.ShortName, shortName));
+		return db.Awards.AnyAsync(a => EF.Functions.Like(a.ShortName, shortName));
 	}
 
-	public IQueryable<Award> AwardCategories() => _db.Awards.AsQueryable();
+	public IQueryable<Award> AwardCategories() => db.Awards.AsQueryable();
 
 	public async Task AssignUserAward(string shortName, int year, IEnumerable<int> userIds)
 	{
-		var award = await _db.Awards.SingleAsync(a => a.ShortName == shortName);
+		var award = await db.Awards.SingleAsync(a => a.ShortName == shortName);
 
-		var existingUsers = await _db.UserAwards
+		var existingUsers = await db.UserAwards
 			.Where(ua => ua.Year == year
 				&& ua.Award!.ShortName == shortName
 				&& userIds.Contains(ua.UserId))
 			.Select(pa => pa.UserId)
 			.ToListAsync();
 
-		_db.UserAwards.AddRange(userIds
+		db.UserAwards.AddRange(userIds
 			.Except(existingUsers)
 			.Select(u => new UserAward
 			{
@@ -129,23 +120,23 @@ internal class Awards : IAwards
 				UserId = u,
 				AwardId = award.Id
 			}));
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 		await FlushCache();
 	}
 
 	public async Task AssignPublicationAward(string shortName, int year, IEnumerable<int> publicationIds)
 	{
 		var pubIds = publicationIds.ToList();
-		var award = await _db.Awards.SingleAsync(a => a.ShortName == shortName);
+		var award = await db.Awards.SingleAsync(a => a.ShortName == shortName);
 
-		var existingPubs = await _db.PublicationAwards
+		var existingPubs = await db.PublicationAwards
 			.Where(pa => pa.Year == year
 				&& pa.Award!.ShortName == shortName
 				&& pubIds.Contains(pa.PublicationId))
 			.Select(pa => pa.PublicationId)
 			.ToListAsync();
 
-		_db.PublicationAwards.AddRange(pubIds
+		db.PublicationAwards.AddRange(pubIds
 			.Except(existingPubs)
 			.Select(u => new PublicationAward
 			{
@@ -154,42 +145,42 @@ internal class Awards : IAwards
 				AwardId = award.Id
 			}));
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 		await FlushCache();
 	}
 
 	public async Task Revoke(AwardAssignment award)
 	{
-		var userAwardsToRemove = await _db.UserAwards
+		var userAwardsToRemove = await db.UserAwards
 			.Where(ua => ua.Award!.Id == award.AwardId && ua.Year == award.Year)
 			.ToListAsync();
 
-		_db.UserAwards.RemoveRange(userAwardsToRemove);
+		db.UserAwards.RemoveRange(userAwardsToRemove);
 
-		var pubAwardsToRemove = await _db.PublicationAwards
+		var pubAwardsToRemove = await db.PublicationAwards
 			.Where(pa => pa.Award!.Id == award.AwardId && pa.Year == award.Year)
 			.ToListAsync();
 
-		_db.PublicationAwards.RemoveRange(pubAwardsToRemove);
+		db.PublicationAwards.RemoveRange(pubAwardsToRemove);
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 		await FlushCache();
 	}
 
 	public async Task FlushCache()
 	{
-		_cache.Remove(CacheKeys.AwardsCache);
+		cache.Remove(CacheKeys.AwardsCache);
 		await AllAwards();
 	}
 
 	private async ValueTask<IEnumerable<AwardAssignment>> AllAwards()
 	{
-		if (_cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
+		if (cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))
 		{
 			return awards;
 		}
 
-		var userLists = await _db.UserAwards
+		var userLists = await db.UserAwards
 			.Select(ua => new
 			{
 				AwardId = ua.Award!.Id,
@@ -227,7 +218,7 @@ internal class Awards : IAwards
 			})
 			.ToList();
 
-		var pubLists = await _db.PublicationAwards
+		var pubLists = await db.PublicationAwards
 			.Select(pa => new
 			{
 				AwardId = pa.Award!.Id,
@@ -281,7 +272,7 @@ internal class Awards : IAwards
 
 		var allAwards = userAwards.Concat(publicationAwards);
 
-		_cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
+		cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
 
 		return allAwards;
 	}

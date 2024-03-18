@@ -8,22 +8,12 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.ReplacePrimaryMovieFile)]
-public class PrimaryMoviesModel : BasePageModel
+public class PrimaryMoviesModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IPublicationMaintenanceLogger publicationMaintenanceLogger)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-
-	public PrimaryMoviesModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger)
-	{
-		_db = db;
-		_publisher = publisher;
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -43,7 +33,7 @@ public class PrimaryMoviesModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Where(p => p.Id == Id)
 			.Select(p => new { p.Title, p.MovieFileName })
 			.SingleOrDefaultAsync();
@@ -60,7 +50,7 @@ public class PrimaryMoviesModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Where(p => p.Id == Id)
 			.SingleOrDefaultAsync();
 
@@ -69,7 +59,7 @@ public class PrimaryMoviesModel : BasePageModel
 			return NotFound();
 		}
 
-		var exists = await _db.Publications.AnyAsync(p => p.Id != publication.Id && p.MovieFileName == PrimaryMovieFile!.FileName);
+		var exists = await db.Publications.AnyAsync(p => p.Id != publication.Id && p.MovieFileName == PrimaryMovieFile!.FileName);
 		if (exists)
 		{
 			ModelState.AddModelError(nameof(PrimaryMovieFile), $"A publication with the filename {PrimaryMovieFile!.FileName} already exists.");
@@ -86,11 +76,11 @@ public class PrimaryMoviesModel : BasePageModel
 		publication.MovieFileName = PrimaryMovieFile!.FileName;
 		publication.MovieFile = await PrimaryMovieFile.ToBytes();
 
-		var result = await ConcurrentSave(_db, log, "Unable to add file");
+		var result = await ConcurrentSave(db, log, "Unable to add file");
 		if (result)
 		{
-			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-			await _publisher.SendPublicationEdit(
+			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+			await publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",

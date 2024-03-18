@@ -6,15 +6,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
-public class ReferrersModel : BasePageModel
+public class ReferrersModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	public ReferrersModel(
-		ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public string? Path { get; set; }
 
@@ -23,7 +16,7 @@ public class ReferrersModel : BasePageModel
 	public async Task OnGet()
 	{
 		Path = Path?.Trim('/') ?? "";
-		Referrals = await _db.WikiReferrals
+		Referrals = await db.WikiReferrals
 			.ThatReferTo(Path)
 			.ToListAsync();
 		ViewData["PageName"] = Path;

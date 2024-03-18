@@ -8,24 +8,15 @@ using TASVideos.Pages.RssFeeds.Models;
 namespace TASVideos.Pages.RssFeeds;
 
 [ResponseCache(Duration = 1200)]
-public class PublicationsModel : BasePageModel
+public class PublicationsModel(
+	ApplicationDbContext db,
+	IWikiPages wikiPages) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-
-	public PublicationsModel(
-		ApplicationDbContext db,
-		IWikiPages wikiPages)
-	{
-		_db = db;
-		_wikiPages = wikiPages;
-	}
-
 	public List<RssPublication> Publications { get; set; } = new();
 	public async Task<IActionResult> OnGet()
 	{
 		var minTimestamp = DateTime.UtcNow.AddDays(-60);
-		Publications = await _db.Publications
+		Publications = await db.Publications
 			.ByMostRecent()
 			.Where(p => p.CreateTimestamp >= minTimestamp)
 			.Select(p => new RssPublication
@@ -53,7 +44,7 @@ public class PublicationsModel : BasePageModel
 
 		foreach (var pub in Publications)
 		{
-			pub.Wiki = (await _wikiPages.PublicationPage(pub.Id))!;
+			pub.Wiki = (await wikiPages.PublicationPage(pub.Id))!;
 		}
 
 		PageResult pageResult = Page();

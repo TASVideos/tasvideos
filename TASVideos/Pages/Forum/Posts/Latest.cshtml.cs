@@ -9,15 +9,8 @@ using TASVideos.Pages.Forum.Posts.Models;
 namespace TASVideos.Pages.Forum.Posts;
 
 [AllowAnonymous]
-public class LatestModel : BasePageModel
+public class LatestModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public LatestModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
@@ -26,7 +19,7 @@ public class LatestModel : BasePageModel
 	public async Task OnGet()
 	{
 		var allowRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		Posts = await _db.ForumPosts
+		Posts = await db.ForumPosts
 			.ExcludeRestricted(allowRestricted)
 			.Where(p => p.CreateTimestamp > DateTime.UtcNow.AddDays(-3))
 			.Select(p => new LatestPostsModel

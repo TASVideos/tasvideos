@@ -7,15 +7,8 @@ using TASVideos.Pages.GameGroups.Models;
 namespace TASVideos.Pages.GameGroups;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class EditModel : BasePageModel
+public class EditModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public EditModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int? Id { get; set; }
 
@@ -28,7 +21,7 @@ public class EditModel : BasePageModel
 	{
 		if (Id.HasValue)
 		{
-			var gameGroup = await _db.GameGroups
+			var gameGroup = await db.GameGroups
 				.Where(gg => gg.Id == Id.Value)
 				.Select(gg => new GameGroupEditModel
 				{
@@ -58,7 +51,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		if (GameGroup.Abbreviation != null && await _db.GameGroups.AnyAsync(g => g.Id != Id && g.Abbreviation == GameGroup.Abbreviation))
+		if (GameGroup.Abbreviation != null && await db.GameGroups.AnyAsync(g => g.Id != Id && g.Abbreviation == GameGroup.Abbreviation))
 		{
 			ModelState.AddModelError($"{nameof(GameGroup)}.{nameof(GameGroup.Abbreviation)}", $"Abbreviation {GameGroup.Abbreviation} already exists");
 		}
@@ -71,7 +64,7 @@ public class EditModel : BasePageModel
 		GameGroup? gameGroup;
 		if (Id.HasValue)
 		{
-			gameGroup = await _db.GameGroups
+			gameGroup = await db.GameGroups
 				.Where(gg => gg.Id == Id.Value)
 				.SingleOrDefaultAsync();
 
@@ -92,10 +85,10 @@ public class EditModel : BasePageModel
 				Abbreviation = GameGroup.Abbreviation,
 				Description = GameGroup.Description
 			};
-			_db.GameGroups.Add(gameGroup);
+			db.GameGroups.Add(gameGroup);
 		}
 
-		await ConcurrentSave(_db, $"Game Group {GameGroup.Name} updated", $"Unable to update Game Group {GameGroup.Name}");
+		await ConcurrentSave(db, $"Game Group {GameGroup.Name} updated", $"Unable to update Game Group {GameGroup.Name}");
 		return BasePageRedirect("Index", new { gameGroup.Id });
 	}
 
@@ -112,14 +105,14 @@ public class EditModel : BasePageModel
 			return BasePageRedirect("List");
 		}
 
-		_db.GameGroups.Attach(new GameGroup { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(_db, $"Game Group {Id} deleted", $"Unable to delete Game Group {Id}");
+		db.GameGroups.Attach(new GameGroup { Id = Id ?? 0 }).State = EntityState.Deleted;
+		await ConcurrentSave(db, $"Game Group {Id} deleted", $"Unable to delete Game Group {Id}");
 
 		return BasePageRedirect("List");
 	}
 
 	private async Task<bool> CanBeDeleted()
 	{
-		return Id.HasValue && !await _db.Games.ForGroup(Id.Value).AnyAsync();
+		return Id.HasValue && !await db.Games.ForGroup(Id.Value).AnyAsync();
 	}
 }

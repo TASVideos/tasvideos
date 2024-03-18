@@ -10,22 +10,12 @@ using TASVideos.Pages.Profile.Models;
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class SettingsModel : BasePageModel
+public class SettingsModel(
+	UserManager userManager,
+	IEmailService emailService,
+	ApplicationDbContext db)
+	: BasePageModel
 {
-	private readonly UserManager _userManager;
-	private readonly IEmailService _emailService;
-	private readonly ApplicationDbContext _db;
-
-	public SettingsModel(
-		UserManager userManager,
-		IEmailService emailService,
-		ApplicationDbContext db)
-	{
-		_userManager = userManager;
-		_emailService = emailService;
-		_db = db;
-	}
-
 	public static readonly IEnumerable<SelectListItem> AvailablePronouns = Enum
 		.GetValues(typeof(PreferredPronounTypes))
 		.Cast<PreferredPronounTypes>()
@@ -81,7 +71,7 @@ public class SettingsModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		var user = await _userManager.GetRequiredUser(User);
+		var user = await userManager.GetRequiredUser(User);
 		Settings = new ProfileSettingsModel
 		{
 			Username = user.UserName,
@@ -95,7 +85,7 @@ public class SettingsModel : BasePageModel
 			MoodAvatar = user.MoodAvatarUrlBase,
 			PreferredPronouns = user.PreferredPronouns,
 			EmailOnPrivateMessage = user.EmailOnPrivateMessage,
-			Roles = await _userManager.UserRoles(user.Id),
+			Roles = await userManager.UserRoles(user.Id),
 			AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto,
 			UserDateFormat = user.DateFormat,
 			UserTimeFormat = user.TimeFormat,
@@ -110,7 +100,7 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
-		var bannedSites = _userManager.BannedAvatarSites().ToList();
+		var bannedSites = userManager.BannedAvatarSites().ToList();
 		if (!string.IsNullOrWhiteSpace(Settings.Avatar))
 		{
 			foreach (var site in bannedSites)
@@ -138,7 +128,7 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _userManager.GetRequiredUser(User);
+		var user = await userManager.GetRequiredUser(User);
 
 		bool hasUserCustomLocaleChanged = user.DateFormat != Settings.UserDateFormat || user.TimeFormat != Settings.UserTimeFormat || user.DecimalFormat != Settings.UserDecimalFormat;
 
@@ -158,11 +148,11 @@ public class SettingsModel : BasePageModel
 			user.Signature = Settings.Signature;
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
 		if (hasUserCustomLocaleChanged)
 		{
-			_userManager.ClearCustomLocaleCache(User.GetUserId());
+			userManager.ClearCustomLocaleCache(User.GetUserId());
 		}
 
 		SuccessStatusMessage("Your profile has been updated");
@@ -176,11 +166,11 @@ public class SettingsModel : BasePageModel
 			return Page();
 		}
 
-		var user = await _userManager.GetRequiredUser(User);
+		var user = await userManager.GetRequiredUser(User);
 
-		var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+		var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
-		await _emailService.EmailConfirmation(user.Email, callbackUrl);
+		await emailService.EmailConfirmation(user.Email, callbackUrl);
 
 		SuccessStatusMessage("Verification email sent. Please check your email.");
 		return BasePageRedirect("Settings");

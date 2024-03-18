@@ -6,15 +6,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.TabularMovieList)]
-public class TabularMovieList : ViewComponent
+public class TabularMovieList(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public TabularMovieList(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(int? limit, IList<string> tier, string? flink, string? footer)
 	{
 		var search = new TabularMovieListSearchModel();
@@ -44,7 +37,7 @@ public class TabularMovieList : ViewComponent
 
 	private async Task<IEnumerable<TabularMovieListResultModel>> MovieList(TabularMovieListSearchModel searchCriteria)
 	{
-		var results = await _db.Publications
+		var results = await db.Publications
 			.Where(p => !searchCriteria.PublicationClasses.Any() || searchCriteria.PublicationClasses.Contains(p.PublicationClass!.Name))
 			.ByMostRecent()
 			.Take(searchCriteria.Limit)

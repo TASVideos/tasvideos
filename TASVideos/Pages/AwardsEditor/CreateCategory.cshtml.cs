@@ -8,21 +8,12 @@ using TASVideos.Pages.AwardsEditor.Models;
 namespace TASVideos.Pages.AwardsEditor;
 
 [RequirePermission(PermissionTo.CreateAwards)]
-public class CreateCategoryModel : BasePageModel
+public class CreateCategoryModel(IAwards awards, IMediaFileUploader mediaFileUploader) : BasePageModel
 {
 	private static readonly IEnumerable<AwardType> AwardTypes = Enum
 		.GetValues(typeof(AwardType))
 		.Cast<AwardType>()
 		.ToList();
-
-	private readonly IAwards _awards;
-	private readonly IMediaFileUploader _mediaFileUploader;
-
-	public CreateCategoryModel(IAwards awards, IMediaFileUploader mediaFileUploader)
-	{
-		_awards = awards;
-		_mediaFileUploader = mediaFileUploader;
-	}
 
 	public IEnumerable<SelectListItem> AvailableAwardTypes { get; set; } = AwardTypes
 		.Select(a => new SelectListItem
@@ -47,13 +38,13 @@ public class CreateCategoryModel : BasePageModel
 			return Page();
 		}
 
-		await _mediaFileUploader.UploadAwardImage(
+		await mediaFileUploader.UploadAwardImage(
 			AwardCategory.BaseImage!,
 			AwardCategory.BaseImage2X!,
 			AwardCategory.BaseImage4X!,
 			AwardCategory.ShortName);
 
-		var result = await _awards.AddAwardCategory(
+		var result = await awards.AddAwardCategory(
 			AwardCategory.Type,
 			AwardCategory.ShortName,
 			AwardCategory.Description);

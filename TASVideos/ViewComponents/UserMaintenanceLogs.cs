@@ -8,15 +8,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.UserMaintenanceLogs)]
-public class UserMaintenanceLogs : ViewComponent
+public class UserMaintenanceLogs(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public UserMaintenanceLogs(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		if (!HttpContext.User.Has(PermissionTo.ViewPrivateUserData))
@@ -33,7 +26,7 @@ public class UserMaintenanceLogs : ViewComponent
 
 		string user = HttpContext.Request.QueryStringValue("User");
 
-		var logsQuery = _db.UserMaintenanceLogs
+		var logsQuery = db.UserMaintenanceLogs
 			.Select(m => new UserMaintenanceLogEntry
 			{
 				User = m.User!.UserName,

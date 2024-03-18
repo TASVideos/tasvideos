@@ -6,22 +6,15 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.MovieChangeLog)]
-public class MovieChangeLog : ViewComponent
+public class MovieChangeLog(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public MovieChangeLog(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(string pubClass)
 	{
 		var paging = this.GetPagingModel();
 
-		var query = _db.Publications.AsQueryable();
+		var query = db.Publications.AsQueryable();
 
-		var publicationClass = await _db.PublicationClasses.FirstOrDefaultAsync(c => c.Name == pubClass);
+		var publicationClass = await db.PublicationClasses.FirstOrDefaultAsync(c => c.Name == pubClass);
 		if (publicationClass is not null)
 		{
 			query = query.Where(p => p.PublicationClassId == publicationClass.Id);

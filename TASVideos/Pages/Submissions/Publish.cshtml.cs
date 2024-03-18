@@ -11,40 +11,18 @@ using TASVideos.Pages.Submissions.Models;
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.PublishMovies)]
-public class PublishModel : BasePageModel
+public class PublishModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IWikiPages wikiPages,
+	IMediaFileUploader uploader,
+	ITASVideoAgent tasVideoAgent,
+	UserManager userManager,
+	IFileService fileService,
+	IYoutubeSync youtubeSync,
+	IQueueService queueService)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IWikiPages _wikiPages;
-	private readonly IMediaFileUploader _uploader;
-	private readonly ITASVideoAgent _tasVideosAgent;
-	private readonly UserManager _userManager;
-	private readonly IFileService _fileService;
-	private readonly IYoutubeSync _youtubeSync;
-	private readonly IQueueService _queueService;
-
-	public PublishModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IWikiPages wikiPages,
-		IMediaFileUploader uploader,
-		ITASVideoAgent tasVideoAgent,
-		UserManager userManager,
-		IFileService fileService,
-		IYoutubeSync youtubeSync,
-		IQueueService queueService)
-	{
-		_db = db;
-		_publisher = publisher;
-		_wikiPages = wikiPages;
-		_uploader = uploader;
-		_tasVideosAgent = tasVideoAgent;
-		_userManager = userManager;
-		_fileService = fileService;
-		_youtubeSync = youtubeSync;
-		_queueService = queueService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -56,7 +34,7 @@ public class PublishModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var submission = await _db.Submissions
+		var submission = await db.Submissions
 			.Where(s => s.Id == Id)
 			.ToPublishModel()
 			.SingleOrDefaultAsync();
@@ -72,7 +50,7 @@ public class PublishModel : BasePageModel
 		}
 
 		Submission = submission;
-		Submission.Markup = (await _wikiPages.SubmissionPage(Id))!.Markup;
+		Submission.Markup = (await wikiPages.SubmissionPage(Id))!.Markup;
 
 		await PopulateDropdowns();
 		return Page();
@@ -94,7 +72,7 @@ public class PublishModel : BasePageModel
 		int? publicationToObsolete = null;
 		if (Submission.MovieToObsolete.HasValue)
 		{
-			publicationToObsolete = (await _db.Publications
+			publicationToObsolete = (await db.Publications
 				.SingleOrDefaultAsync(p => p.Id == Submission.MovieToObsolete.Value))?.Id;
 			if (publicationToObsolete is null)
 			{
@@ -104,7 +82,7 @@ public class PublishModel : BasePageModel
 			}
 		}
 
-		var submission = await _db.Submissions
+		var submission = await db.Submissions
 			.IncludeTitleTables()
 			.Include(s => s.IntendedClass)
 			.SingleOrDefaultAsync(s => s.Id == Id);
@@ -128,7 +106,7 @@ public class PublishModel : BasePageModel
 			MovieFileName = movieFileName,
 			AdditionalAuthors = submission.AdditionalAuthors,
 			Submission = submission,
-			MovieFile = await _fileService.CopyZip(submission.MovieFile, movieFileName),
+			MovieFile = await fileService.CopyZip(submission.MovieFile, movieFileName),
 			GameGoalId = submission.GameGoalId
 		};
 
@@ -138,30 +116,30 @@ public class PublishModel : BasePageModel
 		publication.PublicationFlags.AddFlags(Submission.SelectedFlags);
 		publication.PublicationTags.AddTags(Submission.SelectedTags);
 
-		_db.Publications.Add(publication);
+		db.Publications.Add(publication);
 
-		await _db.SaveChangesAsync(); // Need an Id for the Title
+		await db.SaveChangesAsync(); // Need an Id for the Title
 		publication.GenerateTitle();
 
-		await _uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
+		await uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
 
 		// Create a wiki page corresponding to this publication
 		var wikiPage = GenerateWiki(publication.Id, Submission.MovieMarkup, User.GetUserId());
-		var addedWikiPage = await _wikiPages.Add(wikiPage);
+		var addedWikiPage = await wikiPages.Add(wikiPage);
 
 		submission.Status = SubmissionStatus.Published;
-		_db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
+		db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
 
 		if (publicationToObsolete.HasValue)
 		{
-			await _queueService.ObsoleteWith(publicationToObsolete.Value, publication.Id);
+			await queueService.ObsoleteWith(publicationToObsolete.Value, publication.Id);
 		}
 
-		await _userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
-		await _tasVideosAgent.PostSubmissionPublished(Id, publication.Id);
-		await _publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
+		await userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
+		await tasVideoAgent.PostSubmissionPublished(Id, publication.Id);
+		await publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
 
-		if (_youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
+		if (youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
 		{
 			var video = new YoutubeVideo(
 				publication.Id,
@@ -173,7 +151,7 @@ public class PublishModel : BasePageModel
 				submission.System.Code,
 				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
 				null);
-			await _youtubeSync.SyncYouTubeVideo(video);
+			await youtubeSync.SyncYouTubeVideo(video);
 		}
 
 		return BaseRedirect($"/{publication.Id}M");
@@ -188,7 +166,7 @@ public class PublishModel : BasePageModel
 
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
 	{
-		var pub = await _db.Publications
+		var pub = await db.Publications
 			.Where(p => p.Id == publicationId)
 			.Select(p => new ObsoletePublicationResult
 			{
@@ -202,7 +180,7 @@ public class PublishModel : BasePageModel
 			return BadRequest($"Unable to find publication with an id of {publicationId}");
 		}
 
-		var page = await _wikiPages.PublicationPage(publicationId);
+		var page = await wikiPages.PublicationPage(publicationId);
 		pub.Markup = page!.Markup;
 
 		return new JsonResult(pub);
@@ -222,10 +200,10 @@ public class PublishModel : BasePageModel
 
 	private async Task PopulateDropdowns()
 	{
-		AvailableFlags = await _db.Flags
+		AvailableFlags = await db.Flags
 			.ToDropDown(User.Permissions())
 			.ToListAsync();
-		AvailableTags = await _db.Tags
+		AvailableTags = await db.Tags
 			.ToDropdown()
 			.ToListAsync();
 	}

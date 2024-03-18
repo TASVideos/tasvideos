@@ -7,15 +7,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.Screenshots)]
-public class Screenshots : ViewComponent
+public class Screenshots(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public Screenshots(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		var paging = this.GetPagingModel();
@@ -24,7 +17,7 @@ public class Screenshots : ViewComponent
 			paging.Sort = "-PublicationId";
 		}
 
-		var query = _db.PublicationFiles
+		var query = db.PublicationFiles
 			.Where(pf => pf.Type == FileType.Screenshot);
 
 		var onlyDescriptions = Request.QueryStringBoolValue("OnlyDescriptions");

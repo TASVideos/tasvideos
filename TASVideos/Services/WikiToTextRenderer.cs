@@ -6,37 +6,18 @@ using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.Services;
 
-public class WikiToTextRenderer : IWikiToTextRenderer
+public class WikiToTextRenderer(AppSettings settings, IServiceProvider serviceProvider) : IWikiToTextRenderer
 {
-	private readonly AppSettings _settings;
-	private readonly IServiceProvider _serviceProvider;
-
-	public WikiToTextRenderer(AppSettings settings, IServiceProvider serviceProvider)
-	{
-		_settings = settings;
-		_serviceProvider = serviceProvider;
-	}
-
 	public async Task<string> RenderWikiForYoutube(IWikiPage page)
 	{
 		var sw = new StringWriter();
-		await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(_settings.BaseUrl, _serviceProvider, page));
+		await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(settings.BaseUrl, serviceProvider, page));
 		return sw.ToString();
 	}
 
-	private class WriterHelper : IWriterHelper
+	private class WriterHelper(string host, IServiceProvider serviceProvider, IWikiPage wikiPage)
+		: IWriterHelper
 	{
-		private readonly string _host;
-		private readonly IServiceProvider _serviceProvider;
-		private readonly IWikiPage _wikiPage;
-
-		public WriterHelper(string host, IServiceProvider serviceProvider, IWikiPage wikiPage)
-		{
-			_host = host;
-			_serviceProvider = serviceProvider;
-			_wikiPage = wikiPage;
-		}
-
 		public bool CheckCondition(string condition)
 		{
 			bool result = false;
@@ -79,9 +60,9 @@ public class WikiToTextRenderer : IWikiToTextRenderer
 			}
 
 			var paramObject = ModuleParamHelpers
-				.GetParameterData(w, name, invokeMethod, _wikiPage, pp);
+				.GetParameterData(w, name, invokeMethod, wikiPage, pp);
 
-			var module = _serviceProvider.GetRequiredService(textComponent);
+			var module = serviceProvider.GetRequiredService(textComponent);
 			var result = await (Task<string>)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
 			await w.WriteAsync(result);
 		}
@@ -95,7 +76,7 @@ public class WikiToTextRenderer : IWikiToTextRenderer
 
 			if (!parsed.IsAbsoluteUri)
 			{
-				return _host.TrimEnd('/') + url;
+				return host.TrimEnd('/') + url;
 			}
 
 			return url;

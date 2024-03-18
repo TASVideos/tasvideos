@@ -7,19 +7,12 @@ using TASVideos.Data.Entity.Awards;
 namespace TASVideos.Pages.AwardsEditor;
 
 [RequirePermission(PermissionTo.CreateAwards)]
-public class IndexModel : BasePageModel
+public class IndexModel(IAwards awards) : BasePageModel
 {
 	private static readonly IEnumerable<AwardType> AwardTypes = Enum
 		.GetValues(typeof(AwardType))
 		.Cast<AwardType>()
 		.ToList();
-
-	private readonly IAwards _awards;
-
-	public IndexModel(IAwards awards)
-	{
-		_awards = awards;
-	}
 
 	[FromRoute]
 	public int? Year { get; set; }
@@ -40,7 +33,7 @@ public class IndexModel : BasePageModel
 			return BasePageRedirect("Index", new { DateTime.UtcNow.Year });
 		}
 
-		Assignments = await _awards.ForYear(Year.Value);
+		Assignments = await awards.ForYear(Year.Value);
 
 		return Page();
 	}

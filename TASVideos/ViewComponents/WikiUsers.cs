@@ -6,18 +6,11 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.WikiUsers)]
-public class WikiUsers : ViewComponent
+public class WikiUsers(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public WikiUsers(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(string? role)
 	{
-		var model = await _db.Users
+		var model = await db.Users
 			.ThatHaveRole(role ?? "")
 			.Select(u => new WikiUserEntry
 			{

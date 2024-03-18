@@ -12,24 +12,14 @@ using TASVideos.Pages.Games.Models;
 namespace TASVideos.Pages.Games;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class EditModel : BasePageModel
+public class EditModel(
+	ApplicationDbContext db,
+	IWikiPages wikiPages,
+	ExternalMediaPublisher publisher,
+	AppSettings settings)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly string _baseUrl;
-
-	public EditModel(
-		ApplicationDbContext db,
-		IWikiPages wikiPages,
-		ExternalMediaPublisher publisher,
-		AppSettings settings)
-	{
-		_db = db;
-		_wikiPages = wikiPages;
-		_publisher = publisher;
-		_baseUrl = settings.BaseUrl;
-	}
+	private readonly string _baseUrl = settings.BaseUrl;
 
 	[FromRoute]
 	public int? Id { get; set; }
@@ -49,7 +39,7 @@ public class EditModel : BasePageModel
 	{
 		if (Id.HasValue)
 		{
-			var game = await _db.Games
+			var game = await db.Games
 				.Where(g => g.Id == Id)
 				.Select(g => new GameEditModel
 				{
@@ -93,14 +83,14 @@ public class EditModel : BasePageModel
 
 		if (!string.IsNullOrEmpty(Game.GameResourcesPage))
 		{
-			var page = await _wikiPages.Page(Game.GameResourcesPage);
+			var page = await wikiPages.Page(Game.GameResourcesPage);
 			if (page is null)
 			{
 				ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.GameResourcesPage)}", $"Page {Game.GameResourcesPage} not found");
 			}
 		}
 
-		if (Game.Abbreviation != null && await _db.Games.AnyAsync(g => g.Id != Id && g.Abbreviation == Game.Abbreviation))
+		if (Game.Abbreviation != null && await db.Games.AnyAsync(g => g.Id != Id && g.Abbreviation == Game.Abbreviation))
 		{
 			ModelState.AddModelError($"{nameof(Game)}.{nameof(Game.Abbreviation)}", $"Abbreviation {Game.Abbreviation} already exists");
 		}
@@ -114,7 +104,7 @@ public class EditModel : BasePageModel
 		Game? game;
 		if (Id.HasValue)
 		{
-			game = await _db.Games
+			game = await db.Games
 				.Include(g => g.GameGenres)
 				.Include(g => g.GameGroups)
 				.SingleOrDefaultAsync(g => g.Id == Id.Value);
@@ -130,10 +120,10 @@ public class EditModel : BasePageModel
 			game.GameResourcesPage = Game.GameResourcesPage;
 			SetGameValues(game, Game);
 			var saveMessage = $"Game {game.DisplayName} updated";
-			var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to update Game {Id}");
+			var saveResult = await ConcurrentSave(db, saveMessage, $"Unable to update Game {Id}");
 			if (saveResult && !Game.MinorEdit)
 			{
-				await _publisher.SendGameManagement(
+				await publisher.SendGameManagement(
 					$"{saveMessage} by {User.Name()}",
 					$"Game [{game.DisplayName}]({{0}}) updated by {User.Name()}",
 					"",
@@ -150,13 +140,13 @@ public class EditModel : BasePageModel
 				ScreenshotUrl = Game.ScreenshotUrl,
 				GameResourcesPage = Game.GameResourcesPage
 			};
-			_db.Games.Add(game);
+			db.Games.Add(game);
 			SetGameValues(game, Game);
 			var saveMessage = $"Game {game.DisplayName} created";
-			var saveResult = await ConcurrentSave(_db, saveMessage, "Unable to create game");
+			var saveResult = await ConcurrentSave(db, saveMessage, "Unable to create game");
 			if (saveResult && !Game.MinorEdit)
 			{
-				await _publisher.SendGameManagement(
+				await publisher.SendGameManagement(
 					$"{saveMessage} by {User.Name()}",
 					$"Game [{game.DisplayName}]({{0}}) created by {User.Name()}",
 					"",
@@ -192,18 +182,18 @@ public class EditModel : BasePageModel
 			return BasePageRedirect("List");
 		}
 
-		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == Id);
+		var game = await db.Games.SingleOrDefaultAsync(g => g.Id == Id);
 		if (game is null)
 		{
 			return NotFound();
 		}
 
-		_db.Games.Remove(game);
+		db.Games.Remove(game);
 		var saveMessage = $"Game #{Id} {game.DisplayName} deleted";
-		var saveResult = await ConcurrentSave(_db, saveMessage, $"Unable to delete Game {Id}");
+		var saveResult = await ConcurrentSave(db, saveMessage, $"Unable to delete Game {Id}");
 		if (saveResult)
 		{
-			await _publisher.SendGameManagement(
+			await publisher.SendGameManagement(
 				$"{saveMessage} by {User.Name()}",
 				"",
 				"",
@@ -215,12 +205,12 @@ public class EditModel : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableGenres = await _db.Genres
+		AvailableGenres = await db.Genres
 			.OrderBy(g => g.DisplayName)
 			.ToDropdown()
 			.ToListAsync();
 
-		AvailableGroups = await _db.GameGroups
+		AvailableGroups = await db.GameGroups
 			.OrderBy(g => g.Name)
 			.ToDropdown()
 			.ToListAsync();
@@ -231,8 +221,8 @@ public class EditModel : BasePageModel
 	private async Task<bool> CanBeDeleted()
 	{
 		return Id > 0
-			&& !await _db.Submissions.AnyAsync(s => s.GameId == Id)
-			&& !await _db.Publications.AnyAsync(p => p.GameId == Id)
-			&& !await _db.UserFiles.AnyAsync(u => u.GameId == Id);
+			&& !await db.Submissions.AnyAsync(s => s.GameId == Id)
+			&& !await db.Publications.AnyAsync(p => p.GameId == Id)
+			&& !await db.UserFiles.AnyAsync(u => u.GameId == Id);
 	}
 }

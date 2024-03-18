@@ -8,15 +8,8 @@ using TASVideos.Pages.Forum.Subforum.Models;
 namespace TASVideos.Pages.Forum.Subforum;
 
 [RequirePermission(PermissionTo.EditForums)]
-public class EditModel : BasePageModel
+public class EditModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public EditModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -29,7 +22,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var forum = await _db.Forums
+		var forum = await db.Forums
 			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 			.Where(f => f.Id == Id)
 			.Select(f => new ForumEditModel
@@ -60,7 +53,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var forum = await _db.Forums
+		var forum = await db.Forums
 			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 			.SingleOrDefaultAsync(f => f.Id == Id);
 
@@ -75,7 +68,7 @@ public class EditModel : BasePageModel
 		forum.CategoryId = Forum.CategoryId;
 		forum.Restricted = Forum.Restricted;
 
-		await ConcurrentSave(_db, $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
+		await ConcurrentSave(db, $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
 		return RedirectToPage("Index", new { id = Id });
 	}
 
@@ -86,15 +79,15 @@ public class EditModel : BasePageModel
 			return BadRequest("Cannot delete subforum that contains topics");
 		}
 
-		var subForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == Id);
+		var subForum = await db.Forums.SingleOrDefaultAsync(f => f.Id == Id);
 		if (subForum is null)
 		{
 			return NotFound();
 		}
 
-		_db.Forums.Remove(subForum);
+		db.Forums.Remove(subForum);
 
-		await ConcurrentSave(_db, $"Forum {Id} deleted successfully", $"Unable to delete Forum {Id}");
+		await ConcurrentSave(db, $"Forum {Id} deleted successfully", $"Unable to delete Forum {Id}");
 
 		return RedirectToPage("/Forum/Index");
 	}
@@ -102,13 +95,13 @@ public class EditModel : BasePageModel
 	private async Task Initialize()
 	{
 		CanDelete = await CanBeDeleted();
-		AvailableCategories = await _db.ForumCategories
+		AvailableCategories = await db.ForumCategories
 			.ToDropdown()
 			.ToListAsync();
 	}
 
 	private async Task<bool> CanBeDeleted()
 	{
-		return !await _db.ForumTopics.AnyAsync(t => t.ForumId == Id);
+		return !await db.ForumTopics.AnyAsync(t => t.ForumId == Id);
 	}
 }

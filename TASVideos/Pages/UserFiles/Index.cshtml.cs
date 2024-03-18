@@ -8,37 +8,29 @@ using TASVideos.Pages.UserFiles.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-
-	public IndexModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher)
-	{
-		_db = db;
-		_publisher = publisher;
-	}
-
 	public UserFileIndexModel Data { get; set; } = new();
 
 	public async Task OnGet()
 	{
 		Data = new UserFileIndexModel
 		{
-			UsersWithMovies = await _db.UserFiles
+			UsersWithMovies = await db.UserFiles
 				.ThatArePublic()
 				.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp).Select(
 					uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
 				.ToListAsync(),
-			LatestMovies = await _db.UserFiles
+			LatestMovies = await db.UserFiles
 				.ThatArePublic()
 				.ByRecentlyUploaded()
 				.ToUserMovieListModel()
 				.Take(10)
 				.ToListAsync(),
-			GamesWithMovies = await _db.Games
+			GamesWithMovies = await db.Games
 				.Where(g => g.UserFiles.Any(uf => !uf.Hidden))
 				.OrderBy(g => g.DisplayName)
 				.Select(g => new UserFileIndexModel.GameWithMovie
@@ -48,7 +40,7 @@ public class IndexModel : BasePageModel
 					Dates = g.UserFiles.Select(uf => uf.UploadTimestamp).ToList()
 				})
 				.ToListAsync(),
-			UncatalogedFiles = await _db.UserFiles
+			UncatalogedFiles = await db.UserFiles
 				.Where(uf => uf.GameId == null)
 				.Where(uf => !uf.Hidden)
 				.Select(uf => new UncatalogedViewModel
@@ -66,15 +58,15 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete(long fileId)
 	{
-		var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
+		var userFile = await db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
 		if (userFile is not null)
 		{
 			if (User.GetUserId() == userFile.AuthorId
 				|| User.Has(PermissionTo.EditUserFiles))
 			{
-				_db.UserFiles.Remove(userFile);
+				db.UserFiles.Remove(userFile);
 
-				await ConcurrentSave(_db, $"{userFile.FileName} deleted", $"Unable to delete {userFile.FileName}");
+				await ConcurrentSave(db, $"{userFile.FileName} deleted", $"Unable to delete {userFile.FileName}");
 			}
 		}
 
@@ -86,10 +78,10 @@ public class IndexModel : BasePageModel
 		if (User.Has(PermissionTo.CreateForumPosts)
 			&& !string.IsNullOrWhiteSpace(comment))
 		{
-			var userFile = await _db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
+			var userFile = await db.UserFiles.SingleOrDefaultAsync(u => u.Id == fileId);
 			if (userFile is not null)
 			{
-				_db.UserFileComments.Add(new UserFileComment
+				db.UserFileComments.Add(new UserFileComment
 				{
 					UserFileId = fileId,
 					Text = comment,
@@ -98,8 +90,8 @@ public class IndexModel : BasePageModel
 					CreationTimeStamp = DateTime.UtcNow
 				});
 
-				await _db.SaveChangesAsync();
-				await _publisher.SendUserFile(
+				await db.SaveChangesAsync();
+				await publisher.SendUserFile(
 					userFile.Hidden,
 					$"New user file comment by {User.Name()}",
 					$"New [user file]({{0}}) comment by {User.Name()}",
@@ -116,7 +108,7 @@ public class IndexModel : BasePageModel
 		if (User.Has(PermissionTo.CreateForumPosts)
 			&& !string.IsNullOrWhiteSpace(comment))
 		{
-			var fileComment = await _db.UserFileComments
+			var fileComment = await db.UserFileComments
 				.Include(c => c.UserFile)
 				.SingleOrDefaultAsync(u => u.Id == commentId);
 
@@ -124,10 +116,10 @@ public class IndexModel : BasePageModel
 			{
 				fileComment.Text = comment;
 
-				var result = await ConcurrentSave(_db, "Comment edited", "Unable to edit comment");
+				var result = await ConcurrentSave(db, "Comment edited", "Unable to edit comment");
 				if (result)
 				{
-					await _publisher.SendUserFile(
+					await publisher.SendUserFile(
 						fileComment.UserFile!.Hidden,
 						$"User file comment edited by {User.Name()}",
 						$"[User file]({{0}}) comment edited by {User.Name()}",
@@ -144,18 +136,18 @@ public class IndexModel : BasePageModel
 	{
 		if (User.Has(PermissionTo.CreateForumPosts))
 		{
-			var fileComment = await _db.UserFileComments
+			var fileComment = await db.UserFileComments
 				.Include(c => c.UserFile)
 				.Include(c => c.User)
 				.SingleOrDefaultAsync(u => u.Id == commentId);
 
 			if (fileComment is not null)
 			{
-				_db.UserFileComments.Remove(fileComment);
-				var result = await ConcurrentSave(_db, "Comment deleted", "Unable to delete comment");
+				db.UserFileComments.Remove(fileComment);
+				var result = await ConcurrentSave(db, "Comment deleted", "Unable to delete comment");
 				if (result)
 				{
-					await _publisher.SendUserFile(
+					await publisher.SendUserFile(
 						fileComment.UserFile!.Hidden,
 						$"User file comment DELETED by {User.Name()}",
 						$"[User file]({{0}}) comment DELETED by {User.Name()}",

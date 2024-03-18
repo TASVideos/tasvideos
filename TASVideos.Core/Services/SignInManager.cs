@@ -8,42 +8,32 @@ using Microsoft.Extensions.Options;
 
 namespace TASVideos.Core.Services;
 
-public class SignInManager : SignInManager<User>
+public class SignInManager(
+	ApplicationDbContext db,
+	UserManager userManager,
+	IHttpContextAccessor contextAccessor,
+	IUserClaimsPrincipalFactory<User> claimsFactory,
+	IOptions<IdentityOptions> optionsAccessor,
+	ILogger<SignInManager<User>> logger,
+	IAuthenticationSchemeProvider schemes,
+	IUserConfirmation<User> confirmation)
+	: SignInManager<User>(userManager,
+		contextAccessor,
+		claimsFactory,
+		optionsAccessor,
+		logger,
+		schemes,
+		confirmation)
 {
-	private readonly ApplicationDbContext _db;
-	private readonly UserManager _userManager;
-
-	public SignInManager(
-		ApplicationDbContext db,
-		UserManager userManager,
-		IHttpContextAccessor contextAccessor,
-		IUserClaimsPrincipalFactory<User> claimsFactory,
-		IOptions<IdentityOptions> optionsAccessor,
-		ILogger<SignInManager<User>> logger,
-		IAuthenticationSchemeProvider schemes,
-		IUserConfirmation<User> confirmation)
-		: base(
-			userManager,
-			contextAccessor,
-			claimsFactory,
-			optionsAccessor,
-			logger,
-			schemes,
-			confirmation)
-	{
-		_db = db;
-		_userManager = userManager;
-	}
-
 	public async Task<SignInResult> SignIn(string userName, string password, bool rememberMe = false)
 	{
-		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
+		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
 		if (user is null)
 		{
 			return SignInResult.Failed;
 		}
 
-		var claims = await _userManager.AddUserPermissionsToClaims(user);
+		var claims = await userManager.AddUserPermissionsToClaims(user);
 		var canLogIn = claims.Permissions().Contains(PermissionTo.Login);
 
 		if (!canLogIn)
@@ -62,7 +52,7 @@ public class SignInManager : SignInManager<User>
 			user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
 			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
-			await _userManager.AddUserPermissionsToClaims(user);
+			await userManager.AddUserPermissionsToClaims(user);
 		}
 
 		return result;
@@ -70,7 +60,7 @@ public class SignInManager : SignInManager<User>
 
 	public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
 	{
-		var user = await _userManager.GetRequiredUser(principal);
+		var user = await userManager.GetRequiredUser(principal);
 		var result = await UserManager.AddPasswordAsync(user, newPassword);
 
 		if (result.Succeeded)
@@ -83,7 +73,7 @@ public class SignInManager : SignInManager<User>
 
 	public async Task<bool> UsernameIsAllowed(string userName)
 	{
-		var disallows = await _db.UserDisallows.ToListAsync();
+		var disallows = await db.UserDisallows.ToListAsync();
 		foreach (var disallow in disallows)
 		{
 			var regex = new Regex(disallow.RegexPattern);
@@ -104,7 +94,7 @@ public class SignInManager : SignInManager<User>
 		}
 
 		var baseEmail = email.Split('+')[0]; // Strip off alias
-		return await _db.Users.AnyAsync(u => EF.Functions.Like(u.Email, baseEmail));
+		return await db.Users.AnyAsync(u => EF.Functions.Like(u.Email, baseEmail));
 	}
 
 	public async Task<bool> EmailAndUserNameMatch(string username, string email)
@@ -114,18 +104,18 @@ public class SignInManager : SignInManager<User>
 			return false;
 		}
 
-		return await _db.Users.AnyAsync(u => u.Email == email && u.UserName == username);
+		return await db.Users.AnyAsync(u => u.Email == email && u.UserName == username);
 	}
 
 	public async Task<User> GetRequiredUser(ClaimsPrincipal user)
 	{
-		return await _userManager.GetRequiredUser(user);
+		return await userManager.GetRequiredUser(user);
 	}
 
 	public async Task Logout(ClaimsPrincipal user)
 	{
-		var u = await _userManager.GetRequiredUser(user);
-		await _userManager.RemoveClaimsAsync(u, user.Claims);
+		var u = await userManager.GetRequiredUser(user);
+		await userManager.RemoveClaimsAsync(u, user.Claims);
 		await SignOutAsync();
 	}
 }

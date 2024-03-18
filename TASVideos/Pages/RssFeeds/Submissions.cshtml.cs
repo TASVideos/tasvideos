@@ -9,24 +9,15 @@ using TASVideos.Pages.Submissions.Models;
 namespace TASVideos.Pages.RssFeeds;
 
 [ResponseCache(Duration = 1200)]
-public class SubmissionsModel : BasePageModel
+public class SubmissionsModel(
+	ApplicationDbContext db,
+	IWikiPages wikiPages) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-
-	public SubmissionsModel(
-		ApplicationDbContext db,
-		IWikiPages wikiPages)
-	{
-		_db = db;
-		_wikiPages = wikiPages;
-	}
-
 	public List<RssSubmission> Submissions { get; set; } = new();
 	public async Task<IActionResult> OnGet()
 	{
 		var filter = SubmissionSearchRequest.Default;
-		Submissions = await _db.Submissions
+		Submissions = await db.Submissions
 			.Where(s => filter.Contains(s.Status))
 			.ByMostRecent()
 			.Select(s => new RssSubmission
@@ -41,7 +32,7 @@ public class SubmissionsModel : BasePageModel
 
 		foreach (var sub in Submissions)
 		{
-			sub.Wiki = (await _wikiPages.SubmissionPage(sub.Id))!;
+			sub.Wiki = (await wikiPages.SubmissionPage(sub.Id))!;
 		}
 
 		PageResult pageResult = Page();

@@ -6,15 +6,8 @@ using static TASVideos.Data.Entity.PublicationUrlType;
 namespace TASVideos.ViewComponents.TODO;
 
 [WikiModule(WikiModules.UnmirroredMovies)]
-public class UnmirroredMovies : ViewComponent
+public class UnmirroredMovies(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public UnmirroredMovies(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(
 		bool obs,
 		bool current,
@@ -24,7 +17,7 @@ public class UnmirroredMovies : ViewComponent
 		bool noYoutube,
 		bool playlist)
 	{
-		var query = _db.Publications.AsQueryable();
+		var query = db.Publications.AsQueryable();
 
 		if (obs)
 		{

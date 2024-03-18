@@ -7,15 +7,8 @@ using TASVideos.Pages.Users.Models;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditDisallows)]
-public class DisallowModel : BasePageModel
+public class DisallowModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public DisallowModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IEnumerable<DisallowEntry> Disallows { get; set; } = new List<DisallowEntry>();
 
 	[BindProperty]
@@ -43,19 +36,19 @@ public class DisallowModel : BasePageModel
 			return Page();
 		}
 
-		_db.UserDisallows.Add(new UserDisallow { RegexPattern = RegexPattern! });
-		await _db.SaveChangesAsync();
+		db.UserDisallows.Add(new UserDisallow { RegexPattern = RegexPattern! });
+		await db.SaveChangesAsync();
 
 		return BasePageRedirect("/Users/Disallow");
 	}
 
 	public async Task<IActionResult> OnPostDelete(int disallowId)
 	{
-		var disallow = await _db.UserDisallows.SingleOrDefaultAsync(d => d.Id == disallowId);
+		var disallow = await db.UserDisallows.SingleOrDefaultAsync(d => d.Id == disallowId);
 		if (disallow is not null)
 		{
-			_db.UserDisallows.Remove(disallow);
-			await _db.SaveChangesAsync();
+			db.UserDisallows.Remove(disallow);
+			await db.SaveChangesAsync();
 		}
 
 		return BasePageRedirect("/Users/Disallow");
@@ -63,7 +56,7 @@ public class DisallowModel : BasePageModel
 
 	private async Task PopulateDisallows()
 	{
-		Disallows = await _db.UserDisallows
+		Disallows = await db.UserDisallows
 			.OrderBy(d => d.Id)
 			.Select(d => new DisallowEntry
 			{

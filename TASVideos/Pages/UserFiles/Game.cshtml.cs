@@ -7,15 +7,8 @@ using TASVideos.Pages.UserFiles.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class GameModel : BasePageModel
+public class GameModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public GameModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public GameFileModel Game { get; set; } = new();
 
 	[FromRoute]
@@ -23,7 +16,7 @@ public class GameModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == Id);
+		var game = await db.Games.SingleOrDefaultAsync(g => g.Id == Id);
 		if (game is null)
 		{
 			return NotFound();
@@ -33,7 +26,7 @@ public class GameModel : BasePageModel
 		{
 			GameId = game.Id,
 			GameName = game.DisplayName,
-			Files = _db.UserFiles
+			Files = db.UserFiles
 				.ForGame(game.Id)
 				.HideIfNotAuthor(User.GetUserId())
 				.AsQueryable()

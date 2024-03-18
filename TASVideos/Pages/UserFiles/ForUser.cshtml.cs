@@ -8,15 +8,8 @@ using TASVideos.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class ForUserModel : BasePageModel
+public class ForUserModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ForUserModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
@@ -27,7 +20,7 @@ public class ForUserModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		Files = await _db.UserFiles
+		Files = await db.UserFiles
 			.ForAuthor(UserName)
 			.HideIfNotAuthor(User.GetUserId())
 			.OrderByDescending(uf => uf.UploadTimestamp)

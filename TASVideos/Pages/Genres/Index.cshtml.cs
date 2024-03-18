@@ -2,20 +2,13 @@
 
 namespace TASVideos.Pages.Genres;
 
-public class IndexModel : BasePageModel
+public class IndexModel(IGenreService genreService) : BasePageModel
 {
-	private readonly IGenreService _genreService;
-
-	public IndexModel(IGenreService genreService)
-	{
-		_genreService = genreService;
-	}
-
 	public IEnumerable<GenreDto> Genres { get; set; } = new List<GenreDto>();
 
 	public async Task OnGet()
 	{
-		Genres = (await _genreService.GetAll())
+		Genres = (await genreService.GetAll())
 			.OrderBy(g => g.DisplayName)
 			.ToList();
 	}

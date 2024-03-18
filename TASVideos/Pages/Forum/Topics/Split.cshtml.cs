@@ -10,22 +10,12 @@ using TASVideos.Pages.Forum.Topics.Models;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.SplitTopics)]
-public class SplitModel : BasePageModel
+public class SplitModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IForumService forumService)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IForumService _forumService;
-
-	public SplitModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IForumService forumService)
-	{
-		_db = db;
-		_publisher = publisher;
-		_forumService = forumService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -59,7 +49,7 @@ public class SplitModel : BasePageModel
 		}
 
 		bool seeRestricted = CanSeeRestricted;
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.Include(t => t.ForumPosts)
 			.ExcludeRestricted(seeRestricted)
@@ -70,7 +60,7 @@ public class SplitModel : BasePageModel
 			return NotFound();
 		}
 
-		var destinationForum = await _db.Forums
+		var destinationForum = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
 
@@ -113,8 +103,8 @@ public class SplitModel : BasePageModel
 			ForumId = Topic.SplitToForumId
 		};
 
-		_db.ForumTopics.Add(newTopic);
-		await _db.SaveChangesAsync();
+		db.ForumTopics.Add(newTopic);
+		await db.SaveChangesAsync();
 
 		foreach (var post in postsToSplit)
 		{
@@ -122,12 +112,12 @@ public class SplitModel : BasePageModel
 			post.ForumId = destinationForum.Id;
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
-		_forumService.ClearLatestPostCache();
-		_forumService.ClearTopicActivityCache();
+		forumService.ClearLatestPostCache();
+		forumService.ClearTopicActivityCache();
 
-		await _publisher.SendForum(
+		await publisher.SendForum(
 			destinationForum.Restricted || topic.Forum!.Restricted,
 			$"Topic SPLIT by {User.Name()}",
 			$"[Topic]({{0}}) SPLIT by {User.Name()}",
@@ -140,7 +130,7 @@ public class SplitModel : BasePageModel
 	private async Task<SplitTopicModel?> PopulatePosts()
 	{
 		bool seeRestricted = CanSeeRestricted;
-		return await _db.ForumTopics
+		return await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == Id)
 			.Select(t => new SplitTopicModel
@@ -172,7 +162,7 @@ public class SplitModel : BasePageModel
 	private async Task PopulateAvailableForums()
 	{
 		var seeRestricted = CanSeeRestricted;
-		AvailableForums = await _db.Forums
+		AvailableForums = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Select(f => new SelectListItem
 			{

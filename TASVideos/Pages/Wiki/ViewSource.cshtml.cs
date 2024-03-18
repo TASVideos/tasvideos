@@ -5,15 +5,8 @@ using TASVideos.Core.Services.Wiki;
 namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
-public class ViewSourceModel : BasePageModel
+public class ViewSourceModel(IWikiPages wikiPages) : BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
-
-	public ViewSourceModel(IWikiPages wikiPages)
-	{
-		_wikiPages = wikiPages;
-	}
-
 	[FromQuery]
 	public string? Path { get; set; }
 
@@ -25,7 +18,7 @@ public class ViewSourceModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		Path = Path?.Trim('/') ?? "";
-		var wikiPage = await _wikiPages.Page(Path, Revision);
+		var wikiPage = await wikiPages.Page(Path, Revision);
 
 		if (wikiPage is not null)
 		{

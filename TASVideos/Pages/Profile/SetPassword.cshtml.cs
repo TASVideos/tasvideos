@@ -6,15 +6,8 @@ using TASVideos.Core.Services;
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class SetPasswordModel : BasePageModel
+public class SetPasswordModel(SignInManager signInManager) : BasePageModel
 {
-	private readonly SignInManager _signInManager;
-
-	public SetPasswordModel(SignInManager signInManager)
-	{
-		_signInManager = signInManager;
-	}
-
 	[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
 	[Display(Name = "New password")]
@@ -27,8 +20,8 @@ public class SetPasswordModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await _signInManager.GetRequiredUser(User);
-		var hasPassword = await _signInManager.UserManager.HasPasswordAsync(user);
+		var user = await signInManager.GetRequiredUser(User);
+		var hasPassword = await signInManager.UserManager.HasPasswordAsync(user);
 
 		if (hasPassword)
 		{
@@ -45,7 +38,7 @@ public class SetPasswordModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _signInManager.AddPassword(User, NewPassword);
+		var result = await signInManager.AddPassword(User, NewPassword);
 
 		if (!result.Succeeded)
 		{

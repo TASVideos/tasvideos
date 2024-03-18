@@ -6,15 +6,8 @@ using TASVideos.Pages.Roles.Models;
 namespace TASVideos.Pages.Roles;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public RoleDisplayModel RoleViewModel { get; set; } = new();
 
 	[FromRoute]
@@ -28,7 +21,7 @@ public class IndexModel : BasePageModel
 		}
 
 		Role = Role.Replace(" ", "");
-		var roleModel = await _db.Roles
+		var roleModel = await db.Roles
 			.Where(r => r.Name.Replace(" ", "") == Role)
 			.ToRoleDisplayModel()
 			.SingleOrDefaultAsync();

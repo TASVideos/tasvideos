@@ -2,15 +2,8 @@
 
 namespace TASVideos.Middleware;
 
-public class HtmlRedirectionMiddleware
+public class HtmlRedirectionMiddleware(RequestDelegate next)
 {
-	private readonly RequestDelegate _next;
-
-	public HtmlRedirectionMiddleware(RequestDelegate next)
-	{
-		_next = next;
-	}
-
 	public Task Invoke(HttpContext context)
 	{
 		var request = context.Request;
@@ -19,7 +12,7 @@ public class HtmlRedirectionMiddleware
 		if (path is null || !path.EndsWith(".html", StringComparison.OrdinalIgnoreCase)
 		|| string.Equals(path, "/api/index.html", StringComparison.OrdinalIgnoreCase))
 		{
-			return _next(context);
+			return next(context);
 		}
 
 		var redirectUrl = UriHelper.BuildAbsolute(

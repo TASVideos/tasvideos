@@ -8,25 +8,13 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.EditPublicationFiles)]
-public class EditFilesModel : BasePageModel
+public class EditFilesModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IMediaFileUploader uploader,
+	IPublicationMaintenanceLogger publicationMaintenanceLogger)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IMediaFileUploader _uploader;
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-
-	public EditFilesModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IMediaFileUploader uploader,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger)
-	{
-		_db = db;
-		_publisher = publisher;
-		_uploader = uploader;
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -46,7 +34,7 @@ public class EditFilesModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var title = await _db.Publications
+		var title = await db.Publications
 			.Where(p => p.Id == Id)
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
@@ -57,7 +45,7 @@ public class EditFilesModel : BasePageModel
 		}
 
 		Title = title;
-		Files = await _db.PublicationFiles
+		Files = await db.PublicationFiles
 			.ForPublication(Id)
 			.ToListAsync();
 
@@ -68,19 +56,19 @@ public class EditFilesModel : BasePageModel
 	{
 		if (!ModelState.IsValid)
 		{
-			Files = await _db.PublicationFiles
+			Files = await db.PublicationFiles
 				.ForPublication(Id)
 				.ToListAsync();
 
 			return Page();
 		}
 
-		var path = await _uploader.UploadScreenshot(Id, NewFile!, Description);
+		var path = await uploader.UploadScreenshot(Id, NewFile!, Description);
 
 		string log = $"Added Screenshot file {path}";
 		SuccessStatusMessage(log);
-		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-		await _publisher.SendPublicationEdit(
+		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+		await publisher.SendPublicationEdit(
 			$"{Id}M edited by {User.Name()}",
 			$"[{Id}M]({{0}}) edited by {User.Name()}",
 			$"{log} | {Title}",
@@ -91,14 +79,14 @@ public class EditFilesModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete(int publicationFileId)
 	{
-		var file = await _uploader.DeleteFile(publicationFileId);
+		var file = await uploader.DeleteFile(publicationFileId);
 
 		if (file is not null)
 		{
 			string log = $"Deleted {file.Type} file {file.Path}";
 			SuccessStatusMessage(log);
-			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-			await _publisher.SendPublicationEdit(
+			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+			await publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log}",

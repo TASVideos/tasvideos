@@ -5,15 +5,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.ViewPrivateUserData)]
-public class IpsModel : BasePageModel
+public class IpsModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public IpsModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
@@ -23,20 +16,20 @@ public class IpsModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
+		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
 		if (user is null)
 		{
 			return NotFound();
 		}
 
-		var postIps = await _db.ForumPosts
+		var postIps = await db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
 			.Where(p => p.IpAddress != null)
 			.Select(p => new IpEntry(p.IpAddress ?? "", p.LastUpdateTimestamp))
 			.Distinct()
 			.ToListAsync();
 
-		var voteIps = await _db.ForumPollOptionVotes
+		var voteIps = await db.ForumPollOptionVotes
 			.Where(v => v.UserId == user.Id)
 			.Where(p => p.IpAddress != null)
 			.Select(p => new IpEntry(p.IpAddress ?? "", p.CreateTimestamp))

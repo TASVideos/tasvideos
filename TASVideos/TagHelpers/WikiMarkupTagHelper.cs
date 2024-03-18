@@ -10,15 +10,8 @@ using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.TagHelpers;
 
-public partial class WikiMarkup : TagHelper, IWriterHelper
+public partial class WikiMarkup(IViewComponentHelper viewComponentHelper) : TagHelper, IWriterHelper
 {
-	private readonly IViewComponentHelper _viewComponentHelper;
-
-	public WikiMarkup(IViewComponentHelper viewComponentHelper)
-	{
-		_viewComponentHelper = viewComponentHelper;
-	}
-
 	[ViewContext]
 	[HtmlAttributeNotBound]
 	public ViewContext ViewContext { get; set; } = new();
@@ -28,7 +21,7 @@ public partial class WikiMarkup : TagHelper, IWriterHelper
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
-		((IViewContextAware)_viewComponentHelper).Contextualize(ViewContext);
+		((IViewContextAware)viewComponentHelper).Contextualize(ViewContext);
 		output.TagName = "article";
 		output.AddCssClass("wiki");
 		await Util.RenderHtmlAsync(Markup, new TagHelperTextWriter(output.Content), this);
@@ -58,7 +51,7 @@ public partial class WikiMarkup : TagHelper, IWriterHelper
 		var paramObject = ModuleParamHelpers
 			.GetParameterData(w, name, invokeMethod, PageData, pp);
 
-		var content = await _viewComponentHelper.InvokeAsync(viewComponent, paramObject);
+		var content = await viewComponentHelper.InvokeAsync(viewComponent, paramObject);
 		content.WriteTo(w, HtmlEncoder.Default);
 	}
 

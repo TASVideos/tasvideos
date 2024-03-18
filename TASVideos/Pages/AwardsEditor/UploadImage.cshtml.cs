@@ -7,17 +7,8 @@ using TASVideos.Pages.AwardsEditor.Models;
 namespace TASVideos.Pages.AwardsEditor;
 
 [RequirePermission(PermissionTo.CreateAwards)]
-public class UploadImageModel : BasePageModel
+public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awards) : BasePageModel
 {
-	private readonly IMediaFileUploader _mediaFileUploader;
-	private readonly IAwards _awards;
-
-	public UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awards)
-	{
-		_mediaFileUploader = mediaFileUploader;
-		_awards = awards;
-	}
-
 	[FromRoute]
 	public int Year { get; set; }
 
@@ -36,7 +27,7 @@ public class UploadImageModel : BasePageModel
 			return Page();
 		}
 
-		var exists = await _awards.CategoryExists(ImageToUpload.Award!);
+		var exists = await awards.CategoryExists(ImageToUpload.Award!);
 		if (!exists)
 		{
 			ModelState.AddModelError("", "Award does not exist.");
@@ -44,7 +35,7 @@ public class UploadImageModel : BasePageModel
 			return Page();
 		}
 
-		await _mediaFileUploader.UploadAwardImage(
+		await mediaFileUploader.UploadAwardImage(
 			ImageToUpload.BaseImage!,
 			ImageToUpload.BaseImage2X!,
 			ImageToUpload.BaseImage4X!,
@@ -56,7 +47,7 @@ public class UploadImageModel : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableAwardCategories = UiDefaults.DefaultEntry.Concat(await _awards.AwardCategories()
+		AvailableAwardCategories = UiDefaults.DefaultEntry.Concat(await awards.AwardCategories()
 			.OrderBy(c => c.Description)
 			.ToDropdown(Year)
 			.ToListAsync())

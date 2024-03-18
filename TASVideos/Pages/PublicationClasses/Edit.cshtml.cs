@@ -5,15 +5,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.PublicationClasses;
 
 [RequirePermission(PermissionTo.ClassMaintenance)]
-public class EditModel : BasePageModel
+public class EditModel(IClassService classService) : BasePageModel
 {
-	private readonly IClassService _classService;
-
-	public EditModel(IClassService classService)
-	{
-		_classService = classService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -23,14 +16,14 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publicationClass = await _classService.GetById(Id);
+		var publicationClass = await classService.GetById(Id);
 		if (publicationClass is null)
 		{
 			return NotFound();
 		}
 
 		PublicationClass = publicationClass;
-		InUse = await _classService.InUse(Id);
+		InUse = await classService.InUse(Id);
 		return Page();
 	}
 
@@ -41,7 +34,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _classService.Edit(Id, PublicationClass);
+		var result = await classService.Edit(Id, PublicationClass);
 		switch (result)
 		{
 			default:
@@ -62,7 +55,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete()
 	{
-		var result = await _classService.Delete(Id);
+		var result = await classService.Delete(Id);
 		switch (result)
 		{
 			case ClassDeleteResult.InUse:
