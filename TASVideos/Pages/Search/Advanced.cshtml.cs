@@ -9,16 +9,10 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Search;
 
 [AllowAnonymous]
-public class AdvancedModel : BasePageModel
+public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 {
 	public const int PageSize = 10;
 	public const int PageSizeSingle = 50;
-	private readonly ApplicationDbContext _db;
-
-	public AdvancedModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
 
 	[FromQuery]
 	[StringLength(100, MinimumLength = 2)]
@@ -86,11 +80,11 @@ public class AdvancedModel : BasePageModel
 			}
 
 			var skip = DisplayPageSize * (PageNumber - 1);
-			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 
 			if (PageSearch)
 			{
-				PageResults = await _db.WikiPages
+				PageResults = await db.WikiPages
 					.ThatAreNotDeleted()
 					.ThatAreCurrent()
 					.Where(w => Regex.IsMatch(w.PageName, SearchTerms) || Regex.IsMatch(w.Markup, SearchTerms))
@@ -103,7 +97,7 @@ public class AdvancedModel : BasePageModel
 
 			if (TopicSearch)
 			{
-				TopicResults = await _db.ForumTopics
+				TopicResults = await db.ForumTopics
 				.ExcludeRestricted(seeRestricted)
 				.Where(t => t.ForumId != SiteGlobalConstants.WorkbenchForumId && t.ForumId != SiteGlobalConstants.PlaygroundForumId && t.ForumId != SiteGlobalConstants.PublishedMoviesForumId && t.ForumId != SiteGlobalConstants.GrueFoodForumId)
 				.Where(t => Regex.IsMatch(t.Title, "(^|[^A-Za-z])" + SearchTerms))
@@ -119,7 +113,7 @@ public class AdvancedModel : BasePageModel
 
 			if (PostSearch)
 			{
-				PostResults = await _db.ForumPosts
+				PostResults = await db.ForumPosts
 				.ExcludeRestricted(seeRestricted)
 				.Where(p => Regex.IsMatch(p.Text, "(^|[^A-Za-z])" + SearchTerms))
 				.OrderByDescending(p => p.CreateTimestamp)
@@ -135,7 +129,7 @@ public class AdvancedModel : BasePageModel
 
 			if (GameSearch)
 			{
-				GameResults = await _db.Games
+				GameResults = await db.Games
 				.Where(g => Regex.IsMatch(g.DisplayName, "(^|[^A-Za-z])" + SearchTerms))
 				.OrderByDescending(g => g.Publications.Count)
 				.ThenByDescending(g => g.Submissions.Count)
@@ -148,7 +142,7 @@ public class AdvancedModel : BasePageModel
 
 			if (PublicationSearch)
 			{
-				PublicationResults = await _db.Publications
+				PublicationResults = await db.Publications
 				.Where(p => Regex.IsMatch(p.Title, "(^|[^A-Za-z])" + SearchTerms))
 				.OrderBy(p => p.Title)
 				.Skip(skip)

@@ -11,15 +11,8 @@ public interface IRoleService
 
 public record AssignableRole(int Id, string Name, bool Disabled);
 
-internal class RoleService : IRoleService
+internal class RoleService(ApplicationDbContext db) : IRoleService
 {
-	private readonly ApplicationDbContext _db;
-
-	public RoleService(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IEnumerable<AssignableRole>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles)
 	{
 		if (assignedRoles is null)
@@ -28,7 +21,7 @@ internal class RoleService : IRoleService
 		}
 
 		var assignedRoleList = assignedRoles.ToList();
-		var assignablePermissions = await _db.Users
+		var assignablePermissions = await db.Users
 			.Where(u => u.Id == userId)
 			.SelectMany(u => u.UserRoles)
 			.SelectMany(ur => ur.Role!.RolePermission)
@@ -36,7 +29,7 @@ internal class RoleService : IRoleService
 			.Select(rp => rp.PermissionId)
 			.ToListAsync();
 
-		var roles = await _db.Roles
+		var roles = await db.Roles
 			.Where(r => r.RolePermission.All(rp => assignablePermissions.Contains(rp.PermissionId))
 				|| assignedRoleList.Contains(r.Id))
 			.Select(r => new {
@@ -54,14 +47,14 @@ internal class RoleService : IRoleService
 
 	public async Task RemoveRolesFromUser(int userId)
 	{
-		var userRoles = await _db.UserRoles
+		var userRoles = await db.UserRoles
 			.Where(ur => ur.UserId == userId)
 			.ToListAsync();
 
 		try
 		{
-			_db.RemoveRange(userRoles);
-			await _db.SaveChangesAsync();
+			db.RemoveRange(userRoles);
+			await db.SaveChangesAsync();
 		}
 		catch (DbUpdateConcurrencyException)
 		{
@@ -71,12 +64,12 @@ internal class RoleService : IRoleService
 
 	public async Task<bool> IsInUse(int roleId)
 	{
-		return await _db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
+		return await db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
 	}
 
 	public async Task<IReadOnlyCollection<string>> GetRolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds)
 	{
-		return await _db.Roles
+		return await db.Roles
 			.ThatCanBeAssignedBy(permissionIds)
 			.Select(r => r.Name)
 			.ToListAsync();

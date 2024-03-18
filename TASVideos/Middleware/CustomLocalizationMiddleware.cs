@@ -5,15 +5,8 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Middleware;
 
-public class CustomLocalizationMiddleware
+public class CustomLocalizationMiddleware(RequestDelegate next)
 {
-	private readonly RequestDelegate _next;
-
-	public CustomLocalizationMiddleware(RequestDelegate next)
-	{
-		_next = next;
-	}
-
 	public async Task Invoke(HttpContext context, ApplicationDbContext db, ICacheService cache)
 	{
 		if (context.User.IsLoggedIn())
@@ -51,7 +44,7 @@ public class CustomLocalizationMiddleware
 			}
 		}
 
-		await _next(context);
+		await next(context);
 	}
 
 	private class CustomCultureData

@@ -8,15 +8,9 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Search;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
 	public const int PageSize = 10;
-	private readonly ApplicationDbContext _db;
-
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
 
 	[FromQuery]
 	[StringLength(100, MinimumLength = 2)]
@@ -32,7 +26,7 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		if (!_db.Database.IsNpgsql())
+		if (!db.Database.IsNpgsql())
 		{
 			ModelState.AddModelError("", "This feature is not currently available.");
 			return BadRequest(ModelState);
@@ -47,8 +41,8 @@ public class IndexModel : BasePageModel
 		{
 			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var skip = PageSize * (PageNumber - 1);
-			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
-			PageResults = await _db.WikiPages
+			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+			PageResults = await db.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrent()
 				.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
@@ -58,7 +52,7 @@ public class IndexModel : BasePageModel
 				.Select(w => new PageSearchModel(EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(w.Markup), w.PageName))
 				.ToListAsync();
 
-			PostResults = await _db.ForumPosts
+			PostResults = await db.ForumPosts
 				.ExcludeRestricted(seeRestricted)
 				.Where(p => p.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
@@ -70,7 +64,7 @@ public class IndexModel : BasePageModel
 					p.Id))
 				.ToListAsync();
 
-			GameResults = await _db.Games
+			GameResults = await db.Games
 				.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", SearchTerms)))
 				.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ")).ToStripped().Rank(EF.Functions.WebSearchToTsQuery("simple", SearchTerms), NpgsqlTsRankingNormalization.DivideByLength))
 					.ThenBy(g => g.DisplayName.Length)

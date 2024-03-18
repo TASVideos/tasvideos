@@ -7,15 +7,8 @@ using TASVideos.Pages.Forum.Subforum.Models;
 namespace TASVideos.Pages.Forum.Subforum;
 
 [RequirePermission(PermissionTo.EditForums)]
-public class CreateModel : BasePageModel
+public class CreateModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public CreateModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[BindProperty]
 	public ForumEditModel Forum { get; set; } = new();
 
@@ -44,15 +37,15 @@ public class CreateModel : BasePageModel
 			Restricted = Forum.Restricted
 		};
 
-		_db.Forums.Add(forum);
-		await ConcurrentSave(_db, $"Forum {forum.Name} created successfully.", "Unable to create forum.");
+		db.Forums.Add(forum);
+		await ConcurrentSave(db, $"Forum {forum.Name} created successfully.", "Unable to create forum.");
 
 		return BasePageRedirect("Index", new { forum.Id });
 	}
 
 	private async Task Initialize()
 	{
-		AvailableCategories = await _db.ForumCategories
+		AvailableCategories = await db.ForumCategories
 			.ToDropdown()
 			.ToListAsync();
 	}

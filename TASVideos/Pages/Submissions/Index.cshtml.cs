@@ -10,7 +10,7 @@ using TASVideos.Pages.Submissions.Models;
 namespace TASVideos.Pages.Submissions;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
 	private static readonly IEnumerable<SelectListItem> Statuses = Enum.GetValues(typeof(SubmissionStatus))
 		.Cast<SubmissionStatus>()
@@ -21,13 +21,6 @@ public class IndexModel : BasePageModel
 		})
 		.OrderBy(s => s.Text)
 		.ToList();
-
-	private readonly ApplicationDbContext _db;
-
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
 
 	// For legacy routes such as Subs-Rej-422up
 	[FromRoute]
@@ -46,7 +39,7 @@ public class IndexModel : BasePageModel
 	public async Task OnGet()
 	{
 		SystemList = UiDefaults.DefaultEntry.Concat(
-			await _db.GameSystems
+			await db.GameSystems
 			.OrderBy(s => s.Code)
 			.ToDropdown()
 			.ToListAsync());
@@ -66,7 +59,7 @@ public class IndexModel : BasePageModel
 				: SubmissionSearchRequest.Default;
 		}
 
-		var entries = await _db.Submissions
+		var entries = await db.Submissions
 			.FilterBy(Search)
 			.ToSubListEntry()
 			.SortedPageOf(Search);

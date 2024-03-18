@@ -6,15 +6,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents.TODO;
 
 [WikiModule(WikiModules.UncatalogedTopics)]
-public class UncatalogedTopics : ViewComponent
+public class UncatalogedTopics(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public UncatalogedTopics(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		int? forumId = null;
@@ -24,7 +17,7 @@ public class UncatalogedTopics : ViewComponent
 			forumId = f;
 		}
 
-		var query = _db.ForumTopics
+		var query = db.ForumTopics
 			.Where(t => t.Forum!.Category!.Id == SiteGlobalConstants.GamesForumCategory)
 			.Where(t => t.ForumId != SiteGlobalConstants.OtherGamesForum)
 			.Where(t => !t.Title.ToLower().Contains("wishlist"))

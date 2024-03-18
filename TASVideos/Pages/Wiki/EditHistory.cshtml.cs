@@ -7,15 +7,8 @@ using TASVideos.Pages.Wiki.Models;
 namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
-public class EditHistoryModel : BasePageModel
+public class EditHistoryModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public EditHistoryModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
@@ -23,7 +16,7 @@ public class EditHistoryModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		History = await _db.WikiPages
+		History = await db.WikiPages
 			.ThatAreNotDeleted()
 			.CreatedBy(UserName)
 			.ByMostRecent()

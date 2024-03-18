@@ -4,14 +4,9 @@ namespace TASVideos.WikiEngine;
 
 public class NewParser
 {
-	public class SyntaxException : Exception
+	public class SyntaxException(string msg, int textLocation) : Exception(msg)
 	{
-		public int TextLocation { get; }
-		public SyntaxException(string msg, int textLocation)
-			: base(msg)
-		{
-			TextLocation = textLocation;
-		}
+		public int TextLocation { get; } = textLocation;
 	}
 
 	private readonly List<INode> _output = new();

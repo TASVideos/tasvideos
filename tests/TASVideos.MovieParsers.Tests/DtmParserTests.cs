@@ -4,14 +4,9 @@
 [TestCategory("DtmParsers")]
 public class DtmParserTests : BaseParserTests
 {
-	private readonly Dtm _dtmParser;
+	private readonly Dtm _dtmParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.DtmSampleFiles.";
-
-	public DtmParserTests()
-	{
-		_dtmParser = new Dtm();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

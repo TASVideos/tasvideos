@@ -6,19 +6,12 @@ public interface IPublicationMaintenanceLogger
 	Task Log(int publicationId, int userId, IEnumerable<string> logs);
 }
 
-internal class PublicationMaintenanceLogger : IPublicationMaintenanceLogger
+internal class PublicationMaintenanceLogger(ApplicationDbContext db) : IPublicationMaintenanceLogger
 {
-	private readonly ApplicationDbContext _db;
-
-	public PublicationMaintenanceLogger(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task Log(int publicationId, int userId, string log)
 	{
 		Add(publicationId, userId, log);
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 	}
 
 	public async Task Log(int publicationId, int userId, IEnumerable<string> logs)
@@ -28,12 +21,12 @@ internal class PublicationMaintenanceLogger : IPublicationMaintenanceLogger
 			Add(publicationId, userId, log);
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 	}
 
 	private void Add(int publicationId, int userId, string log)
 	{
-		_db.PublicationMaintenanceLogs.Add(new PublicationMaintenanceLog
+		db.PublicationMaintenanceLogs.Add(new PublicationMaintenanceLog
 		{
 			TimeStamp = DateTime.UtcNow,
 			PublicationId = publicationId,

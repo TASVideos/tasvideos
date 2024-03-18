@@ -6,15 +6,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.BanIpAddresses)]
-public class IpBanModel : BasePageModel
+public class IpBanModel(IIpBanService banService) : BasePageModel
 {
-	private readonly IIpBanService _banService;
-
-	public IpBanModel(IIpBanService banService)
-	{
-		_banService = banService;
-	}
-
 	public IList<IpBanEntry> BannedIps { get; set; } = new List<IpBanEntry>();
 
 	[FromQuery]
@@ -36,7 +29,7 @@ public class IpBanModel : BasePageModel
 	{
 		if (!string.IsNullOrWhiteSpace(IpAddressToBan))
 		{
-			var result = await _banService.Add(IpAddressToBan);
+			var result = await banService.Add(IpAddressToBan);
 			if (!result)
 			{
 				ModelState.AddModelError(nameof(IpAddressToBan), "Unable to add ip address or ip address range");
@@ -50,13 +43,13 @@ public class IpBanModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete(string mask)
 	{
-		await _banService.Remove(mask);
+		await banService.Remove(mask);
 		return RedirectToIpBan();
 	}
 
 	private async Task PopulateList()
 	{
-		BannedIps = (await _banService.GetAll())
+		BannedIps = (await banService.GetAll())
 			.OrderByDescending(b => b.DateCreated)
 			.ToList();
 	}

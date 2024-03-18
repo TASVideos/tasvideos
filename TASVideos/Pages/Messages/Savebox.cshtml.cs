@@ -6,21 +6,14 @@ using TASVideos.Pages.Messages.Models;
 namespace TASVideos.Pages.Messages;
 
 [Authorize]
-public class SaveboxModel : BasePageModel
+public class SaveboxModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public SaveboxModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IEnumerable<SaveboxEntry> SaveBox { get; set; } = new List<SaveboxEntry>();
 
 	public async Task OnGet()
 	{
 		var userId = User.GetUserId();
-		SaveBox = await _db.PrivateMessages
+		SaveBox = await db.PrivateMessages
 			.ThatAreSavedByUser(userId)
 			.Select(pm => new SaveboxEntry
 			{

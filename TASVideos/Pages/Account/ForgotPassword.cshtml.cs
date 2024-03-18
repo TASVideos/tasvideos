@@ -7,17 +7,8 @@ using TASVideos.Core.Services.Email;
 namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
-public class ForgotPasswordModel : BasePageModel
+public class ForgotPasswordModel(UserManager userManager, IEmailService emailService) : BasePageModel
 {
-	private readonly UserManager _userManager;
-	private readonly IEmailService _emailService;
-
-	public ForgotPasswordModel(UserManager userManager, IEmailService emailService)
-	{
-		_userManager = userManager;
-		_emailService = emailService;
-	}
-
 	[BindProperty]
 	[EmailAddress]
 	public string Email { get; set; } = "";
@@ -26,16 +17,16 @@ public class ForgotPasswordModel : BasePageModel
 	{
 		if (ModelState.IsValid)
 		{
-			var user = await _userManager.FindByEmailAsync(Email);
-			if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
+			var user = await userManager.FindByEmailAsync(Email);
+			if (user is null || !await userManager.IsEmailConfirmedAsync(user))
 			{
 				// Don't reveal that the user does not exist or is not confirmed
 				return RedirectToPage("ForgotPasswordConfirmation");
 			}
 
-			var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+			var code = await userManager.GeneratePasswordResetTokenAsync(user);
 			var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
-			await _emailService.ResetPassword(Email, callbackUrl);
+			await emailService.ResetPassword(Email, callbackUrl);
 
 			return RedirectToPage("ForgotPasswordConfirmation");
 		}

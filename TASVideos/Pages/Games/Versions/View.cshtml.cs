@@ -7,15 +7,8 @@ using TASVideos.Pages.Games.Versions.Models;
 namespace TASVideos.Pages.Games.Versions;
 
 [AllowAnonymous]
-public class ViewModel : BasePageModel
+public class ViewModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ViewModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int GameId { get; set; }
 
@@ -33,7 +26,7 @@ public class ViewModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
+		var game = await db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
 
 		if (game is null)
 		{
@@ -42,7 +35,7 @@ public class ViewModel : BasePageModel
 
 		GameName = game.DisplayName;
 
-		var version = await _db.GameVersions
+		var version = await db.GameVersions
 			.Where(r => r.Id == Id && r.Game!.Id == GameId)
 			.Select(v => new VersionDisplayModel(
 				v.System!.Code,

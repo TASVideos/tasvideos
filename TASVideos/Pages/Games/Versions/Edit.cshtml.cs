@@ -8,7 +8,7 @@ using TASVideos.Pages.Games.Versions.Models;
 namespace TASVideos.Pages.Games.Versions;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class EditModel : BasePageModel
+public class EditModel(ApplicationDbContext db) : BasePageModel
 {
 	private static readonly IEnumerable<SelectListItem> VersionTypes = Enum
 		.GetValues(typeof(VersionTypes))
@@ -18,13 +18,6 @@ public class EditModel : BasePageModel
 			Text = r.ToString(),
 			Value = ((int)r).ToString()
 		});
-
-	private readonly ApplicationDbContext _db;
-
-	public EditModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
 
 	[FromRoute]
 	public int GameId { get; set; }
@@ -58,7 +51,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
+		var game = await db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
 
 		if (game is null)
 		{
@@ -67,14 +60,14 @@ public class EditModel : BasePageModel
 
 		GameName = game.DisplayName;
 
-		AvailableSystems = await _db.GameSystems
+		AvailableSystems = await db.GameSystems
 			.OrderBy(s => s.Code)
 			.ToDropdown()
 			.ToListAsync();
 
 		if (SystemId.HasValue)
 		{
-			var systemCode = await _db.GameSystems
+			var systemCode = await db.GameSystems
 				.Where(s => s.Id == SystemId)
 				.Select(s => s.Code)
 				.SingleOrDefaultAsync();
@@ -89,7 +82,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var version = await _db.GameVersions
+		var version = await db.GameVersions
 			.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
 			.Select(v => new VersionEditModel
 			{
@@ -124,7 +117,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var system = await _db.GameSystems
+		var system = await db.GameSystems
 			.SingleOrDefaultAsync(s => s.Code == Version.SystemCode);
 
 		if (system is null)
@@ -135,7 +128,7 @@ public class EditModel : BasePageModel
 		GameVersion version;
 		if (Id.HasValue)
 		{
-			version = await _db.GameVersions.SingleAsync(r => r.Id == Id.Value);
+			version = await db.GameVersions.SingleAsync(r => r.Id == Id.Value);
 			version.Name = Version.Name;
 			version.Md5 = Version.Md5;
 			version.Sha1 = Version.Sha1;
@@ -156,15 +149,15 @@ public class EditModel : BasePageModel
 				Region = Version.Region,
 				Type = Version.Type,
 				TitleOverride = Version.TitleOverride,
-				Game = await _db.Games.SingleAsync(g => g.Id == GameId),
+				Game = await db.Games.SingleAsync(g => g.Id == GameId),
 				System = system
 			};
-			_db.GameVersions.Add(version);
+			db.GameVersions.Add(version);
 		}
 
 		try
 		{
-			await ConcurrentSave(_db, $"Game Version {Id} updated", $"Unable to update Game Version {Id}");
+			await ConcurrentSave(db, $"Game Version {Id} updated", $"Unable to update Game Version {Id}");
 		}
 		catch (DbUpdateException ex)
 		{
@@ -190,14 +183,14 @@ public class EditModel : BasePageModel
 			return BasePageRedirect("List", new { gameId = GameId });
 		}
 
-		_db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(_db, $"Game Version {Id} deleted", $"Unable to delete Game Version {Id}");
+		db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
+		await ConcurrentSave(db, $"Game Version {Id} deleted", $"Unable to delete Game Version {Id}");
 		return BasePageRedirect("List", new { gameId = GameId });
 	}
 
 	private async Task<bool> CanBeDeleted()
 	{
-		return !await _db.Submissions.AnyAsync(s => s.GameVersion!.Id == Id)
-				&& !await _db.Publications.AnyAsync(p => p.GameVersion!.Id == Id);
+		return !await db.Submissions.AnyAsync(s => s.GameVersion!.Id == Id)
+				&& !await db.Publications.AnyAsync(p => p.GameVersion!.Id == Id);
 	}
 }

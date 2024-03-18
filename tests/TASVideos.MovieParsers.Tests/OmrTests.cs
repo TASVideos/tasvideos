@@ -4,14 +4,9 @@
 [TestCategory("OmrParsers")]
 public class OmrTests : BaseParserTests
 {
-	private readonly Omr _omrParser;
+	private readonly Omr _omrParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.OmrSampleFiles.";
-
-	public OmrTests()
-	{
-		_omrParser = new Omr();
-	}
 
 	[TestMethod]
 	public async Task SystemMsx()

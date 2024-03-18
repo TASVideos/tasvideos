@@ -6,14 +6,9 @@ namespace TASVideos.MovieParsers.Tests;
 [TestCategory("LtmParsers")]
 public class LtmTests : BaseParserTests
 {
-	private readonly Ltm _ltmParser;
+	private readonly Ltm _ltmParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.LtmSampleFiles.";
-
-	public LtmTests()
-	{
-		_ltmParser = new Ltm();
-	}
 
 	[TestMethod]
 	[DataRow("arcade.ltm", SystemCodes.Arcade)]

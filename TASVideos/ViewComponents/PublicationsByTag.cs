@@ -5,18 +5,11 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.PublicationsByTag)]
-public class PublicationsByTag : ViewComponent
+public class PublicationsByTag(ITagService tags) : ViewComponent
 {
-	private readonly ITagService _tags;
-
-	public PublicationsByTag(ITagService tags)
-	{
-		_tags = tags;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var tags = await _tags.GetAll();
-		return View(tags);
+		var tags1 = await tags.GetAll();
+		return View(tags1);
 	}
 }

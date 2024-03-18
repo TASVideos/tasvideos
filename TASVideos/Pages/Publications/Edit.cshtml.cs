@@ -12,34 +12,16 @@ using TASVideos.Pages.Publications.Models;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.EditPublicationMetaData)]
-public class EditModel : BasePageModel
+public class EditModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IWikiPages wikiPages,
+	ITagService tagsService,
+	IFlagService flagsService,
+	IPublicationMaintenanceLogger publicationMaintenanceLogger,
+	IYoutubeSync youtubeSync)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly ITagService _tagsService;
-	private readonly IFlagService _flagsService;
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-	private readonly IYoutubeSync _youtubeSync;
-
-	public EditModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IWikiPages wikiPages,
-		ITagService tagsService,
-		IFlagService flagsService,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger,
-		IYoutubeSync youtubeSync)
-	{
-		_db = db;
-		_wikiPages = wikiPages;
-		_publisher = publisher;
-		_tagsService = tagsService;
-		_flagsService = flagsService;
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-		_youtubeSync = youtubeSync;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -56,7 +38,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Where(p => p.Id == Id)
 			.Select(p => new PublicationEditModel
 			{
@@ -93,10 +75,10 @@ public class EditModel : BasePageModel
 			return NotFound();
 		}
 
-		publication.Markup = (await _wikiPages.PublicationPage(Id))?.Markup ?? "";
+		publication.Markup = (await wikiPages.PublicationPage(Id))?.Markup ?? "";
 
 		Publication = publication;
-		Publication.Authors = await _db.PublicationAuthors
+		Publication.Authors = await db.PublicationAuthors
 			.Where(pa => pa.PublicationId == Id)
 			.OrderBy(pa => pa.Ordinal)
 			.Select(pa => pa.Author!.UserName)
@@ -116,7 +98,7 @@ public class EditModel : BasePageModel
 
 		if (Publication.ObsoletedBy.HasValue)
 		{
-			var obsoletedBy = await _db.Publications.SingleOrDefaultAsync(p => p.Id == Publication.ObsoletedBy.Value);
+			var obsoletedBy = await db.Publications.SingleOrDefaultAsync(p => p.Id == Publication.ObsoletedBy.Value);
 			if (obsoletedBy is null)
 			{
 				ModelState.AddModelError($"{nameof(Publication)}.{nameof(Publication.ObsoletedBy)}", "Publication does not exist");
@@ -130,19 +112,19 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGetTitle(int publicationId)
 	{
-		var title = (await _db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId))?.Title;
+		var title = (await db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId))?.Title;
 		return new ContentResult { Content = title };
 	}
 
 	private async Task PopulateDropdowns()
 	{
-		AvailableFlags = await _db.Flags
+		AvailableFlags = await db.Flags
 			.ToDropDown(User.Permissions())
 			.ToListAsync();
-		AvailableTags = await _db.Tags
+		AvailableTags = await db.Tags
 			.ToDropdown()
 			.ToListAsync();
-		Files = await _db.PublicationFiles
+		Files = await db.PublicationFiles
 			.Where(f => f.PublicationId == Id)
 			.Select(f => new PublicationFileDisplayModel
 			{
@@ -158,7 +140,7 @@ public class EditModel : BasePageModel
 	{
 		var externalMessages = new List<string>();
 
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.IncludeTitleTables()
 			.Include(p => p.PublicationUrls)
 			.Include(p => p.PublicationTags)
@@ -190,7 +172,7 @@ public class EditModel : BasePageModel
 		publication.EmulatorVersion = model.EmulatorVersion;
 		publication.AdditionalAuthors = model.AdditionalAuthors.NullIfWhitespace();
 		publication.Authors.Clear();
-		publication.Authors.AddRange(await _db.Users
+		publication.Authors.AddRange(await db.Users
 			.ForUsers(Publication.Authors)
 			.Select(u => new PublicationAuthor
 			{
@@ -203,7 +185,7 @@ public class EditModel : BasePageModel
 
 		publication.GenerateTitle();
 
-		List<int> editableFlags = await _db.Flags
+		List<int> editableFlags = await db.Flags
 			.Where(f => f.PermissionRestriction.HasValue && User.Permissions().Contains(f.PermissionRestriction.Value) || f.PermissionRestriction == null)
 			.Select(f => f.Id)
 			.ToListAsync();
@@ -211,27 +193,27 @@ public class EditModel : BasePageModel
 		List<int> selectedEditableFlagIds = model.SelectedFlags.Intersect(editableFlags).ToList();
 		publication.PublicationFlags = publication.PublicationFlags.Except(existingEditablePublicationFlags).ToList();
 		publication.PublicationFlags.AddFlags(selectedEditableFlagIds);
-		externalMessages.AddRange((await _flagsService
+		externalMessages.AddRange((await flagsService
 			.GetDiff(existingEditablePublicationFlags.Select(p => p.FlagId), selectedEditableFlagIds))
 			.ToMessages("flags"));
 
-		externalMessages.AddRange((await _tagsService
+		externalMessages.AddRange((await tagsService
 			.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags))
 			.ToMessages("tags"));
 
 		publication.PublicationTags.Clear();
-		_db.PublicationTags.RemoveRange(
-			_db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
+		db.PublicationTags.RemoveRange(
+			db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
 
 		publication.PublicationTags.AddTags(model.SelectedTags);
 
-		await _db.SaveChangesAsync();
-		var existingWikiPage = await _wikiPages.PublicationPage(Id);
+		await db.SaveChangesAsync();
+		var existingWikiPage = await wikiPages.PublicationPage(Id);
 		IWikiPage? pageToSync = existingWikiPage;
 
 		if (model.Markup != existingWikiPage!.Markup)
 		{
-			pageToSync = await _wikiPages.Add(new WikiCreateRequest
+			pageToSync = await wikiPages.Add(new WikiCreateRequest
 			{
 				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,
@@ -244,9 +226,9 @@ public class EditModel : BasePageModel
 
 		foreach (var url in publication.PublicationUrls.ThatAreStreaming())
 		{
-			if (_youtubeSync.IsYoutubeUrl(url.Url))
+			if (youtubeSync.IsYoutubeUrl(url.Url))
 			{
-				await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
+				await youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
 					Id,
 					publication.CreateTimestamp,
 					url.Url!,
@@ -259,11 +241,11 @@ public class EditModel : BasePageModel
 			}
 		}
 
-		await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), externalMessages);
+		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), externalMessages);
 
 		if (!model.MinorEdit)
 		{
-			await _publisher.SendPublicationEdit(
+			await publisher.SendPublicationEdit(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{string.Join(", ", externalMessages)} | {publication.Title}",

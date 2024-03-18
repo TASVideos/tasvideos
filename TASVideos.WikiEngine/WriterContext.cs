@@ -3,15 +3,11 @@
 /// <summary>
 /// Used internally by nodes to assist them in writing output.
 /// </summary>
-public class WriterContext
+public class WriterContext(IWriterHelper helper)
 {
 	private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new();
 
-	public IWriterHelper Helper { get; }
-	public WriterContext(IWriterHelper helper)
-	{
-		Helper = helper;
-	}
+	public IWriterHelper Helper { get; } = helper;
 
 	/// <summary>
 	/// Adds a table style filter expression for later use in table cells.

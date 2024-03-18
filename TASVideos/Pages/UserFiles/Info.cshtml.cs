@@ -9,19 +9,9 @@ using TASVideos.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class InfoModel : BasePageModel
+public class InfoModel(ApplicationDbContext db, IFileService fileService) : BasePageModel
 {
 	private static readonly string[] PreviewableExtensions = ["avs", "bat", "lua", "sh", "wch"];
-
-	private readonly ApplicationDbContext _db;
-	private readonly IFileService _fileService;
-
-	public InfoModel(
-		ApplicationDbContext db, IFileService fileService)
-	{
-		_db = db;
-		_fileService = fileService;
-	}
 
 	[FromRoute]
 	public long Id { get; set; }
@@ -30,7 +20,7 @@ public class InfoModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var file = await _db.UserFiles
+		var file = await db.UserFiles
 			.Where(userFile => userFile.Id == Id)
 			.ToUserFileModel(false)
 			.SingleOrDefaultAsync();
@@ -45,13 +35,13 @@ public class InfoModel : BasePageModel
 		if (UserFile.Class == UserFileClass.Support && PreviewableExtensions.Contains(UserFile.Extension))
 		{
 			// We are going back to the database on purpose here, because it is important to never query the entire file when getting lists of files, only when getting a single file
-			var entity = await _db.UserFiles.FindAsync(UserFile.Id);
+			var entity = await db.UserFiles.FindAsync(UserFile.Id);
 			UserFile.Content = entity!.Content;
 			UserFile.CompressionType = entity.CompressionType;
 
 			if (UserFile.CompressionType == Compression.Gzip)
 			{
-				UserFile.ContentPreview = await _fileService.DecompressGzipToString(UserFile.Content);
+				UserFile.ContentPreview = await fileService.DecompressGzipToString(UserFile.Content);
 			}
 			else
 			{
@@ -64,7 +54,7 @@ public class InfoModel : BasePageModel
 
 	public async Task<IActionResult> OnGetDownload()
 	{
-		var file = await _db.UserFiles
+		var file = await db.UserFiles
 			.Where(userFile => userFile.Id == Id)
 			.SingleOrDefaultAsync();
 
@@ -75,7 +65,7 @@ public class InfoModel : BasePageModel
 
 		file.Downloads++;
 
-		await _db.TrySaveChangesAsync();
+		await db.TrySaveChangesAsync();
 		return new DownloadResult(file);
 	}
 

@@ -168,15 +168,8 @@ public class DangerAlertTagHelper : AlertTagHelper
 	public override string Type { get; set; } = "danger";
 }
 
-public class DeleteButtonTagHelper : TagHelper
+public class DeleteButtonTagHelper(IHtmlHelper helper) : TagHelper
 {
-	private readonly IHtmlHelper _htmlHelper;
-
-	public DeleteButtonTagHelper(IHtmlHelper helper)
-	{
-		_htmlHelper = helper;
-	}
-
 	[HtmlAttributeNotBound]
 	[ViewContext]
 	public ViewContext ViewContext { get; set; } = new();
@@ -196,12 +189,12 @@ public class DeleteButtonTagHelper : TagHelper
 			output.Attributes.Remove(existingClassAttr);
 		}
 
-		((IViewContextAware)_htmlHelper).Contextualize(ViewContext);
+		((IViewContextAware)helper).Contextualize(ViewContext);
 		var content = (await output.GetChildContentAsync()).GetContent();
 		output.TagName = "span";
 		var uniqueId = UniqueId();
 
-		var antiForgeryToken = _htmlHelper.AntiForgeryToken().GetString();
+		var antiForgeryToken = helper.AntiForgeryToken().GetString();
 
 		output.Content.SetHtmlContent($@"
 <button type='button' class='btn btn-danger {existingCssClass}' data-bs-toggle='modal' data-bs-target='#areYouSureModal{uniqueId}'>{content}</button>

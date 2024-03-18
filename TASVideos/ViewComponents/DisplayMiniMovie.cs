@@ -7,15 +7,8 @@ namespace TASVideos.ViewComponents;
 
 // TODO: a better name for this is FrontPageMovie or something like that
 [WikiModule(WikiModules.DisplayMiniMovie)]
-public class DisplayMiniMovie : ViewComponent
+public class DisplayMiniMovie(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public DisplayMiniMovie(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(string? pubClass, IList<string> flags)
 	{
 		var candidateIds = await FrontPageMovieCandidates(pubClass, flags);
@@ -26,7 +19,7 @@ public class DisplayMiniMovie : ViewComponent
 
 	private async Task<IEnumerable<int>> FrontPageMovieCandidates(string? publicationClass, IList<string> flagsArr)
 	{
-		var query = _db.Publications
+		var query = db.Publications
 			.ThatAreCurrent()
 			.AsQueryable();
 
@@ -50,12 +43,12 @@ public class DisplayMiniMovie : ViewComponent
 		// TODO: id == 0 means there are no publications, which is an out-of-the-box problem only, make this scenario more clear and simpler
 		if (id != 0)
 		{
-			return await _db.Publications
+			return await db.Publications
 				.ToMiniMovieModel()
 				.SingleOrDefaultAsync(p => p.Id == id);
 		}
 
-		return await _db.Publications
+		return await db.Publications
 			.Select(p => new MiniMovieModel
 			{
 				Id = 0,

@@ -57,27 +57,15 @@ public interface IQueueService
 	Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId);
 }
 
-internal class QueueService : IQueueService
+internal class QueueService(
+	AppSettings settings,
+	ApplicationDbContext db,
+	IYoutubeSync youtubeSync,
+	ITASVideoAgent tva,
+	IWikiPages wikiPages)
+	: IQueueService
 {
-	private readonly int _minimumHoursBeforeJudgment;
-	private readonly ApplicationDbContext _db;
-	private readonly IYoutubeSync _youtubeSync;
-	private readonly ITASVideoAgent _tva;
-	private readonly IWikiPages _wikiPages;
-
-	public QueueService(
-		AppSettings settings,
-		ApplicationDbContext db,
-		IYoutubeSync youtubeSync,
-		ITASVideoAgent tva,
-		IWikiPages wikiPages)
-	{
-		_minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
-		_db = db;
-		_youtubeSync = youtubeSync;
-		_tva = tva;
-		_wikiPages = wikiPages;
-	}
+	private readonly int _minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
 
 	public IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
 		IEnumerable<PermissionTo> userPermissions,
@@ -197,7 +185,7 @@ internal class QueueService : IQueueService
 
 	public async Task<DeleteSubmissionResult> CanDeleteSubmission(int submissionId)
 	{
-		var sub = await _db.Submissions
+		var sub = await db.Submissions
 			.Where(s => s.Id == submissionId)
 			.Select(s => new
 			{
@@ -221,7 +209,7 @@ internal class QueueService : IQueueService
 
 	public async Task<DeleteSubmissionResult> DeleteSubmission(int submissionId)
 	{
-		var submission = await _db.Submissions
+		var submission = await db.Submissions
 			.Include(s => s.SubmissionAuthors)
 			.Include(s => s.History)
 			.SingleOrDefaultAsync(s => s.Id == submissionId);
@@ -238,36 +226,36 @@ internal class QueueService : IQueueService
 
 		submission.SubmissionAuthors.Clear();
 		submission.History.Clear();
-		_db.Submissions.Remove(submission);
+		db.Submissions.Remove(submission);
 		if (submission.TopicId.HasValue)
 		{
-			var topic = await _db.ForumTopics
+			var topic = await db.ForumTopics
 				.Include(t => t.ForumPosts)
 				.Include(t => t.Poll)
 				.ThenInclude(p => p!.PollOptions)
 				.ThenInclude(o => o.Votes)
 				.SingleAsync(t => t.Id == submission.TopicId);
 
-			_db.ForumPosts.RemoveRange(topic.ForumPosts);
+			db.ForumPosts.RemoveRange(topic.ForumPosts);
 			if (topic.Poll is not null)
 			{
-				_db.ForumPollOptionVotes.RemoveRange(topic.Poll.PollOptions.SelectMany(po => po.Votes));
-				_db.ForumPollOptions.RemoveRange(topic.Poll.PollOptions);
-				_db.ForumPolls.Remove(topic.Poll);
+				db.ForumPollOptionVotes.RemoveRange(topic.Poll.PollOptions.SelectMany(po => po.Votes));
+				db.ForumPollOptions.RemoveRange(topic.Poll.PollOptions);
+				db.ForumPolls.Remove(topic.Poll);
 			}
 
-			_db.ForumTopics.Remove(topic);
+			db.ForumTopics.Remove(topic);
 		}
 
-		await _db.SaveChangesAsync();
-		await _wikiPages.Delete(WikiHelper.ToSubmissionWikiPageName(submissionId));
+		await db.SaveChangesAsync();
+		await wikiPages.Delete(WikiHelper.ToSubmissionWikiPageName(submissionId));
 
 		return DeleteSubmissionResult.Success(submission.Title);
 	}
 
 	public async Task<UnpublishResult> CanUnpublish(int publicationId)
 	{
-		var pub = await _db.Publications
+		var pub = await db.Publications
 			.Where(p => p.Id == publicationId)
 			.Select(p => new
 			{
@@ -291,7 +279,7 @@ internal class QueueService : IQueueService
 
 	public async Task<UnpublishResult> Unpublish(int publicationId)
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Include(p => p.PublicationAwards)
 			.Include(p => p.Authors)
 			.Include(p => p.Files)
@@ -317,11 +305,11 @@ internal class QueueService : IQueueService
 		var youtubeUrls = publication.PublicationUrls
 			.ThatAreStreaming()
 			.Select(pu => pu.Url)
-			.Where(url => _youtubeSync.IsYoutubeUrl(url))
+			.Where(url => youtubeSync.IsYoutubeUrl(url))
 			.ToList();
 
 		var obsoletedPubsWithYoutube = publication.ObsoletedMovies
-			.Where(p => p.PublicationUrls.Any(u => _youtubeSync.IsYoutubeUrl(u.Url)))
+			.Where(p => p.PublicationUrls.Any(u => youtubeSync.IsYoutubeUrl(u.Url)))
 			.ToList();
 
 		publication.Authors.Clear();
@@ -332,16 +320,16 @@ internal class QueueService : IQueueService
 		publication.PublicationUrls.Clear();
 
 		// Note: Cascading deletes will ensure obsoleted publications are no longer obsoleted
-		_db.Publications.Remove(publication);
-		_db.SubmissionStatusHistory.Add(publication.SubmissionId, publication.Submission!.Status);
+		db.Publications.Remove(publication);
+		db.SubmissionStatusHistory.Add(publication.SubmissionId, publication.Submission!.Status);
 		publication.Submission.Status = PublicationUnderway;
 
-		await _tva.PostSubmissionUnpublished(publication.SubmissionId);
-		await _db.SaveChangesAsync();
+		await tva.PostSubmissionUnpublished(publication.SubmissionId);
+		await db.SaveChangesAsync();
 
 		foreach (var url in youtubeUrls)
 		{
-			await _youtubeSync.UnlistVideo(url!);
+			await youtubeSync.UnlistVideo(url!);
 		}
 
 		foreach (var obsoletedPub in obsoletedPubsWithYoutube)
@@ -349,7 +337,7 @@ internal class QueueService : IQueueService
 			// Re-query to get all the includes
 			// We can afford these extra trips, compared to the massive query it would be
 			// for a single trip
-			var queriedPub = await _db.Publications
+			var queriedPub = await db.Publications
 				.Include(p => p.PublicationUrls)
 				.Include(p => p.System)
 				.Include(p => p.Game)
@@ -357,11 +345,11 @@ internal class QueueService : IQueueService
 				.ThenInclude(pa => pa.Author)
 				.SingleAsync(p => p.Id == obsoletedPub.Id);
 
-			var obsoletedWiki = await _wikiPages.PublicationPage(queriedPub.Id);
+			var obsoletedWiki = await wikiPages.PublicationPage(queriedPub.Id);
 
-			foreach (var url in obsoletedPub.PublicationUrls.Where(u => _youtubeSync.IsYoutubeUrl(u.Url)))
+			foreach (var url in obsoletedPub.PublicationUrls.Where(u => youtubeSync.IsYoutubeUrl(u.Url)))
 			{
-				await _youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
+				await youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
 					queriedPub.Id,
 					queriedPub.CreateTimestamp,
 					url.Url!,
@@ -384,7 +372,7 @@ internal class QueueService : IQueueService
 			throw new InvalidOperationException("Cannot mapped failed parse result.");
 		}
 
-		var system = await _db.GameSystems
+		var system = await db.GameSystems
 			.ForCode(parseResult.SystemCode)
 			.SingleOrDefaultAsync();
 
@@ -410,7 +398,7 @@ internal class QueueService : IQueueService
 		if (parseResult.FrameRateOverride.HasValue)
 		{
 			// ReSharper disable CompareOfFloatsByEqualityOperator
-			var frameRate = await _db.GameSystemFrameRates
+			var frameRate = await db.GameSystemFrameRates
 				.ForSystem(submission.System.Id)
 				.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
 
@@ -422,8 +410,8 @@ internal class QueueService : IQueueService
 					FrameRate = parseResult.FrameRateOverride.Value,
 					RegionCode = parseResult.Region.ToString().ToUpper()
 				};
-				_db.GameSystemFrameRates.Add(frameRate);
-				await _db.SaveChangesAsync();
+				db.GameSystemFrameRates.Add(frameRate);
+				await db.SaveChangesAsync();
 			}
 
 			submission.SystemFrameRate = frameRate;
@@ -432,7 +420,7 @@ internal class QueueService : IQueueService
 		{
 			// SingleOrDefault should work here because the only time there could be more than one for a system and region are formats that return a framerate override
 			// Those systems should never hit this code block.  But just in case.
-			submission.SystemFrameRate = await _db.GameSystemFrameRates
+			submission.SystemFrameRate = await db.GameSystemFrameRates
 				.ForSystem(submission.System.Id)
 				.ForRegion(parseResult.Region.ToString().ToUpper())
 				.FirstOrDefaultAsync();
@@ -443,7 +431,7 @@ internal class QueueService : IQueueService
 
 	public async Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId)
 	{
-		var toObsolete = await _db.Publications
+		var toObsolete = await db.Publications
 			.Include(p => p.PublicationUrls)
 			.Include(p => p.System)
 			.Include(p => p.Game)
@@ -457,14 +445,14 @@ internal class QueueService : IQueueService
 		}
 
 		var pageName = WikiHelper.ToPublicationWikiPageName(toObsolete.Id);
-		var wikiPage = await _wikiPages.Page(pageName);
+		var wikiPage = await wikiPages.Page(pageName);
 
 		toObsolete.ObsoletedById = obsoletingPublicationId;
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
 		foreach (var url in toObsolete.PublicationUrls
 					.ThatAreStreaming()
-					.Where(pu => _youtubeSync.IsYoutubeUrl(pu.Url)))
+					.Where(pu => youtubeSync.IsYoutubeUrl(pu.Url)))
 		{
 			var obsoleteVideo = new YoutubeVideo(
 				toObsolete.Id,
@@ -479,7 +467,7 @@ internal class QueueService : IQueueService
 					.Select(pa => pa.Author!.UserName),
 				obsoletingPublicationId);
 
-			await _youtubeSync.SyncYouTubeVideo(obsoleteVideo);
+			await youtubeSync.SyncYouTubeVideo(obsoleteVideo);
 		}
 
 		return true;

@@ -102,14 +102,9 @@ public class FieldSelectableTests
 		Assert.AreEqual(3, actual.Count);
 	}
 
-	private class FieldSelectable : IFieldSelectable
+	private class FieldSelectable(string fields) : IFieldSelectable
 	{
-		public FieldSelectable(string fields)
-		{
-			Fields = fields;
-		}
-
-		public string Fields { get; }
+		public string Fields { get; } = fields;
 	}
 
 	private class TestClass

@@ -1,14 +1,9 @@
 ﻿namespace TASVideos.ViewComponents;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class WikiModuleAttribute : Attribute
+public class WikiModuleAttribute(string name) : Attribute
 {
-	public WikiModuleAttribute(string name)
-	{
-		Name = name;
-	}
-
-	public string Name { get; }
+	public string Name { get; } = name;
 }
 
 [AttributeUsage(AttributeTargets.Class)]

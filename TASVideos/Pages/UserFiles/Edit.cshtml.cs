@@ -7,16 +7,8 @@ using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
 
-public class EditModel : BasePageModel
+public class EditModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public EditModel(
-		ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public long Id { get; set; }
 
@@ -29,7 +21,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var file = await _db.UserFiles
+		var file = await db.UserFiles
 			.Where(uf => uf.Id == Id)
 			.Select(uf => new UserFileEditModel
 			{
@@ -68,7 +60,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var file = await _db.UserFiles
+		var file = await db.UserFiles
 			.SingleOrDefaultAsync(uf => uf.Id == Id);
 
 		if (file is null)
@@ -87,13 +79,13 @@ public class EditModel : BasePageModel
 		file.GameId = UserFile.GameId;
 		file.Hidden = UserFile.Hidden;
 
-		await ConcurrentSave(_db, $"UserFile {Id} successfully updated", "Unable to update UserFile");
+		await ConcurrentSave(db, $"UserFile {Id} successfully updated", "Unable to update UserFile");
 		return BasePageRedirect("/UserFiles/Info", new { Id });
 	}
 
 	private async Task Initialize()
 	{
-		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+		AvailableSystems = UiDefaults.DefaultEntry.Concat(await db.GameSystems
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
@@ -105,7 +97,7 @@ public class EditModel : BasePageModel
 		AvailableGames = UiDefaults.DefaultEntry;
 		if (UserFile.SystemId.HasValue)
 		{
-			AvailableGames = AvailableGames.Concat(await _db.Games
+			AvailableGames = AvailableGames.Concat(await db.Games
 				.ForSystem(UserFile.SystemId.Value)
 				.OrderBy(g => g.DisplayName)
 				.ToDropDown()

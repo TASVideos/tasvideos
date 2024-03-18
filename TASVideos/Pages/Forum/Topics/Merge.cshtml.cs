@@ -11,22 +11,12 @@ using TASVideos.Pages.Forum.Topics.Models;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.MergeTopics)]
-public class MergeModel : BasePageModel
+public class MergeModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IForumService forumService)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IForumService _forumService;
-
-	public MergeModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IForumService forumService)
-	{
-		_db = db;
-		_publisher = publisher;
-		_forumService = forumService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -42,7 +32,7 @@ public class MergeModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		bool seeRestricted = CanSeeRestricted;
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == Id)
 			.Select(t => new MergeTopicModel
@@ -79,7 +69,7 @@ public class MergeModel : BasePageModel
 		}
 
 		var seeRestricted = CanSeeRestricted;
-		var originalTopic = await _db.ForumTopics
+		var originalTopic = await db.ForumTopics
 			.Include(f => f.Forum)
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
@@ -89,7 +79,7 @@ public class MergeModel : BasePageModel
 			return NotFound();
 		}
 
-		var destinationTopic = await _db.ForumTopics
+		var destinationTopic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.ExcludeRestricted(seeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Topic.DestinationTopicId);
@@ -99,7 +89,7 @@ public class MergeModel : BasePageModel
 			return NotFound();
 		}
 
-		var oldPosts = await _db.ForumPosts
+		var oldPosts = await db.ForumPosts
 			.ForTopic(Id)
 			.ToListAsync();
 
@@ -109,14 +99,14 @@ public class MergeModel : BasePageModel
 			post.ForumId = destinationTopic.ForumId;
 		}
 
-		_db.ForumTopics.Remove(originalTopic);
+		db.ForumTopics.Remove(originalTopic);
 
-		var result = await ConcurrentSave(_db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
+		var result = await ConcurrentSave(db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
 		if (result)
 		{
-			_forumService.ClearLatestPostCache();
-			_forumService.ClearTopicActivityCache();
-			await _publisher.SendForum(
+			forumService.ClearLatestPostCache();
+			forumService.ClearTopicActivityCache();
+			await publisher.SendForum(
 				originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
 				$"Topics MERGED by {User.Name()}",
 				$"[Topics MERGED]({{0}}) by {User.Name()}",
@@ -140,7 +130,7 @@ public class MergeModel : BasePageModel
 	private async Task PopulateAvailableForums()
 	{
 		var seeRestricted = CanSeeRestricted;
-		AvailableForums = await _db.Forums
+		AvailableForums = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Select(f => new SelectListItem
 			{
@@ -156,7 +146,7 @@ public class MergeModel : BasePageModel
 	private async Task<IEnumerable<SelectListItem>> GetTopicsForForum(int forumId)
 	{
 		var seeRestricted = CanSeeRestricted;
-		return await _db.ForumTopics
+		return await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.ForForum(forumId)
 			.Where(t => t.Id != Id)

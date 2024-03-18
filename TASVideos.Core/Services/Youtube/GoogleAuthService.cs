@@ -11,34 +11,24 @@ public interface IGoogleAuthService
 	Task<string> GetYoutubeAccessToken();
 }
 
-internal class GoogleAuthService : IGoogleAuthService
+internal class GoogleAuthService(
+	IHttpClientFactory httpClientFactory,
+	ICacheService cache,
+	AppSettings settings,
+	ILogger<GoogleAuthService> logger)
+	: IGoogleAuthService
 {
 	private const string YoutubeCacheKey = "GoogleAuthAccessTokenCacheForYoutube";
-	private readonly HttpClient _client;
-	private readonly ICacheService _cache;
-	private readonly AppSettings _settings;
-	private readonly ILogger<GoogleAuthService> _logger;
+	private readonly HttpClient _client = httpClientFactory.CreateClient(HttpClients.GoogleAuth)
+		?? throw new InvalidOperationException($"Unable to initalize {HttpClients.GoogleAuth} client");
 
-	public GoogleAuthService(
-		IHttpClientFactory httpClientFactory,
-		ICacheService cache,
-		AppSettings settings,
-		ILogger<GoogleAuthService> logger)
-	{
-		_client = httpClientFactory.CreateClient(HttpClients.GoogleAuth)
-			?? throw new InvalidOperationException($"Unable to initalize {HttpClients.GoogleAuth} client");
-		_cache = cache;
-		_settings = settings;
-		_logger = logger;
-	}
+	public bool IsYoutubeEnabled() => settings.YouTube.IsEnabled();
 
-	public bool IsYoutubeEnabled() => _settings.YouTube.IsEnabled();
-
-	public async Task<string> GetYoutubeAccessToken() => await GetAccessToken(_settings.YouTube, YoutubeCacheKey);
+	public async Task<string> GetYoutubeAccessToken() => await GetAccessToken(settings.YouTube, YoutubeCacheKey);
 
 	private async Task<string> GetAccessToken(AppSettings.GoogleAuthSettings settings, string cacheKey)
 	{
-		if (_cache.TryGetValue(cacheKey, out string accessToken))
+		if (cache.TryGetValue(cacheKey, out string accessToken))
 		{
 			return accessToken;
 		}
@@ -55,7 +45,7 @@ internal class GoogleAuthService : IGoogleAuthService
 		if (!response.IsSuccessStatusCode)
 		{
 			var errorResponse = await response.Content.ReadAsStringAsync();
-			_logger.LogError(
+			logger.LogError(
 				"Unable to authorize google apis for clientId: {clientId}: {errorResponse}",
 				settings.ClientId,
 				errorResponse);
@@ -67,7 +57,7 @@ internal class GoogleAuthService : IGoogleAuthService
 		if (tokenResponse.ExpiresAt > 10)
 		{
 			// Subtract a bit of time to ensure it does not expire between the time of accessing and using it
-			_cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
+			cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
 		}
 
 		return tokenResponse.AccessToken;

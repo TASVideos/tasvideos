@@ -8,19 +8,10 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.DisplayMovies)]
-public class DisplayMovies : ViewComponent
+public class DisplayMovies(
+	ApplicationDbContext db,
+	IMovieSearchTokens tokens) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IMovieSearchTokens _tokens;
-
-	public DisplayMovies(
-		ApplicationDbContext db,
-		IMovieSearchTokens tokens)
-	{
-		_db = db;
-		_tokens = tokens;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(
 		IList<string> pubClass,
 		IList<string> systemCode,
@@ -36,7 +27,7 @@ public class DisplayMovies : ViewComponent
 		string? sort,
 		int? limit)
 	{
-		var tokenLookup = await _tokens.GetTokens();
+		var tokenLookup = await tokens.GetTokens();
 
 		var searchModel = new PublicationSearchModel
 		{
@@ -61,7 +52,7 @@ public class DisplayMovies : ViewComponent
 			return View(new List<PublicationDisplayModel>());
 		}
 
-		var results = await _db.Publications
+		var results = await db.Publications
 			.FilterByTokens(searchModel)
 			.ToViewModel(searchModel.SortBy == "y")
 			.ToListAsync();

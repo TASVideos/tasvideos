@@ -15,25 +15,13 @@ namespace TASVideos.Pages.Forum.Posts;
 	PermissionTo.CreateForumPosts,
 	PermissionTo.DeleteForumPosts,
 	PermissionTo.EditForumPosts)]
-public class EditModel : BaseForumModel
+public class EditModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IForumService forumService,
+	IRoleService roleService)
+	: BaseForumModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IForumService _forumService;
-	private readonly IRoleService _roleService;
-
-	public EditModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IForumService forumService,
-		IRoleService roleService)
-	{
-		_db = db;
-		_publisher = publisher;
-		_forumService = forumService;
-		_roleService = roleService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -50,7 +38,7 @@ public class EditModel : BaseForumModel
 	public async Task<IActionResult> OnGet()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var post = await _db.ForumPosts
+		var post = await db.ForumPosts
 			.ExcludeRestricted(seeRestricted)
 			.Where(p => p.Id == Id)
 			.Select(p => new ForumPostEditModel
@@ -74,7 +62,7 @@ public class EditModel : BaseForumModel
 		}
 
 		Post = post;
-		var firstPostId = (await _db.ForumPosts
+		var firstPostId = (await db.ForumPosts
 			.ForTopic(Post.TopicId)
 			.OldestToNewest()
 			.FirstAsync())
@@ -88,7 +76,7 @@ public class EditModel : BaseForumModel
 			return AccessDenied();
 		}
 
-		PreviousPosts = await _db.ForumPosts
+		PreviousPosts = await db.ForumPosts
 			.ForTopic(Post.TopicId)
 			.Where(fp => fp.CreateTimestamp < Post.CreateTimestamp)
 			.ByMostRecent()
@@ -107,7 +95,7 @@ public class EditModel : BaseForumModel
 
 		if (Post.PosterId == User.GetUserId())
 		{
-			UserAvatars = await _forumService.UserAvatars(User.GetUserId());
+			UserAvatars = await forumService.UserAvatars(User.GetUserId());
 			MinorEdit = true;
 		}
 
@@ -120,7 +108,7 @@ public class EditModel : BaseForumModel
 		{
 			if (Post.PosterId == User.GetUserId())
 			{
-				UserAvatars = await _forumService.UserAvatars(User.GetUserId());
+				UserAvatars = await forumService.UserAvatars(User.GetUserId());
 			}
 
 			return Page();
@@ -128,7 +116,7 @@ public class EditModel : BaseForumModel
 
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 
-		var forumPost = await _db.ForumPosts
+		var forumPost = await db.ForumPosts
 			.Include(p => p.Topic)
 			.Include(p => p.Topic!.Forum)
 			.ExcludeRestricted(seeRestricted)
@@ -148,7 +136,7 @@ public class EditModel : BaseForumModel
 
 		if (!string.IsNullOrWhiteSpace(Post.TopicTitle))
 		{
-			var firstPostId = (await _db.ForumPosts
+			var firstPostId = (await db.ForumPosts
 				.ForTopic(forumPost.Topic!.Id)
 				.OldestToNewest()
 				.FirstAsync())
@@ -165,14 +153,14 @@ public class EditModel : BaseForumModel
 
 		forumPost.PostEditedTimestamp = DateTime.UtcNow;
 
-		var result = await ConcurrentSave(_db, $"Post {Id} edited", "Unable to edit post");
+		var result = await ConcurrentSave(db, $"Post {Id} edited", "Unable to edit post");
 		if (result)
 		{
-			_forumService.CacheEditedPostActivity(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
+			forumService.CacheEditedPostActivity(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
 
 			if (!MinorEdit)
 			{
-				await _publisher.SendForum(
+				await publisher.SendForum(
 					forumPost.Topic!.Forum!.Restricted,
 					$"Post edited by {User.Name()}",
 					$"[Post]({{0}}) edited by {User.Name()}",
@@ -187,7 +175,7 @@ public class EditModel : BaseForumModel
 	public async Task<IActionResult> OnPostDelete()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var post = await _db.ForumPosts
+		var post = await db.ForumPosts
 			.Include(p => p.Topic)
 			.Include(p => p.Topic!.Forum)
 			.ExcludeRestricted(seeRestricted)
@@ -201,7 +189,7 @@ public class EditModel : BaseForumModel
 		if (!User.Has(PermissionTo.DeleteForumPosts))
 		{
 			// Check if last post
-			var lastPost = _db.ForumPosts
+			var lastPost = db.ForumPosts
 				.ForTopic(post.TopicId ?? -1)
 				.ByMostRecent()
 				.First();
@@ -213,25 +201,25 @@ public class EditModel : BaseForumModel
 			}
 		}
 
-		var postCount = await _db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
+		var postCount = await db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
 
-		_db.ForumPosts.Remove(post);
+		db.ForumPosts.Remove(post);
 
 		bool topicDeleted = false;
 		if (postCount == 1)
 		{
-			var topic = await _db.ForumTopics.SingleAsync(t => t.Id == post.TopicId);
-			_db.ForumTopics.Remove(topic);
+			var topic = await db.ForumTopics.SingleAsync(t => t.Id == post.TopicId);
+			db.ForumTopics.Remove(topic);
 			topicDeleted = true;
 		}
 
-		var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
+		var result = await ConcurrentSave(db, $"Post {Id} deleted", $"Unable to delete post {Id}");
 
 		if (result)
 		{
-			_forumService.ClearLatestPostCache();
-			_forumService.ClearTopicActivityCache();
-			await _publisher.SendForum(
+			forumService.ClearLatestPostCache();
+			forumService.ClearTopicActivityCache();
+			await publisher.SendForum(
 				post.Topic!.Forum!.Restricted,
 				$"{(topicDeleted ? "Topic" : "Post")} DELETED by {User.Name()}",
 				$"[{(topicDeleted ? "Topic" : "Post")} DELETED]({{0}}) by {User.Name()}",
@@ -246,7 +234,7 @@ public class EditModel : BaseForumModel
 
 	public async Task<IActionResult> OnPostSpam()
 	{
-		var post = await _db.ForumPosts
+		var post = await db.ForumPosts
 			.Include(p => p.Poster)
 			.ThenInclude(p => p!.UserRoles)
 			.ThenInclude(ur => ur.Role)
@@ -270,7 +258,7 @@ public class EditModel : BaseForumModel
 			return AccessDenied();
 		}
 
-		var postCount = await _db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
+		var postCount = await db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
 
 		var oldTopicId = post.TopicId;
 		var oldForumId = post.Topic!.ForumId;
@@ -282,19 +270,19 @@ public class EditModel : BaseForumModel
 		bool topicDeleted = false;
 		if (postCount == 1)
 		{
-			var topic = await _db.ForumTopics.SingleAsync(t => t.Id == oldTopicId);
-			_db.ForumTopics.Remove(topic);
+			var topic = await db.ForumTopics.SingleAsync(t => t.Id == oldTopicId);
+			db.ForumTopics.Remove(topic);
 			topicDeleted = true;
 		}
 
-		var result = await ConcurrentSave(_db, $"Post {Id} deleted", $"Unable to delete post {Id}");
+		var result = await ConcurrentSave(db, $"Post {Id} deleted", $"Unable to delete post {Id}");
 
 		if (result)
 		{
-			_forumService.ClearLatestPostCache();
-			_forumService.ClearTopicActivityCache();
-			await _roleService.RemoveRolesFromUser(post.PosterId);
-			await _publisher.SendForum(
+			forumService.ClearLatestPostCache();
+			forumService.ClearTopicActivityCache();
+			await roleService.RemoveRolesFromUser(post.PosterId);
+			await publisher.SendForum(
 				true,
 				$"{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM, and user {post.Poster!.UserName} banned by {User.Name()}",
 				$"[{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM]({{0}}), and user {post.Poster!.UserName} banned by {User.Name()}",

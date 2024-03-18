@@ -10,19 +10,11 @@ using TASVideos.Pages.Publications.Models;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class CatalogModel : BasePageModel
+public class CatalogModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-
-	public CatalogModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher)
-	{
-		_db = db;
-		_publisher = publisher;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -43,7 +35,7 @@ public class CatalogModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var catalog = await _db.Publications
+		var catalog = await db.Publications
 				.Where(p => p.Id == Id)
 				.Select(p => new PublicationCatalogModel
 				{
@@ -64,7 +56,7 @@ public class CatalogModel : BasePageModel
 		Catalog = catalog;
 		if (GameId.HasValue)
 		{
-			var game = await _db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
+			var game = await db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
 			if (game is not null)
 			{
 				Catalog.GameId = game.Id;
@@ -72,7 +64,7 @@ public class CatalogModel : BasePageModel
 				// We only want to pre-populate the Game Version if a valid Game was provided
 				if (GameVersionId.HasValue)
 				{
-					var gameVersion = await _db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
+					var gameVersion = await db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
 					if (gameVersion is not null)
 					{
 						Catalog.GameVersionId = gameVersion.Id;
@@ -94,7 +86,7 @@ public class CatalogModel : BasePageModel
 			return Page();
 		}
 
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.IncludeTitleTables()
 			.SingleOrDefaultAsync(s => s.Id == Id);
 		if (publication is null)
@@ -106,7 +98,7 @@ public class CatalogModel : BasePageModel
 
 		if (publication.SystemId != Catalog.SystemId)
 		{
-			var system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId);
+			var system = await db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId);
 			if (system is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId}");
@@ -121,7 +113,7 @@ public class CatalogModel : BasePageModel
 
 		if (publication.SystemFrameRateId != Catalog.SystemFrameRateId)
 		{
-			var systemFramerate = await _db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId);
+			var systemFramerate = await db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId);
 			if (systemFramerate is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Id: {Catalog.SystemFrameRateId}");
@@ -136,7 +128,7 @@ public class CatalogModel : BasePageModel
 
 		if (publication.GameId != Catalog.GameId)
 		{
-			var game = await _db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId);
+			var game = await db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId);
 			if (game is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown System Id: {Catalog.GameId}");
@@ -151,7 +143,7 @@ public class CatalogModel : BasePageModel
 
 		if (publication.GameGoalId != Catalog.GameGoalId)
 		{
-			var gameGoal = await _db.GameGoals.SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
+			var gameGoal = await db.GameGoals.SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
 			if (gameGoal is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
@@ -166,7 +158,7 @@ public class CatalogModel : BasePageModel
 
 		if (publication.GameVersionId != Catalog.GameVersionId)
 		{
-			var gameVersion = await _db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId);
+			var gameVersion = await db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId);
 			if (gameVersion is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown System Id: {Catalog.GameVersionId}");
@@ -187,10 +179,10 @@ public class CatalogModel : BasePageModel
 
 		publication.GenerateTitle();
 
-		var result = await ConcurrentSave(_db, $"{Id}M catalog updated", $"Unable to save {Id}M catalog");
+		var result = await ConcurrentSave(db, $"{Id}M catalog updated", $"Unable to save {Id}M catalog");
 		if (result && !Catalog.MinorEdit)
 		{
-			await _publisher.SendGameManagement(
+			await publisher.SendGameManagement(
 				$"{Id}M Catalog edited by {User.Name()}",
 				$"[{Id}M]({{0}}) Catalog edited by {User.Name()}",
 				$"{string.Join(", ", externalMessages)} | {publication.Title}",
@@ -202,7 +194,7 @@ public class CatalogModel : BasePageModel
 
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
-		AvailableVersions = UiDefaults.DefaultEntry.Concat(await _db.GameVersions
+		AvailableVersions = UiDefaults.DefaultEntry.Concat(await db.GameVersions
 			.ForGame(gameId)
 			.ForSystem(systemId)
 			.OrderBy(r => r.Name)
@@ -213,7 +205,7 @@ public class CatalogModel : BasePageModel
 			})
 			.ToListAsync());
 
-		AvailableGames = await _db.Games
+		AvailableGames = await db.Games
 			.ForSystem(systemId)
 			.OrderBy(g => g.DisplayName)
 			.Select(g => new SelectListItem
@@ -223,7 +215,7 @@ public class CatalogModel : BasePageModel
 			})
 			.ToListAsync();
 
-		AvailableSystems = await _db.GameSystems
+		AvailableSystems = await db.GameSystems
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
@@ -232,12 +224,12 @@ public class CatalogModel : BasePageModel
 			})
 			.ToListAsync();
 
-		AvailableSystemFrameRates = await _db.GameSystemFrameRates
+		AvailableSystemFrameRates = await db.GameSystemFrameRates
 			.ForSystem(systemId)
 			.ToDropDown()
 			.ToListAsync();
 
-		AvailableGoals = await _db.GameGoals
+		AvailableGoals = await db.GameGoals
 			.Where(gg => gg.GameId == gameId)
 			.Select(gg => new SelectListItem
 			{

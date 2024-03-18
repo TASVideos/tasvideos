@@ -3,13 +3,8 @@ using TASVideos.Core;
 
 namespace TASVideos.Pages.Games.Models;
 
-public class SystemPageOf<T> : PageOf<T>
+public class SystemPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 {
-	public SystemPageOf(IEnumerable<T> items)
-		: base(items)
-	{
-	}
-
 	[Display(Name = "System")]
 	public string? SystemCode { get; set; }
 

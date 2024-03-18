@@ -11,21 +11,12 @@ public interface IMovieFormatDeprecator
 	Task<bool> Allow(string extension);
 }
 
-public class MovieFormatDeprecator : IMovieFormatDeprecator
+public class MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser) : IMovieFormatDeprecator
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IMovieParser _parser;
-
-	public MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser)
-	{
-		_db = db;
-		_parser = parser;
-	}
-
 	public async Task<IReadOnlyDictionary<string, DeprecatedMovieFormat?>> GetAll()
 	{
-		var deprecatedFormats = await _db.DeprecatedMovieFormats.ToListAsync();
-		var supportedMovieExtensions = _parser.SupportedMovieExtensions.ToList();
+		var deprecatedFormats = await db.DeprecatedMovieFormats.ToListAsync();
+		var supportedMovieExtensions = parser.SupportedMovieExtensions.ToList();
 
 		return (from ext in supportedMovieExtensions
 				join d in deprecatedFormats on ext equals d.FileExtension into dd
@@ -37,12 +28,12 @@ public class MovieFormatDeprecator : IMovieFormatDeprecator
 
 	public bool IsMovieExtension(string extension)
 	{
-		return _parser.SupportedMovieExtensions.Any(s => s == extension);
+		return parser.SupportedMovieExtensions.Any(s => s == extension);
 	}
 
 	public async Task<bool> IsDeprecated(string extension)
 	{
-		var entry = await _db.DeprecatedMovieFormats.SingleOrDefaultAsync(d => d.FileExtension == extension);
+		var entry = await db.DeprecatedMovieFormats.SingleOrDefaultAsync(d => d.FileExtension == extension);
 		return entry?.Deprecated ?? false;
 	}
 
@@ -53,12 +44,12 @@ public class MovieFormatDeprecator : IMovieFormatDeprecator
 			return false;
 		}
 
-		var format = await _db.DeprecatedMovieFormats
+		var format = await db.DeprecatedMovieFormats
 			.SingleOrDefaultAsync(f => f.FileExtension == extension);
 
 		if (format is null)
 		{
-			_db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
+			db.DeprecatedMovieFormats.Add(new DeprecatedMovieFormat
 			{
 				FileExtension = extension,
 				Deprecated = true
@@ -71,7 +62,7 @@ public class MovieFormatDeprecator : IMovieFormatDeprecator
 
 		try
 		{
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 			return true;
 		}
 		catch (DbUpdateException)
@@ -87,7 +78,7 @@ public class MovieFormatDeprecator : IMovieFormatDeprecator
 			return false;
 		}
 
-		var format = await _db.DeprecatedMovieFormats
+		var format = await db.DeprecatedMovieFormats
 			.SingleOrDefaultAsync(f => f.FileExtension == extension);
 
 		// If record does not exist, no work is needed to allow it
@@ -96,7 +87,7 @@ public class MovieFormatDeprecator : IMovieFormatDeprecator
 			format.Deprecated = false;
 			try
 			{
-				await _db.SaveChangesAsync();
+				await db.SaveChangesAsync();
 				return true;
 			}
 			catch (DbUpdateException)

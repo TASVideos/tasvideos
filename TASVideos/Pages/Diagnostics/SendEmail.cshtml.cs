@@ -6,15 +6,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class SendEmail : BasePageModel
+public class SendEmail(IEmailService emailService) : BasePageModel
 {
-	private readonly IEmailService _emailService;
-
-	public SendEmail(IEmailService emailService)
-	{
-		_emailService = emailService;
-	}
-
 	[StringLength(100, MinimumLength = 1)]
 	[BindProperty]
 	public string To { get; set; } = "";
@@ -29,7 +22,7 @@ public class SendEmail : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		await _emailService.SendEmail(To, Subject, Text);
+		await emailService.SendEmail(To, Subject, Text);
 		return RedirectToPage("SendEmail");
 	}
 }

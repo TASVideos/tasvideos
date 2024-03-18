@@ -14,40 +14,19 @@ using TASVideos.Pages.Submissions.Models;
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
-public class EditModel : BasePageModel
+public class EditModel(
+	ApplicationDbContext db,
+	IMovieParser parser,
+	IWikiPages wikiPages,
+	ExternalMediaPublisher publisher,
+	ITASVideosGrue tasvideosGrue,
+	IMovieFormatDeprecator deprecator,
+	IQueueService queueService,
+	IYoutubeSync youtubeSync,
+	IForumService forumService)
+	: BasePageModel
 {
 	private readonly string _fileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEditModel.MovieFile)}";
-	private readonly ApplicationDbContext _db;
-	private readonly IMovieParser _parser;
-	private readonly IWikiPages _wikiPages;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly ITASVideosGrue _tasvideosGrue;
-	private readonly IMovieFormatDeprecator _deprecator;
-	private readonly IQueueService _queueService;
-	private readonly IYoutubeSync _youtubeSync;
-	private readonly IForumService _forumService;
-
-	public EditModel(
-		ApplicationDbContext db,
-		IMovieParser parser,
-		IWikiPages wikiPages,
-		ExternalMediaPublisher publisher,
-		ITASVideosGrue tasvideosGrue,
-		IMovieFormatDeprecator deprecator,
-		IQueueService queueService,
-		IYoutubeSync youtubeSync,
-		IForumService forumService)
-	{
-		_db = db;
-		_parser = parser;
-		_wikiPages = wikiPages;
-		_publisher = publisher;
-		_tasvideosGrue = tasvideosGrue;
-		_deprecator = deprecator;
-		_queueService = queueService;
-		_youtubeSync = youtubeSync;
-		_forumService = forumService;
-	}
 
 	[FromRoute]
 	public int Id { get; set; }
@@ -66,7 +45,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var submission = await _db.Submissions
+		var submission = await db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 			{
@@ -98,11 +77,11 @@ public class EditModel : BasePageModel
 		}
 
 		Submission = submission;
-		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
+		var submissionPage = (await wikiPages.SubmissionPage(Id))!;
 		Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
 		Submission.LastUpdateUser = submissionPage.AuthorName;
 		Submission.Markup = submissionPage.Markup;
-		Submission.Authors = await _db.SubmissionAuthors
+		Submission.Authors = await db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == Id)
 			.OrderBy(sa => sa.Ordinal)
 			.Select(sa => sa.Author!.UserName)
@@ -122,7 +101,7 @@ public class EditModel : BasePageModel
 
 		await PopulateDropdowns();
 
-		AvailableStatuses = _queueService.AvailableStatuses(
+		AvailableStatuses = queueService.AvailableStatuses(
 			Submission.Status,
 			User.Permissions(),
 			Submission.CreateTimestamp,
@@ -172,7 +151,7 @@ public class EditModel : BasePageModel
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.PublicationClassId)}", "A submission can not be accepted without a PublicationClass");
 		}
 
-		var subInfo = await _db.Submissions
+		var subInfo = await db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => new
 			{
@@ -189,7 +168,7 @@ public class EditModel : BasePageModel
 			return NotFound();
 		}
 
-		var availableStatus = _queueService.AvailableStatuses(
+		var availableStatus = queueService.AvailableStatuses(
 			subInfo.CurrentStatus,
 			User.Permissions(),
 			subInfo.CreateDate,
@@ -219,7 +198,7 @@ public class EditModel : BasePageModel
 			}
 		}
 
-		var submission = await _db.Submissions
+		var submission = await db.Submissions
 			.IncludeTitleTables()
 			.Include(s => s.Topic)
 			.Include(s => s.Judge)
@@ -228,21 +207,21 @@ public class EditModel : BasePageModel
 
 		if (Submission.MovieFile is not null)
 		{
-			var parseResult = await _parser.ParseZip(Submission.MovieFile.OpenReadStream());
+			var parseResult = await parser.ParseZip(Submission.MovieFile.OpenReadStream());
 			if (!parseResult.Success)
 			{
 				ModelState.AddParseErrors(parseResult);
 				return Page();
 			}
 
-			var deprecated = await _deprecator.IsDeprecated("." + parseResult.FileExtension);
+			var deprecated = await deprecator.IsDeprecated("." + parseResult.FileExtension);
 			if (deprecated)
 			{
 				ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
 				return Page();
 			}
 
-			var error = await _queueService.MapParsedResult(parseResult, submission);
+			var error = await queueService.MapParsedResult(parseResult, submission);
 			if (!string.IsNullOrWhiteSpace(error))
 			{
 				ModelState.AddModelError("", error);
@@ -260,7 +239,7 @@ public class EditModel : BasePageModel
 		if (Submission.Status == SubmissionStatus.JudgingUnderWay
 			&& submission.Status != SubmissionStatus.JudgingUnderWay)
 		{
-			submission.Judge = await _db.Users.SingleAsync(u => u.UserName == userName);
+			submission.Judge = await db.Users.SingleAsync(u => u.UserName == userName);
 		}
 		else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
 			&& Submission.Status == SubmissionStatus.New
@@ -272,7 +251,7 @@ public class EditModel : BasePageModel
 		if (Submission.Status == SubmissionStatus.PublicationUnderway
 			&& submission.Status != SubmissionStatus.PublicationUnderway)
 		{
-			submission.Publisher = await _db.Users.SingleAsync(u => u.UserName == userName);
+			submission.Publisher = await db.Users.SingleAsync(u => u.UserName == userName);
 		}
 		else if (submission.Status == SubmissionStatus.Accepted // If publisher is unclaiming, remove them
 			&& Submission.Status == SubmissionStatus.PublicationUnderway)
@@ -284,7 +263,7 @@ public class EditModel : BasePageModel
 		bool moveTopic = false;
 		if (statusHasChanged)
 		{
-			_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
+			db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 			int moveTopicTo = -1;
 
@@ -310,7 +289,7 @@ public class EditModel : BasePageModel
 			if (moveTopic)
 			{
 				submission.Topic.ForumId = moveTopicTo;
-				var postsToMove = await _db.ForumPosts
+				var postsToMove = await db.ForumPosts
 					.ForTopic(submission.Topic.Id)
 					.ToListAsync();
 				foreach (var post in postsToMove)
@@ -325,7 +304,7 @@ public class EditModel : BasePageModel
 			: null;
 
 		submission.IntendedClass = Submission.PublicationClassId.HasValue
-			? await _db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId.Value)
+			? await db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId.Value)
 			: null;
 
 		submission.SubmittedGameVersion = Submission.GameVersion;
@@ -333,7 +312,7 @@ public class EditModel : BasePageModel
 		submission.EmulatorVersion = Submission.Emulator;
 		submission.Branch = Submission.Branch;
 		submission.RomName = Submission.RomName;
-		submission.EncodeEmbedLink = _youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
+		submission.EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
 		submission.Status = Submission.Status;
 		submission.AdditionalAuthors = Submission.AdditionalAuthors.NullIfWhitespace();
 
@@ -345,14 +324,14 @@ public class EditModel : BasePageModel
 			RevisionMessage = Submission.RevisionMessage,
 			AuthorId = User.GetUserId()
 		};
-		var addResult = await _wikiPages.Add(revision);
+		var addResult = await wikiPages.Add(revision);
 		if (addResult is null)
 		{
 			throw new InvalidOperationException("Unable to save wiki revision!");
 		}
 
 		submission.SubmissionAuthors.Clear();
-		submission.SubmissionAuthors.AddRange(await _db.Users
+		submission.SubmissionAuthors.AddRange(await db.Users
 			.ForUsers(Submission.Authors)
 			.Select(u => new SubmissionAuthor
 			{
@@ -364,25 +343,25 @@ public class EditModel : BasePageModel
 			.ToListAsync());
 
 		submission.GenerateTitle();
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
-		var topic = await _db.ForumTopics.FirstOrDefaultAsync(t => t.Id == submission.TopicId);
+		var topic = await db.ForumTopics.FirstOrDefaultAsync(t => t.Id == submission.TopicId);
 		if (topic is not null)
 		{
 			topic.Title = submission.Title;
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 
 		if (moveTopic)
 		{
-			_forumService.ClearLatestPostCache();
-			_forumService.ClearTopicActivityCache();
+			forumService.ClearLatestPostCache();
+			forumService.ClearTopicActivityCache();
 		}
 
 		if (submission.Status is SubmissionStatus.Rejected or SubmissionStatus.Cancelled
 			&& statusHasChanged)
 		{
-			await _tasvideosGrue.RejectAndMove(submission.Id);
+			await tasvideosGrue.RejectAndMove(submission.Id);
 		}
 
 		if (!Submission.MinorEdit || statusHasChanged) // always publish submission status changes to media
@@ -407,7 +386,7 @@ public class EditModel : BasePageModel
 
 				if (Submission.Status == SubmissionStatus.Accepted)
 				{
-					var publicationClass = (await _db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId)).Name;
+					var publicationClass = (await db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId)).Name;
 
 					if (publicationClass != "Standard")
 					{
@@ -431,7 +410,7 @@ public class EditModel : BasePageModel
 				formattedTitle = $"[{Id}S]({{0}}) edited by {userName}";
 			}
 
-			await _publisher.SendSubmissionEdit(
+			await publisher.SendSubmissionEdit(
 				title,
 				formattedTitle,
 				$"{Submission.RevisionMessage}{separator}{submission.Title}",
@@ -463,7 +442,7 @@ public class EditModel : BasePageModel
 
 	private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
 	{
-		var submission = await _db.Submissions.SingleOrDefaultAsync(s => s.Id == Id);
+		var submission = await db.Submissions.SingleOrDefaultAsync(s => s.Id == Id);
 
 		if (submission is null)
 		{
@@ -475,11 +454,11 @@ public class EditModel : BasePageModel
 			return BadRequest("Submission can not be claimed");
 		}
 
-		var submissionPage = (await _wikiPages.SubmissionPage(Id))!;
-		_db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
+		var submissionPage = (await wikiPages.SubmissionPage(Id))!;
+		db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
 
 		submission.Status = newStatus;
-		await _wikiPages.Add(new WikiCreateRequest
+		await wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = submissionPage.PageName,
 			Markup = submissionPage.Markup + $"\n----\n[user:{User.Name()}]: {message}",
@@ -496,11 +475,11 @@ public class EditModel : BasePageModel
 			submission.PublisherId = User.GetUserId();
 		}
 
-		var result = await ConcurrentSave(_db, "", "Unable to claim");
+		var result = await ConcurrentSave(db, "", "Unable to claim");
 		if (result)
 		{
 			string statusPrefix = newStatus == SubmissionStatus.JudgingUnderWay ? "" : "set to ";
-			await _publisher.SendSubmissionEdit(
+			await publisher.SendSubmissionEdit(
 				$"Submission {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}",
 				$"[Submission]({{0}}) {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}",
 				$"{submission.Title}",
@@ -513,13 +492,13 @@ public class EditModel : BasePageModel
 	private async Task PopulateDropdowns()
 	{
 		CanDelete = User.Has(PermissionTo.DeleteSubmissions)
-			&& (await _queueService.CanDeleteSubmission(Id)).True;
+			&& (await queueService.CanDeleteSubmission(Id)).True;
 
-		AvailableClasses = await _db.PublicationClasses
+		AvailableClasses = await db.PublicationClasses
 			.ToDropdown()
 			.ToListAsync();
 
-		AvailableRejectionReasons = await _db.SubmissionRejectionReasons
+		AvailableRejectionReasons = await db.SubmissionRejectionReasons
 			.ToDropdown()
 			.ToListAsync();
 	}

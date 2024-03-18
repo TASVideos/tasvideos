@@ -7,15 +7,8 @@ using TASVideos.Data;
 namespace TASVideos.Pages.Logs;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public LogPaging Search { get; set; } = new();
 
@@ -29,8 +22,8 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var query = _db.AutoHistory
-			.GroupJoin(_db.Users, outerKey => outerKey.UserId, innerKey => innerKey.Id, (h, user) => new { h, user })
+		var query = db.AutoHistory
+			.GroupJoin(db.Users, outerKey => outerKey.UserId, innerKey => innerKey.Id, (h, user) => new { h, user })
 			.SelectMany(g => g.user.DefaultIfEmpty(), (g, user) => new LogEntry
 			{
 				RowId = g.h.RowId,

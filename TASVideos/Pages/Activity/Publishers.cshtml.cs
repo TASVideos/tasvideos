@@ -7,15 +7,8 @@ using TASVideos.Pages.Activity.Model;
 namespace TASVideos.Pages.Activity;
 
 [AllowAnonymous]
-public class PublishersModel : BasePageModel
+public class PublishersModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public PublishersModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IEnumerable<MovieEntryModel> Publications { get; set; } = new List<MovieEntryModel>();
 
 	[FromRoute]
@@ -28,13 +21,13 @@ public class PublishersModel : BasePageModel
 			return NotFound();
 		}
 
-		var user = await _db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
+		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
 		if (user is null)
 		{
 			return NotFound();
 		}
 
-		Publications = await _db.Publications
+		Publications = await db.Publications
 			.ThatHaveBeenPublishedBy(user.Id)
 			.Where(p => p.Submission!.PublisherId == user.Id)
 			.Select(s => new MovieEntryModel

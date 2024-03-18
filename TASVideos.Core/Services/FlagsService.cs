@@ -14,27 +14,19 @@ public interface IFlagService
 	Task<FlagDeleteResult> Delete(int id);
 }
 
-internal class FlagService : IFlagService
+internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlagService
 {
 	internal const string FlagsKey = "AllFlags";
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public FlagService(ApplicationDbContext db, ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
 
 	public async Task<IReadOnlyCollection<Flag>> GetAll()
 	{
-		if (_cache.TryGetValue(FlagsKey, out List<Flag> flags))
+		if (cache.TryGetValue(FlagsKey, out List<Flag> flags))
 		{
 			return flags;
 		}
 
-		flags = await _db.Flags.ToListAsync();
-		_cache.Set(FlagsKey, flags);
+		flags = await db.Flags.ToListAsync();
+		cache.Set(FlagsKey, flags);
 		return flags;
 	}
 
@@ -62,12 +54,12 @@ internal class FlagService : IFlagService
 
 	public async Task<bool> InUse(int id)
 	{
-		return await _db.PublicationFlags.AnyAsync(pt => pt.FlagId == id);
+		return await db.PublicationFlags.AnyAsync(pt => pt.FlagId == id);
 	}
 
 	public async Task<FlagEditResult> Add(Flag flag)
 	{
-		_db.Flags.Add(new Flag
+		db.Flags.Add(new Flag
 		{
 			Name = flag.Name,
 			IconPath = flag.IconPath,
@@ -78,8 +70,8 @@ internal class FlagService : IFlagService
 
 		try
 		{
-			await _db.SaveChangesAsync();
-			_cache.Remove(FlagsKey);
+			await db.SaveChangesAsync();
+			cache.Remove(FlagsKey);
 			return FlagEditResult.Success;
 		}
 		catch (DbUpdateConcurrencyException)
@@ -99,7 +91,7 @@ internal class FlagService : IFlagService
 
 	public async Task<FlagEditResult> Edit(int id, Flag flag)
 	{
-		var existingFlag = await _db.Flags.SingleOrDefaultAsync(t => t.Id == id);
+		var existingFlag = await db.Flags.SingleOrDefaultAsync(t => t.Id == id);
 		if (existingFlag is null)
 		{
 			return FlagEditResult.NotFound;
@@ -113,8 +105,8 @@ internal class FlagService : IFlagService
 
 		try
 		{
-			await _db.SaveChangesAsync();
-			_cache.Remove(FlagsKey);
+			await db.SaveChangesAsync();
+			cache.Remove(FlagsKey);
 			return FlagEditResult.Success;
 		}
 		catch (DbUpdateConcurrencyException)
@@ -141,15 +133,15 @@ internal class FlagService : IFlagService
 
 		try
 		{
-			var flag = await _db.Flags.SingleOrDefaultAsync(t => t.Id == id);
+			var flag = await db.Flags.SingleOrDefaultAsync(t => t.Id == id);
 			if (flag is null)
 			{
 				return FlagDeleteResult.NotFound;
 			}
 
-			_db.Flags.Remove(flag);
-			await _db.SaveChangesAsync();
-			_cache.Remove(FlagsKey);
+			db.Flags.Remove(flag);
+			await db.SaveChangesAsync();
+			cache.Remove(FlagsKey);
 		}
 		catch (DbUpdateConcurrencyException)
 		{

@@ -6,18 +6,11 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents.TODO;
 
 [WikiModule(WikiModules.OrphanGameResources)]
-public class OrphanGameResources : ViewComponent
+public class OrphanGameResources(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public OrphanGameResources(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var pages = await _db.WikiPages
+		var pages = await db.WikiPages
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
 			.ForPageLevel(3)
@@ -26,7 +19,7 @@ public class OrphanGameResources : ViewComponent
 			.ToListAsync();
 
 		// TODO: a join would be more efficient as the list grows
-		var gamePages = await _db.Games
+		var gamePages = await db.Games
 			.Where(g => g.GameResourcesPage != null)
 			.Select(g => g.GameResourcesPage)
 			.Distinct()

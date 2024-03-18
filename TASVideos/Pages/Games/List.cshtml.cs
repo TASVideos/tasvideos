@@ -9,16 +9,8 @@ using TASVideos.Pages.Games.Models;
 
 namespace TASVideos.Pages.Games;
 
-public class ListModel : BasePageModel
+public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ListModel(
-		ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	[StringLength(50, MinimumLength = 3)]
 	[Display(Name = "Search")]
@@ -45,14 +37,14 @@ public class ListModel : BasePageModel
 			Games = await GetPageOfGames(Search);
 		}
 
-		SystemList = await _db.GameSystems
+		SystemList = await db.GameSystems
 			.OrderBy(s => s.Code)
 			.ToDropdown()
 			.ToListAsync();
 
 		SystemList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
 
-		LetterList = await _db.Games
+		LetterList = await db.Games
 			.Select(g => g.DisplayName.Substring(0, 1))
 			.Distinct()
 			.OrderBy(l => l)
@@ -61,7 +53,7 @@ public class ListModel : BasePageModel
 
 		LetterList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
 
-		GenreList = await _db.Genres
+		GenreList = await db.Genres
 			.Select(g => g.DisplayName)
 			.Distinct()
 			.OrderBy(l => l)
@@ -70,7 +62,7 @@ public class ListModel : BasePageModel
 
 		GenreList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
 
-		GroupList = await _db.GameGroups
+		GroupList = await db.GameGroups
 			.Select(g => g.Name)
 			.Distinct()
 			.OrderBy(l => l)
@@ -82,7 +74,7 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
 	{
-		var items = await _db.GameSystemFrameRates
+		var items = await db.GameSystemFrameRates
 			.ForSystem(systemId)
 			.ToDropDown()
 			.ToListAsync();
@@ -101,7 +93,7 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
 	{
-		var items = await _db.Games
+		var items = await db.Games
 			.ForSystem(systemId)
 			.OrderBy(g => g.DisplayName)
 			.ToDropDown()
@@ -121,7 +113,7 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnGetVersionDropDownForGame(int gameId, int systemId, bool includeEmpty)
 	{
-		var items = await _db.GameVersions
+		var items = await db.GameVersions
 			.ForGame(gameId)
 			.ForSystem(systemId)
 			.OrderBy(r => r.Name)
@@ -146,7 +138,7 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnGetGameGoalDropDownForGame(int gameId, bool includeEmpty)
 	{
-		var items = await _db.GameGoals
+		var items = await db.GameGoals
 			.Where(gg => gg.GameId == gameId)
 			.OrderBy(gg => gg.DisplayName)
 			.Select(gg => new SelectListItem
@@ -173,8 +165,8 @@ public class ListModel : BasePageModel
 		PageOf<GameListModel> data;
 		if (!string.IsNullOrWhiteSpace(paging.SearchTerms))
 		{
-			_db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
-			data = await _db.Games
+			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+			data = await db.Games
 				.ForSystemCode(paging.SystemCode)
 				.ForGenre(paging.Genre)
 				.ForGroup(paging.Group)
@@ -190,7 +182,7 @@ public class ListModel : BasePageModel
 		}
 		else
 		{
-			data = await _db.Games
+			data = await db.Games
 				.ForSystemCode(paging.SystemCode)
 				.ForGenre(paging.Genre)
 				.ForGroup(paging.Group)

@@ -2,22 +2,15 @@
 
 namespace TASVideos.Core;
 
-public class PageOf<T> : IPaged, IEnumerable<T>
+public class PageOf<T>(IEnumerable<T> items) : IPaged, IEnumerable<T>
 {
-	private readonly IEnumerable<T> _items;
-
-	public PageOf(IEnumerable<T> items)
-	{
-		_items = items;
-	}
-
 	public int RowCount { get; set; }
 	public string? Sort { get; set; }
 	public int? PageSize { get; set; }
 	public int? CurrentPage { get; set; }
 
-	public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
-	IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
+	public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
+	IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
 	public static PageOf<T> Empty() => new(Enumerable.Empty<T>());
 }

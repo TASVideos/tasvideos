@@ -6,15 +6,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.MoviesList)]
-public class MoviesList : ViewComponent
+public class MoviesList(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public MoviesList(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(string? platform)
 	{
 		var systemCode = platform;
@@ -23,7 +16,7 @@ public class MoviesList : ViewComponent
 
 		if (!isAll)
 		{
-			system = await _db.GameSystems.SingleOrDefaultAsync(s => s.Code == systemCode);
+			system = await db.GameSystems.SingleOrDefaultAsync(s => s.Code == systemCode);
 			if (system is null)
 			{
 				return View(new MoviesListModel { SystemCode = systemCode });
@@ -34,7 +27,7 @@ public class MoviesList : ViewComponent
 		{
 			SystemCode = systemCode,
 			SystemName = system?.DisplayName ?? "ALL",
-			Movies = await _db.Publications
+			Movies = await db.Publications
 				.Where(p => isAll || p.System!.Code == systemCode)
 				.Select(p => new MoviesListModel.MovieEntry
 				{

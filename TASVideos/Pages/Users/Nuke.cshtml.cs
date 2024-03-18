@@ -7,17 +7,9 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(matchAny: false, PermissionTo.SeeEmails, PermissionTo.EditUsers)]
-public class NukeModel : BasePageModel
+public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaintenanceLogger)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IUserMaintenanceLogger _userMaintenanceLogger;
-
-	public NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaintenanceLogger)
-	{
-		_db = db;
-		_userMaintenanceLogger = userMaintenanceLogger;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -45,7 +37,7 @@ public class NukeModel : BasePageModel
 			return RedirectToPage("/Profile/Settings");
 		}
 
-		var profile = await _db.Users
+		var profile = await db.Users
 			.Where(u => u.Id == Id)
 			.Select(u => new UserModel
 			{
@@ -65,7 +57,7 @@ public class NukeModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		var user = await _db.Users.SingleOrDefaultAsync(u => u.Id == Id);
+		var user = await db.Users.SingleOrDefaultAsync(u => u.Id == Id);
 		if (user is null)
 		{
 			return NotFound();
@@ -87,12 +79,12 @@ public class NukeModel : BasePageModel
 		user.MoodAvatarUrlBase = null;
 		user.PreferredPronouns = PreferredPronounTypes.Unspecified;
 
-		var roles = await _db.UserRoles
+		var roles = await db.UserRoles
 			.Where(ur => ur.UserId == user.Id)
 			.ToListAsync();
-		_db.UserRoles.RemoveRange(roles);
+		db.UserRoles.RemoveRange(roles);
 
-		var votes = await _db.ForumPollOptionVotes
+		var votes = await db.ForumPollOptionVotes
 			.Where(v => v.UserId == user.Id)
 			.ToListAsync();
 
@@ -101,7 +93,7 @@ public class NukeModel : BasePageModel
 			vote.IpAddress = null;
 		}
 
-		var posts = await _db.ForumPosts
+		var posts = await db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
 			.ToListAsync();
 
@@ -110,17 +102,17 @@ public class NukeModel : BasePageModel
 			post.IpAddress = null;
 		}
 
-		var logs = await _db.UserMaintenanceLogs
+		var logs = await db.UserMaintenanceLogs
 			.Where(l => l.UserId == user.Id)
 			.ToListAsync();
 
-		_db.UserMaintenanceLogs.RemoveRange(logs);
-		await _db.SaveChangesAsync();
+		db.UserMaintenanceLogs.RemoveRange(logs);
+		await db.SaveChangesAsync();
 
 		// The simple solution to having the correct data for pubs and subs is to save changes first
 		// This is a repeatable process, so we aren't worried about partial successes
 		// And this is very rare, so we aren't as worried about speed
-		var pubs = await _db.Publications
+		var pubs = await db.Publications
 			.IncludeTitleTables()
 			.ForAuthor(user.Id)
 			.ToListAsync();
@@ -130,7 +122,7 @@ public class NukeModel : BasePageModel
 			pub.GenerateTitle();
 		}
 
-		var subs = await _db.Submissions
+		var subs = await db.Submissions
 			.IncludeTitleTables()
 			.ForAuthor(user.Id)
 			.ToListAsync();
@@ -139,7 +131,7 @@ public class NukeModel : BasePageModel
 			sub.GenerateTitle();
 		}
 
-		await _userMaintenanceLogger.Log(user.Id, "User was anonymized", User.GetUserId());
+		await userMaintenanceLogger.Log(user.Id, "User was anonymized", User.GetUserId());
 
 		// If username is changed, we want to ignore the returnUrl that will be the old name
 		return BasePageRedirect("Edit", new { Id });

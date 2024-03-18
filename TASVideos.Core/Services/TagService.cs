@@ -14,27 +14,19 @@ public interface ITagService
 	Task<TagDeleteResult> Delete(int id);
 }
 
-internal class TagService : ITagService
+internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagService
 {
 	internal const string TagsKey = "AllTags";
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public TagService(ApplicationDbContext db, ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
 
 	public async ValueTask<IReadOnlyCollection<Tag>> GetAll()
 	{
-		if (_cache.TryGetValue(TagsKey, out List<Tag> tags))
+		if (cache.TryGetValue(TagsKey, out List<Tag> tags))
 		{
 			return tags;
 		}
 
-		tags = await _db.Tags.ToListAsync();
-		_cache.Set(TagsKey, tags);
+		tags = await db.Tags.ToListAsync();
+		cache.Set(TagsKey, tags);
 		return tags;
 	}
 
@@ -62,12 +54,12 @@ internal class TagService : ITagService
 
 	public async Task<bool> InUse(int id)
 	{
-		return await _db.PublicationTags.AnyAsync(pt => pt.TagId == id);
+		return await db.PublicationTags.AnyAsync(pt => pt.TagId == id);
 	}
 
 	public async Task<(int? id, TagEditResult result)> Add(string code, string displayName)
 	{
-		var entry = _db.Tags.Add(new Tag
+		var entry = db.Tags.Add(new Tag
 		{
 			Code = code,
 			DisplayName = displayName
@@ -75,8 +67,8 @@ internal class TagService : ITagService
 
 		try
 		{
-			await _db.SaveChangesAsync();
-			_cache.Remove(TagsKey);
+			await db.SaveChangesAsync();
+			cache.Remove(TagsKey);
 			return (entry.Entity.Id, TagEditResult.Success);
 		}
 		catch (DbUpdateConcurrencyException)
@@ -96,7 +88,7 @@ internal class TagService : ITagService
 
 	public async Task<TagEditResult> Edit(int id, string code, string displayName)
 	{
-		var tag = await _db.Tags.SingleOrDefaultAsync(t => t.Id == id);
+		var tag = await db.Tags.SingleOrDefaultAsync(t => t.Id == id);
 		if (tag is null)
 		{
 			return TagEditResult.NotFound;
@@ -107,8 +99,8 @@ internal class TagService : ITagService
 
 		try
 		{
-			await _db.SaveChangesAsync();
-			_cache.Remove(TagsKey);
+			await db.SaveChangesAsync();
+			cache.Remove(TagsKey);
 			return TagEditResult.Success;
 		}
 		catch (DbUpdateConcurrencyException)
@@ -135,15 +127,15 @@ internal class TagService : ITagService
 
 		try
 		{
-			var tag = await _db.Tags.SingleOrDefaultAsync(t => t.Id == id);
+			var tag = await db.Tags.SingleOrDefaultAsync(t => t.Id == id);
 			if (tag is null)
 			{
 				return TagDeleteResult.NotFound;
 			}
 
-			_db.Tags.Remove(tag);
-			await _db.SaveChangesAsync();
-			_cache.Remove(TagsKey);
+			db.Tags.Remove(tag);
+			await db.SaveChangesAsync();
+			cache.Remove(TagsKey);
 		}
 		catch (DbUpdateConcurrencyException)
 		{

@@ -6,15 +6,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.FirstEditionTas)]
-public class FirstEditionTas : ViewComponent
+public class FirstEditionTas(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public FirstEditionTas(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, bool splitByPlatform)
 	{
 		// TODO: add publicationClass argument, default to moon,stars,
@@ -26,7 +19,7 @@ public class FirstEditionTas : ViewComponent
 
 		if (splitByPlatform)
 		{
-			firstEditions = await _db.Publications
+			firstEditions = await db.Publications
 				.GroupBy(
 					gkey => new { gkey.GameId },
 					gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
@@ -41,7 +34,7 @@ public class FirstEditionTas : ViewComponent
 		}
 		else
 		{
-			firstEditions = await _db.Publications
+			firstEditions = await db.Publications
 				.GroupBy(
 					gkey => new { gkey.Game!.DisplayName },
 					gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
@@ -55,7 +48,7 @@ public class FirstEditionTas : ViewComponent
 				.ToListAsync();
 		}
 
-		var query = _db.Publications
+		var query = db.Publications
 			.Where(p => p.PublicationClass!.Weight >= 1) // Exclude Vault
 			.Where(p => p.CreateTimestamp >= afterYear)
 			.Where(p => p.CreateTimestamp < beforeYear);

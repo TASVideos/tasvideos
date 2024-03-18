@@ -6,21 +6,14 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Systems;
 
 [RequirePermission(PermissionTo.GameSystemMaintenance)]
-public class CreateModel : BasePageModel
+public class CreateModel(IGameSystemService systemService) : BasePageModel
 {
-	private readonly IGameSystemService _systemService;
-
-	public CreateModel(IGameSystemService systemService)
-	{
-		_systemService = systemService;
-	}
-
 	[BindProperty]
 	public GameSystem System { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
-		System.Id = await _systemService.NextId();
+		System.Id = await systemService.NextId();
 		return Page();
 	}
 
@@ -31,7 +24,7 @@ public class CreateModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _systemService.Add(System.Id, System.Code, System.DisplayName);
+		var result = await systemService.Add(System.Id, System.Code, System.DisplayName);
 
 		switch (result)
 		{

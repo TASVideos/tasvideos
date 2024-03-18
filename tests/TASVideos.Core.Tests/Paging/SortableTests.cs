@@ -102,14 +102,9 @@ public class SortableTests
 		Assert.AreEqual(expected, actual);
 	}
 
-	private class Sortable : ISortable
+	private class Sortable(string? sort) : ISortable
 	{
-		public Sortable(string? sort)
-		{
-			Sort = sort;
-		}
-
-		public string? Sort { get; }
+		public string? Sort { get; } = sort;
 	}
 
 	private class TestResponse

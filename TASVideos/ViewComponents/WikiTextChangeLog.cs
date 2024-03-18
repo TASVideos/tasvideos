@@ -7,15 +7,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.WikiTextChangeLog)]
-public class WikiTextChangeLog : ViewComponent
+public class WikiTextChangeLog(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public WikiTextChangeLog(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(bool includeMinors)
 	{
 		var paging = this.GetPagingModel(100);
@@ -26,7 +19,7 @@ public class WikiTextChangeLog : ViewComponent
 
 	private async Task<PageOf<WikiTextChangelogModel>> GetWikiChangeLog(PagingModel paging, bool includeMinorEdits)
 	{
-		var query = _db.WikiPages
+		var query = db.WikiPages
 			.ThatAreNotDeleted()
 			.ByMostRecent();
 

@@ -5,17 +5,10 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.BannedAvatarSites)]
-public class BannedAvatarSites : ViewComponent
+public class BannedAvatarSites(UserManager userManager) : ViewComponent
 {
-	private readonly UserManager _userManager;
-
-	public BannedAvatarSites(UserManager userManager)
-	{
-		_userManager = userManager;
-	}
-
 	public IViewComponentResult Invoke()
 	{
-		return View(_userManager.BannedAvatarSites());
+		return View(userManager.BannedAvatarSites());
 	}
 }

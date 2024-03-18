@@ -4,14 +4,9 @@
 [TestCategory("M64Parsers")]
 public class M64Tests : BaseParserTests
 {
-	private readonly M64 _m64Parser;
+	private readonly M64 _m64Parser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.M64SampleFiles.";
-
-	public M64Tests()
-	{
-		_m64Parser = new M64();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

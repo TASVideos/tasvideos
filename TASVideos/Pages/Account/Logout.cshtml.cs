@@ -6,15 +6,8 @@ namespace TASVideos.Pages.Account;
 
 [Authorize]
 [IgnoreAntiforgeryToken]
-public class LogoutModel : BasePageModel
+public class LogoutModel(SignInManager signInManager) : BasePageModel
 {
-	private readonly SignInManager _signInManager;
-
-	public LogoutModel(SignInManager signInManager)
-	{
-		_signInManager = signInManager;
-	}
-
 	public IActionResult OnGet()
 	{
 		return Login();
@@ -22,7 +15,7 @@ public class LogoutModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		await _signInManager.Logout(User);
+		await signInManager.Logout(User);
 		return Login();
 	}
 }

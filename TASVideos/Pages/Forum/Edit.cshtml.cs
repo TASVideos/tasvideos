@@ -6,15 +6,8 @@ using TASVideos.Pages.Forum.Models;
 namespace TASVideos.Pages.Forum;
 
 [RequirePermission(PermissionTo.EditCategories)]
-public class EditModel : BasePageModel
+public class EditModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public EditModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -23,7 +16,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var category = await _db.ForumCategories
+		var category = await db.ForumCategories
 			.Where(c => c.Id == Id)
 			.Select(c => new CategoryEditModel
 			{
@@ -58,7 +51,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var category = await _db.ForumCategories
+		var category = await db.ForumCategories
 			.Include(c => c.Forums)
 			.SingleOrDefaultAsync(c => c.Id == Id);
 
@@ -78,7 +71,7 @@ public class EditModel : BasePageModel
 			forum.Ordinal = forumModel.Ordinal;
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 		return BasePageRedirect("Index");
 	}
 }

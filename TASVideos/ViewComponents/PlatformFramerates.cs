@@ -5,18 +5,11 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.PlatformFramerates)]
-public class PlatformFramerates : ViewComponent
+public class PlatformFramerates(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public PlatformFramerates(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var model = await _db.GameSystemFrameRates
+		var model = await db.GameSystemFrameRates
 			.Where(sf => !sf.Obsolete)
 			.Select(sf => new PlatformFramerateModel
 			{

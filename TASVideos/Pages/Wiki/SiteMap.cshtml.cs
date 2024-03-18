@@ -7,10 +7,8 @@ using TASVideos.Pages.Wiki.Models;
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.EditWikiPages)]
-public class SiteMapModel : BasePageModel
+public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
 	private static readonly List<SiteMapEntry> CorePages = Assembly
 		.GetAssembly(typeof(SiteMapModel))
 		!.GetTypes()
@@ -27,17 +25,12 @@ public class SiteMapModel : BasePageModel
 		})
 		.ToList();
 
-	public SiteMapModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public List<SiteMapEntry> Map { get; set; } = new();
 
 	public void OnGet()
 	{
 		Map = CorePages.ToList();
-		var wikiPages = _db.WikiPages
+		var wikiPages = db.WikiPages
 			.ThatAreSubpagesOf("")
 			.Where(w => !w.PageName.StartsWith("InternalSystem"))
 			.Select(w => w.PageName)

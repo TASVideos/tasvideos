@@ -9,18 +9,11 @@ public interface IPublicationHistory
 	Task<PublicationHistoryGroup?> ForGame(int gameId);
 }
 
-internal class PublicationHistory : IPublicationHistory
+internal class PublicationHistory(ApplicationDbContext db) : IPublicationHistory
 {
-	private readonly ApplicationDbContext _db;
-
-	public PublicationHistory(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<PublicationHistoryGroup?> ForGame(int gameId)
 	{
-		var game = await _db.Games
+		var game = await db.Games
 			.SingleOrDefaultAsync(g => g.Id == gameId);
 
 		if (game is null)
@@ -28,7 +21,7 @@ internal class PublicationHistory : IPublicationHistory
 			return null;
 		}
 
-		var publications = await _db.Publications
+		var publications = await db.Publications
 			.Where(p => p.GameId == gameId)
 			.Select(p => new PublicationHistoryNode
 			{

@@ -6,21 +6,14 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.EditorActivity)]
-public class EditorActivity : ViewComponent
+public class EditorActivity(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public EditorActivity(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		// Legacy system supported a max days value, which isn't easily translated to the current filtering
 		// However, we currently have it set to 365 which greatly exceeds any max number
 		// And submissions are frequent enough to not worry about too stale submissions showing up on the front page
-		var subs = await _db.WikiPages
+		var subs = await db.WikiPages
 			.ThatAreNotDeleted()
 			.GroupBy(g => g.Author!.UserName)
 			.Select(w => new EditorActivityModel

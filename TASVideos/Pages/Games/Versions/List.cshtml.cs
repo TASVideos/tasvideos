@@ -4,15 +4,8 @@ using TASVideos.Pages.Games.Versions.Models;
 
 namespace TASVideos.Pages.Games.Versions;
 
-public class ListModel : BasePageModel
+public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ListModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int GameId { get; set; }
 
@@ -20,7 +13,7 @@ public class ListModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var roms = await _db.Games
+		var roms = await db.Games
 			.Where(g => g.Id == GameId)
 			.Select(g => new VersionListModel
 			{

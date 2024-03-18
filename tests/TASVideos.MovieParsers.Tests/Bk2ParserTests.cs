@@ -6,13 +6,8 @@ namespace TASVideos.MovieParsers.Tests;
 [TestCategory("BK2Parsers")]
 public class Bk2ParserTests : BaseParserTests
 {
-	private readonly Bk2 _bk2Parser;
+	private readonly Bk2 _bk2Parser = new();
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.Bk2SampleFiles.";
-
-	public Bk2ParserTests()
-	{
-		_bk2Parser = new Bk2();
-	}
 
 	[TestMethod]
 	[DataRow("MissingHeader.bk2", DisplayName = "Missing Header creates error")]

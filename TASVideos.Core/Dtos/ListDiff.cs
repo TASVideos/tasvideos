@@ -2,16 +2,10 @@
 
 namespace TASVideos.Core.Services;
 
-public class ListDiff
+public class ListDiff(IReadOnlyCollection<string> currentItems, ICollection<string> newItems)
 {
-	public ListDiff(IReadOnlyCollection<string> currentItems, ICollection<string> newItems)
-	{
-		Added = newItems.Except(currentItems).ToImmutableList();
-		Removed = currentItems.Except(newItems).ToImmutableList();
-	}
-
-	public IReadOnlyCollection<string> Added { get; init; }
-	public IReadOnlyCollection<string> Removed { get; init; }
+	public IReadOnlyCollection<string> Added { get; init; } = newItems.Except(currentItems).ToImmutableList();
+	public IReadOnlyCollection<string> Removed { get; init; } = currentItems.Except(newItems).ToImmutableList();
 }
 
 public static class ListDiffExtensions

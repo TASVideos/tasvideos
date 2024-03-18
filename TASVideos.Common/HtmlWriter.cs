@@ -2,7 +2,7 @@
 
 namespace TASVideos.Common;
 
-public class HtmlWriter
+public class HtmlWriter(TextWriter w)
 {
 	private static readonly Regex AllowedTagNames = new("^[a-z0-9]+$");
 	private static readonly Regex AllowedAttributeNames = new("^[a-z\\-]+$");
@@ -15,16 +15,10 @@ public class HtmlWriter
 		StringComparer.OrdinalIgnoreCase
 	);
 
-	private readonly TextWriter _w;
 	private bool _inTagOpen;
 	private readonly Stack<string> _openTags = new();
 
 	private bool InForeignContent => _openTags.TryPeek(out var tag) && tag is "script" or "style";
-
-	public HtmlWriter(TextWriter w)
-	{
-		_w = w;
-	}
 
 	public void OpenTag(string tagName)
 	{
@@ -45,12 +39,12 @@ public class HtmlWriter
 
 		if (_inTagOpen)
 		{
-			_w.Write('>');
+			w.Write('>');
 		}
 
 		tagName = tagName.ToLowerInvariant();
-		_w.Write('<');
-		_w.Write(tagName);
+		w.Write('<');
+		w.Write(tagName);
 		_openTags.Push(tagName);
 		_inTagOpen = true;
 	}
@@ -69,13 +63,13 @@ public class HtmlWriter
 
 		if (_inTagOpen)
 		{
-			_w.Write('>');
+			w.Write('>');
 		}
 
 		tagName = tagName.ToLowerInvariant();
-		_w.Write("</");
-		_w.Write(tagName);
-		_w.Write('>');
+		w.Write("</");
+		w.Write(tagName);
+		w.Write('>');
 		_openTags.Pop();
 		_inTagOpen = false;
 	}
@@ -99,12 +93,12 @@ public class HtmlWriter
 
 		if (_inTagOpen)
 		{
-			_w.Write('>');
+			w.Write('>');
 		}
 
 		tagName = tagName.ToLowerInvariant();
-		_w.Write('<');
-		_w.Write(tagName);
+		w.Write('<');
+		w.Write(tagName);
 		_inTagOpen = true;
 	}
 
@@ -120,30 +114,30 @@ public class HtmlWriter
 			throw new InvalidOperationException($"Invalid attribute name {name}");
 		}
 
-		_w.Write(' ');
-		_w.Write(name);
-		_w.Write("=\"");
+		w.Write(' ');
+		w.Write(name);
+		w.Write("=\"");
 
 		foreach (var c in value)
 		{
 			switch (c)
 			{
 				case '<':
-					_w.Write("&lt;");
+					w.Write("&lt;");
 					break;
 				case '&':
-					_w.Write("&amp;");
+					w.Write("&amp;");
 					break;
 				case '"':
-					_w.Write("&quot;");
+					w.Write("&quot;");
 					break;
 				default:
-					_w.Write(c);
+					w.Write(c);
 					break;
 			}
 		}
 
-		_w.Write('"');
+		w.Write('"');
 	}
 
 	public void Text(string text)
@@ -157,16 +151,16 @@ public class HtmlWriter
 
 			if (_inTagOpen)
 			{
-				_w.Write('>');
+				w.Write('>');
 			}
 
-			_w.Write(text);
+			w.Write(text);
 		}
 		else
 		{
 			if (_inTagOpen)
 			{
-				_w.Write('>');
+				w.Write('>');
 			}
 
 			foreach (var c in text)
@@ -174,13 +168,13 @@ public class HtmlWriter
 				switch (c)
 				{
 					case '<':
-						_w.Write("&lt;");
+						w.Write("&lt;");
 						break;
 					case '&':
-						_w.Write("&amp;");
+						w.Write("&amp;");
 						break;
 					default:
-						_w.Write(c);
+						w.Write(c);
 						break;
 				}
 			}
@@ -198,7 +192,7 @@ public class HtmlWriter
 
 		if (_inTagOpen)
 		{
-			_w.Write('>');
+			w.Write('>');
 		}
 	}
 
@@ -206,5 +200,5 @@ public class HtmlWriter
 	/// Gets the underlying writer
 	/// Do not use this unless you're very careful with escaping!
 	/// </summary>
-	public TextWriter BaseWriter => _w;
+	public TextWriter BaseWriter => w;
 }

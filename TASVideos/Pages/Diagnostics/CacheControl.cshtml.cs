@@ -6,41 +6,31 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class CacheControlModel : BasePageModel
+public class CacheControlModel(
+	IWikiPages wikiPages,
+	IAwards awards,
+	ICacheService cache)
+	: BasePageModel
 {
-	private readonly IWikiPages _wikiPages;
-	private readonly IAwards _awards;
-	private readonly ICacheService _cache;
-
-	public CacheControlModel(
-		IWikiPages wikiPages,
-		IAwards awards,
-		ICacheService cache)
-	{
-		_wikiPages = wikiPages;
-		_awards = awards;
-		_cache = cache;
-	}
-
 	public void OnGet()
 	{
 	}
 
 	public IActionResult OnGetCacheValue(string key)
 	{
-		var result = _cache.TryGetValue(key, out object value);
+		var result = cache.TryGetValue(key, out object value);
 		return new JsonResult(new { value = result ? value : "Empty" });
 	}
 
 	public async Task<IActionResult> OnPostFlushWikiCache()
 	{
-		await _wikiPages.FlushCache();
+		await wikiPages.FlushCache();
 		return BasePageRedirect("CacheControl");
 	}
 
 	public IActionResult OnPostClearAwardsCache()
 	{
-		_awards.FlushCache();
+		awards.FlushCache();
 		return BasePageRedirect("CacheControl");
 	}
 }

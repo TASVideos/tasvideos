@@ -14,25 +14,17 @@ public interface IEmailService
 	Task NewPrivateMessage(string recipient, string userName);
 }
 
-internal class EmailService : IEmailService
+internal class EmailService(
+	IHostEnvironment env,
+	IEmailSender emailSender,
+	AppSettings appSettings)
+	: IEmailService
 {
-	private readonly IHostEnvironment _env;
-	private readonly IEmailSender _emailSender;
-	private readonly string _baseUrl;
-
-	public EmailService(
-		IHostEnvironment env,
-		IEmailSender emailSender,
-		AppSettings appSettings)
-	{
-		_env = env;
-		_emailSender = emailSender;
-		_baseUrl = appSettings.BaseUrl;
-	}
+	private readonly string _baseUrl = appSettings.BaseUrl;
 
 	public async Task SendEmail(string recipient, string subject, string message)
 	{
-		await _emailSender.SendEmail(new SingleEmail
+		await emailSender.SendEmail(new SingleEmail
 		{
 			Recipient = recipient,
 			Subject = subject,
@@ -43,7 +35,7 @@ internal class EmailService : IEmailService
 
 	public async Task ResetPassword(string recipient, string link)
 	{
-		await _emailSender.SendEmail(new SingleEmail
+		await emailSender.SendEmail(new SingleEmail
 		{
 			Recipient = recipient,
 			Subject = "TASVideos - Reset Password",
@@ -54,7 +46,7 @@ internal class EmailService : IEmailService
 
 	public async Task EmailConfirmation(string recipient, string link)
 	{
-		await _emailSender.SendEmail(new SingleEmail
+		await emailSender.SendEmail(new SingleEmail
 		{
 			Recipient = recipient,
 			Subject = "TASVideos - Confirm your email",
@@ -65,7 +57,7 @@ internal class EmailService : IEmailService
 
 	public async Task PasswordResetConfirmation(string recipient, string resetLink)
 	{
-		await _emailSender.SendEmail(new SingleEmail
+		await emailSender.SendEmail(new SingleEmail
 		{
 			Recipient = recipient,
 			Subject = "TASVideos - Your Password Was Changed",
@@ -83,9 +75,9 @@ internal class EmailService : IEmailService
 		}
 
 		string siteName = "TASVideos";
-		if (!_env.IsProduction())
+		if (!env.IsProduction())
 		{
-			siteName += $" - {_env.EnvironmentName} environment";
+			siteName += $" - {env.EnvironmentName} environment";
 		}
 
 		string subject = "Topic Reply Notification - " + template.TopicTitle;
@@ -112,7 +104,7 @@ internal class EmailService : IEmailService
     TASVideos staff
 </p>";
 
-		await _emailSender.SendEmail(new StandardEmail
+		await emailSender.SendEmail(new StandardEmail
 		{
 			Recipients = recipientsList,
 			Subject = subject,
@@ -125,7 +117,7 @@ internal class EmailService : IEmailService
 	{
 		string link = $"{_baseUrl}/Messages/Inbox";
 
-		await _emailSender.SendEmail(new SingleEmail
+		await emailSender.SendEmail(new SingleEmail
 		{
 			ContainsHtml = false,
 			Recipient = recipient,

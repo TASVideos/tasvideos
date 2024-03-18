@@ -11,32 +11,18 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Publications.Urls;
 
 [RequirePermission(PermissionTo.EditPublicationFiles)]
-public class EditUrlsModel : BasePageModel
+public class EditUrlsModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IYoutubeSync youtubeSync,
+	IPublicationMaintenanceLogger publicationMaintenanceLogger,
+	IWikiPages wikiPages)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IYoutubeSync _youtubeSync;
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-	private readonly IWikiPages _wikiPages;
-
 	private static readonly List<PublicationUrlType> PublicationUrlTypes = Enum
 		.GetValues(typeof(PublicationUrlType))
 		.Cast<PublicationUrlType>()
 		.ToList();
-
-	public EditUrlsModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IYoutubeSync youtubeSync,
-		IPublicationMaintenanceLogger publicationMaintenanceLogger,
-		IWikiPages wikiPages)
-	{
-		_db = db;
-		_publisher = publisher;
-		_youtubeSync = youtubeSync;
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-		_wikiPages = wikiPages;
-	}
 
 	public IEnumerable<SelectListItem> AvailableTypes =
 		PublicationUrlTypes
@@ -73,7 +59,7 @@ public class EditUrlsModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var title = await _db.Publications
+		var title = await db.Publications
 			.Where(p => p.Id == PublicationId)
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
@@ -84,7 +70,7 @@ public class EditUrlsModel : BasePageModel
 		}
 
 		Title = title;
-		CurrentUrls = await _db.PublicationUrls
+		CurrentUrls = await db.PublicationUrls
 			.Where(u => u.PublicationId == PublicationId)
 			.ToListAsync();
 
@@ -111,7 +97,7 @@ public class EditUrlsModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.Where(p => p.Id == PublicationId)
 			.Select(p => new
 			{
@@ -129,7 +115,7 @@ public class EditUrlsModel : BasePageModel
 			return NotFound();
 		}
 
-		var publicationWiki = await _wikiPages.PublicationPage(PublicationId);
+		var publicationWiki = await wikiPages.PublicationPage(PublicationId);
 
 		CurrentUrls = publication.PublicationUrls;
 
@@ -159,7 +145,7 @@ public class EditUrlsModel : BasePageModel
 		}
 		else
 		{
-			_db.PublicationUrls.Add(new PublicationUrl
+			db.PublicationUrls.Add(new PublicationUrl
 			{
 				PublicationId = PublicationId,
 				Url = CurrentUrl,
@@ -171,17 +157,17 @@ public class EditUrlsModel : BasePageModel
 		}
 
 		string log = $"{logWording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";
-		await _publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
-		var result = await ConcurrentSave(_db, log, $"Unable to {logWording[1]} URL.");
+		await publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
+		var result = await ConcurrentSave(db, log, $"Unable to {logWording[1]} URL.");
 		if (result)
 		{
-			await _publisher.SendPublicationEdit(
+			await publisher.SendPublicationEdit(
 				$"{PublicationId}M edited by {User.Name()}",
 				$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
 				$"{logWording[0]}ed {UrlType} URL | {Title}",
 				$"{PublicationId}M");
 
-			if (UrlType == PublicationUrlType.Streaming && _youtubeSync.IsYoutubeUrl(CurrentUrl))
+			if (UrlType == PublicationUrlType.Streaming && youtubeSync.IsYoutubeUrl(CurrentUrl))
 			{
 				YoutubeVideo video = new(
 					PublicationId,
@@ -193,7 +179,7 @@ public class EditUrlsModel : BasePageModel
 					publication.SystemCode,
 					publication.Authors,
 					publication.ObsoletedById);
-				await _youtubeSync.SyncYouTubeVideo(video);
+				await youtubeSync.SyncYouTubeVideo(video);
 			}
 		}
 

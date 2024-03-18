@@ -7,33 +7,24 @@ public interface ILanguages
 	Task<IEnumerable<LanguagePage>> GetTranslations(string pageName);
 }
 
-internal class Languages : ILanguages
+internal class Languages(
+	ApplicationDbContext db,
+	IWikiPages wikiPages,
+	ICacheService cache)
+	: ILanguages
 {
 	internal const string TranslationsCacheKey = "Translations-";
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-	private readonly ICacheService _cache;
-
-	public Languages(
-		ApplicationDbContext db,
-		IWikiPages wikiPages,
-		ICacheService cache)
-	{
-		_db = db;
-		_wikiPages = wikiPages;
-		_cache = cache;
-	}
 
 	public async Task<IEnumerable<LanguagePage>> GetTranslations(string pageName)
 	{
 		var key = TranslationsCacheKey + pageName;
-		if (_cache.TryGetValue(key, out IEnumerable<LanguagePage> languages))
+		if (cache.TryGetValue(key, out IEnumerable<LanguagePage> languages))
 		{
 			return languages;
 		}
 
 		languages = await GetTranslationsInternal(pageName);
-		_cache.Set(key, languages, Durations.FiveMinutesInSeconds);
+		cache.Set(key, languages, Durations.FiveMinutesInSeconds);
 		return languages;
 	}
 
@@ -69,7 +60,7 @@ internal class Languages : ILanguages
 			.Where(l => !pageName.StartsWith(l.Code + "/"))
 			.Select(l => l.Path)
 			.ToList();
-		var existingPages = await _db.WikiPages
+		var existingPages = await db.WikiPages
 			.ThatAreCurrent()
 			.ThatAreNotDeleted()
 			.Where(wp => existingLanguagePages.Contains(wp.PageName))
@@ -102,7 +93,7 @@ internal class Languages : ILanguages
 
 	internal async Task<IEnumerable<Language>> AvailableLanguages()
 	{
-		var languagesMarkup = (await _wikiPages.SystemPage("Languages"))?.Markup;
+		var languagesMarkup = (await wikiPages.SystemPage("Languages"))?.Markup;
 
 		if (string.IsNullOrWhiteSpace(languagesMarkup))
 		{

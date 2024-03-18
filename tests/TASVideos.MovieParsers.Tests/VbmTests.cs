@@ -4,14 +4,9 @@
 [TestCategory("VbmParsers")]
 public class VbmTests : BaseParserTests
 {
-	private readonly Vbm _vbmParser;
+	private readonly Vbm _vbmParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.VbmSampleFiles.";
-
-	public VbmTests()
-	{
-		_vbmParser = new Vbm();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

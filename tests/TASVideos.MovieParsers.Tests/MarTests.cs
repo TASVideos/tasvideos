@@ -4,14 +4,9 @@
 [TestCategory("MarParsers")]
 public class MarTests : BaseParserTests
 {
-	private readonly Mar _marParser;
+	private readonly Mar _marParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.MarSampleFiles.";
-
-	public MarTests()
-	{
-		_marParser = new Mar();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

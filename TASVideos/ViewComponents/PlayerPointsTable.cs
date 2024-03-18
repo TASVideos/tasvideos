@@ -7,22 +7,13 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.PlayerPointsTable)]
-public class PlayerPointsTable : ViewComponent
+public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsService) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IPointsService _pointsService;
-
-	public PlayerPointsTable(ApplicationDbContext db, IPointsService pointsService)
-	{
-		_db = db;
-		_pointsService = pointsService;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(int? count)
 	{
 		var showCount = count ?? 50;
 
-		var players = await _db.Users
+		var players = await db.Users
 			.ThatArePublishedAuthors()
 			.Select(u => new PlayerPointsModel
 			{
@@ -33,7 +24,7 @@ public class PlayerPointsTable : ViewComponent
 
 		foreach (var user in players)
 		{
-			(user.Points, user.Rank) = await _pointsService.PlayerPoints(user.Id);
+			(user.Points, user.Rank) = await pointsService.PlayerPoints(user.Id);
 		}
 
 		var sortedPlayers = players

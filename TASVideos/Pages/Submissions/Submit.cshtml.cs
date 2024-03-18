@@ -12,44 +12,21 @@ using TASVideos.Pages.Submissions.Models;
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.SubmitMovies)]
-public class SubmitModel : BasePageModel
+public class SubmitModel(
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IWikiPages wikiPages,
+	IMovieParser parser,
+	UserManager userManager,
+	ITASVideoAgent tasVideoAgent,
+	IYoutubeSync youtubeSync,
+	IMovieFormatDeprecator deprecator,
+	IQueueService queueService,
+	AppSettings settings)
+	: BasePageModel
 {
 	private readonly string _fileFieldName = $"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}";
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IMovieParser _parser;
-	private readonly UserManager _userManager;
-	private readonly ITASVideoAgent _tasVideoAgent;
-	private readonly IYoutubeSync _youtubeSync;
-	private readonly IMovieFormatDeprecator _deprecator;
-	private readonly IQueueService _queueService;
-	private readonly AppSettings _settings;
 	private DateTime _earliestTimestamp;
-
-	public SubmitModel(
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IWikiPages wikiPages,
-		IMovieParser parser,
-		UserManager userManager,
-		ITASVideoAgent tasVideoAgent,
-		IYoutubeSync youtubeSync,
-		IMovieFormatDeprecator deprecator,
-		IQueueService queueService,
-		AppSettings settings)
-	{
-		_db = db;
-		_publisher = publisher;
-		_wikiPages = wikiPages;
-		_parser = parser;
-		_userManager = userManager;
-		_tasVideoAgent = tasVideoAgent;
-		_youtubeSync = youtubeSync;
-		_deprecator = deprecator;
-		_queueService = queueService;
-		_settings = settings;
-	}
 
 	[BindProperty]
 	public SubmissionCreateModel Create { get; set; } = new();
@@ -63,7 +40,7 @@ public class SubmitModel : BasePageModel
 			Authors = new List<string> { User.Name() }
 		};
 
-		BackupSubmissionDeterminator = (await _db.Submissions
+		BackupSubmissionDeterminator = (await db.Submissions
 			.Where(s => s.SubmitterId == User.GetUserId())
 			.CountAsync())
 			.ToString();
@@ -83,7 +60,7 @@ public class SubmitModel : BasePageModel
 			return Page();
 		}
 
-		var parseResult = await _parser.ParseZip(Create.MovieFile!.OpenReadStream());
+		var parseResult = await parser.ParseZip(Create.MovieFile!.OpenReadStream());
 
 		if (!parseResult.Success)
 		{
@@ -91,7 +68,7 @@ public class SubmitModel : BasePageModel
 			return Page();
 		}
 
-		var deprecated = await _deprecator.IsDeprecated("." + parseResult.FileExtension);
+		var deprecated = await deprecator.IsDeprecated("." + parseResult.FileExtension);
 		if (deprecated)
 		{
 			ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
@@ -105,11 +82,11 @@ public class SubmitModel : BasePageModel
 			Branch = Create.Branch,
 			RomName = Create.RomName,
 			EmulatorVersion = Create.Emulator,
-			EncodeEmbedLink = _youtubeSync.ConvertToEmbedLink(Create.EncodeEmbedLink),
+			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(Create.EncodeEmbedLink),
 			AdditionalAuthors = Create.AdditionalAuthors
 		};
 
-		var error = await _queueService.MapParsedResult(parseResult, submission);
+		var error = await queueService.MapParsedResult(parseResult, submission);
 		if (!string.IsNullOrWhiteSpace(error))
 		{
 			ModelState.AddModelError("", error);
@@ -121,12 +98,12 @@ public class SubmitModel : BasePageModel
 		}
 
 		submission.MovieFile = await Create.MovieFile.ToBytes();
-		submission.Submitter = await _userManager.GetUserAsync(User);
+		submission.Submitter = await userManager.GetUserAsync(User);
 
-		_db.Submissions.Add(submission);
-		await _db.SaveChangesAsync();
+		db.Submissions.Add(submission);
+		await db.SaveChangesAsync();
 
-		await _wikiPages.Add(new WikiCreateRequest
+		await wikiPages.Add(new WikiCreateRequest
 		{
 			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
@@ -135,7 +112,7 @@ public class SubmitModel : BasePageModel
 			AuthorId = User.GetUserId()
 		});
 
-		_db.SubmissionAuthors.AddRange(await _db.Users
+		db.SubmissionAuthors.AddRange(await db.Users
 			.ForUsers(Create.Authors)
 			.Select(u => new SubmissionAuthor
 			{
@@ -148,17 +125,17 @@ public class SubmitModel : BasePageModel
 
 		submission.GenerateTitle();
 
-		submission.TopicId = await _tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
-		await _db.SaveChangesAsync();
+		submission.TopicId = await tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
+		await db.SaveChangesAsync();
 
-		await _publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S");
+		await publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S");
 
 		return BaseRedirect($"/{submission.Id}S");
 	}
 
 	public async Task<IActionResult> OnGetPrefillText()
 	{
-		var page = await _wikiPages.Page("System/SubmissionDefaultMessage");
+		var page = await wikiPages.Page("System/SubmissionDefaultMessage");
 		return new JsonResult(new { text = page?.Markup });
 	}
 
@@ -187,7 +164,7 @@ public class SubmitModel : BasePageModel
 
 		foreach (var author in Create.Authors)
 		{
-			if (!await _db.Users.Exists(author))
+			if (!await db.Users.Exists(author))
 			{
 				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}", $"Could not find user: {author}");
 			}
@@ -198,26 +175,26 @@ public class SubmitModel : BasePageModel
 	{
 		"Sorry, you can not submit at this time.",
 		"We limit submissions to " +
-		_settings.SubmissionRate.Submissions +
+		settings.SubmissionRate.Submissions +
 		" in " +
-		_settings.SubmissionRate.Days +
+		settings.SubmissionRate.Days +
 		" days per user. ",
 		"You will be able to submit again on " +
-		_earliestTimestamp.AddDays(_settings.SubmissionRate.Days)
+		_earliestTimestamp.AddDays(settings.SubmissionRate.Days)
 	};
 
 	public async Task<bool> SubmissionAllowed(int userId)
 	{
-		var subs = await _db.Submissions
+		var subs = await db.Submissions
 			.Where(s => s.Submitter != null
 				&& s.SubmitterId == userId
-				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-_settings.SubmissionRate.Days))
+				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-settings.SubmissionRate.Days))
 			.ToListAsync();
 		if (subs.Count > 0)
 		{
 			_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
 		}
 
-		return subs.Count < _settings.SubmissionRate.Submissions;
+		return subs.Count < settings.SubmissionRate.Submissions;
 	}
 }

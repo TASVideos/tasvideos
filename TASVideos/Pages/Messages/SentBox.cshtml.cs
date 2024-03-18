@@ -7,15 +7,8 @@ using TASVideos.Pages.Messages.Models;
 namespace TASVideos.Pages.Messages;
 
 [Authorize]
-public class SentboxModel : BasePageModel
+public class SentboxModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public SentboxModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int? Id { get; set; }
 
@@ -24,7 +17,7 @@ public class SentboxModel : BasePageModel
 	public async Task OnGet()
 	{
 		var userId = User.GetUserId();
-		SentBox = await _db.PrivateMessages
+		SentBox = await db.PrivateMessages
 			.ThatAreNotToUserDeleted()
 			.FromUser(userId)
 			.Select(pm => new SentboxEntry
@@ -45,17 +38,17 @@ public class SentboxModel : BasePageModel
 			return NotFound();
 		}
 
-		var message = await _db.PrivateMessages
+		var message = await db.PrivateMessages
 			.FromUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.SingleOrDefaultAsync(pm => pm.Id == Id);
 
 		if (message is not null)
 		{
-			_db.PrivateMessages.Remove(message);
+			db.PrivateMessages.Remove(message);
 
 			// Do nothing on failure, likely the user has read at the same time
-			await ConcurrentSave(_db, "", "");
+			await ConcurrentSave(db, "", "");
 		}
 
 		return BasePageRedirect("SentBox");

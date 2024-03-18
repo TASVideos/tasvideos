@@ -10,25 +10,13 @@ using TASVideos.Pages.Forum.Topics.Models;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.CreateForumTopics)]
-public class CreateModel : BaseForumModel
+public class CreateModel(
+	UserManager userManager,
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher,
+	IForumService forumService)
+	: BaseForumModel
 {
-	private readonly UserManager _userManager;
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IForumService _forumService;
-
-	public CreateModel(
-		UserManager userManager,
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher,
-		IForumService forumService)
-	{
-		_userManager = userManager;
-		_db = db;
-		_publisher = publisher;
-		_forumService = forumService;
-	}
-
 	[FromRoute]
 	public int ForumId { get; set; }
 
@@ -49,7 +37,7 @@ public class CreateModel : BaseForumModel
 	public async Task<IActionResult> OnGet()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var topic = await _db.Forums
+		var topic = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Where(f => f.Id == ForumId)
 			.Select(f => new TopicCreateModel
@@ -64,15 +52,15 @@ public class CreateModel : BaseForumModel
 		}
 
 		Topic = topic;
-		UserAvatars = await _forumService.UserAvatars(User.GetUserId());
+		UserAvatars = await forumService.UserAvatars(User.GetUserId());
 
-		var user = await _userManager.GetRequiredUser(User);
+		var user = await userManager.GetRequiredUser(User);
 		if (user.AutoWatchTopic != null && user.AutoWatchTopic != UserPreference.Auto)
 		{
 			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
 		}
 
-		BackupSubmissionDeterminator = (await _db.ForumTopics
+		BackupSubmissionDeterminator = (await db.ForumTopics
 			.ForForum(ForumId)
 			.Where(f => f.PosterId == User.GetUserId())
 			.CountAsync())
@@ -99,11 +87,11 @@ public class CreateModel : BaseForumModel
 
 		if (!ModelState.IsValid)
 		{
-			UserAvatars = await _forumService.UserAvatars(User.GetUserId());
+			UserAvatars = await forumService.UserAvatars(User.GetUserId());
 			return Page();
 		}
 
-		var forum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == ForumId);
+		var forum = await db.Forums.SingleOrDefaultAsync(f => f.Id == ForumId);
 		if (forum is null)
 		{
 			return NotFound();
@@ -124,12 +112,12 @@ public class CreateModel : BaseForumModel
 			ForumId = ForumId
 		};
 
-		_db.ForumTopics.Add(topic);
+		db.ForumTopics.Add(topic);
 
 		// TODO: catch DbConcurrencyException
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
-		await _forumService.CreatePost(new PostCreateDto(
+		await forumService.CreatePost(new PostCreateDto(
 			ForumId,
 			topic.Id,
 			null,
@@ -142,19 +130,19 @@ public class CreateModel : BaseForumModel
 
 		if (User.Has(PermissionTo.CreateForumPolls) && Poll.IsValid)
 		{
-			await _forumService.CreatePoll(
+			await forumService.CreatePoll(
 				topic,
 				new PollCreateDto(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
 		}
 
-		await _publisher.SendForum(
+		await publisher.SendForum(
 			forum.Restricted,
 			$"New Topic by {User.Name()}",
 			$"[New Topic]({{0}}) by {User.Name()}",
 			$"{forum.ShortName}: {Topic.Title}",
 			$"Forum/Topics/{topic.Id}");
 
-		await _userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
+		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 
 		return RedirectToPage("Index", new { topic.Id });
 	}

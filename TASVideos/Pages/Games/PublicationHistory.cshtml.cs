@@ -8,19 +8,10 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Games;
 
 [AllowAnonymous]
-public class PublicationHistoryModel : BasePageModel
+public class PublicationHistoryModel(
+	ApplicationDbContext db,
+	IPublicationHistory history) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IPublicationHistory _history;
-
-	public PublicationHistoryModel(
-		ApplicationDbContext db,
-		IPublicationHistory history)
-	{
-		_history = history;
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -32,7 +23,7 @@ public class PublicationHistoryModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await _db.Games.SingleOrDefaultAsync(p => p.Id == Id);
+		var game = await db.Games.SingleOrDefaultAsync(p => p.Id == Id);
 
 		if (game is null)
 		{
@@ -40,7 +31,7 @@ public class PublicationHistoryModel : BasePageModel
 		}
 
 		Game = game;
-		History = await _history.ForGame(Id) ?? new PublicationHistoryGroup();
+		History = await history.ForGame(Id) ?? new PublicationHistoryGroup();
 		return Page();
 	}
 }

@@ -8,15 +8,8 @@ using TASVideos.Pages.UserFiles.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class CatalogModel : BasePageModel
+public class CatalogModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public CatalogModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public long Id { get; set; }
 
@@ -29,7 +22,7 @@ public class CatalogModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var userFile = await _db.UserFiles
+		var userFile = await db.UserFiles
 			.Select(uf => new CatalogViewModel
 			{
 				Id = uf.Id,
@@ -58,7 +51,7 @@ public class CatalogModel : BasePageModel
 			return Page();
 		}
 
-		var userFile = await _db.UserFiles.SingleOrDefaultAsync(uf => uf.Id == Id);
+		var userFile = await db.UserFiles.SingleOrDefaultAsync(uf => uf.Id == Id);
 		if (userFile is null)
 		{
 			return NotFound();
@@ -66,14 +59,14 @@ public class CatalogModel : BasePageModel
 
 		userFile.SystemId = UserFile.SystemId;
 		userFile.GameId = UserFile.GameId;
-		await ConcurrentSave(_db, "Userfile successfully updated.", "Unable to update Userfile.");
+		await ConcurrentSave(db, "Userfile successfully updated.", "Unable to update Userfile.");
 
 		return BasePageRedirect("Info", new { Id });
 	}
 
 	private async Task Initialize()
 	{
-		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+		AvailableSystems = UiDefaults.DefaultEntry.Concat(await db.GameSystems
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
@@ -84,7 +77,7 @@ public class CatalogModel : BasePageModel
 
 		if (UserFile.SystemId.HasValue)
 		{
-			AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
+			AvailableGames = UiDefaults.DefaultEntry.Concat(await db.Games
 				.ForSystem((int)UserFile.SystemId)
 				.OrderBy(g => g.DisplayName)
 				.ToDropDown()

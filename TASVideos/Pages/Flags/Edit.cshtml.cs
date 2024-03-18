@@ -6,10 +6,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Flags;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
-public class EditModel : BasePageModel
+public class EditModel(IFlagService flagService) : BasePageModel
 {
-	private readonly IFlagService _flagService;
-
 	public IReadOnlyCollection<SelectListItem> AvailablePermissions { get; } = UiDefaults.DefaultEntry.Concat(PermissionUtil
 		.AllPermissions()
 		.Select(p => new SelectListItem
@@ -18,11 +16,6 @@ public class EditModel : BasePageModel
 			Text = p.ToString().SplitCamelCase(),
 		}))
 		.ToList();
-
-	public EditModel(IFlagService flagService)
-	{
-		_flagService = flagService;
-	}
 
 	[FromRoute]
 	public int Id { get; set; }
@@ -34,7 +27,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var flag = await _flagService.GetById(Id);
+		var flag = await flagService.GetById(Id);
 
 		if (flag is null)
 		{
@@ -42,7 +35,7 @@ public class EditModel : BasePageModel
 		}
 
 		Flag = flag;
-		InUse = await _flagService.InUse(Id);
+		InUse = await flagService.InUse(Id);
 		return Page();
 	}
 
@@ -53,7 +46,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _flagService.Edit(Id, Flag);
+		var result = await flagService.Edit(Id, Flag);
 		switch (result)
 		{
 			default:
@@ -74,7 +67,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete()
 	{
-		var result = await _flagService.Delete(Id);
+		var result = await flagService.Delete(Id);
 		switch (result)
 		{
 			case FlagDeleteResult.InUse:

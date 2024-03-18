@@ -9,19 +9,10 @@ using TASVideos.Pages.Publications.Models;
 namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(
+	ApplicationDbContext db,
+	IMovieSearchTokens movieTokens) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IMovieSearchTokens _movieTokens;
-
-	public IndexModel(
-		ApplicationDbContext db,
-		IMovieSearchTokens movieTokens)
-	{
-		_db = db;
-		_movieTokens = movieTokens;
-	}
-
 	[FromQuery]
 	public PublicationRequest Paging { get; set; } = new();
 
@@ -32,7 +23,7 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var tokenLookup = await _movieTokens.GetTokens();
+		var tokenLookup = await movieTokens.GetTokens();
 		var tokens = Query.ToTokens();
 		var searchModel = PublicationSearchModel.FromTokens(tokens, tokenLookup);
 
@@ -42,7 +33,7 @@ public class IndexModel : BasePageModel
 			return BaseRedirect("Movies");
 		}
 
-		Movies = await _db.Publications
+		Movies = await db.Publications
 			.FilterByTokens(searchModel)
 			.ToViewModel(searchModel.SortBy == "y", User.GetUserId())
 			.PageOf(Paging);

@@ -6,10 +6,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Flags;
 
 [RequirePermission(PermissionTo.FlagMaintenance)]
-public class CreateModel : BasePageModel
+public class CreateModel(IFlagService flagService) : BasePageModel
 {
-	private readonly IFlagService _flagService;
-
 	public IReadOnlyCollection<SelectListItem> AvailablePermissions { get; } = UiDefaults.DefaultEntry.Concat(PermissionUtil
 		.AllPermissions()
 		.Select(p => new SelectListItem
@@ -18,11 +16,6 @@ public class CreateModel : BasePageModel
 			Text = p.ToString().SplitCamelCase(),
 		}))
 		.ToList();
-
-	public CreateModel(IFlagService flagService)
-	{
-		_flagService = flagService;
-	}
 
 	[FromRoute]
 	public int Id { get; set; }
@@ -42,7 +35,7 @@ public class CreateModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _flagService.Add(Flag);
+		var result = await flagService.Add(Flag);
 		switch (result)
 		{
 			default:

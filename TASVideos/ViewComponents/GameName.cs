@@ -5,15 +5,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.GameName)]
-public class GameName : ViewComponent
+public class GameName(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public GameName(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		var path = HttpContext.Request.Path.ToString().Trim('/');
@@ -21,7 +14,7 @@ public class GameName : ViewComponent
 		var gameList = new List<GameNameModel>();
 		if (path.IsSystemGameResourcePath())
 		{
-			var system = await _db.GameSystems
+			var system = await db.GameSystems
 				.SingleOrDefaultAsync(s => s.Code == path.SystemGameResourcePath());
 			gameList.Add(new GameNameModel
 			{
@@ -33,7 +26,7 @@ public class GameName : ViewComponent
 		else
 		{
 			var baseGame = string.Join("/", path.Split('/').Take(3));
-			gameList = await _db.Games
+			gameList = await db.Games
 				.Where(g => g.GameResourcesPage == baseGame)
 				.Select(g => new GameNameModel
 				{

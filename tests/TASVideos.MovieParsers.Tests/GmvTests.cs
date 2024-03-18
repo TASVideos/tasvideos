@@ -4,14 +4,9 @@
 [TestCategory("GmvParsers")]
 public class GmvTests : BaseParserTests
 {
-	private readonly Gmv _gmvParser;
+	private readonly Gmv _gmvParser = new();
 
 	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.GmvSampleFiles.";
-
-	public GmvTests()
-	{
-		_gmvParser = new Gmv();
-	}
 
 	[TestMethod]
 	public async Task InvalidHeader()

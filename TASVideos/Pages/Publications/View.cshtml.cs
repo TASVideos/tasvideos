@@ -7,15 +7,8 @@ using TASVideos.Pages.Publications.Models;
 namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
-public class ViewModel : BasePageModel
+public class ViewModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public ViewModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -23,7 +16,7 @@ public class ViewModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publication = await _db.Publications
+		var publication = await db.Publications
 			.ToViewModel(false, User.GetUserId())
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
@@ -39,7 +32,7 @@ public class ViewModel : BasePageModel
 
 	public async Task<IActionResult> OnGetDownload()
 	{
-		var pub = await _db.Publications
+		var pub = await db.Publications
 			.Where(s => s.Id == Id)
 			.Select(s => new { s.MovieFile, s.MovieFileName })
 			.SingleOrDefaultAsync();
@@ -54,7 +47,7 @@ public class ViewModel : BasePageModel
 
 	public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
 	{
-		var file = await _db.PublicationFiles
+		var file = await db.PublicationFiles
 			.Where(pf => pf.PublicationId == Id)
 			.Where(pf => pf.Id == fileId)
 			.Select(pf => new { pf.FileData, pf.Path })

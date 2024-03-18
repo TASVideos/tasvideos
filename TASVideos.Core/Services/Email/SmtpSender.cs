@@ -11,27 +11,19 @@ namespace TASVideos.Core.Services.Email;
 /// An implementation of <see cref="IEmailSender"/> that uses a configured SMTP server
 /// and user/password authentication
 /// </summary>
-internal class SmtpSender : IEmailSender
+internal class SmtpSender(
+	IHostEnvironment env,
+	AppSettings settings,
+	ILogger<SmtpSender> logger)
+	: IEmailSender
 {
-	private readonly IHostEnvironment _env;
-	private readonly AppSettings.EmailBasicAuthSettings _settings;
-	private readonly ILogger<SmtpSender> _logger;
-
-	public SmtpSender(
-		IHostEnvironment env,
-		AppSettings settings,
-		ILogger<SmtpSender> logger)
-	{
-		_env = env;
-		_settings = settings.Email;
-		_logger = logger;
-	}
+	private readonly AppSettings.EmailBasicAuthSettings _settings = settings.Email;
 
 	public async Task SendEmail(IEmail email)
 	{
 		if (!_settings.IsEnabled())
 		{
-			_logger.LogWarning("Attempting to send email without email address configured");
+			logger.LogWarning("Attempting to send email without email address configured");
 			return;
 		}
 
@@ -46,14 +38,14 @@ internal class SmtpSender : IEmailSender
 		}
 		catch (Exception ex)
 		{
-			_logger.LogError("Unable to send email, subject: {subject} message: {message} exception: {ex}", email.Subject, email.Message, ex);
+			logger.LogError("Unable to send email, subject: {subject} message: {message} exception: {ex}", email.Subject, email.Message, ex);
 		}
 	}
 
 	private MimeMessage BccList(IEmail email)
 	{
 		var recipients = email.Recipients.ToList();
-		var from = _env.IsProduction() ? "noreply" : $"TASVideos {_env.EnvironmentName} environment noreply";
+		var from = env.IsProduction() ? "noreply" : $"TASVideos {env.EnvironmentName} environment noreply";
 		var message = new MimeMessage();
 		message.From.Add(new MailboxAddress(from, _settings.Email));
 

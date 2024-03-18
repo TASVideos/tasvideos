@@ -7,15 +7,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.TopicFeed)]
-public class TopicFeed : ViewComponent
+public class TopicFeed(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public TopicFeed(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(int? l, int t, bool right, string? heading, bool hideContent, string wikiLink)
 	{
 		int limit = l ?? 5;
@@ -27,7 +20,7 @@ public class TopicFeed : ViewComponent
 			Heading = heading,
 			HideContent = hideContent,
 			WikiLink = wikiLink,
-			Posts = await _db.ForumPosts
+			Posts = await db.ForumPosts
 					.ForTopic(topicId)
 					.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
 					.ByMostRecent()

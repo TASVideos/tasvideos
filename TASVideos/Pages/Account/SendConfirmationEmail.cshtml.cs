@@ -7,23 +7,14 @@ namespace TASVideos.Pages.Account;
 
 [Authorize]
 [IpBanCheck]
-public class SendConfirmationEmail : BasePageModel
+public class SendConfirmationEmail(UserManager userManager, IEmailService emailService) : BasePageModel
 {
-	private readonly UserManager _userManager;
-	private readonly IEmailService _emailService;
-
-	public SendConfirmationEmail(UserManager userManager, IEmailService emailService)
-	{
-		_userManager = userManager;
-		_emailService = emailService;
-	}
-
 	public async Task<IActionResult> OnPost()
 	{
-		var user = await _userManager.GetRequiredUser(User);
-		var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+		var user = await userManager.GetRequiredUser(User);
+		var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
-		await _emailService.EmailConfirmation(user.Email, callbackUrl);
+		await emailService.EmailConfirmation(user.Email, callbackUrl);
 
 		return RedirectToPage("EmailConfirmationSent");
 	}

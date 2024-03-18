@@ -7,15 +7,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.PlatformAuthorList)]
-public class PlatformAuthorLists : ViewComponent
+public class PlatformAuthorLists(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public PlatformAuthorLists(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(bool showClassIcons, DateTime? before, DateTime? after, IList<int> platforms)
 	{
 		if (!before.HasValue || !after.HasValue)
@@ -26,7 +19,7 @@ public class PlatformAuthorLists : ViewComponent
 		var model = new PlatformAuthorListModel
 		{
 			ShowClasses = showClassIcons,
-			Publications = await _db.Publications
+			Publications = await db.Publications
 				.ForDateRange(before.Value, after.Value)
 				.Where(p => !platforms.Any() || platforms.Contains(p.SystemId))
 				.Select(p => new PlatformAuthorListModel.PublicationEntry

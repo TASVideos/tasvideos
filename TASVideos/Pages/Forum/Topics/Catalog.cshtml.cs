@@ -8,17 +8,10 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class CatalogModel : BasePageModel
+public class CatalogModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
 	[FromRoute]
 	public int Id { get; set;  }
-
-	public CatalogModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
 
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
 
@@ -37,7 +30,7 @@ public class CatalogModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.Select(t => new
 			{
 				t.Id,
@@ -55,7 +48,7 @@ public class CatalogModel : BasePageModel
 		if (topic.GameId.HasValue)
 		{
 			GameId = topic.GameId;
-			SystemId = await _db.GameVersions
+			SystemId = await db.GameVersions
 				.Where(v => v.GameId == GameId)
 				.Select(v => v.SystemId)
 				.FirstOrDefaultAsync();
@@ -73,27 +66,27 @@ public class CatalogModel : BasePageModel
 			return Page();
 		}
 
-		var topic = await _db.ForumTopics.SingleOrDefaultAsync(t => t.Id == Id);
+		var topic = await db.ForumTopics.SingleOrDefaultAsync(t => t.Id == Id);
 		if (topic is null)
 		{
 			return NotFound();
 		}
 
-		var gameExists = await _db.Games.AnyAsync(g => g.Id == GameId);
+		var gameExists = await db.Games.AnyAsync(g => g.Id == GameId);
 		if (!gameExists)
 		{
 			return BadRequest();
 		}
 
 		topic.GameId = GameId;
-		await ConcurrentSave(_db, "Topic successfully cataloged.", "Unable to catalog topic.");
+		await ConcurrentSave(db, "Topic successfully cataloged.", "Unable to catalog topic.");
 
 		return BasePageRedirect("Index", new { Id });
 	}
 
 	private async Task Initialize()
 	{
-		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+		AvailableSystems = UiDefaults.DefaultEntry.Concat(await db.GameSystems
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
@@ -104,7 +97,7 @@ public class CatalogModel : BasePageModel
 
 		if (SystemId.HasValue)
 		{
-			AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
+			AvailableGames = UiDefaults.DefaultEntry.Concat(await db.Games
 				.ForSystem(SystemId.Value)
 				.OrderBy(g => g.DisplayName)
 				.ToDropDown()

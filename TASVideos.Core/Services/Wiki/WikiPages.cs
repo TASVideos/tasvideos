@@ -116,39 +116,30 @@ public interface IWikiPages
 }
 
 // TODO: handle DbConcurrency exceptions
-internal class WikiPages : IWikiPages
+internal class WikiPages(
+	ApplicationDbContext db,
+	ICacheService cache) : IWikiPages
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public WikiPages(
-		ApplicationDbContext db,
-		ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
-
 	private WikiResult? this[string pageName]
 	{
 		get
 		{
-			_cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiResult page);
+			cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiResult page);
 			return page;
 		}
 
-		set => _cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
+		set => cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
 	}
 
 	private void RemovePageFromCache(string pageName) =>
-		_cache.Remove($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}");
+		cache.Remove($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}");
 
 
-	public async Task<IReadOnlyCollection<WikiOrphan>> Orphans() => await _db.WikiPages
+	public async Task<IReadOnlyCollection<WikiOrphan>> Orphans() => await db.WikiPages
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
 			.Where(wp => wp.PageName != "MediaPosts") // Linked by the navbar
-			.Where(wp => !_db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
+			.Where(wp => !db.WikiReferrals.Any(wr => wr.Referral == wp.PageName))
 			.Where(wp => !wp.PageName.StartsWith("InternalSystem")) // These by design aren't orphans they are directly used in the system
 			.Where(wp => !wp.PageName.Contains("/")) // Subpages are linked by default by the parents, so we know they are not orphans
 			.Select(wp => new WikiOrphan(
@@ -157,11 +148,11 @@ internal class WikiPages : IWikiPages
 				wp.Author!.UserName))
 			.ToListAsync();
 
-	public async Task<IReadOnlyCollection<WikiPageReferral>> BrokenLinks() => await _db.WikiReferrals
+	public async Task<IReadOnlyCollection<WikiPageReferral>> BrokenLinks() => await db.WikiReferrals
 		.Where(wr => !Regex.IsMatch(wr.Referral, "(^[0-9]+)([GMS])"))
 		.Where(wr => wr.Referrer != "SandBox")
 		.Where(wr => !wr.Referrer.StartsWith("HomePages/Bisqwit/InitialWikiPages")) // Historical pages with legacy links
-		.Where(wr => !_db.WikiPages.Any(wp => wp.ChildId == null && wp.IsDeleted == false && wp.PageName == wr.Referral))
+		.Where(wr => !db.WikiPages.Any(wp => wp.ChildId == null && wp.IsDeleted == false && wp.PageName == wr.Referral))
 		.Where(wr => !wr.Referral.StartsWith("Subs-"))
 		.Where(wr => !wr.Referral.StartsWith("Movies-"))
 		.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
@@ -183,7 +174,7 @@ internal class WikiPages : IWikiPages
 			return true;
 		}
 
-		var query = _db.WikiPages
+		var query = db.WikiPages
 			.ThatAreCurrent();
 
 		if (!includeDeleted)
@@ -223,7 +214,7 @@ internal class WikiPages : IWikiPages
 			return page;
 		}
 
-		page = await _db.WikiPages
+		page = await db.WikiPages
 			.ForPage(pageName)
 			.ThatAreNotDeleted()
 			.OrderByDescending(wp => wp.Revision)
@@ -247,7 +238,7 @@ internal class WikiPages : IWikiPages
 			throw new InvalidOperationException($"{nameof(addRequest.PageName)} must have a value.");
 		}
 
-		var currentRevision = await _db.WikiPages
+		var currentRevision = await db.WikiPages
 			.ForPage(addRequest.PageName)
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
@@ -260,7 +251,7 @@ internal class WikiPages : IWikiPages
 			return null;
 		}
 
-		var author = await _db.Users.SingleOrDefaultAsync(u => u.Id == addRequest.AuthorId);
+		var author = await db.Users.SingleOrDefaultAsync(u => u.Id == addRequest.AuthorId);
 		if (author is null)
 		{
 			throw new InvalidOperationException($"A user with the id of {addRequest.AuthorId}");
@@ -269,7 +260,7 @@ internal class WikiPages : IWikiPages
 		var newRevision = addRequest.ToWikiPage(author);
 
 		newRevision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
-		_db.WikiPages.Add(newRevision);
+		db.WikiPages.Add(newRevision);
 
 		if (currentRevision is not null)
 		{
@@ -278,7 +269,7 @@ internal class WikiPages : IWikiPages
 		
 		// We cannot assume the "current" revision is the latest
 		// We might have a deleted revision after it
-		var maxRevision = await _db.WikiPages
+		var maxRevision = await db.WikiPages
 			.ForPage(addRequest.PageName)
 			.MaxAsync(r => (int?)r.Revision);
 		if (maxRevision.HasValue)
@@ -318,7 +309,7 @@ internal class WikiPages : IWikiPages
 			throw new InvalidOperationException($"Cannot move {originalName} to {destinationName} because {destinationName} already exists.");
 		}
 
-		var existingRevisions = await _db.WikiPages
+		var existingRevisions = await db.WikiPages
 			.ForPage(originalName)
 			.ToListAsync();
 
@@ -330,7 +321,7 @@ internal class WikiPages : IWikiPages
 		// Update all Referrals.
 		// Referrals can be safely updated since the new page still has the original content
 		// and any links on them are still correctly referring to other pages
-		var existingReferrals = await _db.WikiReferrals
+		var existingReferrals = await db.WikiReferrals
 			.ForPage(originalName)
 			.ToListAsync();
 
@@ -341,7 +332,7 @@ internal class WikiPages : IWikiPages
 
 		try
 		{
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 		catch (DbUpdateException)
 		{
@@ -361,7 +352,7 @@ internal class WikiPages : IWikiPages
 		{
 			RemovePageFromCache(originalName);
 			cachedRevision.SetPageName(destinationName);
-			_cache.Set(destinationName, cachedRevision);
+			cache.Set(destinationName, cachedRevision);
 		}
 
 		return true;
@@ -369,7 +360,7 @@ internal class WikiPages : IWikiPages
 
 	public async Task<bool> MoveAll(string originalName, string destinationName)
 	{
-		var pagesToMove = await _db.WikiPages
+		var pagesToMove = await db.WikiPages
 			.Where(wp => wp.PageName.StartsWith(originalName))
 			.ThatAreCurrent()
 			.ToListAsync();
@@ -392,7 +383,7 @@ internal class WikiPages : IWikiPages
 	public async Task<int> Delete(string pageName)
 	{
 		pageName = pageName.Trim('/');
-		var revisions = await _db.WikiPages
+		var revisions = await db.WikiPages
 			.ForPage(pageName)
 			.ThatAreNotDeleted()
 			.ToListAsync();
@@ -406,15 +397,15 @@ internal class WikiPages : IWikiPages
 		// Remove referrals
 		// Note: Pages that refer to this page will not be removed
 		// It's important for them to remain and show as broken links
-		var referrers = await _db.WikiReferrals
+		var referrers = await db.WikiReferrals
 			.ForPage(pageName)
 			.ToListAsync();
 
-		_db.RemoveRange(referrers);
+		db.RemoveRange(referrers);
 
 		try
 		{
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 		catch (DbUpdateConcurrencyException)
 		{
@@ -431,7 +422,7 @@ internal class WikiPages : IWikiPages
 	public async Task Delete(string pageName, int revision)
 	{
 		pageName = pageName.Trim('/');
-		var wikiPage = await _db.WikiPages
+		var wikiPage = await db.WikiPages
 			.ThatAreNotDeleted()
 			.Revision(pageName, revision)
 			.SingleOrDefaultAsync();
@@ -442,7 +433,7 @@ internal class WikiPages : IWikiPages
 
 			if (isCurrent)
 			{
-				_cache.Remove(pageName);
+				cache.Remove(pageName);
 			}
 
 			wikiPage.IsDeleted = true;
@@ -450,19 +441,19 @@ internal class WikiPages : IWikiPages
 			// Update referrers if latest revision
 			if (wikiPage.Child is null)
 			{
-				var referrers = await _db.WikiReferrals
+				var referrers = await db.WikiReferrals
 					.ForPage(pageName)
 					.ToListAsync();
 
-				_db.RemoveRange(referrers);
+				db.RemoveRange(referrers);
 			}
 
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 
 			if (isCurrent)
 			{
 				// Set the previous page as current, if there is one
-				var newCurrent = _db.WikiPages
+				var newCurrent = db.WikiPages
 					.Include(wp => wp.Author)
 					.ThatAreNotDeleted()
 					.ForPage(pageName)
@@ -482,7 +473,7 @@ internal class WikiPages : IWikiPages
 	public async Task<bool> Undelete(string pageName)
 	{
 		pageName = pageName.Trim('/');
-		var allRevisions = await _db.WikiPages
+		var allRevisions = await db.WikiPages
 			.Include(r => r.Author)
 			.ForPage(pageName)
 			.ToListAsync();
@@ -530,7 +521,7 @@ internal class WikiPages : IWikiPages
 
 	public async Task FlushCache()
 	{
-		var allPages = await _db.WikiPages
+		var allPages = await db.WikiPages
 			.Select(wp => wp.PageName)
 			.Distinct()
 			.ToListAsync();
@@ -543,16 +534,16 @@ internal class WikiPages : IWikiPages
 
 	private void ClearCache(string pageName)
 	{
-		_cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName.ToLower());
+		cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName.ToLower());
 	}
 
 	private async Task GenerateReferrals(string pageName, string markup)
 	{
-		var existingReferrals = await _db.WikiReferrals
+		var existingReferrals = await db.WikiReferrals
 			.ForPage(pageName)
 			.ToListAsync();
 
-		_db.WikiReferrals.RemoveRange(existingReferrals);
+		db.WikiReferrals.RemoveRange(existingReferrals);
 
 		var referrers = Util.GetReferrals(markup)
 			.Select(wl => new WikiPageReferral
@@ -562,8 +553,8 @@ internal class WikiPages : IWikiPages
 				Excerpt = wl.Excerpt
 			});
 
-		_db.WikiReferrals.AddRange(referrers);
-		await _db.SaveChangesAsync();
+		db.WikiReferrals.AddRange(referrers);
+		await db.SaveChangesAsync();
 	}
 }
 

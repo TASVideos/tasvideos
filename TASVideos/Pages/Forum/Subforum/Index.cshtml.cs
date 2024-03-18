@@ -11,17 +11,8 @@ namespace TASVideos.Pages.Forum.Subforum;
 
 [AllowAnonymous]
 [RequireCurrentPermissions]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db, IForumService forumService) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IForumService _forumService;
-
-	public IndexModel(ApplicationDbContext db, IForumService forumService)
-	{
-		_db = db;
-		_forumService = forumService;
-	}
-
 	[FromQuery]
 	public ForumRequest Search { get; set; } = new();
 
@@ -34,7 +25,7 @@ public class IndexModel : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var forum = await _db.Forums
+		var forum = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Select(f => new ForumDisplayModel
 			{
@@ -50,7 +41,7 @@ public class IndexModel : BasePageModel
 		}
 
 		Forum = forum;
-		Forum.Topics = await _db.ForumTopics
+		Forum.Topics = await db.ForumTopics
 			.ForForum(Id)
 			.Select(ft => new ForumDisplayModel.ForumTopicEntry
 			{
@@ -75,7 +66,7 @@ public class IndexModel : BasePageModel
 			.ThenByDescending(ft => ft.LastPost!.Id) // The database does not enforce it, but we can assume a topic will always have at least one post
 			.PageOf(Search);
 
-		ActivityTopics = await _forumService.GetPostActivityOfSubforum(Id);
+		ActivityTopics = await forumService.GetPostActivityOfSubforum(Id);
 
 		return Page();
 	}

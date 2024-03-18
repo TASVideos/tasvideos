@@ -9,22 +9,12 @@ using TASVideos.Pages.UserFiles.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [RequirePermission(PermissionTo.UploadUserFiles)]
-public class UploadModel : BasePageModel
+public class UploadModel(
+	IUserFiles userFiles,
+	ApplicationDbContext db,
+	ExternalMediaPublisher publisher)
+	: BasePageModel
 {
-	private readonly IUserFiles _userFiles;
-	private readonly ApplicationDbContext _db;
-	private readonly ExternalMediaPublisher _publisher;
-
-	public UploadModel(
-		IUserFiles userFiles,
-		ApplicationDbContext db,
-		ExternalMediaPublisher publisher)
-	{
-		_userFiles = userFiles;
-		_db = db;
-		_publisher = publisher;
-	}
-
 	[BindProperty]
 	public UserFileUploadModel UserFile { get; set; } = new();
 
@@ -60,7 +50,7 @@ public class UploadModel : BasePageModel
 
 		var fileExt = UserFile.File.FileExtension();
 
-		if (!(await _userFiles.SupportedFileExtensions()).Contains(fileExt))
+		if (!(await userFiles.SupportedFileExtensions()).Contains(fileExt))
 		{
 			await Initialize();
 			ModelState.AddModelError(
@@ -69,7 +59,7 @@ public class UploadModel : BasePageModel
 			return Page();
 		}
 
-		if (!await _userFiles.SpaceAvailable(User.GetUserId(), UserFile.File!.Length))
+		if (!await userFiles.SpaceAvailable(User.GetUserId(), UserFile.File!.Length))
 		{
 			await Initialize();
 			ModelState.AddModelError(
@@ -79,7 +69,7 @@ public class UploadModel : BasePageModel
 		}
 
 		byte[] actualFileData = await UserFile.File.ActualFileData();
-		var (id, parseResult) = await _userFiles.Upload(User.GetUserId(), new(
+		var (id, parseResult) = await userFiles.Upload(User.GetUserId(), new(
 			UserFile.Title,
 			UserFile.Description,
 			UserFile.SystemId,
@@ -95,7 +85,7 @@ public class UploadModel : BasePageModel
 			return Page();
 		}
 
-		await _publisher.SendUserFile(
+		await publisher.SendUserFile(
 			UserFile.Hidden,
 			$"New user file uploaded by {User.Name()}",
 			$"New [user file]({{0}}) uploaded by {User.Name()}",
@@ -107,13 +97,13 @@ public class UploadModel : BasePageModel
 
 	private async Task Initialize()
 	{
-		SupportedFileExtensions = (await _userFiles.SupportedFileExtensions())
+		SupportedFileExtensions = (await userFiles.SupportedFileExtensions())
 			.Select(s => s.Replace(".", ""))
 			.ToList();
 
-		StorageUsed = await _userFiles.StorageUsed(User.GetUserId());
+		StorageUsed = await userFiles.StorageUsed(User.GetUserId());
 
-		AvailableSystems = UiDefaults.DefaultEntry.Concat(await _db.GameSystems
+		AvailableSystems = UiDefaults.DefaultEntry.Concat(await db.GameSystems
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
@@ -122,7 +112,7 @@ public class UploadModel : BasePageModel
 			})
 			.ToListAsync());
 
-		AvailableGames = UiDefaults.DefaultEntry.Concat(await _db.Games
+		AvailableGames = UiDefaults.DefaultEntry.Concat(await db.Games
 			.OrderBy(g => g.DisplayName)
 			.ToDropDown()
 			.ToListAsync());

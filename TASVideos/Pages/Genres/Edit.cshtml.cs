@@ -5,15 +5,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Genres;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
-public class EditModel : BasePageModel
+public class EditModel(IGenreService genreService) : BasePageModel
 {
-	private readonly IGenreService _genreService;
-
-	public EditModel(IGenreService genreService)
-	{
-		_genreService = genreService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -24,14 +17,14 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var genre = await _genreService.GetById(Id);
+		var genre = await genreService.GetById(Id);
 		if (genre is null)
 		{
 			return NotFound();
 		}
 
 		Genre = genre;
-		InUse = await _genreService.InUse(Id);
+		InUse = await genreService.InUse(Id);
 		return Page();
 	}
 
@@ -42,7 +35,7 @@ public class EditModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _genreService.Edit(Id, Genre.DisplayName);
+		var result = await genreService.Edit(Id, Genre.DisplayName);
 		switch (result)
 		{
 			default:
@@ -59,7 +52,7 @@ public class EditModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete()
 	{
-		var result = await _genreService.Delete(Id);
+		var result = await genreService.Delete(Id);
 		switch(result)
 		{
 			default:

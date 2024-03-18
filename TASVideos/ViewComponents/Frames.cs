@@ -9,17 +9,9 @@ namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.Frames)]
 [TextModule]
-public class Frames : ViewComponent
+public class Frames(ApplicationDbContext db, ICacheService cache) : ViewComponent
 {
 	private const string CacheKey = "FramesModule";
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public Frames(ApplicationDbContext db, ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
 
 	public async Task<string> RenderTextAsync(IWikiPage? pageData, double? fps, int amount)
 	{
@@ -48,7 +40,7 @@ public class Frames : ViewComponent
 		var submissionId = WikiHelper.IsSubmissionPage(pageName);
 		if (submissionId.HasValue)
 		{
-			var sub = await _db.Submissions
+			var sub = await db.Submissions
 				.Where(s => s.Id == submissionId.Value)
 				.Select(s => new { s.Id, s.SystemFrameRate!.FrameRate })
 				.SingleOrDefaultAsync(s => s.Id == submissionId.Value);
@@ -65,19 +57,19 @@ public class Frames : ViewComponent
 		if (publicationId.HasValue)
 		{
 			var key = CacheKey + publicationId.Value;
-			if (_cache.TryGetValue(key, out double frameRate))
+			if (cache.TryGetValue(key, out double frameRate))
 			{
 				return frameRate;
 			}
 
-			var pub = await _db.Publications
+			var pub = await db.Publications
 				.Where(p => p.Id == publicationId.Value)
 				.Select(p => new { p.Id, p.SystemFrameRate!.FrameRate })
 				.SingleOrDefaultAsync();
 
 			if (pub?.FrameRate is not null)
 			{
-				_cache.Set(key, pub.FrameRate);
+				cache.Set(key, pub.FrameRate);
 				return pub.FrameRate;
 			}
 		}

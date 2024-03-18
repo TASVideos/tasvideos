@@ -6,15 +6,8 @@ using TASVideos.Pages.Permissions.Models;
 namespace TASVideos.Pages.Permissions;
 
 [Authorize]
-public class IndexModel : BasePageModel
+public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public IndexModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public IEnumerable<PermissionDisplayModel> Permissions { get; } = PermissionUtil
 		.AllPermissions()
 		.Select(p => new PermissionDisplayModel
@@ -28,7 +21,7 @@ public class IndexModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		var allRoles = await _db.Roles
+		var allRoles = await db.Roles
 			.Select(r => new
 			{
 				r.Name,

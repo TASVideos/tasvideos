@@ -7,18 +7,11 @@ namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.CrossGameObsoletions)]
 
-public class CrossGameObsoletions : ViewComponent
+public class CrossGameObsoletions(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public CrossGameObsoletions(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var obsoletionList = await _db.Publications
+		var obsoletionList = await db.Publications
 			.Include(p => p.ObsoletedBy)
 			.Include(p => p.Game)
 			.Where(p => p.ObsoletedBy != null)

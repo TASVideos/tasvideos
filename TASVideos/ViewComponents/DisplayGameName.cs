@@ -6,15 +6,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.DisplayGameName)]
-public class DisplayGameName : ViewComponent
+public class DisplayGameName(ApplicationDbContext db) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-
-	public DisplayGameName(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(IList<int> gid)
 	{
 		if (!gid.Any())
@@ -22,7 +15,7 @@ public class DisplayGameName : ViewComponent
 			return new ContentViewComponentResult("<<< No gamename ID specified >>>");
 		}
 
-		var games = await _db.Games
+		var games = await db.Games
 			.Where(g => gid.Contains(g.Id))
 			.OrderBy(d => d)
 			.ToListAsync();

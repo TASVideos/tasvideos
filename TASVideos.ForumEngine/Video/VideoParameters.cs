@@ -1,16 +1,10 @@
 ﻿namespace TASVideos.ForumEngine;
 
-public class VideoParameters
+public class VideoParameters(string host, string path)
 {
 	public int? Width { get; set; }
 	public int? Height { get; set; }
-	public string Host { get; set; }
+	public string Host { get; set; } = host;
 	public Dictionary<string, string> QueryParams { get; set; } = new();
-	public string Path { get; set; }
-
-	public VideoParameters(string host, string path)
-	{
-		Host = host;
-		Path = path;
-	}
+	public string Path { get; set; } = path;
 }

@@ -3,24 +3,17 @@ using System.Text.Json;
 
 namespace TASVideos.Middleware;
 
-public class ErrorHandlingMiddleware
+public class ErrorHandlingMiddleware(RequestDelegate next)
 {
-	private readonly RequestDelegate _next;
-
-	public ErrorHandlingMiddleware(RequestDelegate next)
-	{
-		_next = next;
-	}
-
 	public async Task Invoke(HttpContext context, IHostEnvironment env, ILogger<ErrorHandlingMiddleware> logger)
 	{
 		try
 		{
-			await _next(context);
+			await next(context);
 		}
 		catch (Exception ex)
 		{
-			await HandleExceptionAsync(context, ex, env, logger, _next);
+			await HandleExceptionAsync(context, ex, env, logger, next);
 		}
 	}
 

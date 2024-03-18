@@ -4,19 +4,12 @@ using TASVideos.Core.Services;
 namespace TASVideos.Pages.Forum;
 
 [AllowAnonymous]
-public class IndexModel : BasePageModel
+public class IndexModel(IForumService forumService) : BasePageModel
 {
-	private readonly IForumService _forumService;
-
-	public IndexModel(IForumService forumService)
-	{
-		_forumService = forumService;
-	}
-
 	public IReadOnlyCollection<ForumCategoryDisplayDto> Categories { get; set; } = new List<ForumCategoryDisplayDto>();
 
 	public async Task OnGet()
 	{
-		Categories = await _forumService.GetAllCategories();
+		Categories = await forumService.GetAllCategories();
 	}
 }

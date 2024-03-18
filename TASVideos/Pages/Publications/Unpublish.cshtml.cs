@@ -7,22 +7,12 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.Unpublish)]
-public class UnpublishModel : BasePageModel
+public class UnpublishModel(
+	IPublicationMaintenanceLogger publicationMaintenanceLogger,
+	ExternalMediaPublisher publisher,
+	IQueueService queueService)
+	: BasePageModel
 {
-	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly IQueueService _queueService;
-
-	public UnpublishModel(
-		IPublicationMaintenanceLogger publicationMaintenanceLogger,
-		ExternalMediaPublisher publisher,
-		IQueueService queueService)
-	{
-		_publicationMaintenanceLogger = publicationMaintenanceLogger;
-		_publisher = publisher;
-		_queueService = queueService;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -34,7 +24,7 @@ public class UnpublishModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var result = await _queueService.CanUnpublish(Id);
+		var result = await queueService.CanUnpublish(Id);
 
 		switch (result.Status)
 		{
@@ -55,7 +45,7 @@ public class UnpublishModel : BasePageModel
 			return Page();
 		}
 
-		var result = await _queueService.Unpublish(Id);
+		var result = await queueService.Unpublish(Id);
 
 		if (result.Status == UnpublishResult.UnpublishStatus.NotFound)
 		{
@@ -71,8 +61,8 @@ public class UnpublishModel : BasePageModel
 
 		if (result.Status == UnpublishResult.UnpublishStatus.Success)
 		{
-			await _publicationMaintenanceLogger.Log(Id, User.GetUserId(), $"Unpublished. Reaspon: {Reason}");
-			await _publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
+			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), $"Unpublished. Reaspon: {Reason}");
+			await publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
 		}
 
 		return BaseRedirect("/Subs-List");

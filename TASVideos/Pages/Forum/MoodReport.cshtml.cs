@@ -5,19 +5,12 @@ using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum;
 
-public class MoodReportModel : BasePageModel
+public class MoodReportModel(ApplicationDbContext db) : BasePageModel
 {
 	public static readonly IEnumerable<ForumPostMood> Moods = Enum
 		.GetValues(typeof(ForumPostMood))
 		.Cast<ForumPostMood>()
 		.ToList();
-
-	private readonly ApplicationDbContext _db;
-
-	public MoodReportModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
 
 	[FromRoute]
 	public string? UserName { get; set; }
@@ -26,7 +19,7 @@ public class MoodReportModel : BasePageModel
 
 	public async Task OnGet()
 	{
-		var query = _db.Users
+		var query = db.Users
 			.ThatHavePermission(PermissionTo.UseMoodAvatars)
 			.Where(u => u.MoodAvatarUrlBase != null)
 			.Select(u => new MoodReportEntry

@@ -8,14 +8,8 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages;
 
 [IgnoreAntiforgeryToken]
-public class ErrorModel : PageModel
+public class ErrorModel(IHostEnvironment env) : PageModel
 {
-	private readonly IHostEnvironment _env;
-	public ErrorModel(IHostEnvironment env)
-	{
-		_env = env;
-	}
-
 	public string StatusCodeString { get; set; } = "";
 	public string ExceptionMessage { get; set; } = "";
 	public List<KeyValuePair<string, StringValues>> RecoveredFormData { get; set; } = new();
@@ -39,7 +33,7 @@ public class ErrorModel : PageModel
 
 	private void HandleException()
 	{
-		if (_env.IsDevelopment() || User.Has(PermissionTo.SeeDiagnostics))
+		if (env.IsDevelopment() || User.Has(PermissionTo.SeeDiagnostics))
 		{
 			var exceptionHandlerPathFeature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 			ExceptionMessage = exceptionHandlerPathFeature?.Error.ToString() ?? "";

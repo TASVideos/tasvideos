@@ -53,13 +53,8 @@ public class SubmissionListEntry : ITimeable, ISubmissionDisplay
 	public string? IntendedClass { get; set; }
 }
 
-public class SubmissionPageOf<T> : PageOf<T>
+public class SubmissionPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 {
-	public SubmissionPageOf(IEnumerable<T> items)
-		: base(items)
-	{
-	}
-
 	public IEnumerable<int> Years { get; set; } = new List<int>();
 	public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
 	public string? System { get; set; }

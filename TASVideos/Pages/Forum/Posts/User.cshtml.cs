@@ -10,22 +10,12 @@ using TASVideos.Pages.Forum.Posts.Models;
 namespace TASVideos.Pages.Forum.Posts;
 
 [AllowAnonymous]
-public class UserModel : BasePageModel
+public class UserModel(
+	ApplicationDbContext db,
+	IAwards awards,
+	IPointsService pointsService)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IAwards _awards;
-	private readonly IPointsService _pointsService;
-
-	public UserModel(
-		ApplicationDbContext db,
-		IAwards awards,
-		IPointsService pointsService)
-	{
-		_db = db;
-		_awards = awards;
-		_pointsService = pointsService;
-	}
-
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
@@ -38,7 +28,7 @@ public class UserModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await _db.Users
+		var user = await db.Users
 			.Where(u => u.UserName == UserName)
 			.Select(u => new
 			{
@@ -64,7 +54,7 @@ public class UserModel : BasePageModel
 		}
 
 		bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		Posts = await _db.ForumPosts
+		Posts = await db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
 			.ExcludeRestricted(seeRestricted)
 			.Select(p => new UserPagePost
@@ -87,9 +77,9 @@ public class UserModel : BasePageModel
 			.SortedPageOf(Search);
 
 		// Fill user data into each post
-		var userAwards = (await _awards.ForUser(user.Id)).ToList();
+		var userAwards = (await awards.ForUser(user.Id)).ToList();
 
-		var (points, rank) = await _pointsService.PlayerPoints(user.Id);
+		var (points, rank) = await pointsService.PlayerPoints(user.Id);
 
 		if (!string.IsNullOrWhiteSpace(rank))
 		{

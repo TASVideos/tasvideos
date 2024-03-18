@@ -5,19 +5,14 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 /// <summary>
 /// A <see cref="IPostDistributor"/> implementation that simply logs a post.
 /// </summary>
-public class LogDistributor : IPostDistributor
+public class LogDistributor(ILogger<LogDistributor> logger) : IPostDistributor
 {
-	private readonly ILogger _logger;
+	private readonly ILogger _logger = logger;
 
 	private static readonly IEnumerable<PostType> PostTypes = Enum
 		.GetValues(typeof(PostType))
 		.OfType<PostType>()
 		.ToList();
-
-	public LogDistributor(ILogger<LogDistributor> logger)
-	{
-		_logger = logger;
-	}
 
 	public IEnumerable<PostType> Types => PostTypes;
 

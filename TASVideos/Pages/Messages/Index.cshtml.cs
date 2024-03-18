@@ -5,15 +5,8 @@ using TASVideos.Core.Services;
 namespace TASVideos.Pages.Messages;
 
 [Authorize]
-public class IndexModel : BasePageModel
+public class IndexModel(UserManager userManager) : BasePageModel
 {
-	private readonly UserManager _userManager;
-
-	public IndexModel(UserManager userManager)
-	{
-		_userManager = userManager;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -21,7 +14,7 @@ public class IndexModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var message = await _userManager.GetMessage(User.GetUserId(), Id);
+		var message = await userManager.GetMessage(User.GetUserId(), Id);
 
 		if (message is null)
 		{

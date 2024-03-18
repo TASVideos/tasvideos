@@ -7,15 +7,8 @@ using TASVideos.Pages.Wiki.Models;
 namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
-public class PageHistoryModel : BasePageModel
+public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public PageHistoryModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromQuery]
 	public string? Path { get; set; }
 
@@ -38,7 +31,7 @@ public class PageHistoryModel : BasePageModel
 		History = new WikiHistoryModel
 		{
 			PageName = Path,
-			Revisions = await _db.WikiPages
+			Revisions = await db.WikiPages
 				.ForPage(Path)
 				.ThatAreNotDeleted()
 				.OrderBy(wp => wp.Revision)
@@ -72,7 +65,7 @@ public class PageHistoryModel : BasePageModel
 
 	private async Task<WikiDiffModel?> GetPageDiff(string pageName, int fromRevision, int toRevision)
 	{
-		var revisions = await _db.WikiPages
+		var revisions = await db.WikiPages
 			.ForPage(pageName)
 			.Where(wp => wp.Revision == fromRevision
 				|| wp.Revision == toRevision)
@@ -92,7 +85,7 @@ public class PageHistoryModel : BasePageModel
 
 	private async Task<(int? from, int? to)> GetLatestRevisions(string pageName)
 	{
-		var revisions = await _db.WikiPages
+		var revisions = await db.WikiPages
 			.ForPage(pageName)
 			.ThatAreNotDeleted()
 			.OrderByDescending(wp => wp.Revision)

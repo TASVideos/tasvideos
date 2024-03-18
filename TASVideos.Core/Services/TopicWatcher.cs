@@ -43,25 +43,17 @@ public interface ITopicWatcher
 	Task<bool> IsWatchingTopic(int topicId, int userId);
 }
 
-internal class TopicWatcher : ITopicWatcher
+internal class TopicWatcher(
+	IEmailService emailService,
+	ApplicationDbContext db,
+	AppSettings appSettings)
+	: ITopicWatcher
 {
-	private readonly IEmailService _emailService;
-	private readonly ApplicationDbContext _db;
-	private readonly string _baseUrl;
-
-	public TopicWatcher(
-		IEmailService emailService,
-		ApplicationDbContext db,
-		AppSettings appSettings)
-	{
-		_emailService = emailService;
-		_db = db;
-		_baseUrl = appSettings.BaseUrl;
-	}
+	private readonly string _baseUrl = appSettings.BaseUrl;
 
 	public async Task<IEnumerable<WatchedTopic>> UserWatches(int userId)
 	{
-		return await _db.ForumTopicWatches
+		return await db.ForumTopicWatches
 			.ForUser(userId)
 			.Select(tw => new WatchedTopic(
 				tw.ForumTopic!.ForumPosts
@@ -78,7 +70,7 @@ internal class TopicWatcher : ITopicWatcher
 
 	public async Task NotifyNewPost(TopicNotification notification)
 	{
-		var watches = await _db.ForumTopicWatches
+		var watches = await db.ForumTopicWatches
 			.Include(w => w.User)
 			.Where(w => w.ForumTopicId == notification.TopicId)
 			.Where(w => w.UserId != notification.PosterId)
@@ -87,7 +79,7 @@ internal class TopicWatcher : ITopicWatcher
 
 		if (watches.Any())
 		{
-			await _emailService
+			await emailService
 				.TopicReplyNotification(
 					watches.Select(w => w.User!.Email),
 					new TopicReplyNotificationTemplate(
@@ -101,25 +93,25 @@ internal class TopicWatcher : ITopicWatcher
 				watch.IsNotified = true;
 			}
 
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 	}
 
 	public async Task MarkSeen(int topicId, int userId)
 	{
-		var watchedTopic = await _db.ForumTopicWatches
+		var watchedTopic = await db.ForumTopicWatches
 			.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId);
 
 		if (watchedTopic is not null && watchedTopic.IsNotified)
 		{
 			watchedTopic.IsNotified = false;
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 	}
 
 	public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
 	{
-		var topic = await _db.ForumTopics
+		var topic = await db.ForumTopics
 			.ExcludeRestricted(canSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == topicId);
 
@@ -128,36 +120,36 @@ internal class TopicWatcher : ITopicWatcher
 			return;
 		}
 
-		var watch = await _db.ForumTopicWatches
+		var watch = await db.ForumTopicWatches
 			.ExcludeRestricted(canSeeRestricted)
 			.SingleOrDefaultAsync(w => w.UserId == userId
 				&& w.ForumTopicId == topicId);
 
 		if (watch is null)
 		{
-			_db.ForumTopicWatches.Add(new ForumTopicWatch
+			db.ForumTopicWatches.Add(new ForumTopicWatch
 			{
 				UserId = userId,
 				ForumTopicId = topicId
 			});
 
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 	}
 
 	public async Task UnwatchTopic(int topicId, int userId)
 	{
-		var watch = await _db.ForumTopicWatches
+		var watch = await db.ForumTopicWatches
 			.SingleOrDefaultAsync(w => w.UserId == userId
 				&& w.ForumTopicId == topicId);
 
 		if (watch is not null)
 		{
-			_db.ForumTopicWatches.Remove(watch);
+			db.ForumTopicWatches.Remove(watch);
 
 			try
 			{
-				await _db.SaveChangesAsync();
+				await db.SaveChangesAsync();
 			}
 			catch (DbUpdateConcurrencyException)
 			{
@@ -173,13 +165,13 @@ internal class TopicWatcher : ITopicWatcher
 
 	public async Task UnwatchAllTopics(int userId)
 	{
-		var watches = await _db.ForumTopicWatches
+		var watches = await db.ForumTopicWatches
 			.Where(w => w.UserId == userId)
 			.ToListAsync();
-		_db.ForumTopicWatches.RemoveRange(watches);
+		db.ForumTopicWatches.RemoveRange(watches);
 		try
 		{
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 		catch (DbUpdateConcurrencyException)
 		{
@@ -190,7 +182,7 @@ internal class TopicWatcher : ITopicWatcher
 
 	public async Task<bool> IsWatchingTopic(int topicId, int userId)
 	{
-		return (await _db.ForumTopicWatches
+		return (await db.ForumTopicWatches
 			.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId)) is not null;
 	}
 }

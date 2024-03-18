@@ -8,30 +8,22 @@ using TASVideos.Pages.AwardsEditor.Models;
 namespace TASVideos.Pages.AwardsEditor;
 
 [RequirePermission(PermissionTo.CreateAwards)]
-public class ListCategoryModel : BasePageModel
+public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader mediaFileUploader)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IMediaFileUploader _mediaFileUploader;
-
-	public ListCategoryModel(ApplicationDbContext db, IMediaFileUploader mediaFileUploader)
-	{
-		_db = db;
-		_mediaFileUploader = mediaFileUploader;
-	}
-
 	public IEnumerable<AwardCategoryEntry> Categories { get; set; } = new List<AwardCategoryEntry>();
 
 	public async Task<IActionResult> OnGet()
 	{
-		Categories = await _db.Awards
+		Categories = await db.Awards
 			.Select(a => new AwardCategoryEntry
 			{
 				Id = a.Id,
 				Type = a.Type,
 				ShortName = a.ShortName,
 				Description = a.Description,
-				InUse = _db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
-					|| _db.UserAwards.Any(ua => ua.AwardId == a.Id)
+				InUse = db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
+					|| db.UserAwards.Any(ua => ua.AwardId == a.Id)
 			})
 			.ToListAsync();
 		return Page();
@@ -39,13 +31,13 @@ public class ListCategoryModel : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete(int id)
 	{
-		var awardCategory = await _db.Awards
+		var awardCategory = await db.Awards
 			.Where(a => a.Id == id)
 			.Select(a => new
 			{
 				a.ShortName,
-				InUse = _db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
-					|| _db.UserAwards.Any(ua => ua.AwardId == a.Id)
+				InUse = db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
+					|| db.UserAwards.Any(ua => ua.AwardId == a.Id)
 			})
 			.SingleOrDefaultAsync();
 		if (awardCategory is null)
@@ -58,10 +50,10 @@ public class ListCategoryModel : BasePageModel
 			return BadRequest("Cannot delete an award category that is in use.");
 		}
 
-		_db.Awards.Attach(new Award { Id = id }).State = EntityState.Deleted;
-		await _db.SaveChangesAsync();
+		db.Awards.Attach(new Award { Id = id }).State = EntityState.Deleted;
+		await db.SaveChangesAsync();
 
-		_mediaFileUploader.DeleteAwardImage($"{awardCategory.ShortName}_xxxx");
+		mediaFileUploader.DeleteAwardImage($"{awardCategory.ShortName}_xxxx");
 
 		return BasePageRedirect("ListCategories");
 	}

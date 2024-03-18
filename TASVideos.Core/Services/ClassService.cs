@@ -13,27 +13,19 @@ public interface IClassService
 	Task<ClassDeleteResult> Delete(int id);
 }
 
-internal class ClassService : IClassService
+internal class ClassService(ApplicationDbContext db, ICacheService cache) : IClassService
 {
 	internal const string ClassesKey = "AllPublicationClasses";
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-
-	public ClassService(ApplicationDbContext db, ICacheService cache)
-	{
-		_db = db;
-		_cache = cache;
-	}
 
 	public async ValueTask<IReadOnlyCollection<PublicationClass>> GetAll()
 	{
-		if (_cache.TryGetValue(ClassesKey, out List<PublicationClass> classes))
+		if (cache.TryGetValue(ClassesKey, out List<PublicationClass> classes))
 		{
 			return classes;
 		}
 
-		classes = await _db.PublicationClasses.ToListAsync();
-		_cache.Set(ClassesKey, classes);
+		classes = await db.PublicationClasses.ToListAsync();
+		cache.Set(ClassesKey, classes);
 		return classes;
 	}
 
@@ -45,13 +37,13 @@ internal class ClassService : IClassService
 
 	public async Task<bool> InUse(int id)
 	{
-		return await _db.Publications.AnyAsync(pt => pt.PublicationClassId == id);
+		return await db.Publications.AnyAsync(pt => pt.PublicationClassId == id);
 	}
 
 	public async Task<(int? id, ClassEditResult)> Add(PublicationClass publicationClass)
 	{
-		var newId = (await _db.PublicationClasses.Select(f => f.Id).MaxAsync()) + 1;
-		var entry = _db.PublicationClasses.Add(new PublicationClass
+		var newId = (await db.PublicationClasses.Select(f => f.Id).MaxAsync()) + 1;
+		var entry = db.PublicationClasses.Add(new PublicationClass
 		{
 			Id = newId,
 			Name = publicationClass.Name,
@@ -62,8 +54,8 @@ internal class ClassService : IClassService
 
 		try
 		{
-			await _db.SaveChangesAsync();
-			_cache.Remove(ClassesKey);
+			await db.SaveChangesAsync();
+			cache.Remove(ClassesKey);
 			return (entry.Entity.Id, ClassEditResult.Success);
 		}
 		catch (DbUpdateConcurrencyException)
@@ -83,7 +75,7 @@ internal class ClassService : IClassService
 
 	public async Task<ClassEditResult> Edit(int id, PublicationClass publicationClass)
 	{
-		var existingClass = await _db.PublicationClasses.SingleOrDefaultAsync(t => t.Id == id);
+		var existingClass = await db.PublicationClasses.SingleOrDefaultAsync(t => t.Id == id);
 		if (existingClass is null)
 		{
 			return ClassEditResult.NotFound;
@@ -96,8 +88,8 @@ internal class ClassService : IClassService
 
 		try
 		{
-			await _db.SaveChangesAsync();
-			_cache.Remove(ClassesKey);
+			await db.SaveChangesAsync();
+			cache.Remove(ClassesKey);
 			return ClassEditResult.Success;
 		}
 		catch (DbUpdateConcurrencyException)
@@ -124,15 +116,15 @@ internal class ClassService : IClassService
 
 		try
 		{
-			var existingClass = await _db.PublicationClasses.SingleOrDefaultAsync(t => t.Id == id);
+			var existingClass = await db.PublicationClasses.SingleOrDefaultAsync(t => t.Id == id);
 			if (existingClass is null)
 			{
 				return ClassDeleteResult.NotFound;
 			}
 
-			_db.PublicationClasses.Remove(existingClass);
-			await _db.SaveChangesAsync();
-			_cache.Remove(ClassesKey);
+			db.PublicationClasses.Remove(existingClass);
+			await db.SaveChangesAsync();
+			cache.Remove(ClassesKey);
 		}
 		catch (DbUpdateConcurrencyException)
 		{

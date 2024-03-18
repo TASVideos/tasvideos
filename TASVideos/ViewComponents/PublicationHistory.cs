@@ -7,32 +7,23 @@ using TASVideos.WikiEngine;
 namespace TASVideos.ViewComponents;
 
 [WikiModule(WikiModules.PublicationHistory)]
-public class PublicationHistory : ViewComponent
+public class PublicationHistory(ApplicationDbContext db, IPublicationHistory history) : ViewComponent
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IPublicationHistory _history;
-
-	public PublicationHistory(ApplicationDbContext db, IPublicationHistory history)
-	{
-		_db = db;
-		_history = history;
-	}
-
 	public async Task<IViewComponentResult> InvokeAsync(int publicationId)
 	{
-		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
+		var publication = await db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
 		if (publication is null)
 		{
 			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
 		}
 
-		var history = await _history.ForGame(publication.GameId);
-		if (history is null)
+		var history1 = await history.ForGame(publication.GameId);
+		if (history1 is null)
 		{
 			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
 		}
 
 		ViewData["Highlight"] = publicationId;
-		return View(history);
+		return View(history1);
 	}
 }

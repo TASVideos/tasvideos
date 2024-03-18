@@ -6,47 +6,32 @@ using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core.Services;
 
-public class UserManager : UserManager<User>
+public class UserManager(
+	ApplicationDbContext db,
+	ICacheService cache,
+	IPointsService pointsService,
+	ITASVideoAgent tasVideoAgent,
+	IWikiPages wikiPages,
+	IUserStore<User> store,
+	IOptions<IdentityOptions> optionsAccessor,
+	IPasswordHasher<User> passwordHasher,
+	IEnumerable<IUserValidator<User>> userValidators,
+	IEnumerable<IPasswordValidator<User>> passwordValidators,
+	ILookupNormalizer keyNormalizer,
+	IdentityErrorDescriber errors,
+	IServiceProvider services,
+	ILogger<UserManager<User>> logger)
+	: UserManager<User>(store,
+		optionsAccessor,
+		passwordHasher,
+		userValidators,
+		passwordValidators,
+		keyNormalizer,
+		errors,
+		services,
+		logger)
 {
-	private readonly ApplicationDbContext _db;
-	private readonly ICacheService _cache;
-	private readonly IPointsService _pointsService;
-	private readonly ITASVideoAgent _tasVideoAgent;
-	private readonly IWikiPages _wikiPages;
-
 	// Holy dependencies, batman
-	public UserManager(
-		ApplicationDbContext db,
-		ICacheService cache,
-		IPointsService pointsService,
-		ITASVideoAgent tasVideoAgent,
-		IWikiPages wikiPages,
-		IUserStore<User> store,
-		IOptions<IdentityOptions> optionsAccessor,
-		IPasswordHasher<User> passwordHasher,
-		IEnumerable<IUserValidator<User>> userValidators,
-		IEnumerable<IPasswordValidator<User>> passwordValidators,
-		ILookupNormalizer keyNormalizer,
-		IdentityErrorDescriber errors,
-		IServiceProvider services,
-		ILogger<UserManager<User>> logger)
-		: base(
-			store,
-			optionsAccessor,
-			passwordHasher,
-			userValidators,
-			passwordValidators,
-			keyNormalizer,
-			errors,
-			services,
-			logger)
-	{
-		_cache = cache;
-		_db = db;
-		_pointsService = pointsService;
-		_tasVideoAgent = tasVideoAgent;
-		_wikiPages = wikiPages;
-	}
 
 	public async Task<User> GetRequiredUser(ClaimsPrincipal user)
 	{
@@ -57,10 +42,10 @@ public class UserManager : UserManager<User>
 	// so they can be stored and retrieved from their cookie
 	public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)
 	{
-		var existingClaims = _db.UserClaims
+		var existingClaims = db.UserClaims
 			.Where(u => u.UserId == user.Id)
 			.Where(c => c.ClaimType == CustomClaimTypes.Permission);
-		_db.UserClaims.RemoveRange(existingClaims);
+		db.UserClaims.RemoveRange(existingClaims);
 
 		var permissions = await GetUserPermissionsById(user.Id);
 
@@ -76,7 +61,7 @@ public class UserManager : UserManager<User>
 	/// </summary>
 	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId)
 	{
-		return await _db.Users
+		return await db.Users
 			.Where(u => u.Id == userId)
 			.SelectMany(u => u.UserRoles)
 			.SelectMany(ur => ur.Role!.RolePermission)
@@ -92,17 +77,17 @@ public class UserManager : UserManager<User>
 	public async ValueTask<int> GetUnreadMessageCount(int userId)
 	{
 		var cacheKey = CacheKeys.UnreadMessageCount + userId;
-		if (_cache.TryGetValue(cacheKey, out int unreadMessageCount))
+		if (cache.TryGetValue(cacheKey, out int unreadMessageCount))
 		{
 			return unreadMessageCount;
 		}
 
-		unreadMessageCount = await _db.PrivateMessages
+		unreadMessageCount = await db.PrivateMessages
 			.ThatAreNotToUserDeleted()
 			.ToUser(userId)
 			.CountAsync(pm => pm.ReadOn == null);
 
-		_cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
+		cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
 		return unreadMessageCount;
 	}
 
@@ -113,7 +98,7 @@ public class UserManager : UserManager<User>
 	/// </summary>
 	public async Task<UserRatings?> GetUserRatings(string userName, bool includeHidden = false)
 	{
-		var model = await _db.Users
+		var model = await db.Users
 			.Where(u => u.UserName == userName)
 			.Select(u => new UserRatings
 			{
@@ -133,7 +118,7 @@ public class UserManager : UserManager<User>
 			return model;
 		}
 
-		model.Ratings = await _db.PublicationRatings
+		model.Ratings = await db.PublicationRatings
 			.ForUser(model.Id)
 			.Select(pr => new UserRatings.Rating
 			{
@@ -149,10 +134,10 @@ public class UserManager : UserManager<User>
 
 	public async Task AddStandardRoles(int userId)
 	{
-		var user = await _db.Users
+		var user = await db.Users
 			.Include(u => u.UserRoles)
 			.SingleAsync(u => u.Id == userId);
-		var roles = await _db.Roles
+		var roles = await db.Roles
 			.ThatAreDefault()
 			.ToListAsync();
 
@@ -169,11 +154,11 @@ public class UserManager : UserManager<User>
 				UserId = user.Id,
 				RoleId = role.Id
 			};
-			_db.UserRoles.Add(userRole);
+			db.UserRoles.Add(userRole);
 			user.UserRoles.Add(userRole);
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 	}
 
 	/// <summary>
@@ -183,7 +168,7 @@ public class UserManager : UserManager<User>
 	/// </summary>
 	public async Task<UserProfile?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
 	{
-		var model = await _db.Users
+		var model = await db.Users
 			.Select(u => new UserProfile
 			{
 				Id = u.Id,
@@ -225,9 +210,9 @@ public class UserManager : UserManager<User>
 			return null;
 		}
 
-		model.HasHomePage = await _wikiPages.Exists(LinkConstants.HomePages + model.UserName);
+		model.HasHomePage = await wikiPages.Exists(LinkConstants.HomePages + model.UserName);
 
-		model.Submissions = await _db.Submissions
+		model.Submissions = await db.Submissions
 			.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == model.Id)
 				|| s.Submitter != null && s.SubmitterId == model.Id)
 			.GroupBy(s => s.Status)
@@ -239,24 +224,24 @@ public class UserManager : UserManager<User>
 			.ToListAsync();
 
 		// TODO: round to 1 digit?
-		var (points, rank) = await _pointsService.PlayerPoints(model.Id);
+		var (points, rank) = await pointsService.PlayerPoints(model.Id);
 		model.PlayerPoints = (int)Math.Round(points);
 		model.PlayerRank = rank;
 
-		model.PublishedSystems = await _db.Publications
+		model.PublishedSystems = await db.Publications
 			.ForAuthor(model.Id)
 			.Select(p => p.System!.Code)
 			.Distinct()
 			.ToListAsync();
 
-		model.UserFiles.Systems = _db.UserFiles
+		model.UserFiles.Systems = db.UserFiles
 			.Where(uf => uf.AuthorId == model.Id)
 			.Where(uf => includeHiddenUserFiles || !uf.Hidden)
 			.Select(uf => uf.System!.Code)
 			.Distinct()
 			.ToList();
 
-		var wikiEdits = await _db.WikiPages
+		var wikiEdits = await db.WikiPages
 			.ThatAreNotDeleted()
 			.CreatedBy(model.UserName)
 			.Select(w => new { w.CreateTimestamp })
@@ -271,19 +256,19 @@ public class UserManager : UserManager<User>
 
 		model.Publishing = new()
 		{
-			TotalPublished = await _db.Submissions
+			TotalPublished = await db.Submissions
 				.CountAsync(s => s.PublisherId == model.Id)
 		};
 
 		model.Judgments = new()
 		{
-			TotalJudgments = await _db.Submissions
+			TotalJudgments = await db.Submissions
 				.CountAsync(s => s.JudgeId == model.Id)
 		};
 
 		if (model.PublicRatings)
 		{
-			model.Ratings.TotalMoviesRated = await _db.PublicationRatings
+			model.Ratings.TotalMoviesRated = await db.PublicationRatings
 				.Where(p => p.Publication!.ObsoletedById == null)
 				.Where(p => p.UserId == model.Id)
 				.Distinct()
@@ -300,7 +285,7 @@ public class UserManager : UserManager<User>
 	/// </summary>
 	public async Task<PrivateMessageDto?> GetMessage(int userId, int id)
 	{
-		var pm = await _db.PrivateMessages
+		var pm = await db.PrivateMessages
 			.Include(p => p.FromUser)
 			.Include(p => p.ToUser)
 			.Where(p => (!p.DeletedForFromUser && p.FromUserId == userId)
@@ -316,8 +301,8 @@ public class UserManager : UserManager<User>
 		if (!pm.ReadOn.HasValue && pm.ToUserId == userId)
 		{
 			pm.ReadOn = DateTime.UtcNow;
-			await _db.SaveChangesAsync();
-			_cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
+			await db.SaveChangesAsync();
+			cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
 		}
 
 		return new PrivateMessageDto
@@ -342,7 +327,7 @@ public class UserManager : UserManager<User>
 	/// </summary>
 	public async Task AssignAutoAssignableRolesByPost(int userId)
 	{
-		var postCount = await _db.ForumPosts.CountAsync(p => p.PosterId == userId);
+		var postCount = await db.ForumPosts.CountAsync(p => p.PosterId == userId);
 
 		if (postCount == 0)
 		{
@@ -351,7 +336,7 @@ public class UserManager : UserManager<User>
 
 		var userPermissions = (await GetUserPermissionsById(userId)).ToList();
 
-		var assignableRoles = await _db.Roles
+		var assignableRoles = await db.Roles
 			.Include(r => r.RolePermission)
 			.Where(r => r.AutoAssignPostCount <= postCount)
 			.ToListAsync();
@@ -367,7 +352,7 @@ public class UserManager : UserManager<User>
 			// the user will not already have the role
 			if (newRolePermissions.Any(p => !userPermissions.Contains(p)))
 			{
-				_db.UserRoles.Add(new UserRole
+				db.UserRoles.Add(new UserRole
 				{
 					UserId = userId,
 					RoleId = role.Id
@@ -375,14 +360,14 @@ public class UserManager : UserManager<User>
 
 				try
 				{
-					await _db.SaveChangesAsync();
+					await db.SaveChangesAsync();
 				}
 				catch (DbUpdateConcurrencyException)
 				{
 					// Do nothing for now, this can be added manually, in the unlikely situation, that this fails
 				}
 
-				await _tasVideoAgent.SendAutoAssignedRole(userId, role.Name);
+				await tasVideoAgent.SendAutoAssignedRole(userId, role.Name);
 			}
 		}
 	}
@@ -401,14 +386,14 @@ public class UserManager : UserManager<User>
 			return;
 		}
 
-		var assignableRoles = await _db.Roles
+		var assignableRoles = await db.Roles
 			.Include(r => r.RolePermission)
 			.Where(r => r.AutoAssignPublications)
 			.ToListAsync();
 
 		foreach (var userId in ids)
 		{
-			var hasPublication = await _db.PublicationAuthors.AnyAsync(pa => pa.UserId == userId);
+			var hasPublication = await db.PublicationAuthors.AnyAsync(pa => pa.UserId == userId);
 			if (!hasPublication)
 			{
 				continue;
@@ -427,20 +412,20 @@ public class UserManager : UserManager<User>
 				// the user will not already have the role
 				if (newRolePermissions.Any(p => !userPermissions.Contains(p)))
 				{
-					_db.UserRoles.Add(new UserRole
+					db.UserRoles.Add(new UserRole
 					{
 						UserId = userId,
 						RoleId = role.Id
 					});
 
-					await _tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
+					await tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
 				}
 			}
 		}
 
 		try
 		{
-			await _db.SaveChangesAsync();
+			await db.SaveChangesAsync();
 		}
 		catch (DbUpdateConcurrencyException)
 		{
@@ -468,7 +453,7 @@ public class UserManager : UserManager<User>
 			user.EmailConfirmed = true;
 			try
 			{
-				await _db.SaveChangesAsync();
+				await db.SaveChangesAsync();
 			}
 			catch (DbUpdateException)
 			{
@@ -479,7 +464,7 @@ public class UserManager : UserManager<User>
 
 	public async Task<IEnumerable<RoleDto>> UserRoles(int userId)
 	{
-		return await _db.Users
+		return await db.Users
 			.Where(u => u.Id == userId)
 			.SelectMany(u => u.UserRoles)
 			.Select(ur => ur.Role!)
@@ -500,10 +485,10 @@ public class UserManager : UserManager<User>
 		// Move home page and subpages
 		var oldHomePage = LinkConstants.HomePages + oldName;
 		var newHomePage = LinkConstants.HomePages + user.UserName;
-		await _wikiPages.MoveAll(oldHomePage, newHomePage);
+		await wikiPages.MoveAll(oldHomePage, newHomePage);
 
 		// Update submission titles
-		var subsToUpdate = await _db.Submissions
+		var subsToUpdate = await db.Submissions
 			.IncludeTitleTables()
 			.Where(s => s.SubmissionAuthors.Any(sa => sa.UserId == user.Id))
 			.ToListAsync();
@@ -513,7 +498,7 @@ public class UserManager : UserManager<User>
 		}
 
 		// Update publication titles
-		var pubsToUpdate = await _db.Publications
+		var pubsToUpdate = await db.Publications
 			.IncludeTitleTables()
 			.Where(p => p.Authors.Any(pa => pa.UserId == user.Id))
 			.ToListAsync();
@@ -522,10 +507,10 @@ public class UserManager : UserManager<User>
 			pub.GenerateTitle();
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 	}
 
-	public Task<bool> Exists(string userName) => _db.Users.Exists(userName);
+	public Task<bool> Exists(string userName) => db.Users.Exists(userName);
 
 	/// <summary>
 	/// Attempts to prevent some really basic bad behaviors such as same username as password, because people do these things
@@ -553,7 +538,7 @@ public class UserManager : UserManager<User>
 
 	public void ClearCustomLocaleCache(int userId)
 	{
-		_cache.Remove(CacheKeys.UsersWithCustomLocale);
-		_cache.Remove(CacheKeys.CustomUserLocalePrefix + userId);
+		cache.Remove(CacheKeys.UsersWithCustomLocale);
+		cache.Remove(CacheKeys.CustomUserLocalePrefix + userId);
 	}
 }

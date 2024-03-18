@@ -6,12 +6,7 @@ namespace TASVideos.Data.Tests.Context;
 [TestClass]
 public class ApplicationDbContextTests
 {
-	private readonly TestDbContext _db;
-
-	public ApplicationDbContextTests()
-	{
-		_db = TestDbContext.Create();
-	}
+	private readonly TestDbContext _db = TestDbContext.Create();
 
 	[TestMethod]
 	public async Task CreateTimestamp_SetToNow_IfNotProvided()

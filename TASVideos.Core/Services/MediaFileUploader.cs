@@ -12,18 +12,10 @@ public interface IMediaFileUploader
 	bool AwardExists(string shortName, int year);
 }
 
-internal class MediaFileUploader : IMediaFileUploader
+internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment env) : IMediaFileUploader
 {
 	private const string AwardLocation = "awards";
 	private const string MediaLocation = "media";
-	private readonly ApplicationDbContext _db;
-	private readonly IWebHostEnvironment _env;
-
-	public MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment env)
-	{
-		_db = db;
-		_env = env;
-	}
 
 	public async Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description)
 	{
@@ -32,7 +24,7 @@ internal class MediaFileUploader : IMediaFileUploader
 		var screenshotBytes = memoryStream.ToArray();
 
 		string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
-		string screenshotPath = Path.Combine(_env.WebRootPath, MediaLocation, screenshotFileName);
+		string screenshotPath = Path.Combine(env.WebRootPath, MediaLocation, screenshotFileName);
 
 		var screenShotExists = File.Exists(screenshotPath);
 		await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
@@ -41,7 +33,7 @@ internal class MediaFileUploader : IMediaFileUploader
 		if (screenShotExists)
 		{
 			// Should never be more than 1, but just in case
-			publicationFiles = await _db.PublicationFiles
+			publicationFiles = await db.PublicationFiles
 				.Where(pf => pf.PublicationId == publicationId && pf.Path == screenshotFileName)
 				.ToListAsync();
 		}
@@ -58,7 +50,7 @@ internal class MediaFileUploader : IMediaFileUploader
 		}
 		else
 		{
-			_db.PublicationFiles.Add(new PublicationFile
+			db.PublicationFiles.Add(new PublicationFile
 			{
 				PublicationId = publicationId,
 				Path = screenshotFileName,
@@ -67,22 +59,22 @@ internal class MediaFileUploader : IMediaFileUploader
 			});
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 		return screenshotFileName;
 	}
 
 	public async Task<DeletedFile?> DeleteFile(int publicationFileId)
 	{
-		var file = await _db.PublicationFiles
+		var file = await db.PublicationFiles
 			.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
 
 		if (file is not null)
 		{
-			string path = Path.Combine(_env.WebRootPath, file.Path);
+			string path = Path.Combine(env.WebRootPath, file.Path);
 			File.Delete(path);
 
-			_db.PublicationFiles.Remove(file);
-			await _db.SaveChangesAsync();
+			db.PublicationFiles.Remove(file);
+			await db.SaveChangesAsync();
 			return new DeletedFile(file.Id, file.Type, file.Path);
 		}
 
@@ -129,7 +121,7 @@ internal class MediaFileUploader : IMediaFileUploader
 		return File.Exists(path);
 	}
 
-	private string ToFullAwardPath(string fileName) => Path.Combine(_env.WebRootPath, AwardLocation, fileName);
+	private string ToFullAwardPath(string fileName) => Path.Combine(env.WebRootPath, AwardLocation, fileName);
 }
 
 public record DeletedFile(int Id, FileType Type, string Path);

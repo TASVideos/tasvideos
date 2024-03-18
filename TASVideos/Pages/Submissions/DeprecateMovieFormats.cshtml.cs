@@ -6,36 +6,28 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.DeprecateMovieParsers)]
-public class DeprecateMovieFormatsModel : BasePageModel
+public class DeprecateMovieFormatsModel(
+	IMovieFormatDeprecator deprecator,
+	ExternalMediaPublisher publisher)
+	: BasePageModel
 {
-	private readonly IMovieFormatDeprecator _deprecator;
-	private readonly ExternalMediaPublisher _publisher;
-
 	public IReadOnlyDictionary<string, DeprecatedMovieFormat?> MovieExtensions { get; set; } = new Dictionary<string, DeprecatedMovieFormat?>();
-
-	public DeprecateMovieFormatsModel(
-		IMovieFormatDeprecator deprecator,
-		ExternalMediaPublisher publisher)
-	{
-		_deprecator = deprecator;
-		_publisher = publisher;
-	}
 
 	public async Task OnGet()
 	{
-		MovieExtensions = await _deprecator.GetAll();
+		MovieExtensions = await deprecator.GetAll();
 	}
 
 	public async Task<IActionResult> OnPost(string extension, bool deprecate)
 	{
-		if (!_deprecator.IsMovieExtension(extension))
+		if (!deprecator.IsMovieExtension(extension))
 		{
 			return BadRequest($"Invalid format {extension}");
 		}
 
 		var result = deprecate
-			? await _deprecator.Deprecate(extension)
-			: await _deprecator.Allow(extension);
+			? await deprecator.Deprecate(extension)
+			: await deprecator.Allow(extension);
 
 		if (result)
 		{
@@ -52,7 +44,7 @@ public class DeprecateMovieFormatsModel : BasePageModel
 
 	private async Task SendAnnouncement(string extension, bool deprecate)
 	{
-		await _publisher.SendSubmissionEdit(
+		await publisher.SendSubmissionEdit(
 			$"{extension} deprecation status set to {deprecate} by {User.Name()}",
 			$"[{extension}]({{0}}) deprecation status set to {deprecate} by {User.Name()}",
 			"",

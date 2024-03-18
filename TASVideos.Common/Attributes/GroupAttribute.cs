@@ -4,12 +4,7 @@
 /// Represents a generic group that a class or property might belong
 /// </summary>
 [AttributeUsage(AttributeTargets.All)]
-public class GroupAttribute : Attribute
+public class GroupAttribute(string name) : Attribute
 {
-	public GroupAttribute(string name)
-	{
-		Name = name;
-	}
-
-	public string Name { get; }
+	public string Name { get; } = name;
 }

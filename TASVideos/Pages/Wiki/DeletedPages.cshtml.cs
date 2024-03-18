@@ -8,34 +8,24 @@ using TASVideos.Pages.Wiki.Models;
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.SeeDeletedWikiPages)]
-public class DeletedPagesModel : BasePageModel
+public class DeletedPagesModel(
+	ExternalMediaPublisher publisher,
+	ApplicationDbContext db,
+	IWikiPages wikiPages)
+	: BasePageModel
 {
-	private readonly ExternalMediaPublisher _publisher;
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-
-	public DeletedPagesModel(
-		ExternalMediaPublisher publisher,
-		ApplicationDbContext db,
-		IWikiPages wikiPages)
-	{
-		_publisher = publisher;
-		_db = db;
-		_wikiPages = wikiPages;
-	}
-
 	public IEnumerable<DeletedWikiPageDisplayModel> DeletedPages { get; set; } = new List<DeletedWikiPageDisplayModel>();
 
 	public async Task OnGet()
 	{
-		DeletedPages = await _db.WikiPages
+		DeletedPages = await db.WikiPages
 			.ThatAreDeleted()
 			.GroupBy(tkey => tkey.PageName)
 			.Select(record => new DeletedWikiPageDisplayModel
 			{
 				PageName = record.Key,
 				RevisionCount = record.Count(),
-				HasExistingRevisions = _db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
+				HasExistingRevisions = db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
 			})
 			.ToListAsync();
 	}
@@ -49,7 +39,7 @@ public class DeletedPagesModel : BasePageModel
 
 		if (!string.IsNullOrWhiteSpace(path))
 		{
-			var result = await _wikiPages.Delete(path);
+			var result = await wikiPages.Delete(path);
 
 			if (result == -1)
 			{
@@ -57,7 +47,7 @@ public class DeletedPagesModel : BasePageModel
 				return Page();
 			}
 
-			await _publisher.SendGeneralWiki(
+			await publisher.SendGeneralWiki(
 				$"Page {path} DELETED by {User.Name()}",
 				"",
 				$"{result} revisions",
@@ -80,9 +70,9 @@ public class DeletedPagesModel : BasePageModel
 		}
 
 		path = path.Trim('/');
-		await _wikiPages.Delete(path, revision);
+		await wikiPages.Delete(path, revision);
 
-		await _publisher.SendGeneralWiki(
+		await publisher.SendGeneralWiki(
 				$"Revision {revision} of {path} DELETED by {User.Name()}",
 				"",
 				"",
@@ -104,14 +94,14 @@ public class DeletedPagesModel : BasePageModel
 		}
 
 		path = path.Trim('/');
-		var result = await _wikiPages.Undelete(path);
+		var result = await wikiPages.Undelete(path);
 		if (!result)
 		{
 			ModelState.AddModelError("", "Unable to undelete, the page may have been modified during the saving of this operation.");
 			return Page();
 		}
 
-		await _publisher.SendGeneralWiki(
+		await publisher.SendGeneralWiki(
 				$"Page {path} UNDELETED by {User.Name()}",
 				$"Page [{path}]({{0}}) UNDELETED by {User.Name()}",
 				"",

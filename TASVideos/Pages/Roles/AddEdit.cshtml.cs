@@ -10,22 +10,12 @@ using TASVideos.Pages.Roles.Models;
 namespace TASVideos.Pages.Roles;
 
 [RequirePermission(PermissionTo.EditRoles)]
-public class AddEditModel : BasePageModel
+public class AddEditModel(
+	ApplicationDbContext db,
+	IRoleService roleService,
+	ExternalMediaPublisher publisher)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IRoleService _roleService;
-	private readonly ExternalMediaPublisher _publisher;
-
-	public AddEditModel(
-		ApplicationDbContext db,
-		IRoleService roleService,
-		ExternalMediaPublisher publisher)
-	{
-		_db = db;
-		_roleService = roleService;
-		_publisher = publisher;
-	}
-
 	[FromRoute]
 	public int? Id { get; set; }
 
@@ -58,7 +48,7 @@ public class AddEditModel : BasePageModel
 	{
 		if (Id.HasValue)
 		{
-			var role = await _db.Roles
+			var role = await db.Roles
 				.Where(r => r.Id == Id.Value)
 				.ToRoleEditModel()
 				.SingleOrDefaultAsync();
@@ -69,14 +59,14 @@ public class AddEditModel : BasePageModel
 			}
 
 			Role = role;
-			IsInUse = !await _roleService.IsInUse(Id.Value);
+			IsInUse = !await roleService.IsInUse(Id.Value);
 			SetAvailableAssignablePermissions();
 		}
 		else
 		{
 			if (CopyFrom.HasValue)
 			{
-				var role = await _db.Roles
+				var role = await db.Roles
 					.Where(r => r.Id == CopyFrom.Value)
 					.ToRoleEditModel()
 					.SingleOrDefaultAsync();
@@ -114,7 +104,7 @@ public class AddEditModel : BasePageModel
 		}
 
 		await AddUpdateRole(Role);
-		await ConcurrentSave(_db, $"Role {Id} updated", $"Unable to update Role {Id}");
+		await ConcurrentSave(db, $"Role {Id} updated", $"Unable to update Role {Id}");
 
 		return BasePageRedirect("List");
 	}
@@ -131,18 +121,18 @@ public class AddEditModel : BasePageModel
 			return AccessDenied();
 		}
 
-		if (await _roleService.IsInUse(Id.Value))
+		if (await roleService.IsInUse(Id.Value))
 		{
 			ErrorStatusMessage($"Role {Id} cannot be deleted because it is in use by at least 1 user");
 			return BasePageRedirect("List");
 		}
 
-		_db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
+		db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
 
-		var result = await ConcurrentSave(_db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
+		var result = await ConcurrentSave(db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
 		if (result)
 		{
-			await _publisher.SendUserManagement(
+			await publisher.SendUserManagement(
 				$"Role {Id} deleted by {User.Name()}",
 				"",
 				"",
@@ -154,7 +144,7 @@ public class AddEditModel : BasePageModel
 
 	public async Task<IActionResult> OnGetRolesThatCanBeAssignedBy(int[] ids)
 	{
-		var result = await _roleService.GetRolesThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p));
+		var result = await roleService.GetRolesThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p));
 		return new JsonResult(result);
 	}
 
@@ -173,12 +163,12 @@ public class AddEditModel : BasePageModel
 		Role role;
 		if (Id.HasValue)
 		{
-			role = await _db.Roles.SingleAsync(r => r.Id == Id);
-			_db.RolePermission.RemoveRange(_db.RolePermission.Where(rp => rp.RoleId == Id));
-			_db.RoleLinks.RemoveRange(_db.RoleLinks.Where(rp => rp.Role!.Id == Id));
-			await _db.SaveChangesAsync();
+			role = await db.Roles.SingleAsync(r => r.Id == Id);
+			db.RolePermission.RemoveRange(db.RolePermission.Where(rp => rp.RoleId == Id));
+			db.RoleLinks.RemoveRange(db.RoleLinks.Where(rp => rp.Role!.Id == Id));
+			await db.SaveChangesAsync();
 
-			await _publisher.SendUserManagement(
+			await publisher.SendUserManagement(
 				$"Role {model.Name} updated by {User.Name()}",
 				$"Role [{model.Name}]({{0}}) updated by {User.Name()}",
 				"",
@@ -187,8 +177,8 @@ public class AddEditModel : BasePageModel
 		else
 		{
 			role = new Role();
-			_db.Roles.Attach(role);
-			await _publisher.SendUserManagement(
+			db.Roles.Attach(role);
+			await publisher.SendUserManagement(
 				$"New Role {model.Name} added by {User.Name()}",
 				$"New Role [{model.Name}]({{0}}) added by {User.Name()}",
 				"",
@@ -201,7 +191,7 @@ public class AddEditModel : BasePageModel
 		role.AutoAssignPostCount = model.AutoAssignPostCount;
 		role.AutoAssignPublications = model.AutoAssignPublications;
 
-		await _db.RolePermission.AddRangeAsync(model.SelectedPermissions
+		await db.RolePermission.AddRangeAsync(model.SelectedPermissions
 			.Select(p => new RolePermission
 			{
 				RoleId = role.Id,
@@ -209,7 +199,7 @@ public class AddEditModel : BasePageModel
 				CanAssign = model.SelectedAssignablePermissions.Contains(p)
 			}));
 
-		await _db.RoleLinks.AddRangeAsync(model.Links.Select(rl => new RoleLink
+		await db.RoleLinks.AddRangeAsync(model.Links.Select(rl => new RoleLink
 		{
 			Link = rl,
 			Role = role

@@ -6,15 +6,8 @@ using TASVideos.WikiEngine;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class WikiSyntaxErrorsModel : BasePageModel
+public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-
-	public WikiSyntaxErrorsModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	public class Row
 	{
 		public string PageName { get; set; } = "";
@@ -46,7 +39,7 @@ public class WikiSyntaxErrorsModel : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var pages = await _db.WikiPages
+		var pages = await db.WikiPages
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
 			.Select(p => new
