@@ -162,15 +162,15 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 			PosterMood = ForumPostMood.Normal
 		};
 
-		_db.ForumTopics.Add(topic);
-		_db.ForumPosts.Add(post);
-		await _db.SaveChangesAsync();
+		db.ForumTopics.Add(topic);
+		db.ForumPosts.Add(post);
+		await db.SaveChangesAsync();
 
-		_forumService.CacheLatestPost(
+		forumService.CacheLatestPost(
 			ForumConstants.WorkBenchForumId,
 			topic.Id,
 			new LatestPost(post.Id, post.CreateTimestamp, SiteGlobalConstants.TASVideoAgent));
-		_forumService.CacheNewPostActivity(post.ForumId, topic.Id, post.Id, post.CreateTimestamp);
+		forumService.CacheNewPostActivity(post.ForumId, topic.Id, post.Id, post.CreateTimestamp);
 
 		return topic.Id;
 	}
