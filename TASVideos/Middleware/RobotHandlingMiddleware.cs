@@ -2,43 +2,37 @@
 
 namespace TASVideos.Middleware;
 
-public class RobotHandlingMiddleware
+/// <summary>
+/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
+/// </summary>
+public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment env)
 {
-	// ReSharper disable once NotAccessedField.Local
-	private readonly IHostEnvironment _env;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
-	/// </summary>
-	public RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment env)
-	{
-		_env = env;
-	}
-
 	public async Task Invoke(HttpContext context)
 	{
 		var sb = new StringBuilder();
 
-		if (_env.IsProduction())
+		if (env.IsProduction())
 		{
-			sb.AppendLine(@"
-User-agent: *
-Disallow: /forum/
-Disallow: /movies/
-Disallow: /submissions/
-Disallow: /media/
-Disallow: /MovieMaintenanceLog
-Disallow: /UserMaintenanceLog
-Disallow: /InternalSystem/
-Disallow: /*?revision=*
-Disallow: /Wiki/PageHistory
+			sb.AppendLine("""
 
-User-agent: Mediapartners-Google
-Allow: /forum/
+						User-agent: *
+						Disallow: /forum/
+						Disallow: /movies/
+						Disallow: /submissions/
+						Disallow: /media/
+						Disallow: /MovieMaintenanceLog
+						Disallow: /UserMaintenanceLog
+						Disallow: /InternalSystem/
+						Disallow: /*?revision=*
+						Disallow: /Wiki/PageHistory
 
-User-agent: Fasterfox
-Disallow: /
-");
+						User-agent: Mediapartners-Google
+						Allow: /forum/
+
+						User-agent: Fasterfox
+						Disallow: /
+
+						""");
 		}
 		else
 		{

@@ -50,7 +50,7 @@ public class Module : INode
 
 	public async Task WriteTextAsync(TextWriter writer, WriterContext ctx)
 	{
-		if (Name.ToLowerInvariant() == "settableattributes")
+		if (Name.Equals("settableattributes", StringComparison.InvariantCultureIgnoreCase))
 		{
 			// Do nothing for this special module
 		}

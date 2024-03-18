@@ -5,18 +5,8 @@
 /// </summary>
 [AllowAnonymous]
 [Route("api/v1/[controller]")]
-public class SystemsController : Controller
+public class SystemsController(IGameSystemService db) : Controller
 {
-	private readonly IGameSystemService _db;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="SystemsController"/> class.
-	/// </summary>
-	public SystemsController(IGameSystemService db)
-	{
-		_db = db;
-	}
-
 	/// <summary>
 	/// Returns a game system with the given id.
 	/// </summary>
@@ -27,7 +17,7 @@ public class SystemsController : Controller
 	[ProducesResponseType(typeof(SystemsResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var system = (await _db.GetAll())
+		var system = (await db.GetAll())
 			.SingleOrDefault(p => p.Id == id);
 
 		return system is null
@@ -48,6 +38,6 @@ public class SystemsController : Controller
 			return BadRequest(ModelState);
 		}
 
-		return Ok(await _db.GetAll());
+		return Ok(await db.GetAll());
 	}
 }

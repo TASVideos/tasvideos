@@ -31,7 +31,7 @@ public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 	public string? Systems { get; init; }
 
 	/// <summary>
-	/// Gets the Game Id's to filter by.
+	/// Gets the Game Ids to filter by.
 	/// </summary>
 	public string? Games { get; init; }
 

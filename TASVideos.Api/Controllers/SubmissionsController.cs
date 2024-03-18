@@ -5,18 +5,8 @@
 /// </summary>
 [AllowAnonymous]
 [Route("api/v1/[controller]")]
-public class SubmissionsController : Controller
+public class SubmissionsController(ApplicationDbContext db) : Controller
 {
-	private readonly ApplicationDbContext _db;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="SubmissionsController"/> class.
-	/// </summary>
-	public SubmissionsController(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	/// <summary>
 	/// Returns a submission with the given id.
 	/// </summary>
@@ -27,7 +17,7 @@ public class SubmissionsController : Controller
 	[ProducesResponseType(typeof(SubmissionsResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var sub = await _db.Submissions
+		var sub = await db.Submissions
 			.ToSubmissionsResponse()
 			.SingleOrDefaultAsync(p => p.Id == id);
 
@@ -46,7 +36,7 @@ public class SubmissionsController : Controller
 	[ProducesResponseType(typeof(IEnumerable<SubmissionsResponse>), 200)]
 	public async Task<IActionResult> GetAll([FromQuery] SubmissionsRequest request)
 	{
-		var subs = (await _db.Submissions
+		var subs = (await db.Submissions
 			.FilterBy(request)
 			.ToSubmissionsResponse()
 			.SortBy(request)

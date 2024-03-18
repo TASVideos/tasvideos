@@ -7,18 +7,8 @@ namespace TASVideos.Api.Controllers;
 /// </summary>
 [AllowAnonymous]
 [Route("api/v1/[controller]")]
-public class GamesController : Controller
+public class GamesController(ApplicationDbContext db) : Controller
 {
-	private readonly ApplicationDbContext _db;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="GamesController"/> class.
-	/// </summary>
-	public GamesController(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	/// <summary>
 	/// Returns a game with the given id.
 	/// </summary>
@@ -29,7 +19,7 @@ public class GamesController : Controller
 	[ProducesResponseType(typeof(GamesResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var pub = await _db.Games
+		var pub = await db.Games
 			.ToGamesResponse()
 			.SingleOrDefaultAsync(p => p.Id == id);
 		return pub is null
@@ -47,7 +37,7 @@ public class GamesController : Controller
 	[ProducesResponseType(typeof(IEnumerable<GamesResponse>), 200)]
 	public async Task<IActionResult> GetAll([FromQuery] GamesRequest request)
 	{
-		var games = (await _db.Games.ForSystemCodes(request.SystemCodes)
+		var games = (await db.Games.ForSystemCodes(request.SystemCodes)
 			.ToGamesResponse()
 			.SortBy(request)
 			.Paginate(request)

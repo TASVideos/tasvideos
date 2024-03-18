@@ -7,10 +7,10 @@ internal class Lmp : ParserBase, IParser
 
 	private delegate bool TryParseLmp(byte[] movie, ref int frames);
 
+	// order is important here to minimize false detections
+	// especially the last 3, which are impossible to always detect correctly
 	private static readonly TryParseLmp[] LmpParsers =
 	[
-		// order is important here to minimize false detections
-		// especially the last 3, which are impossible to always detect correctly
 		TryParseDoomClassic,
 		TryParseStrife,
 		TryParseNewDoom,

@@ -7,18 +7,8 @@ namespace TASVideos.Api.Controllers;
 /// </summary>
 [AllowAnonymous]
 [Route("api/v1/[controller]")]
-public class TagsController : Controller
+public class TagsController(ITagService tagService) : Controller
 {
-	private readonly ITagService _tagService;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="TagsController"/> class.
-	/// </summary>
-	public TagsController(ITagService tagService)
-	{
-		_tagService = tagService;
-	}
-
 	/// <summary>
 	/// Returns a tag with the given id.
 	/// </summary>
@@ -28,7 +18,7 @@ public class TagsController : Controller
 	[HttpGet("{id}")]
 	public async Task<IActionResult> GetById(int id)
 	{
-		var tag = await _tagService.GetById(id);
+		var tag = await tagService.GetById(id);
 		return tag is null
 			? NotFound()
 			: Ok(tag);
@@ -42,7 +32,7 @@ public class TagsController : Controller
 	[HttpGet]
 	public async Task<IActionResult> GetAll([FromQuery] ApiRequest request)
 	{
-		var tags = (await _tagService.GetAll())
+		var tags = (await tagService.GetAll())
 			.AsQueryable()
 			.SortBy(request)
 			.Paginate(request)
@@ -61,7 +51,7 @@ public class TagsController : Controller
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public async Task<IActionResult> Create(TagAddEditRequest request)
 	{
-		var (id, result) = await _tagService.Add(request.Code, request.DisplayName);
+		var (id, result) = await tagService.Add(request.Code, request.DisplayName);
 
 		switch (result)
 		{
@@ -85,7 +75,7 @@ public class TagsController : Controller
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public async Task<IActionResult> Update([FromQuery] int id, TagAddEditRequest request)
 	{
-		var result = await _tagService.Edit(id, request.Code, request.DisplayName);
+		var result = await tagService.Edit(id, request.Code, request.DisplayName);
 		switch (result)
 		{
 			case TagEditResult.NotFound:
@@ -111,7 +101,7 @@ public class TagsController : Controller
 	[RequirePermission(PermissionTo.TagMaintenance)]
 	public async Task<IActionResult> Delete(int id)
 	{
-		var result = await _tagService.Delete(id);
+		var result = await tagService.Delete(id);
 		switch (result)
 		{
 			case TagDeleteResult.NotFound:

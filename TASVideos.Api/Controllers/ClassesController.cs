@@ -7,18 +7,8 @@ namespace TASVideos.Api.Controllers;
 /// </summary>
 [AllowAnonymous]
 [Route("api/[controller]")]
-public class ClassesController : Controller
+public class ClassesController(IClassService classService) : Controller
 {
-	private readonly IClassService _classService;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="ClassesController"/> class.
-	/// </summary>
-	public ClassesController(IClassService classService)
-	{
-		_classService = classService;
-	}
-
 	/// <summary>
 	/// Returns a list of available publication classes.
 	/// </summary>
@@ -27,7 +17,7 @@ public class ClassesController : Controller
 	[ProducesResponseType(typeof(IEnumerable<PublicationClass>), 200)]
 	public async Task<IActionResult> GetAll()
 	{
-		var classes = await _classService.GetAll();
+		var classes = await classService.GetAll();
 		return Ok(classes);
 	}
 
@@ -40,7 +30,7 @@ public class ClassesController : Controller
 	[HttpGet("id")]
 	public async Task<IActionResult> GetById(int id)
 	{
-		var publicationClass = await _classService.GetById(id);
+		var publicationClass = await classService.GetById(id);
 		return publicationClass is null
 			? NotFound()
 			: Ok(publicationClass);
@@ -56,7 +46,7 @@ public class ClassesController : Controller
 	[RequirePermission(PermissionTo.ClassMaintenance)]
 	public async Task<IActionResult> Create(ClassAddEditRequest request)
 	{
-		var (id, result) = await _classService.Add(new PublicationClass
+		var (id, result) = await classService.Add(new PublicationClass
 		{
 			Name = request.Name,
 			Weight = request.Weight,
@@ -87,7 +77,7 @@ public class ClassesController : Controller
 	[RequirePermission(PermissionTo.ClassMaintenance)]
 	public async Task<IActionResult> Update([FromQuery] int id, ClassAddEditRequest request)
 	{
-		var result = await _classService.Edit(id, new PublicationClass
+		var result = await classService.Edit(id, new PublicationClass
 		{
 			Name = request.Name,
 			Weight = request.Weight,
@@ -119,7 +109,7 @@ public class ClassesController : Controller
 	[RequirePermission(PermissionTo.ClassMaintenance)]
 	public async Task<IActionResult> Delete(int id)
 	{
-		var result = await _classService.Delete(id);
+		var result = await classService.Delete(id);
 		switch (result)
 		{
 			case ClassDeleteResult.NotFound:

@@ -3,18 +3,8 @@
 /// <summary>
 /// Users and user actions
 /// </summary>
-public class UsersController : Controller
+public class UsersController(IJwtAuthenticator jwtAuthenticator) : Controller
 {
-	private readonly IJwtAuthenticator _jwtAuthenticator;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="UsersController"/> class.
-	/// </summary>
-	public UsersController(IJwtAuthenticator jwtAuthenticator)
-	{
-		_jwtAuthenticator = jwtAuthenticator;
-	}
-
 	/// <summary>
 	/// Signs in a user and returns a JWT token.
 	/// </summary>
@@ -24,7 +14,7 @@ public class UsersController : Controller
 	[HttpPost("authenticate")]
 	public async Task<IActionResult> Authenticate([FromBody] AuthenticationRequest request)
 	{
-		var token = await _jwtAuthenticator.Authenticate(request.Username, request.Password);
+		var token = await jwtAuthenticator.Authenticate(request.Username, request.Password);
 		if (string.IsNullOrWhiteSpace(token))
 		{
 			return Unauthorized();

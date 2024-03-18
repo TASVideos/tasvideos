@@ -11,18 +11,8 @@ namespace TASVideos.Api.Controllers;
 /// </summary>
 [AllowAnonymous]
 [Route("api/v1/[controller]")]
-public class PublicationsController : Controller
+public class PublicationsController(ApplicationDbContext db) : Controller
 {
-	private readonly ApplicationDbContext _db;
-
-	/// <summary>
-	/// Initializes a new instance of the <see cref="PublicationsController"/> class.
-	/// </summary>
-	public PublicationsController(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	/// <summary>
 	/// Returns a publication with the given id.
 	/// </summary>
@@ -33,7 +23,7 @@ public class PublicationsController : Controller
 	[ProducesResponseType(typeof(PublicationsResponse), 200)]
 	public async Task<IActionResult> Get(int id)
 	{
-		var pub = await _db.Publications
+		var pub = await db.Publications
 			.ToPublicationsResponse()
 			.SingleOrDefaultAsync(p => p.Id == id);
 
@@ -52,7 +42,7 @@ public class PublicationsController : Controller
 	[ProducesResponseType(typeof(IEnumerable<PublicationsResponse>), 200)]
 	public async Task<IActionResult> GetAll([FromQuery] PublicationsRequest request)
 	{
-		var pubs = (await _db.Publications
+		var pubs = (await db.Publications
 			.FilterByTokens(request)
 			.ToPublicationsResponse()
 			.SortBy(request)
