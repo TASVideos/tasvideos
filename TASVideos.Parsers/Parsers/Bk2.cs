@@ -90,9 +90,9 @@ internal class Bk2 : ParserBase, IParser
 			}
 
 			// Some biz system ids do not match tasvideos, convert if needed
-			if (BizToTasvideosSystemIds.ContainsKey(platform))
+			if (BizToTasvideosSystemIds.TryGetValue(platform, out var systemId))
 			{
-				platform = BizToTasvideosSystemIds[platform];
+				platform = systemId;
 			}
 
 			// Check various subsystem flags
