@@ -152,7 +152,7 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 				break;
 			case "archive.org":
 				// https://blog.archive.org/2011/03/31/how-archive-org-items-are-structured/
-				string[] prefixes = { "/details/", "/download/" };
+				string[] prefixes = ["/details/", "/download/"];
 				foreach (var prefix in prefixes)
 				{
 					if (pp.Path.StartsWith(prefix))

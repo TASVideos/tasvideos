@@ -29,7 +29,7 @@ public interface IEmail
 public class SingleEmail : IEmail
 {
 	public string Recipient { get; init; } = "";
-	public IEnumerable<string> Recipients => new[] { Recipient };
+	public IEnumerable<string> Recipients => [Recipient];
 	public string Subject { get; init; } = "";
 	public string Message { get; init; } = "";
 	public bool ContainsHtml { get; init; }

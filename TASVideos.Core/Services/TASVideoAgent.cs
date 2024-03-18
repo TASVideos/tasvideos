@@ -19,12 +19,12 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 		var poll = new ForumPoll
 		{
 			Question = SiteGlobalConstants.PollQuestion,
-			PollOptions = new ForumPollOption[]
-			{
+			PollOptions =
+			[
 					new () { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
 					new () { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
 					new () { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
-			}
+			]
 		};
 
 		// Create Topic in workbench

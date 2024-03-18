@@ -22,7 +22,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Classes = new[] { "Standard" },
+			Classes = ["Standard"],
 			Years = Array.Empty<int>()
 		};
 
@@ -35,7 +35,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Classes = new[] { "Standard", "Stars" },
+			Classes = ["Standard", "Stars"],
 			Years = Array.Empty<int>()
 		};
 
@@ -48,7 +48,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			SystemCodes = new[] { "NES" },
+			SystemCodes = ["NES"],
 			Years = Array.Empty<int>()
 		};
 
@@ -61,7 +61,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			SystemCodes = new[] { "NES", "N64" },
+			SystemCodes = ["NES", "N64"],
 			Years = Array.Empty<int>()
 		};
 
@@ -74,8 +74,8 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Classes = new[] { "Standard", "Stars" },
-			SystemCodes = new[] { "NES", "N64" },
+			Classes = ["Standard", "Stars"],
+			SystemCodes = ["NES", "N64"],
 			Years = Array.Empty<int>()
 		};
 
@@ -88,7 +88,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Years = new[] { 2000 }
+			Years = [2000]
 		};
 
 		var actual = model.ToUrl();
@@ -100,7 +100,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Years = new[] { 2000, 2001 }
+			Years = [2000, 2001]
 		};
 
 		var actual = model.ToUrl();
@@ -112,8 +112,8 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Classes = new[] { "Standard", "Stars" },
-			Years = new[] { 2000, 2001 }
+			Classes = ["Standard", "Stars"],
+			Years = [2000, 2001]
 		};
 
 		var actual = model.ToUrl();
@@ -125,9 +125,9 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Classes = new[] { "Standard", "Stars" },
-			SystemCodes = new[] { "NES", "N64" },
-			Years = new[] { 2000, 2001 }
+			Classes = ["Standard", "Stars"],
+			SystemCodes = ["NES", "N64"],
+			Years = [2000, 2001]
 		};
 
 		var actual = model.ToUrl();
@@ -139,7 +139,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Tags = new[] { "1p" },
+			Tags = ["1p"],
 			Years = Array.Empty<int>()
 		};
 
@@ -152,7 +152,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Tags = new[] { "1p", "2p" },
+			Tags = ["1p", "2p"],
 			Years = Array.Empty<int>()
 		};
 
@@ -165,8 +165,8 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Tags = new[] { "1p", "2p" },
-			Years = new[] { 2000, 2001 }
+			Tags = ["1p", "2p"],
+			Years = [2000, 2001]
 		};
 
 		var actual = model.ToUrl();
@@ -178,9 +178,9 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Tags = new[] { "1p", "2p" },
-			SystemCodes = new[] { "NES", "N64" },
-			Years = new[] { 2000, 2001 }
+			Tags = ["1p", "2p"],
+			SystemCodes = ["NES", "N64"],
+			Years = [2000, 2001]
 		};
 
 		var actual = model.ToUrl();
@@ -192,7 +192,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Genres = new[] { "action", "adventure" },
+			Genres = ["action", "adventure"],
 			Years = Array.Empty<int>()
 		};
 
@@ -205,8 +205,8 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Tags = new[] { "1p", "2p" },
-			Genres = new[] { "action", "adventure" },
+			Tags = ["1p", "2p"],
+			Genres = ["action", "adventure"],
 			Years = Array.Empty<int>()
 		};
 
@@ -219,7 +219,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Flags = new[] { "atlas", "verified" },
+			Flags = ["atlas", "verified"],
 			Years = Array.Empty<int>()
 		};
 
@@ -232,8 +232,8 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Flags = new[] { "atlas", "verified" },
-			SystemCodes = new[] { "NES", "N64" },
+			Flags = ["atlas", "verified"],
+			SystemCodes = ["NES", "N64"],
 			Years = Array.Empty<int>()
 		};
 
@@ -246,9 +246,9 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			SystemCodes = new[] { "NES", "N64" },
-			Tags = new[] { "1p", "2p" },
-			Genres = new[] { "action", "adventure" },
+			SystemCodes = ["NES", "N64"],
+			Tags = ["1p", "2p"],
+			Genres = ["action", "adventure"],
 			Years = Array.Empty<int>()
 		};
 
@@ -261,7 +261,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Games = new[] { 1, 2 },
+			Games = [1, 2],
 			Years = Array.Empty<int>()
 		};
 
@@ -274,8 +274,8 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Genres = new[] { "action", "adventure" },
-			Games = new[] { 1, 2 },
+			Genres = ["action", "adventure"],
+			Games = [1, 2],
 			Years = Array.Empty<int>()
 		};
 
@@ -288,7 +288,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			GameGroups = new[] { 1, 2 },
+			GameGroups = [1, 2],
 			Years = Array.Empty<int>()
 		};
 
@@ -301,8 +301,8 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Games = new[] { 3, 4 },
-			GameGroups = new[] { 1, 2 },
+			Games = [3, 4],
+			GameGroups = [1, 2],
 			Years = Array.Empty<int>()
 		};
 
@@ -328,7 +328,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			SystemCodes = new[] { "NES", "N64" },
+			SystemCodes = ["NES", "N64"],
 			ShowObsoleted = true,
 			Years = Array.Empty<int>()
 		};

@@ -67,7 +67,7 @@ public static partial class Builtins
 				var link = new Element(
 					charStart,
 					"a",
-					new[] { Attr("href", "#" + h.Attributes["id"]) },
+					[Attr("href", "#" + h.Attributes["id"])],
 					h.Children.SelectMany(c => c.CloneForToc()));
 
 				var li = new Element(charStart, "li", new[] { link });

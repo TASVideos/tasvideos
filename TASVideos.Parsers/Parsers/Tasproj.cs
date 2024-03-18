@@ -5,8 +5,8 @@ internal class Tasproj : Bk2
 {
 	public override string FileExtension => "tasproj";
 
-	protected override string[] InvalidArchiveEntries => new[]
-	{
+	protected override string[] InvalidArchiveEntries =>
+	[
 		"greenzone"
-	};
+	];
 }

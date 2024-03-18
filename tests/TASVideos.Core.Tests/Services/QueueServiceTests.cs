@@ -26,10 +26,10 @@ public class QueueServiceTests
 	private static DateTime OldEnoughToBeJudged
 		=> DateTime.UtcNow.AddHours(-1 - MinimumHoursBeforeJudgment);
 
-	private static readonly IEnumerable<PermissionTo> BasicUserPerms = new[] { PermissionTo.SubmitMovies };
-	private static readonly IEnumerable<PermissionTo> JudgePerms = new[] { PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions };
-	private static readonly IEnumerable<PermissionTo> PublisherPerms = new[] { PermissionTo.SubmitMovies, PermissionTo.PublishMovies };
-	private static readonly IEnumerable<PermissionTo> Override = new[] { PermissionTo.OverrideSubmissionStatus };
+	private static readonly IEnumerable<PermissionTo> BasicUserPerms = [PermissionTo.SubmitMovies];
+	private static readonly IEnumerable<PermissionTo> JudgePerms = [PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions];
+	private static readonly IEnumerable<PermissionTo> PublisherPerms = [PermissionTo.SubmitMovies, PermissionTo.PublishMovies];
+	private static readonly IEnumerable<PermissionTo> Override = [PermissionTo.OverrideSubmissionStatus];
 
 	public QueueServiceTests()
 	{
@@ -265,7 +265,7 @@ public class QueueServiceTests
 	{
 		var exceptPublished = Enum.GetValues(typeof(SubmissionStatus))
 			.Cast<SubmissionStatus>()
-			.Except(new[] { Published })
+			.Except([Published])
 			.OrderBy(s => s)
 			.ToList();
 
@@ -370,7 +370,7 @@ public class QueueServiceTests
 		var poll = new ForumPoll { Id = pollId, TopicId = topicId };
 		var pollOptions = new ForumPollOption[]
 		{
-			new() { PollId = pollId, Votes = new ForumPollOptionVote[] { new() } },
+			new() { PollId = pollId, Votes = [new()] },
 			new() { PollId = pollId }
 		};
 		_db.ForumPollOptions.AddRange(pollOptions);

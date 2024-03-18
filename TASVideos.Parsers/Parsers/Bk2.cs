@@ -18,15 +18,15 @@ internal class Bk2 : ParserBase, IParser
 	private const double NtscPsxFramerate = 59.94006013870239;
 	private const double PalPsxFramerate = 50.00028192996979;
 
-	protected virtual string[] InvalidArchiveEntries => new[]
-	{
+	protected virtual string[] InvalidArchiveEntries =>
+	[
 		"greenzonesettings.txt",
 		"laglog",
 		"markers.txt",
 		"clientsettings.json",
 		"session.txt",
 		"greenzone"
-	};
+	];
 
 	public override string FileExtension => "bk2";
 
@@ -240,14 +240,14 @@ internal class Bk2 : ParserBase, IParser
 		["gambatte"] = 2097152,
 	};
 
-	private static readonly IReadOnlyList<string> ValidClockRates = new[]
-	{
+	private static readonly IReadOnlyList<string> ValidClockRates =
+	[
 		"4194304", // SubGbHawk
 		"2097152", // gambatte, SameBoy
 		"5369318.18181818", // SubNesHawk (NTSC)
 		"5320342.5", // SubNesHawk (PAL/Dendy)
 		"33868800", // NymaShock
-	};
+	];
 
 	private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new()
 	{

@@ -70,7 +70,7 @@ public class TagServiceTests
 		_db.Tags.Add(new Tag { Id = id2, Code = code2 });
 		await _db.SaveChangesAsync();
 
-		var result = await _tagService.GetDiff(new[] { id1 }, new[] { id2 });
+		var result = await _tagService.GetDiff([id1], [id2]);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(1, result.Added.Count);
 		Assert.AreEqual(1, result.Removed.Count);

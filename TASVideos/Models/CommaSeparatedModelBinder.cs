@@ -49,7 +49,7 @@ public class DelimitedQueryStringValueProvider(
 /// </summary>
 public class DelimitedQueryStringValueProviderFactory(params char[] delimiters) : IValueProviderFactory
 {
-	private static readonly char[] DefaultDelimiters = { ',' };
+	private static readonly char[] DefaultDelimiters = [','];
 	private readonly char[] _delimiters = delimiters.Length == 0
 		? DefaultDelimiters
 		: delimiters;

@@ -86,7 +86,7 @@ internal class QueueService(
 		{
 			return Enum.GetValues(typeof(SubmissionStatus))
 				.Cast<SubmissionStatus>()
-				.Except(new[] { Published }); // Published status must only be set when being published
+				.Except([Published]); // Published status must only be set when being published
 		}
 
 		var list = new HashSet<SubmissionStatus>

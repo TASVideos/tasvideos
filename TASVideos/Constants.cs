@@ -8,9 +8,9 @@ public static class UiDefaults
 	public const string DefaultDropdownText = "---";
 
 	public static SelectListItem[] DefaultEntry =
-	{
+	[
 		new() { Text = DefaultDropdownText, Value = "" }
-	};
+	];
 }
 
 public static class SystemWiki

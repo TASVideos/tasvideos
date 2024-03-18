@@ -8,7 +8,7 @@ public interface ITASVideosGrue
 internal class TASVideosGrue(ApplicationDbContext db, IForumService forumService) : ITASVideosGrue
 {
 	private static readonly string[] RandomMessages =
-	{
+	[
 			"... minty!",
 			"... blech, salty!",
 			"... blech, bitter!",
@@ -19,7 +19,7 @@ internal class TASVideosGrue(ApplicationDbContext db, IForumService forumService
 			"... *burp*!",
 			"... om, nom, nom... nom nom",
 			"... 'twas dry"
-		};
+		];
 
 	public async Task RejectAndMove(int submissionId)
 	{

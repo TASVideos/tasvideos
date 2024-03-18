@@ -38,8 +38,8 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
 	public IEnumerable<SelectListItem> AvailableVersionTypes => VersionTypes;
 
-	public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]
-	{
+	public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } =
+	[
 			new () { Text = "U", Value = "U" },
 			new () { Text = "J", Value = "J" },
 			new () { Text = "E", Value = "E" },
@@ -47,7 +47,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			new () { Text = "EU", Value = "UE" },
 			new () { Text = "W", Value = "W" },
 			new () { Text = "Other", Value = "Other" },
-	};
+	];
 
 	public async Task<IActionResult> OnGet()
 	{

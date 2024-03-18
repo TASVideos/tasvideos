@@ -288,7 +288,7 @@ public class AwardsTests
 		await _awards.AssignUserAward(
 			award.ShortName,
 			year,
-			new[] { user.Id });
+			[user.Id]);
 
 		Assert.AreEqual(1, _db.UserAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
@@ -309,7 +309,7 @@ public class AwardsTests
 		await _awards.AssignUserAward(
 			award.ShortName,
 			CurrentYear,
-			new[] { author.Id });
+			[author.Id]);
 
 		Assert.AreEqual(1, _db.UserAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
@@ -339,7 +339,7 @@ public class AwardsTests
 		await _awards.AssignPublicationAward(
 			award.ShortName,
 			year,
-			new[] { pub.Id });
+			[pub.Id]);
 
 		Assert.AreEqual(1, _db.PublicationAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));

@@ -436,14 +436,14 @@ public class UserManager(
 	// Hardcoded for now, we can make a database table if this becomes a maintenance burden
 	public IEnumerable<string> BannedAvatarSites()
 	{
-		return new[]
-		{
+		return
+		[
 			"cdn.discordapp.com",
 			"media.discordapp.net",
 			"membres.lycos.fr",
 			"rphaven.org",
 			"usuarios.lycos.es"
-		};
+		];
 	}
 
 	public async Task MarkEmailConfirmed(User user)

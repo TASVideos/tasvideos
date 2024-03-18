@@ -16,7 +16,7 @@ public interface IPrivateMessageService
 internal class PrivateMessageService(ApplicationDbContext db, IEmailService emailService) : IPrivateMessageService
 {
 	// TODO: this does not belong in code, move to a system wiki page, or database table
-	private static readonly string[] AllowedBulkRoles = { "site admin", "moderator" };
+	private static readonly string[] AllowedBulkRoles = ["site admin", "moderator"];
 
 	public async Task SendMessage(int fromUserId, string toUserName, string subject, string text)
 	{

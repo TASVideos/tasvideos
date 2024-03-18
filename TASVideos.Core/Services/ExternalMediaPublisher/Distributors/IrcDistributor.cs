@@ -28,7 +28,7 @@ public class IrcDistributor : IPostDistributor
 		}
 	}
 
-	public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
+	public IEnumerable<PostType> Types => [PostType.Administrative, PostType.General, PostType.Announcement];
 
 	public async Task Post(IPostable post)
 	{

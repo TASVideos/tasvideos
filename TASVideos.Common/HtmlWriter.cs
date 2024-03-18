@@ -7,11 +7,10 @@ public class HtmlWriter(TextWriter w)
 	private static readonly Regex AllowedTagNames = new("^[a-z0-9]+$");
 	private static readonly Regex AllowedAttributeNames = new("^[a-z\\-]+$");
 	private static readonly HashSet<string> VoidTags = new(
-		new[]
-		{
+		[
 				"area", "base", "br", "col", "embed", "hr", "img", "input",
 				"keygen", "link", "meta", "param", "source", "track", "wbr"
-		},
+		],
 		StringComparer.OrdinalIgnoreCase
 	);
 

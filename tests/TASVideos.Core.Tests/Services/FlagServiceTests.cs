@@ -70,7 +70,7 @@ public class FlagServiceTests
 		_db.Flags.Add(new Flag { Id = id2, Token = token2 });
 		await _db.SaveChangesAsync();
 
-		var result = await _flagService.GetDiff(new[] { id1 }, new[] { id2 });
+		var result = await _flagService.GetDiff([id1], [id2]);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(1, result.Added.Count);
 		Assert.AreEqual(1, result.Removed.Count);

@@ -48,7 +48,7 @@ public static partial class Builtins
 				elt.Children.Insert(0, ClassedText(0, $"Syntax Error on line {lineNo}\n", "info"));
 				var column = e.TextLocation - charAt;
 				elt.Children.Add(ClassedText(charAt, line.Substring(0, column)));
-				var marker = new Element(e.TextLocation, "span", new[] { ClassedText(e.TextLocation, e.Message) })
+				var marker = new Element(e.TextLocation, "span", [ClassedText(e.TextLocation, e.Message)])
 				{
 					Attributes = { ["class"] = "error-marker" }
 				};

@@ -23,7 +23,7 @@ public sealed class DiscordDistributor : IPostDistributor
 		_logger = logger;
 	}
 
-	public IEnumerable<PostType> Types => new[] { PostType.Administrative, PostType.General, PostType.Announcement };
+	public IEnumerable<PostType> Types => [PostType.Administrative, PostType.General, PostType.Announcement];
 
 	public async Task Post(IPostable post)
 	{

@@ -114,7 +114,7 @@ public static class Paginator
 		// REFLECTION: source.OrderBy(x => x.Property)
 		var orderByMethod = typeof(Queryable).GetMethods().First(x => x.Name == orderBy && x.GetParameters().Length == 2);
 		var orderByGeneric = orderByMethod.MakeGenericMethod(typeof(T), property.Type);
-		var result = orderByGeneric.Invoke(null, new object[] { query, lambda });
+		var result = orderByGeneric.Invoke(null, [query, lambda]);
 
 		if (result is null)
 		{

@@ -141,7 +141,7 @@ public class EditUrlsModel(
 			url.Type = UrlType;
 			url.Url = CurrentUrl;
 
-			logWording = new[] { "Chang", "chang" };
+			logWording = ["Chang", "chang"];
 		}
 		else
 		{
@@ -153,7 +153,7 @@ public class EditUrlsModel(
 				DisplayName = DisplayName
 			});
 
-			logWording = new[] { "Add", "add" };
+			logWording = ["Add", "add"];
 		}
 
 		string log = $"{logWording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";

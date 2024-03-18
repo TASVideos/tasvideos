@@ -34,7 +34,7 @@ internal class InfoModelTests
 	{
 		const long fileId = 1;
 		const int originalViewCount = 2;
-		byte[] content = { 0xFF };
+		byte[] content = [0xFF];
 		_db.UserFiles.Add(new UserFile { Id = fileId, Content = content, Downloads = originalViewCount });
 
 		_page.Id = fileId;

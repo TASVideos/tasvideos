@@ -60,37 +60,37 @@ public static partial class Builtins
 
 	private static IEnumerable<INode> MakeFootnote(int charStart, int charEnd, string n)
 	{
-		return new INode[]
-		{
+		return
+		[
 				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", new[] { Attr("id", n) }, Array.Empty<INode>()) { CharEnd = charStart },
-				new Element(charStart, "a", new[] { Attr("href", "#r" + n) }, new[]
+				new Element(charStart, "a", [Attr("id", n)], Array.Empty<INode>()) { CharEnd = charStart },
+				new Element(charStart, "a", [Attr("href", "#r" + n)], new[]
 				{
 					new Text(charStart, n) { CharEnd = charEnd }
 				}) { CharEnd = charEnd },
 				new Text(charEnd, "]") { CharEnd = charEnd }
-		};
+		];
 	}
 
 	private static IEnumerable<INode> MakeFootnoteLink(int charStart, int charEnd, string n)
 	{
 		return new[]
 		{
-			new Element(charStart, "a", new[] { Attr("id", "r" + n) }, Array.Empty<INode>()) { CharEnd = charStart },
-			new Element(charStart, "sup", new INode[]
-			{
+			new Element(charStart, "a", [Attr("id", "r" + n)], Array.Empty<INode>()) { CharEnd = charStart },
+			new Element(charStart, "sup",
+			[
 				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", new[] { Attr("href", "#" + n) }, new[]
+				new Element(charStart, "a", [Attr("href", "#" + n)], new[]
 				{
 					new Text(charStart, n) { CharEnd = charEnd }
 				}) { CharEnd = charEnd },
 				new Text(charEnd, "]") { CharEnd = charEnd }
-			}) { CharEnd = charEnd }
+			]) { CharEnd = charEnd }
 		};
 	}
 
-	private static readonly string[] ImageSuffixes = { ".svg", ".png", ".gif", ".jpg", ".jpeg", ".webp" };
-	private static readonly string[] LinkPrefixes = { "=", "http://", "https://", "ftp://", "//", "irc://", "user:", "#" };
+	private static readonly string[] ImageSuffixes = [".svg", ".png", ".gif", ".jpg", ".jpeg", ".webp"];
+	private static readonly string[] LinkPrefixes = ["=", "http://", "https://", "ftp://", "//", "irc://", "user:", "#"];
 
 	// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 	// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
@@ -201,7 +201,7 @@ public static partial class Builtins
 		var pp = text.Split('|');
 		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 		{
-			return new[] { MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _)) };
+			return [MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _))];
 		}
 
 		if (IsImage(pp[0]))
@@ -209,7 +209,7 @@ public static partial class Builtins
 			var node = MakeImage(charStart, charEnd, pp, 0, out var unusedParams);
 			if (!unusedParams)
 			{
-				return new[] { node };
+				return [node];
 			}
 		}
 
@@ -217,7 +217,7 @@ public static partial class Builtins
 		{
 			return pp.Length > 1
 				? new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) }
-				: new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd }) };
+				: [MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd })];
 		}
 
 		// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
@@ -259,7 +259,7 @@ public static partial class Builtins
 			attrs.Add(Attr("class", "extlink"));
 		}
 
-		return new Element(charStart, "a", attrs, new[] { child }) { CharEnd = charEnd };
+		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };
 	}
 
 	private static INode MakeImage(int charStart, int charEnd, string[] pp, int index, out bool unusedParams)

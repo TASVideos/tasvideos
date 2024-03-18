@@ -172,7 +172,7 @@ public class UserFilesTests
 	public async Task Upload_SupplementalFile_Success()
 	{
 		const int userId = 1;
-		byte[] fileData = { 0xFF };
+		byte[] fileData = [0xFF];
 		const string title = "title";
 		const string desc = "description";
 		const int systemId = 2;
@@ -201,7 +201,7 @@ public class UserFilesTests
 	public async Task Upload_MovieFile_Success()
 	{
 		const int userId = 1;
-		byte[] fileData = { 0xFF };
+		byte[] fileData = [0xFF];
 		const string title = "title";
 		const string desc = "description";
 		const int systemId = 2;
@@ -233,7 +233,7 @@ public class UserFilesTests
 	[DataRow(" .lua,\n .wch ")]
 	public async Task SupportedSupplementalFiles(string markup)
 	{
-		string[] extensions = { ".lua", ".wch" };
+		string[] extensions = [".lua", ".wch"];
 		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = markup });
 
 		var actual = await _userFiles.SupportedSupplementalFiles();

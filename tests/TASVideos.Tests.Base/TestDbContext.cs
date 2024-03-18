@@ -47,7 +47,7 @@ public class TestDbContext : ApplicationDbContext
 	public void LogInUser(string userName)
 	{
 		var identity = new GenericIdentity(userName);
-		string[] roles = { "TestRole" };
+		string[] roles = ["TestRole"];
 		var principal = new GenericPrincipal(identity, roles);
 		_testHttpContext.HttpContext!.User = principal;
 	}
@@ -62,7 +62,7 @@ public class TestDbContext : ApplicationDbContext
 
 		if (_dbConcurrentUpdateConflict)
 		{
-			throw new DbUpdateConcurrencyException("Mock concurrency conflict scenario", new IUpdateEntry[] { new TestUpdateEntry() });
+			throw new DbUpdateConcurrencyException("Mock concurrency conflict scenario", [new TestUpdateEntry()]);
 		}
 
 		return base.SaveChangesAsync(cancellationToken);

@@ -77,7 +77,7 @@ public class Text(int charStart, string content) : INode
 
 	public IEnumerable<INode> CloneForToc()
 	{
-		return new[] { Clone() };
+		return [Clone()];
 	}
 }
 
@@ -154,7 +154,7 @@ public class Element : INodeWithChildren
 			var style = ctx.RunTdStyleFilters(InnerText(ctx.Helper));
 			if (style != null)
 			{
-				attrs = attrs.Concat(new[] { new KeyValuePair<string, string>("style", style) });
+				attrs = attrs.Concat([new KeyValuePair<string, string>("style", style)]);
 			}
 		}
 
@@ -373,7 +373,7 @@ public class IfModule(int charStart, string condition) : INodeWithChildren
 
 	public IEnumerable<INode> CloneForToc()
 	{
-		return new[] { Clone() };
+		return [Clone()];
 	}
 }
 
@@ -392,7 +392,7 @@ public class Module : INode
 		var pp = text.Split('|');
 		Name = pp[0];
 		Parameters = pp.Skip(1)
-			.Select(p => p.Split(new[] { '=' }, 2))
+			.Select(p => p.Split(['='], 2))
 			.Where(p => !string.IsNullOrWhiteSpace(p[0]))
 			.Select(p => new KeyValuePair<string, string>(p[0].Trim().ToLowerInvariant(), p.Length > 1 ? p[1].Trim() : ""))
 			.GroupBy(kvp => kvp.Key, StringComparer.InvariantCultureIgnoreCase)

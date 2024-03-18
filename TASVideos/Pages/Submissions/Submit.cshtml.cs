@@ -171,8 +171,8 @@ public class SubmitModel(
 		}
 	}
 
-	public string[] Notice(int userId) => new[]
-	{
+	public string[] Notice(int userId) =>
+	[
 		"Sorry, you can not submit at this time.",
 		"We limit submissions to " +
 		settings.SubmissionRate.Submissions +
@@ -181,7 +181,7 @@ public class SubmitModel(
 		" days per user. ",
 		"You will be able to submit again on " +
 		_earliestTimestamp.AddDays(settings.SubmissionRate.Days)
-	};
+	];
 
 	public async Task<bool> SubmissionAllowed(int userId)
 	{

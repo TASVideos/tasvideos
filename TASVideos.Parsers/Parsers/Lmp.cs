@@ -8,7 +8,7 @@ internal class Lmp : ParserBase, IParser
 	private delegate bool TryParseLmp(byte[] movie, ref int frames);
 
 	private static readonly TryParseLmp[] LmpParsers =
-	{
+	[
 		// order is important here to minimize false detections
 		// especially the last 3, which are impossible to always detect correctly
 		TryParseDoomClassic,
@@ -18,7 +18,7 @@ internal class Lmp : ParserBase, IParser
 		TryParseNewHexen,
 		TryParseHeretic,
 		TryParseOldDoom,
-	};
+	];
 
 	private static bool CheckSizeSanity(int len, int headerLen, int inputLen)
 	{
