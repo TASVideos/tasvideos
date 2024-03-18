@@ -1,10 +1,10 @@
 ﻿// ReSharper disable MethodHasAsyncOverload
 namespace TASVideos.WikiEngine.AST;
 
-public class Element : INodeWithChildren
+public partial class Element : INodeWithChildren
 {
-	private static readonly Regex AllowedTagNames = new("^[a-z0-9]+$");
-	private static readonly Regex AllowedAttributeNames = new("^[a-z\\-]+$");
+	private static readonly Regex AllowedTagNames = AllowedTagNamesRegex();
+	private static readonly Regex AllowedAttributeNames = AllowedAttributeNamesRegex();
 	private static readonly HashSet<string> VoidTags =
 	[
 		"area",
@@ -218,4 +218,9 @@ public class Element : INodeWithChildren
 		ret.Attributes = new Dictionary<string, string>(Attributes);
 		return new[] { ret };
 	}
+
+	[GeneratedRegex("^[a-z0-9]+$")]
+	private static partial Regex AllowedTagNamesRegex();
+	[GeneratedRegex("^[a-z\\-]+$")]
+	private static partial Regex AllowedAttributeNamesRegex();
 }
