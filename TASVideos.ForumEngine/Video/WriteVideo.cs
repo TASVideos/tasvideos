@@ -6,7 +6,7 @@ public static class WriteVideo
 {
 	private static void DoTemplate(TextWriter w, string template, int width, int height, string id)
 	{
-		foreach (var ss in template.Split(new[] { "$$" }, StringSplitOptions.None))
+		foreach (var ss in template.Split(["$$"], StringSplitOptions.None))
 		{
 			switch (ss)
 			{
@@ -44,53 +44,64 @@ public static class WriteVideo
 		}
 	}
 
-	private static readonly string YouTube =
-@"<iframe width=$$w$$ height=$$h$$
-src=""https://www.youtube.com/embed/$$id$$""
-frameborder=0
-allow=""accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture""
-allowfullscreen
-class=""mw-100""></iframe>
-";
-	private static readonly string YouTubePlaylist =
-@"<iframe width=$$w$$ height=$$h$$
-src=""https://www.youtube.com/embed/videoseries?list=$$id$$""
-frameborder=0
-allow=""accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture""
-allowfullscreen
-class=""mw-100""></iframe>
-";
-	private static readonly string DailyMotion =
-@"<iframe
-frameborder=0 width=$$w$$ height=$$h$$
-src=""https://www.dailymotion.com/embed/video/$$id$$"" allowfullscreen allow=autoplay class=""mw-100""></iframe>
-";
-	private static readonly string Vimeo =
-@"<iframe src=""https://player.vimeo.com/video/$$id$$""
-width=$$w$$ height=$$h$$ frameborder=0
-allow=""autoplay; fullscreen"" allowfullscreen class=""mw-100""></iframe>
-";
+	private const string YouTube = """
+									<iframe width=$$w$$ height=$$h$$
+									src="https://www.youtube.com/embed/$$id$$"
+									frameborder=0
+									allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+									allowfullscreen
+									class="mw-100"></iframe>
 
-	private static readonly string NicoVideoDocument =
-@"<!DOCTYPE html>
-<html><head><title>NicoVideo Player</title><style>
-html { overflow:hidden; }
-body, div { margin:0; padding:0; overflow:hidden; }
-</style></head><body>
-<div>
-<script src=""https://embed.nicovideo.jp/watch/$$id$$/script?w=$$w$$&h=$$h$$""></script>
-</div>
-</body></html>
-";
-	private static readonly string NicoVideo =
-@"<iframe src=""data:text/html;base64,$$id$$""
-width=$$w$$ height=$$h$$ frameborder=0 class=""mw-100""></iframe>
-";
+									""";
 
-	private static readonly string ArchiveOrg =
-@"<iframe src=""https://archive.org/embed/$$id$$""
-width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullscreen=true allowfullscreen class=""mw-100""></iframe>
-";
+	private const string YouTubePlaylist = """
+											<iframe width=$$w$$ height=$$h$$
+											src="https://www.youtube.com/embed/videoseries?list=$$id$$"
+											frameborder=0
+											allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+											allowfullscreen
+											class="mw-100"></iframe>
+
+											""";
+
+	private const string DailyMotion = """
+										<iframe
+										frameborder=0 width=$$w$$ height=$$h$$
+										src="https://www.dailymotion.com/embed/video/$$id$$" allowfullscreen allow=autoplay class="mw-100"></iframe>
+
+										""";
+
+	private const string Vimeo = """
+								<iframe src="https://player.vimeo.com/video/$$id$$"
+								width=$$w$$ height=$$h$$ frameborder=0
+								allow="autoplay; fullscreen" allowfullscreen class="mw-100"></iframe>
+
+								""";
+
+	private const string NicoVideoDocument = """
+											<!DOCTYPE html>
+											<html><head><title>NicoVideo Player</title><style>
+											html { overflow:hidden; }
+											body, div { margin:0; padding:0; overflow:hidden; }
+											</style></head><body>
+											<div>
+											<script src="https://embed.nicovideo.jp/watch/$$id$$/script?w=$$w$$&h=$$h$$"></script>
+											</div>
+											</body></html>
+
+											""";
+
+	private const string NicoVideo = """
+									<iframe src="data:text/html;base64,$$id$$"
+									width=$$w$$ height=$$h$$ frameborder=0 class="mw-100"></iframe>
+
+									""";
+
+	private const string ArchiveOrg = """
+									<iframe src="https://archive.org/embed/$$id$$"
+									width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullscreen=true allowfullscreen class="mw-100"></iframe>
+
+									""";
 
 	public static void Write(TextWriter w, VideoParameters pp)
 	{
@@ -100,9 +111,9 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 		{
 			case "youtube.com":
 			case "www.youtube.com":
-				if (pp.Path == "/watch" && pp.QueryParams.ContainsKey("v")) // https://www.youtube.com/watch?v=yLORZbc-PZw
+				if (pp.Path == "/watch" && pp.QueryParams.TryGetValue("v", out var v)) // https://www.youtube.com/watch?v=yLORZbc-PZw
 				{
-					DoTemplate(w, YouTube, width, height, pp.QueryParams["v"]);
+					DoTemplate(w, YouTube, width, height, v);
 					return;
 				}
 
@@ -112,9 +123,9 @@ width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullsc
 					return;
 				}
 
-				if (pp.Path == "/view_play_list" && pp.QueryParams.ContainsKey("p")) // http://www.youtube.com/view_play_list?p=76E50B82FA870C1D
+				if (pp.Path == "/view_play_list" && pp.QueryParams.TryGetValue("p", out var p)) // http://www.youtube.com/view_play_list?p=76E50B82FA870C1D
 				{
-					DoTemplate(w, YouTubePlaylist, width, height, pp.QueryParams["p"]);
+					DoTemplate(w, YouTubePlaylist, width, height, p);
 				}
 
 				break;
