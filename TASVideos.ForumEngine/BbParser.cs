@@ -3,71 +3,21 @@ using System.Text.RegularExpressions;
 
 namespace TASVideos.ForumEngine;
 
-public class BbParser
+public partial class BbParser
 {
-	private static readonly Regex OpeningTag = new(@"\G
-			# Tag name
-			(
-				[^\p{C}\[\]=\/]+
-			)
-			# Optional attribute value
-			([= ]
-				(
-					(
-						(?'open'\[)
-							| [^\p{C}\[\]]
-							| (?'close-open'\])
-					)+
-				)
-				(?(open)(?!))
-			)?
-			# Closing `]`
-			\]
-		", RegexOptions.IgnorePatternWhitespace);
-	private static readonly Regex ClosingTag = new(@"\G
-			# Slash before tag name
-			\/
-			# Tag name
-			(
-				[^\p{C}\[\]=\/]+
-			)
-			# Closing `]`
-			\]
-		", RegexOptions.IgnorePatternWhitespace);
-	private static readonly Regex Url = new(@"\G
-			https?:\/\/
-			(
-				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
-				|
-				%[A-Fa-f0-9]{2}
-			)+
-			(
-				\?
-				(
-					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
-					|
-					%[A-Fa-f0-9]{2}
-				)+
-			)?
-			(
-				\#
-				(
-					[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
-					|
-					%[A-Fa-f0-9]{2}
-				)+
-			)?
-		", RegexOptions.IgnorePatternWhitespace);
+	private static readonly Regex OpeningTag = OpeningTagRegex();
+	private static readonly Regex ClosingTag = ClosingTagRegex();
+	private static readonly Regex Url = UrlRegex();
 
-	private static readonly Regex BlockTrimAfterEntering = new("\\G[ \t]*\r?\n");
-	private static readonly Regex BlockTrimAfterLeaving = new("\\G[ \t]*\r?\n?");
+	private static readonly Regex BlockTrimAfterEntering = BlockTrimAfterEnteringRegex();
+	private static readonly Regex BlockTrimAfterLeaving = BlockTrimAfterLeavingRegex();
 
 	// The old system does support attributes in html tags, but only a few that we probably don't want,
 	// and it doesn't even support the full html syntax for them.  So forget attributes for now
-	private static readonly Regex HtmlOpening = new(@"\G\s*([a-zA-Z]+)\s*>");
-	private static readonly Regex HtmlClosing = new(@"\G\s*\/\s*([a-zA-Z]+)\s*>");
+	private static readonly Regex HtmlOpening = HtmlOpeningRegex();
+	private static readonly Regex HtmlClosing = HtmlClosingRegex();
 
-	private static readonly Regex HtmlVoid = new(@"\G\s*([a-zA-Z]+)\s*\/?\s*>");
+	private static readonly Regex HtmlVoid = HtmlVoidRegex();
 
 	private class TagInfo
 	{
@@ -181,10 +131,10 @@ public class BbParser
 		{ "th", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "tr" } },
 	};
 
+	// html parsing, except the empty tags <br> and <hr>, as they immediately close
+	// so their parse state is not needed
 	private static readonly HashSet<string> KnownNonEmptyHtmlTags =
 	[
-		// html parsing, except the empty tags <br> and <hr>, as they immediately close
-		// so their parse state is not needed
 		"b",
 		"i",
 		"em",
@@ -468,4 +418,81 @@ public class BbParser
 
 		FlushText();
 	}
+
+	[GeneratedRegex("""
+		\G
+		# Tag name
+		(
+			[^\p{C}\[\]=\/]+
+		)
+		# Optional attribute value
+		([= ]
+			(
+				(
+					(?'open'\[)
+						| [^\p{C}\[\]]
+						| (?'close-open'\])
+				)+
+			)
+			(?(open)(?!))
+		)?
+		# Closing `]`
+		\]
+		""", RegexOptions.IgnorePatternWhitespace)]
+	private static partial Regex OpeningTagRegex();
+
+	[GeneratedRegex("""
+		\G
+		# Slash before tag name
+		\/
+		# Tag name
+		(
+			[^\p{C}\[\]=\/]+
+		)
+		# Closing `]`
+		\]
+		""", RegexOptions.IgnorePatternWhitespace)]
+	private static partial Regex ClosingTagRegex();
+
+	[GeneratedRegex("""
+		\G
+		https?:\/\/
+		(
+			[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+			|
+			%[A-Fa-f0-9]{2}
+		)+
+		(
+			\?
+			(
+				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+				|
+				%[A-Fa-f0-9]{2}
+			)+
+		)?
+		(
+			\#
+			(
+				[A-Za-z0-9\-._~!$&'()*+,;=:@\/]
+				|
+				%[A-Fa-f0-9]{2}
+			)+
+		)?
+		""", RegexOptions.IgnorePatternWhitespace)]
+	private static partial Regex UrlRegex();
+
+	[GeneratedRegex("\\G[ \t]*\r?\n")]
+	private static partial Regex BlockTrimAfterEnteringRegex();
+
+	[GeneratedRegex("\\G[ \t]*\r?\n?")]
+	private static partial Regex BlockTrimAfterLeavingRegex();
+
+	[GeneratedRegex(@"\G\s*([a-zA-Z]+)\s*>")]
+	private static partial Regex HtmlOpeningRegex();
+
+	[GeneratedRegex(@"\G\s*\/\s*([a-zA-Z]+)\s*>")]
+	private static partial Regex HtmlClosingRegex();
+
+	[GeneratedRegex(@"\G\s*([a-zA-Z]+)\s*\/?\s*>")]
+	private static partial Regex HtmlVoidRegex();
 }
