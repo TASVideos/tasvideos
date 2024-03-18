@@ -208,7 +208,7 @@ public class Jrsr : IParser
 				// Get total duration in seconds.
 				// "When computing movie length, it is
 				// customary to ignore all special events."
-				double duration = (double)lastNonSpecialTimestamp / 1e9;
+				double duration = lastNonSpecialTimestamp / 1e9;
 
 				// Compute an integer number of frames,
 				// assuming a frame rate close to 60 fps.
@@ -219,7 +219,7 @@ public class Jrsr : IParser
 				// is divided by it.
 				if (duration > 0.0)
 				{
-					result.FrameRateOverride = (double)result.Frames / duration;
+					result.FrameRateOverride = result.Frames / duration;
 				}
 			}
 		}
