@@ -2,7 +2,7 @@
 
 namespace TASVideos.Extensions;
 
-public static class StringExtensions
+public static partial class StringExtensions
 {
 	/// <summary>
 	/// Truncates the end of a string to the given character <see cref="limit"/> if the
@@ -147,10 +147,10 @@ public static class StringExtensions
 
 	public static string[] SplitWithEmpty(this string str, string separator)
 	{
-		return str.Split(new[] { separator }, StringSplitOptions.RemoveEmptyEntries);
+		return str.Split([separator], StringSplitOptions.RemoveEmptyEntries);
 	}
 
-	private static readonly Regex SplitCamelCaseRegex = new(@"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])");
+	private static readonly Regex SplitCamelCaseRegex = SplitCamelCaseCompiledRegex();
 	private static string SplitCamelCaseInternal(this string? str)
 	{
 		return !string.IsNullOrWhiteSpace(str)
@@ -158,7 +158,7 @@ public static class StringExtensions
 			: "";
 	}
 
-	private static readonly Regex SpaceRegex = new(" +");
+	private static readonly Regex SpaceRegex = SpaceCompiledRegex();
 	public static string RemoveAllSpaces(this string? str)
 	{
 		return SpaceRegex.Replace(str ?? "", "");
@@ -224,7 +224,7 @@ public static class StringExtensions
 	/// </summary>
 	public static string NewlinesToSpaces(this string s)
 	{
-		return Regex.Replace(s, @"\r\n?|\n", " ");
+		return NewLinesToSpacesRegex().Replace(s, " ");
 	}
 
 	/// <summary>
@@ -274,4 +274,13 @@ public static class StringExtensions
 	{
 		return s.Replace('<', '＜').Replace('>', '＞');
 	}
+
+	[GeneratedRegex(@"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])")]
+	private static partial Regex SplitCamelCaseCompiledRegex();
+
+	[GeneratedRegex(" +")]
+	private static partial Regex SpaceCompiledRegex();
+
+	[GeneratedRegex(@"\r\n?|\n")]
+	private static partial Regex NewLinesToSpacesRegex();
 }

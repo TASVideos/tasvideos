@@ -2,10 +2,10 @@
 
 namespace TASVideos.Common;
 
-public class HtmlWriter(TextWriter w)
+public partial class HtmlWriter(TextWriter w)
 {
-	private static readonly Regex AllowedTagNames = new("^[a-z0-9]+$");
-	private static readonly Regex AllowedAttributeNames = new("^[a-z\\-]+$");
+	private static readonly Regex AllowedTagNames = AllowedTagNamesRegex();
+	private static readonly Regex AllowedAttributeNames = AllowedAttributeNamesRegex();
 	private static readonly HashSet<string> VoidTags = new(
 		[
 				"area", "base", "br", "col", "embed", "hr", "img", "input",
@@ -200,4 +200,9 @@ public class HtmlWriter(TextWriter w)
 	/// Do not use this unless you're very careful with escaping!
 	/// </summary>
 	public TextWriter BaseWriter => w;
+
+	[GeneratedRegex("^[a-z0-9]+$")]
+	private static partial Regex AllowedTagNamesRegex();
+	[GeneratedRegex("^[a-z\\-]+$")]
+	private static partial Regex AllowedAttributeNamesRegex();
 }
