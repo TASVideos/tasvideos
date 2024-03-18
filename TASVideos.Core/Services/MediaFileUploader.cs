@@ -72,7 +72,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		var screenshotBytes = memoryStream.ToArray();
 
 		string screenshotFileName = $"exhibition_{exhibitionId}{Path.GetExtension(screenshot.FileName)}";
-		string screenshotPath = Path.Combine(_env.WebRootPath, MediaLocation, screenshotFileName);
+		string screenshotPath = Path.Combine(env.WebRootPath, MediaLocation, screenshotFileName);
 
 		var screenShotExists = File.Exists(screenshotPath);
 		await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
@@ -81,7 +81,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		if (screenShotExists)
 		{
 			// Should never be more than 1, but just in case
-			exhibitionFiles = await _db.ExhibitionFiles
+			exhibitionFiles = await db.ExhibitionFiles
 				.Where(pf => pf.ExhibitionId == exhibitionId && pf.Path == screenshotFileName)
 				.ToListAsync();
 		}
@@ -98,7 +98,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		}
 		else
 		{
-			_db.ExhibitionFiles.Add(new ExhibitionFile
+			db.ExhibitionFiles.Add(new ExhibitionFile
 			{
 				ExhibitionId = exhibitionId,
 				Path = screenshotFileName,
@@ -107,7 +107,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 			});
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 		return screenshotFileName;
 	}
 
