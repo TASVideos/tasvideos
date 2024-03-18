@@ -29,7 +29,7 @@ internal static class Extensions
 			return "";
 		}
 
-		var row = lines.FirstOrDefault(l => l.ToLower().StartsWith(key.ToLower()))?.ToLower();
+		var row = lines.FirstOrDefault(l => l.StartsWith(key, StringComparison.InvariantCultureIgnoreCase))?.ToLower();
 		if (!string.IsNullOrWhiteSpace(row))
 		{
 			var valStr = row
@@ -130,12 +130,12 @@ internal static class Extensions
 	/// </summary>
 	public static ZipArchiveEntry? Entry(this ZipArchive archive, string name)
 	{
-		return archive.Entries.SingleOrDefault(e => e.Name.ToLower().StartsWith(name));
+		return archive.Entries.SingleOrDefault(e => e.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
 	}
 
 	public static bool HasEntry(this ZipArchive archive, string name)
 	{
-		return archive.Entries.Any(e => e.Name.ToLower() == name.ToLower());
+		return archive.Entries.Any(e => string.Equals(e.Name, name, StringComparison.InvariantCultureIgnoreCase));
 	}
 
 	// Returns a boolean indicating whether the given git is set in the given byte

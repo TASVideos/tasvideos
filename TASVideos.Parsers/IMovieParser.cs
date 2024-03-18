@@ -93,5 +93,5 @@ public sealed class MovieParser : IMovieParser
 		return Activator.CreateInstance(type) as IParser;
 	}
 
-	private static IParseResult Error(string errorMsg) => new ErrorResult(errorMsg);
+	private static ErrorResult Error(string errorMsg) => new(errorMsg);
 }

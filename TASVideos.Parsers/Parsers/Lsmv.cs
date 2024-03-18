@@ -23,7 +23,7 @@ internal class Lsmv : ParserBase, IParser
 		var archive = new ZipArchive(file);
 
 		// a .lsmv is actually a savestate if a savestate file is present
-		if (archive.Entries.Any(e => e.Name.ToLower() == Savestate))
+		if (archive.Entries.Any(e => e.Name.Equals(Savestate, StringComparison.InvariantCultureIgnoreCase)))
 		{
 			return Error("This is a savestate file, not a movie file");
 		}
@@ -128,7 +128,7 @@ internal class Lsmv : ParserBase, IParser
 
 		// guard against extra branch input files, which have a number in their name
 		var inputLog = archive.Entries.SingleOrDefault(
-			e => e.Name.ToLower().StartsWith(InputFile) && !e.Name.Any(char.IsDigit));
+			e => e.Name.StartsWith(InputFile, StringComparison.InvariantCultureIgnoreCase) && !e.Name.Any(char.IsDigit));
 		if (inputLog is null)
 		{
 			return Error($"Missing {InputFile}, can not parse");
@@ -140,7 +140,7 @@ internal class Lsmv : ParserBase, IParser
 			result.Frames = (await reader
 				.ReadToEndAsync())
 				.LineSplit()
-				.Count(i => i.StartsWith("F"));
+				.Count(i => i.StartsWith('F'));
 		}
 
 		return result;

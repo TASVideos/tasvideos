@@ -6,7 +6,7 @@ internal static class SystemCodes
 	public const string Arcade = "arcade";
 	public const string Atari2600 = "a2600";
 	public const string Atari7800 = "a7800";
-	public const string BSX = "bsx";
+	public const string Bsx = "bsx";
 	public const string C64 = "c64";
 	public const string Cdi = "cdi";
 	public const string Coleco = "coleco";

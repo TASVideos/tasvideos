@@ -25,7 +25,7 @@ public class Module : INode
 
 	public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 	{
-		if (Name.ToLowerInvariant() == "settableattributes")
+		if (Name.Equals("settableattributes", StringComparison.InvariantCultureIgnoreCase))
 		{
 			if (!ctx.AddTdStyleFilter(Parameters))
 			{

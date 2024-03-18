@@ -96,7 +96,7 @@ internal class Ltm : ParserBase, IParser
 						var sb = new StringBuilder();
 						while (await textReader.ReadLineAsync() is { } line)
 						{
-							if (line.ToLower().StartsWith("platform:"))
+							if (line.StartsWith("platform:", StringComparison.InvariantCultureIgnoreCase))
 							{
 								result.SystemCode = CalculatePlatform(GetPlatformValue(line));
 							}
@@ -138,7 +138,7 @@ internal class Ltm : ParserBase, IParser
 			return 0;
 		}
 
-		var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
 
 		if (split.Length > 1)
 		{
@@ -160,7 +160,7 @@ internal class Ltm : ParserBase, IParser
 			return 0;
 		}
 
-		var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
 
 		if (split.Length > 1)
 		{
@@ -182,7 +182,7 @@ internal class Ltm : ParserBase, IParser
 			return false;
 		}
 
-		var split = str.Split(new[] { "=" }, StringSplitOptions.RemoveEmptyEntries);
+		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
 
 		if (split.Length <= 1)
 		{
@@ -201,7 +201,7 @@ internal class Ltm : ParserBase, IParser
 			return "";
 		}
 
-		var split = str.ToLower().Split(new[] { "platform:" }, StringSplitOptions.RemoveEmptyEntries);
+		var split = str.ToLower().Split(["platform:"], StringSplitOptions.RemoveEmptyEntries);
 		if (split.Length != 1)
 		{
 			return "";
