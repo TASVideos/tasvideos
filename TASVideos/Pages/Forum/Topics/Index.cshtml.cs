@@ -42,7 +42,7 @@ public class IndexModel(
 
 	public ForumPostEntry? HighlightedPost { get; set; }
 
-	public bool SaveActivity { get; set; } = false;
+	public bool SaveActivity { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{

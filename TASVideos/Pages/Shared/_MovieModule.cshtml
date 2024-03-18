@@ -10,9 +10,9 @@
 		: temp.FirstOrDefault(t => t.Url?.Contains("youtube") ?? false);
 }
 
-@inject IAwards _awards
+@inject IAwards Awards
 @{
-	var publicationAwards = await _awards.ForPublication(Model.Id);
+	var publicationAwards = await Awards.ForPublication(Model.Id);
 }
 
 @functions{

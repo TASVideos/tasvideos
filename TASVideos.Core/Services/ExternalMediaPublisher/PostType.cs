@@ -5,18 +5,18 @@ public enum PostType
 	/// <summary>
 	/// A highly time sensitive administrative alert
 	/// Should be used for emergency situations
-	/// Should never be sent to the general public
+	/// Should never be sent to the public
 	/// </summary>
 	Critical,
 
 	/// <summary>
 	/// Administrative only alerts,
-	/// Should not be visible to the general public
+	/// Should not be visible to the public
 	/// </summary>
 	Administrative,
 
 	/// <summary>
-	/// A public announcement to the general public
+	/// A public announcement to the public
 	/// Should be used for alerts such as new Publications
 	/// Should be used for things like tweets
 	/// </summary>

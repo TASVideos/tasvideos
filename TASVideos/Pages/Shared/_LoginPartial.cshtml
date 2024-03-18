@@ -1,12 +1,12 @@
-@inject UserManager _userManager
-@inject SignInManager _signInManager
+@inject UserManager UserManager
+@inject SignInManager SignInManager
 @{ 
-	bool isSignedIn = _signInManager.IsSignedIn(User);
+	bool isSignedIn = SignInManager.IsSignedIn(User);
 	int notificationCount = 0;
 
 	if (isSignedIn)
 	{
-		notificationCount = await _userManager.GetUnreadMessageCount(User.GetUserId());
+		notificationCount = await UserManager.GetUnreadMessageCount(User.GetUserId());
 	}
 }
 @if (isSignedIn)

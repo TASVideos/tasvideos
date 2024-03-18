@@ -22,7 +22,7 @@ public static class Extensions
 	/// </summary>
 	/// <param name="source">The list to search.</param>
 	/// <param name="suffix">The suffix (case in-sensitive) to parse.</param>
-	/// <returns>A list of ints that were able to be parsed from the list.</returns>
+	/// <returns>A list of ints that were parsed from the list.</returns>
 	public static IReadOnlyCollection<int> ToIdList(this IEnumerable<string> source, char suffix)
 	{
 		return source
@@ -37,7 +37,7 @@ public static class Extensions
 	/// </summary>
 	/// <param name="source">The list to search.</param>
 	/// <param name="prefix">The suffix (case in-sensitive) to parse.</param>
-	/// <returns>A list of ints that were able to be parsed from the list.</returns>
+	/// <returns>A list of ints that were parsed from the list.</returns>
 	public static IReadOnlyCollection<int> ToIdListPrefix(this IEnumerable<string> source, string prefix)
 	{
 		return source

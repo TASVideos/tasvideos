@@ -454,11 +454,12 @@ public class Module : INode
 		// to the end user.  TODO:  __wikiLink really needs to be its own AST type.
 		if (Name == "__wikiLink")
 		{
-			if (Parameters.TryGetValue("displaytext", out var displaytext))
+			if (Parameters.TryGetValue("displaytext", out var displayText))
 			{
-				return displaytext;
+				return displayText;
 			}
-			else if (Parameters.TryGetValue("href", out var href))
+
+			if (Parameters.TryGetValue("href", out var href))
 			{
 				return href[1..];
 			}
