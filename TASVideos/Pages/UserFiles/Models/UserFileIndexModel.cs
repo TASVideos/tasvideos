@@ -2,10 +2,10 @@
 
 public class UserFileIndexModel
 {
-	public IEnumerable<UserWithMovie> UsersWithMovies { get; set; } = new List<UserWithMovie>();
-	public IEnumerable<UserMovieListModel> LatestMovies { get; set; } = new List<UserMovieListModel>();
-	public IEnumerable<GameWithMovie> GamesWithMovies { get; set; } = new List<GameWithMovie>();
-	public IEnumerable<UncatalogedViewModel> UncatalogedFiles { get; init; } = new List<UncatalogedViewModel>();
+	public IEnumerable<UserWithMovie> UsersWithMovies { get; set; } = [];
+	public IEnumerable<UserMovieListModel> LatestMovies { get; set; } = [];
+	public IEnumerable<GameWithMovie> GamesWithMovies { get; set; } = [];
+	public IEnumerable<UncatalogedViewModel> UncatalogedFiles { get; init; } = [];
 
 	public class UserWithMovie
 	{
@@ -19,6 +19,6 @@ public class UserFileIndexModel
 		public string GameName { get; set; } = "";
 		public DateTime Latest => Dates.Max();
 
-		internal IEnumerable<DateTime> Dates { get; set; } = new List<DateTime>();
+		internal IEnumerable<DateTime> Dates { get; set; } = [];
 	}
 }

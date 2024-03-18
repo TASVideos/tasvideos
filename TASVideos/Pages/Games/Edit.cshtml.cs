@@ -30,10 +30,10 @@ public class EditModel(
 	public bool CanDelete { get; set; }
 
 	[Display(Name = "Available Genres")]
-	public IEnumerable<SelectListItem> AvailableGenres { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGenres { get; set; } = [];
 
 	[Display(Name = "Available Groups")]
-	public IEnumerable<SelectListItem> AvailableGroups { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGroups { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

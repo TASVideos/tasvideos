@@ -181,8 +181,8 @@ public class BbParser
 		{ "th", new() { SelfNesting = TagInfo.SelfNestingAllowed.No, IsBlock = true, RequiredParent = "tr" } },
 	};
 
-	private static readonly HashSet<string> KnownNonEmptyHtmlTags = new()
-	{
+	private static readonly HashSet<string> KnownNonEmptyHtmlTags =
+	[
 		// html parsing, except the empty tags <br> and <hr>, as they immediately close
 		// so their parse state is not needed
 		"b",
@@ -199,7 +199,7 @@ public class BbParser
 		"sub",
 		"div",
 		"small"
-	};
+	];
 
 	public static Element Parse(string text, bool allowHtml, bool allowBb)
 	{

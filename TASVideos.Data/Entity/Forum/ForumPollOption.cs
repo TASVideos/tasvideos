@@ -13,7 +13,7 @@ public class ForumPollOption : BaseEntity
 	public int PollId { get; set; }
 	public virtual ForumPoll? Poll { get; set; }
 
-	public virtual ICollection<ForumPollOptionVote> Votes { get; set; } = new HashSet<ForumPollOptionVote>();
+	public virtual ICollection<ForumPollOptionVote> Votes { get; set; } = [];
 }
 
 public static class ForumPollOptionExtensions

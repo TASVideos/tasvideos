@@ -11,7 +11,7 @@ namespace TASVideos.Pages.AwardsEditor;
 public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader mediaFileUploader)
 	: BasePageModel
 {
-	public IEnumerable<AwardCategoryEntry> Categories { get; set; } = new List<AwardCategoryEntry>();
+	public IEnumerable<AwardCategoryEntry> Categories { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

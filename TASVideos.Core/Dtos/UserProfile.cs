@@ -63,15 +63,15 @@ public class UserProfile
 	public int PublicationObsoleteCount { get; set; }
 	public bool HasHomePage { get; set; }
 	public bool AnyPublications => PublicationActiveCount + PublicationObsoleteCount > 0;
-	public IEnumerable<string> PublishedSystems { get; set; } = new List<string>();
+	public IEnumerable<string> PublishedSystems { get; set; } = [];
 
 	public WikiEdit WikiEdits { get; set; } = new();
 	public PublishingSummary Publishing { get; set; } = new();
 	public JudgingSummary Judgments { get; set; } = new();
 
-	public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
-	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
-	public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
+	public IEnumerable<RoleDto> Roles { get; set; } = [];
+	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = [];
+	public IEnumerable<SubmissionEntry> Submissions { get; set; } = [];
 
 	public RatingSummary Ratings { get; set; } = new();
 	public UserFileSummary UserFiles { get; set; } = new();
@@ -102,7 +102,7 @@ public class UserProfile
 	public class UserFileSummary
 	{
 		public int Total { get; set; }
-		public IEnumerable<string> Systems { get; set; } = new List<string>();
+		public IEnumerable<string> Systems { get; set; } = [];
 	}
 
 	// TODO: more data points

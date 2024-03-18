@@ -12,7 +12,7 @@ public class ErrorModel(IHostEnvironment env) : PageModel
 {
 	public string StatusCodeString { get; set; } = "";
 	public string ExceptionMessage { get; set; } = "";
-	public List<KeyValuePair<string, StringValues>> RecoveredFormData { get; set; } = new();
+	public List<KeyValuePair<string, StringValues>> RecoveredFormData { get; set; } = [];
 	public void OnGet()
 	{
 		HandleStatusCode();

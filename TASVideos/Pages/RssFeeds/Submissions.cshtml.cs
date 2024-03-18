@@ -13,7 +13,7 @@ public class SubmissionsModel(
 	ApplicationDbContext db,
 	IWikiPages wikiPages) : BasePageModel
 {
-	public List<RssSubmission> Submissions { get; set; } = new();
+	public List<RssSubmission> Submissions { get; set; } = [];
 	public async Task<IActionResult> OnGet()
 	{
 		var filter = SubmissionSearchRequest.Default;

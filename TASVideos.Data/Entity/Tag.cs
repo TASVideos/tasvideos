@@ -10,5 +10,5 @@ public class Tag
 	[StringLength(50)]
 	public string DisplayName { get; set; } = "";
 
-	public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new HashSet<PublicationTag>();
+	public virtual ICollection<PublicationTag> PublicationTags { get; set; } = [];
 }

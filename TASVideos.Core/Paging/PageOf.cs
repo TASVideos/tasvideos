@@ -12,7 +12,7 @@ public class PageOf<T>(IEnumerable<T> items) : IPaged, IEnumerable<T>
 	public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
 	IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 
-	public static PageOf<T> Empty() => new(Enumerable.Empty<T>());
+	public static PageOf<T> Empty() => new([]);
 }
 
 /// <summary>

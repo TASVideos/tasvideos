@@ -29,10 +29,10 @@ public class UserFileModel
 	public int Frames { get; set; }
 	public int Rerecords { get; set; }
 
-	public IEnumerable<UserFileCommentModel> Comments { get; set; } = new List<UserFileCommentModel>();
+	public IEnumerable<UserFileCommentModel> Comments { get; set; } = [];
 	public bool HideComments { get; set; }
 	public Compression CompressionType { get; set; }
-	public byte[] Content { get; set; } = Array.Empty<byte>();
+	public byte[] Content { get; set; } = [];
 	public string ContentPreview { get; set; } = "";
 
 	public string Extension => (FileName ?? "").ToLower().Split('.').Last();

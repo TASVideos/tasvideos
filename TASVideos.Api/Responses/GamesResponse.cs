@@ -11,7 +11,7 @@ public class GamesResponse
 	[Sortable]
 	public int Id { get; init; }
 
-	public IEnumerable<GameVersion> Versions { get; init; } = new List<GameVersion>();
+	public IEnumerable<GameVersion> Versions { get; init; } = [];
 
 	[Sortable]
 	public string DisplayName { get; init; } = "";

@@ -23,5 +23,5 @@ public class UserFileComment
 	public int UserId { get; set; }
 	public virtual User? User { get; set; }
 
-	public virtual ICollection<UserFileComment> Children { get; set; } = new HashSet<UserFileComment>();
+	public virtual ICollection<UserFileComment> Children { get; set; } = [];
 }

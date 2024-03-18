@@ -27,11 +27,11 @@ public class CatalogModel(
 	[BindProperty]
 	public SubmissionCatalogModel Catalog { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableVersions { get; set; } = new List<SelectListItem>();
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
-	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = new List<SelectListItem>();
-	public IEnumerable<SelectListItem> AvailableGoals { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableVersions { get; set; } = [];
+	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
+	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = [];
+	public IEnumerable<SelectListItem> AvailableGoals { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -285,7 +285,7 @@ public class CatalogModel(
 				.ForSystem(Catalog.SystemId.Value)
 				.ToDropDown()
 				.ToListAsync()
-			: new List<SelectListItem>();
+			: [];
 
 		AvailableGoals = Catalog.GameId.HasValue
 			? await db.GameGoals
@@ -296,6 +296,6 @@ public class CatalogModel(
 					Text = gg.DisplayName
 				})
 				.ToListAsync()
-			: new List<SelectListItem>();
+			: [];
 	}
 }

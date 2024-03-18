@@ -12,7 +12,7 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 		PageSize = 100;
 	}
 
-	public IEnumerable<int> Years { get; set; } = new List<int>();
+	public IEnumerable<int> Years { get; set; } = [];
 
 	public IEnumerable<int> AvailableYears => Enumerable
 		.Range(2000, DateTime.UtcNow.Year + 1 - 2000)
@@ -27,17 +27,17 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 	public int? StartType { get; set; }
 
 	[Display(Name = "Statuses")]
-	public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
+	public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = [];
 
-	public static IEnumerable<SubmissionStatus> Default => new List<SubmissionStatus>
-		{
+	public static IEnumerable<SubmissionStatus> Default =>
+		[
 			SubmissionStatus.New,
 			SubmissionStatus.JudgingUnderWay,
 			SubmissionStatus.Accepted,
 			SubmissionStatus.PublicationUnderway,
 			SubmissionStatus.NeedsMoreInfo,
 			SubmissionStatus.Delayed
-		};
+		];
 
 	public static IEnumerable<SubmissionStatus> All => Enum
 		.GetValues(typeof(SubmissionStatus))
@@ -45,10 +45,10 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 		.ToList();
 
 	IEnumerable<string> ISubmissionFilter.Systems => string.IsNullOrWhiteSpace(System)
-		? new List<string>()
-		: new List<string> { System };
+		? []
+		: [System];
 
 	IEnumerable<int> ISubmissionFilter.GameIds => !string.IsNullOrWhiteSpace(GameId) && int.TryParse(GameId, out int _)
-		? new List<int> { int.Parse(GameId) }
-		: new List<int>();
+		? [int.Parse(GameId)]
+		: [];
 }

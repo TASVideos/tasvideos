@@ -9,9 +9,9 @@ public class GoalListModel
 	[Display(Name = "Name")]
 	public string DisplayName { get; set; } = "";
 
-	public IEnumerable<PublicationEntry> Publications { get; set; } = new List<PublicationEntry>();
+	public IEnumerable<PublicationEntry> Publications { get; set; } = [];
 
-	public IEnumerable<SubmissionEntry> Submissions { get; set; } = new List<SubmissionEntry>();
+	public IEnumerable<SubmissionEntry> Submissions { get; set; } = [];
 
 	public record PublicationEntry(int Id, string Title, bool Obs);
 

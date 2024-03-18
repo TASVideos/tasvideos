@@ -25,7 +25,7 @@ public class EditModel(
 	public UserEditModel UserToEdit { get; set; } = new();
 
 	[DisplayName("Available Roles")]
-	public IEnumerable<SelectListItem> AvailableRoles { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableRoles { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

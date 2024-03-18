@@ -16,7 +16,7 @@ public class PublicationEditModel
 	public string? AdditionalAuthors { get; set; }
 
 	[Display(Name = "Author(s)")]
-	public IEnumerable<string> Authors { get; set; } = new List<string>();
+	public IEnumerable<string> Authors { get; set; } = [];
 
 	[Display(Name = "Publication Class")]
 	public string Class { get; set; } = "";
@@ -33,10 +33,10 @@ public class PublicationEditModel
 	public string? EmulatorVersion { get; set; }
 
 	[Display(Name = "Selected Flags")]
-	public IEnumerable<int> SelectedFlags { get; set; } = new List<int>();
+	public IEnumerable<int> SelectedFlags { get; set; } = [];
 
 	[Display(Name = "Selected Tags")]
-	public IEnumerable<int> SelectedTags { get; set; } = new List<int>();
+	public IEnumerable<int> SelectedTags { get; set; } = [];
 
 	[Display(Name = "Revision Message")]
 	public string? RevisionMessage { get; set; }
@@ -47,7 +47,7 @@ public class PublicationEditModel
 	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
-	public IEnumerable<PublicationUrlDisplayModel> Urls { get; set; } = new List<PublicationUrlDisplayModel>();
+	public IEnumerable<PublicationUrlDisplayModel> Urls { get; set; } = [];
 }
 
 public class PublicationFileDisplayModel

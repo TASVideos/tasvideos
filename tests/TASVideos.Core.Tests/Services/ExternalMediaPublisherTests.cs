@@ -13,7 +13,7 @@ public class ExternalMediaPublisherTests
 	{
 		var publisher = new ExternalMediaPublisher(
 			new AppSettings { BaseUrl = baseUrl },
-			Enumerable.Empty<IPostDistributor>());
+			[]);
 
 		var actual = publisher.ToAbsolute(relativeLink);
 		Assert.AreEqual(expected, actual);

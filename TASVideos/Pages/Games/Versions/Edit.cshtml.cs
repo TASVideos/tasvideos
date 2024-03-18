@@ -35,7 +35,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public string GameName { get; set; } = "";
 
 	public bool CanDelete { get; set; }
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
 	public IEnumerable<SelectListItem> AvailableVersionTypes => VersionTypes;
 
 	public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } = new SelectListItem[]

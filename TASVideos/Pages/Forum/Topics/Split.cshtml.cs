@@ -22,7 +22,7 @@ public class SplitModel(
 	[BindProperty]
 	public SplitTopicModel Topic { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableForums { get; set; } = [];
 
 	private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
 

@@ -5,8 +5,8 @@ namespace TASVideos.Core.Tests.Services;
 internal class TestParseResult : IParseResult
 {
 	public bool Success { get; set; }
-	public IEnumerable<string> Errors { get; set; } = new List<string>();
-	public IEnumerable<ParseWarnings> Warnings { get; set; } = new List<ParseWarnings>();
+	public IEnumerable<string> Errors { get; set; } = [];
+	public IEnumerable<ParseWarnings> Warnings { get; set; } = [];
 	public string FileExtension { get; set; } = "";
 	public RegionType Region { get; set; }
 	public int Frames { get; set; }

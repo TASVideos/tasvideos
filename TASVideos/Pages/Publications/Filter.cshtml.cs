@@ -19,7 +19,7 @@ public class FilterModel(
 	[BindProperty]
 	public PublicationSearchModel Search { get; set; } = new()
 	{
-		Years = Enumerable.Empty<int>()
+		Years = []
 	};
 
 	[FromQuery]
@@ -27,13 +27,13 @@ public class FilterModel(
 
 	public IPublicationTokens Tokens { get; set; } = null!;
 
-	public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableTags { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGameGroups { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGameGroups { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableAuthors { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableAuthors { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

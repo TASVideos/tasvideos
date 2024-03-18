@@ -21,13 +21,13 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	public SystemPageOf<GameListModel> Games { get; set; } = SystemPageOf<GameListModel>.Empty();
 
-	public List<SelectListItem> SystemList { get; set; } = new();
+	public List<SelectListItem> SystemList { get; set; } = [];
 
-	public List<SelectListItem> LetterList { get; set; } = new();
+	public List<SelectListItem> LetterList { get; set; } = [];
 
-	public List<SelectListItem> GenreList { get; set; } = new();
+	public List<SelectListItem> GenreList { get; set; } = [];
 
-	public List<SelectListItem> GroupList { get; set; } = new();
+	public List<SelectListItem> GroupList { get; set; } = [];
 
 	public async Task OnGet()
 	{

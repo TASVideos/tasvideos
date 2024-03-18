@@ -26,7 +26,7 @@ public class UserFile
 	[StringLength(255)]
 	public string FileName { get; set; } = "";
 
-	public byte[] Content { get; set; } = Array.Empty<byte>();
+	public byte[] Content { get; set; } = [];
 
 	public UserFileClass Class { get; set; }
 
@@ -65,7 +65,7 @@ public class UserFile
 	[StringLength(3500)]
 	public string? Annotations { get; set; }
 
-	public virtual ICollection<UserFileComment> Comments { get; set; } = new List<UserFileComment>();
+	public virtual ICollection<UserFileComment> Comments { get; set; } = [];
 }
 
 public static class UserFileExtensions

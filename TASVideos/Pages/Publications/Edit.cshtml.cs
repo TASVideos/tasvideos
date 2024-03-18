@@ -29,12 +29,12 @@ public class EditModel(
 	public PublicationEditModel Publication { get; set; } = new();
 
 	[Display(Name = "Available Flags")]
-	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = [];
 
 	[Display(Name = "Available Tags")]
-	public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableTags { get; set; } = [];
 
-	public IEnumerable<PublicationFileDisplayModel> Files { get; set; } = new List<PublicationFileDisplayModel>();
+	public IEnumerable<PublicationFileDisplayModel> Files { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

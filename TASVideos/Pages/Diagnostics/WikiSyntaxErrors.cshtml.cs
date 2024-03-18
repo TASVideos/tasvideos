@@ -35,7 +35,7 @@ public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 		}
 	}
 
-	public IReadOnlyCollection<Row> Rows { get; set; } = new List<Row>();
+	public IReadOnlyCollection<Row> Rows { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

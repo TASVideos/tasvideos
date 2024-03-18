@@ -25,21 +25,21 @@ public class Publication : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
 
-	public virtual ICollection<PublicationFile> Files { get; set; } = new HashSet<PublicationFile>();
-	public virtual ICollection<PublicationTag> PublicationTags { get; set; } = new HashSet<PublicationTag>();
-	public virtual ICollection<PublicationFlag> PublicationFlags { get; set; } = new HashSet<PublicationFlag>();
-	public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = new HashSet<PublicationAward>();
-	public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = new HashSet<PublicationMaintenanceLog>();
+	public virtual ICollection<PublicationFile> Files { get; set; } = [];
+	public virtual ICollection<PublicationTag> PublicationTags { get; set; } = [];
+	public virtual ICollection<PublicationFlag> PublicationFlags { get; set; } = [];
+	public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = [];
+	public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
 
 	[ForeignKey(nameof(PublicationRating.PublicationId))]
-	public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new HashSet<PublicationRating>();
+	public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = [];
 
-	public virtual ICollection<PublicationUrl> PublicationUrls { get; set; } = new HashSet<PublicationUrl>();
+	public virtual ICollection<PublicationUrl> PublicationUrls { get; set; } = [];
 
 	public int? ObsoletedById { get; set; }
 	public virtual Publication? ObsoletedBy { get; set; }
 
-	public virtual ICollection<Publication> ObsoletedMovies { get; set; } = new HashSet<Publication>();
+	public virtual ICollection<Publication> ObsoletedMovies { get; set; } = [];
 
 	public int GameId { get; set; }
 	public virtual Game.Game? Game { get; set; }
@@ -58,9 +58,9 @@ public class Publication : BaseEntity, ITimeable
 
 	public int SubmissionId { get; set; }
 	public virtual Submission? Submission { get; set; }
-	public virtual ICollection<PublicationAuthor> Authors { get; set; } = new HashSet<PublicationAuthor>();
+	public virtual ICollection<PublicationAuthor> Authors { get; set; } = [];
 
-	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
+	public byte[] MovieFile { get; set; } = [];
 
 	[StringLength(200)]
 	public string MovieFileName { get; set; } = "";

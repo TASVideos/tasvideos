@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Roles;
 [AllowAnonymous]
 public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<RoleDisplayModel> Roles { get; set; } = new List<RoleDisplayModel>();
+	public IEnumerable<RoleDisplayModel> Roles { get; set; } = [];
 
 	public async Task OnGet()
 	{

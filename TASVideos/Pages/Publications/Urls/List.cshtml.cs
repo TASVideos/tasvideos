@@ -20,7 +20,7 @@ public class ListUrlsModel(
 
 	public string Title { get; set; } = "";
 
-	public ICollection<PublicationUrl> CurrentUrls { get; set; } = new List<PublicationUrl>();
+	public ICollection<PublicationUrl> CurrentUrls { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

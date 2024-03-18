@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Diagnostics;
 public class SystemPagesModel(IWikiPages wikiPages) : BasePageModel
 {
 	public record SystemPage(string Name, bool Exists);
-	public List<SystemPage> SystemPages { get; set; } = new List<SystemPage>();
+	public List<SystemPage> SystemPages { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

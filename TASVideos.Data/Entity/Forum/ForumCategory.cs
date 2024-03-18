@@ -4,7 +4,7 @@
 public class ForumCategory : BaseEntity
 {
 	public int Id { get; set; }
-	public virtual ICollection<Forum> Forums { get; set; } = new HashSet<Forum>();
+	public virtual ICollection<Forum> Forums { get; set; } = [];
 
 	[StringLength(30)]
 	public string Title { get; set; } = "";

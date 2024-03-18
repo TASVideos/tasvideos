@@ -32,7 +32,7 @@ public class SubmissionCreateModel
 
 	[Display(Name = "Author(s)")]
 	[MinLength(1)]
-	public IList<string> Authors { get; set; } = new List<string>();
+	public IList<string> Authors { get; set; } = [];
 
 	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; set; }

@@ -22,7 +22,7 @@ public class StringListTagHelper : TagHelper
 		output.Attributes.Add("id", parentContainerName);
 		output.Content.AppendHtml("<div class='string-list-container'>");
 
-		List<string> stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? new List<string>();
+		List<string> stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? [];
 		stringList = stringList.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
 
 		// We need at least one line to clone, todo: refactor so this doesn't force the server side to strip out empty strings

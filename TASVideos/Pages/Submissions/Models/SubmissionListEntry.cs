@@ -55,12 +55,12 @@ public class SubmissionListEntry : ITimeable, ISubmissionDisplay
 
 public class SubmissionPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 {
-	public IEnumerable<int> Years { get; set; } = new List<int>();
-	public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = new List<SubmissionStatus>();
+	public IEnumerable<int> Years { get; set; } = [];
+	public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = [];
 	public string? System { get; set; }
 	public string? User { get; set; }
 
 	public string? GameId { get; set; }
 
-	public static new SubmissionPageOf<T> Empty() => new(Enumerable.Empty<T>());
+	public static new SubmissionPageOf<T> Empty() => new([]);
 }

@@ -35,7 +35,7 @@ public class CreateModel(
 
 	public PrivateMessageModel? ReplyingTo { get; set; }
 
-	public IEnumerable<SelectListItem> AvailableGroupRoles { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGroupRoles { get; set; } = [];
 
 	public bool IsReply => ReplyingTo is not null;
 

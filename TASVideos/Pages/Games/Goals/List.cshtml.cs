@@ -18,7 +18,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public int? GoalToEdit { get; set; }
 
-	public List<GoalListModel> Goals { get; set; } = new();
+	public List<GoalListModel> Goals { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

@@ -51,5 +51,5 @@ public class ProfileSettingsModel
 	[Display(Name = "Decimal Format")]
 	public UserDecimalFormat UserDecimalFormat { get; set; }
 
-	public IEnumerable<RoleDto> Roles { get; set; } = new List<RoleDto>();
+	public IEnumerable<RoleDto> Roles { get; set; } = [];
 }

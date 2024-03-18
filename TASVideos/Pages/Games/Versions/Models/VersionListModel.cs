@@ -8,7 +8,7 @@ public class VersionListModel
 	[Display(Name = "Game")]
 	public string GameDisplayName { get; set; } = "";
 
-	public IEnumerable<VersionEntry> Versions { get; set; } = new List<VersionEntry>();
+	public IEnumerable<VersionEntry> Versions { get; set; } = [];
 
 	public class VersionEntry
 	{

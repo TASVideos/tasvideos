@@ -15,7 +15,7 @@ public class MoodReportModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string? UserName { get; set; }
 
-	public IEnumerable<MoodReportEntry> MoodyUsers { get; set; } = new List<MoodReportEntry>();
+	public IEnumerable<MoodReportEntry> MoodyUsers { get; set; } = [];
 
 	public async Task OnGet()
 	{

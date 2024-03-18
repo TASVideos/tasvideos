@@ -20,11 +20,11 @@ public class AssignModel(
 	[BindProperty]
 	public AwardAssignmentModel AwardToAssign { get; set; } = new();
 
-	public IReadOnlyCollection<SelectListItem> AvailableAwardCategories { get; set; } = new List<SelectListItem>();
+	public IReadOnlyCollection<SelectListItem> AvailableAwardCategories { get; set; } = [];
 
-	public IReadOnlyCollection<SelectListItem> AvailableUsers { get; set; } = new List<SelectListItem>();
+	public IReadOnlyCollection<SelectListItem> AvailableUsers { get; set; } = [];
 
-	public IReadOnlyCollection<SelectListItem> AvailablePublications { get; set; } = new List<SelectListItem>();
+	public IReadOnlyCollection<SelectListItem> AvailablePublications { get; set; } = [];
 
 	public async Task OnGet() => await Initialize();
 

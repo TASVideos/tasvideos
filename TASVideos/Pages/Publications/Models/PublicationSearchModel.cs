@@ -7,12 +7,12 @@ namespace TASVideos.Pages.Publications.Models;
 public class PublicationSearchModel : IPublicationTokens
 {
 	[Display(Name = "Platform")]
-	public IEnumerable<string> SystemCodes { get; set; } = new List<string>();
-	public IEnumerable<string> Classes { get; set; } = new List<string>();
-	public IEnumerable<int> Years { get; set; } = new List<int>();
-	public IEnumerable<string> Tags { get; set; } = new List<string>();
-	public IEnumerable<string> Genres { get; set; } = new List<string>();
-	public IEnumerable<string> Flags { get; set; } = new List<string>();
+	public IEnumerable<string> SystemCodes { get; set; } = [];
+	public IEnumerable<string> Classes { get; set; } = [];
+	public IEnumerable<int> Years { get; set; } = [];
+	public IEnumerable<string> Tags { get; set; } = [];
+	public IEnumerable<string> Genres { get; set; } = [];
+	public IEnumerable<string> Flags { get; set; } = [];
 
 	[Display(Name = "Show Obsoleted")]
 	public bool ShowObsoleted { get; set; }
@@ -23,14 +23,14 @@ public class PublicationSearchModel : IPublicationTokens
 	public string SortBy { get; set; } = "";
 	public int? Limit { get; set; }
 
-	public IEnumerable<int> Authors { get; set; } = new List<int>();
+	public IEnumerable<int> Authors { get; set; } = [];
 
-	public IEnumerable<int> MovieIds { get; set; } = new List<int>();
+	public IEnumerable<int> MovieIds { get; set; } = [];
 
-	public IEnumerable<int> Games { get; set; } = new List<int>();
+	public IEnumerable<int> Games { get; set; } = [];
 
 	[Display(Name = "Game Groups")]
-	public IEnumerable<int> GameGroups { get; set; } = new List<int>();
+	public IEnumerable<int> GameGroups { get; set; } = [];
 
 	public bool IsEmpty => !SystemCodes.Any()
 		&& !Classes.Any()

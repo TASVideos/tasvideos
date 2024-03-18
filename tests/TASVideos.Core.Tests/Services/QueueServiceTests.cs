@@ -739,10 +739,10 @@ public class QueueServiceTests
 		_db.Publications.Add(new Publication
 		{
 			Id = pubToObsolete,
-			PublicationUrls = new List<PublicationUrl>
-			{
+			PublicationUrls =
+			[
 				new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl }
-			},
+			],
 			System = new GameSystem { Code = "Test" },
 			Game = new Game()
 		});

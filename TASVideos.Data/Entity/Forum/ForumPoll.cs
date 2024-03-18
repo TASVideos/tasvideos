@@ -15,5 +15,5 @@ public class ForumPoll : BaseEntity
 
 	public bool MultiSelect { get; set; }
 
-	public virtual ICollection<ForumPollOption> PollOptions { get; set; } = new HashSet<ForumPollOption>();
+	public virtual ICollection<ForumPollOption> PollOptions { get; set; } = [];
 }

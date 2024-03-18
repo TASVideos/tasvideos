@@ -8,12 +8,12 @@ public class GameSystem : BaseEntity
 {
 	public int Id { get; set; } // Note that this is Non-auto-incrementing, we need Ids to be identical across any database
 
-	public virtual ICollection<GameSystemFrameRate> SystemFrameRates { get; set; } = new HashSet<GameSystemFrameRate>();
+	public virtual ICollection<GameSystemFrameRate> SystemFrameRates { get; set; } = [];
 
-	public virtual ICollection<GameVersion> GameVersions { get; set; } = new HashSet<GameVersion>();
+	public virtual ICollection<GameVersion> GameVersions { get; set; } = [];
 
-	public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
-	public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
+	public virtual ICollection<Publication> Publications { get; set; } = [];
+	public virtual ICollection<Submission> Submissions { get; set; } = [];
 
 	[StringLength(8)]
 	public string Code { get; set; } = "";

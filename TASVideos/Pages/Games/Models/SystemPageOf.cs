@@ -19,5 +19,5 @@ public class SystemPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 
 	public string? SearchTerms { get; set; }
 
-	public static new SystemPageOf<T> Empty() => new(Enumerable.Empty<T>());
+	public static new SystemPageOf<T> Empty() => new([]);
 }

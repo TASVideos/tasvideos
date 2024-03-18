@@ -4,13 +4,13 @@ namespace TASVideos.WikiEngine;
 
 public static partial class Builtins
 {
-	internal static readonly HashSet<string> TocHeadings = new()
-	{
+	internal static readonly HashSet<string> TocHeadings =
+	[
 		// h1, h5, h6 are not involved in TOC generation
 		"h2",
 		"h3",
 		"h4"
-	};
+	];
 
 	public static Element MakeToc(List<INode> document, int charStart)
 	{

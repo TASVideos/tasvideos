@@ -5,7 +5,7 @@
 /// </summary>
 public class WriterContext(IWriterHelper helper)
 {
-	private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = new();
+	private readonly List<KeyValuePair<Regex, string>> _tableAttributeRunners = [];
 
 	public IWriterHelper Helper { get; } = helper;
 

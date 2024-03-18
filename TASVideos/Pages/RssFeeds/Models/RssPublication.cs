@@ -11,7 +11,7 @@ public class RssPublication
 	public DateTime CreateTimestamp { get; init; }
 	public string Title { get; init; } = "";
 
-	public IEnumerable<string> TagNames { get; init; } = new List<string>();
+	public IEnumerable<string> TagNames { get; init; } = [];
 
 	public int MovieFileSize { get; init; }
 	public string ScreenshotPath => Files.First(f => f.Type == FileType.Screenshot).Path;
@@ -32,11 +32,11 @@ public class RssPublication
 		}
 	}
 
-	public IReadOnlyCollection<string> StreamingUrls { get; init; } = new List<string>();
+	public IReadOnlyCollection<string> StreamingUrls { get; init; } = [];
 
-	internal IReadOnlyCollection<File> Files { get; init; } = new List<File>();
+	internal IReadOnlyCollection<File> Files { get; init; } = [];
 
-	internal IReadOnlyCollection<double> Ratings { get; init; } = new List<double>();
+	internal IReadOnlyCollection<double> Ratings { get; init; } = [];
 
 	internal class File
 	{

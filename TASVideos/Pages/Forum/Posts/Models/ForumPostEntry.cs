@@ -22,13 +22,13 @@ public class ForumPostEntry : IForumPostEntry
 	public string? PosterMoodUrlBase { get; set; }
 	public ForumPostMood PosterMood { get; set; }
 	public PreferredPronounTypes PosterPronouns { get; set; }
-	public IList<string> PosterRoles { get; set; } = new List<string>();
+	public IList<string> PosterRoles { get; set; } = [];
 	public string Text { get; set; } = "";
 	public DateTime? PostEditedTimestamp { get; set; }
 	public string? Subject { get; set; }
 	public string? Signature { get; set; }
 
-	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
+	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = [];
 
 	public bool EnableHtml { get; set; }
 	public bool EnableBbCode { get; set; }

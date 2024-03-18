@@ -19,8 +19,8 @@ internal class ParseResult : IParseResult
 	public long? CycleCount { get; internal set; }
 	public string? Annotations { get; internal set; }
 
-	internal List<ParseWarnings> WarningList { get; set; } = new();
-	internal List<string> ErrorList { get; set; } = new();
+	internal List<ParseWarnings> WarningList { get; set; } = [];
+	internal List<string> ErrorList { get; set; } = [];
 }
 
 internal static class ParseResultExtensions

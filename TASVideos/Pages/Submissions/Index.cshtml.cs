@@ -34,7 +34,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	[Display(Name = "Statuses")]
 	public IEnumerable<SelectListItem> AvailableStatuses => Statuses;
 
-	public IEnumerable<SelectListItem> SystemList { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> SystemList { get; set; } = [];
 
 	public async Task OnGet()
 	{

@@ -17,7 +17,7 @@ internal class YoutubeVideoSnippetResult
 	public string CategoryId { get; init; } = "";
 
 	[JsonPropertyName("tags")]
-	public ICollection<string> Tags { get; set; } = new List<string>();
+	public ICollection<string> Tags { get; set; } = [];
 }
 
 /// <summary>
@@ -32,7 +32,7 @@ public class YoutubeVideoResponse
 	public string Etag { get; set; } = "";
 
 	[JsonPropertyName("items")]
-	public List<YoutubeVideoResponseItem> Items { get; set; } = new();
+	public List<YoutubeVideoResponseItem> Items { get; set; } = [];
 }
 
 public class YoutubeVideoResponseItem
@@ -61,7 +61,7 @@ public class YoutubeVideoResponseItem
 		public string CategoryId { get; init; } = "";
 
 		[JsonPropertyName("tags")]
-		public ICollection<string> Tags { get; set; } = new List<string>();
+		public ICollection<string> Tags { get; set; } = [];
 
 		[JsonPropertyName("channelTitle")]
 		public string ChannelTitle { get; set; } = "";

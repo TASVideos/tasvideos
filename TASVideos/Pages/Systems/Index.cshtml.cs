@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Systems;
 [AllowAnonymous]
 public class IndexModel(IGameSystemService systemService) : BasePageModel
 {
-	public IEnumerable<SystemsResponse> Systems { get; set; } = new List<SystemsResponse>();
+	public IEnumerable<SystemsResponse> Systems { get; set; } = [];
 
 	public async Task OnGet()
 	{

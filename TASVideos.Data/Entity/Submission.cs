@@ -21,7 +21,7 @@ public class Submission : BaseEntity, ITimeable
 	public int SubmitterId { get; set; }
 	public virtual User? Submitter { get; set; }
 
-	public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = new HashSet<SubmissionAuthor>();
+	public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = [];
 
 	public int? IntendedClassId { get; set; }
 	public virtual PublicationClass? IntendedClass { get; set; }
@@ -33,9 +33,9 @@ public class Submission : BaseEntity, ITimeable
 	public virtual User? Publisher { get; set; }
 
 	public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
-	public virtual ICollection<SubmissionStatusHistory> History { get; set; } = new HashSet<SubmissionStatusHistory>();
+	public virtual ICollection<SubmissionStatusHistory> History { get; set; } = [];
 
-	public byte[] MovieFile { get; set; } = Array.Empty<byte>();
+	public byte[] MovieFile { get; set; } = [];
 
 	[StringLength(8)]
 

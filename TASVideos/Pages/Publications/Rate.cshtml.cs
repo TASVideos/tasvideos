@@ -17,7 +17,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 	[BindProperty]
 	public PublicationRateModel Rating { get; set; } = new();
 
-	public IEnumerable<RatingEntry> AllRatings = new List<RatingEntry>();
+	public IEnumerable<RatingEntry> AllRatings = [];
 	public double OverallRating { get; set; }
 
 	public IEnumerable<RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)

@@ -12,7 +12,7 @@ public static class Extensions
 	{
 		if (!start.HasValue && !end.HasValue)
 		{
-			return Enumerable.Empty<int>();
+			return [];
 		}
 
 		var startYear = start ?? 2000; // Well before any TAS movies were created

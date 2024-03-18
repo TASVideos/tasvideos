@@ -10,7 +10,7 @@ public class IpsModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public IReadOnlyCollection<IpEntry> Ips { get; set; } = new List<IpEntry>();
+	public IReadOnlyCollection<IpEntry> Ips { get; set; } = [];
 
 	public record IpEntry(string IpAddress, DateTime UsedOn);
 

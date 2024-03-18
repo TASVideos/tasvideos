@@ -7,6 +7,6 @@ public class UserSummaryModel
 	public int EditCount { get; set; }
 	public int MovieCount { get; set; }
 	public int SubmissionCount { get; set; }
-	public IEnumerable<string> Awards { get; set; } = new List<string>();
+	public IEnumerable<string> Awards { get; set; } = [];
 	public int AwardsWon { get; set; }
 }

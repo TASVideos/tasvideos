@@ -2,7 +2,7 @@
 
 public class MissingModel
 {
-	public IReadOnlyCollection<Entry> Publications { get; init; } = new List<Entry>();
-	public IReadOnlyCollection<Entry> Submissions { get; init; } = new List<Entry>();
+	public IReadOnlyCollection<Entry> Publications { get; init; } = [];
+	public IReadOnlyCollection<Entry> Submissions { get; init; } = [];
 	public record Entry(int Id, string Title);
 }

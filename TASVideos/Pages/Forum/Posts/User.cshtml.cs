@@ -24,7 +24,7 @@ public class UserModel(
 
 	public PageOf<UserPagePost> Posts { get; set; } = PageOf<UserPagePost>.Empty();
 
-	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
+	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

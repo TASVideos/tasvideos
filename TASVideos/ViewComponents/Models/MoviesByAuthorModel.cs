@@ -5,15 +5,15 @@ public class MoviesByAuthorModel
 	public bool MarkNewbies { get; set; }
 	public bool ShowClasses { get; set; }
 
-	public IReadOnlyCollection<string> NewbieAuthors { get; set; } = new List<string>();
+	public IReadOnlyCollection<string> NewbieAuthors { get; set; } = [];
 
-	public IReadOnlyCollection<PublicationEntry> Publications { get; set; } = new List<PublicationEntry>();
+	public IReadOnlyCollection<PublicationEntry> Publications { get; set; } = [];
 
 	public class PublicationEntry
 	{
 		public int Id { get; set; }
 		public string Title { get; set; } = "";
-		public IEnumerable<string> Authors { get; set; } = new List<string>();
+		public IEnumerable<string> Authors { get; set; } = [];
 		public string? PublicationClassIconPath { get; set; } = "";
 	}
 }

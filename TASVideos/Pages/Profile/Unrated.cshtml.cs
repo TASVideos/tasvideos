@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Profile;
 [RequirePermission(PermissionTo.RateMovies)]
 public class UnratedModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<UnratedMovieModel> UnratedMovies { get; set; } = new List<UnratedMovieModel>();
+	public IEnumerable<UnratedMovieModel> UnratedMovies { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

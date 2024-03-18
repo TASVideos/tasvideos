@@ -14,7 +14,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 	public int? Id { get; set; }
 
 	[BindProperty]
-	public IEnumerable<InboxEntry> Messages { get; set; } = new List<InboxEntry>();
+	public IEnumerable<InboxEntry> Messages { get; set; } = [];
 
 	public async Task OnGet()
 	{

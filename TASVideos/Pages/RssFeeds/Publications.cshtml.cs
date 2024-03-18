@@ -12,7 +12,7 @@ public class PublicationsModel(
 	ApplicationDbContext db,
 	IWikiPages wikiPages) : BasePageModel
 {
-	public List<RssPublication> Publications { get; set; } = new();
+	public List<RssPublication> Publications { get; set; } = [];
 	public async Task<IActionResult> OnGet()
 	{
 		var minTimestamp = DateTime.UtcNow.AddDays(-60);

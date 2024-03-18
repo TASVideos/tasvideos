@@ -37,7 +37,7 @@ internal class Languages(
 		{
 			if (!pageName.Contains('/'))
 			{
-				return Enumerable.Empty<LanguagePage>();
+				return [];
 			}
 
 			subPage = string.Join("/", pageName.Split('/').Skip(1));
@@ -53,7 +53,7 @@ internal class Languages(
 
 		if (!languages.Any())
 		{
-			return Enumerable.Empty<LanguagePage>();
+			return [];
 		}
 
 		var existingLanguagePages = languages
@@ -97,7 +97,7 @@ internal class Languages(
 
 		if (string.IsNullOrWhiteSpace(languagesMarkup))
 		{
-			return Enumerable.Empty<Language>();
+			return [];
 		}
 
 		var languages = new List<Language>();

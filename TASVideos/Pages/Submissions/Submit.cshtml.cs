@@ -37,7 +37,7 @@ public class SubmitModel(
 	{
 		Create = new SubmissionCreateModel
 		{
-			Authors = new List<string> { User.Name() }
+			Authors = [User.Name()]
 		};
 
 		BackupSubmissionDeterminator = (await db.Submissions

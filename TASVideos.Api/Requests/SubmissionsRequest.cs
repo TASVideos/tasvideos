@@ -51,7 +51,7 @@ public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 					Enum.TryParse(s, out SubmissionStatus x);
 					return x;
 				})
-		: Enumerable.Empty<SubmissionStatus>();
+		: [];
 
 	IEnumerable<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
 	IEnumerable<int> ISubmissionFilter.GameIds => Games.CsvToInts();

@@ -12,7 +12,7 @@ internal class WikiTestCache : ICacheService
 		ReferenceHandler = ReferenceHandler.IgnoreCycles
 	};
 
-	private readonly Dictionary<string, string> _cache = new();
+	private readonly Dictionary<string, string> _cache = [];
 
 	public void AddPage(WikiPage page)
 	{

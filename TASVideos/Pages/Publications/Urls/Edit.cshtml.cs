@@ -41,7 +41,7 @@ public class EditUrlsModel(
 	[BindProperty]
 	public string Title { get; set; } = "";
 
-	public ICollection<PublicationUrl> CurrentUrls { get; set; } = new List<PublicationUrl>();
+	public ICollection<PublicationUrl> CurrentUrls { get; set; } = [];
 
 	[StringLength(100)]
 	[Display(Name = "Alt Title")]

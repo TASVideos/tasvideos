@@ -97,7 +97,7 @@ public class PagedTests
 	{
 		var paged = new EnumerablePagedModel(1, 1, 1)
 		{
-			IdList = new List<int> { 1, 2, 3 }
+			IdList = [1, 2, 3]
 		};
 
 		var actual = paged.AdditionalProperties();
@@ -122,6 +122,6 @@ public class PagedTests
 		: Paged(rowCount, pageSize, currentPage)
 	{
 		// ReSharper disable once UnusedAutoPropertyAccessor.Local
-		public IEnumerable<int> IdList { get; init; } = new List<int>();
+		public IEnumerable<int> IdList { get; init; } = [];
 	}
 }

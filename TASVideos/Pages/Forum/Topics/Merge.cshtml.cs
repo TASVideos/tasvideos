@@ -23,9 +23,9 @@ public class MergeModel(
 	[BindProperty]
 	public MergeTopicModel Topic { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableForums { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableForums { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableTopics { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableTopics { get; set; } = [];
 
 	private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
 

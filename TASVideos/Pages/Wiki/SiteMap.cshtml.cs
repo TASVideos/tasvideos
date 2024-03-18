@@ -25,7 +25,7 @@ public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 		})
 		.ToList();
 
-	public List<SiteMapEntry> Map { get; set; } = new();
+	public List<SiteMapEntry> Map { get; set; } = [];
 
 	public void OnGet()
 	{

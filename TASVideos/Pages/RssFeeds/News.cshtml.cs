@@ -12,7 +12,7 @@ public class NewsModel(ApplicationDbContext db) : BasePageModel
 {
 	private const int NewsTopicId = 8694; // Unfortunately, there is not an easy way to not hard code this
 
-	public List<RssNews> News { get; set; } = new();
+	public List<RssNews> News { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

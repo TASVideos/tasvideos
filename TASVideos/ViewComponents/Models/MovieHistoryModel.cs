@@ -3,7 +3,7 @@
 public class MovieHistoryModel
 {
 	public DateTime Date { get; init; }
-	public IReadOnlyCollection<PublicationEntry> Pubs { get; init; } = new List<PublicationEntry>();
+	public IReadOnlyCollection<PublicationEntry> Pubs { get; init; } = [];
 
 	public class PublicationEntry
 	{

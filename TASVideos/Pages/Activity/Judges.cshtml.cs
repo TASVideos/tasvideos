@@ -12,7 +12,7 @@ public class JudgesModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public IReadOnlyCollection<SubmissionEntryModel> Submissions { get; set; } = new List<SubmissionEntryModel>();
+	public IReadOnlyCollection<SubmissionEntryModel> Submissions { get; set; } = [];
 
 	public async Task OnGet()
 	{

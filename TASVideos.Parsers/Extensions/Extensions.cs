@@ -9,7 +9,7 @@ internal static class Extensions
 	{
 		if (str is null)
 		{
-			return Array.Empty<string>();
+			return [];
 		}
 
 		return str

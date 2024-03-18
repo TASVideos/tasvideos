@@ -85,8 +85,8 @@ public class Element : INodeWithChildren
 {
 	private static readonly Regex AllowedTagNames = new("^[a-z0-9]+$");
 	private static readonly Regex AllowedAttributeNames = new("^[a-z\\-]+$");
-	private static readonly HashSet<string> VoidTags = new()
-	{
+	private static readonly HashSet<string> VoidTags =
+	[
 		"area",
 		"base",
 		"br",
@@ -102,9 +102,9 @@ public class Element : INodeWithChildren
 		"source",
 		"track",
 		"wbr"
-	};
+	];
 	public NodeType Type => NodeType.Element;
-	public List<INode> Children { get; private set; } = new();
+	public List<INode> Children { get; private set; } = [];
 	public IDictionary<string, string> Attributes { get; private set; } = new Dictionary<string, string>();
 	public string Tag { get; }
 	public int CharStart { get; }
@@ -283,11 +283,11 @@ public class Element : INodeWithChildren
 		w.WriteLine();
 	}
 
-	private static readonly HashSet<string> TocTagBlacklist = new()
-	{
+	private static readonly HashSet<string> TocTagBlacklist =
+	[
 		"a",
 		"br"
-	};
+	];
 
 	public IEnumerable<INode> CloneForToc()
 	{
@@ -307,7 +307,7 @@ public class Element : INodeWithChildren
 public class IfModule(int charStart, string condition) : INodeWithChildren
 {
 	public NodeType Type => NodeType.IfModule;
-	public List<INode> Children { get; private set; } = new();
+	public List<INode> Children { get; private set; } = [];
 	public string Condition { get; } = condition;
 	public int CharStart { get; } = charStart;
 	public int CharEnd { get; set; }
@@ -496,6 +496,6 @@ public class Module : INode
 			return new[] { new Text(CharStart, displaytext ?? href?[1..] ?? "") { CharEnd = CharEnd } };
 		}
 
-		return Enumerable.Empty<INode>();
+		return [];
 	}
 }

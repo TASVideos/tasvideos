@@ -6,7 +6,7 @@ public static class Extensions
 	{
 		if (string.IsNullOrWhiteSpace(routeQuery))
 		{
-			return new List<string>();
+			return [];
 		}
 
 		return routeQuery

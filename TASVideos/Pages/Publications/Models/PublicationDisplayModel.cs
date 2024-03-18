@@ -18,18 +18,18 @@ public class PublicationDisplayModel
 	public string MovieFileName { get; set; } = "";
 	public int SubmissionId { get; set; }
 
-	internal IReadOnlyCollection<PublicationUrl> Urls { get; set; } = new List<PublicationUrl>();
+	internal IReadOnlyCollection<PublicationUrl> Urls { get; set; } = [];
 	public IEnumerable<PublicationUrl> OnlineWatchingUrls => Urls.Where(u => u.Type == PublicationUrlType.Streaming);
 	public IEnumerable<PublicationUrl> MirrorSiteUrls => Urls.Where(u => u.Type == PublicationUrlType.Mirror);
 	public int TopicId { get; set; }
 	public string? EmulatorVersion { get; set; }
 
-	public IEnumerable<TagModel> Tags { get; set; } = new List<TagModel>();
-	public IEnumerable<string> GameGenres { get; set; } = new List<string>();
-	public IEnumerable<FileModel> Files { get; set; } = new List<FileModel>();
-	public IEnumerable<FlagModel> Flags { get; set; } = new List<FlagModel>();
+	public IEnumerable<TagModel> Tags { get; set; } = [];
+	public IEnumerable<string> GameGenres { get; set; } = [];
+	public IEnumerable<FileModel> Files { get; set; } = [];
+	public IEnumerable<FlagModel> Flags { get; set; } = [];
 
-	public IEnumerable<ObsoletesModel> ObsoletedMovies { get; set; } = new List<ObsoletesModel>();
+	public IEnumerable<ObsoletesModel> ObsoletedMovies { get; set; } = [];
 
 	public FileModel Screenshot => Files.First(f => f.Type == FileType.Screenshot);
 

@@ -274,7 +274,7 @@ public class AwardsTests
 	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task AssignUserAward_NotFound_throws()
 	{
-		await _awards.AssignUserAward("DoesNotExist", 1, Enumerable.Empty<int>());
+		await _awards.AssignUserAward("DoesNotExist", 1, []);
 	}
 
 	[TestMethod]
@@ -324,7 +324,7 @@ public class AwardsTests
 	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task AssignPublicationAward_NotFound_throws()
 	{
-		await _awards.AssignPublicationAward("DoesNotExist", 1, Enumerable.Empty<int>());
+		await _awards.AssignPublicationAward("DoesNotExist", 1, []);
 	}
 
 	[TestMethod]
@@ -385,10 +385,10 @@ public class AwardsTests
 			AwardId = award.Id,
 			ShortName = award.ShortName,
 			Year = CurrentYear,
-			Users = new List<AwardAssignment.User>
-			{
+			Users =
+			[
 				new(user.Id, user.UserName)
-			}
+			]
 		};
 
 		await _awards.Revoke(assignment);

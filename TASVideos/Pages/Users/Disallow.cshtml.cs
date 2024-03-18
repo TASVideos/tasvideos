@@ -9,7 +9,7 @@ namespace TASVideos.Pages.Users;
 [RequirePermission(PermissionTo.EditDisallows)]
 public class DisallowModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<DisallowEntry> Disallows { get; set; } = new List<DisallowEntry>();
+	public IEnumerable<DisallowEntry> Disallows { get; set; } = [];
 
 	[BindProperty]
 	[Required]

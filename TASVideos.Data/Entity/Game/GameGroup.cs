@@ -14,5 +14,5 @@ public class GameGroup
 	[StringLength(2000)]
 	public string? Description { get; set; }
 
-	public ICollection<GameGameGroup> Games { get; set; } = new HashSet<GameGameGroup>();
+	public ICollection<GameGameGroup> Games { get; set; } = [];
 }

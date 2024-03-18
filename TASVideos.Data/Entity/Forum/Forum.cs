@@ -8,8 +8,8 @@ public class Forum : BaseEntity
 	public int CategoryId { get; set; }
 	public virtual ForumCategory? Category { get; set; }
 
-	public virtual ICollection<ForumTopic> ForumTopics { get; set; } = new HashSet<ForumTopic>();
-	public virtual ICollection<ForumPost> ForumPosts { get; set; } = new HashSet<ForumPost>();
+	public virtual ICollection<ForumTopic> ForumTopics { get; set; } = [];
+	public virtual ICollection<ForumPost> ForumPosts { get; set; } = [];
 
 	[StringLength(50)]
 	public string Name { get; set; } = "";

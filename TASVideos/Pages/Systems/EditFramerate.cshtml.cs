@@ -17,8 +17,8 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 	[BindProperty]
 	public FrameRateEditModel FrameRate { get; set; } = new();
 
-	public IReadOnlyCollection<UsageEntry> PublicationEntries = new List<UsageEntry>();
-	public IReadOnlyCollection<UsageEntry> SubmissionEntries = new List<UsageEntry>();
+	public IReadOnlyCollection<UsageEntry> PublicationEntries = [];
+	public IReadOnlyCollection<UsageEntry> SubmissionEntries = [];
 
 	public bool InUse => PublicationEntries.Any() || SubmissionEntries.Any();
 

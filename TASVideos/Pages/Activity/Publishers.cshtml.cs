@@ -9,7 +9,7 @@ namespace TASVideos.Pages.Activity;
 [AllowAnonymous]
 public class PublishersModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<MovieEntryModel> Publications { get; set; } = new List<MovieEntryModel>();
+	public IEnumerable<MovieEntryModel> Publications { get; set; } = [];
 
 	[FromRoute]
 	public string UserName { get; set; } = "";

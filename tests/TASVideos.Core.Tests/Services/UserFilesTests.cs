@@ -244,8 +244,8 @@ public class UserFilesTests
 	private class TestParseResult : IParseResult
 	{
 		public bool Success => true;
-		public IEnumerable<string> Errors => Enumerable.Empty<string>();
-		public IEnumerable<ParseWarnings> Warnings => Enumerable.Empty<ParseWarnings>();
+		public IEnumerable<string> Errors => [];
+		public IEnumerable<ParseWarnings> Warnings => [];
 		public string FileExtension => "";
 		public RegionType Region => RegionType.Unknown;
 		public int Frames => 0;

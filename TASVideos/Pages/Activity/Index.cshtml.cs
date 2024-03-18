@@ -7,8 +7,8 @@ namespace TASVideos.Pages.Activity;
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<ActivitySummaryModel> Judges { get; set; } = new List<ActivitySummaryModel>();
-	public IEnumerable<ActivitySummaryModel> Publishers { get; set; } = new List<ActivitySummaryModel>();
+	public IEnumerable<ActivitySummaryModel> Judges { get; set; } = [];
+	public IEnumerable<ActivitySummaryModel> Publishers { get; set; } = [];
 
 	public async Task OnGet()
 	{

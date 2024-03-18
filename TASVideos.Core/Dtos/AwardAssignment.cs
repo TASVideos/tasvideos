@@ -21,8 +21,8 @@ public class AwardAssignment : IAwardAssignmentSummary
 	public string Description { get; set; } = "";
 	public int Year { get; set; }
 	public AwardType Type { get; set; }
-	public IReadOnlyCollection<Publication> Publications { get; set; } = new HashSet<Publication>();
-	public IReadOnlyCollection<User> Users { get; set; } = new HashSet<User>();
+	public IReadOnlyCollection<Publication> Publications { get; set; } = [];
+	public IReadOnlyCollection<User> Users { get; set; } = [];
 
 	public record User(int Id, string UserName);
 	public record Publication(int Id, string Title);

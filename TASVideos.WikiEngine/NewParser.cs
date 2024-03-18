@@ -9,8 +9,8 @@ public class NewParser
 		public int TextLocation { get; } = textLocation;
 	}
 
-	private readonly List<INode> _output = new();
-	private readonly List<INodeWithChildren> _stack = new();
+	private readonly List<INode> _output = [];
+	private readonly List<INodeWithChildren> _stack = [];
 	private readonly StringBuilder _currentText = new();
 	private int _currentTextStart = -1;
 	private readonly string _input;

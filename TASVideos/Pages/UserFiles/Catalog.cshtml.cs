@@ -16,9 +16,9 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	[BindProperty]
 	public CatalogViewModel UserFile { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

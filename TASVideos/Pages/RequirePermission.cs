@@ -7,7 +7,7 @@ public class RequirePermissionAttribute : RequireBase, IAsyncPageFilter
 {
 	public RequirePermissionAttribute(PermissionTo requiredPermission)
 	{
-		RequiredPermissions = new HashSet<PermissionTo> { requiredPermission };
+		RequiredPermissions = [requiredPermission];
 	}
 
 	public RequirePermissionAttribute(bool matchAny, params PermissionTo[] requiredPermissions)

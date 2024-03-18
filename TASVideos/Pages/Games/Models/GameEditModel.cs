@@ -24,10 +24,10 @@ public class GameEditModel
 	public string? GameResourcesPage { get; set; }
 
 	[Display(Name = "Genres")]
-	public IEnumerable<int> Genres { get; set; } = new List<int>();
+	public IEnumerable<int> Genres { get; set; } = [];
 
 	[Display(Name = "Groups")]
-	public IEnumerable<int> Groups { get; set; } = new List<int>();
+	public IEnumerable<int> Groups { get; set; } = [];
 
 	public bool MinorEdit { get; set; }
 }

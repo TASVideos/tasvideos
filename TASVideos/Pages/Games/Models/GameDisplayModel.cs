@@ -11,9 +11,9 @@ public class GameDisplayModel
 	public string? ScreenshotUrl { get; set; }
 	public string? GameResourcesPage { get; set; }
 
-	public IEnumerable<string> Genres { get; set; } = new List<string>();
+	public IEnumerable<string> Genres { get; set; } = [];
 
-	public IReadOnlyCollection<GameVersion> Versions { get; set; } = new List<GameVersion>();
+	public IReadOnlyCollection<GameVersion> Versions { get; set; } = [];
 	public class GameVersion
 	{
 		public VersionTypes Type { get; set; }
@@ -27,7 +27,7 @@ public class GameDisplayModel
 		public string? TitleOverride { get; set; }
 	}
 
-	public IReadOnlyCollection<GameGroup> GameGroups { get; set; } = new List<GameGroup>();
+	public IReadOnlyCollection<GameGroup> GameGroups { get; set; } = [];
 
 	public class GameGroup
 	{

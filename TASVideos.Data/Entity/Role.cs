@@ -36,9 +36,9 @@ public class Role : IdentityRole<int>, ITrackable
 
 	public DateTime LastUpdateTimestamp { get; set; }
 
-	public virtual ICollection<RolePermission> RolePermission { get; set; } = new HashSet<RolePermission>();
-	public virtual ICollection<UserRole> UserRole { get; set; } = new HashSet<UserRole>();
-	public virtual ICollection<RoleLink> RoleLinks { get; set; } = new HashSet<RoleLink>();
+	public virtual ICollection<RolePermission> RolePermission { get; set; } = [];
+	public virtual ICollection<UserRole> UserRole { get; set; } = [];
+	public virtual ICollection<RoleLink> RoleLinks { get; set; } = [];
 }
 
 public static class RoleExtensions

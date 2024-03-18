@@ -8,7 +8,7 @@ internal class ErrorResult(string errorMsg) : IParseResult
 	public bool Success => false;
 	public IEnumerable<string> Errors { get; internal set; } = new[] { errorMsg };
 
-	public IEnumerable<ParseWarnings> Warnings => new List<ParseWarnings>();
+	public IEnumerable<ParseWarnings> Warnings => [];
 	public string FileExtension { get; internal set; } = "";
 	public RegionType Region => RegionType.Unknown;
 	public int Frames => 0;

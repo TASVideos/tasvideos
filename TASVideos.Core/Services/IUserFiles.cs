@@ -137,7 +137,7 @@ internal class UserFiles(
 		var page = await wikiPages.SystemPage(SupplementalUserFileExtensionsPage);
 		if (page is null)
 		{
-			return Enumerable.Empty<string>();
+			return [];
 		}
 
 		var types = page.Markup.SplitWithEmpty(",").Select(s => s.Trim());

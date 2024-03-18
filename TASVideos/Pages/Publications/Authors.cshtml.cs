@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Publications;
 [AllowAnonymous]
 public class AuthorsModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<AuthorListEntry> Authors { get; set; } = new List<AuthorListEntry>();
+	public IEnumerable<AuthorListEntry> Authors { get; set; } = [];
 
 	public async Task OnGet()
 	{

@@ -20,9 +20,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public int PageNumber { get; set; } = 1;
 
-	public List<PageSearchModel> PageResults { get; set; } = new();
-	public List<PostSearchModel> PostResults { get; set; } = new();
-	public List<GameSearchModel> GameResults { get; set; } = new();
+	public List<PageSearchModel> PageResults { get; set; } = [];
+	public List<PostSearchModel> PostResults { get; set; } = [];
+	public List<GameSearchModel> GameResults { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

@@ -9,6 +9,6 @@ public class GameGoal
 	[StringLength(50)]
 	public string DisplayName { get; set; } = "";
 
-	public virtual ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
-	public virtual ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
+	public virtual ICollection<Publication> Publications { get; set; } = [];
+	public virtual ICollection<Submission> Submissions { get; set; } = [];
 }

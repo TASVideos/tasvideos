@@ -29,7 +29,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		var screenShotExists = File.Exists(screenshotPath);
 		await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
 
-		List<PublicationFile> publicationFiles = new();
+		List<PublicationFile> publicationFiles = [];
 		if (screenShotExists)
 		{
 			// Should never be more than 1, but just in case

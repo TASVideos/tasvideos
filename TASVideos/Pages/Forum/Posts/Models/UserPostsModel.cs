@@ -40,7 +40,7 @@ public class UserPagePost : IForumPostEntry
 	public double PosterPlayerPoints { get; set; }
 	public string? PosterAvatar { get; set; }
 	public string? PosterMoodUrlBase { get; set; }
-	public IList<string> PosterRoles { get; set; } = new List<string>();
+	public IList<string> PosterRoles { get; set; } = [];
 	public PreferredPronounTypes PosterPronouns { get; set; }
-	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = new List<AwardAssignmentSummary>();
+	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = [];
 }

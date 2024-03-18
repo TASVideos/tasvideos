@@ -20,11 +20,11 @@ public class UploadModel(
 
 	public int StorageUsed { get; set; }
 
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
 
-	public IReadOnlyCollection<string> SupportedFileExtensions { get; set; } = new List<string>();
+	public IReadOnlyCollection<string> SupportedFileExtensions { get; set; } = [];
 
 	public async Task OnGet()
 	{

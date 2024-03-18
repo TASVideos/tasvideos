@@ -29,8 +29,8 @@ public class PublishModel(
 	[BindProperty]
 	public SubmissionPublishModel Submission { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableTags { get; set; } = new List<SelectListItem>();
-	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableTags { get; set; } = [];
+	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -161,7 +161,7 @@ public class PublishModel(
 	{
 		public string Title { get; init; } = "";
 		public string Markup { get; set; } = "";
-		public IEnumerable<int> Tags { get; init; } = new List<int>();
+		public IEnumerable<int> Tags { get; init; } = [];
 	}
 
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)

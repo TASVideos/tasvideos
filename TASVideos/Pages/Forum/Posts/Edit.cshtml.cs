@@ -31,7 +31,7 @@ public class EditModel(
 	[BindProperty]
 	[DisplayName("Minor Edit")]
 	public bool MinorEdit { get; set; }
-	public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = new List<MiniPostModel>();
+	public IEnumerable<MiniPostModel> PreviousPosts { get; set; } = [];
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
 

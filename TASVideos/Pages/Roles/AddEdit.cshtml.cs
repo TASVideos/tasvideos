@@ -31,7 +31,7 @@ public class AddEditModel(
 	public IEnumerable<SelectListItem> AvailablePermissions => PermissionsSelectList;
 
 	[Display(Name = "Available Assignable Permissions")]
-	public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = [];
 
 	private static IEnumerable<SelectListItem> PermissionsSelectList =>
 		Enum.GetValues(typeof(PermissionTo))

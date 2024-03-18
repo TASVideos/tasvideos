@@ -84,7 +84,7 @@ public static class FormFileExtensions
 	{
 		if (formFile is null)
 		{
-			return Array.Empty<byte>();
+			return [];
 		}
 
 		await using var memoryStream = new MemoryStream();

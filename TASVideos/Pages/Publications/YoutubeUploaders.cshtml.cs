@@ -12,7 +12,7 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 {
 	private const string CachePrefix = "YoutubeUploaders-";
 
-	public IReadOnlyCollection<YoutubeRecord> Videos { get; set; } = new List<YoutubeRecord>();
+	public IReadOnlyCollection<YoutubeRecord> Videos { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

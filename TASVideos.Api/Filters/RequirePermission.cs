@@ -15,7 +15,7 @@ public class RequirePermissionAttribute : ActionFilterAttribute
 	/// </summary>
 	public RequirePermissionAttribute(PermissionTo permission)
 	{
-		RequiredPermissions = new HashSet<PermissionTo> { permission };
+		RequiredPermissions = [permission];
 	}
 
 	/// <summary>

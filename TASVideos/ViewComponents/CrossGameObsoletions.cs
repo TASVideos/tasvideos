@@ -64,7 +64,7 @@ public class CrossGameObsoletions(ApplicationDbContext db) : ViewComponent
 				{
 					addedGames.Add(entry1);
 					addedGames.Add(entry2);
-					allGroups.Add(entry1, new HashSet<CrossGameObsoletionsModel.Entry>());
+					allGroups.Add(entry1, []);
 					allGroups[entry1].Add(entry2);
 				}
 			}

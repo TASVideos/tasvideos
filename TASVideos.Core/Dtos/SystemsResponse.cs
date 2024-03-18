@@ -9,7 +9,7 @@ public class SystemsResponse
 	public string Code { get; init; } = "";
 	public string DisplayName { get; init; } = "";
 
-	public IEnumerable<FrameRates> SystemFrameRates { get; init; } = new List<FrameRates>();
+	public IEnumerable<FrameRates> SystemFrameRates { get; init; } = [];
 
 	public class FrameRates
 	{

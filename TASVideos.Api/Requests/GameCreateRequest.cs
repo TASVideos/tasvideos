@@ -40,5 +40,5 @@ public class GameCreateRequest
 	public string? GameResourcesPage { get; init; }
 
 	[Display(Name = "Genres")]
-	public IEnumerable<int> Genres { get; init; } = new List<int>();
+	public IEnumerable<int> Genres { get; init; } = [];
 }

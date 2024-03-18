@@ -17,7 +17,7 @@ public class IndexModel(IAwards awards) : BasePageModel
 	[FromRoute]
 	public int? Year { get; set; }
 
-	public IEnumerable<AwardAssignment> Assignments { get; set; } = new List<AwardAssignment>();
+	public IEnumerable<AwardAssignment> Assignments { get; set; } = [];
 
 	public IEnumerable<SelectListItem> AvailableAwardTypes { get; set; } = AwardTypes
 		.Select(a => new SelectListItem

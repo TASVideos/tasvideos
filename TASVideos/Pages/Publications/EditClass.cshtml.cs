@@ -24,7 +24,7 @@ public class EditClassModel(
 	[BindProperty]
 	public string Title { get; set; } = "";
 
-	public IEnumerable<SelectListItem> AvailableClasses { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableClasses { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

@@ -9,7 +9,7 @@ namespace TASVideos.Pages.RssFeeds;
 [ResponseCache(Duration = 1200)]
 public class WikiModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<RssWiki> WikiEdits { get; set; } = new();
+	public List<RssWiki> WikiEdits { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

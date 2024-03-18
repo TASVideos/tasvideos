@@ -78,7 +78,7 @@ internal class QueueService(
 		// Published submissions can not be changed
 		if (currentStatus == Published)
 		{
-			return new List<SubmissionStatus> { Published };
+			return [Published];
 		}
 
 		var perms = userPermissions.ToList();

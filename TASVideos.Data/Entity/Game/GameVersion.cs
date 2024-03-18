@@ -17,8 +17,8 @@ public class GameVersion : BaseEntity
 	public int SystemId { get; set; }
 	public virtual GameSystem? System { get; set; }
 
-	public ICollection<Publication> Publications { get; set; } = new HashSet<Publication>();
-	public ICollection<Submission> Submissions { get; set; } = new HashSet<Submission>();
+	public ICollection<Publication> Publications { get; set; } = [];
+	public ICollection<Submission> Submissions { get; set; } = [];
 
 	[StringLength(32)]
 	public string? Md5 { get; set; }

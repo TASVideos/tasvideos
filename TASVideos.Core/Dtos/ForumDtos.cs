@@ -9,7 +9,7 @@ public class ForumCategoryDisplayDto
 	public string Title { get; init; } = "";
 	public string? Description { get; init; }
 
-	public IEnumerable<Forum> Forums { get; init; } = new List<Forum>();
+	public IEnumerable<Forum> Forums { get; init; } = [];
 	public class Forum
 	{
 		public int Id { get; init; }

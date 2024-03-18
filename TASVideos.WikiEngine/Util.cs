@@ -89,7 +89,7 @@ public static class Util
 		{
 			if (string.IsNullOrWhiteSpace(content))
 			{
-				return Enumerable.Empty<InternalLinkInfo>();
+				return [];
 			}
 
 			var parsed = NewParser.Parse(content);
@@ -101,7 +101,7 @@ public static class Util
 		}
 		catch (NewParser.SyntaxException)
 		{
-			return Enumerable.Empty<InternalLinkInfo>();
+			return [];
 		}
 	}
 }

@@ -78,33 +78,33 @@ public class User : IdentityUser<int>, ITrackable
 	public UserTimeFormat TimeFormat { get; set; } = UserTimeFormat.Auto;
 	public UserDecimalFormat DecimalFormat { get; set; } = UserDecimalFormat.Auto;
 
-	public virtual ICollection<UserRole> UserRoles { get; set; } = new HashSet<UserRole>();
-	public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = new HashSet<SubmissionAuthor>();
-	public virtual ICollection<PublicationAuthor> Publications { get; set; } = new HashSet<PublicationAuthor>();
+	public virtual ICollection<UserRole> UserRoles { get; set; } = [];
+	public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = [];
+	public virtual ICollection<PublicationAuthor> Publications { get; set; } = [];
 
-	public virtual ICollection<ForumTopic> Topics { get; set; } = new HashSet<ForumTopic>();
-	public virtual ICollection<ForumPost> Posts { get; set; } = new HashSet<ForumPost>();
-	public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = new HashSet<ForumTopicWatch>();
+	public virtual ICollection<ForumTopic> Topics { get; set; } = [];
+	public virtual ICollection<ForumPost> Posts { get; set; } = [];
+	public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = [];
 
-	public virtual ICollection<UserAward> UserAwards { get; set; } = new HashSet<UserAward>();
+	public virtual ICollection<UserAward> UserAwards { get; set; } = [];
 
 	[ForeignKey(nameof(PrivateMessage.FromUserId))]
-	public virtual ICollection<PrivateMessage> SentPrivateMessages { get; set; } = new HashSet<PrivateMessage>();
+	public virtual ICollection<PrivateMessage> SentPrivateMessages { get; set; } = [];
 
 	[ForeignKey(nameof(PrivateMessage.ToUserId))]
-	public virtual ICollection<PrivateMessage> ReceivedPrivateMessages { get; set; } = new HashSet<PrivateMessage>();
+	public virtual ICollection<PrivateMessage> ReceivedPrivateMessages { get; set; } = [];
 
-	public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = new HashSet<PublicationRating>();
+	public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = [];
 
-	public virtual ICollection<UserFile> UserFiles { get; set; } = new HashSet<UserFile>();
-	public virtual ICollection<UserFileComment> UserFileComments { get; set; } = new HashSet<UserFileComment>();
+	public virtual ICollection<UserFile> UserFiles { get; set; } = [];
+	public virtual ICollection<UserFileComment> UserFileComments { get; set; } = [];
 
-	public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = new HashSet<PublicationMaintenanceLog>();
+	public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
 
-	public virtual ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
-	public virtual ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = new HashSet<UserMaintenanceLog>();
+	public virtual ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = [];
+	public virtual ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = [];
 
-	public virtual ICollection<WikiPage> WikiRevisions { get; set; } = new HashSet<WikiPage>();
+	public virtual ICollection<WikiPage> WikiRevisions { get; set; } = [];
 }
 
 public enum PreferredPronounTypes

@@ -22,7 +22,7 @@ public class AdditionalMoviesModel(
 	[BindProperty]
 	public string PublicationTitle { get; set; } = "";
 
-	public IReadOnlyCollection<PublicationFileModel> AvailableMovieFiles { get; set; } = new List<PublicationFileModel>();
+	public IReadOnlyCollection<PublicationFileModel> AvailableMovieFiles { get; set; } = [];
 
 	[BindProperty]
 	[StringLength(50)]

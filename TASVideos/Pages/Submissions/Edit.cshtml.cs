@@ -37,11 +37,11 @@ public class EditModel(
 	public bool CanDelete { get; set; }
 
 	[Display(Name = "Status")]
-	public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = new List<SubmissionStatus>();
+	public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableClasses { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableClasses { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableRejectionReasons { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableRejectionReasons { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

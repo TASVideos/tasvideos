@@ -9,7 +9,7 @@ namespace TASVideos.Pages.Submissions.RejectionReasons;
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
 	public record RejectionRecord(int Id, string Reason, int SubmissionCount);
-	public IEnumerable<RejectionRecord> Reasons { get; set; } = new List<RejectionRecord>();
+	public IEnumerable<RejectionRecord> Reasons { get; set; } = [];
 
 	public async Task OnGet()
 	{

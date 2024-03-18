@@ -7,7 +7,7 @@ public class TopicFeedModel
 	public bool HideContent { get; set; }
 	public string? WikiLink { get; set; }
 
-	public IEnumerable<TopicPost> Posts { get; set; } = new List<TopicPost>();
+	public IEnumerable<TopicPost> Posts { get; set; } = [];
 
 	public class TopicPost
 	{

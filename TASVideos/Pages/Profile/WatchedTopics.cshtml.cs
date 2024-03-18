@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Profile;
 [Authorize]
 public class WatchedTopicsModel(ITopicWatcher topicWatcher) : BasePageModel
 {
-	public IEnumerable<WatchedTopic> Watches { get; set; } = new List<WatchedTopic>();
+	public IEnumerable<WatchedTopic> Watches { get; set; } = [];
 
 	public async Task OnGet()
 	{

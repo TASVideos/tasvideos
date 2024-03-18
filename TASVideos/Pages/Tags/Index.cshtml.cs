@@ -6,7 +6,7 @@ namespace TASVideos.Pages.Tags;
 [RequirePermission(PermissionTo.TagMaintenance)]
 public class IndexModel(ITagService tagService) : BasePageModel
 {
-	public IEnumerable<Tag> Tags { get; set; } = new List<Tag>();
+	public IEnumerable<Tag> Tags { get; set; } = [];
 
 	public async Task OnGet()
 	{

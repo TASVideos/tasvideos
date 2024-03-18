@@ -114,7 +114,7 @@ public static class StringExtensions
 	public static IEnumerable<string> CsvToStrings(this string? param)
 	{
 		return string.IsNullOrWhiteSpace(param)
-			? Enumerable.Empty<string>()
+			? []
 			: param
 				.SplitWithEmpty(",")
 				.Where(p => !string.IsNullOrWhiteSpace(p))
@@ -128,7 +128,7 @@ public static class StringExtensions
 	{
 		if (string.IsNullOrWhiteSpace(param))
 		{
-			return Enumerable.Empty<int>();
+			return [];
 		}
 
 		var candidates = param.CsvToStrings();

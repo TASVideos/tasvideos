@@ -18,7 +18,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 	public bool CanDelete { get; set; }
 
-	public IEnumerable<SelectListItem> AvailableCategories { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableCategories { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

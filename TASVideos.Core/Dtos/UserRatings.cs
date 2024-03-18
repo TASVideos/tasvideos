@@ -9,7 +9,7 @@ public class UserRatings
 	public string UserName { get; init; } = "";
 	public bool PublicRatings { get; init; }
 
-	public IEnumerable<Rating> Ratings { get; set; } = new List<Rating>();
+	public IEnumerable<Rating> Ratings { get; set; } = [];
 
 	public class Rating
 	{

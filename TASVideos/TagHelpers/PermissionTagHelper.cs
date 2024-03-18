@@ -26,7 +26,7 @@ public class PermissionTagHelper : TagHelper
 [HtmlTargetElement(Attributes = nameof(Permissions))]
 public class PermissionsTagHelper : TagHelper
 {
-	public PermissionTo[] Permissions { get; set; } = Array.Empty<PermissionTo>();
+	public PermissionTo[] Permissions { get; set; } = [];
 
 	[HtmlAttributeNotBound]
 	[ViewContext]

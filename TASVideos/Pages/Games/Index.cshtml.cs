@@ -20,11 +20,11 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public record TabMiniMovieModel(string TabTitleRegular, string TabTitleBold, MiniMovieModel Movie);
 
-	public List<TabMiniMovieModel> Movies { get; set; } = new List<TabMiniMovieModel>();
+	public List<TabMiniMovieModel> Movies { get; set; } = [];
 
-	public IReadOnlyCollection<WatchFile> WatchFiles { get; set; } = new List<WatchFile>();
+	public IReadOnlyCollection<WatchFile> WatchFiles { get; set; } = [];
 
-	public IReadOnlyCollection<TopicEntry> Topics { get; set; } = new List<TopicEntry>();
+	public IReadOnlyCollection<TopicEntry> Topics { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

@@ -48,13 +48,13 @@ public class ForumTopicModel : IForumTopicActionBar
 		public bool MultiSelect { get; set; }
 		public bool ViewPollResults { get; set; }
 
-		public IEnumerable<PollOptionModel> Options { get; set; } = new List<PollOptionModel>();
+		public IEnumerable<PollOptionModel> Options { get; set; } = [];
 
 		public class PollOptionModel
 		{
 			public string Text { get; set; } = "";
 			public int Ordinal { get; set; }
-			public IReadOnlyCollection<int> Voters { get; set; } = new List<int>();
+			public IReadOnlyCollection<int> Voters { get; set; } = [];
 		}
 	}
 }

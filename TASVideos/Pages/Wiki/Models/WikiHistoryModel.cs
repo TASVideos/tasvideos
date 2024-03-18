@@ -6,7 +6,7 @@ public class WikiHistoryModel
 {
 	public string PageName { get; set; } = "";
 
-	public IEnumerable<WikiRevisionModel> Revisions { get; set; } = new List<WikiRevisionModel>();
+	public IEnumerable<WikiRevisionModel> Revisions { get; set; } = [];
 
 	public class WikiRevisionModel
 	{

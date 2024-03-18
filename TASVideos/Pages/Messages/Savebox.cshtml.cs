@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Messages;
 [Authorize]
 public class SaveboxModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<SaveboxEntry> SaveBox { get; set; } = new List<SaveboxEntry>();
+	public IEnumerable<SaveboxEntry> SaveBox { get; set; } = [];
 
 	public async Task OnGet()
 	{

@@ -101,7 +101,7 @@ internal class YouTubeSync(
 
 		if (!googleAuthService.IsYoutubeEnabled())
 		{
-			return Enumerable.Empty<YoutubeVideoResponseItem>();
+			return [];
 		}
 
 		await SetAccessToken();
@@ -128,7 +128,7 @@ internal class YouTubeSync(
 		var response = await _client.GetAsync($"videos?id={string.Join(",", videoIds)}&part=snippet");
 		if (!response.IsSuccessStatusCode)
 		{
-			return Enumerable.Empty<YoutubeVideoResponseItem>();
+			return [];
 		}
 
 		var data = await response.ReadAsync<YoutubeVideoResponse>();

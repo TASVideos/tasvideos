@@ -15,9 +15,9 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	[BindProperty]
 	public UserFileEditModel UserFile { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

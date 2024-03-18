@@ -20,7 +20,7 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 	public int Id { get; set; }
 
 	public ForumDisplayModel Forum { get; set; } = new();
-	public Dictionary<int, (string, string)> ActivityTopics { get; set; } = new();
+	public Dictionary<int, (string, string)> ActivityTopics { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

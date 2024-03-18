@@ -76,7 +76,7 @@ public class Element : INode
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 	public string Name { get; set; } = "";
 	public string Options { get; set; } = "";
-	public List<INode> Children { get; set; } = new();
+	public List<INode> Children { get; set; } = [];
 	private string GetChildText()
 	{
 		var sb = new StringBuilder();

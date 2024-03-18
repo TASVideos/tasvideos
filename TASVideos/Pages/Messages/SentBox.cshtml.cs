@@ -12,7 +12,7 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int? Id { get; set; }
 
-	public IEnumerable<SentboxEntry> SentBox { get; set; } = new List<SentboxEntry>();
+	public IEnumerable<SentboxEntry> SentBox { get; set; } = [];
 
 	public async Task OnGet()
 	{

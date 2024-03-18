@@ -8,7 +8,7 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class Uncataloged(ApplicationDbContext db) : BasePageModel
 {
-	public IReadOnlyCollection<UncatalogedViewModel> Files { get; set; } = new List<UncatalogedViewModel>();
+	public IReadOnlyCollection<UncatalogedViewModel> Files { get; set; } = [];
 
 	[FromRoute]
 	public int Id { get; set; }

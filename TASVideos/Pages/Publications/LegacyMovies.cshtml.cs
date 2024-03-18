@@ -30,7 +30,7 @@ public class LegacyMoviesModel(ApplicationDbContext db) : PageModel
 			return RedirectToPage("/Publications/Index", new { query });
 		}
 
-		List<string> tokens = new();
+		List<string> tokens = [];
 		if (!string.IsNullOrWhiteSpace(Name))
 		{
 			// Movies.cgi only supported a single game name

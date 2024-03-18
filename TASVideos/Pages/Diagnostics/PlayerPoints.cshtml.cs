@@ -9,7 +9,7 @@ public class PlayerPointsModel(
 	ApplicationDbContext db,
 	IPointsService pointsService) : BasePageModel
 {
-	public IEnumerable<PlayerEntry> Players { get; set; } = new List<PlayerEntry>();
+	public IEnumerable<PlayerEntry> Players { get; set; } = [];
 
 	public async Task OnGet()
 	{

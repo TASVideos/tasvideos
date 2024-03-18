@@ -13,9 +13,9 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int Id { get; set;  }
 
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = new List<SelectListItem>();
+	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
 
 	[BindProperty]
 	public string Title { get; set; } = "";

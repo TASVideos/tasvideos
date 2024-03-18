@@ -12,7 +12,7 @@ public class EditHistoryModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public IEnumerable<UserWikiEditHistoryModel> History { get; set; } = new List<UserWikiEditHistoryModel>();
+	public IEnumerable<UserWikiEditHistoryModel> History { get; set; } = [];
 
 	public async Task OnGet()
 	{

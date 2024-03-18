@@ -8,7 +8,7 @@ public class PointsCalculatorTests
 	[TestMethod]
 	public void PlayerPoints_NoPublications()
 	{
-		var actual = PointsCalculator.PlayerPoints(new List<PointsCalculator.Publication>(), 1);
+		var actual = PointsCalculator.PlayerPoints([], 1);
 		Assert.AreEqual(0, actual);
 	}
 
