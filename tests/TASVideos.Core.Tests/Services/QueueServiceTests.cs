@@ -392,8 +392,6 @@ public class QueueServiceTests
 		var post2 = new ForumPost { Topic = topic, TopicId = topicId, Text = "2" };
 		_db.ForumPosts.Add(post1);
 		_db.ForumPosts.Add(post2);
-		topic.ForumPosts.Add(post1);
-		topic.ForumPosts.Add(post2);
 		await _db.SaveChangesAsync();
 
 		var result = await _queueService.DeleteSubmission(submissionId);
