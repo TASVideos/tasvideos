@@ -28,16 +28,16 @@
 	<row>
 		<div class="col-12 col-md-6">
 			<label asp-for="Search.StatusFilter" class="form-control-label"></label>
-			<select asp-for="Search.StatusFilter" asp-items="Model.AvailableStatuses" class="form-control"></select>
+			<select asp-for="Search.StatusFilter" asp-items="Model.AvailableStatuses" class="form-control d-none-js"></select>
 		</div>
 		<div class="col-12 col-md-6">
 			<label asp-for="Search.Years" class="form-control-label"></label>
-			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiple class="form-control"></select>
+			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiple class="form-control d-none-js"></select>
 			<label asp-for="Search.User" class="form-control-label"></label>
 			<input autocomplete="off" asp-for="Search.User" type="text" list="@Html.IdFor(m => m.Search.User)-autocomplete" class="form-control" />
 
 			<label asp-for="Search.System" class="form-control-label"></label>
-			<select asp-for="Search.System" asp-items="Model.SystemList" class="form-control"></select>
+			<select asp-for="Search.System" asp-items="Model.SystemList" class="form-control d-none-js"></select>
 		</div>
 	</row>
 	<button type="submit" class="btn btn-secondary mt-1"><i class="fa fa-filter"></i> Filter</button>
