@@ -10,7 +10,7 @@ public class PublicationSearchModelTests
 	{
 		var model = new PublicationSearchModel
 		{
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -23,7 +23,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			Classes = ["Standard"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -36,7 +36,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			Classes = ["Standard", "Stars"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -49,7 +49,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			SystemCodes = ["NES"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -62,7 +62,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			SystemCodes = ["NES", "N64"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -76,7 +76,7 @@ public class PublicationSearchModelTests
 		{
 			Classes = ["Standard", "Stars"],
 			SystemCodes = ["NES", "N64"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -140,7 +140,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			Tags = ["1p"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -153,7 +153,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			Tags = ["1p", "2p"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -193,7 +193,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			Genres = ["action", "adventure"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -207,7 +207,7 @@ public class PublicationSearchModelTests
 		{
 			Tags = ["1p", "2p"],
 			Genres = ["action", "adventure"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -220,7 +220,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			Flags = ["atlas", "verified"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -234,7 +234,7 @@ public class PublicationSearchModelTests
 		{
 			Flags = ["atlas", "verified"],
 			SystemCodes = ["NES", "N64"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -249,7 +249,7 @@ public class PublicationSearchModelTests
 			SystemCodes = ["NES", "N64"],
 			Tags = ["1p", "2p"],
 			Genres = ["action", "adventure"],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -262,7 +262,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			Games = [1, 2],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -276,7 +276,7 @@ public class PublicationSearchModelTests
 		{
 			Genres = ["action", "adventure"],
 			Games = [1, 2],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -289,7 +289,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			GameGroups = [1, 2],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -303,7 +303,7 @@ public class PublicationSearchModelTests
 		{
 			Games = [3, 4],
 			GameGroups = [1, 2],
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -316,7 +316,7 @@ public class PublicationSearchModelTests
 		var model = new PublicationSearchModel
 		{
 			ShowObsoleted = true,
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();
@@ -330,7 +330,7 @@ public class PublicationSearchModelTests
 		{
 			SystemCodes = ["NES", "N64"],
 			ShowObsoleted = true,
-			Years = Array.Empty<int>()
+			Years = []
 		};
 
 		var actual = model.ToUrl();

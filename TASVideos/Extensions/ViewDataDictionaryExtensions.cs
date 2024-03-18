@@ -9,7 +9,7 @@ namespace TASVideos.Extensions;
 public static class ViewDataDictionaryExtensions
 {
 	public static IReadOnlyCollection<PermissionTo> UserPermissions(this ViewDataDictionary viewData)
-		=> viewData["UserPermissions"] as IReadOnlyCollection<PermissionTo> ?? Array.Empty<PermissionTo>();
+		=> viewData["UserPermissions"] as IReadOnlyCollection<PermissionTo> ?? [];
 
 	public static string UniqueId(this ViewDataDictionary viewData)
 	{

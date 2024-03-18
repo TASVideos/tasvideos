@@ -72,7 +72,7 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 	IEnumerable<string> IPublicationTokens.Tags => TagNames.CsvToStrings();
 	IEnumerable<string> IPublicationTokens.Flags => FlagNames.CsvToStrings();
 	IEnumerable<int> IPublicationTokens.Authors => AuthorIds.CsvToInts();
-	IEnumerable<int> IPublicationTokens.MovieIds => Array.Empty<int>();
+	IEnumerable<int> IPublicationTokens.MovieIds => [];
 	IEnumerable<int> IPublicationTokens.Games => GameIds.CsvToInts();
 	IEnumerable<int> IPublicationTokens.GameGroups => GameGroupIds.CsvToInts();
 	string IPublicationTokens.SortBy => "";

@@ -50,12 +50,9 @@ public static partial class Builtins
 		return MakeLinkOrImage(charStart, charEnd, text);
 	}
 
-	private static IEnumerable<INode> MakeModuleInternal(int charStart, int charEnd, string module)
+	private static Module[] MakeModuleInternal(int charStart, int charEnd, string module)
 	{
-		return new[]
-		{
-			new Module(charStart, charEnd, module)
-		};
+		return [new Module(charStart, charEnd, module)];
 	}
 
 	private static IEnumerable<INode> MakeFootnote(int charStart, int charEnd, string n)
@@ -63,7 +60,7 @@ public static partial class Builtins
 		return
 		[
 				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("id", n)], Array.Empty<INode>()) { CharEnd = charStart },
+				new Element(charStart, "a", [Attr("id", n)], []) { CharEnd = charStart },
 				new Element(charStart, "a", [Attr("href", "#r" + n)], new[]
 				{
 					new Text(charStart, n) { CharEnd = charEnd }
@@ -306,7 +303,7 @@ public static partial class Builtins
 
 		attrs.Add(Attr("class", classString.ToString()));
 
-		return new Element(charStart, "img", attrs, Array.Empty<INode>()) { CharEnd = charEnd };
+		return new Element(charStart, "img", attrs, []) { CharEnd = charEnd };
 	}
 
 	[GeneratedRegex(@"^(\d+)$")]

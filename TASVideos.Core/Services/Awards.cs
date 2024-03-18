@@ -213,8 +213,8 @@ internal class Awards(
 				Description = g.Key.Description + " of " + g.Key.Year,
 				Year = g.Key.Year,
 				Type = AwardType.User,
-				Publications = Array.Empty<AwardAssignment.Publication>(),
-				Users = g.ToList()
+				Publications = [],
+				Users = [.. g]
 			})
 			.ToList();
 

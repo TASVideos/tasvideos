@@ -307,7 +307,7 @@ public class IndexModel(
 		return RedirectToTopic();
 	}
 
-	private IActionResult RedirectToTopic()
+	private RedirectToPageResult RedirectToTopic()
 	{
 		return RedirectToPage("Index", new { Id });
 	}

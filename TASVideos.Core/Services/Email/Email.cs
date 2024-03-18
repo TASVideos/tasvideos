@@ -37,7 +37,7 @@ public class SingleEmail : IEmail
 
 public class StandardEmail : IEmail
 {
-	public IEnumerable<string> Recipients { get; init; } = Array.Empty<string>();
+	public IEnumerable<string> Recipients { get; init; } = [];
 	public string Subject { get; init; } = "";
 	public string Message { get; init; } = "";
 	public bool ContainsHtml { get; init; }

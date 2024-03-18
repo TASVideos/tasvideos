@@ -29,7 +29,7 @@ public static class ClaimsPrincipalExtensions
 	{
 		if (user is null || !user.IsLoggedIn())
 		{
-			return Array.Empty<PermissionTo>();
+			return [];
 		}
 
 		return user.Claims.Permissions();
