@@ -1,4 +1,5 @@
-﻿namespace TASVideos.WikiEngine.AST;
+﻿// ReSharper disable MethodHasAsyncOverload
+namespace TASVideos.WikiEngine.AST;
 
 public class Element : INodeWithChildren
 {
@@ -92,7 +93,7 @@ public class Element : INodeWithChildren
 			var value = a.Value;
 			if (Tag == "a" && a.Key == "href")
 			{
-				value = ctx.Helper.AbsoluteUrl(value);
+				_ = ctx.Helper.AbsoluteUrl(value);
 			}
 
 			foreach (var c in a.Value)
@@ -202,11 +203,7 @@ public class Element : INodeWithChildren
 		w.WriteLine();
 	}
 
-	private static readonly HashSet<string> TocTagBlacklist =
-	[
-		"a",
-		"br"
-	];
+	private static readonly HashSet<string> TocTagBlacklist = ["a", "br"];
 
 	public IEnumerable<INode> CloneForToc()
 	{

@@ -112,13 +112,13 @@ public class Module : INode
 	public IEnumerable<INode> CloneForToc()
 	{
 		// See comment above
-		if (Name == "__wikiLink")
+		if (Name != "__wikiLink")
 		{
-			Parameters.TryGetValue("displaytext", out var displaytext);
-			Parameters.TryGetValue("href", out var href);
-			return new[] { new Text(CharStart, displaytext ?? href?[1..] ?? "") { CharEnd = CharEnd } };
+			return [];
 		}
 
-		return [];
+		Parameters.TryGetValue("displaytext", out var displayText);
+		Parameters.TryGetValue("href", out var href);
+		return new[] { new Text(CharStart, displayText ?? href?[1..] ?? "") { CharEnd = CharEnd } };
 	}
 }
