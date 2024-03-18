@@ -47,7 +47,7 @@ public static class DbInitializer
 		if (conn is NpgsqlConnection nConn)
 		{
 			await nConn.OpenAsync();
-			nConn.ReloadTypes();
+			await nConn.ReloadTypesAsync();
 			await nConn.CloseAsync();
 		}
 	}

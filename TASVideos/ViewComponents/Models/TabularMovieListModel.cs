@@ -13,9 +13,6 @@ public class TabularMovieListResultModel : ITimeable
 	public int Id { get; set; }
 	public DateTime CreateTimestamp { get; set; }
 
-	public TimeSpan? PreviousTime { get; set; }
-	public int? PreviousId { get; set; }
-
 	public string System { get; set; } = "";
 	public string Game { get; set; } = "";
 	public string? Goal { get; set; }

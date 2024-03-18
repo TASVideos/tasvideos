@@ -7,6 +7,4 @@ public class WikiModuleAttribute(string name) : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Class)]
-public class TextModuleAttribute : Attribute
-{
-}
+public class TextModuleAttribute : Attribute;

@@ -3,6 +3,4 @@
 namespace TASVideos.Data.Entity;
 
 [ExcludeFromHistory]
-public class UserLogin : IdentityUserLogin<int>
-{
-}
+public class UserLogin : IdentityUserLogin<int>;

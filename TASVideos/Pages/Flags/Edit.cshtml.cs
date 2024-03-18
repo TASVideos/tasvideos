@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 
@@ -8,15 +7,6 @@ namespace TASVideos.Pages.Flags;
 [RequirePermission(PermissionTo.TagMaintenance)]
 public class EditModel(IFlagService flagService) : BasePageModel
 {
-	public IReadOnlyCollection<SelectListItem> AvailablePermissions { get; } = UiDefaults.DefaultEntry.Concat(PermissionUtil
-		.AllPermissions()
-		.Select(p => new SelectListItem
-		{
-			Value = ((int)p).ToString(),
-			Text = p.ToString().SplitCamelCase(),
-		}))
-		.ToList();
-
 	[FromRoute]
 	public int Id { get; set; }
 

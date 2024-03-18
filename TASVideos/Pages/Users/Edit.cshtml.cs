@@ -121,7 +121,7 @@ public class EditModel(
 				message,
 				$"Username {userNameChange} changed to [{user.UserName}]({{0}}) by {User.Name()}",
 				"",
-				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
+				$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			await userManager.UserNameChanged(user, userNameChange);
 		}
@@ -163,7 +163,7 @@ public class EditModel(
 				$"User {user.UserName} edited by {User.Name()}",
 				$"User [{user.UserName}]({{0}}) edited by {User.Name()}",
 				message,
-				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
+				$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 		}
 

@@ -80,7 +80,7 @@ public class EditEmailModel(
 				message,
 				$"User [{user.UserName}]({{0}}) email changed by {User.Name()}",
 				"",
-				$"Users/Profile/{Uri.EscapeDataString(user.UserName!)}");
+				$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 			SuccessStatusMessage($"User {user.UserName} email changed by {User.Name()}");
 		}
 

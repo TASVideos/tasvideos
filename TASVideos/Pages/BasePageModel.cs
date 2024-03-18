@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages;
 
@@ -105,4 +107,17 @@ public class BasePageModel : PageModel
 			return false;
 		}
 	}
+
+	public IReadOnlyCollection<SelectListItem> AvailablePermissions { get; } =
+	[
+		.. UiDefaults.DefaultEntry,
+		.. PermissionUtil
+			.AllPermissions()
+			.Select(p => new SelectListItem
+			{
+				Value = ((int)p).ToString(),
+				Text = p.ToString().SplitCamelCase(),
+			})
+			.OrderBy(p => p.Text)
+	];
 }

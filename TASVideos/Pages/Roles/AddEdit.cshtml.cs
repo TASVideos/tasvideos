@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -27,22 +26,7 @@ public class AddEditModel(
 	[BindProperty]
 	public RoleEditModel Role { get; set; } = new();
 
-	[Display(Name = "Available Permissions")]
-	public IEnumerable<SelectListItem> AvailablePermissions => PermissionsSelectList;
-
-	[Display(Name = "Available Assignable Permissions")]
 	public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = [];
-
-	private static IEnumerable<SelectListItem> PermissionsSelectList =>
-		Enum.GetValues(typeof(PermissionTo))
-			.Cast<PermissionTo>()
-			.Select(p => new SelectListItem
-			{
-				Value = ((int)p).ToString(),
-				Text = p.EnumDisplayName()
-			})
-			.OrderBy(s => s.Text)
-			.ToList();
 
 	public async Task<IActionResult> OnGet()
 	{

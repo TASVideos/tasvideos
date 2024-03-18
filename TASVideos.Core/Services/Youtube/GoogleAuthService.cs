@@ -24,9 +24,9 @@ internal class GoogleAuthService(
 
 	public bool IsYoutubeEnabled() => settings.YouTube.IsEnabled();
 
-	public async Task<string> GetYoutubeAccessToken() => await GetAccessToken(settings.YouTube, YoutubeCacheKey);
+	public async Task<string> GetYoutubeAccessToken() => await GetAccessToken(YoutubeCacheKey);
 
-	private async Task<string> GetAccessToken(AppSettings.GoogleAuthSettings settings, string cacheKey)
+	private async Task<string> GetAccessToken(string cacheKey)
 	{
 		if (cache.TryGetValue(cacheKey, out string accessToken))
 		{
@@ -35,9 +35,9 @@ internal class GoogleAuthService(
 
 		var body = new AccessTokenRequest
 		{
-			ClientId = settings.ClientId,
-			ClientSecret = settings.ClientSecret,
-			RefreshToken = settings.RefreshToken
+			ClientId = settings.YouTube.ClientId,
+			ClientSecret = settings.YouTube.ClientSecret,
+			RefreshToken = settings.YouTube.RefreshToken
 		}.ToStringContent();
 
 		var response = await _client.PostAsync("token", body);
@@ -47,7 +47,7 @@ internal class GoogleAuthService(
 			var errorResponse = await response.Content.ReadAsStringAsync();
 			logger.LogError(
 				"Unable to authorize google apis for clientId: {clientId}: {errorResponse}",
-				settings.ClientId,
+				settings.YouTube.ClientId,
 				errorResponse);
 			return "";
 		}

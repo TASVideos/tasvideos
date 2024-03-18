@@ -305,7 +305,7 @@ internal class QueueService(
 		var youtubeUrls = publication.PublicationUrls
 			.ThatAreStreaming()
 			.Select(pu => pu.Url)
-			.Where(url => youtubeSync.IsYoutubeUrl(url))
+			.Where(youtubeSync.IsYoutubeUrl)
 			.ToList();
 
 		var obsoletedPubsWithYoutube = publication.ObsoletedMovies

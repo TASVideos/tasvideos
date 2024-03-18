@@ -10,7 +10,7 @@ namespace TASVideos.MovieParsers.Tests;
 public class JrsrTests : BaseParserTests
 {
 	private readonly Jrsr _jrsrParser = new();
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.JrsrSampleFiles.";
+	public override string ResourcesPath => "TASVideos.MovieParsers.Tests.JrsrSampleFiles.";
 
 	[TestMethod]
 	public async Task EmptyFile()
@@ -442,7 +442,7 @@ public class JrsrTests : BaseParserTests
 	/// element. The end of the final section is marked by an additional
 	/// null element.
 	/// </summary>
-	private async Task<string?[]> Serialize(Stream reader, int lengthLimit = 10000)
+	private static async Task<string?[]> Serialize(Stream reader, int lengthLimit = 10000)
 	{
 		// We will serialize the JRSR structure into a flat list of strings,
 		// where each section name is followed by the section's lines, and
@@ -461,14 +461,14 @@ public class JrsrTests : BaseParserTests
 		}
 
 		serialized.Add(null);
-		return serialized.ToArray();
+		return [.. serialized];
 	}
 
 	/// <summary>
 	/// Like <see cref="Serialize"/>, but reads the JRSR from a string,
 	/// which will be encoded to UTF-8 and wrapped in a <c>Stream</c>.
 	/// </summary>
-	private async Task<string?[]> SerializeFromString(string contents, int lengthLimit = 10000)
+	private static async Task<string?[]> SerializeFromString(string contents, int lengthLimit = 10000)
 	{
 		await using var reader = new MemoryStream(new UTF8Encoding(false, true).GetBytes(contents));
 		return await Serialize(reader, lengthLimit);

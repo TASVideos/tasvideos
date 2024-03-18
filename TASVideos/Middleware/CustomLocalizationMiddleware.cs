@@ -49,12 +49,12 @@ public class CustomLocalizationMiddleware(RequestDelegate next)
 
 	private class CustomCultureData
 	{
-		public UserDateFormat DateFormat { get; set; }
-		public UserTimeFormat TimeFormat { get; set; }
-		public UserDecimalFormat DecimalFormat { get; set; }
+		public UserDateFormat DateFormat { get; init; }
+		public UserTimeFormat TimeFormat { get; init; }
+		public UserDecimalFormat DecimalFormat { get; init; }
 	}
 
-	private CultureInfo ConstructCustomCulture(CustomCultureData? customCultureData)
+	private static CultureInfo ConstructCustomCulture(CustomCultureData? customCultureData)
 	{
 		if (customCultureData == null)
 		{

@@ -9,15 +9,10 @@ public class FileServiceTests
 {
 	private readonly FileService _fileService = new();
 
-	private Stream Embedded(string name)
+	private static Stream Embedded(string name)
 	{
 		var stream = Assembly.GetAssembly(typeof(FileServiceTests))?.GetManifestResourceStream("TASVideos.Core.Tests.Services.TestFiles." + name);
-		if (stream is null)
-		{
-			throw new InvalidOperationException($"Unable to find embedded resource {name}");
-		}
-
-		return stream;
+		return stream ?? throw new InvalidOperationException($"Unable to find embedded resource {name}");
 	}
 
 	[TestMethod]

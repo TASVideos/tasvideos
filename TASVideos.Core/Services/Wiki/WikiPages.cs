@@ -251,12 +251,8 @@ internal class WikiPages(
 			return null;
 		}
 
-		var author = await db.Users.SingleOrDefaultAsync(u => u.Id == addRequest.AuthorId);
-		if (author is null)
-		{
-			throw new InvalidOperationException($"A user with the id of {addRequest.AuthorId}");
-		}
-
+		var author = await db.Users.SingleOrDefaultAsync(u => u.Id == addRequest.AuthorId)
+			?? throw new InvalidOperationException($"A user with the id of {addRequest.AuthorId}");
 		var newRevision = addRequest.ToWikiPage(author);
 
 		newRevision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded

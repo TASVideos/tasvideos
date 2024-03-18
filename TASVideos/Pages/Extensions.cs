@@ -27,7 +27,7 @@ public static class Extensions
 	{
 		return source
 			.Where(t => t.ToLower().EndsWith(char.ToLower(suffix)))
-			.Where(t => int.TryParse(t[..^1], out int unused))
+			.Where(t => int.TryParse(t[..^1], out var unused))
 			.Select(t => int.Parse(t[..^1]))
 			.ToList();
 	}
@@ -41,9 +41,9 @@ public static class Extensions
 	public static IReadOnlyCollection<int> ToIdListPrefix(this IEnumerable<string> source, string prefix)
 	{
 		return source
-			.Where(t => t.ToLower().StartsWith(prefix.ToLower()))
+			.Where(t => t.StartsWith(prefix, StringComparison.CurrentCultureIgnoreCase))
 			.Select(s => s.Replace(prefix, ""))
-			.Where(t => int.TryParse(t, out int unused))
+			.Where(t => int.TryParse(t, out var unused))
 			.Select(int.Parse)
 			.ToList();
 	}

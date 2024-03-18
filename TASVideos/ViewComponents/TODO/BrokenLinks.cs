@@ -49,7 +49,7 @@ public class BrokenLinks(IWikiPages wikiPages) : ViewComponent
 			.Select(p => p.Replace("rssfeeds/", "") + ".rss")
 			.ToList();
 
-		generalPages = generalPages.Concat(rssFeeds).ToList();
+		generalPages = [.. generalPages, .. rssFeeds];
 
 		// These should be updated one day, but there are far too many for now
 		var tempRoutedExceptions = new[] { "forum/p/" };
@@ -65,7 +65,7 @@ public class BrokenLinks(IWikiPages wikiPages) : ViewComponent
 
 		var filtered = brokenLinks
 			.Where(b => !generalPages.Contains(b.Referral.Split('?')[0].ToLowerInvariant()))
-			.Where(b => !routedPages.Any(r => b.Referral.ToLowerInvariant().StartsWith(r)))
+			.Where(b => !routedPages.Any(r => b.Referral.StartsWith(r, StringComparison.InvariantCultureIgnoreCase)))
 			.ToList();
 
 		return View(await FilterRevisionLinks(filtered));

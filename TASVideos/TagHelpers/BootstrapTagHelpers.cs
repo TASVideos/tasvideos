@@ -122,15 +122,6 @@ public class CardbodyTagHelper : TagHelper
 	}
 }
 
-public class CardfooterTagHelper : TagHelper
-{
-	public override void Process(TagHelperContext context, TagHelperOutput output)
-	{
-		output.TagName = "div";
-		output.AddCssClass("card-footer");
-	}
-}
-
 public class AlertTagHelper : TagHelper
 {
 	public bool Dismissible { get; set; }

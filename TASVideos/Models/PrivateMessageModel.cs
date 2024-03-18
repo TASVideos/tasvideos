@@ -11,8 +11,6 @@ public class PrivateMessageModel
 	public int ToUserId { get; set; }
 	public string ToUserName { get; set; } = "";
 
-	public bool CanReply { get; set; }
-
 	public bool EnableBbCode { get; set; }
 	public bool EnableHtml { get; set; }
 }

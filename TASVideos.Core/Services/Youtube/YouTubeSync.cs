@@ -81,7 +81,7 @@ internal class YouTubeSync(
 				Title = title.FormatForYouTube(),
 				Description = description.FormatForYouTube(),
 				CategoryId = videoDetails.CategoryId,
-				Tags = BaseTags.Concat(video.Tags).ToList()
+				Tags = [.. BaseTags, .. video.Tags]
 			}
 		};
 
@@ -111,7 +111,7 @@ internal class YouTubeSync(
 		var batches = videoIds.Chunk(BatchSize);
 		foreach (var batch in batches)
 		{
-			var newItems = await GetBatchPublicInfo(batch.ToList());
+			var newItems = await GetBatchPublicInfo([.. batch]);
 			items.AddRange(newItems);
 		}
 

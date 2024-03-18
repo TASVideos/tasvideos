@@ -3,6 +3,4 @@
 namespace TASVideos.Data.Entity;
 
 [ExcludeFromHistory]
-public class UserToken : IdentityUserToken<int>
-{
-}
+public class UserToken : IdentityUserToken<int>;

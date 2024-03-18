@@ -10,7 +10,6 @@ public interface IForumTopicActionBar
 	bool IsLocked { get; }
 	bool IsWatching { get; }
 	string Title { get; }
-	bool AnyVotes { get; }
 	int CategoryId { get; }
 	bool Restricted { get; }
 }
@@ -30,8 +29,6 @@ public class ForumTopicModel : IForumTopicActionBar
 	public ForumTopicType Type { get; set; }
 
 	public int? SubmissionId { get; set; }
-
-	public bool AnyVotes => Poll?.Options.SelectMany(o => o.Voters).Any() ?? false;
 
 	public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
 	public PollModel? Poll { get; set; }

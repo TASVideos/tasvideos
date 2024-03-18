@@ -63,7 +63,7 @@ public class WikiToTextRenderer(AppSettings settings, IServiceProvider servicePr
 				.GetParameterData(w, name, invokeMethod, wikiPage, pp);
 
 			var module = serviceProvider.GetRequiredService(textComponent);
-			var result = await (Task<string>)invokeMethod.Invoke(module, paramObject.Values.ToArray())!;
+			var result = await (Task<string>)invokeMethod.Invoke(module, [.. paramObject.Values])!;
 			await w.WriteAsync(result);
 		}
 
