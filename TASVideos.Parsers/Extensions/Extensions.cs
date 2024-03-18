@@ -12,9 +12,7 @@ internal static class Extensions
 			return [];
 		}
 
-		return str
-			.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries)
-			.ToArray();
+		return str.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
 	}
 
 	/// <summary>
@@ -56,7 +54,7 @@ internal static class Extensions
 			return "";
 		}
 
-		var split = str.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+		var split = str.Split([" "], StringSplitOptions.RemoveEmptyEntries);
 		if (split.Length < 2)
 		{
 			return "";
