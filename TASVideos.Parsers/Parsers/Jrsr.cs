@@ -78,12 +78,10 @@ public class Jrsr : IParser
 			using var parser = await JrsrSectionParser.CreateAsync(file, LengthLimit);
 			while (await parser.NextSection() is { } sectionName)
 			{
-				if (sectionsSeen.Contains(sectionName))
+				if (!sectionsSeen.Add(sectionName))
 				{
 					throw new FormatException($"Duplicate section {sectionName}");
 				}
-
-				sectionsSeen.Add(sectionName);
 
 				if (sectionName == "savestate")
 				{
