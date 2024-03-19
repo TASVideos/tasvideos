@@ -15,20 +15,19 @@ public class RenderWikiPage(IWikiPages wikiPages) : ViewComponent
 		}
 
 		var existingPage = await wikiPages.Page(url, revision);
-
-		if (existingPage is not null)
+		if (existingPage is null)
 		{
-			var model = new RenderWikiPageModel
-			{
-				Markup = existingPage.Markup,
-				PageData = existingPage
-			};
-			ViewData.SetWikiPage(existingPage);
-			ViewData.SetTitle(existingPage.PageName);
-			ViewData["Layout"] = null;
-			return View(model);
+			return new ContentViewComponentResult("");
 		}
 
-		return new ContentViewComponentResult("");
+		var model = new RenderWikiPageModel
+		{
+			Markup = existingPage.Markup,
+			PageData = existingPage
+		};
+		ViewData.SetWikiPage(existingPage);
+		ViewData.SetTitle(existingPage.PageName);
+		ViewData["Layout"] = null;
+		return View(model);
 	}
 }
