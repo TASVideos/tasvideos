@@ -63,4 +63,28 @@ public class PointsServiceTests
 		const int expected = numMovies * PlayerPointConstants.MinimumPlayerPointsForPublication;
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	public async Task PlayerPoints_OnlyObsoletedPublications_NonZero()
+	{
+		_db.AddUser(1, Author);
+		var publicationClass = new PublicationClass { Weight = 1, Name = "Test" };
+		_db.PublicationClasses.Add(publicationClass);
+		await _db.SaveChangesAsync();
+
+		var user = _db.Users.Single();
+		var newPub = new Publication();
+		var oldPub = new Publication
+		{
+			Authors = [new PublicationAuthor { UserId = user.Id }],
+			ObsoletedBy = newPub,
+			PublicationClass = publicationClass,
+		};
+		_db.Publications.Add(oldPub);
+		_db.Publications.Add(newPub);
+		await _db.SaveChangesAsync();
+
+		var (actual, _) = await _pointsService.PlayerPoints(user.Id);
+		Assert.IsTrue(actual > 0);
+	}
 }
