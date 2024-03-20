@@ -38,7 +38,7 @@ internal class PointsService(
 			.ToListAsync();
 
 		var averageRatings = await AverageNumberOfRatingsPerPublication();
-		playerPoints = Math.Round(PointsCalculator.PlayerPoints(publications, averageRatings), 1);
+		playerPoints = Math.Ceiling(PointsCalculator.PlayerPoints(publications, averageRatings) * 10) / 10;
 
 		cache.Set(cacheKey, playerPoints);
 		return (playerPoints, PointsCalculator.PlayerRank((decimal)playerPoints));
