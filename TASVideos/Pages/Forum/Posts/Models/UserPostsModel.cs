@@ -41,6 +41,7 @@ public class UserPagePost : IForumPostEntry
 	public string? PosterAvatar { get; set; }
 	public string? PosterMoodUrlBase { get; set; }
 	public IList<string> PosterRoles { get; set; } = [];
+	public string? PosterPlayerRank { get; set; }
 	public PreferredPronounTypes PosterPronouns { get; set; }
 	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = [];
 }
