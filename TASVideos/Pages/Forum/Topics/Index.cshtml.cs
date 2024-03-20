@@ -144,10 +144,7 @@ public class IndexModel(
 			post.Awards = await awards.ForUser(post.PosterId);
 			var (points, rank) = await pointsService.PlayerPoints(post.PosterId);
 			post.PosterPlayerPoints = points;
-			if (!string.IsNullOrWhiteSpace(rank))
-			{
-				post.PosterRoles.Add(rank);
-			}
+			post.PosterPlayerRank = rank;
 		}
 
 		if (Topic.Poll is not null)

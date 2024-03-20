@@ -32,6 +32,7 @@ public interface IForumPostEntry
 	public string? PosterAvatar { get; }
 	public string? PosterMoodUrlBase { get; }
 	public IList<string> PosterRoles { get; }
+	public string? PosterPlayerRank { get; }
 	public PreferredPronounTypes PosterPronouns { get; }
 	public IEnumerable<AwardAssignmentSummary> Awards { get; }
 }

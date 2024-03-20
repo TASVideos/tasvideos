@@ -81,11 +81,6 @@ public class UserModel(
 
 		var (points, rank) = await pointsService.PlayerPoints(user.Id);
 
-		if (!string.IsNullOrWhiteSpace(rank))
-		{
-			user.Roles.Add(rank);
-		}
-
 		foreach (var post in Posts)
 		{
 			post.PosterName = user.UserName;
@@ -97,6 +92,7 @@ public class UserModel(
 			post.PosterAvatar = user.Avatar;
 			post.PosterMoodUrlBase = user.MoodAvatarUrlBase;
 			post.PosterRoles = user.Roles;
+			post.PosterPlayerRank = rank;
 			post.PosterPronouns = user.PreferredPronouns;
 			post.Awards = userAwards;
 		}
