@@ -25,12 +25,12 @@ public class SignInManager(
 		schemes,
 		confirmation)
 {
-	public async Task<SignInResult> SignIn(string userName, string password, bool rememberMe = false)
+	public async Task<(SignInResult, User?)> SignIn(string userName, string password, bool rememberMe = false)
 	{
 		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
 		if (user is null)
 		{
-			return SignInResult.Failed;
+			return (SignInResult.Failed, null);
 		}
 
 		var claims = await userManager.AddUserPermissionsToClaims(user);
@@ -38,7 +38,7 @@ public class SignInManager(
 
 		if (!canLogIn)
 		{
-			return SignInResult.NotAllowed;
+			return (SignInResult.NotAllowed, user);
 		}
 
 		var result = await base.PasswordSignInAsync(
@@ -55,7 +55,7 @@ public class SignInManager(
 			await userManager.AddUserPermissionsToClaims(user);
 		}
 
-		return result;
+		return (result, user);
 	}
 
 	public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)

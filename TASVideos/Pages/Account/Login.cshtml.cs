@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
-using TASVideos.Data;
 
 namespace TASVideos.Pages.Account;
 
@@ -11,7 +10,6 @@ namespace TASVideos.Pages.Account;
 [IpBanCheck]
 public class LoginModel(
 	SignInManager signInManager,
-	ApplicationDbContext db,
 	IHostEnvironment env)
 	: BasePageModel
 {
@@ -48,14 +46,13 @@ public class LoginModel(
 
 		UserName = UserName.Trim().Replace(" ", "_");
 
-		var result = await signInManager.SignIn(UserName, Password, RememberMe);
+		var (result, user) = await signInManager.SignIn(UserName, Password, RememberMe);
 
 		if (result.Succeeded)
 		{
 			return BaseReturnUrlRedirect();
 		}
 
-		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
 		if (user is not null && !await signInManager.UserManager.IsEmailConfirmedAsync(user) && !env.IsDevelopment())
 		{
 			return RedirectToPage("/Account/EmailConfirmationSent");

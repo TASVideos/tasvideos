@@ -12,7 +12,6 @@ public interface IJwtAuthenticator
 }
 
 internal class JwtAuthenticator(
-	ApplicationDbContext db,
 	UserManager userManager,
 	SignInManager signInManager,
 	AppSettings settings)
@@ -22,13 +21,12 @@ internal class JwtAuthenticator(
 
 	public async Task<string> Authenticate(string userName, string password)
 	{
-		var result = await signInManager.SignIn(userName, password);
+		var (result, user) = await signInManager.SignIn(userName, password);
 		if (!result.Succeeded)
 		{
 			return "";
 		}
 
-		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
 		if (user is null)
 		{
 			return "";
