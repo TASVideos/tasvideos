@@ -44,8 +44,6 @@ public class LoginModel(
 			return Page();
 		}
 
-		UserName = UserName.Trim().Replace(" ", "_");
-
 		var (result, user) = await signInManager.SignIn(UserName, Password, RememberMe);
 
 		if (result.Succeeded)
