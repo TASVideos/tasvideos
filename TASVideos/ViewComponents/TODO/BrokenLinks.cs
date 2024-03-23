@@ -22,7 +22,8 @@ public class BrokenLinks(IWikiPages wikiPages) : ViewComponent
 		.Select(t => new PageEntry(
 			t.Namespace?.Replace("TASVideos.Pages.", "")
 					.Replace(".", "/") + "/"
-				+ t.Name.Replace("Model", ""), t.GetProperties().Any(p => p.HasAttribute<FromRouteAttribute>())))
+				+ t.Name.Replace("Model", ""),
+			t.GetProperties().Any(p => p.HasAttribute<FromRouteAttribute>())))
 		.ToList();
 
 	public async Task<IViewComponentResult> InvokeAsync()

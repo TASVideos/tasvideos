@@ -83,7 +83,7 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 		};
 	}
 
-	private async Task<(int? from, int? to)> GetLatestRevisions(string pageName)
+	private async Task<(int? From, int? To)> GetLatestRevisions(string pageName)
 	{
 		var revisions = await db.WikiPages
 			.ForPage(pageName)

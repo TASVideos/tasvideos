@@ -11,21 +11,13 @@ public static class Util
 		try
 		{
 			var results = NewParser.Parse(content);
-			return JsonSerializer.Serialize(results, new JsonSerializerOptions
-			{
-				WriteIndented = true
-			});
+			return JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true });
 		}
 		catch (NewParser.SyntaxException e)
 		{
 			return JsonSerializer.Serialize(
-				new
-				{
-					Error = e.Message
-				}, new JsonSerializerOptions
-				{
-					WriteIndented = true
-				});
+				new { Error = e.Message },
+				new JsonSerializerOptions { WriteIndented = true });
 		}
 	}
 

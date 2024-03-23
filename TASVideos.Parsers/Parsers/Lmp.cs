@@ -186,7 +186,7 @@ internal class Lmp : ParserBase, IParser
 				players++;
 			}
 
-			if (movie[3 + (i * 2)] is not(0 or 1) || movie[3 + (i * 2) + 1] > 2) // invalid values
+			if (movie[3 + (i * 2)] is not (0 or 1) || movie[3 + (i * 2) + 1] > 2) // invalid values
 			{
 				return false;
 			}
@@ -217,7 +217,7 @@ internal class Lmp : ParserBase, IParser
 				players++;
 			}
 
-			if (movie[3 + (i * 2)] is not(0 or 1) || movie[3 + (i * 2) + 1] > 2) // invalid values
+			if (movie[3 + (i * 2)] is not (0 or 1) || movie[3 + (i * 2) + 1] > 2) // invalid values
 			{
 				return false;
 			}

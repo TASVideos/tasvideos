@@ -109,9 +109,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		// and the history for them can be ensured and be saved with another "SaveChanges"
 		this.EnsureAddedHistory(
 			() => new CustomAutoHistory
-		{
-			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
-		}, addedEntities);
+			{
+				UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+			},
+			addedEntities);
 		result += base.SaveChanges(acceptAllChangesOnSuccess);
 
 		ChangeTracker.AutoDetectChangesEnabled = true;
@@ -142,9 +143,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		// and the history for them can be ensured and be saved with another "SaveChanges"
 		this.EnsureAddedHistory(
 			() => new CustomAutoHistory
-		{
-			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
-		}, addedEntities);
+			{
+				UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
+			},
+			addedEntities);
 		result += await base.SaveChangesAsync(CancellationToken.None);
 
 		return result;

@@ -38,8 +38,8 @@
 					<a condition="@(Model.ActivityTopics.ContainsKey(topic.Id))" class="text-decoration-none">
 						<i class="fa fa-file activity-topic d-none"
 						data-topic-id="@topic.Id"
-						data-activity-posts-created="@Model.ActivityTopics[topic.Id].Item1"
-					    data-activity-posts-edited="@Model.ActivityTopics[topic.Id].Item2"></i>
+						   data-activity-posts-created="@Model.ActivityTopics[topic.Id].PostsCreated"
+						   data-activity-posts-edited="@Model.ActivityTopics[topic.Id].PostsEdited"></i>
 					</a>
 					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
 					<div class="ms-2">

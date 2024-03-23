@@ -2,9 +2,7 @@
 
 namespace TASVideos.Middleware;
 
-/// <summary>
-/// Initializes a new instance of the <see cref="RobotHandlingMiddleware"/> class.
-/// </summary>
+#pragma warning disable CS9113 // Parameter is unread.
 public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment env)
 {
 	public async Task Invoke(HttpContext context)
