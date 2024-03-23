@@ -29,7 +29,6 @@ public class PublishersModel(ApplicationDbContext db) : BasePageModel
 
 		Publications = await db.Publications
 			.ThatHaveBeenPublishedBy(user.Id)
-			.Where(p => p.Submission!.PublisherId == user.Id)
 			.Select(s => new MovieEntryModel
 			{
 				Id = s.Id,

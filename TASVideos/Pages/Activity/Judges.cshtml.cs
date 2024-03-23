@@ -9,13 +9,24 @@ namespace TASVideos.Pages.Activity;
 [AllowAnonymous]
 public class JudgesModel(ApplicationDbContext db) : BasePageModel
 {
+	public IReadOnlyCollection<SubmissionEntryModel> Submissions { get; set; } = [];
+
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public IReadOnlyCollection<SubmissionEntryModel> Submissions { get; set; } = [];
-
-	public async Task OnGet()
+	public async Task<IActionResult> OnGet()
 	{
+		if (string.IsNullOrWhiteSpace(UserName))
+		{
+			return NotFound();
+		}
+
+		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
+		if (user is null)
+		{
+			return NotFound();
+		}
+
 		Submissions = await db.Submissions
 			.ThatHaveBeenJudgedBy(UserName)
 			.Select(s => new SubmissionEntryModel
@@ -26,5 +37,7 @@ public class JudgesModel(ApplicationDbContext db) : BasePageModel
 				Status = s.Status
 			})
 			.ToListAsync();
+
+		return Page();
 	}
 }
