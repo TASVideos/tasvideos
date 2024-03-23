@@ -21,7 +21,7 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 		var allowRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		Posts = await db.ForumPosts
 			.ExcludeRestricted(allowRestricted)
-			.Where(p => p.CreateTimestamp > DateTime.UtcNow.AddDays(-3))
+			.Since(DateTime.UtcNow.AddDays(-3))
 			.Select(p => new LatestPostsModel
 			{
 				Id = p.Id,
