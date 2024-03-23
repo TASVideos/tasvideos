@@ -31,11 +31,6 @@ public static class EnumerableExtensions
 	/// </summary>
 	public static T AtRandom<T>(this ICollection<T> collection)
 	{
-		if (collection is null)
-		{
-			throw new ArgumentNullException($"{nameof(collection)} can not be null");
-		}
-
 		var randomIndex = new Random(DateTime.UtcNow.Millisecond).Next(0, collection.Count);
 		return collection.ElementAt(randomIndex);
 	}

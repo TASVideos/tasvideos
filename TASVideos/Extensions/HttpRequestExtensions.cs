@@ -10,11 +10,6 @@ public static class HttpRequestExtensions
 
 	public static bool IsAjaxRequest(this HttpRequest request)
 	{
-		if (request is null)
-		{
-			throw new ArgumentNullException(nameof(request));
-		}
-
 		return request.Headers[RequestedWithHeader] == XmlHttpRequest;
 	}
 

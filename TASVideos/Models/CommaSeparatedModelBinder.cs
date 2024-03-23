@@ -20,11 +20,6 @@ public class DelimitedQueryStringValueProvider(
 
 	public override ValueProviderResult GetValue(string key)
 	{
-		if (key is null)
-		{
-			throw new ArgumentNullException(nameof(key));
-		}
-
 		var values = _queryCollection[key];
 		if (values.Count == 0)
 		{
