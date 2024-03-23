@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Models;
+using TASVideos.Pages.Messages.Models;
 
 namespace TASVideos.Pages.Messages;
 
