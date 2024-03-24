@@ -34,11 +34,8 @@ public class CollapsableBodyTagHelper : TagHelper
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "div";
-		var id = output.Attributes.FirstOrDefault(a => a.Name.ToLower() == "id");
-		if (id is null)
-		{
-			throw new InvalidOperationException("collapsablecontent-body requires an id attribute");
-		}
+		_ = output.Attributes.FirstOrDefault(a => a.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase))
+			?? throw new InvalidOperationException("collapsablecontent-body requires an id attribute");
 
 		output.AddCssClass("collapse");
 		if (StartShown)

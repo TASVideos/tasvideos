@@ -14,7 +14,7 @@ public class Fullrow : TagHelper
 		output.AddCssClass("row");
 
 		var content = (await output.GetChildContentAsync()).GetContent();
-		output.Content.SetHtmlContent($@"<div class=""col-12"">{content}</div>");
+		output.Content.SetHtmlContent($"<div class='col-12'>{content}</div>");
 	}
 }
 
@@ -42,22 +42,22 @@ public class ColumnTagHelper : TagHelper
 		var classList = new List<string>();
 		if (Xs.HasValue)
 		{
-			classList.Add("col-xs-" + Xs);
+			classList.Add($"col-xs-{Xs}");
 		}
 
 		if (Sm.HasValue)
 		{
-			classList.Add("col-sm-" + Sm);
+			classList.Add($"col-sm-{Sm}");
 		}
 
 		if (Md.HasValue)
 		{
-			classList.Add("col-md-" + Md);
+			classList.Add($"col-md-{Md}");
 		}
 
 		if (Lg.HasValue)
 		{
-			classList.Add("col-lg-" + Lg);
+			classList.Add($"col-lg-{Lg}");
 		}
 
 		if (!classList.Any())
@@ -138,8 +138,7 @@ public class AlertTagHelper : TagHelper
 		{
 			output.AddCssClass("alert-dismissible");
 			output.Content.SetHtmlContent(
-$@"<button type=""button"" class=""btn-close float-end"" data-bs-dismiss=""alert"" aria-label=""close""></button>
-{content}");
+				$"<button type='button' class='btn-close float-end' data-bs-dismiss='alert' aria-label='close'></button>{content}");
 		}
 	}
 }
@@ -226,6 +225,6 @@ public class FormButtonBar : TagHelper
 		output.AddCssClass("row");
 
 		var content = (await output.GetChildContentAsync()).GetContent();
-		output.Content.SetHtmlContent($@"<div class=""col-12""><div class=""text-center mt-2"">{content}</div></div>");
+		output.Content.SetHtmlContent($"<div class='col-12'><div class='text-center mt-2'>{content}</div></div>");
 	}
 }
