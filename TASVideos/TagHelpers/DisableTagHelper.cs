@@ -9,18 +9,20 @@ public class DisableTagHelper : TagHelper
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		if (Disable)
+		if (!Disable)
 		{
-			output.Attributes.Add("disabled", "disabled");
-			output.Attributes.Add("aria-disabled", "true");
-			var tabIndex = output.Attributes.FirstOrDefault(a => a.Name == "tabindex");
-			if (tabIndex is not null)
-			{
-				output.Attributes.Remove(tabIndex);
-			}
-
-			output.Attributes.Add("tabindex", "-1");
-			output.AddCssClass("disabled");
+			return;
 		}
+
+		output.Attributes.Add("disabled", "disabled");
+		output.Attributes.Add("aria-disabled", "true");
+		var tabIndex = output.Attributes.FirstOrDefault(a => a.Name == "tabindex");
+		if (tabIndex is not null)
+		{
+			output.Attributes.Remove(tabIndex);
+		}
+
+		output.Attributes.Add("tabindex", "-1");
+		output.AddCssClass("disabled");
 	}
 }

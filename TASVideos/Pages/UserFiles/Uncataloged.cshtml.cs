@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
+using TASVideos.Data.Entity;
 using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
@@ -16,7 +17,7 @@ public class Uncataloged(ApplicationDbContext db) : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		Files = await db.UserFiles
-			.Where(uf => !uf.Hidden)
+			.ThatArePublic()
 			.Where(uf => uf.GameId == null)
 			.Select(uf => new UncatalogedViewModel
 			{

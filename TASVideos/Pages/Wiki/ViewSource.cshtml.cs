@@ -20,12 +20,12 @@ public class ViewSourceModel(IWikiPages wikiPages) : BasePageModel
 		Path = Path?.Trim('/') ?? "";
 		var wikiPage = await wikiPages.Page(Path, Revision);
 
-		if (wikiPage is not null)
+		if (wikiPage is null)
 		{
-			WikiPage = wikiPage;
-			return Page();
+			return NotFound();
 		}
 
-		return NotFound();
+		WikiPage = wikiPage;
+		return Page();
 	}
 }

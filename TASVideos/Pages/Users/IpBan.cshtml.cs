@@ -49,10 +49,8 @@ public class IpBanModel(IIpBanService banService) : BasePageModel
 
 	private async Task PopulateList()
 	{
-		BannedIps = (await banService.GetAll())
-			.OrderByDescending(b => b.DateCreated)
-			.ToList();
+		BannedIps = [.. (await banService.GetAll()).OrderByDescending(b => b.DateCreated)];
 	}
 
-	private IActionResult RedirectToIpBan() => RedirectToPage("/Users/IpBan");
+	private RedirectToPageResult RedirectToIpBan() => RedirectToPage("/Users/IpBan");
 }

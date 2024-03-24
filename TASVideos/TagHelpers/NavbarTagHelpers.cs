@@ -113,12 +113,7 @@ public class NavItemBase : TagHelper
 		}
 
 		// Wiki Razor Pages that are not the general wiki page action
-		if (string.IsNullOrWhiteSpace(viewActiveTab)
-			&& Activate == "Wiki" && pageGroup == "Wiki")
-		{
-			return true;
-		}
-
-		return false;
+		return string.IsNullOrWhiteSpace(viewActiveTab)
+			&& Activate == "Wiki" && pageGroup == "Wiki";
 	}
 }
