@@ -234,12 +234,12 @@ public class UserManager(
 			.Distinct()
 			.ToListAsync();
 
-		model.UserFiles.Systems = db.UserFiles
+		model.UserFiles.Systems = await db.UserFiles
 			.Where(uf => uf.AuthorId == model.Id)
 			.Where(uf => includeHiddenUserFiles || !uf.Hidden)
 			.Select(uf => uf.System!.Code)
 			.Distinct()
-			.ToList();
+			.ToListAsync();
 
 		var wikiEdits = await db.WikiPages
 			.ThatAreNotDeleted()
