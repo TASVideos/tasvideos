@@ -12,7 +12,7 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 	[FromRoute]
 	public int Year { get; set; }
 
-	public IReadOnlyCollection<SelectListItem> AvailableAwardCategories { get; set; } = [];
+	public List<SelectListItem> AvailableAwardCategories { get; set; } = [];
 
 	[BindProperty]
 	public UploadImageViewModel ImageToUpload { get; set; } = new();

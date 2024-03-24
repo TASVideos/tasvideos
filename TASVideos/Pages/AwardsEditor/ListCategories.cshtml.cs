@@ -3,7 +3,6 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
-using TASVideos.Pages.AwardsEditor.Models;
 
 namespace TASVideos.Pages.AwardsEditor;
 
@@ -11,20 +10,18 @@ namespace TASVideos.Pages.AwardsEditor;
 public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader mediaFileUploader)
 	: BasePageModel
 {
-	public IEnumerable<AwardCategoryEntry> Categories { get; set; } = [];
+	public List<AwardCategoryEntry> Categories { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
 		Categories = await db.Awards
-			.Select(a => new AwardCategoryEntry
-			{
-				Id = a.Id,
-				Type = a.Type,
-				ShortName = a.ShortName,
-				Description = a.Description,
-				InUse = db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
-					|| db.UserAwards.Any(ua => ua.AwardId == a.Id)
-			})
+			.Select(a => new AwardCategoryEntry(
+				a.Id,
+				a.Type,
+				a.ShortName,
+				a.Description,
+				db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
+					|| db.UserAwards.Any(ua => ua.AwardId == a.Id)))
 			.ToListAsync();
 		return Page();
 	}
@@ -57,4 +54,6 @@ public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader media
 
 		return BasePageRedirect("ListCategories");
 	}
+
+	public record AwardCategoryEntry(int Id, AwardType Type, string ShortName, string Description, bool InUse);
 }

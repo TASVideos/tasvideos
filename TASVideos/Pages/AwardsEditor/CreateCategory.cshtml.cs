@@ -10,12 +10,9 @@ namespace TASVideos.Pages.AwardsEditor;
 [RequirePermission(PermissionTo.CreateAwards)]
 public class CreateCategoryModel(IAwards awards, IMediaFileUploader mediaFileUploader) : BasePageModel
 {
-	private static readonly IEnumerable<AwardType> AwardTypes = Enum
+	public IEnumerable<SelectListItem> AvailableAwardTypes { get; set; } = Enum
 		.GetValues(typeof(AwardType))
 		.Cast<AwardType>()
-		.ToList();
-
-	public IEnumerable<SelectListItem> AvailableAwardTypes { get; set; } = AwardTypes
 		.Select(a => new SelectListItem
 		{
 			Text = a.ToString(),
