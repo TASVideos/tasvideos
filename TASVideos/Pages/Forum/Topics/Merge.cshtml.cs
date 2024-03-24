@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
@@ -120,11 +119,7 @@ public class MergeModel(
 	public async Task<IActionResult> OnGetTopicsForForum(int forumId)
 	{
 		var items = UiDefaults.DefaultEntry.Concat(await GetTopicsForForum(forumId));
-		return new PartialViewResult
-		{
-			ViewName = "_DropdownItems",
-			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
-		};
+		return ToDropdownResult(items);
 	}
 
 	private async Task PopulateAvailableForums()

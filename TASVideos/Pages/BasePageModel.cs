@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 
@@ -120,4 +121,13 @@ public class BasePageModel : PageModel
 			})
 			.OrderBy(p => p.Text)
 	];
+
+	protected PartialViewResult ToDropdownResult(IEnumerable<SelectListItem> items)
+	{
+		return new PartialViewResult
+		{
+			ViewName = "_DropdownItems",
+			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+		};
+	}
 }

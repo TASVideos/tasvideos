@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
@@ -81,14 +80,10 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = UiDefaults.DefaultEntry.Concat(items).ToList();
+			items = [.. UiDefaults.DefaultEntry, .. items];
 		}
 
-		return new PartialViewResult
-		{
-			ViewName = "_DropdownItems",
-			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
-		};
+		return ToDropdownResult(items);
 	}
 
 	public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
@@ -101,14 +96,10 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = UiDefaults.DefaultEntry.Concat(items).ToList();
+			items = [.. UiDefaults.DefaultEntry, .. items];
 		}
 
-		return new PartialViewResult
-		{
-			ViewName = "_DropdownItems",
-			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
-		};
+		return ToDropdownResult(items);
 	}
 
 	public async Task<IActionResult> OnGetVersionDropDownForGame(int gameId, int systemId, bool includeEmpty)
@@ -126,14 +117,10 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = UiDefaults.DefaultEntry.Concat(items).ToList();
+			items = [.. UiDefaults.DefaultEntry, .. items];
 		}
 
-		return new PartialViewResult
-		{
-			ViewName = "_DropdownItems",
-			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
-		};
+		return ToDropdownResult(items);
 	}
 
 	public async Task<IActionResult> OnGetGameGoalDropDownForGame(int gameId, bool includeEmpty)
@@ -150,14 +137,10 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = UiDefaults.DefaultEntry.Concat(items).ToList();
+			items = [.. UiDefaults.DefaultEntry, .. items];
 		}
 
-		return new PartialViewResult
-		{
-			ViewName = "_DropdownItems",
-			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
-		};
+		return ToDropdownResult(items);
 	}
 
 	private async Task<SystemPageOf<GameListModel>> GetPageOfGames(GameListRequest paging)
