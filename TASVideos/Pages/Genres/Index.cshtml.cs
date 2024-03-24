@@ -8,8 +8,6 @@ public class IndexModel(IGenreService genreService) : BasePageModel
 
 	public async Task OnGet()
 	{
-		Genres = (await genreService.GetAll())
-			.OrderBy(g => g.DisplayName)
-			.ToList();
+		Genres = await genreService.GetAll();
 	}
 }
