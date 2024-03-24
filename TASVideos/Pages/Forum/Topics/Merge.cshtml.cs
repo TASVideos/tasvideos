@@ -22,9 +22,9 @@ public class MergeModel(
 	[BindProperty]
 	public MergeTopicModel Topic { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableForums { get; set; } = [];
+	public List<SelectListItem> AvailableForums { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableTopics { get; set; } = [];
+	public List<SelectListItem> AvailableTopics { get; set; } = [];
 
 	private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
 
@@ -135,7 +135,7 @@ public class MergeModel(
 			})
 			.ToListAsync();
 
-		AvailableTopics = UiDefaults.DefaultEntry.Concat(await GetTopicsForForum(Topic.ForumId));
+		AvailableTopics = [.. UiDefaults.DefaultEntry, .. await GetTopicsForForum(Topic.ForumId)];
 	}
 
 	private async Task<IEnumerable<SelectListItem>> GetTopicsForForum(int forumId)

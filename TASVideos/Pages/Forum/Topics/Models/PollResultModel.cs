@@ -9,7 +9,7 @@ public class PollResultModel
 
 	public string Question { get; set; } = "";
 
-	public IEnumerable<VoteResult> Votes { get; set; } = [];
+	public List<VoteResult> Votes { get; set; } = [];
 
 	public class VoteResult
 	{

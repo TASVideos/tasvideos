@@ -15,7 +15,7 @@
 		<th>Permission Restriction</th>
 		<th></th>
 	</tr>
-	@foreach (var flag in Model.Flags)
+	@foreach (var flag in Model.Flags.OrderBy(f => f.Token))
 	{
 		<tr>
 			<td>@flag.Name</td>

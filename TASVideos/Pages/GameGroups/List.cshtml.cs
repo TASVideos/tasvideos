@@ -6,7 +6,7 @@ namespace TASVideos.Pages.GameGroups;
 [AllowAnonymous]
 public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<GroupListEntry> GameGroups { get; set; } = [];
+	public List<GroupListEntry> GameGroups { get; set; } = [];
 
 	public async Task OnGet()
 	{

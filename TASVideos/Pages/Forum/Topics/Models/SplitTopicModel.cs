@@ -18,7 +18,7 @@ public class SplitTopicModel
 	public int ForumId { get; set; }
 	public string ForumName { get; set; } = "";
 
-	public IList<Post> Posts { get; set; } = [];
+	public List<Post> Posts { get; set; } = [];
 
 	public class Post
 	{

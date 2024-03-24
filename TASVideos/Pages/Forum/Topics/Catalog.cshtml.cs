@@ -13,9 +13,9 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int Id { get; set;  }
 
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
+	public List<SelectListItem> AvailableSystems { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
+	public List<SelectListItem> AvailableGames { get; set; } = [];
 
 	[BindProperty]
 	public string Title { get; set; } = "";
@@ -86,22 +86,30 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableSystems = UiDefaults.DefaultEntry.Concat(await db.GameSystems
-			.OrderBy(s => s.Code)
-			.Select(s => new SelectListItem
-			{
-				Value = s.Id.ToString(),
-				Text = s.Code
-			})
-			.ToListAsync());
+		AvailableSystems =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await db.GameSystems
+				.OrderBy(s => s.Code)
+				.Select(s => new SelectListItem
+				{
+					Value = s.Id.ToString(),
+					Text = s.Code
+				})
+				.ToListAsync(),
+		];
 
 		if (SystemId.HasValue)
 		{
-			AvailableGames = UiDefaults.DefaultEntry.Concat(await db.Games
-				.ForSystem(SystemId.Value)
-				.OrderBy(g => g.DisplayName)
-				.ToDropDown()
-				.ToListAsync());
+			AvailableGames =
+			[
+				.. UiDefaults.DefaultEntry,
+				.. await db.Games
+					.ForSystem(SystemId.Value)
+					.OrderBy(g => g.DisplayName)
+					.ToDropDown()
+					.ToListAsync(),
+			];
 		}
 	}
 }

@@ -9,7 +9,7 @@ public class CategoryEditModel
 
 	public string? Description { get; set; }
 
-	public IList<ForumEditModel> Forums { get; set; } = [];
+	public List<ForumEditModel> Forums { get; set; } = [];
 
 	public class ForumEditModel
 	{

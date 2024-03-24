@@ -16,7 +16,7 @@ public class PollCreateModel
 	public bool MultiSelect { get; set; }
 
 	[Display(Name = "Options")]
-	public IList<string> PollOptions { get; set; } = ["", ""];
+	public List<string> PollOptions { get; set; } = ["", ""];
 
 	public bool IsValid =>
 		!string.IsNullOrWhiteSpace(Question)

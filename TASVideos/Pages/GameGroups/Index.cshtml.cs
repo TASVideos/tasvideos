@@ -14,7 +14,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
-	public IEnumerable<GameListEntry> Games { get; set; } = [];
+	public List<GameListEntry> Games { get; set; } = [];
 
 	public string Name { get; set; } = "";
 	public string? Description { get; set; }

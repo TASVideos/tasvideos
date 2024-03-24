@@ -22,7 +22,7 @@ public class MoveModel(
 	[BindProperty]
 	public MoveTopicModel Topic { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableForums { get; set; } = [];
+	public List<SelectListItem> AvailableForums { get; set; } = [];
 
 	public bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
 

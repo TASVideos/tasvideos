@@ -12,7 +12,7 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 	[BindProperty]
 	public ForumEditModel Forum { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableCategories { get; set; } = [];
+	public List<SelectListItem> AvailableCategories { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

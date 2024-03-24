@@ -10,8 +10,6 @@ public class IndexModel(IFlagService flagService) : BasePageModel
 
 	public async Task OnGet()
 	{
-		Flags = (await flagService.GetAll())
-			.OrderBy(t => t.Token)
-			.ToList();
+		Flags = await flagService.GetAll();
 	}
 }
