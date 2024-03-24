@@ -26,7 +26,7 @@ public class AddEditModel(
 	[BindProperty]
 	public RoleEditModel Role { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = [];
+	public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = new List<SelectListItem>();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -144,29 +144,23 @@ public class AddEditModel(
 
 	private async Task AddUpdateRole(RoleEditModel model)
 	{
+		var edit = false;
 		Role role;
 		if (Id.HasValue)
 		{
-			role = await db.Roles.SingleAsync(r => r.Id == Id);
+			edit = true;
+			role = await db.Roles
+				.Include(r => r.RolePermission)
+				.Include(r => r.RoleLinks)
+				.SingleAsync(r => r.Id == Id);
 			db.RolePermission.RemoveRange(db.RolePermission.Where(rp => rp.RoleId == Id));
 			db.RoleLinks.RemoveRange(db.RoleLinks.Where(rp => rp.Role!.Id == Id));
 			await db.SaveChangesAsync();
-
-			await publisher.SendUserManagement(
-				$"Role {model.Name} updated by {User.Name()}",
-				$"Role [{model.Name}]({{0}}) updated by {User.Name()}",
-				"",
-				$"Roles/{model.Name}");
 		}
 		else
 		{
 			role = new Role();
 			db.Roles.Attach(role);
-			await publisher.SendUserManagement(
-				$"New Role {model.Name} added by {User.Name()}",
-				$"New Role [{model.Name}]({{0}}) added by {User.Name()}",
-				"",
-				$"Roles/{model.Name}");
 		}
 
 		role.Name = model.Name;
@@ -175,7 +169,7 @@ public class AddEditModel(
 		role.AutoAssignPostCount = model.AutoAssignPostCount;
 		role.AutoAssignPublications = model.AutoAssignPublications;
 
-		await db.RolePermission.AddRangeAsync(model.SelectedPermissions
+		role.RolePermission.AddRange(model.SelectedPermissions
 			.Select(p => new RolePermission
 			{
 				RoleId = role.Id,
@@ -183,10 +177,27 @@ public class AddEditModel(
 				CanAssign = model.SelectedAssignablePermissions.Contains(p)
 			}));
 
-		await db.RoleLinks.AddRangeAsync(model.Links.Select(rl => new RoleLink
+		role.RoleLinks.AddRange(model.Links.Select(rl => new RoleLink
 		{
 			Link = rl,
 			Role = role
 		}));
+
+		if (edit)
+		{
+			await publisher.SendUserManagement(
+				$"Role {model.Name} updated by {User.Name()}",
+				$"Role [{model.Name}]({{0}}) updated by {User.Name()}",
+				"",
+				$"Roles/{model.Name}");
+		}
+		else
+		{
+			await publisher.SendUserManagement(
+				$"New Role {model.Name} added by {User.Name()}",
+				$"New Role [{model.Name}]({{0}}) added by {User.Name()}",
+				"",
+				$"Roles/{model.Name}");
+		}
 	}
 }
