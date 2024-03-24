@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 
 namespace TASVideos.Pages.GameGroups;
@@ -9,13 +8,11 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 {
 	public IEnumerable<GroupListEntry> GameGroups { get; set; } = [];
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		GameGroups = await db.GameGroups
 			.Select(gg => new GroupListEntry(gg.Id, gg.Name))
 			.ToListAsync();
-
-		return Page();
 	}
 
 	public record GroupListEntry(int Id, string Name);
