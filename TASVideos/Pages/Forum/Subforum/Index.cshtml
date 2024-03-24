@@ -35,12 +35,15 @@
 					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fw-bold text-warning"><i class="fa fa-bullhorn"></i> Announcement: </span>
 					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fw-bold text-info"><i class="fa fa-sticky-note"></i> Sticky: </span>
 					<span condition="@topic.IsLocked" class="text-danger"><i class="fa fa-lock"></i></span>
-					<a condition="@(Model.ActivityTopics.ContainsKey(topic.Id))" class="text-decoration-none">
-						<i class="fa fa-file activity-topic d-none"
-						data-topic-id="@topic.Id"
-						   data-activity-posts-created="@Model.ActivityTopics[topic.Id].PostsCreated"
-						   data-activity-posts-edited="@Model.ActivityTopics[topic.Id].PostsEdited"></i>
-					</a>
+					@if (Model.ActivityTopics.TryGetValue(topic.Id, out var activityTopics))
+					{
+						<a class="text-decoration-none">
+							<i class="fa fa-file activity-topic d-none"
+							   data-topic-id="@topic.Id"
+							   data-activity-posts-created="@activityTopics.PostsCreated"
+							   data-activity-posts-edited="@activityTopics.PostsEdited"></i>
+						</a>
+					}
 					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
 					<div class="ms-2">
 						@{
