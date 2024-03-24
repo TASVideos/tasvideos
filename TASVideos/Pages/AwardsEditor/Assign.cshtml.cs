@@ -20,11 +20,11 @@ public class AssignModel(
 	[BindProperty]
 	public AwardAssignmentModel AwardToAssign { get; set; } = new();
 
-	public IReadOnlyCollection<SelectListItem> AvailableAwardCategories { get; set; } = [];
+	public List<SelectListItem> AvailableAwardCategories { get; set; } = [];
 
-	public IReadOnlyCollection<SelectListItem> AvailableUsers { get; set; } = [];
+	public List<SelectListItem> AvailableUsers { get; set; } = [];
 
-	public IReadOnlyCollection<SelectListItem> AvailablePublications { get; set; } = [];
+	public List<SelectListItem> AvailablePublications { get; set; } = [];
 
 	public async Task OnGet() => await Initialize();
 
@@ -111,11 +111,14 @@ public class AssignModel(
 
 	private async Task Initialize()
 	{
-		AvailableAwardCategories = UiDefaults.DefaultEntry.Concat(await awards.AwardCategories()
-			.OrderBy(c => c.Description)
-			.ToDropdown(Year)
-			.ToListAsync())
-			.ToList();
+		AvailableAwardCategories =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await awards.AwardCategories()
+				.OrderBy(c => c.Description)
+				.ToDropdown(Year)
+				.ToListAsync(),
+		];
 
 		AvailableUsers = await db.Users
 			.Where(u => u.Publications.Any(pa => pa.Publication!.CreateTimestamp.Year == Year))

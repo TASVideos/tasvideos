@@ -7,7 +7,7 @@ public class AwardAssignmentModel
 	[Required]
 	public string? Award { get; set; }
 
-	public IEnumerable<int> Users { get; set; } = [];
+	public List<int> Users { get; set; } = [];
 
-	public IEnumerable<int> Publications { get; set; } = [];
+	public List<int> Publications { get; set; } = [];
 }

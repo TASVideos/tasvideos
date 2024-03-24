@@ -29,5 +29,5 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			.ToListAsync();
 	}
 
-	public record ActivitySummaryModel(string? UserName,int Count, DateTime LastActivity);
+	public record ActivitySummaryModel(string? UserName, int Count, DateTime LastActivity);
 }
