@@ -103,12 +103,12 @@ public class NavItemBase : TagHelper
 		switch (Activate)
 		{
 			case "Home" when page == "/Index":
-			case "Movies" when new[] { "Publications", "Submissions", "UserFiles" }.Contains(pageGroup):
-			case "Articles" when new[] { "ArticleIndex", "Game Resources", "EmulatorResources" }.Contains(viewActiveTab):
-			case "Admin" when new[] { "Roles", "Users", "Permissions" }.Contains(pageGroup):
+			case "Movies" when MoviesGroup.Contains(pageGroup):
+			case "Articles" when ArticlesGroup.Contains(viewActiveTab):
+			case "Admin" when AdminGroup.Contains(pageGroup):
 			case "Register" when page == "/Account/Register":
 			case "Login" when page == "/Account/Login":
-			case "Wiki" when new[] { "SandBox", "RecentChanges", "WikiOrphans", "TODO", "System", "DeletedPages" }.Contains(viewActiveTab):
+			case "Wiki" when WikiGroup.Contains(viewActiveTab):
 				return true;
 		}
 
@@ -116,4 +116,9 @@ public class NavItemBase : TagHelper
 		return string.IsNullOrWhiteSpace(viewActiveTab)
 			&& Activate == "Wiki" && pageGroup == "Wiki";
 	}
+
+	private static readonly string[] MoviesGroup = ["Publications", "Submissions", "UserFiles"];
+	private static readonly string[] ArticlesGroup = ["ArticleIndex", "Game Resources", "EmulatorResources"];
+	private static readonly string[] AdminGroup = ["Roles", "Users", "Permissions"];
+	private static readonly string[] WikiGroup = ["SandBox", "RecentChanges", "WikiOrphans", "TODO", "System", "DeletedPages"];
 }
