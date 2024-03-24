@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Activity.Model;
 
 namespace TASVideos.Pages.Activity;
 
 [AllowAnonymous]
 public class PublishersModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<MovieEntryModel> Publications { get; set; } = [];
+	public List<MovieEntryModel> Publications { get; set; } = [];
 
 	[FromRoute]
 	public string UserName { get; set; } = "";
@@ -29,15 +28,15 @@ public class PublishersModel(ApplicationDbContext db) : BasePageModel
 
 		Publications = await db.Publications
 			.ThatHaveBeenPublishedBy(user.Id)
-			.Select(s => new MovieEntryModel
-			{
-				Id = s.Id,
-				CreateTimestamp = s.CreateTimestamp,
-				Title = s.Title,
-				Class = s.PublicationClass!.Name
-			})
+			.Select(s => new MovieEntryModel(
+				s.Id,
+				s.CreateTimestamp,
+				s.Title,
+				s.PublicationClass!.Name))
 			.ToListAsync();
 
 		return Page();
 	}
+
+	public record MovieEntryModel(int Id, DateTime CreateTimestamp, string Title, string Class);
 }

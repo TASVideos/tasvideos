@@ -2,14 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Activity.Model;
 
 namespace TASVideos.Pages.Activity;
 
 [AllowAnonymous]
 public class JudgesModel(ApplicationDbContext db) : BasePageModel
 {
-	public IReadOnlyCollection<SubmissionEntryModel> Submissions { get; set; } = [];
+	public List<SubmissionEntryModel> Submissions { get; set; } = [];
 
 	[FromRoute]
 	public string UserName { get; set; } = "";
@@ -29,15 +28,15 @@ public class JudgesModel(ApplicationDbContext db) : BasePageModel
 
 		Submissions = await db.Submissions
 			.ThatHaveBeenJudgedBy(UserName)
-			.Select(s => new SubmissionEntryModel
-			{
-				Id = s.Id,
-				CreateTimestamp = s.CreateTimestamp,
-				Title = s.Title,
-				Status = s.Status
-			})
+			.Select(s => new SubmissionEntryModel(
+				s.Id,
+				s.CreateTimestamp,
+				s.Title,
+				s.Status))
 			.ToListAsync();
 
 		return Page();
 	}
+
+	public record SubmissionEntryModel(int Id, DateTime CreateTimestamp, string Title, SubmissionStatus Status);
 }
