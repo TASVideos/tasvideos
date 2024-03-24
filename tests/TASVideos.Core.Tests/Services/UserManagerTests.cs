@@ -44,17 +44,6 @@ public sealed class UserManagerTests : IDisposable
 		Assert.AreEqual(expected, actual);
 	}
 
-	[TestMethod]
-	[DataRow(null, null, null, false)]
-	[DataRow("test", "", "test", false)]
-	[DataRow("test", "", "test123", true)]
-	[DataRow("test", "test123@example.com", "test123", false)]
-	public void IsPasswordAllowed_Tests(string userName, string email, string password, bool expected)
-	{
-		var actual = _userManager.IsPasswordAllowed(userName, email, password);
-		Assert.AreEqual(expected, actual);
-	}
-
 	public void Dispose()
 	{
 		_userManager.Dispose();

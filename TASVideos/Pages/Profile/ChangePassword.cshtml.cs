@@ -9,8 +9,7 @@ namespace TASVideos.Pages.Profile;
 [Authorize]
 public class ChangePasswordModel(
 	IEmailService emailService,
-	SignInManager signInManager,
-	UserManager userManager)
+	SignInManager signInManager)
 	: BasePageModel
 {
 	[BindProperty]
@@ -53,7 +52,7 @@ public class ChangePasswordModel(
 
 		var user = await signInManager.GetRequiredUser(User);
 
-		if (!userManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
+		if (!signInManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
 		{
 			ModelState.AddModelError(nameof(NewPassword), "This password is not allowed, please ensure your password is sufficiently different from your username and/or email");
 		}

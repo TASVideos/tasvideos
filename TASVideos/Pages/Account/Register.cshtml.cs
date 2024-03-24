@@ -14,7 +14,6 @@ namespace TASVideos.Pages.Account;
 [IpBanCheck]
 public class RegisterModel(
 	SignInManager signInManager,
-	UserManager userManager,
 	IEmailService emailService,
 	ExternalMediaPublisher publisher,
 	IReCaptchaService reCaptchaService,
@@ -89,7 +88,7 @@ public class RegisterModel(
 			ModelState.AddModelError(nameof(Email), "Email is already taken.");
 		}
 
-		if (!userManager.IsPasswordAllowed(UserName, Email, Password))
+		if (!signInManager.IsPasswordAllowed(UserName, Email, Password))
 		{
 			ModelState.AddModelError(nameof(Password), "This password is not allowed, please ensure your password is sufficiently different from your username and/or email");
 		}
