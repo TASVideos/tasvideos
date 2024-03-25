@@ -4,7 +4,7 @@
 
 	var title = model.Title ?? "TASVideos";
 	var description = model.Description ?? "Tool-assisted game movies - When human skills are just not enough";
-	var url = model.RelativeUrl != null
+	var url = model.RelativeUrl is not null
 		? Context.Request.ToBaseUrl() + model.RelativeUrl
 		: Context.Request.ToUrl();
 	var image = model.Image ?? $"{Context.Request.ToBaseUrl()}/images/logo-embed.png";

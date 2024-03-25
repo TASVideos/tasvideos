@@ -51,7 +51,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		if (GameGroup.Abbreviation != null && await db.GameGroups.AnyAsync(g => g.Id != Id && g.Abbreviation == GameGroup.Abbreviation))
+		if (GameGroup.Abbreviation is not null && await db.GameGroups.AnyAsync(g => g.Id != Id && g.Abbreviation == GameGroup.Abbreviation))
 		{
 			ModelState.AddModelError($"{nameof(GameGroup)}.{nameof(GameGroup.Abbreviation)}", $"Abbreviation {GameGroup.Abbreviation} already exists");
 		}

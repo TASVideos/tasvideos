@@ -41,7 +41,7 @@ public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<
 		}
 
 		var wikiPage = await wikiPages.Page(url, revision);
-		if (wikiPage != null)
+		if (wikiPage is not null)
 		{
 			if (logger.IsEnabled(LogLevel.Information))
 			{

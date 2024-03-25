@@ -15,18 +15,14 @@ public class MoodReportModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string? UserName { get; set; }
 
-	public IEnumerable<MoodReportEntry> MoodyUsers { get; set; } = [];
+	public List<MoodReportEntry> MoodyUsers { get; set; } = [];
 
 	public async Task OnGet()
 	{
 		var query = db.Users
 			.ThatHavePermission(PermissionTo.UseMoodAvatars)
 			.Where(u => u.MoodAvatarUrlBase != null)
-			.Select(u => new MoodReportEntry
-			{
-				UserName = u.UserName,
-				MoodAvatarUrl = u.MoodAvatarUrlBase!
-			});
+			.Select(u => new MoodReportEntry(u.UserName, u.MoodAvatarUrlBase!));
 
 		if (!string.IsNullOrWhiteSpace(UserName))
 		{
@@ -36,9 +32,5 @@ public class MoodReportModel(ApplicationDbContext db) : BasePageModel
 		MoodyUsers = await query.ToListAsync();
 	}
 
-	public class MoodReportEntry
-	{
-		public string UserName { get; set; } = "";
-		public string MoodAvatarUrl { get; set; } = "";
-	}
+	public record MoodReportEntry(string UserName, string MoodAvatarUrl);
 }

@@ -4,46 +4,39 @@ namespace TASVideos.Models;
 
 public class UserFileModel
 {
-	public long Id { get; set; }
-	public UserFileClass Class { get; set; }
-	public string Title { get; set; } = "";
-	public string? Description { get; set; }
-	public DateTime UploadTimestamp { get; set; }
-	public string Author { get; set; } = "";
-	public int AuthorUserFilesCount { get; set; }
-	public int Downloads { get; set; }
-	public bool Hidden { get; set; }
-	public string? FileName { get; set; }
-	public int FileSizeUncompressed { get; set; }
-	public int FileSizeCompressed { get; set; }
-	public int? GameId { get; set; }
-	public string? GameName { get; set; }
-	public string? GameSystem { get; set; }
-	public string? System { get; set; }
+	public long Id { get; init; }
+	public UserFileClass Class { get; init; }
+	public string Title { get; init; } = "";
+	public string? Description { get; init; }
+	public DateTime UploadTimestamp { get; init; }
+	public string Author { get; init; } = "";
+	public int AuthorUserFilesCount { get; init; }
+	public int Downloads { get; init; }
+	public bool Hidden { get; init; }
+	public string? FileName { get; init; }
+	public int FileSizeUncompressed { get; init; }
+	public int FileSizeCompressed { get; init; }
+	public int? GameId { get; init; }
+	public string? GameName { get; init; }
+	public string? GameSystem { get; init; }
+	public string? System { get; init; }
 
 	// Only relevant to Movies
 	public TimeSpan Time => TimeSpan.FromSeconds(Math.Round((double)Length, 2, MidpointRounding.AwayFromZero));
 	public bool IsMovie => Class == UserFileClass.Movie;
 
-	public decimal Length { get; set; }
-	public int Frames { get; set; }
-	public int Rerecords { get; set; }
+	public decimal Length { get; init; }
+	public int Frames { get; init; }
+	public int Rerecords { get; init; }
 
-	public IEnumerable<UserFileCommentModel> Comments { get; set; } = [];
-	public bool HideComments { get; set; }
+	public List<UserFileCommentModel> Comments { get; init; } = [];
+	public bool HideComments { get; init; }
 	public Compression CompressionType { get; set; }
 	public byte[] Content { get; set; } = [];
 	public string ContentPreview { get; set; } = "";
 
 	public string Extension => (FileName ?? "").ToLower().Split('.').Last();
-	public string? Annotations { get; set; }
+	public string? Annotations { get; init; }
 
-	public class UserFileCommentModel
-	{
-		public int Id { get; init; }
-		public string Text { get; init; } = "";
-		public DateTime CreationTimeStamp { get; init; }
-		public int UserId { get; init; }
-		public string UserName { get; init; } = "";
-	}
+	public record UserFileCommentModel(int Id, string Text, DateTime CreationTimeStamp, int UserId, string UserName);
 }

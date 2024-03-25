@@ -56,7 +56,7 @@ public class CustomLocalizationMiddleware(RequestDelegate next)
 
 	private static CultureInfo ConstructCustomCulture(CustomCultureData? customCultureData)
 	{
-		if (customCultureData == null)
+		if (customCultureData is null)
 		{
 			return CultureInfo.CurrentCulture;
 		}

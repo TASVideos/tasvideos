@@ -15,7 +15,7 @@
 					   class="float-start text-decoration-none text-body">
 						<i class="fa fa-bookmark @addClass" data-post-id="@Model.Id" data-unix-created="@(isCreateActivity ? Model.CreateTimestamp.UnixTimestamp() : "")" data-unix-edited="@(isEditActivity ? Model.PostEditedTimestamp?.UnixTimestamp() : "")"></i>
 						Posted: <timezone-convert asp-for="@Model.CreateTimestamp" />
-						<span condition="@(Model.PostEditedTimestamp != null)">@{var postEditedTimestamp = (DateTime)Model.PostEditedTimestamp!;}<br />(Edited: <timezone-convert asp-for="@postEditedTimestamp" />)</span>
+						<span condition="@(Model.PostEditedTimestamp is not null)">@{var postEditedTimestamp = (DateTime)Model.PostEditedTimestamp!;}<br />(Edited: <timezone-convert asp-for="@postEditedTimestamp" />)</span>
 					</a>
 				</small>
 			</div>

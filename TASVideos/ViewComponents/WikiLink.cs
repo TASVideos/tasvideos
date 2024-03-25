@@ -55,7 +55,7 @@ public class WikiLink(ApplicationDbContext db) : ViewComponent
 			}
 		}
 
-		if (titleText != null)
+		if (titleText is not null)
 		{
 			if (string.IsNullOrWhiteSpace(displayText))
 			{

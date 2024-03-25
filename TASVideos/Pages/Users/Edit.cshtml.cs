@@ -114,7 +114,7 @@ public class EditModel(
 			return BasePageRedirect("List");
 		}
 
-		if (userNameChange != null)
+		if (userNameChange is not null)
 		{
 			string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
 			await publisher.SendUserManagement(
@@ -170,7 +170,7 @@ public class EditModel(
 		SuccessStatusMessage($"User {user.UserName} updated");
 
 		// If username is changed, we want to ignore the returnUrl that will be the old name
-		return userNameChange != null
+		return userNameChange is not null
 			? RedirectToPage("/Users/Profile", new { Name = user.UserName })
 			: BasePageRedirect("List");
 	}

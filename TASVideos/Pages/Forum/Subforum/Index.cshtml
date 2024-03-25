@@ -75,7 +75,7 @@
 				<td class="d-none d-md-table-cell">@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
 				<td class="d-none d-md-table-cell"> <profile-link username="@topic.CreateUserName"></profile-link></td>
 				<td>
-					@if (topic.LastPost != null)
+					@if (topic.LastPost is not null)
 					{
 						<timezone-convert asp-for="@topic.LastPost.CreateTimestamp" /> <br />
 						<profile-link username="@topic.LastPost.PosterName"></profile-link>

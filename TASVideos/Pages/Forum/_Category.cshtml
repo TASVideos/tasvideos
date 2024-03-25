@@ -38,7 +38,7 @@
 					</small>
 				</div>
 			</div>
-			@if (forum.LastPost != null)
+			@if (forum.LastPost is not null)
 			{
 				<div class="col-4 align-items-center">
 					<timezone-convert asp-for="@forum.LastPost.Timestamp" /> <br />

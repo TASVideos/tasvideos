@@ -53,7 +53,7 @@ public class WikiToTextRenderer(AppSettings settings, IServiceProvider servicePr
 
 			switch (invokeMethod)
 			{
-				case null when textComponent.GetMethod("RenderText") != null:
+				case null when textComponent.GetMethod("RenderText") is not null:
 					throw new NotImplementedException("Sync method not supported yet");
 				case null:
 					throw new InvalidOperationException($"Could not find an RenderText method on ViewComponent {textComponent}");

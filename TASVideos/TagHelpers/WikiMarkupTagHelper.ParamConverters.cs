@@ -71,7 +71,7 @@ public partial class WikiMarkup
 	{
 		public override bool? Convert(string? input)
 		{
-			return input != null;
+			return input is not null;
 		}
 	}
 

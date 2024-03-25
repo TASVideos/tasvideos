@@ -62,10 +62,10 @@
 					<small condition="showPublicationClass">
 						(@item.IntendedClass)
 					</small>
-					<small condition="item.Judge != null && item.Publisher == null">
+					<small condition="item.Judge is not null && item.Publisher is null">
 						<br /><profile-link username="@item.Judge"></profile-link>
 					</small>
-					<small condition="item.Publisher != null">
+					<small condition="item.Publisher is not null">
 						<br /><profile-link username="@item.Publisher"></profile-link>
 					</small>
 					<small condition="QueueService.HoursRemainingForJudging(item) > 0">

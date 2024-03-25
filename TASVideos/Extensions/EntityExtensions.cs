@@ -324,14 +324,8 @@ public static class EntityExtensions
 			Frames = uf.Frames,
 			Rerecords = uf.Rerecords,
 			Comments = uf.Comments
-				.Select(c => new UserFileModel.UserFileCommentModel
-				{
-					Id = c.Id,
-					Text = c.Text,
-					CreationTimeStamp = c.CreationTimeStamp,
-					UserId = c.UserId,
-					UserName = c.User!.UserName
-				}),
+				.Select(c => new UserFileModel.UserFileCommentModel(c.Id, c.Text, c.CreationTimeStamp, c.UserId, c.User!.UserName))
+				.ToList(),
 			HideComments = hideComments,
 			Annotations = uf.Annotations
 		});

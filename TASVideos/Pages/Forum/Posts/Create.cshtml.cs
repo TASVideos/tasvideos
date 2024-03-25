@@ -79,7 +79,7 @@ public class CreateModel(
 
 		// Override default behavior if user setting demands it, even if they were already watching the topic
 		var user = await userManager.GetRequiredUser(User);
-		if (user.AutoWatchTopic != null && user.AutoWatchTopic != UserPreference.Auto)
+		if (user.AutoWatchTopic is not null && user.AutoWatchTopic != UserPreference.Auto)
 		{
 			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
 		}
