@@ -218,33 +218,23 @@ public static class EntityExtensions
 				TopicId = p.Submission!.TopicId ?? 0,
 				EmulatorVersion = p.EmulatorVersion,
 				Tags = p.PublicationTags
-					.Select(pt => new PublicationDisplayModel.TagModel
-					{
-						DisplayName = pt.Tag!.DisplayName,
-						Code = pt.Tag.Code
-					}),
+					.Select(pt => new PublicationDisplayModel.TagModel(
+						pt.Tag!.DisplayName,
+						pt.Tag.Code)),
 				GameGenres = p.Game!.GameGenres.Select(gg => gg.Genre!.DisplayName),
 				Files = p.Files
-					.Select(f => new PublicationDisplayModel.FileModel
-					{
-						Id = f.Id,
-						Path = f.Path,
-						Type = f.Type,
-						Description = f.Description
-					}),
+					.Select(f => new PublicationDisplayModel.FileModel(
+						f.Id,
+						f.Path,
+						f.Type,
+						f.Description)),
 				Flags = p.PublicationFlags
-					.Select(pf => new PublicationDisplayModel.FlagModel
-					{
-						IconPath = pf.Flag!.IconPath,
-						LinkPath = pf.Flag!.LinkPath,
-						Name = pf.Flag.Name
-					}),
+					.Select(pf => new PublicationDisplayModel.FlagModel(
+						pf.Flag!.IconPath,
+						pf.Flag!.LinkPath,
+						pf.Flag.Name)),
 				ObsoletedMovies = p.ObsoletedMovies
-					.Select(o => new PublicationDisplayModel.ObsoletesModel
-					{
-						Id = o.Id,
-						Title = o.Title
-					}),
+					.Select(o => new PublicationDisplayModel.ObsoletesModel(o.Id, o.Title)),
 				RatingCount = p.PublicationRatings.Count,
 				OverallRating = p.PublicationRatings
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))

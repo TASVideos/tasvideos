@@ -40,32 +40,13 @@ public class PublicationDisplayModel
 	public double? OverallRating { get; set; }
 	public PublicationRateModel Rating { get; set; } = new();
 
-	public class TagModel
-	{
-		public string DisplayName { get; set; } = "";
-		public string Code { get; set; } = "";
-	}
+	public record TagModel(string DisplayName, string Code);
 
-	public class FileModel
-	{
-		public int Id { get; set; }
-		public string Path { get; set; } = "";
-		public FileType Type { get; set; }
-		public string? Description { get; set; }
-	}
+	public record FileModel(int Id, string Path, FileType Type, string? Description);
 
-	public class FlagModel
-	{
-		public string? IconPath { get; set; }
-		public string? LinkPath { get; set; }
-		public string Name { get; set; } = "";
-	}
+	public record FlagModel(string? IconPath, string? LinkPath, string Name);
 
-	public class ObsoletesModel
-	{
-		public int Id { get; set; }
-		public string Title { get; set; } = "";
-	}
+	public record ObsoletesModel(int Id, string Title);
 
 	public record PublicationUrl(PublicationUrlType Type, string? Url, string? DisplayName);
 }

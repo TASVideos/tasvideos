@@ -40,4 +40,9 @@ public class IndexModel(
 		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return Page();
 	}
+
+	public class PublicationRequest : PagingModel
+	{
+		public PublicationRequest() { PageSize = 100; }
+	}
 }

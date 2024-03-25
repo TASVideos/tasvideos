@@ -26,7 +26,7 @@ public class AddEditModel(
 	[BindProperty]
 	public RoleEditModel Role { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableAssignablePermissions { get; set; } = new List<SelectListItem>();
+	public List<SelectListItem> AvailableAssignablePermissions { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -83,7 +83,8 @@ public class AddEditModel(
 			{
 				Text = ((PermissionTo)sp).ToString(),
 				Value = sp.ToString()
-			});
+			})
+			.ToList();
 			return Page();
 		}
 
@@ -139,7 +140,7 @@ public class AddEditModel(
 			{
 				Text = ((PermissionTo)sp).ToString(),
 				Value = sp.ToString()
-			}).OrderBy(sp => sp.Text);
+			}).OrderBy(sp => sp.Text).ToList();
 	}
 
 	private async Task AddUpdateRole(RoleEditModel model)
