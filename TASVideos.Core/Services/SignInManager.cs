@@ -25,6 +25,8 @@ public class SignInManager(
 		schemes,
 		confirmation)
 {
+	public new UserManager UserManager => (UserManager)base.UserManager;
+
 	public async Task<(SignInResult, User?)> SignIn(string userName, string password, bool rememberMe = false)
 	{
 		userName = userName.Trim().Replace(" ", "_");
@@ -106,11 +108,6 @@ public class SignInManager(
 		}
 
 		return await db.Users.AnyAsync(u => u.Email == email && u.UserName == username);
-	}
-
-	public async Task<User> GetRequiredUser(ClaimsPrincipal user)
-	{
-		return await userManager.GetRequiredUser(user);
 	}
 
 	public async Task Logout(ClaimsPrincipal user)

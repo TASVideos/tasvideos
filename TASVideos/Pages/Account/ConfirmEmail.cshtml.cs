@@ -7,7 +7,6 @@ namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
 public class ConfirmEmailModel(
-	UserManager userManager,
 	SignInManager signInManager,
 	ExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
@@ -21,7 +20,7 @@ public class ConfirmEmailModel(
 			return Home();
 		}
 
-		var user = await userManager.FindByIdAsync(userId);
+		var user = await signInManager.UserManager.FindByIdAsync(userId);
 		if (user is null)
 		{
 			return Home();
@@ -33,14 +32,14 @@ public class ConfirmEmailModel(
 			return Home();
 		}
 
-		var result = await userManager.ConfirmEmailAsync(user, code);
+		var result = await signInManager.UserManager.ConfirmEmailAsync(user, code);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");
 		}
 
-		await userManager.AddStandardRoles(user.Id);
-		await userManager.AddUserPermissionsToClaims(user);
+		await signInManager.UserManager.AddStandardRoles(user.Id);
+		await signInManager.UserManager.AddUserPermissionsToClaims(user);
 		await signInManager.SignInAsync(user, isPersistent: false);
 		await publisher.SendUserManagement(
 			$"User {user.UserName} activated",

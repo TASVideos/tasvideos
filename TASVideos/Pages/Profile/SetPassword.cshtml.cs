@@ -20,7 +20,7 @@ public class SetPasswordModel(SignInManager signInManager) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await signInManager.GetRequiredUser(User);
+		var user = await signInManager.UserManager.GetRequiredUser(User);
 		var hasPassword = await signInManager.UserManager.HasPasswordAsync(user);
 
 		if (hasPassword)
