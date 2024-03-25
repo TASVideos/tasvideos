@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Profile.Models;
 
 namespace TASVideos.Pages.Profile;
 
 [RequirePermission(PermissionTo.RateMovies)]
 public class UnratedModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<UnratedMovieModel> UnratedMovies { get; set; } = [];
+	public List<UnratedMovieModel> UnratedMovies { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -16,13 +15,11 @@ public class UnratedModel(ApplicationDbContext db) : BasePageModel
 		UnratedMovies = await db.Publications
 			.ThatAreCurrent()
 			.Where(p => p.PublicationRatings.All(pr => pr.UserId != userId))
-			.Select(p => new UnratedMovieModel
-			{
-				Id = p.Id,
-				Title = p.Title,
-			})
+			.Select(p => new UnratedMovieModel(p.Id, p.Title))
 			.ToListAsync();
 
 		return Page();
 	}
+
+	public record UnratedMovieModel(int Id, string Title);
 }

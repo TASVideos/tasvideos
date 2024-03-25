@@ -10,14 +10,15 @@ namespace TASVideos.Pages.Games.Versions;
 [RequirePermission(PermissionTo.CatalogMovies)]
 public class EditModel(ApplicationDbContext db) : BasePageModel
 {
-	private static readonly IEnumerable<SelectListItem> VersionTypes = Enum
+	private static readonly List<SelectListItem> VersionTypes = Enum
 		.GetValues(typeof(VersionTypes))
 		.Cast<VersionTypes>()
 		.Select(r => new SelectListItem
 		{
 			Text = r.ToString(),
 			Value = ((int)r).ToString()
-		});
+		})
+		.ToList();
 
 	[FromRoute]
 	public int GameId { get; set; }
@@ -35,10 +36,10 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public string GameName { get; set; } = "";
 
 	public bool CanDelete { get; set; }
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableVersionTypes => VersionTypes;
+	public List<SelectListItem> AvailableSystems { get; set; } = [];
+	public List<SelectListItem> AvailableVersionTypes => VersionTypes;
 
-	public IEnumerable<SelectListItem> AvailableRegionTypes { get; set; } =
+	public List<SelectListItem> AvailableRegionTypes { get; set; } =
 	[
 			new () { Text = "U", Value = "U" },
 			new () { Text = "J", Value = "J" },

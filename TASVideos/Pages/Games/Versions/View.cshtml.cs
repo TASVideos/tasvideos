@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
-using TASVideos.Pages.Games.Versions.Models;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games.Versions;
 
@@ -59,4 +59,16 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 
 		return Page();
 	}
+
+	public record VersionDisplayModel(
+		string SystemCode,
+		string Name,
+		string? Md5,
+		string? Sha1,
+		string? Version,
+		string? Region,
+		VersionTypes Type,
+		string? TitleOverride,
+		int GameId,
+		string GameName);
 }

@@ -47,10 +47,13 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 
 	private async Task Initialize()
 	{
-		AvailableAwardCategories = UiDefaults.DefaultEntry.Concat(await awards.AwardCategories()
-			.OrderBy(c => c.Description)
-			.ToDropdown(Year)
-			.ToListAsync())
-			.ToList();
+		AvailableAwardCategories =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await awards.AwardCategories()
+				.OrderBy(c => c.Description)
+				.ToDropdown(Year)
+				.ToListAsync(),
+		];
 	}
 }

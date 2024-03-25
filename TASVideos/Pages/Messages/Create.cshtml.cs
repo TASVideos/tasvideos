@@ -35,7 +35,7 @@ public class CreateModel(
 
 	public PrivateMessageModel? ReplyingTo { get; set; }
 
-	public IEnumerable<SelectListItem> AvailableGroupRoles { get; set; } = [];
+	public List<SelectListItem> AvailableGroupRoles { get; set; } = [];
 
 	public bool IsReply => ReplyingTo is not null;
 
@@ -88,13 +88,16 @@ public class CreateModel(
 
 	private async Task SetAvailableGroupRoles()
 	{
-		AvailableGroupRoles = UiDefaults.DefaultEntry
-			.Concat((await privateMessageService.AllowedRoles())
-			.Select(m => new SelectListItem
-			{
-				Text = m,
-				Value = m
-			}));
+		AvailableGroupRoles =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. (await privateMessageService.AllowedRoles())
+				.Select(m => new SelectListItem
+				{
+					Text = m,
+					Value = m
+				}),
+		];
 	}
 
 	private async Task SetReplyingTo()
