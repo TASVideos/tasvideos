@@ -156,7 +156,7 @@ internal static class Extensions
 	/// </summary>
 	/// <param name="stream">stream of an input log</param>
 	/// <returns>header and frame count</returns>
-	public static async Task<(string[], int)> PipeBasedMovieHeaderAndFrameCount(this Stream stream)
+	public static async Task<(string[] Lines, int FrameCount)> PipeBasedMovieHeaderAndFrameCount(this Stream stream)
 	{
 		using var reader = new StreamReader(stream);
 		var frames = 0;
