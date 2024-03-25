@@ -26,11 +26,11 @@ public class RoleEditModel
 
 	[MinLength(1)]
 	[Display(Name = "Permissions")]
-	public List<int> SelectedPermissions { get; set; } = new();
+	public List<int> SelectedPermissions { get; set; } = [];
 
 	[Display(Name = "Assignable Permissions")]
-	public List<int> SelectedAssignablePermissions { get; set; } = new();
+	public List<int> SelectedAssignablePermissions { get; set; } = [];
 
 	[Display(Name = "Related Links")]
-	public IEnumerable<string> Links { get; set; } = new List<string>();
+	public List<string> Links { get; set; } = [];
 }

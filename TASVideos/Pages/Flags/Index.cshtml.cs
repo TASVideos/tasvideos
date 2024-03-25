@@ -6,7 +6,7 @@ namespace TASVideos.Pages.Flags;
 [RequirePermission(PermissionTo.FlagMaintenance)]
 public class IndexModel(IFlagService flagService) : BasePageModel
 {
-	public IEnumerable<Flag> Flags { get; set; } = [];
+	public ICollection<Flag> Flags { get; set; } = [];
 
 	public async Task OnGet()
 	{

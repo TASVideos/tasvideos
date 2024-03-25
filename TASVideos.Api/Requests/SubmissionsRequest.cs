@@ -40,19 +40,20 @@ public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 	/// </summary>
 	public int? StartType { get; init; }
 
-	IEnumerable<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear);
+	ICollection<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear).ToList();
 
-	IEnumerable<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)
+	ICollection<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)
 		? Statuses
 			.SplitWithEmpty(",")
 			.Where(s => Enum.TryParse(s, out SubmissionStatus _))
 			.Select(s =>
-				{
-					Enum.TryParse(s, out SubmissionStatus x);
-					return x;
-				})
+			{
+				Enum.TryParse(s, out SubmissionStatus x);
+				return x;
+			})
+			.ToList()
 		: [];
 
-	IEnumerable<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
-	IEnumerable<int> ISubmissionFilter.GameIds => Games.CsvToInts();
+	ICollection<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
+	ICollection<int> ISubmissionFilter.GameIds => Games.CsvToInts();
 }

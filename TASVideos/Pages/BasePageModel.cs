@@ -109,7 +109,7 @@ public class BasePageModel : PageModel
 		}
 	}
 
-	public IReadOnlyCollection<SelectListItem> AvailablePermissions { get; } =
+	public List<SelectListItem> AvailablePermissions { get; } =
 	[
 		.. UiDefaults.DefaultEntry,
 		.. PermissionUtil

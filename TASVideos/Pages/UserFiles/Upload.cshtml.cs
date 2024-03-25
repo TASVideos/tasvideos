@@ -20,11 +20,11 @@ public class UploadModel(
 
 	public int StorageUsed { get; set; }
 
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
+	public List<SelectListItem> AvailableSystems { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
+	public List<SelectListItem> AvailableGames { get; set; } = [];
 
-	public IReadOnlyCollection<string> SupportedFileExtensions { get; set; } = [];
+	public List<string> SupportedFileExtensions { get; set; } = [];
 
 	public async Task OnGet()
 	{
@@ -103,18 +103,26 @@ public class UploadModel(
 
 		StorageUsed = await userFiles.StorageUsed(User.GetUserId());
 
-		AvailableSystems = UiDefaults.DefaultEntry.Concat(await db.GameSystems
-			.OrderBy(s => s.Code)
-			.Select(s => new SelectListItem
-			{
-				Value = s.Id.ToString(),
-				Text = s.Code
-			})
-			.ToListAsync());
+		AvailableSystems =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await db.GameSystems
+				.OrderBy(s => s.Code)
+				.Select(s => new SelectListItem
+				{
+					Value = s.Id.ToString(),
+					Text = s.Code
+				})
+				.ToListAsync(),
+		];
 
-		AvailableGames = UiDefaults.DefaultEntry.Concat(await db.Games
-			.OrderBy(g => g.DisplayName)
-			.ToDropDown()
-			.ToListAsync());
+		AvailableGames =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await db.Games
+				.OrderBy(g => g.DisplayName)
+				.ToDropDown()
+				.ToListAsync(),
+		];
 	}
 }

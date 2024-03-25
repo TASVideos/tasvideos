@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.UserFiles.Models;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles;
 
@@ -26,15 +26,23 @@ public class GameModel(ApplicationDbContext db) : BasePageModel
 		{
 			GameId = game.Id,
 			GameName = game.DisplayName,
-			Files = db.UserFiles
+			Files = await db.UserFiles
 				.ForGame(game.Id)
 				.HideIfNotAuthor(User.GetUserId())
 				.AsQueryable()
 				.OrderByDescending(uf => uf.UploadTimestamp)
 				.ToUserFileModel()
-				.ToList()
+				.ToListAsync()
 		};
 
 		return Page();
+	}
+
+	public class GameFileModel
+	{
+		public int GameId { get; init; }
+		public string GameName { get; init; } = "";
+
+		public List<UserFileModel> Files { get; init; } = [];
 	}
 }

@@ -5,7 +5,7 @@ public enum FlagDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IFlagService
 {
-	Task<IReadOnlyCollection<Flag>> GetAll();
+	Task<ICollection<Flag>> GetAll();
 	Task<Flag?> GetById(int id);
 	Task<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
@@ -18,7 +18,7 @@ internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlag
 {
 	internal const string FlagsKey = "AllFlags";
 
-	public async Task<IReadOnlyCollection<Flag>> GetAll()
+	public async Task<ICollection<Flag>> GetAll()
 	{
 		if (cache.TryGetValue(FlagsKey, out List<Flag> flags))
 		{

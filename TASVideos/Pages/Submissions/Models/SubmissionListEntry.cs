@@ -22,7 +22,7 @@ public class SubmissionListEntry : ITimeable, ISubmissionDisplay
 	public TimeSpan Time => this.Time();
 
 	[Display(Name = "By")]
-	public IEnumerable<string>? Authors { get; set; }
+	public List<string>? Authors { get; set; }
 	[TableIgnore]
 	public string? AdditionalAuthors { get; set; }
 

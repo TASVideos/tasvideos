@@ -11,7 +11,7 @@ public class ReferrersModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public string? Path { get; set; }
 
-	public IEnumerable<WikiPageReferral> Referrals { get; set; } = [];
+	public List<WikiPageReferral> Referrals { get; set; } = [];
 
 	public async Task OnGet()
 	{

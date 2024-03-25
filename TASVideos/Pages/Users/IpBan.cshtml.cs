@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Users;
 [RequirePermission(PermissionTo.BanIpAddresses)]
 public class IpBanModel(IIpBanService banService) : BasePageModel
 {
-	public IList<IpBanEntry> BannedIps { get; set; } = [];
+	public List<IpBanEntry> BannedIps { get; set; } = [];
 
 	[FromQuery]
 	public string? BanIp { get; set; }

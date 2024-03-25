@@ -20,7 +20,7 @@ public class ListUrlsModel(
 
 	public string Title { get; set; } = "";
 
-	public ICollection<PublicationUrl> CurrentUrls { get; set; } = [];
+	public List<PublicationUrl> CurrentUrls { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -47,7 +47,7 @@ public class ListUrlsModel(
 		var url = await db.PublicationUrls
 			.SingleOrDefaultAsync(pf => pf.Id == urlId);
 
-		if (url != null)
+		if (url is not null)
 		{
 			db.PublicationUrls.Remove(url);
 			string log = $"Deleted {url.DisplayName} {url.Type} URL {url.Url}";

@@ -8,8 +8,7 @@ namespace TASVideos.Pages.Submissions.RejectionReasons;
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	public record RejectionRecord(int Id, string Reason, int SubmissionCount);
-	public IEnumerable<RejectionRecord> Reasons { get; set; } = [];
+	public List<RejectionRecord> Reasons { get; set; } = [];
 
 	public async Task OnGet()
 	{
@@ -65,4 +64,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			.Select(r => new RejectionRecord(r.Id, r.DisplayName, r.Submissions.Count))
 			.ToListAsync();
 	}
+
+	public record RejectionRecord(int Id, string Reason, int SubmissionCount);
 }

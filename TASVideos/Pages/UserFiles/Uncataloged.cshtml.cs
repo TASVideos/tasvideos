@@ -9,7 +9,7 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class Uncataloged(ApplicationDbContext db) : BasePageModel
 {
-	public IReadOnlyCollection<UncatalogedViewModel> Files { get; set; } = [];
+	public List<UncatalogedViewModel> Files { get; set; } = [];
 
 	[FromRoute]
 	public int Id { get; set; }
@@ -19,14 +19,7 @@ public class Uncataloged(ApplicationDbContext db) : BasePageModel
 		Files = await db.UserFiles
 			.ThatArePublic()
 			.Where(uf => uf.GameId == null)
-			.Select(uf => new UncatalogedViewModel
-			{
-				Id = uf.Id,
-				FileName = uf.FileName,
-				SystemCode = uf.System != null ? uf.System.Code : null,
-				UploadTimestamp = uf.UploadTimestamp,
-				Author = uf.Author!.UserName
-			})
+			.ToUnCatalogedModel()
 			.ToListAsync();
 
 		return Page();

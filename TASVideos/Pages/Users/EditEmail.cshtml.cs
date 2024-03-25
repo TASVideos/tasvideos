@@ -61,13 +61,13 @@ public class EditEmailModel(
 		}
 
 		if (!string.Equals(UserToEdit.Email, user.Email, StringComparison.InvariantCultureIgnoreCase)
-			&& await signInManager.EmailExists(UserToEdit.Email!))
+			&& await signInManager.EmailExists(UserToEdit.Email))
 		{
 			ModelState.AddModelError($"{nameof(UserToEdit)}.{nameof(UserToEdit.Email)}", "Email already exists.");
 			return Page();
 		}
 
-		user.Email = UserToEdit.Email!;
+		user.Email = UserToEdit.Email;
 		user.EmailConfirmed = UserToEdit.EmailConfirmed;
 		user.NormalizedEmail = signInManager.UserManager.NormalizeEmail(user.Email);
 

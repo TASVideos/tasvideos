@@ -25,7 +25,7 @@ public class EditModel(
 	public UserEditModel UserToEdit { get; set; } = new();
 
 	[DisplayName("Available Roles")]
-	public IEnumerable<SelectListItem> AvailableRoles { get; set; } = [];
+	public List<SelectListItem> AvailableRoles { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -46,7 +46,7 @@ public class EditModel(
 
 		UserToEdit = userToEdit;
 		var roles = await roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
-		AvailableRoles = roles.ToDropDown();
+		AvailableRoles = roles.ToDropDown().ToList();
 		return Page();
 	}
 
@@ -55,7 +55,7 @@ public class EditModel(
 		var roles = await roleService.GetAllRolesUserCanAssign(User.GetUserId(), UserToEdit.SelectedRoles);
 		if (!ModelState.IsValid)
 		{
-			AvailableRoles = roles.ToDropDown();
+			AvailableRoles = roles.ToDropDown().ToList();
 			return Page();
 		}
 

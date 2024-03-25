@@ -11,19 +11,20 @@ public class RatingsModel(UserManager userManager) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public UserRatings? Ratings { get; set; }
+	public UserRatings Ratings { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
-		Ratings = await userManager.GetUserRatings(
+		var ratings = await userManager.GetUserRatings(
 			UserName,
 			User.Has(PermissionTo.SeePrivateRatings) || User.Name() == UserName);
 
-		if (Ratings is null)
+		if (ratings is null)
 		{
 			return NotFound();
 		}
 
+		Ratings = ratings;
 		return Page();
 	}
 }

@@ -21,7 +21,7 @@ public class EditFilesModel(
 	[BindProperty]
 	public string Title { get; set; } = "";
 
-	public IReadOnlyCollection<PublicationFile> Files { get; set; } = [];
+	public List<PublicationFile> Files { get; set; } = [];
 
 	[Required]
 	[BindProperty]

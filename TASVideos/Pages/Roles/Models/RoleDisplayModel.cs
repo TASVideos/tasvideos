@@ -15,17 +15,13 @@ public class RoleDisplayModel
 	public string Description { get; set; } = "";
 
 	[Display(Name = "Permissions")]
-	public IEnumerable<PermissionTo> Permissions { get; set; } = [];
+	public List<PermissionTo> Permissions { get; set; } = [];
 
 	[Display(Name = "Related Links")]
-	public IEnumerable<string> Links { get; set; } = [];
+	public List<string> Links { get; set; } = [];
 
 	[Display(Name = "Users with this Role")]
-	public IReadOnlyCollection<UserWithRole> Users { get; set; } = [];
+	public List<UserWithRole> Users { get; set; } = [];
 
-	public class UserWithRole
-	{
-		public int Id { get; set; }
-		public string UserName { get; set; } = "";
-	}
+	public record UserWithRole(int Id, string UserName);
 }

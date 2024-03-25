@@ -22,7 +22,7 @@ public class AdditionalMoviesModel(
 	[BindProperty]
 	public string PublicationTitle { get; set; } = "";
 
-	public IReadOnlyCollection<PublicationFileModel> AvailableMovieFiles { get; set; } = [];
+	public List<PublicationFileModel> AvailableMovieFiles { get; set; } = [];
 
 	[BindProperty]
 	[StringLength(50)]
@@ -122,7 +122,7 @@ public class AdditionalMoviesModel(
 		var file = await db.PublicationFiles
 			.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
 
-		if (file != null)
+		if (file is not null)
 		{
 			db.PublicationFiles.Remove(file);
 
@@ -148,19 +148,9 @@ public class AdditionalMoviesModel(
 		AvailableMovieFiles = await db.PublicationFiles
 			.ThatAreMovieFiles()
 			.ForPublication(Id)
-			.Select(pf => new PublicationFileModel
-			{
-				Id = pf.Id,
-				Description = pf.Description,
-				FileName = pf.Path
-			})
+			.Select(pf => new PublicationFileModel(pf.Id, pf.Description, pf.Path))
 			.ToListAsync();
 	}
 
-	public class PublicationFileModel
-	{
-		public int Id { get; set; }
-		public string? Description { get; set; }
-		public string FileName { get; set; } = "";
-	}
+	public record PublicationFileModel(int Id, string? Description, string FileName);
 }

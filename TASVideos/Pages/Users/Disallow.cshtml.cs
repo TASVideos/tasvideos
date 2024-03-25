@@ -2,19 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditDisallows)]
 public class DisallowModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<DisallowEntry> Disallows { get; set; } = [];
+	public List<DisallowEntry> Disallows { get; set; } = [];
 
 	[BindProperty]
-	[Required]
 	[Display(Name = "Add New Regex Pattern")]
-	public string? RegexPattern { get; set; }
+	public string RegexPattern { get; set; } = "";
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -36,7 +34,7 @@ public class DisallowModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		db.UserDisallows.Add(new UserDisallow { RegexPattern = RegexPattern! });
+		db.UserDisallows.Add(new UserDisallow { RegexPattern = RegexPattern });
 		await db.SaveChangesAsync();
 
 		return BasePageRedirect("/Users/Disallow");
@@ -58,11 +56,9 @@ public class DisallowModel(ApplicationDbContext db) : BasePageModel
 	{
 		Disallows = await db.UserDisallows
 			.OrderBy(d => d.Id)
-			.Select(d => new DisallowEntry
-			{
-				Id = d.Id,
-				RegexPattern = d.RegexPattern
-			})
+			.Select(d => new DisallowEntry(d.Id, d.RegexPattern))
 			.ToListAsync();
 	}
+
+	public record DisallowEntry(int Id, string? RegexPattern);
 }

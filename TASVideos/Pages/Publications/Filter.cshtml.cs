@@ -17,23 +17,20 @@ public class FilterModel(
 	: BasePageModel
 {
 	[BindProperty]
-	public PublicationSearchModel Search { get; set; } = new()
-	{
-		Years = []
-	};
+	public PublicationSearchModel Search { get; set; } = new();
 
 	[FromQuery]
 	public string Query { get; set; } = "";
 
 	public IPublicationTokens Tokens { get; set; } = null!;
 
-	public IEnumerable<SelectListItem> AvailableTags { get; set; } = [];
+	public List<SelectListItem> AvailableTags { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = [];
+	public List<SelectListItem> AvailableFlags { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGameGroups { get; set; } = [];
+	public List<SelectListItem> AvailableGameGroups { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableAuthors { get; set; } = [];
+	public List<SelectListItem> AvailableAuthors { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -41,20 +38,20 @@ public class FilterModel(
 		var tokensFromQuery = Query.ToTokens();
 		Search = PublicationSearchModel.FromTokens(tokensFromQuery, Tokens);
 
-		AvailableTags = (await tagService.GetAll())
+		AvailableTags = [.. (await tagService.GetAll())
 			.Select(t => new SelectListItem
 			{
 				Value = t.Code.ToLower(),
 				Text = t.DisplayName
 			})
-			.OrderBy(t => t.Text);
-		AvailableFlags = (await flagService.GetAll())
+			.OrderBy(t => t.Text)];
+		AvailableFlags = [.. (await flagService.GetAll())
 			.Select(f => new SelectListItem
 			{
 				Value = f.Token.ToLower(),
 				Text = f.Name
 			})
-			.OrderBy(t => t.Text);
+			.OrderBy(t => t.Text)];
 		AvailableGameGroups = await db.GameGroups
 			.Select(gg => new SelectListItem
 			{

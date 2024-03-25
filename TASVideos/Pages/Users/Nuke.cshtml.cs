@@ -13,21 +13,6 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 	[FromRoute]
 	public int Id { get; set; }
 
-	// TODO: move me
-	public class UserModel
-	{
-		public int Id { get; init; }
-
-		[Display(Name = "Original UserName")]
-		public string UserName { get; init; } = "";
-
-		[Display(Name = "New Username")]
-		public string AnonymousUserName => $"Anonymous{Id}";
-
-		[Display(Name = "New Email")]
-		public string AnonymousEmail => $"{AnonymousUserName}@example.com";
-	}
-
 	public UserModel Profile { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
@@ -135,5 +120,19 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 
 		// If username is changed, we want to ignore the returnUrl that will be the old name
 		return BasePageRedirect("Edit", new { Id });
+	}
+
+	public class UserModel
+	{
+		public int Id { get; init; }
+
+		[Display(Name = "Original UserName")]
+		public string UserName { get; init; } = "";
+
+		[Display(Name = "New Username")]
+		public string AnonymousUserName => $"Anonymous{Id}";
+
+		[Display(Name = "New Email")]
+		public string AnonymousEmail => $"{AnonymousUserName}@example.com";
 	}
 }

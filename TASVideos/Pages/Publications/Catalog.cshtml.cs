@@ -27,11 +27,11 @@ public class CatalogModel(
 	[BindProperty]
 	public PublicationCatalogModel Catalog { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableVersions { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableGoals { get; set; } = [];
+	public List<SelectListItem> AvailableVersions { get; set; } = [];
+	public List<SelectListItem> AvailableGames { get; set; } = [];
+	public List<SelectListItem> AvailableSystems { get; set; } = [];
+	public List<SelectListItem> AvailableSystemFrameRates { get; set; } = [];
+	public List<SelectListItem> AvailableGoals { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -194,16 +194,20 @@ public class CatalogModel(
 
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
-		AvailableVersions = UiDefaults.DefaultEntry.Concat(await db.GameVersions
-			.ForGame(gameId)
-			.ForSystem(systemId)
-			.OrderBy(r => r.Name)
-			.Select(r => new SelectListItem
-			{
-				Value = r.Id.ToString(),
-				Text = r.Name
-			})
-			.ToListAsync());
+		AvailableVersions =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await db.GameVersions
+				.ForGame(gameId)
+				.ForSystem(systemId)
+				.OrderBy(r => r.Name)
+				.Select(r => new SelectListItem
+				{
+					Value = r.Id.ToString(),
+					Text = r.Name
+				})
+				.ToListAsync(),
+		];
 
 		AvailableGames = await db.Games
 			.ForSystem(systemId)

@@ -27,11 +27,11 @@ public class CatalogModel(
 	[BindProperty]
 	public SubmissionCatalogModel Catalog { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableVersions { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableSystemFrameRates { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableGoals { get; set; } = [];
+	public List<SelectListItem> AvailableVersions { get; set; } = [];
+	public List<SelectListItem> AvailableGames { get; set; } = [];
+	public List<SelectListItem> AvailableSystems { get; set; } = [];
+	public List<SelectListItem> AvailableSystemFrameRates { get; set; } = [];
+	public List<SelectListItem> AvailableGoals { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

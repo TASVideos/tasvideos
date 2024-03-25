@@ -43,14 +43,7 @@ public class IndexModel(
 			UncatalogedFiles = await db.UserFiles
 				.Where(uf => uf.GameId == null)
 				.Where(uf => !uf.Hidden)
-				.Select(uf => new UncatalogedViewModel
-				{
-					Id = uf.Id,
-					FileName = uf.FileName,
-					SystemCode = uf.System != null ? uf.System.Code : null,
-					UploadTimestamp = uf.UploadTimestamp,
-					Author = uf.Author!.UserName
-				})
+				.ToUnCatalogedModel()
 				.Take(25)
 				.ToListAsync()
 		};

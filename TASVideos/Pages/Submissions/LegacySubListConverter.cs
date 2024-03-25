@@ -35,7 +35,7 @@ public static class LegacySubListConverter
 		}
 
 		var years = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1);
-		request.Years = years.Where(y => tokens.Contains("y" + y));
+		request.Years = years.Where(y => tokens.Contains("y" + y)).ToList();
 
 		return request;
 	}

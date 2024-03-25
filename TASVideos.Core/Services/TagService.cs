@@ -5,7 +5,7 @@ public enum TagDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface ITagService
 {
-	ValueTask<IReadOnlyCollection<Tag>> GetAll();
+	ValueTask<ICollection<Tag>> GetAll();
 	ValueTask<Tag?> GetById(int id);
 	ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
@@ -18,7 +18,7 @@ internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagSe
 {
 	internal const string TagsKey = "AllTags";
 
-	public async ValueTask<IReadOnlyCollection<Tag>> GetAll()
+	public async ValueTask<ICollection<Tag>> GetAll()
 	{
 		if (cache.TryGetValue(TagsKey, out List<Tag> tags))
 		{

@@ -2,11 +2,11 @@
 
 public interface ISubmissionFilter
 {
-	IEnumerable<SubmissionStatus> StatusFilter { get; }
-	IEnumerable<int> Years { get; }
-	IEnumerable<string> Systems { get; }
+	ICollection<SubmissionStatus> StatusFilter { get; }
+	ICollection<int> Years { get; }
+	ICollection<string> Systems { get; }
 	string? User { get; }
-	IEnumerable<int> GameIds { get; }
+	ICollection<int> GameIds { get; }
 	int? StartType { get; }
 }
 

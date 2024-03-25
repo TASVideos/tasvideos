@@ -25,11 +25,10 @@ public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 		})
 		.ToList();
 
-	public List<SiteMapEntry> Map { get; set; } = [];
+	public List<SiteMapEntry> Map => CorePages;
 
 	public void OnGet()
 	{
-		Map = CorePages.ToList();
 		var wikiPages = db.WikiPages
 			.ThatAreSubpagesOf("")
 			.Where(w => !w.PageName.StartsWith("InternalSystem"))

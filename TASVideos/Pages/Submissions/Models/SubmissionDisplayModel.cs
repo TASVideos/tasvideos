@@ -61,7 +61,7 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	public int RerecordCount { get; set; }
 
 	[Display(Name = "Author")]
-	public IEnumerable<string> Authors { get; set; } = [];
+	public List<string> Authors { get; set; } = [];
 
 	[Display(Name = "Submitter")]
 	public string? Submitter { get; set; }

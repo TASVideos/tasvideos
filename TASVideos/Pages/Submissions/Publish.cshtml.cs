@@ -29,8 +29,8 @@ public class PublishModel(
 	[BindProperty]
 	public SubmissionPublishModel Submission { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableTags { get; set; } = [];
-	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = [];
+	public List<SelectListItem> AvailableTags { get; set; } = [];
+	public List<SelectListItem> AvailableFlags { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -157,22 +157,16 @@ public class PublishModel(
 		return BaseRedirect($"/{publication.Id}M");
 	}
 
-	private class ObsoletePublicationResult
+	private record ObsoletePublicationResult(string Title, List<int> Tags)
 	{
-		public string Title { get; init; } = "";
 		public string Markup { get; set; } = "";
-		public IEnumerable<int> Tags { get; init; } = [];
 	}
 
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
 	{
 		var pub = await db.Publications
 			.Where(p => p.Id == publicationId)
-			.Select(p => new ObsoletePublicationResult
-			{
-				Title = p.Title,
-				Tags = p.PublicationTags.Select(pt => pt.TagId)
-			})
+			.Select(p => new ObsoletePublicationResult(p.Title, p.PublicationTags.Select(pt => pt.TagId).ToList()))
 			.SingleOrDefaultAsync();
 
 		if (pub is null)

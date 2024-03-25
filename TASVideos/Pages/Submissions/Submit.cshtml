@@ -5,12 +5,12 @@
 	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
 	var parseErrors = !notSupportedError && ViewData.ModelState.Keys.Any(e => e == "Parser");
 	var submissionAllowed = await Model.SubmissionAllowed(User.GetUserId());
-	var notice = Model.Notice(User.GetUserId());
+	var notice = Model.Notice();
 }
 
 @{
-    if (!submissionAllowed)
-    {
+	if (!submissionAllowed)
+	{
 		<info-alert>
 			<row>
 				@foreach (var n in notice)

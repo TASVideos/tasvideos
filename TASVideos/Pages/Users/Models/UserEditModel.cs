@@ -16,7 +16,7 @@ public class UserEditModel
 	public string? From { get; set; }
 
 	[DisplayName("Selected Roles")]
-	public IEnumerable<int> SelectedRoles { get; set; } = [];
+	public List<int> SelectedRoles { get; set; } = [];
 
 	[DisplayName("Account Created On")]
 	public DateTime CreateTimestamp { get; set; }

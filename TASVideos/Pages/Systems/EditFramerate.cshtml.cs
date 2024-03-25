@@ -17,8 +17,8 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 	[BindProperty]
 	public FrameRateEditModel FrameRate { get; set; } = new();
 
-	public IReadOnlyCollection<UsageEntry> PublicationEntries = [];
-	public IReadOnlyCollection<UsageEntry> SubmissionEntries = [];
+	public List<UsageEntry> PublicationEntries = [];
+	public List<UsageEntry> SubmissionEntries = [];
 
 	public bool InUse => PublicationEntries.Any() || SubmissionEntries.Any();
 
@@ -114,7 +114,6 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 			.ToListAsync();
 	}
 
-	// TODO: move me
 	public class FrameRateEditModel
 	{
 		public int SystemId { get; init; }

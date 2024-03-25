@@ -1,10 +1,8 @@
 ﻿namespace TASVideos.Pages.UserFiles.Models;
 
-public class UncatalogedViewModel
-{
-	public long Id { get; init; }
-	public string FileName { get; init; } = "";
-	public string? SystemCode { get; init; }
-	public DateTime UploadTimestamp { get; init; }
-	public string Author { get; init; } = "";
-}
+public record UncatalogedViewModel(
+	long Id,
+	string FileName,
+	string? SystemCode,
+	DateTime UploadTimestamp,
+	string Author);

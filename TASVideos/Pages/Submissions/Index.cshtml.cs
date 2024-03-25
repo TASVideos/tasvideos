@@ -12,15 +12,14 @@ namespace TASVideos.Pages.Submissions;
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private static readonly IEnumerable<SelectListItem> Statuses = Enum.GetValues(typeof(SubmissionStatus))
+	private static readonly List<SelectListItem> Statuses = [.. Enum.GetValues(typeof(SubmissionStatus))
 		.Cast<SubmissionStatus>()
 		.Select(s => new SelectListItem
 		{
 			Text = s.EnumDisplayName(),
 			Value = ((int)s).ToString()
 		})
-		.OrderBy(s => s.Text)
-		.ToList();
+		.OrderBy(s => s.Text)];
 
 	// For legacy routes such as Subs-Rej-422up
 	[FromRoute]
@@ -32,17 +31,20 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public SubmissionPageOf<SubmissionListEntry> Submissions { get; set; } = SubmissionPageOf<SubmissionListEntry>.Empty();
 
 	[Display(Name = "Statuses")]
-	public IEnumerable<SelectListItem> AvailableStatuses => Statuses;
+	public List<SelectListItem> AvailableStatuses => Statuses;
 
-	public IEnumerable<SelectListItem> SystemList { get; set; } = [];
+	public List<SelectListItem> SystemList { get; set; } = [];
 
 	public async Task OnGet()
 	{
-		SystemList = UiDefaults.DefaultEntry.Concat(
-			await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropdown()
-			.ToListAsync());
+		SystemList =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await db.GameSystems
+				.OrderBy(s => s.Code)
+				.ToDropdown()
+				.ToListAsync(),
+		];
 
 		var search = LegacySubListConverter.ToSearchRequest(Query);
 		if (search is not null)

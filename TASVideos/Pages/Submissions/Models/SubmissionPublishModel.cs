@@ -61,10 +61,10 @@ public class SubmissionPublishModel
 	public string? MovieExtension { get; set; }
 
 	[Display(Name = "Selected Flags")]
-	public IEnumerable<int> SelectedFlags { get; set; } = [];
+	public List<int> SelectedFlags { get; set; } = [];
 
 	[Display(Name = "Selected Tags")]
-	public IEnumerable<int> SelectedTags { get; set; } = [];
+	public List<int> SelectedTags { get; set; } = [];
 
 	// Not used for edit fields
 	public string Title { get; set; } = "";

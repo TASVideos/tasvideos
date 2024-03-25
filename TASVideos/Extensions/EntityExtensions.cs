@@ -184,7 +184,7 @@ public static class EntityExtensions
 				Frames = s.Frames,
 				FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,
 				Branch = s.Branch,
-				Authors = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName),
+				Authors = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName).ToList(),
 				AdditionalAuthors = s.AdditionalAuthors,
 				Submitted = s.CreateTimestamp,
 				Status = s.Status,
@@ -264,7 +264,7 @@ public static class EntityExtensions
 			UserName = u.UserName,
 			TimezoneId = u.TimeZoneId,
 			From = u.From,
-			SelectedRoles = u.UserRoles.Select(ur => ur.RoleId),
+			SelectedRoles = u.UserRoles.Select(ur => ur.RoleId).ToList(),
 			CreateTimestamp = u.CreateTimestamp,
 			LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
 			Email = u.Email,
@@ -286,13 +286,11 @@ public static class EntityExtensions
 			Id = r.Id,
 			Name = r.Name,
 			Description = r.Description,
-			Permissions = r.RolePermission.Select(rp => rp.PermissionId),
-			Links = r.RoleLinks.Select(rl => rl.Link),
-			Users = r.UserRole.Select(ur => new RoleDisplayModel.UserWithRole
-			{
-				Id = ur.UserId,
-				UserName = ur.User!.UserName
-			}).ToList()
+			Permissions = r.RolePermission.Select(rp => rp.PermissionId).ToList(),
+			Links = r.RoleLinks.Select(rl => rl.Link).ToList(),
+			Users = r.UserRole
+				.Select(ur => new RoleDisplayModel.UserWithRole(ur.UserId, ur.User!.UserName))
+				.ToList()
 		});
 	}
 
@@ -450,5 +448,15 @@ public static class EntityExtensions
 				.Select(rp => (int)rp.PermissionId)
 				.ToList()
 		});
+	}
+
+	public static IQueryable<UncatalogedViewModel> ToUnCatalogedModel(this IQueryable<UserFile> query)
+	{
+		return query.Select(uf => new UncatalogedViewModel(
+			uf.Id,
+			uf.FileName,
+			uf.System != null ? uf.System.Code : null,
+			uf.UploadTimestamp,
+			uf.Author!.UserName));
 	}
 }

@@ -20,7 +20,7 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 
 	public WikiHistoryModel History { get; set; } = new();
 
-	public WikiDiffModel Diff { get; set; } = new();
+	public WikiDiffModel Diff { get; set; } = new("", "");
 
 	[FromQuery]
 	public bool? Latest { get; set; }
@@ -76,11 +76,9 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 			return null;
 		}
 
-		return new WikiDiffModel
-		{
-			LeftMarkup = revisions.Single(wp => wp.Revision == fromRevision).Markup,
-			RightMarkup = revisions.Single(wp => wp.Revision == toRevision).Markup
-		};
+		return new WikiDiffModel(
+			revisions.Single(wp => wp.Revision == fromRevision).Markup,
+			revisions.Single(wp => wp.Revision == toRevision).Markup);
 	}
 
 	private async Task<(int? From, int? To)> GetLatestRevisions(string pageName)
@@ -103,4 +101,6 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 			? (1, 1)
 			: (revisions[1], revisions[0]);
 	}
+
+	public record WikiDiffModel(string LeftMarkup, string RightMarkup);
 }

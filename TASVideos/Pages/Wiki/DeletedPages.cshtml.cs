@@ -14,7 +14,7 @@ public class DeletedPagesModel(
 	IWikiPages wikiPages)
 	: BasePageModel
 {
-	public IEnumerable<DeletedWikiPageDisplayModel> DeletedPages { get; set; } = [];
+	public List<DeletedWikiPageDisplayModel> DeletedPages { get; set; } = [];
 
 	public async Task OnGet()
 	{

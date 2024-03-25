@@ -171,7 +171,7 @@ public class SubmitModel(
 		}
 	}
 
-	public string[] Notice(int userId) =>
+	public string[] Notice() =>
 	[
 		"Sorry, you can not submit at this time.",
 		"We limit submissions to " +

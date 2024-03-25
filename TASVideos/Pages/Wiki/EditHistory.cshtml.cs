@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
 
 namespace TASVideos.Pages.Wiki;
 
@@ -12,7 +12,7 @@ public class EditHistoryModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public IEnumerable<UserWikiEditHistoryModel> History { get; set; } = [];
+	public List<UserWikiEditHistoryModel> History { get; set; } = [];
 
 	public async Task OnGet()
 	{
@@ -29,5 +29,23 @@ public class EditHistoryModel(ApplicationDbContext db) : BasePageModel
 				RevisionMessage = wp.RevisionMessage
 			})
 			.ToListAsync();
+	}
+
+	public class UserWikiEditHistoryModel
+	{
+		[Display(Name = "Revision")]
+		public int Revision { get; set; }
+
+		[Display(Name = "Date")]
+		public DateTime CreateTimestamp { get; set; }
+
+		[Display(Name = "Page")]
+		public string PageName { get; set; } = "";
+
+		[Display(Name = "Minor Edit")]
+		public bool MinorEdit { get; set; }
+
+		[Display(Name = "Revision Message")]
+		public string? RevisionMessage { get; set; }
 	}
 }

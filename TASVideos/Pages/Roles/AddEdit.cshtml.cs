@@ -75,7 +75,7 @@ public class AddEditModel(
 			return Page();
 		}
 
-		Role.Links = Role.Links.Where(l => !string.IsNullOrWhiteSpace(l));
+		Role.Links = Role.Links.Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
 		if (!ModelState.IsValid)
 		{
 			AvailableAssignablePermissions = Role.SelectedPermissions
@@ -135,12 +135,12 @@ public class AddEditModel(
 
 	private void SetAvailableAssignablePermissions()
 	{
-		AvailableAssignablePermissions = Role.SelectedPermissions
+		AvailableAssignablePermissions = [.. Role.SelectedPermissions
 			.Select(sp => new SelectListItem
 			{
 				Text = ((PermissionTo)sp).ToString(),
 				Value = sp.ToString()
-			}).OrderBy(sp => sp.Text).ToList();
+			}).OrderBy(sp => sp.Text)];
 	}
 
 	private async Task AddUpdateRole(RoleEditModel model)

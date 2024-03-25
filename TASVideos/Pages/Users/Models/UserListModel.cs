@@ -13,7 +13,7 @@ public class UserListModel
 	public string? UserName { get; set; }
 
 	[DisplayName("Role")]
-	public IEnumerable<string> Roles { get; set; } = [];
+	public List<string> Roles { get; set; } = [];
 
 	[DisplayName("Created")]
 	[Sortable]

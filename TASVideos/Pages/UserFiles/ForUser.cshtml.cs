@@ -16,7 +16,7 @@ public class ForUserModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public IEnumerable<UserFileModel> Files { get; set; } = [];
+	public PageOf<UserFileModel> Files { get; set; } = PageOf<UserFileModel>.Empty();
 
 	public async Task OnGet()
 	{

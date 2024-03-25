@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
@@ -17,7 +16,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 	[BindProperty]
 	public PublicationRateModel Rating { get; set; } = new();
 
-	public IEnumerable<RatingEntry> AllRatings = [];
+	public List<RatingEntry> AllRatings = [];
 	public double OverallRating { get; set; }
 
 	public IEnumerable<RatingEntry> VisibleRatings => User.Has(PermissionTo.SeePrivateRatings)
@@ -52,12 +51,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 		Rating.Unrated = Rating.Rating is null;
 
 		AllRatings = publication.PublicationRatings
-			.Select(pr => new RatingEntry
-			{
-				UserName = pr.User!.UserName,
-				IsPublic = pr.User!.PublicRatings,
-				Rating = pr.Value
-			})
+			.Select(pr => new RatingEntry(pr.User!.UserName, pr.Value, pr.User!.PublicRatings))
 			.ToList();
 
 		OverallRating = AllRatings.Any()
@@ -65,18 +59,6 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 			: 0;
 
 		return Page();
-	}
-
-	// TODO:  Move me
-	public class RatingEntry
-	{
-		[Display(Name = "UserName")]
-		public string UserName { get; init; } = "";
-
-		[Display(Name = "Rating")]
-		public double Rating { get; init; }
-
-		public bool IsPublic { get; init; }
 	}
 
 	public async Task<IActionResult> OnPost()
@@ -175,4 +157,6 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 			// Else do nothing
 		}
 	}
+
+	public record RatingEntry(string UserName, double Rating, bool IsPublic);
 }

@@ -13,7 +13,7 @@
 		<th>Framerates</th>
 		<th></th>
 	</tr>
-	@foreach (var system in Model.Systems)
+	@foreach (var system in Model.Systems.OrderBy(s => s.DisplayName))
 	{
 		<tr>
 			<td>@system.DisplayName</td>

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -28,13 +27,11 @@ public class EditModel(
 	[BindProperty]
 	public PublicationEditModel Publication { get; set; } = new();
 
-	[Display(Name = "Available Flags")]
-	public IEnumerable<SelectListItem> AvailableFlags { get; set; } = [];
+	public List<SelectListItem> AvailableFlags { get; set; } = [];
 
-	[Display(Name = "Available Tags")]
-	public IEnumerable<SelectListItem> AvailableTags { get; set; } = [];
+	public List<SelectListItem> AvailableTags { get; set; } = [];
 
-	public IEnumerable<PublicationFileDisplayModel> Files { get; set; } = [];
+	public List<PublicationFileDisplayModel> Files { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
