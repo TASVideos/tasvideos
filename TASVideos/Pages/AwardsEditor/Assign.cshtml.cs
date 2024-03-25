@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Data;
@@ -131,5 +132,15 @@ public class AssignModel(
 			.OrderBy(p => p.Title)
 			.ToDropdown()
 			.ToListAsync();
+	}
+
+	public class AwardAssignmentModel
+	{
+		[Required]
+		public string? Award { get; set; }
+
+		public List<int> Users { get; set; } = [];
+
+		public List<int> Publications { get; set; } = [];
 	}
 }

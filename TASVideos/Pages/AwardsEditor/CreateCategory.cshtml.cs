@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
-using TASVideos.Pages.AwardsEditor.Models;
 
 namespace TASVideos.Pages.AwardsEditor;
 
@@ -52,5 +52,26 @@ public class CreateCategoryModel(IAwards awards, IMediaFileUploader mediaFileUpl
 		}
 
 		return BasePageRedirect("Index");
+	}
+
+	public class CreateAwardCategoryModel
+	{
+		public int Id { get; set; }
+		public AwardType Type { get; set; }
+
+		[StringLength(25)]
+		public string ShortName { get; set; } = "";
+
+		[StringLength(50)]
+		public string Description { get; set; } = "";
+
+		[Required]
+		public IFormFile? BaseImage { get; set; }
+
+		[Required]
+		public IFormFile? BaseImage2X { get; set; }
+
+		[Required]
+		public IFormFile? BaseImage4X { get; set; }
 	}
 }

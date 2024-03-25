@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.AwardsEditor.Models;
 
 namespace TASVideos.Pages.AwardsEditor;
 
@@ -27,7 +27,7 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 			return Page();
 		}
 
-		var exists = await awards.CategoryExists(ImageToUpload.Award!);
+		var exists = await awards.CategoryExists(ImageToUpload.Award);
 		if (!exists)
 		{
 			ModelState.AddModelError("", "Award does not exist.");
@@ -39,7 +39,7 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 			ImageToUpload.BaseImage!,
 			ImageToUpload.BaseImage2X!,
 			ImageToUpload.BaseImage4X!,
-			ImageToUpload.Award!,
+			ImageToUpload.Award,
 			Year);
 
 		return BasePageRedirect("Index", new { Year });
@@ -55,5 +55,19 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 				.ToDropdown(Year)
 				.ToListAsync(),
 		];
+	}
+
+	public class UploadImageViewModel
+	{
+		public string Award { get; init; } = "";
+
+		[Required]
+		public IFormFile? BaseImage { get; init; }
+
+		[Required]
+		public IFormFile? BaseImage2X { get; init; }
+
+		[Required]
+		public IFormFile? BaseImage4X { get; init; }
 	}
 }

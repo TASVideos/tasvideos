@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Forum.Models;
 
 namespace TASVideos.Pages.Forum;
 
@@ -73,5 +73,28 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		await db.SaveChangesAsync();
 		return BasePageRedirect("Index");
+	}
+
+	public class CategoryEditModel
+	{
+		[StringLength(30)]
+		public string Title { get; set; } = "";
+
+		public string? Description { get; set; }
+
+		public List<ForumEditModel> Forums { get; set; } = [];
+
+		public class ForumEditModel
+		{
+			public int Id { get; set; }
+
+			[StringLength(50)]
+			public string Name { get; set; } = "";
+
+			[StringLength(1000)]
+			public string? Description { get; set; }
+
+			public int Ordinal { get; set; }
+		}
 	}
 }
