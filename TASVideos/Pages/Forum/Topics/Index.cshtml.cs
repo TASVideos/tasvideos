@@ -267,12 +267,12 @@ public class IndexModel(
 			topic.IsLocked = locked;
 
 			var lockedState = locked ? "LOCKED" : "UNLOCKED";
-			var result = await ConcurrentSave(db, $"Topic set to locked {lockedState}", $"Unable to set status of {lockedState}");
+			var result = await ConcurrentSave(db, $"Topic {topicTitle} set to locked {lockedState}", $"Unable to set {topicTitle} to status of {lockedState}");
 			if (result)
 			{
 				await publisher.SendForum(
 					topic.Forum!.Restricted,
-					$"Topic {lockedState} by {User.Name()}",
+					$"Topic {topicTitle} {lockedState} by {User.Name()}",
 					$"[Topic]({{0}}) {lockedState} by {User.Name()}",
 					$"{topic.Forum.ShortName}: {topic.Title}",
 					$"Forum/Topics/{Id}");
