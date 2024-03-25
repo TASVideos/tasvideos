@@ -111,20 +111,21 @@ public static partial class StringExtensions
 	/// <summary>
 	/// Takes a comma separated string and returns a list of values.
 	/// </summary>
-	public static IEnumerable<string> CsvToStrings(this string? param)
+	public static ICollection<string> CsvToStrings(this string? param)
 	{
 		return string.IsNullOrWhiteSpace(param)
 			? []
 			: param
 				.SplitWithEmpty(",")
 				.Where(p => !string.IsNullOrWhiteSpace(p))
-				.Select(p => p.Trim());
+				.Select(p => p.Trim())
+				.ToList();
 	}
 
 	/// <summary>
 	/// Takes a comma separated string and returns a list of values.
 	/// </summary>
-	public static IEnumerable<int> CsvToInts(this string? param)
+	public static ICollection<int> CsvToInts(this string? param)
 	{
 		if (string.IsNullOrWhiteSpace(param))
 		{

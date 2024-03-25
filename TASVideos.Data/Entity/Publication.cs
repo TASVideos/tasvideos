@@ -5,16 +5,16 @@
 /// </summary>
 public interface IPublicationTokens
 {
-	IEnumerable<string> SystemCodes { get; }
-	IEnumerable<string> Classes { get; }
-	IEnumerable<int> Years { get; }
-	IEnumerable<string> Tags { get; }
-	IEnumerable<string> Genres { get; }
-	IEnumerable<string> Flags { get; }
-	IEnumerable<int> Authors { get; }
-	IEnumerable<int> MovieIds { get; }
-	IEnumerable<int> Games { get; }
-	IEnumerable<int> GameGroups { get; }
+	ICollection<string> SystemCodes { get; }
+	ICollection<string> Classes { get; }
+	ICollection<int> Years { get; }
+	ICollection<string> Tags { get; }
+	ICollection<string> Genres { get; }
+	ICollection<string> Flags { get; }
+	ICollection<int> Authors { get; }
+	ICollection<int> MovieIds { get; }
+	ICollection<int> Games { get; }
+	ICollection<int> GameGroups { get; }
 	bool ShowObsoleted { get; }
 	bool OnlyObsoleted { get; }
 	string SortBy { get; }

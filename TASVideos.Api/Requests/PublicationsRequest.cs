@@ -65,16 +65,16 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 	/// </summary>
 	public string? GameGroupIds { get; init; }
 
-	IEnumerable<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
-	IEnumerable<string> IPublicationTokens.Classes => ClassNames.CsvToStrings();
-	IEnumerable<int> IPublicationTokens.Years => StartYear.YearRange(EndYear);
-	IEnumerable<string> IPublicationTokens.Genres => GenreNames.CsvToStrings();
-	IEnumerable<string> IPublicationTokens.Tags => TagNames.CsvToStrings();
-	IEnumerable<string> IPublicationTokens.Flags => FlagNames.CsvToStrings();
-	IEnumerable<int> IPublicationTokens.Authors => AuthorIds.CsvToInts();
-	IEnumerable<int> IPublicationTokens.MovieIds => [];
-	IEnumerable<int> IPublicationTokens.Games => GameIds.CsvToInts();
-	IEnumerable<int> IPublicationTokens.GameGroups => GameGroupIds.CsvToInts();
+	ICollection<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
+	ICollection<string> IPublicationTokens.Classes => ClassNames.CsvToStrings();
+	ICollection<int> IPublicationTokens.Years => StartYear.YearRange(EndYear).ToList();
+	ICollection<string> IPublicationTokens.Genres => GenreNames.CsvToStrings();
+	ICollection<string> IPublicationTokens.Tags => TagNames.CsvToStrings();
+	ICollection<string> IPublicationTokens.Flags => FlagNames.CsvToStrings();
+	ICollection<int> IPublicationTokens.Authors => AuthorIds.CsvToInts();
+	ICollection<int> IPublicationTokens.MovieIds => [];
+	ICollection<int> IPublicationTokens.Games => GameIds.CsvToInts();
+	ICollection<int> IPublicationTokens.GameGroups => GameGroupIds.CsvToInts();
 	string IPublicationTokens.SortBy => "";
 	int? IPublicationTokens.Limit => null;
 }

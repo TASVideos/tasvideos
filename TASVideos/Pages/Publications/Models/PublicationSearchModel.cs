@@ -7,12 +7,12 @@ namespace TASVideos.Pages.Publications.Models;
 public class PublicationSearchModel : IPublicationTokens
 {
 	[Display(Name = "Platform")]
-	public IEnumerable<string> SystemCodes { get; set; } = [];
-	public IEnumerable<string> Classes { get; set; } = [];
-	public IEnumerable<int> Years { get; set; } = [];
-	public IEnumerable<string> Tags { get; set; } = [];
-	public IEnumerable<string> Genres { get; set; } = [];
-	public IEnumerable<string> Flags { get; set; } = [];
+	public ICollection<string> SystemCodes { get; set; } = [];
+	public ICollection<string> Classes { get; set; } = [];
+	public ICollection<int> Years { get; set; } = [];
+	public ICollection<string> Tags { get; set; } = [];
+	public ICollection<string> Genres { get; set; } = [];
+	public ICollection<string> Flags { get; set; } = [];
 
 	[Display(Name = "Show Obsoleted")]
 	public bool ShowObsoleted { get; set; }
@@ -23,14 +23,14 @@ public class PublicationSearchModel : IPublicationTokens
 	public string SortBy { get; set; } = "";
 	public int? Limit { get; set; }
 
-	public IEnumerable<int> Authors { get; set; } = [];
+	public ICollection<int> Authors { get; set; } = [];
 
-	public IEnumerable<int> MovieIds { get; set; } = [];
+	public ICollection<int> MovieIds { get; set; } = [];
 
-	public IEnumerable<int> Games { get; set; } = [];
+	public ICollection<int> Games { get; set; } = [];
 
 	[Display(Name = "Game Groups")]
-	public IEnumerable<int> GameGroups { get; set; } = [];
+	public ICollection<int> GameGroups { get; set; } = [];
 
 	public bool IsEmpty => !SystemCodes.Any()
 		&& !Classes.Any()
@@ -104,7 +104,7 @@ public class PublicationSearchModel : IPublicationTokens
 		return sb.ToString().Trim('-');
 	}
 
-	public static PublicationSearchModel FromTokens(IReadOnlyCollection<string> tokens, IPublicationTokens tokenLookup)
+	public static PublicationSearchModel FromTokens(ICollection<string> tokens, IPublicationTokens tokenLookup)
 	{
 		var limitStr = tokens
 			.Where(t => t.StartsWith("limit"))
@@ -118,21 +118,21 @@ public class PublicationSearchModel : IPublicationTokens
 
 		return new PublicationSearchModel
 		{
-			Classes = tokenLookup.Classes.Where(tokens.Contains),
-			SystemCodes = tokenLookup.SystemCodes.Where(tokens.Contains),
+			Classes = tokenLookup.Classes.Where(tokens.Contains).ToList(),
+			SystemCodes = tokenLookup.SystemCodes.Where(tokens.Contains).ToList(),
 			ShowObsoleted = tokens.Contains("obs"),
 			OnlyObsoleted = tokens.Contains("obsonly"),
 			SortBy = tokens.Where(t => t.StartsWith("sort")).Select(t => t.Replace("sort", "")).FirstOrDefault() ?? "",
 			Limit = limit,
-			Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)),
-			Tags = tokenLookup.Tags.Where(tokens.Contains),
-			Genres = tokenLookup.Genres.Where(tokens.Contains),
-			Flags = tokenLookup.Flags.Where(tokens.Contains),
+			Years = tokenLookup.Years.Where(y => tokens.Contains("y" + y)).ToList(),
+			Tags = tokenLookup.Tags.Where(tokens.Contains).ToList(),
+			Genres = tokenLookup.Genres.Where(tokens.Contains).ToList(),
+			Flags = tokenLookup.Flags.Where(tokens.Contains).ToList(),
 			MovieIds = tokens.ToIdList('m'),
 			Games = tokens.ToIdList('g'),
 			GameGroups = tokens.ToIdListPrefix("group"),
 			Authors = tokens
-				.Where(t => t.ToLower().Contains("author"))
+				.Where(t => t.Contains("author", StringComparison.InvariantCultureIgnoreCase))
 				.Select(t => t.ToLower().Replace("author", ""))
 				.Select(t => int.TryParse(t, out var temp) ? temp : (int?)null)
 				.Where(t => t.HasValue)

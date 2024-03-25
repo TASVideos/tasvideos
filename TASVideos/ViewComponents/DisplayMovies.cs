@@ -31,16 +31,16 @@ public class DisplayMovies(
 
 		var searchModel = new PublicationSearchModel
 		{
-			Classes = tokenLookup.Classes.Where(c => pubClass.Select(tt => tt.ToLower()).Contains(c)),
-			SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Select(c => c.ToLower()).Contains(s)),
+			Classes = tokenLookup.Classes.Where(c => pubClass.Select(tt => tt.ToLower()).Contains(c)).ToList(),
+			SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Select(c => c.ToLower()).Contains(s)).ToList(),
 			ShowObsoleted = obs,
 			OnlyObsoleted = obsOnly,
 			SortBy = sort?.ToLower() ?? "",
 			Limit = limit,
-			Years = tokenLookup.Years.Where(year.Contains),
-			Tags = tokenLookup.Tags.Where(t => tag.Select(tt => tt.ToLower()).Contains(t)),
-			Genres = tokenLookup.Genres.Where(g => tag.Select(tt => tt.ToLower()).Contains(g)),
-			Flags = tokenLookup.Flags.Where(f => flag.Select(ff => ff.ToLower()).Contains(f)),
+			Years = tokenLookup.Years.Where(year.Contains).ToList(),
+			Tags = tokenLookup.Tags.Where(t => tag.Select(tt => tt.ToLower()).Contains(t)).ToList(),
+			Genres = tokenLookup.Genres.Where(g => tag.Select(tt => tt.ToLower()).Contains(g)).ToList(),
+			Flags = tokenLookup.Flags.Where(f => flag.Select(ff => ff.ToLower()).Contains(f)).ToList(),
 			MovieIds = id,
 			Games = game,
 			GameGroups = group,
