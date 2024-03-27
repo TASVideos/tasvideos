@@ -9,17 +9,13 @@ public class PlayerPointsModel(
 	ApplicationDbContext db,
 	IPointsService pointsService) : BasePageModel
 {
-	public IEnumerable<PlayerEntry> Players { get; set; } = [];
+	public List<PlayerEntry> Players { get; set; } = [];
 
 	public async Task OnGet()
 	{
 		Players = await db.Users
 			.ThatArePublishedAuthors()
-			.Select(u => new PlayerEntry
-			{
-				Id = u.Id,
-				UserName = u.UserName
-			})
+			.Select(u => new PlayerEntry(u.Id, u.UserName))
 			.ToListAsync();
 
 		foreach (var user in Players)
@@ -28,10 +24,8 @@ public class PlayerPointsModel(
 		}
 	}
 
-	public class PlayerEntry
+	public record PlayerEntry(int Id, string UserName)
 	{
-		public int Id { get; set; }
-		public string UserName { get; set; } = "";
 		public double Points { get; set; }
 		public string Rank { get; set; } = "";
 	}

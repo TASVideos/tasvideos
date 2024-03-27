@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Forum;
 
 public class MoodReportModel(ApplicationDbContext db) : BasePageModel
 {
-	public static readonly IEnumerable<ForumPostMood> Moods = Enum
+	public static readonly List<ForumPostMood> Moods = Enum
 		.GetValues(typeof(ForumPostMood))
 		.Cast<ForumPostMood>()
 		.ToList();

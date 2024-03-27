@@ -16,7 +16,7 @@ public class SettingsModel(
 	ApplicationDbContext db)
 	: BasePageModel
 {
-	public static readonly IEnumerable<SelectListItem> AvailablePronouns = Enum
+	public static readonly List<SelectListItem> AvailablePronouns = Enum
 		.GetValues(typeof(PreferredPronounTypes))
 		.Cast<PreferredPronounTypes>()
 		.Select(m => new SelectListItem
@@ -26,7 +26,7 @@ public class SettingsModel(
 		})
 		.ToList();
 
-	public static readonly IEnumerable<SelectListItem> AvailableUserPreferenceTypes = Enum
+	public static readonly List<SelectListItem> AvailableUserPreferenceTypes = Enum
 		.GetValues(typeof(UserPreference))
 		.Cast<UserPreference>()
 		.Select(m => new SelectListItem
@@ -36,7 +36,7 @@ public class SettingsModel(
 		})
 		.ToList();
 
-	public static readonly IEnumerable<SelectListItem> AvailableDateFormats = Enum
+	public static readonly List<SelectListItem> AvailableDateFormats = Enum
 		.GetValues(typeof(UserDateFormat))
 		.Cast<UserDateFormat>()
 		.Select(m => new SelectListItem
@@ -46,7 +46,7 @@ public class SettingsModel(
 		})
 		.ToList();
 
-	public static readonly IEnumerable<SelectListItem> AvailableTimeFormats = Enum
+	public static readonly List<SelectListItem> AvailableTimeFormats = Enum
 		.GetValues(typeof(UserTimeFormat))
 		.Cast<UserTimeFormat>()
 		.Select(m => new SelectListItem
@@ -56,7 +56,7 @@ public class SettingsModel(
 		})
 		.ToList();
 
-	public static readonly IEnumerable<SelectListItem> AvailableDecimalFormats = Enum
+	public static readonly List<SelectListItem> AvailableDecimalFormats = Enum
 		.GetValues(typeof(UserDecimalFormat))
 		.Cast<UserDecimalFormat>()
 		.Select(m => new SelectListItem

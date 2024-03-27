@@ -10,7 +10,7 @@ public class IndexModel(IAwards awards) : BasePageModel
 	[FromRoute]
 	public int? Year { get; set; }
 
-	public IEnumerable<AwardAssignment> Assignments { get; set; } = [];
+	public ICollection<AwardAssignment> Assignments { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

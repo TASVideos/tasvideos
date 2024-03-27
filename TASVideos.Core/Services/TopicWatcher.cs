@@ -8,7 +8,7 @@ public interface ITopicWatcher
 	/// <summary>
 	/// Returns all topics the user is currently watching.
 	/// </summary>
-	Task<IEnumerable<WatchedTopic>> UserWatches(int userId);
+	Task<ICollection<WatchedTopic>> UserWatches(int userId);
 
 	/// <summary>
 	/// Notifies everyone watching a topic (other than the poster)
@@ -51,7 +51,7 @@ internal class TopicWatcher(
 {
 	private readonly string _baseUrl = appSettings.BaseUrl;
 
-	public async Task<IEnumerable<WatchedTopic>> UserWatches(int userId)
+	public async Task<ICollection<WatchedTopic>> UserWatches(int userId)
 	{
 		return await db.ForumTopicWatches
 			.ForUser(userId)

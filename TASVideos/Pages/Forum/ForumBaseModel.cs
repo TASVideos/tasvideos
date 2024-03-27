@@ -6,7 +6,7 @@ namespace TASVideos.Pages.Forum;
 
 public class BaseForumModel : BasePageModel
 {
-	protected static readonly IEnumerable<SelectListItem> TopicTypeList = Enum
+	protected static readonly List<SelectListItem> TopicTypeList = Enum
 		.GetValues(typeof(ForumTopicType))
 		.Cast<ForumTopicType>()
 		.Select(m => new SelectListItem
@@ -16,7 +16,7 @@ public class BaseForumModel : BasePageModel
 		})
 		.ToList();
 
-	protected static readonly IEnumerable<SelectListItem> MoodList = Enum
+	protected static readonly List<SelectListItem> MoodList = Enum
 		.GetValues(typeof(ForumPostMood))
 		.Cast<ForumPostMood>()
 		.Select(m => new SelectListItem
@@ -30,8 +30,8 @@ public class BaseForumModel : BasePageModel
 	private static readonly SelectListGroup StandardGroup = new() { Name = "Standard" };
 	private static readonly SelectListGroup AltGroup = new() { Name = "Alternate" };
 
-	public IEnumerable<SelectListItem> Moods => MoodList;
-	public IEnumerable<SelectListItem> TopicTypes => TopicTypeList;
+	public List<SelectListItem> Moods => MoodList;
+	public List<SelectListItem> TopicTypes => TopicTypeList;
 
 	public new IActionResult NotFound()
 	{

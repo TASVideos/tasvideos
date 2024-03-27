@@ -133,7 +133,7 @@ public class MergeModel(
 		AvailableTopics = [.. UiDefaults.DefaultEntry, .. await GetTopicsForForum(Topic.ForumId)];
 	}
 
-	private async Task<IEnumerable<SelectListItem>> GetTopicsForForum(int forumId)
+	private async Task<List<SelectListItem>> GetTopicsForForum(int forumId)
 	{
 		var seeRestricted = CanSeeRestricted;
 		return await db.ForumTopics

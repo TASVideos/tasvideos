@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Permissions;
 [Authorize]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	public IEnumerable<PermissionDisplayModel> Permissions { get; } = PermissionUtil
+	public List<PermissionDisplayModel> Permissions { get; } = PermissionUtil
 		.AllPermissions()
 		.Select(p => new PermissionDisplayModel(
 			p,

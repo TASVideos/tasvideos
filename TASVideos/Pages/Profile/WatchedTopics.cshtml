@@ -22,8 +22,8 @@
 			<th>Stop Watching</th>
 		</tr>
 		@foreach (var watch in Model.Watches
-		   .OrderBy(tw => !tw.IsNotified)
-		   .ThenByDescending(tw => tw.LastPostTimestamp))
+			.OrderBy(tw => !tw.IsNotified)
+			.ThenByDescending(tw => tw.LastPostTimestamp))
 		{
 			<tr style="@(watch.IsNotified ? "font-style: italic" : "")">
 				<td>

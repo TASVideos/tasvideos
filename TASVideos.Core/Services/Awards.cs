@@ -19,7 +19,7 @@ public interface IAwards
 	/// Gets all awards assigned in the given year
 	/// </summary>
 	/// <param name="year">The year, ex: 2010</param>
-	ValueTask<IEnumerable<AwardAssignment>> ForYear(int year);
+	ValueTask<ICollection<AwardAssignment>> ForYear(int year);
 
 	/// <summary>
 	/// Adds an award for the given year
@@ -68,7 +68,7 @@ internal class Awards(
 			.ToList();
 	}
 
-	public async ValueTask<IEnumerable<AwardAssignment>> ForYear(int year)
+	public async ValueTask<ICollection<AwardAssignment>> ForYear(int year)
 	{
 		var allAwards = await AllAwards();
 		return allAwards
