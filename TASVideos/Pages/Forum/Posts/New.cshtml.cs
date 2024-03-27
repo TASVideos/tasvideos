@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core;
-using TASVideos.Core.Services;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
 

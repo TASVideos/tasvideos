@@ -3,7 +3,6 @@ using Serilog;
 using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
-using TASVideos.Data;
 using TASVideos.Middleware;
 using TASVideos.Services;
 

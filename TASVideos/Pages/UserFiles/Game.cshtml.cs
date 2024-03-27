@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-using TASVideos.Models;
+﻿using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles;
 

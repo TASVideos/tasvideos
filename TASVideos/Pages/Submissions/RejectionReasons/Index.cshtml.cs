@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Submissions.RejectionReasons;
+﻿namespace TASVideos.Pages.Submissions.RejectionReasons;
 
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel

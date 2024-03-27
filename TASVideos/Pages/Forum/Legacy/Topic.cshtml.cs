@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Forum.Legacy;
+﻿namespace TASVideos.Pages.Forum.Legacy;
 
 // Handles legacy forum links to viewTopic.php
 [AllowAnonymous]

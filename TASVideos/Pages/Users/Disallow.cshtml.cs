@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Users;
+﻿namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditDisallows)]
 public class DisallowModel(ApplicationDbContext db) : BasePageModel

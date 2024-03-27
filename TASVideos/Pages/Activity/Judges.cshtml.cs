@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Activity;
+﻿namespace TASVideos.Pages.Activity;
 
 [AllowAnonymous]
 public class JudgesModel(ApplicationDbContext db) : BasePageModel

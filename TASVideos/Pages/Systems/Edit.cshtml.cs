@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Systems;
+﻿namespace TASVideos.Pages.Systems;
 
 [RequirePermission(PermissionTo.GameSystemMaintenance)]
 public class EditModel(IGameSystemService systemService) : BasePageModel

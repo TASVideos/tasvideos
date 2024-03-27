@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.PublicationClasses;
+﻿namespace TASVideos.Pages.PublicationClasses;
 
 [RequirePermission(PermissionTo.ClassMaintenance)]
 public class CreateModel(IClassService classService) : BasePageModel

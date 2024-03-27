@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data;
-
-namespace TASVideos.Pages.GameGroups;
+﻿namespace TASVideos.Pages.GameGroups;
 
 [AllowAnonymous]
 public class ListModel(ApplicationDbContext db) : BasePageModel

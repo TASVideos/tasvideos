@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-
-namespace TASVideos.Pages.Profile;
+﻿namespace TASVideos.Pages.Profile;
 
 [Authorize]
 public class WatchedTopicsModel(ITopicWatcher topicWatcher) : BasePageModel

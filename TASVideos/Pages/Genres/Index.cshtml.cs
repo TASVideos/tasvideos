@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services;
-
-namespace TASVideos.Pages.Genres;
+﻿namespace TASVideos.Pages.Genres;
 
 public class IndexModel(IGenreService genreService) : BasePageModel
 {

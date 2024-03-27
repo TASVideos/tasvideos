@@ -1,9 +1,5 @@
 ﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions.Models;
 

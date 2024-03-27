@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account;
 

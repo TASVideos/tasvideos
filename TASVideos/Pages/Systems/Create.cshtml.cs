@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Systems;
 

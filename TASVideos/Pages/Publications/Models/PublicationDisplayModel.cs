@@ -1,6 +1,4 @@
-﻿using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Publications.Models;
+﻿namespace TASVideos.Pages.Publications.Models;
 
 public class PublicationDisplayModel
 {

@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Data;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace TASVideos.Pages.Publications;
 

@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Wiki;
+﻿namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
 public class PageHistoryModel(ApplicationDbContext db) : BasePageModel

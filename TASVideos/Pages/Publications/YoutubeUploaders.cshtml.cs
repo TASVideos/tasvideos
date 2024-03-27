@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Core.Services.Youtube;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.Youtube;
 
 namespace TASVideos.Pages.Publications;
 

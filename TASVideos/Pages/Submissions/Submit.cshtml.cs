@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions.Models;
 

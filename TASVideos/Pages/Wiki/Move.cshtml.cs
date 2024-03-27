@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data.Entity;
 using TASVideos.Models;
 
 namespace TASVideos.Pages.Wiki;

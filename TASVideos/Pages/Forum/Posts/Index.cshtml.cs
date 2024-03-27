@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Forum.Posts;
+﻿namespace TASVideos.Pages.Forum.Posts;
 
 // TODO: how to do this without a redirect
 [AllowAnonymous]

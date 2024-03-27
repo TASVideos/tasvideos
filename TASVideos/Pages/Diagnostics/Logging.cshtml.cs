@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Diagnostics;
+﻿namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
 public class LoggingModel(ILogger<ILogger> logger) : BasePageModel

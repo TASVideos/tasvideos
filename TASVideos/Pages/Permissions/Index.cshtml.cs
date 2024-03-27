@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Permissions;
+﻿namespace TASVideos.Pages.Permissions;
 
 [Authorize]
 public class IndexModel(ApplicationDbContext db) : BasePageModel

@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Genres;
+﻿namespace TASVideos.Pages.Genres;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
 public class EditModel(IGenreService genreService) : BasePageModel

@@ -1,5 +1,4 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Pages.Submissions.Models;
+﻿using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.Submissions;
 

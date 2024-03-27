@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Tags;
+﻿namespace TASVideos.Pages.Tags;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
 public class EditModel(ITagService tagService) : BasePageModel

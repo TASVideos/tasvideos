@@ -1,7 +1,4 @@
-﻿using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Flags;
+﻿namespace TASVideos.Pages.Flags;
 
 [RequirePermission(PermissionTo.FlagMaintenance)]
 public class IndexModel(IFlagService flagService) : BasePageModel

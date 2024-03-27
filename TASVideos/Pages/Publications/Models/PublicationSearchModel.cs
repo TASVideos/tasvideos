@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text;
-using TASVideos.Data.Entity;
+﻿using System.Text;
 
 namespace TASVideos.Pages.Publications.Models;
 

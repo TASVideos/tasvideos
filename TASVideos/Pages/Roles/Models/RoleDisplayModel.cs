@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Roles.Models;
+﻿namespace TASVideos.Pages.Roles.Models;
 
 public class RoleDisplayModel
 {

@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Forum;
+﻿namespace TASVideos.Pages.Forum;
 
 [RequirePermission(PermissionTo.EditCategories)]
 public class EditModel(ApplicationDbContext db) : BasePageModel

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services.Wiki;
-using TASVideos.Data;
+﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Helpers;
 using TASVideos.WikiEngine;
 

@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TASVideos.ViewComponents;
+﻿namespace TASVideos.ViewComponents;
 
 public class PlayerPointsModel
 {

@@ -1,7 +1,4 @@
 ﻿using System.Reflection;
-using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Wiki;
 

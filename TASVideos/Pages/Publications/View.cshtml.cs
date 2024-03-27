@@ -1,7 +1,4 @@
 ﻿using System.Net.Mime;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
 using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications;

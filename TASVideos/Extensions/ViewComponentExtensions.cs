@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core;
+﻿using TASVideos.Core;
 
 namespace TASVideos.Extensions;
 

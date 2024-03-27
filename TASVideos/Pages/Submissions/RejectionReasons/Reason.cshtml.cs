@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-
-namespace TASVideos.Pages.Submissions.RejectionReasons;
+﻿namespace TASVideos.Pages.Submissions.RejectionReasons;
 
 [AllowAnonymous]
 public class ReasonModel(ApplicationDbContext db) : BasePageModel

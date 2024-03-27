@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-
-namespace TASVideos.Pages.Messages;
+﻿namespace TASVideos.Pages.Messages;
 
 [Authorize]
 public class IndexModel(UserManager userManager) : BasePageModel

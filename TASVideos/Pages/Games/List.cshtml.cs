@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core;
-using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games;

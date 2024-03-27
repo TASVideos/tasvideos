@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-
-namespace TASVideos.Pages.Profile;
+﻿namespace TASVideos.Pages.Profile;
 
 [Authorize]
 public class SetPasswordModel(SignInManager signInManager) : BasePageModel

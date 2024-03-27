@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core.Services;
-namespace TASVideos.Pages.Systems;
+﻿namespace TASVideos.Pages.Systems;
 
 [AllowAnonymous]
 public class IndexModel(IGameSystemService systemService) : BasePageModel

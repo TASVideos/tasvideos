@@ -1,8 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core;
-using TASVideos.Data;
 
 namespace TASVideos.Pages.Logs;
 

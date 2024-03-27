@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Profile;
+﻿namespace TASVideos.Pages.Profile;
 
 [RequirePermission(PermissionTo.RateMovies)]
 public class UnratedModel(ApplicationDbContext db) : BasePageModel

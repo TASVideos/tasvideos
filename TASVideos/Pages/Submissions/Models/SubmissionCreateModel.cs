@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.Models;
+﻿using TASVideos.Models;
 using TASVideos.Models.ValidationAttributes;
 
 namespace TASVideos.Pages.Submissions.Models;

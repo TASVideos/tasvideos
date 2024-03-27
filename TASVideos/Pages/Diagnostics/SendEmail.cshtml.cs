@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services.Email;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Diagnostics;
 

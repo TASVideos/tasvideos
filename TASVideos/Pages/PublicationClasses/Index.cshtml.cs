@@ -1,7 +1,4 @@
-﻿using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.PublicationClasses;
+﻿namespace TASVideos.Pages.PublicationClasses;
 
 [RequirePermission(PermissionTo.ClassMaintenance)]
 public class IndexModel(IClassService classService) : BasePageModel

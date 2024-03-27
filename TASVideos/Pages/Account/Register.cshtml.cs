@@ -1,11 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using AspNetCore.ReCaptcha;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
+﻿using AspNetCore.ReCaptcha;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Models.ValidationAttributes;
 
 namespace TASVideos.Pages.Account;

@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core.Services;
-
-namespace TASVideos.Pages.Forum;
+﻿namespace TASVideos.Pages.Forum;
 
 [AllowAnonymous]
 public class IndexModel(IForumService forumService) : BasePageModel

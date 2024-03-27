@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;

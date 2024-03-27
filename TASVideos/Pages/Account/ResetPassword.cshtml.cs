@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-
-namespace TASVideos.Pages.Account;
+﻿namespace TASVideos.Pages.Account;
 
 [IpBanCheck]
 public class ResetPasswordModel(UserManager userManager) : BasePageModel

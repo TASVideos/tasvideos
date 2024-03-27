@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-namespace TASVideos.Pages.Submissions;
+﻿namespace TASVideos.Pages.Submissions;
 
 // Handles legacy queue.cgi links
 [AllowAnonymous]

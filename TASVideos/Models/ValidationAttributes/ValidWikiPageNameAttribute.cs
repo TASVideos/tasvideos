@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TASVideos.Models;
+﻿namespace TASVideos.Models;
 
 public class ValidWikiPageNameAttribute : ValidationAttribute
 {

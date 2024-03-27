@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.ViewComponents.Models;
+﻿using TASVideos.ViewComponents.Models;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents;

@@ -1,9 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Core.Services;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Pages.AwardsEditor;

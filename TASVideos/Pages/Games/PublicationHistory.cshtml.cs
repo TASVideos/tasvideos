@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Core.Services.PublicationChain;
-using TASVideos.Data;
+﻿using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games;

@@ -1,8 +1,5 @@
 ﻿using System.Globalization;
 using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications;

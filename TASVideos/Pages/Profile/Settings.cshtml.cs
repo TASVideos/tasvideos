@@ -1,11 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Core.Services;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.Email;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Profile;
 

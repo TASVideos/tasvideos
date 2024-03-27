@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Diagnostics;
 

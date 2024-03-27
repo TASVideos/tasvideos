@@ -1,6 +1,4 @@
-﻿using TASVideos.Data.Entity;
-
-namespace TASVideos.Models;
+﻿namespace TASVideos.Models;
 
 public class UserFileModel
 {

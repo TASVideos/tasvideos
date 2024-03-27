@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-using TASVideos.Pages.Publications.Models;
+﻿using TASVideos.Pages.Publications.Models;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.ViewComponents;

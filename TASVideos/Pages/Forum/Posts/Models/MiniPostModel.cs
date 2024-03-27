@@ -1,6 +1,4 @@
-﻿using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Forum.Posts.Models;
+﻿namespace TASVideos.Pages.Forum.Posts.Models;
 
 public record MiniPostModel(
 	DateTime CreateTimestamp,

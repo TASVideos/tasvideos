@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace TASVideos.Pages.Forum.Subforum.Models;
+﻿namespace TASVideos.Pages.Forum.Subforum.Models;
 
 public class ForumEditModel
 {

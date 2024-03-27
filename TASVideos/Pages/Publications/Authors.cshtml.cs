@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
-
-namespace TASVideos.Pages.Publications;
+﻿namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
 public class AuthorsModel(ApplicationDbContext db) : BasePageModel

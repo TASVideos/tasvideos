@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Pages.Forum.Subforum.Models;
 
 namespace TASVideos.Pages.Forum.Subforum;
