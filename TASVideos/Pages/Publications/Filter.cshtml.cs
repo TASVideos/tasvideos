@@ -39,34 +39,18 @@ public class FilterModel(
 		Search = PublicationSearchModel.FromTokens(tokensFromQuery, Tokens);
 
 		AvailableTags = [.. (await tagService.GetAll())
-			.Select(t => new SelectListItem
-			{
-				Value = t.Code.ToLower(),
-				Text = t.DisplayName
-			})
+			.ToDopDown()
 			.OrderBy(t => t.Text)];
 		AvailableFlags = [.. (await flagService.GetAll())
-			.Select(f => new SelectListItem
-			{
-				Value = f.Token.ToLower(),
-				Text = f.Name
-			})
+			.ToDopDown()
 			.OrderBy(t => t.Text)];
 		AvailableGameGroups = await db.GameGroups
-			.Select(gg => new SelectListItem
-			{
-				Value = gg.Id.ToString(),
-				Text = gg.Name
-			})
+			.ToDropDown()
 			.OrderBy(gg => gg.Text)
 			.ToListAsync();
 		AvailableAuthors = await db.Users
 			.ThatArePublishedAuthors()
-			.Select(u => new SelectListItem
-			{
-				Value = u.Id.ToString(),
-				Text = u.UserName
-			})
+			.ToDropdown()
 			.ToListAsync();
 		return Page();
 	}

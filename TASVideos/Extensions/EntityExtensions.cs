@@ -28,6 +28,33 @@ public static class EntityExtensions
 		});
 	}
 
+	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<string> strings)
+	{
+		return strings.Select(s => new SelectListItem
+		{
+			Text = s,
+			Value = s
+		});
+	}
+
+	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<PermissionTo> permissions)
+	{
+		return permissions.Select(p => new SelectListItem
+		{
+			Text = p.ToString().SplitCamelCase(),
+			Value = ((int)p).ToString()
+		});
+	}
+
+	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<int> ints)
+	{
+		return ints.Select(i => new SelectListItem
+		{
+			Text = i.ToString(),
+			Value = i.ToString()
+		});
+	}
+
 	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Genre> query)
 	{
 		return query.Select(g => new SelectListItem
@@ -208,6 +235,24 @@ public static class EntityExtensions
 		{
 			Text = gg.DisplayName,
 			Value = gg.Id.ToString()
+		});
+	}
+
+	public static IEnumerable<SelectListItem> ToDopDown(this IEnumerable<Tag> tags)
+	{
+		return tags.Select(t => new SelectListItem
+		{
+			Text = t.DisplayName,
+			Value = t.Code.ToLower()
+		});
+	}
+
+	public static IEnumerable<SelectListItem> ToDopDown(this IEnumerable<Flag> flags)
+	{
+		return flags.Select(f => new SelectListItem
+		{
+			Text = f.Token.ToLower(),
+			Value = f.Name
 		});
 	}
 

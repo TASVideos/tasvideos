@@ -108,11 +108,7 @@ public class UploadModel(
 			.. UiDefaults.DefaultEntry,
 			.. await db.GameSystems
 				.OrderBy(s => s.Code)
-				.Select(s => new SelectListItem
-				{
-					Value = s.Id.ToString(),
-					Text = s.Code
-				})
+				.ToDropDownWithId()
 				.ToListAsync(),
 		];
 

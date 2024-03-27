@@ -91,11 +91,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			.. UiDefaults.DefaultEntry,
 			.. await db.GameSystems
 				.OrderBy(s => s.Code)
-				.Select(s => new SelectListItem
-				{
-					Value = s.Id.ToString(),
-					Text = s.Code
-				})
+				.ToDropDownWithId()
 				.ToListAsync(),
 		];
 

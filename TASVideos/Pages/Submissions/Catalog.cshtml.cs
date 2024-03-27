@@ -271,11 +271,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		AvailableGoals = Catalog.GameId.HasValue
 			? await db.GameGoals
 				.Where(gg => gg.GameId == Catalog.GameId)
-				.Select(gg => new SelectListItem
-				{
-					Text = gg.DisplayName,
-					Value = gg.Id.ToString()
-				})
+				.ToDropDown()
 				.ToListAsync()
 			: [];
 	}

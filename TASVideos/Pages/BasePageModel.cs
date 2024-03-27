@@ -114,11 +114,7 @@ public class BasePageModel : PageModel
 		.. UiDefaults.DefaultEntry,
 		.. PermissionUtil
 			.AllPermissions()
-			.Select(p => new SelectListItem
-			{
-				Value = ((int)p).ToString(),
-				Text = p.ToString().SplitCamelCase(),
-			})
+			.ToDropDown()
 			.OrderBy(p => p.Text)
 	];
 

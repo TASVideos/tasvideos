@@ -90,12 +90,7 @@ public class CreateModel(
 		AvailableGroupRoles =
 		[
 			.. UiDefaults.DefaultEntry,
-			.. (await privateMessageService.AllowedRoles())
-				.Select(m => new SelectListItem
-				{
-					Text = m,
-					Value = m
-				}),
+			.. (await privateMessageService.AllowedRoles()).ToDropDown()
 		];
 	}
 

@@ -4,13 +4,7 @@
 @inject IQueueService QueueService
 @{
 	ViewData.SetTitle("Submissions");
-
-	var selectAvailableYears = Model.Search.AvailableYears
-		.Select(n => new SelectListItem
-		{
-			Text = n.ToString(),
-			Value = n.ToString()
-		});
+	var selectAvailableYears = Model.Search.AvailableYears.ToDropDown();
 }
 
 <div permission="SubmitMovies" class="float-end">
