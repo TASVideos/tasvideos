@@ -45,11 +45,10 @@ public class PublicationRateModel
 		}
 	}
 
-	public string Title { get; set; } = "";
+	public string Title { get; init; } = "";
 
-	[Display(Name = "Rating")]
 	[RatingString(ErrorMessage = "{0} must be between 0 and 10.")]
-	public string? Rating { get; set; }
+	public string? Rating { get; init; }
 
 	public bool Unrated { get; set; }
 }

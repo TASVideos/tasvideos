@@ -9,10 +9,10 @@
 	<table class="table table-striped">
 		<tbody>
 			<tr>
-				<th>@Html.DisplayNameFor(m => m.History.First().PageName)</th>
-				<th>@Html.DisplayNameFor(m => m.History.First().CreateTimestamp)</th>
-				<th>@Html.DisplayNameFor(m => m.History.First().MinorEdit)</th>
-				<th>@Html.DisplayNameFor(m => m.History.First().RevisionMessage)</th>
+				<th>Page</th>
+				<th>Date</th>
+				<th>Minor Edit</th>
+				<th>Revision Message</th>
 				<th>Actions</th>
 			</tr>
 			@foreach (var revision in Model.History)

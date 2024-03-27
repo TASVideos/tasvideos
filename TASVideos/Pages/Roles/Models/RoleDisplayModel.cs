@@ -10,8 +10,6 @@ public class RoleDisplayModel
 	public int Id { get; set; }
 	public string? Name { get; set; }
 	public string Description { get; set; } = "";
-
-	[Display(Name = "Permissions")]
 	public List<PermissionTo> Permissions { get; set; } = [];
 
 	[Display(Name = "Related Links")]

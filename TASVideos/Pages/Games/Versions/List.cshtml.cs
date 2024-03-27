@@ -20,18 +20,16 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			{
 				GameDisplayName = g.DisplayName,
 				Versions = g.GameVersions
-				.Select(r => new VersionListModel.VersionEntry
-				{
-					Id = r.Id,
-					Name = r.Name,
-					Md5 = r.Md5,
-					Sha1 = r.Sha1,
-					Version = r.Version,
-					Region = r.Region,
-					Type = r.Type,
-					System = r.System!.Code,
-					TitleOverride = r.TitleOverride,
-				})
+				.Select(r => new VersionListModel.VersionEntry(
+					r.Id,
+					r.Name,
+					r.Md5,
+					r.Sha1,
+					r.Version,
+					r.Region,
+					r.Type,
+					r.System!.Code,
+					r.TitleOverride))
 				.ToList()
 			})
 			.SingleOrDefaultAsync();
@@ -52,19 +50,15 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		public List<VersionEntry> Versions { get; init; } = [];
 
-		public class VersionEntry
-		{
-			public int Id { get; init; }
-			public string Name { get; init; } = "";
-			public string? Md5 { get; init; }
-			public string? Sha1 { get; init; }
-			public string? Version { get; init; }
-			public string? Region { get; init; }
-			public VersionTypes Type { get; init; }
-			public string System { get; init; } = "";
-
-			[Display(Name = "Title Override")]
-			public string? TitleOverride { get; init; }
-		}
+		public record VersionEntry(
+			int Id,
+			string Name,
+			string? Md5,
+			string? Sha1,
+			string? Version,
+			string? Region,
+			VersionTypes Type,
+			string System,
+			string? TitleOverride);
 	}
 }

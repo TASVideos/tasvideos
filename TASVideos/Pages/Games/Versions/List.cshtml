@@ -9,14 +9,14 @@
 <hr />
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Name)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().TitleOverride)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Version)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Region)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Type)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Md5)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Sha1)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().System)</th>
+		<th>Name</th>
+		<th>Title Override</th>
+		<th>Version</th>
+		<th>Region</th>
+		<th>Type</th>
+		<th>MD5</th>
+		<th>SHA1</th>
+		<th>System</th>
 		<th>Actions</th>
 	</tr>
 	@foreach (var version in Model.Versions.Versions.OrderBy(r => r.Name))
