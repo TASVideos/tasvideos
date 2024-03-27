@@ -11,14 +11,8 @@ namespace TASVideos.Pages.Games.Versions;
 public class EditModel(ApplicationDbContext db) : BasePageModel
 {
 	private static readonly List<SelectListItem> VersionTypes = Enum
-		.GetValues(typeof(VersionTypes))
-		.Cast<VersionTypes>()
-		.Select(r => new SelectListItem
-		{
-			Text = r.ToString(),
-			Value = ((int)r).ToString()
-		})
-		.ToList();
+		.GetValues<VersionTypes>()
+		.ToDropDown();
 
 	[FromRoute]
 	public int GameId { get; set; }

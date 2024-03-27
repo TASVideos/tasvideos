@@ -17,54 +17,24 @@ public class SettingsModel(
 	: BasePageModel
 {
 	public static readonly List<SelectListItem> AvailablePronouns = Enum
-		.GetValues(typeof(PreferredPronounTypes))
-		.Cast<PreferredPronounTypes>()
-		.Select(m => new SelectListItem
-		{
-			Value = ((int)m).ToString(),
-			Text = m.EnumDisplayName()
-		})
-		.ToList();
+		.GetValues<PreferredPronounTypes>()
+		.ToDropDown();
 
 	public static readonly List<SelectListItem> AvailableUserPreferenceTypes = Enum
-		.GetValues(typeof(UserPreference))
-		.Cast<UserPreference>()
-		.Select(m => new SelectListItem
-		{
-			Value = ((int)m).ToString(),
-			Text = m.EnumDisplayName()
-		})
-		.ToList();
+		.GetValues<UserPreference>()
+		.ToDropDown();
 
 	public static readonly List<SelectListItem> AvailableDateFormats = Enum
-		.GetValues(typeof(UserDateFormat))
-		.Cast<UserDateFormat>()
-		.Select(m => new SelectListItem
-		{
-			Value = ((int)m).ToString(),
-			Text = m.EnumDisplayName()
-		})
-		.ToList();
+		.GetValues<UserDateFormat>()
+		.ToDropDown();
 
 	public static readonly List<SelectListItem> AvailableTimeFormats = Enum
-		.GetValues(typeof(UserTimeFormat))
-		.Cast<UserTimeFormat>()
-		.Select(m => new SelectListItem
-		{
-			Value = ((int)m).ToString(),
-			Text = m.EnumDisplayName()
-		})
-		.ToList();
+		.GetValues<UserTimeFormat>()
+		.ToDropDown();
 
 	public static readonly List<SelectListItem> AvailableDecimalFormats = Enum
-		.GetValues(typeof(UserDecimalFormat))
-		.Cast<UserDecimalFormat>()
-		.Select(m => new SelectListItem
-		{
-			Value = ((int)m).ToString(),
-			Text = m.EnumDisplayName()
-		})
-		.ToList();
+		.GetValues<UserDecimalFormat>()
+		.ToDropDown();
 
 	[BindProperty]
 	public ProfileSettingsModel Settings { get; set; } = new();

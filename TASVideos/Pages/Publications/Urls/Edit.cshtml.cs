@@ -19,18 +19,9 @@ public class EditUrlsModel(
 	IWikiPages wikiPages)
 	: BasePageModel
 {
-	private static readonly List<PublicationUrlType> PublicationUrlTypes = Enum
-		.GetValues(typeof(PublicationUrlType))
-		.Cast<PublicationUrlType>()
-		.ToList();
+	private static readonly IEnumerable<PublicationUrlType> PublicationUrlTypes = Enum.GetValues<PublicationUrlType>();
 
-	public IEnumerable<SelectListItem> AvailableTypes =
-		PublicationUrlTypes
-			.Select(t => new SelectListItem
-			{
-				Text = t.ToString(),
-				Value = ((int)t).ToString()
-			});
+	public List<SelectListItem> AvailableTypes => PublicationUrlTypes.ToDropDown();
 
 	[FromRoute]
 	public int PublicationId { get; set; }

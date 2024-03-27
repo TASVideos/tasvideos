@@ -7,18 +7,11 @@ namespace TASVideos.Pages.Forum;
 public class BaseForumModel : BasePageModel
 {
 	protected static readonly List<SelectListItem> TopicTypeList = Enum
-		.GetValues(typeof(ForumTopicType))
-		.Cast<ForumTopicType>()
-		.Select(m => new SelectListItem
-		{
-			Value = ((int)m).ToString(),
-			Text = m.EnumDisplayName()
-		})
-		.ToList();
+		.GetValues<ForumTopicType>()
+		.ToDropDown();
 
 	protected static readonly List<SelectListItem> MoodList = Enum
-		.GetValues(typeof(ForumPostMood))
-		.Cast<ForumPostMood>()
+		.GetValues<ForumPostMood>()
 		.Select(m => new SelectListItem
 		{
 			Value = ((int)m).ToString(),

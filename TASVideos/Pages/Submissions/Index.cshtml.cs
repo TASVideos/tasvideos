@@ -14,11 +14,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
 	private static readonly List<SelectListItem> Statuses = [.. Enum.GetValues(typeof(SubmissionStatus))
 		.Cast<SubmissionStatus>()
-		.Select(s => new SelectListItem
-		{
-			Text = s.EnumDisplayName(),
-			Value = ((int)s).ToString()
-		})
+		.ToDropDown()
 		.OrderBy(s => s.Text)];
 
 	// For legacy routes such as Subs-Rej-422up

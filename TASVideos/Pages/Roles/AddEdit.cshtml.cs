@@ -79,12 +79,10 @@ public class AddEditModel(
 		if (!ModelState.IsValid)
 		{
 			AvailableAssignablePermissions = Role.SelectedPermissions
-			.Select(sp => new SelectListItem
-			{
-				Text = ((PermissionTo)sp).ToString(),
-				Value = sp.ToString()
-			})
-			.ToList();
+				.Cast<PermissionTo>()
+				.ToDropDown()
+				.ToList();
+
 			return Page();
 		}
 
@@ -133,11 +131,10 @@ public class AddEditModel(
 	private void SetAvailableAssignablePermissions()
 	{
 		AvailableAssignablePermissions = [.. Role.SelectedPermissions
-			.Select(sp => new SelectListItem
-			{
-				Text = ((PermissionTo)sp).ToString(),
-				Value = sp.ToString()
-			}).OrderBy(sp => sp.Text)];
+			.Cast<PermissionTo>()
+			.ToDropDown()
+			.OrderBy(sp => sp.Text)
+		];
 	}
 
 	private async Task AddUpdateRole(RoleEditModel model)

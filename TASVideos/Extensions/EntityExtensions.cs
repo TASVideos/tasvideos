@@ -256,6 +256,18 @@ public static class EntityExtensions
 		});
 	}
 
+	public static List<SelectListItem> ToDropDown<T>(this IEnumerable<T> enums)
+		where T : Enum
+	{
+		return enums
+			.Select(e => new SelectListItem
+			{
+				Value = ((int)(object)e).ToString(),
+				Text = e.EnumDisplayName()
+			})
+			.ToList();
+	}
+
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
 	{
 		return query
