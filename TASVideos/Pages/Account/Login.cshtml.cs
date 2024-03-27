@@ -8,10 +8,7 @@ namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
 [IpBanCheck]
-public class LoginModel(
-	SignInManager signInManager,
-	IHostEnvironment env)
-	: BasePageModel
+public class LoginModel(SignInManager signInManager, IHostEnvironment env) : BasePageModel
 {
 	[BindProperty]
 	[Display(Name = "User Name")]

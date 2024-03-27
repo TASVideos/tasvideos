@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users;
 
@@ -86,5 +86,17 @@ public class EditEmailModel(
 
 		// If username is changed, we want to ignore the returnUrl that will be the old name
 		return BasePageRedirect("Edit", new { Id });
+	}
+
+	public class UserEmailEditModel
+	{
+		public string UserName { get; init; } = "";
+
+		[Required]
+		[EmailAddress]
+		public string Email { get; init; } = "";
+
+		[Display(Name = "Email Confirmed")]
+		public bool EmailConfirmed { get; init; }
 	}
 }

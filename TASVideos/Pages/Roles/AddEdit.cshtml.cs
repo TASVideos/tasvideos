@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Roles.Models;
 
 namespace TASVideos.Pages.Roles;
 
@@ -118,10 +118,7 @@ public class AddEditModel(
 		if (result)
 		{
 			await publisher.SendUserManagement(
-				$"Role {Id} deleted by {User.Name()}",
-				"",
-				"",
-				"");
+				$"Role {Id} deleted by {User.Name()}", "", "", "");
 		}
 
 		return BasePageRedirect("List");
@@ -200,5 +197,32 @@ public class AddEditModel(
 				"",
 				$"Roles/{model.Name}");
 		}
+	}
+
+	public class RoleEditModel
+	{
+		[StringLength(50)]
+		public string Name { get; set; } = "";
+
+		[Display(Name = "Default", Description = "Default roles are given to all new users when they register")]
+		public bool IsDefault { get; init; }
+
+		[StringLength(300)]
+		public string Description { get; init; } = "";
+
+		[Range(1, 9999)]
+		[Display(Name = "Auto-assign on Post Count", Description = "If set, the user will automatically be assigned this role when they reach this post count.")]
+		public int? AutoAssignPostCount { get; init; }
+
+		[Display(Name = "Auto-assign on Publication", Description = "If set, the user will automatically be assigned this role when they have a movie published.")]
+		public bool AutoAssignPublications { get; init; }
+
+		[MinLength(1)]
+		public List<int> SelectedPermissions { get; init; } = [];
+
+		public List<int> SelectedAssignablePermissions { get; init; } = [];
+
+		[Display(Name = "Related Links")]
+		public List<string> Links { get; set; } = [];
 	}
 }

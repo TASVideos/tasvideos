@@ -5,12 +5,11 @@ using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
-using TASVideos.Pages.Games.Models;
 using TASVideos.Pages.Publications.Models;
+using TASVideos.Pages.Roles;
 using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.UserFiles.Models;
-using TASVideos.Pages.Users.Models;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Extensions;
@@ -20,74 +19,67 @@ namespace TASVideos.Extensions;
 /// </summary>
 public static class EntityExtensions
 {
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<string> query)
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<string> query)
 	{
-		return query
-			.Select(s => new SelectListItem
-			{
-				Text = s,
-				Value = s
-			});
+		return query.Select(s => new SelectListItem
+		{
+			Text = s,
+			Value = s
+		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Genre> query)
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Genre> query)
 	{
-		return query
-			.Select(s => new SelectListItem
-			{
-				Text = s.DisplayName,
-				Value = s.Id.ToString()
-			});
+		return query.Select(g => new SelectListItem
+		{
+			Text = g.DisplayName,
+			Value = g.Id.ToString()
+		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<GameGroup> query)
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameGroup> query)
 	{
-		return query
-			.Select(s => new SelectListItem
-			{
-				Text = s.Name,
-				Value = s.Id.ToString()
-			});
+		return query.Select(g => new SelectListItem
+		{
+			Text = g.Name,
+			Value = g.Id.ToString()
+		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<GameSystem> query)
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameSystem> query)
 	{
-		return query
-			.Select(s => new SelectListItem
-			{
-				Text = s.Code,
-				Value = s.Code
-			});
+		return query.Select(s => new SelectListItem
+		{
+			Text = s.Code,
+			Value = s.Code
+		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<PublicationClass> query)
+	public static IQueryable<SelectListItem> ToDropDownWithId(this IQueryable<GameSystem> query)
 	{
-		return query
-			.Select(s => new SelectListItem
-			{
-				Text = s.Name,
-				Value = s.Id.ToString()
-			});
+		return query.Select(s => new SelectListItem
+		{
+			Text = s.Id.ToString(),
+			Value = s.Code
+		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<SubmissionRejectionReason> query)
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<PublicationClass> query)
 	{
-		return query
-			.Select(s => new SelectListItem
-			{
-				Text = s.DisplayName,
-				Value = s.Id.ToString()
-			});
+		return query.Select(p => new SelectListItem
+		{
+			Text = p.Name,
+			Value = p.Id.ToString()
+		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Game> query)
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<SubmissionRejectionReason> query)
 	{
-		return query
-			.Select(g => new SelectListItem
-			{
-				Text = g.DisplayName,
-				Value = g.Id.ToString()
-			});
+		return query.Select(r => new SelectListItem
+		{
+			Text = r.DisplayName,
+			Value = r.Id.ToString()
+		});
 	}
 
 	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameSystemFrameRate> query)
@@ -98,8 +90,8 @@ public static class EntityExtensions
 			.ThenBy(fr => fr.FrameRate)
 			.Select(g => new SelectListItem
 			{
-				Value = g.Id.ToString(),
-				Text = g.RegionCode + " " + g.FrameRate + (g.Obsolete ? " (Obsolete)" : "")
+				Text = g.RegionCode + " " + g.FrameRate + (g.Obsolete ? " (Obsolete)" : ""),
+				Value = g.Id.ToString()
 			});
 	}
 
@@ -139,18 +131,37 @@ public static class EntityExtensions
 	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<ForumCategory> query)
 	{
 		return query.Select(c => new SelectListItem
-			{
-				Text = c.Title,
-				Value = c.Id.ToString()
-			});
+		{
+			Text = c.Title,
+			Value = c.Id.ToString()
+		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Forum> query, int forumId)
+	{
+		return query.Select(f => new SelectListItem
+		{
+			Text = f.Name,
+			Value = f.Id.ToString(),
+			Selected = f.Id == forumId
+		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<ForumTopic> query)
+	{
+		return query.Select(t => new SelectListItem
+		{
+			Text = t.Title,
+			Value = t.Id.ToString()
+		});
 	}
 
 	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<User> query)
 	{
 		return query.Select(u => new SelectListItem
 		{
-			Value = u.Id.ToString(),
-			Text = u.UserName
+			Text = u.UserName,
+			Value = u.Id.ToString()
 		});
 	}
 
@@ -158,8 +169,8 @@ public static class EntityExtensions
 	{
 		return query.Select(a => new SelectListItem
 		{
-			Value = a.ShortName,
-			Text = a.Description + " for " + year
+			Text = a.Description + " for " + year,
+			Value = a.ShortName
 		});
 	}
 
@@ -167,9 +178,36 @@ public static class EntityExtensions
 	{
 		return roles.Select(r => new SelectListItem
 		{
-			Value = r.Id.ToString(),
 			Text = r.Name,
+			Value = r.Id.ToString(),
 			Disabled = r.Disabled
+		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameVersion> query)
+	{
+		return query.Select(v => new SelectListItem
+		{
+			Text = v.Name,
+			Value = v.Id.ToString()
+		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Game> query)
+	{
+		return query.Select(g => new SelectListItem
+		{
+			Text = g.DisplayName,
+			Value = g.Id.ToString()
+		});
+	}
+
+	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameGoal> query)
+	{
+		return query.Select(gg => new SelectListItem
+		{
+			Text = gg.DisplayName,
+			Value = gg.Id.ToString()
 		});
 	}
 
@@ -257,27 +295,6 @@ public static class EntityExtensions
 		return q;
 	}
 
-	public static IQueryable<UserEditModel> ToUserEditModel(this IQueryable<User> query)
-	{
-		return query.Select(u => new UserEditModel
-		{
-			UserName = u.UserName,
-			TimezoneId = u.TimeZoneId,
-			From = u.From,
-			SelectedRoles = u.UserRoles.Select(ur => ur.RoleId).ToList(),
-			CreateTimestamp = u.CreateTimestamp,
-			LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
-			Email = u.Email,
-			EmailConfirmed = u.EmailConfirmed,
-			IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
-			Signature = u.Signature,
-			Avatar = u.Avatar,
-			MoodAvatarUrlBase = u.MoodAvatarUrlBase,
-			UseRatings = u.UseRatings,
-			ModeratorComments = u.ModeratorComments
-		});
-	}
-
 	public static IQueryable<RoleDisplayModel> ToRoleDisplayModel(this IQueryable<Role> roles)
 	{
 		return roles.Select(r => new RoleDisplayModel
@@ -333,14 +350,12 @@ public static class EntityExtensions
 
 	public static IQueryable<UserMovieListModel> ToUserMovieListModel(this IQueryable<UserFile> userFiles)
 	{
-		return userFiles.Select(uf => new UserMovieListModel
-		{
-			Id = uf.Id,
-			Author = uf.Author!.UserName,
-			UploadTimestamp = uf.UploadTimestamp,
-			FileName = uf.FileName,
-			Title = uf.Title
-		});
+		return userFiles.Select(uf => new UserMovieListModel(
+			uf.Id,
+			uf.Author!.UserName,
+			uf.UploadTimestamp,
+			uf.FileName,
+			uf.Title));
 	}
 
 	public static IQueryable<MiniMovieModel> ToMiniMovieModel(this IQueryable<Publication> publications)
@@ -387,44 +402,9 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<GameDisplayModel> ToGameDisplayModel(this IQueryable<Game> games)
+	public static IQueryable<AddEditModel.RoleEditModel> ToRoleEditModel(this IQueryable<Role> query)
 	{
-		return games.Select(g => new GameDisplayModel
-		{
-			Id = g.Id,
-			DisplayName = g.DisplayName,
-			Abbreviation = g.Abbreviation,
-			Aliases = g.Aliases,
-			ScreenshotUrl = g.ScreenshotUrl,
-			GameResourcesPage = g.GameResourcesPage,
-			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName),
-			Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion
-			{
-				Type = gv.Type,
-				Id = gv.Id,
-				Md5 = gv.Md5,
-				Sha1 = gv.Sha1,
-				Name = gv.Name,
-				Region = gv.Region,
-				Version = gv.Version,
-				SystemCode = gv.System!.Code,
-				TitleOverride = gv.TitleOverride
-			}).ToList(),
-			GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup
-			{
-				Id = gg.GameGroupId,
-				Name = gg.GameGroup!.Name
-			}).ToList(),
-			PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
-			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
-			SubmissionCount = g.Submissions.Count,
-			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
-		});
-	}
-
-	public static IQueryable<RoleEditModel> ToRoleEditModel(this IQueryable<Role> query)
-	{
-		return query.Select(r => new RoleEditModel
+		return query.Select(r => new AddEditModel.RoleEditModel
 		{
 			Name = r.Name,
 			IsDefault = r.IsDefault,

@@ -34,5 +34,5 @@ public interface IForumPostEntry
 	public IList<string> PosterRoles { get; }
 	public string? PosterPlayerRank { get; }
 	public PreferredPronounTypes PosterPronouns { get; }
-	public IEnumerable<AwardAssignmentSummary> Awards { get; }
+	public ICollection<AwardAssignmentSummary> Awards { get; }
 }

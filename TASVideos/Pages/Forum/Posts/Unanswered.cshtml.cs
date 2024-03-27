@@ -4,7 +4,6 @@ using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -21,17 +20,17 @@ public class UnansweredModel(ApplicationDbContext db) : BasePageModel
 		Posts = await db.ForumTopics
 			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 			.Where(t => t.ForumPosts.Count == 1)
-			.Select(t => new UnansweredPostsModel
-			{
-				ForumId = t.ForumId,
-				ForumName = t.Forum!.Name,
-				TopicId = t.Id,
-				TopicName = t.Title,
-				AuthorId = t.PosterId,
-				AuthorName = t.Poster!.UserName,
-				PostDate = t.CreateTimestamp
-			})
-			.OrderByDescending(t => t.PostDate)
+			.OrderByDescending(t => t.CreateTimestamp)
+			.Select(t => new UnansweredPostsModel(
+				t.ForumId,
+				t.Forum!.Name,
+				t.Id,
+				t.Title,
+				t.PosterId,
+				t.Poster!.UserName,
+				t.CreateTimestamp))
 			.PageOf(Search);
 	}
+
+	public record UnansweredPostsModel(int ForumId, string ForumName, int TopicId, string TopicName, int AuthorId, string AuthorName, DateTime PostDate);
 }

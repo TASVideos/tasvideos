@@ -34,9 +34,9 @@
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Version.SystemCode"></label>
-				<select asp-for="Version.SystemCode" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
-				<span asp-validation-for="Version.SystemCode" class="text-danger"></span>
+				<label asp-for="Version.System"></label>
+				<select asp-for="Version.System" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<span asp-validation-for="Version.System" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.Name"></label>

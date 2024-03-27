@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Messages.Models;
 
 namespace TASVideos.Pages.Messages;
 
@@ -22,14 +21,12 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 			.ToUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.ThatAreNotToUserSaved()
-			.Select(pm => new InboxEntry
-			{
-				Id = pm.Id,
-				Subject = pm.Subject,
-				SendDate = pm.CreateTimestamp,
-				FromUser = pm.FromUser!.UserName,
-				IsRead = pm.ReadOn.HasValue
-			})
+			.Select(pm => new InboxEntry(
+				pm.Id,
+				pm.Subject,
+				pm.FromUser!.UserName,
+				pm.CreateTimestamp,
+				pm.ReadOn.HasValue))
 			.ToListAsync();
 	}
 
@@ -74,4 +71,6 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 
 		return BasePageRedirect("Inbox");
 	}
+
+	public record InboxEntry(int Id, string? Subject, string From, DateTime Date, bool IsRead);
 }

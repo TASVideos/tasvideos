@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Permissions.Models;
 
 namespace TASVideos.Pages.Permissions;
 
@@ -10,13 +9,11 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
 	public IEnumerable<PermissionDisplayModel> Permissions { get; } = PermissionUtil
 		.AllPermissions()
-		.Select(p => new PermissionDisplayModel
-		{
-			Id = p,
-			Name = p.ToString().SplitCamelCase(),
-			Group = p.Group(),
-			Description = p.Description()
-		})
+		.Select(p => new PermissionDisplayModel(
+			p,
+			p.ToString().SplitCamelCase(),
+			p.Group(),
+			p.Description()))
 		.ToList();
 
 	public async Task OnGet()
@@ -35,7 +32,13 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		{
 			permission.Roles = allRoles
 				.Where(r => r.RolePermissionId.Any(p => p == permission.Id))
-				.Select(r => r.Name);
+				.Select(r => r.Name)
+				.ToList();
 		}
+	}
+
+	public record PermissionDisplayModel(PermissionTo Id, string Name, string Description, string Group)
+	{
+		public List<string> Roles { get; set; } = [];
 	}
 }

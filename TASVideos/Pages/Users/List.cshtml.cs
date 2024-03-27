@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users;
 
@@ -78,5 +78,24 @@ public class ListModel(
 		cache.Set(cacheKey, list, Durations.OneMinuteInSeconds);
 
 		return list;
+	}
+
+	public class UserListModel
+	{
+		[Sortable]
+		public int Id { get; init; }
+
+		[DisplayName("User Name")]
+		[Sortable]
+		public string? UserName { get; init; }
+
+		public List<string> Roles { get; init; } = [];
+
+		[DisplayName("Created")]
+		[Sortable]
+		public DateTime CreateTimestamp { get; init; }
+
+		// Dummy to generate column header
+		public object? Actions { get; init; }
 	}
 }

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.RssFeeds.Models;
 
 namespace TASVideos.Pages.RssFeeds;
 
@@ -26,11 +25,9 @@ public class PublicationsModel(
 				CreateTimestamp = p.CreateTimestamp,
 				Title = p.Title,
 				TagNames = p.PublicationTags.Select(pt => pt.Tag!.DisplayName).ToList(),
-				Files = p.Files.Select(pf => new RssPublication.File
-				{
-					Path = pf.Path,
-					Type = pf.Type
-				}).ToList(),
+				Files = p.Files
+					.Select(pf => new RssPublication.File(pf.Path, pf.Type))
+					.ToList(),
 				StreamingUrls = p.PublicationUrls
 					.Where(pu => pu.Type == PublicationUrlType.Streaming)
 					.Where(pu => pu.Url != null)
@@ -50,5 +47,32 @@ public class PublicationsModel(
 		PageResult pageResult = Page();
 		pageResult.ContentType = "application/rss+xml; charset=utf-8";
 		return pageResult;
+	}
+
+	public class RssPublication
+	{
+		public IWikiPage Wiki { get; set; } = null!;
+
+		public int Id { get; init; }
+		public DateTime CreateTimestamp { get; init; }
+		public string Title { get; init; } = "";
+
+		public List<string> TagNames { get; init; } = [];
+
+		public int MovieFileSize { get; init; }
+		public string ScreenshotPath => Files.First(f => f.Type == FileType.Screenshot).Path;
+
+		public double RatingCount => Ratings.Count / 2.0;
+		public double RatingMin => Ratings.Any() ? Ratings.Min() : 0;
+		public double RatingMax => Ratings.Any() ? Ratings.Max() : 0;
+		public double RatingAverage => Ratings.Any() ? Math.Round(Ratings.Average(), 2) : 0;
+
+		public List<string> StreamingUrls { get; init; } = [];
+
+		internal List<File> Files { get; init; } = [];
+
+		internal List<double> Ratings { get; init; } = [];
+
+		internal record File(string Path, FileType Type);
 	}
 }

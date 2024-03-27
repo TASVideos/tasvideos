@@ -10,15 +10,15 @@
 <hr />
 
 <div>
-	<forum-markup markup=@Model.Poll.Question enable-bb-code=true></forum-markup>
+	<forum-markup markup="@Model.Poll.Question" enable-bb-code="true"></forum-markup>
 </div>
 <hr />
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().OptionText)</th>
-		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().UserName)</th>
-		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().CreateTimestamp)</th>
-		<th>@Html.DisplayNameFor(m => m.Poll.Votes.First().IpAddress)</th>
+		<th>Option</th>
+		<th>User</th>
+		<th>Vote On</th>
+		<th>IP Address</th>
 		<th permission="ResetPollResults">Reset</th>
 	</tr>
 	@foreach(var vote in Model.Poll.Votes

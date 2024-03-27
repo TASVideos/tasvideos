@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Messages.Models;
 
 namespace TASVideos.Pages.Messages;
 
@@ -108,17 +107,17 @@ public class CreateModel(
 			if (message is not null)
 			{
 				DefaultToUser = message.FromUserName;
-				ReplyingTo = new PrivateMessageModel
-				{
-					Subject = message.Subject,
-					Text = message.Text,
-					SentOn = message.SentOn,
-					FromUserName = message.FromUserName,
-					FromUserId = message.FromUserId,
-					ToUserName = message.ToUserName,
-					ToUserId = message.ToUserId
-				};
+				ReplyingTo = new PrivateMessageModel(
+					message.Subject,
+					message.SentOn,
+					message.Text,
+					message.FromUserId,
+					message.FromUserName,
+					message.ToUserId,
+					message.ToUserName);
 			}
 		}
 	}
+
+	public record PrivateMessageModel(string? Subject, DateTime SentOn, string Text, int FromUserId, string FromUserName, int ToUserId, string ToUserName);
 }

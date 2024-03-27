@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.RssFeeds.Models;
 
 namespace TASVideos.Pages.RssFeeds;
 
@@ -19,17 +18,19 @@ public class NewsModel(ApplicationDbContext db) : BasePageModel
 		News = await db.ForumPosts
 			.ForTopic(NewsTopicId)
 			.ByMostRecent()
-			.Select(p => new RssNews
-			{
-				PostId = p.Id,
-				PubDate = p.LastUpdateTimestamp,
-				Subject = p.Subject ?? "",
-				Text = p.Text
-			})
+			.Select(p => new RssNews(
+				p.Id,
+				p.LastUpdateTimestamp,
+				p.Subject ?? "",
+				p.Text,
+				p.EnableHtml,
+				p.EnableBbCode))
 			.Take(10)
 			.ToListAsync();
 		PageResult pageResult = Page();
 		pageResult.ContentType = "application/rss+xml; charset=utf-8";
 		return pageResult;
 	}
+
+	public record RssNews(int PostId, DateTime PubDate, string Subject, string Text, bool EnableHtml, bool EnableBbCode);
 }

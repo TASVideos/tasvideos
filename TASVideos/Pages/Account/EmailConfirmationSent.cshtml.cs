@@ -26,12 +26,9 @@ public class EmailConfirmationSentModel(
 	public string Email { get; set; } = "";
 	public IActionResult OnGet()
 	{
-		if (User.IsLoggedIn())
-		{
-			return BaseReturnUrlRedirect();
-		}
-
-		return Page();
+		return User.IsLoggedIn()
+			? BaseReturnUrlRedirect()
+			: Page();
 	}
 
 	public async Task<IActionResult> OnPost()

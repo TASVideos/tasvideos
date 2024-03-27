@@ -7,8 +7,7 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(matchAny: false, PermissionTo.SeeEmails, PermissionTo.EditUsers)]
-public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaintenanceLogger)
-	: BasePageModel
+public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaintenanceLogger) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }

@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Models;
 
 namespace TASVideos.Pages.Games;
 
@@ -38,7 +37,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		SystemList = await db.GameSystems
 			.OrderBy(s => s.Code)
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		SystemList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
@@ -47,7 +46,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			.Select(g => g.DisplayName.Substring(0, 1))
 			.Distinct()
 			.OrderBy(l => l)
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		LetterList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
@@ -56,7 +55,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			.Select(g => g.DisplayName)
 			.Distinct()
 			.OrderBy(l => l)
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		GenreList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
@@ -65,7 +64,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			.Select(g => g.Name)
 			.Distinct()
 			.OrderBy(l => l)
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		GroupList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
@@ -108,11 +107,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			.ForGame(gameId)
 			.ForSystem(systemId)
 			.OrderBy(r => r.Name)
-			.Select(r => new SelectListItem
-			{
-				Value = r.Id.ToString(),
-				Text = r.Name
-			})
+			.ToDropDown()
 			.ToListAsync();
 
 		if (includeEmpty)
@@ -128,11 +123,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		var items = await db.GameGoals
 			.Where(gg => gg.GameId == gameId)
 			.OrderBy(gg => gg.DisplayName)
-			.Select(gg => new SelectListItem
-			{
-				Value = gg.Id.ToString(),
-				Text = gg.DisplayName
-			})
+			.ToDropDown()
 			.ToListAsync();
 
 		if (includeEmpty)
@@ -159,7 +150,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
-					Systems = g.GameVersions.Select(v => v.System!.Code)
+					Systems = g.GameVersions.Select(v => v.System!.Code).ToList()
 				})
 				.SortedPageOf(paging);
 		}
@@ -174,7 +165,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 				{
 					Id = g.Id,
 					DisplayName = g.DisplayName,
-					Systems = g.GameVersions.Select(v => v.System!.Code)
+					Systems = g.GameVersions.Select(v => v.System!.Code).ToList()
 				})
 				.SortedPageOf(paging);
 		}
@@ -191,5 +182,54 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			RowCount = data.RowCount,
 			Sort = data.Sort
 		};
+	}
+
+	public class GameListRequest : PagingModel
+	{
+		public GameListRequest()
+		{
+			PageSize = 50;
+			Sort = "Name";
+		}
+
+		public string? SystemCode { get; init; }
+
+		public string? Letter { get; init; }
+
+		public string? Genre { get; init; }
+
+		public string? Group { get; init; }
+
+		public string? SearchTerms { get; set; }
+	}
+
+	public class SystemPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
+	{
+		[Display(Name = "System")]
+		public string? SystemCode { get; init; }
+
+		[Display(Name = "Starts with")]
+		public string? Letter { get; init; }
+		public string? Genre { get; init; }
+		public string? Group { get; init; }
+		public string? SearchTerms { get; init; }
+
+		public static new SystemPageOf<T> Empty() => new([]);
+	}
+
+	public class GameListModel
+	{
+		[Sortable]
+		public int Id { get; init; }
+
+		[Sortable]
+		[Display(Name = "Name")]
+		public string DisplayName { get; init; } = "";
+
+		public List<string> Systems { get; init; } = [];
+
+		// Dummy to generate column header
+		[Display(Name = "Actions")]
+		public object? Actions { get; init; }
 	}
 }

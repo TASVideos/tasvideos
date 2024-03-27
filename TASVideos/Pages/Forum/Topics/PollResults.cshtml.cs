@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -24,15 +23,13 @@ public class PollResultsModel(ApplicationDbContext db) : BasePageModel
 				Question = p.Question,
 				Votes = p.PollOptions
 					.SelectMany(po => po.Votes)
-					.Select(v => new PollResultModel.VoteResult
-					{
-						UserId = v.UserId,
-						UserName = v.User!.UserName,
-						Ordinal = v.PollOption!.Ordinal,
-						OptionText = v.PollOption.Text,
-						CreateTimestamp = v.CreateTimestamp,
-						IpAddress = v.IpAddress
-					})
+					.Select(v => new PollResultModel.VoteResult(
+						v.UserId,
+						v.User!.UserName,
+						v.PollOption!.Ordinal,
+						v.PollOption.Text,
+						v.CreateTimestamp,
+						v.IpAddress))
 					.ToList()
 			})
 			.SingleOrDefaultAsync();
@@ -73,5 +70,14 @@ public class PollResultsModel(ApplicationDbContext db) : BasePageModel
 
 		await ConcurrentSave(db, "Poll reset", "Unable to reset poll");
 		return RedirectToPage("PollResults", new { Id });
+	}
+
+	public class PollResultModel
+	{
+		public string TopicTitle { get; set; } = "";
+		public int TopicId { get; set; }
+		public string Question { get; set; } = "";
+		public List<VoteResult> Votes { get; set; } = [];
+		public record VoteResult(int UserId, string UserName, int Ordinal, string OptionText, DateTime CreateTimestamp, string? IpAddress);
 	}
 }

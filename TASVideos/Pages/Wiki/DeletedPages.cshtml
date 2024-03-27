@@ -1,15 +1,14 @@
 @page "{handler?}"
 @model DeletedPagesModel
-
 @{
 	ViewData.SetTitle("Deleted Pages");
 }
 <div class="table-container">
 	<table class="table table-striped table-bordered">
 		<tr>
-			<th>@Html.DisplayNameFor(m => m.DeletedPages.First().PageName)</th>
-			<th>@Html.DisplayNameFor(m => m.DeletedPages.First().RevisionCount)</th>
-			<th>@Html.DisplayNameFor(m => m.DeletedPages.First().HasExistingRevisions)</th>
+			<th>Page Name</th>
+			<th>Revision Count</th>
+			<th>Existing Page</th>
 			<th>Actions</th>
 		</tr>
 		@foreach (var item in Model.DeletedPages.OrderBy(m => m.PageName))

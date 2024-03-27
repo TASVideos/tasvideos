@@ -1,25 +1,25 @@
 @page
 @model MoveModel
 @{
-	ViewData.SetTitle($"Moving: {Model.Move.OriginalPageName}");
+	ViewData.SetTitle($"Moving: {Model.OriginalPageName}");
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
-	<input type="hidden" asp-for="Move.OriginalPageName" />
+	<input type="hidden" asp-for="OriginalPageName" />
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
 				<label class="form-control-label">Original Name</label>
-				<label class="form-control">@Model.Move.OriginalPageName</label>
+				<label class="form-control">@Model.OriginalPageName</label>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Move.DestinationPageName" class="form-control-label"></label>
-				<input type="text" asp-for="Move.DestinationPageName" class="form-control" />
-				<span asp-validation-for="Move.DestinationPageName" class="text-danger"></span>
+				<label asp-for="DestinationPageName" class="form-control-label"></label>
+				<input type="text" asp-for="DestinationPageName" class="form-control" />
+				<span asp-validation-for="DestinationPageName" class="text-danger"></span>
 			</fieldset>
 			<div class="text-center">
 				<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Move</submit-button>
-				<a href="/@Model.Move.OriginalPageName" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+				<a href="/@Model.OriginalPageName" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 			</div>
 		</div>
 	</row>

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Goals.Models;
 
 namespace TASVideos.Pages.Games.Goals;
 
@@ -36,15 +35,11 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		Goals = await db.GameGoals
 			.Where(gg => gg.GameId == GameId)
-			.Select(gg => new GoalListModel
-			{
-				Id = gg.Id,
-				DisplayName = gg.DisplayName,
-				Publications = gg.Publications
-					.Select(p => new GoalListModel.PublicationEntry(p.Id, p.Title, p.ObsoletedById.HasValue)),
-				Submissions = gg.Submissions
-					.Select(s => new GoalListModel.SubmissionEntry(s.Id, s.Title))
-			})
+			.Select(gg => new GoalListModel(
+					gg.Id,
+					gg.DisplayName,
+					gg.Publications.Select(p => new PublicationEntry(p.Id, p.Title, p.ObsoletedById.HasValue)).ToList(),
+					gg.Submissions.Select(s => new SubmissionEntry(s.Id, s.Title)).ToList()))
 			.ToListAsync();
 
 		return Page();
@@ -96,7 +91,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		var oldGoalName = gameGoal.DisplayName;
 
-		if (gameGoal.DisplayName.ToLower() == newGoalName.ToLower())
+		if (string.Equals(gameGoal.DisplayName, newGoalName, StringComparison.InvariantCulture))
 		{
 			gameGoal.DisplayName = newGoalName;
 			await ConcurrentSave(db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
@@ -160,8 +155,11 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		return BackToList();
 	}
 
-	private IActionResult BackToList()
-	{
-		return BasePageRedirect("List", new { GameId });
-	}
+	private IActionResult BackToList() => BasePageRedirect("List", new { GameId });
+
+	public record GoalListModel(int Id, string Name, List<PublicationEntry> Publications, List<SubmissionEntry> Submissions);
+
+	public record PublicationEntry(int Id, string Title, bool Obs);
+
+	public record SubmissionEntry(int Id, string Title);
 }

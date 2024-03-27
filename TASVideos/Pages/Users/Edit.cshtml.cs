@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Users.Models;
 
 namespace TASVideos.Pages.Users;
 
@@ -36,7 +36,23 @@ public class EditModel(
 
 		var userToEdit = await db.Users
 			.Where(u => u.Id == Id)
-			.ToUserEditModel()
+			.Select(u => new UserEditModel
+			{
+				UserName = u.UserName,
+				TimezoneId = u.TimeZoneId,
+				From = u.From,
+				SelectedRoles = u.UserRoles.Select(ur => ur.RoleId).ToList(),
+				CreateTimestamp = u.CreateTimestamp,
+				LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
+				Email = u.Email,
+				EmailConfirmed = u.EmailConfirmed,
+				IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+				Signature = u.Signature,
+				Avatar = u.Avatar,
+				MoodAvatarUrlBase = u.MoodAvatarUrlBase,
+				UseRatings = u.UseRatings,
+				ModeratorComments = u.ModeratorComments
+			})
 			.SingleOrDefaultAsync();
 
 		if (userToEdit is null)
@@ -187,5 +203,50 @@ public class EditModel(
 		await ConcurrentSave(db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
 
 		return BaseReturnUrlRedirect();
+	}
+
+	public class UserEditModel
+	{
+		[DisplayName("User Name")]
+		[StringLength(50)]
+		public string? UserName { get; init; }
+
+		[DisplayName("Time Zone")]
+		public string TimezoneId { get; init; } = TimeZoneInfo.Utc.Id;
+
+		[Display(Name = "Location")]
+		public string? From { get; init; }
+
+		[DisplayName("Selected Roles")]
+		public List<int> SelectedRoles { get; init; } = [];
+
+		[DisplayName("Account Created On")]
+		public DateTime CreateTimestamp { get; init; }
+
+		[DisplayName("User Last Logged In")]
+		[DisplayFormat(NullDisplayText = "Never")]
+		public DateTime? LastLoggedInTimeStamp { get; init; }
+
+		[EmailAddress]
+		public string? Email { get; init; }
+
+		public bool EmailConfirmed { get; init; }
+
+		[Display(Name = "Locked Status")]
+		public bool IsLockedOut { get; init; }
+
+		public string? Signature { get; init; }
+		public string? Avatar { get; init; }
+
+		[Display(Name = "Mood Avatar")]
+		public string? MoodAvatarUrlBase { get; init; }
+
+		public string? OriginalUserName => UserName;
+
+		[Display(Name = "Use Ratings", Description = "If unchecked, the user's publication ratings will not be used when calculating average rating")]
+		public bool UseRatings { get; init; }
+
+		[Display(Name = "Moderator Comments")]
+		public string? ModeratorComments { get; init; }
 	}
 }

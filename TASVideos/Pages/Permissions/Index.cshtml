@@ -34,10 +34,10 @@
 
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.Permissions.First().Name)</th>
-		<th>@Html.DisplayNameFor(m => m.Permissions.First().Group)</th>
-		<th>@Html.DisplayNameFor(m => m.Permissions.First().Roles)</th>
-		<th>@Html.DisplayNameFor(m => m.Permissions.First().Description)</th>
+		<th>Permission</th>
+		<th>Group</th>
+		<th>Roles</th>
+		<th>Description</th>
 	</tr>
 	@foreach (var entry in Model.Permissions.OrderBy(m => m.Group).ThenBy(m => m.Id))
 	{

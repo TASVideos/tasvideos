@@ -9,27 +9,27 @@
 <hr />
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().DisplayName)</th>
+		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Name)</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().TitleOverride)</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Version)</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Region)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().VersionType)</th>
+		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Type)</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Md5)</th>
 		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().Sha1)</th>
-		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().SystemCode)</th>
+		<th>@Html.DisplayNameFor(m => m.Versions.Versions.First().System)</th>
 		<th>Actions</th>
 	</tr>
-	@foreach (var version in Model.Versions.Versions.OrderBy(r => r.DisplayName))
+	@foreach (var version in Model.Versions.Versions.OrderBy(r => r.Name))
 	{
 		<tr>
-			<td>@version.DisplayName</td>
+			<td>@version.Name</td>
 			<td>@version.TitleOverride</td>
 			<td>@version.Version</td>
 			<td>@version.Region</td>
-			<td>@version.VersionType</td>
+			<td>@version.Type</td>
 			<td>@version.Md5</td>
 			<td>@version.Sha1</td>
-			<td>@version.SystemCode</td>
+			<td>@version.System</td>
 			<td>
 				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
 			</td>

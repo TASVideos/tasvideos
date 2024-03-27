@@ -495,11 +495,11 @@ public class EditModel(
 			&& (await queueService.CanDeleteSubmission(Id)).True;
 
 		AvailableClasses = await db.PublicationClasses
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		AvailableRejectionReasons = await db.SubmissionRejectionReasons
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 	}
 }

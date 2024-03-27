@@ -8,7 +8,7 @@ public interface IAwards
 	/// Gets all awards for the given user,
 	/// or any movie for which the user is an author of
 	/// </summary>
-	ValueTask<IEnumerable<AwardAssignmentSummary>> ForUser(int userId);
+	ValueTask<ICollection<AwardAssignmentSummary>> ForUser(int userId);
 
 	/// <summary>
 	/// Gets all awards for the given publication
@@ -46,7 +46,7 @@ internal class Awards(
 	ApplicationDbContext db,
 	ICacheService cache) : IAwards
 {
-	public async ValueTask<IEnumerable<AwardAssignmentSummary>> ForUser(int userId)
+	public async ValueTask<ICollection<AwardAssignmentSummary>> ForUser(int userId)
 	{
 		var allAwards = await AllAwards();
 

@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -164,12 +164,40 @@ public class SplitModel(
 		var seeRestricted = CanSeeRestricted;
 		AvailableForums = await db.Forums
 			.ExcludeRestricted(seeRestricted)
-			.Select(f => new SelectListItem
-			{
-				Text = f.Name,
-				Value = f.Id.ToString(),
-				Selected = f.Id == Topic.ForumId
-			})
+			.ToDropdown(Topic.ForumId)
 			.ToListAsync();
+	}
+
+	public class SplitTopicModel
+	{
+		[Display(Name = "Split Posts Starting At")]
+		public int? PostToSplitId { get; init; }
+
+		[Display(Name = "Create New Topic In")]
+		public int SplitToForumId { get; init; }
+
+		[Display(Name = "New Topic Name")]
+		public string SplitTopicName { get; init; } = "";
+
+		public string Title { get; init; } = "";
+
+		public int ForumId { get; init; }
+		public string ForumName { get; init; } = "";
+
+		public List<Post> Posts { get; init; } = [];
+
+		public class Post
+		{
+			public int Id { get; init; }
+			public DateTime PostCreateTimestamp { get; init; }
+			public bool EnableHtml { get; init; }
+			public bool EnableBbCode { get; init; }
+			public string? Subject { get; init; }
+			public string Text { get; init; } = "";
+			public int PosterId { get; init; }
+			public string PosterName { get; init; } = "";
+			public string? PosterAvatar { get; init; }
+			public bool Selected { get; init; }
+		}
 	}
 }

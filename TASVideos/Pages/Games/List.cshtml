@@ -26,7 +26,7 @@
 				<div class="col-5 mb-1">
 					<div class="input-group">
 						<label asp-for="@Model.Games.SystemCode" class="input-group-text"></label>
-						<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="SystemCode" class="form-control"></select>
+						<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="System" class="form-control"></select>
 					</div>
 				</div>
 				<div class="col-5 mb-1">
@@ -62,7 +62,7 @@
 
 <partial name="_Pager" model="Model.Games" />
 <table class="table table-bordered table-striped table-sm">
-	<sortable-table-head sorting="@Model.Search" model-type="typeof(Models.GameListModel)" />
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.GameListModel)" />
 	@foreach (var game in Model.Games)
 	{
 		<tr>

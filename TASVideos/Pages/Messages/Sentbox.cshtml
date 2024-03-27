@@ -7,25 +7,24 @@
 <a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.SentBox.First().Subject)</th>
-		<th>@Html.DisplayNameFor(m => m.SentBox.First().ToUser)</th>
-		<th>@Html.DisplayNameFor(m => m.SentBox.First().SendDate)</th>
+		<th>Subject</th>
+		<th>To</th>
+		<th>Date</th>
 		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.SentBox
-		.OrderBy(m => m.HasBeenRead)
+		.OrderBy(m => m.IsRead)
 		.ThenByDescending(m => m.SendDate))
 	{
 		<tr>
 			<td>
-				<span Condition="@(!entry.HasBeenRead)" class="fa-regular fa-paper-plane" title="User has not yet read"></span>
+				<span Condition="@(!entry.IsRead)" class="fa-regular fa-paper-plane" title="User has not yet read"></span>
 				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
 			</td>
-			<td><profile-link username="@entry.ToUser"></profile-link></td>
+			<td><profile-link username="@entry.To"></profile-link></td>
 			<td>@entry.SendDate</td>
 			<td>
-				<delete-button
-					condition="!entry.HasBeenRead"
+				<delete-button condition="!entry.IsRead"
 					asp-href="/Messages/SentBox/@entry.Id/Delete"
 					warning-message="Are you sure you want to remove this message?"
 					class="btn-sm">

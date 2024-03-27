@@ -7,7 +7,6 @@ using TASVideos.Core.Settings;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Models;
 
 namespace TASVideos.Pages.Games;
 
@@ -48,8 +47,8 @@ public class EditModel(
 					Aliases = g.Aliases,
 					ScreenshotUrl = g.ScreenshotUrl,
 					GameResourcesPage = g.GameResourcesPage,
-					Genres = g.GameGenres.Select(gg => gg.GenreId),
-					Groups = g.GameGroups.Select(gg => gg.GameGroupId)
+					Genres = g.GameGenres.Select(gg => gg.GenreId).ToList(),
+					Groups = g.GameGroups.Select(gg => gg.GameGroupId).ToList()
 				})
 				.SingleOrDefaultAsync();
 
@@ -193,11 +192,7 @@ public class EditModel(
 		var saveResult = await ConcurrentSave(db, saveMessage, $"Unable to delete Game {Id}");
 		if (saveResult)
 		{
-			await publisher.SendGameManagement(
-				$"{saveMessage} by {User.Name()}",
-				"",
-				"",
-				"");
+			await publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", "", "");
 		}
 
 		return BasePageRedirect("List");
@@ -207,12 +202,12 @@ public class EditModel(
 	{
 		AvailableGenres = await db.Genres
 			.OrderBy(g => g.DisplayName)
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		AvailableGroups = await db.GameGroups
 			.OrderBy(g => g.Name)
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		CanDelete = await CanBeDeleted();
@@ -224,5 +219,29 @@ public class EditModel(
 			&& !await db.Submissions.AnyAsync(s => s.GameId == Id)
 			&& !await db.Publications.AnyAsync(p => p.GameId == Id)
 			&& !await db.UserFiles.AnyAsync(u => u.GameId == Id);
+	}
+
+	public class GameEditModel
+	{
+		[StringLength(100)]
+		[Display(Name = "Display Name")]
+		public string DisplayName { get; set; } = "";
+
+		[StringLength(24)]
+		public string? Abbreviation { get; set; }
+
+		[StringLength(250)]
+		public string? Aliases { get; set; }
+
+		[StringLength(250)]
+		[Display(Name = "Screenshot URL")]
+		public string? ScreenshotUrl { get; init; }
+
+		[StringLength(300)]
+		[Display(Name = "Game Resources Page")]
+		public string? GameResourcesPage { get; set; }
+		public List<int> Genres { get; init; } = [];
+		public List<int> Groups { get; init; } = [];
+		public bool MinorEdit { get; init; }
 	}
 }

@@ -39,19 +39,14 @@ public class ForumTopicModel : IForumTopicActionBar
 
 	public class PollModel
 	{
-		public int PollId { get; set; }
-		public string Question { get; set; } = "";
-		public DateTime? CloseDate { get; set; }
-		public bool MultiSelect { get; set; }
-		public bool ViewPollResults { get; set; }
+		public int PollId { get; init; }
+		public string Question { get; init; } = "";
+		public DateTime? CloseDate { get; init; }
+		public bool MultiSelect { get; init; }
+		public bool ViewPollResults { get; init; }
 
-		public IEnumerable<PollOptionModel> Options { get; set; } = [];
-
-		public class PollOptionModel
-		{
-			public string Text { get; set; } = "";
-			public int Ordinal { get; set; }
-			public IReadOnlyCollection<int> Voters { get; set; } = [];
-		}
+		public List<PollOptionModel> Options { get; set; } = [];
 	}
+
+	public record PollOptionModel(string Text, int Ordinal, List<int> Voters);
 }

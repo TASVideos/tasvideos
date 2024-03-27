@@ -13,40 +13,38 @@ public class IndexModel(
 	ExternalMediaPublisher publisher)
 	: BasePageModel
 {
-	public UserFileIndexModel Data { get; set; } = new();
+	public List<UserWithMovie> UsersWithMovies { get; set; } = [];
+	public List<UserMovieListModel> LatestMovies { get; set; } = [];
+	public List<GameWithMovie> GamesWithMovies { get; set; } = [];
+	public List<UncatalogedViewModel> UncatalogedFiles { get; set; } = [];
 
 	public async Task OnGet()
 	{
-		Data = new UserFileIndexModel
-		{
-			UsersWithMovies = await db.UserFiles
-				.ThatArePublic()
-				.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp).Select(
-					uf => new UserFileIndexModel.UserWithMovie { UserName = uf.Key, Latest = uf.Max() })
-				.ToListAsync(),
-			LatestMovies = await db.UserFiles
-				.ThatArePublic()
-				.ByRecentlyUploaded()
-				.ToUserMovieListModel()
-				.Take(10)
-				.ToListAsync(),
-			GamesWithMovies = await db.Games
-				.Where(g => g.UserFiles.Any(uf => !uf.Hidden))
-				.OrderBy(g => g.DisplayName)
-				.Select(g => new UserFileIndexModel.GameWithMovie
-				{
-					GameId = g.Id,
-					GameName = g.DisplayName,
-					Dates = g.UserFiles.Select(uf => uf.UploadTimestamp).ToList()
-				})
-				.ToListAsync(),
-			UncatalogedFiles = await db.UserFiles
-				.Where(uf => uf.GameId == null)
-				.Where(uf => !uf.Hidden)
-				.ToUnCatalogedModel()
-				.Take(25)
-				.ToListAsync()
-		};
+		UsersWithMovies = await db.UserFiles
+			.ThatArePublic()
+			.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp)
+			.Select(uf => new UserWithMovie(uf.Key, uf.Max()))
+			.ToListAsync();
+		LatestMovies = await db.UserFiles
+			.ThatArePublic()
+			.ByRecentlyUploaded()
+			.ToUserMovieListModel()
+			.Take(10)
+			.ToListAsync();
+		GamesWithMovies = await db.Games
+			.Where(g => g.UserFiles.Any(uf => !uf.Hidden))
+			.OrderBy(g => g.DisplayName)
+			.Select(g => new GameWithMovie(
+				g.Id,
+				g.DisplayName,
+				g.UserFiles.Select(uf => uf.UploadTimestamp).ToList()))
+			.ToListAsync();
+		UncatalogedFiles = await db.UserFiles
+			.Where(uf => uf.GameId == null)
+			.Where(uf => !uf.Hidden)
+			.ToUnCatalogedModel()
+			.Take(25)
+			.ToListAsync();
 	}
 
 	public async Task<IActionResult> OnPostDelete(long fileId)
@@ -151,5 +149,12 @@ public class IndexModel(
 		}
 
 		return BaseReturnUrlRedirect();
+	}
+
+	public record UserWithMovie(string UserName, DateTime Latest);
+
+	public record GameWithMovie(int GameId, string GameName, List<DateTime> Dates)
+	{
+		public DateTime Latest => Dates.Max();
 	}
 }

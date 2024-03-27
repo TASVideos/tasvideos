@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -80,15 +81,13 @@ public class EditModel(
 			.ForTopic(Post.TopicId)
 			.Where(fp => fp.CreateTimestamp < Post.CreateTimestamp)
 			.ByMostRecent()
-			.Select(fp => new MiniPostModel
-			{
-				CreateTimestamp = fp.CreateTimestamp,
-				PosterName = fp.Poster!.UserName,
-				PosterPronouns = fp.Poster.PreferredPronouns,
-				Text = fp.Text,
-				EnableBbCode = fp.EnableBbCode,
-				EnableHtml = fp.EnableHtml
-			})
+			.Select(fp => new MiniPostModel(
+				fp.CreateTimestamp,
+				fp.Poster!.UserName,
+				fp.Poster.PreferredPronouns,
+				fp.Text,
+				fp.EnableBbCode,
+				fp.EnableHtml))
 			.Take(10)
 			.Reverse()
 			.ToListAsync();
@@ -293,5 +292,32 @@ public class EditModel(
 		return topicDeleted
 			? BasePageRedirect("/Forum/Subforum/Index", new { id = oldForumId })
 			: BasePageRedirect("/Forum/Topics/Index", new { id = oldTopicId });
+	}
+
+	public class ForumPostEditModel
+	{
+		public int PosterId { get; init; }
+		public string PosterName { get; init; } = "";
+		public DateTime CreateTimestamp { get; init; }
+
+		public bool EnableBbCode { get; init; }
+		public bool EnableHtml { get; init; }
+
+		public int TopicId { get; init; }
+
+		[DisplayName("Topic Title")]
+		[StringLength(500)]
+		public string TopicTitle { get; init; } = "";
+
+		[StringLength(150)]
+		public string? Subject { get; init; }
+
+		public string Text { get; init; } = "";
+
+		public string OriginalText => Text;
+
+		public bool IsFirstPost { get; set; }
+
+		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 }

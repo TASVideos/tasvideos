@@ -7,22 +7,22 @@
 <a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.SaveBox.First().Subject)</th>
-		<th>@Html.DisplayNameFor(m => m.SaveBox.First().FromUser)</th>
-		<th>@Html.DisplayNameFor(m => m.SaveBox.First().ToUser)</th>
-		<th>@Html.DisplayNameFor(m => m.SaveBox.First().SendDate)</th>
+		<th>Subject</th>
+		<th>From</th>
+		<th>To</th>
+		<th>Date</th>
 		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.SaveBox
-		.OrderBy(m => m.ToUser == User.Name())
+		.OrderBy(m => m.To == User.Name())
 		.ThenByDescending(m => m.SendDate))
 	{
 		<tr>
 			<td>
 				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
 			</td>
-			<td><profile-link username="@entry.FromUser"></profile-link></td>
-			<td><profile-link username="@entry.ToUser"></profile-link></td>
+			<td><profile-link username="@entry.From"></profile-link></td>
+			<td><profile-link username="@entry.To"></profile-link></td>
 			<td>@entry.SendDate</td>
 			<td>
 				<delete-button

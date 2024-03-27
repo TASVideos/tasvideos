@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.Wiki;
 
@@ -15,7 +16,12 @@ public class MoveModel(
 	public string? Path { get; set; }
 
 	[BindProperty]
-	public WikiMoveModel Move { get; set; } = new();
+	public string OriginalPageName { get; set; } = "";
+
+	[BindProperty]
+	[ValidWikiPageName]
+	[Display(Name = "Destination Page Name")]
+	public string DestinationPageName { get; set; } = "";
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -24,11 +30,8 @@ public class MoveModel(
 			Path = Path.Trim('/');
 			if (await wikiPages.Exists(Path))
 			{
-				Move = new WikiMoveModel
-				{
-					OriginalPageName = Path,
-					DestinationPageName = Path
-				};
+				OriginalPageName = Path;
+				DestinationPageName = Path;
 				return Page();
 			}
 		}
@@ -43,10 +46,10 @@ public class MoveModel(
 			return Page();
 		}
 
-		Move.OriginalPageName = Move.OriginalPageName.Trim('/');
-		Move.DestinationPageName = Move.DestinationPageName.Trim('/');
+		OriginalPageName = OriginalPageName.Trim('/');
+		DestinationPageName = DestinationPageName.Trim('/');
 
-		if (await wikiPages.Exists(Move.DestinationPageName, includeDeleted: true))
+		if (await wikiPages.Exists(DestinationPageName, includeDeleted: true))
 		{
 			ModelState.AddModelError("Move.DestinationPageName", "The destination page already exists.");
 		}
@@ -56,7 +59,7 @@ public class MoveModel(
 			return Page();
 		}
 
-		var result = await wikiPages.Move(Move.OriginalPageName, Move.DestinationPageName);
+		var result = await wikiPages.Move(OriginalPageName, DestinationPageName);
 
 		if (!result)
 		{
@@ -65,11 +68,11 @@ public class MoveModel(
 		}
 
 		await publisher.SendGeneralWiki(
-			$"Page {Move.OriginalPageName} moved to {Move.DestinationPageName} by {User.Name()}",
-			$"Page {Move.OriginalPageName} moved to [{Move.DestinationPageName}]({{0}}) by {User.Name()}",
+			$"Page {OriginalPageName} moved to {DestinationPageName} by {User.Name()}",
+			$"Page {OriginalPageName} moved to [{DestinationPageName}]({{0}}) by {User.Name()}",
 			"",
-			WikiHelper.EscapeUserName(Move.DestinationPageName));
+			WikiHelper.EscapeUserName(DestinationPageName));
 
-		return BaseRedirect("/" + Move.DestinationPageName);
+		return BaseRedirect("/" + DestinationPageName);
 	}
 }

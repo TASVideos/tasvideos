@@ -4,9 +4,6 @@ using TASVideos.Data.Entity;
 
 namespace TASVideos.Pages.Roles.Models;
 
-/// <summary>
-/// Represents a Role entry for the purpose of display
-/// </summary>
 public class RoleDisplayModel
 {
 	public bool IsDefault { get; set; }

@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Subforum.Models;
 
 namespace TASVideos.Pages.Forum.Subforum;
 
@@ -57,8 +57,8 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 					.Select(fp => new ForumDisplayModel.LastPostEntry
 					{
 						Id = fp.Id,
-						CreateTimestamp = fp.CreateTimestamp,
-						PosterName = fp.Poster!.UserName
+						PosterName = fp.Poster!.UserName,
+						CreateTimestamp = fp.CreateTimestamp
 					})
 					.FirstOrDefault()
 			})
@@ -69,5 +69,61 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		ActivityTopics = await forumService.GetPostActivityOfSubforum(Id);
 
 		return Page();
+	}
+
+	public class ForumRequest : PagingModel
+	{
+		public ForumRequest()
+		{
+			PageSize = ForumConstants.TopicsPerForum;
+		}
+	}
+
+	public class ForumDisplayModel
+	{
+		public int Id { get; init; }
+		public string Name { get; init; } = "";
+		public string? Description { get; init; }
+
+		public PageOf<ForumTopicEntry> Topics { get; set; } = PageOf<ForumTopicEntry>.Empty();
+
+		public class ForumTopicEntry
+		{
+			[TableIgnore]
+			public int Id { get; init; }
+
+			[DisplayName("Topics")]
+			public string Title { get; init; } = "";
+
+			[MobileHide]
+			[DisplayName("Replies")]
+			public int PostCount { get; init; }
+
+			[MobileHide]
+			[DisplayName("Author")]
+			public string? CreateUserName { get; init; }
+
+			[TableIgnore]
+			public DateTime CreateTimestamp { get; init; }
+
+			[TableIgnore]
+			public ForumTopicType Type { get; init; }
+
+			[TableIgnore]
+			public bool IsLocked { get; init; }
+
+			[TableIgnore]
+			public LastPostEntry? LastPost { get; init; }
+
+			[DisplayName("Last Post")]
+			public string? Dummy { get; init; }
+		}
+
+		public class LastPostEntry
+		{
+			public int Id { get; init; }
+			public string? PosterName { get; init; }
+			public DateTime CreateTimestamp { get; init; }
+		}
 	}
 }

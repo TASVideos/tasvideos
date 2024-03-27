@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -145,5 +146,19 @@ public class CreateModel(
 		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 
 		return RedirectToPage("Index", new { topic.Id });
+	}
+
+	public class TopicCreateModel
+	{
+		public string ForumName { get; init; } = "";
+
+		[StringLength(100, MinimumLength = 5)]
+		public string Title { get; init; } = "";
+
+		public string Post { get; init; } = "";
+
+		public ForumTopicType Type { get; init; } = ForumTopicType.Regular;
+
+		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 }

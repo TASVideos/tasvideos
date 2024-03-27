@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Games.Models;
+using TASVideos.Data.Entity.Game;
 using TASVideos.ViewComponents;
 
 namespace TASVideos.Pages.Games;
@@ -22,13 +22,37 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public List<TabMiniMovieModel> Movies { get; set; } = [];
 
-	public IReadOnlyCollection<WatchFile> WatchFiles { get; set; } = [];
+	public List<WatchFile> WatchFiles { get; set; } = [];
 
-	public IReadOnlyCollection<TopicEntry> Topics { get; set; } = [];
+	public List<TopicEntry> Topics { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
-		var query = db.Games.ToGameDisplayModel();
+		var query = db.Games.Select(g => new GameDisplayModel
+		{
+			Id = g.Id,
+			DisplayName = g.DisplayName,
+			Abbreviation = g.Abbreviation,
+			Aliases = g.Aliases,
+			ScreenshotUrl = g.ScreenshotUrl,
+			GameResourcesPage = g.GameResourcesPage,
+			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName).ToList(),
+			Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion(
+				gv.Type,
+				gv.Id,
+				gv.Md5,
+				gv.Sha1,
+				gv.Name,
+				gv.Region,
+				gv.Version,
+				gv.System!.Code,
+				gv.TitleOverride)).ToList(),
+			GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup(gg.GameGroupId, gg.GameGroup!.Name)).ToList(),
+			PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
+			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
+			SubmissionCount = g.Submissions.Count,
+			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
+		});
 
 		query = ParsedId > 0
 			? query.Where(g => g.Id == ParsedId)
@@ -101,7 +125,40 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	// TODO: move me
 	public record WatchFile(long Id, string FileName);
 	public record TopicEntry(int Id, string Title);
+
+	public class GameDisplayModel
+	{
+		public int Id { get; init; }
+		public string DisplayName { get; init; } = "";
+		public string? Abbreviation { get; init; }
+		public string? Aliases { get; init; }
+		public string? ScreenshotUrl { get; init; }
+		public string? GameResourcesPage { get; init; }
+
+		public List<string> Genres { get; init; } = [];
+
+		public List<GameVersion> Versions { get; init; } = [];
+
+		public List<GameGroup> GameGroups { get; init; } = [];
+
+		public int PublicationCount { get; init; }
+		public int ObsoletePublicationCount { get; init; }
+		public int SubmissionCount { get; init; }
+		public int UserFilesCount { get; init; }
+
+		public record GameVersion(
+			VersionTypes Type,
+			int Id,
+			string? Md5,
+			string? Sha1,
+			string Name,
+			string? Region,
+			string? Version,
+			string? SystemCode,
+			string? TitleOverride);
+
+		public record GameGroup(int Id, string Name);
+	}
 }

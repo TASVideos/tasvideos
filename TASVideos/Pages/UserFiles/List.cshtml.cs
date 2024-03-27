@@ -33,4 +33,13 @@ public class ListModel(ApplicationDbContext db) : PageModel
 			})
 			.SortedPageOf(Search);
 	}
+
+	public class UserFileListRequest : PagingModel
+	{
+		public UserFileListRequest()
+		{
+			PageSize = 50;
+			Sort = $"-{nameof(UserFileListModel.UploadTimestamp)}";
+		}
+	}
 }

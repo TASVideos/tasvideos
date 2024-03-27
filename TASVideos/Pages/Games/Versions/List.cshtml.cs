@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
-using TASVideos.Pages.Games.Versions.Models;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games.Versions;
 
@@ -22,13 +23,13 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 				.Select(r => new VersionListModel.VersionEntry
 				{
 					Id = r.Id,
-					DisplayName = r.Name,
+					Name = r.Name,
 					Md5 = r.Md5,
 					Sha1 = r.Sha1,
 					Version = r.Version,
 					Region = r.Region,
-					VersionType = r.Type,
-					SystemCode = r.System!.Code,
+					Type = r.Type,
+					System = r.System!.Code,
 					TitleOverride = r.TitleOverride,
 				})
 				.ToList()
@@ -42,5 +43,28 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		Versions = roms;
 		return Page();
+	}
+
+	public class VersionListModel
+	{
+		[Display(Name = "Game")]
+		public string GameDisplayName { get; init; } = "";
+
+		public List<VersionEntry> Versions { get; init; } = [];
+
+		public class VersionEntry
+		{
+			public int Id { get; init; }
+			public string Name { get; init; } = "";
+			public string? Md5 { get; init; }
+			public string? Sha1 { get; init; }
+			public string? Version { get; init; }
+			public string? Region { get; init; }
+			public VersionTypes Type { get; init; }
+			public string System { get; init; } = "";
+
+			[Display(Name = "Title Override")]
+			public string? TitleOverride { get; init; }
+		}
 	}
 }

@@ -462,7 +462,7 @@ public class UserManager(
 		}
 	}
 
-	public async Task<IEnumerable<RoleDto>> UserRoles(int userId)
+	public async Task<List<RoleDto>> UserRoles(int userId)
 	{
 		return await db.Users
 			.Where(u => u.Id == userId)

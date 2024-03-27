@@ -18,13 +18,13 @@
 <table class="table table-bordered table-striped">
 	<tr>
 		<th>@Html.DisplayNameFor(m => m.Messages.First().Subject)</th>
-		<th>@Html.DisplayNameFor(m => m.Messages.First().FromUser)</th>
-		<th>@Html.DisplayNameFor(m => m.Messages.First().SendDate)</th>
+		<th>@Html.DisplayNameFor(m => m.Messages.First().From)</th>
+		<th>@Html.DisplayNameFor(m => m.Messages.First().Date)</th>
 		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.Messages
-	   .OrderBy(m => m.IsRead)
-	   .ThenByDescending(m => m.SendDate))
+		.OrderBy(m => m.IsRead)
+		.ThenByDescending(m => m.Date))
 	{
 		<tr>
 			<td>
@@ -35,9 +35,9 @@
 				</a>
 			</td>
 			<td>
-				<profile-link username="@entry.FromUser"></profile-link>
+				<profile-link username="@entry.From"></profile-link>
 			</td>
-			<td>@entry.SendDate</td>
+			<td>@entry.Date</td>
 			<td>
 				<form method="post" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id" style="display: inline-block">
 					<button type="submit" class="btn btn-primary btn-sm">Save</button>

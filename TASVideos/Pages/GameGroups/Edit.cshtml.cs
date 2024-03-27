@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.GameGroups.Models;
 
 namespace TASVideos.Pages.GameGroups;
 
@@ -19,26 +19,28 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		if (Id.HasValue)
+		if (!Id.HasValue)
 		{
-			var gameGroup = await db.GameGroups
-				.Where(gg => gg.Id == Id.Value)
-				.Select(gg => new GameGroupEditModel
-				{
-					Name = gg.Name,
-					Abbreviation = gg.Abbreviation,
-					Description = gg.Description
-				})
-				.SingleOrDefaultAsync();
-
-			if (gameGroup is null)
-			{
-				return NotFound();
-			}
-
-			GameGroup = gameGroup;
-			CanDelete = await CanBeDeleted();
+			return Page();
 		}
+
+		var gameGroup = await db.GameGroups
+			.Where(gg => gg.Id == Id.Value)
+			.Select(gg => new GameGroupEditModel
+			{
+				Name = gg.Name,
+				Abbreviation = gg.Abbreviation,
+				Description = gg.Description
+			})
+			.SingleOrDefaultAsync();
+
+		if (gameGroup is null)
+		{
+			return NotFound();
+		}
+
+		GameGroup = gameGroup;
+		CanDelete = await CanBeDeleted();
 
 		return Page();
 	}
@@ -114,5 +116,17 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	private async Task<bool> CanBeDeleted()
 	{
 		return Id.HasValue && !await db.Games.ForGroup(Id.Value).AnyAsync();
+	}
+
+	public class GameGroupEditModel
+	{
+		[StringLength(255)]
+		public string Name { get; init; } = "";
+
+		[StringLength(255)]
+		public string? Abbreviation { get; init; }
+
+		[StringLength(2000)]
+		public string? Description { get; init; }
 	}
 }

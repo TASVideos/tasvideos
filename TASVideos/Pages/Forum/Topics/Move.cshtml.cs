@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -100,7 +100,7 @@ public class MoveModel(
 			topicWasRestricted || forum.Restricted,
 			$"Topic MOVED by {User.Name()}",
 			$"[Topic]({{0}}) MOVED by {User.Name()}",
-			$@"""{Topic.TopicTitle}"" from {Topic.ForumName} to {forum.Name}",
+			$"\"{Topic.TopicTitle}\" from {Topic.ForumName} to {forum.Name}",
 			$"Forum/Topics/{Id}");
 
 		return RedirectToPage("Index", new { Id });
@@ -110,12 +110,19 @@ public class MoveModel(
 	{
 		AvailableForums = await db.Forums
 			.ExcludeRestricted(CanSeeRestricted)
-			.Select(f => new SelectListItem
-			{
-				Text = f.Name,
-				Value = f.Id.ToString(),
-				Selected = f.Id == Topic.ForumId
-			})
+			.ToDropdown(Topic.ForumId)
 			.ToListAsync();
+	}
+
+	public class MoveTopicModel
+	{
+		[Display(Name = "New Forum")]
+		public int ForumId { get; init; }
+
+		[Display(Name = "Topic")]
+		public string TopicTitle { get; init; } = "";
+
+		[Display(Name = "Current Forum")]
+		public string ForumName { get; init; } = "";
 	}
 }

@@ -5,7 +5,7 @@ using TASVideos.Core.Services;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
+using TASVideos.Pages.Forum.Models;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -72,7 +72,8 @@ public class UserModel(
 				ForumId = p.Topic.ForumId,
 				ForumName = p.Topic!.Forum!.Name,
 				PosterMood = p.PosterMood,
-				PosterId = p.PosterId
+				PosterId = p.PosterId,
+				PostEditedTimestamp = p.PostEditedTimestamp
 			})
 			.SortedPageOf(Search);
 
@@ -98,5 +99,54 @@ public class UserModel(
 		}
 
 		return Page();
+	}
+
+	public class UserPostsRequest : PagingModel
+	{
+		public UserPostsRequest()
+		{
+			PageSize = ForumConstants.PostsPerPage;
+			Sort = $"-{nameof(UserPagePost.CreateTimestamp)}";
+		}
+	}
+
+	public class UserPagePost : IForumPostEntry
+	{
+		public int Id { get; init; }
+
+		[Sortable]
+		public DateTime CreateTimestamp { get; init; }
+		public DateTime LastUpdateTimestamp { get; init; }
+		public bool EnableBbCode { get; init; }
+		public bool EnableHtml { get; init; }
+		public bool Restricted { get; init; }
+		public string Text { get; init; } = "";
+		public DateTime? PostEditedTimestamp { get; init; }
+		public string? Subject { get; init; }
+		public int TopicId { get; init; }
+		public string TopicTitle { get; init; } = "";
+		public int ForumId { get; init; }
+		public string ForumName { get; init; } = "";
+		public ForumPostMood PosterMood { get; init; }
+
+		// Not needed
+		public bool Highlight => false;
+		public bool IsEditable => false;
+		public bool IsDeletable => false;
+
+		// Fill with user info
+		public int PosterId { get; set; }
+		public string PosterName { get; set; } = "";
+		public string? Signature { get; set; }
+		public int PosterPostCount { get; set; }
+		public string? PosterLocation { get; set; }
+		public DateTime PosterJoined { get; set; }
+		public double PosterPlayerPoints { get; set; }
+		public string? PosterAvatar { get; set; }
+		public string? PosterMoodUrlBase { get; set; }
+		public IList<string> PosterRoles { get; set; } = [];
+		public string? PosterPlayerRank { get; set; }
+		public PreferredPronounTypes PosterPronouns { get; set; }
+		public ICollection<AwardAssignmentSummary> Awards { get; set; } = [];
 	}
 }

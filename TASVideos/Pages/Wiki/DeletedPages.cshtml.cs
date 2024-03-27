@@ -3,7 +3,6 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
 
 namespace TASVideos.Pages.Wiki;
 
@@ -21,12 +20,10 @@ public class DeletedPagesModel(
 		DeletedPages = await db.WikiPages
 			.ThatAreDeleted()
 			.GroupBy(tkey => tkey.PageName)
-			.Select(record => new DeletedWikiPageDisplayModel
-			{
-				PageName = record.Key,
-				RevisionCount = record.Count(),
-				HasExistingRevisions = db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)
-			})
+			.Select(record => new DeletedWikiPageDisplayModel(
+				record.Key,
+				record.Count(),
+				db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)))
 			.ToListAsync();
 	}
 
@@ -73,10 +70,7 @@ public class DeletedPagesModel(
 		await wikiPages.Delete(path, revision);
 
 		await publisher.SendGeneralWiki(
-				$"Revision {revision} of {path} DELETED by {User.Name()}",
-				"",
-				"",
-				"");
+			$"Revision {revision} of {path} DELETED by {User.Name()}", "", "", "");
 
 		return BaseRedirect("/" + path);
 	}
@@ -102,11 +96,13 @@ public class DeletedPagesModel(
 		}
 
 		await publisher.SendGeneralWiki(
-				$"Page {path} UNDELETED by {User.Name()}",
-				$"Page [{path}]({{0}}) UNDELETED by {User.Name()}",
-				"",
-				WikiHelper.EscapeUserName(path));
+			$"Page {path} UNDELETED by {User.Name()}",
+			$"Page [{path}]({{0}}) UNDELETED by {User.Name()}",
+			"",
+			WikiHelper.EscapeUserName(path));
 
 		return BaseRedirect("/" + path);
 	}
+
+	public record DeletedWikiPageDisplayModel(string PageName, int RevisionCount, bool HasExistingRevisions);
 }

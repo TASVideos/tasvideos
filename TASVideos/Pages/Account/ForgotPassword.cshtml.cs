@@ -15,23 +15,22 @@ public class ForgotPasswordModel(UserManager userManager, IEmailService emailSer
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (ModelState.IsValid)
+		if (!ModelState.IsValid)
 		{
-			var user = await userManager.FindByEmailAsync(Email);
-			if (user is null || !await userManager.IsEmailConfirmedAsync(user))
-			{
-				// Don't reveal that the user does not exist or is not confirmed
-				return RedirectToPage("ForgotPasswordConfirmation");
-			}
+			return Page();
+		}
 
-			var code = await userManager.GeneratePasswordResetTokenAsync(user);
-			var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
-			await emailService.ResetPassword(Email, callbackUrl);
-
+		var user = await userManager.FindByEmailAsync(Email);
+		if (user is null || !await userManager.IsEmailConfirmedAsync(user))
+		{
+			// Don't reveal that the user does not exist or is not confirmed
 			return RedirectToPage("ForgotPasswordConfirmation");
 		}
 
-		// If we got this far, something failed, redisplay form
-		return Page();
+		var code = await userManager.GeneratePasswordResetTokenAsync(user);
+		var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
+		await emailService.ResetPassword(Email, callbackUrl);
+
+		return RedirectToPage("ForgotPasswordConfirmation");
 	}
 }

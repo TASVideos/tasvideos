@@ -10,31 +10,31 @@
 </h4>
 <table class="table table-bordered table-striped">
 	<tr>
-		<th>@Html.DisplayNameFor(m => m.Goals.First().DisplayName)</th>
+		<th>@Html.DisplayNameFor(m => m.Goals.First().Name)</th>
 		<th>Publications</th>
 		<th>Submissions</th>
 		<th>Actions</th>
 	</tr>
 	@foreach (var goal in Model.Goals
-		.OrderByDescending(g => g.DisplayName == "baseline")
+		.OrderByDescending(g => g.Name == "baseline")
 		.ThenByDescending(g => g.Publications.Any(p => !p.Obs))
-		.ThenBy(g => g.DisplayName.Length)
-		.ThenBy(g => g.DisplayName))
+		.ThenBy(g => g.Name.Length)
+		.ThenBy(g => g.Name))
 	{
 		var canDelete = !goal.Publications.Any() && !goal.Submissions.Any();
 		<tr id="goal-@goal.Id">
-			<td condition="@(goal.Id == Model.GoalToEdit && goal.DisplayName != "baseline")">
+			<td condition="@(goal.Id == Model.GoalToEdit && goal.Name != "baseline")">
 				<form method="post" class="d-flex gap-2" asp-page-handler="Edit">
 					<full-row>
 						<input type="hidden" name="gameGoalId" value="@Model.GoalToEdit" />
-						<input type="text" name="newGoalName" class="form-control" value="@goal.DisplayName" />
+						<input type="text" name="newGoalName" class="form-control" value="@goal.Name" />
 						<button type="submit" class="btn btn-primary btn-sm mt-1"><i class="fa fa-save"></i> Save</button>
 						<a asp-page="List" asp-fragment="goal-@goal.Id" asp-route-gameId="@Model.GameId" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-times"></i> Cancel</a>
 					</full-row>
 				</form>
 			</td>
-			<td condition="@(goal.Id != Model.GoalToEdit || goal.DisplayName == "baseline")">
-				@goal.DisplayName</td>
+			<td condition="@(goal.Id != Model.GoalToEdit || goal.Name == "baseline")">
+				@goal.Name</td>
 			<td>
 				<ul>
 					@foreach (var pub in goal.Publications.OrderBy(p => p.Obs).ThenByDescending(p => p.Id))
@@ -65,7 +65,7 @@
 					   asp-route-gameId="@Model.GameId"
 					   asp-route-goalToEdit="@goal.Id"
 					   permission="CatalogMovies"
-					   condition="@(goal.Id != Model.GoalToEdit && goal.DisplayName != "baseline")"
+					   condition="@(goal.Id != Model.GoalToEdit && goal.Name != "baseline")"
 					   class="btn btn-sm btn-primary">
 					   <i class="fa fa-pencil"></i> Edit
 					</a>

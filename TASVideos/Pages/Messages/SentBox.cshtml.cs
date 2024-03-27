@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Messages.Models;
 
 namespace TASVideos.Pages.Messages;
 
@@ -20,14 +19,12 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 		SentBox = await db.PrivateMessages
 			.ThatAreNotToUserDeleted()
 			.FromUser(userId)
-			.Select(pm => new SentboxEntry
-			{
-				Id = pm.Id,
-				Subject = pm.Subject,
-				ToUser = pm.ToUser!.UserName,
-				SendDate = pm.CreateTimestamp,
-				HasBeenRead = pm.ReadOn.HasValue
-			})
+			.Select(pm => new SentboxEntry(
+				pm.Id,
+				pm.Subject,
+				pm.ToUser!.UserName,
+				pm.CreateTimestamp,
+				pm.ReadOn.HasValue))
 			.ToListAsync();
 	}
 
@@ -53,4 +50,6 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 
 		return BasePageRedirect("SentBox");
 	}
+
+	public record SentboxEntry(int Id, string? Subject, string To, DateTime SendDate, bool IsRead);
 }

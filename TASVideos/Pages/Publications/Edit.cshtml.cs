@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -6,7 +7,7 @@ using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Publications.Models;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.Publications;
 
@@ -50,13 +51,8 @@ public class EditModel(
 				EmulatorVersion = p.EmulatorVersion,
 				AdditionalAuthors = p.AdditionalAuthors,
 				Urls = p.PublicationUrls
-					.Select(u => new PublicationUrlDisplayModel
-					{
-						Id = u.Id,
-						Url = u.Url!,
-						Type = u.Type,
-						DisplayName = u.DisplayName
-					})
+					.Select(u => new PublicationUrlDisplayModel(
+						u.Id, u.Url!, u.Type, u.DisplayName))
 					.ToList(),
 				SelectedFlags = p.PublicationFlags
 					.Select(pf => pf.FlagId)
@@ -123,13 +119,8 @@ public class EditModel(
 			.ToListAsync();
 		Files = await db.PublicationFiles
 			.Where(f => f.PublicationId == Id)
-			.Select(f => new PublicationFileDisplayModel
-			{
-				Id = f.Id,
-				Path = f.Path,
-				Type = f.Type,
-				Description = f.Description
-			})
+			.Select(f => new PublicationFileDisplayModel(
+				f.Id, f.Path, f.Type, f.Description))
 			.ToListAsync();
 	}
 
@@ -249,4 +240,54 @@ public class EditModel(
 				$"{Id}M");
 		}
 	}
+
+	public class PublicationEditModel
+	{
+		public string SystemCode { get; init; } = "";
+
+		public string Title { get; init; } = "";
+
+		public string MovieFileName { get; init; } = "";
+
+		[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+		public string? AdditionalAuthors { get; init; }
+
+		[Display(Name = "Author(s)")]
+		public List<string> Authors { get; set; } = [];
+
+		[Display(Name = "Publication Class")]
+		public string Class { get; init; } = "";
+		public string? ClassIconPath { get; init; } = "";
+		public string ClassLink { get; init; } = "";
+
+		[Display(Name = "Obsoleted By")]
+		public int? ObsoletedBy { get; init; }
+
+		public string? ObsoletedByTitle { get; init; }
+
+		[StringLength(50)]
+		[Display(Name = "Emulator Version")]
+		public string? EmulatorVersion { get; init; }
+
+		[Display(Name = "Selected Flags")]
+		public List<int> SelectedFlags { get; init; } = [];
+
+		[Display(Name = "Selected Tags")]
+		public List<int> SelectedTags { get; init; } = [];
+
+		[Display(Name = "Revision Message")]
+		public string? RevisionMessage { get; init; }
+
+		[Display(Name = "Minor Edit")]
+		public bool MinorEdit { get; init; }
+
+		[DoNotTrim]
+		public string Markup { get; set; } = "";
+
+		public List<PublicationUrlDisplayModel> Urls { get; init; } = [];
+	}
+
+	public record PublicationFileDisplayModel(int Id, string Path, FileType Type, string? Description);
+
+	public record PublicationUrlDisplayModel(int Id, string Url, PublicationUrlType Type, string? DisplayName);
 }

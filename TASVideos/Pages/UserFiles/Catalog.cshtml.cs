@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
 
@@ -16,9 +16,9 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	[BindProperty]
 	public CatalogViewModel UserFile { get; set; } = new();
 
-	public IEnumerable<SelectListItem> AvailableSystems { get; set; } = [];
+	public List<SelectListItem> AvailableSystems { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableGames { get; set; } = [];
+	public List<SelectListItem> AvailableGames { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -66,22 +66,41 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableSystems = UiDefaults.DefaultEntry.Concat(await db.GameSystems
-			.OrderBy(s => s.Code)
-			.Select(s => new SelectListItem
-			{
-				Value = s.Id.ToString(),
-				Text = s.Code
-			})
-			.ToListAsync());
+		AvailableSystems =
+		[
+			.. UiDefaults.DefaultEntry,
+			.. await db.GameSystems
+				.OrderBy(s => s.Code)
+				.ToDropDownWithId()
+				.ToListAsync(),
+		];
 
 		if (UserFile.SystemId.HasValue)
 		{
-			AvailableGames = UiDefaults.DefaultEntry.Concat(await db.Games
-				.ForSystem((int)UserFile.SystemId)
-				.OrderBy(g => g.DisplayName)
-				.ToDropDown()
-				.ToListAsync());
+			AvailableGames =
+			[
+				.. UiDefaults.DefaultEntry,
+				.. await db.Games
+					.ForSystem((int)UserFile.SystemId)
+					.OrderBy(g => g.DisplayName)
+					.ToDropDown()
+					.ToListAsync(),
+			];
 		}
+	}
+
+	public class CatalogViewModel
+	{
+		public long Id { get; init; }
+
+		[Required]
+		[Display(Name = "System")]
+		public int? SystemId { get; init; }
+
+		[Display(Name = "Game")]
+		public int? GameId { get; init; }
+
+		public string Filename { get; init; } = "";
+		public string AuthorName { get; init; } = "";
 	}
 }

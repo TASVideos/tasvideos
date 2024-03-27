@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.Wiki;
 
@@ -150,5 +151,22 @@ public class EditModel(
 			$"Page [{Path}]({{0}}) {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"{page.RevisionMessage}",
 			WikiHelper.EscapeUserName(Path!));
+	}
+
+	public class WikiEditModel
+	{
+		public DateTime EditStart { get; init; } = DateTime.UtcNow;
+
+		[DoNotTrim]
+		public string Markup { get; init; } = "";
+
+		public string OriginalMarkup => Markup;
+
+		[Display(Name = "Minor Edit")]
+		public bool MinorEdit { get; init; }
+
+		[Display(Name = "Edit Comments", Description = "Please enter a descriptive summary of your change. Leaving this blank is discouraged.")]
+		[MaxLength(500)]
+		public string? RevisionMessage { get; init; }
 	}
 }

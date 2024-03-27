@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Groups.Models;
 
 namespace TASVideos.Pages.GameGroups;
 
@@ -40,21 +39,24 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		Games = await db.Games
 			.ForGroup(gameGroup.Id)
-			.Select(g => new GameListEntry
-			{
-				Id = g.Id,
-				Name = g.DisplayName,
-				Systems = g.GameVersions
+			.Select(g => new GameListEntry(
+				g.Id,
+				g.DisplayName,
+				g.GameVersions
 					.Select(v => v.System!.Code)
 					.Distinct()
 					.OrderBy(s => s)
 					.ToList(),
-				PublicationCount = g.Publications.Count,
-				SubmissionsCount = g.Submissions.Count,
-				GameResourcesPage = g.GameResourcesPage
-			})
+				g.Publications.Count,
+				g.Submissions.Count,
+				g.GameResourcesPage))
 			.ToListAsync();
 
 		return Page();
+	}
+
+	public record GameListEntry(int Id, string Name, List<string> Systems, int PubCount, int SubCount, string? GameResourcesPage)
+	{
+		public string SystemsString() => string.Join(", ", Systems);
 	}
 }

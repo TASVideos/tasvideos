@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -109,7 +109,7 @@ public class MergeModel(
 				originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
 				$"Topics MERGED by {User.Name()}",
 				$"[Topics MERGED]({{0}}) by {User.Name()}",
-				$@"""{originalTopic.Title}"" into ""{destinationTopic.Title}""",
+				$"\"{originalTopic.Title}\" into \"{destinationTopic.Title}\"",
 				$"Forum/Topics/{destinationTopic.Id}");
 		}
 
@@ -127,12 +127,7 @@ public class MergeModel(
 		var seeRestricted = CanSeeRestricted;
 		AvailableForums = await db.Forums
 			.ExcludeRestricted(seeRestricted)
-			.Select(f => new SelectListItem
-			{
-				Text = f.Name,
-				Value = f.Id.ToString(),
-				Selected = f.Id == Topic.ForumId
-			})
+			.ToDropdown(Topic.ForumId)
 			.ToListAsync();
 
 		AvailableTopics = [.. UiDefaults.DefaultEntry, .. await GetTopicsForForum(Topic.ForumId)];
@@ -145,11 +140,20 @@ public class MergeModel(
 			.ExcludeRestricted(seeRestricted)
 			.ForForum(forumId)
 			.Where(t => t.Id != Id)
-			.Select(t => new SelectListItem
-			{
-				Text = t.Title,
-				Value = t.Id.ToString()
-			})
+			.ToDropdown()
 			.ToListAsync();
+	}
+
+	public class MergeTopicModel
+	{
+		public int ForumId { get; init; }
+		public string ForumName { get; init; } = "";
+		public string Title { get; init; } = "";
+
+		[Display(Name = "Forum To Merge In to")]
+		public int DestinationForumId { get; set; }
+
+		[Display(Name = "Topic To Merge In to")]
+		public int DestinationTopicId { get; init; }
 	}
 }

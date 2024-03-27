@@ -16,7 +16,7 @@ public partial class WikiMarkup(IViewComponentHelper viewComponentHelper) : TagH
 	[HtmlAttributeNotBound]
 	public ViewContext ViewContext { get; set; } = new();
 
-	public string Markup { get; set; } = "";
+	public string? Markup { get; set; }
 	public IWikiPage? PageData { get; set; }
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -24,7 +24,7 @@ public partial class WikiMarkup(IViewComponentHelper viewComponentHelper) : TagH
 		((IViewContextAware)viewComponentHelper).Contextualize(ViewContext);
 		output.TagName = "article";
 		output.AddCssClass("wiki");
-		await Util.RenderHtmlAsync(Markup, new TagHelperTextWriter(output.Content), this);
+		await Util.RenderHtmlAsync(Markup ?? "", new TagHelperTextWriter(output.Content), this);
 	}
 
 	bool IWriterHelper.CheckCondition(string condition)
@@ -40,13 +40,9 @@ public partial class WikiMarkup(IViewComponentHelper viewComponentHelper) : TagH
 			throw new InvalidOperationException($"Unknown ViewComponent: {name}");
 		}
 
-		var invokeMethod = viewComponent!.GetMethod("InvokeAsync")
-			?? viewComponent.GetMethod("Invoke");
-
-		if (invokeMethod is null)
-		{
-			throw new InvalidOperationException($"Could not find an Invoke method on ViewComponent {viewComponent}");
-		}
+		var invokeMethod = (viewComponent!.GetMethod("InvokeAsync")
+			?? viewComponent.GetMethod("Invoke"))
+			?? throw new InvalidOperationException($"Could not find an Invoke method on ViewComponent {viewComponent}");
 
 		var paramObject = ModuleParamHelpers
 			.GetParameterData(w, name, invokeMethod, PageData, pp);

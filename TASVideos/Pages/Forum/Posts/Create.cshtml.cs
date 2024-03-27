@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
@@ -86,16 +87,14 @@ public class CreateModel(
 
 		PreviousPosts = await db.ForumPosts
 			.ForTopic(TopicId)
-			.Select(fp => new MiniPostModel
-			{
-				CreateTimestamp = fp.CreateTimestamp,
-				PosterName = fp.Poster!.UserName,
-				PosterPronouns = fp.Poster.PreferredPronouns,
-				Text = fp.Text,
-				EnableBbCode = fp.EnableBbCode,
-				EnableHtml = fp.EnableHtml
-			})
 			.OrderByDescending(fp => fp.CreateTimestamp)
+			.Select(fp => new MiniPostModel(
+				fp.CreateTimestamp,
+				fp.Poster!.UserName,
+				fp.Poster.PreferredPronouns,
+				fp.Text,
+				fp.EnableBbCode,
+				fp.EnableHtml))
 			.Take(10)
 			.Reverse()
 			.ToListAsync();
@@ -205,5 +204,19 @@ public class CreateModel(
 		}
 
 		return BaseRedirect($"/Forum/Posts/{id}");
+	}
+
+	public class ForumPostCreateModel
+	{
+		public bool IsLocked { get; init; }
+		public string? UserAvatar { get; init; }
+		public string? UserSignature { get; init; }
+
+		public string TopicTitle { get; init; } = "";
+
+		[StringLength(150)]
+		public string? Subject { get; init; }
+		public string Text { get; set; } = "";
+		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 }

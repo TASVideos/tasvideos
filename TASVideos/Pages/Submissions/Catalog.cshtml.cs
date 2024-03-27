@@ -1,19 +1,16 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class CatalogModel(
-	ApplicationDbContext db,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -229,11 +226,7 @@ public class CatalogModel(
 
 			AvailableVersions = await db.GameVersions
 				.OrderBy(r => r.Name)
-				.Select(r => new SelectListItem
-				{
-					Value = r.Id.ToString(),
-					Text = r.Name
-				})
+				.ToDropDown()
 				.ToListAsync();
 		}
 		else
@@ -250,11 +243,7 @@ public class CatalogModel(
 					.ForSystem((int)Catalog.SystemId)
 					.ForGame((int)Catalog.GameId)
 					.OrderBy(r => r.Name)
-					.Select(r => new SelectListItem
-					{
-						Value = r.Id.ToString(),
-						Text = r.Name
-					})
+					.ToDropDown()
 					.ToListAsync();
 			}
 			else
@@ -262,22 +251,14 @@ public class CatalogModel(
 				AvailableVersions = await db.GameVersions
 					.ForSystem((int)Catalog.SystemId)
 					.OrderBy(r => r.Name)
-					.Select(r => new SelectListItem
-					{
-						Value = r.Id.ToString(),
-						Text = r.Name
-					})
+					.ToDropDown()
 					.ToListAsync();
 			}
 		}
 
 		AvailableSystems = await db.GameSystems
 			.OrderBy(s => s.Code)
-			.Select(s => new SelectListItem
-			{
-				Value = s.Id.ToString(),
-				Text = s.Code
-			})
+			.ToDropDownWithId()
 			.ToListAsync();
 
 		AvailableSystemFrameRates = Catalog.SystemId.HasValue
@@ -292,10 +273,34 @@ public class CatalogModel(
 				.Where(gg => gg.GameId == Catalog.GameId)
 				.Select(gg => new SelectListItem
 				{
-					Value = gg.Id.ToString(),
-					Text = gg.DisplayName
+					Text = gg.DisplayName,
+					Value = gg.Id.ToString()
 				})
 				.ToListAsync()
 			: [];
+	}
+
+	public class SubmissionCatalogModel
+	{
+		public string Title { get; init; } = "";
+
+		[Display(Name = "Game Version")]
+		public int? GameVersionId { get; set; }
+
+		[Display(Name = "Game")]
+		public int? GameId { get; set; }
+
+		[Display(Name = "System")]
+		[Required]
+		public int? SystemId { get; init; }
+
+		[Display(Name = "System Framerate")]
+		[Required]
+		public int? SystemFrameRateId { get; init; }
+
+		[Display(Name = "Goal")]
+		public int? GameGoalId { get; init; }
+
+		public bool MinorEdit { get; init; }
 	}
 }

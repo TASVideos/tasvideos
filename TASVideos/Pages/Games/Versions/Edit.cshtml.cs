@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Games.Versions.Models;
 
 namespace TASVideos.Pages.Games.Versions;
 
@@ -63,7 +63,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		AvailableSystems = await db.GameSystems
 			.OrderBy(s => s.Code)
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
 
 		if (SystemId.HasValue)
@@ -74,7 +74,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 				.SingleOrDefaultAsync();
 			if (systemCode is not null)
 			{
-				Version.SystemCode = systemCode;
+				Version.System = systemCode;
 			}
 		}
 
@@ -87,12 +87,12 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
 			.Select(v => new VersionEditModel
 			{
-				SystemCode = v.System!.Code,
+				System = v.System!.Code,
 				Name = v.Name,
 				Md5 = v.Md5,
 				Sha1 = v.Sha1,
 				Version = v.Version,
-				Region = v.Region,
+				Region = v.Region ?? "",
 				Type = v.Type,
 				TitleOverride = v.TitleOverride
 			})
@@ -119,7 +119,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		var system = await db.GameSystems
-			.SingleOrDefaultAsync(s => s.Code == Version.SystemCode);
+			.SingleOrDefaultAsync(s => s.Code == Version.System);
 
 		if (system is null)
 		{
@@ -193,5 +193,34 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	{
 		return !await db.Submissions.AnyAsync(s => s.GameVersion!.Id == Id)
 				&& !await db.Publications.AnyAsync(p => p.GameVersion!.Id == Id);
+	}
+
+	public class VersionEditModel
+	{
+		[StringLength(8)]
+		public string System { get; set; } = "";
+
+		[StringLength(255)]
+		public string Name { get; init; } = "";
+
+		[RegularExpression("^[A-Fa-f0-9]*$")]
+		[StringLength(32, MinimumLength = 32)]
+		public string? Md5 { get; init; }
+
+		[RegularExpression("^[A-Fa-f0-9]*$")]
+		[StringLength(40, MinimumLength = 40)]
+		public string? Sha1 { get; init; }
+
+		[StringLength(50)]
+		public string? Version { get; init; }
+
+		[StringLength(50)]
+		public string Region { get; init; } = "";
+
+		public VersionTypes Type { get; init; }
+
+		[StringLength(255)]
+		[Display(Name = "Title Override")]
+		public string? TitleOverride { get; init; }
 	}
 }

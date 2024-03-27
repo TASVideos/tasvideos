@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications;
 
@@ -98,7 +98,15 @@ public class EditClassModel(
 	private async Task PopulateAvailableClasses()
 	{
 		AvailableClasses = await db.PublicationClasses
-			.ToDropdown()
+			.ToDropDown()
 			.ToListAsync();
+	}
+
+	public class PublicationClassEditModel
+	{
+		public string Title { get; init; } = "";
+
+		[Display(Name = "PublicationClass")]
+		public int ClassId { get; init; }
 	}
 }

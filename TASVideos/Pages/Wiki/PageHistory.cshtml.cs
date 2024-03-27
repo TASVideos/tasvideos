@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
 
 namespace TASVideos.Pages.Wiki;
 
@@ -18,7 +17,9 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public int? ToRevision { get; set; }
 
-	public WikiHistoryModel History { get; set; } = new();
+	public string PageName { get; set; } = "";
+
+	public List<WikiRevisionModel> Revisions { get; set; } = [];
 
 	public WikiDiffModel Diff { get; set; } = new("", "");
 
@@ -28,23 +29,18 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 	public async Task OnGet()
 	{
 		Path = Path?.Trim('/') ?? "";
-		History = new WikiHistoryModel
-		{
-			PageName = Path,
-			Revisions = await db.WikiPages
-				.ForPage(Path)
-				.ThatAreNotDeleted()
-				.OrderBy(wp => wp.Revision)
-				.Select(wp => new WikiHistoryModel.WikiRevisionModel
-				{
-					Revision = wp.Revision,
-					CreateTimestamp = wp.CreateTimestamp,
-					CreateUserName = wp.Author!.UserName,
-					MinorEdit = wp.MinorEdit,
-					RevisionMessage = wp.RevisionMessage
-				})
-				.ToListAsync()
-		};
+		PageName = Path;
+		Revisions = await db.WikiPages
+			.ForPage(Path)
+			.ThatAreNotDeleted()
+			.OrderBy(wp => wp.Revision)
+			.Select(wp => new WikiRevisionModel(
+				wp.Revision,
+				wp.CreateTimestamp,
+				wp.Author!.UserName,
+				wp.MinorEdit,
+				wp.RevisionMessage))
+			.ToListAsync();
 
 		if (Latest == true)
 		{
@@ -103,4 +99,6 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 	}
 
 	public record WikiDiffModel(string LeftMarkup, string RightMarkup);
+
+	public record WikiRevisionModel(int Revision, DateTime CreateTimestamp, string? CreateUserName, bool MinorEdit, string? RevisionMessage);
 }

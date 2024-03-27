@@ -42,7 +42,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			.. UiDefaults.DefaultEntry,
 			.. await db.GameSystems
 				.OrderBy(s => s.Code)
-				.ToDropdown()
+				.ToDropDown()
 				.ToListAsync(),
 		];
 

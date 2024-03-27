@@ -151,14 +151,12 @@ public class IndexModel(
 		{
 			Topic.Poll.Options = await db.ForumPollOptions
 				.ForPoll(Topic.Poll.PollId)
-				.Select(o => new ForumTopicModel.PollModel.PollOptionModel
-				{
-					Text = o.Text,
-					Ordinal = o.Ordinal,
-					Voters = o.Votes
+				.Select(o => new ForumTopicModel.PollOptionModel(
+					o.Text,
+					o.Ordinal,
+					o.Votes
 						.Select(v => v.UserId)
-						.ToList()
-				})
+						.ToList()))
 				.ToListAsync();
 		}
 
@@ -304,8 +302,16 @@ public class IndexModel(
 		return RedirectToTopic();
 	}
 
-	private RedirectToPageResult RedirectToTopic()
+	private RedirectToPageResult RedirectToTopic() => RedirectToPage("Index", new { Id });
+
+	public class TopicRequest : PagingModel
 	{
-		return RedirectToPage("Index", new { Id });
+		public TopicRequest()
+		{
+			PageSize = ForumConstants.PostsPerPage;
+			Sort = $"{nameof(ForumPostEntry.CreateTimestamp)}";
+		}
+
+		public int? Highlight { get; set; }
 	}
 }

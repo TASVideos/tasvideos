@@ -1,7 +1,7 @@
 ﻿@using System.Globalization
 @using TASVideos.TagHelpers
 @inject AppSettings Settings
-@model TASVideos.Pages.RssFeeds.Models.RssSubmission
+@model TASVideos.Pages.RssFeeds.SubmissionsModel.RssSubmission
 @{
 	var baseUrl = Settings.BaseUrl;
 	var subUrl = $"{baseUrl}/{Model.Id}S";

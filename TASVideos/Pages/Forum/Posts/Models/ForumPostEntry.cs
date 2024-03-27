@@ -29,7 +29,7 @@ public class ForumPostEntry : IForumPostEntry
 	public string? Subject { get; set; }
 	public string? Signature { get; set; }
 
-	public IEnumerable<AwardAssignmentSummary> Awards { get; set; } = [];
+	public ICollection<AwardAssignmentSummary> Awards { get; set; } = [];
 
 	public bool EnableHtml { get; set; }
 	public bool EnableBbCode { get; set; }

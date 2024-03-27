@@ -1,19 +1,16 @@
-﻿using System.Globalization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class CatalogModel(
-	ApplicationDbContext db,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -201,31 +198,19 @@ public class CatalogModel(
 				.ForGame(gameId)
 				.ForSystem(systemId)
 				.OrderBy(r => r.Name)
-				.Select(r => new SelectListItem
-				{
-					Value = r.Id.ToString(),
-					Text = r.Name
-				})
+				.ToDropDown()
 				.ToListAsync(),
 		];
 
 		AvailableGames = await db.Games
 			.ForSystem(systemId)
 			.OrderBy(g => g.DisplayName)
-			.Select(g => new SelectListItem
-			{
-				Value = g.Id.ToString(),
-				Text = g.DisplayName
-			})
+			.ToDropDown()
 			.ToListAsync();
 
 		AvailableSystems = await db.GameSystems
 			.OrderBy(s => s.Code)
-			.Select(s => new SelectListItem
-			{
-				Value = s.Id.ToString(),
-				Text = s.Code
-			})
+			.ToDropDownWithId()
 			.ToListAsync();
 
 		AvailableSystemFrameRates = await db.GameSystemFrameRates
@@ -235,11 +220,29 @@ public class CatalogModel(
 
 		AvailableGoals = await db.GameGoals
 			.Where(gg => gg.GameId == gameId)
-			.Select(gg => new SelectListItem
-			{
-				Value = gg.Id.ToString(),
-				Text = gg.DisplayName
-			})
+			.ToDropDown()
 			.ToListAsync();
+	}
+
+	public class PublicationCatalogModel
+	{
+		public string Title { get; set; } = "";
+
+		[Display(Name = "Game Version")]
+		public int GameVersionId { get; set; }
+
+		[Display(Name = "Goal")]
+		public int GameGoalId { get; set; }
+
+		[Display(Name = "Game")]
+		public int GameId { get; set; }
+
+		[Display(Name = "System")]
+		public int SystemId { get; set; }
+
+		[Display(Name = "System Framerate")]
+		public int SystemFrameRateId { get; set; }
+
+		public bool MinorEdit { get; set; }
 	}
 }

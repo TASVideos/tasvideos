@@ -1,20 +1,3 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace TASVideos.Pages.UserFiles.Models;
 
-namespace TASVideos.Pages.UserFiles.Models;
-
-public class UserMovieListModel
-{
-	public long Id { get; set; }
-
-	[Display(Name = "By")]
-	public string Author { get; set; } = "";
-
-	[Display(Name = "Uploaded")]
-	public DateTime UploadTimestamp { get; set; }
-
-	[Display(Name = "Filename")]
-	public string FileName { get; set; } = "";
-
-	[Display(Name = "Title")]
-	public string Title { get; set; } = "";
-}
+public record UserMovieListModel(long Id, string Author, DateTime UploadTimestamp, string FileName, string Title);

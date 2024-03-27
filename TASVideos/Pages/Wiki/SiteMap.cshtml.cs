@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki.Models;
 
 namespace TASVideos.Pages.Wiki;
 
@@ -14,15 +13,13 @@ public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 		!.GetTypes()
 		.Where(type => typeof(BasePageModel).IsAssignableFrom(type))
 		.Where(type => type != typeof(BasePageModel))
-		.Select(t => new SiteMapEntry
-		{
-			PageName = t.Namespace
+		.Select(t => new SiteMapEntry(
+			t.Namespace
 				?.Replace("TASVideos.Pages.", "")
 				.Replace(".", "/") + "/"
 				+ t.Name.Replace("Model", ""),
-			IsWiki = false,
-			AccessRestriction = AccessRestriction(t)
-		})
+			false,
+			AccessRestriction(t)))
 		.ToList();
 
 	public List<SiteMapEntry> Map => CorePages;
@@ -37,12 +34,7 @@ public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 
 		Map.AddRange(wikiPages
 			.Distinct()
-			.Select(p => new SiteMapEntry
-			{
-				PageName = p,
-				IsWiki = true,
-				AccessRestriction = "Anonymous"
-			}));
+			.Select(p => new SiteMapEntry(p, true, "Anonymous")));
 	}
 
 	private static string AccessRestriction(MemberInfo type)
@@ -73,4 +65,6 @@ public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 
 		return "Unknown";
 	}
+
+	public record SiteMapEntry(string PageName, bool IsWiki, string AccessRestriction);
 }
