@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Globalization
 @inject AppSettings Settings
 @model PublicationsModel
 @{
@@ -13,7 +14,36 @@
 		<atom:link href="@(Settings.BaseUrl)/publications.rss" rel="self" type="application/rss+xml" xmlns="atom" />
 		@foreach (var pub in Model.Publications)
 		{
-			<partial model="pub" name="_RssPublication"/>
+			var movieUrl = $"{Settings.BaseUrl}/{pub.Id}M";
+			var primaryStreaming = pub.StreamingUrls.FirstOrDefault(u => u.Contains("youtube"));
+			var secondaryStreaming = pub.StreamingUrls.Where(u => u != primaryStreaming);
+			<item>
+				<title>@pub.Title</title>
+				<rss-link>@movieUrl</rss-link>
+				<description>
+					<html-encode>
+						<wiki-markup markup="@pub.Wiki.Markup" page-data="@pub.Wiki"></wiki-markup>
+					</html-encode>
+				</description>
+				@foreach (var tag in pub.TagNames)
+				{
+					<category>@tag</category>
+				}
+				<media:group>
+					<media:content url="@(movieUrl)?handler=Download" fileSize="@pub.MovieFileSize" type="application/zip" medium="document" />
+					<media:thumbnail url="@(Settings.BaseUrl)/media/@pub.ScreenshotPath" />
+					@foreach (var url in secondaryStreaming)
+					{
+						<media:content url="@url" type="video" medium="video" />
+					}
+					<media:player url="@primaryStreaming" />
+					<media:community>
+						<media:starRating average="@pub.RatingAverage" count="@pub.RatingCount" min="@pub.RatingMin" max="@pub.RatingMax" />
+					</media:community>
+				</media:group>
+				<guid>@movieUrl</guid>
+				<pubDate>@pub.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
+			</item>
 		}
 	</channel>
 </rss>

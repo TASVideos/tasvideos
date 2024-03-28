@@ -1,4 +1,5 @@
 ﻿@page
+@using System.Globalization
 @inject AppSettings Settings
 @model SubmissionsModel
 @{
@@ -13,7 +14,20 @@
 		<atom:link href="@(Settings.BaseUrl)/sublications.rss" rel="self" type="application/rss+xml" xmlns="atom" />
 		@foreach (var sub in Model.Submissions)
 		{
-			<partial model="sub" name="_RssSubmission"/>
+			var subUrl = $"{Settings.BaseUrl}/{sub.Id}S";
+			<item>
+				<title>@sub.Title</title>
+				<rss-link>@subUrl</rss-link>
+				<description>
+					<html-encode>
+						<wiki-markup markup="@sub.Wiki.Markup" page-data="@sub.Wiki"></wiki-markup>
+					</html-encode>
+				</description>
+				<comments condition="@sub.TopicId.HasValue">@(Settings.BaseUrl)/Forum/Topics/@sub.TopicId</comments>
+				<enclosure url="@(subUrl)?handler=Download" />
+				<guid>@subUrl</guid>
+				<pubDate>@sub.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
+			</item>
 		}
 	</channel>
 </rss>

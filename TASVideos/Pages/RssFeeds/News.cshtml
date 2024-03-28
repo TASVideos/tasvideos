@@ -13,7 +13,17 @@
 		<atom:link href="@(Settings.BaseUrl)/sublications.rss" rel="self" type="application/rss+xml" xmlns="atom" />
 		@foreach (var news in Model.News)
 		{
-			<partial model="news" name="_RssNews" />
+			var postUrl = $"{Settings.BaseUrl}/Forum/Posts/{news.PostId}";
+			<item>
+				<title>@news.Subject</title>
+				<rss-link>@postUrl</rss-link>
+				<description>
+					<forum-markup markup="@news.Text" enable-html="@news.EnableHtml" enable-bb-code="@news.EnableBbCode"></forum-markup>
+				</description>
+				<comments>@postUrl</comments>
+				<guid>@postUrl</guid>
+				<pubDate>@news.PubDate</pubDate>
+			</item>
 		}
 	</channel>
 </rss>
