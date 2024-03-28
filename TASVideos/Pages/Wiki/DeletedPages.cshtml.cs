@@ -4,20 +4,17 @@ using TASVideos.Core.Services.Wiki;
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.SeeDeletedWikiPages)]
-public class DeletedPagesModel(
-	ExternalMediaPublisher publisher,
-	ApplicationDbContext db,
-	IWikiPages wikiPages)
+public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMediaPublisher publisher)
 	: BasePageModel
 {
-	public List<DeletedWikiPageDisplayModel> DeletedPages { get; set; } = [];
+	public List<DeletedWikiPage> DeletedPages { get; set; } = [];
 
 	public async Task OnGet()
 	{
 		DeletedPages = await db.WikiPages
 			.ThatAreDeleted()
 			.GroupBy(tkey => tkey.PageName)
-			.Select(record => new DeletedWikiPageDisplayModel(
+			.Select(record => new DeletedWikiPage(
 				record.Key,
 				record.Count(),
 				db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)))
@@ -101,5 +98,5 @@ public class DeletedPagesModel(
 		return BaseRedirect("/" + path);
 	}
 
-	public record DeletedWikiPageDisplayModel(string PageName, int RevisionCount, bool HasExistingRevisions);
+	public record DeletedWikiPage(string PageName, int RevisionCount, bool HasExistingRevisions);
 }

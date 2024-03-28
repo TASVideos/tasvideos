@@ -18,8 +18,8 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var gameDisplayName = await db.Games
-			.Where(g => g.Id == GameId).
-			Select(g => g.DisplayName)
+			.Where(g => g.Id == GameId)
+			.Select(g => g.DisplayName)
 			.SingleOrDefaultAsync();
 
 		if (gameDisplayName is null)

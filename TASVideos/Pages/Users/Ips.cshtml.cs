@@ -8,8 +8,6 @@ public class IpsModel(ApplicationDbContext db) : BasePageModel
 
 	public List<IpEntry> Ips { get; set; } = [];
 
-	public record IpEntry(string IpAddress, DateTime UsedOn);
-
 	public async Task<IActionResult> OnGet()
 	{
 		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
@@ -39,4 +37,6 @@ public class IpsModel(ApplicationDbContext db) : BasePageModel
 
 		return Page();
 	}
+
+	public record IpEntry(string IpAddress, DateTime UsedOn);
 }

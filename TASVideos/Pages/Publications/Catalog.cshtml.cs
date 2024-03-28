@@ -220,6 +220,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	public class PublicationCatalogModel
 	{
 		public string Title { get; set; } = "";
+		public bool MinorEdit { get; set; }
 
 		[Display(Name = "Game Version")]
 		public int GameVersionId { get; set; }
@@ -235,7 +236,5 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		[Display(Name = "System Framerate")]
 		public int SystemFrameRateId { get; set; }
-
-		public bool MinorEdit { get; set; }
 	}
 }

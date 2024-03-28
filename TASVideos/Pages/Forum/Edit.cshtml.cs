@@ -73,23 +73,20 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public class CategoryEditModel
 	{
 		[StringLength(30)]
-		public string Title { get; set; } = "";
-
-		public string? Description { get; set; }
-
-		public List<ForumEditModel> Forums { get; set; } = [];
+		public string Title { get; init; } = "";
+		public string? Description { get; init; }
+		public List<ForumEditModel> Forums { get; init; } = [];
 
 		public class ForumEditModel
 		{
-			public int Id { get; set; }
+			public int Id { get; init; }
 
 			[StringLength(50)]
-			public string Name { get; set; } = "";
+			public string Name { get; init; } = "";
 
 			[StringLength(1000)]
-			public string? Description { get; set; }
-
-			public int Ordinal { get; set; }
+			public string? Description { get; init; }
+			public int Ordinal { get; init; }
 		}
 	}
 }

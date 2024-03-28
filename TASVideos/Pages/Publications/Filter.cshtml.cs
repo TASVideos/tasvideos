@@ -27,7 +27,7 @@ public class FilterModel(
 
 	public List<SelectListItem> AvailableAuthors { get; set; } = [];
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		Tokens = await movieTokens.GetTokens();
 		var tokensFromQuery = Query.ToTokens();
@@ -47,7 +47,6 @@ public class FilterModel(
 			.ThatArePublishedAuthors()
 			.ToDropdown()
 			.ToListAsync();
-		return Page();
 	}
 
 	public IActionResult OnPost()

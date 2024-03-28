@@ -4,9 +4,7 @@ using TASVideos.Core;
 namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
-public class ListModel(
-	ApplicationDbContext db,
-	ICacheService cache) : BasePageModel
+public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageModel
 {
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();

@@ -3,7 +3,7 @@
 [RequirePermission(PermissionTo.ClassMaintenance)]
 public class IndexModel(IClassService classService) : BasePageModel
 {
-	public IEnumerable<PublicationClass> Classes { get; set; } = [];
+	public IReadOnlyCollection<PublicationClass> Classes { get; set; } = [];
 
 	public async Task OnGet()
 	{

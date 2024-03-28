@@ -3,19 +3,17 @@
 [RequirePermission(PermissionTo.RateMovies)]
 public class UnratedModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<UnratedMovieModel> UnratedMovies { get; set; } = [];
+	public List<UnratedMovie> UnratedMovies { get; set; } = [];
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		var userId = User.GetUserId();
 		UnratedMovies = await db.Publications
 			.ThatAreCurrent()
 			.Where(p => p.PublicationRatings.All(pr => pr.UserId != userId))
-			.Select(p => new UnratedMovieModel(p.Id, p.Title))
+			.Select(p => new UnratedMovie(p.Id, p.Title))
 			.ToListAsync();
-
-		return Page();
 	}
 
-	public record UnratedMovieModel(int Id, string Title);
+	public record UnratedMovie(int Id, string Title);
 }

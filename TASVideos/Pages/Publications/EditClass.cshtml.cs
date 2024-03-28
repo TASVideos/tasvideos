@@ -14,7 +14,7 @@ public class EditClassModel(
 	public int Id { get; set; }
 
 	[BindProperty]
-	public PublicationClassEditModel Publication { get; set; } = new();
+	public PublicationClassEdit Publication { get; set; } = new();
 
 	[BindProperty]
 	public string Title { get; set; } = "";
@@ -25,7 +25,7 @@ public class EditClassModel(
 	{
 		var publication = await db.Publications
 			.Where(p => p.Id == Id)
-			.Select(p => new PublicationClassEditModel
+			.Select(p => new PublicationClassEdit
 			{
 				Title = p.Title,
 				ClassId = p.PublicationClassId
@@ -97,7 +97,7 @@ public class EditClassModel(
 			.ToListAsync();
 	}
 
-	public class PublicationClassEditModel
+	public class PublicationClassEdit
 	{
 		public string Title { get; init; } = "";
 

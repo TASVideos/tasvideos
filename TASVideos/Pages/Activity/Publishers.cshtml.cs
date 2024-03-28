@@ -3,10 +3,10 @@
 [AllowAnonymous]
 public class PublishersModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<MovieEntryModel> Publications { get; set; } = [];
-
 	[FromRoute]
 	public string UserName { get; set; } = "";
+
+	public List<MovieEntry> Publications { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -23,7 +23,7 @@ public class PublishersModel(ApplicationDbContext db) : BasePageModel
 
 		Publications = await db.Publications
 			.ThatHaveBeenPublishedBy(user.Id)
-			.Select(s => new MovieEntryModel(
+			.Select(s => new MovieEntry(
 				s.Id,
 				s.CreateTimestamp,
 				s.Title,
@@ -33,5 +33,5 @@ public class PublishersModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public record MovieEntryModel(int Id, DateTime CreateTimestamp, string Title, string Class);
+	public record MovieEntry(int Id, DateTime CreateTimestamp, string Title, string Class);
 }

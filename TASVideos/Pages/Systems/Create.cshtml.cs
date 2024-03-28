@@ -8,10 +8,9 @@ public class CreateModel(IGameSystemService systemService) : BasePageModel
 	[BindProperty]
 	public GameSystem System { get; set; } = new();
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		System.Id = await systemService.NextId();
-		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()

@@ -6,20 +6,20 @@ public class PollResultsModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int Id { get; set; }
 
-	public PollResultModel Poll { get; set; } = new();
+	public PollResult Poll { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
 		var poll = await db.ForumPolls
 			.Where(p => p.Id == Id)
-			.Select(p => new PollResultModel
+			.Select(p => new PollResult
 			{
 				TopicTitle = p.Topic!.Title,
 				TopicId = p.TopicId,
 				Question = p.Question,
 				Votes = p.PollOptions
 					.SelectMany(po => po.Votes)
-					.Select(v => new PollResultModel.VoteResult(
+					.Select(v => new PollResult.VoteResult(
 						v.UserId,
 						v.User!.UserName,
 						v.PollOption!.Ordinal,
@@ -68,12 +68,12 @@ public class PollResultsModel(ApplicationDbContext db) : BasePageModel
 		return RedirectToPage("PollResults", new { Id });
 	}
 
-	public class PollResultModel
+	public class PollResult
 	{
-		public string TopicTitle { get; set; } = "";
-		public int TopicId { get; set; }
-		public string Question { get; set; } = "";
-		public List<VoteResult> Votes { get; set; } = [];
+		public string TopicTitle { get; init; } = "";
+		public int TopicId { get; init; }
+		public string Question { get; init; } = "";
+		public List<VoteResult> Votes { get; init; } = [];
 		public record VoteResult(int UserId, string UserName, int Ordinal, string OptionText, DateTime CreateTimestamp, string? IpAddress);
 	}
 }

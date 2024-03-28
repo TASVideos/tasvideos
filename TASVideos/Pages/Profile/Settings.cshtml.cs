@@ -4,11 +4,7 @@ using TASVideos.Core.Services.Email;
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class SettingsModel(
-	UserManager userManager,
-	IEmailService emailService,
-	ApplicationDbContext db)
-	: BasePageModel
+public class SettingsModel(UserManager userManager, IEmailService emailService, ApplicationDbContext db) : BasePageModel
 {
 	public static readonly List<SelectListItem> AvailablePronouns = Enum
 		.GetValues<PreferredPronounTypes>()
@@ -143,7 +139,6 @@ public class SettingsModel(
 	public class ProfileSettingsModel
 	{
 		public string Username { get; init; } = "";
-
 		public bool IsEmailConfirmed { get; init; }
 
 		[Display(Name = "Current Email")]
@@ -186,7 +181,6 @@ public class SettingsModel(
 
 		[Display(Name = "Decimal Format")]
 		public UserDecimalFormat UserDecimalFormat { get; init; }
-
 		public List<RoleDto> Roles { get; init; } = [];
 	}
 }

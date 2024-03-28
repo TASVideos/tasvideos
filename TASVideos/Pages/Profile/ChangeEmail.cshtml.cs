@@ -3,11 +3,7 @@
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class ChangeEmailModel(
-	UserManager userManager,
-	ICacheService cache,
-	IEmailService emailService)
-	: BasePageModel
+public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEmailService emailService) : BasePageModel
 {
 	[BindProperty]
 	[Display(Name = "Current Email")]
@@ -22,18 +18,11 @@ public class ChangeEmailModel(
 	[Display(Name = "New Email")]
 	public string? NewEmail { get; set; }
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
-		var user = await userManager.GetUserAsync(User);
-		if (user is null)
-		{
-			return AccessDenied();
-		}
-
+		var user = await userManager.GetRequiredUser(User);
 		CurrentEmail = user.Email;
 		IsEmailConfirmed = user.EmailConfirmed;
-
-		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()
@@ -43,12 +32,7 @@ public class ChangeEmailModel(
 			return Page();
 		}
 
-		var user = await userManager.GetUserAsync(User);
-		if (user is null)
-		{
-			return AccessDenied();
-		}
-
+		var user = await userManager.GetRequiredUser(User);
 		var token = await userManager.GenerateChangeEmailTokenAsync(user, NewEmail!);
 
 		if (string.IsNullOrWhiteSpace(token))

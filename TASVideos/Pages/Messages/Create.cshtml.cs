@@ -3,10 +3,7 @@
 namespace TASVideos.Pages.Messages;
 
 [RequirePermission(PermissionTo.SendPrivateMessages)]
-public class CreateModel(
-	UserManager userManager,
-	IPrivateMessageService privateMessageService)
-	: BasePageModel
+public class CreateModel(UserManager userManager, IPrivateMessageService privateMessageService) : BasePageModel
 {
 	[FromQuery]
 	public int? ReplyTo { get; set; }

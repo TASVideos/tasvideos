@@ -211,7 +211,6 @@ public class AddEditModel(
 
 		[MinLength(1)]
 		public List<int> SelectedPermissions { get; init; } = [];
-
 		public List<int> SelectedAssignablePermissions { get; init; } = [];
 
 		[Display(Name = "Related Links")]

@@ -6,7 +6,7 @@ public class ReasonModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int Id { get; set; }
 
-	public IEnumerable<SubmissionEntry> Submissions { get; set; } = [];
+	public List<SubmissionEntry> Submissions { get; set; } = [];
 	public string RejectionReason { get; set; } = "";
 
 	public async Task<IActionResult> OnGet()

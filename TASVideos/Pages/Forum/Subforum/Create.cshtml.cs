@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Pages.Forum.Subforum.Models;
 
 namespace TASVideos.Pages.Forum.Subforum;
 
@@ -7,14 +6,13 @@ namespace TASVideos.Pages.Forum.Subforum;
 public class CreateModel(ApplicationDbContext db) : BasePageModel
 {
 	[BindProperty]
-	public ForumEditModel Forum { get; set; } = new();
+	public EditModel.ForumEditModel Forum { get; set; } = new();
 
 	public List<SelectListItem> AvailableCategories { get; set; } = [];
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		await Initialize();
-		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()

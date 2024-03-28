@@ -33,7 +33,6 @@ public class SubmissionEditModel
 
 	[Display(Name = "Console")]
 	public string? SystemDisplayName { get; set; }
-
 	public string? SystemCode { get; set; }
 
 	[Display(Name = "Game name")]
@@ -58,9 +57,7 @@ public class SubmissionEditModel
 
 	[Display(Name = "FrameCount")]
 	public int FrameCount { get; set; }
-
 	public double FrameRate { get; set; }
-
 	public int RerecordCount { get; set; }
 
 	[Display(Name = "Author(s)")]
@@ -89,9 +86,7 @@ public class SubmissionEditModel
 
 	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; set; }
-
 	public string Title { get; set; } = "";
-
 	internal int? SystemId { get; set; }
 	internal int? GameId { get; set; }
 }

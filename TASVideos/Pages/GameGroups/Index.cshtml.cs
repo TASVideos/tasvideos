@@ -10,7 +10,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
-	public List<GameListEntry> Games { get; set; } = [];
+	public List<GameEntry> Games { get; set; } = [];
 
 	public string Name { get; set; } = "";
 	public string? Description { get; set; }
@@ -36,7 +36,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		Games = await db.Games
 			.ForGroup(gameGroup.Id)
-			.Select(g => new GameListEntry(
+			.Select(g => new GameEntry(
 				g.Id,
 				g.DisplayName,
 				g.GameVersions
@@ -52,7 +52,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public record GameListEntry(int Id, string Name, List<string> Systems, int PubCount, int SubCount, string? GameResourcesPage)
+	public record GameEntry(int Id, string Name, List<string> Systems, int PubCount, int SubCount, string? GameResourcesPage)
 	{
 		public string SystemsString() => string.Join(", ", Systems);
 	}

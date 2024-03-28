@@ -27,16 +27,16 @@
 		<td>Created At</td>
 		<td></td>
 	</tr>
-	@for (int i = 0; i < Model.BannedIps.Count; i++)
+	@foreach (var ip in Model.BannedIps.OrderByDescending(b => b.DateCreated))
 	{
 		<tr>
-			<td>@Model.BannedIps[i].Mask</td>
+			<td>@ip.Mask</td>
 			<td>
-				<timezone-convert asp-for="BannedIps[i].DateCreated" />
+				<timezone-convert asp-for="@ip.DateCreated" />
 			</td>
 			<td>
-				<delete-button asp-href="/Users/IpBan/Delete?mask=@Model.BannedIps[i].Mask"
-							   class="btn-sm">
+				<delete-button asp-href="/Users/IpBan/Delete?mask=@ip.Mask"
+					class="btn-sm">
 					<i class="fa fa-remove"></i>
 				</delete-button>
 			</td>

@@ -9,10 +9,9 @@ public class DisallowModel(ApplicationDbContext db) : BasePageModel
 	[Display(Name = "Add New Regex Pattern")]
 	public string RegexPattern { get; set; } = "";
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		await PopulateDisallows();
-		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()

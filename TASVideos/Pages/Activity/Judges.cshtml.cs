@@ -3,7 +3,7 @@
 [AllowAnonymous]
 public class JudgesModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<SubmissionEntryModel> Submissions { get; set; } = [];
+	public List<SubmissionEntry> Submissions { get; set; } = [];
 
 	[FromRoute]
 	public string UserName { get; set; } = "";
@@ -23,7 +23,7 @@ public class JudgesModel(ApplicationDbContext db) : BasePageModel
 
 		Submissions = await db.Submissions
 			.ThatHaveBeenJudgedBy(UserName)
-			.Select(s => new SubmissionEntryModel(
+			.Select(s => new SubmissionEntry(
 				s.Id,
 				s.CreateTimestamp,
 				s.Title,
@@ -33,5 +33,5 @@ public class JudgesModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public record SubmissionEntryModel(int Id, DateTime CreateTimestamp, string Title, SubmissionStatus Status);
+	public record SubmissionEntry(int Id, DateTime CreateTimestamp, string Title, SubmissionStatus Status);
 }

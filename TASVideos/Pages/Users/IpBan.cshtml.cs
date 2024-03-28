@@ -3,7 +3,7 @@
 [RequirePermission(PermissionTo.BanIpAddresses)]
 public class IpBanModel(IIpBanService banService) : BasePageModel
 {
-	public List<IpBanEntry> BannedIps { get; set; } = [];
+	public ICollection<IpBanEntry> BannedIps { get; set; } = [];
 
 	[FromQuery]
 	public string? BanIp { get; set; }
@@ -13,11 +13,10 @@ public class IpBanModel(IIpBanService banService) : BasePageModel
 	[StringLength(40)]
 	public string? IpAddressToBan { get; set; }
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		IpAddressToBan = BanIp;
 		await PopulateList();
-		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()
@@ -42,10 +41,7 @@ public class IpBanModel(IIpBanService banService) : BasePageModel
 		return RedirectToIpBan();
 	}
 
-	private async Task PopulateList()
-	{
-		BannedIps = [.. (await banService.GetAll()).OrderByDescending(b => b.DateCreated)];
-	}
+	private async Task PopulateList() => BannedIps = await banService.GetAll();
 
 	private RedirectToPageResult RedirectToIpBan() => RedirectToPage("/Users/IpBan");
 }

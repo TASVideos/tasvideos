@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Common;
-using TASVideos.Core.Services;
 
 namespace TASVideos.TagHelpers;
 

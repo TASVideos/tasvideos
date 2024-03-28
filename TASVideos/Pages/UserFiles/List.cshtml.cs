@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core;
-using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
 
@@ -9,13 +8,13 @@ public class ListModel(ApplicationDbContext db) : PageModel
 	[FromQuery]
 	public UserFileListRequest Search { get; set; } = new();
 
-	public PageOf<UserFileListModel> UserFiles { get; set; } = PageOf<UserFileListModel>.Empty();
+	public PageOf<UserFileEntry> UserFiles { get; set; } = PageOf<UserFileEntry>.Empty();
 	public async Task OnGet()
 	{
 		UserFiles = await db.UserFiles
 			.ThatArePublic()
 			.ByRecentlyUploaded()
-			.Select(uf => new UserFileListModel
+			.Select(uf => new UserFileEntry
 			{
 				Id = uf.Id,
 				Title = uf.Title,
@@ -36,7 +35,41 @@ public class ListModel(ApplicationDbContext db) : PageModel
 		public UserFileListRequest()
 		{
 			PageSize = 50;
-			Sort = $"-{nameof(UserFileListModel.UploadTimestamp)}";
+			Sort = $"-{nameof(UserFileEntry.UploadTimestamp)}";
 		}
+	}
+
+	public class UserFileEntry
+	{
+		[TableIgnore]
+		public long Id { get; init; }
+		public string Title { get; init; } = "";
+
+		[TableIgnore]
+		public string FileName { get; init; } = "";
+
+		[Sortable]
+		public string Author { get; init; } = "";
+
+		[TableIgnore]
+		public int? GameId { get; init; }
+
+		[Sortable]
+		[Display(Name = "Game")]
+		public string GameName { get; init; } = "";
+
+		[Sortable]
+		public int Frames { get; init; }
+
+		[Sortable]
+		public int Rerecords { get; init; }
+
+		[Sortable]
+		[Display(Name = "Comments")]
+		public int CommentCount { get; init; }
+
+		[Sortable]
+		[Display(Name = "Uploaded")]
+		public DateTime UploadTimestamp { get; init; }
 	}
 }

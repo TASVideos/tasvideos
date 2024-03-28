@@ -3,10 +3,7 @@
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class ChangePasswordModel(
-	IEmailService emailService,
-	SignInManager signInManager)
-	: BasePageModel
+public class ChangePasswordModel(IEmailService emailService, SignInManager signInManager) : BasePageModel
 {
 	[BindProperty]
 	[DataType(DataType.Password)]

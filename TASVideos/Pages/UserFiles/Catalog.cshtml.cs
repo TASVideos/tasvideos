@@ -89,7 +89,6 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 
 		[Display(Name = "Game")]
 		public int? GameId { get; init; }
-
 		public string Filename { get; init; } = "";
 		public string AuthorName { get; init; } = "";
 	}

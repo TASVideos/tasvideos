@@ -3,10 +3,6 @@
 [RequirePermission(PermissionTo.SeeDiagnostics)]
 public class LoggingModel(ILogger<ILogger> logger) : BasePageModel
 {
-	public void OnGet()
-	{
-	}
-
 	public IActionResult OnGetTestLogLevels()
 	{
 		logger.LogTrace("This is a trace log.");

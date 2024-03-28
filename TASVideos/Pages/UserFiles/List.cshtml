@@ -7,7 +7,7 @@
 <partial name="_Pager" model="Model.UserFiles" />
 <div class="table-container">
 	<table class="table table-bordered table-striped table-sm">
-		<sortable-table-head sorting="@Model.Search" model-type="typeof(Models.UserFileListModel)" />
+		<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.UserFileEntry)" />
 		@foreach (var userFile in Model.UserFiles)
 		{
 			<tr>

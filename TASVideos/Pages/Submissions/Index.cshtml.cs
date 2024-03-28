@@ -7,8 +7,7 @@ namespace TASVideos.Pages.Submissions;
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private static readonly List<SelectListItem> Statuses = [.. Enum.GetValues(typeof(SubmissionStatus))
-		.Cast<SubmissionStatus>()
+	private static readonly List<SelectListItem> Statuses = [.. Enum.GetValues<SubmissionStatus>()
 		.ToDropDown()
 		.OrderBy(s => s.Text)];
 

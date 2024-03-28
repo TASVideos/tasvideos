@@ -55,7 +55,6 @@ public class SubmissionPublishModel
 
 	[Display(Name = "PublicationClass")]
 	public string? PublicationClass { get; set; }
-
 	public string? MovieExtension { get; set; }
 
 	[Display(Name = "Selected Flags")]

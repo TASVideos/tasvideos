@@ -149,11 +149,8 @@ public class CreateModel(
 
 		[StringLength(100, MinimumLength = 5)]
 		public string Title { get; init; } = "";
-
 		public string Post { get; init; } = "";
-
 		public ForumTopicType Type { get; init; } = ForumTopicType.Regular;
-
 		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 }

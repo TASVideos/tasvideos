@@ -35,7 +35,6 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 
 	[Display(Name = "Goal")]
 	public string? Branch { get; set; }
-
 	public string? Goal { get; set; }
 
 	[Display(Name = "Emulator")]
@@ -80,21 +79,14 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 
 	[Display(Name = "Publisher")]
 	public string? Publisher { get; set; }
-
 	public string? Annotations { get; set; }
-
 	public string? RejectionReasonDisplay { get; set; }
-
 	public string Title { get; set; } = "";
-
 	public string? AdditionalAuthors { get; set; }
-
 	public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;
-
 	public int? TopicId { get; set; }
 	public int? GameId { get; set; }
 	public string? Warnings { get; set; }
-
 	internal int? SystemId { get; set; }
 	internal int? SystemFrameRateId { get; set; }
 	public int? GameVersionId { get; set; }

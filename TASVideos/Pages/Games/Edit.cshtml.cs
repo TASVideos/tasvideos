@@ -20,14 +20,11 @@ public class EditModel(
 	public int? Id { get; set; }
 
 	[BindProperty]
-	public GameEditModel Game { get; set; } = new();
+	public GameEdit Game { get; set; } = new();
 
 	public bool CanDelete { get; set; }
 
-	[Display(Name = "Available Genres")]
 	public List<SelectListItem> AvailableGenres { get; set; } = [];
-
-	[Display(Name = "Available Groups")]
 	public List<SelectListItem> AvailableGroups { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
@@ -36,7 +33,7 @@ public class EditModel(
 		{
 			var game = await db.Games
 				.Where(g => g.Id == Id)
-				.Select(g => new GameEditModel
+				.Select(g => new GameEdit
 				{
 					DisplayName = g.DisplayName,
 					Abbreviation = g.Abbreviation,
@@ -152,11 +149,11 @@ public class EditModel(
 		return BasePageRedirect("Index", new { game.Id });
 	}
 
-	private static void SetGameValues(Game game, GameEditModel editModel)
+	private static void SetGameValues(Game game, GameEdit edit)
 	{
-		game.GameResourcesPage = editModel.GameResourcesPage;
-		game.GameGenres.SetGenres(editModel.Genres);
-		game.GameGroups.SetGroups(editModel.Groups);
+		game.GameResourcesPage = edit.GameResourcesPage;
+		game.GameGenres.SetGenres(edit.Genres);
+		game.GameGroups.SetGroups(edit.Groups);
 	}
 
 	public async Task<IActionResult> OnPostDelete()
@@ -217,7 +214,7 @@ public class EditModel(
 			&& !await db.UserFiles.AnyAsync(u => u.GameId == Id);
 	}
 
-	public class GameEditModel
+	public class GameEdit
 	{
 		[StringLength(100)]
 		[Display(Name = "Display Name")]

@@ -2,7 +2,7 @@
 @model GameModel
 
 @{
-	ViewData.SetTitle($"User Files for {Model.Game.GameName}");
+	ViewData.SetTitle($"User Files for {Model.GameName}");
 }
 
 <div class="mb-2">
@@ -10,7 +10,7 @@
 	<a asp-page="Index" class="btn btn-secondary float-end">All User Files</a>
 </div>
 
-@foreach (var file in Model.Game.Files)
+@foreach (var file in Model.Files)
 {
 	<partial name="_UserFileInfo" model="file" />
 }

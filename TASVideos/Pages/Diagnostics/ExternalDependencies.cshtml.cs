@@ -4,12 +4,9 @@ using TASVideos.Core.Settings;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class ExternalDependenciesModel(
-	IGoogleAuthService googleAuthService,
-	AppSettings settings)
-	: BasePageModel
+public class ExternalDependenciesModel(IGoogleAuthService googleAuthService, AppSettings settings) : BasePageModel
 {
-	public ExternalDependenciesViewModel Statuses { get; set; } = new();
+	public ExternalDependencies Statuses { get; set; } = new();
 
 	public async Task OnGet()
 	{
@@ -33,7 +30,7 @@ public class ExternalDependenciesModel(
 		Statuses.DiscordPrivateChannelEnabled = settings.Discord.IsPrivateChannelEnabled();
 	}
 
-	public class ExternalDependenciesViewModel
+	public class ExternalDependencies
 	{
 		public bool YoutubeEnabled { get; set; }
 		public bool? YoutubeAccessSuccessful { get; set; }

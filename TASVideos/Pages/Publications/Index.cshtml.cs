@@ -4,9 +4,7 @@ using TASVideos.Pages.Publications.Models;
 namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
-public class IndexModel(
-	ApplicationDbContext db,
-	IMovieSearchTokens movieTokens) : BasePageModel
+public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens) : BasePageModel
 {
 	[FromQuery]
 	public PublicationRequest Paging { get; set; } = new();

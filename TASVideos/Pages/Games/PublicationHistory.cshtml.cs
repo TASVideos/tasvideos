@@ -4,9 +4,7 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Games;
 
 [AllowAnonymous]
-public class PublicationHistoryModel(
-	ApplicationDbContext db,
-	IPublicationHistory history) : BasePageModel
+public class PublicationHistoryModel(ApplicationDbContext db, IPublicationHistory history) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }

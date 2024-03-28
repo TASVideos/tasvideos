@@ -3,16 +3,8 @@
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class CacheControlModel(
-	IWikiPages wikiPages,
-	IAwards awards,
-	ICacheService cache)
-	: BasePageModel
+public class CacheControlModel(IWikiPages wikiPages, IAwards awards, ICacheService cache) : BasePageModel
 {
-	public void OnGet()
-	{
-	}
-
 	public IActionResult OnGetCacheValue(string key)
 	{
 		var result = cache.TryGetValue(key, out object value);

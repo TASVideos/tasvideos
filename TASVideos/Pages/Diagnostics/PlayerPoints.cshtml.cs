@@ -1,9 +1,7 @@
 ﻿namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class PlayerPointsModel(
-	ApplicationDbContext db,
-	IPointsService pointsService) : BasePageModel
+public class PlayerPointsModel(ApplicationDbContext db, IPointsService pointsService) : BasePageModel
 {
 	public List<PlayerEntry> Players { get; set; } = [];
 

@@ -222,11 +222,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		[Sortable]
 		[Display(Name = "Name")]
 		public string DisplayName { get; init; } = "";
-
 		public List<string> Systems { get; init; } = [];
-
-		// Dummy to generate column header
-		[Display(Name = "Actions")]
 		public object? Actions { get; init; }
 	}
 }

@@ -14,7 +14,7 @@ public interface IIpBanService
 	/// <summary>
 	/// Returns a list of all banned IP Address/Ranges
 	/// </summary>
-	Task<IEnumerable<IpBanEntry>> GetAll();
+	Task<ICollection<IpBanEntry>> GetAll();
 
 	/// <summary>
 	/// Adds an IP Address or Address range to the ban list
@@ -48,7 +48,7 @@ internal class IpBanService(
 		return bans.Any(b => b.Contains(ipAddress));
 	}
 
-	public async Task<IEnumerable<IpBanEntry>> GetAll()
+	public async Task<ICollection<IpBanEntry>> GetAll()
 	{
 		return await db.IpBans
 			.Select(b => new IpBanEntry(b.Mask, b.CreateTimestamp))

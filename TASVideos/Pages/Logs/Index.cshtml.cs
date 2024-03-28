@@ -71,7 +71,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		[Sortable]
 		public EntityState Kind { get; init; }
-
 		public string Changed { get; init; } = "";
 	}
 

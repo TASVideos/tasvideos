@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -28,7 +27,7 @@ public class CreateModel(
 	[DisplayName("Watch Topic for Replies")]
 	public bool WatchTopic { get; set; }
 
-	public List<MiniPostModel> PreviousPosts { get; set; } = [];
+	public List<MiniPost> PreviousPosts { get; set; } = [];
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
 
@@ -83,7 +82,7 @@ public class CreateModel(
 		PreviousPosts = await db.ForumPosts
 			.ForTopic(TopicId)
 			.OrderByDescending(fp => fp.CreateTimestamp)
-			.Select(fp => new MiniPostModel(
+			.Select(fp => new MiniPost(
 				fp.CreateTimestamp,
 				fp.Poster!.UserName,
 				fp.Poster.PreferredPronouns,
@@ -214,4 +213,12 @@ public class CreateModel(
 		public string Text { get; set; } = "";
 		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
+
+	public record MiniPost(
+		DateTime CreateTimestamp,
+		string PosterName,
+		PreferredPronounTypes PosterPronouns,
+		string Text,
+		bool EnableHtml,
+		bool EnableBbCode);
 }

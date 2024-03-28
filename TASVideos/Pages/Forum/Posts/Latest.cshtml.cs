@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -10,7 +9,7 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<LatestPostsModel> Posts { get; set; } = PageOf<LatestPostsModel>.Empty();
+	public PageOf<LatestPost> Posts { get; set; } = PageOf<LatestPost>.Empty();
 
 	public async Task OnGet()
 	{
@@ -18,7 +17,7 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 		Posts = await db.ForumPosts
 			.ExcludeRestricted(allowRestricted)
 			.Since(DateTime.UtcNow.AddDays(-3))
-			.Select(p => new LatestPostsModel
+			.Select(p => new LatestPost
 			{
 				Id = p.Id,
 				CreateTimestamp = p.CreateTimestamp,
@@ -31,5 +30,18 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 			})
 			.OrderByDescending(p => p.CreateTimestamp)
 			.PageOf(Search);
+	}
+
+	public class LatestPost
+	{
+		[Sortable]
+		public DateTime CreateTimestamp { get; init; }
+		public int Id { get; init; }
+		public int TopicId { get; init; }
+		public string TopicTitle { get; init; } = "";
+		public int ForumId { get; init; }
+		public string ForumName { get; init; } = "";
+		public string Text { get; init; } = "";
+		public string PosterName { get; init; } = "";
 	}
 }

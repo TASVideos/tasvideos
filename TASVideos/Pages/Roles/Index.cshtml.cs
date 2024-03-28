@@ -1,11 +1,9 @@
-﻿using TASVideos.Pages.Roles.Models;
-
-namespace TASVideos.Pages.Roles;
+﻿namespace TASVideos.Pages.Roles;
 
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	public RoleDisplayModel RoleViewModel { get; set; } = new();
+	public ListModel.RoleDisplay RoleView { get; set; } = new();
 
 	[FromRoute]
 	public string Role { get; set; } = "";
@@ -28,7 +26,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		RoleViewModel = roleModel;
+		RoleView = roleModel;
 		return Page();
 	}
 }

@@ -11,7 +11,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public bool CanDelete { get; set; }
 
 	[BindProperty]
-	public GameGroupEditModel GameGroup { get; set; } = new();
+	public GameGroupEdit GameGroup { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -22,7 +22,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		var gameGroup = await db.GameGroups
 			.Where(gg => gg.Id == Id.Value)
-			.Select(gg => new GameGroupEditModel
+			.Select(gg => new GameGroupEdit
 			{
 				Name = gg.Name,
 				Abbreviation = gg.Abbreviation,
@@ -114,7 +114,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		return Id.HasValue && !await db.Games.ForGroup(Id.Value).AnyAsync();
 	}
 
-	public class GameGroupEditModel
+	public class GameGroupEdit
 	{
 		[StringLength(255)]
 		public string Name { get; init; } = "";

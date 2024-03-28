@@ -239,9 +239,7 @@ public class EditModel(
 	public class PublicationEditModel
 	{
 		public string SystemCode { get; init; } = "";
-
 		public string Title { get; init; } = "";
-
 		public string MovieFileName { get; init; } = "";
 
 		[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
@@ -257,7 +255,6 @@ public class EditModel(
 
 		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; init; }
-
 		public string? ObsoletedByTitle { get; init; }
 
 		[StringLength(50)]
@@ -278,7 +275,6 @@ public class EditModel(
 
 		[DoNotTrim]
 		public string Markup { get; set; } = "";
-
 		public List<PublicationUrlDisplayModel> Urls { get; init; } = [];
 	}
 

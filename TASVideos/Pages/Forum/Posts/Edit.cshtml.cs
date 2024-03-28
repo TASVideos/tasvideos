@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -27,7 +26,7 @@ public class EditModel(
 	[BindProperty]
 	[DisplayName("Minor Edit")]
 	public bool MinorEdit { get; set; }
-	public List<MiniPostModel> PreviousPosts { get; set; } = [];
+	public List<CreateModel.MiniPost> PreviousPosts { get; set; } = [];
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
 
@@ -76,7 +75,7 @@ public class EditModel(
 			.ForTopic(Post.TopicId)
 			.Where(fp => fp.CreateTimestamp < Post.CreateTimestamp)
 			.ByMostRecent()
-			.Select(fp => new MiniPostModel(
+			.Select(fp => new CreateModel.MiniPost(
 				fp.CreateTimestamp,
 				fp.Poster!.UserName,
 				fp.Poster.PreferredPronouns,
@@ -294,10 +293,8 @@ public class EditModel(
 		public int PosterId { get; init; }
 		public string PosterName { get; init; } = "";
 		public DateTime CreateTimestamp { get; init; }
-
 		public bool EnableBbCode { get; init; }
 		public bool EnableHtml { get; init; }
-
 		public int TopicId { get; init; }
 
 		[DisplayName("Topic Title")]
@@ -306,13 +303,9 @@ public class EditModel(
 
 		[StringLength(150)]
 		public string? Subject { get; init; }
-
 		public string Text { get; init; } = "";
-
 		public string OriginalText => Text;
-
 		public bool IsFirstPost { get; set; }
-
 		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 }

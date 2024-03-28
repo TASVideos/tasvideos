@@ -3,12 +3,11 @@
 namespace TASVideos.Pages.AwardsEditor;
 
 [RequirePermission(PermissionTo.CreateAwards)]
-public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader mediaFileUploader)
-	: BasePageModel
+public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader mediaFileUploader) : BasePageModel
 {
 	public List<AwardCategoryEntry> Categories { get; set; } = [];
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		Categories = await db.Awards
 			.Select(a => new AwardCategoryEntry(
@@ -19,7 +18,6 @@ public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader media
 				db.PublicationAwards.Any(pa => pa.AwardId == a.Id)
 					|| db.UserAwards.Any(ua => ua.AwardId == a.Id)))
 			.ToListAsync();
-		return Page();
 	}
 
 	public async Task<IActionResult> OnPostDelete(int id)

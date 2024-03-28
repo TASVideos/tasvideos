@@ -5,11 +5,7 @@ using TASVideos.Models;
 namespace TASVideos.Pages.Wiki;
 
 [RequireEdit]
-public class EditModel(
-	IWikiPages wikiPages,
-	ApplicationDbContext db,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromQuery]
 	public string? Path { get; set; }

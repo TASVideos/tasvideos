@@ -34,9 +34,9 @@ public class EditModel(
 	[Display(Name = "Status")]
 	public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableClasses { get; set; } = [];
+	public List<SelectListItem> AvailableClasses { get; set; } = [];
 
-	public IEnumerable<SelectListItem> AvailableRejectionReasons { get; set; } = [];
+	public List<SelectListItem> AvailableRejectionReasons { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -11,15 +10,7 @@ public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePa
 	[FromQuery]
 	public NewPagingModel Search { get; set; } = new();
 
-	public class NewPagingModel : PagingModel
-	{
-		public NewPagingModel()
-		{
-			PageSize = 25;
-		}
-	}
-
-	public PageOf<LatestPostsModel> Posts { get; set; } = PageOf<LatestPostsModel>.Empty();
+	public PageOf<LatestModel.LatestPost> Posts { get; set; } = PageOf<LatestModel.LatestPost>.Empty();
 
 	public async Task OnGet()
 	{
@@ -29,7 +20,7 @@ public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePa
 		Posts = await db.ForumPosts
 			.ExcludeRestricted(allowRestricted)
 			.Since(since)
-			.Select(p => new LatestPostsModel
+			.Select(p => new LatestModel.LatestPost
 			{
 				Id = p.Id,
 				CreateTimestamp = p.CreateTimestamp,
@@ -42,5 +33,13 @@ public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePa
 			})
 			.OrderByDescending(p => p.CreateTimestamp)
 			.PageOf(Search);
+	}
+
+	public class NewPagingModel : PagingModel
+	{
+		public NewPagingModel()
+		{
+			PageSize = 25;
+		}
 	}
 }

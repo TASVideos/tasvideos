@@ -47,22 +47,22 @@ public class CreateCategoryModel(IAwards awards, IMediaFileUploader mediaFileUpl
 
 	public class CreateAwardCategoryModel
 	{
-		public int Id { get; set; }
-		public AwardType Type { get; set; }
+		public int Id { get; init; }
+		public AwardType Type { get; init; }
 
 		[StringLength(25)]
-		public string ShortName { get; set; } = "";
+		public string ShortName { get; init; } = "";
 
 		[StringLength(50)]
-		public string Description { get; set; } = "";
+		public string Description { get; init; } = "";
 
 		[Required]
-		public IFormFile? BaseImage { get; set; }
+		public IFormFile? BaseImage { get; init; }
 
 		[Required]
-		public IFormFile? BaseImage2X { get; set; }
+		public IFormFile? BaseImage2X { get; init; }
 
 		[Required]
-		public IFormFile? BaseImage4X { get; set; }
+		public IFormFile? BaseImage4X { get; init; }
 	}
 }

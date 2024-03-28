@@ -1,9 +1,7 @@
 ﻿namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class IndexModel(
-	IAwards awards,
-	UserManager userManager) : BasePageModel
+public class IndexModel(IAwards awards, UserManager userManager) : BasePageModel
 {
 	public UserProfile Profile { get; set; } = new();
 

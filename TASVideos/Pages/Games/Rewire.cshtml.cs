@@ -4,10 +4,7 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Pages.Games;
 
 [RequirePermission(PermissionTo.RewireGames)]
-public class RewireModel(
-	ApplicationDbContext db,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromQuery]
 	[Display(Name = "From Game Id")]
@@ -21,19 +18,6 @@ public class RewireModel(
 
 	public RewireEntry? FromGame { get; set; }
 	public RewireEntry? IntoGame { get; set; }
-
-	public class RewireEntry
-	{
-		public Entry? Game { get; set; }
-		public ICollection<EntryWithVersion>? Publications { get; set; }
-		public ICollection<EntryWithVersion>? Submissions { get; set; }
-		public ICollection<Entry>? Versions { get; set; }
-		public ICollection<EntryLong>? Userfiles { get; set; }
-	}
-
-	public record Entry(int Id, string Title);
-	public record EntryWithVersion(int Id, string Title, string? VersionName);
-	public record EntryLong(long Id, string Title);
 
 	public async Task OnGet()
 	{
@@ -121,4 +105,17 @@ public class RewireModel(
 
 		return RedirectToPage("Rewire", new { FromGameId, IntoGameId });
 	}
+
+	public class RewireEntry
+	{
+		public Entry? Game { get; set; }
+		public ICollection<EntryWithVersion>? Publications { get; set; }
+		public ICollection<EntryWithVersion>? Submissions { get; set; }
+		public ICollection<Entry>? Versions { get; set; }
+		public ICollection<EntryLong>? Userfiles { get; set; }
+	}
+
+	public record Entry(int Id, string Title);
+	public record EntryWithVersion(int Id, string Title, string? VersionName);
+	public record EntryLong(long Id, string Title);
 }

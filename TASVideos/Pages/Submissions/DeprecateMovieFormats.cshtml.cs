@@ -3,10 +3,7 @@
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.DeprecateMovieParsers)]
-public class DeprecateMovieFormatsModel(
-	IMovieFormatDeprecator deprecator,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class DeprecateMovieFormatsModel(IMovieFormatDeprecator deprecator, ExternalMediaPublisher publisher) : BasePageModel
 {
 	public IReadOnlyDictionary<string, DeprecatedMovieFormat?> MovieExtensions { get; set; } = new Dictionary<string, DeprecatedMovieFormat?>();
 

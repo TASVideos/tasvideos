@@ -19,20 +19,15 @@ public class ForumTopicModel : IForumTopicActionBar
 	public int Id { get; set; }
 	public int LastPostId { get; set; }
 	public bool Restricted { get; set; }
-
 	public bool IsWatching { get; set; }
 	public bool IsLocked { get; set; }
 	public string Title { get; set; } = "";
 	public int ForumId { get; set; }
 	public string ForumName { get; set; } = "";
-
 	public ForumTopicType Type { get; set; }
-
 	public int? SubmissionId { get; set; }
-
 	public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
 	public PollModel? Poll { get; set; }
-
 	public int? GameId { get; set; }
 	public string? GameName { get; set; }
 	public int CategoryId { get; set; }
@@ -44,7 +39,6 @@ public class ForumTopicModel : IForumTopicActionBar
 		public DateTime? CloseDate { get; init; }
 		public bool MultiSelect { get; init; }
 		public bool ViewPollResults { get; init; }
-
 		public List<PollOptionModel> Options { get; set; } = [];
 	}
 

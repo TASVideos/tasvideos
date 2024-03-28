@@ -5,10 +5,11 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class GameModel(ApplicationDbContext db) : BasePageModel
 {
-	public GameFileModel Game { get; set; } = new();
-
 	[FromRoute]
 	public int Id { get; set; }
+
+	public string GameName { get; set; } = "";
+	public List<UserFileModel> Files { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -18,27 +19,15 @@ public class GameModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		Game = new GameFileModel
-		{
-			GameId = game.Id,
-			GameName = game.DisplayName,
-			Files = await db.UserFiles
-				.ForGame(game.Id)
-				.HideIfNotAuthor(User.GetUserId())
-				.AsQueryable()
-				.OrderByDescending(uf => uf.UploadTimestamp)
-				.ToUserFileModel()
-				.ToListAsync()
-		};
+		GameName = game.DisplayName;
+		Files = await db.UserFiles
+			.ForGame(game.Id)
+			.HideIfNotAuthor(User.GetUserId())
+			.AsQueryable()
+			.OrderByDescending(uf => uf.UploadTimestamp)
+			.ToUserFileModel()
+			.ToListAsync();
 
 		return Page();
-	}
-
-	public class GameFileModel
-	{
-		public int GameId { get; init; }
-		public string GameName { get; init; } = "";
-
-		public List<UserFileModel> Files { get; init; } = [];
 	}
 }

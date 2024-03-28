@@ -10,14 +10,12 @@ public class Uncataloged(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int Id { get; set; }
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		Files = await db.UserFiles
 			.ThatArePublic()
 			.Where(uf => uf.GameId == null)
 			.ToUnCatalogedModel()
 			.ToListAsync();
-
-		return Page();
 	}
 }

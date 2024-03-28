@@ -3,14 +3,13 @@
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.EditPublicationMetaData)]
-public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtubeSync, ICacheService cache)
-	: BasePageModel
+public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtubeSync, ICacheService cache) : BasePageModel
 {
 	private const string CachePrefix = "YoutubeUploaders-";
 
 	public List<YoutubeRecord> Videos { get; set; } = [];
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		var raw = await db.PublicationUrls
 			.ThatAreStreaming()
@@ -48,8 +47,6 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 				cache.Set(CachePrefix + record.VideoId, record.ChannelTitle, Durations.OneDayInSeconds);
 			}
 		}
-
-		return Page();
 	}
 
 	private void SetChannelTitlesFromCache(IEnumerable<YoutubeRecord> records)

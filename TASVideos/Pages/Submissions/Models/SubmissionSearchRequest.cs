@@ -17,11 +17,8 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 		.OrderByDescending(n => n)];
 
 	public string? System { get; set; }
-
 	public string? User { get; set; }
-
 	public string? GameId { get; set; }
-
 	public int? StartType { get; set; }
 
 	[Display(Name = "Statuses")]

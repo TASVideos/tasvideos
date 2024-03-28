@@ -5,9 +5,7 @@ using TASVideos.Models;
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.MoveWikiPages)]
-public class MoveModel(
-	IWikiPages wikiPages,
-	ExternalMediaPublisher publisher) : BasePageModel
+public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromQuery]
 	public string? Path { get; set; }

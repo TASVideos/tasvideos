@@ -224,18 +224,15 @@ public class EditModel(
 
 		[EmailAddress]
 		public string? Email { get; init; }
-
 		public bool EmailConfirmed { get; init; }
 
 		[Display(Name = "Locked Status")]
 		public bool IsLockedOut { get; init; }
-
 		public string? Signature { get; init; }
 		public string? Avatar { get; init; }
 
 		[Display(Name = "Mood Avatar")]
 		public string? MoodAvatarUrlBase { get; init; }
-
 		public string? OriginalUserName => UserName;
 
 		[Display(Name = "Use Ratings", Description = "If unchecked, the user's publication ratings will not be used when calculating average rating")]

@@ -292,7 +292,6 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		[Display(Name = "Goal")]
 		public int? GameGoalId { get; init; }
-
 		public bool MinorEdit { get; init; }
 	}
 }

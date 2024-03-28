@@ -4,10 +4,7 @@ using TASVideos.Pages.UserFiles.Models;
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class IndexModel(
-	ApplicationDbContext db,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	public List<UserWithMovie> UsersWithMovies { get; set; } = [];
 	public List<UserMovieListModel> LatestMovies { get; set; } = [];

@@ -5,11 +5,7 @@ using TASVideos.Pages.Forum.Models;
 namespace TASVideos.Pages.Forum.Posts;
 
 [AllowAnonymous]
-public class UserModel(
-	ApplicationDbContext db,
-	IAwards awards,
-	IPointsService pointsService)
-	: BasePageModel
+public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService pointsService) : BasePageModel
 {
 	[FromRoute]
 	public string UserName { get; set; } = "";

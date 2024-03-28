@@ -132,13 +132,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public string? Aliases { get; init; }
 		public string? ScreenshotUrl { get; init; }
 		public string? GameResourcesPage { get; init; }
-
 		public List<string> Genres { get; init; } = [];
-
 		public List<GameVersion> Versions { get; init; } = [];
-
 		public List<GameGroup> GameGroups { get; init; } = [];
-
 		public int PublicationCount { get; init; }
 		public int ObsoletePublicationCount { get; init; }
 		public int SubmissionCount { get; init; }

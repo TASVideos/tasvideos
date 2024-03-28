@@ -18,6 +18,5 @@ public class UserFileUploadModel
 
 	[Display(Name = "Game")]
 	public int? GameId { get; set; }
-
 	public bool Hidden { get; set; }
 }

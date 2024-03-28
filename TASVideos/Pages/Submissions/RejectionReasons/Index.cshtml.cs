@@ -3,7 +3,7 @@
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<RejectionRecord> Reasons { get; set; } = [];
+	public List<Rejection> Reasons { get; set; } = [];
 
 	public async Task OnGet()
 	{
@@ -56,9 +56,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	private async Task Initialize()
 	{
 		Reasons = await db.SubmissionRejectionReasons
-			.Select(r => new RejectionRecord(r.Id, r.DisplayName, r.Submissions.Count))
+			.Select(r => new Rejection(r.Id, r.DisplayName, r.Submissions.Count))
 			.ToListAsync();
 	}
 
-	public record RejectionRecord(int Id, string Reason, int SubmissionCount);
+	public record Rejection(int Id, string Reason, int SubmissionCount);
 }

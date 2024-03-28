@@ -4,8 +4,7 @@ using TASVideos.Core.Services.Wiki;
 namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
-public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<RenderModel> logger)
-	: BasePageModel
+public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<RenderModel> logger) : BasePageModel
 {
 	public IWikiPage WikiPage { get; set; } = null!;
 

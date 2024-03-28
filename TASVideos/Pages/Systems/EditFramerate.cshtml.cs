@@ -3,8 +3,7 @@
 namespace TASVideos.Pages.Systems;
 
 [RequirePermission(PermissionTo.GameSystemMaintenance)]
-public class EditFramerateModel(ApplicationDbContext db, IGameSystemService gameSystemService)
-	: BasePageModel
+public class EditFramerateModel(ApplicationDbContext db, IGameSystemService gameSystemService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }

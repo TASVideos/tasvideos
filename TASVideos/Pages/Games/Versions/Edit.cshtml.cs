@@ -20,7 +20,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public int? SystemId { get; set; }
 
 	[BindProperty]
-	public VersionEditModel Version { get; set; } = new();
+	public VersionEdit Version { get; set; } = new();
 
 	[BindProperty]
 	public string GameName { get; set; } = "";
@@ -75,7 +75,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		var version = await db.GameVersions
 			.Where(r => r.Id == Id.Value && r.Game!.Id == GameId)
-			.Select(v => new VersionEditModel
+			.Select(v => new VersionEdit
 			{
 				System = v.System!.Code,
 				Name = v.Name,
@@ -185,7 +185,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 				&& !await db.Publications.AnyAsync(p => p.GameVersion!.Id == Id);
 	}
 
-	public class VersionEditModel
+	public class VersionEdit
 	{
 		[StringLength(8)]
 		public string System { get; set; } = "";
@@ -206,7 +206,6 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		[StringLength(50)]
 		public string Region { get; init; } = "";
-
 		public VersionTypes Type { get; init; }
 
 		[StringLength(255)]

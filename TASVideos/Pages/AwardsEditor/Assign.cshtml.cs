@@ -4,11 +4,7 @@ using TASVideos.Data.Entity.Awards;
 namespace TASVideos.Pages.AwardsEditor;
 
 [RequirePermission(PermissionTo.CreateAwards)]
-public class AssignModel(
-	ApplicationDbContext db,
-	IMediaFileUploader mediaFileUploader,
-	IAwards awards)
-	: BasePageModel
+public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUploader, IAwards awards) : BasePageModel
 {
 	[FromRoute]
 	public int Year { get; set; }
@@ -130,10 +126,8 @@ public class AssignModel(
 	public class AwardAssignmentModel
 	{
 		[Required]
-		public string? Award { get; set; }
-
-		public List<int> Users { get; set; } = [];
-
-		public List<int> Publications { get; set; } = [];
+		public string? Award { get; init; }
+		public List<int> Users { get; init; } = [];
+		public List<int> Publications { get; init; } = [];
 	}
 }

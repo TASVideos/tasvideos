@@ -34,16 +34,12 @@ public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 
 	public List<Row> Rows { get; set; } = [];
 
-	public async Task<IActionResult> OnGet()
+	public async Task OnGet()
 	{
 		var pages = await db.WikiPages
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
-			.Select(p => new
-			{
-				p.PageName,
-				p.Markup
-			})
+			.Select(p => new { p.PageName, p.Markup })
 			.ToListAsync();
 		Rows = pages
 			.Select(p => new
@@ -60,7 +56,5 @@ public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 				ErrorMessage = a.err.Message
 			})
 			.ToList();
-
-		return Page();
 	}
 }

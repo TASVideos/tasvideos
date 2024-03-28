@@ -5,7 +5,6 @@ using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles;
-using TASVideos.Pages.Roles.Models;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.UserFiles.Models;
 using TASVideos.ViewComponents;
@@ -359,9 +358,9 @@ public static class EntityExtensions
 		return q;
 	}
 
-	public static IQueryable<RoleDisplayModel> ToRoleDisplayModel(this IQueryable<Role> roles)
+	public static IQueryable<ListModel.RoleDisplay> ToRoleDisplayModel(this IQueryable<Role> roles)
 	{
-		return roles.Select(r => new RoleDisplayModel
+		return roles.Select(r => new ListModel.RoleDisplay
 		{
 			IsDefault = r.IsDefault,
 			Id = r.Id,
@@ -370,7 +369,7 @@ public static class EntityExtensions
 			Permissions = r.RolePermission.Select(rp => rp.PermissionId).ToList(),
 			Links = r.RoleLinks.Select(rl => rl.Link).ToList(),
 			Users = r.UserRole
-				.Select(ur => new RoleDisplayModel.UserWithRole(ur.UserId, ur.User!.UserName))
+				.Select(ur => new ListModel.RoleDisplay.UserWithRole(ur.UserId, ur.User!.UserName))
 				.ToList()
 		});
 	}
