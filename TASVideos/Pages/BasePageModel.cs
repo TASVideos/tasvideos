@@ -106,14 +106,11 @@ public class BasePageModel : PageModel
 		}
 	}
 
-	public List<SelectListItem> AvailablePermissions { get; } =
-	[
-		.. UiDefaults.DefaultEntry,
-		.. PermissionUtil
-			.AllPermissions()
-			.ToDropDown()
-			.OrderBy(p => p.Text)
-	];
+	public List<SelectListItem> AvailablePermissions { get; } = PermissionUtil
+		.AllPermissions()
+		.ToDropDown()
+		.OrderBy(p => p.Text)
+		.WithDefaultEntry();
 
 	protected PartialViewResult ToDropdownResult(IEnumerable<SelectListItem> items)
 	{

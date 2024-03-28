@@ -187,16 +187,13 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
-		AvailableVersions =
-		[
-			.. UiDefaults.DefaultEntry,
-			.. await db.GameVersions
-				.ForGame(gameId)
-				.ForSystem(systemId)
-				.OrderBy(r => r.Name)
-				.ToDropDown()
-				.ToListAsync(),
-		];
+		AvailableVersions = (await db.GameVersions
+			.ForGame(gameId)
+			.ForSystem(systemId)
+			.OrderBy(r => r.Name)
+			.ToDropDown()
+			.ToListAsync())
+			.WithDefaultEntry();
 
 		AvailableGames = await db.Games
 			.ForSystem(systemId)

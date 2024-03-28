@@ -83,11 +83,9 @@ public class CreateModel(
 
 	private async Task SetAvailableGroupRoles()
 	{
-		AvailableGroupRoles =
-		[
-			.. UiDefaults.DefaultEntry,
-			.. (await privateMessageService.AllowedRoles()).ToDropDown()
-		];
+		AvailableGroupRoles = (await privateMessageService.AllowedRoles())
+			.ToDropDown()
+			.WithDefaultEntry();
 	}
 
 	private async Task SetReplyingTo()

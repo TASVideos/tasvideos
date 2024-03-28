@@ -76,7 +76,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = [.. UiDefaults.DefaultEntry, .. items];
+			items = items.WithDefaultEntry();
 		}
 
 		return ToDropdownResult(items);
@@ -92,7 +92,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = [.. UiDefaults.DefaultEntry, .. items];
+			items = items.WithDefaultEntry();
 		}
 
 		return ToDropdownResult(items);
@@ -109,7 +109,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = [.. UiDefaults.DefaultEntry, .. items];
+			items = items.WithDefaultEntry();
 		}
 
 		return ToDropdownResult(items);
@@ -125,7 +125,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (includeEmpty)
 		{
-			items = [.. UiDefaults.DefaultEntry, .. items];
+			items = items.WithDefaultEntry();
 		}
 
 		return ToDropdownResult(items);

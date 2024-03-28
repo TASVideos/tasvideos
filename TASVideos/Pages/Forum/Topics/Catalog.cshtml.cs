@@ -29,9 +29,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 		var topic = await db.ForumTopics
 			.Select(t => new
 			{
-				t.Id,
-				t.Title,
-				t.GameId
+				t.Id, t.Title, t.GameId
 			})
 			.SingleOrDefaultAsync(t => t.Id == Id);
 		if (topic is null)
@@ -82,26 +80,20 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableSystems =
-		[
-			.. UiDefaults.DefaultEntry,
-			.. await db.GameSystems
-				.OrderBy(s => s.Code)
-				.ToDropDownWithId()
-				.ToListAsync(),
-		];
+		AvailableSystems = (await db.GameSystems
+			.OrderBy(s => s.Code)
+			.ToDropDownWithId()
+			.ToListAsync())
+			.WithDefaultEntry();
 
 		if (SystemId.HasValue)
 		{
-			AvailableGames =
-			[
-				.. UiDefaults.DefaultEntry,
-				.. await db.Games
-					.ForSystem(SystemId.Value)
-					.OrderBy(g => g.DisplayName)
-					.ToDropDown()
-					.ToListAsync(),
-			];
+			AvailableGames = (await db.Games
+				.ForSystem(SystemId.Value)
+				.OrderBy(g => g.DisplayName)
+				.ToDropDown()
+				.ToListAsync())
+				.WithDefaultEntry();
 		}
 	}
 }

@@ -125,7 +125,7 @@ public class MergeModel(
 			.ToDropdown(Topic.ForumId)
 			.ToListAsync();
 
-		AvailableTopics = [.. UiDefaults.DefaultEntry, .. await GetTopicsForForum(Topic.ForumId)];
+		AvailableTopics = (await GetTopicsForForum(Topic.ForumId)).WithDefaultEntry();
 	}
 
 	private async Task<List<SelectListItem>> GetTopicsForForum(int forumId)

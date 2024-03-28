@@ -62,26 +62,20 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableSystems =
-		[
-			.. UiDefaults.DefaultEntry,
-			.. await db.GameSystems
-				.OrderBy(s => s.Code)
-				.ToDropDownWithId()
-				.ToListAsync(),
-		];
+		AvailableSystems = (await db.GameSystems
+			.OrderBy(s => s.Code)
+			.ToDropDownWithId()
+			.ToListAsync())
+			.WithDefaultEntry();
 
 		if (UserFile.SystemId.HasValue)
 		{
-			AvailableGames =
-			[
-				.. UiDefaults.DefaultEntry,
-				.. await db.Games
-					.ForSystem((int)UserFile.SystemId)
-					.OrderBy(g => g.DisplayName)
-					.ToDropDown()
-					.ToListAsync(),
-			];
+			AvailableGames = (await db.Games
+				.ForSystem((int)UserFile.SystemId)
+				.OrderBy(g => g.DisplayName)
+				.ToDropDown()
+				.ToListAsync())
+				.WithDefaultEntry();
 		}
 	}
 

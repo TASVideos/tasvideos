@@ -266,6 +266,15 @@ public static class EntityExtensions
 			.ToList();
 	}
 
+	public static List<SelectListItem> WithDefaultEntry(this IEnumerable<SelectListItem> items)
+	{
+		return
+		[
+			.. UiDefaults.DefaultEntry,
+			.. items
+		];
+	}
+
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
 	{
 		return query

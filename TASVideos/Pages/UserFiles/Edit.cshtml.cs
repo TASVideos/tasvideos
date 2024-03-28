@@ -82,14 +82,11 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableSystems =
-		[
-			.. UiDefaults.DefaultEntry,
-			.. await db.GameSystems
-				.OrderBy(s => s.Code)
-				.ToDropDownWithId()
-				.ToListAsync(),
-		];
+		AvailableSystems = (await db.GameSystems
+			.OrderBy(s => s.Code)
+			.ToDropDownWithId()
+			.ToListAsync())
+			.WithDefaultEntry();
 
 		if (UserFile.SystemId.HasValue)
 		{

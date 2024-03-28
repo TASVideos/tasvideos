@@ -108,13 +108,11 @@ public class AssignModel(
 	private async Task Initialize()
 	{
 		AvailableAwardCategories =
-		[
-			.. UiDefaults.DefaultEntry,
-			.. await awards.AwardCategories()
+				(await awards.AwardCategories()
 				.OrderBy(c => c.Description)
 				.ToDropdown(Year)
-				.ToListAsync(),
-		];
+				.ToListAsync())
+				.WithDefaultEntry();
 
 		AvailableUsers = await db.Users
 			.Where(u => u.Publications.Any(pa => pa.Publication!.CreateTimestamp.Year == Year))
