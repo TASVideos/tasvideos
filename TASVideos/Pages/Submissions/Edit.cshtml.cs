@@ -319,12 +319,7 @@ public class EditModel(
 			RevisionMessage = Submission.RevisionMessage,
 			AuthorId = User.GetUserId()
 		};
-		var addResult = await wikiPages.Add(revision);
-		if (addResult is null)
-		{
-			throw new InvalidOperationException("Unable to save wiki revision!");
-		}
-
+		_ = await wikiPages.Add(revision) ?? throw new InvalidOperationException("Unable to save wiki revision!");
 		submission.SubmissionAuthors.Clear();
 		submission.SubmissionAuthors.AddRange(await db.Users
 			.ForUsers(Submission.Authors)
