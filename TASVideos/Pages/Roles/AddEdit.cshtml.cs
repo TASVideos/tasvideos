@@ -173,22 +173,17 @@ public class AddEditModel(
 			Role = role
 		}));
 
+		var action = "added";
 		if (edit)
 		{
-			await publisher.SendUserManagement(
-				$"Role {model.Name} updated by {User.Name()}",
-				$"Role [{model.Name}]({{0}}) updated by {User.Name()}",
-				"",
-				$"Roles/{model.Name}");
+			action = "updated";
 		}
-		else
-		{
-			await publisher.SendUserManagement(
-				$"New Role {model.Name} added by {User.Name()}",
-				$"New Role [{model.Name}]({{0}}) added by {User.Name()}",
-				"",
-				$"Roles/{model.Name}");
-		}
+
+		await publisher.SendUserManagement(
+			$"Role {model.Name} {action} by {User.Name()}",
+			$"Role [{model.Name}]({{0}}) {action} by {User.Name()}",
+			"",
+			$"Roles/{model.Name}");
 	}
 
 	public class RoleEditModel

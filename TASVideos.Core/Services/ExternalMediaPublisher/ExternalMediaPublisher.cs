@@ -1,5 +1,4 @@
 ﻿using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher;
 
