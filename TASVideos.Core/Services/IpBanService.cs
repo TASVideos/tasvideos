@@ -90,7 +90,7 @@ internal class IpBanService(
 				{
 					processed = mask.Replace("*.*", "0.0") + "/255.255.0.0";
 				}
-				else if (mask.EndsWith("*"))
+				else if (mask.EndsWith('*'))
 				{
 					processed = mask.Replace("*", "0") + "/255.255.255.0";
 				}

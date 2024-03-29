@@ -17,7 +17,7 @@ public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 			{
 				var from = Math.Max(ErrorLocation - 20, 0);
 				var to = ErrorLocation;
-				return Markup.Substring(from, to - from);
+				return Markup[from..to];
 			}
 		}
 
@@ -27,7 +27,7 @@ public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 			{
 				var from = ErrorLocation;
 				var to = Math.Min(ErrorLocation + 20, Markup.Length);
-				return Markup.Substring(from, to - from);
+				return Markup[from..to];
 			}
 		}
 	}
