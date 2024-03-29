@@ -1,4 +1,5 @@
 ﻿using TASVideos.Core.Settings;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher;
 
@@ -56,17 +57,17 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceSubmission(this ExternalMediaPublisher publisher, string title, string relativeLink)
+	public static async Task AnnounceNewSubmission(this ExternalMediaPublisher publisher, Submission submission)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "New Submission!",
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
-			Title = $"New Submission! Go and see {title}",
-			FormattedTitle = $"New Submission! Go and see [{title}]({{0}})",
+			Title = $"New Submission! Go and see {submission.Title}",
+			FormattedTitle = $"New Submission! Go and see [{submission.Title}]({{0}})",
 			Body = "",
-			Link = publisher.ToAbsolute(relativeLink)
+			Link = publisher.ToAbsolute($"{submission.Id}S")
 		});
 	}
 
@@ -84,17 +85,17 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnouncePublication(this ExternalMediaPublisher publisher, string title, string relativeLink)
+	public static async Task AnnounceNewPublication(this ExternalMediaPublisher publisher, Publication publication)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "New Movie Published!",
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
-			Title = $"New movie published! Go and see {title}",
-			FormattedTitle = $"New movie published! Go and see [{title}]({{0}})",
+			Title = $"New movie published! Go and see {publication.Title}",
+			FormattedTitle = $"New movie published! Go and see [{publication.Title}]({{0}})",
 			Body = "",
-			Link = publisher.ToAbsolute(relativeLink)
+			Link = publisher.ToAbsolute($"{publication.Id}M")
 		});
 	}
 

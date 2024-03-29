@@ -124,7 +124,7 @@ public class SubmitModel(
 		submission.TopicId = await tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
 		await db.SaveChangesAsync();
 
-		await publisher.AnnounceSubmission(submission.Title, $"{submission.Id}S");
+		await publisher.AnnounceNewSubmission(submission);
 
 		return BaseRedirect($"/{submission.Id}S");
 	}

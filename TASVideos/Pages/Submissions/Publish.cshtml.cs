@@ -133,7 +133,7 @@ public class PublishModel(
 
 		await userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
 		await tasVideoAgent.PostSubmissionPublished(Id, publication.Id);
-		await publisher.AnnouncePublication(publication.Title, $"{publication.Id}M");
+		await publisher.AnnounceNewPublication(publication);
 
 		if (youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
 		{
