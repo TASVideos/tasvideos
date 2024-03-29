@@ -77,7 +77,6 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 				await db.SaveChangesAsync();
 				await publisher.SendUserFile(
 					userFile.Hidden,
-					$"New user file comment by {User.Name()}",
 					$"New [user file]({{0}}) comment by {User.Name()}",
 					fileId,
 					userFile.Title);
@@ -105,7 +104,6 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 				{
 					await publisher.SendUserFile(
 						fileComment.UserFile!.Hidden,
-						$"User file comment edited by {User.Name()}",
 						$"[User file]({{0}}) comment edited by {User.Name()}",
 						fileComment.UserFile.Id,
 						fileComment.UserFile!.Title);
@@ -133,7 +131,6 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 				{
 					await publisher.SendUserFile(
 						fileComment.UserFile!.Hidden,
-						$"User file comment DELETED by {User.Name()}",
 						$"[User file]({{0}}) comment DELETED by {User.Name()}",
 						fileComment.UserFile.Id,
 						fileComment.UserFile!.Title);

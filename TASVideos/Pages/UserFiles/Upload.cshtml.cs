@@ -83,7 +83,6 @@ public class UploadModel(
 
 		await publisher.SendUserFile(
 			UserFile.Hidden,
-			$"New user file uploaded by {User.Name()}",
 			$"New [user file]({{0}}) uploaded by {User.Name()}",
 			id!.Value,
 			UserFile.Title);

@@ -37,8 +37,11 @@ public class
 
 public static class ExternalMediaPublisherExtensions
 {
-	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string formattedTitle, long id, string fileTitle)
+	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string formattedTitle, long id, string fileTitle)
 	{
+		//formatted: New [user file]({0}) uploaded by
+		// unformatted: New user file uploaded by
+		string unformattedTitle = formattedTitle.Replace("[", "").Replace("]", "").Replace("{0}", "");
 		await publisher.Send(new Post
 		{
 			Announcement = "",
@@ -46,7 +49,7 @@ public static class ExternalMediaPublisherExtensions
 				? PostType.Administrative
 				: PostType.General,
 			Group = PostGroups.UserFiles,
-			Title = title,
+			Title = unformattedTitle,
 			FormattedTitle = formattedTitle,
 			Body = fileTitle,
 			Link = publisher.ToAbsolute($"UserFiles/Info/{id}")
