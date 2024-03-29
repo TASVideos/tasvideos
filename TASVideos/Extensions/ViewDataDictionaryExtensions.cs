@@ -20,6 +20,12 @@ public static class ViewDataDictionaryExtensions
 		return viewData.UserPermissions().Contains(permission);
 	}
 
+	public static bool UserHasAny(this ViewDataDictionary viewData, IEnumerable<PermissionTo> permissions)
+	{
+		var userPerm = viewData.UserPermissions();
+		return permissions.Any(permission => userPerm.Contains(permission));
+	}
+
 	public static void SetMetaTags(this ViewDataDictionary viewData, MetaTagModel metaTags)
 	{
 		viewData["MetaTags"] = metaTags;
