@@ -85,8 +85,8 @@ public class UploadModel(
 			UserFile.Hidden,
 			$"New user file uploaded by {User.Name()}",
 			$"New [user file]({{0}}) uploaded by {User.Name()}",
-			$"/UserFiles/Info/{id}",
-			$"{UserFile.Title}");
+			id!.Value,
+			UserFile.Title);
 
 		return BasePageRedirect("/Profile/UserFiles");
 	}

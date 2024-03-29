@@ -37,7 +37,7 @@ public class
 
 public static class ExternalMediaPublisherExtensions
 {
-	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string formattedTitle, string relativeLink, string body)
+	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string title, string formattedTitle, long id, string fileTitle)
 	{
 		await publisher.Send(new Post
 		{
@@ -48,8 +48,8 @@ public static class ExternalMediaPublisherExtensions
 			Group = PostGroups.UserFiles,
 			Title = title,
 			FormattedTitle = formattedTitle,
-			Body = body,
-			Link = publisher.ToAbsolute(relativeLink)
+			Body = fileTitle,
+			Link = publisher.ToAbsolute($"UserFiles/Info/{id}")
 		});
 	}
 
