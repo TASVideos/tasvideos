@@ -138,7 +138,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		{
 			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 			data = await db.Games
-				.ForSystemCode(paging.SystemCode)
+				.ForSystemCode(paging.System)
 				.ForGenre(paging.Genre)
 				.ForGroup(paging.Group)
 				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
@@ -154,7 +154,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		else
 		{
 			data = await db.Games
-				.ForSystemCode(paging.SystemCode)
+				.ForSystemCode(paging.System)
 				.ForGenre(paging.Genre)
 				.ForGroup(paging.Group)
 				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
@@ -169,7 +169,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		return new SystemPageOf<GameListModel>(data)
 		{
-			SystemCode = paging.SystemCode,
+			System = paging.System,
 			Letter = paging.Letter,
 			Genre = paging.Genre,
 			Group = paging.Group,
@@ -189,7 +189,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			Sort = "Name";
 		}
 
-		public string? SystemCode { get; init; }
+		public string? System { get; set; }
 
 		public string? Letter { get; init; }
 
@@ -202,8 +202,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	public class SystemPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 	{
-		[Display(Name = "System")]
-		public string? SystemCode { get; init; }
+		public string? System { get; init; }
 
 		[Display(Name = "Starts with")]
 		public string? Letter { get; init; }

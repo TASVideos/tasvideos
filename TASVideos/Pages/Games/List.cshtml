@@ -2,7 +2,7 @@
 @model ListModel
 @{
 	ViewData.SetTitle("Game List" +
-		(!string.IsNullOrWhiteSpace(Model.Games.SystemCode) ? " - " + Model.Games.SystemCode : string.Empty) +
+		(!string.IsNullOrWhiteSpace(Model.Games.System) ? " - " + Model.Games.System : string.Empty) +
 		(!string.IsNullOrWhiteSpace(Model.Games.Letter) ? " - " + Model.Games.Letter : string.Empty) +
 		(!string.IsNullOrWhiteSpace(Model.Games.SearchTerms) ? " - " + $@"""{Model.Games.SearchTerms}""" : string.Empty));
 }
@@ -25,8 +25,8 @@
 			<div class="row mb-1">
 				<div class="col-5 mb-1">
 					<div class="input-group">
-						<label asp-for="@Model.Games.SystemCode" class="input-group-text"></label>
-						<select asp-items="@Model.SystemList" asp-for="@Model.Games.SystemCode" name="System" class="form-control"></select>
+						<label asp-for="@Model.Games.System" class="input-group-text"></label>
+						<select asp-items="@Model.SystemList" asp-for="@Model.Games.System" name="System" class="form-control"></select>
 					</div>
 				</div>
 				<div class="col-5 mb-1">
