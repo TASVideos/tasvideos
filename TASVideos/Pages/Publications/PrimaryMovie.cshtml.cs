@@ -79,7 +79,7 @@ public class PrimaryMoviesModel(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",
-				$"{Id}M");
+				Id);
 		}
 
 		return RedirectToPage("Edit", new { Id });

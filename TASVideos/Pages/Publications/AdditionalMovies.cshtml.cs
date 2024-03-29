@@ -106,7 +106,7 @@ public class AdditionalMoviesModel(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log} | {PublicationTitle}",
-				$"{Id}M");
+				Id);
 		}
 
 		return RedirectToPage("AdditionalMovies", new { Id });
@@ -131,7 +131,7 @@ public class AdditionalMoviesModel(
 					$"{Id}M edited by {User.Name()}",
 					$"[{Id}M]({{0}}) edited by {User.Name()}",
 					$"{log}",
-					$"{Id}M");
+					Id);
 			}
 		}
 

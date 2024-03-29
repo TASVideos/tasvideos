@@ -67,7 +67,7 @@ public class EditFilesModel(
 			$"{Id}M edited by {User.Name()}",
 			$"[{Id}M]({{0}}) edited by {User.Name()}",
 			$"{log} | {Title}",
-			$"{Id}M");
+			Id);
 
 		return RedirectToPage("EditFiles", new { Id });
 	}
@@ -85,7 +85,7 @@ public class EditFilesModel(
 				$"{Id}M edited by {User.Name()}",
 				$"[{Id}M]({{0}}) edited by {User.Name()}",
 				$"{log}",
-				$"{Id}M");
+				Id);
 		}
 
 		return RedirectToPage("EditFiles", new { Id });

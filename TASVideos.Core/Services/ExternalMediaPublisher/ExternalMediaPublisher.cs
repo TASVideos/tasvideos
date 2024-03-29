@@ -122,7 +122,7 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, int publicationId)
 	{
 		await publisher.Send(new Post
 		{
@@ -132,7 +132,7 @@ public static class ExternalMediaPublisherExtensions
 			Title = title,
 			FormattedTitle = formattedTitle,
 			Body = body,
-			Link = publisher.ToAbsolute(relativeLink)
+			Link = publisher.ToAbsolute($"{publicationId}M")
 		});
 	}
 

@@ -151,7 +151,7 @@ public class EditUrlsModel(
 				$"{PublicationId}M edited by {User.Name()}",
 				$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
 				$"{logWording[0]}ed {UrlType} URL | {Title}",
-				$"{PublicationId}M");
+				PublicationId);
 
 			if (UrlType == PublicationUrlType.Streaming && youtubeSync.IsYoutubeUrl(CurrentUrl))
 			{

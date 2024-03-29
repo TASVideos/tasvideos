@@ -55,7 +55,7 @@ public class ListUrlsModel(
 					$"{PublicationId}M edited by {User.Name()}",
 					$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
 					$"Deleted {url.Type} URL",
-					$"{PublicationId}M");
+					PublicationId);
 
 				await youtubeSync.UnlistVideo(url.Url!);
 			}
