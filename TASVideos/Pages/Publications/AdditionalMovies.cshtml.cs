@@ -102,11 +102,7 @@ public class AdditionalMoviesModel(
 		var result = await ConcurrentSave(db, log, "Unable to add file");
 		if (result)
 		{
-			await publisher.SendPublicationEdit(
-				$"{Id}M edited by {User.Name()}",
-				$"[{Id}M]({{0}}) edited by {User.Name()}",
-				$"{log} | {PublicationTitle}",
-				Id);
+			await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {PublicationTitle}");
 		}
 
 		return RedirectToPage("AdditionalMovies", new { Id });
@@ -127,11 +123,7 @@ public class AdditionalMoviesModel(
 
 			if (result)
 			{
-				await publisher.SendPublicationEdit(
-					$"{Id}M edited by {User.Name()}",
-					$"[{Id}M]({{0}}) edited by {User.Name()}",
-					$"{log}",
-					Id);
+				await publisher.SendPublicationEdit(User.Name(), Id, $"{log}");
 			}
 		}
 

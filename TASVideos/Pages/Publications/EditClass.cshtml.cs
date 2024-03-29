@@ -79,11 +79,8 @@ public class EditClassModel(
 			var result = await ConcurrentSave(db, log, "Unable to update Publication Class");
 			if (result)
 			{
-				await publisher.SendPublicationEdit(
-					$"{log} by {User.Name()}",
-					$"[{Id}M]({{0}}) Class changed from {originalClass} to {publicationClass.Name} by {User.Name()}",
-					Title,
-					Id);
+				await publisher.SendPublicationClassChange(
+					Id, Title, User.Name(), originalClass, publicationClass.Name);
 			}
 		}
 

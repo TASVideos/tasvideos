@@ -51,12 +51,7 @@ public class ListUrlsModel(
 			var result = await ConcurrentSave(db, log, "Unable to remove URL.");
 			if (result)
 			{
-				await publisher.SendPublicationEdit(
-					$"{PublicationId}M edited by {User.Name()}",
-					$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
-					$"Deleted {url.Type} URL",
-					PublicationId);
-
+				await publisher.SendPublicationEdit(User.Name(), PublicationId, $"Deleted {url.Type} URL");
 				await youtubeSync.UnlistVideo(url.Url!);
 			}
 		}

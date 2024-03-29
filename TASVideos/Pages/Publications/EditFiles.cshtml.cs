@@ -63,11 +63,7 @@ public class EditFilesModel(
 		string log = $"Added Screenshot file {path}";
 		SuccessStatusMessage(log);
 		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-		await publisher.SendPublicationEdit(
-			$"{Id}M edited by {User.Name()}",
-			$"[{Id}M]({{0}}) edited by {User.Name()}",
-			$"{log} | {Title}",
-			Id);
+		await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {Title}");
 
 		return RedirectToPage("EditFiles", new { Id });
 	}
@@ -81,11 +77,7 @@ public class EditFilesModel(
 			string log = $"Deleted {file.Type} file {file.Path}";
 			SuccessStatusMessage(log);
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-			await publisher.SendPublicationEdit(
-				$"{Id}M edited by {User.Name()}",
-				$"[{Id}M]({{0}}) edited by {User.Name()}",
-				$"{log}",
-				Id);
+			await publisher.SendPublicationEdit(User.Name(), Id, $"{log}");
 		}
 
 		return RedirectToPage("EditFiles", new { Id });

@@ -229,10 +229,7 @@ public class EditModel(
 		if (!model.MinorEdit)
 		{
 			await publisher.SendPublicationEdit(
-				$"{Id}M edited by {User.Name()}",
-				$"[{Id}M]({{0}}) edited by {User.Name()}",
-				$"{string.Join(", ", externalMessages)} | {publication.Title}",
-				Id);
+				User.Name(), Id, $"{string.Join(", ", externalMessages)} | {publication.Title}");
 		}
 	}
 

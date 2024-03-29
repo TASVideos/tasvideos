@@ -75,11 +75,7 @@ public class PrimaryMoviesModel(
 		if (result)
 		{
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-			await publisher.SendPublicationEdit(
-				$"{Id}M edited by {User.Name()}",
-				$"[{Id}M]({{0}}) edited by {User.Name()}",
-				$"{log} | {PublicationTitle}",
-				Id);
+			await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {PublicationTitle}");
 		}
 
 		return RedirectToPage("Edit", new { Id });

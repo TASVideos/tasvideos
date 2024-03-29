@@ -1,4 +1,5 @@
 ﻿using TASVideos.Core.Settings;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher;
 
@@ -122,8 +123,10 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, int publicationId)
+	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string userName, int publicationId, string body)
 	{
+		var title = $"{publicationId}M edited by {userName}";
+		var formattedTitle = $"[{publicationId}M]({{0}}) edited by {userName}";
 		await publisher.Send(new Post
 		{
 			Announcement = "",
@@ -133,6 +136,20 @@ public static class ExternalMediaPublisherExtensions
 			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute($"{publicationId}M")
+		});
+	}
+
+	public static async Task SendPublicationClassChange(this ExternalMediaPublisher publisher, int id, string pubTitle, string userName, string oldClass, string newClass)
+	{
+		await publisher.Send(new Post
+		{
+			Announcement = "",
+			Type = PostType.General,
+			Group = PostGroups.Publication,
+			Title = $"{id}M Class changed from {oldClass} to {newClass} by {userName}",
+			FormattedTitle = $"[{id}M]({{0}}) Class changed from {oldClass} to {newClass} by {userName}",
+			Body = pubTitle,
+			Link = publisher.ToAbsolute($"{id}M")
 		});
 	}
 

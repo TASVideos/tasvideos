@@ -148,10 +148,7 @@ public class EditUrlsModel(
 		if (result)
 		{
 			await publisher.SendPublicationEdit(
-				$"{PublicationId}M edited by {User.Name()}",
-				$"[{PublicationId}M]({{0}}) edited by {User.Name()}",
-				$"{logWording[0]}ed {UrlType} URL | {Title}",
-				PublicationId);
+				User.Name(), PublicationId, $"{logWording[0]}ed {UrlType} URL | {Title}");
 
 			if (UrlType == PublicationUrlType.Streaming && youtubeSync.IsYoutubeUrl(CurrentUrl))
 			{
