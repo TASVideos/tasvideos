@@ -75,11 +75,7 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 				});
 
 				await db.SaveChangesAsync();
-				await publisher.SendUserFile(
-					userFile.Hidden,
-					$"New [user file]({{0}}) comment by {User.Name()}",
-					fileId,
-					userFile.Title);
+				await SendUserFile(userFile, $"New [user file]({{0}}) comment by {User.Name()}");
 			}
 		}
 
@@ -102,11 +98,7 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 				var result = await ConcurrentSave(db, "Comment edited", "Unable to edit comment");
 				if (result)
 				{
-					await publisher.SendUserFile(
-						fileComment.UserFile!.Hidden,
-						$"[User file]({{0}}) comment edited by {User.Name()}",
-						fileComment.UserFile.Id,
-						fileComment.UserFile!.Title);
+					await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment edited by {User.Name()}");
 				}
 			}
 		}
@@ -129,17 +121,16 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 				var result = await ConcurrentSave(db, "Comment deleted", "Unable to delete comment");
 				if (result)
 				{
-					await publisher.SendUserFile(
-						fileComment.UserFile!.Hidden,
-						$"[User file]({{0}}) comment DELETED by {User.Name()}",
-						fileComment.UserFile.Id,
-						fileComment.UserFile!.Title);
+					await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment DELETED by {User.Name()}");
 				}
 			}
 		}
 
 		return BaseReturnUrlRedirect();
 	}
+
+	private async Task SendUserFile(UserFile file, string message) => await publisher.SendUserFile(
+		file.Hidden, message, file.Id, file.Title);
 
 	public record UserWithMovie(string UserName, DateTime Latest);
 
