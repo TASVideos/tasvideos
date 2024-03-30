@@ -42,7 +42,7 @@ public static class ForumTopicQueryableExtensions
 {
 	public static IQueryable<ForumTopic> ExcludeRestricted(this IQueryable<ForumTopic> query, bool seeRestricted)
 	{
-		return query.Where(f => seeRestricted || !f.Forum!.Restricted);
+		return seeRestricted ? query : query.Where(f => !f.Forum!.Restricted);
 	}
 
 	public static IQueryable<ForumTopic> ForForum(this IQueryable<ForumTopic> query, int forumId)
