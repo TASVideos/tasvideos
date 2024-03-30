@@ -14,7 +14,8 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 	[FromRoute]
 	public int Id { get; set; }
 
-	public ForumDisplayModel Forum { get; set; } = new();
+	public ForumDisplay Forum { get; set; } = null!;
+	public PageOf<ForumTopicEntry> Topics { get; set; } = PageOf<ForumTopicEntry>.Empty();
 	public Dictionary<int, (string PostsCreated, string PostsEdited)> ActivityTopics { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
@@ -22,13 +23,9 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var forum = await db.Forums
 			.ExcludeRestricted(seeRestricted)
-			.Select(f => new ForumDisplayModel
-			{
-				Id = f.Id,
-				Name = f.Name,
-				Description = f.Description
-			})
-			.SingleOrDefaultAsync(f => f.Id == Id);
+			.Where(f => f.Id == Id)
+			.Select(f => new ForumDisplay(f.Id, f.Name, f.Description))
+			.SingleOrDefaultAsync();
 
 		if (forum is null)
 		{
@@ -36,9 +33,9 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		}
 
 		Forum = forum;
-		Forum.Topics = await db.ForumTopics
+		Topics = await db.ForumTopics
 			.ForForum(Id)
-			.Select(ft => new ForumDisplayModel.ForumTopicEntry
+			.Select(ft => new ForumTopicEntry
 			{
 				Id = ft.Id,
 				Title = ft.Title,
@@ -49,7 +46,7 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 				PostCount = ft.ForumPosts.Count,
 				LastPost = ft.ForumPosts
 					.Where(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
-					.Select(fp => new ForumDisplayModel.LastPostEntry
+					.Select(fp => new ForumTopicEntry.LastPostEntry
 					{
 						Id = fp.Id,
 						PosterName = fp.Poster!.UserName,
@@ -74,45 +71,38 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		}
 	}
 
-	public class ForumDisplayModel
+	public record ForumDisplay(int Id, string Name, string? Description);
+
+	public class ForumTopicEntry
 	{
+		[TableIgnore]
 		public int Id { get; init; }
-		public string Name { get; init; } = "";
-		public string? Description { get; init; }
 
-		public PageOf<ForumTopicEntry> Topics { get; set; } = PageOf<ForumTopicEntry>.Empty();
+		[DisplayName("Topics")]
+		public string Title { get; init; } = "";
 
-		public class ForumTopicEntry
-		{
-			[TableIgnore]
-			public int Id { get; init; }
+		[MobileHide]
+		[DisplayName("Replies")]
+		public int PostCount { get; init; }
 
-			[DisplayName("Topics")]
-			public string Title { get; init; } = "";
+		[MobileHide]
+		[DisplayName("Author")]
+		public string? CreateUserName { get; init; }
 
-			[MobileHide]
-			[DisplayName("Replies")]
-			public int PostCount { get; init; }
+		[TableIgnore]
+		public DateTime CreateTimestamp { get; init; }
 
-			[MobileHide]
-			[DisplayName("Author")]
-			public string? CreateUserName { get; init; }
+		[TableIgnore]
+		public ForumTopicType Type { get; init; }
 
-			[TableIgnore]
-			public DateTime CreateTimestamp { get; init; }
+		[TableIgnore]
+		public bool IsLocked { get; init; }
 
-			[TableIgnore]
-			public ForumTopicType Type { get; init; }
+		[TableIgnore]
+		public LastPostEntry? LastPost { get; init; }
 
-			[TableIgnore]
-			public bool IsLocked { get; init; }
-
-			[TableIgnore]
-			public LastPostEntry? LastPost { get; init; }
-
-			[DisplayName("Last Post")]
-			public string? Dummy { get; init; }
-		}
+		[DisplayName("Last Post")]
+		public string? Dummy { get; init; }
 
 		public class LastPostEntry
 		{

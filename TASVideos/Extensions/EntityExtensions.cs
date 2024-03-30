@@ -3,6 +3,7 @@ using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
+using TASVideos.Pages.Forum.Posts;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles;
 using TASVideos.Pages.Submissions.Models;
@@ -496,5 +497,20 @@ public static class EntityExtensions
 			uf.System != null ? uf.System.Code : null,
 			uf.UploadTimestamp,
 			uf.Author!.UserName));
+	}
+
+	public static IQueryable<LatestModel.LatestPost> ToLatestPost(this IQueryable<ForumPost> query)
+	{
+		return query.Select(p => new LatestModel.LatestPost
+		{
+			Id = p.Id,
+			CreateTimestamp = p.CreateTimestamp,
+			Text = p.Text,
+			TopicId = p.TopicId ?? 0,
+			TopicTitle = p.Topic!.Title,
+			ForumId = p.Topic.ForumId,
+			ForumName = p.Topic!.Forum!.Name,
+			PosterName = p.Poster!.UserName
+		});
 	}
 }

@@ -44,10 +44,10 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 			return NotFound();
 		}
 
-		bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		Posts = await db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
+			.OrderByDescending(p => p.CreateTimestamp)
 			.Select(p => new UserPagePost
 			{
 				Id = p.Id,
@@ -66,7 +66,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 				PosterId = p.PosterId,
 				PostEditedTimestamp = p.PostEditedTimestamp
 			})
-			.SortedPageOf(Search);
+			.PageOf(Search);
 
 		// Fill user data into each post
 		var userAwards = (await awards.ForUser(user.Id)).ToList();
@@ -104,8 +104,6 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 	public class UserPagePost : IForumPostEntry
 	{
 		public int Id { get; init; }
-
-		[Sortable]
 		public DateTime CreateTimestamp { get; init; }
 		public DateTime LastUpdateTimestamp { get; init; }
 		public bool EnableBbCode { get; init; }

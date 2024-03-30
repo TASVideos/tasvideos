@@ -17,24 +17,13 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 		Posts = await db.ForumPosts
 			.ExcludeRestricted(allowRestricted)
 			.Since(DateTime.UtcNow.AddDays(-3))
-			.Select(p => new LatestPost
-			{
-				Id = p.Id,
-				CreateTimestamp = p.CreateTimestamp,
-				Text = p.Text,
-				TopicId = p.TopicId ?? 0,
-				TopicTitle = p.Topic!.Title,
-				ForumId = p.Topic.ForumId,
-				ForumName = p.Topic!.Forum!.Name,
-				PosterName = p.Poster!.UserName
-			})
+			.ToLatestPost()
 			.OrderByDescending(p => p.CreateTimestamp)
 			.PageOf(Search);
 	}
 
 	public class LatestPost
 	{
-		[Sortable]
 		public DateTime CreateTimestamp { get; init; }
 		public int Id { get; init; }
 		public int TopicId { get; init; }
