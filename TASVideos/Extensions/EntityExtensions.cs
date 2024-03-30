@@ -8,7 +8,7 @@ using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles;
 using TASVideos.Pages.Submissions.Models;
 using TASVideos.Pages.UserFiles.Models;
-using TASVideos.ViewComponents;
+using TASVideos.WikiModules;
 
 namespace TASVideos.Extensions;
 

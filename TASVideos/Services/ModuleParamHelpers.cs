@@ -2,7 +2,7 @@
 using Namotion.Reflection;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.TagHelpers;
-using TASVideos.ViewComponents;
+using TASVideos.WikiModules;
 
 namespace TASVideos.Services;
 

@@ -35,7 +35,7 @@ public class Module : INode
 				await div.WriteHtmlAsync(w, ctx);
 			}
 		}
-		else if (WikiModules.IsModule(Name))
+		else if (ModuleNames.IsModule(Name))
 		{
 			await ctx.Helper.RunViewComponentAsync(w, Name, Parameters);
 		}
@@ -54,7 +54,7 @@ public class Module : INode
 		{
 			// Do nothing for this special module
 		}
-		else if (WikiModules.IsModule(Name))
+		else if (ModuleNames.IsModule(Name))
 		{
 			// It's the caller's responsibility to provide a view component runner that will create text output.
 			await ctx.Helper.RunViewComponentAsync(writer, Name, Parameters);

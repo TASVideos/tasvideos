@@ -1,6 +1,6 @@
 ﻿using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
-using TASVideos.ViewComponents;
+using TASVideos.WikiModules;
 
 namespace TASVideos.Pages.Games;
 
