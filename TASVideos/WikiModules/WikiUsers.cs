@@ -19,4 +19,11 @@ public class WikiUsers(ApplicationDbContext db) : ViewComponent
 
 		return View(model);
 	}
+
+	public class WikiUserEntry
+	{
+		public string UserName { get; init; } = "";
+		public int SubmissionCount { get; init; }
+		public int PublicationCount { get; init; }
+	}
 }

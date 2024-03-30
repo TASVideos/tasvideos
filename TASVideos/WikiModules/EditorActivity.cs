@@ -24,4 +24,10 @@ public class EditorActivity(ApplicationDbContext db) : ViewComponent
 
 		return View(subs);
 	}
+
+	public class EditorActivityModel
+	{
+		public string UserName { get; init; } = "";
+		public int WikiEdits { get; init; }
+	}
 }

@@ -1,5 +1,4 @@
-﻿using TASVideos.WikiModules.Models;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules.TODO;
 
@@ -15,4 +14,6 @@ public class NoGameGenres(ApplicationDbContext db) : ViewComponent
 
 		return View(games);
 	}
+
+	public record GameEntry(int Id, string DisplayName);
 }

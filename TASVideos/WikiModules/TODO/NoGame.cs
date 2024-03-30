@@ -1,5 +1,4 @@
-﻿using TASVideos.WikiModules.Models;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules.TODO;
 
@@ -24,5 +23,12 @@ public class NoGame(ApplicationDbContext db) : ViewComponent
 		};
 
 		return View(model);
+	}
+
+	public class MissingModel
+	{
+		public IReadOnlyCollection<Entry> Publications { get; init; } = [];
+		public IReadOnlyCollection<Entry> Submissions { get; init; } = [];
+		public record Entry(int Id, string Title);
 	}
 }

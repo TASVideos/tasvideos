@@ -1,4 +1,4 @@
-﻿@model TASVideos.Core.PageOf<UserMaintenanceLogEntry>
+﻿@model TASVideos.Core.PageOf<UserMaintenanceLogs.UserMaintenanceLogEntry>
 @{
 	var pagingModel = ViewData.GetPagingModel();
 	var currentPage = ViewData["CurrentPage"]?.ToString();
@@ -6,7 +6,7 @@
 <div condition="@Model.Any()">
 	<partial name="_Pager" model="Model" />
 	<table>
-		<sortable-table-head sorting="@pagingModel" model-type="typeof(UserMaintenanceLogEntry)" page-override="@currentPage" />
+		<sortable-table-head sorting="@pagingModel" model-type="typeof(UserMaintenanceLogs.UserMaintenanceLogEntry)" page-override="@currentPage" />
 		@foreach(var entry in Model)
 		{
 			<tr>

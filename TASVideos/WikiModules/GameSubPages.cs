@@ -35,4 +35,11 @@ public class GameSubPages(ApplicationDbContext db) : ViewComponent
 			 })
 			.ToList();
 	}
+
+	public class GameSubpageModel
+	{
+		public string SystemCode { get; init; } = "";
+		public string SystemDescription { get; init; } = "";
+		public string PageLink { get; init; } = "";
+	}
 }

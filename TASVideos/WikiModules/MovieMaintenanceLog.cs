@@ -54,4 +54,7 @@ public class MovieMaintenanceLog(ApplicationDbContext db) : ViewComponent
 
 		return View("Global", globalEntries);
 	}
+
+	public record PublicationMaintenanceLogEntry(string Log, string UserName, DateTime Timestamp);
+	public record ParentPublicationMaintenanceEntry(int Id, string Title);
 }

@@ -38,4 +38,19 @@ public class MoviesList(ApplicationDbContext db) : ViewComponent
 
 		return View(model);
 	}
+
+	public class MoviesListModel
+	{
+		public string? SystemCode { get; init; }
+		public string? SystemName { get; init; }
+
+		public IReadOnlyCollection<MovieEntry> Movies { get; init; } = [];
+
+		public class MovieEntry
+		{
+			public int Id { get; init; }
+			public bool IsObsolete { get; init; }
+			public string GameName { get; init; } = "";
+		}
+	}
 }

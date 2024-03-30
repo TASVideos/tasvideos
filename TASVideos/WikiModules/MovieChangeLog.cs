@@ -40,4 +40,19 @@ public class MovieChangeLog(ApplicationDbContext db) : ViewComponent
 		this.SetPagingToViewData(paging);
 		return View("Default", model);
 	}
+
+	public class MovieHistoryModel
+	{
+		public DateTime Date { get; init; }
+		public IReadOnlyCollection<PublicationEntry> Pubs { get; init; } = [];
+
+		public class PublicationEntry
+		{
+			public int Id { get; init; }
+			public string Name { get; init; } = "";
+			public bool IsNewGame { get; init; }
+			public bool IsNewBranch { get; init; }
+			public string? ClassIconPath { get; init; }
+		}
+	}
 }

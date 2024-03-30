@@ -1,5 +1,4 @@
-﻿using TASVideos.WikiModules.Models;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules.TODO;
 
@@ -36,5 +35,13 @@ public class UncatalogedTopics(ApplicationDbContext db) : ViewComponent
 			})
 			.ToListAsync();
 		return View(topics);
+	}
+
+	public class UncatalogedTopic
+	{
+		public int Id { get; init; }
+		public string Title { get; init; } = "";
+		public int ForumId { get; init; }
+		public string ForumName { get; init; } = "";
 	}
 }

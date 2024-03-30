@@ -1,5 +1,4 @@
-﻿using TASVideos.WikiModules.Models;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -73,5 +72,11 @@ public class CrossGameObsoletions(ApplicationDbContext db) : ViewComponent
 			AllObsoletionGroups = allGroups
 		};
 		return View(model);
+	}
+
+	public class CrossGameObsoletionsModel
+	{
+		public Dictionary<Entry, HashSet<Entry>> AllObsoletionGroups { get; init; } = [];
+		public record Entry(int Id, string Title);
 	}
 }

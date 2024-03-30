@@ -43,4 +43,19 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : ViewComponent
 		this.SetPagingToViewData(paging);
 		return View(logs);
 	}
+
+	public record UserMaintenanceLogEntry
+	{
+		[Sortable]
+		public string User { get; init; } = "";
+
+		[Sortable]
+		public string Editor { get; init; } = "";
+
+		[Sortable]
+		public DateTime TimeStamp { get; init; }
+
+		[Sortable]
+		public string Log { get; init; } = "";
+	}
 }

@@ -1,8 +1,7 @@
 ﻿@using TASVideos.Core
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using TASVideos.TagHelpers
-@using TASVideos.WikiModules
-@model TASVideos.WikiModules.ScreenshotPageOf<TASVideos.WikiModules.ScreenshotEntry>
+@model Screenshots.ScreenshotPageOf<Screenshots.ScreenshotEntry>
 @{
 	var additionalProperties = Model.AdditionalProperties();
 }
@@ -40,7 +39,7 @@
 	var currentPage = ViewData["CurrentPage"]?.ToString();
 }
 <table>
-	<sortable-table-head sorting="@pagingModel" model-type="typeof(ScreenshotEntry)" page-override="@currentPage" />
+	<sortable-table-head sorting="@pagingModel" model-type="typeof(Screenshots.ScreenshotEntry)" page-override="@currentPage" />
 	@foreach (var screenshot in Model)
 	{
 		<tr>

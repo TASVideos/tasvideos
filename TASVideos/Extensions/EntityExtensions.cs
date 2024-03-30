@@ -423,16 +423,16 @@ public static class EntityExtensions
 			uf.Title));
 	}
 
-	public static IQueryable<MiniMovieModel> ToMiniMovieModel(this IQueryable<Publication> publications)
+	public static IQueryable<DisplayMiniMovie.MiniMovieModel> ToMiniMovieModel(this IQueryable<Publication> publications)
 	{
-		return publications.Select(p => new MiniMovieModel
+		return publications.Select(p => new DisplayMiniMovie.MiniMovieModel
 		{
 			Id = p.Id,
 			Title = p.Title,
 			Goal = p.GameGoal!.DisplayName,
 			Screenshot = p.Files
 				.Where(f => f.Type == FileType.Screenshot)
-				.Select(f => new MiniMovieModel.ScreenshotFile
+				.Select(f => new DisplayMiniMovie.MiniMovieModel.ScreenshotFile
 				{
 					Path = f.Path,
 					Description = f.Description

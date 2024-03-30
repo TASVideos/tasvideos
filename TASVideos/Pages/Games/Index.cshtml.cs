@@ -14,7 +14,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public GameDisplayModel Game { get; set; } = new();
 
-	public record TabMiniMovieModel(string TabTitleRegular, string TabTitleBold, MiniMovieModel Movie);
+	public record TabMiniMovieModel(string TabTitleRegular, string TabTitleBold, DisplayMiniMovie.MiniMovieModel Movie);
 
 	public List<TabMiniMovieModel> Movies { get; set; } = [];
 
@@ -74,7 +74,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				Goal = p.GameGoal!.DisplayName,
 				Screenshot = p.Files
 				.Where(f => f.Type == FileType.Screenshot)
-				.Select(f => new MiniMovieModel.ScreenshotFile
+				.Select(f => new DisplayMiniMovie.MiniMovieModel.ScreenshotFile
 				{
 					Path = f.Path,
 					Description = f.Description
@@ -96,7 +96,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				m.Goal == "baseline"
 					? ""
 					: m.Goal,
-				new MiniMovieModel
+				new DisplayMiniMovie.MiniMovieModel
 				{
 					Id = m.Id,
 					Title = m.Title,

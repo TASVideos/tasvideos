@@ -36,4 +36,22 @@ public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsSer
 
 		return View(sortedPlayers);
 	}
+
+	public class PlayerPointsModel
+	{
+		[Display(Name = "Pos")]
+		public int Position { get; set; } = 0;
+
+		[Display(Name = "PlayerID")]
+		public int Id { get; init; } = 0;
+
+		[Display(Name = "Player")]
+		public string Player { get; init; } = "";
+
+		[Display(Name = "Points")]
+		public double Points { get; set; } = 0.0;
+
+		[Display(Name = "Player Rank")]
+		public string Rank { get; set; } = "";
+	}
 }

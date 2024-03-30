@@ -1,5 +1,6 @@
-﻿using TASVideos.WikiEngine;
-using static TASVideos.WikiModules.MovieStatisticsModel;
+﻿using System.Globalization;
+using TASVideos.Common;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -69,7 +70,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 		string fieldHeader;
 
 		IQueryable<Publication> query = db.Publications.ThatAreCurrent();
-		IQueryable<MovieStatisticsEntry> statQuery;
+		IQueryable<MovieStatisticsModel.MovieStatisticsEntry> statQuery;
 
 		switch (comparisonMetric)
 		{
@@ -102,7 +103,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 				statQuery = query
 					.Where(p => p.System != null && p.SystemFrameRate != null)
 					.OrderBy(p => p.Frames / p.SystemFrameRate!.FrameRate, reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -117,7 +118,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 				statQuery = query
 					.Where(p => p.RerecordCount > 0)
 					.OrderBy(p => p.RerecordCount, reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -129,7 +130,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 				statQuery = query
 					.Where(p => p.RerecordCount > 0)
 					.OrderBy(p => (double)p.RerecordCount / p.Frames, reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -142,7 +143,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 				fieldHeader = "Days";
 				statQuery = query
 					.OrderBy(p => (DateTime.UtcNow - p.CreateTimestamp).TotalDays, reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -158,7 +159,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })
 					.OrderBy(join => join.wp.Markup.Length, reverse)
-					.Select(join => new MovieStatisticsEntry
+					.Select(join => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = join.p.Id,
 						Title = join.p.Title,
@@ -175,7 +176,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })
 					.OrderBy(join => join.wp.Markup.Length, reverse)
-					.Select(join => new MovieStatisticsEntry
+					.Select(join => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = join.p.Id,
 						Title = join.p.Title,
@@ -187,7 +188,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 				statQuery = query
 					.Where(p => p.PublicationRatings.Count >= minimumVotes)
 					.OrderBy(p => p.PublicationRatings.Average(r => r.Value), reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -199,7 +200,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 				statQuery = query
 					.Where(p => p.CreateTimestamp <= minimumAgeTime)
 					.OrderBy(p => p.PublicationRatings.Count, reverse)
-					.Select(p => new MovieStatisticsEntry
+					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -208,7 +209,7 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 				break;
 		}
 
-		List<MovieStatisticsEntry> movieList = await statQuery.Take(count).ToListAsync();
+		List<MovieStatisticsModel.MovieStatisticsEntry> movieList = await statQuery.Take(count).ToListAsync();
 
 		var model = new MovieStatisticsModel
 		{
@@ -217,5 +218,42 @@ public class MovieStatistics(ApplicationDbContext db) : ViewComponent
 		};
 
 		return View("Default", model);
+	}
+
+	public class MovieGeneralStatisticsModel
+	{
+		public int PublishedMovieCount { get; init; }
+		public int TotalMovieCount { get; init; }
+		public int SubmissionCount { get; init; }
+		public int AverageRerecordCount { get; init; }
+	}
+
+	public class MovieStatisticsModel
+	{
+		public string ErrorMessage { get; init; } = "";
+		public string FieldHeader { get; init; } = "";
+		public IReadOnlyCollection<MovieStatisticsEntry> MovieList { get; init; } = [];
+
+		public class MovieStatisticsEntry
+		{
+			public int Id { get; init; }
+			public string Title { get; init; } = "";
+			public object Value { get; init; } = new();
+
+			public string? DisplayString()
+			{
+				if (Value is TimeSpan t)
+				{
+					return t.ToStringWithOptionalDaysAndHours();
+				}
+
+				if (Value is double f)
+				{
+					return f.ToString(CultureInfo.CurrentCulture);
+				}
+
+				return Value.ToString();
+			}
+		}
 	}
 }

@@ -95,4 +95,11 @@ public class WikiLink(ApplicationDbContext db) : ViewComponent
 			.Select(g => new { g.Id, g.DisplayName })
 			.SingleOrDefaultAsync(g => g.Id == id))?.DisplayName;
 	}
+
+	public class WikiLinkModel
+	{
+		public string Href { get; set; } = "";
+		public string DisplayText { get; set; } = "";
+		public string? Title { get; set; }
+	}
 }

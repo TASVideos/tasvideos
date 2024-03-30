@@ -1,4 +1,4 @@
-﻿@model IList<GameNameModel>
+﻿@model IList<GameName.GameNameModel>
 @if (Model.Any(g => g.IsSystem))
 {
 	<text><span>@Model.First().System games</span></text>

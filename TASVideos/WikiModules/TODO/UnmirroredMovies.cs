@@ -66,4 +66,10 @@ public class UnmirroredMovies(ApplicationDbContext db) : ViewComponent
 
 		return View(model);
 	}
+
+	public class UnmirroredMovieEntry
+	{
+		public int Id { get; init; }
+		public string Title { get; init; } = "";
+	}
 }

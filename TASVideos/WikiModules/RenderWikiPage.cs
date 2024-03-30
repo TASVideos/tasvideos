@@ -29,4 +29,11 @@ public class RenderWikiPage(IWikiPages wikiPages) : ViewComponent
 		ViewData["Layout"] = null;
 		return View(model);
 	}
+
+	public class RenderWikiPageModel
+	{
+		public string Markup { get; init; } = "";
+
+		public IWikiPage PageData { get; init; } = null!;
+	}
 }

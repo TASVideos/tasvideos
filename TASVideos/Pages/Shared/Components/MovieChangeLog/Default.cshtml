@@ -1,10 +1,10 @@
 ﻿@using TASVideos.Core
-@model PageOf<MovieHistoryModel>
+@model PageOf<MovieChangeLog.MovieHistoryModel>
 <partial name="_Pager" model="Model" />
 @{
 	var mergedHistoryModel = Model
 			.GroupBy(gkey => gkey.Date)
-			.Select(group => new MovieHistoryModel
+			.Select(group => new MovieChangeLog.MovieHistoryModel
 			{
 				Date = group.Key,
 				Pubs = group.SelectMany(item => item.Pubs).Distinct().ToList()
