@@ -32,39 +32,35 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			Games = await GetPageOfGames(Search);
 		}
 
-		SystemList = await db.GameSystems
+		SystemList = (await db.GameSystems
 			.OrderBy(s => s.Code)
 			.ToDropDown()
-			.ToListAsync();
+			.ToListAsync())
+			.WithAnyEntry();
 
-		SystemList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
-
-		LetterList = await db.Games
+		LetterList = (await db.Games
 			.Select(g => g.DisplayName.Substring(0, 1))
 			.Distinct()
 			.OrderBy(l => l)
 			.ToDropDown()
-			.ToListAsync();
+			.ToListAsync())
+			.WithAnyEntry();
 
-		LetterList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
-
-		GenreList = await db.Genres
+		GenreList = (await db.Genres
 			.Select(g => g.DisplayName)
 			.Distinct()
 			.OrderBy(l => l)
 			.ToDropDown()
-			.ToListAsync();
+			.ToListAsync())
+			.WithAnyEntry();
 
-		GenreList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
-
-		GroupList = await db.GameGroups
+		GroupList = (await db.GameGroups
 			.Select(g => g.Name)
 			.Distinct()
 			.OrderBy(l => l)
 			.ToDropDown()
-			.ToListAsync();
-
-		GroupList.Insert(0, new SelectListItem { Text = "Any", Value = "" });
+			.ToListAsync())
+			.WithAnyEntry();
 	}
 
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
@@ -133,39 +129,26 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task<SystemPageOf<GameListModel>> GetPageOfGames(GameListRequest paging)
 	{
-		PageOf<GameListModel> data;
+		IQueryable<Game> query = db.Games
+			.ForSystemCode(paging.System)
+			.ForGenre(paging.Genre)
+			.ForGroup(paging.Group)
+			.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""));
+
 		if (!string.IsNullOrWhiteSpace(paging.SearchTerms))
 		{
 			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
-			data = await db.Games
-				.ForSystemCode(paging.System)
-				.ForGenre(paging.Genre)
-				.ForGroup(paging.Group)
-				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
-				.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", paging.SearchTerms)))
-				.Select(g => new GameListModel
-				{
-					Id = g.Id,
-					DisplayName = g.DisplayName,
-					Systems = g.GameVersions.Select(v => v.System!.Code).ToList()
-				})
-				.SortedPageOf(paging);
+			query = query.Where(g =>
+				EF.Functions.ToTsVector("simple", g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", paging.SearchTerms)));
 		}
-		else
+
+		var data = await query.Select(g => new GameListModel
 		{
-			data = await db.Games
-				.ForSystemCode(paging.System)
-				.ForGenre(paging.Genre)
-				.ForGroup(paging.Group)
-				.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""))
-				.Select(g => new GameListModel
-				{
-					Id = g.Id,
-					DisplayName = g.DisplayName,
-					Systems = g.GameVersions.Select(v => v.System!.Code).ToList()
-				})
-				.SortedPageOf(paging);
-		}
+			Id = g.Id,
+			Name = g.DisplayName,
+			Systems = g.GameVersions.Select(v => v.System!.Code).ToList()
+		})
+		.SortedPageOf(paging);
 
 		return new SystemPageOf<GameListModel>(data)
 		{
@@ -219,8 +202,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		public int Id { get; init; }
 
 		[Sortable]
-		[Display(Name = "Name")]
-		public string DisplayName { get; init; } = "";
+		public string Name { get; init; } = "";
 		public List<string> Systems { get; init; } = [];
 		public object? Actions { get; init; }
 	}

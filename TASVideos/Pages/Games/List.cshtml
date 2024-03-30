@@ -68,7 +68,7 @@
 		<tr>
 			<td>@game.Id</td>
 			<td>
-				<a asp-page="Index" asp-route-id="@game.Id">@game.DisplayName</a>
+				<a asp-page="Index" asp-route-id="@game.Id">@game.Name</a>
 			</td>
 			<td>
 				@string.Join(", ", game.Systems.Distinct())

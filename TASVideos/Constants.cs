@@ -11,6 +11,8 @@ public static class UiDefaults
 	[
 		new() { Text = DefaultDropdownText, Value = "" }
 	];
+
+	public static SelectListItem[] AnyEntry = [new() { Text = "Any", Value = "" }];
 }
 
 public static class SystemWiki

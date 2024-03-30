@@ -267,11 +267,12 @@ public static class EntityExtensions
 
 	public static List<SelectListItem> WithDefaultEntry(this IEnumerable<SelectListItem> items)
 	{
-		return
-		[
-			.. UiDefaults.DefaultEntry,
-			.. items
-		];
+		return [.. UiDefaults.DefaultEntry, .. items];
+	}
+
+	public static List<SelectListItem> WithAnyEntry(this IEnumerable<SelectListItem> items)
+	{
+		return [.. UiDefaults.AnyEntry, .. items];
 	}
 
 	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
