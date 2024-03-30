@@ -39,9 +39,7 @@ public static class ExternalMediaPublisherExtensions
 {
 	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string formattedTitle, long id, string fileTitle)
 	{
-		//formatted: New [user file]({0}) uploaded by
-		// unformatted: New user file uploaded by
-		string unformattedTitle = formattedTitle.Replace("[", "").Replace("]", "").Replace("{0}", "");
+		string unformattedTitle = Unformat(formattedTitle);
 		await publisher.Send(new Post
 		{
 			Announcement = "",
@@ -155,21 +153,21 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceForum(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task AnnounceNewsPost(this ExternalMediaPublisher publisher, string formattedTitle, string body, int postId)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "News Post!",
 			Type = PostType.Announcement,
 			Group = PostGroups.Forum,
-			Title = title,
+			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
-			Link = publisher.ToAbsolute(relativeLink)
+			Link = $"Forum/Posts/{postId}"
 		});
 	}
 
-	public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -177,7 +175,7 @@ public static class ExternalMediaPublisherExtensions
 				? PostType.Administrative
 				: PostType.General,
 			Group = PostGroups.Forum,
-			Title = title,
+			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
@@ -223,5 +221,12 @@ public static class ExternalMediaPublisherExtensions
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)
 		});
+	}
+
+	// formatted: New [user file]({0}) uploaded by
+	// unformatted: New user file uploaded by
+	private static string Unformat(string formattedTitle)
+	{
+		return formattedTitle.Replace("[", "").Replace("]", "").Replace("{0}", "");
 	}
 }

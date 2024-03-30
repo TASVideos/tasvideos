@@ -93,7 +93,6 @@ public class MoveModel(
 
 		await publisher.SendForum(
 			topicWasRestricted || forum.Restricted,
-			$"Topic MOVED by {User.Name()}",
 			$"[Topic]({{0}}) MOVED by {User.Name()}",
 			$"\"{Topic.TopicTitle}\" from {Topic.ForumName} to {forum.Name}",
 			$"Forum/Topics/{Id}");

@@ -114,9 +114,8 @@ public class SplitModel(
 
 		await publisher.SendForum(
 			destinationForum.Restricted || topic.Forum!.Restricted,
-			$"Topic SPLIT by {User.Name()}",
 			$"[Topic]({{0}}) SPLIT by {User.Name()}",
-			$@"""{newTopic.Title}"" from ""{Topic.Title}""",
+			$"\"{newTopic.Title}\" from \"{Topic.Title}\"",
 			$"Forum/Topics/{newTopic.Id}");
 
 		return RedirectToPage("Index", new { id = newTopic.Id });

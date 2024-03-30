@@ -167,17 +167,15 @@ public class CreateModel(
 		var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";
 		if (TopicId == ForumConstants.NewsTopicId)
 		{
-			await publisher.AnnounceForum(
-				$"News Post by {user.UserName}{mood}",
+			await publisher.AnnounceNewsPost(
 				$"[News Post]({{0}}) by {user.UserName}{mood}",
 				$"{topic.Forum.ShortName}: {topic.Title}{subject}",
-				$"Forum/Posts/{id}");
+				id);
 		}
 		else
 		{
 			await publisher.SendForum(
 				topic.Forum.Restricted,
-				$"New Post by {user.UserName}{mood}",
 				$"[New Post]({{0}}) by {user.UserName}{mood}",
 				$"{topic.Forum.ShortName}: {topic.Title}{subject}",
 				$"Forum/Posts/{id}");

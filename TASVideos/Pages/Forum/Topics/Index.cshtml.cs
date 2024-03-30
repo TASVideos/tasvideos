@@ -265,7 +265,6 @@ public class IndexModel(
 			{
 				await publisher.SendForum(
 					topic.Forum!.Restricted,
-					$"Topic {topicTitle} {lockedState} by {User.Name()}",
 					$"[Topic]({{0}}) {lockedState} by {User.Name()}",
 					$"{topic.Forum.ShortName}: {topic.Title}",
 					$"Forum/Topics/{Id}");

@@ -102,7 +102,6 @@ public class MergeModel(
 			forumService.ClearTopicActivityCache();
 			await publisher.SendForum(
 				originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
-				$"Topics MERGED by {User.Name()}",
 				$"[Topics MERGED]({{0}}) by {User.Name()}",
 				$"\"{originalTopic.Title}\" into \"{destinationTopic.Title}\"",
 				$"Forum/Topics/{destinationTopic.Id}");
