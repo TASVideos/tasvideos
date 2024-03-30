@@ -3,7 +3,7 @@
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.EditorActivity)]
-public class EditorActivity(ApplicationDbContext db) : ViewComponent
+public class EditorActivity(ApplicationDbContext db) : WikiViewComponent
 {
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
