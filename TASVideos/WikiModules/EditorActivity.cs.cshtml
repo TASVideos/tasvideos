@@ -1,12 +1,11 @@
-﻿@model IEnumerable<EditorActivity.EditorActivityModel>
-<h2>This is the wiki module cshtml file!</h2>
+﻿@model EditorActivity
 <div class="table-container">
 	<table class="table table-striped table-bordered table-sm">
 		<tr>
-			<th>@Html.DisplayNameFor(m => m.First().UserName)</th>
-			<th>@Html.DisplayNameFor(m => m.First().WikiEdits)</th>
+			<th>@Html.DisplayNameFor(m => m.Edits.First().UserName)</th>
+			<th>@Html.DisplayNameFor(m => m.Edits.First().WikiEdits)</th>
 		</tr>
-		@foreach (var entry in Model)
+		@foreach (var entry in Model.Edits)
 		{
 			<tr>
 				<td>
