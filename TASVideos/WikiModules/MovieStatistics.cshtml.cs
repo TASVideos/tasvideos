@@ -96,13 +96,13 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 			case MovieStatisticComparison.EncodeRatio:
 			case MovieStatisticComparison.EncodeLengthRatio:
 			case MovieStatisticComparison.LongestEnding:
-
 				// currently unable to fetch encode data
-				return View(
-					new MovieStatisticsModel
-					{
-						ErrorMessage = "Could not display statistics for given parameter: " + comp
-					});
+				Default = new MovieStatisticsModel
+				{
+					ErrorMessage = "Could not display statistics for given parameter: " + comp
+				};
+				IsGeneral = false;
+				return View();
 
 			case MovieStatisticComparison.Length:
 				fieldHeader = "Length";

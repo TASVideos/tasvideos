@@ -11,9 +11,4 @@ public abstract class WikiViewComponent : ViewComponent
 	{
 		return View(viewName: WikiViewPath, model: this);
 	}
-
-	public new ViewViewComponentResult View<TModel>(TModel? model)
-	{
-		return View(viewName: WikiViewPath, model: model);
-	}
 }
