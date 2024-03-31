@@ -1,9 +1,0 @@
-﻿@model ListLanguages
-
-@foreach (var l in Model.Languages)
-{
-	<text>
-		>> <a href="/@l.Path">@l.Code | @l.DisplayName</a>
-		<br />
-	</text>
-}

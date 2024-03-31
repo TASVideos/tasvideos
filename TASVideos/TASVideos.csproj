@@ -92,6 +92,9 @@
 		<Content Update="Pages\RssFeeds\_RssChannel.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
+		<Content Update="Pages\Shared\_HomePageHeader.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
 		<Content Update="Pages\Shared\_NicoEmbed.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
@@ -158,20 +161,8 @@
 		<Content Update="WikiModules\SupportedMovieTypes.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="WikiModules\SystemPageFooter.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
-		<Content Update="WikiModules\SystemPageHeader.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
 		<Content Update="WikiModules\GameSubPages.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
-		<Content Update="WikiModules\GameResourcesHeader.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
-		<Content Update="WikiModules\HomePageHeader.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="Pages\Forum\_ForumHeader.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
@@ -207,9 +198,6 @@
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="Pages\Shared\_WikiEditHelper.cshtml">
-		  <Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
-		<Content Update="WikiModules\GameResourcesFooter.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="WikiModules\GameName.cshtml">

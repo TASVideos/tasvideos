@@ -1,0 +1,13 @@
+﻿@model TASVideos.Core.Services.Wiki.IWikiPage
+@inject ILanguages Languages
+@{
+	var languages = await Languages.GetTranslations(Model.PageName);
+}
+
+@foreach (var l in languages)
+{
+	<text>
+		>> <a href="/@l.Path">@l.Code | @l.DisplayName</a>
+		<br />
+	</text>
+}

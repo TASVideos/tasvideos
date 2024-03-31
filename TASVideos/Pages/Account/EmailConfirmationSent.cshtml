@@ -5,7 +5,7 @@
 	ViewData.SetTitle("Email Sent");
 }
 
-@await Component.RenderWiki(SystemWiki.EmailConfirmationSentMessage)
+@await Html.RenderWiki(SystemWiki.EmailConfirmationSentMessage)
 
 <form method="post" id="email-confirmation-form">
 	<row>

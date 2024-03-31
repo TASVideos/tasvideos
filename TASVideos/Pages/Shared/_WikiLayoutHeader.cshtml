@@ -13,15 +13,23 @@
 
 @if (Model.IsSystemPage())
 {
-	@await Component.SystemPageHeader(Model)
+	<info-alert>
+		@await Html.RenderWiki(SystemWiki.IsSystemPage)
+	</info-alert>
 }
 else if (Model.IsGameResourcesPage())
 {
-	@await Component.GameResourcesHeader(Model)
+	<info-alert>
+		<row>
+			<div class="col-12">
+				@await Html.RenderWiki(SystemWiki.GameResourcesHeader)
+			</div>
+		</row>
+	</info-alert>
 }
 else if (Model.IsHomePage())
 {
-	@await Component.HomePageHeader(Model)
+	<partial name="_HomePageHeader" model="Model" />
 }
 
-@await Component.ListLanguages(Model)
+<partial name="_ListLanguages" model="Model" />

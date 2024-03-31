@@ -19,4 +19,9 @@ public static class HtmlHelperExtensions
 	{
 		return val ? "Yes" : "No";
 	}
+
+	public static async Task<IHtmlContent> RenderWiki(this IHtmlHelper html, string pageName)
+	{
+		return await html.PartialAsync("_RenderWikiPage", pageName);
+	}
 }

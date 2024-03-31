@@ -13,7 +13,7 @@
 				<label asp-for="Settings.Username"></label>
 				<input asp-for="Settings.Username" class="form-control" disabled />
 				<div class="text-warning">
-					@await Component.RenderWiki(SystemWiki.NameChanges)
+					@await Html.RenderWiki(SystemWiki.NameChanges)
 				</div>
 			</fieldset>
 			<a asp-page="ChangeEmail">Change Email</a>
@@ -126,7 +126,7 @@
 			<img id="avatar-img" src="@Model.Settings.Avatar" class="m-2" />
 		</div>
 		<small>
-			@await Component.RenderWiki(SystemWiki.AvatarRequirements)
+			@await Html.RenderWiki(SystemWiki.AvatarRequirements)
 		</small>
 	</fullrow>
 	<fullrow permission="UseMoodAvatars">
@@ -136,7 +136,7 @@
 	</fullrow>
 	<fullrow permission="UseMoodAvatars" class="mt-3">
 		<small>
-			@await Component.RenderWiki(SystemWiki.MoodAvatarRequirements)
+			@await Html.RenderWiki(SystemWiki.MoodAvatarRequirements)
 		</small>
 	</fullrow>
 	<fullrow permission="EditSignature" class="mt-3">

@@ -21,17 +21,17 @@
 else
 {
 	<warning-alert>
-		@await Component.RenderWiki(SystemWiki.HomePageCannotBeEdited)
+		@await Html.RenderWiki(SystemWiki.HomePageCannotBeEdited)
 	</warning-alert>
 }
 <hr />
 @if (pageExists)
 {
-	@await Component.RenderWiki(homePage)
+	@await Html.RenderWiki(homePage)
 }
 else if (ViewData.UserHas(PermissionTo.EditHomePage))
 {
 	<info-alert>
-		@await Component.RenderWiki(SystemWiki.HomePageDoesNotExist)
+		@await Html.RenderWiki(SystemWiki.HomePageDoesNotExist)
 	</info-alert>
 }

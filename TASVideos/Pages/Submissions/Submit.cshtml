@@ -23,15 +23,15 @@
 	else
 	{
 		<info-alert dismissible="true">
-			@await Component.RenderWiki(SystemWiki.SubmitMovieHeader)
+			@await Html.RenderWiki(SystemWiki.SubmitMovieHeader)
 		</info-alert>
 		<hr />
 		<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 		<warning-alert dismissible="true" condition="notSupportedError">
-			@await Component.RenderWiki(SystemWiki.SupportedMovieTypes)
+			@await Html.RenderWiki(SystemWiki.SupportedMovieTypes)
 		</warning-alert>
 		<danger-alert dismissible="true" condition="parseErrors">
-			@await Component.RenderWiki(SystemWiki.SubmissionZipFailure)
+			@await Html.RenderWiki(SystemWiki.SubmissionZipFailure)
 		</danger-alert>
 		<span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 		<form method="post" enctype="multipart/form-data">
@@ -98,7 +98,7 @@
 				<fieldset>
 					<label asp-for="Create.Markup" class="form-control-label"></label>
 					<span>
-						@await Component.RenderWiki(SystemWiki.SubmissionImportant)
+						@await Html.RenderWiki(SystemWiki.SubmissionImportant)
 					</span>
 					<partial name="_WikiEditHelper" model="@("Create_Markup")" />
 					<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>

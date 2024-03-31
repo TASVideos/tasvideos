@@ -7,15 +7,20 @@
 
 @if (Model.IsSystemPage())
 {
-	@await Component.SystemPageFooter(Model)
+	<info-alert>
+		@await Html.RenderWiki(SystemWiki.SystemFooter)
+	</info-alert>
 }
 else if (Model.IsGameResourcesPage())
 {
-	@await Component.GameResourcesFooter(Model)
+	<partial name="_ListSubPages" model="Model" />
+	<div role="alert" class="alert alert-info">
+		@await Html.RenderWiki(SystemWiki.GameResourcesFooter)
+	</div>
 }
 else
 {
-	@await Component.ListSubPages(Model, true)
+	<partial name="_ListSubPages" model="Model" />
 }
 
 <hr />

@@ -137,7 +137,7 @@
 		</fieldset>
 	</fullrow>
 	<hr />
-	@await Component.RenderWiki(SystemWiki.FilesEditingHelp)
+	@await Html.RenderWiki(SystemWiki.FilesEditingHelp)
 	<fullrow class="text-center">
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Publish</submit-button>
 		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>

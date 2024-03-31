@@ -159,7 +159,7 @@
 			<div class="col-md">
 				<div class="pb-2 text-body-tertiary"><small>Published <timezone-convert asp-for="@Model.CreateTimestamp" in-line="true" date-only="true" relative-time="false" /></small></div>
 				<fullrow>
-					@await Component.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
+					@await Html.RenderWiki(LinkConstants.PublicationWikiPage + Model.Id)
 				</fullrow>
 			</div>
 		</row>
