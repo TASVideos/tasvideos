@@ -5,7 +5,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.MovieStatistics)]
-public class MovieStatistics(ApplicationDbContext db) : ViewComponent
+public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 {
 	public bool IsGeneral { get; set; } = true;
 	public MovieGeneralStatisticsModel General { get; set; } = new();

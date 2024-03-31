@@ -44,7 +44,7 @@ public class DisplayMovies(ApplicationDbContext db, IMovieSearchTokens tokens) :
 
 		if (searchModel.IsEmpty)
 		{
-			return View(new List<PublicationDisplayModel>());
+			return View();
 		}
 
 		Movies = await db.Publications

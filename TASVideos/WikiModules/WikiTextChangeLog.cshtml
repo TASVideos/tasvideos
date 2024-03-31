@@ -3,7 +3,7 @@
 	var grouped = Model.Log.GroupBy(m => m.CreateTimestamp.Date);
 }
 
-<partial name="_Pager" model="Model" />
+<partial name="_Pager" model="Model.Log" />
 <table class="table">
 	<tr>
 		<th>Page</th>
@@ -43,4 +43,4 @@
 		}
 	}
 </table>
-<partial name="_Pager" model="Model" />
+<partial name="_Pager" model="Model.Log" />
