@@ -1,0 +1,3 @@
+﻿@using System.Globalization
+@model Frames
+<abbr title="@Model.Time.Frames.ToString("N0", CultureInfo.CurrentCulture) Frames @@@Model.Time.FrameRate FPS">@Model.Time.Time().ToStringWithOptionalDaysAndHours()</abbr>

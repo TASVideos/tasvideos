@@ -1,0 +1,6 @@
+﻿@model GameResourcesFooter
+@await Component.ListSubPages(Model.WikiPage, true)
+<div role="alert" class="alert alert-info">
+	@await Component.RenderWiki(SystemWiki.GameResourcesFooter)
+</div>
+

@@ -1,0 +1,20 @@
+﻿@model UnmirroredMovies
+
+Total count: @Model.Entries.Count()
+<div class="table-container">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Movie</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var entry in Model.Entries)
+			{
+				<tr>
+					<td><pub-link id="@entry.Id">@entry.Title</pub-link></td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

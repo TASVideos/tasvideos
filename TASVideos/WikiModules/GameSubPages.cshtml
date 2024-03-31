@@ -1,0 +1,6 @@
+﻿@model GameSubPages
+
+@foreach (var item in Model.Pages.OrderBy(m => m.SystemCode))
+{
+	<card-link href="/@item.PageLink" header="@item.SystemCode" body="@item.SystemDescription" />
+}

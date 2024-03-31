@@ -1,0 +1,17 @@
+﻿@model WikiUsers
+
+@foreach (var user in Model.Users
+	.OrderByDescending(u => u.PublicationCount)
+	.ThenBy(u => u.SubmissionCount))
+{
+	<div class="card-userinfo">
+		<div class="card-header-userinfo">
+			<profile-link username="@user.UserName"></profile-link>
+		</div>
+		<div class="card-body-userinfo">
+			Publications: @user.PublicationCount
+			<br />
+			Submissions: @user.SubmissionCount
+		</div>
+	</div>
+}

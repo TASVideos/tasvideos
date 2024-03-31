@@ -1,0 +1,41 @@
+﻿@model MovieStatistics
+@if (Model.IsGeneral)
+{
+	<div>
+		<p>
+			<ul>
+				<li>Published movies: @Model.General.PublishedMovieCount</li>
+				<li>Total movies (including obsoleted): @Model.General.TotalMovieCount</li>
+				<li>Submitted movies: @Model.General.SubmissionCount</li>
+				<li>Published movie average rerecord count: @Model.General.AverageRerecordCount</li>
+			</ul>
+		</p>
+	</div>
+}
+else
+{
+	<warning-alert condition="!string.IsNullOrEmpty(Model.Default.ErrorMessage)">
+		@Model.Default.ErrorMessage
+	</warning-alert>
+
+	<div condition="Model.Default.MovieList.Count > 0">
+		<table>
+			<tr>
+				<th>@Model.Default.FieldHeader</th>
+				<th>Movie</th>
+			</tr>
+
+			@foreach (var entry in Model.Default.MovieList)
+			{
+				<tr>
+					<td>
+						@entry.DisplayString()
+					</td>
+					<td>
+						<pub-link id="entry.Id">@entry.Title</pub-link>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+}

@@ -1,0 +1,41 @@
+﻿@model MoviesList
+@{
+	var pubGroups = Model.List.Movies.GroupBy(gkey => gkey.GameName, gvalue => new
+	{
+		gvalue.Id, gvalue.IsObsolete
+	}).ToList();
+}
+<warning-alert condition="string.IsNullOrWhiteSpace(Model.List.SystemName)">
+	Unknown System Code: @Model.List.SystemCode
+</warning-alert>
+
+<div condition="!string.IsNullOrWhiteSpace(Model.List.SystemName)" class="table-container">
+	<table class="table table-striped">
+		<tr>
+			<th>Game</th>
+			<th></th>
+		</tr>
+		@foreach (var pubGroup in pubGroups.OrderBy(p => p.Key))
+		{
+			<tr>
+				<td>
+					<a href="/Movies-@string.Join("-", pubGroup.Where(g => !g.IsObsolete).Select(g => g.Id + "M"))">
+						@pubGroup.Key
+					</a>
+					(@pubGroup.Count(g => !g.IsObsolete))
+				</td>
+				<td>
+					<span condition="pubGroup.Any(g => g.IsObsolete)">
+						<a href="/Movies-@string.Join("-", pubGroup.Select(g => g.Id + "M"))">
+							All (@pubGroup.Count())
+						</a>
+					</span>
+				</td>
+			</tr>
+		}
+	</table>
+	<div>
+		<p>@Model.List.Movies.Count(m => !m.IsObsolete) current publications in @pubGroups.Count(g => g.Any(gg => !gg.IsObsolete)) games</p>
+		<p>@Model.List.Movies.Count runs in @pubGroups.Count games</p>
+	</div>
+</div>

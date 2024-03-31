@@ -434,7 +434,7 @@ public class UserManager(
 	}
 
 	// Hardcoded for now, we can make a database table if this becomes a maintenance burden
-	public IEnumerable<string> BannedAvatarSites()
+	public string[] BannedAvatarSites()
 	{
 		return
 		[

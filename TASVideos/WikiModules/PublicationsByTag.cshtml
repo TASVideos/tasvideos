@@ -1,0 +1,9 @@
+﻿@model PublicationsByTag
+<ul>
+	@foreach (var tag in Model.Tags.OrderBy(m => m.DisplayName))
+	{
+		<li>
+			<a href="/Movies-@tag.Code">@tag.DisplayName</a>
+		</li>
+	}
+</ul>

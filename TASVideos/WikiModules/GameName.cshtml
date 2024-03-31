@@ -1,0 +1,13 @@
+﻿@model GameName
+@if (Model.Games.Any(g => g.IsSystem))
+{
+	<text><span>@Model.Games.First().System games</span></text>
+}
+else
+{
+	for (int i = 0; i < Model.Games.Count; i++)
+	{
+		<game-link id="Model.Games[i].GameId">@Model.Games[i].DisplayName</game-link>
+		<span condition="i < Model.Games.Count - 1">, </span>
+	}
+}

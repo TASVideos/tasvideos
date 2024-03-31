@@ -1,0 +1,68 @@
+﻿@using TASVideos.Core
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TASVideos.TagHelpers
+@model Screenshots
+@{
+	var additionalProperties = Model.List.AdditionalProperties();
+}
+<a asp-page="@ViewContext.Page()"
+	asp-all-route-data="@additionalProperties"
+	asp-route-CurrentPage="@Model.List.CurrentPage"
+	asp-route-PageSize="@Model.List.PageSize"
+	asp-route-Sort="@Model.List.Sort"
+	asp-route-OnlyDescriptions=""
+	type="button" class="btn btn-secondary border-dark flex-grow-0">
+	All
+</a>
+<a
+	asp-page="@ViewContext.Page()"
+	asp-all-route-data="@additionalProperties"
+	asp-route-CurrentPage="@Model.List.CurrentPage"
+	asp-route-PageSize="@Model.List.PageSize"
+	asp-route-Sort="@Model.List.Sort"
+	asp-route-OnlyDescriptions="True"
+	type="button" class="btn btn-secondary border-dark flex-grow-0">
+	Only Descriptions
+</a>
+<a asp-page="@ViewContext.Page()"
+   asp-all-route-data="@additionalProperties"
+   asp-route-CurrentPage="@Model.List.CurrentPage"
+   asp-route-PageSize="@Model.List.PageSize"
+   asp-route-Sort="@Model.List.Sort"
+   asp-route-OnlyDescriptions="False"
+   type="button" class="btn btn-secondary border-dark flex-grow-0">
+	Missing Descriptions
+</a>
+<partial name="_Pager" model="Model.List" />
+@{
+	var pagingModel = ViewData.GetPagingModel();
+	var currentPage = ViewData["CurrentPage"]?.ToString();
+}
+<table>
+	<sortable-table-head sorting="@pagingModel" model-type="typeof(Screenshots.ScreenshotEntry)" page-override="@currentPage" />
+	@foreach (var screenshot in Model.List)
+	{
+		<tr>
+			<td>
+				<img
+					alt="@screenshot.Description"
+					title="@screenshot.Description"
+					class="w-100 pixelart-image"
+					loading="lazy"
+					src="~/media/@screenshot.Path"
+					style="max-height: 100px; max-width: 100px"
+				/>
+			</td>
+			<td>@screenshot.PublicationId</td>
+			<td>
+				<pub-link id="@screenshot.PublicationId">
+					@screenshot.PublicationTitle
+				</pub-link>
+			</td>
+			<td>
+				@screenshot.Description
+			</td>
+		</tr>
+	}
+</table>
+<partial name="_Pager" model="Model.List" />

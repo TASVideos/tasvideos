@@ -1,0 +1,21 @@
+﻿@model OrphanGameResources
+@if (Model.Pages.Any())
+{
+	<div>
+		<label>Total: @Model.Pages.Count</label>
+	</div>
+	<ul>
+		@foreach (var orphan in Model.Pages.OrderBy(m => m))
+		{
+			<li>
+				<a href="/@orphan">@orphan</a>
+			</li>
+		}
+	</ul>
+}
+else
+{
+	<info-alert>
+		No Orphans to Display
+	</info-alert>
+}

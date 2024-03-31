@@ -1,0 +1,14 @@
+﻿@model DisplayMovies
+
+<warning-alert condition="!Model.Movies.Any()">
+	No movies found matching the request
+</warning-alert>
+
+<div condition="Model.Movies.Any()">
+	<label condition="Model.Movies.Count > 1">Movies: @Model.Movies.Count</label>
+	@foreach (var movie in Model.Movies)
+	{
+		<partial name="_MovieModule" model="movie"/>
+		<hr/>
+	}
+</div>

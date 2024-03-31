@@ -1,0 +1,34 @@
+﻿@model UncatalogedTopics
+@{
+	var grouped = Model.Topics.GroupBy(m => m.ForumName);
+}
+<h4>Total: @Model.Topics.Count</h4>
+<div condition="Model.Topics.Any()">
+	@foreach (var forum in grouped.OrderBy(m => m.Key))
+	{
+		<card>
+			<cardheader>
+				@forum.Key (@forum.Count())
+			</cardheader>
+			<cardbody>
+				@foreach (var topic in forum.OrderBy(t => t.Title))
+				{
+					<ul class="breadcrumb m-0">
+						<li class="mt-1">
+							<a
+								permission="CatalogMovies"
+								asp-page="/Forum/Topics/Catalog"
+								asp-route-id="@topic.Id"
+								asp-route-returnUrl="@ViewContext.HttpContext.CurrentPathToReturnUrl()"
+								class="btn btn-sm btn-primary">Catalog</a>
+							<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id">@(topic.Title)</a>
+						</li>
+					</ul>
+				}
+			</cardbody>
+		</card>
+	}
+</div>
+<div condition="!Model.Topics.Any()">
+	<info-alert>No uncataloged topics</info-alert>
+</div>

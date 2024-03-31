@@ -1,0 +1,35 @@
+﻿@model WikiOrphans
+
+@if (Model.Orphans.Any())
+{
+	<div>
+		<label>Total: @Model.Orphans.Count</label>
+	</div>
+	<div class="table-container">
+		<table class="table table-striped">
+			<tbody>
+			<tr>
+				<th>Last Modified</th>
+				<th>Page</th>
+				<th>Last Author</th>
+			</tr>
+			@foreach (var orphan in Model.Orphans)
+			{
+				<tr>
+					<td>@orphan.LastUpdateTimestamp</td>
+					<td>
+						<wiki-link page-name="@orphan.PageName"></wiki-link>
+					</td>
+					<td>@orphan.LastUpdateUserName</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
+}
+else
+{
+	<info-alert>
+		No Orphans to Display
+	</info-alert>
+}

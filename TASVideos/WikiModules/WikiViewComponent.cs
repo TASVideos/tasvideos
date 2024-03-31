@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 
 public abstract class WikiViewComponent : ViewComponent
 {
-	private string WikiViewPath => string.Format(CultureInfo.InvariantCulture, "/WikiModules/{0}.cs.cshtml", GetType().Name);
+	private string WikiViewPath => string.Format(CultureInfo.InvariantCulture, "/WikiModules/{0}.cshtml", GetType().Name);
 
 	public new ViewViewComponentResult View()
 	{

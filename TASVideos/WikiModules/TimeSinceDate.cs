@@ -5,7 +5,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.TimeSinceDate)]
-public class TimeSinceDate : ViewComponent
+public class TimeSinceDate : WikiViewComponent
 {
 	public IViewComponentResult Invoke(int d, int m, int y, string @out)
 	{

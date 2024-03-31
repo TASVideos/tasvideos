@@ -1,0 +1,17 @@
+﻿@model NoGameGenres
+
+<div condition="@Model.Games.Count == 0">
+	<alert>No records found.</alert>
+</div>
+<div condition="@Model.Games.Count > 0">
+	<h4>Total: @Model.Games.Count</h4>
+	<ul>
+		@foreach (var game in Model.Games.OrderBy(g => g.DisplayName))
+		{
+			<li>
+				<game-link id="game.Id">@game.DisplayName</game-link>
+			</li>
+		}
+	</ul>
+</div>
+

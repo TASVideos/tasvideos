@@ -1,4 +1,5 @@
-﻿using TASVideos.WikiEngine;
+﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -8,6 +9,6 @@ public class ActiveTab : ViewComponent
 	public IViewComponentResult Invoke(string? tab)
 	{
 		TempData["ActiveTab"] = tab;
-		return View();
+		return new ContentViewComponentResult("");
 	}
 }

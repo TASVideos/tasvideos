@@ -92,9 +92,6 @@
 		<Content Update="Pages\RssFeeds\_RssChannel.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Shared\Components\FirstEditionTas\Default.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
 		<Content Update="Pages\Shared\_NicoEmbed.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
@@ -155,31 +152,25 @@
 		<Content Update="Pages\Publications\EditClass.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Shared\Components\GameSubPages\Default.cshtml">
+		<Content Update="WikiModules\MediaPosts.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Shared\Components\GameName\Default.cshtml">
+		<Content Update="WikiModules\SupportedMovieTypes.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Shared\Components\GameResourcesFooter\Default.cshtml">
+		<Content Update="WikiModules\SystemPageFooter.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Shared\Components\MediaPosts\Default.cshtml">
+		<Content Update="WikiModules\SystemPageHeader.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Shared\Components\SupportedMovieTypes\Default.cshtml">
+		<Content Update="WikiModules\GameSubPages.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="WikiModules\GameResourcesHeader.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
-		<Content Update="Pages\Shared\Components\SystemPageFooter\Default.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
-		<Content Update="Pages\Shared\Components\SystemPageHeader\Default.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
-		<Content Update="Pages\Shared\Components\GameResourcesHeader\Default.cshtml">
-			<Pack>$(IncludeRazorContentInPack)</Pack>
-		</Content>
-		<Content Update="Pages\Shared\Components\HomePageHeader\Default.cshtml">
+		<Content Update="WikiModules\HomePageHeader.cshtml">
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="Pages\Forum\_ForumHeader.cshtml">
@@ -216,6 +207,15 @@
 			<Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 		<Content Update="Pages\Shared\_WikiEditHelper.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="WikiModules\GameResourcesFooter.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="WikiModules\GameName.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
+		<Content Update="WikiModules\FirstEditionTas.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
 	</ItemGroup>

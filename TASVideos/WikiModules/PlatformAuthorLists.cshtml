@@ -1,0 +1,37 @@
+﻿@model PlatformAuthorLists
+@{
+	var authors = Model.List.Publications.SelectMany(p => p.Authors).Distinct().ToList();
+
+	var authorsWithPus = authors.Select(author => new
+	{
+		Name = author,
+		Pubs = Model.List.Publications.Where(p => p.Authors.Any(a => a == author)).ToList()
+	});
+}
+
+<div condition="!Model.List.Publications.Any()">
+	No records found
+</div>
+
+<div condition="Model.List.Publications.Any()">
+	@foreach (var author in authorsWithPus.OrderByDescending(a => a.Pubs.Count).ThenBy(a => a.Name))
+	{
+		<card>
+			<cardheader>
+				<profile-link username="@author.Name"></profile-link>
+				<span>(@author.Pubs.Count)</span>
+			</cardheader>
+			<cardbody>
+				<ul style="list-style-type: none;">
+					@foreach (var pub in author.Pubs)
+					{
+						<li>
+							<icon condition="Model.List.ShowClasses" path="@pub.ClassIconPath" />
+							<pub-link id="pub.Id"> @pub.Title </pub-link>
+						</li>
+					}
+				</ul>
+			</cardbody>
+		</card>
+	}
+</div>
