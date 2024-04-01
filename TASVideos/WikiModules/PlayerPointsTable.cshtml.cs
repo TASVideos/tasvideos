@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.PlayerPointsTable)]
 public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsService) : WikiViewComponent
 {
-	public List<PlayerPointsModel> Authors { get; set; } = [];
+	public List<PointsEntry> Authors { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync(int? count)
 	{
@@ -13,7 +13,7 @@ public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsSer
 
 		var players = await db.Users
 			.ThatArePublishedAuthors()
-			.Select(u => new PlayerPointsModel
+			.Select(u => new PointsEntry
 			{
 				Id = u.Id,
 				Player = u.UserName
@@ -39,21 +39,12 @@ public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsSer
 		return View();
 	}
 
-	public class PlayerPointsModel
+	public class PointsEntry
 	{
-		[Display(Name = "Pos")]
-		public int Position { get; set; } = 0;
-
-		[Display(Name = "PlayerID")]
-		public int Id { get; init; } = 0;
-
-		[Display(Name = "Player")]
+		public int Position { get; set; }
+		public int Id { get; init; }
 		public string Player { get; init; } = "";
-
-		[Display(Name = "Points")]
-		public double Points { get; set; } = 0.0;
-
-		[Display(Name = "Player Rank")]
+		public double Points { get; set; }
 		public string Rank { get; set; } = "";
 	}
 }

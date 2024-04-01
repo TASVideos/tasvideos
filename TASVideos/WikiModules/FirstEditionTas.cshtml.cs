@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.FirstEditionTas)]
 public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 {
-	public List<FirstEditionModel> Movies { get; set; } = [];
+	public List<FirstEdition> Movies { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, bool splitByPlatform)
 	{
@@ -14,7 +14,7 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 		var beforeYear = before ?? new DateTime(DateTime.UtcNow.Year, 1, 1);
 		var afterYear = after ?? new DateTime(DateTime.UtcNow.AddYears(1).Year, 1, 1);
 
-		List<FirstEditionGames> firstEditions;
+		List<FirstEditionGame> firstEditions;
 
 		if (splitByPlatform)
 		{
@@ -22,7 +22,7 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 				.GroupBy(
 					gkey => new { gkey.GameId },
 					gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
-				.Select(g => new FirstEditionGames
+				.Select(g => new FirstEditionGame
 				{
 					GameId = g.Key.GameId,
 					PublicationDate = g.Min(gg => gg.CreateTimestamp)
@@ -37,7 +37,7 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 				.GroupBy(
 					gkey => new { gkey.Game!.DisplayName },
 					gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
-				.Select(g => new FirstEditionGames
+				.Select(g => new FirstEditionGame
 				{
 					GameName = g.Key.DisplayName,
 					PublicationDate = g.Min(gg => gg.CreateTimestamp)
@@ -65,7 +65,7 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 
 		// TODO: first edition logic
 		var pubs = await query
-			.Select(p => new FirstEditionModel
+			.Select(p => new FirstEdition
 			{
 				Id = p.Id,
 				Title = p.Title,
@@ -86,14 +86,14 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	private class FirstEditionGames
+	private class FirstEditionGame
 	{
 		public int GameId { get; init; }
 		public string GameName { get; init; } = "";
 		public DateTime? PublicationDate { get; init; }
 	}
 
-	public class FirstEditionModel
+	public class FirstEdition
 	{
 		public int Id { get; init; }
 		public int GameId { get; init; }

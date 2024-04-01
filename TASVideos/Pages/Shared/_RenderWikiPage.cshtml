@@ -12,4 +12,7 @@
 	}
 }
 
-<wiki-markup condition="wikiPage is not null" markup="@wikiPage!.Markup" page-data="@wikiPage"></wiki-markup>
+@if (wikiPage is not null)
+{
+	<wiki-markup markup="@wikiPage.Markup" page-data="@wikiPage"></wiki-markup>
+}

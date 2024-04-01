@@ -39,8 +39,7 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 			logsQuery = logsQuery.Where(l => l.User == user);
 		}
 
-		Logs = await logsQuery
-			.SortedPageOf(paging);
+		Logs = await logsQuery.SortedPageOf(paging);
 
 		this.SetPagingToViewData(paging);
 		return View();

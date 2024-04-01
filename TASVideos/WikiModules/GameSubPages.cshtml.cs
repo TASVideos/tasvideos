@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.GameSubPages)]
 public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 {
-	public List<GameSubpageModel> Pages { get; set; } = [];
+	public List<Entry> Pages { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
@@ -13,7 +13,7 @@ public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	private async Task<List<GameSubpageModel>> GetGameResourcesSubPages()
+	private async Task<List<Entry>> GetGameResourcesSubPages()
 	{
 		// TODO: cache this
 		var systems = await db.GameSystems.ToListAsync();
@@ -29,7 +29,7 @@ public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 		return
 			(from s in systems
 			 join wp in pages on s.Code equals wp.Split('/').Last()
-			 select new GameSubpageModel
+			 select new Entry
 			 {
 				 SystemCode = s.Code,
 				 SystemDescription = s.DisplayName,
@@ -38,7 +38,7 @@ public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 			.ToList();
 	}
 
-	public class GameSubpageModel
+	public class Entry
 	{
 		public string SystemCode { get; init; } = "";
 		public string SystemDescription { get; init; } = "";

@@ -4,7 +4,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.DisplayGameName)]
-public class DisplayGameName(ApplicationDbContext db) : ViewComponent
+public class DisplayGameName(ApplicationDbContext db) : WikiViewComponent
 {
 	public async Task<IViewComponentResult> InvokeAsync(IList<int> gid)
 	{

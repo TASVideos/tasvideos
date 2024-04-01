@@ -25,9 +25,9 @@ public class MovieChangeLog(ApplicationDbContext db) : WikiViewComponent
 			.Select(p => new MovieHistoryModel
 			{
 				Date = p.CreateTimestamp.Date,
-				Pubs = new List<MovieHistoryModel.PublicationEntry>
+				Pubs = new()
 				{
-					new ()
+					new()
 					{
 						Id = p.Id,
 						Name = p.Title,
@@ -46,7 +46,7 @@ public class MovieChangeLog(ApplicationDbContext db) : WikiViewComponent
 	public class MovieHistoryModel
 	{
 		public DateTime Date { get; init; }
-		public IReadOnlyCollection<PublicationEntry> Pubs { get; init; } = [];
+		public List<PublicationEntry> Pubs { get; init; } = [];
 
 		public class PublicationEntry
 		{

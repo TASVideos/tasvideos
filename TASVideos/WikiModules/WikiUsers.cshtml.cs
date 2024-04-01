@@ -5,13 +5,13 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.WikiUsers)]
 public class WikiUsers(ApplicationDbContext db) : WikiViewComponent
 {
-	public List<WikiUserEntry> Users { get; set; } = [];
+	public List<Entry> Users { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync(string? role)
 	{
 		Users = await db.Users
 			.ThatHaveRole(role ?? "")
-			.Select(u => new WikiUserEntry
+			.Select(u => new Entry
 			{
 				UserName = u.UserName,
 				PublicationCount = u.Publications.Count,
@@ -22,7 +22,7 @@ public class WikiUsers(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public class WikiUserEntry
+	public class Entry
 	{
 		public string UserName { get; init; } = "";
 		public int SubmissionCount { get; init; }

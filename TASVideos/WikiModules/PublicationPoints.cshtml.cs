@@ -5,13 +5,13 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.PublicationPoints)]
 public class PublicationPoints(ApplicationDbContext db, IPointsService pointsService) : WikiViewComponent
 {
-	public List<PublicationPointsModel> Pubs { get; set; } = [];
+	public List<PointsEntry> Pubs { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		var publications = await db.Publications
 			.ThatAreCurrent()
-			.Select(p => new PublicationPointsModel
+			.Select(p => new PointsEntry
 			{
 				Id = p.Id,
 				Title = p.Title,
@@ -23,9 +23,7 @@ public class PublicationPoints(ApplicationDbContext db, IPointsService pointsSer
 			pub.Points = await pointsService.PlayerPointsForPublication(pub.Id);
 		}
 
-		Pubs = publications
-			.OrderByDescending(u => u.Points)
-			.ToList();
+		Pubs = [.. publications.OrderByDescending(u => u.Points)];
 
 		int counter = 0;
 		foreach (var pub in Pubs)
@@ -36,18 +34,11 @@ public class PublicationPoints(ApplicationDbContext db, IPointsService pointsSer
 		return View();
 	}
 
-	public class PublicationPointsModel
+	public class PointsEntry
 	{
-		[Display(Name = "Pos")]
-		public int Position { get; set; } = 0;
-
-		[Display(Name = "Movie Id")]
-		public int Id { get; init; } = 0;
-
-		[Display(Name = "Movie")]
+		public int Position { get; set; }
+		public int Id { get; init; }
 		public string Title { get; init; } = "";
-
-		[Display(Name = "Points")]
-		public double Points { get; set; } = 0.0;
+		public double Points { get; set; }
 	}
 }

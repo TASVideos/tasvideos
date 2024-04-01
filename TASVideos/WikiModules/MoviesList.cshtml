@@ -1,15 +1,15 @@
 ﻿@model MoviesList
 @{
-	var pubGroups = Model.List.Movies.GroupBy(gkey => gkey.GameName, gvalue => new
+	var pubGroups = Model.Movies.GroupBy(gkey => gkey.GameName, gvalue => new
 	{
 		gvalue.Id, gvalue.IsObsolete
 	}).ToList();
 }
-<warning-alert condition="string.IsNullOrWhiteSpace(Model.List.SystemName)">
-	Unknown System Code: @Model.List.SystemCode
+<warning-alert condition="string.IsNullOrWhiteSpace(Model.SystemName)">
+	Unknown System Code: @Model.SystemCode
 </warning-alert>
 
-<div condition="!string.IsNullOrWhiteSpace(Model.List.SystemName)" class="table-container">
+<div condition="!string.IsNullOrWhiteSpace(Model.SystemName)" class="table-container">
 	<table class="table table-striped">
 		<tr>
 			<th>Game</th>
@@ -35,7 +35,7 @@
 		}
 	</table>
 	<div>
-		<p>@Model.List.Movies.Count(m => !m.IsObsolete) current publications in @pubGroups.Count(g => g.Any(gg => !gg.IsObsolete)) games</p>
-		<p>@Model.List.Movies.Count runs in @pubGroups.Count games</p>
+		<p>@Model.Movies.Count(m => !m.IsObsolete) current publications in @pubGroups.Count(g => g.Any(gg => !gg.IsObsolete)) games</p>
+		<p>@Model.Movies.Count runs in @pubGroups.Count games</p>
 	</div>
 </div>

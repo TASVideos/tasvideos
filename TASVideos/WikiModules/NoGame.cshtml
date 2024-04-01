@@ -1,10 +1,10 @@
 ﻿@model NoGame
 
-@if (Model.Missing.Publications.Any())
+@if (Model.Publications.Any())
 {
-	<h4>Publications With Missing Games (@Model.Missing.Publications.Count)</h4>
+	<h4>Publications With Missing Games (@Model.Publications.Count)</h4>
 	<ul>
-		@foreach (var pub in Model.Missing.Publications)
+		@foreach (var pub in Model.Publications)
 		{
 			<li>
 				<pub-link id="pub.Id">@pub.Title</pub-link>
@@ -13,17 +13,17 @@
 	</ul>
 }
 
-@if (Model.Missing.Publications.Any() && Model.Missing.Submissions.Any())
+@if (Model.Publications.Any() && Model.Submissions.Any())
 {
 	<hr />
 }
 
-@if (Model.Missing.Submissions.Any())
+@if (Model.Submissions.Any())
 {
 
-	<h4>Submissions With Missing Games (@Model.Missing.Submissions.Count)</h4>
+	<h4>Submissions With Missing Games (@Model.Submissions.Count)</h4>
 	<ul>
-		@foreach (var sub in Model.Missing.Submissions)
+		@foreach (var sub in Model.Submissions)
 		{
 			<li>
 				<sub-link id="sub.Id">@sub.Title</sub-link>

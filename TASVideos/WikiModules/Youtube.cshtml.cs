@@ -32,7 +32,8 @@ public class Youtube : WikiViewComponent
 		}
 
 		if (!string.IsNullOrWhiteSpace(align)
-			&& (align.ToLower() == "left" || align.ToLower() == "right"))
+			&& (align.Equals("left", StringComparison.InvariantCultureIgnoreCase)
+				|| align.Equals("right", StringComparison.CurrentCultureIgnoreCase)))
 		{
 			Align = align.ToLower();
 		}

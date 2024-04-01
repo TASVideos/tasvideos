@@ -10,8 +10,6 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.BrokenLinks)]
 public class BrokenLinks(IWikiPages wikiPages) : WikiViewComponent
 {
-	private record PageEntry(string Name, bool HasRoute);
-
 	private static readonly List<PageEntry> CorePages = Assembly
 		.GetAssembly(typeof(SiteMapModel))
 		!.GetTypes()
@@ -94,4 +92,6 @@ public class BrokenLinks(IWikiPages wikiPages) : WikiViewComponent
 			.Where(f => !existingRevisionLinks.Contains(f.Referral))
 			.ToList();
 	}
+
+	private record PageEntry(string Name, bool HasRoute);
 }

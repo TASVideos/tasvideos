@@ -1,9 +1,4 @@
 ﻿@model TabularMovieList
-@{
-	string flink = ViewData["flink"]?.ToString() ?? "";
-	string footer = ViewData["footer"]?.ToString() ?? "";
-	var first = Model.Movies.FirstOrDefault();
-}
 <row>
 	<div class="col-12 col-lg-8">
 		<div class="list-group">

@@ -1,11 +1,11 @@
 ﻿@using TASVideos.TagHelpers
 @model DisplayMiniMovie
 
-<div condition="Model.Movie is not null" class="clearfix">
+<div class="clearfix">
 	<div class="card minimovie">
 		<div class="card-header bg-publication">
 			<h5><span class="float-end badge bg-info">Featured</span></h5>
-			<h4><pub-link id="Model.Movie!.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Movie.Title</span></pub-link></h4>
+			<h4><pub-link id="Model.Movie.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Movie.Title</span></pub-link></h4>
 		</div>
 		<div class="card-body bg-publication-subtle">
 			<pub-link id="Model.Movie.Id">

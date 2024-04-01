@@ -6,8 +6,8 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.MovieMaintenanceLog)]
 public class MovieMaintenanceLog(ApplicationDbContext db) : WikiViewComponent
 {
-	public IEnumerable<IGrouping<ParentPublicationMaintenanceEntry, PublicationMaintenanceLogEntry>> Global { get; set; } = Enumerable.Empty<IGrouping<ParentPublicationMaintenanceEntry, PublicationMaintenanceLogEntry>>();
-	public IEnumerable<PublicationMaintenanceLogEntry> Default { get; set; } = Enumerable.Empty<PublicationMaintenanceLogEntry>();
+	public IEnumerable<IGrouping<ParentPublicationMaintenanceEntry, PublicationMaintenanceLogEntry>> Global { get; set; } = [];
+	public IEnumerable<PublicationMaintenanceLogEntry> Default { get; set; } = [];
 	public bool DefaultMode { get; set; }
 	public async Task<IViewComponentResult> InvokeAsync()
 	{

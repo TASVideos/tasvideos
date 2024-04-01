@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.GameName)]
 public class GameName(ApplicationDbContext db) : WikiViewComponent
 {
-	public List<GameNameModel> Games { get; set; } = [];
+	public List<GameEntry> Games { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
@@ -15,7 +15,7 @@ public class GameName(ApplicationDbContext db) : WikiViewComponent
 		{
 			var system = await db.GameSystems
 				.SingleOrDefaultAsync(s => s.Code == path.SystemGameResourcePath());
-			Games.Add(new GameNameModel
+			Games.Add(new GameEntry
 			{
 				System = system is not null
 					? system.DisplayName
@@ -27,7 +27,7 @@ public class GameName(ApplicationDbContext db) : WikiViewComponent
 			var baseGame = string.Join("/", path.Split('/').Take(3));
 			Games = await db.Games
 				.Where(g => g.GameResourcesPage == baseGame)
-				.Select(g => new GameNameModel
+				.Select(g => new GameEntry
 				{
 					GameId = g.Id,
 					DisplayName = g.DisplayName
@@ -38,7 +38,7 @@ public class GameName(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public class GameNameModel
+	public class GameEntry
 	{
 		public int GameId { get; init; }
 		public string DisplayName { get; init; } = "";

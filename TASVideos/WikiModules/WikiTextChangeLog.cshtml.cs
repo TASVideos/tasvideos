@@ -6,7 +6,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.WikiTextChangeLog)]
 public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 {
-	public PageOf<WikiTextChangelogModel> Log { get; set; } = PageOf<WikiTextChangelogModel>.Empty();
+	public PageOf<Entry> Log { get; set; } = PageOf<Entry>.Empty();
 
 	public async Task<IViewComponentResult> InvokeAsync(bool includeMinors)
 	{
@@ -16,7 +16,7 @@ public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	private async Task<PageOf<WikiTextChangelogModel>> GetWikiChangeLog(PagingModel paging, bool includeMinorEdits)
+	private async Task<PageOf<Entry>> GetWikiChangeLog(PagingModel paging, bool includeMinorEdits)
 	{
 		var query = db.WikiPages
 			.ThatAreNotDeleted()
@@ -28,7 +28,7 @@ public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 		}
 
 		return await query
-			.Select(wp => new WikiTextChangelogModel
+			.Select(wp => new Entry
 			{
 				PageName = wp.PageName,
 				Revision = wp.Revision,
@@ -40,7 +40,7 @@ public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 			.PageOf(paging);
 	}
 
-	public class WikiTextChangelogModel
+	public class Entry
 	{
 		public DateTime CreateTimestamp { get; init; }
 		public string? Author { get; init; }

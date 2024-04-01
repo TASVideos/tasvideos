@@ -6,9 +6,9 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.TabularMovieList)]
 public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 {
-	public List<TabularMovieListResultModel> Movies { get; set; } = [];
+	public List<TabularMovieEntry> Movies { get; set; } = [];
 
-	public async Task<IViewComponentResult> InvokeAsync(int? limit, IList<string> tier, string? flink, string? footer)
+	public async Task<IViewComponentResult> InvokeAsync(int? limit, IList<string> tier)
 	{
 		var search = new TabularMovieListSearchModel();
 		if (limit.HasValue)
@@ -21,27 +21,18 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 			search.PublicationClasses = tier;
 		}
 
-		ViewData["flink"] = flink;
-
-		if (!string.IsNullOrWhiteSpace(footer))
-		{
-			footer = "More...";
-		}
-
-		ViewData["footer"] = footer;
-
 		Movies = await MovieList(search);
 
 		return View();
 	}
 
-	private async Task<List<TabularMovieListResultModel>> MovieList(TabularMovieListSearchModel searchCriteria)
+	private async Task<List<TabularMovieEntry>> MovieList(TabularMovieListSearchModel searchCriteria)
 	{
 		var results = await db.Publications
 			.Where(p => !searchCriteria.PublicationClasses.Any() || searchCriteria.PublicationClasses.Contains(p.PublicationClass!.Name))
 			.ByMostRecent()
 			.Take(searchCriteria.Limit)
-			.Select(p => new TabularMovieListResultModel
+			.Select(p => new TabularMovieEntry
 			{
 				Id = p.Id,
 				CreateTimestamp = p.CreateTimestamp,
@@ -54,14 +45,14 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 				AdditionalAuthors = p.AdditionalAuthors,
 				Screenshot = p.Files
 					.Where(f => f.Type == FileType.Screenshot)
-					.Select(f => new TabularMovieListResultModel.ScreenshotFile
+					.Select(f => new TabularMovieEntry.ScreenshotFile
 					{
 						Path = f.Path,
 						Description = f.Description
 					})
 					.First(),
 				ObsoletedMovie = p.ObsoletedMovies
-					.Select(o => new TabularMovieListResultModel.ObsoletedPublication
+					.Select(o => new TabularMovieEntry.ObsoletedPublication
 					{
 						Id = o.Id,
 						Frames = o.Frames,
@@ -80,7 +71,7 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 		public IEnumerable<string> PublicationClasses { get; set; } = [];
 	}
 
-	public class TabularMovieListResultModel : ITimeable
+	public class TabularMovieEntry : ITimeable
 	{
 		public int Id { get; set; }
 		public DateTime CreateTimestamp { get; set; }

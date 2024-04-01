@@ -6,54 +6,43 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.MoviesList)]
 public class MoviesList(ApplicationDbContext db) : WikiViewComponent
 {
-	public MoviesListModel List { get; set; } = new();
+	public string? SystemCode { get; set; }
+	public string? SystemName { get; set; }
+	public List<MovieEntry> Movies { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync(string? platform)
 	{
-		var systemCode = platform;
-		bool isAll = string.IsNullOrWhiteSpace(systemCode);
+		SystemCode = platform;
+		bool isAll = string.IsNullOrWhiteSpace(SystemCode);
 		GameSystem? system = null;
 
 		if (!isAll)
 		{
-			system = await db.GameSystems.SingleOrDefaultAsync(s => s.Code == systemCode);
+			system = await db.GameSystems.SingleOrDefaultAsync(s => s.Code == SystemCode);
 			if (system is null)
 			{
-				List = new MoviesListModel { SystemCode = systemCode };
 				return View();
 			}
 		}
 
-		List = new MoviesListModel
-		{
-			SystemCode = systemCode,
-			SystemName = system?.DisplayName ?? "ALL",
-			Movies = await db.Publications
-				.Where(p => isAll || p.System!.Code == systemCode)
-				.Select(p => new MoviesListModel.MovieEntry
-				{
-					Id = p.Id,
-					IsObsolete = p.ObsoletedById.HasValue,
-					GameName = p.Game!.DisplayName
-				})
-				.ToListAsync()
-		};
+		SystemName = system?.DisplayName ?? "ALL";
+		Movies = await db.Publications
+			.Where(p => isAll || p.System!.Code == SystemCode)
+			.Select(p => new MovieEntry
+			{
+				Id = p.Id,
+				IsObsolete = p.ObsoletedById.HasValue,
+				GameName = p.Game!.DisplayName
+			})
+			.ToListAsync();
 
 		return View();
 	}
 
-	public class MoviesListModel
+	public class MovieEntry
 	{
-		public string? SystemCode { get; init; }
-		public string? SystemName { get; init; }
-
-		public IReadOnlyCollection<MovieEntry> Movies { get; init; } = [];
-
-		public class MovieEntry
-		{
-			public int Id { get; init; }
-			public bool IsObsolete { get; init; }
-			public string GameName { get; init; } = "";
-		}
+		public int Id { get; init; }
+		public bool IsObsolete { get; init; }
+		public string GameName { get; init; } = "";
 	}
 }
