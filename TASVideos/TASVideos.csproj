@@ -92,6 +92,9 @@
 		<Content Update="Pages\RssFeeds\_RssChannel.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
+		<Content Update="Pages\Shared\_DisplayMiniMovie.cshtml">
+		  <Pack>$(IncludeRazorContentInPack)</Pack>
+		</Content>
 		<Content Update="Pages\Shared\_HomePageHeader.cshtml">
 		  <Pack>$(IncludeRazorContentInPack)</Pack>
 		</Content>
