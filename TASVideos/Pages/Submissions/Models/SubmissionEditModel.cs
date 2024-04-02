@@ -11,10 +11,10 @@ public class SubmissionEditModel
 
 	[StringLength(1000)]
 	[Display(Name = "Revision Message")]
-	public string? RevisionMessage { get; set; }
+	public string? RevisionMessage { get; init; }
 
 	[Display(Name = "Minor Edit")]
-	public bool MinorEdit { get; set; }
+	public bool MinorEdit { get; init; }
 
 	[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 	public IFormFile? MovieFile { get; set; }
@@ -23,7 +23,7 @@ public class SubmissionEditModel
 	public int? PublicationClassId { get; set; }
 
 	[Display(Name = "Reason")]
-	public int? RejectionReason { get; set; }
+	public int? RejectionReason { get; init; }
 
 	[Display(Name = "Start Type")]
 	public MovieStartType? StartType { get; set; }
@@ -37,23 +37,23 @@ public class SubmissionEditModel
 
 	[Display(Name = "Game name")]
 	[Required]
-	public string? GameName { get; set; }
+	public string GameName { get; init; } = "";
 
 	[Display(Name = "Game Version")]
-	public string? GameVersion { get; set; }
+	public string? GameVersion { get; init; }
 
 	[Display(Name = "ROM filename")]
-	public string? RomName { get; set; }
+	public string? RomName { get; init; }
 
 	[Display(Name = "Goal")]
-	public string? Branch { get; set; }
+	public string? Branch { get; init; }
 
 	[Display(Name = "Emulator", Description = "Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.")]
-	public string? Emulator { get; set; }
+	public string? Emulator { get; init; }
 
 	[Url]
 	[Display(Name = "Encode Embed Link")]
-	public string? EncodeEmbedLink { get; set; }
+	public string? EncodeEmbedLink { get; init; }
 
 	[Display(Name = "FrameCount")]
 	public int FrameCount { get; set; }
@@ -64,10 +64,10 @@ public class SubmissionEditModel
 	public List<string> Authors { get; set; } = [];
 
 	[Display(Name = "Submitter")]
-	public string? Submitter { get; set; }
+	public string? Submitter { get; init; }
 
 	[Display(Name = "Submit Date")]
-	public DateTime CreateTimestamp { get; set; }
+	public DateTime CreateTimestamp { get; init; }
 
 	[Display(Name = "Last Edited")]
 	public DateTime LastUpdateTimestamp { get; set; }
@@ -76,16 +76,16 @@ public class SubmissionEditModel
 	public string? LastUpdateUser { get; set; }
 
 	[Display(Name = "Status")]
-	public SubmissionStatus Status { get; set; }
+	public SubmissionStatus Status { get; init; }
 
 	[Display(Name = "Judge")]
-	public string? Judge { get; set; }
+	public string? Judge { get; init; }
 
 	[Display(Name = "Publisher")]
-	public string? Publisher { get; set; }
+	public string? Publisher { get; init; }
 
 	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
-	public string? AdditionalAuthors { get; set; }
+	public string? AdditionalAuthors { get; init; }
 	public string Title { get; set; } = "";
 	internal int? SystemId { get; set; }
 	internal int? GameId { get; set; }

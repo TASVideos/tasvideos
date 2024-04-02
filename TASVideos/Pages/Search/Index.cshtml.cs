@@ -15,9 +15,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public int PageNumber { get; set; } = 1;
 
-	public List<PageSearchModel> PageResults { get; set; } = [];
-	public List<PostSearchModel> PostResults { get; set; } = [];
-	public List<GameSearchModel> GameResults { get; set; } = [];
+	public List<PageSearch> PageResults { get; set; } = [];
+	public List<PostSearch> PostResults { get; set; } = [];
+	public List<GameSearch> GameResults { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -44,7 +44,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				.OrderByDescending(w => EF.Functions.ToTsVector(w.Markup).Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.Skip(skip)
 				.Take(PageSize + 1)
-				.Select(w => new PageSearchModel(EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(w.Markup), w.PageName))
+				.Select(w => new PageSearch(EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(w.Markup), w.PageName))
 				.ToListAsync();
 
 			PostResults = await db.ForumPosts
@@ -53,7 +53,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.Skip(skip)
 				.Take(PageSize + 1)
-				.Select(p => new PostSearchModel(
+				.Select(p => new PostSearch(
 					EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(p.Text),
 					p.Topic!.Title,
 					p.Id))
@@ -66,19 +66,19 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 					.ThenBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(PageSize + 1)
-				.Select(g => new GameSearchModel(
+				.Select(g => new GameSearch(
 					g.Id,
 					g.DisplayName,
 					g.GameVersions.Select(v => v.System!.Code),
-					g.GameGroups.Select(gg => new GameGroupResult(gg.GameGroupId, gg.GameGroup!.Name))))
+					g.GameGroups.Select(gg => new GameGroupEntry(gg.GameGroupId, gg.GameGroup!.Name))))
 				.ToListAsync();
 		}
 
 		return Page();
 	}
 
-	public record PageSearchModel(string Highlight, string PageName);
-	public record PostSearchModel(string Highlight, string TopicName, int PostId);
-	public record GameSearchModel(int Id, string DisplayName, IEnumerable<string> Systems, IEnumerable<GameGroupResult> Groups);
-	public record GameGroupResult(int Id, string Name);
+	public record PageSearch(string Highlight, string PageName);
+	public record PostSearch(string Highlight, string TopicName, int PostId);
+	public record GameSearch(int Id, string DisplayName, IEnumerable<string> Systems, IEnumerable<GameGroupEntry> Groups);
+	public record GameGroupEntry(int Id, string Name);
 }

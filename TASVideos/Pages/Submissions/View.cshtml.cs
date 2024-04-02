@@ -27,7 +27,6 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages) : BasePage
 			{
 				StartType = (MovieStartType?)s.MovieStartType,
 				SystemDisplayName = s.System!.DisplayName,
-				SystemCode = s.System.Code,
 				GameName = s.GameId != null ? s.Game!.DisplayName : null,
 				SubmittedGameName = s.GameName,
 				GameVersion = s.GameVersionId != null ? s.GameVersion!.Name : s.SubmittedGameVersion,

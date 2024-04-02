@@ -9,13 +9,12 @@ public class IpBanModel(IIpBanService banService) : BasePageModel
 	public string? BanIp { get; set; }
 
 	[BindProperty]
-	[Required]
 	[StringLength(40)]
-	public string? IpAddressToBan { get; set; }
+	public string IpAddressToBan { get; set; } = "";
 
 	public async Task OnGet()
 	{
-		IpAddressToBan = BanIp;
+		IpAddressToBan = BanIp ?? "";
 		await PopulateList();
 	}
 

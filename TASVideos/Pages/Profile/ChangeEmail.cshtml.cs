@@ -16,7 +16,7 @@ public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEma
 	[EmailAddress]
 	[BindProperty]
 	[Display(Name = "New Email")]
-	public string? NewEmail { get; set; }
+	public string NewEmail { get; set; } = "";
 
 	public async Task OnGet()
 	{
@@ -33,7 +33,7 @@ public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEma
 		}
 
 		var user = await userManager.GetRequiredUser(User);
-		var token = await userManager.GenerateChangeEmailTokenAsync(user, NewEmail!);
+		var token = await userManager.GenerateChangeEmailTokenAsync(user, NewEmail);
 
 		if (string.IsNullOrWhiteSpace(token))
 		{
@@ -43,7 +43,7 @@ public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEma
 		cache.Set(token, NewEmail);
 
 		var callbackUrl = Url.EmailChangeConfirmationLink(token, Request.Scheme);
-		await emailService.EmailConfirmation(NewEmail!, callbackUrl);
+		await emailService.EmailConfirmation(NewEmail, callbackUrl);
 
 		return RedirectToPage("EmailConfirmationSent");
 	}

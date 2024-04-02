@@ -54,7 +54,7 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 			return Page();
 		}
 
-		var awardExists = await awards.CategoryExists(AwardToAssign.Award!);
+		var awardExists = await awards.CategoryExists(AwardToAssign.Award);
 		if (!awardExists)
 		{
 			ModelState.AddModelError("", "Award does not exist.");
@@ -63,7 +63,7 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 		}
 
 		// Do not allow the assignment of an award without an image
-		var exists = mediaFileUploader.AwardExists(AwardToAssign.Award!, Year);
+		var exists = mediaFileUploader.AwardExists(AwardToAssign.Award, Year);
 		if (!exists)
 		{
 			ModelState.AddModelError("", "Cannot assign award because award image does not exist, please upload image first.");
@@ -126,7 +126,7 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 	public class AwardAssignmentModel
 	{
 		[Required]
-		public string? Award { get; init; }
+		public string Award { get; init; } = "";
 		public List<int> Users { get; init; } = [];
 		public List<int> Publications { get; init; } = [];
 	}

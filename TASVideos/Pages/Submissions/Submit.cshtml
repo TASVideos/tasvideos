@@ -38,71 +38,71 @@
 			<row>
 				<column lg="6">
 					<fieldset>
-						<label asp-for="Create.MovieFile" class="form-control-label"></label>
-						<input asp-for="Create.MovieFile" class="form-control" />
-						<div>@Html.DescriptionFor(m => m.Create.MovieFile)</div>
-						<span asp-validation-for="Create.MovieFile" class="text-danger"></span>
+						<label asp-for="MovieFile" class="form-control-label"></label>
+						<input asp-for="MovieFile" class="form-control" />
+						<div>@Html.DescriptionFor(m => m.MovieFile)</div>
+						<span asp-validation-for="MovieFile" class="text-danger"></span>
 					</fieldset>
 				</column>
 				<column lg="6">
 					<fieldset>
-						<label asp-for="Create.Authors" class="form-control-label"></label>
-						<string-list asp-for="Create.Authors" />
-						<span asp-validation-for="Create.Authors" class="text-danger"></span>
+						<label asp-for="Authors" class="form-control-label"></label>
+						<string-list asp-for="Authors" />
+						<span asp-validation-for="Authors" class="text-danger"></span>
 					</fieldset>
 					<fieldset>
-						<label asp-for="Create.AdditionalAuthors" class="form-control-label"></label>
-						<input asp-for="Create.AdditionalAuthors" class="form-control" />
-						<div>@Html.DescriptionFor(m => m.Create.AdditionalAuthors)</div>
-						<span asp-validation-for="Create.AdditionalAuthors" class="text-danger"></span>
+						<label asp-for="AdditionalAuthors" class="form-control-label"></label>
+						<input asp-for="AdditionalAuthors" class="form-control" />
+						<div>@Html.DescriptionFor(m => m.AdditionalAuthors)</div>
+						<span asp-validation-for="AdditionalAuthors" class="text-danger"></span>
 					</fieldset>
 				</column>
 			</row>
 			<row>
 				<column lg="6">
 					<fieldset>
-						<label asp-for="Create.GameVersion" class="form-control-label"></label>
-						<input asp-for="Create.GameVersion" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.GameVersion)" />
-						<span asp-validation-for="Create.GameVersion" class="text-danger"></span>
+						<label asp-for="GameVersion" class="form-control-label"></label>
+						<input asp-for="GameVersion" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameVersion)" />
+						<span asp-validation-for="GameVersion" class="text-danger"></span>
 					</fieldset>
 					<fieldset>
-						<label asp-for="Create.GameName" class="form-control-label"></label>
-						<input asp-for="Create.GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.GameName)" />
-						<span asp-validation-for="Create.GameName" class="text-danger"></span>
+						<label asp-for="GameName" class="form-control-label"></label>
+						<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
+						<span asp-validation-for="GameName" class="text-danger"></span>
 					</fieldset>
 					<fieldset>
-						<label asp-for="Create.Emulator" class="form-control-label"></label>
-						<input asp-for="Create.Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.Emulator)" />
-						<span asp-validation-for="Create.Emulator" class="text-danger"></span>
+						<label asp-for="Emulator" class="form-control-label"></label>
+						<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
+						<span asp-validation-for="Emulator" class="text-danger"></span>
 					</fieldset>
 				</column>
 				<column lg="6">
 					<fieldset>
-						<label asp-for="Create.Branch" class="form-control-label"></label>
-						<input asp-for="Create.Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.Branch)" />
-						<span asp-validation-for="Create.Branch" class="text-danger"></span>
+						<label asp-for="Branch" class="form-control-label"></label>
+						<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)" />
+						<span asp-validation-for="Branch" class="text-danger"></span>
 					</fieldset>
 					<fieldset>
-						<label asp-for="Create.RomName" class="form-control-label"></label>
-						<input asp-for="Create.RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.RomName)" />
-						<span asp-validation-for="Create.RomName" class="text-danger"></span>
+						<label asp-for="RomName" class="form-control-label"></label>
+						<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
+						<span asp-validation-for="RomName" class="text-danger"></span>
 					</fieldset>
 					<fieldset>
-						<label asp-for="Create.EncodeEmbedLink" class="form-control-label"></label>
-						<input asp-for="Create.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Create.EncodeEmbedLink)" />
-						<span asp-validation-for="Create.EncodeEmbedLink" class="text-danger"></span>
+						<label asp-for="EncodeEmbedLink" class="form-control-label"></label>
+						<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)" />
+						<span asp-validation-for="EncodeEmbedLink" class="text-danger"></span>
 					</fieldset>
 				</column>
 			</row>
 			<fullrow>
 				<fieldset>
-					<label asp-for="Create.Markup" class="form-control-label"></label>
+					<label asp-for="Markup" class="form-control-label"></label>
 					<span>
 						@await Html.RenderWiki(SystemWiki.SubmissionImportant)
 					</span>
 					<partial name="_WikiEditHelper" model="@("Create_Markup")" />
-					<textarea asp-for="Create.Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
-					<span asp-validation-for="Create.Markup" class="text-danger"></span>
+					<textarea asp-for="Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
+					<span asp-validation-for="Markup" class="text-danger"></span>
 					<fullrow id="backup-restore" class="d-none mt-2">
 						<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>
 						<label class="text-body-tertiary">from <span id="backup-time"></span></label>
@@ -115,35 +115,35 @@
 			<row class="text-center justify-content-center mb-1 fs-6">
 				<div class="col-auto">
 					<div class="form-check">
-						<input asp-for="Create.AgreeToInstructions" class="form-check-input" />
-						<label asp-for="Create.AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
+						<input asp-for="AgreeToInstructions" class="form-check-input" />
+						<label asp-for="AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
 						<br />
-						<span asp-validation-for="Create.AgreeToInstructions" class="text-danger"></span>
+						<span asp-validation-for="AgreeToInstructions" class="text-danger"></span>
 					</div>
 				</div>
 			</row>
 			<row class="text-center justify-content-center mb-3 fs-6">
 				<div class="col-auto">
 					<div class="form-check">
-						<input asp-for="Create.AgreeToLicense" class="form-check-input" />
-						<label asp-for="Create.AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
+						<input asp-for="AgreeToLicense" class="form-check-input" />
+						<label asp-for="AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
 						<br />
-						<span asp-validation-for="Create.AgreeToLicense" class="text-danger"></span>
+						<span asp-validation-for="AgreeToLicense" class="text-danger"></span>
 					</div>
 				</div>
 			</row>
 			<fullrow class="text-center">
 				<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
-				<submit-button id="submit-btn" class="btn btn-primary border border-warning @(Model.Create.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
+				<submit-button id="submit-btn" class="btn btn-primary border border-warning @(Model.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
 			</fullrow>
 		</form>
 
-		<partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Create.Markup), "/Wiki/Preview"))" />
+		<partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Markup), "/Wiki/Preview"))" />
 		@section Scripts {
 			<partial name="_ValidationScriptsPartial" />
 			<script>
 				document.getElementById('prefill-btn').onclick = function () {
-					const markup = document.getElementById('@Html.IdFor(m => m.Create.Markup)').value;
+					const markup = document.getElementById('@Html.IdFor(m => m.Markup)').value;
 					if (markup) {
 						return;
 					}
@@ -152,7 +152,7 @@
 						.then(handleFetchErrors)
 						.then(r => r.json())
 						.then(data => {
-							document.getElementById('@Html.IdFor(m => m.Create.Markup)').value = data.text;
+							document.getElementById('@Html.IdFor(m => m.Markup)').value = data.text;
 						});
 				};
 				document.getElementById('preview-button').addEventListener('click', function () {

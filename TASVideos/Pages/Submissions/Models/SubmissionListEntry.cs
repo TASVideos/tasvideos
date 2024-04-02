@@ -6,48 +6,48 @@ namespace TASVideos.Pages.Submissions.Models;
 public class SubmissionListEntry : ITimeable, ISubmissionDisplay
 {
 	[Sortable]
-	public string? System { get; set; }
+	public string? System { get; init; }
 
 	[Sortable]
 	[Display(Name = "Game")]
-	public string? GameName { get; set; }
+	public string? GameName { get; init; }
 
 	[Sortable]
-	public string? Branch { get; set; }
+	public string? Branch { get; init; }
 
 	[Display(Name = "Time")]
 	public TimeSpan Time => this.Time();
 
 	[Display(Name = "By")]
-	public List<string>? Authors { get; set; }
+	public List<string>? Authors { get; init; }
 	[TableIgnore]
-	public string? AdditionalAuthors { get; set; }
+	public string? AdditionalAuthors { get; init; }
 
 	[Sortable]
 	[Display(Name = "Date")]
-	public DateTime Submitted { get; set; }
+	public DateTime Submitted { get; init; }
 
 	[Sortable]
 	[Display(Name = "Status")]
-	public SubmissionStatus Status { get; set; }
+	public SubmissionStatus Status { get; init; }
 
 	[TableIgnore]
-	public int Id { get; set; }
+	public int Id { get; init; }
 
 	[TableIgnore]
-	public int Frames { get; set; }
+	public int Frames { get; init; }
 
 	[TableIgnore]
-	public double FrameRate { get; set; }
+	public double FrameRate { get; init; }
 
 	[TableIgnore]
-	public string? Judge { get; set; }
+	public string? Judge { get; init; }
 
 	[TableIgnore]
-	public string? Publisher { get; set; }
+	public string? Publisher { get; init; }
 
 	[TableIgnore]
-	public string? IntendedClass { get; set; }
+	public string? IntendedClass { get; init; }
 }
 
 public class SubmissionPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)

@@ -73,33 +73,33 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 
 	public class TabularMovieEntry : ITimeable
 	{
-		public int Id { get; set; }
-		public DateTime CreateTimestamp { get; set; }
+		public int Id { get; init; }
+		public DateTime CreateTimestamp { get; init; }
 
-		public string System { get; set; } = "";
-		public string Game { get; set; } = "";
-		public string? Goal { get; set; }
-		public IEnumerable<string>? Authors { get; set; }
-		public string? AdditionalAuthors { get; set; }
+		public string System { get; init; } = "";
+		public string Game { get; init; } = "";
+		public string? Goal { get; init; }
+		public IEnumerable<string>? Authors { get; init; }
+		public string? AdditionalAuthors { get; init; }
 
-		public ScreenshotFile Screenshot { get; set; } = new();
+		public ScreenshotFile Screenshot { get; init; } = new();
 
 		public class ScreenshotFile
 		{
-			public string Path { get; set; } = "";
+			public string Path { get; init; } = "";
 			public string? Description { get; set; }
 		}
 
-		public int Frames { get; set; }
-		public double FrameRate { get; set; }
+		public int Frames { get; init; }
+		public double FrameRate { get; init; }
 
 		public ObsoletedPublication? ObsoletedMovie { get; set; }
 
 		public class ObsoletedPublication : ITimeable
 		{
 			public int Id { get; set; }
-			public int Frames { get; set; }
-			public double FrameRate { get; set; }
+			public int Frames { get; init; }
+			public double FrameRate { get; init; }
 		}
 	}
 }

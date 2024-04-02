@@ -1,12 +1,11 @@
-﻿using TASVideos.Pages.UserFiles.Models;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.UserMovies)]
 public class UserMovies(ApplicationDbContext db) : WikiViewComponent
 {
-	public List<UserMovieListModel> Movies { get; set; } = [];
+	public List<Pages.UserFiles.IndexModel.UserMovie> Movies { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync(int? limit)
 	{

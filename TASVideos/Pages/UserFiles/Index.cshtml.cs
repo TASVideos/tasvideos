@@ -1,5 +1,4 @@
 ﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Pages.UserFiles.Models;
 
 namespace TASVideos.Pages.UserFiles;
 
@@ -7,9 +6,9 @@ namespace TASVideos.Pages.UserFiles;
 public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	public List<UserWithMovie> UsersWithMovies { get; set; } = [];
-	public List<UserMovieListModel> LatestMovies { get; set; } = [];
+	public List<UserMovie> LatestMovies { get; set; } = [];
 	public List<GameWithMovie> GamesWithMovies { get; set; } = [];
-	public List<UncatalogedViewModel> UncatalogedFiles { get; set; } = [];
+	public List<Uncataloged.UncatalogedViewModel> UncatalogedFiles { get; set; } = [];
 
 	public async Task OnGet()
 	{
@@ -138,4 +137,6 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 	{
 		public DateTime Latest => Dates.Max();
 	}
+
+	public record UserMovie(long Id, string Author, DateTime UploadTimestamp, string FileName, string Title);
 }

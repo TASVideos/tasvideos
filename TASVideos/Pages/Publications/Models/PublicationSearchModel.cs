@@ -5,30 +5,30 @@ namespace TASVideos.Pages.Publications.Models;
 public class PublicationSearchModel : IPublicationTokens
 {
 	[Display(Name = "Platform")]
-	public ICollection<string> SystemCodes { get; set; } = [];
-	public ICollection<string> Classes { get; set; } = [];
-	public ICollection<int> Years { get; set; } = [];
-	public ICollection<string> Tags { get; set; } = [];
-	public ICollection<string> Genres { get; set; } = [];
-	public ICollection<string> Flags { get; set; } = [];
+	public ICollection<string> SystemCodes { get; init; } = [];
+	public ICollection<string> Classes { get; init; } = [];
+	public ICollection<int> Years { get; init; } = [];
+	public ICollection<string> Tags { get; init; } = [];
+	public ICollection<string> Genres { get; init; } = [];
+	public ICollection<string> Flags { get; init; } = [];
 
 	[Display(Name = "Show Obsoleted")]
-	public bool ShowObsoleted { get; set; }
+	public bool ShowObsoleted { get; init; }
 
 	[Display(Name = "Only Obsoleted")]
-	public bool OnlyObsoleted { get; set; }
+	public bool OnlyObsoleted { get; init; }
 
-	public string SortBy { get; set; } = "";
-	public int? Limit { get; set; }
+	public string SortBy { get; init; } = "";
+	public int? Limit { get; init; }
 
-	public ICollection<int> Authors { get; set; } = [];
+	public ICollection<int> Authors { get; init; } = [];
 
-	public ICollection<int> MovieIds { get; set; } = [];
+	public ICollection<int> MovieIds { get; init; } = [];
 
-	public ICollection<int> Games { get; set; } = [];
+	public ICollection<int> Games { get; init; } = [];
 
 	[Display(Name = "Game Groups")]
-	public ICollection<int> GameGroups { get; set; } = [];
+	public ICollection<int> GameGroups { get; init; } = [];
 
 	public bool IsEmpty => !SystemCodes.Any()
 		&& !Classes.Any()

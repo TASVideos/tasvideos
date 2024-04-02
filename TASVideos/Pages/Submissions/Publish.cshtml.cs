@@ -153,11 +153,6 @@ public class PublishModel(
 		return BaseRedirect($"/{publication.Id}M");
 	}
 
-	private record ObsoletePublicationResult(string Title, List<int> Tags)
-	{
-		public string Markup { get; set; } = "";
-	}
-
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
 	{
 		var pub = await db.Publications
@@ -196,5 +191,10 @@ public class PublishModel(
 		AvailableTags = await db.Tags
 			.ToDropdown()
 			.ToListAsync();
+	}
+
+	private record ObsoletePublicationResult(string Title, List<int> Tags)
+	{
+		public string Markup { get; set; } = "";
 	}
 }

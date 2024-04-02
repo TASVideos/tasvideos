@@ -7,7 +7,6 @@ using TASVideos.Pages.Forum.Posts;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles;
 using TASVideos.Pages.Submissions.Models;
-using TASVideos.Pages.UserFiles.Models;
 using TASVideos.WikiModules;
 
 namespace TASVideos.Extensions;
@@ -413,9 +412,9 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<UserMovieListModel> ToUserMovieListModel(this IQueryable<UserFile> userFiles)
+	public static IQueryable<Pages.UserFiles.IndexModel.UserMovie> ToUserMovieListModel(this IQueryable<UserFile> userFiles)
 	{
-		return userFiles.Select(uf => new UserMovieListModel(
+		return userFiles.Select(uf => new Pages.UserFiles.IndexModel.UserMovie(
 			uf.Id,
 			uf.Author!.UserName,
 			uf.UploadTimestamp,
@@ -489,9 +488,9 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<UncatalogedViewModel> ToUnCatalogedModel(this IQueryable<UserFile> query)
+	public static IQueryable<Pages.UserFiles.Uncataloged.UncatalogedViewModel> ToUnCatalogedModel(this IQueryable<UserFile> query)
 	{
-		return query.Select(uf => new UncatalogedViewModel(
+		return query.Select(uf => new Pages.UserFiles.Uncataloged.UncatalogedViewModel(
 			uf.Id,
 			uf.FileName,
 			uf.System != null ? uf.System.Code : null,

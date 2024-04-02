@@ -1,6 +1,4 @@
-﻿using TASVideos.Pages.UserFiles.Models;
-
-namespace TASVideos.Pages.UserFiles;
+﻿namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
 public class Uncataloged(ApplicationDbContext db) : BasePageModel
@@ -18,4 +16,11 @@ public class Uncataloged(ApplicationDbContext db) : BasePageModel
 			.ToUnCatalogedModel()
 			.ToListAsync();
 	}
+
+	public record UncatalogedViewModel(
+		long Id,
+		string FileName,
+		string? SystemCode,
+		DateTime UploadTimestamp,
+		string Author);
 }

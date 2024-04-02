@@ -124,7 +124,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 		public bool IsDeletable => false;
 
 		// Fill with user info
-		public int PosterId { get; set; }
+		public int PosterId { get; init; }
 		public string PosterName { get; set; } = "";
 		public string? Signature { get; set; }
 		public int PosterPostCount { get; set; }

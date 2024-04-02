@@ -4,13 +4,14 @@
 public class CacheSetModel(ICacheService cache) : BasePageModel
 {
 	[BindProperty]
-	public CacheRequest CacheEntry { get; set; } = new("", "");
+	public string Key { get; set; } = "";
+
+	[BindProperty]
+	public string Value { get; set; } = "";
 
 	public IActionResult OnPost()
 	{
-		cache.Set(CacheEntry.Key, CacheEntry.Value);
+		cache.Set(Key, Value);
 		return RedirectToPage("CacheControl");
 	}
-
-	public record CacheRequest(string Key, string Value);
 }

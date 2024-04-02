@@ -24,7 +24,7 @@ public class PrimaryMoviesModel(
 
 	[Required]
 	[BindProperty]
-	public string? Reason { get; set; }
+	public string Reason { get; set; } = "";
 
 	public async Task<IActionResult> OnGet()
 	{

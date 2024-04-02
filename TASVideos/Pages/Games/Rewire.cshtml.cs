@@ -108,11 +108,11 @@ public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publish
 
 	public class RewireEntry
 	{
-		public Entry? Game { get; set; }
-		public ICollection<EntryWithVersion>? Publications { get; set; }
-		public ICollection<EntryWithVersion>? Submissions { get; set; }
-		public ICollection<Entry>? Versions { get; set; }
-		public ICollection<EntryLong>? Userfiles { get; set; }
+		public Entry? Game { get; init; }
+		public ICollection<EntryWithVersion>? Publications { get; init; }
+		public ICollection<EntryWithVersion>? Submissions { get; init; }
+		public ICollection<Entry>? Versions { get; init; }
+		public ICollection<EntryLong>? Userfiles { get; init; }
 	}
 
 	public record Entry(int Id, string Title);

@@ -16,8 +16,8 @@ public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 		.Range(2000, DateTime.UtcNow.Year + 1 - 2000)
 		.OrderByDescending(n => n)];
 
-	public string? System { get; set; }
-	public string? User { get; set; }
+	public string? System { get; init; }
+	public string? User { get; init; }
 	public string? GameId { get; set; }
 	public int? StartType { get; set; }
 

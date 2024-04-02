@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Pages.UserFiles.Models;
+using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles;
 
@@ -109,5 +109,24 @@ public class UploadModel(
 			.ToDropDown()
 			.ToListAsync())
 			.WithDefaultEntry();
+	}
+
+	public class UserFileUploadModel
+	{
+		[Required]
+		public IFormFile? File { get; init; }
+
+		[StringLength(255)]
+		public string Title { get; init; } = "";
+
+		[DoNotTrim]
+		public string Description { get; init; } = "";
+
+		[Display(Name = "System")]
+		public int? SystemId { get; init; }
+
+		[Display(Name = "Game")]
+		public int? GameId { get; init; }
+		public bool Hidden { get; init; }
 	}
 }

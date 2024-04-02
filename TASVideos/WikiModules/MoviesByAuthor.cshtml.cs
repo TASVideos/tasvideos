@@ -58,9 +58,9 @@ public class MoviesByAuthor(ApplicationDbContext db) : WikiViewComponent
 
 	public class PublicationEntry
 	{
-		public int Id { get; set; }
-		public string Title { get; set; } = "";
-		public IEnumerable<string> Authors { get; set; } = [];
-		public string? PublicationClassIconPath { get; set; } = "";
+		public int Id { get; init; }
+		public string Title { get; init; } = "";
+		public IEnumerable<string> Authors { get; init; } = [];
+		public string? PublicationClassIconPath { get; init; } = "";
 	}
 }

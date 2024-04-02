@@ -2,8 +2,9 @@
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
+using TASVideos.Models;
+using TASVideos.Models.ValidationAttributes;
 using TASVideos.MovieParsers;
-using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -21,20 +22,71 @@ public class SubmitModel(
 	AppSettings settings)
 	: BasePageModel
 {
-	private readonly string _fileFieldName = $"{nameof(Create)}.{nameof(SubmissionCreateModel.MovieFile)}";
+	private const string FileFieldName = $"{nameof(MovieFile)}";
 	private DateTime _earliestTimestamp;
 
 	[BindProperty]
-	public SubmissionCreateModel Create { get; set; } = new();
+	[Display(Name = "Game Version", Description = "Example: USA")]
+	[StringLength(20)]
+	public string? GameVersion { get; init; }
+
+	[BindProperty]
+	[Display(Name = "Game Name", Description = "Example: Mega Man 2")]
+	[StringLength(100)]
+	public string GameName { get; init; } = "";
+
+	[BindProperty]
+	[Display(Name = "Goal Name", Description = "Example: 100% or princess only; any% can usually be omitted")]
+	[StringLength(50)]
+	public string? Branch { get; init; }
+
+	[BindProperty]
+	[Display(Name = "ROM filename", Description = "Example: Mega Man II (U) [!].nes")]
+	[StringLength(100)]
+	public string RomName { get; init; } = "";
+
+	[BindProperty]
+	[Display(Name = "Emulator and version", Description = "Example: BizHawk 2.8.0")]
+	[StringLength(50)]
+	public string? Emulator { get; init; }
+
+	[BindProperty]
+	[Url]
+	[Display(Name = "Encode Embedded Link", Description = "Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU")]
+	public string? EncodeEmbedLink { get; init; }
+
+	[BindProperty]
+	[Display(Name = "Author(s)")]
+	[MinLength(1)]
+	public IList<string> Authors { get; set; } = [];
+
+	[BindProperty]
+	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+	public string? AdditionalAuthors { get; init; }
+
+	[BindProperty]
+	[DoNotTrim]
+	[Display(Name = "Comments and explanations")]
+	public string Markup { get; init; } = "";
+
+	[BindProperty]
+	[Required]
+	[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 500k)")]
+	public IFormFile? MovieFile { get; init; }
+
+	[BindProperty]
+	[MustBeTrue(ErrorMessage = "You must read and follow the instructions.")]
+	public bool AgreeToInstructions { get; init; }
+
+	[BindProperty]
+	[MustBeTrue(ErrorMessage = "You must agree to the license.")]
+	public bool AgreeToLicense { get; init; }
 
 	public string BackupSubmissionDeterminator { get; set; } = "";
 
 	public async Task OnGet()
 	{
-		Create = new SubmissionCreateModel
-		{
-			Authors = [User.Name()]
-		};
+		Authors = [User.Name()];
 
 		BackupSubmissionDeterminator = (await db.Submissions
 			.Where(s => s.SubmitterId == User.GetUserId())
@@ -56,7 +108,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		var parseResult = await parser.ParseZip(Create.MovieFile!.OpenReadStream());
+		var parseResult = await parser.ParseZip(MovieFile!.OpenReadStream());
 
 		if (!parseResult.Success)
 		{
@@ -67,19 +119,19 @@ public class SubmitModel(
 		var deprecated = await deprecator.IsDeprecated("." + parseResult.FileExtension);
 		if (deprecated)
 		{
-			ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
+			ModelState.AddModelError(FileFieldName, $".{parseResult.FileExtension} is no longer submittable");
 			return Page();
 		}
 
 		var submission = new Submission
 		{
-			SubmittedGameVersion = Create.GameVersion,
-			GameName = Create.GameName,
-			Branch = Create.Branch,
-			RomName = Create.RomName,
-			EmulatorVersion = Create.Emulator,
-			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(Create.EncodeEmbedLink),
-			AdditionalAuthors = Create.AdditionalAuthors
+			SubmittedGameVersion = GameVersion,
+			GameName = GameName,
+			Branch = Branch,
+			RomName = RomName,
+			EmulatorVersion = Emulator,
+			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(EncodeEmbedLink),
+			AdditionalAuthors = AdditionalAuthors
 		};
 
 		var error = await queueService.MapParsedResult(parseResult, submission);
@@ -93,7 +145,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		submission.MovieFile = await Create.MovieFile.ToBytes();
+		submission.MovieFile = await MovieFile.ToBytes();
 		submission.Submitter = await userManager.GetUserAsync(User);
 
 		db.Submissions.Add(submission);
@@ -103,19 +155,19 @@ public class SubmitModel(
 		{
 			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-			Markup = Create.Markup,
+			Markup = Markup,
 			MinorEdit = false,
 			AuthorId = User.GetUserId()
 		});
 
 		db.SubmissionAuthors.AddRange(await db.Users
-			.ForUsers(Create.Authors)
+			.ForUsers(Authors)
 			.Select(u => new SubmissionAuthor
 			{
 				SubmissionId = submission.Id,
 				UserId = u.Id,
 				Author = u,
-				Ordinal = Create.Authors.IndexOf(u.UserName)
+				Ordinal = Authors.IndexOf(u.UserName)
 			})
 			.ToListAsync());
 
@@ -137,32 +189,32 @@ public class SubmitModel(
 
 	private async Task ValidateModel()
 	{
-		Create.Authors = Create.Authors
+		Authors = Authors
 			.Where(a => !string.IsNullOrWhiteSpace(a))
 			.ToList();
 
-		if (!Create.Authors.Any() && string.IsNullOrWhiteSpace(Create.AdditionalAuthors))
+		if (!Authors.Any() && string.IsNullOrWhiteSpace(AdditionalAuthors))
 		{
 			ModelState.AddModelError(
-				$"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}",
+				$"{nameof(Authors)}",
 				"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 		}
 
-		if (!Create.MovieFile.IsZip())
+		if (!MovieFile.IsZip())
 		{
-			ModelState.AddModelError(_fileFieldName, "Not a valid .zip file");
+			ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
 		}
 
-		if (!Create.MovieFile.LessThanMovieSizeLimit())
+		if (!MovieFile.LessThanMovieSizeLimit())
 		{
-			ModelState.AddModelError(_fileFieldName, ".zip is too big, are you sure this is a valid movie file?");
+			ModelState.AddModelError(FileFieldName, ".zip is too big, are you sure this is a valid movie file?");
 		}
 
-		foreach (var author in Create.Authors)
+		foreach (var author in Authors)
 		{
 			if (!await db.Users.Exists(author))
 			{
-				ModelState.AddModelError($"{nameof(Create)}.{nameof(SubmissionCreateModel.Authors)}", $"Could not find user: {author}");
+				ModelState.AddModelError($"{nameof(Authors)}", $"Could not find user: {author}");
 			}
 		}
 	}

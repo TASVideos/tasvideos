@@ -21,7 +21,7 @@ public class EditModel(
 	IForumService forumService)
 	: BasePageModel
 {
-	private readonly string _fileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEditModel.MovieFile)}";
+	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEditModel.MovieFile)}";
 
 	[FromRoute]
 	public int Id { get; set; }
@@ -46,7 +46,7 @@ public class EditModel(
 			{
 				SystemDisplayName = s.System!.DisplayName,
 				SystemCode = s.System.Code,
-				GameName = s.GameName,
+				GameName = s.GameName ?? "",
 				GameVersion = s.SubmittedGameVersion,
 				RomName = s.RomName,
 				Branch = s.Branch,
@@ -113,12 +113,12 @@ public class EditModel(
 		{
 			if (!Submission.MovieFile.IsZip())
 			{
-				ModelState.AddModelError(_fileFieldName, "Not a valid .zip file");
+				ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
 			}
 
 			if (!Submission.MovieFile.LessThanMovieSizeLimit())
 			{
-				ModelState.AddModelError(_fileFieldName, ".zip is too big, are you sure this is a valid movie file?");
+				ModelState.AddModelError(FileFieldName, ".zip is too big, are you sure this is a valid movie file?");
 			}
 		}
 		else if (!User.Has(PermissionTo.ReplaceSubmissionMovieFile))
@@ -212,7 +212,7 @@ public class EditModel(
 			var deprecated = await deprecator.IsDeprecated("." + parseResult.FileExtension);
 			if (deprecated)
 			{
-				ModelState.AddModelError(_fileFieldName, $".{parseResult.FileExtension} is no longer submittable");
+				ModelState.AddModelError(FileFieldName, $".{parseResult.FileExtension} is no longer submittable");
 				return Page();
 			}
 

@@ -2,35 +2,35 @@
 
 public class PublicationDisplayModel
 {
-	public int Id { get; set; }
-	public int GameId { get; set; }
-	public string GameName { get; set; } = "";
-	public int GameVersionId { get; set; }
-	public string GameVersionName { get; set; } = "";
-	public DateTime CreateTimestamp { get; set; }
-	public DateTime LastUpdateTimestamp { get; set; }
-	public int? ObsoletedById { get; set; }
-	public string Title { get; set; } = "";
-	public string Class { get; set; } = "";
-	public string? ClassIconPath { get; set; }
-	public string MovieFileName { get; set; } = "";
-	public int SubmissionId { get; set; }
-	internal IReadOnlyCollection<PublicationUrl> Urls { get; set; } = [];
+	public int Id { get; init; }
+	public int GameId { get; init; }
+	public string GameName { get; init; } = "";
+	public int GameVersionId { get; init; }
+	public string GameVersionName { get; init; } = "";
+	public DateTime CreateTimestamp { get; init; }
+	public DateTime LastUpdateTimestamp { get; init; }
+	public int? ObsoletedById { get; init; }
+	public string Title { get; init; } = "";
+	public string Class { get; init; } = "";
+	public string? ClassIconPath { get; init; }
+	public string MovieFileName { get; init; } = "";
+	public int SubmissionId { get; init; }
+	internal IReadOnlyCollection<PublicationUrl> Urls { get; init; } = [];
 	public IEnumerable<PublicationUrl> OnlineWatchingUrls => Urls.Where(u => u.Type == PublicationUrlType.Streaming);
 	public IEnumerable<PublicationUrl> MirrorSiteUrls => Urls.Where(u => u.Type == PublicationUrlType.Mirror);
-	public int TopicId { get; set; }
-	public string? EmulatorVersion { get; set; }
-	public IEnumerable<TagModel> Tags { get; set; } = [];
-	public IEnumerable<string> GameGenres { get; set; } = [];
-	public IEnumerable<FileModel> Files { get; set; } = [];
-	public IEnumerable<FlagModel> Flags { get; set; } = [];
-	public IEnumerable<ObsoletesModel> ObsoletedMovies { get; set; } = [];
+	public int TopicId { get; init; }
+	public string? EmulatorVersion { get; init; }
+	public IEnumerable<TagModel> Tags { get; init; } = [];
+	public IEnumerable<string> GameGenres { get; init; } = [];
+	public IEnumerable<FileModel> Files { get; init; } = [];
+	public IEnumerable<FlagModel> Flags { get; init; } = [];
+	public IEnumerable<ObsoletesModel> ObsoletedMovies { get; init; } = [];
 	public FileModel Screenshot => Files.First(f => f.Type == FileType.Screenshot);
 
 	public IEnumerable<FileModel> MovieFileLinks => Files.Where(f => f.Type == FileType.MovieFile);
-	public int RatingCount { get; set; }
-	public double? OverallRating { get; set; }
-	public PublicationRateModel Rating { get; set; } = new();
+	public int RatingCount { get; init; }
+	public double? OverallRating { get; init; }
+	public PublicationRateModel Rating { get; init; } = new();
 
 	public record TagModel(string DisplayName, string Code);
 

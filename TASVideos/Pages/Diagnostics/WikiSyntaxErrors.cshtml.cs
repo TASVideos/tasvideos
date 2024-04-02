@@ -5,33 +5,6 @@ namespace TASVideos.Pages.Diagnostics;
 [RequirePermission(PermissionTo.SeeDiagnostics)]
 public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 {
-	public class Row
-	{
-		public string PageName { get; set; } = "";
-		public string Markup { get; set; } = "";
-		public int ErrorLocation { get; set; }
-		public string? ErrorMessage { get; set; }
-		public string ExcerptBefore
-		{
-			get
-			{
-				var from = Math.Max(ErrorLocation - 20, 0);
-				var to = ErrorLocation;
-				return Markup[from..to];
-			}
-		}
-
-		public string ExcerptAfter
-		{
-			get
-			{
-				var from = ErrorLocation;
-				var to = Math.Min(ErrorLocation + 20, Markup.Length);
-				return Markup[from..to];
-			}
-		}
-	}
-
 	public List<Row> Rows { get; set; } = [];
 
 	public async Task OnGet()
@@ -56,5 +29,32 @@ public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 				ErrorMessage = a.err.Message
 			})
 			.ToList();
+	}
+
+	public class Row
+	{
+		public string PageName { get; init; } = "";
+		public string Markup { get; init; } = "";
+		public int ErrorLocation { get; init; }
+		public string? ErrorMessage { get; init; }
+		public string ExcerptBefore
+		{
+			get
+			{
+				var from = Math.Max(ErrorLocation - 20, 0);
+				var to = ErrorLocation;
+				return Markup[from..to];
+			}
+		}
+
+		public string ExcerptAfter
+		{
+			get
+			{
+				var from = ErrorLocation;
+				var to = Math.Min(ErrorLocation + 20, Markup.Length);
+				return Markup[from..to];
+			}
+		}
 	}
 }

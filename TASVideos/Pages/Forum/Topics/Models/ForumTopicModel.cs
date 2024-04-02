@@ -16,21 +16,21 @@ public interface IForumTopicActionBar
 
 public class ForumTopicModel : IForumTopicActionBar
 {
-	public int Id { get; set; }
-	public int LastPostId { get; set; }
-	public bool Restricted { get; set; }
-	public bool IsWatching { get; set; }
-	public bool IsLocked { get; set; }
-	public string Title { get; set; } = "";
-	public int ForumId { get; set; }
-	public string ForumName { get; set; } = "";
+	public int Id { get; init; }
+	public int LastPostId { get; init; }
+	public bool Restricted { get; init; }
+	public bool IsWatching { get; init; }
+	public bool IsLocked { get; init; }
+	public string Title { get; init; } = "";
+	public int ForumId { get; init; }
+	public string ForumName { get; init; } = "";
 	public ForumTopicType Type { get; set; }
-	public int? SubmissionId { get; set; }
+	public int? SubmissionId { get; init; }
 	public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
-	public PollModel? Poll { get; set; }
-	public int? GameId { get; set; }
-	public string? GameName { get; set; }
-	public int CategoryId { get; set; }
+	public PollModel? Poll { get; init; }
+	public int? GameId { get; init; }
+	public string? GameName { get; init; }
+	public int CategoryId { get; init; }
 
 	public class PollModel
 	{

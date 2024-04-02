@@ -19,7 +19,7 @@ public class RegisterModel(
 	[Required]
 	[BindProperty]
 	[Display(Name = "Time Zone")]
-	public string? SelectedTimeZone { get; set; }
+	public string SelectedTimeZone { get; set; } = "";
 
 	[BindProperty]
 	[StringLength(50)]
@@ -94,7 +94,7 @@ public class RegisterModel(
 			{
 				UserName = UserName,
 				Email = Email,
-				TimeZoneId = SelectedTimeZone ?? TimeZoneInfo.Utc.Id,
+				TimeZoneId = SelectedTimeZone,
 				From = From,
 				EmailOnPrivateMessage = true
 			};

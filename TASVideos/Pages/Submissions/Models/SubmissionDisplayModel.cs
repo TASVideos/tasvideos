@@ -11,59 +11,57 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 		&& GameGoalId > 0;
 
 	[Display(Name = "Start Type")]
-	public MovieStartType? StartType { get; set; }
+	public MovieStartType? StartType { get; init; }
 
 	[Display(Name = "For Publication Class")]
-	public string? ClassName { get; set; }
+	public string? ClassName { get; init; }
 
 	[Display(Name = "System")]
-	public string? SystemDisplayName { get; set; }
-
-	public string? SystemCode { get; set; }
+	public string? SystemDisplayName { get; init; }
 
 	[Display(Name = "Game Name")]
-	public string? GameName { get; set; }
+	public string? GameName { get; init; }
 
 	[Display(Name = "Submitted Game Name")]
-	public string? SubmittedGameName { get; set; }
+	public string? SubmittedGameName { get; init; }
 
 	[Display(Name = "Game Version")]
-	public string? GameVersion { get; set; }
+	public string? GameVersion { get; init; }
 
 	[Display(Name = "ROM Filename")]
-	public string? RomName { get; set; }
+	public string? RomName { get; init; }
 
 	[Display(Name = "Goal")]
-	public string? Branch { get; set; }
-	public string? Goal { get; set; }
+	public string? Branch { get; init; }
+	public string? Goal { get; init; }
 
 	[Display(Name = "Emulator")]
-	public string? Emulator { get; set; }
+	public string? Emulator { get; init; }
 
 	[Url]
 	[Display(Name = "Encode Embed Link")]
-	public string? EncodeEmbedLink { get; set; }
+	public string? EncodeEmbedLink { get; init; }
 
 	[Display(Name = "Frame Count")]
-	public int FrameCount { get; set; }
+	public int FrameCount { get; init; }
 
 	[Display(Name = "Cycle Count")]
-	public long? CycleCount { get; set; }
+	public long? CycleCount { get; init; }
 
 	[Display(Name = "Frame Rate")]
-	public double FrameRate { get; set; }
+	public double FrameRate { get; init; }
 
 	[Display(Name = "Rerecord Count")]
-	public int RerecordCount { get; set; }
+	public int RerecordCount { get; init; }
 
 	[Display(Name = "Author")]
-	public List<string> Authors { get; set; } = [];
+	public List<string> Authors { get; init; } = [];
 
 	[Display(Name = "Submitter")]
-	public string? Submitter { get; set; }
+	public string? Submitter { get; init; }
 
 	[Display(Name = "Submit Date")]
-	public DateTime Submitted { get; set; }
+	public DateTime Submitted { get; init; }
 
 	[Display(Name = "Last Edited")]
 	public DateTime LastUpdateTimestamp { get; set; }
@@ -72,23 +70,23 @@ public class SubmissionDisplayModel : ISubmissionDisplay
 	public string? LastUpdateUser { get; set; }
 
 	[Display(Name = "Status")]
-	public SubmissionStatus Status { get; set; }
+	public SubmissionStatus Status { get; init; }
 
 	[Display(Name = "Judge")]
-	public string? Judge { get; set; }
+	public string? Judge { get; init; }
 
 	[Display(Name = "Publisher")]
-	public string? Publisher { get; set; }
-	public string? Annotations { get; set; }
-	public string? RejectionReasonDisplay { get; set; }
-	public string Title { get; set; } = "";
-	public string? AdditionalAuthors { get; set; }
+	public string? Publisher { get; init; }
+	public string? Annotations { get; init; }
+	public string? RejectionReasonDisplay { get; init; }
+	public string Title { get; init; } = "";
+	public string? AdditionalAuthors { get; init; }
 	public bool WarnStartType => StartType.HasValue && StartType != MovieStartType.PowerOn;
-	public int? TopicId { get; set; }
-	public int? GameId { get; set; }
-	public string? Warnings { get; set; }
-	internal int? SystemId { get; set; }
-	internal int? SystemFrameRateId { get; set; }
-	public int? GameVersionId { get; set; }
-	internal int? GameGoalId { get; set; }
+	public int? TopicId { get; init; }
+	public int? GameId { get; init; }
+	public string? Warnings { get; init; }
+	internal int? SystemId { get; init; }
+	internal int? SystemFrameRateId { get; init; }
+	public int? GameVersionId { get; init; }
+	internal int? GameGoalId { get; init; }
 }

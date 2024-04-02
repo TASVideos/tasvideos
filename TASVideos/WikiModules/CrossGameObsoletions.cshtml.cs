@@ -6,7 +6,7 @@ namespace TASVideos.WikiModules;
 
 public class CrossGameObsoletions(ApplicationDbContext db) : WikiViewComponent
 {
-	public Dictionary<Entry, HashSet<Entry>> Groups { get; set; } = [];
+	public Dictionary<Entry, HashSet<Entry>> Groups { get; init; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
