@@ -7,9 +7,10 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.MovieStatistics)]
 public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 {
-	public bool IsGeneral { get; set; } = true;
-	public MovieGeneralStatisticsModel General { get; set; } = new();
-	public MovieStatisticsModel Default { get; set; } = new();
+	public GeneralStatistics? General { get; set; }
+	public string ErrorMessage { get; set; } = "";
+	public string FieldHeader { get; set; } = "";
+	public List<MovieStatisticsEntry> Movies { get; set; } = [];
 
 	public enum MovieStatisticComparison
 	{
@@ -71,22 +72,20 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 		}
 
 		var comparisonMetric = ParameterList.GetValueOrDefault(comp);
-		string fieldHeader;
 
 		IQueryable<Publication> query = db.Publications.ThatAreCurrent();
-		IQueryable<MovieStatisticsModel.MovieStatisticsEntry> statQuery;
+		IQueryable<MovieStatisticsEntry> statQuery;
 
 		switch (comparisonMetric)
 		{
 			case MovieStatisticComparison.None:
-				General = new MovieGeneralStatisticsModel
+				General = new GeneralStatistics
 				{
 					PublishedMovieCount = await db.Publications.ThatAreCurrent().CountAsync(),
 					TotalMovieCount = await db.Publications.CountAsync(),
 					SubmissionCount = await db.Submissions.CountAsync(),
 					AverageRerecordCount = (int)await db.Publications.AverageAsync(p => p.RerecordCount),
 				};
-				IsGeneral = true;
 
 				return View();
 
@@ -97,19 +96,15 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 			case MovieStatisticComparison.EncodeLengthRatio:
 			case MovieStatisticComparison.LongestEnding:
 				// currently unable to fetch encode data
-				Default = new MovieStatisticsModel
-				{
-					ErrorMessage = "Could not display statistics for given parameter: " + comp
-				};
-				IsGeneral = false;
+				ErrorMessage = "Could not display statistics for given parameter: " + comp;
 				return View();
 
 			case MovieStatisticComparison.Length:
-				fieldHeader = "Length";
+				FieldHeader = "Length";
 				statQuery = query
 					.Where(p => p.System != null && p.SystemFrameRate != null)
 					.OrderBy(p => p.Frames / p.SystemFrameRate!.FrameRate, reverse)
-					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -120,11 +115,11 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 				break;
 
 			case MovieStatisticComparison.Rerecords:
-				fieldHeader = "Rerecords";
+				FieldHeader = "Rerecords";
 				statQuery = query
 					.Where(p => p.RerecordCount > 0)
 					.OrderBy(p => p.RerecordCount, reverse)
-					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -132,11 +127,11 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 					});
 				break;
 			case MovieStatisticComparison.RerecordsPerLength:
-				fieldHeader = "Rerecords per frame";
+				FieldHeader = "Rerecords per frame";
 				statQuery = query
 					.Where(p => p.RerecordCount > 0)
 					.OrderBy(p => (double)p.RerecordCount / p.Frames, reverse)
-					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -146,10 +141,10 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 					});
 				break;
 			case MovieStatisticComparison.DaysPublished:
-				fieldHeader = "Days";
+				FieldHeader = "Days";
 				statQuery = query
 					.OrderBy(p => (DateTime.UtcNow - p.CreateTimestamp).TotalDays, reverse)
-					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -157,7 +152,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 					});
 				break;
 			case MovieStatisticComparison.DescriptionLength:
-				fieldHeader = "Characters";
+				FieldHeader = "Characters";
 				statQuery = query
 					.Join(
 						db.WikiPages.ThatAreNotDeleted().ThatAreCurrent(),
@@ -165,7 +160,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })
 					.OrderBy(join => join.wp.Markup.Length, reverse)
-					.Select(join => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(join => new MovieStatisticsEntry
 					{
 						Id = join.p.Id,
 						Title = join.p.Title,
@@ -173,7 +168,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 					});
 				break;
 			case MovieStatisticComparison.SubmissionDescriptionLength:
-				fieldHeader = "Characters";
+				FieldHeader = "Characters";
 				statQuery = query
 					.Where(p => p.Submission != null)
 					.Join(
@@ -182,7 +177,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 						wp => wp.PageName,
 						(p, wp) => new { p, wp })
 					.OrderBy(join => join.wp.Markup.Length, reverse)
-					.Select(join => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(join => new MovieStatisticsEntry
 					{
 						Id = join.p.Id,
 						Title = join.p.Title,
@@ -190,11 +185,11 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 					});
 				break;
 			case MovieStatisticComparison.AverageRating:
-				fieldHeader = "Rating";
+				FieldHeader = "Rating";
 				statQuery = query
 					.Where(p => p.PublicationRatings.Count >= minimumVotes)
 					.OrderBy(p => p.PublicationRatings.Average(r => r.Value), reverse)
-					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -202,11 +197,11 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 					});
 				break;
 			case MovieStatisticComparison.VoteCount:
-				fieldHeader = "Ratings";
+				FieldHeader = "Ratings";
 				statQuery = query
 					.Where(p => p.CreateTimestamp <= minimumAgeTime)
 					.OrderBy(p => p.PublicationRatings.Count, reverse)
-					.Select(p => new MovieStatisticsModel.MovieStatisticsEntry
+					.Select(p => new MovieStatisticsEntry
 					{
 						Id = p.Id,
 						Title = p.Title,
@@ -215,19 +210,12 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 				break;
 		}
 
-		List<MovieStatisticsModel.MovieStatisticsEntry> movieList = await statQuery.Take(count).ToListAsync();
+		Movies = await statQuery.Take(count).ToListAsync();
 
-		Default = new MovieStatisticsModel
-		{
-			MovieList = movieList,
-			FieldHeader = fieldHeader
-		};
-
-		IsGeneral = false;
 		return View();
 	}
 
-	public class MovieGeneralStatisticsModel
+	public class GeneralStatistics
 	{
 		public int PublishedMovieCount { get; init; }
 		public int TotalMovieCount { get; init; }
@@ -235,32 +223,25 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 		public int AverageRerecordCount { get; init; }
 	}
 
-	public class MovieStatisticsModel
+	public class MovieStatisticsEntry
 	{
-		public string ErrorMessage { get; init; } = "";
-		public string FieldHeader { get; init; } = "";
-		public IReadOnlyCollection<MovieStatisticsEntry> MovieList { get; init; } = [];
+		public int Id { get; init; }
+		public string Title { get; init; } = "";
+		public object Value { get; init; } = new();
 
-		public class MovieStatisticsEntry
+		public string? DisplayString()
 		{
-			public int Id { get; init; }
-			public string Title { get; init; } = "";
-			public object Value { get; init; } = new();
-
-			public string? DisplayString()
+			if (Value is TimeSpan t)
 			{
-				if (Value is TimeSpan t)
-				{
-					return t.ToStringWithOptionalDaysAndHours();
-				}
-
-				if (Value is double f)
-				{
-					return f.ToString(CultureInfo.CurrentCulture);
-				}
-
-				return Value.ToString();
+				return t.ToStringWithOptionalDaysAndHours();
 			}
+
+			if (Value is double f)
+			{
+				return f.ToString(CultureInfo.CurrentCulture);
+			}
+
+			return Value.ToString();
 		}
 	}
 }

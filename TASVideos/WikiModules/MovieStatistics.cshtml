@@ -1,41 +1,36 @@
 ﻿@model MovieStatistics
-@if (Model.IsGeneral)
-{
-	<div>
-		<p>
-			<ul>
-				<li>Published movies: @Model.General.PublishedMovieCount</li>
-				<li>Total movies (including obsoleted): @Model.General.TotalMovieCount</li>
-				<li>Submitted movies: @Model.General.SubmissionCount</li>
-				<li>Published movie average rerecord count: @Model.General.AverageRerecordCount</li>
-			</ul>
-		</p>
-	</div>
-}
-else
-{
-	<warning-alert condition="!string.IsNullOrEmpty(Model.Default.ErrorMessage)">
-		@Model.Default.ErrorMessage
-	</warning-alert>
+<warning-alert condition="!string.IsNullOrEmpty(Model.ErrorMessage)">
+	@Model.ErrorMessage
+</warning-alert>
 
-	<div condition="Model.Default.MovieList.Count > 0">
-		<table>
+<div condition="Model.General is not null">
+	<p>
+		<ul>
+			<li>Published movies: @Model.General!.PublishedMovieCount</li>
+			<li>Total movies (including obsoleted): @Model.General.TotalMovieCount</li>
+			<li>Submitted movies: @Model.General.SubmissionCount</li>
+			<li>Published movie average rerecord count: @Model.General.AverageRerecordCount</li>
+		</ul>
+	</p>
+</div>
+
+<div condition="Model.Movies.Count > 0">
+	<table class="table table-bordered table-striped table-sm">
+		<tr>
+			<th>@Model.FieldHeader</th>
+			<th>Movie</th>
+		</tr>
+
+		@foreach (var entry in Model.Movies)
+		{
 			<tr>
-				<th>@Model.Default.FieldHeader</th>
-				<th>Movie</th>
+				<td>
+					@entry.DisplayString()
+				</td>
+				<td>
+					<pub-link id="entry.Id">@entry.Title</pub-link>
+				</td>
 			</tr>
-
-			@foreach (var entry in Model.Default.MovieList)
-			{
-				<tr>
-					<td>
-						@entry.DisplayString()
-					</td>
-					<td>
-						<pub-link id="entry.Id">@entry.Title</pub-link>
-					</td>
-				</tr>
-			}
-		</table>
-	</div>
-}
+		}
+	</table>
+</div>
