@@ -1,51 +1,23 @@
 ﻿@model MovieMaintenanceLog
-
-@if (Model.DefaultMode)
+<br /><br />
+<a condition="!Model.IsSinglePub" asp-page="" asp-route-begin="@Model.Next" class="btn btn-primary float-end mb-2">Next</a>
+@foreach (var pub in Model.Logs)
 {
-	<br /><br />
-	<div>
-		<pub-link id="@ViewData.Int("pubId")">@ViewData["pubTitle"]</pub-link>
-	</div>
-	<div class="table-container">
-		<table class="table table-striped table-bordered">
+	<pub-link id="pub.Key.Id">@pub.Key.Title</pub-link>
+	<table class="table table-bordered table-striped">
+		<tr>
+			<th>Editor</th>
+			<th>Datetime</th>
+			<th>Log</th>
+		</tr>
+		@foreach (var log in pub)
+		{
 			<tr>
-				<th>Editor</th>
-				<th>Datetime</th>
-				<th>Log</th>
+				<td><profile-link username="@log.UserName"></profile-link></td>
+				<td><timezone-convert asp-for="@log.Timestamp" /></td>
+				<td>@log.Log</td>
 			</tr>
-			@foreach (var log in Model.Default.OrderByDescending(m => m.Timestamp))
-			{
-				<tr>
-					<td><profile-link username="@log.UserName"></profile-link></td>
-					<td><timezone-convert asp-for="@log.Timestamp" /></td>
-					<td>@log.Log</td>
-				</tr>
-			}
-		</table>
-	</div>
+		}
+	</table>
 }
-else
-{
-	<br /><br />
 
-	<a asp-page="" asp-route-begin="@ViewData["next"]" class="btn btn-primary float-end mb-2">Next</a>
-	@foreach (var pub in Model.Global)
-	{
-		<pub-link id="pub.Key.Id">@pub.Key.Title</pub-link>
-		<table class="table table-bordered table-striped">
-			<tr>
-				<th>Editor</th>
-				<th>Datetime</th>
-				<th>Log</th>
-			</tr>
-			@foreach (var log in pub)
-			{
-				<tr>
-					<td><profile-link username="@log.UserName"></profile-link></td>
-					<td><timezone-convert asp-for="@log.Timestamp" /></td>
-					<td>@log.Log</td>
-				</tr>
-			}
-		</table>
-	}
-}
