@@ -30,7 +30,7 @@ public class PublicationDisplayModel
 	public IEnumerable<FileModel> MovieFileLinks => Files.Where(f => f.Type == FileType.MovieFile);
 	public int RatingCount { get; init; }
 	public double? OverallRating { get; init; }
-	public PublicationRateModel Rating { get; init; } = new();
+	public RateModel.RatingDisplay Rating { get; init; } = new();
 
 	public record TagModel(string DisplayName, string Code);
 

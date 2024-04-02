@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Text.Json;
-using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications;
 
@@ -11,7 +10,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 	public int Id { get; set; }
 
 	[BindProperty]
-	public PublicationRateModel Rating { get; set; } = new();
+	public RatingDisplay Rating { get; set; } = new();
 
 	public List<RatingEntry> AllRatings = [];
 	public double OverallRating { get; set; }
@@ -37,7 +36,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 			.ForUser(userId)
 			.ToListAsync();
 
-		Rating = new PublicationRateModel
+		Rating = new RatingDisplay
 		{
 			Title = publication.Title,
 			Rating = ratings
@@ -72,7 +71,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 			.ForUser(userId)
 			.FirstOrDefaultAsync();
 
-		UpdateRating(rating, Id, userId, PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating), Rating.Unrated);
+		UpdateRating(rating, Id, userId, RatingDisplay.RatingString.AsRatingDouble(Rating.Rating), Rating.Unrated);
 
 		await ConcurrentSave(db, $"{Rating.Title} successfully rated.", $"Unable to rate {Rating.Title}");
 
@@ -81,7 +80,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnPostInline()
 	{
-		Rating = await JsonSerializer.DeserializeAsync<PublicationRateModel>(Request.Body) ?? Rating;
+		Rating = await JsonSerializer.DeserializeAsync<RatingDisplay>(Request.Body) ?? Rating;
 		ModelState.ClearValidationState(nameof(Rating));
 		if (!TryValidateModel(Rating, nameof(Rating)))
 		{
@@ -93,7 +92,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 			.ForPublication(Id)
 			.ForUser(userId)
 			.FirstOrDefaultAsync();
-		var ratingValue = PublicationRateModel.RatingString.AsRatingDouble(Rating.Rating);
+		var ratingValue = RatingDisplay.RatingString.AsRatingDouble(Rating.Rating);
 		UpdateRating(ratingObject, Id, userId, ratingValue, Rating.Unrated);
 
 		await db.SaveChangesAsync();
@@ -156,4 +155,54 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 	}
 
 	public record RatingEntry(string UserName, double Rating, bool IsPublic);
+
+	public class RatingDisplay
+	{
+		public sealed class RatingString : ValidationAttribute
+		{
+			public static double? AsRatingDouble(string? ratingString)
+			{
+				NumberFormatInfo customFormat = new CultureInfo("en-US").NumberFormat;
+				customFormat.NumberDecimalSeparator = ".";
+				var result = double.TryParse(ratingString, NumberStyles.AllowDecimalPoint, customFormat, out double ratingNumber);
+				if (!result)
+				{
+					customFormat.NumberDecimalSeparator = ",";
+					result = double.TryParse(ratingString, NumberStyles.AllowDecimalPoint, customFormat, out ratingNumber);
+					if (!result)
+					{
+						return null;
+					}
+				}
+
+				ratingNumber = Math.Round(ratingNumber, 1, MidpointRounding.AwayFromZero);
+
+				return ratingNumber;
+			}
+
+			public override bool IsValid(object? value)
+			{
+				var ratingString = value as string;
+				if (string.IsNullOrWhiteSpace(ratingString))
+				{
+					return true;
+				}
+
+				var ratingNumber = AsRatingDouble(ratingString);
+				if (ratingNumber is >= 0.0 and <= 10.0)
+				{
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		public string Title { get; init; } = "";
+
+		[RatingString(ErrorMessage = "{0} must be between 0 and 10.")]
+		public string? Rating { get; init; }
+
+		public bool Unrated { get; set; }
+	}
 }

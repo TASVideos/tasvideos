@@ -341,7 +341,7 @@ public static class EntityExtensions
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 					.Where(pr => pr.User!.UseRatings)
 					.Average(pr => pr.Value),
-				Rating = new PublicationRateModel
+				Rating = new Pages.Publications.RateModel.RatingDisplay
 				{
 					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
 					Unrated = p.PublicationRatings.All(pr => pr.UserId != userId)
