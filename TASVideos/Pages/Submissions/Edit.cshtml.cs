@@ -44,16 +44,11 @@ public class EditModel(
 			.Where(s => s.Id == Id)
 			.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 			{
-				SystemDisplayName = s.System!.DisplayName,
-				SystemCode = s.System.Code,
 				GameName = s.GameName ?? "",
 				GameVersion = s.SubmittedGameVersion,
 				RomName = s.RomName,
 				Branch = s.Branch,
 				Emulator = s.EmulatorVersion,
-				FrameCount = s.Frames,
-				FrameRate = s.SystemFrameRate!.FrameRate,
-				RerecordCount = s.RerecordCount,
 				CreateTimestamp = s.CreateTimestamp,
 				Submitter = s.Submitter!.UserName,
 				Status = s.Status,

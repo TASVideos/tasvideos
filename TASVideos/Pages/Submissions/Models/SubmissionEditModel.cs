@@ -31,10 +31,6 @@ public class SubmissionEditModel
 	[Display(Name = "For publication Class")]
 	public string? PublicationClass { get; set; }
 
-	[Display(Name = "Console")]
-	public string? SystemDisplayName { get; set; }
-	public string? SystemCode { get; set; }
-
 	[Display(Name = "Game name")]
 	[Required]
 	public string GameName { get; init; } = "";
@@ -54,11 +50,6 @@ public class SubmissionEditModel
 	[Url]
 	[Display(Name = "Encode Embed Link")]
 	public string? EncodeEmbedLink { get; init; }
-
-	[Display(Name = "FrameCount")]
-	public int FrameCount { get; set; }
-	public double FrameRate { get; set; }
-	public int RerecordCount { get; set; }
 
 	[Display(Name = "Author(s)")]
 	public List<string> Authors { get; set; } = [];
@@ -86,7 +77,4 @@ public class SubmissionEditModel
 
 	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
 	public string? AdditionalAuthors { get; init; }
-	public string Title { get; set; } = "";
-	internal int? SystemId { get; set; }
-	internal int? GameId { get; set; }
 }
