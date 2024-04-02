@@ -6,7 +6,6 @@ using TASVideos.Models;
 using TASVideos.Pages.Forum.Posts;
 using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles;
-using TASVideos.Pages.Submissions.Models;
 using TASVideos.WikiModules;
 
 namespace TASVideos.Extensions;
@@ -275,10 +274,10 @@ public static class EntityExtensions
 		return [.. UiDefaults.AnyEntry, .. items];
 	}
 
-	public static IQueryable<SubmissionListEntry> ToSubListEntry(this IQueryable<Submission> query)
+	public static IQueryable<Pages.Submissions.IndexModel.SubmissionEntry> ToSubListEntry(this IQueryable<Submission> query)
 	{
 		return query
-			.Select(s => new SubmissionListEntry
+			.Select(s => new Pages.Submissions.IndexModel.SubmissionEntry
 			{
 				Id = s.Id,
 				System = s.System != null ? s.System!.Code : "Unknown",
@@ -442,9 +441,9 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<SubmissionPublishModel> ToPublishModel(this IQueryable<Submission> submissions)
+	public static IQueryable<Pages.Submissions.PublishModel.SubmissionPublishModel> ToPublishModel(this IQueryable<Submission> submissions)
 	{
-		return submissions.Select(s => new SubmissionPublishModel
+		return submissions.Select(s => new Pages.Submissions.PublishModel.SubmissionPublishModel
 		{
 			SystemCode = s.System!.Code,
 			SystemRegion = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,

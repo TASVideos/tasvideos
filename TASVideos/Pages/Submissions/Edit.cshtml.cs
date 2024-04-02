@@ -3,8 +3,9 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Models;
 using TASVideos.MovieParsers;
-using TASVideos.Pages.Submissions.Models;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -486,5 +487,73 @@ public class EditModel(
 		AvailableRejectionReasons = await db.SubmissionRejectionReasons
 			.ToDropDown()
 			.ToListAsync();
+	}
+
+	public class SubmissionEditModel
+	{
+		[DoNotTrim]
+		[Display(Name = "Comments and explanations")]
+		public string Markup { get; set; } = "";
+
+		[StringLength(1000)]
+		[Display(Name = "Revision Message")]
+		public string? RevisionMessage { get; init; }
+
+		[Display(Name = "Minor Edit")]
+		public bool MinorEdit { get; init; }
+
+		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
+		public IFormFile? MovieFile { get; set; }
+
+		[Display(Name = "Intended Publication Class")]
+		public int? PublicationClassId { get; set; }
+
+		[Display(Name = "Reason")]
+		public int? RejectionReason { get; init; }
+
+		[Display(Name = "Start Type")]
+		public MovieStartType? StartType { get; set; }
+
+		[Display(Name = "For publication Class")]
+		public string? PublicationClass { get; set; }
+
+		[Display(Name = "Game name")]
+		[Required]
+		public string GameName { get; init; } = "";
+
+		[Display(Name = "Game Version")]
+		public string? GameVersion { get; init; }
+
+		[Display(Name = "ROM filename")]
+		public string? RomName { get; init; }
+
+		[Display(Name = "Goal")]
+		public string? Branch { get; init; }
+
+		[Display(Name = "Emulator", Description = "Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.")]
+		public string? Emulator { get; init; }
+
+		[Url]
+		[Display(Name = "Encode Embed Link")]
+		public string? EncodeEmbedLink { get; init; }
+
+		[Display(Name = "Author(s)")]
+		public List<string> Authors { get; set; } = [];
+		public string? Submitter { get; init; }
+
+		[Display(Name = "Submit Date")]
+		public DateTime CreateTimestamp { get; init; }
+
+		[Display(Name = "Last Edited")]
+		public DateTime LastUpdateTimestamp { get; set; }
+
+		[Display(Name = "Last Edited by")]
+		public string? LastUpdateUser { get; set; }
+		public SubmissionStatus Status { get; init; }
+		public string? Judge { get; init; }
+		public string? Publisher { get; init; }
+
+		[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
+		public string? AdditionalAuthors { get; init; }
 	}
 }

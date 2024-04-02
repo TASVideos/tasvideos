@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Pages.Submissions.Models;
 
 namespace TASVideos.Pages.RssFeeds;
 
@@ -10,7 +9,7 @@ public class SubmissionsModel(ApplicationDbContext db, IWikiPages wikiPages) : B
 	public List<RssSubmission> Submissions { get; set; } = [];
 	public async Task<IActionResult> OnGet()
 	{
-		var filter = SubmissionSearchRequest.Default;
+		var filter = TASVideos.Pages.Submissions.IndexModel.SubmissionSearchRequest.Default;
 		Submissions = await db.Submissions
 			.Where(s => filter.Contains(s.Status))
 			.ByMostRecent()
