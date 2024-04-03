@@ -1,4 +1,4 @@
-﻿@model IForumTopicActionBar
+﻿@model ForumTopicModel
 <a condition="User.IsLoggedIn() && !Model.IsWatching"
    asp-page="Index"
    asp-page-handler="Watch"

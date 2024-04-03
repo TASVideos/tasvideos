@@ -3,17 +3,7 @@ using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Topics.Models;
 
-public interface IForumTopicActionBar
-{
-	int Id { get; }
-	bool IsLocked { get; }
-	bool IsWatching { get; }
-	string Title { get; }
-	int CategoryId { get; }
-	bool Restricted { get; }
-}
-
-public class ForumTopicModel : IForumTopicActionBar
+public class ForumTopicModel
 {
 	public int Id { get; init; }
 	public int LastPostId { get; init; }
