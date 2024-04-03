@@ -3,7 +3,6 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
-using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -28,7 +27,7 @@ public class IndexModel(
 	[FromQuery]
 	public bool ViewPollResults { get; set; } = false;
 
-	public ForumTopicModel Topic { get; set; } = new();
+	public TopicDisplay Topic { get; set; } = new();
 
 	public IWikiPage? WikiPage { get; set; }
 
@@ -48,7 +47,7 @@ public class IndexModel(
 		bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var topic = await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
-			.Select(t => new ForumTopicModel
+			.Select(t => new TopicDisplay
 			{
 				Id = t.Id,
 				IsWatching = userId.HasValue && t.ForumTopicWatches.Any(ft => ft.UserId == userId.Value),
@@ -63,7 +62,7 @@ public class IndexModel(
 				GameName = t.Game != null ? t.Game.DisplayName : null,
 				CategoryId = t.Forum!.CategoryId,
 				Poll = t.PollId.HasValue
-					? new ForumTopicModel.PollModel
+					? new TopicDisplay.PollModel
 					{
 						PollId = t.PollId.Value,
 						Question = t.Poll!.Question,
@@ -145,7 +144,7 @@ public class IndexModel(
 		{
 			Topic.Poll.Options = await db.ForumPollOptions
 				.ForPoll(Topic.Poll.PollId)
-				.Select(o => new ForumTopicModel.PollOptionModel(
+				.Select(o => new TopicDisplay.PollOptionModel(
 					o.Text,
 					o.Ordinal,
 					o.Votes
@@ -306,5 +305,35 @@ public class IndexModel(
 		}
 
 		public int? Highlight { get; set; }
+	}
+
+	public class TopicDisplay
+	{
+		public int Id { get; init; }
+		public int LastPostId { get; init; }
+		public bool Restricted { get; init; }
+		public bool IsWatching { get; init; }
+		public bool IsLocked { get; init; }
+		public string Title { get; init; } = "";
+		public int ForumId { get; init; }
+		public string ForumName { get; init; } = "";
+		public int? SubmissionId { get; init; }
+		public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
+		public PollModel? Poll { get; init; }
+		public int? GameId { get; init; }
+		public string? GameName { get; init; }
+		public int CategoryId { get; init; }
+
+		public class PollModel
+		{
+			public int PollId { get; init; }
+			public string Question { get; init; } = "";
+			public DateTime? CloseDate { get; init; }
+			public bool MultiSelect { get; init; }
+			public bool ViewPollResults { get; init; }
+			public List<PollOptionModel> Options { get; set; } = [];
+		}
+
+		public record PollOptionModel(string Text, int Ordinal, List<int> Voters);
 	}
 }

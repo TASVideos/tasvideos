@@ -1,4 +1,4 @@
-﻿@model ForumTopicModel.PollModel
+﻿@model IndexModel.TopicDisplay.PollModel
 @{
 	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
 	bool viewResults = Model.ViewPollResults;
@@ -19,7 +19,7 @@
 }
 
 <info-alert>
-	<forum-markup markup=@Model.Question enable-bb-code=true></forum-markup>
+	<forum-markup markup="@Model.Question" enable-bb-code="true"></forum-markup>
 	<form asp-page="Index" asp-page-handler="Vote">
 		<input type="hidden" asp-for="@Model.PollId" />
 		@foreach (var option in Model.Options.OrderBy(o => o.Ordinal))
