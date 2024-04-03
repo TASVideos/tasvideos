@@ -1,4 +1,4 @@
-﻿@model TASVideos.Pages.Publications.Models.PublicationDisplayModel
+﻿@model TASVideos.Pages.Publications.IndexModel.PublicationDisplay
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
 	var requestToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
@@ -202,8 +202,8 @@
 					<span condition="Model.GameVersionId > 0 ">
 						Game Version:<br />
 						<a
-							asp-page="/Games/Versions/View" 
-							asp-route-id="@Model.GameVersionId" 
+							asp-page="/Games/Versions/View"
+							asp-route-id="@Model.GameVersionId"
 							asp-route-gameid="@Model.GameId"
 							asp-route-returnUrl="@ViewData["ReturnUrl"]">
 							@Model.GameVersionName
@@ -255,7 +255,7 @@
 						</a>
 					</div>
 				</small>
-				
+
 			</div>
 			<div condition="Model.MovieFileLinks.Any()" class="col-auto">
 				<small>

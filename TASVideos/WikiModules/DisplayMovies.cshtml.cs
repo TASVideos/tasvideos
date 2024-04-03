@@ -6,7 +6,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.DisplayMovies)]
 public class DisplayMovies(ApplicationDbContext db, IMovieSearchTokens tokens) : WikiViewComponent
 {
-	public List<PublicationDisplayModel> Movies { get; set; } = [];
+	public List<Pages.Publications.IndexModel.PublicationDisplay> Movies { get; set; } = [];
 	public async Task<IViewComponentResult> InvokeAsync(
 		IList<string> pubClass,
 		IList<string> systemCode,

@@ -295,10 +295,10 @@ public static class EntityExtensions
 			});
 	}
 
-	public static IQueryable<PublicationDisplayModel> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
+	public static IQueryable<Pages.Publications.IndexModel.PublicationDisplay> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
 	{
 		var q = query
-			.Select(p => new PublicationDisplayModel
+			.Select(p => new Pages.Publications.IndexModel.PublicationDisplay
 			{
 				Id = p.Id,
 				GameId = p.GameId,
@@ -314,28 +314,28 @@ public static class EntityExtensions
 				MovieFileName = p.MovieFileName,
 				SubmissionId = p.SubmissionId,
 				Urls = p.PublicationUrls
-					.Select(pu => new PublicationDisplayModel.PublicationUrl(pu.Type, pu.Url!, pu.DisplayName))
+					.Select(pu => new Pages.Publications.IndexModel.PublicationDisplay.PublicationUrl(pu.Type, pu.Url!, pu.DisplayName))
 					.ToList(),
 				TopicId = p.Submission!.TopicId ?? 0,
 				EmulatorVersion = p.EmulatorVersion,
 				Tags = p.PublicationTags
-					.Select(pt => new PublicationDisplayModel.TagModel(
+					.Select(pt => new Pages.Publications.IndexModel.PublicationDisplay.TagModel(
 						pt.Tag!.DisplayName,
 						pt.Tag.Code)),
 				GameGenres = p.Game!.GameGenres.Select(gg => gg.Genre!.DisplayName),
 				Files = p.Files
-					.Select(f => new PublicationDisplayModel.FileModel(
+					.Select(f => new Pages.Publications.IndexModel.PublicationDisplay.FileModel(
 						f.Id,
 						f.Path,
 						f.Type,
 						f.Description)),
 				Flags = p.PublicationFlags
-					.Select(pf => new PublicationDisplayModel.FlagModel(
+					.Select(pf => new Pages.Publications.IndexModel.PublicationDisplay.FlagModel(
 						pf.Flag!.IconPath,
 						pf.Flag!.LinkPath,
 						pf.Flag.Name)),
 				ObsoletedMovies = p.ObsoletedMovies
-					.Select(o => new PublicationDisplayModel.ObsoletesModel(o.Id, o.Title)),
+					.Select(o => new Pages.Publications.IndexModel.PublicationDisplay.ObsoletesModel(o.Id, o.Title)),
 				RatingCount = p.PublicationRatings.Count,
 				OverallRating = p.PublicationRatings
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))

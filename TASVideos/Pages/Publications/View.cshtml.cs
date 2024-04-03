@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications;
 
@@ -9,7 +8,7 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int Id { get; set; }
 
-	public PublicationDisplayModel Publication { get; set; } = new();
+	public IndexModel.PublicationDisplay Publication { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
