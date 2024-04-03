@@ -1,4 +1,4 @@
-﻿@model TASVideos.Pages.Forum.Models.IForumPostEntry
+﻿@model TASVideos.Pages.Forum.Topics.IndexModel.PostEntry
 @{
 	DateTime minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysPostsCountAsActive);
 	bool isCreateActivity = Model.CreateTimestamp > minimumDate;

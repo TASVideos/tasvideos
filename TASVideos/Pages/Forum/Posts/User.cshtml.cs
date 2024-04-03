@@ -1,7 +1,6 @@
 ﻿using TASVideos.Core;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Models;
-
+using static TASVideos.Pages.Forum.Topics.IndexModel;
 namespace TASVideos.Pages.Forum.Posts;
 
 [AllowAnonymous]
@@ -11,11 +10,9 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 	public string UserName { get; set; } = "";
 
 	[FromQuery]
-	public UserPostsRequest Search { get; set; } = new();
+	public TopicRequest Search { get; set; } = new();
 
 	public PageOf<UserPagePost> Posts { get; set; } = PageOf<UserPagePost>.Empty();
-
-	public List<AwardAssignmentSummary> Awards { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -64,7 +61,8 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 				ForumName = p.Topic!.Forum!.Name,
 				PosterMood = p.PosterMood,
 				PosterId = p.PosterId,
-				PostEditedTimestamp = p.PostEditedTimestamp
+				PostEditedTimestamp = p.PostEditedTimestamp,
+				TopicIsLocked = p.Topic!.IsLocked
 			})
 			.PageOf(Search);
 
@@ -87,55 +85,24 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 			post.PosterPlayerRank = rank;
 			post.PosterPronouns = user.PreferredPronouns;
 			post.Awards = userAwards;
+
+			var isOwnPost = post.PosterId == User.GetUserId();
+			var isOpenTopic = !post.TopicIsLocked;
+			post.IsEditable = User.Has(PermissionTo.EditForumPosts) || (isOwnPost && isOpenTopic);
+
+			// Note: IsLastPost is always false, because calculating it for every topic is too expensive, so we only check permissions
+			// The goal here is for moderators to be able to modify posts from this screen, as a convenience
+			post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts);
 		}
 
 		return Page();
 	}
 
-	public class UserPostsRequest : PagingModel
+	public class UserPagePost : PostEntry
 	{
-		public UserPostsRequest()
-		{
-			PageSize = ForumConstants.PostsPerPage;
-			Sort = $"-{nameof(UserPagePost.CreateTimestamp)}";
-		}
-	}
-
-	public class UserPagePost : IForumPostEntry
-	{
-		public int Id { get; init; }
-		public DateTime CreateTimestamp { get; init; }
-		public DateTime LastUpdateTimestamp { get; init; }
-		public bool EnableBbCode { get; init; }
-		public bool EnableHtml { get; init; }
-		public bool Restricted { get; init; }
-		public string Text { get; init; } = "";
-		public DateTime? PostEditedTimestamp { get; init; }
-		public string? Subject { get; init; }
-		public int TopicId { get; init; }
+		public bool TopicIsLocked { get; init; }
 		public string TopicTitle { get; init; } = "";
 		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";
-		public ForumPostMood PosterMood { get; init; }
-
-		// Not needed
-		public bool Highlight => false;
-		public bool IsEditable => false;
-		public bool IsDeletable => false;
-
-		// Fill with user info
-		public int PosterId { get; init; }
-		public string PosterName { get; set; } = "";
-		public string? Signature { get; set; }
-		public int PosterPostCount { get; set; }
-		public string? PosterLocation { get; set; }
-		public DateTime PosterJoined { get; set; }
-		public double PosterPlayerPoints { get; set; }
-		public string? PosterAvatar { get; set; }
-		public string? PosterMoodUrlBase { get; set; }
-		public IList<string> PosterRoles { get; set; } = [];
-		public string? PosterPlayerRank { get; set; }
-		public PreferredPronounTypes PosterPronouns { get; set; }
-		public ICollection<AwardAssignmentSummary> Awards { get; set; } = [];
 	}
 }

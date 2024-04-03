@@ -2,7 +2,6 @@
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -337,28 +336,28 @@ public class IndexModel(
 		public record PollOptionModel(string Text, int Ordinal, List<int> Voters);
 	}
 
-	public class PostEntry : IForumPostEntry
+	public class PostEntry
 	{
 		public int Id { get; init; }
 		public int TopicId { get; init; }
 		public bool Highlight { get; set; }
 		public bool Restricted { get; init; }
 		public int PosterId { get; init; }
-		public string PosterName { get; init; } = "";
-		public string? PosterAvatar { get; init; }
-		public string? PosterLocation { get; init; }
-		public int PosterPostCount { get; init; }
+		public string PosterName { get; set; } = "";
+		public string? PosterAvatar { get; set; }
+		public string? PosterLocation { get; set; }
+		public int PosterPostCount { get; set; }
 		public double PosterPlayerPoints { get; set; }
-		public DateTime PosterJoined { get; init; }
-		public string? PosterMoodUrlBase { get; init; }
+		public DateTime PosterJoined { get; set; }
+		public string? PosterMoodUrlBase { get; set; }
 		public ForumPostMood PosterMood { get; init; }
-		public PreferredPronounTypes PosterPronouns { get; init; }
-		public IList<string> PosterRoles { get; init; } = [];
+		public PreferredPronounTypes PosterPronouns { get; set; }
+		public IList<string> PosterRoles { get; set; } = [];
 		public string? PosterPlayerRank { get; set; }
 		public string Text { get; init; } = "";
 		public DateTime? PostEditedTimestamp { get; init; }
 		public string? Subject { get; init; }
-		public string? Signature { get; init; }
+		public string? Signature { get; set; }
 
 		public ICollection<AwardAssignmentSummary> Awards { get; set; } = [];
 
