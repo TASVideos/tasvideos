@@ -35,7 +35,7 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 				PublicationId = p.PublicationId,
 				PublicationTitle = p.Publication!.Title,
 				Description = p.Description ?? "",
-				Path = p.Path,
+				Path = p.Path
 			})
 			.SortedPageOf(paging);
 

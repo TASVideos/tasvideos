@@ -28,7 +28,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				Created = g.h.Created,
 				TableName = g.h.TableName,
 				Changed = g.h.Changed,
-				Kind = g.h.Kind,
+				Kind = g.h.Kind
 			});
 
 		if (!string.IsNullOrWhiteSpace(Table))

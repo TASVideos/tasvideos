@@ -49,7 +49,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 			AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto,
 			UserDateFormat = user.DateFormat,
 			UserTimeFormat = user.TimeFormat,
-			UserDecimalFormat = user.DecimalFormat,
+			UserDecimalFormat = user.DecimalFormat
 		};
 	}
 

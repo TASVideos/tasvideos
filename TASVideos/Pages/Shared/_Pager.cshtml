@@ -11,9 +11,9 @@
 	<div condition="Model.LastPage() > 1" class="col-12 text-center">
 		<div class="btn-group flex-wrap" role="group">
 			@{
-				var pagerClass = "btn btn-secondary border-dark flex-grow-0";
-				var pagerDisabledClass = "btn btn-silver border-dark flex-grow-0";
-				var ellipsisClass = "btn btn-outline-secondary border-dark flex-grow-0";
+				const string pagerClass = "btn btn-secondary border-dark flex-grow-0";
+				const string pagerDisabledClass = "btn btn-silver border-dark flex-grow-0";
+				const string ellipsisClass = "btn btn-outline-secondary border-dark flex-grow-0";
 				var additionalProperties = Model.AdditionalProperties();
 			}
 			<a disable="@Model.CurrentPage == 1"

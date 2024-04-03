@@ -105,13 +105,13 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 				OverallRating = (double?)p.PublicationRatings
 						.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 						.Where(pr => pr.User!.UseRatings)
-						.Average(pr => pr.Value),
+						.Average(pr => pr.Value)
 			})
 			.Select(rro => new
 			{
 				Rating = ratingValue.ToString(),
 				rro.RatingCount,
-				OverallRating = (rro.OverallRating ?? 0).ToOverallRatingString(),
+				OverallRating = (rro.OverallRating ?? 0).ToOverallRatingString()
 			})
 			.SingleOrDefaultAsync();
 

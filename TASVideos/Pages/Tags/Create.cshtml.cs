@@ -3,9 +3,6 @@
 [RequirePermission(PermissionTo.TagMaintenance)]
 public class CreateModel(ITagService tagService) : BasePageModel
 {
-	[FromRoute]
-	public int Id { get; set; }
-
 	[BindProperty]
 	public Tag Tag { get; set; } = new();
 

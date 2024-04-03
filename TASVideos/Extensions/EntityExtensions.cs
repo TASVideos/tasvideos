@@ -345,7 +345,7 @@ public static class EntityExtensions
 				{
 					Rating = p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
 					Unrated = p.PublicationRatings.All(pr => pr.UserId != userId)
-				},
+				}
 			});
 
 		if (ratingSort)

@@ -70,7 +70,7 @@ public class IndexModel(
 						Question = t.Poll!.Question,
 						CloseDate = t.Poll!.CloseDate,
 						MultiSelect = t.Poll!.MultiSelect,
-						ViewPollResults = ViewPollResults,
+						ViewPollResults = ViewPollResults
 					}
 					: null
 			})

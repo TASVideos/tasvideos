@@ -3,9 +3,6 @@
 [RequirePermission(PermissionTo.FlagMaintenance)]
 public class CreateModel(IFlagService flagService) : BasePageModel
 {
-	[FromRoute]
-	public int Id { get; set; }
-
 	[BindProperty]
 	public Flag Flag { get; set; } = new();
 

@@ -25,7 +25,7 @@
 					var allPages = pageData.PageName.SplitPathCamelCase().Split(" / ");
 					for (int i = 0; i < allPages.Length - 1; i++)
 					{
-						<li class="breadcrumb-item"><a href="@('/' + string.Join('/', (allPages.Take(i+1))).RemoveAllSpaces())">@allPages[i]</a></li>
+						<li class="breadcrumb-item"><a href="@('/' + string.Join('/', allPages.Take(i+1)).RemoveAllSpaces())">@allPages[i]</a></li>
 					}
 					<li class="breadcrumb-item active" aria-current="page"><h1>@allPages.Last()</h1></li>
 				}

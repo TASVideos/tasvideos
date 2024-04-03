@@ -61,11 +61,11 @@
 	</row>
 	<fieldset>
 		<label asp-for="Game.Genres"></label>
-		<select asp-for="Game.Genres" size="@(Math.Min(Model.Game.Genres.Count(), 7).ToString())" asp-items="Model.AvailableGenres" class="form-control"></select>
+		<select asp-for="Game.Genres" size="@(Math.Min(Model.Game.Genres.Count, 7).ToString())" asp-items="Model.AvailableGenres" class="form-control"></select>
 	</fieldset>
 	<fieldset>
 		<label asp-for="Game.Groups"></label>
-		<select asp-for="Game.Groups" size="@(Math.Min(Model.Game.Groups.Count(), 7).ToString())" asp-items="Model.AvailableGroups" class="form-control"></select>
+		<select asp-for="Game.Groups" size="@(Math.Min(Model.Game.Groups.Count, 7).ToString())" asp-items="Model.AvailableGroups" class="form-control"></select>
 	</fieldset>
 	<hr />
 	<div class="text-center">

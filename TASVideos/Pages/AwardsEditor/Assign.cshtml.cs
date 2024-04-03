@@ -74,12 +74,12 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 
 		if (AwardToAssign.Users.Any())
 		{
-			await awards.AssignUserAward(AwardToAssign.Award!, Year, AwardToAssign.Users);
+			await awards.AssignUserAward(AwardToAssign.Award, Year, AwardToAssign.Users);
 		}
 
 		if (AwardToAssign.Publications.Any())
 		{
-			await awards.AssignPublicationAward(AwardToAssign.Award!, Year, AwardToAssign.Publications);
+			await awards.AssignPublicationAward(AwardToAssign.Award, Year, AwardToAssign.Publications);
 		}
 
 		return BasePageRedirect("Index", new { DateTime.UtcNow.Year });

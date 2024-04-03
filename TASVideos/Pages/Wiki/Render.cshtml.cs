@@ -11,7 +11,7 @@ public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<
 	public async Task<IActionResult> OnGet(string? url, int? revision = null)
 	{
 		url = WebUtility.UrlDecode(url?.Trim('/') ?? "");
-		if (url.ToLower() == "frontpage")
+		if (url.Equals("frontpage", StringComparison.InvariantCultureIgnoreCase))
 		{
 			return Redirect("/");
 		}

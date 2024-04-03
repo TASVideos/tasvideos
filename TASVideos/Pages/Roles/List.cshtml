@@ -9,14 +9,14 @@
 <p condition="User.IsLoggedIn()">See the <a asp-page="/Permissions/Index">Permission List</a> for details on individual permissions</p>
 <div class="card mb-2">
 	<cardbody>
-		@foreach (var item in Model.Roles.OrderBy(m => m.Permissions.Count()).Select(r => r.Name))
+		@foreach (var item in Model.Roles.OrderBy(m => m.Permissions.Count).Select(r => r.Name))
 		{
 			<li><a href="#@item">@item</a></li>
 		}
 	</cardbody>
 </div>
 
-@foreach (var role in Model.Roles.OrderBy(m => m.Permissions.Count()))
+@foreach (var role in Model.Roles.OrderBy(m => m.Permissions.Count))
 {
 	<partial name="_Role", model="role" />
 }

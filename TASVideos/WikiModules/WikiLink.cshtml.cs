@@ -74,7 +74,7 @@ public class WikiLink(ApplicationDbContext db) : WikiViewComponent
 		{
 			Href = href,
 			DisplayText = displayText,
-			Title = titleText,
+			Title = titleText
 		};
 	}
 

@@ -34,14 +34,14 @@
 	ViewData.SetMetaTags(new MetaTagModel
 	{
 		Title = Model.Submission.Title,
-		Description = $"Submission #{Model.Id} from {Model.Submission.Submitted.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}", 
+		Description = $"Submission #{Model.Id} from {Model.Submission.Submitted.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}",
 		Image = youtubeEmbedImage,
 		UseTwitterCard = !string.IsNullOrWhiteSpace(youtubeEmbedImage)
 	});
 }
 
 @functions{
-	string StatusColor(SubmissionStatus status)
+	static string StatusColor(SubmissionStatus status)
 	{
 		switch (status)
 		{
@@ -127,7 +127,7 @@
 						@Model.Submission.GameVersion
 					</a>
 				</div>
-				<div condition="(!Model.Submission.GameVersionId.HasValue)">@Model.Submission.GameVersion</div>
+				<div condition="!Model.Submission.GameVersionId.HasValue">@Model.Submission.GameVersion</div>
 			</div>
 			<div class="sub-info-cell">
 				<label>@Html.DisplayNameFor(m => m.Submission.Emulator)</label>
@@ -176,7 +176,7 @@
 				<div>@Model.Submission.RomName</div>
 			</div>
 		</div>
-	
+
 		<div condition="!string.IsNullOrWhiteSpace(Model.Submission.Annotations)" class="sub-info-cell mb-2">
 			<label>
 				<a class="collapsed text-body" data-bs-toggle="collapse" href="#collapse-content-annotations">

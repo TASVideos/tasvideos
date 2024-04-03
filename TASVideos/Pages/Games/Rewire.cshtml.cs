@@ -34,7 +34,7 @@ public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publish
 					Publications = g.Publications.Select(p => new EntryWithVersion(p.Id, p.Title, p.GameVersion == null ? null : p.GameVersion.TitleOverride)).ToList(),
 					Submissions = g.Submissions.Select(s => new EntryWithVersion(s.Id, s.Title, s.GameVersion == null ? null : s.GameVersion.TitleOverride)).ToList(),
 					Versions = g.GameVersions.Select(r => new Entry(r.Id, r.Name)).ToList(),
-					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
+					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList()
 				})
 				.SingleAsync();
 
@@ -46,7 +46,7 @@ public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publish
 					Publications = g.Publications.Select(p => new EntryWithVersion(p.Id, p.Title, p.GameVersion == null ? null : p.GameVersion.TitleOverride)).ToList(),
 					Submissions = g.Submissions.Select(s => new EntryWithVersion(s.Id, s.Title, s.GameVersion == null ? null : s.GameVersion.TitleOverride)).ToList(),
 					Versions = g.GameVersions.Select(r => new Entry(r.Id, r.Name)).ToList(),
-					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList(),
+					Userfiles = g.UserFiles.Select(u => new EntryLong(u.Id, u.Title)).ToList()
 				})
 				.SingleAsync();
 		}

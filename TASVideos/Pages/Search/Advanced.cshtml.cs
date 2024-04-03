@@ -25,15 +25,15 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 
 	[FromQuery]
 	[Display(Name = "Search Wiki")]
-	public bool PageSearch { get; set; } = false;
+	public bool PageSearch { get; set; }
 
 	[FromQuery]
 	[Display(Name = "Search Forum Topics")]
-	public bool TopicSearch { get; set; } = false;
+	public bool TopicSearch { get; set; }
 
 	[FromQuery]
 	[Display(Name = "Search Forum Posts")]
-	public bool PostSearch { get; set; } = false;
+	public bool PostSearch { get; set; }
 
 	[FromQuery]
 	[Display(Name = "Search Publications")]

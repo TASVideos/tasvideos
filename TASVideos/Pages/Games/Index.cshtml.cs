@@ -82,7 +82,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				.First(),
 				OnlineWatchingUrl = p.PublicationUrls
 				.First(u => u.Type == PublicationUrlType.Streaming).Url,
-				GameTitle = (p.GameVersion != null && p.GameVersion.TitleOverride != null) ? p.GameVersion.TitleOverride : p.Game!.DisplayName,
+				GameTitle = p.GameVersion != null && p.GameVersion.TitleOverride != null ? p.GameVersion.TitleOverride : p.Game!.DisplayName
 			})
 			.ToListAsync();
 
@@ -102,7 +102,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 					Title = m.Title,
 					Goal = m.Goal,
 					Screenshot = m.Screenshot,
-					OnlineWatchingUrl = m.OnlineWatchingUrl,
+					OnlineWatchingUrl = m.OnlineWatchingUrl
 				}))
 			.ToList();
 

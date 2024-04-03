@@ -30,7 +30,7 @@ public class CustomLocalizationMiddleware(RequestDelegate next)
 						{
 							DateFormat = u.DateFormat,
 							TimeFormat = u.TimeFormat,
-							DecimalFormat = u.DecimalFormat,
+							DecimalFormat = u.DecimalFormat
 						})
 						.SingleOrDefaultAsync();
 					customCultureInfo = ConstructCustomCulture(customCultureData);

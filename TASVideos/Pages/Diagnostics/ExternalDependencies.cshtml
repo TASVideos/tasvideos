@@ -11,17 +11,12 @@
 
 	string ToIconClass(bool? val)
 	{
-		if (val == true)
+		return val switch
 		{
-			return "text-success fa-check";
-		}
-
-		if (val == false)
-		{
-			return "text-danger fa-exclamation";
-		}
-
-		return "text-info fa-question";
+			true => "text-success fa-check",
+			false => "text-danger fa-exclamation",
+			_ => "text-info fa-question"
+		};
 	}
 }
 <ul>

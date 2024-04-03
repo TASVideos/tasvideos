@@ -12,12 +12,7 @@ public class RequireBase : Attribute
 		return new RedirectToPageResult("/Account/Login", new { returnUrl });
 	}
 
-	protected IActionResult AccessDenied()
-	{
-		return new RedirectToPageResult("/Account/AccessDenied");
-	}
-
-	protected void Denied(PageHandlerExecutingContext context)
+	protected static void Denied(PageHandlerExecutingContext context)
 	{
 		if (context.HttpContext.Request.IsAjaxRequest())
 		{
@@ -26,11 +21,11 @@ public class RequireBase : Attribute
 		}
 		else
 		{
-			context.Result = AccessDenied();
+			context.Result = new RedirectToPageResult("/Account/AccessDenied");
 		}
 	}
 
-	protected async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissions(PageHandlerExecutingContext context)
+	protected static async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissions(PageHandlerExecutingContext context)
 	{
 		// On Post calls, we are potentially changing data, which could be malicious
 		// Let's take the database hit to get the most recent permissions rather than relying

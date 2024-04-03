@@ -37,7 +37,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			new () { Text = "JU", Value = "JU" },
 			new () { Text = "EU", Value = "UE" },
 			new () { Text = "W", Value = "W" },
-			new () { Text = "Other", Value = "Other" },
+			new () { Text = "Other", Value = "Other" }
 	];
 
 	public async Task<IActionResult> OnGet()

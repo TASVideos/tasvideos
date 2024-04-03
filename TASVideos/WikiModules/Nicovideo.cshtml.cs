@@ -27,7 +27,7 @@ public class Nicovideo : WikiViewComponent
 		}
 
 		if (!string.IsNullOrWhiteSpace(align)
-			&& (align.ToLower() == "left" || align.ToLower() == "right"))
+			&& (align.Equals("left", StringComparison.InvariantCultureIgnoreCase) || align.Equals("right", StringComparison.InvariantCultureIgnoreCase)))
 		{
 			Align = align.ToLower();
 		}

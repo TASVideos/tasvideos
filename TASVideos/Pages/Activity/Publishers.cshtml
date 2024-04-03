@@ -12,7 +12,7 @@
 }
 
 @{
-	var total = Model.Publications.Count();
+	var total = Model.Publications.Count;
 
 	var classCounts = Model.Publications
 		.GroupBy(p => p.Class)

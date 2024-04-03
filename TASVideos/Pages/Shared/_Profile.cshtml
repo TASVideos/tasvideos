@@ -108,7 +108,7 @@
 				</div>
 			</cardbody>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="card-footer">
-				<forum-markup markup=@Model.Signature enable-html=false enable-bb-code=true></forum-markup>
+				<forum-markup markup="@Model.Signature" enable-html="false" enable-bb-code="true"></forum-markup>
 			</div>
 		</card>
 		<card class="mb-2">
@@ -191,8 +191,8 @@
 				</div>
 				<div condition="Model.SubmissionCount > 0" class="card-text">
 					<p>
-						<a 
-							asp-page="/Submissions/Index" 
+						<a
+							asp-page="/Submissions/Index"
 							asp-route-user="@Model.UserName">
 						@Model.SubmissionCount
 					</a> Total
@@ -200,9 +200,9 @@
 					@foreach (var sub in Model.Submissions.OrderByDescending(s => s.Count))
 					{
 						<label>
-							<a 
-								asp-page="/Submissions/Index" 
-								asp-route-user="@Model.UserName" 
+							<a
+								asp-page="/Submissions/Index"
+								asp-route-user="@Model.UserName"
 								asp-route-statusfilter="@((int)sub.Status)">
 								@sub.Count
 							</a>

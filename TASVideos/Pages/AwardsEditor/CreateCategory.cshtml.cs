@@ -47,7 +47,6 @@ public class CreateCategoryModel(IAwards awards, IMediaFileUploader mediaFileUpl
 
 	public class CreateAwardCategoryModel
 	{
-		public int Id { get; init; }
 		public AwardType Type { get; init; }
 
 		[StringLength(25)]

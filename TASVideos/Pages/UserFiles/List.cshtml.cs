@@ -25,7 +25,7 @@ public class ListModel(ApplicationDbContext db) : PageModel
 				Frames = uf.Frames,
 				Rerecords = uf.Rerecords,
 				CommentCount = uf.Comments.Count,
-				UploadTimestamp = uf.UploadTimestamp,
+				UploadTimestamp = uf.UploadTimestamp
 			})
 			.SortedPageOf(Search);
 	}

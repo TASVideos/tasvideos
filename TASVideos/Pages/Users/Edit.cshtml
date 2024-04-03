@@ -187,7 +187,7 @@
 	</full-row>
 	<hr />
 	<label asp-for="UserToEdit.SelectedRoles"></label>
-	<select asp-for="UserToEdit.SelectedRoles" size="@(Math.Min(Model.AvailableRoles.Count(), 7).ToString())" asp-items="Model.AvailableRoles" class="form-control"></select>
+	<select asp-for="UserToEdit.SelectedRoles" size="@(Math.Min(Model.AvailableRoles.Count, 7).ToString())" asp-items="Model.AvailableRoles" class="form-control"></select>
 	@await Html.RenderWiki(SystemWiki.UserEditRole)
 	<row>
 		<column md="5">

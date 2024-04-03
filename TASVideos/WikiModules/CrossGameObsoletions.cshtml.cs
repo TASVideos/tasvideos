@@ -17,7 +17,7 @@ public class CrossGameObsoletions(ApplicationDbContext db) : WikiViewComponent
 				p.GameId,
 				p.Game!.DisplayName,
 				ObsGameId = p.ObsoletedBy == null ? -1 : p.ObsoletedBy.GameId,
-				ObsDisplayName = p.ObsoletedBy == null ? "" : p.ObsoletedBy.Game!.DisplayName,
+				ObsDisplayName = p.ObsoletedBy == null ? "" : p.ObsoletedBy.Game!.DisplayName
 			})
 			.ToListAsync();
 

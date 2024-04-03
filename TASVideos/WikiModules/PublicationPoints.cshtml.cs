@@ -14,7 +14,7 @@ public class PublicationPoints(ApplicationDbContext db, IPointsService pointsSer
 			.Select(p => new PointsEntry
 			{
 				Id = p.Id,
-				Title = p.Title,
+				Title = p.Title
 			})
 			.ToListAsync();
 

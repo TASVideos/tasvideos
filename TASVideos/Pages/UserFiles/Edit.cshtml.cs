@@ -97,7 +97,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 					.ForSystem(UserFile.SystemId.Value)
 					.OrderBy(g => g.DisplayName)
 					.ToDropDown()
-					.ToListAsync(),
+					.ToListAsync()
 			];
 		}
 		else

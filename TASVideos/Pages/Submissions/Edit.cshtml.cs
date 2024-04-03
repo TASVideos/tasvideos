@@ -265,12 +265,12 @@ public class EditModel(
 				moveTopicTo = SiteGlobalConstants.PlaygroundForumId;
 			}
 			else if (submission.Topic.ForumId != SiteGlobalConstants.WorkbenchForumId &&
-				(Submission.Status is SubmissionStatus.New
+				Submission.Status is SubmissionStatus.New
 					or SubmissionStatus.Delayed
 					or SubmissionStatus.NeedsMoreInfo
 					or SubmissionStatus.JudgingUnderWay
 					or SubmissionStatus.Accepted
-					or SubmissionStatus.PublicationUnderway))
+					or SubmissionStatus.PublicationUnderway)
 			{
 				moveTopic = true;
 				moveTopicTo = SiteGlobalConstants.WorkbenchForumId;
@@ -510,12 +510,6 @@ public class EditModel(
 
 		[Display(Name = "Reason")]
 		public int? RejectionReason { get; init; }
-
-		[Display(Name = "Start Type")]
-		public MovieStartType? StartType { get; set; }
-
-		[Display(Name = "For publication Class")]
-		public string? PublicationClass { get; set; }
 
 		[Display(Name = "Game name")]
 		[Required]

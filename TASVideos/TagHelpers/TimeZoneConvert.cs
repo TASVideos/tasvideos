@@ -10,7 +10,7 @@ public class TimeZoneConvert(
 	ClaimsPrincipal claimsPrincipal,
 	UserManager userManager) : TagHelper
 {
-	private static readonly IReadOnlyDictionary<string, TimeZoneInfo> Timezones = TimeZoneInfo
+	private static readonly Dictionary<string, TimeZoneInfo> Timezones = TimeZoneInfo
 		.GetSystemTimeZones()
 		.ToDictionary(tkey => tkey.Id);
 

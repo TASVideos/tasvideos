@@ -84,7 +84,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 					PublishedMovieCount = await db.Publications.ThatAreCurrent().CountAsync(),
 					TotalMovieCount = await db.Publications.CountAsync(),
 					SubmissionCount = await db.Submissions.CountAsync(),
-					AverageRerecordCount = (int)await db.Publications.AverageAsync(p => p.RerecordCount),
+					AverageRerecordCount = (int)await db.Publications.AverageAsync(p => p.RerecordCount)
 				};
 
 				return View();
