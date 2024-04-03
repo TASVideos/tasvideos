@@ -31,16 +31,6 @@ public static class ServiceCollectionExtensions
 				client.BaseAddress = new Uri("https://discord.com/api/v10/");
 			});
 		services
-			.AddHttpClient(HttpClients.TwitterV2, client =>
-			{
-				client.BaseAddress = new Uri("https://api.twitter.com/2/tweets");
-			});
-		services
-			.AddHttpClient(HttpClients.TwitterAuth, client =>
-			{
-				client.BaseAddress = new Uri("https://api.twitter.com/2/oauth2/token");
-			});
-		services
 			.AddHttpClient(HttpClients.GoogleAuth, client =>
 			{
 				client.BaseAddress = new Uri("https://oauth2.googleapis.com/");
@@ -136,7 +126,7 @@ public static class ServiceCollectionExtensions
 		{
 			services.AddSingleton<IPostDistributor, IrcDistributor>();
 		}
-		
+
 		if (settings.Discord.IsEnabled())
 		{
 			services.AddScoped<IPostDistributor, DiscordDistributor>();
