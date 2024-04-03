@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum.Topics.Models;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -20,7 +19,7 @@ public class CreateModel(
 	public TopicCreateModel Topic { get; set; } = new();
 
 	[BindProperty]
-	public PollCreateModel Poll { get; set; } = new();
+	public AddEditPollModel.PollCreate Poll { get; set; } = new();
 
 	[BindProperty]
 	[DisplayName("Watch Topic for Replies")]
