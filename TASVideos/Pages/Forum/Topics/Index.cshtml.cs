@@ -54,7 +54,6 @@ public class IndexModel(
 				IsWatching = userId.HasValue && t.ForumTopicWatches.Any(ft => ft.UserId == userId.Value),
 				Title = t.Title,
 				Restricted = t.Forum!.Restricted,
-				Type = t.Type,
 				ForumId = t.ForumId,
 				ForumName = t.Forum!.Name,
 				IsLocked = t.IsLocked,

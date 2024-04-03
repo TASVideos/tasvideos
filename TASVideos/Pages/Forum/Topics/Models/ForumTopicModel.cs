@@ -1,5 +1,4 @@
 ﻿using TASVideos.Core;
-using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts.Models;
 
 namespace TASVideos.Pages.Forum.Topics.Models;
@@ -24,7 +23,6 @@ public class ForumTopicModel : IForumTopicActionBar
 	public string Title { get; init; } = "";
 	public int ForumId { get; init; }
 	public string ForumName { get; init; } = "";
-	public ForumTopicType Type { get; set; }
 	public int? SubmissionId { get; init; }
 	public PageOf<ForumPostEntry> Posts { get; set; } = PageOf<ForumPostEntry>.Empty();
 	public PollModel? Poll { get; init; }
