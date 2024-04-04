@@ -1,6 +1,4 @@
-﻿using TASVideos.Models;
-
-namespace TASVideos.Pages.UserFiles;
+﻿namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
 public class GameModel(ApplicationDbContext db) : BasePageModel
@@ -9,7 +7,7 @@ public class GameModel(ApplicationDbContext db) : BasePageModel
 	public int Id { get; set; }
 
 	public string GameName { get; set; } = "";
-	public List<UserFileModel> Files { get; set; } = [];
+	public List<InfoModel.UserFileModel> Files { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{

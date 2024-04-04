@@ -1,6 +1,6 @@
-﻿namespace TASVideos.Models;
+﻿namespace TASVideos.Pages;
 
-public class MetaTagModel
+public class MetaTag
 {
 	public string? Title { get; init; }
 	public string? Description { get; init; }
@@ -8,5 +8,5 @@ public class MetaTagModel
 	public string? Image { get; init; }
 	public bool UseTwitterCard { get; init; }
 
-	public static readonly MetaTagModel Default = new();
+	public static readonly MetaTag Default = new();
 }

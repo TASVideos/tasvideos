@@ -9,7 +9,7 @@
 			? Model.Game.ScreenshotUrl
 			: $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Movie.Screenshot.Path}"
 		: null;
-	ViewData.SetMetaTags(new MetaTagModel
+	ViewData.SetMetaTags(new MetaTag
 	{
 		Title = Model.Game.DisplayName,
 		Image = url

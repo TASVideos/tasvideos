@@ -31,7 +31,7 @@
 
 	var isNicoEmbed = hasEncode && Model.Submission.EncodeEmbedLink!.Contains("nicovideo");
 
-	ViewData.SetMetaTags(new MetaTagModel
+	ViewData.SetMetaTags(new MetaTag
 	{
 		Title = Model.Submission.Title,
 		Description = $"Submission #{Model.Id} from {Model.Submission.Submitted.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}",

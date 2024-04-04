@@ -1,5 +1,4 @@
 ﻿using TASVideos.Core;
-using TASVideos.Models;
 
 namespace TASVideos.Pages.Profile;
 
@@ -11,7 +10,7 @@ public class UserFilesModel(ApplicationDbContext db) : BasePageModel
 
 	public string UserName { get; set; } = "";
 
-	public PageOf<UserFileModel> Files { get; set; } = PageOf<UserFileModel>.Empty();
+	public PageOf<UserFiles.InfoModel.UserFileModel> Files { get; set; } = PageOf<UserFiles.InfoModel.UserFileModel>.Empty();
 
 	public async Task OnGet()
 	{

@@ -2,7 +2,7 @@
 @model ViewModel
 @{
 	ViewData.SetTitle($"{Model.Publication.Title} - Movie #{Model.Id}");
-	ViewData.SetMetaTags(new MetaTagModel
+	ViewData.SetMetaTags(new MetaTag
 	{
 		Title = Model.Publication.Title,
 		Description = $"Publication [{Model.Id}] from {Model.Publication.CreateTimestamp.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}",

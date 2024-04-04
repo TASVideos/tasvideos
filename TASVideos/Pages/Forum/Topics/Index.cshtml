@@ -10,7 +10,7 @@
 			description += $"\nSubject: {Model.HighlightedPost.Subject}";
 		}
 
-		ViewData.SetMetaTags(new MetaTagModel
+		ViewData.SetMetaTags(new MetaTag
 		{
 			Title = $"Post by {Model.HighlightedPost.PosterName}",
 			Description = description,
@@ -21,7 +21,7 @@
 	else
 	{
 		var firstPost = Model.Topic.Posts.FirstOrDefault();
-		ViewData.SetMetaTags(new MetaTagModel
+		ViewData.SetMetaTags(new MetaTag
 		{
 			Title = firstPost is not null
 				? $"Topic by {firstPost.PosterName}"

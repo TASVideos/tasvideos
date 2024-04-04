@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Core;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Models;
+using TASVideos.Pages;
 
 namespace TASVideos.Extensions;
 
@@ -26,7 +26,7 @@ public static class ViewDataDictionaryExtensions
 		return permissions.Any(permission => userPerm.Contains(permission));
 	}
 
-	public static void SetMetaTags(this ViewDataDictionary viewData, MetaTagModel metaTags)
+	public static void SetMetaTags(this ViewDataDictionary viewData, MetaTag metaTags)
 	{
 		viewData["MetaTags"] = metaTags;
 	}

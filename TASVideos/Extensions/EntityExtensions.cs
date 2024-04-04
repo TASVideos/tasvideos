@@ -373,9 +373,9 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles, bool hideComments = true)
+	public static IQueryable<Pages.UserFiles.InfoModel.UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles, bool hideComments = true)
 	{
-		return userFiles.Select(uf => new UserFileModel
+		return userFiles.Select(uf => new Pages.UserFiles.InfoModel.UserFileModel
 		{
 			Id = uf.Id,
 			Class = uf.Class,
@@ -403,7 +403,7 @@ public static class EntityExtensions
 			Frames = uf.Frames,
 			Rerecords = uf.Rerecords,
 			Comments = uf.Comments
-				.Select(c => new UserFileModel.UserFileCommentModel(c.Id, c.Text, c.CreationTimeStamp, c.UserId, c.User!.UserName))
+				.Select(c => new Pages.UserFiles.InfoModel.UserFileModel.Comment(c.Id, c.Text, c.CreationTimeStamp, c.UserId, c.User!.UserName))
 				.ToList(),
 			HideComments = hideComments,
 			Annotations = uf.Annotations
