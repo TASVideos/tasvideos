@@ -85,11 +85,12 @@
 
 	@{
 		var title = ViewData["Title"]?.ToString();
-		var heading = ViewData["Heading"] ?? title;
 		if (ViewData.GetWikiPage() is not null)
 		{
 			title = title.SplitPathCamelCase();
 		}
+
+		var heading = ViewData["Heading"] ?? title;
 	}
 	@if (IsSectionDefined("PageTitle"))
 	{
