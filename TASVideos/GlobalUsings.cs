@@ -6,3 +6,4 @@ global using TASVideos.Core.Services;
 global using TASVideos.Data;
 global using TASVideos.Data.Entity;
 global using TASVideos.Extensions;
+global using TASVideos.ModelBinding;

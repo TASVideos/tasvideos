@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Models;
 
 namespace TASVideos.Pages.Wiki;
 

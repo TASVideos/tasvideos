@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
-namespace TASVideos.Models;
+namespace TASVideos.ModelBinding;
 
 public class TrimStringModelBinder : IModelBinder
 {

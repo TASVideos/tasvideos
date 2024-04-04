@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles;
 

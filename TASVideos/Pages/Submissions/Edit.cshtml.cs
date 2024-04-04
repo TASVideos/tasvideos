@@ -3,9 +3,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data.Entity.Forum;
-using TASVideos.Models;
 using TASVideos.MovieParsers;
-using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 

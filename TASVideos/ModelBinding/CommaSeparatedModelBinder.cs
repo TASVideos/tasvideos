@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Primitives;
 
-namespace TASVideos.Models;
+namespace TASVideos.ModelBinding;
 
 // TODO: cleanup and break up
 // https://github.com/aspnet/Mvc/issues/6215

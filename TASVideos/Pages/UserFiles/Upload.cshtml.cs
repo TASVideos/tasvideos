@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Models;
 
 namespace TASVideos.Pages.UserFiles;
 

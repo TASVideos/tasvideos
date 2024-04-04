@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TASVideos.Core.Settings;
-using TASVideos.Models;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;

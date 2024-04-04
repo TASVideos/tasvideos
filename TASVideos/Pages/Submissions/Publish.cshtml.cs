@@ -2,7 +2,6 @@
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Models;
 
 namespace TASVideos.Pages.Submissions;
 

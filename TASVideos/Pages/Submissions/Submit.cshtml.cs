@@ -2,8 +2,6 @@
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using TASVideos.Models;
-using TASVideos.Models.ValidationAttributes;
 using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
