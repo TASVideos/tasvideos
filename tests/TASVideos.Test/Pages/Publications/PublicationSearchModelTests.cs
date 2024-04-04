@@ -1,5 +1,4 @@
-﻿using TASVideos.Pages.Publications.Models;
-
+﻿using static TASVideos.Pages.Publications.IndexModel;
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
 [TestClass]
@@ -8,7 +7,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Empty()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Years = []
 		};
@@ -20,7 +19,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Class()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Classes = ["Standard"],
 			Years = []
@@ -33,7 +32,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Classes()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Classes = ["Standard", "Stars"],
 			Years = []
@@ -46,7 +45,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void SystemCode()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			SystemCodes = ["NES"],
 			Years = []
@@ -59,7 +58,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Systems()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			SystemCodes = ["NES", "N64"],
 			Years = []
@@ -72,7 +71,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void ClassesAndSystems()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Classes = ["Standard", "Stars"],
 			SystemCodes = ["NES", "N64"],
@@ -86,7 +85,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Year()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Years = [2000]
 		};
@@ -98,7 +97,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Years()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Years = [2000, 2001]
 		};
@@ -110,7 +109,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void YearsAndClasses()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Classes = ["Standard", "Stars"],
 			Years = [2000, 2001]
@@ -123,7 +122,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void YearsAndSystemsAndClasses()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Classes = ["Standard", "Stars"],
 			SystemCodes = ["NES", "N64"],
@@ -137,7 +136,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Tag()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Tags = ["1p"],
 			Years = []
@@ -150,7 +149,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Tags()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Tags = ["1p", "2p"],
 			Years = []
@@ -163,7 +162,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void TagsAndYears()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Tags = ["1p", "2p"],
 			Years = [2000, 2001]
@@ -176,7 +175,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void TagsAndSystemsAndYears()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Tags = ["1p", "2p"],
 			SystemCodes = ["NES", "N64"],
@@ -190,7 +189,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Genres()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Genres = ["action", "adventure"],
 			Years = []
@@ -203,7 +202,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void TagsAndGenres()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Tags = ["1p", "2p"],
 			Genres = ["action", "adventure"],
@@ -217,7 +216,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Flags()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Flags = ["atlas", "verified"],
 			Years = []
@@ -230,7 +229,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void SystemsAndFlags()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Flags = ["atlas", "verified"],
 			SystemCodes = ["NES", "N64"],
@@ -244,7 +243,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void SystemsAndTagsAndGenres()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			SystemCodes = ["NES", "N64"],
 			Tags = ["1p", "2p"],
@@ -259,7 +258,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void Games()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Games = [1, 2],
 			Years = []
@@ -272,7 +271,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void GenresAndGame()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Genres = ["action", "adventure"],
 			Games = [1, 2],
@@ -286,7 +285,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void GameGroups()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			GameGroups = [1, 2],
 			Years = []
@@ -299,7 +298,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void GamesAndGameGroups()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			Games = [3, 4],
 			GameGroups = [1, 2],
@@ -313,7 +312,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void ShowObsolete_Empty()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			ShowObsoleted = true,
 			Years = []
@@ -326,7 +325,7 @@ public class PublicationSearchModelTests
 	[TestMethod]
 	public void SystemAndObsolete()
 	{
-		var model = new PublicationSearchModel
+		var model = new PublicationSearch
 		{
 			SystemCodes = ["NES", "N64"],
 			ShowObsoleted = true,

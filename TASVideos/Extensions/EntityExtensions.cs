@@ -4,7 +4,6 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Models;
 using TASVideos.Pages.Forum.Posts;
-using TASVideos.Pages.Publications.Models;
 using TASVideos.Pages.Roles;
 using TASVideos.WikiModules;
 

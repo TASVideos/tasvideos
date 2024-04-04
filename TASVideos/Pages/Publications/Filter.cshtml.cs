@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Pages.Publications.Models;
 
 namespace TASVideos.Pages.Publications;
 
@@ -12,7 +11,7 @@ public class FilterModel(
 	: BasePageModel
 {
 	[BindProperty]
-	public PublicationSearchModel Search { get; set; } = new();
+	public IndexModel.PublicationSearch Search { get; set; } = new();
 
 	[FromQuery]
 	public string Query { get; set; } = "";
@@ -31,7 +30,7 @@ public class FilterModel(
 	{
 		Tokens = await movieTokens.GetTokens();
 		var tokensFromQuery = Query.ToTokens();
-		Search = PublicationSearchModel.FromTokens(tokensFromQuery, Tokens);
+		Search = IndexModel.PublicationSearch.FromTokens(tokensFromQuery, Tokens);
 
 		AvailableTags = [.. (await tagService.GetAll())
 			.ToDopDown()

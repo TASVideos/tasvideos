@@ -1,5 +1,4 @@
-﻿using TASVideos.Pages.Publications.Models;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -24,7 +23,7 @@ public class DisplayMovies(ApplicationDbContext db, IMovieSearchTokens tokens) :
 	{
 		var tokenLookup = await tokens.GetTokens();
 
-		var searchModel = new PublicationSearchModel
+		var searchModel = new Pages.Publications.IndexModel.PublicationSearch
 		{
 			Classes = tokenLookup.Classes.Where(c => pubClass.Select(tt => tt.ToLower()).Contains(c)).ToList(),
 			SystemCodes = tokenLookup.SystemCodes.Where(s => systemCode.Select(c => c.ToLower()).Contains(s)).ToList(),
