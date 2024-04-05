@@ -80,8 +80,8 @@ public static class EntityExtensions
 	{
 		return query.Select(s => new SelectListItem
 		{
-			Text = s.Id.ToString(),
-			Value = s.Code
+			Text = s.Code,
+			Value = s.Id.ToString()
 		});
 	}
 
