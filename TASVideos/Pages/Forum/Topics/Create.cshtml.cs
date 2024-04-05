@@ -16,7 +16,7 @@ public class CreateModel(
 	public int ForumId { get; set; }
 
 	[BindProperty]
-	public TopicCreateModel Topic { get; set; } = new();
+	public TopicCreate Topic { get; set; } = new();
 
 	[BindProperty]
 	public AddEditPollModel.PollCreate Poll { get; set; } = new();
@@ -35,7 +35,7 @@ public class CreateModel(
 		var topic = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Where(f => f.Id == ForumId)
-			.Select(f => new TopicCreateModel
+			.Select(f => new TopicCreate
 			{
 				ForumName = f.Name
 			})
@@ -141,7 +141,7 @@ public class CreateModel(
 		return RedirectToPage("Index", new { topic.Id });
 	}
 
-	public class TopicCreateModel
+	public class TopicCreate
 	{
 		public string ForumName { get; init; } = "";
 

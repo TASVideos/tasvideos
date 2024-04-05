@@ -4,12 +4,12 @@
 
 @functions
 {
-	string ToIcon(bool? val)
+	static string ToIcon(bool? val)
 	{
 		return $"<i class=\"fa {ToIconClass(val)}\"></i>";
 	}
 
-	string ToIconClass(bool? val)
+	static string ToIconClass(bool? val)
 	{
 		return val switch
 		{

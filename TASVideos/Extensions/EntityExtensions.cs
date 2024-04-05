@@ -463,9 +463,9 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<AddEditModel.RoleEditModel> ToRoleEditModel(this IQueryable<Role> query)
+	public static IQueryable<AddEditModel.RoleEdit> ToRoleEditModel(this IQueryable<Role> query)
 	{
-		return query.Select(r => new AddEditModel.RoleEditModel
+		return query.Select(r => new AddEditModel.RoleEdit
 		{
 			Name = r.Name,
 			IsDefault = r.IsDefault,

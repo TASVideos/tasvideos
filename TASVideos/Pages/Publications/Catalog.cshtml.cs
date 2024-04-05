@@ -67,7 +67,6 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		}
 
 		await PopulateCatalogDropDowns(Catalog.GameId, Catalog.SystemId);
-
 		return Page();
 	}
 

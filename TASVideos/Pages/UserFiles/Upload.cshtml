@@ -56,7 +56,7 @@
 		@await Html.RenderWiki(SystemWiki.WikiEditNote)
 		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
 		<submit-button class="btn btn-primary"><i class="fa fa-upload"></i> Upload</submit-button>
-		<a href="/Profile/UserFiles" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<a asp-page="/Profile/UserFiles" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</fullrow>
 </form>
 
@@ -72,7 +72,7 @@
 	</script>
 	<script src="/js/pako_deflate.min.js"></script>
 	<script>
-		
+
 		"use strict";
 		{
 			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile.File)");

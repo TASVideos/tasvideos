@@ -65,7 +65,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 		int minimumVotes = minVotes ?? 1;
 		DateTime minimumAgeTime = DateTime.UtcNow.AddDays(-(minAge ?? 0));
 
-		bool reverse = comp.StartsWith("-");
+		bool reverse = comp.StartsWith('-');
 		if (reverse)
 		{
 			comp = comp[1..];

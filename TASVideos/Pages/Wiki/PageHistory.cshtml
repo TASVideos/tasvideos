@@ -96,15 +96,14 @@
 							</button>
 							<button
 								class="@DiffBtnStyles(revision.Revision, false)"
-								data-to="true" 
+								data-to="true"
 								onClick="diffBtnClicked(null, @revision.Revision)">
 								To
 							</button>
-							
+
 						</div>
 					</td>
 					<td>
-						
 						<delete-button
 							permission="DeleteWikiPages"
 							asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.PageName)&revision=@revision.Revision"
@@ -129,7 +128,7 @@
 	<script src="~/js/diff_match_patch.js"></script>
 	<script src="~/js/diff_view.js"></script>
 	<script>
-		
+
 		window.addEventListener('load', function() {
 			if (@hasDiff.ToString().ToLower()) {
 				generateDiff();
@@ -178,7 +177,7 @@
 					elem.querySelector("button[data-from]").classList.remove("active");
 					elem.querySelector("button[data-to]").classList.remove("active");
 				});
-		
+
 			const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
 			if (cur) {
 				cur.classList.add('table-primary');

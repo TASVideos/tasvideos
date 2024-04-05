@@ -6,7 +6,7 @@ namespace TASVideos.Pages;
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = false)]
 public class RequireBase : Attribute
 {
-	protected IActionResult ReRouteToLogin(PageHandlerExecutingContext context)
+	protected static IActionResult ReRouteToLogin(PageHandlerExecutingContext context)
 	{
 		var returnUrl = context.HttpContext.Request.Path + context.HttpContext.Request.QueryString;
 		return new RedirectToPageResult("/Account/Login", new { returnUrl });

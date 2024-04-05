@@ -123,8 +123,6 @@ public class CreateModel(
 				Subject = Post.Subject,
 				Text = Post.Text,
 				IsLocked = isLocked,
-				UserAvatar = user.Avatar,
-				UserSignature = user.Signature,
 				Mood = User.Has(PermissionTo.UseMoodAvatars) ? Post.Mood : ForumPostMood.Normal
 			};
 
@@ -201,9 +199,6 @@ public class CreateModel(
 	public class ForumPostCreateModel
 	{
 		public bool IsLocked { get; init; }
-		public string? UserAvatar { get; init; }
-		public string? UserSignature { get; init; }
-
 		public string TopicTitle { get; init; } = "";
 
 		[StringLength(150)]

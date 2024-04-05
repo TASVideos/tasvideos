@@ -57,10 +57,7 @@ public class DelimitedQueryStringValueProviderFactory(params char[] delimiters) 
 	/// <inheritdoc />
 	public Task CreateValueProviderAsync(ValueProviderFactoryContext context)
 	{
-		if (context is null)
-		{
-			throw new ArgumentNullException(nameof(context));
-		}
+		ArgumentNullException.ThrowIfNull(context);
 
 		var valueProvider = new DelimitedQueryStringValueProvider(
 			BindingSource.Query,

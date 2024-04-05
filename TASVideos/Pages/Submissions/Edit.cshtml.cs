@@ -20,13 +20,13 @@ public class EditModel(
 	IForumService forumService)
 	: BasePageModel
 {
-	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEditModel.MovieFile)}";
+	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.MovieFile)}";
 
 	[FromRoute]
 	public int Id { get; set; }
 
 	[BindProperty]
-	public SubmissionEditModel Submission { get; set; } = new();
+	public SubmissionEdit Submission { get; set; } = new();
 
 	public bool CanDelete { get; set; }
 
@@ -41,7 +41,7 @@ public class EditModel(
 	{
 		var submission = await db.Submissions
 			.Where(s => s.Id == Id)
-			.Select(s => new SubmissionEditModel // It is important to use a projection here to avoid querying the file data which not needed and can be slow
+			.Select(s => new SubmissionEdit // It is important to use a projection here to avoid querying the file data which not needed and can be slow
 			{
 				GameName = s.GameName ?? "",
 				GameVersion = s.SubmittedGameVersion,
@@ -487,7 +487,7 @@ public class EditModel(
 			.ToListAsync();
 	}
 
-	public class SubmissionEditModel
+	public class SubmissionEdit
 	{
 		[DoNotTrim]
 		[Display(Name = "Comments and explanations")]

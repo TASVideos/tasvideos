@@ -32,8 +32,7 @@ public class UncatalogedTopics(ApplicationDbContext db) : WikiViewComponent
 			{
 				Id = t.Id,
 				Title = t.Title,
-				ForumId = t.Forum!.Id,
-				ForumName = t.Forum.Name
+				ForumName = t.Forum!.Name
 			})
 			.ToListAsync();
 		return View();
@@ -43,7 +42,6 @@ public class UncatalogedTopics(ApplicationDbContext db) : WikiViewComponent
 	{
 		public int Id { get; init; }
 		public string Title { get; init; } = "";
-		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";
 	}
 }

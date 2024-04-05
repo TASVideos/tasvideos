@@ -23,7 +23,7 @@ public class HtmlRedirectionMiddleware(RequestDelegate next)
 			request.QueryString);
 
 		context.Response.StatusCode = 301;
-		context.Response.Headers["Location"] = redirectUrl;
+		context.Response.Headers.Location = redirectUrl;
 
 		return Task.CompletedTask;
 	}

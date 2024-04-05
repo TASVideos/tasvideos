@@ -26,7 +26,7 @@ public class EditModel(
 
 	public List<SelectListItem> AvailableTags { get; set; } = [];
 
-	public List<PublicationFileDisplayModel> Files { get; set; } = [];
+	public List<PublicationFileDisplay> Files { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -45,7 +45,7 @@ public class EditModel(
 				EmulatorVersion = p.EmulatorVersion,
 				AdditionalAuthors = p.AdditionalAuthors,
 				Urls = p.PublicationUrls
-					.Select(u => new PublicationUrlDisplayModel(
+					.Select(u => new PublicationUrlDisplay(
 						u.Id, u.Url!, u.Type, u.DisplayName))
 					.ToList(),
 				SelectedFlags = p.PublicationFlags
@@ -113,7 +113,7 @@ public class EditModel(
 			.ToListAsync();
 		Files = await db.PublicationFiles
 			.Where(f => f.PublicationId == Id)
-			.Select(f => new PublicationFileDisplayModel(
+			.Select(f => new PublicationFileDisplay(
 				f.Id, f.Path, f.Type, f.Description))
 			.ToListAsync();
 	}
@@ -271,10 +271,10 @@ public class EditModel(
 
 		[DoNotTrim]
 		public string Markup { get; set; } = "";
-		public List<PublicationUrlDisplayModel> Urls { get; init; } = [];
+		public List<PublicationUrlDisplay> Urls { get; init; } = [];
 	}
 
-	public record PublicationFileDisplayModel(int Id, string Path, FileType Type, string? Description);
+	public record PublicationFileDisplay(int Id, string Path, FileType Type, string? Description);
 
-	public record PublicationUrlDisplayModel(int Id, string Url, PublicationUrlType Type, string? DisplayName);
+	public record PublicationUrlDisplay(int Id, string Url, PublicationUrlType Type, string? DisplayName);
 }

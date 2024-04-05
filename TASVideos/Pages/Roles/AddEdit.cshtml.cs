@@ -19,7 +19,7 @@ public class AddEditModel(
 	public bool IsInUse { get; set; }
 
 	[BindProperty]
-	public RoleEditModel Role { get; set; } = new();
+	public RoleEdit Role { get; set; } = new();
 
 	public List<SelectListItem> AvailableAssignablePermissions { get; set; } = [];
 
@@ -132,7 +132,7 @@ public class AddEditModel(
 		];
 	}
 
-	private async Task AddUpdateRole(RoleEditModel model)
+	private async Task AddUpdateRole(RoleEdit model)
 	{
 		var edit = false;
 		Role role;
@@ -186,7 +186,7 @@ public class AddEditModel(
 			$"Roles/{model.Name}");
 	}
 
-	public class RoleEditModel
+	public class RoleEdit
 	{
 		[StringLength(50)]
 		public string Name { get; set; } = "";
