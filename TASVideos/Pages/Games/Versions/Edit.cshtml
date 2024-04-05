@@ -35,7 +35,7 @@
 		<div class="col-lg-6">
 			<fieldset>
 				<label asp-for="Version.System"></label>
-				<select asp-for="Version.System" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-control"></select>
+				<select asp-for="Version.System" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-select"></select>
 				<span asp-validation-for="Version.System" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
@@ -74,7 +74,7 @@
 		<div class="col-lg-6">
 			<fieldset>
 				<label asp-for="Version.Type"></label>
-				<select asp-for="Version.Type" asp-items="@Model.AvailableVersionTypes.OrderBy(s => s.Value)" class="form-control"></select>
+				<select asp-for="Version.Type" asp-items="@Model.AvailableVersionTypes.OrderBy(s => s.Value)" class="form-select"></select>
 				<span asp-validation-for="Version.Type" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
@@ -89,7 +89,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.Region"></label>
-				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes" class="form-control"></select>
+				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes" class="form-select"></select>
 				<span asp-validation-for="Version.Region" class="text-danger"></span>
 			</fieldset>
 		</div>

@@ -12,7 +12,7 @@
 		<column md="5">
 			<fieldset>
 				<label asp-for="AwardToAssign.Award"></label>
-				<select asp-for="AwardToAssign.Award" asp-items="Model.AvailableAwardCategories" class="form-control"></select>
+				<select asp-for="AwardToAssign.Award" asp-items="Model.AvailableAwardCategories" class="form-select"></select>
 				<span asp-validation-for="AwardToAssign.Award" class="text-danger"></span>
 			</fieldset>
 		</column>
@@ -23,13 +23,13 @@
 	<fullrow>
 		<fieldset>
 			<label asp-for="AwardToAssign.Users"></label>
-			<select asp-for="AwardToAssign.Users" size="@(Math.Min(Model.AwardToAssign.Users.Count, 7).ToString())" asp-items="Model.AvailableUsers" class="form-control"></select>
+			<select asp-for="AwardToAssign.Users" size="@(Math.Min(Model.AwardToAssign.Users.Count, 7).ToString())" asp-items="Model.AvailableUsers" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<fullrow>
 		<fieldset>
 			<label asp-for="AwardToAssign.Publications"></label>
-			<select asp-for="AwardToAssign.Publications" size="@(Math.Min(Model.AwardToAssign.Publications.Count, 7).ToString())" asp-items="Model.AvailablePublications" class="form-control"></select>
+			<select asp-for="AwardToAssign.Publications" size="@(Math.Min(Model.AwardToAssign.Publications.Count, 7).ToString())" asp-items="Model.AvailablePublications" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<form-button-bar>

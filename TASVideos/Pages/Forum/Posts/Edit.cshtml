@@ -36,7 +36,7 @@
 		<column md="4">
 			<label asp-for="Post.Mood" class="form-control-label"></label>
 			<input condition="!isUserEdit" type="text" readonly asp-for="Post.Mood" class="form-control" />
-			<select condition="isUserEdit" asp-for="Post.Mood" asp-items="@Model.Moods" class="form-control"></select>
+			<select condition="isUserEdit" asp-for="Post.Mood" asp-items="@Model.Moods" class="form-select"></select>
 			<span asp-validation-for="Post.Mood" class="text-danger"></span>
 		</column>
 		<column md="2">

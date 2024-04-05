@@ -26,13 +26,13 @@
 				<div class="col-5 mb-1">
 					<div class="input-group">
 						<label asp-for="@Model.Games.System" class="input-group-text"></label>
-						<select asp-items="@Model.SystemList" asp-for="@Model.Games.System" name="System" class="form-control"></select>
+						<select asp-items="@Model.SystemList" asp-for="@Model.Games.System" name="System" class="form-select"></select>
 					</div>
 				</div>
 				<div class="col-5 mb-1">
 					<div class="input-group">
 						<label asp-for="@Model.Games.Letter" class="input-group-text"></label>
-						<select asp-items="@Model.LetterList" asp-for="@Model.Games.Letter" name="Letter" class="form-control"></select>
+						<select asp-items="@Model.LetterList" asp-for="@Model.Games.Letter" name="Letter" class="form-select"></select>
 					</div>
 				</div>
 			</div>
@@ -40,13 +40,13 @@
 				<div class="col-5 mb-1">
 					<div class="input-group">
 						<label asp-for="@Model.Games.Genre" class="input-group-text"></label>
-						<select asp-for="@Model.Games.Genre" asp-items="@Model.GenreList" name="Genre" class="form-control"></select>
+						<select asp-for="@Model.Games.Genre" asp-items="@Model.GenreList" name="Genre" class="form-select"></select>
 					</div>
 				</div>
 				<div class="col-5 mb-1">
 					<div class="input-group">
 						<label asp-for="@Model.Games.Group" class="input-group-text"></label>
-						<select asp-for="@Model.Games.Group" asp-items="@Model.GroupList" name="Group" class="form-control"></select>
+						<select asp-for="@Model.Games.Group" asp-items="@Model.GroupList" name="Group" class="form-select"></select>
 					</div>
 				</div>
 			</div>

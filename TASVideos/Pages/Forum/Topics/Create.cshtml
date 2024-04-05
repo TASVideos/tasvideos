@@ -45,14 +45,14 @@
 		</column>
 		<column permission="SetTopicType" md="6">
 			<label asp-for="Topic.Type" class="form-control-label"></label>
-			<select asp-for="Topic.Type" asp-items="Model.TopicTypes" class="form-control"></select>
+			<select asp-for="Topic.Type" asp-items="Model.TopicTypes" class="form-select"></select>
 			<span asp-validation-for="Topic.Type" class="text-danger"></span>
 		</column>
 	</row>
 	<row>
 		<column md="4">
 			<label asp-for="Topic.Mood" class="form-control-label"></label>
-			<select asp-for="Topic.Mood" asp-items="@Model.Moods" class="form-control"></select>
+			<select asp-for="Topic.Mood" asp-items="@Model.Moods" class="form-select"></select>
 			<span asp-validation-for="Topic.Mood" class="text-danger"></span>
 		</column>
 		<column md="2">

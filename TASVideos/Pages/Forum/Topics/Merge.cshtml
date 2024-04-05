@@ -19,12 +19,12 @@
 			<input type="hidden" asp-for="Topic.Title" />
 			<fieldset>
 				<label asp-for="Topic.DestinationForumId"></label>
-				<select asp-for="Topic.DestinationForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-control"></select>
+				<select asp-for="Topic.DestinationForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
 				<span asp-validation-for="Topic.DestinationForumId" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Topic.DestinationTopicId"></label>
-				<select asp-for="Topic.DestinationTopicId" asp-items="Model.AvailableTopics.OrderBy(f => f.Text)" class="form-control"></select>
+				<select asp-for="Topic.DestinationTopicId" asp-items="Model.AvailableTopics.OrderBy(f => f.Text)" class="form-select"></select>
 				<span asp-validation-for="Topic.DestinationTopicId" class="text-danger"></span>
 			</fieldset>
 		</column>
