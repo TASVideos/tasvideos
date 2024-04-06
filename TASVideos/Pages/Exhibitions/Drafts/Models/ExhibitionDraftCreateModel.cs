@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using TASVideos.Data.Entity.Exhibition;
-using TASVideos.Models;
-using TASVideos.Models.ValidationAttributes;
+﻿using TASVideos.Data.Entity.Exhibition;
 
 namespace TASVideos.Pages.Exhibitions.Drafts.Models;
 

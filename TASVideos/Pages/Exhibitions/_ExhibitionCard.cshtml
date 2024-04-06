@@ -22,7 +22,7 @@
 			<div class="col">
 				<small class="text-body-tertiary"><timezone-convert asp-for="@Model.ExhibitionTimestamp" date-only="true" relative-time="false" /></small>
 
-				@await Component.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
+				@await Html.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
 			</div>
 		</row>
 		<row class="gx-3 py-2">

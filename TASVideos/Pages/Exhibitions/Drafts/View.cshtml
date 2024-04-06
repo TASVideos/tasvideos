@@ -16,7 +16,7 @@
 <h5>Exhbition Timestamp</h5>
 <p><timezone-convert asp-for="@Model.Exhibition.ExhibitionTimestamp" relative-time="false" /></p>
 <h5>Description</h5>
-@await Component.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
+@await Html.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
 <h5>Contributors</h5>
 <p>
 	@foreach (var user in Model.Exhibition.Contributors)
