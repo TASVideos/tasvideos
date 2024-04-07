@@ -308,7 +308,6 @@ public enum PermissionTo
 public static class PermissionUtil
 {
 	public static IEnumerable<PermissionTo> AllPermissions() => Enum
-		.GetValues(typeof(PermissionTo))
-		.Cast<PermissionTo>()
+		.GetValues<PermissionTo>()
 		.ToList();
 }

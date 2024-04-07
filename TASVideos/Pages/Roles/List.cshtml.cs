@@ -22,8 +22,6 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		[Display(Name = "Related Links")]
 		public List<string> Links { get; init; } = [];
-
-		[Display(Name = "Users with this Role")]
 		public List<UserWithRole> Users { get; init; } = [];
 
 		public record UserWithRole(int Id, string UserName);

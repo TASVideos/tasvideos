@@ -3,11 +3,11 @@
 [Authorize]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<PermissionDisplayModel> Permissions { get; } = PermissionUtil
+	public List<PermissionDisplay> Permissions { get; } = PermissionUtil
 		.AllPermissions()
-		.Select(p => new PermissionDisplayModel(
+		.Select(p => new PermissionDisplay(
 			p,
-			p.ToString().SplitCamelCase(),
+			p.ToString(),
 			p.Group(),
 			p.Description()))
 		.ToList();
@@ -33,7 +33,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		}
 	}
 
-	public record PermissionDisplayModel(PermissionTo Id, string Name, string Description, string Group)
+	public record PermissionDisplay(PermissionTo Id, string Name, string Group, string Description)
 	{
 		public List<string> Roles { get; set; } = [];
 	}

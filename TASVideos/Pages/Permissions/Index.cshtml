@@ -22,7 +22,7 @@
 						@foreach (var item in entry)
 						{
 							<li>
-								<a href="#@item.Name">@item.Name</a>
+								<a href="#@item.Name">@item.Name.SplitCamelCase()</a>
 							</li>
 						}
 					</ul>
@@ -42,13 +42,13 @@
 	@foreach (var entry in Model.Permissions.OrderBy(m => m.Group).ThenBy(m => m.Id))
 	{
 		<tr>
-			<td id="@entry.Name" nowrap>@entry.Name</td>
+			<td id="@entry.Name" nowrap>@entry.Name.SplitCamelCase()</td>
 			<td nowrap>@entry.Group</td>
 			<td nowrap>
 				<ul>
 					@foreach(var role in entry.Roles.OrderBy(r => r))
 					{
-					<li><a asp-page="/Roles/Index" asp-route-role="@role">@role</a></li>
+						<li><a asp-page="/Roles/Index" asp-route-role="@role.Replace(" ", "")">@role</a></li>
 					}
 				</ul>
 			</td>
