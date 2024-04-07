@@ -15,14 +15,14 @@ public class CollapsableHeaderTagHelper : TagHelper
 		output.TagName = "div";
 
 		// TODO: sr and aria tags could use something more informative than BodyId
-		output.Content.AppendHtml($@"
-				<a class='collapsed' data-bs-toggle='collapse' {Attr("href", "#" + BodyId)} aria-expanded='false' aria-controls='collapse1' role='button'>
-					{content}
-				</a>
-					<i class='fa' aria-hidden='true'></i>
-					<span class='sr-only'>Expand/Collapse {Text(BodyId)}</span>
-				</a>
-			");
+		output.Content.AppendHtml($"""
+									<a class='collapsed' data-bs-toggle='collapse' {Attr("href", "#" + BodyId)} aria-expanded='false' aria-controls='collapse1' role='button'>
+										{content}
+									</a>
+										<i class='fa' aria-hidden='true'></i>
+										<span class='sr-only'>Expand/Collapse {Text(BodyId)}</span>
+									</a>
+									""");
 	}
 }
 

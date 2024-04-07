@@ -10,13 +10,15 @@ public class SubmitButtonTagHelper : TagHelper
 		output.TagName = "button";
 		output.Attributes.Add("type", "submit");
 		output.Attributes.Add("data-submit-id", guid);
-		output.PostElement.AppendHtml($@"
-<script>
-	document.querySelector('[data-submit-id=""{guid}""]').onclick = function () {{
-		let btn = this;
-		setTimeout(function () {{ btn.disabled = true }}, 0);
-		setTimeout(function () {{ btn.disabled = false }}, 750);
-	}}
-</script>");
+		output.PostElement.AppendHtml(
+			$$"""
+				<script>
+					document.querySelector('[data-submit-id="{{guid}}"]').onclick = function () {
+						let btn = this;
+						setTimeout(function () { btn.disabled = true }, 0);
+						setTimeout(function () { btn.disabled = false }, 750);
+					}
+				</script>
+				""");
 	}
 }

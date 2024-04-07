@@ -19,14 +19,14 @@ public class CardLinkTagHelper : TagHelper
 		output.AddCssClass("card-link");
 		output.Attributes.Add("href", Href);
 
-		output.Content.AppendHtml($@"
-	<h4 class='card-link-header'>
-		{Text(Header)}
-	</h4>
-	<span class='card-link-body'>
-		{Text(Body)}
-	</span>
-	<span class='card-link-arrow fa fa-chevron-right'></span>
-");
+		output.Content.AppendHtml($"""
+									<h4 class='card-link-header'>
+										{Text(Header)}
+									</h4>
+									<span class='card-link-body'>
+										{Text(Body)}
+									</span>
+									<span class='card-link-arrow fa fa-chevron-right'></span>
+									""");
 	}
 }

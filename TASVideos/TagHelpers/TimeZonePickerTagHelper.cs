@@ -57,10 +57,11 @@ public class TimeZonePickerTagHelper : TagHelper
 			foreach (var option in options)
 			{
 				output.Content.AppendHtml(
-					$@"<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.UtcOffset.TotalMinutes.ToString())}>
-							{Text(option.Id)}
-						</option>
-					");
+					$"""
+					<option {(option.Selected ? "selected" : "")} {Attr("value", option.Id)} {Attr("data-offset", option.UtcOffset.TotalMinutes.ToString())}>
+						{Text(option.Id)}
+					</option>
+					""");
 			}
 
 			output.Content.AppendHtml("</optgroup>");
