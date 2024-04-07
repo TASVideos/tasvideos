@@ -12,24 +12,16 @@ public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment e
 		if (env.IsProduction())
 		{
 			sb.AppendLine("""
-
 						User-agent: *
-						Disallow: /forum/
-						Disallow: /movies/
-						Disallow: /submissions/
-						Disallow: /media/
+						Disallow: /Movies-
 						Disallow: /MovieMaintenanceLog
 						Disallow: /UserMaintenanceLog
 						Disallow: /InternalSystem/
 						Disallow: /*?revision=*
 						Disallow: /Wiki/PageHistory
 
-						User-agent: Mediapartners-Google
-						Allow: /forum/
-
 						User-agent: Fasterfox
 						Disallow: /
-
 						""");
 		}
 		else
