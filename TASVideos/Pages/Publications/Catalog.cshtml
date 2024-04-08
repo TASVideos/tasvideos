@@ -9,12 +9,12 @@
 		<div class="col-lg-6">
 			<fieldset>
 				<label asp-for="Catalog.SystemId" class="form-control-label"></label>
-				<select asp-for="Catalog.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
+				<select asp-for="Catalog.SystemId" asp-items="@Model.AvailableSystems" class="form-select"></select>
 				<span asp-validation-for="Catalog.SystemId" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
-				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-control"></select>
+				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-select"></select>
 				<span asp-validation-for="Catalog.SystemFrameRateId" class="text-danger"></span>
 			</fieldset>
 		</div>
@@ -25,7 +25,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+						<select asp-for="Catalog.GameId" asp-items="@Model.AvailableGames" class="form-select"></select>
 						<span asp-validation-for="Catalog.GameId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
@@ -39,7 +39,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameVersionId" asp-items="@Model.AvailableVersions" class="form-control"></select>
+						<select asp-for="Catalog.GameVersionId" asp-items="@Model.AvailableVersions" class="form-select"></select>
 						<span asp-validation-for="Catalog.GameVersionId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
@@ -53,7 +53,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameGoalId" asp-items="@Model.AvailableGoals" class="form-control"></select>
+						<select asp-for="Catalog.GameGoalId" asp-items="@Model.AvailableGoals" class="form-select"></select>
 						<span asp-validation-for="Catalog.GameGoalId" class="text-danger"></span>
 					</div>
 					<div class="col-2">
