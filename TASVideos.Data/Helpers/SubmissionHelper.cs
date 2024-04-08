@@ -44,16 +44,6 @@ public static class SubmissionHelper
 	/// <returns>The id of the movie if it is a valid link, else null.</returns>
 	public static int? IsPublicationLink(string link) => IsNumberedLink(link, "M");
 
-	public static int SubmissionId(string link)
-	{
-		if (IsSubmissionLink(link) is null)
-		{
-			return int.Parse(link.SplitWithEmpty("/").Last().Replace("S", ""));
-		}
-
-		return 0;
-	}
-
 	/// <summary>
 	/// Determines if the link is in the form of valid game page link ex: 100G.
 	/// </summary>
