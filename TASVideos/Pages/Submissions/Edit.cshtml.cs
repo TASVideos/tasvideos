@@ -241,19 +241,14 @@ public class EditModel(
 
 			int moveTopicTo = -1;
 
-			if (submission.Topic!.ForumId != SiteGlobalConstants.PlaygroundForumId &&
-				Submission.Status == SubmissionStatus.Playground)
+			if (submission.Topic!.ForumId != SiteGlobalConstants.PlaygroundForumId
+				&& Submission.Status == SubmissionStatus.Playground)
 			{
 				moveTopic = true;
 				moveTopicTo = SiteGlobalConstants.PlaygroundForumId;
 			}
-			else if (submission.Topic.ForumId != SiteGlobalConstants.WorkbenchForumId &&
-				Submission.Status is SubmissionStatus.New
-					or SubmissionStatus.Delayed
-					or SubmissionStatus.NeedsMoreInfo
-					or SubmissionStatus.JudgingUnderWay
-					or SubmissionStatus.Accepted
-					or SubmissionStatus.PublicationUnderway)
+			else if (submission.Topic.ForumId != SiteGlobalConstants.WorkbenchForumId
+					&& Submission.Status.IsWorkInProgress())
 			{
 				moveTopic = true;
 				moveTopicTo = SiteGlobalConstants.WorkbenchForumId;
@@ -341,13 +336,7 @@ public class EditModel(
 			{
 				string statusStr = Submission.Status.EnumDisplayName();
 
-				// CAPS on a judge decision
-				if (Submission.Status is SubmissionStatus.Accepted
-					or SubmissionStatus.Rejected
-					or SubmissionStatus.Cancelled
-					or SubmissionStatus.Delayed
-					or SubmissionStatus.NeedsMoreInfo
-					or SubmissionStatus.Playground)
+				if (Submission.Status.IsJudgeDecision())
 				{
 					statusStr = statusStr.ToUpper();
 				}
