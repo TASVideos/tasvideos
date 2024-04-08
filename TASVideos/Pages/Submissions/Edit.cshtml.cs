@@ -3,6 +3,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Helpers;
 using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
@@ -219,25 +220,20 @@ public class EditModel(
 			submission.MovieFile = await Submission.MovieFile.ToBytes();
 		}
 
-		// If a judge is claiming the submission
-		if (Submission.Status == SubmissionStatus.JudgingUnderWay
-			&& submission.Status != SubmissionStatus.JudgingUnderWay)
+		if (SubmissionHelper.JudgeIsClaiming(submission.Status, Submission.Status))
 		{
 			submission.Judge = await db.Users.SingleAsync(u => u.UserName == userName);
 		}
-		else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
-			&& Submission.Status == SubmissionStatus.New)
+		else if (SubmissionHelper.JudgeIsUnclaiming(submission.Status, Submission.Status))
 		{
 			submission.Judge = null;
 		}
 
-		if (Submission.Status == SubmissionStatus.PublicationUnderway
-			&& submission.Status != SubmissionStatus.PublicationUnderway)
+		if (SubmissionHelper.PublisherIsClaiming(submission.Status, Submission.Status))
 		{
 			submission.Publisher = await db.Users.SingleAsync(u => u.UserName == userName);
 		}
-		else if (submission.Status == SubmissionStatus.Accepted // If publisher is unclaiming, remove them
-			&& Submission.Status == SubmissionStatus.PublicationUnderway)
+		else if (SubmissionHelper.PublisherIsUnclaiming(submission.Status, Submission.Status))
 		{
 			submission.Publisher = null;
 		}

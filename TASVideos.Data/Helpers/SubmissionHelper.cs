@@ -58,4 +58,24 @@ public static class SubmissionHelper
 
 	public static int? IsRawGamePageLink(string link)
 		=> IsRawNumberedLink(link, "InternalSystem/GameContent/G");
+
+	public static bool JudgeIsClaiming(SubmissionStatus oldS, SubmissionStatus newS)
+	{
+		return oldS != SubmissionStatus.JudgingUnderWay && newS == SubmissionStatus.JudgingUnderWay;
+	}
+
+	public static bool JudgeIsUnclaiming(SubmissionStatus oldS, SubmissionStatus newS)
+	{
+		return oldS == SubmissionStatus.JudgingUnderWay && newS == SubmissionStatus.New;
+	}
+
+	public static bool PublisherIsClaiming(SubmissionStatus oldS, SubmissionStatus newS)
+	{
+		return oldS != SubmissionStatus.PublicationUnderway && newS == SubmissionStatus.PublicationUnderway;
+	}
+
+	public static bool PublisherIsUnclaiming(SubmissionStatus oldS, SubmissionStatus newS)
+	{
+		return oldS == SubmissionStatus.PublicationUnderway && newS == SubmissionStatus.Accepted;
+	}
 }
