@@ -441,9 +441,7 @@ public class EditModel(
 		var result = await ConcurrentSave(db, "", "Unable to claim");
 		if (result)
 		{
-			string statusPrefix = newStatus == SubmissionStatus.JudgingUnderWay ? "" : "set to ";
-			await publisher.SendSubmissionEdit(
-				Id, $"[Submission]({{0}}) {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}", $"{submission.Title}");
+			await publisher.SendSubmissionEdit(Id, $"[Submission]({{0}}) {newStatus.EnumDisplayName()} by {User.Name()}", $"{submission.Title}");
 		}
 
 		return RedirectToPage("View", new { Id });
