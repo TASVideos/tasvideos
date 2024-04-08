@@ -276,6 +276,11 @@ public static partial class StringExtensions
 		return s.Replace('<', '＜').Replace('>', '＞');
 	}
 
+	public static List<string> RemoveEmpty(this IEnumerable<string> strList)
+	{
+		return strList.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
+	}
+
 	[GeneratedRegex(@"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])")]
 	private static partial Regex SplitCamelCaseCompiledRegex();
 

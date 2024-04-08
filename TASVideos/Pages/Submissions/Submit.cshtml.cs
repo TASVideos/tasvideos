@@ -187,10 +187,7 @@ public class SubmitModel(
 
 	private async Task ValidateModel()
 	{
-		Authors = Authors
-			.Where(a => !string.IsNullOrWhiteSpace(a))
-			.ToList();
-
+		Authors = Authors.RemoveEmpty();
 		if (!Authors.Any() && string.IsNullOrWhiteSpace(AdditionalAuthors))
 		{
 			ModelState.AddModelError(

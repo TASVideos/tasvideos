@@ -113,10 +113,7 @@ public class EditModel(
 		}
 
 		// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
-		var subAuthors = Submission.Authors
-			.Where(a => !string.IsNullOrWhiteSpace(a))
-			.ToList();
-		Submission.Authors = subAuthors;
+		Submission.Authors = Submission.Authors.RemoveEmpty();
 
 		var userName = User.Name();
 
@@ -320,7 +317,7 @@ public class EditModel(
 				SubmissionId = submission.Id,
 				UserId = u.Id,
 				Author = u,
-				Ordinal = subAuthors.IndexOf(u.UserName)
+				Ordinal = Submission.Authors.IndexOf(u.UserName)
 			})
 			.ToListAsync());
 
