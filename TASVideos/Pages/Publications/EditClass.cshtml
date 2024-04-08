@@ -10,7 +10,7 @@
 		<div class="col-lg-4 col-sm-6">
 			<fieldset>
 				<label asp-for="Publication.ClassId"></label>
-				<select class="form-control" asp-for="Publication.ClassId" asp-items="@Model.AvailableClasses"></select>
+				<select class="form-select" asp-for="Publication.ClassId" asp-items="@Model.AvailableClasses"></select>
 				<span asp-validation-for="Publication.ClassId" class="text-danger"></span>
 			</fieldset>
 		</div>

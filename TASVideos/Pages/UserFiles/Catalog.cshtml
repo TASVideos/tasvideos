@@ -18,7 +18,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
-				<select asp-for="UserFile.SystemId" asp-items="Model.AvailableSystems" class="form-control"></select>
+				<select asp-for="UserFile.SystemId" asp-items="Model.AvailableSystems" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<fullrow>
@@ -26,7 +26,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="UserFile.GameId" asp-items="Model.AvailableGames" class="form-control"></select>
+						<select asp-for="UserFile.GameId" asp-items="Model.AvailableGames" class="form-select"></select>
 					</div>
 					<div class="col-2">
 						<button id="create-game" type="button" class="btn btn-primary">New</button>

@@ -42,12 +42,12 @@
 			<hr />
 			<fieldset>
 				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
-				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-control"></select>
+				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-select"></select>
 				<span asp-validation-for="UserFile.SystemId" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserFile.GameId" class="form-control-label"></label>
-				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-control"></select>
+				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-select"></select>
 				<span asp-validation-for="UserFile.GameId" class="text-danger"></span>
 			</fieldset>
 		</column>
