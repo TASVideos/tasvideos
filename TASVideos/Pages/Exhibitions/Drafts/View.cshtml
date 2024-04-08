@@ -15,8 +15,6 @@
 <p><timezone-convert asp-for="@Model.Exhibition.CreateTimestamp" relative-time="false" /></p>
 <h5>Exhbition Timestamp</h5>
 <p><timezone-convert asp-for="@Model.Exhibition.ExhibitionTimestamp" relative-time="false" /></p>
-<h5>Description</h5>
-@await Html.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
 <h5>Contributors</h5>
 <p>
 	@foreach (var user in Model.Exhibition.Contributors)
@@ -57,3 +55,11 @@
 		<br />
 	}
 </p>
+<card>
+	<cardheader>
+		<h5>Description</h5>
+	</cardheader>
+	<cardbody>
+		@await Html.RenderWiki(LinkConstants.ExhibitionWikiPage + Model.Id)
+	</cardbody>
+</card>

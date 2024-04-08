@@ -1,4 +1,118 @@
-﻿@page
+﻿@page "{id}"
+@using TASVideos.Data.Entity.Exhibition
 @model TASVideos.Pages.Exhibitions.Drafts.EditModel
 @{
+	ViewData.SetTitle($"Edit Exhibition D1");
+}
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
+
+<form method="post">
+	<fieldset>
+		<label asp-for="Exhibition.Title" class="form-control-label"></label>
+		<input asp-for="Exhibition.Title" class="form-control" />
+		<span asp-validation-for="Exhibition.Title" class="text-danger"></span>
+	</fieldset>
+	<fieldset>
+		<label asp-for="Exhibition.ExhibitionTimestamp" class="form-control-label"></label>
+		<input asp-for="Exhibition.ExhibitionTimestamp" class="form-control" />
+		<span asp-validation-for="Exhibition.ExhibitionTimestamp" class="text-danger"></span>
+	</fieldset>
+	<fieldset>
+		<row>
+			<div class="col-12 col-lg-6">
+				<label asp-for="Exhibition.Screenshot" class="form-control-label"></label>
+				<input asp-for="Exhibition.Screenshot" class="form-control" />
+				<span asp-validation-for="Exhibition.Screenshot" class="text-danger"></span>
+			</div>
+			<div class="col-12 col-lg-6">
+				<label asp-for="Exhibition.ScreenshotDescription" class="form-control-label"></label>
+				<input asp-for="Exhibition.ScreenshotDescription" class="form-control" />
+				<span asp-validation-for="Exhibition.ScreenshotDescription" class="text-danger"></span>
+			</div>
+		</row>
+	</fieldset>
+	<fieldset>
+		<row>
+			<div class="col-12 col-lg-6">
+				<label asp-for="Exhibition.MovieFile" class="form-control-label"></label>
+				<input asp-for="Exhibition.MovieFile" class="form-control" />
+				<span asp-validation-for="Exhibition.MovieFile" class="text-danger"></span>
+			</div>
+			<div class="col-12 col-lg-6">
+				<label asp-for="Exhibition.MovieFileDescription" class="form-control-label"></label>
+				<input asp-for="Exhibition.MovieFileDescription" class="form-control" />
+				<span asp-validation-for="Exhibition.MovieFileDescription" class="text-danger"></span>
+			</div>
+		</row>
+	</fieldset>
+	<fieldset>
+		<label asp-for="Exhibition.Urls" class="form-control-label"></label>
+		<span asp-validation-for="Exhibition.Urls" class="text-danger"></span>
+		<div class="ms-3">
+			@foreach(var url in Model.Exhibition.Urls)
+			{
+				<row>
+					<div class="col">
+						<row>
+							<div class="col-4">
+								<label asp-for="@url.Type" class="form-control-label"></label>
+								<select asp-for="@url.Type" asp-items="@Html.GetEnumSelectList<ExhibitionUrlType>()" class="form-control"></select>
+								<span asp-validation-for="@url.Type" class="text-danger"></span>
+							</div>
+							<div class="col-4">
+								<label asp-for="@url.DisplayName" class="form-control-label"></label>
+								<input asp-for="@url.DisplayName" class="form-control" />
+								<span asp-validation-for="@url.DisplayName" class="text-danger"></span>
+							</div>
+							<div class="col-4">
+								<label asp-for="@url.Url" class="form-control-label"></label>
+								<input asp-for="@url.Url" class="form-control" />
+								<span asp-validation-for="@url.Url" class="text-danger"></span>
+							</div>
+						</row>
+					</div>
+					<div class="col-auto align-self-end">
+						<button class="btn btn-danger"><i class="fa fa-remove"></i></button>
+					</div>
+				</row>
+			}
+			<fullrow>
+				<div class="btn btn-secondary"><i class="fa fa-plus-square"></i></div>
+			</fullrow>
+		</div>
+	</fieldset>
+	<fieldset>
+		<label asp-for="Exhibition.Games" class="form-control-label"></label>
+		<select asp-for="Exhibition.Games" asp-items="Model.AvailableGames"></select>
+	</fieldset>
+	<fieldset>
+		<label asp-for="Exhibition.Contributors" class="form-control-label"></label>
+		<select asp-for="Exhibition.Contributors" asp-items="Model.AvailableUsers"></select>
+	</fieldset>
+	<fieldset>
+		<label asp-for="Exhibition.Markup" class="form-control-label"></label>
+		<textarea asp-for="Exhibition.Markup" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
+		<span asp-validation-for="Exhibition.Markup" class="text-danger"></span>
+	</fieldset>
+
+	<div class="text-center alert-info mt-2" role="alert">
+		<label class="alert-info">
+			@await Html.RenderWiki(SystemWiki.WikiEditNote)
+		</label>
+	</div>
+	<fullrow class="text-center">
+		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Submit</button>
+		<a class="btn btn-secondary" asp-page="/Exhibitions"><i class="fa fa-times"></i> Cancel</a>
+	</fullrow>
+</form>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	<script src="/js/select-improver.js"></script>
+	<script>
+		engageSelectImprover('@Html.IdFor(m => m.Exhibition.Games)');
+		engageSelectImprover('@Html.IdFor(m => m.Exhibition.Contributors)');
+	</script>
 }
