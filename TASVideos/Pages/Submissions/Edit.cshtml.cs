@@ -226,8 +226,7 @@ public class EditModel(
 			submission.Judge = await db.Users.SingleAsync(u => u.UserName == userName);
 		}
 		else if (submission.Status == SubmissionStatus.JudgingUnderWay // If judge is unclaiming, remove them
-			&& Submission.Status == SubmissionStatus.New
-			&& submission.Judge is not null)
+			&& Submission.Status == SubmissionStatus.New)
 		{
 			submission.Judge = null;
 		}
