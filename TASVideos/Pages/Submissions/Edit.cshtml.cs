@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
@@ -147,7 +148,7 @@ public class EditModel(
 			return NotFound();
 		}
 
-		var availableStatus = queueService.AvailableStatuses(
+		AvailableStatuses = queueService.AvailableStatuses(
 			subInfo.CurrentStatus,
 			User.Permissions(),
 			subInfo.CreateDate,
@@ -155,25 +156,19 @@ public class EditModel(
 			subInfo.UserIsJudge,
 			subInfo.UserIsPublisher);
 
-		if (!availableStatus.Contains(Submission.Status))
+		if (!AvailableStatuses.Contains(Submission.Status))
 		{
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Status)}", $"Invalid status: {Submission.Status}");
 		}
 
 		if (!ModelState.IsValid)
 		{
-			await PopulateDropdowns();
-			AvailableStatuses = availableStatus;
-			return Page();
+			return await ReturnWithModelErrors();
 		}
 
-		// If user can not edit submissions then they must be an author or the original submitter
-		if (!User.Has(PermissionTo.EditSubmissions))
+		if (!User.Has(PermissionTo.EditSubmissions) && !subInfo.UserIsAuthorOrSubmitter)
 		{
-			if (!subInfo.UserIsAuthorOrSubmitter)
-			{
-				return AccessDenied();
-			}
+			return AccessDenied();
 		}
 
 		var submission = await db.Submissions
@@ -196,14 +191,14 @@ public class EditModel(
 			if (!parseResult.Success)
 			{
 				ModelState.AddParseErrors(parseResult);
-				return Page();
+				return await ReturnWithModelErrors();
 			}
 
 			var deprecated = await deprecator.IsDeprecated("." + parseResult.FileExtension);
 			if (deprecated)
 			{
 				ModelState.AddModelError(FileFieldName, $".{parseResult.FileExtension} is no longer submittable");
-				return Page();
+				return await ReturnWithModelErrors();
 			}
 
 			var error = await queueService.MapParsedResult(parseResult, submission);
@@ -214,7 +209,7 @@ public class EditModel(
 
 			if (!ModelState.IsValid)
 			{
-				return Page();
+				return await ReturnWithModelErrors();
 			}
 
 			submission.MovieFile = await Submission.MovieFile.ToBytes();
@@ -452,6 +447,12 @@ public class EditModel(
 		}
 
 		return RedirectToPage("View", new { Id });
+	}
+
+	private async Task<PageResult> ReturnWithModelErrors()
+	{
+		await PopulateDropdowns();
+		return Page();
 	}
 
 	private async Task PopulateDropdowns()
