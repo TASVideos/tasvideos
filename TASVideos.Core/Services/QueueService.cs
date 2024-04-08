@@ -12,7 +12,7 @@ public interface IQueueService
 	/// Returns a list of all available statuses a submission could be set to
 	/// Based on the user's permissions, submission status and date, and authors.
 	/// </summary>
-	IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
+	ICollection<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
 		IEnumerable<PermissionTo> userPermissions,
 		DateTime submitDate,
 		bool isAuthorOrSubmitter,
@@ -67,7 +67,7 @@ internal class QueueService(
 {
 	private readonly int _minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
 
-	public IEnumerable<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
+	public ICollection<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
 		IEnumerable<PermissionTo> userPermissions,
 		DateTime submitDate,
 		bool isAuthorOrSubmitter,
@@ -84,9 +84,9 @@ internal class QueueService(
 		var perms = userPermissions.ToList();
 		if (perms.Contains(PermissionTo.OverrideSubmissionStatus))
 		{
-			return Enum.GetValues(typeof(SubmissionStatus))
-				.Cast<SubmissionStatus>()
-				.Except([Published]); // Published status must only be set when being published
+			return Enum.GetValues<SubmissionStatus>()
+				.Except([Published]) // Published status must only be set when being published
+				.ToList();
 		}
 
 		var list = new HashSet<SubmissionStatus>

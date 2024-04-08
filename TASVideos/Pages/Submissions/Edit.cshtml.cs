@@ -29,12 +29,8 @@ public class EditModel(
 	public SubmissionEdit Submission { get; set; } = new();
 
 	public bool CanDelete { get; set; }
-
-	[Display(Name = "Status")]
-	public IEnumerable<SubmissionStatus> AvailableStatuses { get; set; } = [];
-
+	public ICollection<SubmissionStatus> AvailableStatuses { get; set; } = [];
 	public List<SelectListItem> AvailableClasses { get; set; } = [];
-
 	public List<SelectListItem> AvailableRejectionReasons { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
@@ -46,7 +42,7 @@ public class EditModel(
 				GameName = s.GameName ?? "",
 				GameVersion = s.SubmittedGameVersion,
 				RomName = s.RomName,
-				Branch = s.Branch,
+				Goal = s.Branch,
 				Emulator = s.EmulatorVersion,
 				CreateTimestamp = s.CreateTimestamp,
 				Submitter = s.Submitter!.UserName,
@@ -67,8 +63,6 @@ public class EditModel(
 
 		Submission = submission;
 		var submissionPage = (await wikiPages.SubmissionPage(Id))!;
-		Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
-		Submission.LastUpdateUser = submissionPage.AuthorName;
 		Submission.Markup = submissionPage.Markup;
 		Submission.Authors = await db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == Id)
@@ -79,13 +73,11 @@ public class EditModel(
 		var userName = User.Name();
 
 		// If user can not edit submissions then they must be an author or the original submitter
-		if (!User.Has(PermissionTo.EditSubmissions))
+		if (!User.Has(PermissionTo.EditSubmissions)
+			&& Submission.Submitter != userName
+			&& !Submission.Authors.Contains(userName))
 		{
-			if (Submission.Submitter != userName
-				&& !Submission.Authors.Contains(userName))
-			{
 				return AccessDenied();
-			}
 		}
 
 		await PopulateDropdowns();
@@ -163,8 +155,7 @@ public class EditModel(
 			subInfo.CreateDate,
 			subInfo.UserIsAuthorOrSubmitter,
 			subInfo.UserIsJudge,
-			subInfo.UserIsPublisher)
-			.ToList();
+			subInfo.UserIsPublisher);
 
 		if (!availableStatus.Contains(Submission.Status))
 		{
@@ -306,7 +297,7 @@ public class EditModel(
 		submission.SubmittedGameVersion = Submission.GameVersion;
 		submission.GameName = Submission.GameName;
 		submission.EmulatorVersion = Submission.Emulator;
-		submission.Branch = Submission.Branch;
+		submission.Branch = Submission.Goal;
 		submission.RomName = Submission.RomName;
 		submission.EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
 		submission.Status = Submission.Status;
@@ -525,11 +516,7 @@ public class EditModel(
 
 		[Display(Name = "ROM filename")]
 		public string? RomName { get; init; }
-
-		[Display(Name = "Goal")]
-		public string? Branch { get; init; }
-
-		[Display(Name = "Emulator", Description = "Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.")]
+		public string? Goal { get; init; }
 		public string? Emulator { get; init; }
 
 		[Url]
@@ -542,12 +529,6 @@ public class EditModel(
 
 		[Display(Name = "Submit Date")]
 		public DateTime CreateTimestamp { get; init; }
-
-		[Display(Name = "Last Edited")]
-		public DateTime LastUpdateTimestamp { get; set; }
-
-		[Display(Name = "Last Edited by")]
-		public string? LastUpdateUser { get; set; }
 		public SubmissionStatus Status { get; init; }
 		public string? Judge { get; init; }
 		public string? Publisher { get; init; }

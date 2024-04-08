@@ -51,16 +51,16 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.Emulator" class="form-control-label"></label>
-				<input asp-for="Submission.Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Emulator)" />
+				<input asp-for="Submission.Emulator" spellcheck="false" class="form-control" placeholder="Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author." />
 				<div>@Html.DescriptionFor(m => m.Submission.Emulator)</div>
 				<span asp-validation-for="Submission.Emulator" class="text-danger"></span>
 			</fieldset>
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.Branch" class="form-control-label"></label>
-				<input asp-for="Submission.Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Branch)" />
-				<span asp-validation-for="Submission.Branch" class="text-danger"></span>
+				<label asp-for="Submission.Goal" class="form-control-label"></label>
+				<input asp-for="Submission.Goal" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Goal)" />
+				<span asp-validation-for="Submission.Goal" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.RomName" class="form-control-label"></label>
