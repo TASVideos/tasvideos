@@ -78,7 +78,14 @@ public class PublishModel(
 		}
 
 		var submission = await db.Submissions
-			.IncludeTitleTables()
+			.Include(s => s.SubmissionAuthors)
+			.ThenInclude(sa => sa.Author)
+			.Include(s => s.System)
+			.Include(s => s.SystemFrameRate)
+			.Include(s => s.Game)
+			.Include(s => s.GameVersion)
+			.Include(s => s.GameGoal)
+			.Include(gg => gg.GameGoal)
 			.Include(s => s.IntendedClass)
 			.SingleOrDefaultAsync(s => s.Id == Id);
 

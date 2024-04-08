@@ -123,7 +123,13 @@ public class EditModel(
 		var externalMessages = new List<string>();
 
 		var publication = await db.Publications
-			.IncludeTitleTables()
+			.Include(p => p.Authors)
+			.ThenInclude(pa => pa.Author)
+			.Include(p => p.System)
+			.Include(p => p.SystemFrameRate)
+			.Include(p => p.Game)
+			.Include(p => p.GameVersion)
+			.Include(p => p.GameGoal)
 			.Include(p => p.PublicationUrls)
 			.Include(p => p.PublicationTags)
 			.Include(p => p.PublicationFlags)

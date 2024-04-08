@@ -79,7 +79,13 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		}
 
 		var publication = await db.Publications
-			.IncludeTitleTables()
+			.Include(p => p.Authors)
+			.ThenInclude(pa => pa.Author)
+			.Include(p => p.System)
+			.Include(p => p.SystemFrameRate)
+			.Include(p => p.Game)
+			.Include(p => p.GameVersion)
+			.Include(p => p.GameGoal)
 			.SingleOrDefaultAsync(s => s.Id == Id);
 		if (publication is null)
 		{
