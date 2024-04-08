@@ -68,17 +68,27 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, int subId, string formattedTitle, string body)
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = PostType.General,
 			Group = PostGroups.Submission,
-			Title = title,
+			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
-			Link = publisher.ToAbsolute(relativeLink)
+			Link = $"{subId}S"
+		});
+	}
+
+	public static async Task SendDeprecation(this ExternalMediaPublisher publisher, string formattedTitle)
+	{
+		await publisher.Send(new Post
+		{
+			Type = PostType.General,
+			Group = PostGroups.Submission,
+			Title = Unformat(formattedTitle),
+			FormattedTitle = formattedTitle
 		});
 	}
 

@@ -26,7 +26,7 @@ public class DeprecateMovieFormatsModel(IMovieFormatDeprecator deprecator, Exter
 		if (result)
 		{
 			SuccessStatusMessage($"{extension} allowed successfully");
-			await SendAnnouncement(extension, deprecate);
+			await publisher.SendDeprecation($"[{extension}]({{0}}) deprecation status set to {deprecate} by {User.Name()}");
 		}
 		else
 		{
@@ -34,14 +34,5 @@ public class DeprecateMovieFormatsModel(IMovieFormatDeprecator deprecator, Exter
 		}
 
 		return BasePageRedirect("DeprecateMovieFormats");
-	}
-
-	private async Task SendAnnouncement(string extension, bool deprecate)
-	{
-		await publisher.SendSubmissionEdit(
-			$"{extension} deprecation status set to {deprecate} by {User.Name()}",
-			$"[{extension}]({{0}}) deprecation status set to {deprecate} by {User.Name()}",
-			"",
-			"");
 	}
 }

@@ -345,7 +345,6 @@ public class EditModel(
 
 		if (!Submission.MinorEdit || statusHasChanged) // always publish submission status changes to media
 		{
-			string title;
 			string formattedTitle;
 			string separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
 			if (statusHasChanged)
@@ -380,20 +379,15 @@ public class EditModel(
 					statusStr = "set to " + statusStr;
 				}
 
-				title = $"Submission {statusStr} by {userName}";
 				formattedTitle = $"[{Id}S]({{0}}) {statusStr} by {userName}";
 			}
 			else
 			{
-				title = $"Submission edited by {userName}";
 				formattedTitle = $"[{Id}S]({{0}}) edited by {userName}";
 			}
 
 			await publisher.SendSubmissionEdit(
-				title,
-				formattedTitle,
-				$"{Submission.RevisionMessage}{separator}{submission.Title}",
-				$"{Id}S");
+				Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{submission.Title}");
 		}
 
 		return RedirectToPage("View", new { Id });
@@ -459,10 +453,7 @@ public class EditModel(
 		{
 			string statusPrefix = newStatus == SubmissionStatus.JudgingUnderWay ? "" : "set to ";
 			await publisher.SendSubmissionEdit(
-				$"Submission {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}",
-				$"[Submission]({{0}}) {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}",
-				$"{submission.Title}",
-				$"{Id}S");
+				Id, $"[Submission]({{0}}) {statusPrefix}{newStatus.EnumDisplayName()} by {User.Name()}", $"{submission.Title}");
 		}
 
 		return RedirectToPage("View", new { Id });
