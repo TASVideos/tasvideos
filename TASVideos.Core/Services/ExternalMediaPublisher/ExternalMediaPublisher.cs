@@ -237,6 +237,6 @@ public static class ExternalMediaPublisherExtensions
 	// unformatted: New user file uploaded by
 	private static string Unformat(string formattedTitle)
 	{
-		return formattedTitle.Replace("[", "").Replace("]", "").Replace("{0}", "");
+		return formattedTitle.Replace("[", "").Replace("]", "").Replace("({0})", "");
 	}
 }

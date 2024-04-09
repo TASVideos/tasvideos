@@ -330,46 +330,51 @@ public class EditModel(
 
 		if (!Submission.MinorEdit || statusHasChanged) // always publish submission status changes to media
 		{
-			string formattedTitle;
-			string separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
-			if (statusHasChanged)
-			{
-				string statusStr = Submission.Status.EnumDisplayName();
-
-				if (Submission.Status.IsJudgeDecision())
-				{
-					statusStr = statusStr.ToUpper();
-				}
-
-				if (Submission.Status == SubmissionStatus.Accepted)
-				{
-					var publicationClass = (await db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId)).Name;
-
-					if (publicationClass != "Standard")
-					{
-						statusStr += $" to {publicationClass}";
-					}
-				}
-				else if (Submission.Status is SubmissionStatus.NeedsMoreInfo
-						or SubmissionStatus.New
-						or SubmissionStatus.PublicationUnderway
-						or SubmissionStatus.Playground)
-				{
-					statusStr = "set to " + statusStr;
-				}
-
-				formattedTitle = $"[{Id}S]({{0}}) {statusStr} by {userName}";
-			}
-			else
-			{
-				formattedTitle = $"[{Id}S]({{0}}) edited by {userName}";
-			}
-
+			var formattedTitle = await GetFormattedTitle(statusHasChanged);
+			var separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
 			await publisher.SendSubmissionEdit(
 				Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{submission.Title}");
 		}
 
 		return RedirectToPage("View", new { Id });
+	}
+
+	private async Task<string> GetFormattedTitle(bool statusHasChanged)
+	{
+		if (!statusHasChanged)
+		{
+			return $"[{Id}S]({{0}}) edited by {User.Name()}";
+		}
+
+		string statusStr = Submission.Status.EnumDisplayName();
+
+		if (Submission.Status.IsJudgeDecision())
+		{
+			statusStr = statusStr.ToUpper();
+		}
+
+		switch (Submission.Status)
+		{
+			case SubmissionStatus.Accepted:
+			{
+				var publicationClass = (await db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId)).Name;
+				if (publicationClass != "Standard")
+				{
+					statusStr += $" to {publicationClass}";
+				}
+
+				break;
+			}
+
+			case SubmissionStatus.NeedsMoreInfo
+				or SubmissionStatus.New
+				or SubmissionStatus.PublicationUnderway
+				or SubmissionStatus.Playground:
+				statusStr = "set to " + statusStr;
+				break;
+		}
+
+		return $"[{Id}S]({{0}}) {statusStr} by {User.Name()}";
 	}
 
 	public async Task<IActionResult> OnGetClaimForJudging()
