@@ -472,21 +472,6 @@ public class UserManager(
 		}
 	}
 
-	public async Task<List<RoleDto>> UserRoles(int userId)
-	{
-		return await db.Users
-			.Where(u => u.Id == userId)
-			.SelectMany(u => u.UserRoles)
-			.Select(ur => ur.Role!)
-			.Select(r => new RoleDto
-			{
-				Id = r.Id,
-				Name = r.Name,
-				Description = r.Description
-			})
-			.ToListAsync();
-	}
-
 	/// <summary>
 	/// Performs all the necessary updates after a user's name has been changed
 	/// </summary>

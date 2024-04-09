@@ -3,7 +3,10 @@
 @{
 	ViewData.SetTitle("Profile Settings");
 	ViewData.AddActivePage(ProfileNavPages.Settings);
-	string trueId, falseId;
+	const string ratingsTrueId = nameof(Model.PublicRatings) + "-true";
+	const string ratingsFalseId = nameof(Model.PublicRatings) + "-false";
+	const string emailOnPmTrueId = nameof(Model.EmailOnPrivateMessage) + "-true";
+	const string emailOnPmFalseId = nameof(Model.EmailOnPrivateMessage) + "-false";
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
@@ -41,30 +44,22 @@
 			<fieldset>
 				<label asp-for="PublicRatings"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
-					@{
-						trueId = nameof(Model.PublicRatings) + "-true";
-						falseId = nameof(Model.PublicRatings) + "-false";
-					}
-					<label for="@trueId" class="btn btn-secondary @(Model.PublicRatings ? "active" : "")">
-						<input id="@trueId" type="radio" value="True" asp-for="PublicRatings" /> Yes
+					<label for="@ratingsTrueId" class="btn btn-secondary @(Model.PublicRatings ? "active" : "")">
+						<input id="@ratingsTrueId" type="radio" value="True" asp-for="PublicRatings" /> Yes
 					</label>
-					<label for="@falseId" class="btn btn-secondary @(!Model.PublicRatings ? "active" : "")">
-						<input id="@falseId" type="radio" value="False" asp-for="PublicRatings" /> No
+					<label for="@ratingsFalseId" class="btn btn-secondary @(!Model.PublicRatings ? "active" : "")">
+						<input id="@ratingsFalseId" type="radio" value="False" asp-for="PublicRatings" /> No
 					</label>
 				</div>
 			</fieldset>
 			<fieldset>
 				<label asp-for="EmailOnPrivateMessage"></label>
 				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
-					@{
-						trueId = nameof(Model.EmailOnPrivateMessage) + "-true";
-						falseId = nameof(Model.EmailOnPrivateMessage) + "-false";
-					}
-					<label for="@trueId" class="btn btn-secondary @(Model.EmailOnPrivateMessage ? "active" : "")">
-						<input id="@trueId" type="radio" value="True" asp-for="EmailOnPrivateMessage" /> Yes
+					<label for="@emailOnPmTrueId" class="btn btn-secondary @(Model.EmailOnPrivateMessage ? "active" : "")">
+						<input id="@emailOnPmTrueId" type="radio" value="True" asp-for="EmailOnPrivateMessage" /> Yes
 					</label>
-					<label for="@falseId" class="btn btn-secondary @(!Model.EmailOnPrivateMessage ? "active" : "")">
-						<input id="@falseId" type="radio" value="False" asp-for="EmailOnPrivateMessage" /> No
+					<label for="@emailOnPmFalseId" class="btn btn-secondary @(!Model.EmailOnPrivateMessage ? "active" : "")">
+						<input id="@emailOnPmFalseId" type="radio" value="False" asp-for="EmailOnPrivateMessage" /> No
 					</label>
 				</div>
 			</fieldset>
@@ -89,8 +84,8 @@
 				<timezone-picker asp-for="TimeZoneId" class="form-select" />
 			</fieldset>
 			@{
-				DateTime exampleDate = new DateTime(2024, 2, 29, 17, 35, 0);
-				double exampleNumber = 1.23;
+				var exampleDate = new DateTime(2024, 2, 29, 17, 35, 0);
+				const double exampleNumber = 1.23;
 			}
 			<fieldset>
 				<label asp-for="UserDateFormat"></label>
@@ -152,48 +147,46 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script>
-		{
-			let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Avatar)');
-			let previewElem = document.getElementById('avatar-preview');
+		let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Avatar)');
+		let previewElem = document.getElementById('avatar-preview');
 
-			document.addEventListener("DOMContentLoaded", validateAvatar);
-			avatarBoxElem.addEventListener('blur', toggleAvatarPreview);
-			document.getElementById('preview-btn').addEventListener('click', toggleAvatarPreview);
+		document.addEventListener("DOMContentLoaded", validateAvatar);
+		avatarBoxElem.addEventListener('blur', toggleAvatarPreview);
+		document.getElementById('preview-btn').addEventListener('click', toggleAvatarPreview);
 
-			let avatarImgElem = document.getElementById('avatar-img');
+		let avatarImgElem = document.getElementById('avatar-img');
 
-			function toggleAvatarPreview() {
-				const avatar = document.getElementById('@Html.IdFor(m => m.Avatar)').value;
-				if (avatar) {
-					avatarImgElem.onload = validateAvatar;
-					avatarImgElem.src = avatar;
-				} else {
-					previewElem.classList.add('d-none');
-					preventSave(false);
-				}
+		function toggleAvatarPreview() {
+			const avatar = document.getElementById('@Html.IdFor(m => m.Avatar)').value;
+			if (avatar) {
+				avatarImgElem.onload = validateAvatar;
+				avatarImgElem.src = avatar;
+			} else {
+				previewElem.classList.add('d-none');
+				preventSave(false);
+			}
+		}
+
+		function validateAvatar() {
+			const maxWidth = @AvatarRequirements.Width;
+			const maxHeight = @AvatarRequirements.Height;
+
+			const tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
+			if (tooBig) {
+				previewElem.classList.add('alert');
+				previewElem.classList.add('alert-danger');
+				preventSave(true);
+			} else {
+				previewElem.classList.remove('alert');
+				previewElem.classList.remove('alert-danger');
+				preventSave(false);
 			}
 
-			function validateAvatar() {
-				const maxWidth = @AvatarRequirements.Width;
-				const maxHeight = @AvatarRequirements.Height;
+			previewElem.classList.remove('d-none');
+		}
 
-				const tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
-				if (tooBig) {
-					previewElem.classList.add('alert');
-					previewElem.classList.add('alert-danger');
-					preventSave(true);
-				} else {
-					previewElem.classList.remove('alert');
-					previewElem.classList.remove('alert-danger');
-					preventSave(false);
-				}
-
-				previewElem.classList.remove('d-none');
-			}
-
-			function preventSave(prevent) {
-				document.getElementById('submit-btn').disabled = prevent;
-			}
+		function preventSave(prevent) {
+			document.getElementById('submit-btn').disabled = prevent;
 		}
 	</script>
 }
