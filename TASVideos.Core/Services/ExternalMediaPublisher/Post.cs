@@ -15,7 +15,7 @@ public interface IPostable
 	/// Gets the post title
 	/// </summary>
 	string Title { get; }
-	
+
 	/// <summary>
 	/// Gets the post title with Markdown formatting.
 	/// Optionally may include "{0}" to be replaced with the <see cref="Link"/>.
@@ -55,7 +55,7 @@ public interface IPostable
 /// </summary>
 public class Post : IPostable
 {
-	public string Announcement { get; set; } = "";
+	public string Announcement { get; init; } = "";
 	public string Title { get; init; } = "";
 	public string FormattedTitle { get; init; } = "";
 	public string Link { get; init; } = "";
