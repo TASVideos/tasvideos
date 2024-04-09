@@ -26,31 +26,80 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 		.GetValues<UserDecimalFormat>()
 		.ToDropDown();
 
+	public string Username { get; set; } = "";
+
+	[Display(Name = "Current Email")]
+	public string Email { get; set; } = "";
+	public bool IsEmailConfirmed { get; set; }
+
 	[BindProperty]
-	public ProfileSettingsModel Settings { get; set; } = new();
+	[Display(Name = "Time Zone")]
+	public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
+
+	[BindProperty]
+	[Display(Name = "Allow Movie Ratings to be public?")]
+	public bool PublicRatings { get; set; }
+
+	[BindProperty]
+	[StringLength(100)]
+	public string? Location { get; set; }
+
+	[BindProperty]
+	[StringLength(1000)]
+	public string? Signature { get; set; }
+
+	[BindProperty]
+	[Url]
+	[Display(Name = "Avatar URL")]
+	public string? Avatar { get; set; }
+
+	[BindProperty]
+	[Url]
+	[Display(Name = "Mood-variant avatar URL")]
+	public string? MoodAvatar { get; set; }
+
+	[BindProperty]
+	[Display(Name = "Preferred Pronouns")]
+	public PreferredPronounTypes PreferredPronouns { get; set; }
+
+	[BindProperty]
+	[Display(Name = "Email On New Private Message?")]
+	public bool EmailOnPrivateMessage { get; set; }
+
+	[BindProperty]
+	[Display(Name = "Automatically Watch Topics When Posting")]
+	public UserPreference AutoWatchTopic { get; set; }
+
+	[BindProperty]
+	[Display(Name = "Date Format")]
+	public UserDateFormat UserDateFormat { get; set; }
+
+	[BindProperty]
+	[Display(Name = "Time Format")]
+	public UserTimeFormat UserTimeFormat { get; set; }
+
+	[BindProperty]
+	[Display(Name = "Decimal Format")]
+	public UserDecimalFormat UserDecimalFormat { get; set; }
 
 	public async Task OnGet()
 	{
 		var user = await userManager.GetRequiredUser(User);
-		Settings = new ProfileSettingsModel
-		{
-			Username = user.UserName,
-			Email = user.Email,
-			TimeZoneId = user.TimeZoneId,
-			IsEmailConfirmed = user.EmailConfirmed,
-			PublicRatings = user.PublicRatings,
-			From = user.From,
-			Signature = user.Signature,
-			Avatar = user.Avatar,
-			MoodAvatar = user.MoodAvatarUrlBase,
-			PreferredPronouns = user.PreferredPronouns,
-			EmailOnPrivateMessage = user.EmailOnPrivateMessage,
-			Roles = await userManager.UserRoles(user.Id),
-			AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto,
-			UserDateFormat = user.DateFormat,
-			UserTimeFormat = user.TimeFormat,
-			UserDecimalFormat = user.DecimalFormat
-		};
+		Username = user.UserName;
+		Email = user.Email;
+		IsEmailConfirmed = user.EmailConfirmed;
+		TimeZoneId = user.TimeZoneId;
+		PublicRatings = user.PublicRatings;
+		Location = user.From;
+		Signature = user.Signature;
+		Avatar = user.Avatar;
+		MoodAvatar = user.MoodAvatarUrlBase;
+		PreferredPronouns = user.PreferredPronouns;
+		EmailOnPrivateMessage = user.EmailOnPrivateMessage;
+		AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto;
+		UserDateFormat = user.DateFormat;
+		UserTimeFormat = user.TimeFormat;
+		UserDecimalFormat = user.DecimalFormat;
 	}
 
 	public async Task<IActionResult> OnPost()
@@ -60,27 +109,16 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 			return Page();
 		}
 
-		var bannedSites = userManager.BannedAvatarSites().ToList();
-		if (!string.IsNullOrWhiteSpace(Settings.Avatar))
+		var site = userManager.AvatarSiteIsBanned(Avatar);
+		if (!string.IsNullOrEmpty(site))
 		{
-			foreach (var site in bannedSites)
-			{
-				if (Settings.Avatar.Contains(site))
-				{
-					ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.Avatar)}", $"Using {site} to host avatars is not allowed.");
-				}
-			}
+			ModelState.AddModelError($"{nameof(Avatar)}", $"Using {site} to host avatars is not allowed.");
 		}
 
-		if (!string.IsNullOrWhiteSpace(Settings.MoodAvatar))
+		site = userManager.AvatarSiteIsBanned(MoodAvatar);
+		if (!string.IsNullOrEmpty(site))
 		{
-			foreach (var site in bannedSites)
-			{
-				if (Settings.MoodAvatar.Contains(site))
-				{
-					ModelState.AddModelError($"{nameof(Settings)}.{nameof(Settings.MoodAvatar)}", $"Using {site} to host avatars is not allowed.");
-				}
-			}
+			ModelState.AddModelError($"{nameof(Avatar)}", $"Using {site} to host avatars is not allowed.");
 		}
 
 		if (!ModelState.IsValid)
@@ -90,22 +128,22 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 		var user = await userManager.GetRequiredUser(User);
 
-		bool hasUserCustomLocaleChanged = user.DateFormat != Settings.UserDateFormat || user.TimeFormat != Settings.UserTimeFormat || user.DecimalFormat != Settings.UserDecimalFormat;
+		bool hasUserCustomLocaleChanged = user.DateFormat != UserDateFormat || user.TimeFormat != UserTimeFormat || user.DecimalFormat != UserDecimalFormat;
 
-		user.TimeZoneId = Settings.TimeZoneId;
-		user.PublicRatings = Settings.PublicRatings;
-		user.From = Settings.From;
-		user.Avatar = Settings.Avatar;
-		user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? Settings.MoodAvatar : null;
-		user.PreferredPronouns = Settings.PreferredPronouns;
-		user.EmailOnPrivateMessage = Settings.EmailOnPrivateMessage;
-		user.AutoWatchTopic = Settings.AutoWatchTopic;
-		user.DateFormat = Settings.UserDateFormat;
-		user.TimeFormat = Settings.UserTimeFormat;
-		user.DecimalFormat = Settings.UserDecimalFormat;
+		user.TimeZoneId = TimeZoneId;
+		user.PublicRatings = PublicRatings;
+		user.From = Location;
+		user.Avatar = Avatar;
+		user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? MoodAvatar : null;
+		user.PreferredPronouns = PreferredPronouns;
+		user.EmailOnPrivateMessage = EmailOnPrivateMessage;
+		user.AutoWatchTopic = AutoWatchTopic;
+		user.DateFormat = UserDateFormat;
+		user.TimeFormat = UserTimeFormat;
+		user.DecimalFormat = UserDecimalFormat;
 		if (User.Has(PermissionTo.EditSignature))
 		{
-			user.Signature = Settings.Signature;
+			user.Signature = Signature;
 		}
 
 		await db.SaveChangesAsync();
@@ -134,53 +172,5 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 		SuccessStatusMessage("Verification email sent. Please check your email.");
 		return BasePageRedirect("Settings");
-	}
-
-	public class ProfileSettingsModel
-	{
-		public string Username { get; init; } = "";
-		public bool IsEmailConfirmed { get; init; }
-
-		[Display(Name = "Current Email")]
-		public string Email { get; init; } = "";
-
-		[Display(Name = "Time Zone")]
-		public string TimeZoneId { get; init; } = TimeZoneInfo.Utc.Id;
-
-		[Display(Name = "Allow Movie Ratings to be public?")]
-		public bool PublicRatings { get; init; }
-
-		[Display(Name = "Location")]
-		public string? From { get; init; }
-
-		[StringLength(1000)]
-		public string? Signature { get; init; }
-
-		[Url]
-		[Display(Name = "Avatar URL")]
-		public string? Avatar { get; init; }
-
-		[Url]
-		[Display(Name = "Mood-variant avatar URL")]
-		public string? MoodAvatar { get; init; }
-
-		[Display(Name = "Preferred Pronouns")]
-		public PreferredPronounTypes PreferredPronouns { get; init; }
-
-		[Display(Name = "Email On New Private Message?")]
-		public bool EmailOnPrivateMessage { get; init; }
-
-		[Display(Name = "Automatically Watch Topics When Posting")]
-		public UserPreference AutoWatchTopic { get; init; }
-
-		[Display(Name = "Date Format")]
-		public UserDateFormat UserDateFormat { get; init; }
-
-		[Display(Name = "Time Format")]
-		public UserTimeFormat UserTimeFormat { get; init; }
-
-		[Display(Name = "Decimal Format")]
-		public UserDecimalFormat UserDecimalFormat { get; init; }
-		public List<RoleDto> Roles { get; init; } = [];
 	}
 }

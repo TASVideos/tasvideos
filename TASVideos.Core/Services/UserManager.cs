@@ -446,6 +446,16 @@ public class UserManager(
 		];
 	}
 
+	public string? AvatarSiteIsBanned(string? avatar)
+	{
+		if (string.IsNullOrWhiteSpace(avatar))
+		{
+			return null;
+		}
+
+		return BannedAvatarSites().FirstOrDefault(avatar.Contains);
+	}
+
 	public async Task MarkEmailConfirmed(User user)
 	{
 		if (!user.EmailConfirmed)
