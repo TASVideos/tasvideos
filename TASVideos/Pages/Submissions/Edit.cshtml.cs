@@ -19,7 +19,8 @@ public class EditModel(
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
 	IYoutubeSync youtubeSync,
-	IForumService forumService)
+	IForumService forumService,
+	ITopicWatcher topicWatcher)
 	: BasePageModel
 {
 	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.MovieFile)}";
@@ -426,6 +427,10 @@ public class EditModel(
 		if (isJudge)
 		{
 			submission.JudgeId = User.GetUserId();
+			if (submission.TopicId.HasValue)
+			{
+				await topicWatcher.WatchTopic(submission.TopicId.Value, User.GetUserId(), true);
+			}
 		}
 		else
 		{
