@@ -34,7 +34,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 	[BindProperty]
 	[Display(Name = "Time Zone")]
-	public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
+	public string? TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 	[BindProperty]
 	[Display(Name = "Allow Movie Ratings to be public?")]
@@ -130,7 +130,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 		bool hasUserCustomLocaleChanged = user.DateFormat != UserDateFormat || user.TimeFormat != UserTimeFormat || user.DecimalFormat != UserDecimalFormat;
 
-		user.TimeZoneId = TimeZoneId;
+		user.TimeZoneId = TimeZoneId ?? TimeZoneInfo.Utc.Id;
 		user.PublicRatings = PublicRatings;
 		user.From = Location;
 		user.Avatar = Avatar;
