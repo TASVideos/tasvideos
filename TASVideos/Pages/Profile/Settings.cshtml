@@ -184,20 +184,17 @@
 		}
 
 		function validateAvatar() {
-			console.log('validating avatar requirements');
 			const maxWidth = @AvatarRequirements.Width;
 			const maxHeight = @AvatarRequirements.Height;
 			const descSection = document.getElementById('avatar-description');
 
 			const tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
 			if (tooBig) {
-				descSection.classList.add('alert');
-				descSection.classList.add('alert-danger');
+				descSection.classList.add('text-danger');
 				document.getElementById('avatar-too-big').classList.remove('d-none');
 				preventSave(true);
 			} else {
-				descSection.classList.remove('alert');
-				descSection.classList.remove('alert-danger');
+				descSection.classList.remove('text-danger');
 				document.getElementById('avatar-too-big').classList.add('d-none');
 				preventSave(false);
 			}
@@ -210,14 +207,11 @@
 		async function onGravatarToggle() {
 			const checked = document.querySelector('[name="UseGravatar"]:checked').value == 'True';
 			if (checked) {
-				console.log('showing gravatar')
 				document.getElementById('gravatar-section').classList.remove('d-none');
 				await generateGravatarPreview();
 			} else {
-				console.log('showing avatar')
 				document.getElementById('gravatar-section').classList.add('d-none');
 			}
-			console.log('checked', checked)
 		}
 
 		async function generateGravatarPreview() {
