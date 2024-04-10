@@ -130,11 +130,7 @@
 		</fullrow>
 		<fullrow class="mt-2" id="avatar-preview">
 			<div show="!string.IsNullOrWhiteSpace(Model.Avatar)" class="float-end">
-				<button id="preview-btn" type="button" class="btn btn-secondary btn-sm m-2">
-					<span class="fa fa-refresh"></span>
-				</button>
-				<label>Preview</label><br />
-				<img id="avatar-img" src="@Model.Avatar" class="m-2" alt="Avatar preview" />
+				<img id="avatar-img" src="@Model.Avatar" class="m-2" alt="Avatar preview" onerror="this.src = '/images/empty.png'" />
 			</div>
 			<small>
 				@await Html.RenderWiki(SystemWiki.AvatarRequirements)
@@ -168,12 +164,11 @@
 		let previewElem = document.getElementById('avatar-preview');
 
 		document.addEventListener("DOMContentLoaded", validateAvatar);
-		avatarBoxElem.addEventListener('blur', toggleAvatarPreview);
-		document.getElementById('preview-btn').addEventListener('click', toggleAvatarPreview);
+		document.addEventListener("DOMContentLoaded", onGravatarToggle);
+		avatarBoxElem.addEventListener('input', toggleAvatarPreview);
 
 		let avatarImgElem = document.getElementById('avatar-img');
 
-		onGravatarToggle();
 		Array.from(document.querySelectorAll('[name="UseGravatar"]')).forEach(elem => elem.addEventListener('click', onGravatarToggle));
 
 		function toggleAvatarPreview() {
