@@ -1,5 +1,5 @@
 ﻿@model MovieChangeLog
-<partial name="_Pager" model="Model" />
+<partial name="_Pager" model="Model.Logs" />
 @{
 	var mergedHistoryModel = Model.Logs
 			.GroupBy(gkey => gkey.Date)
@@ -37,7 +37,7 @@
 			</div>
 		}
 	</fullrow>
-	
+
 }
 
-<partial name="_Pager" model="Model" />
+<partial name="_Pager" model="Model.Logs" />

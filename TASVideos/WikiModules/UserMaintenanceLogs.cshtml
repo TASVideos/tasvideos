@@ -4,8 +4,8 @@
 	var currentPage = ViewData["CurrentPage"]?.ToString();
 }
 <div condition="@Model.Logs.Any()">
-	<partial name="_Pager" model="Model" />
-	<table>
+	<partial name="_Pager" model="Model.Logs" />
+	<table class="table table-bordered table-striped table-sm">
 		<sortable-table-head sorting="@pagingModel" model-type="typeof(UserMaintenanceLogs.UserMaintenanceLogEntry)" page-override="@currentPage" />
 		@foreach(var entry in Model.Logs)
 		{
@@ -25,5 +25,5 @@
 			</tr>
 		}
 	</table>
-	<partial name="_Pager" model="Model" />
+	<partial name="_Pager" model="Model.Logs" />
 </div>
