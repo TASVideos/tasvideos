@@ -7,6 +7,7 @@
 	const string ratingsFalseId = nameof(Model.PublicRatings) + "-false";
 	const string emailOnPmTrueId = nameof(Model.EmailOnPrivateMessage) + "-true";
 	const string emailOnPmFalseId = nameof(Model.EmailOnPrivateMessage) + "-false";
+	bool useGravatar = Model.Avatar?.Contains("gravatar") ?? false;
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
@@ -72,12 +73,12 @@
 			<fieldset>
 				<label asp-for="PreferredPronouns"></label>
 				<select asp-for="PreferredPronouns" asp-items="@SettingsModel.AvailablePronouns" class="form-select"></select>
-				<span asp-validation-for="PreferredPronouns"></span>
+				<span asp-validation-for="PreferredPronouns" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Location"></label>
 				<input asp-for="Location" class="form-control" />
-				<span asp-validation-for="Location"></span>
+				<span asp-validation-for="Location" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="TimeZoneId"></label>
@@ -91,42 +92,56 @@
 				<label asp-for="UserDateFormat"></label>
 				<label condition="@Model.UserDateFormat == UserDateFormat.Auto" asp-for="UserDateFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortDateString())</label>
 				<select asp-for="UserDateFormat" asp-items="@SettingsModel.AvailableDateFormats" class="form-select"></select>
-				<span asp-validation-for="UserDateFormat"></span>
+				<span asp-validation-for="UserDateFormat" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserTimeFormat"></label>
 				<label condition="@Model.UserTimeFormat == UserTimeFormat.Auto" asp-for="UserTimeFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortTimeString())</label>
 				<select asp-for="UserTimeFormat" asp-items="@SettingsModel.AvailableTimeFormats" class="form-select"></select>
-				<span asp-validation-for="UserTimeFormat"></span>
+				<span asp-validation-for="UserTimeFormat" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserDecimalFormat"></label>
 				<label condition="@Model.UserDecimalFormat == UserDecimalFormat.Auto"  asp-for="UserDecimalFormat" class="text-body-tertiary">(Currently: @exampleNumber)</label>
 				<select asp-for="UserDecimalFormat" asp-items="@SettingsModel.AvailableDecimalFormats" class="form-select"></select>
-				<span asp-validation-for="UserDecimalFormat"></span>
+				<span asp-validation-for="UserDecimalFormat" class="text-danger"></span>
 			</fieldset>
 		</column>
 	</row>
 	<hr />
+	<label>Use Gravatar</label>
+	<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+		<label class="btn btn-secondary @(useGravatar ? "active" : "")">
+			<input id="UseGravatar-true" type="radio" value="True" name="UseGravatar" @(useGravatar ? "checked" : "") /> Yes
+		</label>
+		<label class="btn btn-secondary" value="True"  @(!useGravatar ? "active" : "")>
+			<input id="UseGravatar-false" type="radio" value="False" name="UseGravatar" @(!useGravatar ? "checked" : "") /> No
+		</label>
+	</div>
+	<div class="mt-3" id="gravatar-section">
+		<fieldset>
+			<label>Email to Use for Gravatar Image</label>
+			<input id="gravatar-email" class="form-control" value="@Model.Email"/>
+		</fieldset>
+	</div>
 	<fullrow class="mt-3">
 		<label asp-for="Avatar"></label>
 		<input type="text" asp-for="Avatar" class="form-control" />
+		<span asp-validation-for="Avatar" class="text-danger"></span>
+		<span id="avatar-too-big" class="text-danger d-none">Image invalid, please check requirements</span>
 	</fullrow>
-	<fullrow class="mt-2" id="avatar-preview">
-		<div show="!string.IsNullOrWhiteSpace(Model.Avatar)" class="float-end">
-			<button id="preview-btn" type="button" class="btn btn-secondary btn-sm m-2">
-				<span class="fa fa-refresh"></span>
-			</button>
-			<label>Preview</label><br />
-			<img id="avatar-img" src="@Model.Avatar" class="m-2" alt="Avatar preview" />
+	<fullrow class="mt-2">
+		<div class="float-end">
+			<img id="avatar-img" src="@Model.Avatar" class="m-2" alt="Avatar preview" onerror="this.src = '/images/empty.png'" />
 		</div>
-		<small>
+		<small id="avatar-description">
 			@await Html.RenderWiki(SystemWiki.AvatarRequirements)
 		</small>
 	</fullrow>
 	<fullrow permission="UseMoodAvatars">
 		<label asp-for="MoodAvatar"></label>
 		<input type="text" asp-for="MoodAvatar" class="form-control" />
+		<span asp-validation-for="MoodAvatar" class="text-danger"></span>
 		<a asp-page="/Forum/MoodReport" asp-route-username="@Model.Username">Check Mood Avatars</a>
 	</fullrow>
 	<fullrow permission="UseMoodAvatars" class="mt-3">
@@ -148,21 +163,22 @@
 	<partial name="_ValidationScriptsPartial" />
 	<script>
 		let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Avatar)');
-		let previewElem = document.getElementById('avatar-preview');
 
 		document.addEventListener("DOMContentLoaded", validateAvatar);
-		avatarBoxElem.addEventListener('blur', toggleAvatarPreview);
-		document.getElementById('preview-btn').addEventListener('click', toggleAvatarPreview);
-
+		document.addEventListener("DOMContentLoaded", onGravatarToggle);
+		avatarBoxElem.addEventListener('input', generateAvatarPreview);
+		document.getElementById('gravatar-email').addEventListener('input', generateGravatarPreview)
 		let avatarImgElem = document.getElementById('avatar-img');
+		avatarImgElem.onload = validateAvatar;
 
-		function toggleAvatarPreview() {
+		Array.from(document.querySelectorAll('[name="UseGravatar"]')).forEach(elem => elem.addEventListener('click', onGravatarToggle));
+
+		function generateAvatarPreview() {
 			const avatar = document.getElementById('@Html.IdFor(m => m.Avatar)').value;
 			if (avatar) {
-				avatarImgElem.onload = validateAvatar;
 				avatarImgElem.src = avatar;
 			} else {
-				previewElem.classList.add('d-none');
+				avatarImgElem.src = '';
 				preventSave(false);
 			}
 		}
@@ -170,23 +186,57 @@
 		function validateAvatar() {
 			const maxWidth = @AvatarRequirements.Width;
 			const maxHeight = @AvatarRequirements.Height;
+			const descSection = document.getElementById('avatar-description');
 
 			const tooBig = avatarImgElem.width > maxWidth || avatarImgElem.height > maxHeight;
 			if (tooBig) {
-				previewElem.classList.add('alert');
-				previewElem.classList.add('alert-danger');
+				descSection.classList.add('text-danger');
+				document.getElementById('avatar-too-big').classList.remove('d-none');
 				preventSave(true);
 			} else {
-				previewElem.classList.remove('alert');
-				previewElem.classList.remove('alert-danger');
+				descSection.classList.remove('text-danger');
+				document.getElementById('avatar-too-big').classList.add('d-none');
 				preventSave(false);
 			}
-
-			previewElem.classList.remove('d-none');
 		}
 
 		function preventSave(prevent) {
 			document.getElementById('submit-btn').disabled = prevent;
+		}
+
+		async function onGravatarToggle() {
+			const checked = document.querySelector('[name="UseGravatar"]:checked').value == 'True';
+			if (checked) {
+				document.getElementById('gravatar-section').classList.remove('d-none');
+				await generateGravatarPreview();
+			} else {
+				document.getElementById('gravatar-section').classList.add('d-none');
+			}
+		}
+
+		async function generateGravatarPreview() {
+			avatarBoxElem.value = await getGravatarUrl();
+			generateAvatarPreview();
+		}
+
+		async function getGravatarUrl() {
+			const email = document.getElementById('gravatar-email').value?.toLowerCase();
+			if (!email) {
+				return;
+			}
+
+			const hash = await createSha256(email);
+			return `https://gravatar.com/avatar/${hash}`;
+		}
+
+		function createSha256(string) {
+			const utf8 = new TextEncoder().encode(string);
+			return crypto.subtle.digest('SHA-256', utf8).then((hashBuffer) => {
+				const hashArray = Array.from(new Uint8Array(hashBuffer));
+				return hashArray
+					.map((bytes) => bytes.toString(16).padStart(2, '0'))
+					.join('');
+			});
 		}
 	</script>
 }
