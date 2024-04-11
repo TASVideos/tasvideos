@@ -77,7 +77,7 @@ public static class ExternalMediaPublisherExtensions
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
-			Link = $"{subId}S"
+			Link = publisher.ToAbsolute($"{subId}S")
 		});
 	}
 
@@ -173,7 +173,7 @@ public static class ExternalMediaPublisherExtensions
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
-			Link = $"Forum/Posts/{postId}"
+			Link = publisher.ToAbsolute($"Forum/Posts/{postId}")
 		});
 	}
 
