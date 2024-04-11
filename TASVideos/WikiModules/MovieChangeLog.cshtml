@@ -3,7 +3,7 @@
 @{
 	var mergedHistoryModel = Model.Logs
 			.GroupBy(gkey => gkey.Date)
-			.Select(group => new MovieChangeLog.MovieHistoryModel
+			.Select(group => new MovieChangeLog.HistoryEntry
 			{
 				Date = group.Key,
 				Pubs = group.SelectMany(item => item.Pubs).Distinct().ToList()

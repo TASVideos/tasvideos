@@ -6,12 +6,10 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.MovieChangeLog)]
 public class MovieChangeLog(ApplicationDbContext db) : WikiViewComponent
 {
-	public PageOf<MovieHistoryModel> Logs { get; set; } = PageOf<MovieHistoryModel>.Empty();
+	public PageOf<HistoryEntry> Logs { get; set; } = PageOf<HistoryEntry>.Empty();
 
 	public async Task<IViewComponentResult> InvokeAsync(string pubClass)
 	{
-		var paging = this.GetPagingModel();
-
 		var query = db.Publications.AsQueryable();
 
 		var publicationClass = await db.PublicationClasses.FirstOrDefaultAsync(c => c.Name == pubClass);
@@ -22,7 +20,7 @@ public class MovieChangeLog(ApplicationDbContext db) : WikiViewComponent
 
 		Logs = await query
 			.OrderByDescending(p => p.CreateTimestamp)
-			.Select(p => new MovieHistoryModel
+			.Select(p => new HistoryEntry
 			{
 				Date = p.CreateTimestamp.Date,
 				Pubs = new()
@@ -37,13 +35,12 @@ public class MovieChangeLog(ApplicationDbContext db) : WikiViewComponent
 					}
 				}
 			})
-			.PageOf(paging);
+			.PageOf(GetPaging());
 
-		this.SetPagingToViewData(paging);
 		return View();
 	}
 
-	public class MovieHistoryModel
+	public class HistoryEntry
 	{
 		public DateTime Date { get; init; }
 		public List<PublicationEntry> Pubs { get; init; } = [];

@@ -16,12 +16,8 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 			return new ContentViewComponentResult("No access to this resource");
 		}
 
-		var paging = this.GetPagingModel();
-
-		if (string.IsNullOrWhiteSpace(paging.Sort))
-		{
-			paging.Sort = "-TimeStamp";
-		}
+		DefaultPageSize = 100;
+		DefaultSort = "-TimeStamp";
 
 		string user = HttpContext.Request.QueryStringValue("User");
 
@@ -39,9 +35,8 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 			logsQuery = logsQuery.Where(l => l.User == user);
 		}
 
-		Logs = await logsQuery.SortedPageOf(paging);
+		Logs = await logsQuery.SortedPageOf(GetPaging());
 
-		this.SetPagingToViewData(paging);
 		return View();
 	}
 

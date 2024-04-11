@@ -10,24 +10,18 @@ public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync(bool includeMinors)
 	{
-		var paging = this.GetPagingModel(100);
-		Log = await GetWikiChangeLog(paging, includeMinors);
-		this.SetPagingToViewData(paging);
-		return View();
-	}
+		DefaultPageSize = 100;
 
-	private async Task<PageOf<Entry>> GetWikiChangeLog(PagingModel paging, bool includeMinorEdits)
-	{
 		var query = db.WikiPages
 			.ThatAreNotDeleted()
 			.ByMostRecent();
 
-		if (!includeMinorEdits)
+		if (!includeMinors)
 		{
 			query = query.ExcludingMinorEdits();
 		}
 
-		return await query
+		Log = await query
 			.Select(wp => new Entry
 			{
 				PageName = wp.PageName,
@@ -37,7 +31,9 @@ public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 				MinorEdit = wp.MinorEdit,
 				RevisionMessage = wp.RevisionMessage
 			})
-			.PageOf(paging);
+			.PageOf(GetPaging());
+
+		return View();
 	}
 
 	public class Entry

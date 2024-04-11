@@ -10,11 +10,7 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var paging = this.GetPagingModel();
-		if (string.IsNullOrWhiteSpace(paging.Sort))
-		{
-			paging.Sort = "-PublicationId";
-		}
+		DefaultSort = "-PublicationId";
 
 		var query = db.PublicationFiles
 			.Where(pf => pf.Type == FileType.Screenshot);
@@ -37,9 +33,7 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 				Description = p.Description ?? "",
 				Path = p.Path
 			})
-			.SortedPageOf(paging);
-
-		this.SetPagingToViewData(paging);
+			.SortedPageOf(GetPaging());
 
 		List = new ScreenshotPageOf<ScreenshotEntry>(screenshots)
 		{

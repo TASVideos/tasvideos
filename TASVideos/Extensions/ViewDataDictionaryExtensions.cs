@@ -51,11 +51,6 @@ public static class ViewDataDictionaryExtensions
 		viewData["WikiPage"] = wikiPage;
 	}
 
-	public static PagingModel GetPagingModel(this ViewDataDictionary viewData)
-	{
-		return viewData["PagingModel"] as PagingModel ?? new PagingModel();
-	}
-
 	public static int Int(this ViewDataDictionary viewData, string key)
 	{
 		var obj = viewData[key];
