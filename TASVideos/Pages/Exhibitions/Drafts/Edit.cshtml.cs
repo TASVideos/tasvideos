@@ -47,6 +47,7 @@ public class EditModel : BasePageModel
 				Contributors = e.Contributors.Select(e => e.Id).ToList(),
 				Urls = e.Urls.Select(u => new ExhibitionDraftEditModel.ExhibitionDraftEditUrlModel
 				{
+					UrlId = u.Id,
 					Type = u.Type,
 					DisplayName = u.DisplayName ?? "",
 					Url = u.Url,
@@ -68,6 +69,12 @@ public class EditModel : BasePageModel
 
 		await PopulateDropdowns();
 
+		return Page();
+	}
+
+	public async Task<IActionResult> OnPost()
+	{
+		var test = 2;
 		return Page();
 	}
 

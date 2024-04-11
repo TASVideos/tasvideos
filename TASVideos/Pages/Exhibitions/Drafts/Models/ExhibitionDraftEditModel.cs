@@ -14,6 +14,7 @@ public class ExhibitionDraftEditModel
 	public IFormFile? MovieFile { get; set; }
 	public string? MovieFileDescription { get; set; }
 
+	public ExhibitionDraftEditUrlModel UrlsDefault { get; set; } = new();
 	public List<ExhibitionDraftEditUrlModel> Urls { get; set; } = [];
 
 	[DoNotTrim]
@@ -21,6 +22,7 @@ public class ExhibitionDraftEditModel
 
 	public class ExhibitionDraftEditUrlModel
 	{
+		public int UrlId { get; set; }
 		public ExhibitionUrlType Type { get; set; }
 		public string DisplayName { get; set; } = "";
 		public string Url { get; set; } = "";

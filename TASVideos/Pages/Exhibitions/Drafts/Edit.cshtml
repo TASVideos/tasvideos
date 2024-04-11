@@ -50,36 +50,71 @@
 	<fieldset>
 		<label asp-for="Exhibition.Urls" class="form-control-label"></label>
 		<span asp-validation-for="Exhibition.Urls" class="text-danger"></span>
+		@{
+			string collectionId = $"{nameof(Model.Exhibition)}.{nameof(Model.Exhibition.UrlsDefault)}";
+		}
+		<template class="template-collection" data-for="@collectionId">
+			<input type="hidden" asp-for="Exhibition.UrlsDefault.UrlId" />
+			<row>
+				<div class="col">
+					<row>
+						<div class="col-4">
+							<label asp-for="Exhibition.UrlsDefault.Type" class="form-control-label"></label>
+							<select asp-for="Exhibition.UrlsDefault.Type" asp-items="@Html.GetEnumSelectList<ExhibitionUrlType>()" class="form-control"></select>
+							<span asp-validation-for="Exhibition.UrlsDefault.Type" class="text-danger"></span>
+						</div>
+						<div class="col-4">
+							<label asp-for="Exhibition.UrlsDefault.DisplayName" class="form-control-label"></label>
+							<input asp-for="Exhibition.UrlsDefault.DisplayName" class="form-control" />
+							<span asp-validation-for="Exhibition.UrlsDefault.DisplayName" class="text-danger"></span>
+						</div>
+						<div class="col-4">
+							<label asp-for="Exhibition.UrlsDefault.Url" class="form-control-label"></label>
+							<input asp-for="Exhibition.UrlsDefault.Url" class="form-control" />
+							<span asp-validation-for="Exhibition.UrlsDefault.Url" class="text-danger"></span>
+						</div>
+					</row>
+				</div>
+				<div class="col-auto align-self-end">
+					<button type="button" data-for="@collectionId" class="btn btn-danger remove-collection-entry"><i class="fa fa-remove"></i></button>
+				</div>
+			</row>
+		</template>
 		<div class="ms-3">
-			@foreach(var url in Model.Exhibition.Urls)
-			{
-				<row>
-					<div class="col">
+			<div id="collection-@collectionId">
+				@for (int i = 0; i < Model.Exhibition.Urls.Count; i++)
+				{
+					<div>
+						<input type="hidden" asp-for="Exhibition.Urls[i].UrlId" />
 						<row>
-							<div class="col-4">
-								<label asp-for="@url.Type" class="form-control-label"></label>
-								<select asp-for="@url.Type" asp-items="@Html.GetEnumSelectList<ExhibitionUrlType>()" class="form-control"></select>
-								<span asp-validation-for="@url.Type" class="text-danger"></span>
+							<div class="col">
+								<row>
+									<div class="col-4">
+										<label asp-for="Exhibition.Urls[i].Type" class="form-control-label"></label>
+										<select asp-for="Exhibition.Urls[i].Type" asp-items="@Html.GetEnumSelectList<ExhibitionUrlType>()" class="form-control"></select>
+										<span asp-validation-for="Exhibition.Urls[i].Type" class="text-danger"></span>
+									</div>
+									<div class="col-4">
+										<label asp-for="Exhibition.Urls[i].DisplayName" class="form-control-label"></label>
+										<input asp-for="Exhibition.Urls[i].DisplayName" class="form-control" />
+										<span asp-validation-for="Exhibition.Urls[i].DisplayName" class="text-danger"></span>
+									</div>
+									<div class="col-4">
+										<label asp-for="Exhibition.Urls[i].Url" class="form-control-label"></label>
+										<input asp-for="Exhibition.Urls[i].Url" class="form-control" />
+										<span asp-validation-for="Exhibition.Urls[i].Url" class="text-danger"></span>
+									</div>
+								</row>
 							</div>
-							<div class="col-4">
-								<label asp-for="@url.DisplayName" class="form-control-label"></label>
-								<input asp-for="@url.DisplayName" class="form-control" />
-								<span asp-validation-for="@url.DisplayName" class="text-danger"></span>
-							</div>
-							<div class="col-4">
-								<label asp-for="@url.Url" class="form-control-label"></label>
-								<input asp-for="@url.Url" class="form-control" />
-								<span asp-validation-for="@url.Url" class="text-danger"></span>
+							<div class="col-auto align-self-end">
+								<button type="button" class="btn btn-danger remove-collection-entry"><i class="fa fa-remove"></i></button>
 							</div>
 						</row>
 					</div>
-					<div class="col-auto align-self-end">
-						<button class="btn btn-danger"><i class="fa fa-remove"></i></button>
-					</div>
-				</row>
-			}
+				}
+			</div>
 			<fullrow>
-				<div class="btn btn-secondary"><i class="fa fa-plus-square"></i></div>
+				<button type="button" data-for="@collectionId" class="btn btn-secondary add-collection-entry"><i class="fa fa-plus-square"></i></button>
 			</fullrow>
 		</div>
 	</fieldset>
@@ -115,4 +150,5 @@
 		engageSelectImprover('@Html.IdFor(m => m.Exhibition.Games)');
 		engageSelectImprover('@Html.IdFor(m => m.Exhibition.Contributors)');
 	</script>
+	<script src="/js/complex-collections.js"></script>
 }
