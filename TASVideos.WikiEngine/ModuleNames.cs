@@ -47,7 +47,6 @@ public static class ModuleNames
 	public const string UserGetWikiName = "usergetwikiname";
 	public const string UserMaintenanceLogs = "usermaintlog";
 	public const string UserMovies = "usermovies";
-	public const string UserName = "user_name";
 	public const string Welcome = "welcome";
 	public const string WikiLink = "__wikilink";
 	public const string WikiOrphans = "wikiorphans";
