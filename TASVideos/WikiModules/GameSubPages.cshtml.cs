@@ -19,29 +19,18 @@ public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 		var systems = await db.GameSystems.ToListAsync();
 		var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
 
-		var pages = db.WikiPages
+		var pages = await db.WikiPages
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
 			.Where(wp => gameResourceSystems.Contains(wp.PageName))
 			.Select(wp => wp.PageName)
-			.ToList();
+			.ToListAsync();
 
-		return
-			(from s in systems
-			 join wp in pages on s.Code equals wp.Split('/').Last()
-			 select new Entry
-			 {
-				 SystemCode = s.Code,
-				 SystemDescription = s.DisplayName,
-				 PageLink = "GameResources/" + s.Code
-			 })
+		return systems
+			.Join(pages, s => s.Code, wp => wp.Split('/').Last(), (s, _) => s)
+			.Select(s => new Entry(s.Code, s.DisplayName, "GameResources/" + s.Code))
 			.ToList();
 	}
 
-	public class Entry
-	{
-		public string SystemCode { get; init; } = "";
-		public string SystemDescription { get; init; } = "";
-		public string PageLink { get; init; } = "";
-	}
+	public record Entry(string SystemCode, string SystemDescription,  string PageLink);
 }
