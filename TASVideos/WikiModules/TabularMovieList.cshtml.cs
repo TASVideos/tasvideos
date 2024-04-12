@@ -8,10 +8,9 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 {
 	public List<MovieEntry> Movies { get; set; } = [];
 
-	public async Task<IViewComponentResult> InvokeAsync(int? limit, IList<string> tier)
+	public async Task<IViewComponentResult> InvokeAsync(int? limit)
 	{
 		Movies = await db.Publications
-			.Where(p => !tier.Any() || tier.Contains(p.PublicationClass!.Name))
 			.ByMostRecent()
 			.Take(limit ?? 10)
 			.Select(p => new MovieEntry
