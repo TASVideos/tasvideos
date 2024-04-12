@@ -50,14 +50,10 @@ public class BrokenLinks(IWikiPages wikiPages) : WikiViewComponent
 
 		generalPages = [.. generalPages, .. rssFeeds];
 
-		// These should be updated one day, but there are far too many for now
-		var tempRoutedExceptions = new[] { "forum/p/" };
-
 		// For pages with routes, assume anything added to the end is okay
 		var routedPages = corePages
 			.Where(c => c.HasRoute)
 			.Select(c => c.Name.ToLowerInvariant())
-			.Concat(tempRoutedExceptions)
 			.ToList();
 
 		var brokenLinks = await wikiPages.BrokenLinks();
