@@ -9,14 +9,12 @@ public class UserMovies(ApplicationDbContext db) : WikiViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync(int? limit)
 	{
-		var count = limit ?? 5;
-
 		Movies = await db.UserFiles
 			.ThatAreMovies()
 			.ThatArePublic()
 			.ByRecentlyUploaded()
 			.ToUserMovieListModel()
-			.Take(count)
+			.Take(limit ?? 5)
 			.ToListAsync();
 
 		return View();

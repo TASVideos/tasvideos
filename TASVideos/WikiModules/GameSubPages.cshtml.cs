@@ -9,12 +9,6 @@ public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		Pages = await GetGameResourcesSubPages();
-		return View();
-	}
-
-	private async Task<List<Entry>> GetGameResourcesSubPages()
-	{
 		// TODO: cache this
 		var systems = await db.GameSystems.ToListAsync();
 		var gameResourceSystems = systems.Select(s => "GameResources/" + s.Code);
@@ -26,10 +20,12 @@ public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 			.Select(wp => wp.PageName)
 			.ToListAsync();
 
-		return systems
+		Pages = systems
 			.Join(pages, s => s.Code, wp => wp.Split('/').Last(), (s, _) => s)
 			.Select(s => new Entry(s.Code, s.DisplayName, "GameResources/" + s.Code))
 			.ToList();
+
+		return View();
 	}
 
 	public record Entry(string SystemCode, string SystemDescription,  string PageLink);
