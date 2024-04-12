@@ -9,7 +9,7 @@ public class MediaPosts(ApplicationDbContext db) : WikiViewComponent
 {
 	public PageOf<MediaPost> Posts { get; set; } = PageOf<MediaPost>.Empty();
 
-	public async Task<IViewComponentResult> InvokeAsync(int? days, int? limit)
+	public async Task<IViewComponentResult> InvokeAsync()
 	{
 		var canSeeRestricted = UserClaimsPrincipal.Has(PermissionTo.SeeRestrictedForums);
 
