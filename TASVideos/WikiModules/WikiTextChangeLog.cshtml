@@ -1,9 +1,9 @@
 ﻿@model WikiTextChangeLog
 @{
-	var grouped = Model.Log.GroupBy(m => m.CreateTimestamp.Date);
+	var grouped = Model.Logs.GroupBy(m => m.CreateTimestamp.Date);
 }
 
-<partial name="_Pager" model="Model.Log" />
+<partial name="_Pager" model="Model.Logs" />
 <table class="table">
 	<tr>
 		<th>Page</th>
@@ -43,4 +43,4 @@
 		}
 	}
 </table>
-<partial name="_Pager" model="Model.Log" />
+<partial name="_Pager" model="Model.Logs" />

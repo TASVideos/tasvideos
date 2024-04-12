@@ -8,21 +8,23 @@ namespace TASVideos.WikiModules;
 [TextModule]
 public class WikiLink(ApplicationDbContext db) : WikiViewComponent
 {
-	public WikiLinkModel Link { get; set; } = new();
+	public string Href { get; set; } = "";
+	public string DisplayText { get; set; } = "";
+	public string? Title { get; set; }
 
 	public async Task<IViewComponentResult> InvokeAsync(string href, string? displayText)
 	{
-		Link = await InvokeInternal(href, displayText);
+		await GenerateLink(href, displayText);
 		return View();
 	}
 
 	public async Task<string> RenderTextAsync(IWikiPage? pageData, string href, string? displayText)
 	{
-		WikiLinkModel wikiLinkModel = await InvokeInternal(href, displayText);
-		return wikiLinkModel.DisplayText;
+		await GenerateLink(href, displayText);
+		return DisplayText;
 	}
 
-	private async Task<WikiLinkModel> InvokeInternal(string href, string? displayText)
+	private async Task GenerateLink(string href, string? displayText)
 	{
 		int? id;
 		string? titleText = null;
@@ -70,12 +72,9 @@ public class WikiLink(ApplicationDbContext db) : WikiViewComponent
 			displayText = href[1..];
 		}
 
-		return new WikiLinkModel
-		{
-			Href = href,
-			DisplayText = displayText,
-			Title = titleText
-		};
+		Href = href;
+		DisplayText = displayText;
+		Title = titleText;
 	}
 
 	private async Task<string?> GetPublicationTitle(int id)
@@ -97,12 +96,5 @@ public class WikiLink(ApplicationDbContext db) : WikiViewComponent
 		return (await db.Games
 			.Select(g => new { g.Id, g.DisplayName })
 			.SingleOrDefaultAsync(g => g.Id == id))?.DisplayName;
-	}
-
-	public class WikiLinkModel
-	{
-		public string Href { get; init; } = "";
-		public string DisplayText { get; init; } = "";
-		public string? Title { get; init; }
 	}
 }

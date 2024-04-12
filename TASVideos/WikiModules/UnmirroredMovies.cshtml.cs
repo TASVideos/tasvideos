@@ -6,7 +6,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.UnmirroredMovies)]
 public class UnmirroredMovies(ApplicationDbContext db) : WikiViewComponent
 {
-	public List<UnmirroredMovieEntry> Entries { get; set; } = [];
+	public List<MovieEntry> Entries { get; set; } = [];
 
 	public async Task<IViewComponentResult> InvokeAsync(
 		bool obs,
@@ -59,19 +59,11 @@ public class UnmirroredMovies(ApplicationDbContext db) : WikiViewComponent
 
 		Entries = await query
 			.OrderBy(p => p.SystemId)
-			.Select(p => new UnmirroredMovieEntry
-			{
-				Id = p.Id,
-				Title = p.Title
-			})
+			.Select(p => new MovieEntry(p.Id, p.Title))
 			.ToListAsync();
 
 		return View();
 	}
 
-	public class UnmirroredMovieEntry
-	{
-		public int Id { get; init; }
-		public string Title { get; init; } = "";
-	}
+	public record MovieEntry(int Id, string Title);
 }

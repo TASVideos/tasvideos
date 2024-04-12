@@ -7,7 +7,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.UserMaintenanceLogs)]
 public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 {
-	public PageOf<UserMaintenanceLogEntry> Logs { get; set; } = PageOf<UserMaintenanceLogEntry>.Empty();
+	public PageOf<LogEntry> Logs { get; set; } = PageOf<LogEntry>.Empty();
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
@@ -22,7 +22,7 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 		string user = HttpContext.Request.QueryStringValue("User");
 
 		var logsQuery = db.UserMaintenanceLogs
-			.Select(m => new UserMaintenanceLogEntry
+			.Select(m => new LogEntry
 			{
 				User = m.User!.UserName,
 				Editor = m.Editor!.UserName,
@@ -40,7 +40,7 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public record UserMaintenanceLogEntry
+	public class LogEntry
 	{
 		[Sortable]
 		public string User { get; init; } = "";

@@ -28,20 +28,10 @@ public class UncatalogedTopics(ApplicationDbContext db) : WikiViewComponent
 		}
 
 		Topics = await query
-			.Select(t => new UncatalogedTopic
-			{
-				Id = t.Id,
-				Title = t.Title,
-				ForumName = t.Forum!.Name
-			})
+			.Select(t => new UncatalogedTopic(t.Id, t.Title, t.Forum!.Name))
 			.ToListAsync();
 		return View();
 	}
 
-	public class UncatalogedTopic
-	{
-		public int Id { get; init; }
-		public string Title { get; init; } = "";
-		public string ForumName { get; init; } = "";
-	}
+	public record UncatalogedTopic(int Id, string Title, string ForumName);
 }

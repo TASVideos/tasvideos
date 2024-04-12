@@ -11,21 +11,12 @@ public class WikiUsers(ApplicationDbContext db) : WikiViewComponent
 	{
 		Users = await db.Users
 			.ThatHaveRole(role ?? "")
-			.Select(u => new Entry
-			{
-				UserName = u.UserName,
-				PublicationCount = u.Publications.Count,
-				SubmissionCount = u.Submissions.Count
-			})
+			.Select(u => new Entry(
+				u.UserName, u.Publications.Count, u.Submissions.Count))
 			.ToListAsync();
 
 		return View();
 	}
 
-	public class Entry
-	{
-		public string UserName { get; init; } = "";
-		public int SubmissionCount { get; init; }
-		public int PublicationCount { get; init; }
-	}
+	public record Entry(string UserName, int SubmissionCount, int PublicationCount);
 }
