@@ -7,7 +7,7 @@
 	const string ratingsFalseId = nameof(Model.PublicRatings) + "-false";
 	const string emailOnPmTrueId = nameof(Model.EmailOnPrivateMessage) + "-true";
 	const string emailOnPmFalseId = nameof(Model.EmailOnPrivateMessage) + "-false";
-	bool useGravatar = Model.Avatar?.Contains("gravatar") ?? false;
+	bool usingGravatar = Model.Avatar?.Contains("gravatar") ?? false;
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
@@ -111,17 +111,17 @@
 	<hr />
 	<label>Use Gravatar</label>
 	<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
-		<label class="btn btn-secondary @(useGravatar ? "active" : "")">
-			<input id="UseGravatar-true" type="radio" value="True" name="UseGravatar" @(useGravatar ? "checked" : "") /> Yes
+		<label class="btn btn-secondary @(usingGravatar ? "active" : "")">
+			<input id="UseGravatar-true" type="radio" value="True" name="UseGravatar" @(usingGravatar ? "checked" : "") /> Yes
 		</label>
-		<label class="btn btn-secondary" value="True"  @(!useGravatar ? "active" : "")>
-			<input id="UseGravatar-false" type="radio" value="False" name="UseGravatar" @(!useGravatar ? "checked" : "") /> No
+		<label class="btn btn-secondary" value="True"  @(!usingGravatar ? "active" : "")>
+			<input id="UseGravatar-false" type="radio" value="False" name="UseGravatar" @(!usingGravatar ? "checked" : "") /> No
 		</label>
 	</div>
 	<div class="mt-3" id="gravatar-section">
 		<fieldset>
 			<label>Email to Use for Gravatar Image</label>
-			<input id="gravatar-email" class="form-control" value="@Model.Email"/>
+			<input id="gravatar-email" class="form-control" />
 		</fieldset>
 	</div>
 	<fullrow class="mt-3">
@@ -162,7 +162,9 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script>
+		let emailBoxElem = document.getElementById('@Html.IdFor(m => m.Email)');
 		let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Avatar)');
+		let gravatarBoxElem = document.getElementById('gravatar-email');
 
 		document.addEventListener("DOMContentLoaded", validateAvatar);
 		document.addEventListener("DOMContentLoaded", onGravatarToggle);
@@ -174,7 +176,7 @@
 		Array.from(document.querySelectorAll('[name="UseGravatar"]')).forEach(elem => elem.addEventListener('click', onGravatarToggle));
 
 		function generateAvatarPreview() {
-			const avatar = document.getElementById('@Html.IdFor(m => m.Avatar)').value;
+			const avatar = avatarBoxElem.value;
 			if (avatar) {
 				avatarImgElem.src = avatar;
 			} else {
@@ -204,10 +206,23 @@
 			document.getElementById('submit-btn').disabled = prevent;
 		}
 
+		function avatarIsGravatar() {
+			return avatarBoxElem.value?.includes('gravatar');
+		}
+
 		async function onGravatarToggle() {
 			const checked = document.querySelector('[name="UseGravatar"]:checked').value == 'True';
 			if (checked) {
 				document.getElementById('gravatar-section').classList.remove('d-none');
+				console.log('profile email value', emailBoxElem.value)
+				const profileEmailGravatarValue = await getGravatarUrl(emailBoxElem);
+				console.log('gravatar generated from email value', profileEmailGravatarValue)
+				if (avatarIsGravatar() && profileEmailGravatarValue != avatarBoxElem.value) {
+					gravatarBoxElem.value = '';
+				} else {
+					gravatarBoxElem.value = emailBoxElem.value;
+				}
+
 				await generateGravatarPreview();
 			} else {
 				document.getElementById('gravatar-section').classList.add('d-none');
@@ -215,12 +230,16 @@
 		}
 
 		async function generateGravatarPreview() {
-			avatarBoxElem.value = await getGravatarUrl();
+			const url = await getGravatarUrl(gravatarBoxElem);
+			if (url) {
+				avatarBoxElem.value = url;
+			}
+
 			generateAvatarPreview();
 		}
 
-		async function getGravatarUrl() {
-			const email = document.getElementById('gravatar-email').value?.toLowerCase();
+		async function getGravatarUrl(boxElem) {
+			const email = boxElem?.value.toLowerCase();
 			if (!email) {
 				return;
 			}
