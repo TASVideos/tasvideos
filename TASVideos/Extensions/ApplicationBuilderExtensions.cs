@@ -75,7 +75,7 @@ public static class ApplicationBuilderExtensions
 		return app.UseEndpoints(endpoints =>
 		{
 			endpoints.MapRazorPages();
-			endpoints.MapControllers();
+			//endpoints.MapControllers();
 		});
 	}
 

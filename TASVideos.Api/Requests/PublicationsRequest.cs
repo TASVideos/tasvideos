@@ -1,69 +1,25 @@
-﻿namespace TASVideos.Api.Requests;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Http;
+
+namespace TASVideos.Api.Requests;
 
 /// <summary>
 /// Represents the filtering criteria for the publications endpoint.
 /// </summary>
 public class PublicationsRequest : ApiRequest, IPublicationTokens
 {
-	/// <summary>
-	/// Gets the system codes to filter by.
-	/// </summary>
-	public string? Systems { get; init; }
-
-	/// <summary>
-	/// Gets the publication class codes to filter by.
-	/// </summary>
-	public string? ClassNames { get; init; }
-
-	/// <summary>
-	/// Gets the start year to filter by.
-	/// </summary>
-	public int? StartYear { get; init; }
-
-	/// <summary>
-	/// Gets the end year to filter by.
-	/// </summary>
-	public int? EndYear { get; init; }
-
-	/// <summary>
-	/// Gets the game genres to filter by.
-	/// </summary>
-	public string? GenreNames { get; init; }
-
-	/// <summary>
-	/// Gets the publication flags names to filter by.
-	/// </summary>
-	public string? TagNames { get; init; }
-
-	/// <summary>
-	/// Gets the publication flags names to filter by.
-	/// </summary>
-	public string? FlagNames { get; init; }
-
-	/// <summary>
-	/// Gets the author ids filter by.
-	/// </summary>
-	public string? AuthorIds { get; init; }
-
-	/// <summary>
-	/// Gets a value indicating whether to show obsoleted in addition to current movies.
-	/// </summary>
-	public bool ShowObsoleted { get; init; }
-
-	/// <summary>
-	/// Gets a value indicating whether to only show obsoleted movies (and exclude current)
-	/// </summary>
-	public bool OnlyObsoleted { get; init; }
-
-	/// <summary>
-	/// Gets the list of Game Ids to filter by.
-	/// </summary>
-	public string? GameIds { get; init; }
-
-	/// <summary>
-	///  Gets the list of Game Group Ids to filter by.
-	/// </summary>
-	public string? GameGroupIds { get; init; }
+	public string? Systems { get; set; }
+	public string? ClassNames { get; set; }
+	public int? StartYear { get; set; }
+	public int? EndYear { get; set; }
+	public string? GenreNames { get; set; }
+	public string? TagNames { get; set; }
+	public string? FlagNames { get; set; }
+	public string? AuthorIds { get; set; }
+	public bool ShowObsoleted { get; set; }
+	public bool OnlyObsoleted { get; set; }
+	public string? GameIds { get; set; }
+	public string? GameGroupIds { get; set; }
 
 	ICollection<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
 	ICollection<string> IPublicationTokens.Classes => ClassNames.CsvToStrings();
@@ -77,4 +33,41 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 	ICollection<int> IPublicationTokens.GameGroups => GameGroupIds.CsvToInts();
 	string IPublicationTokens.SortBy => "";
 	int? IPublicationTokens.Limit => null;
+
+	public static async ValueTask<PublicationsRequest> BindAsync(HttpContext context, ParameterInfo parameter)
+	{
+		var result = (PublicationsRequest)(await ApiRequest.BindAsync(context, parameter));
+
+		result.Systems = context.Request.Query["Systems"];
+		result.ClassNames = context.Request.Query["ClassNames"];
+		if (int.TryParse(context.Request.Query["StartYear"], out var startYear))
+		{
+			result.StartYear = startYear;
+		}
+
+		if (int.TryParse(context.Request.Query["EndYear"], out var endYear))
+		{
+			result.EndYear = endYear;
+		}
+
+		result.GenreNames = context.Request.Query["GenreNames"];
+		result.TagNames = context.Request.Query["TagNames"];
+		result.FlagNames = context.Request.Query["FlagNames"];
+		result.FlagNames = context.Request.Query["FlagNames"];
+
+		if (bool.TryParse(context.Request.Query["ShowObsoleted"], out var showObsoleted))
+		{
+			result.ShowObsoleted = showObsoleted;
+		}
+
+		if (bool.TryParse(context.Request.Query["OnlyObsoleted"], out var onlyObsoleted))
+		{
+			result.OnlyObsoleted = onlyObsoleted;
+		}
+
+		result.GameIds = context.Request.Query["GameIds"];
+		result.GameGroupIds = context.Request.Query["GameGroupIds"];
+
+		return result;
+	}
 }

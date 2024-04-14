@@ -185,6 +185,7 @@ public static class ServiceCollectionExtensions
 
 		var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
 
+		services.AddEndpointsApiExplorer();
 		return services.AddSwaggerGen(c =>
 		{
 			c.SwaggerDoc(
@@ -199,9 +200,6 @@ public static class ServiceCollectionExtensions
 			{
 				Name = "Authorization"
 			});
-			var basePath = AppContext.BaseDirectory;
-			var xmlPath = Path.Combine(basePath, "TASVideos.Api.xml");
-			c.IncludeXmlComments(xmlPath);
 		});
 	}
 

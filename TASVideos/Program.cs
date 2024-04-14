@@ -1,11 +1,11 @@
 ﻿using AspNetCore.ReCaptcha;
 using Serilog;
+using TASVideos.Api.Controllers;
 using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
 using TASVideos.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
@@ -50,6 +50,8 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
+// TODO: move to api project
+PublicationsApiMapper.MapEndpoints(app);
 app.UseRobots()
 	.UseMiddleware<HtmlRedirectionMiddleware>()
 	.UseRequestLocalization()
