@@ -31,7 +31,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			Search.SearchTerms = SearchTerms;
 			Games = await GetPageOfGames(Search);
 		}
-
+		throw new Exception("Unexpected Page error");
 		SystemList = (await db.GameSystems
 			.OrderBy(s => s.Code)
 			.ToDropDown()

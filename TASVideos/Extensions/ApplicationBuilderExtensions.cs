@@ -20,13 +20,7 @@ public static class ApplicationBuilderExtensions
 	public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostEnvironment env)
 	{
 		app.UseExceptionHandler("/Error");
-		app.UseStatusCodePagesWithReExecute("/Error");
-
-		// TODO: we want to use some middleware so that we can dynamically decide to return json for the API
-		// However, registering this in combination with the pages above causes a request to happen a second time
-		// when there is an unhandled exception, which is very bad
-		return app;
-		////.UseMiddleware(typeof(ErrorHandlingMiddleware));
+		return app.UseStatusCodePagesWithReExecute("/Error");
 	}
 
 	public static IApplicationBuilder UseGzipCompression(this IApplicationBuilder app, AppSettings settings)

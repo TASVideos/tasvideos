@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TASVideos.Api.Controllers;
 
@@ -9,6 +11,24 @@ public static class WebApplicationExtensions
 	{
 		PublicationsApiMapper.Map(app);
 		UseSwaggerUi(app, env);
+
+		app.UseExceptionHandler(exceptionHandlerApp =>
+		{
+			exceptionHandlerApp.Run(async httpContext =>
+			{
+				if (httpContext.Request.Path.ToString().StartsWith("/api"))
+				{
+					var pds = httpContext.RequestServices.GetService<IProblemDetailsService>();
+					if (pds == null
+						|| !await pds.TryWriteAsync(new() { HttpContext = httpContext }))
+					{
+						// Fallback behavior
+						await httpContext.Response.WriteAsync("Fallback: An error occurred.");
+					}
+				}
+			});
+		});
+
 		return app;
 	}
 

@@ -7,7 +7,6 @@ namespace TASVideos.Api.Controllers;
 
 // TODO: old swagger UI did client side validation of int, not letting non-ints be typed in, how is this done?
 // JWT authentication
-// Exception handling
 internal static class PublicationsApiMapper
 {
 	public static void Map(WebApplication app)
@@ -17,7 +16,7 @@ internal static class PublicationsApiMapper
 			var pub = await db.Publications
 				.ToPublicationsResponse()
 				.SingleOrDefaultAsync(p => p.Id == id);
-
+			throw new Exception("unexpected API exception");
 			return pub is null
 				? Results.NotFound()
 				: Results.Ok(pub);
