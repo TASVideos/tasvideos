@@ -13,8 +13,9 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddTasvideosApi(this IServiceCollection services, AppSettings settings)
 	{
-		services.AddSwagger(settings);
-		return services.AddValidatorsFromAssemblyContaining<ApiRequest>();
+		return services
+			.AddValidatorsFromAssemblyContaining<ApiRequest>()
+			.AddSwagger(settings);
 	}
 
 	private static IServiceCollection AddSwagger(this IServiceCollection services, AppSettings settings)
