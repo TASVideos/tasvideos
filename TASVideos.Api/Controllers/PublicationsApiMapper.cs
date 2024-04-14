@@ -7,7 +7,6 @@ using Microsoft.OpenApi.Models;
 namespace TASVideos.Api.Controllers;
 
 // TODO: document types (integer($int32), string, etc
-// Model validation
 // JWT authentication
 public static class PublicationsApiMapper
 {

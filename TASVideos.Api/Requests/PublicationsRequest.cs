@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Http;
 
 namespace TASVideos.Api.Requests;
 
-/// <summary>
-/// Represents the filtering criteria for the publications endpoint.
-/// </summary>
 public class PublicationsRequest : ApiRequest, IPublicationTokens
 {
 	public string? Systems { get; set; }
