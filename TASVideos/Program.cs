@@ -51,7 +51,7 @@ builder.Host.UseSerilog();
 var app = builder.Build();
 
 app
-	.UseTasvideosApiEndpoints()
+	.UseTasvideosApiEndpoints(builder.Environment)
 	.UseRobots()
 	.UseMiddleware<HtmlRedirectionMiddleware>()
 	.UseRequestLocalization()
@@ -61,7 +61,6 @@ app
 	.UseStaticFilesWithExtensionMapping()
 	.UseAuthentication()
 	.UseMiddleware<CustomLocalizationMiddleware>()
-	.UseSwaggerUi(app.Environment)
 	.UseLogging()
 	.UseMvcWithOptions(app.Environment);
 

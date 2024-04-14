@@ -31,7 +31,7 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 	string IPublicationTokens.SortBy => "";
 	int? IPublicationTokens.Limit => null;
 
-	public static async ValueTask<PublicationsRequest> BindAsync(HttpContext context, ParameterInfo parameter)
+	public static new async ValueTask<PublicationsRequest> BindAsync(HttpContext context, ParameterInfo parameter)
 	{
 		var baseResult = await ApiRequest.BindAsync(context, parameter);
 

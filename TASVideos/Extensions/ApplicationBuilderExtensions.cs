@@ -75,29 +75,6 @@ public static class ApplicationBuilderExtensions
 		return app.UseEndpoints(endpoints =>
 		{
 			endpoints.MapRazorPages();
-			//endpoints.MapControllers();
-		});
-	}
-
-	public static IApplicationBuilder UseSwaggerUi(
-		this IApplicationBuilder app,
-		IHostEnvironment env)
-	{
-		// Append environment to app name when in non-production environments
-		var appName = "TASVideos";
-		if (!env.IsProduction())
-		{
-			appName += $" ({env.EnvironmentName})";
-		}
-
-		// Enable middleware to serve generated Swagger as a JSON endpoint.
-		app.UseSwagger();
-
-		// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-		return app.UseSwaggerUI(c =>
-		{
-			c.SwaggerEndpoint("/swagger/v1/swagger.json", appName);
-			c.RoutePrefix = "api";
 		});
 	}
 
