@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace TASVideos.Api.Controllers;
@@ -9,6 +11,12 @@ namespace TASVideos.Api.Controllers;
 // JWT authentication
 public static class PublicationsApiMapper
 {
+	// TODO: move all the swagger and api stuff here
+	public static IServiceCollection AddTasvideosApi(this IServiceCollection services)
+	{
+		return services.AddValidatorsFromAssemblyContaining<ApiRequest>();
+	}
+
 	public static void MapEndpoints(WebApplication app)
 	{
 		app.MapGet("api/v1/publications/{id}", async (int id, ApplicationDbContext db) =>
@@ -31,8 +39,14 @@ public static class PublicationsApiMapper
 			return g;
 		});
 
-		app.MapGet("api/v1/publications", async (PublicationsRequest request, ApplicationDbContext db) =>
+		app.MapGet("api/v1/publications", async (PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
 		{
+			var validationResult = validator.Validate(request);
+			if (!validationResult.IsValid)
+			{
+				return Results.ValidationProblem(validationResult.ToDictionary());
+			}
+
 			var pubs = (await db.Publications
 					.FilterByTokens(request)
 					.ToPublicationsResponse()

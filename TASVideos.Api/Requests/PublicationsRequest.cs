@@ -36,7 +36,16 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 
 	public static async ValueTask<PublicationsRequest> BindAsync(HttpContext context, ParameterInfo parameter)
 	{
-		var result = (PublicationsRequest)(await ApiRequest.BindAsync(context, parameter));
+		var baseResult = await ApiRequest.BindAsync(context, parameter);
+
+		// TODO: ughhhhhhhhhhhhhhhhhhhhhhhhh
+		var result = new PublicationsRequest
+		{
+			PageSize = baseResult.PageSize,
+			CurrentPage = baseResult.CurrentPage,
+			Sort = baseResult.Sort,
+			Fields = baseResult.Fields
+		};
 
 		result.Systems = context.Request.Query["Systems"];
 		result.ClassNames = context.Request.Query["ClassNames"];
