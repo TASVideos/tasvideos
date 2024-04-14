@@ -6,7 +6,7 @@ using Microsoft.OpenApi.Models;
 
 namespace TASVideos.Api.Controllers;
 
-// TODO: document types (integer($int32), string, etc
+// TODO: old swagger UI did client side validation of int, not letting non-ints be typed in, how is this done?
 // JWT authentication
 public static class PublicationsApiMapper
 {
@@ -60,18 +60,18 @@ public static class PublicationsApiMapper
 		.Produces<IEnumerable<PublicationsResponse>>()
 		.WithOpenApi(g =>
 		{
-			g.Parameters.AddFromQuery("systems", "The system codes to filter by");
-			g.Parameters.AddFromQuery("classNames", "The publication class names to filter by");
-			g.Parameters.AddFromQuery("startYear", "The start year to filter by");
-			g.Parameters.AddFromQuery("endYear", "The end year to filter by");
-			g.Parameters.AddFromQuery("genreNames", "the genres to filter by");
-			g.Parameters.AddFromQuery("tagNames", "the names of the publication tags to filter by");
-			g.Parameters.AddFromQuery("flagNames", "the names of the publication flags to filter by");
-			g.Parameters.AddFromQuery("authorIds", "the ids of the authors to filter by");
-			g.Parameters.AddFromQuery("showObsoleted", "indicates whether or not to return obsoleted publications");
-			g.Parameters.AddFromQuery("onlyObsoleted", "indicates whether or not to only return obsoleted publications");
-			g.Parameters.AddFromQuery("gameIds", "the ids of the games to filter by");
-			g.Parameters.AddFromQuery("gameGroupIds", "the ids of the game groups to filter by");
+			g.Parameters.AddFromQuery("systems", "The system codes to filter by", typeof(string));
+			g.Parameters.AddFromQuery("classNames", "The publication class names to filter by", typeof(string));
+			g.Parameters.AddFromQuery("startYear", "The start year to filter by", typeof(int));
+			g.Parameters.AddFromQuery("endYear", "The end year to filter by", typeof(int));
+			g.Parameters.AddFromQuery("genreNames", "the genres to filter by", typeof(string));
+			g.Parameters.AddFromQuery("tagNames", "the names of the publication tags to filter by", typeof(string));
+			g.Parameters.AddFromQuery("flagNames", "the names of the publication flags to filter by", typeof(string));
+			g.Parameters.AddFromQuery("authorIds", "the ids of the authors to filter by", typeof(string));
+			g.Parameters.AddFromQuery("showObsoleted", "indicates whether or not to return obsoleted publications", typeof(bool));
+			g.Parameters.AddFromQuery("onlyObsoleted", "indicates whether or not to only return obsoleted publications", typeof(bool));
+			g.Parameters.AddFromQuery("gameIds", "the ids of the games to filter by", typeof(string));
+			g.Parameters.AddFromQuery("gameGroupIds", "the ids of the game groups to filter by", typeof(string));
 			g.Parameters.AddBaseQueryParams();
 			g.Responses.AddGeneric400();
 			return g;
@@ -92,9 +92,9 @@ public static class Extensions
 		responses.Add("404", new OpenApiResponse { Description = $"Could not find {resourceName} with the given id" });
 	}
 
-	public static void AddFromQuery(this IList<OpenApiParameter> list, string name, string description)
+	public static void AddFromQuery(this IList<OpenApiParameter> list, string name, string description, Type type)
 	{
-		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description });
+		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(type) } });
 	}
 
 	public static void AddBaseQueryParams(this IList<OpenApiParameter> list)
@@ -104,13 +104,15 @@ public static class Extensions
 			"""
 			The total number of records to return.
 			If not specified, then a default number of records will be returned
-			""");
+			""",
+			typeof(int));
 		list.AddFromQuery(
 			"currentPage",
 			"""
 			The page to start returning records.
 			If not specified, then an offset of 1 will be used
-			""");
+			""",
+			typeof(int));
 		list.AddFromQuery(
 			"sort",
 			"""
@@ -118,13 +120,35 @@ public static class Extensions
 			If multiple sort parameters, the list should be comma separated.
 			Precede the parameter with a + or - to sort ascending or descending respectively.
 			If not specified, then a default sort will be used
-			""");
+			""",
+			typeof(string));
 		list.AddFromQuery(
 			"fields",
 			"""
 			The fields to return.
 			If multiple, fields must be comma separated.
 			If not specified, then all fields will be returned
-			""");
+			""",
+			typeof(string));
+	}
+
+	public static string GenerateType(Type type)
+	{
+		if (type == typeof(int))
+		{
+			return "integer($int32)";
+		}
+
+		if (type == typeof(bool))
+		{
+			return "boolean";
+		}
+
+		if (type == typeof(string))
+		{
+			return "string";
+		}
+
+		throw new NotImplementedException($"support for type {type.Name} not supported yet.");
 	}
 }
