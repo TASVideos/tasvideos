@@ -10,6 +10,7 @@ public static class WebApplicationExtensions
 	public static WebApplication UseTasvideosApiEndpoints(this WebApplication app, IHostEnvironment env)
 	{
 		PublicationsApiMapper.Map(app);
+		SubmissionsApiMapper.Map(app);
 		UseSwaggerUi(app, env);
 
 		app.UseExceptionHandler(exceptionHandlerApp =>

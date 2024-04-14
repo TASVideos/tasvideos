@@ -1,6 +1,4 @@
-﻿#pragma warning disable 1591
-
-namespace TASVideos.Api.Responses;
+﻿namespace TASVideos.Api.Responses;
 
 public class SubmissionsResponse
 {

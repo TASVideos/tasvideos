@@ -1,44 +1,17 @@
-﻿namespace TASVideos.Api.Requests;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Http;
 
-/// <summary>
-/// Represents the filtering criteria for the submissions endpoint.
-/// </summary>
+namespace TASVideos.Api.Requests;
+
 public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 {
-	/// <summary>
-	/// Gets the statuses to filter by.
-	/// </summary>
-	public string? Statuses { get; init; }
-
-	/// <summary>
-	/// Gets user's name to filter by.
-	/// </summary>
-	public string? User { get; init; }
-
-	/// <summary>
-	/// Gets the start year to filter by.
-	/// </summary>
-	public int? StartYear { get; init; }
-
-	/// <summary>
-	/// Gets the end year to filter by.
-	/// </summary>
-	public int? EndYear { get; init; }
-
-	/// <summary>
-	/// Gets the system codes to filter by.
-	/// </summary>
-	public string? Systems { get; init; }
-
-	/// <summary>
-	/// Gets the Game Ids to filter by.
-	/// </summary>
-	public string? Games { get; init; }
-
-	/// <summary>
-	/// Gets the start type of the movie. 0 = Power On, 1 = Sram, 2 = Savestate
-	/// </summary>
-	public int? StartType { get; init; }
+	public string? Statuses { get; set; }
+	public string? User { get; set; }
+	public int? StartYear { get; set; }
+	public int? EndYear { get; set; }
+	public string? Systems { get; set; }
+	public string? Games { get; set; }
+	public int? StartType { get; set; }
 
 	ICollection<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear).ToList();
 
@@ -56,4 +29,40 @@ public class SubmissionsRequest : ApiRequest, ISubmissionFilter
 
 	ICollection<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
 	ICollection<int> ISubmissionFilter.GameIds => Games.CsvToInts();
+
+	public static new async ValueTask<SubmissionsRequest> BindAsync(HttpContext context, ParameterInfo parameter)
+	{
+		var baseResult = await ApiRequest.BindAsync(context, parameter);
+
+		// TODO: ughhhhhhhhhhhhhhhhhhhhhhhhh
+		var result = new SubmissionsRequest
+		{
+			PageSize = baseResult.PageSize,
+			CurrentPage = baseResult.CurrentPage,
+			Sort = baseResult.Sort,
+			Fields = baseResult.Fields
+		};
+
+		if (int.TryParse(context.Request.Query["StartYear"], out var startYear))
+		{
+			result.StartYear = startYear;
+		}
+
+		if (int.TryParse(context.Request.Query["EndYear"], out var endYear))
+		{
+			result.EndYear = endYear;
+		}
+
+		if (int.TryParse(context.Request.Query["StartType"], out var startType))
+		{
+			result.StartType = startType;
+		}
+
+		result.Statuses = context.Request.Query["Statuses"];
+		result.User = context.Request.Query["User"];
+		result.Systems = context.Request.Query["Systems"];
+		result.Games = context.Request.Query["Games"];
+
+		return result;
+	}
 }

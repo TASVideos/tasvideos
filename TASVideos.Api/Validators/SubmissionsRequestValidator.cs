@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 
 namespace TASVideos.Api.Validators;
-public class PublicationsRequestValidator : AbstractValidator<PublicationsRequest>
+
+public class SubmissionsRequestValidator : AbstractValidator<SubmissionsRequest>
 {
-	public PublicationsRequestValidator()
+	public SubmissionsRequestValidator()
 	{
 		RuleFor(p => p.StartYear).Must(st => st is null or >= 2000).WithMessage("Year must be 2000 or greater");
 		RuleFor(p => p.EndYear).Must(st => st is null or >= 2000).WithMessage("Year must be 2000 or greater");

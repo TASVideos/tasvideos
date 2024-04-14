@@ -44,8 +44,6 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 			Fields = baseResult.Fields
 		};
 
-		result.Systems = context.Request.Query["Systems"];
-		result.ClassNames = context.Request.Query["ClassNames"];
 		if (int.TryParse(context.Request.Query["StartYear"], out var startYear))
 		{
 			result.StartYear = startYear;
@@ -56,6 +54,8 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 			result.EndYear = endYear;
 		}
 
+		result.Systems = context.Request.Query["Systems"];
+		result.ClassNames = context.Request.Query["ClassNames"];
 		result.GenreNames = context.Request.Query["GenreNames"];
 		result.TagNames = context.Request.Query["TagNames"];
 		result.FlagNames = context.Request.Query["FlagNames"];
