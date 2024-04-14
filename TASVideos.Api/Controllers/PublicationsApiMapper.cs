@@ -16,7 +16,7 @@ internal static class PublicationsApiMapper
 			var pub = await db.Publications
 				.ToPublicationsResponse()
 				.SingleOrDefaultAsync(p => p.Id == id);
-			throw new Exception("unexpected API exception");
+
 			return pub is null
 				? Results.NotFound()
 				: Results.Ok(pub);
