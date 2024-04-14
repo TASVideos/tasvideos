@@ -21,7 +21,6 @@ builder.Services
 	.AddRequestLocalization()
 	.AddCookieConfiguration()
 	.AddGzipCompression(settings)
-	.AddSwagger(settings)
 	.AddTextModules();
 
 // Internal Libraries
@@ -33,7 +32,7 @@ builder.Services
 	.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection)
 	.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), settings)
 	.AddMovieParser()
-	.AddTasvideosApi();
+	.AddTasvideosApi(settings);
 
 // 3rd Party
 builder.Services
