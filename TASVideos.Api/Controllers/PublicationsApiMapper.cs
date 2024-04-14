@@ -1,22 +1,15 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace TASVideos.Api.Controllers;
 
 // TODO: old swagger UI did client side validation of int, not letting non-ints be typed in, how is this done?
 // JWT authentication
-public static class PublicationsApiMapper
+internal static class PublicationsApiMapper
 {
-	// TODO: move all the swagger and api stuff here
-	public static IServiceCollection AddTasvideosApi(this IServiceCollection services)
-	{
-		return services.AddValidatorsFromAssemblyContaining<ApiRequest>();
-	}
-
-	public static void MapEndpoints(WebApplication app)
+	public static void Map(WebApplication app)
 	{
 		app.MapGet("api/v1/publications/{id}", async (int id, ApplicationDbContext db) =>
 		{

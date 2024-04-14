@@ -1,6 +1,6 @@
 ﻿using AspNetCore.ReCaptcha;
 using Serilog;
-using TASVideos.Api.Controllers;
+using TASVideos.Api;
 using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
@@ -51,9 +51,9 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-// TODO: move to api project
-PublicationsApiMapper.MapEndpoints(app);
-app.UseRobots()
+app
+	.UseTasvideosApiEndpoints()
+	.UseRobots()
 	.UseMiddleware<HtmlRedirectionMiddleware>()
 	.UseRequestLocalization()
 	.UseExceptionHandlers(app.Environment)
