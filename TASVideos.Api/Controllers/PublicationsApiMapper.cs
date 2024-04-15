@@ -53,18 +53,18 @@ internal static class PublicationsApiMapper
 		.Produces<IEnumerable<PublicationsResponse>>()
 		.WithOpenApi(g =>
 		{
-			g.Parameters.AddFromQuery("systems", "The system codes to filter by", typeof(string));
-			g.Parameters.AddFromQuery("classNames", "The publication class names to filter by", typeof(string));
-			g.Parameters.AddFromQuery("startYear", "The start year to filter by", typeof(int));
-			g.Parameters.AddFromQuery("endYear", "The end year to filter by", typeof(int));
-			g.Parameters.AddFromQuery("genreNames", "the genres to filter by", typeof(string));
-			g.Parameters.AddFromQuery("tagNames", "the names of the publication tags to filter by", typeof(string));
-			g.Parameters.AddFromQuery("flagNames", "the names of the publication flags to filter by", typeof(string));
-			g.Parameters.AddFromQuery("authorIds", "the ids of the authors to filter by", typeof(string));
-			g.Parameters.AddFromQuery("showObsoleted", "indicates whether or not to return obsoleted publications", typeof(bool));
-			g.Parameters.AddFromQuery("onlyObsoleted", "indicates whether or not to only return obsoleted publications", typeof(bool));
-			g.Parameters.AddFromQuery("gameIds", "the ids of the games to filter by", typeof(string));
-			g.Parameters.AddFromQuery("gameGroupIds", "the ids of the game groups to filter by", typeof(string));
+			g.Parameters.AddStringFromQuery("systems", "The system codes to filter by");
+			g.Parameters.AddStringFromQuery("classNames", "The publication class names to filter by");
+			g.Parameters.AddIntFromQuery("startYear", "The start year to filter by");
+			g.Parameters.AddIntFromQuery("endYear", "The end year to filter by");
+			g.Parameters.AddStringFromQuery("genreNames", "the genres to filter by");
+			g.Parameters.AddStringFromQuery("tagNames", "the names of the publication tags to filter by");
+			g.Parameters.AddStringFromQuery("flagNames", "the names of the publication flags to filter by");
+			g.Parameters.AddStringFromQuery("authorIds", "the ids of the authors to filter by");
+			g.Parameters.AddBoolFromQuery("showObsoleted", "indicates whether or not to return obsoleted publications");
+			g.Parameters.AddBoolFromQuery("onlyObsoleted", "indicates whether or not to only return obsoleted publications");
+			g.Parameters.AddStringFromQuery("gameIds", "the ids of the games to filter by");
+			g.Parameters.AddStringFromQuery("gameGroupIds", "the ids of the game groups to filter by");
 			g.Parameters.AddBaseQueryParams();
 			g.Responses.AddGeneric400();
 			return g;

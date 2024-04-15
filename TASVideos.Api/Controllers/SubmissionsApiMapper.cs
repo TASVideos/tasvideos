@@ -50,12 +50,12 @@ internal static class SubmissionsApiMapper
 		.Produces<IEnumerable<SubmissionsResponse>>()
 		.WithOpenApi(g =>
 		{
-			g.Parameters.AddFromQuery("user", "the author/submitter name to filter by", typeof(string));
-			g.Parameters.AddFromQuery("statuses", "the statuses to filter by", typeof(string));
-			g.Parameters.AddFromQuery("startYear", "The start year to filter by", typeof(int));
-			g.Parameters.AddFromQuery("endYear", "The end year to filter by", typeof(int));
-			g.Parameters.AddFromQuery("systems", "The system codes to filter by", typeof(string));
-			g.Parameters.AddFromQuery("games", "the ids of the games to filter by", typeof(string));
+			g.Parameters.AddStringFromQuery("user", "the author/submitter name to filter by");
+			g.Parameters.AddStringFromQuery("statuses", "the statuses to filter by");
+			g.Parameters.AddIntFromQuery("startYear", "The start year to filter by");
+			g.Parameters.AddIntFromQuery("endYear", "The end year to filter by");
+			g.Parameters.AddStringFromQuery("systems", "The system codes to filter by");
+			g.Parameters.AddStringFromQuery("games", "the ids of the games to filter by");
 			g.Parameters.AddBaseQueryParams();
 			g.Responses.AddGeneric400();
 			return g;

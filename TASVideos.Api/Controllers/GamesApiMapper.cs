@@ -50,7 +50,7 @@ internal static class GamesApiMapper
 		.Produces<IEnumerable<GamesResponse>>()
 		.WithOpenApi(g =>
 		{
-			g.Parameters.AddFromQuery("systems", "The system codes to filter by", typeof(string));
+			g.Parameters.AddStringFromQuery("systems", "The system codes to filter by");
 			g.Parameters.AddBaseQueryParams();
 			g.Responses.AddGeneric400();
 			return g;

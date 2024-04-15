@@ -19,6 +19,21 @@ internal static class RegistrationExtensions
 		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(type) } });
 	}
 
+	public static void AddBoolFromQuery(this IList<OpenApiParameter> list, string name, string description)
+	{
+		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(typeof(bool)) } });
+	}
+
+	public static void AddIntFromQuery(this IList<OpenApiParameter> list, string name, string description)
+	{
+		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(typeof(int)) } });
+	}
+
+	public static void AddStringFromQuery(this IList<OpenApiParameter> list, string name, string description)
+	{
+		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(typeof(string)) } });
+	}
+
 	public static void AddBaseQueryParams(this IList<OpenApiParameter> list)
 	{
 		list.AddFromQuery(
