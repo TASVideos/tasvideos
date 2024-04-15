@@ -1,6 +1,6 @@
-using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Models;
 
-namespace TASVideos.Api.Controllers;
+namespace TASVideos.Api;
 
 internal static class RegistrationExtensions
 {
