@@ -73,9 +73,13 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages) : BasePage
 		}
 
 		Submission = submission;
-		var submissionPage = (await wikiPages.SubmissionPage(Id))!;
-		Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
-		Submission.LastUpdateUser = submissionPage.AuthorName;
+		var submissionPage = await wikiPages.SubmissionPage(Id);
+		if (submissionPage != null)
+		{
+			Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
+			Submission.LastUpdateUser = submissionPage.AuthorName;
+		}
+
 		CanEdit = !string.IsNullOrWhiteSpace(User.Name())
 			&& (User.Name() == Submission.Submitter
 				|| Submission.Authors.Contains(User.Name()));
