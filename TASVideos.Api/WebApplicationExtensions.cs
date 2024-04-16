@@ -13,6 +13,7 @@ public static class WebApplicationExtensions
 		SubmissionsApiMapper.Map(app);
 		GamesApiMapper.Map(app);
 		SystemsApiMapper.Map(app);
+		UsersApiMapper.Map(app);
 		UseSwaggerUi(app, env);
 
 		app.UseExceptionHandler(exceptionHandlerApp =>

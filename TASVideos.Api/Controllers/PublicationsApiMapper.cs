@@ -6,6 +6,8 @@ namespace TASVideos.Api.Controllers;
 
 // TODO: old swagger UI did client side validation of int, not letting non-ints be typed in, how is this done?
 // JWT authentication
+// RequirePermission
+// Validate : ActionFilterAttribute
 internal static class PublicationsApiMapper
 {
 	public static void Map(WebApplication app)
