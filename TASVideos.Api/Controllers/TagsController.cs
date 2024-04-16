@@ -2,46 +2,10 @@
 
 namespace TASVideos.Api.Controllers;
 
-/// <summary>
-/// The publication tags that categorize publications
-/// </summary>
 [AllowAnonymous]
 [Route("api/v1/[controller]")]
 public class TagsController(ITagService tagService) : Controller
 {
-	/// <summary>
-	/// Returns a tag with the given id.
-	/// </summary>
-	/// <response code="200">Returns a tag.</response>
-	/// <response code="400">The request parameters are invalid.</response>
-	/// <response code="404">A tag with the given id was not found.</response>
-	[HttpGet("{id}")]
-	public async Task<IActionResult> GetById(int id)
-	{
-		var tag = await tagService.GetById(id);
-		return tag is null
-			? NotFound()
-			: Ok(tag);
-	}
-
-	/// <summary>
-	/// Returns a list of available tags
-	/// </summary>
-	/// <response code="200">Returns the list of games.</response>
-	/// <response code="400">The request parameters are invalid.</response>
-	[HttpGet]
-	public async Task<IActionResult> GetAll([FromQuery] ApiRequest request)
-	{
-		var tags = (await tagService.GetAll())
-			.AsQueryable()
-			.SortBy(request)
-			.Paginate(request)
-			.AsEnumerable()
-			.FieldSelect(request);
-
-		return Ok(tags);
-	}
-
 	/// <summary>
 	/// Creates a new tag
 	/// </summary>
