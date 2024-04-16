@@ -101,9 +101,9 @@
 	</fullrow>
 	<fullrow>
 		<fieldset>
-			<label asp-for="Submission.Markup" class="form-control-label"></label>
-			<textarea asp-for="Submission.Markup" rows="12" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
-			<span asp-validation-for="Submission.Markup" class="text-danger"></span>
+			<label asp-for="Markup" class="form-control-label"></label>
+			<textarea asp-for="Markup" rows="12" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<span asp-validation-for="Markup" class="text-danger"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 		</fieldset>
 	</fullrow>
@@ -124,12 +124,12 @@
 	</row>
 	<fullrow class="text-center">
 		<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
-		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Submission.Markup.Length > 0 ? "" : "hide")"><i class="fa fa-save"></i> Save</button>
+		<button id="submit-btn" type="submit" class="btn btn-primary @(Model.Markup.Length > 0 ? "" : "hide")"><i class="fa fa-save"></i> Save</button>
 		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
 	</fullrow>
 </form>
 
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.Markup), "/Wiki/Preview")" />
+<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Markup), "/Wiki/Preview")" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

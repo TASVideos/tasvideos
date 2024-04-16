@@ -74,7 +74,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages) : BasePage
 
 		Submission = submission;
 		var submissionPage = await wikiPages.SubmissionPage(Id);
-		if (submissionPage != null)
+		if (submissionPage is not null)
 		{
 			Submission.LastUpdateTimestamp = submissionPage.CreateTimestamp;
 			Submission.LastUpdateUser = submissionPage.AuthorName;

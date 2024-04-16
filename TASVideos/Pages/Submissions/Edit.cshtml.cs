@@ -31,6 +31,11 @@ public class EditModel(
 	[BindProperty]
 	public SubmissionEdit Submission { get; set; } = new();
 
+	[BindProperty]
+	[DoNotTrim]
+	[Display(Name = "Comments and explanations")]
+	public string Markup { get; set; } = "";
+
 	public bool CanDelete { get; set; }
 	public ICollection<SubmissionStatus> AvailableStatuses { get; set; } = [];
 	public List<SelectListItem> AvailableClasses { get; set; } = [];
@@ -65,8 +70,12 @@ public class EditModel(
 		}
 
 		Submission = submission;
-		var submissionPage = (await wikiPages.SubmissionPage(Id))!;
-		Submission.Markup = submissionPage.Markup;
+		var submissionPage = await wikiPages.SubmissionPage(Id);
+		if (submissionPage is not null)
+		{
+			Markup = submissionPage.Markup;
+		}
+
 		Submission.Authors = await db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == Id)
 			.OrderBy(sa => sa.Ordinal)
@@ -289,7 +298,7 @@ public class EditModel(
 		var revision = new WikiCreateRequest
 		{
 			PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
-			Markup = Submission.Markup,
+			Markup = Markup,
 			MinorEdit = Submission.MinorEdit,
 			RevisionMessage = Submission.RevisionMessage,
 			AuthorId = User.GetUserId()
@@ -468,10 +477,6 @@ public class EditModel(
 
 	public class SubmissionEdit
 	{
-		[DoNotTrim]
-		[Display(Name = "Comments and explanations")]
-		public string Markup { get; set; } = "";
-
 		[StringLength(1000)]
 		[Display(Name = "Revision Message")]
 		public string? RevisionMessage { get; init; }
