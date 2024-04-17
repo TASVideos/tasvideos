@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.Data.Entity.Exhibition;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Exhibitions.Drafts.Models;
+using TASVideos.Pages.Exhibitions.Models;
 
 namespace TASVideos.Pages.Exhibitions.Drafts;
 
@@ -31,28 +33,30 @@ public class EditModel : BasePageModel
 	public int Id { get; set; }
 
 	[BindProperty]
-	public ExhibitionDraftEditModel Exhibition { get; set; } = new();
-	public List<SelectListItem> AvailableGames { get; set; } = [];
-	public List<SelectListItem> AvailableUsers { get; set; } = [];
+	public ExhibitionFormModel ExhibitionForm { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
 		var exhibition = await _db.Exhibitions
 			.Where(e => e.Id == Id)
-			.Select(e => new ExhibitionDraftEditModel
+			.Select(e => new ExhibitionAddEditModel
 			{
 				Title = e.Title,
 				ExhibitionTimestamp = e.ExhibitionTimestamp,
 				Games = e.Games.Select(g => g.Id).ToList(),
 				Contributors = e.Contributors.Select(e => e.Id).ToList(),
-				Urls = e.Urls.Select(u => new ExhibitionDraftEditModel.ExhibitionDraftEditUrlModel
+				Movies = e.Files.Where(f => f.Type == ExhibitionFileType.MovieFile).Select(m => new ExhibitionAddEditModel.ExhibitionAddEditMovieModel
+				{
+					FileId = m.Id,
+					MovieFileDescription = m.Description,
+				}).ToList(),
+				Urls = e.Urls.Select(u => new ExhibitionAddEditModel.ExhibitionAddEditUrlModel
 				{
 					UrlId = u.Id,
 					Type = u.Type,
 					DisplayName = u.DisplayName ?? "",
 					Url = u.Url,
 				}).ToList(),
-
 			})
 			.SingleOrDefaultAsync();
 
@@ -65,7 +69,8 @@ public class EditModel : BasePageModel
 
 		exhibition.Markup = page?.Markup ?? "";
 
-		Exhibition = exhibition;
+		ExhibitionForm.Type = ExhibitionFormModel.FormType.Edit;
+		ExhibitionForm.Exhibition = exhibition;
 
 		await PopulateDropdowns();
 
@@ -80,7 +85,7 @@ public class EditModel : BasePageModel
 
 	private async Task PopulateDropdowns()
 	{
-		AvailableGames = await _db.Games
+		ExhibitionForm.AvailableGames = await _db.Games
 			.OrderBy(g => g.DisplayName)
 			.Select(g => new SelectListItem
 			{
@@ -89,7 +94,7 @@ public class EditModel : BasePageModel
 			})
 			.ToListAsync();
 
-		AvailableUsers = await _db.Users
+		ExhibitionForm.AvailableUsers = await _db.Users
 			.OrderBy(u => u.UserName)
 			.Select(u => new SelectListItem
 			{

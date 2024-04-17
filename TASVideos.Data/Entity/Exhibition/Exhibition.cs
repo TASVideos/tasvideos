@@ -6,7 +6,7 @@ public class Exhibition : BaseEntity
 	public int Id { get; set; }
 	public int? PublishId { get; set; }
 	public ExhibitionStatus Status { get; set; }
-	public DateTime PublicationTimestamp { get; set; }
+	public DateTime? PublicationTimestamp { get; set; }
 
 	public string Title { get; set; } = "";
 	public DateTime ExhibitionTimestamp { get; set; }
