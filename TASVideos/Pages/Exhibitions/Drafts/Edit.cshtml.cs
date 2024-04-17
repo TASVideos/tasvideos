@@ -41,6 +41,7 @@ public class EditModel : BasePageModel
 			.Where(e => e.Id == Id)
 			.Select(e => new ExhibitionAddEditModel
 			{
+				ExhibitionId = e.Id,
 				Title = e.Title,
 				ExhibitionTimestamp = e.ExhibitionTimestamp,
 				Games = e.Games.Select(g => g.Id).ToList(),
@@ -69,7 +70,6 @@ public class EditModel : BasePageModel
 
 		exhibition.Markup = page?.Markup ?? "";
 
-		ExhibitionForm.Type = ExhibitionFormModel.FormType.Edit;
 		ExhibitionForm.Exhibition = exhibition;
 
 		await PopulateDropdowns();

@@ -8,6 +8,7 @@ using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Exhibition;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Exhibitions.Drafts.Models;
+using TASVideos.Pages.Exhibitions.Models;
 
 namespace TASVideos.Pages.Exhibitions.Drafts;
 
@@ -33,9 +34,7 @@ public class CreateModel : BasePageModel
 	}
 
 	[BindProperty]
-	public ExhibitionDraftCreateModel Exhibition { get; set; } = new();
-	public List<SelectListItem> AvailableGames { get; set; } = [];
-	public List<SelectListItem> AvailableUsers { get; set; } = [];
+	public ExhibitionFormModel ExhibitionForm { get; set; } = new();
 
 	public async Task OnGet()
 	{
@@ -44,9 +43,9 @@ public class CreateModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (Exhibition.Screenshot != null && !Exhibition.Screenshot.IsValidImage())
+		if (ExhibitionForm.Exhibition.Screenshot != null && !ExhibitionForm.Exhibition.Screenshot.IsValidImage())
 		{
-			ModelState.AddModelError($"{nameof(Exhibition)}.{nameof(Exhibition.Screenshot)}", "Invalid file type. Must be .png or .jpg");
+			ModelState.AddModelError($"{nameof(ExhibitionForm)}.{nameof(ExhibitionForm.Exhibition)}.{nameof(ExhibitionForm.Exhibition.Screenshot)}", "Invalid file type. Must be .png or .jpg");
 		}
 
 		if (!ModelState.IsValid)
@@ -55,39 +54,45 @@ public class CreateModel : BasePageModel
 			return Page();
 		}
 
-		if (Exhibition.MovieFile != null)
+		foreach (var movie in ExhibitionForm.Exhibition.Movies)
 		{
-			var parseResult = await _parser.ParseZip(Exhibition.MovieFile.OpenReadStream());
-
-			if (!parseResult.Success)
+			if (movie.MovieFile != null)
 			{
-				ModelState.AddParseErrors(parseResult, $"{nameof(Exhibition)}.{nameof(Exhibition.MovieFile)}");
-				await PopulateDropdowns();
-				return Page();
+				var parseResult = await _parser.ParseZip(movie.MovieFile.OpenReadStream());
+
+				if (!parseResult.Success)
+				{
+					ModelState.AddParseErrors(parseResult);
+					await PopulateDropdowns();
+					return Page();
+				}
 			}
 		}
 
 		Exhibition exhibition = new()
 		{
-			Title = Exhibition.Title,
-			ExhibitionTimestamp = Exhibition.ExhibitionTimestamp,
-			Games = await _db.Games.Where(g => Exhibition.Games.Contains(g.Id)).ToListAsync(),
-			Contributors = await _db.Users.Where(g => Exhibition.Contributors.Contains(g.Id)).ToListAsync()
+			Title = ExhibitionForm.Exhibition.Title,
+			ExhibitionTimestamp = ExhibitionForm.Exhibition.ExhibitionTimestamp,
+			Games = await _db.Games.Where(g => ExhibitionForm.Exhibition.Games.Contains(g.Id)).ToListAsync(),
+			Contributors = await _db.Users.Where(g => ExhibitionForm.Exhibition.Contributors.Contains(g.Id)).ToListAsync()
 		};
 
-		if (Exhibition.MovieFile != null)
+		foreach (var movie in ExhibitionForm.Exhibition.Movies)
 		{
-			byte[] movieFile = await Exhibition.MovieFile.ToBytes();
-
-			exhibition.Files.Add(new ExhibitionFile
+			if (movie.MovieFile != null)
 			{
-				Type = ExhibitionFileType.MovieFile,
-				Description = Exhibition.MovieFileDescription,
-				FileData = movieFile,
-			});
+				byte[] movieFile = await movie.MovieFile.ToBytes();
+
+				exhibition.Files.Add(new ExhibitionFile
+				{
+					Type = ExhibitionFileType.MovieFile,
+					Description = movie.MovieFileDescription,
+					FileData = movieFile,
+				});
+			}
 		}
 
-		foreach (var url in Exhibition.Urls)
+		foreach (var url in ExhibitionForm.Exhibition.Urls)
 		{
 			exhibition.Urls.Add(new ExhibitionUrl
 			{
@@ -101,9 +106,9 @@ public class CreateModel : BasePageModel
 
 		await _db.SaveChangesAsync();
 
-		if (Exhibition.Screenshot != null)
+		if (ExhibitionForm.Exhibition.Screenshot != null)
 		{
-			await _uploader.UploadExhibitionScreenshot(exhibition.Id, Exhibition.Screenshot, Exhibition.ScreenshotDescription);
+			await _uploader.UploadExhibitionScreenshot(exhibition.Id, ExhibitionForm.Exhibition.Screenshot, ExhibitionForm.Exhibition.ScreenshotDescription);
 		}
 
 		var wikiPage = new WikiCreateRequest
@@ -111,7 +116,7 @@ public class CreateModel : BasePageModel
 			RevisionMessage = $"Auto-generated from Exhibition #{exhibition.Id}",
 			PageName = WikiHelper.ToExhibitionWikiPageName(exhibition.Id),
 			MinorEdit = false,
-			Markup = Exhibition.Markup,
+			Markup = ExhibitionForm.Exhibition.Markup,
 			AuthorId = User.GetUserId()
 		};
 		var addedWikiPage = await _wikiPages.Add(wikiPage);
@@ -124,7 +129,7 @@ public class CreateModel : BasePageModel
 
 	private async Task PopulateDropdowns()
 	{
-		AvailableGames = await _db.Games
+		ExhibitionForm.AvailableGames = await _db.Games
 			.OrderBy(g => g.DisplayName)
 			.Select(g => new SelectListItem
 			{
@@ -133,7 +138,7 @@ public class CreateModel : BasePageModel
 			})
 			.ToListAsync();
 
-		AvailableUsers = await _db.Users
+		ExhibitionForm.AvailableUsers = await _db.Users
 			.OrderBy(u => u.UserName)
 			.Select(u => new SelectListItem
 			{

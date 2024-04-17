@@ -1,7 +1,11 @@
 ﻿@using TASVideos.Data.Entity.Exhibition
 @model TASVideos.Pages.Exhibitions.Models.ExhibitionFormModel
 
-<form method="post">
+<div class="text-danger">
+	@Html.ValidationSummary()
+</div>
+
+<form method="post" enctype="multipart/form-data">
 	<fieldset>
 		<label asp-for="Exhibition.Title" class="form-control-label"></label>
 		<input asp-for="Exhibition.Title" class="form-control" />
@@ -29,10 +33,10 @@
 	<fieldset>
 		<label asp-for="Exhibition.Movies" class="form-control-label"></label>
 		@{
-			string movieCollectionId = $"{nameof(Model.Exhibition)}.{nameof(Model.Exhibition.MoviesDefault)}";
+			string movieCollectionId = Html.NameFor(m => m.Exhibition.MoviesDefault);
 		}
 		<template class="template-collection" data-for="@movieCollectionId">
-			<input type="hidden" asp-for="Exhibition.UrlsDefault.UrlId" />
+			<input type="hidden" asp-for="Exhibition.MoviesDefault.FileId" />
 			<row>
 				<div class="col">
 					<row>
@@ -58,19 +62,19 @@
 				@for (int i = 0; i < Model.Exhibition.Movies.Count; i++)
 				{
 					<div>
-						<input type="hidden" asp-for="Exhibition.UrlsDefault.UrlId" />
+						<input type="hidden" asp-for="Exhibition.Movies[i].FileId" />
 						<row>
 							<div class="col">
 								<row>
 									<div class="col-12 col-lg-6">
-										<label asp-for="Exhibition.MoviesDefault.MovieFile" class="form-control-label"></label>
-										<input asp-for="Exhibition.MoviesDefault.MovieFile" class="form-control" />
-										<span asp-validation-for="Exhibition.MoviesDefault.MovieFile" class="text-danger"></span>
+										<label asp-for="Exhibition.Movies[i].MovieFile" class="form-control-label"></label>
+										<input asp-for="Exhibition.Movies[i].MovieFile" class="form-control" />
+										<span asp-validation-for="Exhibition.Movies[i].MovieFile" class="text-danger"></span>
 									</div>
 									<div class="col-12 col-lg-6">
-										<label asp-for="Exhibition.MoviesDefault.MovieFileDescription" class="form-control-label"></label>
-										<input asp-for="Exhibition.MoviesDefault.MovieFileDescription" class="form-control" />
-										<span asp-validation-for="Exhibition.MoviesDefault.MovieFileDescription" class="text-danger"></span>
+										<label asp-for="Exhibition.Movies[i].MovieFileDescription" class="form-control-label"></label>
+										<input asp-for="Exhibition.Movies[i].MovieFileDescription" class="form-control" />
+										<span asp-validation-for="Exhibition.Movies[i].MovieFileDescription" class="text-danger"></span>
 									</div>
 								</row>
 							</div>
@@ -89,7 +93,7 @@
 	<fieldset>
 		<label asp-for="Exhibition.Urls" class="form-control-label"></label>
 		@{
-			string urlCollectionId = $"{nameof(Model.Exhibition)}.{nameof(Model.Exhibition.UrlsDefault)}";
+			string urlCollectionId = Html.NameFor(m => m.Exhibition.UrlsDefault);
 		}
 		<template class="template-collection" data-for="@urlCollectionId">
 			<input type="hidden" asp-for="Exhibition.UrlsDefault.UrlId" />

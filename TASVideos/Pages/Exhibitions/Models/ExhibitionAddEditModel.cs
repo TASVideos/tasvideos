@@ -5,6 +5,7 @@ namespace TASVideos.Pages.Exhibitions.Models;
 
 public class ExhibitionAddEditModel
 {
+	public int ExhibitionId { get; set; }
 	public string Title { get; set; } = "";
 	[DisplayName("Exhibition Timestamp (UTC)")]
 	public DateTime ExhibitionTimestamp { get; set; } = DateTime.UtcNow;

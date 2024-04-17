@@ -69,7 +69,7 @@ function addRemoveButtonEventListeners() {
 			var regexDefault = new RegExp('Default$');
 			for (var nextEntry of nextEntries) {
 				decreaseAttributes(nextEntry, collectionId.replace(regexDefault, '') + '[');
-				decreaseAttributes(nextEntry, collectionId.replace(regexDefault, '').replace('.', '_') + '_');
+				decreaseAttributes(nextEntry, collectionId.replace(regexDefault, '').replaceAll('.', '_') + '_');
 			}
 		});
 	});
