@@ -1,9 +1,12 @@
-﻿using FluentValidation;
+﻿using System.Security.Claims;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.OpenApi.Models;
 
 namespace TASVideos.Api.Controllers;
 
+// POST/PUT todos - Results.Forbid() returns the login screen and a 200
 internal static class TagsApiMapper
 {
 	public static void Map(WebApplication app)
@@ -49,8 +52,19 @@ internal static class TagsApiMapper
 			return g;
 		});
 
-		app.MapPost("api/v1/tags", async (TagAddEditRequest request, ITagService tagService) =>
+		app.MapPost("api/v1/tags", async (TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
 		{
+			if (!user.Has(PermissionTo.TagMaintenance))
+			{
+				return Results.Forbid();
+			}
+
+			var validationResult = validator.Validate(request);
+			if (!validationResult.IsValid)
+			{
+				return Results.ValidationProblem(validationResult.ToDictionary());
+			}
+
 			var (id, result) = await tagService.Add(request.Code, request.DisplayName);
 
 			switch (result)
@@ -67,7 +81,14 @@ internal static class TagsApiMapper
 					return Results.BadRequest();
 			}
 		})
+		.RequireAuthorization()
 		.WithTags("Tags")
-		.WithSummary("Creates a new tag");
+		.WithSummary("Creates a new tag")
+		.WithOpenApi(g =>
+		{
+			g.Responses.Add("201", new OpenApiResponse { Description = "The Tag was created successfully." });
+			g.Responses.AddGeneric400();
+			return g;
+		});
 	}
 }
