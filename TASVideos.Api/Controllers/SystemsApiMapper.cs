@@ -5,7 +5,7 @@ namespace TASVideos.Api.Controllers;
 
 internal static class SystemsApiMapper
 {
-	public static void Map(WebApplication app)
+	public static WebApplication MapSystems(this WebApplication app)
 	{
 		app.MapGet("api/v1/systems/{id}", async (int id, IGameSystemService systemService) =>
 		{
@@ -31,5 +31,7 @@ internal static class SystemsApiMapper
 		.WithTags("Systems")
 		.WithSummary("Returns a list of available game sytems, including supported framerates.")
 		.Produces<IEnumerable<SystemsResponse>>();
+
+		return app;
 	}
 }

@@ -10,7 +10,7 @@ namespace TASVideos.Api.Controllers;
 // Validate : ActionFilterAttribute
 internal static class PublicationsApiMapper
 {
-	public static void Map(WebApplication app)
+	public static WebApplication MapPublications(this WebApplication app)
 	{
 		app.MapGet("api/v1/publications/{id}", async (int id, ApplicationDbContext db) =>
 		{
@@ -71,5 +71,7 @@ internal static class PublicationsApiMapper
 			g.Responses.AddGeneric400();
 			return g;
 		});
+
+		return app;
 	}
 }

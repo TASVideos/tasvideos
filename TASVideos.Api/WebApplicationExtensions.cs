@@ -9,12 +9,13 @@ public static class WebApplicationExtensions
 {
 	public static WebApplication UseTasvideosApiEndpoints(this WebApplication app, IHostEnvironment env)
 	{
-		PublicationsApiMapper.Map(app);
-		SubmissionsApiMapper.Map(app);
-		GamesApiMapper.Map(app);
-		SystemsApiMapper.Map(app);
-		UsersApiMapper.Map(app);
-		TagsApiMapper.Map(app);
+		app.MapPublications()
+			.MapSubmissions()
+			.MapGames()
+			.MapSystems()
+			.MapUsers()
+			.MapTags();
+
 		UseSwaggerUi(app, env);
 
 		app.UseExceptionHandler(exceptionHandlerApp =>
@@ -37,7 +38,7 @@ public static class WebApplicationExtensions
 		return app;
 	}
 
-	private static IApplicationBuilder UseSwaggerUi(this WebApplication app, IHostEnvironment env)
+	private static void UseSwaggerUi(this WebApplication app, IHostEnvironment env)
 	{
 		// Append environment to app name when in non-production environments
 		var appName = "TASVideos";
@@ -50,7 +51,7 @@ public static class WebApplicationExtensions
 		app.UseSwagger();
 
 		// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-		return app.UseSwaggerUI(c =>
+		app.UseSwaggerUI(c =>
 		{
 			c.SwaggerEndpoint("/swagger/v1/swagger.json", appName);
 			c.RoutePrefix = "api";

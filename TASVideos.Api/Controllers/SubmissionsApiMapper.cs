@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 namespace TASVideos.Api.Controllers;
 internal static class SubmissionsApiMapper
 {
-	public static void Map(WebApplication app)
+	public static WebApplication MapSubmissions(this WebApplication app)
 	{
 		app.MapGet("api/v1/submissions/{id}", async (int id, ApplicationDbContext db) =>
 		{
@@ -60,5 +60,7 @@ internal static class SubmissionsApiMapper
 			g.Responses.AddGeneric400();
 			return g;
 		});
+
+		return app;
 	}
 }

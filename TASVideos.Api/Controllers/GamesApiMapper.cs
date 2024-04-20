@@ -7,7 +7,7 @@ namespace TASVideos.Api.Controllers;
 
 internal static class GamesApiMapper
 {
-	public static void Map(WebApplication app)
+	public static WebApplication MapGames(this WebApplication app)
 	{
 		app.MapGet("api/v1/games/{id}", async (int id, ApplicationDbContext db) =>
 		{
@@ -55,5 +55,7 @@ internal static class GamesApiMapper
 			g.Responses.AddGeneric400();
 			return g;
 		});
+
+		return app;
 	}
 }

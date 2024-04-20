@@ -9,7 +9,7 @@ namespace TASVideos.Api.Controllers;
 // POST/PUT todos - Results.Forbid() returns the login screen and a 200
 internal static class TagsApiMapper
 {
-	public static void Map(WebApplication app)
+	public static WebApplication MapTags(this WebApplication app)
 	{
 		app.MapGet("api/v1/tags/{id}", async (int id, ITagService tagService) =>
 		{
@@ -163,5 +163,7 @@ internal static class TagsApiMapper
 			g.Responses.Add("409", new OpenApiResponse { Description = "The Tag is in use and cannot be deleted." });
 			return g;
 		});
+
+		return app;
 	}
 }

@@ -7,7 +7,7 @@ namespace TASVideos.Api.Controllers;
 
 internal static class UsersApiMapper
 {
-	public static void Map(WebApplication app)
+	public static WebApplication MapUsers(this WebApplication app)
 	{
 		app.MapPost("api/v1/users/authenticate", async (AuthenticationRequest request, IValidator<AuthenticationRequest> validator, IJwtAuthenticator jwtAuthenticator) =>
 		{
@@ -31,5 +31,7 @@ internal static class UsersApiMapper
 			g.Responses.Add("401", new OpenApiResponse { Description = "The sign in failed." });
 			return g;
 		});
+
+		return app;
 	}
 }
