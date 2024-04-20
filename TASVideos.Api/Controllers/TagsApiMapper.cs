@@ -56,13 +56,13 @@ internal static class TagsApiMapper
 			switch (result)
 			{
 				case TagEditResult.DuplicateCode:
-					//ModelState.AddModelError(nameof(request.Code), $"{request.Code} already exists.");
-					
-					//return Results.Conflict(ModelState);
-				return Results.Problem("not built yet");
+					var error = new Dictionary<string, string>
+					{
+						["Code"] = $"{request.Code} already exists"
+					};
+					return Results.Conflict(error);
 				case TagEditResult.Success:
-					//return Results.Created(new Uri($"{Request.Path}/{id}", UriKind.Relative), id);
-				return Results.CreatedAtRoute(routeName: "GetByTagId", routeValues: new { id });
+					return Results.CreatedAtRoute(routeName: "GetByTagId", routeValues: new { id });
 				default:
 					return Results.BadRequest();
 			}
