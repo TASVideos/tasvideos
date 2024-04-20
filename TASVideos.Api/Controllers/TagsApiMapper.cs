@@ -87,7 +87,80 @@ internal static class TagsApiMapper
 		.WithOpenApi(g =>
 		{
 			g.Responses.Add("201", new OpenApiResponse { Description = "The Tag was created successfully." });
+			g.Responses.Add("409", new OpenApiResponse { Description = "A Tag with the given code already exists." });
 			g.Responses.AddGeneric400();
+			return g;
+		});
+
+		app.MapPut("api/v1/tags/{id}", async (int id, TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
+		{
+			if (!user.Has(PermissionTo.TagMaintenance))
+			{
+				return Results.Forbid();
+			}
+
+			var validationResult = validator.Validate(request);
+			if (!validationResult.IsValid)
+			{
+				return Results.ValidationProblem(validationResult.ToDictionary());
+			}
+
+			var result = await tagService.Edit(id, request.Code, request.DisplayName);
+			switch (result)
+			{
+				case TagEditResult.NotFound:
+					return Results.NotFound();
+				case TagEditResult.DuplicateCode:
+					var error = new Dictionary<string, string>
+					{
+						["Code"] = $"{request.Code} already exists"
+					};
+					return Results.Conflict(error);
+				case TagEditResult.Success:
+					return Results.Ok();
+				default:
+					return Results.BadRequest();
+			}
+		})
+		.RequireAuthorization()
+		.WithTags("Tags")
+		.WithSummary("Updates an existing tag")
+		.WithOpenApi(g =>
+		{
+			g.Responses.AddGeneric400();
+			g.Responses.Add404ById("tag");
+			g.Responses.Add("409", new OpenApiResponse { Description = "A Tag with the given code already exists." });
+			return g;
+		});
+
+		app.MapDelete("api/v1/tags/{id}", async (int id, ITagService tagService, ClaimsPrincipal user) =>
+		{
+			if (!user.Has(PermissionTo.TagMaintenance))
+			{
+				return Results.Forbid();
+			}
+
+			var result = await tagService.Delete(id);
+			switch (result)
+			{
+				case TagDeleteResult.NotFound:
+					return Results.NotFound();
+				case TagDeleteResult.InUse:
+					return Results.Conflict("The tag is in use and cannot be deleted.");
+				case TagDeleteResult.Success:
+					return Results.Ok();
+				default:
+					return Results.BadRequest();
+			}
+		})
+		.RequireAuthorization()
+		.WithTags("Tags")
+		.WithSummary("Deletes an existing tag")
+		.WithOpenApi(g =>
+		{
+			g.Responses.AddGeneric400();
+			g.Responses.Add404ById("tag");
+			g.Responses.Add("409", new OpenApiResponse { Description = "The Tag is in use and cannot be deleted." });
 			return g;
 		});
 	}
