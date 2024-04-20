@@ -11,23 +11,23 @@ public class TagsController(ITagService tagService) : Controller
 	/// </summary>
 	/// <response code="201">The tag was created successfully.</response>
 	/// <response code="400">The request parameters are invalid.</response>
-	[HttpPost]
-	[RequirePermission(PermissionTo.TagMaintenance)]
-	public async Task<IActionResult> Create(TagAddEditRequest request)
-	{
-		var (id, result) = await tagService.Add(request.Code, request.DisplayName);
+	//[HttpPost]
+	//[RequirePermission(PermissionTo.TagMaintenance)]
+	//public async Task<IActionResult> Create(TagAddEditRequest request)
+	//{
+	//	var (id, result) = await tagService.Add(request.Code, request.DisplayName);
 
-		switch (result)
-		{
-			case TagEditResult.DuplicateCode:
-				ModelState.AddModelError(nameof(request.Code), $"{request.Code} already exists.");
-				return Conflict(ModelState);
-			case TagEditResult.Success:
-				return Created(new Uri($"{Request.Path}/{id}", UriKind.Relative), id);
-			default:
-				return BadRequest();
-		}
-	}
+	//	switch (result)
+	//	{
+	//		case TagEditResult.DuplicateCode:
+	//			ModelState.AddModelError(nameof(request.Code), $"{request.Code} already exists.");
+	//			return Conflict(ModelState);
+	//		case TagEditResult.Success:
+	//			return Created(new Uri($"{Request.Path}/{id}", UriKind.Relative), id);
+	//		default:
+	//			return BadRequest();
+	//	}
+	//}
 
 	/// <summary>
 	/// Updates an existing tag

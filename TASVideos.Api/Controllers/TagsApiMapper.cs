@@ -20,7 +20,8 @@ internal static class TagsApiMapper
 			g.Responses.AddGeneric400();
 			g.Responses.Add404ById("tag");
 			return g;
-		});
+		})
+		.WithName("GetByTagId");
 
 		app.MapGet("api/v1/tags", async (ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>
 		{
@@ -47,5 +48,26 @@ internal static class TagsApiMapper
 			g.Responses.AddGeneric400();
 			return g;
 		});
+
+		app.MapPost("api/v1/tags", async (TagAddEditRequest request, ITagService tagService) =>
+		{
+			var (id, result) = await tagService.Add(request.Code, request.DisplayName);
+
+			switch (result)
+			{
+				case TagEditResult.DuplicateCode:
+					//ModelState.AddModelError(nameof(request.Code), $"{request.Code} already exists.");
+					
+					//return Results.Conflict(ModelState);
+				return Results.Problem("not built yet");
+				case TagEditResult.Success:
+					//return Results.Created(new Uri($"{Request.Path}/{id}", UriKind.Relative), id);
+				return Results.CreatedAtRoute(routeName: "GetByTagId", routeValues: new { id });
+				default:
+					return Results.BadRequest();
+			}
+		})
+		.WithTags("Tags")
+		.WithSummary("Creates a new tag");
 	}
 }
