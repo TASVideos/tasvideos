@@ -1,8 +1,4 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.OpenApi.Models;
-
-namespace TASVideos.Api;
+﻿namespace TASVideos.Api;
 
 internal static class TagsEndpoints
 {
@@ -37,14 +33,10 @@ internal static class TagsEndpoints
 
 		group.MapPost("", async (TagAddEditRequest request, ITagService tagService, HttpContext context) =>
 		{
-			if (!context.User.IsLoggedIn())
+			var authError = ApiResults.Authorize(PermissionTo.TagMaintenance, context);
+			if (authError is not null)
 			{
-				return ApiResults.Unauthorized();
-			}
-
-			if (!context.User.Has(PermissionTo.TagMaintenance))
-			{
-				return ApiResults.Forbid();
+				return authError;
 			}
 
 			var validationError = ApiResults.Validate(request, context);
@@ -65,22 +57,18 @@ internal static class TagsEndpoints
 		.WithSummary("Creates a new tag")
 		.WithOpenApi(g =>
 		{
-			g.Responses.Add("201", new OpenApiResponse { Description = "The Tag was created successfully." });
-			g.Responses.Add("409", new OpenApiResponse { Description = "A Tag with the given code already exists." });
+			g.Responses.Add(201, "The Tag was created successfully.");
+			g.Responses.Add(409, "A Tag with the given code already exists.");
 			g.Responses.AddGeneric400();
 			return g;
 		});
 
 		group.MapPut("{id}", async (int id, TagAddEditRequest request, ITagService tagService, HttpContext context) =>
 		{
-			if (!context.User.IsLoggedIn())
+			var authError = ApiResults.Authorize(PermissionTo.TagMaintenance, context);
+			if (authError is not null)
 			{
-				return ApiResults.Unauthorized();
-			}
-
-			if (!context.User.Has(PermissionTo.TagMaintenance))
-			{
-				return ApiResults.Forbid();
+				return authError;
 			}
 
 			var validationError = ApiResults.Validate(request, context);
@@ -103,20 +91,16 @@ internal static class TagsEndpoints
 		{
 			g.Responses.AddGeneric400();
 			g.Responses.Add404ById("tag");
-			g.Responses.Add("409", new OpenApiResponse { Description = "A Tag with the given code already exists." });
+			g.Responses.Add(409, "A Tag with the given code already exists.");
 			return g;
 		});
 
-		group.MapDelete("{id}", async (int id, ITagService tagService, ClaimsPrincipal user) =>
+		group.MapDelete("{id}", async (int id, ITagService tagService, HttpContext context) =>
 		{
-			if (!user.IsLoggedIn())
+			var authError = ApiResults.Authorize(PermissionTo.TagMaintenance, context);
+			if (authError is not null)
 			{
-				return ApiResults.Unauthorized();
-			}
-
-			if (!user.Has(PermissionTo.TagMaintenance))
-			{
-				return ApiResults.Forbid();
+				return authError;
 			}
 
 			var result = await tagService.Delete(id);
@@ -133,7 +117,7 @@ internal static class TagsEndpoints
 		{
 			g.Responses.AddGeneric400();
 			g.Responses.Add404ById("tag");
-			g.Responses.Add("409", new OpenApiResponse { Description = "The Tag is in use and cannot be deleted." });
+			g.Responses.Add(409, "The Tag is in use and cannot be deleted.");
 			return g;
 		});
 

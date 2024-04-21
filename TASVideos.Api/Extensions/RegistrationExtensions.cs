@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 
@@ -38,6 +37,11 @@ internal static class RegistrationExtensions
 	public static RouteHandlerBuilder ProducesList<T>(this RouteHandlerBuilder builder, string summary)
 	{
 		return builder.WithSummary($"Returns {summary}").Produces<IEnumerable<T>>().WithOpenApi();
+	}
+
+	public static void Add(this OpenApiResponses responses, int statusCode, string description)
+	{
+		responses.Add(statusCode.ToString(), new OpenApiResponse { Description = description });
 	}
 
 	public static void AddGeneric400(this OpenApiResponses responses)

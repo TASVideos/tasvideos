@@ -20,6 +20,21 @@ internal static class ApiResults
 			: Results.ValidationProblem(validationResult.ToDictionary());
 	}
 
+	public static IResult? Authorize(PermissionTo permission, HttpContext context)
+	{
+		if (!context.User.IsLoggedIn())
+		{
+			return Unauthorized();
+		}
+
+		if (!context.User.Has(permission))
+		{
+			return Forbid();
+		}
+
+		return null;
+	}
+
 	public static IResult BadRequest()
 	{
 		return Results.Json(new { Title = "Bad Request", Status = 400 }, statusCode: 400);

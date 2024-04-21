@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-
-namespace TASVideos.Api;
+﻿namespace TASVideos.Api;
 
 internal static class ClassesEndpoints
 {
