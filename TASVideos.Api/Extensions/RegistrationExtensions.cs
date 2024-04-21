@@ -38,78 +38,43 @@ internal static class RegistrationExtensions
 		responses.Add("404", new OpenApiResponse { Description = $"{resourceName} with the given id could not be found" });
 	}
 
-	public static void AddFromQuery(this IList<OpenApiParameter> list, string name, string description, Type type)
+	public static void DescribeBaseQueryParams(this IList<OpenApiParameter> list)
 	{
-		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(type) } });
-	}
-
-	public static void AddBoolFromQuery(this IList<OpenApiParameter> list, string name, string description)
-	{
-		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(typeof(bool)) } });
-	}
-
-	public static void AddIntFromQuery(this IList<OpenApiParameter> list, string name, string description)
-	{
-		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(typeof(int)) } });
-	}
-
-	public static void AddStringFromQuery(this IList<OpenApiParameter> list, string name, string description)
-	{
-		list.Add(new OpenApiParameter { In = ParameterLocation.Query, Name = name, Description = description, Schema = new OpenApiSchema { Type = GenerateType(typeof(string)) } });
-	}
-
-	public static void AddBaseQueryParams(this IList<OpenApiParameter> list)
-	{
-		list.AddFromQuery(
-			"pageSize",
+		list.Describe(
+			"PageSize",
 			"""
 			The total number of records to return.
 			If not specified, then a default number of records will be returned
-			""",
-			typeof(int));
-		list.AddFromQuery(
-			"currentPage",
+			""");
+		list.Describe(
+			"CurrentPage",
 			"""
 			The page to start returning records.
 			If not specified, then an offset of 1 will be used
-			""",
-			typeof(int));
-		list.AddFromQuery(
-			"sort",
+			""");
+		list.Describe(
+			"Sort",
 			"""
 			The fields to sort by.
 			If multiple sort parameters, the list should be comma separated.
 			Precede the parameter with a + or - to sort ascending or descending respectively.
 			If not specified, then a default sort will be used
-			""",
-			typeof(string));
-		list.AddFromQuery(
-			"fields",
+			""");
+		list.Describe(
+			"Fields",
 			"""
 			The fields to return.
 			If multiple, fields must be comma separated.
 			If not specified, then all fields will be returned
-			""",
-			typeof(string));
+			""");
 	}
 
-	private static string GenerateType(Type type)
+	public static void Describe(this IList<OpenApiParameter> list, string name, string description)
 	{
-		if (type == typeof(int))
+		var parameter = list.FirstOrDefault(l => l.Name == name);
+		if (parameter is not null)
 		{
-			return "integer($int32)";
+			parameter.Description = description;
 		}
-
-		if (type == typeof(bool))
-		{
-			return "boolean";
-		}
-
-		if (type == typeof(string))
-		{
-			return "string";
-		}
-
-		throw new NotImplementedException($"support for type {type.Name} not supported yet.");
 	}
 }

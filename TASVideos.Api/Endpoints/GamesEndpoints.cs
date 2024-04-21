@@ -37,8 +37,8 @@ internal static class GamesEndpoints
 		.Produces<IEnumerable<GamesResponse>>()
 		.WithOpenApi(g =>
 		{
-			g.Parameters.AddStringFromQuery("systems", "The system codes to filter by");
-			g.Parameters.AddBaseQueryParams();
+			g.Parameters.Describe("Systems", "The system codes to filter by");
+			g.Parameters.DescribeBaseQueryParams();
 			g.Responses.AddGeneric400();
 			return g;
 		});
