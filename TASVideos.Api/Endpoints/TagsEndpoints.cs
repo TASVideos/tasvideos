@@ -29,7 +29,7 @@ internal static class TagsEndpoints
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
 			{
-				return Results.ValidationProblem(validationResult.ToDictionary());
+				return ApiResults.ValidationError(validationResult);
 			}
 
 			var tags = (await tagService.GetAll())
@@ -64,7 +64,7 @@ internal static class TagsEndpoints
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
 			{
-				return Results.ValidationProblem(validationResult.ToDictionary());
+				return ApiResults.ValidationError(validationResult);
 			}
 
 			var (id, result) = await tagService.Add(request.Code, request.DisplayName);
@@ -107,7 +107,7 @@ internal static class TagsEndpoints
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
 			{
-				return Results.ValidationProblem(validationResult.ToDictionary());
+				return ApiResults.ValidationError(validationResult);
 			}
 
 			var result = await tagService.Edit(id, request.Code, request.DisplayName);

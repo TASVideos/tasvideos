@@ -33,7 +33,7 @@ internal static class PublicationsEndpoints
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
 			{
-				return Results.ValidationProblem(validationResult.ToDictionary());
+				return ApiResults.ValidationError(validationResult);
 			}
 
 			var pubs = (await db.Publications

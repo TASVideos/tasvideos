@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Api;
+﻿using FluentValidation.Results;
+
+namespace TASVideos.Api;
 
 internal static class ApiResults
 {
@@ -11,4 +13,10 @@ internal static class ApiResults
 	{
 		return Results.Json(new { Title = "Forbidden", Status = 403 }, statusCode: 403);
 	}
+
+	public static IResult ValidationError(ValidationResult validationResult)
+	{
+		return Results.ValidationProblem(validationResult.ToDictionary());
+	}
+
 }

@@ -12,7 +12,7 @@ internal static class UsersEndpoints
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
 			{
-				return Results.ValidationProblem(validationResult.ToDictionary());
+				return ApiResults.ValidationError(validationResult);
 			}
 
 			var token = await jwtAuthenticator.Authenticate(request.Username, request.Password);

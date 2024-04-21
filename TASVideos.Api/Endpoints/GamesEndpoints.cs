@@ -32,7 +32,7 @@ internal static class GamesEndpoints
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
 			{
-				return Results.ValidationProblem(validationResult.ToDictionary());
+				return ApiResults.ValidationError(validationResult);
 			}
 
 			var games = (await db.Games.ForSystemCodes(request.SystemCodes)

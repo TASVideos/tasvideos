@@ -31,7 +31,7 @@ internal static class SubmissionsEndpoints
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
 			{
-				return Results.ValidationProblem(validationResult.ToDictionary());
+				return ApiResults.ValidationError(validationResult);
 			}
 
 			var subs = (await db.Submissions
