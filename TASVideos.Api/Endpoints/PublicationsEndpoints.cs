@@ -27,7 +27,7 @@ internal static class PublicationsEndpoints
 			return g;
 		});
 
-		app.MapGet("api/v1/publications", async (PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
+		app.MapGet("api/v1/publications", async ([AsParameters]PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)

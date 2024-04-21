@@ -27,26 +27,4 @@ internal class PublicationsRequest : ApiRequest, IPublicationTokens
 	ICollection<int> IPublicationTokens.GameGroups => GameGroupIds.CsvToInts();
 	string IPublicationTokens.SortBy => "";
 	int? IPublicationTokens.Limit => null;
-
-	public static new ValueTask<PublicationsRequest> BindAsync(HttpContext context)
-	{
-		return ValueTask.FromResult(new PublicationsRequest
-		{
-			Sort = context.Request.Query["Sort"],
-			Fields = context.Request.Query["Fields"],
-			PageSize = context.Request.GetInt(nameof(PageSize)) ?? 100,
-			CurrentPage = context.Request.GetInt(nameof(CurrentPage)) ?? 1,
-			StartYear = context.Request.GetInt(nameof(StartYear)),
-			EndYear = context.Request.GetInt(nameof(EndYear)),
-			Systems = context.Request.Query["Systems"],
-			ClassNames = context.Request.Query["ClassNames"],
-			GenreNames = context.Request.Query["GenreNames"],
-			TagNames = context.Request.Query["TagNames"],
-			FlagNames = context.Request.Query["FlagNames"],
-			GameIds = context.Request.Query["GameIds"],
-			GameGroupIds = context.Request.Query["GameGroupIds"],
-			ShowObsoleted = context.Request.GetBool(nameof(ShowObsoleted)) ?? false,
-			OnlyObsoleted = context.Request.GetBool(nameof(OnlyObsoleted)) ?? false
-		});
-	}
 }

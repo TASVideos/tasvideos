@@ -25,7 +25,7 @@ internal static class SubmissionsEndpoints
 			return g;
 		});
 
-		app.MapGet("api/v1/submissions", async (SubmissionsRequest request, IValidator<SubmissionsRequest> validator, ApplicationDbContext db) =>
+		app.MapGet("api/v1/submissions", async ([AsParameters]SubmissionsRequest request, IValidator<SubmissionsRequest> validator, ApplicationDbContext db) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)

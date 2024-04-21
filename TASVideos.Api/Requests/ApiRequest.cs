@@ -17,17 +17,6 @@ internal class ApiRequest : IFieldSelectable, ISortable, IPageable
 	public string? Sort { get; init; }
 	public string? Fields { get; init; }
 
-	public static ValueTask<ApiRequest> BindAsync(HttpContext context)
-	{
-		return ValueTask.FromResult(new ApiRequest
-		{
-			Sort = context.Request.Query["Sort"],
-			Fields = context.Request.Query["Fields"],
-			PageSize = context.Request.GetInt(nameof(PageSize)) ?? 100,
-			CurrentPage = context.Request.GetInt(nameof(CurrentPage)) ?? 1
-		});
-	}
-
 	public const int MaxPageSize = 100;
 }
 

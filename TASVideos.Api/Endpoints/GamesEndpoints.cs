@@ -26,7 +26,7 @@ internal static class GamesEndpoints
 			return g;
 		});
 
-		app.MapGet("api/v1/games", async (GamesRequest request, IValidator<GamesRequest> validator, ApplicationDbContext db) =>
+		app.MapGet("api/v1/games", async ([AsParameters]GamesRequest request, IValidator<GamesRequest> validator, ApplicationDbContext db) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)

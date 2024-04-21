@@ -26,22 +26,4 @@ internal class SubmissionsRequest : ApiRequest, ISubmissionFilter
 
 	ICollection<string> ISubmissionFilter.Systems => Systems.CsvToStrings();
 	ICollection<int> ISubmissionFilter.GameIds => Games.CsvToInts();
-
-	public static new ValueTask<SubmissionsRequest> BindAsync(HttpContext context)
-	{
-		return ValueTask.FromResult(new SubmissionsRequest
-		{
-			Sort = context.Request.Query["Sort"],
-			Fields = context.Request.Query["Fields"],
-			PageSize = context.Request.GetInt(nameof(PageSize)) ?? 100,
-			CurrentPage = context.Request.GetInt(nameof(CurrentPage)) ?? 1,
-			StartYear = context.Request.GetInt(nameof(StartYear)),
-			EndYear = context.Request.GetInt(nameof(EndYear)),
-			StartType = context.Request.GetInt(nameof(StartType)),
-			Statuses = context.Request.Query["Statuses"],
-			User = context.Request.Query["User"],
-			Systems = context.Request.Query["Systems"],
-			Games = context.Request.Query["Games"]
-		});
-	}
 }

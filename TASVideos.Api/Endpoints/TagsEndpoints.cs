@@ -24,7 +24,7 @@ internal static class TagsEndpoints
 		})
 		.WithName("GetByTagId");
 
-		app.MapGet("api/v1/tags", async (ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>
+		app.MapGet("api/v1/tags", async ([AsParameters]ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
