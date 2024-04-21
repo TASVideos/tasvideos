@@ -76,7 +76,7 @@ internal static class RegistrationExtensions
 			typeof(string));
 	}
 
-	public static string GenerateType(Type type)
+	private static string GenerateType(Type type)
 	{
 		if (type == typeof(int))
 		{
