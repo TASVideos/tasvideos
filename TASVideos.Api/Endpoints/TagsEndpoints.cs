@@ -52,6 +52,11 @@ internal static class TagsEndpoints
 
 		group.MapPost("", async (TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
 		{
+			if (!user.IsLoggedIn())
+			{
+				return Results.Unauthorized();
+			}
+
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
 				return Results.Forbid();
@@ -79,7 +84,6 @@ internal static class TagsEndpoints
 					return Results.BadRequest();
 			}
 		})
-		.RequireAuthorization()
 		.WithSummary("Creates a new tag")
 		.WithOpenApi(g =>
 		{
@@ -91,6 +95,11 @@ internal static class TagsEndpoints
 
 		group.MapPut("{id}", async (int id, TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
 		{
+			if (!user.IsLoggedIn())
+			{
+				return Results.Unauthorized();
+			}
+
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
 				return Results.Forbid();
@@ -119,7 +128,6 @@ internal static class TagsEndpoints
 					return Results.BadRequest();
 			}
 		})
-		.RequireAuthorization()
 		.WithTags("Tags")
 		.WithSummary("Updates an existing tag")
 		.WithOpenApi(g =>
@@ -132,6 +140,11 @@ internal static class TagsEndpoints
 
 		group.MapDelete("{id}", async (int id, ITagService tagService, ClaimsPrincipal user) =>
 		{
+			if (!user.IsLoggedIn())
+			{
+				return Results.Unauthorized();
+			}
+
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
 				return Results.Forbid();
@@ -146,7 +159,6 @@ internal static class TagsEndpoints
 				_ => Results.BadRequest()
 			};
 		})
-		.RequireAuthorization()
 		.WithTags("Tags")
 		.WithSummary("Deletes an existing tag")
 		.WithOpenApi(g =>
