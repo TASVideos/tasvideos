@@ -14,10 +14,7 @@ internal static class PublicationsEndpoints
 			var pub = await db.Publications
 				.ToPublicationsResponse()
 				.SingleOrDefaultAsync(p => p.Id == id);
-
-			return pub is null
-				? Results.NotFound()
-				: Results.Ok(pub);
+			return ApiResults.OkOr404(pub);
 		})
 		.DocumentIdGet("Returns a publication with the given id.", "publication", typeof(PublicationsResponse));
 

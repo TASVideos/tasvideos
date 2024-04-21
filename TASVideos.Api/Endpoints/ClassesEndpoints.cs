@@ -11,9 +11,7 @@ internal static class ClassesEndpoints
 		group.MapGet("{id}", async (int id, IClassService classService) =>
 		{
 			var publicationClass = await classService.GetById(id);
-			return publicationClass is null
-				? Results.NotFound()
-				: Results.Ok(publicationClass);
+			return ApiResults.OkOr404(publicationClass);
 		})
 		.DocumentIdGet("Returns a publication class with the given id.", "publication class", typeof(PublicationClass));
 

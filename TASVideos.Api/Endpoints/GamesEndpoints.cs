@@ -11,12 +11,10 @@ internal static class GamesEndpoints
 
 		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
 		{
-			var pub = await db.Games
+			var game = await db.Games
 				.ToGamesResponse()
-				.SingleOrDefaultAsync(p => p.Id == id);
-			return pub is null
-				? Results.NotFound()
-				: Results.Ok(pub);
+				.SingleOrDefaultAsync(g => g.Id == id);
+			return ApiResults.OkOr404(game);
 		})
 		.DocumentIdGet("Returns a game with the given id.", "game", typeof(GamesResponse));
 

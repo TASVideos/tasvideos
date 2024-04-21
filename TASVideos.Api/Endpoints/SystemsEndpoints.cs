@@ -12,10 +12,7 @@ internal static class SystemsEndpoints
 		{
 			var system = (await systemService.GetAll())
 				.SingleOrDefault(p => p.Id == id);
-
-			return system is null
-				? Results.NotFound()
-				: Results.Ok(system);
+			return ApiResults.OkOr404(system);
 		})
 		.DocumentIdGet("Returns a game system  with the given id.", "system", typeof(SystemsResponse));
 

@@ -12,10 +12,7 @@ internal static class SubmissionsEndpoints
 			var sub = await db.Submissions
 				.ToSubmissionsResponse()
 				.SingleOrDefaultAsync(p => p.Id == id);
-
-			return sub is null
-				? Results.NotFound()
-				: Results.Ok(sub);
+			return ApiResults.OkOr404(sub);
 		})
 		.DocumentIdGet("Returns a submission with the given id.", "submission", typeof(SubmissionsResponse));
 

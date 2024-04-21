@@ -13,7 +13,7 @@ internal static class TagsEndpoints
 		group.MapGet("{id}", async (int id, ITagService tagService) =>
 		{
 			var tag = await tagService.GetById(id);
-			return tag is null ? Results.NotFound() : Results.Ok(tag);
+			return ApiResults.OkOr404(tag);
 		})
 		.DocumentIdGet("Returns a tag with the given id.", "tag")
 		.WithName("GetByTagId");
@@ -108,7 +108,7 @@ internal static class TagsEndpoints
 			switch (result)
 			{
 				case TagEditResult.NotFound:
-					return Results.NotFound();
+					return ApiResults.NotFound();
 				case TagEditResult.DuplicateCode:
 					var error = new Dictionary<string, string>
 					{
@@ -145,7 +145,7 @@ internal static class TagsEndpoints
 			var result = await tagService.Delete(id);
 			return result switch
 			{
-				TagDeleteResult.NotFound => Results.NotFound(),
+				TagDeleteResult.NotFound => ApiResults.NotFound(),
 				TagDeleteResult.InUse => Results.Conflict("The tag is in use and cannot be deleted."),
 				TagDeleteResult.Success => Results.Ok(),
 				_ => Results.BadRequest()
