@@ -12,7 +12,8 @@ public static class WebApplicationExtensions
 			.MapGames()
 			.MapSystems()
 			.MapUsers()
-			.MapTags();
+			.MapTags()
+			.MapClasses();
 
 		UseSwaggerUi(app, env);
 
