@@ -8,11 +8,8 @@ internal static class ClassesEndpoints
 	{
 		var group = app.MapApiGroup("Classes");
 
-		group.MapGet("{id}", async (int id, IClassService classService) =>
-		{
-			var publicationClass = await classService.GetById(id);
-			return ApiResults.OkOr404(publicationClass);
-		})
+		group.MapGet("{id}", async (int id, IClassService classService)
+				=> ApiResults.OkOr404(await classService.GetById(id)))
 		.DocumentIdGet("Returns a publication class with the given id.", "publication class", typeof(PublicationClass));
 
 		group.MapGet("", async (IClassService classService) =>

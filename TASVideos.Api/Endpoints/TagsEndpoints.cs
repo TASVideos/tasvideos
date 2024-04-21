@@ -10,11 +10,8 @@ internal static class TagsEndpoints
 	{
 		var group = app.MapApiGroup("Tags");
 
-		group.MapGet("{id}", async (int id, ITagService tagService) =>
-		{
-			var tag = await tagService.GetById(id);
-			return ApiResults.OkOr404(tag);
-		})
+		group.MapGet("{id}", async (int id, ITagService tagService)
+				=> ApiResults.OkOr404(await tagService.GetById(id)))
 		.DocumentIdGet("Returns a tag with the given id.", "tag")
 		.WithName("GetByTagId");
 

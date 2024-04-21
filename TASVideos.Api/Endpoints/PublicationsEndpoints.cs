@@ -2,20 +2,16 @@
 
 namespace TASVideos.Api;
 
-// TODO: old swagger UI did client side validation of int, not letting non-ints be typed in, how is this done?
 internal static class PublicationsEndpoints
 {
 	public static WebApplication MapPublications(this WebApplication app)
 	{
 		var group = app.MapApiGroup("Publications");
 
-		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
-		{
-			var pub = await db.Publications
-				.ToPublicationsResponse()
-				.SingleOrDefaultAsync(p => p.Id == id);
-			return ApiResults.OkOr404(pub);
-		})
+		group.MapGet("{id}", async (int id, ApplicationDbContext db)
+				=> ApiResults.OkOr404(await db.Publications
+					.ToPublicationsResponse()
+					.SingleOrDefaultAsync(p => p.Id == id)))
 		.DocumentIdGet("Returns a publication with the given id.", "publication", typeof(PublicationsResponse));
 
 		group.MapGet("", async ([AsParameters]PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>

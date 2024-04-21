@@ -8,12 +8,8 @@ internal static class SystemsEndpoints
 	{
 		var group = app.MapApiGroup("Systems");
 
-		group.MapGet("{id}", async (int id, IGameSystemService systemService) =>
-		{
-			var system = (await systemService.GetAll())
-				.SingleOrDefault(p => p.Id == id);
-			return ApiResults.OkOr404(system);
-		})
+		group.MapGet("{id}", async (int id, IGameSystemService systemService)
+				=> ApiResults.OkOr404((await systemService.GetAll()).SingleOrDefault(p => p.Id == id)))
 		.DocumentIdGet("Returns a game system  with the given id.", "system", typeof(SystemsResponse));
 
 		group.MapGet("", async (IGameSystemService systemService) => Results.Ok((object?)await systemService.GetAll()))
