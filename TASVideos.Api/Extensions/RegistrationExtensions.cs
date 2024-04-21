@@ -25,6 +25,16 @@ internal static class RegistrationExtensions
 			});
 	}
 
+	public static RouteHandlerBuilder Receives<T>(this RouteHandlerBuilder builder)
+	{
+		return builder.WithOpenApi(g =>
+		{
+			g.Parameters.Describe<T>();
+			g.Responses.AddGeneric400();
+			return g;
+		});
+	}
+
 	public static void AddGeneric400(this OpenApiResponses responses)
 	{
 		responses.Add("400", new OpenApiResponse { Description = "The request parameters are invalid." });

@@ -33,13 +33,8 @@ internal static class SubmissionsEndpoints
 			return Results.Ok(subs);
 		})
 		.WithSummary("Returns a list of submissions, filtered by the given criteria.")
-		.Produces<IEnumerable<SubmissionsResponse>>()
-		.WithOpenApi(g =>
-		{
-			g.Parameters.Describe<SubmissionsRequest>();
-			g.Responses.AddGeneric400();
-			return g;
-		});
+		.Receives<SubmissionsRequest>()
+		.Produces<IEnumerable<SubmissionsResponse>>();
 
 		return app;
 	}

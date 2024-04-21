@@ -34,13 +34,8 @@ internal static class GamesEndpoints
 			return Results.Ok(games);
 		})
 		.WithSummary("Returns a list of available games.")
-		.Produces<IEnumerable<GamesResponse>>()
-		.WithOpenApi(g =>
-		{
-			g.Parameters.Describe<GamesRequest>();
-			g.Responses.AddGeneric400();
-			return g;
-		});
+		.Receives<GamesRequest>()
+		.Produces<IEnumerable<GamesResponse>>();
 
 		return app;
 	}

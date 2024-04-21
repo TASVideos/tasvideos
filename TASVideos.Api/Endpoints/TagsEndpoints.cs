@@ -34,13 +34,8 @@ internal static class TagsEndpoints
 			return Results.Ok(tags);
 		})
 		.WithSummary("Returns a list of available tags")
-		.Produces<IEnumerable<TagsResponse>>()
-		.WithOpenApi(g =>
-		{
-			g.Parameters.Describe<ApiRequest>();
-			g.Responses.AddGeneric400();
-			return g;
-		});
+		.Receives<ApiRequest>()
+		.Produces<IEnumerable<TagsResponse>>();
 
 		group.MapPost("", async (TagAddEditRequest request, ITagService tagService, HttpContext context) =>
 		{

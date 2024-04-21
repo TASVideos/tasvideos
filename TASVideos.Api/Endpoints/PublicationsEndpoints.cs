@@ -34,13 +34,8 @@ internal static class PublicationsEndpoints
 			return Results.Ok(pubs);
 		})
 		.WithSummary("Returns a list of publications, filtered by the given criteria.")
-		.Produces<IEnumerable<PublicationsResponse>>()
-		.WithOpenApi(g =>
-		{
-			g.Parameters.Describe<PublicationsRequest>();
-			g.Responses.AddGeneric400();
-			return g;
-		});
+		.Receives<PublicationsRequest>()
+		.Produces<IEnumerable<PublicationsResponse>>();
 
 		return app;
 	}
