@@ -27,6 +27,8 @@ public class ApiRequest : IFieldSelectable, ISortable, IPageable
 			CurrentPage = context.Request.GetInt(nameof(CurrentPage)) ?? 1
 		});
 	}
+
+	public const int MaxPageSize = 100;
 }
 
 internal static class RequestableExtensions
@@ -34,7 +36,7 @@ internal static class RequestableExtensions
 	public static IQueryable<T> Paginate<T>(this IQueryable<T> source, ApiRequest paging)
 	{
 		int offset = paging.Offset();
-		int limit = paging.PageSize ?? ApiConstants.MaxPageSize;
+		int limit = paging.PageSize ?? ApiRequest.MaxPageSize;
 		return source
 			.Skip(offset)
 			.Take(limit);
