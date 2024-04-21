@@ -1,11 +1,9 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
 using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Api.Controllers;
+namespace TASVideos.Api;
 
-internal static class GamesApiMapper
+internal static class GamesEndpoints
 {
 	public static WebApplication MapGames(this WebApplication app)
 	{

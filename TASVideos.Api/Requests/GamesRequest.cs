@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Http;
-
-namespace TASVideos.Api.Requests;
+﻿namespace TASVideos.Api.Requests;
 
 public class GamesRequest : ApiRequest
 {
@@ -9,18 +6,15 @@ public class GamesRequest : ApiRequest
 
 	internal IEnumerable<string> SystemCodes => Systems.CsvToStrings();
 
-	public static new async ValueTask<GamesRequest> BindAsync(HttpContext context, ParameterInfo parameter)
+	public static new ValueTask<GamesRequest> BindAsync(HttpContext context)
 	{
-		var baseResult = await ApiRequest.BindAsync(context, parameter);
-
-		// TODO: ughhhhhhhhhhhhhhhhhhhhhhhhh
-		return new GamesRequest
+		return ValueTask.FromResult(new GamesRequest
 		{
-			PageSize = baseResult.PageSize,
-			CurrentPage = baseResult.CurrentPage,
-			Sort = baseResult.Sort,
-			Fields = baseResult.Fields,
+			Sort = context.Request.Query["Sort"],
+			Fields = context.Request.Query["Fields"],
+			PageSize = context.Request.GetInt(nameof(PageSize)) ?? 100,
+			CurrentPage = context.Request.GetInt(nameof(CurrentPage)) ?? 1,
 			Systems = context.Request.Query["Systems"]
-		};
+		});
 	}
 }

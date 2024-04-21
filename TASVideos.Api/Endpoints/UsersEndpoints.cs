@@ -1,11 +1,9 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.OpenApi.Models;
 
-namespace TASVideos.Api.Controllers;
+namespace TASVideos.Api;
 
-internal static class UsersApiMapper
+internal static class UsersEndpoints
 {
 	public static WebApplication MapUsers(this WebApplication app)
 	{

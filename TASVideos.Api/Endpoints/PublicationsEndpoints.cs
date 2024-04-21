@@ -1,14 +1,12 @@
-﻿using FluentValidation;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Builder;
 
-namespace TASVideos.Api.Controllers;
+namespace TASVideos.Api;
 
 // TODO: old swagger UI did client side validation of int, not letting non-ints be typed in, how is this done?
 // JWT authentication
 // RequirePermission
 // Validate : ActionFilterAttribute
-internal static class PublicationsApiMapper
+internal static class PublicationsEndpoints
 {
 	public static WebApplication MapPublications(this WebApplication app)
 	{

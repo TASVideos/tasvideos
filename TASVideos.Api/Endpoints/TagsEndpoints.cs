@@ -1,13 +1,11 @@
 ﻿using System.Security.Claims;
-using FluentValidation;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
 
-namespace TASVideos.Api.Controllers;
+namespace TASVideos.Api;
 
 // POST/PUT todos - Results.Forbid() returns the login screen and a 200
-internal static class TagsApiMapper
+internal static class TagsEndpoints
 {
 	public static WebApplication MapTags(this WebApplication app)
 	{

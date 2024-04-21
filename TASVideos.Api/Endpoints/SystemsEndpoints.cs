@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 
-namespace TASVideos.Api.Controllers;
+namespace TASVideos.Api;
 
-internal static class SystemsApiMapper
+internal static class SystemsEndpoints
 {
 	public static WebApplication MapSystems(this WebApplication app)
 	{

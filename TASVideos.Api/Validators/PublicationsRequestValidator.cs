@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace TASVideos.Api.Validators;
+﻿namespace TASVideos.Api.Validators;
 public class PublicationsRequestValidator : AbstractValidator<PublicationsRequest>
 {
 	public PublicationsRequestValidator()

@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Http;
-
-namespace TASVideos.Api.Requests;
+﻿namespace TASVideos.Api.Requests;
 
 public class PublicationsRequest : ApiRequest, IPublicationTokens
 {
@@ -31,49 +28,25 @@ public class PublicationsRequest : ApiRequest, IPublicationTokens
 	string IPublicationTokens.SortBy => "";
 	int? IPublicationTokens.Limit => null;
 
-	public static new async ValueTask<PublicationsRequest> BindAsync(HttpContext context, ParameterInfo parameter)
+	public static new ValueTask<PublicationsRequest> BindAsync(HttpContext context)
 	{
-		var baseResult = await ApiRequest.BindAsync(context, parameter);
-
-		// TODO: ughhhhhhhhhhhhhhhhhhhhhhhhh
-		var result = new PublicationsRequest
+		return ValueTask.FromResult(new PublicationsRequest
 		{
-			PageSize = baseResult.PageSize,
-			CurrentPage = baseResult.CurrentPage,
-			Sort = baseResult.Sort,
-			Fields = baseResult.Fields
-		};
-
-		if (int.TryParse(context.Request.Query["StartYear"], out var startYear))
-		{
-			result.StartYear = startYear;
-		}
-
-		if (int.TryParse(context.Request.Query["EndYear"], out var endYear))
-		{
-			result.EndYear = endYear;
-		}
-
-		result.Systems = context.Request.Query["Systems"];
-		result.ClassNames = context.Request.Query["ClassNames"];
-		result.GenreNames = context.Request.Query["GenreNames"];
-		result.TagNames = context.Request.Query["TagNames"];
-		result.FlagNames = context.Request.Query["FlagNames"];
-		result.FlagNames = context.Request.Query["FlagNames"];
-
-		if (bool.TryParse(context.Request.Query["ShowObsoleted"], out var showObsoleted))
-		{
-			result.ShowObsoleted = showObsoleted;
-		}
-
-		if (bool.TryParse(context.Request.Query["OnlyObsoleted"], out var onlyObsoleted))
-		{
-			result.OnlyObsoleted = onlyObsoleted;
-		}
-
-		result.GameIds = context.Request.Query["GameIds"];
-		result.GameGroupIds = context.Request.Query["GameGroupIds"];
-
-		return result;
+			Sort = context.Request.Query["Sort"],
+			Fields = context.Request.Query["Fields"],
+			PageSize = context.Request.GetInt(nameof(PageSize)) ?? 100,
+			CurrentPage = context.Request.GetInt(nameof(CurrentPage)) ?? 1,
+			StartYear = context.Request.GetInt(nameof(StartYear)),
+			EndYear = context.Request.GetInt(nameof(EndYear)),
+			Systems = context.Request.Query["Systems"],
+			ClassNames = context.Request.Query["ClassNames"],
+			GenreNames = context.Request.Query["GenreNames"],
+			TagNames = context.Request.Query["TagNames"],
+			FlagNames = context.Request.Query["FlagNames"],
+			GameIds = context.Request.Query["GameIds"],
+			GameGroupIds = context.Request.Query["GameGroupIds"],
+			ShowObsoleted = context.Request.GetBool(nameof(ShowObsoleted)) ?? false,
+			OnlyObsoleted = context.Request.GetBool(nameof(OnlyObsoleted)) ?? false
+		});
 	}
 }

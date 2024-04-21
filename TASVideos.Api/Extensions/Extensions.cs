@@ -1,13 +1,7 @@
 ﻿namespace TASVideos.Api;
 
-/// <summary>
-/// API specific extension methods.
-/// </summary>
-public static class Extensions
+internal static class Extensions
 {
-	/// <summary>
-	/// Converts a start and end year into a list of years.
-	/// </summary>
 	public static IEnumerable<int> YearRange(this int? start, int? end)
 	{
 		if (!start.HasValue && !end.HasValue)
@@ -19,5 +13,15 @@ public static class Extensions
 		var endYear = end ?? 2050; // Well after the life expectancy of this code
 
 		return Enumerable.Range(startYear, endYear - endYear + 1);
+	}
+
+	public static int? GetInt(this HttpRequest request, string key)
+	{
+		return int.TryParse(request.Query[key], out var val) ? val : null;
+	}
+
+	public static bool? GetBool(this HttpRequest request, string key)
+	{
+		return bool.TryParse(request.Query[key], out var val) ? val : null;
 	}
 }

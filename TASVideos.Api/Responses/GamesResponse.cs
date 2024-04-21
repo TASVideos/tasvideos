@@ -1,11 +1,7 @@
 ﻿using TASVideos.Data.Entity.Game;
 
-#pragma warning disable 1591
 namespace TASVideos.Api.Responses;
 
-/// <summary>
-/// Represents a game returned by the Games endpoint.
-/// </summary>
 public class GamesResponse
 {
 	[Sortable]

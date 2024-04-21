@@ -1,7 +1,4 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Http;
-
-/*
+﻿/*
 * General API TODOs:
 * Field selection is purely post-processing and returns distinct objects,
 * so the record count might be less than the requested count
@@ -15,33 +12,24 @@ namespace TASVideos.Api.Requests;
 /// </summary>
 public class ApiRequest : IFieldSelectable, ISortable, IPageable
 {
-	public int? PageSize { get; set; } = 100;
-	public int? CurrentPage { get; set; } = 1;
-	public string? Sort { get; set; }
-	public string? Fields { get; set; }
+	public int? PageSize { get; init; } = 100;
+	public int? CurrentPage { get; init; } = 1;
+	public string? Sort { get; init; }
+	public string? Fields { get; init; }
 
-	public static ValueTask<ApiRequest> BindAsync(HttpContext context, ParameterInfo parameter)
+	public static ValueTask<ApiRequest> BindAsync(HttpContext context)
 	{
-		var result = new ApiRequest
+		return ValueTask.FromResult(new ApiRequest
 		{
 			Sort = context.Request.Query["Sort"],
-			Fields = context.Request.Query["Fields"]
-		};
-		if (int.TryParse(context.Request.Query["PageSize"], out var pageSize))
-		{
-			result.PageSize = pageSize;
-		}
-
-		if (int.TryParse(context.Request.Query["PageSize"], out var currentPage))
-		{
-			result.CurrentPage = currentPage;
-		}
-
-		return ValueTask.FromResult(result);
+			Fields = context.Request.Query["Fields"],
+			PageSize = context.Request.GetInt(nameof(PageSize)) ?? 100,
+			CurrentPage = context.Request.GetInt(nameof(CurrentPage)) ?? 1
+		});
 	}
 }
 
-public static class RequestableExtensions
+internal static class RequestableExtensions
 {
 	public static IQueryable<T> Paginate<T>(this IQueryable<T> source, ApiRequest paging)
 	{
