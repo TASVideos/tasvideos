@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Responses;
 
-public class PublicationsResponse
+internal class PublicationsResponse
 {
 	[Sortable]
 	public int Id { get; init; }

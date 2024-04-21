@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Requests;
 
-public class PublicationsRequest : ApiRequest, IPublicationTokens
+internal class PublicationsRequest : ApiRequest, IPublicationTokens
 {
 	public string? Systems { get; set; }
 	public string? ClassNames { get; set; }

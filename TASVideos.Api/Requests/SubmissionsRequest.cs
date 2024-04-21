@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Requests;
 
-public class SubmissionsRequest : ApiRequest, ISubmissionFilter
+internal class SubmissionsRequest : ApiRequest, ISubmissionFilter
 {
 	public string? Statuses { get; set; }
 	public string? User { get; set; }

@@ -10,7 +10,7 @@ namespace TASVideos.Api.Requests;
 /// Represents a standard API GET request.
 /// Supports sorting, paging, and field selection parameters.
 /// </summary>
-public class ApiRequest : IFieldSelectable, ISortable, IPageable
+internal class ApiRequest : IFieldSelectable, ISortable, IPageable
 {
 	public int? PageSize { get; init; } = 100;
 	public int? CurrentPage { get; init; } = 1;

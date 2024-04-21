@@ -2,7 +2,7 @@
 
 namespace TASVideos.Api.Responses;
 
-public class GamesResponse
+internal class GamesResponse
 {
 	[Sortable]
 	public int Id { get; init; }

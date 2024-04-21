@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Requests;
 
-public class GamesRequest : ApiRequest
+internal class GamesRequest : ApiRequest
 {
 	public string? Systems { get; init; }
 
