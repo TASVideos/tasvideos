@@ -59,9 +59,9 @@ internal static class TagsEndpoints
 
 			return result switch
 			{
-				TagEditResult.DuplicateCode => Results.Conflict($"{request.Code} already exists"),
+				TagEditResult.DuplicateCode => ApiResults.Conflict($"{request.Code} already exists"),
 				TagEditResult.Success => Results.CreatedAtRoute(routeName: "GetByTagId", routeValues: new { id }),
-				_ => Results.BadRequest()
+				_ => ApiResults.BadRequest()
 			};
 		})
 		.WithSummary("Creates a new tag")
@@ -77,7 +77,7 @@ internal static class TagsEndpoints
 		{
 			if (!context.User.IsLoggedIn())
 			{
-				return Results.Unauthorized();
+				return ApiResults.Unauthorized();
 			}
 
 			if (!context.User.Has(PermissionTo.TagMaintenance))
@@ -95,9 +95,9 @@ internal static class TagsEndpoints
 			return result switch
 			{
 				TagEditResult.NotFound => ApiResults.NotFound(),
-				TagEditResult.DuplicateCode => Results.Conflict($"{request.Code} already exists"),
+				TagEditResult.DuplicateCode => ApiResults.Conflict($"{request.Code} already exists"),
 				TagEditResult.Success => Results.Ok(),
-				_ => Results.BadRequest()
+				_ => ApiResults.BadRequest()
 			};
 		})
 		.WithSummary("Updates an existing tag")
@@ -113,7 +113,7 @@ internal static class TagsEndpoints
 		{
 			if (!user.IsLoggedIn())
 			{
-				return Results.Unauthorized();
+				return ApiResults.Unauthorized();
 			}
 
 			if (!user.Has(PermissionTo.TagMaintenance))
@@ -125,9 +125,9 @@ internal static class TagsEndpoints
 			return result switch
 			{
 				TagDeleteResult.NotFound => ApiResults.NotFound(),
-				TagDeleteResult.InUse => Results.Conflict("The tag is in use and cannot be deleted."),
+				TagDeleteResult.InUse => ApiResults.Conflict("The tag is in use and cannot be deleted."),
 				TagDeleteResult.Success => Results.Ok(),
-				_ => Results.BadRequest()
+				_ => ApiResults.BadRequest()
 			};
 		})
 		.WithSummary("Deletes an existing tag")

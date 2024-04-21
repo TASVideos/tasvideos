@@ -20,6 +20,11 @@ internal static class ApiResults
 			: Results.ValidationProblem(validationResult.ToDictionary());
 	}
 
+	public static IResult BadRequest()
+	{
+		return Results.Json(new { Title = "Bad Request", Status = 400 }, statusCode: 400);
+	}
+
 	public static IResult Unauthorized()
 	{
 		return Results.Json(new { Title = "Unauthorized", Status = 401 }, statusCode: 401);
@@ -33,5 +38,10 @@ internal static class ApiResults
 	public static IResult NotFound()
 	{
 		return Results.Json(new { Title = "Not Found", Status = 404 }, statusCode: 404);
+	}
+
+	public static IResult Conflict(string message)
+	{
+		return Results.Json(new { Title = "Conflict", Message = message, Status = 409 }, statusCode: 409);
 	}
 }
