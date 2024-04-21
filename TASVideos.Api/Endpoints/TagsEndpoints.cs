@@ -57,19 +57,12 @@ internal static class TagsEndpoints
 
 			var (id, result) = await tagService.Add(request.Code, request.DisplayName);
 
-			switch (result)
+			return result switch
 			{
-				case TagEditResult.DuplicateCode:
-					var error = new Dictionary<string, string>
-					{
-						["Code"] = $"{request.Code} already exists"
-					};
-					return Results.Conflict(error);
-				case TagEditResult.Success:
-					return Results.CreatedAtRoute(routeName: "GetByTagId", routeValues: new { id });
-				default:
-					return Results.BadRequest();
-			}
+				TagEditResult.DuplicateCode => Results.Conflict($"{request.Code} already exists"),
+				TagEditResult.Success => Results.CreatedAtRoute(routeName: "GetByTagId", routeValues: new { id }),
+				_ => Results.BadRequest()
+			};
 		})
 		.WithSummary("Creates a new tag")
 		.WithOpenApi(g =>
