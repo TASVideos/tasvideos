@@ -13,12 +13,12 @@ internal static class SubmissionsEndpoints
 					.SingleOrDefaultAsync(p => p.Id == id)))
 		.DocumentIdGet("submission", typeof(SubmissionsResponse));
 
-		group.MapGet("", async ([AsParameters]SubmissionsRequest request, IValidator<SubmissionsRequest> validator, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters]SubmissionsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
-			var validationResult = validator.Validate(request);
-			if (!validationResult.IsValid)
+			var validationError = ApiResults.Validate(request, context);
+			if (validationError is not null)
 			{
-				return ApiResults.ValidationError(validationResult);
+				return validationError;
 			}
 
 			var subs = (await db.Submissions

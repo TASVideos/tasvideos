@@ -1,4 +1,4 @@
-﻿using FluentValidation.Results;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace TASVideos.Api;
 
@@ -11,9 +11,13 @@ internal static class ApiResults
 			: Results.Ok(result);
 	}
 
-	public static IResult ValidationError(ValidationResult validationResult)
+	public static IResult? Validate<T>(T request, HttpContext context)
 	{
-		return Results.ValidationProblem(validationResult.ToDictionary());
+		var validator = context.RequestServices.GetRequiredService<IValidator<T>>();
+		var validationResult = validator.Validate(request);
+		return validationResult.IsValid
+			? null
+			: Results.ValidationProblem(validationResult.ToDictionary());
 	}
 
 	public static IResult Unauthorized()

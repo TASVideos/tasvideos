@@ -14,12 +14,12 @@ internal static class PublicationsEndpoints
 					.SingleOrDefaultAsync(p => p.Id == id)))
 		.DocumentIdGet("publication", typeof(PublicationsResponse));
 
-		group.MapGet("", async ([AsParameters]PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters]PublicationsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
-			var validationResult = validator.Validate(request);
-			if (!validationResult.IsValid)
+			var validationError = ApiResults.Validate(request, context);
+			if (validationError is not null)
 			{
-				return ApiResults.ValidationError(validationResult);
+				return validationError;
 			}
 
 			var pubs = (await db.Publications

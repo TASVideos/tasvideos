@@ -7,12 +7,12 @@ internal static class UsersEndpoints
 {
 	public static WebApplication MapUsers(this WebApplication app)
 	{
-		app.MapPost("api/v1/users/authenticate", async (AuthenticationRequest request, IValidator<AuthenticationRequest> validator, IJwtAuthenticator jwtAuthenticator) =>
+		app.MapPost("api/v1/users/authenticate", async (AuthenticationRequest request, HttpContext context, IJwtAuthenticator jwtAuthenticator) =>
 		{
-			var validationResult = validator.Validate(request);
-			if (!validationResult.IsValid)
+			var validationError = ApiResults.Validate(request, context);
+			if (validationError is not null)
 			{
-				return ApiResults.ValidationError(validationResult);
+				return validationError;
 			}
 
 			var token = await jwtAuthenticator.Authenticate(request.Username, request.Password);

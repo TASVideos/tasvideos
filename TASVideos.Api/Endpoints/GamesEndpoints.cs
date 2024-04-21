@@ -15,12 +15,12 @@ internal static class GamesEndpoints
 					.SingleOrDefaultAsync(g => g.Id == id)))
 		.DocumentIdGet("game", typeof(GamesResponse));
 
-		group.MapGet("", async ([AsParameters]GamesRequest request, IValidator<GamesRequest> validator, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters]GamesRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
-			var validationResult = validator.Validate(request);
-			if (!validationResult.IsValid)
+			var validationError = ApiResults.Validate(request, context);
+			if (validationError is not null)
 			{
-				return ApiResults.ValidationError(validationResult);
+				return validationError;
 			}
 
 			var games = (await db.Games.ForSystemCodes(request.SystemCodes)

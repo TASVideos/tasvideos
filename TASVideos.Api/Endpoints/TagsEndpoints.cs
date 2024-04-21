@@ -15,12 +15,12 @@ internal static class TagsEndpoints
 		.DocumentIdGet("tag")
 		.WithName("GetByTagId");
 
-		group.MapGet("", async ([AsParameters]ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>
+		group.MapGet("", async ([AsParameters]ApiRequest request, HttpContext context, ITagService tagService) =>
 		{
-			var validationResult = validator.Validate(request);
-			if (!validationResult.IsValid)
+			var validationError = ApiResults.Validate(request, context);
+			if (validationError is not null)
 			{
-				return ApiResults.ValidationError(validationResult);
+				return validationError;
 			}
 
 			var tags = (await tagService.GetAll())
@@ -40,22 +40,22 @@ internal static class TagsEndpoints
 			return g;
 		});
 
-		group.MapPost("", async (TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
+		group.MapPost("", async (TagAddEditRequest request, ITagService tagService, HttpContext context) =>
 		{
-			if (!user.IsLoggedIn())
+			if (!context.User.IsLoggedIn())
 			{
 				return ApiResults.Unauthorized();
 			}
 
-			if (!user.Has(PermissionTo.TagMaintenance))
+			if (!context.User.Has(PermissionTo.TagMaintenance))
 			{
 				return ApiResults.Forbid();
 			}
 
-			var validationResult = validator.Validate(request);
-			if (!validationResult.IsValid)
+			var validationError = ApiResults.Validate(request, context);
+			if (validationError is not null)
 			{
-				return ApiResults.ValidationError(validationResult);
+				return validationError;
 			}
 
 			var (id, result) = await tagService.Add(request.Code, request.DisplayName);
@@ -83,22 +83,22 @@ internal static class TagsEndpoints
 			return g;
 		});
 
-		group.MapPut("{id}", async (int id, TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
+		group.MapPut("{id}", async (int id, TagAddEditRequest request, ITagService tagService, HttpContext context) =>
 		{
-			if (!user.IsLoggedIn())
+			if (!context.User.IsLoggedIn())
 			{
 				return Results.Unauthorized();
 			}
 
-			if (!user.Has(PermissionTo.TagMaintenance))
+			if (!context.User.Has(PermissionTo.TagMaintenance))
 			{
 				return ApiResults.Forbid();
 			}
 
-			var validationResult = validator.Validate(request);
-			if (!validationResult.IsValid)
+			var validationError = ApiResults.Validate(request, context);
+			if (validationError is not null)
 			{
-				return ApiResults.ValidationError(validationResult);
+				return validationError;
 			}
 
 			var result = await tagService.Edit(id, request.Code, request.DisplayName);
