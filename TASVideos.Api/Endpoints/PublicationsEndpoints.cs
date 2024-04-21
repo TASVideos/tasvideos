@@ -7,7 +7,7 @@ internal static class PublicationsEndpoints
 {
 	public static WebApplication MapPublications(this WebApplication app)
 	{
-		var group = app.MapGroup("api/v1/publications").WithTags("Publications");
+		var group = app.MapApiGroup("Publications");
 
 		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
 		{

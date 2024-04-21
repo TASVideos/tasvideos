@@ -7,7 +7,7 @@ internal static class GamesEndpoints
 {
 	public static WebApplication MapGames(this WebApplication app)
 	{
-		var group = app.MapGroup("api/v1/games").WithTags("Games");
+		var group = app.MapApiGroup("Games");
 
 		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
 		{

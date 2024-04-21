@@ -6,7 +6,7 @@ internal static class SystemsEndpoints
 {
 	public static WebApplication MapSystems(this WebApplication app)
 	{
-		var group = app.MapGroup("api/v1/systems").WithTags("Systems");
+		var group = app.MapApiGroup("Systems");
 
 		group.MapGet("{id}", async (int id, IGameSystemService systemService) =>
 			{

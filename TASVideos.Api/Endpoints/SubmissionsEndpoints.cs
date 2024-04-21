@@ -5,7 +5,8 @@ internal static class SubmissionsEndpoints
 {
 	public static WebApplication MapSubmissions(this WebApplication app)
 	{
-		var group = app.MapGroup("submissions").WithTags("Submissions");
+		var group = app.MapApiGroup("Submissions");
+
 		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
 		{
 			var sub = await db.Submissions

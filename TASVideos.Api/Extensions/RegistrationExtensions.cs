@@ -1,9 +1,16 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.OpenApi.Models;
 
 namespace TASVideos.Api;
 
 internal static class RegistrationExtensions
 {
+	public static RouteGroupBuilder MapApiGroup(this WebApplication app, string group)
+	{
+		return app.MapGroup($"api/v1/{group.ToLower()}").WithTags(group);
+	}
+
 	public static void AddGeneric400(this OpenApiResponses responses)
 	{
 		responses.Add("400", new OpenApiResponse { Description = "The request parameters are invalid." });

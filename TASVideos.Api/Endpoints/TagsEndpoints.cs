@@ -9,7 +9,7 @@ internal static class TagsEndpoints
 {
 	public static WebApplication MapTags(this WebApplication app)
 	{
-		var group = app.MapGroup("api/v1/tags").WithTags("Tags");
+		var group = app.MapApiGroup("Tags");
 
 		group.MapGet("{id}", async (int id, ITagService tagService) =>
 		{
