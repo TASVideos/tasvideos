@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using TASVideos.Api.Validators;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Api;
@@ -14,7 +15,12 @@ public static class ServiceCollectionExtensions
 	{
 		return services
 			.AddProblemDetails()
-			.AddValidatorsFromAssemblyContaining<ApiRequest>()
+			.AddScoped<IValidator<ApiRequest>, ApiRequestValidator>()
+			.AddScoped<IValidator<AuthenticationRequest>, AuthenticationRequestValidator>()
+			.AddScoped<IValidator<GamesRequest>, GamesRequestValidator>()
+			.AddScoped<IValidator<PublicationsRequest>, PublicationsRequestValidator>()
+			.AddScoped<IValidator<SubmissionsRequest>, SubmissionsRequestValidator>()
+			.AddScoped<IValidator<TagAddEditRequest>, TagAddEditRequestValidator>()
 			.AddSwagger(settings);
 	}
 

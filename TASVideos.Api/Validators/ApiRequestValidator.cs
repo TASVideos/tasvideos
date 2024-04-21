@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Validators;
 
-public class ApiRequestValidator : AbstractValidator<ApiRequest>
+internal class ApiRequestValidator : AbstractValidator<ApiRequest>
 {
 	public ApiRequestValidator()
 	{
@@ -8,7 +8,7 @@ public class ApiRequestValidator : AbstractValidator<ApiRequest>
 	}
 }
 
-public static class ApiRequestValidatorExtensions
+internal static class ApiRequestValidatorExtensions
 {
 	public static void ValidateApiRequest<T>(this AbstractValidator<T> validator, Type? sortType = null)
 		where T : ApiRequest

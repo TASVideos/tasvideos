@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Validators;
 
-public class GamesRequestValidator : AbstractValidator<GamesRequest>
+internal class GamesRequestValidator : AbstractValidator<GamesRequest>
 {
 	public GamesRequestValidator()
 	{

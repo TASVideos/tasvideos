@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Validators;
 
-public class TagAddEditRequestValidator : AbstractValidator<TagAddEditRequest>
+internal class TagAddEditRequestValidator : AbstractValidator<TagAddEditRequest>
 {
 	public TagAddEditRequestValidator()
 	{

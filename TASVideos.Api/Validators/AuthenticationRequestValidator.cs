@@ -1,5 +1,6 @@
 ﻿namespace TASVideos.Api.Validators;
-public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRequest>
+
+internal class AuthenticationRequestValidator : AbstractValidator<AuthenticationRequest>
 {
 	public AuthenticationRequestValidator()
 	{

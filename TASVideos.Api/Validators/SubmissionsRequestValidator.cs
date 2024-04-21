@@ -1,6 +1,6 @@
 ﻿namespace TASVideos.Api.Validators;
 
-public class SubmissionsRequestValidator : AbstractValidator<SubmissionsRequest>
+internal class SubmissionsRequestValidator : AbstractValidator<SubmissionsRequest>
 {
 	public SubmissionsRequestValidator()
 	{
