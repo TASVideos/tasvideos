@@ -13,7 +13,7 @@ internal static class TagsEndpoints
 		group
 			.MapGet("{id}", async (int id, ITagService tagService) => ApiResults.OkOr404(
 				await tagService.GetById(id)))
-			.DocumentIdGet("tag")
+			.DocumentIdGet("tag", typeof(TagsResponse))
 			.WithName("GetByTagId");
 
 		group.MapGet("", async ([AsParameters]ApiRequest request, HttpContext context, ITagService tagService) =>
@@ -34,6 +34,7 @@ internal static class TagsEndpoints
 			return Results.Ok(tags);
 		})
 		.WithSummary("Returns a list of available tags")
+		.Produces<IEnumerable<TagsResponse>>()
 		.WithOpenApi(g =>
 		{
 			g.Parameters.Describe<ApiRequest>();
