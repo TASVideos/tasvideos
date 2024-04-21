@@ -2,17 +2,40 @@
 
 internal class PublicationsRequest : ApiRequest, IPublicationTokens
 {
+	[Description("The system codes to filter by")]
 	public string? Systems { get; set; }
+
+	[Description("The publication class names to filter by")]
 	public string? ClassNames { get; set; }
+
+	[Description("The start year to filter by")]
 	public int? StartYear { get; set; }
+
+	[Description("The end year to filter by")]
 	public int? EndYear { get; set; }
+
+	[Description("The genre names to filter by")]
 	public string? GenreNames { get; set; }
+
+	[Description("The names of the publication tags to filter by")]
 	public string? TagNames { get; set; }
+
+	[Description("The names of the publication flags to filter by")]
 	public string? FlagNames { get; set; }
+
+	[Description("The ids of the authors to filter by")]
 	public string? AuthorIds { get; set; }
+
+	[Description("Indicates whether or not to return obsoleted publications")]
 	public bool? ShowObsoleted { get; set; }
+
+	[Description("Indicates whether or not to only return obsoleted publications")]
 	public bool? OnlyObsoleted { get; set; }
+
+	[Description("The ids of the games to filter by")]
 	public string? GameIds { get; set; }
+
+	[Description("The ids of the game groups to filter by")]
 	public string? GameGroupIds { get; set; }
 
 	bool IPublicationTokens.ShowObsoleted => ShowObsoleted ?? false;

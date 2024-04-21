@@ -1,4 +1,5 @@
-﻿global using FluentValidation;
+﻿global using System.ComponentModel;
+global using FluentValidation;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;

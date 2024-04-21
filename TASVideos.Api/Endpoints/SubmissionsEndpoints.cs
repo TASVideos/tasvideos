@@ -36,14 +36,7 @@ internal static class SubmissionsEndpoints
 		.Produces<IEnumerable<SubmissionsResponse>>()
 		.WithOpenApi(g =>
 		{
-			g.Parameters.Describe("User", "the author/submitter name to filter by");
-			g.Parameters.Describe("Statuses", "the statuses to filter by");
-			g.Parameters.Describe("StartYear", "The start year to filter by");
-			g.Parameters.Describe("EndYear", "The end year to filter by");
-			g.Parameters.Describe("Systems", "The system codes to filter by");
-			g.Parameters.Describe("Games", "the ids of the games to filter by");
-			g.Parameters.Describe("StartType", "Gets the start type of the movie. 0 = Power On, 1 = Sram, 2 = Savestate");
-			g.Parameters.DescribeBaseQueryParams();
+			g.Parameters.Describe<SubmissionsRequest>();
 			g.Responses.AddGeneric400();
 			return g;
 		});

@@ -36,7 +36,7 @@ internal static class TagsEndpoints
 		.WithSummary("Returns a list of available tags")
 		.WithOpenApi(g =>
 		{
-			g.Parameters.DescribeBaseQueryParams();
+			g.Parameters.Describe<ApiRequest>();
 			g.Responses.AddGeneric400();
 			return g;
 		});

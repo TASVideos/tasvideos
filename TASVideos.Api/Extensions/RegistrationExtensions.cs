@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Reflection;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 
@@ -38,43 +39,23 @@ internal static class RegistrationExtensions
 		responses.Add("404", new OpenApiResponse { Description = $"{resourceName} with the given id could not be found" });
 	}
 
-	public static void DescribeBaseQueryParams(this IList<OpenApiParameter> list)
+	// SwaggerParameter from Swashbuckle.AspNetCore.Annotations should be able to do this automatically but there is an outstanding bug so we need to do this ourselves
+	public static void Describe<T>(this IList<OpenApiParameter> list)
 	{
-		list.Describe(
-			"PageSize",
-			"""
-			The total number of records to return.
-			If not specified, then a default number of records will be returned
-			""");
-		list.Describe(
-			"CurrentPage",
-			"""
-			The page to start returning records.
-			If not specified, then an offset of 1 will be used
-			""");
-		list.Describe(
-			"Sort",
-			"""
-			The fields to sort by.
-			If multiple sort parameters, the list should be comma separated.
-			Precede the parameter with a + or - to sort ascending or descending respectively.
-			If not specified, then a default sort will be used
-			""");
-		list.Describe(
-			"Fields",
-			"""
-			The fields to return.
-			If multiple, fields must be comma separated.
-			If not specified, then all fields will be returned
-			""");
-	}
-
-	public static void Describe(this IList<OpenApiParameter> list, string name, string description)
-	{
-		var parameter = list.FirstOrDefault(l => l.Name == name);
-		if (parameter is not null)
+		var props = typeof(T).GetProperties();
+		foreach (var prop in props)
 		{
-			parameter.Description = description;
+			var descriptionAttr = prop.GetCustomAttribute<DescriptionAttribute>();
+			if (descriptionAttr is null)
+			{
+				continue;
+			}
+
+			var parameter = list.FirstOrDefault(p => p.Name == prop.Name);
+			if (parameter is not null)
+			{
+				parameter.Description = descriptionAttr.Description;
+			}
 		}
 	}
 }

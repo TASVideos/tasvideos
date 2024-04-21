@@ -37,19 +37,7 @@ internal static class PublicationsEndpoints
 		.Produces<IEnumerable<PublicationsResponse>>()
 		.WithOpenApi(g =>
 		{
-			g.Parameters.Describe("Systems", "The system codes to filter by");
-			g.Parameters.Describe("ClassNames", "The publication class names to filter by");
-			g.Parameters.Describe("StartYear", "The start year to filter by");
-			g.Parameters.Describe("EndYear", "The end year to filter by");
-			g.Parameters.Describe("GenreNames", "the genres to filter by");
-			g.Parameters.Describe("TagNames", "the names of the publication tags to filter by");
-			g.Parameters.Describe("FlagNames", "the names of the publication flags to filter by");
-			g.Parameters.Describe("AuthorIds", "the ids of the authors to filter by");
-			g.Parameters.Describe("ShowObsoleted", "indicates whether or not to return obsoleted publications");
-			g.Parameters.Describe("OnlyObsoleted", "indicates whether or not to only return obsoleted publications");
-			g.Parameters.Describe("GameIds", "the ids of the games to filter by");
-			g.Parameters.Describe("GameGroupIds", "the ids of the game groups to filter by");
-			g.Parameters.DescribeBaseQueryParams();
+			g.Parameters.Describe<PublicationsRequest>();
 			g.Responses.AddGeneric400();
 			return g;
 		});
