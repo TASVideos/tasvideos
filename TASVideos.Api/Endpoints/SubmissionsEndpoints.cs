@@ -12,7 +12,7 @@ internal static class SubmissionsEndpoints
 				await db.Submissions
 					.ToSubmissionsResponse()
 					.SingleOrDefaultAsync(p => p.Id == id)))
-			.DocumentIdGet("submission", typeof(SubmissionsResponse));
+			.ProducesFromId<SubmissionsResponse>("submission");
 
 		group.MapGet("", async ([AsParameters]SubmissionsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
@@ -32,9 +32,8 @@ internal static class SubmissionsEndpoints
 
 			return Results.Ok(subs);
 		})
-		.WithSummary("Returns a list of submissions, filtered by the given criteria.")
 		.Receives<SubmissionsRequest>()
-		.Produces<IEnumerable<SubmissionsResponse>>();
+		.ProducesList<SubmissionsResponse>("a list of submissions, searchable by the given criteria.");
 
 		return app;
 	}

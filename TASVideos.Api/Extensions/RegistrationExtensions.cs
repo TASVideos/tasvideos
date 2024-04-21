@@ -12,10 +12,10 @@ internal static class RegistrationExtensions
 		return app.MapGroup($"api/v1/{group.ToLower()}").WithTags(group);
 	}
 
-	public static RouteHandlerBuilder DocumentIdGet(this RouteHandlerBuilder builder, string resource, Type type)
+	public static RouteHandlerBuilder ProducesFromId<T>(this RouteHandlerBuilder builder, string resource)
 	{
 		return builder
-			.Produces(200, type)
+			.Produces<T>()
 			.WithSummary($"Returns a {resource} with the given id.")
 			.WithOpenApi(g =>
 			{
@@ -35,6 +35,11 @@ internal static class RegistrationExtensions
 		});
 	}
 
+	public static RouteHandlerBuilder ProducesList<T>(this RouteHandlerBuilder builder, string summary)
+	{
+		return builder.WithSummary($"Returns {summary}").Produces<IEnumerable<T>>().WithOpenApi();
+	}
+
 	public static void AddGeneric400(this OpenApiResponses responses)
 	{
 		responses.Add("400", new OpenApiResponse { Description = "The request parameters are invalid." });
@@ -46,7 +51,7 @@ internal static class RegistrationExtensions
 	}
 
 	// SwaggerParameter from Swashbuckle.AspNetCore.Annotations should be able to do this automatically but there is an outstanding bug so we need to do this ourselves
-	public static void Describe<T>(this IList<OpenApiParameter> list)
+	private static void Describe<T>(this IList<OpenApiParameter> list)
 	{
 		var props = typeof(T).GetProperties();
 		foreach (var prop in props)

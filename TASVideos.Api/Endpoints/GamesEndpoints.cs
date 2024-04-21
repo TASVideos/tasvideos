@@ -14,7 +14,7 @@ internal static class GamesEndpoints
 				await db.Games
 					.ToGamesResponse()
 					.SingleOrDefaultAsync(g => g.Id == id)))
-			.DocumentIdGet("game", typeof(GamesResponse));
+			.ProducesFromId<GamesResponse>("game");
 
 		group.MapGet("", async ([AsParameters]GamesRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
@@ -33,9 +33,8 @@ internal static class GamesEndpoints
 
 			return Results.Ok(games);
 		})
-		.WithSummary("Returns a list of available games.")
 		.Receives<GamesRequest>()
-		.Produces<IEnumerable<GamesResponse>>();
+		.ProducesList<GamesResponse>("a list of games");
 
 		return app;
 	}

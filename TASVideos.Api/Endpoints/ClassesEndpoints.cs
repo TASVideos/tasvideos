@@ -10,13 +10,11 @@ internal static class ClassesEndpoints
 
 		group
 			.MapGet("{id}", async (int id, IClassService classService) => ApiResults.OkOr404(await classService.GetById(id)))
-			.DocumentIdGet("publication class", typeof(PublicationClass));
+			.ProducesFromId<PublicationClass>("publication class");
 
 		group
 			.MapGet("", async (IClassService classService) => Results.Ok(await classService.GetAll()))
-			.WithSummary("Returns a list of available publication classes.")
-			.Produces<IEnumerable<PublicationClass>>()
-			.WithOpenApi();
+			.ProducesList<PublicationClass>("a list of available publication classes");
 
 		return app;
 	}

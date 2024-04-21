@@ -13,7 +13,7 @@ internal static class PublicationsEndpoints
 				await db.Publications
 					.ToPublicationsResponse()
 					.SingleOrDefaultAsync(p => p.Id == id)))
-			.DocumentIdGet("publication", typeof(PublicationsResponse));
+			.ProducesFromId<PublicationsResponse>("publication");
 
 		group.MapGet("", async ([AsParameters]PublicationsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
@@ -33,9 +33,8 @@ internal static class PublicationsEndpoints
 
 			return Results.Ok(pubs);
 		})
-		.WithSummary("Returns a list of publications, filtered by the given criteria.")
 		.Receives<PublicationsRequest>()
-		.Produces<IEnumerable<PublicationsResponse>>();
+		.ProducesList<PublicationsResponse>("a list of publications, searchable by the given criteria");
 
 		return app;
 	}
