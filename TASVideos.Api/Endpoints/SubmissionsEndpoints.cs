@@ -5,7 +5,8 @@ internal static class SubmissionsEndpoints
 {
 	public static WebApplication MapSubmissions(this WebApplication app)
 	{
-		app.MapGet("api/v1/submissions/{id}", async (int id, ApplicationDbContext db) =>
+		var group = app.MapGroup("submissions").WithTags("Submissions");
+		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
 		{
 			var sub = await db.Submissions
 				.ToSubmissionsResponse()
@@ -15,7 +16,6 @@ internal static class SubmissionsEndpoints
 				? Results.NotFound()
 				: Results.Ok(sub);
 		})
-		.WithTags("Submissions")
 		.WithSummary("Returns a submission with the given id.")
 		.Produces<SubmissionsResponse>()
 		.WithOpenApi(g =>
@@ -25,7 +25,7 @@ internal static class SubmissionsEndpoints
 			return g;
 		});
 
-		app.MapGet("api/v1/submissions", async ([AsParameters]SubmissionsRequest request, IValidator<SubmissionsRequest> validator, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters]SubmissionsRequest request, IValidator<SubmissionsRequest> validator, ApplicationDbContext db) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
@@ -43,7 +43,6 @@ internal static class SubmissionsEndpoints
 
 			return Results.Ok(subs);
 		})
-		.WithTags("Submissions")
 		.WithSummary("Returns a list of submissions, filtered by the given criteria.")
 		.Produces<IEnumerable<SubmissionsResponse>>()
 		.WithOpenApi(g =>

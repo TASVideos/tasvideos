@@ -7,7 +7,9 @@ internal static class PublicationsEndpoints
 {
 	public static WebApplication MapPublications(this WebApplication app)
 	{
-		app.MapGet("api/v1/publications/{id}", async (int id, ApplicationDbContext db) =>
+		var group = app.MapGroup("api/v1/publications").WithTags("Publications");
+
+		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
 		{
 			var pub = await db.Publications
 				.ToPublicationsResponse()
@@ -17,7 +19,6 @@ internal static class PublicationsEndpoints
 				? Results.NotFound()
 				: Results.Ok(pub);
 		})
-		.WithTags("Publications")
 		.WithSummary("Returns a publication with the given id.")
 		.Produces<PublicationsResponse>()
 		.WithOpenApi(g =>
@@ -27,7 +28,7 @@ internal static class PublicationsEndpoints
 			return g;
 		});
 
-		app.MapGet("api/v1/publications", async ([AsParameters]PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters]PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)

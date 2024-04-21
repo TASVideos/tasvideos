@@ -9,12 +9,13 @@ internal static class TagsEndpoints
 {
 	public static WebApplication MapTags(this WebApplication app)
 	{
-		app.MapGet("api/v1/tags/{id}", async (int id, ITagService tagService) =>
+		var group = app.MapGroup("api/v1/tags").WithTags("Tags");
+
+		group.MapGet("{id}", async (int id, ITagService tagService) =>
 		{
 			var tag = await tagService.GetById(id);
 			return tag is null ? Results.NotFound() : Results.Ok(tag);
 		})
-		.WithTags("Tags")
 		.WithSummary("Returns a tag with the given id.")
 		.WithOpenApi(g =>
 		{
@@ -24,7 +25,7 @@ internal static class TagsEndpoints
 		})
 		.WithName("GetByTagId");
 
-		app.MapGet("api/v1/tags", async ([AsParameters]ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>
+		group.MapGet("", async ([AsParameters]ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
@@ -41,7 +42,6 @@ internal static class TagsEndpoints
 
 			return Results.Ok(tags);
 		})
-		.WithTags("Tags")
 		.WithSummary("Returns a list of available tags")
 		.WithOpenApi(g =>
 		{
@@ -50,7 +50,7 @@ internal static class TagsEndpoints
 			return g;
 		});
 
-		app.MapPost("api/v1/tags", async (TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
+		group.MapPost("", async (TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
 		{
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
@@ -80,7 +80,6 @@ internal static class TagsEndpoints
 			}
 		})
 		.RequireAuthorization()
-		.WithTags("Tags")
 		.WithSummary("Creates a new tag")
 		.WithOpenApi(g =>
 		{
@@ -90,7 +89,7 @@ internal static class TagsEndpoints
 			return g;
 		});
 
-		app.MapPut("api/v1/tags/{id}", async (int id, TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
+		group.MapPut("{id}", async (int id, TagAddEditRequest request, ITagService tagService, ClaimsPrincipal user, IValidator<TagAddEditRequest> validator) =>
 		{
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
@@ -131,7 +130,7 @@ internal static class TagsEndpoints
 			return g;
 		});
 
-		app.MapDelete("api/v1/tags/{id}", async (int id, ITagService tagService, ClaimsPrincipal user) =>
+		group.MapDelete("{id}", async (int id, ITagService tagService, ClaimsPrincipal user) =>
 		{
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{

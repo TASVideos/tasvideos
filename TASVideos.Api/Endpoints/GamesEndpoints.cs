@@ -7,7 +7,9 @@ internal static class GamesEndpoints
 {
 	public static WebApplication MapGames(this WebApplication app)
 	{
-		app.MapGet("api/v1/games/{id}", async (int id, ApplicationDbContext db) =>
+		var group = app.MapGroup("api/v1/games").WithTags("Games");
+
+		group.MapGet("{id}", async (int id, ApplicationDbContext db) =>
 		{
 			var pub = await db.Games
 				.ToGamesResponse()
@@ -16,7 +18,6 @@ internal static class GamesEndpoints
 				? Results.NotFound()
 				: Results.Ok(pub);
 		})
-		.WithTags("Games")
 		.WithSummary("Returns a game with the given id.")
 		.Produces<GamesResponse>()
 		.WithOpenApi(g =>
@@ -26,7 +27,7 @@ internal static class GamesEndpoints
 			return g;
 		});
 
-		app.MapGet("api/v1/games", async ([AsParameters]GamesRequest request, IValidator<GamesRequest> validator, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters]GamesRequest request, IValidator<GamesRequest> validator, ApplicationDbContext db) =>
 		{
 			var validationResult = validator.Validate(request);
 			if (!validationResult.IsValid)
@@ -43,7 +44,6 @@ internal static class GamesEndpoints
 
 			return Results.Ok(games);
 		})
-		.WithTags("Games")
 		.WithSummary("Returns a list of available games.")
 		.Produces<IEnumerable<GamesResponse>>()
 		.WithOpenApi(g =>
