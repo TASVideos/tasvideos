@@ -12,7 +12,7 @@ internal static class TagsEndpoints
 
 		group.MapGet("{id}", async (int id, ITagService tagService)
 				=> ApiResults.OkOr404(await tagService.GetById(id)))
-		.DocumentIdGet("Returns a tag with the given id.", "tag")
+		.DocumentIdGet("tag")
 		.WithName("GetByTagId");
 
 		group.MapGet("", async ([AsParameters]ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>

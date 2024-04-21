@@ -11,7 +11,7 @@ internal static class RegistrationExtensions
 		return app.MapGroup($"api/v1/{group.ToLower()}").WithTags(group);
 	}
 
-	public static RouteHandlerBuilder DocumentIdGet(this RouteHandlerBuilder builder, string summary, string resource, Type? type = null)
+	public static RouteHandlerBuilder DocumentIdGet(this RouteHandlerBuilder builder, string resource, Type? type = null)
 	{
 		if (type is not null)
 		{
@@ -19,7 +19,7 @@ internal static class RegistrationExtensions
 		}
 
 		return builder
-			.WithSummary(summary)
+			.WithSummary($"Returns a {resource} with the given id.")
 			.WithOpenApi(g =>
 			{
 				g.Responses.AddGeneric400();

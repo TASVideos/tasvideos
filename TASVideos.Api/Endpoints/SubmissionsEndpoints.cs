@@ -11,7 +11,7 @@ internal static class SubmissionsEndpoints
 				=> ApiResults.OkOr404(await db.Submissions
 					.ToSubmissionsResponse()
 					.SingleOrDefaultAsync(p => p.Id == id)))
-		.DocumentIdGet("Returns a submission with the given id.", "submission", typeof(SubmissionsResponse));
+		.DocumentIdGet("submission", typeof(SubmissionsResponse));
 
 		group.MapGet("", async ([AsParameters]SubmissionsRequest request, IValidator<SubmissionsRequest> validator, ApplicationDbContext db) =>
 		{

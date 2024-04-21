@@ -13,7 +13,7 @@ internal static class GamesEndpoints
 				=> ApiResults.OkOr404(await db.Games
 					.ToGamesResponse()
 					.SingleOrDefaultAsync(g => g.Id == id)))
-		.DocumentIdGet("Returns a game with the given id.", "game", typeof(GamesResponse));
+		.DocumentIdGet("game", typeof(GamesResponse));
 
 		group.MapGet("", async ([AsParameters]GamesRequest request, IValidator<GamesRequest> validator, ApplicationDbContext db) =>
 		{

@@ -12,7 +12,7 @@ internal static class PublicationsEndpoints
 				=> ApiResults.OkOr404(await db.Publications
 					.ToPublicationsResponse()
 					.SingleOrDefaultAsync(p => p.Id == id)))
-		.DocumentIdGet("Returns a publication with the given id.", "publication", typeof(PublicationsResponse));
+		.DocumentIdGet("publication", typeof(PublicationsResponse));
 
 		group.MapGet("", async ([AsParameters]PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
 		{
