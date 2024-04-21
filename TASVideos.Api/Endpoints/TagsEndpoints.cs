@@ -102,21 +102,13 @@ internal static class TagsEndpoints
 			}
 
 			var result = await tagService.Edit(id, request.Code, request.DisplayName);
-			switch (result)
+			return result switch
 			{
-				case TagEditResult.NotFound:
-					return ApiResults.NotFound();
-				case TagEditResult.DuplicateCode:
-					var error = new Dictionary<string, string>
-					{
-						["Code"] = $"{request.Code} already exists"
-					};
-					return Results.Conflict(error);
-				case TagEditResult.Success:
-					return Results.Ok();
-				default:
-					return Results.BadRequest();
-			}
+				TagEditResult.NotFound => ApiResults.NotFound(),
+				TagEditResult.DuplicateCode => Results.Conflict($"{request.Code} already exists"),
+				TagEditResult.Success => Results.Ok(),
+				_ => Results.BadRequest()
+			};
 		})
 		.WithSummary("Updates an existing tag")
 		.WithOpenApi(g =>
