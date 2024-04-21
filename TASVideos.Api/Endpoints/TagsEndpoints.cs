@@ -139,17 +139,13 @@ internal static class TagsEndpoints
 			}
 
 			var result = await tagService.Delete(id);
-			switch (result)
+			return result switch
 			{
-				case TagDeleteResult.NotFound:
-					return Results.NotFound();
-				case TagDeleteResult.InUse:
-					return Results.Conflict("The tag is in use and cannot be deleted.");
-				case TagDeleteResult.Success:
-					return Results.Ok();
-				default:
-					return Results.BadRequest();
-			}
+				TagDeleteResult.NotFound => Results.NotFound(),
+				TagDeleteResult.InUse => Results.Conflict("The tag is in use and cannot be deleted."),
+				TagDeleteResult.Success => Results.Ok(),
+				_ => Results.BadRequest()
+			};
 		})
 		.RequireAuthorization()
 		.WithTags("Tags")
