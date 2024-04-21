@@ -9,11 +9,12 @@ internal static class GamesEndpoints
 	{
 		var group = app.MapApiGroup("Games");
 
-		group.MapGet("{id}", async (int id, ApplicationDbContext db)
-				=> ApiResults.OkOr404(await db.Games
+		group
+			.MapGet("{id}", async (int id, ApplicationDbContext db) => ApiResults.OkOr404(
+				await db.Games
 					.ToGamesResponse()
 					.SingleOrDefaultAsync(g => g.Id == id)))
-		.DocumentIdGet("game", typeof(GamesResponse));
+			.DocumentIdGet("game", typeof(GamesResponse));
 
 		group.MapGet("", async ([AsParameters]GamesRequest request, HttpContext context, ApplicationDbContext db) =>
 		{

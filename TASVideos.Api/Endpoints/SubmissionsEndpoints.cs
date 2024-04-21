@@ -7,11 +7,12 @@ internal static class SubmissionsEndpoints
 	{
 		var group = app.MapApiGroup("Submissions");
 
-		group.MapGet("{id}", async (int id, ApplicationDbContext db)
-				=> ApiResults.OkOr404(await db.Submissions
+		group
+			.MapGet("{id}", async (int id, ApplicationDbContext db) => ApiResults.OkOr404(
+				await db.Submissions
 					.ToSubmissionsResponse()
 					.SingleOrDefaultAsync(p => p.Id == id)))
-		.DocumentIdGet("submission", typeof(SubmissionsResponse));
+			.DocumentIdGet("submission", typeof(SubmissionsResponse));
 
 		group.MapGet("", async ([AsParameters]SubmissionsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{

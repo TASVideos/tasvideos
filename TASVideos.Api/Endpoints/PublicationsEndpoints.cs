@@ -8,11 +8,12 @@ internal static class PublicationsEndpoints
 	{
 		var group = app.MapApiGroup("Publications");
 
-		group.MapGet("{id}", async (int id, ApplicationDbContext db)
-				=> ApiResults.OkOr404(await db.Publications
+		group
+			.MapGet("{id}", async (int id, ApplicationDbContext db) => ApiResults.OkOr404(
+				await db.Publications
 					.ToPublicationsResponse()
 					.SingleOrDefaultAsync(p => p.Id == id)))
-		.DocumentIdGet("publication", typeof(PublicationsResponse));
+			.DocumentIdGet("publication", typeof(PublicationsResponse));
 
 		group.MapGet("", async ([AsParameters]PublicationsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
@@ -32,7 +33,6 @@ internal static class PublicationsEndpoints
 
 			return Results.Ok(pubs);
 		})
-		.WithTags("Publications")
 		.WithSummary("Returns a list of publications, filtered by the given criteria.")
 		.Produces<IEnumerable<PublicationsResponse>>()
 		.WithOpenApi(g =>
