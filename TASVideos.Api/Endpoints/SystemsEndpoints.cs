@@ -9,22 +9,15 @@ internal static class SystemsEndpoints
 		var group = app.MapApiGroup("Systems");
 
 		group.MapGet("{id}", async (int id, IGameSystemService systemService) =>
-			{
-				var system = (await systemService.GetAll())
-					.SingleOrDefault(p => p.Id == id);
+		{
+			var system = (await systemService.GetAll())
+				.SingleOrDefault(p => p.Id == id);
 
-				return system is null
-					? Results.NotFound()
-					: Results.Ok(system);
-			})
-			.WithSummary("Returns a game system with the given id.")
-			.Produces<SystemsResponse>()
-			.WithOpenApi(g =>
-			{
-				g.Responses.AddGeneric400();
-				g.Responses.Add404ById("system");
-				return g;
-			});
+			return system is null
+				? Results.NotFound()
+				: Results.Ok(system);
+		})
+		.DocumentIdGet("Returns a game system  with the given id.", "system", typeof(SystemsResponse));
 
 		group.MapGet("", async (IGameSystemService systemService) => Results.Ok((object?)await systemService.GetAll()))
 			.WithSummary("Returns a list of available game sytems, including supported framerates.")

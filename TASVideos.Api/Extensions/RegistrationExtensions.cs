@@ -11,6 +11,23 @@ internal static class RegistrationExtensions
 		return app.MapGroup($"api/v1/{group.ToLower()}").WithTags(group);
 	}
 
+	public static RouteHandlerBuilder DocumentIdGet(this RouteHandlerBuilder builder, string summary, string resource, Type? type = null)
+	{
+		if (type is not null)
+		{
+			builder = builder.Produces(200, type);
+		}
+
+		return builder
+			.WithSummary(summary)
+			.WithOpenApi(g =>
+			{
+				g.Responses.AddGeneric400();
+				g.Responses.Add404ById(resource);
+				return g;
+			});
+	}
+
 	public static void AddGeneric400(this OpenApiResponses responses)
 	{
 		responses.Add("400", new OpenApiResponse { Description = "The request parameters are invalid." });
@@ -18,7 +35,7 @@ internal static class RegistrationExtensions
 
 	public static void Add404ById(this OpenApiResponses responses, string resourceName)
 	{
-		responses.Add("404", new OpenApiResponse { Description = $"Could not find {resourceName} with the given id" });
+		responses.Add("404", new OpenApiResponse { Description = $"{resourceName} with the given id could not be found" });
 	}
 
 	public static void AddFromQuery(this IList<OpenApiParameter> list, string name, string description, Type type)

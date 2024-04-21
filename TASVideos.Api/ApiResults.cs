@@ -18,5 +18,4 @@ internal static class ApiResults
 	{
 		return Results.ValidationProblem(validationResult.ToDictionary());
 	}
-
 }

@@ -17,14 +17,7 @@ internal static class SubmissionsEndpoints
 				? Results.NotFound()
 				: Results.Ok(sub);
 		})
-		.WithSummary("Returns a submission with the given id.")
-		.Produces<SubmissionsResponse>()
-		.WithOpenApi(g =>
-		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("submissions");
-			return g;
-		});
+		.DocumentIdGet("Returns a submission with the given id.", "submission", typeof(SubmissionsResponse));
 
 		group.MapGet("", async ([AsParameters]SubmissionsRequest request, IValidator<SubmissionsRequest> validator, ApplicationDbContext db) =>
 		{

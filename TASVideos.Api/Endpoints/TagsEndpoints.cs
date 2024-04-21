@@ -15,13 +15,7 @@ internal static class TagsEndpoints
 			var tag = await tagService.GetById(id);
 			return tag is null ? Results.NotFound() : Results.Ok(tag);
 		})
-		.WithSummary("Returns a tag with the given id.")
-		.WithOpenApi(g =>
-		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("tag");
-			return g;
-		})
+		.DocumentIdGet("Returns a tag with the given id.", "tag")
 		.WithName("GetByTagId");
 
 		group.MapGet("", async ([AsParameters]ApiRequest request, IValidator<ApiRequest> validator, ITagService tagService) =>
@@ -127,7 +121,6 @@ internal static class TagsEndpoints
 					return Results.BadRequest();
 			}
 		})
-		.WithTags("Tags")
 		.WithSummary("Updates an existing tag")
 		.WithOpenApi(g =>
 		{
@@ -158,7 +151,6 @@ internal static class TagsEndpoints
 				_ => Results.BadRequest()
 			};
 		})
-		.WithTags("Tags")
 		.WithSummary("Deletes an existing tag")
 		.WithOpenApi(g =>
 		{

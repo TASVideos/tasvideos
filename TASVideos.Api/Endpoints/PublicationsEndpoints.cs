@@ -19,14 +19,7 @@ internal static class PublicationsEndpoints
 				? Results.NotFound()
 				: Results.Ok(pub);
 		})
-		.WithSummary("Returns a publication with the given id.")
-		.Produces<PublicationsResponse>()
-		.WithOpenApi(g =>
-		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("publication");
-			return g;
-		});
+		.DocumentIdGet("Returns a publication with the given id.", "publication", typeof(PublicationsResponse));
 
 		group.MapGet("", async ([AsParameters]PublicationsRequest request, IValidator<PublicationsRequest> validator, ApplicationDbContext db) =>
 		{

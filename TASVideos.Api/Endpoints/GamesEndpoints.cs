@@ -18,14 +18,7 @@ internal static class GamesEndpoints
 				? Results.NotFound()
 				: Results.Ok(pub);
 		})
-		.WithSummary("Returns a game with the given id.")
-		.Produces<GamesResponse>()
-		.WithOpenApi(g =>
-		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("game");
-			return g;
-		});
+		.DocumentIdGet("Returns a game with the given id.", "game", typeof(GamesResponse));
 
 		group.MapGet("", async ([AsParameters]GamesRequest request, IValidator<GamesRequest> validator, ApplicationDbContext db) =>
 		{
