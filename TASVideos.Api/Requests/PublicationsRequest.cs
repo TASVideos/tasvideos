@@ -10,10 +10,13 @@ internal class PublicationsRequest : ApiRequest, IPublicationTokens
 	public string? TagNames { get; set; }
 	public string? FlagNames { get; set; }
 	public string? AuthorIds { get; set; }
-	public bool ShowObsoleted { get; set; }
-	public bool OnlyObsoleted { get; set; }
+	public bool? ShowObsoleted { get; set; }
+	public bool? OnlyObsoleted { get; set; }
 	public string? GameIds { get; set; }
 	public string? GameGroupIds { get; set; }
+
+	bool IPublicationTokens.ShowObsoleted => ShowObsoleted ?? false;
+	bool IPublicationTokens.OnlyObsoleted => OnlyObsoleted ?? false;
 
 	ICollection<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
 	ICollection<string> IPublicationTokens.Classes => ClassNames.CsvToStrings();
