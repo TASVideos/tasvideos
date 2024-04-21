@@ -30,11 +30,12 @@ internal class ApiRequest : IFieldSelectable, ISortable, IPageable
 
 internal static class RequestableExtensions
 {
-	public static IQueryable<T> Paginate<T>(this IQueryable<T> source, ApiRequest paging)
+	public static IQueryable<T> SortAndPaginate<T>(this IQueryable<T> source, ApiRequest request)
 	{
-		int offset = paging.Offset();
-		int limit = paging.PageSize ?? ApiRequest.MaxPageSize;
+		int offset = request.Offset();
+		int limit = request.PageSize ?? ApiRequest.MaxPageSize;
 		return source
+			.SortBy(request)
 			.Skip(offset)
 			.Take(limit);
 	}

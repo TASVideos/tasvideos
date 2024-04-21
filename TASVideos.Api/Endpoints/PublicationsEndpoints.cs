@@ -26,8 +26,7 @@ internal static class PublicationsEndpoints
 			var pubs = (await db.Publications
 				.FilterByTokens(request)
 				.ToPublicationsResponse()
-				.SortBy(request)
-				.Paginate(request)
+				.SortAndPaginate(request)
 				.ToListAsync())
 			.FieldSelect(request);
 

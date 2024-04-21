@@ -25,8 +25,7 @@ internal static class SubmissionsEndpoints
 			var subs = (await db.Submissions
 				.FilterBy(request)
 				.ToSubmissionsResponse()
-				.SortBy(request)
-				.Paginate(request)
+				.SortAndPaginate(request)
 				.ToListAsync())
 				.FieldSelect(request);
 

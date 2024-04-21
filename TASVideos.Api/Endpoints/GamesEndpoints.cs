@@ -26,8 +26,7 @@ internal static class GamesEndpoints
 
 			var games = (await db.Games.ForSystemCodes(request.SystemCodes)
 					.ToGamesResponse()
-					.SortBy(request)
-					.Paginate(request)
+					.SortAndPaginate(request)
 					.ToListAsync())
 				.FieldSelect(request);
 

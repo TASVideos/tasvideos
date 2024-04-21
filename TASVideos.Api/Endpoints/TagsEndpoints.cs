@@ -26,8 +26,7 @@ internal static class TagsEndpoints
 
 			var tags = (await tagService.GetAll())
 				.AsQueryable()
-				.SortBy(request)
-				.Paginate(request)
+				.SortAndPaginate(request)
 				.AsEnumerable()
 				.FieldSelect(request);
 
