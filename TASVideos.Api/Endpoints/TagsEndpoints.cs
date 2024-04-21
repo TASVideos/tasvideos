@@ -4,7 +4,6 @@ using Microsoft.OpenApi.Models;
 
 namespace TASVideos.Api;
 
-// POST/PUT todos - Results.Forbid() returns the login screen and a 200
 internal static class TagsEndpoints
 {
 	public static WebApplication MapTags(this WebApplication app)
@@ -54,12 +53,12 @@ internal static class TagsEndpoints
 		{
 			if (!user.IsLoggedIn())
 			{
-				return Results.Unauthorized();
+				return ApiResults.Unauthorized();
 			}
 
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
-				return Results.Forbid();
+				return ApiResults.Forbid();
 			}
 
 			var validationResult = validator.Validate(request);
@@ -102,7 +101,7 @@ internal static class TagsEndpoints
 
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
-				return Results.Forbid();
+				return ApiResults.Forbid();
 			}
 
 			var validationResult = validator.Validate(request);
@@ -147,7 +146,7 @@ internal static class TagsEndpoints
 
 			if (!user.Has(PermissionTo.TagMaintenance))
 			{
-				return Results.Forbid();
+				return ApiResults.Forbid();
 			}
 
 			var result = await tagService.Delete(id);

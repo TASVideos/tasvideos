@@ -17,7 +17,7 @@ internal static class UsersEndpoints
 
 			var token = await jwtAuthenticator.Authenticate(request.Username, request.Password);
 			return string.IsNullOrWhiteSpace(token)
-				? Results.Unauthorized()
+				? ApiResults.Unauthorized()
 				: Results.Ok(token);
 		})
 		.WithTags("Users")
