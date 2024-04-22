@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 
 namespace TASVideos.Api;
 
@@ -39,12 +40,12 @@ internal static class Extensions
 			.Select(str => str.Trim())
 			.Select(s => s.Replace("-", ""))
 			.Select(s => s.Replace("+", ""))
-			.Select(s => s.ToLower());
+			.Select(s => s.ToLower(CultureInfo.InvariantCulture));
 
 		var sortableProperties = response
 			.GetProperties()
 			.Where(p => p.GetCustomAttribute<SortableAttribute>() != null)
-			.Select(p => p.Name.ToLower())
+			.Select(p => p.Name.ToLower(CultureInfo.InvariantCulture))
 			.ToList();
 
 		return requestedSorts.All(s => sortableProperties.Contains(s));
