@@ -7,7 +7,7 @@ internal static class PublicationsEndpoints
 		var group = app.MapApiGroup("Publications");
 
 		group
-			.MapGet("{id}", async (int id, ApplicationDbContext db) => ApiResults.OkOr404(
+			.MapGet("{id:int}", async (int id, ApplicationDbContext db) => ApiResults.OkOr404(
 				await db.Publications
 					.ToPublicationsResponse()
 					.SingleOrDefaultAsync(p => p.Id == id)))

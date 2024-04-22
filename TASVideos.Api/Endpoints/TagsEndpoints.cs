@@ -7,7 +7,7 @@ internal static class TagsEndpoints
 		var group = app.MapApiGroup("Tags");
 
 		group
-			.MapGet("{id}", async (int id, ITagService tagService) => ApiResults.OkOr404(
+			.MapGet("{id:int}", async (int id, ITagService tagService) => ApiResults.OkOr404(
 				await tagService.GetById(id)))
 			.ProducesFromId<TagsResponse>("tag")
 			.WithName("GetByTagId");
@@ -63,7 +63,7 @@ internal static class TagsEndpoints
 			return g;
 		});
 
-		group.MapPut("{id}", async (int id, TagAddEditRequest request, ITagService tagService, HttpContext context) =>
+		group.MapPut("{id:int}", async (int id, TagAddEditRequest request, ITagService tagService, HttpContext context) =>
 		{
 			var authError = ApiResults.Authorize(PermissionTo.TagMaintenance, context);
 			if (authError is not null)
@@ -95,7 +95,7 @@ internal static class TagsEndpoints
 			return g;
 		});
 
-		group.MapDelete("{id}", async (int id, ITagService tagService, HttpContext context) =>
+		group.MapDelete("{id:int}", async (int id, ITagService tagService, HttpContext context) =>
 		{
 			var authError = ApiResults.Authorize(PermissionTo.TagMaintenance, context);
 			if (authError is not null)

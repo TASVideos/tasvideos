@@ -7,7 +7,7 @@ internal static class ClassesEndpoints
 		var group = app.MapApiGroup("Classes");
 
 		group
-			.MapGet("{id}", async (int id, IClassService classService) => ApiResults.OkOr404(await classService.GetById(id)))
+			.MapGet("{id:int}", async (int id, IClassService classService) => ApiResults.OkOr404(await classService.GetById(id)))
 			.ProducesFromId<PublicationClass>("publication class");
 
 		group

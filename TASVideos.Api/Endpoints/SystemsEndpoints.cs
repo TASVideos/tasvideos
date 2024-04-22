@@ -7,7 +7,7 @@ internal static class SystemsEndpoints
 		var group = app.MapApiGroup("Systems");
 
 		group
-			.MapGet("{id}", async (int id, IGameSystemService systemService) => ApiResults.OkOr404((await systemService.GetAll()).SingleOrDefault(p => p.Id == id)))
+			.MapGet("{id:int}", async (int id, IGameSystemService systemService) => ApiResults.OkOr404((await systemService.GetAll()).SingleOrDefault(p => p.Id == id)))
 			.ProducesFromId<SystemsResponse>("system");
 
 		group
