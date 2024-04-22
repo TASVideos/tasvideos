@@ -57,8 +57,7 @@ internal static class RegistrationExtensions
 	// SwaggerParameter from Swashbuckle.AspNetCore.Annotations should be able to do this automatically but there is an outstanding bug, so we need to do this ourselves
 	private static void Describe<T>(this IList<OpenApiParameter> list)
 	{
-		var props = typeof(T).GetProperties();
-		foreach (var prop in props)
+		foreach (var prop in typeof(T).GetProperties())
 		{
 			var swaggerParameter = prop.GetCustomAttribute<SwaggerParameterAttribute>();
 			if (swaggerParameter is null)
