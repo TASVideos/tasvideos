@@ -4,7 +4,6 @@
 * so the record count might be less than the requested count
 * how do we document this? or do we want to try to do dynamic queryable field selection?
 */
-
 namespace TASVideos.Api.Requests;
 
 /// <summary>
@@ -13,16 +12,16 @@ namespace TASVideos.Api.Requests;
 /// </summary>
 internal class ApiRequest : IFieldSelectable, ISortable, IPageable
 {
-	[Description("The total number of records to return. If not specified, then a default number of records will be returned")]
+	[SwaggerParameter("The total number of records to return. If not specified, then a default number of records will be returned")]
 	public int? PageSize { get; init; } = 100;
 
-	[Description("The page to start returning records. If not specified, then an offset of 1 will be used")]
+	[SwaggerParameter("The page to start returning records. If not specified, then an offset of 1 will be used")]
 	public int? CurrentPage { get; init; } = 1;
 
-	[Description("The fields to sort by. If multiple sort parameters, the list should be comma separated. Precede the parameter with a + or - to sort ascending or descending respectively. If not specified, then a default sort will be used")]
+	[SwaggerParameter("The fields to sort by. If multiple sort parameters, the list should be comma separated. Precede the parameter with a + or - to sort ascending or descending respectively. If not specified, then a default sort will be used")]
 	public string? Sort { get; init; }
 
-	[Description("The fields to return. If multiple, fields must be comma separated. If not specified, then all fields will be returned")]
+	[SwaggerParameter("The fields to return. If multiple, fields must be comma separated. If not specified, then all fields will be returned")]
 	public string? Fields { get; init; }
 
 	public const int MaxPageSize = 100;

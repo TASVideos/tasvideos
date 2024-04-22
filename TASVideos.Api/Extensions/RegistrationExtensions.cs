@@ -60,8 +60,8 @@ internal static class RegistrationExtensions
 		var props = typeof(T).GetProperties();
 		foreach (var prop in props)
 		{
-			var descriptionAttr = prop.GetCustomAttribute<DescriptionAttribute>();
-			if (descriptionAttr is null)
+			var swaggerParameter = prop.GetCustomAttribute<SwaggerParameterAttribute>();
+			if (swaggerParameter is null)
 			{
 				continue;
 			}
@@ -69,7 +69,7 @@ internal static class RegistrationExtensions
 			var parameter = list.FirstOrDefault(p => p.Name == prop.Name);
 			if (parameter is not null)
 			{
-				parameter.Description = descriptionAttr.Description;
+				parameter.Description = swaggerParameter.Description;
 			}
 		}
 	}
