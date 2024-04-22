@@ -4,7 +4,7 @@ internal class AuthenticationRequestValidator : AbstractValidator<Authentication
 {
 	public AuthenticationRequestValidator()
 	{
-		RuleFor(g => g.Username).MinimumLength(1);
-		RuleFor(g => g.Password).MinimumLength(1);
+		RuleFor(a => a.Username).MinimumLength(1);
+		RuleFor(a => a.Password).MinimumLength(1);
 	}
 }

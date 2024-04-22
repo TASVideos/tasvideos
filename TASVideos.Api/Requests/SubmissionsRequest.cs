@@ -20,7 +20,7 @@ internal class SubmissionsRequest : ApiRequest, ISubmissionFilter
 	[SwaggerParameter("The ids of the games to filter by")]
 	public string? Games { get; set; }
 
-	[SwaggerParameter("Gets the start type of the movie. 0 = Power On, 1 = Sram, 2 = Savestate")]
+	[SwaggerParameter("The start type of the movie. 0 = Power On, 1 = Sram, 2 = Savestate")]
 	public int? StartType { get; set; }
 
 	ICollection<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear).ToList();
