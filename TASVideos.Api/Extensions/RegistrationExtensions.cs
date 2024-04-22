@@ -54,7 +54,7 @@ internal static class RegistrationExtensions
 		responses.Add("404", new OpenApiResponse { Description = $"{resourceName} with the given id could not be found" });
 	}
 
-	// SwaggerParameter from Swashbuckle.AspNetCore.Annotations should be able to do this automatically but there is an outstanding bug so we need to do this ourselves
+	// SwaggerParameter from Swashbuckle.AspNetCore.Annotations should be able to do this automatically but there is an outstanding bug, so we need to do this ourselves
 	private static void Describe<T>(this IList<OpenApiParameter> list)
 	{
 		var props = typeof(T).GetProperties();

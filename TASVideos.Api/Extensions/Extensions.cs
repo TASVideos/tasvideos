@@ -17,16 +17,6 @@ internal static class Extensions
 		return Enumerable.Range(startYear, endYear - endYear + 1);
 	}
 
-	public static int? GetInt(this HttpRequest request, string key)
-	{
-		return int.TryParse(request.Query[key], out var val) ? val : null;
-	}
-
-	public static bool? GetBool(this HttpRequest request, string key)
-	{
-		return bool.TryParse(request.Query[key], out var val) ? val : null;
-	}
-
 	/// <summary>
 	/// Returns whether the requested sort is valid based on the destination response
 	/// The sorting is valid if all parameters match properties in the response, and that
