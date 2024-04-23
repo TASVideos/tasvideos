@@ -17,10 +17,11 @@ public static class ApplicationBuilderExtensions
 			});
 	}
 
-	public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostEnvironment env)
+	public static WebApplication UseExceptionHandlers(this WebApplication app, IHostEnvironment env)
 	{
 		app.UseExceptionHandler("/Error");
-		return app.UseStatusCodePagesWithReExecute("/Error");
+		app.UseStatusCodePagesWithReExecute("/Error");
+		return app;
 	}
 
 	public static IApplicationBuilder UseGzipCompression(this IApplicationBuilder app, AppSettings settings)

@@ -51,11 +51,11 @@ builder.Host.UseSerilog();
 var app = builder.Build();
 
 app
+	.UseExceptionHandlers(app.Environment)
 	.UseTasvideosApiEndpoints(builder.Environment)
 	.UseRobots()
 	.UseMiddleware<HtmlRedirectionMiddleware>()
 	.UseRequestLocalization()
-	.UseExceptionHandlers(app.Environment)
 	.UseGzipCompression(settings)
 	.UseWebOptimizer()
 	.UseStaticFilesWithExtensionMapping()
