@@ -11,24 +11,13 @@ public class PlatformFramerates(ApplicationDbContext db) : WikiViewComponent
 	{
 		Framerates = await db.GameSystemFrameRates
 			.Where(sf => !sf.Obsolete)
-			.Select(sf => new Framerate
-			{
-				SystemCode = sf.System!.Code,
-				FrameRate = sf.FrameRate,
-				RegionCode = sf.RegionCode,
-				Preliminary = sf.Preliminary
-			})
-			.OrderBy(sf => sf.SystemCode)
+			.OrderBy(sf => sf.System!.Code)
 			.ThenBy(sf => sf.RegionCode)
+			.Select(sf => new Framerate(
+				sf.System!.Code, sf.RegionCode, sf.FrameRate, sf.Preliminary))
 			.ToListAsync();
 		return View();
 	}
 
-	public class Framerate
-	{
-		public string SystemCode { get; init; } = "";
-		public string RegionCode { get; init; } = "";
-		public double FrameRate { get; init; }
-		public bool Preliminary { get; init; }
-	}
+	public record Framerate(string SystemCode, string RegionCode, double FrameRate, bool Preliminary);
 }

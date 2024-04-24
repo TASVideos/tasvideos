@@ -23,24 +23,17 @@ public class MoviesGameList(ApplicationDbContext db) : WikiViewComponent
 
 		Games = await db.Games
 			.ForSystem(SystemId.Value)
-			.Select(g => new GameEntry
-			{
-				Id = g.Id,
-				Name = g.DisplayName,
-				PublicationIds = g.Publications
+			.Select(g => new GameEntry(
+				g.Id,
+				g.DisplayName,
+				g.Publications
 					.Where(p => p.ObsoletedById == null)
 					.Select(p => p.Id)
-					.ToList()
-			})
+					.ToList()))
 			.ToListAsync();
 
 		return View();
 	}
 
-	public class GameEntry
-	{
-		public int Id { get; init; }
-		public string Name { get; init; } = "";
-		public List<int> PublicationIds { get; init; } = [];
-	}
+	public record GameEntry(int Id, string Name, List<int> PublicationIds);
 }

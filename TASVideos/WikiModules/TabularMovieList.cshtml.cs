@@ -26,11 +26,7 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 				AdditionalAuthors = p.AdditionalAuthors,
 				Screenshot = p.Files
 					.Where(f => f.Type == FileType.Screenshot)
-					.Select(f => new MovieEntry.ScreenshotFile
-					{
-						Path = f.Path,
-						Description = f.Description
-					})
+					.Select(f => new MovieEntry.ScreenshotFile(f.Path, f.Description))
 					.First()
 			})
 			.ToListAsync();
@@ -42,7 +38,6 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 	{
 		public int Id { get; init; }
 		public DateTime CreateTimestamp { get; init; }
-
 		public string System { get; init; } = "";
 		public string Game { get; init; } = "";
 		public string? Goal { get; init; }
@@ -50,12 +45,8 @@ public class TabularMovieList(ApplicationDbContext db) : WikiViewComponent
 		public string? AdditionalAuthors { get; init; }
 		public int Frames { get; init; }
 		public double FrameRate { get; init; }
-		public ScreenshotFile Screenshot { get; init; } = new();
+		public ScreenshotFile Screenshot { get; init; } = null!;
 
-		public class ScreenshotFile
-		{
-			public string Path { get; init; } = "";
-			public string? Description { get; init; }
-		}
+		public record ScreenshotFile(string Path, string? Description);
 	}
 }

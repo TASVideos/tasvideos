@@ -26,13 +26,11 @@ public class MoviesByAuthor(ApplicationDbContext db) : WikiViewComponent
 
 		Publications = await db.Publications
 			.ForDateRange(before.Value, after.Value)
-			.Select(p => new PublicationEntry
-			{
-				Id = p.Id,
-				Title = p.Title,
-				Authors = p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-				PublicationClassIconPath = p.PublicationClass!.IconPath
-			})
+			.Select(p => new PublicationEntry(
+				p.Id,
+				p.Title,
+				p.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
+				p.PublicationClass!.IconPath))
 			.ToListAsync();
 
 		if (newbiesOnly || MarkNewbies)
@@ -56,11 +54,5 @@ public class MoviesByAuthor(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public class PublicationEntry
-	{
-		public int Id { get; init; }
-		public string Title { get; init; } = "";
-		public IEnumerable<string> Authors { get; init; } = [];
-		public string? PublicationClassIconPath { get; init; } = "";
-	}
+	public record PublicationEntry(int Id, string Title, IEnumerable<string> Authors, string? ClassIconPath);
 }

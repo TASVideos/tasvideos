@@ -11,7 +11,7 @@ public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsSer
 	{
 		var showCount = count ?? 50;
 
-		var players = await db.Users
+		var authors = await db.Users
 			.ThatArePublishedAuthors()
 			.Select(u => new PointsEntry
 			{
@@ -20,12 +20,12 @@ public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsSer
 			})
 			.ToListAsync();
 
-		foreach (var user in players)
+		foreach (var user in authors)
 		{
 			(user.Points, user.Rank) = await pointsService.PlayerPoints(user.Id);
 		}
 
-		Authors = players
+		Authors = authors
 			.OrderByDescending(u => u.Points)
 			.Take(showCount)
 			.ToList();

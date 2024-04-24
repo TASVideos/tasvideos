@@ -30,7 +30,7 @@
 					@foreach (var pub in author.Pubs)
 					{
 						<li>
-							<icon condition="Model.ShowClasses" path="@pub.PublicationClassIconPath" />
+							<icon condition="Model.ShowClasses" path="@pub.ClassIconPath" />
 							<pub-link id="pub.Id"> @pub.Title </pub-link>
 						</li>
 					}
