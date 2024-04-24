@@ -1,13 +1,8 @@
 ﻿using System.Globalization;
 using System.IO.Compression;
-using System.Reflection;
-using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using TASVideos.Core.Settings;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
@@ -162,47 +157,6 @@ public static class ServiceCollectionExtensions
 			.AddDefaultTokenProviders();
 
 		return services;
-	}
-
-	public static IServiceCollection AddSwagger(this IServiceCollection services, AppSettings settings)
-	{
-		services.AddAuthentication(x =>
-		{
-			x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-			x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-		}).AddJwtBearer(x =>
-		{
-			x.RequireHttpsMetadata = true;
-			x.SaveToken = true;
-			x.TokenValidationParameters = new TokenValidationParameters
-			{
-				ValidateIssuerSigningKey = true,
-				IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(settings.Jwt.SecretKey)),
-				ValidateIssuer = false,
-				ValidateAudience = false
-			};
-		});
-
-		var version = Assembly.GetExecutingAssembly().GetName().Version ?? new Version();
-
-		return services.AddSwaggerGen(c =>
-		{
-			c.SwaggerDoc(
-				"v1",
-				new OpenApiInfo
-				{
-					Title = "TASVideos API",
-					Version = $"v{version.Major}.{version.Minor}.{version.Revision}",
-					Description = "API For tasvideos.org content"
-				});
-			c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-			{
-				Name = "Authorization"
-			});
-			var basePath = AppContext.BaseDirectory;
-			var xmlPath = Path.Combine(basePath, "TASVideos.Api.xml");
-			c.IncludeXmlComments(xmlPath);
-		});
 	}
 
 	private static IServiceCollection AddHttpContext(this IServiceCollection services)

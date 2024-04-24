@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace TASVideos.Core;
+﻿namespace TASVideos.Core;
 
 /// <summary>
 /// Represents a request for a data collection that can be sorted.
@@ -64,39 +62,6 @@ public static class SortableExtensions
 					str.Replace("-", "").Replace("+", ""),
 					param,
 					StringComparison.OrdinalIgnoreCase)
-				&& str.StartsWith("-"));
-	}
-
-	/// <summary>
-	/// Returns whether the requested sort is valid based on the destination response
-	/// The sorting is valid if all parameters match properties in the response, and that
-	/// those properties are declared as sortable.
-	/// </summary>
-	public static bool IsValidSort(this ISortable? request, Type? response)
-	{
-		if (response is null)
-		{
-			return false;
-		}
-
-		if (string.IsNullOrWhiteSpace(request?.Sort))
-		{
-			return true;
-		}
-
-		var requestedSorts = request.Sort
-			.SplitWithEmpty(",")
-			.Select(str => str.Trim())
-			.Select(s => s.Replace("-", ""))
-			.Select(s => s.Replace("+", ""))
-			.Select(s => s.ToLower());
-
-		var sortableProperties = response
-			.GetProperties()
-			.Where(p => p.GetCustomAttribute<SortableAttribute>() != null)
-			.Select(p => p.Name.ToLower())
-			.ToList();
-
-		return requestedSorts.All(s => sortableProperties.Contains(s));
+				&& str.StartsWith('-'));
 	}
 }

@@ -17,16 +17,11 @@ public static class ApplicationBuilderExtensions
 			});
 	}
 
-	public static IApplicationBuilder UseExceptionHandlers(this IApplicationBuilder app, IHostEnvironment env)
+	public static WebApplication UseExceptionHandlers(this WebApplication app, IHostEnvironment env)
 	{
 		app.UseExceptionHandler("/Error");
 		app.UseStatusCodePagesWithReExecute("/Error");
-
-		// TODO: we want to use some middleware so that we can dynamically decide to return json for the API
-		// However, registering this in combination with the pages above causes a request to happen a second time
-		// when there is an unhandled exception, which is very bad
 		return app;
-		////.UseMiddleware(typeof(ErrorHandlingMiddleware));
 	}
 
 	public static IApplicationBuilder UseGzipCompression(this IApplicationBuilder app, AppSettings settings)
@@ -75,29 +70,6 @@ public static class ApplicationBuilderExtensions
 		return app.UseEndpoints(endpoints =>
 		{
 			endpoints.MapRazorPages();
-			endpoints.MapControllers();
-		});
-	}
-
-	public static IApplicationBuilder UseSwaggerUi(
-		this IApplicationBuilder app,
-		IHostEnvironment env)
-	{
-		// Append environment to app name when in non-production environments
-		var appName = "TASVideos";
-		if (!env.IsProduction())
-		{
-			appName += $" ({env.EnvironmentName})";
-		}
-
-		// Enable middleware to serve generated Swagger as a JSON endpoint.
-		app.UseSwagger();
-
-		// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-		return app.UseSwaggerUI(c =>
-		{
-			c.SwaggerEndpoint("/swagger/v1/swagger.json", appName);
-			c.RoutePrefix = "api";
 		});
 	}
 

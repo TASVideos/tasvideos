@@ -1,10 +1,6 @@
-﻿#pragma warning disable 1591
-namespace TASVideos.Api.Responses;
+﻿namespace TASVideos.Api.Responses;
 
-/// <summary>
-/// Represents a publication returned by the Publications endpoint.
-/// </summary>
-public class PublicationsResponse
+internal class PublicationsResponse
 {
 	[Sortable]
 	public int Id { get; init; }
