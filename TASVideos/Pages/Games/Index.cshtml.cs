@@ -12,7 +12,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
-	public GameDisplayModel Game { get; set; } = new();
+	public GameDisplay Game { get; set; } = new();
 
 	public record TabMiniMovieModel(string TabTitleRegular, string TabTitleBold, DisplayMiniMovie.MiniMovieModel Movie);
 
@@ -24,7 +24,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var query = db.Games.Select(g => new GameDisplayModel
+		var query = db.Games.Select(g => new GameDisplay
 		{
 			Id = g.Id,
 			DisplayName = g.DisplayName,
@@ -33,9 +33,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			ScreenshotUrl = g.ScreenshotUrl,
 			GameResourcesPage = g.GameResourcesPage,
 			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName).ToList(),
-			Versions = g.GameVersions.Select(gv => new GameDisplayModel.GameVersion(
+			Versions = g.GameVersions.Select(gv => new GameDisplay.GameVersion(
 				gv.Type,
-				gv.Id,
 				gv.Md5,
 				gv.Sha1,
 				gv.Name,
@@ -43,7 +42,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				gv.Version,
 				gv.System!.Code,
 				gv.TitleOverride)).ToList(),
-			GameGroups = g.GameGroups.Select(gg => new GameDisplayModel.GameGroup(gg.GameGroupId, gg.GameGroup!.Name)).ToList(),
+			GameGroups = g.GameGroups.Select(gg => new GameDisplay.GameGroup(gg.GameGroupId, gg.GameGroup!.Name)).ToList(),
 			PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
 			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
 			SubmissionCount = g.Submissions.Count,
@@ -124,7 +123,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public record WatchFile(long Id, string FileName);
 	public record TopicEntry(int Id, string Title);
 
-	public class GameDisplayModel
+	public class GameDisplay
 	{
 		public int Id { get; init; }
 		public string DisplayName { get; init; } = "";
@@ -142,7 +141,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		public record GameVersion(
 			VersionTypes Type,
-			int Id,
 			string? Md5,
 			string? Sha1,
 			string Name,

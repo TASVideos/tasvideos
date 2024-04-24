@@ -10,7 +10,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	public long Id { get; set; }
 
 	[BindProperty]
-	public CatalogViewModel UserFile { get; set; } = new();
+	public Catalog UserFile { get; set; } = new();
 
 	public List<SelectListItem> AvailableSystems { get; set; } = [];
 
@@ -19,7 +19,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		var userFile = await db.UserFiles
-			.Select(uf => new CatalogViewModel
+			.Select(uf => new Catalog
 			{
 				Id = uf.Id,
 				GameId = uf.GameId,
@@ -79,7 +79,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 		}
 	}
 
-	public class CatalogViewModel
+	public class Catalog
 	{
 		public long Id { get; init; }
 

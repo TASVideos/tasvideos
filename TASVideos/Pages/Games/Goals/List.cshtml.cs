@@ -13,7 +13,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public int? GoalToEdit { get; set; }
 
-	public List<GoalListModel> Goals { get; set; } = [];
+	public List<GoalEntry> Goals { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -31,7 +31,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		Goals = await db.GameGoals
 			.Where(gg => gg.GameId == GameId)
-			.Select(gg => new GoalListModel(
+			.Select(gg => new GoalEntry(
 					gg.Id,
 					gg.DisplayName,
 					gg.Publications.Select(p => new PublicationEntry(p.Id, p.Title, p.ObsoletedById.HasValue)).ToList(),
@@ -153,7 +153,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	private IActionResult BackToList() => BasePageRedirect("List", new { GameId });
 
-	public record GoalListModel(int Id, string Name, List<PublicationEntry> Publications, List<SubmissionEntry> Submissions);
+	public record GoalEntry(int Id, string Name, List<PublicationEntry> Publications, List<SubmissionEntry> Submissions);
 
 	public record PublicationEntry(int Id, string Title, bool Obs);
 

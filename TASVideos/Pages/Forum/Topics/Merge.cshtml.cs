@@ -15,7 +15,7 @@ public class MergeModel(
 	public int Id { get; set; }
 
 	[BindProperty]
-	public MergeTopicModel Topic { get; set; } = new();
+	public TopicMerge Topic { get; set; } = new();
 
 	public List<SelectListItem> AvailableForums { get; set; } = [];
 
@@ -29,7 +29,7 @@ public class MergeModel(
 		var topic = await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == Id)
-			.Select(t => new MergeTopicModel
+			.Select(t => new TopicMerge
 			{
 				Title = t.Title,
 				ForumId = t.Forum!.Id,
@@ -138,7 +138,7 @@ public class MergeModel(
 			.ToListAsync();
 	}
 
-	public class MergeTopicModel
+	public class TopicMerge
 	{
 		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";

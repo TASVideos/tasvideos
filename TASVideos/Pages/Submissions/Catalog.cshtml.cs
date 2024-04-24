@@ -18,7 +18,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	public int? GameVersionId { get; set; }
 
 	[BindProperty]
-	public SubmissionCatalogModel Catalog { get; set; } = new();
+	public SubmissionCatalog Catalog { get; set; } = new();
 
 	public List<SelectListItem> AvailableVersions { get; set; } = [];
 	public List<SelectListItem> AvailableGames { get; set; } = [];
@@ -30,7 +30,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	{
 		var catalog = await db.Submissions
 			.Where(s => s.Id == Id)
-			.Select(s => new SubmissionCatalogModel
+			.Select(s => new SubmissionCatalog
 			{
 				Title = s.Title,
 				GameVersionId = s.GameVersionId,
@@ -279,7 +279,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			: [];
 	}
 
-	public class SubmissionCatalogModel
+	public class SubmissionCatalog
 	{
 		public string Title { get; init; } = "";
 

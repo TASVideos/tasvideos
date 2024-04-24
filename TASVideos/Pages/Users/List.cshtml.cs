@@ -9,17 +9,17 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<UserListModel> Users { get; set; } = PageOf<UserListModel>.Empty();
+	public PageOf<UserEntry> Users { get; set; } = PageOf<UserEntry>.Empty();
 
 	public async Task OnGet()
 	{
 		if (string.IsNullOrWhiteSpace(Search.Sort))
 		{
-			Search.Sort = $"-{nameof(UserListModel.CreateTimestamp)}";
+			Search.Sort = $"-{nameof(UserEntry.CreateTimestamp)}";
 		}
 
 		Users = await db.Users
-			.Select(u => new UserListModel
+			.Select(u => new UserEntry
 			{
 				Id = u.Id,
 				UserName = u.UserName,
@@ -73,7 +73,7 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 		return list;
 	}
 
-	public class UserListModel
+	public class UserEntry
 	{
 		[Sortable]
 		public int Id { get; init; }

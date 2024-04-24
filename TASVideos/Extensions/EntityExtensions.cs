@@ -366,9 +366,7 @@ public static class EntityExtensions
 			Description = r.Description,
 			Permissions = r.RolePermission.Select(rp => rp.PermissionId).ToList(),
 			Links = r.RoleLinks.Select(rl => rl.Link).ToList(),
-			Users = r.UserRole
-				.Select(ur => new ListModel.RoleDisplay.UserWithRole(ur.UserId, ur.User!.UserName))
-				.ToList()
+			Users = r.UserRole.Select(ur => ur.User!.UserName).ToList()
 		});
 	}
 
@@ -497,16 +495,14 @@ public static class EntityExtensions
 
 	public static IQueryable<LatestModel.LatestPost> ToLatestPost(this IQueryable<ForumPost> query)
 	{
-		return query.Select(p => new LatestModel.LatestPost
-		{
-			Id = p.Id,
-			CreateTimestamp = p.CreateTimestamp,
-			Text = p.Text,
-			TopicId = p.TopicId ?? 0,
-			TopicTitle = p.Topic!.Title,
-			ForumId = p.Topic.ForumId,
-			ForumName = p.Topic!.Forum!.Name,
-			PosterName = p.Poster!.UserName
-		});
+		return query.Select(p => new LatestModel.LatestPost(
+			p.CreateTimestamp,
+			p.Id,
+			p.TopicId ?? 0,
+			p.Topic!.Title,
+			p.Topic.ForumId,
+			p.Topic!.Forum!.Name,
+			p.Text,
+			p.Poster!.UserName));
 	}
 }

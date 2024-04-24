@@ -7,17 +7,17 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int GameId { get; set; }
 
-	public VersionListModel Versions { get; set; } = new();
+	public VersionList Versions { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
 		var roms = await db.Games
 			.Where(g => g.Id == GameId)
-			.Select(g => new VersionListModel
+			.Select(g => new VersionList
 			{
 				GameDisplayName = g.DisplayName,
 				Versions = g.GameVersions
-				.Select(r => new VersionListModel.VersionEntry(
+				.Select(r => new VersionList.VersionEntry(
 					r.Id,
 					r.Name,
 					r.Md5,
@@ -40,7 +40,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public class VersionListModel
+	public class VersionList
 	{
 		[Display(Name = "Game")]
 		public string GameDisplayName { get; init; } = "";

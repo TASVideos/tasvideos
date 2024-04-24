@@ -14,7 +14,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public GameListRequest Search { get; set; } = new();
 
-	public SystemPageOf<GameListModel> Games { get; set; } = SystemPageOf<GameListModel>.Empty();
+	public SystemPageOf<GameEntry> Games { get; set; } = SystemPageOf<GameEntry>.Empty();
 
 	public List<SelectListItem> SystemList { get; set; } = [];
 
@@ -127,7 +127,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		return ToDropdownResult(items);
 	}
 
-	private async Task<SystemPageOf<GameListModel>> GetPageOfGames(GameListRequest paging)
+	private async Task<SystemPageOf<GameEntry>> GetPageOfGames(GameListRequest paging)
 	{
 		IQueryable<Game> query = db.Games
 			.ForSystemCode(paging.System)
@@ -142,7 +142,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 				EF.Functions.ToTsVector("simple", g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", paging.SearchTerms)));
 		}
 
-		var data = await query.Select(g => new GameListModel
+		var data = await query.Select(g => new GameEntry
 		{
 			Id = g.Id,
 			Name = g.DisplayName,
@@ -150,7 +150,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		})
 		.SortedPageOf(paging);
 
-		return new SystemPageOf<GameListModel>(data)
+		return new SystemPageOf<GameEntry>(data)
 		{
 			System = paging.System,
 			Letter = paging.Letter,
@@ -196,7 +196,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		public static new SystemPageOf<T> Empty() => new([]);
 	}
 
-	public class GameListModel
+	public class GameEntry
 	{
 		[Sortable]
 		public int Id { get; init; }

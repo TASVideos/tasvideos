@@ -11,7 +11,7 @@ public class UploadModel(
 	: BasePageModel
 {
 	[BindProperty]
-	public UserFileUploadModel UserFile { get; set; } = new();
+	public UserFileUpload UserFile { get; set; } = new();
 
 	public int StorageUsed { get; set; }
 
@@ -110,7 +110,7 @@ public class UploadModel(
 			.WithDefaultEntry();
 	}
 
-	public class UserFileUploadModel
+	public class UserFileUpload
 	{
 		[Required]
 		public IFormFile? File { get; init; }

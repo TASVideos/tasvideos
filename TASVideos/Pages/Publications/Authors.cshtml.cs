@@ -3,13 +3,13 @@
 [AllowAnonymous]
 public class AuthorsModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<AuthorListEntry> Authors { get; set; } = [];
+	public List<AuthorEntry> Authors { get; set; } = [];
 
 	public async Task OnGet()
 	{
 		Authors = await db.Users
 			.ThatArePublishedAuthors()
-			.Select(u => new AuthorListEntry(
+			.Select(u => new AuthorEntry(
 				u.Id,
 				u.UserName,
 				u.Publications.Count(pa => !pa.Publication!.ObsoletedById.HasValue),
@@ -17,5 +17,5 @@ public class AuthorsModel(ApplicationDbContext db) : BasePageModel
 			.ToListAsync();
 	}
 
-	public record AuthorListEntry(int Id, string Author, int ActivePubCount, int ObsoletePubCount);
+	public record AuthorEntry(int Id, string Author, int ActivePubCount, int ObsoletePubCount);
 }
