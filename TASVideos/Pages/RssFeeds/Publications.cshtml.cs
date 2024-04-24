@@ -45,7 +45,7 @@ public class PublicationsModel(ApplicationDbContext db, IWikiPages wikiPages) : 
 	public record RssPublication(
 		int Id, int MovieFileSize, DateTime CreateTimestamp, string Title, List<string> TagNames, List<PubFile> Files, List<string> StreamingUrls, List<double> Ratings)
 	{
-		public IWikiPage Wiki { get; set; } = null!;
+		public IWikiPage? Wiki { get; set; }
 		public string ScreenshotPath => Files.First(f => f.Type == FileType.Screenshot).Path;
 		public double RatingCount => Ratings.Count / 2.0;
 		public double RatingMin => Ratings.Any() ? Ratings.Min() : 0;

@@ -29,6 +29,6 @@ public class SubmissionsModel(ApplicationDbContext db, IWikiPages wikiPages) : B
 
 	public record RssSubmission(int Id, int? TopicId, DateTime CreateTimestamp, string Title)
 	{
-		public IWikiPage Wiki { get; set; } = null!;
+		public IWikiPage? Wiki { get; set; }
 	}
 }
