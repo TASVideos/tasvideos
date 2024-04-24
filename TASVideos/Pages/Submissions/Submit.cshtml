@@ -100,7 +100,7 @@
 					<span>
 						@await Html.RenderWiki(SystemWiki.SubmissionImportant)
 					</span>
-					<partial name="_WikiEditHelper" model="@("Create_Markup")" />
+					<partial name="_WikiEditHelper" model="@("Markup")" />
 					<textarea asp-for="Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
 					<span asp-validation-for="Markup" class="text-danger"></span>
 					<fullrow id="backup-restore" class="d-none mt-2">
