@@ -22,6 +22,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	public List<PostSearchModel> PostResults { get; set; } = [];
 	public List<GameSearchModel> GameResults { get; set; } = [];
 	public List<PublicationSearchModel> PublicationResults { get; set; } = [];
+	public List<UserSearchModel> UserResults { get; set; } = [];
 
 	[FromQuery]
 	[Display(Name = "Search Wiki")]
@@ -42,6 +43,10 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	[Display(Name = "Search Games")]
 	public bool GameSearch { get; set; } = true;
+
+	[FromQuery]
+	[Display(Name = "Search Users")]
+	public bool UserSearch { get; set; } = false;
 
 	public int DisplayPageSize { get; set; } = PageSize;
 	public bool EnablePrev { get; set; }
@@ -146,6 +151,17 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.ToListAsync();
 			}
 
+			if (UserSearch)
+			{
+				UserResults = await db.Users
+					.Where(u => Regex.IsMatch(u.UserName, "(^|[^A-Za-z])" + SearchTerms))
+					.OrderBy(u => u.UserName)
+					.Skip(skip)
+					.Take(DisplayPageSize + 1)
+					.Select(u => new UserSearchModel(u.Id, u.UserName, u.UserRoles.Select(ur => ur.Role!.Name)))
+					.ToListAsync();
+			}
+
 			EnablePrev = PageNumber > 1;
 			EnableNext = new[] { PageResults.Count, TopicResults.Count, PostResults.Count, GameResults.Count, PublicationResults.Count }.Any(c => c > DisplayPageSize);
 		}
@@ -158,4 +174,5 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	public record PostSearchModel(string Text, int Index, string TopicName, int PostId);
 	public record GameSearchModel(int Id, string DisplayName);
 	public record PublicationSearchModel(int Id, string Title);
+	public record UserSearchModel(int Id, string UserName, IEnumerable<string> Roles);
 }
