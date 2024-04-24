@@ -64,7 +64,9 @@
 		document.location = `/Games/Edit?returnUrl=${returnUrl}`;
 	}
 
-	gameGoalBtn.onclick = function () {
-		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${returnUrl}`;
+	if (gameGoalBtn) {
+		gameGoalBtn.onclick = function () {
+			document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${returnUrl}`;
+		}
 	}
 }
