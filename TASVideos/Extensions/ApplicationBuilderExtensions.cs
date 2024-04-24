@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.StaticFiles;
-using Serilog;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
 
@@ -59,8 +58,9 @@ public static class ApplicationBuilderExtensions
 			Secure = CookieSecurePolicy.Always
 		});
 
-		app.UseRouting();
-		app.UseAuthorization();
+		app
+			.UseRouting()
+			.UseAuthorization();
 
 		if (!env.IsProduction() && !env.IsStaging())
 		{
@@ -71,10 +71,5 @@ public static class ApplicationBuilderExtensions
 		{
 			endpoints.MapRazorPages();
 		});
-	}
-
-	public static IApplicationBuilder UseLogging(this IApplicationBuilder app)
-	{
-		return app.UseSerilogRequestLogging();
 	}
 }

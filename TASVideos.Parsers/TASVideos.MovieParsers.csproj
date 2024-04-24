@@ -16,4 +16,9 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+	    <HintPath>..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\8.0.4\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
 </Project>

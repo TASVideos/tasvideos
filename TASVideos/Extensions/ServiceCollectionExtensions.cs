@@ -81,12 +81,7 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	public static IServiceCollection AddMovieParser(this IServiceCollection services)
-	{
-		return services.AddSingleton<IMovieParser, MovieParser>();
-	}
-
-	public static IServiceCollection AddMvcWithOptions(this IServiceCollection services, IHostEnvironment env)
+	public static IServiceCollection AddRazorPages(this IServiceCollection services, IHostEnvironment env)
 	{
 		if (env.IsDevelopment())
 		{
@@ -94,7 +89,7 @@ public static class ServiceCollectionExtensions
 		}
 
 		services.AddResponseCaching();
-		services
+		var pagesResult = services
 			.AddRazorPages(options =>
 			{
 				options.Conventions.AddPageRoute("/Wiki/Render", "{*url}");
@@ -111,8 +106,12 @@ public static class ServiceCollectionExtensions
 				{
 					options.Conventions.AddPageRoute(redirect.Key, redirect.Value);
 				}
-			})
-			.AddRazorRuntimeCompilation();
+			});
+
+		if (!env.IsProduction())
+		{
+			pagesResult.AddRazorRuntimeCompilation();
+		}
 
 		services.AddAntiforgery(options =>
 		{

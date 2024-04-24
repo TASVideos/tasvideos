@@ -5,6 +5,7 @@ using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
+using TASVideos.MovieParsers;
 using TASVideos.Services;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,12 +32,12 @@ string dbConnection = settings.UseSampleDatabase
 builder.Services
 	.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection)
 	.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), settings)
-	.AddMovieParser()
+	.AddTasvideosMovieParsers()
 	.AddTasvideosApi(settings);
 
 // 3rd Party
 builder.Services
-	.AddMvcWithOptions(builder.Environment)
+	.AddRazorPages(builder.Environment)
 	.AddIdentity(builder.Environment)
 	.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"))
 	.AddWebOptimizer(pipeline =>
@@ -61,7 +62,7 @@ app
 	.UseStaticFilesWithExtensionMapping()
 	.UseAuthentication()
 	.UseMiddleware<CustomLocalizationMiddleware>()
-	.UseLogging()
+	.UseSerilogRequestLogging()
 	.UseMvcWithOptions(app.Environment);
 
 if (app.Environment.IsDevelopment())
