@@ -27,7 +27,7 @@ public class EmailConfirmationSentModel(SignInManager signInManager, IEmailServi
 		if (user is not null && !user.EmailConfirmed)
 		{
 			var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
-			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
+			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token);
 
 			await emailService.EmailConfirmation(Email, callbackUrl);
 		}

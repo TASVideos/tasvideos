@@ -10,7 +10,7 @@ public class SendConfirmationEmail(UserManager userManager, IEmailService emailS
 	{
 		var user = await userManager.GetRequiredUser(User);
 		var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
-		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
+		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token);
 		await emailService.EmailConfirmation(user.Email, callbackUrl);
 
 		return RedirectToPage("EmailConfirmationSent");

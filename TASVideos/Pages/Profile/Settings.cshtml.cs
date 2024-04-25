@@ -167,7 +167,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 		var user = await userManager.GetRequiredUser(User);
 
 		var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
-		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code, Request.Scheme);
+		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code);
 		await emailService.EmailConfirmation(user.Email, callbackUrl);
 
 		SuccessStatusMessage("Verification email sent. Please check your email.");

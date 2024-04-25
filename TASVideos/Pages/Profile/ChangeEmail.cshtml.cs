@@ -42,7 +42,7 @@ public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEma
 
 		cache.Set(token, NewEmail);
 
-		var callbackUrl = Url.EmailChangeConfirmationLink(token, Request.Scheme);
+		var callbackUrl = Url.EmailChangeConfirmationLink(token);
 		await emailService.EmailConfirmation(NewEmail, callbackUrl);
 
 		return RedirectToPage("EmailConfirmationSent");

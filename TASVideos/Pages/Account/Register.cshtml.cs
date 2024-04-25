@@ -109,7 +109,7 @@ public class RegisterModel(
 		}
 
 		var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
-		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
+		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token);
 
 		await signInManager.SignInAsync(user, isPersistent: false);
 		await publisher.SendUserManagement($"New User registered! [{user.UserName}]({{0}})", user.UserName);
