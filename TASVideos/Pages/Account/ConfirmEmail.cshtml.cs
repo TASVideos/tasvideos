@@ -38,11 +38,7 @@ public class ConfirmEmailModel(
 		await signInManager.UserManager.AddStandardRoles(user.Id);
 		await signInManager.UserManager.AddUserPermissionsToClaims(user);
 		await signInManager.SignInAsync(user, isPersistent: false);
-		await publisher.SendUserManagement(
-			$"User {user.UserName} activated",
-			$"User [{user.UserName}]({{0}}) activated",
-			"",
-			$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
+		await publisher.SendUserManagement($"User [{user.UserName}]({{0}}) activated", user.UserName);
 		await userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
 		await tasVideoAgent.SendWelcomeMessage(user.Id);
 		return Page();

@@ -127,12 +127,9 @@ public class EditModel(
 
 		if (userNameChange is not null)
 		{
-			string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
 			await publisher.SendUserManagement(
-				message,
-				$"Username {userNameChange} changed to [{user.UserName}]({{0}}) by {User.Name()}",
-				"",
-				$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
+				$"Username {userNameChange} changed to [{user.UserName}]({{0}}) by {User.Name()}", user.UserName);
+			string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
 			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			await userManager.UserNameChanged(user, userNameChange);
 		}
@@ -170,11 +167,7 @@ public class EditModel(
 				message += "Removed roles: " + string.Join(", ", removedRoles);
 			}
 
-			await publisher.SendUserManagement(
-				$"User {user.UserName} edited by {User.Name()}",
-				$"User [{user.UserName}]({{0}}) edited by {User.Name()}",
-				message,
-				$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
+			await publisher.SendUserManagement($"User [{user.UserName}]({{0}}) edited by {User.Name()}", user.UserName);
 			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 		}
 

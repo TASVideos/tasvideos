@@ -206,17 +206,15 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string formattedTitle, string userName)
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = PostType.Administrative,
 			Group = PostGroups.UserManagement,
-			Title = title,
+			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
-			Body = body,
-			Link = publisher.ToAbsolute(relativeLink)
+			Link = publisher.ToAbsolute($"Users/Profile/{Uri.EscapeDataString(userName)}")
 		});
 	}
 

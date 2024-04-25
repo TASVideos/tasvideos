@@ -69,13 +69,10 @@ public class EditEmailModel(
 		var result = await ConcurrentSave(db, "", $"Unable to update user data for {user.UserName}");
 		if (result)
 		{
+			await publisher.SendUserManagement(
+				$"User [{user.UserName}]({{0}}) email changed by {User.Name()}", user.UserName);
 			var message = $"User {user.UserName} email changed by {User.Name()}";
 			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
-			await publisher.SendUserManagement(
-				message,
-				$"User [{user.UserName}]({{0}}) email changed by {User.Name()}",
-				"",
-				$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
 			SuccessStatusMessage($"User {user.UserName} email changed by {User.Name()}");
 		}
 

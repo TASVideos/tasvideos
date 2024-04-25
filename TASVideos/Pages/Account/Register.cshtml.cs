@@ -112,11 +112,7 @@ public class RegisterModel(
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
 
 		await signInManager.SignInAsync(user, isPersistent: false);
-		await publisher.SendUserManagement(
-			$"New User registered! {user.UserName}",
-			$"New User registered! [{user.UserName}]({{0}})",
-			"",
-			$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
+		await publisher.SendUserManagement($"New User registered! [{user.UserName}]({{0}})", user.UserName);
 		await userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 		await emailService.EmailConfirmation(Email, callbackUrl);
 
