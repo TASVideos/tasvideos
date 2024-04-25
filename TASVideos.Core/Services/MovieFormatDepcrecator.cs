@@ -82,20 +82,20 @@ public class MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser)
 			.SingleOrDefaultAsync(f => f.FileExtension == extension);
 
 		// If record does not exist, no work is needed to allow it
-		if (format != null)
+		if (format is null)
 		{
-			format.Deprecated = false;
-			try
-			{
-				await db.SaveChangesAsync();
-				return true;
-			}
-			catch (DbUpdateException)
-			{
-				return false;
-			}
+			return true;
 		}
 
-		return true;
+		format.Deprecated = false;
+		try
+		{
+			await db.SaveChangesAsync();
+			return true;
+		}
+		catch (DbUpdateException)
+		{
+			return false;
+		}
 	}
 }

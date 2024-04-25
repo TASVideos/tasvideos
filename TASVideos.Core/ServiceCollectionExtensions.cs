@@ -99,18 +99,18 @@ public static class ServiceCollectionExtensions
 
 	private static IServiceCollection AddCacheService(this IServiceCollection services, AppSettings.CacheSetting cacheSettings)
 	{
-		if (cacheSettings.CacheType == "Memory")
+		switch (cacheSettings.CacheType)
 		{
-			services.AddMemoryCache();
-			services.AddSingleton<ICacheService, MemoryCacheService>();
-		}
-		else if (cacheSettings.CacheType == "Redis")
-		{
-			services.AddScoped<ICacheService, RedisCacheService>();
-		}
-		else
-		{
-			services.AddSingleton<ICacheService, NoCacheService>();
+			case "Memory":
+				services.AddMemoryCache();
+				services.AddSingleton<ICacheService, MemoryCacheService>();
+				break;
+			case "Redis":
+				services.AddScoped<ICacheService, RedisCacheService>();
+				break;
+			default:
+				services.AddSingleton<ICacheService, NoCacheService>();
+				break;
 		}
 
 		return services;

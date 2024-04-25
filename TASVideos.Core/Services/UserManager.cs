@@ -200,7 +200,7 @@ public class UserManager(
 					.ToList(),
 				UserFiles = new()
 				{
-					Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
+					Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden)
 				}
 			})
 			.SingleOrDefaultAsync(u => u.UserName == userName);

@@ -59,11 +59,9 @@ internal class TASVideosGrue(ApplicationDbContext db, IForumService forumService
 
 	private static string RejectionMessage(DateTime createTimeStamp)
 	{
-		string message = "om, nom, nom";
-		message += (DateTime.UtcNow - createTimeStamp).TotalDays >= 365
+		const string message = "om, nom, nom";
+		return message + ((DateTime.UtcNow - createTimeStamp).TotalDays >= 365
 			? "... blech, stale!"
-			: RandomMessages.AtRandom();
-
-		return message;
+			: RandomMessages.AtRandom());
 	}
 }

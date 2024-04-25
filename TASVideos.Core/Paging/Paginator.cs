@@ -75,7 +75,7 @@ public static class Paginator
 
 	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy)
 	{
-		bool desc = column?.StartsWith("-") ?? false;
+		bool desc = column?.StartsWith('-') ?? false;
 
 		column = column?.Trim('-').Trim('+').ToLower() ?? "";
 
