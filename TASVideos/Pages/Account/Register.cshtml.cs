@@ -87,39 +87,41 @@ public class RegisterModel(
 			ModelState.AddModelError(nameof(Password), "This password is not allowed, please ensure your password is sufficiently different from your username and/or email");
 		}
 
-		if (ModelState.IsValid)
+		if (!ModelState.IsValid)
 		{
-			var user = new User
-			{
-				UserName = UserName,
-				Email = Email,
-				TimeZoneId = SelectedTimeZone,
-				From = From,
-				EmailOnPrivateMessage = true
-			};
-			var result = await signInManager.UserManager.CreateAsync(user, Password);
-			if (result.Succeeded)
-			{
-				var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
-				var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
-
-				await signInManager.SignInAsync(user, isPersistent: false);
-				await publisher.SendUserManagement(
-					$"New User registered! {user.UserName}",
-					$"New User registered! [{user.UserName}]({{0}})",
-					"",
-					$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
-				await userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
-				await emailService.EmailConfirmation(Email, callbackUrl);
-
-				return signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
-					? RedirectToPage("EmailConfirmationSent")
-					: BaseReturnUrlRedirect();
-			}
-
-			AddErrors(result);
+			return Page();
 		}
 
-		return Page();
+		var user = new User
+		{
+			UserName = UserName,
+			Email = Email,
+			TimeZoneId = SelectedTimeZone,
+			From = From,
+			EmailOnPrivateMessage = true
+		};
+
+		var result = await signInManager.UserManager.CreateAsync(user, Password);
+		if (!result.Succeeded)
+		{
+			AddErrors(result);
+			return Page();
+		}
+
+		var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
+
+		await signInManager.SignInAsync(user, isPersistent: false);
+		await publisher.SendUserManagement(
+			$"New User registered! {user.UserName}",
+			$"New User registered! [{user.UserName}]({{0}})",
+			"",
+			$"Users/Profile/{Uri.EscapeDataString(user.UserName)}");
+		await userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
+		await emailService.EmailConfirmation(Email, callbackUrl);
+
+		return signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
+			? RedirectToPage("EmailConfirmationSent")
+			: BaseReturnUrlRedirect();
 	}
 }
