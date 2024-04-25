@@ -100,14 +100,14 @@ public class SignInManager(
 		return await db.Users.AnyAsync(u => EF.Functions.Like(u.Email, baseEmail));
 	}
 
-	public async Task<bool> EmailAndUserNameMatch(string username, string email)
+	public async Task<User?> GetUserByEmailAndUserName(string username, string email)
 	{
 		if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username))
 		{
-			return false;
+			return null;
 		}
 
-		return await db.Users.AnyAsync(u => u.Email == email && u.UserName == username);
+		return await db.Users.SingleOrDefaultAsync(u => u.Email == email && u.UserName == username);
 	}
 
 	public async Task Logout(ClaimsPrincipal user)
