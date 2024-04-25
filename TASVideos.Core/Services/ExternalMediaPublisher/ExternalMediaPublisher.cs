@@ -220,6 +220,20 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
+	public static async Task SendRoleManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string relativeLink)
+	{
+		await publisher.Send(new Post
+		{
+			Announcement = "",
+			Type = PostType.Administrative,
+			Group = PostGroups.UserManagement,
+			Title = title,
+			FormattedTitle = formattedTitle,
+			Body = "",
+			Link = !string.IsNullOrWhiteSpace(relativeLink) ? publisher.ToAbsolute(relativeLink) : ""
+		});
+	}
+
 	public static async Task SendGameManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
