@@ -121,7 +121,8 @@ public class CreateModel : BasePageModel
 		};
 		var addedWikiPage = await _wikiPages.Add(wikiPage);
 
-		exhibition.TopicId = await _tasVideoAgent.PostExhibitionTopic(exhibition.Id, $"D{exhibition.Id}: {exhibition.Title}");
+		string topicTitle = $"D{exhibition.Id}: {exhibition.Title}";
+		exhibition.TopicId = await _tasVideoAgent.PostExhibitionTopic(exhibition.Id, topicTitle);
 		await _db.SaveChangesAsync();
 
 		return RedirectToPage("View", new { exhibition.Id });

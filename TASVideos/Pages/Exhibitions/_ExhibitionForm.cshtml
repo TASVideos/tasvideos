@@ -173,6 +173,20 @@
 		<textarea asp-for="Exhibition.Markup" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
 		<span asp-validation-for="Exhibition.Markup" class="text-danger"></span>
 	</fieldset>
+	@if (Model.Exhibition.ExhibitionId != 0)
+	{
+		<fieldset>
+			<label asp-for="Exhibition.RevisionMessage" class="form-control-label"></label>
+			<div class="input-group">
+				<input asp-for="Exhibition.RevisionMessage" class="form-control" />
+				<div class="input-group-text">
+						<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="Exhibition.MinorEdit" />
+					<label asp-for="Exhibition.MinorEdit" class="form-check-label"></label>
+				</div>
+			</div>
+			<span asp-validation-for="Exhibition.RevisionMessage" class="text-danger"></span>
+		</fieldset>
+	}
 
 	<div class="text-center alert-info mt-2" role="alert">
 		<label class="alert-info">

@@ -29,6 +29,12 @@ public class ExhibitionAddEditModel
 	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
+	[StringLength(1000)]
+	[Display(Name = "Revision Message")]
+	public string? RevisionMessage { get; set; } = "";
+
+	public bool MinorEdit { get; set; }
+
 	public class ExhibitionAddEditUrlModel
 	{
 		public int UrlId { get; set; }
