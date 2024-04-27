@@ -110,8 +110,7 @@ public class AdditionalMoviesModel(
 
 	public async Task<IActionResult> OnPostDelete(int publicationFileId)
 	{
-		var file = await db.PublicationFiles
-			.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
+		var file = await db.PublicationFiles.FindAsync(publicationFileId);
 
 		if (file is not null)
 		{

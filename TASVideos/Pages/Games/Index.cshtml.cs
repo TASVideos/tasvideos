@@ -13,13 +13,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
 
 	public GameDisplay Game { get; set; } = new();
-
-	public record TabMiniMovieModel(string TabTitleRegular, string TabTitleBold, DisplayMiniMovie.MiniMovieModel Movie);
-
 	public List<TabMiniMovieModel> Movies { get; set; } = [];
-
 	public List<WatchFile> WatchFiles { get; set; } = [];
-
 	public List<TopicEntry> Topics { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
@@ -53,8 +48,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			? query.Where(g => g.Id == ParsedId)
 			: query.Where(g => g.Abbreviation == Id);
 
-		var game = await query
-			.SingleOrDefaultAsync();
+		var game = await query.SingleOrDefaultAsync();
 
 		if (game is null)
 		{
@@ -151,4 +145,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		public record GameGroup(int Id, string Name);
 	}
+
+	public record TabMiniMovieModel(string TabTitleRegular, string TabTitleBold, DisplayMiniMovie.MiniMovieModel Movie);
 }

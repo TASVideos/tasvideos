@@ -189,12 +189,7 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 				}
 
 				var ratingNumber = AsRatingDouble(ratingString);
-				if (ratingNumber is >= 0.0 and <= 10.0)
-				{
-					return true;
-				}
-
-				return false;
+				return ratingNumber is >= 0.0 and <= 10.0;
 			}
 		}
 

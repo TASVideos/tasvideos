@@ -317,23 +317,23 @@ public static class EntityExtensions
 				TopicId = p.Submission!.TopicId ?? 0,
 				EmulatorVersion = p.EmulatorVersion,
 				Tags = p.PublicationTags
-					.Select(pt => new Pages.Publications.IndexModel.PublicationDisplay.TagModel(
+					.Select(pt => new Pages.Publications.IndexModel.PublicationDisplay.Tag(
 						pt.Tag!.DisplayName,
 						pt.Tag.Code)),
 				GameGenres = p.Game!.GameGenres.Select(gg => gg.Genre!.DisplayName),
 				Files = p.Files
-					.Select(f => new Pages.Publications.IndexModel.PublicationDisplay.FileModel(
+					.Select(f => new Pages.Publications.IndexModel.PublicationDisplay.File(
 						f.Id,
 						f.Path,
 						f.Type,
 						f.Description)),
 				Flags = p.PublicationFlags
-					.Select(pf => new Pages.Publications.IndexModel.PublicationDisplay.FlagModel(
+					.Select(pf => new Pages.Publications.IndexModel.PublicationDisplay.Flag(
 						pf.Flag!.IconPath,
 						pf.Flag!.LinkPath,
 						pf.Flag.Name)),
 				ObsoletedMovies = p.ObsoletedMovies
-					.Select(o => new Pages.Publications.IndexModel.PublicationDisplay.ObsoletesModel(o.Id, o.Title)),
+					.Select(o => new Pages.Publications.IndexModel.PublicationDisplay.ObsoleteMovie(o.Id, o.Title)),
 				RatingCount = p.PublicationRatings.Count,
 				OverallRating = p.PublicationRatings
 					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
@@ -358,16 +358,14 @@ public static class EntityExtensions
 
 	public static IQueryable<ListModel.RoleDisplay> ToRoleDisplayModel(this IQueryable<Role> roles)
 	{
-		return roles.Select(r => new ListModel.RoleDisplay
-		{
-			IsDefault = r.IsDefault,
-			Id = r.Id,
-			Name = r.Name,
-			Description = r.Description,
-			Permissions = r.RolePermission.Select(rp => rp.PermissionId).ToList(),
-			Links = r.RoleLinks.Select(rl => rl.Link).ToList(),
-			Users = r.UserRole.Select(ur => ur.User!.UserName).ToList()
-		});
+		return roles.Select(r => new ListModel.RoleDisplay(
+			r.IsDefault,
+			r.Id,
+			r.Name,
+			r.Description,
+			r.RolePermission.Select(rp => rp.PermissionId).ToList(),
+			r.RoleLinks.Select(rl => rl.Link).ToList(),
+			r.UserRole.Select(ur => ur.User!.UserName).ToList()));
 	}
 
 	public static IQueryable<Pages.UserFiles.InfoModel.UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles, bool hideComments = true)

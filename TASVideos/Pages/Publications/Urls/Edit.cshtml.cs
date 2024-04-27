@@ -65,10 +65,9 @@ public class EditUrlsModel(
 			return Page();
 		}
 
-		var url = CurrentUrls
-			.SingleOrDefault(u => u.Id == UrlId.Value);
+		var url = CurrentUrls.SingleOrDefault(u => u.Id == UrlId.Value);
 
-		if (url is null || url.Url is null)
+		if (url?.Url is null)
 		{
 			return NotFound();
 		}
@@ -119,8 +118,7 @@ public class EditUrlsModel(
 
 		if (UrlId.HasValue)
 		{
-			var url = CurrentUrls
-				.Single(u => u.Id == UrlId.Value);
+			var url = CurrentUrls.Single(u => u.Id == UrlId.Value);
 
 			url.PublicationId = PublicationId;
 			url.DisplayName = DisplayName;

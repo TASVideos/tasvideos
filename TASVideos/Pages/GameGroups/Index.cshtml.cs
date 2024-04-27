@@ -22,9 +22,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			? db.GameGroups.Where(g => g.Id == ParsedId)
 			: db.GameGroups.Where(g => g.Abbreviation == Id);
 
-		var gameGroup = await query
-			.SingleOrDefaultAsync();
-
+		var gameGroup = await query.SingleOrDefaultAsync();
 		if (gameGroup is null)
 		{
 			return NotFound();

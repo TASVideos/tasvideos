@@ -82,7 +82,6 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.Forums.Remove(subForum);
-
 		await ConcurrentSave(db, $"Forum {Id} deleted successfully", $"Unable to delete Forum {Id}");
 
 		return RedirectToPage("/Forum/Index");

@@ -45,10 +45,7 @@ public class PrimaryMoviesModel(
 
 	public async Task<IActionResult> OnPost()
 	{
-		var publication = await db.Publications
-			.Where(p => p.Id == Id)
-			.SingleOrDefaultAsync();
-
+		var publication = await db.Publications.FindAsync(Id);
 		if (publication is null)
 		{
 			return NotFound();

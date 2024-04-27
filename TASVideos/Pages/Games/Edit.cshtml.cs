@@ -94,8 +94,10 @@ public class EditModel(
 		}
 
 		Game? game;
+		var action = "created";
 		if (Id.HasValue)
 		{
+			action = "updated";
 			game = await db.Games
 				.Include(g => g.GameGenres)
 				.Include(g => g.GameGroups)
@@ -104,46 +106,27 @@ public class EditModel(
 			{
 				return NotFound();
 			}
-
-			game.DisplayName = Game.DisplayName;
-			game.Abbreviation = Game.Abbreviation;
-			game.Aliases = Game.Aliases;
-			game.ScreenshotUrl = Game.ScreenshotUrl;
-			game.GameResourcesPage = Game.GameResourcesPage;
-			SetGameValues(game, Game);
-			var saveMessage = $"Game {game.DisplayName} updated";
-			var saveResult = await ConcurrentSave(db, saveMessage, $"Unable to update Game {Id}");
-			if (saveResult && !Game.MinorEdit)
-			{
-				await publisher.SendGameManagement(
-					$"{saveMessage} by {User.Name()}",
-					$"Game [{game.DisplayName}]({{0}}) updated by {User.Name()}",
-					"",
-					$"{Id}G");
-			}
 		}
 		else
 		{
-			game = new Game
-			{
-				DisplayName = Game.DisplayName,
-				Abbreviation = Game.Abbreviation,
-				Aliases = Game.Aliases,
-				ScreenshotUrl = Game.ScreenshotUrl,
-				GameResourcesPage = Game.GameResourcesPage
-			};
+			game = new Game();
 			db.Games.Add(game);
-			SetGameValues(game, Game);
-			var saveMessage = $"Game {game.DisplayName} created";
-			var saveResult = await ConcurrentSave(db, saveMessage, "Unable to create game");
-			if (saveResult && !Game.MinorEdit)
-			{
-				await publisher.SendGameManagement(
-					$"{saveMessage} by {User.Name()}",
-					$"Game [{game.DisplayName}]({{0}}) created by {User.Name()}",
-					"",
-					$"{game.Id}G");
-			}
+		}
+
+		game.DisplayName = Game.DisplayName;
+		game.Abbreviation = Game.Abbreviation;
+		game.Aliases = Game.Aliases;
+		game.ScreenshotUrl = Game.ScreenshotUrl;
+		game.GameResourcesPage = Game.GameResourcesPage;
+
+		SetGameValues(game, Game);
+		var saveResult = await ConcurrentSave(db, $"Game {game.DisplayName} {action}", $"Unable to update Game {game.DisplayName}");
+		if (saveResult && !Game.MinorEdit)
+		{
+			await publisher.SendGameManagement(
+				$"Game [{game.DisplayName}]({{0}}) {action} by {User.Name()}",
+				"",
+				$"{Id}G");
 		}
 
 		return BasePageRedirect("Index", new { game.Id });
@@ -185,7 +168,7 @@ public class EditModel(
 		var saveResult = await ConcurrentSave(db, saveMessage, $"Unable to delete Game {Id}");
 		if (saveResult)
 		{
-			await publisher.SendGameManagement($"{saveMessage} by {User.Name()}", "", "", "");
+			await publisher.SendMessage(PostGroups.Game, $"{saveMessage} by {User.Name()}");
 		}
 
 		return BasePageRedirect("List");

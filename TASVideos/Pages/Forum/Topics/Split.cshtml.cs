@@ -43,11 +43,10 @@ public class SplitModel(
 			return Page();
 		}
 
-		bool seeRestricted = CanSeeRestricted;
 		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.Include(t => t.ForumPosts)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(CanSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
 		if (topic is null)
@@ -56,7 +55,7 @@ public class SplitModel(
 		}
 
 		var destinationForum = await db.Forums
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(CanSeeRestricted)
 			.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
 
 		if (destinationForum is null)

@@ -3,7 +3,7 @@
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	public ListModel.RoleDisplay RoleView { get; set; } = new();
+	public ListModel.RoleDisplay RoleView { get; set; } = null!;
 
 	[FromRoute]
 	public string Role { get; set; } = "";

@@ -78,8 +78,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			return BackToList();
 		}
 
-		var gameGoal = await db.GameGoals
-			.SingleOrDefaultAsync(gg => gg.Id == gameGoalId);
+		var gameGoal = await db.GameGoals.FindAsync(gameGoalId);
 		if (gameGoal is null)
 		{
 			return NotFound();

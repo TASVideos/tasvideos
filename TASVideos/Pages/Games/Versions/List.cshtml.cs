@@ -7,55 +7,47 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int GameId { get; set; }
 
-	public VersionList Versions { get; set; } = new();
+	[Display(Name = "Game")]
+	public string GameDisplayName { get; set; } = "";
+
+	public List<VersionEntry> Versions { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
-		var roms = await db.Games
+		var displayName = await db.Games
 			.Where(g => g.Id == GameId)
-			.Select(g => new VersionList
-			{
-				GameDisplayName = g.DisplayName,
-				Versions = g.GameVersions
-				.Select(r => new VersionList.VersionEntry(
-					r.Id,
-					r.Name,
-					r.Md5,
-					r.Sha1,
-					r.Version,
-					r.Region,
-					r.Type,
-					r.System!.Code,
-					r.TitleOverride))
-				.ToList()
-			})
+			.Select(g => g.DisplayName)
 			.SingleOrDefaultAsync();
 
-		if (roms is null)
+		if (displayName is null)
 		{
 			return NotFound();
 		}
 
-		Versions = roms;
+		Versions = await db.GameVersions
+			.Where(v => v.GameId == GameId)
+			.Select(v => new VersionEntry(
+				v.Id,
+				v.Name,
+				v.Md5,
+				v.Sha1,
+				v.Version,
+				v.Region,
+				v.Type,
+				v.System!.Code,
+				v.TitleOverride))
+			.ToListAsync();
 		return Page();
 	}
 
-	public class VersionList
-	{
-		[Display(Name = "Game")]
-		public string GameDisplayName { get; init; } = "";
-
-		public List<VersionEntry> Versions { get; init; } = [];
-
-		public record VersionEntry(
-			int Id,
-			string Name,
-			string? Md5,
-			string? Sha1,
-			string? Version,
-			string? Region,
-			VersionTypes Type,
-			string System,
-			string? TitleOverride);
-	}
+	public record VersionEntry(
+		int Id,
+		string Name,
+		string? Md5,
+		string? Sha1,
+		string? Version,
+		string? Region,
+		VersionTypes Type,
+		string System,
+		string? TitleOverride);
 }

@@ -21,9 +21,7 @@ public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publish
 
 	public async Task OnGet()
 	{
-		ValidIds = await db.Games
-			.Where(g => g.Id == FromGameId || g.Id == IntoGameId)
-			.CountAsync() == 2;
+		ValidIds = await db.Games.CountAsync(g => g.Id == FromGameId || g.Id == IntoGameId) == 2;
 		if (ValidIds)
 		{
 			FromGame = await db.Games
@@ -56,9 +54,7 @@ public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publish
 	{
 		if (FromGameId is not null && IntoGameId is not null)
 		{
-			ValidIds = await db.Games
-				.Where(g => g.Id == FromGameId || g.Id == IntoGameId)
-				.CountAsync() == 2;
+			ValidIds = await db.Games.CountAsync(g => g.Id == FromGameId || g.Id == IntoGameId) == 2;
 			if (ValidIds)
 			{
 				int intoGameId = (int)IntoGameId;
@@ -95,7 +91,6 @@ public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publish
 				if (result)
 				{
 					await publisher.SendGameManagement(
-						$"{IntoGameId}G edited by {User.Name()}",
 						$"[{IntoGameId}G]({{0}}) edited by {User.Name()}",
 						$"Rewired {FromGameId}G into {IntoGameId}G",
 						$"{IntoGameId}G");

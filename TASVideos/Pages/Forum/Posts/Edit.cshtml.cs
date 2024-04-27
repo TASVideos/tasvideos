@@ -143,7 +143,6 @@ public class EditModel(
 		forumPost.Subject = Post.Subject;
 		forumPost.Text = Post.Text;
 		forumPost.PosterMood = Post.Mood;
-
 		forumPost.PostEditedTimestamp = DateTime.UtcNow;
 
 		var result = await ConcurrentSave(db, $"Post {Id} edited", "Unable to edit post");

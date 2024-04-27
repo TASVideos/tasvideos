@@ -4,11 +4,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Roles;
 
 [RequirePermission(PermissionTo.EditRoles)]
-public class AddEditModel(
-	ApplicationDbContext db,
-	IRoleService roleService,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class AddEditModel(ApplicationDbContext db, IRoleService roleService, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int? Id { get; set; }

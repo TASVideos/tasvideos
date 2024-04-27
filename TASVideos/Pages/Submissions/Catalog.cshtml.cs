@@ -209,7 +209,6 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		if (result && !Catalog.MinorEdit)
 		{
 			await publisher.SendGameManagement(
-				$"{Id}S Catalog edited by {User.Name()}",
 				$"[{Id}S]({{0}}) Catalog edited by {User.Name()}",
 				$"{string.Join(", ", externalMessages)} | {submission.Title}",
 				$"{Id}S");
