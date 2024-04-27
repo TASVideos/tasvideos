@@ -22,7 +22,7 @@
 				<rss-link>@movieUrl</rss-link>
 				<description>
 					<html-encode>
-						<wiki-markup markup="@pub.Wiki.Markup" page-data="@pub.Wiki"></wiki-markup>
+						<wiki-markup markup="@pub.Wiki?.Markup" page-data="@pub.Wiki"></wiki-markup>
 					</html-encode>
 				</description>
 				@foreach (var tag in pub.TagNames)

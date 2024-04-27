@@ -65,22 +65,20 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 
 		// TODO: first edition logic
 		var pubs = await query
-			.Select(p => new FirstEdition
-			{
-				Id = p.Id,
-				Title = p.Title,
-				GameId = p.GameId,
-				PublicationClassId = p.PublicationClassId,
-				PublicationClassIconPath = p.PublicationClass!.IconPath,
-				PublicationClassName = p.PublicationClass.Name,
-				PublicationDate = p.CreateTimestamp
-			})
+			.Select(p => new FirstEdition(
+				p.Id,
+				p.GameId,
+				p.Title,
+				p.PublicationClassId,
+				p.PublicationClass!.IconPath,
+				p.PublicationClass.Name,
+				p.CreateTimestamp))
 			.ToListAsync();
 
 		// If multiple first editions in the same year, go with the first
 		Movies = pubs
 			.GroupBy(g => new { g.GameId })
-			.Select(g => g.OrderBy(gg => gg.PublicationDate).First())
+			.Select(g => g.OrderBy(gg => gg.Date).First())
 			.ToList();
 
 		return View();
@@ -93,14 +91,5 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 		public DateTime? PublicationDate { get; init; }
 	}
 
-	public class FirstEdition
-	{
-		public int Id { get; init; }
-		public int GameId { get; init; }
-		public string Title { get; init; } = "";
-		public int PublicationClassId { get; init; }
-		public string? PublicationClassIconPath { get; init; } = "";
-		public string PublicationClassName { get; init; } = "";
-		public DateTime PublicationDate { get; init; }
-	}
+	public record FirstEdition(int Id, int GameId, string Title, int ClassId, string? ClassIconPath, string ClassName, DateTime Date);
 }

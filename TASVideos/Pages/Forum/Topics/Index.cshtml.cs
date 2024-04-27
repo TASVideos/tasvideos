@@ -143,7 +143,7 @@ public class IndexModel(
 		{
 			Topic.Poll.Options = await db.ForumPollOptions
 				.ForPoll(Topic.Poll.PollId)
-				.Select(o => new TopicDisplay.PollOptionModel(
+				.Select(o => new TopicDisplay.PollOption(
 					o.Text,
 					o.Ordinal,
 					o.Votes
@@ -330,10 +330,10 @@ public class IndexModel(
 			public DateTime? CloseDate { get; init; }
 			public bool MultiSelect { get; init; }
 			public bool ViewPollResults { get; init; }
-			public List<PollOptionModel> Options { get; set; } = [];
+			public List<PollOption> Options { get; set; } = [];
 		}
 
-		public record PollOptionModel(string Text, int Ordinal, List<int> Voters);
+		public record PollOption(string Text, int Ordinal, List<int> Voters);
 	}
 
 	public class PostEntry
@@ -374,14 +374,12 @@ public class IndexModel(
 
 		public string? GetCurrentAvatar()
 		{
-			var currentAvatar = PosterAvatar;
-
 			if (PosterMood != ForumPostMood.None && !string.IsNullOrWhiteSpace(PosterMoodUrlBase))
 			{
-				currentAvatar = PosterMoodUrlBase.Replace("$", ((int)PosterMood).ToString());
+				return PosterMoodUrlBase.Replace("$", ((int)PosterMood).ToString());
 			}
 
-			return currentAvatar;
+			return PosterAvatar;
 		}
 	}
 }

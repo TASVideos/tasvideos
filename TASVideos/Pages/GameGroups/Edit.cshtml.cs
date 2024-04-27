@@ -62,10 +62,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		GameGroup? gameGroup;
 		if (Id.HasValue)
 		{
-			gameGroup = await db.GameGroups
-				.Where(gg => gg.Id == Id.Value)
-				.SingleOrDefaultAsync();
-
+			gameGroup = await db.GameGroups.SingleOrDefaultAsync(gg => gg.Id == Id.Value);
 			if (gameGroup is null)
 			{
 				return NotFound();

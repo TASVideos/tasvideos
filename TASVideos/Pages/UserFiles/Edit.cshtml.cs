@@ -9,7 +9,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public long Id { get; set; }
 
 	[BindProperty]
-	public UserFileEditModel UserFile { get; set; } = new();
+	public UserFileEdit UserFile { get; set; } = new();
 
 	public List<SelectListItem> AvailableSystems { get; set; } = [];
 
@@ -19,7 +19,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	{
 		var file = await db.UserFiles
 			.Where(uf => uf.Id == Id)
-			.Select(uf => new UserFileEditModel
+			.Select(uf => new UserFileEdit
 			{
 				Title = uf.Title,
 				Description = uf.Description ?? "",
@@ -105,7 +105,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 	}
 
-	public class UserFileEditModel
+	public class UserFileEdit
 	{
 		[StringLength(255)]
 		public string Title { get; init; } = "";

@@ -17,8 +17,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			return AccessDenied();
 		}
 
-		if (await db.SubmissionRejectionReasons
-				.AnyAsync(r => r.DisplayName == displayName))
+		if (await db.SubmissionRejectionReasons.AnyAsync(r => r.DisplayName == displayName))
 		{
 			ModelState.AddModelError("displayName", $"{displayName} already exists");
 			await Initialize();

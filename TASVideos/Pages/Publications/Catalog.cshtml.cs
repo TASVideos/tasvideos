@@ -18,7 +18,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	public int? GameVersionId { get; set; }
 
 	[BindProperty]
-	public PublicationCatalogModel Catalog { get; set; } = new();
+	public PublicationCatalog Catalog { get; set; } = new();
 
 	public List<SelectListItem> AvailableVersions { get; set; } = [];
 	public List<SelectListItem> AvailableGames { get; set; } = [];
@@ -30,7 +30,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	{
 		var catalog = await db.Publications
 				.Where(p => p.Id == Id)
-				.Select(p => new PublicationCatalogModel
+				.Select(p => new PublicationCatalog
 				{
 					Title = p.Title,
 					GameVersionId = p.GameVersionId,
@@ -181,7 +181,6 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		if (result && !Catalog.MinorEdit)
 		{
 			await publisher.SendGameManagement(
-				$"{Id}M Catalog edited by {User.Name()}",
 				$"[{Id}M]({{0}}) Catalog edited by {User.Name()}",
 				$"{string.Join(", ", externalMessages)} | {publication.Title}",
 				$"{Id}M");
@@ -222,7 +221,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			.ToListAsync();
 	}
 
-	public class PublicationCatalogModel
+	public class PublicationCatalog
 	{
 		public string Title { get; init; } = "";
 		public bool MinorEdit { get; init; }

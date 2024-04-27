@@ -18,7 +18,7 @@ public interface IMovieParser
 	Task<IParseResult> ParseFile(string fileName, Stream stream);
 }
 
-public sealed class MovieParser : IMovieParser
+internal sealed class MovieParser : IMovieParser
 {
 	private static readonly ICollection<Type> ParserTypes =
 		typeof(IParser).Assembly

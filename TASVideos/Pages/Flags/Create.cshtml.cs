@@ -6,11 +6,6 @@ public class CreateModel(IFlagService flagService) : BasePageModel
 	[BindProperty]
 	public Flag Flag { get; set; } = new();
 
-	public IActionResult OnGet()
-	{
-		return Page();
-	}
-
 	public async Task<IActionResult> OnPost()
 	{
 		if (!ModelState.IsValid)

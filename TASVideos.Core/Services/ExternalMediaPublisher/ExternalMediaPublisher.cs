@@ -37,6 +37,16 @@ public class
 
 public static class ExternalMediaPublisherExtensions
 {
+	public static async Task SendMessage(this ExternalMediaPublisher publisher, string group, string message)
+	{
+		await publisher.Send(new Post
+		{
+			Type = PostType.General,
+			Group = group,
+			Title = message,
+		});
+	}
+
 	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string formattedTitle, long id, string fileTitle)
 	{
 		string unformattedTitle = Unformat(formattedTitle);
@@ -206,7 +216,19 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string formattedTitle, string userName)
+	{
+		await publisher.Send(new Post
+		{
+			Type = PostType.Administrative,
+			Group = PostGroups.UserManagement,
+			Title = Unformat(formattedTitle),
+			FormattedTitle = formattedTitle,
+			Link = publisher.ToAbsolute($"Users/Profile/{Uri.EscapeDataString(userName)}")
+		});
+	}
+
+	public static async Task SendRoleManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -215,18 +237,18 @@ public static class ExternalMediaPublisherExtensions
 			Group = PostGroups.UserManagement,
 			Title = title,
 			FormattedTitle = formattedTitle,
-			Body = body,
-			Link = publisher.ToAbsolute(relativeLink)
+			Body = "",
+			Link = !string.IsNullOrWhiteSpace(relativeLink) ? publisher.ToAbsolute(relativeLink) : ""
 		});
 	}
 
-	public static async Task SendGameManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task SendGameManagement(this ExternalMediaPublisher publisher, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
 			Type = PostType.General,
 			Group = PostGroups.Game,
-			Title = title,
+			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
 			Link = publisher.ToAbsolute(relativeLink)

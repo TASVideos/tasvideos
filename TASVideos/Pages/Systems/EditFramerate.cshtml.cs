@@ -9,7 +9,7 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 	public int Id { get; set; }
 
 	[BindProperty]
-	public FrameRateEditModel FrameRate { get; set; } = new();
+	public FrameRateEdit FrameRate { get; set; } = new();
 
 	public List<UsageEntry> PublicationEntries = [];
 	public List<UsageEntry> SubmissionEntries = [];
@@ -20,7 +20,7 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 	{
 		var frameRate = await db.GameSystemFrameRates
 			.Where(sf => sf.Id == Id)
-			.Select(sf => new FrameRateEditModel
+			.Select(sf => new FrameRateEdit
 			{
 				SystemId = sf.System!.Id,
 				SystemCode = sf.System!.Code,
@@ -108,7 +108,7 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 			.ToListAsync();
 	}
 
-	public class FrameRateEditModel
+	public class FrameRateEdit
 	{
 		public int SystemId { get; init; }
 		public string SystemCode { get; init; } = "";

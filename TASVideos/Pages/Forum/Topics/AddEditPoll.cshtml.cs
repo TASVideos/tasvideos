@@ -26,8 +26,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 			.ThenInclude(p => p!.PollOptions)
 			.ThenInclude(o => o.Votes)
 			.ExcludeRestricted(seeRestricted)
-			.Where(t => t.Id == TopicId)
-			.SingleOrDefaultAsync();
+			.SingleOrDefaultAsync(t => t.Id == TopicId);
 
 		if (topic is null)
 		{

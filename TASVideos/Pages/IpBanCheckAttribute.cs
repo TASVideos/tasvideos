@@ -30,7 +30,7 @@ public class IpBanCheckAttribute : Attribute, IAsyncPageFilter
 		await Task.CompletedTask;
 	}
 
-	protected void Denied(PageHandlerExecutingContext context)
+	private static void Denied(PageHandlerExecutingContext context)
 	{
 		if (context.HttpContext.Request.IsAjaxRequest())
 		{

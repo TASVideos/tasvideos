@@ -20,7 +20,7 @@
 				<rss-link>@subUrl</rss-link>
 				<description>
 					<html-encode>
-						<wiki-markup markup="@sub.Wiki.Markup" page-data="@sub.Wiki"></wiki-markup>
+						<wiki-markup markup="@sub.Wiki?.Markup" page-data="@sub.Wiki"></wiki-markup>
 					</html-encode>
 				</description>
 				<comments condition="@sub.TopicId.HasValue">@(Settings.BaseUrl)/Forum/Topics/@sub.TopicId</comments>

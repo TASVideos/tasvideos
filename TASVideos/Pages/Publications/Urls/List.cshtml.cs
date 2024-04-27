@@ -40,8 +40,7 @@ public class ListUrlsModel(
 
 	public async Task<IActionResult> OnPostDelete(int urlId)
 	{
-		var url = await db.PublicationUrls
-			.SingleOrDefaultAsync(pf => pf.Id == urlId);
+		var url = await db.PublicationUrls.SingleOrDefaultAsync(pf => pf.Id == urlId);
 
 		if (url is not null)
 		{

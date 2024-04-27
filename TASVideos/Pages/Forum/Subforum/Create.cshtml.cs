@@ -6,7 +6,7 @@ namespace TASVideos.Pages.Forum.Subforum;
 public class CreateModel(ApplicationDbContext db) : BasePageModel
 {
 	[BindProperty]
-	public EditModel.ForumEditModel Forum { get; set; } = new();
+	public EditModel.ForumEdit Forum { get; set; } = new();
 
 	public List<SelectListItem> AvailableCategories { get; set; } = [];
 

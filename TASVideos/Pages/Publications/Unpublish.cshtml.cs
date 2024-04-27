@@ -57,7 +57,7 @@ public class UnpublishModel(
 
 		if (result.Status == UnpublishResult.UnpublishStatus.Success)
 		{
-			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), $"Unpublished. Reaspon: {Reason}");
+			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), $"Unpublished. Reason: {Reason}");
 			await publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
 		}
 

@@ -7,7 +7,7 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 {
 	private const string CachePrefix = "YoutubeUploaders-";
 
-	public List<YoutubeRecord> Videos { get; set; } = [];
+	public List<YoutubeEntry> Videos { get; set; } = [];
 
 	public async Task OnGet()
 	{
@@ -24,7 +24,7 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 
 		Videos = raw
 			.Where(r => youtubeSync.IsYoutubeUrl(r.Url))
-			.Select(u => new YoutubeRecord(u.PublicationId, youtubeSync.VideoId(u.Url!), u.IsObsolete))
+			.Select(u => new YoutubeEntry(u.PublicationId, youtubeSync.VideoId(u.Url!), u.IsObsolete))
 			.Distinct()
 			.ToList();
 
@@ -49,7 +49,7 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 		}
 	}
 
-	private void SetChannelTitlesFromCache(IEnumerable<YoutubeRecord> records)
+	private void SetChannelTitlesFromCache(IEnumerable<YoutubeEntry> records)
 	{
 		foreach (var record in records)
 		{
@@ -61,7 +61,7 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 		}
 	}
 
-	public record YoutubeRecord(int PublicationId, string VideoId, bool IsObsolete)
+	public record YoutubeEntry(int PublicationId, string VideoId, bool IsObsolete)
 	{
 		public string ChannelTitle { get; set; } = "";
 	}

@@ -27,7 +27,6 @@ public class CreateFramerateModel(IGameSystemService systemService, ApplicationD
 	public async Task<IActionResult> OnGet()
 	{
 		var system = await systemService.GetById(SystemId);
-
 		if (system is null)
 		{
 			return NotFound();
@@ -46,7 +45,6 @@ public class CreateFramerateModel(IGameSystemService systemService, ApplicationD
 		}
 
 		var system = await systemService.GetById(SystemId);
-
 		if (system is null)
 		{
 			return NotFound();

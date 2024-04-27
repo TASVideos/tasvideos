@@ -262,7 +262,7 @@ internal class ForumService(
 				TopicId = fp.TopicId ?? 0,
 				fp.ForumId,
 				fp.CreateTimestamp,
-				fp.PostEditedTimestamp,
+				fp.PostEditedTimestamp
 			})
 			.ToListAsync();
 		forumActivity = fullrow
@@ -314,7 +314,7 @@ internal class ForumService(
 				TopicId = fp.TopicId ?? 0,
 				fp.ForumId,
 				fp.CreateTimestamp,
-				fp.PostEditedTimestamp,
+				fp.PostEditedTimestamp
 			})
 			.ToListAsync();
 		subforumActivity = fullrow

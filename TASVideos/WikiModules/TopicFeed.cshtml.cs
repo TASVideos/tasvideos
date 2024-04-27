@@ -23,30 +23,19 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 			.ForTopic(t)
 			.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
 			.ByMostRecent()
-			.Select(p => new TopicPost
-			{
-				Id = p.Id,
-				EnableBbCode = p.EnableBbCode,
-				EnableHtml = p.EnableHtml,
-				Text = p.Text,
-				Subject = p.Subject,
-				PosterName = p.Poster!.UserName,
-				CreateTimestamp = p.CreateTimestamp
-			})
+			.Select(p => new TopicPost(
+				p.Id,
+				p.EnableBbCode,
+				p.EnableHtml,
+				p.Text,
+				p.Subject,
+				p.Poster!.UserName,
+				p.CreateTimestamp))
 			.Take(l ?? 5)
 			.ToListAsync();
 
 		return View();
 	}
 
-	public class TopicPost
-	{
-		public int Id { get; init; }
-		public bool EnableBbCode { get; init; }
-		public bool EnableHtml { get; init; }
-		public string Text { get; init; } = "";
-		public string? Subject { get; init; }
-		public string PosterName { get; init; } = "";
-		public DateTime CreateTimestamp { get; init; }
-	}
+	public record TopicPost(int Id, bool EnableBbCode, bool EnableHtml, string Text, string? Subject, string PosterName,  DateTime CreateTimestamp);
 }

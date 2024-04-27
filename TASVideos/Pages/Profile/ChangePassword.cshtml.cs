@@ -64,7 +64,7 @@ public class ChangePasswordModel(IEmailService emailService, SignInManager signI
 
 		await signInManager.SignInAsync(user, isPersistent: false);
 		var code = await signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
-		var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code, "https");
+		var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code);
 		await emailService.PasswordResetConfirmation(user.Email, callbackUrl);
 		SuccessStatusMessage("Your password has been changed.");
 		return BasePageRedirect("Index");

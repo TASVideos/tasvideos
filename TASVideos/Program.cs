@@ -1,11 +1,12 @@
 ﻿using AspNetCore.ReCaptcha;
 using Serilog;
+using TASVideos.Api;
 using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
+using TASVideos.MovieParsers;
 using TASVideos.Services;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
@@ -21,7 +22,6 @@ builder.Services
 	.AddRequestLocalization()
 	.AddCookieConfiguration()
 	.AddGzipCompression(settings)
-	.AddSwagger(settings)
 	.AddTextModules();
 
 // Internal Libraries
@@ -32,11 +32,12 @@ string dbConnection = settings.UseSampleDatabase
 builder.Services
 	.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection)
 	.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), settings)
-	.AddMovieParser();
+	.AddTasvideosMovieParsers()
+	.AddTasvideosApi(settings);
 
 // 3rd Party
 builder.Services
-	.AddMvcWithOptions(builder.Environment)
+	.AddRazorPages(builder.Environment)
 	.AddIdentity(builder.Environment)
 	.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"))
 	.AddWebOptimizer(pipeline =>
@@ -50,17 +51,18 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
-app.UseRobots()
+app
+	.UseExceptionHandlers(app.Environment)
+	.UseTasvideosApiEndpoints(builder.Environment)
+	.UseRobots()
 	.UseMiddleware<HtmlRedirectionMiddleware>()
 	.UseRequestLocalization()
-	.UseExceptionHandlers(app.Environment)
 	.UseGzipCompression(settings)
 	.UseWebOptimizer()
 	.UseStaticFilesWithExtensionMapping()
 	.UseAuthentication()
 	.UseMiddleware<CustomLocalizationMiddleware>()
-	.UseSwaggerUi(app.Environment)
-	.UseLogging()
+	.UseSerilogRequestLogging()
 	.UseMvcWithOptions(app.Environment);
 
 if (app.Environment.IsDevelopment())

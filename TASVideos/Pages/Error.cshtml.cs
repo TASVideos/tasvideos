@@ -40,7 +40,10 @@ public class ErrorModel(IHostEnvironment env) : PageModel
 
 	private void HandleFormData()
 	{
-		RecoveredFormData.AddRange(Request.Form
-			.Where(kvp => kvp.Key != "__RequestVerificationToken"));
+		if (Request.HasFormContentType)
+		{
+			RecoveredFormData.AddRange(Request.Form
+				.Where(kvp => kvp.Key != "__RequestVerificationToken"));
+		}
 	}
 }

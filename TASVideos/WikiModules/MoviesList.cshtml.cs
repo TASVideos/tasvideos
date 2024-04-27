@@ -28,21 +28,14 @@ public class MoviesList(ApplicationDbContext db) : WikiViewComponent
 		SystemName = system?.DisplayName ?? "ALL";
 		Movies = await db.Publications
 			.Where(p => isAll || p.System!.Code == SystemCode)
-			.Select(p => new MovieEntry
-			{
-				Id = p.Id,
-				IsObsolete = p.ObsoletedById.HasValue,
-				GameName = p.Game!.DisplayName
-			})
+			.Select(p => new MovieEntry(
+				p.Id,
+				p.ObsoletedById.HasValue,
+				p.Game!.DisplayName))
 			.ToListAsync();
 
 		return View();
 	}
 
-	public class MovieEntry
-	{
-		public int Id { get; init; }
-		public bool IsObsolete { get; init; }
-		public string GameName { get; init; } = "";
-	}
+	public record MovieEntry(int Id, bool IsObsolete, string GameName);
 }

@@ -15,7 +15,7 @@ public class SplitModel(
 	public int Id { get; set; }
 
 	[BindProperty]
-	public SplitTopicModel Topic { get; set; } = new();
+	public TopicSplit Topic { get; set; } = new();
 
 	public List<SelectListItem> AvailableForums { get; set; } = [];
 
@@ -43,11 +43,10 @@ public class SplitModel(
 			return Page();
 		}
 
-		bool seeRestricted = CanSeeRestricted;
 		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.Include(t => t.ForumPosts)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(CanSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
 		if (topic is null)
@@ -56,7 +55,7 @@ public class SplitModel(
 		}
 
 		var destinationForum = await db.Forums
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(CanSeeRestricted)
 			.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
 
 		if (destinationForum is null)
@@ -121,13 +120,13 @@ public class SplitModel(
 		return RedirectToPage("Index", new { id = newTopic.Id });
 	}
 
-	private async Task<SplitTopicModel?> PopulatePosts()
+	private async Task<TopicSplit?> PopulatePosts()
 	{
 		bool seeRestricted = CanSeeRestricted;
 		return await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == Id)
-			.Select(t => new SplitTopicModel
+			.Select(t => new TopicSplit
 			{
 				Title = t.Title,
 				SplitTopicName = "(Split from " + t.Title + ")",
@@ -135,7 +134,7 @@ public class SplitModel(
 				ForumId = t.Forum.Id,
 				ForumName = t.Forum.Name,
 				Posts = t.ForumPosts
-					.Select(p => new SplitTopicModel.Post
+					.Select(p => new TopicSplit.Post
 					{
 						Id = p.Id,
 						PostCreateTimestamp = p.CreateTimestamp,
@@ -143,7 +142,6 @@ public class SplitModel(
 						EnableHtml = p.EnableHtml,
 						Subject = p.Subject,
 						Text = p.Text,
-						PosterId = p.PosterId,
 						PosterName = p.Poster!.UserName,
 						PosterAvatar = p.Poster.Avatar
 					})
@@ -162,7 +160,7 @@ public class SplitModel(
 			.ToListAsync();
 	}
 
-	public class SplitTopicModel
+	public class TopicSplit
 	{
 		[Display(Name = "Split Posts Starting At")]
 		public int? PostToSplitId { get; init; }
@@ -188,7 +186,6 @@ public class SplitModel(
 			public bool EnableBbCode { get; init; }
 			public string? Subject { get; init; }
 			public string Text { get; init; } = "";
-			public int PosterId { get; init; }
 			public string PosterName { get; init; } = "";
 			public string? PosterAvatar { get; init; }
 			public bool Selected { get; init; }

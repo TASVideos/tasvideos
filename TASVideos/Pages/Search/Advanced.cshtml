@@ -36,6 +36,10 @@
 					<input asp-for="PostSearch" />
 					<label asp-for="PostSearch"></label>
 				</div>
+				<div>
+					<input asp-for="UserSearch" />
+					<label asp-for="UserSearch"></label>
+				</div>
 			</fieldset>
 			<button type="submit" class="btn btn-primary">Search</button>
 			<a condition="Model.EnablePrev"
@@ -45,8 +49,9 @@
 				asp-route-PageSearch="@Model.PageSearch"
 				asp-route-TopicSearch="@Model.TopicSearch"
 				asp-route-PostSearch="@Model.PostSearch"
-				asp-route-PostSearch="@Model.PublicationSearch"
-				asp-route-GameSearch="@Model.GameSearch">
+				asp-route-PublicationSearch="@Model.PublicationSearch"
+				asp-route-GameSearch="@Model.GameSearch"
+				asp-route-UserSearch="@Model.UserSearch">
 				Prev
 			</a>
 			<a condition="!Model.EnablePrev" disable class="btn btn-secondary">Prev</a>
@@ -57,8 +62,9 @@
 				asp-route-PageSearch="@Model.PageSearch"
 				asp-route-TopicSearch="@Model.TopicSearch"
 				asp-route-PostSearch="@Model.PostSearch"
-				asp-route-PostSearch="@Model.PublicationSearch"
-				asp-route-GameSearch="@Model.GameSearch">
+				asp-route-PublicationSearch="@Model.PublicationSearch"
+				asp-route-GameSearch="@Model.GameSearch"
+				asp-route-UserSearch="@Model.UserSearch">
 				Next
 			</a>
 			<a condition="!Model.EnableNext" disable class="btn btn-secondary">Next</a>
@@ -167,6 +173,29 @@
 						@result.Text.Substring(start, length)
 					</td>
 				</tr>
+			}
+		</table>
+	</div>
+</div>
+
+<div condition="Model.UserResults.Any()">
+	<h4>User Results:</h4>
+	<div class="table-container">
+		<table class="table table-striped table-bordered">
+			<tr>
+				<td>User</td>
+				<td>Roles</td>
+			</tr>
+			@foreach (var result in Model.UserResults.Take(Model.DisplayPageSize))
+			{
+			<tr>
+				<td>
+					<profile-link username="@result.UserName"></profile-link>
+				</td>
+				<td>
+					@string.Join(",", result.Roles)
+				</td>
+			</tr>
 			}
 		</table>
 	</div>

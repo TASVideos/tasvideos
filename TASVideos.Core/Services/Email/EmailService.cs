@@ -81,28 +81,30 @@ internal class EmailService(
 		}
 
 		string subject = "Topic Reply Notification - " + template.TopicTitle;
-		string message = $@"<p>
-    Hello,<br>
-    <br>
-    The {siteName} forum topic ""{template.TopicTitle}"" has received a new post since your last visit.
-</p>
-<p>
-    <a href=""{template.BaseUrl}/Forum/Posts/{template.PostId}"">{template.BaseUrl}/Forum/Posts/{template.PostId}</a>
-</p>
-<p>
-    No more notification emails for this topic will be sent until you visit it.<br>
-    If the post was moved or deleted you can find the topic <a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}"">here</a>.
-</p>
-<hr />
-<p>
-    To stop this particular topic from notifying you, visit <a href=""{template.BaseUrl}/Forum/Topics/{template.TopicId}?handler=Unwatch"">this link</a>.<br>
-    To stop all topic notification emails, visit <a href=""{template.BaseUrl}/Profile/WatchedTopics"">this link</a> and press ""Stop Watching All"".
-</p>
-<hr />
-<p>
-    Thanks,<br>
-    TASVideos staff
-</p>";
+		string message = $"""
+						<p>
+						    Hello,<br>
+						    <br>
+						    The {siteName} forum topic "{template.TopicTitle}" has received a new post since your last visit.
+						</p>
+						<p>
+						    <a href="{template.BaseUrl}/Forum/Posts/{template.PostId}">{template.BaseUrl}/Forum/Posts/{template.PostId}</a>
+						</p>
+						<p>
+						    No more notification emails for this topic will be sent until you visit it.<br>
+						    If the post was moved or deleted you can find the topic <a href="{template.BaseUrl}/Forum/Topics/{template.TopicId}">here</a>.
+						</p>
+						<hr />
+						<p>
+						    To stop this particular topic from notifying you, visit <a href="{template.BaseUrl}/Forum/Topics/{template.TopicId}?handler=Unwatch">this link</a>.<br>
+						    To stop all topic notification emails, visit <a href="{template.BaseUrl}/Profile/WatchedTopics">this link</a> and press "Stop Watching All".
+						</p>
+						<hr />
+						<p>
+						    Thanks,<br>
+						    TASVideos staff
+						</p>
+						""";
 
 		await emailSender.SendEmail(new StandardEmail
 		{
@@ -122,13 +124,15 @@ internal class EmailService(
 			ContainsHtml = false,
 			Recipient = recipient,
 			Subject = "New Private Message has arrived",
-			Message = $@"Hello {userName}
+			Message = $"""
+						Hello {userName}
 
-You have received a new private message to your account on ""TASVideos"" and you have requested that you be notified on this event. You can view your new message by clicking on the following link:
+						You have received a new private message to your account on "TASVideos" and you have requested that you be notified on this event. You can view your new message by clicking on the following link:
 
-{link}
+						{link}
 
-Remember that you can always choose not to be notified of new messages by changing the appropriate setting in your profile."
+						Remember that you can always choose not to be notified of new messages by changing the appropriate setting in your profile.
+						"""
 		});
 	}
 }

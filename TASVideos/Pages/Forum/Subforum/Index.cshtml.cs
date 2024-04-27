@@ -40,7 +40,6 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 				Id = ft.Id,
 				Title = ft.Title,
 				CreateUserName = ft.Poster!.UserName,
-				CreateTimestamp = ft.CreateTimestamp,
 				Type = ft.Type,
 				IsLocked = ft.IsLocked,
 				PostCount = ft.ForumPosts.Count,
@@ -88,9 +87,6 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		[MobileHide]
 		[DisplayName("Author")]
 		public string? CreateUserName { get; init; }
-
-		[TableIgnore]
-		public DateTime CreateTimestamp { get; init; }
 
 		[TableIgnore]
 		public ForumTopicType Type { get; init; }

@@ -4,11 +4,7 @@ namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
 [IpBanCheck]
-public class EmailConfirmationSentModel(
-	SignInManager signInManager,
-	ApplicationDbContext db,
-	IEmailService emailService)
-	: BasePageModel
+public class EmailConfirmationSentModel(SignInManager signInManager, IEmailService emailService) : BasePageModel
 {
 	[BindProperty]
 	[StringLength(256)]
@@ -17,7 +13,6 @@ public class EmailConfirmationSentModel(
 
 	[BindProperty]
 	[EmailAddress]
-	[Display(Name = "Email")]
 	public string Email { get; set; } = "";
 	public IActionResult OnGet()
 	{
@@ -28,19 +23,16 @@ public class EmailConfirmationSentModel(
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (await signInManager.EmailAndUserNameMatch(UserName, Email))
+		var user = await signInManager.GetUserByEmailAndUserName(Email, UserName);
+		if (user is not null && !user.EmailConfirmed)
 		{
-			var user = db.Users.SingleOrDefault(u => u.Email == Email && u.UserName == UserName);
-			if (user is not null && !user.EmailConfirmed)
-			{
-				var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
-				var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token, Request.Scheme);
+			var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token);
 
-				await emailService.EmailConfirmation(Email, callbackUrl);
-			}
+			await emailService.EmailConfirmation(Email, callbackUrl);
 		}
 
-		SuccessStatusMessage("Email resend received");
-		return Page();
+		SuccessStatusMessage("Email confirmation sent");
+		return RedirectToPage("EmailConfirmationSent");
 	}
 }

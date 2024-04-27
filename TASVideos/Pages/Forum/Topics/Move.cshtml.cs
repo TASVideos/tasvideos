@@ -15,7 +15,7 @@ public class MoveModel(
 	public int Id { get; set; }
 
 	[BindProperty]
-	public MoveTopicModel Topic { get; set; } = new();
+	public TopicMove Topic { get; set; } = new();
 
 	public List<SelectListItem> AvailableForums { get; set; } = [];
 
@@ -29,7 +29,7 @@ public class MoveModel(
 			.Where(t => t.Id == Id)
 			.Include(t => t.Forum)
 			.ExcludeRestricted(seeRestricted)
-			.Select(t => new MoveTopicModel
+			.Select(t => new TopicMove
 			{
 				TopicTitle = t.Title,
 				ForumId = t.Forum!.Id,
@@ -108,7 +108,7 @@ public class MoveModel(
 			.ToListAsync();
 	}
 
-	public class MoveTopicModel
+	public class TopicMove
 	{
 		[Display(Name = "New Forum")]
 		public int ForumId { get; init; }

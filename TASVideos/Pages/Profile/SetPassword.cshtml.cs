@@ -17,7 +17,6 @@ public class SetPasswordModel(SignInManager signInManager) : BasePageModel
 	{
 		var user = await signInManager.UserManager.GetRequiredUser(User);
 		var hasPassword = await signInManager.UserManager.HasPasswordAsync(user);
-
 		if (hasPassword)
 		{
 			return RedirectToPage("ChangePassword");
@@ -34,7 +33,6 @@ public class SetPasswordModel(SignInManager signInManager) : BasePageModel
 		}
 
 		var result = await signInManager.AddPassword(User, NewPassword);
-
 		if (!result.Succeeded)
 		{
 			AddErrors(result);

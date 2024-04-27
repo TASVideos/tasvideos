@@ -4,11 +4,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 namespace TASVideos.Pages.Roles;
 
 [RequirePermission(PermissionTo.EditRoles)]
-public class AddEditModel(
-	ApplicationDbContext db,
-	IRoleService roleService,
-	ExternalMediaPublisher publisher)
-	: BasePageModel
+public class AddEditModel(ApplicationDbContext db, IRoleService roleService, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int? Id { get; set; }
@@ -110,8 +106,8 @@ public class AddEditModel(
 		var result = await ConcurrentSave(db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
 		if (result)
 		{
-			await publisher.SendUserManagement(
-				$"Role {Id} deleted by {User.Name()}", "", "", "");
+			await publisher.SendRoleManagement(
+				$"Role {Id} deleted by {User.Name()}", "", "");
 		}
 
 		return BasePageRedirect("List");
@@ -179,10 +175,9 @@ public class AddEditModel(
 			action = "updated";
 		}
 
-		await publisher.SendUserManagement(
+		await publisher.SendRoleManagement(
 			$"Role {model.Name} {action} by {User.Name()}",
 			$"Role [{model.Name}]({{0}}) {action} by {User.Name()}",
-			"",
 			$"Roles/{model.Name}");
 	}
 

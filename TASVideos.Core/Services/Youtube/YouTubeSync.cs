@@ -65,9 +65,12 @@ internal class YouTubeSync(
 		
 		var descriptionFloor = $"\n\n#tas #tasvideos #tool-assisted #speedrun";
 
+		const string hashTags = "\n\n#tas #tasvideos #tool-assisted #speedrun";
+
 		var obsoleteStr = video.ObsoletedBy.HasValue ? "[Obsoleted] " : "";
 		var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $"[{video.UrlDisplayName}] " : "";
 		string title = $"[TAS] {obsoleteStr}{displayStr}{video.Title}";
+
 		string description = descriptionBase + renderedDescription + descriptionFloor;
 		if (title.Length > YoutubeTitleMaxLength)
 		{

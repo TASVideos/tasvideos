@@ -20,8 +20,8 @@ public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePa
 		Posts = await db.ForumPosts
 			.ExcludeRestricted(allowRestricted)
 			.Since(since)
-			.ToLatestPost()
 			.OrderByDescending(p => p.CreateTimestamp)
+			.ToLatestPost()
 			.PageOf(Search);
 	}
 

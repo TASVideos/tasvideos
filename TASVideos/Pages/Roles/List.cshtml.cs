@@ -12,18 +12,5 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			.ToListAsync();
 	}
 
-	public class RoleDisplay
-	{
-		public bool IsDefault { get; init; }
-		public int Id { get; init; }
-		public string? Name { get; init; }
-		public string Description { get; init; } = "";
-		public List<PermissionTo> Permissions { get; init; } = [];
-
-		[Display(Name = "Related Links")]
-		public List<string> Links { get; init; } = [];
-		public List<UserWithRole> Users { get; init; } = [];
-
-		public record UserWithRole(int Id, string UserName);
-	}
+	public record RoleDisplay(bool IsDefault, int Id, string? Name, string Description, List<PermissionTo> Permissions, List<string> Links, List<string> Users);
 }

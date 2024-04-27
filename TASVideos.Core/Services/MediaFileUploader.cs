@@ -68,17 +68,17 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		var file = await db.PublicationFiles
 			.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
 
-		if (file is not null)
+		if (file is null)
 		{
-			string path = Path.Combine(env.WebRootPath, file.Path);
-			File.Delete(path);
-
-			db.PublicationFiles.Remove(file);
-			await db.SaveChangesAsync();
-			return new DeletedFile(file.Id, file.Type, file.Path);
+			return null;
 		}
 
-		return null;
+		string path = Path.Combine(env.WebRootPath, file.Path);
+		File.Delete(path);
+
+		db.PublicationFiles.Remove(file);
+		await db.SaveChangesAsync();
+		return new DeletedFile(file.Id, file.Type, file.Path);
 	}
 
 	public async Task UploadAwardImage(IFormFile image, IFormFile image2X, IFormFile image4X, string shortName, int? year = null)

@@ -31,13 +31,13 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 	public List<SelectListItem> AvailableRegionTypes { get; set; } =
 	[
-			new () { Text = "U", Value = "U" },
-			new () { Text = "J", Value = "J" },
-			new () { Text = "E", Value = "E" },
-			new () { Text = "JU", Value = "JU" },
-			new () { Text = "EU", Value = "UE" },
-			new () { Text = "W", Value = "W" },
-			new () { Text = "Other", Value = "Other" }
+		new() { Text = "U", Value = "U" },
+		new() { Text = "J", Value = "J" },
+		new() { Text = "E", Value = "E" },
+		new() { Text = "JU", Value = "JU" },
+		new() { Text = "EU", Value = "UE" },
+		new() { Text = "W", Value = "W" },
+		new() { Text = "Other", Value = "Other" }
 	];
 
 	public async Task<IActionResult> OnGet()
@@ -94,7 +94,6 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		Version = version;
-
 		CanDelete = await CanBeDeleted();
 
 		return Page();
@@ -108,9 +107,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		var system = await db.GameSystems
-			.SingleOrDefaultAsync(s => s.Code == Version.System);
-
+		var system = await db.GameSystems.SingleOrDefaultAsync(s => s.Code == Version.System);
 		if (system is null)
 		{
 			return BadRequest();
@@ -120,31 +117,24 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		if (Id.HasValue)
 		{
 			version = await db.GameVersions.SingleAsync(r => r.Id == Id.Value);
-			version.Name = Version.Name;
-			version.Md5 = Version.Md5;
-			version.Sha1 = Version.Sha1;
-			version.Version = Version.Version;
-			version.Region = Version.Region;
-			version.Type = Version.Type;
-			version.TitleOverride = Version.TitleOverride;
-			version.System = system;
 		}
 		else
 		{
 			version = new GameVersion
 			{
-				Name = Version.Name,
-				Md5 = Version.Md5,
-				Sha1 = Version.Sha1,
-				Version = Version.Version,
-				Region = Version.Region,
-				Type = Version.Type,
-				TitleOverride = Version.TitleOverride,
-				Game = await db.Games.SingleAsync(g => g.Id == GameId),
-				System = system
+				Game = await db.Games.SingleAsync(g => g.Id == GameId)
 			};
 			db.GameVersions.Add(version);
 		}
+
+		version.Name = Version.Name;
+		version.Md5 = Version.Md5;
+		version.Sha1 = Version.Sha1;
+		version.Version = Version.Version;
+		version.Region = Version.Region;
+		version.Type = Version.Type;
+		version.TitleOverride = Version.TitleOverride;
+		version.System = system;
 
 		try
 		{

@@ -17,7 +17,7 @@ public class AdditionalMoviesModel(
 	[BindProperty]
 	public string PublicationTitle { get; set; } = "";
 
-	public List<PublicationFileModel> AvailableMovieFiles { get; set; } = [];
+	public List<FileEntry> AvailableMovieFiles { get; set; } = [];
 
 	[BindProperty]
 	[StringLength(50)]
@@ -110,8 +110,7 @@ public class AdditionalMoviesModel(
 
 	public async Task<IActionResult> OnPostDelete(int publicationFileId)
 	{
-		var file = await db.PublicationFiles
-			.SingleOrDefaultAsync(pf => pf.Id == publicationFileId);
+		var file = await db.PublicationFiles.FindAsync(publicationFileId);
 
 		if (file is not null)
 		{
@@ -135,9 +134,9 @@ public class AdditionalMoviesModel(
 		AvailableMovieFiles = await db.PublicationFiles
 			.ThatAreMovieFiles()
 			.ForPublication(Id)
-			.Select(pf => new PublicationFileModel(pf.Id, pf.Description, pf.Path))
+			.Select(pf => new FileEntry(pf.Id, pf.Description, pf.Path))
 			.ToListAsync();
 	}
 
-	public record PublicationFileModel(int Id, string? Description, string FileName);
+	public record FileEntry(int Id, string? Description, string FileName);
 }

@@ -12,17 +12,18 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 	public int Id { get; set; }
 
 	[BindProperty]
-	public VersionDisplayModel Version { get; set; } = null!;
+	public VersionDisplay Version { get; set; } = null!;
 
 	[BindProperty]
 	[Display(Name = "Game")]
 	public string GameName { get; set; } = "";
 
-	public bool CanDelete { get; set; }
-
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
+		var game = await db.Games
+			.Where(g => g.Id == GameId)
+			.Select(g => new { g.Id, g.DisplayName })
+			.SingleOrDefaultAsync();
 
 		if (game is null)
 		{
@@ -33,7 +34,7 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 
 		var version = await db.GameVersions
 			.Where(r => r.Id == Id && r.Game!.Id == GameId)
-			.Select(v => new VersionDisplayModel(
+			.Select(v => new VersionDisplay(
 				v.System!.Code,
 				v.Name,
 				v.Md5,
@@ -56,7 +57,7 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public record VersionDisplayModel(
+	public record VersionDisplay(
 		string SystemCode,
 		string Name,
 		string? Md5,

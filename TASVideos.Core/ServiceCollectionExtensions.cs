@@ -16,9 +16,10 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddTasvideosCore<T>(this IServiceCollection services, bool isDevelopment, AppSettings settings) where T : class, IWikiToTextRenderer
 	{
 		services.AddScoped<IWikiToTextRenderer, T>();
-		services
-			.AddControllers()
-			.AddApplicationPart(typeof(IJwtAuthenticator).Assembly);
+		// TODO: resolve application part stuff, and move to api project
+		// services
+		// 	.AddControllers()
+		// 	.AddApplicationPart(typeof(IJwtAuthenticator).Assembly);
 
 		services
 			.AddCacheService(settings.CacheSettings)
@@ -98,18 +99,18 @@ public static class ServiceCollectionExtensions
 
 	private static IServiceCollection AddCacheService(this IServiceCollection services, AppSettings.CacheSetting cacheSettings)
 	{
-		if (cacheSettings.CacheType == "Memory")
+		switch (cacheSettings.CacheType)
 		{
-			services.AddMemoryCache();
-			services.AddSingleton<ICacheService, MemoryCacheService>();
-		}
-		else if (cacheSettings.CacheType == "Redis")
-		{
-			services.AddScoped<ICacheService, RedisCacheService>();
-		}
-		else
-		{
-			services.AddSingleton<ICacheService, NoCacheService>();
+			case "Memory":
+				services.AddMemoryCache();
+				services.AddSingleton<ICacheService, MemoryCacheService>();
+				break;
+			case "Redis":
+				services.AddScoped<ICacheService, RedisCacheService>();
+				break;
+			default:
+				services.AddSingleton<ICacheService, NoCacheService>();
+				break;
 		}
 
 		return services;

@@ -20,7 +20,7 @@ public class EditModel(
 	public int Id { get; set; }
 
 	[BindProperty]
-	public PublicationEditModel Publication { get; set; } = new();
+	public PublicationEdit Publication { get; set; } = new();
 
 	public List<SelectListItem> AvailableFlags { get; set; } = [];
 
@@ -32,7 +32,7 @@ public class EditModel(
 	{
 		var publication = await db.Publications
 			.Where(p => p.Id == Id)
-			.Select(p => new PublicationEditModel
+			.Select(p => new PublicationEdit
 			{
 				Class = p.PublicationClass!.Name,
 				MovieFileName = p.MovieFileName,
@@ -118,7 +118,7 @@ public class EditModel(
 			.ToListAsync();
 	}
 
-	private async Task UpdatePublication(int id, PublicationEditModel model)
+	private async Task UpdatePublication(int id, PublicationEdit model)
 	{
 		var externalMessages = new List<string>();
 
@@ -235,7 +235,7 @@ public class EditModel(
 		}
 	}
 
-	public class PublicationEditModel
+	public class PublicationEdit
 	{
 		public string SystemCode { get; init; } = "";
 		public string Title { get; init; } = "";

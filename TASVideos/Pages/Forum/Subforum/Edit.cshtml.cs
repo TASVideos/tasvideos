@@ -10,7 +10,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	public int Id { get; set; }
 
 	[BindProperty]
-	public ForumEditModel Forum { get; set; } = new();
+	public ForumEdit Forum { get; set; } = new();
 
 	public bool CanDelete { get; set; }
 
@@ -21,7 +21,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		var forum = await db.Forums
 			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
 			.Where(f => f.Id == Id)
-			.Select(f => new ForumEditModel
+			.Select(f => new ForumEdit
 			{
 				Name = f.Name,
 				Description = f.Description,
@@ -82,7 +82,6 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.Forums.Remove(subForum);
-
 		await ConcurrentSave(db, $"Forum {Id} deleted successfully", $"Unable to delete Forum {Id}");
 
 		return RedirectToPage("/Forum/Index");
@@ -101,7 +100,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		return !await db.ForumTopics.AnyAsync(t => t.ForumId == Id);
 	}
 
-	public class ForumEditModel
+	public class ForumEdit
 	{
 		[StringLength(50)]
 		public string Name { get; init; } = "";

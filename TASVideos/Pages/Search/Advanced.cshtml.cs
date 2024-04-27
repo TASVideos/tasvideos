@@ -17,11 +17,12 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public int PageNumber { get; set; } = 1;
 
-	public List<PageSearchModel> PageResults { get; set; } = [];
-	public List<TopicSearchModel> TopicResults { get; set; } = [];
-	public List<PostSearchModel> PostResults { get; set; } = [];
-	public List<GameSearchModel> GameResults { get; set; } = [];
-	public List<PublicationSearchModel> PublicationResults { get; set; } = [];
+	public List<PageResult> PageResults { get; set; } = [];
+	public List<TopicResult> TopicResults { get; set; } = [];
+	public List<PostResult> PostResults { get; set; } = [];
+	public List<GameResult> GameResults { get; set; } = [];
+	public List<PublicationResult> PublicationResults { get; set; } = [];
+	public List<UserResult> UserResults { get; set; } = [];
 
 	[FromQuery]
 	[Display(Name = "Search Wiki")]
@@ -42,6 +43,10 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	[Display(Name = "Search Games")]
 	public bool GameSearch { get; set; } = true;
+
+	[FromQuery]
+	[Display(Name = "Search Users")]
+	public bool UserSearch { get; set; }
 
 	public int DisplayPageSize { get; set; } = PageSize;
 	public bool EnablePrev { get; set; }
@@ -86,7 +91,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 					.OrderBy(w => w.PageName)
 					.Skip(skip)
 					.Take(DisplayPageSize + 1)
-					.Select(w => new PageSearchModel(w.Markup.Substring(0, Math.Min(60, w.Markup.Length)), w.PageName))
+					.Select(w => new PageResult(w.Markup.Substring(0, Math.Min(60, w.Markup.Length)), w.PageName))
 					.ToListAsync();
 			}
 
@@ -99,7 +104,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.OrderByDescending(t => t.CreateTimestamp)
 				.Skip(skip)
 				.Take(DisplayPageSize + 1)
-				.Select(t => new TopicSearchModel(
+				.Select(t => new TopicResult(
 					t.Title,
 					t.Id,
 					t.Forum!.Name))
@@ -114,7 +119,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.OrderByDescending(p => p.CreateTimestamp)
 				.Skip(skip)
 				.Take(DisplayPageSize + 1)
-				.Select(p => new PostSearchModel(
+				.Select(p => new PostResult(
 					p.Text,
 					Regex.Match(p.Text, "(^|[^A-Za-z])" + SearchTerms, RegexOptions.IgnoreCase).Index,
 					p.Topic!.Title,
@@ -131,7 +136,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.ThenBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(DisplayPageSize + 1)
-				.Select(g => new GameSearchModel(g.Id, g.DisplayName))
+				.Select(g => new GameResult(g.Id, g.DisplayName))
 				.ToListAsync();
 			}
 
@@ -142,8 +147,19 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.OrderBy(p => p.Title)
 				.Skip(skip)
 				.Take(DisplayPageSize + 1)
-				.Select(p => new PublicationSearchModel(p.Id, p.Title))
+				.Select(p => new PublicationResult(p.Id, p.Title))
 				.ToListAsync();
+			}
+
+			if (UserSearch)
+			{
+				UserResults = await db.Users
+					.Where(u => Regex.IsMatch(u.UserName, "(^|[^A-Za-z])" + SearchTerms))
+					.OrderBy(u => u.UserName)
+					.Skip(skip)
+					.Take(DisplayPageSize + 1)
+					.Select(u => new UserResult(u.Id, u.UserName, u.UserRoles.Select(ur => ur.Role!.Name)))
+					.ToListAsync();
 			}
 
 			EnablePrev = PageNumber > 1;
@@ -153,9 +169,10 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public record PageSearchModel(string Text, string PageName);
-	public record TopicSearchModel(string TopicName, int TopicId, string SubforumName);
-	public record PostSearchModel(string Text, int Index, string TopicName, int PostId);
-	public record GameSearchModel(int Id, string DisplayName);
-	public record PublicationSearchModel(int Id, string Title);
+	public record PageResult(string Text, string PageName);
+	public record TopicResult(string TopicName, int TopicId, string SubforumName);
+	public record PostResult(string Text, int Index, string TopicName, int PostId);
+	public record GameResult(int Id, string DisplayName);
+	public record PublicationResult(int Id, string Title);
+	public record UserResult(int Id, string UserName, IEnumerable<string> Roles);
 }

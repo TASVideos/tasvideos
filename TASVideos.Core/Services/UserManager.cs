@@ -200,7 +200,7 @@ public class UserManager(
 					.ToList(),
 				UserFiles = new()
 				{
-					Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden),
+					Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden)
 				}
 			})
 			.SingleOrDefaultAsync(u => u.UserName == userName);
@@ -511,5 +511,11 @@ public class UserManager(
 	{
 		cache.Remove(CacheKeys.UsersWithCustomLocale);
 		cache.Remove(CacheKeys.CustomUserLocalePrefix + userId);
+	}
+
+	public async Task<string> GenerateChangeEmailToken(ClaimsPrincipal claimsUser, string newEmail)
+	{
+		var user = await GetRequiredUser(claimsUser);
+		return await GenerateChangeEmailTokenAsync(user, newEmail);
 	}
 }

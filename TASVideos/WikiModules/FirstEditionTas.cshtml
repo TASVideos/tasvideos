@@ -1,15 +1,15 @@
 ﻿@model FirstEditionTas
 @{
-	var groups = Model.Movies.GroupBy(gkey => new { gkey.PublicationClassId, gkey.PublicationClassIconPath, gkey.PublicationClassName });
+	var groups = Model.Movies.GroupBy(gkey => new { gkey.ClassId, gkey.ClassIconPath, gkey.ClassName });
 }
 
-@foreach (var g in groups.OrderByDescending(g => g.Key.PublicationClassId))
+@foreach (var g in groups.OrderByDescending(g => g.Key.ClassId))
 {
 	<card>
 		<cardheader>
-			<a href="/@g.Key.PublicationClassName">
-				<icon path="@g.Key.PublicationClassIconPath"></icon>
-				<strong>@g.Key.PublicationClassName</strong>
+			<a href="/@g.Key.ClassName">
+				<icon path="@g.Key.ClassIconPath"></icon>
+				<strong>@g.Key.ClassName</strong>
 			</a>
 			&nbsp;(@g.Count())
 		</cardheader>

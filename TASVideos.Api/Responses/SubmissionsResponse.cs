@@ -1,8 +1,6 @@
-﻿#pragma warning disable 1591
+﻿namespace TASVideos.Api.Responses;
 
-namespace TASVideos.Api.Responses;
-
-public class SubmissionsResponse
+internal class SubmissionsResponse
 {
 	[Sortable]
 	public int Id { get; init; }
