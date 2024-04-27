@@ -62,16 +62,19 @@ internal class YouTubeSync(
 
 		descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
 		var renderedDescription = await textRenderer.RenderWikiForYoutube(video.WikiPage);
+		
+		var descriptionFloor = $"\n\n#tas #tasvideos #tool-assisted #speedrun";
 
 		const string hashTags = "\n\n#tas #tasvideos #tool-assisted #speedrun";
 
 		var obsoleteStr = video.ObsoletedBy.HasValue ? "[Obsoleted] " : "";
 		var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $"[{video.UrlDisplayName}] " : "";
 		string title = $"[TAS] {obsoleteStr}{displayStr}{video.Title}";
-		string description = descriptionBase + renderedDescription + hashTags;
+
+		string description = descriptionBase + renderedDescription + descriptionFloor;
 		if (title.Length > YoutubeTitleMaxLength)
 		{
-			description = title + "\n" + descriptionBase + renderedDescription + hashTags;
+			description = title + "\n" + descriptionBase + renderedDescription + descriptionFloor;
 			title = title.CapAndEllipse(YoutubeTitleMaxLength);
 		}
 
