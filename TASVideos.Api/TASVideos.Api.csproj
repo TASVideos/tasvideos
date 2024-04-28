@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
-		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -13,18 +12,10 @@
 		<PackageReference Include="FluentValidation.AspNetCore" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
-		<PackageReference Include="StyleCop.Analyzers">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Core\TASVideos.Core.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
 	</ItemGroup>
 </Project>

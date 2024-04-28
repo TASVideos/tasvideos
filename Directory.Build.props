@@ -2,7 +2,12 @@
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
 		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+		<CodeAnalysisRuleSet>$(SolutionDir)Common.ruleset</CodeAnalysisRuleSet>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	</PropertyGroup>
+	<ItemGroup>
+		<AdditionalFiles Include="$(SolutionDir).stylecop.json" />
+		<PackageReference Include="StyleCop.Analyzers" />
+	</ItemGroup>
 </Project>

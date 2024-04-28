@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<RunAnalyzers>false</RunAnalyzers> <!-- this project did not have StyleCop applied; when it was added, there were 66 extra warnings -->
 		<TargetFramework>net8.0</TargetFramework>
-		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="IPAddressRange" />
