@@ -101,7 +101,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		WatchFiles = await db.UserFiles
 			.ForGame(Game.Id)
-			.Where(u => !u.Hidden)
+			.ThatArePublic()
 			.Where(u => u.Type == "wch")
 			.Select(u => new WatchFile(u.Id, u.FileName))
 			.ToListAsync();
