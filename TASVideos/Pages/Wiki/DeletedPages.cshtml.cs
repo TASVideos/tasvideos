@@ -7,14 +7,14 @@ namespace TASVideos.Pages.Wiki;
 public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMediaPublisher publisher)
 	: BasePageModel
 {
-	public List<DeletedWikiPage> DeletedPages { get; set; } = [];
+	public List<DeletedPage> DeletedPages { get; set; } = [];
 
 	public async Task OnGet()
 	{
 		DeletedPages = await db.WikiPages
 			.ThatAreDeleted()
 			.GroupBy(tkey => tkey.PageName)
-			.Select(record => new DeletedWikiPage(
+			.Select(record => new DeletedPage(
 				record.Key,
 				record.Count(),
 				db.WikiPages.Any(wp => !wp.IsDeleted && wp.PageName == record.Key)))
@@ -38,11 +38,7 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 				return Page();
 			}
 
-			await publisher.SendGeneralWiki(
-				$"Page {path} DELETED by {User.Name()}",
-				"",
-				$"{result} revisions",
-				"");
+			await publisher.SendMessage(PostGroups.Wiki, $"Page {path} DELETED by {User.Name()} ({{result}} revisions\")");
 		}
 
 		return BasePageRedirect("DeletedPages");
@@ -62,9 +58,7 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 
 		path = path.Trim('/');
 		await wikiPages.Delete(path, revision);
-
-		await publisher.SendGeneralWiki(
-			$"Revision {revision} of {path} DELETED by {User.Name()}", "", "", "");
+		await publisher.SendMessage(PostGroups.Wiki, $"Revision {revision} of {path} DELETED by {User.Name()}");
 
 		return BaseRedirect("/" + path);
 	}
@@ -89,14 +83,11 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 			return Page();
 		}
 
-		await publisher.SendGeneralWiki(
-			$"Page {path} UNDELETED by {User.Name()}",
-			$"Page [{path}]({{0}}) UNDELETED by {User.Name()}",
-			"",
-			WikiHelper.EscapeUserName(path));
+		await publisher.SendWiki(
+			$"Page [{path}]({{0}}) UNDELETED by {User.Name()}", "", path);
 
 		return BaseRedirect("/" + path);
 	}
 
-	public record DeletedWikiPage(string PageName, int RevisionCount, bool HasExistingRevisions);
+	public record DeletedPage(string PageName, int RevisionCount, bool HasExistingRevisions);
 }

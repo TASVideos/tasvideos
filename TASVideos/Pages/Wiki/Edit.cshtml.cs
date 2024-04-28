@@ -137,11 +137,10 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 
 	private async Task Announce(IWikiPage page)
 	{
-		await publisher.SendGeneralWiki(
-			$"Page {Path} {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
+		await publisher.SendWiki(
 			$"Page [{Path}]({{0}}) {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"{page.RevisionMessage}",
-			WikiHelper.EscapeUserName(Path!));
+			Path!);
 	}
 
 	public class WikiEditModel

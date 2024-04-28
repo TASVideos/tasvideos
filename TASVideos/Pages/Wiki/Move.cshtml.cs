@@ -61,11 +61,10 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 			return Page();
 		}
 
-		await publisher.SendGeneralWiki(
-			$"Page {OriginalPageName} moved to {DestinationPageName} by {User.Name()}",
+		await publisher.SendWiki(
 			$"Page {OriginalPageName} moved to [{DestinationPageName}]({{0}}) by {User.Name()}",
 			"",
-			WikiHelper.EscapeUserName(DestinationPageName));
+			DestinationPageName);
 
 		return BaseRedirect("/" + DestinationPageName);
 	}

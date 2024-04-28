@@ -13,8 +13,7 @@ public class
 {
 	private readonly string _baseUrl = appSettings.BaseUrl.TrimEnd('/'); // The site base url, will be combined to relative links to provide absolute links to distributors
 
-	// Calling code will likely not know or care the list, but doesn't hurt to expose it
-	public IEnumerable<IPostDistributor> Providers { get; } = providers.ToList();
+	private IEnumerable<IPostDistributor> Providers { get; } = providers.ToList();
 
 	public async Task Send(IPostable message)
 	{
@@ -42,6 +41,16 @@ public static class ExternalMediaPublisherExtensions
 		await publisher.Send(new Post
 		{
 			Type = PostType.General,
+			Group = group,
+			Title = message,
+		});
+	}
+
+	public static async Task SendAdminMessage(this ExternalMediaPublisher publisher, string group, string message)
+	{
+		await publisher.Send(new Post
+		{
+			Type = PostType.Administrative,
 			Group = group,
 			Title = message,
 		});
@@ -202,17 +211,19 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendGeneralWiki(this ExternalMediaPublisher publisher, string title, string formattedTitle, string body, string relativeLink)
+	public static async Task SendWiki(this ExternalMediaPublisher publisher, string formattedTitle, string body, string path)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "",
 			Type = PostType.General,
 			Group = PostGroups.Wiki,
-			Title = title,
+			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
-			Link = publisher.ToAbsolute(relativeLink)
+			Link = !string.IsNullOrWhiteSpace(path)
+				? publisher.ToAbsolute(WikiHelper.EscapeUserName(path))
+				: ""
 		});
 	}
 
@@ -228,17 +239,17 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendRoleManagement(this ExternalMediaPublisher publisher, string title, string formattedTitle, string relativeLink)
+	public static async Task SendRoleManagement(this ExternalMediaPublisher publisher, string formattedTitle, string roleName)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "",
 			Type = PostType.Administrative,
 			Group = PostGroups.UserManagement,
-			Title = title,
+			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = "",
-			Link = !string.IsNullOrWhiteSpace(relativeLink) ? publisher.ToAbsolute(relativeLink) : ""
+			Link = publisher.ToAbsolute($"Roles/{roleName}")
 		});
 	}
 

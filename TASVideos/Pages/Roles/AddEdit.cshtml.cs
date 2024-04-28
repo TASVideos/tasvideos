@@ -106,8 +106,7 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 		var result = await ConcurrentSave(db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
 		if (result)
 		{
-			await publisher.SendRoleManagement(
-				$"Role {Id} deleted by {User.Name()}", "", "");
+			await publisher.SendAdminMessage(PostGroups.UserManagement, $"Role {Id} deleted by {User.Name()}");
 		}
 
 		return BasePageRedirect("List");
@@ -169,16 +168,8 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 			Role = role
 		}));
 
-		var action = "added";
-		if (edit)
-		{
-			action = "updated";
-		}
-
-		await publisher.SendRoleManagement(
-			$"Role {model.Name} {action} by {User.Name()}",
-			$"Role [{model.Name}]({{0}}) {action} by {User.Name()}",
-			$"Roles/{model.Name}");
+		var action = edit ? "updated" : "added";
+		await publisher.SendRoleManagement($"Role [{model.Name}]({{0}}) {action} by {User.Name()}", model.Name);
 	}
 
 	public class RoleEdit
