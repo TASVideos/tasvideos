@@ -103,9 +103,9 @@ public class RateModel(ApplicationDbContext db) : BasePageModel
 			{
 				RatingCount = p.PublicationRatings.Count,
 				OverallRating = (double?)p.PublicationRatings
-						.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
-						.Where(pr => pr.User!.UseRatings)
-						.Average(pr => pr.Value)
+					.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
+					.Where(pr => pr.User!.UseRatings)
+					.Average(pr => pr.Value)
 			})
 			.Select(rro => new
 			{
