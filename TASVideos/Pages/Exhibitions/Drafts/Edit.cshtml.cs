@@ -190,6 +190,8 @@ public class EditModel : BasePageModel
 			exhibition.Urls.Remove(urlToDelete);
 		}
 
+		exhibition.Status = ExhibitionForm.Exhibition.Status;
+
 		await _db.SaveChangesAsync();
 
 		if (ExhibitionForm.Exhibition.Screenshot != null)
@@ -243,5 +245,7 @@ public class EditModel : BasePageModel
 				Value = u.Id.ToString()
 			})
 			.ToListAsync();
+
+		ExhibitionForm.AvailableStatuses = [ExhibitionStatus.Drafted, ExhibitionStatus.Accepted, ExhibitionStatus.Rejected];
 	}
 }

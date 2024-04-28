@@ -23,6 +23,7 @@ public class Exhibition : BaseEntity
 public enum ExhibitionStatus
 {
 	Drafted,
+	Accepted,
 	Published,
 	Rejected,
 }

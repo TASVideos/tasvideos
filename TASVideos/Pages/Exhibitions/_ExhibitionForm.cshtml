@@ -1,5 +1,8 @@
 ﻿@using TASVideos.Data.Entity.Exhibition
 @model TASVideos.Pages.Exhibitions.Models.ExhibitionFormModel
+@{
+	bool isEdit = Model.Exhibition.ExhibitionId != 0;
+}
 
 <div class="text-danger">
 	@Html.ValidationSummary()
@@ -173,7 +176,7 @@
 		<textarea asp-for="Exhibition.Markup" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
 		<span asp-validation-for="Exhibition.Markup" class="text-danger"></span>
 	</fieldset>
-	@if (Model.Exhibition.ExhibitionId != 0)
+	@if (isEdit)
 	{
 		<fieldset>
 			<label asp-for="Exhibition.RevisionMessage" class="form-control-label"></label>
@@ -185,6 +188,15 @@
 				</div>
 			</div>
 			<span asp-validation-for="Exhibition.RevisionMessage" class="text-danger"></span>
+		</fieldset>
+	}
+	@if (isEdit)
+	{
+		<fieldset>
+			<label asp-for="Exhibition.Status" class="form-control-label"></label>
+			<select class="form-select"
+					asp-for="Exhibition.Status"
+					asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Exhibition.Status })"></select>
 		</fieldset>
 	}
 

@@ -35,6 +35,8 @@ public class ExhibitionAddEditModel
 
 	public bool MinorEdit { get; set; }
 
+	public ExhibitionStatus Status { get; set; }
+
 	public class ExhibitionAddEditUrlModel
 	{
 		public int UrlId { get; set; }
