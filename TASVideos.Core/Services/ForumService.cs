@@ -15,7 +15,7 @@ public interface IForumService
 	Task<int> CreatePost(PostCreateDto post);
 	Task<bool> IsTopicLocked(int topicId);
 	Task<AvatarUrls> UserAvatars(int userId);
-	Task<Dictionary<int, (string, string)>> GetPostActivityOfSubforum(int subforumId);
+	Task<Dictionary<int, (string PostsCreated, string PostsEdited)>> GetPostActivityOfSubforum(int subforumId);
 }
 
 internal class ForumService(
@@ -82,8 +82,8 @@ internal class ForumService(
 			}
 
 			allActivityPosts.TryGetValue(forum.Id, out var activityPosts);
-			forum.ActivityPostsCreated = activityPosts.Item1 ?? "";
-			forum.ActivityPostsEdited = activityPosts.Item2 ?? "";
+			forum.ActivityPostsCreated = activityPosts.PostsCreated ?? "";
+			forum.ActivityPostsEdited = activityPosts.PostsEdited ?? "";
 		}
 
 		return dto;
@@ -247,7 +247,7 @@ internal class ForumService(
 		return dict;
 	}
 
-	internal async Task<Dictionary<int, Dictionary<int, (string, string)>>> GetPostActivityOfTopics()
+	internal async Task<Dictionary<int, Dictionary<int, (string PostsCreated, string PostsEdited)>>> GetPostActivityOfTopics()
 	{
 		if (cacheService.TryGetValue(PostActivityOfTopicsCacheKey, out Dictionary<int, Dictionary<int, (string, string)>> forumActivity))
 		{
@@ -299,7 +299,7 @@ internal class ForumService(
 		return activityTopics ?? [];
 	}
 
-	internal async Task<Dictionary<int, (string, string)>> GetPostActivityOfSubforums()
+	internal async Task<Dictionary<int, (string PostsCreated, string PostsEdited)>> GetPostActivityOfSubforums()
 	{
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> subforumActivity))
 		{
