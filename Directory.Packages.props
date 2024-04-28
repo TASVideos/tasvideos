@@ -19,10 +19,8 @@
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.3.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.3.1" />
+    <PackageVersion Include="MSTest" Version="3.3.1" />
     <PackageVersion Include="Namotion.Reflection" Version="3.1.1" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
     <PackageVersion Include="NSubstitute" Version="5.1.0" />

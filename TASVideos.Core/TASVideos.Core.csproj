@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
+		<RunAnalyzers>false</RunAnalyzers> <!-- this project did not have StyleCop applied; when it was added, there were 66 extra warnings -->
 		<TargetFramework>net8.0</TargetFramework>
-		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="IPAddressRange" />
@@ -11,7 +11,6 @@
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
 		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
 		<ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />

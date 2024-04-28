@@ -1,27 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+	<Import Project="../UseMSTest.props" />
+
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<IsPackable>false</IsPackable>
-		<CodeAnalysisRuleSet>$(ProjectDir)../../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<AdditionalFiles Include="$(ProjectDir)../../.stylecop.json" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" />
-		<PackageReference Include="MSTest.TestAdapter" />
-		<PackageReference Include="MSTest.TestFramework" />
-		<PackageReference Include="StyleCop.Analyzers">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

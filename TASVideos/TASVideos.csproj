@@ -3,17 +3,12 @@
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<TargetFramework>net8.0</TargetFramework>
 		<UserSecretsId>aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152</UserSecretsId>
-		<CodeAnalysisRuleSet>$(ProjectDir)../Common.ruleset</CodeAnalysisRuleSet>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<VersionPrefix>2.0.0</VersionPrefix>
 		<VersionSuffix>alpha</VersionSuffix>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<AdditionalFiles Include="$(ProjectDir)../.stylecop.json" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Remove="logs\**" />
@@ -35,20 +30,12 @@
 		<PackageReference Include="LigerShark.WebOptimizer.Sass" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" />
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" />
 		<PackageReference Include="Namotion.Reflection" />
 		<PackageReference Include="RoslynCodeTaskFactory" />
 		<PackageReference Include="Serilog.AspNetCore" />
-		<PackageReference Include="StyleCop.Analyzers">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -57,12 +44,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Api\TASVideos.Api.csproj" />
-		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
-		<ProjectReference Include="..\TASVideos.Core\TASVideos.Core.csproj" />
-		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
-		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
-		<ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
-		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
