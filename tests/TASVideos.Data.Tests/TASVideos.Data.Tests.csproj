@@ -8,10 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" />
 	</ItemGroup>
 
