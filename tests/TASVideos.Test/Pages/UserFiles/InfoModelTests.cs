@@ -7,6 +7,7 @@ using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
+#pragma warning disable UTA001 //TODO this class should be public, or these shouldn't be tests
 [TestClass]
 internal class InfoModelTests
 {
