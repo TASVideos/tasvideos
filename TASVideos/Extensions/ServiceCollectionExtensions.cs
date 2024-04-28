@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
 using TASVideos.Core.Settings;
-using TASVideos.MovieParsers;
 using TASVideos.Pages;
 using TASVideos.Services;
 
@@ -160,8 +159,8 @@ public static class ServiceCollectionExtensions
 
 	private static IServiceCollection AddHttpContext(this IServiceCollection services)
 	{
-		services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-		return services.AddTransient(
-			provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
+		return services
+			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+			.AddTransient(provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
 	}
 }

@@ -7,9 +7,8 @@ using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
-#pragma warning disable UTA001 //TODO this class should be public, or these shouldn't be tests
 [TestClass]
-internal class InfoModelTests
+public class InfoModelTests
 {
 	private readonly InfoModel _page;
 	private readonly TestDbContext _db;
@@ -37,8 +36,9 @@ internal class InfoModelTests
 		const int originalViewCount = 2;
 		byte[] content = [0xFF];
 		_db.UserFiles.Add(new UserFile { Id = fileId, Content = content, Downloads = originalViewCount });
-
+		await _db.SaveChangesAsync();
 		_page.Id = fileId;
+
 		var result = await _page.OnGetDownload();
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType<InfoModel.DownloadResult>(result);
