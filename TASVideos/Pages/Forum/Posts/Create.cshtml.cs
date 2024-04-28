@@ -72,11 +72,10 @@ public class CreateModel(
 
 		WatchTopic = await topicWatcher.IsWatchingTopic(TopicId, User.GetUserId());
 
-		// Override default behavior if user setting demands it, even if they were already watching the topic
 		var user = await userManager.GetRequiredUser(User);
-		if (user.AutoWatchTopic is not null && user.AutoWatchTopic != UserPreference.Auto)
+		if (user.AutoWatchTopic == UserPreference.Always)
 		{
-			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
+			WatchTopic = true;
 		}
 
 		PreviousPosts = await db.ForumPosts

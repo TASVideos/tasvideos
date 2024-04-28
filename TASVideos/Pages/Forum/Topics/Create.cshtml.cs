@@ -50,9 +50,9 @@ public class CreateModel(
 		UserAvatars = await forumService.UserAvatars(User.GetUserId());
 
 		var user = await userManager.GetRequiredUser(User);
-		if (user.AutoWatchTopic is not null && user.AutoWatchTopic != UserPreference.Auto)
+		if (user.AutoWatchTopic == UserPreference.Always)
 		{
-			WatchTopic = user.AutoWatchTopic == UserPreference.Always;
+			WatchTopic = true;
 		}
 
 		BackupSubmissionDeterminator = (await db.ForumTopics
