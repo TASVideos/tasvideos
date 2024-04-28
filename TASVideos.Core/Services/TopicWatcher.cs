@@ -14,8 +14,7 @@ public interface ITopicWatcher
 	/// Notifies everyone watching a topic (other than the poster)
 	/// that a new post has been created.
 	/// </summary>
-	/// <param name="notification">The data necessary to create a topic notification.</param>
-	Task NotifyNewPost(TopicNotification notification);
+	Task NotifyNewPost(int postId, int topicId, string topicTitle, int posterId);
 
 	/// <summary>
 	/// Marks that a user has seen a topic with new posts.
@@ -68,12 +67,12 @@ internal class TopicWatcher(
 			.ToListAsync();
 	}
 
-	public async Task NotifyNewPost(TopicNotification notification)
+	public async Task NotifyNewPost(int postId, int topicId, string topicTitle, int posterId)
 	{
 		var watches = await db.ForumTopicWatches
 			.Include(w => w.User)
-			.Where(w => w.ForumTopicId == notification.TopicId)
-			.Where(w => w.UserId != notification.PosterId)
+			.Where(w => w.ForumTopicId == topicId)
+			.Where(w => w.UserId != posterId)
 			.Where(w => !w.IsNotified)
 			.ToListAsync();
 
@@ -82,11 +81,7 @@ internal class TopicWatcher(
 			await emailService
 				.TopicReplyNotification(
 					watches.Select(w => w.User!.Email),
-					new TopicReplyNotificationTemplate(
-						notification.PostId,
-						notification.TopicId,
-						notification.TopicTitle,
-						_baseUrl));
+					new TopicReplyNotificationTemplate(postId, topicId, topicTitle, _baseUrl));
 
 			foreach (var watch in watches)
 			{
@@ -197,12 +192,3 @@ public record WatchedTopic(
 	string ForumTitle,
 	int TopicId,
 	string TopicTitle);
-
-/// <summary>
-/// Represents a notification that a new post has been added to a topic
-/// </summary>
-public record TopicNotification(
-	int PostId,
-	int TopicId,
-	string TopicTitle,
-	int PosterId);

@@ -76,7 +76,7 @@ public class TopicWatcherTests
 		});
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", 1));
+		await _topicWatcher.NotifyNewPost(0, 1, "", 1);
 
 		await _mockEmailService.DidNotReceive().TopicReplyNotification(Arg.Any<IEnumerable<string>>(), Arg.Any<TopicReplyNotificationTemplate>());
 	}
@@ -97,7 +97,7 @@ public class TopicWatcherTests
 		});
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", poster));
+		await _topicWatcher.NotifyNewPost(0, 1, "", poster);
 
 		await _mockEmailService.Received(1).TopicReplyNotification(Arg.Any<IEnumerable<string>>(), Arg.Any<TopicReplyNotificationTemplate>());
 	}
@@ -118,7 +118,7 @@ public class TopicWatcherTests
 		});
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.NotifyNewPost(new TopicNotification(0, 1, "", poster));
+		await _topicWatcher.NotifyNewPost(0, 1, "", poster);
 
 		Assert.IsTrue(_db.ForumTopicWatches.All(w => w.IsNotified));
 	}

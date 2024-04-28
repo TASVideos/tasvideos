@@ -183,8 +183,7 @@ public class CreateModel(
 
 		try
 		{
-			await topicWatcher.NotifyNewPost(new TopicNotification(
-				id, topic.Id, topic.Title, user.Id));
+			await topicWatcher.NotifyNewPost(id, topic.Id, topic.Title, user.Id);
 		}
 		catch
 		{
