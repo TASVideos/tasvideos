@@ -134,7 +134,6 @@ internal class WikiPages(
 	private void RemovePageFromCache(string pageName) =>
 		cache.Remove($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}");
 
-
 	public async Task<IReadOnlyCollection<WikiOrphan>> Orphans() => await db.WikiPages
 			.ThatAreNotDeleted()
 			.ThatAreCurrent()
@@ -262,7 +261,7 @@ internal class WikiPages(
 		{
 			currentRevision.Child = newRevision;
 		}
-		
+
 		// We cannot assume the "current" revision is the latest
 		// We might have a deleted revision after it
 		var maxRevision = await db.WikiPages
@@ -342,7 +341,6 @@ internal class WikiPages(
 		// broken, and it is important to keep them listed as broken, so they
 		// can show up in the Broken Links module for editors to see and fix.
 		// Anyone doing a move operation should know to check broken links afterward
-
 		var cachedRevision = this[originalName];
 		if (cachedRevision is not null)
 		{

@@ -6,7 +6,7 @@ public interface IPrivateMessageService
 {
 	Task SendMessage(int fromUserId, string toUserName, string subject, string text);
 	Task SendMessageToRole(int fromUserId, string roleName, string subject, string text);
-	
+
 	/// <summary>
 	/// Returns a list of roles that are allowed for bulk sending
 	/// </summary>

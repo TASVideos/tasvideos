@@ -7,7 +7,7 @@ public interface IPointsService
 	/// the calculated player rank is returned. If a user with the given
 	/// <see cref="userId"/> does not exist, 0 is returned
 	/// </summary>
-	ValueTask<(double, string)> PlayerPoints(int userId);
+	ValueTask<(double Points, string Rank)> PlayerPoints(int userId);
 
 	/// <summary>
 	/// Calculates the player points that are being awarded for the given publication
@@ -24,7 +24,7 @@ internal class PointsService(
 	private const string PlayerPointKey = "PlayerPoints-";
 	private const string AverageNumberOfRatingsKey = "AverageNumberOfRatings";
 
-	public async ValueTask<(double, string)> PlayerPoints(int userId)
+	public async ValueTask<(double Points, string Rank)> PlayerPoints(int userId)
 	{
 		string cacheKey = PlayerPointKey + userId;
 		if (cache.TryGetValue(cacheKey, out double playerPoints))

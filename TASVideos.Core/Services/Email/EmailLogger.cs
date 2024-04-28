@@ -17,7 +17,7 @@ internal class EmailLogger(ILogger<EmailLogger> logger) : IEmailSender
 				email.Subject,
 				email.Message);
 		}
-		
+
 		return Task.CompletedTask;
 	}
 }

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.HttpClientExtensions;
@@ -100,7 +100,6 @@ internal class YouTubeSync(
 
 	public async Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds)
 	{
-
 		if (!googleAuthService.IsYoutubeEnabled())
 		{
 			return [];

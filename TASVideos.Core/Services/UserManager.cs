@@ -31,11 +31,9 @@ public class UserManager(
 		services,
 		logger)
 {
-	// Holy dependencies, batman
-
 	public async Task<User> GetRequiredUser(ClaimsPrincipal user)
 	{
-		return await base.GetUserAsync(user) ?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
+		return await GetUserAsync(user) ?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
 	}
 
 	// Clears the user claims, and adds a distinct list of user permissions,

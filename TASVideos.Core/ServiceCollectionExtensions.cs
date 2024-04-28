@@ -2,25 +2,21 @@
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Services.Email;
-using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 using TASVideos.Core.Services.PublicationChain;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
-using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddTasvideosCore<T>(this IServiceCollection services, bool isDevelopment, AppSettings settings) where T : class, IWikiToTextRenderer
+	public static IServiceCollection AddTasvideosCore<T>(this IServiceCollection services, bool isDevelopment, AppSettings settings)
+		where T : class, IWikiToTextRenderer
 	{
 		services.AddScoped<IWikiToTextRenderer, T>();
-		// TODO: resolve application part stuff, and move to api project
-		// services
-		// 	.AddControllers()
-		// 	.AddApplicationPart(typeof(IJwtAuthenticator).Assembly);
-
 		services
 			.AddCacheService(settings.CacheSettings)
 			.AddExternalMediaPublishing(settings, isDevelopment);

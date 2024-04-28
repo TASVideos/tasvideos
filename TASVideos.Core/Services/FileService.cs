@@ -52,7 +52,7 @@ internal class FileService : IFileService
 		using var unzip = new StreamReader(gz);
 		return await unzip.ReadToEndAsync();
 	}
-	
+
 	public async Task<byte[]> CopyZip(byte[] zipBytes, string fileName)
 	{
 		await using var submissionFileStream = new MemoryStream(zipBytes);
@@ -69,6 +69,7 @@ internal class FileService : IFileService
 		using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
 		{
 			var fileInArchive = archive.CreateEntry(fileName, CompressionLevel.Optimal);
+
 			// set Unix permissions UserRead | UserWrite | GroupRead | OtherRead
 			// this is needed as CreateEntry will 0 the ExternalAttributes field
 			// in .NET 7 this could be removed, see https://github.com/dotnet/runtime/commit/bce94154f24e2ae83e5597881029d4f1ba428b60

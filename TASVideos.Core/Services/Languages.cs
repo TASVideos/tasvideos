@@ -44,7 +44,6 @@ internal class Languages(
 
 			// Translations should also include the original link to the English version
 			languages.Add(new LanguagePage("EN", "English", subPage));
-
 		}
 
 		languages.AddRange((await AvailableLanguages())

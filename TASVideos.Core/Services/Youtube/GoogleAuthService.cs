@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.HttpClientExtensions;
+using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.Youtube;

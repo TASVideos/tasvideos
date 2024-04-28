@@ -12,7 +12,8 @@ public interface IQueueService
 	/// Returns a list of all available statuses a submission could be set to
 	/// Based on the user's permissions, submission status and date, and authors.
 	/// </summary>
-	ICollection<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
+	ICollection<SubmissionStatus> AvailableStatuses(
+		SubmissionStatus currentStatus,
 		IEnumerable<PermissionTo> userPermissions,
 		DateTime submitDate,
 		bool isAuthorOrSubmitter,
@@ -67,14 +68,14 @@ internal class QueueService(
 {
 	private readonly int _minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
 
-	public ICollection<SubmissionStatus> AvailableStatuses(SubmissionStatus currentStatus,
+	public ICollection<SubmissionStatus> AvailableStatuses(
+		SubmissionStatus currentStatus,
 		IEnumerable<PermissionTo> userPermissions,
 		DateTime submitDate,
 		bool isAuthorOrSubmitter,
 		bool isJudge,
 		bool isPublisher)
 	{
-
 		// Published submissions can not be changed
 		if (currentStatus == Published)
 		{

@@ -9,7 +9,7 @@ public interface ITagService
 	ValueTask<Tag?> GetById(int id);
 	ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
-	Task<(int? id, TagEditResult result)> Add(string code, string displayName);
+	Task<(int? Id, TagEditResult Result)> Add(string code, string displayName);
 	Task<TagEditResult> Edit(int id, string code, string displayName);
 	Task<TagDeleteResult> Delete(int id);
 }
@@ -57,7 +57,7 @@ internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagSe
 		return await db.PublicationTags.AnyAsync(pt => pt.TagId == id);
 	}
 
-	public async Task<(int? id, TagEditResult result)> Add(string code, string displayName)
+	public async Task<(int? Id, TagEditResult Result)> Add(string code, string displayName)
 	{
 		var entry = db.Tags.Add(new Tag
 		{

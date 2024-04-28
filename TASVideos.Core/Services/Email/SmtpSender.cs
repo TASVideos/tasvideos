@@ -1,8 +1,8 @@
 ﻿using MailKit.Net.Smtp;
 using MailKit.Security;
-using MimeKit;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MimeKit;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.Email;

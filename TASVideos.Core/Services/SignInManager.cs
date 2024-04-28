@@ -27,7 +27,7 @@ public class SignInManager(
 {
 	public new UserManager UserManager => (UserManager)base.UserManager;
 
-	public async Task<(SignInResult, User?)> SignIn(string userName, string password, bool rememberMe = false)
+	public async Task<(SignInResult Result, User? User)> SignIn(string userName, string password, bool rememberMe = false)
 	{
 		userName = userName.Trim().Replace(" ", "_");
 		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
@@ -44,7 +44,7 @@ public class SignInManager(
 			return (SignInResult.NotAllowed, user);
 		}
 
-		var result = await base.PasswordSignInAsync(
+		var result = await PasswordSignInAsync(
 			userName,
 			password,
 			rememberMe,

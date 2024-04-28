@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<RunAnalyzers>false</RunAnalyzers> <!-- this project did not have StyleCop applied; when it was added, there were 66 extra warnings -->
+		<RunAnalyzers>true</RunAnalyzers>
 		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 	<ItemGroup>

@@ -162,6 +162,7 @@ public static class WikiHelper
 		{
 			return pageName;
 		}
+
 		string[] splitPage = pageName.Trim('/').Split('/');
 		if (splitPage.Length >= 2)
 		{

@@ -9,7 +9,6 @@ public interface IAwardAssignmentSummary
 	int Year { get; }
 }
 
-
 /// <summary>
 /// Represents the assignment of an award to a user or movie
 /// Ex: 2010 TASer of the Year.

@@ -79,8 +79,8 @@ internal class ForumService(
 			if (latestPostMappings.TryGetValue(forum.Id, out var lastPost))
 			{
 				forum.LastPost = lastPost;
-
 			}
+
 			allActivityPosts.TryGetValue(forum.Id, out var activityPosts);
 			forum.ActivityPostsCreated = activityPosts.Item1 ?? "";
 			forum.ActivityPostsEdited = activityPosts.Item2 ?? "";
@@ -111,6 +111,7 @@ internal class ForumService(
 			forumActivity[forumId] = subforumActivity;
 			cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDayInSeconds);
 		}
+
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> fullSubforumActivity))
 		{
 			fullSubforumActivity.TryGetValue(forumId, out (string, string) postActivity);
@@ -134,6 +135,7 @@ internal class ForumService(
 			forumActivity[forumId] = subforumActivity;
 			cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDayInSeconds);
 		}
+
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> fullSubforumActivity))
 		{
 			fullSubforumActivity.TryGetValue(forumId, out (string, string) postActivity);

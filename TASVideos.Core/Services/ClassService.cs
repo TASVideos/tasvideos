@@ -8,7 +8,7 @@ public interface IClassService
 	ValueTask<IReadOnlyCollection<PublicationClass>> GetAll();
 	ValueTask<PublicationClass?> GetById(int id);
 	Task<bool> InUse(int id);
-	Task<(int? id, ClassEditResult)> Add(PublicationClass publicationClass);
+	Task<(int? Id, ClassEditResult Result)> Add(PublicationClass publicationClass);
 	Task<ClassEditResult> Edit(int id, PublicationClass publicationClass);
 	Task<ClassDeleteResult> Delete(int id);
 }
@@ -40,7 +40,7 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 		return await db.Publications.AnyAsync(pt => pt.PublicationClassId == id);
 	}
 
-	public async Task<(int? id, ClassEditResult)> Add(PublicationClass publicationClass)
+	public async Task<(int? Id, ClassEditResult Result)> Add(PublicationClass publicationClass)
 	{
 		var newId = (await db.PublicationClasses.Select(f => f.Id).MaxAsync()) + 1;
 		var entry = db.PublicationClasses.Add(new PublicationClass

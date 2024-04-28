@@ -9,7 +9,6 @@ public interface ITASVideoAgent
 	Task SendWelcomeMessage(int userId);
 	Task SendAutoAssignedRole(int userId, string roleName);
 	Task SendPublishedAuthorRole(int userId, string roleName, string publicationTitle);
-
 }
 
 internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService) : ITASVideoAgent

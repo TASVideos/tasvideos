@@ -25,7 +25,7 @@ public interface IUserFiles
 	/// Uploads a file for the user to user files
 	/// </summary>
 	/// <returns>The id of the saved file and an <seealso cref="IParseResult"/> if the file is a movie type</returns>
-	Task<(long? id, IParseResult? parseResult)> Upload(int userId, UserFileUpload file);
+	Task<(long? Id, IParseResult? ParseResult)> Upload(int userId, UserFileUpload file);
 }
 
 internal class UserFiles(
@@ -60,7 +60,7 @@ internal class UserFiles(
 			.ToList();
 	}
 
-	public async Task<(long?, IParseResult?)> Upload(int userId, UserFileUpload file)
+	public async Task<(long? Id, IParseResult? ParseResult)> Upload(int userId, UserFileUpload file)
 	{
 		var fileExt = Path.GetExtension(file.FileName);
 		var userFile = new UserFile
@@ -89,6 +89,7 @@ internal class UserFiles(
 			{
 				return (null, parseResult);
 			}
+
 			userFile.Rerecords = parseResult.RerecordCount;
 			userFile.Frames = parseResult.Frames;
 			if (!string.IsNullOrWhiteSpace(parseResult.Annotations))
