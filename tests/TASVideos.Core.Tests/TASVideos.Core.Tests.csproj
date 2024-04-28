@@ -28,7 +28,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\TASVideos.Core\TASVideos.Core.csproj" />
 		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" />
 	</ItemGroup>
 
