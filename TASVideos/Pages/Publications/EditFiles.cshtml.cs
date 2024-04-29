@@ -59,12 +59,7 @@ public class EditFilesModel(
 		}
 
 		var path = await uploader.UploadScreenshot(Id, NewFile!, Description);
-
-		string log = $"Added Screenshot file {path}";
-		SuccessStatusMessage(log);
-		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-		await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {Title}");
-
+		await Log($"Added Screenshot file {path}");
 		return RedirectToPage("EditFiles", new { Id });
 	}
 
@@ -74,12 +69,16 @@ public class EditFilesModel(
 
 		if (file is not null)
 		{
-			string log = $"Deleted {file.Type} file {file.Path}";
-			SuccessStatusMessage(log);
-			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-			await publisher.SendPublicationEdit(User.Name(), Id, $"{log}");
+			await Log($"Deleted {file.Type} file {file.Path}");
 		}
 
 		return RedirectToPage("EditFiles", new { Id });
+	}
+
+	private async Task Log(string log)
+	{
+		SuccessStatusMessage(log);
+		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
+		await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {Title}");
 	}
 }
