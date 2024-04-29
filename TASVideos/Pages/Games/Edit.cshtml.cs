@@ -111,6 +111,11 @@ public class EditModel(
 		{
 			game = new Game();
 			db.Games.Add(game);
+			db.GameGoals.Add(new GameGoal
+			{
+				Game = game,
+				DisplayName = "baseline"
+			});
 		}
 
 		game.DisplayName = Game.DisplayName;
