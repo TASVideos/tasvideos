@@ -11,7 +11,27 @@ public class UploadModel(
 	: BasePageModel
 {
 	[BindProperty]
-	public UserFileUpload UserFile { get; set; } = new();
+	[Required]
+	public IFormFile? UserFile { get; init; }
+
+	[BindProperty]
+	[StringLength(255)]
+	public string Title { get; init; } = "";
+
+	[BindProperty]
+	[DoNotTrim]
+	public string Description { get; init; } = "";
+
+	[BindProperty]
+	[Display(Name = "System")]
+	public int? SystemId { get; init; }
+
+	[BindProperty]
+	[Display(Name = "Game")]
+	public int? GameId { get; init; }
+
+	[BindProperty]
+	public bool Hidden { get; init; }
 
 	public int StorageUsed { get; set; }
 
@@ -21,10 +41,7 @@ public class UploadModel(
 
 	public List<string> SupportedFileExtensions { get; set; } = [];
 
-	public async Task OnGet()
-	{
-		await Initialize();
-	}
+	public async Task OnGet() => await Initialize();
 
 	public async Task<IActionResult> OnPost()
 	{
@@ -34,57 +51,57 @@ public class UploadModel(
 			return Page();
 		}
 
-		if (UserFile.File.IsCompressed())
+		if (UserFile.IsCompressed())
 		{
 			await Initialize();
 			ModelState.AddModelError(
-				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+				$"{nameof(Data.Entity.UserFile)}.{nameof(UserFile)}",
 				"Compressed files are not supported.");
 			return Page();
 		}
 
-		var fileExt = UserFile.File.FileExtension();
+		var fileExt = UserFile.FileExtension();
 
 		if (!(await userFiles.SupportedFileExtensions()).Contains(fileExt))
 		{
 			await Initialize();
 			ModelState.AddModelError(
-				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+				$"{nameof(Data.Entity.UserFile)}.{nameof(UserFile)}",
 				$"Unsupported file type: {fileExt}");
 			return Page();
 		}
 
-		if (!await userFiles.SpaceAvailable(User.GetUserId(), UserFile.File!.Length))
+		if (!await userFiles.SpaceAvailable(User.GetUserId(), UserFile!.Length))
 		{
 			await Initialize();
 			ModelState.AddModelError(
-				$"{nameof(UserFile)}.{nameof(UserFile.File)}",
+				$"{nameof(Data.Entity.UserFile)}.{nameof(UserFile)}",
 				"File exceeds your available storage space. Remove unecessary files and try again.");
 			return Page();
 		}
 
-		byte[] actualFileData = await UserFile.File.ActualFileData();
+		byte[] actualFileData = await UserFile.ActualFileData();
 		var (id, parseResult) = await userFiles.Upload(User.GetUserId(), new(
-			UserFile.Title,
-			UserFile.Description,
-			UserFile.SystemId,
-			UserFile.GameId,
+			Title,
+			Description,
+			SystemId,
+			GameId,
 			actualFileData,
-			UserFile.File.FileName,
-			UserFile.Hidden));
+			UserFile.FileName,
+			Hidden));
 
 		if (parseResult is not null && !parseResult.Success)
 		{
 			await Initialize();
-			ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}.{nameof(UserFile.File)}");
+			ModelState.AddParseErrors(parseResult, $"{nameof(UserFile)}");
 			return Page();
 		}
 
 		await publisher.SendUserFile(
-			UserFile.Hidden,
+			Hidden,
 			$"New [user file]({{0}}) uploaded by {User.Name()}",
 			id!.Value,
-			UserFile.Title);
+			Title);
 
 		return BasePageRedirect("/Profile/UserFiles");
 	}
@@ -108,24 +125,5 @@ public class UploadModel(
 			.ToDropDown()
 			.ToListAsync())
 			.WithDefaultEntry();
-	}
-
-	public class UserFileUpload
-	{
-		[Required]
-		public IFormFile? File { get; init; }
-
-		[StringLength(255)]
-		public string Title { get; init; } = "";
-
-		[DoNotTrim]
-		public string Description { get; init; } = "";
-
-		[Display(Name = "System")]
-		public int? SystemId { get; init; }
-
-		[Display(Name = "Game")]
-		public int? GameId { get; init; }
-		public bool Hidden { get; init; }
 	}
 }

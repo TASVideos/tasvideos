@@ -15,40 +15,40 @@
 	<row>
 		<column>
 			<fieldset>
-				<label asp-for="UserFile.File" class="form-control-label"></label>
-				<input asp-for="UserFile.File" class="form-control" />
+				<label asp-for="UserFile" class="form-control-label"></label>
+				<input asp-for="UserFile" class="form-control" />
 				<small>Valid file types: @string.Join(", ", Model.SupportedFileExtensions)</small><br />
-				<span id="FileInputWarning" asp-validation-for="UserFile.File" class="text-danger"></span>
+				<span id="FileInputWarning" asp-validation-for="UserFile" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserFile.Title" class="form-control-label"></label>
-				<input asp-for="UserFile.Title" type="text" class="form-control" />
-				<span asp-validation-for="UserFile.Title" class="text-danger"></span>
+				<label asp-for="Title" class="form-control-label"></label>
+				<input asp-for="Title" type="text" class="form-control" />
+				<span asp-validation-for="Title" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div>
 					<partial name="_WikiEditHelper" model="@("UserFile_Description")"/>
 				</div>
-				<label asp-for="UserFile.Description" class="form-control-label"></label>
-				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
-				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
+				<label asp-for="Description" class="form-control-label"></label>
+				<textarea asp-for="Description" rows="6" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<span asp-validation-for="Description" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div class="form-check">
-					<input type="checkbox" class="form-check-input" asp-for="UserFile.Hidden">
-					<label class="form-check-label form-control-label" asp-for="UserFile.Hidden"></label>
+					<input type="checkbox" class="form-check-input" asp-for="Hidden">
+					<label class="form-check-label form-control-label" asp-for="Hidden"></label>
 				</div>
 			</fieldset>
 			<hr />
 			<fieldset>
-				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
-				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-select"></select>
-				<span asp-validation-for="UserFile.SystemId" class="text-danger"></span>
+				<label asp-for="SystemId" class="form-control-label"></label>
+				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" class="form-select"></select>
+				<span asp-validation-for="SystemId" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserFile.GameId" class="form-control-label"></label>
-				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-select"></select>
-				<span asp-validation-for="UserFile.GameId" class="text-danger"></span>
+				<label asp-for="GameId" class="form-control-label"></label>
+				<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-select"></select>
+				<span asp-validation-for="GameId" class="text-danger"></span>
 			</fieldset>
 		</column>
 	</row>
@@ -60,14 +60,14 @@
 	</fullrow>
 </form>
 
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.UserFile.Description), "/Wiki/Preview")" />
+<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Description), "/Wiki/Preview")" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/userfile.js"></script>
 	<script>
-		const gameId = "@Html.IdFor(m => m.UserFile.GameId)";
-		const systemId = "@Html.IdFor(m => m.UserFile.SystemId)";
+		const gameId = "@Html.IdFor(m => m.GameId)";
+		const systemId = "@Html.IdFor(m => m.SystemId)";
 		enableUserFile(gameId, systemId);
 	</script>
 	<script src="/js/pako_deflate.min.js"></script>
@@ -75,7 +75,7 @@
 
 		"use strict";
 		{
-			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile.File)");
+			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile)");
 			const storageAvailable = parseFloat(document.getElementById("StorageAvailable").value);
 			const supportedFileExtensions = '@string.Join(",", Model.SupportedFileExtensions)'.split(',');
 			const fileInputWarning = document.getElementById("FileInputWarning");
