@@ -155,8 +155,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		];
 
 		public static List<SubmissionStatus> All => Enum
-			.GetValues(typeof(SubmissionStatus))
-			.Cast<SubmissionStatus>()
+			.GetValues<SubmissionStatus>()
 			.ToList();
 
 		ICollection<string> ISubmissionFilter.Systems => string.IsNullOrWhiteSpace(System)

@@ -7,21 +7,16 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 /// </summary>
 public class LogDistributor(ILogger<LogDistributor> logger) : IPostDistributor
 {
-	private readonly ILogger _logger = logger;
-
-	private static readonly IEnumerable<PostType> PostTypes = Enum
-		.GetValues(typeof(PostType))
-		.OfType<PostType>()
-		.ToList();
+	private static readonly IEnumerable<PostType> PostTypes = Enum.GetValues<PostType>().ToList();
 
 	public IEnumerable<PostType> Types => PostTypes;
 
 	public async Task Post(IPostable post)
 	{
-		if (_logger.IsEnabled(LogLevel.Information))
+		if (logger.IsEnabled(LogLevel.Information))
 		{
-			await Task.Run(() => _logger.LogInformation(
-				"New {post.Type} message recieved\n{announcement}\n{title}\n{body}\nLink:{link}\nGroup:{group}\n{user}",
+			await Task.Run(() => logger.LogInformation(
+				"New {post.Type} message received\n{announcement}\n{title}\n{body}\nLink:{link}\nGroup:{group}\n{user}",
 				post.Type,
 				post.Announcement,
 				post.Title,

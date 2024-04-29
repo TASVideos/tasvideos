@@ -57,8 +57,7 @@ public class CreateModel(
 
 		BackupSubmissionDeterminator = (await db.ForumTopics
 			.ForForum(ForumId)
-			.Where(f => f.PosterId == User.GetUserId())
-			.CountAsync())
+			.CountAsync(t => t.PosterId == User.GetUserId()))
 			.ToString();
 
 		return Page();

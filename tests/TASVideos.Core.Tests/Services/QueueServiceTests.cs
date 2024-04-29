@@ -263,8 +263,7 @@ public class QueueServiceTests
 	[TestMethod]
 	public void OverrideSubmissions_AnyStatusButPublished()
 	{
-		var exceptPublished = Enum.GetValues(typeof(SubmissionStatus))
-			.Cast<SubmissionStatus>()
+		var exceptPublished = Enum.GetValues<SubmissionStatus>()
 			.Except([Published])
 			.OrderBy(s => s)
 			.ToList();

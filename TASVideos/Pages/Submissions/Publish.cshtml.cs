@@ -24,6 +24,11 @@ public class PublishModel(
 	[BindProperty]
 	public SubmissionPublishModel Submission { get; set; } = new();
 
+	[BindProperty]
+	[DoNotTrim]
+	[Display(Name = "Submission description (for quoting, reference, etc)")]
+	public string? Markup { get; set; }
+
 	public List<SelectListItem> AvailableTags { get; set; } = [];
 	public List<SelectListItem> AvailableFlags { get; set; } = [];
 
@@ -45,7 +50,7 @@ public class PublishModel(
 		}
 
 		Submission = submission;
-		Submission.Markup = (await wikiPages.SubmissionPage(Id))!.Markup;
+		Markup = (await wikiPages.SubmissionPage(Id))!.Markup;
 
 		await PopulateDropdowns();
 		return Page();
@@ -236,10 +241,6 @@ public class PublishModel(
 
 		[Display(Name = "Description", Description = "Caption, describe what happens in the screenshot")]
 		public string? ScreenshotDescription { get; init; }
-
-		[DoNotTrim]
-		[Display(Name = "Submission description (for quoting, reference, etc)")]
-		public string? Markup { get; set; }
 
 		[Display(Name = "System")]
 		public string? SystemCode { get; init; }
