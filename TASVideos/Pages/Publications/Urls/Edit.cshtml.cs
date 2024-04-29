@@ -116,29 +116,22 @@ public class EditUrlsModel(
 
 		string[] logWording;
 
+		PublicationUrl url;
 		if (UrlId.HasValue)
 		{
-			var url = CurrentUrls.Single(u => u.Id == UrlId.Value);
-
-			url.PublicationId = PublicationId;
-			url.DisplayName = DisplayName;
-			url.Type = UrlType;
-			url.Url = CurrentUrl;
-
+			url = CurrentUrls.Single(u => u.Id == UrlId.Value);
 			logWording = ["Chang", "chang"];
 		}
 		else
 		{
-			db.PublicationUrls.Add(new PublicationUrl
-			{
-				PublicationId = PublicationId,
-				Url = CurrentUrl,
-				Type = UrlType,
-				DisplayName = DisplayName
-			});
-
+			url = db.PublicationUrls.Add(new PublicationUrl()).Entity;
 			logWording = ["Add", "add"];
 		}
+
+		url.PublicationId = PublicationId;
+		url.DisplayName = DisplayName;
+		url.Type = UrlType;
+		url.Url = CurrentUrl;
 
 		string log = $"{logWording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";
 		await publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
