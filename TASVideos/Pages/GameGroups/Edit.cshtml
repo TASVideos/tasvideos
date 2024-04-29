@@ -5,7 +5,7 @@
 	string iconClass;
 	if (Model.Id.HasValue)
 	{
-		ViewData.SetTitle($"Editing Game Group #{Model.Id} {Model.GameGroup.Name}");
+		ViewData.SetTitle($"Editing Game Group #{Model.Id} {Model.Name}");
 		saveBtnName = "Save";
 		iconClass = "fa fa-save";
 	}
@@ -23,30 +23,30 @@
 	<row>
 		<column md="6">
 			<fieldset>
-				<label asp-for="GameGroup.Name"></label>
-				<input type="text" asp-for="GameGroup.Name" class="form-control" />
-				<span asp-validation-for="GameGroup.Name" class="text-danger"></span>
+				<label asp-for="Name"></label>
+				<input type="text" asp-for="Name" class="form-control" />
+				<span asp-validation-for="Name" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="GameGroup.Abbreviation"></label>
+				<label asp-for="Abbreviation"></label>
 				<div class="input-group">
-					<input type="text" asp-for="GameGroup.Abbreviation" class="form-control" />
+					<input type="text" asp-for="Abbreviation" class="form-control" />
 					<a asp-page="/Wiki/Referrers"
-					   asp-route-path="GameGroups/@Model.GameGroup.Abbreviation"
+					   asp-route-path="GameGroups/@Model.Abbreviation"
 					   asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()"
 					   class="btn btn-primary">
 						Referrers
 					</a>
 				</div>
-				<span asp-validation-for="GameGroup.Abbreviation" class="text-danger"></span>
+				<span asp-validation-for="Abbreviation" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div>
 					<partial name="_WikiEditHelper" model="@("GameGroup_Description")" />
 				</div>
-				<label asp-for="GameGroup.Description" class="form-control-label"></label>
-				<textarea asp-for="GameGroup.Description" rows="4" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
-				<span asp-validation-for="GameGroup.Description" class="text-danger"></span>
+				<label asp-for="Description" class="form-control-label"></label>
+				<textarea asp-for="Description" rows="4" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<span asp-validation-for="Description" class="text-danger"></span>
 				@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 			</fieldset>
 		</column>
