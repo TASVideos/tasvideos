@@ -9,36 +9,36 @@
 	<row>
 		<column md="6">
 			<fieldset>
-				<label asp-for="AwardCategory.Type"></label>
-				<select asp-for="AwardCategory.Type" asp-items="Model.AvailableAwardTypes" class="form-select"></select>
+				<label asp-for="Type"></label>
+				<select asp-for="Type" asp-items="Model.AvailableAwardTypes" class="form-select"></select>
 			</fieldset>
 			<fieldset>
-				<label asp-for="AwardCategory.ShortName"></label>
-				<input asp-for="AwardCategory.ShortName" class="form-control"/>
-				<span asp-validation-for="AwardCategory.ShortName" class="text-danger"></span>
+				<label asp-for="ShortName"></label>
+				<input asp-for="ShortName" class="form-control"/>
+				<span asp-validation-for="ShortName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="AwardCategory.Description"></label>
-				<input asp-for="AwardCategory.Description" class="form-control"/>
-				<span asp-validation-for="AwardCategory.Description" class="text-danger"></span>
+				<label asp-for="Description"></label>
+				<input asp-for="Description" class="form-control"/>
+				<span asp-validation-for="Description" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div><small>Note: filename will be auto-generated with the pattern {shortname}_xxxx.png</small></div>
-				<label asp-for="AwardCategory.BaseImage"></label>
-				<input asp-for="AwardCategory.BaseImage" class="form-control"/>
-				<span asp-validation-for="AwardCategory.BaseImage" class="text-danger"></span>
+				<label asp-for="BaseImage"></label>
+				<input asp-for="BaseImage" class="form-control"/>
+				<span asp-validation-for="BaseImage" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
-				<label asp-for="AwardCategory.BaseImage2X"></label>
-				<input asp-for="AwardCategory.BaseImage2X" class="form-control"/>
-				<span asp-validation-for="AwardCategory.BaseImage2X" class="text-danger"></span>
+				<label asp-for="BaseImage2X"></label>
+				<input asp-for="BaseImage2X" class="form-control"/>
+				<span asp-validation-for="BaseImage2X" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
-				<label asp-for="AwardCategory.BaseImage4X"></label>
-				<input asp-for="AwardCategory.BaseImage4X" class="form-control"/>
-				<span asp-validation-for="AwardCategory.BaseImage4X" class="text-danger"></span>
+				<label asp-for="BaseImage4X"></label>
+				<input asp-for="BaseImage4X" class="form-control"/>
+				<span asp-validation-for="BaseImage4X" class="text-danger"></span>
 			</fieldset>
 		</column>
 	</row>
