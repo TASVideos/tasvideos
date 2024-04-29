@@ -8,10 +8,22 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 	[FromRoute]
 	public int Year { get; set; }
 
-	public List<SelectListItem> AvailableAwardCategories { get; set; } = [];
+	[BindProperty]
+	public string Award { get; init; } = "";
 
 	[BindProperty]
-	public UploadImageViewModel ImageToUpload { get; set; } = new();
+	[Required]
+	public IFormFile? BaseImage { get; init; }
+
+	[BindProperty]
+	[Required]
+	public IFormFile? BaseImage2X { get; init; }
+
+	[BindProperty]
+	[Required]
+	public IFormFile? BaseImage4X { get; init; }
+
+	public List<SelectListItem> AvailableAwardCategories { get; set; } = [];
 
 	public async Task OnGet() => await Initialize();
 
@@ -23,7 +35,7 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 			return Page();
 		}
 
-		var exists = await awards.CategoryExists(ImageToUpload.Award);
+		var exists = await awards.CategoryExists(Award);
 		if (!exists)
 		{
 			ModelState.AddModelError("", "Award does not exist.");
@@ -32,11 +44,7 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 		}
 
 		await mediaFileUploader.UploadAwardImage(
-			ImageToUpload.BaseImage!,
-			ImageToUpload.BaseImage2X!,
-			ImageToUpload.BaseImage4X!,
-			ImageToUpload.Award,
-			Year);
+			BaseImage!, BaseImage2X!, BaseImage4X!, Award, Year);
 
 		return BasePageRedirect("Index", new { Year });
 	}
@@ -48,19 +56,5 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 			.ToDropdown(Year)
 			.ToListAsync())
 			.WithDefaultEntry();
-	}
-
-	public class UploadImageViewModel
-	{
-		public string Award { get; init; } = "";
-
-		[Required]
-		public IFormFile? BaseImage { get; init; }
-
-		[Required]
-		public IFormFile? BaseImage2X { get; init; }
-
-		[Required]
-		public IFormFile? BaseImage4X { get; init; }
 	}
 }
