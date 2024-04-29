@@ -2,19 +2,17 @@
 
 namespace TASVideos.Pages.Account;
 
+[BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
 public class LoginModel(SignInManager signInManager, IHostEnvironment env) : BasePageModel
 {
-	[BindProperty]
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
-	[BindProperty]
 	[DataType(DataType.Password)]
 	public string Password { get; set; } = "";
 
-	[BindProperty]
 	[Display(Name = "Remember me?")]
 	public bool RememberMe { get; set; }
 
