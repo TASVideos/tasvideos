@@ -1,25 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Data.Entity.Exhibition;
+﻿using TASVideos.Data.Entity.Exhibition;
 using TASVideos.Pages.Exhibitions.Models;
 
 namespace TASVideos.Pages.Exhibitions.Drafts;
 
-public class PublishModel : BasePageModel
+public class PublishModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	public PublishModel(ApplicationDbContext db)
-	{
-		_db = db;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 
 	public ExhibitionDisplayModel Exhibition { get; set; } = new();
 	public async Task<IActionResult> OnGet()
 	{
-		var exhibition = await _db.Exhibitions
+		var exhibition = await db.Exhibitions
 			.Select(e => new ExhibitionDisplayModel
 			{
 				Id = e.Id,
@@ -68,7 +60,7 @@ public class PublishModel : BasePageModel
 
 	public async Task<IActionResult> OnPost()
 	{
-		var exhibition = await _db.Exhibitions.SingleOrDefaultAsync(e => e.Id == Id);
+		var exhibition = await db.Exhibitions.SingleOrDefaultAsync(e => e.Id == Id);
 
 		if (exhibition is null)
 		{
@@ -86,17 +78,17 @@ public class PublishModel : BasePageModel
 		}
 
 		exhibition.Status = ExhibitionStatus.Published;
-		exhibition.PublishId = await _db.Exhibitions.MaxAsync(e => e.PublishId) + 1;
+		exhibition.PublishId = await db.Exhibitions.MaxAsync(e => e.PublishId) + 1;
 		exhibition.PublicationTimestamp = DateTime.UtcNow;
 
-		var topic = await _db.ForumTopics.FirstOrDefaultAsync(t => t.Id == exhibition.TopicId);
+		var topic = await db.ForumTopics.FirstOrDefaultAsync(t => t.Id == exhibition.TopicId);
 		if (topic is not null)
 		{
 			string topicTitle = $"#{exhibition.Id}: {exhibition.Title}";
 			topic.Title = topicTitle;
 		}
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
 		return RedirectToPage("View", new { Id = exhibition.PublishId });
 	}

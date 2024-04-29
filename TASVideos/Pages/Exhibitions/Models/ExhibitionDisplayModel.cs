@@ -21,11 +21,13 @@ public class ExhibitionDisplayModel
 		public int Id { get; set; }
 		public string DisplayName { get; set; } = "";
 	}
+
 	public class UserModel
 	{
 		public int Id { get; set; }
 		public string UserName { get; set; } = "";
 	}
+
 	public class UrlModel
 	{
 		public string Url { get; set; } = "";

@@ -1,28 +1,16 @@
-using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core.Services.Wiki;
-using TASVideos.Data;
-using TASVideos.Pages.Exhibitions.Drafts.Models;
+﻿using TASVideos.Pages.Exhibitions.Drafts.Models;
 
 namespace TASVideos.Pages.Exhibitions.Drafts;
 
-public class ViewModel : BasePageModel
+public class ViewModel(ApplicationDbContext db) : BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IWikiPages _wikiPages;
-
-	public ViewModel(ApplicationDbContext db, IWikiPages wikiPages)
-	{
-		_db = db;
-		_wikiPages = wikiPages;
-	}
-
 	[FromRoute]
 	public int Id { get; set; }
 	public ExhibitionDraftDisplayModel Exhibition { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
-		var exhibition = await _db.Exhibitions
+		var exhibition = await db.Exhibitions
 			.Where(e => e.Id == Id)
 			.Select(e => new ExhibitionDraftDisplayModel
 			{

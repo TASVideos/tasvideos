@@ -1,38 +1,19 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Core.Services;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Exhibition;
 using TASVideos.MovieParsers;
-using TASVideos.Pages.Exhibitions.Drafts.Models;
 using TASVideos.Pages.Exhibitions.Models;
 
 namespace TASVideos.Pages.Exhibitions.Drafts;
 
-public class CreateModel : BasePageModel
+public class CreateModel(
+	ApplicationDbContext db,
+	IMediaFileUploader uploader,
+	IMovieParser parser,
+	IWikiPages wikiPages,
+	ITASVideoAgent tasVideoAgent)
+	: BasePageModel
 {
-	private readonly ApplicationDbContext _db;
-	private readonly IMediaFileUploader _uploader;
-	private readonly IMovieParser _parser;
-	private readonly IWikiPages _wikiPages;
-	private readonly ITASVideoAgent _tasVideoAgent;
-	public CreateModel(
-		ApplicationDbContext db,
-		IMediaFileUploader uploader,
-		IMovieParser parser,
-		IWikiPages wikiPages,
-		ITASVideoAgent tasVideoAgent)
-	{
-		_db = db;
-		_uploader = uploader;
-		_parser = parser;
-		_wikiPages = wikiPages;
-		_tasVideoAgent = tasVideoAgent;
-	}
-
 	[BindProperty]
 	public ExhibitionFormModel ExhibitionForm { get; set; } = new();
 
@@ -58,7 +39,7 @@ public class CreateModel : BasePageModel
 		{
 			if (movie.MovieFile != null)
 			{
-				var parseResult = await _parser.ParseZip(movie.MovieFile.OpenReadStream());
+				var parseResult = await parser.ParseZip(movie.MovieFile.OpenReadStream());
 
 				if (!parseResult.Success)
 				{
@@ -73,8 +54,8 @@ public class CreateModel : BasePageModel
 		{
 			Title = ExhibitionForm.Exhibition.Title,
 			ExhibitionTimestamp = ExhibitionForm.Exhibition.ExhibitionTimestamp,
-			Games = await _db.Games.Where(g => ExhibitionForm.Exhibition.Games.Contains(g.Id)).ToListAsync(),
-			Contributors = await _db.Users.Where(g => ExhibitionForm.Exhibition.Contributors.Contains(g.Id)).ToListAsync()
+			Games = await db.Games.Where(g => ExhibitionForm.Exhibition.Games.Contains(g.Id)).ToListAsync(),
+			Contributors = await db.Users.Where(g => ExhibitionForm.Exhibition.Contributors.Contains(g.Id)).ToListAsync()
 		};
 
 		foreach (var movie in ExhibitionForm.Exhibition.Movies)
@@ -102,13 +83,13 @@ public class CreateModel : BasePageModel
 			});
 		}
 
-		await _db.Exhibitions.AddAsync(exhibition);
+		await db.Exhibitions.AddAsync(exhibition);
 
-		await _db.SaveChangesAsync();
+		await db.SaveChangesAsync();
 
 		if (ExhibitionForm.Exhibition.Screenshot != null)
 		{
-			await _uploader.UploadExhibitionScreenshot(exhibition.Id, ExhibitionForm.Exhibition.Screenshot, ExhibitionForm.Exhibition.ScreenshotDescription);
+			await uploader.UploadExhibitionScreenshot(exhibition.Id, ExhibitionForm.Exhibition.Screenshot, ExhibitionForm.Exhibition.ScreenshotDescription);
 		}
 
 		var wikiPage = new WikiCreateRequest
@@ -119,18 +100,18 @@ public class CreateModel : BasePageModel
 			Markup = ExhibitionForm.Exhibition.Markup,
 			AuthorId = User.GetUserId()
 		};
-		var addedWikiPage = await _wikiPages.Add(wikiPage);
+		var addedWikiPage = await wikiPages.Add(wikiPage);
 
 		string topicTitle = $"D{exhibition.Id}: {exhibition.Title}";
-		exhibition.TopicId = await _tasVideoAgent.PostExhibitionTopic(exhibition.Id, topicTitle);
-		await _db.SaveChangesAsync();
+		exhibition.TopicId = await tasVideoAgent.PostExhibitionTopic(exhibition.Id, topicTitle);
+		await db.SaveChangesAsync();
 
 		return RedirectToPage("View", new { exhibition.Id });
 	}
 
 	private async Task PopulateDropdowns()
 	{
-		ExhibitionForm.AvailableGames = await _db.Games
+		ExhibitionForm.AvailableGames = await db.Games
 			.OrderBy(g => g.DisplayName)
 			.Select(g => new SelectListItem
 			{
@@ -139,7 +120,7 @@ public class CreateModel : BasePageModel
 			})
 			.ToListAsync();
 
-		ExhibitionForm.AvailableUsers = await _db.Users
+		ExhibitionForm.AvailableUsers = await db.Users
 			.OrderBy(u => u.UserName)
 			.Select(u => new SelectListItem
 			{
