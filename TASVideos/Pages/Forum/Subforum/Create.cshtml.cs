@@ -10,10 +10,7 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 
 	public List<SelectListItem> AvailableCategories { get; set; } = [];
 
-	public async Task OnGet()
-	{
-		await Initialize();
-	}
+	public async Task OnGet() => await Initialize();
 
 	public async Task<IActionResult> OnPost()
 	{
