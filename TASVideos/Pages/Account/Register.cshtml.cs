@@ -4,6 +4,7 @@ using TASVideos.Core.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account;
 
+[BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
 public class RegisterModel(
@@ -16,38 +17,31 @@ public class RegisterModel(
 	: BasePageModel
 {
 	[Required]
-	[BindProperty]
 	[Display(Name = "Time Zone")]
 	public string SelectedTimeZone { get; set; } = "";
 
-	[BindProperty]
 	[StringLength(50)]
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
-	[BindProperty]
 	[EmailAddress]
 	[Display(Name = "Email")]
 	public string Email { get; set; } = "";
 
-	[BindProperty]
 	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
 	[Display(Name = "Password")]
 	public string Password { get; set; } = "";
 
-	[BindProperty]
 	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
 	[Display(Name = "Confirm password")]
 	public string ConfirmPassword { get; set; } = "";
 
-	[BindProperty]
 	[Display(Name = "Location")]
 	[StringLength(256)]
 	public string? From { get; set; }
 
-	[BindProperty]
 	[MustBeTrue(ErrorMessage = "You must certify that you are 13 years of age or older")]
 	[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 	public bool Coppa { get; set; }
