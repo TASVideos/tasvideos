@@ -1,4 +1,8 @@
 <Project>
+	<PropertyGroup Condition=" '$(SolutionDir)' == '' ">
+		<!-- needed when building individual projects, which you probably don't want to do, but VS Code was doing it regardless -->
+		<SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
+	</PropertyGroup>
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
 		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
