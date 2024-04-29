@@ -2,16 +2,15 @@
 
 namespace TASVideos.Pages.Account;
 
+[BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
 public class EmailConfirmationSentModel(SignInManager signInManager, IEmailService emailService) : BasePageModel
 {
-	[BindProperty]
 	[StringLength(256)]
 	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
-	[BindProperty]
 	[EmailAddress]
 	public string Email { get; set; } = "";
 	public IActionResult OnGet()
