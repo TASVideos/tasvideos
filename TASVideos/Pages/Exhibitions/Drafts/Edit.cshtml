@@ -1,8 +1,7 @@
 ﻿@page "{id}"
-@using TASVideos.Data.Entity.Exhibition
 @model TASVideos.Pages.Exhibitions.Drafts.EditModel
 @{
-	ViewData.SetTitle($"Edit Exhibition D1");
+	ViewData.SetTitle($"Edit Exhibition D{Model.Id}");
 }
 
 <partial name="_ExhibitionForm" for="ExhibitionForm" />
