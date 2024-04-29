@@ -116,9 +116,7 @@ public interface IWikiPages
 }
 
 // TODO: handle DbConcurrency exceptions
-internal class WikiPages(
-	ApplicationDbContext db,
-	ICacheService cache) : IWikiPages
+internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPages
 {
 	private WikiResult? this[string pageName]
 	{

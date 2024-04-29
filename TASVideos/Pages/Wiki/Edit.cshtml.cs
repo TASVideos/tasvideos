@@ -10,7 +10,22 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 	public string? Path { get; set; }
 
 	[BindProperty]
-	public WikiEditModel PageToEdit { get; set; } = new();
+	public DateTime EditStart { get; set; } = DateTime.UtcNow;
+
+	[BindProperty]
+	[DoNotTrim]
+	public string Markup { get; set; } = "";
+
+	public string OriginalMarkup => Markup;
+
+	[BindProperty]
+	[Display(Name = "Minor Edit")]
+	public bool MinorEdit { get; set; }
+
+	[BindProperty]
+	[Display(Name = "Edit Comments", Description = "Please enter a descriptive summary of your change. Leaving this blank is discouraged.")]
+	[MaxLength(500)]
+	public string? RevisionMessage { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -31,11 +46,7 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 		}
 
 		var page = await wikiPages.Page(Path);
-
-		PageToEdit = new WikiEditModel
-		{
-			Markup = page?.Markup ?? ""
-		};
+		Markup = page?.Markup ?? "";
 
 		return Page();
 	}
@@ -65,11 +76,11 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 
 		var page = new WikiCreateRequest
 		{
-			CreateTimestamp = PageToEdit.EditStart,
+			CreateTimestamp = EditStart,
 			PageName = Path.Trim('/'),
-			Markup = PageToEdit.Markup,
-			MinorEdit = PageToEdit.MinorEdit,
-			RevisionMessage = PageToEdit.RevisionMessage,
+			Markup = Markup,
+			MinorEdit = MinorEdit,
+			RevisionMessage = RevisionMessage,
 			AuthorId = User.GetUserId()
 		};
 		var result = await wikiPages.Add(page);
@@ -79,7 +90,7 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			return Page();
 		}
 
-		if (result.Revision == 1 || !PageToEdit.MinorEdit)
+		if (result.Revision == 1 || !MinorEdit)
 		{
 			await Announce(result);
 		}
@@ -141,22 +152,5 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			$"Page [{Path}]({{0}}) {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"{page.RevisionMessage}",
 			Path!);
-	}
-
-	public class WikiEditModel
-	{
-		public DateTime EditStart { get; init; } = DateTime.UtcNow;
-
-		[DoNotTrim]
-		public string Markup { get; init; } = "";
-
-		public string OriginalMarkup => Markup;
-
-		[Display(Name = "Minor Edit")]
-		public bool MinorEdit { get; init; }
-
-		[Display(Name = "Edit Comments", Description = "Please enter a descriptive summary of your change. Leaving this blank is discouraged.")]
-		[MaxLength(500)]
-		public string? RevisionMessage { get; init; }
 	}
 }

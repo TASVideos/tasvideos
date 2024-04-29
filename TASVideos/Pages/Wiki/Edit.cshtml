@@ -6,27 +6,27 @@
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="POST">
-	<input type="hidden" asp-for="PageToEdit.EditStart" />
-	<input type="hidden" asp-for="PageToEdit.OriginalMarkup" />
+	<input type="hidden" asp-for="EditStart" />
+	<input type="hidden" asp-for="OriginalMarkup" />
 	<fullrow class="mt-3">
-		<partial name="_WikiEditHelper" model="@("PageToEdit_Markup")" />
+		<partial name="_WikiEditHelper" model="@("Markup")" />
 	</fullrow>
 	<fieldset>
-		<textarea asp-for="PageToEdit.Markup" class="form-control wiki-edit" rows="20" placeholder="Enter your __markup__ here..."></textarea>
-		<span asp-validation-for="PageToEdit.Markup" class="text-danger"></span>
+		<textarea asp-for="Markup" class="form-control wiki-edit" rows="20" placeholder="Enter your __markup__ here..."></textarea>
+		<span asp-validation-for="Markup" class="text-danger"></span>
 		@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 	</fieldset>
 	<fieldset class="col-12">
-		<label asp-for="PageToEdit.RevisionMessage" class="form-control-label"></label>
+		<label asp-for="RevisionMessage" class="form-control-label"></label>
 		<div class="input-group">
-			<input type="text" asp-for="PageToEdit.RevisionMessage" class="form-control" autocomplete="off" />
+			<input type="text" asp-for="RevisionMessage" class="form-control" autocomplete="off" />
 			<div class="input-group-text">
-				<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="PageToEdit.MinorEdit" />
-				<label asp-for="PageToEdit.MinorEdit" class="form-check-label"></label>
+				<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="MinorEdit" />
+				<label asp-for="MinorEdit" class="form-check-label"></label>
 			</div>
 		</div>
-		<span>@Html.DescriptionFor(m => m.PageToEdit.RevisionMessage)</span><br />
-		<span asp-validation-for="PageToEdit.RevisionMessage" class="text-danger"></span>
+		<span>@Html.DescriptionFor(m => m.RevisionMessage)</span><br />
+		<span asp-validation-for="RevisionMessage" class="text-danger"></span>
 	</fieldset>
 	<div class="text-center">
 		<button type="button" class="btn btn-secondary" onclick="generateDiff()">Diff</button>
@@ -42,7 +42,7 @@
 	</div>
 </form>
 
-<partial name="_Diff" model="@((Html.IdFor(m => m.PageToEdit.OriginalMarkup), Html.IdFor(m => m.PageToEdit.Markup)))" />
+<partial name="_Diff" model="@((Html.IdFor(m => m.OriginalMarkup), Html.IdFor(m => m.Markup)))" />
 <partial name="_PreviewWindow" model="@(("PageToEdit_Markup", "/Wiki/Preview?Id=" + Model.Path))" />
 
 @section Scripts {
