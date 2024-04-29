@@ -6,7 +6,7 @@ using TASVideos.Pages.Exhibitions.Models;
 
 namespace TASVideos.Pages.Exhibitions
 {
-    public class ViewModel : BasePageModel
+	public class ViewModel : BasePageModel
 	{
 		private readonly ApplicationDbContext _db;
 
@@ -14,15 +14,18 @@ namespace TASVideos.Pages.Exhibitions
 		{
 			_db = db;
 		}
+
 		[FromRoute]
 		public int Id { get; set; }
 		public ExhibitionDisplayModel Exhibition { get; set; } = new();
 		public async Task<IActionResult> OnGet()
-        {
+		{
 			var exhibition = await _db.Exhibitions
 				.Select(e => new ExhibitionDisplayModel
 				{
 					Id = e.Id,
+					PublishId = e.PublishId,
+					Status = e.Status,
 					Title = e.Title,
 					ExhibitionTimestamp = e.ExhibitionTimestamp,
 					Games = e.Games.Select(g => new ExhibitionDisplayModel.GameModel
@@ -42,7 +45,7 @@ namespace TASVideos.Pages.Exhibitions
 						DisplayName = u.DisplayName
 					}).ToList(),
 				})
-				.SingleOrDefaultAsync(e => e.Id == Id);
+				.SingleOrDefaultAsync(e => e.PublishId == Id);
 
 			if (exhibition is null)
 			{
@@ -53,5 +56,5 @@ namespace TASVideos.Pages.Exhibitions
 
 			return Page();
 		}
-    }
+	}
 }

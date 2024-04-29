@@ -5,6 +5,8 @@ namespace TASVideos.Pages.Exhibitions.Models;
 public class ExhibitionDisplayModel
 {
 	public int Id { get; set; }
+	public int? PublishId { get; set; }
+	public ExhibitionStatus Status { get; set; }
 	public IReadOnlyCollection<GameModel> Games { get; set; } = new List<GameModel>();
 	public IReadOnlyCollection<UserModel> Contributors { get; set; } = new List<UserModel>();
 	public IReadOnlyCollection<UrlModel> Urls { get; set; } = new List<UrlModel>();

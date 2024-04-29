@@ -223,7 +223,7 @@ public class EditModel : BasePageModel
 			await _db.SaveChangesAsync();
 		}
 
-		return RedirectToPage("View", new { Id });
+		return RedirectToPage("View", new { Id = exhibition.PublishId });
 	}
 
 	private async Task PopulateDropdowns()

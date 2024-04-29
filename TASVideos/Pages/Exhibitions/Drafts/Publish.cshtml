@@ -1,4 +1,9 @@
-﻿@page
+﻿@page "{id}"
 @model TASVideos.Pages.Exhibitions.Drafts.PublishModel
-@{
-}
+
+<partial name="_ExhibitionCard" model="Model.Exhibition" />
+
+<fullrow class="text-center">
+	<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Publish</submit-button>
+	<a asp-page="Drafts/View" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+</fullrow>
