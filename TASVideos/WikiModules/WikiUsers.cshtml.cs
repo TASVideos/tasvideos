@@ -12,7 +12,7 @@ public class WikiUsers(ApplicationDbContext db) : WikiViewComponent
 		Users = await db.Users
 			.ThatHaveRole(role ?? "")
 			.Select(u => new Entry(
-				u.UserName, PublicationCount: u.Publications.Count, SubmissionCount: u.Submissions.Count))
+				u.UserName, u.Publications.Count, u.Submissions.Count))
 			.ToListAsync();
 
 		return View();
