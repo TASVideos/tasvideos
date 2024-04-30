@@ -18,5 +18,5 @@ public class WikiUsers(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public record Entry(string UserName, int SubmissionCount, int PublicationCount);
+	public record Entry(string UserName, int PublicationCount, int SubmissionCount);
 }
