@@ -19,8 +19,18 @@ public class CreateModel(
 	[FromQuery]
 	public int? QuoteId { get; set; }
 
+	public bool IsLocked { get; set; }
+	public string TopicTitle { get; set; } = "";
+
 	[BindProperty]
-	public PostCreate Post { get; set; } = new();
+	[StringLength(150)]
+	public string? Subject { get; set; }
+
+	[BindProperty]
+	public string Text { get; set; } = "";
+
+	[BindProperty]
+	public ForumPostMood Mood { get; set; } = ForumPostMood.Normal;
 
 	[BindProperty]
 	[DisplayName("Watch Topic for Replies")]
@@ -35,23 +45,20 @@ public class CreateModel(
 	public async Task<IActionResult> OnGet()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var post = await db.ForumTopics
+		var topic = await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == TopicId)
-			.Select(t => new PostCreate
-			{
-				TopicTitle = t.Title,
-				IsLocked = t.IsLocked
-			})
+			.Select(t => new { t.Title, t.IsLocked })
 			.SingleOrDefaultAsync();
 
-		if (post is null)
+		if (topic is null)
 		{
 			return NotFound();
 		}
 
-		Post = post;
-		if (Post.IsLocked && !User.Has(PermissionTo.PostInLockedTopics))
+		TopicTitle = topic.Title;
+		IsLocked = topic.IsLocked;
+		if (IsLocked && !User.Has(PermissionTo.PostInLockedTopics))
 		{
 			return AccessDenied();
 		}
@@ -65,7 +72,7 @@ public class CreateModel(
 
 			if (qPost is not null)
 			{
-				Post.Text = $"[quote=\"[post={QuoteId}][/post] {qPost.Poster!.UserName}\"]{qPost.Text}[/quote]";
+				Text = $"[quote=\"[post={QuoteId}][/post] {qPost.Poster!.UserName}\"]{qPost.Text}[/quote]";
 			}
 		}
 
@@ -106,23 +113,14 @@ public class CreateModel(
 		var user = await userManager.GetRequiredUser(User);
 		if (!ModelState.IsValid)
 		{
-			// We have to consider direct posting to this call, including "over-posting",
-			// so all of this logic is necessary
 			var isLocked = await forumService.IsTopicLocked(TopicId);
 			if (isLocked && !User.Has(PermissionTo.PostInLockedTopics))
 			{
 				return AccessDenied();
 			}
 
-			Post = new PostCreate
-			{
-				TopicTitle = Post.TopicTitle,
-				Subject = Post.Subject,
-				Text = Post.Text,
-				IsLocked = isLocked,
-				Mood = User.Has(PermissionTo.UseMoodAvatars) ? Post.Mood : ForumPostMood.Normal
-			};
-
+			IsLocked = isLocked;
+			Mood = User.Has(PermissionTo.UseMoodAvatars) ? Mood : ForumPostMood.Normal;
 			UserAvatars = new AvatarUrls(user.Avatar, user.MoodAvatarUrlBase);
 
 			return Page();
@@ -132,12 +130,7 @@ public class CreateModel(
 			.Include(t => t.Forum)
 			.SingleOrDefaultAsync(t => t.Id == TopicId);
 
-		if (topic is null)
-		{
-			return NotFound();
-		}
-
-		if (topic.Forum!.Restricted && !User.Has(PermissionTo.SeeRestrictedForums))
+		if (topic is null || (topic.Forum!.Restricted && !User.Has(PermissionTo.SeeRestrictedForums)))
 		{
 			return NotFound();
 		}
@@ -150,16 +143,16 @@ public class CreateModel(
 		var id = await forumService.CreatePost(new PostCreateDto(
 			topic.ForumId,
 			TopicId,
-			Post.Subject,
-			Post.Text,
+			Subject,
+			Text,
 			user.Id,
 			user.UserName,
-			Post.Mood,
+			Mood,
 			IpAddress,
 			WatchTopic));
 
-		var mood = Post.Mood != ForumPostMood.Normal ? $" (Mood: {Post.Mood})" : "";
-		var subject = string.IsNullOrWhiteSpace(Post.Subject) ? "" : $" ({Post.Subject})";
+		var mood = Mood != ForumPostMood.Normal ? $" (Mood: {Mood})" : "";
+		var subject = string.IsNullOrWhiteSpace(Subject) ? "" : $" ({Subject})";
 		if (TopicId == ForumConstants.NewsTopicId)
 		{
 			await publisher.AnnounceNewsPost(
@@ -180,17 +173,6 @@ public class CreateModel(
 		await topicWatcher.NotifyNewPost(id, topic.Id, topic.Title, user.Id);
 
 		return BaseRedirect($"/Forum/Posts/{id}");
-	}
-
-	public class PostCreate
-	{
-		public bool IsLocked { get; init; }
-		public string TopicTitle { get; init; } = "";
-
-		[StringLength(150)]
-		public string? Subject { get; init; }
-		public string Text { get; set; } = "";
-		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 
 	public record MiniPost(
