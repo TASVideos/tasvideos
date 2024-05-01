@@ -1,5 +1,4 @@
-﻿using System.Net.Mime;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
@@ -99,12 +98,9 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages) : BasePage
 			.Select(s => s.MovieFile)
 			.SingleOrDefaultAsync();
 
-		if (submissionFile is null)
-		{
-			return NotFound();
-		}
-
-		return File(submissionFile, MediaTypeNames.Application.Octet, $"submission{Id}.zip");
+		return submissionFile is not null
+			? ZipFile(submissionFile, $"submission{Id}")
+			: NotFound();
 	}
 
 	public class SubmissionDisplay : ISubmissionDisplay

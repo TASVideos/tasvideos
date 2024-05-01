@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Net.Mime;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -119,5 +120,10 @@ public class BasePageModel : PageModel
 			ViewName = "_DropdownItems",
 			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
 		};
+	}
+
+	protected FileContentResult ZipFile(byte[] data, string filename)
+	{
+		return File(data, MediaTypeNames.Application.Octet, $"{filename}.zip");
 	}
 }

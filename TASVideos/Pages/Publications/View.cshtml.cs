@@ -1,6 +1,4 @@
-﻿using System.Net.Mime;
-
-namespace TASVideos.Pages.Publications;
+﻿namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
 public class ViewModel(ApplicationDbContext db) : BasePageModel
@@ -33,12 +31,9 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 			.Select(s => new { s.MovieFile, s.MovieFileName })
 			.SingleOrDefaultAsync();
 
-		if (pub is null)
-		{
-			return NotFound();
-		}
-
-		return File(pub.MovieFile, MediaTypeNames.Application.Octet, $"{pub.MovieFileName}.zip");
+		return pub is not null
+			? ZipFile(pub.MovieFile, pub.MovieFileName)
+			: NotFound();
 	}
 
 	public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
@@ -49,11 +44,8 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 			.Select(pf => new { pf.FileData, pf.Path })
 			.SingleOrDefaultAsync();
 
-		if (file?.FileData is null)
-		{
-			return NotFound();
-		}
-
-		return File(file.FileData, MediaTypeNames.Application.Octet, $"{file.Path}.zip");
+		return file?.FileData is not null
+			? ZipFile(file.FileData, file.Path)
+			: NotFound();
 	}
 }
