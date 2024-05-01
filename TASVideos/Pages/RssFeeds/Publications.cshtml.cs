@@ -44,7 +44,6 @@ public class PublicationsModel(ApplicationDbContext db, IWikiPages wikiPages) : 
 	{
 		public IWikiPage? Wiki { get; set; }
 		public string ScreenshotPath => Files.First(f => f.Type == FileType.Screenshot).Path;
-		public double RatingCount => Ratings.Count / 2.0;
 		public double RatingMin => Ratings.Any() ? Ratings.Min() : 0;
 		public double RatingMax => Ratings.Any() ? Ratings.Max() : 0;
 		public double RatingAverage => Ratings.Any() ? Math.Round(Ratings.Average(), 2) : 0;
