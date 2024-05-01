@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
-public class ViewModel(ApplicationDbContext db) : BasePageModel
+public class ViewModel(ApplicationDbContext db, IFileService fileService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -24,28 +24,8 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public async Task<IActionResult> OnGetDownload()
-	{
-		var pub = await db.Publications
-			.Where(s => s.Id == Id)
-			.Select(s => new { s.MovieFile, s.MovieFileName })
-			.SingleOrDefaultAsync();
-
-		return pub is not null
-			? ZipFile(pub.MovieFile, pub.MovieFileName)
-			: NotFound();
-	}
+	public async Task<IActionResult> OnGetDownload() => ZipFile(await fileService.GetPublicationFile(Id));
 
 	public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
-	{
-		var file = await db.PublicationFiles
-			.Where(pf => pf.PublicationId == Id)
-			.Where(pf => pf.Id == fileId)
-			.Select(pf => new { pf.FileData, pf.Path })
-			.SingleOrDefaultAsync();
-
-		return file?.FileData is not null
-			? ZipFile(file.FileData, file.Path)
-			: NotFound();
-	}
+		=> ZipFile(await fileService.GetAdditionalPublicationFile(Id, fileId));
 }

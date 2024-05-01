@@ -11,9 +11,13 @@ public interface IFileService
 	/// Unzips the file, and re-zips it while renaming the contained file
 	/// </summary>
 	Task<byte[]> CopyZip(byte[] zipBytes, string fileName);
+
+	Task<ZippedFile?> GetSubmissionFile(int id);
+	Task<ZippedFile?> GetPublicationFile(int id);
+	Task<ZippedFile?> GetAdditionalPublicationFile(int publicationId, int fileId);
 }
 
-internal class FileService : IFileService
+internal class FileService(ApplicationDbContext db) : IFileService
 {
 	public async Task<CompressedFile> Compress(byte[] contents)
 	{
@@ -76,6 +80,39 @@ internal class FileService : IFileService
 
 		return outStream.ToArray();
 	}
+
+	public async Task<ZippedFile?> GetSubmissionFile(int id)
+	{
+		var data = await db.Submissions
+			.Where(s => s.Id == id)
+			.Select(s => s.MovieFile)
+			.SingleOrDefaultAsync();
+
+		return data is not null
+			? new ZippedFile(data, $"submission{id}")
+			: null;
+	}
+
+	public async Task<ZippedFile?> GetPublicationFile(int id)
+	{
+		return await db.Publications
+			.Where(s => s.Id == id)
+			.Select(s => new ZippedFile(s.MovieFile, s.MovieFileName))
+			.SingleOrDefaultAsync();
+	}
+
+	public async Task<ZippedFile?> GetAdditionalPublicationFile(int publicationId, int fileId)
+	{
+		var result = await db.PublicationFiles
+			.Where(pf => pf.PublicationId == publicationId)
+			.Where(pf => pf.Id == fileId)
+			.Select(pf => new { pf.FileData, pf.Path })
+			.SingleOrDefaultAsync();
+
+		return result?.FileData is not null
+			? new ZippedFile(result.FileData, result.Path)
+			: null;
+	}
 }
 
 public record CompressedFile(
@@ -83,3 +120,5 @@ public record CompressedFile(
 	int CompressedSize,
 	Compression Type,
 	byte[] Data);
+
+public record ZippedFile(byte[] Data, string Path);

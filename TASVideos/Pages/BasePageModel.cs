@@ -122,8 +122,10 @@ public class BasePageModel : PageModel
 		};
 	}
 
-	protected FileContentResult ZipFile(byte[] data, string filename)
+	protected IActionResult ZipFile(ZippedFile? file)
 	{
-		return File(data, MediaTypeNames.Application.Octet, $"{filename}.zip");
+		return file is not null
+			? File(file.Data, MediaTypeNames.Application.Octet, $"{file.Path}.zip")
+			: NotFound();
 	}
 }

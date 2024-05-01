@@ -4,7 +4,7 @@ using TASVideos.MovieParsers.Result;
 namespace TASVideos.Pages.Submissions;
 
 [AllowAnonymous]
-public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages) : BasePageModel
+public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileService fileService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -91,17 +91,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages) : BasePage
 		return Page();
 	}
 
-	public async Task<IActionResult> OnGetDownload()
-	{
-		var submissionFile = await db.Submissions
-			.Where(s => s.Id == Id)
-			.Select(s => s.MovieFile)
-			.SingleOrDefaultAsync();
-
-		return submissionFile is not null
-			? ZipFile(submissionFile, $"submission{Id}")
-			: NotFound();
-	}
+	public async Task<IActionResult> OnGetDownload() => ZipFile(await fileService.GetSubmissionFile(Id));
 
 	public class SubmissionDisplay : ISubmissionDisplay
 	{

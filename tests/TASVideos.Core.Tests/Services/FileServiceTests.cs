@@ -7,7 +7,13 @@ namespace TASVideos.Core.Tests.Services;
 [TestClass]
 public class FileServiceTests
 {
-	private readonly FileService _fileService = new();
+	private readonly FileService _fileService;
+
+	public FileServiceTests()
+	{
+		var db = TestDbContext.Create();
+		_fileService = new FileService(db);
+	}
 
 	private static Stream Embedded(string name)
 	{
