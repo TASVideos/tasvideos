@@ -1,12 +1,15 @@
-﻿namespace TASVideos.Pages.Publications;
+﻿using TASVideos.Core.Services.PublicationChain;
+
+namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
-public class ViewModel(ApplicationDbContext db, IFileService fileService) : BasePageModel
+public class ViewModel(ApplicationDbContext db, IFileService fileService, IPublicationHistory history) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
 
 	public IndexModel.PublicationDisplay Publication { get; set; } = new();
+	public PublicationHistoryGroup History { get; set; } = new();
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -20,6 +23,8 @@ public class ViewModel(ApplicationDbContext db, IFileService fileService) : Base
 		}
 
 		Publication = publication;
+		History = await history.ForGame(publication.GameId) ?? new();
+
 		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return Page();
 	}
