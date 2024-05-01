@@ -21,7 +21,7 @@ public class CreateModel(
 	public int? QuoteId { get; set; }
 
 	[BindProperty]
-	public ForumPostCreateModel Post { get; set; } = new();
+	public PostCreate Post { get; set; } = new();
 
 	[BindProperty]
 	[DisplayName("Watch Topic for Replies")]
@@ -39,7 +39,7 @@ public class CreateModel(
 		var post = await db.ForumTopics
 			.ExcludeRestricted(seeRestricted)
 			.Where(t => t.Id == TopicId)
-			.Select(t => new ForumPostCreateModel
+			.Select(t => new PostCreate
 			{
 				TopicTitle = t.Title,
 				IsLocked = t.IsLocked
@@ -115,7 +115,7 @@ public class CreateModel(
 				return AccessDenied();
 			}
 
-			Post = new ForumPostCreateModel
+			Post = new PostCreate
 			{
 				TopicTitle = Post.TopicTitle,
 				Subject = Post.Subject,
@@ -193,7 +193,7 @@ public class CreateModel(
 		return BaseRedirect($"/Forum/Posts/{id}");
 	}
 
-	public class ForumPostCreateModel
+	public class PostCreate
 	{
 		public bool IsLocked { get; init; }
 		public string TopicTitle { get; init; } = "";
