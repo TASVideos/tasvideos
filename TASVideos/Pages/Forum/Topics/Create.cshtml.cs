@@ -16,7 +16,20 @@ public class CreateModel(
 	public int ForumId { get; set; }
 
 	[BindProperty]
-	public TopicCreate Topic { get; set; } = new();
+	public string ForumName { get; set; } = "";
+
+	[BindProperty]
+	[StringLength(100, MinimumLength = 5)]
+	public string Title { get; init; } = "";
+
+	[BindProperty]
+	public string Post { get; init; } = "";
+
+	[BindProperty]
+	public ForumTopicType Type { get; init; } = ForumTopicType.Regular;
+
+	[BindProperty]
+	public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 
 	[BindProperty]
 	public AddEditPollModel.PollCreate Poll { get; set; } = new();
@@ -35,10 +48,7 @@ public class CreateModel(
 		var topic = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Where(f => f.Id == ForumId)
-			.Select(f => new TopicCreate
-			{
-				ForumName = f.Name
-			})
+			.Select(f => new { ForumName = f.Name })
 			.SingleOrDefaultAsync();
 
 		if (topic is null)
@@ -46,7 +56,7 @@ public class CreateModel(
 			return NotFound();
 		}
 
-		Topic = topic;
+		ForumName = topic.ForumName;
 		UserAvatars = await forumService.UserAvatars(User.GetUserId());
 
 		var user = await userManager.GetRequiredUser(User);
@@ -100,8 +110,8 @@ public class CreateModel(
 
 		var topic = new ForumTopic
 		{
-			Type = Topic.Type,
-			Title = Topic.Title,
+			Type = Type,
+			Title = Title,
 			PosterId = userId,
 			ForumId = ForumId
 		};
@@ -112,15 +122,7 @@ public class CreateModel(
 		await db.SaveChangesAsync();
 
 		await forumService.CreatePost(new PostCreateDto(
-			ForumId,
-			topic.Id,
-			null,
-			Topic.Post,
-			userId,
-			User.Name(),
-			Topic.Mood,
-			IpAddress,
-			WatchTopic));
+			ForumId, topic.Id, null, Post, userId, User.Name(), Mood, IpAddress, WatchTopic));
 
 		if (User.Has(PermissionTo.CreateForumPolls) && Poll.IsValid)
 		{
@@ -132,22 +134,11 @@ public class CreateModel(
 		await publisher.SendForum(
 			forum.Restricted,
 			$"[New Topic]({{0}}) by {User.Name()}",
-			$"{forum.ShortName}: {Topic.Title}",
+			$"{forum.ShortName}: {Title}",
 			$"Forum/Topics/{topic.Id}");
 
 		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 
 		return RedirectToPage("Index", new { topic.Id });
-	}
-
-	public class TopicCreate
-	{
-		public string ForumName { get; init; } = "";
-
-		[StringLength(100, MinimumLength = 5)]
-		public string Title { get; init; } = "";
-		public string Post { get; init; } = "";
-		public ForumTopicType Type { get; init; } = ForumTopicType.Regular;
-		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 }

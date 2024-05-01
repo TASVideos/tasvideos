@@ -65,7 +65,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		forum.Restricted = Forum.Restricted;
 
 		await ConcurrentSave(db, $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
-		return RedirectToPage("Index", new { id = Id });
+		return RedirectToPage("Index", new { Id });
 	}
 
 	public async Task<IActionResult> OnPostDelete()

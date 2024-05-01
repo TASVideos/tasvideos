@@ -1,10 +1,10 @@
 ﻿@page "{forumId}/{handler?}"
 @model CreateModel
 @{
-	ViewData.SetTitle($"Creating topic for: {Model.Topic.ForumName}");
+	ViewData.SetTitle($"Creating topic for: {Model.ForumName}");
 }
 <partial Name="_ForumHeader" />
-<h4>Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.Topic.ForumName</a></h4>
+<h4>Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a></h4>
 <div asp-validation-summary="All" class="text-danger"></div>
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form method="post">
@@ -36,35 +36,35 @@
 		<hr />
 	</div>
 
-	<input type="hidden" asp-for="Topic.ForumName" />
+	<input type="hidden" asp-for="ForumName" />
 	<row>
 		<column md="6">
-			<label asp-for="Topic.Title" class="form-control-label"></label>
-			<input type="text" asp-for="Topic.Title" class="form-control" autocomplete="off" />
-			<span asp-validation-for="Topic.Title" class="text-danger"></span>
+			<label asp-for="Title" class="form-control-label"></label>
+			<input type="text" asp-for="Title" class="form-control" autocomplete="off" />
+			<span asp-validation-for="Title" class="text-danger"></span>
 		</column>
 		<column permission="SetTopicType" md="6">
-			<label asp-for="Topic.Type" class="form-control-label"></label>
-			<select asp-for="Topic.Type" asp-items="Model.TopicTypes" class="form-select"></select>
-			<span asp-validation-for="Topic.Type" class="text-danger"></span>
+			<label asp-for="Type" class="form-control-label"></label>
+			<select asp-for="Type" asp-items="Model.TopicTypes" class="form-select"></select>
+			<span asp-validation-for="Type" class="text-danger"></span>
 		</column>
 	</row>
 	<row>
 		<column md="4">
-			<label asp-for="Topic.Mood" class="form-control-label"></label>
-			<select asp-for="Topic.Mood" asp-items="@Model.Moods" class="form-select"></select>
-			<span asp-validation-for="Topic.Mood" class="text-danger"></span>
+			<label asp-for="Mood" class="form-control-label"></label>
+			<select asp-for="Mood" asp-items="@Model.Moods" class="form-select"></select>
+			<span asp-validation-for="Mood" class="text-danger"></span>
 		</column>
 		<column md="2">
-			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Topic.Mood), Model.Topic.Mood, Model.UserAvatars)"/>
+			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Mood), Model.Mood, Model.UserAvatars)"/>
 		</column>
 	</row>
 	<fullrow class="mt-3">
-		<partial name="_CreatePostHelper" model="@("Topic_Post")" />
+		<partial name="_CreatePostHelper" model="@("Post")" />
 	</fullrow>
 	<fieldset>
-		<textarea asp-for="Topic.Post" class="form-control backup-content" rows="20" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
-		<span asp-validation-for="Topic.Post" class="text-danger"></span>
+		<textarea asp-for="Post" class="form-control backup-content" rows="20" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
+		<span asp-validation-for="Post" class="text-danger"></span>
 	</fieldset>
 	<fullrow id="backup-restore" class="d-none">
 		<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>

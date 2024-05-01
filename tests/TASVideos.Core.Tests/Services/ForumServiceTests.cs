@@ -313,7 +313,8 @@ public class ForumServiceTests
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = true;
-		var dto = new PostCreateDto(
+
+		int actual = await _forumService.CreatePost(new PostCreateDto(
 			forumId,
 			topicId,
 			subject,
@@ -322,9 +323,7 @@ public class ForumServiceTests
 			posterName,
 			mood,
 			ipAddress,
-			watchTopic);
-
-		int actual = await _forumService.CreatePost(dto);
+			watchTopic));
 
 		// Post must match
 		Assert.AreEqual(1, _db.ForumPosts.Count(p => p.Id == actual));
