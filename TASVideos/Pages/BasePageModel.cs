@@ -128,4 +128,11 @@ public class BasePageModel : PageModel
 			? File(file.Data, MediaTypeNames.Application.Octet, $"{file.Path}.zip")
 			: NotFound();
 	}
+
+	protected PageResult Rss()
+	{
+		var pageResult = Page();
+		pageResult.ContentType = "application/rss+xml; charset=utf-8";
+		return pageResult;
+	}
 }

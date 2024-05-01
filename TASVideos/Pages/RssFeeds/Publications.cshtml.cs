@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.RssFeeds;
 
@@ -37,9 +36,7 @@ public class PublicationsModel(ApplicationDbContext db, IWikiPages wikiPages) : 
 			pub.Wiki = (await wikiPages.PublicationPage(pub.Id))!;
 		}
 
-		PageResult pageResult = Page();
-		pageResult.ContentType = "application/rss+xml; charset=utf-8";
-		return pageResult;
+		return Rss();
 	}
 
 	public record RssPublication(

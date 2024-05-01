@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-
-namespace TASVideos.Pages.RssFeeds;
+﻿namespace TASVideos.Pages.RssFeeds;
 
 [ResponseCache(Duration = 1200)]
 public class WikiModel(ApplicationDbContext db) : BasePageModel
@@ -19,9 +17,7 @@ public class WikiModel(ApplicationDbContext db) : BasePageModel
 				wp.Author!.UserName))
 			.Take(10)
 			.ToListAsync();
-		PageResult pageResult = Page();
-		pageResult.ContentType = "application/rss+xml; charset=utf-8";
-		return pageResult;
+		return Rss();
 	}
 
 	public record RssWiki(string RevisionMessage, string PageName, DateTime PubDate, bool IsNew, string Author);

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Data.Entity.Forum;
+﻿using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.RssFeeds;
 
@@ -24,9 +23,7 @@ public class NewsModel(ApplicationDbContext db) : BasePageModel
 				p.EnableBbCode))
 			.Take(10)
 			.ToListAsync();
-		PageResult pageResult = Page();
-		pageResult.ContentType = "application/rss+xml; charset=utf-8";
-		return pageResult;
+		return Rss();
 	}
 
 	public record RssNews(int PostId, DateTime PubDate, string Subject, string Text, bool EnableHtml, bool EnableBbCode);

@@ -17,7 +17,7 @@ public class PublicationHistoryModel(ApplicationDbContext db, IPublicationHistor
 
 	public async Task<IActionResult> OnGet()
 	{
-		var game = await db.Games.SingleOrDefaultAsync(p => p.Id == Id);
+		var game = await db.Games.SingleOrDefaultAsync(g => g.Id == Id);
 
 		if (game is null)
 		{

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.RssFeeds;
 
@@ -22,9 +21,7 @@ public class SubmissionsModel(ApplicationDbContext db, IWikiPages wikiPages) : B
 			sub.Wiki = (await wikiPages.SubmissionPage(sub.Id))!;
 		}
 
-		PageResult pageResult = Page();
-		pageResult.ContentType = "application/rss+xml; charset=utf-8";
-		return pageResult;
+		return Rss();
 	}
 
 	public record RssSubmission(int Id, int? TopicId, DateTime CreateTimestamp, string Title)
