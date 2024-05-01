@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Email;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity.Forum;
 
@@ -21,7 +22,7 @@ public class TopicWatcherTests
 			BaseUrl = "http://example.com"
 		};
 
-		_topicWatcher = new TopicWatcher(_mockEmailService, _db, settings);
+		_topicWatcher = new TopicWatcher(_mockEmailService, _db, settings, new NullLogger<TopicWatcher>());
 	}
 
 	[TestMethod]

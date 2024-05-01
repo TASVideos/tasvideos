@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Email;
+﻿using Microsoft.Extensions.Logging;
+using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services;
@@ -45,7 +46,8 @@ public interface ITopicWatcher
 internal class TopicWatcher(
 	IEmailService emailService,
 	ApplicationDbContext db,
-	AppSettings appSettings)
+	AppSettings appSettings,
+	ILogger<TopicWatcher> logger)
 	: ITopicWatcher
 {
 	private readonly string _baseUrl = appSettings.BaseUrl;
@@ -78,10 +80,18 @@ internal class TopicWatcher(
 
 		if (watches.Any())
 		{
-			await emailService
-				.TopicReplyNotification(
+			try
+			{
+				await emailService.TopicReplyNotification(
 					watches.Select(w => w.User!.Email),
 					new TopicReplyNotificationTemplate(postId, topicId, topicTitle, _baseUrl));
+			}
+			catch
+			{
+				// emails are currently somewhat unstable
+				// we want to continue the request even if the email fails, so eat the exception
+				logger.LogWarning("Email notification failed on new reply creation");
+			}
 
 			foreach (var watch in watches)
 			{

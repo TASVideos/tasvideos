@@ -10,7 +10,6 @@ public class CreateModel(
 	ExternalMediaPublisher publisher,
 	ApplicationDbContext db,
 	ITopicWatcher topicWatcher,
-	ILogger<CreateModel> logger,
 	IForumService forumService)
 	: BaseForumModel
 {
@@ -178,17 +177,7 @@ public class CreateModel(
 		}
 
 		await userManager.AssignAutoAssignableRolesByPost(user.Id);
-
-		try
-		{
-			await topicWatcher.NotifyNewPost(id, topic.Id, topic.Title, user.Id);
-		}
-		catch
-		{
-			// emails are currently somewhat unstable
-			// we want to continue the request even if the email fails, so eat the exception
-			logger.LogWarning("Email notification failed on new reply creation");
-		}
+		await topicWatcher.NotifyNewPost(id, topic.Id, topic.Title, user.Id);
 
 		return BaseRedirect($"/Forum/Posts/{id}");
 	}
