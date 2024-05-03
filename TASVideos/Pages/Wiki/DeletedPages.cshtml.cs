@@ -56,7 +56,7 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 				return Page();
 			}
 
-			await publisher.SendMessage(PostGroups.Wiki, $"Page {path} DELETED by {User.Name()} ({{result}} revisions\") Reason: {reason}");
+			await publisher.SendMessage(PostGroups.Wiki, $"Page {path} DELETED by {User.Name()} ({{result}} revisions\")", reason);
 		}
 
 		return BasePageRedirect("DeletedPages");
