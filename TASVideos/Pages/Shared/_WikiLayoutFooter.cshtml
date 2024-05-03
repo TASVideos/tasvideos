@@ -43,7 +43,8 @@ else
 </a>
 <delete-button permission="DeleteWikiPages"
 			   asp-href="/Wiki/DeletedPages/DeletePage?path=@Model.PageName"
-			   warning-message="Are you sure you want to delete this page?"
+				warning-message="Are you sure you want to delete this page?"
+				ask-reason="true"
 			   class="btn btn-danger btn-sm">
 	<i class="fa fa-times"></i> Delete
 </delete-button>
