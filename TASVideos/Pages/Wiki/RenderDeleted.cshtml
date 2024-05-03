@@ -1,29 +1,30 @@
 ﻿@page
 @model RenderDeletedModel
 @{
-	ViewData.SetTitle($"Viewing Deleted Page: {Model.WikiPage.PageName}");
+	ViewData.SetTitle($"Viewing Deleted Page: {Model.WikiPages.First().PageName}");
 }
-<h4>Revision: @Model.WikiPage.Revision</h4>
 
-<ul>
-	<li>
-		Revision: @Model.WikiPage.Revision
-	</li>
-	<li>
-		Latest? @(Model.WikiPage.IsCurrent().ToYesNo())
-	</li>
-	<li>
-		Author: <profile-link username="@Model.WikiPage.Author!.UserName"></profile-link>
-	</li>
-	<li>
-		Revision Message: @Model.WikiPage.RevisionMessage
-	</li>
-	<li>
-		Minor Edit? @Model.WikiPage.MinorEdit.ToYesNo()
-	</li>
-</ul>
+<table class="table">
+	<tr>
+		<th>Revision</th>
+		<th>IsCurrent</th>
+		<th>Author</th>
+		<th>Revision</th>
+		<th>Minor Edit</th>
+	</tr>
+	@foreach (var revision in Model.WikiPages.OrderByDescending(wp => wp.Revision))
+	{
+		<tr>
+			<td>@revision.Revision</td>
+			<td>@revision.IsCurrent().ToYesNo()</td>
+			<td>@revision.Author!.UserName</td>
+			<td>@revision.RevisionMessage</td>
+			<td>@revision.MinorEdit</td>
+		</tr>
+	}
+</table>
 
 <h4>Markup</h4>
 <info-alert>
-	@Model.WikiPage.Markup
+	@Model.WikiPages.MaxBy(f => f.Revision)!.Markup
 </info-alert>
