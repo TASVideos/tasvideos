@@ -21,13 +21,9 @@ public class RenderDeletedModel(ApplicationDbContext db) : BasePageModel
 			? query.Where(wp => wp.Revision == revision)
 			: query.ThatAreCurrent();
 
-		var pages = await query.ToListAsync();
-		if (pages.Count == 0)
-		{
-			return NotFound();
-		}
-
-		WikiPages = pages;
-		return Page();
+		WikiPages = await query.ToListAsync();
+		return WikiPages.Count == 0
+			? NotFound()
+			: Page();
 	}
 }
