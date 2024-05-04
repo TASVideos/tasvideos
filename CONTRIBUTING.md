@@ -16,6 +16,9 @@ Contributors are expected to uphold a basic [code of conduct](CODE_OF_CONDUCT.md
 
 See [Local Development Setup](https://github.com/TASVideos/tasvideos/wiki/Local-Development-Setup) in the readme for instructions on running the site locally for development.
 
+There are several test suites in the `/tests` directory, which you can run in the conventional way (`dotnet test [TASVideos.sln]`).
+They are also run in CI.
+
 ## Code Style
 
 The codebase uses the [Allman style](https://en.wikipedia.org/wiki/Indentation_style#Allman_style), placing braces on their own line. It uses tabs for indentation including in HTML in CSHTML where it acts as a single space when parsed by web browsers. Otherwise, code style should generally follow conventions for .NET 5 and C#.

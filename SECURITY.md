@@ -6,4 +6,4 @@ The only version of the site supported with patches is the latest release as use
 
 ## Reporting Vulnerabilities
 
-Please report security vulnerabilities to adelikat@tasvideos.org
+Please report security vulnerabilities to project lead adelikat, [via TASVideos PM](https://tasvideos.org/Messages/Create?defaultToUser=adelikat) or ~~[via email](mailto:adelikat@tasvideos.org)~~ (cannot receive mail at the moment).
