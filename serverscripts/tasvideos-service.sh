@@ -103,6 +103,27 @@ deploy() {
   echo 'Deploy complete.'
 }
 
+# Move files from the live site directory into a different temp directory.
+# Move the previous temp directory into the live site directory.
+undeploy() {
+  echo 'Reverting last deployment.'
+
+  # remove the current build
+  mv $ACTIVE_DIRECTORY /dev/null
+
+  # mv temp location into build location
+  mv $TEMP_DIRECTORY $ACTIVE_DIRECTORY
+
+  # recreate symlinks
+  ln -s $MEDIA_SYMLINK_DIRECTORY $ACTIVE_MEDIA_LOCATION
+  ln -s $SAMPLEDATA_SYMLINK_DIRECTORY $ACTIVE_SAMPLEDATA_LOCATION
+
+  # delete secondary temp location
+
+  echo 'Revert complete.'
+}
+
+
 # Delete the temp directory.
 cleanup() {
   rm -rf $TEMP_DIRECTORY
@@ -119,11 +140,16 @@ case "$1" in
     restart
     ;;
   reload)
+    cleanup
     build
     stop
     deploy
-    cleanup
     start
+    ;;
+  revert)
+    stop
+    undeploy
+    restart
     ;;
   build-only)
     build
@@ -133,10 +159,11 @@ case "$1" in
     echo stop - Stop the website
     echo restart - Stop and Start the website without updating
     echo reload - Full update.  Pulls latest code and builds it.  Should restart the service afterwards. \(Recommended\)
+    echo revert - Stop the website, revert to the previous build (which was likely good), and then start the website again.
     echo build-only - Pulls the latest code and compiles without affecting the state of the website
     ;;
   *)
-    echo "Usage: $0 {start|stop|restart|reload|build-only|commands}"
+    echo "Usage: $0 {start|stop|restart|reload|revert|build-only|commands}"
 esac
 
 EC=$?
