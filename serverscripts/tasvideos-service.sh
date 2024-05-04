@@ -90,8 +90,8 @@ restart() {
 deploy() {
   echo 'Starting deployment.'
 
-  # delete old active directory
-  rm -rf $ACTIVE_DIRECTORY
+  # mv current website into temp directory
+  mv $ACTIVE_DIRECTORY $TEMP_DIRECTORY
 
   # mv build directory into build location
   mv $BUILD_DIRECTORY $ACTIVE_DIRECTORY
@@ -117,7 +117,7 @@ undeploy() {
   fi
 
   # remove the current build
-  mv $ACTIVE_DIRECTORY /dev/null
+  rm -rf $ACTIVE_DIRECTORY
 
   # mv temp location into build location
   mv $TEMP_DIRECTORY $ACTIVE_DIRECTORY
