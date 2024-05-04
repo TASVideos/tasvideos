@@ -90,8 +90,8 @@ restart() {
 deploy() {
   echo 'Starting deployment.'
 
-  # mv old code into temp location
-  mv $ACTIVE_DIRECTORY $TEMP_DIRECTORY
+  # delete old active directory
+  rm -rf $ACTIVE_DIRECTORY
 
   # mv build directory into build location
   mv $BUILD_DIRECTORY $ACTIVE_DIRECTORY
@@ -107,6 +107,14 @@ deploy() {
 # Move the previous temp directory into the live site directory.
 undeploy() {
   echo 'Reverting last deployment.'
+
+  ls $TEMP_DIRECTORY
+  LS=$?
+
+  if [ $LS -ne 0 ]; then
+    echo 'Error received checking existence of previous deployment.  Aborting revert.'
+    exit $LS
+  fi
 
   # remove the current build
   mv $ACTIVE_DIRECTORY /dev/null
@@ -159,7 +167,7 @@ case "$1" in
     echo stop - Stop the website
     echo restart - Stop and Start the website without updating
     echo reload - Full update.  Pulls latest code and builds it.  Should restart the service afterwards. \(Recommended\)
-    echo revert - Stop the website, revert to the previous build (which was likely good), and then start the website again.
+    echo revert - Stop the website, revert to the previous build \(which was likely good\), and then start the website again.
     echo build-only - Pulls the latest code and compiles without affecting the state of the website
     ;;
   *)
