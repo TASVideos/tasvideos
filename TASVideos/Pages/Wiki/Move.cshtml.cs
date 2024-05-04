@@ -45,7 +45,7 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 
 		if (await wikiPages.Exists(DestinationPageName, includeDeleted: true))
 		{
-			ModelState.AddModelError("Move.DestinationPageName", "The destination page already exists.");
+			ModelState.AddModelError("DestinationPageName", "The destination page already exists.");
 		}
 
 		if (!ModelState.IsValid)
