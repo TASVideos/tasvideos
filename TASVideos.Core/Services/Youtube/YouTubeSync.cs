@@ -63,7 +63,7 @@ internal class YouTubeSync(
 		descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
 		var renderedDescription = await textRenderer.RenderWikiForYoutube(video.WikiPage);
 
-		const string hashTags = "\n\n#tas #tasvideos #tool-assisted #speedrun";
+		const string hashTags = "\n\n#tas #tasvideos #toolassisted #toolassistedspeedrun #speedrun";
 
 		var obsoleteStr = video.ObsoletedBy.HasValue ? "[Obsoleted] " : "";
 		var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $"[{video.UrlDisplayName}] " : "";
