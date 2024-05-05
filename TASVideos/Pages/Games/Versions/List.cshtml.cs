@@ -24,6 +24,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
+		GameDisplayName = displayName;
 		Versions = await db.GameVersions
 			.Where(v => v.GameId == GameId)
 			.Select(v => new VersionEntry(
