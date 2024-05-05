@@ -55,6 +55,17 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 
 		var result = await wikiPages.Move(OriginalPageName, DestinationPageName);
 
+		// At a dummy commit to track the move
+		var page = (await wikiPages.Page(DestinationPageName))!;
+		await wikiPages.Add(new WikiCreateRequest
+		{
+			PageName = DestinationPageName,
+			Markup = page.Markup,
+			RevisionMessage = $"Page Moved from {OriginalPageName}",
+			AuthorId = User.GetUserId(),
+			MinorEdit = false
+		});
+
 		if (!result)
 		{
 			ModelState.AddModelError("", "Unable to move page, the page may have been modified during the saving of this operation.");
