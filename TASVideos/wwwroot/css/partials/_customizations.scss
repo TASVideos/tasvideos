@@ -242,6 +242,10 @@ article.wiki, .postbody {
 	div.p {
 		margin-top: 0;
 		margin-bottom: 1rem;
+
+		&:last-child {
+			margin-bottom: 0;
+		}
 	}
 
 	&-edit {
@@ -260,6 +264,12 @@ article.wiki, .postbody {
 	sillyquote {
 		display: block;
 	}
+}
+
+ol, ul, dl {
+    &:last-child {
+        margin-bottom: 0;
+    }
 }
 
 .error-code {
