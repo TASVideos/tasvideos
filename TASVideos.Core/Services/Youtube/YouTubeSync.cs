@@ -29,7 +29,7 @@ internal class YouTubeSync(
 {
 	private const int YoutubeTitleMaxLength = 100;
 	private const int BatchSize = 50;
-	private static readonly string[] BaseTags = ["TAS", "TASVideos", "ToolAssisted", "ToolAssistedSpeedrun", "Video Game"];
+	private static readonly string[] BaseTags = ["TAS", "TASVideos", "Tool-Assisted", "Video Game"];
 	private readonly HttpClient _client = httpClientFactory.CreateClient(HttpClients.Youtube)
 		?? throw new InvalidOperationException($"Unable to initialize {HttpClients.Youtube} client");
 
