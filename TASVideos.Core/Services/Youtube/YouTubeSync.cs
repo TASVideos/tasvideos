@@ -29,7 +29,7 @@ internal class YouTubeSync(
 {
 	private const int YoutubeTitleMaxLength = 100;
 	private const int BatchSize = 50;
-	private static readonly string[] BaseTags = ["TAS", "TASVideos", "ToolAssisted", "ToolAssistedSpeedrun", "Video Game"];
+	private static readonly string[] BaseTags = ["TAS", "TASVideos", "Tool-Assisted", "Video Game"];
 	private readonly HttpClient _client = httpClientFactory.CreateClient(HttpClients.Youtube)
 		?? throw new InvalidOperationException($"Unable to initialize {HttpClients.Youtube} client");
 
@@ -63,7 +63,7 @@ internal class YouTubeSync(
 		descriptionBase += $"\nTAS originally published on {video.PublicationDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)}\n\n";
 		var renderedDescription = await textRenderer.RenderWikiForYoutube(video.WikiPage);
 
-		const string hashTags = "\n\n#tas #tasvideos #tool-assisted #speedrun";
+		const string hashTags = "\n\n#tas #tasvideos #toolassisted #toolassistedspeedrun #speedrun";
 
 		var obsoleteStr = video.ObsoletedBy.HasValue ? "[Obsoleted] " : "";
 		var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $"[{video.UrlDisplayName}] " : "";
