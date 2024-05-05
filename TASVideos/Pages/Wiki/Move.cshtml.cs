@@ -61,7 +61,7 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 		{
 			PageName = DestinationPageName,
 			Markup = page.Markup,
-			RevisionMessage = $"Page Moved from {OriginalPageName}",
+			RevisionMessage = $"Page Moved from {OriginalPageName} to {DestinationPageName}",
 			AuthorId = User.GetUserId(),
 			MinorEdit = false
 		});
