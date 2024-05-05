@@ -45,18 +45,23 @@ public class CreateModel(
 	public async Task<IActionResult> OnGet()
 	{
 		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var topic = await db.Forums
+		var forum = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Where(f => f.Id == ForumId)
-			.Select(f => new { ForumName = f.Name })
+			.Select(f => new { f.Name, f.CanCreateTopics })
 			.SingleOrDefaultAsync();
 
-		if (topic is null)
+		if (forum is null)
 		{
 			return NotFound();
 		}
 
-		ForumName = topic.ForumName;
+		if (!forum.CanCreateTopics)
+		{
+			return AccessDenied();
+		}
+
+		ForumName = forum.Name;
 		UserAvatars = await forumService.UserAvatars(User.GetUserId());
 
 		var user = await userManager.GetRequiredUser(User);

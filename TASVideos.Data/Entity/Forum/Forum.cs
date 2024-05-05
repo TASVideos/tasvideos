@@ -23,6 +23,8 @@ public class Forum : BaseEntity
 	public int Ordinal { get; set; }
 
 	public bool Restricted { get; set; }
+
+	public bool CanCreateTopics { get; set; } = true;
 }
 
 public static class ForumQueryableExtensions

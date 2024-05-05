@@ -24,7 +24,7 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		var forum = await db.Forums
 			.ExcludeRestricted(seeRestricted)
 			.Where(f => f.Id == Id)
-			.Select(f => new ForumDisplay(f.Id, f.Name, f.Description))
+			.Select(f => new ForumDisplay(f.Id, f.Name, f.Description, f.CanCreateTopics))
 			.SingleOrDefaultAsync();
 
 		if (forum is null)
@@ -70,7 +70,7 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		}
 	}
 
-	public record ForumDisplay(int Id, string Name, string? Description);
+	public record ForumDisplay(int Id, string Name, string? Description, bool CanCreateTopics);
 
 	public class ForumTopicEntry
 	{

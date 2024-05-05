@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="SampleData\SampleData-Postgres.sql" />
+		<None Remove="SampleData\SampleData-Postgres.sql" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -16,10 +15,6 @@
 		<PackageReference Include="EFCore.NamingConventions" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.AutoHistory" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
 	</ItemGroup>
 
