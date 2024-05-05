@@ -21,7 +21,7 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 			.ToListAsync();
 	}
 
-	public async Task<IActionResult> OnPostDeletePage(string path)
+	public async Task<IActionResult> OnPostDeletePage(string path, string reason)
 	{
 		if (!User.Has(PermissionTo.DeleteWikiPages))
 		{
@@ -30,6 +30,24 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 
 		if (!string.IsNullOrWhiteSpace(path))
 		{
+			if (!string.IsNullOrWhiteSpace(reason))
+			{
+				var page = await wikiPages.Page(path);
+				if (page is null)
+				{
+					return BadRequest();
+				}
+
+				await wikiPages.Add(new WikiCreateRequest
+				{
+					PageName = page.PageName,
+					Markup = page.Markup,
+					RevisionMessage = $"Page deleted, reason: {reason}",
+					MinorEdit = true,
+					AuthorId = User.GetUserId()
+				});
+			}
+
 			var result = await wikiPages.Delete(path);
 
 			if (result == -1)
@@ -38,7 +56,7 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 				return Page();
 			}
 
-			await publisher.SendMessage(PostGroups.Wiki, $"Page {path} DELETED by {User.Name()} ({{result}} revisions\")");
+			await publisher.SendMessage(PostGroups.Wiki, $"Page {path} DELETED by {User.Name()} ({{result}} revisions\")", reason);
 		}
 
 		return BasePageRedirect("DeletedPages");

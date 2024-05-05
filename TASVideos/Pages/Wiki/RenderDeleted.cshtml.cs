@@ -3,7 +3,7 @@
 [RequirePermission(PermissionTo.SeeDeletedWikiPages)]
 public class RenderDeletedModel(ApplicationDbContext db) : BasePageModel
 {
-	public WikiPage WikiPage { get; set; } = null!;
+	public List<WikiPage> WikiPages { get; set; } = [];
 
 	public async Task<IActionResult> OnGet(string? url, int? revision = null)
 	{
@@ -21,14 +21,9 @@ public class RenderDeletedModel(ApplicationDbContext db) : BasePageModel
 			? query.Where(wp => wp.Revision == revision)
 			: query.ThatAreCurrent();
 
-		var page = await query.FirstOrDefaultAsync();
-		if (page is null)
-		{
-			return NotFound();
-		}
-
-		WikiPage = page;
-
-		return Page();
+		WikiPages = await query.ToListAsync();
+		return WikiPages.Count == 0
+			? NotFound()
+			: Page();
 	}
 }

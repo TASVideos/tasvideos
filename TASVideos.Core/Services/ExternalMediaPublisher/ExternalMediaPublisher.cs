@@ -36,13 +36,14 @@ public class
 
 public static class ExternalMediaPublisherExtensions
 {
-	public static async Task SendMessage(this ExternalMediaPublisher publisher, string group, string message)
+	public static async Task SendMessage(this ExternalMediaPublisher publisher, string group, string message, string body = "")
 	{
 		await publisher.Send(new Post
 		{
 			Type = PostType.General,
 			Group = group,
 			Title = message,
+			Body = body
 		});
 	}
 

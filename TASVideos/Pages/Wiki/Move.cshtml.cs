@@ -45,7 +45,7 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 
 		if (await wikiPages.Exists(DestinationPageName, includeDeleted: true))
 		{
-			ModelState.AddModelError("Move.DestinationPageName", "The destination page already exists.");
+			ModelState.AddModelError("DestinationPageName", "The destination page already exists.");
 		}
 
 		if (!ModelState.IsValid)
@@ -54,6 +54,17 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 		}
 
 		var result = await wikiPages.Move(OriginalPageName, DestinationPageName);
+
+		// At a dummy commit to track the move
+		var page = (await wikiPages.Page(DestinationPageName))!;
+		await wikiPages.Add(new WikiCreateRequest
+		{
+			PageName = DestinationPageName,
+			Markup = page.Markup,
+			RevisionMessage = $"Page Moved from {OriginalPageName} to {DestinationPageName}",
+			AuthorId = User.GetUserId(),
+			MinorEdit = false
+		});
 
 		if (!result)
 		{
