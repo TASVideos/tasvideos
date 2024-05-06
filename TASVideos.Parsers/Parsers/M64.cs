@@ -15,7 +15,7 @@ internal class M64 : Parser, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "M64\u001a")
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .m64");
+			return Error("Invalid file format, does not seem to be a .m64");
 		}
 
 		br.ReadUInt32(); // Version id

@@ -15,7 +15,7 @@ internal class Fbm : Parser, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "FB1 ")
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .fbm");
+			return Error("Invalid file format, does not seem to be a .fbm");
 		}
 
 		br.ReadByte(); // Version number
@@ -34,7 +34,7 @@ internal class Fbm : Parser, IParser
 
 		if (nextHeader != "FR1 ")
 		{
-			return new ErrorResult("Input data not found");
+			return Error("Input data not found");
 		}
 
 		br.ReadBytes(4); // Size of frame data chunk in bytes (not including the chunk identifier)

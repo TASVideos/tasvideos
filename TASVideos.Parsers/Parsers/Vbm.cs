@@ -15,7 +15,7 @@ internal class Vbm : Parser, IParser
 		var header = new string(br.ReadChars(4));
 		if (!header.StartsWith("VBM"))
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .vbm");
+			return Error("Invalid file format, does not seem to be a .vbm");
 		}
 
 		br.ReadBytes(8); // major version, movie uid

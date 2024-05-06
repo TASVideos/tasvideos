@@ -82,7 +82,7 @@ internal class Jrsr : Parser, IParser
 
 				if (sectionName == "savestate")
 				{
-					return new ErrorResult("File contains a savestate");
+					return Error("File contains a savestate");
 				}
 
 				if (sectionName == "header")
@@ -222,16 +222,16 @@ internal class Jrsr : Parser, IParser
 		}
 		catch (FormatException ex)
 		{
-			return new ErrorResult(ex.Message);
+			return Error(ex.Message);
 		}
 		catch (OverflowException ex)
 		{
-			return new ErrorResult(ex.Message);
+			return Error(ex.Message);
 		}
 
 		if (!sectionsSeen.Contains("header"))
 		{
-			return new ErrorResult("No header found");
+			return Error("No header found");
 		}
 
 		if (!hasRerecordCount)

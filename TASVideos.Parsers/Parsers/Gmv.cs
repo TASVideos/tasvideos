@@ -15,7 +15,7 @@ internal class Gmv : Parser, IParser
 		var header = new string(br.ReadChars(16));
 		if (!header.StartsWith("Gens Movie"))
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .gmv");
+			return Error("Invalid file format, does not seem to be a .gmv");
 		}
 
 		result.RerecordCount = br.ReadInt32();
