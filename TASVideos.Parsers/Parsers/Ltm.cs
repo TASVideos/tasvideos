@@ -31,83 +31,81 @@ internal class Ltm : Parser, IParser
 		double? lengthNanoseconds = null;
 		bool isVariableFramerate = false;
 
-		using (var reader = ReaderFactory.Open(file))
+		using var reader = ReaderFactory.Open(file);
+		while (reader.MoveToNextEntry())
 		{
-			while (reader.MoveToNextEntry())
+			if (reader.Entry.IsDirectory)
 			{
-				if (reader.Entry.IsDirectory)
-				{
-					continue;
-				}
-
-				await using var entry = reader.OpenEntryStream();
-				using var textReader = new StreamReader(entry);
-				switch (reader.Entry.Key)
-				{
-					case "config.ini":
-						while (await textReader.ReadLineAsync() is { } s)
-						{
-							if (s.StartsWith(FrameCountHeader))
-							{
-								result.Frames = ParseIntFromConfig(s);
-							}
-							else if (s.StartsWith(RerecordCountHeader))
-							{
-								result.RerecordCount = ParseIntFromConfig(s);
-							}
-							else if (s.StartsWith(SaveStateCountHeader))
-							{
-								var savestateCount = ParseIntFromConfig(s);
-
-								// Power-on movies seem to always have a savestate count equal to frames
-								if (savestateCount > 0 && savestateCount != result.Frames)
-								{
-									result.StartType = MovieStartType.Savestate;
-								}
-							}
-							else if (s.StartsWith(FrameRateDenHeader))
-							{
-								frameRateDenominator = ParseDoubleFromConfig(s);
-							}
-							else if (s.StartsWith(FrameRateNumHeader))
-							{
-								frameRateNumerator = ParseDoubleFromConfig(s);
-							}
-							else if (s.StartsWith(VariableFramerateHeader))
-							{
-								isVariableFramerate = ParseBoolFromConfig(s);
-							}
-							else if (s.StartsWith(LengthSecondsHeader))
-							{
-								lengthSeconds = ParseDoubleFromConfig(s);
-							}
-							else if (s.StartsWith(LengthNanosecondsHeader))
-							{
-								lengthNanoseconds = ParseDoubleFromConfig(s);
-							}
-						}
-
-						break;
-					case "annotations.txt":
-						var sb = new StringBuilder();
-						while (await textReader.ReadLineAsync() is { } line)
-						{
-							if (line.StartsWith("platform:", StringComparison.InvariantCultureIgnoreCase))
-							{
-								result.SystemCode = CalculatePlatform(GetPlatformValue(line));
-							}
-							else
-							{
-								sb.AppendLine(line);
-							}
-						}
-
-						result.Annotations = sb.ToString();
-						break;
-				}
-
-				entry.SkipEntry(); // seems to be required if the stream was not fully consumed
+				continue;
 			}
+
+			await using var entry = reader.OpenEntryStream();
+			using var textReader = new StreamReader(entry);
+			switch (reader.Entry.Key)
+			{
+				case "config.ini":
+					while (await textReader.ReadLineAsync() is { } s)
+					{
+						if (s.StartsWith(FrameCountHeader))
+						{
+							result.Frames = ParseIntFromConfig(s);
+						}
+						else if (s.StartsWith(RerecordCountHeader))
+						{
+							result.RerecordCount = ParseIntFromConfig(s);
+						}
+						else if (s.StartsWith(SaveStateCountHeader))
+						{
+							var savestateCount = ParseIntFromConfig(s);
+
+							// Power-on movies seem to always have a savestate count equal to frames
+							if (savestateCount > 0 && savestateCount != result.Frames)
+							{
+								result.StartType = MovieStartType.Savestate;
+							}
+						}
+						else if (s.StartsWith(FrameRateDenHeader))
+						{
+							frameRateDenominator = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(FrameRateNumHeader))
+						{
+							frameRateNumerator = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(VariableFramerateHeader))
+						{
+							isVariableFramerate = ParseBoolFromConfig(s);
+						}
+						else if (s.StartsWith(LengthSecondsHeader))
+						{
+							lengthSeconds = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(LengthNanosecondsHeader))
+						{
+							lengthNanoseconds = ParseDoubleFromConfig(s);
+						}
+					}
+
+					break;
+				case "annotations.txt":
+					var sb = new StringBuilder();
+					while (await textReader.ReadLineAsync() is { } line)
+					{
+						if (line.StartsWith("platform:", StringComparison.InvariantCultureIgnoreCase))
+						{
+							result.SystemCode = CalculatePlatform(GetPlatformValue(line));
+						}
+						else
+						{
+							sb.AppendLine(line);
+						}
+					}
+
+					result.Annotations = sb.ToString();
+					break;
+			}
+
+			entry.SkipEntry(); // seems to be required if the stream was not fully consumed
 		}
 
 		if (isVariableFramerate)
