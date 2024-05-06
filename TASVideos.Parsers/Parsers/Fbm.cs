@@ -1,13 +1,11 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("fbm")]
-internal class Fbm : ParserBase, IParser
+internal class Fbm : Parser, IParser
 {
-	public override string FileExtension => "fbm";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

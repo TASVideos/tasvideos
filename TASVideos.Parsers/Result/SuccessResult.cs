@@ -3,9 +3,9 @@
 /// <summary>
 /// The standard implementation of <seealso cref="IParseResult"/>.
 /// </summary>
-internal class ParseResult : IParseResult
+internal class SuccessResult : IParseResult
 {
-	public bool Success { get; internal set; } = true;
+	public bool Success => true;
 	public IEnumerable<string> Errors => ErrorList;
 	public IEnumerable<ParseWarnings> Warnings => WarningList;
 
@@ -19,24 +19,24 @@ internal class ParseResult : IParseResult
 	public long? CycleCount { get; internal set; }
 	public string? Annotations { get; internal set; }
 
-	internal List<ParseWarnings> WarningList { get; set; } = [];
-	internal List<string> ErrorList { get; set; } = [];
+	internal List<ParseWarnings> WarningList { get; } = [];
+	internal List<string> ErrorList { get; } = [];
 }
 
 internal static class ParseResultExtensions
 {
-	internal static void WarnNoRerecords(this ParseResult parseResult)
+	internal static void WarnNoRerecords(this SuccessResult successResult)
 	{
-		parseResult.WarningList.Add(ParseWarnings.MissingRerecordCount);
+		successResult.WarningList.Add(ParseWarnings.MissingRerecordCount);
 	}
 
-	internal static void WarnNoFrameRate(this ParseResult parseResult)
+	internal static void WarnNoFrameRate(this SuccessResult successResult)
 	{
-		parseResult.WarningList.Add(ParseWarnings.FrameRateInferred);
+		successResult.WarningList.Add(ParseWarnings.FrameRateInferred);
 	}
 
-	internal static void WarnLengthInferred(this ParseResult parseResult)
+	internal static void WarnLengthInferred(this SuccessResult successResult)
 	{
-		parseResult.WarningList.Add(ParseWarnings.LengthInferred);
+		successResult.WarningList.Add(ParseWarnings.LengthInferred);
 	}
 }

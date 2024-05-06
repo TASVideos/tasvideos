@@ -1,13 +1,11 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("mar")]
-internal class Mar : ParserBase, IParser
+internal class Mar : Parser, IParser
 {
-	public override string FileExtension => "mar";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

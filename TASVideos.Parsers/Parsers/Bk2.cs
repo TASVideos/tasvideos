@@ -3,7 +3,7 @@
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("bk2")]
-internal class Bk2 : ParserBase, IParser
+internal class Bk2 : Parser, IParser
 {
 	private const string HeaderFile = "header";
 	private const string InputFile = "input log";
@@ -28,11 +28,9 @@ internal class Bk2 : ParserBase, IParser
 		"greenzone"
 	];
 
-	public override string FileExtension => "bk2";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension
@@ -74,7 +72,7 @@ internal class Bk2 : ParserBase, IParser
 				return Error("Could not determine the System Code");
 			}
 
-			int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToPositiveInt();
+			int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
 			if (rerecordVal.HasValue)
 			{
 				result.RerecordCount = rerecordVal.Value;
@@ -84,7 +82,7 @@ internal class Bk2 : ParserBase, IParser
 				result.WarnNoRerecords();
 			}
 
-			if (header.GetValueFor(Keys.Pal).ToBool())
+			if (header.GetBoolFor(Keys.Pal))
 			{
 				result.Region = RegionType.Pal;
 			}
@@ -96,11 +94,11 @@ internal class Bk2 : ParserBase, IParser
 			}
 
 			// Check various subsystem flags
-			if (header.GetValueFor(Keys.Mode32X).ToBool())
+			if (header.GetBoolFor(Keys.Mode32X))
 			{
 				platform = SystemCodes.X32;
 			}
-			else if (header.GetValueFor(Keys.ModeCgb).ToBool())
+			else if (header.GetBoolFor(Keys.ModeCgb))
 			{
 				platform = SystemCodes.Gbc;
 			}
@@ -108,7 +106,7 @@ internal class Bk2 : ParserBase, IParser
 			{
 				platform = SystemCodes.Fds;
 			}
-			else if (header.GetValueFor(Keys.ModeVs).ToBool())
+			else if (header.GetBoolFor(Keys.ModeVs))
 			{
 				platform = SystemCodes.Arcade;
 				result.FrameRateOverride = NtscNesFramerate;
@@ -120,45 +118,45 @@ internal class Bk2 : ParserBase, IParser
 					? PalSnesFramerate
 					: NtscSnesFramerate;
 			}
-			else if (header.GetValueFor(Keys.ModeSegaCd).ToBool())
+			else if (header.GetBoolFor(Keys.ModeSegaCd))
 			{
 				platform = SystemCodes.SegaCd;
 			}
-			else if (header.GetValueFor(Keys.ModeGg).ToBool())
+			else if (header.GetBoolFor(Keys.ModeGg))
 			{
 				platform = SystemCodes.Gg;
 			}
-			else if (header.GetValueFor(Keys.ModeSg).ToBool())
+			else if (header.GetBoolFor(Keys.ModeSg))
 			{
 				platform = SystemCodes.Sg;
 			}
-			else if (header.GetValueFor(Keys.ModeDsi).ToBool())
+			else if (header.GetBoolFor(Keys.ModeDsi))
 			{
 				platform = SystemCodes.Dsi;
 			}
-			else if (header.GetValueFor(Keys.ModeDd).ToBool())
+			else if (header.GetBoolFor(Keys.ModeDd))
 			{
 				platform = SystemCodes.N64Dd;
 			}
-			else if (header.GetValueFor(Keys.ModeJaguarCd).ToBool())
+			else if (header.GetBoolFor(Keys.ModeJaguarCd))
 			{
 				platform = SystemCodes.JaguarCd;
 			}
 
 			result.SystemCode = platform;
 
-			if (header.GetValueFor(Keys.StartsFromSavestate).ToBool())
+			if (header.GetBoolFor(Keys.StartsFromSavestate))
 			{
 				result.StartType = MovieStartType.Savestate;
 			}
-			else if (header.GetValueFor(Keys.StartsFromSram).ToBool())
+			else if (header.GetBoolFor(Keys.StartsFromSram))
 			{
 				result.StartType = MovieStartType.Sram;
 			}
 
-			vsyncAttoseconds = header.GetValueFor(Keys.VsyncAttoseconds).ToPositiveLong();
-			vBlankCount = header.GetValueFor(Keys.VBlankCount).ToPositiveInt();
-			result.CycleCount = header.GetValueFor(Keys.CycleCount).ToPositiveLong();
+			vsyncAttoseconds = header.GetPositiveLongFor(Keys.VsyncAttoseconds);
+			vBlankCount = header.GetPositiveIntFor(Keys.VBlankCount);
+			result.CycleCount = header.GetPositiveLongFor(Keys.CycleCount);
 			clockRate = header.GetValueFor(Keys.ClockRate).Replace(',', '.');
 			core = header.GetValueFor(Keys.Core).ToLower();
 		}

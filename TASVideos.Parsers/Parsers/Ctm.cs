@@ -1,15 +1,14 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("ctm")]
-internal class Ctm : ParserBase, IParser
+internal class Ctm : Parser, IParser
 {
 	private const decimal FrameRate = 268111856.0M / 4481136.0M; // https://github.com/citra-emu/citra/blob/a2f34ea82b5a31a7e842d0099921b85b8bce403f/src/core/hw/gpu.h#L27
 	private const int InputRate = 234; // Rate at which inputs are polled per second
-	public override string FileExtension => "ctm";
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

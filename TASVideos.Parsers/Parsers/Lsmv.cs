@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("lsmv")]
-internal class Lsmv : ParserBase, IParser
+internal class Lsmv : Parser, IParser
 {
 	private const string InputFile = "input";
 	private const string RerecordFile = "rerecords";
@@ -10,11 +10,9 @@ internal class Lsmv : ParserBase, IParser
 	private const string SavestateAnchor = "savestate.anchor";
 	private const string Sram = "moviesram";
 
-	public override string FileExtension => "lsmv";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension
@@ -146,7 +144,7 @@ internal class Lsmv : ParserBase, IParser
 		return result;
 	}
 
-	private static void DefaultGameType(ParseResult result)
+	private static void DefaultGameType(SuccessResult result)
 	{
 		result.SystemCode = SystemCodes.Snes;
 		result.Region = RegionType.Ntsc;

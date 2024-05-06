@@ -5,7 +5,7 @@ using SharpCompress.Readers;
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("ltm")]
-internal class Ltm : ParserBase, IParser
+internal class Ltm : Parser, IParser
 {
 	public const double DefaultFrameRate = 60.0;
 
@@ -18,11 +18,9 @@ internal class Ltm : ParserBase, IParser
 	private const string LengthSecondsHeader = "length_sec=";
 	private const string LengthNanosecondsHeader = "length_nsec=";
 
-	public override string FileExtension => "ltm";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

@@ -3,10 +3,5 @@
 [FileExtension("tasproj")]
 internal class Tasproj : Bk2
 {
-	public override string FileExtension => "tasproj";
-
-	protected override string[] InvalidArchiveEntries =>
-	[
-		"greenzone"
-	];
+	protected override string[] InvalidArchiveEntries => ["greenzone"];
 }

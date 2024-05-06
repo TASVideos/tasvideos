@@ -61,7 +61,7 @@ public class Jrsr : IParser
 	private const string FileExtension = "jrsr";
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,
@@ -309,7 +309,7 @@ internal class JrsrSectionParser : IDisposable
 
 	// We will need to read 1 char at a time from the stream, and also to be
 	// able to "unread" up to 1 char so that it can be read again later.
-	private readonly char[] _readBuf = new char[1];
+	private readonly char[] _readBuffer = new char[1];
 	private char? _unread;
 
 	/// <summary>
@@ -332,8 +332,8 @@ internal class JrsrSectionParser : IDisposable
 		// Otherwise, read a new character from _reader.
 		try
 		{
-			var n = await _reader.ReadBlockAsync(_readBuf, 0, _readBuf.Length);
-			return n == 0 ? -1 : _readBuf[0];
+			var n = await _reader.ReadBlockAsync(_readBuffer, 0, _readBuffer.Length);
+			return n == 0 ? -1 : _readBuffer[0];
 		}
 		catch (DecoderFallbackException ex)
 		{

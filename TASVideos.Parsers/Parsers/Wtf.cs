@@ -1,13 +1,11 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("wtf")]
-internal class Wtf : ParserBase, IParser
+internal class Wtf : Parser, IParser
 {
-	public override string FileExtension => "wtf";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

@@ -5,13 +5,11 @@ using System.Xml.XPath;
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("omr")]
-internal class Omr : ParserBase, IParser
+internal class Omr : Parser, IParser
 {
-	public override string FileExtension => "omr";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

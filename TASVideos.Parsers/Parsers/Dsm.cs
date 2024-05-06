@@ -7,7 +7,7 @@ internal class Dsm : IParser
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,
@@ -16,7 +16,7 @@ internal class Dsm : IParser
 
 		(var header, result.Frames) = await file.PipeBasedMovieHeaderAndFrameCount();
 
-		int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToPositiveInt();
+		int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
 		if (rerecordVal.HasValue)
 		{
 			result.RerecordCount = rerecordVal.Value;
@@ -26,12 +26,12 @@ internal class Dsm : IParser
 			result.WarnNoRerecords();
 		}
 
-		if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
+		if (header.HasValue(Keys.StartsFromSavestate))
 		{
 			result.StartType = MovieStartType.Savestate;
 		}
 
-		if (header.GetValueFor(Keys.StartsFromSram).Length > 1)
+		if (header.HasValue(Keys.StartsFromSram))
 		{
 			result.StartType = MovieStartType.Sram;
 		}

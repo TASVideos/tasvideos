@@ -1,13 +1,11 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("gmv")]
-internal class Gmv : ParserBase, IParser
+internal class Gmv : Parser, IParser
 {
-	public override string FileExtension => "gmv";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

@@ -1,13 +1,11 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("m64")]
-internal class M64 : ParserBase, IParser
+internal class M64 : Parser, IParser
 {
-	public override string FileExtension => "m64";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,

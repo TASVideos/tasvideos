@@ -1,10 +1,8 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("lmp")]
-internal class Lmp : ParserBase, IParser
+internal class Lmp : Parser, IParser
 {
-	public override string FileExtension => "lmp";
-
 	private delegate bool TryParseLmp(byte[] movie, ref int frames);
 
 	// order is important here to minimize false detections
@@ -269,7 +267,7 @@ internal class Lmp : ParserBase, IParser
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult
 		{
 			Region = RegionType.Ntsc,
 			FileExtension = FileExtension,
