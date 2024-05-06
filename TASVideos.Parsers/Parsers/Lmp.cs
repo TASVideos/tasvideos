@@ -285,7 +285,7 @@ internal class Lmp : Parser, IParser
 
 		if (movie[length - 1] != 0x80) // fixme: this might be ok if there is a source port footer (not easy to detect however)
 		{
-			return Error("Invalid file format, does not seem to be a .lmp");
+			return InvalidFormat();
 		}
 
 		int frames = -1;
@@ -299,7 +299,7 @@ internal class Lmp : Parser, IParser
 
 		if (frames < 0)
 		{
-			return Error("Invalid file format, does not seem to be a .lmp");
+			return InvalidFormat();
 		}
 
 		result.Frames = frames;

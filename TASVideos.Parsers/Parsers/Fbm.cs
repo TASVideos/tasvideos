@@ -15,7 +15,7 @@ internal class Fbm : Parser, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "FB1 ")
 		{
-			return Error("Invalid file format, does not seem to be a .fbm");
+			return InvalidFormat();
 		}
 
 		br.ReadByte(); // Version number

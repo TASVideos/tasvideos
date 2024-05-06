@@ -16,7 +16,7 @@ internal class Wtf : Parser, IParser
 		var signature = br.ReadInt32(); // 0x66 0x54 0x77 0x02
 		if (signature != 41374822)
 		{
-			return Error("Invalid file format, does not seem to be a .wtf");
+			return InvalidFormat();
 		}
 
 		br.ReadInt32(); // input frames

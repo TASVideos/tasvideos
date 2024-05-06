@@ -15,7 +15,7 @@ internal class Mar : Parser, IParser
 		var header = new string(br.ReadChars(8));
 		if (!header.StartsWith("MAMETAS\0"))
 		{
-			return Error("Invalid file format, does not seem to be a .mar");
+			return InvalidFormat();
 		}
 
 		br.ReadBytes(8);

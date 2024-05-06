@@ -18,7 +18,7 @@ internal class Dtm : Parser, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "DTM\u001a")
 		{
-			return Error("Invalid file format, does not seem to be a .dtm");
+			return InvalidFormat();
 		}
 
 		br.ReadChars(6); // Game Id

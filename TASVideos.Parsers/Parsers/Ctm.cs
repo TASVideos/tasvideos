@@ -18,7 +18,7 @@ internal class Ctm : Parser, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "CTM\x1b")
 		{
-			return Error("Invalid file format, does not seem to be a .ctm");
+			return InvalidFormat();
 		}
 
 		br.ReadUInt64(); // Title ID
