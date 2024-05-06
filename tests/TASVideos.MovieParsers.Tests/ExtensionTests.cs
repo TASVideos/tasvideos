@@ -37,4 +37,22 @@ public class ExtensionTests
 		var actual = val.ToPositiveLong();
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	[DataRow(null, false)]
+	[DataRow("", false)]
+	[DataRow(" ", false)]
+	[DataRow("1", true)]
+	[DataRow("0", false)]
+	[DataRow("true", true)]
+	[DataRow("True", true)]
+	[DataRow("truE", true)]
+	[DataRow("false", false)]
+	[DataRow("False", false)]
+	[DataRow("falsE", false)]
+	public void ToBool(string val, bool expected)
+	{
+		var actual = val.ToBool();
+		Assert.AreEqual(expected, actual);
+	}
 }
