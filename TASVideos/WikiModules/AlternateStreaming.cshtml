@@ -1,0 +1,18 @@
+﻿@model AlternateStreaming
+
+@foreach (var pub in Model.Publications.OrderBy(u => u.Id))
+{
+	<card class="mb-2">
+		<cardheader>
+			<pub-link id="pub.Id">@pub.Title</pub-link>
+		</cardheader>
+		<cardbody>
+			<ul>
+				@foreach(var url in pub.Urls.OrderBy(p => string.IsNullOrWhiteSpace(p.DisplayName)))
+				{
+					<li>@url.DisplayName</li>
+				}
+			</ul>
+		</cardbody>
+	</card>
+}
