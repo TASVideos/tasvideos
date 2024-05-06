@@ -45,7 +45,7 @@ using System.Text;
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("jrsr")]
-public class Jrsr : IParser
+internal class Jrsr : Parser, IParser
 {
 	// Safety limit on the length of JRSR section names and lines.
 	private const int LengthLimit = 10000;
@@ -58,7 +58,6 @@ public class Jrsr : IParser
 	// permits a '+' prefix.
 	private const NumberStyles IntegerStyle = NumberStyles.AllowLeadingSign;
 
-	private const string FileExtension = "jrsr";
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new SuccessResult
