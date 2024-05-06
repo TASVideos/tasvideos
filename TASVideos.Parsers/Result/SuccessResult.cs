@@ -6,7 +6,7 @@
 internal class SuccessResult : IParseResult
 {
 	public bool Success => true;
-	public IEnumerable<string> Errors => ErrorList;
+	public IEnumerable<string> Errors => [];
 	public IEnumerable<ParseWarnings> Warnings => WarningList;
 
 	public string FileExtension { get; internal set; } = "";
@@ -20,7 +20,6 @@ internal class SuccessResult : IParseResult
 	public string? Annotations { get; internal set; }
 
 	internal List<ParseWarnings> WarningList { get; } = [];
-	internal List<string> ErrorList { get; } = [];
 }
 
 internal static class ParseResultExtensions
