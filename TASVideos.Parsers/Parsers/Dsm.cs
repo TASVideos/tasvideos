@@ -1,10 +1,8 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("dsm")]
-internal class Dsm : IParser
+internal class Dsm : Parser, IParser
 {
-	private const string FileExtension = "dsm";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new SuccessResult(FileExtension)

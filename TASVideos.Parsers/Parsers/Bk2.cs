@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace TASVideos.MovieParsers.Parsers;
+﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("bk2")]
 internal class Bk2 : Parser, IParser

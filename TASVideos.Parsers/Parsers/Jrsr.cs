@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Text;
 
 /*
  * https://tasvideos.org/EmulatorResources/JPC/JRSRFormat
