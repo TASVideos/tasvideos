@@ -134,8 +134,7 @@ internal class Ltm : Parser, IParser
 			return 0;
 		}
 
-		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
-
+		var split = str.SplitWithEmpty("=");
 		if (split.Length > 1)
 		{
 			var intStr = split.Skip(1).First();
@@ -156,8 +155,7 @@ internal class Ltm : Parser, IParser
 			return 0;
 		}
 
-		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
-
+		var split = str.SplitWithEmpty("=");
 		if (split.Length > 1)
 		{
 			var doubleStr = split.Skip(1).First();
@@ -178,8 +176,7 @@ internal class Ltm : Parser, IParser
 			return false;
 		}
 
-		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
-
+		var split = str.SplitWithEmpty("=");
 		if (split.Length <= 1)
 		{
 			return false;
@@ -197,13 +194,8 @@ internal class Ltm : Parser, IParser
 			return "";
 		}
 
-		var split = str.ToLower().Split(["platform:"], StringSplitOptions.RemoveEmptyEntries);
-		if (split.Length != 1)
-		{
-			return "";
-		}
-
-		return split[0].Trim().ToLowerInvariant();
+		var split = str.ToLower().SplitWithEmpty("platform:");
+		return split.Length == 1 ? split[0].Trim().ToLowerInvariant() : "";
 	}
 
 	private static string CalculatePlatform(string str)
