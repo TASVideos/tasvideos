@@ -1,10 +1,8 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("fm2")]
-internal class Fm2 : IParser
+internal class Fm2 : Parser, IParser
 {
-	private const string FileExtension = "fm2";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new SuccessResult
