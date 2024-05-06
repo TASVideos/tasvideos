@@ -18,13 +18,11 @@ internal class Omr : Parser, IParser
 
 		await using var gz = new GZipStream(file, CompressionMode.Decompress);
 		using var unzip = new StreamReader(gz);
-		var replay = XElement.Parse(await unzip.ReadToEndAsync())
-			.Descendants().First(x => x.Name == "replay");
+		var replay = XElement.Parse(await unzip.ReadToEndAsync()).FirstDescendant("replay");
 
-		result.RerecordCount = int.Parse(replay.Descendants().First(x => x.Name == "reRecordCount").Value);
+		result.RerecordCount = int.Parse(replay.FirstDescendant("reRecordCount").Value);
 
-		var isPowerOn = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/scheduler/currentTime/time"))
-			.Cast<XElement>()
+		var isPowerOn = replay.XPathEvaluateList("//snapshots/item/scheduler/currentTime/time")
 			.Any(x => x.Value == "0");
 
 		if (!isPowerOn)
@@ -32,75 +30,46 @@ internal class Omr : Parser, IParser
 			result.StartType = MovieStartType.Savestate;
 		}
 
-		var isPal = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/device/palTiming"))
-			.Cast<XElement>()
-			.Any(x => x.Value.ToString() == "true");
+		var isPal = replay.XPathEvaluateList("//snapshots/item/config/device/palTiming")
+			.Any(x => x.Value == "true");
 
 		if (isPal)
 		{
 			result.Region = RegionType.Pal;
 		}
 
-		var lengthTimestamp = long.Parse(((IEnumerable)replay.XPathEvaluate("//events/item"))
-			.Cast<XElement>()
+		var lengthTimestamp = long.Parse(replay.XPathEvaluateList("//events/item")
 			.Last(x => x.Attribute("type")?.Value != "EndLog")
-			.Descendants()
-			.First(x => x.Name == "StateChange")
-			.Descendants()
-			.First(x => x.Name == "time")
-			.Descendants()
-			.First(x => x.Name == "time")
+			.FirstDescendant("StateChange")
+			.FirstDescendant("time")
+			.FirstDescendant("time")
 			.Value);
 
 		var seconds = ConvertTimestamp(lengthTimestamp);
 
 		result.Frames = (int)Math.Round(seconds * (result.Region == RegionType.Pal ? 50.1589758045661 : 59.9227510135505));
 
-		var version = ((IEnumerable)replay.XPathEvaluate("//snapshots/item"))
-			.Cast<XElement>()
-			.Attributes()
-			.First(x => x.Name == "version")
-			.Value;
+		var version = replay.XPathEvaluateList("//snapshots/item").FirstAttributeValue("version");
 
 		string system;
 
 		if(Convert.ToInt16(version) >= 4)
 		{
-			var confVersion = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config"))
-				.Cast<XElement>()
-				.Attributes()
-				.First(x => x.Name == "version")
-				.Value;
+			var confVersion = replay.XPathEvaluateList("//snapshots/item/config").FirstAttributeValue("version");
 
 			if(Convert.ToInt16(confVersion) >= 6)
 			{
-				system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/msxconfig/info"))
-					.Cast<XElement>()
-					.Descendants()
-					.First(x => x.Name == "type")
-					.Value
-					.ToLower();
+				system = replay.XPathEvaluateList("//snapshots/item/config/config/msxconfig/info")
+					.FirstDescendant("type").Value.ToLower();
 			}
 			else
 			{
-				system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/children/item/children/item"))
-					.Cast<XElement>()
-					.First(x => x.Descendants().Any(d => d.Name == "name" && d.Value == "type"))
-					.Descendants()
-					.First(x => x.Name == "data")
-					.Value
-					.ToLower();
+				system = LegacyGetSystem(replay);
 			}
 		}
 		else
 		{
-			system = ((IEnumerable)replay.XPathEvaluate("//snapshots/item/config/config/children/item/children/item"))
-				.Cast<XElement>()
-				.First(x => x.Descendants().Any(d => d.Name == "name" && d.Value == "type"))
-				.Descendants()
-				.First(x => x.Name == "data")
-				.Value
-				.ToLower();
+			system = LegacyGetSystem(replay);
 		}
 
 		if (system.StartsWith("svi"))
@@ -119,5 +88,26 @@ internal class Omr : Parser, IParser
 		return result;
 	}
 
+	private static string LegacyGetSystem(XElement replay)
+		=> replay.XPathEvaluateList("//snapshots/item/config/config/children/item/children/item")
+				.First(x => x.Descendants().Any(d => d.Name == "name" && d.Value == "type"))
+				.FirstDescendant("data")
+				.Value.ToLower();
+
 	private static double ConvertTimestamp(long timestamp) => timestamp / 3579545.0 / 960.0;
+}
+
+internal static class XPathExtensions
+{
+	public static IEnumerable<XElement> XPathEvaluateList(this XElement element, string path)
+		=> ((IEnumerable)element.XPathEvaluate(path)).Cast<XElement>();
+
+	public static XElement FirstDescendant(this XElement element, string name)
+		=> element.Descendants().First(x => x.Name == name);
+
+	public static XElement FirstDescendant(this IEnumerable<XElement> element, string name)
+		=> element.Descendants().First(x => x.Name == name);
+
+	public static string FirstAttributeValue(this IEnumerable<XElement> element, string name)
+		=> element.Attributes().First(x => x.Name == name).Value;
 }
