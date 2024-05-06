@@ -1,15 +1,15 @@
 ﻿namespace TASVideos.MovieParsers.Result;
 
 /// <summary>
-/// The standard implementation of <seealso cref="IParseResult"/>.
+/// An implementation of <seealso cref="IParseResult"/> that represents a successful result.
 /// </summary>
-internal class SuccessResult : IParseResult
+internal class SuccessResult(string fileExtension) : IParseResult
 {
 	public bool Success => true;
 	public IEnumerable<string> Errors => [];
 	public IEnumerable<ParseWarnings> Warnings => WarningList;
 
-	public string FileExtension { get; internal set; } = "";
+	public string FileExtension => fileExtension;
 	public RegionType Region { get; internal set; }
 	public int Frames { get; internal set; }
 	public string SystemCode { get; internal set; } = "";

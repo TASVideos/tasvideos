@@ -30,10 +30,9 @@ internal class Bk2 : Parser, IParser
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new SuccessResult
+		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
-			FileExtension = FileExtension
+			Region = RegionType.Ntsc
 		};
 
 		var archive = new ZipArchive(file);

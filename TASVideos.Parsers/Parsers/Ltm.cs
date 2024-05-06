@@ -20,10 +20,9 @@ internal class Ltm : Parser, IParser
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new SuccessResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Linux
 		};
 
