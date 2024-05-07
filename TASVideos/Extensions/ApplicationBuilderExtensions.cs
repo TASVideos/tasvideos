@@ -42,13 +42,29 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env)
 	{
+		var permissionsPolicyValue = string.Join(", ", [
+			"camera=()", // defaults to `self`
+			"display-capture=()", // defaults to `self`
+			"fullscreen=()", // defaults to `self`
+			"geolocation=()", // defaults to `self`
+			"microphone=()", // defaults to `self`
+			"publickey-credentials-get=()", // defaults to `self`
+			"screen-wake-lock=()", // defaults to `self`
+			"web-share=()", // defaults to `self`
+
+			// ...and that's all of the non-experimental options listed on MDN as of 2024-04
+		]);
 		app.Use(async (context, next) =>
 		{
+			context.Response.Headers["Cross-Origin-Embedder-Policy"] = "credentialless";
+			context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
+			context.Response.Headers["Cross-Origin-Resource-Policy"] = "cross-origin"; // TODO this is as unsecure as before; should be `same-site` or `same-origin` when serving auth-gated responses
+			context.Response.Headers["Permissions-Policy"] = permissionsPolicyValue;
 			context.Response.Headers.XXSSProtection = "1; mode=block";
 			context.Response.Headers.XFrameOptions = "DENY";
 			context.Response.Headers.XContentTypeOptions = "nosniff";
 			context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
-			context.Response.Headers.XPoweredBy = "";
+			context.Response.Headers.XPoweredBy = string.Empty; // why tho --yoshi
 			context.Response.Headers.ContentSecurityPolicy = "upgrade-insecure-requests";
 			await next();
 		});
