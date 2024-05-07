@@ -10,7 +10,7 @@
 			<ul>
 				@foreach(var url in pub.Urls.OrderBy(p => string.IsNullOrWhiteSpace(p.DisplayName)))
 				{
-					<li>@url.DisplayName</li>
+					<li><a href="@url.Url">@(string.IsNullOrEmpty(url.DisplayName) ? url.Url : url.DisplayName)</a></li>
 				}
 			</ul>
 		</cardbody>
