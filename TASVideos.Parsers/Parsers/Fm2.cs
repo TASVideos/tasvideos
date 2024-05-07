@@ -1,27 +1,24 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("fm2")]
-internal class Fm2 : IParser
+internal class Fm2 : Parser, IParser
 {
-	private const string FileExtension = "fm2";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Nes
 		};
 
 		(var header, result.Frames) = await file.PipeBasedMovieHeaderAndFrameCount();
 
-		if (header.GetValueFor(Keys.Fds).ToBool())
+		if (header.GetBoolFor(Keys.Fds))
 		{
 			result.SystemCode = SystemCodes.Fds;
 		}
 
-		int? rerecordVal = header.GetValueFor(Keys.RerecordCount).ToPositiveInt();
+		int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
 		if (rerecordVal.HasValue)
 		{
 			result.RerecordCount = rerecordVal.Value;
@@ -31,12 +28,12 @@ internal class Fm2 : IParser
 			result.WarnNoRerecords();
 		}
 
-		if (header.GetValueFor(Keys.Pal).ToBool())
+		if (header.GetBoolFor(Keys.Pal))
 		{
 			result.Region = RegionType.Pal;
 		}
 
-		if (header.GetValueFor(Keys.StartsFromSavestate).Length > 1)
+		if (header.HasValue(Keys.StartsFromSavestate))
 		{
 			result.StartType = MovieStartType.Savestate;
 		}

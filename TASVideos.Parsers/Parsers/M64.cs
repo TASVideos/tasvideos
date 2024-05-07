@@ -1,16 +1,13 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("m64")]
-internal class M64 : ParserBase, IParser
+internal class M64 : Parser, IParser
 {
-	public override string FileExtension => "m64";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.N64
 		};
 
@@ -18,7 +15,7 @@ internal class M64 : ParserBase, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "M64\u001a")
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .m64");
+			return InvalidFormat();
 		}
 
 		br.ReadUInt32(); // Version id

@@ -7,12 +7,9 @@ internal static class Extensions
 	/// </summary>
 	public static string[] LineSplit(this string? str)
 	{
-		if (str is null)
-		{
-			return [];
-		}
-
-		return str.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
+		return str is null
+			? []
+			: str.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
 	}
 
 	/// <summary>
@@ -44,32 +41,45 @@ internal static class Extensions
 		return "";
 	}
 
-	/// <summary>
-	/// Receives a space separate key/value pair and returns the value as a string
-	/// </summary>
-	public static string GetValue(this string str)
+	public static bool HasValue(this string[]? lines, string key)
 	{
-		if (string.IsNullOrWhiteSpace(str))
+		if (lines is null || !lines.Any() || string.IsNullOrWhiteSpace(key))
 		{
-			return "";
+			return false;
 		}
 
-		var split = str.Split([" "], StringSplitOptions.RemoveEmptyEntries);
-		if (split.Length < 2)
-		{
-			return "";
-		}
-
-		return split[1].Trim();
+		var row = lines.FirstOrDefault(l => l.StartsWith(key, StringComparison.InvariantCultureIgnoreCase))?.ToLower();
+		return !string.IsNullOrWhiteSpace(row);
 	}
 
 	/// <summary>
-	/// Parses the given string as an integer.
+	/// Searches through a list of strings that represents a space separated
+	/// key/value pair, for the given key (case-insensitive and returns the value) and parses as a boolean.
+	/// </summary>
+	/// <returns>True if value is a case-insensitive true, or a 1.</returns>
+	public static bool GetBoolFor(this string[]? lines, string key) => GetValueFor(lines, key).ToBool();
+
+	/// <summary>
+	/// Searches through a list of strings that represents a space separated
+	/// and parses the resulting string as an integer.
 	/// If value can not be parsed, null is returned.
 	/// If the value is negative or greater than the max
 	/// value of an int, null is returned.
 	/// </summary>
-	public static int? ToPositiveInt(this string val)
+	public static int? GetPositiveIntFor(this string[]? lines, string key)
+		=> GetValueFor(lines, key).ToPositiveInt();
+
+	/// <summary>
+	/// Searches through a list of strings that represents a space separated
+	/// and parses the resulting string as an integer.
+	/// If value can not be parsed, null is returned.
+	/// If the value is negative or greater than the max
+	/// value of a long, null is returned.
+	/// </summary>
+	public static long? GetPositiveLongFor(this string[]? lines, string key)
+		=> GetValueFor(lines, key).ToPositiveLong();
+
+	internal static int? ToPositiveInt(this string val)
 	{
 		var result = int.TryParse(val, out var parsedVal);
 		if (!result)
@@ -85,11 +95,7 @@ internal static class Extensions
 		return null;
 	}
 
-	/// <summary>
-	/// Parses the given string as a long.
-	/// If value can not be parsed, null is returned.
-	/// </summary>
-	public static long? ToPositiveLong(this string val)
+	internal static long? ToPositiveLong(this string val)
 	{
 		var result = long.TryParse(val, out var parsedVal);
 		if (!result)
@@ -105,11 +111,7 @@ internal static class Extensions
 		return null;
 	}
 
-	/// <summary>
-	/// Parses the given string as a boolean.
-	/// </summary>
-	/// <returns>True if value is a case-insensitive true, or a 1.</returns>
-	public static bool ToBool(this string val)
+	internal static bool ToBool(this string val)
 	{
 		if (string.IsNullOrWhiteSpace(val))
 		{

@@ -6,10 +6,10 @@
 internal class ErrorResult(string errorMsg) : IParseResult
 {
 	public bool Success => false;
-	public IEnumerable<string> Errors { get; internal set; } = [errorMsg];
+	public IEnumerable<string> Errors { get; } = [errorMsg];
 
 	public IEnumerable<ParseWarnings> Warnings => [];
-	public string FileExtension { get; internal set; } = "";
+	public string FileExtension { get; internal init; } = "";
 	public RegionType Region => RegionType.Unknown;
 	public int Frames => 0;
 	public string SystemCode => "";

@@ -1,16 +1,13 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("gmv")]
-internal class Gmv : ParserBase, IParser
+internal class Gmv : Parser, IParser
 {
-	public override string FileExtension => "gmv";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Genesis
 		};
 
@@ -18,7 +15,7 @@ internal class Gmv : ParserBase, IParser
 		var header = new string(br.ReadChars(16));
 		if (!header.StartsWith("Gens Movie"))
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .gmv");
+			return InvalidFormat();
 		}
 
 		result.RerecordCount = br.ReadInt32();

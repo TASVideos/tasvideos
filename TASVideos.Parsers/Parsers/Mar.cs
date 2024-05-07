@@ -1,16 +1,13 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("mar")]
-internal class Mar : ParserBase, IParser
+internal class Mar : Parser, IParser
 {
-	public override string FileExtension => "mar";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Arcade
 		};
 
@@ -18,7 +15,7 @@ internal class Mar : ParserBase, IParser
 		var header = new string(br.ReadChars(8));
 		if (!header.StartsWith("MAMETAS\0"))
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .mar");
+			return InvalidFormat();
 		}
 
 		br.ReadBytes(8);

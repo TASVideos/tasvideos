@@ -1,11 +1,10 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Text;
 using SharpCompress.Readers;
 
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("ltm")]
-internal class Ltm : ParserBase, IParser
+internal class Ltm : Parser, IParser
 {
 	public const double DefaultFrameRate = 60.0;
 
@@ -18,14 +17,11 @@ internal class Ltm : ParserBase, IParser
 	private const string LengthSecondsHeader = "length_sec=";
 	private const string LengthNanosecondsHeader = "length_nsec=";
 
-	public override string FileExtension => "ltm";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Linux
 		};
 
@@ -35,83 +31,81 @@ internal class Ltm : ParserBase, IParser
 		double? lengthNanoseconds = null;
 		bool isVariableFramerate = false;
 
-		using (var reader = ReaderFactory.Open(file))
+		using var reader = ReaderFactory.Open(file);
+		while (reader.MoveToNextEntry())
 		{
-			while (reader.MoveToNextEntry())
+			if (reader.Entry.IsDirectory)
 			{
-				if (reader.Entry.IsDirectory)
-				{
-					continue;
-				}
-
-				await using var entry = reader.OpenEntryStream();
-				using var textReader = new StreamReader(entry);
-				switch (reader.Entry.Key)
-				{
-					case "config.ini":
-						while (await textReader.ReadLineAsync() is { } s)
-						{
-							if (s.StartsWith(FrameCountHeader))
-							{
-								result.Frames = ParseIntFromConfig(s);
-							}
-							else if (s.StartsWith(RerecordCountHeader))
-							{
-								result.RerecordCount = ParseIntFromConfig(s);
-							}
-							else if (s.StartsWith(SaveStateCountHeader))
-							{
-								var savestateCount = ParseIntFromConfig(s);
-
-								// Power-on movies seem to always have a savestate count equal to frames
-								if (savestateCount > 0 && savestateCount != result.Frames)
-								{
-									result.StartType = MovieStartType.Savestate;
-								}
-							}
-							else if (s.StartsWith(FrameRateDenHeader))
-							{
-								frameRateDenominator = ParseDoubleFromConfig(s);
-							}
-							else if (s.StartsWith(FrameRateNumHeader))
-							{
-								frameRateNumerator = ParseDoubleFromConfig(s);
-							}
-							else if (s.StartsWith(VariableFramerateHeader))
-							{
-								isVariableFramerate = ParseBoolFromConfig(s);
-							}
-							else if (s.StartsWith(LengthSecondsHeader))
-							{
-								lengthSeconds = ParseDoubleFromConfig(s);
-							}
-							else if (s.StartsWith(LengthNanosecondsHeader))
-							{
-								lengthNanoseconds = ParseDoubleFromConfig(s);
-							}
-						}
-
-						break;
-					case "annotations.txt":
-						var sb = new StringBuilder();
-						while (await textReader.ReadLineAsync() is { } line)
-						{
-							if (line.StartsWith("platform:", StringComparison.InvariantCultureIgnoreCase))
-							{
-								result.SystemCode = CalculatePlatform(GetPlatformValue(line));
-							}
-							else
-							{
-								sb.AppendLine(line);
-							}
-						}
-
-						result.Annotations = sb.ToString();
-						break;
-				}
-
-				entry.SkipEntry(); // seems to be required if the stream was not fully consumed
+				continue;
 			}
+
+			await using var entry = reader.OpenEntryStream();
+			using var textReader = new StreamReader(entry);
+			switch (reader.Entry.Key)
+			{
+				case "config.ini":
+					while (await textReader.ReadLineAsync() is { } s)
+					{
+						if (s.StartsWith(FrameCountHeader))
+						{
+							result.Frames = ParseIntFromConfig(s);
+						}
+						else if (s.StartsWith(RerecordCountHeader))
+						{
+							result.RerecordCount = ParseIntFromConfig(s);
+						}
+						else if (s.StartsWith(SaveStateCountHeader))
+						{
+							var savestateCount = ParseIntFromConfig(s);
+
+							// Power-on movies seem to always have a savestate count equal to frames
+							if (savestateCount > 0 && savestateCount != result.Frames)
+							{
+								result.StartType = MovieStartType.Savestate;
+							}
+						}
+						else if (s.StartsWith(FrameRateDenHeader))
+						{
+							frameRateDenominator = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(FrameRateNumHeader))
+						{
+							frameRateNumerator = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(VariableFramerateHeader))
+						{
+							isVariableFramerate = ParseBoolFromConfig(s);
+						}
+						else if (s.StartsWith(LengthSecondsHeader))
+						{
+							lengthSeconds = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(LengthNanosecondsHeader))
+						{
+							lengthNanoseconds = ParseDoubleFromConfig(s);
+						}
+					}
+
+					break;
+				case "annotations.txt":
+					var sb = new StringBuilder();
+					while (await textReader.ReadLineAsync() is { } line)
+					{
+						if (line.StartsWith("platform:", StringComparison.InvariantCultureIgnoreCase))
+						{
+							result.SystemCode = CalculatePlatform(GetPlatformValue(line));
+						}
+						else
+						{
+							sb.AppendLine(line);
+						}
+					}
+
+					result.Annotations = sb.ToString();
+					break;
+			}
+
+			entry.SkipEntry(); // seems to be required if the stream was not fully consumed
 		}
 
 		if (isVariableFramerate)
@@ -138,8 +132,7 @@ internal class Ltm : ParserBase, IParser
 			return 0;
 		}
 
-		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
-
+		var split = str.SplitWithEmpty("=");
 		if (split.Length > 1)
 		{
 			var intStr = split.Skip(1).First();
@@ -160,8 +153,7 @@ internal class Ltm : ParserBase, IParser
 			return 0;
 		}
 
-		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
-
+		var split = str.SplitWithEmpty("=");
 		if (split.Length > 1)
 		{
 			var doubleStr = split.Skip(1).First();
@@ -182,8 +174,7 @@ internal class Ltm : ParserBase, IParser
 			return false;
 		}
 
-		var split = str.Split(["="], StringSplitOptions.RemoveEmptyEntries);
-
+		var split = str.SplitWithEmpty("=");
 		if (split.Length <= 1)
 		{
 			return false;
@@ -201,13 +192,8 @@ internal class Ltm : ParserBase, IParser
 			return "";
 		}
 
-		var split = str.ToLower().Split(["platform:"], StringSplitOptions.RemoveEmptyEntries);
-		if (split.Length != 1)
-		{
-			return "";
-		}
-
-		return split[0].Trim().ToLowerInvariant();
+		var split = str.ToLower().SplitWithEmpty("platform:");
+		return split.Length == 1 ? split[0].Trim().ToLowerInvariant() : "";
 	}
 
 	private static string CalculatePlatform(string str)

@@ -1,18 +1,16 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("dtm")]
-internal class Dtm : ParserBase, IParser
+internal class Dtm : Parser, IParser
 {
 	private const decimal GameCubeHertz = 486000000.0M;
 	private const decimal WiiHertz = 729000000.0M;
-	public override string FileExtension => "dtm";
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.GameCube
 		};
 
@@ -20,7 +18,7 @@ internal class Dtm : ParserBase, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "DTM\u001a")
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .dtm");
+			return InvalidFormat();
 		}
 
 		br.ReadChars(6); // Game Id

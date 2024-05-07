@@ -1,10 +1,8 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("lmp")]
-internal class Lmp : ParserBase, IParser
+internal class Lmp : Parser, IParser
 {
-	public override string FileExtension => "lmp";
-
 	private delegate bool TryParseLmp(byte[] movie, ref int frames);
 
 	// order is important here to minimize false detections
@@ -269,10 +267,9 @@ internal class Lmp : ParserBase, IParser
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Doom
 		};
 
@@ -288,7 +285,7 @@ internal class Lmp : ParserBase, IParser
 
 		if (movie[length - 1] != 0x80) // fixme: this might be ok if there is a source port footer (not easy to detect however)
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .lmp");
+			return InvalidFormat();
 		}
 
 		int frames = -1;
@@ -302,7 +299,7 @@ internal class Lmp : ParserBase, IParser
 
 		if (frames < 0)
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .lmp");
+			return InvalidFormat();
 		}
 
 		result.Frames = frames;

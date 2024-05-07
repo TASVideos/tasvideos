@@ -1,16 +1,13 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("vbm")]
-internal class Vbm : ParserBase, IParser
+internal class Vbm : Parser, IParser
 {
-	public override string FileExtension => "vbm";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.GameBoy
 		};
 
@@ -18,7 +15,7 @@ internal class Vbm : ParserBase, IParser
 		var header = new string(br.ReadChars(4));
 		if (!header.StartsWith("VBM"))
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .vbm");
+			return InvalidFormat();
 		}
 
 		br.ReadBytes(8); // major version, movie uid

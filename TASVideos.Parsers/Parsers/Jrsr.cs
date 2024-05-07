@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Text;
+﻿using System.Text;
 
 /*
  * https://tasvideos.org/EmulatorResources/JPC/JRSRFormat
@@ -45,7 +44,7 @@ using System.Text;
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("jrsr")]
-public class Jrsr : IParser
+internal class Jrsr : Parser, IParser
 {
 	// Safety limit on the length of JRSR section names and lines.
 	private const int LengthLimit = 10000;
@@ -58,13 +57,11 @@ public class Jrsr : IParser
 	// permits a '+' prefix.
 	private const NumberStyles IntegerStyle = NumberStyles.AllowLeadingSign;
 
-	private const string FileExtension = "jrsr";
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Dos
 		};
 
@@ -85,7 +82,7 @@ public class Jrsr : IParser
 
 				if (sectionName == "savestate")
 				{
-					return new ErrorResult("File contains a savestate");
+					return Error("File contains a savestate");
 				}
 
 				if (sectionName == "header")
@@ -225,16 +222,16 @@ public class Jrsr : IParser
 		}
 		catch (FormatException ex)
 		{
-			return new ErrorResult(ex.Message);
+			return Error(ex.Message);
 		}
 		catch (OverflowException ex)
 		{
-			return new ErrorResult(ex.Message);
+			return Error(ex.Message);
 		}
 
 		if (!sectionsSeen.Contains("header"))
 		{
-			return new ErrorResult("No header found");
+			return Error("No header found");
 		}
 
 		if (!hasRerecordCount)
@@ -309,7 +306,7 @@ internal class JrsrSectionParser : IDisposable
 
 	// We will need to read 1 char at a time from the stream, and also to be
 	// able to "unread" up to 1 char so that it can be read again later.
-	private readonly char[] _readBuf = new char[1];
+	private readonly char[] _readBuffer = new char[1];
 	private char? _unread;
 
 	/// <summary>
@@ -332,8 +329,8 @@ internal class JrsrSectionParser : IDisposable
 		// Otherwise, read a new character from _reader.
 		try
 		{
-			var n = await _reader.ReadBlockAsync(_readBuf, 0, _readBuf.Length);
-			return n == 0 ? -1 : _readBuf[0];
+			var n = await _reader.ReadBlockAsync(_readBuffer, 0, _readBuffer.Length);
+			return n == 0 ? -1 : _readBuffer[0];
 		}
 		catch (DecoderFallbackException ex)
 		{

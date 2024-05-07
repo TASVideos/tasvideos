@@ -1,16 +1,13 @@
 ﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("fbm")]
-internal class Fbm : ParserBase, IParser
+internal class Fbm : Parser, IParser
 {
-	public override string FileExtension => "fbm";
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
-		var result = new ParseResult
+		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			FileExtension = FileExtension,
 			SystemCode = SystemCodes.Arcade
 		};
 
@@ -18,7 +15,7 @@ internal class Fbm : ParserBase, IParser
 		var header = new string(br.ReadChars(4));
 		if (header != "FB1 ")
 		{
-			return new ErrorResult("Invalid file format, does not seem to be a .fbm");
+			return InvalidFormat();
 		}
 
 		br.ReadByte(); // Version number
@@ -37,7 +34,7 @@ internal class Fbm : ParserBase, IParser
 
 		if (nextHeader != "FR1 ")
 		{
-			return new ErrorResult("Input data not found");
+			return Error("Input data not found");
 		}
 
 		br.ReadBytes(4); // Size of frame data chunk in bytes (not including the chunk identifier)
