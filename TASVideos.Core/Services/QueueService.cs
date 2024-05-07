@@ -319,6 +319,10 @@ internal class QueueService(
 		publication.PublicationRatings.Clear();
 		publication.PublicationTags.Clear();
 		publication.PublicationUrls.Clear();
+		var logs = await db.PublicationMaintenanceLogs
+			.Where(l => l.PublicationId == publicationId)
+			.ToListAsync();
+		db.RemoveRange(logs);
 
 		// Note: Cascading deletes will ensure obsoleted publications are no longer obsoleted
 		db.Publications.Remove(publication);
