@@ -5,7 +5,7 @@
 public class DsmParserTests : BaseParserTests
 {
 	private readonly Dsm _dsmParser = new();
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.DsmSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.DsmSampleFiles.";
 
 	[TestMethod]
 	public async Task System()

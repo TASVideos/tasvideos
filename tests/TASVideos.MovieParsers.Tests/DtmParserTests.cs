@@ -6,7 +6,7 @@ public class DtmParserTests : BaseParserTests
 {
 	private readonly Dtm _dtmParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.DtmSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.DtmSampleFiles.";
 
 	[TestMethod]
 	public async Task InvalidHeader()

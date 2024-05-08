@@ -5,7 +5,7 @@
 public class Fm2ParserTests : BaseParserTests
 {
 	private readonly Fm2 _fm2Parser = new();
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.Fm2SampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.Fm2SampleFiles.";
 
 	[TestMethod]
 	public async Task Ntsc()

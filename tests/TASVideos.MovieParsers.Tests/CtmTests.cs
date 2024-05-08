@@ -6,7 +6,7 @@ public class CtmTests : BaseParserTests
 {
 	private readonly Ctm _ctmParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.CtmSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.CtmSampleFiles.";
 
 	[TestMethod]
 	public async Task InvalidHeader()

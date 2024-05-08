@@ -6,7 +6,7 @@ public class M64Tests : BaseParserTests
 {
 	private readonly M64 _m64Parser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.M64SampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.M64SampleFiles.";
 
 	[TestMethod]
 	public async Task InvalidHeader()

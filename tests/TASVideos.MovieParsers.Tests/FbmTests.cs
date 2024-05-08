@@ -6,7 +6,7 @@ public class FbmTests : BaseParserTests
 {
 	private readonly Fbm _fbmParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.FbmSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.FbmSampleFiles.";
 
 	[TestMethod]
 	public async Task InvalidHeader()

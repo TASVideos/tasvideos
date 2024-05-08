@@ -5,7 +5,7 @@ namespace TASVideos.MovieParsers.Tests;
 
 public abstract class BaseParserTests
 {
-	public abstract string ResourcesPath { get; }
+	protected abstract string ResourcesPath { get; }
 
 	protected Stream Embedded(string name)
 	{

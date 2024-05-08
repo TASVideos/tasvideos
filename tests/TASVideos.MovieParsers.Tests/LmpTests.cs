@@ -6,7 +6,7 @@ public class LmpTests : BaseParserTests
 {
 	private readonly Lmp _lmpParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.LmpSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.LmpSampleFiles.";
 
 	[TestMethod]
 	public async Task FileDoesNotEndIn0x80_ReturnsError()

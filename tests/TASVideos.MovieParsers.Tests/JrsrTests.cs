@@ -9,7 +9,7 @@ namespace TASVideos.MovieParsers.Tests;
 public class JrsrTests : BaseParserTests
 {
 	private readonly Jrsr _jrsrParser = new();
-	public override string ResourcesPath => "TASVideos.MovieParsers.Tests.JrsrSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.JrsrSampleFiles.";
 
 	[TestMethod]
 	public async Task EmptyFile()

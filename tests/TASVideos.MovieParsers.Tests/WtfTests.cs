@@ -6,7 +6,7 @@ public class WtfTests : BaseParserTests
 {
 	private readonly Wtf _wtfParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.WtfSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.WtfSampleFiles.";
 
 	[TestMethod]
 	public async Task InvalidHeader()

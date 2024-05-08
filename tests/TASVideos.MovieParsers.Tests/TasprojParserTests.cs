@@ -5,7 +5,7 @@
 public class TasprojParserTests : BaseParserTests
 {
 	private readonly Tasproj _tasprojParser = new();
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.TasprojSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.TasprojSampleFiles.";
 
 	[TestMethod]
 	public async Task ContainsBranch_NoError()

@@ -5,7 +5,7 @@
 public class GbmvParserTests : BaseParserTests
 {
 	private readonly Gbmv _gbmvParser = new();
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.GbmvSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.GbmvSampleFiles.";
 
 	[TestMethod]
 	public async Task GBAHawk_NewHeaderValues()

@@ -6,7 +6,7 @@ public class OmrTests : BaseParserTests
 {
 	private readonly Omr _omrParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.OmrSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.OmrSampleFiles.";
 
 	[TestMethod]
 	public async Task SystemMsx()

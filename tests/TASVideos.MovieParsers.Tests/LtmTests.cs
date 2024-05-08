@@ -8,7 +8,7 @@ public class LtmTests : BaseParserTests
 {
 	private readonly Ltm _ltmParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.LtmSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.LtmSampleFiles.";
 
 	[TestMethod]
 	[DataRow("arcade.ltm", SystemCodes.Arcade)]

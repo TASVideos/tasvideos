@@ -6,7 +6,7 @@ public class MarTests : BaseParserTests
 {
 	private readonly Mar _marParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.MarSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.MarSampleFiles.";
 
 	[TestMethod]
 	public async Task InvalidHeader()

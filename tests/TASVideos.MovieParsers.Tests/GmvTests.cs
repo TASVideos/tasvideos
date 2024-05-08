@@ -6,7 +6,7 @@ public class GmvTests : BaseParserTests
 {
 	private readonly Gmv _gmvParser = new();
 
-	public override string ResourcesPath { get; } = "TASVideos.MovieParsers.Tests.GmvSampleFiles.";
+	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.GmvSampleFiles.";
 
 	[TestMethod]
 	public async Task InvalidHeader()
