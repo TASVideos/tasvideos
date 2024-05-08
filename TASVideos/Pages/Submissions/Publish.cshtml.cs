@@ -100,6 +100,13 @@ public class PublishModel(
 		}
 
 		var movieFileName = Submission.MovieFileName + "." + Submission.MovieExtension;
+		if (await db.Publications.AnyAsync(p => p.MovieFileName == movieFileName))
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieFileName)}", $"{nameof(Submission.MovieFileName)} already exists.");
+			await PopulateDropdowns();
+			return Page();
+		}
+		
 		var publication = new Publication
 		{
 			PublicationClassId = submission.IntendedClass!.Id,
