@@ -47,37 +47,23 @@ public static class TimeableExtensions
 
 	public static string ToRelativeString(this TimeSpan relativeTime)
 	{
-		if (relativeTime.TotalSeconds < 5)
+		return relativeTime.TotalSeconds switch
 		{
-			return "Now";
-		}
-		else if (relativeTime.TotalSeconds < 60)
-		{
-			return $"{relativeTime.Seconds} seconds ago";
-		}
-		else if (relativeTime.TotalMinutes < 2)
-		{
-			return "1 minute ago";
-		}
-		else if (relativeTime.TotalMinutes < 60)
-		{
-			return $"{relativeTime.Minutes} minutes ago";
-		}
-		else if (relativeTime.TotalHours < 2)
-		{
-			return "1 hour ago";
-		}
-		else if (relativeTime.TotalHours < 24)
-		{
-			return $"{relativeTime.Hours} hours ago";
-		}
-		else if (relativeTime.TotalDays < 2)
-		{
-			return "1 day ago";
-		}
-		else
-		{
-			return $"{relativeTime.Days} days ago";
-		}
+			< 5 => "Now",
+			< 60 => $"{relativeTime.Seconds} seconds ago",
+			_ => relativeTime.TotalMinutes switch
+			{
+				< 2 => "1 minute ago",
+				< 60 => $"{relativeTime.Minutes} minutes ago",
+				_ => relativeTime.TotalHours switch
+				{
+					< 2 => "1 hour ago",
+					< 24 => $"{relativeTime.Hours} hours ago",
+					_ => relativeTime.TotalDays < 2
+						? "1 day ago"
+						: $"{relativeTime.Days} days ago"
+				}
+			}
+		};
 	}
 }

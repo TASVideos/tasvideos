@@ -15,7 +15,6 @@ public static class Durations
 	public const int OneDayInSeconds = 60 * 60 * 24;
 	public const int OneWeekInSeconds = 60 * 60 * 24 * 7;
 	public const int OneYearInSeconds = 60 * 60 * 24 * 365;
-	public const int OneHourInMilliseconds = 60 * 60 * 1000;
 }
 
 public static class CacheKeys
@@ -47,16 +46,22 @@ public static class SiteGlobalConstants
 	public const int SpamForumId = 28;
 
 	public const string NewPublicationPostSubject = "Movie published";
-	public const string NewPublicationPost = @"[b]This movie has been published.[/b]
-The posts before this message apply to the submission, and posts after this message apply to the published movie.
+	public const string NewPublicationPost =
+		"""
+		[b]This movie has been published.[/b]
+		The posts before this message apply to the submission, and posts after this message apply to the published movie.
 
-----
-[movie]{PublicationId}[/movie]";
+		----
+		[movie]{PublicationId}[/movie]
+		""";
 
 	public const string UnpublishSubject = "Publication Reset To Workbench";
-	public const string UnpublishPost = @"[b]This movie has been unpublished and reset to a pending submission.[/b]
-The posts after this message will continue to apply to the submission.
-";
+	public const string UnpublishPost =
+		"""
+		[b]This movie has been unpublished and reset to a pending submission.[/b]
+		The posts after this message will continue to apply to the submission.
+
+		""";
 
 	public const string NewSubmissionPost = "This topic is for the purpose of discussing ";
 	public const string PollQuestion = "Vote: Did you like watching this movie? (Vote after watching!)";
@@ -109,16 +114,6 @@ public static class PostGroups
 	public const string UserFiles = "UserFiles";
 	public const string Publication = "Publication";
 	public const string Game = "Game";
-}
-
-// TODO: this is bootstrap specific, maybe it should go in the MVC project
-// TODO: a better name
-public static class Styles
-{
-	public const string Info = "info";
-	public const string Success = "success";
-	public const string Warning = "warning";
-	public const string Danger = "danger";
 }
 
 public static class CustomClaimTypes

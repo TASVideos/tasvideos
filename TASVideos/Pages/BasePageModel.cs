@@ -17,13 +17,13 @@ public class BasePageModel : PageModel
 	public void SuccessStatusMessage(string message)
 	{
 		Message = message;
-		MessageType = Styles.Success;
+		MessageType = "success";
 	}
 
 	public void ErrorStatusMessage(string message)
 	{
 		Message = message;
-		MessageType = Styles.Danger;
+		MessageType = "danger";
 	}
 
 	public void ClearStatusMessage()
