@@ -78,7 +78,7 @@ public class PointsServiceTests
 		{
 			Authors = [new PublicationAuthor { UserId = user.Id }],
 			ObsoletedBy = newPub,
-			PublicationClass = publicationClass,
+			PublicationClass = publicationClass
 		};
 		_db.Publications.Add(oldPub);
 		_db.Publications.Add(newPub);

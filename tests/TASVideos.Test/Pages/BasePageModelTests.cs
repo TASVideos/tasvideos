@@ -9,7 +9,7 @@ namespace TASVideos.RazorPages.Tests.Pages;
 
 public class BasePageModelTests
 {
-	public PageContext TestPageContext()
+	protected static PageContext TestPageContext()
 	{
 		var httpContext = new DefaultHttpContext();
 		var modelState = new ModelStateDictionary();

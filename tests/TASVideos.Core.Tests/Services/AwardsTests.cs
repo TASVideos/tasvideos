@@ -25,7 +25,7 @@ public class AwardsTests
 		var actual = await _awards.ForUser(int.MaxValue);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -81,7 +81,7 @@ public class AwardsTests
 		var actual = await _awards.ForUser(authorWithNoAward.Id);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -141,7 +141,7 @@ public class AwardsTests
 		var actual = await _awards.ForUser(author.Id);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(2, actual.Count());
+		Assert.AreEqual(2, actual.Count);
 	}
 
 	[TestMethod]
@@ -162,7 +162,7 @@ public class AwardsTests
 	{
 		var actual = await _awards.ForYear(int.MaxValue);
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -225,7 +225,7 @@ public class AwardsTests
 		var actual = await _awards.ForYear(CurrentYear - 1);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]

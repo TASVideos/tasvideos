@@ -41,7 +41,7 @@ public class TASVideosGrueTests
 		var post = _db.ForumPosts.Add(new ForumPost
 		{
 			TopicId = topicId,
-			ForumId = forumId,
+			ForumId = forumId
 		});
 		await _db.SaveChangesAsync();
 

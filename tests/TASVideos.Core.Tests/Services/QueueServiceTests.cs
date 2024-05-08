@@ -381,7 +381,7 @@ public class QueueServiceTests
 			Status = New,
 			Title = submissionTitle,
 			TopicId = topicId,
-			Topic = topic,
+			Topic = topic
 		});
 		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory { SubmissionId = submissionId, Status = New });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = 1 });

@@ -31,7 +31,7 @@ public class TopicWatcherTests
 		var actual = await _topicWatcher.UserWatches(int.MaxValue);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]

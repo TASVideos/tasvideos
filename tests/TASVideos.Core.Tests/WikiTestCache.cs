@@ -21,11 +21,9 @@ internal class WikiTestCache : ICacheService
 
 	public List<WikiResult> PageCache()
 	{
-		List<WikiResult> pages = _cache
-				.Select(kvp => JsonSerializer.Deserialize<WikiResult>(kvp.Value)!)
-				.ToList();
-
-		return pages;
+		return _cache
+			.Select(kvp => JsonSerializer.Deserialize<WikiResult>(kvp.Value)!)
+			.ToList();
 	}
 
 	public void Remove(string key)

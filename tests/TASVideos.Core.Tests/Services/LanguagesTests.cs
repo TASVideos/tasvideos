@@ -90,9 +90,12 @@ public class LanguagesTests
 	[TestMethod]
 	public async Task AvailableLanguages_IgnoresTrailingDelimitersAndWhiteSpace()
 	{
-		const string systemLanguageMarkup = @"
-				FR : French : ,
-				ES : Español , : ";
+		const string systemLanguageMarkup = """
+											
+											FR : French : ,
+											ES : Español , : 
+											
+											""";
 		_wikiPages.Page("System/Languages").Returns(new WikiResult { Markup = systemLanguageMarkup });
 
 		var actual = await _languages.AvailableLanguages();

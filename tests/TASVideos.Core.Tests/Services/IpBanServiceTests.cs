@@ -98,7 +98,7 @@ public class IpBanServiceTests
 	{
 		var actual = await _banService.GetAll();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -109,6 +109,6 @@ public class IpBanServiceTests
 
 		var result = await _banService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count());
+		Assert.AreEqual(1, result.Count);
 	}
 }

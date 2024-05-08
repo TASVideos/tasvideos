@@ -66,7 +66,7 @@ public class ForumServiceTests
 		const int forumId = 1;
 		const int topicId = 2;
 		const int postId = 3;
-		DateTime postDate = DateTime.UtcNow;
+		var postDate = DateTime.UtcNow;
 		_db.AddUser(posterId, posterName);
 		_db.Forums.Add(new Forum { Id = forumId });
 		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
@@ -105,8 +105,8 @@ public class ForumServiceTests
 		const int topicId = 2;
 		const int post1Id = 3;
 		const int post2Id = 4;
-		DateTime post1Date = DateTime.UtcNow.AddDays(-2);
-		DateTime post2Date = DateTime.UtcNow.AddDays(-1);
+		var post1Date = DateTime.UtcNow.AddDays(-2);
+		var post2Date = DateTime.UtcNow.AddDays(-1);
 		_db.AddUser(poster1Id, poster1Name);
 		_db.AddUser(poster2Id, poster2Name);
 		_db.Forums.Add(new Forum { Id = forumId });
@@ -177,7 +177,7 @@ public class ForumServiceTests
 		const int forumId = 1;
 		const int topicId = 1;
 		const int oldPostId = 1;
-		DateTime oldPostTime = DateTime.UtcNow.AddDays(-1);
+		var oldPostTime = DateTime.UtcNow.AddDays(-1);
 		const string oldPoster = "OldPoster";
 		var mapping = new Dictionary<int, LatestPost?>
 		{
@@ -186,7 +186,7 @@ public class ForumServiceTests
 		_cache.Set(ForumService.LatestPostCacheKey, mapping);
 
 		const int newPostId = 2;
-		DateTime newPostTime = DateTime.UtcNow;
+		var newPostTime = DateTime.UtcNow;
 		const string newPoster = "NewPoster";
 
 		_forumService.CacheLatestPost(forumId, topicId, new LatestPost(newPostId, newPostTime, newPoster));

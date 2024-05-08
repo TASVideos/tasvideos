@@ -83,7 +83,7 @@ public class StringExtensionTests
 	{
 		var actual = str.CsvToStrings();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]
@@ -108,7 +108,7 @@ public class StringExtensionTests
 	{
 		var actual = str.CsvToInts();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count());
+		Assert.AreEqual(0, actual.Count);
 	}
 
 	[TestMethod]

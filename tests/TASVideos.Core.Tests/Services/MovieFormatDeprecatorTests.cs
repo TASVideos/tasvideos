@@ -22,7 +22,7 @@ public class MovieFormatDeprecatorTests
 	[TestMethod]
 	public async Task GetAll_NoEntries_ReturnsEmptyList()
 	{
-		_mockParser.SupportedMovieExtensions.Returns(Enumerable.Empty<string>());
+		_mockParser.SupportedMovieExtensions.Returns([]);
 
 		var actual = await _deprecator.GetAll();
 		Assert.IsNotNull(actual);

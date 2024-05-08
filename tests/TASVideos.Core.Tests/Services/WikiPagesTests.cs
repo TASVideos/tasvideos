@@ -1586,7 +1586,7 @@ public class WikiPagesTests
 				UserName = $"Test User from {nameof(AddPage)}",
 				NormalizedUserName = $"Test User from {nameof(AddPage)}",
 				Email = $"Test User from {nameof(AddPage)}",
-				NormalizedEmail = $"Test User from {nameof(AddPage)}",
+				NormalizedEmail = $"Test User from {nameof(AddPage)}"
 			};
 		var wp = new WikiPage { PageName = name, IsDeleted = isDeleted, AuthorId = author.Id, Author = author };
 		_db.Add(wp);
