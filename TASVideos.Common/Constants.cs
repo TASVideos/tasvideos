@@ -78,22 +78,6 @@ public static class SiteGlobalConstants
 	public const int OtherGamesForum = 5;
 }
 
-public static class PlayerPointConstants
-{
-	public const double ObsoleteMultiplier = 0.000001;
-	public const int MinimumPlayerPointsForPublication = 5;
-}
-
-public static class PlayerRanks
-{
-	public const string FormerPlayer = "Former player";
-	public const string Player = "Player";
-	public const string ActivePlayer = "Active player";
-	public const string ExperiencedPlayer = "Experienced player";
-	public const string SkilledPlayer = "Skilled player";
-	public const string ExpertPlayer = "Expert player";
-}
-
 public static class ForumConstants
 {
 	public const int PostsPerPage = 25;
@@ -103,17 +87,6 @@ public static class ForumConstants
 	public const int NewsTopicId = 8694;
 
 	public const int DaysPostsCountAsActive = 14;
-}
-
-public static class PostGroups
-{
-	public const string Forum = "Forum";
-	public const string Wiki = "Wiki";
-	public const string Submission = "Submission";
-	public const string UserManagement = "UserManagement";
-	public const string UserFiles = "UserFiles";
-	public const string Publication = "Publication";
-	public const string Game = "Game";
 }
 
 public static class CustomClaimTypes
