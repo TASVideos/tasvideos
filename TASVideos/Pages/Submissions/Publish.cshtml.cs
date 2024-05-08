@@ -106,7 +106,7 @@ public class PublishModel(
 			await PopulateDropdowns();
 			return Page();
 		}
-		
+
 		var publication = new Publication
 		{
 			PublicationClassId = submission.IntendedClass!.Id,
