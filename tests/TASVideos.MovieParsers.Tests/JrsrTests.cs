@@ -615,7 +615,6 @@ null)]
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(FormatException))]
 	// Missing magic.
 	[DataRow("")]
 	[DataRow(
@@ -713,11 +712,10 @@ JRSR
 ")]
 	public async Task ParserFormatException(string contents)
 	{
-		await SerializeFromString(contents);
+		await Assert.ThrowsExceptionAsync<FormatException>(() => SerializeFromString(contents));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(FormatException))]
 	public async Task ParserDecoderUtf16()
 	{
 		// Input not encoded as UTF-8 should be an error.
@@ -727,11 +725,10 @@ JRSR
 !END
 ";
 		await using var reader = new MemoryStream(Encoding.Unicode.GetBytes(contents));
-		await Serialize(reader);
+		await Assert.ThrowsExceptionAsync<FormatException>(() => Serialize(reader));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(FormatException))]
 	public async Task ParserDecoderUtf8Error()
 	{
 		// Input with UTF-8 encoding errors should be an error. We must
@@ -743,7 +740,7 @@ JRSR
 			.Concat(enc.GetBytes("\n!END\n"))
 			.ToArray();
 		await using var reader = new MemoryStream(contents);
-		await Serialize(reader);
+		await Assert.ThrowsExceptionAsync<FormatException>(() => Serialize(reader));
 	}
 
 	[TestMethod]
@@ -885,7 +882,6 @@ JRSR
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(FormatException))]
 	// Unmatched '('.
 	[DataRow("(foo")]
 	[DataRow("(foo(bar)baz")]
@@ -897,7 +893,7 @@ JRSR
 	public void DecodeComponentFormatException(string line)
 	{
 		// ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-		JrsrSectionParser.DecodeComponent(line).ToList();
+		Assert.ThrowsException<FormatException>(() => JrsrSectionParser.DecodeComponent(line).ToList());
 	}
 
 	[TestMethod]

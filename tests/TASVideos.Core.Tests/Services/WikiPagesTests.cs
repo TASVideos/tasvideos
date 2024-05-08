@@ -260,11 +260,10 @@ public class WikiPagesTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task Add_UserDoesNotExist_Throws()
 	{
 		var revision = new WikiCreateRequest { PageName = "Test", AuthorId = int.MaxValue };
-		await _wikiPages.Add(revision);
+		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _wikiPages.Add(revision));
 	}
 
 	[TestMethod]
@@ -468,10 +467,9 @@ public class WikiPagesTests
 	[DataRow(null)]
 	[DataRow("")]
 	[DataRow("\r \n \t")]
-	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task Add_NoPageName_Throws(string pageName)
 	{
-		await _wikiPages.Add(new WikiCreateRequest { PageName = pageName });
+		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _wikiPages.Add(new WikiCreateRequest { PageName = pageName }));
 	}
 
 	[TestMethod]
@@ -557,19 +555,17 @@ public class WikiPagesTests
 	[DataRow(null)]
 	[DataRow("")]
 	[DataRow("\n \r \t")]
-	[ExpectedException(typeof(ArgumentException))]
 	public async Task Move_EmptyDestination_Throws(string destination)
 	{
-		await _wikiPages.Move("Test", destination);
+		await Assert.ThrowsExceptionAsync<ArgumentException>(() => _wikiPages.Move("Test", destination));
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task Move_DestinationExists_Throws()
 	{
 		const string existingPage = "InCache";
 		AddPage(existingPage);
-		await _wikiPages.Move("Original Page", existingPage);
+		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _wikiPages.Move("Original Page", existingPage));
 	}
 
 	[TestMethod]

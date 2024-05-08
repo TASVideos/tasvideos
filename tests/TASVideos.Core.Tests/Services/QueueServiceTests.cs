@@ -629,10 +629,9 @@ public class QueueServiceTests
 	}
 
 	[TestMethod]
-	[ExpectedException(typeof(InvalidOperationException))]
 	public async Task MapParsedResult_ThrowsIfParsingIsFailed()
 	{
-		await _queueService.MapParsedResult(new TestParseResult { Success = false }, new Submission());
+		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _queueService.MapParsedResult(new TestParseResult { Success = false }, new Submission()));
 	}
 
 	[TestMethod]

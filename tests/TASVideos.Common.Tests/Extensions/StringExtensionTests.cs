@@ -6,10 +6,9 @@ namespace TASVideos.Common.Tests.Extensions;
 public class StringExtensionTests
 {
 	[TestMethod]
-	[ExpectedException(typeof(ArgumentException))]
 	public void CapAndEllipse_NegativeLimit_Throws()
 	{
-		"".CapAndEllipse(-1);
+		Assert.ThrowsException<ArgumentException>(() => "".CapAndEllipse(-1));
 	}
 
 	[TestMethod]
