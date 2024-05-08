@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using TASVideos.Core;
 
 namespace TASVideos.Pages.Logs;
 

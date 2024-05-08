@@ -137,7 +137,7 @@ internal class QueueService(
 			list.Add(Accepted);
 			list.Add(Rejected);
 		}
-		else if ((currentStatus == Accepted || currentStatus == PublicationUnderway)
+		else if (currentStatus is Accepted or PublicationUnderway
 			&& isJudge
 			&& isAfterJudgmentWindow)
 		{

@@ -17,10 +17,10 @@
 				<input type="text" asp-for="DestinationPageName" class="form-control" />
 				<span asp-validation-for="DestinationPageName" class="text-danger"></span>
 			</fieldset>
-			<div class="text-center">
+			<form-button-bar>
 				<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Move</submit-button>
 				<a href="/@Model.OriginalPageName" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-			</div>
+			</form-button-bar>
 		</div>
 	</row>
 </form>

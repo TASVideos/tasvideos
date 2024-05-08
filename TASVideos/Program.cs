@@ -1,7 +1,6 @@
 ﻿using AspNetCore.ReCaptcha;
 using Serilog;
 using TASVideos.Api;
-using TASVideos.Core;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;

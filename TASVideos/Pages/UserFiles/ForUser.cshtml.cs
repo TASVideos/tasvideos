@@ -1,6 +1,4 @@
-﻿using TASVideos.Core;
-
-namespace TASVideos.Pages.UserFiles;
+﻿namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
 public class ForUserModel(ApplicationDbContext db) : BasePageModel

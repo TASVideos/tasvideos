@@ -18,10 +18,10 @@
 		<select asp-for="Topic.ForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
 		<span asp-validation-for="Topic.ForumId" class="text-danger"></span>
 	</fieldset>
-	<div class="text-center">
-		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Move</button>
+	<form-button-bar>
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Move</submit-button>
 		<a asp-page="Index" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-	</div>
+	</form-button-bar>
 </form>
 
 @section Scripts {

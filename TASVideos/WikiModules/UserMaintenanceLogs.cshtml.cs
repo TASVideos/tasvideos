@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.Core;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;

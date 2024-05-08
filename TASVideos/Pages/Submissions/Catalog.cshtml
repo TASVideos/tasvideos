@@ -40,10 +40,10 @@
 						<select asp-for="Catalog.GameVersionId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableVersions)" class="form-select"></select>
 					</div>
 					<div class="col-2">
-						<button 
-							disable="!Model.Catalog.GameId.HasValue || Model.Catalog.GameId == -1" 
-							id="create-version" 
-							type="button" 
+						<button
+							disable="!Model.Catalog.GameId.HasValue || Model.Catalog.GameId == -1"
+							id="create-version"
+							type="button"
 							class="btn btn-primary">New</button>
 					</div>
 				</row>
@@ -66,7 +66,7 @@
 	</row>
 	<hr />
 	<form-button-bar>
-		<button id="submit-btn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
+		<submit-button id="submit-btn" class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
 		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
 		<div class="form-check-inline">
 			<label asp-for="Catalog.MinorEdit" class="form-check-label"></label>

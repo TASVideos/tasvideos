@@ -42,7 +42,7 @@
 		</column>
 	</row>
 	<form-button-bar>
-		<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</button>
+		<submit-button class="btn btn-primary"><i class="fa fa-upload"></i> Upload</submit-button>
 		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="Index" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>

@@ -143,11 +143,11 @@
 			</fieldset>
 		</div>
 	</row>
-	<div class="text-center mt-3">
+	<form-button-bar>
 		<button id="preview-button" type="button" class="btn btn-secondary"><span class="fa fa-eye"></span> Preview</button>
 		<submit-button class="btn btn-primary"><span class="fa fa-save"></span> Save</submit-button>
 		<pub-link id="Model.Id" class="btn btn-secondary"><span class="fa fa-times"></span> Cancel</pub-link>
-	</div>
+	</form-button-bar>
 </form>
 
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), "/Wiki/Preview")" />

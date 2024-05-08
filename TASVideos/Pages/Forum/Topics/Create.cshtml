@@ -74,11 +74,11 @@
 		<input asp-for="WatchTopic" />
 		<label asp-for="WatchTopic"></label>
 	</fullrow>
-	<div class="text-center">
+	<form-button-bar>
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
 		<button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Post</button>
 		<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-	</div>
+	</form-button-bar>
 </form>
 
 <partial name="_PreviewWindow" model="@(("Topic_Post", "/Forum/Preview"))" />

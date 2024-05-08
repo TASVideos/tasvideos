@@ -52,7 +52,7 @@
 		</column>
 	</row>
 	<form-button-bar>
-		<button type="submit" class="btn btn-primary"><i class="@iconClass"></i> @saveBtnName</button>
+		<submit-button class="btn btn-primary"><i class="@iconClass"></i> @saveBtnName</submit-button>
 		<a condition="@(!Model.Id.HasValue)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 		<a condition="Model.Id.HasValue" asp-page="Index" asp-route-id="@(Model.Id ?? 0)" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>

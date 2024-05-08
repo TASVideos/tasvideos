@@ -35,7 +35,7 @@
 		</column>
 	</row>
 	<fullrow condition="@Model.UserAvatars.HasAvatar">
-		<img id="avatar-img" src="@Model.UserAvatars.Avatar"/>
+		<img id="avatar-img" src="@Model.UserAvatars.Avatar" alt="user avatar"/>
 	</fullrow>
 	<fullrow class="mt-3">
 		<partial name="_CreatePostHelper" model="@("Text")" />

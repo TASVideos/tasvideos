@@ -138,10 +138,10 @@
 	</fullrow>
 	<hr />
 	@await Html.RenderWiki(SystemWiki.FilesEditingHelp)
-	<fullrow class="text-center">
+	<form-button-bar>
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Publish</submit-button>
 		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-	</fullrow>
+	</form-button-bar>
 </form>
 
 @section Scripts {

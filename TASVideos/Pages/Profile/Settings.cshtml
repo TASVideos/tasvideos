@@ -154,9 +154,9 @@
 		<textarea asp-for="Signature" class="form-control" rows="5" disabled="@(!User.Has(PermissionTo.EditSignature))"></textarea>
 	</fullrow>
 	<hr />
-	<div class="text-center">
-		<button id="submit-btn" type="submit" class="btn btn-secondary">Save</button>
-	</div>
+	<form-button-bar>
+		<submit-button id="submit-btn" class="btn btn-secondary">Save</submit-button>
+	</form-button-bar>
 </form>
 
 @section Scripts {

@@ -3,7 +3,7 @@
 
 @if (User.Has(PermissionTo.UseMoodAvatars) && Model.Avatar.HasMoods)
 {
-	<img class="mt-2" id="mood-img" src="@Model.Avatar.ToMoodUrl(Model.Mood)" />
+	<img class="mt-2" id="mood-img" src="@Model.Avatar.ToMoodUrl(Model.Mood)" alt="mood @Model.Mood.ToString()" />
 	<script>
 		const moodBase = "@Model.Avatar.MoodBase";
 		const moodDropdown = document.getElementById('@Model.FormId');

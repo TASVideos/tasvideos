@@ -132,10 +132,10 @@
 					</div>
 				</div>
 			</row>
-			<fullrow class="text-center">
+			<form-button-bar>
 				<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
 				<submit-button id="submit-btn" class="btn btn-primary border border-warning @(Model.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
-			</fullrow>
+			</form-button-bar>
 		</form>
 
 		<partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Markup), "/Wiki/Preview"))" />

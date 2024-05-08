@@ -1,5 +1,4 @@
-﻿using TASVideos.Core;
-using TASVideos.Data.Entity.Forum;
+﻿using TASVideos.Data.Entity.Forum;
 using static TASVideos.Pages.Forum.Topics.IndexModel;
 namespace TASVideos.Pages.Forum.Posts;
 

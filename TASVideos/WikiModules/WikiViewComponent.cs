@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.Core;
 
 namespace TASVideos.WikiModules;
 

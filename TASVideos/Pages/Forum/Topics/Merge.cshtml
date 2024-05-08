@@ -29,10 +29,10 @@
 			</fieldset>
 		</column>
 	</row>
-	<div class="text-center mt-2">
-		<button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Merge</button>
+	<form-button-bar>
+		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Merge</submit-button>
 		<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-	</div>
+	</form-button-bar>
 </form>
 
 @section Scripts {

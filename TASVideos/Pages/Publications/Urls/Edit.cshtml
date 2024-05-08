@@ -36,10 +36,10 @@
                 <input type="text" asp-for="DisplayName" class="form-control" />
                 <span asp-validation-for="DisplayName" class="text-danger"></span>
             </fieldset>
-			<div class="text-center mt-3">
+			<form-button-bar>
 				<submit-button class="btn btn-primary"><span class="@iconClass"></span> @saveBtnName</submit-button>
 				<a asp-page="List" asp-route-PublicationId="@Model.PublicationId" class="btn btn-secondary"><span class="fa fa-times"></span> Cancel</a>
-			</div>
+			</form-button-bar>
 		</column>
 	</row>
 </form>
