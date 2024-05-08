@@ -50,7 +50,7 @@ public static class ReflectionExtensions
 
 		return descriptionAttribute is not null
 			? descriptionAttribute.Name
-			: string.Empty;
+			: "";
 	}
 
 	public static string DisplayName(this PropertyInfo propertyInfo)

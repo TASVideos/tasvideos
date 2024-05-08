@@ -57,7 +57,7 @@ public class LoginModel(SignInManager signInManager, IHostEnvironment env) : Bas
 			return AccessDenied();
 		}
 
-		ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+		ModelState.AddModelError("", "Invalid login attempt.");
 		return Page();
 	}
 }

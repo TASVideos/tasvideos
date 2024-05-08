@@ -40,7 +40,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 
 	public readonly Dictionary<string, MovieStatisticComparison> ParameterList = new()
 	{
-		[string.Empty] = MovieStatisticComparison.None,
+		[""] = MovieStatisticComparison.None,
 		["length"] = MovieStatisticComparison.Length,
 		["filererecords"] = MovieStatisticComparison.Rerecords,
 		["rerecsPerLength"] = MovieStatisticComparison.RerecordsPerLength,
@@ -58,7 +58,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync(string? comp, int? minAge, int? minVotes, int? top)
 	{
-		comp ??= string.Empty;
+		comp ??= "";
 		int count = top ?? 10;
 
 		// these are only used for rating statistics

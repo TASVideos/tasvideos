@@ -12,7 +12,7 @@ public class HtmlEncodeTagHelper : TagHelper
 			? output.Content.GetContent()
 			: (await output.GetChildContentAsync()).GetContent();
 
-		string encodedChildContent = WebUtility.HtmlEncode(childContent ?? string.Empty);
+		string encodedChildContent = WebUtility.HtmlEncode(childContent ?? "");
 
 		output.TagName = null;
 		output.Content.SetHtmlContent(encodedChildContent);

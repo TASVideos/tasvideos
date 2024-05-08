@@ -64,7 +64,7 @@ public static class ApplicationBuilderExtensions
 			context.Response.Headers.XFrameOptions = "DENY";
 			context.Response.Headers.XContentTypeOptions = "nosniff";
 			context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
-			context.Response.Headers.XPoweredBy = string.Empty; // why tho --yoshi
+			context.Response.Headers.XPoweredBy = "";
 			context.Response.Headers.ContentSecurityPolicy = "upgrade-insecure-requests";
 			await next();
 		});

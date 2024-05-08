@@ -29,10 +29,10 @@ public static class ReflectionExtensions
 
 		if (displayAttribute is not null)
 		{
-			return displayAttribute.Description ?? string.Empty;
+			return displayAttribute.Description ?? "";
 		}
 
-		return string.Empty;
+		return "";
 	}
 
 	/// <summary>
@@ -44,7 +44,7 @@ public static class ReflectionExtensions
 	{
 		if (enumValue is null)
 		{
-			return string.Empty;
+			return "";
 		}
 
 		var displayName = enumValue

@@ -2,9 +2,9 @@
 @model ListModel
 @{
 	ViewData.SetTitle("Game List" +
-		(!string.IsNullOrWhiteSpace(Model.Games.System) ? " - " + Model.Games.System : string.Empty) +
-		(!string.IsNullOrWhiteSpace(Model.Games.Letter) ? " - " + Model.Games.Letter : string.Empty) +
-		(!string.IsNullOrWhiteSpace(Model.Games.SearchTerms) ? " - " + $@"""{Model.Games.SearchTerms}""" : string.Empty));
+		(!string.IsNullOrWhiteSpace(Model.Games.System) ? " - " + Model.Games.System : "") +
+		(!string.IsNullOrWhiteSpace(Model.Games.Letter) ? " - " + Model.Games.Letter : "") +
+		(!string.IsNullOrWhiteSpace(Model.Games.SearchTerms) ? " - " + $@"""{Model.Games.SearchTerms}""" : ""));
 }
 
 <div class="row">

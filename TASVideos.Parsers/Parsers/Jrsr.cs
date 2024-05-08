@@ -843,7 +843,7 @@ internal class JrsrSectionParser : IDisposable
 		// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#EventsSection
 		// "If $class consists only of 'A-Z' and '0-9' (capital letters and
 		// numbers) then it is either special event or reserved (error)."
-		return eventClass != string.Empty && eventClass.All(c =>
+		return eventClass != "" && eventClass.All(c =>
 			c is >= 'A' and <= 'Z' or >= '0' and <= '9');
 	}
 }
