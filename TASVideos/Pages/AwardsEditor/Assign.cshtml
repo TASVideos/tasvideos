@@ -33,7 +33,7 @@
 		</fieldset>
 	</fullrow>
 	<form-button-bar>
-		<button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Assign</button>
+		<submit-button class="btn btn-primary"><i class="fa fa-plus"></i> Assign</submit-button>
 		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
 	</form-button-bar>

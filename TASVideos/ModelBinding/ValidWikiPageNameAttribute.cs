@@ -9,11 +9,6 @@ public class ValidWikiPageNameAttribute : ValidationAttribute
 
 	public override bool IsValid(object? value)
 	{
-		if (value is string str)
-		{
-			return WikiHelper.IsValidWikiPageName(str);
-		}
-
-		return false;
+		return value is string str && WikiHelper.IsValidWikiPageName(str);
 	}
 }
