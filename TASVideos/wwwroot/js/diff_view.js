@@ -103,7 +103,7 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 
 	const results = [];
 	if (inline) {
-		results.push(h("div"), h("div"), h("div", { class: "header" }, from.name + "⇒" + to.name));
+		results.push(h("div"), h("div"), h("div", { class: "header" }, from.name + " ⟶ " + to.name));
 	} else {
 		results.push(
 			h("div"),

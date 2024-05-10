@@ -19,8 +19,8 @@
 		document.getElementById('diff-options').classList.remove('d-none');
 
 		renderDiff(
-			{ text: document.getElementById('@Model.LeftMarkupId').value, name: "Previous" },
-			{ text: document.getElementById('@Model.RightMarkupId').value, name: "Current" },
+			{ text: document.getElementById('@Model.LeftMarkupId').value, name: @* TODO include revision? *@ "Current" },
+			{ text: document.getElementById('@Model.RightMarkupId').value, name: "Pending" },
 			diffElem,
 			!!viewType,
 			contextSize
