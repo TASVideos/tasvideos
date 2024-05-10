@@ -16,6 +16,7 @@
 	font-family: monospace;
 
 	.header {
+		font-family: var(--bs-body-font-family); /* doesn't override if combined as `font` */
 		font-weight: bold;
 		text-align: center;
 	}
