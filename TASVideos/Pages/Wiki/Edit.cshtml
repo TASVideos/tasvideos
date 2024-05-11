@@ -43,6 +43,14 @@
 </form>
 
 <partial name="_Diff" model="@((Html.IdFor(m => m.OriginalMarkup), Html.IdFor(m => m.Markup)))" />
+<script>
+window.addEventListener("load", function() {
+	const rightMarkupElem = document.getElementById("@Html.IdFor(m => m.Markup)");
+	rightMarkupElem.addEventListener("change", generateDiff);
+	rightMarkupElem.addEventListener("keyup", generateDiff);
+});
+</script>
+
 <partial name="_PreviewWindow" model="@(("Markup", "/Wiki/Preview?Id=" + Model.Path))" />
 
 @section Scripts {
