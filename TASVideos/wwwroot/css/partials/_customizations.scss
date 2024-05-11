@@ -119,9 +119,8 @@ h4 {
 	--bs-card-spacer-x: 1rem;
 	padding: 1rem;
 	display: inline-block;
-	margin: 1rem;
 	width: 18rem;
-	margin-bottom: 2rem;
+	margin: 1rem 1rem 2rem;
 	background-color: var(--bs-body-bg);
 	text-align: left;
 	border-radius: 3px;
@@ -312,7 +311,7 @@ ol, ul, dl {
 }
 
 .forum-post-highlight {
-	box-shadow: var(--bs-border-color) 0px 8px 16px;
+	box-shadow: var(--bs-border-color) 0 8px 16px;
 }
 
 .pixelart-image {
@@ -627,7 +626,7 @@ fieldset {
 .sub-info {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
-	
+
 }
 
 .sub-info-cell {
