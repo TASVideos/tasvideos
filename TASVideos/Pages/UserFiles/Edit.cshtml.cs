@@ -84,14 +84,9 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			.ToDropDownListWithId())
 			.WithDefaultEntry();
 
-		if (UserFile.SystemId.HasValue)
-		{
-			AvailableGames = await db.Games.ToDropDownList(UserFile.SystemId.Value);
-		}
-		else
-		{
-			AvailableGames = [.. UiDefaults.DefaultEntry];
-		}
+		AvailableGames = UserFile.SystemId.HasValue
+			? await db.Games.ToDropDownList(UserFile.SystemId.Value)
+			: [.. UiDefaults.DefaultEntry];
 	}
 
 	public class UserFileEdit
