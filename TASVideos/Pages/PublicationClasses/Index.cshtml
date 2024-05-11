@@ -5,35 +5,33 @@
 }
 
 <a class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
-<div class="table-container">
-	<standard-table>
+<standard-table>
+	<tr>
+		<th>Id</th>
+		<th>Name</th>
+		<th>Link</th>
+		<th>Weight</th>
+		<th></th>
+	</tr>
+	@foreach (var publicationClass in Model.Classes.OrderBy(t => t.Id))
+	{
 		<tr>
-			<th>Id</th>
-			<th>Name</th>
-			<th>Link</th>
-			<th>Weight</th>
-			<th></th>
+			<td>
+				@publicationClass.Id
+			</td>
+			<td>
+				<img condition="!string.IsNullOrWhiteSpace(publicationClass.IconPath)" class="pixelart-image" src="/@publicationClass.IconPath" />
+				@publicationClass.Name
+			</td>
+			<td>
+				<a href="/@publicationClass.Link">@publicationClass.Link</a>
+			</td>
+			<td>
+				@publicationClass.Weight
+			</td>
+			<th>
+				<a asp-page="/PublicationClasses/Edit" asp-route-id="@publicationClass.Id" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+			</th>
 		</tr>
-		@foreach (var publicationClass in Model.Classes.OrderBy(t => t.Id))
-		{
-			<tr>
-				<td>
-					@publicationClass.Id
-				</td>
-				<td>
-					<img condition="!string.IsNullOrWhiteSpace(publicationClass.IconPath)" class="pixelart-image" src="/@publicationClass.IconPath" />
-					@publicationClass.Name
-				</td>
-				<td>
-					<a href="/@publicationClass.Link">@publicationClass.Link</a>
-				</td>
-				<td>
-					@publicationClass.Weight
-				</td>
-				<th>
-					<a asp-page="/PublicationClasses/Edit" asp-route-id="@publicationClass.Id" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-				</th>
-			</tr>
-		}
-	</standard-table>
-</div>
+	}
+</standard-table>

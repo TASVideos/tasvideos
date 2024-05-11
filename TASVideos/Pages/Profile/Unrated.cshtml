@@ -6,18 +6,16 @@
 }
 
 <h4>Unrated Movies</h4>
-<div class="table-container">
-	<standard-table>
-		@foreach (var pub in Model.UnratedMovies.OrderBy(p => p.Title))
-		{
-			<tr>
-				<td>
-					<a asp-page="/Publications/Rate" asp-route-id="@pub.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn btn-primary btn-sm">Rate</a>
-				</td>
-				<td>
-					<a href="/@(pub.Id)M">@pub.Title</a>
-				</td>
-			</tr>
-		}
-	</standard-table>
-</div>
+<standard-table>
+	@foreach (var pub in Model.UnratedMovies.OrderBy(p => p.Title))
+	{
+		<tr>
+			<td>
+				<a asp-page="/Publications/Rate" asp-route-id="@pub.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn btn-primary btn-sm">Rate</a>
+			</td>
+			<td>
+				<a href="/@(pub.Id)M">@pub.Title</a>
+			</td>
+		</tr>
+	}
+</standard-table>
