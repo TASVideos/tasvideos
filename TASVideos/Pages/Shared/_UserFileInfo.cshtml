@@ -71,7 +71,7 @@
 	</cardheader>
 	<cardbody class="px-2 py-0">
 		<div class="col d-flex flex-column py-2 px-2" condition="@(!string.IsNullOrEmpty(Model.Description))">
-			<wiki-markup markup=@Model.Description></wiki-markup>
+			<wiki-markup markup="@Model.Description"></wiki-markup>
 		</div>
 	</cardbody>
 </card>

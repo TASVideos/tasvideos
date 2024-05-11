@@ -18,10 +18,10 @@
 					</small>
 				</h6>
 				<div condition="Model.HideContent" class="collapse card-text" id="collapse-content-@post.Id">
-					<forum-markup markup=@post.Text enable-bb-code=@post.EnableBbCode enable-html=@post.EnableHtml></forum-markup>
+					<forum-markup markup="@post.Text" enable-bb-code="@post.EnableBbCode" enable-html="@post.EnableHtml"></forum-markup>
 				</div>
 				<div condition="!Model.HideContent" class="card-text">
-					<forum-markup markup=@post.Text enable-bb-code=@post.EnableBbCode enable-html=@post.EnableHtml></forum-markup>
+					<forum-markup markup="@post.Text" enable-bb-code="@post.EnableBbCode" enable-html="@post.EnableHtml"></forum-markup>
 				</div>
 			</div>
 		</div>

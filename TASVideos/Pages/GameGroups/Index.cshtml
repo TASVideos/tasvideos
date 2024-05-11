@@ -15,7 +15,7 @@
 </row>
 <card condition="!string.IsNullOrWhiteSpace(Model.Description)" class="mb-2">
 	<cardheader>Description</cardheader>
-	<cardbody><wiki-markup markup=@Model.Description></wiki-markup></cardbody>
+	<cardbody><wiki-markup markup="@Model.Description"></wiki-markup></cardbody>
 </card>
 <standard-table condition="Model.Games.Any()">
 	<tr>
