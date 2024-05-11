@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Publications;
 
@@ -192,33 +191,13 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
 		AvailableVersions = (await db.GameVersions
-			.ForGame(gameId)
-			.ForSystem(systemId)
-			.OrderBy(r => r.Name)
-			.ToDropDown()
-			.ToListAsync())
+			.ToDropDownList(gameId, systemId))
 			.WithDefaultEntry();
 
-		AvailableGames = await db.Games
-			.ForSystem(systemId)
-			.OrderBy(g => g.DisplayName)
-			.ToDropDown()
-			.ToListAsync();
-
-		AvailableSystems = await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDownWithId()
-			.ToListAsync();
-
-		AvailableSystemFrameRates = await db.GameSystemFrameRates
-			.ForSystem(systemId)
-			.ToDropDown()
-			.ToListAsync();
-
-		AvailableGoals = await db.GameGoals
-			.Where(gg => gg.GameId == gameId)
-			.ToDropDown()
-			.ToListAsync();
+		AvailableGames = await db.Games.ToDropDownList(systemId);
+		AvailableSystems = await db.GameSystems.ToDropDownListWithId();
+		AvailableSystemFrameRates = await db.GameSystemFrameRates.ToDropDownList(systemId);
+		AvailableGoals = await db.GameGoals.ToDropDownList(gameId);
 	}
 
 	public class PublicationCatalog

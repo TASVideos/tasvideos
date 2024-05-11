@@ -12,3 +12,11 @@ public class GameGoal
 	public virtual ICollection<Publication> Publications { get; set; } = [];
 	public virtual ICollection<Submission> Submissions { get; set; } = [];
 }
+
+public static class GameGoalExtensions
+{
+	public static IQueryable<GameGoal> ForGame(this IQueryable<GameGoal> query, int gameId)
+	{
+		return query.Where(gg => gg.GameId == gameId);
+	}
+}

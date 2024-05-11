@@ -115,15 +115,11 @@ public class UploadModel(
 		StorageUsed = await userFiles.StorageUsed(User.GetUserId());
 
 		AvailableSystems = (await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDownWithId()
-			.ToListAsync())
+			.ToDropDownListWithId())
 			.WithDefaultEntry();
 
 		AvailableGames = (await db.Games
-			.OrderBy(g => g.DisplayName)
-			.ToDropDown()
-			.ToListAsync())
+			.ToDropDownList())
 			.WithDefaultEntry();
 	}
 }

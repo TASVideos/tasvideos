@@ -466,13 +466,8 @@ public class EditModel(
 		CanDelete = User.Has(PermissionTo.DeleteSubmissions)
 			&& (await queueService.CanDeleteSubmission(Id)).True;
 
-		AvailableClasses = await db.PublicationClasses
-			.ToDropDown()
-			.ToListAsync();
-
-		AvailableRejectionReasons = await db.SubmissionRejectionReasons
-			.ToDropDown()
-			.ToListAsync();
+		AvailableClasses = await db.PublicationClasses.ToDropDownList();
+		AvailableRejectionReasons = await db.SubmissionRejectionReasons.ToDropDownList();
 	}
 
 	public class SubmissionEdit

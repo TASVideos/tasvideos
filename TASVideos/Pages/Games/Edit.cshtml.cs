@@ -181,16 +181,8 @@ public class EditModel(
 
 	private async Task Initialize()
 	{
-		AvailableGenres = await db.Genres
-			.OrderBy(g => g.DisplayName)
-			.ToDropDown()
-			.ToListAsync();
-
-		AvailableGroups = await db.GameGroups
-			.OrderBy(g => g.Name)
-			.ToDropDown()
-			.ToListAsync();
-
+		AvailableGenres = await db.Genres.ToDropDownList();
+		AvailableGroups = await db.GameGroups.ToDropDownList();
 		CanDelete = await CanBeDeleted();
 	}
 

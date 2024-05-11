@@ -105,12 +105,8 @@ public class EditModel(
 
 	private async Task PopulateDropdowns()
 	{
-		AvailableFlags = await db.Flags
-			.ToDropDown(User.Permissions())
-			.ToListAsync();
-		AvailableTags = await db.Tags
-			.ToDropdown()
-			.ToListAsync();
+		AvailableFlags = await db.Flags.ToDropDownList(User.Permissions());
+		AvailableTags = await db.Tags.ToDropdownList();
 		Files = await db.PublicationFiles
 			.Where(f => f.PublicationId == Id)
 			.Select(f => new PublicationFileDisplay(

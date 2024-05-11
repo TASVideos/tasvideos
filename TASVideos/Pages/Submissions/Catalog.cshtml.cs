@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -219,62 +218,15 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 	private async Task PopulateCatalogDropDowns()
 	{
-		if (!Catalog.SystemId.HasValue)
-		{
-			AvailableGames = await db.Games
-				.OrderBy(g => g.DisplayName)
-				.ToDropDown()
-				.ToListAsync();
-
-			AvailableVersions = await db.GameVersions
-				.OrderBy(r => r.Name)
-				.ToDropDown()
-				.ToListAsync();
-		}
-		else
-		{
-			AvailableGames = await db.Games
-				.ForSystem((int)Catalog.SystemId)
-				.OrderBy(g => g.DisplayName)
-				.ToDropDown()
-				.ToListAsync();
-
-			if (Catalog.GameId.HasValue)
-			{
-				AvailableVersions = await db.GameVersions
-					.ForSystem((int)Catalog.SystemId)
-					.ForGame((int)Catalog.GameId)
-					.OrderBy(r => r.Name)
-					.ToDropDown()
-					.ToListAsync();
-			}
-			else
-			{
-				AvailableVersions = await db.GameVersions
-					.ForSystem((int)Catalog.SystemId)
-					.OrderBy(r => r.Name)
-					.ToDropDown()
-					.ToListAsync();
-			}
-		}
-
-		AvailableSystems = await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDownWithId()
-			.ToListAsync();
-
+		AvailableGames = await db.Games.ToDropDownList(Catalog.SystemId);
+		AvailableVersions = await db.GameVersions.ToDropDownList(Catalog.SystemId, Catalog.GameId);
+		AvailableSystems = await db.GameSystems.ToDropDownListWithId();
 		AvailableSystemFrameRates = Catalog.SystemId.HasValue
-			? await db.GameSystemFrameRates
-				.ForSystem(Catalog.SystemId.Value)
-				.ToDropDown()
-				.ToListAsync()
+			? await db.GameSystemFrameRates.ToDropDownList(Catalog.SystemId.Value)
 			: [];
 
 		AvailableGoals = Catalog.GameId.HasValue
-			? await db.GameGoals
-				.Where(gg => gg.GameId == Catalog.GameId)
-				.ToDropDown()
-				.ToListAsync()
+			? await db.GameGoals.ToDropDownList(Catalog.GameId.Value)
 			: [];
 	}
 

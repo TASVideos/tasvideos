@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Forum.Topics;
 
@@ -81,18 +80,13 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	private async Task Initialize()
 	{
 		AvailableSystems = (await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDownWithId()
-			.ToListAsync())
+			.ToDropDownListWithId())
 			.WithDefaultEntry();
 
 		if (SystemId.HasValue)
 		{
 			AvailableGames = (await db.Games
-				.ForSystem(SystemId.Value)
-				.OrderBy(g => g.DisplayName)
-				.ToDropDown()
-				.ToListAsync())
+				.ToDropDownList(SystemId.Value))
 				.WithDefaultEntry();
 		}
 	}

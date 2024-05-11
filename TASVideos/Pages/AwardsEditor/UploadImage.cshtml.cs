@@ -52,9 +52,7 @@ public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awar
 	private async Task Initialize()
 	{
 		AvailableAwardCategories = (await awards.AwardCategories()
-			.OrderBy(c => c.Description)
-			.ToDropdown(Year)
-			.ToListAsync())
+			.ToDropdownList(Year))
 			.WithDefaultEntry();
 	}
 }

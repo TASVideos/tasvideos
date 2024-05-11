@@ -32,42 +32,31 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		SystemList = (await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDown()
-			.ToListAsync())
+			.ToDropDownList())
 			.WithAnyEntry();
 
 		LetterList = (await db.Games
 			.Select(g => g.DisplayName.Substring(0, 1))
 			.Distinct()
-			.OrderBy(l => l)
-			.ToDropDown()
-			.ToListAsync())
+			.ToDropDownList())
 			.WithAnyEntry();
 
 		GenreList = (await db.Genres
 			.Select(g => g.DisplayName)
 			.Distinct()
-			.OrderBy(l => l)
-			.ToDropDown()
-			.ToListAsync())
+			.ToDropDownList())
 			.WithAnyEntry();
 
 		GroupList = (await db.GameGroups
 			.Select(g => g.Name)
 			.Distinct()
-			.OrderBy(l => l)
-			.ToDropDown()
-			.ToListAsync())
+			.ToDropDownList())
 			.WithAnyEntry();
 	}
 
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
 	{
-		var items = await db.GameSystemFrameRates
-			.ForSystem(systemId)
-			.ToDropDown()
-			.ToListAsync();
+		var items = await db.GameSystemFrameRates.ToDropDownList(systemId);
 
 		if (includeEmpty)
 		{
@@ -79,11 +68,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
 	{
-		var items = await db.Games
-			.ForSystem(systemId)
-			.OrderBy(g => g.DisplayName)
-			.ToDropDown()
-			.ToListAsync();
+		var items = await db.Games.ToDropDownList(systemId);
 
 		if (includeEmpty)
 		{
@@ -95,12 +80,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGetVersionDropDownForGame(int gameId, int systemId, bool includeEmpty)
 	{
-		var items = await db.GameVersions
-			.ForGame(gameId)
-			.ForSystem(systemId)
-			.OrderBy(r => r.Name)
-			.ToDropDown()
-			.ToListAsync();
+		var items = await db.GameVersions.ToDropDownList(systemId, gameId);
 
 		if (includeEmpty)
 		{
@@ -112,11 +92,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGetGameGoalDropDownForGame(int gameId, bool includeEmpty)
 	{
-		var items = await db.GameGoals
-			.Where(gg => gg.GameId == gameId)
-			.OrderBy(gg => gg.DisplayName)
-			.ToDropDown()
-			.ToListAsync();
+		var items = await db.GameGoals.ToDropDownList(gameId);
 
 		if (includeEmpty)
 		{

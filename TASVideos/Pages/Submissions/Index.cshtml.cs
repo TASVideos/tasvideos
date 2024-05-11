@@ -27,9 +27,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public async Task OnGet()
 	{
 		SystemList = (await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDown()
-			.ToListAsync())
+			.ToDropDownList())
 			.WithDefaultEntry();
 
 		var search = LegacySubListConverter.ToSearchRequest(Query);

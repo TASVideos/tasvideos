@@ -51,10 +51,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		GameName = game.DisplayName;
 
-		AvailableSystems = await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDown()
-			.ToListAsync();
+		AvailableSystems = await db.GameSystems.ToDropDownList();
 
 		if (SystemId.HasValue)
 		{

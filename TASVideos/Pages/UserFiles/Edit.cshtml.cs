@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.UserFiles;
 
@@ -82,22 +81,12 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	private async Task Initialize()
 	{
 		AvailableSystems = (await db.GameSystems
-			.OrderBy(s => s.Code)
-			.ToDropDownWithId()
-			.ToListAsync())
+			.ToDropDownListWithId())
 			.WithDefaultEntry();
 
 		if (UserFile.SystemId.HasValue)
 		{
-			AvailableGames =
-			[
-				.. AvailableGames,
-				.. await db.Games
-					.ForSystem(UserFile.SystemId.Value)
-					.OrderBy(g => g.DisplayName)
-					.ToDropDown()
-					.ToListAsync()
-			];
+			AvailableGames = await db.Games.ToDropDownList(UserFile.SystemId.Value);
 		}
 		else
 		{

@@ -105,22 +105,16 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 	{
 		AvailableAwardCategories =
 				(await awards.AwardCategories()
-				.OrderBy(c => c.Description)
-				.ToDropdown(Year)
-				.ToListAsync())
+				.ToDropdownList(Year))
 				.WithDefaultEntry();
 
 		AvailableUsers = await db.Users
 			.Where(u => u.Publications.Any(pa => pa.Publication!.CreateTimestamp.Year == Year))
-			.OrderBy(u => u.UserName)
-			.ToDropdown()
-			.ToListAsync();
+			.ToDropdownList();
 
 		AvailablePublications = await db.Publications
 			.Where(p => p.CreateTimestamp.Year == Year)
-			.OrderBy(p => p.Title)
-			.ToDropdown()
-			.ToListAsync();
+			.ToDropdownList();
 	}
 
 	public class AwardAssignmentModel

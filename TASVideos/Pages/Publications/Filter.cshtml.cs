@@ -32,20 +32,12 @@ public class FilterModel(
 		var tokensFromQuery = Query.ToTokens();
 		Search = IndexModel.PublicationSearch.FromTokens(tokensFromQuery, Tokens);
 
-		AvailableTags = [.. (await tagService.GetAll())
-			.ToDopDown()
-			.OrderBy(t => t.Text)];
-		AvailableFlags = [.. (await flagService.GetAll())
-			.ToDopDown()
-			.OrderBy(t => t.Text)];
-		AvailableGameGroups = await db.GameGroups
-			.ToDropDown()
-			.OrderBy(gg => gg.Text)
-			.ToListAsync();
+		AvailableTags = [.. (await tagService.GetAll()).ToDopDown()];
+		AvailableFlags = [.. (await flagService.GetAll()).ToDopDown()];
+		AvailableGameGroups = await db.GameGroups.ToDropDownList();
 		AvailableAuthors = await db.Users
 			.ThatArePublishedAuthors()
-			.ToDropdown()
-			.ToListAsync();
+			.ToDropdownList();
 	}
 
 	public IActionResult OnPost()

@@ -89,9 +89,7 @@ public class EditClassModel(
 
 	private async Task PopulateAvailableClasses()
 	{
-		AvailableClasses = await db.PublicationClasses
-			.ToDropDown()
-			.ToListAsync();
+		AvailableClasses = await db.PublicationClasses.ToDropDownList();
 	}
 
 	public class PublicationClassEdit

@@ -13,13 +13,16 @@ namespace TASVideos.Extensions;
 /// </summary>
 public static class EntityExtensions
 {
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<string> query)
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<string> query)
 	{
-		return query.Select(s => new SelectListItem
-		{
-			Text = s,
-			Value = s
-		});
+		return query
+			.OrderBy(s => s)
+			.Select(s => new SelectListItem
+			{
+				Text = s,
+				Value = s
+			})
+			.ToListAsync();
 	}
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<string> strings)
@@ -49,63 +52,82 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Genre> query)
-	{
-		return query.Select(g => new SelectListItem
-		{
-			Text = g.DisplayName,
-			Value = g.Id.ToString()
-		});
-	}
-
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameGroup> query)
-	{
-		return query.Select(g => new SelectListItem
-		{
-			Text = g.Name,
-			Value = g.Id.ToString()
-		});
-	}
-
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameSystem> query)
-	{
-		return query.Select(s => new SelectListItem
-		{
-			Text = s.Code,
-			Value = s.Code
-		});
-	}
-
-	public static IQueryable<SelectListItem> ToDropDownWithId(this IQueryable<GameSystem> query)
-	{
-		return query.Select(s => new SelectListItem
-		{
-			Text = s.Code,
-			Value = s.Id.ToString()
-		});
-	}
-
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<PublicationClass> query)
-	{
-		return query.Select(p => new SelectListItem
-		{
-			Text = p.Name,
-			Value = p.Id.ToString()
-		});
-	}
-
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<SubmissionRejectionReason> query)
-	{
-		return query.Select(r => new SelectListItem
-		{
-			Text = r.DisplayName,
-			Value = r.Id.ToString()
-		});
-	}
-
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameSystemFrameRate> query)
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<Genre> query)
 	{
 		return query
+			.OrderBy(g => g.DisplayName)
+			.Select(g => new SelectListItem
+			{
+				Text = g.DisplayName,
+				Value = g.Id.ToString()
+			})
+			.ToListAsync();
+	}
+
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameGroup> query)
+	{
+		return query
+			.OrderBy(g => g.Name)
+			.Select(g => new SelectListItem
+			{
+				Text = g.Name,
+				Value = g.Id.ToString()
+			})
+			.ToListAsync();
+	}
+
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameSystem> query)
+	{
+		return query
+			.OrderBy(s => s.Code)
+			.Select(s => new SelectListItem
+			{
+				Text = s.Code,
+				Value = s.Code
+			})
+			.ToListAsync();
+	}
+
+	public static Task<List<SelectListItem>> ToDropDownListWithId(this IQueryable<GameSystem> query)
+	{
+		return query
+			.OrderBy(s => s.Code)
+			.Select(s => new SelectListItem
+			{
+				Text = s.Code,
+				Value = s.Id.ToString()
+			})
+			.ToListAsync();
+	}
+
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<PublicationClass> query)
+	{
+		return query
+			.OrderBy(p => p.Name)
+			.Select(p => new SelectListItem
+			{
+				Text = p.Name,
+				Value = p.Id.ToString()
+			})
+			.ToListAsync();
+	}
+
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<SubmissionRejectionReason> query)
+	{
+		return query
+			.OrderBy(r => r.DisplayName)
+			.Select(r => new SelectListItem
+			{
+				Text = r.DisplayName,
+				Value = r.Id.ToString()
+			})
+			.ToListAsync();
+	}
+
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameSystemFrameRate> query, int systemId)
+	{
+		return query
+			.ForSystem(systemId)
 			.OrderBy(fr => fr.Obsolete)
 			.ThenBy(fr => fr.RegionCode)
 			.ThenBy(fr => fr.FrameRate)
@@ -113,10 +135,11 @@ public static class EntityExtensions
 			{
 				Text = g.RegionCode + " " + g.FrameRate + (g.Obsolete ? " (Obsolete)" : ""),
 				Value = g.Id.ToString()
-			});
+			})
+			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Flag> query, IEnumerable<PermissionTo> userPermissions)
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<Flag> query, IEnumerable<PermissionTo> userPermissions)
 	{
 		return query
 			.OrderBy(f => f.Name)
@@ -126,10 +149,11 @@ public static class EntityExtensions
 				Value = f.Id.ToString(),
 				Disabled = f.PermissionRestriction.HasValue
 					&& !userPermissions.Contains(f.PermissionRestriction.Value)
-			});
+			})
+			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Tag> query)
+	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Tag> query)
 	{
 		return query
 			.OrderBy(t => t.DisplayName)
@@ -137,16 +161,20 @@ public static class EntityExtensions
 			{
 				Text = t.DisplayName,
 				Value = t.Id.ToString()
-			});
+			})
+			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Publication> query)
+	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Publication> query)
 	{
-		return query.Select(p => new SelectListItem
-		{
-			Text = p.Title,
-			Value = p.Id.ToString()
-		});
+		return query
+			.OrderBy(p => p.Title)
+			.Select(p => new SelectListItem
+			{
+				Text = p.Title,
+				Value = p.Id.ToString()
+			})
+			.ToListAsync();
 	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<ForumCategory> query)
@@ -183,22 +211,28 @@ public static class EntityExtensions
 			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<User> query)
+	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<User> query)
 	{
-		return query.Select(u => new SelectListItem
-		{
-			Text = u.UserName,
-			Value = u.Id.ToString()
-		});
+		return query
+			.OrderBy(u => u.UserName)
+			.Select(u => new SelectListItem
+			{
+				Text = u.UserName,
+				Value = u.Id.ToString()
+			})
+			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Award> query, int year)
+	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Award> query, int year)
 	{
-		return query.Select(a => new SelectListItem
-		{
-			Text = a.Description + " for " + year,
-			Value = a.ShortName
-		});
+		return query
+			.OrderBy(a => a.Description)
+			.Select(a => new SelectListItem
+			{
+				Text = a.Description + " for " + year,
+				Value = a.ShortName
+			})
+			.ToListAsync();
 	}
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<AssignableRole> roles)
@@ -211,49 +245,82 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameVersion> query)
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameVersion> query, int? systemId = null, int? gameId = null)
 	{
-		return query.Select(v => new SelectListItem
+		if (systemId.HasValue)
 		{
-			Text = v.Name,
-			Value = v.Id.ToString()
-		});
+			query = query.ForSystem(systemId.Value);
+		}
+
+		if (gameId.HasValue)
+		{
+			query = query.ForGame(gameId.Value);
+		}
+
+		return query
+			.OrderBy(v => v.Name)
+			.Select(v => new SelectListItem
+			{
+				Text = v.Name,
+				Value = v.Id.ToString()
+			})
+			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<Game> query)
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<Game> query, int? systemId = null)
 	{
-		return query.Select(g => new SelectListItem
+		if (systemId.HasValue)
 		{
-			Text = g.DisplayName,
-			Value = g.Id.ToString()
-		});
+			query = query.ForSystem(systemId.Value);
+		}
+
+		return query
+			.OrderBy(g => g.DisplayName)
+			.Select(g => new SelectListItem
+			{
+				Text = g.DisplayName,
+				Value = g.Id.ToString()
+			})
+			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropDown(this IQueryable<GameGoal> query)
+	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameGoal> query, int? gameId = null)
 	{
-		return query.Select(gg => new SelectListItem
+		if (gameId.HasValue)
 		{
-			Text = gg.DisplayName,
-			Value = gg.Id.ToString()
-		});
+			query = query.ForGame(gameId.Value);
+		}
+
+		return query
+			.OrderBy(gg => gg.DisplayName)
+			.Select(gg => new SelectListItem
+			{
+				Text = gg.DisplayName,
+				Value = gg.Id.ToString()
+			})
+			.ToListAsync();
 	}
 
 	public static IEnumerable<SelectListItem> ToDopDown(this IEnumerable<Tag> tags)
 	{
-		return tags.Select(t => new SelectListItem
-		{
-			Text = t.DisplayName,
-			Value = t.Code.ToLower()
-		});
+		return tags
+			.OrderBy(t => t.DisplayName)
+			.Select(t => new SelectListItem
+			{
+				Text = t.DisplayName,
+				Value = t.Code.ToLower()
+			});
 	}
 
 	public static IEnumerable<SelectListItem> ToDopDown(this IEnumerable<Flag> flags)
 	{
-		return flags.Select(f => new SelectListItem
-		{
-			Text = f.Token.ToLower(),
-			Value = f.Name
-		});
+		return flags
+			.OrderBy(f => f.Token)
+			.Select(f => new SelectListItem
+			{
+				Text = f.Token.ToLower(),
+				Value = f.Name
+			});
 	}
 
 	public static List<SelectListItem> ToDropDown<T>(this IEnumerable<T> enums)
