@@ -7,8 +7,7 @@
 
 <h4>Unrated Movies</h4>
 <div class="table-container">
-	<table class="table table-striped">
-
+	<standard-table>
 		@foreach (var pub in Model.UnratedMovies.OrderBy(p => p.Title))
 		{
 			<tr>
@@ -20,5 +19,5 @@
 				</td>
 			</tr>
 		}
-	</table>
+	</standard-table>
 </div>

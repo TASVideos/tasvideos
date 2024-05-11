@@ -25,67 +25,65 @@
 </div>
 <hr />
 <partial name="_Pager" model="Model.Topics" />
-<div class="table-container">
-	<table class="table table-striped table-bordered">
-		<sortable-table-head sorting="@Model.Search" model-type="typeof(IndexModel.ForumTopicEntry)" page-override="@HttpContext.Request.Path" />
-		@foreach (var topic in Model.Topics)
-		{
-			<tr>
-				<td>
-					<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fw-bold text-warning"><i class="fa fa-bullhorn"></i> Announcement: </span>
-					<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fw-bold text-info"><i class="fa fa-sticky-note"></i> Sticky: </span>
-					<span condition="@topic.IsLocked" class="text-danger"><i class="fa fa-lock"></i></span>
-					@if (Model.ActivityTopics.TryGetValue(topic.Id, out var activityTopics))
-					{
-						<a class="text-decoration-none">
-							<i class="fa fa-file activity-topic d-none"
-							   data-topic-id="@topic.Id"
-							   data-activity-posts-created="@activityTopics.PostsCreated"
-							   data-activity-posts-edited="@activityTopics.PostsEdited"></i>
-						</a>
-					}
-					<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
-					<div class="ms-2">
-						@{
-							var totalPages = (topic.PostCount - 1) / ForumConstants.PostsPerPage + 1;
-							if (totalPages > 1)
+<standard-table>
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(IndexModel.ForumTopicEntry)" page-override="@HttpContext.Request.Path" />
+	@foreach (var topic in Model.Topics)
+	{
+		<tr>
+			<td>
+				<span condition="@(topic.Type == ForumTopicType.Announcement)" class="fw-bold text-warning"><i class="fa fa-bullhorn"></i> Announcement: </span>
+				<span condition="@(topic.Type == ForumTopicType.Sticky)" class="fw-bold text-info"><i class="fa fa-sticky-note"></i> Sticky: </span>
+				<span condition="@topic.IsLocked" class="text-danger"><i class="fa fa-lock"></i></span>
+				@if (Model.ActivityTopics.TryGetValue(topic.Id, out var activityTopics))
+				{
+					<a class="text-decoration-none">
+						<i class="fa fa-file activity-topic d-none"
+						   data-topic-id="@topic.Id"
+						   data-activity-posts-created="@activityTopics.PostsCreated"
+						   data-activity-posts-edited="@activityTopics.PostsEdited"></i>
+					</a>
+				}
+				<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
+				<div class="ms-2">
+					@{
+						var totalPages = (topic.PostCount - 1) / ForumConstants.PostsPerPage + 1;
+						if (totalPages > 1)
+						{
+							for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++)
 							{
-								for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++)
+									<text>
+										<a asp-page="/Forum/Topics/Index"
+									   asp-route-id="@topic.Id"
+									   asp-route-CurrentPage="@pageNumber"
+									   asp-route-PageSize="@ForumConstants.PostsPerPage"
+									   asp-route-Sort="CreateTimestamp"
+									   class="btn btn-outline-primary btn-sm mt-1">
+											@pageNumber
+										</a>
+									</text>
+								if (totalPages > 5 && pageNumber == 2)
 								{
-										<text>
-											<a asp-page="/Forum/Topics/Index"
-										   asp-route-id="@topic.Id"
-										   asp-route-CurrentPage="@pageNumber"
-										   asp-route-PageSize="@ForumConstants.PostsPerPage"
-										   asp-route-Sort="CreateTimestamp"
-										   class="btn btn-outline-primary btn-sm mt-1">
-												@pageNumber
-											</a>
-										</text>
-									if (totalPages > 5 && pageNumber == 2)
-									{
-										pageNumber = totalPages - 2;
-											<text><span>…</span></text>
-									}
+									pageNumber = totalPages - 2;
+										<text><span>…</span></text>
 								}
 							}
 						}
-					</div>
-				</td>
-				<td class="d-none d-md-table-cell">@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
-				<td class="d-none d-md-table-cell"> <profile-link username="@topic.CreateUserName"></profile-link></td>
-				<td>
-					@if (topic.LastPost is not null)
-					{
-						<timezone-convert asp-for="@topic.LastPost.CreateTimestamp" /> <br />
-						<profile-link username="@topic.LastPost.PosterName"></profile-link>
-						<a href="/Forum/Posts/@topic.LastPost.Id" class="fa fa-arrow-circle-right"></a>
 					}
-				</td>
-			</tr>
-		}
-	</table>
-</div>
+				</div>
+			</td>
+			<td class="d-none d-md-table-cell">@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
+			<td class="d-none d-md-table-cell"> <profile-link username="@topic.CreateUserName"></profile-link></td>
+			<td>
+				@if (topic.LastPost is not null)
+				{
+					<timezone-convert asp-for="@topic.LastPost.CreateTimestamp" /> <br />
+					<profile-link username="@topic.LastPost.PosterName"></profile-link>
+					<a href="/Forum/Posts/@topic.LastPost.Id" class="fa fa-arrow-circle-right"></a>
+				}
+			</td>
+		</tr>
+	}
+</standard-table>
 <partial name="_Pager" model="Model.Topics" />
 
 <span id="serverUnixTime" class="d-none">@DateTime.UtcNow.UnixTimestamp()</span>

@@ -38,7 +38,7 @@
 	<li><a asp-page="SystemPages">System Wiki Pages</a></li>
 </ul>
 
-<table class="table table-bordered table-striped">
+<standard-table>
 	<tr><td>Version</td><td>@ViewData["Version"]</td></tr>
 	<tr><td>IHostEnvironment Name</td><td>@Env.EnvironmentName</td></tr>
 	<tr><td>ASPNETCORE_ENVIRONMENT</td><td>@Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")</td></tr>
@@ -61,16 +61,16 @@
 			<span condition="!cacheWorks" class="text-danger"><i class="fa fa-exclamation"></i> Failing to cache</span>
 		</td>
 	</tr>
-</table>
+</standard-table>
 
 <hr />
 
-<table class="table table-bordered table-striped">
+<standard-table>
 	<tr>
 		<td>Ip Address</td>
 		<td>@this.Model.IpAddress</td>
 	</tr>
-</table>
+</standard-table>
 <hr />
 <h4>Request headers</h4>
 <ul>

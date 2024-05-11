@@ -5,29 +5,27 @@
 }
 <partial Name="_ForumHeader" />
 <partial name="_Pager" model="Model.Posts" />
-<div class="table-container">
-	<table class="table table-striped table-bordered">
+<standard-table>
+	<tr>
+		<th>Forum</th>
+		<th>Topic</th>
+		<th>Author</th>
+		<th>Posted On</th>
+	</tr>
+	@foreach (var post in Model.Posts)
+	{
 		<tr>
-			<th>Forum</th>
-			<th>Topic</th>
-			<th>Author</th>
-			<th>Posted On</th>
+			<td>
+				<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a>
+			</td>
+			<td>
+				<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicName</a>
+			</td>
+			<td>
+				<profile-link username="@post.AuthorName"></profile-link>
+			</td>
+			<td><timezone-convert asp-for="@post.PostDate" /></td>
 		</tr>
-		@foreach (var post in Model.Posts)
-		{
-			<tr>
-				<td>
-					<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a>
-				</td>
-				<td>
-					<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicName</a>
-				</td>
-				<td>
-					<profile-link username="@post.AuthorName"></profile-link>
-				</td>
-				<td><timezone-convert asp-for="@post.PostDate" /></td>
-			</tr>
-		}
-	</table>
-</div>
+	}
+</standard-table>
 <partial name="_Pager" model="Model.Posts" />

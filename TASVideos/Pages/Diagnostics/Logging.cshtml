@@ -9,7 +9,7 @@
 	<li><a asp-page="Index">Diagnostics</a></li>
 </ul>
 <a class="btn btn-primary mb-2" asp-page-handler="TestLogLevels">Test log levels</a>
-<table class="table table-sm table-striped">
+<standard-table>
 	<tr>
 		<th>Log Level</th>
 		<th>Enabled</th>
@@ -20,4 +20,4 @@
 	<tr><td>Warning</td><td>@Logger.IsEnabled(LogLevel.Warning)</td></tr>
 	<tr><td>Error</td><td>@Logger.IsEnabled(LogLevel.Error)</td></tr>
 	<tr><td>Critical</td><td>@Logger.IsEnabled(LogLevel.Critical)</td></tr>
-</table>
+</standard-table>

@@ -1,20 +1,18 @@
 ﻿@model PlatformFramerates
-<div class="table-container">
-	<table class="table table-striped table-bordered">
-		<tr>
-			<th>System</th>
-			<th>Region</th>
-			<th>Framerate</th>
-			<th>Preliminary or approximate</th>
+<standard-table>
+	<tr>
+		<th>System</th>
+		<th>Region</th>
+		<th>Framerate</th>
+		<th>Preliminary or approximate</th>
+	</tr>
+	@foreach (var item in Model.Framerates)
+	{
+		<tr class="@(item.Preliminary ? "alert-warning" : "")">
+			<td>@item.SystemCode</td>
+			<td>@item.RegionCode</td>
+			<td>@item.FrameRate</td>
+			<td>@item.Preliminary.ToYesNo()</td>
 		</tr>
-		@foreach (var item in Model.Framerates)
-		{
-			<tr class="@(item.Preliminary ? "alert-warning" : "")">
-				<td>@item.SystemCode</td>
-				<td>@item.RegionCode</td>
-				<td>@item.FrameRate</td>
-				<td>@item.Preliminary.ToYesNo()</td>
-			</tr>
-		}
-	</table>
-</div>
+	}
+</standard-table>

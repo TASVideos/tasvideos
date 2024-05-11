@@ -10,7 +10,7 @@
 </div>
 <hr>
 <partial name="_Pager" model="Model.Users" />
-<table class="table table-bordered table-striped">
+<standard-table>
 	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.UserEntry)" />
 	@foreach (var user in Model.Users)
 	{
@@ -33,5 +33,5 @@
 			</td>
 		</tr>
 	}
-</table>
+</standard-table>
 <partial name="_Pager" model="Model.Users" />

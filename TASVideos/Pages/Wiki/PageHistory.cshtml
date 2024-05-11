@@ -52,75 +52,73 @@
 	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
 </div>
 <hr />
-<div class="table-container">
-	<table class="table table-sm">
-		<thead>
-			<tr>
-				<th>Revision</th>
-				<th>Date</th>
-				<th>Author</th>
-				<th>Minor Edit</th>
-				<th>Revision Message</th>
-				<th>Diff</th>
-				<th>Actions</th>
-			</tr>
-		</thead>
-		<tbody data-hasrevisions="true">
-			@{ var revisions = Model.Revisions.OrderByDescending(r => r.Revision).ToList(); }
-			@for (var i = 0; i < revisions.Count; i++)
-			{
-				var revision = revisions[i];
-				var previousId = i < revisions.Count - 1 ? revisions[i + 1].Revision : (int?)null;
-				<tr data-revision="@revision.Revision" class="@RowStyles(revision.Revision)">
-					<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
-					<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
-					<td><profile-link username="@revision.CreateUserName"></profile-link></td>
-					<td>@revision.MinorEdit</td>
-					<td>@revision.RevisionMessage</td>
-					<td style="min-width: 100px">
-						<div class="btn-group" role="button" aria-label="diff picker">
-							<a
-								condition="previousId.HasValue"
-								class="btn btn-secondary btn-sm"
-								asp-page="/Wiki/PageHistory"
-								asp-route-path="@Model.Path"
-								asp-route-fromRevision="@previousId"
-								asp-route-toRevision="@revision.Revision">
-								Prev
-							</a>
-							<button
-								class="@DiffBtnStyles(revision.Revision, true)"
-								data-from="true"
-								onClick="diffBtnClicked(@revision.Revision, null)">
-								From
-							</button>
-							<button
-								class="@DiffBtnStyles(revision.Revision, false)"
-								data-to="true"
-								onClick="diffBtnClicked(null, @revision.Revision)">
-								To
-							</button>
+<standard-table>
+	<thead>
+		<tr>
+			<th>Revision</th>
+			<th>Date</th>
+			<th>Author</th>
+			<th>Minor Edit</th>
+			<th>Revision Message</th>
+			<th>Diff</th>
+			<th>Actions</th>
+		</tr>
+	</thead>
+	<tbody data-hasrevisions="true">
+		@{ var revisions = Model.Revisions.OrderByDescending(r => r.Revision).ToList(); }
+		@for (var i = 0; i < revisions.Count; i++)
+		{
+			var revision = revisions[i];
+			var previousId = i < revisions.Count - 1 ? revisions[i + 1].Revision : (int?)null;
+			<tr data-revision="@revision.Revision" class="@RowStyles(revision.Revision)">
+				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
+				<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
+				<td><profile-link username="@revision.CreateUserName"></profile-link></td>
+				<td>@revision.MinorEdit</td>
+				<td>@revision.RevisionMessage</td>
+				<td style="min-width: 100px">
+					<div class="btn-group" role="button" aria-label="diff picker">
+						<a
+							condition="previousId.HasValue"
+							class="btn btn-secondary btn-sm"
+							asp-page="/Wiki/PageHistory"
+							asp-route-path="@Model.Path"
+							asp-route-fromRevision="@previousId"
+							asp-route-toRevision="@revision.Revision">
+							Prev
+						</a>
+						<button
+							class="@DiffBtnStyles(revision.Revision, true)"
+							data-from="true"
+							onClick="diffBtnClicked(@revision.Revision, null)">
+							From
+						</button>
+						<button
+							class="@DiffBtnStyles(revision.Revision, false)"
+							data-to="true"
+							onClick="diffBtnClicked(null, @revision.Revision)">
+							To
+						</button>
 
-						</div>
-					</td>
-					<td>
-						<delete-button
-							permission="DeleteWikiPages"
-							asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.PageName)&revision=@revision.Revision"
-							warning-message="Are you sure you want to delete this revision?"
-							class="btn-sm">
-							<i class="fa fa-remove"></i>
-						</delete-button>
-						<form asp-page="/Wiki/Edit" asp-page-handler="RollbackLatest" asp-route-path="@Model.Path" condition="canEdit">
-							<input type="hidden" name="previousRevision" value="@(164)" />
-							<button condition="i == 0 && revision.Revision > 1" type="submit" class="btn btn-sm btn-warning" title="Rollback this revision"><i class="fa fa-undo"></i></button>
-						</form>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-</div>
+					</div>
+				</td>
+				<td>
+					<delete-button
+						permission="DeleteWikiPages"
+						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.PageName)&revision=@revision.Revision"
+						warning-message="Are you sure you want to delete this revision?"
+						class="btn-sm">
+						<i class="fa fa-remove"></i>
+					</delete-button>
+					<form asp-page="/Wiki/Edit" asp-page-handler="RollbackLatest" asp-route-path="@Model.Path" condition="canEdit">
+						<input type="hidden" name="previousRevision" value="@(164)" />
+						<button condition="i == 0 && revision.Revision > 1" type="submit" class="btn btn-sm btn-warning" title="Rollback this revision"><i class="fa fa-undo"></i></button>
+					</form>
+				</td>
+			</tr>
+		}
+	</tbody>
+</standard-table>
 <input type="hidden" asp-for="Diff.LeftMarkup" rows="8" class="form-control" />
 <input type="hidden" asp-for="Diff.RightMarkup" rows="8" class="form-control" />
 

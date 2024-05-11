@@ -14,23 +14,20 @@
 	</p>
 </div>
 
-<div condition="Model.Movies.Count > 0">
-	<table class="table table-bordered table-striped table-sm">
+<standard-table condition="Model.Movies.Count > 0">
+	<tr>
+		<th>@Model.FieldHeader</th>
+		<th>Movie</th>
+	</tr>
+	@foreach (var entry in Model.Movies)
+	{
 		<tr>
-			<th>@Model.FieldHeader</th>
-			<th>Movie</th>
+			<td>
+				@entry.DisplayString()
+			</td>
+			<td>
+				<pub-link id="entry.Id">@entry.Title</pub-link>
+			</td>
 		</tr>
-
-		@foreach (var entry in Model.Movies)
-		{
-			<tr>
-				<td>
-					@entry.DisplayString()
-				</td>
-				<td>
-					<pub-link id="entry.Id">@entry.Title</pub-link>
-				</td>
-			</tr>
-		}
-	</table>
-</div>
+	}
+</standard-table>

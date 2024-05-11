@@ -17,10 +17,7 @@
 <label>Current: @tvcData.Count(d => !d.IsObsolete)</label>
 <br />
 <label>Obsolete: @tvcData.Count(d => d.IsObsolete)</label>
-<br />
-<br />
-
-<table class="table table-sm table-bordered">
+<standard-table>
 	<tr>
 		<th>Youtube Channel</th>
 		<th>Current Uploads</th>
@@ -55,4 +52,4 @@
 			</td>
 		</tr>
 	}
-</table>
+</standard-table>

@@ -1,20 +1,18 @@
 ﻿@model PlayerPointsTable
-<div class="table-container">
-	<table class="table table-striped table-bordered">
+<standard-table>
+	<tr>
+		<th>Post</th>
+		<th>Player</th>
+		<th>Points</th>
+		<th>Player Rank</th>
+	</tr>
+	@foreach (var item in Model.Authors)
+	{
 		<tr>
-			<th>Post</th>
-			<th>Player</th>
-			<th>Points</th>
-			<th>Player Rank</th>
+			<td>@item.Position</td>
+			<td>@item.Player</td>
+			<td>@item.Points</td>
+			<td>@item.Rank</td>
 		</tr>
-		@foreach (var item in Model.Authors)
-		{
-			<tr>
-				<td>@item.Position</td>
-				<td>@item.Player</td>
-				<td>@item.Points</td>
-				<td>@item.Rank</td>
-			</tr>
-		}
-	</table>
-</div>
+	}
+</standard-table>

@@ -5,7 +5,7 @@
 	<li><a asp-page="Index">Diagnostics</a></li>
 </ul>
 <label class="float-end">Total: @Model.SystemPages.Count</label>
-<table class="table table-bordered table-striped">
+<standard-table>
 	<thead>
 		<tr>
 			<th>Page Name</th>
@@ -18,7 +18,7 @@
 			<tr>
 				<td>
 					<wiki-link page-name="@p.Name"></wiki-link>
-				<td>
+				</td>
 				<td>
 					<i condition="p.Exists" class="text-success fa fa-check"></i>
 					<i condition="!p.Exists" class="text-danger fa fa-exclamation"></i>
@@ -26,4 +26,4 @@
 			</tr>
 		}
 	</tbody>
-</table>
+</standard-table>

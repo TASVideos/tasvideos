@@ -5,28 +5,26 @@
 }
 
 <partial name="_Pager" model="Model.UserFiles" />
-<div class="table-container">
-	<table class="table table-bordered table-striped table-sm">
-		<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.UserFileEntry)" />
-		@foreach (var userFile in Model.UserFiles)
-		{
-			<tr>
-				<td>
-					<a asp-page="Info" asp-route-id="@userFile.Id">@(string.IsNullOrWhiteSpace(userFile.Title) ? userFile.FileName : userFile.Title)</a>
-				</td>
-				<td><a asp-page="ForUser" asp-route-username="@userFile.Author">@userFile.Author</a></td>
-				<td>
-					@if (userFile.GameId is not null)
-					{
-						<a asp-page="Game" asp-route-id="@userFile.GameId">@userFile.GameName</a>
-					}
-				</td>
-				<td>@userFile.Frames</td>
-				<td>@userFile.Rerecords</td>
-				<td>@userFile.CommentCount</td>
-				<td class="text-nowrap"><timezone-convert asp-for="@userFile.UploadTimestamp" /></td>
-			</tr>
-		}
-	</table>
-</div>
+<standard-table>
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.UserFileEntry)" />
+	@foreach (var userFile in Model.UserFiles)
+	{
+		<tr>
+			<td>
+				<a asp-page="Info" asp-route-id="@userFile.Id">@(string.IsNullOrWhiteSpace(userFile.Title) ? userFile.FileName : userFile.Title)</a>
+			</td>
+			<td><a asp-page="ForUser" asp-route-username="@userFile.Author">@userFile.Author</a></td>
+			<td>
+				@if (userFile.GameId is not null)
+				{
+					<a asp-page="Game" asp-route-id="@userFile.GameId">@userFile.GameName</a>
+				}
+			</td>
+			<td>@userFile.Frames</td>
+			<td>@userFile.Rerecords</td>
+			<td>@userFile.CommentCount</td>
+			<td class="text-nowrap"><timezone-convert asp-for="@userFile.UploadTimestamp" /></td>
+		</tr>
+	}
+</standard-table>
 <partial name="_Pager" model="Model.UserFiles" />

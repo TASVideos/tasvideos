@@ -32,7 +32,7 @@
 
 <a class="btn btn-primary float-end mb-2" asp-page="CreateFramerate" asp-route-systemId="@Model.Id">Create</a>
 <h4>System Framerates</h4>
-<table class="table table-sm table-bordered">
+<standard-table>
 	<tr>
 		<th>Framerate</th>
 		<th>Region</th>
@@ -52,7 +52,7 @@
 			<td><a class="btn btn-sm btn-danger" asp-page="EditFrameRate" asp-route-id="@rate.Id">Edit</a></td>
 		</tr>
 	}
-</table>
+</standard-table>
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

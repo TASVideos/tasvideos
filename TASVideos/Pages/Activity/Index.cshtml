@@ -3,61 +3,53 @@
 @model IndexModel
 
 @await Html.RenderWiki(SystemWiki.ActivitySummary)
-<row>
+<row class="mt-3">
 	<column md="6">
-		<card>
-			<cardheader>Judge Counts</cardheader>
-			<cardbody>
-				<table class="table">
-					<tr>
-						<th>User</th>
-						<th>Count</th>
-						<th>Time since last</th>
-					</tr>
-					@foreach (var judge in Model.Judges.OrderByDescending(j => j.Count))
-					{
-						<tr>
-							<td>
-								<profile-link username="@judge.UserName"></profile-link>
-							</td>
-							<td>
-								<a asp-page="/Activity/Judges" asp-route-username="@judge.UserName">@judge.Count</a>
-							</td>
-							<td>
-								<span>@judge.LastActivity.DaysAgo()</span>
-							</td>
-						</tr>
-					}
-				</table>
-			</cardbody>
-		</card>
+		<h4>Judge Counts</h4>
+		<standard-table>
+			<tr>
+				<th>User</th>
+				<th>Count</th>
+				<th>Time since last</th>
+			</tr>
+			@foreach (var judge in Model.Judges.OrderByDescending(j => j.Count))
+			{
+				<tr>
+					<td>
+						<profile-link username="@judge.UserName"></profile-link>
+					</td>
+					<td>
+						<a asp-page="/Activity/Judges" asp-route-username="@judge.UserName">@judge.Count</a>
+					</td>
+					<td>
+						<span>@judge.LastActivity.DaysAgo()</span>
+					</td>
+				</tr>
+			}
+		</standard-table>
 	</column>
 	<column md="6">
-		<card>
-			<cardheader>Publisher Counts</cardheader>
-			<cardbody>
-				<table class="table">
-					<tr>
-						<th>User</th>
-						<th>Count</th>
-						<th>Time since last</th>
-					</tr>
-					@foreach (var publisher in Model.Publishers.OrderByDescending(j => j.Count))
-					{
-						<tr>
-							<td>
-								<profile-link username="@publisher.UserName"></profile-link>
-							</td>
-							<td>
-								<a asp-page="/Activity/Publishers" asp-route-username="@publisher.UserName">@publisher.Count</a>
-							</td>
-							<td>
-								<span>@publisher.LastActivity.DaysAgo()</span>
-							</td>
-						</tr>
-					}
-				</table>
-			</cardbody>
-		</card>
+		<h4>Publisher Counts</h4>
+		<standard-table>
+			<tr>
+				<th>User</th>
+				<th>Count</th>
+				<th>Time since last</th>
+			</tr>
+			@foreach (var publisher in Model.Publishers.OrderByDescending(j => j.Count))
+			{
+				<tr>
+					<td>
+						<profile-link username="@publisher.UserName"></profile-link>
+					</td>
+					<td>
+						<a asp-page="/Activity/Publishers" asp-route-username="@publisher.UserName">@publisher.Count</a>
+					</td>
+					<td>
+						<span>@publisher.LastActivity.DaysAgo()</span>
+					</td>
+				</tr>
+			}
+		</standard-table>
 	</column>
 </row>

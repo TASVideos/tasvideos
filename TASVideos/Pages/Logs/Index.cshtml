@@ -5,7 +5,7 @@
 }
 
 <partial name="_Pager" model="Model.History" />
-<table class="table table-sm">
+<standard-table>
 	<sortable-table-head sorting="@Model.Search" model-type="typeof(IndexModel.LogEntry)" page-override="@HttpContext.Request.Path" />
 	@foreach (var entry in Model.History)
 	{
@@ -21,7 +21,7 @@
 			<partial name="_ChangedCol" model="@((entry.Changed, entry.Kind))" />
 		</tr>
 	}
-</table>
+</standard-table>
 <partial name="_Pager" model="Model.History" />
 
 @section Scripts {

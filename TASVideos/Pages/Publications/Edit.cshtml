@@ -20,7 +20,7 @@
 <hr />
 <a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mb-2 float-end ms-2"><span class="fa fa-plus"></span> Additional Movie Files</a>
 <a permission="EditPublicationFiles" asp-page="EditFiles" asp-route-id="@Model.Id" class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
-<table class="table table-bordered table-sm">
+<standard-table>
 	<tr>
 		<th>File Name</th>
 		<th>Type</th>
@@ -42,13 +42,13 @@
 			<td>@file.Description</td>
 		</tr>
 	}
-</table>
+</standard-table>
 <hr />
 <a permission="EditPublicationFiles"
    asp-page="Urls/List"
    asp-route-publicationId="@Model.Id"
    class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
-<table class="table table-bordered table-sm">
+<standard-table>
 	<tr>
 		<th>Type</th>
 		<th>URL</th>
@@ -62,7 +62,7 @@
 			<td>@url.DisplayName</td>
 		</tr>
 	}
-</table>
+</standard-table>
 <hr />
 <form method="post">
 	<input type="hidden" asp-for="Publication.SystemCode" />

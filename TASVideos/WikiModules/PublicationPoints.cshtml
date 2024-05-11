@@ -1,20 +1,18 @@
 ﻿@model PublicationPoints
-<div class="table-container">
-	<table class="table table-striped table-bordered">
+<standard-table>
+	<tr>
+		<th>Pos</th>
+		<th>Movie</th>
+		<th>Points</th>
+	</tr>
+	@foreach (var item in Model.Pubs)
+	{
 		<tr>
-			<th>Pos</th>
-			<th>Movie</th>
-			<th>Points</th>
+			<td>@item.Position</td>
+			<td>
+				<pub-link id="@item.Id">@item.Title</pub-link>
+			</td>
+			<td>@Math.Round(item.Points, 3)</td>
 		</tr>
-		@foreach (var item in Model.Pubs)
-		{
-			<tr>
-				<td>@item.Position</td>
-				<td>
-					<pub-link id="@item.Id">@item.Title</pub-link>
-				</td>
-				<td>@Math.Round(item.Points, 3)</td>
-			</tr>
-		}
-	</table>
-</div>
+	}
+</standard-table>

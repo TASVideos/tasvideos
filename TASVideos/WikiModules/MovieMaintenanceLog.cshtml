@@ -4,7 +4,7 @@
 @foreach (var pub in Model.Logs)
 {
 	<pub-link id="pub.Key.Id">@pub.Key.Title</pub-link>
-	<table class="table table-bordered table-striped">
+	<standard-table>
 		<tr>
 			<th>Editor</th>
 			<th>Datetime</th>
@@ -18,6 +18,5 @@
 				<td>@log.Log</td>
 			</tr>
 		}
-	</table>
+	</standard-table>
 }
-

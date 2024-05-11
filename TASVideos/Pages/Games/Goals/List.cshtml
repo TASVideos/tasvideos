@@ -8,7 +8,7 @@
 <h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a>
 	<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary mb-2 float-end"><span class="fa fa-arrow-left"></span> Back</a>
 </h4>
-<table class="table table-bordered table-striped">
+<standard-table>
 	<tr>
 		<th>Name</th>
 		<th>Publications</th>
@@ -86,4 +86,4 @@
 			</td>
 		</form>
 	</tr>
-</table>
+</standard-table>

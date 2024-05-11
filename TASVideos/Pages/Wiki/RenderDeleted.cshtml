@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Viewing Deleted Page: {Model.WikiPages.First().PageName}");
 }
 
-<table class="table">
+<standard-table>
 	<tr>
 		<th>Revision</th>
 		<th>IsCurrent</th>
@@ -22,7 +22,7 @@
 			<td>@revision.MinorEdit</td>
 		</tr>
 	}
-</table>
+</standard-table>
 
 <h4>Markup</h4>
 <info-alert>

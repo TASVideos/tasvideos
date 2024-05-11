@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Reasons used for Submission Rejection");
 }
 @await Html.RenderWiki(SystemWiki.RejectionReasonsHeader)
-<table class="table">
+<standard-table>
 	<tr>
 		<th>Reasons</th>
 		<th>Submission Count</th>
@@ -25,7 +25,7 @@
 			</td>
 		</tr>
 	}
-</table>
+</standard-table>
 
 <div permission="RejectionReasonMaintenance">
 	<hr />
@@ -37,9 +37,9 @@
 				<label for="displayName">New Reason</label>
 				<input id="displayName" name="displayName" type="text" class="form-control"/>
 				<form-button-bar>
-					<button type="submit" class="btn btn-primary">
+					<submit-button class="btn btn-primary">
 						<i class="fa fa-plus"></i> Create
-					</button>
+					</submit-button>
 				</form-button-bar>
 			</column>
 		</row>

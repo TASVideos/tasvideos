@@ -17,7 +17,7 @@
 	<cardheader>Description</cardheader>
 	<cardbody><wiki-markup markup=@Model.Description></wiki-markup></cardbody>
 </card>
-<table condition="Model.Games.Any()" class="table table-bordered table-striped">
+<standard-table condition="Model.Games.Any()">
 	<tr>
 		<th>Game</th>
 		<th>Systems</th>
@@ -53,4 +53,4 @@
 			</td>
 		</tr>
 	}
-</table>
+</standard-table>
