@@ -56,10 +56,10 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 				// We only want to pre-populate the Game Version if a valid Game was provided
 				if (GameVersionId.HasValue)
 				{
-					var rom = await db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
-					if (rom is not null)
+					var version = await db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
+					if (version is not null)
 					{
-						Catalog.GameVersionId = rom.Id;
+						Catalog.GameVersionId = version.Id;
 					}
 				}
 			}
@@ -176,16 +176,16 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		{
 			if (Catalog.GameVersionId.HasValue)
 			{
-				var rom = await db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId.Value);
-				if (rom is null)
+				var version = await db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId.Value);
+				if (version is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown Game Version Id: {Catalog.GameVersionId.Value}");
 				}
 				else
 				{
-					externalMessages.Add($"Game Version changed from \"{submission.GameVersion?.Name}\" to \"{rom.Name}\"");
+					externalMessages.Add($"Game Version changed from \"{submission.GameVersion?.Name}\" to \"{version.Name}\"");
 					submission.GameVersionId = Catalog.GameVersionId.Value;
-					submission.GameVersion = rom;
+					submission.GameVersion = version;
 				}
 			}
 			else
