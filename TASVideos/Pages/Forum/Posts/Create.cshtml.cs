@@ -44,9 +44,8 @@ public class CreateModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var topic = await db.ForumTopics
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Where(t => t.Id == TopicId)
 			.Select(t => new { t.Title, t.IsLocked })
 			.SingleOrDefaultAsync();

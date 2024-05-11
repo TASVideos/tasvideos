@@ -42,7 +42,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 
 		Posts = await db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
-			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.OrderByDescending(p => p.CreateTimestamp)
 			.Select(p => new UserPagePost
 			{

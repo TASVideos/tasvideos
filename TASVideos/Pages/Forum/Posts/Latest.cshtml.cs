@@ -12,9 +12,8 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task OnGet()
 	{
-		var allowRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		Posts = await db.ForumPosts
-			.ExcludeRestricted(allowRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Since(DateTime.UtcNow.AddDays(-3))
 			.OrderByDescending(p => p.CreateTimestamp)
 			.ToLatestPost()

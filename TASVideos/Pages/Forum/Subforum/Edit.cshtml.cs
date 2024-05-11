@@ -90,9 +90,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 	private async Task Initialize()
 	{
 		CanDelete = await CanBeDeleted();
-		AvailableCategories = await db.ForumCategories
-			.ToDropdown()
-			.ToListAsync();
+		AvailableCategories = await db.ForumCategories.ToDropdownList();
 	}
 
 	private async Task<bool> CanBeDeleted()

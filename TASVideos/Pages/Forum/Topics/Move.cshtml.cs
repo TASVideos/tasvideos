@@ -19,16 +19,12 @@ public class MoveModel(
 
 	public List<SelectListItem> AvailableForums { get; set; } = [];
 
-	public bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
-
 	public async Task<IActionResult> OnGet()
 	{
-		var seeRestricted = CanSeeRestricted;
-
 		var topic = await db.ForumTopics
 			.Where(t => t.Id == Id)
 			.Include(t => t.Forum)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Select(t => new TopicMove
 			{
 				TopicTitle = t.Title,
@@ -56,10 +52,9 @@ public class MoveModel(
 			return Page();
 		}
 
-		var seeRestricted = CanSeeRestricted;
 		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
 		if (topic is null)
@@ -102,10 +97,7 @@ public class MoveModel(
 
 	private async Task PopulateAvailableForums()
 	{
-		AvailableForums = await db.Forums
-			.ExcludeRestricted(CanSeeRestricted)
-			.ToDropdown(Topic.ForumId)
-			.ToListAsync();
+		AvailableForums = await db.Forums.ToDropdownList(UserCanSeeRestricted, Topic.ForumId);
 	}
 
 	public class TopicMove

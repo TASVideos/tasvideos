@@ -34,6 +34,8 @@ public class BasePageModel : PageModel
 
 	public string IpAddress => PageContext.HttpContext.ActualIpAddress()?.ToString() ?? "";
 
+	protected bool UserCanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
+
 	protected IActionResult Home() => RedirectToPage("/Index");
 
 	protected IActionResult AccessDenied() => RedirectToPage("/Account/AccessDenied");

@@ -72,7 +72,6 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 
 		if (!string.IsNullOrWhiteSpace(SearchTerms))
 		{
-			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			DisplayPageSize = PageSize;
 			if (new[] { PageSearch, TopicSearch, PostSearch, GameSearch }.Count(b => b) == 1)
 			{
@@ -98,7 +97,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 			if (TopicSearch)
 			{
 				TopicResults = await db.ForumTopics
-				.ExcludeRestricted(seeRestricted)
+				.ExcludeRestricted(UserCanSeeRestricted)
 				.Where(t => t.ForumId != SiteGlobalConstants.WorkbenchForumId && t.ForumId != SiteGlobalConstants.PlaygroundForumId && t.ForumId != SiteGlobalConstants.PublishedMoviesForumId && t.ForumId != SiteGlobalConstants.GrueFoodForumId)
 				.Where(t => Regex.IsMatch(t.Title, "(^|[^A-Za-z])" + SearchTerms))
 				.OrderByDescending(t => t.CreateTimestamp)
@@ -114,7 +113,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 			if (PostSearch)
 			{
 				PostResults = await db.ForumPosts
-				.ExcludeRestricted(seeRestricted)
+				.ExcludeRestricted(UserCanSeeRestricted)
 				.Where(p => Regex.IsMatch(p.Text, "(^|[^A-Za-z])" + SearchTerms))
 				.OrderByDescending(p => p.CreateTimestamp)
 				.Skip(skip)

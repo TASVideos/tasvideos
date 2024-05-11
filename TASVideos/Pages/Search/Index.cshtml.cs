@@ -34,7 +34,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		if (!string.IsNullOrWhiteSpace(SearchTerms))
 		{
-			var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 			var skip = PageSize * (PageNumber - 1);
 			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
 			PageResults = await db.WikiPages
@@ -48,7 +47,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				.ToListAsync();
 
 			PostResults = await db.ForumPosts
-				.ExcludeRestricted(seeRestricted)
+				.ExcludeRestricted(UserCanSeeRestricted)
 				.Where(p => p.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.Skip(skip)

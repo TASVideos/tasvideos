@@ -32,9 +32,8 @@ public class EditModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var post = await db.ForumPosts
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Where(p => p.Id == Id)
 			.Select(p => new ForumPostEditModel
 			{
@@ -107,12 +106,10 @@ public class EditModel(
 			return Page();
 		}
 
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-
 		var forumPost = await db.ForumPosts
 			.Include(p => p.Topic)
 			.Include(p => p.Topic!.Forum)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
 		if (forumPost is null)
@@ -165,11 +162,10 @@ public class EditModel(
 
 	public async Task<IActionResult> OnPostDelete()
 	{
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var post = await db.ForumPosts
 			.Include(p => p.Topic)
 			.Include(p => p.Topic!.Forum)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
 		if (post is null)

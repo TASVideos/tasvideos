@@ -13,7 +13,7 @@ public class UnansweredModel(ApplicationDbContext db) : BasePageModel
 	public async Task OnGet()
 	{
 		Posts = await db.ForumTopics
-			.ExcludeRestricted(User.Has(PermissionTo.SeeRestrictedForums))
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Where(t => t.ForumPosts.Count == 1)
 			.OrderByDescending(t => t.CreateTimestamp)
 			.Select(t => new UnansweredPosts(

@@ -19,13 +19,11 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 
 	public async Task<IActionResult> OnGet()
 	{
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-
 		var topic = await db.ForumTopics
 			.Include(t => t.Poll)
 			.ThenInclude(p => p!.PollOptions)
 			.ThenInclude(o => o.Votes)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == TopicId);
 
 		if (topic is null)
@@ -76,13 +74,11 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 			return Page();
 		}
 
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-
 		var topic = await db.ForumTopics
 			.Include(t => t.Poll)
 			.ThenInclude(p => p!.PollOptions)
 			.ThenInclude(o => o.Votes)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Where(t => t.Id == TopicId)
 			.SingleOrDefaultAsync();
 

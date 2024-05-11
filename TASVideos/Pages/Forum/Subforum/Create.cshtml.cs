@@ -37,8 +37,6 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task Initialize()
 	{
-		AvailableCategories = await db.ForumCategories
-			.ToDropdown()
-			.ToListAsync();
+		AvailableCategories = await db.ForumCategories.ToDropdownList();
 	}
 }

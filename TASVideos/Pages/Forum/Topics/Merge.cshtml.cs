@@ -17,13 +17,10 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 
 	public List<SelectListItem> AvailableTopics { get; set; } = [];
 
-	private bool CanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
-
 	public async Task<IActionResult> OnGet()
 	{
-		bool seeRestricted = CanSeeRestricted;
 		var topic = await db.ForumTopics
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Where(t => t.Id == Id)
 			.Select(t => new TopicMerge
 			{
@@ -58,10 +55,9 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 			return Page();
 		}
 
-		var seeRestricted = CanSeeRestricted;
 		var originalTopic = await db.ForumTopics
 			.Include(f => f.Forum)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
 		if (originalTopic is null)
@@ -71,7 +67,7 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 
 		var destinationTopic = await db.ForumTopics
 			.Include(t => t.Forum)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Topic.DestinationTopicId);
 
 		if (destinationTopic is null)
@@ -114,24 +110,16 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 
 	private async Task PopulateAvailableForums()
 	{
-		var seeRestricted = CanSeeRestricted;
-		AvailableForums = await db.Forums
-			.ExcludeRestricted(seeRestricted)
-			.ToDropdown(Topic.ForumId)
-			.ToListAsync();
-
+		AvailableForums = await db.Forums.ToDropdownList(UserCanSeeRestricted, Topic.ForumId);
 		AvailableTopics = (await GetTopicsForForum(Topic.ForumId)).WithDefaultEntry();
 	}
 
 	private async Task<List<SelectListItem>> GetTopicsForForum(int forumId)
 	{
-		var seeRestricted = CanSeeRestricted;
 		return await db.ForumTopics
-			.ExcludeRestricted(seeRestricted)
 			.ForForum(forumId)
 			.Where(t => t.Id != Id)
-			.ToDropdown()
-			.ToListAsync();
+			.ToDropdownList(UserCanSeeRestricted);
 	}
 
 	public class TopicMerge

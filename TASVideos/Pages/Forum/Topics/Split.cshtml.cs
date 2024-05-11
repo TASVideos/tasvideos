@@ -122,9 +122,8 @@ public class SplitModel(
 
 	private async Task<TopicSplit?> PopulatePosts()
 	{
-		bool seeRestricted = CanSeeRestricted;
 		return await db.ForumTopics
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(CanSeeRestricted)
 			.Where(t => t.Id == Id)
 			.Select(t => new TopicSplit
 			{
@@ -153,11 +152,7 @@ public class SplitModel(
 
 	private async Task PopulateAvailableForums()
 	{
-		var seeRestricted = CanSeeRestricted;
-		AvailableForums = await db.Forums
-			.ExcludeRestricted(seeRestricted)
-			.ToDropdown(Topic.ForumId)
-			.ToListAsync();
+		AvailableForums = await db.Forums.ToDropdownList(CanSeeRestricted, Topic.ForumId);
 	}
 
 	public class TopicSplit

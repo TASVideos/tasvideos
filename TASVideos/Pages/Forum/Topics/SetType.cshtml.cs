@@ -49,10 +49,8 @@ public class SetTypeModel(ApplicationDbContext db) : BaseForumModel
 			return Page();
 		}
 
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-
 		var topic = await db.ForumTopics
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Where(t => t.Id == TopicId)
 			.SingleOrDefaultAsync();
 

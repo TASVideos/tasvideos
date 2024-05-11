@@ -42,9 +42,8 @@ public class IndexModel(
 			? User.GetUserId()
 			: null;
 
-		bool seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var topic = await db.ForumTopics
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.Select(t => new TopicDisplay
 			{
 				Id = t.Id,
@@ -241,10 +240,9 @@ public class IndexModel(
 
 	public async Task<IActionResult> OnPostLock(string topicTitle, bool locked)
 	{
-		var seeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
 		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
-			.ExcludeRestricted(seeRestricted)
+			.ExcludeRestricted(UserCanSeeRestricted)
 			.SingleOrDefaultAsync(t => t.Id == Id);
 		if (topic is null)
 		{

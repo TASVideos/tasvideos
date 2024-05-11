@@ -149,32 +149,38 @@ public static class EntityExtensions
 		});
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<ForumCategory> query)
+	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<ForumCategory> query)
 	{
 		return query.Select(c => new SelectListItem
 		{
 			Text = c.Title,
 			Value = c.Id.ToString()
-		});
+		}).ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<Forum> query, int forumId)
+	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Forum> query, bool canSeeRestricted, int forumId)
 	{
-		return query.Select(f => new SelectListItem
-		{
-			Text = f.Name,
-			Value = f.Id.ToString(),
-			Selected = f.Id == forumId
-		});
+		return query
+			.ExcludeRestricted(canSeeRestricted)
+			.Select(f => new SelectListItem
+			{
+				Text = f.Name,
+				Value = f.Id.ToString(),
+				Selected = f.Id == forumId
+			})
+			.ToListAsync();
 	}
 
-	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<ForumTopic> query)
+	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<ForumTopic> query, bool canSeeRestricted)
 	{
-		return query.Select(t => new SelectListItem
-		{
-			Text = t.Title,
-			Value = t.Id.ToString()
-		});
+		return query
+			.ExcludeRestricted(canSeeRestricted)
+			.Select(t => new SelectListItem
+			{
+				Text = t.Title,
+				Value = t.Id.ToString()
+			})
+			.ToListAsync();
 	}
 
 	public static IQueryable<SelectListItem> ToDropdown(this IQueryable<User> query)

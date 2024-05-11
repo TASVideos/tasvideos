@@ -14,11 +14,9 @@ public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePa
 	public async Task OnGet()
 	{
 		var user = await userManager.GetRequiredUser(User);
-		var allowRestricted = User.Has(PermissionTo.SeeRestrictedForums);
-		var since = user.LastLoggedInTimeStamp ?? DateTime.UtcNow;
 		Posts = await db.ForumPosts
-			.ExcludeRestricted(allowRestricted)
-			.Since(since)
+			.ExcludeRestricted(UserCanSeeRestricted)
+			.Since(user.LastLoggedInTimeStamp ?? DateTime.UtcNow)
 			.OrderByDescending(p => p.CreateTimestamp)
 			.ToLatestPost()
 			.PageOf(Search);
