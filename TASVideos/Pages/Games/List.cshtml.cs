@@ -57,49 +57,25 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	public async Task<IActionResult> OnGetFrameRateDropDownForSystem(int systemId, bool includeEmpty)
 	{
 		var items = await db.GameSystemFrameRates.ToDropDownList(systemId);
-
-		if (includeEmpty)
-		{
-			items = items.WithDefaultEntry();
-		}
-
-		return ToDropdownResult(items);
+		return ToDropdownResult(items, includeEmpty);
 	}
 
 	public async Task<IActionResult> OnGetGameDropDownForSystem(int systemId, bool includeEmpty)
 	{
 		var items = await db.Games.ToDropDownList(systemId);
-
-		if (includeEmpty)
-		{
-			items = items.WithDefaultEntry();
-		}
-
-		return ToDropdownResult(items);
+		return ToDropdownResult(items, includeEmpty);
 	}
 
 	public async Task<IActionResult> OnGetVersionDropDownForGame(int gameId, int systemId, bool includeEmpty)
 	{
 		var items = await db.GameVersions.ToDropDownList(systemId, gameId);
-
-		if (includeEmpty)
-		{
-			items = items.WithDefaultEntry();
-		}
-
-		return ToDropdownResult(items);
+		return ToDropdownResult(items, includeEmpty);
 	}
 
 	public async Task<IActionResult> OnGetGameGoalDropDownForGame(int gameId, bool includeEmpty)
 	{
 		var items = await db.GameGoals.ToDropDownList(gameId);
-
-		if (includeEmpty)
-		{
-			items = items.WithDefaultEntry();
-		}
-
-		return ToDropdownResult(items);
+		return ToDropdownResult(items, includeEmpty);
 	}
 
 	private async Task<SystemPageOf<GameEntry>> GetPageOfGames(GameListRequest paging)

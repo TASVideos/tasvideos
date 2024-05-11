@@ -115,8 +115,13 @@ public class BasePageModel : PageModel
 		.OrderBy(p => p.Text)
 		.WithDefaultEntry();
 
-	protected PartialViewResult ToDropdownResult(IEnumerable<SelectListItem> items)
+	protected PartialViewResult ToDropdownResult(IEnumerable<SelectListItem> items, bool includeEmpty)
 	{
+		if (includeEmpty)
+		{
+			items = items.WithDefaultEntry();
+		}
+
 		return new PartialViewResult
 		{
 			ViewName = "_DropdownItems",

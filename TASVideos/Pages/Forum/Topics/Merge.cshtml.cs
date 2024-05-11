@@ -104,8 +104,7 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 
 	public async Task<IActionResult> OnGetTopicsForForum(int forumId)
 	{
-		var items = UiDefaults.DefaultEntry.Concat(await GetTopicsForForum(forumId));
-		return ToDropdownResult(items);
+		return ToDropdownResult(await GetTopicsForForum(forumId), true);
 	}
 
 	private async Task PopulateAvailableForums()
