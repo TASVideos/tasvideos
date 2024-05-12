@@ -68,13 +68,14 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 		public IEnumerable<File> MovieFileLinks => Files.Where(f => f.Type == FileType.MovieFile);
 		public int RatingCount { get; init; }
 		public double? OverallRating { get; init; }
-		public RateModel.RatingDisplay Rating { get; init; } = new();
+		public CurrentRating Rating { get; init; } = null!;
 
 		public record Tag(string DisplayName, string Code);
 		public record Flag(string? IconPath, string? LinkPath, string Name);
 		public record File(int Id, string Path, FileType Type, string? Description);
 		public record ObsoleteMovie(int Id, string Title);
 		public record PublicationUrl(PublicationUrlType Type, string? Url, string? DisplayName);
+		public record CurrentRating(string? Rating, bool Unrated);
 	}
 
 	public class PublicationSearch : IPublicationTokens

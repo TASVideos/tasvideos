@@ -1,27 +1,27 @@
 ﻿@page "{id}"
 @model RateModel
 @{
-	ViewData.SetTitle($"Movie #{Model.Id} - {Model.Rating.Title}");
+	ViewData.SetTitle($"Movie #{Model.Id} - {Model.Title}");
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
-	<input type="hidden" asp-for="Rating.Title" />
+	<input type="hidden" asp-for="Title" />
 	<row>
 		<column class="text-center text-md-start">
 			<fieldset>
-				<span class="fs-4">@Html.DisplayNameFor(m => m.Rating.Rating)</span>
+				<span class="fs-4">@Html.DisplayNameFor(m => m.Rating)</span>
 				<span class="text-nowrap">
-					( <input asp-for="Rating.Unrated" />
-					<label asp-for="Rating.Unrated">Unrated</label> )
+					( <input type="checkbox" id="unrated" />
+					<label for="unrated">Unrated</label> )
 				</span>
 				<br />
-				<input asp-for="Rating.Rating" type="number" class="form-control fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
-				<input id="entertainmentSlider" type="range" class="form-range mw-100 h-auto" style="width:15rem;" min="0" max="10" value="@Model.Rating.Rating" step="0.1" />
+				<input asp-for="Rating" type="number" class="form-control fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating" step="0.1" />
+				<input id="entertainmentSlider" type="range" class="form-range mw-100 h-auto" style="width:15rem;" min="0" max="10" value="@Model.Rating" step="0.1" />
 			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>
-		<button disable="@Model.Rating.Rating is null" type="submit" class="btn btn-primary" id="submit-btn"><span class="fa fa-save"></span> Rate</button>
+		<button disable="@Model.Rating is null" type="submit" class="btn btn-primary" id="submit-btn"><span class="fa fa-save"></span> Rate</button>
 		<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back to Publication</a>
 	</form-button-bar>
 </form>
@@ -31,7 +31,7 @@
 {
 	<label>@Model.AllRatings.Count total ratings</label>
 	<br />
-	<label>Rating Average: @Model.OverallRating</label>
+	<label>Rating Average: @Model.OverallRating.ToOverallRatingString()</label>
 	<standard-table>
 		<tr>
 			<th>User</th>
@@ -87,6 +87,6 @@ else
 				enableSubmit();
 			};
 		}
-		ratingConnect(document.getElementById('Rating_Unrated'), document.getElementById('Rating_Rating'), document.getElementById('entertainmentSlider'));
+		ratingConnect(document.getElementById('unrated'), document.getElementById('Rating'), document.getElementById('entertainmentSlider'));
 	</script>
 }

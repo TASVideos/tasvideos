@@ -153,7 +153,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	}
 
 	/// <summary>
-	/// Attempts to save changes, but if a <see cref="DbUpdateConcurrencyException"/> occurs,
+	/// Attempts to save changes, but if a <see cref="DbUpdateConcurrencyException"/> or a <see cref="DbUpdateException"/> occurs,
 	/// it will be caught no changes will be saved.  Only to be used if discarding the data is
 	/// an acceptable handling.
 	/// </summary>
@@ -164,6 +164,10 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			return await SaveChangesAsync(cancellationToken);
 		}
 		catch (DbUpdateConcurrencyException)
+		{
+			return 0;
+		}
+		catch (DbUpdateException)
 		{
 			return 0;
 		}

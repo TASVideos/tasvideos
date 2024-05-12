@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -126,6 +127,15 @@ public class BasePageModel : PageModel
 		{
 			ViewName = "_DropdownItems",
 			ViewData = new ViewDataDictionary<IEnumerable<SelectListItem>>(ViewData, items)
+		};
+	}
+
+	protected ContentResult Json(object? obj)
+	{
+		return new ContentResult
+		{
+			StatusCode = StatusCodes.Status200OK,
+			Content = JsonSerializer.Serialize(obj)
 		};
 	}
 
