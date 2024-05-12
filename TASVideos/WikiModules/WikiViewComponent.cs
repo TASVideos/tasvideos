@@ -12,6 +12,10 @@ public abstract class WikiViewComponent : ViewComponent
 		return View(viewName: WikiViewPath, model: this);
 	}
 
+	public ContentViewComponentResult Empty() => new ContentViewComponentResult("");
+	public ContentViewComponentResult Error(string str) => new ContentViewComponentResult($"<<< Error: {str} >>>");
+	public ContentViewComponentResult String(string str) => new ContentViewComponentResult(str);
+
 	protected int DefaultPageSize { get; set; } = 25;
 	protected string? DefaultSort { get; set; }
 

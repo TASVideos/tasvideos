@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -8,6 +7,6 @@ public class UserGetWikiName : WikiViewComponent
 {
 	public IViewComponentResult Invoke()
 	{
-		return new ContentViewComponentResult(UserClaimsPrincipal.Name());
+		return String(UserClaimsPrincipal.Name());
 	}
 }

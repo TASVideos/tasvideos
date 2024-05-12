@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using Microsoft.AspNetCore.Mvc.ViewComponents;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
@@ -12,14 +11,12 @@ public class TimeSinceDate : WikiViewComponent
 		var previousDate = new DateTime(y, m, d);
 		var nowDate = DateTime.UtcNow;
 
-		string output = @out.ToLowerInvariant() switch
+		return @out.ToLowerInvariant() switch
 		{
-			"days" => ((int)(nowDate - previousDate).TotalDays).ToString(CultureInfo.CurrentCulture),
-			"years" => GetDifferenceInYears(previousDate, nowDate).ToString(CultureInfo.CurrentCulture),
-			_ => "Error: Invalid out parameter!"
+			"days" => String(((int)(nowDate - previousDate).TotalDays).ToString(CultureInfo.CurrentCulture)),
+			"years" => String(GetDifferenceInYears(previousDate, nowDate).ToString(CultureInfo.CurrentCulture)),
+			_ => Error("Invalid out parameter!")
 		};
-
-		return new ContentViewComponentResult(output);
 	}
 
 	// https://stackoverflow.com/questions/4127363/date-difference-in-years-using-c-sharp

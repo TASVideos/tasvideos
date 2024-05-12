@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -13,7 +12,7 @@ public class PlatformAuthorLists(ApplicationDbContext db) : WikiViewComponent
 	{
 		if (!before.HasValue || !after.HasValue)
 		{
-			return new ContentViewComponentResult("Invalid parameters.");
+			return Error("Invalid parameters.");
 		}
 
 		ShowClasses = showClassIcons;

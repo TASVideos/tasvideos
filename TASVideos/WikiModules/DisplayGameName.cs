@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -10,7 +9,7 @@ public class DisplayGameName(ApplicationDbContext db) : WikiViewComponent
 	{
 		if (!gid.Any())
 		{
-			return new ContentViewComponentResult("<<< No gamename ID specified >>>");
+			return Error("No game ID specified");
 		}
 
 		var games = await db.Games
@@ -22,6 +21,6 @@ public class DisplayGameName(ApplicationDbContext db) : WikiViewComponent
 			.OrderBy(g => g.DisplayName)
 			.Select(g => $"{g.DisplayName}");
 
-		return new ContentViewComponentResult(string.Join(", ", displayNames));
+		return String(string.Join(", ", displayNames));
 	}
 }

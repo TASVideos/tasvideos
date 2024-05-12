@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -12,7 +11,7 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 	{
 		if (!HttpContext.User.Has(PermissionTo.ViewPrivateUserData))
 		{
-			return new ContentViewComponentResult("No access to this resource");
+			return Error("No access to this resource");
 		}
 
 		DefaultPageSize = 100;

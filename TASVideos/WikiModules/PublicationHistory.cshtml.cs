@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewComponents;
-using TASVideos.Core.Services.PublicationChain;
+﻿using TASVideos.Core.Services.PublicationChain;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
@@ -14,13 +13,13 @@ public class PublicationHistory(ApplicationDbContext db, IPublicationHistory his
 		var publication = await db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
 		if (publication is null)
 		{
-			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
+			return Error($"Invalid publication id: {publicationId}");
 		}
 
 		var gameHistory = await history.ForGame(publication.GameId);
 		if (gameHistory is null)
 		{
-			return new ContentViewComponentResult($"Invalid publication id: {publicationId}");
+			return Error($"Invalid publication id: {publicationId}");
 		}
 
 		History = gameHistory;
