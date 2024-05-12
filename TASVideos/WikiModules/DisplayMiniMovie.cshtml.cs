@@ -9,9 +9,7 @@ public class DisplayMiniMovie(ApplicationDbContext db) : WikiViewComponent
 	public MiniMovieModel Movie { get; set; } = new MiniMovieModel { Title = "No Publications", OnlineWatchingUrl = "" };
 	public async Task<IViewComponentResult> InvokeAsync(string? pubClass, IList<string> flags)
 	{
-		var query = db.Publications
-			.ThatAreCurrent()
-			.AsQueryable();
+		var query = db.Publications.ThatAreCurrent();
 
 		if (!string.IsNullOrWhiteSpace(pubClass))
 		{
