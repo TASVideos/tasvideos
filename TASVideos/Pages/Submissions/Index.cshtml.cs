@@ -6,9 +6,7 @@ namespace TASVideos.Pages.Submissions;
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
-	private static readonly List<SelectListItem> Statuses = [.. Enum.GetValues<SubmissionStatus>()
-		.ToDropDown()
-		.OrderBy(s => s.Text)];
+	private static readonly List<SelectListItem> Statuses = Enum.GetValues<SubmissionStatus>().ToDropDown();
 
 	// For legacy routes such as Subs-Rej-422up
 	[FromRoute]
@@ -19,7 +17,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public SubmissionPageOf<SubmissionEntry> Submissions { get; set; } = SubmissionPageOf<SubmissionEntry>.Empty();
 
-	[Display(Name = "Statuses")]
 	public List<SelectListItem> AvailableStatuses => Statuses;
 
 	public List<SelectListItem> SystemList { get; set; } = [];

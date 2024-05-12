@@ -4,13 +4,17 @@ namespace TASVideos.TagHelpers;
 
 public class StandardTableTagHelper : TagHelper
 {
-	public override void Process(TagHelperContext context, TagHelperOutput output)
+	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
-		output.TagName = "table";
-		output.AddCssClass("table");
-		output.AddCssClass("table-sm");
-		output.AddCssClass("table-bordered");
-		output.AddCssClass("table-striped");
+		output.TagName = "div";
 		output.AddCssClass("table-responsive");
+
+		var content = (await output.GetChildContentAsync()).GetContent();
+		output.Content.SetHtmlContent(
+			$"""
+			<table class='table table-sm table-bordered table-striped'>
+				{content}
+			</table>
+			""");
 	}
 }

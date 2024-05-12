@@ -37,7 +37,7 @@
 </form>
 <hr />
 <partial name="_Pager" model="Model.Submissions" />
-<standard-table class="table table-striped table-bordered">
+<standard-table>
 	<sortable-table-head model-type="typeof(IndexModel.SubmissionEntry)" sorting="Model.Search" />
 	@foreach (var item in Model.Submissions)
 	{

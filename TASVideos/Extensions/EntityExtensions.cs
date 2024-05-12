@@ -332,6 +332,7 @@ public static class EntityExtensions
 				Value = ((int)(object)e).ToString(),
 				Text = e.EnumDisplayName()
 			})
+			.OrderBy(s => s.Text)
 			.ToList();
 	}
 
