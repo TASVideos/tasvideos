@@ -50,6 +50,11 @@ public partial class HtmlWriter(TextWriter w)
 
 	public void CloseTag(string tagName)
 	{
+		if (VoidTags.Contains(tagName))
+		{
+			throw new InvalidOperationException($"{tagName} cannot have children and is self-closing");
+		}
+
 		if (_openTags.Count == 0)
 		{
 			throw new InvalidOperationException("No open tags!");
@@ -73,6 +78,10 @@ public partial class HtmlWriter(TextWriter w)
 		_inTagOpen = false;
 	}
 
+	/// <summary>equivalent of <see cref="OpenTag"/> for tags like <c>&lt;img></c> which may not have children and are self-closing</summary>
+	/// <remarks>where does the name "void" come from? it's the title of the relevant MDN article, but nowhere in the spec --yoshi</remarks>
+	/// <seealso cref="OpenTag"/>
+	/// <seealso cref="CloseTag"/>
 	public void VoidTag(string tagName)
 	{
 		if (InForeignContent)
@@ -186,11 +195,12 @@ public partial class HtmlWriter(TextWriter w)
 	{
 		if (_openTags.Count > 0)
 		{
-			throw new InvalidOperationException("Tags still open!");
+			throw new InvalidOperationException($"Tags still open! {string.Join(" > ", _openTags)}");
 		}
 
 		if (_inTagOpen)
 		{
+			_inTagOpen = false;
 			w.Write('>');
 		}
 	}
