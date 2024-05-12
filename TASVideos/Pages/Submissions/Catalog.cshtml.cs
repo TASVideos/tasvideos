@@ -96,7 +96,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		if (submission.SystemId != Catalog.SystemId)
 		{
-			var system = await db.GameSystems.SingleOrDefaultAsync(s => s.Id == Catalog.SystemId!.Value);
+			var system = await db.GameSystems.FindAsync(Catalog.SystemId!.Value);
 			if (system is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId!.Value}");
@@ -111,7 +111,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		if (submission.SystemFrameRateId != Catalog.SystemFrameRateId)
 		{
-			var systemFramerate = await db.GameSystemFrameRates.SingleOrDefaultAsync(s => s.Id == Catalog.SystemFrameRateId!.Value);
+			var systemFramerate = await db.GameSystemFrameRates.FindAsync(Catalog.SystemFrameRateId!.Value);
 			if (systemFramerate is null)
 			{
 				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Framerate Id: {Catalog.SystemFrameRateId!.Value}");
@@ -128,7 +128,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		{
 			if (Catalog.GameId.HasValue)
 			{
-				var game = await db.Games.SingleOrDefaultAsync(s => s.Id == Catalog.GameId.Value);
+				var game = await db.Games.FindAsync(Catalog.GameId.Value);
 				if (game is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown Game Id: {Catalog.GameId.Value}");
@@ -152,7 +152,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		{
 			if (Catalog.GameGoalId.HasValue)
 			{
-				var gameGoal = await db.GameGoals.SingleOrDefaultAsync(gg => gg.Id == Catalog.GameGoalId);
+				var gameGoal = await db.GameGoals.FindAsync(Catalog.GameGoalId);
 				if (gameGoal is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
@@ -176,7 +176,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		{
 			if (Catalog.GameVersionId.HasValue)
 			{
-				var version = await db.GameVersions.SingleOrDefaultAsync(s => s.Id == Catalog.GameVersionId.Value);
+				var version = await db.GameVersions.FindAsync(Catalog.GameVersionId.Value);
 				if (version is null)
 				{
 					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown Game Version Id: {Catalog.GameVersionId.Value}");
