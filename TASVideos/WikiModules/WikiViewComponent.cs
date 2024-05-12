@@ -35,5 +35,5 @@ public abstract class WikiViewComponent : ViewComponent
 		};
 	}
 
-	public string? CurrentPage => HttpContext.Request.Path.Value;
+	public string CurrentPage => HttpContext.Request.Path.Value?.Trim('/') ?? "";
 }

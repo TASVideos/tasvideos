@@ -9,12 +9,10 @@ public class GameName(ApplicationDbContext db) : WikiViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		var path = HttpContext.Request.Path.ToString().Trim('/');
-
-		if (path.IsSystemGameResourcePath())
+		if (CurrentPage.IsSystemGameResourcePath())
 		{
 			var system = await db.GameSystems
-				.SingleOrDefaultAsync(s => s.Code == path.SystemGameResourcePath());
+				.SingleOrDefaultAsync(s => s.Code == CurrentPage.SystemGameResourcePath());
 			Games.Add(new GameEntry
 			{
 				System = system is not null
@@ -24,7 +22,7 @@ public class GameName(ApplicationDbContext db) : WikiViewComponent
 		}
 		else
 		{
-			var baseGame = string.Join("/", path.Split('/').Take(3));
+			var baseGame = string.Join("/", CurrentPage.Split('/').Take(3));
 			Games = await db.Games
 				.Where(g => g.GameResourcesPage == baseGame)
 				.Select(g => new GameEntry
