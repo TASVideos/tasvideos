@@ -24,7 +24,6 @@ public class PublicationHistory(ApplicationDbContext db, IPublicationHistory his
 
 		History = gameHistory;
 		ViewData["Highlight"] = publicationId;
-		ViewData["HighlightClass"] = "fw-bold fst-italic border border-info p-1";
 		return View();
 	}
 }

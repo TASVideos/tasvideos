@@ -2,7 +2,7 @@
 
 @foreach (var node in Model.Goals.OrderBy(b => string.IsNullOrWhiteSpace(b.Goal)))
 {
-	var highlight = node.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
+	var highlight = node.Id == (int?)ViewData["Highlight"] ? "fw-bold fst-italic border border-info p-1" : "";
 	<div class="mb-4">
 		<p>Current: <strong>@node.Goal</strong></p>
 		<icon path="@node.ClassIconPath" />

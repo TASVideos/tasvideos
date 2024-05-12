@@ -1,6 +1,6 @@
 ﻿@model TASVideos.Core.Services.PublicationHistoryNode
 @{
-	var highlight = Model.Id == (int?)ViewData["Highlight"] ? ViewData["HighlightClass"] : "";
+	var highlight = Model.Id == (int?)ViewData["Highlight"] ? "fw-bold fst-italic border border-info p-1" : "";
 }
 <icon path="@Model.ClassIconPath" />
 <pub-link class="@highlight text-decoration-line-through" id="@Model.Id">@Model.Title</pub-link>
