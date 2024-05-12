@@ -1,4 +1,5 @@
 ﻿@model TASVideos.Pages.Publications.IndexModel.PublicationDisplay
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor Accessor
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
 	var requestToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
@@ -203,7 +204,7 @@
 							asp-page="/Games/Versions/View"
 							asp-route-id="@Model.GameVersionId"
 							asp-route-gameid="@Model.GameId"
-							asp-route-returnUrl="@ViewData["ReturnUrl"]">
+							asp-route-returnUrl="@Accessor.HttpContext.CurrentPathToReturnUrl()">
 							@Model.GameVersionName
 						</a><br />
 					</span>

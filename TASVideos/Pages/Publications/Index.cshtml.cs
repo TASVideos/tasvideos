@@ -29,7 +29,6 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 			.FilterByTokens(searchModel)
 			.ToViewModel(searchModel.SortBy == "y", User.GetUserId())
 			.PageOf(Paging);
-		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return Page();
 	}
 

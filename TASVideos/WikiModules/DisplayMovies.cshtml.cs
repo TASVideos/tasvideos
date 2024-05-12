@@ -41,16 +41,14 @@ public class DisplayMovies(ApplicationDbContext db, IMovieSearchTokens tokens) :
 			Authors = author
 		};
 
-		if (searchModel.IsEmpty)
+		if (!searchModel.IsEmpty)
 		{
-			return View();
+			Movies = await db.Publications
+				.FilterByTokens(searchModel)
+				.ToViewModel(searchModel.SortBy == "y")
+				.ToListAsync();
 		}
 
-		Movies = await db.Publications
-			.FilterByTokens(searchModel)
-			.ToViewModel(searchModel.SortBy == "y")
-			.ToListAsync();
-		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return View();
 	}
 }

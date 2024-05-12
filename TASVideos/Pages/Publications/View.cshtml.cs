@@ -20,7 +20,6 @@ public class ViewModel(ApplicationDbContext db, IFileService fileService) : Base
 		}
 
 		Publication = publication;
-		ViewData["ReturnUrl"] = HttpContext.CurrentPathToReturnUrl();
 		return Page();
 	}
 

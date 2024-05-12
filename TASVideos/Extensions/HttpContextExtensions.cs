@@ -2,8 +2,8 @@
 
 public static class HttpContextExtensions
 {
-	public static string CurrentPathToReturnUrl(this HttpContext context)
+	public static string CurrentPathToReturnUrl(this HttpContext? context)
 	{
-		return $"{context.Request.Path}{context.Request.QueryString}";
+		return context is null ? "" : $"{context.Request.Path}{context.Request.QueryString}";
 	}
 }
