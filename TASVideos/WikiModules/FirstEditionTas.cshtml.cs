@@ -9,8 +9,6 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 
 	public async Task<IViewComponentResult> InvokeAsync(DateTime? before, DateTime? after, bool splitByPlatform)
 	{
-		// TODO: add publicationClass argument, default to moon,stars,
-		// we want to avoid baking in "business logic" like which classes are award eligible
 		var beforeYear = before ?? new DateTime(DateTime.UtcNow.Year, 1, 1);
 		var afterYear = after ?? new DateTime(DateTime.UtcNow.AddYears(1).Year, 1, 1);
 
