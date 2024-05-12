@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages;
+﻿using TASVideos.Extensions;
 
 namespace TASVideos.RazorPages.Tests.Pages;
 

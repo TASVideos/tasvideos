@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.ResponseCompression;
 using TASVideos.Core.Settings;
-using TASVideos.Pages;
 using TASVideos.Services;
 
 namespace TASVideos.Extensions;
@@ -92,9 +91,6 @@ public static class ServiceCollectionExtensions
 			.AddRazorPages(options =>
 			{
 				options.Conventions.AddPageRoute("/Wiki/Render", "{*url}");
-				options.Conventions.AddFolderApplicationModelConvention(
-					"/",
-					model => model.Filters.Add(new SetPageViewBagAttribute()));
 
 				foreach (var alias in Aliases)
 				{

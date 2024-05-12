@@ -1,6 +1,6 @@
-﻿namespace TASVideos.Pages;
+﻿namespace TASVideos.Extensions;
 
-public static class Extensions
+public static class StringExtensions
 {
 	public static ICollection<string> ToTokens(this string? routeQuery)
 	{
