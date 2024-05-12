@@ -12,9 +12,9 @@ public abstract class WikiViewComponent : ViewComponent
 		return View(viewName: WikiViewPath, model: this);
 	}
 
-	public ContentViewComponentResult Empty() => new ContentViewComponentResult("");
-	public ContentViewComponentResult Error(string str) => new ContentViewComponentResult($"<<< Error: {str} >>>");
-	public ContentViewComponentResult String(string str) => new ContentViewComponentResult(str);
+	public ContentViewComponentResult Empty() => new("");
+	public ContentViewComponentResult Error(string str) => new($"<<< Error: {str} >>>");
+	public ContentViewComponentResult String(string str) => new(str);
 
 	protected int DefaultPageSize { get; set; } = 25;
 	protected string? DefaultSort { get; set; }
@@ -35,5 +35,5 @@ public abstract class WikiViewComponent : ViewComponent
 		};
 	}
 
-	public string CurrentPage => HttpContext.Request.Path.Value?.Trim('/') ?? "";
+	public string CurrentPage => Request.Path.Value?.Trim('/') ?? "";
 }
