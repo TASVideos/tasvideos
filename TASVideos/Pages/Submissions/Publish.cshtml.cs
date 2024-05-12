@@ -186,7 +186,7 @@ public class PublishModel(
 		var page = await wikiPages.PublicationPage(publicationId);
 		pub.Markup = page!.Markup;
 
-		return new JsonResult(pub);
+		return Json(pub);
 	}
 
 	private static WikiCreateRequest GenerateWiki(int publicationId, string markup, int userId)

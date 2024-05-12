@@ -1,5 +1,4 @@
 ﻿using System.Net.Mime;
-using System.Text.Json;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -130,13 +129,9 @@ public class BasePageModel : PageModel
 		};
 	}
 
-	protected ContentResult Json(object? obj)
+	protected JsonResult Json(object? obj)
 	{
-		return new ContentResult
-		{
-			StatusCode = StatusCodes.Status200OK,
-			Content = JsonSerializer.Serialize(obj)
-		};
+		return new JsonResult(obj);
 	}
 
 	protected IActionResult ZipFile(ZippedFile? file)

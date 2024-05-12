@@ -115,7 +115,7 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 	public async Task<IActionResult> OnGetRolesThatCanBeAssignedBy(int[] ids)
 	{
 		var result = await roleService.GetRolesThatCanBeAssignedBy(ids.Select(p => (PermissionTo)p));
-		return new JsonResult(result);
+		return Json(result);
 	}
 
 	private void SetAvailableAssignablePermissions()

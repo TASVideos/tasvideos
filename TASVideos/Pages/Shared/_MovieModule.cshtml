@@ -130,7 +130,7 @@
 							} else {
 								document.querySelector(`#ownRating-${pubId}`).innerHTML = `Rated ${rating} / 10`;
 							}
-							document.querySelector(`#overallRating-${pubId}`).innerHTML = update.OverallRating;
+							document.querySelector(`#overallRating-${pubId}`).innerHTML = update.overallRating;
 							toggleDisplay(pubId);
 						})
 						.catch(() => alert("Rating failed"));

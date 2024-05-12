@@ -8,7 +8,7 @@ public class CacheControlModel(IWikiPages wikiPages, IAwards awards, ICacheServi
 	public IActionResult OnGetCacheValue(string key)
 	{
 		var result = cache.TryGetValue(key, out object value);
-		return new JsonResult(new { value = result ? value : "Empty" });
+		return Json(new { value = result ? value : "Empty" });
 	}
 
 	public async Task<IActionResult> OnPostFlushWikiCache()

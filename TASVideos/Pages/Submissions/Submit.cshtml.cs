@@ -182,7 +182,7 @@ public class SubmitModel(
 	public async Task<IActionResult> OnGetPrefillText()
 	{
 		var page = await wikiPages.Page("System/SubmissionDefaultMessage");
-		return new JsonResult(new { text = page?.Markup });
+		return Json(new { text = page?.Markup });
 	}
 
 	private async Task ValidateModel()

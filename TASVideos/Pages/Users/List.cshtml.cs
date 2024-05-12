@@ -32,24 +32,24 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 
 	public async Task<IActionResult> OnGetSearch(string partial)
 	{
-		if (!string.IsNullOrWhiteSpace(partial) && partial.Length > 2)
+		if (string.IsNullOrWhiteSpace(partial) || partial.Length <= 2)
 		{
-			var matches = await GetUsersByPartial(partial);
-			return new JsonResult(matches);
+			return Json(new List<string>());
 		}
 
-		return new JsonResult(new List<string>());
+		var matches = await GetUsersByPartial(partial);
+		return Json(matches);
 	}
 
 	public async Task<IActionResult> OnGetVerifyUniqueUserName(string userName)
 	{
 		if (string.IsNullOrWhiteSpace(userName))
 		{
-			return new JsonResult(false);
+			return Json(false);
 		}
 
 		var exists = await db.Users.Exists(userName);
-		return new JsonResult(exists);
+		return Json(exists);
 	}
 
 	private async ValueTask<IEnumerable<string>> GetUsersByPartial(string partialUserName)
