@@ -11,8 +11,7 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 	{
 		DefaultSort = "-PublicationId";
 
-		var query = db.PublicationFiles
-			.Where(pf => pf.Type == FileType.Screenshot);
+		var query = db.PublicationFiles.Where(pf => pf.Type == FileType.Screenshot);
 
 		var onlyDescriptions = Request.QueryStringBoolValue("OnlyDescriptions");
 		if (onlyDescriptions == true)

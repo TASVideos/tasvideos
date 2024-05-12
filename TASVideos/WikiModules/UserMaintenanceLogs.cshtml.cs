@@ -17,8 +17,6 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 		DefaultPageSize = 100;
 		DefaultSort = "-TimeStamp";
 
-		string user = HttpContext.Request.QueryStringValue("User");
-
 		var logsQuery = db.UserMaintenanceLogs
 			.Select(m => new LogEntry
 			{
@@ -28,6 +26,7 @@ public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 				Log = m.Log
 			});
 
+		var user = Request.QueryStringValue("User");
 		if (!string.IsNullOrWhiteSpace(user))
 		{
 			logsQuery = logsQuery.Where(l => l.User == user);
