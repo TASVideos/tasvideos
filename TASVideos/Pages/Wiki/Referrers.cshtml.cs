@@ -14,6 +14,5 @@ public class ReferrersModel(ApplicationDbContext db) : BasePageModel
 		Referrals = await db.WikiReferrals
 			.ThatReferTo(Path)
 			.ToListAsync();
-		ViewData["PageName"] = Path;
 	}
 }

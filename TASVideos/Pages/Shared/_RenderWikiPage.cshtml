@@ -2,8 +2,6 @@
 @using TASVideos.Core.Services.Wiki
 @inject IWikiPages WikiPages
 @{
-	
-	ViewData["Layout"] = null;
 	var wikiPage = await WikiPages.Page(Model);
 	if (wikiPage is not null)
 	{

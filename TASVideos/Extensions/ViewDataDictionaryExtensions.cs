@@ -16,6 +16,9 @@ public static class ViewDataDictionaryExtensions
 		viewData["MetaTags"] = metaTags;
 	}
 
+	public static MetaTag GetMetaTags(this ViewDataDictionary viewData)
+		=> viewData["MetaTags"] as MetaTag ?? MetaTag.Default;
+
 	public static void SetTitle(this ViewDataDictionary viewData, string title)
 	{
 		viewData["Title"] = title;
@@ -24,6 +27,17 @@ public static class ViewDataDictionaryExtensions
 	public static void SetHeading(this ViewDataDictionary viewData, string heading)
 	{
 		viewData["Heading"] = heading;
+	}
+
+	public static string GetHeading(this ViewDataDictionary viewData)
+	{
+		var title = viewData["Title"]?.ToString();
+		if (viewData.GetWikiPage() is not null)
+		{
+			title = title.SplitPathCamelCase();
+		}
+
+		return viewData["Heading"]?.ToString() ?? title ?? "";
 	}
 
 	public static IWikiPage? GetWikiPage(this ViewDataDictionary viewData)

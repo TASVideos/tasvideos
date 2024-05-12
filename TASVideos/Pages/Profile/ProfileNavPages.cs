@@ -36,7 +36,7 @@ public static class ProfileNavPages
 
 	public static string PageNavClass(ViewContext viewContext, string page)
 	{
-		var activePage = viewContext.ViewData["ActivePage"] as string;
+		var activePage = viewContext.ViewData[ActivePageKey] as string;
 		return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : "";
 	}
 

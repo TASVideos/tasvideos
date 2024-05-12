@@ -83,21 +83,13 @@
 		</div>
 	</nav>
 
-	@{
-		var title = ViewData["Title"]?.ToString();
-		if (ViewData.GetWikiPage() is not null)
-		{
-			title = title.SplitPathCamelCase();
-		}
-
-		var heading = ViewData["Heading"] ?? title;
-	}
 	@if (IsSectionDefined("PageTitle"))
 	{
 		@await RenderSectionAsync("PageTitle")
 	}
 	else
 	{
+		var heading = ViewData.GetHeading();
 		int? prev = null;
 		int? next = null;
 		if (User.Has(PermissionTo.CatalogMovies) && ViewData["NavigationId"] is int && ViewData["NavigationSuffix"] is string)

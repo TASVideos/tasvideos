@@ -1,6 +1,5 @@
 ﻿@{
-	var obj = ViewData["MetaTags"];
-	var model = obj as MetaTag ?? MetaTag.Default;
+	var model = ViewData.GetMetaTags();
 
 	var title = model.Title ?? "TASVideos";
 	var description = model.Description ?? "Tool-assisted game movies - When human skills are just not enough";
