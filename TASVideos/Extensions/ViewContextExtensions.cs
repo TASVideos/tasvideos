@@ -18,7 +18,7 @@ public static class ViewContextExtensions
 
 	public static bool WikiCondition(this ViewContext viewContext, string condition)
 	{
-		var viewData = viewContext.ViewData;
+		var user = viewContext.HttpContext.User;
 		bool result = false;
 
 		if (condition.StartsWith('!'))
@@ -32,7 +32,7 @@ public static class ViewContextExtensions
 			default:
 				if (Enum.TryParse(condition, out PermissionTo permission))
 				{
-					result ^= viewData.UserHas(permission);
+					result ^= user.Has(permission);
 				}
 
 				break;
@@ -51,19 +51,19 @@ public static class ViewContextExtensions
 
 			// Support legacy values, these are deprecated
 			case "CanEditPages":
-				result ^= viewData.UserHas(PermissionTo.EditWikiPages);
+				result ^= user.Has(PermissionTo.EditWikiPages);
 				break;
 			case "UserHasHomepage":
-				result ^= viewContext.HttpContext.User.IsLoggedIn(); // Let's assume every user can have a homepage automatically
+				result ^= user.IsLoggedIn(); // Let's assume every user can have a homepage automatically
 				break;
 			case "CanViewSubmissions":
 				result ^= true; // Legacy system always returned true
 				break;
 			case "CanJudgeMovies":
-				result ^= viewData.UserHas(PermissionTo.JudgeSubmissions);
+				result ^= user.Has(PermissionTo.JudgeSubmissions);
 				break;
 			case "CanPublishMovies":
-				result ^= viewData.UserHas(PermissionTo.PublishMovies);
+				result ^= user.Has(PermissionTo.PublishMovies);
 				break;
 		}
 

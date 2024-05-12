@@ -15,7 +15,7 @@ public class PermissionTagHelper : TagHelper
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		if (!ViewContext.ViewData.UserHas(Permission))
+		if (!ViewContext.HttpContext.User.Has(Permission))
 		{
 			output.SuppressOutput();
 		}
@@ -33,7 +33,7 @@ public class PermissionsTagHelper : TagHelper
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		if (!ViewContext.ViewData.UserHasAny(Permissions))
+		if (!ViewContext.HttpContext.User.HasAny(Permissions))
 		{
 			output.SuppressOutput();
 		}

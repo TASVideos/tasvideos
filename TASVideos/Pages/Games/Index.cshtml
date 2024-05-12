@@ -3,7 +3,7 @@
 @{
 	ViewData.SetTitle($"{Model.Game.DisplayName}");
 	string wiki = LinkConstants.GameWikiPage + Model.Game.Id;
-	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), ViewData.UserPermissions());
+	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), User.Permissions());
 	string? url = !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any()
 		? !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl)
 			? Model.Game.ScreenshotUrl
@@ -17,8 +17,7 @@
 
 	if (int.TryParse(Model.Id, out int id))
 	{
-		ViewData["NavigationId"] = id;
-		ViewData["NavigationSuffix"] = "G";
+		ViewData.SetNavigation(id, "G");
 	}
 }
 

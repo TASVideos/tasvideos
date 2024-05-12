@@ -9,11 +9,11 @@
 	Your ratings are currently private and will not be visible to others. This can be changed on the 
 	<a asp-page="/Profile/Settings">Settings Page</a>
 </div>
-<div condition="!isMyPage && !Model.PublicRatings && !ViewData.UserHas(PermissionTo.SeePrivateRatings)">
+<div condition="!isMyPage && !Model.PublicRatings && !User.Has(PermissionTo.SeePrivateRatings)">
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
-<div condition="isMyPage || Model.PublicRatings || ViewData.UserHas(PermissionTo.SeePrivateRatings)">
-	<warning-alert condition="!isMyPage && ViewData.UserHas(PermissionTo.SeePrivateRatings)">
+<div condition="isMyPage || Model.PublicRatings || User.Has(PermissionTo.SeePrivateRatings)">
+	<warning-alert condition="!isMyPage && User.Has(PermissionTo.SeePrivateRatings)">
 		This user has elected to keep their ratings private. You are seeing this because you have the @nameof(PermissionTo.SeePrivateRatings) permission
 	</warning-alert>
 	<ul class="nav nav-tabs" role="tablist">

@@ -11,7 +11,7 @@
 	bool pageExists = await WikiPages.Exists(homePage);
 }
 <br />
-@if (ViewData.UserHas(PermissionTo.EditHomePage))
+@if (User.Has(PermissionTo.EditHomePage))
 {
 	<div class="text-center">
 		<a class="btn btn-secondary" href="/@homePage"><i class="fa fa-eye"></i> Full View</a>
@@ -29,7 +29,7 @@ else
 {
 	@await Html.RenderWiki(homePage)
 }
-else if (ViewData.UserHas(PermissionTo.EditHomePage))
+else if (User.Has(PermissionTo.EditHomePage))
 {
 	<info-alert>
 		@await Html.RenderWiki(SystemWiki.HomePageDoesNotExist)

@@ -61,8 +61,8 @@
 <div class="row mb-2">
 	<div class="col-12">
 		<partial name="_TopicActionBar" model="Model.Topic" />
-		<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
-			|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
+		<a condition="User.Has(PermissionTo.PostInLockedTopics)
+			|| (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
 		   asp-page="/Forum/Posts/Create"
 		   asp-route-topicId="@Model.Id"
 		   class="btn btn-primary btn-sm float-end">
@@ -118,8 +118,8 @@
 
 <fullrow class="mt-2">
 	<partial name="_TopicActionBar" model="Model.Topic" />
-	<a condition="ViewData.UserHas(PermissionTo.PostInLockedTopics)
-		|| (!Model.Topic.IsLocked && ViewData.UserHas(PermissionTo.CreateForumPosts))"
+	<a condition="User.Has(PermissionTo.PostInLockedTopics)
+		|| (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
 	   asp-page="/Forum/Posts/Create"
 	   asp-route-topicId="@Model.Id"
 	   class="btn btn-primary btn-sm float-end">

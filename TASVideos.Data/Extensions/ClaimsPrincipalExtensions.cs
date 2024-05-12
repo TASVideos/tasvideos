@@ -40,6 +40,12 @@ public static class ClaimsPrincipalExtensions
 		return user.Permissions().Contains(permission);
 	}
 
+	public static bool HasAny(this ClaimsPrincipal user, IEnumerable<PermissionTo> permissions)
+	{
+		var userPermissions = user.Claims.Permissions();
+		return permissions.Any(permission => userPermissions.Contains(permission));
+	}
+
 	public static void ReplacePermissionClaims(this ClaimsPrincipal? user, IEnumerable<Claim> permissions)
 	{
 		if (user is null || !user.IsLoggedIn())

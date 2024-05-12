@@ -2,7 +2,7 @@
 @model Uncataloged
 
 @{
-	ViewData["Title"] = $"Uncataloged User Files ({Model.Files.Count})";
+	ViewData.SetTitle($"Uncataloged User Files ({Model.Files.Count})");
 	var grouped = Model.Files.GroupBy(f => f.SystemCode);
 }
 

@@ -5,7 +5,7 @@
 }
 <div asp-validation-summary="All" class="text-danger"></div>
 <form asp-route="Edit">
-	<a condition="ViewData.UserHas(PermissionTo.SeeEmails) && ViewData.UserHas(PermissionTo.EditUsers)"
+	<a condition="User.Has(PermissionTo.SeeEmails) && User.Has(PermissionTo.EditUsers)"
 		asp-page="Nuke"
 		asp-route-id="@Model.Id"
 		class="btn btn-danger float-end"><i class="fa fa-trash-can"></i> Anonymize User</a>
@@ -32,7 +32,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserToEdit.UserName" class="form-control-label"></label>
-				@if (ViewData.UserHas(PermissionTo.EditUsersUserName))
+				@if (User.Has(PermissionTo.EditUsersUserName))
 				{
 					<input asp-for="UserToEdit.OriginalUserName" type="hidden" />
 					<row>

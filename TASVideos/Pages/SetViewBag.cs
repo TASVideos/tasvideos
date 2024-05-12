@@ -19,11 +19,6 @@ public class SetPageViewBagAttribute : ResultFilterAttribute
 			var viewData = pageResult.ViewData;
 			viewData["Version"] = Version;
 			viewData["VersionSha"] = VersionSha;
-
-			var user = context.HttpContext.User;
-			viewData["UserPermissions"] = user.IsLoggedIn()
-				? user.Permissions()
-				: [];
 		}
 
 		await next.Invoke();

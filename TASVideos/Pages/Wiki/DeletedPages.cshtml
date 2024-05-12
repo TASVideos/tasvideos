@@ -23,7 +23,7 @@
 				<a condition="@item.HasExistingRevisions" href="/@item.PageName">@item.PageName</a>
 			</td>
 			<td>
-				@if (ViewData.UserHas(PermissionTo.DeleteWikiPages))
+				@if (User.Has(PermissionTo.DeleteWikiPages))
 				{
 					<delete-button condition="@item.HasExistingRevisions"
 									asp-href="/Wiki/DeletedPages/Undelete?path=@item.PageName"

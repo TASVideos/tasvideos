@@ -7,7 +7,7 @@
 	if (User.IsLoggedIn())
 	{
 		userId = User.GetUserId();
-		bool votePermission = ViewData.UserHas(PermissionTo.VoteInPolls);
+		bool votePermission = User.Has(PermissionTo.VoteInPolls);
 		bool hasAlreadyVoted = Model.Options.Any(o => o.Voters.Any(v => v == userId));
 		bool pollIsClosed = Model.CloseDate <= DateTime.UtcNow;
 		canVote = votePermission && !hasAlreadyVoted && !pollIsClosed;
@@ -69,7 +69,7 @@
 		class="btn btn-sm btn-outline-info mt-2">
 		Return To Voting
 	</a>
-	<a condition="ViewData.UserHas(PermissionTo.SeePollResults) && totalVotes > 0"
+	<a condition="User.Has(PermissionTo.SeePollResults) && totalVotes > 0"
 		asp-page="PollResults"
 		asp-route-id="@Model.PollId"
 		class="btn btn-sm btn-info mt-2">

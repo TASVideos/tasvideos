@@ -20,7 +20,7 @@
 	<cardbody class="py-0">
 		@foreach (var forum in Model.Forums
 			.OrderBy(f => f.Ordinal)
-			.Where(f => ViewData.UserHas(PermissionTo.SeeRestrictedForums) || !f.Restricted))
+			.Where(f => User.Has(PermissionTo.SeeRestrictedForums) || !f.Restricted))
 		{
 		<row class="py-1 border-bottom border-card align-items-center">
 				<div class="col-8">

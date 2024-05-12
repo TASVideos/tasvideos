@@ -20,6 +20,8 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 
 	public async Task OnGet() => await Initialize();
 
+	public bool ShowUpload { get; set; }
+
 	public async Task<IActionResult> OnPost()
 	{
 		if (!AwardToAssign.Users.Any() && !AwardToAssign.Publications.Any())
@@ -67,7 +69,7 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 		if (!exists)
 		{
 			ModelState.AddModelError("", "Cannot assign award because award image does not exist, please upload image first.");
-			ViewData["ShowUpload"] = true;
+			ShowUpload = true;
 			await Initialize();
 			return Page();
 		}

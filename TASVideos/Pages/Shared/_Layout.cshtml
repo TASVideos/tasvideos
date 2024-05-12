@@ -124,8 +124,7 @@
 	<hr/>
 	<footer class="mb-3">
 		@if (ViewData.GetWikiPage() is null
-			&& !(this.Model is Publications.ViewModel
-			|| this.Model is Submissions.ViewModel))
+			&& this.Model is not (Publications.ViewModel or Submissions.ViewModel))
 		{
 			var path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
 			if (path != "Wiki/PageDoesNotExist")
