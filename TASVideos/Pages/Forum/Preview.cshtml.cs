@@ -12,7 +12,7 @@ public class PreviewModel(IWriterHelper helper) : BasePageModel
 	{
 		var text = await new StreamReader(Request.Body, Encoding.UTF8).ReadToEndAsync();
 		var renderedText = await RenderPost(text, true, false); // New posts are always bbcode = true, html = false
-		return new ContentResult { Content = renderedText };
+		return Content(renderedText);
 	}
 
 	private async Task<string> RenderPost(string text, bool useBbCode, bool useHtml)

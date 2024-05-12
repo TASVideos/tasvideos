@@ -100,7 +100,7 @@ public class EditModel(
 	public async Task<IActionResult> OnGetTitle(int publicationId)
 	{
 		var title = (await db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId))?.Title;
-		return new ContentResult { Content = title };
+		return Content(title ?? "");
 	}
 
 	private async Task PopulateDropdowns()
