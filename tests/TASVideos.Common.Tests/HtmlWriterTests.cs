@@ -340,10 +340,11 @@ public sealed class HtmlWriterTests : IDisposable
 	public void TestAttributeValueEscaping()
 	{
 		W.OpenTag("a");
+		W.Attribute("class", """break="\"\\&yes;><""");
 		W.Attribute("password", """hunter2" authenticated="true" role="admin" break="\"\\&yes;><""");
 		W.CloseTag("a");
 		W.AssertFinished();
-		AssertOutputEquals("""<a password="hunter2&quot; authenticated=&quot;true&quot; role=&quot;admin&quot; break=&quot;\&quot;\\&amp;yes;>&lt;"></a>"""); // I'm not proud to say I copied this from the actual value... --yoshi
+		AssertOutputEquals("""<a password="hunter2&quot; authenticated=&quot;true&quot; role=&quot;admin&quot; break=&quot;\&quot;\\&amp;yes;>&lt;" class="break=&quot;\&quot;\\&amp;yes;>&lt;"></a>"""); // I'm not proud to say I copied this from the actual value... --yoshi
 	}
 
 	[TestMethod]

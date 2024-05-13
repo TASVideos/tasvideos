@@ -43,7 +43,7 @@ public partial class HtmlWriter(TextWriter w)
 				return "";
 			}
 
-			return classes.Count is 0 ? "" : $" class=\"{string.Join(' ', classes)}\"";
+			return classes.Count is 0 ? "" : string.Join(' ', classes);
 		}
 	}
 
@@ -155,13 +155,18 @@ public partial class HtmlWriter(TextWriter w)
 		if (name is "class")
 		{
 			_currentElemClassAttr.Add(value);
-			return;
 		}
+		else
+		{
+			EscapeAndWriteAttribute(name, value);
+		}
+	}
 
+	private void EscapeAndWriteAttribute(ReadOnlySpan<char> name, ReadOnlySpan<char> value)
+	{
 		w.Write(' ');
 		w.Write(name);
 		w.Write("=\"");
-
 		foreach (var c in value)
 		{
 			switch (c)
@@ -234,8 +239,14 @@ public partial class HtmlWriter(TextWriter w)
 		}
 
 		_inTagOpen = false;
-		w.Write(_currentElemClassAttr.Serialize());
+
+		var classListStr = _currentElemClassAttr.Serialize();
 		_currentElemClassAttr = default;
+		if (classListStr.Length is not 0)
+		{
+			EscapeAndWriteAttribute("class", classListStr);
+		}
+
 		w.Write('>');
 	}
 
