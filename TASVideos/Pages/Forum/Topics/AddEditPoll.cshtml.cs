@@ -12,8 +12,6 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 
 	public int? PollId { get; set; }
 
-	public bool AnyVotes { get; set; }
-
 	[BindProperty]
 	public PollCreate Poll { get; set; } = new();
 
@@ -35,8 +33,6 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 
 		if (topic.Poll is not null)
 		{
-			AnyVotes = topic.Poll.PollOptions.SelectMany(o => o.Votes).Any();
-
 			Poll = new PollCreate
 			{
 				MultiSelect = topic.Poll.MultiSelect,
@@ -47,7 +43,8 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 				PollOptions = topic.Poll.PollOptions
 					.OrderBy(o => o.Ordinal)
 					.Select(o => o.Text)
-					.ToList()
+					.ToList(),
+				HasVotes = topic.Poll.PollOptions.SelectMany(o => o.Votes).Any()
 			};
 
 			PollId = topic.PollId;
@@ -89,13 +86,12 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 
 		if (topic.Poll is not null)
 		{
-			AnyVotes = topic.Poll.PollOptions.SelectMany(o => o.Votes).Any();
-
 			topic.Poll.CloseDate = Poll.DaysOpen.HasValue
 				? DateTime.UtcNow.AddDays(Poll.DaysOpen.Value)
 				: null;
 
-			if (!AnyVotes)
+			var hasVotes = topic.Poll.PollOptions.SelectMany(o => o.Votes).Any();
+			if (!hasVotes)
 			{
 				topic.Poll.MultiSelect = Poll.MultiSelect;
 				topic.Poll.Question = Poll.Question ?? "";
@@ -147,5 +143,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 		public bool HasAnyField => !string.IsNullOrWhiteSpace(Question)
 			|| DaysOpen.HasValue
 			|| PollOptions.Any(o => !string.IsNullOrWhiteSpace(o));
+
+		public bool HasVotes { get; set; }
 	}
 }

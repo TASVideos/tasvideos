@@ -1,16 +1,12 @@
 ﻿@model AddEditPollModel.PollCreate
-@{
-	bool restricted = ViewData["Restricted"] is true;
-}
 
-<h4 class="text-danger" condition="restricted">This poll has votes! Some options have been restricted</h4>
+<h4 class="text-danger" condition="Model.HasVotes">This poll has votes! Some options have been restricted</h4>
 
 <row>
 	<column lg="6">
 		<fieldset>
 			<label asp-for="Question"></label>
-			<input condition="!restricted" type="text" asp-for="Question" class="form-control" />
-			<input condition="restricted" disabled placeholder="@Model.Question" type="text" class="form-control" />
+			<input readonly="@Model.HasVotes" asp-for="Question" placeholder="@Model.Question" class="form-control" />
 			<span asp-validation-for="Question" class="text-danger"></span>
 		</fieldset>
 		<fieldset>
@@ -19,22 +15,22 @@
 			<div>@Html.DescriptionFor(m => m.DaysOpen)</div>
 			<span asp-validation-for="DaysOpen" class="text-danger"></span>
 		</fieldset>
-		<fieldset condition="!restricted">
+		<fieldset condition="!Model.HasVotes">
 			<label asp-for="PollOptions"></label>
 			<string-list asp-for="PollOptions" />
 			<span asp-validation-for="PollOptions" class="text-danger"></span>
 		</fieldset>
-		<fieldset condition="restricted">
+		<fieldset condition="Model.HasVotes">
 			@for (int i = 0; i < Model.PollOptions.Count; i++)
 			{
 				<input disabled type="text" placeholder="@Model.PollOptions[i]" class="form-control" />
 				<input asp-for="PollOptions[i]" type="hidden" />
 			}
 		</fieldset>
-		<fieldset>
+		<fieldset disable="true">
 			<div class="form-check">
 				<label asp-for="MultiSelect" class="form-check-label"></label>
-				<input disable="restricted" asp-for="MultiSelect" type="checkbox" class="form-check-input"/>
+				<input disable="@Model.HasVotes" asp-for="MultiSelect" type="checkbox" class="form-check-input" />
 			</div>
 			<span asp-validation-for="MultiSelect" class="text-danger"></span>
 		</fieldset>
