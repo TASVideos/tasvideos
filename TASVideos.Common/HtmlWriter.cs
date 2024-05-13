@@ -4,6 +4,49 @@ namespace TASVideos.Common;
 
 public partial class HtmlWriter(TextWriter w)
 {
+	private struct HtmlClassList()
+	{
+		private List<string>? _list = null;
+
+		private string? _single = null;
+
+		public void Add(string item)
+		{
+			if (_single is not null)
+			{
+				_list = new() { _single, item };
+				_single = null;
+			}
+			else if (_list is not null)
+			{
+				_list.Add(item);
+			}
+			else
+			{
+				_single = item;
+			}
+		}
+
+		public readonly string Serialize()
+		{
+			HashSet<string> classes;
+			if (!string.IsNullOrEmpty(_single))
+			{
+				classes = _single.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
+			}
+			else if (_list is not null)
+			{
+				classes = _list.SelectMany(static s => s.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToHashSet();
+			}
+			else
+			{
+				return "";
+			}
+
+			return classes.Count is 0 ? "" : $" class=\"{string.Join(' ', classes)}\"";
+		}
+	}
+
 	private static readonly Regex AllowedTagNames = AllowedTagNamesRegex();
 	private static readonly Regex AllowedAttributeNames = AllowedAttributeNamesRegex();
 	private static readonly HashSet<string> VoidTags = new(
@@ -13,6 +56,8 @@ public partial class HtmlWriter(TextWriter w)
 		],
 		StringComparer.OrdinalIgnoreCase
 	);
+
+	private HtmlClassList _currentElemClassAttr = default;
 
 	private bool _inTagOpen;
 	private readonly Stack<string> _openTags = new();
@@ -107,6 +152,12 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException($"Invalid attribute name {name}");
 		}
 
+		if (name is "class")
+		{
+			_currentElemClassAttr.Add(value);
+			return;
+		}
+
 		w.Write(' ');
 		w.Write(name);
 		w.Write("=\"");
@@ -183,6 +234,8 @@ public partial class HtmlWriter(TextWriter w)
 		}
 
 		_inTagOpen = false;
+		w.Write(_currentElemClassAttr.Serialize());
+		_currentElemClassAttr = default;
 		w.Write('>');
 	}
 
