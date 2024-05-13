@@ -308,10 +308,17 @@ public sealed class HtmlWriterTests : IDisposable
 		AssertOutputIsEmpty();
 
 		W.OpenTag("span");
+		W.Text("Hello, world!");
+		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem2"), "after opening tag");
 		W.CloseTag("span");
-		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem2"), "after all closed");
 		W.AssertFinished();
-		AssertOutputEquals("<span></span>");
+		AssertOutputEquals("<span>Hello, world!</span>");
+
+		W.OpenTag("div");
+		W.CloseTag("div");
+		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem3"), "after all closed");
+		W.AssertFinished();
+		AssertOutputEquals("<span>Hello, world!</span><div></div>");
 	}
 
 	[DataRow("href", "/Forum")]
