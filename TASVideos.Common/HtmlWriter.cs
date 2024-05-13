@@ -36,12 +36,7 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException("Can't open a void tag");
 		}
 
-		if (_inTagOpen)
-		{
-			w.Write('>');
-		}
-
-		tagName = tagName.ToLowerInvariant();
+		FinalizeOpenTag();
 		w.Write('<');
 		w.Write(tagName);
 		_openTags.Push(tagName);
@@ -60,22 +55,17 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException("No open tags!");
 		}
 
-		if (!tagName.Equals(_openTags.Peek(), StringComparison.OrdinalIgnoreCase))
+		tagName = tagName.ToLowerInvariant();
+		if (!tagName.Equals(_openTags.Peek(), StringComparison.Ordinal))
 		{
 			throw new InvalidOperationException($"Opened tag {_openTags.Peek()} but closing tag {tagName}");
 		}
 
-		if (_inTagOpen)
-		{
-			w.Write('>');
-		}
-
-		tagName = tagName.ToLowerInvariant();
+		FinalizeOpenTag();
 		w.Write("</");
 		w.Write(tagName);
 		w.Write('>');
 		_openTags.Pop();
-		_inTagOpen = false;
 	}
 
 	/// <summary>equivalent of <see cref="OpenTag"/> for tags like <c>&lt;img></c> which may not have children and are self-closing</summary>
@@ -99,12 +89,7 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException("Can't void an open tag");
 		}
 
-		if (_inTagOpen)
-		{
-			w.Write('>');
-		}
-
-		tagName = tagName.ToLowerInvariant();
+		FinalizeOpenTag();
 		w.Write('<');
 		w.Write(tagName);
 		_inTagOpen = true;
@@ -140,7 +125,7 @@ public partial class HtmlWriter(TextWriter w)
 					w.Write("&quot;");
 					break;
 				default:
-					w.Write(c);
+					w.Write(c); // different overload
 					break;
 			}
 		}
@@ -150,45 +135,34 @@ public partial class HtmlWriter(TextWriter w)
 
 	public void Text(string text)
 	{
-		if (InForeignContent)
+		var inForeignContent = InForeignContent;
+		if (inForeignContent && text.Contains($"</{_openTags.Peek()}", StringComparison.OrdinalIgnoreCase))
 		{
-			if (text.Contains($"</{_openTags.Peek()}", StringComparison.OrdinalIgnoreCase))
-			{
-				throw new InvalidOperationException("Can't unescape something that looks like closing tag here!");
-			}
+			throw new InvalidOperationException("Can't unescape something that looks like closing tag here!");
+		}
 
-			if (_inTagOpen)
-			{
-				w.Write('>');
-			}
-
+		FinalizeOpenTag();
+		if (inForeignContent)
+		{
 			w.Write(text);
+			return;
 		}
-		else
+
+		foreach (var c in text)
 		{
-			if (_inTagOpen)
+			switch (c)
 			{
-				w.Write('>');
-			}
-
-			foreach (var c in text)
-			{
-				switch (c)
-				{
-					case '<':
-						w.Write("&lt;");
-						break;
-					case '&':
-						w.Write("&amp;");
-						break;
-					default:
-						w.Write(c);
-						break;
-				}
+				case '<':
+					w.Write("&lt;");
+					break;
+				case '&':
+					w.Write("&amp;");
+					break;
+				default:
+					w.Write(c); // different overload
+					break;
 			}
 		}
-
-		_inTagOpen = false;
 	}
 
 	public void AssertFinished()
@@ -198,11 +172,18 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException($"Tags still open! {string.Join(" > ", _openTags)}");
 		}
 
-		if (_inTagOpen)
+		FinalizeOpenTag();
+	}
+
+	private void FinalizeOpenTag()
+	{
+		if (!_inTagOpen)
 		{
-			_inTagOpen = false;
-			w.Write('>');
+			return;
 		}
+
+		_inTagOpen = false;
+		w.Write('>');
 	}
 
 	/// <summary>
