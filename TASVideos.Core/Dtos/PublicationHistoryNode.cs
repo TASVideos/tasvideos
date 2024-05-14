@@ -3,6 +3,7 @@
 public class PublicationHistoryGroup
 {
 	public int GameId { get; init; }
+	public string GameDisplayName { get; init; } = "";
 
 	public IEnumerable<PublicationHistoryNode> Goals { get; init; } = [];
 }

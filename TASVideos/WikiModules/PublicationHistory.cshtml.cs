@@ -4,19 +4,13 @@ using TASVideos.WikiEngine;
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.PublicationHistory)]
-public class PublicationHistory(ApplicationDbContext db, IPublicationHistory history) : WikiViewComponent
+public class PublicationHistory(IPublicationHistory history) : WikiViewComponent
 {
 	public PublicationHistoryGroup History { get; set; } = new();
 
 	public async Task<IViewComponentResult> InvokeAsync(int publicationId)
 	{
-		var publication = await db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId);
-		if (publication is null)
-		{
-			return Error($"Invalid publication id: {publicationId}");
-		}
-
-		var gameHistory = await history.ForGame(publication.GameId);
+		var gameHistory = await history.ForGameByPublication(publicationId);
 		if (gameHistory is null)
 		{
 			return Error($"Invalid publication id: {publicationId}");

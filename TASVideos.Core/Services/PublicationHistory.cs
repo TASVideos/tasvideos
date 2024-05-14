@@ -7,14 +7,19 @@ public interface IPublicationHistory
 	/// grouped by non-obsolete publications as the parent node
 	/// </summary>
 	Task<PublicationHistoryGroup?> ForGame(int gameId);
+
+	/// <summary>
+	/// Returns the publication history for a game associated with the given publication id.
+	/// Note that this returns all publications for a game, not just the publication's chain
+	/// </summary>
+	Task<PublicationHistoryGroup?> ForGameByPublication(int publicationId);
 }
 
 internal class PublicationHistory(ApplicationDbContext db) : IPublicationHistory
 {
 	public async Task<PublicationHistoryGroup?> ForGame(int gameId)
 	{
-		var game = await db.Games
-			.SingleOrDefaultAsync(g => g.Id == gameId);
+		var game = await db.Games.FindAsync(gameId);
 
 		if (game is null)
 		{
@@ -47,9 +52,24 @@ internal class PublicationHistory(ApplicationDbContext db) : IPublicationHistory
 		return new PublicationHistoryGroup
 		{
 			GameId = gameId,
+			GameDisplayName = game.DisplayName,
 			Goals = publications
 				.Where(p => !p.ObsoletedById.HasValue)
 				.ToList()
 		};
+	}
+
+	public async Task<PublicationHistoryGroup?> ForGameByPublication(int publicationId)
+	{
+		var pub = await db.Publications
+			.Select(p => new { p.Id, p.GameId })
+			.SingleOrDefaultAsync(p => p.Id == publicationId);
+
+		if (pub is null)
+		{
+			return null;
+		}
+
+		return await ForGame(pub.GameId);
 	}
 }
