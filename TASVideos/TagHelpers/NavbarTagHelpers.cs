@@ -73,18 +73,12 @@ public class NavItemBase : TagHelper
 			return false;
 		}
 
-		var viewPaths = ((string?)ViewContext.ViewData["ActiveTab"] ?? "").SplitWithEmpty("/");
+		var viewPaths = ((string?)ViewContext.TempData["ActiveTab"] ?? "").SplitWithEmpty("/");
 
 		// If length of the name is 2, assume it is the language prefix and use the next part of the path for tab matching
 		var viewActiveTab = viewPaths.Length > 1 && viewPaths[0].Length == 2
 			? viewPaths[1]
 			: viewPaths.FirstOrDefault();
-
-		var tempActiveTab = (string?)ViewContext.TempData["ActiveTab"];
-		if (!string.IsNullOrWhiteSpace(tempActiveTab))
-		{
-			viewActiveTab = tempActiveTab;
-		}
 
 		var page = ViewContext.Page();
 		var pageGroup = ViewContext.PageGroup();
