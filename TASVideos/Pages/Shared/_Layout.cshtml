@@ -6,7 +6,8 @@
 	<environment include="Production">
 		<meta name="google-site-verification" content="dvluB-ypxKLVGmSQpqBmi9i1xo85I0OmRFD2GhJkTYw" />
 	</environment>
-	<title>@(ViewData["Title"] is not null ? ViewData["Title"] + " - " : "")TASVideos</title>
+	@{ var title = ViewData.GetTitle(); }
+	<title>@(title is not null ? title + " - " : "")TASVideos</title>
 
 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="stylesheet" href="/css/bootstrap.css" />

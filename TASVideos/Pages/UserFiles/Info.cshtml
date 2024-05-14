@@ -2,10 +2,11 @@
 @model InfoModel
 
 @{
-	ViewData.SetTitle($"User File #{Model.Id}");
+	var title = $"User File #{Model.Id}";
+	ViewData.SetTitle(title);
 	ViewData.SetMetaTags(new MetaTag
 	{
-		Title = ViewData["Title"]?.ToString(),
+		Title = title,
 		Description = Model.UserFile.Title
 	});
 }
