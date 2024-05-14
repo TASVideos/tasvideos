@@ -92,11 +92,14 @@
 		var heading = ViewData.GetHeading();
 		int? prev = null;
 		int? next = null;
-		if (User.Has(PermissionTo.CatalogMovies) && ViewData["NavigationId"] is int && ViewData["NavigationSuffix"] is string)
+		if (User.Has(PermissionTo.CatalogMovies))
 		{
 			var id = ViewData.Int("NavigationId");
-			prev = id > 1 ? id - 1 : null;
-			next = id + 1;
+			if (id.HasValue)
+			{
+				prev = id > 1 ? id - 1 : null;
+				next = id + 1;
+			}
 		}
 
 		<div class="container mb-2">

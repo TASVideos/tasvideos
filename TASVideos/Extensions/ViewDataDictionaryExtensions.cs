@@ -56,7 +56,7 @@ public static class ViewDataDictionaryExtensions
 		viewData["NavigationSuffix"] = suffix;
 	}
 
-	public static int Int(this ViewDataDictionary viewData, string key)
+	public static int? Int(this ViewDataDictionary viewData, string key)
 	{
 		var obj = viewData[key];
 		if (obj is int i)
@@ -64,6 +64,6 @@ public static class ViewDataDictionaryExtensions
 			return i;
 		}
 
-		return 0;
+		return null;
 	}
 }
