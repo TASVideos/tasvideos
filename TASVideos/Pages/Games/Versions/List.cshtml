@@ -30,9 +30,9 @@
 			<td>@version.Md5</td>
 			<td>@version.Sha1</td>
 			<td>@version.System</td>
-			<td>
+			<td-action-column>
 				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

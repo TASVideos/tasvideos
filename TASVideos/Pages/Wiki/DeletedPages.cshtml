@@ -22,10 +22,11 @@
 			<td>
 				<a condition="@item.HasExistingRevisions" href="/@item.PageName">@item.PageName</a>
 			</td>
-			<td>
+			<td-action-column>
 				@if (User.Has(PermissionTo.DeleteWikiPages))
 				{
 					<delete-button condition="@item.HasExistingRevisions"
+									class="btn-sm"
 									asp-href="/Wiki/DeletedPages/Undelete?path=@item.PageName"
 									warning-message="This page already exists. Undeleting these revisions will merge them into the history of the existing page. Continue?">
 						Undelete
@@ -33,11 +34,11 @@
 					<span condition="!item.HasExistingRevisions">
 						<form method="post" asp-page="/Wiki/DeletedPages" asp-page-handler="Undelete">
 							<input type="hidden" name="path" value="@item.PageName" />
-							<submit-button>Undelete</submit-button>
+							<submit-button class="btn-sm">Undelete</submit-button>
 						</form>
 					</span>
 				}
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

@@ -24,14 +24,14 @@
 			<td><profile-link username="@entry.From"></profile-link></td>
 			<td><profile-link username="@entry.To"></profile-link></td>
 			<td>@entry.SendDate</td>
-			<td>
+			<td-action-column>
 				<delete-button
 					asp-href="/Messages/InBox/@entry.Id/Delete"
 					warning-message="Are you sure you want to remove this message?"
 					class="btn-sm">
 					Delete
 				</delete-button>
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

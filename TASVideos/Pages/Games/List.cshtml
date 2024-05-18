@@ -73,10 +73,10 @@
 			<td>
 				@string.Join(", ", game.Systems.Distinct())
 			</td>
-			<td>
-				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@game.Id" class="btn btn-primary btn-sm mb-1"><i class="fa fa-pencil"></i> Edit</a>
-				<a asp-page="Versions/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm mb-1">Versions</a>
-			</td>
+			<td-action-column>
+				<a asp-page="Edit" permission="CatalogMovies" asp-route-id="@game.Id" class="btn btn-primary btn-sm"><i class="fa fa-pencil"></i> Edit</a>
+				<a asp-page="Versions/List" asp-route-gameId="@game.Id" class="btn btn-secondary btn-sm">Versions</a>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

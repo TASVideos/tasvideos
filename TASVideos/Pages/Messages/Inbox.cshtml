@@ -38,7 +38,7 @@
 				<profile-link username="@entry.From"></profile-link>
 			</td>
 			<td>@entry.Date</td>
-			<td>
+			<td-action-column>
 				<form method="post" class="d-inline-block" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id">
 					<submit-button class="btn-sm">Save</submit-button>
 				</form>
@@ -48,7 +48,7 @@
 					class="btn-sm">
 					Delete
 				</delete-button>
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

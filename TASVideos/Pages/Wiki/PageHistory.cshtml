@@ -102,7 +102,7 @@
 
 					</div>
 				</td>
-				<td>
+				<td-action-column>
 					<delete-button
 						permission="DeleteWikiPages"
 						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.PageName)&revision=@revision.Revision"
@@ -113,7 +113,7 @@
 					<delete-button condition="i == 0 && canEdit" asp-href="/Wiki/Edit/RollbackLatest?path=@Model.Path" warning-message="This will create a new revision that reverses the previous revision. Do you want to continue?" class="btn-warning btn-sm">
 						<i class="fa fa-undo"></i>
 					</delete-button>
-				</td>
+				</td-action-column>
 			</tr>
 		}
 	</tbody>

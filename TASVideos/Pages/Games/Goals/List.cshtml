@@ -58,20 +58,18 @@
 					}
 				</ul>
 			</td>
-			<td>
-				<div class="btn-toolbar">
-					<a asp-page="List"
-					   asp-fragment="goal-@goal.Id"
-					   asp-route-gameId="@Model.GameId"
-					   asp-route-goalToEdit="@goal.Id"
-					   permission="CatalogMovies"
-					   condition="@(goal.Id != Model.GoalToEdit && goal.Name != "baseline")"
-					   class="btn btn-sm btn-primary">
-					   <i class="fa fa-pencil"></i> Edit
-					</a>
-					<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGroupId="@goal.Id" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
-				</div>
-			</td>
+			<td-action-column>
+				<a asp-page="List"
+				   asp-fragment="goal-@goal.Id"
+				   asp-route-gameId="@Model.GameId"
+				   asp-route-goalToEdit="@goal.Id"
+				   permission="CatalogMovies"
+				   condition="@(goal.Id != Model.GoalToEdit && goal.Name != "baseline")"
+				   class="btn btn-sm btn-primary">
+				   <i class="fa fa-pencil"></i> Edit
+				</a>
+				<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGroupId="@goal.Id" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
+			</td-action-column>
 		</tr>
 	}
 	<tr>

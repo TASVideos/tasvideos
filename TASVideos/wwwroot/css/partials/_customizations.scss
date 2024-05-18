@@ -639,6 +639,14 @@ fieldset {
 	}
 }
 
+.action-column {
+	display: flex;
+	gap: 4px;
+	& > * {
+		text-wrap: nowrap;
+	}
+}
+
 @media screen and (min-width: 769px) {
 	.sub-info {
 		.sub-info-cell {

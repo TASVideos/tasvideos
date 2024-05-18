@@ -23,7 +23,7 @@
 			<td>@url.Type</td>
 			<td>@url.Url</td>
 			<td>@url.DisplayName</td>
-			<td>
+			<td-action-column>
 				<a asp-page="Edit"
 					permission="EditPublicationFiles"
 					asp-route-urlId="@url.Id"
@@ -37,7 +37,7 @@
 					class="btn-sm mb-1">
 					<span class="fa fa-times"></span> Delete
 				</delete-button>
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>
