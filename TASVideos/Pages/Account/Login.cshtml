@@ -3,12 +3,12 @@
 @{
 	ViewData.SetTitle("Log in");
 }
+
 <row>
 	<section class="col-lg-4">
 		<form method="post">
 			<h4>Use a TASVideos account to log in.</h4>
 			<hr />
-			<div asp-validation-summary="All" class="text-danger"></div>
 			<fieldset>
 				<label asp-for="UserName"></label>
 				<input asp-for="UserName" class="form-control" autocomplete="username" />
