@@ -59,13 +59,8 @@ public class EditModel(
 
 	public async Task<IActionResult> OnPost()
 	{
-		Game.DisplayName = Game.DisplayName.Trim();
-		Game.Abbreviation = Game.Abbreviation?.Trim();
-		Game.GameResourcesPage = Game.GameResourcesPage
-			?.Replace(_baseUrl, "")
-			.Trim()
-			.Trim('/');
-		Game.Aliases = Game.Aliases?.Trim().Replace(", ", ",");
+		Game.GameResourcesPage = Game.GameResourcesPage?.Replace(_baseUrl, "").Trim('/');
+		Game.Aliases = Game.Aliases?.Replace(", ", ",");
 
 		if (!ModelState.IsValid)
 		{
@@ -123,8 +118,8 @@ public class EditModel(
 		game.Aliases = Game.Aliases;
 		game.ScreenshotUrl = Game.ScreenshotUrl;
 		game.GameResourcesPage = Game.GameResourcesPage;
-
-		SetGameValues(game, Game);
+		game.GameGenres.SetGenres(Game.Genres);
+		game.GameGroups.SetGroups(Game.Groups);
 		var saveResult = await ConcurrentSave(db, $"Game {game.DisplayName} {action}", $"Unable to update Game {game.DisplayName}");
 		if (saveResult && !Game.MinorEdit)
 		{
@@ -135,13 +130,6 @@ public class EditModel(
 		}
 
 		return BasePageRedirect("Index", new { game.Id });
-	}
-
-	private static void SetGameValues(Game game, GameEdit edit)
-	{
-		game.GameResourcesPage = edit.GameResourcesPage;
-		game.GameGenres.SetGenres(edit.Genres);
-		game.GameGroups.SetGroups(edit.Groups);
 	}
 
 	public async Task<IActionResult> OnPostDelete()
@@ -162,7 +150,7 @@ public class EditModel(
 			return BasePageRedirect("List");
 		}
 
-		var game = await db.Games.SingleOrDefaultAsync(g => g.Id == Id);
+		var game = await db.Games.FindAsync(Id);
 		if (game is null)
 		{
 			return NotFound();
@@ -187,12 +175,10 @@ public class EditModel(
 	}
 
 	private async Task<bool> CanBeDeleted()
-	{
-		return Id > 0
-			&& !await db.Submissions.AnyAsync(s => s.GameId == Id)
-			&& !await db.Publications.AnyAsync(p => p.GameId == Id)
-			&& !await db.UserFiles.AnyAsync(u => u.GameId == Id);
-	}
+		=> Id > 0
+		&& !await db.Submissions.AnyAsync(s => s.GameId == Id)
+		&& !await db.Publications.AnyAsync(p => p.GameId == Id)
+		&& !await db.UserFiles.AnyAsync(u => u.GameId == Id);
 
 	public class GameEdit
 	{

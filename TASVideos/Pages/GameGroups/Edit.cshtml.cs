@@ -73,7 +73,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		GameGroup? gameGroup;
 		if (Id.HasValue)
 		{
-			gameGroup = await db.GameGroups.SingleOrDefaultAsync(gg => gg.Id == Id.Value);
+			gameGroup = await db.GameGroups.FindAsync(Id.Value);
 			if (gameGroup is null)
 			{
 				return NotFound();
@@ -112,8 +112,5 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		return BasePageRedirect("List");
 	}
 
-	private async Task<bool> CanBeDeleted()
-	{
-		return Id.HasValue && !await db.Games.ForGroup(Id.Value).AnyAsync();
-	}
+	private async Task<bool> CanBeDeleted() => Id.HasValue && !await db.Games.ForGroup(Id.Value).AnyAsync();
 }
