@@ -3,10 +3,13 @@
 [Authorize]
 public class SentboxModel(ApplicationDbContext db) : BasePageModel
 {
+	[FromQuery]
+	public PagingModel Paging { get; set; } = new();
+
 	[FromRoute]
 	public int? Id { get; set; }
 
-	public List<SentboxEntry> SentBox { get; set; } = [];
+	public PageOf<SentboxEntry> SentBox { get; set; } = PageOf<SentboxEntry>.Empty();
 
 	public async Task OnGet()
 	{
@@ -20,7 +23,7 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 				pm.ToUser!.UserName,
 				pm.CreateTimestamp,
 				pm.ReadOn.HasValue))
-			.ToListAsync();
+			.PageOf(Paging);
 	}
 
 	public async Task<IActionResult> OnPostDelete()

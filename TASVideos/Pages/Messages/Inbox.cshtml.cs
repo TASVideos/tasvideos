@@ -4,11 +4,14 @@
 [IgnoreAntiforgeryToken]
 public class InboxModel(ApplicationDbContext db) : BasePageModel
 {
+	[FromQuery]
+	public PagingModel Paging { get; set; } = new();
+
 	[FromRoute]
 	public int? Id { get; set; }
 
 	[BindProperty]
-	public List<InboxEntry> Messages { get; set; } = [];
+	public PageOf<InboxEntry> Messages { get; set; } = PageOf<InboxEntry>.Empty();
 
 	public async Task OnGet()
 	{
@@ -22,7 +25,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 				pm.FromUser!.UserName,
 				pm.CreateTimestamp,
 				pm.ReadOn.HasValue))
-			.ToListAsync();
+			.PageOf(Paging);
 	}
 
 	public async Task<IActionResult> OnPostSave()

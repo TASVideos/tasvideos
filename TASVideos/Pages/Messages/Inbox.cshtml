@@ -23,8 +23,8 @@
 		<th>Actions</th>
 	</tr>
 	@foreach (var entry in Model.Messages
-		.OrderBy(m => m.IsRead)
-		.ThenByDescending(m => m.Date))
+				.OrderBy(m => m.IsRead)
+				.ThenByDescending(m => m.Date))
 	{
 		<tr>
 			<td>
@@ -52,4 +52,5 @@
 		</tr>
 	}
 </standard-table>
+<partial name="_Pager" model="Model.Messages" />
 
