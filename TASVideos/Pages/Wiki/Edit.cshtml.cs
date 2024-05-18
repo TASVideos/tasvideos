@@ -40,9 +40,13 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			return NotFound();
 		}
 
-		if (WikiHelper.IsHomePage(Path) && !await UserNameExists(Path))
+		if (WikiHelper.IsHomePage(Path))
 		{
-			return NotFound();
+			var existingUser = await UserName(Path);
+			if (string.IsNullOrEmpty(existingUser))
+			{
+				return NotFound();
+			}
 		}
 
 		var page = await wikiPages.Page(Path);
@@ -64,9 +68,15 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			return Home();
 		}
 
-		if (WikiHelper.IsHomePage(Path) && !await UserNameExists(Path))
+		var existingUser = await UserName(Path);
+		if (WikiHelper.IsHomePage(Path))
 		{
-			return Home();
+			if (string.IsNullOrEmpty(existingUser))
+			{
+				return Home();
+			}
+
+			Path = Path.Replace(existingUser, existingUser, StringComparison.InvariantCultureIgnoreCase); // Normalize user name
 		}
 
 		if (!ModelState.IsValid)
@@ -140,10 +150,13 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 		return BasePageRedirect("PageHistory", new { Path, Latest = true });
 	}
 
-	private async Task<bool> UserNameExists(string path)
+	private async Task<string?> UserName(string path)
 	{
 		var userName = WikiHelper.ToUserName(path);
-		return await db.Users.Exists(userName);
+		return await db.Users
+			.Where(u => u.UserName == userName)
+			.Select(u => u.UserName)
+			.SingleOrDefaultAsync();
 	}
 
 	private async Task Announce(IWikiPage page)
