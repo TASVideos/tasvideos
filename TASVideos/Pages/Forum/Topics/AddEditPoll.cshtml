@@ -11,7 +11,7 @@
 	<partial name="_PollCreate" model="Model.Poll" />
 	<form-button-bar>
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> @mode</submit-button>
-		<a asp-page="Index" asp-route-id="@Model.TopicId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="Index" asp-route-id="@Model.TopicId"></cancel-button>
 	</form-button-bar>
 </form>
 @section Scripts {

@@ -140,7 +140,7 @@
 	@await Html.RenderWiki(SystemWiki.FilesEditingHelp)
 	<form-button-bar>
 		<submit-button class="btn btn-primary"><i class="fa fa-save"></i> Publish</submit-button>
-		<a asp-page="View" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="View" asp-route-id="@Model.Id"></cancel-button>
 	</form-button-bar>
 </form>
 

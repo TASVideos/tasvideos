@@ -55,7 +55,7 @@
 	<form-button-bar>
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
 		<submit-button class="btn btn-primary"><i class="fa fa-plus"></i> Post</submit-button>
-		<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId"></cancel-button>
 	</form-button-bar>
 </form>
 

@@ -67,7 +67,7 @@
 	<hr />
 	<form-button-bar>
 		<submit-button id="submit-btn" class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
-		<a class="btn btn-secondary" asp-page="View" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="View" asp-route-id="@Model.Id"></cancel-button>
 		<div class="form-check-inline">
 			<label asp-for="Catalog.MinorEdit" class="form-check-label"></label>
 			<input asp-for="Catalog.MinorEdit" type="checkbox" class="form-check-input"/>

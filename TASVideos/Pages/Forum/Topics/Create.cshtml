@@ -76,8 +76,8 @@
 	</fullrow>
 	<form-button-bar>
 		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
-		<button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> Post</button>
-		<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<submit-button class="btn btn-primary"><i class="fa fa-plus"></i> Post</submit-button>
+		<cancel-button asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId"></cancel-button>
 	</form-button-bar>
 </form>
 

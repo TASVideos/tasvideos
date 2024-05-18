@@ -16,7 +16,6 @@
 		iconClass = "fa fa-plus";
 	}
 	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
-	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 
 <div class="text-danger">
@@ -96,8 +95,7 @@
 	</row>
 	<form-button-bar>
 		<submit-button id="submit-btn" class="btn btn-primary"><i class="@iconClass"></i> @saveBtnName</submit-button>
-		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="/Games/Versions/List" class="btn btn-secondary" asp-route-gameId="@Model.GameId"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></cancel-button>
 	</form-button-bar>
 </form>
 <input id="hash-input" type="file" class="d-none" />

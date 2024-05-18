@@ -15,6 +15,6 @@
 	</row>
 	<form-button-bar>
 		<submit-button class="btn btn-danger"><i class="fa fa-remove"></i> Unpublish</submit-button>
-		<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i>Cancel</a>
+		<cancel-button asp-page="/Publications/View" asp-route-id="@Model.Id"></cancel-button>
 	</form-button-bar>
 </form>

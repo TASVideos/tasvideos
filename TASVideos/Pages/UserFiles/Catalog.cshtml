@@ -37,7 +37,7 @@
 	</row>
 	<form-button-bar>
 		<submit-button id="submit-btn" class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
-		<a class="btn btn-secondary" asp-page="Info" asp-route-id="@Model.Id"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="Info" asp-route-id="@Model.Id"></cancel-button>
 	</form-button-bar>
 </form>
 <div id="dummy" class="d-none"></div>

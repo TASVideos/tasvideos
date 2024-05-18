@@ -102,6 +102,30 @@ public static partial class TagHelperExtensions
 		return JsonSerializer.Serialize(value).Replace("/", "\\/");
 	}
 
+	public static string GenerateTagHelperOutput<T>(this T tagHelper)
+		where T : TagHelper
+	{
+		var tagHelperContext = new TagHelperContext(
+			new TagHelperAttributeList(),
+			new Dictionary<object, object>(),
+			Guid.NewGuid().ToString("N"));
+
+		var tagHelperOutput = new TagHelperOutput(
+			"div",
+			new TagHelperAttributeList(),
+			(useCachedResult, encoder) =>
+			{
+				var tagHelperContent = new DefaultTagHelperContent();
+				return Task.FromResult<TagHelperContent>(tagHelperContent);
+			});
+
+		tagHelper.Process(tagHelperContext, tagHelperOutput);
+
+		using var writer = new StringWriter();
+		tagHelperOutput.WriteTo(writer, HtmlEncoder.Default);
+		return writer.ToString();
+	}
+
 	[GeneratedRegex("^[^\t\n\f \\/>\"'=]+$")]
 	private static partial Regex ValidAttributeNameRegex();
 }

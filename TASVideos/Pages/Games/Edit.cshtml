@@ -4,7 +4,6 @@
 	ViewData.SetTitle(Model.Id.HasValue
 	? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
 		: "Create a new Game entry");
-	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 <fieldset>
 	<a class="btn btn-primary" asp-page="/Logs/Index" asp-route-table="Games" asp-route-rowId="@Model.Id" >History</a>
@@ -69,8 +68,7 @@
 	</fieldset>
 	<form-button-bar>
 		<submit-button id="submit-btn" class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
-		<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
-		<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="List" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="List"></cancel-button>
 		<div class="form-check-inline">
 			<label asp-for="Game.MinorEdit" class="form-check-label"></label>
 			<input asp-for="Game.MinorEdit" type="checkbox" class="form-check-input"/>

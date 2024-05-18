@@ -46,6 +46,6 @@ Important manual steps to take before this action
 	</row>
 	<form-button-bar>
 		<submit-button id="submit-btn" class="btn btn-danger"><i class="fa fa-trash-can"></i> Anonymize</submit-button>
-		<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary"><i class="fa fa-times"></i> Cancel</a>
+		<cancel-button asp-page="Edit" asp-route-id="@Model.Id"></cancel-button>
 	</form-button-bar>
 </form>
