@@ -3,10 +3,13 @@
 [AllowAnonymous]
 public class EditHistoryModel(ApplicationDbContext db) : BasePageModel
 {
+	[FromQuery]
+	public PagingModel Paging { get; set; } = new();
+
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public List<HistoryEntry> History { get; set; } = [];
+	public PageOf<HistoryEntry> History { get; set; } = PageOf<HistoryEntry>.Empty();
 
 	public async Task OnGet()
 	{
@@ -16,7 +19,7 @@ public class EditHistoryModel(ApplicationDbContext db) : BasePageModel
 			.ByMostRecent()
 			.Select(wp => new HistoryEntry(
 				wp.Revision, wp.CreateTimestamp, wp.PageName, wp.MinorEdit, wp.RevisionMessage))
-			.ToListAsync();
+			.PageOf(Paging);
 	}
 
 	public record HistoryEntry(int Revision, DateTime CreateTimestamp, string PageName, bool MinorEdit, string? RevisionMessage);

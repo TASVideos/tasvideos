@@ -1,9 +1,9 @@
 @page "{username}"
 @model EditHistoryModel
-
 @{
 	ViewData.SetTitle("Edit History For User " + Model.UserName);
 }
+
 <h4>Edits by <a href="@WikiEngine.Builtins.NormalizeInternalLink("/HomePages/" + Model.UserName)">@Model.UserName</a></h4>
 <standard-table>
 	<tbody>
@@ -40,3 +40,4 @@
 		}
 	</tbody>
 </standard-table>
+<partial name="_Pager" model="Model.History" />
