@@ -110,10 +110,9 @@
 						class="btn-sm">
 						<i class="fa fa-remove"></i>
 					</delete-button>
-					<form asp-page="/Wiki/Edit" asp-page-handler="RollbackLatest" asp-route-path="@Model.Path" condition="canEdit">
-						<input type="hidden" name="previousRevision" value="@(164)" />
-						<submit-button condition="i == 0 && revision.Revision > 1" class="btn-sm" btn-class-override="btn-warning" title="Rollback this revision"><i class="fa fa-undo"></i></submit-button>
-					</form>
+					<delete-button condition="i == 0 && canEdit" asp-href="/Wiki/Edit/RollbackLatest?path=@Model.Path" warning-message="This will create a new revision that reverses the previous revision. Do you want to continue?" class="btn-warning btn-sm">
+						<i class="fa fa-undo"></i>
+					</delete-button>
 				</td>
 			</tr>
 		}
@@ -135,7 +134,7 @@
 
 		function generateDiff() {
 			const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
-			const contextSize = parseInt(document.querySelector('[name="context-size"').value);
+			const contextSize = parseInt(document.querySelector('[name="context-size"]').value);
 
 			const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
 			const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
