@@ -33,7 +33,7 @@
 					<span condition="!item.HasExistingRevisions">
 						<form method="post" asp-page="/Wiki/DeletedPages" asp-page-handler="Undelete">
 							<input type="hidden" name="path" value="@item.PageName" />
-							<button type="submit" class="btn btn-primary">Undelete</button>
+							<submit-button>Undelete</submit-button>
 						</form>
 					</span>
 				}

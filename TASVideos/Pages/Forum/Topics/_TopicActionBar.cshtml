@@ -51,14 +51,14 @@
 	asp-route-locked="@(!Model.IsLocked)"
 	method="POST"
 	style="display: inline">
-	<button type="submit" class="btn @(Model.IsLocked ? "btn-success" : "btn-warning") btn-sm">
+	<submit-button btn-class-override="@(Model.IsLocked ? "btn-success" : "btn-warning")" class="btn-sm">
 		<span condition="Model.IsLocked" title="Unlock this topic">
 			<i class="fa fa-unlock"></i> Unlock
 		</span>
 		<span condition="!Model.IsLocked" title="Lock this topic">
 			<i class="fa fa-lock"></i> Lock
 		</span>
-	</button>
+	</submit-button>
 </form>
 <a permission="CreateForumPolls"
 	asp-page="AddEditPoll"

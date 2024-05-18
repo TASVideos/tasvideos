@@ -124,7 +124,7 @@
 	</row>
 	<form-button-bar>
 		<button id="preview-button" type="button" class="btn btn-secondary"><i class="fa fa-eye"></i> Preview</button>
-		<submit-button id="submit-btn" class="btn btn-primary @(Model.Markup.Length > 0 ? "" : "hide")"><i class="fa fa-save"></i> Save</submit-button>
+		<submit-button id="submit-btn"></submit-button>
 		<cancel-button asp-page="View" asp-route-id="@Model.Id"></cancel-button>
 	</form-button-bar>
 </form>

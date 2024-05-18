@@ -39,8 +39,8 @@
 			</td>
 			<td>@entry.Date</td>
 			<td>
-				<form method="post" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id" style="display: inline-block">
-					<button type="submit" class="btn btn-primary btn-sm">Save</button>
+				<form method="post" class="d-inline-block" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id">
+					<submit-button class="btn-sm">Save</submit-button>
 				</form>
 				<delete-button
 					asp-href="/Messages/InBox/@entry.Id/Delete"

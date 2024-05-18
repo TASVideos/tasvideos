@@ -67,7 +67,7 @@
 		<select asp-for="Game.Groups" size="@(Math.Min(Model.Game.Groups.Count, 7).ToString())" asp-items="Model.AvailableGroups" class="form-select"></select>
 	</fieldset>
 	<form-button-bar>
-		<submit-button id="submit-btn" class="btn btn-primary"><i class="fa fa-save"></i> Save</submit-button>
+		<submit-button id="submit-btn"></submit-button>
 		<cancel-button asp-page="List"></cancel-button>
 		<div class="form-check-inline">
 			<label asp-for="Game.MinorEdit" class="form-check-label"></label>

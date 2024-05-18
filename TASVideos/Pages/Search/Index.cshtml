@@ -15,7 +15,7 @@
 				<input type="text" asp-for="SearchTerms" class="form-control" />
 				<span condition="PageContext.HttpContext.Request.QueryString.HasValue" asp-validation-for="SearchTerms" class="text-danger"></span>
 			</fieldset>
-			<button type="submit" class="btn btn-primary">Search</button>
+			<submit-button>Search</submit-button>
 			<a condition="Model.PageNumber > 1" asp-page="/Search/Index" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber - 1)">Prev</a>
 			<a condition="Model.PageResults.Count > IndexModel.PageSize || Model.PostResults.Count > IndexModel.PageSize || Model.GameResults.Count > IndexModel.PageSize" asp-page="/Search/Index" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber + 1)">Next</a>
 		</column>

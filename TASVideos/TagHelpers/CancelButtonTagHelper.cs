@@ -6,6 +6,8 @@ namespace TASVideos.TagHelpers;
 
 public class CancelButtonTagHelper(IHtmlGenerator generator, IHttpContextAccessor httpContextAccessor) : AnchorTagHelper(generator)
 {
+	public string? BtnClassOverride { get; set; }
+
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "a";
@@ -24,7 +26,10 @@ public class CancelButtonTagHelper(IHtmlGenerator generator, IHttpContextAccesso
 
 		await base.ProcessAsync(context, output);
 		output.AddCssClass("btn");
-		output.AddCssClass("btn-secondary");
+
+		output.AddCssClass(string.IsNullOrEmpty(BtnClassOverride)
+			? "btn-secondary"
+			: BtnClassOverride);
 
 		var content = (await output.GetChildContentAsync()).GetContent();
 		if (string.IsNullOrWhiteSpace(content))

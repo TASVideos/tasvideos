@@ -37,7 +37,7 @@
 				<span asp-validation-for="DisplayName" class="text-danger"></span>
 			</fieldset>
 			<form-button-bar>
-				<submit-button class="btn btn-primary"><span class="@iconClass"></span> @saveBtnName</submit-button>
+				<submit-button><span class="@iconClass"></span> @saveBtnName</submit-button>
 				<cancel-button asp-page="List" asp-route-PublicationId="@Model.PublicationId"></cancel-button>
 			</form-button-bar>
 		</column>

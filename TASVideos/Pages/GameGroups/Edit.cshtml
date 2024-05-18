@@ -52,7 +52,7 @@
 		</column>
 	</row>
 	<form-button-bar>
-		<submit-button class="btn btn-primary"><i class="@iconClass"></i> @saveBtnName</submit-button>
+		<submit-button><i class="@iconClass"></i> @saveBtnName</submit-button>
 		<cancel-button asp-page="@(Model.Id.HasValue ? "Index" : "List")" asp-route-id="@Model.Id"></cancel-button>
 	</form-button-bar>
 </form>

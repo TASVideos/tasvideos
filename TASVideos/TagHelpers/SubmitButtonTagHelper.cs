@@ -4,7 +4,9 @@ namespace TASVideos.TagHelpers;
 
 public class SubmitButtonTagHelper : TagHelper
 {
-	public override void Process(TagHelperContext context, TagHelperOutput output)
+	public string? BtnClassOverride { get; set; }
+
+	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
 		var guid = Guid.NewGuid();
 		output.TagName = "button";
@@ -20,5 +22,17 @@ public class SubmitButtonTagHelper : TagHelper
 					}
 				</script>
 				""");
+
+		output.AddCssClass("btn");
+
+		output.AddCssClass(string.IsNullOrEmpty(BtnClassOverride)
+			? "btn-primary"
+			: BtnClassOverride);
+
+		var content = (await output.GetChildContentAsync()).GetContent();
+		if (string.IsNullOrWhiteSpace(content))
+		{
+			output.Content.AppendHtml("<i class=\"fa fa-save\"></i> Save");
+		}
 	}
 }
