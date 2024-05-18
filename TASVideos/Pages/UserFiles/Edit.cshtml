@@ -47,7 +47,7 @@
 	</row>
 	<form-button-bar>
 		@await Html.RenderWiki(SystemWiki.WikiEditNote)
-		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
+		<preview-button></preview-button>
 		<submit-button></submit-button>
 		<cancel-button asp-page="/UserFiles/Info" asp-route-id="@Model.Id"></cancel-button>
 	</form-button-bar>

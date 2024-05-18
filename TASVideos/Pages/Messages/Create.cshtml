@@ -46,7 +46,7 @@
 		</fieldset>
 	</row>
 	<form-button-bar>
-		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
+		<preview-button></preview-button>
 		<submit-button disable="@string.IsNullOrWhiteSpace(Model.ToUser)"><i class="fa fa-save"></i> Send</submit-button>
 		<cancel-button asp-page="Inbox"></cancel-button>
 	</form-button-bar>

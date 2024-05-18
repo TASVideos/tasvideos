@@ -75,13 +75,13 @@
 		<label asp-for="WatchTopic"></label>
 	</fullrow>
 	<form-button-bar>
-		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
+		<preview-button></preview-button>
 		<submit-button><i class="fa fa-plus"></i> Post</submit-button>
 		<cancel-button asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId"></cancel-button>
 	</form-button-bar>
 </form>
 
-<partial name="_PreviewWindow" model="@(("Topic_Post", "/Forum/Preview"))" />
+<partial name="_PreviewWindow" model="@(("Post", "/Forum/Preview"))" />
 
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />

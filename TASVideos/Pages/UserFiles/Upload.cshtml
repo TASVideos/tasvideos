@@ -27,7 +27,7 @@
 			</fieldset>
 			<fieldset>
 				<div>
-					<partial name="_WikiEditHelper" model="@("UserFile_Description")"/>
+					<partial name="_WikiEditHelper" model="@("Description")"/>
 				</div>
 				<label asp-for="Description" class="form-control-label"></label>
 				<textarea asp-for="Description" rows="6" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
@@ -54,7 +54,7 @@
 	</row>
 	<form-button-bar>
 		@await Html.RenderWiki(SystemWiki.WikiEditNote)
-		<button type="button" class="btn btn-secondary" id="preview-button">Preview</button>
+		<preview-button></preview-button>
 		<submit-button><i class="fa fa-upload"></i> Upload</submit-button>
 		<cancel-button asp-page="/Profile/UserFiles"></cancel-button>
 	</form-button-bar>
@@ -72,7 +72,6 @@
 	</script>
 	<script src="/js/pako_deflate.min.js"></script>
 	<script>
-
 		"use strict";
 		{
 			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile)");

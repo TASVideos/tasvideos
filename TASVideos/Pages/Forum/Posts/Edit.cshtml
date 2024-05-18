@@ -55,7 +55,7 @@
 		<label asp-for="MinorEdit"></label>
 	</fullrow>
 	<form-button-bar class="mb-2">
-		<button type="button" class="btn btn-secondary" id="preview-button"><i class="fa fa-eye"></i> Preview</button>
+		<preview-button></preview-button>
 		<submit-button></submit-button>
 		<cancel-button asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId"></cancel-button>
 	</form-button-bar>
