@@ -647,6 +647,13 @@ fieldset {
 	}
 }
 
+top-button-bar {
+	display: flex;
+	justify-content: end;
+	gap: 4px;
+	margin-bottom: .5rem
+}
+
 @media screen and (min-width: 769px) {
 	.sub-info {
 		.sub-info-cell {

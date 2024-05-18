@@ -15,11 +15,12 @@
 		</nav>
 	</div>
 }
-
 <partial Name="_ForumHeader" />
-<a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="ms-2 float-end btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</a>
-<a permission="CreateForumTopics" condition="Model.Forum.CanCreateTopics" asp-page="/Forum/Topics/Create" asp-route-forumId="@Model.Forum.Id" class="ms-2 float-end btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
-<a class="ms-2 float-end btn btn-secondary btn-sm" onclick="markSubforumPostsRead()">Mark Posts as read</a>
+<top-button-bar>
+	<a class="btn btn-secondary btn-sm" onclick="markSubforumPostsRead()">Mark Posts as read</a>
+	<a permission="CreateForumTopics" condition="Model.Forum.CanCreateTopics" asp-page="/Forum/Topics/Create" asp-route-forumId="@Model.Forum.Id" class="btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
+	<a permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="btn btn-primary btn-sm border border-warning"><i class="fa fa-pencil"></i> Edit</a>
+</top-button-bar>
 <div>
 	<small>@Html.Raw(Model.Forum.Description)</small>
 </div>

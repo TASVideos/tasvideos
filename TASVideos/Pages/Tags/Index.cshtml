@@ -3,8 +3,9 @@
 @{
 	ViewData.SetTitle("Tag List");
 }
-
-<a class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
+<top-button-bar>
+	<add-button asp-page="Create"></add-button>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>Code</th>
@@ -16,11 +17,9 @@
 		<tr>
 			<td>@tag.Code</td>
 			<td>@tag.DisplayName</td>
-			<td>
-				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@tag.Id">
-					<i class="fa fa-pencil"></i> Edit
-				</a>
-			</td>
+			<td-action-column>
+				<edit-button asp-page="Edit" asp-route-id="@tag.Id"></edit-button>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

@@ -4,8 +4,9 @@
 	ViewData.SetTitle("Flag List");
 }
 
-<a class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
-
+<top-button-bar>
+	<add-button asp-page="Create"></add-button>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>Name</th>
@@ -23,11 +24,9 @@
 			<td>@flag.LinkPath</td>
 			<td>@flag.Token</td>
 			<td>@flag.PermissionRestriction</td>
-			<td>
-				<a class="btn btn-primary" asp-page="Edit" asp-route-id="@flag.Id">
-					<i class="fa fa-pencil"></i> Edit
-				</a>
-			</td>
+			<td-action-column>
+				<edit-button asp-page="Edit" asp-route-id="@flag.Id"></edit-button>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

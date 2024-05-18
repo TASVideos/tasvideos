@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Editing Tag: {Model.Tag.Code}");
 }
 
-<div class="text-end">
+<top-button-bar>
 	<delete-button condition="!Model.InUse"
 				   asp-href="/Tags/Edit/@(Model.Tag.Id)/Delete"
 				   warning-message="Are you sure you want to remove this tag?">
@@ -13,19 +13,23 @@
 	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Tag.Code">
 		Tag in Use
 	</a>
-</div>
+</top-button-bar>
 
 <form method="post">
 	<row>
 		<column lg="6">
-			<label asp-for="Tag.Code"></label>
-			<input type="text" asp-for="Tag.Code" class="form-control" />
-			<span asp-validation-for="Tag.Code" class="text-danger"></span>
+			<fieldset>
+				<label asp-for="Tag.Code"></label>
+				<input type="text" asp-for="Tag.Code" class="form-control"/>
+				<span asp-validation-for="Tag.Code" class="text-danger"></span>
+			</fieldset>
 		</column>
-		<column lg="6" class="mt-lg-0 mt-3">
-			<label asp-for="Tag.DisplayName"></label>
-			<input type="text" asp-for="Tag.DisplayName" class="form-control" />
-			<span asp-validation-for="Tag.DisplayName" class="text-danger"></span>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="Tag.DisplayName"></label>
+				<input type="text" asp-for="Tag.DisplayName" class="form-control"/>
+				<span asp-validation-for="Tag.DisplayName" class="text-danger"></span>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>
