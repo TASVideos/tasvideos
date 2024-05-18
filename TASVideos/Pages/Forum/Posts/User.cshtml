@@ -4,11 +4,7 @@
 	ViewData.SetTitle($"Posts for {Model.UserName}");
 }
 <partial Name="_ForumHeader" />
-
-<hr class="mt-1" />
-<fullrow>
-	<partial name="_Pager" model="Model.Posts" />
-</fullrow>
+<partial name="_Pager" model="Model.Posts" />
 @foreach (var post in Model.Posts)
 {
 	<div class="container mt-3">
@@ -24,6 +20,5 @@
 	</div>
 	<partial name="Forum/Topics/_TopicPost" model="post" />
 }
-<fullrow class="mt-2">
-	<partial name="_Pager" model="Model.Posts" />
-</fullrow>
+<partial name="_Pager" model="Model.Posts" />
+

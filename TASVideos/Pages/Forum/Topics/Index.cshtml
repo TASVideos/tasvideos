@@ -51,7 +51,7 @@
 					</h1>
 				</li>
 			</ol>
-			
+
 		</nav>
 		<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
 	</div>
@@ -102,20 +102,13 @@
 }
 
 <hr class="my-0" />
-<fullrow>
-	<partial name="_Pager" model="Model.Topic.Posts" />
-</fullrow>
-
+<partial name="_Pager" model="Model.Topic.Posts" />
 @foreach (var post in Model.Topic.Posts.OrderBy(p => p.CreateTimestamp).ToList())
 {
 	<partial name="_TopicPost" model="post" />
 }
-
-<fullrow class="mt-2">
-	<partial name="_Pager" model="Model.Topic.Posts" />
-</fullrow>
+<partial name="_Pager" model="Model.Topic.Posts" />
 <hr class="mb-1"/>
-
 <fullrow class="mt-2">
 	<partial name="_TopicActionBar" model="Model.Topic" />
 	<a condition="User.Has(PermissionTo.PostInLockedTopics)
