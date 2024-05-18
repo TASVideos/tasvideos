@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Forum.Posts;
 public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePageModel
 {
 	[FromQuery]
-	public NewPagingModel Search { get; set; } = new();
+	public PagingModel Search { get; set; } = new();
 
 	public PageOf<LatestModel.LatestPost> Posts { get; set; } = PageOf<LatestModel.LatestPost>.Empty();
 
@@ -20,13 +20,5 @@ public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePa
 			.OrderByDescending(p => p.CreateTimestamp)
 			.ToLatestPost()
 			.PageOf(Search);
-	}
-
-	public class NewPagingModel : PagingModel
-	{
-		public NewPagingModel()
-		{
-			PageSize = 25;
-		}
 	}
 }

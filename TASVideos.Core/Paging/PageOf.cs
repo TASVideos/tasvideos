@@ -21,6 +21,6 @@ public class PageOf<T>(IEnumerable<T> items) : IPaged, IEnumerable<T>
 public class PagingModel : ISortable, IPageable
 {
 	public string? Sort { get; set; }
-	public int? PageSize { get; set; } = 10;
+	public int? PageSize { get; set; } = 25;
 	public int? CurrentPage { get; set; } = 1;
 }

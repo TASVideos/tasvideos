@@ -50,7 +50,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public LogPaging()
 		{
 			Sort = $"-{nameof(LogEntry.Created)}";
-			PageSize = 25;
 		}
 	}
 
