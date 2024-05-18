@@ -1,4 +1,6 @@
 ﻿using AspNetCore.ReCaptcha;
+using JavaScriptEngineSwitcher.Core;
+using JavaScriptEngineSwitcher.V8;
 using Serilog;
 using TASVideos.Api;
 using TASVideos.Core.Data;
@@ -35,10 +37,12 @@ builder.Services
 	.AddTasvideosApi(settings);
 
 // 3rd Party
+JsEngineSwitcher.AllowCurrentProperty = false;
 builder.Services
 	.AddRazorPages(builder.Environment)
 	.AddIdentity(builder.Environment)
 	.AddReCaptcha(builder.Configuration.GetSection("ReCaptcha"))
+	.AddSingleton<IJsEngineSwitcher>(new JsEngineSwitcher([new V8JsEngineFactory()], V8JsEngine.EngineName))
 	.AddWebOptimizer(pipeline =>
 	{
 		pipeline.AddScssBundle("/css/bootstrap.css", "/css/bootstrap.scss");
