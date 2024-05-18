@@ -7,7 +7,7 @@
 
 @await Html.RenderWiki(SystemWiki.EmailConfirmationSentMessage)
 
-<form method="post" id="email-confirmation-form">
+<form method="post">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -33,9 +33,5 @@
 </form>
 
 @section Scripts {
-	<script>
-	function onSubmit() {
-		document.getElementById("email-confirmation-form").submit();
-	}
-	</script>
+	<partial name="_ValidationScriptsPartial" />
 }
