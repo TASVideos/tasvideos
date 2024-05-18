@@ -2,16 +2,6 @@
 @model JudgesModel
 @{
 	ViewData.SetTitle($"Judge Activity for {Model.UserName}");
-}
-@section PageTitle {
-	<div class="container mb-2">
-		<h1 class="card card-header d-block">
-			Judge <a asp-page="/Activity/Index">Activity</a> for @Model.UserName
-		</h1>
-	</div>
-}
-
-@{
 	var total = Model.Submissions.Count;
 	var acceptedTotal = Model.Submissions.Count(s => s.Status is SubmissionStatus.Published
 		or SubmissionStatus.Accepted
@@ -26,17 +16,19 @@
 		{ SubmissionStatus.NeedsMoreInfo, 1 }
 	};
 }
-
-<p>Submissions judged by <profile-link username="@Model.UserName"></profile-link></p>
-<hr />
+@section PageTitle {
+	<div class="container mb-2">
+		<h1 class="card card-header d-block">
+			Judge <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
+		</h1>
+	</div>
+}
 <label>Total: @total</label><br />
 <div>Accepted: @acceptedTotal (@acceptedTotal.ToPercent(total)%)</div>
 <div>Rejected: @rejectedTotal (@rejectedTotal.ToPercent(total)%)</div>
 <div>Cancelled: @cancelledTotal (@cancelledTotal.ToPercent(total)%)</div>
 <div>Playground: @playgroundTotal (@playgroundTotal.ToPercent(total)%)</div>
-<hr />
-
-<standard-table>
+<standard-table class="mt-2">
 	<tr>
 		<th>Date</th>
 		<th>Submission</th>

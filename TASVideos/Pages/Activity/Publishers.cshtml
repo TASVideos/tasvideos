@@ -2,32 +2,27 @@
 @model PublishersModel
 @{
 	ViewData.SetTitle($"Publisher Activity for {Model.UserName}");
-}
-@section PageTitle {
-	<div class="container mb-2">
-		<h1 class="card card-header d-block">
-			Publisher <a asp-page="/Activity/Index">Activity</a> for @Model.UserName
-		</h1>
-	</div>
-}
-
-@{
 	var total = Model.Publications.Count;
 
 	var classCounts = Model.Publications
 		.GroupBy(p => p.Class)
 		.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Count());
 }
+@section PageTitle {
+	<div class="container mb-2">
+		<h1 class="card card-header d-block">
+			Publisher <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
+		</h1>
+	</div>
+}
 
-<p>Movies published by <profile-link username="@Model.UserName"></profile-link></p>
-<hr />
 <label>Total: @total</label>
 @foreach (var c in classCounts)
 {
 	<div>@c.Key: @c.Value</div>
 }
-<hr />
-<standard-table>
+
+<standard-table class="mt-2">
 	<tr>
 		<th>Date</th>
 		<th>Publication</th>

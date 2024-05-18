@@ -1,6 +1,8 @@
 ﻿@page
-@{ ViewData.SetTitle("User Activity"); }
 @model IndexModel
+@{
+	ViewData.SetTitle("User Activity");
+}
 
 @await Html.RenderWiki(SystemWiki.ActivitySummary)
 <row class="mt-3">
