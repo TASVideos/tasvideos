@@ -1,7 +1,6 @@
 ﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Core.Settings;
 using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
@@ -16,12 +15,10 @@ public class SubmitModel(
 	ITASVideoAgent tasVideoAgent,
 	IYoutubeSync youtubeSync,
 	IMovieFormatDeprecator deprecator,
-	IQueueService queueService,
-	AppSettings settings)
+	IQueueService queueService)
 	: BasePageModel
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
-	private DateTime _earliestTimestamp;
 
 	[BindProperty]
 	[Display(Name = "Game Version", Description = "Example: USA")]
@@ -81,22 +78,32 @@ public class SubmitModel(
 	public bool AgreeToLicense { get; init; }
 
 	public string BackupSubmissionDeterminator { get; set; } = "";
+	public DateTime? EarliestTimestamp { get; set; }
 
-	public async Task OnGet()
+	public async Task<IActionResult> OnGet()
 	{
+		var nextWindow = await queueService.ExceededSubmissionLimit(User.GetUserId());
+		if (nextWindow is not null)
+		{
+			return RedirectToPage("ExceededLimit", new { NextWindow = nextWindow.Value });
+		}
+
 		Authors = [User.Name()];
 
 		BackupSubmissionDeterminator = (await db.Submissions
 			.Where(s => s.SubmitterId == User.GetUserId())
 			.CountAsync())
 			.ToString();
+
+		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (!await SubmissionAllowed(User.GetUserId()))
+		var nextWindow = await queueService.ExceededSubmissionLimit(User.GetUserId());
+		if (nextWindow is not null)
 		{
-			return RedirectToPage("/Submissions/Submit");
+			return RedirectToPage("ExceededLimit", new { NextWindow = nextWindow.Value });
 		}
 
 		await ValidateModel();
@@ -212,32 +219,5 @@ public class SubmitModel(
 				ModelState.AddModelError($"{nameof(Authors)}", $"Could not find user: {author}");
 			}
 		}
-	}
-
-	public string[] Notice() =>
-	[
-		"Sorry, you can not submit at this time.",
-		"We limit submissions to " +
-		settings.SubmissionRate.Submissions +
-		" in " +
-		settings.SubmissionRate.Days +
-		" days per user. ",
-		"You will be able to submit again on " +
-		_earliestTimestamp.AddDays(settings.SubmissionRate.Days)
-	];
-
-	public async Task<bool> SubmissionAllowed(int userId)
-	{
-		var subs = await db.Submissions
-			.Where(s => s.Submitter != null
-				&& s.SubmitterId == userId
-				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-settings.SubmissionRate.Days))
-			.ToListAsync();
-		if (subs.Count > 0)
-		{
-			_earliestTimestamp = subs.Select(s => s.CreateTimestamp).Min();
-		}
-
-		return subs.Count < settings.SubmissionRate.Submissions;
 	}
 }

@@ -56,6 +56,12 @@ public interface IQueueService
 	/// <param name="obsoletingPublicationId">The movie that obsoletes it</param>
 	/// <returns>False if publications is not found</returns>
 	Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId);
+
+	/// <summary>
+	/// Returns whether or not the user has exceeded the submission limit
+	/// </summary>
+	/// <returns>Next time the user can submit, if limit has been exceeded, else null</returns>
+	Task<DateTime?> ExceededSubmissionLimit(int userId);
 }
 
 internal class QueueService(
@@ -476,5 +482,20 @@ internal class QueueService(
 		}
 
 		return true;
+	}
+
+	public async Task<DateTime?> ExceededSubmissionLimit(int userId)
+	{
+		var subs = await db.Submissions
+			.Where(s => s.SubmitterId == userId
+				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-settings.SubmissionRate.Days))
+			.ToListAsync();
+
+		if (subs.Count >= settings.SubmissionRate.Submissions)
+		{
+			return subs.Select(s => s.CreateTimestamp).Min().AddDays(settings.SubmissionRate.Days);
+		}
+
+		return null;
 	}
 }

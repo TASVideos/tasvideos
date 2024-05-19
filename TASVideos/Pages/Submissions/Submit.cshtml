@@ -4,162 +4,144 @@
 	ViewData.SetTitle("Submit Movie");
 	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
 	var parseErrors = !notSupportedError && ViewData.ModelState.Keys.Any(e => e == "Parser");
-	var submissionAllowed = await Model.SubmissionAllowed(User.GetUserId());
-	var notice = Model.Notice();
 }
 
-@{
-	if (!submissionAllowed)
-	{
-		<info-alert>
-			<row>
-				@foreach (var n in notice)
-				{
-					<div class="col-12">@n</div>
-				}
-			</row>
-		</info-alert>
-	}
-	else
-	{
-		<info-alert dismissible="true">
-			@await Html.RenderWiki(SystemWiki.SubmitMovieHeader)
-		</info-alert>
-		<hr />
-		<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-		<warning-alert dismissible="true" condition="notSupportedError">
-			@await Html.RenderWiki(SystemWiki.SupportedMovieTypes)
-		</warning-alert>
-		<danger-alert dismissible="true" condition="parseErrors">
-			@await Html.RenderWiki(SystemWiki.SubmissionZipFailure)
-		</danger-alert>
-		<span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
-		<form method="post" enctype="multipart/form-data">
-			<row>
-				<column lg="6">
-					<fieldset>
-						<label asp-for="MovieFile" class="form-control-label"></label>
-						<input asp-for="MovieFile" class="form-control" />
-						<div>@Html.DescriptionFor(m => m.MovieFile)</div>
-						<span asp-validation-for="MovieFile" class="text-danger"></span>
-					</fieldset>
-				</column>
-				<column lg="6">
-					<fieldset>
-						<label asp-for="Authors" class="form-control-label"></label>
-						<string-list asp-for="Authors" />
-						<span asp-validation-for="Authors" class="text-danger"></span>
-					</fieldset>
-					<fieldset>
-						<label asp-for="AdditionalAuthors" class="form-control-label"></label>
-						<input asp-for="AdditionalAuthors" class="form-control" />
-						<div>@Html.DescriptionFor(m => m.AdditionalAuthors)</div>
-						<span asp-validation-for="AdditionalAuthors" class="text-danger"></span>
-					</fieldset>
-				</column>
-			</row>
-			<row>
-				<column lg="6">
-					<fieldset>
-						<label asp-for="GameVersion" class="form-control-label"></label>
-						<input asp-for="GameVersion" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameVersion)" />
-						<span asp-validation-for="GameVersion" class="text-danger"></span>
-					</fieldset>
-					<fieldset>
-						<label asp-for="GameName" class="form-control-label"></label>
-						<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
-						<span asp-validation-for="GameName" class="text-danger"></span>
-					</fieldset>
-					<fieldset>
-						<label asp-for="Emulator" class="form-control-label"></label>
-						<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
-						<span asp-validation-for="Emulator" class="text-danger"></span>
-					</fieldset>
-				</column>
-				<column lg="6">
-					<fieldset>
-						<label asp-for="Branch" class="form-control-label"></label>
-						<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)" />
-						<span asp-validation-for="Branch" class="text-danger"></span>
-					</fieldset>
-					<fieldset>
-						<label asp-for="RomName" class="form-control-label"></label>
-						<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
-						<span asp-validation-for="RomName" class="text-danger"></span>
-					</fieldset>
-					<fieldset>
-						<label asp-for="EncodeEmbedLink" class="form-control-label"></label>
-						<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)" />
-						<span asp-validation-for="EncodeEmbedLink" class="text-danger"></span>
-					</fieldset>
-				</column>
-			</row>
-			<fullrow>
-				<fieldset>
-					<label asp-for="Markup" class="form-control-label"></label>
-					<span>
-						@await Html.RenderWiki(SystemWiki.SubmissionImportant)
-					</span>
-					<partial name="_WikiEditHelper" model="@("Markup")" />
-					<textarea asp-for="Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
-					<span asp-validation-for="Markup" class="text-danger"></span>
-					<fullrow id="backup-restore" class="d-none mt-2">
-						<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>
-						<label class="text-body-tertiary">from <span id="backup-time"></span></label>
-					</fullrow>
-					<div>
-						<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
-					</div>
-				</fieldset>
+<info-alert dismissible="true">
+	@await Html.RenderWiki(SystemWiki.SubmitMovieHeader)
+</info-alert>
+<hr />
+<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+<warning-alert dismissible="true" condition="notSupportedError">
+	@await Html.RenderWiki(SystemWiki.SupportedMovieTypes)
+</warning-alert>
+<danger-alert dismissible="true" condition="parseErrors">
+	@await Html.RenderWiki(SystemWiki.SubmissionZipFailure)
+</danger-alert>
+<span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
+<form method="post" enctype="multipart/form-data">
+	<row>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="MovieFile" class="form-control-label"></label>
+				<input asp-for="MovieFile" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
+				<span asp-validation-for="MovieFile" class="text-danger"></span>
+			</fieldset>
+		</column>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="Authors" class="form-control-label"></label>
+				<string-list asp-for="Authors" />
+				<span asp-validation-for="Authors" class="text-danger"></span>
+			</fieldset>
+			<fieldset>
+				<label asp-for="AdditionalAuthors" class="form-control-label"></label>
+				<input asp-for="AdditionalAuthors" class="form-control" />
+				<div>@Html.DescriptionFor(m => m.AdditionalAuthors)</div>
+				<span asp-validation-for="AdditionalAuthors" class="text-danger"></span>
+			</fieldset>
+		</column>
+	</row>
+	<row>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="GameVersion" class="form-control-label"></label>
+				<input asp-for="GameVersion" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameVersion)" />
+				<span asp-validation-for="GameVersion" class="text-danger"></span>
+			</fieldset>
+			<fieldset>
+				<label asp-for="GameName" class="form-control-label"></label>
+				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
+				<span asp-validation-for="GameName" class="text-danger"></span>
+			</fieldset>
+			<fieldset>
+				<label asp-for="Emulator" class="form-control-label"></label>
+				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
+				<span asp-validation-for="Emulator" class="text-danger"></span>
+			</fieldset>
+		</column>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="Branch" class="form-control-label"></label>
+				<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)" />
+				<span asp-validation-for="Branch" class="text-danger"></span>
+			</fieldset>
+			<fieldset>
+				<label asp-for="RomName" class="form-control-label"></label>
+				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
+				<span asp-validation-for="RomName" class="text-danger"></span>
+			</fieldset>
+			<fieldset>
+				<label asp-for="EncodeEmbedLink" class="form-control-label"></label>
+				<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)" />
+				<span asp-validation-for="EncodeEmbedLink" class="text-danger"></span>
+			</fieldset>
+		</column>
+	</row>
+	<fullrow>
+		<fieldset>
+			<label asp-for="Markup" class="form-control-label"></label>
+			<span>
+				@await Html.RenderWiki(SystemWiki.SubmissionImportant)
+			</span>
+			<partial name="_WikiEditHelper" model="@("Markup")" />
+			<textarea asp-for="Markup" rows="12" class="form-control wiki-edit backup-content" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<span asp-validation-for="Markup" class="text-danger"></span>
+			<fullrow id="backup-restore" class="d-none mt-2">
+				<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>
+				<label class="text-body-tertiary">from <span id="backup-time"></span></label>
 			</fullrow>
-			<row class="text-center justify-content-center mb-1 fs-6">
-				<div class="col-auto">
-					<div class="form-check">
-						<input asp-for="AgreeToInstructions" class="form-check-input" />
-						<label asp-for="AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
-						<br />
-						<span asp-validation-for="AgreeToInstructions" class="text-danger"></span>
-					</div>
-				</div>
-			</row>
-			<row class="text-center justify-content-center mb-3 fs-6">
-				<div class="col-auto">
-					<div class="form-check">
-						<input asp-for="AgreeToLicense" class="form-check-input" />
-						<label asp-for="AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
-						<br />
-						<span asp-validation-for="AgreeToLicense" class="text-danger"></span>
-					</div>
-				</div>
-			</row>
-			<form-button-bar>
-				<preview-button></preview-button>
-				<submit-button id="submit-btn" class="border border-warning @(Model.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
-			</form-button-bar>
-		</form>
+			<div>
+				<button id="prefill-btn" type="button" class="btn btn-secondary mt-2">Prefill comments</button>
+			</div>
+		</fieldset>
+	</fullrow>
+	<row class="text-center justify-content-center mb-1 fs-6">
+		<div class="col-auto">
+			<div class="form-check">
+				<input asp-for="AgreeToInstructions" class="form-check-input" />
+				<label asp-for="AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
+				<br />
+				<span asp-validation-for="AgreeToInstructions" class="text-danger"></span>
+			</div>
+		</div>
+	</row>
+	<row class="text-center justify-content-center mb-3 fs-6">
+		<div class="col-auto">
+			<div class="form-check">
+				<input asp-for="AgreeToLicense" class="form-check-input" />
+				<label asp-for="AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
+				<br />
+				<span asp-validation-for="AgreeToLicense" class="text-danger"></span>
+			</div>
+		</div>
+	</row>
+	<form-button-bar>
+		<preview-button></preview-button>
+		<submit-button id="submit-btn" class="border border-warning @(Model.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
+	</form-button-bar>
+</form>
 
-		<partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Markup), "/Wiki/Preview"))" />
-		@section Scripts {
-			<partial name="_ValidationScriptsPartial" />
-			<script>
-				document.getElementById('prefill-btn').onclick = function () {
-					const markup = document.getElementById('@Html.IdFor(m => m.Markup)').value;
-					if (markup) {
-						return;
-					}
+<partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Markup), "/Wiki/Preview"))" />
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+	<script>
+		document.getElementById('prefill-btn').onclick = function () {
+			const markup = document.getElementById('@Html.IdFor(m => m.Markup)').value;
+			if (markup) {
+				return;
+			}
 
-					fetch("/Submissions/Submit?handler=PrefillText")
-						.then(handleFetchErrors)
-						.then(r => r.json())
-						.then(data => {
-							document.getElementById('@Html.IdFor(m => m.Markup)').value = data.text;
-						});
-				};
-				document.getElementById('preview-button').addEventListener('click', function () {
-					document.getElementById('submit-btn').classList.remove('d-none');
+			fetch("/Submissions/Submit?handler=PrefillText")
+				.then(handleFetchErrors)
+				.then(r => r.json())
+				.then(data => {
+					document.getElementById('@Html.IdFor(m => m.Markup)').value = data.text;
 				});
-			</script>
-			<script src="~/js/backup-text.js"></script>
-		}
-	}
+		};
+		document.getElementById('preview-button').addEventListener('click', function () {
+			document.getElementById('submit-btn').classList.remove('d-none');
+		});
+	</script>
+	<script src="~/js/backup-text.js"></script>
 }
