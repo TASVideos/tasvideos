@@ -178,15 +178,15 @@ public sealed class HtmlWriterTests : IDisposable
 		W.AssertFinished();
 		AssertOutputEquals("""
 		<div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
-			<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" target="_blank"><img src="/media/3216M.png" class="w-100 pixelart-image" loading="lazy"></a>
-			<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" class="btn btn-primary btn-sm mt-1" target="_blank"><i class="fa fa-external-link"></i> Watch on YouTube</a>
+			<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" target="_blank"><img src="/media/3216M.png" loading="lazy" class="w-100 pixelart-image"></a>
+			<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" target="_blank" class="btn btn-primary btn-sm mt-1"><i class="fa fa-external-link"></i> Watch on YouTube</a>
 			<div>
-				<a class="btn btn-secondary btn-sm mt-1" href="/5206S"><i class="fa fa-info-circle"></i> Author notes</a>
-				<a class="btn btn-secondary btn-sm mt-1" href="/Forum/Topics/18324"><i class="fa-regular fa-comments"></i> Discuss</a>
+				<a href="/5206S" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
+				<a href="/Forum/Topics/18324" class="btn btn-secondary btn-sm mt-1"><i class="fa-regular fa-comments"></i> Discuss</a>
 			</div>
-			<a class="btn btn-warning btn-sm mt-1" href="/Publications/Rate/3216"><i class="fa-regular fa-star"></i> <span id="overallRating-3216">9.76</span> / 10</a>
-			<a class="align-bottom" href="/Awards/2016#tas_gba_2016" title="Award - GBA TAS of 2016"><img style="max-height: 48px;" src="/awards/tas_gba_2016.png" alt="GBA TAS of 2016" loading="lazy"></a>
-			<a class="align-bottom" href="/Awards/2016#tas_lucky_2016" title="Award - Lucky TAS of 2016"><img style="max-height: 48px;" src="/awards/tas_lucky_2016.png" alt="Lucky TAS of 2016" loading="lazy"></a>
+			<a href="/Publications/Rate/3216" class="btn btn-warning btn-sm mt-1"><i class="fa-regular fa-star"></i> <span id="overallRating-3216">9.76</span> / 10</a>
+			<a href="/Awards/2016#tas_gba_2016" title="Award - GBA TAS of 2016" class="align-bottom"><img style="max-height: 48px;" src="/awards/tas_gba_2016.png" alt="GBA TAS of 2016" loading="lazy"></a>
+			<a href="/Awards/2016#tas_lucky_2016" title="Award - Lucky TAS of 2016" class="align-bottom"><img style="max-height: 48px;" src="/awards/tas_lucky_2016.png" alt="Lucky TAS of 2016" loading="lazy"></a>
 		</div>
 		""".Replace("\n", "").Replace("\t", ""));
 	}
@@ -308,10 +308,17 @@ public sealed class HtmlWriterTests : IDisposable
 		AssertOutputIsEmpty();
 
 		W.OpenTag("span");
+		W.Text("Hello, world!");
+		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem2"), "after opening tag");
 		W.CloseTag("span");
-		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem2"), "after all closed");
 		W.AssertFinished();
-		AssertOutputEquals("<span></span>");
+		AssertOutputEquals("<span>Hello, world!</span>");
+
+		W.OpenTag("div");
+		W.CloseTag("div");
+		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem3"), "after all closed");
+		W.AssertFinished();
+		AssertOutputEquals("<span>Hello, world!</span><div></div>");
 	}
 
 	[DataRow("href", "/Forum")]
@@ -333,10 +340,25 @@ public sealed class HtmlWriterTests : IDisposable
 	public void TestAttributeValueEscaping()
 	{
 		W.OpenTag("a");
+		W.Attribute("class", """break="\"\\&yes;><""");
 		W.Attribute("password", """hunter2" authenticated="true" role="admin" break="\"\\&yes;><""");
 		W.CloseTag("a");
 		W.AssertFinished();
-		AssertOutputEquals("""<a password="hunter2&quot; authenticated=&quot;true&quot; role=&quot;admin&quot; break=&quot;\&quot;\\&amp;yes;>&lt;"></a>"""); // I'm not proud to say I copied this from the actual value... --yoshi
+		AssertOutputEquals("""<a password="hunter2&quot; authenticated=&quot;true&quot; role=&quot;admin&quot; break=&quot;\&quot;\\&amp;yes;>&lt;" class="break=&quot;\&quot;\\&amp;yes;>&lt;"></a>"""); // I'm not proud to say I copied this from the actual value... --yoshi
+	}
+
+	[TestMethod]
+	public void TestClassListHandling()
+	{
+		W.OpenTag("span");
+		W.Attribute("class", "small");
+		W.Attribute("class", "big");
+		W.Attribute("id", "elem1");
+		W.Attribute("class", "small");
+		W.Text("Hello, world!");
+		W.CloseTag("span");
+		W.AssertFinished();
+		AssertOutputEquals("""<span id="elem1" class="small big">Hello, world!</span>""");
 	}
 
 	[TestMethod]

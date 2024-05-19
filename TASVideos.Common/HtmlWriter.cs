@@ -4,6 +4,49 @@ namespace TASVideos.Common;
 
 public partial class HtmlWriter(TextWriter w)
 {
+	private struct HtmlClassList()
+	{
+		private List<string>? _list = null;
+
+		private string? _single = null;
+
+		public void Add(string item)
+		{
+			if (_single is not null)
+			{
+				_list = new() { _single, item };
+				_single = null;
+			}
+			else if (_list is not null)
+			{
+				_list.Add(item);
+			}
+			else
+			{
+				_single = item;
+			}
+		}
+
+		public readonly string Serialize()
+		{
+			HashSet<string> classes;
+			if (!string.IsNullOrEmpty(_single))
+			{
+				classes = _single.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToHashSet();
+			}
+			else if (_list is not null)
+			{
+				classes = _list.SelectMany(static s => s.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToHashSet();
+			}
+			else
+			{
+				return "";
+			}
+
+			return classes.Count is 0 ? "" : string.Join(' ', classes);
+		}
+	}
+
 	private static readonly Regex AllowedTagNames = AllowedTagNamesRegex();
 	private static readonly Regex AllowedAttributeNames = AllowedAttributeNamesRegex();
 	private static readonly HashSet<string> VoidTags = new(
@@ -13,6 +56,8 @@ public partial class HtmlWriter(TextWriter w)
 		],
 		StringComparer.OrdinalIgnoreCase
 	);
+
+	private HtmlClassList _currentElemClassAttr = default;
 
 	private bool _inTagOpen;
 	private readonly Stack<string> _openTags = new();
@@ -36,12 +81,7 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException("Can't open a void tag");
 		}
 
-		if (_inTagOpen)
-		{
-			w.Write('>');
-		}
-
-		tagName = tagName.ToLowerInvariant();
+		FinalizeOpenTag();
 		w.Write('<');
 		w.Write(tagName);
 		_openTags.Push(tagName);
@@ -60,22 +100,17 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException("No open tags!");
 		}
 
-		if (!tagName.Equals(_openTags.Peek(), StringComparison.OrdinalIgnoreCase))
+		tagName = tagName.ToLowerInvariant();
+		if (!tagName.Equals(_openTags.Peek(), StringComparison.Ordinal))
 		{
 			throw new InvalidOperationException($"Opened tag {_openTags.Peek()} but closing tag {tagName}");
 		}
 
-		if (_inTagOpen)
-		{
-			w.Write('>');
-		}
-
-		tagName = tagName.ToLowerInvariant();
+		FinalizeOpenTag();
 		w.Write("</");
 		w.Write(tagName);
 		w.Write('>');
 		_openTags.Pop();
-		_inTagOpen = false;
 	}
 
 	/// <summary>equivalent of <see cref="OpenTag"/> for tags like <c>&lt;img></c> which may not have children and are self-closing</summary>
@@ -99,12 +134,7 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException("Can't void an open tag");
 		}
 
-		if (_inTagOpen)
-		{
-			w.Write('>');
-		}
-
-		tagName = tagName.ToLowerInvariant();
+		FinalizeOpenTag();
 		w.Write('<');
 		w.Write(tagName);
 		_inTagOpen = true;
@@ -122,10 +152,21 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException($"Invalid attribute name {name}");
 		}
 
+		if (name is "class")
+		{
+			_currentElemClassAttr.Add(value);
+		}
+		else
+		{
+			EscapeAndWriteAttribute(name, value);
+		}
+	}
+
+	private void EscapeAndWriteAttribute(ReadOnlySpan<char> name, ReadOnlySpan<char> value)
+	{
 		w.Write(' ');
 		w.Write(name);
 		w.Write("=\"");
-
 		foreach (var c in value)
 		{
 			switch (c)
@@ -140,7 +181,7 @@ public partial class HtmlWriter(TextWriter w)
 					w.Write("&quot;");
 					break;
 				default:
-					w.Write(c);
+					w.Write(c); // different overload
 					break;
 			}
 		}
@@ -150,45 +191,34 @@ public partial class HtmlWriter(TextWriter w)
 
 	public void Text(string text)
 	{
-		if (InForeignContent)
+		var inForeignContent = InForeignContent;
+		if (inForeignContent && text.Contains($"</{_openTags.Peek()}", StringComparison.OrdinalIgnoreCase))
 		{
-			if (text.Contains($"</{_openTags.Peek()}", StringComparison.OrdinalIgnoreCase))
-			{
-				throw new InvalidOperationException("Can't unescape something that looks like closing tag here!");
-			}
+			throw new InvalidOperationException("Can't unescape something that looks like closing tag here!");
+		}
 
-			if (_inTagOpen)
-			{
-				w.Write('>');
-			}
-
+		FinalizeOpenTag();
+		if (inForeignContent)
+		{
 			w.Write(text);
+			return;
 		}
-		else
+
+		foreach (var c in text)
 		{
-			if (_inTagOpen)
+			switch (c)
 			{
-				w.Write('>');
-			}
-
-			foreach (var c in text)
-			{
-				switch (c)
-				{
-					case '<':
-						w.Write("&lt;");
-						break;
-					case '&':
-						w.Write("&amp;");
-						break;
-					default:
-						w.Write(c);
-						break;
-				}
+				case '<':
+					w.Write("&lt;");
+					break;
+				case '&':
+					w.Write("&amp;");
+					break;
+				default:
+					w.Write(c); // different overload
+					break;
 			}
 		}
-
-		_inTagOpen = false;
 	}
 
 	public void AssertFinished()
@@ -198,11 +228,26 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException($"Tags still open! {string.Join(" > ", _openTags)}");
 		}
 
-		if (_inTagOpen)
+		FinalizeOpenTag();
+	}
+
+	private void FinalizeOpenTag()
+	{
+		if (!_inTagOpen)
 		{
-			_inTagOpen = false;
-			w.Write('>');
+			return;
 		}
+
+		_inTagOpen = false;
+
+		var classListStr = _currentElemClassAttr.Serialize();
+		_currentElemClassAttr = default;
+		if (classListStr.Length is not 0)
+		{
+			EscapeAndWriteAttribute("class", classListStr);
+		}
+
+		w.Write('>');
 	}
 
 	/// <summary>
