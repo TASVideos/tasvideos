@@ -56,7 +56,6 @@ public static class ApplicationBuilderExtensions
 		]);
 		app.Use(async (context, next) =>
 		{
-			context.Response.Headers["Cross-Origin-Embedder-Policy"] = "credentialless";
 			context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
 			context.Response.Headers["Cross-Origin-Resource-Policy"] = "cross-origin"; // TODO this is as unsecure as before; should be `same-site` or `same-origin` when serving auth-gated responses
 			context.Response.Headers["Permissions-Policy"] = permissionsPolicyValue;
