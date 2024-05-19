@@ -6,16 +6,25 @@
 }
 
 <h4>Unrated Movies</h4>
+<partial name="_Pager" model="Model.UnratedMovies" />
 <standard-table>
-	@foreach (var pub in Model.UnratedMovies.OrderBy(p => p.Title))
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(UnratedModel.UnratedMovie)" />
+	@foreach (var pub in Model.UnratedMovies)
 	{
 		<tr>
 			<td>
 				<a asp-page="/Publications/Rate" asp-route-id="@pub.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn btn-primary btn-sm">Rate</a>
 			</td>
 			<td>
+				@pub.SystemCode
+			</td>
+			<td>
 				<a href="/@(pub.Id)M">@pub.Title</a>
+			</td>
+			<td>
+				<timezone-convert asp-for="@pub.Date" date-only="true" relative-time="false" />
 			</td>
 		</tr>
 	}
 </standard-table>
+<partial name="_Pager" model="Model.UnratedMovies" />

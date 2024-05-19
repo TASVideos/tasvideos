@@ -3,7 +3,10 @@
 [RequirePermission(PermissionTo.RateMovies)]
 public class UnratedModel(ApplicationDbContext db) : BasePageModel
 {
-	public List<UnratedMovie> UnratedMovies { get; set; } = [];
+	[FromQuery]
+	public UnratedRequest Search { get; set; } = new();
+
+	public PageOf<UnratedMovie> UnratedMovies { get; set; } = PageOf<UnratedMovie>.Empty();
 
 	public async Task OnGet()
 	{
@@ -11,9 +14,30 @@ public class UnratedModel(ApplicationDbContext db) : BasePageModel
 		UnratedMovies = await db.Publications
 			.ThatAreCurrent()
 			.Where(p => p.PublicationRatings.All(pr => pr.UserId != userId))
-			.Select(p => new UnratedMovie(p.Id, p.Title))
-			.ToListAsync();
+			.Select(p => new UnratedMovie { Id = p.Id, Title = p.Title, SystemCode = p.System!.Code, Date = p.CreateTimestamp })
+			.SortedPageOf(Search);
 	}
 
-	public record UnratedMovie(int Id, string Title);
+	public class UnratedMovie
+	{
+		public int Id { get; init; }
+
+		[Sortable]
+		public string SystemCode { get; init; } = "";
+
+		[Sortable]
+		public string Title { get; init; } = "";
+
+		[Sortable]
+		public DateTime Date { get; init; }
+	}
+
+	public class UnratedRequest : PagingModel
+	{
+		public UnratedRequest()
+		{
+			PageSize = 50;
+			Sort = "Date";
+		}
+	}
 }
