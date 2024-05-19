@@ -78,7 +78,6 @@ public class SubmitModel(
 	public bool AgreeToLicense { get; init; }
 
 	public string BackupSubmissionDeterminator { get; set; } = "";
-	public DateTime? EarliestTimestamp { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -89,10 +88,8 @@ public class SubmitModel(
 		}
 
 		Authors = [User.Name()];
-
 		BackupSubmissionDeterminator = (await db.Submissions
-			.Where(s => s.SubmitterId == User.GetUserId())
-			.CountAsync())
+			.CountAsync(s => s.SubmitterId == User.GetUserId()))
 			.ToString();
 
 		return Page();
@@ -114,7 +111,6 @@ public class SubmitModel(
 		}
 
 		var parseResult = await parser.ParseZip(MovieFile!.OpenReadStream());
-
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
