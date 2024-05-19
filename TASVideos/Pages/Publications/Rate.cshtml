@@ -3,7 +3,6 @@
 @{
 	ViewData.SetTitle($"Movie #{Model.Id} - {Model.Title}");
 }
-<div asp-validation-summary="All" class="text-danger"></div>
 <form method="post">
 	<input type="hidden" asp-for="Title" />
 	<row>

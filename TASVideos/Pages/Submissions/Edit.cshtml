@@ -13,7 +13,7 @@
 </div>
 
 <form method="post" enctype="multipart/form-data">
-	<input condition="@Model.AvailableStatuses.Count() <= 1" type="hidden" asp-for="Submission.Status" />
+	<input condition="@Model.AvailableStatuses.Count <= 1" type="hidden" asp-for="Submission.Status" />
 	<row>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
 			<fieldset>

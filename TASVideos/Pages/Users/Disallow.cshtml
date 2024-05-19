@@ -5,7 +5,7 @@
 }
 <label>This page manages username patterns that are not allowed during user registration</label>
 <hr />
-<form method="POST">
+<form method="post">
 	<row>
 		<column lg="6">
 			<label asp-for="RegexPattern"></label>
@@ -31,14 +31,14 @@
 			<td>
 				@disallow.RegexPattern
 			</td>
-			<td>
+			<td-action-column>
 				<delete-button
 					warning-message="Are you sure you want to delete this pattern?"
 					asp-href="/Users/Disallow/Delete?disallowId=@disallow.Id"
 					class="btn-sm">
 					<i class="fa fa-remove"></i>
 				</delete-button>
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

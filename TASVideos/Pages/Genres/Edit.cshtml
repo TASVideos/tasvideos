@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Editing Genre: {Model.Genre.DisplayName}");
 }
 
-<div class="text-end">
+<top-button-bar>
 	<delete-button condition="!Model.InUse"
 				   asp-href="/Genres/Edit/@(Model.Id)/Delete"
 				   warning-message="Are you sure you want to remove this genre?">
@@ -13,10 +13,10 @@
 	<span condition="Model.InUse">
 		Genre in Use
 	</span>
-</div>
+</top-button-bar>
 <form method="post">
 	<row>
-		<column lg="6" class="mt-lg-0 mt-3">
+		<column lg="6">
 			<label asp-for="Genre.DisplayName"></label>
 			<input type="text" asp-for="Genre.DisplayName" class="form-control" />
 			<span asp-validation-for="Genre.DisplayName" class="text-danger"></span>

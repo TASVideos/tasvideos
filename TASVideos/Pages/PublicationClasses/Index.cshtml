@@ -3,8 +3,9 @@
 @{
 	ViewData.SetTitle("Publication Class List");
 }
-
-<a class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
+<top-button-bar>
+	<add-button asp-page="Create"></add-button>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>Id</th>
@@ -20,7 +21,7 @@
 				@publicationClass.Id
 			</td>
 			<td>
-				<img condition="!string.IsNullOrWhiteSpace(publicationClass.IconPath)" class="pixelart-image" src="/@publicationClass.IconPath" />
+				<img condition="!string.IsNullOrWhiteSpace(publicationClass.IconPath)" class="pixelart-image" src="/@publicationClass.IconPath" alt="@publicationClass.Name" />
 				@publicationClass.Name
 			</td>
 			<td>
@@ -29,9 +30,9 @@
 			<td>
 				@publicationClass.Weight
 			</td>
-			<th>
-				<a asp-page="/PublicationClasses/Edit" asp-route-id="@publicationClass.Id" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-			</th>
+			<td-action-column>
+				<edit-button asp-page="/PublicationClasses/Edit" asp-route-id="@publicationClass.Id"></edit-button>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

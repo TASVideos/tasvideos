@@ -3,25 +3,29 @@
 @{
 	ViewData.SetTitle($"Editing System: {Model.System.Id} {Model.System.Code}");
 }
-<div class="text-end">
+<top-button-bar>
 	<delete-button condition="!Model.InUse"
 					asp-href="/Systems/Edit/@(Model.System.Id)/Delete"
 					warning-message="Are you sure you want to remove this system?">
 		Delete
 	</delete-button>
 	<span condition="Model.InUse">System in Use</span>
-</div>
+</top-button-bar>
 <form method="post">
 	<row>
 		<column lg="6">
-			<label asp-for="System.Code"></label>
-			<input type="text" asp-for="System.Code" class="form-control"/>
-			<span asp-validation-for="System.Code" class="text-danger"></span>
+			<fieldset>
+				<label asp-for="System.Code"></label>
+				<input type="text" asp-for="System.Code" class="form-control"/>
+				<span asp-validation-for="System.Code" class="text-danger"></span>
+			</fieldset>
 		</column>
-		<column lg="6" class="mt-lg-0 mt-3">
-			<label asp-for="System.DisplayName"></label>
-			<input type="text" asp-for="System.DisplayName" class="form-control"/>
-			<span asp-validation-for="System.DisplayName" class="text-danger"></span>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="System.DisplayName"></label>
+				<input type="text" asp-for="System.DisplayName" class="form-control"/>
+				<span asp-validation-for="System.DisplayName" class="text-danger"></span>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>
@@ -30,7 +34,9 @@
 	</form-button-bar>
 </form>
 
-<a class="btn btn-primary float-end mb-2" asp-page="CreateFramerate" asp-route-systemId="@Model.Id">Create</a>
+<top-button-bar>
+	<add-button asp-page="CreateFramerate" asp-route-systemId="@Model.Id"></add-button>
+</top-button-bar>
 <h4>System Framerates</h4>
 <standard-table>
 	<tr>
@@ -49,7 +55,7 @@
 			<td>@rate.RegionCode</td>
 			<td>@rate.Preliminary</td>
 			<td>@rate.Obsolete</td>
-			<td><a class="btn btn-sm btn-danger" asp-page="EditFrameRate" asp-route-id="@rate.Id">Edit</a></td>
+			<td-action-column><a class="btn btn-sm btn-danger" asp-page="EditFrameRate" asp-route-id="@rate.Id">Edit</a></td-action-column>
 		</tr>
 	}
 </standard-table>

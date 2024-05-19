@@ -9,7 +9,7 @@
 	</div>
 }
 
-<fullrow class="mt-2">
+<fullrow>
 	<label asp-for="Publication.Class"></label>:
 	<a condition="!string.IsNullOrWhiteSpace(Model.Publication.ClassIconPath)" href="/@Model.Publication.ClassLink">
 		<icon path="@Model.Publication.ClassIconPath" />
@@ -17,9 +17,10 @@
 	<label class="form-control-label">@Model.Publication.Class</label>
 	<a permission="SetPublicationClass" class="btn btn-secondary btn-sm" asp-page="EditClass" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
 </fullrow>
-<hr />
-<a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm mb-2 float-end ms-2"><span class="fa fa-plus"></span> Additional Movie Files</a>
-<a permission="EditPublicationFiles" asp-page="EditFiles" asp-route-id="@Model.Id" class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
+<top-button-bar>
+	<edit-button permission="EditPublicationFiles" asp-page="EditFiles" asp-route-id="@Model.Id" class="btn-sm"></edit-button>
+	<a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm"><span class="fa fa-plus"></span> Additional Movie Files</a>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>File Name</th>
@@ -28,7 +29,7 @@
 	</tr>
 	<tr>
 		<td>
-			<a Permission="ReplacePrimaryMovieFile" class="btn btn-warning" asp-page="PrimaryMovie" asp-route-id="@Model.Id">Replace</a>
+			<a Permission="ReplacePrimaryMovieFile" class="btn btn-warning btn-sm" asp-page="PrimaryMovie" asp-route-id="@Model.Id">Replace</a>
 			<strong>@Model.Publication.MovieFileName</strong>
 		</td>
 		<td>Primary Movie File</td>
@@ -43,11 +44,12 @@
 		</tr>
 	}
 </standard-table>
-<hr />
-<a permission="EditPublicationFiles"
-   asp-page="Urls/List"
-   asp-route-publicationId="@Model.Id"
-   class="float-end btn btn-primary btn-sm mb-2"><span class="fa fa-pencil"></span> Edit</a>
+<top-button-bar>
+	<edit-button permission="EditPublicationFiles"
+	   asp-page="Urls/List"
+	   asp-route-publicationId="@Model.Id"
+	   class="btn-sm"></edit-button>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>Type</th>

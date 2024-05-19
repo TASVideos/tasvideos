@@ -18,12 +18,12 @@
 			<td>@file.Path</td>
 			<td>@file.Type</td>
 			<td>@file.Description</td>
-			<td>
+			<td-action-column>
 				<delete-button warning-message="Are you sure you want to remove this file?"
 							   asp-href="/Publications/EditFiles/@Model.Id/Delete/@file.Id">
 					<span class="fa fa-times"></span> Delete
 				</delete-button>
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>
@@ -44,7 +44,7 @@
 			</fieldset>
 			<form-button-bar>
 				<submit-button><span class="fa fa-plus"></span> Add</submit-button>
-				<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back To Edit</a>
+				<cancel-button asp-page="Edit" asp-route-id="@Model.Id"></cancel-button>
 			</form-button-bar>
 		</column>
 	</row>

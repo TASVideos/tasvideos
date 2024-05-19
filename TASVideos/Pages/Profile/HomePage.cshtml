@@ -1,22 +1,19 @@
 ﻿@page
 @using TASVideos.Core.Services.Wiki
 @using TASVideos.TagHelpers
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @inject IWikiPages WikiPages
-
 @{
 	ViewData.SetTitle("Home Page");
 	ViewData.AddActivePage(ProfileNavPages.HomePage);
 	var homePage = $"{LinkConstants.HomePages}{User.Name()}";
 	bool pageExists = await WikiPages.Exists(homePage);
 }
-<br />
 @if (User.Has(PermissionTo.EditHomePage))
 {
-	<div class="text-center">
+	<top-button-bar>
 		<a class="btn btn-secondary" href="/@homePage"><i class="fa fa-eye"></i> Full View</a>
-		<a class="btn btn-primary" asp-page="/Wiki/Edit" asp-route-path="@homePage"><i class="fa fa-pencil"></i> Edit</a>
-	</div>
+		<edit-button asp-page="/Wiki/Edit" asp-route-path="@homePage"></edit-button>
+	</top-button-bar>
 }
 else
 {

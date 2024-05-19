@@ -2,7 +2,7 @@
 @model IpBanModel
 @{ ViewData.SetTitle("Banned Ip Addresses"); }
 
-<form method="POST">
+<form method="post">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -34,12 +34,12 @@
 			<td>
 				<timezone-convert asp-for="@ip.DateCreated" />
 			</td>
-			<td>
+			<td-action-column>
 				<delete-button asp-href="/Users/IpBan/Delete?mask=@ip.Mask"
 					class="btn-sm">
 					<i class="fa fa-remove"></i>
 				</delete-button>
-			</td>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

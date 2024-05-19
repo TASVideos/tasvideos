@@ -3,8 +3,9 @@
 @{
 	ViewData.SetTitle("Game Systems List");
 }
-
-<a permission="GameSystemMaintenance" class="btn btn-primary float-end mb-3" asp-page="Create"><i class="fa fa-plus"></i> Create</a>
+<top-button-bar>
+	<add-button permission="GameSystemMaintenance" asp-page="Create"></add-button>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>Display Name</th>
@@ -26,16 +27,14 @@
 				{
 					<div>@rate.FrameRate</div>
 				}
-				
+
 				<div condition="system.SystemFrameRates.Any(sf => sf.Obsolete)">
 					(@system.SystemFrameRates.Count(sf => sf.Obsolete) obsolete)
 				</div>
 			</td>
-			<td>
-				<a permission="GameSystemMaintenance" class="btn btn-primary" asp-page="Edit" asp-route-id="@system.Id">
-					<i class="fa fa-pencil"></i> Edit
-				</a>
-			</td>
+			<td-action-column>
+				<edit-button permission="GameSystemMaintenance" asp-page="Edit" asp-route-id="@system.Id"></edit-button>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

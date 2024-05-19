@@ -5,11 +5,10 @@
 }
 
 <h4>Movie: <pub-link id="Model.PublicationId">@Model.Title</pub-link></h4>
-<a asp-page="Edit"
-	permission="EditPublicationFiles"
-	asp-route-publicationId="@Model.PublicationId"
-	class="btn btn-primary"><i class="fa fa-plus"></i> Add</a>
-<hr />
+
+<top-button-bar>
+	<add-button asp-page="Edit" permission="EditPublicationFiles" asp-route-publicationId="@Model.PublicationId"></add-button>
+</top-button-bar>
 <standard-table condition="Model.CurrentUrls.Any()">
 	<tr>
 		<th>Type</th>
@@ -24,17 +23,16 @@
 			<td>@url.Url</td>
 			<td>@url.DisplayName</td>
 			<td-action-column>
-				<a asp-page="Edit"
+				<edit-button asp-page="Edit"
+					class="btn-sm"
 					permission="EditPublicationFiles"
 					asp-route-urlId="@url.Id"
-					asp-route-publicationId="@Model.PublicationId"
-					class="btn btn-primary btn-sm mb-1">
-					<i class="fa fa-pencil"></i> Edit
-				</a>
+					asp-route-publicationId="@Model.PublicationId">
+				</edit-button>
 				<delete-button warning-message="Are you sure you want to remove this URL?"
 					permission="EditPublicationFiles"
 					asp-href="/Publications/@Model.PublicationId/Urls/List/@url.Id/Delete"
-					class="btn-sm mb-1">
+					class="btn-sm">
 					<span class="fa fa-times"></span> Delete
 				</delete-button>
 			</td-action-column>

@@ -7,12 +7,10 @@
 <warning-alert condition="!Model.Games.Any()">
 	No Games Listed for this Game Group
 </warning-alert>
-<row>
-	<column>
-		<a asp-page="List" class="btn btn-secondary mb-3 ms-1 float-end">All Groups</a>
-		<a asp-page="Edit" asp-route-id="@Model.Id" class="btn btn-primary mb-3 float-end" permission="CatalogMovies"><i class="fa fa-pencil"></i> Edit</a>
-	</column>
-</row>
+<top-button-bar>
+	<edit-button asp-page="Edit" asp-route-id="@Model.Id" permission="CatalogMovies"></edit-button>
+	<a asp-page="List" class="btn btn-secondary">All Groups</a>
+</top-button-bar>
 <card condition="!string.IsNullOrWhiteSpace(Model.Description)" class="mb-2">
 	<cardheader>Description</cardheader>
 	<cardbody><wiki-markup markup="@Model.Description"></wiki-markup></cardbody>

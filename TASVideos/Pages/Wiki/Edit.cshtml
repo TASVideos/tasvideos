@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Editing {Model.Path}");
 }
 <div asp-validation-summary="All" class="text-danger"></div>
-<form method="POST">
+<form method="post">
 	<input type="hidden" asp-for="EditStart" />
 	<input type="hidden" asp-for="OriginalMarkup" />
 	<fullrow class="mt-3">
