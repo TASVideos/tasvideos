@@ -8,10 +8,8 @@
 		<row>
 			<div class="col-md-6">
 				<div permission="EditRoles">
-					<a asp-page="AddEdit" asp-route-id="@Model.Id" class="btn btn-primary mb-m border border-warning">
-						<i class="fa fa-pencil"></i> Edit
-					</a>
-					<a asp-page="AddEdit" asp-route-copyFrom="@Model.Id" class="btn btn-secondary mb-m border border-warning">
+					<edit-button asp-page="AddEdit" asp-route-id="@Model.Id"></edit-button>
+					<a asp-page="AddEdit" asp-route-copyFrom="@Model.Id" class="btn btn-secondary">
 						<i class="fa fa-plus"></i> Copy From
 					</a>
 				</div>
@@ -23,11 +21,7 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-6">
-				<strong>
-					<a asp-page="/Permissions/Index">
-						@Html.DisplayNameFor(m => m.Permissions):
-					</a>
-				</strong>
+				<strong><a asp-page="/Permissions/Index">Permissions</a></strong>
 				<br />
 				@foreach (var permissionGroup in groupedPermissions)
 				{
