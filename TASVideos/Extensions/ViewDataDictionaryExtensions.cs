@@ -58,6 +58,14 @@ public static class ViewDataDictionaryExtensions
 		viewData["NavigationSuffix"] = suffix;
 	}
 
+	public static string ActivePageClass(this ViewDataDictionary viewData, string page)
+	{
+		var activePage = viewData["ActivePage"] as string;
+		return string.Equals(activePage, page, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+	}
+
+	public static void AddActivePage(this ViewDataDictionary viewData, string activePage) => viewData["ActivePage"] = activePage;
+
 	public static int? Int(this ViewDataDictionary viewData, string key)
 	{
 		var obj = viewData[key];

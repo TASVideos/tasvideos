@@ -1,30 +1,29 @@
 ﻿<ul class="nav nav-pills flex-column">
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.IndexNavClass(ViewContext)" asp-page="Index">Profile</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.Index)" asp-page="Index">Profile</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.SettingsNavClass(ViewContext)" asp-page="Settings">Settings</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.Settings)" asp-page="Settings">Settings</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.ChangePasswordNavClass(ViewContext)" asp-page="ChangePassword">Password</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.ChangePassword)" asp-page="ChangePassword">Password</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.ChangeEmailNavClass(ViewContext)" asp-page="ChangeEmail">Change Email</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.ChangeEmail)" asp-page="ChangeEmail">Change Email</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.HomePageNavClass(ViewContext)" asp-page="HomePage">Home Page</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.HomePage)" asp-page="HomePage">Home Page</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.UserFilesNavClass(ViewContext)" asp-page="UserFiles">My Files</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.UserFiles)" asp-page="UserFiles">My Files</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.RatingsNavClass(ViewContext)" asp-page="Ratings">My Ratings</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.Ratings)" asp-page="Ratings">My Ratings</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.UnratedNavClass(ViewContext)" asp-page="Unrated">My Unrated Movies</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.Unrated)" asp-page="Unrated">My Unrated Movies</a>
 	</li>
 	<li class="nav-item">
-		<a class="nav-link @ProfileNavPages.TopicsNavClass(ViewContext)" asp-page="WatchedTopics">My Watched Topics</a>
+		<a class="nav-link @ViewData.ActivePageClass(ProfileNavPages.Topics)" asp-page="WatchedTopics">My Watched Topics</a>
 	</li>
 </ul>
- 
