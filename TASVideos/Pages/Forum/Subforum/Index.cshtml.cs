@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Forum.Subforum;
 public class IndexModel(ApplicationDbContext db, IForumService forumService) : BasePageModel
 {
 	[FromQuery]
-	public ForumRequest Search { get; set; } = new();
+	public PagingModel Search { get; set; } = new();
 
 	[FromRoute]
 	public int Id { get; set; }
@@ -61,14 +61,6 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		return Page();
 	}
 
-	public class ForumRequest : PagingModel
-	{
-		public ForumRequest()
-		{
-			PageSize = ForumConstants.TopicsPerForum;
-		}
-	}
-
 	public record ForumDisplay(int Id, string Name, string? Description, bool CanCreateTopics);
 
 	public class ForumTopicEntry
@@ -95,9 +87,6 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 
 		[TableIgnore]
 		public LastPostEntry? LastPost { get; init; }
-
-		[DisplayName("Last Post")]
-		public string? Dummy { get; init; }
 
 		public class LastPostEntry
 		{

@@ -27,7 +27,7 @@
 <hr />
 <partial name="_Pager" model="Model.Topics" />
 <standard-table>
-	<sortable-table-head sorting="@Model.Search" model-type="typeof(IndexModel.ForumTopicEntry)" page-override="@HttpContext.Request.Path" />
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(IndexModel.ForumTopicEntry)" page-override="@HttpContext.Request.Path" action-column-name="Last Post" />
 	@foreach (var topic in Model.Topics)
 	{
 		<tr>
