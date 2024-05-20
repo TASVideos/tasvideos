@@ -59,6 +59,8 @@ public partial class HtmlWriter(TextWriter w)
 
 	private HtmlClassList _currentElemClassAttr = default;
 
+	private HtmlClassList _currentElemRelAttr = default;
+
 	private bool _inTagOpen;
 	private readonly Stack<string> _openTags = new();
 
@@ -156,6 +158,10 @@ public partial class HtmlWriter(TextWriter w)
 		{
 			_currentElemClassAttr.Add(value);
 		}
+		else if (name is "rel")
+		{
+			_currentElemRelAttr.Add(value);
+		}
 		else
 		{
 			EscapeAndWriteAttribute(name, value);
@@ -245,6 +251,13 @@ public partial class HtmlWriter(TextWriter w)
 		if (classListStr.Length is not 0)
 		{
 			EscapeAndWriteAttribute("class", classListStr);
+		}
+
+		var relationListStr = _currentElemRelAttr.Serialize();
+		_currentElemRelAttr = default;
+		if (relationListStr.Length is not 0)
+		{
+			EscapeAndWriteAttribute("rel", relationListStr);
 		}
 
 		w.Write('>');

@@ -365,11 +365,7 @@ public sealed class HtmlWriterTests : IDisposable
 		W.Attribute("rel", "nofollow external");
 		W.Attribute("rel", "noopener external");
 		W.AssertFinished();
-#if true
-		AssertOutputEquals("""<link rel="nofollow external" rel="noopener external">""");
-#else
 		AssertOutputEquals("""<link rel="nofollow external noopener">""");
-#endif
 	}
 
 	[TestMethod]
