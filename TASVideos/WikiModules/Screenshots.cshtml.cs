@@ -26,10 +26,10 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 		var screenshots = await query
 			.Select(p => new ScreenshotEntry
 			{
-				PublicationId = p.PublicationId,
-				PublicationTitle = p.Publication!.Title,
+				Id = p.PublicationId,
+				Title = p.Publication!.Title,
 				Description = p.Description ?? "",
-				Path = p.Path
+				Screenshot = p.Path
 			})
 			.SortedPageOf(GetPaging());
 
@@ -47,16 +47,13 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 
 	public class ScreenshotEntry
 	{
-		[Display(Name = "Screenshot")]
-		public string Path { get; init; } = "";
+		public string Screenshot { get; init; } = "";
 
 		[Sortable]
-		[Display(Name = "Id")]
-		public int PublicationId { get; init; }
+		public int Id { get; init; }
 
 		[Sortable]
-		[Display(Name = "Title")]
-		public string PublicationTitle { get; init; } = "";
+		public string Title { get; init; } = "";
 
 		[Sortable]
 		public string Description { get; init; } = "";

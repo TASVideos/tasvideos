@@ -18,7 +18,7 @@
 			<td>@user.Id</td>
 			<td>@user.UserName</td>
 			<td>@string.Join(",", user.Roles)</td>
-			<td><timezone-convert asp-for="@user.CreateTimestamp" /></td>
+			<td><timezone-convert asp-for="@user.Created" /></td>
 			<td-action-column>
 				<profile-link username="@user.UserName" class="btn btn-secondary btn-sm">
 					<i class="fa fa-eye"></i> View

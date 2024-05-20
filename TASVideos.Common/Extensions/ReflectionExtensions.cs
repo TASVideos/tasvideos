@@ -64,6 +64,6 @@ public static class ReflectionExtensions
 		var displayAttribute = propertyInfo.GetCustomAttribute<DisplayAttribute>();
 		return displayAttribute is not null
 			? displayAttribute.Name ?? ""
-			: propertyInfo.Name;
+			: propertyInfo.Name.SplitCamelCase();
 	}
 }

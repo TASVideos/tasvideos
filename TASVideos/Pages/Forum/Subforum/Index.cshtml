@@ -44,10 +44,10 @@
 						   data-activity-posts-edited="@activityTopics.PostsEdited"></i>
 					</a>
 				}
-				<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Title</a>
+				<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Topics</a>
 				<div class="ms-2">
 					@{
-						var totalPages = (topic.PostCount - 1) / ForumConstants.PostsPerPage + 1;
+						var totalPages = (topic.Replies - 1) / ForumConstants.PostsPerPage + 1;
 						if (totalPages > 1)
 						{
 							for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++)
@@ -72,8 +72,8 @@
 					}
 				</div>
 			</td>
-			<td class="d-none d-md-table-cell">@Math.Max(0, topic.PostCount - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
-			<td class="d-none d-md-table-cell"> <profile-link username="@topic.CreateUserName"></profile-link></td>
+			<td class="d-none d-md-table-cell">@Math.Max(0, topic.Replies - 1)</td> @*Imported Submission Topics will have no replies and no original post*@
+			<td class="d-none d-md-table-cell"> <profile-link username="@topic.Author"></profile-link></td>
 			<td>
 				@if (topic.LastPost is not null)
 				{

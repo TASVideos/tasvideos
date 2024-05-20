@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 
@@ -59,7 +58,7 @@ internal class TopicWatcher(
 			.ForUser(userId)
 			.Select(tw => new WatchedTopic
 			{
-				LastPostTimestamp = tw.ForumTopic!.ForumPosts
+				LastPostedOn = tw.ForumTopic!.ForumPosts
 					.Where(fp => fp.Id == tw.ForumTopic.ForumPosts.Max(fpp => fpp.Id))
 					.Select(fp => fp.CreateTimestamp)
 					.First(),
@@ -213,8 +212,7 @@ public class WatchedTopic
 	public int TopicId { get; init; }
 
 	[Sortable]
-	[Display(Name = "Last Posted On")]
-	public DateTime LastPostTimestamp { get; init; }
+	public DateTime LastPostedOn { get; init; }
 
 	[TableIgnore]
 	public bool IsNotified { get; init; }

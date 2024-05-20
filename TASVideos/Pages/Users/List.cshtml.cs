@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace TASVideos.Pages.Users;
+﻿namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
 public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageModel
@@ -14,7 +12,7 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 	{
 		if (string.IsNullOrWhiteSpace(Search.Sort))
 		{
-			Search.Sort = $"-{nameof(UserEntry.CreateTimestamp)}";
+			Search.Sort = $"-{nameof(UserEntry.Created)}";
 		}
 
 		Users = await db.Users
@@ -22,10 +20,8 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 			{
 				Id = u.Id,
 				UserName = u.UserName,
-				CreateTimestamp = u.CreateTimestamp,
-				Roles = u.UserRoles
-					.Select(ur => ur.Role!.Name)
-					.ToList()
+				Created = u.CreateTimestamp,
+				Roles = u.UserRoles.Select(ur => ur.Role!.Name)
 			})
 			.SortedPageOf(Search);
 	}
@@ -77,14 +73,12 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 		[Sortable]
 		public int Id { get; init; }
 
-		[DisplayName("User Name")]
 		[Sortable]
 		public string? UserName { get; init; }
 
-		public List<string> Roles { get; init; } = [];
+		public IEnumerable<string> Roles { get; init; } = [];
 
-		[DisplayName("Created")]
 		[Sortable]
-		public DateTime CreateTimestamp { get; init; }
+		public DateTime Created { get; init; }
 	}
 }

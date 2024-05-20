@@ -26,7 +26,7 @@
 				<a asp-page="/Forum/Topics/Index" asp-route-id="@watch.TopicId">@watch.Topic</a>
 			</td>
 			<td>
-				<timezone-convert asp-for="@watch.LastPostTimestamp" date-only="true"/>
+				<timezone-convert asp-for="@watch.LastPostedOn" date-only="true"/>
 			</td>
 			<td-action-column>
 				<delete-button warning-message="Are you sure you want to stop watching this topic?"

@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using TASVideos.Data.Entity.Forum;
+﻿using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Subforum;
 
@@ -37,11 +36,11 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 			.Select(ft => new ForumTopicEntry
 			{
 				Id = ft.Id,
-				Title = ft.Title,
-				CreateUserName = ft.Poster!.UserName,
+				Topics = ft.Title,
+				Author = ft.Poster!.UserName,
 				Type = ft.Type,
 				IsLocked = ft.IsLocked,
-				PostCount = ft.ForumPosts.Count,
+				Replies = ft.ForumPosts.Count,
 				LastPost = ft.ForumPosts
 					.Where(fp => fp.Id == ft.ForumPosts.Max(fpp => fpp.Id))
 					.Select(fp => new ForumTopicEntry.LastPostEntry
@@ -68,16 +67,13 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 		[TableIgnore]
 		public int Id { get; init; }
 
-		[DisplayName("Topics")]
-		public string Title { get; init; } = "";
+		public string Topics { get; init; } = "";
 
 		[MobileHide]
-		[DisplayName("Replies")]
-		public int PostCount { get; init; }
+		public int Replies { get; init; }
 
 		[MobileHide]
-		[DisplayName("Author")]
-		public string? CreateUserName { get; init; }
+		public string? Author { get; init; }
 
 		[TableIgnore]
 		public ForumTopicType Type { get; init; }
