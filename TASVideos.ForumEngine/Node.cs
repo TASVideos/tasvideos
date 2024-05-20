@@ -75,6 +75,14 @@ public class Text : INode
 
 public class Element : INode
 {
+	private static void AddStockAttrsToHyperlink(HtmlWriter w, string targetURI)
+	{
+		if (UriString.IsToExternalDomain(targetURI))
+		{
+			w.Attribute("rel", "noopener"); // for browsers which pre-date `Cross-Origin-Opener-Policy` response header; see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#security_and_privacy
+		}
+	}
+
 	/// <seealso cref="WriteHref"/>
 	private static void WriteHyperlink(HtmlWriter w, string labelText, string targetURI, params RawAttrNameVal[] attrs)
 	{
@@ -85,6 +93,7 @@ public class Element : INode
 			w.Attribute(attr.Name, attr.Value);
 		}
 
+		AddStockAttrsToHyperlink(w, targetURI); // done last so `attrs` can override (as the first has precedence when there are duplicates)
 		w.Text(labelText);
 		w.CloseTag("a");
 	}
@@ -99,6 +108,7 @@ public class Element : INode
 			w.Attribute(attr.Name, attr.Value);
 		}
 
+		AddStockAttrsToHyperlink(w, targetURI); // done last so `attrs` can override (as the first has precedence when there are duplicates)
 		writeContents();
 		w.CloseTag("a");
 	}
