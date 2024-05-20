@@ -3,11 +3,14 @@
 [Authorize]
 public class WatchedTopicsModel(ITopicWatcher topicWatcher) : BasePageModel
 {
-	public ICollection<WatchedTopic> Watches { get; set; } = [];
+	[FromQuery]
+	public PagingModel Search { get; set; } = new();
+
+	public PageOf<WatchedTopic> Watches { get; set; } = PageOf<WatchedTopic>.Empty();
 
 	public async Task OnGet()
 	{
-		Watches = await topicWatcher.UserWatches(User.GetUserId());
+		Watches = await topicWatcher.UserWatches(User.GetUserId(), Search);
 	}
 
 	public async Task<IActionResult> OnPostStopWatching(int topicId)

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 
@@ -9,7 +10,7 @@ public interface ITopicWatcher
 	/// <summary>
 	/// Returns all topics the user is currently watching.
 	/// </summary>
-	Task<ICollection<WatchedTopic>> UserWatches(int userId);
+	Task<PageOf<WatchedTopic>> UserWatches(int userId, PagingModel paging);
 
 	/// <summary>
 	/// Notifies everyone watching a topic (other than the poster)
@@ -52,21 +53,23 @@ internal class TopicWatcher(
 {
 	private readonly string _baseUrl = appSettings.BaseUrl;
 
-	public async Task<ICollection<WatchedTopic>> UserWatches(int userId)
+	public async Task<PageOf<WatchedTopic>> UserWatches(int userId, PagingModel paging)
 	{
 		return await db.ForumTopicWatches
 			.ForUser(userId)
-			.Select(tw => new WatchedTopic(
-				tw.ForumTopic!.ForumPosts
+			.Select(tw => new WatchedTopic
+			{
+				LastPostTimestamp = tw.ForumTopic!.ForumPosts
 					.Where(fp => fp.Id == tw.ForumTopic.ForumPosts.Max(fpp => fpp.Id))
 					.Select(fp => fp.CreateTimestamp)
 					.First(),
-				tw.IsNotified,
-				tw.ForumTopic.ForumId,
-				tw.ForumTopic!.Forum!.Name,
-				tw.ForumTopicId,
-				tw.ForumTopic!.Title))
-			.ToListAsync();
+				IsNotified = tw.IsNotified,
+				ForumId = tw.ForumTopic.ForumId,
+				Forum = tw.ForumTopic!.Forum!.Name,
+				TopicId = tw.ForumTopicId,
+				Topic = tw.ForumTopic!.Title
+			})
+			.SortedPageOf(paging);
 	}
 
 	public async Task NotifyNewPost(int postId, int topicId, string topicTitle, int posterId)
@@ -195,10 +198,27 @@ internal class TopicWatcher(
 /// <summary>
 /// Represents a watched forum topic
 /// </summary>
-public record WatchedTopic(
-	DateTime LastPostTimestamp,
-	bool IsNotified,
-	int ForumId,
-	string ForumTitle,
-	int TopicId,
-	string TopicTitle);
+public class WatchedTopic
+{
+	[Sortable]
+	public string Forum { get; init; } = "";
+
+	[TableIgnore]
+	public int ForumId { get; init; }
+
+	[Sortable]
+	public string Topic { get; init; } = "";
+
+	[TableIgnore]
+	public int TopicId { get; init; }
+
+	[Sortable]
+	[Display(Name = "Last Posted On")]
+	public DateTime LastPostTimestamp { get; init; }
+
+	[TableIgnore]
+	public bool IsNotified { get; init; }
+
+	[Display(Name = "Stop Watching")]
+	public object? Actions { get; init; } = null;
+}
