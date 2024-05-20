@@ -22,6 +22,7 @@ public class SortableTableHeadTagHelper : TagHelper
 	public ISortable Sorting { get; set; } = null!;
 	public Type ModelType { get; set; } = null!;
 	public string? PageOverride { get; set; }
+	public string? ActionColumnName { get; set; }
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
@@ -84,6 +85,11 @@ public class SortableTableHeadTagHelper : TagHelper
 			}
 
 			output.Content.AppendHtml("</th>");
+		}
+
+		if (!string.IsNullOrWhiteSpace(ActionColumnName))
+		{
+			output.Content.AppendHtml($"<th>{ActionColumnName}</th>");
 		}
 	}
 

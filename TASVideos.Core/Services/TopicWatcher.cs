@@ -218,7 +218,4 @@ public class WatchedTopic
 
 	[TableIgnore]
 	public bool IsNotified { get; init; }
-
-	[Display(Name = "Stop Watching")]
-	public object? Actions { get; init; } = null;
 }

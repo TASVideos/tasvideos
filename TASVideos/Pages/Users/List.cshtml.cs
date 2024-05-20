@@ -86,8 +86,5 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 		[DisplayName("Created")]
 		[Sortable]
 		public DateTime CreateTimestamp { get; init; }
-
-		// Dummy to generate column header
-		public object? Actions { get; init; }
 	}
 }

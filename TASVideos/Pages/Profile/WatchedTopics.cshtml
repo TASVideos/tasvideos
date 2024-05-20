@@ -14,7 +14,7 @@
 </h3>
 <partial name="_Pager" model="Model.Watches" />
 <standard-table>
-	<sortable-table-head sorting="@Model.Search" model-type="typeof(WatchedTopic)"/>
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(WatchedTopic)" action-column-name="Stop Watching"/>
 	@foreach (var watch in Model.Watches)
 	{
 		<tr style="@(watch.IsNotified ? "font-style: italic" : "")">

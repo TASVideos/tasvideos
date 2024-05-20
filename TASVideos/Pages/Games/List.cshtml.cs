@@ -155,6 +155,5 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		[Sortable]
 		public string Name { get; init; } = "";
 		public List<string> Systems { get; init; } = [];
-		public object? Actions { get; init; }
 	}
 }

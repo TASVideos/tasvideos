@@ -62,7 +62,7 @@
 
 <partial name="_Pager" model="Model.Games" />
 <standard-table>
-	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.GameEntry)" />
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.GameEntry)" action-column-name="Actions" />
 	@foreach (var game in Model.Games)
 	{
 		<tr>

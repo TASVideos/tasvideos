@@ -11,7 +11,7 @@
 <hr>
 <partial name="_Pager" model="Model.Users" />
 <standard-table>
-	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.UserEntry)" />
+	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.UserEntry)" action-column-name="Actions" />
 	@foreach (var user in Model.Users)
 	{
 		<tr>
@@ -20,16 +20,10 @@
 			<td>@string.Join(",", user.Roles)</td>
 			<td><timezone-convert asp-for="@user.CreateTimestamp" /></td>
 			<td-action-column>
-				<profile-link username="@user.UserName"
-							  class="btn btn-secondary btn-sm">
+				<profile-link username="@user.UserName" class="btn btn-secondary btn-sm">
 					<i class="fa fa-eye"></i> View
 				</profile-link>
-				<a permission="EditUsers"
-				   asp-page="Edit"
-				   asp-route-id="@user.Id"
-				   class="btn-sm btn btn-primary border border-warning">
-					<i class="fa fa-pencil"></i> Edit
-				</a>
+				<edit-button permission="EditUsers" asp-page="Edit" asp-route-id="@user.Id" class="btn-sm"></edit-button>
 			</td-action-column>
 		</tr>
 	}
