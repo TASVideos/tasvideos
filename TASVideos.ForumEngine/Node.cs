@@ -3,6 +3,8 @@ using System.Text;
 using System.Web;
 using TASVideos.Common;
 
+using RawAttrNameVal = (string Name, string Value);
+
 namespace TASVideos.ForumEngine;
 
 /// <summary>
@@ -73,6 +75,34 @@ public class Text : INode
 
 public class Element : INode
 {
+	/// <seealso cref="WriteHref"/>
+	private static void WriteHyperlink(HtmlWriter w, string labelText, string targetURI, params RawAttrNameVal[] attrs)
+	{
+		w.OpenTag("a");
+		w.Attribute("href", targetURI);
+		foreach (var attr in attrs)
+		{
+			w.Attribute(attr.Name, attr.Value);
+		}
+
+		w.Text(labelText);
+		w.CloseTag("a");
+	}
+
+	/// <seealso cref="WriteHref"/>
+	private static void WriteHyperlink(HtmlWriter w, Action writeContents, string targetURI, params RawAttrNameVal[] attrs)
+	{
+		w.OpenTag("a");
+		w.Attribute("href", targetURI);
+		foreach (var attr in attrs)
+		{
+			w.Attribute(attr.Name, attr.Value);
+		}
+
+		writeContents();
+		w.CloseTag("a");
+	}
+
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
 	public string Name { get; set; } = "";
 	public string Options { get; set; } = "";
@@ -144,19 +174,18 @@ public class Element : INode
 		}
 	}
 
+	/// <seealso cref="WriteHyperlink"/>
 	private async Task WriteHref(HtmlWriter w, IWriterHelper h, Func<string, string> transformUrl, Func<string, Task<string>>? transformUrlText)
 	{
-		w.OpenTag("a");
-		var href = transformUrl(Options != "" ? Options : GetChildText());
-		w.Attribute("href", href);
 		if (Options != "")
 		{
-			if (transformUrlText != null)
-			{
-				w.Attribute("title", await transformUrlText(Options));
-			}
-
-			await WriteChildren(w, h);
+			WriteHyperlink(
+				w,
+				writeContents: async () => await WriteChildren(w, h),
+				targetURI: transformUrl(Options),
+				attrs: transformUrlText is not null ? [
+					("title", await transformUrlText(Options))
+				] : []);
 		}
 		else
 		{
@@ -167,10 +196,8 @@ public class Element : INode
 				text = await transformUrlText(text);
 			}
 
-			w.Text(text);
+			WriteHyperlink(w, labelText: text, targetURI: transformUrl(GetChildText()));
 		}
-
-		w.CloseTag("a");
 	}
 
 	public async Task WriteHtml(HtmlWriter w, IWriterHelper h)
@@ -252,13 +279,14 @@ public class Element : INode
 					var osplit = Options.Split('.', StringSplitOptions.RemoveEmptyEntries);
 					if (osplit.Length == 2)
 					{
-						w.OpenTag("a");
-						w.Attribute("class", "btn btn-info code-download");
-						w.Attribute("href", "data:text/plain," + Uri.EscapeDataString(GetChildText()));
-						w.Attribute("download", Options);
-						w.Text("Download ");
-						w.Text(Options);
-						w.CloseTag("a");
+						WriteHyperlink(
+							w,
+							labelText: $"Download {Options}",
+							targetURI: $"data:text/plain,{Uri.EscapeDataString(GetChildText())}",
+							[
+								("class", "btn btn-info code-download"),
+								("download", Options),
+							]);
 					}
 
 					w.OpenTag("pre");
@@ -429,17 +457,17 @@ public class Element : INode
 			case "google":
 				if (Options == "images")
 				{
-					w.OpenTag("a");
-					w.Attribute("href", "//www.google.com/images?q=" + Uri.EscapeDataString(GetChildText()));
-					w.Text("Google Images Search: " + GetChildText());
-					w.CloseTag("a");
+					WriteHyperlink(
+						w,
+						labelText: $"Google Images Search: {GetChildText()}",
+						targetURI: $"//www.google.com/images?q={Uri.EscapeDataString(GetChildText())}");
 				}
 				else
 				{
-					w.OpenTag("a");
-					w.Attribute("href", "//www.google.com/search?q=" + Uri.EscapeDataString(GetChildText()));
-					w.Text("Google Search: " + GetChildText());
-					w.CloseTag("a");
+					WriteHyperlink(
+						w,
+						labelText: $"Google Search: {GetChildText()}",
+						targetURI: $"//www.google.com/search?q={Uri.EscapeDataString(GetChildText())}");
 				}
 
 				break;
@@ -478,10 +506,7 @@ public class Element : INode
 						WriteVideo.Write(w.BaseWriter, pp);
 					}
 
-					w.OpenTag("a");
-					w.Attribute("href", href);
-					w.Text("Link to video");
-					w.CloseTag("a");
+					WriteHyperlink(w, labelText: "Link to video", targetURI: href);
 					break;
 				}
 
