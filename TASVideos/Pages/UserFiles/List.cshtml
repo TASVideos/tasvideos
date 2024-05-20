@@ -15,10 +15,7 @@
 			</td>
 			<td><a asp-page="ForUser" asp-route-username="@userFile.Author">@userFile.Author</a></td>
 			<td>
-				@if (userFile.GameId is not null)
-				{
-					<a asp-page="Game" asp-route-id="@userFile.GameId">@userFile.GameName</a>
-				}
+				<a asp-page="Game" condition="userFile.GameId is not null" asp-route-id="@userFile.GameId">@userFile.GameName</a>
 			</td>
 			<td>@userFile.Frames</td>
 			<td>@userFile.Rerecords</td>
