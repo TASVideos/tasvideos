@@ -52,11 +52,11 @@ public static class ApplicationBuilderExtensions
 			"screen-wake-lock=()", // defaults to `self`
 			"web-share=()", // defaults to `self`
 
-			// ...and that's all of the non-experimental options listed on MDN as of 2024-04
+			// ...and that's all the non-experimental options listed on MDN as of 2024-04
 		]);
 		app.Use(async (context, next) =>
 		{
-			context.Response.Headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"; // this is as unsecure as before, but can't use `credentialless`, see https://github.com/TASVideos/tasvideos/issues/1852
+			context.Response.Headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"; // this is as unsecure as before, but can't use `credentialless`, due to breaking YouTube Embeds, see https://github.com/TASVideos/tasvideos/issues/1852
 			context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
 			context.Response.Headers["Cross-Origin-Resource-Policy"] = "cross-origin"; // TODO this is as unsecure as before; should be `same-site` or `same-origin` when serving auth-gated responses
 			context.Response.Headers["Permissions-Policy"] = permissionsPolicyValue;
