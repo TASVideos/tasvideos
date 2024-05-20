@@ -25,9 +25,7 @@ public class ChangePasswordModel(IEmailService emailService, SignInManager signI
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await signInManager.UserManager.GetRequiredUser(User);
-
-		var hasPassword = await signInManager.UserManager.HasPasswordAsync(user);
+		var hasPassword = await signInManager.HasPassword(User);
 		if (!hasPassword)
 		{
 			return RedirectToPage("SetPassword");

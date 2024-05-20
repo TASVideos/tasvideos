@@ -140,4 +140,10 @@ public class SignInManager(
 
 		return true;
 	}
+
+	public async Task<bool> HasPassword(ClaimsPrincipal user)
+	{
+		var u = await UserManager.GetRequiredUser(user);
+		return await UserManager.HasPasswordAsync(u);
+	}
 }
