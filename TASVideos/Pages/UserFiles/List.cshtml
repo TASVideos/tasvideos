@@ -15,12 +15,12 @@
 			</td>
 			<td><a asp-page="ForUser" asp-route-username="@userFile.Author">@userFile.Author</a></td>
 			<td>
-				<a asp-page="Game" condition="userFile.GameId is not null" asp-route-id="@userFile.GameId">@userFile.GameName</a>
+				<a asp-page="Game" condition="userFile.GameId is not null" asp-route-id="@userFile.GameId">@userFile.Game</a>
 			</td>
 			<td>@userFile.Frames</td>
 			<td>@userFile.Rerecords</td>
-			<td>@userFile.CommentCount</td>
-			<td class="text-nowrap"><timezone-convert asp-for="@userFile.UploadTimestamp" /></td>
+			<td>@userFile.Comments</td>
+			<td class="text-nowrap"><timezone-convert asp-for="@userFile.Uploaded" /></td>
 		</tr>
 	}
 </standard-table>

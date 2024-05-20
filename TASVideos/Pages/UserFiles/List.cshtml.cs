@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+﻿namespace TASVideos.Pages.UserFiles;
 
-namespace TASVideos.Pages.UserFiles;
-
-public class ListModel(ApplicationDbContext db) : PageModel
+public class ListModel(ApplicationDbContext db) : BasePageModel
 {
 	[FromQuery]
 	public UserFileListRequest Search { get; set; } = new();
@@ -13,19 +11,17 @@ public class ListModel(ApplicationDbContext db) : PageModel
 		UserFiles = await db.UserFiles
 			.ThatArePublic()
 			.ByRecentlyUploaded()
-			.Select(uf => new UserFileEntry
-			{
-				Id = uf.Id,
-				Title = uf.Title,
-				FileName = uf.FileName,
-				Author = uf.Author!.UserName,
-				GameId = uf.GameId,
-				GameName = uf.Game != null ? uf.Game.DisplayName : "",
-				Frames = uf.Frames,
-				Rerecords = uf.Rerecords,
-				CommentCount = uf.Comments.Count,
-				UploadTimestamp = uf.UploadTimestamp
-			})
+			.Select(uf => new UserFileEntry(
+				uf.Id,
+				uf.Title,
+				uf.FileName,
+				uf.Author!.UserName,
+				uf.GameId,
+				uf.Game != null ? uf.Game.DisplayName : "",
+				uf.Frames,
+				uf.Rerecords,
+				uf.Comments.Count,
+				uf.UploadTimestamp))
 			.SortedPageOf(Search);
 	}
 
@@ -34,41 +30,19 @@ public class ListModel(ApplicationDbContext db) : PageModel
 		public UserFileListRequest()
 		{
 			PageSize = 50;
-			Sort = $"-{nameof(UserFileEntry.UploadTimestamp)}";
+			Sort = $"-{nameof(UserFileEntry.Uploaded)}";
 		}
 	}
 
-	public class UserFileEntry
-	{
-		[TableIgnore]
-		public long Id { get; init; }
-		public string Title { get; init; } = "";
-
-		[TableIgnore]
-		public string FileName { get; init; } = "";
-
-		[Sortable]
-		public string Author { get; init; } = "";
-
-		[TableIgnore]
-		public int? GameId { get; init; }
-
-		[Sortable]
-		[Display(Name = "Game")]
-		public string GameName { get; init; } = "";
-
-		[Sortable]
-		public int Frames { get; init; }
-
-		[Sortable]
-		public int Rerecords { get; init; }
-
-		[Sortable]
-		[Display(Name = "Comments")]
-		public int CommentCount { get; init; }
-
-		[Sortable]
-		[Display(Name = "Uploaded")]
-		public DateTime UploadTimestamp { get; init; }
-	}
+	public record UserFileEntry(
+		[property: TableIgnore]long Id,
+		string Title,
+		[property: TableIgnore]string FileName,
+		[property: Sortable] string Author,
+		[property: TableIgnore] int? GameId,
+		[property: Sortable] string Game,
+		[property: Sortable] int Frames,
+		[property: Sortable] int Rerecords,
+		[property: Sortable] int Comments,
+		[property: Sortable] DateTime Uploaded);
 }
