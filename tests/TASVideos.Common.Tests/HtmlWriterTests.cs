@@ -58,136 +58,135 @@ public sealed class HtmlWriterTests : IDisposable
 		_w.Value = new(new StringWriter());
 	}
 
-	//// This test fails
-	////[TestMethod]
-	////public void TestComplexExample()
-	////{
-	////	W.OpenTag("div");
-	////	W.Attribute("class", "col-auto mb-4 mb-md-0 mx-auto text-center text-md-start");
-	////	{
-	////		W.OpenTag("a");
-	////		W.Attribute("href", "https://www.youtube.com/watch?v=LDx4KpYdykg");
-	////		W.Attribute("target", "_blank");
-	////		{
-	////			W.VoidTag("img");
-	////			W.Attribute("src", "/media/3216M.png");
-	////			W.Attribute("class", "w-100 pixelart-image");
-	////			W.Attribute("loading", "lazy");
-	////		}
+	[TestMethod]
+	public void TestComplexExample()
+	{
+		W.OpenTag("div");
+		W.Attribute("class", "col-auto mb-4 mb-md-0 mx-auto text-center text-md-start");
+		{
+			W.OpenTag("a");
+			W.Attribute("href", "https://www.youtube.com/watch?v=LDx4KpYdykg");
+			W.Attribute("target", "_blank");
+			{
+				W.VoidTag("img");
+				W.Attribute("src", "/media/3216M.png");
+				W.Attribute("class", "w-100 pixelart-image");
+				W.Attribute("loading", "lazy");
+			}
 
-	////		W.CloseTag("a");
+			W.CloseTag("a");
 
-	////		W.OpenTag("a");
-	////		W.Attribute("href", "https://www.youtube.com/watch?v=LDx4KpYdykg");
-	////		W.Attribute("class", "btn btn-primary btn-sm mt-1");
-	////		W.Attribute("target", "_blank");
-	////		{
-	////			W.OpenTag("i");
-	////			W.Attribute("class", "fa fa-external-link");
-	////			W.CloseTag("i");
+			W.OpenTag("a");
+			W.Attribute("href", "https://www.youtube.com/watch?v=LDx4KpYdykg");
+			W.Attribute("class", "btn btn-primary btn-sm mt-1");
+			W.Attribute("target", "_blank");
+			{
+				W.OpenTag("i");
+				W.Attribute("class", "fa fa-external-link");
+				W.CloseTag("i");
 
-	////			W.Text(" Watch on YouTube");
-	////		}
+				W.Text(" Watch on YouTube");
+			}
 
-	////		W.CloseTag("a");
+			W.CloseTag("a");
 
-	////		W.OpenTag("div");
-	////		{
-	////			W.OpenTag("a");
-	////			W.Attribute("class", "btn btn-secondary btn-sm mt-1");
-	////			W.Attribute("href", "/5206S");
-	////			{
-	////				W.OpenTag("i");
-	////				W.Attribute("class", "fa fa-info-circle");
-	////				W.CloseTag("i");
+			W.OpenTag("div");
+			{
+				W.OpenTag("a");
+				W.Attribute("class", "btn btn-secondary btn-sm mt-1");
+				W.Attribute("href", "/5206S");
+				{
+					W.OpenTag("i");
+					W.Attribute("class", "fa fa-info-circle");
+					W.CloseTag("i");
 
-	////				W.Text(" Author notes");
-	////			}
+					W.Text(" Author notes");
+				}
 
-	////			W.CloseTag("a");
+				W.CloseTag("a");
 
-	////			W.OpenTag("a");
-	////			W.Attribute("class", "btn btn-secondary btn-sm mt-1");
-	////			W.Attribute("href", "/Forum/Topics/18324");
-	////			{
-	////				W.OpenTag("i");
-	////				W.Attribute("class", "fa-regular fa-comments");
-	////				W.CloseTag("i");
+				W.OpenTag("a");
+				W.Attribute("class", "btn btn-secondary btn-sm mt-1");
+				W.Attribute("href", "/Forum/Topics/18324");
+				{
+					W.OpenTag("i");
+					W.Attribute("class", "fa-regular fa-comments");
+					W.CloseTag("i");
 
-	////				W.Text(" Discuss");
-	////			}
+					W.Text(" Discuss");
+				}
 
-	////			W.CloseTag("a");
-	////		}
+				W.CloseTag("a");
+			}
 
-	////		W.CloseTag("div");
+			W.CloseTag("div");
 
-	////		W.OpenTag("a");
-	////		W.Attribute("class", "btn btn-warning btn-sm mt-1");
-	////		W.Attribute("href", "/Publications/Rate/3216");
-	////		{
-	////			W.OpenTag("i");
-	////			W.Attribute("class", "fa-regular fa-star");
-	////			W.CloseTag("i");
+			W.OpenTag("a");
+			W.Attribute("class", "btn btn-warning btn-sm mt-1");
+			W.Attribute("href", "/Publications/Rate/3216");
+			{
+				W.OpenTag("i");
+				W.Attribute("class", "fa-regular fa-star");
+				W.CloseTag("i");
 
-	////			W.Text(" ");
+				W.Text(" ");
 
-	////			W.OpenTag("span");
-	////			W.Attribute("id", "overallRating-3216");
-	////			W.Text("9.76");
-	////			W.CloseTag("span");
+				W.OpenTag("span");
+				W.Attribute("id", "overallRating-3216");
+				W.Text("9.76");
+				W.CloseTag("span");
 
-	////			W.Text(" / 10");
-	////		}
+				W.Text(" / 10");
+			}
 
-	////		W.CloseTag("a");
+			W.CloseTag("a");
 
-	////		W.OpenTag("a");
-	////		W.Attribute("class", "align-bottom");
-	////		W.Attribute("href", "/Awards/2016#tas_gba_2016");
-	////		W.Attribute("title", "Award - GBA TAS of 2016");
-	////		{
-	////			W.VoidTag("img");
-	////			W.Attribute("style", "max-height: 48px;");
-	////			W.Attribute("src", "/awards/tas_gba_2016.png");
-	////			W.Attribute("alt", "GBA TAS of 2016");
-	////			W.Attribute("loading", "lazy");
-	////		}
+			W.OpenTag("a");
+			W.Attribute("class", "align-bottom");
+			W.Attribute("href", "/Awards/2016#tas_gba_2016");
+			W.Attribute("title", "Award - GBA TAS of 2016");
+			{
+				W.VoidTag("img");
+				W.Attribute("style", "max-height: 48px;");
+				W.Attribute("src", "/awards/tas_gba_2016.png");
+				W.Attribute("alt", "GBA TAS of 2016");
+				W.Attribute("loading", "lazy");
+			}
 
-	////		W.CloseTag("a");
+			W.CloseTag("a");
 
-	////		W.OpenTag("a");
-	////		W.Attribute("class", "align-bottom");
-	////		W.Attribute("href", "/Awards/2016#tas_lucky_2016");
-	////		W.Attribute("title", "Award - Lucky TAS of 2016");
-	////		{
-	////			W.VoidTag("img");
-	////			W.Attribute("style", "max-height: 48px;");
-	////			W.Attribute("src", "/awards/tas_lucky_2016.png");
-	////			W.Attribute("alt", "Lucky TAS of 2016");
-	////			W.Attribute("loading", "lazy");
-	////		}
+			W.OpenTag("a");
+			W.Attribute("class", "align-bottom");
+			W.Attribute("href", "/Awards/2016#tas_lucky_2016");
+			W.Attribute("title", "Award - Lucky TAS of 2016");
+			{
+				W.VoidTag("img");
+				W.Attribute("style", "max-height: 48px;");
+				W.Attribute("src", "/awards/tas_lucky_2016.png");
+				W.Attribute("alt", "Lucky TAS of 2016");
+				W.Attribute("loading", "lazy");
+			}
 
-	////		W.CloseTag("a");
-	////	}
+			W.CloseTag("a");
+		}
 
-	////	W.CloseTag("div");
+		W.CloseTag("div");
 
-	////	W.AssertFinished();
-	////	AssertOutputEquals("""
-	////	<div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
-	////		<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" target="_blank"><img src="/media/3216M.png" loading="lazy" class="w-100 pixelart-image"></a>
-	////		<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" target="_blank" class="btn btn-primary btn-sm mt-1"><i class="fa fa-external-link"></i> Watch on YouTube</a>
-	////		<div>
-	////			<a href="/5206S" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
-	////			<a href="/Forum/Topics/18324" class="btn btn-secondary btn-sm mt-1"><i class="fa-regular fa-comments"></i> Discuss</a>
-	////		</div>
-	////		<a href="/Publications/Rate/3216" class="btn btn-warning btn-sm mt-1"><i class="fa-regular fa-star"></i> <span id="overallRating-3216">9.76</span> / 10</a>
-	////		<a href="/Awards/2016#tas_gba_2016" title="Award - GBA TAS of 2016" class="align-bottom"><img style="max-height: 48px;" src="/awards/tas_gba_2016.png" alt="GBA TAS of 2016" loading="lazy"></a>
-	////		<a href="/Awards/2016#tas_lucky_2016" title="Award - Lucky TAS of 2016" class="align-bottom"><img style="max-height: 48px;" src="/awards/tas_lucky_2016.png" alt="Lucky TAS of 2016" loading="lazy"></a>
-	////	</div>
-	////	""".Replace("\n", "").Replace("\t", ""));
-	////}
+		W.AssertFinished();
+		AssertOutputEquals("""
+		<div class="col-auto mb-4 mb-md-0 mx-auto text-center text-md-start">
+			<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" target="_blank"><img src="/media/3216M.png" loading="lazy" class="w-100 pixelart-image"></a>
+			<a href="https://www.youtube.com/watch?v=LDx4KpYdykg" target="_blank" class="btn btn-primary btn-sm mt-1"><i class="fa fa-external-link"></i> Watch on YouTube</a>
+			<div>
+				<a href="/5206S" class="btn btn-secondary btn-sm mt-1"><i class="fa fa-info-circle"></i> Author notes</a>
+				<a href="/Forum/Topics/18324" class="btn btn-secondary btn-sm mt-1"><i class="fa-regular fa-comments"></i> Discuss</a>
+			</div>
+			<a href="/Publications/Rate/3216" class="btn btn-warning btn-sm mt-1"><i class="fa-regular fa-star"></i> <span id="overallRating-3216">9.76</span> / 10</a>
+			<a href="/Awards/2016#tas_gba_2016" title="Award - GBA TAS of 2016" class="align-bottom"><img style="max-height: 48px;" src="/awards/tas_gba_2016.png" alt="GBA TAS of 2016" loading="lazy"></a>
+			<a href="/Awards/2016#tas_lucky_2016" title="Award - Lucky TAS of 2016" class="align-bottom"><img style="max-height: 48px;" src="/awards/tas_lucky_2016.png" alt="Lucky TAS of 2016" loading="lazy"></a>
+		</div>
+		""".Replace("\r", "").Replace("\n", "").Replace("\t", ""));
+	}
 
 	[DataRow(false)]
 	[DataRow(true)]
