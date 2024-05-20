@@ -252,8 +252,7 @@ public static partial class Builtins
 		}
 		else
 		{
-			attrs.Add(Attr("rel", "noopener nofollow"));
-			attrs.Add(Attr("class", "extlink"));
+			attrs.Add(Attr("rel", "noopener external nofollow"));
 		}
 
 		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };

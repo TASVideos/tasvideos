@@ -79,7 +79,7 @@ public class Element : INode
 	{
 		if (UriString.IsToExternalDomain(targetURI))
 		{
-			w.Attribute("rel", "noopener"); // for browsers which pre-date `Cross-Origin-Opener-Policy` response header; see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#security_and_privacy
+			w.Attribute("rel", "noopener external"); // for browsers which pre-date `Cross-Origin-Opener-Policy` response header; see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#security_and_privacy
 		}
 	}
 
