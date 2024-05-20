@@ -28,10 +28,10 @@ public class TopicWatcherTests
 	[TestMethod]
 	public async Task UserWatches_EmptyList_WhenUserDoesNotExist()
 	{
-		var actual = await _topicWatcher.UserWatches(int.MaxValue);
+		var actual = await _topicWatcher.UserWatches(int.MaxValue, new PagingModel());
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.AreEqual(0, actual.Count());
 	}
 
 	[TestMethod]
@@ -54,7 +54,7 @@ public class TopicWatcherTests
 		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = 1 + 1, UserId = user2Id });
 		await _db.SaveChangesAsync();
 
-		var actual = await _topicWatcher.UserWatches(user1Id);
+		var actual = await _topicWatcher.UserWatches(user1Id, new PagingModel());
 
 		Assert.IsNotNull(actual);
 
