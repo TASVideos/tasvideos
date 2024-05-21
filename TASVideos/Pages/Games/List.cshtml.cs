@@ -13,7 +13,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public GameListRequest Search { get; set; } = new();
 
-	public SystemPageOf<GameEntry> Games { get; set; } = SystemPageOf<GameEntry>.Empty();
+	public SystemPageOf<GameEntry> Games { get; set; } = new([]);
 
 	public List<SelectListItem> SystemList { get; set; } = [];
 
@@ -139,8 +139,6 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		public string? Genre { get; init; }
 		public string? Group { get; init; }
 		public string? SearchTerms { get; init; }
-
-		public static new SystemPageOf<T> Empty() => new([]);
 	}
 
 	public class GameEntry

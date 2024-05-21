@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.MovieChangeLog)]
 public class MovieChangeLog(ApplicationDbContext db) : WikiViewComponent
 {
-	public PageOf<HistoryEntry> Logs { get; set; } = PageOf<HistoryEntry>.Empty();
+	public PageOf<HistoryEntry> Logs { get; set; } = new([]);
 
 	public async Task<IViewComponentResult> InvokeAsync(string pubClass)
 	{

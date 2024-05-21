@@ -6,7 +6,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.MediaPosts)]
 public class MediaPosts(ApplicationDbContext db) : WikiViewComponent
 {
-	public PageOf<MediaPost> Posts { get; set; } = PageOf<MediaPost>.Empty();
+	public PageOf<MediaPost> Posts { get; set; } = new([]);
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{

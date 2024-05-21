@@ -6,7 +6,7 @@ public class UserFilesModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<UserFiles.InfoModel.UserFileModel> Files { get; set; } = PageOf<UserFiles.InfoModel.UserFileModel>.Empty();
+	public PageOf<UserFiles.InfoModel.UserFileModel> Files { get; set; } = new([]);
 
 	public async Task OnGet()
 	{

@@ -314,7 +314,7 @@ public class IndexModel(
 		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";
 		public int? SubmissionId { get; init; }
-		public PageOf<PostEntry> Posts { get; set; } = PageOf<PostEntry>.Empty();
+		public PageOf<PostEntry> Posts { get; set; } = new([]);
 		public PollModel? Poll { get; init; }
 		public int? GameId { get; init; }
 		public string? GameName { get; init; }

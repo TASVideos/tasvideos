@@ -9,7 +9,7 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int? Id { get; set; }
 
-	public PageOf<SentboxEntry> SentBox { get; set; } = PageOf<SentboxEntry>.Empty();
+	public PageOf<SentboxEntry> SentBox { get; set; } = new([]);
 
 	public async Task OnGet()
 	{

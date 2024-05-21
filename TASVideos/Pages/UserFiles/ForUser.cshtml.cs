@@ -9,7 +9,7 @@ public class ForUserModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public PageOf<InfoModel.UserFileModel> Files { get; set; } = PageOf<InfoModel.UserFileModel>.Empty();
+	public PageOf<InfoModel.UserFileModel> Files { get; set; } = new([]);
 
 	public async Task OnGet()
 	{

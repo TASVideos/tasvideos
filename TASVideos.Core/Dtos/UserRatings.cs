@@ -9,7 +9,7 @@ public class UserRatings
 	public string UserName { get; init; } = "";
 	public bool PublicRatings { get; init; }
 
-	public RatingPageOf<Rating> Ratings { get; set; } = RatingPageOf<Rating>.Empty();
+	public RatingPageOf<Rating> Ratings { get; set; } = new([]);
 
 	public class Rating
 	{
@@ -41,6 +41,4 @@ public class RatingRequest : PagingModel
 public class RatingPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 {
 	public bool IncludeObsolete { get; set; }
-
-	public static new RatingPageOf<T> Empty() => new([]);
 }

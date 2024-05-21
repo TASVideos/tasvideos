@@ -15,7 +15,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public SubmissionSearchRequest Search { get; set; } = new();
 
-	public SubmissionPageOf<SubmissionEntry> Submissions { get; set; } = SubmissionPageOf<SubmissionEntry>.Empty();
+	public SubmissionPageOf<SubmissionEntry> Submissions { get; set; } = new([]);
 
 	public List<SelectListItem> AvailableStatuses => Statuses;
 
@@ -108,8 +108,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public string? System { get; set; }
 		public string? User { get; set; }
 		public string? GameId { get; set; }
-
-		public static new SubmissionPageOf<T> Empty() => new([]);
 	}
 
 	public class SubmissionSearchRequest : PagingModel, ISubmissionFilter

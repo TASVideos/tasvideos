@@ -11,7 +11,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 	public int? Id { get; set; }
 
 	[BindProperty]
-	public PageOf<InboxEntry> Messages { get; set; } = PageOf<InboxEntry>.Empty();
+	public PageOf<InboxEntry> Messages { get; set; } = new([]);
 
 	public async Task OnGet()
 	{

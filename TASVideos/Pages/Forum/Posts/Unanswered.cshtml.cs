@@ -8,7 +8,7 @@ public class UnansweredModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<UnansweredPosts> Posts { get; set; } = PageOf<UnansweredPosts>.Empty();
+	public PageOf<UnansweredPosts> Posts { get; set; } = new([]);
 
 	public async Task OnGet()
 	{

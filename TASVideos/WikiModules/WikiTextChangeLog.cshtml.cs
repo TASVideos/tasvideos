@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.WikiTextChangeLog)]
 public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 {
-	public PageOf<Log> Logs { get; set; } = PageOf<Log>.Empty();
+	public PageOf<Log> Logs { get; set; } = new([]);
 
 	public async Task<IViewComponentResult> InvokeAsync(bool includeMinors)
 	{

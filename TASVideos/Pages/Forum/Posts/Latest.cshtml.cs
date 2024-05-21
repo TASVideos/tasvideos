@@ -8,7 +8,7 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<LatestPost> Posts { get; set; } = PageOf<LatestPost>.Empty();
+	public PageOf<LatestPost> Posts { get; set; } = new([]);
 
 	public async Task OnGet()
 	{

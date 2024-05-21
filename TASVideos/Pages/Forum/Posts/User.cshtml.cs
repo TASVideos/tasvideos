@@ -11,7 +11,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 	[FromQuery]
 	public TopicRequest Search { get; set; } = new();
 
-	public PageOf<UserPagePost> Posts { get; set; } = PageOf<UserPagePost>.Empty();
+	public PageOf<UserPagePost> Posts { get; set; } = new([]);
 
 	public async Task<IActionResult> OnGet()
 	{

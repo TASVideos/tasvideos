@@ -6,7 +6,7 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<UserEntry> Users { get; set; } = PageOf<UserEntry>.Empty();
+	public PageOf<UserEntry> Users { get; set; } = new([]);
 
 	public async Task OnGet()
 	{
