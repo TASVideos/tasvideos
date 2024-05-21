@@ -30,7 +30,7 @@ public class SignInManager(
 	public async Task<(SignInResult Result, User? User)> SignIn(string userName, string password, bool rememberMe = false)
 	{
 		userName = userName.Trim().Replace(" ", "_");
-		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == userName);
+		var user = await db.Users.ForUser(userName).SingleOrDefaultAsync();
 		if (user is null)
 		{
 			return (SignInResult.Failed, null);

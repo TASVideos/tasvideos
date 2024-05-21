@@ -16,7 +16,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 	public async Task<IActionResult> OnGet()
 	{
 		var user = await db.Users
-			.Where(u => u.UserName == UserName)
+			.ForUser(UserName)
 			.Select(u => new
 			{
 				u.Id,

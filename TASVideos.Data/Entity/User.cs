@@ -220,6 +220,11 @@ public static class UserExtensions
 		return query.Where(u => users.Contains(u.UserName));
 	}
 
+	public static IQueryable<User> ForUser(this IQueryable<User> query, string? userName)
+	{
+		return query.Where(u => u.UserName == userName);
+	}
+
 	public static IQueryable<User> ThatHaveCustomLocale(this IQueryable<User> query)
 	{
 		return query.Where(u => u.DateFormat != UserDateFormat.Auto || u.TimeFormat != UserTimeFormat.Auto || u.DecimalFormat != UserDecimalFormat.Auto);

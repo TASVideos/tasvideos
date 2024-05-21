@@ -21,7 +21,7 @@ internal class PrivateMessageService(ApplicationDbContext db, IEmailService emai
 	public async Task SendMessage(int fromUserId, string toUserName, string subject, string text)
 	{
 		var toUser = await db.Users
-			.Where(u => u.UserName == toUserName)
+			.ForUser(toUserName)
 			.Select(u => new
 			{
 				u.Id,

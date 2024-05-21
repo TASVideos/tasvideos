@@ -154,7 +154,7 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 	{
 		var userName = WikiHelper.ToUserName(path);
 		return await db.Users
-			.Where(u => u.UserName == userName)
+			.ForUser(userName)
 			.Select(u => u.UserName)
 			.SingleOrDefaultAsync();
 	}

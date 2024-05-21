@@ -97,7 +97,7 @@ public class UserManager(
 	public async Task<UserRatings?> GetUserRatings(string userName, bool includeHidden = false)
 	{
 		var model = await db.Users
-			.Where(u => u.UserName == userName)
+			.ForUser(userName)
 			.Select(u => new UserRatings
 			{
 				Id = u.Id,
@@ -167,6 +167,7 @@ public class UserManager(
 	public async Task<UserProfile?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
 	{
 		var model = await db.Users
+			.ForUser(userName)
 			.Select(u => new UserProfile
 			{
 				Id = u.Id,
@@ -201,7 +202,7 @@ public class UserManager(
 					Total = u.UserFiles.Count(uf => includeHiddenUserFiles || !uf.Hidden)
 				}
 			})
-			.SingleOrDefaultAsync(u => u.UserName == userName);
+			.SingleOrDefaultAsync();
 
 		if (model is null)
 		{

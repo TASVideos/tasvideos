@@ -10,7 +10,7 @@ public class IpsModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await db.Users.SingleOrDefaultAsync(u => u.UserName == UserName);
+		var user = await db.Users.ForUser(UserName).SingleOrDefaultAsync();
 		if (user is null)
 		{
 			return NotFound();
