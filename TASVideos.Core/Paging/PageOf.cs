@@ -2,15 +2,29 @@
 
 namespace TASVideos.Core;
 
-public class PageOf<T>(IEnumerable<T> items) : IPaged, IEnumerable<T>
+public class PageOf<T> : IPaged, IEnumerable<T>
 {
-	public int RowCount { get; set; }
-	public string? Sort { get; set; }
-	public int? PageSize { get; set; }
-	public int? CurrentPage { get; set; }
+	private readonly IEnumerable<T> _items;
 
-	public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
-	IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
+	public PageOf(IEnumerable<T> items)
+	{
+		_items = items;
+		if (_items is PageOf<T> pageOf)
+		{
+			RowCount = pageOf.RowCount;
+			Sort = pageOf.Sort;
+			PageSize = pageOf.PageSize;
+			CurrentPage = pageOf.CurrentPage;
+		}
+	}
+
+	public int RowCount { get; init; }
+	public string? Sort { get; init; }
+	public int? PageSize { get; init; }
+	public int? CurrentPage { get; init; }
+
+	public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
+	IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
 
 	public static PageOf<T> Empty() => new([]);
 }

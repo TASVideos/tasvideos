@@ -131,10 +131,6 @@ public class UserManager(
 		model.Ratings = new RatingPageOf<UserRatings.Rating>(ratings)
 		{
 			IncludeObsolete = paging.IncludeObsolete,
-			PageSize = ratings.PageSize,
-			CurrentPage = ratings.CurrentPage,
-			RowCount = ratings.RowCount,
-			Sort = ratings.Sort
 		};
 
 		return model;

@@ -108,10 +108,6 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			Genre = paging.Genre,
 			Group = paging.Group,
 			SearchTerms = paging.SearchTerms,
-			PageSize = data.PageSize,
-			CurrentPage = data.CurrentPage,
-			RowCount = data.RowCount,
-			Sort = data.Sort
 		};
 	}
 

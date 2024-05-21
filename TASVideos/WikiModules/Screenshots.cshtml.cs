@@ -35,10 +35,6 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 
 		List = new ScreenshotPageOf<ScreenshotEntry>(screenshots)
 		{
-			PageSize = screenshots.PageSize,
-			CurrentPage = screenshots.CurrentPage,
-			RowCount = screenshots.RowCount,
-			Sort = screenshots.Sort,
 			OnlyDescriptions = onlyDescriptions
 		};
 

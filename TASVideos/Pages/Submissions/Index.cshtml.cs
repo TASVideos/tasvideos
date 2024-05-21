@@ -49,10 +49,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		Submissions = new SubmissionPageOf<SubmissionEntry>(entries)
 		{
-			PageSize = entries.PageSize,
-			CurrentPage = entries.CurrentPage,
-			RowCount = entries.RowCount,
-			Sort = entries.Sort,
 			Years = Search.Years,
 			StatusFilter = Search.StatusFilter,
 			System = Search.System,
