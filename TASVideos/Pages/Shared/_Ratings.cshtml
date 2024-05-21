@@ -1,11 +1,12 @@
-﻿@model UserRatings
+﻿@using TASVideos.Pages.Profile
+@model UserRatings
 @{
 	var isMyPage = User.GetUserId() == Model.Id;
 	ViewData.SetTitle($"Ratings for {Model.UserName}");
 }
-<h4>User: <profile-link username="@Model.UserName"></profile-link></h4>
+<h4 condition="!isMyPage">User: <profile-link username="@Model.UserName"></profile-link></h4>
 <div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">
-	Your ratings are currently private and will not be visible to others. This can be changed on the 
+	Your ratings are currently private and will not be visible to others. This can be changed on the
 	<a asp-page="/Profile/Settings">Settings Page</a>
 </div>
 <div condition="!isMyPage && !Model.PublicRatings && !User.Has(PermissionTo.SeePrivateRatings)">
@@ -15,46 +16,24 @@
 	<warning-alert condition="!isMyPage && User.Has(PermissionTo.SeePrivateRatings)">
 		This user has elected to keep their ratings private. You are seeing this because you have the @nameof(PermissionTo.SeePrivateRatings) permission
 	</warning-alert>
-	<ul class="nav nav-tabs" role="tablist">
-		<li class="nav-item">
-			<a class="nav-link active" href="#current" role="tab" data-bs-toggle="tab">Current</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="#obsolete" role="tab" data-bs-toggle="tab">Obsolete</a>
-		</li>
-	</ul>
-
-	<!-- Tab panes -->
-	<div class="tab-content">
-		<div role="tabpanel" class="tab-pane fade active show" id="current">
-			<standard-table>
-				<tr>
-					<th>Movie</th>
-					<th>Rating</th>
-				</tr>
-				@foreach (var rating in Model.Ratings.Where(r => !r.IsObsolete).OrderByDescending(r => r.Value))
-				{
-					<tr>
-						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
-						<td>@(Math.Round(rating.Value, 1))</td>
-					</tr>
-				}
-			</standard-table>
+	<form id="obsolete-form">
+		<div class="d-flex justify-content-end" style="gap: 8px;">
+			<label style="margin: auto 0" for="include-obsolete">Include Obsolete <input onclick="document.forms['obsolete-form'].submit()" id="include-obsolete" name="IncludeObsolete" checked="@Model.Ratings.IncludeObsolete" type="checkbox" asp-for="Ratings.IncludeObsolete"/></label>
+			<noscript>
+				<submit-button btn-class-override="ml-2 btn-secondary btn-sm" class="float-center">Go</submit-button>
+			</noscript>
 		</div>
-		<div role="tabpanel" class="tab-pane fade" id="obsolete">
-			<standard-table>
-				<tr>
-					<th>Movie</th>
-					<th>Rating</th>
-				</tr>
-				@foreach (var rating in Model.Ratings.Where(r => r.IsObsolete).OrderByDescending(r => r.Value))
-				{
-					<tr>
-						<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
-						<td>@(Math.Round(rating.Value, 1))</td>
-					</tr>
-				}
-			</standard-table>
-		</div>
-	</div>
+	</form>
+	<partial name="_Pager" model="Model.Ratings" />
+	<standard-table>
+		<sortable-table-head sorting="@Model.Ratings" model-type="typeof(UserRatings.Rating)" />
+		@foreach (var rating in Model.Ratings)
+		{
+			<tr style="@(rating.IsObsolete ? "opacity: 0.6" : "")">
+				<td><a href="/@(rating.PublicationId)M">@rating.PublicationTitle</a></td>
+				<td>@(Math.Round(rating.Value, 1))</td>
+				<td>@rating.IsObsolete.ToYesNo()</td>
+			</tr>
+		}
+	</standard-table>
 </div>

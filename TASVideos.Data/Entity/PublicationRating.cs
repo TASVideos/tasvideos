@@ -23,4 +23,14 @@ public static class PublicationRatingExtensions
 	{
 		return query.Where(pr => pr.UserId == userId);
 	}
+
+	public static IQueryable<PublicationRating> IncludeObsolete(this IQueryable<PublicationRating> query, bool includeObsolete)
+	{
+		if (!includeObsolete)
+		{
+			query = query.Where(pr => pr.Publication!.ObsoletedById == null);
+		}
+
+		return query;
+	}
 }

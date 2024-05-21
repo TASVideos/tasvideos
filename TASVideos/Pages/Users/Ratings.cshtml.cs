@@ -3,6 +3,9 @@
 [AllowAnonymous]
 public class RatingsModel(UserManager userManager) : BasePageModel
 {
+	[FromQuery]
+	public RatingRequest Search { get; set; } = new();
+
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
@@ -12,6 +15,7 @@ public class RatingsModel(UserManager userManager) : BasePageModel
 	{
 		var ratings = await userManager.GetUserRatings(
 			UserName,
+			Search,
 			User.Has(PermissionTo.SeePrivateRatings) || User.Name() == UserName);
 
 		if (ratings is null)

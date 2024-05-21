@@ -94,7 +94,7 @@ public class UserManager(
 	/// If user is not found, null is returned
 	/// If user has PublicRatings false, then the ratings will be an empty list
 	/// </summary>
-	public async Task<UserRatings?> GetUserRatings(string userName, bool includeHidden = false)
+	public async Task<UserRatings?> GetUserRatings(string userName, RatingRequest paging, bool includeHidden = false)
 	{
 		var model = await db.Users
 			.ForUser(userName)
@@ -116,8 +116,9 @@ public class UserManager(
 			return model;
 		}
 
-		model.Ratings = await db.PublicationRatings
+		var ratings = await db.PublicationRatings
 			.ForUser(model.Id)
+			.IncludeObsolete(paging.IncludeObsolete)
 			.Select(pr => new UserRatings.Rating
 			{
 				PublicationId = pr.PublicationId,
@@ -125,7 +126,16 @@ public class UserManager(
 				IsObsolete = pr.Publication.ObsoletedById.HasValue,
 				Value = pr.Value
 			})
-			.ToListAsync();
+			.SortedPageOf(paging);
+
+		model.Ratings = new RatingPageOf<UserRatings.Rating>(ratings)
+		{
+			IncludeObsolete = paging.IncludeObsolete,
+			PageSize = ratings.PageSize,
+			CurrentPage = ratings.CurrentPage,
+			RowCount = ratings.RowCount,
+			Sort = ratings.Sort
+		};
 
 		return model;
 	}
