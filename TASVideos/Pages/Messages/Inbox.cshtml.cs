@@ -15,7 +15,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 	public async Task OnGet()
 	{
 		Messages = await db.PrivateMessages
-			.ToUser(User.GetUserId())
+			.SentToUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.ThatAreNotToUserSaved()
 			.OrderBy(m => m.ReadOn.HasValue)
@@ -65,7 +65,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task<PrivateMessage?> GetMessage()
 		=> await db.PrivateMessages
-			.ToUser(User.GetUserId())
+			.SentToUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.SingleOrDefaultAsync(pm => pm.Id == Id);
 

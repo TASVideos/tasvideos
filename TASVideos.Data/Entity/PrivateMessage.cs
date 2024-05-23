@@ -30,7 +30,7 @@ public class PrivateMessage : BaseEntity
 
 public static class MessageExtensions
 {
-	public static IQueryable<PrivateMessage> ToUser(this IQueryable<PrivateMessage> query, int userId)
+	public static IQueryable<PrivateMessage> SentToUser(this IQueryable<PrivateMessage> query, int userId)
 	{
 		return query.Where(m => m.ToUserId == userId);
 	}
