@@ -16,9 +16,9 @@
 		iconClass = "fa fa-plus";
 	}
 }
-<fieldset>
-	<delete-button condition="@Model.CanDelete" asp-href="/GameGroups/Edit/@(Model.Id ?? 0)?handler=Delete" class="float-end">Delete</delete-button>
-</fieldset>
+<top-button-bar>
+	<delete-button condition="@Model.CanDelete" asp-href="/GameGroups/Edit/@(Model.Id ?? 0)?handler=Delete"></delete-button>
+</top-button-bar>
 <form method="post">
 	<row>
 		<column md="6">

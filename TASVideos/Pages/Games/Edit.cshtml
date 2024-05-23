@@ -7,7 +7,7 @@
 }
 <top-button-bar>
 	<a class="btn btn-primary" asp-page="/Logs/Index" asp-route-table="Games" asp-route-rowId="@Model.Id" >History</a>
-	<delete-button permission="DeleteGameEntries" condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete">Delete</delete-button>
+	<delete-button permission="DeleteGameEntries" condition="@Model.CanDelete" asp-href="/Games/Edit/@(Model.Id ?? 0)?handler=Delete"></delete-button>
 </top-button-bar>
 <div class="text-danger">
 	@Html.ValidationSummary()
