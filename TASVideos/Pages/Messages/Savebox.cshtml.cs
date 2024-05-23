@@ -10,6 +10,7 @@ public class SaveboxModel(ApplicationDbContext db) : BasePageModel
 		var userId = User.GetUserId();
 		SaveBox = await db.PrivateMessages
 			.ThatAreSavedByUser(userId)
+			.ByMostRecent()
 			.Select(pm => new SaveboxEntry(
 				pm.Id,
 				pm.Subject,
