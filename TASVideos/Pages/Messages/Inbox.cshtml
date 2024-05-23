@@ -22,9 +22,7 @@
 		<th>Date</th>
 		<th>Actions</th>
 	</tr>
-	@foreach (var entry in Model.Messages
-				.OrderBy(m => m.IsRead)
-				.ThenByDescending(m => m.Date))
+	@foreach (var entry in Model.Messages)
 	{
 		<tr>
 			<td>
