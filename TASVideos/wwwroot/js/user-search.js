@@ -13,7 +13,20 @@
 
 	function maybeEnableSubmit() {
 		if (submitBtnElem) {
-			submitBtnElem.disabled = !validNames.has(getCurrentValue().toUpperCase()) && getCurrentValue().length > 0;
+			const valid = validNames.has(getCurrentValue().toUpperCase()) && getCurrentValue().length > 0;
+			if (valid) {
+				console.log('valid')
+				submitBtnElem.removeAttribute('disabled');
+				submitBtnElem.removeAttribute('tabIndex');
+				submitBtnElem.removeAttribute('aria-disabled');
+				submitBtnElem.classList.remove('disabled');
+			} else {
+				console.log('invalid')
+				submitBtnElem.setAttribute('disabled', 'disabled');
+				submitBtnElem.setAttribute('tabIndex', '-1');
+				submitBtnElem.setAttribute('aria-disabled', 'disabled');
+				submitBtnElem.classList.add('disabled');
+			}
 		}
 	}
 	function updateDataList(names) {
