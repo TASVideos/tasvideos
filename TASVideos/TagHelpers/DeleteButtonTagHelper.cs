@@ -30,6 +30,11 @@ public class DeleteButtonTagHelper(IHtmlHelper helper) : TagHelper
 
 		((IViewContextAware)helper).Contextualize(ViewContext);
 		var content = (await output.GetChildContentAsync()).GetContent();
+		if (string.IsNullOrWhiteSpace(content))
+		{
+			content = "<i title=\"Delete\" class=\"fa fa-remove\"></i>";
+		}
+
 		output.TagName = "span";
 		var uniqueId = UniqueId();
 
@@ -73,8 +78,5 @@ public class DeleteButtonTagHelper(IHtmlHelper helper) : TagHelper
 				""");
 	}
 
-	private static string UniqueId()
-	{
-		return Guid.NewGuid().ToString().Replace("-", "");
-	}
+	private static string UniqueId() => Guid.NewGuid().ToString().Replace("-", "");
 }

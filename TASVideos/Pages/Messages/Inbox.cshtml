@@ -38,14 +38,12 @@
 			<td>@entry.Date</td>
 			<td-action-column>
 				<form method="post" class="d-inline-block" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id">
-					<submit-button class="btn-sm">Save</submit-button>
+					<submit-button class="btn-sm"></submit-button>
 				</form>
 				<delete-button
 					asp-href="/Messages/InBox/@entry.Id/Delete"
 					warning-message="Are you sure you want to remove this message?"
-					class="btn-sm">
-					Delete
-				</delete-button>
+					class="btn-sm"></delete-button>
 			</td-action-column>
 		</tr>
 	}

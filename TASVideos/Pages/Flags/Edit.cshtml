@@ -7,9 +7,7 @@
 <div class="text-end">
 	<delete-button condition="!Model.InUse"
 			asp-href="/Flags/Edit/@(Model.Flag.Id)/Delete"
-			warning-message="Are you sure you want to remove this flag?">
-		Delete
-	</delete-button>
+			warning-message="Are you sure you want to remove this flag?"></delete-button>
 	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Flag.Token">
 		Flag in Use
 	</a>
