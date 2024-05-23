@@ -10,7 +10,6 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int? Id { get; set; }
 
-	[BindProperty]
 	public PageOf<InboxEntry> Messages { get; set; } = new([]);
 
 	public async Task OnGet()
@@ -37,11 +36,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		var message = await db.PrivateMessages
-			.ToUser(User.GetUserId())
-			.ThatAreNotToUserDeleted()
-			.SingleOrDefaultAsync(pm => pm.Id == Id);
-
+		var message = await GetMessage();
 		if (message is not null)
 		{
 			message.SavedForToUser = true;
@@ -58,11 +53,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		var message = await db.PrivateMessages
-			.ToUser(User.GetUserId())
-			.ThatAreNotToUserDeleted()
-			.SingleOrDefaultAsync(pm => pm.Id == Id);
-
+		var message = await GetMessage();
 		if (message is not null)
 		{
 			message.DeletedForToUser = true;
@@ -71,6 +62,12 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 
 		return BasePageRedirect("Inbox");
 	}
+
+	private async Task<PrivateMessage?> GetMessage()
+		=> await db.PrivateMessages
+			.ToUser(User.GetUserId())
+			.ThatAreNotToUserDeleted()
+			.SingleOrDefaultAsync(pm => pm.Id == Id);
 
 	public record InboxEntry(int Id, string? Subject, string From, DateTime Date, bool IsRead);
 }
