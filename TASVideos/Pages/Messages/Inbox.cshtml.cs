@@ -19,6 +19,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 			.ToUser(User.GetUserId())
 			.ThatAreNotToUserDeleted()
 			.ThatAreNotToUserSaved()
+			.ByMostRecent()
 			.Select(pm => new InboxEntry(
 				pm.Id,
 				pm.Subject,
