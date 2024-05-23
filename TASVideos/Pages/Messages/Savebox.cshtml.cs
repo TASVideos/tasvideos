@@ -8,9 +8,11 @@ public class SaveboxModel(ApplicationDbContext db) : BasePageModel
 	public async Task OnGet()
 	{
 		var userId = User.GetUserId();
+		var userName = User.Name();
 		SaveBox = await db.PrivateMessages
 			.ThatAreSavedByUser(userId)
-			.ByMostRecent()
+			.OrderBy(m => m.ToUser!.UserName == userName)
+			.ThenByDescending(m => m.CreateTimestamp)
 			.Select(pm => new SaveboxEntry(
 				pm.Id,
 				pm.Subject,

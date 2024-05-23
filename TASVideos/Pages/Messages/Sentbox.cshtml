@@ -12,9 +12,7 @@
 		<th>Date</th>
 		<th>Actions</th>
 	</tr>
-	@foreach (var entry in Model.SentBox
-		.OrderBy(m => m.IsRead)
-		.ThenByDescending(m => m.SendDate))
+	@foreach (var entry in Model.SentBox)
 	{
 		<tr>
 			<td>

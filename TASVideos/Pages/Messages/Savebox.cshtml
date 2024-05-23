@@ -13,9 +13,7 @@
 		<th>Date</th>
 		<th>Actions</th>
 	</tr>
-	@foreach (var entry in Model.SaveBox
-		.OrderBy(m => m.To == User.Name())
-		.ThenByDescending(m => m.SendDate))
+	@foreach (var entry in Model.SaveBox)
 	{
 		<tr>
 			<td>

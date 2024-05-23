@@ -17,7 +17,8 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 		SentBox = await db.PrivateMessages
 			.ThatAreNotToUserDeleted()
 			.FromUser(userId)
-			.ByMostRecent()
+			.OrderBy(m => m.ReadOn.HasValue)
+			.ThenByDescending(m => m.CreateTimestamp)
 			.Select(pm => new SentboxEntry(
 				pm.Id,
 				pm.Subject,
