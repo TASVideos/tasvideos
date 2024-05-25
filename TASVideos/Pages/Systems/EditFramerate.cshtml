@@ -5,15 +5,10 @@
 		$"Editing Framerate: {Model.FrameRate.SystemCode} {Model.FrameRate.RegionCode} {Model.FrameRate.FrameRate}");
 }
 
-<div class="text-danger">
-	@Html.ValidationSummary()
-</div>
-
 <top-button-bar>
 	<span condition = "Model.InUse">This entry cannot be deleted because it is in use</span>
 	<delete-button condition="!Model.InUse" asp-href="/Systems/EditFramerate/@(Model.Id)/Delete/@Model.FrameRate.SystemId"></delete-button>
 </top-button-bar>
-
 <div condition="Model.PublicationEntries.Any()">
 	<h4>Publications using this framerate</h4>
 	<ul>

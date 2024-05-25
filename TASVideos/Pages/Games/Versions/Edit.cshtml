@@ -18,10 +18,6 @@
 	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
 }
 
-<div class="text-danger">
-	@Html.ValidationSummary()
-</div>
-
 <fieldset>
 	<delete-button condition="@Model.CanDelete"
 				   asp-href="@deleteLink"
