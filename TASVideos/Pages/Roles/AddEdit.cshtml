@@ -11,7 +11,7 @@
 </top-button-bar>
 <form asp-route="Edit">
 	<row>
-		<column lg="5">
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Role.Name" class="form-control-label"></label>
 				<input asp-for="Role.Name" class="form-control" maxlength="50" />
@@ -27,7 +27,7 @@
 				</div>
 			</fieldset>
 		</column>
-		<column lg="5" class="offset-lg-2">
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Role.Description" class="form-control-label"></label>
 				<textarea asp-for="Role.Description" class="form-control" rows="4" maxlength="200"></textarea>
@@ -53,7 +53,7 @@
 		</column>
 	</row>
 	<row>
-		<column class="col-lg-5">
+		<column class="col-lg-6">
 			<label asp-for="Role.Links" class="form-control-label"></label>
 			<string-list asp-for="Role.Links" />
 		</column>
