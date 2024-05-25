@@ -5,7 +5,6 @@
 }
 <partial Name="_ForumHeader" />
 <h4>Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a></h4>
-<div asp-validation-summary="All" class="text-danger"></div>
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form method="post">
 	<div permission="CreateForumPolls">

@@ -57,12 +57,12 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 	{
 		if (string.IsNullOrEmpty(Poll.Question))
 		{
-			ModelState.AddModelError($"{nameof(Poll.Question)}", "The Question field is required.");
+			ModelState.AddModelError($"{nameof(Poll)}.{nameof(Poll.Question)}", "The Question field is required.");
 		}
 
 		if (!Poll.OptionsAreValid)
 		{
-			ModelState.AddModelError($"{nameof(Poll.PollOptions)}", "Invalid poll options");
+			ModelState.AddModelError($"{nameof(Poll)}.{nameof(Poll.PollOptions)}", "Invalid poll options");
 			return Page();
 		}
 

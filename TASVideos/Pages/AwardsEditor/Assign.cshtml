@@ -4,8 +4,8 @@
 	ViewData.SetTitle($"Assign an Award for Year {Model.Year}");
 }
 
+<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <form method="post">
-	<div asp-validation-summary="All" class="text-danger"></div>
 	<a condition="Model.ShowUpload" asp-page="UploadImage" asp-route-year="@Model.Year" class="btn btn-primary mb-2"><i class="fa fa-upload"></i> Upload</a>
 	<row>
 		<column md="5">

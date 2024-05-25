@@ -49,8 +49,7 @@ public class CreateCategoryModel(IAwards awards, IMediaFileUploader mediaFileUpl
 		await mediaFileUploader.UploadAwardImage(
 			BaseImage!, BaseImage2X!, BaseImage4X!, ShortName);
 
-		var result = await awards.AddAwardCategory(
-			Type, ShortName, Description);
+		var result = await awards.AddAwardCategory(Type, ShortName, Description);
 		if (!result)
 		{
 			ModelState.AddModelError("", "An award with this short name and description already exist");

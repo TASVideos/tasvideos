@@ -52,11 +52,6 @@ public class LoginModel(SignInManager signInManager, IHostEnvironment env) : Bas
 			return RedirectToPage("/Account/Lockout");
 		}
 
-		if (result.IsNotAllowed)
-		{
-			return AccessDenied();
-		}
-
 		ModelState.AddModelError("", "Invalid login attempt.");
 		return Page();
 	}
