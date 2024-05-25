@@ -52,12 +52,12 @@
 						</div>
 						<script>
 						(function() {
-							var checkUserBtn = document.getElementById('check-username');
-							var userNameBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.UserName)');
-							var userNameStatus = document.getElementById('user-name-status');
-							var userNameExistsMessage = document.getElementById('username-exists-message');
-							var originalUserNameBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.OriginalUserName)');
-							var userNameDiv = document.getElementById('user-name-div');
+							const checkUserBtn = document.getElementById('check-username');
+							const userNameBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.UserName)');
+							const userNameStatus = document.getElementById('user-name-status');
+							const userNameExistsMessage = document.getElementById('username-exists-message');
+							const originalUserNameBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.OriginalUserName)');
+							const userNameDiv = document.getElementById('user-name-div');
 
 							userNameBox.onkeyup = onUserNameBoxChange;
 							userNameBox.onchange = onUserNameBoxChange;
