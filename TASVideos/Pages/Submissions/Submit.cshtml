@@ -10,7 +10,6 @@
 	@await Html.RenderWiki(SystemWiki.SubmitMovieHeader)
 </info-alert>
 <hr />
-<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 <warning-alert dismissible="true" condition="notSupportedError">
 	@await Html.RenderWiki(SystemWiki.SupportedMovieTypes)
 </warning-alert>

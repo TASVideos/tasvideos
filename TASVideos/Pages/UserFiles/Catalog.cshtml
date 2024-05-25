@@ -3,7 +3,7 @@
 @{
 	ViewData.SetTitle($"Set Cataloging for Userfile {Model.Id}");
 }
-<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
+
 <ul>
 	<li>
 		UserFile: <a asp-page="Info" asp-route-id="@Model.Id">@Model.UserFile.Filename</a>

@@ -3,26 +3,25 @@
 @{
 	ViewData.SetTitle("Log in");
 }
-<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 <row>
 	<section class="col-lg-4">
 		<form method="post">
 			<h4>Use a TASVideos account to log in.</h4>
-			<hr />
+			<hr/>
 			<fieldset>
 				<label asp-for="UserName"></label>
-				<input asp-for="UserName" class="form-control" autocomplete="username" />
+				<input asp-for="UserName" class="form-control" autocomplete="username"/>
 				<span asp-validation-for="UserName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Password"></label>
-				<input asp-for="Password" class="form-control" autocomplete="current-password" />
+				<input asp-for="Password" class="form-control" autocomplete="current-password"/>
 				<span asp-validation-for="Password" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div class="checkbox">
 					<label asp-for="RememberMe">
-						<input asp-for="RememberMe" />
+						<input asp-for="RememberMe"/>
 						@Html.DisplayNameFor(m => m.RememberMe)
 					</label>
 				</div>

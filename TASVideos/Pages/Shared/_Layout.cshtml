@@ -116,6 +116,7 @@
 	<alert type="@TempData["MessageType"]" condition="@(!string.IsNullOrWhiteSpace(TempData["MessageType"]?.ToString()))" dismissible="true">
 		@TempData["Message"]
 	</alert>
+	<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
 	@RenderBody()
 	<hr/>
 	<footer class="mb-3">
