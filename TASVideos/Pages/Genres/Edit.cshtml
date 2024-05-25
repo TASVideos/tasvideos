@@ -7,9 +7,7 @@
 <top-button-bar>
 	<delete-button condition="!Model.InUse"
 				   asp-href="/Genres/Edit/@(Model.Id)/Delete"
-				   warning-message="Are you sure you want to remove this genre?">
-		Delete
-	</delete-button>
+				   warning-message="Are you sure you want to remove this genre?"></delete-button>
 	<span condition="Model.InUse">
 		Genre in Use
 	</span>

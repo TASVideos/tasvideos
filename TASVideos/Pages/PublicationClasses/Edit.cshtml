@@ -7,9 +7,7 @@
 <top-button-bar>
 	<delete-button condition="!Model.InUse"
 				   asp-href="/PublicationClasses/Edit/@(Model.PublicationClass.Id)/Delete"
-				   warning-message="Are you sure you want to remove this Publication Class?">
-		Delete
-	</delete-button>
+				   warning-message="Are you sure you want to remove this Publication Class?"></delete-button>
 	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.PublicationClass.Name">
 		Publication Class in Use
 	</a>

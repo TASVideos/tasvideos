@@ -107,9 +107,7 @@
 						permission="DeleteWikiPages"
 						asp-href="/Wiki/DeletedPages/DeleteRevision?path=@(Model.PageName)&revision=@revision.Revision"
 						warning-message="Are you sure you want to delete this revision?"
-						class="btn-sm">
-						<i class="fa fa-remove"></i>
-					</delete-button>
+						class="btn-sm"></delete-button>
 					<delete-button condition="i == 0 && canEdit" asp-href="/Wiki/Edit/RollbackLatest?path=@Model.Path" warning-message="This will create a new revision that reverses the previous revision. Do you want to continue?" class="btn-warning btn-sm">
 						<i class="fa fa-undo"></i>
 					</delete-button>

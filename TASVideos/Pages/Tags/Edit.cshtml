@@ -7,9 +7,7 @@
 <top-button-bar>
 	<delete-button condition="!Model.InUse"
 				   asp-href="/Tags/Edit/@(Model.Tag.Id)/Delete"
-				   warning-message="Are you sure you want to remove this tag?">
-		Delete
-	</delete-button>
+				   warning-message="Are you sure you want to remove this tag?"></delete-button>
 	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Tag.Code">
 		Tag in Use
 	</a>

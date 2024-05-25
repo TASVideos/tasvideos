@@ -15,9 +15,7 @@
 			<td>
 				<delete-button
 					permission="RejectionReasonMaintenance"
-					condition="@reason.SubmissionCount == 0" asp-href="/Submissions/RejectionReasons/Index?handler=Delete&id=@reason.Id">
-					<i class="fa fa-remove"></i>
-				</delete-button>
+					condition="@reason.SubmissionCount == 0" asp-href="/Submissions/RejectionReasons/Index?handler=Delete&id=@reason.Id"></delete-button>
 				@reason.Reason
 			</td>
 			<td>

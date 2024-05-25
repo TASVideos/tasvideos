@@ -6,9 +6,7 @@
 <top-button-bar>
 	<delete-button condition="!Model.InUse"
 					asp-href="/Systems/Edit/@(Model.System.Id)/Delete"
-					warning-message="Are you sure you want to remove this system?">
-		Delete
-	</delete-button>
+					warning-message="Are you sure you want to remove this system?"></delete-button>
 	<span condition="Model.InUse">System in Use</span>
 </top-button-bar>
 <form method="post">

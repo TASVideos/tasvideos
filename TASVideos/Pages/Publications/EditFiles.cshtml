@@ -19,10 +19,8 @@
 			<td>@file.Type</td>
 			<td>@file.Description</td>
 			<td-action-column>
-				<delete-button warning-message="Are you sure you want to remove this file?"
-							   asp-href="/Publications/EditFiles/@Model.Id/Delete/@file.Id">
-					<span class="fa fa-times"></span> Delete
-				</delete-button>
+				<delete-button class="btn-sm" warning-message="Are you sure you want to remove this file?"
+							   asp-href="/Publications/EditFiles/@Model.Id/Delete/@file.Id"></delete-button>
 			</td-action-column>
 		</tr>
 	}
