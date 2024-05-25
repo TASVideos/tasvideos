@@ -97,6 +97,7 @@ public class SubmitModel(
 
 	public async Task<IActionResult> OnPost()
 	{
+		await using var dbTransaction = await db.Database.BeginTransactionAsync();
 		var nextWindow = await queueService.ExceededSubmissionLimit(User.GetUserId());
 		if (nextWindow is not null)
 		{
@@ -176,7 +177,7 @@ public class SubmitModel(
 
 		submission.TopicId = await tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
 		await db.SaveChangesAsync();
-
+		await dbTransaction.CommitAsync();
 		await publisher.AnnounceNewSubmission(submission);
 
 		return BaseRedirect($"/{submission.Id}S");
