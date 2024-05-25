@@ -62,6 +62,7 @@
 	<fieldset>
 		<label asp-for="Role.SelectedPermissions" class="form-control-label"></label>
 		<select asp-for="Role.SelectedPermissions" size="@(Math.Min(Model.Role.SelectedPermissions.Count, 7).ToString())" asp-items="Model.AvailablePermissions" class="form-select"></select>
+		<span asp-validation-for="Role.SelectedPermissions" class="text-danger"></span>
 	</fieldset>
 	<fieldset class="d-none" id="assignable-permissions-section">
 		<label asp-for="Role.SelectedAssignablePermissions" class="form-control-label"></label>
