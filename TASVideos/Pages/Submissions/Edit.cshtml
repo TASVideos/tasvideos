@@ -5,13 +5,11 @@
 	var canEditPublicationClass = User.Has(PermissionTo.JudgeSubmissions)
 		&& Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted);
 }
-<a condition="Model.CanDelete" asp-page="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">
-	<i class="fa fa-remove"></i> Delete
-</a>
-<div class="text-danger">
-	@Html.ValidationSummary()
-</div>
-
+<top-button-bar condition="Model.CanDelete">
+	<a  asp-page="Delete" asp-route-id="@Model.Id" class="btn btn-danger btn-sm">
+		<i class="fa fa-remove"></i> Delete
+	</a>
+</top-button-bar>
 <form method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count <= 1" type="hidden" asp-for="Submission.Status" />
 	<row>
