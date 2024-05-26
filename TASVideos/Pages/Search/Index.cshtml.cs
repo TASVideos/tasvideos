@@ -40,7 +40,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				.ThatAreNotDeleted()
 				.ThatAreCurrent()
 				.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
-				.OrderByDescending(w => EF.Functions.ToTsVector(w.Markup).Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
+				.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
 				.Skip(skip)
 				.Take(PageSize + 1)
 				.Select(w => new PageSearch(EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(w.Markup), w.PageName))
