@@ -121,9 +121,8 @@ public class CreateModel(
 			ForumId = ForumId
 		};
 
+		await using var dbTransaction = await db.Database.BeginTransactionAsync();
 		db.ForumTopics.Add(topic);
-
-		// TODO: catch DbConcurrencyException
 		await db.SaveChangesAsync();
 
 		await forumService.CreatePost(new PostCreateDto(
@@ -136,13 +135,14 @@ public class CreateModel(
 				new PollCreateDto(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
 		}
 
+		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
+		await dbTransaction.CommitAsync();
+
 		await publisher.SendForum(
 			forum.Restricted,
 			$"[New Topic]({{0}}) by {User.Name()}",
 			$"{forum.ShortName}: {Title}",
 			$"Forum/Topics/{topic.Id}");
-
-		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 
 		return RedirectToPage("Index", new { topic.Id });
 	}
