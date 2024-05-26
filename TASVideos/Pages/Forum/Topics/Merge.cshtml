@@ -3,6 +3,7 @@
 @{
 	ViewData.SetTitle($"Merging Topic: {Model.Topic.Title}");
 }
+
 <partial Name="_ForumHeader" />
 <h4>
 	Merging Topic:
@@ -37,14 +38,12 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script>
-		{
-			let forumModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationForumId)');
-			let topicModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationTopicId)');
+		let forumModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationForumId)');
+		let topicModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationTopicId)');
 
-			forumModel.onchange = function () {
-				const url = `/Forum/Topics/Merge/@(Model.Id)?handler=TopicsForForum&forumId=${this.value}`;
-				fetch(url).then(r => r.text()).then(t => topicModel.innerHTML = t);
-			}
+		forumModel.onchange = function () {
+			const url = `/Forum/Topics/Merge/@(Model.Id)?handler=TopicsForForum&forumId=${this.value}`;
+			fetch(url).then(r => r.text()).then(t => topicModel.innerHTML = t);
 		}
 	</script>
 }

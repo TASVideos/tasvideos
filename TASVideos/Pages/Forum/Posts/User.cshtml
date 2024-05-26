@@ -3,6 +3,7 @@
 @{
 	ViewData.SetTitle($"Posts for {Model.UserName}");
 }
+
 <partial Name="_ForumHeader" />
 <partial name="_Pager" model="Model.Posts" />
 @foreach (var post in Model.Posts)

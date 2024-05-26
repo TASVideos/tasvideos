@@ -4,11 +4,10 @@
 	ViewData.SetTitle($"Poll Results for {Model.Poll.TopicTitle}");
 }
 <partial Name="_ForumHeader" />
-<div>
+<top-button-bar>
 	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Poll.TopicId" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back</a>
-</div>
+</top-button-bar>
 <hr />
-
 <div>
 	<forum-markup markup="@Model.Poll.Question" enable-bb-code="true"></forum-markup>
 </div>

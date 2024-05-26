@@ -3,13 +3,14 @@
 @{
 	ViewData.SetTitle($"TASVideos Forum {Model.Forum.Name}");
 }
+
 <partial Name="_ForumHeader" />
-<fieldset>
+<top-button-bar>
 	<delete-button
-		condition="@Model.CanDelete"
+		condition="Model.CanDelete"
 		asp-href="/Forum/Subforum/Edit/@Model.Id?handler=Delete"
 		class="float-end"></delete-button>
-</fieldset>
+</top-button-bar>
 <form method="post">
 	<row>
 		<column lg="6">
@@ -24,7 +25,7 @@
 				<span asp-validation-for="Forum.CategoryId" class="text-danger"></span>
 			</fieldset>
 		</column>
-		<column lg="6" class="mt-lg-0 mt-2">
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Forum.ShortName"></label>
 				<small>
@@ -41,10 +42,12 @@
 			</fieldset>
 		</column>
 	</row>
-	<fullrow class="mt-2">
-		<label asp-for="Forum.Description"></label>
-		<textarea asp-for="Forum.Description" class="form-control" rows="4"></textarea>
-		<span asp-validation-for="Forum.Description" class="text-danger"></span>
+	<fullrow>
+		<fieldset>
+			<label asp-for="Forum.Description"></label>
+			<textarea asp-for="Forum.Description" class="form-control" rows="4"></textarea>
+			<span asp-validation-for="Forum.Description" class="text-danger"></span>
+		</fieldset>
 	</fullrow>
 	<form-button-bar>
 		<submit-button></submit-button>
