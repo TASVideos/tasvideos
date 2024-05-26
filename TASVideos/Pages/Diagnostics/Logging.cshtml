@@ -1,10 +1,11 @@
 ﻿@page
-@using Microsoft.Extensions.Logging
 @model LoggingModel
+@using Microsoft.Extensions.Logging
 @inject ILogger<LoggingModel> Logger;
 @{
-	ViewData.SetTitle("Loggging");
+	ViewData.SetTitle("Logging");
 }
+
 <ul>
 	<li><a asp-page="Index">Diagnostics</a></li>
 </ul>

@@ -1,12 +1,15 @@
 ﻿@page "{handler?}"
-@{ ViewData.SetTitle("System Information"); }
-@model IndexModel
 @using System.Diagnostics
 @using Microsoft.Extensions.Hosting
 @inject ApplicationDbContext Db
 @inject IHostEnvironment Env
 @inject ICacheService Cache
 @inject AppSettings Settings;
+@model IndexModel
+@{
+	ViewData.SetTitle("System Information");
+}
+
 @functions {
 	private static string GetProcessInfo()
 	{
@@ -28,6 +31,7 @@
 		return Cache.TryGetValue(key, out string _);
 	}
 }
+
 <ul>
 	<li><a asp-page="CacheControl">Cache Control</a></li>
 	<li><a asp-page="ExternalDependencies">External Dependencies</a></li>

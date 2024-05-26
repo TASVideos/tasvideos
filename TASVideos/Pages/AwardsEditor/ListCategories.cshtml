@@ -4,8 +4,10 @@
 	ViewData.SetTitle("Award Categories");
 }
 
-<a asp-page="CreateCategory" class="btn btn-primary mb-2"><i class="fa fa-plus"></i> Create</a>
-<a asp-page="Index" asp-route-year="@DateTime.UtcNow.Year" class="btn btn-secondary float-end">Awards Editor</a>
+<top-button-bar>
+	<a asp-page="Index" asp-route-year="@DateTime.UtcNow.Year" class="btn btn-secondary">Awards Editor</a>
+	<add-button asp-page="CreateCategory"></add-button>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>Description</th>
