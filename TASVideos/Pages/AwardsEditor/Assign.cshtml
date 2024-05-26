@@ -7,14 +7,14 @@
 <form method="post">
 	<a condition="Model.ShowUpload" asp-page="UploadImage" asp-route-year="@Model.Year" class="btn btn-primary mb-2"><i class="fa fa-upload"></i> Upload</a>
 	<row>
-		<column md="5">
+		<column md="6">
 			<fieldset>
 				<label asp-for="AwardToAssign.Award"></label>
 				<select asp-for="AwardToAssign.Award" asp-items="Model.AvailableAwardCategories" class="form-select"></select>
 				<span asp-validation-for="AwardToAssign.Award" class="text-danger"></span>
 			</fieldset>
 		</column>
-		<column md="5" class="offset-md-2">
+		<column md="6">
 			<partial name="_ImagePreview" model="@(Html.IdFor(m => m.AwardToAssign.Award), Model.Year)" />
 		</column>
 	</row>

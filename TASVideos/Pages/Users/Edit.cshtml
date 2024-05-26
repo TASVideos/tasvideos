@@ -190,17 +190,17 @@
 	<select asp-for="UserToEdit.SelectedRoles" data-multiselect="true" asp-items="Model.AvailableRoles" class="form-select"></select>
 	@await Html.RenderWiki(SystemWiki.UserEditRole)
 	<row>
-		<column md="5">
+		<column md="6">
 			<label asp-for="UserToEdit.Avatar" class="form-control-label"></label>
 			<input type="text" asp-for="UserToEdit.Avatar" class="form-control" />
 		</column>
-		<column class="offset-md-2" md="5" show="!string.IsNullOrWhiteSpace(Model.UserToEdit.Avatar)">
+		<column md="6" show="!string.IsNullOrWhiteSpace(Model.UserToEdit.Avatar)">
 			<label class="form-control-label">Preview</label><br />
 			<img id="avatar-img" src="@Model.UserToEdit.Avatar" class="float-start m-2"/>
 		</column>
 	</row>
 	<row>
-		<column md="5">
+		<column md="6">
 			<label asp-for="UserToEdit.MoodAvatarUrlBase"></label>
 			<input type="text" asp-for="UserToEdit.MoodAvatarUrlBase" class="form-control" />
 		</column>

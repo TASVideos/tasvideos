@@ -10,7 +10,7 @@
 <form method="post">
 	<input type="hidden" asp-for="UserToEdit.UserName" />
 	<row>
-		<column md="5">
+		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.Email"></label>
 				<input asp-for="UserToEdit.Email" class="form-control" />
@@ -26,7 +26,6 @@
 			</fieldset>
 		</column>
 	</row>
-	<hr/>
 	<form-button-bar>
 		<submit-button id="submit-btn"></submit-button>
 		<cancel-button asp-page="Edit" asp-route-id="@Model.Id"></cancel-button>
