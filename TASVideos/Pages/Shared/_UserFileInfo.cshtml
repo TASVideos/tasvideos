@@ -121,7 +121,7 @@
 			<cardbody>
 				<wiki-markup markup="@comment.Text" id="view-comment-@comment.Id"></wiki-markup>
 				<div class="d-none" id="edit-comment-@comment.Id">
-					<form method="POST" asp-page="/UserFiles/Index" asp-route-handler="EditComment" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()">
+					<form method="post" asp-page="/UserFiles/Index" asp-route-handler="EditComment" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()">
 						<input type="hidden" name="commentId" value="@comment.Id" />
 						<textarea name="comment" class="form-control">@comment.Text</textarea>
 						<submit-button class="btn-sm mt-2"></submit-button>
@@ -142,7 +142,7 @@
 			<h4>Comment:</h4>
 		</cardheader>
 		<cardbody>
-			<form method="POST" asp-page="/UserFiles/Index" asp-route-handler="Comment" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()">
+			<form method="post" asp-page="/UserFiles/Index" asp-route-handler="Comment" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()">
 				<input type="hidden" name="fileId" value="@Model.Id "/>
 				<label class="form-control-label"></label>
 				<textarea class="form-control" name="comment" maxlength="3500"></textarea>

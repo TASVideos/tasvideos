@@ -4,14 +4,14 @@
 	ViewData.SetTitle($"Editing Flag: {Model.Flag.Token}");
 }
 
-<div class="text-end">
+<top-button-bar>
 	<delete-button condition="!Model.InUse"
 			asp-href="/Flags/Edit/@(Model.Flag.Id)/Delete"
 			warning-message="Are you sure you want to remove this flag?"></delete-button>
 	<a class="btn btn-secondary" condition="Model.InUse" asp-page="/Publications/Index" asp-route-query="@Model.Flag.Token">
 		Flag in Use
 	</a>
-</div>
+</top-button-bar>
 
 <form method="post">
 	<row>

@@ -49,7 +49,7 @@
 	asp-route-id="@Model.Id"
 	asp-route-topictitle="@Model.Title"
 	asp-route-locked="@(!Model.IsLocked)"
-	method="POST"
+	method="post"
 	style="display: inline">
 	<submit-button btn-class-override="@(Model.IsLocked ? "btn-success" : "btn-warning")" class="btn-sm">
 		<span condition="Model.IsLocked" title="Unlock this topic">

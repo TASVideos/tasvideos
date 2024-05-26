@@ -7,6 +7,7 @@
 @section PageTitle {
 	Posting to Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId">@Model.TopicTitle</a>
 }
+
 <show-more class="mb-2" max-height="0" show-text="Show previous posts" reverse>
 	@foreach (var post in Model.PreviousPosts)
 	{
@@ -14,7 +15,7 @@
 	}
 </show-more>
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
-<form method="POST">
+<form method="post">
 	<input type="hidden" asp-for="TopicTitle" />
 	<row>
 		<column md="6">
