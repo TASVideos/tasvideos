@@ -1,4 +1,12 @@
-﻿function searchUsers(searchBoxElemId) {
+﻿document.addEventListener("DOMContentLoaded", wireUpUserSearchBoxes);
+function wireUpUserSearchBoxes() {
+	const userSearches = Array.from(document.querySelectorAll('[data-user-search="true"]'));
+	userSearches.forEach(search => {
+		searchUsers(search.id);
+	})
+}
+
+function searchUsers(searchBoxElemId) {
 	const searchBoxElem = document.getElementById(searchBoxElemId);
 	const formElem = searchBoxElem.closest("form");
 	const submitBtnElem = formElem.querySelector("button[type='Submit']");
@@ -15,13 +23,11 @@
 		if (submitBtnElem) {
 			const valid = validNames.has(getCurrentValue().toUpperCase()) && getCurrentValue().length > 0;
 			if (valid) {
-				console.log('valid')
 				submitBtnElem.removeAttribute('disabled');
 				submitBtnElem.removeAttribute('tabIndex');
 				submitBtnElem.removeAttribute('aria-disabled');
 				submitBtnElem.classList.remove('disabled');
 			} else {
-				console.log('invalid')
 				submitBtnElem.setAttribute('disabled', 'disabled');
 				submitBtnElem.setAttribute('tabIndex', '-1');
 				submitBtnElem.setAttribute('aria-disabled', 'disabled');

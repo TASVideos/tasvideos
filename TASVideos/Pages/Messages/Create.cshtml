@@ -27,7 +27,7 @@
 		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser" class="form-control-label"></label>
-				<input type="text" asp-for="ToUser" class="form-control" autocomplete="off" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
+				<input type="text" asp-for="ToUser" data-user-search="true" class="form-control" autocomplete="off" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
 				<span asp-validation-for="ToUser" class="text-danger"></span>
 			</div>
 			<label for="group-select">To Group</label>
@@ -58,14 +58,12 @@
 	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/user-search.js"></script>
 	<script>
-		const userBoxElemId = '@Html.IdFor(m => m.ToUser)';
 		const userFormGroup = document.getElementById('user-form-group');
-		const userBox = document.getElementById(userBoxElemId);
+		const userBox = document.getElementById('@Html.IdFor(m => m.ToUser)');
 		const formSubmitBtn = userBox
 			.closest('form')
 			.querySelector("button[type='Submit']");
 
-		searchUsers(userBoxElemId);
 		if (document.getElementById('quote-btn')) {
 			document.getElementById('quote-btn').onclick = function () {
 				const text = document.getElementById('replying-to-text').innerHTML;
