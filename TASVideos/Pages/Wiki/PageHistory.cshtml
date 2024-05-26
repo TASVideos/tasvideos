@@ -1,15 +1,12 @@
 @page
-@using TASVideos.TagHelpers
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model PageHistoryModel
-
 @{
 	ViewData.SetTitle("Page History For " + Model.PageName);
 	bool hasDiff = Model.FromRevision.HasValue && Model.ToRevision.HasValue;
 	var canEdit = WikiHelper.UserCanEditWikiPage(Model.Path, User.Name(), User.Permissions());
 }
 
-@functions{
+@functions {
 	string RowStyles(int revision)
 	{
 		if (revision == Model.FromRevision)
@@ -41,17 +38,13 @@
 	}
 }
 
-<a class="btn btn-secondary" href="/@WikiHelper.ProcessLink(Model.PageName)"><span class="fa fa-arrow-left"></span> Back to Page</a>
-<div id="diff-view" class="mt-3 border border-secondary">
-
-</div>
-<div id="diff-options" condition="hasDiff">
-	<hr />
+<a class="btn btn-secondary my-2" href="/@WikiHelper.ProcessLink(Model.PageName)"><span class="fa fa-arrow-left"></span> Back to Page</a>
+<div id="diff-view" class="mt-3 border border-secondary d-none"></div>
+<div id="diff-options" condition="hasDiff" class="py-3">
 	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff()" /> Inline</label>
 	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff()" /> Side by Side</label>
 	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
 </div>
-<hr />
 <standard-table>
 	<thead>
 		<tr>
@@ -137,6 +130,7 @@
 			const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
 			const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
 			const diffElem = document.getElementById('diff-view');
+			diffElem.classList.remove('d-none');
 
 			renderDiff(
 				{ text: leftMarkup, name: "r@(Model.FromRevision ?? 0)" },
