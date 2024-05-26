@@ -6,6 +6,13 @@ namespace TASVideos.Extensions;
 
 public static class ViewDataDictionaryExtensions
 {
+	public static void IgnorePageTitle(this ViewDataDictionary viewData)
+	{
+		viewData["IgnorePageTitle"] = true;
+	}
+
+	public static bool UsePageTitle(this ViewDataDictionary viewData) => viewData["IgnorePageTitle"] is not true;
+
 	public static string UniqueId(this ViewDataDictionary viewData)
 	{
 		return "_" + Guid.NewGuid().ToString().Replace("-", "").ToLower();

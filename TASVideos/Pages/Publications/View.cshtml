@@ -1,6 +1,7 @@
 ﻿@page "{id}"
 @model ViewModel
 @{
+	ViewData.IgnorePageTitle();
 	ViewData.SetTitle($"{Model.Publication.Title} - Movie #{Model.Id}");
 	ViewData.SetMetaTags(new MetaTag
 	{
@@ -10,8 +11,6 @@
 		UseTwitterCard = true
 	});
 }
-
-@section PageTitle { }
 
 <partial name="_MovieModule" model="Model.Publication" />
 <hr />

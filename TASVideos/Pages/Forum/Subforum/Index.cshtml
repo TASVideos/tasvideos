@@ -6,14 +6,12 @@
 }
 
 @section PageTitle {
-	<div class="container mb-2">
-		<nav aria-label="breadcrumb" class="card card-header">
-			<ol class="breadcrumb m-0">
-				<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
-				<li class="breadcrumb-item active" aria-current="page"><h1>@Model.Forum.Name</h1></li>
-			</ol>
-		</nav>
-	</div>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
+			<li class="breadcrumb-item active" aria-current="page">@Model.Forum.Name</li>
+		</ol>
+	</nav>
 }
 <partial Name="_ForumHeader" />
 <top-button-bar>

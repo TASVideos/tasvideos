@@ -2,11 +2,7 @@
 @model EditModel
 @{
 	ViewData.SetTitle($"Edit Movie #{Model.Id}");
-}
-@section PageTitle {
-	<div class="container mb-2">
-		<h1 class="card card-header d-block">@Model.Publication.Title</h1>
-	</div>
+	ViewData.SetHeading(Model.Publication.Title);
 }
 
 <fullrow>

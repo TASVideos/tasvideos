@@ -61,13 +61,13 @@
 }
 
 <div class="alert alert-@(statusColor)" role="alert">
-	<h4 condition="!Model.IsPublished" class="alert-heading">
+	<div condition="!Model.IsPublished" class="lead">
 		Status: @Model.Submission.Status.EnumDisplayName()
 		<small condition="Model.Submission.Status == SubmissionStatus.Rejected">
 			<span condition="!string.IsNullOrWhiteSpace(Model.Submission.RejectionReasonDisplay)">(Reason: @Model.Submission.RejectionReasonDisplay)</span>
 		</small>
-	</h4>
-	<h4 condition="Model.IsPublished" class="alert-heading">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></h4>
+	</div>
+	<div condition="Model.IsPublished" class="lead">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></div>
 	<div condition="QueueService.HoursRemainingForJudging(Model.Submission) > 0">
 		(Available for judging in @QueueService.HoursRemainingForJudging(Model.Submission) hours)
 	</div>

@@ -1,7 +1,6 @@
 ﻿@page
-@section PageTitle {
-}
 @{
+	ViewData.IgnorePageTitle();
 	bool canEdit = WikiHelper.UserCanEditWikiPage(SystemWiki.FrontPage, User.Name(), User.Permissions());
 }
 

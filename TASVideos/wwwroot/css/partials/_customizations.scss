@@ -78,6 +78,19 @@ a {
 	}
 }
 
+.page-title {
+	font-size: 1.375em;
+	line-height: 1.375em;
+
+	.breadcrumb {
+		font-size: unset;
+
+		& > .breadcrumb-item {
+			font-size: unset;
+		}
+	}
+}
+
 h1 {
 	font-size: 1.25em;
 

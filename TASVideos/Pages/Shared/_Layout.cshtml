@@ -84,11 +84,7 @@
 		</div>
 	</nav>
 
-	@if (IsSectionDefined("PageTitle"))
-	{
-		@await RenderSectionAsync("PageTitle")
-	}
-	else
+	@if (ViewData.UsePageTitle())
 	{
 		var heading = ViewData.GetHeading();
 		int? prev = null;
@@ -104,11 +100,18 @@
 		}
 
 		<div class="container mb-2">
-			<h1 class="card card-header d-block">
+			<div class="page-title card card-body d-block">
 				<a condition="prev.HasValue" href="@(prev + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-left"></i></a>
-				<span>@heading</span>
+				@if (IsSectionDefined("PageTitle"))
+				{
+					@await RenderSectionAsync("PageTitle")
+				}
+				else
+				{
+					@heading
+				}
 				<a condition="next.HasValue" class="float-end" href="@(next + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-right"></i></a>
-			</h1>
+			</div>
 		</div>
 	}
 

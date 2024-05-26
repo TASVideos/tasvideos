@@ -6,9 +6,7 @@
 }
 
 @section PageTitle {
-	<div class="container mb-2">
-		<h1 class="card card-header d-block">Editing Post in Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId">@Model.Post.TopicTitle</a></h1>
-	</div>
+	Editing Post in Topic: <a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId">@Model.Post.TopicTitle</a>
 }
 <show-more max-height="0" show-text="Show previous posts" reverse condition="@Model.PreviousPosts.Any()" class="mb-2">
 	@foreach (var post in Model.PreviousPosts)

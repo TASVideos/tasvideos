@@ -33,39 +33,36 @@
 }
 
 @section PageTitle {
-	<div class="container mb-2">
-		<nav aria-label="breadcrumb" class="card card-header d-block">
-			<ol class="breadcrumb m-0">
-				<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
-				<li class="breadcrumb-item"><a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a></li>
-				<li class="breadcrumb-item active" aria-current="page">
-					<h1>
-						@(Model.Topic.Title)
-						<span
-							condition="Model.Topic.GameId.HasValue"
-							class="float-end">
-							Game: <a asp-page="/Games/Index" asp-route-id="@Model.Topic.GameId">
-								@Model.Topic.GameName
-							</a>
-						</span>
-					</h1>
-				</li>
-			</ol>
-
-		</nav>
-		<h6 condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</h6>
-	</div>
+	<nav aria-label="breadcrumb">
+		<ol class="breadcrumb m-0">
+			<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>
+			<li class="breadcrumb-item"><a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a></li>
+			<li class="breadcrumb-item active" aria-current="page">
+				<h1>
+					@(Model.Topic.Title)
+					<span
+						condition="Model.Topic.GameId.HasValue"
+						class="float-end">
+						Game:
+						<a asp-page="/Games/Index" asp-route-id="@Model.Topic.GameId">
+							@Model.Topic.GameName
+						</a>
+					</span>
+				</h1>
+			</li>
+		</ol>
+	</nav>
 }
 
 <partial Name="_ForumHeader" />
 <div class="row mb-2">
 	<div class="col-12">
-		<partial name="_TopicActionBar" model="Model.Topic" />
-		<a condition="User.Has(PermissionTo.PostInLockedTopics)
-			|| (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
-		   asp-page="/Forum/Posts/Create"
-		   asp-route-topicId="@Model.Id"
-		   class="btn btn-primary btn-sm float-end">
+		<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2"><i class="fa fa-lock"></i> Locked</p>
+		<partial name="_TopicActionBar" model="Model.Topic"/>
+		<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
+			asp-page="/Forum/Posts/Create"
+			asp-route-topicId="@Model.Id"
+			class="btn btn-primary btn-sm float-end">
 			<span class="fa fa-plus"></span> New Post
 		</a>
 	</div>
@@ -110,12 +107,12 @@
 <partial name="_Pager" model="Model.Topic.Posts" />
 <hr class="mb-1"/>
 <fullrow class="mt-2">
-	<partial name="_TopicActionBar" model="Model.Topic" />
-	<a condition="User.Has(PermissionTo.PostInLockedTopics)
-		|| (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
-	   asp-page="/Forum/Posts/Create"
-	   asp-route-topicId="@Model.Id"
-	   class="btn btn-primary btn-sm float-end">
+	<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2"><i class="fa fa-lock"></i> Locked</p>
+	<partial name="_TopicActionBar" model="Model.Topic"/>
+	<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
+		asp-page="/Forum/Posts/Create"
+		asp-route-topicId="@Model.Id"
+		class="btn btn-primary btn-sm float-end">
 		<span class="fa fa-plus"></span> New Post
 	</a>
 	<nav aria-label="breadcrumb" class="card card-header d-block mt-2">
@@ -127,7 +124,6 @@
 			</li>
 		</ol>
 	</nav>
-	<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 m-0"><i class="fa fa-lock"></i> Locked</p>
 </fullrow>
 
 <span condition="@(Model.SaveActivity)" id="serverUnixTime" class="d-none">@DateTime.UtcNow.UnixTimestamp()</span>

@@ -9,11 +9,7 @@
 		.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Count());
 }
 @section PageTitle {
-	<div class="container mb-2">
-		<h1 class="card card-header d-block">
-			Publisher <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
-		</h1>
-	</div>
+	Publisher <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
 }
 
 <label>Total: @total</label>

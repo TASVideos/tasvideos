@@ -17,11 +17,7 @@
 	};
 }
 @section PageTitle {
-	<div class="container mb-2">
-		<h1 class="card card-header d-block">
-			Judge <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
-		</h1>
-	</div>
+	Judge <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
 }
 <label>Total: @total</label><br />
 <div>Accepted: @acceptedTotal (@acceptedTotal.ToPercent(total)%)</div>
