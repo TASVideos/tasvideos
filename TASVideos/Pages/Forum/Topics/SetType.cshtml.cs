@@ -61,7 +61,7 @@ public class SetTypeModel(ApplicationDbContext db) : BaseForumModel
 
 		topic.Type = Type;
 
-		await ConcurrentSave(db, $"Topic set to {Type}", "Unable to set the topic type");
+		SetMessage(await db.TrySaveChanges(), $"Topic set to {Type}", "Unable to set the topic type");
 		return RedirectToPage("Index", new { topic.Id });
 	}
 }

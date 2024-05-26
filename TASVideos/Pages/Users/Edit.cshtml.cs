@@ -106,9 +106,10 @@ public class EditModel(
 
 		db.UserRoles.RemoveRange(currentRoles);
 
-		var result = await ConcurrentSave(db, "", $"Unable to update user data for {user.UserName}");
-		if (!result)
+		var result = await db.TrySaveChanges();
+		if (result != SaveResult.Success)
 		{
+			ErrorStatusMessage($"Unable to update user data for {user.UserName}");
 			return BasePageRedirect("List");
 		}
 
@@ -119,9 +120,10 @@ public class EditModel(
 				RoleId = r
 			}));
 
-		var saveResult2 = await ConcurrentSave(db, "", $"Unable to update user data for {user.UserName}");
-		if (!saveResult2)
+		var saveResult2 = await db.TrySaveChanges();
+		if (saveResult2 != SaveResult.Success)
 		{
+			ErrorStatusMessage($"Unable to update user data for {user.UserName}");
 			return BasePageRedirect("List");
 		}
 
@@ -188,7 +190,7 @@ public class EditModel(
 		}
 
 		user.LockoutEnd = null;
-		await ConcurrentSave(db, $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
+		SetMessage(await db.TrySaveChanges(), $"User {user.UserName} unlocked", $"Unable to unlock user {user.UserName}");
 
 		return BaseReturnUrlRedirect();
 	}

@@ -135,7 +135,11 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		try
 		{
-			await ConcurrentSave(db, $"Game Version {Id} updated", $"Unable to update Game Version {Id}");
+			await db.SaveChangesAsync();
+		}
+		catch (DbUpdateConcurrencyException)
+		{
+			ErrorStatusMessage($"Unable to update Game Version {Id}");
 		}
 		catch (DbUpdateException ex)
 		{
@@ -143,6 +147,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
+		SuccessStatusMessage($"Game Version {Id} updated");
 		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 			? RedirectToPage("List", new { gameId = GameId })
 			: BaseReturnUrlRedirect($"?GameId={GameId}&GameVersionId={version.Id}");
@@ -162,7 +167,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(db, $"Game Version {Id} deleted", $"Unable to delete Game Version {Id}");
+		SetMessage(await db.TrySaveChanges(), $"Game Version {Id} deleted", $"Unable to delete Game Version {Id}");
 		return BasePageRedirect("List", new { gameId = GameId });
 	}
 

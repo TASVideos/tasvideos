@@ -99,8 +99,9 @@ public class AdditionalMoviesModel(
 
 		string log = $"Added new movie file: {DisplayName}";
 		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-		var result = await ConcurrentSave(db, log, "Unable to add file");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, log, "Unable to add file");
+		if (result.IsSuccess())
 		{
 			await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {PublicationTitle}");
 		}
@@ -118,9 +119,9 @@ public class AdditionalMoviesModel(
 
 			string log = $"Removed movie file {file.Path}";
 			await publicationMaintenanceLogger.Log(file.PublicationId, User.GetUserId(), log);
-			var result = await ConcurrentSave(db, log, "Unable to delete file");
-
-			if (result)
+			var result = await db.TrySaveChanges();
+			SetMessage(result, log, "Unable to delete file");
+			if (result.IsSuccess())
 			{
 				await publisher.SendPublicationEdit(User.Name(), Id, $"{log}");
 			}

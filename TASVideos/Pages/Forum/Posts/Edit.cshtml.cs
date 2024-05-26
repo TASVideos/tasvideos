@@ -142,8 +142,9 @@ public class EditModel(
 		forumPost.PosterMood = Post.Mood;
 		forumPost.PostEditedTimestamp = DateTime.UtcNow;
 
-		var result = await ConcurrentSave(db, $"Post {Id} edited", "Unable to edit post");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, $"Post {Id} edited", "Unable to edit post");
+		if (result.IsSuccess())
 		{
 			forumService.CacheEditedPostActivity(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
 
@@ -200,9 +201,9 @@ public class EditModel(
 			topicDeleted = true;
 		}
 
-		var result = await ConcurrentSave(db, $"Post {Id} deleted", $"Unable to delete post {Id}");
-
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, $"Post {Id} deleted", $"Unable to delete post {Id}");
+		if (result.IsSuccess())
 		{
 			forumService.ClearLatestPostCache();
 			forumService.ClearTopicActivityCache();
@@ -261,9 +262,9 @@ public class EditModel(
 			topicDeleted = true;
 		}
 
-		var result = await ConcurrentSave(db, $"Post {Id} deleted", $"Unable to delete post {Id}");
-
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, $"Post {Id} deleted", $"Unable to delete post {Id}");
+		if (result.IsSuccess())
 		{
 			forumService.ClearLatestPostCache();
 			forumService.ClearTopicActivityCache();

@@ -52,14 +52,7 @@ public class RateModel(ApplicationDbContext db, IRatingService ratingService) : 
 
 		var ratingValue = RatingString.AsRatingDouble(Rating);
 		var result = await ratingService.UpdateUserRating(User.GetUserId(), Id, ratingValue);
-		if (result)
-		{
-			SuccessStatusMessage($"{Title} successfully rated.");
-		}
-		else
-		{
-			ErrorStatusMessage($"Unable to rate {Title}");
-		}
+		SetMessage(result, $"{Title} successfully rated.", $"Unable to rate {Title}");
 
 		return BasePageRedirect("/Publications/Rate", new { Id });
 	}

@@ -254,8 +254,9 @@ public class IndexModel(
 			topic.IsLocked = locked;
 
 			var lockedState = locked ? "LOCKED" : "UNLOCKED";
-			var result = await ConcurrentSave(db, $"Topic {topicTitle} set to locked {lockedState}", $"Unable to set {topicTitle} to status of {lockedState}");
-			if (result)
+			var result = await db.TrySaveChanges();
+			SetMessage(result, $"Topic {topicTitle} set to locked {lockedState}", $"Unable to set {topicTitle} to status of {lockedState}");
+			if (result.IsSuccess())
 			{
 				await publisher.SendForum(
 					topic.Forum!.Restricted,

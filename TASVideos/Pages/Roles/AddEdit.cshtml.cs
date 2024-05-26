@@ -78,7 +78,7 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 		}
 
 		await AddUpdateRole(Role);
-		await ConcurrentSave(db, $"Role {Id} updated", $"Unable to update Role {Id}");
+		SetMessage(await db.TrySaveChanges(), $"Role {Id} updated", $"Unable to update Role {Id}");
 
 		return BasePageRedirect("List");
 	}
@@ -102,9 +102,9 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 		}
 
 		db.Roles.Attach(new Role { Id = Id.Value }).State = EntityState.Deleted;
-
-		var result = await ConcurrentSave(db, $"Role {Id} deleted", $"Unable to delete Role {Id}");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, $"Role {Id} deleted", $"Unable to delete Role {Id}");
+		if (result.IsSuccess())
 		{
 			await publisher.SendAdminMessage(PostGroups.UserManagement, $"Role {Id} deleted by {User.Name()}");
 		}

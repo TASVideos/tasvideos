@@ -59,8 +59,8 @@ public class CreateFramerateModel(IGameSystemService systemService, ApplicationD
 			Obsolete = false
 		});
 
-		await ConcurrentSave(
-			db,
+		SetMessage(
+			await db.TrySaveChanges(),
 			$"Framerate successfully created for {SystemCode}",
 			$"Unable to create Framerate for {SystemCode}");
 		await systemService.FlushCache();

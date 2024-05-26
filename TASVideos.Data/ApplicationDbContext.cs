@@ -157,19 +157,20 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	/// it will be caught no changes will be saved.  Only to be used if discarding the data is
 	/// an acceptable handling.
 	/// </summary>
-	public async Task<int> TrySaveChangesAsync(CancellationToken cancellationToken = default)
+	public async Task<SaveResult> TrySaveChanges(CancellationToken cancellationToken = default)
 	{
 		try
 		{
-			return await SaveChangesAsync(cancellationToken);
+			await SaveChangesAsync(cancellationToken);
+			return SaveResult.Success;
 		}
 		catch (DbUpdateConcurrencyException)
 		{
-			return 0;
+			return SaveResult.ConcurrencyFailure;
 		}
 		catch (DbUpdateException)
 		{
-			return 0;
+			return SaveResult.UpdateFailure;
 		}
 	}
 

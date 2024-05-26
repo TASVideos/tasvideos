@@ -204,8 +204,9 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		submission.GenerateTitle();
 
-		var result = await ConcurrentSave(db, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
-		if (result && !Catalog.MinorEdit)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
+		if (result.IsSuccess() && !Catalog.MinorEdit)
 		{
 			await publisher.SendGameManagement(
 				$"[{Id}S]({{0}}) Catalog edited by {User.Name()}",

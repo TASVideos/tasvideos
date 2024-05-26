@@ -76,8 +76,9 @@ public class EditClassModel(
 			var log = $"{Id}M Class changed from {originalClass} to {publicationClass.Name}";
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 
-			var result = await ConcurrentSave(db, log, "Unable to update Publication Class");
-			if (result)
+			var result = await db.TrySaveChanges();
+			SetMessage(result, log, "Unable to update Publication Class");
+			if (result.IsSuccess())
 			{
 				await publisher.SendPublicationClassChange(
 					Id, Title, User.Name(), originalClass, publicationClass.Name);

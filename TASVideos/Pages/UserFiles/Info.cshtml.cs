@@ -59,7 +59,7 @@ public class InfoModel(ApplicationDbContext db, IFileService fileService) : Base
 
 		file.Downloads++;
 
-		await db.TrySaveChangesAsync();
+		await db.TrySaveChanges();
 		return new DownloadResult(file);
 	}
 

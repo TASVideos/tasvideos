@@ -43,9 +43,7 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 		if (message is not null)
 		{
 			db.PrivateMessages.Remove(message);
-
-			// Do nothing on failure, likely the user has read at the same time
-			await ConcurrentSave(db, "", "");
+			await db.TrySaveChanges(); // Do nothing on failure, likely the user has read at the same time
 		}
 
 		return BasePageRedirect("SentBox");

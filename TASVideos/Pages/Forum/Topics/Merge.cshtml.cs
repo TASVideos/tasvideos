@@ -87,8 +87,9 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 
 		db.ForumTopics.Remove(originalTopic);
 
-		var result = await ConcurrentSave(db, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, $"Topic merged into {destinationTopic.Title}", "Unable to merge topic");
+		if (result.IsSuccess())
 		{
 			forumService.ClearLatestPostCache();
 			forumService.ClearTopicActivityCache();

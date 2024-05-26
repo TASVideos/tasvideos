@@ -446,8 +446,9 @@ public class EditModel(
 			submission.PublisherId = User.GetUserId();
 		}
 
-		var result = await ConcurrentSave(db, "", "Unable to claim");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, "", "Unable to claim");
+		if (result.IsSuccess())
 		{
 			await publisher.SendSubmissionEdit(Id, $"[Submission]({{0}}) {newStatus.EnumDisplayName()} by {User.Name()}", $"{submission.Title}");
 		}

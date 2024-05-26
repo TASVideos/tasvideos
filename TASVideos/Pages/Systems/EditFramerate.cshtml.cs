@@ -64,8 +64,8 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 		frameRate.Obsolete = FrameRate.Obsolete;
 
 		var displayName = $"{FrameRate.SystemCode} {FrameRate.RegionCode} {FrameRate.FrameRate.ToString(CultureInfo.InvariantCulture)}";
-		await ConcurrentSave(
-			db,
+		SetMessage(
+			await db.TrySaveChanges(),
 			$"FrameRate {displayName} updated.",
 			$"Unable to update {displayName} due to an unknown error");
 		await gameSystemService.FlushCache();
@@ -90,7 +90,7 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 		}
 
 		db.GameSystemFrameRates.Remove(frameRate);
-		await ConcurrentSave(db, $"FrameRate {Id} deleted", $"Unable to delete FrameRate {Id}");
+		SetMessage(await db.TrySaveChanges(), $"FrameRate {Id} deleted", $"Unable to delete FrameRate {Id}");
 
 		return BasePageRedirect("Edit", new { Id = systemId });
 	}

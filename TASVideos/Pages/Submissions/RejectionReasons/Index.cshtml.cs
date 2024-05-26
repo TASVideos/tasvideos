@@ -29,7 +29,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			DisplayName = displayName
 		});
 
-		await ConcurrentSave(db, $"reason: {displayName} created successfully", $"Unable to save reason: {displayName}");
+		SetMessage(await db.TrySaveChanges(), $"reason: {displayName} created successfully", $"Unable to save reason: {displayName}");
 		return BasePageRedirect("Index");
 	}
 
@@ -47,7 +47,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.SubmissionRejectionReasons.Remove(reason);
-		await ConcurrentSave(db, $"reason: {reason.DisplayName} deleted successfully", $"Unable to delete reason: {reason.DisplayName}");
+		SetMessage(await db.TrySaveChanges(), $"reason: {reason.DisplayName} deleted successfully", $"Unable to delete reason: {reason.DisplayName}");
 
 		return BasePageRedirect("Index");
 	}

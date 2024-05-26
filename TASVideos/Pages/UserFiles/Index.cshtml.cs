@@ -49,7 +49,7 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 			{
 				db.UserFiles.Remove(userFile);
 
-				await ConcurrentSave(db, $"{userFile.FileName} deleted", $"Unable to delete {userFile.FileName}");
+				SetMessage(await db.TrySaveChanges(), $"{userFile.FileName} deleted", $"Unable to delete {userFile.FileName}");
 			}
 		}
 
@@ -94,8 +94,9 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 			{
 				fileComment.Text = comment;
 
-				var result = await ConcurrentSave(db, "Comment edited", "Unable to edit comment");
-				if (result)
+				var result = await db.TrySaveChanges();
+				SetMessage(result, "Comment edited", "Unable to edit comment");
+				if (result.IsSuccess())
 				{
 					await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment edited by {User.Name()}");
 				}
@@ -117,8 +118,9 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 			if (fileComment is not null)
 			{
 				db.UserFileComments.Remove(fileComment);
-				var result = await ConcurrentSave(db, "Comment deleted", "Unable to delete comment");
-				if (result)
+				var result = await db.TrySaveChanges();
+				SetMessage(result, "Comment deleted", "Unable to delete comment");
+				if (result.IsSuccess())
 				{
 					await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment DELETED by {User.Name()}");
 				}

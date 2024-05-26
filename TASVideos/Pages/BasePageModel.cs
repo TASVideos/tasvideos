@@ -77,35 +77,18 @@ public class BasePageModel : PageModel
 		}
 	}
 
-	protected async Task<bool> ConcurrentSave(ApplicationDbContext db, string successMessage, string errorMessage)
+	protected void SetMessage(SaveResult result, string successMessage, string failureMessage)
 	{
-		try
+		if (result.IsSuccess() && !string.IsNullOrWhiteSpace(successMessage))
 		{
-			await db.SaveChangesAsync();
-			if (!string.IsNullOrWhiteSpace(successMessage))
-			{
-				SuccessStatusMessage(successMessage);
-			}
-
-			return true;
+			SuccessStatusMessage(successMessage);
 		}
-		catch (DbUpdateConcurrencyException)
+		else if (!string.IsNullOrWhiteSpace(failureMessage))
 		{
-			if (!string.IsNullOrWhiteSpace(errorMessage))
-			{
-				ErrorStatusMessage(errorMessage + "\nThe resource may have already been deleted or updated");
-			}
-
-			return false;
-		}
-		catch (DbUpdateException)
-		{
-			if (!string.IsNullOrWhiteSpace(errorMessage))
-			{
-				ErrorStatusMessage(errorMessage + "\nThe resource cannot be deleted or updated");
-			}
-
-			return false;
+			var addOn = result == SaveResult.ConcurrencyFailure
+				? "The resource may have already been deleted or updated"
+				: "The resource cannot be deleted or updated";
+			ErrorStatusMessage($"{failureMessage}\n{addOn}");
 		}
 	}
 

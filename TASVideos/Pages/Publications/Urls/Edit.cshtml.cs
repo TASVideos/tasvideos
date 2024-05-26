@@ -135,8 +135,9 @@ public class EditUrlsModel(
 
 		string log = $"{logWording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";
 		await publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
-		var result = await ConcurrentSave(db, log, $"Unable to {logWording[1]} URL.");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, log, $"Unable to {logWording[1]} URL.");
+		if (result.IsSuccess())
 		{
 			await publisher.SendPublicationEdit(
 				User.Name(), PublicationId, $"{logWording[0]}ed {UrlType} URL | {Title}");

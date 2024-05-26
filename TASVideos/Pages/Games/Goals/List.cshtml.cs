@@ -61,7 +61,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			DisplayName = goalToCreate
 		});
 
-		await ConcurrentSave(db, $"Goal {goalToCreate} created successfully", $"Unable to create goal {goalToCreate}");
+		SetMessage(await db.TrySaveChanges(), $"Goal {goalToCreate} created successfully", $"Unable to create goal {goalToCreate}");
 		return BackToList();
 	}
 
@@ -89,7 +89,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		if (string.Equals(gameGoal.DisplayName, newGoalName, StringComparison.InvariantCulture))
 		{
 			gameGoal.DisplayName = newGoalName;
-			await ConcurrentSave(db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
+			SetMessage(await db.TrySaveChanges(), $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
 			return BackToList();
 		}
 
@@ -107,7 +107,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		gameGoal.DisplayName = newGoalName;
 
-		await ConcurrentSave(db, $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
+		SetMessage(await db.TrySaveChanges(), $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
 
 		// Update publication and submission titles
 		if (gameGoal.DisplayName != "baseline")
@@ -145,7 +145,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.GameGoals.Attach(new GameGoal { Id = gameGroupId }).State = EntityState.Deleted;
-		await ConcurrentSave(db, $"Game Group {gameGroupId} deleted", $"Unable to delete Game Group {gameGroupId}");
+		SetMessage(await db.TrySaveChanges(), $"Game Group {gameGroupId} deleted", $"Unable to delete Game Group {gameGroupId}");
 
 		return BackToList();
 	}

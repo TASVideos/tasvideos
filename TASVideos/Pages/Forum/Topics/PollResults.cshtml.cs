@@ -62,7 +62,7 @@ public class PollResultsModel(ApplicationDbContext db) : BasePageModel
 
 		db.ForumPollOptionVotes.RemoveRange(votes);
 
-		await ConcurrentSave(db, "Poll reset", "Unable to reset poll");
+		SetMessage(await db.TrySaveChanges(), "Poll reset", "Unable to reset poll");
 		return RedirectToPage("PollResults", new { Id });
 	}
 

@@ -47,8 +47,9 @@ public class ListUrlsModel(
 			db.PublicationUrls.Remove(url);
 			string log = $"Deleted {url.DisplayName} {url.Type} URL {url.Url}";
 			await publicationMaintenanceLogger.Log(url.PublicationId, User.GetUserId(), log);
-			var result = await ConcurrentSave(db, log, "Unable to remove URL.");
-			if (result)
+			var result = await db.TrySaveChanges();
+			SetMessage(result, log, "Unable to remove URL.");
+			if (result.IsSuccess())
 			{
 				await publisher.SendPublicationEdit(User.Name(), PublicationId, $"Deleted {url.Type} URL");
 				await youtubeSync.UnlistVideo(url.Url!);

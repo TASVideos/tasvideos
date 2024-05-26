@@ -68,8 +68,9 @@ public class PrimaryMoviesModel(
 		publication.MovieFileName = PrimaryMovieFile!.FileName;
 		publication.MovieFile = await PrimaryMovieFile.ToBytes();
 
-		var result = await ConcurrentSave(db, log, "Unable to add file");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, log, "Unable to add file");
+		if (result.IsSuccess())
 		{
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {PublicationTitle}");

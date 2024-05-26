@@ -40,7 +40,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 		if (message is not null)
 		{
 			message.SavedForToUser = true;
-			await ConcurrentSave(db, "Message successfully saved", "Unable to save message");
+			SetMessage(await db.TrySaveChanges(), "Message successfully saved", "Unable to save message");
 		}
 
 		return BasePageRedirect("Savebox");
@@ -57,7 +57,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 		if (message is not null)
 		{
 			message.DeletedForToUser = true;
-			await ConcurrentSave(db, "Message successfully deleted", "Unable to deleted message");
+			SetMessage(await db.TrySaveChanges(), "Message successfully deleted", "Unable to deleted message");
 		}
 
 		return BasePageRedirect("Inbox");

@@ -74,7 +74,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		file.GameId = UserFile.GameId;
 		file.Hidden = UserFile.Hidden;
 
-		await ConcurrentSave(db, $"UserFile {Id} successfully updated", "Unable to update UserFile");
+		SetMessage(await db.TrySaveChanges(), $"UserFile {Id} successfully updated", "Unable to update UserFile");
 		return BasePageRedirect("/UserFiles/Info", new { Id });
 	}
 

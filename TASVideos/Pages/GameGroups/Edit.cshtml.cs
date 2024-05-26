@@ -89,7 +89,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		gameGroup.Abbreviation = Abbreviation;
 		gameGroup.Description = Description;
 
-		await ConcurrentSave(db, $"Game Group {Name} updated", $"Unable to update Game Group {Name}");
+		SetMessage(await db.TrySaveChanges(), $"Game Group {Name} updated", $"Unable to update Game Group {Name}");
 		return BasePageRedirect("Index", new { gameGroup.Id });
 	}
 
@@ -107,7 +107,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.GameGroups.Attach(new GameGroup { Id = Id ?? 0 }).State = EntityState.Deleted;
-		await ConcurrentSave(db, $"Game Group {Id} deleted", $"Unable to delete Game Group {Id}");
+		SetMessage(await db.TrySaveChanges(), $"Game Group {Id} deleted", $"Unable to delete Game Group {Id}");
 
 		return BasePageRedirect("List");
 	}

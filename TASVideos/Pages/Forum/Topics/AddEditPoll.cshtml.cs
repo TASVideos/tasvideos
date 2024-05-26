@@ -104,7 +104,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 					}));
 			}
 
-			await ConcurrentSave(db, "Poll edited", "Unable to clear existing poll");
+			SetMessage(await db.TrySaveChanges(), "Poll edited", "Unable to clear existing poll");
 		}
 		else
 		{

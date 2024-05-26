@@ -54,7 +54,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 
 		userFile.SystemId = UserFile.SystemId;
 		userFile.GameId = UserFile.GameId;
-		await ConcurrentSave(db, "Userfile successfully updated.", "Unable to update Userfile.");
+		SetMessage(await db.TrySaveChanges(), "Userfile successfully updated.", "Unable to update Userfile.");
 
 		return BasePageRedirect("Info", new { Id });
 	}

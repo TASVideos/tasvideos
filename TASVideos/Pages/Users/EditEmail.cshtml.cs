@@ -66,8 +66,9 @@ public class EditEmailModel(
 		user.EmailConfirmed = UserToEdit.EmailConfirmed;
 		user.NormalizedEmail = signInManager.UserManager.NormalizeEmail(user.Email);
 
-		var result = await ConcurrentSave(db, "", $"Unable to update user data for {user.UserName}");
-		if (result)
+		var result = await db.TrySaveChanges();
+		SetMessage(result, "", $"Unable to update user data for {user.UserName}");
+		if (result.IsSuccess())
 		{
 			await publisher.SendUserManagement(
 				$"User [{user.UserName}]({{0}}) email changed by {User.Name()}", user.UserName);

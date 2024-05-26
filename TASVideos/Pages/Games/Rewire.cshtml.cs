@@ -86,9 +86,9 @@ public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publish
 					.ToListAsync();
 				db.UserFiles.AttachRange(rewireUserfiles);
 				rewireUserfiles.ForEach(u => u.GameId = intoGameId);
-
-				var result = await ConcurrentSave(db, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
-				if (result)
+				var result = await db.TrySaveChanges();
+				SetMessage(result, $"Rewired Game {FromGameId} into Game {IntoGameId}", $"Unable to rewire Game {FromGameId} into Game {IntoGameId}");
+				if (result.IsSuccess())
 				{
 					await publisher.SendGameManagement(
 						$"[{IntoGameId}G]({{0}}) edited by {User.Name()}",

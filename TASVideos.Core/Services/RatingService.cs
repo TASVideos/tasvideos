@@ -5,7 +5,7 @@ public interface IRatingService
 	Task<PublicationRating?> GetUserRatingForPublication(int userId, int publicationId);
 	Task<ICollection<RatingEntry>> GetRatingsForPublication(int publicationId);
 	Task<double> GetOverallRatingForPublication(int publicationId);
-	Task<bool> UpdateUserRating(int userId, int publicationId, double? value);
+	Task<SaveResult> UpdateUserRating(int userId, int publicationId, double? value);
 }
 
 internal class RatingService(ApplicationDbContext db) : IRatingService
@@ -37,7 +37,7 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 			.SingleOrDefaultAsync();
 	}
 
-	public async Task<bool> UpdateUserRating(int userId, int publicationId, double? value)
+	public async Task<SaveResult> UpdateUserRating(int userId, int publicationId, double? value)
 	{
 		var rating = await GetUserRatingForPublication(userId, publicationId);
 		if (rating is not null)
@@ -62,10 +62,10 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 		}
 		else
 		{
-			return true;
+			return SaveResult.Success;
 		}
 
-		return await db.TrySaveChangesAsync() > 0;
+		return await db.TrySaveChanges();
 	}
 }
 

@@ -72,7 +72,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		topic.GameId = GameId;
-		await ConcurrentSave(db, "Topic successfully cataloged.", "Unable to catalog topic.");
+		SetMessage(await db.TrySaveChanges(), "Topic successfully cataloged.", "Unable to catalog topic.");
 
 		return BasePageRedirect("Index", new { Id });
 	}

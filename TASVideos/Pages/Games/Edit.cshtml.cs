@@ -120,8 +120,9 @@ public class EditModel(
 		game.GameResourcesPage = Game.GameResourcesPage;
 		game.GameGenres.SetGenres(Game.Genres);
 		game.GameGroups.SetGroups(Game.Groups);
-		var saveResult = await ConcurrentSave(db, $"Game {game.DisplayName} {action}", $"Unable to update Game {game.DisplayName}");
-		if (saveResult && !Game.MinorEdit)
+		var saveResult = await db.TrySaveChanges();
+		SetMessage(saveResult, $"Game {game.DisplayName} {action}", $"Unable to update Game {game.DisplayName}");
+		if (saveResult.IsSuccess() && !Game.MinorEdit)
 		{
 			await publisher.SendGameManagement(
 				$"Game [{game.DisplayName}]({{0}}) {action} by {User.Name()}",
@@ -158,8 +159,9 @@ public class EditModel(
 
 		db.Games.Remove(game);
 		var saveMessage = $"Game #{Id} {game.DisplayName} deleted";
-		var saveResult = await ConcurrentSave(db, saveMessage, $"Unable to delete Game {Id}");
-		if (saveResult)
+		var saveResult = await db.TrySaveChanges();
+		SetMessage(saveResult, saveMessage, $"Unable to delete Game {Id}");
+		if (saveResult.IsSuccess())
 		{
 			await publisher.SendMessage(PostGroups.Game, $"{saveMessage} by {User.Name()}");
 		}

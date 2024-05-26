@@ -30,7 +30,7 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 		};
 
 		db.Forums.Add(forum);
-		await ConcurrentSave(db, $"Forum {forum.Name} created successfully.", "Unable to create forum.");
+		SetMessage(await db.TrySaveChanges(), $"Forum {forum.Name} created successfully.", "Unable to create forum.");
 
 		return BasePageRedirect("Index", new { forum.Id });
 	}

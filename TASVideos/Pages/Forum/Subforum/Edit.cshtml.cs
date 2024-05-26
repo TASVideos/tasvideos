@@ -64,7 +64,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		forum.CategoryId = Forum.CategoryId;
 		forum.Restricted = Forum.Restricted;
 
-		await ConcurrentSave(db, $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
+		SetMessage(await db.TrySaveChanges(), $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
 		return RedirectToPage("Index", new { Id });
 	}
 
@@ -82,7 +82,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.Forums.Remove(subForum);
-		await ConcurrentSave(db, $"Forum {Id} deleted successfully", $"Unable to delete Forum {Id}");
+		SetMessage(await db.TrySaveChanges(), $"Forum {Id} deleted successfully", $"Unable to delete Forum {Id}");
 
 		return RedirectToPage("/Forum/Index");
 	}
