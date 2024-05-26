@@ -4,12 +4,9 @@
 	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Name(), User.Permissions());
 }
 
-@if (canEdit)
-{
-	<div class="text-end mb-2">
-		<a asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn btn-primary border border-warning"><i class="fa fa-pencil"></i> Edit</a>
-	</div>
-}
+<top-button-bar condition="canEdit">
+	<edit-button asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn-sm"></edit-button>
+</top-button-bar>
 
 @if (Model.IsSystemPage())
 {
@@ -20,11 +17,7 @@
 else if (Model.IsGameResourcesPage())
 {
 	<info-alert>
-		<row>
-			<div class="col-12">
-				@await Html.RenderWiki(SystemWiki.GameResourcesHeader)
-			</div>
-		</row>
+		@await Html.RenderWiki(SystemWiki.GameResourcesHeader)
 	</info-alert>
 }
 else if (Model.IsHomePage())

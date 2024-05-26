@@ -7,9 +7,6 @@
 <cache enabled="@(!User.IsLoggedIn())" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">
 	@await Html.RenderWiki(SystemWiki.FrontPage)
 </cache>
-<a condition="@canEdit"
-   asp-page="/Wiki/Edit"
-   asp-route-path="System/FrontPage"
-   class="btn btn-primary btn-sm border border-warning">
-	<i class="fa fa-pencil"></i> Edit
-</a>
+<edit-button condition="@canEdit"
+   asp-page="/Wiki/Edit" asp-route-path="System/FrontPage" class="btn-sm">
+</edit-button>

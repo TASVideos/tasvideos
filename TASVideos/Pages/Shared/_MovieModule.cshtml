@@ -267,21 +267,21 @@
 			</div>
 			<div class="col">
 				<div class="float-end">
-					<a permission="EditPublicationMetaData"
+					<edit-button permission="EditPublicationMetaData"
 					   asp-page="/Publications/Edit"
 					   asp-route-id="@Model.Id"
-					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-pencil"></i> Edit</a>
+					   class="btn-sm mt-1"></edit-button>
 					<a permission="CatalogMovies"
 					   asp-page="/Publications/Catalog"
 					   asp-route-id="@Model.Id"
-					   class="btn btn-secondary btn-sm border border-warning mt-1"><i class="fa fa-book"></i> Catalog</a>
+					   class="btn btn-primary btn-sm mt-1"><i class="fa fa-book"></i> Catalog</a>
 					<a permission="EditPublicationMetaData"
 						href="/MovieMaintenanceLog?id=@Model.Id"
-						class="btn btn-secondary btn-sm border border-warning mt-1">
+						class="btn btn-primary btn-sm mt-1">
 						<i class="fa fa-history"></i> Logs
 					</a>
 					<a permission="Unpublish"
-						class="btn btn-danger btn-sm border border-warning mt-1"
+						class="btn btn-danger btn-sm mt-1"
 						asp-page="/Publications/Unpublish"
 						asp-route-id="@Model.Id">
 						<i class="fa fa-remove"></i> Unpublish
