@@ -12,19 +12,19 @@ public class WikiLink(ApplicationDbContext db) : WikiViewComponent
 	public string DisplayText { get; set; } = "";
 	public string? Title { get; set; }
 
-	public async Task<IViewComponentResult> InvokeAsync(string href, string? displayText)
+	public async Task<IViewComponentResult> InvokeAsync(string href, string? displayText, string? implicitDisplayText)
 	{
-		await GenerateLink(href, displayText);
+		await GenerateLink(href, displayText, implicitDisplayText);
 		return View();
 	}
 
-	public async Task<string> RenderTextAsync(IWikiPage? pageData, string href, string? displayText)
+	public async Task<string> RenderTextAsync(IWikiPage? pageData, string href, string? displayText, string? implicitDisplayText)
 	{
-		await GenerateLink(href, displayText);
+		await GenerateLink(href, displayText, implicitDisplayText);
 		return DisplayText;
 	}
 
-	private async Task GenerateLink(string href, string? displayText)
+	private async Task GenerateLink(string href, string? displayText, string? implicitDisplayText)
 	{
 		int? id;
 		string? titleText = null;
@@ -69,7 +69,7 @@ public class WikiLink(ApplicationDbContext db) : WikiViewComponent
 
 		if (string.IsNullOrWhiteSpace(displayText))
 		{
-			displayText = href[1..];
+			displayText = implicitDisplayText ?? href[1..];
 		}
 
 		Href = href;
