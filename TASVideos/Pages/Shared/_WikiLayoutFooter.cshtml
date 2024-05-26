@@ -1,9 +1,6 @@
 ﻿@using TASVideos.TagHelpers
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model TASVideos.Core.Services.Wiki.IWikiPage
-@{
-	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Name(), User.Permissions());
-}
 
 @if (Model.IsSystemPage())
 {
@@ -29,7 +26,7 @@ else
 </small>
 <br />
 
-<a condition="@canEdit"
+<a condition="@User.CanEditWiki(Model.PageName)"
    asp-page="/Wiki/Edit"
    asp-route-path="@Model.PageName"
    class="btn btn-primary btn-sm">

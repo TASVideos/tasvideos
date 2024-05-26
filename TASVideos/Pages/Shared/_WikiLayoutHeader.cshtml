@@ -1,10 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model TASVideos.Core.Services.Wiki.IWikiPage
-@{
-	bool canEdit = WikiHelper.UserCanEditWikiPage(Model.PageName, User.Name(), User.Permissions());
-}
 
-<top-button-bar condition="canEdit">
+<top-button-bar condition="User.CanEditWiki(Model.PageName)">
 	<edit-button asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn-sm"></edit-button>
 </top-button-bar>
 

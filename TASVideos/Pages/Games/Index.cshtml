@@ -3,7 +3,7 @@
 @{
 	ViewData.SetTitle($"{Model.Game.DisplayName}");
 	string wiki = LinkConstants.GameWikiPage + Model.Game.Id;
-	bool canEdit = WikiHelper.UserCanEditWikiPage(wiki, User.Name(), User.Permissions());
+	bool canEdit = User.CanEditWiki(wiki);
 	string? url = !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any()
 		? !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl)
 			? Model.Game.ScreenshotUrl
