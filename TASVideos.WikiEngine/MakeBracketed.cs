@@ -230,20 +230,20 @@ public static partial class Builtins
 			// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 			// DB lookup will be required for links like [4022S], so use __wikiLink
 			// TODO:  __wikilink should probably be its own AST type??
-			return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]));
+			return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|implicitdisplaytext=" + pp[0]);
 		}
 
 		// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
-		return new[] { new Text(charStart, "[" + text + "]") { CharEnd = charEnd } };
+		return [new Text(charStart, "[" + text + "]") { CharEnd = charEnd }];
 	}
 
 	internal static INode MakeLink(int charStart, int charEnd, string text, INode child)
 	{
 		var href = NormalizeUrl(text);
 		var attrs = new List<KeyValuePair<string, string>>
-			{
-				Attr("href", href)
-			};
+		{
+			Attr("href", href)
+		};
 		if (href[0] == '#' || href[0] == '/' && (href.Length == 1 || href[1] != '/'))
 		{
 			// internal
