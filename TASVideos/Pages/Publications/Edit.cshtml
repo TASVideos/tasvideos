@@ -107,11 +107,11 @@
 	</row>
 	<fieldset>
 		<label asp-for="Publication.SelectedFlags"></label>
-		<select asp-for="Publication.SelectedFlags" size="@(Math.Min(Model.Publication.SelectedFlags.Count, 7).ToString())" asp-items="Model.AvailableFlags" class="form-select"></select>
+		<select asp-for="Publication.SelectedFlags" data-multiselect="true" size="@(Math.Min(Model.Publication.SelectedFlags.Count, 7).ToString())" asp-items="Model.AvailableFlags" class="form-select"></select>
 	</fieldset>
 	<fieldset>
 		<label asp-for="Publication.SelectedTags"></label>
-		<select asp-for="Publication.SelectedTags" size="@(Math.Min(Model.Publication.SelectedTags.Count, 7).ToString())" asp-items="Model.AvailableTags" class="form-select"></select>
+		<select asp-for="Publication.SelectedTags" data-multiselect="true" size="@(Math.Min(Model.Publication.SelectedTags.Count, 7).ToString())" asp-items="Model.AvailableTags" class="form-select"></select>
 	</fieldset>
 	@await Html.RenderWiki(SystemWiki.ClassEditingHelp)
 	<hr />
@@ -153,8 +153,4 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/select-improver.js"></script>
-	<script>
-		engageSelectImprover('@Html.IdFor(m => m.Publication.SelectedFlags)');
-		engageSelectImprover('@Html.IdFor(m => m.Publication.SelectedTags)');
-	</script>
 }

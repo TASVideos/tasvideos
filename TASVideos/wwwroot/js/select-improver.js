@@ -1,4 +1,13 @@
-﻿function createButtonElement(text, value) {
+﻿document.addEventListener("DOMContentLoaded", findAndEngageMultiselects);
+
+function findAndEngageMultiselects() {
+	const selects = Array.from(document.querySelectorAll('[data-multiselect="true"]'));
+	selects.forEach(select => {
+		engageSelectImprover(select.id);
+	});
+}
+
+function createButtonElement(text, value) {
 	const button = document.createElement('button');
 	button.type = 'button';
 	button.classList.add('btn', 'btn-primary', 'btn-sm', 'mb-1', 'me-1');
@@ -60,7 +69,7 @@ function updateSelectAllToggle(multiSelect, buttons) {
 function renderVirtualScroll(list, optionsList, visibleHeight) {
 	const firstElementHeight = 39;
 	const otherElementsHeight = 38;
-	
+
 	const scrollPosition = list.scrollTop;
 
 	const optionsListVisible = optionsList.filter(option => option.dataset.visible === String(true));
@@ -159,7 +168,7 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 			for (let o of notSelected) {
 				toggleSelectOption(multiSelect, buttons, inputList, o.value, o, false);
 			}
-			
+
 			buttons.querySelector('span').classList.add('d-none');
 		} else {
 			for (let o of options.filter(o => !o.disabled)) {

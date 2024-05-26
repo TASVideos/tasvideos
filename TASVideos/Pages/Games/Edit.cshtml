@@ -57,11 +57,11 @@
 	</row>
 	<fieldset>
 		<label asp-for="Game.Genres"></label>
-		<select asp-for="Game.Genres" size="@(Math.Min(Model.Game.Genres.Count, 7).ToString())" asp-items="Model.AvailableGenres" class="form-select"></select>
+		<select asp-for="Game.Genres" data-multiselect="true" size="@(Math.Min(Model.Game.Genres.Count, 7).ToString())" asp-items="Model.AvailableGenres" class="form-select"></select>
 	</fieldset>
 	<fieldset>
 		<label asp-for="Game.Groups"></label>
-		<select asp-for="Game.Groups" size="@(Math.Min(Model.Game.Groups.Count, 7).ToString())" asp-items="Model.AvailableGroups" class="form-select"></select>
+		<select asp-for="Game.Groups" data-multiselect="true" size="@(Math.Min(Model.Game.Groups.Count, 7).ToString())" asp-items="Model.AvailableGroups" class="form-select"></select>
 	</fieldset>
 	<form-button-bar>
 		<submit-button id="submit-btn"></submit-button>
@@ -76,8 +76,4 @@
 @section Scripts {
 	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/select-improver.js"></script>
-	<script>
-		engageSelectImprover('@Html.IdFor(m => m.Game.Genres)');
-		engageSelectImprover('@Html.IdFor(m => m.Game.Groups)');
-	</script>
 }
