@@ -21,7 +21,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		if (!db.Database.IsNpgsql())
+		if (!db.HasFullTextSearch())
 		{
 			ModelState.AddModelError("", "This feature is not currently available.");
 			return BadRequest(ModelState);
@@ -35,7 +35,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		if (!string.IsNullOrWhiteSpace(SearchTerms))
 		{
 			var skip = PageSize * (PageNumber - 1);
-			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+			db.ExtendTimeoutForSearch();
 			PageResults = await db.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrent()

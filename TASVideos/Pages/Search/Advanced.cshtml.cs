@@ -79,7 +79,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 			}
 
 			var skip = DisplayPageSize * (PageNumber - 1);
-			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+			db.ExtendTimeoutForSearch();
 
 			if (PageSearch)
 			{

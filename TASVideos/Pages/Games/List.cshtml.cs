@@ -88,7 +88,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		if (!string.IsNullOrWhiteSpace(paging.SearchTerms))
 		{
-			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+			db.ExtendTimeoutForSearch();
 			query = query.Where(g =>
 				EF.Functions.ToTsVector("simple", g.DisplayName + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", paging.SearchTerms)));
 		}
