@@ -2,8 +2,6 @@
 @model PublishersModel
 @{
 	ViewData.SetTitle($"Publisher Activity for {Model.UserName}");
-	var total = Model.Publications.Count;
-
 	var classCounts = Model.Publications
 		.GroupBy(p => p.Class)
 		.ToDictionary(tkey => tkey.Key, tvalue => tvalue.Count());
@@ -12,7 +10,7 @@
 	Publisher <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
 }
 
-<label>Total: @total</label>
+<div>Total: @Model.Publications.Count</div>
 @foreach (var c in classCounts)
 {
 	<div>@c.Key: @c.Value</div>

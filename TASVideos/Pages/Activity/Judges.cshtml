@@ -19,7 +19,8 @@
 @section PageTitle {
 	Judge <a asp-page="/Activity/Index">Activity</a> for <profile-link username="@Model.UserName"></profile-link>
 }
-<label>Total: @total</label><br />
+
+<div>Total: @total</div>
 <div>Accepted: @acceptedTotal (@acceptedTotal.ToPercent(total)%)</div>
 <div>Rejected: @rejectedTotal (@rejectedTotal.ToPercent(total)%)</div>
 <div>Cancelled: @cancelledTotal (@cancelledTotal.ToPercent(total)%)</div>
