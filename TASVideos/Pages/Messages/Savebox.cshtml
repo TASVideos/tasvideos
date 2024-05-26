@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Saved messages for {User.Name()}");
 }
 
-<a asp-page="Inbox" class="btn btn-secondary mb-1"><span class="fa fa-arrow-left"></span> Inbox</a>
+<back-button asp-page="Inbox" class="mb-1" name-override="Inbox"></back-button>
 <standard-table>
 	<tr>
 		<th>Subject</th>

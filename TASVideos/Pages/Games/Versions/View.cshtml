@@ -2,12 +2,10 @@
 @model ViewModel
 @{
 	ViewData.SetTitle($"Game Version #{Model.Id} {Model.Version.Name}");
-	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 
 <div class="mb-2">
-	<a condition="!string.IsNullOrWhiteSpace(returnUrl)" href="@returnUrl" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Back</a>
-	<a condition="string.IsNullOrWhiteSpace(returnUrl)" asp-page="/Games/Versions/List" class="btn btn-secondary" asp-route-gameId="@Model.GameId"><i class="fa fa-arrow-left"></i> Back</a>
+	<back-button asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></back-button>
 </div>
 <h4 class="mb-3">
 	<label asp-for="GameName" class="form-control-label"></label>
@@ -56,12 +54,12 @@
 	.info-entry {
 		margin-bottom: .5rem;
 	}
-	
+
 	.info-entry > label:first-child {
 		min-width: 100px;
 		font-weight: bold;
 	}
-	
+
 	.info-entry > label:last-child:empty::after {
 		content: "N/A";
 		opacity: 0.5;

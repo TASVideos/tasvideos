@@ -193,7 +193,7 @@
 		</small>
 		<div class="btn-toolbar mt-2">
 			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary"><i class="fa-regular fa-comments"></i> Discuss and Vote</a>
-			<a asp-page="Index" class="btn btn-secondary"><i class="fa fa-arrow-left"></i> Queue</a>
+			<back-button asp-page="Index" name-override="Queue"></back-button>
 			<a asp-page="Index" asp-route-user="@Model.Submission.Submitter" class="btn btn-secondary">All by submitter</a>
 			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
 		</div>

@@ -5,7 +5,7 @@
 }
 <partial Name="_ForumHeader" />
 <top-button-bar>
-	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Poll.TopicId" class="btn btn-secondary"><span class="fa fa-arrow-left"></span> Back</a>
+	<back-button asp-page="/Forum/Topics/Index" asp-route-id="@Model.Poll.TopicId"></back-button>
 </top-button-bar>
 <hr />
 <div>

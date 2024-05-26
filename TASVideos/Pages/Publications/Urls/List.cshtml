@@ -7,6 +7,7 @@
 <h4>Movie: <pub-link id="Model.PublicationId">@Model.Title</pub-link></h4>
 
 <top-button-bar>
+	<back-button permission="EditPublicationMetaData" asp-page="/Publications/Edit" asp-route-id="@Model.PublicationId" name-override="Back to Edit"></back-button>
 	<add-button asp-page="Edit" permission="EditPublicationFiles" asp-route-publicationId="@Model.PublicationId"></add-button>
 </top-button-bar>
 <standard-table condition="Model.CurrentUrls.Any()">
@@ -24,24 +25,17 @@
 			<td>@url.DisplayName</td>
 			<td-action-column>
 				<edit-button asp-page="Edit"
-					class="btn-sm"
-					permission="EditPublicationFiles"
-					asp-route-urlId="@url.Id"
-					asp-route-publicationId="@Model.PublicationId">
+							class="btn-sm"
+							permission="EditPublicationFiles"
+							asp-route-urlId="@url.Id"
+							asp-route-publicationId="@Model.PublicationId">
 				</edit-button>
 				<delete-button warning-message="Are you sure you want to remove this URL?"
-					permission="EditPublicationFiles"
-					asp-href="/Publications/@Model.PublicationId/Urls/List/@url.Id/Delete"
-					class="btn-sm"></delete-button>
+								permission="EditPublicationFiles"
+								asp-href="/Publications/@Model.PublicationId/Urls/List/@url.Id/Delete"
+								class="btn-sm"></delete-button>
 			</td-action-column>
 		</tr>
 	}
 </standard-table>
-<div class="text-center mt-3">
-	<a permission="EditPublicationMetaData"
-		asp-page="/Publications/Edit"
-		asp-route-id="@Model.PublicationId"
-		class="btn btn-secondary">
-		<span class="fa fa-arrow-left"></span> Back To Edit
-	</a>
-</div>
+

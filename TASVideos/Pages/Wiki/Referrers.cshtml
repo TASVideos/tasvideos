@@ -3,11 +3,9 @@
 @{
 	string link = WikiHelper.ProcessLink(Model.Path ?? "");
 	ViewData.SetTitle($"Referrers for {link}");
-	string returnUrl = HttpContext.Request.ReturnUrl();
 }
 
-<a condition="string.IsNullOrWhiteSpace(returnUrl)" class="btn btn-secondary" href="/@link"><span class="fa fa-arrow-left"></span> Back to Page</a>
-<a condition="!string.IsNullOrWhiteSpace(returnUrl)" class="btn btn-secondary" href="@returnUrl"><span class="fa fa-arrow-left"></span> Back</a>
+<back-button href="/@link">Back</back-button>
 <br />
 <br />
 <label>Referrers (@Model.Referrals.Count Total)</label>

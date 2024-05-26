@@ -9,13 +9,7 @@
 }
 
 <h4>
-	<a
-		condition="Model.Year > 2007"
-		class="btn btn-secondary"
-		asp-page="Index"
-		asp-route-year="@(Model.Year - 1)">
-		<i class="fa fa-arrow-left"></i>
-	</a>
+	<back-button condition="Model.Year > 2007" asp-page="Index" asp-route-year="@(Model.Year - 1)"></back-button>
 	<a
 		condition="Model.Year < DateTime.UtcNow.Year"
 		class="btn btn-secondary"
