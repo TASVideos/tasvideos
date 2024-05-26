@@ -21,13 +21,13 @@
 	<fullrow>
 		<fieldset>
 			<label asp-for="AwardToAssign.Users"></label>
-			<select asp-for="AwardToAssign.Users" data-multiselect="true" size="@(Math.Min(Model.AwardToAssign.Users.Count, 7).ToString())" asp-items="Model.AvailableUsers" class="form-select"></select>
+			<select asp-for="AwardToAssign.Users" data-multiselect="true" asp-items="Model.AvailableUsers" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<fullrow>
 		<fieldset>
 			<label asp-for="AwardToAssign.Publications"></label>
-			<select asp-for="AwardToAssign.Publications" data-multiselect="true" size="@(Math.Min(Model.AwardToAssign.Publications.Count, 7).ToString())" asp-items="Model.AvailablePublications" class="form-select"></select>
+			<select asp-for="AwardToAssign.Publications" data-multiselect="true" asp-items="Model.AvailablePublications" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<form-button-bar>

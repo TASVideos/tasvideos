@@ -57,11 +57,11 @@
 	</row>
 	<fieldset>
 		<label asp-for="Game.Genres"></label>
-		<select asp-for="Game.Genres" data-multiselect="true" size="@(Math.Min(Model.Game.Genres.Count, 7).ToString())" asp-items="Model.AvailableGenres" class="form-select"></select>
+		<select asp-for="Game.Genres" data-multiselect="true" asp-items="Model.AvailableGenres" class="form-select"></select>
 	</fieldset>
 	<fieldset>
 		<label asp-for="Game.Groups"></label>
-		<select asp-for="Game.Groups" data-multiselect="true" size="@(Math.Min(Model.Game.Groups.Count, 7).ToString())" asp-items="Model.AvailableGroups" class="form-select"></select>
+		<select asp-for="Game.Groups" data-multiselect="true" asp-items="Model.AvailableGroups" class="form-select"></select>
 	</fieldset>
 	<form-button-bar>
 		<submit-button id="submit-btn"></submit-button>
