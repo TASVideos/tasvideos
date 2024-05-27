@@ -73,6 +73,9 @@ public static class GameExtensions
 			: query;
 	}
 
+	public static IQueryable<Game> WebSearch(this IQueryable<Game> query, string searchTerms)
+		=> query.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", searchTerms)));
+
 	public static void SetGenres(this ICollection<GameGenre> genres, IEnumerable<int> genreIds)
 	{
 		genres.Clear();

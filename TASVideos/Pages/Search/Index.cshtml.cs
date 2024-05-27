@@ -1,4 +1,5 @@
 ﻿using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Search;
 
@@ -59,7 +60,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				.ToListAsync();
 
 			GameResults = await db.Games
-				.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", SearchTerms)))
+				.WebSearch(SearchTerms)
 				.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ")).ToStripped().Rank(EF.Functions.WebSearchToTsQuery("simple", SearchTerms), NpgsqlTsRankingNormalization.DivideByLength))
 					.ThenBy(g => g.DisplayName.Length)
 					.ThenBy(g => g.DisplayName)
