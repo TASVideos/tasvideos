@@ -43,7 +43,7 @@
 				.then(handleFetchErrors)
 				.then(r => r.text())
 				.then(t => versionModel.innerHTML = t);
-			console.log('getting game goals', gameModel.value);
+
 			fetch(`/Games/List/GameGoalDropDownForGame?includeEmpty=false&gameId=${gameModel.value}`)
 				.then(handleFetchErrors)
 				.then(r => r.text())

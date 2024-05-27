@@ -48,7 +48,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		Catalog = catalog;
 		if (GameId.HasValue)
 		{
-			var game = await db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
+			var game = await db.Games.FindAsync(GameId);
 			if (game is not null)
 			{
 				Catalog.GameId = game.Id;
@@ -191,10 +191,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 	private async Task PopulateCatalogDropDowns(int gameId, int systemId)
 	{
-		AvailableVersions = (await db.GameVersions
-			.ToDropDownList(gameId, systemId))
-			.WithDefaultEntry();
-
+		AvailableVersions = (await db.GameVersions.ToDropDownList(systemId, gameId)).WithDefaultEntry();
 		AvailableGames = await db.Games.ToDropDownList(systemId);
 		AvailableSystems = await db.GameSystems.ToDropDownListWithId();
 		AvailableSystemFrameRates = await db.GameSystemFrameRates.ToDropDownList(systemId);

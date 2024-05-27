@@ -48,7 +48,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		Catalog = catalog;
 		if (GameId.HasValue)
 		{
-			var game = await db.Games.SingleOrDefaultAsync(g => g.Id == GameId);
+			var game = await db.Games.FindAsync(GameId);
 			if (game is not null)
 			{
 				Catalog.GameId = game.Id;
