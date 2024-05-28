@@ -10,4 +10,3 @@ public class RowTagHelper : TagHelper
 		output.AddCssClass("row");
 	}
 }
-

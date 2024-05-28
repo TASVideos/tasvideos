@@ -25,8 +25,5 @@ public class BaseForumModel : BasePageModel
 	public List<SelectListItem> Moods => MoodList;
 	public List<SelectListItem> TopicTypes => TopicTypeList;
 
-	public new IActionResult NotFound()
-	{
-		return RedirectToPage("/Forum/NotFound");
-	}
+	public new RedirectToPageResult NotFound() => RedirectToPage("/Forum/NotFound");
 }
