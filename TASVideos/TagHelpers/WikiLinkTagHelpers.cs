@@ -70,7 +70,6 @@ public class WikiLinkTagHelper : TagHelper
 	}
 }
 
-[HtmlTargetElement("profile-link")]
 public class ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : AnchorTagHelper(htmlGenerator)
 {
 	public string? Username { get; set; }
