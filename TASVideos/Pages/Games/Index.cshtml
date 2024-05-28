@@ -158,16 +158,14 @@
 </row>
 <hr />
 
-<fullrow>
-<h4>
-	Game Versions
+<top-button-bar>
+	<h4 class="heading">Game Versions</h4>
 	<edit-link permission="CatalogMovies"
-	   asp-page="/Games/Versions/List"
-	   asp-route-gameId="@Model.Game.Id"
-	   asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
-	   class="float-end btn-sm"></edit-link>
-</h4>
-</fullrow>
+	           asp-page="/Games/Versions/List"
+	           asp-route-gameId="@Model.Game.Id"
+	           asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
+	           class="btn-sm"></edit-link>
+</top-button-bar>
 <alert type="warning" condition="!Model.Game.Versions.Any()" class="mt-3">
 	No records.
 </alert>
@@ -181,7 +179,7 @@
 		<th>Platform</th>
 		<th>Hashes</th>
 	</tr>
-	@foreach (var rom in Model.Game.Versions)
+	@foreach (var rom in Model.Game.Versions.OrderBy(v => v.Name))
 	{
 		<tr>
 			<td>@rom.Type.ToString()</td>
@@ -191,8 +189,8 @@
 			<td>@rom.Version</td>
 			<td>@rom.SystemCode</td>
 			<td>
-				<div condition="!string.IsNullOrWhiteSpace(rom.Sha1)" class="text-nowrap">Sha1: @rom.Sha1</div>
-				<div condition="!string.IsNullOrWhiteSpace(rom.Md5)" class="text-nowrap">Md5: @rom.Md5</div>
+				<small condition="!string.IsNullOrWhiteSpace(rom.Sha1)" class="text-nowrap">SHA1: @rom.Sha1</small>
+				<small condition="!string.IsNullOrWhiteSpace(rom.Md5)" class="text-nowrap">MD5: @rom.Md5</small>
 			</td>
 		</tr>
 	}

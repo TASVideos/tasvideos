@@ -18,12 +18,10 @@
 	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
 }
 
-<fieldset>
-	<delete-button condition="@Model.CanDelete"
-				   asp-href="@deleteLink"
-				   class="float-end"></delete-button>
-	<h4>Game: @Model.GameName</h4>
-</fieldset>
+<top-button-bar>
+	<h4 class="heading">Game: <game-link id="Model.GameId">@Model.GameName</game-link></h4>
+	<delete-button condition="@Model.CanDelete" asp-href="@deleteLink"></delete-button>
+</top-button-bar>
 <form method="post">
 	<input type="hidden" asp-for="GameName" />
 	<row>

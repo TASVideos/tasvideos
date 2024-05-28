@@ -27,27 +27,19 @@
 	{
 		<tr>
 			<td>
-				<game-link id="game.Id">
-					@game.Name
-				</game-link>
+				<game-link id="game.Id">@game.Name</game-link>
 			</td>
 			<td>
 				@game.SystemsString()
 			</td>
 			<td>
-				<a href="/Movies-@(game.Id)G">
-					@game.PubCount
-				</a>
+				<a href="/Movies-@(game.Id)G">@game.PubCount</a>
 			</td>
 			<td>
-				<a href="/Subs-List?GameId=@(game.Id)">
-					@game.SubCount
-				</a>
+				<a href="/Subs-List?GameId=@(game.Id)">@game.SubCount</a>
 			</td>
 			<td>
-				<a href="/@game.GameResourcesPage">
-					@game.GameResourcesPage
-				</a>
+				<a href="/@game.GameResourcesPage">@game.GameResourcesPage</a>
 			</td>
 		</tr>
 	}
