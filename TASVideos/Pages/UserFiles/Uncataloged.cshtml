@@ -15,15 +15,15 @@
 	.ThenBy(f  => f.Key))
 {
 	<card>
-		<cardheader>
+		<card-header>
 			@(group.Key ?? "No System") (@group.Count())
-		</cardheader>
-		<cardbody>
+		</card-header>
+		<card-body>
 			@foreach (var file in group.OrderByDescending(g => g.UploadTimestamp))
 			{
 				<a asp-page="Info" asp-route-id="@file.Id">@file.FileName</a> <span>by @file.Author</span>
 				<span>(<timezone-convert asp-for="@file.UploadTimestamp" />)</span><br />
 			}
-		</cardbody>
+		</card-body>
 	</card>
 }

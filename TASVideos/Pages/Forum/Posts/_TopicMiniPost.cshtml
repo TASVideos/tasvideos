@@ -1,13 +1,13 @@
 ﻿@model TASVideos.Pages.Forum.Posts.CreateModel.MiniPost
 <card class="mb-2 border border-primary-subtle">
-	<cardheader>
+	<card-header>
 		<row>
 			<div class="col-auto"><timezone-convert asp-for="@Model.CreateTimestamp" /></div>
 			<div class="col-auto fw-bold">@Model.PosterName</div>
 			<div condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="col-auto text-body-tertiary">@Html.DisplayFor(m => m.PosterPronouns)</div>
 		</row>
-	</cardheader>
-	<cardbody>
+	</card-header>
+	<card-body>
 		<forum-markup markup="@Model.Text" enable-html="@Model.EnableHtml" enable-bb-code="@Model.EnableBbCode"></forum-markup>
-	</cardbody>
+	</card-body>
 </card>

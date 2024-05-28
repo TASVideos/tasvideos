@@ -12,8 +12,8 @@
 	<a asp-page="List" class="btn btn-secondary">All Groups</a>
 </top-button-bar>
 <card condition="!string.IsNullOrWhiteSpace(Model.Description)" class="mb-2">
-	<cardheader>Description</cardheader>
-	<cardbody><wiki-markup markup="@Model.Description"></wiki-markup></cardbody>
+	<card-header>Description</card-header>
+	<card-body><wiki-markup markup="@Model.Description"></wiki-markup></card-body>
 </card>
 <standard-table condition="Model.Games.Any()">
 	<tr>

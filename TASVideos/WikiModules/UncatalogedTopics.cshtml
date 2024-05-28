@@ -7,10 +7,10 @@
 	@foreach (var forum in grouped.OrderBy(m => m.Key))
 	{
 		<card>
-			<cardheader>
+			<card-header>
 				@forum.Key (@forum.Count())
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				@foreach (var topic in forum.OrderBy(t => t.Title))
 				{
 					<ul class="breadcrumb m-0">
@@ -25,7 +25,7 @@
 						</li>
 					</ul>
 				}
-			</cardbody>
+			</card-body>
 		</card>
 	}
 </div>

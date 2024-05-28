@@ -32,7 +32,7 @@
 		var gameNameDifference = Model.FromGame!.Game!.Title != Model.IntoGame!.Game!.Title;
 	}
 	<card class="mb-2">
-		<cardheader>
+		<card-header>
 			<row>
 				<div class="col-6">
 					<h3>From Game</h3>
@@ -43,8 +43,8 @@
 					<h4><game-link id="@Model.IntoGame.Game.Id">@Model.IntoGame!.Game!.Title</game-link></h4>
 				</div>
 			</row>
-		</cardheader>
-		<cardbody>
+		</card-header>
+		<card-body>
 			<row>
 				<div class="col-6">
 					<h4>Publications</h4>
@@ -142,7 +142,7 @@
 					</ul>
 				</div>
 			</row>
-		</cardbody>
+		</card-body>
 	</card>
 	<form method="post">
 		<input type="hidden" asp-for="FromGameId" />

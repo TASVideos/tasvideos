@@ -3,16 +3,16 @@
 @foreach (var pub in Model.Publications.OrderBy(u => u.Id))
 {
 	<card class="mb-2">
-		<cardheader>
+		<card-header>
 			<pub-link id="pub.Id">@pub.Title</pub-link>
-		</cardheader>
-		<cardbody>
+		</card-header>
+		<card-body>
 			<ul>
 				@foreach(var url in pub.Urls.OrderBy(p => string.IsNullOrWhiteSpace(p.DisplayName)))
 				{
 					<li><a href="@url.Url">@(string.IsNullOrEmpty(url.DisplayName) ? url.Url : url.DisplayName)</a></li>
 				}
 			</ul>
-		</cardbody>
+		</card-body>
 	</card>
 }

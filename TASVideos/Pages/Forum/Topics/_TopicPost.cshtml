@@ -6,7 +6,7 @@
 	string addClass = isCreateActivity || isEditActivity ? "activity-post" : "";
 }
 <card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning-subtle border-2" : "border-primary-subtle") border mb-2">
-	<cardheader class="px-2 py-1">
+	<card-header class="px-2 py-1">
 		<row class="align-items-center">
 			<div class="col-auto">
 				<small>
@@ -53,8 +53,8 @@
 				</small>
 			</div>
 		</row>
-	</cardheader>
-	<cardbody class="px-2 py-0">
+	</card-header>
+	<card-body class="px-2 py-0">
 		<row class="gx-3">
 			<div class="forum-profile-section col-lg-2 col-md-3 py-2">
 				<row class="gx-0">
@@ -104,5 +104,5 @@
 				</div>
 			</div>
 		</row>
-	</cardbody>
+	</card-body>
 </card>

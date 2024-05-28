@@ -83,17 +83,17 @@
 		</div>
 	</div>
 	<card class="mt-2 mb-2">
-		<cardheader>
+		<card-header>
 			<row class="align-items-center row">
 				<span class="col-auto fs-5">Submission Text</span>
 				<sub-link class="col-auto btn btn-secondary btn-sm" id="@Model.Topic.SubmissionId.Value"><i class="fa fa-info-circle"></i> Full Submission Page</sub-link>
 				<pub-link condition="@Model.PublicationId.HasValue" class="ms-1 col-auto btn btn-secondary btn-sm" id="@(Model.PublicationId ?? 0)">Publication Page</pub-link>
 			</row>
-		</cardheader>
+		</card-header>
 		<show-more max-height="38rem">
-			<cardbody>
+			<card-body>
 				<wiki-markup markup="@Model.WikiPage.Markup" page-data="Model.WikiPage"></wiki-markup>
-			</cardbody>
+			</card-body>
 		</show-more>
 	</card>
 }

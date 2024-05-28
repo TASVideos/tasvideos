@@ -1,7 +1,7 @@
 ﻿@model ForumCategoryDisplayDto
 
 <card class="mb-2">
-	<cardheader>
+	<card-header>
 		<edit-link permission="EditCategories" asp-page="Edit" asp-route-id="@Model.Id" class="btn-sm float-end"></edit-link>
 		<h4>@Model.Title</h4>
 		@if (!string.IsNullOrWhiteSpace(Model.Description))
@@ -10,14 +10,14 @@
 				@Html.Raw(Model.Description)
 			</div>
 		}
-	</cardheader>
-	<cardheader class="py-0 text-body-tertiary">
+	</card-header>
+	<card-header class="py-0 text-body-tertiary">
 		<row>
 			<div class="col-8"><small>Subforum</small></div>
 			<div class="col-4"><small>Last Post</small></div>
 		</row>
-	</cardheader>
-	<cardbody class="py-0">
+	</card-header>
+	<card-body class="py-0">
 		@foreach (var forum in Model.Forums
 			.OrderBy(f => f.Ordinal)
 			.Where(f => User.Has(PermissionTo.SeeRestrictedForums) || !f.Restricted))
@@ -48,5 +48,5 @@
 			}
 			</row>
 		}
-	</cardbody>
+	</card-body>
 </card>

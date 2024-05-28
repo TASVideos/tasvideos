@@ -11,7 +11,7 @@
 }
 
 <card class="border-primary-subtle border mb-2">
-	<cardheader>
+	<card-header>
 		<h4 class="mt-2">
 			#@Model.Id <span condition="Model.Hidden"><i>(unlisted)</i> </span>- @Model.Title
 			<span condition="canEdit" class="float-end">
@@ -22,8 +22,8 @@
 					asp-href="/UserFiles?handler=Delete&fileId=@Model.Id&returnUrl=/UserFiles"></delete-button>
 			</span>
 		</h4>
-	</cardheader>
-	<cardheader>
+	</card-header>
+	<card-header>
 		<row>
 			<div class="col px-3 pb-2">
 				@Model.FileName
@@ -65,20 +65,20 @@
 				</div>
 			</div>
 		</row>
-	</cardheader>
-	<cardbody class="px-2 py-0">
+	</card-header>
+	<card-body class="px-2 py-0">
 		<div class="col d-flex flex-column py-2 px-2" condition="@(!string.IsNullOrEmpty(Model.Description))">
 			<wiki-markup markup="@Model.Description"></wiki-markup>
 		</div>
-	</cardbody>
+	</card-body>
 </card>
 
 <div condition="!string.IsNullOrWhiteSpace(Model.Annotations)" class="mb-2">
 	<card class="border-primary-subtle border mb-2">
-		<cardheader><h4>Annotations</h4></cardheader>
-		<cardbody>
+		<card-header><h4>Annotations</h4></card-header>
+		<card-body>
 			<pre class="annotations-text">@Model.Annotations</pre>
-		</cardbody>
+		</card-body>
 	</card>
 </div>
 
@@ -89,7 +89,7 @@
 	@foreach (var comment in Model.Comments.OrderBy(c => c.CreationTimeStamp))
 	{
 		<card class="border-primary-subtle border mb-2" condition="@(Model.Comments.Any())">
-			<cardheader>
+			<card-header>
 				<row>
 					<div class="col">
 						<h6>
@@ -117,8 +117,8 @@
 						</div>
 					</div>
 				</row>
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				<wiki-markup markup="@comment.Text" id="view-comment-@comment.Id"></wiki-markup>
 				<div class="d-none" id="edit-comment-@comment.Id">
 					<form method="post" asp-page="/UserFiles/Index" asp-route-handler="EditComment" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()">
@@ -133,22 +133,22 @@
 						</button>
 					</form>
 				</div>
-			</cardbody>
+			</card-body>
 		</card>
 	}
 
 	<card class="border-primary-subtle border mb-2" permission="CreateForumPosts">
-		<cardheader>
+		<card-header>
 			<h4>Comment:</h4>
-		</cardheader>
-		<cardbody>
+		</card-header>
+		<card-body>
 			<form method="post" asp-page="/UserFiles/Index" asp-route-handler="Comment" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()">
 				<input type="hidden" name="fileId" value="@Model.Id "/>
 				<label class="form-control-label"></label>
 				<textarea class="form-control" name="comment" maxlength="3500"></textarea>
 				<submit-button class="mt-3 mb-3"><i class="fa fa-plus"></i> Post</submit-button>
 			</form>
-		</cardbody>
+		</card-body>
 	</card>
 </div>
 

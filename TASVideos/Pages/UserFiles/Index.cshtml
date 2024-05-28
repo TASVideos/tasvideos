@@ -12,36 +12,36 @@
 <row>
 	<div class="col-md-6">
 		<card>
-			<cardheader>
+			<card-header>
 				Users with movies
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				@foreach (var user in Model.UsersWithMovies.OrderBy(u => u.UserName))
 				{
 					<a asp-page="ForUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: <timezone-convert asp-for="@user.Latest"/>)</span><br />
 				}
-			</cardbody>
+			</card-body>
 		</card>
 		<card>
-			<cardheader>
+			<card-header>
 				Recent Uncataloged Files <a class="btn btn-primary btn-sm" asp-page="Uncataloged">See all</a>
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				@foreach (var file in Model.UncatalogedFiles.OrderBy(u => u.SystemCode).ThenByDescending(uf => uf.UploadTimestamp))
 				{
 					<span condition="@file.SystemCode is not null">@file.SystemCode</span>
 					<a asp-page="Info" asp-route-id="@file.Id">@file.FileName by @file.Author</a>
 					<span>(<timezone-convert asp-for="@file.UploadTimestamp" />)</span><br />
 				}
-			</cardbody>
+			</card-body>
 		</card>
 	</div>
 	<div class="col-md-6">
 		<card>
-			<cardheader>
+			<card-header>
 				Latest Movies
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				@foreach (var file in Model.LatestMovies)
 				{
 					<div class="mb-2">
@@ -53,13 +53,13 @@
 					</div>
 				}
 				<a asp-page="List">More...</a>
-			</cardbody>
+			</card-body>
 		</card>
 		<card>
-			<cardheader>
+			<card-header>
 				Games with movies
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				@foreach (var game in Model.GamesWithMovies)
 				{
 					<div>
@@ -67,7 +67,7 @@
 						<small>(latest <timezone-convert asp-for="@game.Latest"/>)</small>
 					</div>
 				}
-			</cardbody>
+			</card-body>
 		</card>
 	</div>
 </row>

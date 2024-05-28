@@ -9,10 +9,10 @@
 @foreach (var user in Model.MoodyUsers)
 {
 	<card>
-		<cardheader>
+		<card-header>
 			<h4><profile-link username="@user.UserName"></profile-link></h4>
-		</cardheader>
-		<cardbody>
+		</card-header>
+		<card-body>
 			@foreach (var mood in MoodReportModel.Moods)
 			{
 				<div class="mood-box border p-2">
@@ -21,7 +21,7 @@
 					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="this.src = '/images/empty.png'" loading="lazy" />
 				</div>
 			}
-		</cardbody>
+		</card-body>
 	</card>
 	<hr />
 }

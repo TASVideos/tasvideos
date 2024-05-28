@@ -6,19 +6,19 @@
 @foreach (var g in groups.OrderByDescending(g => g.Key.ClassId))
 {
 	<card>
-		<cardheader>
+		<card-header>
 			<a href="/@g.Key.ClassName">
 				<icon path="@g.Key.ClassIconPath"></icon>
 				<strong>@g.Key.ClassName</strong>
 			</a>
 			&nbsp;(@g.Count())
-		</cardheader>
-		<cardbody>
+		</card-header>
+		<card-body>
 			@foreach (var pub in g.OrderBy(p => p.Id))
 			{
 				<pub-link id="pub.Id">@pub.Title</pub-link>
 				<br />
 			}
-		</cardbody>
+		</card-body>
 	</card>
 }

@@ -6,7 +6,7 @@
 <row>
 	<div class="col-md-6">
 		<card class="mb-2">
-			<cardheader>
+			<card-header>
 				<row>
 					<div class="col">
 						<h4>
@@ -29,8 +29,8 @@
 						</div>
 					</div>
 				</row>
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" class="float-end" />
 				<div class="card-text">
 					<a condition="Model.HasHomePage" href="/HomePages/@Model.UserName">Homepage</a>
@@ -104,14 +104,14 @@
 						}
 					</div>
 				</div>
-			</cardbody>
+			</card-body>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="card-footer">
 				<forum-markup markup="@Model.Signature" enable-html="false" enable-bb-code="true"></forum-markup>
 			</div>
 		</card>
 		<card class="mb-2">
-			<cardheader><h4>Roles</h4></cardheader>
-			<cardbody>
+			<card-header><h4>Roles</h4></card-header>
+			<card-body>
 				@if (Model.Roles.Any())
 				{
 					foreach (var role in Model.Roles)
@@ -124,27 +124,27 @@
 				{
 					<div class="alert alert-danger">This user has no Roles</div>
 				}
-			</cardbody>
-			<cardfooter permission="ViewPrivateUserData" condition="!string.IsNullOrWhiteSpace(Model.ModeratorComments)">
+			</card-body>
+			<card-footer permission="ViewPrivateUserData" condition="!string.IsNullOrWhiteSpace(Model.ModeratorComments)">
 				<label>Moderator Comments</label><br />
 				<small>@Model.ModeratorComments</small>
-			</cardfooter>
+			</card-footer>
 		</card>
 		<card condition="Model.Judgments.TotalJudgments > 0" class="mb-2">
-			<cardheader><h4>Judgments</h4></cardheader>
-			<cardbody>
+			<card-header><h4>Judgments</h4></card-header>
+			<card-body>
 				<p>Total movies judged: <a asp-page="/Activity/Judges" asp-route-username="@Model.UserName">@Model.Judgments.TotalJudgments</a></p>
-			</cardbody>
+			</card-body>
 		</card>
 		<card condition="Model.Publishing.TotalPublished > 0" class="mb-2">
-			<cardheader><h4>Publishing</h4></cardheader>
-			<cardbody>
+			<card-header><h4>Publishing</h4></card-header>
+			<card-body>
 				<p>Total movies published: <a asp-page="/Activity/Publishers" asp-route-username="@Model.UserName">@Model.Publishing.TotalPublished</a></p>
-			</cardbody>
+			</card-body>
 		</card>
 		<card class="mb-2" condition="Model.WikiEdits.TotalEdits > 0">
-			<cardheader><h4>Wiki</h4></cardheader>
-			<cardbody>
+			<card-header><h4>Wiki</h4></card-header>
+			<card-body>
 				<div>
 					<p>
 						<a asp-page="/Wiki/EditHistory"
@@ -156,13 +156,13 @@
 					<br />
 					<label>First Edit: <timezone-convert asp-for="@Model.WikiEdits.FirstEditDateTime" date-only="true" /></label>
 				</div>
-			</cardbody>
+			</card-body>
 		</card>
 	</div>
 	<div class="col-md-6">
 		<card class="text-start text-md-end mb-2">
-			<cardheader><h4>Publications</h4></cardheader>
-			<cardbody>
+			<card-header><h4>Publications</h4></card-header>
+			<card-body>
 				<div condition="!Model.AnyPublications" class="card-text">
 					<i>User has not had any Published Movies</i>
 				</div>
@@ -179,11 +179,11 @@
 					</p>
 					<p>Has published movies on these systems: @string.Join(", ", Model.PublishedSystems)</p>
 				</div>
-			</cardbody>
+			</card-body>
 		</card>
 		<card class="text-start text-md-end mb-2">
-			<cardheader><h4>Submissions</h4></cardheader>
-			<cardbody>
+			<card-header><h4>Submissions</h4></card-header>
+			<card-body>
 				<div condition="Model.SubmissionCount == 0" class="card-text">
 					<i>User has not had any Submissions</i>
 				</div>
@@ -209,11 +209,11 @@
 						<br />
 					}
 				</div>
-			</cardbody>
+			</card-body>
 		</card>
 		<card class="text-start text-md-end mb-2">
-			<cardheader><h4>Ratings</h4></cardheader>
-			<cardbody>
+			<card-header><h4>Ratings</h4></card-header>
+			<card-body>
 				<a class="btn btn-warning btn-sm" a asp-page="/Users/Ratings" asp-route-userName="@Model.UserName">See Ratings</a>
 				<label asp-for="PublicRatings"></label> @Model.PublicRatings.ToYesNo()
 				<div condition="Model.PublicRatings">
@@ -227,18 +227,18 @@
 					<br />
 					<label>(Ratings of obsolete movies are not counted)</label>
 				</div>
-			</cardbody>
+			</card-body>
 		</card>
 		<card class="text-start text-md-end mb-2" condition="Model.UserFiles.Total > 0">
-			<cardheader>
+			<card-header>
 				<h4>User Files</h4>
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				<a href="/UserFiles/ForUser/@Model.UserName">@Model.UserFiles.Total</a> files
 				<br /><br />
 				<span>Systems:</span><br />
 				@string.Join(", ", Model.UserFiles.Systems.Where(s => !string.IsNullOrWhiteSpace(s)))
-			</cardbody>
+			</card-body>
 		</card>
 	</div>
 </row>

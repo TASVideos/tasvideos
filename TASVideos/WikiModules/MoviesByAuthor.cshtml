@@ -20,12 +20,12 @@
 	@foreach (var author in authorsWithPubs.OrderByDescending(a => a.Pubs.Count).ThenBy(a => a.Name))
 	{
 		<card>
-			<cardheader>
+			<card-header>
 				<profile-link username="@author.Name"></profile-link>
 				<span>(@author.Pubs.Count)</span>
 				<span condition="Model.MarkNewbies && Model.NewbieAuthors.Any(a => a == author.Name)" class="badge bg-success text-white">New Author</span>
-			</cardheader>
-			<cardbody>
+			</card-header>
+			<card-body>
 				<ul style="list-style-type: none;">
 					@foreach (var pub in author.Pubs)
 					{
@@ -35,7 +35,7 @@
 						</li>
 					}
 				</ul>
-			</cardbody>
+			</card-body>
 		</card>
 	}
 </div>

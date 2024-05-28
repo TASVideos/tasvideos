@@ -22,13 +22,13 @@
 }
 
 <card class="mb-3">
-	<cardheader condition="canEdit || User.Has(PermissionTo.CatalogMovies)" class="d-flex p-1">
+	<card-header condition="canEdit || User.Has(PermissionTo.CatalogMovies)" class="d-flex p-1">
 		<div class="btn-toolbar ms-sm-auto">
 			<edit-link permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn-sm"></edit-link>
 			<edit-link condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn-sm"><i class="fa fa-pencil"></i> Edit Description</edit-link>
 		</div>
-	</cardheader>
-	<cardbody class="p-1 p-sm-3">
+	</card-header>
+	<card-body class="p-1 p-sm-3">
 		<img class="pull-end img-fluid float-sm-end mb-3 mb-sm-0" src="@url" />
 		@await Html.RenderWiki(wiki)
 		<row>
@@ -79,7 +79,7 @@
 				</ul>
 			</column>
 		</row>
-	</cardbody>
+	</card-body>
 </card>
 
 <h3>Publications</h3>

@@ -3,7 +3,7 @@
 	var groupedPermissions = Model.Permissions.GroupBy(p => p.Group());
 }
 <card class="mb-2">
-	<cardbody>
+	<card-body>
 		<h5 id="@Model.Name" class="card-title">@Model.Name</h5>
 		<row>
 			<div class="col-md-6">
@@ -44,8 +44,8 @@
 				}
 			</div>
 		</row>
-	</cardbody>
-	<cardfooter condition="!Model.IsDefault">
+	</card-body>
+	<card-footer condition="!Model.IsDefault">
 		<span class="font-weight-bold">Users with this role</span>
 		<div condition="!Model.Users.Any()">
 			<label class="form-control-label">No users currently have this role.</label>
@@ -61,5 +61,5 @@
 				</span>
 			}
 		</div>
-	</cardfooter>
+	</card-footer>
 </card>
