@@ -14,7 +14,7 @@
 	<a permission="SetPublicationClass" class="btn btn-secondary btn-sm" asp-page="EditClass" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
 </fullrow>
 <top-button-bar>
-	<edit-button permission="EditPublicationFiles" asp-page="EditFiles" asp-route-id="@Model.Id" class="btn-sm"></edit-button>
+	<edit-link permission="EditPublicationFiles" asp-page="EditFiles" asp-route-id="@Model.Id" class="btn-sm"></edit-link>
 	<a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm"><span class="fa fa-plus"></span> Additional Movie Files</a>
 </top-button-bar>
 <standard-table>
@@ -41,10 +41,10 @@
 	}
 </standard-table>
 <top-button-bar>
-	<edit-button permission="EditPublicationFiles"
+	<edit-link permission="EditPublicationFiles"
 	   asp-page="Urls/List"
 	   asp-route-publicationId="@Model.Id"
-	   class="btn-sm"></edit-button>
+	   class="btn-sm"></edit-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -144,7 +144,7 @@
 	<form-button-bar>
 		<preview-button></preview-button>
 		<submit-button></submit-button>
-		<cancel-button asp-page="/Publications/View" asp-route-id="@Model.Id"></cancel-button>
+		<cancel-link asp-page="/Publications/View" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
 

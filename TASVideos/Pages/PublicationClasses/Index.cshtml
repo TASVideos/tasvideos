@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Publication Class List");
 }
 <top-button-bar>
-	<add-button asp-page="Create"></add-button>
+	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -31,7 +31,7 @@
 				@publicationClass.Weight
 			</td>
 			<td-action-column>
-				<edit-button asp-page="/PublicationClasses/Edit" asp-route-id="@publicationClass.Id"></edit-button>
+				<edit-link asp-page="/PublicationClasses/Edit" asp-route-id="@publicationClass.Id"></edit-link>
 			</td-action-column>
 		</tr>
 	}

@@ -15,7 +15,7 @@
 		<h4 class="mt-2">
 			#@Model.Id <span condition="Model.Hidden"><i>(unlisted)</i> </span>- @Model.Title
 			<span condition="canEdit" class="float-end">
-				<edit-button asp-page="/UserFiles/Edit" asp-route-id="@Model.Id" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()" class="btn-sm"></edit-button>
+				<edit-link asp-page="/UserFiles/Edit" asp-route-id="@Model.Id" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()" class="btn-sm"></edit-link>
 				<delete-button
 					class="btn-sm"
 					warning-message="Are you sure you want to delete this file?"

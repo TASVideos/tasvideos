@@ -7,7 +7,7 @@
 <h4>Game: <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a></h4>
 
 <top-button-bar>
-	<add-button asp-page="Edit" permission="CatalogMovies" asp-route-gameId="@Model.GameId"></add-button>
+	<add-link asp-page="Edit" permission="CatalogMovies" asp-route-gameId="@Model.GameId"></add-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -33,7 +33,7 @@
 			<td>@version.Sha1</td>
 			<td>@version.System</td>
 			<td-action-column>
-				<edit-button class="btn-sm" asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId"></edit-button>
+				<edit-link class="btn-sm" asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId"></edit-link>
 			</td-action-column>
 		</tr>
 	}

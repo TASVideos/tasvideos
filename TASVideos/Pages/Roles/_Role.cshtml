@@ -8,7 +8,7 @@
 		<row>
 			<div class="col-md-6">
 				<div permission="EditRoles">
-					<edit-button asp-page="AddEdit" asp-route-id="@Model.Id"></edit-button>
+					<edit-link asp-page="AddEdit" asp-route-id="@Model.Id"></edit-link>
 					<a asp-page="AddEdit" asp-route-copyFrom="@Model.Id" class="btn btn-secondary">
 						<i class="fa fa-plus"></i> Copy From
 					</a>

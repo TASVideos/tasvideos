@@ -75,7 +75,7 @@
 	</fieldset>
 	<form-button-bar>
 		<submit-button><i class="fa fa-save"></i> @(Model.Id.HasValue ? "Save" : "Create")</submit-button>
-		<cancel-button asp-page="List"></cancel-button>
+		<cancel-link asp-page="List"></cancel-link>
 	</form-button-bar>
 </form>
 

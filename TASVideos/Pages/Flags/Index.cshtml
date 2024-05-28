@@ -5,7 +5,7 @@
 }
 
 <top-button-bar>
-	<add-button asp-page="Create"></add-button>
+	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -25,7 +25,7 @@
 			<td>@flag.Token</td>
 			<td>@flag.PermissionRestriction</td>
 			<td-action-column>
-				<edit-button asp-page="Edit" asp-route-id="@flag.Id"></edit-button>
+				<edit-link asp-page="Edit" asp-route-id="@flag.Id"></edit-link>
 			</td-action-column>
 		</tr>
 	}

@@ -48,7 +48,7 @@
 	<form-button-bar>
 		<preview-button></preview-button>
 		<submit-button disable="@string.IsNullOrWhiteSpace(Model.ToUser)"><i class="fa fa-save"></i> Send</submit-button>
-		<cancel-button asp-page="Inbox"></cancel-button>
+		<cancel-link asp-page="Inbox"></cancel-link>
 	</form-button-bar>
 </form>
 

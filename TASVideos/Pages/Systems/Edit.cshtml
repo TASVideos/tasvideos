@@ -28,12 +28,12 @@
 	</row>
 	<form-button-bar>
 		<submit-button></submit-button>
-		<cancel-button asp-page="Index"></cancel-button>
+		<cancel-link asp-page="Index"></cancel-link>
 	</form-button-bar>
 </form>
 
 <top-button-bar>
-	<add-button asp-page="CreateFramerate" asp-route-systemId="@Model.Id"></add-button>
+	<add-link asp-page="CreateFramerate" asp-route-systemId="@Model.Id"></add-link>
 </top-button-bar>
 <h4>System Framerates</h4>
 <standard-table>

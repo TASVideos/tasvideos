@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Tag List");
 }
 <top-button-bar>
-	<add-button asp-page="Create"></add-button>
+	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -18,7 +18,7 @@
 			<td>@tag.Code</td>
 			<td>@tag.DisplayName</td>
 			<td-action-column>
-				<edit-button asp-page="Edit" asp-route-id="@tag.Id"></edit-button>
+				<edit-link asp-page="Edit" asp-route-id="@tag.Id"></edit-link>
 			</td-action-column>
 		</tr>
 	}

@@ -54,7 +54,7 @@
 	<form-button-bar>
 		<preview-button></preview-button>
 		<submit-button><i class="@iconClass"></i> @saveBtnName</submit-button>
-		<cancel-button asp-page="@(Model.Id.HasValue ? "Index" : "List")" asp-route-id="@Model.Id"></cancel-button>
+		<cancel-link asp-page="@(Model.Id.HasValue ? "Index" : "List")" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
 <partial name="_PreviewWindow" model="@("Description", "/Wiki/Preview")" />

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers;
 
-public class EditButtonTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
+public class AddLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
@@ -15,7 +15,7 @@ public class EditButtonTagHelper(IHtmlGenerator generator) : AnchorTagHelper(gen
 		var content = (await output.GetChildContentAsync()).GetContent();
 		if (string.IsNullOrWhiteSpace(content))
 		{
-			output.Content.AppendHtml("<i class=\"fa fa-pencil\"></i> Edit");
+			output.Content.AppendHtml("<i class=\"fa fa-plus\"></i> Add");
 		}
 	}
 }

@@ -8,7 +8,7 @@
 }
 
 <top-button-bar condition="!string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())">
-	<back-button></back-button>
+	<back-link></back-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -31,7 +31,7 @@
 						<input type="hidden" name="gameGoalId" value="@Model.GoalToEdit" />
 						<input type="text" name="newGoalName" class="form-control" value="@goal.Name" />
 						<submit-button class="btn-sm mt-1"></submit-button>
-						<cancel-button asp-page="List" asp-fragment="goal-@goal.Id" asp-route-gameId="@Model.GameId" class="btn-sm mt-1"></cancel-button>
+						<cancel-link asp-page="List" asp-fragment="goal-@goal.Id" asp-route-gameId="@Model.GameId" class="btn-sm mt-1"></cancel-link>
 					</fullrow>
 				</form>
 			</td>

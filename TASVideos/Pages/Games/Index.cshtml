@@ -24,8 +24,8 @@
 <card class="mb-3">
 	<cardheader condition="canEdit || User.Has(PermissionTo.CatalogMovies)" class="d-flex p-1">
 		<div class="btn-toolbar ms-sm-auto">
-			<edit-button permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn-sm"></edit-button>
-			<edit-button condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn-sm"><i class="fa fa-pencil"></i> Edit Description</edit-button>
+			<edit-link permission="CatalogMovies" asp-page="/Games/Edit" asp-route-id="@Model.Game.Id" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn-sm"></edit-link>
+			<edit-link condition="@canEdit" asp-page="/Wiki/Edit" asp-route-path="@wiki" asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()" class="btn-sm"><i class="fa fa-pencil"></i> Edit Description</edit-link>
 		</div>
 	</cardheader>
 	<cardbody class="p-1 p-sm-3">
@@ -161,11 +161,11 @@
 <fullrow>
 <h4>
 	Game Versions
-	<edit-button permission="CatalogMovies"
+	<edit-link permission="CatalogMovies"
 	   asp-page="/Games/Versions/List"
 	   asp-route-gameId="@Model.Game.Id"
 	   asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
-	   class="float-end btn-sm"></edit-button>
+	   class="float-end btn-sm"></edit-link>
 </h4>
 </fullrow>
 <alert type="warning" condition="!Model.Game.Versions.Any()" class="mt-3">

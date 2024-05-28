@@ -21,7 +21,7 @@
 	</row>
 	<form-button-bar>
 		<submit-button disable="@Model.Rating is null" id="submit-btn"><span class="fa fa-save"></span> Rate</submit-button>
-		<back-button asp-page="/Publications/View" asp-route-id="@Model.Id"></back-button>
+		<back-link asp-page="/Publications/View" asp-route-id="@Model.Id"></back-link>
 	</form-button-bar>
 </form>
 <hr />

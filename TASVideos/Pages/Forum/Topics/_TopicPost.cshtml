@@ -38,7 +38,7 @@
 					   class="btn btn-secondary btn-sm">
 						<i class="fa fa-quote-right"></i> Quote
 					</a>
-					<edit-button condition="Model.IsEditable" asp-page="/Forum/Posts/Edit" asp-route-id="@Model.Id" class="btn-sm"></edit-button>
+					<edit-link condition="Model.IsEditable" asp-page="/Forum/Posts/Edit" asp-route-id="@Model.Id" class="btn-sm"></edit-link>
 					<delete-button condition="!Model.Restricted && User.Has(PermissionTo.DeleteForumPosts) && User.Has(PermissionTo.AssignRoles) && Model.PosterId != User.GetUserId()"
 								   asp-href="@($"/Forum/Posts/Edit/{Model.Id}?handler=Spam")"
 									warning-message="Are you sure you want to mark this post as spam and ban this user?"

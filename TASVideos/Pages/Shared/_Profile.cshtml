@@ -21,11 +21,11 @@
 							class="btn btn-secondary btn-sm">
 								<i class="fa fa-envelope"></i> PM
 							</a>
-							<edit-button permission="EditUsers"
+							<edit-link permission="EditUsers"
 							asp-page="/Users/Edit"
 							asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"
 							asp-route-id="@Model.Id"
-							class="btn-sm"></edit-button>
+							class="btn-sm"></edit-link>
 						</div>
 					</div>
 				</row>

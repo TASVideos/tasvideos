@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Game Systems List");
 }
 <top-button-bar>
-	<add-button permission="GameSystemMaintenance" asp-page="Create"></add-button>
+	<add-link permission="GameSystemMaintenance" asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -33,7 +33,7 @@
 				</div>
 			</td>
 			<td-action-column>
-				<edit-button permission="GameSystemMaintenance" asp-page="Edit" asp-route-id="@system.Id"></edit-button>
+				<edit-link permission="GameSystemMaintenance" asp-page="Edit" asp-route-id="@system.Id"></edit-link>
 			</td-action-column>
 		</tr>
 	}

@@ -91,7 +91,7 @@
 	</row>
 	<form-button-bar>
 		<submit-button id="submit-btn"><i class="@iconClass"></i> @saveBtnName</submit-button>
-		<cancel-button asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></cancel-button>
+		<cancel-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></cancel-link>
 	</form-button-bar>
 </form>
 <input id="hash-input" type="file" class="d-none" />

@@ -61,7 +61,7 @@
 	<form-button-bar class="mb-2">
 		<preview-button></preview-button>
 		<submit-button></submit-button>
-		<cancel-button asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId"></cancel-button>
+		<cancel-link asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId"></cancel-link>
 	</form-button-bar>
 </form>
 <div class="alert alert-light p-0">

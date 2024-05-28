@@ -8,7 +8,7 @@
 	No Games Listed for this Game Group
 </warning-alert>
 <top-button-bar>
-	<edit-button asp-page="Edit" asp-route-id="@Model.Id" permission="CatalogMovies"></edit-button>
+	<edit-link asp-page="Edit" asp-route-id="@Model.Id" permission="CatalogMovies"></edit-link>
 	<a asp-page="List" class="btn btn-secondary">All Groups</a>
 </top-button-bar>
 <card condition="!string.IsNullOrWhiteSpace(Model.Description)" class="mb-2">

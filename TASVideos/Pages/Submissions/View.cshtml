@@ -193,7 +193,7 @@
 		</small>
 		<div class="btn-toolbar mt-2">
 			<a condition="@Model.Submission.TopicId > 0" asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId" class="btn btn-secondary"><i class="fa-regular fa-comments"></i> Discuss and Vote</a>
-			<back-button asp-page="Index" name-override="Queue"></back-button>
+			<back-link asp-page="Index" name-override="Queue"></back-link>
 			<a asp-page="Index" asp-route-user="@Model.Submission.Submitter" class="btn btn-secondary">All by submitter</a>
 			<a asp-page="View" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-primary"><i class="fa fa-download"></i> Download</a>
 		</div>
@@ -201,7 +201,7 @@
 		<div class="btn-toolbar mt-2">
 			<a condition="@canClaimAsJudge" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success">Claim</a>
 			<a condition="@canClaimAsPublisher" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForPublishing" class="btn btn-success">Claim</a>
-			<edit-button condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id"></edit-button>
+			<edit-link condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id"></edit-link>
 			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="btn btn-info"><i class="fa fa-book"></i> Catalog</a>
 			<a condition="@canPublish" asp-page="Publish" asp-route-id="@Model.Id" class="btn btn-warning">Publish</a>
 		</div>

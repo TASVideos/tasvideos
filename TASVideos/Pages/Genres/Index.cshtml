@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Genre List");
 }
 <top-button-bar>
-	<add-button asp-page="Create" Permission="TagMaintenance"></add-button>
+	<add-link asp-page="Create" Permission="TagMaintenance"></add-link>
 </top-button-bar>
 <standard-table>
 	<tr>
@@ -20,7 +20,7 @@
 				<a asp-page="/Games/List" asp-route-Genre="@genre.DisplayName">@genre.GameCount</a>
 			</td>
 			<td>
-				<edit-button asp-page="Edit" asp-route-id="@genre.Id"></edit-button>
+				<edit-link asp-page="Edit" asp-route-id="@genre.Id"></edit-link>
 			</td>
 		</tr>
 	}

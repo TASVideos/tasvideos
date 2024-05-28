@@ -2,7 +2,7 @@
 @model TASVideos.Core.Services.Wiki.IWikiPage
 
 <top-button-bar condition="User.CanEditWiki(Model.PageName)">
-	<edit-button asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn-sm"></edit-button>
+	<edit-link asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn-sm"></edit-link>
 </top-button-bar>
 
 @if (Model.IsSystemPage())

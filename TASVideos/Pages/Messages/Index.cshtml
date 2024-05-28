@@ -5,7 +5,7 @@
 }
 
 <div class="mb-2">
-	<back-button asp-page="Inbox"></back-button>
+	<back-link asp-page="Inbox"></back-link>
 	<a condition="Model.PrivateMessage.CanReply" asp-page="Create" asp-route-replyTo="@Model.Id" class="btn btn-primary">Reply</a>
 </div>
 <div>
