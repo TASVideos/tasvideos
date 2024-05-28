@@ -8,7 +8,7 @@
 <p condition="string.IsNullOrWhiteSpace(Model.UserName)">These are peoples mood avatars</p>
 @foreach (var user in Model.MoodyUsers)
 {
-	<card>
+	<card class="mood-card">
 		<card-header>
 			<h4><profile-link username="@user.UserName"></profile-link></h4>
 		</card-header>
@@ -18,15 +18,22 @@
 				<div class="mood-box border p-2">
 					<strong>@mood.EnumDisplayName()</strong>
 					<br />
-					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="this.src = '/images/empty.png'" loading="lazy" />
+					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="this.src = '/images/empty.png'" loading="lazy" alt="mood @mood.ToString()" />
 				</div>
 			}
 		</card-body>
 	</card>
-	<hr />
 }
 
 <style>
+	.mood-card {
+		margin-bottom: .75rem;
+	}
+
+	.mood-card:last-child {
+		margin-bottom:  0;
+	}
+
 	.mood-box {
 		display: inline-block;
 		min-height: 139px;
