@@ -61,18 +61,18 @@
 	</form>
 	<a condition="!viewResults"
 		asp-route-ViewPollResults="True"
-		class="btn btn-sm btn-outline-info mt-2">
+		class="btn btn-sm btn-outline-info">
 		View Results
 	</a>
 	<a condition="viewResults && canVote"
 		asp-route-ViewPollResults=""
-		class="btn btn-sm btn-outline-info mt-2">
+		class="btn btn-sm btn-outline-info">
 		Return To Voting
 	</a>
 	<a condition="User.Has(PermissionTo.SeePollResults) && totalVotes > 0"
 		asp-page="PollResults"
 		asp-route-id="@Model.PollId"
-		class="btn btn-sm btn-info mt-2">
+		class="btn btn-sm btn-info">
 		See All Votes
 	</a>
 </info-alert>
