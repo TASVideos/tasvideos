@@ -4,7 +4,9 @@
 	ViewData.SetTitle($"URLs for {Model.Title}");
 }
 
-<h4>Movie: <pub-link id="Model.PublicationId">@Model.Title</pub-link></h4>
+@section PageTitle {
+	Movie: <pub-link id="Model.PublicationId">@Model.Title</pub-link>
+}
 
 <top-button-bar>
 	<back-link permission="EditPublicationMetaData" asp-page="/Publications/Edit" asp-route-id="@Model.PublicationId" name-override="Back to Edit"></back-link>
