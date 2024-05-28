@@ -4,13 +4,13 @@
 	ViewData.SetTitle($"Merging Topic: {Model.Topic.Title}");
 }
 
-<partial Name="_ForumHeader" />
-<h4>
+@section PageTitle {
 	Merging Topic:
 	<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a> →
 	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id">@Model.Topic.Title</a>
-</h4>
-<hr />
+}
+
+<partial Name="_ForumHeader" />
 <form method="post">
 	<row>
 		<column md="6">

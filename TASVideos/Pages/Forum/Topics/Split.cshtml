@@ -3,13 +3,14 @@
 @{
 	ViewData.SetTitle($"Splitting Topic: {Model.Topic.Title}");
 }
-<partial Name="_ForumHeader" />
-<h4>
+
+@section PageTitle {
 	Splitting Topic:
 	<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a> →
 	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id">@Model.Topic.Title</a>
-</h4>
-<hr />
+}
+
+<partial Name="_ForumHeader" />
 <form method="post">
 	<input type="hidden" asp-for="Topic.ForumName" />
 	<input type="hidden" asp-for="Topic.ForumId" />

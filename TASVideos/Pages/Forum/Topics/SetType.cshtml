@@ -3,10 +3,12 @@
 @{
 	ViewData.SetTitle($"Setting type for topic for: {Model.TopicTitle}");
 }
+@section PageTitle {
+	Setting type for topic: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a> →
+	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId">@Model.TopicTitle</a>
+}
+
 <partial Name="_ForumHeader" />
-<h4>Setting type for topic: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a></h4>
-
-
 <form method="post">
 	<input type="hidden" asp-for="ForumId"/>
 	<input type="hidden" asp-for="ForumName" />
