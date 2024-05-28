@@ -4,17 +4,19 @@
 	ViewData.SetTitle($"Private messages for {User.Name()}");
 }
 
-<div class="mb-1">
-	<a permission="SendPrivateMessages" class="float-end btn btn-primary" asp-page="Create">
-		<span class="fa fa-envelope"></span> Create
-	</a>
+<top-button-bar>
+	<div class="heading">
+		<a permission="SendPrivateMessages" class="btn btn-primary" asp-page="Create">
+			<span class="fa fa-envelope"></span> Create
+		</a>
+	</div>
 	<a class="btn btn-secondary" asp-page="Savebox">
 		<span class="fa fa-check-square"></span> Savebox
 	</a>
 	<a class="btn btn-secondary" asp-page="Sentbox">
 		<span class="fa fa-arrow-right"></span> Sentbox
 	</a>
-</div>
+</top-button-bar>
 <standard-table>
 	<tr>
 		<th>Subject</th>
