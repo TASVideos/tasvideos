@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace TASVideos.Pages.Messages;
+﻿namespace TASVideos.Pages.Messages;
 
 [RequirePermission(PermissionTo.SendPrivateMessages)]
 public class CreateModel(UserManager userManager, IPrivateMessageService privateMessageService) : BasePageModel

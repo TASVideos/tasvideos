@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace TASVideos.Pages.Forum.Topics;
+﻿namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
 public class CatalogModel(ApplicationDbContext db) : BasePageModel

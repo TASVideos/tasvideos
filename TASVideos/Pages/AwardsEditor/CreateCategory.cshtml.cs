@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Data.Entity.Awards;
+﻿using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Pages.AwardsEditor;
 

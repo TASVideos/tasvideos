@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-
-namespace TASVideos.Extensions;
+﻿namespace TASVideos.Extensions;
 
 public static class ViewContextExtensions
 {

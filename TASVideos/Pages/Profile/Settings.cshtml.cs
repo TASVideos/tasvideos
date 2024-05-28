@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Core.Services.Email;
+﻿using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Profile;
 

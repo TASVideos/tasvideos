@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Common;
+﻿using TASVideos.Common;
 
 namespace TASVideos.Pages.Submissions;
 

@@ -1,5 +1,4 @@
-﻿@using TASVideos.Pages.Profile
-@model UserRatings
+﻿@model UserRatings
 @{
 	var isMyPage = User.GetUserId() == Model.Id;
 	ViewData.SetTitle($"Ratings for {Model.UserName}");

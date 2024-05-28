@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Topics;
