@@ -113,10 +113,7 @@ public class BasePageModel : PageModel
 		};
 	}
 
-	protected JsonResult Json(object? obj)
-	{
-		return new JsonResult(obj);
-	}
+	protected JsonResult Json(object? obj) => new JsonResult(obj);
 
 	protected IActionResult ZipFile(ZippedFile? file)
 	{
