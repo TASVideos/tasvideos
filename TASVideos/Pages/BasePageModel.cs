@@ -78,9 +78,12 @@ public class BasePageModel : PageModel
 
 	protected void SetMessage(SaveResult result, string successMessage, string failureMessage)
 	{
-		if (result.IsSuccess() && !string.IsNullOrWhiteSpace(successMessage))
+		if (result.IsSuccess())
 		{
-			SuccessStatusMessage(successMessage);
+			if (!string.IsNullOrWhiteSpace(successMessage))
+			{
+				SuccessStatusMessage(successMessage);
+			}
 		}
 		else if (!string.IsNullOrWhiteSpace(failureMessage))
 		{
