@@ -71,6 +71,17 @@ public class RatingServiceTests
 	}
 
 	[TestMethod]
+	public async Task GetOverallRatingForPublication_PublicationWithNoRatings_ReturnsZero()
+	{
+		const int pubId = 1;
+		_db.Publications.Add(new Publication { Id = pubId });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetOverallRatingForPublication(pubId);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
 	public async Task GetOverallRatingForPublication_ReturnsCorrectAverage()
 	{
 		const int pubId = 1;

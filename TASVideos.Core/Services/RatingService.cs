@@ -28,13 +28,19 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 
 	public async Task<double> GetOverallRatingForPublication(int publicationId)
 	{
-		return await db.Publications
-			.Where(p => p.Id == publicationId)
-			.Select(p => p.PublicationRatings
+		var ratings = await db.PublicationRatings
+			.Where(pr => pr.PublicationId == publicationId)
 			.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 			.Where(pr => pr.User!.UseRatings)
-			.Average(pr => pr.Value))
-			.SingleOrDefaultAsync();
+			.Select(pr => pr.Value)
+			.ToListAsync();
+
+		if (ratings.Count == 0)
+		{
+			return 0;
+		}
+
+		return ratings.Average();
 	}
 
 	public async Task<SaveResult> UpdateUserRating(int userId, int publicationId, double? value)
