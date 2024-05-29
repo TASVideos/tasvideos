@@ -17,11 +17,7 @@
 }
 
 <standard-table class="mt-2">
-	<tr>
-		<th>Date</th>
-		<th>Publication</th>
-		<th>Class</th>
-	</tr>
+	<table-head columns="Date,Publication,Class"></table-head>
 	@foreach (var pub in Model.Publications.OrderByDescending(p => p.Id))
 	{
 		<tr>

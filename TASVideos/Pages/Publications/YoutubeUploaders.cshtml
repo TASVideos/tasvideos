@@ -18,11 +18,7 @@
 <br />
 <label>Obsolete: @tvcData.Count(d => d.IsObsolete)</label>
 <standard-table>
-	<tr>
-		<th>Youtube Channel</th>
-		<th>Current Uploads</th>
-		<th>Obsolete Uploads</th>
-	</tr>
+	<table-head columns="Youtube Channel,Current Uploads,Obsolete Uploads"></table-head>
 	@foreach (var channel in groups.Where(g => g.Key != tvc))
 	{
 		var obsoleteCount = channel.Count(c => c.IsObsolete);
@@ -39,17 +35,13 @@
 					@currentCount
 				</a>
 			</td>
-			<td condition="currentCount == 0">
-				0
-			</td>
+			<td condition="currentCount == 0">0</td>
 			<td condition="obsoleteCount > 0">
 				<a href="/Movies-@(string.Join("-", channel.Where(c => c.IsObsolete).Select(c => $"{c.PublicationId}M")))">
 					@obsoleteCount
 				</a>
 			</td>
-			<td condition="obsoleteCount == 0">
-				0
-			</td>
+			<td condition="obsoleteCount == 0">0</td>
 		</tr>
 	}
 </standard-table>

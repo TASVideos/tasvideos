@@ -9,10 +9,7 @@
 </warning-alert>
 
 <standard-table>
-	<tr>
-		<th>Game</th>
-		<th>Publications</th>
-	</tr>
+	<table-head columns="Game,Publications"></table-head>
 	@foreach (var game in Model.Games.OrderBy(g => g.Name))
 	{
 		<tr>

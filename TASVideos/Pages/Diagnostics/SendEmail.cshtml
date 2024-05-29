@@ -4,9 +4,9 @@
 	ViewData.SetTitle("Send an Email");
 }
 
-<ul>
-	<li><a asp-page="Index">Diagnostics</a></li>
-</ul>
+<top-button-bar>
+	<back-link asp-page="Index"></back-link>
+</top-button-bar>
 <form method="post">
 	<label asp-for="To"></label>
 	<input asp-for="To" rows="10" class="form-control mb-2" maxlength="100" />

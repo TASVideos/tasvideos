@@ -8,12 +8,14 @@
 <div condition="@Model.Posts.Any()">
 	<partial name="_Pager" model="Model.Posts" />
 	<standard-table>
-		<tr>
-			<th class="d-none d-md-table-cell">Forum</th>
-			<th>Topic</th>
-			<th>Posted</th>
-			<th>Post</th>
-		</tr>
+		<thead>
+			<tr>
+				<th class="d-none d-md-table-cell">Forum</th>
+				<th>Topic</th>
+				<th>Posted</th>
+				<th>Post</th>
+			</tr>
+		</thead>
 		@foreach (var post in Model.Posts)
 		{
 			<tr>
@@ -28,7 +30,7 @@
 				</td>
 				<td>
 					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa-regular fa-bookmark"></i> @post.PosterName</a>
-					<br />
+					<br/>
 					<small class="d-none d-md-inline-block">
 						@post.Text.CapAndEllipse(50)
 					</small>

@@ -2,16 +2,9 @@
 
 @if (Model.Orphans.Any())
 {
-	<div>
-		<label>Total: @Model.Orphans.Count</label>
-	</div>
+	<div>Total: @Model.Orphans.Count</div>
 	<standard-table>
-		<tbody>
-		<tr>
-			<th>Last Modified</th>
-			<th>Page</th>
-			<th>Last Author</th>
-		</tr>
+		<table-head columns="Last Modified,Page,Last Author"></table-head>
 		@foreach (var orphan in Model.Orphans)
 		{
 			<tr>
@@ -22,7 +15,6 @@
 				<td>@orphan.LastUpdateUserName</td>
 			</tr>
 		}
-		</tbody>
 	</standard-table>
 }
 else

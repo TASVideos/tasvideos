@@ -32,10 +32,7 @@
 	<br />
 	<label>Rating Average: @Model.OverallRating.ToOverallRatingString()</label>
 	<standard-table>
-		<tr>
-			<th>User</th>
-			<th>Rating</th>
-		</tr>
+		<table-head columns="User,Rating"></table-head>
 		@foreach (var ratings in Model.VisibleRatings.OrderBy(r => r.UserName))
 		{
 			<tr @Html.Raw(!ratings.IsPublic ? "style=\"opacity: 0.50\"" : "")>

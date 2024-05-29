@@ -36,14 +36,7 @@
 <hr />
 <h4>Current Awards</h4>
 <standard-table>
-	<tr>
-		<th>Description</th>
-		<th>Image</th>
-		<th>Short Name</th>
-		<th>Type</th>
-		<th>Assigned</th>
-		<th></th>
-	</tr>
+	<table-head columns="Description,Image,Short Name,Type,Assigned,"></table-head>
 	@foreach (var assignment in Model.Assignments.OrderBy(a => a.Description))
 	{
 		<tr>

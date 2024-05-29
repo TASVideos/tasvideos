@@ -2,18 +2,12 @@
 @using System.Globalization
 @model DeprecateMovieFormatsModel
 @{
-	ViewData.SetTitle("Deprecrate Movie Formats");
+	ViewData.SetTitle("Deprecate Movie Formats");
 }
 
 <h4>Supported formats</h4>
 <standard-table>
-	<tr>
-		<th>Format</th>
-		<th>Status</th>
-		<th>Actions</th>
-		<th>Changed On</th>
-		<th>Changed By</th>
-	</tr>
+	<table-head columns="Format,Status,Actions,Changed On"></table-head>
 	@foreach (var format in Model.MovieExtensions)
 	{
 		var deprecated = format.Value?.Deprecated ?? false;
@@ -35,7 +29,9 @@
 					<button class="btn btn-success btn-sm">Allow</button>
 				</form>
 			</td>
-			<td>@(format.Value?.LastUpdateTimestamp.ToString(CultureInfo.CurrentCulture) ?? "")</td>
+			<td>
+				@(format.Value?.LastUpdateTimestamp.ToString(CultureInfo.CurrentCulture) ?? "")
+			</td>
 		</tr>
 	}
 </standard-table>

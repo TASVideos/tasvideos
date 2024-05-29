@@ -13,12 +13,7 @@
 	<add-link asp-page="Edit" permission="EditPublicationFiles" asp-route-publicationId="@Model.PublicationId"></add-link>
 </top-button-bar>
 <standard-table condition="Model.CurrentUrls.Any()">
-	<tr>
-		<th>Type</th>
-		<th>URL</th>
-		<th>Name</th>
-		<th>Actions</th>
-	</tr>
+	<table-head columns="Type,URL,Name,Actions"></table-head>
 	@foreach (var url in Model.CurrentUrls.OrderBy(u => u.Type).ThenBy(u => u.DisplayName))
 	{
 		<tr>

@@ -8,14 +8,7 @@
 	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Name</th>
-		<th>Icon Path</th>
-		<th>Link Path</th>
-		<th>Token</th>
-		<th>Permission Restriction</th>
-		<th></th>
-	</tr>
+	<table-head columns="Name,Icon Path,Link Path,Token,Permission Restriction,"></table-head>
 	@foreach (var flag in Model.Flags.OrderBy(f => f.Token))
 	{
 		<tr>

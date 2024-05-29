@@ -3,15 +3,11 @@
 @{
 	ViewData.SetTitle("Unanswered Posts");
 }
+
 <partial Name="_ForumHeader" />
 <partial name="_Pager" model="Model.Posts" />
 <standard-table>
-	<tr>
-		<th>Forum</th>
-		<th>Topic</th>
-		<th>Author</th>
-		<th>Posted On</th>
-	</tr>
+	<table-head columns="Forum,Topic,Author,Posted On"></table-head>
 	@foreach (var post in Model.Posts)
 	{
 		<tr>

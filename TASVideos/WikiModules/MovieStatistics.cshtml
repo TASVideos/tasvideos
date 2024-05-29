@@ -3,22 +3,14 @@
 	@Model.ErrorMessage
 </warning-alert>
 
-<div condition="Model.General is not null">
-	<p>
-		<ul>
-			<li>Published movies: @Model.General!.PublishedMovieCount</li>
-			<li>Total movies (including obsoleted): @Model.General.TotalMovieCount</li>
-			<li>Submitted movies: @Model.General.SubmissionCount</li>
-			<li>Published movie average rerecord count: @Model.General.AverageRerecordCount</li>
-		</ul>
-	</p>
-</div>
-
+<ul condition="Model.General is not null">
+	<li>Published movies: @Model.General!.PublishedMovieCount</li>
+	<li>Total movies (including obsoleted): @Model.General.TotalMovieCount</li>
+	<li>Submitted movies: @Model.General.SubmissionCount</li>
+	<li>Published movie average rerecord count: @Model.General.AverageRerecordCount</li>
+</ul>
 <standard-table condition="Model.Movies.Count > 0">
-	<tr>
-		<th>@Model.FieldHeader</th>
-		<th>Movie</th>
-	</tr>
+	<table-head columns="@($"{Model.FieldHeader},Movie")"></table-head>
 	@foreach (var entry in Model.Movies)
 	{
 		<tr>

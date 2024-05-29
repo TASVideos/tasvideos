@@ -5,17 +5,11 @@
 
 <partial name="_Pager" model="Model.Logs" />
 <standard-table>
-	<tr>
-		<th>Page</th>
-		<th>Author</th>
-		<th>Message</th>
-		<th>Time</th>
-		<th>Diff</th>
-	</tr>
+	<table-head columns="Page,Author,Message,Time,Diff"></table-head>
 	@foreach (var group in grouped)
 	{
 		<tr>
-			<th style="background-color: #D0D0D0" colspan="6">@group.Key.ToShortDateString()</th>
+			<td style="background-color: #D0D0D0" colspan="6">@group.Key.ToShortDateString()</td>
 		</tr>
 		foreach (var item in group)
 		{

@@ -1,15 +1,12 @@
 ﻿@model MovieMaintenanceLog
-<br /><br />
-<a condition="!Model.IsSinglePub" asp-page="" asp-route-begin="@Model.Next" class="btn btn-primary float-end mb-2">Next</a>
+<top-button-bar>
+	<a condition="!Model.IsSinglePub" asp-page="" asp-route-begin="@Model.Next" class="btn btn-primary">Next</a>
+</top-button-bar>
 @foreach (var pub in Model.Logs)
 {
 	<pub-link id="pub.Key.Id">@pub.Key.Title</pub-link>
 	<standard-table>
-		<tr>
-			<th>Editor</th>
-			<th>Datetime</th>
-			<th>Log</th>
-		</tr>
+		<table-head columns="Editor,Datetime,Log"></table-head>
 		@foreach (var log in pub)
 		{
 			<tr>

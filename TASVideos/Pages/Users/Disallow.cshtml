@@ -3,9 +3,8 @@
 @{
 	ViewData.SetTitle("Disallows");
 }
-<label>This page manages username patterns that are not allowed during user registration</label>
-<hr />
-<form method="post">
+<div class="mb-2">This page manages username patterns that are not allowed during user registration</div>
+<form method="post" class="mb-2">
 	<row>
 		<column lg="6">
 			<label asp-for="RegexPattern"></label>
@@ -15,13 +14,9 @@
 		</column>
 	</row>
 </form>
-<hr />
+
 <standard-table>
-	<tr>
-		<th>Id</th>
-		<th>Regex Pattern</th>
-		<th></th>
-	</tr>
+	<table-head columns="Id,Regex Pattern,"></table-head>
 	@foreach (var disallow in Model.Disallows)
 	{
 		<tr>

@@ -1,11 +1,6 @@
 ﻿@model UserMovies
 <standard-table>
-	<tr>
-		<th>Uploaded</th>
-		<th>By</th>
-		<th>Filename</th>
-		<th>Title</th>
-	</tr>
+	<table-head columns="Uploaded,By,Filename,Title"></table-head>
 	@foreach (var item in Model.Movies)
 	{
 		<tr>

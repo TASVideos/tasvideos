@@ -18,11 +18,7 @@
 	<a permission="CreateAdditionalMovieFiles" asp-page="AdditionalMovies" asp-route-id="@Model.Id" class="btn btn-primary btn-sm"><span class="fa fa-plus"></span> Additional Movie Files</a>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>File Name</th>
-		<th>Type</th>
-		<th>Description</th>
-	</tr>
+	<table-head columns="File Name,Type,Description"></table-head>
 	<tr>
 		<td>
 			<a Permission="ReplacePrimaryMovieFile" class="btn btn-warning btn-sm" asp-page="PrimaryMovie" asp-route-id="@Model.Id">Replace</a>
@@ -47,11 +43,7 @@
 	   class="btn-sm"></edit-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Type</th>
-		<th>URL</th>
-		<th>Name</th>
-	</tr>
+	<table-head columns="Type,URL,Name"></table-head>
 	@foreach (var url in Model.Publication.Urls.OrderBy(f => f.Type).ThenBy(f => f.DisplayName))
 	{
 		<tr>

@@ -26,11 +26,7 @@
 <div>Cancelled: @cancelledTotal (@cancelledTotal.ToPercent(total)%)</div>
 <div>Playground: @playgroundTotal (@playgroundTotal.ToPercent(total)%)</div>
 <standard-table class="mt-2">
-	<tr>
-		<th>Date</th>
-		<th>Submission</th>
-		<th>Decision</th>
-	</tr>
+	<table-head columns="Date,Submission,Decision"></table-head>
 	@foreach (var sub in Model.Submissions
 		.OrderByDescending(s => orders.GetValueOrDefault(s.Status, 0))
 		.ThenByDescending(s => s.Id))

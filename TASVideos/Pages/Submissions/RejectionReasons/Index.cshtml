@@ -5,10 +5,7 @@
 }
 @await Html.RenderWiki(SystemWiki.RejectionReasonsHeader)
 <standard-table>
-	<tr>
-		<th>Reasons</th>
-		<th>Submission Count</th>
-	</tr>
+	<table-head columns="Reasons,Submission Count"></table-head>
 	@foreach (var reason in Model.Reasons.OrderByDescending(m => m.SubmissionCount))
 	{
 		<tr>

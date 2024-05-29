@@ -22,50 +22,44 @@
 	}
 }
 
-<ul>
-	<li><a asp-page="Index">Diagnostics</a></li>
-</ul>
-<row>
-	<column lg="6">
-		<standard-table>
-			<tr>
-				<th>Service</th>
-				<th>Status</th>
-			</tr>
-			<tr>
-				<td>YouTube Enabled</td>
-				<td>
-					@Html.Raw(ToIcon(Model.YoutubeEnabled))
-				</td>
-			</tr>
-			<tr>
-				<td>Youtube Access Successful</td>
-				<td>
-					@Html.Raw(ToIcon(Model.YoutubeAccessSuccessful))
-				</td>
-			</tr>
-			<tr>
-				<td>Email Enabled</td>
-				<td>
-					@Html.Raw(ToIcon(Model.EmailEnabled))
-				</td>
-			</tr>
-			<tr>
-				<td>Irc</td>
-				<td>@Html.Raw(ToIcon(Model.IrcEnabled))</td>
-			</tr>
-			<tr>
-				<td>Irc Secure Channel</td>
-				<td>@Html.Raw(ToIcon(Model.SecureIrcEnabled))</td>
-			</tr>
-			<tr>
-				<td>Discord</td>
-				<td>@Html.Raw(ToIcon(Model.DiscordEnabled))</td>
-			</tr>
-			<tr>
-				<td>Discord Private Channel</td>
-				<td>@Html.Raw(ToIcon(Model.DiscordPrivateChannelEnabled))</td>
-			</tr>
-		</standard-table>
-	</column>
-</row>
+<top-button-bar>
+	<back-link asp-page="Index"></back-link>
+</top-button-bar>
+<standard-table>
+	<table-head columns="Service,Status"></table-head>
+	<tr>
+		<td>YouTube Enabled</td>
+		<td>
+			@Html.Raw(ToIcon(Model.YoutubeEnabled))
+		</td>
+	</tr>
+	<tr>
+		<td>Youtube Access Successful</td>
+		<td>
+			@Html.Raw(ToIcon(Model.YoutubeAccessSuccessful))
+		</td>
+	</tr>
+	<tr>
+		<td>Email Enabled</td>
+		<td>
+			@Html.Raw(ToIcon(Model.EmailEnabled))
+		</td>
+	</tr>
+	<tr>
+		<td>Irc</td>
+		<td>@Html.Raw(ToIcon(Model.IrcEnabled))</td>
+	</tr>
+	<tr>
+		<td>Irc Secure Channel</td>
+		<td>@Html.Raw(ToIcon(Model.SecureIrcEnabled))</td>
+	</tr>
+	<tr>
+		<td>Discord</td>
+		<td>@Html.Raw(ToIcon(Model.DiscordEnabled))</td>
+	</tr>
+	<tr>
+		<td>Discord Private Channel</td>
+		<td>@Html.Raw(ToIcon(Model.DiscordPrivateChannelEnabled))</td>
+	</tr>
+</standard-table>
+

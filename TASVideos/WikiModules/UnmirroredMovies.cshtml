@@ -2,11 +2,7 @@
 
 Total count: @Model.Entries.Count
 <standard-table>
-	<thead>
-		<tr>
-			<th>Movie</th>
-		</tr>
-	</thead>
+	<table-head columns="Movie"></table-head>
 	<tbody>
 		@foreach (var entry in Model.Entries)
 		{

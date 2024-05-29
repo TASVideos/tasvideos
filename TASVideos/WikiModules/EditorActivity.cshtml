@@ -1,18 +1,11 @@
 ﻿@model EditorActivity
 <standard-table>
-	<tr>
-		<th>UserName</th>
-		<th>Edits</th>
-	</tr>
+	<table-head columns="UserName,Edits"></table-head>
 	@foreach (var entry in Model.Edits)
 	{
 		<tr>
-			<td>
-				<profile-link username="@entry.UserName"></profile-link>
-			</td>
-			<td>
-				<a asp-page="/Wiki/EditHistory" asp-route-username="@entry.UserName">@entry.WikiEdits</a>
-			</td>
+			<td><profile-link username="@entry.UserName"></profile-link></td>
+			<td><a asp-page="/Wiki/EditHistory" asp-route-username="@entry.UserName">@entry.WikiEdits</a></td>
 		</tr>
 	}
 </standard-table>

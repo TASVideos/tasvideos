@@ -6,12 +6,7 @@
 
 <back-link asp-page="Inbox" class="mb-1" name-override="Inbox"></back-link>
 <standard-table>
-	<tr>
-		<th>Subject</th>
-		<th>To</th>
-		<th>Date</th>
-		<th>Actions</th>
-	</tr>
+	<table-head columns="Subject,To,Date,"></table-head>
 	@foreach (var entry in Model.SentBox)
 	{
 		<tr>

@@ -3,11 +3,12 @@
 @{
 	ViewData.SetTitle($"Games for Group: {Model.Name}");
 }
-<label class="mb-2">Abbreviation: @Model.Abbreviation</label>
+
 <warning-alert condition="!Model.Games.Any()">
 	No Games Listed for this Game Group
 </warning-alert>
 <top-button-bar>
+	<label class="heading">Abbreviation: @Model.Abbreviation</label>
 	<edit-link asp-page="Edit" asp-route-id="@Model.Id" permission="CatalogMovies"></edit-link>
 	<a asp-page="List" class="btn btn-secondary">All Groups</a>
 </top-button-bar>
@@ -16,31 +17,15 @@
 	<card-body><wiki-markup markup="@Model.Description"></wiki-markup></card-body>
 </card>
 <standard-table condition="Model.Games.Any()">
-	<tr>
-		<th>Game</th>
-		<th>Systems</th>
-		<th>Publications</th>
-		<th>Submissions</th>
-		<th>Resource Page</th>
-	</tr>
+	<table-head columns="Game,Systems,Publications,Submissions,Resource Page"></table-head>
 	@foreach (var game in Model.Games.OrderBy(g => g.Name).ThenBy(g => g.SystemsString()))
 	{
 		<tr>
-			<td>
-				<game-link id="game.Id">@game.Name</game-link>
-			</td>
-			<td>
-				@game.SystemsString()
-			</td>
-			<td>
-				<a href="/Movies-@(game.Id)G">@game.PubCount</a>
-			</td>
-			<td>
-				<a href="/Subs-List?GameId=@(game.Id)">@game.SubCount</a>
-			</td>
-			<td>
-				<a href="/@game.GameResourcesPage">@game.GameResourcesPage</a>
-			</td>
+			<td><game-link id="game.Id">@game.Name</game-link></td>
+			<td>@game.SystemsString()</td>
+			<td><a href="/Movies-@(game.Id)G">@game.PubCount</a></td>
+			<td><a href="/Subs-List?GameId=@(game.Id)">@game.SubCount</a></td>
+			<td><a href="/@game.GameResourcesPage">@game.GameResourcesPage</a></td>
 		</tr>
 	}
 </standard-table>

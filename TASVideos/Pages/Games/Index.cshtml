@@ -29,7 +29,7 @@
 		</div>
 	</card-header>
 	<card-body class="p-1 p-sm-3">
-		<img class="pull-end img-fluid float-sm-end mb-3 mb-sm-0" src="@url" />
+		<img class="pull-end img-fluid float-sm-end mb-3 mb-sm-0" src="@url" alt="Game Screenshot" />
 		@await Html.RenderWiki(wiki)
 		<row>
 			<column md="6">
@@ -170,15 +170,7 @@
 	No records.
 </alert>
 <standard-table condition="Model.Game.Versions.Any()">
-	<tr>
-		<th>Type</th>
-		<th>Name</th>
-		<th>Title Override</th>
-		<th>Region</th>
-		<th>Version</th>
-		<th>Platform</th>
-		<th>Hashes</th>
-	</tr>
+	<table-head columns="Type,Name,Title Override,Region,Version,Platform,Hashes"></table-head>
 	@foreach (var rom in Model.Game.Versions.OrderBy(v => v.Name))
 	{
 		<tr>
@@ -189,7 +181,7 @@
 			<td>@rom.Version</td>
 			<td>@rom.SystemCode</td>
 			<td>
-				<small condition="!string.IsNullOrWhiteSpace(rom.Sha1)" class="text-nowrap">SHA1: @rom.Sha1</small>
+				<small condition="!string.IsNullOrWhiteSpace(rom.Sha1)" class="text-nowrap">SHA1: @rom.Sha1</small><br />
 				<small condition="!string.IsNullOrWhiteSpace(rom.Md5)" class="text-nowrap">MD5: @rom.Md5</small>
 			</td>
 		</tr>

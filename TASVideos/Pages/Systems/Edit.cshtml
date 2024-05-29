@@ -33,17 +33,11 @@
 </form>
 
 <top-button-bar>
+	<h4 class="heading">System Framerates</h4>
 	<add-link asp-page="CreateFramerate" asp-route-systemId="@Model.Id"></add-link>
 </top-button-bar>
-<h4>System Framerates</h4>
 <standard-table>
-	<tr>
-		<th>Framerate</th>
-		<th>Region</th>
-		<th>Preliminary</th>
-		<th>Obsolete</th>
-		<th>Actions</th>
-	</tr>
+	<table-head columns="Framerate,Region,Preliminary,Obsolete,Actions"></table-head>
 	@foreach (var rate in Model.System.SystemFrameRates
 		.OrderBy(r => r.Obsolete)
 		.ThenBy(r => r.FrameRate))
@@ -53,7 +47,9 @@
 			<td>@rate.RegionCode</td>
 			<td>@rate.Preliminary</td>
 			<td>@rate.Obsolete</td>
-			<td-action-column><a class="btn btn-sm btn-danger" asp-page="EditFrameRate" asp-route-id="@rate.Id">Edit</a></td-action-column>
+			<td-action-column>
+				<edit-link class="btn-sm" asp-page="EditFrameRate" asp-route-id="@rate.Id"></edit-link>
+			</td-action-column>
 		</tr>
 	}
 </standard-table>

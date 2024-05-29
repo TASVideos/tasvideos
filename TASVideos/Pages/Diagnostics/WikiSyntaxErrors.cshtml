@@ -4,18 +4,12 @@
 	ViewData.SetTitle("Wiki Syntax Errors");
 }
 
-<ul>
-	<li><a asp-page="Index">Diagnostics</a></li>
-</ul>
-<label class="float-end">Total: @Model.Rows.Count</label>
+<top-button-bar>
+	<label class="heading">Total: @Model.Rows.Count</label>
+	<back-link asp-page="Index"></back-link>
+</top-button-bar>
 <standard-table>
-	<thead>
-		<tr>
-			<th>Page Name</th>
-			<th>Error Message</th>
-			<th>Excerpt</th>
-		</tr>
-	</thead>
+	<table-head columns="Page Name,Error Message,Excerpt"></table-head>
 	<tbody>
 		@foreach (var row in Model.Rows)
 		{

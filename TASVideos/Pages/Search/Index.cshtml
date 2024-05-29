@@ -26,11 +26,7 @@
 	<hr />
 	<h4>Game Results:</h4>
 	<standard-table>
-		<tr>
-			<th>Game</th>
-			<th>System</th>
-			<th>Groups</th>
-		</tr>
+		<table-head columns="Game,System,Groups"></table-head>
 		@foreach (var result in Model.GameResults.Take(IndexModel.PageSize))
 		{
 			<tr>
@@ -53,10 +49,7 @@
 	<hr />
 	<h4>Wiki Results:</h4>
 	<standard-table>
-		<tr>
-			<th>Page</th>
-			<td>Content</td>
-		</tr>
+		<table-head columns="Page,Content"></table-head>
 		@foreach (var result in Model.PageResults.Take(IndexModel.PageSize))
 		{
 			<tr>
@@ -75,10 +68,7 @@
 	<hr />
 	<h4>Post Results:</h4>
 	<standard-table>
-		<tr>
-			<th>Post</th>
-			<td>Content</td>
-		</tr>
+		<table-head columns="Post,Content"></table-head>
 		@foreach (var result in Model.PostResults.Take(IndexModel.PageSize))
 		{
 			<tr>

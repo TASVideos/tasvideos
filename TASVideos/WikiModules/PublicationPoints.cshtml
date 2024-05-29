@@ -1,17 +1,11 @@
 ﻿@model PublicationPoints
 <standard-table>
-	<tr>
-		<th>Pos</th>
-		<th>Movie</th>
-		<th>Points</th>
-	</tr>
+	<table-head columns="Pos,Movie,Points"></table-head>
 	@foreach (var item in Model.Pubs)
 	{
 		<tr>
 			<td>@item.Position</td>
-			<td>
-				<pub-link id="@item.Id">@item.Title</pub-link>
-			</td>
+			<td><pub-link id="@item.Id">@item.Title</pub-link></td>
 			<td>@Math.Round(item.Points, 3)</td>
 		</tr>
 	}

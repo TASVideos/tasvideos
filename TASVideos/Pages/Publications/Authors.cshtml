@@ -8,26 +8,16 @@
 	@await Html.RenderWiki(SystemWiki.PlayersHeader)
 </cache>
 <standard-table>
-	<tr>
-		<th>Author</th>
-		<th>Active Movies</th>
-		<th>Obsolete Movies</th>
-	</tr>
+	<table-head columns="Author,Active Publications,Obsolete Publications"></table-head>
 	@foreach (var author in Model.Authors
 		.OrderByDescending(a => a.ActivePubCount)
 		.ThenByDescending(a => a.ObsoletePubCount)
 		.ThenBy(a => a.Author))
 	{
 		<tr>
-			<td>
-				<profile-link username="@author.Author"></profile-link>
-			</td>
-			<td>
-				<a href="/Movies-List-author@(author.Id)">@author.ActivePubCount</a>
-			</td>
-			<td>
-				<a href="/Movies-List-author@(author.Id)-ObsOnly">@author.ObsoletePubCount</a>
-			</td>
+			<td><profile-link username="@author.Author"></profile-link></td>
+			<td><a href="/Movies-List-author@(author.Id)">@author.ActivePubCount</a></td>
+			<td><a href="/Movies-List-author@(author.Id)-ObsOnly">@author.ObsoletePubCount</a></td>
 		</tr>
 	}
 </standard-table>

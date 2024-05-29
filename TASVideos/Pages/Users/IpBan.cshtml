@@ -22,11 +22,7 @@
 </form>
 <hr />
 <standard-table>
-	<tr>
-		<th>Ip Address</th>
-		<td>Created At</td>
-		<td></td>
-	</tr>
+	<table-head columns="Ip Address,Created At,"></table-head>
 	@foreach (var ip in Model.BannedIps.OrderByDescending(b => b.DateCreated))
 	{
 		<tr>
@@ -36,9 +32,7 @@
 			</td>
 			<td-action-column>
 				<delete-button asp-href="/Users/IpBan/Delete?mask=@ip.Mask"
-					class="btn-sm">
-					<i class="fa fa-remove"></i>
-				</delete-button>
+					class="btn-sm"></delete-button>
 			</td-action-column>
 		</tr>
 	}

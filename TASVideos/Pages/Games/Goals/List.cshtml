@@ -11,12 +11,7 @@
 	<back-link></back-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Name</th>
-		<th>Publications</th>
-		<th>Submissions</th>
-		<th>Actions</th>
-	</tr>
+	<table-head columns="Name,Publications,Submissions,Actions"></table-head>
 	@foreach (var goal in Model.Goals
 		.OrderByDescending(g => g.Name == "baseline")
 		.ThenByDescending(g => g.Publications.Any(p => !p.Obs))

@@ -33,12 +33,7 @@
 </div>
 
 <standard-table>
-	<tr>
-		<th>Permission</th>
-		<th>Group</th>
-		<th>Roles</th>
-		<th>Description</th>
-	</tr>
+	<table-head columns="Permission,Group,Roles,Description"></table-head>
 	@foreach (var entry in Model.Permissions.OrderBy(m => m.Group).ThenBy(m => m.Id))
 	{
 		<tr>

@@ -6,15 +6,12 @@
 	ViewData.SetTitle("Logging");
 }
 
-<ul>
-	<li><a asp-page="Index">Diagnostics</a></li>
-</ul>
-<a class="btn btn-primary mb-2" asp-page-handler="TestLogLevels">Test log levels</a>
+<top-button-bar>
+	<back-link asp-page="Index"></back-link>
+	<a class="btn btn-primary" asp-page-handler="TestLogLevels">Test log levels</a>
+</top-button-bar>
 <standard-table>
-	<tr>
-		<th>Log Level</th>
-		<th>Enabled</th>
-	</tr>
+	<table-head columns="Log Level,Enabled"></table-head>
 	<tr><td>Trace</td><td>@Logger.IsEnabled(LogLevel.Trace)</td></tr>
 	<tr><td>Debug</td><td>@Logger.IsEnabled(LogLevel.Debug)</td></tr>
 	<tr><td>Information</td><td>@Logger.IsEnabled(LogLevel.Information)</td></tr>

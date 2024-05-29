@@ -7,11 +7,7 @@
 	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Code</th>
-		<th>Display Name</th>
-		<th></th>
-	</tr>
+	<table-head columns="Code,Display Name,"></table-head>
 	@foreach (var tag in Model.Tags.OrderBy(t => t.Code))
 	{
 		<tr>

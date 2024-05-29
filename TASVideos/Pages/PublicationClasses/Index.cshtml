@@ -3,35 +3,30 @@
 @{
 	ViewData.SetTitle("Publication Class List");
 }
+
 <top-button-bar>
 	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Id</th>
-		<th>Name</th>
-		<th>Link</th>
-		<th>Weight</th>
-		<th></th>
-	</tr>
-	@foreach (var publicationClass in Model.Classes.OrderBy(t => t.Id))
+	<table-head columns="Id,Name,Link,Weight,"></table-head>
+	@foreach (var pubClass in Model.Classes.OrderBy(t => t.Id))
 	{
 		<tr>
 			<td>
-				@publicationClass.Id
+				@pubClass.Id
 			</td>
 			<td>
-				<img condition="!string.IsNullOrWhiteSpace(publicationClass.IconPath)" class="pixelart-image" src="/@publicationClass.IconPath" alt="@publicationClass.Name" />
-				@publicationClass.Name
+				<img condition="!string.IsNullOrWhiteSpace(pubClass.IconPath)" class="pixelart-image" src="/@pubClass.IconPath" alt="@pubClass.Name" />
+				@pubClass.Name
 			</td>
 			<td>
-				<a href="/@publicationClass.Link">@publicationClass.Link</a>
+				<a href="/@pubClass.Link">@pubClass.Link</a>
 			</td>
 			<td>
-				@publicationClass.Weight
+				@pubClass.Weight
 			</td>
 			<td-action-column>
-				<edit-link asp-page="/PublicationClasses/Edit" asp-route-id="@publicationClass.Id"></edit-link>
+				<edit-link asp-page="/PublicationClasses/Edit" asp-route-id="@pubClass.Id"></edit-link>
 			</td-action-column>
 		</tr>
 	}

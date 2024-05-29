@@ -13,13 +13,8 @@
 </div>
 <hr />
 <standard-table>
-	<tr>
-		<th>Option</th>
-		<th>User</th>
-		<th>Vote On</th>
-		<th>IP Address</th>
-		<th permission="ResetPollResults">Reset</th>
-	</tr>
+	<table-head condition="!User.Has(PermissionTo.ResetPollResults)" columns="Option,User,Vote On,IP Address"></table-head>
+	<table-head permission="ResetPollResults" columns="Option,User,Vote On,IP Address,Reset"></table-head>
 	@foreach(var vote in Model.Poll.Votes
 		.OrderBy(v => v.Ordinal)
 		.ThenBy(v => v.UserName))
@@ -32,11 +27,7 @@
 			<td permission="ResetPollResults">
 				<form method="post">
 					<input type="hidden" name="userId" value="@vote.UserId" />
-					<button
-						type="submit"
-						class="btn btn-danger"
-						asp-page-handler="ResetVote">
-						<i class="fa fa-remove"></i>
+					<button type="submit" class="btn btn-danger" asp-page-handler="ResetVote"><i class="fa fa-remove"></i>
 					</button>
 				</form>
 			</td>

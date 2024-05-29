@@ -5,12 +5,7 @@
 }
 
 <standard-table>
-	<tr>
-		<th>Page Name</th>
-		<th>Revision Count</th>
-		<th>Existing Page</th>
-		<th>Actions</th>
-	</tr>
+	<table-head columns="Page Name,Revision Count,Existing Page,Actions"></table-head>
 	@foreach (var item in Model.DeletedPages.OrderBy(m => m.PageName))
 	{
 		<tr>

@@ -7,11 +7,7 @@
 	<add-link asp-page="Create" Permission="TagMaintenance"></add-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Display Name</th>
-		<th>Game Count</th>
-		<th></th>
-	</tr>
+	<table-head columns="Display Name,Game Count,"></table-head>
 	@foreach (var genre in Model.Genres.OrderBy(g => g.DisplayName))
 	{
 		<tr>

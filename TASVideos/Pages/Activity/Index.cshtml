@@ -8,11 +8,7 @@
 	<column md="6">
 		<h4>Judge Counts</h4>
 		<standard-table>
-			<tr>
-				<th>User</th>
-				<th>Count</th>
-				<th>Time since last</th>
-			</tr>
+			<table-head columns="User,Count,Time since last"></table-head>
 			@foreach (var judge in Model.Judges.OrderByDescending(j => j.Count))
 			{
 				<tr>
@@ -32,11 +28,7 @@
 	<column md="6">
 		<h4>Publisher Counts</h4>
 		<standard-table>
-			<tr>
-				<th>User</th>
-				<th>Count</th>
-				<th>Time since last</th>
-			</tr>
+			<table-head columns="User,Count,Time since last"></table-head>
 			@foreach (var publisher in Model.Publishers.OrderByDescending(j => j.Count))
 			{
 				<tr>

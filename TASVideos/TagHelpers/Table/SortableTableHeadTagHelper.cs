@@ -37,7 +37,8 @@ public class SortableTableHeadTagHelper : TagHelper
 
 		output.TagName = "tr";
 		output.TagMode = TagMode.StartTagAndEndTag;
-		foreach (PropertyInfo property in ModelType.UnderlyingSystemType.GetProperties())
+		output.Content.AppendHtml("<thead>");
+		foreach (var property in ModelType.UnderlyingSystemType.GetProperties())
 		{
 			if (property.GetCustomAttribute<TableIgnoreAttribute>() is not null)
 			{
@@ -90,6 +91,8 @@ public class SortableTableHeadTagHelper : TagHelper
 		{
 			output.Content.AppendHtml($"<th>{ActionColumnName}</th>");
 		}
+
+		output.Content.AppendHtml("</thead>");
 	}
 
 	private string ComputeHref(string sortStr)

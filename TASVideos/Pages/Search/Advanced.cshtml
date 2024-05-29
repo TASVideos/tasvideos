@@ -104,10 +104,7 @@
 <div condition="Model.PageResults.Any()">
 	<h4>Wiki Results:</h4>
 	<standard-table>
-		<tr>
-			<th>Page</th>
-			<td>Content</td>
-		</tr>
+		<table-head columns="Page,Content"></table-head>
 		@foreach (var result in Model.PageResults.Take(Model.DisplayPageSize))
 		{
 			<tr>
@@ -125,10 +122,7 @@
 <div condition="Model.TopicResults.Any()">
 	<h4>Topic Results:</h4>
 	<standard-table>
-		<tr>
-			<td>Subforum</td>
-			<th>Topic</th>
-		</tr>
+		<table-head columns="Subforum,Topic"></table-head>
 		@foreach (var result in Model.TopicResults.Take(Model.DisplayPageSize))
 		{
 			<tr>
@@ -146,10 +140,7 @@
 <div condition="Model.PostResults.Any()">
 	<h4>Post Results:</h4>
 	<standard-table>
-		<tr>
-			<th>Post</th>
-			<td>Content</td>
-		</tr>
+		<table-head columns="Post,Content"></table-head>
 		@foreach (var result in Model.PostResults.Take(Model.DisplayPageSize))
 		{
 			<tr>
@@ -171,10 +162,7 @@
 <div condition="Model.UserResults.Any()">
 	<h4>User Results:</h4>
 	<standard-table>
-		<tr>
-			<td>User</td>
-			<td>Roles</td>
-		</tr>
+		<table-head columns="User,Roles"></table-head>
 		@foreach (var result in Model.UserResults.Take(Model.DisplayPageSize))
 		{
 		<tr>

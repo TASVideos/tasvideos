@@ -18,12 +18,7 @@
 	</a>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Subject</th>
-		<th>From</th>
-		<th>Date</th>
-		<th>Actions</th>
-	</tr>
+	<table-head columns="Subject,From,Date,Actions"></table-head>
 	@foreach (var entry in Model.Messages)
 	{
 		<tr>

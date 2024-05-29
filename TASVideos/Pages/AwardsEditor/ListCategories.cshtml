@@ -9,13 +9,7 @@
 	<add-link asp-page="CreateCategory"></add-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Description</th>
-		<th>Base Icon</th>
-		<th>Type</th>
-		<th>Short Name</th>
-		<th>In Use</th>
-	</tr>
+	<table-head columns="Description,Base Icon,Type,Short Name,In Use"></table-head>
 	@foreach (var cat in Model.Categories.OrderBy(c => c.Description))
 	{
 		<tr>

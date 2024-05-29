@@ -5,13 +5,7 @@
 }
 
 <standard-table>
-	<tr>
-		<th>Revision</th>
-		<th>IsCurrent</th>
-		<th>Author</th>
-		<th>Revision</th>
-		<th>Minor Edit</th>
-	</tr>
+	<table-head columns="Revision,Is Current,Author,Revision,Minor Edit"></table-head>
 	@foreach (var revision in Model.WikiPages.OrderByDescending(wp => wp.Revision))
 	{
 		<tr>

@@ -9,10 +9,7 @@
 	Unknown System Code: @Model.SystemCode
 </warning-alert>
 <standard-table condition="!string.IsNullOrWhiteSpace(Model.SystemName)">
-	<tr>
-		<th>Game</th>
-		<th></th>
-	</tr>
+	<table-head columns="Game,"></table-head>
 	@foreach (var pubGroup in pubGroups.OrderBy(p => p.Key))
 	{
 		<tr>

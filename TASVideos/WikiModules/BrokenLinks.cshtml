@@ -3,17 +3,10 @@
 
 @if (Model.Links.Any())
 {
-	<div>
-		<label>Total: @Model.Links.Count</label>
-	</div>
+	<div>Total: @Model.Links.Count</div>
 	<standard-table>
-		<tbody>
-		<tr>
-			<th>Page</th>
-			<th>Linked From</th>
-			<th>Excerpt</th>
-		</tr>
-			@foreach (var link in Model.Links.OrderBy(b => b.Referrer))
+		<table-head columns="Page,Linked From,Excerpt"></table-head>
+		@foreach (var link in Model.Links.OrderBy(b => b.Referrer))
 		{
 			<tr>
 				<td style="max-width: 400px; overflow-x: auto"><a href="/@WikiHelper.ProcessLink(link.Referral)">@Html.Encode(WikiHelper.ProcessLink(link.Referral))</a></td>
@@ -21,7 +14,6 @@
 				<td><i>@link.Excerpt</i></td>
 			</tr>
 		}
-		</tbody>
 	</standard-table>
 }
 else

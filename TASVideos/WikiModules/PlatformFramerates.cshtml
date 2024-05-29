@@ -1,11 +1,6 @@
 ﻿@model PlatformFramerates
 <standard-table>
-	<tr>
-		<th>System</th>
-		<th>Region</th>
-		<th>Framerate</th>
-		<th>Preliminary or approximate</th>
-	</tr>
+	<table-head columns="System,Region,Framerate,Preliminary or approximate"></table-head>
 	@foreach (var item in Model.Framerates)
 	{
 		<tr class="@(item.Preliminary ? "alert-warning" : "")">

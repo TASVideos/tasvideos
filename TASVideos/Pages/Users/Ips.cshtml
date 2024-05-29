@@ -9,11 +9,8 @@
 }
 
 <standard-table>
-	<tr>
-		<th>IP Address (total: @ipList.Count)</th>
-		<th>Last Used</th>
-		<th></th>
-	</tr>
+	<caption>Total: @ipList.Count</caption>
+	<table-head columns="IP Address,Last Used,"></table-head>
 	@foreach (var ip in ipList.OrderByDescending(i => i.UsedOn))
 	{
 		<tr>

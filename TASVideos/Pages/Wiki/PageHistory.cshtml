@@ -46,17 +46,7 @@
 	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
 </div>
 <standard-table>
-	<thead>
-		<tr>
-			<th>Revision</th>
-			<th>Date</th>
-			<th>Author</th>
-			<th>Minor Edit</th>
-			<th>Revision Message</th>
-			<th>Diff</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
+	<table-head columns="Revision,Date,Author,Minor Edit,Revision Message,Diff,Actions"></table-head>
 	<tbody data-hasrevisions="true">
 		@{ var revisions = Model.Revisions.OrderByDescending(r => r.Revision).ToList(); }
 		@for (var i = 0; i < revisions.Count; i++)
@@ -92,7 +82,6 @@
 							onClick="diffBtnClicked(null, @revision.Revision)">
 							To
 						</button>
-
 					</div>
 				</td>
 				<td-action-column>

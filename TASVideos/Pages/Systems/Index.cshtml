@@ -7,13 +7,7 @@
 	<add-link permission="GameSystemMaintenance" asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
-	<tr>
-		<th>Display Name</th>
-		<th>Code</th>
-		<th>Id</th>
-		<th>Framerates</th>
-		<th></th>
-	</tr>
+	<table-head columns="Display Name,Code,Id,Framerates,"></table-head>
 	@foreach (var system in Model.Systems.OrderBy(s => s.DisplayName))
 	{
 		<tr>
