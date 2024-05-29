@@ -100,7 +100,7 @@
 		}
 
 		<div class="container mb-2">
-			<div class="page-title card card-body d-block">
+			<h1 class="page-title card card-body d-block">
 				<a condition="prev.HasValue" href="@(prev + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-left"></i></a>
 				@if (IsSectionDefined("PageTitle"))
 				{
@@ -111,7 +111,7 @@
 					@heading
 				}
 				<a condition="next.HasValue" class="float-end" href="@(next + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-right"></i></a>
-			</div>
+			</h1>
 		</div>
 	}
 
