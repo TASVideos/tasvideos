@@ -139,5 +139,8 @@
 		<cancel-link asp-page="/Publications/View" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), "/Wiki/Preview")" />
+
+@section Scripts {
+	<script src="/js/select-improver.js"></script>
+}
