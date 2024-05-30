@@ -3,8 +3,11 @@
 @{
 	ViewData.SetTitle($"Creating topic for: {Model.ForumName}");
 }
+@section PageTitle {
+	Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a>
+}
 <partial Name="_ForumHeader" />
-<h4>Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a></h4>
+
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form client-side-validation="true" method="post">
 	<div permission="CreateForumPolls">
