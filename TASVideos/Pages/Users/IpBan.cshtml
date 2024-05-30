@@ -2,7 +2,7 @@
 @model IpBanModel
 @{ ViewData.SetTitle("Banned Ip Addresses"); }
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -37,7 +37,3 @@
 		</tr>
 	}
 </standard-table>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

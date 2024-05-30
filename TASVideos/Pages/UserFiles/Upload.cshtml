@@ -11,7 +11,7 @@
 
 <partial name="Shared/_StorageUsed" model="Model.StorageUsed" />
 <hr />
-<form method="post" enctype="multipart/form-data">
+<form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<row>
 		<column>
 			<fieldset>
@@ -63,7 +63,6 @@
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Description), "/Wiki/Preview")" />
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/userfile.js"></script>
 	<script>
 		const gameId = "@Html.IdFor(m => m.GameId)";

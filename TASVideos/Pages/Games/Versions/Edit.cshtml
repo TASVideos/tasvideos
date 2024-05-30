@@ -22,7 +22,7 @@
 	<h4 class="heading">Game: <game-link id="Model.GameId">@Model.GameName</game-link></h4>
 	<delete-button condition="@Model.CanDelete" asp-href="@deleteLink"></delete-button>
 </top-button-bar>
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="GameName" />
 	<row>
 		<div class="col-lg-6">
@@ -95,7 +95,6 @@
 <input id="hash-input" type="file" class="d-none" />
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js" integrity="sha512-E8QSvWZ0eCLGk4km3hxSsNmGWbLtSCSUcewDQPQWZF6pEU8GlT8a5fF32wOl1i8ftdMhssTrF/OhyGWwonTcXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 		let dropArea = document.getElementById('hash-drop-area');

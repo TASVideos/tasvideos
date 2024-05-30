@@ -7,7 +7,7 @@
 
 <row>
 	<column lg="4">
-		<form method="post">
+		<form client-side-validation="true" method="post">
 			<fieldset>
 				<label asp-for="UserName"></label>
 				<input asp-for="UserName" class="form-control" autocomplete="username"/>
@@ -39,7 +39,3 @@
 		</form>
 	</column>
 </row>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

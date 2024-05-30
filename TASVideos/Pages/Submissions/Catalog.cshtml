@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Set Cataloging Information for {Model.Catalog.Title}");
 }
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
@@ -75,7 +75,6 @@
 </form>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/catalog.js"></script>
 	<script>
 		enableCataloging(

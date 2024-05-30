@@ -54,7 +54,7 @@
 	}
 </standard-table>
 <hr />
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Publication.SystemCode" />
 	<row>
 		<div class="col-lg-6">
@@ -141,8 +141,3 @@
 </form>
 
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), "/Wiki/Preview")" />
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-	<script src="/js/select-improver.js"></script>
-}

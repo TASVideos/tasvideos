@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Moving: {Model.OriginalPageName}");
 }
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="OriginalPageName" />
 	<row>
 		<div class="col-lg-6">
@@ -24,6 +24,4 @@
 		</div>
 	</row>
 </form>
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}
+

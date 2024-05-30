@@ -9,7 +9,7 @@
 					warning-message="Are you sure you want to remove this system?"></delete-button>
 	<span condition="Model.InUse">System in Use</span>
 </top-button-bar>
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -53,7 +53,3 @@
 		</tr>
 	}
 </standard-table>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

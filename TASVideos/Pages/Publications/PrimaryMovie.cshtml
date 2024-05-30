@@ -5,7 +5,7 @@
 }
 
 <p>Original File: @Model.OriginalFileName</p>
-<form method="post" enctype="multipart/form-data">
+<form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="PublicationTitle" />
 	<row>
 		<column lg="6">
@@ -28,7 +28,3 @@
 		<cancel-link asp-page="Edit" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

@@ -7,7 +7,7 @@
 <fullrow class="mt-2 mb-2">
 	<label>Author: <profile-link username="@Model.UserFile.UserName"></profile-link></label>
 </fullrow>
-<form method="post" enctype="multipart/form-data">
+<form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<row>
 		<column>
 			<input type="hidden" asp-for="UserFile.UserId" />
@@ -56,7 +56,6 @@
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.UserFile.Description), "/Wiki/Preview")" />
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/userfile.js"></script>
 	<script>
 		const gameId = "@Html.IdFor(m => m.UserFile.GameId)";

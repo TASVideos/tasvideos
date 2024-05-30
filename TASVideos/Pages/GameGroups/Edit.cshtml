@@ -19,7 +19,7 @@
 <top-button-bar>
 	<delete-button condition="@Model.CanDelete" asp-href="/GameGroups/Edit/@(Model.Id ?? 0)?handler=Delete"></delete-button>
 </top-button-bar>
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -58,6 +58,3 @@
 	</form-button-bar>
 </form>
 <partial name="_PreviewWindow" model="@("Description", "/Wiki/Preview")" />
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

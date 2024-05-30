@@ -3,7 +3,7 @@
 @{
 	ViewData.SetTitle($"TASVideos Forum Category {Model.Category.Title}");
 }
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<div class="col-lg-6">
 			<label asp-for="Category.Title"></label>
@@ -47,7 +47,6 @@
 </form>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script>
 		function IncrementOrdinal(element) {
 			const parent = element.closest('.forum-section');

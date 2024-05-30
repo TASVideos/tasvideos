@@ -9,7 +9,7 @@
 	               asp-href="@($"/Roles/AddEdit/{Model.Id}/Delete")"
 	               warning-message="Are you sure you want to delete this Role? This action cannot be undone!"></delete-button>
 </top-button-bar>
-<form asp-route="Edit">
+<form client-side-validation="true" asp-route="Edit">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -80,7 +80,6 @@
 </form>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/select-improver.js"></script>
 	<script>
 		const selectedPermissionsModelName = '@Html.NameFor(m => m.Role.SelectedPermissions)';

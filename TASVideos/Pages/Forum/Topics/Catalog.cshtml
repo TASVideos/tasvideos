@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Set Cataloging Information for Topic {Model.Title}");
 }
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input asp-for="Title" type="hidden" />
 	<row>
 		<column md="6">
@@ -25,7 +25,6 @@
 </form>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/catalog.js"></script>
 	<script>
 		enableCataloging(

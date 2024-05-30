@@ -17,7 +17,7 @@
 	@await Html.RenderWiki(SystemWiki.SubmissionZipFailure)
 </danger-alert>
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
-<form method="post" enctype="multipart/form-data">
+<form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -123,7 +123,6 @@
 
 <partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Markup), "/Wiki/Preview"))" />
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script>
 		document.getElementById('prefill-btn').onclick = function () {
 			const markup = document.getElementById('@Html.IdFor(m => m.Markup)').value;

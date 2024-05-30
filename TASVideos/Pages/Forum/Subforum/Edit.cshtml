@@ -11,7 +11,7 @@
 		asp-href="/Forum/Subforum/Edit/@Model.Id?handler=Delete"
 		class="float-end"></delete-button>
 </top-button-bar>
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -54,7 +54,3 @@
 		<cancel-link asp-page="Index" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

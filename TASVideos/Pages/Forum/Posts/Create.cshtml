@@ -15,7 +15,7 @@
 	}
 </show-more>
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="TopicTitle" />
 	<row>
 		<column md="6">
@@ -64,6 +64,5 @@
 <partial name="_PreviewWindow" model="@(("Text", "/Forum/Preview"))" />
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="~/js/backup-text.js"></script>
 }

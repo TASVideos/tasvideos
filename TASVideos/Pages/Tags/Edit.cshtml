@@ -13,7 +13,7 @@
 	</a>
 </top-button-bar>
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -35,7 +35,3 @@
 		<cancel-link asp-page="Index"></cancel-link>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

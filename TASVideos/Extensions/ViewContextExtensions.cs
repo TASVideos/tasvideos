@@ -3,9 +3,7 @@
 public static class ViewContextExtensions
 {
 	public static string Page(this ViewContext viewContext)
-	{
-		return viewContext.ActionDescriptor.DisplayName ?? "";
-	}
+		=> viewContext.ActionDescriptor.DisplayName ?? "";
 
 	public static string PageGroup(this ViewContext viewContext)
 	{

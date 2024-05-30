@@ -11,7 +11,7 @@
 }
 
 <partial Name="_ForumHeader" />
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Topic.TopicTitle" />
 	<input type="hidden" asp-for="Topic.ForumName" />
 	<fieldset class="col-lg-6">
@@ -24,7 +24,3 @@
 		<cancel-link asp-page="Index" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

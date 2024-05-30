@@ -7,13 +7,10 @@
 
 <partial Name="_ForumHeader" />
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<partial name="_PollCreate" model="Model.Poll" />
 	<form-button-bar>
 		<submit-button><i class="fa fa-save"></i> @mode</submit-button>
 		<cancel-link asp-page="Index" asp-route-id="@Model.TopicId"></cancel-link>
 	</form-button-bar>
 </form>
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

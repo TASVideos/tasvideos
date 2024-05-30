@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Editing {Model.Path}");
 }
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="EditStart" />
 	<input type="hidden" asp-for="OriginalMarkup" />
 	<fullrow class="mt-3">
@@ -48,9 +48,4 @@ window.addEventListener("load", function() {
 	rightMarkupElem.addEventListener("keyup", generateDiff);
 });
 </script>
-
 <partial name="_PreviewWindow" model="@(("Markup", "/Wiki/Preview?Id=" + Model.Path))" />
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

@@ -12,7 +12,7 @@
 		Author: <profile-link username="@Model.UserFile.AuthorName"></profile-link>
 	</li>
 </ul>
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="UserFile.Filename" />
 	<row>
 		<column lg="6">
@@ -43,7 +43,6 @@
 <div id="dummy" class="d-none"></div>
 <div id="create-version" class="d-none"></div>
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/catalog.js"></script>
 	<script>
 		enableCataloging(

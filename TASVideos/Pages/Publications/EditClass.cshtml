@@ -4,7 +4,7 @@
 	ViewData.SetTitle($"Edit PublicationClass for {Model.Publication.Title}");
 }
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Title" />
 	<row>
 		<div class="col-lg-4 col-sm-6">
@@ -20,7 +20,3 @@
 		<cancel-link asp-page="Edit" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

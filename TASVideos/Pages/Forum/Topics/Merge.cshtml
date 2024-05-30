@@ -11,7 +11,7 @@
 }
 
 <partial Name="_ForumHeader" />
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<column md="6">
 			<input type="hidden" asp-for="Topic.ForumName" />
@@ -36,7 +36,6 @@
 </form>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script>
 		let forumModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationForumId)');
 		let topicModel = document.getElementById('@Html.IdFor(m => m.Topic.DestinationTopicId)');

@@ -17,7 +17,7 @@
 	</div>
 </div>
 
-<form method="post" id="create-form">
+<form client-side-validation="true" method="post" id="create-form">
 	<row>
 		<fieldset class="col-lg-6">
 			<label asp-for="Subject" class="form-control-label"></label>
@@ -55,7 +55,6 @@
 <partial name="_PreviewWindow" model="@((nameof(Model.Text), "/Forum/Preview"))" />
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/user-search.js"></script>
 	<script>
 		const userFormGroup = document.getElementById('user-form-group');

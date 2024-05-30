@@ -30,7 +30,7 @@
 </row>
 <hr />
 <h4>Add a movie file</h4>
-<form method="post" enctype="multipart/form-data">
+<form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="PublicationTitle" />
 	<row>
 		<column lg="6">
@@ -52,7 +52,3 @@
 		</column>
 	</row>
 </form>
-
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

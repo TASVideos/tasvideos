@@ -15,7 +15,7 @@
 	}
 </show-more>
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Post.EnableBbCode" />
 	<input type="hidden" asp-for="Post.EnableHtml" />
 	<input type="hidden" asp-for="Post.OriginalText" />
@@ -92,6 +92,3 @@
 	</card>
 </div>
 <partial name="_PreviewWindow" model="@(("Post_Text", "/Forum/Preview"))" />
-@section Scripts {
-	<partial name="_ValidationScriptsPartial" />
-}

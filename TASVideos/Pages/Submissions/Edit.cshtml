@@ -10,7 +10,7 @@
 		<i class="fa fa-remove"></i> Delete
 	</a>
 </top-button-bar>
-<form method="post" enctype="multipart/form-data">
+<form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count <= 1" type="hidden" asp-for="Submission.Status" />
 	<row>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
@@ -130,7 +130,6 @@
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Markup), "/Wiki/Preview")" />
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script>
 		document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
 			const reject = '@((int)SubmissionStatus.Rejected)';

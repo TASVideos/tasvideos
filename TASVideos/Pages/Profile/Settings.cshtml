@@ -10,7 +10,7 @@
 	bool usingGravatar = Model.Avatar?.Contains("gravatar") ?? false;
 }
 
-<form method="post">
+<form client-side-validation="true" method="post">
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -160,7 +160,6 @@
 </form>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script>
 		let emailBoxElem = document.getElementById('@Html.IdFor(m => m.Email)');
 		let avatarBoxElem = document.getElementById('@Html.IdFor(m => m.Avatar)');

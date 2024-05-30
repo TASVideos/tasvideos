@@ -49,7 +49,7 @@
 	</card-body>
 </card>
 <hr />
-<form method="post" enctype="multipart/form-data">
+<form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="Submission.SystemId" />
 	<row>
 		<input type="hidden" asp-for="Submission.MovieExtension" />
@@ -145,7 +145,6 @@
 </form>
 
 @section Scripts {
-	<partial name="_ValidationScriptsPartial" />
 	<script src="/js/select-improver.js"></script>
 	<script>
 		const selectedTagsId = "@Html.IdFor(m => m.Submission.SelectedTags)";
