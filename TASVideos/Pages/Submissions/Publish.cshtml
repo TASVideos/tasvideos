@@ -129,11 +129,11 @@
 	<fullrow>
 		<fieldset>
 			<label asp-for="Submission.SelectedFlags"></label>
-			<select asp-for="Submission.SelectedFlags" data-multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
+			<select asp-for="Submission.SelectedFlags" multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
 		</fieldset>
 		<fieldset>
 			<label asp-for="Submission.SelectedTags"></label>
-			<select asp-for="Submission.SelectedTags" data-multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
+			<select asp-for="Submission.SelectedTags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<hr />
@@ -145,7 +145,6 @@
 </form>
 
 @section Scripts {
-	<script src="/js/select-improver.js"></script>
 	<script>
 		const selectedTagsId = "@Html.IdFor(m => m.Submission.SelectedTags)";
 		let originalDescription = "@Model.Submission.MovieMarkup";

@@ -21,13 +21,13 @@
 	<fullrow>
 		<fieldset>
 			<label asp-for="AwardToAssign.Users"></label>
-			<select asp-for="AwardToAssign.Users" data-multiselect="true" asp-items="Model.AvailableUsers" class="form-select"></select>
+			<select asp-for="AwardToAssign.Users" multiselect="true" asp-items="Model.AvailableUsers" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<fullrow>
 		<fieldset>
 			<label asp-for="AwardToAssign.Publications"></label>
-			<select asp-for="AwardToAssign.Publications" data-multiselect="true" asp-items="Model.AvailablePublications" class="form-select"></select>
+			<select asp-for="AwardToAssign.Publications" multiselect="true" asp-items="Model.AvailablePublications" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<form-button-bar>
@@ -35,7 +35,3 @@
 		<cancel-link asp-page="List"></cancel-link>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<script src="/js/select-improver.js"></script>
-}

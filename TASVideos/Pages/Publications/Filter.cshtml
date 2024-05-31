@@ -17,39 +17,39 @@
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.Classes"></label>
-				<select asp-for="Search.Classes" data-multiselect="true" asp-items="Model.Tokens.Classes.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Classes" multiselect="true" asp-items="Model.Tokens.Classes.ToDropDown()" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Years"></label>
-				<select asp-for="Search.Years" data-multiselect="true" asp-items="Model.Tokens.Years.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Years" multiselect="true" asp-items="Model.Tokens.Years.ToDropDown()" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Genres"></label>
-				<select asp-for="Search.Genres" data-multiselect="true" asp-items="Model.Tokens.Genres.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Genres" multiselect="true" asp-items="Model.Tokens.Genres.ToDropDown()" class="form-select"></select>
 			</fieldset>
 		</column>
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.Flags"></label>
-				<select asp-for="Search.Flags" data-multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
+				<select asp-for="Search.Flags" multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.GameGroups"></label>
-				<select asp-for="Search.GameGroups" data-multiselect="true" asp-items="Model.AvailableGameGroups" class="form-select"></select>
+				<select asp-for="Search.GameGroups" multiselect="true" asp-items="Model.AvailableGameGroups" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Authors"></label>
-				<select asp-for="Search.Authors"  data-multiselect="true" asp-items="Model.AvailableAuthors" class="form-select"></select>
+				<select asp-for="Search.Authors"  multiselect="true" asp-items="Model.AvailableAuthors" class="form-select"></select>
 			</fieldset>
 		</column>
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.SystemCodes"></label>
-				<select asp-for="Search.SystemCodes" data-multiselect="true" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.SystemCodes" multiselect="true" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).ToDropDown()" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Tags"></label>
-				<select asp-for="Search.Tags" data-multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
+				<select asp-for="Search.Tags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
 			</fieldset>
 		</column>
 	</row>
@@ -80,7 +80,6 @@
 	</form-button-bar>
 </form>
 
-<script src="/js/select-improver.js"></script>
 <script>
 	window.addEventListener('load', validateForm);
 	const classes = document.getElementById('@Html.IdFor(m => m.Search.Classes)');

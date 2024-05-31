@@ -57,11 +57,11 @@
 	</row>
 	<fieldset>
 		<label asp-for="Game.Genres"></label>
-		<select asp-for="Game.Genres" data-multiselect="true" asp-items="Model.AvailableGenres" class="form-select"></select>
+		<select asp-for="Game.Genres" multiselect="true" asp-items="Model.AvailableGenres" class="form-select"></select>
 	</fieldset>
 	<fieldset>
 		<label asp-for="Game.Groups"></label>
-		<select asp-for="Game.Groups" data-multiselect="true" asp-items="Model.AvailableGroups" class="form-select"></select>
+		<select asp-for="Game.Groups" multiselect="true" asp-items="Model.AvailableGroups" class="form-select"></select>
 	</fieldset>
 	<form-button-bar>
 		<submit-button id="submit-btn"></submit-button>
@@ -72,7 +72,3 @@
 		</div>
 	</form-button-bar>
 </form>
-
-@section Scripts {
-	<script src="/js/select-improver.js"></script>
-}

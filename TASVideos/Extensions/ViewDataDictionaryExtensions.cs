@@ -76,4 +76,10 @@ public static class ViewDataDictionaryExtensions
 
 	public static bool ClientSideValidationEnabled(this ViewDataDictionary viewData)
 		=> viewData["client-side-validation"] != null;
+
+	public static void UseSelectImprover(this ViewDataDictionary viewData)
+		=> viewData["use-select-improver"] = true;
+
+	public static bool UsesSelectImprover(this ViewDataDictionary viewData)
+		=> viewData["use-select-improver"] != null;
 }

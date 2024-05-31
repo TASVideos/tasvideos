@@ -99,11 +99,11 @@
 	</row>
 	<fieldset>
 		<label asp-for="Publication.SelectedFlags"></label>
-		<select asp-for="Publication.SelectedFlags" data-multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
+		<select asp-for="Publication.SelectedFlags" multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
 	</fieldset>
 	<fieldset>
 		<label asp-for="Publication.SelectedTags"></label>
-		<select asp-for="Publication.SelectedTags" data-multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
+		<select asp-for="Publication.SelectedTags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
 	</fieldset>
 	@await Html.RenderWiki(SystemWiki.ClassEditingHelp)
 	<hr />
@@ -140,7 +140,3 @@
 	</form-button-bar>
 </form>
 <partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), "/Wiki/Preview")" />
-
-@section Scripts {
-	<script src="/js/select-improver.js"></script>
-}

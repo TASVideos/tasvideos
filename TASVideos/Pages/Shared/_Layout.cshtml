@@ -163,6 +163,7 @@
 				crossorigin="anonymous">
 		</script>
 	}
+	<script condition="ViewData.UsesSelectImprover()" src="/js/select-improver.js"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
