@@ -21,13 +21,13 @@
 	<row>
 		<fieldset class="col-lg-6">
 			<label asp-for="Subject" class="form-control-label"></label>
-			<input type="text" asp-for="Subject" list="search-username-list" class="form-control" autocomplete="off" />
+			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
 		</fieldset>
 		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser" class="form-control-label"></label>
-				<input type="text" asp-for="ToUser" data-user-search="true" class="form-control" autocomplete="off" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
+				<input asp-for="ToUser" user-search="true" class="form-control" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
 				<span asp-validation-for="ToUser" class="text-danger"></span>
 			</div>
 			<label for="group-select">To Group</label>
@@ -55,7 +55,6 @@
 <partial name="_PreviewWindow" model="@((nameof(Model.Text), "/Forum/Preview"))" />
 
 @section Scripts {
-	<script src="/js/user-search.js"></script>
 	<script>
 		const userFormGroup = document.getElementById('user-form-group');
 		const userBox = document.getElementById('@Html.IdFor(m => m.ToUser)');

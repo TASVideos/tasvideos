@@ -82,4 +82,10 @@ public static class ViewDataDictionaryExtensions
 
 	public static bool UsesSelectImprover(this ViewDataDictionary viewData)
 		=> viewData["use-select-improver"] != null;
+
+	public static void UseUserSearch(this ViewDataDictionary viewData)
+		=> viewData["use-user-search"] = true;
+
+	public static bool UsesUserSearch(this ViewDataDictionary viewData)
+		=> viewData["use-user-search"] != null;
 }

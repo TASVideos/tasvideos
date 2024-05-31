@@ -5,7 +5,13 @@
 }
 <div class="row justify-content-end">
 	<div class="col-auto">
-		<partial name="_UserSearch" />
+		<form asp-page="/Users/Profile" method="GET" id="search-form">
+			<div class="input-group">
+				<label class="input-group-text" for="search-username-box">Search: </label>
+				<input id="search-username-box" user-search="true" name="name" required="required" class="form-control" placeholder="Enter a UserName" autofocus="autofocus" />
+				<submit-button id="go-button" btn-class-override="btn-secondary" disabled="disabled">Go</submit-button>
+			</div>
+		</form>
 	</div>
 </div>
 <hr>
