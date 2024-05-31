@@ -3,18 +3,15 @@
 @{
 	ViewData.SetTitle("User List");
 }
-<div class="row justify-content-end">
-	<div class="col-auto">
-		<form asp-page="/Users/Profile" method="GET" id="search-form">
-			<div class="input-group">
-				<label class="input-group-text" for="search-username-box">Search: </label>
-				<input id="search-username-box" user-search="true" name="name" required="required" class="form-control" placeholder="Enter a UserName" autofocus="autofocus" />
-				<submit-button id="go-button" btn-class-override="btn-secondary" disabled="disabled">Go</submit-button>
-			</div>
-		</form>
-	</div>
-</div>
-<hr>
+<top-button-bar>
+	<form asp-page="/Users/Profile" method="GET" id="search-form">
+		<div class="input-group">
+			<label class="input-group-text" for="search-username-box">Search: </label>
+			<input id="search-username-box" user-search="true" name="name" required="required" class="form-control" placeholder="Enter a UserName" autofocus="autofocus"/>
+			<submit-button id="go-button" disabled="disabled">Go</submit-button>
+		</div>
+	</form>
+</top-button-bar>
 <partial name="_Pager" model="Model.Users" />
 <standard-table>
 	<sortable-table-head sorting="@Model.Search" model-type="typeof(ListModel.UserEntry)" action-column-name="Actions" />
