@@ -4,11 +4,14 @@
 	ViewData.SetTitle($"Editing User: {Model.UserToEdit.UserName}");
 }
 
-<form asp-route="Edit">
+<top-button-bar>
 	<a condition="User.Has(PermissionTo.SeeEmails) && User.Has(PermissionTo.EditUsers)"
-		asp-page="Nuke"
-		asp-route-id="@Model.Id"
-		class="btn btn-danger float-end"><i class="fa fa-trash-can"></i> Anonymize User</a>
+	   asp-page="Nuke"
+	   asp-route-id="@Model.Id"
+	   class="btn btn-danger"><i class="fa fa-trash-can"></i> Anonymize User</a>
+</top-button-bar>
+
+<form asp-route="Edit">
 	<fullrow>
 		<fieldset condition="Model.UserToEdit.IsLockedOut">
 			<label asp-for="UserToEdit.IsLockedOut"></label>
@@ -39,10 +42,8 @@
 						<div id="user-name-div" class="col-sm-12">
 							<div class="input-group">
 								<input asp-for="UserToEdit.UserName" class="form-control" autocomplete="off" />
-								<div class="input-group-append">
-									<div class="input-group-text" aria-hidden="true">
-										<span id="user-name-status" class="fa fa-check-square text-success"></span>
-									</div>
+								<div class="input-group-text" aria-hidden="true">
+									<span id="user-name-status" class="fa fa-check-square text-success"></span>
 								</div>
 							</div>
 							<span id="username-exists-message" class="d-none text-danger">Username already exists</span>
@@ -159,12 +160,10 @@
 				<label asp-for="UserToEdit.Email"></label>
 				<div class="input-group">
 					<label class="form-control">@Model.UserToEdit.Email</label>
-					<div class="input-group-append">
-						<span class="input-group-text" aria-hidden="true">
-							<i condition="Model.UserToEdit.EmailConfirmed" class="fa fa-check-square text-success"></i>
-							<i condition="!Model.UserToEdit.EmailConfirmed" class="fa fa-question text-warning" title="Email not confirmed"></i>
-						</span>
-					</div>
+					<span class="input-group-text" aria-hidden="true">
+						<i condition="Model.UserToEdit.EmailConfirmed" class="fa fa-check-square text-success"></i>
+						<i condition="!Model.UserToEdit.EmailConfirmed" class="fa fa-question text-warning" title="Email not confirmed"></i>
+					</span>
 				</div>
 				<a asp-page="EditEmail" asp-route-id="@Model.Id" class="btn btn-danger mt-2">Edit</a>
 				<label>(also allows manually setting the email confirmed value)</label>
