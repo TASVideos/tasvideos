@@ -20,14 +20,14 @@
 	<row>
 		<column md="6">
 			<fieldset>
-				<label asp-for="Subject" class="form-control-label"></label>
+				<label asp-for="Subject"></label>
 				<input type="text" asp-for="Subject" class="form-control" autocomplete="off"/>
 				<span asp-validation-for="Subject" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column md="4" permission="UseMoodAvatars" condition="@Model.UserAvatars.HasMoods">
 			<fieldset>
-				<label asp-for="Mood" class="form-control-label"></label>
+				<label asp-for="Mood"></label>
 				<select asp-for="Mood" asp-items="@Model.Moods" class="form-select"></select>
 				<span asp-validation-for="Mood" class="text-danger"></span>
 			</fieldset>

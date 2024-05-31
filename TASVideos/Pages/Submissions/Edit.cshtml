@@ -15,7 +15,7 @@
 	<row>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.MovieFile" class="form-control-label"></label>
+				<label asp-for="Submission.MovieFile"></label>
 				<input asp-for="Submission.MovieFile" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Submission.MovieFile)</div>
 				<span asp-validation-for="Submission.MovieFile" class="text-danger"></span>
@@ -23,12 +23,12 @@
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.Authors" class="form-control-label"></label>
+				<label asp-for="Submission.Authors"></label>
 				<string-list asp-for="Submission.Authors" />
 				<span asp-validation-for="Submission.Authors" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.AdditionalAuthors" class="form-control-label"></label>
+				<label asp-for="Submission.AdditionalAuthors"></label>
 				<input asp-for="Submission.AdditionalAuthors" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.Submission.AdditionalAuthors)</div>
 				<span asp-validation-for="Submission.AdditionalAuthors" class="text-danger"></span>
@@ -38,17 +38,17 @@
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.GameVersion" class="form-control-label"></label>
+				<label asp-for="Submission.GameVersion"></label>
 				<input asp-for="Submission.GameVersion" class="form-control" placeholder="USA v1.0" />
 				<span asp-validation-for="Submission.GameVersion" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.GameName" class="form-control-label"></label>
+				<label asp-for="Submission.GameName"></label>
 				<input asp-for="Submission.GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.GameName)" />
 				<span asp-validation-for="Submission.GameName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.Emulator" class="form-control-label"></label>
+				<label asp-for="Submission.Emulator"></label>
 				<input asp-for="Submission.Emulator" spellcheck="false" class="form-control" placeholder="Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author." />
 				<div>@Html.DescriptionFor(m => m.Submission.Emulator)</div>
 				<span asp-validation-for="Submission.Emulator" class="text-danger"></span>
@@ -56,17 +56,17 @@
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.Goal" class="form-control-label"></label>
+				<label asp-for="Submission.Goal"></label>
 				<input asp-for="Submission.Goal" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.Goal)" />
 				<span asp-validation-for="Submission.Goal" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.RomName" class="form-control-label"></label>
+				<label asp-for="Submission.RomName"></label>
 				<input asp-for="Submission.RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.RomName)" />
 				<span asp-validation-for="Submission.RomName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.EncodeEmbedLink" class="form-control-label"></label>
+				<label asp-for="Submission.EncodeEmbedLink"></label>
 				<input asp-for="Submission.EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.EncodeEmbedLink)" />
 				<span asp-validation-for="Submission.EncodeEmbedLink" class="text-danger"></span>
 			</fieldset>
@@ -75,19 +75,19 @@
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.Status" class="form-control-label"></label>
+				<label asp-for="Submission.Status"></label>
 				<select class="form-select"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
 			</fieldset>
 			<fieldset id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
-				<label asp-for="Submission.RejectionReason" class="form-control-label"></label>
+				<label asp-for="Submission.RejectionReason"></label>
 				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-select"></select>
 			</fieldset>
 		</div>
 		<div condition="canEditPublicationClass" class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.PublicationClassId" class="form-control-label"></label>
+				<label asp-for="Submission.PublicationClassId"></label>
 				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-select"></select>
 				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
 			</fieldset>
@@ -99,7 +99,7 @@
 	</fullrow>
 	<fullrow>
 		<fieldset>
-			<label asp-for="Markup" class="form-control-label"></label>
+			<label asp-for="Markup"></label>
 			<textarea asp-for="Markup" rows="12" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Markup" class="text-danger"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
@@ -108,7 +108,7 @@
 	<row>
 		<div class="col-12">
 			<fieldset>
-				<label asp-for="Submission.RevisionMessage" class="form-control-label"></label>
+				<label asp-for="Submission.RevisionMessage"></label>
 				<div class="input-group">
 					<input asp-for="Submission.RevisionMessage" class="form-control" />
 					<div class="input-group-text">

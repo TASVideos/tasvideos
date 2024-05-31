@@ -48,7 +48,7 @@
 	<card-footer condition="!Model.IsDefault">
 		<span class="font-weight-bold">Users with this role</span>
 		<div condition="!Model.Users.Any()">
-			<label class="form-control-label">No users currently have this role.</label>
+			<label class="fst-italic">No users currently have this role.</label>
 		</div>
 		<div condition="Model.Users.Count > 100">
 			<i>@Model.Users.Count Users (too many to display)</i>

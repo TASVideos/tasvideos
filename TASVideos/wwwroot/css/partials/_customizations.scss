@@ -425,10 +425,6 @@ figure {
 	padding: 10px;
 }
 
-.form-control-label {
-	font-weight: bold;
-}
-
 /* Firefox fix for file inputs */
 @-moz-document url-prefix() {
 	input[type="file"].form-control {

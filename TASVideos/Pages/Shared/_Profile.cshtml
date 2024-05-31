@@ -70,7 +70,7 @@
 								<label>@Model.Email</label>
 							</div>
 							<br />
-							<label asp-for="EmailConfirmed" class="form-control-label"></label>
+							<label asp-for="EmailConfirmed"></label>
 							@if (Model.EmailConfirmed)
 							{
 								<span class="fa fa-check-square text-success"></span><span> Yes</span>
@@ -80,7 +80,7 @@
 								<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
 							}
 							<br />
-							<label asp-for="IsLockedOut" class="form-control-label"></label>
+							<label asp-for="IsLockedOut"></label>
 							@if (Model.IsLockedOut)
 							{
 								<span class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>

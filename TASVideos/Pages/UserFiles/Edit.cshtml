@@ -13,7 +13,7 @@
 			<input type="hidden" asp-for="UserFile.UserId" />
 			<input type="hidden" asp-for="UserFile.UserName" />
 			<fieldset>
-				<label asp-for="UserFile.Title" class="form-control-label"></label>
+				<label asp-for="UserFile.Title"></label>
 				<input asp-for="UserFile.Title" type="text" class="form-control" />
 				<span asp-validation-for="UserFile.Title" class="text-danger"></span>
 			</fieldset>
@@ -21,7 +21,7 @@
 				<div>
 					<partial name="_WikiEditHelper" model="@("UserFile_Description")"/>
 				</div>
-				<label asp-for="UserFile.Description" class="form-control-label"></label>
+				<label asp-for="UserFile.Description"></label>
 				<textarea asp-for="UserFile.Description" rows="6" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
 				@await Html.RenderWiki(SystemWiki.WikiEditHelp)
@@ -29,17 +29,17 @@
 			<fieldset>
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" asp-for="UserFile.Hidden">
-					<label class="form-check-label form-control-label" asp-for="UserFile.Hidden"></label>
+					<label class="form-check-label" asp-for="UserFile.Hidden"></label>
 				</div>
 			</fieldset>
 			<hr />
 			<fieldset>
-				<label asp-for="UserFile.SystemId" class="form-control-label"></label>
+				<label asp-for="UserFile.SystemId"></label>
 				<select asp-for="UserFile.SystemId" asp-items="@Model.AvailableSystems" class="form-select"></select>
 				<span asp-validation-for="UserFile.SystemId" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserFile.GameId" class="form-control-label"></label>
+				<label asp-for="UserFile.GameId"></label>
 				<select asp-for="UserFile.GameId" asp-items="@Model.AvailableGames" class="form-select"></select>
 				<span asp-validation-for="UserFile.GameId" class="text-danger"></span>
 			</fieldset>

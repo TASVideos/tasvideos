@@ -55,28 +55,28 @@
 		<input type="hidden" asp-for="Submission.MovieExtension" />
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Submission.MovieToObsolete" class="form-control-label"></label>
+				<label asp-for="Submission.MovieToObsolete"></label>
 				<input asp-for="Submission.MovieToObsolete" class="form-control" />
 				<span asp-validation-for="Submission.MovieToObsolete" class="text-danger"></span>
 				<span id="obsoleted-by"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.OnlineWatchingUrl" class="form-control-label"></label>
+				<label asp-for="Submission.OnlineWatchingUrl"></label>
 				<input type="text" asp-for="Submission.OnlineWatchingUrl" class="form-control" />
 				<span asp-validation-for="Submission.OnlineWatchingUrl" class="text-danger"></span>
-				<label asp-for="Submission.OnlineWatchUrlName" class="form-control-label"></label>
+				<label asp-for="Submission.OnlineWatchUrlName"></label>
 				<input type="text" asp-for="Submission.OnlineWatchUrlName" class="form-control"/>
 				<span asp-validation-for="Submission.OnlineWatchUrlName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.MirrorSiteUrl" class="form-control-label"></label>
+				<label asp-for="Submission.MirrorSiteUrl"></label>
 				<input type="text" asp-for="Submission.MirrorSiteUrl" class="form-control" />
 				<span asp-validation-for="Submission.MirrorSiteUrl" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Submission.MovieFileName" class="form-control-label"></label>
+				<label asp-for="Submission.MovieFileName"></label>
 				<div class="input-group">
 					<input type="text" asp-for="Submission.MovieFileName" class="form-control" />
 					<div class="input-group-append">
@@ -89,7 +89,7 @@
 				<span asp-validation-for="Submission.MovieFileName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.Screenshot" class="form-control-label"></label>
+				<label asp-for="Submission.Screenshot"></label>
 				<input asp-for="Submission.Screenshot" class="form-control" />
 				<span>
 					Must be JPEG or PNG
@@ -111,14 +111,14 @@
 		<column lg="6">
 			<partial name="_WikiEditHelper" model="@("Submission_MovieMarkup")" />
 			<fieldset>
-				<label asp-for="Submission.MovieMarkup" class="form-control-label"></label>
+				<label asp-for="Submission.MovieMarkup"></label>
 				<textarea asp-for="Submission.MovieMarkup" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Submission.MovieMarkup" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Markup" class="form-control-label"></label>
+				<label asp-for="Markup"></label>
 				<textarea readonly class="form-control" rows="10" asp-for="Markup"></textarea>
 			</fieldset>
 		</column>

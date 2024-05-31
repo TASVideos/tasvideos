@@ -13,7 +13,7 @@
 	<row>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Role.Name" class="form-control-label"></label>
+				<label asp-for="Role.Name"></label>
 				<input asp-for="Role.Name" class="form-control" maxlength="50" />
 				<span asp-validation-for="Role.Name" class="text-danger"></span>
 			</fieldset>
@@ -29,12 +29,12 @@
 		</column>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Role.Description" class="form-control-label"></label>
+				<label asp-for="Role.Description"></label>
 				<textarea asp-for="Role.Description" class="form-control" rows="4" maxlength="200"></textarea>
 				<span asp-validation-for="Role.Description" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Role.AutoAssignPostCount" class="form-control-label"></label>
+				<label asp-for="Role.AutoAssignPostCount"></label>
 				<div>
 					<small>(@Html.DescriptionFor(m => m.Role.AutoAssignPostCount))</small>
 				</div>
@@ -54,24 +54,20 @@
 	</row>
 	<row>
 		<column class="col-lg-6">
-			<label asp-for="Role.Links" class="form-control-label"></label>
+			<label asp-for="Role.Links"></label>
 			<string-list asp-for="Role.Links" />
 		</column>
 	</row>
 	<fieldset>
-		<label asp-for="Role.SelectedPermissions" class="form-control-label"></label>
+		<label asp-for="Role.SelectedPermissions"></label>
 		<select asp-for="Role.SelectedPermissions" multiselect="true" asp-items="Model.AvailablePermissions" class="form-select"></select>
 		<span asp-validation-for="Role.SelectedPermissions" class="text-danger"></span>
 	</fieldset>
 	<fieldset class="d-none" id="assignable-permissions-section">
-		<label asp-for="Role.SelectedAssignablePermissions" class="form-control-label"></label>
+		<label asp-for="Role.SelectedAssignablePermissions"></label>
 		<select asp-for="Role.SelectedAssignablePermissions" multiselect="true" asp-items="Model.AvailableAssignablePermissions" class="form-select"></select>
-		<row class="mt-3">
-			<column sm="5" class="offset-sm-7">
-				<label class="form-control-label">Roles that can be assigned:</label>
-				<div id="assignable-roles">None</div>
-			</column>
-		</row>
+		<label>Roles that can be assigned:</label>
+		<div id="assignable-roles">None</div>
 	</fieldset>
 	<form-button-bar>
 		<submit-button><i class="fa fa-save"></i> @(Model.Id.HasValue ? "Save" : "Create")</submit-button>

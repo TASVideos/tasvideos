@@ -21,7 +21,7 @@
 	<row>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="MovieFile" class="form-control-label"></label>
+				<label asp-for="MovieFile"></label>
 				<input asp-for="MovieFile" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.MovieFile)</div>
 				<span asp-validation-for="MovieFile" class="text-danger"></span>
@@ -29,12 +29,12 @@
 		</column>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Authors" class="form-control-label"></label>
+				<label asp-for="Authors"></label>
 				<string-list asp-for="Authors" />
 				<span asp-validation-for="Authors" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="AdditionalAuthors" class="form-control-label"></label>
+				<label asp-for="AdditionalAuthors"></label>
 				<input asp-for="AdditionalAuthors" class="form-control" />
 				<div>@Html.DescriptionFor(m => m.AdditionalAuthors)</div>
 				<span asp-validation-for="AdditionalAuthors" class="text-danger"></span>
@@ -44,34 +44,34 @@
 	<row>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="GameVersion" class="form-control-label"></label>
+				<label asp-for="GameVersion"></label>
 				<input asp-for="GameVersion" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameVersion)" />
 				<span asp-validation-for="GameVersion" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="GameName" class="form-control-label"></label>
+				<label asp-for="GameName"></label>
 				<input asp-for="GameName" class="form-control" placeholder="@Html.DescriptionFor(m => m.GameName)" />
 				<span asp-validation-for="GameName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Emulator" class="form-control-label"></label>
+				<label asp-for="Emulator"></label>
 				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="@Html.DescriptionFor(m => m.Emulator)" />
 				<span asp-validation-for="Emulator" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Branch" class="form-control-label"></label>
+				<label asp-for="Branch"></label>
 				<input asp-for="Branch" class="form-control" placeholder="@Html.DescriptionFor(m => m.Branch)" />
 				<span asp-validation-for="Branch" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="RomName" class="form-control-label"></label>
+				<label asp-for="RomName"></label>
 				<input asp-for="RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.RomName)" />
 				<span asp-validation-for="RomName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="EncodeEmbedLink" class="form-control-label"></label>
+				<label asp-for="EncodeEmbedLink"></label>
 				<input asp-for="EncodeEmbedLink" class="form-control" placeholder="@Html.DescriptionFor(m => m.EncodeEmbedLink)" />
 				<span asp-validation-for="EncodeEmbedLink" class="text-danger"></span>
 			</fieldset>
@@ -79,7 +79,7 @@
 	</row>
 	<fullrow>
 		<fieldset>
-			<label asp-for="Markup" class="form-control-label"></label>
+			<label asp-for="Markup"></label>
 			<span>
 				@await Html.RenderWiki(SystemWiki.SubmissionImportant)
 			</span>

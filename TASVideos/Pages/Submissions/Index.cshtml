@@ -20,15 +20,15 @@
 <form method="get" id="submission-form">
 	<row>
 		<div class="col-12 col-md-6">
-			<label asp-for="Search.StatusFilter" class="form-control-label"></label>
+			<label asp-for="Search.StatusFilter"></label>
 			<select asp-for="Search.StatusFilter" multiselect="true" asp-items="Model.AvailableStatuses" class="form-select"></select>
 		</div>
 		<div class="col-12 col-md-6">
-			<label asp-for="Search.Years" class="form-control-label"></label>
+			<label asp-for="Search.Years"></label>
 			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiselect="true" class="form-select"></select>
-			<label asp-for="Search.User" class="form-control-label"></label>
+			<label asp-for="Search.User"></label>
 			<input asp-for="Search.User" user-search="true" class="form-control" />
-			<label asp-for="Search.System" class="form-control-label"></label>
+			<label asp-for="Search.System"></label>
 			<select asp-for="Search.System" asp-items="Model.SystemList" class="form-select"></select>
 		</div>
 	</row>

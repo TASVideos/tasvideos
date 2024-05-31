@@ -8,18 +8,18 @@
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Catalog.SystemId" class="form-control-label"></label>
+				<label asp-for="Catalog.SystemId"></label>
 				<select asp-for="Catalog.SystemId" asp-items="Model.AvailableSystems" class="form-select"></select>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Catalog.SystemFrameRateId" class="form-control-label"></label>
+				<label asp-for="Catalog.SystemFrameRateId"></label>
 				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-select"></select>
 			</fieldset>
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
 				<fullrow>
-					<label asp-for="Catalog.GameId" class="form-control-label"></label>
+					<label asp-for="Catalog.GameId"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
@@ -32,7 +32,7 @@
 			</fieldset>
 			<fieldset>
 				<fullrow>
-					<label asp-for="Catalog.GameVersionId" class="form-control-label"></label>
+					<label asp-for="Catalog.GameVersionId"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
@@ -40,7 +40,7 @@
 					</div>
 					<div class="col-2">
 						<button
-							disable="!Model.Catalog.GameId.HasValue || Model.Catalog.GameId == -1"
+							disable="Model.Catalog.GameId is null or -1"
 							id="create-version"
 							type="button"
 							class="btn btn-primary">New</button>
@@ -49,7 +49,7 @@
 			</fieldset>
 			<fieldset>
 				<fullrow>
-					<label asp-for="Catalog.GameGoalId" class="form-control-label"></label>
+					<label asp-for="Catalog.GameGoalId"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">

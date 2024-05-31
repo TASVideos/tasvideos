@@ -9,11 +9,11 @@
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
-				<label class="form-control-label">Original Name</label>
+				<label>Original Name</label>
 				<label class="form-control">@Model.OriginalPageName</label>
 			</fieldset>
 			<fieldset>
-				<label asp-for="DestinationPageName" class="form-control-label"></label>
+				<label asp-for="DestinationPageName"></label>
 				<input type="text" asp-for="DestinationPageName" class="form-control" />
 				<span asp-validation-for="DestinationPageName" class="text-danger"></span>
 			</fieldset>

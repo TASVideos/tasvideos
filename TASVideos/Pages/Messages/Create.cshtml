@@ -20,13 +20,13 @@
 <form client-side-validation="true" method="post" id="create-form">
 	<row>
 		<fieldset class="col-lg-6">
-			<label asp-for="Subject" class="form-control-label"></label>
+			<label asp-for="Subject"></label>
 			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
 			<span asp-validation-for="Subject" class="text-danger"></span>
 		</fieldset>
 		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
-				<label asp-for="ToUser" class="form-control-label"></label>
+				<label asp-for="ToUser"></label>
 				<input asp-for="ToUser" user-search="true" class="form-control" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
 				<span asp-validation-for="ToUser" class="text-danger"></span>
 			</div>
@@ -40,7 +40,7 @@
 	</fullrow>
 	<row>
 		<fieldset class="col-12">
-			<label asp-for="Text" class="form-control-label"></label>
+			<label asp-for="Text"></label>
 			<textarea asp-for="Text" class="form-control" rows="20"></textarea>
 			<span asp-validation-for="Text" class="text-danger"></span>
 		</fieldset>

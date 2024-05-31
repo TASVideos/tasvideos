@@ -16,12 +16,12 @@
 	<input type="hidden" asp-for="Topic.ForumId" />
 	<input type="hidden" asp-for="Topic.Title" />
 	<fieldset class="col-lg-6">
-		<label asp-for="Topic.SplitToForumId" class="form-control-label"></label>
+		<label asp-for="Topic.SplitToForumId"></label>
 		<select asp-for="Topic.SplitToForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
 		<span asp-validation-for="Topic.SplitToForumId" class="text-danger"></span>
 	</fieldset>
 	<fieldset class="col-lg-6">
-		<label asp-for="Topic.SplitTopicName" class="form-control-label"></label>
+		<label asp-for="Topic.SplitTopicName"></label>
 		<input type="text" asp-for="Topic.SplitTopicName" class="form-control" />
 		<span asp-validation-for="Topic.SplitTopicName" class="text-danger"></span>
 	</fieldset>
@@ -30,10 +30,10 @@
 		<small>
 			<row>
 				<div class="col-2 col-md-1">
-					<label asp-for="Topic.PostToSplitId" class="form-control-label"></label>
+					<label asp-for="Topic.PostToSplitId"></label>
 				</div>
 				<div class="col-2 col-md-1">
-					<label class="form-control-label">Split Selected Posts</label>
+					<label>Split Selected Posts</label>
 				</div>
 			</row>
 			@for (int i = 0; i < Model.Topic.Posts.Count; i++)

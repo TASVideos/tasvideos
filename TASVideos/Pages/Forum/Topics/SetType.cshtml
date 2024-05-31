@@ -15,7 +15,7 @@
 	<input type="hidden" asp-for="TopicTitle"/>
 	<row>
 		<column md="6">
-			<label asp-for="Type" class="form-control-label"></label>
+			<label asp-for="Type"></label>
 			<select type="text" asp-for="Type" class="form-select" asp-items="Model.TopicTypes"></select>
 			<span asp-validation-for="Type" class="text-danger"></span>
 		</column>

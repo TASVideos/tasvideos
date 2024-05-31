@@ -11,14 +11,14 @@
 		class="btn btn-danger float-end"><i class="fa fa-trash-can"></i> Anonymize User</a>
 	<fullrow>
 		<fieldset condition="Model.UserToEdit.IsLockedOut">
-			<label asp-for="UserToEdit.IsLockedOut" class="form-control-label"></label>
+			<label asp-for="UserToEdit.IsLockedOut"></label>
 			<div>
 				<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
 				<a class="btn btn-secondary" asp-page="Edit" asp-page-handler="Unlock" asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
 			</div>
 		</fieldset>
 		<fieldset condition="!Model.UserToEdit.IsLockedOut">
-			<label asp-for="UserToEdit.IsLockedOut" class="form-control-label"></label>
+			<label asp-for="UserToEdit.IsLockedOut"></label>
 			<div>
 				<span class="fa fa-check-square text-success"></span> Not locked
 			</div>
@@ -27,11 +27,11 @@
 	<row>
 		<div class="col-md-6">
 			<fieldset>
-				<label asp-for="UserToEdit.CreateTimestamp" class="form-control-label"></label>
+				<label asp-for="UserToEdit.CreateTimestamp"></label>
 				<div><timezone-convert asp-for="@Model.UserToEdit.CreateTimestamp"/></div>
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserToEdit.UserName" class="form-control-label"></label>
+				<label asp-for="UserToEdit.UserName"></label>
 				@if (User.Has(PermissionTo.EditUsersUserName))
 				{
 					<input asp-for="UserToEdit.OriginalUserName" type="hidden" />
@@ -135,28 +135,28 @@
 				else
 				{
 					<div>
-						<label class="form-control-label">@Model.UserToEdit.UserName</label>
+						<label>@Model.UserToEdit.UserName</label>
 						<input type="hidden" asp-for="UserToEdit.UserName" />
 					</div>
 				}
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserToEdit.From" class="form-control-label"></label>
+				<label asp-for="UserToEdit.From"></label>
 				<input asp-for="UserToEdit.From" type="text" class="form-control" />
 				<span asp-validation-for="UserToEdit.From" class="text-danger"></span>
 			</fieldset>
 		</div>
 		<div class="col-md-6">
 			<fieldset>
-				<label asp-for="UserToEdit.LastLoggedInTimeStamp" class="form-control-label"></label>
+				<label asp-for="UserToEdit.LastLoggedInTimeStamp"></label>
 				<div>@Html.DisplayFor(m => m.UserToEdit.LastLoggedInTimeStamp)</div>
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserToEdit.TimezoneId" class="form-control-label"></label>
+				<label asp-for="UserToEdit.TimezoneId"></label>
 				<timezone-picker asp-for="UserToEdit.TimezoneId" class="form-control" />
 			</fieldset>
 			<fieldset permission="SeeEmails">
-				<label asp-for="UserToEdit.Email" class="form-control-label"></label>
+				<label asp-for="UserToEdit.Email"></label>
 				<div class="input-group">
 					<label class="form-control">@Model.UserToEdit.Email</label>
 					<div class="input-group-append">
@@ -191,11 +191,11 @@
 	@await Html.RenderWiki(SystemWiki.UserEditRole)
 	<row>
 		<column md="6">
-			<label asp-for="UserToEdit.Avatar" class="form-control-label"></label>
+			<label asp-for="UserToEdit.Avatar"></label>
 			<input type="text" asp-for="UserToEdit.Avatar" class="form-control" />
 		</column>
 		<column md="6" show="!string.IsNullOrWhiteSpace(Model.UserToEdit.Avatar)">
-			<label class="form-control-label">Preview</label><br />
+			<label>Preview</label><br />
 			<img id="avatar-img" src="@Model.UserToEdit.Avatar" class="float-start m-2"/>
 		</column>
 	</row>
@@ -207,7 +207,7 @@
 	</row>
 	<hr />
 	<fullrow>
-		<label asp-for="UserToEdit.Signature" class="form-control-label"></label>
+		<label asp-for="UserToEdit.Signature"></label>
 		<textarea asp-for="UserToEdit.Signature" class="form-control" rows="5"></textarea>
 	</fullrow>
 	<form-button-bar class="text-center">

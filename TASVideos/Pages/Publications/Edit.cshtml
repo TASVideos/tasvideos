@@ -10,7 +10,7 @@
 	<a condition="!string.IsNullOrWhiteSpace(Model.Publication.ClassIconPath)" href="/@Model.Publication.ClassLink">
 		<icon path="@Model.Publication.ClassIconPath" />
 	</a>
-	<label class="form-control-label">@Model.Publication.Class</label>
+	<label class="fw-bold">@Model.Publication.Class</label>
 	<a permission="SetPublicationClass" class="btn btn-secondary btn-sm" asp-page="EditClass" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
 </fullrow>
 <top-button-bar>
@@ -112,7 +112,7 @@
 	</fullrow>
 	<fullrow>
 		<fieldset>
-			<label asp-for="Publication.Markup" class="form-control-label"></label>
+			<label asp-for="Publication.Markup"></label>
 			<textarea asp-for="Publication.Markup" rows="6" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Publication.Markup" class="text-danger"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
@@ -121,7 +121,7 @@
 	<row>
 		<div class="col-12">
 			<fieldset>
-				<label asp-for="Publication.RevisionMessage" class="form-control-label"></label>
+				<label asp-for="Publication.RevisionMessage"></label>
 				<div class="input-group">
 					<input asp-for="Publication.RevisionMessage" class="form-control" />
 					<div class="input-group-text">
