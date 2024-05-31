@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace TASVideos.TagHelpers;
 
 [HtmlTargetElement("select", Attributes = "multiselect")]
-public class DataMultiselectTagHelper : TagHelper
+public class MultiselectTagHelper : TagHelper
 {
 	[HtmlAttributeName("multiselect")]
 	public bool Multiselect { get; set; }
