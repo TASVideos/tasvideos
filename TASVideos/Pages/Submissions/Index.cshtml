@@ -27,7 +27,7 @@
 			<label asp-for="Search.Years" class="form-control-label"></label>
 			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiselect="true" class="form-select"></select>
 			<label asp-for="Search.User" class="form-control-label"></label>
-			<input autocomplete="off" asp-for="Search.User" data-search-user="true" type="text" list="@Html.IdFor(m => m.Search.User)-autocomplete" class="form-control" />
+			<input autocomplete="off" asp-for="Search.User" data-user-search="true" type="text" list="@Html.IdFor(m => m.Search.User)-autocomplete" class="form-control" />
 
 			<label asp-for="Search.System" class="form-control-label"></label>
 			<select asp-for="Search.System" asp-items="Model.SystemList" class="form-select"></select>
