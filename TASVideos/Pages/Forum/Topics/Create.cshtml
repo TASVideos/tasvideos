@@ -65,7 +65,7 @@
 		<partial name="_CreatePostHelper" model="@("Post")" />
 	</fullrow>
 	<fieldset>
-		<textarea asp-for="Post" class="form-control backup-content" rows="20" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
+		<textarea asp-for="Post" class="form-control" rows="20" backup-content="true" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
 		<span asp-validation-for="Post" class="text-danger"></span>
 	</fieldset>
 	<fullrow id="backup-restore" class="d-none">
@@ -84,7 +84,3 @@
 </form>
 
 <partial name="_PreviewWindow" model="@(("Post", "/Forum/Preview"))" />
-
-@section Scripts {
-	<script src="~/js/backup-text.js"></script>
-}

@@ -75,17 +75,23 @@ public static class ViewDataDictionaryExtensions
 		=> viewData["client-side-validation"] = true;
 
 	public static bool ClientSideValidationEnabled(this ViewDataDictionary viewData)
-		=> viewData["client-side-validation"] != null;
+		=> viewData["client-side-validation"] is not null;
 
 	public static void UseSelectImprover(this ViewDataDictionary viewData)
 		=> viewData["use-select-improver"] = true;
 
 	public static bool UsesSelectImprover(this ViewDataDictionary viewData)
-		=> viewData["use-select-improver"] != null;
+		=> viewData["use-select-improver"] is not null;
 
 	public static void UseUserSearch(this ViewDataDictionary viewData)
 		=> viewData["use-user-search"] = true;
 
 	public static bool UsesUserSearch(this ViewDataDictionary viewData)
-		=> viewData["use-user-search"] != null;
+		=> viewData["use-user-search"] is not null;
+
+	public static void UseBackupText(this ViewDataDictionary viewData)
+		=> viewData["use-backup-text"] = true;
+
+	public static bool UsesBackupText(this ViewDataDictionary viewData)
+		=> viewData["use-backup-text"] is not null;
 }
