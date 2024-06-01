@@ -75,6 +75,8 @@
 				textArea.selectionStart = i + ss[0].length;
 				textArea.selectionEnd = j + ss[0].length;
 			}
+
+			textArea.dispatchEvent(new Event('change'));
 		}
 
 		for (let i = 0; i < buttons.length; i++) {
