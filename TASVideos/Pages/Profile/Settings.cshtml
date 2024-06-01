@@ -153,7 +153,6 @@
 		<label asp-for="Signature"></label>
 		<textarea asp-for="Signature" class="form-control" rows="5" disabled="@(!User.Has(PermissionTo.EditSignature))"></textarea>
 	</fullrow>
-	<hr />
 	<form-button-bar>
 		<submit-button id="submit-btn"></submit-button>
 	</form-button-bar>

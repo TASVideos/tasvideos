@@ -5,17 +5,20 @@
 }
 <form client-side-validation="true" method="post">
 	<row>
-		<div class="col-lg-6">
-			<label asp-for="Category.Title"></label>
-			<input type="text" asp-for="Category.Title" class="form-control" />
-			<span asp-validation-for="Category.Title" class="text-danger"></span>
-			<label asp-for="Category.Description"></label>
-			<input type="text" asp-for="Category.Description" class="form-control" />
-			<span asp-validation-for="Category.Description" class="text-danger"></span>
-		</div>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="Category.Title"></label>
+				<input type="text" asp-for="Category.Title" class="form-control"/>
+				<span asp-validation-for="Category.Title" class="text-danger"></span>
+			</fieldset>
+			<fieldset>
+				<label asp-for="Category.Description"></label>
+				<input type="text" asp-for="Category.Description" class="form-control"/>
+				<span asp-validation-for="Category.Description" class="text-danger"></span>
+			</fieldset>
+		</column>
 	</row>
-	<hr />
-	<div id="forum-container" class="border border-info">
+	<div id="forum-container" class="border border-info ">
 		@for (int i = 0; i < Model.Category.Forums.Count; i++)
 		{
 			<div class="forum-section border border-info p-2" data-index="@i">

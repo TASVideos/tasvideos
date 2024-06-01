@@ -53,7 +53,6 @@
 		</tr>
 	}
 </standard-table>
-<hr />
 <form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Publication.SystemCode" />
 	<row>
@@ -106,7 +105,6 @@
 		<select asp-for="Publication.SelectedTags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
 	</fieldset>
 	@await Html.RenderWiki(SystemWiki.ClassEditingHelp)
-	<hr />
 	<fullrow class="mt-3">
 		<partial name="_WikiEditHelper" model="@("Publication_Markup")" />
 	</fullrow>

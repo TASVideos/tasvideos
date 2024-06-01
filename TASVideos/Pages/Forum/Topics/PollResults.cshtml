@@ -7,11 +7,7 @@
 <top-button-bar>
 	<back-link asp-page="/Forum/Topics/Index" asp-route-id="@Model.Poll.TopicId"></back-link>
 </top-button-bar>
-<hr />
-<div>
-	<forum-markup markup="@Model.Poll.Question" enable-bb-code="true"></forum-markup>
-</div>
-<hr />
+<forum-markup class="my-3" markup="@Model.Poll.Question" enable-bb-code="true"></forum-markup>
 <standard-table>
 	<table-head condition="!User.Has(PermissionTo.ResetPollResults)" columns="Option,User,Vote On,IP Address"></table-head>
 	<table-head permission="ResetPollResults" columns="Option,User,Vote On,IP Address,Reset"></table-head>
