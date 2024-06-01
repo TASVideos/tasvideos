@@ -126,7 +126,7 @@ public class EditModel(
 			await publisher.SendGameManagement(
 				$"Game [{game.DisplayName}]({{0}}) {action} by {User.Name()}",
 				"",
-				$"{Id}G");
+				$"{game.Id}G");
 		}
 
 		return BasePageRedirect("Index", new { game.Id });
