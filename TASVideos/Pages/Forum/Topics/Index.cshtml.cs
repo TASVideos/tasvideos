@@ -391,7 +391,7 @@ public class IndexModel(
 					return "Banned User";
 				}
 
-				return string.Join(",", PosterRoles
+				return string.Join(", ", PosterRoles
 					.OrderBy(s => s)
 					.Append(PosterPlayerRank)
 					.Where(s => !string.IsNullOrEmpty(s))
