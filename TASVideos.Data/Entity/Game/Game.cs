@@ -76,6 +76,9 @@ public static class GameExtensions
 	public static IQueryable<Game> WebSearch(this IQueryable<Game> query, string searchTerms)
 		=> query.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", searchTerms)));
 
+	public static IOrderedQueryable<Game> ByWebRanking(this IQueryable<Game> query, string searchTerms)
+		=> query.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ")).ToStripped().Rank(EF.Functions.WebSearchToTsQuery("simple", searchTerms), NpgsqlTsRankingNormalization.DivideByLength));
+
 	public static void SetGenres(this ICollection<GameGenre> genres, IEnumerable<int> genreIds)
 	{
 		genres.Clear();

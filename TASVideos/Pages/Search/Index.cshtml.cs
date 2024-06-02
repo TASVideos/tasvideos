@@ -40,8 +40,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			PageResults = await db.WikiPages
 				.ThatAreNotDeleted()
 				.ThatAreCurrent()
-				.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
-				.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
+				.WebSearch(SearchTerms)
+				.ByWebRanking(SearchTerms)
 				.Skip(skip)
 				.Take(PageSize + 1)
 				.Select(w => new PageSearch(EF.Functions.WebSearchToTsQuery(SearchTerms).GetResultHeadline(w.Markup), w.PageName))
@@ -49,8 +49,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 			PostResults = await db.ForumPosts
 				.ExcludeRestricted(UserCanSeeRestricted)
-				.Where(p => p.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(SearchTerms)))
-				.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(SearchTerms)))
+				.WebSearch(SearchTerms)
+				.ByWebRanking(SearchTerms)
 				.Skip(skip)
 				.Take(PageSize + 1)
 				.Select(p => new PostSearch(
@@ -61,9 +61,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 			GameResults = await db.Games
 				.WebSearch(SearchTerms)
-				.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ")).ToStripped().Rank(EF.Functions.WebSearchToTsQuery("simple", SearchTerms), NpgsqlTsRankingNormalization.DivideByLength))
-					.ThenBy(g => g.DisplayName.Length)
-					.ThenBy(g => g.DisplayName)
+				.ByWebRanking(SearchTerms)
+				.ThenBy(g => g.DisplayName.Length)
+				.ThenBy(g => g.DisplayName)
 				.Skip(skip)
 				.Take(PageSize + 1)
 				.Select(g => new GameSearch(

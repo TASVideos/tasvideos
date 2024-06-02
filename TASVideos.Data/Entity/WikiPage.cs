@@ -38,14 +38,10 @@ public class WikiPage : BaseEntity, ISoftDeletable
 public static class WikiQueryableExtensions
 {
 	public static IQueryable<WikiPage> ThatAreCurrent(this IQueryable<WikiPage> list)
-	{
-		return list.Where(wp => wp.ChildId == null);
-	}
+		=> list.Where(wp => wp.ChildId == null);
 
 	public static IQueryable<WikiPage> ThatAreNotCurrent(this IQueryable<WikiPage> list)
-	{
-		return list.Where(wp => wp.ChildId != null);
-	}
+		=> list.Where(wp => wp.ChildId != null);
 
 	/// <summary>
 	/// Filters to pages at a specific indentation level
@@ -60,24 +56,16 @@ public static class WikiQueryableExtensions
 	}
 
 	public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
-	{
-		return list.Where(w => w.PageName == pageName);
-	}
+		=> list.Where(w => w.PageName == pageName);
 
 	public static IQueryable<WikiPage> Revision(this IQueryable<WikiPage> list, string pageName, int revision)
-	{
-		return list.Where(w => w.PageName == pageName && w.Revision == revision);
-	}
+		=> list.Where(w => w.PageName == pageName && w.Revision == revision);
 
 	public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> list)
-	{
-		return list.Where(w => !w.MinorEdit);
-	}
+		=> list.Where(w => !w.MinorEdit);
 
 	public static IQueryable<WikiPage> CreatedBy(this IQueryable<WikiPage> list, string userName)
-	{
-		return list.Where(t => t.Author!.UserName == userName);
-	}
+		=> list.Where(t => t.Author!.UserName == userName);
 
 	/// <summary>
 	/// Filters the list of wiki pages to only pages that are nest beneath the given page.
@@ -127,8 +115,11 @@ public static class WikiQueryableExtensions
 			.Where(wp => pageName.StartsWith(wp.PageName + "/"));
 	}
 
-	public static bool IsCurrent(this WikiPage? wikiPage)
-	{
-		return wikiPage is { ChildId: null, IsDeleted: false };
-	}
+	public static bool IsCurrent(this WikiPage? wikiPage) => wikiPage is { ChildId: null, IsDeleted: false };
+
+	public static IQueryable<WikiPage> WebSearch(this IQueryable<WikiPage> query, string searchTerms)
+		=> query.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerms)));
+
+	public static IOrderedQueryable<WikiPage> ByWebRanking(this IQueryable<WikiPage> query, string searchTerms)
+		=> query.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(searchTerms)));
 }
