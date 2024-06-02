@@ -45,6 +45,7 @@ public class EditModel(
 				Avatar = u.Avatar,
 				MoodAvatarUrlBase = u.MoodAvatarUrlBase,
 				UseRatings = u.UseRatings,
+				BannedUntil = u.BannedUntil,
 				ModeratorComments = u.ModeratorComments
 			})
 			.SingleOrDefaultAsync();
@@ -97,6 +98,7 @@ public class EditModel(
 		user.Avatar = UserToEdit.Avatar;
 		user.MoodAvatarUrlBase = UserToEdit.MoodAvatarUrlBase;
 		user.UseRatings = UserToEdit.UseRatings;
+		user.BannedUntil = UserToEdit.BannedUntil;
 		user.ModeratorComments = UserToEdit.ModeratorComments;
 
 		var currentRoles = await db.UserRoles
@@ -231,6 +233,8 @@ public class EditModel(
 
 		[Display(Name = "Use Ratings", Description = "If unchecked, the user's publication ratings will not be used when calculating average rating")]
 		public bool UseRatings { get; init; }
+
+		public DateTime? BannedUntil { get; init; }
 
 		[Display(Name = "Moderator Comments")]
 		public string? ModeratorComments { get; init; }

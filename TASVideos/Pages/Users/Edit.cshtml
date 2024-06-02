@@ -12,36 +12,50 @@
 </top-button-bar>
 
 <form asp-route="Edit">
-	<fullrow>
-		<fieldset condition="Model.UserToEdit.IsLockedOut">
-			<label asp-for="UserToEdit.IsLockedOut"></label>
-			<div>
-				<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
-				<a class="btn btn-secondary" asp-page="Edit" asp-page-handler="Unlock" asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
-			</div>
-		</fieldset>
-		<fieldset condition="!Model.UserToEdit.IsLockedOut">
-			<label asp-for="UserToEdit.IsLockedOut"></label>
-			<div>
-				<span class="fa fa-check-square text-success"></span> Not locked
-			</div>
-		</fieldset>
-	</fullrow>
 	<row>
-		<div class="col-md-6">
+		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.CreateTimestamp"></label>
 				<div><timezone-convert asp-for="@Model.UserToEdit.CreateTimestamp"/></div>
 			</fieldset>
+			<fieldset condition="Model.UserToEdit.IsLockedOut">
+				<label asp-for="UserToEdit.IsLockedOut"></label>
+				<div>
+					<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
+					<a class="btn btn-secondary" asp-page="Edit" asp-page-handler="Unlock" asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
+				</div>
+			</fieldset>
+			<fieldset condition="!Model.UserToEdit.IsLockedOut">
+				<label asp-for="UserToEdit.IsLockedOut"></label>
+				<div>
+					<span class="fa fa-check-square text-success"></span> Not locked
+				</div>
+			</fieldset>
+		</column>
+		<column md="6">
+			<fieldset>
+				<label asp-for="UserToEdit.LastLoggedInTimeStamp"></label>
+				<div>@Html.DisplayFor(m => m.UserToEdit.LastLoggedInTimeStamp)</div>
+			</fieldset>
+			<fieldset>
+				<input type="checkbox" class="forum-check-input" asp-for="UserToEdit.UseRatings" />
+				<label class="form-check-label" asp-for="UserToEdit.UseRatings"></label>
+				<br />
+				(@Html.DescriptionFor(m => m.UserToEdit.UseRatings))
+			</fieldset>
+		</column>
+	</row>
+	<row>
+		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.UserName"></label>
 				@if (User.Has(PermissionTo.EditUsersUserName))
 				{
-					<input asp-for="UserToEdit.OriginalUserName" type="hidden" />
+					<input asp-for="UserToEdit.OriginalUserName" type="hidden"/>
 					<row>
 						<div id="user-name-div" class="col-sm-12">
 							<div class="input-group">
-								<input asp-for="UserToEdit.UserName" class="form-control" autocomplete="off" />
+								<input asp-for="UserToEdit.UserName" class="form-control" autocomplete="off"/>
 								<div class="input-group-text" aria-hidden="true">
 									<span id="user-name-status" class="fa fa-check-square text-success"></span>
 								</div>
@@ -137,21 +151,17 @@
 				{
 					<div>
 						<label>@Model.UserToEdit.UserName</label>
-						<input type="hidden" asp-for="UserToEdit.UserName" />
+						<input type="hidden" asp-for="UserToEdit.UserName"/>
 					</div>
 				}
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserToEdit.From"></label>
-				<input asp-for="UserToEdit.From" type="text" class="form-control" />
+				<input asp-for="UserToEdit.From" type="text" class="form-control"/>
 				<span asp-validation-for="UserToEdit.From" class="text-danger"></span>
 			</fieldset>
-		</div>
-		<div class="col-md-6">
-			<fieldset>
-				<label asp-for="UserToEdit.LastLoggedInTimeStamp"></label>
-				<div>@Html.DisplayFor(m => m.UserToEdit.LastLoggedInTimeStamp)</div>
-			</fieldset>
+		</column>
+		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.TimezoneId"></label>
 				<timezone-picker asp-for="UserToEdit.TimezoneId" class="form-control" />
@@ -168,15 +178,13 @@
 				<a asp-page="EditEmail" asp-route-id="@Model.Id" class="btn btn-danger mt-2">Edit</a>
 				<label>(also allows manually setting the email confirmed value)</label>
 			</fieldset>
-		</div>
+		</column>
 	</row>
 	<row>
 		<column md="6">
 			<fieldset>
-				<input type="checkbox" class="forum-check-input" asp-for="UserToEdit.UseRatings" />
-				<label class="form-check-label" asp-for="UserToEdit.UseRatings"></label>
-				<br />
-				(@Html.DescriptionFor(m => m.UserToEdit.UseRatings))
+				<label asp-for="UserToEdit.BannedUntil">Banned Until</label>
+				<input asp-for="UserToEdit.BannedUntil" class="form-control"/>
 			</fieldset>
 		</column>
 	</row>
