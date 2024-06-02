@@ -94,4 +94,10 @@ public static class ViewDataDictionaryExtensions
 
 	public static bool UsesBackupText(this ViewDataDictionary viewData)
 		=> viewData["use-backup-text"] is not null;
+
+	public static void UseStringList(this ViewDataDictionary viewData)
+		=> viewData["use-string-list"] = true;
+
+	public static bool UsesStringList(this ViewDataDictionary viewData)
+		=> viewData["use-backup-text"] is not null;
 }

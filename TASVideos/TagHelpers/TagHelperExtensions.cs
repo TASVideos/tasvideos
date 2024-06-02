@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.Encodings.Web;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -91,15 +90,6 @@ public static partial class TagHelperExtensions
 		}
 
 		return sb.ToString();
-	}
-
-	/// <summary>
-	/// Returns a value serialized to javascript, suitable for inclusion in a script tag.
-	/// </summary>
-	public static string JsValue(object? value)
-	{
-		// The .NET serializer by default never escapes `/`; we always escape it to avoid stray </script>s.
-		return JsonSerializer.Serialize(value).Replace("/", "\\/");
 	}
 
 	[GeneratedRegex("^[^\t\n\f \\/>\"'=]+$")]
