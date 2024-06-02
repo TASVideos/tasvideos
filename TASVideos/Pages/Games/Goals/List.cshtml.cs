@@ -84,26 +84,19 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		var oldGoalName = gameGoal.DisplayName;
-
-		if (string.Equals(gameGoal.DisplayName, newGoalName, StringComparison.InvariantCulture))
-		{
-			gameGoal.DisplayName = newGoalName;
-			SetMessage(await db.TrySaveChanges(), $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
-			return BackToList();
-		}
-
 		if (gameGoal.DisplayName == "baseline")
 		{
 			ErrorStatusMessage("Cannot edit baseline goal.");
 			return BackToList();
 		}
 
-		if (await db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == newGoalName))
+		if (await db.GameGoals.AnyAsync(gg => gg.GameId == GameId && gg.DisplayName == newGoalName && gg.Id != gameGoal.Id))
 		{
 			ErrorStatusMessage($"Cannot change goal to {newGoalName} because it already exists.");
 			return BackToList();
 		}
+
+		var oldGoalName = gameGoal.DisplayName;
 
 		gameGoal.DisplayName = newGoalName;
 
