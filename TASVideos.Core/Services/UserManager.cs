@@ -188,6 +188,7 @@ public class UserManager(
 				PublicRatings = u.PublicRatings,
 				TimeZone = u.TimeZoneId,
 				IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+				BannedUntil = u.BannedUntil,
 				PublicationActiveCount = u.Publications
 					.Count(p => !p.Publication!.ObsoletedById.HasValue),
 				PublicationObsoleteCount = u.Publications

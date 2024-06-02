@@ -31,64 +31,56 @@
 				</row>
 			</card-header>
 			<card-body>
-				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" class="float-end" />
+				<danger-alert condition="Model.IsBanned">
+					<span condition="Model.BanIsIndefinite">User is banned indefinitely</span>
+					<span condition="!Model.BanIsIndefinite">User is banned until <timezone-convert relative-time="false" asp-for="BannedUntil"/></span>
+				</danger-alert>
+				<img condition="@(!string.IsNullOrWhiteSpace(Model.Avatar))" src="@Model.Avatar" class="float-end"/>
 				<div class="card-text">
 					<a condition="Model.HasHomePage" href="/HomePages/@Model.UserName">Homepage</a>
 					<small condition="!Model.HasHomePage">(No Home Page)</small>
-					<br />
+					<br/>
 					<label asp-for="JoinDate"></label>
-					<label><timezone-convert asp-for="@Model.JoinDate" date-only="true" /></label>
-					<br />
+					<label><timezone-convert asp-for="@Model.JoinDate" date-only="true"/></label>
+					<br/>
 					<label asp-for="LastLoggedInTimeStamp"></label>
-					<label condition="Model.LastLoggedInTimeStamp.HasValue"><timezone-convert asp-for="@lastLoggedIn" date-only="true" /></label>
+					<label condition="Model.LastLoggedInTimeStamp.HasValue"><timezone-convert asp-for="@lastLoggedIn" date-only="true"/></label>
 					<label condition="!Model.LastLoggedInTimeStamp.HasValue">Never</label>
-					<br />
+					<br/>
 					<label asp-for="PreferredPronouns"></label>
 					<label>@Html.DisplayFor(m => m.PreferredPronouns)</label>
-					<br />
+					<br/>
 					<label asp-for="Location"></label>
 					<label>@Html.DisplayFor(m => m.Location)</label>
-					<br />
+					<br/>
 					<label asp-for="PostCount"></label>
 					<label>
 						<a asp-page="/Forum/Posts/User" asp-route-username="@Model.UserName">
 							@Html.DisplayFor(m => m.PostCount)
 						</a>
 					</label>
-					<br />
+					<br/>
 					<a condition="canViewPrivateData" class="btn btn-warning btn-sm mt-1 mb-2" data-bs-toggle="collapse" href="#pii">Private Data</a>
 					<div class="collapse" id="pii">
 						<div class="alert alert-info" condition="canViewPrivateData">
 							<label asp-for="Id"></label>
 							<label>@Model.Id</label>
-							<br />
+							<br/>
 							<label asp-for="TimeZone"></label>
 							<label>@Model.TimeZone</label>
-							<br />
+							<br/>
 							<div permission="SeeEmails">
 								<label asp-for="Email"></label>
 								<label>@Model.Email</label>
 							</div>
-							<br />
+							<br/>
 							<label asp-for="EmailConfirmed"></label>
-							@if (Model.EmailConfirmed)
-							{
-								<span class="fa fa-check-square text-success"></span><span> Yes</span>
-							}
-							else
-							{
-								<div><span class="fa fa-exclamation-triangle text-danger"></span> No</div>
-							}
-							<br />
+							<span condition="Model.EmailConfirmed" class="fa fa-check-square text-success"></span><span> Yes</span>
+							<div><span condition="!Model.EmailConfirmed" class="fa fa-exclamation-triangle text-danger"></span> No</div>
+							<br/>
 							<label asp-for="IsLockedOut"></label>
-							@if (Model.IsLockedOut)
-							{
-								<span class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
-							}
-							else
-							{
-								<span class="fa fa-check-square text-success"></span><span> Not locked</span>
-							}
+							<span condition="Model.IsLockedOut" class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
+							<span condition="!Model.IsLockedOut" class="fa fa-check-square text-success"></span><span> Not locked</span>
 							<div>
 								<a permission="ViewPrivateUserData" asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning btn-sm">IP Addresses used</a>
 							</div>
@@ -100,7 +92,7 @@
 					<div class="float-end mt-2">
 						@foreach (var award in Model.Awards.OrderByDescending(a => a.Year))
 						{
-							<partial name="_Award" model="award" />
+							<partial name="_Award" model="award"/>
 						}
 					</div>
 				</div>
