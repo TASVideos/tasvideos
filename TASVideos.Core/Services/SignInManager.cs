@@ -36,6 +36,11 @@ public class SignInManager(
 			return (SignInResult.Failed, null);
 		}
 
+		if (user.BannedUntil < DateTime.UtcNow)
+		{
+			return (SignInResult.Failed, null);
+		}
+
 		var claims = await userManager.AddUserPermissionsToClaims(user);
 		var canLogIn = claims.Permissions().Contains(PermissionTo.Login);
 

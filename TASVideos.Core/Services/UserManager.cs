@@ -61,6 +61,7 @@ public class UserManager(
 	{
 		return await db.Users
 			.Where(u => u.Id == userId)
+			.ThatAreNotBanned()
 			.SelectMany(u => u.UserRoles)
 			.SelectMany(ur => ur.Role!.RolePermission)
 			.Select(rp => rp.PermissionId)

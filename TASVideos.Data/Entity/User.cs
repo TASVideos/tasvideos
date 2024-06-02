@@ -186,14 +186,10 @@ public enum UserDecimalFormat
 public static class UserExtensions
 {
 	public static async Task<bool> Exists(this IQueryable<User> query, string userName)
-	{
-		return await query.AnyAsync(q => q.UserName == userName);
-	}
+		=> await query.AnyAsync(q => q.UserName == userName);
 
 	public static IQueryable<User> ThatHaveSubmissions(this IQueryable<User> query)
-	{
-		return query.Where(u => u.Submissions.Any());
-	}
+		=> query.Where(u => u.Submissions.Any());
 
 	public static IQueryable<User> ThatPartiallyMatch(this IQueryable<User> query, string? partial)
 	{
@@ -202,33 +198,24 @@ public static class UserExtensions
 	}
 
 	public static IQueryable<User> ThatArePublishedAuthors(this IQueryable<User> query)
-	{
-		return query.Where(u => u.Publications.Any());
-	}
+		=> query.Where(u => u.Publications.Any());
 
 	public static IQueryable<User> ThatHavePermission(this IQueryable<User> query, PermissionTo permission)
-	{
-		return query.Where(u => u.UserRoles
+		=> query.Where(u => u.UserRoles
 			.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId == permission)));
-	}
 
 	public static IQueryable<User> ThatHaveRole(this IQueryable<User> query, string role)
-	{
-		return query.Where(u => u.UserRoles.Any(ur => ur.Role!.Name == role));
-	}
+		=> query.Where(u => u.UserRoles.Any(ur => ur.Role!.Name == role));
 
 	public static IQueryable<User> ForUsers(this IQueryable<User> query, IEnumerable<string> users)
-	{
-		return query.Where(u => users.Contains(u.UserName));
-	}
+		=> query.Where(u => users.Contains(u.UserName));
 
 	public static IQueryable<User> ForUser(this IQueryable<User> query, string? userName)
-	{
-		return query.Where(u => u.UserName == userName);
-	}
+		=> query.Where(u => u.UserName == userName);
 
 	public static IQueryable<User> ThatHaveCustomLocale(this IQueryable<User> query)
-	{
-		return query.Where(u => u.DateFormat != UserDateFormat.Auto || u.TimeFormat != UserTimeFormat.Auto || u.DecimalFormat != UserDecimalFormat.Auto);
-	}
+		=> query.Where(u => u.DateFormat != UserDateFormat.Auto || u.TimeFormat != UserTimeFormat.Auto || u.DecimalFormat != UserDecimalFormat.Auto);
+
+	public static IQueryable<User> ThatAreNotBanned(this IQueryable<User> query)
+		=> query.Where(u => !u.BannedUntil.HasValue || u.BannedUntil < DateTime.UtcNow);
 }
