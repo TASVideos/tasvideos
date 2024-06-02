@@ -28,6 +28,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 				u.Signature,
 				PostCount = u.Posts.Count,
 				u.PreferredPronouns,
+				u.BannedUntil,
 				Roles = u.UserRoles
 					.Where(ur => !ur.Role!.IsDefault)
 					.Select(ur => ur.Role!.Name)
@@ -84,6 +85,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 			post.PosterPlayerRank = rank;
 			post.PosterPronouns = user.PreferredPronouns;
 			post.Awards = userAwards;
+			post.PosterIsBanned = user.BannedUntil.HasValue && user.BannedUntil > DateTime.UtcNow;
 
 			var isOwnPost = post.PosterId == User.GetUserId();
 			var isOpenTopic = !post.TopicIsLocked;

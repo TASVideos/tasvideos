@@ -120,6 +120,7 @@ public class IndexModel(
 				PosterJoined = p.Poster.CreateTimestamp,
 				PosterPostCount = p.Poster.Posts.Count,
 				PosterMood = p.PosterMood,
+				PosterIsBanned = p.Poster.BannedUntil.HasValue && p.Poster.BannedUntil > DateTime.UtcNow,
 				Text = p.Text,
 				PostEditedTimestamp = p.PostEditedTimestamp,
 				Subject = p.Subject,
@@ -345,6 +346,7 @@ public class IndexModel(
 		public string? PosterAvatar { get; set; }
 		public string? PosterLocation { get; set; }
 		public int PosterPostCount { get; set; }
+		public bool PosterIsBanned { get; set; }
 		public double PosterPlayerPoints { get; set; }
 		public DateTime PosterJoined { get; set; }
 		public string? PosterMoodUrlBase { get; set; }
@@ -378,6 +380,23 @@ public class IndexModel(
 			}
 
 			return PosterAvatar;
+		}
+
+		public string CalculatedRoles
+		{
+			get
+			{
+				if (PosterIsBanned)
+				{
+					return "Banned User";
+				}
+
+				return string.Join(",", PosterRoles
+					.OrderBy(s => s)
+					.Append(PosterPlayerRank)
+					.Where(s => !string.IsNullOrEmpty(s))
+					.Select(s => s!.Replace(' ', '\u00A0')));
+			}
 		}
 	}
 }

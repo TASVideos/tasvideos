@@ -68,7 +68,7 @@
 									<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-body-tertiary col-auto col-md-12" style="line-height: 22px;">@Html.DisplayFor(m => m.PosterPronouns)</small>
 								</row>
 								<div class="ms-2 ms-md-0" style="line-height: 1">
-									<small>@string.Join(", ", Model.PosterRoles.OrderBy(s => s).Append(Model.PosterPlayerRank).Where(s => !string.IsNullOrEmpty(s)).Select(s => s!.Replace(' ', '\u00A0')))
+									<small>@string.Join(", ", Model.CalculatedRoles)
 										<span condition="Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
 									</small>
 								</div>
