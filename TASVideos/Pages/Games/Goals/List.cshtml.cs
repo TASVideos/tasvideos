@@ -86,7 +86,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		var oldGoalName = gameGoal.DisplayName;
 
-		if (string.Equals(gameGoal.DisplayName, newGoalName, StringComparison.InvariantCulture))
+		if (string.Equals(gameGoal.DisplayName, newGoalName, StringComparison.InvariantCultureIgnoreCase))
 		{
 			gameGoal.DisplayName = newGoalName;
 			SetMessage(await db.TrySaveChanges(), $"Goal changed from {oldGoalName} to {newGoalName} successfully", $"Unable to change goal from {oldGoalName} to {newGoalName}");
