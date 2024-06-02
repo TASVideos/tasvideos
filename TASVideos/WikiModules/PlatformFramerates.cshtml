@@ -1,6 +1,6 @@
 ﻿@model PlatformFramerates
 <standard-table>
-	<table-head columns="System,Region,Framerate,Preliminary or approximate"></table-head>
+	<table-head columns="System,Region,Framerate,Preliminary or approximate,Publications,Submissions"></table-head>
 	@foreach (var item in Model.Framerates)
 	{
 		<tr class="@(item.Preliminary ? "alert-warning" : "")">
@@ -8,6 +8,8 @@
 			<td>@item.RegionCode</td>
 			<td>@item.FrameRate</td>
 			<td>@item.Preliminary.ToYesNo()</td>
+			<td>@item.PublicationCount</td>
+			<td>@item.SubmissionCount</td>
 		</tr>
 	}
 </standard-table>
