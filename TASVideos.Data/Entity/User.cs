@@ -59,6 +59,8 @@ public class User : IdentityUser<int>, ITrackable
 	[StringLength(250)]
 	public string? MoodAvatarUrlBase { get; set; }
 
+	public DateTime? BannedUntil { get; set; }
+
 	/// <summary>
 	/// Gets or sets a value indicating whether to use
 	/// the user's ratings when calculating a publication's average rating.
