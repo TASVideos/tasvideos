@@ -218,4 +218,6 @@ public static class UserExtensions
 
 	public static IQueryable<User> ThatAreNotBanned(this IQueryable<User> query)
 		=> query.Where(u => !u.BannedUntil.HasValue || u.BannedUntil < DateTime.UtcNow);
+
+	public static bool IsBanned(this User user) => user.BannedUntil.HasValue && user.BannedUntil > DateTime.UtcNow;
 }

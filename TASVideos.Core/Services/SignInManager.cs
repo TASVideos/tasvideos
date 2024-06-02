@@ -36,7 +36,7 @@ public class SignInManager(
 			return (SignInResult.Failed, null);
 		}
 
-		if (user.BannedUntil < DateTime.UtcNow)
+		if (user.IsBanned())
 		{
 			return (SignInResult.Failed, null);
 		}
