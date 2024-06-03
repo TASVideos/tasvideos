@@ -43,10 +43,6 @@ public enum PermissionTo
 	UploadUserFiles = 13,
 
 	[Group("User")]
-	[Description("Grants the ability to log into the site. Without this permissions, a user account is effectively banned.")]
-	Login = 14,
-
-	[Group("User")]
 	[Description("The ability for a user to edit their signature.")]
 	EditSignature = 15,
 
