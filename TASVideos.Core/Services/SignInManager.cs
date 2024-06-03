@@ -41,14 +41,6 @@ public class SignInManager(
 			return (SignInResult.Failed, null);
 		}
 
-		var claims = await userManager.AddUserPermissionsToClaims(user);
-		var canLogIn = claims.Permissions().Contains(PermissionTo.Login);
-
-		if (!canLogIn)
-		{
-			return (SignInResult.NotAllowed, user);
-		}
-
 		var result = await PasswordSignInAsync(
 			userName,
 			password,
