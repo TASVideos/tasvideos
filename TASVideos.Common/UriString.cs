@@ -1,4 +1,4 @@
-namespace TASVideos.Common;
+﻿namespace TASVideos.Common;
 
 public static class UriString
 {

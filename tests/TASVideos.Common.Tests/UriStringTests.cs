@@ -1,4 +1,4 @@
-namespace TASVideos.Common.Tests;
+﻿namespace TASVideos.Common.Tests;
 
 [TestClass]
 public sealed class UriStringTests
