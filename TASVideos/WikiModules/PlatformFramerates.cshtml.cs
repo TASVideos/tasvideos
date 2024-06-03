@@ -12,12 +12,13 @@ public class PlatformFramerates(ApplicationDbContext db) : WikiViewComponent
 		Framerates = await db.GameSystemFrameRates
 			.Where(sf => !sf.Obsolete)
 			.OrderBy(sf => sf.System!.Code)
+			.ThenByDescending(sf => sf.Publications.Count + sf.Submissions.Count)
 			.ThenBy(sf => sf.RegionCode)
 			.Select(sf => new Framerate(
-				sf.System!.Code, sf.RegionCode, sf.FrameRate, sf.Preliminary))
+				sf.System!.Code, sf.RegionCode, sf.FrameRate, sf.Preliminary, sf.Publications.Count, sf.Submissions.Count))
 			.ToListAsync();
 		return View();
 	}
 
-	public record Framerate(string SystemCode, string RegionCode, double FrameRate, bool Preliminary);
+	public record Framerate(string SystemCode, string RegionCode, double FrameRate, bool Preliminary, int PublicationCount, int SubmissionCount);
 }
