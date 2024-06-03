@@ -57,6 +57,8 @@ public class UserProfile
 	[DisplayName("Locked Out Status")]
 	public bool IsLockedOut { get; set; }
 
+	public DateTime? BannedUntil { get; set; }
+
 	public string? ModeratorComments { get; set; }
 
 	public int PublicationActiveCount { get; set; }
@@ -77,6 +79,9 @@ public class UserProfile
 	public UserFileSummary UserFiles { get; set; } = new();
 
 	public int SubmissionCount => Submissions.Sum(s => s.Count);
+
+	public bool IsBanned => BannedUntil.HasValue && BannedUntil >= DateTime.UtcNow;
+	public bool BanIsIndefinite => BannedUntil >= DateTime.UtcNow.AddYears(2);
 
 	public class SubmissionEntry
 	{

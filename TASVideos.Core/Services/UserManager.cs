@@ -61,6 +61,7 @@ public class UserManager(
 	{
 		return await db.Users
 			.Where(u => u.Id == userId)
+			.ThatAreNotBanned()
 			.SelectMany(u => u.UserRoles)
 			.SelectMany(ur => ur.Role!.RolePermission)
 			.Select(rp => rp.PermissionId)
@@ -187,6 +188,7 @@ public class UserManager(
 				PublicRatings = u.PublicRatings,
 				TimeZone = u.TimeZoneId,
 				IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+				BannedUntil = u.BannedUntil,
 				PublicationActiveCount = u.Publications
 					.Count(p => !p.Publication!.ObsoletedById.HasValue),
 				PublicationObsoleteCount = u.Publications

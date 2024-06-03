@@ -20,15 +20,19 @@ public class TimeZoneConvert(
 	public bool RelativeTime { get; set; } = true;
 	public bool InLine { get; set; }
 
-	public DateTime ConvertedDateTime => (DateTime)AspFor.Model;
+	private DateTime? ConvertedDateTime => (DateTime?)AspFor.Model;
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
 		ValidateExpression();
 
 		var user = await userManager.GetUserAsync(claimsPrincipal);
+		if (ConvertedDateTime is null)
+		{
+			return;
+		}
 
-		var dateTime = ConvertedDateTime;
+		var dateTime = ConvertedDateTime.Value;
 
 		TimeZoneInfo? userTimeZone = null;
 		if (user is not null)
@@ -81,7 +85,7 @@ public class TimeZoneConvert(
 	private void ValidateExpression()
 	{
 		var type = AspFor.ModelExplorer.ModelType;
-		if (!typeof(DateTime).IsAssignableFrom(type))
+		if (!typeof(DateTime).IsAssignableFrom(type) && !typeof(DateTime?).IsAssignableFrom(type))
 		{
 			throw new ArgumentException($"Invalid property type {type}, {nameof(AspFor)} must be a {nameof(DateTime)}");
 		}
