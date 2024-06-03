@@ -609,7 +609,7 @@ pre code {
     --bs-border-color: var(--bs-gray-600);
 }
 
-.extlink {
+a[rel~="external"] {
 	&::after {
 		font-size: 0.75rem;
 		content: "\f08e";

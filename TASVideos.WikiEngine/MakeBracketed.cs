@@ -1,4 +1,5 @@
-﻿using TASVideos.WikiEngine.AST;
+﻿using TASVideos.Common;
+using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine;
 
@@ -244,15 +245,14 @@ public static partial class Builtins
 		{
 			Attr("href", href)
 		};
-		if (href[0] == '#' || href[0] == '/' && (href.Length == 1 || href[1] != '/'))
+		if (!UriString.IsToExternalDomain(href))
 		{
 			// internal
 			attrs.Add(Attr("class", "intlink"));
 		}
 		else
 		{
-			attrs.Add(Attr("rel", "nofollow"));
-			attrs.Add(Attr("class", "extlink"));
+			attrs.Add(Attr("rel", "noopener external nofollow"));
 		}
 
 		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };

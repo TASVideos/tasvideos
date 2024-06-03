@@ -359,6 +359,16 @@ public sealed class HtmlWriterTests : IDisposable
 	}
 
 	[TestMethod]
+	public void TestRelListHandling()
+	{
+		W.VoidTag("link");
+		W.Attribute("rel", "nofollow external");
+		W.Attribute("rel", "noopener external");
+		W.AssertFinished();
+		AssertOutputEquals("""<link rel="nofollow external noopener">""");
+	}
+
+	[TestMethod]
 	public void TestInnerText()
 	{
 		W.OpenTag("a");
