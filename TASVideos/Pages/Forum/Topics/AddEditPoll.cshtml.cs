@@ -121,14 +121,11 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 		[StringLength(200, MinimumLength = 8)]
 		public string? Question { get; init; }
 
-		[Display(Name = "Days to Run for", Description = "0 or empty for a never-ending poll")]
 		[Range(0, 365)]
 		public int? DaysOpen { get; init; }
 
-		[Display(Name = "Allow Multiple Selections")]
 		public bool MultiSelect { get; init; }
 
-		[Display(Name = "Options")]
 		public List<string> PollOptions { get; init; } = ["", ""];
 
 		public bool IsValid =>

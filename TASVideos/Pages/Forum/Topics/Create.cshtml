@@ -2,6 +2,7 @@
 @model CreateModel
 @{
 	ViewData.SetTitle($"Creating topic for: {Model.ForumName}");
+	ViewData.UseStringList(); // Hack for now, partial views use a different viewDataDictionary, so the component will not work
 }
 @section PageTitle {
 	Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a>

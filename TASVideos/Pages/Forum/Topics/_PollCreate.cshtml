@@ -10,13 +10,13 @@
 			<span asp-validation-for="Question" class="text-danger"></span>
 		</fieldset>
 		<fieldset>
-			<label asp-for="DaysOpen"></label>
+			<label asp-for="DaysOpen">Days to Run for</label>
 			<input asp-for="DaysOpen" type="number" min="0" max="365" class="form-control" />
-			<div>@Html.DescriptionFor(m => m.DaysOpen)</div>
+			<div>0 or empty for a never-ending poll</div>
 			<span asp-validation-for="DaysOpen" class="text-danger"></span>
 		</fieldset>
 		<fieldset condition="!Model.HasVotes">
-			<label asp-for="PollOptions"></label>
+			<label asp-for="PollOptions">Options</label>
 			<string-list asp-for="PollOptions" />
 			<span asp-validation-for="PollOptions" class="text-danger"></span>
 		</fieldset>
@@ -29,7 +29,7 @@
 		</fieldset>
 		<fieldset disable="true">
 			<div class="form-check">
-				<label asp-for="MultiSelect" class="form-check-label"></label>
+				<label asp-for="MultiSelect" class="form-check-label">Allow Multiple Selections</label>
 				<input disable="@Model.HasVotes" asp-for="MultiSelect" type="checkbox" class="form-check-input" />
 			</div>
 			<span asp-validation-for="MultiSelect" class="text-danger"></span>

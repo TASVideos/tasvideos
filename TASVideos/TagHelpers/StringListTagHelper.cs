@@ -10,9 +10,14 @@ public class StringListTagHelper : TagHelper
 {
 	public ModelExpression AspFor { get; set; } = null!;
 
+	[HtmlAttributeNotBound]
+	[ViewContext]
+	public ViewContext ViewContext { get; set; } = new();
+
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
 		ValidateExpression();
+		ViewContext.ViewData.UseStringList();
 		output.TagMode = TagMode.StartTagAndEndTag;
 		output.TagName = "div";
 

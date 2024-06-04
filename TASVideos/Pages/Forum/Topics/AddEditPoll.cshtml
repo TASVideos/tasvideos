@@ -3,6 +3,7 @@
 @{
 	var mode = Model.PollId.HasValue ? "Edit" : "Add";
 	ViewData.SetTitle($"{mode}ing Poll for Topic {Model.TopicTitle}");
+	ViewData.UseStringList(); // Hack for now, partial views use a different viewDataDictionary, so the component will not work
 }
 
 <partial Name="_ForumHeader" />

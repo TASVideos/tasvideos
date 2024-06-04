@@ -99,5 +99,5 @@ public static class ViewDataDictionaryExtensions
 		=> viewData["use-string-list"] = true;
 
 	public static bool UsesStringList(this ViewDataDictionary viewData)
-		=> viewData["use-backup-text"] is not null;
+		=> viewData["use-string-list"] is not null;
 }

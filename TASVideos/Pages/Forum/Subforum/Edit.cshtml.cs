@@ -92,10 +92,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		AvailableCategories = await db.ForumCategories.ToDropdownList();
 	}
 
-	private async Task<bool> CanBeDeleted()
-	{
-		return !await db.ForumTopics.AnyAsync(t => t.ForumId == Id);
-	}
+	private async Task<bool> CanBeDeleted() => !await db.ForumTopics.AnyAsync(t => t.ForumId == Id);
 
 	public class ForumEdit
 	{
