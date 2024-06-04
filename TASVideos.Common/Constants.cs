@@ -90,9 +90,3 @@ public static class CustomClaimTypes
 {
 	public const string Permission = "P";
 }
-
-public static class AvatarRequirements
-{
-	public const int Width = 125;
-	public const int Height = 125;
-}
