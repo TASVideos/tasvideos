@@ -5,7 +5,7 @@
 	ViewData.SetTitle("Create a new account");
 }
 
-<form method="post" id="register-form">
+<form method="post">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -73,10 +73,5 @@
 			let timezone = document.querySelector(`[data-offset="${timezoneOffset}"]`);
 			timezone.setAttribute('selected', 'selected');
 		}
-	</script>
-	<script>
-	function onSubmit() {
-		document.getElementById("register-form").submit();
-	}
 	</script>
 }
