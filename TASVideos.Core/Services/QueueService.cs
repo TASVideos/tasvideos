@@ -89,7 +89,7 @@ internal class QueueService(
 		}
 
 		var perms = userPermissions.ToList();
-		if (perms.Contains(PermissionTo.OverrideSubmissionStatus))
+		if (perms.Contains(PermissionTo.OverrideSubmissionConstraints))
 		{
 			return Enum.GetValues<SubmissionStatus>()
 				.Except([Published]) // Published status must only be set when being published

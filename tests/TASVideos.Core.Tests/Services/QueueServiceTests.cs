@@ -29,7 +29,7 @@ public class QueueServiceTests
 	private static readonly IEnumerable<PermissionTo> BasicUserPerms = [PermissionTo.SubmitMovies];
 	private static readonly IEnumerable<PermissionTo> JudgePerms = [PermissionTo.SubmitMovies, PermissionTo.JudgeSubmissions];
 	private static readonly IEnumerable<PermissionTo> PublisherPerms = [PermissionTo.SubmitMovies, PermissionTo.PublishMovies];
-	private static readonly IEnumerable<PermissionTo> Override = [PermissionTo.OverrideSubmissionStatus];
+	private static readonly IEnumerable<PermissionTo> Override = [PermissionTo.OverrideSubmissionConstraints];
 
 	public QueueServiceTests()
 	{

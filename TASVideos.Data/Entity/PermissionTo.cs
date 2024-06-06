@@ -107,8 +107,8 @@ public enum PermissionTo
 	ReplaceSubmissionMovieFile = 203,
 
 	[Group("Queue Maintenance")]
-	[Description("The ability to set a submission status regardless of condition (exception: published submissions)")]
-	OverrideSubmissionStatus = 204,
+	[Description("The ability to override filesize and other limits, as well as set the submission status regardless of condition (exception: published submissions)")]
+	OverrideSubmissionConstraints = 204,
 
 	[Group("Queue Maintenance")]
 	[Description("The ability to deprecate an existing movie parser. When deprecated, a movie will no longer be eligible for submission")]
