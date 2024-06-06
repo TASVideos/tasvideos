@@ -2,9 +2,11 @@
 using System.IO.Compression;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.ResponseCompression;
 using TASVideos.Core.Settings;
 using TASVideos.Services;
+using TASVideos.TagHelpers;
 
 namespace TASVideos.Extensions;
 
@@ -120,6 +122,7 @@ public static class ServiceCollectionExtensions
 			options.ModelBinderProviders.Insert(0, new TrimStringModelBinderProvider());
 		});
 
+		services.AddSingleton<IHtmlGenerator, OverrideHtmlGenerator>();
 		return services;
 	}
 

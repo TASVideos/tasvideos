@@ -184,7 +184,6 @@ public class EditModel(
 	public class GameEdit
 	{
 		[StringLength(100)]
-		[Display(Name = "Display Name")]
 		public string DisplayName { get; set; } = "";
 
 		[StringLength(24)]
