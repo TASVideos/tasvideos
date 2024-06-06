@@ -2,7 +2,7 @@
 
 public interface ISubmissionFilter
 {
-	ICollection<SubmissionStatus> StatusFilter { get; }
+	ICollection<SubmissionStatus> Statuses { get; }
 	ICollection<int> Years { get; }
 	ICollection<string> Systems { get; }
 	string? User { get; }
@@ -184,9 +184,9 @@ public static class SubmissionExtensions
 			query = query.Where(p => criteria.Years.Contains(p.CreateTimestamp.Year));
 		}
 
-		if (criteria.StatusFilter.Any())
+		if (criteria.Statuses.Any())
 		{
-			query = query.Where(s => criteria.StatusFilter.Contains(s.Status));
+			query = query.Where(s => criteria.Statuses.Contains(s.Status));
 		}
 
 		if (criteria.Systems.Any())

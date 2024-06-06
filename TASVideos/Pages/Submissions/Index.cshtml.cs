@@ -34,9 +34,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		// Defaults
 		// Note that we do not provide these for GameId, the assumption is that we want to see all submissions of a given game, not just active ones
-		if (!Search.StatusFilter.Any() && string.IsNullOrWhiteSpace(Search.GameId))
+		if (!Search.Statuses.Any() && string.IsNullOrWhiteSpace(Search.GameId))
 		{
-			Search.StatusFilter = !string.IsNullOrWhiteSpace(Search.User) || Search.Years.Any()
+			Search.Statuses = !string.IsNullOrWhiteSpace(Search.User) || Search.Years.Any()
 				? SubmissionSearchRequest.All
 				: SubmissionSearchRequest.Default;
 		}
@@ -49,7 +49,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		Submissions = new SubmissionPageOf<SubmissionEntry>(entries)
 		{
 			Years = Search.Years,
-			StatusFilter = Search.StatusFilter,
+			StatusFilter = Search.Statuses,
 			System = Search.System,
 			GameId = Search.GameId,
 			User = Search.User
@@ -125,8 +125,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public string? GameId { get; set; }
 		public int? StartType { get; set; }
 
-		[Display(Name = "Statuses")]
-		public ICollection<SubmissionStatus> StatusFilter { get; set; } = [];
+		public ICollection<SubmissionStatus> Statuses { get; set; } = [];
 
 		public static ICollection<SubmissionStatus> Default =>
 		[

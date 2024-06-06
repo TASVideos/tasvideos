@@ -28,7 +28,7 @@ public static class LegacySubListConverter
 
 		if (statuses.Any())
 		{
-			request.StatusFilter = statuses;
+			request.Statuses = statuses;
 		}
 
 		var years = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1);

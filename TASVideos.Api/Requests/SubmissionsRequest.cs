@@ -25,7 +25,7 @@ internal class SubmissionsRequest : ApiRequest, ISubmissionFilter
 
 	ICollection<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear).ToList();
 
-	ICollection<SubmissionStatus> ISubmissionFilter.StatusFilter => !string.IsNullOrWhiteSpace(Statuses)
+	ICollection<SubmissionStatus> ISubmissionFilter.Statuses => !string.IsNullOrWhiteSpace(Statuses)
 		? Statuses
 			.SplitWithEmpty(",")
 			.Where(s => Enum.TryParse(s, out SubmissionStatus _))
