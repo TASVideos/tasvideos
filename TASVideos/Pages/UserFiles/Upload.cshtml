@@ -41,14 +41,14 @@
 			</fieldset>
 			<hr />
 			<fieldset>
-				<label asp-for="SystemId"></label>
-				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" class="form-select"></select>
-				<span asp-validation-for="SystemId" class="text-danger"></span>
+				<label asp-for="System"></label>
+				<select asp-for="System" asp-items="@Model.AvailableSystems" class="form-select"></select>
+				<span asp-validation-for="System" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="GameId"></label>
-				<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-select"></select>
-				<span asp-validation-for="GameId" class="text-danger"></span>
+				<label asp-for="Game"></label>
+				<select asp-for="Game" asp-items="@Model.AvailableGames" class="form-select"></select>
+				<span asp-validation-for="Game" class="text-danger"></span>
 			</fieldset>
 		</column>
 	</row>
@@ -65,8 +65,8 @@
 @section Scripts {
 	<script src="/js/userfile.js"></script>
 	<script>
-		const gameId = "@Html.IdFor(m => m.GameId)";
-		const systemId = "@Html.IdFor(m => m.SystemId)";
+		const gameId = "@Html.IdFor(m => m.Game)";
+		const systemId = "@Html.IdFor(m => m.System)";
 		enableUserFile(gameId, systemId);
 	</script>
 	<script src="/js/pako_deflate.min.js"></script>

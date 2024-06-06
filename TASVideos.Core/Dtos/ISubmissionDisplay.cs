@@ -3,5 +3,5 @@
 public interface ISubmissionDisplay
 {
 	SubmissionStatus Status { get; }
-	DateTime Submitted { get; }
+	DateTime Date { get; }
 }

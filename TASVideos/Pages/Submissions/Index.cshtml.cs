@@ -62,21 +62,18 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public string? System { get; init; }
 
 		[Sortable]
-		[Display(Name = "Game")]
-		public string? GameName { get; init; }
+		public string? Game { get; init; }
 
 		[Sortable]
 		public string? Branch { get; init; }
 		public TimeSpan Time => this.Time();
+		public List<string>? By { get; init; }
 
-		[Display(Name = "By")]
-		public List<string>? Authors { get; init; }
 		[TableIgnore]
 		public string? AdditionalAuthors { get; init; }
 
 		[Sortable]
-		[Display(Name = "Date")]
-		public DateTime Submitted { get; init; }
+		public DateTime Date { get; init; }
 
 		[Sortable]
 		public SubmissionStatus Status { get; init; }
@@ -113,7 +110,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	{
 		public SubmissionSearchRequest()
 		{
-			Sort = $"{nameof(SubmissionEntry.Submitted)}";
+			Sort = $"{nameof(SubmissionEntry.Date)}";
 			PageSize = 100;
 		}
 

@@ -37,7 +37,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 				FrameCount = s.Frames,
 				FrameRate = s.SystemFrameRate!.FrameRate,
 				RerecordCount = s.RerecordCount,
-				Submitted = s.CreateTimestamp,
+				Date = s.CreateTimestamp,
 				Submitter = s.Submitter!.UserName,
 				Status = s.Status,
 				EncodeEmbedLink = s.EncodeEmbedLink,
@@ -132,7 +132,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 		public string? Submitter { get; init; }
 
 		[Display(Name = "Submit Date")]
-		public DateTime Submitted { get; init; }
+		public DateTime Date { get; init; }
 
 		[Display(Name = "Last Edited")]
 		public DateTime LastUpdateTimestamp { get; set; }

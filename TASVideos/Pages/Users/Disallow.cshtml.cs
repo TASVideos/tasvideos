@@ -6,8 +6,7 @@ public class DisallowModel(ApplicationDbContext db) : BasePageModel
 	public List<DisallowEntry> Disallows { get; set; } = [];
 
 	[BindProperty]
-	[Display(Name = "Add New Regex Pattern")]
-	public string RegexPattern { get; set; } = "";
+	public string AddNewRegexPattern { get; set; } = "";
 
 	public async Task OnGet()
 	{
@@ -18,9 +17,9 @@ public class DisallowModel(ApplicationDbContext db) : BasePageModel
 	{
 		await PopulateDisallows();
 
-		if (Disallows.Any(d => d.RegexPattern == RegexPattern))
+		if (Disallows.Any(d => d.RegexPattern == AddNewRegexPattern))
 		{
-			ModelState.AddModelError(nameof(RegexPattern), "The provided regex pattern already exists.");
+			ModelState.AddModelError(nameof(AddNewRegexPattern), "The provided regex pattern already exists.");
 		}
 
 		if (!ModelState.IsValid)
@@ -28,7 +27,7 @@ public class DisallowModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		db.UserDisallows.Add(new UserDisallow { RegexPattern = RegexPattern });
+		db.UserDisallows.Add(new UserDisallow { RegexPattern = AddNewRegexPattern });
 		await db.SaveChangesAsync();
 
 		return BasePageRedirect("/Users/Disallow");

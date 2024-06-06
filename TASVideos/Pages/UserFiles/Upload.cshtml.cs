@@ -22,12 +22,10 @@ public class UploadModel(
 	public string Description { get; init; } = "";
 
 	[BindProperty]
-	[Display(Name = "System")]
-	public int? SystemId { get; init; }
+	public int? System { get; init; }
 
 	[BindProperty]
-	[Display(Name = "Game")]
-	public int? GameId { get; init; }
+	public int? Game { get; init; }
 
 	[BindProperty]
 	public bool Hidden { get; init; }
@@ -75,7 +73,7 @@ public class UploadModel(
 			await Initialize();
 			ModelState.AddModelError(
 				$"{nameof(Data.Entity.UserFile)}.{nameof(UserFile)}",
-				"File exceeds your available storage space. Remove unecessary files and try again.");
+				"File exceeds your available storage space. Remove unnecessary files and try again.");
 			return Page();
 		}
 
@@ -83,8 +81,8 @@ public class UploadModel(
 		var (id, parseResult) = await userFiles.Upload(User.GetUserId(), new(
 			Title,
 			Description,
-			SystemId,
-			GameId,
+			System,
+			Game,
 			actualFileData,
 			UserFile.FileName,
 			Hidden));

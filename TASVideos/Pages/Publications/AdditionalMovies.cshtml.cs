@@ -25,7 +25,6 @@ public class AdditionalMoviesModel(
 
 	[Required]
 	[BindProperty]
-	[Display(Name = "Add an additional movie file:", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 	public IFormFile? AdditionalMovieFile { get; set; }
 
 	public async Task<IActionResult> OnGet()

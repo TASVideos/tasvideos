@@ -183,7 +183,7 @@ internal class QueueService(
 	{
 		if (submission.Status.CanBeJudged())
 		{
-			var diff = (DateTime.UtcNow - submission.Submitted).TotalHours;
+			var diff = (DateTime.UtcNow - submission.Date).TotalHours;
 			return _minimumHoursBeforeJudgment - (int)diff;
 		}
 

@@ -25,7 +25,6 @@ public class PublishModel(
 
 	[BindProperty]
 	[DoNotTrim]
-	[Display(Name = "Submission description (for quoting, reference, etc)")]
 	public string? Markup { get; set; }
 
 	public List<SelectListItem> AvailableTags { get; set; } = [];
@@ -213,7 +212,6 @@ public class PublishModel(
 
 	public class SubmissionPublishModel
 	{
-		[Display(Name = "Select movie to be obsoleted")]
 		public int? MovieToObsolete { get; init; }
 
 		[DoNotTrim]
@@ -221,16 +219,13 @@ public class PublishModel(
 		public string MovieFilename { get; init; } = "";
 
 		[Url]
-		[Display(Name = "Online-watching URL")]
 		[StringLength(500)]
 		public string OnlineWatchingUrl { get; init; } = "";
 
 		[StringLength(100)]
-		[Display(Name = "Online-watching URL Display Name (Optional)")]
 		public string? OnlineWatchUrlName { get; init; }
 
 		[Url]
-		[Display(Name = "Mirror site URL")]
 		[StringLength(500)]
 		public string MirrorSiteUrl { get; init; } = "";
 

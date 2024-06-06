@@ -19,8 +19,8 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			.Select(uf => new Catalog
 			{
 				Id = uf.Id,
-				GameId = uf.GameId,
-				SystemId = uf.SystemId,
+				Game = uf.GameId,
+				System = uf.SystemId,
 				Filename = uf.FileName,
 				AuthorName = uf.Author!.UserName
 			})
@@ -50,8 +50,8 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		userFile.SystemId = UserFile.SystemId;
-		userFile.GameId = UserFile.GameId;
+		userFile.SystemId = UserFile.System;
+		userFile.GameId = UserFile.Game;
 		SetMessage(await db.TrySaveChanges(), "Userfile successfully updated.", "Unable to update Userfile.");
 
 		return BasePageRedirect("Info", new { Id });
@@ -63,10 +63,10 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			.ToDropDownListWithId())
 			.WithDefaultEntry();
 
-		if (UserFile.SystemId.HasValue)
+		if (UserFile.System.HasValue)
 		{
 			AvailableGames = (await db.Games
-				.ToDropDownList(UserFile.SystemId))
+				.ToDropDownList(UserFile.System))
 				.WithDefaultEntry();
 		}
 	}
@@ -76,11 +76,8 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 		public long Id { get; init; }
 
 		[Required]
-		[Display(Name = "System")]
-		public int? SystemId { get; init; }
-
-		[Display(Name = "Game")]
-		public int? GameId { get; init; }
+		public int? System { get; init; }
+		public int? Game { get; init; }
 		public string Filename { get; init; } = "";
 		public string AuthorName { get; init; } = "";
 	}

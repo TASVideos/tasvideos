@@ -16,13 +16,13 @@
 								</div>
 								<div class="col-auto px-1 ms-auto">
 									<row class="justify-content-end">
-										<small class="col-12 text-body-tertiary text-end"><timezone-convert asp-for="@sub.Submitted" date-only="true" /></small>
+										<small class="col-12 text-body-tertiary text-end"><timezone-convert asp-for="@sub.Date" date-only="true" /></small>
 									</row>
 								</div>
 							</row>
 							<row class="align-items-center">
 								<div class="col-auto px-1">
-									<span class="fs-6 fs-sm-5">@sub.GameName</span><span condition="!string.IsNullOrEmpty(sub.Branch)" class="fs-6 fs-sm-5"> "@sub.Branch"</span>
+									<span class="fs-6 fs-sm-5">@sub.Game</span><span condition="!string.IsNullOrEmpty(sub.Branch)" class="fs-6 fs-sm-5"> "@sub.Branch"</span>
 								</div>
 								<div class="col-auto ms-auto text-end">
 									<row>
@@ -37,7 +37,7 @@
 							</row>
 							<row>
 								<div class="col-12 px-1">
-									<span class="mt-auto">by <author-list authors="sub.Authors" additional-authors="@sub.AdditionalAuthors"></author-list></span>
+									<span class="mt-auto">by <author-list authors="sub.By" additional-authors="@sub.AdditionalAuthors"></author-list></span>
 								</div>
 							</row>
 						</div>

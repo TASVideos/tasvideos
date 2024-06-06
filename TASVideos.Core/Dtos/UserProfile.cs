@@ -13,33 +13,17 @@ public class UserProfile
 	public string UserName { get; set; } = "";
 	public int PlayerPoints { get; set; }
 	public string PlayerRank { get; set; } = "";
-
-	[Display(Name = "Joined On:")]
-	public DateTime JoinDate { get; set; }
-
-	[Display(Name = "Last Logged In: ")]
-	[DisplayFormat(NullDisplayText = "Never")]
-	public DateTime? LastLoggedInTimeStamp { get; set; }
-
-	[Display(Name = "Total posts:")]
+	public DateTime JoinedOn { get; set; }
+	public DateTime? LastLoggedIn { get; set; }
 	public int PostCount { get; set; }
 	public string? Avatar { get; set; }
-
-	[Display(Name = "Location:")]
 	public string? Location { get; set; }
 	public string? Signature { get; set; }
-
-	[Display(Name = "Ratings Public?")]
 	public bool PublicRatings { get; set; }
-
-	[Display(Name = "Time Zone:")]
 	public string? TimeZone { get; set; }
-
-	[Display(Name = "Preferred Pronouns:")]
 	public PreferredPronounTypes PreferredPronouns { get; set; }
 
 	// Private info
-	[Display(Name = "Email:")]
 	public string? Email { get; set; }
 	public bool EmailConfirmed { get; set; }
 	public bool LockedOutStatus { get; set; }

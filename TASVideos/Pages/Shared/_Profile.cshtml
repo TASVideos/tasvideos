@@ -1,6 +1,6 @@
 ﻿@model UserProfile
 @{
-	var lastLoggedIn = Model.LastLoggedInTimeStamp ?? DateTime.UtcNow;
+	var lastLoggedIn = Model.LastLoggedIn ?? DateTime.UtcNow;
 	bool canViewPrivateData = User.Has(PermissionTo.ViewPrivateUserData) || Model.Id == User.GetUserId();
 }
 <row>
@@ -40,20 +40,20 @@
 					<a condition="Model.HasHomePage" href="/HomePages/@Model.UserName">Homepage</a>
 					<small condition="!Model.HasHomePage">(No Home Page)</small>
 					<br/>
-					<label asp-for="JoinDate"></label>
-					<label><timezone-convert asp-for="@Model.JoinDate" date-only="true"/></label>
+					<label asp-for="JoinedOn"></label>:
+					<label><timezone-convert asp-for="@Model.JoinedOn" date-only="true"/></label>
 					<br/>
-					<label asp-for="LastLoggedInTimeStamp"></label>
-					<label condition="Model.LastLoggedInTimeStamp.HasValue"><timezone-convert asp-for="@lastLoggedIn" date-only="true"/></label>
-					<label condition="!Model.LastLoggedInTimeStamp.HasValue">Never</label>
+					<label asp-for="LastLoggedIn"></label>:
+					<label condition="Model.LastLoggedIn.HasValue"><timezone-convert asp-for="@lastLoggedIn" date-only="true"/></label>
+					<label condition="!Model.LastLoggedIn.HasValue">Never</label>
 					<br/>
-					<label asp-for="PreferredPronouns"></label>
+					<label asp-for="PreferredPronouns"></label>:
 					<label>@Html.DisplayFor(m => m.PreferredPronouns)</label>
 					<br/>
-					<label asp-for="Location"></label>
+					<label asp-for="Location"></label>:
 					<label>@Html.DisplayFor(m => m.Location)</label>
 					<br/>
-					<label asp-for="PostCount"></label>
+					<label asp-for="PostCount">Total posts:</label>
 					<label>
 						<a asp-page="/Forum/Posts/User" asp-route-username="@Model.UserName">
 							@Html.DisplayFor(m => m.PostCount)
@@ -66,11 +66,11 @@
 							<label asp-for="Id"></label>
 							<label>@Model.Id</label>
 							<br/>
-							<label asp-for="TimeZone"></label>
+							<label asp-for="TimeZone"></label>:
 							<label>@Model.TimeZone</label>
 							<br/>
 							<div permission="SeeEmails">
-								<label asp-for="Email"></label>
+								<label asp-for="Email"></label>:
 								<label>@Model.Email</label>
 							</div>
 							<br/>
@@ -207,7 +207,7 @@
 			<card-header><h4>Ratings</h4></card-header>
 			<card-body>
 				<a class="btn btn-warning btn-sm" a asp-page="/Users/Ratings" asp-route-userName="@Model.UserName">See Ratings</a>
-				<label asp-for="PublicRatings"></label> @Model.PublicRatings.ToYesNo()
+				<label>Ratings Public?</label> @Model.PublicRatings.ToYesNo()
 				<div condition="Model.PublicRatings">
 					<label>
 						Total Movies Rated:
