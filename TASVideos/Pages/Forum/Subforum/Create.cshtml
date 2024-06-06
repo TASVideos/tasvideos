@@ -23,7 +23,7 @@
 			<fieldset>
 				<label asp-for="Forum.ShortName"></label>
 				<small>
-					(@Html.DescriptionFor(m => m.Forum.ShortName))
+					(Used for IRC notifications and other external posts)
 				</small>
 				<input type="text" asp-for="Forum.ShortName" class="form-control"/>
 				<span asp-validation-for="Forum.ShortName" class="text-danger"></span>
@@ -32,7 +32,7 @@
 				<input type="checkbox" class="forum-check-input" asp-for="Forum.RestrictedAccess" />
 				<label class="form-check-label" asp-for="Forum.RestrictedAccess"></label>
 				<br />
-				(@Html.DescriptionFor(m => m.Forum.RestrictedAccess))
+				(If set, only users with permission to restricted forums will be allowed to see this forum)
 			</fieldset>
 		</column>
 	</row>

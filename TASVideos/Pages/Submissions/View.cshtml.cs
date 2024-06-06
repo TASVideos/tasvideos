@@ -102,20 +102,12 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 			&& GameGoalId > 0;
 
 		public MovieStartType? StartType { get; init; }
-
-		[Display(Name = "For Publication Class")]
 		public string? ClassName { get; init; }
-
-		[Display(Name = "System")]
 		public string? SystemDisplayName { get; init; }
 		public string? GameName { get; init; }
 		public string? SubmittedGameName { get; init; }
 		public string? GameVersion { get; init; }
-
-		[Display(Name = "ROM Filename")]
 		public string? RomName { get; init; }
-
-		[Display(Name = "Goal")]
 		public string? Branch { get; init; }
 		public string? Goal { get; init; }
 		public string? Emulator { get; init; }
@@ -126,18 +118,10 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 		public long? CycleCount { get; init; }
 		public double FrameRate { get; init; }
 		public int RerecordCount { get; init; }
-
-		[Display(Name = "Author")]
 		public List<string> Authors { get; init; } = [];
 		public string? Submitter { get; init; }
-
-		[Display(Name = "Submit Date")]
 		public DateTime Date { get; init; }
-
-		[Display(Name = "Last Edited")]
 		public DateTime LastUpdateTimestamp { get; set; }
-
-		[Display(Name = "Last Edited By")]
 		public string? LastUpdateUser { get; set; }
 		public SubmissionStatus Status { get; init; }
 		public string? Judge { get; init; }

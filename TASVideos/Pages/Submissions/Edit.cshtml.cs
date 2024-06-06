@@ -32,7 +32,6 @@ public class EditModel(
 
 	[BindProperty]
 	[DoNotTrim]
-	[Display(Name = "Comments and explanations")]
 	public string Markup { get; set; } = "";
 
 	public bool CanDelete { get; set; }

@@ -44,7 +44,7 @@
 		</column>
 		<column md="4">
 			<fieldset>
-				<label asp-for="Search.SystemCodes"></label>
+				<label asp-for="Search.SystemCodes">Platform</label>
 				<select asp-for="Search.SystemCodes" multiselect="true" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).ToDropDown()" class="form-select"></select>
 			</fieldset>
 			<fieldset>

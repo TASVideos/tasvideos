@@ -19,7 +19,6 @@ public class PrimaryMoviesModel(
 
 	[Required]
 	[BindProperty]
-	[Display(Name = "Primary Movie File", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 	public IFormFile? PrimaryMovieFile { get; set; }
 
 	[Required]

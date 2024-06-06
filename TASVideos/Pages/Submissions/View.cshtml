@@ -82,7 +82,7 @@
 	@if (showPublicationClass)
 	{
 		<div class="mt-3">
-			<label asp-for="Submission.ClassName"></label><span>: </span><a href="/@Model.Submission.ClassName">@Model.Submission.ClassName</a>
+			<label>For Publication Class</label><span>: </span><a href="/@Model.Submission.ClassName">@Model.Submission.ClassName</a>
 		</div>
 	}
 </div>
@@ -95,7 +95,7 @@
 	<div class="@(hasEncode ? "col-lg-6" : "col-lg-12")">
 		<div class="sub-info mb-2">
 			<div class="sub-info-cell">
-				<label>@Html.DisplayNameFor(m => m.Submission.SystemDisplayName)</label>
+				<label>System</label>
 				<div>@Model.Submission.SystemDisplayName</div>
 			</div>
 			<div condition="Model.Submission.GameId.HasValue" class="sub-info-cell">
@@ -112,11 +112,11 @@
 				<div>@Model.Submission.Branch</div>
 			</div>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Submission.Goal)" class="sub-info-cell">
-				<label>@Html.DisplayNameFor(m => m.Submission.Goal)</label>
+				<label>Global</label>
 				<div>@Model.Submission.Goal</div>
 			</div>
 			<div condition="Model.Submission.GameVersionId > 0" class="sub-info-cell">
-				<label>@Html.DisplayNameFor(m => m.Submission.GameVersion)</label>
+				<label>Game Version</label>
 				<div>
 					<a
 						asp-page="/Games/Versions/View"
@@ -129,22 +129,22 @@
 				<div condition="!Model.Submission.GameVersionId.HasValue">@Model.Submission.GameVersion</div>
 			</div>
 			<div class="sub-info-cell">
-				<label>@Html.DisplayNameFor(m => m.Submission.Emulator)</label>
+				<label>Emulator</label>
 				<div>@Model.Submission.Emulator</div>
 			</div>
 			<div class="sub-info-cell">
-				<label>@Html.DisplayNameFor(m => m.Submission.FrameCount)</label>
+				<label>Frame Count</label>
 				<div>
 					@Model.Submission.FrameCount
-					<small condition="Model.Submission.CycleCount.HasValue">(@Html.DisplayNameFor(m => m.Submission.CycleCount) @Model.Submission.CycleCount)</small>
+					<small condition="Model.Submission.CycleCount.HasValue">(cycle count @Model.Submission.CycleCount)</small>
 				</div>
 			</div>
 			<div class="sub-info-cell">
-				<label>@Html.DisplayNameFor(m => m.Submission.FrameRate)</label>
+				<label>Framerate</label>
 				<div>@Model.Submission.FrameRate</div>
 			</div>
 			<div class="sub-info-cell">
-				<label>@Html.DisplayNameFor(m => m.Submission.RerecordCount)</label>
+				<label>Rerecord Count</label>
 				<div>@Model.Submission.RerecordCount</div>
 			</div>
 			<div class="sub-info-cell">

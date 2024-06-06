@@ -65,7 +65,7 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 			return Page();
 		}
 
-		Role.Links = Role.Links.Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
+		Role.RelatedLinks = Role.RelatedLinks.Where(l => !string.IsNullOrWhiteSpace(l)).ToList();
 		if (!ModelState.IsValid)
 		{
 			AvailableAssignablePermissions = Role.SelectedPermissions
@@ -161,7 +161,7 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 				CanAssign = model.SelectedAssignablePermissions.Contains(p)
 			}));
 
-		role.RoleLinks.AddRange(model.Links.Select(rl => new RoleLink
+		role.RoleLinks.AddRange(model.RelatedLinks.Select(rl => new RoleLink
 		{
 			Link = rl,
 			Role = role
@@ -175,25 +175,18 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, Ext
 	{
 		[StringLength(50)]
 		public string Name { get; set; } = "";
-
-		[Display(Name = "Default", Description = "Default roles are given to all new users when they register")]
 		public bool IsDefault { get; init; }
 
 		[StringLength(300)]
 		public string Description { get; init; } = "";
 
 		[Range(1, 9999)]
-		[Display(Name = "Auto-assign on Post Count", Description = "If set, the user will automatically be assigned this role when they reach this post count.")]
 		public int? AutoAssignPostCount { get; init; }
-
-		[Display(Name = "Auto-assign on Publication", Description = "If set, the user will automatically be assigned this role when they have a movie published.")]
 		public bool AutoAssignPublications { get; init; }
 
 		[MinLength(1)]
 		public List<int> SelectedPermissions { get; init; } = [];
 		public List<int> SelectedAssignablePermissions { get; init; } = [];
-
-		[Display(Name = "Related Links")]
-		public List<string> Links { get; set; } = [];
+		public List<string> RelatedLinks { get; set; } = [];
 	}
 }

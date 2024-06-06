@@ -79,7 +79,6 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 
 	public class PublicationSearch : IPublicationTokens
 	{
-		[Display(Name = "Platform")]
 		public ICollection<string> SystemCodes { get; init; } = [];
 		public ICollection<string> Classes { get; init; } = [];
 		public ICollection<int> Years { get; init; } = [];

@@ -20,9 +20,9 @@
 			<fieldset>
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" asp-for="Role.IsDefault" />
-					<label asp-for="Role.IsDefault" class="form-check-label"></label>
+					<label asp-for="Role.IsDefault" class="form-check-label">Default</label>
 					<div>
-						<small>(@Html.DescriptionFor(m => m.Role.IsDefault))</small>
+						<small>(Default roles are given to all new users when they register)</small>
 					</div>
 				</div>
 			</fieldset>
@@ -34,9 +34,9 @@
 				<span asp-validation-for="Role.Description" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Role.AutoAssignPostCount"></label>
+				<label asp-for="Role.AutoAssignPostCount">Auto-assign on Post Count</label>
 				<div>
-					<small>(@Html.DescriptionFor(m => m.Role.AutoAssignPostCount))</small>
+					<small>(If set, the user will automatically be assigned this role when they reach this post count.)</small>
 				</div>
 				<span asp-validation-for="Role.AutoAssignPostCount" class="text-danger"></span>
 				<input type="number" class="form-control" asp-for="Role.AutoAssignPostCount" min="1" />
@@ -44,9 +44,9 @@
 			<fieldset>
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" asp-for="Role.AutoAssignPublications" />
-					<label asp-for="Role.AutoAssignPublications" class="form-check-label"></label>
+					<label asp-for="Role.AutoAssignPublications" class="form-check-label">uto-assign on Publication</label>
 					<div>
-						<small>(@Html.DescriptionFor(m => m.Role.AutoAssignPublications))</small>
+						<small>(If set, the user will automatically be assigned this role when they have a movie published.)</small>
 					</div>
 				</div>
 			</fieldset>
@@ -54,8 +54,8 @@
 	</row>
 	<row>
 		<column class="col-lg-6">
-			<label asp-for="Role.Links"></label>
-			<string-list asp-for="Role.Links" />
+			<label asp-for="Role.RelatedLinks"></label>
+			<string-list asp-for="Role.RelatedLinks" />
 		</column>
 	</row>
 	<fieldset>

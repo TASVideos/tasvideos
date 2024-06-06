@@ -10,7 +10,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	[FromQuery]
 	[StringLength(100, MinimumLength = 2)]
-	[Display(Name = "Search Terms")]
 	public string SearchTerms { get; set; } = "";
 
 	[FromQuery]

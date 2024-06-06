@@ -17,28 +17,28 @@
 			</fieldset>
 			<fieldset>
 				<div>
-					<input asp-for="GameSearch" />
-					<label asp-for="GameSearch"></label>
+					<input asp-for="SearchGames" />
+					<label asp-for="SearchGames"></label>
 				</div>
 				<div>
-					<input asp-for="PublicationSearch" />
-					<label asp-for="PublicationSearch"></label>
+					<input asp-for="SearchPublications" />
+					<label asp-for="SearchPublications"></label>
 				</div>
 				<div>
-					<input asp-for="PageSearch" />
-					<label asp-for="PageSearch"></label>
+					<input asp-for="SearchWiki" />
+					<label asp-for="SearchWiki"></label>
 				</div>
 				<div>
-					<input asp-for="TopicSearch" />
-					<label asp-for="TopicSearch"></label>
+					<input asp-for="SearchForumTopics" />
+					<label asp-for="SearchForumTopics"></label>
 				</div>
 				<div>
-					<input asp-for="PostSearch" />
-					<label asp-for="PostSearch"></label>
+					<input asp-for="SearchForumPosts" />
+					<label asp-for="SearchForumPosts"></label>
 				</div>
 				<div>
-					<input asp-for="UserSearch" />
-					<label asp-for="UserSearch"></label>
+					<input asp-for="SearchUsers" />
+					<label asp-for="SearchUsers"></label>
 				</div>
 			</fieldset>
 			<submit-button>Search</submit-button>
@@ -46,12 +46,12 @@
 				class="btn btn-secondary"
 				asp-route-SearchTerms="@Model.SearchTerms"
 				asp-route-PageNumber="@(Model.PageNumber - 1)"
-				asp-route-PageSearch="@Model.PageSearch"
-				asp-route-TopicSearch="@Model.TopicSearch"
-				asp-route-PostSearch="@Model.PostSearch"
-				asp-route-PublicationSearch="@Model.PublicationSearch"
-				asp-route-GameSearch="@Model.GameSearch"
-				asp-route-UserSearch="@Model.UserSearch">
+				asp-route-PageSearch="@Model.SearchWiki"
+				asp-route-TopicSearch="@Model.SearchForumTopics"
+				asp-route-PostSearch="@Model.SearchForumPosts"
+				asp-route-PublicationSearch="@Model.SearchPublications"
+				asp-route-GameSearch="@Model.SearchGames"
+				asp-route-UserSearch="@Model.SearchUsers">
 				Prev
 			</a>
 			<a condition="!Model.EnablePrev" disable class="btn btn-secondary">Prev</a>
@@ -59,12 +59,12 @@
 				class="btn btn-secondary"
 				asp-route-SearchTerms="@Model.SearchTerms"
 				asp-route-PageNumber="@(Model.PageNumber + 1)"
-				asp-route-PageSearch="@Model.PageSearch"
-				asp-route-TopicSearch="@Model.TopicSearch"
-				asp-route-PostSearch="@Model.PostSearch"
-				asp-route-PublicationSearch="@Model.PublicationSearch"
-				asp-route-GameSearch="@Model.GameSearch"
-				asp-route-UserSearch="@Model.UserSearch">
+				asp-route-PageSearch="@Model.SearchWiki"
+				asp-route-TopicSearch="@Model.SearchForumTopics"
+				asp-route-PostSearch="@Model.SearchForumPosts"
+				asp-route-PublicationSearch="@Model.SearchPublications"
+				asp-route-GameSearch="@Model.SearchGames"
+				asp-route-UserSearch="@Model.SearchUsers">
 				Next
 			</a>
 			<a condition="!Model.EnableNext" disable class="btn btn-secondary">Next</a>

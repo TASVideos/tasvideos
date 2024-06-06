@@ -11,7 +11,6 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 
 	[FromQuery]
 	[StringLength(100, MinimumLength = 2)]
-	[Display(Name = "Search Terms")]
 	public string SearchTerms { get; set; } = "";
 
 	[FromQuery]
@@ -25,28 +24,22 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	public List<UserResult> UserResults { get; set; } = [];
 
 	[FromQuery]
-	[Display(Name = "Search Wiki")]
-	public bool PageSearch { get; set; }
+	public bool SearchWiki { get; set; }
 
 	[FromQuery]
-	[Display(Name = "Search Forum Topics")]
-	public bool TopicSearch { get; set; }
+	public bool SearchForumTopics { get; set; }
 
 	[FromQuery]
-	[Display(Name = "Search Forum Posts")]
-	public bool PostSearch { get; set; }
+	public bool SearchForumPosts { get; set; }
 
 	[FromQuery]
-	[Display(Name = "Search Publications")]
-	public bool PublicationSearch { get; set; } = true;
+	public bool SearchPublications { get; set; } = true;
 
 	[FromQuery]
-	[Display(Name = "Search Games")]
-	public bool GameSearch { get; set; } = true;
+	public bool SearchGames { get; set; } = true;
 
 	[FromQuery]
-	[Display(Name = "Search Users")]
-	public bool UserSearch { get; set; }
+	public bool SearchUsers { get; set; }
 
 	public int DisplayPageSize { get; set; } = PageSize;
 	public bool EnablePrev { get; set; }
@@ -73,7 +66,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 		if (!string.IsNullOrWhiteSpace(SearchTerms))
 		{
 			DisplayPageSize = PageSize;
-			if (new[] { PageSearch, TopicSearch, PostSearch, GameSearch }.Count(b => b) == 1)
+			if (new[] { SearchWiki, SearchForumTopics, SearchForumPosts, SearchGames }.Count(b => b) == 1)
 			{
 				DisplayPageSize = PageSizeSingle;
 			}
@@ -81,7 +74,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 			var skip = DisplayPageSize * (PageNumber - 1);
 			db.ExtendTimeoutForSearch();
 
-			if (PageSearch)
+			if (SearchWiki)
 			{
 				PageResults = await db.WikiPages
 					.ThatAreNotDeleted()
@@ -94,7 +87,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 					.ToListAsync();
 			}
 
-			if (TopicSearch)
+			if (SearchForumTopics)
 			{
 				TopicResults = await db.ForumTopics
 				.ExcludeRestricted(UserCanSeeRestricted)
@@ -110,7 +103,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.ToListAsync();
 			}
 
-			if (PostSearch)
+			if (SearchForumPosts)
 			{
 				PostResults = await db.ForumPosts
 				.ExcludeRestricted(UserCanSeeRestricted)
@@ -126,7 +119,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.ToListAsync();
 			}
 
-			if (GameSearch)
+			if (SearchGames)
 			{
 				GameResults = await db.Games
 				.Where(g => Regex.IsMatch(g.DisplayName, "(^|[^A-Za-z])" + SearchTerms))
@@ -139,7 +132,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.ToListAsync();
 			}
 
-			if (PublicationSearch)
+			if (SearchPublications)
 			{
 				PublicationResults = await db.Publications
 				.Where(p => Regex.IsMatch(p.Title, "(^|[^A-Za-z])" + SearchTerms))
@@ -150,7 +143,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 				.ToListAsync();
 			}
 
-			if (UserSearch)
+			if (SearchUsers)
 			{
 				UserResults = await db.Users
 					.Where(u => Regex.IsMatch(u.UserName, "(^|[^A-Za-z])" + SearchTerms))

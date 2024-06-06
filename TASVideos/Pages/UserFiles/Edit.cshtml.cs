@@ -20,8 +20,8 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			{
 				Title = uf.Title,
 				Description = uf.Description ?? "",
-				SystemId = uf.SystemId,
-				GameId = uf.GameId,
+				System = uf.SystemId,
+				Game = uf.GameId,
 				Hidden = uf.Hidden,
 				UserId = uf.AuthorId,
 				UserName = uf.Author!.UserName
@@ -68,8 +68,8 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		file.Title = UserFile.Title;
 		file.Description = UserFile.Description;
-		file.SystemId = UserFile.SystemId;
-		file.GameId = UserFile.GameId;
+		file.SystemId = UserFile.System;
+		file.GameId = UserFile.Game;
 		file.Hidden = UserFile.Hidden;
 
 		SetMessage(await db.TrySaveChanges(), $"UserFile {Id} successfully updated", "Unable to update UserFile");
@@ -82,8 +82,8 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			.ToDropDownListWithId())
 			.WithDefaultEntry();
 
-		AvailableGames = UserFile.SystemId.HasValue
-			? await db.Games.ToDropDownList(UserFile.SystemId.Value)
+		AvailableGames = UserFile.System.HasValue
+			? await db.Games.ToDropDownList(UserFile.System.Value)
 			: [.. UiDefaults.DefaultEntry];
 	}
 
@@ -94,17 +94,10 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		[DoNotTrim]
 		public string Description { get; init; } = "";
-
-		[Display(Name = "System")]
-		public int? SystemId { get; init; }
-
-		[Display(Name = "Game")]
-		public int? GameId { get; init; }
-
+		public int? System { get; init; }
+		public int? Game { get; init; }
 		public bool Hidden { get; init; }
-
 		public int UserId { get; init; }
-
 		public string UserName { get; init; } = "";
 	}
 }

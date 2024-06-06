@@ -29,18 +29,15 @@ public class EditUrlsModel(
 	public ICollection<PublicationUrl> CurrentUrls { get; set; } = [];
 
 	[StringLength(100)]
-	[Display(Name = "Alt Title")]
 	[BindProperty]
-	public string? DisplayName { get; set; }
+	public string? AltTitle { get; set; }
 
 	[BindProperty]
 	[Url]
-	[Display(Name = "URL")]
 	public string CurrentUrl { get; set; } = "";
 
 	[BindProperty]
-	[Display(Name = "Type")]
-	public PublicationUrlType UrlType { get; set; }
+	public PublicationUrlType Type { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -72,8 +69,8 @@ public class EditUrlsModel(
 		}
 
 		PublicationId = url.PublicationId;
-		DisplayName = url.DisplayName;
-		UrlType = url.Type;
+		AltTitle = url.DisplayName;
+		Type = url.Type;
 		CurrentUrl = url.Url;
 
 		return Page();
@@ -103,9 +100,9 @@ public class EditUrlsModel(
 
 		CurrentUrls = publication.PublicationUrls;
 
-		if (CurrentUrls.Any(u => u.Type == UrlType && u.Url == CurrentUrl && u.Id != UrlId))
+		if (CurrentUrls.Any(u => u.Type == Type && u.Url == CurrentUrl && u.Id != UrlId))
 		{
-			ModelState.AddModelError($"{nameof(CurrentUrl)}", $"The {UrlType} URL: {CurrentUrl} already exists");
+			ModelState.AddModelError($"{nameof(CurrentUrl)}", $"The {Type} URL: {CurrentUrl} already exists");
 		}
 
 		if (!ModelState.IsValid)
@@ -128,26 +125,26 @@ public class EditUrlsModel(
 		}
 
 		url.PublicationId = PublicationId;
-		url.DisplayName = DisplayName;
-		url.Type = UrlType;
+		url.DisplayName = AltTitle;
+		url.Type = Type;
 		url.Url = CurrentUrl;
 
-		string log = $"{logWording[0]}ed {DisplayName} {UrlType} URL {CurrentUrl}";
+		string log = $"{logWording[0]}ed {AltTitle} {Type} URL {CurrentUrl}";
 		await publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
 		var result = await db.TrySaveChanges();
 		SetMessage(result, log, $"Unable to {logWording[1]} URL.");
 		if (result.IsSuccess())
 		{
 			await publisher.SendPublicationEdit(
-				User.Name(), PublicationId, $"{logWording[0]}ed {UrlType} URL | {Title}");
+				User.Name(), PublicationId, $"{logWording[0]}ed {Type} URL | {Title}");
 
-			if (UrlType == PublicationUrlType.Streaming && youtubeSync.IsYoutubeUrl(CurrentUrl))
+			if (Type == PublicationUrlType.Streaming && youtubeSync.IsYoutubeUrl(CurrentUrl))
 			{
 				YoutubeVideo video = new(
 					PublicationId,
 					publication.CreateTimestamp,
 					CurrentUrl,
-					DisplayName,
+					AltTitle,
 					publication.Title,
 					publicationWiki!,
 					publication.SystemCode,

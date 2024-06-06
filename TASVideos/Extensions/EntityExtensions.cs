@@ -539,7 +539,7 @@ public static class EntityExtensions
 			Description = r.Description,
 			AutoAssignPostCount = r.AutoAssignPostCount,
 			AutoAssignPublications = r.AutoAssignPublications,
-			Links = r.RoleLinks
+			RelatedLinks = r.RoleLinks
 				.Select(rl => rl.Link)
 				.ToList(),
 			SelectedPermissions = r.RolePermission
