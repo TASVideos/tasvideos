@@ -16,21 +16,21 @@
 	<input type="hidden" asp-for="Topic.ForumId" />
 	<input type="hidden" asp-for="Topic.Title" />
 	<fieldset class="col-lg-6">
-		<label asp-for="Topic.SplitToForumId"></label>
-		<select asp-for="Topic.SplitToForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
-		<span asp-validation-for="Topic.SplitToForumId" class="text-danger"></span>
+		<label asp-for="Topic.CreateNewTopicIn"></label>
+		<select asp-for="Topic.CreateNewTopicIn" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
+		<span asp-validation-for="Topic.CreateNewTopicIn" class="text-danger"></span>
 	</fieldset>
 	<fieldset class="col-lg-6">
-		<label asp-for="Topic.SplitTopicName"></label>
-		<input type="text" asp-for="Topic.SplitTopicName" class="form-control" />
-		<span asp-validation-for="Topic.SplitTopicName" class="text-danger"></span>
+		<label asp-for="Topic.NewTopicName"></label>
+		<input type="text" asp-for="Topic.NewTopicName" class="form-control" />
+		<span asp-validation-for="Topic.NewTopicName" class="text-danger"></span>
 	</fieldset>
 	<small class="text-body-tertiary">Either select one Post to start splitting at (left), or manually select the Posts to be split (right). If both are provided the manual selection will take precedence.</small>
 	<div class="border border-info p-2">
 		<small>
 			<row>
 				<div class="col-2 col-md-1">
-					<label asp-for="Topic.PostToSplitId"></label>
+					<label asp-for="Topic.SplitPostsStartingAt"></label>
 				</div>
 				<div class="col-2 col-md-1">
 					<label>Split Selected Posts</label>
@@ -40,7 +40,7 @@
 			{
 				<row class="align-items-center">
 					<div class="col-2 col-md-1">
-						<input class="m-2" type="radio" value="@Model.Topic.Posts[i].Id" name="@Html.NameFor(m =>m.Topic.PostToSplitId)" id="post_@Model.Topic.Posts[i].Id" />
+						<input class="m-2" type="radio" value="@Model.Topic.Posts[i].Id" name="@Html.NameFor(m =>m.Topic.SplitPostsStartingAt)" id="post_@Model.Topic.Posts[i].Id" />
 					</div>
 					<div class="col-2 col-md-1">
 						<input type="hidden" asp-for="@Model.Topic.Posts[i].Id" />

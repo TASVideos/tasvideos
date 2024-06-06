@@ -6,7 +6,6 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 {
 	[FromQuery]
 	[StringLength(50, MinimumLength = 3)]
-	[Display(Name = "Search")]
 	public string? SearchTerms { get; set; }
 
 	[FromQuery]
@@ -102,7 +101,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		return new SystemPageOf<GameEntry>(data)
 		{
 			System = paging.System,
-			Letter = paging.Letter,
+			StartsWith = paging.Letter,
 			Genre = paging.Genre,
 			Group = paging.Group,
 			SearchTerms = paging.SearchTerms,
@@ -131,9 +130,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	public class SystemPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 	{
 		public string? System { get; init; }
-
-		[Display(Name = "Starts with")]
-		public string? Letter { get; init; }
+		public string? StartsWith { get; init; }
 		public string? Genre { get; init; }
 		public string? Group { get; init; }
 		public string? SearchTerms { get; init; }

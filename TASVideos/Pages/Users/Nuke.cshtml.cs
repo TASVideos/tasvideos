@@ -20,7 +20,7 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 			.Select(u => new UserModel
 			{
 				Id = u.Id,
-				UserName = u.UserName
+				OriginalUserName = u.UserName
 			})
 			.SingleOrDefaultAsync();
 
@@ -120,7 +120,7 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 		public int Id { get; init; }
 
 		[Display(Name = "Original UserName")]
-		public string UserName { get; init; } = "";
+		public string OriginalUserName { get; init; } = "";
 
 		[Display(Name = "New Username")]
 		public string AnonymousUserName => $"Anonymous{Id}";

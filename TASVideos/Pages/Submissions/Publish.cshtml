@@ -15,12 +15,12 @@
 					<span class="col-sm-9"><a href="/@Model.Submission.PublicationClass">@Html.DisplayFor(m => m.Submission.PublicationClass)</a></span>
 				</row>
 				<row>
-					<label class="col-sm-3" asp-for="Submission.SystemCode"></label>
-					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.SystemCode)</span>
+					<label class="col-sm-3" asp-for="Submission.System"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.System)</span>
 				</row>
 				<row>
-					<label class="col-sm-3" asp-for="Submission.SystemRegion"></label>
-					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.SystemRegion)</span>
+					<label class="col-sm-3" asp-for="Submission.Region"></label>
+					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.Region)</span>
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.EmulatorVersion"></label>
@@ -76,17 +76,17 @@
 		</column>
 		<column lg="6">
 			<fieldset>
-				<label asp-for="Submission.MovieFileName"></label>
+				<label asp-for="Submission.MovieFilename"></label>
 				<div class="input-group">
-					<input type="text" asp-for="Submission.MovieFileName" class="form-control" />
+					<input type="text" asp-for="Submission.MovieFilename" class="form-control" />
 					<div class="input-group-append">
 						<span class="input-group-text">
 							.@Model.Submission.MovieExtension
 						</span>
 					</div>
 				</div>
-				<div>@Html.DescriptionFor(m => m.Submission.MovieFileName)</div>
-				<span asp-validation-for="Submission.MovieFileName" class="text-danger"></span>
+				<div>Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.</div>
+				<span asp-validation-for="Submission.MovieFilename" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.Screenshot"></label>
@@ -99,9 +99,9 @@
 				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.ScreenshotDescription"></label>
+				<label asp-for="Submission.ScreenshotDescription">Description</label>
 				<input asp-for="Submission.ScreenshotDescription" type="text" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.Submission.ScreenshotDescription)</div>
+				<div>Caption, describe what happens in the screenshot</div>
 				<span asp-validation-for="Submission.ScreenshotDescription" class="text-danger"></span>
 			</fieldset>
 		</column>
@@ -111,9 +111,9 @@
 		<column lg="6">
 			<partial name="_WikiEditHelper" model="@("Submission_MovieMarkup")" />
 			<fieldset>
-				<label asp-for="Submission.MovieMarkup"></label>
-				<textarea asp-for="Submission.MovieMarkup" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
-				<span asp-validation-for="Submission.MovieMarkup" class="text-danger"></span>
+				<label asp-for="Submission.MovieDescription"></label>
+				<textarea asp-for="Submission.MovieDescription" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<span asp-validation-for="Submission.MovieDescription" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
@@ -124,7 +124,7 @@
 		</column>
 	</row>
 	<preview-button></preview-button>
-	<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.MovieMarkup), "/Wiki/Preview")" />
+	<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.MovieDescription), "/Wiki/Preview")" />
 	<hr />
 	<fullrow>
 		<fieldset>
@@ -147,9 +147,9 @@
 @section Scripts {
 	<script>
 		const selectedTagsId = "@Html.IdFor(m => m.Submission.SelectedTags)";
-		let originalDescription = "@Model.Submission.MovieMarkup";
+		let originalDescription = "@Model.Submission.MovieDescription";
 		const obsoletionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieToObsolete)");
-		const descriptionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieMarkup)");
+		const descriptionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieDescription)");
 
 		descriptionModel.onchange = function() {
 			originalDescription = descriptionModel.value;

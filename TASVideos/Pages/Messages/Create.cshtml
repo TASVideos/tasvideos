@@ -27,7 +27,7 @@
 		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser"></label>
-				<input asp-for="ToUser" user-search="true" class="form-control" placeholder="@Html.DescriptionFor(m => m.ToUser)"/>
+				<input asp-for="ToUser" user-search="true" class="form-control" placeholder="Enter a UserName"/>
 				<span asp-validation-for="ToUser" class="text-danger"></span>
 			</div>
 			<label for="group-select">To Group</label>
@@ -40,9 +40,9 @@
 	</fullrow>
 	<row>
 		<fieldset class="col-12">
-			<label asp-for="Text"></label>
-			<textarea asp-for="Text" class="form-control" rows="20"></textarea>
-			<span asp-validation-for="Text" class="text-danger"></span>
+			<label asp-for="MessageBody"></label>
+			<textarea asp-for="MessageBody" class="form-control" rows="20"></textarea>
+			<span asp-validation-for="MessageBody" class="text-danger"></span>
 		</fieldset>
 	</row>
 	<form-button-bar>
@@ -52,7 +52,7 @@
 	</form-button-bar>
 </form>
 
-<partial name="_PreviewWindow" model="@((nameof(Model.Text), "/Forum/Preview"))" />
+<partial name="_PreviewWindow" model="@((nameof(Model.MessageBody), "/Forum/Preview"))" />
 
 @section Scripts {
 	<script>
@@ -65,7 +65,7 @@
 		if (document.getElementById('quote-btn')) {
 			document.getElementById('quote-btn').onclick = function () {
 				const text = document.getElementById('replying-to-text').innerHTML;
-				document.getElementById('@Html.IdFor(m => m.Text)').innerHTML = `[quote]${text}[/quote]`;
+				document.getElementById('@Html.IdFor(m => m.MessageBody)').innerHTML = `[quote]${text}[/quote]`;
 			};
 		}
 

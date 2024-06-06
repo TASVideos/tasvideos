@@ -98,10 +98,10 @@ public class PublishModel(
 			return NotFound();
 		}
 
-		var movieFileName = Submission.MovieFileName + "." + Submission.MovieExtension;
+		var movieFileName = Submission.MovieFilename + "." + Submission.MovieExtension;
 		if (await db.Publications.AnyAsync(p => p.MovieFileName == movieFileName))
 		{
-			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieFileName)}", $"{nameof(Submission.MovieFileName)} already exists.");
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieFilename)}", $"{nameof(Submission.MovieFilename)} already exists.");
 			await PopulateDropdowns();
 			return Page();
 		}
@@ -137,7 +137,7 @@ public class PublishModel(
 		await uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
 
 		// Create a wiki page corresponding to this publication
-		var wikiPage = GenerateWiki(publication.Id, Submission.MovieMarkup, User.GetUserId());
+		var wikiPage = GenerateWiki(publication.Id, Submission.MovieDescription, User.GetUserId());
 		var addedWikiPage = await wikiPages.Add(wikiPage);
 
 		submission.Status = SubmissionStatus.Published;
@@ -217,11 +217,8 @@ public class PublishModel(
 		public int? MovieToObsolete { get; init; }
 
 		[DoNotTrim]
-		[Display(Name = "Movie description")]
-		public string MovieMarkup { get; init; } = SiteGlobalConstants.DefaultPublicationText;
-
-		[Display(Name = "Movie Filename", Description = "Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.")]
-		public string MovieFileName { get; init; } = "";
+		public string MovieDescription { get; init; } = SiteGlobalConstants.DefaultPublicationText;
+		public string MovieFilename { get; init; } = "";
 
 		[Url]
 		[Display(Name = "Online-watching URL")]
@@ -238,30 +235,17 @@ public class PublishModel(
 		public string MirrorSiteUrl { get; init; } = "";
 
 		[Required]
-		[Display(Name = "Screenshot", Description = "Your movie packed in a ZIP file (max size: 150k)")]
 		public IFormFile? Screenshot { get; init; }
-
-		[Display(Name = "Description", Description = "Caption, describe what happens in the screenshot")]
 		public string? ScreenshotDescription { get; init; }
-
-		[Display(Name = "System")]
-		public string? SystemCode { get; init; }
-
-		[Display(Name = "Region")]
-		public string? SystemRegion { get; init; }
+		public string? System { get; init; }
+		public string? Region { get; init; }
 		public string? Game { get; init; }
 		public int GameId { get; init; }
-
-		[Display(Name = "Game Version")]
 		public string? GameVersion { get; init; }
 		public int VersionId { get; init; }
 		public string? PublicationClass { get; init; }
 		public string? MovieExtension { get; init; }
-
-		[Display(Name = "Selected Flags")]
 		public List<int> SelectedFlags { get; init; } = [];
-
-		[Display(Name = "Selected Tags")]
 		public List<int> SelectedTags { get; init; } = [];
 
 		// Not used for edit fields
@@ -270,8 +254,6 @@ public class PublishModel(
 		public int? SystemFrameRateId { get; init; }
 		public SubmissionStatus Status { get; init; }
 		public int? GameGoalId { get; init; }
-
-		[Display(Name = "Emulator Version")]
 		public string? EmulatorVersion { get; init; }
 		public string? Branch { get; init; }
 

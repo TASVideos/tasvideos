@@ -7,7 +7,6 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int GameId { get; set; }
 
-	[Display(Name = "Game")]
 	public string GameDisplayName { get; set; } = "";
 
 	public List<VersionEntry> Versions { get; set; } = [];

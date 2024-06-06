@@ -5,7 +5,7 @@
 }
 
 <top-button-bar>
-	<h4 class="heading"><label asp-for="GameName"></label> <game-link id="@Model.GameId">@Model.GameName</game-link></h4>
+	<h4 class="heading"><label asp-for="Game"></label> <game-link id="@Model.GameId">@Model.Game</game-link></h4>
 	<back-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></back-link>
 </top-button-bar>
 <row>

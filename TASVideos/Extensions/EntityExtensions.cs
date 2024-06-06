@@ -510,8 +510,8 @@ public static class EntityExtensions
 	{
 		return submissions.Select(s => new Pages.Submissions.PublishModel.SubmissionPublishModel
 		{
-			SystemCode = s.System!.Code,
-			SystemRegion = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,
+			System = s.System!.Code,
+			Region = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,
 			Game = s.Game!.DisplayName,
 			GameId = s.GameId ?? 0,
 			GameVersion = s.GameVersion!.Name,

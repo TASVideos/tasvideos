@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Posts;
@@ -33,7 +32,6 @@ public class CreateModel(
 	public ForumPostMood Mood { get; set; } = ForumPostMood.Normal;
 
 	[BindProperty]
-	[DisplayName("Watch Topic for Replies")]
 	public bool WatchTopic { get; set; }
 
 	public List<MiniPost> PreviousPosts { get; set; } = [];

@@ -126,11 +126,7 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";
 		public string Title { get; init; } = "";
-
-		[Display(Name = "Forum To Merge In to")]
 		public int DestinationForumId { get; set; }
-
-		[Display(Name = "Topic To Merge In to")]
 		public int DestinationTopicId { get; init; }
 	}
 }

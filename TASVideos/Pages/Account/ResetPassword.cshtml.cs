@@ -8,16 +8,14 @@ public class ResetPasswordModel(UserManager userManager) : BasePageModel
 	public string Email { get; set; } = "";
 
 	[BindProperty]
-	[Display(Name = "New password")]
 	[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
-	public string Password { get; set; } = "";
+	public string NewPassword { get; set; } = "";
 
 	[BindProperty]
 	[DataType(DataType.Password)]
-	[Display(Name = "Confirm new password")]
-	[Compare(nameof(Password), ErrorMessage = "The password and confirmation password do not match.")]
-	public string ConfirmPassword { get; set; } = "";
+	[Compare(nameof(NewPassword), ErrorMessage = "The password and confirmation password do not match.")]
+	public string ConfirmNewPassword { get; set; } = "";
 
 	[FromQuery]
 	public string? Code { get; set; }
@@ -57,7 +55,7 @@ public class ResetPasswordModel(UserManager userManager) : BasePageModel
 		}
 
 		var code = Code ?? "";
-		var result = await userManager.ResetPasswordAsync(user, code, Password);
+		var result = await userManager.ResetPasswordAsync(user, code, NewPassword);
 		if (result.Succeeded)
 		{
 			await userManager.MarkEmailConfirmed(user);

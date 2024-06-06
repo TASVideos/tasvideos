@@ -16,16 +16,16 @@
 		@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 	</fieldset>
 	<fieldset class="col-12">
-		<label asp-for="RevisionMessage"></label>
+		<label asp-for="EditComments"></label>
 		<div class="input-group">
-			<input type="text" asp-for="RevisionMessage" class="form-control" autocomplete="off" />
+			<input type="text" asp-for="EditComments" class="form-control" autocomplete="off" />
 			<div class="input-group-text">
 				<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="MinorEdit" />
 				<label asp-for="MinorEdit" class="form-check-label"></label>
 			</div>
 		</div>
-		<span>@Html.DescriptionFor(m => m.RevisionMessage)</span><br />
-		<span asp-validation-for="RevisionMessage" class="text-danger"></span>
+		<span>Please enter a descriptive summary of your change. Leaving this blank is discouraged.</span><br />
+		<span asp-validation-for="EditComments" class="text-danger"></span>
 	</fieldset>
 	<form-button-bar>
 		<button type="button" class="btn btn-secondary" onclick="generateDiff()">Diff</button>

@@ -27,7 +27,7 @@ public class EditClassModel(
 			.Select(p => new PublicationClassEdit
 			{
 				Title = p.Title,
-				ClassId = p.PublicationClassId
+				PublicationClass = p.PublicationClassId
 			})
 			.SingleOrDefaultAsync();
 
@@ -60,17 +60,17 @@ public class EditClassModel(
 		}
 
 		var publicationClass = await db.PublicationClasses
-			.SingleOrDefaultAsync(t => t.Id == Publication.ClassId);
+			.SingleOrDefaultAsync(t => t.Id == Publication.PublicationClass);
 
 		if (publicationClass is null)
 		{
 			return NotFound();
 		}
 
-		if (publication.PublicationClassId != Publication.ClassId)
+		if (publication.PublicationClassId != Publication.PublicationClass)
 		{
 			var originalClass = publication.PublicationClass!.Name;
-			publication.PublicationClassId = Publication.ClassId;
+			publication.PublicationClassId = Publication.PublicationClass;
 
 			var log = $"{Id}M Class changed from {originalClass} to {publicationClass.Name}";
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
@@ -95,8 +95,6 @@ public class EditClassModel(
 	public class PublicationClassEdit
 	{
 		public string Title { get; init; } = "";
-
-		[Display(Name = "PublicationClass")]
-		public int ClassId { get; init; }
+		public int PublicationClass { get; init; }
 	}
 }

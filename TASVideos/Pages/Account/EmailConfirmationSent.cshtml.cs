@@ -8,7 +8,6 @@ namespace TASVideos.Pages.Account;
 public class EmailConfirmationSentModel(SignInManager signInManager, IEmailService emailService) : BasePageModel
 {
 	[StringLength(256)]
-	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
 	[EmailAddress]

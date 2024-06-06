@@ -1,23 +1,23 @@
 ﻿@page "{id}"
 @model MoveModel
 @{
-	ViewData.SetTitle($"Moving Topic: {Model.Topic.TopicTitle}");
+	ViewData.SetTitle($"Moving Topic: {Model.Topic.Topic}");
 }
 
 @section PageTitle {
 	Moving Topic:
-	<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.ForumId">@Model.Topic.ForumName</a> →
-	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id">@Model.Topic.TopicTitle</a>
+	<a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.Topic.NewForum">@Model.Topic.CurrentForum</a> →
+	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id">@Model.Topic.Topic</a>
 }
 
 <partial Name="_ForumHeader" />
 <form client-side-validation="true" method="post">
-	<input type="hidden" asp-for="Topic.TopicTitle" />
-	<input type="hidden" asp-for="Topic.ForumName" />
+	<input type="hidden" asp-for="Topic.Topic" />
+	<input type="hidden" asp-for="Topic.CurrentForum" />
 	<fieldset class="col-lg-6">
-		<label asp-for="Topic.ForumId"></label>
-		<select asp-for="Topic.ForumId" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
-		<span asp-validation-for="Topic.ForumId" class="text-danger"></span>
+		<label asp-for="Topic.NewForum"></label>
+		<select asp-for="Topic.NewForum" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
+		<span asp-validation-for="Topic.NewForum" class="text-danger"></span>
 	</fieldset>
 	<form-button-bar>
 		<submit-button><i class="fa fa-save"></i> Move</submit-button>

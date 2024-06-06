@@ -15,8 +15,7 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 	public VersionDisplay Version { get; set; } = null!;
 
 	[BindProperty]
-	[Display(Name = "Game")]
-	public string GameName { get; set; } = "";
+	public string Game { get; set; } = "";
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -30,7 +29,7 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		GameName = game.DisplayName;
+		Game = game.DisplayName;
 
 		var version = await db.GameVersions
 			.Where(r => r.Id == Id && r.Game!.Id == GameId)

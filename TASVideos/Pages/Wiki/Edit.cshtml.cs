@@ -19,13 +19,11 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 	public string OriginalMarkup => Markup;
 
 	[BindProperty]
-	[Display(Name = "Minor Edit")]
 	public bool MinorEdit { get; set; }
 
 	[BindProperty]
-	[Display(Name = "Edit Comments", Description = "Please enter a descriptive summary of your change. Leaving this blank is discouraged.")]
 	[MaxLength(500)]
-	public string? RevisionMessage { get; set; }
+	public string? EditComments { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -90,7 +88,7 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			PageName = Path.Trim('/'),
 			Markup = Markup,
 			MinorEdit = MinorEdit,
-			RevisionMessage = RevisionMessage,
+			RevisionMessage = EditComments,
 			AuthorId = User.GetUserId()
 		};
 		var result = await wikiPages.Add(page);

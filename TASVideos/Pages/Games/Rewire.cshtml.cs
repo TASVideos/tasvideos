@@ -7,11 +7,9 @@ namespace TASVideos.Pages.Games;
 public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromQuery]
-	[Display(Name = "From Game Id")]
 	public int? FromGameId { get; set; }
 
 	[FromQuery]
-	[Display(Name = "Into Game Id")]
 	public int? IntoGameId { get; set; }
 
 	public bool ValidIds { get; set; }

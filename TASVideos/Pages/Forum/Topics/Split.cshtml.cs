@@ -55,7 +55,7 @@ public class SplitModel(
 
 		var destinationForum = await db.Forums
 			.ExcludeRestricted(CanSeeRestricted)
-			.SingleOrDefaultAsync(f => f.Id == Topic.SplitToForumId);
+			.SingleOrDefaultAsync(f => f.Id == Topic.CreateNewTopicIn);
 
 		if (destinationForum is null)
 		{
@@ -73,7 +73,7 @@ public class SplitModel(
 		if (!postsToSplit.Any())
 		{
 			var splitOnPost = topic.ForumPosts
-				.SingleOrDefault(p => p.Id == Topic.PostToSplitId);
+				.SingleOrDefault(p => p.Id == Topic.SplitPostsStartingAt);
 
 			if (splitOnPost is null)
 			{
@@ -91,9 +91,9 @@ public class SplitModel(
 		var newTopic = new ForumTopic
 		{
 			Type = ForumTopicType.Regular,
-			Title = Topic.SplitTopicName,
+			Title = Topic.NewTopicName,
 			PosterId = User.GetUserId(),
-			ForumId = Topic.SplitToForumId
+			ForumId = Topic.CreateNewTopicIn
 		};
 
 		db.ForumTopics.Add(newTopic);
@@ -127,8 +127,8 @@ public class SplitModel(
 			.Select(t => new TopicSplit
 			{
 				Title = t.Title,
-				SplitTopicName = "(Split from " + t.Title + ")",
-				SplitToForumId = t.Forum!.Id,
+				NewTopicName = "(Split from " + t.Title + ")",
+				CreateNewTopicIn = t.Forum!.Id,
 				ForumId = t.Forum.Id,
 				ForumName = t.Forum.Name,
 				Posts = t.ForumPosts
@@ -156,20 +156,12 @@ public class SplitModel(
 
 	public class TopicSplit
 	{
-		[Display(Name = "Split Posts Starting At")]
-		public int? PostToSplitId { get; init; }
-
-		[Display(Name = "Create New Topic In")]
-		public int SplitToForumId { get; init; }
-
-		[Display(Name = "New Topic Name")]
-		public string SplitTopicName { get; init; } = "";
-
+		public int? SplitPostsStartingAt { get; init; }
+		public int CreateNewTopicIn { get; init; }
+		public string NewTopicName { get; init; } = "";
 		public string Title { get; init; } = "";
-
 		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";
-
 		public List<Post> Posts { get; init; } = [];
 
 		public class Post

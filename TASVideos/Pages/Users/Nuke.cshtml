@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model NukeModel
 @{
-	ViewData.SetTitle($"Anonymizing User: {Model.Profile.UserName}");
+	ViewData.SetTitle($"Anonymizing User: {Model.Profile.OriginalUserName}");
 }
 <danger-alert>
 	<p>Welcome to the danger zone! This will anonymize this account</p>
@@ -29,8 +29,8 @@ Important manual steps to take before this action
 	<row>
 		<column md="6">
 			<fieldset>
-				<label asp-for="Profile.UserName"></label>
-				<input readonly asp-for="Profile.UserName" class="form-control" />
+				<label asp-for="Profile.OriginalUserName"></label>
+				<input readonly asp-for="Profile.OriginalUserName" class="form-control" />
 			</fieldset>
 		</column>
 		<column md="6">

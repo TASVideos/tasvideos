@@ -8,22 +8,22 @@
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Catalog.SystemId"></label>
-				<select asp-for="Catalog.SystemId" asp-items="Model.AvailableSystems" class="form-select"></select>
+				<label asp-for="Catalog.System"></label>
+				<select asp-for="Catalog.System" asp-items="Model.AvailableSystems" class="form-select"></select>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Catalog.SystemFrameRateId"></label>
-				<select asp-for="Catalog.SystemFrameRateId" asp-items="@Model.AvailableSystemFrameRates" class="form-select"></select>
+				<label asp-for="Catalog.SystemFramerate"></label>
+				<select asp-for="Catalog.SystemFramerate" asp-items="@Model.AvailableSystemFrameRates" class="form-select"></select>
 			</fieldset>
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
 				<fullrow>
-					<label asp-for="Catalog.GameId"></label>
+					<label asp-for="Catalog.Game"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-select"></select>
+						<select asp-for="Catalog.Game" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGames)" class="form-select"></select>
 					</div>
 					<div class="col-2">
 						<button id="create-game" type="button" class="btn btn-primary">New</button>
@@ -32,15 +32,15 @@
 			</fieldset>
 			<fieldset>
 				<fullrow>
-					<label asp-for="Catalog.GameVersionId"></label>
+					<label asp-for="Catalog.GameVersion"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameVersionId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableVersions)" class="form-select"></select>
+						<select asp-for="Catalog.GameVersion" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableVersions)" class="form-select"></select>
 					</div>
 					<div class="col-2">
 						<button
-							disable="Model.Catalog.GameId is null or -1"
+							disable="Model.Catalog.Game is null or -1"
 							id="create-version"
 							type="button"
 							class="btn btn-primary">New</button>
@@ -49,12 +49,12 @@
 			</fieldset>
 			<fieldset>
 				<fullrow>
-					<label asp-for="Catalog.GameGoalId"></label>
+					<label asp-for="Catalog.Goal"></label>
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="Catalog.GameGoalId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGoals)" class="form-select"></select>
-						<span asp-validation-for="Catalog.GameGoalId" class="text-danger"></span>
+						<select asp-for="Catalog.Goal" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGoals)" class="form-select"></select>
+						<span asp-validation-for="Catalog.Goal" class="text-danger"></span>
 					</div>
 					<div class="col-2">
 						<button id="create-goal" type="button" class="btn btn-primary">Manage</button>
@@ -77,11 +77,11 @@
 	<script src="/js/catalog.js"></script>
 	<script>
 		enableCataloging(
-			"@Html.IdFor(m => m.Catalog.SystemId)",
-			"@Html.IdFor(m => m.Catalog.SystemFrameRateId)",
-			"@Html.IdFor(m => m.Catalog.GameId)",
-			"@Html.IdFor(m => m.Catalog.GameVersionId)",
-			"@Html.IdFor(m => m.Catalog.GameGoalId)",
+			"@Html.IdFor(m => m.Catalog.System)",
+			"@Html.IdFor(m => m.Catalog.SystemFramerate)",
+			"@Html.IdFor(m => m.Catalog.Game)",
+			"@Html.IdFor(m => m.Catalog.GameVersion)",
+			"@Html.IdFor(m => m.Catalog.Goal)",
 			"@HttpContext.CurrentPathToReturnUrl()");
 	</script>
 }

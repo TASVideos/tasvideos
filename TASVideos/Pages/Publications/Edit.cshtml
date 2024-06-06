@@ -6,11 +6,11 @@
 }
 
 <fullrow>
-	<label asp-for="Publication.Class"></label>:
+	<label asp-for="Publication.PublicationClass"></label>:
 	<a condition="!string.IsNullOrWhiteSpace(Model.Publication.ClassIconPath)" href="/@Model.Publication.ClassLink">
 		<icon path="@Model.Publication.ClassIconPath" />
 	</a>
-	<label class="fw-bold">@Model.Publication.Class</label>
+	<label class="fw-bold">@Model.Publication.PublicationClass</label>
 	<a permission="SetPublicationClass" class="btn btn-secondary btn-sm" asp-page="EditClass" asp-route-id="@Model.Id"><span class="fa fa-pencil"></span> Edit</a>
 </fullrow>
 <top-button-bar>
@@ -84,15 +84,15 @@
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Publication.Authors"></label>
+				<label asp-for="Publication.Authors">Author(s)</label>
 				<string-list asp-for="Publication.Authors" />
 				<span asp-validation-for="Publication.Authors" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Publication.AdditionalAuthors"></label>
-				<input type="text" asp-for="Publication.AdditionalAuthors" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.Publication.AdditionalAuthors)</div>
-				<span asp-validation-for="Publication.AdditionalAuthors" class="text-danger"></span>
+				<label asp-for="Publication.ExternalAuthors"></label>
+				<input type="text" asp-for="Publication.ExternalAuthors" class="form-control" />
+				<div>Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.</div>
+				<span asp-validation-for="Publication.ExternalAuthors" class="text-danger"></span>
 			</fieldset>
 		</div>
 	</row>

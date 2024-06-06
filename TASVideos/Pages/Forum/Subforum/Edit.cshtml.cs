@@ -25,8 +25,8 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 				Name = f.Name,
 				Description = f.Description,
 				ShortName = f.ShortName,
-				CategoryId = f.CategoryId,
-				Restricted = f.Restricted
+				Category = f.CategoryId,
+				RestrictedAccess = f.Restricted
 			})
 			.SingleOrDefaultAsync();
 
@@ -60,8 +60,8 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		forum.Name = Forum.Name;
 		forum.ShortName = Forum.ShortName;
 		forum.Description = Forum.Description;
-		forum.CategoryId = Forum.CategoryId;
-		forum.Restricted = Forum.Restricted;
+		forum.CategoryId = Forum.Category;
+		forum.Restricted = Forum.RestrictedAccess;
 
 		SetMessage(await db.TrySaveChanges(), $"Forum {forum.Name} updated.", $"Unable to edit {forum.Name}");
 		return RedirectToPage("Index", new { Id });
@@ -100,16 +100,11 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		public string Name { get; init; } = "";
 
 		[StringLength(10)]
-		[Display(Name = "Short Name", Description = "Used for IRC notifications and other external posts")]
 		public string ShortName { get; init; } = "";
 
 		[StringLength(1000)]
 		public string? Description { get; init; }
-
-		[Display(Name = "Category")]
-		public int CategoryId { get; init; }
-
-		[Display(Name = "Restricted Access", Description = "If set, only users with permission to restricted forums will be allowed to see this forum")]
-		public bool Restricted { get; init; }
+		public int Category { get; init; }
+		public bool RestrictedAccess { get; init; }
 	}
 }

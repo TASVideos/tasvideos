@@ -4,8 +4,7 @@ namespace TASVideos.Pages.Games.Goals;
 
 public class ListModel(ApplicationDbContext db) : BasePageModel
 {
-	[Display(Name = "Game")]
-	public string GameDisplayName { get; set; } = "";
+	public string Game { get; set; } = "";
 
 	[FromRoute]
 	public int GameId { get; set; }
@@ -27,15 +26,15 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		GameDisplayName = gameDisplayName;
+		Game = gameDisplayName;
 
 		Goals = await db.GameGoals
 			.Where(gg => gg.GameId == GameId)
 			.Select(gg => new GoalEntry(
-					gg.Id,
-					gg.DisplayName,
-					gg.Publications.Select(p => new PublicationEntry(p.Id, p.Title, p.ObsoletedById.HasValue)).ToList(),
-					gg.Submissions.Select(s => new SubmissionEntry(s.Id, s.Title)).ToList()))
+				gg.Id,
+				gg.DisplayName,
+				gg.Publications.Select(p => new PublicationEntry(p.Id, p.Title, p.ObsoletedById.HasValue)).ToList(),
+				gg.Submissions.Select(s => new SubmissionEntry(s.Id, s.Title)).ToList()))
 			.ToListAsync();
 
 		return Page();

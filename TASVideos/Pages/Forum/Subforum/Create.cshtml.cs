@@ -23,8 +23,8 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 			Name = Forum.Name,
 			ShortName = Forum.ShortName,
 			Description = Forum.Description,
-			CategoryId = Forum.CategoryId,
-			Restricted = Forum.Restricted
+			CategoryId = Forum.Category,
+			Restricted = Forum.RestrictedAccess
 		};
 
 		db.Forums.Add(forum);

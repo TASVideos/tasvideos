@@ -78,9 +78,9 @@
 							<span condition="Model.EmailConfirmed" class="fa fa-check-square text-success"></span><span> Yes</span>
 							<div><span condition="!Model.EmailConfirmed" class="fa fa-exclamation-triangle text-danger"></span> No</div>
 							<br/>
-							<label asp-for="IsLockedOut"></label>
-							<span condition="Model.IsLockedOut" class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
-							<span condition="!Model.IsLockedOut" class="fa fa-check-square text-success"></span><span> Not locked</span>
+							<label asp-for="LockedOutStatus"></label>
+							<span condition="Model.LockedOutStatus" class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
+							<span condition="!Model.LockedOutStatus" class="fa fa-check-square text-success"></span><span> Not locked</span>
 							<div>
 								<a permission="ViewPrivateUserData" asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning btn-sm">IP Addresses used</a>
 							</div>

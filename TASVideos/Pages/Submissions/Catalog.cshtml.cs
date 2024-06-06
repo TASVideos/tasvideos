@@ -31,11 +31,11 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			.Select(s => new SubmissionCatalog
 			{
 				Title = s.Title,
-				GameVersionId = s.GameVersionId,
-				GameId = s.GameId,
-				SystemId = s.SystemId,
-				SystemFrameRateId = s.SystemFrameRateId,
-				GameGoalId = s.GameGoalId
+				GameVersion = s.GameVersionId,
+				Game = s.GameId,
+				System = s.SystemId,
+				SystemFramerate = s.SystemFrameRateId,
+				Goal = s.GameGoalId
 			})
 			.SingleOrDefaultAsync();
 
@@ -50,15 +50,15 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			var game = await db.Games.FindAsync(GameId);
 			if (game is not null)
 			{
-				Catalog.GameId = game.Id;
+				Catalog.Game = game.Id;
 
 				// We only want to pre-populate the Game Version if a valid Game was provided
 				if (GameVersionId.HasValue)
 				{
-					var version = await db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.SystemId);
+					var version = await db.GameVersions.SingleOrDefaultAsync(r => r.GameId == game.Id && r.Id == GameVersionId && r.SystemId == Catalog.System);
 					if (version is not null)
 					{
-						Catalog.GameVersionId = version.Id;
+						Catalog.GameVersion = version.Id;
 					}
 				}
 			}
@@ -93,49 +93,49 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		var externalMessages = new List<string>();
 
-		if (submission.SystemId != Catalog.SystemId)
+		if (submission.SystemId != Catalog.System)
 		{
-			var system = await db.GameSystems.FindAsync(Catalog.SystemId!.Value);
+			var system = await db.GameSystems.FindAsync(Catalog.System!.Value);
 			if (system is null)
 			{
-				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemId)}", $"Unknown System Id: {Catalog.SystemId!.Value}");
+				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.System)}", $"Unknown System Id: {Catalog.System!.Value}");
 			}
 			else
 			{
 				externalMessages.Add($"System changed from {submission.System?.Code ?? ""} to {system.Code}");
-				submission.SystemId = Catalog.SystemId!.Value;
+				submission.SystemId = Catalog.System!.Value;
 				submission.System = system;
 			}
 		}
 
-		if (submission.SystemFrameRateId != Catalog.SystemFrameRateId)
+		if (submission.SystemFrameRateId != Catalog.SystemFramerate)
 		{
-			var systemFramerate = await db.GameSystemFrameRates.FindAsync(Catalog.SystemFrameRateId!.Value);
+			var systemFramerate = await db.GameSystemFrameRates.FindAsync(Catalog.SystemFramerate!.Value);
 			if (systemFramerate is null)
 			{
-				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFrameRateId)}", $"Unknown System Framerate Id: {Catalog.SystemFrameRateId!.Value}");
+				ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.SystemFramerate)}", $"Unknown System Framerate Id: {Catalog.SystemFramerate!.Value}");
 			}
 			else
 			{
 				externalMessages.Add($"Framerate changed from {(submission.SystemFrameRate?.FrameRate ?? 0.0).ToString(CultureInfo.InvariantCulture)} to {systemFramerate.FrameRate.ToString(CultureInfo.InvariantCulture)}");
-				submission.SystemFrameRateId = Catalog.SystemFrameRateId!.Value;
+				submission.SystemFrameRateId = Catalog.SystemFramerate!.Value;
 				submission.SystemFrameRate = systemFramerate;
 			}
 		}
 
-		if (submission.GameId != Catalog.GameId)
+		if (submission.GameId != Catalog.Game)
 		{
-			if (Catalog.GameId.HasValue)
+			if (Catalog.Game.HasValue)
 			{
-				var game = await db.Games.FindAsync(Catalog.GameId.Value);
+				var game = await db.Games.FindAsync(Catalog.Game.Value);
 				if (game is null)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameId)}", $"Unknown Game Id: {Catalog.GameId.Value}");
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.Game)}", $"Unknown Game Id: {Catalog.Game.Value}");
 				}
 				else
 				{
 					externalMessages.Add($"Game changed from \"{submission.Game?.DisplayName}\" to \"{game.DisplayName}\"");
-					submission.GameId = Catalog.GameId.Value;
+					submission.GameId = Catalog.Game.Value;
 					submission.Game = game;
 				}
 			}
@@ -147,19 +147,19 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			}
 		}
 
-		if (submission.GameGoalId != Catalog.GameGoalId)
+		if (submission.GameGoalId != Catalog.Goal)
 		{
-			if (Catalog.GameGoalId.HasValue)
+			if (Catalog.Goal.HasValue)
 			{
-				var gameGoal = await db.GameGoals.FindAsync(Catalog.GameGoalId);
+				var gameGoal = await db.GameGoals.FindAsync(Catalog.Goal);
 				if (gameGoal is null)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameGoalId)}", $"Unknown Game Goal Id: {Catalog.GameGoalId}");
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.Goal)}", $"Unknown Game Goal Id: {Catalog.Goal}");
 				}
 				else
 				{
 					externalMessages.Add($"Game Goal changed from \"{submission.GameGoal?.DisplayName}\" to \"{gameGoal.DisplayName}\"");
-					submission.GameGoalId = Catalog.GameGoalId;
+					submission.GameGoalId = Catalog.Goal;
 					submission.GameGoal = gameGoal;
 				}
 			}
@@ -171,19 +171,19 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			}
 		}
 
-		if (submission.GameVersionId != Catalog.GameVersionId)
+		if (submission.GameVersionId != Catalog.GameVersion)
 		{
-			if (Catalog.GameVersionId.HasValue)
+			if (Catalog.GameVersion.HasValue)
 			{
-				var version = await db.GameVersions.FindAsync(Catalog.GameVersionId.Value);
+				var version = await db.GameVersions.FindAsync(Catalog.GameVersion.Value);
 				if (version is null)
 				{
-					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersionId)}", $"Unknown Game Version Id: {Catalog.GameVersionId.Value}");
+					ModelState.AddModelError($"{nameof(Catalog)}.{nameof(Catalog.GameVersion)}", $"Unknown Game Version Id: {Catalog.GameVersion.Value}");
 				}
 				else
 				{
 					externalMessages.Add($"Game Version changed from \"{submission.GameVersion?.Name}\" to \"{version.Name}\"");
-					submission.GameVersionId = Catalog.GameVersionId.Value;
+					submission.GameVersionId = Catalog.GameVersion.Value;
 					submission.GameVersion = version;
 				}
 			}
@@ -218,38 +218,31 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 	private async Task PopulateCatalogDropDowns()
 	{
-		AvailableGames = await db.Games.ToDropDownList(Catalog.SystemId);
-		AvailableVersions = await db.GameVersions.ToDropDownList(Catalog.SystemId, Catalog.GameId);
+		AvailableGames = await db.Games.ToDropDownList(Catalog.System);
+		AvailableVersions = await db.GameVersions.ToDropDownList(Catalog.System, Catalog.Game);
 		AvailableSystems = await db.GameSystems.ToDropDownListWithId();
-		AvailableSystemFrameRates = Catalog.SystemId.HasValue
-			? await db.GameSystemFrameRates.ToDropDownList(Catalog.SystemId.Value)
+		AvailableSystemFrameRates = Catalog.System.HasValue
+			? await db.GameSystemFrameRates.ToDropDownList(Catalog.System.Value)
 			: [];
 
-		AvailableGoals = Catalog.GameId.HasValue
-			? await db.GameGoals.ToDropDownList(Catalog.GameId.Value)
+		AvailableGoals = Catalog.Game.HasValue
+			? await db.GameGoals.ToDropDownList(Catalog.Game.Value)
 			: [];
 	}
 
 	public class SubmissionCatalog
 	{
 		public string Title { get; init; } = "";
+		public int? GameVersion { get; set; }
+		public int? Game { get; set; }
 
-		[Display(Name = "Game Version")]
-		public int? GameVersionId { get; set; }
-
-		[Display(Name = "Game")]
-		public int? GameId { get; set; }
-
-		[Display(Name = "System")]
 		[Required]
-		public int? SystemId { get; init; }
+		public int? System { get; init; }
 
-		[Display(Name = "System Framerate")]
 		[Required]
-		public int? SystemFrameRateId { get; init; }
+		public int? SystemFramerate { get; init; }
 
-		[Display(Name = "Goal")]
-		public int? GameGoalId { get; init; }
+		public int? Goal { get; init; }
 		public bool MinorEdit { get; init; }
 	}
 }

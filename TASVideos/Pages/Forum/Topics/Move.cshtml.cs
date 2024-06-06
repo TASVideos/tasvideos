@@ -26,9 +26,9 @@ public class MoveModel(
 			.ExcludeRestricted(UserCanSeeRestricted)
 			.Select(t => new TopicMove
 			{
-				TopicTitle = t.Title,
-				ForumId = t.Forum!.Id,
-				ForumName = t.Forum.Name
+				Topic = t.Title,
+				NewForum = t.Forum!.Id,
+				CurrentForum = t.Forum.Name
 			})
 			.SingleOrDefaultAsync();
 
@@ -61,7 +61,7 @@ public class MoveModel(
 			return NotFound();
 		}
 
-		var forum = await db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.ForumId);
+		var forum = await db.Forums.SingleOrDefaultAsync(f => f.Id == Topic.NewForum);
 
 		if (forum is null)
 		{
@@ -69,7 +69,7 @@ public class MoveModel(
 		}
 
 		var topicWasRestricted = topic.Forum?.Restricted ?? false;
-		topic.ForumId = Topic.ForumId;
+		topic.ForumId = Topic.NewForum;
 
 		var postsToMove = await db.ForumPosts
 			.ForTopic(topic.Id)
@@ -88,7 +88,7 @@ public class MoveModel(
 		await publisher.SendForum(
 			topicWasRestricted || forum.Restricted,
 			$"[Topic]({{0}}) MOVED by {User.Name()}",
-			$"\"{Topic.TopicTitle}\" from {Topic.ForumName} to {forum.Name}",
+			$"\"{Topic.Topic}\" from {Topic.CurrentForum} to {forum.Name}",
 			$"Forum/Topics/{Id}");
 
 		return RedirectToPage("Index", new { Id });
@@ -96,18 +96,13 @@ public class MoveModel(
 
 	private async Task PopulateAvailableForums()
 	{
-		AvailableForums = await db.Forums.ToDropdownList(UserCanSeeRestricted, Topic.ForumId);
+		AvailableForums = await db.Forums.ToDropdownList(UserCanSeeRestricted, Topic.NewForum);
 	}
 
 	public class TopicMove
 	{
-		[Display(Name = "New Forum")]
-		public int ForumId { get; init; }
-
-		[Display(Name = "Topic")]
-		public string TopicTitle { get; init; } = "";
-
-		[Display(Name = "Current Forum")]
-		public string ForumName { get; init; } = "";
+		public int NewForum { get; init; }
+		public string Topic { get; init; } = "";
+		public string CurrentForum { get; init; } = "";
 	}
 }

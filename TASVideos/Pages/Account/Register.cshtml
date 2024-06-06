@@ -31,18 +31,18 @@
 		</column>
 		<column md="6">
 			<fieldset>
-				<label asp-for="SelectedTimeZone"></label>
-				<timezone-picker asp-for="SelectedTimeZone" class="form-control" />
-				<span asp-validation-for="SelectedTimeZone" class="text-danger"></span>
+				<label asp-for="TimeZone"></label>
+				<timezone-picker asp-for="TimeZone" class="form-control" />
+				<span asp-validation-for="TimeZone" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="From"></label>
-				<input asp-for="From" type="text" class="form-control" />
-				<span asp-validation-for="From" class="text-danger"></span>
+				<label asp-for="Location"></label>
+				<input asp-for="Location" type="text" class="form-control" />
+				<span asp-validation-for="Location" class="text-danger"></span>
 			</fieldset>
 			<fieldset class="mt-3">
 				<div class="form-check">
-					<label asp-for="Coppa" class="form-check-label"></label>
+					<label asp-for="Coppa" class="form-check-label">By checking the box below, you certify you are 13 years of age or older</label>
 					<input asp-for="Coppa" type="checkbox" class="form-check-input"/>
 				</div>
 				<span asp-validation-for="Coppa" class="text-danger"></span>
@@ -68,7 +68,7 @@
 	<script src="https://www.google.com/recaptcha/api.js"></script>
 	<script>
 		// Autofill timezone if not set
-		if (!document.querySelector("#SelectedTimeZone option:checked").value) {
+		if (!document.querySelector("#TimeZone option:checked").value) {
 			const timezoneOffset = 0 - new Date().getTimezoneOffset();
 			let timezone = document.querySelector(`[data-offset="${timezoneOffset}"]`);
 			timezone.setAttribute('selected', 'selected');

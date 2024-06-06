@@ -21,7 +21,6 @@ public class AdditionalMoviesModel(
 
 	[BindProperty]
 	[StringLength(50)]
-	[Display(Name = "Display Name")]
 	public string DisplayName { get; set; } = "";
 
 	[Required]

@@ -89,22 +89,22 @@
 				const double exampleNumber = 1.23;
 			}
 			<fieldset>
-				<label asp-for="UserDateFormat"></label>
-				<label condition="@Model.UserDateFormat == UserDateFormat.Auto" asp-for="UserDateFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortDateString())</label>
-				<select asp-for="UserDateFormat" asp-items="@SettingsModel.AvailableDateFormats" class="form-select"></select>
-				<span asp-validation-for="UserDateFormat" class="text-danger"></span>
+				<label asp-for="DateFormat"></label>
+				<label condition="@Model.DateFormat == UserDateFormat.Auto" asp-for="DateFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortDateString())</label>
+				<select asp-for="DateFormat" asp-items="@SettingsModel.AvailableDateFormats" class="form-select"></select>
+				<span asp-validation-for="DateFormat" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserTimeFormat"></label>
-				<label condition="@Model.UserTimeFormat == UserTimeFormat.Auto" asp-for="UserTimeFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortTimeString())</label>
-				<select asp-for="UserTimeFormat" asp-items="@SettingsModel.AvailableTimeFormats" class="form-select"></select>
-				<span asp-validation-for="UserTimeFormat" class="text-danger"></span>
+				<label asp-for="TimeFormat"></label>
+				<label condition="@Model.TimeFormat == UserTimeFormat.Auto" asp-for="TimeFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortTimeString())</label>
+				<select asp-for="TimeFormat" asp-items="@SettingsModel.AvailableTimeFormats" class="form-select"></select>
+				<span asp-validation-for="TimeFormat" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserDecimalFormat"></label>
-				<label condition="@Model.UserDecimalFormat == UserDecimalFormat.Auto"  asp-for="UserDecimalFormat" class="text-body-tertiary">(Currently: @exampleNumber)</label>
-				<select asp-for="UserDecimalFormat" asp-items="@SettingsModel.AvailableDecimalFormats" class="form-select"></select>
-				<span asp-validation-for="UserDecimalFormat" class="text-danger"></span>
+				<label asp-for="DecimalFormat"></label>
+				<label condition="@Model.DecimalFormat == UserDecimalFormat.Auto"  asp-for="DecimalFormat" class="text-body-tertiary">(Currently: @exampleNumber)</label>
+				<select asp-for="DecimalFormat" asp-items="@SettingsModel.AvailableDecimalFormats" class="form-select"></select>
+				<span asp-validation-for="DecimalFormat" class="text-danger"></span>
 			</fieldset>
 		</column>
 	</row>

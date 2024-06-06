@@ -33,7 +33,7 @@ public class EditModel(
 			.Where(p => p.Id == Id)
 			.Select(p => new PublicationEdit
 			{
-				Class = p.PublicationClass!.Name,
+				PublicationClass = p.PublicationClass!.Name,
 				MovieFileName = p.MovieFileName,
 				ClassIconPath = p.PublicationClass.IconPath,
 				ClassLink = p.PublicationClass.Link,
@@ -42,7 +42,7 @@ public class EditModel(
 				ObsoletedBy = p.ObsoletedById,
 				ObsoletedByTitle = p.ObsoletedBy != null ? p.ObsoletedBy.Title : null,
 				EmulatorVersion = p.EmulatorVersion,
-				AdditionalAuthors = p.AdditionalAuthors,
+				ExternalAuthors = p.AdditionalAuthors,
 				Urls = p.PublicationUrls
 					.Select(u => new PublicationUrlDisplay(
 						u.Id, u.Url!, u.Type, u.DisplayName))
@@ -143,14 +143,14 @@ public class EditModel(
 			externalMessages.Add($"Changed obsoleting movie from \"{publication.ObsoletedById}\" to \"{model.ObsoletedBy}\"");
 		}
 
-		if (publication.AdditionalAuthors != model.AdditionalAuthors)
+		if (publication.AdditionalAuthors != model.ExternalAuthors)
 		{
-			externalMessages.Add($"Changed external authors from \"{publication.AdditionalAuthors}\" to \"{model.AdditionalAuthors}\"");
+			externalMessages.Add($"Changed external authors from \"{publication.AdditionalAuthors}\" to \"{model.ExternalAuthors}\"");
 		}
 
 		publication.ObsoletedById = model.ObsoletedBy;
 		publication.EmulatorVersion = model.EmulatorVersion;
-		publication.AdditionalAuthors = model.AdditionalAuthors.NullIfWhitespace();
+		publication.AdditionalAuthors = model.ExternalAuthors.NullIfWhitespace();
 		publication.Authors.Clear();
 		publication.Authors.AddRange(await db.Users
 			.ForUsers(Publication.Authors)
@@ -235,36 +235,19 @@ public class EditModel(
 		public string SystemCode { get; init; } = "";
 		public string Title { get; init; } = "";
 		public string MovieFileName { get; init; } = "";
-
-		[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
-		public string? AdditionalAuthors { get; init; }
-
-		[Display(Name = "Author(s)")]
+		public string? ExternalAuthors { get; init; }
 		public List<string> Authors { get; set; } = [];
-
-		[Display(Name = "Publication Class")]
-		public string Class { get; init; } = "";
+		public string PublicationClass { get; init; } = "";
 		public string? ClassIconPath { get; init; } = "";
 		public string ClassLink { get; init; } = "";
-
-		[Display(Name = "Obsoleted By")]
 		public int? ObsoletedBy { get; init; }
 		public string? ObsoletedByTitle { get; init; }
 
 		[StringLength(50)]
-		[Display(Name = "Emulator Version")]
 		public string? EmulatorVersion { get; init; }
-
-		[Display(Name = "Selected Flags")]
 		public List<int> SelectedFlags { get; init; } = [];
-
-		[Display(Name = "Selected Tags")]
 		public List<int> SelectedTags { get; init; } = [];
-
-		[Display(Name = "Revision Message")]
 		public string? RevisionMessage { get; init; }
-
-		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; init; }
 
 		[DoNotTrim]

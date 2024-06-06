@@ -17,33 +17,26 @@ public class RegisterModel(
 	: BasePageModel
 {
 	[Required]
-	[Display(Name = "Time Zone")]
-	public string SelectedTimeZone { get; set; } = "";
+	public string TimeZone { get; set; } = "";
 
 	[StringLength(50)]
-	[Display(Name = "User Name")]
 	public string UserName { get; set; } = "";
 
 	[EmailAddress]
-	[Display(Name = "Email")]
 	public string Email { get; set; } = "";
 
 	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
-	[Display(Name = "Password")]
 	public string Password { get; set; } = "";
 
 	[StringLength(128, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
 	[DataType(DataType.Password)]
-	[Display(Name = "Confirm password")]
 	public string ConfirmPassword { get; set; } = "";
 
-	[Display(Name = "Location")]
 	[StringLength(256)]
-	public string? From { get; set; }
+	public string? Location { get; set; }
 
 	[MustBeTrue(ErrorMessage = "You must certify that you are 13 years of age or older")]
-	[Display(Name = "By checking the box below, you certify you are 13 years of age or older")]
 	public bool Coppa { get; set; }
 
 	public async Task<IActionResult> OnPost()
@@ -90,8 +83,8 @@ public class RegisterModel(
 		{
 			UserName = UserName,
 			Email = Email,
-			TimeZoneId = SelectedTimeZone,
-			From = From,
+			TimeZoneId = TimeZone,
+			From = Location,
 			EmailOnPrivateMessage = true
 		};
 

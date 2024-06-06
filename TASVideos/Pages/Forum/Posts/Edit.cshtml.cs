@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Posts;
@@ -24,7 +23,6 @@ public class EditModel(
 	public ForumPostEditModel Post { get; set; } = new();
 
 	[BindProperty]
-	[DisplayName("Minor Edit")]
 	public bool MinorEdit { get; set; }
 	public List<CreateModel.MiniPost> PreviousPosts { get; set; } = [];
 
@@ -290,7 +288,6 @@ public class EditModel(
 		public bool EnableHtml { get; init; }
 		public int TopicId { get; init; }
 
-		[DisplayName("Topic Title")]
 		[StringLength(500)]
 		public string TopicTitle { get; init; } = "";
 

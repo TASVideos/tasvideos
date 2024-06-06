@@ -15,23 +15,23 @@
 	<row>
 		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.MovieFile"></label>
-				<input asp-for="Submission.MovieFile" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.Submission.MovieFile)</div>
-				<span asp-validation-for="Submission.MovieFile" class="text-danger"></span>
+				<label asp-for="Submission.ReplaceMovieFile"></label>
+				<input asp-for="Submission.ReplaceMovieFile" class="form-control" />
+				<div>Your movie packed in a ZIP file (max size: 150k)</div>
+				<span asp-validation-for="Submission.ReplaceMovieFile" class="text-danger"></span>
 			</fieldset>
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.Authors"></label>
+				<label asp-for="Submission.Authors">Author(s)</label>
 				<string-list asp-for="Submission.Authors" />
 				<span asp-validation-for="Submission.Authors" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.AdditionalAuthors"></label>
-				<input asp-for="Submission.AdditionalAuthors" class="form-control" />
-				<div>@Html.DescriptionFor(m => m.Submission.AdditionalAuthors)</div>
-				<span asp-validation-for="Submission.AdditionalAuthors" class="text-danger"></span>
+				<label asp-for="Submission.ExternalAuthors"></label>
+				<input asp-for="Submission.ExternalAuthors" class="form-control" />
+				<div>Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.</div>
+				<span asp-validation-for="Submission.ExternalAuthors" class="text-danger"></span>
 			</fieldset>
 		</div>
 	</row>
@@ -61,7 +61,7 @@
 				<span asp-validation-for="Submission.Goal" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.RomName"></label>
+				<label asp-for="Submission.RomName">ROM filename</label>
 				<input asp-for="Submission.RomName" class="form-control" placeholder="@Html.DescriptionFor(m => m.Submission.RomName)" />
 				<span asp-validation-for="Submission.RomName" class="text-danger"></span>
 			</fieldset>
@@ -81,18 +81,18 @@
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
 			</fieldset>
 			<fieldset id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
-				<label asp-for="Submission.RejectionReason"></label>
+				<label asp-for="Submission.RejectionReason">Reason</label>
 				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-select"></select>
 			</fieldset>
 		</div>
 		<div condition="canEditPublicationClass" class="col-lg-6">
 			<fieldset>
-				<label asp-for="Submission.PublicationClassId"></label>
-				<select asp-for="Submission.PublicationClassId" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-select"></select>
-				<span asp-validation-for="Submission.PublicationClassId" class="text-danger"></span>
+				<label asp-for="Submission.IntendedPublicationClass"></label>
+				<select asp-for="Submission.IntendedPublicationClass" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-select"></select>
+				<span asp-validation-for="Submission.IntendedPublicationClass" class="text-danger"></span>
 			</fieldset>
 		</div>
-		<input type="hidden" asp-for="Submission.PublicationClassId" condition="!canEditPublicationClass" />
+		<input type="hidden" asp-for="Submission.IntendedPublicationClass" condition="!canEditPublicationClass" />
 	</row>
 	<fullrow class="mt-3">
 		<partial name="_WikiEditHelper" model="@("Markup")" />

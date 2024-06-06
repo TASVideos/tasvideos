@@ -21,52 +21,42 @@ public class SubmitModel(
 	private const string FileFieldName = $"{nameof(MovieFile)}";
 
 	[BindProperty]
-	[Display(Name = "Game Version", Description = "Example: USA")]
 	[StringLength(20)]
 	public string? GameVersion { get; init; }
 
 	[BindProperty]
-	[Display(Name = "Game Name", Description = "Example: Mega Man 2")]
 	[StringLength(100)]
 	public string GameName { get; init; } = "";
 
 	[BindProperty]
-	[Display(Name = "Goal Name", Description = "Example: 100% or princess only; any% can usually be omitted")]
 	[StringLength(50)]
-	public string? Branch { get; init; }
+	public string? GoalName { get; init; }
 
 	[BindProperty]
-	[Display(Name = "ROM filename", Description = "Example: Mega Man II (U) [!].nes")]
 	[StringLength(100)]
 	public string RomName { get; init; } = "";
 
 	[BindProperty]
-	[Display(Name = "Emulator and version", Description = "Example: BizHawk 2.8.0")]
 	[StringLength(50)]
 	public string? Emulator { get; init; }
 
 	[BindProperty]
 	[Url]
-	[Display(Name = "Encode Embedded Link", Description = "Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU")]
-	public string? EncodeEmbedLink { get; init; }
+	public string? EncodeEmbeddedLink { get; init; }
 
 	[BindProperty]
-	[Display(Name = "Author(s)")]
 	[MinLength(1)]
 	public IList<string> Authors { get; set; } = [];
 
 	[BindProperty]
-	[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
-	public string? AdditionalAuthors { get; init; }
+	public string? ExternalAuthors { get; init; }
 
 	[BindProperty]
 	[DoNotTrim]
-	[Display(Name = "Comments and explanations")]
 	public string Markup { get; init; } = "";
 
 	[BindProperty]
 	[Required]
-	[Display(Name = "Movie file", Description = "Your movie packed in a ZIP file (max size: 500k)")]
 	public IFormFile? MovieFile { get; init; }
 
 	[BindProperty]
@@ -129,11 +119,11 @@ public class SubmitModel(
 		{
 			SubmittedGameVersion = GameVersion,
 			GameName = GameName,
-			Branch = Branch,
+			Branch = GoalName,
 			RomName = RomName,
 			EmulatorVersion = Emulator,
-			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(EncodeEmbedLink),
-			AdditionalAuthors = AdditionalAuthors
+			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(EncodeEmbeddedLink),
+			AdditionalAuthors = ExternalAuthors
 		};
 
 		var error = await queueService.MapParsedResult(parseResult, submission);
@@ -192,7 +182,7 @@ public class SubmitModel(
 	private async Task ValidateModel()
 	{
 		Authors = Authors.RemoveEmpty();
-		if (!Authors.Any() && string.IsNullOrWhiteSpace(AdditionalAuthors))
+		if (!Authors.Any() && string.IsNullOrWhiteSpace(ExternalAuthors))
 		{
 			ModelState.AddModelError(
 				$"{nameof(Authors)}",

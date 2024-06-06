@@ -58,7 +58,6 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 	public string? MoodAvatar { get; set; }
 
 	[BindProperty]
-	[Display(Name = "Preferred Pronouns")]
 	public PreferredPronounTypes PreferredPronouns { get; set; }
 
 	[BindProperty]
@@ -70,16 +69,13 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 	public UserPreference AutoWatchTopic { get; set; }
 
 	[BindProperty]
-	[Display(Name = "Date Format")]
-	public UserDateFormat UserDateFormat { get; set; }
+	public UserDateFormat DateFormat { get; set; }
 
 	[BindProperty]
-	[Display(Name = "Time Format")]
-	public UserTimeFormat UserTimeFormat { get; set; }
+	public UserTimeFormat TimeFormat { get; set; }
 
 	[BindProperty]
-	[Display(Name = "Decimal Format")]
-	public UserDecimalFormat UserDecimalFormat { get; set; }
+	public UserDecimalFormat DecimalFormat { get; set; }
 
 	public async Task OnGet()
 	{
@@ -96,9 +92,9 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 		PreferredPronouns = user.PreferredPronouns;
 		EmailOnPrivateMessage = user.EmailOnPrivateMessage;
 		AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto;
-		UserDateFormat = user.DateFormat;
-		UserTimeFormat = user.TimeFormat;
-		UserDecimalFormat = user.DecimalFormat;
+		DateFormat = user.DateFormat;
+		TimeFormat = user.TimeFormat;
+		DecimalFormat = user.DecimalFormat;
 	}
 
 	public async Task<IActionResult> OnPost()
@@ -127,7 +123,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 		var user = await userManager.GetRequiredUser(User);
 
-		bool hasUserCustomLocaleChanged = user.DateFormat != UserDateFormat || user.TimeFormat != UserTimeFormat || user.DecimalFormat != UserDecimalFormat;
+		bool hasUserCustomLocaleChanged = user.DateFormat != DateFormat || user.TimeFormat != TimeFormat || user.DecimalFormat != DecimalFormat;
 
 		user.TimeZoneId = TimeZoneId ?? TimeZoneInfo.Utc.Id;
 		user.PublicRatings = PublicRatings;
@@ -137,9 +133,9 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 		user.PreferredPronouns = PreferredPronouns;
 		user.EmailOnPrivateMessage = EmailOnPrivateMessage;
 		user.AutoWatchTopic = AutoWatchTopic;
-		user.DateFormat = UserDateFormat;
-		user.TimeFormat = UserTimeFormat;
-		user.DecimalFormat = UserDecimalFormat;
+		user.DateFormat = DateFormat;
+		user.TimeFormat = TimeFormat;
+		user.DecimalFormat = DecimalFormat;
 		if (User.Has(PermissionTo.EditSignature))
 		{
 			user.Signature = Signature;

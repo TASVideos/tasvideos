@@ -10,17 +10,14 @@ public class CreateModel(UserManager userManager, IPrivateMessageService private
 	public string? DefaultToUser { get; set; }
 
 	[BindProperty]
-	[Display(Name = "Subject")]
 	[StringLength(100, MinimumLength = 3)]
 	public string Subject { get; set; } = "";
 
 	[BindProperty]
-	[Display(Name = "Message Body")]
 	[StringLength(10000, MinimumLength = 5)]
-	public string Text { get; set; } = "";
+	public string MessageBody { get; set; } = "";
 
 	[BindProperty]
-	[Display(Name = "Username", Description = "Enter a UserName")]
 	public string ToUser { get; set; } = "";
 
 	public PrivateMessageModel? ReplyingTo { get; set; }
@@ -58,7 +55,7 @@ public class CreateModel(UserManager userManager, IPrivateMessageService private
 		var allowedRoles = await privateMessageService.AllowedRoles();
 		if (allowedRoles.Contains(ToUser))
 		{
-			await privateMessageService.SendMessageToRole(User.GetUserId(), ToUser, Subject, Text);
+			await privateMessageService.SendMessageToRole(User.GetUserId(), ToUser, Subject, MessageBody);
 		}
 		else
 		{
@@ -70,7 +67,7 @@ public class CreateModel(UserManager userManager, IPrivateMessageService private
 				return Page();
 			}
 
-			await privateMessageService.SendMessage(User.GetUserId(), ToUser, Subject, Text);
+			await privateMessageService.SendMessage(User.GetUserId(), ToUser, Subject, MessageBody);
 		}
 
 		return BasePageRedirect("Inbox");

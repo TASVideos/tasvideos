@@ -14,7 +14,6 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 
 	[BindProperty]
 	[ValidWikiPageName]
-	[Display(Name = "Destination Page Name")]
 	public string DestinationPageName { get; set; } = "";
 
 	public async Task<IActionResult> OnGet()

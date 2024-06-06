@@ -200,7 +200,6 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		public VersionTypes Type { get; init; }
 
 		[StringLength(255)]
-		[Display(Name = "Title Override")]
 		public string? TitleOverride { get; init; }
 	}
 }

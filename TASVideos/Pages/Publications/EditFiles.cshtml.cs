@@ -20,8 +20,7 @@ public class EditFilesModel(
 
 	[Required]
 	[BindProperty]
-	[Display(Name = "New Screenshot")]
-	public IFormFile? NewFile { get; set; }
+	public IFormFile? NewScreenshot { get; set; }
 
 	[BindProperty]
 	[StringLength(250)]
@@ -58,7 +57,7 @@ public class EditFilesModel(
 			return Page();
 		}
 
-		var path = await uploader.UploadScreenshot(Id, NewFile!, Description);
+		var path = await uploader.UploadScreenshot(Id, NewScreenshot!, Description);
 		await Log($"Added Screenshot file {path}");
 		return RedirectToPage("EditFiles", new { Id });
 	}

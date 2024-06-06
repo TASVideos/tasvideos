@@ -9,9 +9,9 @@
 	<row>
 		<div class="col-lg-4 col-sm-6">
 			<fieldset>
-				<label asp-for="Publication.ClassId"></label>
-				<select class="form-select" asp-for="Publication.ClassId" asp-items="@Model.AvailableClasses"></select>
-				<span asp-validation-for="Publication.ClassId" class="text-danger"></span>
+				<label asp-for="Publication.PublicationClass"></label>
+				<select class="form-select" asp-for="Publication.PublicationClass" asp-items="@Model.AvailableClasses"></select>
+				<span asp-validation-for="Publication.PublicationClass" class="text-danger"></span>
 			</fieldset>
 		</div>
 	</row>

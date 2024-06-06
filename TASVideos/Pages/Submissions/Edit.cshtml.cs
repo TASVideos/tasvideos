@@ -22,7 +22,7 @@ public class EditModel(
 	ITopicWatcher topicWatcher)
 	: BasePageModel
 {
-	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.MovieFile)}";
+	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.ReplaceMovieFile)}";
 
 	[FromRoute]
 	public int Id { get; set; }
@@ -51,15 +51,15 @@ public class EditModel(
 				RomName = s.RomName,
 				Goal = s.Branch,
 				Emulator = s.EmulatorVersion,
-				CreateTimestamp = s.CreateTimestamp,
+				SubmitDate = s.CreateTimestamp,
 				Submitter = s.Submitter!.UserName,
 				Status = s.Status,
 				EncodeEmbedLink = s.EncodeEmbedLink,
 				Judge = s.Judge != null ? s.Judge.UserName : "",
 				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-				PublicationClassId = s.IntendedClassId,
+				IntendedPublicationClass = s.IntendedClassId,
 				RejectionReason = s.RejectionReasonId,
-				AdditionalAuthors = s.AdditionalAuthors
+				ExternalAuthors = s.AdditionalAuthors
 			})
 			.SingleOrDefaultAsync();
 
@@ -96,7 +96,7 @@ public class EditModel(
 		AvailableStatuses = queueService.AvailableStatuses(
 			Submission.Status,
 			User.Permissions(),
-			Submission.CreateTimestamp,
+			Submission.SubmitDate,
 			Submission.Submitter == userName || Submission.Authors.Contains(userName),
 			Submission.Judge == userName,
 			Submission.Publisher == userName);
@@ -106,21 +106,21 @@ public class EditModel(
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.MovieFile is not null)
+		if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.ReplaceMovieFile is not null)
 		{
-			if (!Submission.MovieFile.IsZip())
+			if (!Submission.ReplaceMovieFile.IsZip())
 			{
 				ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
 			}
 
-			if (!Submission.MovieFile.LessThanMovieSizeLimit())
+			if (!Submission.ReplaceMovieFile.LessThanMovieSizeLimit())
 			{
 				ModelState.AddModelError(FileFieldName, ".zip is too big, are you sure this is a valid movie file?");
 			}
 		}
 		else if (!User.Has(PermissionTo.ReplaceSubmissionMovieFile))
 		{
-			Submission.MovieFile = null;
+			Submission.ReplaceMovieFile = null;
 		}
 
 		// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
@@ -132,12 +132,12 @@ public class EditModel(
 		// but if we treat null as no choice, then we have no way to unset these values
 		if (!User.Has(PermissionTo.JudgeSubmissions))
 		{
-			Submission.PublicationClassId = null;
+			Submission.IntendedPublicationClass = null;
 		}
-		else if (Submission.PublicationClassId is null &&
+		else if (Submission.IntendedPublicationClass is null &&
 			Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
 		{
-			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.PublicationClassId)}", "A submission can not be accepted without a PublicationClass");
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.IntendedPublicationClass)}", "A submission can not be accepted without a PublicationClass");
 		}
 
 		var subInfo = await db.Submissions
@@ -194,9 +194,9 @@ public class EditModel(
 			.Include(s => s.Publisher)
 			.SingleAsync(s => s.Id == Id);
 
-		if (Submission.MovieFile is not null)
+		if (Submission.ReplaceMovieFile is not null)
 		{
-			var parseResult = await parser.ParseZip(Submission.MovieFile.OpenReadStream());
+			var parseResult = await parser.ParseZip(Submission.ReplaceMovieFile.OpenReadStream());
 			if (!parseResult.Success)
 			{
 				ModelState.AddParseErrors(parseResult);
@@ -221,7 +221,7 @@ public class EditModel(
 				return await ReturnWithModelErrors();
 			}
 
-			submission.MovieFile = await Submission.MovieFile.ToBytes();
+			submission.MovieFile = await Submission.ReplaceMovieFile.ToBytes();
 		}
 
 		if (SubmissionHelper.JudgeIsClaiming(submission.Status, Submission.Status))
@@ -281,8 +281,8 @@ public class EditModel(
 			? Submission.RejectionReason
 			: null;
 
-		submission.IntendedClass = Submission.PublicationClassId.HasValue
-			? await db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId.Value)
+		submission.IntendedClass = Submission.IntendedPublicationClass.HasValue
+			? await db.PublicationClasses.SingleAsync(t => t.Id == Submission.IntendedPublicationClass.Value)
 			: null;
 
 		submission.SubmittedGameVersion = Submission.GameVersion;
@@ -292,7 +292,7 @@ public class EditModel(
 		submission.RomName = Submission.RomName;
 		submission.EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
 		submission.Status = Submission.Status;
-		submission.AdditionalAuthors = Submission.AdditionalAuthors.NullIfWhitespace();
+		submission.AdditionalAuthors = Submission.ExternalAuthors.NullIfWhitespace();
 
 		var revision = new WikiCreateRequest
 		{
@@ -366,7 +366,7 @@ public class EditModel(
 		{
 			case SubmissionStatus.Accepted:
 			{
-				var publicationClass = (await db.PublicationClasses.SingleAsync(t => t.Id == Submission.PublicationClassId)).Name;
+				var publicationClass = (await db.PublicationClasses.SingleAsync(t => t.Id == Submission.IntendedPublicationClass)).Name;
 				if (publicationClass != "Standard")
 				{
 					statusStr += $" to {publicationClass}";
@@ -473,48 +473,27 @@ public class EditModel(
 	public class SubmissionEdit
 	{
 		[StringLength(1000)]
-		[Display(Name = "Revision Message")]
 		public string? RevisionMessage { get; init; }
-
-		[Display(Name = "Minor Edit")]
 		public bool MinorEdit { get; init; }
-
-		[Display(Name = "Replace Movie file", Description = "Your movie packed in a ZIP file (max size: 150k)")]
-		public IFormFile? MovieFile { get; set; }
-
-		[Display(Name = "Intended Publication Class")]
-		public int? PublicationClassId { get; set; }
-
-		[Display(Name = "Reason")]
+		public IFormFile? ReplaceMovieFile { get; set; }
+		public int? IntendedPublicationClass { get; set; }
 		public int? RejectionReason { get; init; }
 
-		[Display(Name = "Game name")]
 		[Required]
 		public string GameName { get; init; } = "";
-
-		[Display(Name = "Game Version")]
 		public string? GameVersion { get; init; }
-
-		[Display(Name = "ROM filename")]
 		public string? RomName { get; init; }
 		public string? Goal { get; init; }
 		public string? Emulator { get; init; }
 
 		[Url]
-		[Display(Name = "Encode Embed Link")]
 		public string? EncodeEmbedLink { get; init; }
-
-		[Display(Name = "Author(s)")]
 		public List<string> Authors { get; set; } = [];
 		public string? Submitter { get; init; }
-
-		[Display(Name = "Submit Date")]
-		public DateTime CreateTimestamp { get; init; }
+		public DateTime SubmitDate { get; init; }
 		public SubmissionStatus Status { get; init; }
 		public string? Judge { get; init; }
 		public string? Publisher { get; init; }
-
-		[Display(Name = "External Authors", Description = "Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.")]
-		public string? AdditionalAuthors { get; init; }
+		public string? ExternalAuthors { get; init; }
 	}
 }

@@ -15,18 +15,18 @@
 	<row>
 		<column md="6">
 			<fieldset>
-				<label asp-for="UserToEdit.CreateTimestamp"></label>
-				<div><timezone-convert asp-for="@Model.UserToEdit.CreateTimestamp"/></div>
+				<label asp-for="UserToEdit.AccountCreatedOn"></label>
+				<div><timezone-convert asp-for="@Model.UserToEdit.AccountCreatedOn"/></div>
 			</fieldset>
-			<fieldset condition="Model.UserToEdit.IsLockedOut">
-				<label asp-for="UserToEdit.IsLockedOut"></label>
+			<fieldset condition="Model.UserToEdit.LockedStatus">
+				<label asp-for="UserToEdit.LockedStatus"></label>
 				<div>
 					<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
 					<a class="btn btn-secondary" asp-page="Edit" asp-page-handler="Unlock" asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
 				</div>
 			</fieldset>
-			<fieldset condition="!Model.UserToEdit.IsLockedOut">
-				<label asp-for="UserToEdit.IsLockedOut"></label>
+			<fieldset condition="!Model.UserToEdit.LockedStatus">
+				<label asp-for="UserToEdit.LockedStatus"></label>
 				<div>
 					<span class="fa fa-check-square text-success"></span> Not locked
 				</div>
@@ -34,14 +34,14 @@
 		</column>
 		<column md="6">
 			<fieldset>
-				<label asp-for="UserToEdit.LastLoggedInTimeStamp"></label>
-				<div>@Html.DisplayFor(m => m.UserToEdit.LastLoggedInTimeStamp)</div>
+				<label asp-for="UserToEdit.UserLastLoggedIn"></label>
+				<div>@Html.DisplayFor(m => m.UserToEdit.UserLastLoggedIn)</div>
 			</fieldset>
 			<fieldset>
 				<input type="checkbox" class="forum-check-input" asp-for="UserToEdit.UseRatings" />
 				<label class="form-check-label" asp-for="UserToEdit.UseRatings"></label>
 				<br />
-				(@Html.DescriptionFor(m => m.UserToEdit.UseRatings))
+				(If unchecked, the user's publication ratings will not be used when calculating average rating)
 			</fieldset>
 		</column>
 	</row>
@@ -156,15 +156,15 @@
 				}
 			</fieldset>
 			<fieldset>
-				<label asp-for="UserToEdit.From"></label>
-				<input asp-for="UserToEdit.From" type="text" class="form-control"/>
-				<span asp-validation-for="UserToEdit.From" class="text-danger"></span>
+				<label asp-for="UserToEdit.Location"></label>
+				<input asp-for="UserToEdit.Location" type="text" class="form-control"/>
+				<span asp-validation-for="UserToEdit.Location" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column md="6">
 			<fieldset>
-				<label asp-for="UserToEdit.TimezoneId"></label>
-				<timezone-picker asp-for="UserToEdit.TimezoneId" class="form-control" />
+				<label asp-for="UserToEdit.TimeZone"></label>
+				<timezone-picker asp-for="UserToEdit.TimeZone" class="form-control" />
 			</fieldset>
 			<fieldset permission="SeeEmails">
 				<label asp-for="UserToEdit.Email"></label>
@@ -208,8 +208,8 @@
 	</row>
 	<row>
 		<column md="6">
-			<label asp-for="UserToEdit.MoodAvatarUrlBase"></label>
-			<input type="text" asp-for="UserToEdit.MoodAvatarUrlBase" class="form-control" />
+			<label asp-for="UserToEdit.MoodAvatar"></label>
+			<input type="text" asp-for="UserToEdit.MoodAvatar" class="form-control" />
 		</column>
 	</row>
 	<hr />

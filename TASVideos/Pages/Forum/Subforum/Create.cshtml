@@ -14,9 +14,9 @@
 				<span asp-validation-for="Forum.Name" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Forum.CategoryId"></label>
-				<select asp-for="Forum.CategoryId" asp-items="Model.AvailableCategories" class="form-select"></select>
-				<span asp-validation-for="Forum.CategoryId" class="text-danger"></span>
+				<label asp-for="Forum.Category"></label>
+				<select asp-for="Forum.Category" asp-items="Model.AvailableCategories" class="form-select"></select>
+				<span asp-validation-for="Forum.Category" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column lg="6" class="mt-lg-0 mt-2">
@@ -29,10 +29,10 @@
 				<span asp-validation-for="Forum.ShortName" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<input type="checkbox" class="forum-check-input" asp-for="Forum.Restricted" />
-				<label class="form-check-label" asp-for="Forum.Restricted"></label>
+				<input type="checkbox" class="forum-check-input" asp-for="Forum.RestrictedAccess" />
+				<label class="form-check-label" asp-for="Forum.RestrictedAccess"></label>
 				<br />
-				(@Html.DescriptionFor(m => m.Forum.Restricted))
+				(@Html.DescriptionFor(m => m.Forum.RestrictedAccess))
 			</fieldset>
 		</column>
 	</row>

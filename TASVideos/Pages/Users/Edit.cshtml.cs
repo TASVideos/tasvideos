@@ -18,7 +18,6 @@ public class EditModel(
 	[BindProperty]
 	public UserEditModel UserToEdit { get; set; } = new();
 
-	[DisplayName("Available Roles")]
 	public List<SelectListItem> AvailableRoles { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
@@ -33,17 +32,17 @@ public class EditModel(
 			.Select(u => new UserEditModel
 			{
 				UserName = u.UserName,
-				TimezoneId = u.TimeZoneId,
-				From = u.From,
+				TimeZone = u.TimeZoneId,
+				Location = u.From,
 				SelectedRoles = u.UserRoles.Select(ur => ur.RoleId).ToList(),
-				CreateTimestamp = u.CreateTimestamp,
-				LastLoggedInTimeStamp = u.LastLoggedInTimeStamp,
+				AccountCreatedOn = u.CreateTimestamp,
+				UserLastLoggedIn = u.LastLoggedInTimeStamp,
 				Email = u.Email,
 				EmailConfirmed = u.EmailConfirmed,
-				IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue,
+				LockedStatus = u.LockoutEnabled && u.LockoutEnd.HasValue,
 				Signature = u.Signature,
 				Avatar = u.Avatar,
-				MoodAvatarUrlBase = u.MoodAvatarUrlBase,
+				MoodAvatar = u.MoodAvatarUrlBase,
 				UseRatings = u.UseRatings,
 				BannedUntil = u.BannedUntil,
 				ModeratorComments = u.ModeratorComments
@@ -92,11 +91,11 @@ public class EditModel(
 			user.UserName = UserToEdit.UserName;
 		}
 
-		user.TimeZoneId = UserToEdit.TimezoneId;
-		user.From = UserToEdit.From;
+		user.TimeZoneId = UserToEdit.TimeZone;
+		user.From = UserToEdit.Location;
 		user.Signature = UserToEdit.Signature;
 		user.Avatar = UserToEdit.Avatar;
-		user.MoodAvatarUrlBase = UserToEdit.MoodAvatarUrlBase;
+		user.MoodAvatarUrlBase = UserToEdit.MoodAvatar;
 		user.UseRatings = UserToEdit.UseRatings;
 		user.BannedUntil = UserToEdit.BannedUntil;
 		user.ModeratorComments = UserToEdit.ModeratorComments;
@@ -198,45 +197,26 @@ public class EditModel(
 
 	public class UserEditModel
 	{
-		[DisplayName("User Name")]
 		[StringLength(50)]
 		public string? UserName { get; init; }
-
-		[DisplayName("Time Zone")]
-		public string TimezoneId { get; init; } = TimeZoneInfo.Utc.Id;
-
-		[Display(Name = "Location")]
-		public string? From { get; init; }
-
-		[DisplayName("Selected Roles")]
+		public string TimeZone { get; init; } = TimeZoneInfo.Utc.Id;
+		public string? Location { get; init; }
 		public List<int> SelectedRoles { get; init; } = [];
+		public DateTime AccountCreatedOn { get; init; }
 
-		[DisplayName("Account Created On")]
-		public DateTime CreateTimestamp { get; init; }
-
-		[DisplayName("User Last Logged In")]
 		[DisplayFormat(NullDisplayText = "Never")]
-		public DateTime? LastLoggedInTimeStamp { get; init; }
+		public DateTime? UserLastLoggedIn { get; init; }
 
 		[EmailAddress]
 		public string? Email { get; init; }
 		public bool EmailConfirmed { get; init; }
-
-		[Display(Name = "Locked Status")]
-		public bool IsLockedOut { get; init; }
+		public bool LockedStatus { get; init; }
 		public string? Signature { get; init; }
 		public string? Avatar { get; init; }
-
-		[Display(Name = "Mood Avatar")]
-		public string? MoodAvatarUrlBase { get; init; }
+		public string? MoodAvatar { get; init; }
 		public string? OriginalUserName => UserName;
-
-		[Display(Name = "Use Ratings", Description = "If unchecked, the user's publication ratings will not be used when calculating average rating")]
 		public bool UseRatings { get; init; }
-
 		public DateTime? BannedUntil { get; init; }
-
-		[Display(Name = "Moderator Comments")]
 		public string? ModeratorComments { get; init; }
 	}
 }

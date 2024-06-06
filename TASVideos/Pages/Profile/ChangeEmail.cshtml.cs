@@ -6,7 +6,6 @@ namespace TASVideos.Pages.Profile;
 public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEmailService emailService) : BasePageModel
 {
 	[BindProperty]
-	[Display(Name = "Current Email")]
 	public string CurrentEmail { get; set; } = "";
 
 	[BindProperty]
@@ -15,7 +14,6 @@ public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEma
 	[Required]
 	[EmailAddress]
 	[BindProperty]
-	[Display(Name = "New Email")]
 	public string NewEmail { get; set; } = "";
 
 	public async Task OnGet()

@@ -1,10 +1,10 @@
 ﻿@page "/Games/{gameId}/Goals/List"
 @model ListModel
 @{
-	ViewData.SetTitle($"Goals for {Model.GameDisplayName}");
+	ViewData.SetTitle($"Goals for {Model.Game}");
 }
 @section PageTitle {
-	Goals for <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.GameDisplayName</a>
+	Goals for <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.Game</a>
 }
 
 <top-button-bar condition="!string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())">
