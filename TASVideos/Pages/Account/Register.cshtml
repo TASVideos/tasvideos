@@ -66,12 +66,5 @@
 @section Scripts {
 	@*For manual implementation of Google's ReCaptcha scripts, will require embedding site's public key.*@
 	<script src="https://www.google.com/recaptcha/api.js"></script>
-	<script>
-		// Autofill timezone if not set
-		if (!document.querySelector("#TimeZone option:checked").value) {
-			const timezoneOffset = 0 - new Date().getTimezoneOffset();
-			let timezone = document.querySelector(`[data-offset="${timezoneOffset}"]`);
-			timezone.setAttribute('selected', 'selected');
-		}
-	</script>
+	<script src="/js/account-register.js"></script>
 }
