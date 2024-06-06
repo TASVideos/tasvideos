@@ -6,7 +6,9 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 	[FromRoute]
 	public int Id { get; set; }
 
-	public UserModel Profile { get; set; } = new();
+	public string OriginalUserName { get; set; } = "";
+	public string AnonymousUserName => $"Anonymous{Id}";
+	public string AnonymousEmail => $"{AnonymousUserName}@example.com";
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -15,38 +17,34 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 			return RedirectToPage("/Profile/Settings");
 		}
 
-		var profile = await db.Users
+		var userName = await db.Users
 			.Where(u => u.Id == Id)
-			.Select(u => new UserModel
-			{
-				Id = u.Id,
-				OriginalUserName = u.UserName
-			})
+			.Select(u => u.UserName)
 			.SingleOrDefaultAsync();
 
-		if (profile is null)
+		if (userName is null)
 		{
 			return NotFound();
 		}
 
-		Profile = profile;
+		OriginalUserName = userName;
 		return Page();
 	}
 
 	public async Task<IActionResult> OnPost()
 	{
-		var user = await db.Users.SingleOrDefaultAsync(u => u.Id == Id);
+		var user = await db.Users.FindAsync(Id);
 		if (user is null)
 		{
 			return NotFound();
 		}
 
-		var anonModel = new UserModel { Id = user.Id };
+		OriginalUserName = user.UserName;
 
 		user.PasswordHash = "";
-		user.UserName = anonModel.AnonymousUserName;
+		user.UserName = AnonymousUserName;
 		user.NormalizedUserName = user.UserName.ToUpperInvariant();
-		user.Email = anonModel.AnonymousEmail;
+		user.Email = AnonymousEmail;
 		user.NormalizedEmail = user.Email.ToUpperInvariant();
 		user.From = null;
 		user.TimeZoneId = TimeZoneInfo.Utc.Id;
@@ -113,19 +111,5 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 
 		// If username is changed, we want to ignore the returnUrl that will be the old name
 		return BasePageRedirect("Edit", new { Id });
-	}
-
-	public class UserModel
-	{
-		public int Id { get; init; }
-
-		[Display(Name = "Original UserName")]
-		public string OriginalUserName { get; init; } = "";
-
-		[Display(Name = "New Username")]
-		public string AnonymousUserName => $"Anonymous{Id}";
-
-		[Display(Name = "New Email")]
-		public string AnonymousEmail => $"{AnonymousUserName}@example.com";
 	}
 }
