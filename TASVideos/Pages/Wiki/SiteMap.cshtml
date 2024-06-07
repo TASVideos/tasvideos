@@ -1,6 +1,6 @@
 @page
 @model SiteMapModel
-@{ 
+@{
 	ViewData.SetTitle("Site Map");
 }
 <div>
@@ -49,21 +49,4 @@
 	}
 </ul>
 
-<script>
-	const onlyWikiCheckbox = document.getElementById('only-wiki-checkbox');
-	onlyWikiCheckbox.addEventListener('click', (e) => {
-		let hide = false;
-		if (onlyWikiCheckbox.checked) {
-			hide = true;
-		}
-		
-		Array.from(document.querySelectorAll('.developed')).forEach(e => {
-			if (hide) {
-				e.classList.add('d-none');
-			} else {
-				e.classList.remove('d-none');
-			}
-			
-		});
-	});
-</script>
+<script src="/js/wiki-site-map.js"></script>

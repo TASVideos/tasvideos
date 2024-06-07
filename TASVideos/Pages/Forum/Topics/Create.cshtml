@@ -4,11 +4,12 @@
 	ViewData.SetTitle($"Creating topic for: {Model.ForumName}");
 	ViewData.UseStringList(); // Hack for now, partial views use a different viewDataDictionary, so the component will not work
 }
+
 @section PageTitle {
 	Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a>
 }
-<partial Name="_ForumHeader" />
 
+<partial Name="_ForumHeader" />
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form client-side-validation="true" method="post">
 	<div permission="CreateForumPolls">
@@ -18,27 +19,8 @@
 			<h4>Poll</h4>
 			<partial name="_PollCreate" model="Model.Poll" />
 		</div>
-		<script>
-			{
-				let pollContainer = document.getElementById('poll-container');
-				document.getElementById('add-poll-btn').onclick = function () {
-					document.getElementById('add-poll-btn').classList.add('d-none');
-					pollContainer.classList.remove('d-none');
-					Array.from(pollContainer.querySelectorAll('input'))
-						.forEach(element => element.disabled = false);
-				}
-
-				document.getElementById('poll-close').onclick = function () {
-					document.getElementById('add-poll-btn').classList.remove('d-none');
-					pollContainer.classList.add('d-none');
-					Array.from(pollContainer.querySelectorAll('input'))
-						.forEach(element => element.disabled = true);
-				}
-			}
-		</script>
 		<hr />
 	</div>
-
 	<input type="hidden" asp-for="ForumName" />
 	<row>
 		<column md="6">
@@ -83,5 +65,8 @@
 		<cancel-link asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId"></cancel-link>
 	</form-button-bar>
 </form>
-
 <partial name="_PreviewWindow" model="@(("Post", "/Forum/Preview"))" />
+
+@section Scripts {
+<script src="/js/topic-create.js"></script>
+}
