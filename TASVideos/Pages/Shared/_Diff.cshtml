@@ -13,13 +13,14 @@
 <script>
 	function generateDiff() {
 		const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
-		const contextSize = parseInt(document.querySelector('[name="context-size"').value);
+		const contextSize = parseInt(document.querySelector('[name="context-size"]').value);
 		const diffElem = document.getElementById('diff-view');
 		diffElem.classList.remove('d-none');
 		document.getElementById('diff-options').classList.remove('d-none');
 
+		@* TODO include revision? *@
 		renderDiff(
-			{ text: document.getElementById('@Model.LeftMarkupId').value, name: @* TODO include revision? *@ "Current" },
+			{ text: document.getElementById('@Model.LeftMarkupId').value, name: "Current" },
 			{ text: document.getElementById('@Model.RightMarkupId').value, name: "Pending" },
 			diffElem,
 			!!viewType,
