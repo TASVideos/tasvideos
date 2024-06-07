@@ -193,7 +193,7 @@
 							<a
 								asp-page="/Submissions/Index"
 								asp-route-user="@Model.UserName"
-								asp-route-statusfilter="@((int)sub.Status)">
+								asp-route-statuses="@((int)sub.Status)">
 								@sub.Count
 							</a>
 							@sub.Status.EnumDisplayName()
