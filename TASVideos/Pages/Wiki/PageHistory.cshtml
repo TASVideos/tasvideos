@@ -2,6 +2,7 @@
 @model PageHistoryModel
 @{
 	ViewData.SetTitle("Page History For " + Model.PageName);
+	ViewData.UseDiff();
 	bool hasDiff = Model.FromRevision.HasValue && Model.ToRevision.HasValue;
 	var canEdit = WikiHelper.UserCanEditWikiPage(Model.Path, User.Name(), User.Permissions());
 }
@@ -37,13 +38,14 @@
 		return "btn btn-info btn-sm";
 	}
 }
-
+<input condition="hasDiff" id="has-diff" type="hidden" />
+<input asp-for="Path" data-id="path" type="hidden" />
 <back-link class="my-2" href="/@WikiHelper.ProcessLink(Model.PageName)" name-override="Back to Page"></back-link>
 <div id="diff-view" class="mt-3 border border-secondary d-none"></div>
 <div id="diff-options" condition="hasDiff" class="py-3">
-	<label><input name="diff-type" type="radio" value="1" checked="checked" onclick="generateDiff()" /> Inline</label>
-	<label><input name="diff-type" type="radio" value="0" onclick="generateDiff()" /> Side by Side</label>
-	<label><input name="context-size" type="number" value="5" min="0" max="9999" oninput="generateDiff()" /> Context Size</label>
+	<label><input name="diff-type" type="radio" value="1" checked="checked" /> Inline</label>
+	<label><input name="diff-type" type="radio" value="0" /> Side by Side</label>
+	<label><input name="context-size" type="number" value="5" min="0" max="9999" /> Context Size</label>
 </div>
 <standard-table>
 	<table-head columns="Revision,Date,Author,Minor Edit,Revision Message,Diff,Actions"></table-head>
@@ -72,14 +74,14 @@
 						</a>
 						<button
 							class="@DiffBtnStyles(revision.Revision, true)"
-							data-from="true"
-							onClick="diffBtnClicked(@revision.Revision, null)">
+							data-from
+							data-revision="@revision.Revision">
 							From
 						</button>
 						<button
 							class="@DiffBtnStyles(revision.Revision, false)"
-							data-to="true"
-							onClick="diffBtnClicked(null, @revision.Revision)">
+							data-to
+							data-revision="@revision.Revision">
 							To
 						</button>
 					</div>
@@ -98,75 +100,9 @@
 		}
 	</tbody>
 </standard-table>
-<input type="hidden" asp-for="Diff.LeftMarkup" rows="8" class="form-control" />
-<input type="hidden" asp-for="Diff.RightMarkup" rows="8" class="form-control" />
+<input type="hidden" asp-for="Diff.LeftMarkup" data-diff="left" data-diff-label="r@(Model.FromRevision ?? 0)" rows="8" class="form-control" />
+<input type="hidden" asp-for="Diff.RightMarkup" data-diff="right" data-diff-label="r@(Model.ToRevision ?? 0)" rows="8" class="form-control" />
 
 @section Scripts {
-	<script src="~/js/diff_match_patch.js"></script>
-	<script src="~/js/diff_view.js"></script>
-	<script>
-
-		window.addEventListener('load', function() {
-			if (@hasDiff.ToString().ToLower()) {
-				generateDiff();
-			}
-		});
-
-		function generateDiff() {
-			const viewType = parseInt(document.querySelector('[name="diff-type"]:checked').value);
-			const contextSize = parseInt(document.querySelector('[name="context-size"]').value);
-
-			const leftMarkup = document.getElementById('@Html.IdFor(m => m.Diff.LeftMarkup)').value;
-			const rightMarkup = document.getElementById('@Html.IdFor(m => m.Diff.RightMarkup)').value;
-			const diffElem = document.getElementById('diff-view');
-			diffElem.classList.remove('d-none');
-
-			renderDiff(
-				{ text: leftMarkup, name: "r@(Model.FromRevision ?? 0)" },
-				{ text: rightMarkup, name: "r@(Model.ToRevision ?? 0)" },
-				diffElem,
-				!!viewType,
-				contextSize
-			);
-		}
-
-		let fromRevision, toRevision;
-		function diffBtnClicked(from, to) {
-			if (from) {
-				fromRevision = from;
-			}
-
-			if (to) {
-				toRevision = to;
-			}
-
-			if (fromRevision && toRevision) {
-				window.location = `/Wiki/PageHistory?path=@Model.Path&fromRevision=${fromRevision}&toRevision=${toRevision}`;
-			} else {
-				updateTableStyling();
-			}
-		}
-
-		function updateTableStyling() {
-			Array.from(document.querySelectorAll('tbody[data-hasrevisions] tr'))
-				.forEach(function (elem) {
-					elem.classList.remove('table-primary');
-					elem.classList.remove('table-info');
-					elem.querySelector("button[data-from]").classList.remove("active");
-					elem.querySelector("button[data-to]").classList.remove("active");
-				});
-
-			const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
-			if (cur) {
-				cur.classList.add('table-primary');
-				cur.querySelector("button[data-to]").classList.add("active");
-			}
-
-			const prev = document.querySelector(`tr[data-revision="${fromRevision}"]`);
-			if (prev) {
-				prev.classList.add('table-info');
-				prev.querySelector("button[data-from]").classList.add("active");
-			}
-		}
-	</script>
+	<script src="/js/wiki-page-history.js"></script>
 }

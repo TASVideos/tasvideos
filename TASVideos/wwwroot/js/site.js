@@ -14,6 +14,10 @@ function scrollToTop() {
 }
 
 function clearDropdown(elemId) {
+	if (!elemId) {
+		return;
+	}
+
 	Array.from(document.querySelectorAll(`#${elemId} option`))
 		.forEach(element => {
 			if (element.value) {

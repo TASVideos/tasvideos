@@ -9,7 +9,9 @@ avatarBoxElem.addEventListener('input', generateAvatarPreview);
 document.getElementById('gravatar-email').addEventListener('input', generateGravatarPreview)
 let avatarImgElem = document.getElementById('avatar-img');
 avatarImgElem.onload = validateAvatar;
-
+avatarImgElem.onerror = () => {
+    avatarImgElem.src = '/images/empty.png'
+};
 Array.from(document.querySelectorAll('[name="UseGravatar"]')).forEach(elem => elem.addEventListener('click', onGravatarToggle));
 
 function generateAvatarPreview() {

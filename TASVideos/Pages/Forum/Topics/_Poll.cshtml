@@ -49,14 +49,6 @@
 				</div>
 			</row>
 		}
-		<script condition="canVote">
-			Array.from(document.querySelectorAll('[name="ordinal"]'))
-				.forEach(element => {
-					element.addEventListener('change', () => {
-						document.getElementById('vote-btn').removeAttribute('hidden');
-					});
-				});
-		</script>
 		<button condition="canVote" hidden="hidden" type="submit" class="btn btn-sm btn-success" id="vote-btn">Vote!</button>
 	</form>
 	<a condition="!viewResults"
@@ -76,4 +68,3 @@
 		See All Votes
 	</a>
 </info-alert>
-

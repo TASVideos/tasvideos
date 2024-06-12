@@ -9,12 +9,12 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="Award"></label>
-				<select asp-for="Award" asp-items="Model.AvailableAwardCategories" class="form-select"></select>
+				<select asp-for="Award" data-id="award-dropdown" data-year="@Model.Year" asp-items="Model.AvailableAwardCategories" class="form-select"></select>
 				<span asp-validation-for="Award" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column md="6">
-			<partial name="_ImagePreview" model="@(Html.IdFor(m => m.Award), Model.Year)" />
+			<img id="award-image" src="" />
 		</column>
 	</row>
 	<row>
@@ -44,3 +44,7 @@
 		<cancel-link asp-page="Index"></cancel-link>
 	</form-button-bar>
 </form>
+
+@section Scripts {
+	<script src="/js/award-preview.js"></script>
+}

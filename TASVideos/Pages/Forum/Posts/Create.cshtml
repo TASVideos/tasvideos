@@ -28,22 +28,20 @@
 		<column md="4" permission="UseMoodAvatars" condition="@Model.UserAvatars.HasMoods">
 			<fieldset>
 				<label asp-for="Mood"></label>
-				<select asp-for="Mood" asp-items="@Model.Moods" class="form-select"></select>
+				<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown" class="form-select"></select>
 				<span asp-validation-for="Mood" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column md="2">
-			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Mood), Model.Mood, Model.UserAvatars)" />
+			<mood-preview current-mood="@Model.Mood" avatar="@Model.UserAvatars"></mood-preview>
 		</column>
 	</row>
 	<fullrow condition="@Model.UserAvatars.HasAvatar">
 		<img id="avatar-img" src="@Model.UserAvatars.Avatar" alt="user avatar"/>
 	</fullrow>
-	<fullrow class="mt-2">
-		<partial name="_CreatePostHelper" model="@("Text")" />
-	</fullrow>
+	<post-helper class="mt-2"></post-helper>
 	<fieldset>
-		<textarea asp-for="Text" class="form-control" rows="20" backup-content="true" data-backup-key="backup-post-@Model.TopicId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
+		<textarea asp-for="Text" class="form-control" rows="20" data-id="forum-edit" backup-content="true" data-backup-key="backup-post-@Model.TopicId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
 		<span asp-validation-for="Text" class="text-danger"></span>
 	</fieldset>
 	<fullrow id="backup-restore" class="d-none">
@@ -60,5 +58,4 @@
 		<cancel-link asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId"></cancel-link>
 	</form-button-bar>
 </form>
-
-<partial name="_PreviewWindow" model="@(("Text", "/Forum/Preview"))" />
+<forum-preview></forum-preview>

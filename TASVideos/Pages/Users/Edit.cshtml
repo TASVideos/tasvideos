@@ -1,6 +1,7 @@
 ﻿@page "{id}"
 @model EditModel
 @{
+	var lastLoggedIn = Model.UserToEdit.UserLastLoggedIn ?? DateTime.UtcNow;
 	ViewData.SetTitle($"Editing User: {Model.UserToEdit.UserName}");
 }
 
@@ -35,7 +36,8 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.UserLastLoggedIn"></label>
-				<div>@Html.DisplayFor(m => m.UserToEdit.UserLastLoggedIn)</div>
+				<label condition="Model.UserToEdit.UserLastLoggedIn.HasValue"><timezone-convert asp-for="@lastLoggedIn" date-only="true" /></label>
+				<label condition="!Model.UserToEdit.UserLastLoggedIn.HasValue">Never</label>
 			</fieldset>
 			<fieldset>
 				<input type="checkbox" class="forum-check-input" asp-for="UserToEdit.UseRatings" />
@@ -51,11 +53,11 @@
 				<label asp-for="UserToEdit.UserName"></label>
 				@if (User.Has(PermissionTo.EditUsersUserName))
 				{
-					<input asp-for="UserToEdit.OriginalUserName" type="hidden"/>
+					<input asp-for="UserToEdit.OriginalUserName" data-id="original-username" type="hidden"/>
 					<row>
 						<div id="user-name-div" class="col-sm-12">
 							<div class="input-group">
-								<input asp-for="UserToEdit.UserName" class="form-control" autocomplete="off"/>
+								<input asp-for="UserToEdit.UserName" data-id="username" class="form-control" autocomplete="off"/>
 								<div class="input-group-text" aria-hidden="true">
 									<span id="user-name-status" class="fa fa-check-square text-success"></span>
 								</div>
@@ -65,85 +67,6 @@
 						<div>
 							<button id="check-username" type="button" class="btn btn-secondary d-none">Check</button>
 						</div>
-						<script>
-						(function() {
-							const checkUserBtn = document.getElementById('check-username');
-							const userNameBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.UserName)');
-							const userNameStatus = document.getElementById('user-name-status');
-							const userNameExistsMessage = document.getElementById('username-exists-message');
-							const originalUserNameBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.OriginalUserName)');
-							const userNameDiv = document.getElementById('user-name-div');
-
-							userNameBox.onkeyup = onUserNameBoxChange;
-							userNameBox.onchange = onUserNameBoxChange;
-
-							function onUserNameBoxChange() {
-								if (userNameBox.value === originalUserNameBox.value) {
-									hideCheckNameBtn();
-									markUserNameGood();
-								} else {
-									showCheckNameBtn();
-									markUserNameUnknown();
-								}
-							}
-
-							function showCheckNameBtn() {
-								checkUserBtn.classList.remove('d-none');
-								checkUserBtn.parentNode.classList.add('col-sm-2');
-								userNameDiv.classList.remove('col-sm-12');
-								userNameDiv.classList.add('col-sm-10');
-							}
-
-							function hideCheckNameBtn() {
-								checkUserBtn.classList.add("div-none");
-								checkUserBtn.parentNode.classList.remove('col-sm-2');
-								userNameDiv.classList.remove('col-sm-10');
-								userNameDiv.classList.add('col-sm-12');
-							}
-
-							function markUserNameUnknown() {
-								userNameStatus.classList.remove('fa-check-square', 'text-success');
-								userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
-								userNameStatus.classList.add('fa-question-circle', 'text-primary');
-								userNameExistsMessage.classList.add('d-none');
-								document.getElementById('submit-btn').disabled = true;
-							}
-
-							function markUserNameGood() {
-								userNameStatus.classList.add('fa-check-square', 'text-success');
-								userNameStatus.classList.remove('fa-exclamation-triangle', 'text-danger');
-								userNameStatus.classList.remove('fa-question-circle', 'text-primary');
-								userNameExistsMessage.classList.add('d-none');
-								document.getElementById('submit-btn').disabled = false;
-							}
-
-							function markUserNameBad() {
-								userNameStatus.classList.remove('fa-check-square', 'text-success');
-								userNameStatus.classList.add('fa-exclamation-triangle', 'text-danger');
-								userNameStatus.classList.remove('fa-question-circle', 'text-primary');
-								userNameExistsMessage.classList.remove('d-none');
-								document.getElementById('submit-btn').disabled = true;
-							}
-
-							checkUserBtn.onclick = function() {
-								if (originalUserNameBox.value === userNameBox.value) {
-									markUserNameGood();
-									return;
-								}
-
-								fetch(`/Users/List?handler=VerifyUniqueUserName&userName=${userNameBox.value}`)
-									.then(handleFetchErrors)
-									.then(r => r.text())
-									.then(d => {
-										if (d === "true") {
-											markUserNameBad();
-										} else {
-											markUserNameGood();
-										}
-									});
-							};
-						})();
-						</script>
 						<span asp-validation-for="UserToEdit.UserName"></span>
 					</row>
 				}
@@ -151,7 +74,7 @@
 				{
 					<div>
 						<label>@Model.UserToEdit.UserName</label>
-						<input type="hidden" asp-for="UserToEdit.UserName"/>
+						<input type="hidden" data-id="username" asp-for="UserToEdit.UserName" />
 					</div>
 				}
 			</fieldset>
@@ -222,3 +145,7 @@
 		<cancel-link asp-page="List"></cancel-link>
 	</form-button-bar>
 </form>
+
+@section Scripts {
+	<script src="/js/user-edit.js"></script>
+}

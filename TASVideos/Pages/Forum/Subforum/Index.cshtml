@@ -15,7 +15,9 @@
 }
 <partial Name="_ForumHeader" />
 <top-button-bar>
-	<a class="btn btn-secondary btn-sm" onclick="markSubforumPostsRead()">Mark Posts as read</a>
+	<button type="button" id="mark-all-posts" class="btn btn-secondary btn-sm">
+		Mark all Posts as read
+	</button>
 	<a permission="CreateForumTopics" condition="Model.Forum.CanCreateTopics" asp-page="/Forum/Topics/Create" asp-route-forumId="@Model.Forum.Id" class="btn btn-primary btn-sm"><span class="fa fa-plus"></span> New Topic</a>
 	<edit-link permission="EditForums" asp-page="Edit" asp-route-id="@Model.Forum.Id" class="btn-sm"></edit-link>
 </top-button-bar>

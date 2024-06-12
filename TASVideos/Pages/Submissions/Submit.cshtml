@@ -82,8 +82,8 @@
 			<span>
 				@await Html.RenderWiki(SystemWiki.SubmissionImportant)
 			</span>
-			<partial name="_WikiEditHelper" model="@("Markup")" />
-			<textarea asp-for="Markup" rows="12" class="form-control wiki-edit" backup-content="true" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<wiki-edit-helper></wiki-edit-helper>
+			<textarea asp-for="Markup" rows="12" class="form-control" data-id="wiki-edit" backup-content="true" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Markup" class="text-danger"></span>
 			<fullrow id="backup-restore" class="d-none mt-2">
 				<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>
@@ -119,25 +119,7 @@
 		<submit-button id="submit-btn" class="@(Model.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
 	</form-button-bar>
 </form>
-
-<partial name="_PreviewWindow" model="@((Html.IdFor(m => m.Markup), "/Wiki/Preview"))" />
+<wiki-preview></wiki-preview>
 @section Scripts {
-	<script>
-		document.getElementById('prefill-btn').onclick = function () {
-			const markup = document.getElementById('@Html.IdFor(m => m.Markup)').value;
-			if (markup) {
-				return;
-			}
-
-			fetch("/Submissions/Submit?handler=PrefillText")
-				.then(handleFetchErrors)
-				.then(r => r.json())
-				.then(data => {
-					document.getElementById('@Html.IdFor(m => m.Markup)').value = data.text;
-				});
-		};
-		document.getElementById('preview-button').addEventListener('click', function () {
-			document.getElementById('submit-btn').classList.remove('d-none');
-		});
-	</script>
+	<script src="/js/submit.js"></script>
 }

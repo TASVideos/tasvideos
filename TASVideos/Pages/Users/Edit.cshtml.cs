@@ -203,8 +203,6 @@ public class EditModel(
 		public string? Location { get; init; }
 		public List<int> SelectedRoles { get; init; } = [];
 		public DateTime AccountCreatedOn { get; init; }
-
-		[DisplayFormat(NullDisplayText = "Never")]
 		public DateTime? UserLastLoggedIn { get; init; }
 
 		[EmailAddress]

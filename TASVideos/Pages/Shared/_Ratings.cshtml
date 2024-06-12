@@ -17,7 +17,7 @@
 	</warning-alert>
 	<form id="obsolete-form">
 		<div class="d-flex justify-content-end" style="gap: 8px;">
-			<label style="margin: auto 0" for="include-obsolete">Include Obsolete <input onclick="document.forms['obsolete-form'].submit()" id="include-obsolete" name="IncludeObsolete" checked="@Model.Ratings.IncludeObsolete" type="checkbox" asp-for="Ratings.IncludeObsolete"/></label>
+			<label style="margin: auto 0" for="include-obsolete">Include Obsolete <input id="include-obsolete" name="IncludeObsolete" checked="@Model.Ratings.IncludeObsolete" type="checkbox" asp-for="Ratings.IncludeObsolete"/></label>
 			<noscript>
 				<submit-button btn-class-override="ml-2 btn-secondary btn-sm" class="float-center">Go</submit-button>
 			</noscript>
@@ -36,3 +36,4 @@
 		}
 	</standard-table>
 </div>
+<script src="/js/rating-list.js"></script>

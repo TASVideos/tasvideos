@@ -37,18 +37,16 @@
 	<row>
 		<column md="4">
 			<label asp-for="Mood"></label>
-			<select asp-for="Mood" asp-items="@Model.Moods" class="form-select"></select>
+			<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown" class="form-select"></select>
 			<span asp-validation-for="Mood" class="text-danger"></span>
 		</column>
 		<column md="2">
-			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Mood), Model.Mood, Model.UserAvatars)"/>
+			<mood-preview current-mood="@Model.Mood" avatar="@Model.UserAvatars"></mood-preview>
 		</column>
 	</row>
-	<fullrow class="mt-3">
-		<partial name="_CreatePostHelper" model="@("Post")" />
-	</fullrow>
+	<post-helper class="mt-2"></post-helper>
 	<fieldset>
-		<textarea asp-for="Post" class="form-control" rows="20" backup-content="true" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
+		<textarea asp-for="Post" class="form-control" data-id="forum-edit" rows="20" backup-content="true" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
 		<span asp-validation-for="Post" class="text-danger"></span>
 	</fieldset>
 	<fullrow id="backup-restore" class="d-none">
@@ -65,8 +63,8 @@
 		<cancel-link asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId"></cancel-link>
 	</form-button-bar>
 </form>
-<partial name="_PreviewWindow" model="@(("Post", "/Forum/Preview"))" />
-
+<forum-preview></forum-preview>
 @section Scripts {
-<script src="/js/topic-create.js"></script>
+	<script src="/js/topic-create.js"></script>
+	<script src="/js/forum-poll.js"></script>
 }

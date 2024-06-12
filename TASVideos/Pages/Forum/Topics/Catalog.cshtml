@@ -10,11 +10,13 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="SystemId">System</label>
-				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" class="form-select"></select>
+				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" data-id="system" data-return-url="@HttpContext.CurrentPathToReturnUrl()" class="form-select"></select>
+				<span asp-validation-for="SystemId" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="GameId">Game</label>
-				<select asp-for="GameId" asp-items="@Model.AvailableGames" class="form-select"></select>
+				<select asp-for="GameId" asp-items="@Model.AvailableGames" data-id="game" class="form-select"></select>
+				<span asp-validation-for="GameId" class="text-danger"></span>
 			</fieldset>
 		</column>
 	</row>
@@ -26,12 +28,4 @@
 
 @section Scripts {
 	<script src="/js/catalog.js"></script>
-	<script>
-		enableCataloging(
-			"@Html.IdFor(m => m.SystemId)",
-			"dummy",
-			"@Html.IdFor(m => m.GameId)",
-			"dummy",
-			"@HttpContext.CurrentPathToReturnUrl()");
-	</script>
 }

@@ -16,9 +16,9 @@
 		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm">
 			Unanswered Posts
 		</a>
-		<a class="btn btn-secondary btn-sm" onclick="markAllPostsRead()">
+		<button type="button" id="mark-all-posts" class="btn btn-secondary btn-sm">
 			Mark all Posts as read
-		</a>
+		</button>
 		<add-link asp-page="/Forum/Subforum/Create" permission="EditForums" class="btn-sm"></add-link>
 	</top-button-bar>
 </div>

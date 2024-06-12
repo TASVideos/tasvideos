@@ -100,4 +100,40 @@ public static class ViewDataDictionaryExtensions
 
 	public static bool UsesStringList(this ViewDataDictionary viewData)
 		=> viewData["use-string-list"] is not null;
+
+	public static void UsePreview(this ViewDataDictionary viewData)
+		=> viewData["use-preview"] = true;
+
+	public static bool UsesPreview(this ViewDataDictionary viewData)
+		=> viewData["use-preview"] is not null;
+
+	public static void UseShowMore(this ViewDataDictionary viewData)
+		=> viewData["use-show-more"] = true;
+
+	public static bool UsesShowMore(this ViewDataDictionary viewData)
+		=> viewData["use-show-more"] is not null;
+
+	public static void UsePostHelper(this ViewDataDictionary viewData)
+		=> viewData["use-post-helper"] = true;
+
+	public static bool UsesPostHelper(this ViewDataDictionary viewData)
+		=> viewData["use-post-helper"] is not null;
+
+	public static void UseWikiEditHelper(this ViewDataDictionary viewData)
+		=> viewData["use-wiki-edit-helper"] = true;
+
+	public static bool UsesWikiEditHelper(this ViewDataDictionary viewData)
+		=> viewData["use-wiki-edit-helper"] is not null;
+
+	public static void UseDiff(this ViewDataDictionary viewData)
+		=> viewData["use-diff"] = true;
+
+	public static bool UsesDiff(this ViewDataDictionary viewData)
+		=> viewData["use-diff"] is not null;
+
+	public static void UseMoodPreview(this ViewDataDictionary viewData)
+		=> viewData["use-mood-preview"] = true;
+
+	public static bool UsesMoodPreview(this ViewDataDictionary viewData)
+		=> viewData["use-mood-preview"] is not null;
 }

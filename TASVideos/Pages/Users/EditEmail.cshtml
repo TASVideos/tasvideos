@@ -13,13 +13,13 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.Email"></label>
-				<input asp-for="UserToEdit.Email" class="form-control" />
+				<input asp-for="UserToEdit.Email" class="form-control" data-id="email" />
 				<span asp-validation-for="UserToEdit.Email" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<div class="checkbox">
 					<label asp-for="UserToEdit.EmailConfirmed">
-						<input asp-for="UserToEdit.EmailConfirmed" />
+						<input asp-for="UserToEdit.EmailConfirmed" data-id="email-confirmed" />
 						Email Confirmed
 					</label>
 				</div>
@@ -31,10 +31,4 @@
 		<cancel-link asp-page="Edit" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-<script>
-	"use strict";
-	const emailConfirmedBox = document.getElementById('@Html.IdFor(m => m.UserToEdit.EmailConfirmed)');
-	document
-		.getElementById('@Html.IdFor(m => m.UserToEdit.Email)')
-		.addEventListener('change', () => { emailConfirmedBox.checked = false });
-</script>
+<script src="/js/user-email-edit.js"></script>

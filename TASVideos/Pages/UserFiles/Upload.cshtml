@@ -1,6 +1,5 @@
 ﻿@page
 @model UploadModel
-
 @{
 	ViewData.SetTitle("Upload a User file");
 }
@@ -16,7 +15,7 @@
 		<column>
 			<fieldset>
 				<label asp-for="UserFile"></label>
-				<input asp-for="UserFile" class="form-control" />
+				<input asp-for="UserFile" class="form-control" data-id="user-form-file" data-supported-extensions="@string.Join(",", Model.SupportedFileExtensions)" />
 				<small>Valid file types: @string.Join(", ", Model.SupportedFileExtensions)</small><br />
 				<span id="FileInputWarning" asp-validation-for="UserFile" class="text-danger"></span>
 			</fieldset>
@@ -26,11 +25,9 @@
 				<span asp-validation-for="Title" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<div>
-					<partial name="_WikiEditHelper" model="@("Description")"/>
-				</div>
+				<wiki-edit-helper></wiki-edit-helper>
 				<label asp-for="Description"></label>
-				<textarea asp-for="Description" rows="6" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<textarea asp-for="Description" rows="6" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Description" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
@@ -42,12 +39,12 @@
 			<hr />
 			<fieldset>
 				<label asp-for="System"></label>
-				<select asp-for="System" asp-items="@Model.AvailableSystems" class="form-select"></select>
+				<select asp-for="System" data-id="system" asp-items="@Model.AvailableSystems" class="form-select"></select>
 				<span asp-validation-for="System" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Game"></label>
-				<select asp-for="Game" asp-items="@Model.AvailableGames" class="form-select"></select>
+				<select asp-for="Game" data-id="game" asp-items="@Model.AvailableGames" class="form-select"></select>
 				<span asp-validation-for="Game" class="text-danger"></span>
 			</fieldset>
 		</column>
@@ -59,55 +56,9 @@
 		<cancel-link asp-page="/Profile/UserFiles"></cancel-link>
 	</form-button-bar>
 </form>
-
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Description), "/Wiki/Preview")" />
-
+<wiki-preview></wiki-preview>
 @section Scripts {
 	<script src="/js/userfile.js"></script>
-	<script>
-		const gameId = "@Html.IdFor(m => m.Game)";
-		const systemId = "@Html.IdFor(m => m.System)";
-		enableUserFile(gameId, systemId);
-	</script>
 	<script src="/js/pako_deflate.min.js"></script>
-	<script>
-		"use strict";
-		{
-			const fileInput = document.getElementById("@Html.IdFor(m => m.UserFile)");
-			const storageAvailable = parseFloat(document.getElementById("StorageAvailable").value);
-			const supportedFileExtensions = '@string.Join(",", Model.SupportedFileExtensions)'.split(',');
-			const fileInputWarning = document.getElementById("FileInputWarning");
-			fileInput.addEventListener("input", async () => {
-				const inputFile = fileInput.files[0];
-				if (!inputFile) {
-					return;
-				}
-
-				const ext = (s => s.substring(s.lastIndexOf('.') + 1))(fileInput.files[0].name);
-				if (ext) {
-					if (supportedFileExtensions.includes(ext)) {
-						fileInputWarning.innerText = "";
-					} else {
-						fileInput.value = "";
-						fileInputWarning.innerText = `Invalid file extension: ${ext}`;
-						return;
-					}
-				}
-
-				const inputBytes = await inputFile.arrayBuffer();
-				const zippedBytes = pako.gzip(inputBytes);
-
-				const newFile = new File([zippedBytes], inputFile.name, { type: inputFile.type, lastModified: inputFile.lastModified });
-				if (newFile.size < storageAvailable) {
-					const dto = new DataTransfer;
-					dto.items.add(newFile);
-					fileInput.files = dto.files;
-					fileInputWarning.innerText = "";
-				} else {
-					fileInput.value = "";
-					fileInputWarning.innerText = "Chosen File Exceeds Quota";
-				}
-			});
-		}
-	</script>
+	<script src="/js/userfiles-upload.js"></script>
 }

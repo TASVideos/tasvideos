@@ -101,11 +101,8 @@
 					</div>
 					<div class="col" condition="User.Has(PermissionTo.EditForumPosts) || User.GetUserId() == comment.UserId">
 						<div class="float-end mb-1 mt-1">
-							<button type="button" class="btn btn-primary btn-sm" id="edit-button-@comment.Id" onclick="
-								this.classList.add('d-none');
-								document.getElementById('edit-comment-@comment.Id').classList.remove('d-none');
-								document.getElementById('view-comment-@comment.Id').classList.add('d-none');
-								"><i class="fa fa-pencil"></i> Edit
+							<button type="button" class="btn btn-primary btn-sm" data-edit-btn data-comment-id="@comment.Id" id="edit-button-@comment.Id">
+								<i class="fa fa-pencil"></i> Edit
 							</button>
 							<delete-button
 								class="btn-sm"
@@ -125,11 +122,7 @@
 						<input type="hidden" name="commentId" value="@comment.Id" />
 						<textarea name="comment" class="form-control">@comment.Text</textarea>
 						<submit-button class="btn-sm mt-2"></submit-button>
-						<button type="button" class="btn btn-secondary btn-sm mt-2" onclick="
-							document.getElementById('edit-comment-@comment.Id').classList.add('d-none');
-							document.getElementById('view-comment-@comment.Id').classList.remove('d-none');
-							document.getElementById('edit-button-@comment.Id').classList.remove('d-none');
-							"><i class="fa fa-times"></i> Cancel
+						<button type="button" class="btn btn-secondary btn-sm mt-2" data-cancel-btn data-comment-id="@comment.Id"><i class="fa fa-times"></i> Cancel
 						</button>
 					</form>
 				</div>
@@ -156,3 +149,4 @@
 		white-space: pre-wrap;
 	}
 </style>
+<script src="/js/userfile-info.js"></script>

@@ -55,6 +55,7 @@
 </standard-table>
 <form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Publication.SystemCode" />
+	<input type="hidden" asp-for="Id" />
 	<row>
 		<div class="col-lg-6">
 			<fieldset>
@@ -64,21 +65,8 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Publication.ObsoletedBy"></label>
-				<input asp-for="Publication.ObsoletedBy" class="form-control" />
+				<input asp-for="Publication.ObsoletedBy" data-id="obsoleted-by" class="form-control" />
 				<span id="obsoleted-by">@Model.Publication.ObsoletedByTitle</span>
-				<script>
-					const obsoletedByBox = document.getElementById("@Html.IdFor(m => m.Publication.ObsoletedBy)");
-					const titleSpan = document.getElementById("obsoleted-by");
-					obsoletedByBox.onchange = function () {
-						const url = `/Publications/Edit/@Model.Id?handler=Title&publicationId=${this.value}`;
-						fetch(url)
-							.then(handleFetchErrors)
-							.then(r => r.text())
-							.then(r => {
-								titleSpan.innerHTML = r ? r : "Unknown publication Id";
-							});
-					}
-				</script>
 				<span asp-validation-for="Publication.ObsoletedBy" class="text-danger"></span>
 			</fieldset>
 		</div>
@@ -105,13 +93,11 @@
 		<select asp-for="Publication.SelectedTags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
 	</fieldset>
 	@await Html.RenderWiki(SystemWiki.ClassEditingHelp)
-	<fullrow class="mt-3">
-		<partial name="_WikiEditHelper" model="@("Publication_Markup")" />
-	</fullrow>
+	<wiki-edit-helper class="mt-2"></wiki-edit-helper>
 	<fullrow>
 		<fieldset>
 			<label asp-for="Publication.Markup"></label>
-			<textarea asp-for="Publication.Markup" rows="6" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<textarea asp-for="Publication.Markup" rows="6" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Publication.Markup" class="text-danger"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 		</fieldset>
@@ -137,4 +123,7 @@
 		<cancel-link asp-page="/Publications/View" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Publication.Markup), "/Wiki/Preview")" />
+<wiki-preview></wiki-preview>
+@section Scripts {
+	<script src="/js/publications-edit.js"></script>
+}

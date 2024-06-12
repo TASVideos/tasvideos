@@ -41,11 +41,9 @@
 				<span asp-validation-for="Abbreviation" class="text-danger"></span>
 			</fieldset>
 			<fieldset>
-				<div>
-					<partial name="_WikiEditHelper" model="@("Description")" />
-				</div>
+				<wiki-edit-helper></wiki-edit-helper>
 				<label asp-for="Description"></label>
-				<textarea asp-for="Description" rows="4" class="form-control wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<textarea asp-for="Description" rows="4" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Description" class="text-danger"></span>
 				@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 			</fieldset>
@@ -57,4 +55,4 @@
 		<cancel-link asp-page="@(Model.Id.HasValue ? "Index" : "List")" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-<partial name="_PreviewWindow" model="@("Description", "/Wiki/Preview")" />
+<wiki-preview></wiki-preview>

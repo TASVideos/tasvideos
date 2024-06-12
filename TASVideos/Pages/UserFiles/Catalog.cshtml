@@ -18,7 +18,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="UserFile.System"></label>
-				<select asp-for="UserFile.System" asp-items="Model.AvailableSystems" class="form-select"></select>
+				<select asp-for="UserFile.System" asp-items="Model.AvailableSystems" data-id="system" data-return-url="@HttpContext.CurrentPathToReturnUrl()" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<fullrow>
@@ -26,7 +26,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="UserFile.Game" asp-items="Model.AvailableGames" class="form-select"></select>
+						<select asp-for="UserFile.Game" asp-items="Model.AvailableGames" data-id="game" class="form-select"></select>
 					</div>
 					<div class="col-2">
 						<button id="create-game" type="button" class="btn btn-primary">New</button>
@@ -40,17 +40,6 @@
 		<cancel-link asp-page="Info" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-<div id="dummy" class="d-none"></div>
-<div id="create-version" class="d-none"></div>
 @section Scripts {
 	<script src="/js/catalog.js"></script>
-	<script>
-		enableCataloging(
-			"@Html.IdFor(m => m.UserFile.System)",
-			"dummy",
-			"@Html.IdFor(m => m.UserFile.Game)",
-			"dummy",
-			"dummy",
-			"@HttpContext.CurrentPathToReturnUrl()");
-	</script>
 }

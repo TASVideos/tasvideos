@@ -1,4 +1,12 @@
-﻿function IncrementOrdinal(element) {
+﻿Array.from(document.querySelectorAll('[data-id="move-up"]')).forEach(moveUpBtn => {
+	moveUpBtn.addEventListener('click', () => decrementOrdinal(moveUpBtn));
+});
+
+Array.from(document.querySelectorAll('[data-id="move-down"]')).forEach(moveDownBtn => {
+	moveDownBtn.addEventListener('click', () => incrementOrdinal(moveDownBtn));
+});
+
+function incrementOrdinal(element) {
 	const parent = element.closest('.forum-section');
 	const index = parseInt(parent.dataset.index);
 
@@ -24,7 +32,7 @@
 	SortForums();
 }
 
-function DecrementOrdinal(element) {
+function decrementOrdinal(element) {
 	const parent = element.closest('.forum-section');
 	const index = parseInt(parent.dataset.index);
 	if (index <= 0) {

@@ -75,11 +75,11 @@
 		<div class="col-lg-6">
 			<fieldset>
 				<label asp-for="Submission.Status"></label>
-				<select class="form-select"
+				<select class="form-select" data-id="status"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
 			</fieldset>
-			<fieldset id="rejection-reason" show="@Model.Submission.Status == SubmissionStatus.Rejected">
+			<fieldset id="rejection-reason" data-rejection-id="@((int)SubmissionStatus.Rejected)" show="@Model.Submission.Status == SubmissionStatus.Rejected">
 				<label asp-for="Submission.RejectionReason">Reason</label>
 				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-select"></select>
 			</fieldset>
@@ -93,13 +93,11 @@
 		</div>
 		<input type="hidden" asp-for="Submission.IntendedPublicationClass" condition="!canEditPublicationClass" />
 	</row>
-	<fullrow class="mt-3">
-		<partial name="_WikiEditHelper" model="@("Markup")" />
-	</fullrow>
+	<wiki-edit-helper class="mt-2"></wiki-edit-helper>
 	<fullrow>
 		<fieldset>
 			<label asp-for="Markup">Comments and explanations</label>
-			<textarea asp-for="Markup" rows="12" class="form-control" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<textarea asp-for="Markup" rows="12" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Markup" class="text-danger"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 		</fieldset>
@@ -125,18 +123,8 @@
 		<cancel-link asp-page="View" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>
-
-<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Markup), "/Wiki/Preview")" />
+<wiki-preview></wiki-preview>
 
 @section Scripts {
-	<script>
-		document.getElementById('@Html.IdFor(m => m.Submission.Status)').addEventListener("change", function () {
-			const reject = '@((int)SubmissionStatus.Rejected)';
-			if (this.value === reject) {
-				document.getElementById('rejection-reason').classList.remove('d-none');
-			} else {
-				document.getElementById('rejection-reason').classList.add('d-none');
-			}
-		});
-	</script>
+	<script src="/js/submissions-edit.js"></script>
 }

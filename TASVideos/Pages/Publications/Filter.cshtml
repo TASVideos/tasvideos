@@ -17,39 +17,39 @@
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.Classes"></label>
-				<select asp-for="Search.Classes" multiselect="true" asp-items="Model.Tokens.Classes.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Classes" data-id="classes" multiselect="true" asp-items="Model.Tokens.Classes.ToDropDown()" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Years"></label>
-				<select asp-for="Search.Years" multiselect="true" asp-items="Model.Tokens.Years.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Years" data-id="years" multiselect="true" asp-items="Model.Tokens.Years.ToDropDown()" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Genres"></label>
-				<select asp-for="Search.Genres" multiselect="true" asp-items="Model.Tokens.Genres.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Genres" data-id="genres" multiselect="true" asp-items="Model.Tokens.Genres.ToDropDown()" class="form-select"></select>
 			</fieldset>
 		</column>
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.Flags"></label>
-				<select asp-for="Search.Flags" multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
+				<select asp-for="Search.Flags" data-id="flags" multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.GameGroups"></label>
-				<select asp-for="Search.GameGroups" multiselect="true" asp-items="Model.AvailableGameGroups" class="form-select"></select>
+				<select asp-for="Search.GameGroups" data-id="game-groups" multiselect="true" asp-items="Model.AvailableGameGroups" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Authors"></label>
-				<select asp-for="Search.Authors"  multiselect="true" asp-items="Model.AvailableAuthors" class="form-select"></select>
+				<select asp-for="Search.Authors" data-id="authors" multiselect="true" asp-items="Model.AvailableAuthors" class="form-select"></select>
 			</fieldset>
 		</column>
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.SystemCodes">Platform</label>
-				<select asp-for="Search.SystemCodes" multiselect="true" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.SystemCodes" data-id="systems" multiselect="true" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).ToDropDown()" class="form-select"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Tags"></label>
-				<select asp-for="Search.Tags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
+				<select asp-for="Search.Tags" data-id="tags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
 			</fieldset>
 		</column>
 	</row>
@@ -80,38 +80,6 @@
 	</form-button-bar>
 </form>
 
-<script>
-	window.addEventListener('load', validateForm);
-	const classes = document.getElementById('@Html.IdFor(m => m.Search.Classes)');
-	const years = document.getElementById('@Html.IdFor(m => m.Search.Years)');
-	const genres = document.getElementById('@Html.IdFor(m => m.Search.Genres)');
-	const flags = document.getElementById('@Html.IdFor(m => m.Search.Flags)');
-	const gameGroups = document.getElementById('@Html.IdFor(m => m.Search.GameGroups)');
-	const authors = document.getElementById('@Html.IdFor(m => m.Search.Authors)');
-	const systemCodes = document.getElementById('@Html.IdFor(m => m.Search.SystemCodes)');
-	const tags = document.getElementById('@Html.IdFor(m => m.Search.Tags)');
-
-	classes.onchange = validateForm;
-	years.onchange = validateForm;
-	genres.onchange = validateForm;
-	flags.onchange = validateForm;
-	gameGroups.onchange = validateForm;
-	authors.onchange = validateForm;
-	systemCodes.onchange = validateForm;
-	tags.onchange = validateForm;
-
-	function validateForm() {
-		document.getElementById('filter-btn').disabled = !anySelected();
-	}
-
-	function anySelected() {
-		return classes.selectedIndex >= 0
-			|| years.selectedIndex >= 0
-			|| genres.selectedIndex >= 0
-			|| flags.selectedIndex >= 0
-			|| gameGroups.selectedIndex >= 0
-			|| authors.selectedIndex >= 0
-			|| systemCodes.selectedIndex >= 0
-			|| tags.selectedIndex >= 0;
-	}
-</script>
+@section Scripts {
+	<script src="/js/publications-filter.js"></script>
+}

@@ -1,3 +1,4 @@
+document.getElementById('mark-all-posts').addEventListener('click', markAllPostsRead);
 let currentTime = Number(document.getElementById('serverUnixTime').textContent);
 {
 	let visitedPosts = localStorage.getItem('VisitedPosts');

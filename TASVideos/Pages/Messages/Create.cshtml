@@ -27,7 +27,7 @@
 		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser"></label>
-				<input asp-for="ToUser" user-search="true" class="form-control" placeholder="Enter a UserName"/>
+				<input asp-for="ToUser" user-search="true" class="form-control" data-id="to-user" placeholder="Enter a UserName"/>
 				<span asp-validation-for="ToUser" class="text-danger"></span>
 			</div>
 			<label for="group-select">To Group</label>
@@ -35,13 +35,11 @@
 			</select>
 		</fieldset>
 	</row>
-	<fullrow>
-		<partial name="Forum/_CreatePostHelper" model="@("Text")" />
-	</fullrow>
+	<post-helper></post-helper>
 	<row>
 		<fieldset class="col-12">
 			<label asp-for="MessageBody"></label>
-			<textarea asp-for="MessageBody" class="form-control" rows="20"></textarea>
+			<textarea asp-for="MessageBody" data-id="forum-edit" class="form-control" rows="20"></textarea>
 			<span asp-validation-for="MessageBody" class="text-danger"></span>
 		</fieldset>
 	</row>
@@ -51,36 +49,8 @@
 		<cancel-link asp-page="Inbox"></cancel-link>
 	</form-button-bar>
 </form>
-
-<partial name="_PreviewWindow" model="@((nameof(Model.MessageBody), "/Forum/Preview"))" />
+<forum-preview></forum-preview>
 
 @section Scripts {
-	<script>
-		const userFormGroup = document.getElementById('user-form-group');
-		const userBox = document.getElementById('@Html.IdFor(m => m.ToUser)');
-		const formSubmitBtn = userBox
-			.closest('form')
-			.querySelector("button[type='Submit']");
-
-		if (document.getElementById('quote-btn')) {
-			document.getElementById('quote-btn').onclick = function () {
-				const text = document.getElementById('replying-to-text').innerHTML;
-				document.getElementById('@Html.IdFor(m => m.MessageBody)').innerHTML = `[quote]${text}[/quote]`;
-			};
-		}
-
-		const groupSelect = document.getElementById('group-select');
-		groupSelect.addEventListener('change', () => {
-			if (groupSelect.value) {
-				userBox.value = groupSelect.value;
-				formSubmitBtn.removeAttribute('disabled');
-
-				userFormGroup.classList.add('d-none');
-			} else {
-				userBox.value = '';
-				userFormGroup.classList.remove('d-none');
-				formSubmitBtn.setAttribute('disabled', 'disabled');
-			}
-		});
-	</script>
+	<script src="/js/messages-create.js"></script>
 }

@@ -18,7 +18,7 @@
 <form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Post.EnableBbCode" />
 	<input type="hidden" asp-for="Post.EnableHtml" />
-	<input type="hidden" asp-for="Post.OriginalText" />
+	<input type="hidden" asp-for="Post.OriginalText" data-diff="left" />
 
 	<row>
 		<column condition="!Model.Post.IsFirstPost" md="6">
@@ -39,19 +39,17 @@
 			<fieldset>
 				<label asp-for="Post.Mood"></label>
 				<input condition="!isUserEdit" type="text" readonly asp-for="Post.Mood" class="form-control"/>
-				<select condition="isUserEdit" asp-for="Post.Mood" asp-items="@Model.Moods" class="form-select"></select>
+				<select condition="isUserEdit" asp-for="Post.Mood" data-id="avatar-dropdown" asp-items="@Model.Moods" class="form-select"></select>
 				<span asp-validation-for="Post.Mood" class="text-danger"></span>
 			</fieldset>
 		</column>
 		<column md="2">
-			<partial name="_AvatarPreview" model="(Html.IdFor(m => m.Post.Mood), Model.Post.Mood, Model.UserAvatars)"/>
+			<mood-preview current-mood="@Model.Post.Mood" avatar="@Model.UserAvatars"></mood-preview>
 		</column>
 	</row>
-	<fullrow class="mt-2">
-		<partial name="_CreatePostHelper" model="@("Post_Text")" />
-	</fullrow>
+	<post-helper class="mt-2"></post-helper>
 	<fieldset>
-		<textarea asp-for="Post.Text" class="form-control" rows="20" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
+		<textarea asp-for="Post.Text" class="form-control" data-id="forum-edit" data-diff="right" rows="20" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
 		<span asp-validation-for="Post.Text" class="text-danger"></span>
 	</fieldset>
 	<fullrow class="mt-3">
@@ -80,15 +78,8 @@
 			</row>
 		</card-header>
 		<card-body>
-			<partial name="_Diff" model="@((Html.IdFor(m => m.Post.OriginalText), Html.IdFor(m => m.Post.Text)))" />
-			<script>
-				window.addEventListener('load', function () {
-					const rightMarkupElem = document.getElementById('@Html.IdFor(m => m.Post.Text)');
-					rightMarkupElem.addEventListener('change', generateDiff);
-					rightMarkupElem.addEventListener('keyup', generateDiff);
-				});
-			</script>
+			<diff-panel></diff-panel>
 		</card-body>
 	</card>
 </div>
-<partial name="_PreviewWindow" model="@(("Post_Text", "/Forum/Preview"))" />
+<forum-preview></forum-preview>

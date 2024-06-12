@@ -12,13 +12,15 @@
 		<card-header>
 			<h4><profile-link username="@user.UserName"></profile-link></h4>
 		</card-header>
-		<card-body>
+		<card-body class="d-flex flex-wrap">
 			@foreach (var mood in MoodReportModel.Moods)
 			{
 				<div class="mood-box border p-2">
 					<strong>@mood.EnumDisplayName()</strong>
 					<br />
-					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" onerror="this.src = '/images/empty.png'" loading="lazy" alt="mood @mood.ToString()" />
+					<object data="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" type="image/png">
+						<img src="/images/empty.png" alt="mood @mood.ToString()">
+					</object>
 				</div>
 			}
 		</card-body>

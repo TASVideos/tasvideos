@@ -10,6 +10,7 @@
 	               warning-message="Are you sure you want to delete this Role? This action cannot be undone!"></delete-button>
 </top-button-bar>
 <form client-side-validation="true" asp-route="Edit">
+	<input type="hidden" asp-for="Id" />
 	<row>
 		<column lg="6">
 			<fieldset>
@@ -44,7 +45,7 @@
 			<fieldset>
 				<div class="form-check">
 					<input type="checkbox" class="form-check-input" asp-for="Role.AutoAssignPublications" />
-					<label asp-for="Role.AutoAssignPublications" class="form-check-label">uto-assign on Publication</label>
+					<label asp-for="Role.AutoAssignPublications" class="form-check-label">Auto-assign on Publication</label>
 					<div>
 						<small>(If set, the user will automatically be assigned this role when they have a movie published.)</small>
 					</div>
@@ -76,80 +77,6 @@
 </form>
 
 @section Scripts {
-	<script>
-		const selectedPermissionsModelName = '@Html.NameFor(m => m.Role.SelectedPermissions)';
-		const selectedAssignableModelName = '@Html.NameFor(m => m.Role.SelectedAssignablePermissions)';
-		const assignRolesValue = '@((int)PermissionTo.AssignRoles)';
-
-		const selectedPermElem = document.querySelector(`[name="${selectedPermissionsModelName}"]`);
-		const selectedAssignablePermElem = document.querySelector(`[name="${selectedAssignableModelName}"]`);
-
-		function shouldShowAssignRoles() {
-			const hasAssign = Boolean(document.querySelector(`[name="${selectedPermissionsModelName}"] option:checked[value="${assignRolesValue}"]`));
-			const hasAtLeastOneOtherPerm = document.querySelectorAll(`[name="${selectedPermissionsModelName}"] option:checked`).length > 1;
-
-			return hasAssign && hasAtLeastOneOtherPerm;
-		}
-
-		function syncAssignablePerms() {
-			// remove all non-selected permissions from assignable permissions
-			[...selectedAssignablePermElem.options]
-				.filter(option => ![...selectedPermElem.options]
-					.filter(o => o.selected)
-					.find(o => o.value == option.value))
-				.forEach(option => option.remove());
-
-			// add all missing selected permissions to assignable permissions
-			[...selectedPermElem.options]
-				.filter(option => option.selected && ![...selectedAssignablePermElem.options]
-					.find(o => o.value == option.value))
-				.forEach(option => {
-					const newOption = document.createElement('option');
-					newOption.value = option.value;
-					newOption.text = option.text;
-					selectedAssignablePermElem.add(newOption);
-				});
-
-			engageSelectImprover('@Html.IdFor(m => m.Role.SelectedAssignablePermissions)');
-
-			showRolesCurrentlyAssignable();
-		}
-
-		function showRolesCurrentlyAssignable() {
-			const permissions = Array
-				.from(document.querySelectorAll(`[name="${selectedAssignableModelName}"] option:checked`))
-				.map(element => element.value);
-
-			if (!permissions.length) {
-				document.getElementById("assignable-roles").textContent = 'None';
-				return;
-			}
-			const selectedOptions = [...selectedAssignablePermElem].filter(option => option.selected).map(option => option.value);
-			const url = `/Roles/AddEdit/@(Model.Id)?handler=RolesThatCanBeAssignedBy&ids=${selectedOptions.join('&ids=')}`;
-			fetch(url)
-				.then(handleFetchErrors)
-				.then(r => r.json())
-				.then(json => {
-					if (json.length > 0) {
-						document.getElementById("assignable-roles").textContent = json.join(', ');
-					} else {
-						document.getElementById("assignable-roles").textContent = 'None';
-					}
-				});
-		}
-
-		function onSelectedPermissionsChange() {
-			if (shouldShowAssignRoles()) {
-				document.getElementById('assignable-permissions-section').classList.remove('d-none');
-				syncAssignablePerms();
-			} else {
-				document.getElementById('assignable-permissions-section').classList.add('d-none');
-			}
-		}
-
-		selectedPermElem.addEventListener('change', onSelectedPermissionsChange);
-		document.addEventListener("DOMContentLoaded", onSelectedPermissionsChange);
-		selectedAssignablePermElem.addEventListener('change', showRolesCurrentlyAssignable);
-	</script>
+	<script src="/js/roles-addedit.js"></script>
 }
 

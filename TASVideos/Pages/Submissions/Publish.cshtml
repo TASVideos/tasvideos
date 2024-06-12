@@ -51,12 +51,13 @@
 <hr />
 <form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="Submission.SystemId" />
+	<input type="hidden" asp-for="Id" />
 	<row>
 		<input type="hidden" asp-for="Submission.MovieExtension" />
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Submission.MovieToObsolete">Select movie to be obsoleted</label>
-				<input asp-for="Submission.MovieToObsolete" class="form-control" />
+				<input asp-for="Submission.MovieToObsolete" data-id="obsolete" class="form-control" />
 				<span asp-validation-for="Submission.MovieToObsolete" class="text-danger"></span>
 				<span id="obsoleted-by"></span>
 			</fieldset>
@@ -109,10 +110,10 @@
 	<hr />
 	<row>
 		<column lg="6">
-			<partial name="_WikiEditHelper" model="@("Submission_MovieMarkup")" />
+			<wiki-edit-helper></wiki-edit-helper>
 			<fieldset>
 				<label asp-for="Submission.MovieDescription"></label>
-				<textarea asp-for="Submission.MovieDescription" class="form-control" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<textarea asp-for="Submission.MovieDescription" class="form-control" data-id="wiki-edit" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Submission.MovieDescription" class="text-danger"></span>
 			</fieldset>
 		</column>
@@ -124,7 +125,7 @@
 		</column>
 	</row>
 	<preview-button></preview-button>
-	<partial name="_PreviewWindow" model="@(Html.IdFor(m => m.Submission.MovieDescription), "/Wiki/Preview")" />
+	<wiki-preview></wiki-preview>
 	<hr />
 	<fullrow>
 		<fieldset>
@@ -133,7 +134,7 @@
 		</fieldset>
 		<fieldset>
 			<label asp-for="Submission.SelectedTags"></label>
-			<select asp-for="Submission.SelectedTags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
+			<select asp-for="Submission.SelectedTags" data-id="tags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
 		</fieldset>
 	</fullrow>
 	<hr />
@@ -145,39 +146,5 @@
 </form>
 
 @section Scripts {
-	<script>
-		const selectedTagsId = "@Html.IdFor(m => m.Submission.SelectedTags)";
-		let originalDescription = "@Model.Submission.MovieDescription";
-		const obsoletionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieToObsolete)");
-		const descriptionModel = document.getElementById("@Html.IdFor(m => m.Submission.MovieDescription)");
-
-		descriptionModel.onchange = function() {
-			originalDescription = descriptionModel.value;
-		}
-
-		obsoletionModel.onchange = function() {
-			if (!obsoletionModel.value) {
-				descriptionModel.value = originalDescription;
-				return;
-			}
-
-			document.getElementById("obsoleted-by").innerHTML = "";
-			const url = `/Submissions/Publish/@(Model.Id)?handler=ObsoletePublication&publicationId=${obsoletionModel.value}`;
-			fetch(url)
-				.then(handleFetchErrors)
-				.then(r => r.json())
-				.then(t => {
-					const oldValue = originalDescription;
-					descriptionModel.value = t.markup;
-					originalDescription = oldValue;
-
-					document.getElementById("obsoleted-by").innerHTML = t.title ? t.title : "Unknown publication";
-
-					for (let option of document.querySelectorAll(`#${selectedTagsId} option`)) {
-						option.selected = t.tags.includes(Number(option.value));
-					}
-					engageSelectImprover('@Html.IdFor(m => m.Submission.SelectedTags)');
-				});
-		}
-	</script>
+	<script src="/js/publish.js"></script>
 }

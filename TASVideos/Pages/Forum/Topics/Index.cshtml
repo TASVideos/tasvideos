@@ -99,6 +99,7 @@
 }
 
 <hr class="my-0" />
+<hr class="my-0" />
 <partial name="_Pager" model="Model.Topic.Posts" />
 @foreach (var post in Model.Topic.Posts.OrderBy(p => p.CreateTimestamp).ToList())
 {
@@ -128,22 +129,6 @@
 
 <span condition="@(Model.SaveActivity)" id="serverUnixTime" class="d-none">@DateTime.UtcNow.UnixTimestamp()</span>
 @section Scripts {
-	<script condition="@(Model.SaveActivity)">
-		{
-			let currentTime = Number(document.getElementById('serverUnixTime').textContent);
-			let activityPosts = document.getElementsByClassName('activity-post');
-			let visitedPosts = localStorage.getItem('VisitedPosts');
-			visitedPosts = JSON.parse(visitedPosts) ?? {};
-			for (let i = 0; i < activityPosts.length; i++) {
-				let lastVisit = visitedPosts[activityPosts[i].dataset.postId];
-				if (activityPosts[i].dataset.unixCreated && (lastVisit === undefined || lastVisit < activityPosts[i].dataset.unixCreated)) {
-					activityPosts[i].classList.add('text-warning');
-				} else if (activityPosts[i].dataset.unixEdited && (lastVisit === undefined || lastVisit < activityPosts[i].dataset.unixEdited)) {
-					activityPosts[i].classList.add('text-info');
-				}
-				visitedPosts[activityPosts[i].dataset.postId] = currentTime;
-			}
-			localStorage.setItem('VisitedPosts', JSON.stringify(visitedPosts));
-		}
-	</script>
+	<script condition="@Model.SaveActivity" src="/js/forum-topic.js"></script>
+	<script src="/js/forum-poll.js"></script>
 }
