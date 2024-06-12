@@ -4,21 +4,17 @@ namespace TASVideos.Core.Services;
 
 public interface ILanguages
 {
-	Task<IEnumerable<LanguagePage>> GetTranslations(string pageName);
+	Task<ICollection<LanguagePage>> GetTranslations(string pageName);
 }
 
-internal class Languages(
-	ApplicationDbContext db,
-	IWikiPages wikiPages,
-	ICacheService cache)
-	: ILanguages
+internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheService cache) : ILanguages
 {
 	internal const string TranslationsCacheKey = "Translations-";
 
-	public async Task<IEnumerable<LanguagePage>> GetTranslations(string pageName)
+	public async Task<ICollection<LanguagePage>> GetTranslations(string pageName)
 	{
 		var key = TranslationsCacheKey + pageName;
-		if (cache.TryGetValue(key, out IEnumerable<LanguagePage> languages))
+		if (cache.TryGetValue(key, out ICollection<LanguagePage> languages))
 		{
 			return languages;
 		}
@@ -28,7 +24,7 @@ internal class Languages(
 		return languages;
 	}
 
-	private async Task<IEnumerable<LanguagePage>> GetTranslationsInternal(string pageName)
+	private async Task<ICollection<LanguagePage>> GetTranslationsInternal(string pageName)
 	{
 		string subPage = pageName;
 		var languages = new List<LanguagePage>();
@@ -67,7 +63,8 @@ internal class Languages(
 			.ToListAsync();
 
 		return languages
-			.Where(l => existingPages.Contains(l.Path));
+			.Where(l => existingPages.Contains(l.Path))
+			.ToList();
 	}
 
 	internal async Task<bool> IsLanguagePage(string? pageName)
