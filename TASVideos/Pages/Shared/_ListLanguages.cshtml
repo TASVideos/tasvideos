@@ -4,7 +4,7 @@
 	var languages = await Languages.GetTranslations(Model.PageName);
 }
 
-<div class="dropdown">
+<div class="dropdown" condition="languages.Any()">
 	<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="translation-menu" data-bs-toggle="dropdown" aria-expanded="false">
 		<i class="fa fa-language fa-xl"></i>
 	</button>

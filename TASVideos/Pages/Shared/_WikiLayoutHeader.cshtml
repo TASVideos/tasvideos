@@ -1,9 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model TASVideos.Core.Services.Wiki.IWikiPage
 
-<top-button-bar condition="User.CanEditWiki(Model.PageName)">
+<top-button-bar>
 	<partial name="_ListLanguages" model="Model" />
-	<edit-link asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn-sm"></edit-link>
+	<edit-link condition="User.CanEditWiki(Model.PageName)" asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn-sm"></edit-link>
 </top-button-bar>
 
 @if (Model.IsSystemPage())
