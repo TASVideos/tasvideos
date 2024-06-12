@@ -2,6 +2,7 @@
 @model TASVideos.Core.Services.Wiki.IWikiPage
 
 <top-button-bar condition="User.CanEditWiki(Model.PageName)">
+	<partial name="_ListLanguages" model="Model" />
 	<edit-link asp-page="/Wiki/Edit" asp-route-path="@Model.PageName" class="btn-sm"></edit-link>
 </top-button-bar>
 
@@ -21,5 +22,3 @@ else if (Model.IsHomePage())
 {
 	<partial name="_HomePageHeader" model="Model" />
 }
-
-<partial name="_ListLanguages" model="Model" />

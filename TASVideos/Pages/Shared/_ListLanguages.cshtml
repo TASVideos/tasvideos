@@ -4,10 +4,14 @@
 	var languages = await Languages.GetTranslations(Model.PageName);
 }
 
-@foreach (var l in languages)
-{
-	<text>
-		>> <a href="/@l.Path">@l.Code | @l.DisplayName</a>
-		<br />
-	</text>
-}
+<div class="dropdown">
+	<button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="translation-menu" data-bs-toggle="dropdown" aria-expanded="false">
+		<i class="fa fa-language fa-xl"></i>
+	</button>
+	<ul class="dropdown-menu" aria-labelledby="translation-menu">
+		@foreach (var l in languages)
+		{
+			<li><a class="dropdown-item" href="/@l.Path">@l.Code | @l.DisplayName</a></li>
+		}
+	</ul>
+</div>
