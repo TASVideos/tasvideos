@@ -41,18 +41,15 @@ public class SignInManager(
 			return (SignInResult.Failed, null);
 		}
 
-		var result = await PasswordSignInAsync(
-			userName,
-			password,
-			rememberMe,
-			lockoutOnFailure: true);
+		var result = await CheckPasswordSignInAsync(user, password, true);
 
 		if (result.Succeeded)
 		{
 			user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
 			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
-			await userManager.AddUserPermissionsToClaims(user);
+			var claims = await userManager.AddUserPermissionsToClaims(user);
+			await SignInWithClaimsAsync(user, rememberMe, claims);
 		}
 
 		return (result, user);
