@@ -86,11 +86,11 @@
 	</row>
 	<fieldset>
 		<label asp-for="Publication.SelectedFlags"></label>
-		<select asp-for="Publication.SelectedFlags" multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
+		<select asp-for="Publication.SelectedFlags" multiselect="true" asp-items="Model.AvailableFlags"></select>
 	</fieldset>
 	<fieldset>
 		<label asp-for="Publication.SelectedTags"></label>
-		<select asp-for="Publication.SelectedTags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
+		<select asp-for="Publication.SelectedTags" multiselect="true" asp-items="Model.AvailableTags"></select>
 	</fieldset>
 	@await Html.RenderWiki(SystemWiki.ClassEditingHelp)
 	<wiki-edit-helper class="mt-2"></wiki-edit-helper>

@@ -17,39 +17,39 @@
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.Classes"></label>
-				<select asp-for="Search.Classes" data-id="classes" multiselect="true" asp-items="Model.Tokens.Classes.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Classes" data-id="classes" multiselect="true" asp-items="Model.Tokens.Classes.ToDropDown()"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Years"></label>
-				<select asp-for="Search.Years" data-id="years" multiselect="true" asp-items="Model.Tokens.Years.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Years" data-id="years" multiselect="true" asp-items="Model.Tokens.Years.ToDropDown()"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Genres"></label>
-				<select asp-for="Search.Genres" data-id="genres" multiselect="true" asp-items="Model.Tokens.Genres.ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.Genres" data-id="genres" multiselect="true" asp-items="Model.Tokens.Genres.ToDropDown()"></select>
 			</fieldset>
 		</column>
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.Flags"></label>
-				<select asp-for="Search.Flags" data-id="flags" multiselect="true" asp-items="Model.AvailableFlags" class="form-select"></select>
+				<select asp-for="Search.Flags" data-id="flags" multiselect="true" asp-items="Model.AvailableFlags"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.GameGroups"></label>
-				<select asp-for="Search.GameGroups" data-id="game-groups" multiselect="true" asp-items="Model.AvailableGameGroups" class="form-select"></select>
+				<select asp-for="Search.GameGroups" data-id="game-groups" multiselect="true" asp-items="Model.AvailableGameGroups"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Authors"></label>
-				<select asp-for="Search.Authors" data-id="authors" multiselect="true" asp-items="Model.AvailableAuthors" class="form-select"></select>
+				<select asp-for="Search.Authors" data-id="authors" multiselect="true" asp-items="Model.AvailableAuthors"></select>
 			</fieldset>
 		</column>
 		<column md="4">
 			<fieldset>
 				<label asp-for="Search.SystemCodes">Platform</label>
-				<select asp-for="Search.SystemCodes" data-id="systems" multiselect="true" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).ToDropDown()" class="form-select"></select>
+				<select asp-for="Search.SystemCodes" data-id="systems" multiselect="true" asp-items="Model.Tokens.SystemCodes.OrderBy(c => c).ToDropDown()"></select>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Search.Tags"></label>
-				<select asp-for="Search.Tags" data-id="tags" multiselect="true" asp-items="Model.AvailableTags" class="form-select"></select>
+				<select asp-for="Search.Tags" data-id="tags" multiselect="true" asp-items="Model.AvailableTags"></select>
 			</fieldset>
 		</column>
 	</row>

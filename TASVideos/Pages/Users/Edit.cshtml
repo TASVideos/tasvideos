@@ -117,7 +117,7 @@
 	</full-row>
 	<hr />
 	<label asp-for="UserToEdit.SelectedRoles"></label>
-	<select asp-for="UserToEdit.SelectedRoles" multiselect="true" asp-items="Model.AvailableRoles" class="form-select"></select>
+	<select asp-for="UserToEdit.SelectedRoles" multiselect="true" asp-items="Model.AvailableRoles"></select>
 	@await Html.RenderWiki(SystemWiki.UserEditRole)
 	<row>
 		<column md="6">

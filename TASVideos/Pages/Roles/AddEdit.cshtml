@@ -61,12 +61,12 @@
 	</row>
 	<fieldset>
 		<label asp-for="Role.SelectedPermissions"></label>
-		<select asp-for="Role.SelectedPermissions" multiselect="true" asp-items="Model.AvailablePermissions" class="form-select"></select>
+		<select asp-for="Role.SelectedPermissions" multiselect="true" asp-items="Model.AvailablePermissions"></select>
 		<span asp-validation-for="Role.SelectedPermissions"></span>
 	</fieldset>
 	<fieldset class="d-none" id="assignable-permissions-section">
 		<label asp-for="Role.SelectedAssignablePermissions"></label>
-		<select asp-for="Role.SelectedAssignablePermissions" multiselect="true" asp-items="Model.AvailableAssignablePermissions" class="form-select"></select>
+		<select asp-for="Role.SelectedAssignablePermissions" multiselect="true" asp-items="Model.AvailableAssignablePermissions"></select>
 		<label>Roles that can be assigned:</label>
 		<div id="assignable-roles">None</div>
 	</fieldset>
