@@ -58,21 +58,21 @@
 			<fieldset>
 				<label asp-for="Submission.MovieToObsolete">Select movie to be obsoleted</label>
 				<input asp-for="Submission.MovieToObsolete" data-id="obsolete" class="form-control" />
-				<span asp-validation-for="Submission.MovieToObsolete" class="text-danger"></span>
+				<span asp-validation-for="Submission.MovieToObsolete"></span>
 				<span id="obsoleted-by"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.OnlineWatchingUrl">Online-watching URL</label>
 				<input type="text" asp-for="Submission.OnlineWatchingUrl" class="form-control" />
-				<span asp-validation-for="Submission.OnlineWatchingUrl" class="text-danger"></span>
+				<span asp-validation-for="Submission.OnlineWatchingUrl"></span>
 				<label asp-for="Submission.OnlineWatchUrlName">Online-watching URL Display Name (Optional)</label>
 				<input type="text" asp-for="Submission.OnlineWatchUrlName" class="form-control"/>
-				<span asp-validation-for="Submission.OnlineWatchUrlName" class="text-danger"></span>
+				<span asp-validation-for="Submission.OnlineWatchUrlName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.MirrorSiteUrl">Mirror site URL</label>
 				<input type="text" asp-for="Submission.MirrorSiteUrl" class="form-control" />
-				<span asp-validation-for="Submission.MirrorSiteUrl" class="text-danger"></span>
+				<span asp-validation-for="Submission.MirrorSiteUrl"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
@@ -87,7 +87,7 @@
 					</div>
 				</div>
 				<div>Please follow the convention: xxxv#-yyy where xxx is author name, # is version and yyy is game name. Special characters such as \"&\" and \"/\" and \".\" and spaces must not occur in the filename.</div>
-				<span asp-validation-for="Submission.MovieFilename" class="text-danger"></span>
+				<span asp-validation-for="Submission.MovieFilename"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.Screenshot"></label>
@@ -97,13 +97,13 @@
 					<br />
 					(Please read <a href="/PublisherGuidelines">Publisher guidelines</a> for guidelines regarding screenshot selection.)
 				</span>
-				<span asp-validation-for="Submission.Screenshot" class="text-danger"></span>
+				<span asp-validation-for="Submission.Screenshot"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.ScreenshotDescription">Description</label>
 				<input asp-for="Submission.ScreenshotDescription" type="text" class="form-control" />
 				<div>Caption, describe what happens in the screenshot</div>
-				<span asp-validation-for="Submission.ScreenshotDescription" class="text-danger"></span>
+				<span asp-validation-for="Submission.ScreenshotDescription"></span>
 			</fieldset>
 		</column>
 	</row>
@@ -114,7 +114,7 @@
 			<fieldset>
 				<label asp-for="Submission.MovieDescription"></label>
 				<textarea asp-for="Submission.MovieDescription" class="form-control" data-id="wiki-edit" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
-				<span asp-validation-for="Submission.MovieDescription" class="text-danger"></span>
+				<span asp-validation-for="Submission.MovieDescription"></span>
 			</fieldset>
 		</column>
 		<column lg="6">

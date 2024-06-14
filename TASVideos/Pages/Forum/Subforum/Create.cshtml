@@ -11,12 +11,12 @@
 			<fieldset>
 				<label asp-for="Forum.Name"></label>
 				<input type="text" asp-for="Forum.Name" class="form-control"/>
-				<span asp-validation-for="Forum.Name" class="text-danger"></span>
+				<span asp-validation-for="Forum.Name"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Forum.Category"></label>
 				<select asp-for="Forum.Category" asp-items="Model.AvailableCategories" class="form-select"></select>
-				<span asp-validation-for="Forum.Category" class="text-danger"></span>
+				<span asp-validation-for="Forum.Category"></span>
 			</fieldset>
 		</column>
 		<column lg="6" class="mt-lg-0 mt-2">
@@ -26,7 +26,7 @@
 					(Used for IRC notifications and other external posts)
 				</small>
 				<input type="text" asp-for="Forum.ShortName" class="form-control"/>
-				<span asp-validation-for="Forum.ShortName" class="text-danger"></span>
+				<span asp-validation-for="Forum.ShortName"></span>
 			</fieldset>
 			<fieldset>
 				<input type="checkbox" class="forum-check-input" asp-for="Forum.RestrictedAccess" />
@@ -39,7 +39,7 @@
 	<fullrow class="mt-2">
 		<label asp-for="Forum.Description"></label>
 		<textarea asp-for="Forum.Description" class="form-control" rows="4"></textarea>
-		<span asp-validation-for="Forum.Description" class="text-danger"></span>
+		<span asp-validation-for="Forum.Description"></span>
 	</fullrow>
 	<form-button-bar>
 		<submit-button><i class="fa fa-plus"></i> Create</submit-button>

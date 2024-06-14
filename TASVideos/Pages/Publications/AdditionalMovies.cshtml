@@ -37,13 +37,13 @@
 			<fieldset>
 				<label asp-for="DisplayName"></label>
 				<input type="text" asp-for="DisplayName" maxlength="50" class="form-control" />
-				<span asp-validation-for="DisplayName" class="text-danger"></span>
+				<span asp-validation-for="DisplayName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="AdditionalMovieFile">Add an additional movie file</label>
 				<input asp-for="AdditionalMovieFile" class="form-control"/>
 				<div>Your movie packed in a ZIP file (max size: 150k)</div>
-				<span asp-validation-for="AdditionalMovieFile" class="text-danger"></span>
+				<span asp-validation-for="AdditionalMovieFile"></span>
 			</fieldset>
 			<form-button-bar>
 				<submit-button><span class="fa fa-plus"></span> Add</submit-button>

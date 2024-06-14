@@ -10,12 +10,12 @@
 			<fieldset>
 				<label asp-for="Catalog.System"></label>
 				<select asp-for="Catalog.System" asp-items="@Model.AvailableSystems" data-id="system" data-return-url="@HttpContext.CurrentPathToReturnUrl()" class="form-select"></select>
-				<span asp-validation-for="Catalog.System" class="text-danger"></span>
+				<span asp-validation-for="Catalog.System"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Catalog.SystemFramerate"></label>
 				<select asp-for="Catalog.SystemFramerate" asp-items="@Model.AvailableSystemFrameRates" data-id="system-framerate" class="form-select"></select>
-				<span asp-validation-for="Catalog.SystemFramerate" class="text-danger"></span>
+				<span asp-validation-for="Catalog.SystemFramerate"></span>
 			</fieldset>
 		</div>
 		<div class="col-lg-6">
@@ -26,7 +26,7 @@
 				<row>
 					<div class="col-10">
 						<select asp-for="Catalog.Game" asp-items="@Model.AvailableGames" data-id="game" class="form-select"></select>
-						<span asp-validation-for="Catalog.Game" class="text-danger"></span>
+						<span asp-validation-for="Catalog.Game"></span>
 					</div>
 					<div class="col-2">
 						<button id="create-game" type="button" class="btn btn-primary">New</button>
@@ -40,7 +40,7 @@
 				<row>
 					<div class="col-10">
 						<select asp-for="Catalog.GameVersion" asp-items="@Model.AvailableVersions" data-id="version" class="form-select"></select>
-						<span asp-validation-for="Catalog.GameVersion" class="text-danger"></span>
+						<span asp-validation-for="Catalog.GameVersion"></span>
 					</div>
 					<div class="col-2">
 						<button id="create-version" type="button" class="btn btn-primary">New</button>
@@ -54,7 +54,7 @@
 				<row>
 					<div class="col-10">
 						<select asp-for="Catalog.Goal" asp-items="@Model.AvailableGoals" data-id="goal" class="form-select"></select>
-						<span asp-validation-for="Catalog.Goal" class="text-danger"></span>
+						<span asp-validation-for="Catalog.Goal"></span>
 					</div>
 					<div class="col-2">
 						<button id="create-goal" type="button" class="btn btn-primary">Manage</button>

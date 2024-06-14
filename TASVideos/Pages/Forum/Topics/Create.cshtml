@@ -26,19 +26,19 @@
 		<column md="6">
 			<label asp-for="Title"></label>
 			<input type="text" asp-for="Title" class="form-control" autocomplete="off" />
-			<span asp-validation-for="Title" class="text-danger"></span>
+			<span asp-validation-for="Title"></span>
 		</column>
 		<column permission="SetTopicType" md="6">
 			<label asp-for="Type"></label>
 			<select asp-for="Type" asp-items="Model.TopicTypes" class="form-select"></select>
-			<span asp-validation-for="Type" class="text-danger"></span>
+			<span asp-validation-for="Type"></span>
 		</column>
 	</row>
 	<row>
 		<column md="4">
 			<label asp-for="Mood"></label>
 			<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown" class="form-select"></select>
-			<span asp-validation-for="Mood" class="text-danger"></span>
+			<span asp-validation-for="Mood"></span>
 		</column>
 		<column md="2">
 			<mood-preview current-mood="@Model.Mood" avatar="@Model.UserAvatars"></mood-preview>
@@ -47,7 +47,7 @@
 	<post-helper class="mt-2"></post-helper>
 	<fieldset>
 		<textarea asp-for="Post" class="form-control" data-id="forum-edit" rows="20" backup-content="true" data-backup-key="backup-topic-@Model.ForumId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
-		<span asp-validation-for="Post" class="text-danger"></span>
+		<span asp-validation-for="Post"></span>
 	</fieldset>
 	<fullrow id="backup-restore" class="d-none">
 		<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>

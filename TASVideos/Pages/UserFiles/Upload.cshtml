@@ -17,18 +17,18 @@
 				<label asp-for="UserFile"></label>
 				<input asp-for="UserFile" class="form-control" data-id="user-form-file" data-supported-extensions="@string.Join(",", Model.SupportedFileExtensions)" />
 				<small>Valid file types: @string.Join(", ", Model.SupportedFileExtensions)</small><br />
-				<span id="FileInputWarning" asp-validation-for="UserFile" class="text-danger"></span>
+				<span id="FileInputWarning" asp-validation-for="UserFile"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Title"></label>
 				<input asp-for="Title" type="text" class="form-control" />
-				<span asp-validation-for="Title" class="text-danger"></span>
+				<span asp-validation-for="Title"></span>
 			</fieldset>
 			<fieldset>
 				<wiki-edit-helper></wiki-edit-helper>
 				<label asp-for="Description"></label>
 				<textarea asp-for="Description" rows="6" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
-				<span asp-validation-for="Description" class="text-danger"></span>
+				<span asp-validation-for="Description"></span>
 			</fieldset>
 			<fieldset>
 				<div class="form-check">
@@ -40,12 +40,12 @@
 			<fieldset>
 				<label asp-for="System"></label>
 				<select asp-for="System" data-id="system" asp-items="@Model.AvailableSystems" class="form-select"></select>
-				<span asp-validation-for="System" class="text-danger"></span>
+				<span asp-validation-for="System"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Game"></label>
 				<select asp-for="Game" data-id="game" asp-items="@Model.AvailableGames" class="form-select"></select>
-				<span asp-validation-for="Game" class="text-danger"></span>
+				<span asp-validation-for="Game"></span>
 			</fieldset>
 		</column>
 	</row>

@@ -13,7 +13,7 @@
 			<fieldset>
 				<label asp-for="SearchTerms"></label>
 				<input type="text" asp-for="SearchTerms" class="form-control" />
-				<span condition="PageContext.HttpContext.Request.QueryString.HasValue" asp-validation-for="SearchTerms" class="text-danger"></span>
+				<span condition="PageContext.HttpContext.Request.QueryString.HasValue" asp-validation-for="SearchTerms"></span>
 			</fieldset>
 			<fieldset>
 				<div>

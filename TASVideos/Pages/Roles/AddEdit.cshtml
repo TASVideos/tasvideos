@@ -16,7 +16,7 @@
 			<fieldset>
 				<label asp-for="Role.Name"></label>
 				<input asp-for="Role.Name" class="form-control" maxlength="50" />
-				<span asp-validation-for="Role.Name" class="text-danger"></span>
+				<span asp-validation-for="Role.Name"></span>
 			</fieldset>
 			<fieldset>
 				<div class="form-check">
@@ -32,14 +32,14 @@
 			<fieldset>
 				<label asp-for="Role.Description"></label>
 				<textarea asp-for="Role.Description" class="form-control" rows="4" maxlength="200"></textarea>
-				<span asp-validation-for="Role.Description" class="text-danger"></span>
+				<span asp-validation-for="Role.Description"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Role.AutoAssignPostCount">Auto-assign on Post Count</label>
 				<div>
 					<small>(If set, the user will automatically be assigned this role when they reach this post count.)</small>
 				</div>
-				<span asp-validation-for="Role.AutoAssignPostCount" class="text-danger"></span>
+				<span asp-validation-for="Role.AutoAssignPostCount"></span>
 				<input type="number" class="form-control" asp-for="Role.AutoAssignPostCount" min="1" />
 			</fieldset>
 			<fieldset>
@@ -62,7 +62,7 @@
 	<fieldset>
 		<label asp-for="Role.SelectedPermissions"></label>
 		<select asp-for="Role.SelectedPermissions" multiselect="true" asp-items="Model.AvailablePermissions" class="form-select"></select>
-		<span asp-validation-for="Role.SelectedPermissions" class="text-danger"></span>
+		<span asp-validation-for="Role.SelectedPermissions"></span>
 	</fieldset>
 	<fieldset class="d-none" id="assignable-permissions-section">
 		<label asp-for="Role.SelectedAssignablePermissions"></label>

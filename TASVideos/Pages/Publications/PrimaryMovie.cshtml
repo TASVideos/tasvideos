@@ -13,13 +13,13 @@
 				<label asp-for="Reason"></label>
 				<div>Note: The reason will be used for announcements but not stored in the database</div>
 				<input asp-for="Reason" class="form-control" />
-				<span asp-validation-for="Reason" class="text-danger"></span>
+				<span asp-validation-for="Reason"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="PrimaryMovieFile"></label>
 				<div>Your movie packed in a ZIP file (max size: 150k)</div>
 				<input asp-for="PrimaryMovieFile" class="form-control" />
-				<span asp-validation-for="PrimaryMovieFile" class="text-danger"></span>
+				<span asp-validation-for="PrimaryMovieFile"></span>
 			</fieldset>
 		</column>
 	</row>

@@ -29,22 +29,22 @@
 			<fieldset>
 				<label asp-for="Version.System"></label>
 				<select asp-for="Version.System" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)" class="form-select"></select>
-				<span asp-validation-for="Version.System" class="text-danger"></span>
+				<span asp-validation-for="Version.System"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.Name"></label>
 				<input type="text" asp-for="Version.Name" class="form-control" autocomplete="off" />
-				<span asp-validation-for="Version.Name" class="text-danger"></span>
+				<span asp-validation-for="Version.Name"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.Sha1"></label>
 				<input type="text" asp-for="Version.Sha1" data-id="sha1" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Version.Sha1" class="text-danger"></span>
+				<span asp-validation-for="Version.Sha1"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.Md5"></label>
 				<input type="text" asp-for="Version.Md5" data-id="md5" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Version.Md5" class="text-danger"></span>
+				<span asp-validation-for="Version.Md5"></span>
 			</fieldset>
 			<fieldset>
 				<div id="hash-drop-area" role="button" class="border border-silver rounded p-2 text-body-tertiary">
@@ -68,22 +68,22 @@
 			<fieldset>
 				<label asp-for="Version.Type"></label>
 				<select asp-for="Version.Type" asp-items="@Model.AvailableVersionTypes.OrderBy(s => s.Value)" class="form-select"></select>
-				<span asp-validation-for="Version.Type" class="text-danger"></span>
+				<span asp-validation-for="Version.Type"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.TitleOverride"></label>
 				<input type="text" asp-for="Version.TitleOverride" class="form-control" />
-				<span asp-validation-for="Version.TitleOverride" class="text-danger"></span>
+				<span asp-validation-for="Version.TitleOverride"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.Version"></label>
 				<input type="text" asp-for="Version.Version" class="form-control" autocomplete="off" spellcheck="false" />
-				<span asp-validation-for="Version.Version" class="text-danger"></span>
+				<span asp-validation-for="Version.Version"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Version.Region"></label>
 				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes" class="form-select"></select>
-				<span asp-validation-for="Version.Region" class="text-danger"></span>
+				<span asp-validation-for="Version.Region"></span>
 			</fieldset>
 		</div>
 	</row>

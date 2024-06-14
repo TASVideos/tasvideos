@@ -22,14 +22,14 @@
 			<fieldset>
 				<label asp-for="Subject"></label>
 				<input type="text" asp-for="Subject" class="form-control" autocomplete="off"/>
-				<span asp-validation-for="Subject" class="text-danger"></span>
+				<span asp-validation-for="Subject"></span>
 			</fieldset>
 		</column>
 		<column md="4" permission="UseMoodAvatars" condition="@Model.UserAvatars.HasMoods">
 			<fieldset>
 				<label asp-for="Mood"></label>
 				<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown" class="form-select"></select>
-				<span asp-validation-for="Mood" class="text-danger"></span>
+				<span asp-validation-for="Mood"></span>
 			</fieldset>
 		</column>
 		<column md="2">
@@ -42,7 +42,7 @@
 	<post-helper class="mt-2"></post-helper>
 	<fieldset>
 		<textarea asp-for="Text" class="form-control" rows="20" data-id="forum-edit" backup-content="true" data-backup-key="backup-post-@Model.TopicId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
-		<span asp-validation-for="Text" class="text-danger"></span>
+		<span asp-validation-for="Text"></span>
 	</fieldset>
 	<fullrow id="backup-restore" class="d-none">
 		<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>

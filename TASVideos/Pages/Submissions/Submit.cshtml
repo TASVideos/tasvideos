@@ -23,20 +23,20 @@
 				<label asp-for="MovieFile"></label>
 				<input asp-for="MovieFile" class="form-control" />
 				<div>Your movie packed in a ZIP file (max size: 500k)</div>
-				<span asp-validation-for="MovieFile" class="text-danger"></span>
+				<span asp-validation-for="MovieFile"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Authors">Author(s)</label>
 				<string-list asp-for="Authors" />
-				<span asp-validation-for="Authors" class="text-danger"></span>
+				<span asp-validation-for="Authors"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="ExternalAuthors"></label>
 				<input asp-for="ExternalAuthors" class="form-control" />
 				<div>Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.</div>
-				<span asp-validation-for="ExternalAuthors" class="text-danger"></span>
+				<span asp-validation-for="ExternalAuthors"></span>
 			</fieldset>
 		</column>
 	</row>
@@ -45,34 +45,34 @@
 			<fieldset>
 				<label asp-for="GameVersion"></label>
 				<input asp-for="GameVersion" class="form-control" placeholder="Example: USA" />
-				<span asp-validation-for="GameVersion" class="text-danger"></span>
+				<span asp-validation-for="GameVersion"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="GameName"></label>
 				<input asp-for="GameName" class="form-control" placeholder="Example: Mega Man 2" />
-				<span asp-validation-for="GameName" class="text-danger"></span>
+				<span asp-validation-for="GameName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Emulator">Emulator and version</label>
 				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="Example: BizHawk 2.8.0" />
-				<span asp-validation-for="Emulator" class="text-danger"></span>
+				<span asp-validation-for="Emulator"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
 				<label asp-for="GoalName"></label>
 				<input asp-for="GoalName" class="form-control" placeholder="Example: 100% or princess only; any% can usually be omitted" />
-				<span asp-validation-for="GoalName" class="text-danger"></span>
+				<span asp-validation-for="GoalName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="RomName">ROM filename</label>
 				<input asp-for="RomName" class="form-control" placeholder="Example: Mega Man II (U) [!].nes" />
-				<span asp-validation-for="RomName" class="text-danger"></span>
+				<span asp-validation-for="RomName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="EncodeEmbeddedLink"></label>
 				<input asp-for="EncodeEmbeddedLink" class="form-control" placeholder="Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU" />
-				<span asp-validation-for="EncodeEmbeddedLink" class="text-danger"></span>
+				<span asp-validation-for="EncodeEmbeddedLink"></span>
 			</fieldset>
 		</column>
 	</row>
@@ -84,7 +84,7 @@
 			</span>
 			<wiki-edit-helper></wiki-edit-helper>
 			<textarea asp-for="Markup" rows="12" class="form-control" data-id="wiki-edit" backup-content="true" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
-			<span asp-validation-for="Markup" class="text-danger"></span>
+			<span asp-validation-for="Markup"></span>
 			<fullrow id="backup-restore" class="d-none mt-2">
 				<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>
 				<label class="text-body-tertiary">from <span id="backup-time"></span></label>
@@ -100,7 +100,7 @@
 				<input asp-for="AgreeToInstructions" class="form-check-input" />
 				<label asp-for="AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
 				<br />
-				<span asp-validation-for="AgreeToInstructions" class="text-danger"></span>
+				<span asp-validation-for="AgreeToInstructions"></span>
 			</div>
 		</div>
 	</row>
@@ -110,7 +110,7 @@
 				<input asp-for="AgreeToLicense" class="form-check-input" />
 				<label asp-for="AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
 				<br />
-				<span asp-validation-for="AgreeToLicense" class="text-danger"></span>
+				<span asp-validation-for="AgreeToLicense"></span>
 			</div>
 		</div>
 	</row>

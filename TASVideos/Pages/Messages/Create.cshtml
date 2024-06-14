@@ -22,17 +22,16 @@
 		<fieldset class="col-lg-6">
 			<label asp-for="Subject"></label>
 			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
-			<span asp-validation-for="Subject" class="text-danger"></span>
+			<span asp-validation-for="Subject"></span>
 		</fieldset>
 		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser"></label>
 				<input asp-for="ToUser" user-search="true" class="form-control" data-id="to-user" placeholder="Enter a UserName"/>
-				<span asp-validation-for="ToUser" class="text-danger"></span>
+				<span asp-validation-for="ToUser"></span>
 			</div>
 			<label for="group-select">To Group</label>
-			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" class="form-control" asp-items="@Model.AvailableGroupRoles">
-			</select>
+			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" class="form-control" asp-items="@Model.AvailableGroupRoles"></select>
 		</fieldset>
 	</row>
 	<post-helper></post-helper>
@@ -40,7 +39,7 @@
 		<fieldset class="col-12">
 			<label asp-for="MessageBody"></label>
 			<textarea asp-for="MessageBody" data-id="forum-edit" class="form-control" rows="20"></textarea>
-			<span asp-validation-for="MessageBody" class="text-danger"></span>
+			<span asp-validation-for="MessageBody"></span>
 		</fieldset>
 	</row>
 	<form-button-bar>

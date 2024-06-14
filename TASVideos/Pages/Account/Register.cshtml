@@ -11,41 +11,41 @@
 			<fieldset>
 				<label asp-for="UserName"></label>
 				<input asp-for="UserName" class="form-control" autocomplete="username" />
-				<span asp-validation-for="UserName" class="text-danger"></span>
+				<span asp-validation-for="UserName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Email"></label>
 				<input asp-for="Email" class="form-control" autocomplete="off" />
-				<span asp-validation-for="Email" class="text-danger"></span>
+				<span asp-validation-for="Email"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Password"></label>
 				<input asp-for="Password" class="form-control" autocomplete="new-password" maxlength="524288" />
-				<span asp-validation-for="Password" class="text-danger"></span>
+				<span asp-validation-for="Password"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="ConfirmPassword"></label>
 				<input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" maxlength="524288" />
-				<span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+				<span asp-validation-for="ConfirmPassword"></span>
 			</fieldset>
 		</column>
 		<column md="6">
 			<fieldset>
 				<label asp-for="TimeZone"></label>
 				<timezone-picker asp-for="TimeZone" class="form-control" />
-				<span asp-validation-for="TimeZone" class="text-danger"></span>
+				<span asp-validation-for="TimeZone"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Location"></label>
 				<input asp-for="Location" type="text" class="form-control" />
-				<span asp-validation-for="Location" class="text-danger"></span>
+				<span asp-validation-for="Location"></span>
 			</fieldset>
 			<fieldset class="mt-3">
 				<div class="form-check">
 					<label asp-for="Coppa" class="form-check-label">By checking the box below, you certify you are 13 years of age or older</label>
 					<input asp-for="Coppa" type="checkbox" class="form-check-input"/>
 				</div>
-				<span asp-validation-for="Coppa" class="text-danger"></span>
+				<span asp-validation-for="Coppa"></span>
 			</fieldset>
 			<fieldset>
 				Also make sure you've read the <a href="/SiteRules">Site Rules</a>.<br/>

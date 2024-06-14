@@ -11,12 +11,12 @@
 			<fieldset>
 				<label asp-for="SystemId">System</label>
 				<select asp-for="SystemId" asp-items="@Model.AvailableSystems" data-id="system" data-return-url="@HttpContext.CurrentPathToReturnUrl()" class="form-select"></select>
-				<span asp-validation-for="SystemId" class="text-danger"></span>
+				<span asp-validation-for="SystemId"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="GameId">Game</label>
 				<select asp-for="GameId" asp-items="@Model.AvailableGames" data-id="game" class="form-select"></select>
-				<span asp-validation-for="GameId" class="text-danger"></span>
+				<span asp-validation-for="GameId"></span>
 			</fieldset>
 		</column>
 	</row>

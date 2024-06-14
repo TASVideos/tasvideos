@@ -15,13 +15,13 @@
 			<fieldset>
 				<label asp-for="UserFile.Title"></label>
 				<input asp-for="UserFile.Title" type="text" class="form-control" />
-				<span asp-validation-for="UserFile.Title" class="text-danger"></span>
+				<span asp-validation-for="UserFile.Title"></span>
 			</fieldset>
 			<fieldset>
 				<wiki-edit-helper></wiki-edit-helper>
 				<label asp-for="UserFile.Description"></label>
 				<textarea asp-for="UserFile.Description" rows="6" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
-				<span asp-validation-for="UserFile.Description" class="text-danger"></span>
+				<span asp-validation-for="UserFile.Description"></span>
 				@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 			</fieldset>
 			<fieldset>
@@ -33,12 +33,12 @@
 			<fieldset>
 				<label asp-for="UserFile.System"></label>
 				<select asp-for="UserFile.System" data-id="system" asp-items="@Model.AvailableSystems" class="form-select"></select>
-				<span asp-validation-for="UserFile.System" class="text-danger"></span>
+				<span asp-validation-for="UserFile.System"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserFile.Game"></label>
 				<select asp-for="UserFile.Game" data-id="game" asp-items="@Model.AvailableGames" class="form-select"></select>
-				<span asp-validation-for="UserFile.Game" class="text-danger"></span>
+				<span asp-validation-for="UserFile.Game"></span>
 			</fieldset>
 		</column>
 	</row>

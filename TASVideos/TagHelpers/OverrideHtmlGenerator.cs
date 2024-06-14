@@ -37,4 +37,11 @@ public class OverrideHtmlGenerator(
 
 		return base.GenerateLabel(viewContext, modelExplorer, expression, generatedLabelText, htmlAttributes);
 	}
+
+	public override TagBuilder GenerateValidationMessage(ViewContext viewContext, ModelExplorer modelExplorer, string expression, string message, string tag, object htmlAttributes)
+	{
+		var builder = base.GenerateValidationMessage(viewContext, modelExplorer, expression, message, tag, htmlAttributes);
+		builder.AddCssClass("text-danger");
+		return builder;
+	}
 }

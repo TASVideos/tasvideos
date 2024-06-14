@@ -24,17 +24,17 @@
 			<fieldset>
 				<label asp-for="Type"></label>
 				<select asp-for="Type" asp-items="Model.AvailableTypes" class="form-select"></select>
-				<span asp-validation-for="Type" class="text-danger"></span>
+				<span asp-validation-for="Type"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="CurrentUrl">URL</label>
 				<input type="text" asp-for="CurrentUrl" class="form-control" />
-				<span asp-validation-for="CurrentUrl" class="text-danger"></span>
+				<span asp-validation-for="CurrentUrl"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="AltTitle"></label>
 				<input type="text" asp-for="AltTitle" class="form-control" />
-				<span asp-validation-for="AltTitle" class="text-danger"></span>
+				<span asp-validation-for="AltTitle"></span>
 			</fieldset>
 			<form-button-bar>
 				<submit-button><span class="@iconClass"></span> @saveBtnName</submit-button>

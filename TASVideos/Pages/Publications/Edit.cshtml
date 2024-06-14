@@ -61,26 +61,26 @@
 			<fieldset>
 				<label asp-for="Publication.EmulatorVersion"></label>
 				<input type="text" class="form-control" asp-for="Publication.EmulatorVersion" />
-				<span asp-validation-for="Publication.EmulatorVersion" class="text-danger"></span>
+				<span asp-validation-for="Publication.EmulatorVersion"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Publication.ObsoletedBy"></label>
 				<input asp-for="Publication.ObsoletedBy" data-id="obsoleted-by" class="form-control" />
 				<span id="obsoleted-by">@Model.Publication.ObsoletedByTitle</span>
-				<span asp-validation-for="Publication.ObsoletedBy" class="text-danger"></span>
+				<span asp-validation-for="Publication.ObsoletedBy"></span>
 			</fieldset>
 		</div>
 		<div class="col-lg-6">
 			<fieldset>
 				<label asp-for="Publication.Authors">Author(s)</label>
 				<string-list asp-for="Publication.Authors" />
-				<span asp-validation-for="Publication.Authors" class="text-danger"></span>
+				<span asp-validation-for="Publication.Authors"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Publication.ExternalAuthors"></label>
 				<input type="text" asp-for="Publication.ExternalAuthors" class="form-control" />
 				<div>Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.</div>
-				<span asp-validation-for="Publication.ExternalAuthors" class="text-danger"></span>
+				<span asp-validation-for="Publication.ExternalAuthors"></span>
 			</fieldset>
 		</div>
 	</row>
@@ -98,7 +98,7 @@
 		<fieldset>
 			<label asp-for="Publication.Markup"></label>
 			<textarea asp-for="Publication.Markup" rows="6" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
-			<span asp-validation-for="Publication.Markup" class="text-danger"></span>
+			<span asp-validation-for="Publication.Markup"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 		</fieldset>
 	</fullrow>
@@ -113,7 +113,7 @@
 						<label asp-for="Publication.MinorEdit" class="form-check-label"></label>
 					</div>
 				</div>
-				<span asp-validation-for="Publication.RevisionMessage" class="text-danger"></span>
+				<span asp-validation-for="Publication.RevisionMessage"></span>
 			</fieldset>
 		</div>
 	</row>

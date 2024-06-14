@@ -73,12 +73,12 @@
 			<fieldset>
 				<label asp-for="PreferredPronouns"></label>
 				<select asp-for="PreferredPronouns" asp-items="@SettingsModel.AvailablePronouns" class="form-select"></select>
-				<span asp-validation-for="PreferredPronouns" class="text-danger"></span>
+				<span asp-validation-for="PreferredPronouns"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Location"></label>
 				<input asp-for="Location" class="form-control" />
-				<span asp-validation-for="Location" class="text-danger"></span>
+				<span asp-validation-for="Location"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="TimeZone"></label>
@@ -92,19 +92,19 @@
 				<label asp-for="DateFormat"></label>
 				<label condition="@Model.DateFormat == UserDateFormat.Auto" asp-for="DateFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortDateString())</label>
 				<select asp-for="DateFormat" asp-items="@SettingsModel.AvailableDateFormats" class="form-select"></select>
-				<span asp-validation-for="DateFormat" class="text-danger"></span>
+				<span asp-validation-for="DateFormat"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="TimeFormat"></label>
 				<label condition="@Model.TimeFormat == UserTimeFormat.Auto" asp-for="TimeFormat" class="text-body-tertiary">(Currently: @exampleDate.ToShortTimeString())</label>
 				<select asp-for="TimeFormat" asp-items="@SettingsModel.AvailableTimeFormats" class="form-select"></select>
-				<span asp-validation-for="TimeFormat" class="text-danger"></span>
+				<span asp-validation-for="TimeFormat"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="DecimalFormat"></label>
 				<label condition="@Model.DecimalFormat == UserDecimalFormat.Auto"  asp-for="DecimalFormat" class="text-body-tertiary">(Currently: @exampleNumber)</label>
 				<select asp-for="DecimalFormat" asp-items="@SettingsModel.AvailableDecimalFormats" class="form-select"></select>
-				<span asp-validation-for="DecimalFormat" class="text-danger"></span>
+				<span asp-validation-for="DecimalFormat"></span>
 			</fieldset>
 		</column>
 	</row>
@@ -127,7 +127,7 @@
 	<fullrow class="mt-3">
 		<label asp-for="AvatarUrl"></label>
 		<input type="text" asp-for="AvatarUrl" data-avatar-box class="form-control" />
-		<span asp-validation-for="AvatarUrl" class="text-danger"></span>
+		<span asp-validation-for="AvatarUrl"></span>
 		<span id="avatar-too-big" class="text-danger d-none">Image invalid, please check requirements</span>
 	</fullrow>
 	<fullrow class="mt-2">
@@ -141,7 +141,7 @@
 	<fullrow permission="UseMoodAvatars">
 		<label asp-for="MoodAvatar">Mood-variant avatar URL</label>
 		<input type="text" asp-for="MoodAvatar" class="form-control" />
-		<span asp-validation-for="MoodAvatar" class="text-danger"></span>
+		<span asp-validation-for="MoodAvatar"></span>
 		<a asp-page="/Forum/MoodReport" asp-route-username="@Model.Username">Check Mood Avatars</a>
 	</fullrow>
 	<fullrow permission="UseMoodAvatars" class="mt-3">

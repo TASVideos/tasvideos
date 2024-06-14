@@ -54,7 +54,7 @@
 				<row>
 					<div class="col-10">
 						<select asp-for="Catalog.Goal" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableGoals)" data-id="goal" class="form-select"></select>
-						<span asp-validation-for="Catalog.Goal" class="text-danger"></span>
+						<span asp-validation-for="Catalog.Goal"></span>
 					</div>
 					<div class="col-2">
 						<button id="create-goal" type="button" class="btn btn-primary">Manage</button>

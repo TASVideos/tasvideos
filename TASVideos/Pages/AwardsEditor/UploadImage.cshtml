@@ -10,7 +10,7 @@
 			<fieldset>
 				<label asp-for="Award"></label>
 				<select asp-for="Award" data-id="award-dropdown" data-year="@Model.Year" asp-items="Model.AvailableAwardCategories" class="form-select"></select>
-				<span asp-validation-for="Award" class="text-danger"></span>
+				<span asp-validation-for="Award"></span>
 			</fieldset>
 		</column>
 		<column md="6">
@@ -23,19 +23,19 @@
 				<div><small>Note: filename will be auto-generated with the pattern {shortname}_@(Model.Year).png</small></div>
 				<label asp-for="BaseImage"></label>
 				<input asp-for="BaseImage" class="form-control"/>
-				<span asp-validation-for="BaseImage" class="text-danger"></span>
+				<span asp-validation-for="BaseImage"></span>
 			</fieldset>
 			<fieldset>
 				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
 				<label asp-for="BaseImage2X"></label>
 				<input asp-for="BaseImage2X" class="form-control"/>
-				<span asp-validation-for="BaseImage2X" class="text-danger"></span>
+				<span asp-validation-for="BaseImage2X"></span>
 			</fieldset>
 			<fieldset>
 				<div><small>Unfortunately, we need the higher res images manually uploaded too, for now</small></div>
 				<label asp-for="BaseImage4X"></label>
 				<input asp-for="BaseImage4X" class="form-control"/>
-				<span asp-validation-for="BaseImage4X" class="text-danger"></span>
+				<span asp-validation-for="BaseImage4X"></span>
 			</fieldset>
 		</column>
 	</row>
