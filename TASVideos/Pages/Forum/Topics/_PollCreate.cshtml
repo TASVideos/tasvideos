@@ -6,7 +6,7 @@
 	<column lg="6">
 		<fieldset>
 			<label asp-for="Question"></label>
-			<input readonly="@Model.HasVotes" asp-for="Question" placeholder="@Model.Question" class="form-control" />
+			<input readonly="@Model.HasVotes" asp-for="Question" placeholder="@Model.Question" />
 			<span asp-validation-for="Question"></span>
 		</fieldset>
 		<fieldset>
