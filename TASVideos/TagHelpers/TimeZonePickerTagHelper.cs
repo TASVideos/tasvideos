@@ -26,6 +26,7 @@ public class TimeZonePickerTagHelper : TagHelper
 		output.TagName = "select";
 		output.Attributes.Add("id", modelName);
 		output.Attributes.Add("name", modelName);
+		output.AddCssClass("form-select");
 
 		var now = DateTime.UtcNow;
 

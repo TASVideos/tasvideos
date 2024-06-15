@@ -60,12 +60,12 @@
 		<div class="col-lg-6">
 			<fieldset>
 				<label asp-for="Publication.EmulatorVersion"></label>
-				<input type="text" class="form-control" asp-for="Publication.EmulatorVersion" />
+				<input asp-for="Publication.EmulatorVersion" />
 				<span asp-validation-for="Publication.EmulatorVersion"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Publication.ObsoletedBy"></label>
-				<input asp-for="Publication.ObsoletedBy" data-id="obsoleted-by" class="form-control" />
+				<input asp-for="Publication.ObsoletedBy" data-id="obsoleted-by" />
 				<span id="obsoleted-by">@Model.Publication.ObsoletedByTitle</span>
 				<span asp-validation-for="Publication.ObsoletedBy"></span>
 			</fieldset>
@@ -78,7 +78,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Publication.ExternalAuthors"></label>
-				<input type="text" asp-for="Publication.ExternalAuthors" class="form-control" />
+				<input asp-for="Publication.ExternalAuthors" />
 				<div>Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.</div>
 				<span asp-validation-for="Publication.ExternalAuthors"></span>
 			</fieldset>
@@ -107,7 +107,7 @@
 			<fieldset>
 				<label asp-for="Publication.RevisionMessage"></label>
 				<div class="input-group">
-					<input asp-for="Publication.RevisionMessage" class="form-control" />
+					<input asp-for="Publication.RevisionMessage" />
 					<div class="input-group-text">
 						<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="Publication.MinorEdit" />
 						<label asp-for="Publication.MinorEdit" class="form-check-label"></label>

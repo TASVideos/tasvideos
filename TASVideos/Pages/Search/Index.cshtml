@@ -12,7 +12,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="SearchTerms"></label>
-				<input type="text" asp-for="SearchTerms" class="form-control" />
+				<input asp-for="SearchTerms" />
 				<span condition="PageContext.HttpContext.Request.QueryString.HasValue" asp-validation-for="SearchTerms"></span>
 			</fieldset>
 			<submit-button>Search</submit-button>

@@ -9,14 +9,14 @@
 	<input type="hidden" asp-for="OriginalMarkup" data-diff="left" />
 	<wiki-edit-helper class="mt-2"></wiki-edit-helper>
 	<fieldset>
-		<textarea asp-for="Markup" class="form-control" data-id="wiki-edit" rows="20" data-id="wiki-markup" data-diff="right" placeholder="Enter your __markup__ here..."></textarea>
+		<textarea asp-for="Markup" class="form-control" data-id="wiki-edit" rows="20" data-diff="right" placeholder="Enter your __markup__ here..."></textarea>
 		<span asp-validation-for="Markup"></span>
 		@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 	</fieldset>
 	<fieldset class="col-12">
 		<label asp-for="EditComments"></label>
 		<div class="input-group">
-			<input type="text" asp-for="EditComments" class="form-control" autocomplete="off" />
+			<input asp-for="EditComments" autocomplete="off" />
 			<div class="input-group-text">
 				<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="MinorEdit" />
 				<label asp-for="MinorEdit" class="form-check-label"></label>

@@ -14,7 +14,7 @@
 					<label for="unrated">Unrated</label> )
 				</span>
 				<br />
-				<input asp-for="Rating" type="number" class="form-control fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating" step="0.1" />
+				<input asp-for="Rating" class="fs-4 d-inline-block" style="width:4em;" min="0" max="10" value="@Model.Rating" step="0.1" />
 				<input id="entertainmentSlider" type="range" class="form-range mw-100 h-auto" style="width:15rem;" min="0" max="10" value="@Model.Rating" step="0.1" />
 			</fieldset>
 		</column>

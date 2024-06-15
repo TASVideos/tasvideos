@@ -57,7 +57,7 @@
 					<row>
 						<div id="user-name-div" class="col-sm-12">
 							<div class="input-group">
-								<input asp-for="UserToEdit.UserName" data-id="username" class="form-control" autocomplete="off"/>
+								<input asp-for="UserToEdit.UserName" data-id="username" autocomplete="off"/>
 								<div class="input-group-text" aria-hidden="true">
 									<span id="user-name-status" class="fa fa-check-square text-success"></span>
 								</div>
@@ -80,14 +80,14 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserToEdit.Location"></label>
-				<input asp-for="UserToEdit.Location" type="text" class="form-control"/>
+				<input asp-for="UserToEdit.Location" />
 				<span asp-validation-for="UserToEdit.Location"></span>
 			</fieldset>
 		</column>
 		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.TimeZone"></label>
-				<timezone-picker asp-for="UserToEdit.TimeZone" class="form-control" />
+				<timezone-picker asp-for="UserToEdit.TimeZone" />
 			</fieldset>
 			<fieldset permission="SeeEmails">
 				<label asp-for="UserToEdit.Email"></label>
@@ -107,7 +107,7 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="UserToEdit.BannedUntil">Banned Until</label>
-				<input asp-for="UserToEdit.BannedUntil" class="form-control"/>
+				<input asp-for="UserToEdit.BannedUntil" />
 			</fieldset>
 		</column>
 	</row>
@@ -122,7 +122,7 @@
 	<row>
 		<column md="6">
 			<label asp-for="UserToEdit.Avatar"></label>
-			<input type="text" asp-for="UserToEdit.Avatar" class="form-control" />
+			<input asp-for="UserToEdit.Avatar" />
 		</column>
 		<column md="6" show="!string.IsNullOrWhiteSpace(Model.UserToEdit.Avatar)">
 			<label>Preview</label><br />
@@ -132,7 +132,7 @@
 	<row>
 		<column md="6">
 			<label asp-for="UserToEdit.MoodAvatar"></label>
-			<input type="text" asp-for="UserToEdit.MoodAvatar" class="form-control" />
+			<input asp-for="UserToEdit.MoodAvatar" />
 		</column>
 	</row>
 	<hr />
@@ -140,7 +140,7 @@
 		<label asp-for="UserToEdit.Signature"></label>
 		<textarea asp-for="UserToEdit.Signature" class="form-control" rows="5"></textarea>
 	</fullrow>
-	<form-button-bar class="text-center">
+	<form-button-bar>
 		<submit-button id="submit-btn"></submit-button>
 		<cancel-link asp-page="List"></cancel-link>
 	</form-button-bar>

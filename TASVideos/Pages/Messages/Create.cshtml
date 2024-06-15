@@ -21,17 +21,17 @@
 	<row>
 		<fieldset class="col-lg-6">
 			<label asp-for="Subject"></label>
-			<input type="text" asp-for="Subject" class="form-control" autocomplete="off" />
+			<input asp-for="Subject" autocomplete="off" />
 			<span asp-validation-for="Subject"></span>
 		</fieldset>
 		<fieldset class="col-lg-6">
 			<div id="user-form-group" class="mb-2">
 				<label asp-for="ToUser"></label>
-				<input asp-for="ToUser" user-search="true" class="form-control" data-id="to-user" placeholder="Enter a UserName"/>
+				<input asp-for="ToUser" user-search="true" data-id="to-user" placeholder="Enter a UserName"/>
 				<span asp-validation-for="ToUser"></span>
 			</div>
 			<label for="group-select">To Group</label>
-			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" class="form-control" asp-items="@Model.AvailableGroupRoles"></select>
+			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" class="form-select" asp-items="@Model.AvailableGroupRoles"></select>
 		</fieldset>
 	</row>
 	<post-helper></post-helper>

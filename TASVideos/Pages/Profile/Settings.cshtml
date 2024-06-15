@@ -15,7 +15,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Username"></label>
-				<input asp-for="Username" class="form-control" disabled />
+				<label class="form-control">@Model.Username</label>
 				<div class="text-warning">
 					@await Html.RenderWiki(SystemWiki.NameChanges)
 				</div>
@@ -26,7 +26,7 @@
 				<fieldset disabled>
 					<label asp-for="CurrentEmail"></label>
 					<div class="input-group">
-						<input asp-for="CurrentEmail" class="form-control" data-email-box />
+						<input asp-for="CurrentEmail" data-email-box />
 						<div class="input-group-text" aria-disabled="true"><span class="fa fa-check-square text-success"></span></div>
 					</div>
 				</fieldset>
@@ -35,7 +35,7 @@
 			{
 				<fieldset>
 					<div class="input-group">
-						<input asp-for="CurrentEmail" readonly  data-email-box class="form-control"/>
+						<input asp-for="CurrentEmail" readonly  data-email-box />
 						<div class="input-group-text" aria-disabled="true" title="Email not confirmed"><span class="fa fa-exclamation text-warning"></span></div>
 					</div>
 					<button asp-page="Settings" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
@@ -77,12 +77,12 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Location"></label>
-				<input asp-for="Location" class="form-control" />
+				<input asp-for="Location" />
 				<span asp-validation-for="Location"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="TimeZone"></label>
-				<timezone-picker asp-for="TimeZone" class="form-select" />
+				<timezone-picker asp-for="TimeZone" />
 			</fieldset>
 			@{
 				var exampleDate = new DateTime(2024, 2, 29, 17, 35, 0);
@@ -126,7 +126,7 @@
 	</div>
 	<fullrow class="mt-3">
 		<label asp-for="AvatarUrl"></label>
-		<input type="text" asp-for="AvatarUrl" data-avatar-box class="form-control" />
+		<input asp-for="AvatarUrl" data-avatar-box />
 		<span asp-validation-for="AvatarUrl"></span>
 		<span id="avatar-too-big" class="text-danger d-none">Image invalid, please check requirements</span>
 	</fullrow>
@@ -140,7 +140,7 @@
 	</fullrow>
 	<fullrow permission="UseMoodAvatars">
 		<label asp-for="MoodAvatar">Mood-variant avatar URL</label>
-		<input type="text" asp-for="MoodAvatar" class="form-control" />
+		<input asp-for="MoodAvatar" />
 		<span asp-validation-for="MoodAvatar"></span>
 		<a asp-page="/Forum/MoodReport" asp-route-username="@Model.Username">Check Mood Avatars</a>
 	</fullrow>

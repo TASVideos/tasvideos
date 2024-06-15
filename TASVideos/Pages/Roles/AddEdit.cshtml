@@ -15,7 +15,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Role.Name"></label>
-				<input asp-for="Role.Name" class="form-control" maxlength="50" />
+				<input asp-for="Role.Name" maxlength="50" />
 				<span asp-validation-for="Role.Name"></span>
 			</fieldset>
 			<fieldset>
@@ -40,7 +40,7 @@
 					<small>(If set, the user will automatically be assigned this role when they reach this post count.)</small>
 				</div>
 				<span asp-validation-for="Role.AutoAssignPostCount"></span>
-				<input type="number" class="form-control" asp-for="Role.AutoAssignPostCount" min="1" />
+				<input asp-for="Role.AutoAssignPostCount" min="1" />
 			</fieldset>
 			<fieldset>
 				<div class="form-check">

@@ -30,17 +30,17 @@ Important manual steps to take before this action
 		<column md="6">
 			<fieldset>
 				<label asp-for="OriginalUserName"></label>
-				<input readonly asp-for="OriginalUserName" class="form-control" />
+				<label class="form-control">@Model.OriginalUserName</label>
 			</fieldset>
 		</column>
 		<column md="6">
 			<fieldset>
 				<label asp-for="AnonymousUserName">New Username</label>
-				<input readonly asp-for="AnonymousUserName" class="form-control" />
+				<label class="form-control">@Model.AnonymousUserName</label>
 			</fieldset>
 			<fieldset>
 				<label asp-for="AnonymousEmail">New Email</label>
-				<input readonly asp-for="AnonymousEmail" class="form-control" />
+				<label class="form-control">@Model.AnonymousEmail</label>
 			</fieldset>
 		</column>
 	</row>

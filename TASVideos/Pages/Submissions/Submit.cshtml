@@ -21,7 +21,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="MovieFile"></label>
-				<input asp-for="MovieFile" class="form-control" />
+				<input asp-for="MovieFile" />
 				<div>Your movie packed in a ZIP file (max size: 500k)</div>
 				<span asp-validation-for="MovieFile"></span>
 			</fieldset>
@@ -34,7 +34,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="ExternalAuthors"></label>
-				<input asp-for="ExternalAuthors" class="form-control" />
+				<input asp-for="ExternalAuthors" />
 				<div>Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.</div>
 				<span asp-validation-for="ExternalAuthors"></span>
 			</fieldset>
@@ -44,34 +44,34 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="GameVersion"></label>
-				<input asp-for="GameVersion" class="form-control" placeholder="Example: USA" />
+				<input asp-for="GameVersion" placeholder="Example: USA" />
 				<span asp-validation-for="GameVersion"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="GameName"></label>
-				<input asp-for="GameName" class="form-control" placeholder="Example: Mega Man 2" />
+				<input asp-for="GameName" placeholder="Example: Mega Man 2" />
 				<span asp-validation-for="GameName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Emulator">Emulator and version</label>
-				<input asp-for="Emulator" spellcheck="false" class="form-control" placeholder="Example: BizHawk 2.8.0" />
+				<input asp-for="Emulator" spellcheck="false" placeholder="Example: BizHawk 2.8.0" />
 				<span asp-validation-for="Emulator"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
 				<label asp-for="GoalName"></label>
-				<input asp-for="GoalName" class="form-control" placeholder="Example: 100% or princess only; any% can usually be omitted" />
+				<input asp-for="GoalName" placeholder="Example: 100% or princess only; any% can usually be omitted" />
 				<span asp-validation-for="GoalName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="RomName">ROM filename</label>
-				<input asp-for="RomName" class="form-control" placeholder="Example: Mega Man II (U) [!].nes" />
+				<input asp-for="RomName" placeholder="Example: Mega Man II (U) [!].nes" />
 				<span asp-validation-for="RomName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="EncodeEmbeddedLink"></label>
-				<input asp-for="EncodeEmbeddedLink" class="form-control" placeholder="Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU" />
+				<input asp-for="EncodeEmbeddedLink" placeholder="Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU" />
 				<span asp-validation-for="EncodeEmbeddedLink"></span>
 			</fieldset>
 		</column>

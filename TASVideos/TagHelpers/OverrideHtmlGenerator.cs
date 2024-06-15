@@ -50,7 +50,7 @@ public class OverrideHtmlGenerator(
 		var builder = base.GenerateTextBox(viewContext, modelExplorer, expression, value, format, htmlAttributes);
 		if (builder.Attributes.TryGetValue("type", out var type))
 		{
-			if (type == "text")
+			if (type is "text" or "email" or "number" or "url" or "file" or "datetime-local")
 			{
 				builder.AddCssClass("form-control");
 			}

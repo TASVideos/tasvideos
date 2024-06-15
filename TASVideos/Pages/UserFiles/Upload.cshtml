@@ -15,13 +15,13 @@
 		<column>
 			<fieldset>
 				<label asp-for="UserFile"></label>
-				<input asp-for="UserFile" class="form-control" data-id="user-form-file" data-supported-extensions="@string.Join(",", Model.SupportedFileExtensions)" />
+				<input asp-for="UserFile" data-id="user-form-file" data-supported-extensions="@string.Join(",", Model.SupportedFileExtensions)" />
 				<small>Valid file types: @string.Join(", ", Model.SupportedFileExtensions)</small><br />
 				<span id="FileInputWarning" asp-validation-for="UserFile"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Title"></label>
-				<input asp-for="Title" type="text" class="form-control" />
+				<input asp-for="Title" />
 				<span asp-validation-for="Title"></span>
 			</fieldset>
 			<fieldset>

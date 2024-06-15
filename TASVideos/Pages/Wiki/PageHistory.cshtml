@@ -100,8 +100,8 @@
 		}
 	</tbody>
 </standard-table>
-<input type="hidden" asp-for="Diff.LeftMarkup" data-diff="left" data-diff-label="r@(Model.FromRevision ?? 0)" rows="8" class="form-control" />
-<input type="hidden" asp-for="Diff.RightMarkup" data-diff="right" data-diff-label="r@(Model.ToRevision ?? 0)" rows="8" class="form-control" />
+<input type="hidden" asp-for="Diff.LeftMarkup" data-diff="left" data-diff-label="r@(Model.FromRevision ?? 0)" rows="8" />
+<input type="hidden" asp-for="Diff.RightMarkup" data-diff="right" data-diff-label="r@(Model.ToRevision ?? 0)" rows="8" />
 
 @section Scripts {
 	<script src="/js/wiki-page-history.js"></script>

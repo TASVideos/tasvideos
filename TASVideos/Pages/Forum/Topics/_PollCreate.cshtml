@@ -11,7 +11,7 @@
 		</fieldset>
 		<fieldset>
 			<label asp-for="DaysOpen">Days to Run for</label>
-			<input asp-for="DaysOpen" type="number" min="0" max="365" class="form-control" />
+			<input asp-for="DaysOpen" min="0" max="365" />
 			<div>0 or empty for a never-ending poll</div>
 			<span asp-validation-for="DaysOpen"></span>
 		</fieldset>

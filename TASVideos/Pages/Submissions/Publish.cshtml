@@ -57,21 +57,21 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Submission.MovieToObsolete">Select movie to be obsoleted</label>
-				<input asp-for="Submission.MovieToObsolete" data-id="obsolete" class="form-control" />
+				<input asp-for="Submission.MovieToObsolete" data-id="obsolete" />
 				<span asp-validation-for="Submission.MovieToObsolete"></span>
 				<span id="obsoleted-by"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.OnlineWatchingUrl">Online-watching URL</label>
-				<input type="text" asp-for="Submission.OnlineWatchingUrl" class="form-control" />
+				<input asp-for="Submission.OnlineWatchingUrl" />
 				<span asp-validation-for="Submission.OnlineWatchingUrl"></span>
 				<label asp-for="Submission.OnlineWatchUrlName">Online-watching URL Display Name (Optional)</label>
-				<input type="text" asp-for="Submission.OnlineWatchUrlName" class="form-control"/>
+				<input asp-for="Submission.OnlineWatchUrlName" />
 				<span asp-validation-for="Submission.OnlineWatchUrlName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.MirrorSiteUrl">Mirror site URL</label>
-				<input type="text" asp-for="Submission.MirrorSiteUrl" class="form-control" />
+				<input asp-for="Submission.MirrorSiteUrl" />
 				<span asp-validation-for="Submission.MirrorSiteUrl"></span>
 			</fieldset>
 		</column>
@@ -79,7 +79,7 @@
 			<fieldset>
 				<label asp-for="Submission.MovieFilename"></label>
 				<div class="input-group">
-					<input type="text" asp-for="Submission.MovieFilename" class="form-control" />
+					<input asp-for="Submission.MovieFilename" />
 					<div class="input-group-append">
 						<span class="input-group-text">
 							.@Model.Submission.MovieExtension
@@ -91,7 +91,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.Screenshot"></label>
-				<input asp-for="Submission.Screenshot" class="form-control" />
+				<input asp-for="Submission.Screenshot" />
 				<span>
 					Must be JPEG or PNG
 					<br />
@@ -101,7 +101,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.ScreenshotDescription">Description</label>
-				<input asp-for="Submission.ScreenshotDescription" type="text" class="form-control" />
+				<input asp-for="Submission.ScreenshotDescription" />
 				<div>Caption, describe what happens in the screenshot</div>
 				<span asp-validation-for="Submission.ScreenshotDescription"></span>
 			</fieldset>
