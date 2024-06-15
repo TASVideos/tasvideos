@@ -48,8 +48,8 @@ public class SignInManager(
 			user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
 			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
-			var claims = await userManager.AddUserPermissionsToClaims(user);
-			await SignInWithClaimsAsync(user, rememberMe, claims);
+			await userManager.AddUserPermissionsToClaims(user);
+			await SignInAsync(user, rememberMe);
 		}
 
 		return (result, user);
