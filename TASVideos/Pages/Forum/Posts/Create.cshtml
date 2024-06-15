@@ -41,7 +41,7 @@
 	</fullrow>
 	<post-helper class="mt-2"></post-helper>
 	<fieldset>
-		<textarea asp-for="Text" class="form-control" rows="20" data-id="forum-edit" backup-content="true" data-backup-key="backup-post-@Model.TopicId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
+		<textarea asp-for="Text" rows="20" data-id="forum-edit" backup-content="true" data-backup-key="backup-post-@Model.TopicId" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
 		<span asp-validation-for="Text"></span>
 	</fieldset>
 	<fullrow id="backup-restore" class="d-none">

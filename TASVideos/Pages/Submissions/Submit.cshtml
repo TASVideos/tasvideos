@@ -83,7 +83,7 @@
 				@await Html.RenderWiki(SystemWiki.SubmissionImportant)
 			</span>
 			<wiki-edit-helper></wiki-edit-helper>
-			<textarea asp-for="Markup" rows="12" class="form-control" data-id="wiki-edit" backup-content="true" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<textarea asp-for="Markup" rows="12" data-id="wiki-edit" backup-content="true" data-backup-key="backup-submission" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Markup"></span>
 			<fullrow id="backup-restore" class="d-none mt-2">
 				<button id="backup-restore-button" type="button" class="btn btn-secondary">Restore Text</button>

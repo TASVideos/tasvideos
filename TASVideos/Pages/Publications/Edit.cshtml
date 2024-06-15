@@ -97,7 +97,7 @@
 	<fullrow>
 		<fieldset>
 			<label asp-for="Publication.Markup"></label>
-			<textarea asp-for="Publication.Markup" rows="6" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<textarea asp-for="Publication.Markup" rows="6" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 			<span asp-validation-for="Publication.Markup"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 		</fieldset>

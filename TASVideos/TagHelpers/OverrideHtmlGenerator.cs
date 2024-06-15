@@ -58,4 +58,11 @@ public class OverrideHtmlGenerator(
 
 		return builder;
 	}
+
+	public override TagBuilder GenerateTextArea(ViewContext viewContext, ModelExplorer modelExplorer, string expression, int rows, int columns, object htmlAttributes)
+	{
+		var builder = base.GenerateTextArea(viewContext, modelExplorer, expression, rows, columns, htmlAttributes);
+		builder.AddCssClass("form-control");
+		return builder;
+	}
 }

@@ -113,14 +113,14 @@
 			<wiki-edit-helper></wiki-edit-helper>
 			<fieldset>
 				<label asp-for="Submission.MovieDescription"></label>
-				<textarea asp-for="Submission.MovieDescription" class="form-control" data-id="wiki-edit" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<textarea asp-for="Submission.MovieDescription" data-id="wiki-edit" rows="10" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Submission.MovieDescription"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Markup">Submission description (for quoting, reference, etc)</label>
-				<textarea readonly class="form-control" rows="10" asp-for="Markup"></textarea>
+				<textarea readonly rows="10" asp-for="Markup"></textarea>
 			</fieldset>
 		</column>
 	</row>

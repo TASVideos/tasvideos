@@ -43,7 +43,7 @@
 			<fieldset>
 				<wiki-edit-helper></wiki-edit-helper>
 				<label asp-for="Description"></label>
-				<textarea asp-for="Description" rows="4" class="form-control" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
+				<textarea asp-for="Description" rows="4" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
 				<span asp-validation-for="Description"></span>
 				@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 			</fieldset>
