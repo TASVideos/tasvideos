@@ -24,13 +24,13 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="Name"></label>
-				<input type="text" asp-for="Name" class="form-control" />
+				<input asp-for="Name" />
 				<span asp-validation-for="Name"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Abbreviation"></label>
 				<div class="input-group">
-					<input type="text" asp-for="Abbreviation" class="form-control" />
+					<input asp-for="Abbreviation" />
 					<a asp-page="/Wiki/Referrers"
 					   asp-route-path="GameGroups/@Model.Abbreviation"
 					   asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()"

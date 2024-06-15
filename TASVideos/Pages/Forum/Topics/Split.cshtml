@@ -22,7 +22,7 @@
 	</fieldset>
 	<fieldset class="col-lg-6">
 		<label asp-for="Topic.NewTopicName"></label>
-		<input type="text" asp-for="Topic.NewTopicName" class="form-control" />
+		<input asp-for="Topic.NewTopicName" />
 		<span asp-validation-for="Topic.NewTopicName"></span>
 	</fieldset>
 	<small class="text-body-tertiary">Either select one Post to start splitting at (left), or manually select the Posts to be split (right). If both are provided the manual selection will take precedence.</small>

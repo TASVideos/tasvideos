@@ -44,4 +44,18 @@ public class OverrideHtmlGenerator(
 		builder.AddCssClass("text-danger");
 		return builder;
 	}
+
+	public override TagBuilder GenerateTextBox(ViewContext viewContext, ModelExplorer modelExplorer, string expression, object value, string format, object htmlAttributes)
+	{
+		var builder = base.GenerateTextBox(viewContext, modelExplorer, expression, value, format, htmlAttributes);
+		if (builder.Attributes.TryGetValue("type", out var type))
+		{
+			if (type == "text")
+			{
+				builder.AddCssClass("form-control");
+			}
+		}
+
+		return builder;
+	}
 }

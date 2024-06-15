@@ -10,22 +10,22 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="UserName"></label>
-				<input asp-for="UserName" class="form-control" autocomplete="username" />
+				<input asp-for="UserName" autocomplete="username" />
 				<span asp-validation-for="UserName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Email"></label>
-				<input asp-for="Email" class="form-control" autocomplete="off" />
+				<input asp-for="Email" autocomplete="off" />
 				<span asp-validation-for="Email"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Password"></label>
-				<input asp-for="Password" class="form-control" autocomplete="new-password" maxlength="524288" />
+				<input asp-for="Password" autocomplete="new-password" maxlength="524288" />
 				<span asp-validation-for="Password"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="ConfirmPassword"></label>
-				<input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" maxlength="524288" />
+				<input asp-for="ConfirmPassword" autocomplete="new-password" maxlength="524288" />
 				<span asp-validation-for="ConfirmPassword"></span>
 			</fieldset>
 		</column>
@@ -37,7 +37,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Location"></label>
-				<input asp-for="Location" type="text" class="form-control" />
+				<input asp-for="Location" />
 				<span asp-validation-for="Location"></span>
 			</fieldset>
 			<fieldset class="mt-3">

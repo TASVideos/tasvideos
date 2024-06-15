@@ -14,13 +14,13 @@
 		<div class="col-lg-6">
 			<fieldset>
 				<label asp-for="Game.DisplayName"></label>
-				<input type="text" asp-for="Game.DisplayName" class="form-control" autocomplete="off" />
+				<input asp-for="Game.DisplayName" autocomplete="off" />
 				<span asp-validation-for="Game.DisplayName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Game.Abbreviation"></label>
 				<div class="input-group">
-					<input type="text" asp-for="Game.Abbreviation" class="form-control" autocomplete="off" spellcheck="false" style="text-transform: lowercase;" />
+					<input asp-for="Game.Abbreviation" autocomplete="off" spellcheck="false" style="text-transform: lowercase;" />
 					<a
 						asp-page="/Wiki/Referrers"
 						asp-route-path="Games/@Model.Game.Abbreviation"
