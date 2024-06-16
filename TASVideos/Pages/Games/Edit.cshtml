@@ -2,7 +2,7 @@
 @model EditModel
 @{
 	ViewData.SetTitle(Model.Id.HasValue
-	? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
+		? $"Editing Game #{Model.Id} {Model.Game.DisplayName}"
 		: "Create a new Game entry");
 }
 <top-button-bar>
@@ -64,7 +64,7 @@
 		<select asp-for="Game.Groups" multiselect="true" asp-items="Model.AvailableGroups"></select>
 	</fieldset>
 	<form-button-bar>
-		<submit-button id="submit-btn"></submit-button>
+		<submit-button id="submit-btn" edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="List"></cancel-link>
 		<div class="form-check-inline">
 			<label asp-for="Game.MinorEdit" class="form-check-label"></label>

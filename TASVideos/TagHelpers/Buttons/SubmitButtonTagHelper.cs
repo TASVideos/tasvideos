@@ -6,6 +6,8 @@ public class SubmitButtonTagHelper : TagHelper
 {
 	public string? BtnClassOverride { get; set; }
 
+	public bool? Edit { get; set; }
+
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "button";
@@ -19,7 +21,9 @@ public class SubmitButtonTagHelper : TagHelper
 		var content = (await output.GetChildContentAsync()).GetContent();
 		if (string.IsNullOrWhiteSpace(content))
 		{
-			output.Content.AppendHtml("<i class=\"fa fa-save\"></i> Save");
+			output.Content.AppendHtml(Edit == false
+				? "<i class=\"fa fa-plus\"></i> Create"
+				: "<i class=\"fa fa-save\"></i> Save");
 		}
 	}
 }

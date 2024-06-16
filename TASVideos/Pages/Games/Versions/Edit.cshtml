@@ -1,20 +1,9 @@
 ﻿@page "/Games/{gameId}/Versions/Edit/{id?}/{handler?}"
 @model EditModel
 @{
-	string saveBtnName;
-	string iconClass;
-	if (Model.Id.HasValue)
-	{
-		ViewData.SetTitle($"Editing Game Version #{Model.Id} {Model.Version.Name}");
-		saveBtnName = "Save";
-		iconClass = "fa fa-save";
-	}
-	else
-	{
-		ViewData.SetTitle("Create A New Game Version Entry");
-		saveBtnName = "Create";
-		iconClass = "fa fa-plus";
-	}
+	ViewData.SetTitle(Model.Id.HasValue
+		? $"Editing Game Version #{Model.Id} {Model.Version.Name}"
+		: "Create A New Game Version Entry");
 	var deleteLink = $"/Games/{Model.GameId}/Versions/Edit/{Model.Id ?? 0}/Delete";
 }
 
@@ -88,7 +77,7 @@
 		</div>
 	</row>
 	<form-button-bar>
-		<submit-button id="submit-btn"><i class="@iconClass"></i> @saveBtnName</submit-button>
+		<submit-button id="submit-btn" edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></cancel-link>
 	</form-button-bar>
 </form>

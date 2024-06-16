@@ -1,20 +1,9 @@
 @page "{id?}"
 @model EditModel
 @{
-	string saveBtnName;
-	string iconClass;
-	if (Model.Id.HasValue)
-	{
-		ViewData.SetTitle($"Editing Game Group #{Model.Id} {Model.Name}");
-		saveBtnName = "Save";
-		iconClass = "fa fa-save";
-	}
-	else
-	{
-		ViewData.SetTitle("Create a new Game Group entry");
-		saveBtnName = "Create";
-		iconClass = "fa fa-plus";
-	}
+	ViewData.SetTitle(Model.Id.HasValue
+		? $"Editing Game Group #{Model.Id} {Model.Name}"
+		: "Create a new Game Group entry");
 }
 <top-button-bar>
 	<delete-button condition="@Model.CanDelete" asp-href="/GameGroups/Edit/@(Model.Id ?? 0)?handler=Delete"></delete-button>
@@ -51,7 +40,7 @@
 	</row>
 	<form-button-bar>
 		<preview-button></preview-button>
-		<submit-button><i class="@iconClass"></i> @saveBtnName</submit-button>
+		<submit-button edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="@(Model.Id.HasValue ? "Index" : "List")" asp-route-id="@Model.Id"></cancel-link>
 	</form-button-bar>
 </form>

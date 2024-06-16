@@ -71,7 +71,7 @@
 		<div id="assignable-roles">None</div>
 	</fieldset>
 	<form-button-bar>
-		<submit-button><i class="fa fa-save"></i> @(Model.Id.HasValue ? "Save" : "Create")</submit-button>
+		<submit-button edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="List"></cancel-link>
 	</form-button-bar>
 </form>
