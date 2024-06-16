@@ -6,7 +6,7 @@
 	<card-body>
 		<h5 id="@Model.Name" class="card-title">@Model.Name</h5>
 		<row>
-			<div class="col-md-6">
+			<column md="6">
 				<div permission="EditRoles">
 					<edit-link asp-page="AddEdit" asp-route-id="@Model.Id"></edit-link>
 					<a asp-page="AddEdit" asp-route-copyFrom="@Model.Id" class="btn btn-secondary">
@@ -19,7 +19,7 @@
 						* This role is added to users by default when they register
 					</small>
 				</div>
-			</div>
+			</column>
 			<div class="col-lg-3 col-md-6">
 				<strong><a asp-page="/Permissions/Index">Permissions</a></strong>
 				<br />

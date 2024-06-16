@@ -14,7 +14,7 @@
 <form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="GameName" />
 	<row>
-		<div class="col-lg-6">
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Version.System"></label>
 				<select asp-for="Version.System" asp-items="@Model.AvailableSystems.OrderBy(s => s.Value)"></select>
@@ -52,8 +52,8 @@
 					</fullrow>
 				</div>
 			</fieldset>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Version.Type"></label>
 				<select asp-for="Version.Type" asp-items="@Model.AvailableVersionTypes.OrderBy(s => s.Value)"></select>
@@ -74,7 +74,7 @@
 				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes"></select>
 				<span asp-validation-for="Version.Region"></span>
 			</fieldset>
-		</div>
+		</column>
 	</row>
 	<form-button-bar>
 		<submit-button edit="@Model.Id.HasValue"></submit-button>

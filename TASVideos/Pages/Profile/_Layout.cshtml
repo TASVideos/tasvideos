@@ -4,12 +4,12 @@
 <h2>Your account profile</h2>
 <hr />
 <row>
-	<div class="col-lg-3">
+	<column lg="3">
 		<partial name="_ProfileNav" />
-	</div>
-	<div class="col-lg-9">
+	</column>
+	<column lg="9">
 		@RenderBody()
-	</div>
+	</column>
 </row>
 @section Scripts {
 	@await RenderSectionAsync("Scripts", required: false)

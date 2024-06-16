@@ -7,7 +7,7 @@
 <form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="OriginalPageName" />
 	<row>
-		<div class="col-lg-6">
+		<column lg="6">
 			<fieldset>
 				<label>Original Name</label>
 				<label class="form-control">@Model.OriginalPageName</label>
@@ -21,7 +21,7 @@
 				<submit-button><i class="fa fa-save"></i> Move</submit-button>
 				<cancel-link href="/@Model.OriginalPageName"></cancel-link>
 			</form-button-bar>
-		</div>
+		</column>
 	</row>
 </form>
 

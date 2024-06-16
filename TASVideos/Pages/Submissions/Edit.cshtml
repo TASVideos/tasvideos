@@ -13,15 +13,15 @@
 <form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count <= 1" type="hidden" asp-for="Submission.Status" />
 	<row>
-		<div permission="ReplaceSubmissionMovieFile" class="col-lg-6">
+		<column lg="6" permission="ReplaceSubmissionMovieFile">
 			<fieldset>
 				<label asp-for="Submission.ReplaceMovieFile"></label>
 				<input asp-for="Submission.ReplaceMovieFile" />
 				<div>Your movie packed in a ZIP file (max size: 150k)</div>
 				<span asp-validation-for="Submission.ReplaceMovieFile"></span>
 			</fieldset>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Submission.Authors">Author(s)</label>
 				<string-list asp-for="Submission.Authors" />
@@ -33,10 +33,10 @@
 				<div>Only authors not registered for TASVideos should be listed here. If multiple authors, separate the names with a comma.</div>
 				<span asp-validation-for="Submission.ExternalAuthors"></span>
 			</fieldset>
-		</div>
+		</column>
 	</row>
 	<row>
-		<div class="col-lg-6">
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Submission.GameVersion"></label>
 				<input asp-for="Submission.GameVersion" placeholder="USA v1.0" />
@@ -52,8 +52,8 @@
 				<input asp-for="Submission.Emulator" spellcheck="false" placeholder="Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author." />
 				<span asp-validation-for="Submission.Emulator"></span>
 			</fieldset>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Submission.Goal"></label>
 				<input asp-for="Submission.Goal" placeholder="Example: 100% or princess only; any% can usually be omitted" />
@@ -69,7 +69,7 @@
 				<input asp-for="Submission.EncodeEmbedLink" placeholder="Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU" />
 				<span asp-validation-for="Submission.EncodeEmbedLink"></span>
 			</fieldset>
-		</div>
+		</column>
 	</row>
 	<row>
 		<column lg="6">

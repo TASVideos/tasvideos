@@ -6,7 +6,7 @@
 
 <form client-side-validation="true" method="post">
 	<row>
-		<div class="col-lg-6">
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Catalog.System"></label>
 				<select asp-for="Catalog.System" asp-items="@Model.AvailableSystems" data-id="system" data-return-url="@HttpContext.CurrentPathToReturnUrl()"></select>
@@ -17,8 +17,8 @@
 				<select asp-for="Catalog.SystemFramerate" asp-items="@Model.AvailableSystemFrameRates" data-id="system-framerate"></select>
 				<span asp-validation-for="Catalog.SystemFramerate"></span>
 			</fieldset>
-		</div>
-		<div class="col-lg-6">
+		</column>
+		<column lg="6">
 			<fieldset>
 				<fullrow>
 					<label asp-for="Catalog.Game"></label>
@@ -61,7 +61,7 @@
 					</div>
 				</row>
 			</fieldset>
-		</div>
+		</column>
 	</row>
 	<form-button-bar>
 		<submit-button></submit-button>
