@@ -77,7 +77,7 @@
 		</div>
 	</row>
 	<form-button-bar>
-		<submit-button id="submit-btn" edit="@Model.Id.HasValue"></submit-button>
+		<submit-button edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></cancel-link>
 	</form-button-bar>
 </form>
