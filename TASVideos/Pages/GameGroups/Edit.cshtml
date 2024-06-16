@@ -42,6 +42,7 @@
 		<preview-button></preview-button>
 		<submit-button edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="@(Model.Id.HasValue ? "Index" : "List")" asp-route-id="@Model.Id"></cancel-link>
+		<minor-edit></minor-edit>
 	</form-button-bar>
 </form>
 <wiki-preview></wiki-preview>

@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.GameGroups;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class EditModel(ApplicationDbContext db) : BasePageModel
+public class EditModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int? Id { get; set; }
@@ -70,9 +70,11 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
+		var action = "created";
 		GameGroup? gameGroup;
 		if (Id.HasValue)
 		{
+			action = "updated";
 			gameGroup = await db.GameGroups.FindAsync(Id.Value);
 			if (gameGroup is null)
 			{
@@ -89,7 +91,16 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		gameGroup.Abbreviation = Abbreviation;
 		gameGroup.Description = Description;
 
-		SetMessage(await db.TrySaveChanges(), $"Game Group {Name} updated", $"Unable to update Game Group {Name}");
+		var saveResult = await db.TrySaveChanges();
+		SetMessage(saveResult, $"Game Group {Name} updated", $"Unable to update Game Group {Name}");
+		if (saveResult.IsSuccess())
+		{
+			await publisher.SendGameManagement(
+				$"Game Group [{gameGroup.Name}]({{0}}) {action} by {User.Name()}",
+				"",
+				$"GameGroups/{gameGroup.Id}");
+		}
+
 		return BasePageRedirect("Index", new { gameGroup.Id });
 	}
 
