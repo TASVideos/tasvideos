@@ -65,4 +65,11 @@ public class OverrideHtmlGenerator(
 		builder.AddCssClass("form-control");
 		return builder;
 	}
+
+	public override TagBuilder GenerateSelect(ViewContext viewContext, ModelExplorer modelExplorer, string optionLabel, string expression, IEnumerable<SelectListItem> selectList, ICollection<string> currentValues, bool allowMultiple, object htmlAttributes)
+	{
+		var builder =  base.GenerateSelect(viewContext, modelExplorer, optionLabel, expression, selectList, currentValues, allowMultiple, htmlAttributes);
+		builder.AddCssClass("form-select");
+		return builder;
+	}
 }

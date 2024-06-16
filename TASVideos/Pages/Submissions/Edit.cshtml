@@ -75,19 +75,19 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Submission.Status"></label>
-				<select class="form-select" data-id="status"
+				<select data-id="status"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
 			</fieldset>
 			<fieldset id="rejection-reason" data-rejection-id="@((int)SubmissionStatus.Rejected)" show="@Model.Submission.Status == SubmissionStatus.Rejected">
 				<label asp-for="Submission.RejectionReason">Reason</label>
-				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons" class="form-select"></select>
+				<select asp-for="Submission.RejectionReason" asp-items="Model.AvailableRejectionReasons"></select>
 			</fieldset>
 		</column>
 		<column lg="6" condition="canEditPublicationClass">
 			<fieldset>
 				<label asp-for="Submission.IntendedPublicationClass"></label>
-				<select asp-for="Submission.IntendedPublicationClass" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)" class="form-select"></select>
+				<select asp-for="Submission.IntendedPublicationClass" asp-items="@UiDefaults.DefaultEntry.Concat(Model.AvailableClasses)"></select>
 				<span asp-validation-for="Submission.IntendedPublicationClass"></span>
 			</fieldset>
 		</column>

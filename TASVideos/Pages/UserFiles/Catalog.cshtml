@@ -18,7 +18,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="UserFile.System"></label>
-				<select asp-for="UserFile.System" asp-items="Model.AvailableSystems" data-id="system" data-return-url="@HttpContext.CurrentPathToReturnUrl()" class="form-select"></select>
+				<select asp-for="UserFile.System" asp-items="Model.AvailableSystems" data-id="system" data-return-url="@HttpContext.CurrentPathToReturnUrl()"></select>
 			</fieldset>
 			<fieldset>
 				<fullrow>
@@ -26,7 +26,7 @@
 				</fullrow>
 				<row>
 					<div class="col-10">
-						<select asp-for="UserFile.Game" asp-items="Model.AvailableGames" data-id="game" class="form-select"></select>
+						<select asp-for="UserFile.Game" asp-items="Model.AvailableGames" data-id="game"></select>
 					</div>
 					<div class="col-2">
 						<button id="create-game" type="button" class="btn btn-primary">New</button>

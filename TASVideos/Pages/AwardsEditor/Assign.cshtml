@@ -10,7 +10,7 @@
 		<column md="6">
 			<fieldset>
 				<label asp-for="AwardToAssign.Award"></label>
-				<select asp-for="AwardToAssign.Award" data-id="award-dropdown" data-year="@Model.Year" asp-items="Model.AvailableAwardCategories" class="form-select"></select>
+				<select asp-for="AwardToAssign.Award" data-id="award-dropdown" data-year="@Model.Year" asp-items="Model.AvailableAwardCategories"></select>
 				<span asp-validation-for="AwardToAssign.Award"></span>
 			</fieldset>
 		</column>

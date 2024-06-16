@@ -31,7 +31,7 @@
 				<span asp-validation-for="ToUser"></span>
 			</div>
 			<label for="group-select">To Group</label>
-			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" class="form-select" asp-items="@Model.AvailableGroupRoles"></select>
+			<select id="group-select" name="@Html.NameFor(m => m.ToUser)" asp-items="@Model.AvailableGroupRoles"></select>
 		</fieldset>
 	</row>
 	<post-helper></post-helper>

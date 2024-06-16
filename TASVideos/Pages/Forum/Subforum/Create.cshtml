@@ -15,11 +15,11 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Forum.Category"></label>
-				<select asp-for="Forum.Category" asp-items="Model.AvailableCategories" class="form-select"></select>
+				<select asp-for="Forum.Category" asp-items="Model.AvailableCategories"></select>
 				<span asp-validation-for="Forum.Category"></span>
 			</fieldset>
 		</column>
-		<column lg="6" class="mt-lg-0 mt-2">
+		<column lg="6">
 			<fieldset>
 				<label asp-for="Forum.ShortName"></label>
 				<small>

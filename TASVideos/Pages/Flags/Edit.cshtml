@@ -40,7 +40,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Flag.PermissionRestriction"></label>
-				<select asp-for="Flag.PermissionRestriction" asp-items="Model.AvailablePermissions.WithDefaultEntry()" class="form-select"></select>
+				<select asp-for="Flag.PermissionRestriction" asp-items="Model.AvailablePermissions.WithDefaultEntry()"></select>
 				<span asp-validation-for="Flag.PermissionRestriction"></span>
 			</fieldset>
 		</column>

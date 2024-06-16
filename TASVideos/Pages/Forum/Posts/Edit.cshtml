@@ -39,7 +39,7 @@
 			<fieldset>
 				<label asp-for="Post.Mood"></label>
 				<input condition="!isUserEdit" readonly asp-for="Post.Mood" />
-				<select condition="isUserEdit" asp-for="Post.Mood" data-id="avatar-dropdown" asp-items="@Model.Moods" class="form-select"></select>
+				<select condition="isUserEdit" asp-for="Post.Mood" data-id="avatar-dropdown" asp-items="@Model.Moods"></select>
 				<span asp-validation-for="Post.Mood"></span>
 			</fieldset>
 		</column>

@@ -28,7 +28,7 @@
 		<column md="4" permission="UseMoodAvatars" condition="@Model.UserAvatars.HasMoods">
 			<fieldset>
 				<label asp-for="Mood"></label>
-				<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown" class="form-select"></select>
+				<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown"></select>
 				<span asp-validation-for="Mood"></span>
 			</fieldset>
 		</column>

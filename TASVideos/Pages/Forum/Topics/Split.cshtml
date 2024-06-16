@@ -17,7 +17,7 @@
 	<input type="hidden" asp-for="Topic.Title" />
 	<fieldset class="col-lg-6">
 		<label asp-for="Topic.CreateNewTopicIn"></label>
-		<select asp-for="Topic.CreateNewTopicIn" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
+		<select asp-for="Topic.CreateNewTopicIn" asp-items="Model.AvailableForums.OrderBy(f => f.Text)"></select>
 		<span asp-validation-for="Topic.CreateNewTopicIn"></span>
 	</fieldset>
 	<fieldset class="col-lg-6">

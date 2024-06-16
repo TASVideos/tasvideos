@@ -32,12 +32,12 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserFile.System"></label>
-				<select asp-for="UserFile.System" data-id="system" asp-items="@Model.AvailableSystems" class="form-select"></select>
+				<select asp-for="UserFile.System" data-id="system" asp-items="@Model.AvailableSystems"></select>
 				<span asp-validation-for="UserFile.System"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="UserFile.Game"></label>
-				<select asp-for="UserFile.Game" data-id="game" asp-items="@Model.AvailableGames" class="form-select"></select>
+				<select asp-for="UserFile.Game" data-id="game" asp-items="@Model.AvailableGames"></select>
 				<span asp-validation-for="UserFile.Game"></span>
 			</fieldset>
 		</column>

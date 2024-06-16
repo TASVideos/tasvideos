@@ -30,14 +30,14 @@
 		</column>
 		<column permission="SetTopicType" md="6">
 			<label asp-for="Type"></label>
-			<select asp-for="Type" asp-items="Model.TopicTypes" class="form-select"></select>
+			<select asp-for="Type" asp-items="Model.TopicTypes"></select>
 			<span asp-validation-for="Type"></span>
 		</column>
 	</row>
 	<row>
 		<column md="4">
 			<label asp-for="Mood"></label>
-			<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown" class="form-select"></select>
+			<select asp-for="Mood" asp-items="@Model.Moods" data-id="avatar-dropdown"></select>
 			<span asp-validation-for="Mood"></span>
 		</column>
 		<column md="2">

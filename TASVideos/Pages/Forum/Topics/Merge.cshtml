@@ -20,12 +20,12 @@
 			<input type="hidden" asp-for="Topic.Title" />
 			<fieldset>
 				<label asp-for="Topic.DestinationForumId">Forum To Merge In to</label>
-				<select asp-for="Topic.DestinationForumId" data-id="destination-forum-id" asp-items="Model.AvailableForums.OrderBy(f => f.Text)" class="form-select"></select>
+				<select asp-for="Topic.DestinationForumId" data-id="destination-forum-id" asp-items="Model.AvailableForums.OrderBy(f => f.Text)"></select>
 				<span asp-validation-for="Topic.DestinationForumId"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Topic.DestinationTopicId">Topic To Merge In to</label>
-				<select asp-for="Topic.DestinationTopicId" data-id="destination-topic-id" asp-items="Model.AvailableTopics.OrderBy(f => f.Text)" class="form-select"></select>
+				<select asp-for="Topic.DestinationTopicId" data-id="destination-topic-id" asp-items="Model.AvailableTopics.OrderBy(f => f.Text)"></select>
 				<span asp-validation-for="Topic.DestinationTopicId"></span>
 			</fieldset>
 		</column>
