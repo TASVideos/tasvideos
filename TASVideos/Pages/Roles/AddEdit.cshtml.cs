@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-
-namespace TASVideos.Pages.Roles;
+﻿namespace TASVideos.Pages.Roles;
 
 [RequirePermission(PermissionTo.EditRoles)]
 public class AddEditModel(ApplicationDbContext db, IRoleService roleService, ExternalMediaPublisher publisher) : BasePageModel

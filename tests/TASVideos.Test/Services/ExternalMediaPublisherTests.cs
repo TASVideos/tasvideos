@@ -1,5 +1,5 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Settings;
+﻿using TASVideos.Core.Settings;
+using TASVideos.Services;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -13,7 +13,8 @@ public class ExternalMediaPublisherTests
 	{
 		var publisher = new ExternalMediaPublisher(
 			new AppSettings { BaseUrl = baseUrl },
-			[]);
+			[],
+			null!);
 
 		var actual = publisher.ToAbsolute(relativeLink);
 		Assert.AreEqual(expected, actual);

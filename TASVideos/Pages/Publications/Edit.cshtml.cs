@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 
 namespace TASVideos.Pages.Publications;
@@ -197,7 +196,7 @@ public class EditModel(
 			{
 				PageName = WikiHelper.ToPublicationWikiPageName(id),
 				Markup = model.Markup,
-				MinorEdit = model.MinorEdit,
+				MinorEdit = HttpContext.Request.MinorEdit(),
 				RevisionMessage = model.RevisionMessage,
 				AuthorId = User.GetUserId()
 			});
@@ -222,12 +221,7 @@ public class EditModel(
 		}
 
 		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), externalMessages);
-
-		if (!model.MinorEdit)
-		{
-			await publisher.SendPublicationEdit(
-				User.Name(), Id, $"{string.Join(", ", externalMessages)} | {publication.Title}");
-		}
+		await publisher.SendPublicationEdit(User.Name(), Id, $"{string.Join(", ", externalMessages)} | {publication.Title}");
 	}
 
 	public class PublicationEdit
@@ -248,7 +242,6 @@ public class EditModel(
 		public List<int> SelectedFlags { get; init; } = [];
 		public List<int> SelectedTags { get; init; } = [];
 		public string? RevisionMessage { get; init; }
-		public bool MinorEdit { get; init; }
 
 		[DoNotTrim]
 		public string Markup { get; set; } = "";

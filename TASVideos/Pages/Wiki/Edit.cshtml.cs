@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.Wiki;
 
@@ -17,9 +16,6 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 	public string Markup { get; set; } = "";
 
 	public string OriginalMarkup => Markup;
-
-	[BindProperty]
-	public bool MinorEdit { get; set; }
 
 	[BindProperty]
 	[MaxLength(500)]
@@ -82,12 +78,13 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			return Page();
 		}
 
+		var minorEdit = HttpContext.Request.MinorEdit();
 		var page = new WikiCreateRequest
 		{
 			CreateTimestamp = EditStart,
 			PageName = Path.Trim('/'),
 			Markup = Markup,
-			MinorEdit = MinorEdit,
+			MinorEdit = minorEdit,
 			RevisionMessage = EditComments,
 			AuthorId = User.GetUserId()
 		};
@@ -98,10 +95,7 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			return Page();
 		}
 
-		if (result.Revision == 1 || !MinorEdit)
-		{
-			await Announce(result);
-		}
+		await Announce(result, result.Revision == 1);
 
 		return BaseRedirect("/" + page.PageName);
 	}
@@ -157,11 +151,12 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			.SingleOrDefaultAsync();
 	}
 
-	private async Task Announce(IWikiPage page)
+	private async Task Announce(IWikiPage page, bool force = false)
 	{
 		await publisher.SendWiki(
 			$"Page [{Path}]({{0}}) {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"{page.RevisionMessage}",
-			Path!);
+			Path!,
+			force);
 	}
 }

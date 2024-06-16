@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.ResponseCompression;
 using TASVideos.Core.Settings;
-using TASVideos.Services;
 using TASVideos.TagHelpers;
 
 namespace TASVideos.Extensions;
@@ -126,14 +125,14 @@ public static class ServiceCollectionExtensions
 		return services;
 	}
 
-	public static IServiceCollection AddTextModules(this IServiceCollection services)
+	public static IServiceCollection AddServices(this IServiceCollection services)
 	{
 		foreach (var component in ModuleParamHelpers.TextComponents.Values)
 		{
 			services.AddScoped(component);
 		}
 
-		return services;
+		return services.AddTransient<ExternalMediaPublisher>();
 	}
 
 	public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)

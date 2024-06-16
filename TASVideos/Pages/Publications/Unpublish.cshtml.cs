@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-
-namespace TASVideos.Pages.Publications;
+﻿namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.Unpublish)]
 public class UnpublishModel(ExternalMediaPublisher publisher, IQueueService queueService) : BasePageModel

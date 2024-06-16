@@ -1,6 +1,5 @@
 ﻿using AspNetCore.ReCaptcha;
 using TASVideos.Core.Services.Email;
-using TASVideos.Core.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Account;
 

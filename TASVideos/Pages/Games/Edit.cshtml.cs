@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity.Game;
 
@@ -121,7 +120,7 @@ public class EditModel(
 		game.GameGroups.SetGroups(Game.Groups);
 		var saveResult = await db.TrySaveChanges();
 		SetMessage(saveResult, $"Game {game.DisplayName} {action}", $"Unable to update Game {game.DisplayName}");
-		if (saveResult.IsSuccess() && !Game.MinorEdit)
+		if (saveResult.IsSuccess())
 		{
 			await publisher.SendGameManagement(
 				$"Game [{game.DisplayName}]({{0}}) {action} by {User.Name()}",
@@ -199,6 +198,5 @@ public class EditModel(
 		public string? GameResourcesPage { get; set; }
 		public List<int> Genres { get; init; } = [];
 		public List<int> Groups { get; init; } = [];
-		public bool MinorEdit { get; init; }
 	}
 }

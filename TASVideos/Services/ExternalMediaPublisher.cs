@@ -1,25 +1,29 @@
-﻿using TASVideos.Core.Settings;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Settings;
 
-namespace TASVideos.Core.Services.ExternalMediaPublisher;
+namespace TASVideos.Services;
 
 /// <summary>
 /// Provides a mechanism for sending posts to a variety of external resources
 /// Such as IRC, Discord, etc. via a collection of
 /// <see cref="IPostDistributor"/> instances that will deliver posts to specific resources.
 /// </summary>
-public class
-	ExternalMediaPublisher // DI as a singleton, pass in a hardcoded list of IMessagingProvider implementations, config drive which implementations to use
-	(AppSettings appSettings, IEnumerable<IPostDistributor> providers)
+/// <remarks>DI as a singleton, pass in a hardcoded list of IMessagingProvider implementations, config drive which implementations to use</remarks>
+public class ExternalMediaPublisher(AppSettings appSettings, IEnumerable<IPostDistributor> providers, IHttpContextAccessor httpContextAccessor)
 {
-	private readonly string _baseUrl = appSettings.BaseUrl.TrimEnd('/'); // The site base url, will be combined to relative links to provide absolute links to distributors
+	private readonly string _baseUrl = appSettings.BaseUrl.TrimEnd('/');
 
 	private IEnumerable<IPostDistributor> Providers { get; } = providers.ToList();
 
-	public async Task Send(IPostable message)
+	public async Task Send(IPostable message, bool force = false)
 	{
-		if (message is null)
+		if (!force)
 		{
-			throw new ArgumentException($"{nameof(message)} can not be null");
+			var isMinorEdit = httpContextAccessor.HttpContext?.Request.MinorEdit() ?? false;
+			if (isMinorEdit)
+			{
+				return;
+			}
 		}
 
 		var providers = Providers.Where(p => p.Types.Contains(message.Type));
@@ -88,17 +92,19 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, int subId, string formattedTitle, string body)
+	public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, int subId, string formattedTitle, string body, bool force = false)
 	{
-		await publisher.Send(new Post
-		{
-			Type = PostType.General,
-			Group = PostGroups.Submission,
-			Title = Unformat(formattedTitle),
-			FormattedTitle = formattedTitle,
-			Body = body,
-			Link = publisher.ToAbsolute($"{subId}S")
-		});
+		await publisher.Send(
+			new Post
+			{
+				Type = PostType.General,
+				Group = PostGroups.Submission,
+				Title = Unformat(formattedTitle),
+				FormattedTitle = formattedTitle,
+				Body = body,
+				Link = publisher.ToAbsolute($"{subId}S")
+			},
+			force);
 	}
 
 	public static async Task SendDeprecation(this ExternalMediaPublisher publisher, string formattedTitle)
@@ -212,9 +218,10 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendWiki(this ExternalMediaPublisher publisher, string formattedTitle, string body, string path)
+	public static async Task SendWiki(this ExternalMediaPublisher publisher, string formattedTitle, string body, string path, bool force = false)
 	{
-		await publisher.Send(new Post
+		await publisher.Send(
+		new Post
 		{
 			Announcement = "",
 			Type = PostType.General,
@@ -225,7 +232,8 @@ public static class ExternalMediaPublisherExtensions
 			Link = !string.IsNullOrWhiteSpace(path)
 				? publisher.ToAbsolute(WikiHelper.EscapeUserName(path))
 				: ""
-		});
+		},
+		force);
 	}
 
 	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string formattedTitle, string userName)

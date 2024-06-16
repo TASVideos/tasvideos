@@ -52,14 +52,11 @@
 		<textarea asp-for="Post.Text" data-id="forum-edit" data-diff="right" rows="20" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
 		<span asp-validation-for="Post.Text"></span>
 	</fieldset>
-	<fullrow class="mt-3">
-		<input asp-for="MinorEdit" />
-		<label asp-for="MinorEdit"></label>
-	</fullrow>
 	<form-button-bar class="mb-2">
 		<preview-button></preview-button>
 		<submit-button></submit-button>
 		<cancel-link asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId"></cancel-link>
+		<minor-edit checked="Model.Post.PosterId == User.GetUserId()"></minor-edit>
 	</form-button-bar>
 </form>
 <div class="alert alert-light p-0">

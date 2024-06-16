@@ -87,6 +87,26 @@ public static class HttpRequestExtensions
 		return null;
 	}
 
+	private static bool FormBoolValue(this HttpRequest? request, string key)
+	{
+		if (request?.Form.TryGetValue(key, out var val) ?? false)
+		{
+			if (val == "on")
+			{
+				return true;
+			}
+
+			if (bool.TryParse(val, out var parsedBool))
+			{
+				return parsedBool;
+			}
+		}
+
+		return false;
+	}
+
+	public static bool MinorEdit(this HttpRequest? request) => request.FormBoolValue("MinorEdit");
+
 	public static IPAddress? ActualIpAddress(this HttpContext context)
 	{
 		var forwardedIp = context.Request.Headers["X-Forwarded-For"];

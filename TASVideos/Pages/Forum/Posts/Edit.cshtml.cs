@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity.Forum;
+﻿using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -22,8 +21,6 @@ public class EditModel(
 	[BindProperty]
 	public ForumPostEditModel Post { get; set; } = new();
 
-	[BindProperty]
-	public bool MinorEdit { get; set; }
 	public List<CreateModel.MiniPost> PreviousPosts { get; set; } = [];
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
@@ -86,7 +83,6 @@ public class EditModel(
 		if (Post.PosterId == User.GetUserId())
 		{
 			UserAvatars = await forumService.UserAvatars(User.GetUserId());
-			MinorEdit = true;
 		}
 
 		return Page();
@@ -145,15 +141,11 @@ public class EditModel(
 		if (result.IsSuccess())
 		{
 			forumService.CacheEditedPostActivity(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
-
-			if (!MinorEdit)
-			{
-				await publisher.SendForum(
-					forumPost.Topic!.Forum!.Restricted,
-					$"[Post]({{0}}) edited by {User.Name()}",
-					$"{forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title}",
-					$"Forum/Posts/{Id}");
-			}
+			await publisher.SendForum(
+				forumPost.Topic!.Forum!.Restricted,
+				$"[Post]({{0}}) edited by {User.Name()}",
+				$"{forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title}",
+				$"Forum/Posts/{Id}");
 		}
 
 		return BaseRedirect($"/Forum/Posts/{Id}");

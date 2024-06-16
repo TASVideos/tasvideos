@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games;
 

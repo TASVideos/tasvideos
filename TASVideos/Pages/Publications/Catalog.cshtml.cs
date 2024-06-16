@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using TASVideos.Core.Services.ExternalMediaPublisher;
 
 namespace TASVideos.Pages.Publications;
 
@@ -177,7 +176,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		var result = await db.TrySaveChanges();
 		SetMessage(result, $"{Id}M catalog updated", $"Unable to save {Id}M catalog");
-		if (result.IsSuccess() && !Catalog.MinorEdit)
+		if (result.IsSuccess())
 		{
 			await publisher.SendGameManagement(
 				$"[{Id}M]({{0}}) Catalog edited by {User.Name()}",
@@ -200,7 +199,6 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	public class PublicationCatalog
 	{
 		public string Title { get; init; } = "";
-		public bool MinorEdit { get; init; }
 		public int GameVersion { get; set; }
 		public int Goal { get; init; }
 		public int Game { get; set; }

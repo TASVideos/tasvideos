@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.Youtube;
+﻿using TASVideos.Core.Services.Youtube;
 
 namespace TASVideos.Pages.Publications.Urls;
 

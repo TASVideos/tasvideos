@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-
-namespace TASVideos.Pages.Users;
+﻿namespace TASVideos.Pages.Users;
 
 [RequirePermission(matchAny: false, PermissionTo.SeeEmails, PermissionTo.EditUsers)]
 public class EditEmailModel(

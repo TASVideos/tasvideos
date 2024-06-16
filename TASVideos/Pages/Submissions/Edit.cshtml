@@ -108,8 +108,7 @@
 			<div class="input-group">
 				<input asp-for="Submission.RevisionMessage" />
 				<div class="input-group-text">
-					<input type="checkbox" class="form-check-input me-1 mt-0" asp-for="Submission.MinorEdit" />
-					<label asp-for="Submission.MinorEdit" class="form-check-label"></label>
+					<minor-edit></minor-edit>
 				</div>
 			</div>
 			<span asp-validation-for="Submission.RevisionMessage"></span>

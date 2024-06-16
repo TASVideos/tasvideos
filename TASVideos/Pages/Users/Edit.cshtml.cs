@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using TASVideos.Core.Services.ExternalMediaPublisher;
-
-namespace TASVideos.Pages.Users;
+﻿namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditUsers)]
 public class EditModel(

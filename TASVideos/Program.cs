@@ -7,7 +7,7 @@ using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
 using TASVideos.MovieParsers;
-using TASVideos.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
@@ -23,7 +23,7 @@ builder.Services
 	.AddRequestLocalization()
 	.AddCookieConfiguration()
 	.AddGzipCompression(settings)
-	.AddTextModules();
+	.AddServices();
 
 // Internal Libraries
 string dbConnection = settings.UseSampleDatabase

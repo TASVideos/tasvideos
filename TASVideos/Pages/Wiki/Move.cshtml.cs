@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.Wiki;
 

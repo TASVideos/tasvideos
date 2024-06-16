@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
-using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Data.Entity.Forum;
@@ -293,11 +292,12 @@ public class EditModel(
 		submission.Status = Submission.Status;
 		submission.AdditionalAuthors = Submission.ExternalAuthors.NullIfWhitespace();
 
+		var minorEdit = HttpContext.Request.MinorEdit();
 		var revision = new WikiCreateRequest
 		{
 			PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
 			Markup = Markup,
-			MinorEdit = Submission.MinorEdit,
+			MinorEdit = minorEdit,
 			RevisionMessage = Submission.RevisionMessage,
 			AuthorId = User.GetUserId()
 		};
@@ -336,13 +336,10 @@ public class EditModel(
 			await tasvideosGrue.RejectAndMove(submission.Id);
 		}
 
-		if (!Submission.MinorEdit || statusHasChanged) // always publish submission status changes to media
-		{
-			var formattedTitle = await GetFormattedTitle(statusHasChanged);
-			var separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
-			await publisher.SendSubmissionEdit(
-				Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{submission.Title}");
-		}
+		var formattedTitle = await GetFormattedTitle(statusHasChanged);
+		var separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
+		await publisher.SendSubmissionEdit(
+			Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{submission.Title}", statusHasChanged);
 
 		return RedirectToPage("View", new { Id });
 	}
@@ -473,7 +470,6 @@ public class EditModel(
 	{
 		[StringLength(1000)]
 		public string? RevisionMessage { get; init; }
-		public bool MinorEdit { get; init; }
 		public IFormFile? ReplaceMovieFile { get; set; }
 		public int? IntendedPublicationClass { get; set; }
 		public int? RejectionReason { get; init; }

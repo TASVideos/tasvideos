@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-
-namespace TASVideos.Pages.UserFiles;
+﻿namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel

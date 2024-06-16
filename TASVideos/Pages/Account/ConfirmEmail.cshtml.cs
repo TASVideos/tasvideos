@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-
-namespace TASVideos.Pages.Account;
+﻿namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
 public class ConfirmEmailModel(

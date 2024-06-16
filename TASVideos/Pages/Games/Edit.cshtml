@@ -66,9 +66,6 @@
 	<form-button-bar>
 		<submit-button edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="List"></cancel-link>
-		<div class="form-check-inline">
-			<label asp-for="Game.MinorEdit" class="form-check-label"></label>
-			<input asp-for="Game.MinorEdit" type="checkbox" class="form-check-input"/>
-		</div>
+		<minor-edit></minor-edit>
 	</form-button-bar>
 </form>

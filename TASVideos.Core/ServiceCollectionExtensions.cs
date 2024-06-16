@@ -130,7 +130,6 @@ public static class ServiceCollectionExtensions
 			services.AddScoped<IPostDistributor, DiscordDistributor>();
 		}
 
-		services.AddScoped<IPostDistributor, DistributorStorage>();
-		return services.AddTransient<ExternalMediaPublisher>();
+		return services.AddScoped<IPostDistributor, DistributorStorage>();
 	}
 }
