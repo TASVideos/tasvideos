@@ -65,7 +65,7 @@ public static class ApplicationBuilderExtensions
 			context.Response.Headers.XContentTypeOptions = "nosniff";
 			context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
 			context.Response.Headers.XPoweredBy = "";
-			context.Response.Headers.ContentSecurityPolicy = "upgrade-insecure-requests; script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com ";
+			context.Response.Headers.ContentSecurityPolicy = "upgrade-insecure-requests; script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.youtube.com/iframe_api";
 			await next();
 		});
 
