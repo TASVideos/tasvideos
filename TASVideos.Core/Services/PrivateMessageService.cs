@@ -65,7 +65,7 @@ internal class PrivateMessageService(ApplicationDbContext db, IEmailService emai
 		}
 
 		var role = await db.Roles
-			.Where(r => r.Name.ToLower() == roleName)
+			.Where(r => r.Name.Equals(roleName, StringComparison.CurrentCultureIgnoreCase))
 			.SingleOrDefaultAsync();
 
 		if (role is null)
@@ -85,8 +85,5 @@ internal class PrivateMessageService(ApplicationDbContext db, IEmailService emai
 		}
 	}
 
-	public async Task<string[]> AllowedRoles()
-	{
-		return await Task.FromResult(AllowedBulkRoles);
-	}
+	public async Task<string[]> AllowedRoles() => await Task.FromResult(AllowedBulkRoles);
 }

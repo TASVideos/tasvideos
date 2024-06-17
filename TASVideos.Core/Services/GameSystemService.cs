@@ -165,7 +165,7 @@ internal class GameSystemService(ApplicationDbContext db, ICacheService cache) :
 
 		try
 		{
-			var system = await db.GameSystems.SingleOrDefaultAsync(t => t.Id == id);
+			var system = await db.GameSystems.FindAsync(id);
 			if (system is null)
 			{
 				return SystemDeleteResult.NotFound;

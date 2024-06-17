@@ -27,8 +27,8 @@ public class WikiResult : IWikiPage
 	public DateTime CreateTimestamp { get; init; }
 	public bool MinorEdit { get; init; }
 
-	internal int? ChildId { get; set; }
-	internal bool IsDeleted { get; set; }
+	internal int? ChildId { get; init; }
+	internal bool IsDeleted { get; init; }
 
 	internal void SetPageName(string newPageName)
 	{

@@ -14,11 +14,6 @@ internal class RoleService(ApplicationDbContext db) : IRoleService
 {
 	public async Task<IEnumerable<AssignableRole>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles)
 	{
-		if (assignedRoles is null)
-		{
-			throw new ArgumentException($"{nameof(assignedRoles)} can not be null");
-		}
-
 		var assignedRoleList = assignedRoles.ToList();
 		var assignablePermissions = await db.Users
 			.Where(u => u.Id == userId)
@@ -62,16 +57,11 @@ internal class RoleService(ApplicationDbContext db) : IRoleService
 		}
 	}
 
-	public async Task<bool> IsInUse(int roleId)
-	{
-		return await db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
-	}
+	public async Task<bool> IsInUse(int roleId) => await db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
 
 	public async Task<IReadOnlyCollection<string>> GetRolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds)
-	{
-		return await db.Roles
+		=> await db.Roles
 			.ThatCanBeAssignedBy(permissionIds)
 			.Select(r => r.Name)
 			.ToListAsync();
-	}
 }

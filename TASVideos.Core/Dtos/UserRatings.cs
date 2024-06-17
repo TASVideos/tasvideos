@@ -40,5 +40,5 @@ public class RatingRequest : PagingModel
 
 public class RatingPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 {
-	public bool IncludeObsolete { get; set; }
+	public bool IncludeObsolete { get; init; }
 }

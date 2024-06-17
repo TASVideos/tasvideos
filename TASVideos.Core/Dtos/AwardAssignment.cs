@@ -15,13 +15,13 @@ public interface IAwardAssignmentSummary
 /// </summary>
 public class AwardAssignment : IAwardAssignmentSummary
 {
-	public int AwardId { get; set; }
-	public string ShortName { get; set; } = "";
-	public string Description { get; set; } = "";
-	public int Year { get; set; }
-	public AwardType Type { get; set; }
-	public IReadOnlyCollection<Publication> Publications { get; set; } = [];
-	public IReadOnlyCollection<User> Users { get; set; } = [];
+	public int AwardId { get; init; }
+	public string ShortName { get; init; } = "";
+	public string Description { get; init; } = "";
+	public int Year { get; init; }
+	public AwardType Type { get; init; }
+	public IReadOnlyCollection<Publication> Publications { get; init; } = [];
+	public IReadOnlyCollection<User> Users { get; init; } = [];
 
 	public record User(int Id, string UserName);
 	public record Publication(int Id, string Title);

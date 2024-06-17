@@ -58,7 +58,7 @@ public interface IQueueService
 	Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId);
 
 	/// <summary>
-	/// Returns whether or not the user has exceeded the submission limit
+	/// Returns whether the user has exceeded the submission limit
 	/// </summary>
 	/// <returns>Next time the user can submit, if limit has been exceeded, else null</returns>
 	Task<DateTime?> ExceededSubmissionLimit(int userId);

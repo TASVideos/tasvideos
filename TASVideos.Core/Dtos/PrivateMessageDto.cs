@@ -2,17 +2,17 @@
 
 public class PrivateMessageDto
 {
-	public string? Subject { get; set; }
-	public DateTime SentOn { get; set; }
-	public string Text { get; set; } = "";
-	public int FromUserId { get; set; }
-	public string FromUserName { get; set; } = "";
+	public string? Subject { get; init; }
+	public DateTime SentOn { get; init; }
+	public string Text { get; init; } = "";
+	public int FromUserId { get; init; }
+	public string FromUserName { get; init; } = "";
 
-	public int ToUserId { get; set; }
-	public string ToUserName { get; set; } = "";
+	public int ToUserId { get; init; }
+	public string ToUserName { get; init; } = "";
 
-	public bool CanReply { get; set; }
+	public bool CanReply { get; init; }
 
-	public bool EnableBbCode { get; set; }
-	public bool EnableHtml { get; set; }
+	public bool EnableBbCode { get; init; }
+	public bool EnableHtml { get; init; }
 }

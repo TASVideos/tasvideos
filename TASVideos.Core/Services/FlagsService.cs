@@ -52,10 +52,7 @@ internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlag
 		return new ListDiff(currentFlags, newFlags);
 	}
 
-	public async Task<bool> InUse(int id)
-	{
-		return await db.PublicationFlags.AnyAsync(pt => pt.FlagId == id);
-	}
+	public async Task<bool> InUse(int id) => await db.PublicationFlags.AnyAsync(pt => pt.FlagId == id);
 
 	public async Task<FlagEditResult> Add(Flag flag)
 	{
@@ -133,7 +130,7 @@ internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlag
 
 		try
 		{
-			var flag = await db.Flags.SingleOrDefaultAsync(t => t.Id == id);
+			var flag = await db.Flags.FindAsync(id);
 			if (flag is null)
 			{
 				return FlagDeleteResult.NotFound;

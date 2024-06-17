@@ -52,10 +52,7 @@ internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagSe
 		return new ListDiff(currentTags, newTags);
 	}
 
-	public async Task<bool> InUse(int id)
-	{
-		return await db.PublicationTags.AnyAsync(pt => pt.TagId == id);
-	}
+	public async Task<bool> InUse(int id) => await db.PublicationTags.AnyAsync(pt => pt.TagId == id);
 
 	public async Task<(int? Id, TagEditResult Result)> Add(string code, string displayName)
 	{
@@ -88,7 +85,7 @@ internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagSe
 
 	public async Task<TagEditResult> Edit(int id, string code, string displayName)
 	{
-		var tag = await db.Tags.SingleOrDefaultAsync(t => t.Id == id);
+		var tag = await db.Tags.FindAsync(id);
 		if (tag is null)
 		{
 			return TagEditResult.NotFound;
@@ -127,7 +124,7 @@ internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagSe
 
 		try
 		{
-			var tag = await db.Tags.SingleOrDefaultAsync(t => t.Id == id);
+			var tag = await db.Tags.FindAsync(id);
 			if (tag is null)
 			{
 				return TagDeleteResult.NotFound;

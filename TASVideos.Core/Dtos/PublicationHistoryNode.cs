@@ -13,11 +13,11 @@ public class PublicationHistoryNode
 	public int Id { get; init; }
 	public string Title { get; init; } = "";
 	public string? Goal { get; init; }
-	public DateTime CreateTimestamp { get; set; }
+	public DateTime CreateTimestamp { get; init; }
 
-	public string? ClassIconPath { get; set; }
+	public string? ClassIconPath { get; init; }
 
-	public IEnumerable<FlagEntry> Flags { get; set; } = [];
+	public IEnumerable<FlagEntry> Flags { get; init; } = [];
 
 	public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 

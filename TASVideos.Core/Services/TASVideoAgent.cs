@@ -20,9 +20,9 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 			Question = SiteGlobalConstants.PollQuestion,
 			PollOptions =
 			[
-					new () { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
-					new () { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
-					new () { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
+				new () { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
+				new () { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
+				new () { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
 			]
 		};
 
@@ -138,9 +138,7 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 	}
 
 	public Task SendWelcomeMessage(int userId)
-	{
-		return SendPm(userId, SiteGlobalConstants.WelcomeToTasvideosPostId, t => t);
-	}
+		=> SendPm(userId, SiteGlobalConstants.WelcomeToTasvideosPostId, t => t);
 
 	public Task SendAutoAssignedRole(int userId, string roleName)
 	{

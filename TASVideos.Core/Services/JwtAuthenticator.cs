@@ -11,11 +11,7 @@ public interface IJwtAuthenticator
 	Task<string> Authenticate(string username, string password);
 }
 
-internal class JwtAuthenticator(
-	UserManager userManager,
-	SignInManager signInManager,
-	AppSettings settings)
-	: IJwtAuthenticator
+internal class JwtAuthenticator(SignInManager signInManager, AppSettings settings) : IJwtAuthenticator
 {
 	private readonly AppSettings.JwtSettings _settings = settings.Jwt;
 
@@ -32,7 +28,7 @@ internal class JwtAuthenticator(
 			return "";
 		}
 
-		var claims = await userManager.GetClaimsAsync(user);
+		var claims = await signInManager.UserManager.GetClaimsAsync(user);
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var tokenKey = Encoding.ASCII.GetBytes(_settings.SecretKey);
 		var tokenDescriptor = new SecurityTokenDescriptor

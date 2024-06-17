@@ -16,9 +16,7 @@ public interface IPointsService
 	ValueTask<double> PlayerPointsForPublication(int publicationId);
 }
 
-internal class PointsService(
-	ApplicationDbContext db,
-	ICacheService cache) : IPointsService
+internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPointsService
 {
 	private const string MoviePlayerPointKey = "PlayerPointsForPub-";
 	private const string PlayerPointKey = "PlayerPoints-";

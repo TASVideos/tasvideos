@@ -35,10 +35,7 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 		return classes.SingleOrDefault(t => t.Id == id);
 	}
 
-	public async Task<bool> InUse(int id)
-	{
-		return await db.Publications.AnyAsync(pt => pt.PublicationClassId == id);
-	}
+	public async Task<bool> InUse(int id) => await db.Publications.AnyAsync(pt => pt.PublicationClassId == id);
 
 	public async Task<(int? Id, ClassEditResult Result)> Add(PublicationClass publicationClass)
 	{
@@ -116,7 +113,7 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 
 		try
 		{
-			var existingClass = await db.PublicationClasses.SingleOrDefaultAsync(t => t.Id == id);
+			var existingClass = await db.PublicationClasses.FindAsync(id);
 			if (existingClass is null)
 			{
 				return ClassDeleteResult.NotFound;

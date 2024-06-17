@@ -42,9 +42,7 @@ public interface IAwards
 	Task FlushCache();
 }
 
-internal class Awards(
-	ApplicationDbContext db,
-	ICacheService cache) : IAwards
+internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 {
 	public async ValueTask<ICollection<AwardAssignmentSummary>> ForUser(int userId)
 	{

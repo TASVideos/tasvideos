@@ -341,10 +341,7 @@ internal class ForumService(
 		return subforumActivity;
 	}
 
-	public async Task<bool> IsTopicLocked(int topicId)
-	{
-		return await db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
-	}
+	public async Task<bool> IsTopicLocked(int topicId) => await db.ForumTopics.AnyAsync(t => t.Id == topicId && t.IsLocked);
 
 	public async Task<AvatarUrls> UserAvatars(int userId)
 	{
