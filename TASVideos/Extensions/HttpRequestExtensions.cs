@@ -9,14 +9,10 @@ public static class HttpRequestExtensions
 	private const string XmlHttpRequest = "XMLHttpRequest";
 
 	public static bool IsAjaxRequest(this HttpRequest request)
-	{
-		return request.Headers[RequestedWithHeader] == XmlHttpRequest;
-	}
+		=> request.Headers[RequestedWithHeader] == XmlHttpRequest;
 
 	public static bool IsRobotsTxt(this HttpRequest? request)
-	{
-		return request?.Path.Value?.EndsWith("robots.txt") ?? false;
-	}
+		=> request?.Path.Value?.EndsWith("robots.txt") ?? false;
 
 	public static string ReturnUrl(this HttpRequest? request)
 	{
@@ -128,12 +124,8 @@ public static class HttpRequestExtensions
 	}
 
 	public static string ToBaseUrl(this HttpRequest request)
-	{
-		return $"https://{request.Host}{request.PathBase}";
-	}
+		=> $"https://{request.Host}{request.PathBase}";
 
 	public static string ToUrl(this HttpRequest request)
-	{
-		return $"https://{request.Host}{request.PathBase}{request.Path}";
-	}
+		=> $"https://{request.Host}{request.PathBase}{request.Path}";
 }
