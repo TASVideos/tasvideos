@@ -280,7 +280,7 @@ public class EditModel(
 			: null;
 
 		submission.IntendedClass = Submission.IntendedPublicationClass.HasValue
-			? await db.PublicationClasses.SingleAsync(t => t.Id == Submission.IntendedPublicationClass.Value)
+			? await db.PublicationClasses.FindAsync(Submission.IntendedPublicationClass.Value)
 			: null;
 
 		submission.SubmittedGameVersion = Submission.GameVersion;
@@ -362,7 +362,7 @@ public class EditModel(
 		{
 			case SubmissionStatus.Accepted:
 			{
-				var publicationClass = (await db.PublicationClasses.SingleAsync(t => t.Id == Submission.IntendedPublicationClass)).Name;
+				var publicationClass = (await db.PublicationClasses.FindAsync(Submission.IntendedPublicationClass))!.Name;
 				if (publicationClass != "Standard")
 				{
 					statusStr += $" to {publicationClass}";
@@ -404,8 +404,7 @@ public class EditModel(
 
 	private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
 	{
-		var submission = await db.Submissions.SingleOrDefaultAsync(s => s.Id == Id);
-
+		var submission = await db.Submissions.FindAsync(Id);
 		if (submission is null)
 		{
 			return NotFound();
