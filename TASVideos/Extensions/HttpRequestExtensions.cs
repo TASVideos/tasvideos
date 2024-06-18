@@ -89,7 +89,12 @@ public static class HttpRequestExtensions
 
 	private static bool FormBoolValue(this HttpRequest? request, string key)
 	{
-		if (request?.Form.TryGetValue(key, out var val) ?? false)
+		if (request is null || !request.HasFormContentType)
+		{
+			return false;
+		}
+
+		if (request.Form.TryGetValue(key, out var val))
 		{
 			if (val == "on")
 			{
