@@ -2,7 +2,7 @@
 
 [Authorize]
 [IgnoreAntiforgeryToken]
-public class InboxModel(ApplicationDbContext db) : BasePageModel
+public class InboxModel(IPrivateMessageService privateMessageService) : BasePageModel
 {
 	[FromQuery]
 	public PagingModel Paging { get; set; } = new();
@@ -14,19 +14,7 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task OnGet()
 	{
-		Messages = await db.PrivateMessages
-			.SentToUser(User.GetUserId())
-			.ThatAreNotToUserDeleted()
-			.ThatAreNotToUserSaved()
-			.OrderBy(m => m.ReadOn.HasValue)
-			.ThenByDescending(m => m.CreateTimestamp)
-			.Select(pm => new InboxEntry(
-				pm.Id,
-				pm.Subject,
-				pm.FromUser!.UserName,
-				pm.CreateTimestamp,
-				pm.ReadOn.HasValue))
-			.PageOf(Paging);
+		Messages = await privateMessageService.GetInbox(User.GetUserId(), Paging);
 	}
 
 	public async Task<IActionResult> OnPostSave()
@@ -36,12 +24,8 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		var message = await GetMessage();
-		if (message is not null)
-		{
-			message.SavedForToUser = true;
-			SetMessage(await db.TrySaveChanges(), "Message successfully saved", "Unable to save message");
-		}
+		var result = await privateMessageService.SaveMessageForUser(Id.Value);
+		SetMessage(result, "Message successfully saved", "Unable to save message");
 
 		return BasePageRedirect("Savebox");
 	}
@@ -53,21 +37,9 @@ public class InboxModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		var message = await GetMessage();
-		if (message is not null)
-		{
-			message.DeletedForToUser = true;
-			SetMessage(await db.TrySaveChanges(), "Message successfully deleted", "Unable to deleted message");
-		}
+		var result = await privateMessageService.DeleteMessageForUser(Id.Value);
+		SetMessage(result, "Message successfully deleted", "Unable to deleted message");
 
 		return BasePageRedirect("Inbox");
 	}
-
-	private async Task<PrivateMessage?> GetMessage()
-		=> await db.PrivateMessages
-			.SentToUser(User.GetUserId())
-			.ThatAreNotToUserDeleted()
-			.SingleOrDefaultAsync(pm => pm.Id == Id);
-
-	public record InboxEntry(int Id, string? Subject, string From, DateTime Date, bool IsRead);
 }

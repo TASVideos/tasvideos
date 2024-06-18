@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Messages;
 
 [Authorize]
-public class SentboxModel(ApplicationDbContext db) : BasePageModel
+public class SentboxModel(IPrivateMessageService privateMessageService) : BasePageModel
 {
 	[FromQuery]
 	public PagingModel Paging { get; set; } = new();
@@ -13,19 +13,7 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task OnGet()
 	{
-		var userId = User.GetUserId();
-		SentBox = await db.PrivateMessages
-			.ThatAreNotToUserDeleted()
-			.FromUser(userId)
-			.OrderBy(m => m.ReadOn.HasValue)
-			.ThenByDescending(m => m.CreateTimestamp)
-			.Select(pm => new SentboxEntry(
-				pm.Id,
-				pm.Subject,
-				pm.ToUser!.UserName,
-				pm.CreateTimestamp,
-				pm.ReadOn.HasValue))
-			.PageOf(Paging);
+		SentBox = await privateMessageService.GetSentInbox(User.GetUserId(), Paging);
 	}
 
 	public async Task<IActionResult> OnPostDelete()
@@ -35,19 +23,8 @@ public class SentboxModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		var message = await db.PrivateMessages
-			.FromUser(User.GetUserId())
-			.ThatAreNotToUserDeleted()
-			.SingleOrDefaultAsync(pm => pm.Id == Id);
-
-		if (message is not null)
-		{
-			db.PrivateMessages.Remove(message);
-			await db.TrySaveChanges(); // Do nothing on failure, likely the user has read at the same time
-		}
-
+		var result = await privateMessageService.HardDeleteMessage(Id.Value, User.GetUserId());
+		SetMessage(result, "Message successfully saved", "Unable to save message");
 		return BasePageRedirect("SentBox");
 	}
-
-	public record SentboxEntry(int Id, string? Subject, string To, DateTime SendDate, bool IsRead);
 }

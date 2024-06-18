@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Messages;
 
 [Authorize]
-public class IndexModel(UserManager userManager) : BasePageModel
+public class IndexModel(IPrivateMessageService privateMessageService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -10,7 +10,7 @@ public class IndexModel(UserManager userManager) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var message = await userManager.GetMessage(User.GetUserId(), Id);
+		var message = await privateMessageService.GetMessage(User.GetUserId(), Id);
 
 		if (message is null)
 		{

@@ -286,48 +286,6 @@ public class UserManager(
 	}
 
 	/// <summary>
-	/// Returns the <see cref="PrivateMessage"/>
-	/// record with the given <see cref="id"/> if the user has access to the message
-	/// A user has access if they are the sender or the receiver of the message
-	/// </summary>
-	public async Task<PrivateMessageDto?> GetMessage(int userId, int id)
-	{
-		var pm = await db.PrivateMessages
-			.Include(p => p.FromUser)
-			.Include(p => p.ToUser)
-			.Where(p => (!p.DeletedForFromUser && p.FromUserId == userId)
-				|| (!p.DeletedForToUser && p.ToUserId == userId))
-			.SingleOrDefaultAsync(p => p.Id == id);
-
-		if (pm is null)
-		{
-			return null;
-		}
-
-		// If it is the recipient and the message are not deleted
-		if (!pm.ReadOn.HasValue && pm.ToUserId == userId)
-		{
-			pm.ReadOn = DateTime.UtcNow;
-			await db.SaveChangesAsync();
-			cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
-		}
-
-		return new PrivateMessageDto
-		{
-			Subject = pm.Subject,
-			SentOn = pm.CreateTimestamp,
-			Text = pm.Text,
-			FromUserId = pm.FromUserId,
-			FromUserName = pm.FromUser!.UserName,
-			ToUserId = pm.ToUserId,
-			ToUserName = pm.ToUser!.UserName,
-			CanReply = pm.ToUserId == userId,
-			EnableBbCode = pm.EnableBbCode,
-			EnableHtml = pm.EnableHtml
-		};
-	}
-
-	/// <summary>
 	/// Assigns any roles to the user that have an auto-assign post count
 	/// property, that the user does not already have. Note that the role
 	/// won't be assigned if the user already has all permissions assigned to that role

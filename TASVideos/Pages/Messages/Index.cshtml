@@ -4,21 +4,21 @@
 	ViewData.SetTitle($"Message from {Model.PrivateMessage.FromUserName}");
 }
 
-<div class="mb-2">
+<top-button-bar>
 	<back-link asp-page="Inbox"></back-link>
 	<a condition="Model.PrivateMessage.CanReply" asp-page="Create" asp-route-replyTo="@Model.Id" class="btn btn-primary">Reply</a>
-</div>
+</top-button-bar>
 <div>
 	<profile-link username="@Model.PrivateMessage.FromUserName"></profile-link> <span class="fa fa-arrow-right"></span> @Model.PrivateMessage.ToUserName
 	<small class="float-end">
 		@Model.PrivateMessage.SentOn
 	</small>
 </div>
-<div class="card">
-	<div class="card-header">
+<card>
+	<card-header>
 		<h4>@Model.PrivateMessage.Subject</h4>
-	</div>
-	<div class="card-body">
+	</card-header>
+	<card-body>
 		<forum-markup markup="@Model.PrivateMessage.Text" enable-html="@Model.PrivateMessage.EnableHtml" enable-bb-code="@Model.PrivateMessage.EnableBbCode"></forum-markup>
-	</div>
-</div>
+	</card-body>
+</card>

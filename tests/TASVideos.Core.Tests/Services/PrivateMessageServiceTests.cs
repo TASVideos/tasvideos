@@ -14,7 +14,7 @@ public class PrivateMessageServiceTests
 	{
 		_db = TestDbContext.Create();
 		_emailService = Substitute.For<IEmailService>();
-		_privateMessageService = new PrivateMessageService(_db, _emailService);
+		_privateMessageService = new PrivateMessageService(_db, new TestCache(), _emailService);
 	}
 
 	[TestMethod]

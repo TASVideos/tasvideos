@@ -84,7 +84,7 @@ public class CreateModel(UserManager userManager, IPrivateMessageService private
 	{
 		if (ReplyTo > 0)
 		{
-			var message = await userManager.GetMessage(User.GetUserId(), ReplyTo.Value);
+			var message = await privateMessageService.GetMessage(User.GetUserId(), ReplyTo.Value);
 			if (message is not null)
 			{
 				DefaultToUser = message.FromUserName;
