@@ -1,4 +1,6 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using Microsoft.Extensions.Hosting;
+using TASVideos.Core.Services.Wiki;
+using TASVideos.Core.Settings;
 using TASVideos.Data.Helpers;
 using TASVideos.WikiEngine;
 
@@ -6,7 +8,7 @@ namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.WikiLink)]
 [TextModule]
-public class WikiLink(ApplicationDbContext db) : WikiViewComponent
+public class WikiLink(ApplicationDbContext db, AppSettings settings) : WikiViewComponent
 {
 	public string Href { get; set; } = "";
 	public string DisplayText { get; set; } = "";
@@ -21,7 +23,22 @@ public class WikiLink(ApplicationDbContext db) : WikiViewComponent
 	public async Task<string> RenderTextAsync(IWikiPage? pageData, string href, string? displayText, string? implicitDisplayText)
 	{
 		await GenerateLink(href, displayText, implicitDisplayText);
-		return DisplayText;
+		return $"{DisplayText} ( {AbsoluteUrl(Href)} )";
+	}
+
+	public string AbsoluteUrl(string url)
+	{
+		if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsed))
+		{
+			return url;
+		}
+
+		if (!parsed.IsAbsoluteUri)
+		{
+			return $"{settings.BaseUrl}/{url.TrimStart('/')}";
+		}
+
+		return url;
 	}
 
 	private async Task GenerateLink(string href, string? displayText, string? implicitDisplayText)
