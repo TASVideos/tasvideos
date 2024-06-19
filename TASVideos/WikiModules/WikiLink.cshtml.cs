@@ -26,7 +26,7 @@ public class WikiLink(ApplicationDbContext db, AppSettings settings) : WikiViewC
 		return $"{DisplayText} ( {AbsoluteUrl(Href)} )";
 	}
 
-	public string AbsoluteUrl(string url)
+	private string AbsoluteUrl(string url)
 	{
 		if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsed))
 		{
