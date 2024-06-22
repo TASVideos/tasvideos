@@ -330,27 +330,19 @@ public class UserManager(
 	}
 
 	// Hardcoded for now, we can make a database table if this becomes a maintenance burden
-	public string[] BannedAvatarSites()
-	{
-		return
-		[
-			"cdn.discordapp.com",
-			"media.discordapp.net",
-			"membres.lycos.fr",
-			"rphaven.org",
-			"usuarios.lycos.es"
-		];
-	}
+	private static readonly string[] BannedAvatarSites = [
+		"cdn.discordapp.com",
+		"media.discordapp.net",
+		"membres.lycos.fr",
+		"rphaven.org",
+		"usuarios.lycos.es"
+	];
+	public string[] GetBannedAvatarSites() => BannedAvatarSites;
 
 	public string? AvatarSiteIsBanned(string? avatar)
-	{
-		if (string.IsNullOrWhiteSpace(avatar))
-		{
-			return null;
-		}
-
-		return BannedAvatarSites().FirstOrDefault(avatar.Contains);
-	}
+		=> string.IsNullOrWhiteSpace(avatar)
+			? null
+			: BannedAvatarSites.FirstOrDefault(avatar.Contains);
 
 	public async Task MarkEmailConfirmed(User user)
 	{

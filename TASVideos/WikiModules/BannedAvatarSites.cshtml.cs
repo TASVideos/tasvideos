@@ -9,7 +9,7 @@ public class BannedAvatarSites(UserManager userManager) : WikiViewComponent
 
 	public IViewComponentResult Invoke()
 	{
-		Sites = userManager.BannedAvatarSites();
+		Sites = userManager.GetBannedAvatarSites();
 		return View();
 	}
 }
