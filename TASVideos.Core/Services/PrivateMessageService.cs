@@ -14,11 +14,15 @@ public interface IPrivateMessageService
 	Task<PageOf<SentboxEntry>> GetSentInbox(int userId, PagingModel paging);
 	Task<ICollection<SaveboxEntry>> GetSavebox(int userId);
 
+	/// <summary>
+	/// Returns the number of unread <see cref="PrivateMessage"/>
+	/// for the given <see cref="User" />
+	/// </summary>
+	ValueTask<int> GetUnreadMessageCount(int userId);
 	Task SendMessage(int fromUserId, string toUserName, string subject, string text);
 	Task SendMessageToRole(int fromUserId, string roleName, string subject, string text);
-	Task<SaveResult> SaveMessageForUser(int privateMessageId);
-	Task<SaveResult> DeleteMessageForUser(int privateMessageId);
-	Task<SaveResult> HardDeleteMessage(int privateMessageId, int userId);
+	Task<SaveResult> SaveMessage(int userId, int privateMessageId);
+	Task<SaveResult> DeleteMessage(int userId, int privateMessageId);
 
 	/// <summary>
 	/// Returns a list of roles that are allowed for bulk sending
@@ -28,9 +32,10 @@ public interface IPrivateMessageService
 
 internal class PrivateMessageService(ApplicationDbContext db, ICacheService cache, IEmailService emailService) : IPrivateMessageService
 {
+	internal const string UnreadMessageCount = "UnreadMessageCountCache-";
+
 	// TODO: this does not belong in code, move to a system wiki page, or database table
 	private static readonly string[] AllowedBulkRoles = ["site admin", "moderator"];
-
 	public async Task<PrivateMessageDto?> GetMessage(int userId, int id)
 	{
 		var pm = await db.PrivateMessages
@@ -50,7 +55,7 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 		{
 			pm.ReadOn = DateTime.UtcNow;
 			await db.SaveChangesAsync();
-			cache.Remove(CacheKeys.UnreadMessageCount + userId); // Message count possibly no longer valid
+			cache.Remove(UnreadMessageCount + userId); // Message count possibly no longer valid
 		}
 
 		return new PrivateMessageDto
@@ -114,6 +119,23 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 				pm.ToUser!.UserName,
 				pm.CreateTimestamp))
 			.ToListAsync();
+	}
+
+	public async ValueTask<int> GetUnreadMessageCount(int userId)
+	{
+		var cacheKey = UnreadMessageCount + userId;
+		if (cache.TryGetValue(cacheKey, out int unreadMessageCount))
+		{
+			return unreadMessageCount;
+		}
+
+		unreadMessageCount = await db.PrivateMessages
+			.ThatAreNotToUserDeleted()
+			.SentToUser(userId)
+			.CountAsync(pm => pm.ReadOn == null);
+
+		cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
+		return unreadMessageCount;
 	}
 
 	public async Task SendMessage(int fromUserId, string toUserName, string subject, string text)
@@ -183,7 +205,7 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 		}
 	}
 
-	public async Task<SaveResult> SaveMessageForUser(int privateMessageId)
+	public async Task<SaveResult> SaveMessage(int userId, int privateMessageId)
 	{
 		var message = await db.PrivateMessages.FindAsync(privateMessageId);
 		if (message is null)
@@ -191,11 +213,23 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 			return SaveResult.UpdateFailure;
 		}
 
-		message.SavedForToUser = true;
+		if (message.FromUserId == userId)
+		{
+			message.SavedForFromUser = true;
+		}
+		else if (message.ToUserId == userId)
+		{
+			message.SavedForToUser = true;
+		}
+		else
+		{
+			return SaveResult.UpdateFailure;
+		}
+
 		return await db.TrySaveChanges();
 	}
 
-	public async Task<SaveResult> DeleteMessageForUser(int privateMessageId)
+	public async Task<SaveResult> DeleteMessage(int userId, int privateMessageId)
 	{
 		var message = await db.PrivateMessages.FindAsync(privateMessageId);
 		if (message is null)
@@ -203,23 +237,26 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 			return SaveResult.UpdateFailure;
 		}
 
-		message.DeletedForToUser = true;
-		return await db.TrySaveChanges();
-	}
-
-	public async Task<SaveResult> HardDeleteMessage(int privateMessageId, int userId)
-	{
-		var message = await db.PrivateMessages
-			.FromUser(userId)
-			.ThatAreNotToUserDeleted()
-			.SingleOrDefaultAsync(pm => pm.Id == privateMessageId);
-
-		if (message is null)
+		if (message.FromUserId == userId)
+		{
+			if (message.ReadOn.HasValue)
+			{
+				message.DeletedForFromUser = true;
+			}
+			else
+			{
+				db.PrivateMessages.Remove(message);
+			}
+		}
+		else if (message.ToUserId == userId)
+		{
+			message.DeletedForToUser = true;
+		}
+		else
 		{
 			return SaveResult.UpdateFailure;
 		}
 
-		db.PrivateMessages.Remove(message);
 		return await db.TrySaveChanges();
 	}
 

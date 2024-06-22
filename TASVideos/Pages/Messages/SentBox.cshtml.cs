@@ -15,16 +15,4 @@ public class SentboxModel(IPrivateMessageService privateMessageService) : BasePa
 	{
 		SentBox = await privateMessageService.GetSentInbox(User.GetUserId(), Paging);
 	}
-
-	public async Task<IActionResult> OnPostDelete()
-	{
-		if (!Id.HasValue)
-		{
-			return NotFound();
-		}
-
-		var result = await privateMessageService.HardDeleteMessage(Id.Value, User.GetUserId());
-		SetMessage(result, "Message successfully saved", "Unable to save message");
-		return BasePageRedirect("SentBox");
-	}
 }

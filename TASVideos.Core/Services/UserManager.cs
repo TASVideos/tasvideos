@@ -70,27 +70,6 @@ public class UserManager(
 	}
 
 	/// <summary>
-	/// Returns the number of unread <see cref="PrivateMessage"/>
-	/// for the given <see cref="User" />
-	/// </summary>
-	public async ValueTask<int> GetUnreadMessageCount(int userId)
-	{
-		var cacheKey = CacheKeys.UnreadMessageCount + userId;
-		if (cache.TryGetValue(cacheKey, out int unreadMessageCount))
-		{
-			return unreadMessageCount;
-		}
-
-		unreadMessageCount = await db.PrivateMessages
-			.ThatAreNotToUserDeleted()
-			.SentToUser(userId)
-			.CountAsync(pm => pm.ReadOn == null);
-
-		cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
-		return unreadMessageCount;
-	}
-
-	/// <summary>
 	/// Returns the rating information for the given user
 	/// If user is not found, null is returned
 	/// If user has PublicRatings false, then the ratings will be an empty list

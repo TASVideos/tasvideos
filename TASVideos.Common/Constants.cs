@@ -21,7 +21,6 @@ public static class CacheKeys
 {
 	public const string CurrentWikiCache = "WikiCache";
 	public const string AwardsCache = "AwardsCache";
-	public const string UnreadMessageCount = "UnreadMessageCountCache-";
 	public const string MovieTokens = "MovieTokenData";
 	public const string UsersWithCustomLocale = "UsersWithCustomLocale";
 	public const string CustomUserLocalePrefix = "CustomUserLocale-";

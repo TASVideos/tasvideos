@@ -17,8 +17,11 @@
 			<td><profile-link username="@entry.To"></profile-link></td>
 			<td>@entry.SendDate</td>
 			<td-action-column>
+				<form method="post" class="d-inline-block" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id">
+					<submit-button class="btn-sm"></submit-button>
+				</form>
 				<delete-button condition="!entry.IsRead"
-					asp-href="/Messages/SentBox/@entry.Id/Delete"
+					asp-href="/Messages/Inbox/@entry.Id/Delete"
 					warning-message="Are you sure you want to remove this message?"
 					class="btn-sm"></delete-button>
 			</td-action-column>

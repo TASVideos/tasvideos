@@ -24,7 +24,7 @@ public class InboxModel(IPrivateMessageService privateMessageService) : BasePage
 			return NotFound();
 		}
 
-		var result = await privateMessageService.SaveMessageForUser(Id.Value);
+		var result = await privateMessageService.SaveMessage(User.GetUserId(), Id.Value);
 		SetMessage(result, "Message successfully saved", "Unable to save message");
 
 		return BasePageRedirect("Savebox");
@@ -37,8 +37,8 @@ public class InboxModel(IPrivateMessageService privateMessageService) : BasePage
 			return NotFound();
 		}
 
-		var result = await privateMessageService.DeleteMessageForUser(Id.Value);
-		SetMessage(result, "Message successfully deleted", "Unable to deleted message");
+		var result = await privateMessageService.DeleteMessage(User.GetUserId(), Id.Value);
+		SetMessage(result, "Message successfully deleted", "Unable to delete message");
 
 		return BasePageRedirect("Inbox");
 	}

@@ -1,4 +1,4 @@
-@inject UserManager UserManager
+@inject IPrivateMessageService PrivateMessages
 @inject SignInManager SignInManager
 @{
 	bool isSignedIn = SignInManager.IsSignedIn(User);
@@ -6,7 +6,7 @@
 
 	if (isSignedIn)
 	{
-		notificationCount = await UserManager.GetUnreadMessageCount(User.GetUserId());
+		notificationCount = await PrivateMessages.GetUnreadMessageCount(User.GetUserId());
 	}
 }
 @if (isSignedIn)

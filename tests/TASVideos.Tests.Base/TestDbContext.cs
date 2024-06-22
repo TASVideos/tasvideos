@@ -86,10 +86,8 @@ public class TestDbContext : ApplicationDbContext
 		_dbConcurrentUpdateConflict = true;
 	}
 
-	public EntityEntry<User> AddUser(string userName)
-	{
-		return AddUser(0, userName);
-	}
+	public EntityEntry<User> AddUser(string userName) => AddUser(0, userName);
+	public EntityEntry<User> AddUser(int userId) => AddUser(userId, "User" + userId + Guid.NewGuid());
 
 	public EntityEntry<User> AddUser(int id, string userName)
 	{
