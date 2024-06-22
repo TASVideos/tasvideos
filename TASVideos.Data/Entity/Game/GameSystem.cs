@@ -25,7 +25,5 @@ public class GameSystem : BaseEntity
 public static class GameSystemExtensions
 {
 	public static IQueryable<GameSystem> ForCode(this IQueryable<GameSystem> query, string code)
-	{
-		return query.Where(s => s.Code == code);
-	}
+		=> query.Where(s => s.Code == code);
 }

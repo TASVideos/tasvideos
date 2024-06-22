@@ -49,23 +49,23 @@ public static class WikiQueryableExtensions
 	/// Foo/Bar = 2
 	/// Foo/Bar/Baz = 3
 	/// </summary>
-	public static IQueryable<WikiPage> ForPageLevel(this IQueryable<WikiPage> list, int indentationLevel)
+	public static IQueryable<WikiPage> ForPageLevel(this IQueryable<WikiPage> query, int indentationLevel)
 	{
 		int slashCount = indentationLevel - 1;
-		return list.Where(wp => Regex.IsMatch(wp.PageName, $"^[^\\/]+(\\/[^\\/]+){{{slashCount}}}$"));
+		return query.Where(wp => Regex.IsMatch(wp.PageName, $"^[^\\/]+(\\/[^\\/]+){{{slashCount}}}$"));
 	}
 
-	public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> list, string pageName)
-		=> list.Where(w => w.PageName == pageName);
+	public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> query, string pageName)
+		=> query.Where(w => w.PageName == pageName);
 
-	public static IQueryable<WikiPage> Revision(this IQueryable<WikiPage> list, string pageName, int revision)
-		=> list.Where(w => w.PageName == pageName && w.Revision == revision);
+	public static IQueryable<WikiPage> Revision(this IQueryable<WikiPage> query, string pageName, int revision)
+		=> query.Where(w => w.PageName == pageName && w.Revision == revision);
 
-	public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> list)
-		=> list.Where(w => !w.MinorEdit);
+	public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> query)
+		=> query.Where(w => !w.MinorEdit);
 
-	public static IQueryable<WikiPage> CreatedBy(this IQueryable<WikiPage> list, string userName)
-		=> list.Where(t => t.Author!.UserName == userName);
+	public static IQueryable<WikiPage> CreatedBy(this IQueryable<WikiPage> query, string userName)
+		=> query.Where(t => t.Author!.UserName == userName);
 
 	/// <summary>
 	/// Filters the list of wiki pages to only pages that are nest beneath the given page.
@@ -114,8 +114,6 @@ public static class WikiQueryableExtensions
 			.Where(wp => wp.PageName != pageName)
 			.Where(wp => pageName.StartsWith(wp.PageName + "/"));
 	}
-
-	public static bool IsCurrent(this WikiPage? wikiPage) => wikiPage is { ChildId: null, IsDeleted: false };
 
 	public static IQueryable<WikiPage> WebSearch(this IQueryable<WikiPage> query, string searchTerms)
 		=> query.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerms)));

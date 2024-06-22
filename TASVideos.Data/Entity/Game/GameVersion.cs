@@ -44,12 +44,8 @@ public class GameVersion : BaseEntity
 public static class GameVersionExtensions
 {
 	public static IQueryable<GameVersion> ForGame(this IQueryable<GameVersion> query, int gameId)
-	{
-		return query.Where(g => g.GameId == gameId);
-	}
+		=> query.Where(g => g.GameId == gameId);
 
 	public static IQueryable<GameVersion> ForSystem(this IQueryable<GameVersion> query, int systemId)
-	{
-		return query.Where(g => g.SystemId == systemId);
-	}
+		=> query.Where(g => g.SystemId == systemId);
 }

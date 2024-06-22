@@ -31,28 +31,18 @@ public class PrivateMessage : BaseEntity
 public static class MessageExtensions
 {
 	public static IQueryable<PrivateMessage> SentToUser(this IQueryable<PrivateMessage> query, int userId)
-	{
-		return query.Where(m => m.ToUserId == userId);
-	}
+		=> query.Where(m => m.ToUserId == userId);
 
 	public static IQueryable<PrivateMessage> FromUser(this IQueryable<PrivateMessage> query, int userId)
-	{
-		return query.Where(m => m.FromUserId == userId);
-	}
+		=> query.Where(m => m.FromUserId == userId);
 
 	public static IQueryable<PrivateMessage> ThatAreNotToUserSaved(this IQueryable<PrivateMessage> query)
-	{
-		return query.Where(m => !m.SavedForToUser);
-	}
+		=> query.Where(m => !m.SavedForToUser);
 
 	public static IQueryable<PrivateMessage> ThatAreNotToUserDeleted(this IQueryable<PrivateMessage> query)
-	{
-		return query.Where(m => !m.DeletedForToUser);
-	}
+		=> query.Where(m => !m.DeletedForToUser);
 
 	public static IQueryable<PrivateMessage> ThatAreSavedByUser(this IQueryable<PrivateMessage> query, int userId)
-	{
-		return query.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == userId)
+		=> query.Where(pm => (pm.SavedForFromUser && !pm.DeletedForFromUser && pm.FromUserId == userId)
 			|| (pm.SavedForToUser && !pm.DeletedForToUser && pm.ToUserId == userId));
-	}
 }

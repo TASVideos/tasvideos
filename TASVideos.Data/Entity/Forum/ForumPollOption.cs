@@ -18,8 +18,6 @@ public class ForumPollOption : BaseEntity
 
 public static class ForumPollOptionExtensions
 {
-	public static IQueryable<ForumPollOption> ForPoll(this IQueryable<ForumPollOption> list, int pollId)
-	{
-		return list.Where(o => o.PollId == pollId);
-	}
+	public static IQueryable<ForumPollOption> ForPoll(this IQueryable<ForumPollOption> query, int pollId)
+		=> query.Where(o => o.PollId == pollId);
 }

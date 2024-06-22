@@ -17,13 +17,9 @@ public class WikiPageReferral
 
 public static class WikiReferralQueryableExtensions
 {
-	public static IQueryable<WikiPageReferral> ThatReferTo(this IQueryable<WikiPageReferral> list, string pageName)
-	{
-		return list.Where(wr => wr.Referral == pageName);
-	}
+	public static IQueryable<WikiPageReferral> ThatReferTo(this IQueryable<WikiPageReferral> query, string pageName)
+		=> query.Where(wr => wr.Referral == pageName);
 
-	public static IQueryable<WikiPageReferral> ForPage(this IQueryable<WikiPageReferral> list, string pageName)
-	{
-		return list.Where(wr => wr.Referrer == pageName);
-	}
+	public static IQueryable<WikiPageReferral> ForPage(this IQueryable<WikiPageReferral> query, string pageName)
+		=> query.Where(wr => wr.Referrer == pageName);
 }

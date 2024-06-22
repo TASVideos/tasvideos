@@ -38,11 +38,11 @@ public class ForumPost : BaseEntity
 
 public static class ForumPostQueryableExtensions
 {
-	public static IQueryable<ForumPost> ExcludeRestricted(this IQueryable<ForumPost> list, bool seeRestricted)
-		=> list.Where(f => seeRestricted || !f.Topic!.Forum!.Restricted);
+	public static IQueryable<ForumPost> ExcludeRestricted(this IQueryable<ForumPost> query, bool seeRestricted)
+		=> query.Where(f => seeRestricted || !f.Topic!.Forum!.Restricted);
 
-	public static IQueryable<ForumPost> ForTopic(this IQueryable<ForumPost> list, int topicId)
-		=> list.Where(p => p.TopicId == topicId);
+	public static IQueryable<ForumPost> ForTopic(this IQueryable<ForumPost> query, int topicId)
+		=> query.Where(p => p.TopicId == topicId);
 
 	public static IQueryable<ForumPost> WebSearch(this IQueryable<ForumPost> query, string searchTerms)
 		=> query.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerms)));

@@ -208,42 +208,31 @@ public static class SubmissionExtensions
 	}
 
 	public static IQueryable<Submission> ThatAreActive(this IQueryable<Submission> query)
-	{
-		return query.Where(s => s.Status != SubmissionStatus.Published
+		=> query.Where(s => s.Status != SubmissionStatus.Published
 			&& s.Status != SubmissionStatus.Playground
 			&& s.Status != SubmissionStatus.Cancelled
 			&& s.Status != SubmissionStatus.Rejected);
-	}
 
 	public static IQueryable<Submission> ThatAreInActive(this IQueryable<Submission> query)
-	{
-		return query.Where(s => s.Status == SubmissionStatus.Published
+		=> query.Where(s => s.Status == SubmissionStatus.Published
 			|| s.Status == SubmissionStatus.Playground
 			|| s.Status == SubmissionStatus.Cancelled
 			|| s.Status == SubmissionStatus.Rejected);
-	}
 
 	public static IQueryable<Submission> ThatAreRejected(this IQueryable<Submission> query)
-	{
-		return query.Where(s => s.Status == SubmissionStatus.Rejected);
-	}
+		=> query.Where(s => s.Status == SubmissionStatus.Rejected);
 
 	public static IQueryable<Submission> ThatHaveBeenJudgedBy(this IQueryable<Submission> query, string userName)
-	{
-		return query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
-	}
+		=> query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
 
 	public static IQueryable<Submission> ForAuthor(this IQueryable<Submission> submissions, int userId)
-	{
-		return submissions.Where(p => p.SubmissionAuthors.Select(pa => pa.UserId).Contains(userId));
-	}
+		=> submissions.Where(p => p.SubmissionAuthors.Select(pa => pa.UserId).Contains(userId));
 
 	/// <summary>
 	/// Includes all the necessary sub-tables in order to generate a title
 	/// </summary>
 	public static IQueryable<Submission> IncludeTitleTables(this DbSet<Submission> query)
-	{
-		return query
+		=> query
 			.Include(s => s.SubmissionAuthors)
 			.ThenInclude(sa => sa.Author)
 			.Include(s => s.System)
@@ -252,5 +241,4 @@ public static class SubmissionExtensions
 			.Include(s => s.GameVersion)
 			.Include(s => s.GameGoal)
 			.Include(gg => gg.GameGoal);
-	}
 }

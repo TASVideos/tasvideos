@@ -26,12 +26,8 @@ public class PublicationFile : BaseEntity
 public static class PublicationFileExtensions
 {
 	public static IQueryable<PublicationFile> ForPublication(this IQueryable<PublicationFile> query, int publicationId)
-	{
-		return query.Where(pf => pf.PublicationId == publicationId);
-	}
+		=> query.Where(pf => pf.PublicationId == publicationId);
 
 	public static IQueryable<PublicationFile> ThatAreMovieFiles(this IQueryable<PublicationFile> query)
-	{
-		return query.Where(pf => pf.FileData != null);
-	}
+		=> query.Where(pf => pf.FileData != null);
 }

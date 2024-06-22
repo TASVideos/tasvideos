@@ -29,8 +29,6 @@ public class Forum : BaseEntity
 
 public static class ForumQueryableExtensions
 {
-	public static IQueryable<Forum> ExcludeRestricted(this IQueryable<Forum> list, bool seeRestricted)
-	{
-		return list.Where(f => seeRestricted || !f.Restricted);
-	}
+	public static IQueryable<Forum> ExcludeRestricted(this IQueryable<Forum> query, bool seeRestricted)
+		=> query.Where(f => seeRestricted || !f.Restricted);
 }

@@ -35,43 +35,32 @@ public class Game : BaseEntity
 public static class GameExtensions
 {
 	public static IQueryable<Game> ForGroup(this IQueryable<Game> query, int gameGroupId)
-	{
-		return query.Where(g => g.GameGroups.Any(gg => gg.GameGroupId == gameGroupId));
-	}
+		=> query.Where(g => g.GameGroups.Any(gg => gg.GameGroupId == gameGroupId));
 
 	public static IQueryable<Game> ForSystem(this IQueryable<Game> query, int systemId)
-	{
-		return query.Where(g => g.GameVersions.Count == 0 || g.GameVersions.Any(r => r.SystemId == systemId));
-	}
+		=> query.Where(g => g.GameVersions.Count == 0 || g.GameVersions.Any(r => r.SystemId == systemId));
 
 	public static IQueryable<Game> ForSystemCode(this IQueryable<Game> query, string? code)
-	{
-		return !string.IsNullOrWhiteSpace(code)
+		=> !string.IsNullOrWhiteSpace(code)
 			? query.Where(g => g.GameVersions.Count == 0 || g.GameVersions.Any(r => r.System!.Code == code))
 			: query;
-	}
 
-	public static IQueryable<Game> ForSystemCodes(this IQueryable<Game> query, IEnumerable<string> codes)
+	public static IQueryable<Game> ForSystemCodes(this IQueryable<Game> query, ICollection<string> codes)
 	{
-		var codeList = codes.ToList();
-		return codeList.Any()
-			? query.Where(g => g.GameVersions.Select(r => r.System!.Code).Any(c => codeList.Contains(c)))
+		return codes.Any()
+			? query.Where(g => g.GameVersions.Select(r => r.System!.Code).Any(c => codes.Contains(c)))
 			: query;
 	}
 
 	public static IQueryable<Game> ForGenre(this IQueryable<Game> query, string? genre)
-	{
-		return !string.IsNullOrWhiteSpace(genre)
+		=> !string.IsNullOrWhiteSpace(genre)
 			? query.Where(g => g.GameGenres.Any(gg => gg.Genre!.DisplayName == genre))
 			: query;
-	}
 
 	public static IQueryable<Game> ForGroup(this IQueryable<Game> query, string? group)
-	{
-		return !string.IsNullOrWhiteSpace(group)
+		=> !string.IsNullOrWhiteSpace(group)
 			? query.Where(g => g.GameGroups.Any(gg => gg.GameGroup!.Name == group))
 			: query;
-	}
 
 	public static IQueryable<Game> WebSearch(this IQueryable<Game> query, string searchTerms)
 		=> query.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", searchTerms)));

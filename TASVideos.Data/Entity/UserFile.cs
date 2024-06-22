@@ -71,42 +71,26 @@ public class UserFile
 public static class UserFileExtensions
 {
 	public static IQueryable<UserFile> ThatArePublic(this IQueryable<UserFile> query)
-	{
-		return query.Where(q => !q.Hidden);
-	}
+		=> query.Where(q => !q.Hidden);
 
 	public static IQueryable<UserFile> HideIfNotAuthor(this IQueryable<UserFile> query, int userId)
-	{
-		return query.Where(uf => !uf.Hidden || uf.AuthorId == userId);
-	}
+		=> query.Where(uf => !uf.Hidden || uf.AuthorId == userId);
 
 	public static IEnumerable<UserFile> HideIfNotAuthor(this IEnumerable<UserFile> query, int userId)
-	{
-		return query.Where(uf => !uf.Hidden || uf.AuthorId == userId);
-	}
+		=> query.Where(uf => !uf.Hidden || uf.AuthorId == userId);
 
 	public static IQueryable<UserFile> ThatAreMovies(this IQueryable<UserFile> query)
-	{
-		return query.Where(q => q.Class == UserFileClass.Movie);
-	}
+		=> query.Where(q => q.Class == UserFileClass.Movie);
 
 	public static IQueryable<UserFile> ThatAreSupport(this IQueryable<UserFile> query)
-	{
-		return query.Where(q => q.Class == UserFileClass.Support);
-	}
+		=> query.Where(q => q.Class == UserFileClass.Support);
 
 	public static IQueryable<UserFile> ByRecentlyUploaded(this IQueryable<UserFile> query)
-	{
-		return query.OrderByDescending(q => q.UploadTimestamp);
-	}
+		=> query.OrderByDescending(q => q.UploadTimestamp);
 
 	public static IQueryable<UserFile> ForAuthor(this IQueryable<UserFile> query, string userName)
-	{
-		return query.Where(q => q.Author!.UserName == userName);
-	}
+		=> query.Where(q => q.Author!.UserName == userName);
 
 	public static IQueryable<UserFile> ForGame(this IQueryable<UserFile> query, int gameId)
-	{
-		return query.Where(q => q.GameId == gameId);
-	}
+		=> query.Where(q => q.GameId == gameId);
 }

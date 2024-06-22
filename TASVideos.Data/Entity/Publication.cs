@@ -130,44 +130,30 @@ public class Publication : BaseEntity, ITimeable
 
 public static class PublicationExtensions
 {
-	public static IQueryable<Publication> ThatAreCurrent(this IQueryable<Publication> publications)
-	{
-		return publications.Where(p => p.ObsoletedById == null);
-	}
+	public static IQueryable<Publication> ThatAreCurrent(this IQueryable<Publication> query)
+		=> query.Where(p => p.ObsoletedById == null);
 
-	public static IEnumerable<Publication> ThatAreCurrent(this IEnumerable<Publication> publications)
-	{
-		return publications.Where(p => p.ObsoletedById == null);
-	}
+	public static IEnumerable<Publication> ThatAreCurrent(this IEnumerable<Publication> query)
+		=> query.Where(p => p.ObsoletedById == null);
 
-	public static IQueryable<Publication> ThatAreObsolete(this IQueryable<Publication> publications)
-	{
-		return publications.Where(p => p.ObsoletedById != null);
-	}
+	public static IQueryable<Publication> ThatAreObsolete(this IQueryable<Publication> query)
+		=> query.Where(p => p.ObsoletedById != null);
 
-	public static IQueryable<Publication> ForYearRange(this IQueryable<Publication> publications, int before, int after)
-	{
-		return publications
+	public static IQueryable<Publication> ForYearRange(this IQueryable<Publication> query, int before, int after)
+		=> query
 			.Where(p => p.CreateTimestamp.Year < before)
 			.Where(p => p.CreateTimestamp.Year >= after);
-	}
 
-	public static IQueryable<Publication> ForDateRange(this IQueryable<Publication> publications, DateTime before, DateTime after)
-	{
-		return publications
+	public static IQueryable<Publication> ForDateRange(this IQueryable<Publication> query, DateTime before, DateTime after)
+		=> query
 			.Where(p => p.CreateTimestamp < before)
 			.Where(p => p.CreateTimestamp >= after);
-	}
 
-	public static IQueryable<Publication> ThatHaveBeenPublishedBy(this IQueryable<Publication> publications, int userId)
-	{
-		return publications.Where(p => p.Submission!.PublisherId == userId);
-	}
+	public static IQueryable<Publication> ThatHaveBeenPublishedBy(this IQueryable<Publication> query, int userId)
+		=> query.Where(p => p.Submission!.PublisherId == userId);
 
-	public static IQueryable<Publication> ForAuthor(this IQueryable<Publication> publications, int userId)
-	{
-		return publications.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId));
-	}
+	public static IQueryable<Publication> ForAuthor(this IQueryable<Publication> query, int userId)
+		=> query.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId));
 
 	public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
 	{
@@ -260,8 +246,7 @@ public static class PublicationExtensions
 	}
 
 	public static IQueryable<Publication> IncludeTitleTables(this DbSet<Publication> query)
-	{
-		return query
+		=> query
 			.Include(p => p.Authors)
 			.ThenInclude(pa => pa.Author)
 			.Include(p => p.System)
@@ -269,5 +254,4 @@ public static class PublicationExtensions
 			.Include(p => p.Game)
 			.Include(p => p.GameVersion)
 			.Include(p => p.GameGoal);
-	}
 }

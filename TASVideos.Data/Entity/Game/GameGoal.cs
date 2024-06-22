@@ -16,7 +16,5 @@ public class GameGoal
 public static class GameGoalExtensions
 {
 	public static IQueryable<GameGoal> ForGame(this IQueryable<GameGoal> query, int gameId)
-	{
-		return query.Where(gg => gg.GameId == gameId);
-	}
+		=> query.Where(gg => gg.GameId == gameId);
 }
