@@ -483,4 +483,16 @@ public class UserManager(
 		var user = await GetRequiredUser(claimsUser);
 		return await GenerateChangeEmailTokenAsync(user, newEmail);
 	}
+
+	public async Task PermaBanUser(int userId)
+	{
+		var user = await db.Users.FindAsync(userId);
+		if (user is null)
+		{
+			return;
+		}
+
+		user.BannedUntil = DateTime.UtcNow.AddYears(100);
+		await db.TrySaveChanges();
+	}
 }

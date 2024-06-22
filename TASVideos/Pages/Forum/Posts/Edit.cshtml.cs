@@ -12,7 +12,7 @@ public class EditModel(
 	ApplicationDbContext db,
 	ExternalMediaPublisher publisher,
 	IForumService forumService,
-	IRoleService roleService)
+	UserManager userManager)
 	: BaseForumModel
 {
 	[FromRoute]
@@ -247,8 +247,12 @@ public class EditModel(
 		bool topicDeleted = false;
 		if (postCount == 1)
 		{
-			var topic = await db.ForumTopics.SingleAsync(t => t.Id == oldTopicId);
-			db.ForumTopics.Remove(topic);
+			var topic = await db.ForumTopics.FindAsync(oldTopicId);
+			if (topic != null)
+			{
+				db.ForumTopics.Remove(topic);
+			}
+
 			topicDeleted = true;
 		}
 
@@ -258,7 +262,7 @@ public class EditModel(
 		{
 			forumService.ClearLatestPostCache();
 			forumService.ClearTopicActivityCache();
-			await roleService.RemoveRolesFromUser(post.PosterId);
+			await userManager.PermaBanUser(post.PosterId);
 			await publisher.SendForum(
 				true,
 				$"[{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM]({{0}}), and user {post.Poster!.UserName} banned by {User.Name()}",

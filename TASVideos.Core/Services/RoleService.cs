@@ -3,7 +3,6 @@
 public interface IRoleService
 {
 	Task<IEnumerable<AssignableRole>> GetAllRolesUserCanAssign(int userId, IEnumerable<int> assignedRoles);
-	Task RemoveRolesFromUser(int userId);
 	Task<bool> IsInUse(int roleId);
 	Task<IReadOnlyCollection<string>> GetRolesThatCanBeAssignedBy(IEnumerable<PermissionTo> permissionIds);
 }
@@ -38,23 +37,6 @@ internal class RoleService(ApplicationDbContext db) : IRoleService
 			.ToListAsync();
 
 		return roles.Select(r => new AssignableRole(r.Id, r.Name, r.Diabled));
-	}
-
-	public async Task RemoveRolesFromUser(int userId)
-	{
-		var userRoles = await db.UserRoles
-			.Where(ur => ur.UserId == userId)
-			.ToListAsync();
-
-		try
-		{
-			db.RemoveRange(userRoles);
-			await db.SaveChangesAsync();
-		}
-		catch (DbUpdateConcurrencyException)
-		{
-			// Eat it for now
-		}
 	}
 
 	public async Task<bool> IsInUse(int roleId) => await db.Users.AnyAsync(u => u.UserRoles.Any(ur => ur.RoleId == roleId));
