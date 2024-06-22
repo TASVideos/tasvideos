@@ -349,14 +349,7 @@ public class UserManager(
 		if (!user.EmailConfirmed)
 		{
 			user.EmailConfirmed = true;
-			try
-			{
-				await db.SaveChangesAsync();
-			}
-			catch (DbUpdateException)
-			{
-				// Do nothing, we do not want to block the rest of the request
-			}
+			await db.TrySaveChanges();
 		}
 	}
 
