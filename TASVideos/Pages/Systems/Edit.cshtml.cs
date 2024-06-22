@@ -7,7 +7,7 @@ public class EditModel(IGameSystemService systemService) : BasePageModel
 	public int Id { get; set; }
 
 	[BindProperty]
-	public SystemsResponse System { get; set; } = new();
+	public SystemsResponse System { get; set; } = null!;
 
 	public bool InUse { get; set; } = true;
 

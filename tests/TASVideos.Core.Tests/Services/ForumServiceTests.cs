@@ -227,7 +227,7 @@ public class ForumServiceTests
 		const string option2 = "2";
 		const string option3 = "3";
 		var options = new List<string> { option1, option2, option3 };
-		var poll = new PollCreateDto(question, daysOpen, multiSelect, options);
+		var poll = new PollCreate(question, daysOpen, multiSelect, options);
 
 		await _forumService.CreatePoll(topic, poll);
 
@@ -262,7 +262,7 @@ public class ForumServiceTests
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = false;
-		var dto = new PostCreateDto(
+		var dto = new PostCreate(
 			forumId,
 			topicId,
 			subject,
@@ -314,7 +314,7 @@ public class ForumServiceTests
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = true;
 
-		int actual = await _forumService.CreatePost(new PostCreateDto(
+		int actual = await _forumService.CreatePost(new PostCreate(
 			forumId,
 			topicId,
 			subject,

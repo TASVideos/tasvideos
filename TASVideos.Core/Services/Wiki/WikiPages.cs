@@ -3,39 +3,6 @@ using TASVideos.WikiEngine;
 
 namespace TASVideos.Core.Services.Wiki;
 
-public class WikiCreateRequest
-{
-	public string PageName { get; init; } = "";
-	public string Markup { get; init; } = "";
-	public string? RevisionMessage { get; init; }
-	public int AuthorId { get; init; }
-	public bool MinorEdit { get; init; }
-	public DateTime CreateTimestamp { get; init; } = DateTime.UtcNow;
-}
-
-public class WikiResult : IWikiPage
-{
-	private string _pageName = "";
-
-	public string PageName { get => _pageName; init => _pageName = value; }
-	public string Markup { get; init; } = "";
-	public int Revision { get; init; }
-	public string? RevisionMessage { get; init; }
-	public int? AuthorId { get; init; }
-	public string? AuthorName { get; init; }
-	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
-	public DateTime CreateTimestamp { get; init; }
-	public bool MinorEdit { get; init; }
-
-	internal int? ChildId { get; init; }
-	internal bool IsDeleted { get; init; }
-
-	internal void SetPageName(string newPageName)
-	{
-		_pageName = newPageName;
-	}
-}
-
 public interface IWikiPages
 {
 	/// <summary>
@@ -625,3 +592,38 @@ public static class WikiPageExtensions
 		};
 	}
 }
+
+public class WikiCreateRequest
+{
+	public string PageName { get; init; } = "";
+	public string Markup { get; init; } = "";
+	public string? RevisionMessage { get; init; }
+	public int AuthorId { get; init; }
+	public bool MinorEdit { get; init; }
+	public DateTime CreateTimestamp { get; init; } = DateTime.UtcNow;
+}
+
+public class WikiResult : IWikiPage
+{
+	private string _pageName = "";
+
+	public string PageName { get => _pageName; init => _pageName = value; }
+	public string Markup { get; init; } = "";
+	public int Revision { get; init; }
+	public string? RevisionMessage { get; init; }
+	public int? AuthorId { get; init; }
+	public string? AuthorName { get; init; }
+	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
+	public DateTime CreateTimestamp { get; init; }
+	public bool MinorEdit { get; init; }
+
+	internal int? ChildId { get; init; }
+	internal bool IsDeleted { get; init; }
+
+	internal void SetPageName(string newPageName)
+	{
+		_pageName = newPageName;
+	}
+}
+
+public record WikiOrphan(string PageName, DateTime LastUpdateTimestamp, string? LastUpdateUserName);

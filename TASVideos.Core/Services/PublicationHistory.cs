@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services.PublicationChain;
+﻿namespace TASVideos.Core.Services;
 
 public interface IPublicationHistory
 {
@@ -72,4 +72,32 @@ internal class PublicationHistory(ApplicationDbContext db) : IPublicationHistory
 
 		return await ForGame(pub.GameId);
 	}
+}
+
+public class PublicationHistoryGroup
+{
+	public int GameId { get; init; }
+	public string GameDisplayName { get; init; } = "";
+
+	public IEnumerable<PublicationHistoryNode> Goals { get; init; } = [];
+}
+
+public class PublicationHistoryNode
+{
+	public int Id { get; init; }
+	public string Title { get; init; } = "";
+	public string? Goal { get; init; }
+	public DateTime CreateTimestamp { get; init; }
+
+	public string? ClassIconPath { get; init; }
+
+	public IEnumerable<FlagEntry> Flags { get; init; } = [];
+
+	public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
+
+	internal int? ObsoletedById { get; init; }
+
+	internal List<PublicationHistoryNode> ObsoleteList { get; set; } = [];
+
+	public record FlagEntry(string? IconPath, string? LinkPath, string Name);
 }

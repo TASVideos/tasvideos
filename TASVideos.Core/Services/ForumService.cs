@@ -4,15 +4,15 @@ namespace TASVideos.Core.Services;
 
 public interface IForumService
 {
-	Task<PostPositionDto?> GetPostPosition(int postId, bool seeRestricted);
-	Task<IReadOnlyCollection<ForumCategoryDisplayDto>> GetAllCategories();
+	Task<PostPosition?> GetPostPosition(int postId, bool seeRestricted);
+	Task<IReadOnlyCollection<ForumCategoryDisplay>> GetAllCategories();
 	void CacheLatestPost(int forumId, int topicId, LatestPost post);
 	void CacheNewPostActivity(int forumId, int topicId, int postId, DateTime createTimestamp);
 	void CacheEditedPostActivity(int forumId, int topicId, int postId, DateTime createTimestamp);
 	void ClearLatestPostCache();
 	void ClearTopicActivityCache();
-	Task CreatePoll(ForumTopic topic, PollCreateDto poll);
-	Task<int> CreatePost(PostCreateDto post);
+	Task CreatePoll(ForumTopic topic, PollCreate poll);
+	Task<int> CreatePost(PostCreate post);
 	Task<bool> IsTopicLocked(int topicId);
 	Task<AvatarUrls> UserAvatars(int userId);
 	Task<Dictionary<int, (string PostsCreated, string PostsEdited)>> GetPostActivityOfSubforum(int subforumId);
@@ -28,7 +28,7 @@ internal class ForumService(
 	internal const string PostActivityOfTopicsCacheKey = "Forum-PostActivityOfTopics";
 	internal const string PostActivityOfSubforumsCacheKey = "Forum-PostActivityOfSubforums";
 
-	public async Task<PostPositionDto?> GetPostPosition(int postId, bool seeRestricted)
+	public async Task<PostPosition?> GetPostPosition(int postId, bool seeRestricted)
 	{
 		var post = await db.ForumPosts
 			.ExcludeRestricted(seeRestricted)
@@ -45,23 +45,23 @@ internal class ForumService(
 			.ToListAsync();
 
 		var position = posts.IndexOf(post);
-		return new PostPositionDto(
+		return new PostPosition(
 			(position / ForumConstants.PostsPerPage) + 1,
 			post.TopicId ?? 0);
 	}
 
-	public async Task<IReadOnlyCollection<ForumCategoryDisplayDto>> GetAllCategories()
+	public async Task<IReadOnlyCollection<ForumCategoryDisplay>> GetAllCategories()
 	{
 		var latestPostMappings = await GetAllLatestPosts();
 		var dto = await db.ForumCategories
-			.Select(c => new ForumCategoryDisplayDto
+			.Select(c => new ForumCategoryDisplay
 			{
 				Id = c.Id,
 				Ordinal = c.Ordinal,
 				Title = c.Title,
 				Description = c.Description,
 				Forums = c.Forums
-					.Select(f => new ForumCategoryDisplayDto.Forum
+					.Select(f => new ForumCategoryDisplay.Forum
 					{
 						Id = f.Id,
 						Ordinal = f.Ordinal,
@@ -157,7 +157,7 @@ internal class ForumService(
 		cacheService.Remove(PostActivityOfSubforumsCacheKey);
 	}
 
-	public async Task CreatePoll(ForumTopic topic, PollCreateDto pollDto)
+	public async Task CreatePoll(ForumTopic topic, PollCreate pollDto)
 	{
 		var poll = new ForumPoll
 		{
@@ -181,7 +181,7 @@ internal class ForumService(
 		await db.SaveChangesAsync();
 	}
 
-	public async Task<int> CreatePost(PostCreateDto post)
+	public async Task<int> CreatePost(PostCreate post)
 	{
 		var forumPost = new ForumPost
 		{
@@ -350,4 +350,48 @@ internal class ForumService(
 			.Select(u => new AvatarUrls(u.Avatar, u.MoodAvatarUrlBase))
 			.SingleAsync();
 	}
+}
+
+public record LatestPost(int Id, DateTime Timestamp, string PosterName);
+
+public class ForumCategoryDisplay
+{
+	public int Id { get; init; }
+	public int Ordinal { get; init; }
+	public string Title { get; init; } = "";
+	public string? Description { get; init; }
+
+	public IEnumerable<Forum> Forums { get; init; } = [];
+	public class Forum
+	{
+		public int Id { get; init; }
+		public int Ordinal { get; init; }
+		public bool Restricted { get; init; }
+		public string Name { get; init; } = "";
+		public string? Description { get; init; }
+		public LatestPost? LastPost { get; set; }
+		public string ActivityPostsCreated { get; set; } = "";
+		public string ActivityPostsEdited { get; set; } = "";
+	}
+}
+
+public record PostPosition(int Page, int TopicId);
+
+public record PollCreate(string? Question, int? DaysOpen, bool MultiSelect, IEnumerable<string> Options);
+public record PostCreate(
+	int ForumId,
+	int TopicId,
+	string? Subject,
+	string Text,
+	int PosterId,
+	string PosterName,
+	ForumPostMood Mood,
+	string IpAddress,
+	bool WatchTopic);
+
+public record AvatarUrls(string? Avatar, string? MoodBase)
+{
+	public bool HasMoods => !string.IsNullOrWhiteSpace(MoodBase);
+	public bool HasAvatar => !HasMoods && !string.IsNullOrWhiteSpace(Avatar);
+	public string ToMoodUrl(ForumPostMood mood) => MoodBase?.Replace("$", ((int)mood).ToString()) ?? "";
 }

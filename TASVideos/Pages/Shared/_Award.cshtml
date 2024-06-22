@@ -1,4 +1,4 @@
-﻿@model TASVideos.Core.Services.IAwardAssignmentSummary
+﻿@model TASVideos.Core.Services.AwardAssignmentSummary
 @{
 	string awardName = $"{Model.ShortName}_{Model.Year.ToString()}";
 	int maxHeight = ViewContext.PageGroup() is "Users" or "Profile"

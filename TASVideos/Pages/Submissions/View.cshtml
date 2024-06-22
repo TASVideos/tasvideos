@@ -29,6 +29,7 @@
 		: null;
 
 	var isNicoEmbed = hasEncode && Model.Submission.EncodeEmbedLink!.Contains("nicovideo");
+	var hoursRemaining = QueueService.HoursRemainingForJudging(Model.Submission);
 
 	ViewData.SetMetaTags(new MetaTag
 	{
@@ -68,8 +69,8 @@
 		</small>
 	</div>
 	<div condition="Model.IsPublished" class="lead">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></div>
-	<div condition="QueueService.HoursRemainingForJudging(Model.Submission) > 0">
-		(Available for judging in @QueueService.HoursRemainingForJudging(Model.Submission) hours)
+	<div condition="hoursRemaining > 0">
+		(Available for judging in @hoursRemaining hours)
 	</div>
 	<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
 		<label asp-for="Submission.Judge"></label>:

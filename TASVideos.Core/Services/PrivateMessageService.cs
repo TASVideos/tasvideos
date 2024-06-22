@@ -9,7 +9,7 @@ public interface IPrivateMessageService
 	/// record with the given <see cref="id"/> if the user has access to the message
 	/// A user has access if they are the sender or the receiver of the message
 	/// </summary>
-	Task<PrivateMessageDto?> GetMessage(int userId, int id);
+	Task<Message?> GetMessage(int userId, int id);
 	Task<PageOf<InboxEntry>> GetInbox(int userId, PagingModel paging);
 	Task<PageOf<SentboxEntry>> GetSentInbox(int userId, PagingModel paging);
 	Task<ICollection<SaveboxEntry>> GetSavebox(int userId);
@@ -36,7 +36,7 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 
 	// TODO: this does not belong in code, move to a system wiki page, or database table
 	private static readonly string[] AllowedBulkRoles = ["site admin", "moderator"];
-	public async Task<PrivateMessageDto?> GetMessage(int userId, int id)
+	public async Task<Message?> GetMessage(int userId, int id)
 	{
 		var pm = await db.PrivateMessages
 			.Include(p => p.FromUser)
@@ -58,19 +58,17 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 			cache.Remove(UnreadMessageCount + userId); // Message count possibly no longer valid
 		}
 
-		return new PrivateMessageDto
-		{
-			Subject = pm.Subject,
-			SentOn = pm.CreateTimestamp,
-			Text = pm.Text,
-			FromUserId = pm.FromUserId,
-			FromUserName = pm.FromUser!.UserName,
-			ToUserId = pm.ToUserId,
-			ToUserName = pm.ToUser!.UserName,
-			CanReply = pm.ToUserId == userId,
-			EnableBbCode = pm.EnableBbCode,
-			EnableHtml = pm.EnableHtml
-		};
+		return new Message(
+			pm.Subject,
+			pm.CreateTimestamp,
+			pm.Text,
+			pm.FromUserId,
+			pm.FromUser!.UserName,
+			pm.ToUserId,
+			pm.ToUser!.UserName,
+			pm.ToUserId == userId,
+			pm.EnableBbCode,
+			pm.EnableHtml);
 	}
 
 	public async Task<PageOf<InboxEntry>> GetInbox(int userId, PagingModel paging)
@@ -266,3 +264,15 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 public record InboxEntry(int Id, string? Subject, string From, DateTime Date, bool IsRead);
 public record SentboxEntry(int Id, string? Subject, string To, DateTime SendDate, bool IsRead);
 public record SaveboxEntry(int Id, string? Subject, string From, string To, DateTime SendDate);
+
+public record Message(
+	string? Subject,
+	DateTime SentOn,
+	string Text,
+	int FromUserId,
+	string FromUserName,
+	int ToUserId,
+	string ToUserName,
+	bool CanReply,
+	bool EnableBbCode,
+	bool EnableHtml);

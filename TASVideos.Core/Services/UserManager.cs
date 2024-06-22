@@ -129,12 +129,7 @@ public class UserManager(
 				PreferredPronouns = u.PreferredPronouns,
 				ModeratorComments = u.ModeratorComments,
 				Roles = u.UserRoles
-					.Select(ur => new RoleDto
-					{
-						Id = ur.RoleId,
-						Name = ur.Role!.Name,
-						Description = ur.Role.Description
-					})
+					.Select(ur => new UserProfile.RoleSummary(ur.Role!.Name, ur.Role.Description))
 					.ToList(),
 				UserFiles = new()
 				{

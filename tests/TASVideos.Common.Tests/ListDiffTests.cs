@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Tests.Services;
+﻿namespace TASVideos.Common.Tests;
 
 [TestClass]
 public class ListDiffTests

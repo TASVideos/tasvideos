@@ -4,7 +4,6 @@ using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
-using TASVideos.Core.Services.PublicationChain;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;

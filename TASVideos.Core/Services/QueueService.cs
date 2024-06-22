@@ -499,3 +499,47 @@ internal class QueueService(
 		return null;
 	}
 }
+
+public interface ISubmissionDisplay
+{
+	SubmissionStatus Status { get; }
+	DateTime Date { get; }
+}
+
+public record DeleteSubmissionResult(
+	DeleteSubmissionResult.DeleteStatus Status,
+	string SubmissionTitle,
+	string ErrorMessage)
+{
+	public enum DeleteStatus { Success, NotFound, NotAllowed }
+
+	public bool True => Status == DeleteStatus.Success;
+
+	internal static DeleteSubmissionResult NotFound() => new(DeleteStatus.NotFound, "", "");
+
+	internal static DeleteSubmissionResult IsPublished(string submissionTitle) => new(
+		DeleteStatus.NotAllowed,
+		submissionTitle,
+		"Cannot delete a submission that is published");
+
+	internal static DeleteSubmissionResult Success(string submissionTitle)
+		=> new(DeleteStatus.Success, submissionTitle, "");
+}
+
+public record UnpublishResult(
+	UnpublishResult.UnpublishStatus Status,
+	string PublicationTitle,
+	string ErrorMessage)
+{
+	public enum UnpublishStatus { Success, NotFound, NotAllowed }
+
+	internal static UnpublishResult NotFound() => new(UnpublishStatus.NotFound, "", "");
+
+	internal static UnpublishResult HasAwards(string publicationTitle) => new(
+		UnpublishStatus.NotAllowed,
+		publicationTitle,
+		"Cannot unpublish a publication that has awards");
+
+	internal static UnpublishResult Success(string publicationTitle)
+		=> new(UnpublishStatus.Success, publicationTitle, "");
+}

@@ -136,7 +136,7 @@ public class CreateModel(
 			return AccessDenied();
 		}
 
-		var id = await forumService.CreatePost(new PostCreateDto(
+		var id = await forumService.CreatePost(new PostCreate(
 			topic.ForumId, TopicId, Subject, Text, user.Id, user.UserName, Mood, IpAddress, WatchTopic));
 
 		var mood = Mood != ForumPostMood.Normal ? $" (Mood: {Mood})" : "";

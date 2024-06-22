@@ -3,7 +3,7 @@
 [AllowAnonymous]
 public class IndexModel(IForumService forumService) : BasePageModel
 {
-	public IReadOnlyCollection<ForumCategoryDisplayDto> Categories { get; set; } = [];
+	public IReadOnlyCollection<ForumCategoryDisplay> Categories { get; set; } = [];
 
 	public async Task OnGet()
 	{

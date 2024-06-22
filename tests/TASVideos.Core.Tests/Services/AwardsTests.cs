@@ -281,7 +281,7 @@ public class AwardsTests
 	{
 		var user = CreateUser();
 		var award = CreateAuthorAward();
-		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new() { ShortName = "PreviouslyCached" } });
+		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new(0, "PreviouslyCached", "", 2000, AwardType.Movie, [], []) });
 
 		int year = DateTime.UtcNow.Year - 1;
 		await _awards.AssignUserAward(
@@ -331,7 +331,7 @@ public class AwardsTests
 		var author = CreateUser();
 		var pub = CreatePublication(author);
 		var award = CreatePublicationAward();
-		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new() { ShortName = "PreviouslyCached" } });
+		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new(0, "PreviouslyCached", "", 2000, AwardType.Movie, [], []) });
 
 		int year = DateTime.UtcNow.Year - 1;
 		await _awards.AssignPublicationAward(
@@ -378,16 +378,14 @@ public class AwardsTests
 		var award = CreateAuthorAward();
 		GiveUserAnAward(user, award);
 
-		var assignment = new AwardAssignment
-		{
-			AwardId = award.Id,
-			ShortName = award.ShortName,
-			Year = CurrentYear,
-			Users =
-			[
-				new(user.Id, user.UserName)
-			]
-		};
+		var assignment = new AwardAssignment(
+			award.Id,
+			award.ShortName,
+			"",
+			CurrentYear,
+			AwardType.User,
+			[],
+			[new(user.Id, user.UserName)]);
 
 		await _awards.Revoke(assignment);
 

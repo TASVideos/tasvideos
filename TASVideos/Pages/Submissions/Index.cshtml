@@ -40,6 +40,7 @@
 	@foreach (var item in Model.Submissions)
 	{
 		var showPublicationClass = !string.IsNullOrWhiteSpace(item.IntendedClass) && item.IntendedClass != "Standard";
+		var hoursRemaining = QueueService.HoursRemainingForJudging(item);
 		<tr>
 			<td>@item.System</td>
 			<td><sub-link id="item.Id">@item.Game</sub-link></td>
@@ -58,8 +59,8 @@
 				<small condition="item.Publisher is not null">
 					<br /><profile-link username="@item.Publisher"></profile-link>
 				</small>
-				<small condition="QueueService.HoursRemainingForJudging(item) > 0">
-					<br />(Available for judging in @QueueService.HoursRemainingForJudging(item) hours)
+				<small condition="hoursRemaining > 0">
+					<br />(Available for judging in @hoursRemaining hours)
 				</small>
 			</td>
 		</tr>

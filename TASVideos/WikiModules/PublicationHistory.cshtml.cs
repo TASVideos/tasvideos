@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.PublicationChain;
-using TASVideos.WikiEngine;
+﻿using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 

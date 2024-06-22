@@ -110,7 +110,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 		{
 			await forumService.CreatePoll(
 				topic,
-				new PollCreateDto(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
+				new Core.Services.PollCreate(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
 		}
 
 		return RedirectToPage("Index", new { Id = TopicId });

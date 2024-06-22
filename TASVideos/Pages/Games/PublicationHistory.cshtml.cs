@@ -1,6 +1,4 @@
-﻿using TASVideos.Core.Services.PublicationChain;
-
-namespace TASVideos.Pages.Games;
+﻿namespace TASVideos.Pages.Games;
 
 [AllowAnonymous]
 public class PublicationHistoryModel(IPublicationHistory history) : BasePageModel

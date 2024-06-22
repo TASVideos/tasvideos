@@ -27,20 +27,16 @@ internal class GameSystemService(ApplicationDbContext db, ICacheService cache) :
 		}
 
 		systems = await db.GameSystems
-			.Select(s => new SystemsResponse
-			{
-				Id = s.Id,
-				Code = s.Code,
-				DisplayName = s.DisplayName,
-				SystemFrameRates = s.SystemFrameRates.Select(sf => new SystemsResponse.FrameRates
-				{
-					Id = sf.Id,
-					FrameRate = sf.FrameRate,
-					RegionCode = sf.RegionCode,
-					Preliminary = sf.Preliminary,
-					Obsolete = sf.Obsolete
-				})
-			})
+			.Select(s => new SystemsResponse(
+				s.Id,
+				s.Code,
+				s.DisplayName,
+				s.SystemFrameRates.Select(sf => new FrameRatesResponse(
+					sf.Id,
+					sf.FrameRate,
+					sf.RegionCode,
+					sf.Preliminary,
+					sf.Obsolete))))
 			.ToListAsync();
 		cache.Set(SystemsKey, systems);
 		return systems;
@@ -189,3 +185,6 @@ internal class GameSystemService(ApplicationDbContext db, ICacheService cache) :
 		await GetAll();
 	}
 }
+
+public record SystemsResponse(int Id, string Code, string DisplayName, IEnumerable<FrameRatesResponse> SystemFrameRates);
+public record FrameRatesResponse(int Id, double FrameRate, string RegionCode, bool Preliminary, bool Obsolete);

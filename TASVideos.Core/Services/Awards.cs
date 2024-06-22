@@ -199,21 +199,15 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 					gkey.ShortName,
 					gkey.Year
 				},
-				gvalue => new AwardAssignment.User(gvalue.UserId, gvalue.UserName)
-				{
-					Id = gvalue.UserId,
-					UserName = gvalue.UserName
-				})
-			.Select(g => new AwardAssignment
-			{
-				AwardId = g.Key.AwardId,
-				ShortName = g.Key.ShortName,
-				Description = g.Key.Description + " of " + g.Key.Year,
-				Year = g.Key.Year,
-				Type = AwardType.User,
-				Publications = [],
-				Users = [.. g]
-			})
+				gvalue => new AwardAssignmentUser(gvalue.UserId, gvalue.UserName))
+			.Select(g => new AwardAssignment(
+				g.Key.AwardId,
+				g.Key.ShortName,
+				g.Key.Description + " of " + g.Key.Year,
+				g.Key.Year,
+				AwardType.User,
+				[],
+				[.. g]))
 			.ToList();
 
 		var pubLists = await db.PublicationAwards
@@ -251,21 +245,17 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 						a.UserName
 					})
 				})
-			.Select(g => new AwardAssignment
-			{
-				AwardId = g.Key.AwardId,
-				ShortName = g.Key.ShortName,
-				Description = g.Key.Description + " of " + g.Key.Year,
-				Year = g.Key.Year,
-				Type = AwardType.Movie,
-				Publications = g
-					.Select(gv => new AwardAssignment.Publication(gv.Publication.Id, gv.Publication.Title))
+			.Select(g => new AwardAssignment(
+				g.Key.AwardId,
+				g.Key.ShortName,
+				g.Key.Description + " of " + g.Key.Year,
+				g.Key.Year,
+				AwardType.Movie,
+				g.Select(gv => new AwardAssignmentPublication(gv.Publication.Id, gv.Publication.Title))
 					.ToList(),
-				Users = g
-					.SelectMany(gv => gv.Users)
-					.Select(u => new AwardAssignment.User(u.UserId, u.UserName))
-					.ToList()
-			})
+				g.SelectMany(gv => gv.Users)
+					.Select(u => new AwardAssignmentUser(u.UserId, u.UserName))
+					.ToList()))
 			.ToList();
 
 		var allAwards = userAwards.Concat(publicationAwards);
@@ -275,3 +265,20 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 		return allAwards;
 	}
 }
+
+/// <summary>
+/// Represents the assignment of an award to a user or movie
+/// Ex: 2010 TASer of the Year.
+/// </summary>
+public record AwardAssignment(
+	int AwardId,
+	string ShortName,
+	string Description,
+	int Year,
+	AwardType Type,
+	ICollection<AwardAssignmentPublication> Publications,
+	ICollection<AwardAssignmentUser> Users) : AwardAssignmentSummary(ShortName, Description, Year);
+
+public record AwardAssignmentUser(int Id, string UserName);
+public record AwardAssignmentPublication(int Id, string Title);
+public record AwardAssignmentSummary(string ShortName, string Description, int Year);

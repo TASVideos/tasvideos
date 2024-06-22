@@ -122,14 +122,14 @@ public class CreateModel(
 		db.ForumTopics.Add(topic);
 		await db.SaveChangesAsync();
 
-		await forumService.CreatePost(new PostCreateDto(
+		await forumService.CreatePost(new PostCreate(
 			ForumId, topic.Id, null, Post, userId, User.Name(), Mood, IpAddress, WatchTopic));
 
 		if (User.Has(PermissionTo.CreateForumPolls) && Poll.IsValid)
 		{
 			await forumService.CreatePoll(
 				topic,
-				new PollCreateDto(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
+				new PollCreate(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
 		}
 
 		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
