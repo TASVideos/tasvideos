@@ -44,16 +44,12 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		var userFile = await db.UserFiles.FindAsync(Id);
-		if (userFile is null)
-		{
-			return NotFound();
-		}
+		var count = await db.UserFiles.Where(uf => uf.Id == Id)
+			.ExecuteUpdateAsync(s => s
+				.SetProperty(uf => uf.SystemId, UserFile.System)
+				.SetProperty(uf => uf.GameId, UserFile.Game));
 
-		userFile.SystemId = UserFile.System;
-		userFile.GameId = UserFile.Game;
-		SetMessage(await db.TrySaveChanges(), "Userfile successfully updated.", "Unable to update Userfile.");
-
+		SetMessage(count > 0, "Userfile successfully updated", "Unable to update Userfile");
 		return BasePageRedirect("Info", new { Id });
 	}
 

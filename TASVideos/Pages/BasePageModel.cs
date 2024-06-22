@@ -31,6 +31,36 @@ public class BasePageModel : PageModel
 		MessageType = null;
 	}
 
+	protected void SetMessage(SaveResult result, string successMessage, string failureMessage)
+	{
+		if (result.IsSuccess())
+		{
+			if (!string.IsNullOrWhiteSpace(successMessage))
+			{
+				SuccessStatusMessage(successMessage);
+			}
+		}
+		else if (!string.IsNullOrWhiteSpace(failureMessage))
+		{
+			var addOn = result == SaveResult.ConcurrencyFailure
+				? "The resource may have already been deleted or updated"
+				: "The resource cannot be deleted or updated";
+			ErrorStatusMessage($"{failureMessage}\n{addOn}");
+		}
+	}
+
+	protected void SetMessage(bool success, string successMessage, string failureMessage)
+	{
+		if (success)
+		{
+			SuccessStatusMessage(successMessage);
+		}
+		else
+		{
+			ErrorStatusMessage(failureMessage);
+		}
+	}
+
 	public string IpAddress => PageContext.HttpContext.ActualIpAddress()?.ToString() ?? "";
 
 	protected bool UserCanSeeRestricted => User.Has(PermissionTo.SeeRestrictedForums);
@@ -73,24 +103,6 @@ public class BasePageModel : PageModel
 		foreach (var error in result.Errors)
 		{
 			ModelState.AddModelError("", error.Description);
-		}
-	}
-
-	protected void SetMessage(SaveResult result, string successMessage, string failureMessage)
-	{
-		if (result.IsSuccess())
-		{
-			if (!string.IsNullOrWhiteSpace(successMessage))
-			{
-				SuccessStatusMessage(successMessage);
-			}
-		}
-		else if (!string.IsNullOrWhiteSpace(failureMessage))
-		{
-			var addOn = result == SaveResult.ConcurrencyFailure
-				? "The resource may have already been deleted or updated"
-				: "The resource cannot be deleted or updated";
-			ErrorStatusMessage($"{failureMessage}\n{addOn}");
 		}
 	}
 
