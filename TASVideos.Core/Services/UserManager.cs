@@ -31,13 +31,12 @@ public class UserManager(
 		services,
 		logger)
 {
-	public async Task<User> GetRequiredUser(ClaimsPrincipal user)
-	{
-		return await GetUserAsync(user) ?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
-	}
+	public async Task<User> GetRequiredUser(ClaimsPrincipal user) => await GetUserAsync(user)
+			?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
 
-	// Clears the user claims, and adds a distinct list of user permissions,
-	// so they can be stored and retrieved from their cookie
+	/// <summary>
+	/// Clears the user claims, and adds a distinct list of user permissions, so they can be stored and retrieved from their cookie
+	/// </summary>
 	public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)
 	{
 		var existingClaims = db.UserClaims
@@ -67,53 +66,6 @@ public class UserManager(
 			.Select(rp => rp.PermissionId)
 			.Distinct()
 			.ToListAsync();
-	}
-
-	/// <summary>
-	/// Returns the rating information for the given user
-	/// If user is not found, null is returned
-	/// If user has PublicRatings false, then the ratings will be an empty list
-	/// </summary>
-	public async Task<UserRatings?> GetUserRatings(string userName, RatingRequest paging, bool includeHidden = false)
-	{
-		var model = await db.Users
-			.ForUser(userName)
-			.Select(u => new UserRatings
-			{
-				Id = u.Id,
-				UserName = u.UserName,
-				PublicRatings = u.PublicRatings
-			})
-			.SingleOrDefaultAsync();
-
-		if (model is null)
-		{
-			return null;
-		}
-
-		if (!model.PublicRatings && !includeHidden)
-		{
-			return model;
-		}
-
-		var ratings = await db.PublicationRatings
-			.ForUser(model.Id)
-			.IncludeObsolete(paging.IncludeObsolete)
-			.Select(pr => new UserRatings.Rating
-			{
-				PublicationId = pr.PublicationId,
-				PublicationTitle = pr.Publication!.Title,
-				IsObsolete = pr.Publication.ObsoletedById.HasValue,
-				Value = pr.Value
-			})
-			.SortedPageOf(paging);
-
-		model.Ratings = new RatingPageOf<UserRatings.Rating>(ratings)
-		{
-			IncludeObsolete = paging.IncludeObsolete,
-		};
-
-		return model;
 	}
 
 	public async Task AddStandardRoles(int userId)

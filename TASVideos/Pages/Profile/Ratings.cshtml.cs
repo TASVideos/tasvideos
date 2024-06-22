@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class RatingsModel(UserManager userManager) : BasePageModel
+public class RatingsModel(IRatingService ratingService) : BasePageModel
 {
 	[FromQuery]
 	public RatingRequest Search { get; set; } = new();
@@ -10,6 +10,6 @@ public class RatingsModel(UserManager userManager) : BasePageModel
 
 	public async Task OnGet()
 	{
-		Ratings = (await userManager.GetUserRatings(User.Name(), Search, includeHidden: true))!;
+		Ratings = (await ratingService.GetUserRatings(User.Name(), Search, includeHidden: true))!;
 	}
 }

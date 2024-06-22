@@ -201,4 +201,111 @@ public class RatingServiceTests
 		Assert.AreEqual(SaveResult.Success, actual);
 		Assert.AreEqual(0, _db.PublicationRatings.Count());
 	}
+
+	[TestMethod]
+	public async Task GetUserRatings_UserDoesNotExist_ReturnsNull()
+	{
+		var actual = await _ratingService.GetUserRatings("DoesNotExist", new RatingRequest());
+		Assert.IsNull(actual);
+	}
+
+	[TestMethod]
+	public async Task GetUserRatings_UserExistsButHidesRatings_IncludeHiddenFalse_ReturnsNoRatings()
+	{
+		const string userName = "a";
+		var user = _db.AddUser(userName);
+		user.Entity.PublicRatings = false;
+		var pub = _db.Publications.Add(new Publication());
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = 1.0 });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetUserRatings(userName, new RatingRequest(), includeHidden: false);
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(userName, actual.UserName);
+		Assert.IsFalse(actual.PublicRatings);
+		Assert.AreEqual(0, actual.Ratings.RowCount);
+	}
+
+	[TestMethod]
+	public async Task GetUserRatings_UserExistsButHidesRatings_IncludeHiddenTrue_ReturnsRatings()
+	{
+		const string userName = "a";
+		var user = _db.AddUser(userName);
+		user.Entity.PublicRatings = false;
+		const double ratingValue = 1.0;
+		var pub = _db.Publications.Add(new Publication());
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = ratingValue });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetUserRatings(userName, new RatingRequest(), includeHidden: true);
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(userName, actual.UserName);
+		Assert.IsFalse(actual.PublicRatings);
+		Assert.AreEqual(1, actual.Ratings.RowCount);
+		var actualRating = actual.Ratings.First();
+		Assert.AreEqual(pub.Entity.Id, actualRating.PublicationId);
+		Assert.AreEqual(ratingValue, actualRating.Value);
+	}
+
+	[TestMethod]
+	public async Task GetUserRatings_UserExistsWithPublicRatings_IncludeHiddenFalse_ReturnsRatings()
+	{
+		const string userName = "a";
+		var user = _db.AddUser(userName);
+		user.Entity.PublicRatings = true;
+		const double ratingValue = 1.0;
+		var pub = _db.Publications.Add(new Publication());
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = ratingValue });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetUserRatings(userName, new RatingRequest(), includeHidden: false);
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(userName, actual.UserName);
+		Assert.IsTrue(actual.PublicRatings);
+		Assert.AreEqual(1, actual.Ratings.RowCount);
+		var actualRating = actual.Ratings.First();
+		Assert.AreEqual(pub.Entity.Id, actualRating.PublicationId);
+		Assert.AreEqual(ratingValue, actualRating.Value);
+	}
+
+	[TestMethod]
+	public async Task GetUserRatings_DoNotIncludeObsolete_DoesNotReturnRatingForObsoletePublication()
+	{
+		const string userName = "a";
+		var user = _db.AddUser(userName);
+		var pub = _db.Publications.Add(new Publication());
+		var obsoletePub = _db.Publications.Add(new Publication { ObsoletedBy = pub.Entity });
+
+		const double ratingValue = 2.0;
+		const double ratingValueForObs = 1.0;
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = ratingValue });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = obsoletePub.Entity, User = user.Entity, Value = ratingValueForObs });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetUserRatings(userName, new RatingRequest { IncludeObsolete = false });
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(1, actual.Ratings.RowCount);
+		var actualRating = actual.Ratings.First();
+		Assert.AreEqual(pub.Entity.Id, actualRating.PublicationId);
+		Assert.AreEqual(ratingValue, actualRating.Value);
+	}
+
+	[TestMethod]
+	public async Task GetUserRatings_IncludeObsolete_ReturnsRatingForObsoletePublication()
+	{
+		const string userName = "a";
+		var user = _db.AddUser(userName);
+		var pub = _db.Publications.Add(new Publication());
+		var obsoletePub = _db.Publications.Add(new Publication { ObsoletedBy = pub.Entity });
+
+		const double ratingValue = 2.0;
+		const double ratingValueForObs = 1.0;
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = ratingValue });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = obsoletePub.Entity, User = user.Entity, Value = ratingValueForObs });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetUserRatings(userName, new RatingRequest { IncludeObsolete = true });
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(2, actual.Ratings.RowCount);
+	}
 }

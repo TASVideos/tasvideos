@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
-public class RatingsModel(UserManager userManager) : BasePageModel
+public class RatingsModel(IRatingService ratingService) : BasePageModel
 {
 	[FromQuery]
 	public RatingRequest Search { get; set; } = new();
@@ -13,7 +13,7 @@ public class RatingsModel(UserManager userManager) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var ratings = await userManager.GetUserRatings(
+		var ratings = await ratingService.GetUserRatings(
 			UserName,
 			Search,
 			User.Has(PermissionTo.SeePrivateRatings) || User.Name() == UserName);

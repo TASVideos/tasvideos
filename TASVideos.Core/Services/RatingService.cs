@@ -6,6 +6,13 @@ public interface IRatingService
 	Task<ICollection<RatingEntry>> GetRatingsForPublication(int publicationId);
 	Task<double> GetOverallRatingForPublication(int publicationId);
 	Task<SaveResult> UpdateUserRating(int userId, int publicationId, double? value);
+
+	/// <summary>
+	/// Returns the rating information for the given user
+	/// If user is not found, null is returned
+	/// If user has PublicRatings false, then the ratings will be an empty list
+	/// </summary>
+	Task<UserRatings?> GetUserRatings(string userName, RatingRequest paging, bool includeHidden = false);
 }
 
 internal class RatingService(ApplicationDbContext db) : IRatingService
@@ -72,6 +79,48 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 		}
 
 		return await db.TrySaveChanges();
+	}
+
+	public async Task<UserRatings?> GetUserRatings(string userName, RatingRequest paging, bool includeHidden = false)
+	{
+		var dto = await db.Users
+			.ForUser(userName)
+			.Select(u => new UserRatings
+			{
+				Id = u.Id,
+				UserName = u.UserName,
+				PublicRatings = u.PublicRatings
+			})
+			.SingleOrDefaultAsync();
+
+		if (dto is null)
+		{
+			return null;
+		}
+
+		if (!dto.PublicRatings && !includeHidden)
+		{
+			return dto;
+		}
+
+		var ratings = await db.PublicationRatings
+			.ForUser(dto.Id)
+			.IncludeObsolete(paging.IncludeObsolete)
+			.Select(pr => new UserRatings.Rating
+			{
+				PublicationId = pr.PublicationId,
+				PublicationTitle = pr.Publication!.Title,
+				IsObsolete = pr.Publication.ObsoletedById.HasValue,
+				Value = pr.Value
+			})
+			.SortedPageOf(paging);
+
+		dto.Ratings = new RatingPageOf<UserRatings.Rating>(ratings)
+		{
+			IncludeObsolete = paging.IncludeObsolete,
+		};
+
+		return dto;
 	}
 }
 
