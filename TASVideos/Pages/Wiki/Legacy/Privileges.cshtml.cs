@@ -3,8 +3,5 @@
 [AllowAnonymous]
 public class PrivilegesModel : BasePageModel
 {
-	public IActionResult OnGet()
-	{
-		return RedirectToPage("/Permissions/Index");
-	}
+	public IActionResult OnGet() => RedirectToPage("/Permissions/Index");
 }

@@ -44,7 +44,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		var userFile = await db.UserFiles.SingleOrDefaultAsync(uf => uf.Id == Id);
+		var userFile = await db.UserFiles.FindAsync(Id);
 		if (userFile is null)
 		{
 			return NotFound();

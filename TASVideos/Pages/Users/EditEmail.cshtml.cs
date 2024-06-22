@@ -47,7 +47,7 @@ public class EditEmailModel(
 			return Page();
 		}
 
-		var user = await db.Users.SingleOrDefaultAsync(u => u.Id == Id);
+		var user = await db.Users.FindAsync(Id);
 		if (user is null)
 		{
 			return NotFound();

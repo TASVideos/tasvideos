@@ -35,7 +35,7 @@ public class DisallowModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnPostDelete(int disallowId)
 	{
-		var disallow = await db.UserDisallows.SingleOrDefaultAsync(d => d.Id == disallowId);
+		var disallow = await db.UserDisallows.FindAsync(disallowId);
 		if (disallow is not null)
 		{
 			db.UserDisallows.Remove(disallow);

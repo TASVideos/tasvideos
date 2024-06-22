@@ -180,7 +180,7 @@ public class EditModel(
 
 	public async Task<IActionResult> OnGetUnlock()
 	{
-		var user = await db.Users.SingleOrDefaultAsync(u => u.Id == Id);
+		var user = await db.Users.FindAsync(Id);
 		if (user is null)
 		{
 			return NotFound();

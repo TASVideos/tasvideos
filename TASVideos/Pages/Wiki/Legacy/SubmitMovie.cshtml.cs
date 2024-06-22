@@ -3,8 +3,5 @@
 [AllowAnonymous]
 public class SubmitMovieModel : BasePageModel
 {
-	public IActionResult OnGet()
-	{
-		return RedirectToPage("/Submissions/Submit");
-	}
+	public IActionResult OnGet() => RedirectToPage("/Submissions/Submit");
 }
