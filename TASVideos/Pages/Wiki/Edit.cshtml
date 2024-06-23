@@ -9,7 +9,7 @@
 	<input type="hidden" asp-for="OriginalMarkup" data-diff="left" />
 	<wiki-edit-helper class="mt-2"></wiki-edit-helper>
 	<fieldset>
-		<textarea asp-for="Markup" data-id="wiki-edit" rows="20" data-diff="right" placeholder="Enter your __markup__ here..."></textarea>
+		<wiki-textarea asp-for="Markup" rows="20" data-diff="right"></wiki-textarea>
 		<span asp-validation-for="Markup"></span>
 		@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 	</fieldset>

@@ -97,25 +97,23 @@
 	<fullrow>
 		<fieldset>
 			<label asp-for="Publication.Markup"></label>
-			<textarea asp-for="Publication.Markup" rows="6" data-id="wiki-edit" placeholder="Enter your __wiki markup__ here..."></textarea>
+			<wiki-textarea asp-for="Publication.Markup" rows="6"></wiki-textarea>
 			<span asp-validation-for="Publication.Markup"></span>
 			@await Html.RenderWiki(SystemWiki.WikiEditHelp)
 		</fieldset>
 	</fullrow>
-	<row>
-		<div class="col-12">
-			<fieldset>
-				<label asp-for="Publication.RevisionMessage"></label>
-				<div class="input-group">
-					<input asp-for="Publication.RevisionMessage" />
-					<div class="input-group-text">
-						<minor-edit></minor-edit>
-					</div>
+	<full-row>
+		<fieldset>
+			<label asp-for="Publication.RevisionMessage"></label>
+			<div class="input-group">
+				<input asp-for="Publication.RevisionMessage" />
+				<div class="input-group-text">
+					<minor-edit></minor-edit>
 				</div>
-				<span asp-validation-for="Publication.RevisionMessage"></span>
-			</fieldset>
-		</div>
-	</row>
+			</div>
+			<span asp-validation-for="Publication.RevisionMessage"></span>
+		</fieldset>
+	</full-row>
 	<form-button-bar>
 		<preview-button></preview-button>
 		<submit-button></submit-button>
