@@ -49,7 +49,7 @@
 	</row>
 	<post-helper class="mt-2"></post-helper>
 	<fieldset>
-		<textarea asp-for="Post.Text" data-id="forum-edit" data-diff="right" rows="20" placeholder="Enter your [b]bbcode[/b] here..."></textarea>
+		<forum-textarea asp-for="Post.Text" data-diff="right" rows="20"></forum-textarea>
 		<span asp-validation-for="Post.Text"></span>
 	</fieldset>
 	<form-button-bar class="mb-2">
