@@ -51,8 +51,9 @@ public class EditClassModel(
 		}
 
 		var publication = await db.Publications
-			.Include(p => p.PublicationClass)
-			.SingleOrDefaultAsync(p => p.Id == Id);
+			.Where(p => p.Id == Id)
+			.Select(p => new { p.PublicationClassId, PublicationClassName = p.PublicationClass!.Name })
+			.SingleOrDefaultAsync();
 
 		if (publication is null)
 		{
@@ -61,8 +62,10 @@ public class EditClassModel(
 
 		if (publication.PublicationClassId != PublicationClassId)
 		{
-			var originalClass = publication.PublicationClass!.Name;
-			publication.PublicationClassId = PublicationClassId;
+			var originalClass = publication.PublicationClassName;
+			await db.Publications
+				.Where(p => p.Id == Id)
+				.ExecuteUpdateAsync(s => s.SetProperty(p => p.PublicationClassId, PublicationClassId));
 
 			var log = $"{Id}M Class changed from {originalClass} to {publicationClass.Name}";
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
