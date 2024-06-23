@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model EditClassModel
 @{
-	ViewData.SetTitle($"Edit PublicationClass for {Model.Publication.Title}");
+	ViewData.SetTitle($"Edit PublicationClass for {Model.Title}");
 }
 
 <form client-side-validation="true" method="post">
@@ -9,9 +9,9 @@
 	<row>
 		<div class="col-lg-4 col-sm-6">
 			<fieldset>
-				<label asp-for="Publication.PublicationClass"></label>
-				<select asp-for="Publication.PublicationClass" asp-items="@Model.AvailableClasses"></select>
-				<span asp-validation-for="Publication.PublicationClass"></span>
+				<label asp-for="PublicationClassId"></label>
+				<select asp-for="PublicationClassId" asp-items="@Model.AvailableClasses"></select>
+				<span asp-validation-for="PublicationClassId"></span>
 			</fieldset>
 		</div>
 	</row>

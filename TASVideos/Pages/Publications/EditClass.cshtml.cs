@@ -11,31 +11,27 @@ public class EditClassModel(
 	public int Id { get; set; }
 
 	[BindProperty]
-	public PublicationClassEdit Publication { get; set; } = new();
+	public string Title { get; set; } = "";
 
 	[BindProperty]
-	public string Title { get; set; } = "";
+	public int PublicationClassId { get; set; }
 
 	public List<SelectListItem> AvailableClasses { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publication = await db.Publications
+		var pub = await db.Publications
 			.Where(p => p.Id == Id)
-			.Select(p => new PublicationClassEdit
-			{
-				Title = p.Title,
-				PublicationClass = p.PublicationClassId
-			})
+			.Select(p => new { p.Title, p.PublicationClassId })
 			.SingleOrDefaultAsync();
 
-		if (publication is null)
+		if (pub is null)
 		{
 			return NotFound();
 		}
 
-		Publication = publication;
-		Title = Publication.Title;
+		PublicationClassId = pub.PublicationClassId;
+		Title = pub.Title;
 		await PopulateAvailableClasses();
 		return Page();
 	}
@@ -48,6 +44,12 @@ public class EditClassModel(
 			return Page();
 		}
 
+		var publicationClass = await db.PublicationClasses.FindAsync(PublicationClassId);
+		if (publicationClass is null)
+		{
+			return NotFound();
+		}
+
 		var publication = await db.Publications
 			.Include(p => p.PublicationClass)
 			.SingleOrDefaultAsync(p => p.Id == Id);
@@ -57,18 +59,10 @@ public class EditClassModel(
 			return NotFound();
 		}
 
-		var publicationClass = await db.PublicationClasses
-			.SingleOrDefaultAsync(t => t.Id == Publication.PublicationClass);
-
-		if (publicationClass is null)
-		{
-			return NotFound();
-		}
-
-		if (publication.PublicationClassId != Publication.PublicationClass)
+		if (publication.PublicationClassId != PublicationClassId)
 		{
 			var originalClass = publication.PublicationClass!.Name;
-			publication.PublicationClassId = Publication.PublicationClass;
+			publication.PublicationClassId = PublicationClassId;
 
 			var log = $"{Id}M Class changed from {originalClass} to {publicationClass.Name}";
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
@@ -86,13 +80,5 @@ public class EditClassModel(
 	}
 
 	private async Task PopulateAvailableClasses()
-	{
-		AvailableClasses = await db.PublicationClasses.ToDropDownList();
-	}
-
-	public class PublicationClassEdit
-	{
-		public string Title { get; init; } = "";
-		public int PublicationClass { get; init; }
-	}
+		=> AvailableClasses = await db.PublicationClasses.ToDropDownList();
 }

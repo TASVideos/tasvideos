@@ -78,13 +78,12 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 			return Page();
 		}
 
-		var minorEdit = HttpContext.Request.MinorEdit();
 		var page = new WikiCreateRequest
 		{
 			CreateTimestamp = EditStart,
 			PageName = Path.Trim('/'),
 			Markup = Markup,
-			MinorEdit = minorEdit,
+			MinorEdit = HttpContext.Request.MinorEdit(),
 			RevisionMessage = EditComments,
 			AuthorId = User.GetUserId()
 		};
@@ -152,11 +151,9 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 	}
 
 	private async Task Announce(IWikiPage page, bool force = false)
-	{
-		await publisher.SendWiki(
+		=> await publisher.SendWiki(
 			$"Page [{Path}]({{0}}) {(page.Revision > 1 ? "edited" : "created")} by {User.Name()}",
 			$"{page.RevisionMessage}",
 			Path!,
 			force);
-	}
 }

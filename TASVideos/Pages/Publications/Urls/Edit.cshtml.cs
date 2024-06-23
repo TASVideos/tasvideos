@@ -61,7 +61,6 @@ public class EditUrlsModel(
 		}
 
 		var url = CurrentUrls.SingleOrDefault(u => u.Id == UrlId.Value);
-
 		if (url?.Url is null)
 		{
 			return NotFound();

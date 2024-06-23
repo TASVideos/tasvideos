@@ -83,16 +83,14 @@ public class AdditionalMoviesModel(
 			return Page();
 		}
 
-		var publicationFile = new PublicationFile
+		db.PublicationFiles.Add(new PublicationFile
 		{
 			Path = AdditionalMovieFile!.FileName,
 			PublicationId = Id,
 			Description = DisplayName,
 			Type = FileType.MovieFile,
 			FileData = await AdditionalMovieFile.ToBytes()
-		};
-
-		db.PublicationFiles.Add(publicationFile);
+		});
 
 		string log = $"Added new movie file: {DisplayName}";
 		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
