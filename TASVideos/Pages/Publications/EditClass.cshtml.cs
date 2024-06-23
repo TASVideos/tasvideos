@@ -63,16 +63,15 @@ public class EditClassModel(
 		if (publication.PublicationClassId != PublicationClassId)
 		{
 			var originalClass = publication.PublicationClassName;
-			await db.Publications
+			var result = await db.Publications
 				.Where(p => p.Id == Id)
 				.ExecuteUpdateAsync(s => s.SetProperty(p => p.PublicationClassId, PublicationClassId));
 
 			var log = $"{Id}M Class changed from {originalClass} to {publicationClass.Name}";
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 
-			var result = await db.TrySaveChanges();
-			SetMessage(result, log, "Unable to update Publication Class");
-			if (result.IsSuccess())
+			SetMessage(result > 0, log, "Unable to update Publication Class");
+			if (result > 0)
 			{
 				await publisher.SendPublicationClassChange(
 					Id, Title, User.Name(), originalClass, publicationClass.Name);
