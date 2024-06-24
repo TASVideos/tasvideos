@@ -84,8 +84,8 @@ public class EditModel(
 
 		if (Publication.ObsoletedBy.HasValue)
 		{
-			var obsoletedBy = await db.Publications.SingleOrDefaultAsync(p => p.Id == Publication.ObsoletedBy.Value);
-			if (obsoletedBy is null)
+			var obsoletedByExists = await db.Publications.AnyAsync(p => p.Id == Publication.ObsoletedBy.Value);
+			if (!obsoletedByExists)
 			{
 				ModelState.AddModelError($"{nameof(Publication)}.{nameof(Publication.ObsoletedBy)}", "Publication does not exist");
 				return Page();
