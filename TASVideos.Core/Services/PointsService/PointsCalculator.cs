@@ -46,13 +46,15 @@ internal static class PointsCalculator
 
 		var rawPoints = Math.Pow(Math.Max(publication.AverageRating ?? 0, 0), exp);
 		var authorMultiplier = Math.Pow(publication.AuthorCount, -0.5);
-		var actual = rawPoints * authorMultiplier * publication.ClassWeight;
+		var actual = rawPoints * authorMultiplier * publication.Weight;
 
 		if (actual < PlayerPointConstants.MinimumPlayerPointsForPublication)
 		{
 			actual = PlayerPointConstants.MinimumPlayerPointsForPublication;
 		}
 
+		// We still factor in obsolete movies but only at a number less than zero
+		// for the purpose of determining "former player" rank
 		if (publication.Obsolete)
 		{
 			actual *= PlayerPointConstants.ObsoleteMultiplier;
@@ -80,16 +82,5 @@ internal static class PointsCalculator
 	/// <summary>
 	/// Represents all the data necessary from a publication to factor into player points
 	/// </summary>
-	public class Publication
-	{
-		public int Id { get; init; }
-
-		// We still factor in obsolete movies but only at a number less than zero
-		// for the purpose of determining "former player" rank
-		public bool Obsolete { get; init; }
-		public double? AverageRating { get; init; }
-		public int RatingCount { get; init; }
-		public double ClassWeight { get; init; }
-		public int AuthorCount { get; init; }
-	}
+	internal record Publication(bool Obsolete, int RatingCount, int AuthorCount, double Weight, double? AverageRating);
 }

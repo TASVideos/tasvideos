@@ -51,8 +51,9 @@ internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPo
 		}
 
 		var publication = await db.Publications
+			.Where(p => p.Id == publicationId)
 			.ToCalcPublication()
-			.SingleOrDefaultAsync(p => p.Id == publicationId);
+			.SingleOrDefaultAsync();
 
 		if (publication is null || publication.AuthorCount == 0)
 		{
@@ -90,17 +91,14 @@ internal static class PointsEntityExtensions
 {
 	public static IQueryable<PointsCalculator.Publication> ToCalcPublication(this IQueryable<Publication> query)
 	{
-		return query.Select(p => new PointsCalculator.Publication
-		{
-			Id = p.Id,
-			Obsolete = p.ObsoletedById.HasValue,
-			ClassWeight = p.PublicationClass!.Weight,
-			AuthorCount = p.Authors.Count,
-			RatingCount = p.PublicationRatings.Count,
-			AverageRating = p.PublicationRatings.Count > 0 ? p.PublicationRatings
+		return query.Select(p => new PointsCalculator.Publication(
+			p.ObsoletedById.HasValue,
+			p.PublicationRatings.Count,
+			p.Authors.Count,
+			p.PublicationClass!.Weight,
+			p.PublicationRatings.Count > 0 ? p.PublicationRatings
 				.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 				.Where(pr => pr.User!.UseRatings)
-				.Average(pr => pr.Value) : null
-		});
+				.Average(pr => pr.Value) : null));
 	}
 }
