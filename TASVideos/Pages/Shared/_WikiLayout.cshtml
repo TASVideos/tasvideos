@@ -11,7 +11,7 @@
 
 	ViewData.SetMetaTags(new MetaTag
 	{
-		Title = pageData.PageName,
+		Title = pageData.PageName.SplitPathCamelCase(),
 		Description = await wikiToMetaDescriptionRenderer.RenderWikiForMetaDescription(pageData),
 	});
 }
