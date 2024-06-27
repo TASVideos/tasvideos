@@ -43,6 +43,11 @@
 				<select asp-for="Flag.PermissionRestriction" asp-items="Model.AvailablePermissions.WithDefaultEntry()"></select>
 				<span asp-validation-for="Flag.PermissionRestriction"></span>
 			</fieldset>
+			<fieldset>
+				<label asp-for="Flag.Weight"></label>
+				<input asp-for="Flag.Weight" />
+				<span asp-validation-for="Flag.Weight"></span>
+			</fieldset>
 		</column>
 	</row>
 	<form-button-bar>

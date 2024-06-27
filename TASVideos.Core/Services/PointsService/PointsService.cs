@@ -95,7 +95,7 @@ internal static class PointsEntityExtensions
 			p.ObsoletedById.HasValue,
 			p.PublicationRatings.Count,
 			p.Authors.Count,
-			p.PublicationClass!.Weight,
+			p.PublicationFlags.Any() ? p.PublicationFlags.Max(pf => pf.Flag!.Weight) : 1,
 			p.PublicationRatings.Count > 0 ? p.PublicationRatings
 				.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 				.Where(pr => pr.User!.UseRatings)

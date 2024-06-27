@@ -62,7 +62,8 @@ internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlag
 			IconPath = flag.IconPath,
 			LinkPath = flag.LinkPath,
 			Token = flag.Token,
-			PermissionRestriction = flag.PermissionRestriction
+			PermissionRestriction = flag.PermissionRestriction,
+			Weight = flag.Weight
 		});
 
 		try
@@ -99,6 +100,7 @@ internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlag
 		existingFlag.LinkPath = flag.LinkPath;
 		existingFlag.Token = flag.Token;
 		existingFlag.PermissionRestriction = flag.PermissionRestriction;
+		existingFlag.Weight = flag.Weight;
 
 		try
 		{

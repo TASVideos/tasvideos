@@ -7,7 +7,6 @@ public class PublicationClass
 
 	[StringLength(20)]
 	public string Name { get; set; } = "";
-	public double Weight { get; set; }
 
 	[StringLength(100)]
 	public string? IconPath { get; set; }

@@ -8,7 +8,7 @@
 	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
-	<table-head columns="Id,Name,Link,Weight,"></table-head>
+	<table-head columns="Id,Name,Link,"></table-head>
 	@foreach (var pubClass in Model.Classes.OrderBy(t => t.Id))
 	{
 		<tr>
@@ -21,9 +21,6 @@
 			</td>
 			<td>
 				<a href="/@pubClass.Link">@pubClass.Link</a>
-			</td>
-			<td>
-				@pubClass.Weight
 			</td>
 			<td-action-column>
 				<edit-link asp-page="/PublicationClasses/Edit" asp-route-id="@pubClass.Id"></edit-link>
