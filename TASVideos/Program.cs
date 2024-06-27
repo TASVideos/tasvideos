@@ -32,7 +32,7 @@ string dbConnection = settings.UseSampleDatabase
 
 builder.Services
 	.AddTasvideosData(builder.Environment.IsDevelopment(), dbConnection)
-	.AddTasvideosCore<WikiToTextRenderer>(builder.Environment.IsDevelopment(), settings)
+	.AddTasvideosCore<WikiToTextRenderer, WikiToMetaDescriptionRenderer>(builder.Environment.IsDevelopment(), settings)
 	.AddTasvideosMovieParsers()
 	.AddTasvideosApi(settings);
 

@@ -8,6 +8,7 @@ namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.WikiLink)]
 [TextModule]
+[MetaDescriptionModule]
 public class WikiLink(ApplicationDbContext db, AppSettings settings) : WikiViewComponent
 {
 	public string Href { get; set; } = "";
@@ -24,6 +25,12 @@ public class WikiLink(ApplicationDbContext db, AppSettings settings) : WikiViewC
 	{
 		await GenerateLink(href, displayText, implicitDisplayText);
 		return $"{DisplayText} ( {AbsoluteUrl(Href)} )";
+	}
+
+	public async Task<string> RenderMetaDescriptionAsync(IWikiPage? pageData, string href, string? displayText, string? implicitDisplayText)
+	{
+		await GenerateLink(href, displayText, implicitDisplayText);
+		return DisplayText;
 	}
 
 	private string AbsoluteUrl(string url)
