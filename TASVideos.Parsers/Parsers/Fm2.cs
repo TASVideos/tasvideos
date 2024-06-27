@@ -11,7 +11,24 @@ internal class Fm2 : Parser, IParser
 			SystemCode = SystemCodes.Nes
 		};
 
-		(var header, result.Frames) = await file.PipeBasedMovieHeaderAndFrameCount();
+		(var header, int initialFrameCount) = await file.PipeBasedMovieHeaderAndFrameCount();
+
+		if (header.GetBoolFor(Keys.Binary))
+		{
+			int? frameCount = header.GetPositiveIntFor(Keys.Length);
+			if (frameCount.HasValue)
+			{
+				result.Frames = frameCount.Value;
+			}
+			else
+			{
+				return Error("No frame count found for binary format");
+			}
+		}
+		else
+		{
+			result.Frames = initialFrameCount;
+		}
 
 		if (header.GetBoolFor(Keys.Fds))
 		{
@@ -45,6 +62,8 @@ internal class Fm2 : Parser, IParser
 	{
 		public const string RerecordCount = "rerecordcount";
 		public const string Pal = "palFlag";
+		public const string Binary = "binary";
+		public const string Length = "length";
 		public const string Fds = "fds";
 		public const string StartsFromSavestate = "savestate";
 	}
