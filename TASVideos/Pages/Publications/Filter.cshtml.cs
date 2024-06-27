@@ -30,8 +30,8 @@ public class FilterModel(
 		var tokensFromQuery = Query.ToTokens();
 		Search = IndexModel.PublicationSearch.FromTokens(tokensFromQuery, Tokens);
 
-		AvailableTags = [.. (await tagService.GetAll()).ToDopDown()];
-		AvailableFlags = [.. (await flagService.GetAll()).ToDopDown()];
+		AvailableTags = [.. (await tagService.GetAll()).ToDropDown()];
+		AvailableFlags = [.. (await flagService.GetAll()).ToDropDown()];
 		AvailableGameGroups = await db.GameGroups.ToDropDownList();
 		AvailableAuthors = await db.Users
 			.ThatArePublishedAuthors()
