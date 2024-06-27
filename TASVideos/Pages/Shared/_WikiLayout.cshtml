@@ -1,5 +1,7 @@
 ﻿@using TASVideos.Core.Services.Wiki
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TASVideos.Core.Services.Youtube
+@inject IWikiToTextRenderer wikiToTextRenderer
 @{
 	Layout = "_Layout.cshtml";
 	IWikiPage pageData = ViewData.GetWikiPage() ?? throw new InvalidOperationException("WikiPage not set");
@@ -8,12 +10,14 @@
 		? "Game Resources"
 		: pageData.PageName;
 
+
+	string textMarkup = await wikiToTextRenderer.RenderWikiForYoutube(pageData);
+	string metaDescription = textMarkup.Length <= 350 ? textMarkup : textMarkup.Substring(0, 349) + "…";
+
 	ViewData.SetMetaTags(new MetaTag
 	{
 		Title = pageData.PageName,
-		Description = pageData.AuthorName is not null && pageData.RevisionMessage is not null
-			? $"Last Edited By {pageData.AuthorName} - {pageData.RevisionMessage}"
-			: null
+		Description = metaDescription,
 	});
 }
 
