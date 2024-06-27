@@ -167,9 +167,13 @@ public partial class Element : INodeWithChildren
 
 	public async Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
 	{
-		foreach (var c in Children)
+		// write all except for divs that aren't p (which aims to exclude TOC, tabs, etc.)
+		if (Tag != "div" || Attributes.TryGetValue("class", out string? classes) && classes.Split(' ').Contains("p"))
 		{
-			await c.WriteMetaDescriptionAsync(sb, ctx);
+			foreach (var c in Children)
+			{
+				await c.WriteMetaDescriptionAsync(sb, ctx);
+			}
 		}
 	}
 
