@@ -317,8 +317,8 @@ public static class EntityExtensions
 			.OrderBy(f => f.Token)
 			.Select(f => new SelectListItem
 			{
-				Text = f.Token.ToLower(),
-				Value = f.Name
+				Text = f.Name,
+				Value = f.Token.ToLower()
 			});
 	}
 
