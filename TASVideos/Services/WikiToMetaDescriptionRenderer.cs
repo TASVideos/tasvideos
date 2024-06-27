@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using System.Text;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
@@ -8,9 +9,9 @@ public class WikiToMetaDescriptionRenderer(IServiceProvider serviceProvider) : I
 {
 	public async Task<string> RenderWikiForMetaDescription(IWikiPage page)
 	{
-		var sw = new StringWriter();
-		await Util.RenderTextAsync(page.Markup, sw, new WriterHelper(serviceProvider, page));
-		return sw.ToString();
+		var sb = new StringBuilder();
+		await Util.RenderMetaDescriptionAsync(page.Markup, sb, new WriterHelper(serviceProvider, page));
+		return sb.ToString().Trim();
 	}
 
 	private class WriterHelper(IServiceProvider serviceProvider, IWikiPage wikiPage)

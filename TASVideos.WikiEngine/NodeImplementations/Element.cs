@@ -1,4 +1,5 @@
 ﻿// ReSharper disable MethodHasAsyncOverload
+
 namespace TASVideos.WikiEngine.AST;
 
 public partial class Element : INodeWithChildren
@@ -161,6 +162,14 @@ public partial class Element : INodeWithChildren
 			case "hr":
 				writer.Write("--------\n");
 				break;
+		}
+	}
+
+	public async Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
+	{
+		foreach (var c in Children)
+		{
+			await c.WriteMetaDescriptionAsync(sb, ctx);
 		}
 	}
 

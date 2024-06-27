@@ -36,6 +36,17 @@ public class IfModule(int charStart, string condition) : INodeWithChildren
 		}
 	}
 
+	public async Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
+	{
+		if (ctx.Helper.CheckCondition(Condition))
+		{
+			foreach (var c in Children)
+			{
+				await c.WriteMetaDescriptionAsync(sb, ctx);
+			}
+		}
+	}
+
 	public INode Clone()
 	{
 		var ret = (IfModule)MemberwiseClone();

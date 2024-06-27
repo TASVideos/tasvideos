@@ -10,14 +10,10 @@
 		? "Game Resources"
 		: pageData.PageName;
 
-
-	string textMarkup = await wikiToMetaDescriptionRenderer.RenderWikiForMetaDescription(pageData);
-	string metaDescription = textMarkup.Length <= 350 ? textMarkup : textMarkup.Substring(0, 349) + "…";
-
 	ViewData.SetMetaTags(new MetaTag
 	{
 		Title = pageData.PageName,
-				Description = metaDescription,
+		Description = await wikiToMetaDescriptionRenderer.RenderWikiForMetaDescription(pageData),
 	});
 }
 

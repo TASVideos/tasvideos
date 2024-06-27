@@ -75,6 +75,8 @@ public static class SiteGlobalConstants
 
 	public const int GamesForumCategory = 5;
 	public const int OtherGamesForum = 5;
+
+	public const int MetaDescriptionLength = 350;
 }
 
 public static class ForumConstants
