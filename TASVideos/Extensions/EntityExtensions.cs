@@ -300,7 +300,7 @@ public static class EntityExtensions
 			.ToListAsync();
 	}
 
-	public static IEnumerable<SelectListItem> ToDopDown(this IEnumerable<Tag> tags)
+	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<Tag> tags)
 	{
 		return tags
 			.OrderBy(t => t.DisplayName)
@@ -311,7 +311,7 @@ public static class EntityExtensions
 			});
 	}
 
-	public static IEnumerable<SelectListItem> ToDopDown(this IEnumerable<Flag> flags)
+	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<Flag> flags)
 	{
 		return flags
 			.OrderBy(f => f.Token)
