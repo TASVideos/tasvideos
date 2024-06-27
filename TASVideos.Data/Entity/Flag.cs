@@ -17,4 +17,6 @@ public class Flag
 	public string Token { get; set; } = "";
 
 	public PermissionTo? PermissionRestriction { get; set; }
+
+	public double Weight { get; set; }
 }

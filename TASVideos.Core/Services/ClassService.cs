@@ -46,7 +46,6 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 			Name = publicationClass.Name,
 			IconPath = publicationClass.IconPath,
 			Link = publicationClass.Link,
-			Weight = publicationClass.Weight
 		});
 
 		try
@@ -81,7 +80,6 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 		existingClass.Name = publicationClass.Name;
 		existingClass.Link = publicationClass.Link;
 		existingClass.IconPath = publicationClass.IconPath;
-		existingClass.Weight = publicationClass.Weight;
 
 		try
 		{

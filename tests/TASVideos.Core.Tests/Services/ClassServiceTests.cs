@@ -92,7 +92,6 @@ public class ClassServiceTests
 			Name = "Name",
 			IconPath = "IconPath",
 			Link = "Link",
-			Weight = 1
 		};
 
 		var (id, result) = await _classService.Add(publicationClass);
@@ -105,7 +104,6 @@ public class ClassServiceTests
 		Assert.AreEqual(publicationClass.Name, savedClass.Name);
 		Assert.AreEqual(publicationClass.IconPath, savedClass.IconPath);
 		Assert.AreEqual(publicationClass.Link, savedClass.Link);
-		Assert.AreEqual(publicationClass.Weight, savedClass.Weight);
 		Assert.IsFalse(_cache.ContainsKey(ClassService.ClassesKey));
 	}
 

@@ -8,7 +8,7 @@
 	<add-link asp-page="Create"></add-link>
 </top-button-bar>
 <standard-table>
-	<table-head columns="Name,Icon Path,Link Path,Token,Permission Restriction,"></table-head>
+	<table-head columns="Name,Icon Path,Link Path,Token,Permission Restriction,Weight,"></table-head>
 	@foreach (var flag in Model.Flags.OrderBy(f => f.Token))
 	{
 		<tr>
@@ -17,6 +17,7 @@
 			<td>@flag.LinkPath</td>
 			<td>@flag.Token</td>
 			<td>@flag.PermissionRestriction</td>
+			<td>@flag.Weight</td>
 			<td-action-column>
 				<edit-link asp-page="Edit" asp-route-id="@flag.Id"></edit-link>
 			</td-action-column>

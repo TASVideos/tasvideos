@@ -46,7 +46,6 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 		}
 
 		var query = db.Publications
-			.Where(p => p.PublicationClass!.Weight >= 1) // Exclude Vault
 			.Where(p => p.CreateTimestamp >= afterYear)
 			.Where(p => p.CreateTimestamp < beforeYear);
 
