@@ -67,7 +67,7 @@ public class Module : INode
 
 	public async Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
 	{
-		if (sb.Length == SiteGlobalConstants.MetaDescriptionLength)
+		if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
 		{
 			return;
 		}

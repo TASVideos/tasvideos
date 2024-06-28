@@ -35,7 +35,7 @@ public class Text(int charStart, string content) : INode
 
 	public Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
 	{
-		if (sb.Length == SiteGlobalConstants.MetaDescriptionLength)
+		if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
 		{
 			return Task.CompletedTask;
 		}
