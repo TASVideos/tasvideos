@@ -65,6 +65,33 @@ public class Module : INode
 		}
 	}
 
+	public async Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
+	{
+		if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+		{
+			return;
+		}
+
+		if (ModuleNames.IsModule(Name))
+		{
+			StringWriter sw = new();
+
+			// It's the caller's responsibility to provide a view component runner that will create text output.
+			await ctx.Helper.RunViewComponentAsync(sw, Name, Parameters);
+
+			string moduleContent = sw.ToString();
+			if (sb.Length + moduleContent.Length < SiteGlobalConstants.MetaDescriptionLength)
+			{
+				sb.Append(moduleContent);
+			}
+			else
+			{
+				sb.Append('…');
+				sb.Append(' ', SiteGlobalConstants.MetaDescriptionLength - sb.Length);
+			}
+		}
+	}
+
 	public INode Clone()
 	{
 		return (Module)MemberwiseClone();

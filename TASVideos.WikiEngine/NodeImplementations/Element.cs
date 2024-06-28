@@ -1,4 +1,5 @@
 ﻿// ReSharper disable MethodHasAsyncOverload
+
 namespace TASVideos.WikiEngine.AST;
 
 public partial class Element : INodeWithChildren
@@ -161,6 +162,23 @@ public partial class Element : INodeWithChildren
 			case "hr":
 				writer.Write("--------\n");
 				break;
+		}
+	}
+
+	public async Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
+	{
+		// write all except for divs that aren't p (which aims to exclude TOC, tabs, etc.)
+		if (Tag != "div" || Attributes.TryGetValue("class", out string? classes) && classes.Split(' ').Contains("p"))
+		{
+			foreach (var c in Children)
+			{
+				if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+				{
+					break;
+				}
+
+				await c.WriteMetaDescriptionAsync(sb, ctx);
+			}
 		}
 	}
 

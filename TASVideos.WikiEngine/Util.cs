@@ -72,6 +72,30 @@ public static class Util
 		}
 	}
 
+	public static async Task RenderMetaDescriptionAsync(string content, StringBuilder sb, IWriterHelper h)
+	{
+		List<INode> results;
+		try
+		{
+			results = NewParser.Parse(content);
+		}
+		catch (NewParser.SyntaxException e)
+		{
+			results = Builtins.MakeErrorPage(content, e);
+		}
+
+		var ctx = new WriterContext(h);
+		foreach (var r in results)
+		{
+			if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+			{
+				break;
+			}
+
+			await r.WriteMetaDescriptionAsync(sb, ctx);
+		}
+	}
+
 	/// <summary>
 	/// Returns all the referrals to other site pages that exist in the given wiki markup.
 	/// </summary>

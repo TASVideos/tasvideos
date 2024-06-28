@@ -12,10 +12,12 @@ namespace TASVideos.Core;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddTasvideosCore<T>(this IServiceCollection services, bool isDevelopment, AppSettings settings)
-		where T : class, IWikiToTextRenderer
+	public static IServiceCollection AddTasvideosCore<T1, T2>(this IServiceCollection services, bool isDevelopment, AppSettings settings)
+		where T1 : class, IWikiToTextRenderer
+		where T2 : class, IWikiToMetaDescriptionRenderer
 	{
-		services.AddScoped<IWikiToTextRenderer, T>();
+		services.AddScoped<IWikiToTextRenderer, T1>();
+		services.AddScoped<IWikiToMetaDescriptionRenderer, T2>();
 		services
 			.AddCacheService(settings.CacheSettings)
 			.AddExternalMediaPublishing(settings, isDevelopment);

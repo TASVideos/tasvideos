@@ -33,6 +33,24 @@ public class Text(int charStart, string content) : INode
 		await writer.WriteAsync(Content);
 	}
 
+	public Task WriteMetaDescriptionAsync(StringBuilder sb, WriterContext ctx)
+	{
+		if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+		{
+			return Task.CompletedTask;
+		}
+
+		sb.Append(Content);
+		if (sb.Length > SiteGlobalConstants.MetaDescriptionLength)
+		{
+			int endIndex = SiteGlobalConstants.MetaDescriptionLength - 1;
+			sb.Remove(endIndex, sb.Length - endIndex);
+			sb.Append('…');
+		}
+
+		return Task.CompletedTask;
+	}
+
 	public INode Clone()
 	{
 		return (Text)MemberwiseClone();

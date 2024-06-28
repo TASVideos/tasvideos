@@ -8,3 +8,6 @@ public class WikiModuleAttribute(string name) : Attribute
 
 [AttributeUsage(AttributeTargets.Class)]
 public class TextModuleAttribute : Attribute;
+
+[AttributeUsage(AttributeTargets.Class)]
+public class MetaDescriptionModuleAttribute : Attribute;

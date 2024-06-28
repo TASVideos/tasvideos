@@ -1,5 +1,6 @@
 ﻿@using TASVideos.Core.Services.Wiki
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject IWikiToMetaDescriptionRenderer wikiToMetaDescriptionRenderer
 @{
 	Layout = "_Layout.cshtml";
 	IWikiPage pageData = ViewData.GetWikiPage() ?? throw new InvalidOperationException("WikiPage not set");
@@ -10,10 +11,8 @@
 
 	ViewData.SetMetaTags(new MetaTag
 	{
-		Title = pageData.PageName,
-		Description = pageData.AuthorName is not null && pageData.RevisionMessage is not null
-			? $"Last Edited By {pageData.AuthorName} - {pageData.RevisionMessage}"
-			: null
+		Title = pageData.PageName.SplitPathCamelCase(),
+		Description = await wikiToMetaDescriptionRenderer.RenderWikiForMetaDescription(pageData),
 	});
 }
 

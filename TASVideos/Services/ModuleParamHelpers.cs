@@ -31,6 +31,13 @@ public static class ModuleParamHelpers
 		.Where(t => t.GetCustomAttribute(typeof(TextModuleAttribute)) != null)
 		.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
 
+	public static readonly IDictionary<string, Type> MetaDescriptionComponents = Assembly
+		.GetAssembly(typeof(WikiModuleAttribute))
+		!.GetTypes()
+		.Where(t => t.GetCustomAttribute(typeof(WikiModuleAttribute)) != null)
+		.Where(t => t.GetCustomAttribute(typeof(MetaDescriptionModuleAttribute)) != null)
+		.ToDictionary(tkey => ((WikiModuleAttribute)tkey.GetCustomAttribute(typeof(WikiModuleAttribute))!).Name, tvalue => tvalue, StringComparer.InvariantCultureIgnoreCase);
+
 	public static IDictionary<string, object?> GetParameterData(
 		TextWriter w,
 		string name,
