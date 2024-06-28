@@ -3,7 +3,7 @@
 @{
 	ViewData.SetTitle($"Publishing Submission {Model.Submission.Title}");
 }
-<card>
+<card class="mb-3">
 	<card-body>
 		<div class="card-title">
 			<a class="btn btn-primary " asp-page="Catalog" asp-route-id="@Model.Id">Catalog</a>
@@ -12,43 +12,42 @@
 			<column lg="6">
 				<row>
 					<label class="col-sm-3" asp-for="Submission.PublicationClass"></label>
-					<span class="col-sm-9"><a href="/@Model.Submission.PublicationClass">@Html.DisplayFor(m => m.Submission.PublicationClass)</a></span>
+					<span class="col-sm-9"><a href="/@Model.Submission.PublicationClass">@Model.Submission.PublicationClass</a></span>
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.System"></label>
-					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.System)</span>
+					<span class="col-sm-9">@Model.Submission.System</span>
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Region"></label>
-					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.Region)</span>
+					<span class="col-sm-9">@Model.Submission.Region</span>
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.EmulatorVersion"></label>
-					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.EmulatorVersion)</span>
+					<span class="col-sm-9">@Model.Submission.EmulatorVersion</span>
 				</row>
 			</column>
 			<column lg="6">
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Game"></label>
-					<span class="col-sm-9"><a asp-page="/Games/Index" asp-route-id="@Model.Submission.GameId">@Html.DisplayFor(m => m.Submission.Game)</a></span>
+					<span class="col-sm-9"><a asp-page="/Games/Index" asp-route-id="@Model.Submission.GameId">@Model.Submission.Game</a></span>
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.GameVersion"></label>
 					<span class="col-sm-9">
 						<a asp-page="/Games/Versions/Edit" asp-route-gameId="@Model.Submission.GameId" asp-route-id="@Model.Submission.VersionId">
-							<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.GameVersion)</span>
+							@Model.Submission.GameVersion
 						</a>
 					</span>
 				</row>
 				<row>
 					<label class="col-sm-3" asp-for="Submission.Branch"></label>
-					<span class="col-sm-9">@Html.DisplayFor(m => m.Submission.Branch)</span>
+					<span class="col-sm-9">@Model.Submission.Branch</span>
 				</row>
 			</column>
 		</row>
 	</card-body>
 </card>
-<hr />
 <form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input type="hidden" asp-for="Submission.SystemId" />
 	<input type="hidden" asp-for="Id" />
