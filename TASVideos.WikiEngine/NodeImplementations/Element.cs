@@ -172,6 +172,11 @@ public partial class Element : INodeWithChildren
 		{
 			foreach (var c in Children)
 			{
+				if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+				{
+					break;
+				}
+
 				await c.WriteMetaDescriptionAsync(sb, ctx);
 			}
 		}

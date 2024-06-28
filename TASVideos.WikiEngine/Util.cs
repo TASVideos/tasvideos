@@ -87,6 +87,11 @@ public static class Util
 		var ctx = new WriterContext(h);
 		foreach (var r in results)
 		{
+			if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+			{
+				break;
+			}
+
 			await r.WriteMetaDescriptionAsync(sb, ctx);
 		}
 	}
