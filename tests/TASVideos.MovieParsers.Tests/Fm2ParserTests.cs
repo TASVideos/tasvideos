@@ -15,7 +15,7 @@ public class Fm2ParserTests : BaseParserTests
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
 		Assert.AreEqual(21, result.RerecordCount);
-		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
+		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System should be NES");
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -28,7 +28,7 @@ public class Fm2ParserTests : BaseParserTests
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 		Assert.AreEqual(RegionType.Pal, result.Region);
 		Assert.AreEqual(21, result.RerecordCount);
-		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
+		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System should be NES");
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -54,7 +54,7 @@ public class Fm2ParserTests : BaseParserTests
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
 		Assert.AreEqual(21, result.RerecordCount);
-		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System chould be NES");
+		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System should be NES");
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -78,5 +78,23 @@ public class Fm2ParserTests : BaseParserTests
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count assumed to be 0");
 		AssertNoErrors(result);
 		Assert.AreEqual(1, result.Warnings.Count());
+	}
+
+	[TestMethod]
+	public async Task Binary()
+	{
+		var result = await _fm2Parser.Parse(Embedded("binary.fm2"), EmbeddedLength("binary.fm2"));
+		Assert.IsTrue(result.Success, "Result is successful");
+		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
+		AssertNoWarningsOrErrors(result);
+	}
+
+	[TestMethod]
+	public async Task BinaryWithoutFrameCount()
+	{
+		var result = await _fm2Parser.Parse(Embedded("binarynolength.fm2"), EmbeddedLength("binarynolength.fm2"));
+		Assert.IsFalse(result.Success);
+		AssertNoWarnings(result);
+		Assert.AreEqual(1, result.Errors.Count());
 	}
 }
