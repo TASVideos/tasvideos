@@ -23,12 +23,12 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="Type"></label>
-				<select asp-for="Type" asp-items="Model.AvailableTypes"></select>
+				<select asp-for="Type" asp-items="Model.AvailableTypes" data-id="url-types"></select>
 				<span asp-validation-for="Type"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="CurrentUrl">URL</label>
-				<input asp-for="CurrentUrl" />
+				<input asp-for="CurrentUrl" data-id="url" />
 				<span asp-validation-for="CurrentUrl"></span>
 			</fieldset>
 			<fieldset>
@@ -43,3 +43,7 @@
 		</column>
 	</row>
 </form>
+
+@section Scripts {
+	<script src="/js/publication-url-edit.js"></script>
+}
