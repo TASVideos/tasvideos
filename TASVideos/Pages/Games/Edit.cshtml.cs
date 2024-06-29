@@ -128,7 +128,9 @@ public class EditModel(
 				$"{game.Id}G");
 		}
 
-		return BasePageRedirect("Index", new { game.Id });
+		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
+			? RedirectToPage("Index", new { game.Id })
+			: BaseReturnUrlRedirect($"?GameId={game.Id}");
 	}
 
 	public async Task<IActionResult> OnPostDelete()

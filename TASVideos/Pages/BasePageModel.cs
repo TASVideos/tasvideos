@@ -72,18 +72,14 @@ public class BasePageModel : PageModel
 	protected IActionResult Login() => BasePageRedirect("/Account/Login");
 
 	protected IActionResult BasePageRedirect(string page, object? routeValues = null)
-	{
-		return !string.IsNullOrWhiteSpace(Request.ReturnUrl())
+		=> !string.IsNullOrWhiteSpace(Request.ReturnUrl())
 			? BaseReturnUrlRedirect()
 			: RedirectToPage(page, routeValues);
-	}
 
 	protected IActionResult BaseRedirect(string page)
-	{
-		return !string.IsNullOrWhiteSpace(Request.ReturnUrl())
+		=> !string.IsNullOrWhiteSpace(Request.ReturnUrl())
 			? BaseReturnUrlRedirect()
 			: Redirect(page);
-	}
 
 	protected IActionResult BaseReturnUrlRedirect(string? additionalParam = null)
 	{
@@ -125,14 +121,12 @@ public class BasePageModel : PageModel
 		};
 	}
 
-	protected JsonResult Json(object? obj) => new JsonResult(obj);
+	protected JsonResult Json(object? obj) => new(obj);
 
 	protected IActionResult ZipFile(ZippedFile? file)
-	{
-		return file is not null
+		=> file is not null
 			? File(file.Data, MediaTypeNames.Application.Octet, $"{file.Path}.zip")
 			: NotFound();
-	}
 
 	protected PageResult Rss()
 	{

@@ -68,7 +68,14 @@ function enableCataloging() {
 	});
 
 	document.getElementById('create-game')?.addEventListener('click', function () {
-		document.location = `/Games/Edit?returnUrl=${returnUrl}`;
+		if (returnUrl) {
+			// we do not want to pass query params
+			const split = returnUrl.split('?')[0];
+			document.location = `/Games/Edit?returnUrl=${split}`;
+		} else {
+			document.location = '/Games/Edit';
+		}
+
 	});
 
 	gameGoalBtn?.addEventListener('click', function () {
