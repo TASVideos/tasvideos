@@ -3,6 +3,7 @@ let hashInput = document.getElementById('hash-input');
 let hashProgress = document.getElementById('hash-progress');
 let sha1Input = document.querySelector('[data-id="sha1"]');
 let md5Input = document.querySelector('[data-id="md5"]');
+let nameInput = document.querySelector('[data-id="name"]');
 function dropEnterStyle() {
 	dropArea.classList.add('border-secondary');
 	dropArea.classList.remove('border-silver');
@@ -12,6 +13,7 @@ function dropLeaveStyle() {
 	dropArea.classList.remove('border-secondary');
 }
 function calculateHashes(file) {
+	nameInput.value = file.name;
 	const sha1 = CryptoJS.algo.SHA1.create();
 	const md5 = CryptoJS.algo.MD5.create();
 	const fileSize = file.size;
