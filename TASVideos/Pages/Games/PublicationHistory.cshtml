@@ -4,5 +4,8 @@
 	ViewData.SetTitle($"Publication History of {Model.History.GameDisplayName}");
 	ViewData["Highlight"] = Model.Highlight;
 }
+@section PageTitle {
+	Publication History of <game-link id="@Model.History.GameId">@Model.History.GameDisplayName</game-link>
+}
 
 <partial name="_PublicationHistory" model="Model.History" />
