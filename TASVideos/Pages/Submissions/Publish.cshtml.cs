@@ -121,15 +121,20 @@ public class PublishModel(
 			GameGoalId = submission.GameGoalId
 		};
 
-		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, Submission.OnlineWatchUrlName);
+		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, "");
 		publication.PublicationUrls.AddMirror(Submission.MirrorSiteUrl);
+		if (!string.IsNullOrWhiteSpace(Submission.AlternateOnlineWatchingUrl))
+		{
+			publication.PublicationUrls.AddStreaming(Submission.AlternateOnlineWatchingUrl, Submission.AlternateOnlineWatchUrlName);
+		}
+
 		publication.Authors.CopyFromSubmission(submission.SubmissionAuthors);
 		publication.PublicationFlags.AddFlags(Submission.SelectedFlags);
 		publication.PublicationTags.AddTags(Submission.SelectedTags);
 
 		db.Publications.Add(publication);
 
-		await db.SaveChangesAsync(); // Need an Id for the Title
+		await db.SaveChangesAsync(); // Need an ID for the Title
 		publication.GenerateTitle();
 
 		await uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
@@ -156,7 +161,22 @@ public class PublishModel(
 				publication.Id,
 				publication.CreateTimestamp,
 				Submission.OnlineWatchingUrl,
-				Submission.OnlineWatchUrlName,
+				"",
+				publication.Title,
+				addedWikiPage!,
+				submission.System.Code,
+				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
+				null);
+			await youtubeSync.SyncYouTubeVideo(video);
+		}
+
+		if (youtubeSync.IsYoutubeUrl(Submission.AlternateOnlineWatchingUrl))
+		{
+			var video = new YoutubeVideo(
+				publication.Id,
+				publication.CreateTimestamp,
+				Submission.AlternateOnlineWatchingUrl,
+				Submission.AlternateOnlineWatchUrlName,
 				publication.Title,
 				addedWikiPage!,
 				submission.System.Code,
@@ -221,8 +241,12 @@ public class PublishModel(
 		[StringLength(500)]
 		public string OnlineWatchingUrl { get; init; } = "";
 
+		[Url]
+		[StringLength(500)]
+		public string AlternateOnlineWatchingUrl { get; init; } = "";
+
 		[StringLength(100)]
-		public string? OnlineWatchUrlName { get; init; }
+		public string? AlternateOnlineWatchUrlName { get; init; }
 
 		[Url]
 		[StringLength(500)]

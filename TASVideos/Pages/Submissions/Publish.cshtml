@@ -64,14 +64,19 @@
 				<label asp-for="Submission.OnlineWatchingUrl">Online-watching URL</label>
 				<input asp-for="Submission.OnlineWatchingUrl" />
 				<span asp-validation-for="Submission.OnlineWatchingUrl"></span>
-				<label asp-for="Submission.OnlineWatchUrlName">Online-watching URL Display Name (Optional)</label>
-				<input asp-for="Submission.OnlineWatchUrlName" />
-				<span asp-validation-for="Submission.OnlineWatchUrlName"></span>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.MirrorSiteUrl">Mirror site URL</label>
 				<input asp-for="Submission.MirrorSiteUrl" />
 				<span asp-validation-for="Submission.MirrorSiteUrl"></span>
+			</fieldset>
+			<fieldset>
+				<label asp-for="Submission.AlternateOnlineWatchingUrl">Alternative Online-watching URL (optional)</label>
+				<input asp-for="Submission.AlternateOnlineWatchingUrl" />
+				<span asp-validation-for="Submission.AlternateOnlineWatchingUrl"></span>
+				<label asp-for="Submission.AlternateOnlineWatchUrlName">Alternative Online-watching URL Display Name (optional)</label>
+				<input asp-for="Submission.AlternateOnlineWatchUrlName" />
+				<span asp-validation-for="Submission.AlternateOnlineWatchUrlName"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
