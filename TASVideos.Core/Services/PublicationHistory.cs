@@ -62,8 +62,9 @@ internal class PublicationHistory(ApplicationDbContext db) : IPublicationHistory
 	public async Task<PublicationHistoryGroup?> ForGameByPublication(int publicationId)
 	{
 		var pub = await db.Publications
-			.Select(p => new { p.Id, p.GameId })
-			.SingleOrDefaultAsync(p => p.Id == publicationId);
+			.Where(p => p.Id == publicationId)
+			.Select(p => new { p.GameId })
+			.SingleOrDefaultAsync();
 
 		if (pub is null)
 		{
