@@ -1,4 +1,5 @@
-﻿using TASVideos.Extensions;
+﻿using System.Text.RegularExpressions;
+using TASVideos.Extensions;
 
 namespace TASVideos.Common.Tests.Extensions;
 
@@ -29,6 +30,23 @@ public class StringExtensionTests
 	{
 		var actual = str.CapAndEllipse(limit);
 		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void RegexMatchShim_EquivToRefType()
+	{
+		var str = "here's a long string with some words in it";
+		Regex regex = new("""a(?: [^w][^ ]*)* (?:[^w][^ ]*) w""");
+		var refType = regex.Match(str);
+		var valType = regex.Match(str.AsSpan());
+		Assert.AreEqual(refType.Success, valType.Success, nameof(Match.Success));
+		Assert.IsTrue(valType.Value.SequenceEqual(refType.Value), nameof(Match.Value));
+		Assert.AreEqual(refType.Groups.Count, valType.Groups.Count, $"{nameof(Match.Groups)}.{nameof(Match.Groups.Count)}");
+		Assert.AreEqual(refType.Groups[0].Value, valType.Groups[0].Value, $"first of {nameof(Match.Groups)}");
+
+		Assert.IsFalse(default(RegexMatchShim).Success, $"zeroed {nameof(RegexMatchShim)}.{nameof(RegexMatchShim.Success)}");
+		Assert.ThrowsException<InvalidOperationException>(() => _ = default(RegexMatchShim).Value, $"zeroed {nameof(RegexMatchShim)}.{nameof(RegexMatchShim.Success)}");
+		Assert.ThrowsException<InvalidOperationException>(() => _ = default(RegexMatchShim).Groups, $"zeroed {nameof(RegexMatchShim)}.{nameof(RegexMatchShim.Groups)}");
 	}
 
 	[TestMethod]

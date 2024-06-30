@@ -2,6 +2,39 @@
 
 namespace TASVideos.Extensions;
 
+public ref struct RegexMatchShim
+{
+	private const string ErrMsgZeroed = $"this {nameof(RegexMatchShim)} has no value";
+
+	private GroupCollection? _groups = null;
+
+	private readonly Regex _regex;
+
+	private readonly ReadOnlySpan<char> _str;
+
+	private readonly Range _valueRange;
+
+	public GroupCollection Groups
+		=> Success
+			? (_groups ??= _regex.Match(_str.ToString()).Groups)
+			: throw new InvalidOperationException(ErrMsgZeroed);
+
+	public readonly bool Success;
+
+	public readonly ReadOnlySpan<char> Value
+		=> Success
+			? _str[_valueRange]
+			: throw new InvalidOperationException(ErrMsgZeroed);
+
+	internal RegexMatchShim(Regex regex, ReadOnlySpan<char> str, Range valueRange)
+	{
+		_regex = regex;
+		_str = str;
+		_valueRange = valueRange;
+		Success = true;
+	}
+}
+
 public static partial class StringExtensions
 {
 	/// <summary>
@@ -49,6 +82,14 @@ public static partial class StringExtensions
 		return str.Length < limit
 			? str
 			: str[..limit];
+	}
+
+	public static RegexMatchShim Match(this Regex regex, ReadOnlySpan<char> str)
+	{
+		var iter = regex.EnumerateMatches(str);
+		return iter.MoveNext()
+			? new(regex, str, iter.Current.Index..(iter.Current.Index + iter.Current.Length))
+			: default;
 	}
 
 	/// <summary>
