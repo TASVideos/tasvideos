@@ -84,6 +84,19 @@ public static partial class StringExtensions
 			: str[..limit];
 	}
 
+	public static bool EndsWithAny(this ReadOnlySpan<char> str, IEnumerable<string> suffixes)
+	{
+		foreach (var sfx in suffixes)
+		{
+			if (str.EndsWith(sfx))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public static RegexMatchShim Match(this Regex regex, ReadOnlySpan<char> str)
 	{
 		var iter = regex.EnumerateMatches(str);
@@ -198,6 +211,19 @@ public static partial class StringExtensions
 		return !string.IsNullOrWhiteSpace(str)
 			? SplitCamelCaseRegex.Replace(str, "$1$2$3$4$5 ")
 			: "";
+	}
+
+	public static bool StartsWithAny(this ReadOnlySpan<char> str, IEnumerable<string> prefixes)
+	{
+		foreach (var pfx in prefixes)
+		{
+			if (str.StartsWith(pfx))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static readonly Regex SpaceRegex = SpaceCompiledRegex();
