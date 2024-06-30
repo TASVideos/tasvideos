@@ -5,12 +5,13 @@
 	bool isEditActivity = Model.PostEditedTimestamp > minimumDate;
 	string addClass = isCreateActivity || isEditActivity ? "activity-post" : "";
 }
-<card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning-subtle border-2" : "border-primary-subtle") border mb-2">
+<card use-article="true" id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning-subtle border-2" : "border-primary-subtle") border mb-2">
 	<card-header class="px-2 py-1">
 		<row class="align-items-center">
 			<div class="col-auto">
 				<small>
 					<a href="/Forum/Posts/@(Model.Id)"
+					   rel="bookmark"
 					   title="Link to this post"
 					   class="float-start text-decoration-none text-body">
 						<i class="fa fa-bookmark @addClass" data-post-id="@Model.Id" data-unix-created="@(isCreateActivity ? Model.CreateTimestamp.UnixTimestamp() : "")" data-unix-edited="@(isEditActivity ? Model.PostEditedTimestamp?.UnixTimestamp() : "")"></i>
@@ -64,7 +65,7 @@
 							<div class="col">
 								<row class="text-center mb-2 gx-1">
 									<h6 class="col-auto col-md-12 ms-2 ms-md-0 me-auto my-0">
-										<profile-link username="@Model.PosterName"></profile-link>
+										<profile-link paired-to-article="true" username="@Model.PosterName"></profile-link>
 									</h6>
 									<small condition="@(Model.PosterPronouns != PreferredPronounTypes.Unspecified)" class="text-body-tertiary col-auto col-md-12" style="line-height: 22px;">@Html.DisplayFor(m => m.PosterPronouns)</small>
 								</row>

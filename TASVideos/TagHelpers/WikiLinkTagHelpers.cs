@@ -72,6 +72,8 @@ public class WikiLinkTagHelper : TagHelper
 
 public class ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : AnchorTagHelper(htmlGenerator)
 {
+	public bool PairedToArticle { get; set; } = false;
+
 	public string? Username { get; set; }
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
@@ -84,6 +86,11 @@ public class ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : AnchorTagHelpe
 		}
 
 		output.TagName = "a";
+		if (PairedToArticle)
+		{
+			output.Attributes.Add("rel", "author");
+		}
+
 		Page = "/Users/Profile";
 		RouteValues.Add("UserName", Username);
 		await base.ProcessAsync(context, output);
