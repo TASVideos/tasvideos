@@ -1,4 +1,5 @@
 ﻿using TASVideos.Common;
+using TASVideos.Extensions;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine;
@@ -12,7 +13,7 @@ public static partial class Builtins
 	/// <summary>
 	/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:].
 	/// </summary>
-	public static IEnumerable<INode> MakeBracketed(string text, StringIndices range)
+	public static IEnumerable<INode> MakeBracketed(ReadOnlySpan<char> text, StringIndices range)
 	{
 		if (text.StartsWith("if:"))
 		{
@@ -32,7 +33,7 @@ public static partial class Builtins
 				return MakeModuleInternal(range, "UserGetWikiName");
 		}
 
-		Match match;
+		RegexMatchShim match;
 		if ((match = Footnote.Match(text)).Success)
 		{
 			return MakeFootnote(range, match.Groups[1].Value);
@@ -51,12 +52,12 @@ public static partial class Builtins
 		return MakeLinkOrImage(range, text);
 	}
 
-	private static Module[] MakeModuleInternal(StringIndices range, string module)
+	private static Module[] MakeModuleInternal(StringIndices range, ReadOnlySpan<char> module)
 	{
-		return [new Module(range, module)];
+		return [new Module(range, module.ToString())];
 	}
 
-	private static IEnumerable<INode> MakeFootnote(StringIndices range, string n)
+	private static IEnumerable<INode> MakeFootnote(StringIndices range, ReadOnlySpan<char> n)
 	{
 		return
 		[
@@ -67,7 +68,7 @@ public static partial class Builtins
 		];
 	}
 
-	private static Element[] MakeFootnoteLink(StringIndices range, string n)
+	private static Element[] MakeFootnoteLink(StringIndices range, ReadOnlySpan<char> n)
 	{
 		return
 		[
@@ -88,24 +89,24 @@ public static partial class Builtins
 	// You can always make a wikilink by starting with "[=", and that will accept a wide range of characters
 	// This regex is just for things that we'll make implicit wiki links out of; contents of brackets that don't match any other known pattern
 	private static readonly Regex ImplicitWikiLink = ImplicitWikiLinkRegex();
-	private static bool IsLink(string text)
+	private static bool IsLink(ReadOnlySpan<char> text)
 	{
-		return LinkPrefixes.Any(text.StartsWith);
+		return text.StartsWithAny(LinkPrefixes);
 	}
 
-	private static bool IsImage(string text)
+	private static bool IsImage(ReadOnlySpan<char> text)
 	{
-		return IsLink(text) && ImageSuffixes.Any(text.EndsWith);
+		return IsLink(text) && text.EndsWithAny(ImageSuffixes);
 	}
 
-	private static string NormalizeImageUrl(string text)
+	private static ReadOnlySpan<char> NormalizeImageUrl(ReadOnlySpan<char> text)
 	{
 		return text[0] == '='
 			? text[1] is '/' ? text[1..] : $"/{text[1..]}"
 			: text;
 	}
 
-	private static string NormalizeUrl(string text)
+	private static ReadOnlySpan<char> NormalizeUrl(ReadOnlySpan<char> text)
 	{
 		if (text[0] == '=')
 		{
@@ -125,12 +126,12 @@ public static partial class Builtins
 		return text;
 	}
 
-	public static string NormalizeInternalLink(string input)
+	public static string NormalizeInternalLink(ReadOnlySpan<char> input)
 	{
 		var iAnchorSeparator = input.IndexOf('#');
 		var pathAndQuery = iAnchorSeparator < 0 ? input : input[..iAnchorSeparator];
 		var anchor = iAnchorSeparator < 0 ? "" : input[(iAnchorSeparator + 1)..];
-		var ss = pathAndQuery.TrimEnd('/').Split('/');
+		var ss = pathAndQuery.TrimEnd('/').ToString().Split('/');
 
 		int skip = -1;
 		if (ss.Length >= 4 && ss[1].Equals("users", StringComparison.OrdinalIgnoreCase) && ss[2].Equals("profile", StringComparison.OrdinalIgnoreCase))
@@ -173,7 +174,7 @@ public static partial class Builtins
 		return anchor.Length is 0 ? newText : $"{newText}#{anchor}";
 	}
 
-	private static string DisplayTextForUrl(string text)
+	private static ReadOnlySpan<char> DisplayTextForUrl(ReadOnlySpan<char> text)
 	{
 		// If users don't like this, they should use links with explicit display text
 		if (text.StartsWith("user:"))
@@ -185,9 +186,9 @@ public static partial class Builtins
 		return text;
 	}
 
-	private static IEnumerable<INode> MakeLinkOrImage(StringIndices range, string text)
+	private static IEnumerable<INode> MakeLinkOrImage(StringIndices range, ReadOnlySpan<char> text)
 	{
-		var pp = text.Split('|');
+		var pp = text.ToString().Split('|');
 		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 		{
 			return [MakeLink(range, pp[0], MakeImage(range, pp.Skip(1), out _))];
@@ -232,7 +233,7 @@ public static partial class Builtins
 		return [new Text(range, $"[{text}]")];
 	}
 
-	internal static INode MakeLink(StringIndices range, string text, INode child)
+	internal static INode MakeLink(StringIndices range, ReadOnlySpan<char> text, INode child)
 	{
 		var href = NormalizeUrl(text);
 		var attrs = new List<KeyValuePair<string, string>>

@@ -17,8 +17,14 @@ public class Text(StringIndices _charRange, string content) : INode
 		set => _charRange.End = value;
 	}
 
+	public Text(StringIndices range, ReadOnlySpan<char> content)
+		: this(range, content.ToString()) { }
+
 	public Text(int charStart, string content)
 		: this((charStart, default), content) { }
+
+	public Text(int charStart, ReadOnlySpan<char> content)
+		: this(charStart, content.ToString()) { }
 
 	public Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 	{
