@@ -12,7 +12,7 @@ public static partial class Builtins
 	/// <summary>
 	/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:].
 	/// </summary>
-	public static IEnumerable<INode> MakeBracketed(int charStart, int charEnd, string text)
+	public static IEnumerable<INode> MakeBracketed(int charStart, int charEnd, bool isUGC, string text)
 	{
 		if (text.StartsWith("if:"))
 		{
@@ -48,7 +48,7 @@ public static partial class Builtins
 			return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
 		}
 
-		return MakeLinkOrImage(charStart, charEnd, text);
+		return MakeLinkOrImage(charStart: charStart, charEnd: charEnd, isUGC: isUGC, text: text);
 	}
 
 	private static Module[] MakeModuleInternal(int charStart, int charEnd, string module)
@@ -190,12 +190,18 @@ public static partial class Builtins
 		return text;
 	}
 
-	private static IEnumerable<INode> MakeLinkOrImage(int charStart, int charEnd, string text)
+	private static IEnumerable<INode> MakeLinkOrImage(int charStart, int charEnd, bool isUGC, string text)
 	{
 		var pp = text.Split('|');
 		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 		{
-			return [MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _))];
+			var node = MakeLink(
+				charStart: charStart,
+				charEnd: charEnd,
+				isUGC: isUGC,
+				text: pp[0],
+				child: MakeImage(charStart, charEnd, pp, 1, out _));
+			return [node];
 		}
 
 		if (IsImage(pp[0]))
@@ -212,6 +218,7 @@ public static partial class Builtins
 			var node = MakeLink(
 				charStart,
 				charEnd,
+				isUGC: isUGC,
 				pp[0],
 				new Text(charStart, pp.Length > 1 ? pp[1] : DisplayTextForUrl(pp[0])) { CharEnd = charEnd });
 			return [node];
@@ -238,7 +245,7 @@ public static partial class Builtins
 		return [new Text(charStart, "[" + text + "]") { CharEnd = charEnd }];
 	}
 
-	internal static INode MakeLink(int charStart, int charEnd, string text, INode child)
+	internal static INode MakeLink(int charStart, int charEnd, bool isUGC, string text, INode child)
 	{
 		var href = NormalizeUrl(text);
 		var attrs = new List<KeyValuePair<string, string>>
@@ -252,7 +259,9 @@ public static partial class Builtins
 		}
 		else
 		{
-			attrs.Add(Attr("rel", "noopener external nofollow"));
+			const string WITHOUT_UGC = "noopener external nofollow";
+			const string WITH_UGC = $"{WITHOUT_UGC} ugc";
+			attrs.Add(Attr("rel", isUGC ? WITH_UGC : WITHOUT_UGC));
 		}
 
 		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };

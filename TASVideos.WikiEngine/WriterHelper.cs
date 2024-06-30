@@ -5,6 +5,14 @@
 /// </summary>
 public interface IWriterHelper
 {
+#pragma warning disable SA1604
+	/// <value>
+	/// <see langword="true"/> iff the wiki page being rendered should be considered user-generated content,
+	/// as opposed to content which is in some way "trusted" or "vetted".
+	/// </value>
+	public bool IsUGC { get; }
+#pragma warning restore SA1604
+
 	/// <summary>
 	/// Check the condition for one of the wiki language's conditional markups
 	/// </summary>
@@ -32,6 +40,8 @@ public interface IWriterHelper
 /// </summary>
 public class NullWriterHelper : IWriterHelper
 {
+	public bool IsUGC => false;
+
 	public bool CheckCondition(string condition)
 	{
 		return false;

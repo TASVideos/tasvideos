@@ -10,7 +10,7 @@ public static class Util
 	{
 		try
 		{
-			var results = NewParser.Parse(content);
+			var results = NewParser.Parse(content, isUGC: false);
 			return JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true });
 		}
 		catch (NewParser.SyntaxException e)
@@ -21,11 +21,11 @@ public static class Util
 		}
 	}
 
-	public static NewParser.SyntaxException? ParsePageForErrors(string content)
+	public static NewParser.SyntaxException? ParsePageForErrors(string content, bool isUGC)
 	{
 		try
 		{
-			NewParser.Parse(content);
+			NewParser.Parse(content, isUGC: isUGC);
 			return null;
 		}
 		catch (NewParser.SyntaxException e)
@@ -39,7 +39,7 @@ public static class Util
 		List<INode> results;
 		try
 		{
-			results = NewParser.Parse(content);
+			results = NewParser.Parse(content, isUGC: h.IsUGC);
 		}
 		catch (NewParser.SyntaxException e)
 		{
@@ -58,7 +58,7 @@ public static class Util
 		List<INode> results;
 		try
 		{
-			results = NewParser.Parse(content);
+			results = NewParser.Parse(content, isUGC: h.IsUGC);
 		}
 		catch (NewParser.SyntaxException e)
 		{
@@ -77,7 +77,7 @@ public static class Util
 		List<INode> results;
 		try
 		{
-			results = NewParser.Parse(content);
+			results = NewParser.Parse(content, isUGC: h.IsUGC);
 		}
 		catch (NewParser.SyntaxException e)
 		{
@@ -108,7 +108,7 @@ public static class Util
 				return [];
 			}
 
-			var parsed = NewParser.Parse(content);
+			var parsed = NewParser.Parse(content, isUGC: false/*doesn't matter*/);
 			var results = NodeUtils.GetAllInternalLinks(content, parsed);
 			return results
 				.Where(l => !string.IsNullOrWhiteSpace(l.Link.Split('#')[0]))

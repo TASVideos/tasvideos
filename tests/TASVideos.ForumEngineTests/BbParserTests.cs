@@ -48,7 +48,7 @@ public class BbParserTests
 	public async Task Url()
 	{
 		const string input = "[url=http://www.example.com]Example[/url]";
-		const string expected = """<a href="http://www.example.com" rel="noopener external">Example</a>""";
+		const string expected = """<a href="http://www.example.com" rel="noopener external ugc">Example</a>""";
 
 		var actual = await ParseBbcodeString(input);
 		Assert.AreEqual(expected, actual);

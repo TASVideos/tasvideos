@@ -18,7 +18,7 @@ public class WikiSyntaxErrorsModel(ApplicationDbContext db) : BasePageModel
 			.Select(p => new
 			{
 				p,
-				err = Util.ParsePageForErrors(p.Markup)
+				err = Util.ParsePageForErrors(p.Markup, isUGC: false/*doesn't matter*/)
 			})
 			.Where(a => a.err is not null)
 			.Select(a => new Row
