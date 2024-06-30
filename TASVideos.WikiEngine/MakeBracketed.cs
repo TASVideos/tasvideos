@@ -62,7 +62,7 @@ public static partial class Builtins
 		[
 			new Text(range, "["),
 			new Element(range, "a", attributes: [Attr("id", n)]),
-			new Element(range, "a", attributes: [Attr("href", "#r" + n)], new Text(range, n)),
+			new Element(range, "a", attributes: [Attr("href", $"#r{n}")], new Text(range, n)),
 			new Text(range, "]"),
 		];
 	}
@@ -71,13 +71,13 @@ public static partial class Builtins
 	{
 		return
 		[
-			new Element(range, "a", attributes: [Attr("id", "r" + n)]),
+			new Element(range, "a", attributes: [Attr("id", $"r{n}")]),
 			new Element(
 				range,
 				"sup",
 				attributes: [],
 				new Text(range, "["),
-				new Element(range, "a", attributes: [Attr("href", "#" + n)], new Text(range, n)),
+				new Element(range, "a", attributes: [Attr("href", $"#{n}")], new Text(range, n)),
 				new Text(range, "]")),
 		];
 	}
@@ -101,7 +101,7 @@ public static partial class Builtins
 	private static string NormalizeImageUrl(string text)
 	{
 		return text[0] == '='
-			? string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1))
+			? text[1] is '/' ? text[1..] : $"/{text[1..]}"
 			: text;
 	}
 
@@ -114,12 +114,12 @@ public static partial class Builtins
 				return "/";
 			}
 
-			return NormalizeInternalLink(string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1)));
+			return NormalizeInternalLink(text[1] is '/' ? text[1..] : $"/{text[1..]}");
 		}
 
 		if (text.StartsWith("user:"))
 		{
-			return NormalizeInternalLink("/Users/Profile/" + text[5..]);
+			return NormalizeInternalLink($"/Users/Profile/{text[5..]}");
 		}
 
 		return text;
@@ -127,10 +127,10 @@ public static partial class Builtins
 
 	public static string NormalizeInternalLink(string input)
 	{
-		var hashParts = input.Split('#');
-
-		var text = hashParts[0].TrimEnd('/');
-		var ss = text.Split('/');
+		var iAnchorSeparator = input.IndexOf('#');
+		var pathAndQuery = iAnchorSeparator < 0 ? input : input[..iAnchorSeparator];
+		var anchor = iAnchorSeparator < 0 ? "" : input[(iAnchorSeparator + 1)..];
+		var ss = pathAndQuery.TrimEnd('/').ToString().Split('/');
 
 		int skip = -1;
 		if (ss.Length >= 4 && ss[1].Equals("users", StringComparison.OrdinalIgnoreCase) && ss[2].Equals("profile", StringComparison.OrdinalIgnoreCase))
@@ -169,9 +169,8 @@ public static partial class Builtins
 			ss[i] = s;
 		}
 
-		var newText = string.Join("/", ss);
-		hashParts[0] = newText;
-		return string.Join("#", hashParts);
+		var newText = string.Join('/', ss);
+		return anchor.Length is 0 ? newText : $"{newText}#{anchor}";
 	}
 
 	private static string DisplayTextForUrl(string text)
@@ -188,15 +187,15 @@ public static partial class Builtins
 
 	private static IEnumerable<INode> MakeLinkOrImage(StringIndices range, string text)
 	{
-		var pp = text.Split('|');
+		var pp = text.ToString().Split('|');
 		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 		{
-			return [MakeLink(range, pp[0], MakeImage(range, pp, 1, out _))];
+			return [MakeLink(range, pp[0], MakeImage(range, pp.Skip(1), out _))];
 		}
 
 		if (IsImage(pp[0]))
 		{
-			var node = MakeImage(range, pp, 0, out var unusedParams);
+			var node = MakeImage(range, pp, out var unusedParams);
 			if (!unusedParams)
 			{
 				return [node];
@@ -211,22 +210,22 @@ public static partial class Builtins
 		// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
 		// any of the other predetermined things we scan for
 		// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
-		if (ImplicitWikiLink.Match(text).Success)
+		if (ImplicitWikiLink.IsMatch(text))
 		{
 			if (pp.Length >= 2)
 			{
 				// These need DB lookup for title attributes in some cases
-				return MakeModuleInternal(range, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[1]);
+				return MakeModuleInternal(range, $"__wikiLink|href={NormalizeUrl("=" + pp[0])}|displaytext={pp[1]}");
 			}
 
 			// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 			// DB lookup will be required for links like [4022S], so use __wikiLink
 			// TODO:  __wikilink should probably be its own AST type??
-			return MakeModuleInternal(range, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|implicitdisplaytext=" + pp[0]);
+			return MakeModuleInternal(range, $"__wikiLink|href={NormalizeUrl("=" + pp[0])}|implicitdisplaytext={pp[0]}");
 		}
 
 		// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
-		return [new Text(range, "[" + text + "]")];
+		return [new Text(range, $"[{text}]")];
 	}
 
 	internal static INode MakeLink(StringIndices range, string text, INode child)
@@ -249,17 +248,19 @@ public static partial class Builtins
 		return new Element(range, "a", attributes: attrs, child);
 	}
 
-	private static Element MakeImage(StringIndices range, string[] pp, int index, out bool unusedParams)
+	private static Element MakeImage(StringIndices range, IEnumerable<string> pp0, out bool unusedParams)
 	{
 		unusedParams = false;
+		var iter = pp0.GetEnumerator();
+		_ = iter.MoveNext();
 		var attrs = new List<KeyValuePair<string, string>>
 		{
-			Attr("src", NormalizeImageUrl(pp[index++]))
+			Attr("src", NormalizeImageUrl(iter.Current))
 		};
 		StringBuilder classString = new("embed");
-		for (; index < pp.Length; index++)
+		while (iter.MoveNext())
 		{
-			var s = pp[index];
+			var s = iter.Current;
 			if (s == "left")
 			{
 				classString.Append("left");
