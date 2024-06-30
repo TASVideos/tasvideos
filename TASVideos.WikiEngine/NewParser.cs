@@ -980,11 +980,7 @@ public partial class NewParser
 			e =>
 			{
 				var p = (Element)e;
-				var ret = new Element(p.CharStart, "div", p.Children)
-				{
-					Attributes = { ["class"] = "p" }
-				};
-				return ret;
+				return new Element(p.CharStart, "div", attributes: [new("class", "p")], children: p.Children);
 			});
 	}
 

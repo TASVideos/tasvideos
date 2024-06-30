@@ -29,13 +29,10 @@ public static partial class Builtins
 
 		var ret = new List<INode>();
 
-		var head = new Element(0, "h1", new[] { new Text(0, "Syntax Error") });
+		Element head = new(0, "h1", attributes: [], new Text(0, "Syntax Error"));
 		ret.Add(head);
 
-		var elt = new Element(0, "pre")
-		{
-			Attributes = { ["class"] = "error-code" }
-		};
+		Element elt = new(0, "pre", attributes: [new("class", "error-code")]);
 
 		var lineNo = 1;
 		var charAt = 0;
@@ -48,10 +45,11 @@ public static partial class Builtins
 				elt.Children.Insert(0, ClassedText(0, $"Syntax Error on line {lineNo}\n", "info"));
 				var column = e.TextLocation - charAt;
 				elt.Children.Add(ClassedText(charAt, line[..column]));
-				var marker = new Element(e.TextLocation, "span", [ClassedText(e.TextLocation, e.Message)])
-				{
-					Attributes = { ["class"] = "error-marker" }
-				};
+				Element marker = new(
+					e.TextLocation,
+					"span",
+					attributes: [new("class", "error-marker")],
+					ClassedText(e.TextLocation, e.Message));
 				elt.Children.Add(marker);
 				elt.Children.Add(ClassedText(charAt, string.Concat(line.AsSpan(column), "\n")));
 			}

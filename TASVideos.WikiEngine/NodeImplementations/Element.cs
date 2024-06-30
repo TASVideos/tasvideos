@@ -25,8 +25,11 @@ public partial class Element : INodeWithChildren
 		"wbr"
 	];
 	public NodeType Type => NodeType.Element;
-	public List<INode> Children { get; private set; } = [];
-	public IDictionary<string, string> Attributes { get; private set; } = new Dictionary<string, string>();
+
+	public List<INode> Children { get; private set; }
+
+	public IDictionary<string, string> Attributes { get; private set; }
+
 	public string Tag { get; }
 
 	private StringIndices _charRange = (default, default);
@@ -43,7 +46,11 @@ public partial class Element : INodeWithChildren
 		set => _charRange.End = value;
 	}
 
-	public Element(int charStart, string tag)
+	public Element(
+		StringIndices range,
+		string tag,
+		IEnumerable<KeyValuePair<string, string>> attributes,
+		IEnumerable<INode> children)
 	{
 		if (!AllowedTagNames.IsMatch(tag))
 		{
@@ -56,37 +63,32 @@ public partial class Element : INodeWithChildren
 			throw new InvalidOperationException("Unsupported tag!");
 		}
 
-		CharStart = charStart;
+		_charRange = range;
 		Tag = tag;
+		Attributes = attributes.ToDictionary();
+		Children = children.ToList();
 	}
 
-	public Element(StringIndices range, string tag)
-		: this(range.Start, tag) => CharEnd = range.End;
-
-	public Element(int charStart, string tag, IEnumerable<INode> children)
-		: this(charStart, tag)
-	{
-		Children.AddRange(children);
-	}
-
-	public Element(StringIndices range, string tag, IEnumerable<INode> children)
-		: this(range.Start, tag, children) => CharEnd = range.End;
-
-	public Element(int charStart, string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
-		: this(charStart, tag, children)
-	{
-		foreach (var kvp in attributes)
-		{
-			Attributes.Add(kvp.Key, kvp.Value);
-		}
-	}
+	public Element(
+		int charStart,
+		string tag,
+		IEnumerable<KeyValuePair<string, string>> attributes,
+		IEnumerable<INode> children)
+			: this((charStart, default), tag, attributes, children) { }
 
 	public Element(
 		StringIndices range,
 		string tag,
-		IEnumerable<KeyValuePair<string, string>> attributes,
-		IEnumerable<INode> children)
-			: this(range.Start, tag, attributes, children) => CharEnd = range.End;
+		IEnumerable<KeyValuePair<string, string>>? attributes = null,
+		params INode[] children)
+			: this(range, tag, attributes ?? [], children.AsEnumerable()) { }
+
+	public Element(
+		int charStart,
+		string tag,
+		IEnumerable<KeyValuePair<string, string>>? attributes = null,
+		params INode[] children)
+			: this((charStart, default), tag, attributes, children: children) { }
 
 	public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 	{

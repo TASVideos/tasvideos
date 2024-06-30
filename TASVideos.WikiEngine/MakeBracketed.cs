@@ -61,8 +61,8 @@ public static partial class Builtins
 		return
 		[
 			new Text(range, "["),
-			new Element(range, "a", [Attr("id", n)], []),
-			new Element(range, "a", [Attr("href", "#r" + n)], [new Text(range, n)]),
+			new Element(range, "a", attributes: [Attr("id", n)]),
+			new Element(range, "a", attributes: [Attr("href", "#r" + n)], new Text(range, n)),
 			new Text(range, "]"),
 		];
 	}
@@ -71,15 +71,14 @@ public static partial class Builtins
 	{
 		return
 		[
-			new Element(range, "a", [Attr("id", "r" + n)], []),
+			new Element(range, "a", attributes: [Attr("id", "r" + n)]),
 			new Element(
 				range,
 				"sup",
-				[
-					new Text(range, "["),
-					new Element(range, "a", [Attr("href", "#" + n)], [new Text(range, n)]),
-					new Text(range, "]"),
-				]),
+				attributes: [],
+				new Text(range, "["),
+				new Element(range, "a", attributes: [Attr("href", "#" + n)], new Text(range, n)),
+				new Text(range, "]")),
 		];
 	}
 
@@ -247,7 +246,7 @@ public static partial class Builtins
 			attrs.Add(Attr("rel", "noopener external nofollow"));
 		}
 
-		return new Element(range, "a", attrs, [child]);
+		return new Element(range, "a", attributes: attrs, child);
 	}
 
 	private static Element MakeImage(StringIndices range, string[] pp, int index, out bool unusedParams)
@@ -295,7 +294,7 @@ public static partial class Builtins
 
 		attrs.Add(Attr("class", classString.ToString()));
 
-		return new Element(range, "img", attrs, []);
+		return new Element(range, "img", attributes: attrs);
 	}
 
 	[GeneratedRegex(@"^(\d+)$")]
