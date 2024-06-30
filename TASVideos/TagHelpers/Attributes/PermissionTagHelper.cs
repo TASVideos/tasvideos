@@ -18,6 +18,12 @@ public class PermissionTagHelper : TagHelper
 		{
 			output.SuppressOutput();
 		}
+		else if (context.TagName is "a")
+		{
+			// this hyperlink is gated behind a permission (it may lead to a form, for example), so bots needn't bother loading it
+			// presumably crawlers aren't authenticated, but maybe a user has some sort of "eager preload" extension
+			output.Attributes.Add("rel", "nofollow");
+		}
 	}
 }
 
