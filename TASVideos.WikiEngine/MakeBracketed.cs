@@ -12,7 +12,7 @@ public static partial class Builtins
 	/// <summary>
 	/// Turns text inside [square brackets] into the appropriate thing, usually module or link.  Does not handle [if:].
 	/// </summary>
-	public static IEnumerable<INode> MakeBracketed(int charStart, int charEnd, string text)
+	public static IEnumerable<INode> MakeBracketed(string text, StringIndices range)
 	{
 		if (text.StartsWith("if:"))
 		{
@@ -23,69 +23,63 @@ public static partial class Builtins
 		{
 			// literal | escape
 			case "|":
-				return new[] { new Text(charStart, "|") { CharEnd = charEnd } };
+				return [new Text(range, "|")];
 
 			// literal : escape (for inside dd/dt)
 			case ":":
-				return new[] { new Text(charStart, ":") { CharEnd = charEnd } };
+				return [new Text(range, ":")];
 			case "expr:UserGetWikiName":
-				return MakeModuleInternal(charStart, charEnd, "UserGetWikiName");
+				return MakeModuleInternal(range, "UserGetWikiName");
 		}
 
 		Match match;
 		if ((match = Footnote.Match(text)).Success)
 		{
-			return MakeFootnote(charStart, charEnd, match.Groups[1].Value);
+			return MakeFootnote(range, match.Groups[1].Value);
 		}
 
 		if ((match = FootnoteLink.Match(text)).Success)
 		{
-			return MakeFootnoteLink(charStart, charEnd, match.Groups[1].Value);
+			return MakeFootnoteLink(range, match.Groups[1].Value);
 		}
 
 		if ((match = RealModule.Match(text)).Success)
 		{
-			return MakeModuleInternal(charStart, charEnd, match.Groups[1].Value);
+			return MakeModuleInternal(range, match.Groups[1].Value);
 		}
 
-		return MakeLinkOrImage(charStart, charEnd, text);
+		return MakeLinkOrImage(range, text);
 	}
 
-	private static Module[] MakeModuleInternal(int charStart, int charEnd, string module)
+	private static Module[] MakeModuleInternal(StringIndices range, string module)
 	{
-		return [new Module(charStart, charEnd, module)];
+		return [new Module(range, module)];
 	}
 
-	private static IEnumerable<INode> MakeFootnote(int charStart, int charEnd, string n)
+	private static IEnumerable<INode> MakeFootnote(StringIndices range, string n)
 	{
 		return
 		[
-				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("id", n)], []) { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("href", "#r" + n)], new[]
-				{
-					new Text(charStart, n) { CharEnd = charEnd }
-				}) { CharEnd = charEnd },
-				new Text(charEnd, "]") { CharEnd = charEnd }
+			new Text(range, "["),
+			new Element(range, "a", [Attr("id", n)], []),
+			new Element(range, "a", [Attr("href", "#r" + n)], [new Text(range, n)]),
+			new Text(range, "]"),
 		];
 	}
 
-	private static Element[] MakeFootnoteLink(int charStart, int charEnd, string n)
+	private static Element[] MakeFootnoteLink(StringIndices range, string n)
 	{
 		return
 		[
-			new Element(charStart, "a", [Attr("id", "r" + n)], []) { CharEnd = charStart },
+			new Element(range, "a", [Attr("id", "r" + n)], []),
 			new Element(
-				charStart,
+				range,
 				"sup",
 				[
-					new Text(charStart, "[") { CharEnd = charStart },
-					new Element(charStart, "a", [Attr("href", "#" + n)], new[]
-					{
-						new Text(charStart, n) { CharEnd = charEnd }
-					}) { CharEnd = charEnd },
-					new Text(charEnd, "]") { CharEnd = charEnd }
-				]) { CharEnd = charEnd }
+					new Text(range, "["),
+					new Element(range, "a", [Attr("href", "#" + n)], [new Text(range, n)]),
+					new Text(range, "]"),
+				]),
 		];
 	}
 
@@ -193,17 +187,17 @@ public static partial class Builtins
 		return text;
 	}
 
-	private static IEnumerable<INode> MakeLinkOrImage(int charStart, int charEnd, string text)
+	private static IEnumerable<INode> MakeLinkOrImage(StringIndices range, string text)
 	{
 		var pp = text.Split('|');
 		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 		{
-			return [MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _))];
+			return [MakeLink(range, pp[0], MakeImage(range, pp, 1, out _))];
 		}
 
 		if (IsImage(pp[0]))
 		{
-			var node = MakeImage(charStart, charEnd, pp, 0, out var unusedParams);
+			var node = MakeImage(range, pp, 0, out var unusedParams);
 			if (!unusedParams)
 			{
 				return [node];
@@ -212,9 +206,7 @@ public static partial class Builtins
 
 		if (IsLink(pp[0]))
 		{
-			return pp.Length > 1
-				? new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) }
-				: [MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd })];
+			return [MakeLink(range, pp[0], new Text(range, pp.Length > 1 ? pp[1] : DisplayTextForUrl(pp[0])))];
 		}
 
 		// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
@@ -225,20 +217,20 @@ public static partial class Builtins
 			if (pp.Length >= 2)
 			{
 				// These need DB lookup for title attributes in some cases
-				return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[1]);
+				return MakeModuleInternal(range, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[1]);
 			}
 
 			// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 			// DB lookup will be required for links like [4022S], so use __wikiLink
 			// TODO:  __wikilink should probably be its own AST type??
-			return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|implicitdisplaytext=" + pp[0]);
+			return MakeModuleInternal(range, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|implicitdisplaytext=" + pp[0]);
 		}
 
 		// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
-		return [new Text(charStart, "[" + text + "]") { CharEnd = charEnd }];
+		return [new Text(range, "[" + text + "]")];
 	}
 
-	internal static INode MakeLink(int charStart, int charEnd, string text, INode child)
+	internal static INode MakeLink(StringIndices range, string text, INode child)
 	{
 		var href = NormalizeUrl(text);
 		var attrs = new List<KeyValuePair<string, string>>
@@ -255,10 +247,10 @@ public static partial class Builtins
 			attrs.Add(Attr("rel", "noopener external nofollow"));
 		}
 
-		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };
+		return new Element(range, "a", attrs, [child]);
 	}
 
-	private static Element MakeImage(int charStart, int charEnd, string[] pp, int index, out bool unusedParams)
+	private static Element MakeImage(StringIndices range, string[] pp, int index, out bool unusedParams)
 	{
 		unusedParams = false;
 		var attrs = new List<KeyValuePair<string, string>>
@@ -303,7 +295,7 @@ public static partial class Builtins
 
 		attrs.Add(Attr("class", classString.ToString()));
 
-		return new Element(charStart, "img", attrs, []) { CharEnd = charEnd };
+		return new Element(range, "img", attrs, []);
 	}
 
 	[GeneratedRegex(@"^(\d+)$")]
