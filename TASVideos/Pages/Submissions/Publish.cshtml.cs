@@ -175,7 +175,7 @@ public class PublishModel(
 			var video = new YoutubeVideo(
 				publication.Id,
 				publication.CreateTimestamp,
-				Submission.AlternateOnlineWatchingUrl!,
+				Submission.AlternateOnlineWatchingUrl ?? "",
 				Submission.AlternateOnlineWatchUrlName,
 				publication.Title,
 				addedWikiPage!,
@@ -243,7 +243,7 @@ public class PublishModel(
 
 		[Url]
 		[StringLength(500)]
-		public string? AlternateOnlineWatchingUrl { get; init; } = "";
+		public string? AlternateOnlineWatchingUrl { get; init; }
 
 		[StringLength(100)]
 		public string? AlternateOnlineWatchUrlName { get; init; }
