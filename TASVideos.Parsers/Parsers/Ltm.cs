@@ -13,6 +13,7 @@ internal class Ltm : Parser, IParser
 	private const string SaveStateCountHeader = "savestate_frame_count=";
 	private const string FrameRateDenHeader = "framerate_den=";
 	private const string FrameRateNumHeader = "framerate_num=";
+	private const string GameNameHeader = "game_name=";
 	private const string VariableFramerateHeader = "variable_framerate=";
 	private const string LengthSecondsHeader = "length_sec=";
 	private const string LengthNanosecondsHeader = "length_nsec=";
@@ -71,6 +72,15 @@ internal class Ltm : Parser, IParser
 						else if (s.StartsWith(FrameRateNumHeader))
 						{
 							frameRateNumerator = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(GameNameHeader))
+						{
+							var gameName = ParseStringFromConfig(s);
+
+							if (gameName.Contains("ruffle", StringComparison.OrdinalIgnoreCase))
+							{
+								result.SystemCode = SystemCodes.Flash;
+							}
 						}
 						else if (s.StartsWith(VariableFramerateHeader))
 						{
@@ -165,6 +175,22 @@ internal class Ltm : Parser, IParser
 		}
 
 		return 0;
+	}
+
+	private static string ParseStringFromConfig(string str)
+	{
+		if (string.IsNullOrWhiteSpace(str))
+		{
+			return string.Empty;
+		}
+
+		var split = str.SplitWithEmpty("=");
+		if (split.Length > 1)
+		{
+			return split[1].Trim();
+		}
+
+		return string.Empty;
 	}
 
 	private static bool ParseBoolFromConfig(string str)

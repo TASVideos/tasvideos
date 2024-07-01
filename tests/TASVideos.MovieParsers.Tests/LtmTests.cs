@@ -19,6 +19,8 @@ public class LtmTests : BaseParserTests
 	[DataRow("macos.ltm", SystemCodes.MacOs)]
 	[DataRow("pc98.ltm", SystemCodes.Pc98)]
 	[DataRow("pico8.ltm", SystemCodes.Pico8)]
+	[DataRow("ruffle.ltm", SystemCodes.Flash)]
+	[DataRow("ruffle-windows-override.ltm", SystemCodes.Windows)]
 	[DataRow("unknown-linuxfallback.ltm", SystemCodes.Linux)]
 	[DataRow("windows.ltm", SystemCodes.Windows)]
 	public async Task SystemId(string filename, string expectedSystemCode)
