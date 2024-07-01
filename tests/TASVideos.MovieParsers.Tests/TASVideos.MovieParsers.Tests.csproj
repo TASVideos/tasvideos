@@ -29,6 +29,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="LtmSampleFiles\ruffle-windows-override.ltm" />
+	  <None Remove="LtmSampleFiles\ruffle.ltm" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<FrameworkReference Include="Microsoft.AspNetCore.App" />
 	</ItemGroup>
 
