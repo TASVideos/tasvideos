@@ -77,7 +77,7 @@ internal class Ltm : Parser, IParser
 						{
 							var gameName = ParseStringFromConfig(s);
 
-							if (gameName == "ruffle")
+							if (gameName.Contains("ruffle", StringComparison.OrdinalIgnoreCase))
 							{
 								result.SystemCode = SystemCodes.Flash;
 							}
