@@ -20,13 +20,13 @@ public static partial class Builtins
 
 		var strong = new Element(charStart, "strong");
 		strong.Children.Add(new Text(charStart, "Table of contents"));
-		var header = new Element(charStart, "div") { Attributes = { ["class"] = "card-header" } };
+		Element header = new(charStart, "div", attributes: [new("class", "card-header")]);
 		header.Children.Add(strong);
-		var ret = new Element(charStart, "div") { Attributes = { ["class"] = "card mb-2" } };
+		Element ret = new(charStart, "div", attributes: [new("class", "card mb-2")]);
 		ret.Children.Add(header);
 
 		var stack = new Stack<Element>();
-		var body = new Element(charStart, "div") { Attributes = { ["class"] = "card-body" } };
+		Element body = new(charStart, "div", attributes: [new("class", "card-body")]);
 		ret.Children.Add(body);
 		stack.Push(body);
 
@@ -67,10 +67,9 @@ public static partial class Builtins
 				var link = new Element(
 					charStart,
 					"a",
-					[Attr("href", "#" + h.Attributes["id"])],
-					h.Children.SelectMany(c => c.CloneForToc()));
-
-				var li = new Element(charStart, "li", new[] { link });
+					attributes: [Attr("href", "#" + h.Attributes["id"])],
+					children: h.Children.SelectMany(static c => c.CloneForToc()));
+				Element li = new(charStart, "li", attributes: [], link);
 				stack.Peek().Children.Add(li);
 				stack.Push(li);
 			}

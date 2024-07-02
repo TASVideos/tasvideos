@@ -1,11 +1,30 @@
 ﻿namespace TASVideos.WikiEngine.AST;
 
-public class Text(int charStart, string content) : INode
+public class Text(StringIndices _charRange, string content) : INode
 {
 	public NodeType Type => NodeType.Text;
 	public string Content { get; } = content;
-	public int CharStart { get; } = charStart;
-	public int CharEnd { get; set; }
+
+	public int CharStart
+	{
+		get => _charRange.Start;
+		set => _charRange.Start = value;
+	}
+
+	public int CharEnd
+	{
+		get => _charRange.End;
+		set => _charRange.End = value;
+	}
+
+	public Text(StringIndices range, ReadOnlySpan<char> content)
+		: this(range, content.ToString()) { }
+
+	public Text(int charStart, string content)
+		: this((charStart, default), content) { }
+
+	public Text(int charStart, ReadOnlySpan<char> content)
+		: this(charStart, content.ToString()) { }
 
 	public Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 	{

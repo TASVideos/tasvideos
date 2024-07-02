@@ -2,6 +2,41 @@
 
 namespace TASVideos.Extensions;
 
+public ref struct RegexMatchShim
+{
+#pragma warning disable SA1310
+	private const string ERR_MSG_ZEROED = $"this {nameof(RegexMatchShim)} has no value";
+#pragma warning restore SA1310
+
+	private GroupCollection? _groups = null;
+
+	private readonly Regex _regex;
+
+	private readonly ReadOnlySpan<char> _str;
+
+	private readonly Range _valueRange;
+
+	public GroupCollection Groups
+		=> Success
+			? (_groups ??= _regex.Match(_str.ToString()).Groups)
+			: throw new InvalidOperationException(ERR_MSG_ZEROED);
+
+	public readonly bool Success;
+
+	public readonly ReadOnlySpan<char> Value
+		=> Success
+			? _str[_valueRange]
+			: throw new InvalidOperationException(ERR_MSG_ZEROED);
+
+	internal RegexMatchShim(Range valueRange, ReadOnlySpan<char> str, Regex regex)
+	{
+		_regex = regex;
+		_str = str;
+		_valueRange = valueRange;
+		Success = true;
+	}
+}
+
 public static partial class StringExtensions
 {
 	/// <summary>
@@ -49,6 +84,27 @@ public static partial class StringExtensions
 		return str.Length < limit
 			? str
 			: str[..limit];
+	}
+
+	public static bool EndsWithAny(this ReadOnlySpan<char> str, IEnumerable<string> suffixes)
+	{
+		foreach (var sfx in suffixes)
+		{
+			if (str.EndsWith(sfx))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static RegexMatchShim Match(this Regex regex, ReadOnlySpan<char> str)
+	{
+		var iter = regex.EnumerateMatches(str);
+		return iter.MoveNext()
+			? new(iter.Current.Index..(iter.Current.Index + iter.Current.Length), str, regex)
+			: default;
 	}
 
 	/// <summary>
@@ -157,6 +213,19 @@ public static partial class StringExtensions
 		return !string.IsNullOrWhiteSpace(str)
 			? SplitCamelCaseRegex.Replace(str, "$1$2$3$4$5 ")
 			: "";
+	}
+
+	public static bool StartsWithAny(this ReadOnlySpan<char> str, IEnumerable<string> prefixes)
+	{
+		foreach (var pfx in prefixes)
+		{
+			if (str.StartsWith(pfx))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static readonly Regex SpaceRegex = SpaceCompiledRegex();

@@ -1,4 +1,11 @@
-﻿namespace TASVideos.WikiEngine.AST;
+﻿#pragma warning disable SA1209
+global using StringIndices = (int Start, int End);
+#pragma warning restore SA1209
+
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
+
+namespace TASVideos.WikiEngine.AST;
 
 public enum NodeType
 {

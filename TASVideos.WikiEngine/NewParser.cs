@@ -256,7 +256,7 @@ public partial class NewParser
 	{
 		if (_currentText.Length > 0)
 		{
-			var t = new Text(_currentTextStart, _currentText.ToString()) { CharEnd = _index };
+			Text t = new((_currentTextStart, _index), _currentText.ToString());
 			_currentText.Clear();
 			if (_stack.Count > 0)
 			{
@@ -550,7 +550,7 @@ public partial class NewParser
 			{
 			}
 
-			AddNonChild(new Element(_index, "br") { CharEnd = _index });
+			AddNonChild(new Element((_index, _index), "br"));
 		}
 		else if (Eat("[["))
 		{
@@ -575,7 +575,7 @@ public partial class NewParser
 		{
 			var start = _index;
 			var content = EatToBracket();
-			AddNonChild(Builtins.MakeBracketed(start, _index, content));
+			AddNonChild(Builtins.MakeBracketed(content, (start, _index)));
 		}
 		else if (In("dt") && Eat(':'))
 		{
@@ -613,7 +613,8 @@ public partial class NewParser
 		}
 		else if ((url = Eat(Url)) != null)
 		{
-			AddNonChild(Builtins.MakeLink(_index - url.Length, _index, url, new Text(_index - url.Length, url) { CharEnd = _index }));
+			StringIndices range = (_index - url.Length, _index);
+			AddNonChild(Builtins.MakeLink(range, url, new Text(range, url)));
 		}
 		else
 		{
@@ -792,7 +793,7 @@ public partial class NewParser
 			}
 
 			ClearBlockTags();
-			AddNonChild(new Element(_index, "hr") { CharEnd = _index });
+			AddNonChild(new Element((_index, _index), "hr"));
 		}
 		else if (Eat("!!!!"))
 		{
@@ -822,7 +823,7 @@ public partial class NewParser
 		{
 			DiscardLine();
 			ClearBlockTags();
-			AddNonChild(new Element(_index, "toc") { CharEnd = _index });
+			AddNonChild(new Element((_index, _index), "toc"));
 		}
 		else if ((tmp = EatPipes()) > 0)
 		{
@@ -859,9 +860,9 @@ public partial class NewParser
 				e.Attributes["class"] = "language-" + PrismNames.FixLanguage(lang);
 			}
 
-			e.Children.Add(new Text(_index, EatSrcEmbedText()) { CharEnd = _index });
+			e.Children.Add(new Text((_index, _index), EatSrcEmbedText()));
 			e.CharEnd = _index;
-			var ret = new Element(e.CharStart, "pre") { CharEnd = e.CharEnd };
+			Element ret = new((e.CharStart, e.CharEnd), "pre");
 			ret.Children.Add(e);
 			AddNonChild(ret);
 		}
@@ -979,11 +980,7 @@ public partial class NewParser
 			e =>
 			{
 				var p = (Element)e;
-				var ret = new Element(p.CharStart, "div", p.Children)
-				{
-					Attributes = { ["class"] = "p" }
-				};
-				return ret;
+				return new Element(p.CharStart, "div", attributes: [new("class", "p")], children: p.Children);
 			});
 	}
 

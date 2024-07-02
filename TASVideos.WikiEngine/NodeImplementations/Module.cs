@@ -5,12 +5,24 @@ public class Module : INode
 	public NodeType Type => NodeType.Module;
 	public string Name { get; }
 	public IReadOnlyDictionary<string, string> Parameters { get; }
-	public int CharStart { get; }
-	public int CharEnd { get; set; }
-	public Module(int charStart, int charEnd, string text)
+
+	private StringIndices _charRange = (default, default);
+
+	public int CharStart
 	{
-		CharStart = charStart;
-		CharEnd = charEnd;
+		get => _charRange.Start;
+		set => _charRange.Start = value;
+	}
+
+	public int CharEnd
+	{
+		get => _charRange.End;
+		set => _charRange.End = value;
+	}
+
+	public Module(StringIndices range, string text)
+	{
+		_charRange = range;
 
 		var pp = text.Split('|');
 		Name = pp[0];
@@ -29,8 +41,8 @@ public class Module : INode
 		{
 			if (!ctx.AddTdStyleFilter(Parameters))
 			{
-				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-				div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string.") { CharEnd = CharEnd });
+				var div = new Element(_charRange, "div");
+				div.Children.Add(new Text(_charRange, "Module Error for settableattributes: Couldn't parse parameter string."));
 				div.Attributes["class"] = "module-error";
 				await div.WriteHtmlAsync(w, ctx);
 			}
@@ -41,8 +53,8 @@ public class Module : INode
 		}
 		else
 		{
-			var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-			div.Children.Add(new Text(CharStart, "Unknown module " + Name) { CharEnd = CharEnd });
+			var div = new Element(_charRange, "div");
+			div.Children.Add(new Text(_charRange, "Unknown module " + Name));
 			div.Attributes["class"] = "module-error";
 			await div.WriteHtmlAsync(w, ctx);
 		}
@@ -146,6 +158,6 @@ public class Module : INode
 
 		Parameters.TryGetValue("displaytext", out var displayText);
 		Parameters.TryGetValue("href", out var href);
-		return new[] { new Text(CharStart, displayText ?? href?[1..] ?? "") { CharEnd = CharEnd } };
+		return [new Text(_charRange, displayText ?? href?[1..] ?? "")];
 	}
 }
