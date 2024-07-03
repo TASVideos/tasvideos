@@ -33,7 +33,8 @@ public static class Paginator
 
 		if (paging.PageSize.HasValue)
 		{
-			newQuery = newQuery.Take(paging.PageSize.Value);
+			int pageSize = Math.Max(paging.PageSize.Value, 1);
+			newQuery = newQuery.Take(pageSize);
 		}
 
 		IEnumerable<T> results = await newQuery
