@@ -62,7 +62,7 @@ public static partial class Builtins
 		[
 				new Text(charStart, "[") { CharEnd = charStart },
 				new Element(charStart, "a", [Attr("id", n)], []) { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("href", "#r" + n)], new[]
+				new Element(charStart, "a", [Attr("href", $"#r{n}")], new[]
 				{
 					new Text(charStart, n) { CharEnd = charEnd }
 				}) { CharEnd = charEnd },
@@ -74,13 +74,13 @@ public static partial class Builtins
 	{
 		return
 		[
-			new Element(charStart, "a", [Attr("id", "r" + n)], []) { CharEnd = charStart },
+			new Element(charStart, "a", [Attr("id", $"r{n}")], []) { CharEnd = charStart },
 			new Element(
 				charStart,
 				"sup",
 				[
 					new Text(charStart, "[") { CharEnd = charStart },
-					new Element(charStart, "a", [Attr("href", "#" + n)], new[]
+					new Element(charStart, "a", [Attr("href", $"#{n}")], new[]
 					{
 						new Text(charStart, n) { CharEnd = charEnd }
 					}) { CharEnd = charEnd },
@@ -108,7 +108,7 @@ public static partial class Builtins
 	private static string NormalizeImageUrl(string text)
 	{
 		return text[0] == '='
-			? string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1))
+			? text[1] is '/' ? text[1..] : $"/{text[1..]}"
 			: text;
 	}
 
@@ -121,12 +121,12 @@ public static partial class Builtins
 				return "/";
 			}
 
-			return NormalizeInternalLink(string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1)));
+			return NormalizeInternalLink(text[1] is '/' ? text[1..] : $"/{text[1..]}");
 		}
 
 		if (text.StartsWith("user:"))
 		{
-			return NormalizeInternalLink("/Users/Profile/" + text[5..]);
+			return NormalizeInternalLink($"/Users/Profile/{text[5..]}");
 		}
 
 		return text;
@@ -134,10 +134,10 @@ public static partial class Builtins
 
 	public static string NormalizeInternalLink(string input)
 	{
-		var hashParts = input.Split('#');
-
-		var text = hashParts[0].TrimEnd('/');
-		var ss = text.Split('/');
+		var iAnchorSeparator = input.IndexOf('#');
+		var pathAndQuery = iAnchorSeparator < 0 ? input : input[..iAnchorSeparator];
+		var anchor = iAnchorSeparator < 0 ? "" : input[(iAnchorSeparator + 1)..];
+		var ss = pathAndQuery.TrimEnd('/').Split('/');
 
 		int skip = -1;
 		if (ss.Length >= 4 && ss[1].Equals("users", StringComparison.OrdinalIgnoreCase) && ss[2].Equals("profile", StringComparison.OrdinalIgnoreCase))
@@ -176,9 +176,8 @@ public static partial class Builtins
 			ss[i] = s;
 		}
 
-		var newText = string.Join("/", ss);
-		hashParts[0] = newText;
-		return string.Join("#", hashParts);
+		var newText = string.Join('/', ss);
+		return anchor.Length is 0 ? newText : $"{newText}#{anchor}";
 	}
 
 	private static string DisplayTextForUrl(string text)
@@ -198,12 +197,12 @@ public static partial class Builtins
 		var pp = text.Split('|');
 		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
 		{
-			return [MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _))];
+			return [MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp.Skip(1), out _))];
 		}
 
 		if (IsImage(pp[0]))
 		{
-			var node = MakeImage(charStart, charEnd, pp, 0, out var unusedParams);
+			var node = MakeImage(charStart, charEnd, pp, out var unusedParams);
 			if (!unusedParams)
 			{
 				return [node];
@@ -212,30 +211,33 @@ public static partial class Builtins
 
 		if (IsLink(pp[0]))
 		{
-			return pp.Length > 1
-				? new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) }
-				: [MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd })];
+			var node = MakeLink(
+				charStart,
+				charEnd,
+				pp[0],
+				new Text(charStart, pp.Length > 1 ? pp[1] : DisplayTextForUrl(pp[0])) { CharEnd = charEnd });
+			return [node];
 		}
 
 		// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
 		// any of the other predetermined things we scan for
 		// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
-		if (ImplicitWikiLink.Match(text).Success)
+		if (ImplicitWikiLink.IsMatch(text))
 		{
 			if (pp.Length >= 2)
 			{
 				// These need DB lookup for title attributes in some cases
-				return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|displaytext=" + pp[1]);
+				return MakeModuleInternal(charStart, charEnd, $"__wikiLink|href={NormalizeUrl("=" + pp[0])}|displaytext={pp[1]}");
 			}
 
 			// If no labeling text was needed, a module is needed for DB lookups (eg `[4022S]`)
 			// DB lookup will be required for links like [4022S], so use __wikiLink
 			// TODO:  __wikilink should probably be its own AST type??
-			return MakeModuleInternal(charStart, charEnd, "__wikiLink|href=" + NormalizeUrl("=" + pp[0]) + "|implicitdisplaytext=" + pp[0]);
+			return MakeModuleInternal(charStart, charEnd, $"__wikiLink|href={NormalizeUrl("=" + pp[0])}|implicitdisplaytext={pp[0]}");
 		}
 
 		// In other cases, return raw literal text.  This doesn't quite match the old wiki, which could look for formatting in these, but should be good enough
-		return [new Text(charStart, "[" + text + "]") { CharEnd = charEnd }];
+		return [new Text(charStart, $"[{text}]") { CharEnd = charEnd }];
 	}
 
 	internal static INode MakeLink(int charStart, int charEnd, string text, INode child)
@@ -258,17 +260,19 @@ public static partial class Builtins
 		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };
 	}
 
-	private static Element MakeImage(int charStart, int charEnd, string[] pp, int index, out bool unusedParams)
+	private static Element MakeImage(int charStart, int charEnd, IEnumerable<string> pp, out bool unusedParams)
 	{
 		unusedParams = false;
+		var iter = pp.GetEnumerator();
+		_ = iter.MoveNext();
 		var attrs = new List<KeyValuePair<string, string>>
 		{
-			Attr("src", NormalizeImageUrl(pp[index++]))
+			Attr("src", NormalizeImageUrl(iter.Current)),
 		};
 		StringBuilder classString = new("embed");
-		for (; index < pp.Length; index++)
+		while (iter.MoveNext())
 		{
-			var s = pp[index];
+			var s = iter.Current;
 			if (s == "left")
 			{
 				classString.Append("left");
