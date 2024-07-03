@@ -21,6 +21,7 @@ public class EditModel(
 	[BindProperty]
 	public ForumPostEditModel Post { get; set; } = new();
 
+	public bool IsFirstPost { get; set; }
 	public List<CreateModel.MiniPost> PreviousPosts { get; set; } = [];
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
@@ -51,13 +52,13 @@ public class EditModel(
 		}
 
 		Post = post;
-		var firstPostId = (await db.ForumPosts
+		var firstPostId = await db.ForumPosts
 			.ForTopic(Post.TopicId)
 			.OldestToNewest()
-			.FirstAsync())
-			.Id;
+			.Select(p => p.Id)
+			.FirstAsync();
 
-		Post.IsFirstPost = Id == firstPostId;
+		IsFirstPost = Id == firstPostId;
 
 		if (!User.Has(PermissionTo.EditForumPosts)
 			&& Post.PosterId != User.GetUserId())
@@ -120,11 +121,11 @@ public class EditModel(
 
 		if (!string.IsNullOrWhiteSpace(Post.TopicTitle))
 		{
-			var firstPostId = (await db.ForumPosts
+			var firstPostId = await db.ForumPosts
 				.ForTopic(forumPost.Topic!.Id)
 				.OldestToNewest()
-				.FirstAsync())
-				.Id;
+				.Select(p => p.Id)
+				.FirstAsync();
 			if (Id == firstPostId)
 			{
 				forumPost.Topic!.Title = Post.TopicTitle;
@@ -154,9 +155,16 @@ public class EditModel(
 	public async Task<IActionResult> OnPostDelete()
 	{
 		var post = await db.ForumPosts
-			.Include(p => p.Topic)
-			.Include(p => p.Topic!.Forum)
 			.ExcludeRestricted(UserCanSeeRestricted)
+			.Select(p => new
+			{
+				p.Id,
+				p.TopicId,
+				p.Topic!.Forum!.Restricted,
+				p.Topic!.ForumId,
+				ForumShortName = p.Topic!.Forum!.ShortName,
+				TopicTitle = p.Topic!.Title
+			})
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
 		if (post is null)
@@ -181,98 +189,87 @@ public class EditModel(
 
 		var postCount = await db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
 
-		db.ForumPosts.Remove(post);
+		await db.ForumPosts.Where(p => p.Id == Id).ExecuteDeleteAsync();
 
 		bool topicDeleted = false;
 		if (postCount == 1)
 		{
-			var topic = await db.ForumTopics.SingleAsync(t => t.Id == post.TopicId);
-			db.ForumTopics.Remove(topic);
+			await db.ForumTopics.Where(t => t.Id == post.TopicId).ExecuteDeleteAsync();
 			topicDeleted = true;
 		}
 
-		var result = await db.TrySaveChanges();
-		SetMessage(result, $"Post {Id} deleted", $"Unable to delete post {Id}");
-		if (result.IsSuccess())
-		{
-			forumService.ClearLatestPostCache();
-			forumService.ClearTopicActivityCache();
-			await publisher.SendForum(
-				post.Topic!.Forum!.Restricted,
-				$"[{(topicDeleted ? "Topic" : "Post")} DELETED]({{0}}) by {User.Name()}",
-				$"{post.Topic!.Forum!.ShortName}: {post.Topic.Title}",
-				topicDeleted ? "" : $"Forum/Topics/{post.Topic.Id}");
-		}
+		SuccessStatusMessage($"Post {Id} deleted");
+		forumService.ClearLatestPostCache();
+		forumService.ClearTopicActivityCache();
+		await publisher.SendForum(
+			post.Restricted,
+			$"[{(topicDeleted ? "Topic" : "Post")} DELETED]({{0}}) by {User.Name()}",
+			$"{post.ForumShortName}: {post.TopicTitle}",
+			topicDeleted ? "" : $"Forum/Topics/{post.TopicId}");
 
 		return topicDeleted
-			? BasePageRedirect("/Forum/Subforum/Index", new { id = post.Topic!.ForumId })
+			? BasePageRedirect("/Forum/Subforum/Index", new { id = post.ForumId })
 			: BasePageRedirect("/Forum/Topics/Index", new { id = post.TopicId });
 	}
 
 	public async Task<IActionResult> OnPostSpam()
 	{
+		if (!User.Has(PermissionTo.DeleteForumPosts) || !User.Has(PermissionTo.AssignRoles))
+		{
+			return AccessDenied();
+		}
+
 		var post = await db.ForumPosts
-			.Include(p => p.Poster)
-			.ThenInclude(p => p!.UserRoles)
-			.ThenInclude(ur => ur.Role)
-			.Include(p => p.Topic)
-			.Include(p => p.Topic!.Forum)
+			.Where(p => p.Id == Id)
 			.ExcludeRestricted(seeRestricted: false) // Intentionally not allowing spamming on restricted forums
-			.SingleOrDefaultAsync(p => p.Id == Id);
+			.Select(p => new
+			{
+				p.TopicId,
+				TopicTitle = p.Topic!.Title,
+				p.Topic!.ForumId,
+				ForumShortName = p.Topic!.Forum!.ShortName,
+				p.PosterId,
+				PosterName = p.Poster!.UserName,
+				PosterCannotBeSpammed = p.Poster!.UserRoles.SelectMany(ur => ur.Role!.RolePermission).Any(rp => rp.PermissionId == PermissionTo.AssignRoles)
+			})
+			.SingleOrDefaultAsync();
 
 		if (post is null)
 		{
 			return NotFound();
 		}
 
-		if (!User.Has(PermissionTo.DeleteForumPosts) || !User.Has(PermissionTo.AssignRoles))
+		if (post.PosterCannotBeSpammed)
 		{
 			return AccessDenied();
 		}
 
-		if (post.Poster!.UserRoles.SelectMany(ur => ur.Role!.RolePermission).Any(rp => rp.PermissionId == PermissionTo.AssignRoles))
-		{
-			return AccessDenied();
-		}
-
-		var postCount = await db.ForumPosts.CountAsync(t => t.TopicId == post.TopicId);
-
-		var oldTopicId = post.TopicId;
-		var oldForumId = post.Topic!.ForumId;
-		var oldTopicTitle = post.Topic.Title;
-		var oldForumShortName = post.Topic.Forum!.ShortName;
-		post.TopicId = SiteGlobalConstants.SpamTopicId;
-		post.ForumId = SiteGlobalConstants.SpamForumId;
+		await db.ForumPosts.Where(p => p.Id == Id)
+			.ExecuteUpdateAsync(b => b
+				.SetProperty(p => p.TopicId, SiteGlobalConstants.SpamTopicId)
+				.SetProperty(p => p.ForumId, SiteGlobalConstants.SpamForumId));
 
 		bool topicDeleted = false;
+		var postCount = await db.ForumPosts.CountAsync(p => p.TopicId == post.TopicId);
 		if (postCount == 1)
 		{
-			var topic = await db.ForumTopics.FindAsync(oldTopicId);
-			if (topic != null)
-			{
-				db.ForumTopics.Remove(topic);
-			}
-
+			await db.ForumTopics.Where(t => t.Id == post.TopicId).ExecuteDeleteAsync();
 			topicDeleted = true;
 		}
 
-		var result = await db.TrySaveChanges();
-		SetMessage(result, $"Post {Id} deleted", $"Unable to delete post {Id}");
-		if (result.IsSuccess())
-		{
-			forumService.ClearLatestPostCache();
-			forumService.ClearTopicActivityCache();
-			await userManager.PermaBanUser(post.PosterId);
-			await publisher.SendForum(
-				true,
-				$"[{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM]({{0}}), and user {post.Poster!.UserName} banned by {User.Name()}",
-				$"{oldForumShortName}: {oldTopicTitle}",
-				topicDeleted ? "" : $"Forum/Topics/{oldTopicId}");
-		}
+		SuccessStatusMessage($"Post {Id} marked as spam");
+		forumService.ClearLatestPostCache();
+		forumService.ClearTopicActivityCache();
+		await userManager.PermaBanUser(post.PosterId);
+		await publisher.SendForum(
+			true,
+			$"[{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM]({{0}}), and user {post.PosterName} banned by {User.Name()}",
+			$"{post.ForumShortName}: {post.TopicTitle}",
+			topicDeleted ? "" : $"Forum/Topics/{post.TopicId}");
 
 		return topicDeleted
-			? BasePageRedirect("/Forum/Subforum/Index", new { id = oldForumId })
-			: BasePageRedirect("/Forum/Topics/Index", new { id = oldTopicId });
+			? BasePageRedirect("/Forum/Subforum/Index", new { id = post.ForumId })
+			: BasePageRedirect("/Forum/Topics/Index", new { id = post.TopicId });
 	}
 
 	public class ForumPostEditModel
@@ -291,7 +288,6 @@ public class EditModel(
 		public string? Subject { get; init; }
 		public string Text { get; init; } = "";
 		public string OriginalText => Text;
-		public bool IsFirstPost { get; set; }
 		public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
 	}
 }

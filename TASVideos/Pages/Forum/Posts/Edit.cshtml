@@ -21,14 +21,14 @@
 	<input type="hidden" asp-for="Post.OriginalText" data-diff="left" />
 
 	<row>
-		<column condition="!Model.Post.IsFirstPost" md="6">
+		<column condition="!Model.IsFirstPost" md="6">
 			<fieldset>
 				<label asp-for="Post.Subject"></label>
 				<input asp-for="Post.Subject" autocomplete="off"/>
 				<span asp-validation-for="Post.Subject"></span>
 			</fieldset>
 		</column>
-		<column condition="Model.Post.IsFirstPost" md="6">
+		<column condition="Model.IsFirstPost" md="6">
 			<fieldset>
 				<label asp-for="Post.TopicTitle"></label>
 				<input asp-for="Post.TopicTitle" autocomplete="off"/>
@@ -69,7 +69,7 @@
 				<div class="col-8 pt-0 pb-0">
 					<small>
 						Posted: <timezone-convert asp-for="@Model.Post.CreateTimestamp" />
-						<span condition="!Model.Post.IsFirstPost && !string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
+						<span condition="!Model.IsFirstPost && !string.IsNullOrWhiteSpace(Model.Post.Subject)">Post subject: @Model.Post.Subject</span>
 					</small>
 				</div>
 			</row>
