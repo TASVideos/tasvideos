@@ -5,12 +5,24 @@ public class Module : INode
 	public NodeType Type => NodeType.Module;
 	public string Name { get; }
 	public IReadOnlyDictionary<string, string> Parameters { get; }
-	public int CharStart { get; }
-	public int CharEnd { get; set; }
-	public Module(int charStart, int charEnd, string text)
+
+	private StringIndices _charRange = (default, default);
+
+	public int CharStart
 	{
-		CharStart = charStart;
-		CharEnd = charEnd;
+		get => _charRange.Start;
+		set => _charRange.Start = value;
+	}
+
+	public int CharEnd
+	{
+		get => _charRange.End;
+		set => _charRange.End = value;
+	}
+
+	public Module(StringIndices range, string text)
+	{
+		_charRange = range;
 
 		var pp = text.Split('|');
 		Name = pp[0];
@@ -30,18 +42,10 @@ public class Module : INode
 			if (!ctx.AddTdStyleFilter(Parameters))
 			{
 				Element div = new(
-					CharStart,
+					_charRange,
 					"div",
 					attributes: [new("class", "module-error")],
-					new Text(
-						CharStart,
-						"Module Error for settableattributes: Couldn't parse parameter string.")
-					{
-						CharEnd = CharEnd,
-					})
-				{
-					CharEnd = CharEnd,
-				};
+					new Text(_charRange, "Module Error for settableattributes: Couldn't parse parameter string."));
 				await div.WriteHtmlAsync(w, ctx);
 			}
 		}
@@ -52,13 +56,10 @@ public class Module : INode
 		else
 		{
 			Element div = new(
-				CharStart,
+				_charRange,
 				"div",
 				attributes: [new("class", "module-error")],
-				new Text(CharStart, "Unknown module " + Name) { CharEnd = CharEnd })
-			{
-				CharEnd = CharEnd,
-			};
+				new Text(_charRange, "Unknown module " + Name));
 			await div.WriteHtmlAsync(w, ctx);
 		}
 	}
@@ -161,6 +162,6 @@ public class Module : INode
 
 		Parameters.TryGetValue("displaytext", out var displayText);
 		Parameters.TryGetValue("href", out var href);
-		return new[] { new Text(CharStart, displayText ?? href?[1..] ?? "") { CharEnd = CharEnd } };
+		return [new Text(_charRange, displayText ?? href?[1..] ?? "")];
 	}
 }

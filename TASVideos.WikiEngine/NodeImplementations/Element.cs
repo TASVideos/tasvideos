@@ -31,11 +31,23 @@ public partial class Element : INodeWithChildren
 	public IDictionary<string, string> Attributes { get; private set; }
 
 	public string Tag { get; }
-	public int CharStart { get; }
-	public int CharEnd { get; set; }
+
+	private StringIndices _charRange = (default, default);
+
+	public int CharStart
+	{
+		get => _charRange.Start;
+		set => _charRange.Start = value;
+	}
+
+	public int CharEnd
+	{
+		get => _charRange.End;
+		set => _charRange.End = value;
+	}
 
 	public Element(
-		int charStart,
+		StringIndices range,
 		string tag,
 		IEnumerable<KeyValuePair<string, string>> attributes,
 		IEnumerable<INode> children)
@@ -51,7 +63,7 @@ public partial class Element : INodeWithChildren
 			throw new InvalidOperationException("Unsupported tag!");
 		}
 
-		CharStart = charStart;
+		_charRange = range;
 		Tag = tag;
 		Attributes = attributes.ToDictionary();
 		Children = children.ToList();
@@ -61,11 +73,28 @@ public partial class Element : INodeWithChildren
 		int charStart,
 		string tag,
 		IEnumerable<KeyValuePair<string, string>> attributes,
+		IEnumerable<INode> children)
+			: this((charStart, default), tag, attributes, children) { }
+
+	public Element(
+		StringIndices range,
+		string tag,
+		IEnumerable<KeyValuePair<string, string>> attributes,
 		params INode[] children)
-			: this(charStart, tag, attributes, children: children.AsEnumerable()) { }
+			: this(range, tag, attributes, children: children.AsEnumerable()) { }
+
+	public Element(
+		int charStart,
+		string tag,
+		IEnumerable<KeyValuePair<string, string>> attributes,
+		params INode[] children)
+			: this((charStart, default), tag, attributes, children: children.AsEnumerable()) { }
+
+	public Element(StringIndices range, string tag)
+		: this(range, tag, [], children: (IEnumerable<INode>)[]) { }
 
 	public Element(int charStart, string tag)
-		: this(charStart, tag, [], children: (IEnumerable<INode>)[]) { }
+		: this((charStart, default), tag) { }
 
 	public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 	{

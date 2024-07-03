@@ -26,7 +26,7 @@ public class ParamHelperTests
 	public void HasParam(string parameterStr, string param, bool expected)
 	{
 		var moduleString = "foo|" + parameterStr;
-		var module = new Module(0, moduleString.Length, moduleString);
+		Module module = new((0, moduleString.Length), moduleString);
 		var actual = WikiMarkup.ConvertParameter<bool?>(module.Parameters.GetValueOrDefault(param));
 
 		Assert.AreEqual(expected, actual);
@@ -45,7 +45,7 @@ public class ParamHelperTests
 	public void GetValueFor(string parameterStr, string param, string expected)
 	{
 		var moduleString = "foo|" + parameterStr;
-		var module = new Module(0, moduleString.Length, moduleString);
+		Module module = new((0, moduleString.Length), moduleString);
 		var actual = WikiMarkup.ConvertParameter<string?>(module.Parameters.GetValueOrDefault(param));
 
 		Assert.AreEqual(expected, actual);
@@ -67,7 +67,7 @@ public class ParamHelperTests
 	public void GetInt(string parameterStr, string param, int? expected)
 	{
 		var moduleString = "foo|" + parameterStr;
-		var module = new Module(0, moduleString.Length, moduleString);
+		Module module = new((0, moduleString.Length), moduleString);
 		var actual = WikiMarkup.ConvertParameter<int?>(module.Parameters.GetValueOrDefault(param));
 
 		Assert.AreEqual(expected, actual);
@@ -90,7 +90,7 @@ public class ParamHelperTests
 	public void GetYear(string parameterStr, string param, string? expectedDt)
 	{
 		var moduleString = "foo|" + parameterStr;
-		var module = new Module(0, moduleString.Length, moduleString);
+		Module module = new((0, moduleString.Length), moduleString);
 		var actual = WikiMarkup.ConvertParameter<DateTime?>(module.Parameters.GetValueOrDefault(param));
 		DateTime? expected = expectedDt != null ? DateTime.Parse(expectedDt) : null;
 
@@ -111,7 +111,7 @@ public class ParamHelperTests
 	public void GetInts(string parameterStr, string param, int[] expected)
 	{
 		var moduleString = "foo|" + parameterStr;
-		var module = new Module(0, moduleString.Length, moduleString);
+		Module module = new((0, moduleString.Length), moduleString);
 		var actual = WikiMarkup.ConvertParameter<IList<int>>(module.Parameters.GetValueOrDefault(param));
 
 		Assert.IsNotNull(actual);

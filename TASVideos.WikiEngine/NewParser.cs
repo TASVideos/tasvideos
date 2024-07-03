@@ -256,7 +256,7 @@ public partial class NewParser
 	{
 		if (_currentText.Length > 0)
 		{
-			var t = new Text(_currentTextStart, _currentText.ToString()) { CharEnd = _index };
+			Text t = new((_currentTextStart, _index), _currentText.ToString());
 			_currentText.Clear();
 			if (_stack.Count > 0)
 			{
@@ -550,7 +550,7 @@ public partial class NewParser
 			{
 			}
 
-			AddNonChild(new Element(_index, "br") { CharEnd = _index });
+			AddNonChild(new Element((_index, _index), "br"));
 		}
 		else if (Eat("[["))
 		{
@@ -575,7 +575,7 @@ public partial class NewParser
 		{
 			var start = _index;
 			var content = EatToBracket();
-			AddNonChild(Builtins.MakeBracketed(start, _index, content));
+			AddNonChild(Builtins.MakeBracketed(content, (start, _index)));
 		}
 		else if (In("dt") && Eat(':'))
 		{
@@ -613,7 +613,8 @@ public partial class NewParser
 		}
 		else if ((url = Eat(Url)) != null)
 		{
-			AddNonChild(Builtins.MakeLink(_index - url.Length, _index, url, new Text(_index - url.Length, url) { CharEnd = _index }));
+			StringIndices range = (_index - url.Length, _index);
+			AddNonChild(Builtins.MakeLink(range, url, new Text(range, url)));
 		}
 		else
 		{
@@ -786,7 +787,7 @@ public partial class NewParser
 			}
 
 			ClearBlockTags();
-			AddNonChild(new Element(_index, "hr") { CharEnd = _index });
+			AddNonChild(new Element((_index, _index), "hr"));
 		}
 		else if (Eat("!!!!"))
 		{
@@ -816,7 +817,7 @@ public partial class NewParser
 		{
 			DiscardLine();
 			ClearBlockTags();
-			AddNonChild(new Element(_index, "toc") { CharEnd = _index });
+			AddNonChild(new Element((_index, _index), "toc"));
 		}
 		else if ((tmp = EatPipes()) > 0)
 		{
@@ -848,14 +849,11 @@ public partial class NewParser
 			var lang = EatClassText();
 			ClearBlockTags();
 			Element e = new(
-				_index,
+				(_index, _index),
 				"code",
 				attributes: lang.Length is 0 ? [] : [new("class", $"language-{PrismNames.FixLanguage(lang)}")],
-				new Text(_index, EatSrcEmbedText()) { CharEnd = _index })
-			{
-				CharEnd = _index,
-			};
-			Element ret = new(e.CharStart, "pre", attributes: [], e) { CharEnd = e.CharEnd };
+				new Text((_index, _index), EatSrcEmbedText()));
+			Element ret = new((e.CharStart, e.CharEnd), "pre", attributes: [], e);
 			AddNonChild(ret);
 		}
 		else if (Eat('>'))
