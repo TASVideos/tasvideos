@@ -25,12 +25,20 @@ public partial class Element : INodeWithChildren
 		"wbr"
 	];
 	public NodeType Type => NodeType.Element;
-	public List<INode> Children { get; private set; } = [];
-	public IDictionary<string, string> Attributes { get; private set; } = new Dictionary<string, string>();
+
+	public List<INode> Children { get; private set; }
+
+	public IDictionary<string, string> Attributes { get; private set; }
+
 	public string Tag { get; }
 	public int CharStart { get; }
 	public int CharEnd { get; set; }
-	public Element(int charStart, string tag)
+
+	public Element(
+		int charStart,
+		string tag,
+		IEnumerable<KeyValuePair<string, string>> attributes,
+		IEnumerable<INode> children)
 	{
 		if (!AllowedTagNames.IsMatch(tag))
 		{
@@ -45,22 +53,19 @@ public partial class Element : INodeWithChildren
 
 		CharStart = charStart;
 		Tag = tag;
+		Attributes = attributes.ToDictionary();
+		Children = children.ToList();
 	}
 
-	public Element(int charStart, string tag, IEnumerable<INode> children)
-		: this(charStart, tag)
-	{
-		Children.AddRange(children);
-	}
+	public Element(
+		int charStart,
+		string tag,
+		IEnumerable<KeyValuePair<string, string>> attributes,
+		params INode[] children)
+			: this(charStart, tag, attributes, children: children.AsEnumerable()) { }
 
-	public Element(int charStart, string tag, IEnumerable<KeyValuePair<string, string>> attributes, IEnumerable<INode> children)
-		: this(charStart, tag, children)
-	{
-		foreach (var kvp in attributes)
-		{
-			Attributes.Add(kvp.Key, kvp.Value);
-		}
-	}
+	public Element(int charStart, string tag)
+		: this(charStart, tag, [], children: (IEnumerable<INode>)[]) { }
 
 	public async Task WriteHtmlAsync(TextWriter w, WriterContext ctx)
 	{

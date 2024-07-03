@@ -61,11 +61,15 @@ public static partial class Builtins
 		return
 		[
 				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("id", n)], []) { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("href", $"#r{n}")], new[]
+				new Element(charStart, "a", attributes: [Attr("id", n)]) { CharEnd = charStart },
+				new Element(
+					charStart,
+					"a",
+					attributes: [Attr("href", $"#r{n}")],
+					new Text(charStart, n) { CharEnd = charEnd })
 				{
-					new Text(charStart, n) { CharEnd = charEnd }
-				}) { CharEnd = charEnd },
+					CharEnd = charEnd,
+				},
 				new Text(charEnd, "]") { CharEnd = charEnd }
 		];
 	}
@@ -74,18 +78,24 @@ public static partial class Builtins
 	{
 		return
 		[
-			new Element(charStart, "a", [Attr("id", $"r{n}")], []) { CharEnd = charStart },
+			new Element(charStart, "a", attributes: [Attr("id", $"r{n}")]) { CharEnd = charStart },
 			new Element(
 				charStart,
 				"sup",
-				[
-					new Text(charStart, "[") { CharEnd = charStart },
-					new Element(charStart, "a", [Attr("href", $"#{n}")], new[]
-					{
-						new Text(charStart, n) { CharEnd = charEnd }
-					}) { CharEnd = charEnd },
-					new Text(charEnd, "]") { CharEnd = charEnd }
-				]) { CharEnd = charEnd }
+				attributes: [],
+				new Text(charStart, "[") { CharEnd = charStart },
+				new Element(
+					charStart,
+					"a",
+					attributes: [Attr("href", $"#{n}")],
+					new Text(charStart, n) { CharEnd = charEnd })
+				{
+					CharEnd = charEnd,
+				},
+				new Text(charEnd, "]") { CharEnd = charEnd })
+			{
+				CharEnd = charEnd,
+			},
 		];
 	}
 
@@ -257,7 +267,7 @@ public static partial class Builtins
 			attrs.Add(Attr("rel", "noopener external nofollow"));
 		}
 
-		return new Element(charStart, "a", attrs, [child]) { CharEnd = charEnd };
+		return new Element(charStart, "a", attributes: attrs, child) { CharEnd = charEnd };
 	}
 
 	private static Element MakeImage(int charStart, int charEnd, IEnumerable<string> pp, out bool unusedParams)
@@ -307,7 +317,7 @@ public static partial class Builtins
 
 		attrs.Add(Attr("class", classString.ToString()));
 
-		return new Element(charStart, "img", attrs, []) { CharEnd = charEnd };
+		return new(charStart, "img", attributes: attrs) { CharEnd = charEnd };
 	}
 
 	[GeneratedRegex(@"^(\d+)$")]

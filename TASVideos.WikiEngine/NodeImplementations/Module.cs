@@ -29,9 +29,19 @@ public class Module : INode
 		{
 			if (!ctx.AddTdStyleFilter(Parameters))
 			{
-				var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-				div.Children.Add(new Text(CharStart, "Module Error for settableattributes: Couldn't parse parameter string.") { CharEnd = CharEnd });
-				div.Attributes["class"] = "module-error";
+				Element div = new(
+					CharStart,
+					"div",
+					attributes: [new("class", "module-error")],
+					new Text(
+						CharStart,
+						"Module Error for settableattributes: Couldn't parse parameter string.")
+					{
+						CharEnd = CharEnd,
+					})
+				{
+					CharEnd = CharEnd,
+				};
 				await div.WriteHtmlAsync(w, ctx);
 			}
 		}
@@ -41,9 +51,14 @@ public class Module : INode
 		}
 		else
 		{
-			var div = new Element(CharStart, "div") { CharEnd = CharEnd };
-			div.Children.Add(new Text(CharStart, "Unknown module " + Name) { CharEnd = CharEnd });
-			div.Attributes["class"] = "module-error";
+			Element div = new(
+				CharStart,
+				"div",
+				attributes: [new("class", "module-error")],
+				new Text(CharStart, "Unknown module " + Name) { CharEnd = CharEnd })
+			{
+				CharEnd = CharEnd,
+			};
 			await div.WriteHtmlAsync(w, ctx);
 		}
 	}

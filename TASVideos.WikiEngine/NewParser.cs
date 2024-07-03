@@ -703,8 +703,7 @@ public partial class NewParser
 		}
 		else if (Eat("%%QUOTE"))
 		{
-			var authorBlock = new Element(_index, "figcaption");
-			authorBlock.Attributes["class"] = "author";
+			Element authorBlock = new(_index, "figcaption", attributes: [new("class", "author")]);
 			var author = EatClassText();
 
 			ClearBlockTags();
@@ -729,12 +728,7 @@ public partial class NewParser
 		{
 			var className = EatClassText();
 			ClearBlockTags();
-			var e = new Element(_index, "div");
-			if (className != "")
-			{
-				e.Attributes["class"] = className;
-			}
-
+			Element e = new(_index, "div", attributes: className.Length is 0 ? [] : [new("class", className)]);
 			Push(e);
 		}
 		else if (Eat("%%TAB "))
@@ -750,7 +744,7 @@ public partial class NewParser
 				TryPopTab();
 			}
 
-			var e = new Element(_index, "tab") { Attributes = { ["data-name"] = name } };
+			Element e = new(_index, "tab", attributes: [new("data-name", name)]);
 			Push(e);
 		}
 		else if (Eat("%%TAB_START"))
@@ -853,16 +847,15 @@ public partial class NewParser
 		{
 			var lang = EatClassText();
 			ClearBlockTags();
-			var e = new Element(_index, "code");
-			if (lang != "")
+			Element e = new(
+				_index,
+				"code",
+				attributes: lang.Length is 0 ? [] : [new("class", $"language-{PrismNames.FixLanguage(lang)}")],
+				new Text(_index, EatSrcEmbedText()) { CharEnd = _index })
 			{
-				e.Attributes["class"] = "language-" + PrismNames.FixLanguage(lang);
-			}
-
-			e.Children.Add(new Text(_index, EatSrcEmbedText()) { CharEnd = _index });
-			e.CharEnd = _index;
-			var ret = new Element(e.CharStart, "pre") { CharEnd = e.CharEnd };
-			ret.Children.Add(e);
+				CharEnd = _index,
+			};
+			Element ret = new(e.CharStart, "pre", attributes: [], e) { CharEnd = e.CharEnd };
 			AddNonChild(ret);
 		}
 		else if (Eat('>'))
@@ -979,11 +972,7 @@ public partial class NewParser
 			e =>
 			{
 				var p = (Element)e;
-				var ret = new Element(p.CharStart, "div", p.Children)
-				{
-					Attributes = { ["class"] = "p" }
-				};
-				return ret;
+				return new Element(p.CharStart, "div", attributes: [new("class", "p")], children: p.Children);
 			});
 	}
 
