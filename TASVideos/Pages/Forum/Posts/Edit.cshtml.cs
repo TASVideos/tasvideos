@@ -244,13 +244,14 @@ public class EditModel(
 			return AccessDenied();
 		}
 
+		var postCount = await db.ForumPosts.CountAsync(p => p.TopicId == post.TopicId);
+
 		await db.ForumPosts.Where(p => p.Id == Id)
 			.ExecuteUpdateAsync(b => b
 				.SetProperty(p => p.TopicId, SiteGlobalConstants.SpamTopicId)
 				.SetProperty(p => p.ForumId, SiteGlobalConstants.SpamForumId));
 
 		bool topicDeleted = false;
-		var postCount = await db.ForumPosts.CountAsync(p => p.TopicId == post.TopicId);
 		if (postCount == 1)
 		{
 			await db.ForumTopics.Where(t => t.Id == post.TopicId).ExecuteDeleteAsync();
