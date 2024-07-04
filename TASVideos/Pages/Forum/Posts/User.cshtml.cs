@@ -89,7 +89,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 
 			var isOwnPost = post.PosterId == User.GetUserId();
 			var isOpenTopic = !post.TopicIsLocked;
-			post.IsEditable = User.Has(PermissionTo.EditForumPosts) || (isOwnPost && isOpenTopic);
+			post.IsEditable = User.Has(PermissionTo.EditUsersForumPosts) || (isOwnPost && isOpenTopic);
 
 			// Note: IsLastPost is always false, because calculating it for every topic is too expensive, so we only check permissions
 			// The goal here is for moderators to be able to modify posts from this screen, as a convenience

@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Forum.Posts;
 	PermissionTo.SeeRestrictedForums,
 	PermissionTo.CreateForumPosts,
 	PermissionTo.DeleteForumPosts,
-	PermissionTo.EditForumPosts)]
+	PermissionTo.EditUsersForumPosts)]
 public class EditModel(
 	ApplicationDbContext db,
 	ExternalMediaPublisher publisher,
@@ -60,7 +60,7 @@ public class EditModel(
 
 		IsFirstPost = Id == firstPostId;
 
-		if (!User.Has(PermissionTo.EditForumPosts)
+		if (!User.Has(PermissionTo.EditUsersForumPosts)
 			&& Post.PosterId != User.GetUserId())
 		{
 			return AccessDenied();
@@ -112,7 +112,7 @@ public class EditModel(
 			return NotFound();
 		}
 
-		if (!User.Has(PermissionTo.EditForumPosts)
+		if (!User.Has(PermissionTo.EditUsersForumPosts)
 			&& forumPost.PosterId != User.GetUserId())
 		{
 			ModelState.AddModelError("", "Unable to edit post.");

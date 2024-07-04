@@ -27,6 +27,10 @@ public enum PermissionTo
 	RateMovies = 4,
 
 	[Group("User")]
+	[Description("The ability for a user to edit their own created forum posts.")]
+	EditForumPosts = 9,
+
+	[Group("User")]
 	[Description("The ability to create new topics on the forums. Experienced users have the ability to do this, unless revoked")]
 	CreateForumTopics = 10,
 
@@ -196,7 +200,7 @@ public enum PermissionTo
 
 	[Group("Forum Moderation")]
 	[Description("The ability to edit post created by another user.")]
-	EditForumPosts = 400,
+	EditUsersForumPosts = 400,
 
 	[Group("Forum Moderation")]
 	[Description("The ability to delete post created by another user.")]
