@@ -1,4 +1,6 @@
-﻿using System.Net.Mime;
+﻿using System.Collections.Specialized;
+using System.Net.Mime;
+using System.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -81,9 +83,16 @@ public class BasePageModel : PageModel
 			? BaseReturnUrlRedirect()
 			: Redirect(page);
 
-	protected IActionResult BaseReturnUrlRedirect(string? additionalParam = null)
+	protected IActionResult BaseReturnUrlRedirect(NameValueCollection? additionalParam = null)
 	{
-		var returnUrl = Request.ReturnUrl() + additionalParam;
+		var returnUrl = Request.ReturnUrl();
+		if (additionalParam is not null)
+		{
+			var returnUrlParams = HttpUtility.ParseQueryString(returnUrl);
+			returnUrlParams.Add(additionalParam);
+			returnUrl = returnUrlParams.ToString();
+		}
+
 		if (!string.IsNullOrWhiteSpace(returnUrl))
 		{
 			return Url.IsLocalUrl(returnUrl)
