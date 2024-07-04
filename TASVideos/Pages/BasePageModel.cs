@@ -83,14 +83,27 @@ public class BasePageModel : PageModel
 			? BaseReturnUrlRedirect()
 			: Redirect(page);
 
-	protected IActionResult BaseReturnUrlRedirect(NameValueCollection? additionalParam = null)
+	protected IActionResult BaseReturnUrlRedirect(NameValueCollection? additionalParams = null)
 	{
 		var returnUrl = Request.ReturnUrl();
-		if (additionalParam is not null)
+
+		if (additionalParams is not null)
 		{
-			var returnUrlParams = HttpUtility.ParseQueryString(returnUrl);
-			returnUrlParams.Add(additionalParam);
-			returnUrl = returnUrlParams.ToString();
+			try
+			{
+				var uri = new UriBuilder($"https://localhost/{returnUrl.TrimStart('/')}");
+				var returnQuery = HttpUtility.ParseQueryString(uri.Query);
+				foreach (string? key in additionalParams.AllKeys)
+				{
+					returnQuery[key] = additionalParams[key];
+				}
+
+				uri.Query = returnQuery.ToString();
+				returnUrl = uri.Path + uri.Query;
+			}
+			catch // fall through, because return urls can be messed with by malicious users
+			{
+			}
 		}
 
 		if (!string.IsNullOrWhiteSpace(returnUrl))
