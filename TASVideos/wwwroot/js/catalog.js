@@ -64,14 +64,14 @@ function enableCataloging() {
 	}
 
 	document.getElementById('create-version')?.addEventListener('click', function () {
-		document.location = `/Games/${gameModel.value}/Versions/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
+		document.location = `/Games/${gameModel.value}/Versions/Edit?returnUrl=${encodeURIComponent(returnUrl)}&systemId=${systemModel.value}`;
 	});
 
 	document.getElementById('create-game')?.addEventListener('click', function () {
 		if (returnUrl) {
 			// we do not want to pass query params
 			const split = returnUrl.split('?')[0];
-			document.location = `/Games/Edit?returnUrl=${split}`;
+			document.location = `/Games/Edit?returnUrl=${encodeURIComponent(split)}`;
 		} else {
 			document.location = '/Games/Edit';
 		}
@@ -79,6 +79,6 @@ function enableCataloging() {
 	});
 
 	gameGoalBtn?.addEventListener('click', function () {
-		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${returnUrl}`;
+		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${encodeURIComponent(returnUrl)}`;
 	});
 }
