@@ -70,6 +70,6 @@ public class EditModel(IFlagService flagService) : BasePageModel
 				break;
 		}
 
-		return BaseReturnUrlRedirect("Index");
+		return BasePageRedirect("Index");
 	}
 }

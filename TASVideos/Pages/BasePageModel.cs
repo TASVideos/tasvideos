@@ -1,4 +1,6 @@
-﻿using System.Net.Mime;
+﻿using System.Collections.Specialized;
+using System.Net.Mime;
+using System.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -81,9 +83,12 @@ public class BasePageModel : PageModel
 			? BaseReturnUrlRedirect()
 			: Redirect(page);
 
-	protected IActionResult BaseReturnUrlRedirect(string? additionalParam = null)
+	protected IActionResult BaseReturnUrlRedirect(NameValueCollection? additionalParams = null)
 	{
-		var returnUrl = Request.ReturnUrl() + additionalParam;
+		var returnUrl = Request.ReturnUrl();
+
+		returnUrl = AddAdditionalParams(returnUrl, additionalParams);
+
 		if (!string.IsNullOrWhiteSpace(returnUrl))
 		{
 			return Url.IsLocalUrl(returnUrl)
@@ -92,6 +97,32 @@ public class BasePageModel : PageModel
 		}
 
 		return Home();
+	}
+
+	internal static string AddAdditionalParams(string relativeUrl, NameValueCollection? additionalParams = null)
+	{
+		if (additionalParams is null)
+		{
+			return relativeUrl;
+		}
+
+		try
+		{
+			var uri = new UriBuilder($"https://localhost/{relativeUrl.TrimStart('/')}");
+			var returnQuery = HttpUtility.ParseQueryString(uri.Query);
+			foreach (string? key in additionalParams.AllKeys)
+			{
+				returnQuery[key] = additionalParams[key];
+			}
+
+			uri.Query = returnQuery.ToString();
+			relativeUrl = uri.Path + uri.Query;
+		}
+		catch
+		{
+		}
+
+		return relativeUrl;
 	}
 
 	protected void AddErrors(IdentityResult result)

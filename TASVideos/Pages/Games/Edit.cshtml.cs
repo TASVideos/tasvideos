@@ -130,7 +130,7 @@ public class EditModel(
 
 		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 			? RedirectToPage("Index", new { game.Id })
-			: BaseReturnUrlRedirect($"?GameId={game.Id}");
+			: BaseReturnUrlRedirect(new() { ["GameId"] = game.Id.ToString() });
 	}
 
 	public async Task<IActionResult> OnPostDelete()
