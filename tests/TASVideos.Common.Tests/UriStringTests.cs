@@ -20,6 +20,7 @@ public sealed class UriStringTests
 #endif
 	[DataRow(true, "//example.com/path/resource.txt")]
 	[DataRow(true, "https://example.com/path/resource.txt#fragment")] // yes I pulled this list straight from the English Wikipedia --yoshi
+	[DataRow(false, "")]
 	public void TestIsToExternalDomain(bool expected, string uri)
 		=> Assert.AreEqual(expected: expected, actual: UriString.IsToExternalDomain(uri));
 }
