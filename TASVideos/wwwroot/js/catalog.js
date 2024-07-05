@@ -10,7 +10,7 @@ function enableCataloging() {
 	const createVersionBtn = document.getElementById('create-version');
 	const gameGoalModel = document.querySelector('[data-id="goal"]');
 	const gameGoalBtn = document.getElementById('create-goal');
-	const returnUrl = systemModel.dataset.returnUrl;
+	const returnUrl = encodeURIComponent(systemModel.dataset.returnUrl);
 
 	systemModel.onchange = function () {
 		if (this.value) {
@@ -64,21 +64,14 @@ function enableCataloging() {
 	}
 
 	document.getElementById('create-version')?.addEventListener('click', function () {
-		document.location = `/Games/${gameModel.value}/Versions/Edit?returnUrl=${encodeURIComponent(returnUrl)}&systemId=${systemModel.value}`;
+		document.location = `/Games/${gameModel.value}/Versions/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
 	});
 
 	document.getElementById('create-game')?.addEventListener('click', function () {
-		if (returnUrl) {
-			// we do not want to pass query params
-			const split = returnUrl.split('?')[0];
-			document.location = `/Games/Edit?returnUrl=${encodeURIComponent(split)}`;
-		} else {
-			document.location = '/Games/Edit';
-		}
-
+		document.location = `/Games/Edit?returnUrl=${returnUrl}`;
 	});
 
 	gameGoalBtn?.addEventListener('click', function () {
-		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${encodeURIComponent(returnUrl)}`;
+		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${returnUrl}`;
 	});
 }
