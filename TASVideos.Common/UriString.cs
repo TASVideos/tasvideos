@@ -8,5 +8,5 @@ public static class UriString
 	/// could maybe use a constant which holds the domain name, but either way that should be stripped out by the UI
 	/// </remarks>
 	public static bool IsToExternalDomain(ReadOnlySpan<char> uri)
-		=> !(uri[0] is '#' || (uri[0] is '/' && (uri.Length < 2 || uri[1] is not '/')));
+		=> uri.Length >= 1 && !(uri[0] is '#' || (uri[0] is '/' && (uri.Length < 2 || uri[1] is not '/')));
 }
