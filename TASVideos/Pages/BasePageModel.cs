@@ -87,24 +87,7 @@ public class BasePageModel : PageModel
 	{
 		var returnUrl = Request.ReturnUrl();
 
-		if (additionalParams is not null)
-		{
-			try
-			{
-				var uri = new UriBuilder($"https://localhost/{returnUrl.TrimStart('/')}");
-				var returnQuery = HttpUtility.ParseQueryString(uri.Query);
-				foreach (string? key in additionalParams.AllKeys)
-				{
-					returnQuery[key] = additionalParams[key];
-				}
-
-				uri.Query = returnQuery.ToString();
-				returnUrl = uri.Path + uri.Query;
-			}
-			catch // fall through, because return urls can be messed with by malicious users
-			{
-			}
-		}
+		returnUrl = AddAdditionalParams(returnUrl, additionalParams);
 
 		if (!string.IsNullOrWhiteSpace(returnUrl))
 		{
@@ -114,6 +97,32 @@ public class BasePageModel : PageModel
 		}
 
 		return Home();
+	}
+
+	internal static string AddAdditionalParams(string relativeUrl, NameValueCollection? additionalParams = null)
+	{
+		if (additionalParams is null)
+		{
+			return relativeUrl;
+		}
+
+		try
+		{
+			var uri = new UriBuilder($"https://localhost/{relativeUrl.TrimStart('/')}");
+			var returnQuery = HttpUtility.ParseQueryString(uri.Query);
+			foreach (string? key in additionalParams.AllKeys)
+			{
+				returnQuery[key] = additionalParams[key];
+			}
+
+			uri.Query = returnQuery.ToString();
+			relativeUrl = uri.Path + uri.Query;
+		}
+		catch
+		{
+		}
+
+		return relativeUrl;
 	}
 
 	protected void AddErrors(IdentityResult result)
