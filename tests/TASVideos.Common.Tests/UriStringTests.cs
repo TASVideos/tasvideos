@@ -4,9 +4,7 @@
 public sealed class UriStringTests
 {
 	[TestMethod]
-#if false // throws
 	[DataRow(false, ""/*empty string*/)]
-#endif
 	[DataRow(false, "#fragment")]
 #if false // misclassified as external (probably a good idea, though the UI should prepend `//` before these get anywhere near the DB or SSR)
 	[DataRow(false, "resource.txt")]
