@@ -6,6 +6,7 @@ namespace TASVideos.Pages.Forum.Posts;
 	true,
 	PermissionTo.SeeRestrictedForums,
 	PermissionTo.CreateForumPosts,
+	PermissionTo.EditForumPosts,
 	PermissionTo.DeleteForumPosts,
 	PermissionTo.EditUsersForumPosts)]
 public class EditModel(
@@ -51,6 +52,11 @@ public class EditModel(
 			return NotFound();
 		}
 
+		if (!CanEditPost(Post.PosterId))
+		{
+			return AccessDenied();
+		}
+
 		Post = post;
 		var firstPostId = await db.ForumPosts
 			.ForTopic(Post.TopicId)
@@ -59,12 +65,6 @@ public class EditModel(
 			.FirstAsync();
 
 		IsFirstPost = Id == firstPostId;
-
-		if (!User.Has(PermissionTo.EditUsersForumPosts)
-			&& Post.PosterId != User.GetUserId())
-		{
-			return AccessDenied();
-		}
 
 		PreviousPosts = await db.ForumPosts
 			.ForTopic(Post.TopicId)
@@ -112,8 +112,7 @@ public class EditModel(
 			return NotFound();
 		}
 
-		if (!User.Has(PermissionTo.EditUsersForumPosts)
-			&& forumPost.PosterId != User.GetUserId())
+		if (!CanEditPost(forumPost.PosterId))
 		{
 			ModelState.AddModelError("", "Unable to edit post.");
 			return Page();
@@ -272,6 +271,9 @@ public class EditModel(
 			? BasePageRedirect("/Forum/Subforum/Index", new { id = post.ForumId })
 			: BasePageRedirect("/Forum/Topics/Index", new { id = post.TopicId });
 	}
+
+	private bool CanEditPost(int posterId) => User.Has(PermissionTo.EditUsersForumPosts)
+		|| (User.Has(PermissionTo.EditForumPosts) && posterId == User.GetUserId());
 
 	public class ForumPostEditModel
 	{
