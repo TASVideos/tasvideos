@@ -1,7 +1,7 @@
 <Project>
   <ItemGroup>
     <PackageVersion Include="AspNetCore.ReCaptcha" Version="1.8.1" />
-    <PackageVersion Include="EFCore.NamingConventions" Version="8.0.2" />
+    <PackageVersion Include="EFCore.NamingConventions" Version="8.0.3" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="GitVersion.MsBuild" Version="5.12.0" />
     <PackageVersion Include="IPAddressRange" Version="6.0.0" />
@@ -10,22 +10,22 @@
     <PackageVersion Include="LigerShark.WebOptimizer.Sass" Version="3.0.118" />
     <PackageVersion Include="MailKit" Version="4.3.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.1" />
-    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.6" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.1" />
     <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
     <PackageVersion Include="Microsoft.ClearScript.Complete" Version="7.4.5" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.AutoHistory" Version="6.0.0" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.1" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
     <PackageVersion Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
     <PackageVersion Include="Microsoft.Web.LibraryManager.Build" Version="2.1.175" />
     <PackageVersion Include="MSTest" Version="3.3.1" />
     <PackageVersion Include="Namotion.Reflection" Version="3.1.1" />
-    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
     <PackageVersion Include="NSubstitute" Version="5.1.0" />
     <PackageVersion Include="RoslynCodeTaskFactory" Version="2.0.7" />
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
