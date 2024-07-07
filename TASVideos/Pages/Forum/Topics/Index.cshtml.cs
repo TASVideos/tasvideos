@@ -164,7 +164,7 @@ public class IndexModel(
 			var isOwnPost = post.PosterId == userId;
 			var isOpenTopic = !topic.IsLocked;
 			post.IsEditable = User.Has(PermissionTo.EditUsersForumPosts)
-				|| (isOwnPost && isOpenTopic);
+				|| (isOwnPost && User.Has(PermissionTo.EditForumPosts) && isOpenTopic);
 			post.IsDeletable = User.Has(PermissionTo.DeleteForumPosts)
 				|| (isOwnPost && isOpenTopic && post.IsLastPost);
 		}

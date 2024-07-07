@@ -52,7 +52,7 @@ public class EditModel(
 			return NotFound();
 		}
 
-		if (!CanEditPost(Post.PosterId))
+		if (!CanEditPost(post.PosterId))
 		{
 			return AccessDenied();
 		}
