@@ -18,6 +18,7 @@ public class MultiselectTagHelper : TagHelper
 		if (Multiselect)
 		{
 			output.Attributes.Add("data-multiselect", "true");
+			output.AddCssClass("d-none-js");
 			ViewContext.ViewData.UseSelectImprover();
 		}
 	}
