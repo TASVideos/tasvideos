@@ -3,10 +3,7 @@
 function findAndEngageMultiselects() {
 	const selects = Array.from(document.querySelectorAll('[data-multiselect="true"]'));
 	selects.forEach(select => {
-		const selectFromTemplate = select.content.cloneNode(true).firstElementChild;
-		selectFromTemplate.classList.add('d-none');
-		select.insertAdjacentElement('afterend', selectFromTemplate);
-		engageSelectImprover(selectFromTemplate.id);
+		engageSelectImprover(select.id);
 	});
 }
 
