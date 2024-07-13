@@ -717,3 +717,7 @@ top-button-bar {
 		}
 	}
 }
+
+.d-none-except-noscript {
+	display: none !important;
+}

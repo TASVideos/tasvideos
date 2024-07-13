@@ -103,7 +103,6 @@ function engageSelectImprover(multiSelectId, maxHeight = 250) {
 </div>
 `;
 	let multiSelect = document.getElementById(multiSelectId);
-	multiSelect.classList.add('d-none');
 	let div = document.getElementById(multiSelectId + '_div');
 	div?.remove();
 	multiSelect.insertAdjacentHTML('afterend', initialHtmlToAdd);
