@@ -104,5 +104,5 @@
 <input type="hidden" asp-for="Diff.RightMarkup" data-diff="right" data-diff-label="r@(Model.ToRevision ?? 0)" rows="8" />
 
 @section Scripts {
-	<script src="/js/wiki-page-history.js"></script>
+		<script src="/js/wiki-page-history.js" asp-append-version="true"></script>
 }

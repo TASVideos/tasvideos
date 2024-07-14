@@ -163,19 +163,19 @@
 				crossorigin="anonymous">
 		</script>
 	}
-	<script condition="ViewData.UsesSelectImprover()" src="/js/select-improver.js"></script>
+	<script condition="ViewData.UsesSelectImprover()" src="/js/select-improver.js" asp-append-version="true"></script>
 	<noscript condition="ViewData.UsesSelectImprover()"><style>.d-none-except-noscript { display: block !important; }</style></noscript>
-	<script condition="ViewData.UsesUserSearch()" src="/js/user-search.js"></script>
-	<script condition="ViewData.UsesBackupText()" src="/js/backup-text.js"></script>
-	<script condition="ViewData.UsesStringList()" src="/js/string-list.js"></script>
-	<script condition="ViewData.UsesPreview()" src="/js/preview.js"></script>
-	<script condition="ViewData.UsesShowMore()" src="/js/show-more.js"></script>
-	<script condition="ViewData.UsesPostHelper()" src="/js/post-helper.js"></script>
-	<script condition="ViewData.UsesWikiEditHelper()" src="/js/wiki-edit-helper.js"></script>
-	<script condition="ViewData.UsesDiff()" src="/js/diff_match_patch.js"></script>
-	<script condition="ViewData.UsesDiff()" src="/js/diff_view.js"></script>
-	<script condition="ViewData.UsesMoodPreview()" src="/js/mood-preview.js"></script>
-	<script src="/js/prevent-double-submit.js"></script>
+	<script condition="ViewData.UsesUserSearch()" src="/js/user-search.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesBackupText()" src="/js/backup-text.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesStringList()" src="/js/string-list.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesPreview()" src="/js/preview.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesShowMore()" src="/js/show-more.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesPostHelper()" src="/js/post-helper.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesWikiEditHelper()" src="/js/wiki-edit-helper.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesDiff()" src="/js/diff_match_patch.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesDiff()" src="/js/diff_view.js" asp-append-version="true"></script>
+	<script condition="ViewData.UsesMoodPreview()" src="/js/mood-preview.js" asp-append-version="true"></script>
+	<script src="/js/prevent-double-submit.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
