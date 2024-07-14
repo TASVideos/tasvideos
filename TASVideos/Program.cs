@@ -48,6 +48,7 @@ builder.Services
 		pipeline.AddScssBundle("/css/bootstrap.css", "/css/bootstrap.scss");
 		pipeline.AddScssBundle("/css/site.css", "/css/site.scss");
 		pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
+		pipeline.AddFiles("text/javascript", "/js/*");
 	});
 
 builder.Host.UseSerilog();
