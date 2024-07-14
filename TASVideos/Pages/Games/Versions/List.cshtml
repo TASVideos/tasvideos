@@ -12,7 +12,7 @@
 	<add-link asp-page="Edit" permission="CatalogMovies" asp-route-gameId="@Model.GameId"></add-link>
 </top-button-bar>
 <standard-table>
-	<table-head columns="Name,Title Override,Version,Region,Type,Hashes,System,"></table-head>
+	<table-head columns="Type,Name,Title Override,Version,Region,Hashes,System,"></table-head>
 	@foreach (var version in Model.Versions.OrderBy(v => v.Name))
 	{
 		<tr>
