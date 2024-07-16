@@ -33,6 +33,9 @@ public class EditModel(
 	[DoNotTrim]
 	public string Markup { get; set; } = "";
 
+	[BindProperty]
+	public bool MarkupChanged { get; set; }
+
 	public bool CanDelete { get; set; }
 	public ICollection<SubmissionStatus> AvailableStatuses { get; set; } = [];
 	public List<SelectListItem> AvailableClasses { get; set; } = [];
@@ -292,16 +295,19 @@ public class EditModel(
 		submission.Status = Submission.Status;
 		submission.AdditionalAuthors = Submission.ExternalAuthors.NullIfWhitespace();
 
-		var minorEdit = HttpContext.Request.MinorEdit();
-		var revision = new WikiCreateRequest
+		if (MarkupChanged)
 		{
-			PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
-			Markup = Markup,
-			MinorEdit = minorEdit,
-			RevisionMessage = Submission.RevisionMessage,
-			AuthorId = User.GetUserId()
-		};
-		_ = await wikiPages.Add(revision) ?? throw new InvalidOperationException("Unable to save wiki revision!");
+			var revision = new WikiCreateRequest
+			{
+				PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
+				Markup = Markup,
+				MinorEdit = HttpContext.Request.MinorEdit(),
+				RevisionMessage = Submission.RevisionMessage,
+				AuthorId = User.GetUserId()
+			};
+			_ = await wikiPages.Add(revision) ?? throw new InvalidOperationException("Unable to save wiki revision!");
+		}
+
 		submission.SubmissionAuthors.Clear();
 		submission.SubmissionAuthors.AddRange(await db.Users
 			.ForUsers(Submission.Authors)

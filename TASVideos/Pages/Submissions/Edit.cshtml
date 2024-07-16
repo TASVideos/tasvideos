@@ -12,6 +12,7 @@
 </top-button-bar>
 <form client-side-validation="true" method="post" enctype="multipart/form-data">
 	<input condition="@Model.AvailableStatuses.Count <= 1" type="hidden" asp-for="Submission.Status" />
+	<input type="hidden" asp-for="MarkupChanged" id="markup-changed" />
 	<row>
 		<column lg="6" permission="ReplaceSubmissionMovieFile">
 			<fieldset>

@@ -7,3 +7,7 @@
 		rejectionReasonElem.classList.add('d-none');
 	}
 });
+
+document.querySelector('[data-id="wiki-edit"]').addEventListener('change', () => {
+	document.getElementById('markup-changed').value = true;
+});
