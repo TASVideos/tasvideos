@@ -11,11 +11,10 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public int Id { get; set; }
 
-	[BindProperty]
-	public VersionDisplay Version { get; set; } = null!;
-
-	[BindProperty]
 	public string Game { get; set; } = "";
+	public VersionDisplay Version { get; set; } = null!;
+	public List<Entry> Publications { get; set; } = [];
+	public List<Entry> Submissions { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -32,8 +31,9 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 		Game = game.DisplayName;
 
 		var version = await db.GameVersions
-			.Where(r => r.Id == Id && r.Game!.Id == GameId)
+			.Where(v => v.Id == Id && v.Game!.Id == GameId)
 			.Select(v => new VersionDisplay(
+				v.Id,
 				v.System!.Code,
 				v.Name,
 				v.Md5,
@@ -41,9 +41,7 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 				v.Version,
 				v.Region,
 				v.Type,
-				v.TitleOverride,
-				game.Id,
-				game.DisplayName))
+				v.TitleOverride))
 			.SingleOrDefaultAsync();
 
 		if (version is null)
@@ -53,10 +51,21 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 
 		Version = version;
 
+		Publications = await db.Publications
+			.Where(p => p.GameVersionId == version.Id)
+			.Select(p => new Entry(p.Id, p.Title))
+			.ToListAsync();
+
+		Submissions = await db.Submissions
+			.Where(p => p.GameVersionId == version.Id)
+			.Select(p => new Entry(p.Id, p.Title))
+			.ToListAsync();
+
 		return Page();
 	}
 
 	public record VersionDisplay(
+		int Id,
 		string SystemCode,
 		string Name,
 		string? Md5,
@@ -64,7 +73,7 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 		string? Version,
 		string? Region,
 		VersionTypes Type,
-		string? TitleOverride,
-		int GameId,
-		string GameName);
+		string? TitleOverride);
+
+	public record Entry(int Id, string Title);
 }

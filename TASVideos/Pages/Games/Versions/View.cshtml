@@ -48,6 +48,26 @@
 				</div>
 			</column>
 		</row>
+		<row class="mt-2" condition="@Model.Publications.Any() || Model.Submissions.Any()">
+			<column md="6" condition="@Model.Publications.Any()">
+				<h4>Publications</h4>
+				<ul>
+					@foreach (var pub in Model.Publications)
+					{
+						<li><pub-link id="@pub.Id">@pub.Title</pub-link></li>
+					}
+				</ul>
+			</column>
+			<column md="6" condition="@Model.Submissions.Any()">
+				<h4>Submissions</h4>
+				<ul>
+					@foreach (var sub in Model.Submissions)
+					{
+						<li><sub-link id="@sub.Id">@sub.Title</sub-link></li>
+					}
+				</ul>
+			</column>
+		</row>
 	</card-body>
 </card>
 
