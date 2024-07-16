@@ -27,6 +27,13 @@
 			</td>
 			<td>@version.System</td>
 			<td-action-column>
+				<a
+					class="btn btn-secondary btn-sm"
+					asp-page="/Games/Versions/View"
+					asp-route-gameId="@Model.GameId"
+					asp-route-id="@version.Id">
+					<i class="fa fa-eye"></i> View
+				</a>
 				<edit-link class="btn-sm" asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId"></edit-link>
 			</td-action-column>
 		</tr>
