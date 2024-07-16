@@ -8,44 +8,49 @@
 	<h4 class="heading"><label asp-for="Game"></label> <game-link id="@Model.GameId">@Model.Game</game-link></h4>
 	<back-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></back-link>
 </top-button-bar>
-<row>
-	<column md="6">
-		<div class="info-entry">
-			<label asp-for="Version.SystemCode"></label>
-			<label>@Model.Version.SystemCode</label>
-		</div>
-		<div class="info-entry">
-			<label asp-for="Version.Name"></label>
-			<label>@Model.Version.Name</label>
-		</div>
-		<div class="info-entry">
-			<label asp-for="Version.Type"></label>
-			<label>@Model.Version.Type</label>
-		</div>
-		<div class="info-entry">
-			<label asp-for="Version.TitleOverride"></label>
-			<label>@Model.Version.TitleOverride</label>
-		</div>
-		<div class="info-entry">
-			<label asp-for="Version.Version"></label>
-			<label>@Model.Version.Version</label>
-		</div>
-		<div class="info-entry">
-			<label asp-for="Version.Region"></label>
-			<label>@Model.Version.Region</label>
-		</div>
-	</column>
-	<column md="6">
-		<div class="info-entry">
-			<label asp-for="Version.Sha1"></label>
-			<label>@Model.Version.Sha1</label>
-		</div>
-		<div class="info-entry">
-			<label asp-for="Version.Md5"></label>
-			<label>@Model.Version.Md5</label>
-		</div>
-	</column>
-</row>
+<card>
+	<card-body>
+		<row>
+			<column md="6">
+				<div class="info-entry">
+					<label asp-for="Version.SystemCode"></label>
+					<label>@Model.Version.SystemCode</label>
+				</div>
+				<div class="info-entry">
+					<label asp-for="Version.Name"></label>
+					<label>@Model.Version.Name</label>
+				</div>
+				<div class="info-entry">
+					<label asp-for="Version.Type"></label>
+					<label>@Model.Version.Type</label>
+				</div>
+				<div class="info-entry">
+					<label asp-for="Version.TitleOverride"></label>
+					<label>@Model.Version.TitleOverride</label>
+				</div>
+				<div class="info-entry">
+					<label asp-for="Version.Version"></label>
+					<label>@Model.Version.Version</label>
+				</div>
+				<div class="info-entry">
+					<label asp-for="Version.Region"></label>
+					<label>@Model.Version.Region</label>
+				</div>
+			</column>
+			<column md="6">
+				<div class="info-entry">
+					<label asp-for="Version.Sha1"></label>
+					<label>@Model.Version.Sha1</label>
+				</div>
+				<div class="info-entry">
+					<label asp-for="Version.Md5"></label>
+					<label>@Model.Version.Md5</label>
+				</div>
+			</column>
+		</row>
+	</card-body>
+</card>
+
 
 <style>
 	.info-entry {
