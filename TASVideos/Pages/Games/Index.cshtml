@@ -155,11 +155,11 @@
 </row>
 <top-button-bar>
 	<h4 class="heading">Game Versions</h4>
-	<edit-link permission="CatalogMovies"
-	           asp-page="/Games/Versions/List"
-	           asp-route-gameId="@Model.Game.Id"
-	           asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
-	           class="btn-sm"></edit-link>
+	<a
+		asp-page="/Games/Versions/List"
+		asp-route-gameId="@Model.Game.Id"
+		asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
+		class="btn btn-primary btn-sm">View</a>
 </top-button-bar>
 <alert type="warning" condition="!Model.Game.Versions.Any()" class="mt-3">
 	No records.
