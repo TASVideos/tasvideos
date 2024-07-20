@@ -43,7 +43,14 @@
 		var hoursRemaining = QueueService.HoursRemainingForJudging(item);
 		<tr>
 			<td>@item.System</td>
-			<td>@item.Game</td>
+			@if (item.GameId is int gameId)
+			{
+				<td><game-link id="gameId">@item.Game</game-link></td>
+			}
+			else
+			{
+				<td>@item.Game</td>
+			}
 			<td><sub-link id="item.Id">@item.Branch</sub-link></td>
 			<td><sub-link id="item.Id">@(item.Time.ToStringWithOptionalDaysAndHours())</sub-link></td>
 			<td><author-list authors="item.By" additional-authors="@item.AdditionalAuthors"></author-list></td>

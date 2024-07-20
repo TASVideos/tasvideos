@@ -352,6 +352,11 @@ public static class EntityExtensions
 			{
 				Id = s.Id,
 				System = s.System != null ? s.System!.Code : "Unknown",
+				GameId = s.GameVersion != null
+					? s.GameVersion.GameId
+					: s.Game != null
+						? s.Game.Id
+						: null,
 				Game = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
 				Frames = s.Frames,
 				FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,

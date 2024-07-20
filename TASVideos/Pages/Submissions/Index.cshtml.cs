@@ -61,6 +61,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		[Sortable]
 		public string? System { get; init; }
 
+		[TableIgnore]
+		public int? GameId { get; init; }
+
 		[Sortable]
 		public string? Game { get; init; }
 
