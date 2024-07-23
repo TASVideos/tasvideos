@@ -7,6 +7,7 @@
 <top-button-bar>
 	<h4 class="heading"><label asp-for="Game"></label> <game-link id="@Model.GameId">@Model.Game</game-link></h4>
 	<back-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></back-link>
+	<edit-link permission="CatalogMovies" asp-page="/Games/Versions/Edit" asp-route-gameId="@Model.GameId" asp-route-id="@Model.Id"></edit-link>
 </top-button-bar>
 <card>
 	<card-body>
