@@ -122,21 +122,23 @@ internal class TopicWatcher(
 			return;
 		}
 
-		var watch = await db.ForumTopicWatches
+		var watchExists = await db.ForumTopicWatches
 			.ExcludeRestricted(canSeeRestricted)
-			.SingleOrDefaultAsync(w => w.UserId == userId
+			.AnyAsync(w => w.UserId == userId
 				&& w.ForumTopicId == topicId);
 
-		if (watch is null)
+		if (watchExists)
 		{
-			db.ForumTopicWatches.Add(new ForumTopicWatch
-			{
-				UserId = userId,
-				ForumTopicId = topicId
-			});
-
-			await db.SaveChangesAsync();
+			return;
 		}
+
+		db.ForumTopicWatches.Add(new ForumTopicWatch
+		{
+			UserId = userId,
+			ForumTopicId = topicId
+		});
+
+		await db.SaveChangesAsync();
 	}
 
 	public async Task UnwatchTopic(int topicId, int userId)
@@ -154,10 +156,7 @@ internal class TopicWatcher(
 	}
 
 	public async Task<bool> IsWatchingTopic(int topicId, int userId)
-	{
-		return (await db.ForumTopicWatches
-			.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId)) is not null;
-	}
+		=> await db.ForumTopicWatches.AnyAsync(w => w.UserId == userId && w.ForumTopicId == topicId);
 }
 
 /// <summary>
