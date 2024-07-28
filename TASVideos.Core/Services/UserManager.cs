@@ -39,10 +39,10 @@ public class UserManager(
 	/// </summary>
 	public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)
 	{
-		var existingClaims = db.UserClaims
+		await db.UserClaims
 			.Where(u => u.UserId == user.Id)
-			.Where(c => c.ClaimType == CustomClaimTypes.Permission);
-		db.UserClaims.RemoveRange(existingClaims);
+			.Where(c => c.ClaimType == CustomClaimTypes.Permission)
+			.ExecuteDeleteAsync();
 
 		var permissions = await GetUserPermissionsById(user.Id);
 
