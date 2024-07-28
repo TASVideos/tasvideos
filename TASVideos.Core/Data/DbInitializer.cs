@@ -56,7 +56,7 @@ public static class DbInitializer
 	private static async Task GenerateDevSampleData(DbContext context)
 	{
 		var sql = await GetSampleDataScript();
-		await using (await context.Database.BeginTransactionAsync())
+		using (await context.Database.BeginTransactionAsync())
 		{
 			var commands = new[] { sql };
 

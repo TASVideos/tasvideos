@@ -118,7 +118,7 @@ public class CreateModel(
 			ForumId = ForumId
 		};
 
-		await using var dbTransaction = await db.Database.BeginTransactionAsync();
+		using var dbTransaction = await db.Database.BeginTransactionAsync();
 		db.ForumTopics.Add(topic);
 		await db.SaveChangesAsync();
 
