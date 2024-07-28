@@ -7,6 +7,7 @@ public enum UserPreference
 	Auto = 0, Always, Never
 }
 
+[ExcludeFromHistory]
 public class User : IdentityUser<int>, ITrackable
 {
 	[StringLength(50)]
