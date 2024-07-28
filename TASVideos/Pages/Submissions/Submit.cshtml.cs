@@ -113,7 +113,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		await using var dbTransaction = await db.Database.BeginTransactionAsync();
+		using var dbTransaction = await db.Database.BeginTransactionAsync();
 		var submission = new Submission
 		{
 			SubmittedGameVersion = GameVersion,
