@@ -19,7 +19,7 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 			firstEditions = await db.Publications
 				.GroupBy(
 					gkey => new { gkey.GameId },
-					gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
+					gvalue => new { gvalue.Id, gvalue.CreateTimestamp })
 				.Select(g => new FirstEditionGame
 				{
 					GameId = g.Key.GameId,
@@ -34,7 +34,7 @@ public class FirstEditionTas(ApplicationDbContext db) : WikiViewComponent
 			firstEditions = await db.Publications
 				.GroupBy(
 					gkey => new { gkey.Game!.DisplayName },
-					gvalue => new { gvalue.Id, gvalue.Submission!.CreateTimestamp })
+					gvalue => new { gvalue.Id, gvalue.CreateTimestamp })
 				.Select(g => new FirstEditionGame
 				{
 					GameName = g.Key.DisplayName,
