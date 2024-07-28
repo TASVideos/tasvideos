@@ -106,23 +106,18 @@ internal class TopicWatcher(
 
 	public async Task MarkSeen(int topicId, int userId)
 	{
-		var watchedTopic = await db.ForumTopicWatches
-			.SingleOrDefaultAsync(w => w.UserId == userId && w.ForumTopicId == topicId);
-
-		if (watchedTopic is not null && watchedTopic.IsNotified)
-		{
-			watchedTopic.IsNotified = false;
-			await db.SaveChangesAsync();
-		}
+		await db.ForumTopicWatches
+			.Where(w => w.UserId == userId && w.ForumTopicId == topicId)
+			.ExecuteUpdateAsync(s => s.SetProperty(w => w.IsNotified, false));
 	}
 
 	public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
 	{
-		var topic = await db.ForumTopics
+		var topicExists = await db.ForumTopics
 			.ExcludeRestricted(canSeeRestricted)
-			.SingleOrDefaultAsync(t => t.Id == topicId);
+			.AnyAsync(t => t.Id == topicId);
 
-		if (topic is null)
+		if (!topicExists)
 		{
 			return;
 		}
@@ -146,45 +141,16 @@ internal class TopicWatcher(
 
 	public async Task UnwatchTopic(int topicId, int userId)
 	{
-		var watch = await db.ForumTopicWatches
-			.SingleOrDefaultAsync(w => w.UserId == userId
-				&& w.ForumTopicId == topicId);
-
-		if (watch is not null)
-		{
-			db.ForumTopicWatches.Remove(watch);
-
-			try
-			{
-				await db.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				// Do nothing
-				// 1) if a watch is already removed, we are done
-				// 2) if a watch was updated (for instance, someone posted in the topic),
-				//        there isn't much we can do other than reload the page anyway with an error.
-				//        An error would only be modestly helpful anyway, and wouldn't save clicks
-				//        However, this would be a nice to have one day
-			}
-		}
+		await db.ForumTopicWatches
+			.Where(w => w.UserId == userId && w.ForumTopicId == topicId)
+			.ExecuteDeleteAsync();
 	}
 
 	public async Task UnwatchAllTopics(int userId)
 	{
-		var watches = await db.ForumTopicWatches
+		await db.ForumTopicWatches
 			.Where(w => w.UserId == userId)
-			.ToListAsync();
-		db.ForumTopicWatches.RemoveRange(watches);
-		try
-		{
-			await db.SaveChangesAsync();
-		}
-		catch (DbUpdateConcurrencyException)
-		{
-			// Do nothing
-			// See UnwatchTopic for why
-		}
+			.ExecuteDeleteAsync();
 	}
 
 	public async Task<bool> IsWatchingTopic(int topicId, int userId)
