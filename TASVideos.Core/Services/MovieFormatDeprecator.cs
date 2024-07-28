@@ -26,16 +26,10 @@ public class MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser)
 			.ToDictionary(tkey => tkey.ext, tvalue => (DeprecatedMovieFormat?)tvalue.d);
 	}
 
-	public bool IsMovieExtension(string extension)
-	{
-		return parser.SupportedMovieExtensions.Any(s => s == extension);
-	}
+	public bool IsMovieExtension(string extension) => parser.SupportedMovieExtensions.Any(s => s == extension);
 
 	public async Task<bool> IsDeprecated(string extension)
-	{
-		var entry = await db.DeprecatedMovieFormats.SingleOrDefaultAsync(d => d.FileExtension == extension);
-		return entry?.Deprecated ?? false;
-	}
+		=> await db.DeprecatedMovieFormats.AnyAsync(d => d.FileExtension == extension && d.Deprecated);
 
 	public async Task<bool> Deprecate(string extension)
 	{
