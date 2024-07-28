@@ -489,11 +489,12 @@ internal class QueueService(
 		var subs = await db.Submissions
 			.Where(s => s.SubmitterId == userId
 				&& s.CreateTimestamp > DateTime.UtcNow.AddDays(-settings.SubmissionRate.Days))
+			.Select(s => s.CreateTimestamp)
 			.ToListAsync();
 
 		if (subs.Count >= settings.SubmissionRate.Submissions)
 		{
-			return subs.Select(s => s.CreateTimestamp).Min().AddDays(settings.SubmissionRate.Days);
+			return subs.Min().AddDays(settings.SubmissionRate.Days);
 		}
 
 		return null;
