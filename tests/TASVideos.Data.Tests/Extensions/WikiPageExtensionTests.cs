@@ -4,10 +4,8 @@ using TASVideos.Tests.Base;
 namespace TASVideos.Data.Tests.QueryableExtensions;
 
 [TestClass]
-public class WikiPageExtensionTests
+public class WikiPageExtensionTests : TestDbBase
 {
-	private readonly TestDbContext _db = TestDbContext.Create();
-
 	#region ThatAreSubpagesOf
 
 	[TestMethod]

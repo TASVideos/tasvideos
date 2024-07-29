@@ -4,10 +4,8 @@ using TASVideos.Tests.Base;
 namespace TASVideos.Data.Tests.Context;
 
 [TestClass]
-public class ApplicationDbContextTests
+public class ApplicationDbContextTests : TestDbBase
 {
-	private readonly TestDbContext _db = TestDbContext.Create();
-
 	[TestMethod]
 	public async Task CreateTimestamp_SetToNow_IfNotProvided()
 	{
