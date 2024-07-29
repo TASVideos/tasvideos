@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using TASVideos.Pages;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages;
 
 [TestClass]
-public class BasePageModelTests
+public class BasePageModelTests : TestDbBase
 {
 	protected static PageContext TestPageContext()
 	{

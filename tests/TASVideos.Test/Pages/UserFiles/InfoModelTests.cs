@@ -8,15 +8,13 @@ using TASVideos.Tests.Base;
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
 [TestClass]
-public class InfoModelTests
+public class InfoModelTests : TestDbBase
 {
 	private readonly InfoModel _page;
-	private readonly TestDbContext _db;
 
 	public InfoModelTests()
 	{
 		var fileService = Substitute.For<IFileService>();
-		_db = TestDbContext.Create();
 		_page = new InfoModel(_db, fileService);
 	}
 
