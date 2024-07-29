@@ -4,17 +4,15 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class LanguagesTests
+public class LanguagesTests : TestDbBase
 {
 	private const string SystemLanguageMarkup = "FR:French,ES:Español";
 
-	private readonly TestDbContext _db;
 	private readonly IWikiPages _wikiPages;
 	private readonly Languages _languages;
 
 	public LanguagesTests()
 	{
-		_db = TestDbContext.Create();
 		_wikiPages = Substitute.For<IWikiPages>();
 		_languages = new Languages(_db, _wikiPages, new NoCacheService());
 	}

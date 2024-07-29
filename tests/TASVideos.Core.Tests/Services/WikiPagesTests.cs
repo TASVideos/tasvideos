@@ -4,15 +4,13 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class WikiPagesTests
+public class WikiPagesTests : TestDbBase
 {
 	private readonly WikiPages _wikiPages;
-	private readonly TestDbContext _db;
 	private readonly WikiTestCache _cache;
 
 	public WikiPagesTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new WikiTestCache();
 		_wikiPages = new WikiPages(_db, _cache);
 	}

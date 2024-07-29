@@ -4,18 +4,16 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class TASVideoAgentTests
+public class TASVideoAgentTests : TestDbBase
 {
 	private const int SubmissionId = 1;
 	private const string SubmissionTitle = "Test Title";
 	private const int PublicationId = 1;
 
 	private readonly TASVideoAgent _tasVideoAgent;
-	private readonly TestDbContext _db;
 
 	public TASVideoAgentTests()
 	{
-		_db = TestDbContext.Create();
 		var mockForumService = Substitute.For<IForumService>();
 		_tasVideoAgent = new TASVideoAgent(_db, mockForumService);
 	}

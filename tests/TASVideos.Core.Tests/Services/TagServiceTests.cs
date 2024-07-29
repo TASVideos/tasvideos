@@ -3,15 +3,13 @@
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class TagServiceTests
+public class TagServiceTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly TagService _tagService;
 
 	public TagServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_tagService = new TagService(_db, _cache);
 	}

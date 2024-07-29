@@ -6,16 +6,14 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class TopicWatcherTests
+public class TopicWatcherTests : TestDbBase
 {
 	private readonly IEmailService _mockEmailService;
-	private readonly TestDbContext _db;
 
 	private readonly TopicWatcher _topicWatcher;
 
 	public TopicWatcherTests()
 	{
-		_db = TestDbContext.Create();
 		_mockEmailService = Substitute.For<IEmailService>();
 		var settings = new AppSettings
 		{

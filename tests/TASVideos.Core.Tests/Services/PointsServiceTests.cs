@@ -3,15 +3,13 @@
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class PointsServiceTests
+public class PointsServiceTests : TestDbBase
 {
 	private readonly PointsService _pointsService;
-	private readonly TestDbContext _db;
 	private static string Author => "Player";
 
 	public PointsServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_pointsService = new PointsService(_db, new NoCacheService());
 	}
 

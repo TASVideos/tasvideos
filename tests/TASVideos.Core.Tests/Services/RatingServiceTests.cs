@@ -4,14 +4,12 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class RatingServiceTests
+public class RatingServiceTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly RatingService _ratingService;
 
 	public RatingServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_ratingService = new RatingService(_db);
 	}
 

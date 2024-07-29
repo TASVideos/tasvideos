@@ -4,16 +4,14 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class TASVideosGrueTests
+public class TASVideosGrueTests : TestDbBase
 {
 	private const int SubmissionId = 1;
 
 	private readonly TASVideosGrue _tasVideosGrue;
-	private readonly TestDbContext _db;
 
 	public TASVideosGrueTests()
 	{
-		_db = TestDbContext.Create();
 		var mockForumService = Substitute.For<IForumService>();
 		_tasVideosGrue = new TASVideosGrue(_db, mockForumService);
 	}

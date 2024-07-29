@@ -9,9 +9,8 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public sealed class UserManagerTests : IDisposable
+public sealed class UserManagerTests : TestDbBase, IDisposable
 {
-	private readonly TestDbContext _db;
 	private readonly ITASVideoAgent _tasVideoAgent;
 	private readonly IWikiPages _wikiPages;
 
@@ -19,7 +18,6 @@ public sealed class UserManagerTests : IDisposable
 
 	public UserManagerTests()
 	{
-		_db = TestDbContext.Create();
 		_tasVideoAgent = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		_userManager = new UserManager(

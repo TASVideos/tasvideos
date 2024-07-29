@@ -4,16 +4,14 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class ForumServiceTests
+public class ForumServiceTests : TestDbBase
 {
 	private readonly ForumService _forumService;
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly ITopicWatcher _topicWatcher;
 
 	public ForumServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_topicWatcher = Substitute.For<ITopicWatcher>();
 		_forumService = new ForumService(_db, _cache, _topicWatcher);

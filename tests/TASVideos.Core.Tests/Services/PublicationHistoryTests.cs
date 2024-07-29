@@ -4,10 +4,9 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class PublicationHistoryTests
+public class PublicationHistoryTests : TestDbBase
 {
 	private readonly PublicationHistory _publicationHistory;
-	private readonly TestDbContext _db;
 
 	#region Test Data
 	private static readonly PublicationClass PublicationClass = new() { Id = 1 };
@@ -75,7 +74,6 @@ public class PublicationHistoryTests
 
 	public PublicationHistoryTests()
 	{
-		_db = TestDbContext.Create();
 		_publicationHistory = new PublicationHistory(_db);
 	}
 

@@ -12,11 +12,10 @@ using static TASVideos.Data.Entity.SubmissionStatus;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class QueueServiceTests
+public class QueueServiceTests : TestDbBase
 {
 	private const int MinimumHoursBeforeJudgment = 72;
 	private readonly QueueService _queueService;
-	private readonly TestDbContext _db;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
 	private readonly IWikiPages _wikiPages;
@@ -33,7 +32,6 @@ public class QueueServiceTests
 
 	public QueueServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_youtubeSync = Substitute.For<IYoutubeSync>();
 		_tva = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();

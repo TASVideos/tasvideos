@@ -3,14 +3,12 @@
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class PublicationMaintenanceLoggerTests
+public class PublicationMaintenanceLoggerTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly PublicationMaintenanceLogger _publicationMaintenanceLogger;
 
 	public PublicationMaintenanceLoggerTests()
 	{
-		_db = TestDbContext.Create();
 		_publicationMaintenanceLogger = new PublicationMaintenanceLogger(_db);
 	}
 

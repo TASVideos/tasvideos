@@ -4,17 +4,15 @@ using TASVideos.Data.Entity.Awards;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class AwardsTests
+public class AwardsTests : TestDbBase
 {
 	private readonly Awards _awards;
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 
 	private static readonly int CurrentYear = DateTime.UtcNow.Year;
 
 	public AwardsTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_awards = new Awards(_db, _cache);
 	}

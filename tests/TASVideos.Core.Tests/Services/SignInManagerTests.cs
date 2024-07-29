@@ -9,16 +9,15 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public sealed class SignInManagerTests
+public sealed class SignInManagerTests : TestDbBase
 {
 	private readonly SignInManager _signInManager;
 
 	public SignInManagerTests()
 	{
-		var db = TestDbContext.Create();
 		var identityOptions = Substitute.For<IOptions<IdentityOptions>>();
 		var userManager = new UserManager(
-			db,
+			_db,
 			new TestCache(),
 			Substitute.For<IPointsService>(),
 			Substitute.For<ITASVideoAgent>(),
@@ -34,7 +33,7 @@ public sealed class SignInManagerTests
 			Substitute.For<ILogger<UserManager<User>>>());
 
 		_signInManager = new SignInManager(
-			db,
+			_db,
 			userManager,
 			Substitute.For<IHttpContextAccessor>(),
 			Substitute.For<IUserClaimsPrincipalFactory<User>>(),

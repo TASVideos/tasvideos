@@ -6,9 +6,8 @@ using TASVideos.MovieParsers.Result;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class UserFilesTests
+public class UserFilesTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly IFileService _fileService;
 	private readonly IMovieParser _parser;
 	private readonly IWikiPages _wikiPages;
@@ -16,7 +15,6 @@ public class UserFilesTests
 
 	public UserFilesTests()
 	{
-		_db = TestDbContext.Create();
 		_parser = Substitute.For<IMovieParser>();
 		_fileService = Substitute.For<IFileService>();
 		_wikiPages = Substitute.For<IWikiPages>();
