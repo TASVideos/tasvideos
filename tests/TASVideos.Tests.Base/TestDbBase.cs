@@ -27,6 +27,7 @@ public class TestDbBase
 
 	public static TestDbContext Create()
 	{
+		AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
 			.UseNpgsql(connectionString)
 			.UseSnakeCaseNamingConvention()
