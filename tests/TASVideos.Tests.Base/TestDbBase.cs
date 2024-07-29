@@ -12,6 +12,7 @@ public class TestDbBase
 
 	private static IDbContextTransaction? _transaction;
 	private static bool isInitialized = false;
+	private static string? connectionString;
 
 	public TestDbBase()
 	{
@@ -19,9 +20,13 @@ public class TestDbBase
 		_transaction = _db.Database.BeginTransaction();
 	}
 
+	public static void AssemblyInit(TestContext context)
+	{
+		connectionString = context.Properties["PostgresTestsConnection"]?.ToString();
+	}
+
 	public static TestDbContext Create()
 	{
-		string connectionString = "Host=127.0.0.1;Port=5432;Database=TASVideosTests;User Id=postgres;Password=postgres;Include Error Detail=true";
 		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
 			.UseNpgsql(connectionString)
 			.UseSnakeCaseNamingConvention()

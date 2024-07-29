@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <TestRunParameters>
+    <Parameter name="PostgresTestsConnection" value="Host=127.0.0.1;Port=5432;Database=TASVideosTests;User Id=postgres;Password=postgres;Include Error Detail=true" />
+  </TestRunParameters>
+</RunSettings>
