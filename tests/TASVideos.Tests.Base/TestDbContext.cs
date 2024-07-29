@@ -21,24 +21,10 @@ public class TestDbContext : ApplicationDbContext
 	private bool _dbConcurrentUpdateConflict;
 	private bool _dbUpdateConflict;
 
-	private TestDbContext(DbContextOptions<ApplicationDbContext> options, TestHttpContextAccessor httpContextAccessor)
+	public TestDbContext(DbContextOptions<ApplicationDbContext> options, TestHttpContextAccessor httpContextAccessor)
 		: base(options, httpContextAccessor)
 	{
 		_testHttpContext = httpContextAccessor;
-	}
-
-	public static TestDbContext Create()
-	{
-		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-			.UseInMemoryDatabase("TestDb")
-			.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-			.EnableSensitiveDataLogging()
-			.Options;
-
-		var testHttpContext = new TestHttpContextAccessor();
-		var db = new TestDbContext(options, testHttpContext);
-		db.Database.EnsureDeleted();
-		return db;
 	}
 
 	/// <summary>
@@ -104,7 +90,7 @@ public class TestDbContext : ApplicationDbContext
 		return Users.Add(user);
 	}
 
-	private class TestHttpContextAccessor : IHttpContextAccessor
+	public class TestHttpContextAccessor : IHttpContextAccessor
 	{
 		public HttpContext? HttpContext { get; set; } = new DefaultHttpContext();
 	}
