@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Npgsql;
 using TASVideos.Data;
 
 namespace TASVideos.Tests.Base;
@@ -22,7 +24,10 @@ public class TestDbBase
 
 	public static void AssemblyInit(TestContext context)
 	{
-		connectionString = context.Properties["PostgresTestsConnection"]?.ToString();
+		var contextConnectionString = context.Properties["PostgresTestsConnection"]?.ToString();
+		var builder = new NpgsqlConnectionStringBuilder(contextConnectionString);
+		builder.Database += "-" + Assembly.GetCallingAssembly().GetName().Name;
+		connectionString = builder.ToString();
 	}
 
 	public static TestDbContext Create()
