@@ -68,9 +68,9 @@ public class ClassServiceTests : TestDbBase
 	public async Task InUse_Exists_ReturnsFalse()
 	{
 		const int classId = 1;
-		const int publicationId = 1;
-		_db.PublicationClasses.Add(new PublicationClass { Id = classId });
-		_db.Publications.Add(new Publication { Id = publicationId, PublicationClassId = classId });
+		var publicationClass = new PublicationClass { Id = classId };
+		_db.PublicationClasses.Add(publicationClass);
+		_db.AddPublication(publicationClass);
 		await _db.SaveChangesAsync();
 
 		var result = await _classService.InUse(classId);
@@ -97,7 +97,7 @@ public class ClassServiceTests : TestDbBase
 		Assert.AreEqual(ClassEditResult.Success, result);
 		Assert.AreEqual(identity + 1, id);
 		Assert.AreEqual(2, _db.PublicationClasses.Count());
-		var savedClass = _db.PublicationClasses.Last();
+		var savedClass = _db.PublicationClasses.OrderBy(pc => pc.Id).Last();
 		Assert.AreEqual(identity + 1, savedClass.Id);
 		Assert.AreEqual(publicationClass.Name, savedClass.Name);
 		Assert.AreEqual(publicationClass.IconPath, savedClass.IconPath);
@@ -222,11 +222,10 @@ public class ClassServiceTests : TestDbBase
 	public async Task Delete_InUse_FlushesNotCache()
 	{
 		const int classId = 1;
-		const int publicationId = 1;
 		var publicationClass = new PublicationClass { Id = classId };
 		_db.PublicationClasses.Add(publicationClass);
 		_cache.Set(ClassService.ClassesKey, new object());
-		_db.Publications.Add(new Publication { Id = publicationId, PublicationClassId = classId });
+		_db.AddPublication(publicationClass);
 		await _db.SaveChangesAsync();
 
 		var result = await _classService.Delete(classId);

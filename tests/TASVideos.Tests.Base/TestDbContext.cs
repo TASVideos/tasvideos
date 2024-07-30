@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Tests.Base;
 
@@ -88,6 +90,61 @@ public class TestDbContext : ApplicationDbContext
 		};
 
 		return Users.Add(user);
+	}
+
+	public EntityEntry<Publication> AddPublication(User? author = null, PublicationClass? publicationClass = null)
+	{
+		var gameSystemId = (GameSystems.Max(gs => (int?)gs.Id) ?? -1) + 1;
+		var gameSystem = new GameSystem() { Id = gameSystemId, Code = gameSystemId.ToString() };
+		GameSystems.Add(gameSystem);
+		var systemFrameRate = new GameSystemFrameRate() { GameSystemId = gameSystem.Id };
+		GameSystemFrameRates.Add(systemFrameRate);
+		var game = new Game();
+		Games.Add(game);
+		var gameVersion = new GameVersion() { Game = game };
+		GameVersions.Add(gameVersion);
+		var publicationClassId = (PublicationClasses.Max(pc => (int?)pc.Id) ?? -1) + 1;
+		publicationClass ??= new PublicationClass() { Id = publicationClassId, Name = publicationClassId.ToString() };
+		PublicationClasses.Add(publicationClass);
+		author ??= AddUser(0).Entity;
+		var submission = new Submission()
+		{
+			Submitter = author,
+		};
+		Submissions.Add(submission);
+		SaveChanges();
+
+		var pub = new Publication
+		{
+			Title = "Test Publication",
+			SystemFrameRate = systemFrameRate,
+			Game = game,
+			GameVersion = gameVersion,
+			PublicationClass = publicationClass,
+			Submission = submission,
+			MovieFileName = submission.Id.ToString(),
+		};
+		PublicationAuthors.Add(new PublicationAuthor { Author = author, Publication = pub });
+		return Publications.Add(pub);
+	}
+
+	public EntityEntry<Publication> AddPublication(User author)
+	{
+		return AddPublication(author, null);
+	}
+
+	public EntityEntry<Publication> AddPublication(PublicationClass publicationClass)
+	{
+		return AddPublication(null, publicationClass);
+	}
+
+	public EntityEntry<ForumTopic> AddTopic()
+	{
+		var user = AddUser("TestUser").Entity;
+		var forumCategory = new ForumCategory();
+		var forum = new Forum() { Category = forumCategory };
+		var topic = new ForumTopic() { Forum = forum, Poster = user };
+		return ForumTopics.Add(topic);
 	}
 
 	public class TestHttpContextAccessor : IHttpContextAccessor

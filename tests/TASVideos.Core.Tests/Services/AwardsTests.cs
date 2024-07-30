@@ -429,15 +429,7 @@ public class AwardsTests : TestDbBase
 
 	private Publication CreatePublication(User author)
 	{
-		var pub = new Publication { Title = "Test Publication" };
-		_db.Publications.Add(pub);
-		_db.SaveChanges();
-
-		_db.PublicationAuthors.Add(new PublicationAuthor
-		{
-			PublicationId = pub.Id,
-			UserId = author.Id
-		});
+		var pub = _db.AddPublication(author).Entity;
 		_db.SaveChanges();
 
 		return pub;

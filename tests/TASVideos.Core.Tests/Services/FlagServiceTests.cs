@@ -114,7 +114,7 @@ public class FlagServiceTests : TestDbBase
 
 		Assert.AreEqual(FlagEditResult.Success, result);
 		Assert.AreEqual(2, _db.Flags.Count());
-		var savedFlag = _db.Flags.Last();
+		var savedFlag = _db.Flags.OrderBy(f => f.Id).Last();
 		Assert.AreEqual(flag.Name, savedFlag.Name);
 		Assert.AreEqual(flag.IconPath, savedFlag.IconPath);
 		Assert.AreEqual(flag.LinkPath, savedFlag.LinkPath);
