@@ -122,26 +122,26 @@ public class TopicWatcherTests : TestDbBase
 		Assert.IsTrue(_db.ForumTopicWatches.All(w => w.IsNotified));
 	}
 
-	// [TestMethod]
-	// public async Task MarkSeen_IsNotifiedFalse()
-	// {
-	// 	const int userId = 1;
-	// 	const int topicId = 1;
-	// 	_db.AddUser(userId, "_");
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topicId });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch
-	// 	{
-	// 		UserId = userId,
-	// 		ForumTopicId = topicId,
-	// 		IsNotified = true
-	// 	});
-	// 	await _db.SaveChangesAsync();
-	//
-	// 	await _topicWatcher.MarkSeen(topicId, userId);
-	//
-	// 	Assert.AreEqual(1, _db.ForumTopicWatches.Count());
-	// 	Assert.IsFalse(_db.ForumTopicWatches.Single().IsNotified);
-	// }
+	[TestMethod]
+	public async Task MarkSeen_IsNotifiedFalse()
+	{
+		const int userId = 1;
+		const int topicId = 1;
+		_db.AddUser(userId, "_");
+		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch
+		{
+			UserId = userId,
+			ForumTopicId = topicId,
+			IsNotified = true
+		});
+		await _db.SaveChangesAsync();
+
+		await _topicWatcher.MarkSeen(topicId, userId);
+
+		Assert.AreEqual(1, _db.ForumTopicWatches.Count());
+		Assert.IsFalse(_db.ForumTopicWatches.Single().IsNotified);
+	}
 
 	[TestMethod]
 	public async Task WatchTopic_AddsWatch_IfNoneExist()
@@ -191,36 +191,36 @@ public class TopicWatcherTests : TestDbBase
 		Assert.AreEqual(0, _db.ForumTopicWatches.Count());
 	}
 
-	// [TestMethod]
-	// public async Task UnwatchTopic_RemovesTopic()
-	// {
-	// 	const int userId = 1;
-	// 	const int topicId = 1;
-	// 	_db.AddUser(userId, "_");
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topicId });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
-	// 	await _db.SaveChangesAsync();
-	//
-	// 	await _topicWatcher.UnwatchTopic(topicId, userId);
-	//
-	// 	Assert.AreEqual(0, _db.ForumTopicWatches.Count());
-	// }
+	[TestMethod]
+	public async Task UnwatchTopic_RemovesTopic()
+	{
+		const int userId = 1;
+		const int topicId = 1;
+		_db.AddUser(userId, "_");
+		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
+		await _db.SaveChangesAsync();
 
-	// [TestMethod]
-	// public async Task UnwatchAllTopics_RemovesAllTopics()
-	// {
-	// 	const int userId = 1;
-	// 	const int topic1Id = 1;
-	// 	const int topic2Id = 2;
-	// 	_db.AddUser(userId, "_");
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topic1Id });
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topic2Id });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic1Id });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic2Id });
-	// 	await _db.SaveChangesAsync();
-	//
-	// 	await _topicWatcher.UnwatchAllTopics(userId);
-	//
-	// 	Assert.AreEqual(0, _db.ForumTopicWatches.Count());
-	// }
+		await _topicWatcher.UnwatchTopic(topicId, userId);
+
+		Assert.AreEqual(0, _db.ForumTopicWatches.Count());
+	}
+
+	[TestMethod]
+	public async Task UnwatchAllTopics_RemovesAllTopics()
+	{
+		const int userId = 1;
+		const int topic1Id = 1;
+		const int topic2Id = 2;
+		_db.AddUser(userId, "_");
+		_db.ForumTopics.Add(new ForumTopic { Id = topic1Id });
+		_db.ForumTopics.Add(new ForumTopic { Id = topic2Id });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic1Id });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic2Id });
+		await _db.SaveChangesAsync();
+
+		await _topicWatcher.UnwatchAllTopics(userId);
+
+		Assert.AreEqual(0, _db.ForumTopicWatches.Count());
+	}
 }
