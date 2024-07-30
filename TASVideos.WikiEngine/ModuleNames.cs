@@ -38,6 +38,7 @@ public static class ModuleNames
 	public const string PlayerPointsTable = "playerpointstable";
 	public const string PublicationHistory = "publicationhistory";
 	public const string PublicationPoints = "publicationpoints";
+	public const string PublicationsByPlatform = "publicationsbyplatform";
 	public const string Screenshots = "screenshots";
 	public const string SupportedMovieTypes = "supportedmovietypes";
 	public const string TabularMovieList = "tabularmovielist";
