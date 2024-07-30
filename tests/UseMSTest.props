@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<EnableMSTestRunner>true</EnableMSTestRunner>
 		<OutputType>Exe</OutputType>
-    <RunSettingsFilePath>$(MSBuildProjectDirectory)\..\.runsettings</RunSettingsFilePath>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\..\..\.runsettings</RunSettingsFilePath>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="MSTest" />
