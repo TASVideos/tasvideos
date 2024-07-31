@@ -33,7 +33,8 @@ public class InfoModelTests : TestDbBase
 		const long fileId = 1;
 		const int originalViewCount = 2;
 		byte[] content = [0xFF];
-		_db.UserFiles.Add(new UserFile { Id = fileId, Content = content, Downloads = originalViewCount });
+		var user = _db.AddUser(0).Entity;
+		_db.UserFiles.Add(new UserFile { Id = fileId, Content = content, Downloads = originalViewCount, Author = user });
 		await _db.SaveChangesAsync();
 		_page.Id = fileId;
 

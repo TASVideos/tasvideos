@@ -1,4 +1,5 @@
-﻿using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.Email;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Core.Tests.Services;
@@ -9,65 +10,119 @@ public class PublicationHistoryTests : TestDbBase
 	private readonly PublicationHistory _publicationHistory;
 
 	#region Test Data
-	private static readonly PublicationClass PublicationClass = new() { Id = 1 };
-	private static Game Smb => new() { Id = 1 };
-	private static Game Smb2j => new() { Id = 2 };
+	private readonly PublicationClass _publicationClass = new() { Id = 1 };
+	private readonly GameSystem _gameSystem = new() { Id = 1 };
+	private Game Smb => new() { Id = 1, DisplayName = "Smb" };
+	private GameVersion SmbGameVersion => new() { GameId = Smb.Id, System = _gameSystem };
+	private Game Smb2j => new() { Id = 2, DisplayName = "Smb2j" };
+	private GameVersion Smb2jGameVersion => new() { GameId = Smb2j.Id, System = _gameSystem };
+	private GameSystemFrameRate GameSystemFrameRate => new() { GameSystemId = _gameSystem.Id };
+	private int _nextUserId = 1;
+	private Submission Submission
+	{
+		get
+		{
+			var submission = new Submission()
+			{
+				Submitter = new User
+				{
+					Id = _nextUserId,
+					UserName = "TestUser" + _nextUserId,
+					NormalizedUserName = ("TestUser" + _nextUserId).ToUpper(),
+					Email = "TestUser" + _nextUserId + "@example.com",
+					NormalizedEmail = ("TestUser" + _nextUserId + "@example.com").ToUpper()
+				}
+			};
+			_nextUserId++;
+			return submission;
+		}
+	}
 
-	private static Publication SmbWarps => new()
+	private Publication SmbWarps => new()
 	{
 		Id = 1,
 		GameId = Smb.Id,
 		Title = "Smb in less than 5 minutes",
-		GameGoal = new GameGoal { DisplayName = "Warps" },
-		PublicationClass = PublicationClass
+		GameGoal = new GameGoal { DisplayName = "Warps", GameId = Smb.Id },
+		PublicationClass = _publicationClass,
+		GameVersion = SmbGameVersion,
+		SystemFrameRate = GameSystemFrameRate,
+		Submission = Submission,
+		MovieFileName = Smb.DisplayName + "1",
+		SystemId = _gameSystem.Id,
 	};
 
-	private static Publication SmbWarpsObsolete => new()
+	private Publication SmbWarpsObsolete => new()
 	{
 		Id = 2,
 		GameId = Smb.Id,
 		Title = "Smb in 5 minutes",
-		GameGoal = new GameGoal { DisplayName = "Warps" },
+		GameGoal = new GameGoal { DisplayName = "Warps", GameId = Smb.Id },
 		ObsoletedById = SmbWarps.Id,
-		PublicationClass = PublicationClass
+		PublicationClass = _publicationClass,
+		GameVersion = SmbGameVersion,
+		SystemFrameRate = GameSystemFrameRate,
+		Submission = Submission,
+		MovieFileName = Smb.DisplayName + "2",
+		SystemId = _gameSystem.Id,
 	};
 
-	private static Publication SmbWarpsObsoleteObsolete => new()
+	private Publication SmbWarpsObsoleteObsolete => new()
 	{
 		Id = 3,
 		GameId = Smb.Id,
 		Title = "Smb in 5.5 minutes",
-		GameGoal = new GameGoal { DisplayName = "Warps" },
+		GameGoal = new GameGoal { DisplayName = "Warps", GameId = Smb.Id },
 		ObsoletedById = SmbWarpsObsolete.Id,
-		PublicationClass = PublicationClass
+		PublicationClass = _publicationClass,
+		GameVersion = SmbGameVersion,
+		SystemFrameRate = GameSystemFrameRate,
+		Submission = Submission,
+		MovieFileName = Smb.DisplayName + "3",
+		SystemId = _gameSystem.Id,
 	};
 
-	private static Publication SmbWarpsObsoleteGoal => new()
+	private Publication SmbWarpsObsoleteGoal => new()
 	{
 		Id = 4,
 		GameId = Smb.Id,
 		Title = "Smb in 6 minutes without using glitches",
-		GameGoal = new GameGoal { DisplayName = "Warps" },
+		GameGoal = new GameGoal { DisplayName = "Warps", GameId = Smb.Id },
 		ObsoletedById = SmbWarps.Id,
-		PublicationClass = PublicationClass
+		PublicationClass = _publicationClass,
+		GameVersion = SmbGameVersion,
+		SystemFrameRate = GameSystemFrameRate,
+		Submission = Submission,
+		MovieFileName = Smb.DisplayName + "4",
+		SystemId = _gameSystem.Id,
 	};
 
-	private static Publication SmbWarpless => new()
+	private Publication SmbWarpless => new()
 	{
 		Id = 10,
 		GameId = Smb.Id,
 		Title = "Smb in about 20 minutes",
-		GameGoal = new GameGoal { DisplayName = "No Warps" },
-		PublicationClass = PublicationClass
+		GameGoal = new GameGoal { DisplayName = "No Warps", GameId = Smb.Id },
+		PublicationClass = _publicationClass,
+		GameVersion = SmbGameVersion,
+		SystemFrameRate = GameSystemFrameRate,
+		Submission = Submission,
+		MovieFileName = Smb.DisplayName + "10",
+		SystemId = _gameSystem.Id,
 	};
 
-	private static Publication Smb2jWarps => new()
+	private Publication Smb2jWarps => new()
 	{
 		Id = 20,
 		GameId = Smb2j.Id,
 		Title = "Smb2j in about 8 minutes",
-		GameGoal = new GameGoal { DisplayName = "Warps" },
-		PublicationClass = PublicationClass
+		GameGoal = new GameGoal { DisplayName = "Warps", GameId = Smb2j.Id },
+		PublicationClass = _publicationClass,
+		GameVersion = Smb2jGameVersion,
+		SystemFrameRate = GameSystemFrameRate,
+		Submission = Submission,
+		MovieFileName = Smb2j.DisplayName + "20",
+		SystemId = _gameSystem.Id,
 	};
 
 	#endregion
@@ -110,7 +165,7 @@ public class PublicationHistoryTests : TestDbBase
 	[TestMethod]
 	public async Task ForGame_FiltersByGame()
 	{
-		_db.Add(PublicationClass);
+		_db.Add(_publicationClass);
 		_db.Add(Smb);
 		_db.Add(SmbWarps);
 

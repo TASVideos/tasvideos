@@ -295,17 +295,12 @@ public class QueueServiceTests : TestDbBase
 	[TestMethod]
 	public async Task CanDeleteSubmission_CannotDeleteIfPublished()
 	{
-		const int submissionId = 1;
-		const int publicationId = 2;
-		_db.Submissions.Add(new Submission
-		{
-			Id = 1,
-			PublisherId = publicationId
-		});
-		_db.Publications.Add(new Publication { Id = publicationId });
+		var user = _db.AddUser(0).Entity;
+		var pub = _db.AddPublication().Entity;
+		pub.Submission!.Publisher = user;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.DeleteSubmission(submissionId);
+		var result = await _queueService.CanDeleteSubmission(pub.SubmissionId);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotAllowed, result.Status);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
@@ -315,12 +310,12 @@ public class QueueServiceTests : TestDbBase
 	[TestMethod]
 	public async Task CanDeleteSubmission_Success()
 	{
-		const int submissionId = 1;
+		var sub = _db.AddSubmission().Entity;
 		const string submissionTitle = "Test Submission";
-		_db.Submissions.Add(new Submission { Id = 1, Status = New, Title = submissionTitle });
+		sub.Title = submissionTitle;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.DeleteSubmission(submissionId);
+		var result = await _queueService.CanDeleteSubmission(sub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.Success, result.Status);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
@@ -340,17 +335,12 @@ public class QueueServiceTests : TestDbBase
 	[TestMethod]
 	public async Task DeleteSubmission_CannotDeleteIfPublished()
 	{
-		const int submissionId = 1;
-		const int publicationId = 2;
-		_db.Submissions.Add(new Submission
-		{
-			Id = 1,
-			PublisherId = publicationId
-		});
-		_db.Publications.Add(new Publication { Id = publicationId });
+		var user = _db.AddUser(0).Entity;
+		var pub = _db.AddPublication().Entity;
+		pub.Submission!.Publisher = user;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.DeleteSubmission(submissionId);
+		var result = await _queueService.DeleteSubmission(pub.SubmissionId);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotAllowed, result.Status);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
@@ -361,32 +351,34 @@ public class QueueServiceTests : TestDbBase
 	public async Task DeleteSubmission_Success()
 	{
 		const int submissionId = 1;
-		const int topicId = 2;
 		const int pollId = 3;
 		const string submissionTitle = "Test Submission";
-		var poll = new ForumPoll { Id = pollId, TopicId = topicId };
+		var user = _db.AddUser(0).Entity;
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		var poll = new ForumPoll { Id = pollId, TopicId = topic.Id };
+		_db.ForumPolls.Add(poll);
 		var pollOptions = new ForumPollOption[]
 		{
-			new() { PollId = pollId, Votes = [new()] },
+			new() { PollId = pollId, Votes = [new() { User = user }] },
 			new() { PollId = pollId }
 		};
 		_db.ForumPollOptions.AddRange(pollOptions);
 		poll.PollOptions.AddRange(pollOptions);
-		var topic = new ForumTopic { Id = topicId, PollId = 2, Poll = poll };
+		topic.Poll = poll;
 		_db.Submissions.Add(new Submission
 		{
 			Id = submissionId,
 			Status = New,
 			Title = submissionTitle,
-			TopicId = topicId,
-			Topic = topic
+			TopicId = topic.Id,
+			Topic = topic,
+			Submitter = user,
 		});
 		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory { SubmissionId = submissionId, Status = New });
-		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = 1 });
-		_db.ForumTopics.Add(topic);
-		_db.ForumPolls.Add(poll);
-		var post1 = new ForumPost { Topic = topic, TopicId = topicId, Text = "1" };
-		var post2 = new ForumPost { Topic = topic, TopicId = topicId, Text = "2" };
+		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = user.Id });
+		var post1 = new ForumPost { Topic = topic, TopicId = topic.Id, Text = "1", ForumId = topic.ForumId, Poster = user };
+		var post2 = new ForumPost { Topic = topic, TopicId = topic.Id, Text = "2", ForumId = topic.ForumId, Poster = user };
 		_db.ForumPosts.Add(post1);
 		_db.ForumPosts.Add(post2);
 		await _db.SaveChangesAsync();
@@ -420,28 +412,26 @@ public class QueueServiceTests : TestDbBase
 	[TestMethod]
 	public async Task CanUnpublish_CannotUnpublishWithAwards()
 	{
-		const int publicationId = 1;
-		const int awardId = 2;
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationAwards.Add(new PublicationAward { PublicationId = publicationId, AwardId = awardId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAwards.Add(new PublicationAward { Publication = pub, Award = new Award() });
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.CanUnpublish(publicationId);
+		var result = await _queueService.CanUnpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
 		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
-		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
 	}
 
 	[TestMethod]
 	public async Task CanUnpublish_Success()
 	{
-		const int publicationId = 1;
+		var pub = _db.AddPublication().Entity;
 		const string publicationTitle = "Test Publication";
-		_db.Publications.Add(new Publication { Id = publicationId, Title = publicationTitle });
+		pub.Title = publicationTitle;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.CanUnpublish(publicationId);
+		var result = await _queueService.CanUnpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));

@@ -85,10 +85,9 @@ public class FlagServiceTests : TestDbBase
 	public async Task InUse_Exists_ReturnsFalse()
 	{
 		const int flagId = 1;
-		const int publicationId = 1;
 		_db.Flags.Add(new Flag { Id = flagId });
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = flagId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, FlagId = flagId });
 		await _db.SaveChangesAsync();
 
 		var result = await _flagService.InUse(flagId);
@@ -238,12 +237,11 @@ public class FlagServiceTests : TestDbBase
 	public async Task Delete_InUse_FlushesNotCache()
 	{
 		const int flagId = 1;
-		const int publicationId = 1;
 		var flag = new Flag { Id = flagId };
 		_db.Flags.Add(flag);
 		_cache.Set(FlagService.FlagsKey, new object());
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = flagId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, FlagId = flagId });
 		await _db.SaveChangesAsync();
 
 		var result = await _flagService.Delete(flagId);
