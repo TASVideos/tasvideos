@@ -18,7 +18,7 @@ public class WikiPageExtensionTests : TestDbBase
 			new WikiPage { PageName = "Parent1" },
 			new WikiPage { PageName = "Parent2" },
 			new WikiPage { PageName = "Parent2/Child1" },
-			new WikiPage { PageName = "Parent2/Child1" }
+			new WikiPage { PageName = "Parent2/Child2" }
 		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();
