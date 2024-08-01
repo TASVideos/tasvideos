@@ -46,6 +46,11 @@ public class TestDbBase
 		{
 			db.Database.EnsureDeleted();
 			db.Database.EnsureCreated();
+
+			// We have constant Forum IDs required by parts of our code, but the Test Database doesn't know about this and starts its IDs at 0.
+			// This causes us to eventually run into duplicate IDs. As a workaround, we increase the starting ID to 100.
+			db.Database.ExecuteSqlRaw($"ALTER SEQUENCE forums_id_seq RESTART WITH 100;");
+
 			isInitialized = true;
 		}
 
