@@ -23,17 +23,17 @@ public class RatingServiceTests : TestDbBase
 	[TestMethod]
 	public async Task GetUserRatingForPublication_ReturnsRating()
 	{
-		const int pubId = 1;
 		const string userName = "User";
 		const double rating = 5.5;
-		_db.Publications.Add(new Publication { Id = pubId });
+		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
 		var user = _db.AddUser(userName).Entity;
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = 1, User = user, Value = rating });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user, Value = rating });
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.GetUserRatingForPublication(user.Id, pubId);
+		var actual = await _ratingService.GetUserRatingForPublication(user.Id, pub.Id);
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(pubId, actual.PublicationId);
+		Assert.AreEqual(pub.Id, actual.PublicationId);
 		Assert.AreEqual(user.Id, actual.UserId);
 		Assert.AreEqual(rating, actual.Value);
 	}
@@ -41,19 +41,19 @@ public class RatingServiceTests : TestDbBase
 	[TestMethod]
 	public async Task GetRatingsForPublication_ReturnsCorrectRatings()
 	{
-		const int pubId = 1;
 		const string userName1 = "User 1";
 		const string userName2 = "User 2";
 
 		var user1 = _db.AddUser(userName1).Entity;
 		var user2 = _db.AddUser(userName2).Entity;
-		_db.Publications.Add(new Publication { Id = pubId });
-
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user1, Value = 1 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user2, Value = 2 });
+		var pub = _db.AddPublication().Entity;
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.GetRatingsForPublication(pubId);
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user1, Value = 1 });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user2, Value = 2 });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetRatingsForPublication(pub.Id);
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(actual.Count, 2);
@@ -71,102 +71,101 @@ public class RatingServiceTests : TestDbBase
 	[TestMethod]
 	public async Task GetOverallRatingForPublication_PublicationWithNoRatings_ReturnsZero()
 	{
-		const int pubId = 1;
-		_db.Publications.Add(new Publication { Id = pubId });
+		var pub = _db.AddPublication().Entity;
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.GetOverallRatingForPublication(pubId);
+		var actual = await _ratingService.GetOverallRatingForPublication(pub.Id);
 		Assert.AreEqual(0, actual);
 	}
 
 	[TestMethod]
 	public async Task GetOverallRatingForPublication_ReturnsCorrectAverage()
 	{
-		const int pubId = 1;
 		const string userName1 = "User 1";
 		const string userName2 = "User 2";
 
 		var user1 = _db.AddUser(userName1).Entity;
 		var user2 = _db.AddUser(userName2).Entity;
-		_db.Publications.Add(new Publication { Id = pubId });
-
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user1, Value = 1 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user2, Value = 9 });
+		var pub = _db.AddPublication().Entity;
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.GetOverallRatingForPublication(pubId);
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user1, Value = 1 });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user2, Value = 9 });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetOverallRatingForPublication(pub.Id);
 		Assert.AreEqual(5, actual);
 	}
 
 	[TestMethod]
 	public async Task GetOverallRatingForPublication_DoesNotUseAuthorRatings()
 	{
-		const int pubId = 1;
 		const string userName1 = "User 1";
 		const string userName2 = "User 2";
 
 		var user1 = _db.AddUser(userName1).Entity;
 		var user2 = _db.AddUser(userName2).Entity;
-		_db.Publications.Add(new Publication { Id = pubId });
-		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = user2.Id, PublicationId = pubId });
+		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
+		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = user2.Id, PublicationId = pub.Id });
 
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user1, Value = 1 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user2, Value = 9 });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user1, Value = 1 });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user2, Value = 9 });
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.GetOverallRatingForPublication(pubId);
+		var actual = await _ratingService.GetOverallRatingForPublication(pub.Id);
 		Assert.AreEqual(1, actual);
 	}
 
 	[TestMethod]
 	public async Task GetOverallRatingForPublication_DoesNotUseIfUserDoesNotHaveUseRatings()
 	{
-		const int pubId = 1;
 		const string userName1 = "User 1";
 		const string userName2 = "User 2";
 
 		var user1 = _db.AddUser(userName1).Entity;
 		var user2 = _db.AddUser(userName2).Entity;
 		user2.UseRatings = false;
-		_db.Publications.Add(new Publication { Id = pubId });
-
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user1, Value = 1 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pubId, User = user2, Value = 9 });
+		var pub = _db.AddPublication().Entity;
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.GetOverallRatingForPublication(pubId);
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user1, Value = 1 });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user2, Value = 9 });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetOverallRatingForPublication(pub.Id);
 		Assert.AreEqual(1, actual);
 	}
 
 	[TestMethod]
 	public async Task UpdateUserRating_RatingHasValueAndUserAlreadyRated_UpdatesRating()
 	{
-		const int pubId = 1;
 		const string userName = "User";
 		const double rating = 5.5;
-		_db.Publications.Add(new Publication { Id = pubId });
+		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
 		var user = _db.AddUser(userName).Entity;
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = 1, User = user, Value = rating });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user, Value = rating });
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.UpdateUserRating(user.Id, pubId, rating + 1);
+		var actual = await _ratingService.UpdateUserRating(user.Id, pub.Id, rating + 1);
 		Assert.AreEqual(SaveResult.Success, actual);
-		var savedRating = _db.PublicationRatings.Single(pr => pr.PublicationId == pubId);
+		var savedRating = _db.PublicationRatings.Single(pr => pr.PublicationId == pub.Id);
 		Assert.AreEqual(rating + 1, savedRating.Value);
 	}
 
 	[TestMethod]
 	public async Task UpdateUserRating_RatingIsNullAndUserAlreadyRated_RemovesRating()
 	{
-		const int pubId = 1;
 		const string userName = "User";
 		const double rating = 5.5;
-		_db.Publications.Add(new Publication { Id = pubId });
+		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
 		var user = _db.AddUser(userName).Entity;
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = 1, User = user, Value = rating });
+		_db.PublicationRatings.Add(new PublicationRating { PublicationId = pub.Id, User = user, Value = rating });
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.UpdateUserRating(user.Id, pubId, null);
+		var actual = await _ratingService.UpdateUserRating(user.Id, pub.Id, null);
 		Assert.AreEqual(SaveResult.Success, actual);
 		Assert.AreEqual(0, _db.PublicationRatings.Count());
 	}
@@ -174,28 +173,26 @@ public class RatingServiceTests : TestDbBase
 	[TestMethod]
 	public async Task UpdateUserRating_UserNotYetRated_AddsRatingAndRoundsIt()
 	{
-		const int pubId = 1;
 		const string userName = "User";
-		_db.Publications.Add(new Publication { Id = pubId });
+		var pub = _db.AddPublication().Entity;
 		var user = _db.AddUser(userName).Entity;
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.UpdateUserRating(user.Id, pubId, 5.222);
+		var actual = await _ratingService.UpdateUserRating(user.Id, pub.Id, 5.222);
 		Assert.AreEqual(SaveResult.Success, actual);
-		var savedRating = _db.PublicationRatings.Single(pr => pr.PublicationId == pubId);
+		var savedRating = _db.PublicationRatings.Single(pr => pr.PublicationId == pub.Id);
 		Assert.AreEqual(5.2, savedRating.Value);
 	}
 
 	[TestMethod]
 	public async Task UpdateUserRating_UserNotYetRatedAndRatingIsNull_SavesNothing()
 	{
-		const int pubId = 1;
 		const string userName = "User";
-		_db.Publications.Add(new Publication { Id = pubId });
+		var pub = _db.AddPublication().Entity;
 		var user = _db.AddUser(userName).Entity;
 		await _db.SaveChangesAsync();
 
-		var actual = await _ratingService.UpdateUserRating(user.Id, pubId, null);
+		var actual = await _ratingService.UpdateUserRating(user.Id, pub.Id, null);
 		Assert.AreEqual(SaveResult.Success, actual);
 		Assert.AreEqual(0, _db.PublicationRatings.Count());
 	}
@@ -213,7 +210,7 @@ public class RatingServiceTests : TestDbBase
 		const string userName = "a";
 		var user = _db.AddUser(userName);
 		user.Entity.PublicRatings = false;
-		var pub = _db.Publications.Add(new Publication());
+		var pub = _db.AddPublication();
 		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = 1.0 });
 		await _db.SaveChangesAsync();
 
@@ -231,7 +228,7 @@ public class RatingServiceTests : TestDbBase
 		var user = _db.AddUser(userName);
 		user.Entity.PublicRatings = false;
 		const double ratingValue = 1.0;
-		var pub = _db.Publications.Add(new Publication());
+		var pub = _db.AddPublication();
 		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = ratingValue });
 		await _db.SaveChangesAsync();
 
@@ -252,7 +249,7 @@ public class RatingServiceTests : TestDbBase
 		var user = _db.AddUser(userName);
 		user.Entity.PublicRatings = true;
 		const double ratingValue = 1.0;
-		var pub = _db.Publications.Add(new Publication());
+		var pub = _db.AddPublication();
 		_db.PublicationRatings.Add(new PublicationRating { Publication = pub.Entity, User = user.Entity, Value = ratingValue });
 		await _db.SaveChangesAsync();
 
@@ -271,8 +268,9 @@ public class RatingServiceTests : TestDbBase
 	{
 		const string userName = "a";
 		var user = _db.AddUser(userName);
-		var pub = _db.Publications.Add(new Publication());
-		var obsoletePub = _db.Publications.Add(new Publication { ObsoletedBy = pub.Entity });
+		var pub = _db.AddPublication();
+		var obsoletePub = _db.AddPublication();
+		obsoletePub.Entity.ObsoletedBy = pub.Entity;
 
 		const double ratingValue = 2.0;
 		const double ratingValueForObs = 1.0;
@@ -293,8 +291,9 @@ public class RatingServiceTests : TestDbBase
 	{
 		const string userName = "a";
 		var user = _db.AddUser(userName);
-		var pub = _db.Publications.Add(new Publication());
-		var obsoletePub = _db.Publications.Add(new Publication { ObsoletedBy = pub.Entity });
+		var pub = _db.AddPublication();
+		var obsoletePub = _db.AddPublication();
+		obsoletePub.Entity.ObsoletedBy = pub.Entity;
 
 		const double ratingValue = 2.0;
 		const double ratingValueForObs = 1.0;
