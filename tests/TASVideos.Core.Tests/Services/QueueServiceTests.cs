@@ -451,21 +451,15 @@ public class QueueServiceTests : TestDbBase
 	[TestMethod]
 	public async Task Unpublish_CannotUnpublishWithAwards()
 	{
-		const int publicationId = 1;
-		const int awardId = 2;
-		_db.Publications.Add(new Publication
-		{
-			Id = publicationId,
-			Submission = new Submission { PublisherId = publicationId } // A quirk of InMemoryDatabase, 1:1 relationships need the other object for the .Include() to work
-		});
-		_db.PublicationAwards.Add(new PublicationAward { PublicationId = publicationId, AwardId = awardId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAwards.Add(new PublicationAward { Publication = pub, Award = new Award() });
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.Unpublish(publicationId);
+		var result = await _queueService.Unpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
 		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
-		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
 	}
 
 	[TestMethod]
@@ -473,50 +467,37 @@ public class QueueServiceTests : TestDbBase
 	{
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 
-		const int publicationId = 1;
-		const string publicationTitle = "Test Publication";
+		var user1 = _db.AddUser(0).Entity;
+		var user2 = _db.AddUser(0).Entity;
+		await _db.SaveChangesAsync();
 
-		const int publisherId = 3;
-		const int submissionId = 2;
-		var submission = new Submission
-		{
-			Id = submissionId,
-			Status = Published,
-			PublisherId = publisherId
-		};
-
-		_db.Submissions.Add(submission);
-		_db.Publications.Add(new Publication
-		{
-			Id = publicationId,
-			Title = publicationTitle,
-			Submission = submission,
-			SubmissionId = submissionId
-		});
-		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = publicationId, UserId = 1 });
-		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = publicationId, UserId = 2 });
-		_db.PublicationFiles.Add(new PublicationFile { PublicationId = publicationId });
-		_db.PublicationFiles.Add(new PublicationFile { PublicationId = publicationId });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = 1 });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = 2 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = publicationId, UserId = 1 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = publicationId, UserId = 2 });
-		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 1 });
-		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 2 });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = user1.Id });
+		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = user2.Id });
+		_db.PublicationFiles.Add(new PublicationFile { Publication = pub });
+		_db.PublicationFiles.Add(new PublicationFile { Publication = pub });
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag() { Token = "1" } });
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag() { Token = "2" } });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub, User = user1 });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub, User = user2 });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag() { Code = "1" } });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag() { Code = "2" } });
 		_db.PublicationUrls.Add(new PublicationUrl
 		{
-			PublicationId = publicationId,
+			Publication = pub,
 			Type = PublicationUrlType.Streaming,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 		});
 		await _db.SaveChangesAsync();
+		int publicationId = pub.Id;
+		int submissionId = pub.Submission!.Id;
 
 		var result = await _queueService.Unpublish(publicationId);
 
 		// Result must be correct
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
-		Assert.AreEqual(publicationTitle, result.PublicationTitle);
+		Assert.AreEqual(pub.Title, result.PublicationTitle);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
 
 		// Publication sub-tables must be cleared
@@ -532,7 +513,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsTrue(_db.Submissions.Any(s => s.Id == submissionId));
 
 		var sub = _db.Submissions.Single(s => s.Id == submissionId);
-		Assert.AreEqual(sub.PublisherId, publisherId);
+		Assert.AreEqual(sub.PublisherId, pub.Submission!.PublisherId);
 		Assert.AreEqual(PublicationUnderway, sub.Status);
 
 		// YouTube url should be unlisted
@@ -552,64 +533,29 @@ public class QueueServiceTests : TestDbBase
 	{
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 
-		_db.WikiPages.Add(new WikiPage { Markup = "Test" });
-		var systemEntry = _db.GameSystems.Add(new GameSystem { Code = "Test" });
-		var gameEntry = _db.Games.Add(new Game());
-
-		var authorEntry = _db.AddUser("Author");
-
-		const int publicationId = 1;
-		const string publicationTitle = "Test Publication";
-		const int obsoletedPublicationId = 10;
-
-		const int publisherId = 3;
-		const int submissionId = 2;
-		var submission = new Submission
-		{
-			Id = submissionId,
-			Status = Published,
-			PublisherId = publisherId
-		};
-
-		_db.Submissions.Add(submission);
-
-		_db.Publications.Add(new Publication
-		{
-			Id = obsoletedPublicationId,
-			ObsoletedById = publicationId,
-			SystemId = systemEntry.Entity.Id,
-			GameId = gameEntry.Entity.Id
-		});
-
+		var obsoletedPub = _db.AddPublication().Entity;
 		_db.PublicationUrls.Add(new PublicationUrl
 		{
-			PublicationId = obsoletedPublicationId,
+			Publication = obsoletedPub,
 			Type = PublicationUrlType.Streaming,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 		});
+		var pub = _db.AddPublication().Entity;
 
-		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = obsoletedPublicationId, UserId = authorEntry.Entity.Id });
-
-		_db.Publications.Add(new Publication
-		{
-			Id = publicationId,
-			Title = publicationTitle,
-			Submission = submission,
-			SubmissionId = submissionId
-		});
+		obsoletedPub.ObsoletedBy = pub;
 
 		await _db.SaveChangesAsync();
-		var result = await _queueService.Unpublish(publicationId);
+		var result = await _queueService.Unpublish(pub.Id);
 
 		// Result must be correct
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
-		Assert.AreEqual(publicationTitle, result.PublicationTitle);
+		Assert.AreEqual(pub.Title, result.PublicationTitle);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
 
 		// Obsoleted movie must no longer be obsolete
-		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == obsoletedPublicationId));
-		var obsoletedMovie = _db.Publications.Single(p => p.Id == obsoletedPublicationId);
+		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == obsoletedPub.Id));
+		var obsoletedMovie = _db.Publications.Single(p => p.Id == obsoletedPub.Id);
 		Assert.IsNull(obsoletedMovie.ObsoletedById);
 
 		// Obsoleted movie YouTube url must be synced
@@ -716,33 +662,25 @@ public class QueueServiceTests : TestDbBase
 	public async Task ObsoleteWith_Success()
 	{
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
-		const int pubToObsolete = 1;
-		const int obsoletingPub = 2;
 		const string youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 		const string wikiMarkup = "Test";
-		_db.Publications.Add(new Publication
-		{
-			Id = pubToObsolete,
-			PublicationUrls =
-			[
-				new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl }
-			],
-			System = new GameSystem { Code = "Test" },
-			Game = new Game()
-		});
+		var pubToObsolete = _db.AddPublication().Entity;
+		pubToObsolete.PublicationUrls = [new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl }];
+		var obsoletingPub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
 		_db.WikiPages.Add(new WikiPage
 		{
-			PageName = WikiHelper.ToPublicationWikiPageName(pubToObsolete),
+			PageName = WikiHelper.ToPublicationWikiPageName(pubToObsolete.Id),
 			Markup = wikiMarkup
 		});
 		await _db.SaveChangesAsync();
 
-		var actual = await _queueService.ObsoleteWith(pubToObsolete, obsoletingPub);
+		var actual = await _queueService.ObsoleteWith(pubToObsolete.Id, obsoletingPub.Id);
 
 		Assert.IsTrue(actual);
-		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == pubToObsolete));
-		var actualPub = _db.Publications.Single(p => p.Id == pubToObsolete);
-		Assert.AreEqual(obsoletingPub, actualPub.ObsoletedById);
+		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == pubToObsolete.Id));
+		var actualPub = _db.Publications.Single(p => p.Id == pubToObsolete.Id);
+		Assert.AreEqual(obsoletingPub.Id, actualPub.ObsoletedById);
 
 		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}
