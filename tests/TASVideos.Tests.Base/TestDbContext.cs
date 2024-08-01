@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
@@ -16,18 +15,10 @@ namespace TASVideos.Tests.Base;
 /// Creates a context optimized for unit testing.
 /// Database is in memory, and provides mechanisms for mocking database conflicts.
 /// </summary>
-public class TestDbContext : ApplicationDbContext
+public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestDbContext.TestHttpContextAccessor testHttpContext) : ApplicationDbContext(options, testHttpContext)
 {
-	private readonly IHttpContextAccessor _testHttpContext;
-
 	private bool _dbConcurrentUpdateConflict;
 	private bool _dbUpdateConflict;
-
-	public TestDbContext(DbContextOptions<ApplicationDbContext> options, TestHttpContextAccessor httpContextAccessor)
-		: base(options, httpContextAccessor)
-	{
-		_testHttpContext = httpContextAccessor;
-	}
 
 	/// <summary>
 	/// Simulates a user having logged in.
@@ -37,7 +28,7 @@ public class TestDbContext : ApplicationDbContext
 		var identity = new GenericIdentity(userName);
 		string[] roles = ["TestRole"];
 		var principal = new GenericPrincipal(identity, roles);
-		_testHttpContext.HttpContext!.User = principal;
+		testHttpContext.HttpContext!.User = principal;
 	}
 
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
