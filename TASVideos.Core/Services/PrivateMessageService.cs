@@ -183,7 +183,7 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 		}
 
 		var role = await db.Roles
-			.Where(r => r.Name.Equals(roleName, StringComparison.CurrentCultureIgnoreCase))
+			.Where(r => r.Name == roleName)
 			.SingleOrDefaultAsync();
 
 		if (role is null)
