@@ -36,5 +36,5 @@ function registerShowMore(content) {
     };
 
     show.querySelector('a').onclick = () => false;
-    show.querySelector('a').onclick = () => false;
+    hide.querySelector('a').onclick = () => false;
 }
