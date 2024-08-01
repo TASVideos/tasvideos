@@ -92,6 +92,16 @@ public class TestDbContext : ApplicationDbContext
 		return Users.Add(user);
 	}
 
+	public EntityEntry<Submission> AddSubmission(User? submitter = null)
+	{
+		submitter ??= AddUser(0).Entity;
+		var submission = new Submission()
+		{
+			Submitter = submitter,
+		};
+		return Submissions.Add(submission);
+	}
+
 	public EntityEntry<Publication> AddPublication(User? author = null, PublicationClass? publicationClass = null)
 	{
 		var gameSystemId = (GameSystems.Max(gs => (int?)gs.Id) ?? -1) + 1;
@@ -107,11 +117,8 @@ public class TestDbContext : ApplicationDbContext
 		publicationClass ??= new PublicationClass() { Id = publicationClassId, Name = publicationClassId.ToString() };
 		PublicationClasses.Add(publicationClass);
 		author ??= AddUser(0).Entity;
-		var submission = new Submission()
-		{
-			Submitter = author,
-		};
-		Submissions.Add(submission);
+		var submission = AddSubmission(author).Entity;
+		submission.Status = SubmissionStatus.Published;
 		SaveChanges();
 
 		var pub = new Publication
@@ -138,9 +145,20 @@ public class TestDbContext : ApplicationDbContext
 		return AddPublication(null, publicationClass);
 	}
 
+	public void AddForumConstantEntities()
+	{
+		var forumCategory = new ForumCategory();
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.WorkbenchForumId, Category = forumCategory });
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.PlaygroundForumId, Category = forumCategory });
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.PublishedMoviesForumId, Category = forumCategory });
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.GrueFoodForumId, Category = forumCategory });
+		AddUser(SiteGlobalConstants.TASVideosGrueId);
+		AddUser(SiteGlobalConstants.TASVideoAgentId);
+	}
+
 	public EntityEntry<ForumTopic> AddTopic()
 	{
-		var user = AddUser("TestUser").Entity;
+		var user = AddUser(0).Entity;
 		var forumCategory = new ForumCategory();
 		var forum = new Forum() { Category = forumCategory };
 		var topic = new ForumTopic() { Forum = forum, Poster = user };
