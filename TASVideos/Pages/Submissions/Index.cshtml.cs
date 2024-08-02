@@ -49,7 +49,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		Submissions = new SubmissionPageOf<SubmissionEntry>(entries)
 		{
 			Years = Search.Years,
-			StatusFilter = Search.Statuses,
+			Statuses = Search.Statuses,
 			System = Search.System,
 			GameId = Search.GameId,
 			User = Search.User
@@ -100,7 +100,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public class SubmissionPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
 	{
 		public IEnumerable<int> Years { get; set; } = [];
-		public IEnumerable<SubmissionStatus> StatusFilter { get; set; } = [];
+		public IEnumerable<SubmissionStatus> Statuses { get; set; } = [];
 		public string? System { get; set; }
 		public string? User { get; set; }
 		public string? GameId { get; set; }
