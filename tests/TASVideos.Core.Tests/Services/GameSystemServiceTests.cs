@@ -4,15 +4,13 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class GameSystemServiceTests
+public class GameSystemServiceTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly GameSystemService _systemService;
 
 	public GameSystemServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_systemService = new GameSystemService(_db, _cache);
 	}
@@ -71,9 +69,10 @@ public class GameSystemServiceTests
 	public async Task InUse_PublicationExists_ReturnsTrue()
 	{
 		const int systemId = 1;
-		const int publicationId = 1;
-		_db.GameSystems.Add(new GameSystem { Id = systemId });
-		_db.Publications.Add(new Publication { Id = publicationId, SystemId = systemId });
+		var gameSystem = new GameSystem { Id = systemId };
+		_db.GameSystems.Add(gameSystem);
+		var pub = _db.AddPublication().Entity;
+		pub.System = gameSystem;
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.InUse(systemId);
@@ -84,9 +83,10 @@ public class GameSystemServiceTests
 	public async Task InUse_SubmissionExists_ReturnsTrue()
 	{
 		const int systemId = 1;
-		const int submissionId = 1;
-		_db.GameSystems.Add(new GameSystem { Id = systemId });
-		_db.Submissions.Add(new Submission { Id = submissionId, SystemId = systemId });
+		var gameSystem = new GameSystem { Id = systemId };
+		_db.GameSystems.Add(gameSystem);
+		var sub = _db.AddSubmission().Entity;
+		sub.System = gameSystem;
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.InUse(systemId);
@@ -98,8 +98,10 @@ public class GameSystemServiceTests
 	{
 		const int systemId = 1;
 		const int gameVersionId = 1;
+		var game = new Game();
+		_db.Games.Add(game);
 		_db.GameSystems.Add(new GameSystem { Id = systemId });
-		_db.GameVersions.Add(new GameVersion { Id = gameVersionId, SystemId = systemId });
+		_db.GameVersions.Add(new GameVersion { Id = gameVersionId, SystemId = systemId, Game = game });
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.InUse(systemId);
@@ -112,7 +114,8 @@ public class GameSystemServiceTests
 		const int systemId = 1;
 		const int userFileId = 1;
 		_db.GameSystems.Add(new GameSystem { Id = systemId });
-		_db.UserFiles.Add(new UserFile { Id = userFileId, SystemId = systemId });
+		var user = _db.AddUser(0).Entity;
+		_db.UserFiles.Add(new UserFile { Id = userFileId, SystemId = systemId, Author = user });
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.InUse(systemId);
@@ -129,8 +132,8 @@ public class GameSystemServiceTests
 	[TestMethod]
 	public async Task NextId_Entries_ReturnsNext()
 	{
-		_db.GameSystems.Add(new GameSystem { Id = 1 });
-		_db.GameSystems.Add(new GameSystem { Id = 2 });
+		_db.GameSystems.Add(new GameSystem { Id = 1, Code = "1" });
+		_db.GameSystems.Add(new GameSystem { Id = 2, Code = "2" });
 		await _db.SaveChangesAsync();
 
 		var actual = await _systemService.NextId();
@@ -140,8 +143,8 @@ public class GameSystemServiceTests
 	[TestMethod]
 	public async Task NextId_Gaps_ReturnsNext()
 	{
-		_db.GameSystems.Add(new GameSystem { Id = 1 });
-		_db.GameSystems.Add(new GameSystem { Id = 3 });
+		_db.GameSystems.Add(new GameSystem { Id = 1, Code = "1" });
+		_db.GameSystems.Add(new GameSystem { Id = 3, Code = "3" });
 		await _db.SaveChangesAsync();
 
 		var actual = await _systemService.NextId();
@@ -289,11 +292,11 @@ public class GameSystemServiceTests
 	public async Task Delete_InUse_DoesNotFlushesCache()
 	{
 		const int systemId = 1;
-		const int publicationId = 1;
 		var system = new GameSystem { Id = systemId, Code = "Test" };
 		_db.GameSystems.Add(system);
 		_cache.Set(GameSystemService.SystemsKey, new object());
-		_db.Publications.Add(new Publication { Id = publicationId, SystemId = systemId });
+		var pub = _db.AddPublication().Entity;
+		pub.System = system;
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.Delete(systemId);

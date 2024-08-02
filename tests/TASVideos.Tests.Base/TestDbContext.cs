@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Tests.Base;
 
@@ -14,32 +15,10 @@ namespace TASVideos.Tests.Base;
 /// Creates a context optimized for unit testing.
 /// Database is in memory, and provides mechanisms for mocking database conflicts.
 /// </summary>
-public class TestDbContext : ApplicationDbContext
+public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestDbContext.TestHttpContextAccessor testHttpContext) : ApplicationDbContext(options, testHttpContext)
 {
-	private readonly IHttpContextAccessor _testHttpContext;
-
 	private bool _dbConcurrentUpdateConflict;
 	private bool _dbUpdateConflict;
-
-	private TestDbContext(DbContextOptions<ApplicationDbContext> options, TestHttpContextAccessor httpContextAccessor)
-		: base(options, httpContextAccessor)
-	{
-		_testHttpContext = httpContextAccessor;
-	}
-
-	public static TestDbContext Create()
-	{
-		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-			.UseInMemoryDatabase("TestDb")
-			.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning))
-			.EnableSensitiveDataLogging()
-			.Options;
-
-		var testHttpContext = new TestHttpContextAccessor();
-		var db = new TestDbContext(options, testHttpContext);
-		db.Database.EnsureDeleted();
-		return db;
-	}
 
 	/// <summary>
 	/// Simulates a user having logged in.
@@ -49,7 +28,7 @@ public class TestDbContext : ApplicationDbContext
 		var identity = new GenericIdentity(userName);
 		string[] roles = ["TestRole"];
 		var principal = new GenericPrincipal(identity, roles);
-		_testHttpContext.HttpContext!.User = principal;
+		testHttpContext.HttpContext!.User = principal;
 	}
 
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -104,7 +83,80 @@ public class TestDbContext : ApplicationDbContext
 		return Users.Add(user);
 	}
 
-	private class TestHttpContextAccessor : IHttpContextAccessor
+	public EntityEntry<Submission> AddSubmission(User? submitter = null)
+	{
+		submitter ??= AddUser(0).Entity;
+		var submission = new Submission()
+		{
+			Submitter = submitter,
+		};
+		return Submissions.Add(submission);
+	}
+
+	public EntityEntry<Publication> AddPublication(User? author = null, PublicationClass? publicationClass = null)
+	{
+		var gameSystemId = (GameSystems.Max(gs => (int?)gs.Id) ?? -1) + 1;
+		var gameSystem = new GameSystem() { Id = gameSystemId, Code = gameSystemId.ToString() };
+		GameSystems.Add(gameSystem);
+		var systemFrameRate = new GameSystemFrameRate() { GameSystemId = gameSystem.Id };
+		GameSystemFrameRates.Add(systemFrameRate);
+		var game = new Game();
+		Games.Add(game);
+		var gameVersion = new GameVersion() { Game = game };
+		GameVersions.Add(gameVersion);
+		var publicationClassId = (PublicationClasses.Max(pc => (int?)pc.Id) ?? -1) + 1;
+		publicationClass ??= new PublicationClass() { Id = publicationClassId, Name = publicationClassId.ToString() };
+		PublicationClasses.Add(publicationClass);
+		author ??= AddUser(0).Entity;
+		var submission = AddSubmission(author).Entity;
+		submission.Status = SubmissionStatus.Published;
+		SaveChanges();
+
+		var pub = new Publication
+		{
+			Title = "Test Publication",
+			SystemFrameRate = systemFrameRate,
+			Game = game,
+			GameVersion = gameVersion,
+			PublicationClass = publicationClass,
+			Submission = submission,
+			MovieFileName = submission.Id.ToString(),
+		};
+		PublicationAuthors.Add(new PublicationAuthor { Author = author, Publication = pub });
+		return Publications.Add(pub);
+	}
+
+	public EntityEntry<Publication> AddPublication(User author)
+	{
+		return AddPublication(author, null);
+	}
+
+	public EntityEntry<Publication> AddPublication(PublicationClass publicationClass)
+	{
+		return AddPublication(null, publicationClass);
+	}
+
+	public void AddForumConstantEntities()
+	{
+		var forumCategory = new ForumCategory();
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.WorkbenchForumId, Category = forumCategory });
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.PlaygroundForumId, Category = forumCategory });
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.PublishedMoviesForumId, Category = forumCategory });
+		Forums.Add(new Forum() { Id = SiteGlobalConstants.GrueFoodForumId, Category = forumCategory });
+		AddUser(SiteGlobalConstants.TASVideosGrueId);
+		AddUser(SiteGlobalConstants.TASVideoAgentId);
+	}
+
+	public EntityEntry<ForumTopic> AddTopic()
+	{
+		var user = AddUser(0).Entity;
+		var forumCategory = new ForumCategory();
+		var forum = new Forum() { Category = forumCategory };
+		var topic = new ForumTopic() { Forum = forum, Poster = user };
+		return ForumTopics.Add(topic);
+	}
+
+	public class TestHttpContextAccessor : IHttpContextAccessor
 	{
 		public HttpContext? HttpContext { get; set; } = new DefaultHttpContext();
 	}

@@ -3,15 +3,13 @@
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class TagServiceTests
+public class TagServiceTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly TagService _tagService;
 
 	public TagServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_tagService = new TagService(_db, _cache);
 	}
@@ -87,10 +85,9 @@ public class TagServiceTests
 	public async Task InUse_Exists_ReturnsTrue()
 	{
 		const int tagId = 1;
-		const int publicationId = 1;
 		_db.Tags.Add(new Tag { Id = tagId });
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = tagId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, TagId = tagId });
 		await _db.SaveChangesAsync();
 
 		var result = await _tagService.InUse(tagId);
@@ -231,12 +228,11 @@ public class TagServiceTests
 	public async Task Delete_InUse_DoesNotFlushCache()
 	{
 		const int tagId = 1;
-		const int publicationId = 1;
 		var tag = new Tag { Id = tagId };
 		_db.Tags.Add(tag);
 		_cache.Set(TagService.TagsKey, new object());
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = tagId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, TagId = tagId });
 		await _db.SaveChangesAsync();
 
 		var result = await _tagService.Delete(tagId);

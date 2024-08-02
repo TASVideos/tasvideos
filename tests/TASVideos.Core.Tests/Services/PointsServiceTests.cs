@@ -3,15 +3,14 @@
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class PointsServiceTests
+public class PointsServiceTests : TestDbBase
 {
 	private readonly PointsService _pointsService;
-	private readonly TestDbContext _db;
 	private static string Author => "Player";
+	private static string Author2 => "Player2";
 
 	public PointsServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_pointsService = new PointsService(_db, new NoCacheService());
 	}
 
@@ -39,7 +38,7 @@ public class PointsServiceTests
 
 		for (int i = 0; i < numMovies; i++)
 		{
-			_db.Publications.Add(new Publication());
+			_db.AddPublication();
 		}
 
 		await _db.SaveChangesAsync();
@@ -65,14 +64,9 @@ public class PointsServiceTests
 	{
 		var user = _db.AddUser(1, Author);
 
-		var newPub = new Publication();
-		var oldPub = new Publication
-		{
-			Authors = [new PublicationAuthor { UserId = user.Entity.Id }],
-			ObsoletedBy = newPub
-		};
-		_db.Publications.Add(oldPub);
-		_db.Publications.Add(newPub);
+		var newPub = _db.AddPublication().Entity;
+		var oldPub = _db.AddPublication(user.Entity).Entity;
+		oldPub.ObsoletedBy = newPub;
 		await _db.SaveChangesAsync();
 
 		var (actual, _) = await _pointsService.PlayerPoints(user.Entity.Id);
@@ -85,21 +79,16 @@ public class PointsServiceTests
 	{
 		// 2 authors, 1 for a non-weighted pub and 1 for a weighted pub
 		var author1 = _db.AddUser(1, Author);
-		var author2 = _db.AddUser(2, Author);
-		var nonWeightedFlag = new Flag { Id = 1, Name = "Regular", Weight = 1 };
-		var weightedFlag = new Flag { Id = 2, Name = "Weighted", Weight = 100 };
+		var author2 = _db.AddUser(2, Author2);
+		var nonWeightedFlag = new Flag { Id = 1, Name = "Regular", Weight = 1, Token = "regular" };
+		var weightedFlag = new Flag { Id = 2, Name = "Weighted", Weight = 100, Token = "weighted" };
 		_db.Flags.Add(nonWeightedFlag);
 		_db.Flags.Add(weightedFlag);
-		var pubNonWeighted = _db.Publications.Add(new Publication
-		{
-			Authors = [new PublicationAuthor { UserId = author1.Entity.Id }],
-			PublicationFlags = [new PublicationFlag { Flag = nonWeightedFlag }]
-		});
-		var pubWeighted = _db.Publications.Add(new Publication
-		{
-			Authors = [new PublicationAuthor { UserId = author2.Entity.Id }],
-			PublicationFlags = [new PublicationFlag { Flag = weightedFlag }]
-		});
+
+		var pubNonWeighted = _db.AddPublication(author1.Entity);
+		pubNonWeighted.Entity.PublicationFlags = [new PublicationFlag { Flag = nonWeightedFlag }];
+		var pubWeighted = _db.AddPublication(author2.Entity);
+		pubWeighted.Entity.PublicationFlags = [new PublicationFlag { Flag = weightedFlag }];
 		await _db.SaveChangesAsync();
 
 		// 3rd User rates each publication equally

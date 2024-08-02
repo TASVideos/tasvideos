@@ -4,16 +4,14 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class ForumServiceTests
+public class ForumServiceTests : TestDbBase
 {
 	private readonly ForumService _forumService;
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly ITopicWatcher _topicWatcher;
 
 	public ForumServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_topicWatcher = Substitute.For<ITopicWatcher>();
 		_forumService = new ForumService(_db, _cache, _topicWatcher);
@@ -29,12 +27,10 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetPostPosition_UnableToSeeRestrictedPost_ReturnsNull()
 	{
-		const int forumId = 1;
-		const int topicId = 1;
-		var forum = new Forum { Id = forumId, Restricted = true };
-		_db.Forums.Add(forum);
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forumId });
-		var entry = _db.ForumPosts.Add(new ForumPost { TopicId = topicId, ForumId = forumId });
+		var topic = _db.AddTopic().Entity;
+		topic.Forum!.Restricted = true;
+		await _db.SaveChangesAsync();
+		var entry = _db.ForumPosts.Add(new ForumPost { Topic = topic, Forum = topic.Forum, Poster = topic.Poster });
 		await _db.SaveChangesAsync();
 
 		var actual = await _forumService.GetPostPosition(entry.Entity.Id, false);
@@ -44,18 +40,16 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetPostPosition_ValidPost_ReturnsPosition()
 	{
-		const int forumId = 1;
-		const int topicId = 1;
-		var forum = new Forum { Id = forumId, Restricted = false };
-		_db.Forums.Add(forum);
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forumId });
-		var entry = _db.ForumPosts.Add(new ForumPost { TopicId = topicId, ForumId = forumId });
+		var topic = _db.AddTopic().Entity;
+		topic.Forum!.Restricted = false;
+		await _db.SaveChangesAsync();
+		var entry = _db.ForumPosts.Add(new ForumPost { Topic = topic, Forum = topic.Forum, Poster = topic.Poster });
 		await _db.SaveChangesAsync();
 
 		var actual = await _forumService.GetPostPosition(entry.Entity.Id, false);
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(1, actual.Page);
-		Assert.AreEqual(topicId, actual.TopicId);
+		Assert.AreEqual(topic.Id, actual.TopicId);
 	}
 
 	[TestMethod]
@@ -63,18 +57,16 @@ public class ForumServiceTests
 	{
 		const int posterId = 1;
 		const string posterName = "Test";
-		const int forumId = 1;
-		const int topicId = 2;
 		const int postId = 3;
 		var postDate = DateTime.UtcNow;
 		_db.AddUser(posterId, posterName);
-		_db.Forums.Add(new Forum { Id = forumId });
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = postId,
-			ForumId = forumId,
-			TopicId = 1,
+			ForumId = topic.ForumId,
+			TopicId = topic.Id,
 			PosterId = posterId,
 			CreateTimestamp = postDate
 		});
@@ -84,11 +76,11 @@ public class ForumServiceTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(1, actual.Count);
-		Assert.IsTrue(actual.ContainsKey(forumId));
-		var latestPost = actual[forumId];
+		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
+		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
 		Assert.AreEqual(posterName, latestPost.PosterName);
-		Assert.AreEqual(postDate, latestPost.Timestamp);
+		Assert.AreEqual(postDate.Ticks, latestPost.Timestamp.Ticks, TimeSpan.FromSeconds(1).Ticks);
 		Assert.AreEqual(postId, latestPost.Id);
 		Assert.AreEqual(1, _cache.Count());
 	}
@@ -101,21 +93,19 @@ public class ForumServiceTests
 		const int poster2Id = 10;
 		const string poster2Name = "Test2";
 
-		const int forumId = 1;
-		const int topicId = 2;
 		const int post1Id = 3;
 		const int post2Id = 4;
 		var post1Date = DateTime.UtcNow.AddDays(-2);
 		var post2Date = DateTime.UtcNow.AddDays(-1);
 		_db.AddUser(poster1Id, poster1Name);
 		_db.AddUser(poster2Id, poster2Name);
-		_db.Forums.Add(new Forum { Id = forumId });
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = post1Id,
-			ForumId = forumId,
-			TopicId = 1,
+			ForumId = topic.ForumId,
+			TopicId = topic.Id,
 			PosterId = poster1Id,
 			CreateTimestamp = post1Date
 		});
@@ -123,8 +113,8 @@ public class ForumServiceTests
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = post2Id,
-			ForumId = forumId,
-			TopicId = 1,
+			ForumId = topic.ForumId,
+			TopicId = topic.Id,
 			PosterId = poster2Id,
 			CreateTimestamp = post2Date
 		});
@@ -135,11 +125,11 @@ public class ForumServiceTests
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(1, actual.Count);
-		Assert.IsTrue(actual.ContainsKey(forumId));
-		var latestPost = actual[forumId];
+		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
+		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
 		Assert.AreEqual(poster2Name, latestPost.PosterName);
-		Assert.AreEqual(post2Date, latestPost.Timestamp);
+		Assert.AreEqual(post2Date.Ticks, latestPost.Timestamp.Ticks, TimeSpan.FromSeconds(1).Ticks);
 		Assert.AreEqual(post2Id, latestPost.Id);
 		Assert.AreEqual(1, _cache.Count());
 	}
@@ -148,19 +138,15 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task GetAllLatestPosts_NoPosts_ReturnsNull()
 	{
-		const int posterId = 1;
-		const string posterName = "Test";
-		const int forumId = 1;
-		_db.AddUser(posterId, posterName);
-		_db.Forums.Add(new Forum { Id = forumId });
+		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
 
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(1, actual.Count);
-		Assert.IsTrue(actual.ContainsKey(forumId));
-		Assert.IsNull(actual[forumId]);
+		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
+		Assert.IsNull(actual[topic.ForumId]);
 		Assert.AreEqual(1, _cache.Count());
 	}
 
@@ -215,9 +201,7 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task CreatePoll_AddsPollToTopic()
 	{
-		const int topicId = 2;
-		var topic = new ForumTopic { Id = topicId };
-		_db.ForumTopics.Add(topic);
+		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
 
 		const string question = "Is this a question?";
@@ -231,7 +215,7 @@ public class ForumServiceTests
 
 		await _forumService.CreatePoll(topic, poll);
 
-		Assert.AreEqual(1, _db.ForumTopics.Count(t => t.Id == topicId));
+		Assert.AreEqual(1, _db.ForumTopics.Count(t => t.Id == topic.Id));
 		var actualTopic = await _db.ForumTopics
 			.Include(f => f.Poll)
 			.ThenInclude(p => p!.PollOptions).SingleOrDefaultAsync(t => t.Id == topic.Id);
@@ -253,12 +237,16 @@ public class ForumServiceTests
 	public async Task CreatePostWithNoWatch_CreatesPost()
 	{
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
-		const int forumId = 1;
-		const int topicId = 2;
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		int forumId = topic.ForumId;
+		int topicId = topic.Id;
 		const string subject = "Test Subject";
 		const string postText = "This is a post";
-		const int posterId = 3;
-		const string posterName = "Test User";
+		var poster = _db.AddUser("Test User").Entity;
+		await _db.SaveChangesAsync();
+		int posterId = poster.Id;
+		string posterName = poster.UserName;
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = false;
@@ -304,12 +292,16 @@ public class ForumServiceTests
 	public async Task CreatePostWithWatch_CreatesPost()
 	{
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
-		const int forumId = 1;
-		const int topicId = 2;
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		int forumId = topic.ForumId;
+		int topicId = topic.Id;
 		const string subject = "Test Subject";
 		const string postText = "This is a post";
-		const int posterId = 3;
-		const string posterName = "Test User";
+		var poster = _db.AddUser("Test User").Entity;
+		await _db.SaveChangesAsync();
+		int posterId = poster.Id;
+		string posterName = poster.UserName;
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = true;
@@ -360,22 +352,22 @@ public class ForumServiceTests
 	[TestMethod]
 	public async Task IsTopicLocked_TopicExistsAndNotLocked_ReturnsFalse()
 	{
-		const int topicId = 1;
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId, IsLocked = false });
+		var topic = _db.AddTopic().Entity;
+		topic.IsLocked = false;
 		await _db.SaveChangesAsync();
 
-		var actual = await _forumService.IsTopicLocked(topicId);
+		var actual = await _forumService.IsTopicLocked(topic.Id);
 		Assert.IsFalse(actual);
 	}
 
 	[TestMethod]
 	public async Task IsTopicLocked_TopicExistsAndLocked_ReturnsTrue()
 	{
-		const int topicId = 1;
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId, IsLocked = true });
+		var topic = _db.AddTopic().Entity;
+		topic.IsLocked = true;
 		await _db.SaveChangesAsync();
 
-		var actual = await _forumService.IsTopicLocked(topicId);
+		var actual = await _forumService.IsTopicLocked(topic.Id);
 		Assert.IsTrue(actual);
 	}
 }

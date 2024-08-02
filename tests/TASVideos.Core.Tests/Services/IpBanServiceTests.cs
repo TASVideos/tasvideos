@@ -5,15 +5,13 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class IpBanServiceTests
+public class IpBanServiceTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly IpBanService _banService;
 
 	public IpBanServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_banService = new IpBanService(_db, _cache, new NullLogger<IpBanService>());
 	}

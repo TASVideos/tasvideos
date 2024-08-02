@@ -8,15 +8,13 @@ using TASVideos.Tests.Base;
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
 [TestClass]
-public class InfoModelTests
+public class InfoModelTests : TestDbBase
 {
 	private readonly InfoModel _page;
-	private readonly TestDbContext _db;
 
 	public InfoModelTests()
 	{
 		var fileService = Substitute.For<IFileService>();
-		_db = TestDbContext.Create();
 		_page = new InfoModel(_db, fileService);
 	}
 
@@ -35,7 +33,8 @@ public class InfoModelTests
 		const long fileId = 1;
 		const int originalViewCount = 2;
 		byte[] content = [0xFF];
-		_db.UserFiles.Add(new UserFile { Id = fileId, Content = content, Downloads = originalViewCount });
+		var user = _db.AddUser(0).Entity;
+		_db.UserFiles.Add(new UserFile { Id = fileId, Content = content, Downloads = originalViewCount, Author = user });
 		await _db.SaveChangesAsync();
 		_page.Id = fileId;
 

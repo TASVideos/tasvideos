@@ -4,15 +4,13 @@ using TASVideos.MovieParsers;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class MovieFormatDeprecatorTests
+public class MovieFormatDeprecatorTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly MovieFormatDeprecator _deprecator;
 	private readonly IMovieParser _mockParser;
 
 	public MovieFormatDeprecatorTests()
 	{
-		_db = TestDbContext.Create();
 		_mockParser = Substitute.For<IMovieParser>();
 		_deprecator = new MovieFormatDeprecator(_db, _mockParser);
 	}

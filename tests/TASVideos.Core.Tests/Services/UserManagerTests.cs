@@ -9,9 +9,8 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public sealed class UserManagerTests : IDisposable
+public sealed class UserManagerTests : TestDbBase, IDisposable
 {
-	private readonly TestDbContext _db;
 	private readonly ITASVideoAgent _tasVideoAgent;
 	private readonly IWikiPages _wikiPages;
 
@@ -19,7 +18,6 @@ public sealed class UserManagerTests : IDisposable
 
 	public UserManagerTests()
 	{
-		_db = TestDbContext.Create();
 		_tasVideoAgent = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		_userManager = new UserManager(
@@ -137,7 +135,8 @@ public sealed class UserManagerTests : IDisposable
 		const int anotherUserId = 2;
 		_db.AddUser(anotherUserId);
 		_db.Roles.Add(new Role { Name = "r", AutoAssignPostCount = 1 });
-		_db.ForumPosts.Add(new ForumPost { PosterId = anotherUserId });
+		var topic = _db.AddTopic().Entity;
+		_db.ForumPosts.Add(new ForumPost { PosterId = anotherUserId, Topic = topic, Forum = topic.Forum });
 		await _db.SaveChangesAsync();
 
 		await _userManager.AssignAutoAssignableRolesByPost(currentUserId);
@@ -149,7 +148,8 @@ public sealed class UserManagerTests : IDisposable
 	{
 		const int userId = 1;
 		_db.AddUser(userId);
-		_db.ForumPosts.Add(new ForumPost { PosterId = userId });
+		var topic = _db.AddTopic().Entity;
+		_db.ForumPosts.Add(new ForumPost { PosterId = userId, Topic = topic, Forum = topic.Forum });
 		_db.Roles.Add(new Role { Name = "r", AutoAssignPostCount = 2 });
 		await _db.SaveChangesAsync();
 
@@ -163,7 +163,8 @@ public sealed class UserManagerTests : IDisposable
 	{
 		const int userId = 1;
 		_db.AddUser(userId);
-		_db.ForumPosts.Add(new ForumPost { PosterId = userId });
+		var topic = _db.AddTopic().Entity;
+		_db.ForumPosts.Add(new ForumPost { PosterId = userId, Topic = topic, Forum = topic.Forum });
 		var role = _db.Roles.Add(new Role { Name = "r", AutoAssignPostCount = 1 });
 		_db.RolePermission.Add(new RolePermission { Role = role.Entity, PermissionId = PermissionTo.CreateForumTopics });
 		await _db.SaveChangesAsync();
@@ -178,7 +179,8 @@ public sealed class UserManagerTests : IDisposable
 	{
 		const int userId = 1;
 		_db.AddUser(userId);
-		_db.ForumPosts.Add(new ForumPost { PosterId = userId });
+		var topic = _db.AddTopic().Entity;
+		_db.ForumPosts.Add(new ForumPost { PosterId = userId, Topic = topic, Forum = topic.Forum });
 		var role = _db.Roles.Add(new Role { Name = "r", AutoAssignPostCount = 1 });
 		_db.RolePermission.Add(new RolePermission { Role = role.Entity, PermissionId = PermissionTo.CreateForumTopics });
 		_db.UserRoles.Add(new UserRole { UserId = userId, Role = role.Entity });
@@ -194,7 +196,8 @@ public sealed class UserManagerTests : IDisposable
 	{
 		const int userId = 1;
 		_db.AddUser(userId);
-		_db.ForumPosts.Add(new ForumPost { PosterId = userId });
+		var topic = _db.AddTopic().Entity;
+		_db.ForumPosts.Add(new ForumPost { PosterId = userId, Topic = topic, Forum = topic.Forum });
 		var role1 = _db.Roles.Add(new Role { Name = "r1" });
 		var role2 = _db.Roles.Add(new Role { Name = "r2", AutoAssignPostCount = 1 });
 		var role3 = _db.Roles.Add(new Role { Name = "r3", AutoAssignPostCount = 1 });
@@ -234,9 +237,9 @@ public sealed class UserManagerTests : IDisposable
 		_db.AddUser(publishedAuthor1Id);
 		_db.AddUser(publishedAuthor2Id);
 		_db.AddUser(noAuthorId);
-		var pub = _db.Publications.Add(new Publication());
-		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub.Entity, UserId = publishedAuthor1Id });
-		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub.Entity, UserId = publishedAuthor2Id });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = publishedAuthor1Id });
+		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = publishedAuthor2Id });
 		var role = _db.Roles.Add(new Role { Name = "r", AutoAssignPublications = true });
 		_db.RolePermission.Add(new RolePermission { Role = role.Entity, PermissionId = PermissionTo.CatalogMovies });
 		await _db.SaveChangesAsync();
@@ -255,8 +258,8 @@ public sealed class UserManagerTests : IDisposable
 	{
 		const int userId = 1;
 		_db.AddUser(1);
-		var pub = _db.Publications.Add(new Publication());
-		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub.Entity, UserId = userId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = userId });
 		var role1 = _db.Roles.Add(new Role { Name = "r1", AutoAssignPublications = true });
 		var role2 = _db.Roles.Add(new Role { Name = "r2" });
 		_db.UserRoles.Add(new UserRole { UserId = userId, Role = role2.Entity });
@@ -288,15 +291,17 @@ public sealed class UserManagerTests : IDisposable
 		var system = _db.GameSystems.Add(new GameSystem { Code = "code" });
 		var systemFrameRate = _db.GameSystemFrameRates.Add(new GameSystemFrameRate { FrameRate = 60 });
 		var game = _db.Games.Add(new Game { DisplayName = "game" });
-		var gameGoal = _db.GameGoals.Add(new GameGoal { DisplayName = "game" });
-		var sub1 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity });
-		var sub2 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity });
+		var gameGoal = _db.GameGoals.Add(new GameGoal { DisplayName = "game", Game = game.Entity });
+		var gameVersion = _db.GameVersions.Add(new GameVersion() { Game = game.Entity });
+		var sub1 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Submitter = user.Entity });
+		var sub2 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Submitter = user.Entity });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { UserId = userId, Submission = sub1.Entity });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { UserId = userId, Submission = sub2.Entity });
 		sub1.Entity.GenerateTitle();
 		sub2.Entity.GenerateTitle();
-		var pub1 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity });
-		var pub2 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity });
+		var publicationClass = _db.PublicationClasses.Add(new PublicationClass() { Name = "class" });
+		var pub1 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity, GameVersion = gameVersion.Entity, PublicationClass = publicationClass.Entity, Submission = sub1.Entity, MovieFileName = "1" });
+		var pub2 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity, GameVersion = gameVersion.Entity, PublicationClass = publicationClass.Entity, Submission = sub2.Entity, MovieFileName = "2" });
 		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = userId, Publication = pub1.Entity });
 		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = userId, Publication = pub2.Entity });
 		pub1.Entity.GenerateTitle();

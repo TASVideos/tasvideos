@@ -12,11 +12,10 @@ using static TASVideos.Data.Entity.SubmissionStatus;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class QueueServiceTests
+public class QueueServiceTests : TestDbBase
 {
 	private const int MinimumHoursBeforeJudgment = 72;
 	private readonly QueueService _queueService;
-	private readonly TestDbContext _db;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
 	private readonly IWikiPages _wikiPages;
@@ -33,7 +32,6 @@ public class QueueServiceTests
 
 	public QueueServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_youtubeSync = Substitute.For<IYoutubeSync>();
 		_tva = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
@@ -297,17 +295,12 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task CanDeleteSubmission_CannotDeleteIfPublished()
 	{
-		const int submissionId = 1;
-		const int publicationId = 2;
-		_db.Submissions.Add(new Submission
-		{
-			Id = 1,
-			PublisherId = publicationId
-		});
-		_db.Publications.Add(new Publication { Id = publicationId });
+		var user = _db.AddUser(0).Entity;
+		var pub = _db.AddPublication().Entity;
+		pub.Submission!.Publisher = user;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.DeleteSubmission(submissionId);
+		var result = await _queueService.CanDeleteSubmission(pub.SubmissionId);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotAllowed, result.Status);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
@@ -317,12 +310,12 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task CanDeleteSubmission_Success()
 	{
-		const int submissionId = 1;
+		var sub = _db.AddSubmission().Entity;
 		const string submissionTitle = "Test Submission";
-		_db.Submissions.Add(new Submission { Id = 1, Status = New, Title = submissionTitle });
+		sub.Title = submissionTitle;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.DeleteSubmission(submissionId);
+		var result = await _queueService.CanDeleteSubmission(sub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.Success, result.Status);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
@@ -342,17 +335,12 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task DeleteSubmission_CannotDeleteIfPublished()
 	{
-		const int submissionId = 1;
-		const int publicationId = 2;
-		_db.Submissions.Add(new Submission
-		{
-			Id = 1,
-			PublisherId = publicationId
-		});
-		_db.Publications.Add(new Publication { Id = publicationId });
+		var user = _db.AddUser(0).Entity;
+		var pub = _db.AddPublication().Entity;
+		pub.Submission!.Publisher = user;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.DeleteSubmission(submissionId);
+		var result = await _queueService.DeleteSubmission(pub.SubmissionId);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(DeleteSubmissionResult.DeleteStatus.NotAllowed, result.Status);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
@@ -363,32 +351,34 @@ public class QueueServiceTests
 	public async Task DeleteSubmission_Success()
 	{
 		const int submissionId = 1;
-		const int topicId = 2;
 		const int pollId = 3;
 		const string submissionTitle = "Test Submission";
-		var poll = new ForumPoll { Id = pollId, TopicId = topicId };
+		var user = _db.AddUser(0).Entity;
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		var poll = new ForumPoll { Id = pollId, TopicId = topic.Id };
+		_db.ForumPolls.Add(poll);
 		var pollOptions = new ForumPollOption[]
 		{
-			new() { PollId = pollId, Votes = [new()] },
+			new() { PollId = pollId, Votes = [new() { User = user }] },
 			new() { PollId = pollId }
 		};
 		_db.ForumPollOptions.AddRange(pollOptions);
 		poll.PollOptions.AddRange(pollOptions);
-		var topic = new ForumTopic { Id = topicId, PollId = 2, Poll = poll };
+		topic.Poll = poll;
 		_db.Submissions.Add(new Submission
 		{
 			Id = submissionId,
 			Status = New,
 			Title = submissionTitle,
-			TopicId = topicId,
-			Topic = topic
+			TopicId = topic.Id,
+			Topic = topic,
+			Submitter = user,
 		});
 		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory { SubmissionId = submissionId, Status = New });
-		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = 1 });
-		_db.ForumTopics.Add(topic);
-		_db.ForumPolls.Add(poll);
-		var post1 = new ForumPost { Topic = topic, TopicId = topicId, Text = "1" };
-		var post2 = new ForumPost { Topic = topic, TopicId = topicId, Text = "2" };
+		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = user.Id });
+		var post1 = new ForumPost { Topic = topic, TopicId = topic.Id, Text = "1", ForumId = topic.ForumId, Poster = user };
+		var post2 = new ForumPost { Topic = topic, TopicId = topic.Id, Text = "2", ForumId = topic.ForumId, Poster = user };
 		_db.ForumPosts.Add(post1);
 		_db.ForumPosts.Add(post2);
 		await _db.SaveChangesAsync();
@@ -422,28 +412,26 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task CanUnpublish_CannotUnpublishWithAwards()
 	{
-		const int publicationId = 1;
-		const int awardId = 2;
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationAwards.Add(new PublicationAward { PublicationId = publicationId, AwardId = awardId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAwards.Add(new PublicationAward { Publication = pub, Award = new Award() });
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.CanUnpublish(publicationId);
+		var result = await _queueService.CanUnpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
 		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
-		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
 	}
 
 	[TestMethod]
 	public async Task CanUnpublish_Success()
 	{
-		const int publicationId = 1;
+		var pub = _db.AddPublication().Entity;
 		const string publicationTitle = "Test Publication";
-		_db.Publications.Add(new Publication { Id = publicationId, Title = publicationTitle });
+		pub.Title = publicationTitle;
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.CanUnpublish(publicationId);
+		var result = await _queueService.CanUnpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
@@ -463,21 +451,15 @@ public class QueueServiceTests
 	[TestMethod]
 	public async Task Unpublish_CannotUnpublishWithAwards()
 	{
-		const int publicationId = 1;
-		const int awardId = 2;
-		_db.Publications.Add(new Publication
-		{
-			Id = publicationId,
-			Submission = new Submission { PublisherId = publicationId } // A quirk of InMemoryDatabase, 1:1 relationships need the other object for the .Include() to work
-		});
-		_db.PublicationAwards.Add(new PublicationAward { PublicationId = publicationId, AwardId = awardId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAwards.Add(new PublicationAward { Publication = pub, Award = new Award() });
 		await _db.SaveChangesAsync();
 
-		var result = await _queueService.Unpublish(publicationId);
+		var result = await _queueService.Unpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
 		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
-		Assert.IsTrue(string.IsNullOrWhiteSpace(result.PublicationTitle));
+		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
 	}
 
 	[TestMethod]
@@ -485,50 +467,37 @@ public class QueueServiceTests
 	{
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 
-		const int publicationId = 1;
-		const string publicationTitle = "Test Publication";
+		var user1 = _db.AddUser(0).Entity;
+		var user2 = _db.AddUser(0).Entity;
+		await _db.SaveChangesAsync();
 
-		const int publisherId = 3;
-		const int submissionId = 2;
-		var submission = new Submission
-		{
-			Id = submissionId,
-			Status = Published,
-			PublisherId = publisherId
-		};
-
-		_db.Submissions.Add(submission);
-		_db.Publications.Add(new Publication
-		{
-			Id = publicationId,
-			Title = publicationTitle,
-			Submission = submission,
-			SubmissionId = submissionId
-		});
-		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = publicationId, UserId = 1 });
-		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = publicationId, UserId = 2 });
-		_db.PublicationFiles.Add(new PublicationFile { PublicationId = publicationId });
-		_db.PublicationFiles.Add(new PublicationFile { PublicationId = publicationId });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = 1 });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = 2 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = publicationId, UserId = 1 });
-		_db.PublicationRatings.Add(new PublicationRating { PublicationId = publicationId, UserId = 2 });
-		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 1 });
-		_db.PublicationTags.Add(new PublicationTag { PublicationId = publicationId, TagId = 2 });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = user1.Id });
+		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = user2.Id });
+		_db.PublicationFiles.Add(new PublicationFile { Publication = pub });
+		_db.PublicationFiles.Add(new PublicationFile { Publication = pub });
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag() { Token = "1" } });
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag() { Token = "2" } });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub, User = user1 });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub, User = user2 });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag() { Code = "1" } });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag() { Code = "2" } });
 		_db.PublicationUrls.Add(new PublicationUrl
 		{
-			PublicationId = publicationId,
+			Publication = pub,
 			Type = PublicationUrlType.Streaming,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 		});
 		await _db.SaveChangesAsync();
+		int publicationId = pub.Id;
+		int submissionId = pub.Submission!.Id;
 
 		var result = await _queueService.Unpublish(publicationId);
 
 		// Result must be correct
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
-		Assert.AreEqual(publicationTitle, result.PublicationTitle);
+		Assert.AreEqual(pub.Title, result.PublicationTitle);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
 
 		// Publication sub-tables must be cleared
@@ -544,7 +513,7 @@ public class QueueServiceTests
 		Assert.IsTrue(_db.Submissions.Any(s => s.Id == submissionId));
 
 		var sub = _db.Submissions.Single(s => s.Id == submissionId);
-		Assert.AreEqual(sub.PublisherId, publisherId);
+		Assert.AreEqual(sub.PublisherId, pub.Submission!.PublisherId);
 		Assert.AreEqual(PublicationUnderway, sub.Status);
 
 		// YouTube url should be unlisted
@@ -564,64 +533,29 @@ public class QueueServiceTests
 	{
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 
-		_db.WikiPages.Add(new WikiPage { Markup = "Test" });
-		var systemEntry = _db.GameSystems.Add(new GameSystem { Code = "Test" });
-		var gameEntry = _db.Games.Add(new Game());
-
-		var authorEntry = _db.AddUser("Author");
-
-		const int publicationId = 1;
-		const string publicationTitle = "Test Publication";
-		const int obsoletedPublicationId = 10;
-
-		const int publisherId = 3;
-		const int submissionId = 2;
-		var submission = new Submission
-		{
-			Id = submissionId,
-			Status = Published,
-			PublisherId = publisherId
-		};
-
-		_db.Submissions.Add(submission);
-
-		_db.Publications.Add(new Publication
-		{
-			Id = obsoletedPublicationId,
-			ObsoletedById = publicationId,
-			SystemId = systemEntry.Entity.Id,
-			GameId = gameEntry.Entity.Id
-		});
-
+		var obsoletedPub = _db.AddPublication().Entity;
 		_db.PublicationUrls.Add(new PublicationUrl
 		{
-			PublicationId = obsoletedPublicationId,
+			Publication = obsoletedPub,
 			Type = PublicationUrlType.Streaming,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 		});
+		var pub = _db.AddPublication().Entity;
 
-		_db.PublicationAuthors.Add(new PublicationAuthor { PublicationId = obsoletedPublicationId, UserId = authorEntry.Entity.Id });
-
-		_db.Publications.Add(new Publication
-		{
-			Id = publicationId,
-			Title = publicationTitle,
-			Submission = submission,
-			SubmissionId = submissionId
-		});
+		obsoletedPub.ObsoletedBy = pub;
 
 		await _db.SaveChangesAsync();
-		var result = await _queueService.Unpublish(publicationId);
+		var result = await _queueService.Unpublish(pub.Id);
 
 		// Result must be correct
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
-		Assert.AreEqual(publicationTitle, result.PublicationTitle);
+		Assert.AreEqual(pub.Title, result.PublicationTitle);
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
 
 		// Obsoleted movie must no longer be obsolete
-		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == obsoletedPublicationId));
-		var obsoletedMovie = _db.Publications.Single(p => p.Id == obsoletedPublicationId);
+		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == obsoletedPub.Id));
+		var obsoletedMovie = _db.Publications.Single(p => p.Id == obsoletedPub.Id);
 		Assert.IsNull(obsoletedMovie.ObsoletedById);
 
 		// Obsoleted movie YouTube url must be synced
@@ -728,33 +662,25 @@ public class QueueServiceTests
 	public async Task ObsoleteWith_Success()
 	{
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
-		const int pubToObsolete = 1;
-		const int obsoletingPub = 2;
 		const string youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 		const string wikiMarkup = "Test";
-		_db.Publications.Add(new Publication
-		{
-			Id = pubToObsolete,
-			PublicationUrls =
-			[
-				new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl }
-			],
-			System = new GameSystem { Code = "Test" },
-			Game = new Game()
-		});
+		var pubToObsolete = _db.AddPublication().Entity;
+		pubToObsolete.PublicationUrls = [new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl }];
+		var obsoletingPub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
 		_db.WikiPages.Add(new WikiPage
 		{
-			PageName = WikiHelper.ToPublicationWikiPageName(pubToObsolete),
+			PageName = WikiHelper.ToPublicationWikiPageName(pubToObsolete.Id),
 			Markup = wikiMarkup
 		});
 		await _db.SaveChangesAsync();
 
-		var actual = await _queueService.ObsoleteWith(pubToObsolete, obsoletingPub);
+		var actual = await _queueService.ObsoleteWith(pubToObsolete.Id, obsoletingPub.Id);
 
 		Assert.IsTrue(actual);
-		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == pubToObsolete));
-		var actualPub = _db.Publications.Single(p => p.Id == pubToObsolete);
-		Assert.AreEqual(obsoletingPub, actualPub.ObsoletedById);
+		Assert.AreEqual(1, _db.Publications.Count(p => p.Id == pubToObsolete.Id));
+		var actualPub = _db.Publications.Single(p => p.Id == pubToObsolete.Id);
+		Assert.AreEqual(obsoletingPub.Id, actualPub.ObsoletedById);
 
 		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}

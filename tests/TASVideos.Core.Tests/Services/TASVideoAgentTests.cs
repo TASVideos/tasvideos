@@ -1,34 +1,38 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class TASVideoAgentTests
+public class TASVideoAgentTests : TestDbBase
 {
-	private const int SubmissionId = 1;
 	private const string SubmissionTitle = "Test Title";
 	private const int PublicationId = 1;
+	private readonly Submission _submission;
 
 	private readonly TASVideoAgent _tasVideoAgent;
-	private readonly TestDbContext _db;
 
 	public TASVideoAgentTests()
 	{
-		_db = TestDbContext.Create();
 		var mockForumService = Substitute.For<IForumService>();
 		_tasVideoAgent = new TASVideoAgent(_db, mockForumService);
+
+		_db.AddForumConstantEntities();
+		_submission = _db.AddSubmission().Entity;
+		_submission.Title = SubmissionTitle;
+		_db.SaveChanges();
 	}
 
 	[TestMethod]
 	public async Task PostSubmissionTopic_CreatesPost()
 	{
-		await _tasVideoAgent.PostSubmissionTopic(SubmissionId, SubmissionTitle);
-		var actual = await _db.ForumPosts.LastOrDefaultAsync();
+		await _tasVideoAgent.PostSubmissionTopic(_submission.Id, SubmissionTitle);
+		var actual = await _db.ForumPosts.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
-		Assert.IsTrue(actual.Text.Contains(SubmissionId.ToString()));
+		Assert.IsTrue(actual.Text.Contains(_submission.Id.ToString()));
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsTrue(actual.EnableBbCode);
 	}
@@ -36,12 +40,12 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionTopic_CreatesTopic()
 	{
-		await _tasVideoAgent.PostSubmissionTopic(SubmissionId, SubmissionTitle);
-		var actual = await _db.ForumTopics.LastOrDefaultAsync();
+		await _tasVideoAgent.PostSubmissionTopic(_submission.Id, SubmissionTitle);
+		var actual = await _db.ForumTopics.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
-		Assert.AreEqual(SubmissionId, actual.SubmissionId);
+		Assert.AreEqual(_submission.Id, actual.SubmissionId);
 		Assert.AreEqual(SubmissionTitle, actual.Title);
 		Assert.AreEqual(ForumConstants.WorkBenchForumId, actual.ForumId);
 	}
@@ -49,8 +53,8 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionTopic_CreatesPoll()
 	{
-		await _tasVideoAgent.PostSubmissionTopic(SubmissionId, SubmissionTitle);
-		var actual = await _db.ForumPolls.LastOrDefaultAsync();
+		await _tasVideoAgent.PostSubmissionTopic(_submission.Id, SubmissionTitle);
+		var actual = await _db.ForumPolls.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.PollQuestion, actual.Question);
@@ -59,7 +63,7 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionTopic_CreatesPollOptions()
 	{
-		await _tasVideoAgent.PostSubmissionTopic(SubmissionId, SubmissionTitle);
+		await _tasVideoAgent.PostSubmissionTopic(_submission.Id, SubmissionTitle);
 		var actual = await _db.ForumPollOptions.ToListAsync();
 
 		Assert.AreEqual(3, actual.Count);
@@ -71,11 +75,11 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionTopic_IdsMatch()
 	{
-		await _tasVideoAgent.PostSubmissionTopic(SubmissionId, SubmissionTitle);
+		await _tasVideoAgent.PostSubmissionTopic(_submission.Id, SubmissionTitle);
 
-		var post = await _db.ForumPosts.LastOrDefaultAsync();
-		var topic = await _db.ForumTopics.LastOrDefaultAsync();
-		var poll = await _db.ForumPolls.LastOrDefaultAsync();
+		var post = await _db.ForumPosts.OrderBy(fp => fp.Id).LastOrDefaultAsync();
+		var topic = await _db.ForumTopics.OrderBy(ft => ft.Id).LastOrDefaultAsync();
+		var poll = await _db.ForumPolls.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 		var options = await _db.ForumPollOptions.ToListAsync();
 
 		Assert.IsNotNull(post);
@@ -90,8 +94,8 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionPublished_NoTopic_DoesNotPost()
 	{
-		await _tasVideoAgent.PostSubmissionPublished(SubmissionId, PublicationId);
-		var actual = await _db.ForumPosts.LastOrDefaultAsync();
+		await _tasVideoAgent.PostSubmissionPublished(_submission.Id, PublicationId);
+		var actual = await _db.ForumPosts.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 		Assert.IsNull(actual);
 	}
 
@@ -99,23 +103,25 @@ public class TASVideoAgentTests
 	public async Task PostSubmissionPublished_TopicCreated()
 	{
 		const int topicId = 1;
-		const int forumId = 1;
+		const int forumId = SiteGlobalConstants.WorkbenchForumId;
 		var topic = _db.ForumTopics.Add(new ForumTopic
 		{
 			Id = topicId,
 			ForumId = forumId,
 			Title = "Title",
-			SubmissionId = SubmissionId
+			SubmissionId = _submission.Id,
+			PosterId = SiteGlobalConstants.TASVideoAgentId,
 		});
 		var post = _db.ForumPosts.Add(new ForumPost
 		{
 			TopicId = topicId,
-			ForumId = forumId
+			ForumId = forumId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId,
 		});
 		await _db.SaveChangesAsync();
 
-		await _tasVideoAgent.PostSubmissionPublished(SubmissionId, PublicationId);
-		var actual = await _db.ForumPosts.LastOrDefaultAsync();
+		await _tasVideoAgent.PostSubmissionPublished(_submission.Id, PublicationId);
+		var actual = await _db.ForumPosts.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.PublishedMoviesForumId, topic.Entity.ForumId);
@@ -130,8 +136,8 @@ public class TASVideoAgentTests
 	[TestMethod]
 	public async Task PostSubmissionUnpublish_NoTopic_DoesNotPost()
 	{
-		await _tasVideoAgent.PostSubmissionUnpublished(SubmissionId);
-		var actual = await _db.ForumPosts.LastOrDefaultAsync();
+		await _tasVideoAgent.PostSubmissionUnpublished(_submission.Id);
+		var actual = await _db.ForumPosts.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 		Assert.IsNull(actual);
 	}
 
@@ -141,12 +147,14 @@ public class TASVideoAgentTests
 		var topic = _db.ForumTopics.Add(new ForumTopic
 		{
 			Title = "Title",
-			SubmissionId = SubmissionId
+			SubmissionId = _submission.Id,
+			ForumId = SiteGlobalConstants.PublishedMoviesForumId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId,
 		});
 		await _db.SaveChangesAsync();
 
-		await _tasVideoAgent.PostSubmissionUnpublished(SubmissionId);
-		var actual = await _db.ForumPosts.LastOrDefaultAsync();
+		await _tasVideoAgent.PostSubmissionUnpublished(_submission.Id);
+		var actual = await _db.ForumPosts.OrderBy(fp => fp.Id).LastOrDefaultAsync();
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.WorkbenchForumId, topic.Entity.ForumId);
@@ -184,11 +192,15 @@ public class TASVideoAgentTests
 		const string template = "Welcome [[username]]";
 		const string subject = "Test";
 		var userEntry = _db.AddUser(userName);
+		var topic = _db.AddTopic().Entity;
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = SiteGlobalConstants.WelcomeToTasvideosPostId,
 			Text = template,
-			Subject = subject
+			Subject = subject,
+			Topic = topic,
+			Forum = topic.Forum,
+			PosterId = SiteGlobalConstants.TASVideoAgentId,
 		});
 		await _db.SaveChangesAsync();
 
@@ -232,11 +244,15 @@ public class TASVideoAgentTests
 		const string roleName = "Test Forum User";
 		const string subject = "Test";
 		var userEntry = _db.AddUser(userName);
+		var topic = _db.AddTopic().Entity;
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = SiteGlobalConstants.AutoAssignedRolePostId,
 			Text = template,
-			Subject = subject
+			Subject = subject,
+			Topic = topic,
+			Forum = topic.Forum,
+			PosterId = SiteGlobalConstants.TASVideoAgentId,
 		});
 		await _db.SaveChangesAsync();
 
@@ -281,11 +297,15 @@ public class TASVideoAgentTests
 		const string roleName = "Test Role";
 		const string publicationTitle = "Test in 1:00";
 		var userEntry = _db.AddUser(userName);
+		var topic = _db.AddTopic().Entity;
 		_db.ForumPosts.Add(new ForumPost
 		{
 			Id = SiteGlobalConstants.PublishedAuthorRoleAddedPostId,
 			Text = template,
-			Subject = subject
+			Subject = subject,
+			Topic = topic,
+			Forum = topic.Forum,
+			PosterId = SiteGlobalConstants.TASVideoAgentId,
 		});
 		await _db.SaveChangesAsync();
 

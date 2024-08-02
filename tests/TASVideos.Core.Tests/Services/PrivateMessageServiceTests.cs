@@ -5,16 +5,14 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class PrivateMessageServiceTests
+public class PrivateMessageServiceTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly IEmailService _emailService;
 	private readonly PrivateMessageService _privateMessageService;
 
 	public PrivateMessageServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_emailService = Substitute.For<IEmailService>();
 		_privateMessageService = new PrivateMessageService(_db, _cache, _emailService);

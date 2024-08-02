@@ -4,10 +4,8 @@ using TASVideos.Tests.Base;
 namespace TASVideos.Data.Tests.QueryableExtensions;
 
 [TestClass]
-public class WikiPageExtensionTests
+public class WikiPageExtensionTests : TestDbBase
 {
-	private readonly TestDbContext _db = TestDbContext.Create();
-
 	#region ThatAreSubpagesOf
 
 	[TestMethod]
@@ -20,7 +18,7 @@ public class WikiPageExtensionTests
 			new WikiPage { PageName = "Parent1" },
 			new WikiPage { PageName = "Parent2" },
 			new WikiPage { PageName = "Parent2/Child1" },
-			new WikiPage { PageName = "Parent2/Child1" }
+			new WikiPage { PageName = "Parent2/Child2" }
 		};
 		_db.WikiPages.AddRange(pages);
 		_db.SaveChanges();

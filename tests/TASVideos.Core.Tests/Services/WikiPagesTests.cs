@@ -4,15 +4,13 @@ using TASVideos.Data.Entity;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class WikiPagesTests
+public class WikiPagesTests : TestDbBase
 {
 	private readonly WikiPages _wikiPages;
-	private readonly TestDbContext _db;
 	private readonly WikiTestCache _cache;
 
 	public WikiPagesTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new WikiTestCache();
 		_wikiPages = new WikiPages(_db, _cache);
 	}
@@ -130,8 +128,8 @@ public class WikiPagesTests
 	public async Task Page_PreviousRevision_ReturnsPage()
 	{
 		const string existingPage = "Exists";
-		_db.WikiPages.Add(new WikiPage { PageName = existingPage, Markup = "", Revision = 1, ChildId = 2 });
-		_db.WikiPages.Add(new WikiPage { PageName = existingPage, Markup = "", Revision = 2, ChildId = null });
+		_db.WikiPages.Add(new WikiPage { Id = 1, PageName = existingPage, Markup = "", Revision = 1, ChildId = 2 });
+		_db.WikiPages.Add(new WikiPage { Id = 2, PageName = existingPage, Markup = "", Revision = 2, ChildId = null });
 		await _db.SaveChangesAsync();
 
 		var actual = await _wikiPages.Page(existingPage, 1);
@@ -608,8 +606,8 @@ public class WikiPagesTests
 		var author = _db.AddUser(1, "_").Entity;
 		const string existingPageName = "ExistingPage";
 		const string newPageName = "NewPageName";
-		var previousRevision = new WikiPage { Id = 1, PageName = existingPageName, ChildId = 2, Author = author, AuthorId = author.Id };
-		var existingPage = new WikiPage { Id = 2, PageName = existingPageName, ChildId = null, Author = author, AuthorId = author.Id };
+		var previousRevision = new WikiPage { Id = 1, PageName = existingPageName, ChildId = 2, Author = author, AuthorId = author.Id, Revision = 1 };
+		var existingPage = new WikiPage { Id = 2, PageName = existingPageName, ChildId = null, Author = author, AuthorId = author.Id, Revision = 2 };
 		_db.WikiPages.Add(previousRevision);
 		_db.WikiPages.Add(existingPage);
 		_cache.AddPage(existingPage);
@@ -1588,7 +1586,10 @@ public class WikiPagesTests
 				Email = $"Test User from {nameof(AddPage)}",
 				NormalizedEmail = $"Test User from {nameof(AddPage)}"
 			};
-		var wp = new WikiPage { PageName = name, IsDeleted = isDeleted, AuthorId = author.Id, Author = author };
+		var maxRevision = _db.WikiPages
+			.ForPage(name)
+			.Max(r => (int?)r.Revision) ?? 0;
+		var wp = new WikiPage { PageName = name, IsDeleted = isDeleted, AuthorId = author.Id, Author = author, Revision = maxRevision + 1 };
 		_db.Add(wp);
 		_db.SaveChanges();
 

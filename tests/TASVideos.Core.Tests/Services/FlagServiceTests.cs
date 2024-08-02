@@ -3,15 +3,13 @@
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class FlagServiceTests
+public class FlagServiceTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly FlagService _flagService;
 
 	public FlagServiceTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_flagService = new FlagService(_db, _cache);
 	}
@@ -87,10 +85,9 @@ public class FlagServiceTests
 	public async Task InUse_Exists_ReturnsFalse()
 	{
 		const int flagId = 1;
-		const int publicationId = 1;
 		_db.Flags.Add(new Flag { Id = flagId });
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = flagId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, FlagId = flagId });
 		await _db.SaveChangesAsync();
 
 		var result = await _flagService.InUse(flagId);
@@ -116,7 +113,7 @@ public class FlagServiceTests
 
 		Assert.AreEqual(FlagEditResult.Success, result);
 		Assert.AreEqual(2, _db.Flags.Count());
-		var savedFlag = _db.Flags.Last();
+		var savedFlag = _db.Flags.OrderBy(f => f.Id).Last();
 		Assert.AreEqual(flag.Name, savedFlag.Name);
 		Assert.AreEqual(flag.IconPath, savedFlag.IconPath);
 		Assert.AreEqual(flag.LinkPath, savedFlag.LinkPath);
@@ -240,12 +237,11 @@ public class FlagServiceTests
 	public async Task Delete_InUse_FlushesNotCache()
 	{
 		const int flagId = 1;
-		const int publicationId = 1;
 		var flag = new Flag { Id = flagId };
 		_db.Flags.Add(flag);
 		_cache.Set(FlagService.FlagsKey, new object());
-		_db.Publications.Add(new Publication { Id = publicationId });
-		_db.PublicationFlags.Add(new PublicationFlag { PublicationId = publicationId, FlagId = flagId });
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, FlagId = flagId });
 		await _db.SaveChangesAsync();
 
 		var result = await _flagService.Delete(flagId);

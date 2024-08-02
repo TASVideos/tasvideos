@@ -16,8 +16,7 @@ public class RenderModelTests : BasePageModelTests
 	public RenderModelTests()
 	{
 		_mockWikiPages = Substitute.For<IWikiPages>();
-		var db = TestDbContext.Create();
-		_model = new RenderModel(_mockWikiPages, db, NullLogger<RenderModel>.Instance)
+		_model = new RenderModel(_mockWikiPages, _db, NullLogger<RenderModel>.Instance)
 		{
 			PageContext = TestPageContext()
 		};

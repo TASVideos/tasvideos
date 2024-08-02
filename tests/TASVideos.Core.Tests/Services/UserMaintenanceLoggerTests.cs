@@ -1,14 +1,12 @@
 ﻿namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class UserMaintenanceLoggerTests
+public class UserMaintenanceLoggerTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly UserMaintenanceLogger _publicationMaintenanceLogger;
 
 	public UserMaintenanceLoggerTests()
 	{
-		_db = TestDbContext.Create();
 		_publicationMaintenanceLogger = new UserMaintenanceLogger(_db);
 	}
 

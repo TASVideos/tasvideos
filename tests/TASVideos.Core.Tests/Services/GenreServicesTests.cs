@@ -4,15 +4,13 @@ using TASVideos.Data.Entity.Game;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class GenreServicesTests
+public class GenreServicesTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly TestCache _cache;
 	private readonly GenreService _genreService;
 
 	public GenreServicesTests()
 	{
-		_db = TestDbContext.Create();
 		_cache = new TestCache();
 		_genreService = new GenreService(_db, _cache, new NullLogger<GenreService>());
 	}

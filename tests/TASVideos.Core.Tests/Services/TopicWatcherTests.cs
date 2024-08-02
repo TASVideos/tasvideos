@@ -6,16 +6,14 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class TopicWatcherTests
+public class TopicWatcherTests : TestDbBase
 {
 	private readonly IEmailService _mockEmailService;
-	private readonly TestDbContext _db;
 
 	private readonly TopicWatcher _topicWatcher;
 
 	public TopicWatcherTests()
 	{
-		_db = TestDbContext.Create();
 		_mockEmailService = Substitute.For<IEmailService>();
 		var settings = new AppSettings
 		{
@@ -39,19 +37,17 @@ public class TopicWatcherTests
 	{
 		const int user1Id = 1;
 		const int user2Id = 2;
-		const int topic1Id = 1;
-		const int topic2Id = 2;
 		_db.AddUser(user1Id, "_");
 		_db.AddUser(user2Id, "__");
-		var forum = new Forum { Id = 1 };
-		_db.ForumTopics.Add(new ForumTopic { Id = topic1Id, ForumId = forum.Id, Forum = forum });
-		_db.ForumTopics.Add(new ForumTopic { Id = topic2Id, ForumId = forum.Id, Forum = forum });
-		_db.ForumPosts.Add(new ForumPost { TopicId = topic1Id });
-		_db.ForumPosts.Add(new ForumPost { TopicId = topic2Id });
-		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = topic1Id, UserId = user1Id });
-		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = topic2Id, UserId = user1Id });
-		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = 1, UserId = user2Id });
-		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopicId = 1 + 1, UserId = user2Id });
+		var topic1 = _db.AddTopic().Entity;
+		var topic2 = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		_db.ForumPosts.Add(new ForumPost { Topic = topic1, Forum = topic1.Forum, PosterId = user1Id });
+		_db.ForumPosts.Add(new ForumPost { Topic = topic2, Forum = topic2.Forum, PosterId = user2Id });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopic = topic1, UserId = user1Id });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopic = topic2, UserId = user1Id });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopic = topic1, UserId = user2Id });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { ForumTopic = topic2, UserId = user2Id });
 		await _db.SaveChangesAsync();
 
 		var actual = await _topicWatcher.UserWatches(user1Id, new PagingModel());
@@ -60,24 +56,26 @@ public class TopicWatcherTests
 
 		var list = actual.ToList();
 		Assert.AreEqual(2, list.Count);
-		Assert.AreEqual(1, list.Count(l => l.TopicId == topic1Id));
-		Assert.AreEqual(1, list.Count(l => l.TopicId == topic2Id));
+		Assert.AreEqual(1, list.Count(l => l.TopicId == topic1.Id));
+		Assert.AreEqual(1, list.Count(l => l.TopicId == topic2.Id));
 	}
 
 	[TestMethod]
 	public async Task NotifyNewPost_DoesNotNotifyPoster()
 	{
-		_db.AddUser(1, "_");
-		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
+		const int userId = 1;
+		_db.AddUser(userId, "_");
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
 		{
-			ForumTopicId = 1,
-			UserId = 1,
+			ForumTopicId = topic.Id,
+			UserId = userId,
 			IsNotified = false
 		});
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.NotifyNewPost(0, 1, "", 1);
+		await _topicWatcher.NotifyNewPost(0, topic.Id, "", userId);
 
 		await _mockEmailService.DidNotReceive().TopicReplyNotification(Arg.Any<IEnumerable<string>>(), Arg.Any<TopicReplyNotificationTemplate>());
 	}
@@ -89,16 +87,17 @@ public class TopicWatcherTests
 		const int poster = 2;
 		const string posterEmail = "a@b.com";
 		_db.AddUser(watcher, posterEmail);
-		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
 		{
-			ForumTopicId = 1,
+			ForumTopicId = topic.Id,
 			UserId = watcher,
 			IsNotified = false
 		});
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.NotifyNewPost(0, 1, "", poster);
+		await _topicWatcher.NotifyNewPost(0, topic.Id, "", poster);
 
 		await _mockEmailService.Received(1).TopicReplyNotification(Arg.Any<IEnumerable<string>>(), Arg.Any<TopicReplyNotificationTemplate>());
 	}
@@ -110,71 +109,71 @@ public class TopicWatcherTests
 		const int poster = 2;
 		const string posterEmail = "a@b.com";
 		_db.AddUser(watcher, posterEmail);
-		_db.ForumTopics.Add(new ForumTopic { Id = 1 });
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
 		_db.ForumTopicWatches.Add(new ForumTopicWatch
 		{
-			ForumTopicId = 1,
+			ForumTopicId = topic.Id,
 			UserId = watcher,
 			IsNotified = false
 		});
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.NotifyNewPost(0, 1, "", poster);
+		await _topicWatcher.NotifyNewPost(0, topic.Id, "", poster);
 
 		Assert.IsTrue(_db.ForumTopicWatches.All(w => w.IsNotified));
 	}
 
-	// [TestMethod]
-	// public async Task MarkSeen_IsNotifiedFalse()
-	// {
-	// 	const int userId = 1;
-	// 	const int topicId = 1;
-	// 	_db.AddUser(userId, "_");
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topicId });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch
-	// 	{
-	// 		UserId = userId,
-	// 		ForumTopicId = topicId,
-	// 		IsNotified = true
-	// 	});
-	// 	await _db.SaveChangesAsync();
-	//
-	// 	await _topicWatcher.MarkSeen(topicId, userId);
-	//
-	// 	Assert.AreEqual(1, _db.ForumTopicWatches.Count());
-	// 	Assert.IsFalse(_db.ForumTopicWatches.Single().IsNotified);
-	// }
+	[TestMethod]
+	public async Task MarkSeen_IsNotifiedFalse()
+	{
+		const int userId = 1;
+		_db.AddUser(userId, "_");
+		var topic = _db.AddTopic().Entity;
+		_db.ForumTopicWatches.Add(new ForumTopicWatch
+		{
+			UserId = userId,
+			ForumTopic = topic,
+			IsNotified = true
+		});
+		await _db.SaveChangesAsync();
+
+		await _topicWatcher.MarkSeen(topic.Id, userId);
+		_db.ChangeTracker.Clear();
+
+		Assert.AreEqual(1, _db.ForumTopicWatches.Count());
+		Assert.IsFalse(_db.ForumTopicWatches.Single().IsNotified);
+	}
 
 	[TestMethod]
 	public async Task WatchTopic_AddsWatch_IfNoneExist()
 	{
 		const int userId = 1;
-		const int topicId = 1;
 		_db.AddUser(userId, "_");
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
+		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.WatchTopic(topicId, userId, true);
+		await _topicWatcher.WatchTopic(topic.Id, userId, true);
 
 		Assert.AreEqual(1, _db.ForumTopicWatches.Count());
 		Assert.AreEqual(userId, _db.ForumTopicWatches.Single().UserId);
-		Assert.AreEqual(topicId, _db.ForumTopicWatches.Single().ForumTopicId);
+		Assert.AreEqual(topic.Id, _db.ForumTopicWatches.Single().ForumTopicId);
 	}
 
 	[TestMethod]
 	public async Task WatchTopic_DoesNotAdd_IfAlreadyExists()
 	{
 		const int userId = 1;
-		const int topicId = 1;
 		_db.AddUser(userId, "_");
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId });
-		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic.Id });
 		await _db.SaveChangesAsync();
 
-		await _topicWatcher.WatchTopic(topicId, userId, true);
+		await _topicWatcher.WatchTopic(topic.Id, userId, true);
 		Assert.AreEqual(1, _db.ForumTopicWatches.Count());
 		Assert.AreEqual(userId, _db.ForumTopicWatches.Single().UserId);
-		Assert.AreEqual(topicId, _db.ForumTopicWatches.Single().ForumTopicId);
+		Assert.AreEqual(topic.Id, _db.ForumTopicWatches.Single().ForumTopicId);
 	}
 
 	[TestMethod]
@@ -183,9 +182,8 @@ public class TopicWatcherTests
 		const int userId = 1;
 		const int topicId = 1;
 		_db.AddUser(userId, "_");
-		var forum = new Forum { Id = 1, Restricted = true };
-		_db.Forums.Add(forum);
-		_db.ForumTopics.Add(new ForumTopic { Id = topicId, ForumId = forum.Id });
+		var topic = _db.AddTopic().Entity;
+		topic.Forum!.Restricted = true;
 		await _db.SaveChangesAsync();
 
 		await _topicWatcher.WatchTopic(topicId, userId, false);
@@ -193,36 +191,35 @@ public class TopicWatcherTests
 		Assert.AreEqual(0, _db.ForumTopicWatches.Count());
 	}
 
-	// [TestMethod]
-	// public async Task UnwatchTopic_RemovesTopic()
-	// {
-	// 	const int userId = 1;
-	// 	const int topicId = 1;
-	// 	_db.AddUser(userId, "_");
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topicId });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topicId });
-	// 	await _db.SaveChangesAsync();
-	//
-	// 	await _topicWatcher.UnwatchTopic(topicId, userId);
-	//
-	// 	Assert.AreEqual(0, _db.ForumTopicWatches.Count());
-	// }
+	[TestMethod]
+	public async Task UnwatchTopic_RemovesTopic()
+	{
+		const int userId = 1;
+		_db.AddUser(userId, "_");
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic.Id });
+		await _db.SaveChangesAsync();
 
-	// [TestMethod]
-	// public async Task UnwatchAllTopics_RemovesAllTopics()
-	// {
-	// 	const int userId = 1;
-	// 	const int topic1Id = 1;
-	// 	const int topic2Id = 2;
-	// 	_db.AddUser(userId, "_");
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topic1Id });
-	// 	_db.ForumTopics.Add(new ForumTopic { Id = topic2Id });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic1Id });
-	// 	_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic2Id });
-	// 	await _db.SaveChangesAsync();
-	//
-	// 	await _topicWatcher.UnwatchAllTopics(userId);
-	//
-	// 	Assert.AreEqual(0, _db.ForumTopicWatches.Count());
-	// }
+		await _topicWatcher.UnwatchTopic(topic.Id, userId);
+
+		Assert.AreEqual(0, _db.ForumTopicWatches.Count());
+	}
+
+	[TestMethod]
+	public async Task UnwatchAllTopics_RemovesAllTopics()
+	{
+		const int userId = 1;
+		_db.AddUser(userId, "_");
+		var topic1 = _db.AddTopic().Entity;
+		var topic2 = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic1.Id });
+		_db.ForumTopicWatches.Add(new ForumTopicWatch { UserId = userId, ForumTopicId = topic2.Id });
+		await _db.SaveChangesAsync();
+
+		await _topicWatcher.UnwatchAllTopics(userId);
+
+		Assert.AreEqual(0, _db.ForumTopicWatches.Count());
+	}
 }

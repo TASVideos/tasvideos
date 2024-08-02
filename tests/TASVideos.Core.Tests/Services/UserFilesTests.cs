@@ -1,14 +1,14 @@
 ﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
+using TASVideos.Data.Entity.Game;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
-public class UserFilesTests
+public class UserFilesTests : TestDbBase
 {
-	private readonly TestDbContext _db;
 	private readonly IFileService _fileService;
 	private readonly IMovieParser _parser;
 	private readonly IWikiPages _wikiPages;
@@ -16,7 +16,6 @@ public class UserFilesTests
 
 	public UserFilesTests()
 	{
-		_db = TestDbContext.Create();
 		_parser = Substitute.For<IMovieParser>();
 		_fileService = Substitute.For<IFileService>();
 		_wikiPages = Substitute.For<IWikiPages>();
@@ -115,36 +114,36 @@ public class UserFilesTests
 	[TestMethod]
 	public async Task SpaceAvailable_Available_ReturnsTrue()
 	{
-		const int userId = 1;
+		var user = _db.AddUser(0).Entity;
 		const int candidateFileSize = 100;
 		_db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
-			AuthorId = userId,
+			Author = user,
 			Content = new byte[SiteGlobalConstants.UserFileStorageLimit - candidateFileSize],
 			CompressionType = Compression.None
 		});
 		await _db.SaveChangesAsync();
 
-		var actual = await _userFiles.SpaceAvailable(userId, candidateFileSize);
+		var actual = await _userFiles.SpaceAvailable(user.Id, candidateFileSize);
 		Assert.IsTrue(actual);
 	}
 
 	[TestMethod]
 	public async Task SpaceAvailable_NotUnavailable_ReturnsFalse()
 	{
-		const int userId = 1;
+		var user = _db.AddUser(0).Entity;
 		const int candidateFileSize = 100;
 		_db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
-			AuthorId = userId,
+			Author = user,
 			Content = new byte[SiteGlobalConstants.UserFileStorageLimit - candidateFileSize + 1],
 			CompressionType = Compression.None
 		});
 		await _db.SaveChangesAsync();
 
-		var actual = await _userFiles.SpaceAvailable(userId, candidateFileSize);
+		var actual = await _userFiles.SpaceAvailable(user.Id, candidateFileSize);
 		Assert.IsFalse(actual);
 	}
 
@@ -171,18 +170,19 @@ public class UserFilesTests
 	[TestMethod]
 	public async Task Upload_SupplementalFile_Success()
 	{
-		const int userId = 1;
+		var user = _db.AddUser(0).Entity;
+		var system = _db.GameSystems.Add(new GameSystem()).Entity;
+		var game = _db.Games.Add(new Game()).Entity;
+		await _db.SaveChangesAsync();
 		byte[] fileData = [0xFF];
 		const string title = "title";
 		const string desc = "description";
-		const int systemId = 2;
-		const int gameId = 3;
 		const string fileName = "script.lua";
 		const bool hidden = true;
 		_fileService.Compress(Arg.Any<byte[]>()).Returns(new CompressedFile(100, 99, Compression.Gzip, fileData));
 		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = ".lua" });
 
-		var (id, parseResult) = await _userFiles.Upload(userId, new(title, desc, systemId, gameId, fileData, fileName, hidden));
+		var (id, parseResult) = await _userFiles.Upload(user.Id, new(title, desc, system.Id, game.Id, fileData, fileName, hidden));
 
 		Assert.IsTrue(id > 0);
 		Assert.IsNull(parseResult);
@@ -190,8 +190,8 @@ public class UserFilesTests
 		var userFile = _db.UserFiles.Single();
 		Assert.AreEqual(title, userFile.Title);
 		Assert.AreEqual(desc, userFile.Description);
-		Assert.AreEqual(systemId, userFile.SystemId);
-		Assert.AreEqual(gameId, userFile.GameId);
+		Assert.AreEqual(system.Id, userFile.SystemId);
+		Assert.AreEqual(game.Id, userFile.GameId);
 		Assert.AreEqual(fileName, userFile.FileName);
 		Assert.AreEqual(hidden, userFile.Hidden);
 		Assert.AreEqual(UserFileClass.Support, userFile.Class);
@@ -200,19 +200,20 @@ public class UserFilesTests
 	[TestMethod]
 	public async Task Upload_MovieFile_Success()
 	{
-		const int userId = 1;
+		var user = _db.AddUser(0).Entity;
+		var system = _db.GameSystems.Add(new GameSystem()).Entity;
+		var game = _db.Games.Add(new Game()).Entity;
+		await _db.SaveChangesAsync();
 		byte[] fileData = [0xFF];
 		const string title = "title";
 		const string desc = "description";
-		const int systemId = 2;
-		const int gameId = 3;
 		const string fileName = "movie.bk2";
 		const bool hidden = true;
 		_fileService.Compress(Arg.Any<byte[]>()).Returns(new CompressedFile(100, 99, Compression.Gzip, fileData));
 		_parser.SupportedMovieExtensions.Returns(new[] { ".bk2" });
 		_parser.ParseFile(Arg.Any<string>(), Arg.Any<Stream>()).Returns(new TestParseResult());
 
-		var (id, parseResult) = await _userFiles.Upload(userId, new(title, desc, systemId, gameId, fileData, fileName, hidden));
+		var (id, parseResult) = await _userFiles.Upload(user.Id, new(title, desc, system.Id, game.Id, fileData, fileName, hidden));
 
 		Assert.IsTrue(id > 0);
 		Assert.IsNotNull(parseResult);
@@ -220,8 +221,8 @@ public class UserFilesTests
 		var userFile = _db.UserFiles.Single();
 		Assert.AreEqual(title, userFile.Title);
 		Assert.AreEqual(desc, userFile.Description);
-		Assert.AreEqual(systemId, userFile.SystemId);
-		Assert.AreEqual(gameId, userFile.GameId);
+		Assert.AreEqual(system.Id, userFile.SystemId);
+		Assert.AreEqual(game.Id, userFile.GameId);
 		Assert.AreEqual(fileName, userFile.FileName);
 		Assert.AreEqual(hidden, userFile.Hidden);
 		Assert.AreEqual(UserFileClass.Movie, userFile.Class);

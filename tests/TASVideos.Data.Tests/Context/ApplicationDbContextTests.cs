@@ -4,14 +4,12 @@ using TASVideos.Tests.Base;
 namespace TASVideos.Data.Tests.Context;
 
 [TestClass]
-public class ApplicationDbContextTests
+public class ApplicationDbContextTests : TestDbBase
 {
-	private readonly TestDbContext _db = TestDbContext.Create();
-
 	[TestMethod]
 	public async Task CreateTimestamp_SetToNow_IfNotProvided()
 	{
-		_db.Publications.Add(new Publication());
+		_db.AddPublication();
 
 		await _db.SaveChangesAsync();
 
@@ -23,10 +21,9 @@ public class ApplicationDbContextTests
 	[TestMethod]
 	public async Task CreateTimestamp_DoesNotOverride_IfProvided()
 	{
-		_db.Publications.Add(new Publication
-		{
-			CreateTimestamp = DateTime.Parse("01/01/1970")
-		});
+		var pubEntity = _db.AddPublication().Entity;
+		pubEntity.CreateTimestamp = DateTime.Parse("01/01/1970");
+
 		await _db.SaveChangesAsync();
 
 		Assert.AreEqual(1, _db.Publications.Count());
@@ -38,12 +35,11 @@ public class ApplicationDbContextTests
 	[TestMethod]
 	public async Task CreateTimestamp_OnUpdate_DoesNotChange()
 	{
-		var pub = new Publication
-		{
-			CreateTimestamp = DateTime.Parse("01/01/1970")
-		};
-		_db.Publications.Add(pub);
+		var pub = _db.AddPublication().Entity;
+		pub.CreateTimestamp = DateTime.Parse("01/01/1970");
+
 		await _db.SaveChangesAsync();
+
 		pub.Title = "NewTitle";
 
 		await _db.SaveChangesAsync();
@@ -54,7 +50,7 @@ public class ApplicationDbContextTests
 	[TestMethod]
 	public async Task LastUpdateTimestamp_OnCreate_SetToNow_IfNotProvided()
 	{
-		_db.Publications.Add(new Publication());
+		_db.AddPublication();
 
 		await _db.SaveChangesAsync();
 
@@ -66,10 +62,8 @@ public class ApplicationDbContextTests
 	[TestMethod]
 	public async Task LastUpdateTimestamp_OnCreate_DoesNotOverride_IfProvided()
 	{
-		_db.Publications.Add(new Publication
-		{
-			LastUpdateTimestamp = DateTime.Parse("01/01/1970")
-		});
+		var pubEntity = _db.AddPublication().Entity;
+		pubEntity.CreateTimestamp = DateTime.Parse("01/01/1970");
 
 		await _db.SaveChangesAsync();
 
@@ -81,12 +75,11 @@ public class ApplicationDbContextTests
 	[TestMethod]
 	public async Task LastUpdateTimestamp_OnUpdate_SetToNow_IfNotProvided()
 	{
-		_db.Publications.Add(new Publication
-		{
-			LastUpdateTimestamp = DateTime.Parse("01/01/1970")
-		});
+		var pubEntity = _db.AddPublication().Entity;
+		pubEntity.CreateTimestamp = DateTime.Parse("01/01/1970");
 
 		await _db.SaveChangesAsync();
+
 		var pub = _db.Publications.Single();
 		pub.Title = "NewTitle";
 
@@ -98,12 +91,11 @@ public class ApplicationDbContextTests
 	[TestMethod]
 	public async Task LastUpdateTimestamp_OnUpdate_DoesNotOverride_IfProvided()
 	{
-		_db.Publications.Add(new Publication
-		{
-			LastUpdateTimestamp = DateTime.Parse("01/01/1970")
-		});
+		var pubEntity = _db.AddPublication().Entity;
+		pubEntity.CreateTimestamp = DateTime.Parse("01/01/1970");
 
 		await _db.SaveChangesAsync();
+
 		var pub = _db.Publications.Single();
 		pub.LastUpdateTimestamp = DateTime.Parse("01/01/1980");
 
