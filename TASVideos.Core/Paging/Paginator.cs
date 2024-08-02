@@ -40,7 +40,7 @@ public static class Paginator
 		IEnumerable<T> results = await newQuery
 			.ToListAsync();
 
-		var pageOf = new PageOf<T>(results)
+		var pageOf = new PageOf<T>(results, paging)
 		{
 			PageSize = paging.PageSize,
 			CurrentPage = paging.CurrentPage,
