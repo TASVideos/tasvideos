@@ -4,9 +4,12 @@
 	Layout = "_WikiLayout";
 }
 <warning-alert condition="!Model.WikiPage.IsCurrent()">
-	<p>
-		This is an old revision of this page.<br />
-		<a href="/@Model.WikiPage.PageName">Click here</a> to see the current revision.
-	</p>
+	<div>
+		This is an old revision of this page, as edited by <profile-link username="@Model.WikiPage.AuthorName"></profile-link> at <timezone-convert asp-for="@Model.WikiPage.CreateTimestamp" relative-time="false" />
+		<span condition="!string.IsNullOrEmpty(Model.WikiPage.RevisionMessage)">(<span class="text-body-secondary">@Model.WikiPage.RevisionMessage</span>)</span>
+	</div>
+	<div>
+		This revision may differ significantly from the <a href="/@Model.WikiPage.PageName">current revision</a>.
+	</div>
 </warning-alert>
 <wiki-markup markup="@Model.WikiPage.Markup" page-data="@Model.WikiPage"></wiki-markup>
