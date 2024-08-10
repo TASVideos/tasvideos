@@ -108,7 +108,7 @@ public static partial class Builtins
 	private static string NormalizeImageUrl(string text)
 	{
 		return text[0] == '='
-			? string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1))
+			? text[1] is '/' ? text[1..] : $"/{text[1..]}"
 			: text;
 	}
 
@@ -121,7 +121,7 @@ public static partial class Builtins
 				return "/";
 			}
 
-			return NormalizeInternalLink(string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1)));
+			return NormalizeInternalLink(text[1] is '/' ? text[1..] : $"/{text[1..]}");
 		}
 
 		if (text.StartsWith("user:"))
@@ -209,15 +209,18 @@ public static partial class Builtins
 
 		if (IsLink(pp[0]))
 		{
-			return pp.Length > 1
-				? new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) }
-				: [MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd })];
+			var node = MakeLink(
+				charStart,
+				charEnd,
+				pp[0],
+				new Text(charStart, pp.Length > 1 ? pp[1] : DisplayTextForUrl(pp[0])) { CharEnd = charEnd });
+			return [node];
 		}
 
 		// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
 		// any of the other predetermined things we scan for
 		// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
-		if (ImplicitWikiLink.Match(text).Success)
+		if (ImplicitWikiLink.IsMatch(text))
 		{
 			if (pp.Length >= 2)
 			{
