@@ -20,6 +20,15 @@ public static class Paginator
 			.PageOf(paging);
 	}
 
+	public static async Task<PageOf<T, T2>> SortedPageOf<T, T2>(this IQueryable<T> query, T2 paging)
+		where T : class
+		where T2 : PagingModel
+	{
+		return await query
+			.SortBy(paging)
+			.PageOf(paging);
+	}
+
 	public static async Task<PageOf<T>> PageOf<T>(
 		this IQueryable<T> query,
 		PagingModel paging)
@@ -40,12 +49,38 @@ public static class Paginator
 		IEnumerable<T> results = await newQuery
 			.ToListAsync();
 
-		var pageOf = new PageOf<T>(results)
+		var pageOf = new PageOf<T>(results, paging)
 		{
-			PageSize = paging.PageSize,
-			CurrentPage = paging.CurrentPage,
 			RowCount = rowCount,
-			Sort = paging.Sort
+		};
+
+		return pageOf;
+	}
+
+	public static async Task<PageOf<T, T2>> PageOf<T, T2>(
+		this IQueryable<T> query,
+		T2 paging)
+		where T : class
+		where T2 : PagingModel
+	{
+		int rowsToSkip = paging.Offset();
+
+		int rowCount = await query.CountAsync();
+
+		var newQuery = query.Skip(rowsToSkip);
+
+		if (paging.PageSize.HasValue)
+		{
+			int pageSize = Math.Max(paging.PageSize.Value, 1);
+			newQuery = newQuery.Take(pageSize);
+		}
+
+		IEnumerable<T> results = await newQuery
+			.ToListAsync();
+
+		var pageOf = new PageOf<T, T2>(results, paging)
+		{
+			RowCount = rowCount,
 		};
 
 		return pageOf;

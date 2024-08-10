@@ -1,9 +1,9 @@
 @using TASVideos.Core
-@model IPaged
+@model IPaged<IRequest>
 
 <row class="my-2 align-items-center">
 	<div class="col-12 text-end">
-		<small><label class="text-body-tertiary me-4"> Showing items [@(Model.Offset() + 1) - @Model.LastRow()] of @Model.RowCount</label></small>
+		<small><label class="text-body-tertiary me-4"> Showing items [@(Model.Request.Offset() + 1) - @Model.LastRow()] of @Model.RowCount</label></small>
 		<a asp-page="@ViewContext.Page()" class="btn btn-outline-silver">
 			<i class="fa fa-sort"> <i class="fa fa-times-circle"></i></i>
 		</a>
@@ -14,21 +14,21 @@
 				const string pagerClass = "btn btn-secondary border-dark flex-grow-0";
 				const string pagerDisabledClass = "btn btn-silver border-dark flex-grow-0";
 				const string ellipsisClass = "btn btn-outline-secondary border-dark flex-grow-0";
-				var additionalProperties = Model.AdditionalProperties();
+				var additionalProperties = Model.Request.AdditionalProperties();
 			}
-			<a disable="@Model.CurrentPage == 1"
+			<a disable="@Model.Request.CurrentPage == 1"
 			   asp-page="@ViewContext.Page()"
 			   asp-all-route-data="@additionalProperties"
-			   asp-route-CurrentPage="@(Model.CurrentPage - 1)"
-			   asp-route-PageSize="@Model.PageSize"
-			   asp-route-Sort="@Model.Sort"
-			   type="button" class="@(Model.CurrentPage == 1 ? pagerDisabledClass : pagerClass)">
+			   asp-route-CurrentPage="@(Model.Request.CurrentPage - 1)"
+			   asp-route-PageSize="@Model.Request.PageSize"
+			   asp-route-Sort="@Model.Request.Sort"
+			   type="button" class="@(Model.Request.CurrentPage == 1 ? pagerDisabledClass : pagerClass)">
 				<span class="fa fa-chevron-left"></span>
 			</a>
 
 			@{
 				var totalPages = Model.LastPage();
-				var currentPage = Model.CurrentPage ?? 0;
+				var currentPage = Model.Request.CurrentPage ?? 0;
 				var pageList = Enumerable.Range(1, totalPages).ToList();
 				var leftShown = pageList.Where(p => p <= 2);
 				var leftHidden = pageList.Where(p => 2 < p && p < currentPage - 1).ToList();
@@ -40,8 +40,8 @@
 					<a asp-page="@ViewContext.Page()"
 					   asp-all-route-data="@additionalProperties"
 					   asp-route-CurrentPage="@iteratorPage"
-					   asp-route-PageSize="@Model.PageSize"
-					   asp-route-Sort="@Model.Sort"
+					   asp-route-PageSize="@Model.Request.PageSize"
+					   asp-route-Sort="@Model.Request.Sort"
 					   type="button" class="@pagerClass @(iteratorPage == currentPage ? "active" : "")">@iteratorPage</a>
 				}
 				if (leftHidden.Count == 1)
@@ -49,8 +49,8 @@
 					<a asp-page="@ViewContext.Page()"
 					   asp-all-route-data="@additionalProperties"
 					   asp-route-CurrentPage="@leftHidden.First()"
-					   asp-route-PageSize="@Model.PageSize"
-					   asp-route-Sort="@Model.Sort"
+					   asp-route-PageSize="@Model.Request.PageSize"
+					   asp-route-Sort="@Model.Request.Sort"
 					   type="button" class="@pagerClass">@leftHidden.First()</a>
 
 				}
@@ -63,8 +63,8 @@
 								<a asp-page="@ViewContext.Page()"
 								   asp-all-route-data="@additionalProperties"
 								   asp-route-CurrentPage="@iteratorPage"
-								   asp-route-PageSize="@Model.PageSize"
-								   asp-route-Sort="@Model.Sort"
+								   asp-route-PageSize="@Model.Request.PageSize"
+								   asp-route-Sort="@Model.Request.Sort"
 								   class="dropdown-item">@iteratorPage</a>
 							</li>
 						}
@@ -75,8 +75,8 @@
 					<a asp-page="@ViewContext.Page()"
 					   asp-all-route-data="@additionalProperties"
 					   asp-route-CurrentPage="@iteratorPage"
-					   asp-route-PageSize="@Model.PageSize"
-					   asp-route-Sort="@Model.Sort"
+					   asp-route-PageSize="@Model.Request.PageSize"
+					   asp-route-Sort="@Model.Request.Sort"
 					   type="button" class="@pagerClass @(iteratorPage == currentPage ? "active" : "")">@iteratorPage</a>
 				}
 				if (rightHidden.Count == 1)
@@ -84,8 +84,8 @@
 					<a asp-page="@ViewContext.Page()"
 					   asp-all-route-data="@additionalProperties"
 					   asp-route-CurrentPage="@rightHidden.First()"
-					   asp-route-PageSize="@Model.PageSize"
-					   asp-route-Sort="@Model.Sort"
+					   asp-route-PageSize="@Model.Request.PageSize"
+					   asp-route-Sort="@Model.Request.Sort"
 					   type="button" class="@pagerClass">@rightHidden.First()</a>
 				}
 				<div condition="rightHidden.Count > 1" class="btn-group" role="group">
@@ -97,8 +97,8 @@
 								<a asp-page="@ViewContext.Page()"
 								   asp-all-route-data="@additionalProperties"
 								   asp-route-CurrentPage="@iteratorPage"
-								   asp-route-PageSize="@Model.PageSize"
-								   asp-route-Sort="@Model.Sort"
+								   asp-route-PageSize="@Model.Request.PageSize"
+								   asp-route-Sort="@Model.Request.Sort"
 								   class="dropdown-item">@iteratorPage</a>
 							</li>
 						}
@@ -109,18 +109,18 @@
 					<a asp-page="@ViewContext.Page()"
 					   asp-all-route-data="@additionalProperties"
 					   asp-route-CurrentPage="@iteratorPage"
-					   asp-route-PageSize="@Model.PageSize"
-					   asp-route-Sort="@Model.Sort"
+					   asp-route-PageSize="@Model.Request.PageSize"
+					   asp-route-Sort="@Model.Request.Sort"
 					   type="button" class="@pagerClass @(iteratorPage == currentPage ? "active" : "")">@iteratorPage</a>
 				}
 			}
-			<a disable="@Model.CurrentPage == Model.LastPage()"
+			<a disable="@Model.Request.CurrentPage == Model.LastPage()"
 			   asp-page="@ViewContext.Page()"
 			   asp-all-route-data="@additionalProperties"
-			   asp-route-CurrentPage="@(Model.CurrentPage + 1)"
-			   asp-route-PageSize="@Model.PageSize"
-			   asp-route-Sort="@Model.Sort"
-			   type="button" class="@(Model.CurrentPage == Model.LastPage() ? pagerDisabledClass : pagerClass)">
+			   asp-route-CurrentPage="@(Model.Request.CurrentPage + 1)"
+			   asp-route-PageSize="@Model.Request.PageSize"
+			   asp-route-Sort="@Model.Request.Sort"
+			   type="button" class="@(Model.Request.CurrentPage == Model.LastPage() ? pagerDisabledClass : pagerClass)">
 				<span class="fa fa-chevron-right"></span>
 			</a>
 		</div>
