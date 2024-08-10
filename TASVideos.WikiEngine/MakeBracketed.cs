@@ -132,12 +132,12 @@ public static partial class Builtins
 		return text;
 	}
 
-	public static string NormalizeInternalLink(string input)
+	public static string NormalizeInternalLink(ReadOnlySpan<char> input)
 	{
-		var hashParts = input.Split('#');
-
-		var text = hashParts[0].TrimEnd('/');
-		var ss = text.Split('/');
+		var iAnchorSeparator = input.IndexOf('#');
+		var pathAndQuery = iAnchorSeparator < 0 ? input : input[..iAnchorSeparator];
+		var anchor = iAnchorSeparator < 0 ? "" : input[(iAnchorSeparator + 1)..];
+		var ss = pathAndQuery.TrimEnd('/').ToString().Split('/');
 
 		int skip = -1;
 		if (ss.Length >= 4 && ss[1].Equals("users", StringComparison.OrdinalIgnoreCase) && ss[2].Equals("profile", StringComparison.OrdinalIgnoreCase))
@@ -151,7 +151,7 @@ public static partial class Builtins
 
 		for (var i = 0; i < ss.Length; i++)
 		{
-			var s = ss[i];
+			ref var s = ref ss[i];
 			if (i != skip)
 			{
 				s = s.Replace(" ", "");
@@ -172,13 +172,10 @@ public static partial class Builtins
 			{
 				s = s[..^4];
 			}
-
-			ss[i] = s;
 		}
 
-		var newText = string.Join("/", ss);
-		hashParts[0] = newText;
-		return string.Join("#", hashParts);
+		var newText = string.Join('/', ss);
+		return anchor.Length is 0 ? newText : $"{newText}#{anchor}";
 	}
 
 	private static string DisplayTextForUrl(string text)
