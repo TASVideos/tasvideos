@@ -2,9 +2,9 @@
 @model ListModel
 @{
 	ViewData.SetTitle("Game List" +
-		(!string.IsNullOrWhiteSpace(Model.Games.System) ? " - " + Model.Games.System : "") +
-		(!string.IsNullOrWhiteSpace(Model.Games.StartsWith) ? " - " + Model.Games.StartsWith : "") +
-		(!string.IsNullOrWhiteSpace(Model.Games.SearchTerms) ? " - " + $@"""{Model.Games.SearchTerms}""" : ""));
+		(!string.IsNullOrWhiteSpace(Model.Search.System) ? " - " + Model.Search.System : "") +
+		(!string.IsNullOrWhiteSpace(Model.Search.StartsWith) ? " - " + Model.Search.StartsWith : "") +
+		(!string.IsNullOrWhiteSpace(Model.Search.SearchTerms) ? " - " + $@"""{Model.Search.SearchTerms}""" : ""));
 }
 
 <div class="row">
@@ -25,28 +25,28 @@
 			<div class="row mb-1">
 				<div class="col-5 mb-1">
 					<div class="input-group">
-						<label asp-for="@Model.Games.System" class="input-group-text"></label>
-						<select asp-items="@Model.SystemList" asp-for="@Model.Games.System" name="System"></select>
+						<label asp-for="@Model.Search.System" class="input-group-text"></label>
+						<select asp-items="@Model.SystemList" asp-for="@Model.Search.System" name="System"></select>
 					</div>
 				</div>
 				<div class="col-5 mb-1">
 					<div class="input-group">
-						<label asp-for="@Model.Games.StartsWith" class="input-group-text"></label>
-						<select asp-items="@Model.LetterList" asp-for="@Model.Games.StartsWith" name="Letter"></select>
+						<label asp-for="@Model.Search.StartsWith" class="input-group-text"></label>
+						<select asp-items="@Model.LetterList" asp-for="@Model.Search.StartsWith" name="StartsWith"></select>
 					</div>
 				</div>
 			</div>
 			<div class="row mb-1">
 				<div class="col-5 mb-1">
 					<div class="input-group">
-						<label asp-for="@Model.Games.Genre" class="input-group-text"></label>
-						<select asp-for="@Model.Games.Genre" asp-items="@Model.GenreList" name="Genre"></select>
+						<label asp-for="@Model.Search.Genre" class="input-group-text"></label>
+						<select asp-for="@Model.Search.Genre" asp-items="@Model.GenreList" name="GenreList"></select>
 					</div>
 				</div>
 				<div class="col-5 mb-1">
 					<div class="input-group">
-						<label asp-for="@Model.Games.Group" class="input-group-text"></label>
-						<select asp-for="@Model.Games.Group" asp-items="@Model.GroupList" name="Group"></select>
+						<label asp-for="@Model.Search.Group" class="input-group-text"></label>
+						<select asp-for="@Model.Search.Group" asp-items="@Model.GroupList" name="GroupList"></select>
 					</div>
 				</div>
 			</div>

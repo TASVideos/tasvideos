@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.Screenshots)]
 public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 {
-	public ScreenshotPageOf<ScreenshotEntry> List { get; set; } = null!;
+	public PageOf<ScreenshotEntry> List { get; set; } = null!;
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
@@ -23,7 +23,7 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 			query = query.Where(pf => string.IsNullOrEmpty(pf.Description));
 		}
 
-		var screenshots = await query
+		List = await query
 			.Select(p => new ScreenshotEntry
 			{
 				Id = p.PublicationId,
@@ -32,11 +32,6 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 				Screenshot = p.Path
 			})
 			.SortedPageOf(GetPaging());
-
-		List = new ScreenshotPageOf<ScreenshotEntry>(screenshots)
-		{
-			OnlyDescriptions = onlyDescriptions
-		};
 
 		return View();
 	}
@@ -53,10 +48,5 @@ public class Screenshots(ApplicationDbContext db) : WikiViewComponent
 
 		[Sortable]
 		public string Description { get; init; } = "";
-	}
-
-	public class ScreenshotPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
-	{
-		public bool? OnlyDescriptions { get; set; }
 	}
 }
