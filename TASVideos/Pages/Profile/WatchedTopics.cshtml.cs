@@ -6,7 +6,7 @@ public class WatchedTopicsModel(ITopicWatcher topicWatcher) : BasePageModel
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<WatchedTopic> Watches { get; set; } = new([]);
+	public PageOf<WatchedTopic> Watches { get; set; } = new([], new());
 
 	public async Task OnGet()
 	{

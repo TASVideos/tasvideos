@@ -8,7 +8,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public LogPaging Search { get; set; } = new();
 
-	public PageOf<LogEntry> History { get; set; } = new([]);
+	public PageOf<LogEntry, LogPaging> History { get; set; } = new([], new());
 
 	[FromRoute]
 	public string Table { get; set; } = "";

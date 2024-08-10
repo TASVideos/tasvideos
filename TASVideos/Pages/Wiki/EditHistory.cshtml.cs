@@ -9,7 +9,7 @@ public class EditHistoryModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string UserName { get; set; } = "";
 
-	public PageOf<HistoryEntry> History { get; set; } = new([]);
+	public PageOf<HistoryEntry> History { get; set; } = new([], new());
 
 	public async Task OnGet()
 	{
