@@ -35,13 +35,12 @@ public class Frames(ApplicationDbContext db, ICacheService cache) : WikiViewComp
 
 	private async ValueTask<double> GuessFps(string? pageName)
 	{
-		var submissionId = WikiHelper.IsSubmissionPage(pageName);
-		if (submissionId.HasValue)
+		if (WikiHelper.IsSubmissionPage(pageName, out var submissionId))
 		{
 			var sub = await db.Submissions
-				.Where(s => s.Id == submissionId.Value)
+				.Where(s => s.Id == submissionId)
 				.Select(s => new { s.Id, s.SystemFrameRate!.FrameRate })
-				.SingleOrDefaultAsync(s => s.Id == submissionId.Value);
+				.SingleOrDefaultAsync(s => s.Id == submissionId);
 
 			if (sub?.FrameRate is not null)
 			{
@@ -51,17 +50,16 @@ public class Frames(ApplicationDbContext db, ICacheService cache) : WikiViewComp
 			return 60;
 		}
 
-		var publicationId = WikiHelper.IsPublicationPage(pageName);
-		if (publicationId.HasValue)
+		if (WikiHelper.IsPublicationPage(pageName, out var publicationId))
 		{
-			var key = CacheKey + publicationId.Value;
+			var key = $"{CacheKey}{publicationId}";
 			if (cache.TryGetValue(key, out double frameRate))
 			{
 				return frameRate;
 			}
 
 			var pub = await db.Publications
-				.Where(p => p.Id == publicationId.Value)
+				.Where(p => p.Id == publicationId)
 				.Select(p => new { p.Id, p.SystemFrameRate!.FrameRate })
 				.SingleOrDefaultAsync();
 
