@@ -54,7 +54,14 @@
 				}
 			</div>
 			<h4>
-				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Title</span></a>
+				@if (ViewContext.Page() != $"/{Model.Id}M") // is there a better way of doing this? MSDN suggests appending to ViewData in the parent and passing that through, but this seemed simpler --yoshi
+				{
+					<span class="text-body-emphasis">@Model.Title</span>
+				}
+				else
+				{
+					<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Title</span></a>
+				}
 			</h4>
 		</div>
 	</card-header>
