@@ -5,7 +5,9 @@ public enum VersionTypes
 	Unknown,
 	Good,
 	Hack,
-	Bad
+	Bad,
+	Homebrew,
+	Unlicensed
 }
 
 public class GameVersion : BaseEntity
