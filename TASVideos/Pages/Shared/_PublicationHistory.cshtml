@@ -2,25 +2,8 @@
 
 @foreach (var node in Model.Goals.OrderBy(b => string.IsNullOrWhiteSpace(b.Goal)))
 {
-	var highlight = node.Id == ViewData.Int("Highlight") ? "fw-bold fst-italic border border-info p-1" : "";
 	<div class="mb-4">
 		<p>Current: <strong>@node.Goal</strong></p>
-		<icon path="@node.ClassIconPath" />
-		@foreach (var flag in node.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
-		{
-			<a href="/@flag.LinkPath">
-				<img class="ms-1" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
-			</a>
-		}
-		<pub-link class="@highlight" id="@node.Id">@node.Title</pub-link>
-		<span>(<timezone-convert asp-for="@node.CreateTimestamp" date-only="true" />)</span>
-		@foreach (var obsoletion in node.Obsoletes)
-		{
-			<ul class="mb-0">
-				<li>
-					<partial name="_HistoryEntry" model="obsoletion" view-data="ViewData" />
-				</li>
-			</ul>
-		}
+		<partial name="_HistoryEntry" model="node" view-data="ViewData" />
 	</div>
 }

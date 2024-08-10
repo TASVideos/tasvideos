@@ -96,7 +96,7 @@ public class PublicationHistoryNode
 
 	public IEnumerable<PublicationHistoryNode> Obsoletes => ObsoleteList;
 
-	internal int? ObsoletedById { get; init; }
+	public int? ObsoletedById { get; internal init; }
 
 	internal List<PublicationHistoryNode> ObsoleteList { get; set; } = [];
 
