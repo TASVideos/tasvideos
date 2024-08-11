@@ -31,5 +31,6 @@ internal class GamesResponse
 		public string? Region { get; init; } = "";
 		public string? Version { get; init; } = "";
 		public string SystemCode { get; init; } = "";
+		public string? SourceDb { get; init; }
 	}
 }

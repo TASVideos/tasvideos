@@ -22,7 +22,8 @@ internal static class EntityExtensions
 				Type = gv.Type,
 				Region = gv.Region,
 				Version = gv.Version,
-				SystemCode = gv.System!.Code
+				SystemCode = gv.System!.Code,
+				SourceDb = gv.SourceDb
 			})
 		});
 	}

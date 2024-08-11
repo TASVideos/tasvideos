@@ -45,6 +45,12 @@ public class GameVersion : BaseEntity
 
 	[StringLength(255)]
 	public string? TitleOverride { get; set; }
+
+	[StringLength(50)]
+	public string? SourceDb { get; set; }
+
+	[StringLength(2000)]
+	public string? Notes { get; set; }
 }
 
 public static class GameVersionExtensions

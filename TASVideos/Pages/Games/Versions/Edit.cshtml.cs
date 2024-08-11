@@ -80,7 +80,9 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 				Version = v.Version,
 				Region = v.Region ?? "",
 				Type = v.Type,
-				TitleOverride = v.TitleOverride
+				TitleOverride = v.TitleOverride,
+				SourceDb = v.SourceDb,
+				Notes = v.Notes
 			})
 			.SingleOrDefaultAsync();
 
@@ -131,6 +133,8 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		version.Type = Version.Type;
 		version.TitleOverride = Version.TitleOverride;
 		version.System = system;
+		version.SourceDb = Version.SourceDb;
+		version.Notes = Version.Notes;
 
 		try
 		{
@@ -201,5 +205,11 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		[StringLength(255)]
 		public string? TitleOverride { get; init; }
+
+		[StringLength(50)]
+		public string? SourceDb { get; init; }
+
+		[StringLength(2000)]
+		public string? Notes { get; init; }
 	}
 }

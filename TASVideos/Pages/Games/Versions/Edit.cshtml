@@ -74,8 +74,17 @@
 				<select asp-for="Version.Region" asp-items="@Model.AvailableRegionTypes"></select>
 				<span asp-validation-for="Version.Region"></span>
 			</fieldset>
+			<fieldset>
+				<label asp-for="Version.SourceDb"></label>
+				<input asp-for="Version.SourceDb" />
+				<span asp-validation-for="Version.SourceDb"></span>
+			</fieldset>
 		</column>
 	</row>
+	<fullrow>
+		<label asp-for="Version.Notes"></label>
+		<textarea asp-for="Version.Notes" rows="4"></textarea>
+	</fullrow>
 	<form-button-bar>
 		<submit-button edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></cancel-link>
