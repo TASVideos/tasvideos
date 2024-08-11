@@ -7,7 +7,11 @@ public enum VersionTypes
 	Hack,
 	Bad,
 	Homebrew,
-	Unlicensed
+	Unlicensed,
+	Prerelease,
+	UnofficialPort,
+	Unreleased,
+	CustomLevelSet
 }
 
 public class GameVersion : BaseEntity
