@@ -44,15 +44,15 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden),
 			PlaygroundGoals = g.Submissions
 				.Where(s => s.Status == SubmissionStatus.Playground)
-				.Select(s => s.GameGoal)
-				.Select(g => new GoalEntry(
-					g.Id,
-					g.DisplayName,
-					g.Submissions
-						.Where(s => s.Status == SubmissionStatus.Playground)
-						.Select(s => new SubmissionEntry(s.Id, s.Title))
+				.GroupBy(s => s.GameGoal)
+				.OrderBy(gg => gg.Key!.DisplayName.Length)
+				.Select(gg => new GoalEntry(
+					gg.Key!.Id,
+					gg.Key!.DisplayName,
+					gg.OrderByDescending(ggs => ggs.Id)
+						.Select(ggs => new SubmissionEntry(ggs.Id, ggs.Title))
 						.ToList()))
-				.ToList()
+				.ToList(),
 		});
 
 		query = ParsedId > 0

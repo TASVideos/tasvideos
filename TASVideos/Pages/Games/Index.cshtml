@@ -131,7 +131,7 @@
 		{
 			<div id="tab-goal-@(goal.Id)" class="tab-pane fade@(goal==Model.Game.PlaygroundGoals.First() ? " active show" : "")">
 				<ul>
-					@foreach (var sub in goal.Submissions.OrderByDescending(s => s.Id))
+					@foreach (var sub in goal.Submissions)
 					{
 						<li>
 							<sub-link id="@sub.Id">@sub.Title</sub-link>
