@@ -83,7 +83,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			.WithDefaultEntry();
 
 		AvailableGames = UserFile.System.HasValue
-			? await db.Games.ToDropDownList(UserFile.System.Value)
+			? (await db.Games.ToDropDownList(UserFile.System.Value)).WithDefaultEntry()
 			: [.. UiDefaults.DefaultEntry];
 	}
 
