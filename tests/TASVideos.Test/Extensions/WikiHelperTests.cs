@@ -197,8 +197,15 @@ public class WikiHelperTests
 	[DataRow("InternalSystem/PublicationContent/MNotANumber", null)]
 	public void IsPublicationPage(string pageName, int? expected)
 	{
-		var actual = WikiHelper.IsPublicationPage(pageName);
-		Assert.AreEqual(expected, actual);
+		if (expected is null)
+		{
+			Assert.IsFalse(WikiHelper.IsPublicationPage(pageName, out _), "success");
+		}
+		else
+		{
+			Assert.IsTrue(WikiHelper.IsPublicationPage(pageName, out var actual), "success");
+			Assert.AreEqual(expected, actual, "match");
+		}
 	}
 
 	[TestMethod]
@@ -213,8 +220,15 @@ public class WikiHelperTests
 	[DataRow("InternalSystem/SubmissionContent/SNotANumber", null)]
 	public void IsSubmissionPage(string pageName, int? expected)
 	{
-		var actual = WikiHelper.IsSubmissionPage(pageName);
-		Assert.AreEqual(expected, actual);
+		if (expected is null)
+		{
+			Assert.IsFalse(WikiHelper.IsSubmissionPage(pageName, out _), "success");
+		}
+		else
+		{
+			Assert.IsTrue(WikiHelper.IsSubmissionPage(pageName, out var actual), "success");
+			Assert.AreEqual(expected, actual, "match");
+		}
 	}
 
 	[TestMethod]

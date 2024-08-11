@@ -25,12 +25,12 @@ public static class WikiHelper
 				|| userPermissions.Contains(PermissionTo.EditPublicationMetaData);
 		}
 
-		if (IsPublicationPage(pageName).HasValue)
+		if (IsPublicationPage(pageName, out _))
 		{
 			return userPermissions.Contains(PermissionTo.EditPublicationMetaData);
 		}
 
-		if (IsSubmissionPage(pageName).HasValue)
+		if (IsSubmissionPage(pageName, out _))
 		{
 			return userPermissions.Contains(PermissionTo.EditSubmissions);
 		}
@@ -184,46 +184,26 @@ public static class WikiHelper
 			&& pageName.StartsWith("GameResources/");
 	}
 
-	public static int? IsPublicationPage(string? pageName)
+	public static bool IsPublicationPage(string? pageName, out int id)
 	{
-		if (string.IsNullOrWhiteSpace(pageName))
+		if (!string.IsNullOrWhiteSpace(pageName) && pageName.StartsWith(LinkConstants.PublicationWikiPage))
 		{
-			return null;
+			return int.TryParse(pageName[LinkConstants.PublicationWikiPage.Length..], out id);
 		}
 
-		if (pageName.StartsWith(LinkConstants.PublicationWikiPage))
-		{
-			var result = int.TryParse(
-				pageName.Replace(LinkConstants.PublicationWikiPage, ""), out int id);
-
-			if (result)
-			{
-				return id;
-			}
-		}
-
-		return null;
+		id = default;
+		return false;
 	}
 
-	public static int? IsSubmissionPage(string? pageName)
+	public static bool IsSubmissionPage(string? pageName, out int id)
 	{
-		if (string.IsNullOrWhiteSpace(pageName))
+		if (!string.IsNullOrWhiteSpace(pageName) && pageName.StartsWith(LinkConstants.SubmissionWikiPage))
 		{
-			return null;
+			return int.TryParse(pageName[LinkConstants.SubmissionWikiPage.Length..], out id);
 		}
 
-		if (pageName.StartsWith(LinkConstants.SubmissionWikiPage))
-		{
-			var result = int.TryParse(
-				pageName.Replace(LinkConstants.SubmissionWikiPage, ""), out int id);
-
-			if (result)
-			{
-				return id;
-			}
-		}
-
-		return null;
+		id = default;
+		return false;
 	}
 
 	/// <summary>
