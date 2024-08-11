@@ -41,7 +41,18 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
 			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
 			SubmissionCount = g.Submissions.Count,
-			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden)
+			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden),
+			PlaygroundGoals = g.Submissions
+				.Where(s => s.Status == SubmissionStatus.Playground)
+				.GroupBy(s => s.GameGoal)
+				.OrderBy(gg => gg.Key!.DisplayName.Length)
+				.Select(gg => new GoalEntry(
+					gg.Key!.Id,
+					gg.Key!.DisplayName,
+					gg.OrderByDescending(ggs => ggs.Id)
+						.Select(ggs => new SubmissionEntry(ggs.Id, ggs.Title))
+						.ToList()))
+				.ToList(),
 		});
 
 		query = ParsedId > 0
@@ -116,6 +127,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public record WatchFile(long Id, string FileName);
 	public record TopicEntry(int Id, string Title);
+	public record GoalEntry(int Id, string Name, List<SubmissionEntry> Submissions);
+	public record SubmissionEntry(int Id, string Title);
 
 	public class GameDisplay
 	{
@@ -128,6 +141,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public List<string> Genres { get; init; } = [];
 		public List<GameVersion> Versions { get; init; } = [];
 		public List<GameGroup> GameGroups { get; init; } = [];
+		public List<GoalEntry> PlaygroundGoals { get; set; } = [];
 		public int PublicationCount { get; init; }
 		public int ObsoletePublicationCount { get; init; }
 		public int SubmissionCount { get; init; }

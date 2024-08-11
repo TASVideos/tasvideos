@@ -91,7 +91,9 @@
 		@foreach (var movie in Model.Movies)
 		{
 			<li class="nav-item">
-				<a class="nav-link@(movie==Model.Movies.First() ? " active" : "")" href="#tab-@(movie.Movie.Id)M" data-bs-toggle="tab">
+				<a class="nav-link@(movie==Model.Movies.First() ? " active" : "")"
+				   href="#tab-@(movie.Movie.Id)M"
+				   data-bs-toggle="tab">
 					<span condition="!string.IsNullOrEmpty(movie.TabTitleRegular)">@movie.TabTitleRegular</span>
 					<span condition="!string.IsNullOrEmpty(movie.TabTitleBold)" class="fw-bold">"@(movie.TabTitleBold)"</span>
 				</a>
@@ -108,6 +110,39 @@
 	</div>
 	<small condition="@(Model.Movies.Any(m => m.Movie.Goal == "baseline"))" class="text-body-tertiary">The baseline tab shows the default movie beating the game as fast as possible without any special conditions.</small>
 </div>
+<br />
+
+<div condition="Model.Game.PlaygroundGoals.Any()">
+	<h3>Playground</h3>
+	<ul class="nav nav-tabs" role="tablist">
+		@foreach (var goal in Model.Game.PlaygroundGoals)
+		{
+			<li class="nav-item">
+				<a class="nav-link@(goal==Model.Game.PlaygroundGoals.First() ? " active" : "")"
+				   href="#tab-goal-@(goal.Id)"
+				   data-bs-toggle="tab">
+					@goal.Name
+				</a>
+			</li>
+		}
+	</ul>
+	<div class="tab-content">
+		@foreach (var goal in Model.Game.PlaygroundGoals)
+		{
+			<div id="tab-goal-@(goal.Id)" class="tab-pane fade@(goal==Model.Game.PlaygroundGoals.First() ? " active show" : "")">
+				<ul>
+					@foreach (var sub in goal.Submissions)
+					{
+						<li>
+							<sub-link id="@sub.Id">@sub.Title</sub-link>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	</div>
+</div>
+
 <row class="my-3">
 	<column md="6">
 		<ul>
@@ -130,15 +165,15 @@
 				<a href="/UserFiles/Game/@(Model.Game.Id)">
 					@Model.Game.UserFilesCount User Files
 				</a>
-            </li>
-            <li condition="Model.Game.PublicationCount > 0">
-                <a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
-            </li>
-            <li>
+			</li>
+			<li condition="Model.Game.PublicationCount > 0">
+				<a asp-page="PublicationHistory" asp-route-id="@Model.Game.Id">Publication History</a>
+			</li>
+			<li>
 				<a href="/Games/@(Model.Game.Id)/Goals/List">
-                    Goals
-                </a>
-            </li>
+					Goals
+				</a>
+			</li>
 		</ul>
 	</column>
 	<column md="6" condition="Model.WatchFiles.Any()">
