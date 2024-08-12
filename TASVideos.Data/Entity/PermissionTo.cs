@@ -171,6 +171,10 @@ public enum PermissionTo
 	ReplacePrimaryMovieFile = 309,
 
 	[Group("Publication Maintenance")]
+	[Description("The ability to edit a movie's star flag")]
+	EditStars = 310,
+
+	[Group("Publication Maintenance")]
 	[Description("The ability to add, edit, and remove the tags used for publications")]
 	TagMaintenance = 390,
 
