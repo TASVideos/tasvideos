@@ -6,14 +6,14 @@ public class PageOf<T>(IEnumerable<T> items, PagingModel request) : PageOf<T, Pa
 {
 }
 
-public class PageOf<T, T2>(IEnumerable<T> items, T2 request) : IPaged<T2>, IEnumerable<T>
-	where T2 : IRequest
+public class PageOf<TItem, TRequest>(IEnumerable<TItem> items, TRequest request) : IPaged<TRequest>, IEnumerable<TItem>
+	where TRequest : IRequest
 {
-	public T2 Request { get; init; } = request;
+	public TRequest Request { get; init; } = request;
 
 	public int RowCount { get; init; }
 
-	public IEnumerator<T> GetEnumerator() => items.GetEnumerator();
+	public IEnumerator<TItem> GetEnumerator() => items.GetEnumerator();
 	IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 }
 

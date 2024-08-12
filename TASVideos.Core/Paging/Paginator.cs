@@ -11,28 +11,28 @@ public static class Paginator
 	/// </summary>
 	/// <param name="query">The query to paginate and run.</param>
 	/// <param name="paging">The paging data to use.</param>
-	/// <typeparam name="T">The result type of the query.</typeparam>
-	public static async Task<PageOf<T>> SortedPageOf<T>(this IQueryable<T> query, PagingModel paging)
-		where T : class
+	/// <typeparam name="TItem">The result type of the query.</typeparam>
+	public static async Task<PageOf<TItem>> SortedPageOf<TItem>(this IQueryable<TItem> query, PagingModel paging)
+		where TItem : class
 	{
 		return await query
 			.SortBy(paging)
 			.PageOf(paging);
 	}
 
-	public static async Task<PageOf<T, T2>> SortedPageOf<T, T2>(this IQueryable<T> query, T2 paging)
-		where T : class
-		where T2 : PagingModel
+	public static async Task<PageOf<TItem, TRequest>> SortedPageOf<TItem, TRequest>(this IQueryable<TItem> query, TRequest paging)
+		where TItem : class
+		where TRequest : PagingModel
 	{
 		return await query
 			.SortBy(paging)
 			.PageOf(paging);
 	}
 
-	public static async Task<PageOf<T>> PageOf<T>(
-		this IQueryable<T> query,
+	public static async Task<PageOf<TItem>> PageOf<TItem>(
+		this IQueryable<TItem> query,
 		PagingModel paging)
-		where T : class
+		where TItem : class
 	{
 		int rowsToSkip = paging.Offset();
 
@@ -46,10 +46,10 @@ public static class Paginator
 			newQuery = newQuery.Take(pageSize);
 		}
 
-		IEnumerable<T> results = await newQuery
+		IEnumerable<TItem> results = await newQuery
 			.ToListAsync();
 
-		var pageOf = new PageOf<T>(results, paging)
+		var pageOf = new PageOf<TItem>(results, paging)
 		{
 			RowCount = rowCount,
 		};
@@ -57,11 +57,11 @@ public static class Paginator
 		return pageOf;
 	}
 
-	public static async Task<PageOf<T, T2>> PageOf<T, T2>(
-		this IQueryable<T> query,
-		T2 paging)
-		where T : class
-		where T2 : PagingModel
+	public static async Task<PageOf<TItem, TRequest>> PageOf<TItem, TRequest>(
+		this IQueryable<TItem> query,
+		TRequest paging)
+		where TItem : class
+		where TRequest : PagingModel
 	{
 		int rowsToSkip = paging.Offset();
 
@@ -75,10 +75,10 @@ public static class Paginator
 			newQuery = newQuery.Take(pageSize);
 		}
 
-		IEnumerable<T> results = await newQuery
+		IEnumerable<TItem> results = await newQuery
 			.ToListAsync();
 
-		var pageOf = new PageOf<T, T2>(results, paging)
+		var pageOf = new PageOf<TItem, TRequest>(results, paging)
 		{
 			RowCount = rowCount,
 		};
