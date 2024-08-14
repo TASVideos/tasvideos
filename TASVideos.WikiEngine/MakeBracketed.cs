@@ -108,7 +108,7 @@ public static partial class Builtins
 	private static string NormalizeImageUrl(string text)
 	{
 		return text[0] == '='
-			? string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1))
+			? text[1] is '/' ? text[1..] : $"/{text[1..]}"
 			: text;
 	}
 
@@ -121,7 +121,7 @@ public static partial class Builtins
 				return "/";
 			}
 
-			return NormalizeInternalLink(string.Concat("/", text.AsSpan(text[1] == '/' ? 2 : 1)));
+			return NormalizeInternalLink(text[1] is '/' ? text[1..] : $"/{text[1..]}");
 		}
 
 		if (text.StartsWith("user:"))
@@ -132,12 +132,12 @@ public static partial class Builtins
 		return text;
 	}
 
-	public static string NormalizeInternalLink(string input)
+	public static string NormalizeInternalLink(ReadOnlySpan<char> input)
 	{
-		var hashParts = input.Split('#');
-
-		var text = hashParts[0].TrimEnd('/');
-		var ss = text.Split('/');
+		var iAnchorSeparator = input.IndexOf('#');
+		var pathAndQuery = iAnchorSeparator < 0 ? input : input[..iAnchorSeparator];
+		var anchor = iAnchorSeparator < 0 ? "" : input[(iAnchorSeparator + 1)..];
+		var ss = pathAndQuery.TrimEnd('/').ToString().Split('/');
 
 		int skip = -1;
 		if (ss.Length >= 4 && ss[1].Equals("users", StringComparison.OrdinalIgnoreCase) && ss[2].Equals("profile", StringComparison.OrdinalIgnoreCase))
@@ -151,7 +151,7 @@ public static partial class Builtins
 
 		for (var i = 0; i < ss.Length; i++)
 		{
-			var s = ss[i];
+			ref var s = ref ss[i];
 			if (i != skip)
 			{
 				s = s.Replace(" ", "");
@@ -172,13 +172,10 @@ public static partial class Builtins
 			{
 				s = s[..^4];
 			}
-
-			ss[i] = s;
 		}
 
-		var newText = string.Join("/", ss);
-		hashParts[0] = newText;
-		return string.Join("#", hashParts);
+		var newText = string.Join('/', ss);
+		return anchor.Length is 0 ? newText : $"{newText}#{anchor}";
 	}
 
 	private static string DisplayTextForUrl(string text)
@@ -212,15 +209,18 @@ public static partial class Builtins
 
 		if (IsLink(pp[0]))
 		{
-			return pp.Length > 1
-				? new[] { MakeLink(charStart, charEnd, pp[0], new Text(charStart, pp[1]) { CharEnd = charEnd }) }
-				: [MakeLink(charStart, charEnd, pp[0], new Text(charStart, DisplayTextForUrl(pp[0])) { CharEnd = charEnd })];
+			var node = MakeLink(
+				charStart,
+				charEnd,
+				pp[0],
+				new Text(charStart, pp.Length > 1 ? pp[1] : DisplayTextForUrl(pp[0])) { CharEnd = charEnd });
+			return [node];
 		}
 
 		// at this point, we have text between [] that doesn't look like a module, doesn't look like a link, and doesn't look like
 		// any of the other predetermined things we scan for
 		// it could be an internal wiki link, but it could also be a lot of other not-allowed garbage
-		if (ImplicitWikiLink.Match(text).Success)
+		if (ImplicitWikiLink.IsMatch(text))
 		{
 			if (pp.Length >= 2)
 			{
