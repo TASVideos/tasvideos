@@ -6,7 +6,7 @@ public class UnratedModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public UnratedRequest Search { get; set; } = new();
 
-	public PageOf<UnratedMovie> UnratedMovies { get; set; } = new([]);
+	public PageOf<UnratedMovie, UnratedRequest> UnratedMovies { get; set; } = new([], new());
 
 	public async Task OnGet()
 	{

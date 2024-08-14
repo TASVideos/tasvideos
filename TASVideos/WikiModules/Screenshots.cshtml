@@ -3,13 +3,13 @@
 @using TASVideos.TagHelpers
 @model Screenshots
 @{
-	var additionalProperties = Model.List.AdditionalProperties();
+	var additionalProperties = Model.List.Request.AdditionalProperties();
 }
 <a asp-page="@ViewContext.Page()"
 	asp-all-route-data="@additionalProperties"
-	asp-route-CurrentPage="@Model.List.CurrentPage"
-	asp-route-PageSize="@Model.List.PageSize"
-	asp-route-Sort="@Model.List.Sort"
+	asp-route-CurrentPage="@Model.List.Request.CurrentPage"
+	asp-route-PageSize="@Model.List.Request.PageSize"
+	asp-route-Sort="@Model.List.Request.Sort"
 	asp-route-OnlyDescriptions=""
 	type="button" class="btn btn-secondary border-dark flex-grow-0">
 	All
@@ -17,18 +17,18 @@
 <a
 	asp-page="@ViewContext.Page()"
 	asp-all-route-data="@additionalProperties"
-	asp-route-CurrentPage="@Model.List.CurrentPage"
-	asp-route-PageSize="@Model.List.PageSize"
-	asp-route-Sort="@Model.List.Sort"
+	asp-route-CurrentPage="@Model.List.Request.CurrentPage"
+	asp-route-PageSize="@Model.List.Request.PageSize"
+	asp-route-Sort="@Model.List.Request.Sort"
 	asp-route-OnlyDescriptions="True"
 	type="button" class="btn btn-secondary border-dark flex-grow-0">
 	Only Descriptions
 </a>
 <a asp-page="@ViewContext.Page()"
    asp-all-route-data="@additionalProperties"
-   asp-route-CurrentPage="@Model.List.CurrentPage"
-   asp-route-PageSize="@Model.List.PageSize"
-   asp-route-Sort="@Model.List.Sort"
+   asp-route-CurrentPage="@Model.List.Request.CurrentPage"
+   asp-route-PageSize="@Model.List.Request.PageSize"
+   asp-route-Sort="@Model.List.Request.Sort"
    asp-route-OnlyDescriptions="False"
    type="button" class="btn btn-secondary border-dark flex-grow-0">
 	Missing Descriptions

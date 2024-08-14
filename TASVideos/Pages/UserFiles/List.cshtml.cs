@@ -5,7 +5,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public UserFileListRequest Search { get; set; } = new();
 
-	public PageOf<UserFileEntry> UserFiles { get; set; } = new([]);
+	public PageOf<UserFileEntry, UserFileListRequest> UserFiles { get; set; } = new([], new());
 	public async Task OnGet()
 	{
 		UserFiles = await db.UserFiles

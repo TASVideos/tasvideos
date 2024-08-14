@@ -2,35 +2,25 @@
 
 namespace TASVideos.Core;
 
-public class PageOf<T> : IPaged, IEnumerable<T>
+public class PageOf<T>(IEnumerable<T> items, PagingModel request) : PageOf<T, PagingModel>(items, request)
 {
-	private readonly IEnumerable<T> _items;
+}
 
-	public PageOf(IEnumerable<T> items)
-	{
-		_items = items;
-		if (_items is PageOf<T> pageOf)
-		{
-			RowCount = pageOf.RowCount;
-			Sort = pageOf.Sort;
-			PageSize = pageOf.PageSize;
-			CurrentPage = pageOf.CurrentPage;
-		}
-	}
+public class PageOf<TItem, TRequest>(IEnumerable<TItem> items, TRequest request) : IPaged<TRequest>, IEnumerable<TItem>
+	where TRequest : IRequest
+{
+	public TRequest Request { get; init; } = request;
 
 	public int RowCount { get; init; }
-	public string? Sort { get; init; }
-	public int? PageSize { get; init; }
-	public int? CurrentPage { get; init; }
 
-	public IEnumerator<T> GetEnumerator() => _items.GetEnumerator();
-	IEnumerator IEnumerable.GetEnumerator() => _items.GetEnumerator();
+	public IEnumerator<TItem> GetEnumerator() => items.GetEnumerator();
+	IEnumerator IEnumerable.GetEnumerator() => items.GetEnumerator();
 }
 
 /// <summary>
 /// Represents all the data necessary to create a paged query.
 /// </summary>
-public class PagingModel : ISortable, IPageable
+public class PagingModel : IRequest
 {
 	public string? Sort { get; set; }
 	public int? PageSize { get; set; } = 25;

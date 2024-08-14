@@ -11,7 +11,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public GameListRequest Search { get; set; } = new();
 
-	public SystemPageOf<GameEntry> Games { get; set; } = new([]);
+	public PageOf<GameEntry, GameListRequest> Games { get; set; } = new([], new());
 
 	public List<SelectListItem> SystemList { get; set; } = [];
 
@@ -25,7 +25,6 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 	{
 		if (ModelState.IsValid)
 		{
-			Search.SearchTerms = SearchTerms;
 			Games = await GetPageOfGames(Search);
 		}
 
@@ -76,13 +75,13 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		return ToDropdownResult(items, includeEmpty);
 	}
 
-	private async Task<SystemPageOf<GameEntry>> GetPageOfGames(GameListRequest paging)
+	private async Task<PageOf<GameEntry, GameListRequest>> GetPageOfGames(GameListRequest paging)
 	{
 		IQueryable<Game> query = db.Games
 			.ForSystemCode(paging.System)
 			.ForGenre(paging.Genre)
 			.ForGroup(paging.Group)
-			.Where(g => g.DisplayName.StartsWith(paging.Letter ?? ""));
+			.Where(g => g.DisplayName.StartsWith(paging.StartsWith ?? ""));
 
 		if (!string.IsNullOrWhiteSpace(paging.SearchTerms))
 		{
@@ -90,22 +89,13 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			query = query.WebSearch(paging.SearchTerms);
 		}
 
-		var data = await query.Select(g => new GameEntry
+		return await query.Select(g => new GameEntry
 		{
 			Id = g.Id,
 			Name = g.DisplayName,
 			Systems = g.GameVersions.Select(v => v.System!.Code).ToList()
 		})
 		.SortedPageOf(paging);
-
-		return new SystemPageOf<GameEntry>(data)
-		{
-			System = paging.System,
-			StartsWith = paging.Letter,
-			Genre = paging.Genre,
-			Group = paging.Group,
-			SearchTerms = paging.SearchTerms,
-		};
 	}
 
 	public class GameListRequest : PagingModel
@@ -118,21 +108,12 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		public string? System { get; set; }
 
-		public string? Letter { get; init; }
-
-		public string? Genre { get; init; }
-
-		public string? Group { get; init; }
-
-		public string? SearchTerms { get; set; }
-	}
-
-	public class SystemPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
-	{
-		public string? System { get; init; }
 		public string? StartsWith { get; init; }
+
 		public string? Genre { get; init; }
+
 		public string? Group { get; init; }
+
 		public string? SearchTerms { get; init; }
 	}
 

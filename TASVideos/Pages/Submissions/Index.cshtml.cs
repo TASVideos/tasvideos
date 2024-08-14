@@ -14,7 +14,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	[FromQuery]
 	public SubmissionSearchRequest Search { get; set; } = new();
 
-	public SubmissionPageOf<SubmissionEntry> Submissions { get; set; } = new([]);
+	public PageOf<SubmissionEntry, SubmissionSearchRequest> Submissions { get; set; } = new([], new());
 
 	public List<SelectListItem> AvailableStatuses => Statuses;
 
@@ -41,19 +41,10 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				: SubmissionSearchRequest.Default;
 		}
 
-		var entries = await db.Submissions
+		Submissions = await db.Submissions
 			.FilterBy(Search)
 			.ToSubListEntry()
 			.SortedPageOf(Search);
-
-		Submissions = new SubmissionPageOf<SubmissionEntry>(entries)
-		{
-			Years = Search.Years,
-			Statuses = Search.Statuses,
-			System = Search.System,
-			GameId = Search.GameId,
-			User = Search.User
-		};
 	}
 
 	public class SubmissionEntry : ITimeable, ISubmissionDisplay
@@ -95,15 +86,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		[TableIgnore]
 		public string? IntendedClass { get; init; }
-	}
-
-	public class SubmissionPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
-	{
-		public IEnumerable<int> Years { get; set; } = [];
-		public IEnumerable<SubmissionStatus> Statuses { get; set; } = [];
-		public string? System { get; set; }
-		public string? User { get; set; }
-		public string? GameId { get; set; }
 	}
 
 	public class SubmissionSearchRequest : PagingModel, ISubmissionFilter

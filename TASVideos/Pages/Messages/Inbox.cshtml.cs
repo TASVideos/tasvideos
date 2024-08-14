@@ -10,7 +10,7 @@ public class InboxModel(IPrivateMessageService privateMessageService) : BasePage
 	[FromRoute]
 	public int? Id { get; set; }
 
-	public PageOf<InboxEntry> Messages { get; set; } = new([]);
+	public PageOf<InboxEntry> Messages { get; set; } = new([], new());
 
 	public async Task OnGet()
 	{

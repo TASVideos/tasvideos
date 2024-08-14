@@ -11,7 +11,7 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 	[FromRoute]
 	public string Query { get; set; } = "";
 
-	public PageOf<PublicationDisplay> Movies { get; set; } = new([]);
+	public PageOf<PublicationDisplay, PublicationRequest> Movies { get; set; } = new([], new());
 
 	public async Task<IActionResult> OnGet()
 	{

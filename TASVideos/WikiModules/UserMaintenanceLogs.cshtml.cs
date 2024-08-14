@@ -5,7 +5,7 @@ namespace TASVideos.WikiModules;
 [WikiModule(ModuleNames.UserMaintenanceLogs)]
 public class UserMaintenanceLogs(ApplicationDbContext db) : WikiViewComponent
 {
-	public PageOf<LogEntry> Logs { get; set; } = new([]);
+	public PageOf<LogEntry> Logs { get; set; } = new([], new());
 
 	public async Task<IViewComponentResult> InvokeAsync()
 	{

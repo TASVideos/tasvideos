@@ -9,7 +9,7 @@ public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePa
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
 
-	public PageOf<LatestModel.LatestPost> Posts { get; set; } = new([]);
+	public PageOf<LatestModel.LatestPost> Posts { get; set; } = new([], new());
 
 	public async Task OnGet()
 	{

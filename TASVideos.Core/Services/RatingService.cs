@@ -103,7 +103,7 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 			return dto;
 		}
 
-		var ratings = await db.PublicationRatings
+		dto.Ratings = await db.PublicationRatings
 			.ForUser(dto.Id)
 			.IncludeObsolete(paging.IncludeObsolete)
 			.Select(pr => new UserRatings.Rating
@@ -114,11 +114,6 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 				Value = pr.Value
 			})
 			.SortedPageOf(paging);
-
-		dto.Ratings = new RatingPageOf<UserRatings.Rating>(ratings)
-		{
-			IncludeObsolete = paging.IncludeObsolete,
-		};
 
 		return dto;
 	}
@@ -132,7 +127,7 @@ public class UserRatings
 	public string UserName { get; init; } = "";
 	public bool PublicRatings { get; init; }
 
-	public RatingPageOf<Rating> Ratings { get; set; } = new([]);
+	public PageOf<Rating, RatingRequest> Ratings { get; set; } = new([], new());
 
 	public class Rating
 	{
@@ -159,9 +154,4 @@ public class RatingRequest : PagingModel
 	}
 
 	public bool IncludeObsolete { get; set; }
-}
-
-public class RatingPageOf<T>(IEnumerable<T> items) : PageOf<T>(items)
-{
-	public bool IncludeObsolete { get; init; }
 }

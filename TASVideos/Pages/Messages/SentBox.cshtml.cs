@@ -9,7 +9,7 @@ public class SentboxModel(IPrivateMessageService privateMessageService) : BasePa
 	[FromRoute]
 	public int? Id { get; set; }
 
-	public PageOf<SentboxEntry> SentBox { get; set; } = new([]);
+	public PageOf<SentboxEntry> SentBox { get; set; } = new([], new());
 
 	public async Task OnGet()
 	{
