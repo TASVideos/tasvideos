@@ -104,6 +104,8 @@ public class PublishModel(
 			return Page();
 		}
 
+		using var dbTransaction = await db.Database.BeginTransactionAsync();
+
 		var publication = new Publication
 		{
 			PublicationClassId = submission.IntendedClass!.Id,
@@ -153,6 +155,7 @@ public class PublishModel(
 
 		await userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
 		await tasVideoAgent.PostSubmissionPublished(Id, publication.Id);
+		await dbTransaction.CommitAsync();
 		await publisher.AnnounceNewPublication(publication);
 
 		if (youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
