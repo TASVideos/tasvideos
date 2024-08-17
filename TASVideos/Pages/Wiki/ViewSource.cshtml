@@ -8,7 +8,7 @@
 	<back-link href="/@Model.WikiPage.PageName" name-override="Back to Page"></back-link>
 </top-button-bar>
 <div class="mb-2">
-	Revision @Model.Revision (current) <br />
-	Last Updated by @(Model.WikiPage.AuthorName ?? "Unknown") <timezone-convert asp-for="@Model.WikiPage.CreateTimestamp" in-line="true" />
+	Revision @Model.WikiPage.Revision @(Model.WikiPage.IsCurrent() ? "(current)" : "(old)") <br />
+	Edited by @(Model.WikiPage.AuthorName ?? "Unknown") <timezone-convert asp-for="@Model.WikiPage.CreateTimestamp" in-line="true" />
 </div>
 <pre>@Model.WikiPage.Markup.ReplaceLineEndings("\n")</pre>
