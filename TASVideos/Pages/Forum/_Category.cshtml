@@ -42,8 +42,7 @@
 			{
 				<div class="col-4 align-items-center">
 					<timezone-convert asp-for="@forum.LastPost.Timestamp" /> <br />
-					<profile-link username="@forum.LastPost.PosterName"></profile-link>
-					<a href="/Forum/Posts/@forum.LastPost.Id" class="fa fa-arrow-circle-right"></a>
+					<a href="/Forum/Posts/@forum.LastPost.Id">@forum.LastPost.PosterName <i class="fa fa-arrow-circle-right"></i></a>
 				</div>
 			}
 			</row>
