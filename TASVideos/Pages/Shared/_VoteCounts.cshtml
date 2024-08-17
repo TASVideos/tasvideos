@@ -1,0 +1,20 @@
+﻿@model VoteCounts?
+
+<span condition="Model is not null">
+	@{
+		int totalCount = Model!.VotesYes + Model.VotesMeh + Model.VotesNo;
+		if (totalCount == 0)
+		{
+			<text>No votes</text>
+		}
+		else
+		{
+			var support = Math.Ceiling(100 * ((Model.VotesYes + (Model.VotesMeh / 2d)) / totalCount));
+			<text>@support%</text>
+		}
+
+		if (totalCount != 0){
+			<text> (<span class="@(Model.UserVotedYes ? "fw-bold" : "")">@Model.VotesYes</span>/<span class="@(Model.UserVotedMeh ? "fw-bold" : "")">@Model.VotesMeh</span>/<span class="@(Model.UserVotedNo ? "fw-bold" : "")">@Model.VotesNo</span>)</text>
+		}
+	}
+</span>

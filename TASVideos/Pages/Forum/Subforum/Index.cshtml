@@ -44,6 +44,7 @@
 					</a>
 				}
 				<a asp-page="/Forum/Topics/Index" asp-route-id="@topic.Id" class="fw-bold">@topic.Topics</a>
+				<div condition="topic.Votes is not null" class="text-body-tertiary float-end"><partial name="_VoteCounts" model="topic.Votes" /></div>
 				<div class="ms-2">
 					@{
 						var totalPages = (topic.Replies - 1) / ForumConstants.PostsPerPage + 1;

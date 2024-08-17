@@ -1,4 +1,5 @@
-﻿using TASVideos.Data.Entity.Awards;
+﻿using TASVideos.Common;
+using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Forum.Posts;
@@ -345,7 +346,7 @@ public static class EntityExtensions
 		return [.. UiDefaults.AnyEntry, .. items];
 	}
 
-	public static IQueryable<Pages.Submissions.IndexModel.SubmissionEntry> ToSubListEntry(this IQueryable<Submission> query)
+	public static IQueryable<Pages.Submissions.IndexModel.SubmissionEntry> ToSubListEntry(this IQueryable<Submission> query, int? userIdForVotes = null)
 	{
 		return query
 			.Select(s => new Pages.Submissions.IndexModel.SubmissionEntry
@@ -362,7 +363,17 @@ public static class EntityExtensions
 				Status = s.Status,
 				Judge = s.Judge != null ? s.Judge.UserName : null,
 				Publisher = s.Publisher != null ? s.Publisher.UserName : null,
-				IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null
+				IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null,
+				Votes = s.Topic != null ? s.Topic.Poll != null ? new VoteCounts
+				{
+					VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
+					VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
+					VotesNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
+					UserVotedYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
+					UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
+					UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
+				}
+				: null : null,
 			});
 	}
 
