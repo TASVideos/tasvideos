@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.FileProviders;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
 
@@ -33,11 +34,19 @@ public static class ApplicationBuilderExtensions
 		return app;
 	}
 
-	public static IApplicationBuilder UseStaticFilesWithExtensionMapping(this IApplicationBuilder app)
+	public static IApplicationBuilder UseStaticFilesWithExtensionMapping(this IApplicationBuilder app, IWebHostEnvironment env)
 	{
 		var provider = new FileExtensionContentTypeProvider();
 		provider.Mappings[".avif"] = "image/avif";
-		return app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
+		return app.UseStaticFiles(new StaticFileOptions
+		{
+			ContentTypeProvider = provider,
+			FileProvider = new PhysicalFileProvider(
+				Path.Combine(env.WebRootPath, ".well-known", ".acme-challenge")),
+			RequestPath = "/.well-known/.acme-challenge",
+			ServeUnknownFileTypes = true,
+			DefaultContentType = "text/plain"
+		});
 	}
 
 	public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env)

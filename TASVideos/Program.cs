@@ -63,7 +63,7 @@ app
 	.UseRequestLocalization()
 	.UseGzipCompression(settings)
 	.UseWebOptimizer()
-	.UseStaticFilesWithExtensionMapping()
+	.UseStaticFilesWithExtensionMapping(builder.Environment)
 	.UseAuthentication()
 	.UseMiddleware<CustomLocalizationMiddleware>()
 	.UseSerilogRequestLogging()
