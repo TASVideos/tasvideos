@@ -364,7 +364,11 @@ public static class EntityExtensions
 				Judge = s.Judge != null ? s.Judge.UserName : null,
 				Publisher = s.Publisher != null ? s.Publisher.UserName : null,
 				IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null,
-				Votes = s.Topic != null ? s.Topic.Poll != null ? new VoteCounts
+				Votes = s.Topic != null && s.Topic.Poll != null
+					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionYes)
+					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
+					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionNo)
+					? new VoteCounts
 				{
 					VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
 					VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
@@ -373,7 +377,7 @@ public static class EntityExtensions
 					UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
 					UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
 				}
-				: null : null,
+				: null,
 			});
 	}
 
