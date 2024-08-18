@@ -34,7 +34,8 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 					Game = p.GameId,
 					System = p.SystemId,
 					SystemFramerate = p.SystemFrameRateId,
-					Goal = p.GameGoalId!.Value
+					Goal = p.GameGoalId!.Value,
+					Emulator = p.EmulatorVersion
 				})
 				.SingleOrDefaultAsync();
 
@@ -172,6 +173,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			}
 		}
 
+		publication.EmulatorVersion = Catalog.Emulator;
 		publication.GenerateTitle();
 
 		var result = await db.TrySaveChanges();
@@ -204,5 +206,8 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		public int Game { get; set; }
 		public int System { get; init; }
 		public int SystemFramerate { get; init; }
+
+		[StringLength(50)]
+		public string Emulator { get; init; } = "";
 	}
 }

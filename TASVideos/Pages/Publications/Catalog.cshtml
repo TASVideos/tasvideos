@@ -17,6 +17,11 @@
 				<select asp-for="Catalog.SystemFramerate" asp-items="@Model.AvailableSystemFrameRates" data-id="system-framerate"></select>
 				<span asp-validation-for="Catalog.SystemFramerate"></span>
 			</fieldset>
+			<fieldset>
+				<label asp-for="Catalog.Emulator"></label>
+				<input asp-for="Catalog.Emulator" />
+				<span asp-validation-for="Catalog.Emulator"></span>
+			</fieldset>
 		</column>
 		<column lg="6">
 			<fieldset>
