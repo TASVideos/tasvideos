@@ -41,9 +41,6 @@ public static class ApplicationBuilderExtensions
 		return app.UseStaticFiles(new StaticFileOptions
 		{
 			ContentTypeProvider = provider,
-			FileProvider = new PhysicalFileProvider(
-				Path.Combine(env.WebRootPath, ".well-known", ".acme-challenge")),
-			RequestPath = "/.well-known/.acme-challenge",
 			ServeUnknownFileTypes = true,
 			DefaultContentType = "text/plain"
 		});
