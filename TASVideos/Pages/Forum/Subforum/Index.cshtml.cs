@@ -1,4 +1,5 @@
-﻿using TASVideos.Data.Entity.Forum;
+﻿using TASVideos.Common;
+using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Subforum;
 
@@ -30,6 +31,8 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 			return NotFound();
 		}
 
+		int userIdForVotes = User.GetUserId();
+
 		Forum = forum;
 		Topics = await db.ForumTopics
 			.ForForum(Id)
@@ -49,7 +52,17 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 						PosterName = fp.Poster!.UserName,
 						CreateTimestamp = fp.CreateTimestamp
 					})
-					.FirstOrDefault()
+					.FirstOrDefault(),
+				Votes = ft.Submission != null ? ft.Poll != null ? new VoteCounts
+				{
+					VotesYes = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
+					VotesMeh = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
+					VotesNo = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
+					UserVotedYes = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
+					UserVotedMeh = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
+					UserVotedNo = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
+				}
+				: null : null,
 			})
 			.OrderByDescending(ft => ft.Type)
 			.ThenByDescending(ft => ft.LastPost!.Id) // The database does not enforce it, but we can assume a topic will always have at least one post
@@ -80,6 +93,9 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 
 		[TableIgnore]
 		public bool IsLocked { get; init; }
+
+		[TableIgnore]
+		public VoteCounts? Votes { get; init; }
 
 		[TableIgnore]
 		public LastPostEntry? LastPost { get; init; }

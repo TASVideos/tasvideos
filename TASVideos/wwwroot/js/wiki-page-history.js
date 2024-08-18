@@ -47,21 +47,17 @@ function diffBtnClicked(from, to) {
 function updateTableStyling() {
 	Array.from(document.querySelectorAll('tbody[data-hasrevisions] tr'))
 		.forEach(function (elem) {
-			elem.classList.remove('table-primary');
-			elem.classList.remove('table-info');
-			elem.querySelector("button[data-from]").classList.remove("active");
-			elem.querySelector("button[data-to]").classList.remove("active");
+			elem.querySelector("button[data-from]").classList.remove("bg-warning");
+			elem.querySelector("button[data-to]").classList.remove("bg-warning");
 		});
 
 	const cur = document.querySelector(`tr[data-revision="${toRevision}"]`);
 	if (cur) {
-		cur.classList.add('table-primary');
-		cur.querySelector("button[data-to]").classList.add("active");
+		cur.querySelector("button[data-to]").classList.add("bg-warning");
 	}
 
 	const prev = document.querySelector(`tr[data-revision="${fromRevision}"]`);
 	if (prev) {
-		prev.classList.add('table-info');
-		prev.querySelector("button[data-from]").classList.add("active");
+		prev.querySelector("button[data-from]").classList.add("bg-warning");
 	}
 }

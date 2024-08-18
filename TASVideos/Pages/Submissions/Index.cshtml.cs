@@ -43,7 +43,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		Submissions = await db.Submissions
 			.FilterBy(Search)
-			.ToSubListEntry()
+			.ToSubListEntry(User.GetUserId())
 			.SortedPageOf(Search);
 	}
 
@@ -68,6 +68,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		[Sortable]
 		public SubmissionStatus Status { get; init; }
+
+		public VoteCounts? Votes { get; init; }
 
 		[TableIgnore]
 		public int Id { get; init; }

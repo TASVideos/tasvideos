@@ -129,8 +129,9 @@
 					@{
 						var (version, sha) = Versioning.GetVersion();
 					}
-					&copy; @DateTime.UtcNow.Year - TASVideos <a href="https://github.com/TASVideos/tasvideos/commit/@(sha)">v@(version)</a>
-					- <a href="/SiteRules">Terms</a> - <a href="/api">API</a>
+					<a class="btn btn-silver btn-sm mb-2" href="https://github.com/TASVideos/tasvideos/commit/@(sha)">&copy; @DateTime.UtcNow.Year - TASVideos v@(version)</a>
+					<a class="btn btn-info btn-sm mb-2" href="/SiteRules">Terms</a>
+					<a class="btn btn-info btn-sm mb-2" href="/api">API</a>
 					@{
 						string? path = null;
 						if (ViewData.GetWikiPage() is null && this.Model is not (Publications.ViewModel or Submissions.ViewModel))
@@ -138,7 +139,7 @@
 							path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
 						}
 					}
-				<a condition="path is not null" class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
+				<a condition="path is not null" class="btn btn-info btn-sm mb-2" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
 			</p>
 		</row>
 	</footer>

@@ -8,31 +8,16 @@
 }
 
 @functions {
-	string RowStyles(int revision)
-	{
-		if (revision == Model.FromRevision)
-		{
-			return "table-info";
-		}
-
-		if (revision == Model.ToRevision)
-		{
-			return "table-primary";
-		}
-
-		return "";
-	}
-
 	string DiffBtnStyles(int revision, bool isFrom)
 	{
 		if (isFrom && revision == Model.FromRevision)
 		{
-			return "btn btn-info btn-sm active";
+			return "btn btn-info btn-sm bg-warning";
 		}
 
 		if (!isFrom && revision == Model.ToRevision)
 		{
-			return "btn btn-info btn-sm active";
+			return "btn btn-info btn-sm bg-warning";
 		}
 
 		return "btn btn-info btn-sm";
@@ -55,8 +40,8 @@
 		{
 			var revision = revisions[i];
 			var previousId = i < revisions.Count - 1 ? revisions[i + 1].Revision : (int?)null;
-			<tr data-revision="@revision.Revision" class="@RowStyles(revision.Revision)">
-				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a></td>
+			<tr data-revision="@revision.Revision">
+				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a> (<a asp-page="ViewSource" asp-route-path="@Model.Path" asp-route-revision="@revision.Revision">source</a>)</td>
 				<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
 				<td><profile-link username="@revision.CreateUserName"></profile-link></td>
 				<td>@revision.MinorEdit</td>

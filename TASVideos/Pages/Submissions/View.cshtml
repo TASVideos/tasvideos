@@ -200,8 +200,8 @@
 		</div>
 
 		<div class="btn-toolbar mt-2">
-			<a condition="@canClaimAsJudge" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success">Claim</a>
-			<a condition="@canClaimAsPublisher" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForPublishing" class="btn btn-success">Claim</a>
+			<a condition="@canClaimAsJudge" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForJudging" class="btn btn-success"><i class="fa fa-hand"></i> Claim</a>
+			<a condition="@canClaimAsPublisher" asp-page="Edit" asp-route-id="@Model.Id" asp-page-handler="ClaimForPublishing" class="btn btn-success"><i class="fa fa-hand"></i> Claim</a>
 			<edit-link condition="@canEdit" asp-page="Edit" asp-route-id="@Model.Id"></edit-link>
 			<a permission="CatalogMovies" asp-page="Catalog" asp-route-id="@Model.Id" class="btn btn-info"><i class="fa fa-book"></i> Catalog</a>
 			<a condition="@canPublish" asp-page="Publish" asp-route-id="@Model.Id" class="btn btn-warning">Publish</a>
