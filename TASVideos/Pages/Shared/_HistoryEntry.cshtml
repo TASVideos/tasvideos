@@ -3,7 +3,7 @@
 	var highlight = Model.Id == ViewData.Int("Highlight") ? "fw-bold fst-italic border border-info p-1" : "";
 	var strikethrough = Model.ObsoletedById is null ? "" : "text-decoration-line-through";
 }
-<icon path="@Model.ClassIconPath" />
+<icon path="@Model.ClassIconPath" title="@Model.Class" />
 @foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 {
 	<a href="/@flag.LinkPath">
