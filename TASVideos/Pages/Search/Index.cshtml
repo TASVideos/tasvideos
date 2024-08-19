@@ -16,14 +16,28 @@
 				<span condition="PageContext.HttpContext.Request.QueryString.HasValue" asp-validation-for="SearchTerms"></span>
 			</fieldset>
 			<submit-button>Search</submit-button>
-			<a condition="Model.PageNumber > 1" asp-page="/Search/Index" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber - 1)">Prev</a>
-			<a condition="Model.PageResults.Count > IndexModel.PageSize || Model.PostResults.Count > IndexModel.PageSize || Model.GameResults.Count > IndexModel.PageSize" asp-page="/Search/Index" class="btn btn-secondary" asp-route-searchterms="@Model.SearchTerms" asp-route-pagenumber="@(Model.PageNumber + 1)">Next</a>
 		</column>
 	</row>
 </form>
 
+@{
+	const string pagerClass = "btn btn-secondary border-dark flex-grow-0";
+	const string pagerDisabledClass = "btn btn-silver border-dark flex-grow-0";
+	bool prevDisabled = Model.PageNumber <= 1;
+	bool nextDisabled = Model.PageResults.Count <= IndexModel.PageSize && Model.PostResults.Count <= IndexModel.PageSize && Model.GameResults.Count <= IndexModel.PageSize;
+}
+
+<fullrow class="my-2 text-center">
+	<div class="btn-group flex-wrap" role="group">
+		<a disable="prevDisabled" asp-page="/Search/Index" class="@(prevDisabled ? pagerDisabledClass : pagerClass)" asp-route-SearchTerms="@Model.SearchTerms" asp-route-PageNumber="@(Model.PageNumber - 1)"><i class="fa fa-chevron-left"></i></a>
+		<a condition="!prevDisabled" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="true" class="@pagerDisabledClass">@Model.PageNumber</a>
+		<a condition="!nextDisabled" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="nextDisabled" asp-page="/Search/Index" class="@(nextDisabled ? pagerDisabledClass : pagerClass)" asp-route-SearchTerms="@Model.SearchTerms" asp-route-PageNumber="@(Model.PageNumber + 1)"><i class="fa fa-chevron-right"></i></a>
+	</div>
+</fullrow>
+
 <div condition="Model.GameResults.Any()">
-	<hr />
 	<h4>Game Results:</h4>
 	<standard-table>
 		<table-head columns="Game,System,Groups"></table-head>
@@ -46,7 +60,6 @@
 </div>
 
 <div condition="Model.PageResults.Any()">
-	<hr />
 	<h4>Wiki Results:</h4>
 	<standard-table>
 		<table-head columns="Page,Content"></table-head>
@@ -65,7 +78,6 @@
 </div>
 
 <div condition="Model.PostResults.Any()">
-	<hr />
 	<h4>Post Results:</h4>
 	<standard-table>
 		<table-head columns="Post,Content"></table-head>
@@ -82,3 +94,13 @@
 		}
 	</standard-table>
 </div>
+
+<fullrow class="my-2 text-center">
+	<div class="btn-group flex-wrap" role="group">
+		<a disable="prevDisabled" asp-page="/Search/Index" class="@(prevDisabled ? pagerDisabledClass : pagerClass)" asp-route-SearchTerms="@Model.SearchTerms" asp-route-PageNumber="@(Model.PageNumber - 1)"><i class="fa fa-chevron-left"></i></a>
+		<a condition="!prevDisabled" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="true" class="@pagerDisabledClass">@Model.PageNumber</a>
+		<a condition="!nextDisabled" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="nextDisabled" asp-page="/Search/Index" class="@(nextDisabled ? pagerDisabledClass : pagerClass)" asp-route-SearchTerms="@Model.SearchTerms" asp-route-PageNumber="@(Model.PageNumber + 1)"><i class="fa fa-chevron-right"></i></a>
+	</div>
+</fullrow>

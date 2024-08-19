@@ -42,36 +42,43 @@
 				</div>
 			</fieldset>
 			<submit-button>Search</submit-button>
-			<a condition="Model.EnablePrev"
-			   class="btn btn-secondary"
-			   asp-route-SearchTerms="@Model.SearchTerms"
-			   asp-route-PageNumber="@(Model.PageNumber - 1)"
-			   asp-route-SearchWiki="@Model.SearchWiki"
-			   asp-route-SearchForumTopics="@Model.SearchForumTopics"
-			   asp-route-SearchForumPosts="@Model.SearchForumPosts"
-			   asp-route-SearchPublications="@Model.SearchPublications"
-			   asp-route-SearchGames="@Model.SearchGames"
-			   asp-route-SearchUsers="@Model.SearchUsers">
-				Prev
-			</a>
-			<a condition="!Model.EnablePrev" disable class="btn btn-secondary">Prev</a>
-			<a condition="Model.EnableNext"
-			   class="btn btn-secondary"
-			   asp-route-SearchTerms="@Model.SearchTerms"
-			   asp-route-PageNumber="@(Model.PageNumber + 1)"
-			   asp-route-SearchWiki="@Model.SearchWiki"
-			   asp-route-SearchForumTopics="@Model.SearchForumTopics"
-			   asp-route-SearchForumPosts="@Model.SearchForumPosts"
-			   asp-route-SearchPublications="@Model.SearchPublications"
-			   asp-route-SearchGames="@Model.SearchGames"
-			   asp-route-SearchUsers="@Model.SearchUsers">
-				Next
-			</a>
-			<a condition="!Model.EnableNext" disable class="btn btn-secondary">Next</a>
 		</column>
 	</row>
 </form>
-<br />
+
+@{
+	const string pagerClass = "btn btn-secondary border-dark flex-grow-0";
+	const string pagerDisabledClass = "btn btn-silver border-dark flex-grow-0";
+}
+
+<fullrow class="my-2 text-center">
+	<div class="btn-group flex-wrap" role="group">
+		<a disable="!Model.EnablePrev" class="@(Model.EnablePrev ? pagerClass : pagerDisabledClass)"
+		   asp-route-SearchTerms="@Model.SearchTerms"
+		   asp-route-PageNumber="@(Model.PageNumber - 1)"
+		   asp-route-SearchWiki="@Model.SearchWiki"
+		   asp-route-SearchForumTopics="@Model.SearchForumTopics"
+		   asp-route-SearchForumPosts="@Model.SearchForumPosts"
+		   asp-route-SearchPublications="@Model.SearchPublications"
+		   asp-route-SearchGames="@Model.SearchGames"
+		   asp-route-SearchUsers="@Model.SearchUsers">
+			<i class="fa fa-chevron-left"></i>
+		</a>
+		<a condition="Model.EnablePrev" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="true" class="@pagerDisabledClass">@Model.PageNumber</a>
+		<a condition="Model.EnableNext" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="!Model.EnableNext" class="@(Model.EnableNext ? pagerClass : pagerDisabledClass)" asp-route-SearchTerms="@Model.SearchTerms"
+		   asp-route-PageNumber="@(Model.PageNumber + 1)"
+		   asp-route-SearchWiki="@Model.SearchWiki"
+		   asp-route-SearchForumTopics="@Model.SearchForumTopics"
+		   asp-route-SearchForumPosts="@Model.SearchForumPosts"
+		   asp-route-SearchPublications="@Model.SearchPublications"
+		   asp-route-SearchGames="@Model.SearchGames"
+		   asp-route-SearchUsers="@Model.SearchUsers">
+			<i class="fa fa-chevron-right"></i>
+		</a>
+	</div>
+</fullrow>
 
 <div condition="Model.GameResults.Any()">
 	<h4>Game Results:</h4>
@@ -176,3 +183,32 @@
 		}
 	</standard-table>
 </div>
+
+<fullrow class="my-2 text-center">
+	<div class="btn-group flex-wrap" role="group">
+		<a disable="!Model.EnablePrev" class="@(Model.EnablePrev ? pagerClass : pagerDisabledClass)"
+		   asp-route-SearchTerms="@Model.SearchTerms"
+		   asp-route-PageNumber="@(Model.PageNumber - 1)"
+		   asp-route-SearchWiki="@Model.SearchWiki"
+		   asp-route-SearchForumTopics="@Model.SearchForumTopics"
+		   asp-route-SearchForumPosts="@Model.SearchForumPosts"
+		   asp-route-SearchPublications="@Model.SearchPublications"
+		   asp-route-SearchGames="@Model.SearchGames"
+		   asp-route-SearchUsers="@Model.SearchUsers">
+			<i class="fa fa-chevron-left"></i>
+		</a>
+		<a condition="Model.EnablePrev" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="true" class="@pagerDisabledClass">@Model.PageNumber</a>
+		<a condition="Model.EnableNext" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>
+		<a disable="!Model.EnableNext" class="@(Model.EnableNext ? pagerClass : pagerDisabledClass)" asp-route-SearchTerms="@Model.SearchTerms"
+		   asp-route-PageNumber="@(Model.PageNumber + 1)"
+		   asp-route-SearchWiki="@Model.SearchWiki"
+		   asp-route-SearchForumTopics="@Model.SearchForumTopics"
+		   asp-route-SearchForumPosts="@Model.SearchForumPosts"
+		   asp-route-SearchPublications="@Model.SearchPublications"
+		   asp-route-SearchGames="@Model.SearchGames"
+		   asp-route-SearchUsers="@Model.SearchUsers">
+			<i class="fa fa-chevron-right"></i>
+		</a>
+	</div>
+</fullrow>
