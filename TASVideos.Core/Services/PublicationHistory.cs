@@ -35,6 +35,7 @@ internal class PublicationHistory(ApplicationDbContext db) : IPublicationHistory
 				Goal = p.GameGoal!.DisplayName,
 				CreateTimestamp = p.CreateTimestamp,
 				ObsoletedById = p.ObsoletedById,
+				Class = p.PublicationClass!.Name,
 				ClassIconPath = p.PublicationClass!.IconPath,
 				Flags = p.PublicationFlags
 					.Select(pf => new PublicationHistoryNode.FlagEntry(
@@ -89,6 +90,8 @@ public class PublicationHistoryNode
 	public string Title { get; init; } = "";
 	public string? Goal { get; init; }
 	public DateTime CreateTimestamp { get; init; }
+
+	public string Class { get; init; } = "";
 
 	public string? ClassIconPath { get; init; }
 
