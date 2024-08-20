@@ -95,10 +95,9 @@
 					<input condition="@canRate" id="RequestVerificationToken" type="hidden" value="@requestToken" />
 					<a condition="@canRate" asp-page="/Publications/Rate" asp-route-id="@Model.Id" data-rate-btn data-pub-id="@Model.Id" class="btn btn-success btn-sm mt-1" id="ownRating-@(Model.Id)">@ratingString</a>
 					<a asp-page="/Publications/Rate" asp-route-id="@Model.Id" class="btn btn-warning btn-sm mt-1">
-						@* <i class="fa-regular fa-star"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10 *@
 						@if (Model.RatingCount > 0)
 						{
-							@:<span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
+							@:<i class="fa-regular fa-star"></i> <span id="overallRating-@(Model.Id)">@((Model.OverallRating ?? 0).ToOverallRatingString())</span> / 10
 						}
 						else
 						{
