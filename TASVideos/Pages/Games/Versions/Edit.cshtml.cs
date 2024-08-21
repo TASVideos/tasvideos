@@ -102,6 +102,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		if (!ModelState.IsValid)
 		{
 			CanDelete = await CanBeDeleted();
+			AvailableSystems = await db.GameSystems.ToDropDownList();
 			return Page();
 		}
 

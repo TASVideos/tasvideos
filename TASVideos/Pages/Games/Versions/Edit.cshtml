@@ -84,6 +84,7 @@
 	<fullrow>
 		<label asp-for="Version.Notes"></label>
 		<textarea asp-for="Version.Notes" rows="4"></textarea>
+		<span asp-validation-for="Version.Notes"></span>
 	</fullrow>
 	<form-button-bar>
 		<submit-button edit="@Model.Id.HasValue"></submit-button>
