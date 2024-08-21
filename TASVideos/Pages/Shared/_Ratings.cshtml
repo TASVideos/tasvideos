@@ -25,7 +25,7 @@
 	</form>
 	<partial name="_Pager" model="Model.Ratings" />
 	<standard-table>
-		<sortable-table-head sorting="@Model.Ratings.Request" model-type="typeof(UserRatings.Rating)" />
+		<sortable-table-head sorting="@Model.Ratings.Request" model-type="typeof(UserRatings.Rating)" page-override="@Context.Request.Path" />
 		@foreach (var rating in Model.Ratings)
 		{
 			<tr style="@(rating.IsObsolete ? "opacity: 0.6" : "")">
