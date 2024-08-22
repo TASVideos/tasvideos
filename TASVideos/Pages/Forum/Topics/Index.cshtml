@@ -20,14 +20,11 @@
 	}
 	else
 	{
-		var firstPost = Model.Topic.Posts.FirstOrDefault();
 		ViewData.SetMetaTags(new MetaTag
 		{
-			Title = firstPost is not null
-				? $"Topic by {firstPost.PosterName}"
-				: "Forum Topic",
+			Title = $"Topic by {Model.Topic.TopicCreator!.PosterName}",
 			Description = $"{Model.Topic.ForumName} → {Model.Topic.Title}",
-			Image = firstPost?.GetCurrentAvatar()
+			Image = Model.Topic.TopicCreator!.GetCurrentAvatar()
 		});
 	}
 }

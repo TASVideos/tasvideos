@@ -66,7 +66,14 @@ public class IndexModel(
 						MultiSelect = t.Poll!.MultiSelect,
 						ViewPollResults = ViewPollResults
 					}
-					: null
+					: null,
+				TopicCreator = new PostEntry()
+				{
+					PosterName = t.Poster!.UserName,
+					PosterAvatar = t.Poster!.Avatar,
+					PosterMoodUrlBase = t.Poster!.MoodAvatarUrlBase,
+					PosterMood = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().PosterMood,
+				}
 			})
 			.SingleOrDefaultAsync(t => t.Id == Id);
 
@@ -320,6 +327,7 @@ public class IndexModel(
 		public int? GameId { get; init; }
 		public string? GameName { get; init; }
 		public int CategoryId { get; init; }
+		public PostEntry? TopicCreator { get; init; }
 
 		public class PollModel
 		{
