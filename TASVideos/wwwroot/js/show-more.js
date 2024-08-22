@@ -37,4 +37,10 @@ function registerShowMore(content) {
 
     show.querySelector('a').onclick = () => false;
     hide.querySelector('a').onclick = () => false;
+
+    content.onclick = function (e) {
+        if (e.target.tagName === "A" && e.target.getAttribute('href')?.startsWith('#') && content.style.overflowY === "hidden") {
+            show.click();
+        }
+    }
 }
