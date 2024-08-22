@@ -39,7 +39,7 @@ function registerShowMore(content) {
     hide.querySelector('a').onclick = () => false;
 
     content.onclick = function (e) {
-        if (e.target.tagName === "A" && e.target.getAttribute('href')?.startsWith('#') && content.style.overflowY === "hidden") {
+        if (e.target.tagName === 'A' && e.target.getAttribute('href')?.startsWith('#') && content.style.overflowY === 'hidden') {
             show.click();
         }
     }
