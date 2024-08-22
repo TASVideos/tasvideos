@@ -9,10 +9,16 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	public int Id { get; set; }
 
 	[FromQuery]
+	public int? SystemId { get; set; }
+
+	[FromQuery]
 	public int? GameId { get; set; }
 
 	[FromQuery]
 	public int? GameVersionId { get; set; }
+
+	[FromQuery]
+	public int? GameGoalId { get; set; }
 
 	[BindProperty]
 	public PublicationCatalog Catalog { get; set; } = new();
@@ -45,6 +51,16 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		}
 
 		Catalog = catalog;
+
+		if (SystemId.HasValue)
+		{
+			var system = await db.GameSystems.FindAsync(SystemId);
+			if (system is not null)
+			{
+				Catalog.System = system.Id;
+			}
+		}
+
 		if (GameId.HasValue)
 		{
 			var game = await db.Games.FindAsync(GameId);
@@ -59,6 +75,15 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 					if (gameVersion is not null)
 					{
 						Catalog.GameVersion = gameVersion.Id;
+					}
+				}
+
+				if (GameGoalId.HasValue)
+				{
+					var gameGoal = await db.GameGoals.SingleOrDefaultAsync(gg => gg.GameId == game.Id && gg.Id == GameGoalId);
+					if (gameGoal is not null)
+					{
+						Catalog.Goal = gameGoal.Id;
 					}
 				}
 			}
@@ -202,9 +227,9 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 	{
 		public string Title { get; init; } = "";
 		public int GameVersion { get; set; }
-		public int Goal { get; init; }
+		public int Goal { get; set; }
 		public int Game { get; set; }
-		public int System { get; init; }
+		public int System { get; set; }
 		public int SystemFramerate { get; init; }
 
 		[StringLength(50)]

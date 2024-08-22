@@ -10,7 +10,9 @@ function enableCataloging() {
 	const createVersionBtn = document.getElementById('create-version');
 	const gameGoalModel = document.querySelector('[data-id="goal"]');
 	const gameGoalBtn = document.getElementById('create-goal');
-	const returnUrl = encodeURIComponent(systemModel.dataset.returnUrl);
+	const returnUrlPathAndQuery = systemModel.dataset.returnUrl.split(/\?(.*)/s) // splits string at the first question mark (?)
+	const returnUrlPath = returnUrlPathAndQuery[0];
+	const returnUrlQuery = returnUrlPathAndQuery[1] ?? "";
 
 	systemModel.onchange = function () {
 		if (this.value) {
@@ -58,20 +60,39 @@ function enableCataloging() {
 		} else {
 			createVersionBtn.classList.add('disabled');
 			createVersionBtn.setAttribute('disabled', 'disabled');
+			gameGoalBtn.classList.add('disabled');
+			gameGoalBtn.setAttribute('disabled', 'disabled');
 			clearDropdown(versionElemId);
 			clearDropdown(gameGoalElemId);
 		}
 	}
 
 	document.getElementById('create-version')?.addEventListener('click', function () {
-		document.location = `/Games/${gameModel.value}/Versions/Edit?returnUrl=${returnUrl}&systemId=${systemModel.value}`;
+		const returnUrlQueryModified = new URLSearchParams();
+		returnUrlQueryModified.set('SystemId', systemModel.value);
+		returnUrlQueryModified.set('GameId', gameModel.value);
+		document.location = `/Games/${gameModel.value}/Versions/Edit?SystemId=${systemModel.value}&returnUrl=${encodeURIComponent(returnUrlPath + '?' + returnUrlQueryModified.toString())}`;
 	});
 
 	document.getElementById('create-game')?.addEventListener('click', function () {
-		document.location = `/Games/Edit?returnUrl=${returnUrl}`;
+		const returnUrlQueryModified = new URLSearchParams();
+		returnUrlQueryModified.set('SystemId', systemModel.value);
+		if (gameModel.value) {
+			returnUrlQueryModified.set('GameId', gameModel.value);
+		}
+		document.location = `/Games/Edit?returnUrl=${encodeURIComponent(returnUrlPath + '?' + returnUrlQueryModified.toString())}`;
 	});
 
 	gameGoalBtn?.addEventListener('click', function () {
-		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${returnUrl}`;
+		const returnUrlQueryModified = new URLSearchParams();
+		returnUrlQueryModified.set('SystemId', systemModel.value);
+		returnUrlQueryModified.set('GameId', gameModel.value);
+		if (versionModel.value) {
+			returnUrlQueryModified.set('GameVersionId', versionModel.value);
+		}
+		if (gameGoalModel.value) {
+			returnUrlQueryModified.set('GameGoalId', gameGoalModel.value);
+		}
+		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${encodeURIComponent(returnUrlPath + '?' + returnUrlQueryModified.toString())}`;
 	});
 }

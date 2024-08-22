@@ -154,7 +154,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		SuccessStatusMessage($"Game Version {Id} updated");
 		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 			? RedirectToPage("List", new { gameId = GameId })
-			: BaseReturnUrlRedirect(new() { ["GameId"] = GameId.ToString(), ["GameVersionId"] = version.Id.ToString() });
+			: BaseReturnUrlRedirect(new() { ["SystemId"] = system.Id.ToString(), ["GameId"] = GameId.ToString(), ["GameVersionId"] = version.Id.ToString() });
 	}
 
 	public async Task<IActionResult> OnPostDelete()
