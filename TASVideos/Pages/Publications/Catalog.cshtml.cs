@@ -208,6 +208,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		public int SystemFramerate { get; init; }
 
 		[StringLength(50)]
-		public string Emulator { get; init; } = "";
+		[Required]
+		public string? Emulator { get; init; }
 	}
 }
