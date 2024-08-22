@@ -68,31 +68,32 @@ function enableCataloging() {
 	}
 
 	document.getElementById('create-version')?.addEventListener('click', function () {
-		const returnUrlQueryModified = new URLSearchParams();
-		returnUrlQueryModified.set('SystemId', systemModel.value);
-		returnUrlQueryModified.set('GameId', gameModel.value);
-		document.location = `/Games/${gameModel.value}/Versions/Edit?SystemId=${systemModel.value}&returnUrl=${encodeURIComponent(returnUrlPath + '?' + returnUrlQueryModified.toString())}`;
+		document.location = `/Games/${gameModel.value}/Versions/Edit?SystemId=${systemModel.value}&returnUrl=${generateCurrentReturnUrl() }`;
 	});
 
 	document.getElementById('create-game')?.addEventListener('click', function () {
-		const returnUrlQueryModified = new URLSearchParams();
-		returnUrlQueryModified.set('SystemId', systemModel.value);
-		if (gameModel.value) {
-			returnUrlQueryModified.set('GameId', gameModel.value);
-		}
-		document.location = `/Games/Edit?returnUrl=${encodeURIComponent(returnUrlPath + '?' + returnUrlQueryModified.toString())}`;
+		document.location = `/Games/Edit?returnUrl=${generateCurrentReturnUrl() }`;
 	});
 
 	gameGoalBtn?.addEventListener('click', function () {
+		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${generateCurrentReturnUrl()}`;
+	});
+
+	function generateCurrentReturnUrl() {
 		const returnUrlQueryModified = new URLSearchParams();
-		returnUrlQueryModified.set('SystemId', systemModel.value);
-		returnUrlQueryModified.set('GameId', gameModel.value);
+		if (systemModel.value) {
+			returnUrlQueryModified.set('SystemId', systemModel.value);
+		}
+		if (gameModel.value) {
+			returnUrlQueryModified.set('GameId', gameModel.value);
+		}
 		if (versionModel.value) {
 			returnUrlQueryModified.set('GameVersionId', versionModel.value);
 		}
 		if (gameGoalModel.value) {
 			returnUrlQueryModified.set('GameGoalId', gameGoalModel.value);
 		}
-		document.location = `/Games/${gameModel.value}/Goals/List?returnUrl=${encodeURIComponent(returnUrlPath + '?' + returnUrlQueryModified.toString())}`;
-	});
+
+		return encodeURIComponent(returnUrlPath + '?' + returnUrlQueryModified.toString());
+	}
 }
