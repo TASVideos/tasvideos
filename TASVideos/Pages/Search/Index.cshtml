@@ -37,6 +37,23 @@
 	</div>
 </fullrow>
 
+<div condition="Model.PublicationResults.Any()">
+	<h4>Publication Results:</h4>
+	<standard-table>
+		<table-head columns="Publication"></table-head>
+		@foreach (var result in Model.PublicationResults.Take(IndexModel.PageSize))
+		{
+			<tr style="@(result.IsObsolete ? "opacity: 0.6" : "")">
+				<td><pub-link id="result.Id">[@result.Id] @result.Title</pub-link></td>
+			</tr>
+		}
+		@if (Model.PublicationResults.Count == IndexModel.PageSize + 1)
+		{
+			<tr><td>...</td></tr>
+		}
+	</standard-table>
+</div>
+
 <div condition="Model.GameResults.Any()">
 	<h4>Game Results:</h4>
 	<standard-table>
@@ -56,6 +73,10 @@
 				</td>
 			</tr>
 		}
+		@if (Model.GameResults.Count == IndexModel.PageSize + 1)
+		{
+			<tr><td>...</td><td></td><td></td></tr>
+		}
 	</standard-table>
 </div>
 
@@ -74,6 +95,10 @@
 				</td>
 			</tr>
 		}
+		@if (Model.PageResults.Count == IndexModel.PageSize + 1)
+		{
+			<tr><td>...</td><td></td></tr>
+		}
 	</standard-table>
 </div>
 
@@ -91,6 +116,10 @@
 					@Html.Raw(result.Highlight)
 				</td>
 			</tr>
+		}
+		@if (Model.PostResults.Count == IndexModel.PageSize + 1)
+		{
+			<tr><td>...</td><td></td></tr>
 		}
 	</standard-table>
 </div>
