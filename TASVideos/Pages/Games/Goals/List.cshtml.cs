@@ -54,14 +54,18 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			return BackToList();
 		}
 
-		db.GameGoals.Add(new GameGoal
+		var gameGoal = new GameGoal
 		{
 			GameId = GameId,
 			DisplayName = goalToCreate
-		});
+		};
+
+		db.GameGoals.Add(gameGoal);
 
 		SetMessage(await db.TrySaveChanges(), $"Goal {goalToCreate} created successfully", $"Unable to create goal {goalToCreate}");
-		return BackToList();
+		return string.IsNullOrWhiteSpace(Request.ReturnUrl())
+			? RedirectToPage("List", new { GameId })
+			: BaseReturnUrlRedirect(new() { ["GameGoalId"] = gameGoal.Id.ToString() });
 	}
 
 	public async Task<IActionResult> OnPostEdit(int gameGoalId, string? newGoalName)
