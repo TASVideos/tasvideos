@@ -18,6 +18,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public List<PageSearch> PageResults { get; set; } = [];
 	public List<PostSearch> PostResults { get; set; } = [];
 	public List<GameSearch> GameResults { get; set; } = [];
+	public List<PublicationSearch> PublicationResults { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -71,6 +72,18 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 					g.GameVersions.Select(v => v.System!.Code),
 					g.GameGroups.Select(gg => new GameGroupEntry(gg.GameGroupId, gg.GameGroup!.Name))))
 				.ToListAsync();
+
+			PublicationResults = await db.Publications
+				.Where(p => EF.Functions.ToTsVector("simple", p.Title).Matches(EF.Functions.WebSearchToTsQuery("simple", SearchTerms)))
+				.OrderBy(p => p.ObsoletedById == null ? 0 : 1)
+				.ThenByDescending(p => p.CreateTimestamp)
+				.Skip(skip)
+				.Take(PageSize + 1)
+				.Select(p => new PublicationSearch(
+					p.Id,
+					p.Title,
+					p.ObsoletedById != null))
+				.ToListAsync();
 		}
 
 		return Page();
@@ -80,4 +93,5 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public record PostSearch(string Highlight, string TopicName, int PostId);
 	public record GameSearch(int Id, string DisplayName, IEnumerable<string> Systems, IEnumerable<GameGroupEntry> Groups);
 	public record GameGroupEntry(int Id, string Name);
+	public record PublicationSearch(int Id, string Title, bool IsObsolete);
 }
