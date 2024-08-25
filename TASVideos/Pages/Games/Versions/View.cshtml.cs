@@ -41,7 +41,9 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 				v.Version,
 				v.Region,
 				v.Type,
-				v.TitleOverride))
+				v.TitleOverride,
+				v.SourceDb,
+				v.Notes))
 			.SingleOrDefaultAsync();
 
 		if (version is null)
@@ -73,7 +75,9 @@ public class ViewModel(ApplicationDbContext db) : BasePageModel
 		string? Version,
 		string? Region,
 		VersionTypes Type,
-		string? TitleOverride);
+		string? TitleOverride,
+		string? SourceDb,
+		string? Notes);
 
 	public record Entry(int Id, string Title);
 }

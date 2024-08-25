@@ -47,6 +47,10 @@
 					<label asp-for="Version.Md5"></label>
 					<label>@Model.Version.Md5</label>
 				</div>
+				<div class="info-entry">
+					<label asp-for="Version.SourceDb"></label>
+					<label>@Model.Version.SourceDb</label>
+				</div>
 			</column>
 		</row>
 		<row class="mt-2" condition="@Model.Publications.Any() || Model.Submissions.Any()">
@@ -67,6 +71,12 @@
 						<li><sub-link id="@sub.Id">@sub.Title</sub-link></li>
 					}
 				</ul>
+			</column>
+		</row>
+		<row condition="!string.IsNullOrWhiteSpace(Model.Version.Notes)" class="mt-2">
+			<column sm="12">
+				<h4>Notes</h4>
+				@Model.Version.Notes
 			</column>
 		</row>
 	</card-body>
