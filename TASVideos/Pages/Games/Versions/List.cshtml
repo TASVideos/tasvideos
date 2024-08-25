@@ -16,8 +16,16 @@
 	@foreach (var version in Model.Versions.OrderBy(v => v.Name))
 	{
 		<tr>
-			<td>@version.Type</td>
-			<td>@version.Name</td>
+			<td>
+				@version.Type
+			</td>
+			<td>
+				@version.Name
+				@if (!string.IsNullOrWhiteSpace(version.SourceDb))
+				{
+					<br /><span>SourceDB: @version.SourceDb</span>
+				}
+			</td>
 			<td>@version.TitleOverride</td>
 			<td>@version.Version</td>
 			<td>@version.Region</td>

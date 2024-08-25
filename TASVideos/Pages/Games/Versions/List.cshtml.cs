@@ -35,7 +35,8 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 				v.Region,
 				v.Type,
 				v.System!.Code,
-				v.TitleOverride))
+				v.TitleOverride,
+				v.SourceDb))
 			.ToListAsync();
 		return Page();
 	}
@@ -49,5 +50,6 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		string? Region,
 		VersionTypes Type,
 		string System,
-		string? TitleOverride);
+		string? TitleOverride,
+		string? SourceDb);
 }
