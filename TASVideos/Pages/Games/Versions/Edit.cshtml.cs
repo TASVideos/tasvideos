@@ -50,7 +50,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 		GameName = game.DisplayName;
 
-		AvailableSystems = await db.GameSystems.ToDropDownList();
+		AvailableSystems = (await db.GameSystems.ToDropDownList()).WithDefaultEntry();
 
 		if (SystemId.HasValue)
 		{
@@ -102,7 +102,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		if (!ModelState.IsValid)
 		{
 			CanDelete = await CanBeDeleted();
-			AvailableSystems = await db.GameSystems.ToDropDownList();
+			AvailableSystems = (await db.GameSystems.ToDropDownList()).WithDefaultEntry();
 			return Page();
 		}
 
