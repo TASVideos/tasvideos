@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Games.Versions;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class EditModel(ApplicationDbContext db) : BasePageModel
+public class EditModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
 {
 	private static readonly List<SelectListItem> VersionTypes = Enum
 		.GetValues<VersionTypes>()
@@ -113,8 +113,10 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		GameVersion version;
+		var action = "created";
 		if (Id.HasValue)
 		{
+			action = "updated";
 			version = await db.GameVersions.SingleAsync(r => r.Id == Id.Value);
 		}
 		else
@@ -137,21 +139,22 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		version.SourceDb = Version.SourceDb;
 		version.Notes = Version.Notes;
 
-		try
+		var saveResult = await db.TrySaveChanges();
+		if (saveResult == SaveResult.UpdateFailure)
 		{
-			await db.SaveChangesAsync();
-		}
-		catch (DbUpdateConcurrencyException)
-		{
-			ErrorStatusMessage($"Unable to update Game Version {Id}");
-		}
-		catch (DbUpdateException ex)
-		{
-			ModelState.AddModelError("", ex.InnerException?.Message ?? ex.Message);
+			ModelState.AddModelError("", "Unable to save");
 			return Page();
 		}
 
-		SuccessStatusMessage($"Game Version {Id} updated");
+		SetMessage(saveResult, $"Game Version {version.Name} {action}", $"Unable to update Game {version.Name}");
+		if (saveResult.IsSuccess())
+		{
+			await publisher.SendGameManagement(
+				$"Game Version [{version.Name}]({{0}}) {action} by {User.Name()}",
+				"",
+				$"/Games/{version.GameId}/Versions/View/{version.Id}");
+		}
+
 		return string.IsNullOrWhiteSpace(HttpContext.Request.ReturnUrl())
 			? RedirectToPage("List", new { gameId = GameId })
 			: BaseReturnUrlRedirect(new() { ["SystemId"] = system.Id.ToString(), ["GameId"] = GameId.ToString(), ["GameVersionId"] = version.Id.ToString() });
@@ -171,7 +174,14 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 		}
 
 		db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
-		SetMessage(await db.TrySaveChanges(), $"Game Version {Id} deleted", $"Unable to delete Game Version {Id}");
+		var saveResult = await db.TrySaveChanges();
+		string saveMessage = $"Game Version {Id} deleted";
+		SetMessage(saveResult, saveMessage, $"Unable to delete Game Version {Id}");
+		if (saveResult.IsSuccess())
+		{
+			await publisher.SendMessage(PostGroups.Game, $"{saveMessage} by {User.Name()}");
+		}
+
 		return BasePageRedirect("List", new { gameId = GameId });
 	}
 

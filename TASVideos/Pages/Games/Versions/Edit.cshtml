@@ -89,6 +89,7 @@
 	<form-button-bar>
 		<submit-button edit="@Model.Id.HasValue"></submit-button>
 		<cancel-link asp-page="/Games/Versions/List" asp-route-gameId="@Model.GameId"></cancel-link>
+		<minor-edit></minor-edit>
 	</form-button-bar>
 </form>
 <input id="hash-input" type="file" class="d-none" />
