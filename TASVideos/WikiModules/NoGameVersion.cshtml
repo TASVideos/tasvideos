@@ -39,7 +39,7 @@
 				<ul condition="@version.Subs.Any()">
 					@foreach(var sub in @version.Subs)
 					{
-						<li><pub-link id="@sub.Id">@sub.Title</pub-link></li>
+						<li><sub-link id="@sub.Id">@sub.Title</sub-link></li>
 					}
 				</ul>
 			</card-body>
@@ -79,7 +79,7 @@
 			<ul>
 				@foreach(var sub in @version.Subs)
 				{
-				<li><pub-link id="@sub.Id">@sub.Title</pub-link></li>
+				<li><sub-link id="@sub.Id">@sub.Title</sub-link></li>
 				}
 			</ul>
 		</card-body>
