@@ -1,26 +1,99 @@
 ﻿@model NoGameVersion
-
-@if (Model.Publications.Any())
+@{
+	var oneHash = Model.GameVersions
+		.Where(v => v.Sha1 != null || v.Md5 != null)
+		.Where(v => v.Pubs.Any() || v.Subs.Any())
+		.ToList();
+	var noHash = Model.GameVersions
+		.Where(v => v.Sha1 == null && v.Md5 == null)
+		.Where(v => v.Pubs.Any() || v.Subs.Any())
+		.ToList();
+}
+@if (noHash.Any())
 {
-	<h4>Publications With Missing Game Versions (@Model.Publications.Count)</h4>
-	<ul>
-		@foreach (var pub in Model.Publications)
-		{
-			<li>
-				<pub-link id="pub.Id">@pub.Title</pub-link>
-			</li>
-		}
-	</ul>
+	<h2>Game Versions with no hash (@noHash.Count)</h2>
+	@foreach(var version in noHash.OrderBy(v => v.SystemCode))
+	{
+		<card class="game-version-card">
+			<card-header>
+				<h4>
+					<a
+						asp-page="/Games/Versions/View"
+						asp-route-id="@version.GameVersionId"
+						asp-route-gameid="@version.GameId"
+						asp-route-returnUrl="@ViewContext.HttpContext.CurrentPathToReturnUrl()">
+						@version.SystemCode - @version.GameVersionName
+					</a>
+				</h4>
+			</card-header>
+			<card-body>
+				<p>Game: <a asp-page="/Games/Index" asp-route-id="@version.GameId">@version.GameName</a></p>
+				Publications: <span condition="!version.Pubs.Any()" class="n-a">None</span><br />
+				<ul condition="@version.Pubs.Any()">
+					@foreach(var pub in version.Pubs)
+					{
+						<li><pub-link id="@pub.Id">@pub.Title</pub-link></li>
+					}
+				</ul>
+				Submissions: <span condition="!version.Subs.Any()" class="n-a">None</span><br />
+				<ul condition="@version.Subs.Any()">
+					@foreach(var sub in @version.Subs)
+					{
+						<li><pub-link id="@sub.Id">@sub.Title</pub-link></li>
+					}
+				</ul>
+			</card-body>
+		</card>
+	}
 }
 
-@if (Model.Publications.Any() && Model.Submissions.Any())
+@if (oneHash.Any())
+{
+	<br /><h2>Game Versions with just one hash (@oneHash.Count)</h2><br />
+	@foreach(var version in oneHash.OrderBy(v => v.SystemCode))
+	{
+	<card class="mb-2">
+		<card-header>
+			<h4>
+				<a
+					asp-page="/Games/Versions/View"
+					asp-route-id="@version.GameVersionId"
+					asp-route-gameid="@version.GameId"
+					asp-route-returnUrl="@ViewContext.HttpContext.CurrentPathToReturnUrl()">
+					@version.SystemCode - @version.GameVersionName
+				</a>
+			</h4>
+		</card-header>
+		<card-body>
+			<p>Game: <a asp-page="/Games/Index" asp-route-id="@version.GameId">@version.GameName</a></p>
+			<p>SHA1: @version.Sha1</p>
+			<p>MD5: @version.Md5</p>
+			Publications:
+			<ul>
+				@foreach(var pub in @version.Pubs)
+				{
+				<li><pub-link id="@pub.Id">@pub.Title</pub-link></li>
+				}
+			</ul>
+			Submissions:
+			<ul>
+				@foreach(var sub in @version.Subs)
+				{
+				<li><pub-link id="@sub.Id">@sub.Title</pub-link></li>
+				}
+			</ul>
+		</card-body>
+	</card>
+	}
+}
+
+@if (Model.GameVersions.Any() && Model.Submissions.Any())
 {
 	<hr />
 }
 
 @if (Model.Submissions.Any())
 {
-
 	<h4>Submissions With Missing Game Versions (@Model.Submissions.Count)</h4>
 	<ul>
 		@foreach (var sub in Model.Submissions)
@@ -31,3 +104,26 @@
 		}
 	</ul>
 }
+
+<style>
+	.game-version-card {
+		margin-bottom:  0.5em;
+		p {
+			margin-top: 0.125em;
+			margin-bottom:  0;
+		}
+	}
+
+	.game-version-card .n-a {
+		opacity:  0.5;
+	}
+
+	.game-version-card .card-body {
+		padding-top: 0.25em;
+		padding-bottom: 0.25em;
+	}
+
+	.game-version-card ul {
+		margin-bottom: 0.25em;
+	}
+</style>
