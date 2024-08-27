@@ -9,6 +9,11 @@ using TASVideos.Middleware;
 using TASVideos.MovieParsers;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseDefaultServiceProvider(config =>
+{
+	config.ValidateOnBuild = true;
+	config.ValidateScopes = true;
+});
 
 // We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
 // This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.Configuration.AddUserSecrets<T>() will not work.
