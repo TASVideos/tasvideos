@@ -21,7 +21,7 @@ public class NoGameVersion(ApplicationDbContext db) : WikiViewComponent
 				v.Md5,
 				v.System!.Code,
 				v.Publications.Select(p => new NoGame.Entry(p.Id, p.Title)).ToList(),
-				v.Submissions.Select(s => new NoGame.Entry(s.Id, s.Title)).ToList()))
+				v.Submissions.Where(s => s.Status != SubmissionStatus.Published).Select(s => new NoGame.Entry(s.Id, s.Title)).ToList()))
 			.ToListAsync();
 		Submissions = await db.Submissions
 			.Where(s => s.GameVersionId == null || s.GameVersionId < 1)
