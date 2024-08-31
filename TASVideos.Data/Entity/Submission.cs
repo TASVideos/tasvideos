@@ -159,6 +159,10 @@ public class Submission : BaseEntity, ITimeable
 	public string? Warnings { get; set; }
 
 	public long? CycleCount { get; set; }
+
+	[StringLength(50)]
+	public string? SyncedBy { get; set; }
+	public DateTime? SyncedOn { get; set; }
 }
 
 public static class SubmissionExtensions

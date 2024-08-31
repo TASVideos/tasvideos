@@ -2,6 +2,13 @@
 @model CatalogModel
 @{
 	ViewData.SetTitle($"Set Cataloging Information for {Model.Catalog.Title}");
+	var canSyncVerify = !string.IsNullOrWhiteSpace(Model.Catalog.Emulator) && Model.Catalog is
+	{
+		Game: not null,
+		GameVersion: not null,
+		SystemFramerate: not null,
+		System: not null
+	};
 }
 
 <form client-side-validation="true" method="post">
@@ -19,6 +26,15 @@
 				<label asp-for="Catalog.Emulator"></label>
 				<input asp-for="Catalog.Emulator" />
 				<span asp-validation-for="Catalog.Emulator"></span>
+			</fieldset>
+			<fieldset>
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" asp-for="Catalog.SyncVerified" disabled="@(!canSyncVerify)">
+					<label class="form-check-label" asp-for="Catalog.SyncVerified">
+						Sync verified
+					</label>
+					<p condition="Model.Catalog.SyncVerified">Verified on <timezone-convert asp-for="Catalog.SyncVerifiedOn"/> by @Model.Catalog.SyncedBy</p>
+				</div>
 			</fieldset>
 		</column>
 		<column lg="6">
@@ -72,6 +88,11 @@
 			</fieldset>
 		</column>
 	</row>
+	<fullrow>
+		<label>Additional Sync notes</label><br/>
+		<small>Enter any additional information not contained in the movie file that is necessary to sync this movie. This includes custom emulator settings or steps. If there is a verification movie not included in the submission, link it here.</small>
+		<textarea class="form-control" rows="4"></textarea>
+	</fullrow>
 	<form-button-bar>
 		<submit-button></submit-button>
 		<cancel-link asp-page="View" asp-route-id="@Model.Id"></cancel-link>

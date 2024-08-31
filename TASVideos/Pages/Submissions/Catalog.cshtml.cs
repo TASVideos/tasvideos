@@ -41,7 +41,10 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 				System = s.SystemId,
 				SystemFramerate = s.SystemFrameRateId,
 				Goal = s.GameGoalId,
-				Emulator = s.EmulatorVersion
+				Emulator = s.EmulatorVersion,
+				SyncVerified = s.SyncedOn.HasValue,
+				SyncVerifiedOn = s.SyncedOn,
+				SyncedBy = s.SyncedBy
 			})
 			.SingleOrDefaultAsync();
 
@@ -272,5 +275,9 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 
 		[StringLength(50)]
 		public string? Emulator { get; init; }
+
+		public bool SyncVerified { get; init; }
+		public DateTime? SyncVerifiedOn { get; init; }
+		public string? SyncedBy { get; init; }
 	}
 }
