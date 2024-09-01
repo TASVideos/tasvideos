@@ -167,13 +167,16 @@ public class Submission : BaseEntity, ITimeable
 
 public static class SubmissionExtensions
 {
-	public static bool CanPublish(this Submission submission)
+	public static bool CanPublish(this Submission submission) => submission is
 	{
-		return submission is { SystemId: > 0, SystemFrameRateId: > 0, GameId: > 0 }
-			&& submission.GameVersionId > 0
-			&& submission.IntendedClassId > 0
-			&& submission.Status == SubmissionStatus.PublicationUnderway;
-	}
+		SystemId: > 0,
+		SystemFrameRateId: > 0,
+		GameId: > 0,
+		GameVersionId: > 0,
+		IntendedClassId: > 0,
+		Status: SubmissionStatus.PublicationUnderway,
+		SyncedOn: not null
+	};
 
 	public static IQueryable<Submission> FilterBy(this IQueryable<Submission> query, ISubmissionFilter criteria)
 	{
