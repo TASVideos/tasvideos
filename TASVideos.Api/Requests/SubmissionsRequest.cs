@@ -23,6 +23,8 @@ internal class SubmissionsRequest : ApiRequest, ISubmissionFilter
 	[SwaggerParameter("The start type of the movie. 0 = Power On, 1 = Sram, 2 = Savestate")]
 	public int? StartType { get; init; }
 
+	public bool? ShowVerified { get; set; }
+
 	ICollection<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear).ToList();
 
 	ICollection<SubmissionStatus> ISubmissionFilter.Statuses => !string.IsNullOrWhiteSpace(Statuses)

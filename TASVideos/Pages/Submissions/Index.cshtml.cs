@@ -112,6 +112,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public string? GameId { get; set; }
 		public int? StartType { get; set; }
 
+		public bool? ShowVerified { get; set; }
+
 		public ICollection<SubmissionStatus> Statuses { get; set; } = [];
 
 		public static ICollection<SubmissionStatus> Default =>

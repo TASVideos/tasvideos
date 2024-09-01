@@ -1,5 +1,6 @@
 ﻿namespace TASVideos.Data.Entity;
 
+public enum ShowVerified { All, Verified, NotVerified }
 public interface ISubmissionFilter
 {
 	ICollection<SubmissionStatus> Statuses { get; }
@@ -8,6 +9,7 @@ public interface ISubmissionFilter
 	string? User { get; }
 	ICollection<int> GameIds { get; }
 	int? StartType { get; }
+	bool? ShowVerified { get; }
 }
 
 [ExcludeFromHistory]
@@ -211,6 +213,13 @@ public static class SubmissionExtensions
 			query = query.Where(s => s.MovieStartType == criteria.StartType);
 		}
 
+		if (criteria.ShowVerified.HasValue)
+		{
+			query = criteria.ShowVerified.Value
+				? query.ThatAreVerified()
+				: query.ThatAreUnverified();
+		}
+
 		return query;
 	}
 
@@ -248,4 +257,10 @@ public static class SubmissionExtensions
 			.Include(s => s.GameVersion)
 			.Include(s => s.GameGoal)
 			.Include(gg => gg.GameGoal);
+
+	public static IQueryable<Submission> ThatAreVerified(this IQueryable<Submission> query)
+		=> query.Where(s => s.SyncedOn.HasValue);
+
+	public static IQueryable<Submission> ThatAreUnverified(this IQueryable<Submission> query)
+		=> query.Where(s => !s.SyncedOn.HasValue);
 }
