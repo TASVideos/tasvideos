@@ -12,7 +12,8 @@
 	bool canPublish = User.Has(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
-		&& (Model.Submission.Publisher == User.Name() || User.Has(PermissionTo.OverrideSubmissionConstraints));
+		&& (Model.Submission.Publisher == User.Name() || User.Has(PermissionTo.OverrideSubmissionConstraints))
+		&& Model.Submission.SyncedOn.HasValue;
 	string statusColor = StatusColor(Model.Submission.Status);
 
 	bool canClaimAsJudge = User.Has(PermissionTo.JudgeSubmissions)
