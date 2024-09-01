@@ -21,8 +21,8 @@
 		<column md="6">
 			<label asp-for="Search.Statuses"></label>
 			<select asp-for="Search.Statuses" multiselect="true" asp-items="Model.AvailableStatuses"></select>
-			<label asp-for="Search.ShowVerified"></label>
-			<select class="form-control" name="@Html.NameFor(m => m.Search.ShowVerified)">
+			<label condition="@User.Has(PermissionTo.CatalogMovies)" asp-for="Search.ShowVerified"></label>
+			<select condition="@User.Has(PermissionTo.CatalogMovies)" class="form-control" name="@Html.NameFor(m => m.Search.ShowVerified)">
 				<option value="">All</option>
 				<option value="True">Sync Verified</option>
 				<option value="False">Unverified</option>
