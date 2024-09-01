@@ -88,6 +88,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		[TableIgnore]
 		public string? IntendedClass { get; init; }
+
+		[TableIgnore]
+		public DateTime? SyncedOn { get; set; }
 	}
 
 	public class SubmissionSearchRequest : PagingModel, ISubmissionFilter

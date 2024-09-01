@@ -62,6 +62,11 @@
 				<small condition="hoursRemaining > 0">
 					<br />(Available for judging in @hoursRemaining hours)
 				</small>
+				<div>
+					<small condition="item.SyncedOn.HasValue">
+						<i class="fa fa-check-square"></i> Sync Verified
+					</small>
+				</div>
 			</td>
 			<td><partial name="_VoteCounts" model="item.Votes" /></td>
 		</tr>
