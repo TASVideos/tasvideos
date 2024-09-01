@@ -232,12 +232,40 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		submission.EmulatorVersion = Catalog.Emulator;
 		submission.GenerateTitle();
 
+		bool synced = false;
+		bool unsynced = false;
+		if (Catalog.CanSyncVerify)
+		{
+			if (Catalog.SyncVerified && !submission.SyncedOn.HasValue)
+			{
+				submission.SyncedOn = DateTime.UtcNow;
+				submission.SyncedBy = User.Name();
+				synced = true;
+			}
+			else
+			{
+				submission.SyncedOn = null;
+				submission.SyncedBy = null;
+				unsynced = true;
+			}
+		}
+
 		var result = await db.TrySaveChanges();
 		SetMessage(result, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
 		if (result.IsSuccess())
 		{
+			string message = $"[{Id}S]({{0}}) Catalog edited by {User.Name()}";
+			if (synced)
+			{
+				message += " (Sync Verified)";
+			}
+			else if (unsynced)
+			{
+				message += " (Sync Verified REMOVED)";
+			}
+
 			await publisher.SendGameManagement(
-				$"[{Id}S]({{0}}) Catalog edited by {User.Name()}",
+				message,
 				$"{string.Join(", ", externalMessages)} | {submission.Title}",
 				$"{Id}S");
 		}
@@ -279,5 +307,13 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		public bool SyncVerified { get; init; }
 		public DateTime? SyncVerifiedOn { get; init; }
 		public string? SyncedBy { get; init; }
+
+		public bool CanSyncVerify => !string.IsNullOrWhiteSpace(Emulator) && this is
+		{
+			Game: not null,
+			GameVersion: not null,
+			SystemFramerate: not null,
+			System: not null
+		};
 	}
 }

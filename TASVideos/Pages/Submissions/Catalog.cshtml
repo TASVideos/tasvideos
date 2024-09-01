@@ -2,13 +2,6 @@
 @model CatalogModel
 @{
 	ViewData.SetTitle($"Set Cataloging Information for {Model.Catalog.Title}");
-	var canSyncVerify = !string.IsNullOrWhiteSpace(Model.Catalog.Emulator) && Model.Catalog is
-	{
-		Game: not null,
-		GameVersion: not null,
-		SystemFramerate: not null,
-		System: not null
-	};
 }
 
 <form client-side-validation="true" method="post">
@@ -29,7 +22,7 @@
 			</fieldset>
 			<fieldset>
 				<div class="form-check">
-					<input class="form-check-input" type="checkbox" asp-for="Catalog.SyncVerified" disabled="@(!canSyncVerify)">
+					<input class="form-check-input" type="checkbox" asp-for="Catalog.SyncVerified" disabled="@(!Model.Catalog.CanSyncVerify)">
 					<label class="form-check-label" asp-for="Catalog.SyncVerified">
 						Sync verified
 					</label>
