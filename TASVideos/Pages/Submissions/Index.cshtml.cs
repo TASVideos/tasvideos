@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Submissions;
 
 [AllowAnonymous]
-public class IndexModel(ApplicationDbContext db) : BasePageModel
+public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemService) : BasePageModel
 {
 	private static readonly List<SelectListItem> Statuses = Enum.GetValues<SubmissionStatus>().ToDropDown();
 
@@ -22,9 +22,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task OnGet()
 	{
-		SystemList = (await db.GameSystems
-			.ToDropDownList())
-			.WithDefaultEntry();
+		SystemList = (await gameSystemService.GetAll())
+			.ToDropDownList().WithDefaultEntry();
 
 		var search = LegacySubListConverter.ToSearchRequest(Query);
 		if (search is not null)

@@ -25,6 +25,18 @@ public static class EntityExtensions
 			.ToListAsync();
 	}
 
+	public static List<SelectListItem> ToDropDownList(this IEnumerable<SystemsResponse> list)
+	{
+		return list
+			.OrderBy(s => s.Code)
+			.Select(s => new SelectListItem
+			{
+				Text = s.Code,
+				Value = s.Code
+			})
+			.ToList();
+	}
+
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<string> strings)
 	{
 		return strings.Select(s => new SelectListItem
