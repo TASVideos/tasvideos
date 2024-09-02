@@ -12,7 +12,8 @@
 	bool canPublish = User.Has(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
-		&& (Model.Submission.Publisher == User.Name() || User.Has(PermissionTo.OverrideSubmissionConstraints));
+		&& (Model.Submission.Publisher == User.Name() || User.Has(PermissionTo.OverrideSubmissionConstraints))
+		&& Model.Submission.SyncedOn.HasValue;
 	string statusColor = StatusColor(Model.Submission.Status);
 
 	bool canClaimAsJudge = User.Has(PermissionTo.JudgeSubmissions)
@@ -62,30 +63,38 @@
 }
 
 <div class="alert alert-@(statusColor)" role="alert">
-	<div condition="!Model.IsPublished" class="lead">
-		Status: @Model.Submission.Status.EnumDisplayName()
-		<small condition="Model.Submission.Status == SubmissionStatus.Rejected">
-			<span condition="!string.IsNullOrWhiteSpace(Model.Submission.RejectionReasonDisplay)">(Reason: @Model.Submission.RejectionReasonDisplay)</span>
-		</small>
-	</div>
-	<div condition="Model.IsPublished" class="lead">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></div>
-	<div condition="hoursRemaining > 0">
-		(Available for judging in @hoursRemaining hours)
-	</div>
-	<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
-		<label asp-for="Submission.Judge"></label>:
-		<profile-link username="@Model.Submission.Judge"></profile-link>
-	</span>
-	<span class="ms-3" condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
-		<label asp-for="Submission.Publisher"></label>:
-		<profile-link username="@Model.Submission.Publisher"></profile-link>
-	</span>
-	@if (showPublicationClass)
-	{
-		<div class="mt-3">
-			<label>For Publication Class</label><span>: </span><a href="/@Model.Submission.ClassName">@Model.Submission.ClassName</a>
+	<div class="d-flex" style="justify-content: space-between">
+		<div>
+			<div condition="Model.IsPublished" class="lead">Status: <a asp-page="/Publications/View" asp-route-id="@Model.PublicationId">@Model.Submission.Status.EnumDisplayName()</a></div>
+			<div condition="hoursRemaining > 0">
+				(Available for judging in @hoursRemaining hours)
+			</div>
+			<span condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Judge))">
+				<label asp-for="Submission.Judge"></label>:
+				<profile-link username="@Model.Submission.Judge"></profile-link>
+			</span>
+			<span class="ms-3" condition="@(!string.IsNullOrWhiteSpace(Model.Submission.Publisher))">
+				<label asp-for="Submission.Publisher"></label>:
+				<profile-link username="@Model.Submission.Publisher"></profile-link>
+			</span>
+			@if (showPublicationClass)
+			{
+				<div class="mt-3">
+					<label>For Publication Class</label><span>: </span><a href="/@Model.Submission.ClassName">@Model.Submission.ClassName</a>
+				</div>
+			}
+			<div condition="!Model.IsPublished" class="lead">
+				Status: @Model.Submission.Status.EnumDisplayName()
+				<small condition="Model.Submission.Status == SubmissionStatus.Rejected">
+					<span condition="!string.IsNullOrWhiteSpace(Model.Submission.RejectionReasonDisplay)">(Reason: @Model.Submission.RejectionReasonDisplay)</span>
+				</small>
+			</div>
 		</div>
-	}
+		<div condition="@Model.Submission.SyncedOn.HasValue && !Model.IsPublished" class="float-end">
+			<div class="lead"><i class="fa fa-check-square"></i> Sync Verified</div>
+			<small>Verified <timezone-convert asp-for="Submission.SyncedOn"/> by <profile-link username="@Model.Submission.SyncedBy"></profile-link></small>
+		</div>
+	</div>
 </div>
 
 <row class="mt-2 mb-3">

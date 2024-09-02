@@ -63,7 +63,9 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 				Warnings = s.Warnings,
 				CycleCount = s.CycleCount,
 				Annotations = s.Annotations,
-				GameGoalId = s.GameGoalId
+				GameGoalId = s.GameGoalId,
+				SyncedOn = s.SyncedOn,
+				SyncedBy = s.SyncedBy
 			})
 			.SingleOrDefaultAsync();
 
@@ -140,5 +142,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 		internal int? SystemFrameRateId { get; init; }
 		public int? GameVersionId { get; init; }
 		internal int? GameGoalId { get; init; }
+		public string? SyncedBy { get; set; }
+		public DateTime? SyncedOn { get; set; }
 	}
 }

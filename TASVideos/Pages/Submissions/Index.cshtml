@@ -21,6 +21,12 @@
 		<column md="6">
 			<label asp-for="Search.Statuses"></label>
 			<select asp-for="Search.Statuses" multiselect="true" asp-items="Model.AvailableStatuses"></select>
+			<label condition="@User.Has(PermissionTo.CatalogMovies)" asp-for="Search.ShowVerified"></label>
+			<select condition="@User.Has(PermissionTo.CatalogMovies)" class="form-control" name="@Html.NameFor(m => m.Search.ShowVerified)">
+				<option value="">All</option>
+				<option value="True">Sync Verified</option>
+				<option value="False">Unverified</option>
+			</select>
 		</column>
 		<column md="6">
 			<label asp-for="Search.Years"></label>
@@ -62,6 +68,11 @@
 				<small condition="hoursRemaining > 0">
 					<br />(Available for judging in @hoursRemaining hours)
 				</small>
+				<div>
+					<small condition="item.SyncedOn.HasValue">
+						<i class="fa fa-check-square"></i> Sync Verified
+					</small>
+				</div>
 			</td>
 			<td><partial name="_VoteCounts" model="item.Votes" /></td>
 		</tr>

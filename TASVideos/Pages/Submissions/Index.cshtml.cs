@@ -88,6 +88,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 		[TableIgnore]
 		public string? IntendedClass { get; init; }
+
+		[TableIgnore]
+		public DateTime? SyncedOn { get; set; }
 	}
 
 	public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
@@ -108,6 +111,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public string? User { get; init; }
 		public string? GameId { get; set; }
 		public int? StartType { get; set; }
+
+		[Display(Name = "Show Sync Verified")]
+		public bool? ShowVerified { get; set; }
 
 		public ICollection<SubmissionStatus> Statuses { get; set; } = [];
 

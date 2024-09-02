@@ -1,5 +1,6 @@
 ﻿namespace TASVideos.Data.Entity;
 
+public enum ShowVerified { All, Verified, NotVerified }
 public interface ISubmissionFilter
 {
 	ICollection<SubmissionStatus> Statuses { get; }
@@ -8,6 +9,7 @@ public interface ISubmissionFilter
 	string? User { get; }
 	ICollection<int> GameIds { get; }
 	int? StartType { get; }
+	bool? ShowVerified { get; }
 }
 
 [ExcludeFromHistory]
@@ -159,17 +161,24 @@ public class Submission : BaseEntity, ITimeable
 	public string? Warnings { get; set; }
 
 	public long? CycleCount { get; set; }
+
+	[StringLength(50)]
+	public string? SyncedBy { get; set; }
+	public DateTime? SyncedOn { get; set; }
 }
 
 public static class SubmissionExtensions
 {
-	public static bool CanPublish(this Submission submission)
+	public static bool CanPublish(this Submission submission) => submission is
 	{
-		return submission is { SystemId: > 0, SystemFrameRateId: > 0, GameId: > 0 }
-			&& submission.GameVersionId > 0
-			&& submission.IntendedClassId > 0
-			&& submission.Status == SubmissionStatus.PublicationUnderway;
-	}
+		SystemId: > 0,
+		SystemFrameRateId: > 0,
+		GameId: > 0,
+		GameVersionId: > 0,
+		IntendedClassId: > 0,
+		Status: SubmissionStatus.PublicationUnderway,
+		SyncedOn: not null
+	};
 
 	public static IQueryable<Submission> FilterBy(this IQueryable<Submission> query, ISubmissionFilter criteria)
 	{
@@ -202,6 +211,13 @@ public static class SubmissionExtensions
 		if (criteria.StartType.HasValue)
 		{
 			query = query.Where(s => s.MovieStartType == criteria.StartType);
+		}
+
+		if (criteria.ShowVerified.HasValue)
+		{
+			query = criteria.ShowVerified.Value
+				? query.ThatAreVerified()
+				: query.ThatAreUnverified();
 		}
 
 		return query;
@@ -241,4 +257,10 @@ public static class SubmissionExtensions
 			.Include(s => s.GameVersion)
 			.Include(s => s.GameGoal)
 			.Include(gg => gg.GameGoal);
+
+	public static IQueryable<Submission> ThatAreVerified(this IQueryable<Submission> query)
+		=> query.Where(s => s.SyncedOn.HasValue);
+
+	public static IQueryable<Submission> ThatAreUnverified(this IQueryable<Submission> query)
+		=> query.Where(s => !s.SyncedOn.HasValue);
 }

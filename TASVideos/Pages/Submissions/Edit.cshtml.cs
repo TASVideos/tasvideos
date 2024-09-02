@@ -223,6 +223,8 @@ public class EditModel(
 			}
 
 			submission.MovieFile = await Submission.ReplaceMovieFile.ToBytes();
+			submission.SyncedOn = null;
+			submission.SyncedBy = null;
 		}
 
 		if (SubmissionHelper.JudgeIsClaiming(submission.Status, Submission.Status))

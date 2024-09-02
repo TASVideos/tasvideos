@@ -364,6 +364,7 @@ public static class EntityExtensions
 				Judge = s.Judge != null ? s.Judge.UserName : null,
 				Publisher = s.Publisher != null ? s.Publisher.UserName : null,
 				IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null,
+				SyncedOn = s.SyncedOn,
 				Votes = s.Topic != null && s.Topic.Poll != null
 					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionYes)
 					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
