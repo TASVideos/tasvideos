@@ -238,11 +238,14 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		bool unsynced = false;
 		if (Catalog.CanSyncVerify)
 		{
-			if (Catalog.SyncVerified && !submission.SyncedOn.HasValue)
+			if (Catalog.SyncVerified)
 			{
-				submission.SyncedOn = DateTime.UtcNow;
-				submission.SyncedByUserId = User.GetUserId();
-				synced = true;
+				if (!submission.SyncedOn.HasValue)
+				{
+					submission.SyncedOn = DateTime.UtcNow;
+					submission.SyncedByUserId = User.GetUserId();
+					synced = true;
+				}
 			}
 			else
 			{
