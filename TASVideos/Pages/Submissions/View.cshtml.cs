@@ -29,8 +29,8 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 				SubmittedGameName = s.GameName,
 				GameVersion = s.GameVersionId != null ? s.GameVersion!.Name : "",
 				SubmittedGameVersion = s.SubmittedGameVersion,
-				RomName = s.RomName,
-				Branch = s.Branch,
+				SubmittedRomName = s.RomName,
+				SubmittedBranch = s.Branch,
 				Goal = s.GameGoal != null
 					? s.GameGoal!.DisplayName
 					: null,
@@ -111,8 +111,8 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 		public string? SubmittedGameName { get; init; }
 		public string? GameVersion { get; init; }
 		public string? SubmittedGameVersion { get; init; }
-		public string? RomName { get; init; }
-		public string? Branch { get; init; }
+		public string? SubmittedRomName { get; init; }
+		public string? SubmittedBranch { get; init; }
 		public string? Goal { get; init; }
 		public string? Emulator { get; init; }
 

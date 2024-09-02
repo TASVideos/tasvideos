@@ -117,13 +117,14 @@
 				<label>Game</label>
 				<div>@Model.Submission.SubmittedGameName</div>
 			</div>
-			<div condition="string.IsNullOrWhiteSpace(Model.Submission.Goal) && !string.IsNullOrWhiteSpace(Model.Submission.Branch)" class="sub-info-cell">
+			<div condition="string.IsNullOrWhiteSpace(Model.Submission.Goal) && !string.IsNullOrWhiteSpace(Model.Submission.SubmittedBranch)" class="sub-info-cell">
 				<label>Submitted Goal</label>
-				<div>@Model.Submission.Branch</div>
+				<div>@Model.Submission.SubmittedBranch</div>
 			</div>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Submission.Goal)" class="sub-info-cell">
 				<label>Goal</label>
 				<div>@Model.Submission.Goal</div>
+				<small condition="@(!string.IsNullOrWhiteSpace(Model.Submission.SubmittedBranch))">(Submitted: @Model.Submission.SubmittedBranch)</small>
 			</div>
 			<div condition="Model.Submission.GameVersionId > 0" class="sub-info-cell">
 				<label>Game Version</label>
@@ -136,7 +137,7 @@
 						@Model.Submission.GameVersion
 					</a>
 				</div>
-				(Submitted: @Model.Submission.RomName @Model.Submission.SubmittedGameVersion)
+				(Submitted: @Model.Submission.SubmittedRomName @Model.Submission.SubmittedGameVersion)
 			</div>
 			<div class="sub-info-cell">
 				<label>Emulator</label>
@@ -180,9 +181,9 @@
 					</small>
 				</div>
 			</div>
-			<div condition="!string.IsNullOrWhiteSpace(Model.Submission.RomName) && !(Model.Submission.GameVersionId > 0)" class="sub-info-cell">
+			<div condition="!string.IsNullOrWhiteSpace(Model.Submission.SubmittedRomName) && !(Model.Submission.GameVersionId > 0)" class="sub-info-cell">
 				<label>Submitted ROM</label>
-				<div>@Model.Submission.RomName</div>
+				<div>@Model.Submission.SubmittedRomName</div>
 			</div>
 			<div condition="!string.IsNullOrWhiteSpace(Model.Submission.SubmittedGameVersion) && !(Model.Submission.GameVersionId > 0)" class="sub-info-cell">
 				<label>Submitted Game Version</label>
