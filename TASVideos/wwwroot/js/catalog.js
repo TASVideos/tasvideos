@@ -54,7 +54,7 @@ function enableCataloging() {
 			}
 
 			if (gameGoalModel) {
-				fetch(`/Games/List/GameGoalDropDownForGame?includeEmpty=false&gameId=${gameModel.value}`)
+				fetch(`/Games/List/GameGoalDropDownForGame?includeEmpty=true&gameId=${gameModel.value}`)
 					.then(handleFetchErrors)
 					.then(r => r.text())
 					.then(t => gameGoalModel.innerHTML = t);
