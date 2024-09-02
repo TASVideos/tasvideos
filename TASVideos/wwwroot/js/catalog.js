@@ -14,7 +14,7 @@ function enableCataloging() {
 	const returnUrlPath = returnUrlPathAndQuery[0];
 	const returnUrlQuery = returnUrlPathAndQuery[1] ?? "";
 	const verifiedCheckbox = document.getElementById('Catalog_SyncVerified');
-	const origSyncVerified = verifiedCheckbox.checked;
+	const origSyncVerified = verifiedCheckbox?.checked;
 
 	systemModel.onchange = function () {
 		if (this.value) {
@@ -41,7 +41,6 @@ function enableCataloging() {
 	}
 
 	gameModel.onchange = function () {
-		console.log('gamemodel changed')
 		if (this.value) {
 			createVersionBtn?.removeAttribute('disabled');
 			createVersionBtn?.classList.remove('disabled');
@@ -73,10 +72,9 @@ function enableCataloging() {
 	}
 
 	versionModel.onchange = function() {
-		console.log('version changed')
 		setSyncVerifiedCheckbox();
 	}
-	console.log('versionModel', versionModel)
+
 	document.getElementById('create-version')?.addEventListener('click', function () {
 		document.location = `/Games/${gameModel.value}/Versions/Edit?SystemId=${systemModel.value}&returnUrl=${generateCurrentReturnUrl() }`;
 	});
@@ -109,6 +107,10 @@ function enableCataloging() {
 
 	function setSyncVerifiedCheckbox() {
 		const verifiedCheckbox = document.getElementById('Catalog_SyncVerified');
+		if (!verifiedCheckbox) {
+			return;
+		}
+
 		const emulatorInput = document.getElementById('Catalog_Emulator');
 
 		const canVerify = systemModel.value && frameRateModel.value && gameModel.value && versionModel.value && emulatorInput.value;
@@ -118,7 +120,5 @@ function enableCataloging() {
 			verifiedCheckbox.checked = origSyncVerified;
 			verifiedCheckbox.disabled = true;
 		}
-
-
 	}
 }
