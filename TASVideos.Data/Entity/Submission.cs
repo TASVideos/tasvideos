@@ -165,6 +165,9 @@ public class Submission : BaseEntity, ITimeable
 	public int? SyncedByUserId { get; set; }
 	public virtual User? SyncedByUser { get; set; }
 	public DateTime? SyncedOn { get; set; }
+
+	[StringLength(3000)]
+	public string? AdditionalSyncNotes { get; set; }
 }
 
 public static class SubmissionExtensions
