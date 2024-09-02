@@ -162,8 +162,8 @@ public class Submission : BaseEntity, ITimeable
 
 	public long? CycleCount { get; set; }
 
-	[StringLength(50)]
-	public string? SyncedBy { get; set; }
+	public int? SyncedByUserId { get; set; }
+	public virtual User? SyncedByUser { get; set; }
 	public DateTime? SyncedOn { get; set; }
 }
 

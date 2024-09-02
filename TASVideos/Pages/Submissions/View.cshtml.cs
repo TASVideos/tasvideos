@@ -65,7 +65,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 				Annotations = s.Annotations,
 				GameGoalId = s.GameGoalId,
 				SyncedOn = s.SyncedOn,
-				SyncedBy = s.SyncedBy
+				SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null
 			})
 			.SingleOrDefaultAsync();
 

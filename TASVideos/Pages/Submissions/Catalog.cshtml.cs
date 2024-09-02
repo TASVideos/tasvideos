@@ -44,7 +44,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 				Emulator = s.EmulatorVersion,
 				SyncVerified = s.SyncedOn.HasValue,
 				SyncVerifiedOn = s.SyncedOn,
-				SyncedBy = s.SyncedBy
+				SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null
 			})
 			.SingleOrDefaultAsync();
 
@@ -239,13 +239,13 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 			if (Catalog.SyncVerified && !submission.SyncedOn.HasValue)
 			{
 				submission.SyncedOn = DateTime.UtcNow;
-				submission.SyncedBy = User.Name();
+				submission.SyncedByUserId = User.GetUserId();
 				synced = true;
 			}
 			else
 			{
 				submission.SyncedOn = null;
-				submission.SyncedBy = null;
+				submission.SyncedByUserId = null;
 				unsynced = true;
 			}
 		}
