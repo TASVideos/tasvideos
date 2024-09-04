@@ -1,8 +1,33 @@
-To add a migration:
-First you must have EF cli installed (run dotnet ef to check) to install: dotnet tool install --global dotnet-ef
-Go to the PackageManagerConsole (or powershell window)
-Make sure you are in the solution directory
+To do migrations, first you must have EF Core CLI installed. Open the Package Manager Console or any command window. You can check if you have it by running "dotnet ef", and install it with: dotnet tool install --global dotnet-ef
+
+In EF Core every SQL table corresponds to a so called "Entity". These Entities are C# objects/classes, and all of ours are in the TASVideos.Data/Entity/ folder. Their Properties correspond to SQL columns.
+"Migrations" are what we call queries that move the Database from one structure to another (e.g. adding tables or columns, deleting, modifying, etc.).
+
+The usual Migration workflow looks like this:
+1. Make a change in a C# Entity.
+	This is simply going into the Entity folder and adding/modifying/deleting Properties or Classes like you would any other C# code. Note that you can't run the project with these changes before you migrate by following the next steps.
+2. Instruct EF Core to generate a Migration.
+	In the Package Manager Console or PowerShell window, move to the solution directory (which should be the default location), and run the following command:
 dotnet ef migrations --project TASVideos.Data --startup-project TASVideos add NameOfMigration
+	Name the Migration something like "AddSubmissionCycleCount" or "RemoveRatingType".
+	You should see 2 files be added with the name of your Migration, and 1 modified ModelSnapshot file.
+3. Apply the Migration.
+	Usually you apply all unapplied Migrations by simply starting the project profile "Dev (Migrate)" if you use your own Database, or "Dev (Sample Data No Recreate)" if you use Sample Data.
+	If you want to apply all unapplied Migrations manually, you can run the following command:
+dotnet ef database --project TASVideos.Data --startup-project TASVideos update
+
+
+Other commands:
+List all Migrations (It will show "(Pending)" on unapplied Migrations):
+dotnet ef migrations --project TASVideos.Data --startup-project TASVideos list
+
+Unapply Migrations:
+dotnet ef database --project TASVideos.Data --startup-project TASVideos update NameOfLastGoodMigration
+
+Remove last Migration (This will delete the CODE of the Migration. Make sure to unapply it before removing it. If you're unsure, you can use the List command to ensure the last migration is pending, so safe to remove.):
+dotnet ef migrations --project TASVideos.Data --startup-project TASVideos remove
+If you only added one Migration, this command does the same as deleting the 2 migration files and undoing the modification of the ModelSnapshot file.
+
 
 Migration Best practices:
 Always inspect your migration to see if it could result in data loss!
