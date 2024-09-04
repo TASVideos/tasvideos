@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers;
 
-[HtmlTargetElement("textarea", Attributes = "backup-content")]
+[HtmlTargetElement(Attributes = "backup-content")]
 public class BackupContentTagHelper : TagHelper
 {
 	[HtmlAttributeName("backup-content")]
