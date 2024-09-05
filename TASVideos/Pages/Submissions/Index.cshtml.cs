@@ -55,7 +55,7 @@ public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemSe
 		public string? Game { get; init; }
 
 		[Sortable]
-		public string? Branch { get; init; }
+		public string? Goal { get; init; }
 		public TimeSpan Time => this.Time();
 		public List<string>? By { get; init; }
 
