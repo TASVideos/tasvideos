@@ -52,7 +52,7 @@
 		<tr>
 			<td>@item.System</td>
 			<td><sub-link id="item.Id">@item.Game</sub-link></td>
-			<td>@item.Branch</td>
+			<td>@(item.Goal == "baseline" ? "" : item.Goal)</td>
 			<td>@(item.Time.ToStringWithOptionalDaysAndHours())</td>
 			<td><author-list authors="item.By" additional-authors="@item.AdditionalAuthors"></author-list></td>
 			<td><timezone-convert asp-for="@item.Date" date-only="true" /></td>

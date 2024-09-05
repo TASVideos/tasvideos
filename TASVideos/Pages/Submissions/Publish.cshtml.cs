@@ -276,7 +276,7 @@ public class PublishModel(
 		public SubmissionStatus Status { get; init; }
 		public int? GameGoalId { get; init; }
 		public string? EmulatorVersion { get; init; }
-		public string? Branch { get; init; }
+		public string? Goal { get; init; }
 
 		public bool CanPublish => SystemId > 0
 			&& SystemFrameRateId.HasValue

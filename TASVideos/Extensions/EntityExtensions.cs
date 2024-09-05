@@ -368,7 +368,7 @@ public static class EntityExtensions
 				Game = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
 				Frames = s.Frames,
 				FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,
-				Branch = s.Branch,
+				Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
 				By = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName).ToList(),
 				AdditionalAuthors = s.AdditionalAuthors,
 				Date = s.CreateTimestamp,
@@ -553,7 +553,7 @@ public static class EntityExtensions
 			SystemFrameRateId = s.SystemFrameRateId,
 			Status = s.Status,
 			EmulatorVersion = s.EmulatorVersion,
-			Branch = s.Branch,
+			Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
 			GameGoalId = s.GameGoalId
 		});
 	}
