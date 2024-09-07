@@ -1,4 +1,7 @@
 ﻿@page "{id}"
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using TASVideos.Data.Entity.Game
+@using TASVideos.TagHelpers
 @model IndexModel
 @{
 	ViewData.SetTitle($"{Model.Game.DisplayName}");
@@ -201,18 +204,20 @@
 </alert>
 <standard-table condition="Model.Game.Versions.Any()">
 	<table-head columns="Type,Name,Title Override,Region,Version,Platform,Hashes"></table-head>
-	@foreach (var rom in Model.Game.Versions.OrderBy(v => v.Name))
+	@foreach (var version in Model.Game.Versions.OrderBy(v => v.Name))
 	{
 		<tr>
-			<td>@rom.Type.ToString()</td>
-			<td>@rom.Name</td>
-			<td>@rom.TitleOverride</td>
-			<td>@rom.Region</td>
-			<td>@rom.Version</td>
-			<td>@rom.SystemCode</td>
 			<td>
-				<small condition="!string.IsNullOrWhiteSpace(rom.Sha1)" class="text-nowrap">SHA1: @rom.Sha1</small><br />
-				<small condition="!string.IsNullOrWhiteSpace(rom.Md5)" class="text-nowrap">MD5: @rom.Md5</small>
+				<span class="text-nowrap"><i condition="@version.Type == VersionTypes.Unknown" class="fa fa-circle-question"></i> @version.Type</span>
+			</td>
+			<td>@version.Name</td>
+			<td>@version.TitleOverride</td>
+			<td>@version.Region</td>
+			<td>@version.Version</td>
+			<td>@version.SystemCode</td>
+			<td>
+				<small condition="!string.IsNullOrWhiteSpace(version.Sha1)" class="text-nowrap">SHA1: @version.Sha1</small><br />
+				<small condition="!string.IsNullOrWhiteSpace(version.Md5)" class="text-nowrap">MD5: @version.Md5</small>
 			</td>
 		</tr>
 	}
