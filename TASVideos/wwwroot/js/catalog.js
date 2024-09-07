@@ -71,8 +71,10 @@ function enableCataloging() {
 		setSyncVerifiedCheckbox();
 	}
 
-	versionModel.onchange = function() {
-		setSyncVerifiedCheckbox();
+	if (versionModel) {
+		versionModel.onchange = function() {
+			setSyncVerifiedCheckbox();
+		}
 	}
 
 	document.getElementById('create-version')?.addEventListener('click', function () {

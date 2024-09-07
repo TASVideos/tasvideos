@@ -14,11 +14,9 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 	public string Title { get; set; } = "";
 
 	[BindProperty]
-	[Required]
 	public int? SystemId { get; set; }
 
 	[BindProperty]
-	[Required]
 	public int? GameId { get; set; }
 
 	public async Task<IActionResult> OnGet()
@@ -63,10 +61,13 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			return NotFound();
 		}
 
-		var gameExists = await db.Games.AnyAsync(g => g.Id == GameId);
-		if (!gameExists)
+		if (GameId.HasValue)
 		{
-			return BadRequest();
+			var gameExists = GameId.HasValue && await db.Games.AnyAsync(g => g.Id == GameId);
+			if (!gameExists)
+			{
+				return BadRequest();
+			}
 		}
 
 		topic.GameId = GameId;
