@@ -55,7 +55,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		var topic = await db.ForumTopics.SingleOrDefaultAsync(t => t.Id == Id);
+		var topic = await db.ForumTopics.FindAsync(Id);
 		if (topic is null)
 		{
 			return NotFound();
