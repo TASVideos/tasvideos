@@ -22,7 +22,7 @@
 							</row>
 							<row class="align-items-center">
 								<div class="col-auto px-1">
-									<span class="fs-6 fs-sm-5">@sub.Game</span><span condition="!string.IsNullOrEmpty(sub.Goal)" class="fs-6 fs-sm-5"> "@sub.Goal"</span>
+									<span class="fs-6 fs-sm-5">@sub.Game</span><span condition="@(!string.IsNullOrEmpty(sub.Goal) && sub.Goal != "baseline")" class="fs-6 fs-sm-5"> "@sub.Goal"</span>
 								</div>
 								<div class="col-auto ms-auto text-end">
 									<row>
