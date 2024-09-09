@@ -179,7 +179,7 @@ internal class Bk2 : Parser, IParser
 			}
 		}
 
-		// We only ever have a list of framerates for cores with framerate overrides, but it doesn't distinguish by core. nymashock has cycle count but octoshock has to rely on mednafen framerates for now. so we override with a constant for octoshock, to prevent picking random wrong values from nymashock overrides
+		// MapParsedResult() implies we only ever have a list of framerates for cores with framerate overrides, but it doesn't distinguish by core. nymashock has cycle count but octoshock has to rely on mednafen framerates for now. so we override with a constant for octoshock, to prevent picking random wrong values from nymashock overrides
 		if (core == "octoshock")
 		{
 			result.FrameRateOverride = result.Region == RegionType.Pal
