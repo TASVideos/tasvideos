@@ -129,7 +129,7 @@ public class Submission : BaseEntity, ITimeable
 		}
 
 		var gameName = GameName;
-		if (Game is not null)
+		if (Game is not null && Game.Id > 0)
 		{
 			gameName = Game.DisplayName;
 		}
