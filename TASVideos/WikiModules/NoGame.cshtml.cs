@@ -16,7 +16,7 @@ public class NoGame(ApplicationDbContext db) : WikiViewComponent
 			.Select(p => new Entry(p.Id, p.Title))
 			.ToListAsync();
 		Submissions = await db.Submissions
-			.Where(s => s.GameId == null || s.GameId < 1)
+			.Where(s => s.GameId == null)
 			.ThatAreInActive()
 			.OrderBy(p => p.Id)
 			.Select(s => new Entry(s.Id, s.Title))
