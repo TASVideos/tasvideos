@@ -10,7 +10,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	[FromRoute]
 	public string Id { get; set; } = "";
 
-	public int ParsedId => int.TryParse(Id, out var id) ? id : -1;
+	public int ParsedId => int.TryParse(Id, out var id) ? id : -2;
 
 	public GameDisplay Game { get; set; } = new();
 	public List<TabMiniMovieModel> Movies { get; set; } = [];
@@ -55,7 +55,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				.ToList(),
 		});
 
-		query = ParsedId > 0
+		query = ParsedId > -2
 			? query.Where(g => g.Id == ParsedId)
 			: query.Where(g => g.Abbreviation == Id);
 
