@@ -15,10 +15,11 @@
 
 <h4>Non-Obsolete Pubs Without a TASVideosChannel Encode</h4>
 <standard-table>
-	<table-head columns="Publication, Channel"></table-head>
+	<table-head columns="Id, Publication, Channel"></table-head>
 	@foreach(var channel in Model.Videos.Where(v => !v.IsObsolete).Where(v => v.ChannelTitle != tvc).OrderByDescending(v => v.PublicationId))
 	{
 		<tr>
+			<td>@channel.PublicationId</td>
 			<td><pub-link id="@channel.PublicationId">@channel.PublicationTitle</pub-link></td>
 			<td>@channel.ChannelTitle</td>
 		</tr>
