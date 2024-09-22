@@ -13,10 +13,25 @@
 	var tvcData = groups.Single(g => g.Key == tvc);
 }
 
+<h4>Non-Obsolete Pubs Without a TASVideosChannel Encode</h4>
+<standard-table>
+	<table-head columns="Publication, Channel"></table-head>
+	@foreach(var channel in Model.Videos.Where(v => !v.IsObsolete).Where(v => v.ChannelTitle != tvc).OrderByDescending(v => v.PublicationId))
+	{
+		<tr>
+			<td><pub-link id="@channel.PublicationId">@channel.PublicationTitle</pub-link></td>
+			<td>@channel.ChannelTitle</td>
+		</tr>
+	}
+</standard-table>
+
 <h4>@tvc</h4>
 <label>Current: @tvcData.Count(d => !d.IsObsolete)</label>
 <br />
 <label>Obsolete: @tvcData.Count(d => d.IsObsolete)</label>
+<br />
+<br />
+<h4>Non-TVA channels linked on Publications</h4>
 <standard-table>
 	<table-head columns="Youtube Channel,Current Uploads,Obsolete Uploads"></table-head>
 	@foreach (var channel in groups.Where(g => g.Key != tvc))

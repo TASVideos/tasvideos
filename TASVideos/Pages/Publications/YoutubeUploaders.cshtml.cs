@@ -18,13 +18,14 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 			{
 				u.Url,
 				u.PublicationId,
+				u.Publication!.Title,
 				IsObsolete = u.Publication!.ObsoletedById.HasValue
 			})
 			.ToListAsync();
 
 		Videos = raw
 			.Where(r => youtubeSync.IsYoutubeUrl(r.Url))
-			.Select(u => new YoutubeEntry(u.PublicationId, youtubeSync.VideoId(u.Url!), u.IsObsolete))
+			.Select(u => new YoutubeEntry(u.PublicationId, u.Title, youtubeSync.VideoId(u.Url!), u.IsObsolete))
 			.Distinct()
 			.ToList();
 
@@ -61,7 +62,7 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 		}
 	}
 
-	public record YoutubeEntry(int PublicationId, string VideoId, bool IsObsolete)
+	public record YoutubeEntry(int PublicationId, string PublicationTitle, string VideoId, bool IsObsolete)
 	{
 		public string ChannelTitle { get; set; } = "";
 	}
