@@ -13,38 +13,39 @@ public class PublicationsByPlatform(IGameSystemService platforms, IClassService 
 	{
 		var extant = (await platforms.GetAll()).ToList();
 		List<IReadOnlyList<SystemsResponse>> rows = [];
-		void ProcessGroup(string groupStr)
-		{
-			List<SystemsResponse> row = [];
-			foreach (var idStr in groupStr.Split('-'))
-			{
-				var found = extant.FirstOrDefault(sys => sys.Code.Equals(idStr, StringComparison.OrdinalIgnoreCase));
-				if (found is null)
-				{
-					// ignore, TODO log?
-					return;
-				}
+		rows.AddRange(groupings
+			.Select(groupStr => ProcessGroup(extant, groupStr))
+			.OfType<List<SystemsResponse>>());
 
-				extant.Remove(found);
-				row.Add(found);
-			}
-
-			rows.Add(row);
-		}
-
-		foreach (var groupStr in groupings)
-		{
-			ProcessGroup(groupStr);
-		}
-
-		Platforms = extant.Select(static sys => (sys.DisplayName, sys.Code))
-			.Concat(rows.Select(static row => (
-				DisplayName: string.Join(" / ", row.Select(static sys => sys.DisplayName)),
-				Code: string.Join("-", row.Select(static sys => sys.Code))
+		Platforms = extant
+			.Select(sys => (sys.DisplayName, sys.Code))
+			.Concat(rows.Select(row => (
+				DisplayName: string.Join(" / ", row.Select(sys => sys.DisplayName)),
+				Code: string.Join("-", row.Select(sys => sys.Code))
 			)))
-			.OrderBy(static tuple => tuple.DisplayName)
+			.OrderBy(tuple => tuple.DisplayName)
 			.ToArray();
 		PubClasses = await classes.GetAll();
+
 		return View();
+	}
+
+	private static List<SystemsResponse>? ProcessGroup(List<SystemsResponse> extant, string groupStr)
+	{
+		List<SystemsResponse> row = [];
+		foreach (var idStr in groupStr.Split('-'))
+		{
+			var found = extant.FirstOrDefault(sys => sys.Code.Equals(idStr, StringComparison.OrdinalIgnoreCase));
+			if (found is null)
+			{
+				// ignore, TODO log?
+				return null;
+			}
+
+			extant.Remove(found);
+			row.Add(found);
+		}
+
+		return row;
 	}
 }

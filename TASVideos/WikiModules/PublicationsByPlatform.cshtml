@@ -1,5 +1,5 @@
 ﻿@model PublicationsByPlatform
-<table>
+<standard-table>
 	@foreach (var platform in Model.Platforms.OrderBy(res => res.DisplayName))
 	{
 		<tr>
@@ -11,4 +11,4 @@
 			}
 		</tr>
 	}
-</table>
+</standard-table>
