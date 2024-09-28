@@ -1,0 +1,14 @@
+﻿@model PublicationsByPlatform
+<table>
+	@foreach (var platform in Model.Platforms.OrderBy(res => res.DisplayName))
+	{
+		<tr>
+			<td>@platform.DisplayName</td>
+			<td><a href="/Movies-@platform.Code">All Publications</a></td>
+			@foreach (var pubClass in Model.PubClasses.OrderBy(t => t.Id))
+			{
+				<td><a href="/Movies-@platform.Code-@pubClass.Link">@pubClass.Name</a></td>
+			}
+		</tr>
+	}
+</table>
