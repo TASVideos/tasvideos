@@ -112,7 +112,11 @@ internal static class EntityExtensions
 				.OrderBy(a => a.Ordinal)
 				.Select(a => a.Author!.UserName),
 			AdditionalAuthors = s.AdditionalAuthors,
-			CreateTimestamp = s.CreateTimestamp
+			CreateTimestamp = s.CreateTimestamp,
+			SyncedOn = s.SyncedOn,
+			SyncedByUser = s.SyncedByUser != null
+				? s.SyncedByUser.UserName
+				: null
 		});
 	}
 }

@@ -73,4 +73,10 @@ internal class SubmissionsResponse
 
 	[Sortable]
 	public DateTime CreateTimestamp { get; init; }
+
+	[Sortable]
+	public DateTime? SyncedOn { get; init; }
+
+	[Sortable]
+	public string? SyncedByUser { get; init; }
 }
