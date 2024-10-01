@@ -14,26 +14,12 @@
 	<input condition="@Model.AvailableStatuses.Count <= 1" type="hidden" asp-for="Submission.Status" />
 	<input type="hidden" asp-for="MarkupChanged" id="markup-changed" />
 	<row>
-		<column lg="6">
+		<column lg="6" permission="ReplaceSubmissionMovieFile">
 			<fieldset>
-				@if (ViewContext.HttpContext.User.Has(PermissionTo.ReplaceSubmissionMovieFile))
-				{
-					<label asp-for="Submission.ReplaceMovieFile"></label>
-					<input asp-for="Submission.ReplaceMovieFile" />
-					<div>Your movie packed in a ZIP file (max size: 150k)</div>
-					<span asp-validation-for="Submission.ReplaceMovieFile"></span>
-				}
-				else
-				{
-					<label for="notReplaceMovieFile">Movie File</label>
-					<input class="form-control" disabled name="notReplaceMovieFile" type="text"
-						value="(existing movie file)" @* TODO show current filename? an earlier comment says getting the file info is expensive, which presumably includes metadata since that would be in the same table? *@ />
-					<div>
-						@EditModel.ErrMsgMayNotReplaceFile
-						(<a asp-page="/UserFiles/Upload">go to upload form</a><span condition="@Model.Submission.TopicId > 0">;
-						<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Submission.TopicId">go to forum thread</a></span>)
-					</div>
-				}
+				<label asp-for="Submission.ReplaceMovieFile"></label>
+				<input asp-for="Submission.ReplaceMovieFile" />
+				<div>Your movie packed in a ZIP file (max size: 150k)</div>
+				<span asp-validation-for="Submission.ReplaceMovieFile"></span>
 			</fieldset>
 		</column>
 		<column lg="6">
