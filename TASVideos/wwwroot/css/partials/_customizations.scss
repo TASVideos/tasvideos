@@ -283,6 +283,18 @@ ol, ul, dl {
         margin-bottom: 0;
     }
 }
+/*ul*/.hlist {
+	padding: 0;
+	& > li {
+		display: inline list-item;
+		&:first-child {
+			list-style: none;
+			&::marker {
+				content: none;
+			}
+		}
+	}
+}
 
 .error-code {
 	border: 2px solid var(--bs-danger);
