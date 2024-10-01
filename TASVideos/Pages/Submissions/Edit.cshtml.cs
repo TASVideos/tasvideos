@@ -21,8 +21,6 @@ public class EditModel(
 	ITopicWatcher topicWatcher)
 	: BasePageModel
 {
-	internal const string ErrMsgMayNotReplaceFile = "You don't have permission to replace movie files directly; upload a userfile and ask a staff member to swap it out";
-
 	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.ReplaceMovieFile)}";
 
 	[FromRoute]
@@ -109,25 +107,21 @@ public class EditModel(
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (Submission.ReplaceMovieFile is not null)
+		if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.ReplaceMovieFile is not null)
 		{
-			if (User.Has(PermissionTo.ReplaceSubmissionMovieFile))
+			if (!Submission.ReplaceMovieFile.IsZip())
 			{
-				if (!Submission.ReplaceMovieFile.IsZip())
-				{
-					ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
-				}
+				ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
+			}
 
-				if (!User.Has(PermissionTo.OverrideSubmissionConstraints) && !Submission.ReplaceMovieFile.LessThanMovieSizeLimit())
-				{
-					ModelState.AddModelError(FileFieldName, ".zip is too big, are you sure this is a valid movie file?");
-				}
-			}
-			else
+			if (!User.Has(PermissionTo.OverrideSubmissionConstraints) && !Submission.ReplaceMovieFile.LessThanMovieSizeLimit())
 			{
-				Submission.ReplaceMovieFile = null;
-				ModelState.AddModelError(FileFieldName, ErrMsgMayNotReplaceFile);
+				ModelState.AddModelError(FileFieldName, ".zip is too big, are you sure this is a valid movie file?");
 			}
+		}
+		else if (!User.Has(PermissionTo.ReplaceSubmissionMovieFile))
+		{
+			Submission.ReplaceMovieFile = null;
 		}
 
 		// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
