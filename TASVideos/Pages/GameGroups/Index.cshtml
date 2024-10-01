@@ -2,6 +2,10 @@
 @model IndexModel
 @{
 	ViewData.SetTitle($"Games for Group: {Model.Name}");
+	if (int.TryParse(Model.Id, out var id))
+	{
+		ViewData.SetNavigation(id, "/GameGroups/{0}");
+	}
 }
 
 <warning-alert condition="!Model.Games.Any()">

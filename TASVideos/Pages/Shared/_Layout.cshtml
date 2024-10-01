@@ -89,6 +89,7 @@
 		var heading = ViewData.GetHeading();
 		int? prev = null;
 		int? next = null;
+		string? fmtStr = ViewData["NavigationFmtStr"] as string;
 		if (User.Has(PermissionTo.CatalogMovies))
 		{
 			var id = ViewData.Int("NavigationId");
@@ -101,7 +102,7 @@
 
 		<div class="container mb-2">
 			<h1 class="page-title card card-body d-block">
-				<a condition="prev.HasValue" href="@(prev + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-left"></i></a>
+				<a condition="prev.HasValue" href="@string.Format(fmtStr!, prev)"><i class="fa fa-arrow-left"></i></a>
 				@if (IsSectionDefined("PageTitle"))
 				{
 					@await RenderSectionAsync("PageTitle")
@@ -110,7 +111,7 @@
 				{
 					@heading
 				}
-				<a condition="next.HasValue" class="float-end" href="@(next + ViewData["NavigationSuffix"]?.ToString())"><i class="fa fa-arrow-right"></i></a>
+				<a condition="next.HasValue" class="float-end" href="@string.Format(fmtStr!, next)"><i class="fa fa-arrow-right"></i></a>
 			</h1>
 		</div>
 	}
