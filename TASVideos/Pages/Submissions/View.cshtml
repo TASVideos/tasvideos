@@ -4,7 +4,7 @@
 @{
 	ViewData.SetTitle($"{Model.Submission.Title} - Submission #{Model.Id}");
 	ViewData.SetHeading($"Submission {Model.Submission.Title}");
-	ViewData.SetNavigation(Model.Id, "/{0}S");
+	ViewData.SetNavigation(Model.Id, "S");
 	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
 	bool canEdit = User.Has(PermissionTo.EditSubmissions)
 		|| (Model.CanEdit && User.Has(PermissionTo.SubmitMovies));
