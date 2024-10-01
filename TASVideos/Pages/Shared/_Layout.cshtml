@@ -89,7 +89,7 @@
 		var heading = ViewData.GetHeading();
 		int? prev = null;
 		int? next = null;
-		string? fmtStr = ViewData["NavigationFmtStr"] as string;
+		string fmtStr = ViewData.GetNavigationFormatStr();
 		if (User.Has(PermissionTo.CatalogMovies))
 		{
 			var id = ViewData.Int("NavigationId");

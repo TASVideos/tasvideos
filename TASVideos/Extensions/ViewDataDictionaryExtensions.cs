@@ -51,6 +51,9 @@ public static class ViewDataDictionaryExtensions
 		viewData["NavigationFmtStr"] = fmtStr;
 	}
 
+	public static string GetNavigationFormatStr(this ViewDataDictionary viewData)
+		=> viewData["NavigationFmtStr"] as string ?? "";
+
 	public static string ActivePageClass(this ViewDataDictionary viewData, string page)
 	{
 		var activePage = viewData["ActivePage"] as string;
