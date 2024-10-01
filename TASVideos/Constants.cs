@@ -19,6 +19,7 @@ public static class SystemWiki
 	public const string ActivitySummary = "System/ActivitySummary";
 	public const string AvatarRequirements = "System/AvatarRequirements";
 	public const string ClassEditingHelp = "System/ClassEditingHelp";
+	public const string EditMovieHeader = "System/EditMovieHeader";
 	public const string EmailConfirmationSentMessage = "System/EmailConfirmationSentMessage";
 	public const string Error = "System/Error";
 	public const string FilesEditingHelp = "System/FilesEditingHelp";
