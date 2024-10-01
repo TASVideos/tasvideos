@@ -45,10 +45,10 @@ public static class ViewDataDictionaryExtensions
 	public static void SetWikiPage(this ViewDataDictionary viewData, IWikiPage wikiPage)
 		=> viewData["WikiPage"] = wikiPage;
 
-	public static void SetNavigation(this ViewDataDictionary viewData, int id, string suffix)
+	public static void SetNavigation(this ViewDataDictionary viewData, int id, string fmtStr = "{0}")
 	{
 		viewData["NavigationId"] = id;
-		viewData["NavigationSuffix"] = suffix;
+		viewData["NavigationFmtStr"] = fmtStr;
 	}
 
 	public static string ActivePageClass(this ViewDataDictionary viewData, string page)
