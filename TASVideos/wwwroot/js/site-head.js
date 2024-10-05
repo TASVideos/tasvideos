@@ -64,6 +64,22 @@ window.addEventListener("DOMContentLoaded", function () {
             rate(btn.dataset.pubId, true);
         };
     });
+
+    // allow middle-clicking the search button to open in new tab
+    const searchBtnElem = document.querySelector(/*ul.navbar-nav */'form[action="/Search/Index"] button[type="submit"]');
+    // is there a function for this? reverse Element.querySelector?
+    let searchFormElem = searchBtnElem.parentElement;
+    while (!(searchFormElem instanceof HTMLFormElement)) searchFormElem = searchFormElem.parentElement;
+    const linkElem = document.createElement("a");
+    Array.from(searchBtnElem.attributes).forEach(attr => linkElem.setAttribute(attr.name, attr.value));
+    linkElem.onclick = e => {
+        e.preventDefault();
+        searchFormElem.requestSubmit();
+    };
+    linkElem.removeAttribute("type");
+    linkElem.setAttribute("href", "/Search/Index");
+    Array.from(searchBtnElem.children).forEach(e => linkElem.appendChild(e));
+    searchBtnElem.replaceWith(linkElem);
 });
 
 function rate(pubId, unrated) {
