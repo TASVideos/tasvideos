@@ -46,8 +46,9 @@ public static class ApplicationBuilderExtensions
 		});
 	}
 
-	public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env)
+	public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env, AppSettings settings)
 	{
+		var userAgentReportURL = $"{settings.BaseUrl}/Diagnostics/UserAgentInterventionReports";
 		string[] trustedJSHosts = [
 			"https://cdn.jsdelivr.net",
 			"https://cdnjs.cloudflare.com",
@@ -57,7 +58,15 @@ public static class ApplicationBuilderExtensions
 			"https://www.youtube.com",
 		];
 		string[] cspDirectives = [
+			"base-uri 'none'", // neutralises the `<base/>` footgun
+			"default-src 'self'", // fallback for other `*-src` directives
+			"font-src 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // CSS `font: url();` and `@font-face { src: url(); }` will be blocked unless they're from one of these domains (this also blocks nonstandard fonts installed on the system maybe)
+			"form-action 'self'", // domains allowed for `<form action/>` (POST target page)
+			"frame-src 'self' https://www.youtube.com/embed/", // allow these domains in <iframe/>
+			"img-src *", // allow hotlinking images from any domain in UGC (not great)
+			"require-trusted-types-for 'script'", // experimental, but Google seems to be pushing it: should block `HTMLScriptElement.innerHTML = "user.pwn();";`, and similarly block adding in-line scripts as attrs
 			$"script-src 'self' {string.Join(' ', trustedJSHosts)}", // `<script/>`s will be blocked unless they're from one of these domains
+			"style-src 'unsafe-inline' 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // allow `<style/>`, and `<link rel="stylesheet"/>` if it's from our domain or trusted CDN
 			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
 		];
 		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);

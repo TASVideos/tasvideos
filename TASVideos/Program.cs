@@ -67,7 +67,7 @@ app
 	.UseAuthentication()
 	.UseMiddleware<CustomLocalizationMiddleware>()
 	.UseSerilogRequestLogging()
-	.UseMvcWithOptions(app.Environment);
+	.UseMvcWithOptions(app.Environment, settings);
 
 if (app.Environment.IsDevelopment())
 {
