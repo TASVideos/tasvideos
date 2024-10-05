@@ -48,6 +48,19 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env)
 	{
+		string[] trustedJSHosts = [
+			"https://cdn.jsdelivr.net",
+			"https://cdnjs.cloudflare.com",
+			"https://code.jquery.com",
+			"https://www.google.com/recaptcha/",
+			"https://www.gstatic.com/recaptcha/",
+			"https://www.youtube.com",
+		];
+		string[] cspDirectives = [
+			$"script-src 'self' {string.Join(' ', trustedJSHosts)}", // `<script/>`s will be blocked unless they're from one of these domains
+			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
+		];
+		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);
 		var permissionsPolicyValue = string.Join(", ", [
 			"camera=()", // defaults to `self`
 			"display-capture=()", // defaults to `self`
@@ -71,7 +84,7 @@ public static class ApplicationBuilderExtensions
 			context.Response.Headers.XContentTypeOptions = "nosniff";
 			context.Response.Headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
 			context.Response.Headers.XPoweredBy = "";
-			context.Response.Headers.ContentSecurityPolicy = "upgrade-insecure-requests; script-src 'self' https://code.jquery.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://www.youtube.com https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/";
+			context.Response.Headers.ContentSecurityPolicy = contentSecurityPolicyValue;
 			await next();
 		});
 
