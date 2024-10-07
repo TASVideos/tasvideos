@@ -1,6 +1,6 @@
 <Project>
   <ItemGroup>
-    <PackageVersion Include="AspNetCore.ReCaptcha" Version="1.8.1" />
+    <PackageVersion Include="AspNetCore.ReCaptcha" Version="1.8.2" />
     <PackageVersion Include="EFCore.NamingConventions" Version="8.0.3" />
     <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageVersion Include="GitVersion.MsBuild" Version="5.12.0" />
