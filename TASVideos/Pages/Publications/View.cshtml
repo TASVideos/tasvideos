@@ -5,6 +5,7 @@
 	ViewData.SetTitle($"{Model.Publication.Title} - Movie #{Model.Id}");
 	ViewData.SetMetaTags(new MetaTag
 	{
+		License = "https://creativecommons.org/licenses/by/2.0/", // TODO also set this for wiki pages incl. game resources, as the editor page for those claims they're also CC BY 2.0
 		Title = Model.Publication.Title,
 		Description = $"Publication [{Model.Id}] from {Model.Publication.CreateTimestamp.ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture)}",
 		Image = $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Publication.Screenshot.Path}",

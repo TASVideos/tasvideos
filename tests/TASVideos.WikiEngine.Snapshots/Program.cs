@@ -105,7 +105,7 @@ foreach (var wp in toProcess)
 
 	try
 	{
-		nodes = NewParser.Parse(markup);
+		nodes = NewParser.Parse(markup, isUGC: true);
 	}
 	catch (NewParser.SyntaxException e)
 	{

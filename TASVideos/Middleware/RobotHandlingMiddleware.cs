@@ -19,6 +19,8 @@ public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment e
 						Disallow: /InternalSystem/
 						Disallow: /*?revision=*
 						Disallow: /Wiki/PageHistory
+						Disallow: /Wiki/Referrers
+						Disallow: /Wiki/ViewSource
 
 						User-agent: Fasterfox
 						Disallow: /

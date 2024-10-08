@@ -8,6 +8,7 @@
 		: Context.Request.ToUrl();
 	var image = model.Image ?? $"{Context.Request.ToBaseUrl()}/images/logo-embed.png";
 }
+<link condition="model.License is not null" href="@(model.License)" rel="license" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="TASVideos"/>
 <meta property="og:title" content="@title" />

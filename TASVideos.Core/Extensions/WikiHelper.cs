@@ -126,6 +126,9 @@ public static class WikiHelper
 		return IsHomePage(page.PageName);
 	}
 
+	public static bool IsHomePageOrSubmissionNotes(this IWikiPage page)
+		=> page.IsHomePage() || IsSubmissionPage(page.PageName, out _);
+
 	public static bool IsSystemPage(this IWikiPage page)
 	{
 		return IsSystemPage(page.PageName);

@@ -69,7 +69,7 @@ public class PostHelperTagHelper : TagHelper
 					<button type="button" class="btn btn-success btn-sm flex-grow-0 border-dark" tabindex="-1" data-fmt="[userfile],[/userfile]">userfile</button>
 				</div>
 				<div class="mt-1 mb-2">
-					<small><a href="/ForumMarkup" target="_blank">Forum Markup Usage</a></small>
+					<small><a href="/ForumMarkup" rel="help" target="_blank">Forum Markup Usage</a></small>
 				</div>
 			</div>
 			""");
