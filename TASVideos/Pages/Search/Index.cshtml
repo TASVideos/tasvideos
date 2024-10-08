@@ -49,7 +49,7 @@
 		}
 		@if (Model.PublicationResults.Count == IndexModel.PageSize + 1)
 		{
-			<tr><td>...</td></tr>
+			<tr><td style="padding-inline-start: 3em; user-select: none;">&hellip;</td></tr>
 		}
 	</standard-table>
 </div>
@@ -65,17 +65,17 @@
 					<a asp-page="/Games/Index" asp-route-id="@result.Id">@result.DisplayName</a>
 				</td>
 				<td>@string.Join(",", result.Systems.Distinct())</td>
-				<td>
+				<td><ul class="hlist">
 					@foreach (var group in result.Groups)
 					{
-						<a asp-page="/GameGroups/Index" asp-route-id="@group.Id">@group.Name</a>
+						<li><a asp-page="/GameGroups/Index" asp-route-id="@group.Id">@group.Name</a></li>
 					}
-				</td>
+				</ul></td>
 			</tr>
 		}
 		@if (Model.GameResults.Count == IndexModel.PageSize + 1)
 		{
-			<tr><td>...</td><td></td><td></td></tr>
+			<tr><td colspan="3" style="padding-inline-start: 3em; user-select: none;">&hellip;</td></tr>
 		}
 	</standard-table>
 </div>
@@ -97,7 +97,7 @@
 		}
 		@if (Model.PageResults.Count == IndexModel.PageSize + 1)
 		{
-			<tr><td>...</td><td></td></tr>
+			<tr><td colspan="2" style="padding-inline-start: 3em; user-select: none;">&hellip;</td></tr>
 		}
 	</standard-table>
 </div>
@@ -119,7 +119,7 @@
 		}
 		@if (Model.PostResults.Count == IndexModel.PageSize + 1)
 		{
-			<tr><td>...</td><td></td></tr>
+			<tr><td colspan="2" style="padding-inline-start: 3em; user-select: none;">&hellip;</td></tr>
 		}
 	</standard-table>
 </div>
