@@ -254,7 +254,7 @@ internal class ForumService(
 			return forumActivity;
 		}
 
-		DateTime minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysPostsCountAsActive);
+		DateTime minimumDate = DateTime.UtcNow.AddDays(-(ForumConstants.DaysPostsCountAsActive - 1)); // we subtract 1 day here because we cache activity for 1 day
 
 		var fullrow = await db.ForumPosts
 			.Where(fp => fp.CreateTimestamp > minimumDate || fp.PostEditedTimestamp > minimumDate)
@@ -306,7 +306,7 @@ internal class ForumService(
 			return subforumActivity;
 		}
 
-		DateTime minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysPostsCountAsActive);
+		DateTime minimumDate = DateTime.UtcNow.AddDays(-(ForumConstants.DaysPostsCountAsActive - 1)); // we subtract 1 day here because we cache activity for 1 day
 
 		var fullrow = await db.ForumPosts
 			.Where(fp => fp.CreateTimestamp > minimumDate || fp.PostEditedTimestamp > minimumDate)
