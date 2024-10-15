@@ -2,7 +2,6 @@
 
 public class MetaTag
 {
-	public string? License { get; init; }
 	public string? Title { get; init; }
 	public string? Description { get; init; }
 	public string? RelativeUrl { get; init; }
