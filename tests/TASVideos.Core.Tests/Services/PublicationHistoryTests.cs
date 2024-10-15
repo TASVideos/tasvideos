@@ -1,5 +1,4 @@
-﻿using TASVideos.Core.Services.Email;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Core.Tests.Services;

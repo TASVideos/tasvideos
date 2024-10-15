@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.FileProviders;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
 

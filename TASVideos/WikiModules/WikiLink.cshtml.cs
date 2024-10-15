@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Helpers;
 using TASVideos.WikiEngine;
