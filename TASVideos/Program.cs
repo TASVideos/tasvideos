@@ -1,6 +1,7 @@
 ﻿using AspNetCore.ReCaptcha;
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
+using OpenTelemetry.Metrics;
 using Serilog;
 using TASVideos.Api;
 using TASVideos.Core.Data;
@@ -52,6 +53,23 @@ builder.Services
 	});
 
 builder.Host.UseSerilog();
+
+builder.Services
+	.AddOpenTelemetry()
+	.WithMetrics(builder =>
+	{
+		builder.AddMeter(
+			"Microsoft.AspNetCore.Hosting",
+			"Microsoft.AspNetCore.Server.Kestrel",
+			"Microsoft.AspNetCore.Http.Connections",
+			"Microsoft.AspNetCore.Routing",
+			"Microsoft.AspNetCore.Diagnostics",
+			"Microsoft.AspNetCore.RateLimiting");
+
+		builder.AddMeter("Npgsql");
+
+		builder.AddPrometheusExporter();
+	});
 
 var app = builder.Build();
 

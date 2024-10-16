@@ -112,6 +112,10 @@ public static class ApplicationBuilderExtensions
 		return app.UseEndpoints(endpoints =>
 		{
 			endpoints.MapRazorPages();
+			endpoints.MapPrometheusScrapingEndpoint().RequireAuthorization(builder =>
+			{
+				builder.RequireClaim(CustomClaimTypes.Permission, ((int)PermissionTo.SeeDiagnostics).ToString());
+			});
 		});
 	}
 }

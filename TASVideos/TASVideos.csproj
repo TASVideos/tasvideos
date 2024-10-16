@@ -42,6 +42,8 @@
 		<PackageReference Include="Microsoft.IO.RecyclableMemoryStream" />
 		<PackageReference Include="Microsoft.Web.LibraryManager.Build" />
 		<PackageReference Include="Namotion.Reflection" />
+		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" />
+		<PackageReference Include="OpenTelemetry.Extensions.Hosting" />
 		<PackageReference Include="RoslynCodeTaskFactory" />
 		<PackageReference Include="Serilog.AspNetCore" />
 	</ItemGroup>
