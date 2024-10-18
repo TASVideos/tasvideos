@@ -18,6 +18,8 @@ public class WikiToTextRenderer(AppSettings settings, IServiceProvider servicePr
 	private class WriterHelper(string host, IServiceProvider serviceProvider, IWikiPage wikiPage)
 		: IWriterHelper
 	{
+		public bool IsUGC => wikiPage.IsHomePageOrSubmissionNotes();
+
 		public bool CheckCondition(string condition)
 		{
 			bool result = false;
