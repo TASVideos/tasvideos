@@ -5,8 +5,10 @@ namespace TASVideos.Extensions;
 
 public static class WikiHelper
 {
-	public static bool UserCanEditWikiPage(string? pageName, string? userName, IReadOnlyCollection<PermissionTo> userPermissions)
+	public static bool UserCanEditWikiPage(string? pageName, string? userName, IReadOnlyCollection<PermissionTo> userPermissions, out HashSet<PermissionTo> relevantPermissions)
 	{
+		relevantPermissions = [];
+
 		if (string.IsNullOrWhiteSpace(pageName) || string.IsNullOrWhiteSpace(userName))
 		{
 			return false;
@@ -17,43 +19,52 @@ public static class WikiHelper
 		// Anyone who can edit anything (including the user's own homepage) should be allowed to edit his
 		if (pageName == "SandBox")
 		{
-			return userPermissions.Contains(PermissionTo.EditGameResources)
-				|| userPermissions.Contains(PermissionTo.EditHomePage)
-				|| userPermissions.Contains(PermissionTo.EditWikiPages)
-				|| userPermissions.Contains(PermissionTo.EditSystemPages)
-				|| userPermissions.Contains(PermissionTo.EditSubmissions)
-				|| userPermissions.Contains(PermissionTo.EditPublicationMetaData);
+			relevantPermissions = [
+				PermissionTo.EditGameResources,
+				PermissionTo.EditHomePage,
+				PermissionTo.EditWikiPages,
+				PermissionTo.EditSystemPages,
+				PermissionTo.EditSubmissions,
+				PermissionTo.EditPublicationMetaData
+			];
+			return relevantPermissions.Any(userPermissions.Contains);
 		}
 
 		if (IsPublicationPage(pageName, out _))
 		{
-			return userPermissions.Contains(PermissionTo.EditPublicationMetaData);
+			relevantPermissions = [PermissionTo.EditPublicationMetaData];
+			return relevantPermissions.Any(userPermissions.Contains);
 		}
 
 		if (IsSubmissionPage(pageName, out _))
 		{
-			return userPermissions.Contains(PermissionTo.EditSubmissions);
+			relevantPermissions = [PermissionTo.EditSubmissions];
+			return relevantPermissions.Any(userPermissions.Contains);
 		}
 
 		if (pageName.StartsWith("GameResources/"))
 		{
-			return userPermissions.Contains(PermissionTo.EditGameResources);
+			relevantPermissions = [PermissionTo.EditGameResources];
+			return relevantPermissions.Any(userPermissions.Contains);
 		}
 
 		if (pageName.StartsWith("System/"))
 		{
-			return userPermissions.Contains(PermissionTo.EditSystemPages);
+			relevantPermissions = [PermissionTo.EditSystemPages];
+			return relevantPermissions.Any(userPermissions.Contains);
 		}
 
 		if (pageName.StartsWith(LinkConstants.HomePages))
 		{
+			relevantPermissions = [PermissionTo.EditHomePage];
+
 			// A home page is defined as Homepages/[UserName]
 			// If a user can exploit this fact to create an exploit
 			// then we should first reconsider rules about allowed patterns of usernames and what defines a valid wiki page
 			// before deciding to nuke this feature
 			var homepage = pageName[LinkConstants.HomePages.Length..].Split('/')[0];
 			if (string.Equals(homepage, userName, StringComparison.OrdinalIgnoreCase)
-				&& userPermissions.Contains(PermissionTo.EditHomePage))
+				&& relevantPermissions.Any(userPermissions.Contains))
 			{
 				return true;
 			}
@@ -61,7 +72,8 @@ public static class WikiHelper
 			// Notice we fall back to EditWikiPages if it is not the user's homepage, regular editors should be able to edit homepages
 		}
 
-		return userPermissions.Contains(PermissionTo.EditWikiPages);
+		relevantPermissions = [PermissionTo.EditWikiPages];
+		return relevantPermissions.Any(userPermissions.Contains);
 	}
 
 	public static bool IsValidWikiPageName(string pageName)

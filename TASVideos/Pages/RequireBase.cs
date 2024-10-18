@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace TASVideos.Pages;
@@ -40,4 +41,15 @@ public class RequireBase : Attribute
 
 		return context.HttpContext.User.Permissions();
 	}
+
+	protected static void SetRequiredPermissionsView(PageHandlerExecutingContext context, HashSet<PermissionTo> requiredPermissions, bool matchAny)
+	{
+		context.HttpContext.SetRequiredPermissionsView(new RequirePermissionsView { Permissions = requiredPermissions, MatchAny = matchAny });
+	}
+}
+
+public class RequirePermissionsView
+{
+	public HashSet<PermissionTo> Permissions { get; set; } = [];
+	public bool MatchAny { get; set; }
 }

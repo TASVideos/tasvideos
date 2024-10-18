@@ -38,6 +38,7 @@ public class RequirePermissionAttribute : RequireBase, IAsyncPageFilter
 		if ((MatchAny && RequiredPermissions.Any(r => userPerms.Contains(r)))
 			|| RequiredPermissions.IsSubsetOf(userPerms))
 		{
+			SetRequiredPermissionsView(context, RequiredPermissions, MatchAny);
 			await next.Invoke();
 		}
 		else

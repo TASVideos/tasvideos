@@ -28,10 +28,12 @@ public class RequireEdit : RequireBase, IAsyncPageFilter
 
 		var userPerms = await GetUserPermissions(context);
 		var canEdit = WikiHelper
-			.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms);
+			.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms, out HashSet<PermissionTo> relevantPermissions);
 
 		if (canEdit)
 		{
+			SetRequiredPermissionsView(context, relevantPermissions, matchAny: true);
+
 			await next.Invoke();
 		}
 		else

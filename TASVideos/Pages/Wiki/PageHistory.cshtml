@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Page History For " + Model.PageName);
 	ViewData.UseDiff();
 	bool hasDiff = Model.FromRevision.HasValue && Model.ToRevision.HasValue;
-	var canEdit = WikiHelper.UserCanEditWikiPage(Model.Path, User.Name(), User.Permissions());
+	var canEdit = WikiHelper.UserCanEditWikiPage(Model.Path, User.Name(), User.Permissions(), out _);
 }
 
 @functions {
