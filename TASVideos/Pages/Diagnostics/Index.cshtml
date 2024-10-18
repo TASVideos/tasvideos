@@ -40,6 +40,8 @@
 	<li><a asp-page="Logging">Logging</a></li>
 	<li><a asp-page="SendEmail">Send an Email</a></li>
 	<li><a asp-page="SystemPages">System Wiki Pages</a></li>
+	<li condition="@Settings.EnableMetrics"><a href="/metrics">Metrics</a></li>
+	<li condition="!@Settings.EnableMetrics">Metrics (disabled)</li>
 </ul>
 
 <standard-table>
