@@ -112,10 +112,14 @@ public static class ApplicationBuilderExtensions
 		return app.UseEndpoints(endpoints =>
 		{
 			endpoints.MapRazorPages();
-			endpoints.MapPrometheusScrapingEndpoint().RequireAuthorization(builder =>
+
+			if (settings.EnableMetrics)
 			{
-				builder.RequireClaim(CustomClaimTypes.Permission, ((int)PermissionTo.SeeDiagnostics).ToString());
-			});
+				endpoints.MapPrometheusScrapingEndpoint().RequireAuthorization(builder =>
+				{
+					builder.RequireClaim(CustomClaimTypes.Permission, ((int)PermissionTo.SeeDiagnostics).ToString());
+				});
+			}
 		});
 	}
 }

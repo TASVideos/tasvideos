@@ -28,6 +28,8 @@ public class AppSettings
 
 	public ReCaptchaSettings ReCaptcha { get; set; } = new();
 
+	public bool EnableMetrics { get; set; }
+
 	// User is only allowed to submit X submissions in Y days
 	public class SubmissionRateLimit
 	{

@@ -54,22 +54,23 @@ builder.Services
 
 builder.Host.UseSerilog();
 
-builder.Services
-	.AddOpenTelemetry()
-	.WithMetrics(builder =>
-	{
-		builder.AddMeter(
-			"Microsoft.AspNetCore.Hosting",
-			"Microsoft.AspNetCore.Server.Kestrel",
-			"Microsoft.AspNetCore.Http.Connections",
-			"Microsoft.AspNetCore.Routing",
-			"Microsoft.AspNetCore.Diagnostics",
-			"Microsoft.AspNetCore.RateLimiting");
+if (settings.EnableMetrics)
+{
+	builder.Services
+		.AddOpenTelemetry()
+		.WithMetrics(builder =>
+		{
+			builder.AddMeter(
+				"Microsoft.AspNetCore.Hosting",
+				"Microsoft.AspNetCore.Server.Kestrel",
+				"Microsoft.AspNetCore.Routing",
+				"Microsoft.AspNetCore.Diagnostics");
 
-		builder.AddMeter("Npgsql");
+			builder.AddMeter("Npgsql");
 
-		builder.AddPrometheusExporter();
-	});
+			builder.AddPrometheusExporter();
+		});
+}
 
 var app = builder.Build();
 
