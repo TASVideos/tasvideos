@@ -47,6 +47,7 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env, AppSettings settings)
 	{
+		var userAgentReportUrl = $"{settings.BaseUrl}/Diagnostics/UserAgentInterventionReports";
 		string[] trustedJsHosts = [
 			"https://cdn.jsdelivr.net",
 			"https://cdnjs.cloudflare.com",
@@ -62,12 +63,25 @@ public static class ApplicationBuilderExtensions
 			"form-action 'self'", // domains allowed for `<form action/>` (POST target page)
 			"frame-src 'self' https://www.youtube.com/embed/", // allow these domains in <iframe/>
 			"img-src *", // allow hotlinking images from any domain in UGC (not great)
+			/*
+			"report-to for-csp", // browsers using CSP Level 3+ will look up this key in the `Reporting-Endpoints` header and use that URI
+			$"report-uri {userAgentReportUrl}?kind=csp&csp-lvl=lteq2", // browsers from before CSP Level 3 will use this
+			*/
 			"require-trusted-types-for 'script'", // experimental, but Google seems to be pushing it: should block `HTMLScriptElement.innerHTML = "user.pwn();";`, and similarly block adding in-line scripts as attrs
 			$"script-src 'self' {string.Join(' ', trustedJsHosts)}", // `<script/>`s will be blocked unless they're from one of these domains
 			"style-src 'unsafe-inline' 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // allow `<style/>`, and `<link rel="stylesheet"/>` if it's from our domain or trusted CDN
 			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
 		];
 		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);
+		string[] cspStagingExtraDirectives = [
+			"object-src 'none'", // new directive for testing (should probably be changed to this anyway, currently it falls back to `default-src`)
+		];
+		var contentSecurityPolicyStagingValue = cspStagingExtraDirectives.Length is 0 ? contentSecurityPolicyValue : string.Join("; ", [
+			"report-to for-csp-staging", // browsers using CSP Level 3+ will look up this key in the `Reporting-Endpoints` header and use that URI
+			$"report-uri {userAgentReportUrl}?kind=csp-staging&csp-lvl=lteq2", // browsers from before CSP Level 3 will use this
+			..cspStagingExtraDirectives,
+			..cspDirectives, // at end because, in the case of a duplicate (like `report-to`), the first is used
+		]);
 		var permissionsPolicyValue = string.Join(", ", [
 			"camera=()", // defaults to `self`
 			"display-capture=()", // defaults to `self`
@@ -80,12 +94,18 @@ public static class ApplicationBuilderExtensions
 
 			// ...and that's all the non-experimental options listed on MDN as of 2024-04
 		]);
+		var reportingEndpointsValue = string.Join(", ", [
+			$"for-csp=\"{userAgentReportUrl}?kind=csp&csp-lvl=gteq3\"",
+			$"for-csp-staging=\"{userAgentReportUrl}?kind=csp-staging&csp-lvl=gteq3\"",
+		]);
 		app.Use(async (context, next) =>
 		{
+			if (cspStagingExtraDirectives.Length is not 0) context.Response.Headers.ContentSecurityPolicyReportOnly = contentSecurityPolicyStagingValue;
 			context.Response.Headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"; // this is as unsecure as before, but can't use `credentialless`, due to breaking YouTube Embeds, see https://github.com/TASVideos/tasvideos/issues/1852
 			context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
 			context.Response.Headers["Cross-Origin-Resource-Policy"] = "cross-origin"; // TODO this is as unsecure as before; should be `same-site` or `same-origin` when serving auth-gated responses
 			context.Response.Headers["Permissions-Policy"] = permissionsPolicyValue;
+			context.Response.Headers["Reporting-Endpoints"] = reportingEndpointsValue; // used with `report-to` CSP directive
 			context.Response.Headers.XXSSProtection = "1; mode=block";
 			context.Response.Headers.XFrameOptions = "DENY";
 			context.Response.Headers.XContentTypeOptions = "nosniff";
