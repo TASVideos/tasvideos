@@ -1,7 +1,6 @@
 ﻿using AspNetCore.ReCaptcha;
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
-using OpenTelemetry.Metrics;
 using Serilog;
 using TASVideos.Api;
 using TASVideos.Core.Data;
@@ -50,30 +49,10 @@ builder.Services
 		pipeline.AddScssBundle("/css/site.css", "/css/site.scss");
 		pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
 		pipeline.AddFiles("text/javascript", "/js/*");
-	});
+	})
+	.AddMetrics(settings);
 
 builder.Host.UseSerilog();
-
-if (settings.EnableMetrics)
-{
-	builder.Services
-		.AddOpenTelemetry()
-		.WithMetrics(builder =>
-		{
-			builder.AddMeter(
-				"Microsoft.AspNetCore.Hosting",
-				"Microsoft.AspNetCore.Server.Kestrel",
-				"Microsoft.AspNetCore.Routing",
-				"Microsoft.AspNetCore.Diagnostics");
-
-			builder.AddMeter("Npgsql");
-
-			builder.AddPrometheusExporter(options =>
-			{
-				options.ScrapeEndpointPath = "/Metrics";
-			});
-		});
-}
 
 var app = builder.Build();
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.ResponseCompression;
+using OpenTelemetry.Metrics;
 using TASVideos.Core.Settings;
 using TASVideos.TagHelpers;
 
@@ -160,5 +161,31 @@ public static class ServiceCollectionExtensions
 		return services
 			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
 			.AddTransient(provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
+	}
+
+	public static IServiceCollection AddMetrics(this IServiceCollection services, AppSettings settings)
+	{
+		if (settings.EnableMetrics)
+		{
+			services
+				.AddOpenTelemetry()
+				.WithMetrics(builder =>
+				{
+					builder.AddMeter(
+						"Microsoft.AspNetCore.Hosting",
+						"Microsoft.AspNetCore.Server.Kestrel",
+						"Microsoft.AspNetCore.Routing",
+						"Microsoft.AspNetCore.Diagnostics");
+
+					builder.AddMeter("Npgsql");
+
+					builder.AddPrometheusExporter(options =>
+					{
+						options.ScrapeEndpointPath = "/Metrics";
+					});
+				});
+		}
+
+		return services;
 	}
 }
