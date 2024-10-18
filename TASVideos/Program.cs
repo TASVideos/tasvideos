@@ -68,7 +68,10 @@ if (settings.EnableMetrics)
 
 			builder.AddMeter("Npgsql");
 
-			builder.AddPrometheusExporter();
+			builder.AddPrometheusExporter(options =>
+			{
+				options.ScrapeEndpointPath = "/Metrics";
+			});
 		});
 }
 
