@@ -1,6 +1,4 @@
-﻿#define SHOULD_INCLUDE_STAGING_CSP
-
-using Microsoft.AspNetCore.StaticFiles;
+﻿using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
@@ -76,16 +74,15 @@ public static class ApplicationBuilderExtensions
 			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
 		];
 		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);
-#if SHOULD_INCLUDE_STAGING_CSP
-		var contentSecurityPolicyStagingValue = string.Join("; ", [
+		string[] cspStagingExtraDirectives = [
+			"object-src 'none'", // new directive for testing (should probably be changed to this anyway, currently it falls back to `default-src`)
+		];
+		var contentSecurityPolicyStagingValue = cspStagingExtraDirectives.Length is 0 ? contentSecurityPolicyValue : string.Join("; ", [
 			"report-to for-csp-staging", // browsers using CSP Level 3+ will look up this key in the `Reporting-Endpoints` header and use that URI
 			$"report-uri {userAgentReportUrl}?kind=csp-staging&csp-lvl=lteq2", // browsers from before CSP Level 3 will use this
-			"object-src 'none'", // new directive for testing (should probably be changed to this anyway, currently it falls back to `default-src`)
+			..cspStagingExtraDirectives,
 			..cspDirectives, // at end because, in the case of a duplicate (like `report-to`), the first is used
 		]);
-#else
-		var contentSecurityPolicyStagingValue = contentSecurityPolicyValue;
-#endif
 		var permissionsPolicyValue = string.Join(", ", [
 			"camera=()", // defaults to `self`
 			"display-capture=()", // defaults to `self`
@@ -104,9 +101,7 @@ public static class ApplicationBuilderExtensions
 		]);
 		app.Use(async (context, next) =>
 		{
-#if SHOULD_INCLUDE_STAGING_CSP
-			context.Response.Headers.ContentSecurityPolicyReportOnly = contentSecurityPolicyStagingValue;
-#endif
+			if (cspStagingExtraDirectives.Length is not 0) context.Response.Headers.ContentSecurityPolicyReportOnly = contentSecurityPolicyStagingValue;
 			context.Response.Headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"; // this is as unsecure as before, but can't use `credentialless`, due to breaking YouTube Embeds, see https://github.com/TASVideos/tasvideos/issues/1852
 			context.Response.Headers["Cross-Origin-Opener-Policy"] = "same-origin";
 			context.Response.Headers["Cross-Origin-Resource-Policy"] = "cross-origin"; // TODO this is as unsecure as before; should be `same-site` or `same-origin` when serving auth-gated responses
