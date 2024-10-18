@@ -100,6 +100,9 @@
 			}
 		}
 
+		var permissionsRequired = Context.GetRequiredPermissionsView() as RequirePermissionsView;
+		bool requiresPermissions = permissionsRequired is not null && permissionsRequired.Permissions.Count > 0;
+
 		<div class="container mb-2">
 			<h1 class="page-title card card-body d-block">
 				<a condition="prev.HasValue" href="@string.Format(fmtStr!, prev)"><i class="fa fa-arrow-left"></i></a>
@@ -112,7 +115,31 @@
 					@heading
 				}
 				<a condition="next.HasValue" class="float-end" href="@string.Format(fmtStr!, next)"><i class="fa fa-arrow-right"></i></a>
+				<a condition="requiresPermissions" class="float-end text-body-secondary" data-id="permission-modal-button" href="#"><i class="fa-solid fa-shield-halved"></i></a>
 			</h1>
+		</div>
+
+		<div condition="requiresPermissions" id="permission-modal" class="modal fade" tabindex="-1">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title"><i class="fa-solid fa-shield-halved"></i> This page requires permissions</h5>
+						<button type='button' class='btn-close' data-bs-dismiss='modal'></button>
+					</div>
+					<div class="modal-body">
+						<p>You can visit this page because you have @(permissionsRequired!.Permissions.Count == 1 ? "" : permissionsRequired.MatchAny ? "one of " : "all of ")the following required permissions:</p>
+						<ul>
+							@foreach (var permission in permissionsRequired.Permissions)
+							{
+								<li>@permission.ToString().SplitCamelCase()</li>
+							}
+						</ul>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-silver" data-bs-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	}
 
