@@ -19,7 +19,7 @@ public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 			AccessRestriction(t)))
 		.ToList();
 
-	public List<SiteMapEntry> Map => CorePages;
+	public List<SiteMapEntry> Map { get; set; } = [];
 
 	public void OnGet()
 	{
@@ -29,9 +29,10 @@ public class SiteMapModel(ApplicationDbContext db) : BasePageModel
 			.Select(w => w.PageName)
 			.ToList();
 
-		Map.AddRange(wikiPages
+		Map = CorePages.Concat(wikiPages
 			.Distinct()
-			.Select(p => new SiteMapEntry(p, true, "Anonymous")));
+			.Select(p => new SiteMapEntry(p, true, "Anonymous")))
+			.ToList();
 	}
 
 	private static string AccessRestriction(MemberInfo type)
