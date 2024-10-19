@@ -217,9 +217,10 @@ public static class PublicationExtensions
 			query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => tokens.Authors.Contains(a)));
 		}
 
+		IOrderedQueryable<Publication> orderedQuery;
 		if (!string.IsNullOrEmpty(tokens.SortBy))
 		{
-			query = tokens.SortBy switch
+			orderedQuery = tokens.SortBy switch
 			{
 				"v" => query.OrderBy(p => p.CreateTimestamp),
 				"u" => query.OrderByDescending(p => p.CreateTimestamp),
@@ -232,10 +233,12 @@ public static class PublicationExtensions
 		}
 		else
 		{
-			query = query
+			orderedQuery = query
 				.OrderBy(p => p.System!.Code)
 				.ThenBy(p => p.Game!.DisplayName);
 		}
+
+		query = orderedQuery.ThenBy(p => p.Id);
 
 		if (tokens.Limit.HasValue)
 		{
