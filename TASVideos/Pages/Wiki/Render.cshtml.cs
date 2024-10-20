@@ -4,7 +4,12 @@ using TASVideos.Core.Services.Wiki;
 namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
-public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<RenderModel> logger) : BasePageModel
+public class RenderModel(
+	IWikiPages wikiPages,
+	ApplicationDbContext db,
+	IHostEnvironment env,
+	ILogger<RenderModel> logger
+) : BasePageModel
 {
 	public IWikiPage WikiPage { get; set; } = null!;
 
@@ -30,6 +35,12 @@ public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<
 			if (await wikiPages.Exists(LinkConstants.HomePages + url))
 			{
 				return Redirect(LinkConstants.HomePages + url);
+			}
+
+			if (env.IsDevelopment() && url.StartsWith("media/"))
+			{
+				// fix missing images everywhere when running locally
+				return Redirect("/images/tasvideos_rss.png");
 			}
 
 			return RedirectToPage("/Wiki/PageNotFound", new { possibleUrl = WikiEngine.Builtins.NormalizeInternalLink(url) });
