@@ -1,0 +1,14 @@
+﻿@model UserAgentInterventionReportsModel
+@{
+	ViewData.SetTitle("User agent intervention reports");
+}
+
+This is the endpoint for reports automatically submitted by user agents, which can happen for several reasons:<ul>
+<li>CSP violations;</li>
+<li><code>Permissions-Policy</code> violations;</li>
+<li>use of deprecated features;</li>
+<li>crashes; or</li>
+<li>pther miscellaneous user-agent interventions.</li>
+</ul>
+(Paraphrased from <a href="https://developer.mozilla.org/en-US/docs/Web/API/Reporting_API">MDN</a>.)
+A JSON payload will be POST'd to one of <code>Reporting-Endpoints</code> (should all be pointing at this page) if any of these are encountered by a conformant browser.
