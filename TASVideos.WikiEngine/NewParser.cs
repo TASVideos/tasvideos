@@ -9,6 +9,7 @@ public partial class NewParser
 		public int TextLocation { get; } = textLocation;
 	}
 
+	private readonly bool _isUGC;
 	private readonly List<INode> _output = [];
 	private readonly List<INodeWithChildren> _stack = [];
 	private readonly StringBuilder _currentText = new();
@@ -17,9 +18,10 @@ public partial class NewParser
 	private int _index;
 	private bool _parsingInline;
 
-	private NewParser(string input)
+	private NewParser(string input, bool isUGC)
 	{
 		_input = input;
+		_isUGC = isUGC;
 	}
 
 	private static void Abort(string msg, int from)
@@ -575,7 +577,7 @@ public partial class NewParser
 		{
 			var start = _index;
 			var content = EatToBracket();
-			AddNonChild(Builtins.MakeBracketed(start, _index, content));
+			AddNonChild(Builtins.MakeBracketed(charStart: start, charEnd: _index, isUGC: _isUGC, text: content));
 		}
 		else if (In("dt") && Eat(':'))
 		{
@@ -613,7 +615,12 @@ public partial class NewParser
 		}
 		else if ((url = Eat(Url)) != null)
 		{
-			AddNonChild(Builtins.MakeLink(_index - url.Length, _index, url, new Text(_index - url.Length, url) { CharEnd = _index }));
+			AddNonChild(Builtins.MakeLink(
+				charStart: _index - url.Length,
+				charEnd: _index,
+				isUGC: _isUGC,
+				text: url,
+				child: new Text(_index - url.Length, url) { CharEnd = _index }));
 		}
 		else
 		{
@@ -987,9 +994,9 @@ public partial class NewParser
 			});
 	}
 
-	public static List<INode> Parse(string content)
+	public static List<INode> Parse(string content, bool isUGC)
 	{
-		var p = new NewParser(content);
+		NewParser p = new(content, isUGC);
 		p.ParseLoop();
 		ReplaceTabs(p._output);
 		AddIdsToHeadings(p._output);

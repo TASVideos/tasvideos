@@ -13,7 +13,10 @@ public partial class WikiMarkup(IViewComponentHelper viewComponentHelper) : TagH
 	[HtmlAttributeNotBound]
 	public ViewContext ViewContext { get; set; } = new();
 
+	public bool IsUGC => PageData?.IsHomePageOrSubmissionNotes() ?? false;
+
 	public string? Markup { get; set; }
+
 	public IWikiPage? PageData { get; set; }
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)

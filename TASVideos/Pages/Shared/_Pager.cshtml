@@ -22,6 +22,7 @@
 			   asp-route-CurrentPage="@(Model.Request.CurrentPage - 1)"
 			   asp-route-PageSize="@Model.Request.PageSize"
 			   asp-route-Sort="@Model.Request.Sort"
+			   rel="prev"
 			   type="button" class="@(Model.Request.CurrentPage == 1 ? pagerDisabledClass : pagerClass)">
 				<span class="fa fa-chevron-left"></span>
 			</a>
@@ -120,6 +121,7 @@
 			   asp-route-CurrentPage="@(Model.Request.CurrentPage + 1)"
 			   asp-route-PageSize="@Model.Request.PageSize"
 			   asp-route-Sort="@Model.Request.Sort"
+			   rel="next"
 			   type="button" class="@(Model.Request.CurrentPage == Model.LastPage() ? pagerDisabledClass : pagerClass)">
 				<span class="fa fa-chevron-right"></span>
 			</a>

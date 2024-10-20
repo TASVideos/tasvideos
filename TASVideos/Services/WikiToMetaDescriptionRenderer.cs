@@ -17,6 +17,8 @@ public class WikiToMetaDescriptionRenderer(IServiceProvider serviceProvider) : I
 	private class WriterHelper(IServiceProvider serviceProvider, IWikiPage wikiPage)
 		: IWriterHelper
 	{
+		public bool IsUGC => wikiPage.IsHomePageOrSubmissionNotes();
+
 		public string AbsoluteUrl(string url)
 		{
 			return url;
