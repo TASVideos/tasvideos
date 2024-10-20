@@ -124,7 +124,11 @@ public class PublishModel(
 		};
 
 		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, "");
-		publication.PublicationUrls.AddMirror(Submission.MirrorSiteUrl);
+		if (!string.IsNullOrWhiteSpace(Submission.MirrorSiteUrl))
+		{
+			publication.PublicationUrls.AddMirror(Submission.MirrorSiteUrl);
+		}
+
 		if (!string.IsNullOrWhiteSpace(Submission.AlternateOnlineWatchingUrl))
 		{
 			publication.PublicationUrls.AddStreaming(Submission.AlternateOnlineWatchingUrl, Submission.AlternateOnlineWatchUrlName);
@@ -253,7 +257,7 @@ public class PublishModel(
 
 		[Url]
 		[StringLength(500)]
-		public string MirrorSiteUrl { get; init; } = "";
+		public string? MirrorSiteUrl { get; init; }
 
 		[Required]
 		public IFormFile? Screenshot { get; init; }
