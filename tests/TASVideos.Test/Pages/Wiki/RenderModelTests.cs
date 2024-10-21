@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
@@ -15,7 +16,11 @@ public class RenderModelTests : BasePageModelTests
 	public RenderModelTests()
 	{
 		_mockWikiPages = Substitute.For<IWikiPages>();
-		_model = new RenderModel(_mockWikiPages, _db, NullLogger<RenderModel>.Instance)
+		_model = new(
+			_mockWikiPages,
+			_db,
+			Substitute.For<IHostEnvironment>(),
+			NullLogger<RenderModel>.Instance)
 		{
 			PageContext = TestPageContext()
 		};
