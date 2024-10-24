@@ -48,6 +48,7 @@ public static class WriteVideo
 									<iframe width=$$w$$ height=$$h$$
 									src="https://www.youtube.com/embed/$$id$$"
 									frameborder=0
+									loading="lazy"
 									allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
 									allowfullscreen
 									class="mw-100"></iframe>
@@ -58,6 +59,7 @@ public static class WriteVideo
 											<iframe width=$$w$$ height=$$h$$
 											src="https://www.youtube.com/embed/videoseries?list=$$id$$"
 											frameborder=0
+											loading="lazy"
 											allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
 											allowfullscreen
 											class="mw-100"></iframe>
@@ -67,14 +69,14 @@ public static class WriteVideo
 	private const string DailyMotion = """
 										<iframe
 										frameborder=0 width=$$w$$ height=$$h$$
-										src="https://www.dailymotion.com/embed/video/$$id$$" allowfullscreen allow=autoplay class="mw-100"></iframe>
+										src="https://www.dailymotion.com/embed/video/$$id$$" allowfullscreen allow=autoplay class="mw-100" loading="lazy"></iframe>
 
 										""";
 
 	private const string Vimeo = """
 								<iframe src="https://player.vimeo.com/video/$$id$$"
 								width=$$w$$ height=$$h$$ frameborder=0
-								allow="autoplay; fullscreen" allowfullscreen class="mw-100"></iframe>
+								allow="autoplay; fullscreen" allowfullscreen class="mw-100" loading="lazy"></iframe>
 
 								""";
 
@@ -93,13 +95,13 @@ public static class WriteVideo
 
 	private const string NicoVideo = """
 									<iframe src="data:text/html;base64,$$id$$"
-									width=$$w$$ height=$$h$$ frameborder=0 class="mw-100"></iframe>
+									width=$$w$$ height=$$h$$ frameborder=0 class="mw-100" loading="lazy"></iframe>
 
 									""";
 
 	private const string ArchiveOrg = """
 									<iframe src="https://archive.org/embed/$$id$$"
-									width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullscreen=true allowfullscreen class="mw-100"></iframe>
+									width=$$w$$ height=$$h$$ frameborder=0 webkitallowfullscreen=true mozallowfullscreen=true allowfullscreen class="mw-100" loading="lazy"></iframe>
 
 									""";
 
