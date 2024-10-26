@@ -139,6 +139,7 @@ public static class ServiceCollectionExtensions
 	public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)
 	{
 		services.Configure<PasswordHasherOptions>(options => options.IterationCount = 720_000);
+		services.AddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User>>(); // the default would use UserClaimsPrincipalFactory<User, Role>, but like this we prevent it putting roles in the principal and thus in the identity cookie
 		services.AddIdentity<User, Role>(config =>
 			{
 				config.SignIn.RequireConfirmedEmail = env.IsProduction() || env.IsStaging();
