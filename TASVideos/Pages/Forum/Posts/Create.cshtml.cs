@@ -75,10 +75,13 @@ public class CreateModel(
 		WatchTopic = await topicWatcher.IsWatchingTopic(TopicId, User.GetUserId());
 
 		var user = await userManager.GetRequiredUser(User);
-		if (user.AutoWatchTopic == UserPreference.Always)
+		WatchTopic = user.AutoWatchTopic switch
 		{
-			WatchTopic = true;
-		}
+			UserPreference.Auto => WatchTopic,
+			UserPreference.Always => true,
+			UserPreference.Never => false,
+			_ => WatchTopic,
+		};
 
 		PreviousPosts = await db.ForumPosts
 			.ForTopic(TopicId)
