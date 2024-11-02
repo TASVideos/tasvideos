@@ -68,7 +68,7 @@
 				<td>
 					@foreach (var group in result.Groups)
 					{
-						<a asp-page="/GameGroups/Index" asp-route-id="@group.Id">@group.Name</a>
+						<span><a asp-page="/GameGroups/Index" asp-route-id="@group.Id">@group.Name</a><span condition="group != result.Groups.Last()">, </span></span>
 					}
 				</td>
 			</tr>
