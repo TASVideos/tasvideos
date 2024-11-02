@@ -65,8 +65,15 @@
 				</div>
 			</fieldset>
 			<fieldset>
-				<label asp-for="AutoWatchTopic">Automatically Watch Topics When Posting</label>
+				<label asp-for="AutoWatchTopic">Preselect "Watch Topic" When Posting</label>
 				<select asp-for="AutoWatchTopic" asp-items="@SettingsModel.AvailableUserPreferenceTypes"></select>
+				<small>
+					This setting affects how the "Watch Topic" checkbox will be preselected when creating a new Post or Topic.<br />
+					<strong>Auto:</strong> Keep the current Watch Topic setting.
+					<strong>Always:</strong> Always enable the checkbox.
+					<strong>Never:</strong> Always disable the checkbox.<br />
+					Note that this is only a preselect. No matter what you choose here, you can always override it manually when creating a new Post or Topic.
+				</small>
 			</fieldset>
 		</column>
 		<column lg="6">
