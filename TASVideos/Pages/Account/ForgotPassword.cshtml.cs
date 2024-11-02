@@ -3,13 +3,14 @@
 namespace TASVideos.Pages.Account;
 
 [AllowAnonymous]
-public class ForgotPasswordModel(UserManager userManager, IEmailService emailService) : BasePageModel
+public class ForgotPasswordModel : BasePageModel
 {
 	[BindProperty]
 	[EmailAddress]
 	public string Email { get; set; } = "";
 
-	public async Task<IActionResult> OnPost()
+	public async Task<IActionResult> OnPost(
+		[FromServices]UserManager userManager, [FromServices]IEmailService emailService)
 	{
 		if (!ModelState.IsValid)
 		{

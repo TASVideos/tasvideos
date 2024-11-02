@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Account;
 [BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
-public class EmailConfirmationSentModel(SignInManager signInManager, IEmailService emailService) : BasePageModel
+public class EmailConfirmationSentModel : BasePageModel
 {
 	[StringLength(256)]
 	public string UserName { get; set; } = "";
@@ -19,7 +19,8 @@ public class EmailConfirmationSentModel(SignInManager signInManager, IEmailServi
 			: Page();
 	}
 
-	public async Task<IActionResult> OnPost()
+	public async Task<IActionResult> OnPost(
+		[FromServices]SignInManager signInManager, [FromServices]IEmailService emailService)
 	{
 		var user = await signInManager.GetUserByEmailAndUserName(Email, UserName);
 		if (user is not null && !user.EmailConfirmed)
