@@ -15,8 +15,7 @@ public class LoginModel(SignInManager signInManager, IHostEnvironment env) : Bas
 
 	public async Task<IActionResult> OnGet()
 	{
-		var user = await signInManager.UserManager.GetUserAsync(User);
-		if (user is not null)
+		if (User.Identity?.IsAuthenticated ?? false)
 		{
 			return BaseReturnUrlRedirect();
 		}
