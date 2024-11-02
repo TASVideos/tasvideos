@@ -6,14 +6,7 @@ namespace TASVideos.Pages.Account;
 [BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
-public class RegisterModel(
-	SignInManager signInManager,
-	IEmailService emailService,
-	ExternalMediaPublisher publisher,
-	IReCaptchaService reCaptchaService,
-	IHostEnvironment env,
-	IUserMaintenanceLogger userMaintenanceLogger)
-	: BasePageModel
+public class RegisterModel : BasePageModel
 {
 	[Required]
 	public string TimeZone { get; set; } = "";
@@ -38,7 +31,13 @@ public class RegisterModel(
 	[MustBeTrue(ErrorMessage = "You must certify that you are 13 years of age or older")]
 	public bool Coppa { get; set; }
 
-	public async Task<IActionResult> OnPost()
+	public async Task<IActionResult> OnPost(
+		[FromServices]SignInManager signInManager,
+		[FromServices]IEmailService emailService,
+		[FromServices]ExternalMediaPublisher publisher,
+		[FromServices]IReCaptchaService reCaptchaService,
+		[FromServices]IHostEnvironment env,
+		[FromServices]IUserMaintenanceLogger userMaintenanceLogger)
 	{
 		if (Password != ConfirmPassword)
 		{
