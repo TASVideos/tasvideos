@@ -70,7 +70,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 					g.Id,
 					g.DisplayName,
 					g.GameVersions.Select(v => v.System!.Code),
-					g.GameGroups.Select(gg => new GameGroupEntry(gg.GameGroupId, gg.GameGroup!.Name))))
+					g.GameGroups.Select(gg => new GameGroupEntry(gg.GameGroupId, gg.GameGroup!.Name)).ToList()))
 				.ToListAsync();
 
 			PublicationResults = await db.Publications
@@ -91,7 +91,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public record PageSearch(string Highlight, string PageName);
 	public record PostSearch(string Highlight, string TopicName, int PostId);
-	public record GameSearch(int Id, string DisplayName, IEnumerable<string> Systems, IEnumerable<GameGroupEntry> Groups);
+	public record GameSearch(int Id, string DisplayName, IEnumerable<string> Systems, List<GameGroupEntry> Groups);
 	public record GameGroupEntry(int Id, string Name);
 	public record PublicationSearch(int Id, string Title, bool IsObsolete);
 }
