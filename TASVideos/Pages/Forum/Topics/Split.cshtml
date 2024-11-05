@@ -11,6 +11,14 @@
 }
 
 <partial Name="_ForumHeader" />
+<div condition="Model.TotalPages > 1" class="btn-group flex-wrap" role="group">
+	@for (int iteratorPage = 1; iteratorPage <= Model.TotalPages; iteratorPage++)
+	{
+		<a asp-page="@ViewContext.Page()"
+		   asp-route-CurrentPage="@iteratorPage"
+		   type="button" class="btn btn-secondary border-dark flex-grow-0 @(iteratorPage == Model.CurrentPage ? "active" : "")">@iteratorPage</a>
+	}
+</div>
 <form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Topic.ForumName" />
 	<input type="hidden" asp-for="Topic.ForumId" />
