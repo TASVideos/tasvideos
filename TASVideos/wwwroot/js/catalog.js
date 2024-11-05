@@ -91,16 +91,16 @@ function enableCataloging() {
 
 	function generateCurrentReturnUrl() {
 		const returnUrlQueryModified = new URLSearchParams();
-		if (systemModel.value) {
+		if (systemModel && systemModel.value) {
 			returnUrlQueryModified.set('SystemId', systemModel.value);
 		}
-		if (gameModel.value) {
+		if (gameModel && gameModel.value) {
 			returnUrlQueryModified.set('GameId', gameModel.value);
 		}
-		if (versionModel.value) {
+		if (versionModel && versionModel.value) {
 			returnUrlQueryModified.set('GameVersionId', versionModel.value);
 		}
-		if (gameGoalModel.value) {
+		if (gameGoalModel && gameGoalModel.value) {
 			returnUrlQueryModified.set('GameGoalId', gameGoalModel.value);
 		}
 
