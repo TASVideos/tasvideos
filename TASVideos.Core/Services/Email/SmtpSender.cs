@@ -45,7 +45,7 @@ internal class SmtpSender(
 	private MimeMessage BccList(IEmail email)
 	{
 		var recipients = email.Recipients.ToList();
-		var from = env.IsProduction() ? "noreply" : $"TASVideos {env.EnvironmentName} environment noreply";
+		var from = env.IsProduction() ? "TASVideos" : $"TASVideos {env.EnvironmentName} environment";
 		var message = new MimeMessage();
 		message.From.Add(new MailboxAddress(from, _settings.Email));
 
