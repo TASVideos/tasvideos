@@ -12,6 +12,10 @@ public class SplitModel(
 	[FromRoute]
 	public int Id { get; set; }
 
+	[FromQuery]
+	public int CurrentPage { get; set; }
+	public int TotalPages { get; set; }
+
 	[BindProperty]
 	public TopicSplit Topic { get; set; } = new();
 
@@ -120,7 +124,7 @@ public class SplitModel(
 
 	private async Task<TopicSplit?> PopulatePosts()
 	{
-		return await db.ForumTopics
+		TopicSplit? topicSplit = await db.ForumTopics
 			.ExcludeRestricted(CanSeeRestricted)
 			.Where(t => t.Id == Id)
 			.Select(t => new TopicSplit
@@ -130,27 +134,58 @@ public class SplitModel(
 				CreateNewTopicIn = t.Forum!.Id,
 				ForumId = t.Forum.Id,
 				ForumName = t.Forum.Name,
-				Posts = t.ForumPosts
-					.Select(p => new TopicSplit.Post
-					{
-						Id = p.Id,
-						PostCreateTimestamp = p.CreateTimestamp,
-						EnableBbCode = p.EnableBbCode,
-						EnableHtml = p.EnableHtml,
-						Subject = p.Subject,
-						Text = p.Text,
-						PosterName = p.Poster!.UserName,
-						PosterAvatar = p.Poster.Avatar
-					})
-					.OrderBy(p => p.PostCreateTimestamp)
-					.ToList()
+				PostsCount = t.ForumPosts.Count,
 			})
 			.SingleOrDefaultAsync();
+
+		if (topicSplit is not null)
+		{
+			const int PageSize = 500;
+			TotalPages = ((topicSplit!.PostsCount - 1) / PageSize) + 1;
+
+			if (CurrentPage <= 0 || CurrentPage > TotalPages)
+			{
+				CurrentPage = TotalPages;
+			}
+
+			int leftover = topicSplit!.PostsCount % PageSize;
+			int take = CurrentPage == 1 ? leftover : PageSize;
+			int skip = CurrentPage == 1 ? 0 : leftover + (PageSize * (CurrentPage - 2));
+
+			topicSplit.Posts = await db.ForumPosts
+				.Where(fp => fp.TopicId == Id)
+				.Select(p => new TopicSplit.Post
+				{
+					Id = p.Id,
+					PostCreateTimestamp = p.CreateTimestamp,
+					EnableBbCode = p.EnableBbCode,
+					EnableHtml = p.EnableHtml,
+					Subject = p.Subject,
+					Text = p.Text,
+					PosterName = p.Poster!.UserName,
+					PosterAvatar = p.Poster.Avatar
+				})
+				.OrderBy(p => p.PostCreateTimestamp)
+				.Skip(skip)
+				.Take(take)
+				.ToListAsync();
+		}
+
+		return topicSplit;
 	}
 
 	private async Task PopulateAvailableForums()
 	{
 		AvailableForums = await db.Forums.ToDropdownList(CanSeeRestricted, Topic.ForumId);
+	}
+
+	public class TopicSplitRequest : PagingModel
+	{
+		public TopicSplitRequest()
+		{
+			PageSize = 500;
+			CurrentPage = -1;
+		}
 	}
 
 	public class TopicSplit
@@ -161,7 +196,8 @@ public class SplitModel(
 		public string Title { get; init; } = "";
 		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";
-		public List<Post> Posts { get; init; } = [];
+		public int PostsCount { get; set; }
+		public List<Post> Posts { get; set; } = [];
 
 		public class Post
 		{
