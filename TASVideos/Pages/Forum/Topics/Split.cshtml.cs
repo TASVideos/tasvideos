@@ -179,15 +179,6 @@ public class SplitModel(
 		AvailableForums = await db.Forums.ToDropdownList(CanSeeRestricted, Topic.ForumId);
 	}
 
-	public class TopicSplitRequest : PagingModel
-	{
-		public TopicSplitRequest()
-		{
-			PageSize = 500;
-			CurrentPage = -1;
-		}
-	}
-
 	public class TopicSplit
 	{
 		public int? SplitPostsStartingAt { get; init; }
