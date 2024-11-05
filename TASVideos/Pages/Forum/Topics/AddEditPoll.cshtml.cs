@@ -62,7 +62,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 
 		if (!Poll.OptionsAreValid)
 		{
-			ModelState.AddModelError($"{nameof(Poll)}.{nameof(Poll.PollOptions)}", "Invalid poll options");
+			ModelState.AddModelError($"{nameof(Poll)}.{nameof(Poll.PollOptions)}", "Enter at least 2 options. Each option must be a string with a maximum length of 250.");
 			return Page();
 		}
 
