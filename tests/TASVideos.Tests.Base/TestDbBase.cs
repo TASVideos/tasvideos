@@ -7,8 +7,7 @@ using TASVideos.Data;
 
 namespace TASVideos.Tests.Base;
 
-[TestClass]
-public class TestDbBase
+public abstract class TestDbBase
 {
 	protected TestDbContext _db;
 
@@ -16,7 +15,7 @@ public class TestDbBase
 	private static bool _isInitialized = false;
 	private static string? _connectionString;
 
-	public TestDbBase()
+	protected TestDbBase()
 	{
 		_db = Create();
 		_transaction = _db.Database.BeginTransaction();
