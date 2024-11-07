@@ -13,8 +13,8 @@ public class TestDbBase
 	protected TestDbContext _db;
 
 	private static IDbContextTransaction? _transaction;
-	private static bool isInitialized = false;
-	private static string? connectionString;
+	private static bool _isInitialized = false;
+	private static string? _connectionString;
 
 	public TestDbBase()
 	{
@@ -27,14 +27,14 @@ public class TestDbBase
 		var contextConnectionString = context.Properties["PostgresTestsConnection"]?.ToString();
 		var builder = new NpgsqlConnectionStringBuilder(contextConnectionString);
 		builder.Database += "-" + Assembly.GetCallingAssembly().GetName().Name;
-		connectionString = builder.ToString();
+		_connectionString = builder.ToString();
 	}
 
 	public static TestDbContext Create()
 	{
 		AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 		var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-			.UseNpgsql(connectionString)
+			.UseNpgsql(_connectionString)
 			.UseSnakeCaseNamingConvention()
 			.EnableSensitiveDataLogging()
 			.Options;
@@ -42,16 +42,16 @@ public class TestDbBase
 		var testHttpContext = new TestDbContext.TestHttpContextAccessor();
 		var db = new TestDbContext(options, testHttpContext);
 
-		if (!isInitialized)
+		if (!_isInitialized)
 		{
 			db.Database.EnsureDeleted();
 			db.Database.EnsureCreated();
 
 			// We have constant Forum IDs required by parts of our code, but the Test Database doesn't know about this and starts its IDs at 0.
 			// This causes us to eventually run into duplicate IDs. As a workaround, we increase the starting ID to 100.
-			db.Database.ExecuteSqlRaw($"ALTER SEQUENCE forums_id_seq RESTART WITH 100;");
+			db.Database.ExecuteSqlRaw("ALTER SEQUENCE forums_id_seq RESTART WITH 100;");
 
-			isInitialized = true;
+			_isInitialized = true;
 		}
 
 		return db;
@@ -65,7 +65,7 @@ public class TestDbBase
 
 	public static void AssemblyCleanup()
 	{
-		if (isInitialized)
+		if (_isInitialized)
 		{
 			var db = Create();
 			db.Database.EnsureDeleted();
