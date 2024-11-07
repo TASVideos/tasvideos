@@ -20,6 +20,8 @@ internal class SuccessResult(string fileExtension) : IParseResult
 	public string? Annotations { get; internal set; }
 
 	internal List<ParseWarnings> WarningList { get; } = [];
+
+	public Dictionary<HashType, string> Hashes { get; } = [];
 }
 
 internal static class ParseResultExtensions

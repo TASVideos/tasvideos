@@ -73,4 +73,11 @@ public interface IParseResult
 	/// Gets the annotations. These can be general comments, or other user entered descriptions supported by the file format.
 	/// </summary>
 	string? Annotations { get; }
+
+	Dictionary<HashType, string> Hashes { get; }
+}
+
+public enum HashType
+{
+	Md5, Sha1, Sha256, Crc32
 }

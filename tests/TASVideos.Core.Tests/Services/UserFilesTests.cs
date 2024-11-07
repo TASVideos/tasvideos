@@ -256,5 +256,6 @@ public class UserFilesTests : TestDbBase
 		public double? FrameRateOverride => null;
 		public long? CycleCount => null;
 		public string? Annotations => null;
+		public Dictionary<HashType, string> Hashes { get; init; } = new Dictionary<HashType, string>();
 	}
 }
