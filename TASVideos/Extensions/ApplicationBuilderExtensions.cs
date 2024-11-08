@@ -36,7 +36,6 @@ public static class ApplicationBuilderExtensions
 	public static IApplicationBuilder UseStaticFilesWithExtensionMapping(this IApplicationBuilder app, IWebHostEnvironment env)
 	{
 		var provider = new FileExtensionContentTypeProvider();
-		provider.Mappings[".avif"] = "image/avif";
 		return app.UseStaticFiles(new StaticFileOptions
 		{
 			ContentTypeProvider = provider,
