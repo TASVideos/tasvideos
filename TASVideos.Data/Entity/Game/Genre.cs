@@ -8,5 +8,5 @@ public class Genre
 	[StringLength(20)]
 	public string DisplayName { get; set; } = "";
 
-	public ICollection<GameGenre> GameGenres { get; set; } = [];
+	public ICollection<GameGenre> GameGenres { get; init; } = [];
 }

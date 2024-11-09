@@ -81,33 +81,33 @@ public class User : IdentityUser<int>, ITrackable
 	public UserTimeFormat TimeFormat { get; set; } = UserTimeFormat.Auto;
 	public UserDecimalFormat DecimalFormat { get; set; } = UserDecimalFormat.Auto;
 
-	public ICollection<UserRole> UserRoles { get; set; } = [];
-	public ICollection<SubmissionAuthor> Submissions { get; set; } = [];
-	public ICollection<PublicationAuthor> Publications { get; set; } = [];
+	public ICollection<UserRole> UserRoles { get; init; } = [];
+	public ICollection<SubmissionAuthor> Submissions { get; init; } = [];
+	public ICollection<PublicationAuthor> Publications { get; init; } = [];
 
-	public ICollection<ForumTopic> Topics { get; set; } = [];
-	public ICollection<ForumPost> Posts { get; set; } = [];
-	public ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = [];
+	public ICollection<ForumTopic> Topics { get; init; } = [];
+	public ICollection<ForumPost> Posts { get; init; } = [];
+	public ICollection<ForumTopicWatch> ForumTopicWatches { get; init; } = [];
 
-	public ICollection<UserAward> UserAwards { get; set; } = [];
+	public ICollection<UserAward> UserAwards { get; init; } = [];
 
 	[ForeignKey(nameof(PrivateMessage.FromUserId))]
-	public ICollection<PrivateMessage> SentPrivateMessages { get; set; } = [];
+	public ICollection<PrivateMessage> SentPrivateMessages { get; init; } = [];
 
 	[ForeignKey(nameof(PrivateMessage.ToUserId))]
-	public ICollection<PrivateMessage> ReceivedPrivateMessages { get; set; } = [];
+	public ICollection<PrivateMessage> ReceivedPrivateMessages { get; init; } = [];
 
-	public ICollection<PublicationRating> PublicationRatings { get; set; } = [];
+	public ICollection<PublicationRating> PublicationRatings { get; init; } = [];
 
-	public ICollection<UserFile> UserFiles { get; set; } = [];
-	public ICollection<UserFileComment> UserFileComments { get; set; } = [];
+	public ICollection<UserFile> UserFiles { get; init; } = [];
+	public ICollection<UserFileComment> UserFileComments { get; init; } = [];
 
-	public ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
+	public ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; init; } = [];
 
-	public ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = [];
-	public ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = [];
+	public ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; init; } = [];
+	public ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; init; } = [];
 
-	public ICollection<WikiPage> WikiRevisions { get; set; } = [];
+	public ICollection<WikiPage> WikiRevisions { get; init; } = [];
 }
 
 public enum PreferredPronounTypes

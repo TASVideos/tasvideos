@@ -16,8 +16,8 @@ public class GameSystemFrameRate : BaseEntity
 
 	public bool Obsolete { get; set; }
 
-	public ICollection<Submission> Submissions { get; set; } = [];
-	public ICollection<Publication> Publications { get; set; } = [];
+	public ICollection<Submission> Submissions { get; init; } = [];
+	public ICollection<Publication> Publications { get; init; } = [];
 }
 
 public static class GameSystemFrameRateExtensions

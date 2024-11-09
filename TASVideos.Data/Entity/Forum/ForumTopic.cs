@@ -15,8 +15,8 @@ public class ForumTopic : BaseEntity
 	public int ForumId { get; set; }
 	public Forum? Forum { get; set; }
 
-	public ICollection<ForumPost> ForumPosts { get; set; } = [];
-	public ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = [];
+	public ICollection<ForumPost> ForumPosts { get; init; } = [];
+	public ICollection<ForumTopicWatch> ForumTopicWatches { get; init; } = [];
 
 	[StringLength(500)]
 	public string Title { get; set; } = "";

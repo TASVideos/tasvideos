@@ -23,7 +23,7 @@ public class Submission : BaseEntity, ITimeable
 	public int SubmitterId { get; set; }
 	public User? Submitter { get; set; }
 
-	public ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = [];
+	public ICollection<SubmissionAuthor> SubmissionAuthors { get; init; } = [];
 
 	public int? IntendedClassId { get; set; }
 	public PublicationClass? IntendedClass { get; set; }
@@ -35,7 +35,7 @@ public class Submission : BaseEntity, ITimeable
 	public User? Publisher { get; set; }
 
 	public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
-	public ICollection<SubmissionStatusHistory> History { get; set; } = [];
+	public ICollection<SubmissionStatusHistory> History { get; init; } = [];
 
 	public byte[] MovieFile { get; set; } = [];
 

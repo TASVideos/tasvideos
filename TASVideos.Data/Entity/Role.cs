@@ -36,9 +36,9 @@ public class Role : IdentityRole<int>, ITrackable
 
 	public DateTime LastUpdateTimestamp { get; set; }
 
-	public ICollection<RolePermission> RolePermission { get; set; } = [];
-	public ICollection<UserRole> UserRole { get; set; } = [];
-	public ICollection<RoleLink> RoleLinks { get; set; } = [];
+	public ICollection<RolePermission> RolePermission { get; init; } = [];
+	public ICollection<UserRole> UserRole { get; init; } = [];
+	public ICollection<RoleLink> RoleLinks { get; init; } = [];
 }
 
 public static class RoleExtensions

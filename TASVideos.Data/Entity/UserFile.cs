@@ -65,7 +65,7 @@ public class UserFile
 	[StringLength(3500)]
 	public string? Annotations { get; set; }
 
-	public ICollection<UserFileComment> Comments { get; set; } = [];
+	public ICollection<UserFileComment> Comments { get; init; } = [];
 }
 
 public static class UserFileExtensions

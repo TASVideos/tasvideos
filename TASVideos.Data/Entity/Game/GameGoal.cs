@@ -9,8 +9,8 @@ public class GameGoal
 	[StringLength(50)]
 	public string DisplayName { get; set; } = "";
 
-	public ICollection<Publication> Publications { get; set; } = [];
-	public ICollection<Submission> Submissions { get; set; } = [];
+	public ICollection<Publication> Publications { get; init; } = [];
+	public ICollection<Submission> Submissions { get; init; } = [];
 }
 
 public static class GameGoalExtensions

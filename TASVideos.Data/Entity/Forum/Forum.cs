@@ -8,8 +8,8 @@ public class Forum : BaseEntity
 	public int CategoryId { get; set; }
 	public ForumCategory? Category { get; set; }
 
-	public ICollection<ForumTopic> ForumTopics { get; set; } = [];
-	public ICollection<ForumPost> ForumPosts { get; set; } = [];
+	public ICollection<ForumTopic> ForumTopics { get; init; } = [];
+	public ICollection<ForumPost> ForumPosts { get; init; } = [];
 
 	[StringLength(50)]
 	public string Name { get; set; } = "";

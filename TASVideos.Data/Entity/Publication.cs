@@ -25,21 +25,21 @@ public class Publication : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
 
-	public ICollection<PublicationFile> Files { get; set; } = [];
-	public ICollection<PublicationTag> PublicationTags { get; set; } = [];
-	public ICollection<PublicationFlag> PublicationFlags { get; set; } = [];
-	public ICollection<PublicationAward> PublicationAwards { get; set; } = [];
-	public ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
+	public ICollection<PublicationFile> Files { get; init; } = [];
+	public ICollection<PublicationTag> PublicationTags { get; init; } = [];
+	public ICollection<PublicationFlag> PublicationFlags { get; init; } = [];
+	public ICollection<PublicationAward> PublicationAwards { get; init; } = [];
+	public ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; init; } = [];
 
 	[ForeignKey(nameof(PublicationRating.PublicationId))]
-	public ICollection<PublicationRating> PublicationRatings { get; set; } = [];
+	public ICollection<PublicationRating> PublicationRatings { get; init; } = [];
 
-	public ICollection<PublicationUrl> PublicationUrls { get; set; } = [];
+	public ICollection<PublicationUrl> PublicationUrls { get; init; } = [];
 
 	public int? ObsoletedById { get; set; }
 	public Publication? ObsoletedBy { get; set; }
 
-	public ICollection<Publication> ObsoletedMovies { get; set; } = [];
+	public ICollection<Publication> ObsoletedMovies { get; init; } = [];
 
 	public int GameId { get; set; }
 	public Game.Game? Game { get; set; }
@@ -58,7 +58,7 @@ public class Publication : BaseEntity, ITimeable
 
 	public int SubmissionId { get; set; }
 	public Submission? Submission { get; set; }
-	public ICollection<PublicationAuthor> Authors { get; set; } = [];
+	public ICollection<PublicationAuthor> Authors { get; init; } = [];
 
 	public byte[] MovieFile { get; set; } = [];
 

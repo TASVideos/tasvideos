@@ -171,7 +171,10 @@ public class EditModel(
 			.ToListAsync();
 		List<PublicationFlag> existingEditablePublicationFlags = publication.PublicationFlags.Where(pf => editableFlags.Contains(pf.FlagId)).ToList();
 		List<int> selectedEditableFlagIds = model.SelectedFlags.Intersect(editableFlags).ToList();
-		publication.PublicationFlags = publication.PublicationFlags.Except(existingEditablePublicationFlags).ToList();
+
+		var flagsToAdd = publication.PublicationFlags.Except(existingEditablePublicationFlags).ToList();
+		publication.PublicationFlags.Clear();
+		publication.PublicationFlags.AddRange(flagsToAdd);
 		publication.PublicationFlags.AddFlags(selectedEditableFlagIds);
 		externalMessages.AddRange((await flagsService
 			.GetDiff(existingEditablePublicationFlags.Select(p => p.FlagId), selectedEditableFlagIds))

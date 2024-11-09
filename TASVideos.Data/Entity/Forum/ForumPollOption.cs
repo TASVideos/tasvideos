@@ -13,7 +13,7 @@ public class ForumPollOption : BaseEntity
 	public int PollId { get; set; }
 	public ForumPoll? Poll { get; set; }
 
-	public ICollection<ForumPollOptionVote> Votes { get; set; } = [];
+	public ICollection<ForumPollOptionVote> Votes { get; init; } = [];
 }
 
 public static class ForumPollOptionExtensions

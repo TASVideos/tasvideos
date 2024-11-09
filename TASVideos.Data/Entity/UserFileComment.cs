@@ -23,5 +23,5 @@ public class UserFileComment
 	public int UserId { get; set; }
 	public User? User { get; set; }
 
-	public ICollection<UserFileComment> Children { get; set; } = [];
+	public ICollection<UserFileComment> Children { get; init; } = [];
 }

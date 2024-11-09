@@ -23,8 +23,8 @@ public class GameVersion : BaseEntity
 	public int SystemId { get; set; }
 	public GameSystem? System { get; set; }
 
-	public ICollection<Publication> Publications { get; set; } = [];
-	public ICollection<Submission> Submissions { get; set; } = [];
+	public ICollection<Publication> Publications { get; init; } = [];
+	public ICollection<Submission> Submissions { get; init; } = [];
 
 	[StringLength(32)]
 	public string? Md5 { get; set; }

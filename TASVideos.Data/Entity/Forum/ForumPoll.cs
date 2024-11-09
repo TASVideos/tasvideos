@@ -15,5 +15,5 @@ public class ForumPoll : BaseEntity
 
 	public bool MultiSelect { get; set; }
 
-	public ICollection<ForumPollOption> PollOptions { get; set; } = [];
+	public ICollection<ForumPollOption> PollOptions { get; init; } = [];
 }

@@ -1,4 +1,5 @@
 ﻿using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -86,9 +87,9 @@ public class PointsServiceTests : TestDbBase
 		_db.Flags.Add(weightedFlag);
 
 		var pubNonWeighted = _db.AddPublication(author1.Entity);
-		pubNonWeighted.Entity.PublicationFlags = [new PublicationFlag { Flag = nonWeightedFlag }];
+		pubNonWeighted.Entity.PublicationFlags.Add(new PublicationFlag { Flag = nonWeightedFlag });
 		var pubWeighted = _db.AddPublication(author2.Entity);
-		pubWeighted.Entity.PublicationFlags = [new PublicationFlag { Flag = weightedFlag }];
+		pubWeighted.Entity.PublicationFlags.Add(new PublicationFlag { Flag = weightedFlag });
 		await _db.SaveChangesAsync();
 
 		// 3rd User rates each publication equally
