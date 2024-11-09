@@ -19,9 +19,9 @@ public class GameVersion : BaseEntity
 	public int Id { get; set; }
 
 	public int GameId { get; set; }
-	public virtual Game? Game { get; set; }
+	public Game? Game { get; set; }
 	public int SystemId { get; set; }
-	public virtual GameSystem? System { get; set; }
+	public GameSystem? System { get; set; }
 
 	public ICollection<Publication> Publications { get; set; } = [];
 	public ICollection<Submission> Submissions { get; set; } = [];

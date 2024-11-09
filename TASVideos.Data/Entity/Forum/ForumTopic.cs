@@ -13,29 +13,29 @@ public class ForumTopic : BaseEntity
 	public int Id { get; set; }
 
 	public int ForumId { get; set; }
-	public virtual Forum? Forum { get; set; }
+	public Forum? Forum { get; set; }
 
-	public virtual ICollection<ForumPost> ForumPosts { get; set; } = [];
-	public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = [];
+	public ICollection<ForumPost> ForumPosts { get; set; } = [];
+	public ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = [];
 
 	[StringLength(500)]
 	public string Title { get; set; } = "";
 
 	public int PosterId { get; set; }
-	public virtual User? Poster { get; set; }
+	public User? Poster { get; set; }
 
 	public ForumTopicType Type { get; set; }
 
 	public bool IsLocked { get; set; }
 
 	public int? PollId { get; set; }
-	public virtual ForumPoll? Poll { get; set; }
+	public ForumPoll? Poll { get; set; }
 
 	public int? SubmissionId { get; set; }
-	public virtual Submission? Submission { get; set; }
+	public Submission? Submission { get; set; }
 
 	public int? GameId { get; set; }
-	public virtual Game.Game? Game { get; set; }
+	public Game.Game? Game { get; set; }
 }
 
 public static class ForumTopicQueryableExtensions

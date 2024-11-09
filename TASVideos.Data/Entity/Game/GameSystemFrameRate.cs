@@ -6,7 +6,7 @@ public class GameSystemFrameRate : BaseEntity
 	public int Id { get; set; }
 
 	public int GameSystemId { get; set; }
-	public virtual GameSystem? System { get; set; }
+	public GameSystem? System { get; set; }
 
 	public double FrameRate { get; set; }
 
@@ -16,8 +16,8 @@ public class GameSystemFrameRate : BaseEntity
 
 	public bool Obsolete { get; set; }
 
-	public virtual ICollection<Submission> Submissions { get; set; } = [];
-	public virtual ICollection<Publication> Publications { get; set; } = [];
+	public ICollection<Submission> Submissions { get; set; } = [];
+	public ICollection<Publication> Publications { get; set; } = [];
 }
 
 public static class GameSystemFrameRateExtensions

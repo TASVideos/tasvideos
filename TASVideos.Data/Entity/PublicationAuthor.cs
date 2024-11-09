@@ -4,12 +4,12 @@
 public class PublicationAuthor
 {
 	public int UserId { get; set; }
-	public virtual User? Author { get; set; }
+	public User? Author { get; set; }
 
 	public int Ordinal { get; set; }
 
 	public int PublicationId { get; set; }
-	public virtual Publication? Publication { get; set; }
+	public Publication? Publication { get; set; }
 }
 
 public static class PublicationAuthorExtensions

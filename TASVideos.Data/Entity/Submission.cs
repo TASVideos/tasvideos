@@ -18,24 +18,24 @@ public class Submission : BaseEntity, ITimeable
 	public int Id { get; set; }
 
 	public int? TopicId { get; set; }
-	public virtual ForumTopic? Topic { get; set; }
+	public ForumTopic? Topic { get; set; }
 
 	public int SubmitterId { get; set; }
-	public virtual User? Submitter { get; set; }
+	public User? Submitter { get; set; }
 
-	public virtual ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = [];
+	public ICollection<SubmissionAuthor> SubmissionAuthors { get; set; } = [];
 
 	public int? IntendedClassId { get; set; }
-	public virtual PublicationClass? IntendedClass { get; set; }
+	public PublicationClass? IntendedClass { get; set; }
 
 	public int? JudgeId { get; set; }
-	public virtual User? Judge { get; set; }
+	public User? Judge { get; set; }
 
 	public int? PublisherId { get; set; }
-	public virtual User? Publisher { get; set; }
+	public User? Publisher { get; set; }
 
 	public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
-	public virtual ICollection<SubmissionStatusHistory> History { get; set; } = [];
+	public ICollection<SubmissionStatusHistory> History { get; set; } = [];
 
 	public byte[] MovieFile { get; set; } = [];
 
@@ -44,19 +44,19 @@ public class Submission : BaseEntity, ITimeable
 	public string? MovieExtension { get; set; }
 
 	public int? GameId { get; set; }
-	public virtual Game.Game? Game { get; set; }
+	public Game.Game? Game { get; set; }
 
 	public int? GameVersionId { get; set; }
-	public virtual GameVersion? GameVersion { get; set; }
+	public GameVersion? GameVersion { get; set; }
 
 	// Metadata parsed from movie file
 	public int? SystemId { get; set; }
-	public virtual GameSystem? System { get; set; }
+	public GameSystem? System { get; set; }
 
 	public int? SystemFrameRateId { get; set; }
-	public virtual GameSystemFrameRate? SystemFrameRate { get; set; }
+	public GameSystemFrameRate? SystemFrameRate { get; set; }
 
-	public virtual Publication? Publication { get; set; }
+	public Publication? Publication { get; set; }
 
 	public int Frames { get; set; }
 	public int RerecordCount { get; set; }
@@ -83,7 +83,7 @@ public class Submission : BaseEntity, ITimeable
 	public int? MovieStartType { get; set; }
 
 	public int? RejectionReasonId { get; set; }
-	public virtual SubmissionRejectionReason? RejectionReason { get; set; }
+	public SubmissionRejectionReason? RejectionReason { get; set; }
 
 	/// <summary>
 	/// Gets or sets Any author's that are not a user. If they are a user, they should be linked, and not listed here.
@@ -104,7 +104,7 @@ public class Submission : BaseEntity, ITimeable
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? 0;
 
 	public int? GameGoalId { get; set; }
-	public virtual GameGoal? GameGoal { get; set; }
+	public GameGoal? GameGoal { get; set; }
 
 	public void GenerateTitle()
 	{
@@ -163,7 +163,7 @@ public class Submission : BaseEntity, ITimeable
 	public long? CycleCount { get; set; }
 
 	public int? SyncedByUserId { get; set; }
-	public virtual User? SyncedByUser { get; set; }
+	public User? SyncedByUser { get; set; }
 	public DateTime? SyncedOn { get; set; }
 
 	[StringLength(3000)]

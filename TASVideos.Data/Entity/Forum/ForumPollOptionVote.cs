@@ -6,10 +6,10 @@ public class ForumPollOptionVote
 	public int Id { get; set; }
 
 	public int PollOptionId { get; set; }
-	public virtual ForumPollOption? PollOption { get; set; }
+	public ForumPollOption? PollOption { get; set; }
 
 	public int UserId { get; set; }
-	public virtual User? User { get; set; }
+	public User? User { get; set; }
 
 	public DateTime CreateTimestamp { get; set; }
 

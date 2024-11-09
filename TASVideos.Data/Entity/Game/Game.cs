@@ -7,14 +7,14 @@
 public class Game : BaseEntity
 {
 	public int Id { get; set; }
-	public virtual ICollection<GameVersion> GameVersions { get; set; } = [];
+	public ICollection<GameVersion> GameVersions { get; set; } = [];
 
-	public virtual ICollection<Publication> Publications { get; set; } = [];
-	public virtual ICollection<Submission> Submissions { get; set; } = [];
-	public virtual ICollection<GameGenre> GameGenres { get; set; } = [];
-	public virtual ICollection<UserFile> UserFiles { get; set; } = [];
-	public virtual ICollection<GameGameGroup> GameGroups { get; set; } = [];
-	public virtual ICollection<GameGoal> GameGoals { get; set; } = [];
+	public ICollection<Publication> Publications { get; set; } = [];
+	public ICollection<Submission> Submissions { get; set; } = [];
+	public ICollection<GameGenre> GameGenres { get; set; } = [];
+	public ICollection<UserFile> UserFiles { get; set; } = [];
+	public ICollection<GameGameGroup> GameGroups { get; set; } = [];
+	public ICollection<GameGoal> GameGoals { get; set; } = [];
 
 	[StringLength(100)]
 	public string DisplayName { get; set; } = "";

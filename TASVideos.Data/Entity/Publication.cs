@@ -25,40 +25,40 @@ public class Publication : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
 
-	public virtual ICollection<PublicationFile> Files { get; set; } = [];
-	public virtual ICollection<PublicationTag> PublicationTags { get; set; } = [];
-	public virtual ICollection<PublicationFlag> PublicationFlags { get; set; } = [];
-	public virtual ICollection<PublicationAward> PublicationAwards { get; set; } = [];
-	public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
+	public ICollection<PublicationFile> Files { get; set; } = [];
+	public ICollection<PublicationTag> PublicationTags { get; set; } = [];
+	public ICollection<PublicationFlag> PublicationFlags { get; set; } = [];
+	public ICollection<PublicationAward> PublicationAwards { get; set; } = [];
+	public ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
 
 	[ForeignKey(nameof(PublicationRating.PublicationId))]
-	public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = [];
+	public ICollection<PublicationRating> PublicationRatings { get; set; } = [];
 
-	public virtual ICollection<PublicationUrl> PublicationUrls { get; set; } = [];
+	public ICollection<PublicationUrl> PublicationUrls { get; set; } = [];
 
 	public int? ObsoletedById { get; set; }
-	public virtual Publication? ObsoletedBy { get; set; }
+	public Publication? ObsoletedBy { get; set; }
 
-	public virtual ICollection<Publication> ObsoletedMovies { get; set; } = [];
+	public ICollection<Publication> ObsoletedMovies { get; set; } = [];
 
 	public int GameId { get; set; }
-	public virtual Game.Game? Game { get; set; }
+	public Game.Game? Game { get; set; }
 
 	public int SystemId { get; set; }
-	public virtual GameSystem? System { get; set; }
+	public GameSystem? System { get; set; }
 
 	public int SystemFrameRateId { get; set; }
-	public virtual GameSystemFrameRate? SystemFrameRate { get; set; }
+	public GameSystemFrameRate? SystemFrameRate { get; set; }
 
 	public int GameVersionId { get; set; }
-	public virtual GameVersion? GameVersion { get; set; }
+	public GameVersion? GameVersion { get; set; }
 
 	public int PublicationClassId { get; set; }
-	public virtual PublicationClass? PublicationClass { get; set; }
+	public PublicationClass? PublicationClass { get; set; }
 
 	public int SubmissionId { get; set; }
-	public virtual Submission? Submission { get; set; }
-	public virtual ICollection<PublicationAuthor> Authors { get; set; } = [];
+	public Submission? Submission { get; set; }
+	public ICollection<PublicationAuthor> Authors { get; set; } = [];
 
 	public byte[] MovieFile { get; set; } = [];
 
@@ -84,7 +84,7 @@ public class Publication : BaseEntity, ITimeable
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");
 
 	public int? GameGoalId { get; set; }
-	public virtual GameGoal? GameGoal { get; set; }
+	public GameGoal? GameGoal { get; set; }
 
 	public void GenerateTitle()
 	{

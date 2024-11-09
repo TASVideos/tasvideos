@@ -10,8 +10,8 @@ public class UserMaintenanceLog
 	public string Log { get; set; } = "";
 
 	public int? EditorId { get; set; }
-	public virtual User? Editor { get; set; }
+	public User? Editor { get; set; }
 
 	public int? UserId { get; set; }
-	public virtual User? User { get; set; }
+	public User? User { get; set; }
 }

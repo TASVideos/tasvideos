@@ -9,13 +9,13 @@ public class ForumPost : BaseEntity
 	public int Id { get; set; }
 
 	public int? TopicId { get; set; }
-	public virtual ForumTopic? Topic { get; set; }
+	public ForumTopic? Topic { get; set; }
 
 	public int ForumId { get; set; }
-	public virtual Forum? Forum { get; set; }
+	public Forum? Forum { get; set; }
 
 	public int PosterId { get; set; }
-	public virtual User? Poster { get; set; }
+	public User? Poster { get; set; }
 
 	[StringLength(50)]
 	public string? IpAddress { get; set; }

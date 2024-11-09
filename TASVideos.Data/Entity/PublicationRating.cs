@@ -4,10 +4,10 @@
 public class PublicationRating
 {
 	public int UserId { get; set; }
-	public virtual User? User { get; set; }
+	public User? User { get; set; }
 
 	public int PublicationId { get; set; }
-	public virtual Publication? Publication { get; set; }
+	public Publication? Publication { get; set; }
 
 	public double Value { get; set; }
 }

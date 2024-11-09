@@ -81,33 +81,33 @@ public class User : IdentityUser<int>, ITrackable
 	public UserTimeFormat TimeFormat { get; set; } = UserTimeFormat.Auto;
 	public UserDecimalFormat DecimalFormat { get; set; } = UserDecimalFormat.Auto;
 
-	public virtual ICollection<UserRole> UserRoles { get; set; } = [];
-	public virtual ICollection<SubmissionAuthor> Submissions { get; set; } = [];
-	public virtual ICollection<PublicationAuthor> Publications { get; set; } = [];
+	public ICollection<UserRole> UserRoles { get; set; } = [];
+	public ICollection<SubmissionAuthor> Submissions { get; set; } = [];
+	public ICollection<PublicationAuthor> Publications { get; set; } = [];
 
-	public virtual ICollection<ForumTopic> Topics { get; set; } = [];
-	public virtual ICollection<ForumPost> Posts { get; set; } = [];
-	public virtual ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = [];
+	public ICollection<ForumTopic> Topics { get; set; } = [];
+	public ICollection<ForumPost> Posts { get; set; } = [];
+	public ICollection<ForumTopicWatch> ForumTopicWatches { get; set; } = [];
 
-	public virtual ICollection<UserAward> UserAwards { get; set; } = [];
+	public ICollection<UserAward> UserAwards { get; set; } = [];
 
 	[ForeignKey(nameof(PrivateMessage.FromUserId))]
-	public virtual ICollection<PrivateMessage> SentPrivateMessages { get; set; } = [];
+	public ICollection<PrivateMessage> SentPrivateMessages { get; set; } = [];
 
 	[ForeignKey(nameof(PrivateMessage.ToUserId))]
-	public virtual ICollection<PrivateMessage> ReceivedPrivateMessages { get; set; } = [];
+	public ICollection<PrivateMessage> ReceivedPrivateMessages { get; set; } = [];
 
-	public virtual ICollection<PublicationRating> PublicationRatings { get; set; } = [];
+	public ICollection<PublicationRating> PublicationRatings { get; set; } = [];
 
-	public virtual ICollection<UserFile> UserFiles { get; set; } = [];
-	public virtual ICollection<UserFileComment> UserFileComments { get; set; } = [];
+	public ICollection<UserFile> UserFiles { get; set; } = [];
+	public ICollection<UserFileComment> UserFileComments { get; set; } = [];
 
-	public virtual ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
+	public ICollection<PublicationMaintenanceLog> PublicationMaintenanceLogs { get; set; } = [];
 
-	public virtual ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = [];
-	public virtual ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = [];
+	public ICollection<UserMaintenanceLog> UserMaintenanceLogs { get; set; } = [];
+	public ICollection<UserMaintenanceLog> EditMaintenanceLogs { get; set; } = [];
 
-	public virtual ICollection<WikiPage> WikiRevisions { get; set; } = [];
+	public ICollection<WikiPage> WikiRevisions { get; set; } = [];
 }
 
 public enum PreferredPronounTypes

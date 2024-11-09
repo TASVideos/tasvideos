@@ -6,7 +6,7 @@ public class PublicationUrl : BaseEntity
 {
 	public int Id { get; set; }
 	public int PublicationId { get; set; }
-	public virtual Publication? Publication { get; set; }
+	public Publication? Publication { get; set; }
 
 	[Required]
 	[StringLength(500)]

@@ -21,7 +21,7 @@ public class UserFile
 	public long Id { get; set; }
 
 	public int AuthorId { get; set; }
-	public virtual User? Author { get; set; }
+	public User? Author { get; set; }
 
 	[StringLength(255)]
 	public string FileName { get; set; } = "";
@@ -51,10 +51,10 @@ public class UserFile
 	public int PhysicalLength { get; set; }
 
 	public int? GameId { get; set; }
-	public virtual Game.Game? Game { get; set; }
+	public Game.Game? Game { get; set; }
 
 	public int? SystemId { get; set; }
-	public virtual GameSystem? System { get; set; }
+	public GameSystem? System { get; set; }
 
 	public bool Hidden { get; set; }
 
@@ -65,7 +65,7 @@ public class UserFile
 	[StringLength(3500)]
 	public string? Annotations { get; set; }
 
-	public virtual ICollection<UserFileComment> Comments { get; set; } = [];
+	public ICollection<UserFileComment> Comments { get; set; } = [];
 }
 
 public static class UserFileExtensions

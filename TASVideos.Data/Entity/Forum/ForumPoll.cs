@@ -6,7 +6,7 @@ public class ForumPoll : BaseEntity
 	public int Id { get; set; }
 
 	public int TopicId { get; set; }
-	public virtual ForumTopic? Topic { get; set; }
+	public ForumTopic? Topic { get; set; }
 
 	[StringLength(500)]
 	public string Question { get; set; } = "";
@@ -15,5 +15,5 @@ public class ForumPoll : BaseEntity
 
 	public bool MultiSelect { get; set; }
 
-	public virtual ICollection<ForumPollOption> PollOptions { get; set; } = [];
+	public ICollection<ForumPollOption> PollOptions { get; set; } = [];
 }

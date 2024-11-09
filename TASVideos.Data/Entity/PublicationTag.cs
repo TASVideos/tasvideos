@@ -4,10 +4,10 @@
 public class PublicationTag
 {
 	public int PublicationId { get; set; }
-	public virtual Publication? Publication { get; set; }
+	public Publication? Publication { get; set; }
 
 	public int TagId { get; set; }
-	public virtual Tag? Tag { get; set; }
+	public Tag? Tag { get; set; }
 }
 
 public static class PublicationTagExtensions

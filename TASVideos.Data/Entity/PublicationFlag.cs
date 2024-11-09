@@ -4,10 +4,10 @@
 public class PublicationFlag
 {
 	public int PublicationId { get; set; }
-	public virtual Publication? Publication { get; set; }
+	public Publication? Publication { get; set; }
 
 	public int FlagId { get; set; }
-	public virtual Flag? Flag { get; set; }
+	public Flag? Flag { get; set; }
 }
 
 public static class PublicationFlagExtensions

@@ -22,7 +22,7 @@ public class WikiPage : BaseEntity, ISoftDeletable
 	public string? RevisionMessage { get; set; }
 
 	public int? ChildId { get; set; }
-	public virtual WikiPage? Child { get; set; } // The latest revision of a page is one with Child = null
+	public WikiPage? Child { get; set; } // The latest revision of a page is one with Child = null
 
 	public bool IsDeleted { get; set; }
 
@@ -30,7 +30,7 @@ public class WikiPage : BaseEntity, ISoftDeletable
 	public NpgsqlTsVector SearchVector { get; set; } = null!;
 
 	public int? AuthorId { get; set; }
-	public virtual User? Author { get; set; }
+	public User? Author { get; set; }
 
 	public bool IsCurrent() => !ChildId.HasValue && !IsDeleted;
 }
