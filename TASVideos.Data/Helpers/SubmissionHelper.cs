@@ -20,13 +20,15 @@ public static class SubmissionHelper
 	private static int? IsRawNumberedLink(string? link, string prefix)
 	{
 		link = link?.Trim('/');
-		if (link != null && link.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+		if (link == null || !link.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
 		{
-			var numberText = link.Replace(prefix, "");
-			if (int.TryParse(numberText, out int id))
-			{
-				return id;
-			}
+			return null;
+		}
+
+		var numberText = link.Replace(prefix, "");
+		if (int.TryParse(numberText, out int id))
+		{
+			return id;
 		}
 
 		return null;

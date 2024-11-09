@@ -157,7 +157,7 @@ public enum UserDateFormat
 	MMDDY,
 
 	[Display(Name = "M/d/yyyy (2/29/2024)")]
-	MDY,
+	MDY
 }
 
 public enum UserTimeFormat
