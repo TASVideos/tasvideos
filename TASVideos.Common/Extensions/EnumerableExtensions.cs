@@ -31,7 +31,7 @@ public static class EnumerableExtensions
 	/// </summary>
 	public static T AtRandom<T>(this ICollection<T> collection)
 	{
-		var randomIndex = new Random(DateTime.UtcNow.Millisecond).Next(0, collection.Count);
+		var randomIndex = new Random().Next(0, collection.Count);
 		return collection.ElementAt(randomIndex);
 	}
 
