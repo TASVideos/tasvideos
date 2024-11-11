@@ -125,4 +125,34 @@ public class LtmTests : BaseParserTests
 		Assert.AreEqual(30.002721239119342, result.FrameRateOverride);
 		AssertNoWarningsOrErrors(result);
 	}
+
+	[TestMethod]
+	public async Task Hash()
+	{
+		var result = await _ltmParser.Parse(Embedded("hash.ltm"), EmbeddedLength("hash.ltm"));
+		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.AreEqual(HashType.Md5, result.Hashes.First().Key);
+		Assert.AreEqual("7d66e47fdc0807927c40ce1491c68ad3", result.Hashes.First().Value);
+	}
+
+	[TestMethod]
+	public async Task NoHash()
+	{
+		var result = await _ltmParser.Parse(Embedded("no-hash.ltm"), EmbeddedLength("no-hash.ltm"));
+		Assert.AreEqual(0, result.Hashes.Count);
+	}
+
+	[TestMethod]
+	public async Task MissingHash()
+	{
+		var result = await _ltmParser.Parse(Embedded("missing-hash.ltm"), EmbeddedLength("missing-hash.ltm"));
+		Assert.AreEqual(0, result.Hashes.Count);
+	}
+
+	[TestMethod]
+	public async Task InvalidHash()
+	{
+		var result = await _ltmParser.Parse(Embedded("invalid-hash.ltm"), EmbeddedLength("invalid-hash.ltm"));
+		Assert.AreEqual(0, result.Hashes.Count);
+	}
 }

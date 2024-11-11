@@ -17,7 +17,7 @@ internal class Ltm : Parser, IParser
 	private const string VariableFramerateHeader = "variable_framerate=";
 	private const string LengthSecondsHeader = "length_sec=";
 	private const string LengthNanosecondsHeader = "length_nsec=";
-
+	private const string Md5 = "md5=";
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new SuccessResult(FileExtension)
@@ -93,6 +93,14 @@ internal class Ltm : Parser, IParser
 						else if (s.StartsWith(LengthNanosecondsHeader))
 						{
 							lengthNanoseconds = ParseDoubleFromConfig(s);
+						}
+						else if (s.StartsWith(Md5))
+						{
+							var md5 = ParseStringFromConfig(s);
+							if (md5.Length == 32)
+							{
+								result.Hashes.Add(HashType.Md5, md5.ToLower());
+							}
 						}
 					}
 
