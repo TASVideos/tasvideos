@@ -25,6 +25,14 @@ public static class ViewDataDictionaryExtensions
 	public static void SetTitle(this ViewDataDictionary viewData, string title)
 		=> viewData["Title"] = title;
 
+	public static string GetFavicon(this ViewDataDictionary viewData) => viewData["Favicon"]?.ToString() ?? "favicon.ico";
+
+	public static void UseGreenFavicon(this ViewDataDictionary viewData)
+		=> viewData["Favicon"] = "favicon_green.ico";
+
+	public static void UseRedFavicon(this ViewDataDictionary viewData)
+		=> viewData["Favicon"] = "favicon_red.ico";
+
 	public static void SetHeading(this ViewDataDictionary viewData, string heading)
 		=> viewData["Heading"] = heading;
 

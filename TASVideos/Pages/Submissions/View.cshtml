@@ -2,6 +2,7 @@
 @inject IQueueService QueueService
 @model ViewModel
 @{
+	ViewData.UseRedFavicon();
 	ViewData.SetTitle($"{Model.Submission.Title} - Submission #{Model.Id}");
 	ViewData.SetHeading($"Submission {Model.Submission.Title}");
 	ViewData.SetNavigation(Model.Id, "/{0}S");

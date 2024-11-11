@@ -9,7 +9,7 @@
 	@{ var title = ViewData.GetTitle(); }
 	<title>@(title is not null ? title + " - " : "")TASVideos</title>
 
-	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/@(ViewData.GetFavicon())" type="image/x-icon">
 	<link rel="stylesheet" href="/css/bootstrap.css" />
 	<link rel="stylesheet" href="/css/site.css" />
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
