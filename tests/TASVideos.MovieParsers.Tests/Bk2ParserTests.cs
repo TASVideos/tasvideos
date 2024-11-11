@@ -333,11 +333,26 @@ public class Bk2ParserTests : BaseParserTests
 	}
 
 	[TestMethod]
-	public async Task Hashes_ParseCrc32AsSha1()
+	[DataRow("hash-crc32-as-sha1", HashType.Crc32, "26b9ba0c")]
+	[DataRow("hash-crc32-as-md5", HashType.Crc32, "26b9ba0c")]
+	[DataRow("hash-md5-as-sha1", HashType.Md5, "811b027eaf99c2def7b933c5208636de")]
+	[DataRow("hash-md5", HashType.Md5, "811b027eaf99c2def7b933c5208636de")]
+	[DataRow("hash-sha1", HashType.Sha1, "ea343f4e445a9050d4b4fbac2c77d0693b1d0922")]
+	[DataRow("hash-sha1-as-md5", HashType.Sha1, "ea343f4e445a9050d4b4fbac2c77d0693b1d0922")]
+	public async Task Hashes(string filename, HashType hashType, string hash)
 	{
-		var result = await _bk2Parser.Parse(Embedded("hash-crc32-as-sha1.bk2"), EmbeddedLength("hash-crc32-as-sha1.bk2"));
+		var result = await _bk2Parser.Parse(Embedded(filename + ".bk2"), EmbeddedLength(filename + ".bk2"));
 		Assert.AreEqual(1, result.Hashes.Count);
-		Assert.AreEqual(HashType.Crc32, result.Hashes.First().Key);
-		Assert.AreEqual("26b9ba0c", result.Hashes.First().Value);
+		Assert.AreEqual(hashType, result.Hashes.First().Key);
+		Assert.AreEqual(hash, result.Hashes.First().Value);
+	}
+
+	[TestMethod]
+	[DataRow("hash-missing")]
+	[DataRow("hash-na")]
+	public async Task HashesMissing(string filename)
+	{
+		var result = await _bk2Parser.Parse(Embedded(filename + ".bk2"), EmbeddedLength(filename + ".bk2"));
+		Assert.AreEqual(0, result.Hashes.Count);
 	}
 }
