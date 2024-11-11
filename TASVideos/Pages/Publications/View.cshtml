@@ -1,6 +1,7 @@
 ﻿@page "{id}"
 @model ViewModel
 @{
+	ViewData.UseGreenFavicon();
 	ViewData.IgnorePageTitle();
 	ViewData.SetTitle($"{Model.Publication.Title} - Movie #{Model.Id}");
 	ViewData.SetMetaTags(new MetaTag
