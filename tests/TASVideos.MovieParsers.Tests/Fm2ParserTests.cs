@@ -113,4 +113,11 @@ public class Fm2ParserTests : BaseParserTests
 		var result = await _fm2Parser.Parse(Embedded("hash-invalid.fm2"), EmbeddedLength("hash-invalid.fm2"));
 		Assert.AreEqual(0, result.Hashes.Count);
 	}
+
+	[TestMethod]
+	public async Task MissingHash()
+	{
+		var result = await _fm2Parser.Parse(Embedded("hash-missing.fm2"), EmbeddedLength("hash-missing.fm2"));
+		Assert.AreEqual(0, result.Hashes.Count);
+	}
 }
