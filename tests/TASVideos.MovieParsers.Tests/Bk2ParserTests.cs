@@ -331,4 +331,13 @@ public class Bk2ParserTests : BaseParserTests
 		var lines = result.Annotations.SplitWithEmpty("\n");
 		Assert.AreEqual(2, lines.Length);
 	}
+
+	[TestMethod]
+	public async Task Hashes_ParseCrc32AsSha1()
+	{
+		var result = await _bk2Parser.Parse(Embedded("hash-crc32-as-sha1.bk2"), EmbeddedLength("hash-crc32-as-sha1.bk2"));
+		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.AreEqual(HashType.Crc32, result.Hashes.First().Key);
+		Assert.AreEqual("26b9ba0c", result.Hashes.First().Value);
+	}
 }
