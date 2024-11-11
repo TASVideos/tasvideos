@@ -16,4 +16,5 @@ internal class TestParseResult : IParseResult
 	public double? FrameRateOverride { get; init; }
 	public long? CycleCount { get; init; }
 	public string? Annotations { get; init; }
+	public Dictionary<HashType, string> Hashes { get; init; } = new Dictionary<HashType, string>();
 }

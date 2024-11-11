@@ -1,4 +1,6 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+﻿using System.Security.Cryptography;
+
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("bk2")]
 internal class Bk2 : Parser, IParser
@@ -67,6 +69,23 @@ internal class Bk2 : Parser, IParser
 			if (string.IsNullOrWhiteSpace(platform))
 			{
 				return Error("Could not determine the System Code");
+			}
+
+			string romHash = header.GetValueFor("SHA1");
+			if (string.IsNullOrEmpty(romHash))
+			{
+				romHash = header.GetValueFor("MD5");
+			}
+
+			HashType? hashType = romHash.Length switch {
+				2 * SHA1.HashSizeInBytes => HashType.Sha1,
+				2 * MD5.HashSizeInBytes => HashType.Md5,
+				8/* 2 * Crc32.HashLengthInBytes w/ System.IO.Hashing */ => HashType.Crc32,
+				_ => null
+			};
+			if (hashType is not null)
+			{
+				result.Hashes[hashType.Value] = romHash.ToLower();
 			}
 
 			int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);

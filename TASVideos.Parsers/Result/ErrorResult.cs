@@ -18,4 +18,5 @@ internal class ErrorResult(string errorMsg) : IParseResult
 	public double? FrameRateOverride => null;
 	public long? CycleCount => null;
 	public string? Annotations => null;
+	public Dictionary<HashType, string> Hashes => [];
 }

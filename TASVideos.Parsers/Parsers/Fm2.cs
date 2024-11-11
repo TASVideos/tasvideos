@@ -1,4 +1,6 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+﻿using System.Text;
+
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("fm2")]
 internal class Fm2 : Parser, IParser
@@ -55,7 +57,41 @@ internal class Fm2 : Parser, IParser
 			result.StartType = MovieStartType.Savestate;
 		}
 
+		var hashLine = header.GetValueFor(Keys.RomChecksum);
+		if (!string.IsNullOrWhiteSpace(hashLine))
+		{
+			var hashSplit = hashLine.Split(':');
+			var base64Line = hashSplit.Length == 2 ? hashSplit[1] : "";
+			if (!string.IsNullOrWhiteSpace(base64Line))
+			{
+				try
+				{
+					byte[] data = Convert.FromBase64String(base64Line);
+					string hash = BytesToHexString(data.AsSpan());
+					if (hash.Length == 32)
+					{
+						result.Hashes.Add(HashType.Md5, hash.ToLower());
+					}
+				}
+				catch
+				{
+					// Treat an invalid base64 hash as a missing hash
+				}
+			}
+		}
+
 		return result;
+	}
+
+	private static string BytesToHexString(ReadOnlySpan<byte> bytes)
+	{
+		StringBuilder sb = new(capacity: 2 * bytes.Length, maxCapacity: 2 * bytes.Length);
+		foreach (var b in bytes)
+		{
+			sb.Append($"{b:X2}");
+		}
+
+		return sb.ToString();
 	}
 
 	private static class Keys
@@ -66,5 +102,6 @@ internal class Fm2 : Parser, IParser
 		public const string Length = "length";
 		public const string Fds = "fds";
 		public const string StartsFromSavestate = "savestate";
+		public const string RomChecksum = "romChecksum";
 	}
 }

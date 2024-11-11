@@ -97,4 +97,27 @@ public class Fm2ParserTests : BaseParserTests
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
+
+	[TestMethod]
+	public async Task Hash()
+	{
+		var result = await _fm2Parser.Parse(Embedded("hash.fm2"), EmbeddedLength("hash.fm2"));
+		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.AreEqual(HashType.Md5, result.Hashes.First().Key);
+		Assert.AreEqual("e9d82f825725c616b0be66ac85dc1b7a", result.Hashes.First().Value);
+	}
+
+	[TestMethod]
+	public async Task InvalidHash()
+	{
+		var result = await _fm2Parser.Parse(Embedded("hash-invalid.fm2"), EmbeddedLength("hash-invalid.fm2"));
+		Assert.AreEqual(0, result.Hashes.Count);
+	}
+
+	[TestMethod]
+	public async Task MissingHash()
+	{
+		var result = await _fm2Parser.Parse(Embedded("hash-missing.fm2"), EmbeddedLength("hash-missing.fm2"));
+		Assert.AreEqual(0, result.Hashes.Count);
+	}
 }
