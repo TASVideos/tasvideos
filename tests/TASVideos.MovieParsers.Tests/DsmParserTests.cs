@@ -81,6 +81,14 @@ public class DsmParserTests : BaseParserTests
 		AssertNoWarningsOrErrors(result);
 	}
 
+	public async Task SavestateSetAs0()
+	{
+		var result = await _dsmParser.Parse(Embedded("savestate0.dsm"), EmbeddedLength("savestate0.dsm"));
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
+		AssertNoWarningsOrErrors(result);
+	}
+
 	[TestMethod]
 	public async Task NegativeRerecords()
 	{
@@ -90,4 +98,5 @@ public class DsmParserTests : BaseParserTests
 		AssertNoErrors(result);
 		Assert.AreEqual(1, result.Warnings.Count());
 	}
+
 }

@@ -23,7 +23,8 @@ internal class Dsm : Parser, IParser
 			result.WarnNoRerecords();
 		}
 
-		if (header.HasValue(Keys.StartsFromSavestate))
+		var startsFromSavestate = header.GetValueFor(Keys.StartsFromSavestate);
+		if (!string.IsNullOrWhiteSpace(startsFromSavestate) && startsFromSavestate != "0")
 		{
 			result.StartType = MovieStartType.Savestate;
 		}
