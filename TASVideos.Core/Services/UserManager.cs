@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -102,6 +103,7 @@ public class UserManager(
 	/// for the <see cref="User"/> with the given <see cref="userName"/>
 	/// If no user is found, null is returned
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(IPointsService.PlayerPoints))]
 	public async Task<UserProfile?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts)
 	{
 		var model = await db.Users
@@ -351,6 +353,7 @@ public class UserManager(
 	/// <summary>
 	/// Performs all the necessary updates after a user's name has been changed
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(IWikiPages.MoveAll))]
 	public async Task UserNameChanged(User user, string oldName)
 	{
 		// Move home page and subpages

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Core.Settings;
@@ -8,6 +10,7 @@ namespace TASVideos.Core.Services.Youtube;
 public interface IGoogleAuthService
 {
 	bool IsYoutubeEnabled();
+	[RequiresUnreferencedCode(nameof(GoogleAuthService.GetYoutubeAccessToken))]
 	Task<string> GetYoutubeAccessToken();
 }
 
@@ -24,8 +27,10 @@ internal class GoogleAuthService(
 
 	public bool IsYoutubeEnabled() => settings.YouTube.IsEnabled();
 
+	[RequiresUnreferencedCode(nameof(GetAccessToken))]
 	public async Task<string> GetYoutubeAccessToken() => await GetAccessToken(YoutubeCacheKey);
 
+	[RequiresUnreferencedCode("multiple")]
 	private async Task<string> GetAccessToken(string cacheKey)
 	{
 		if (cache.TryGetValue(cacheKey, out string accessToken))

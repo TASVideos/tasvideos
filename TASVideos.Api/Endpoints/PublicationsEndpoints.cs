@@ -1,7 +1,10 @@
-﻿namespace TASVideos.Api;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Api;
 
 internal static class PublicationsEndpoints
 {
+	[RequiresUnreferencedCode("multiple")]
 	public static WebApplication MapPublications(this WebApplication app)
 	{
 		var group = app.MapApiGroup("Publications");

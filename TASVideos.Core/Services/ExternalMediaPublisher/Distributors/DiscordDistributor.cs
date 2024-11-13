@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;
@@ -25,6 +26,7 @@ public sealed class DiscordDistributor : IPostDistributor
 
 	public IEnumerable<PostType> Types => [PostType.Administrative, PostType.General, PostType.Announcement];
 
+	[RequiresUnreferencedCode(nameof(HttpClientExtensions.HttpClientExtensions.ToStringContent))]
 	public async Task Post(IPostable post)
 	{
 		if (!_settings.IsEnabled())

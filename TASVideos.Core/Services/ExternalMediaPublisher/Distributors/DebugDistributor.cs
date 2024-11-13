@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.Logging;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
@@ -11,6 +13,7 @@ public class LogDistributor(ILogger<LogDistributor> logger) : IPostDistributor
 
 	public IEnumerable<PostType> Types => PostTypes;
 
+	[RequiresUnreferencedCode(nameof(IPostDistributor.Post))]
 	public async Task Post(IPostable post)
 	{
 		if (logger.IsEnabled(LogLevel.Information))

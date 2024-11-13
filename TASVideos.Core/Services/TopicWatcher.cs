@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 
@@ -9,6 +11,7 @@ public interface ITopicWatcher
 	/// <summary>
 	/// Returns all topics the user is currently watching.
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(TopicWatcher.UserWatches))]
 	Task<PageOf<WatchedTopic>> UserWatches(int userId, PagingModel paging);
 
 	/// <summary>
@@ -52,6 +55,7 @@ internal class TopicWatcher(
 {
 	private readonly string _baseUrl = appSettings.BaseUrl;
 
+	[RequiresUnreferencedCode(nameof(Paginator.SortedPageOf))]
 	public async Task<PageOf<WatchedTopic>> UserWatches(int userId, PagingModel paging)
 	{
 		return await db.ForumTopicWatches

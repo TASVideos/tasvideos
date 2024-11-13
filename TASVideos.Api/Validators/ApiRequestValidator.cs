@@ -1,7 +1,10 @@
-﻿namespace TASVideos.Api.Validators;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Api.Validators;
 
 internal class ApiRequestValidator : AbstractValidator<ApiRequest>
 {
+	[RequiresUnreferencedCode(nameof(ApiRequestValidatorExtensions.ValidateApiRequest))]
 	public ApiRequestValidator()
 	{
 		this.ValidateApiRequest();
@@ -10,6 +13,7 @@ internal class ApiRequestValidator : AbstractValidator<ApiRequest>
 
 internal static class ApiRequestValidatorExtensions
 {
+	[RequiresUnreferencedCode(nameof(Extensions.IsValidSort))]
 	public static void ValidateApiRequest<T>(this AbstractValidator<T> validator, Type? sortType = null)
 		where T : ApiRequest
 	{

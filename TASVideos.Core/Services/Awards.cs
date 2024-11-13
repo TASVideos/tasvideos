@@ -1,4 +1,6 @@
-﻿using TASVideos.Data.Entity.Awards;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Core.Services;
 
@@ -8,17 +10,20 @@ public interface IAwards
 	/// Gets all awards for the given user,
 	/// or any movie for which the user is an author of
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(Awards.ForUser))]
 	ValueTask<ICollection<AwardAssignmentSummary>> ForUser(int userId);
 
 	/// <summary>
 	/// Gets all awards for the given publication
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(Awards.ForPublication))]
 	ValueTask<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId);
 
 	/// <summary>
 	/// Gets all awards assigned in the given year
 	/// </summary>
 	/// <param name="year">The year, ex: 2010</param>
+	[RequiresUnreferencedCode(nameof(Awards.ForYear))]
 	ValueTask<ICollection<AwardAssignment>> ForYear(int year);
 
 	/// <summary>
@@ -31,19 +36,24 @@ public interface IAwards
 
 	IQueryable<Award> AwardCategories();
 
+	[RequiresUnreferencedCode(nameof(Awards.AssignUserAward))]
 	Task AssignUserAward(string shortName, int year, IEnumerable<int> userIds);
+	[RequiresUnreferencedCode(nameof(Awards.AssignPublicationAward))]
 	Task AssignPublicationAward(string shortName, int year, IEnumerable<int> publicationIds);
 
+	[RequiresUnreferencedCode(nameof(Awards.Revoke))]
 	Task Revoke(AwardAssignment award);
 
 	/// <summary>
 	/// Clears the awards cache
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(Awards.FlushCache))]
 	Task FlushCache();
 }
 
 internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 {
+	[RequiresUnreferencedCode(nameof(AllAwards))]
 	public async ValueTask<ICollection<AwardAssignmentSummary>> ForUser(int userId)
 	{
 		var allAwards = await AllAwards();
@@ -56,6 +66,7 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 			.ToList();
 	}
 
+	[RequiresUnreferencedCode(nameof(AllAwards))]
 	public async ValueTask<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId)
 	{
 		var allAwards = await AllAwards();
@@ -66,6 +77,7 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 			.ToList();
 	}
 
+	[RequiresUnreferencedCode(nameof(AllAwards))]
 	public async ValueTask<ICollection<AwardAssignment>> ForYear(int year)
 	{
 		var allAwards = await AllAwards();
@@ -99,6 +111,7 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 
 	public IQueryable<Award> AwardCategories() => db.Awards.AsQueryable();
 
+	[RequiresUnreferencedCode(nameof(FlushCache))]
 	public async Task AssignUserAward(string shortName, int year, IEnumerable<int> userIds)
 	{
 		var award = await db.Awards.SingleAsync(a => a.ShortName == shortName);
@@ -122,6 +135,7 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 		await FlushCache();
 	}
 
+	[RequiresUnreferencedCode(nameof(FlushCache))]
 	public async Task AssignPublicationAward(string shortName, int year, IEnumerable<int> publicationIds)
 	{
 		var pubIds = publicationIds.ToList();
@@ -147,6 +161,7 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 		await FlushCache();
 	}
 
+	[RequiresUnreferencedCode(nameof(FlushCache))]
 	public async Task Revoke(AwardAssignment award)
 	{
 		var userAwardsToRemove = await db.UserAwards
@@ -165,12 +180,14 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 		await FlushCache();
 	}
 
+	[RequiresUnreferencedCode(nameof(AllAwards))]
 	public async Task FlushCache()
 	{
 		cache.Remove(CacheKeys.AwardsCache);
 		await AllAwards();
 	}
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	private async ValueTask<IEnumerable<AwardAssignment>> AllAwards()
 	{
 		if (cache.TryGetValue(CacheKeys.AwardsCache, out IEnumerable<AwardAssignment> awards))

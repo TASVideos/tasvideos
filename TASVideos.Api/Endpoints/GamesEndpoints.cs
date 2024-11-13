@@ -1,9 +1,12 @@
-﻿using TASVideos.Data.Entity.Game;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Api;
 
 internal static class GamesEndpoints
 {
+	[RequiresUnreferencedCode("multiple")]
 	public static WebApplication MapGames(this WebApplication app)
 	{
 		var group = app.MapApiGroup("Games");

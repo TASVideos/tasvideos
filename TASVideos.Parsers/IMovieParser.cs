@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using TASVideos.MovieParsers.Parsers;
 
 namespace TASVideos.MovieParsers;
@@ -18,6 +19,7 @@ public interface IMovieParser
 	Task<IParseResult> ParseFile(string fileName, Stream stream);
 }
 
+[RequiresUnreferencedCode("uses reflection")]
 internal sealed class MovieParser : IMovieParser
 {
 	private static readonly ICollection<Type> ParserTypes =

@@ -1,7 +1,10 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public interface ITASVideoAgent
 {
+	[RequiresUnreferencedCode(nameof(TASVideoAgent.PostSubmissionTopic))]
 	Task<int> PostSubmissionTopic(int submissionId, string postTitle);
 	Task PostSubmissionPublished(int submissionId, int publicationId);
 	Task PostSubmissionUnpublished(int submissionId);
@@ -13,6 +16,7 @@ public interface ITASVideoAgent
 
 internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService) : ITASVideoAgent
 {
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async Task<int> PostSubmissionTopic(int submissionId, string title)
 	{
 		var poll = new ForumPoll

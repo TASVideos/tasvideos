@@ -1,9 +1,12 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace TASVideos.Api;
 public static class WebApplicationExtensions
 {
+	[RequiresUnreferencedCode("uses several helpers which in turn all use MapGet")]
 	public static IApplicationBuilder UseTasvideosApiEndpoints(this WebApplication app, IHostEnvironment env)
 	{
 		return app.MapPublications()

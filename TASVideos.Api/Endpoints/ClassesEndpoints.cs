@@ -1,7 +1,10 @@
-﻿namespace TASVideos.Api;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Api;
 
 internal static class ClassesEndpoints
 {
+	[RequiresUnreferencedCode(nameof(EndpointRouteBuilderExtensions.MapGet))]
 	public static WebApplication MapClasses(this WebApplication app)
 	{
 		var group = app.MapApiGroup("Classes");

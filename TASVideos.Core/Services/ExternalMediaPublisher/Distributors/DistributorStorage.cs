@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
 public class DistributorStorage(ApplicationDbContext db) : IPostDistributor
 {
@@ -9,6 +11,7 @@ public class DistributorStorage(ApplicationDbContext db) : IPostDistributor
 
 	public IEnumerable<PostType> Types => PostTypes;
 
+	[RequiresUnreferencedCode(nameof(IPostDistributor.Post))]
 	public async Task Post(IPostable post)
 	{
 		db.MediaPosts.Add(new MediaPost

@@ -1,12 +1,17 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public enum TagEditResult { Success, Fail, NotFound, DuplicateCode }
 public enum TagDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface ITagService
 {
+	[RequiresUnreferencedCode(nameof(TagService.GetAll))]
 	ValueTask<ICollection<Tag>> GetAll();
+	[RequiresUnreferencedCode(nameof(TagService.GetById))]
 	ValueTask<Tag?> GetById(int id);
+	[RequiresUnreferencedCode(nameof(TagService.GetDiff))]
 	ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
 	Task<(int? Id, TagEditResult Result)> Add(string code, string displayName);
@@ -18,6 +23,7 @@ internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagSe
 {
 	internal const string TagsKey = "AllTags";
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async ValueTask<ICollection<Tag>> GetAll()
 	{
 		if (cache.TryGetValue(TagsKey, out List<Tag> tags))
@@ -30,12 +36,14 @@ internal class TagService(ApplicationDbContext db, ICacheService cache) : ITagSe
 		return tags;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async ValueTask<Tag?> GetById(int id)
 	{
 		var tags = await GetAll();
 		return tags.SingleOrDefault(t => t.Id == id);
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async ValueTask<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds)
 	{
 		var tags = await GetAll();

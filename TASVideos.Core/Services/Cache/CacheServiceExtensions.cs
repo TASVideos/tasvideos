@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public static class CacheServiceExtensions
 {
@@ -6,6 +8,7 @@ public static class CacheServiceExtensions
 	/// Returns a dictionary of all cached values for the given cache keys
 	/// Only entries that have a cached value are returned
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(ICacheService.TryGetValue))]
 	public static IDictionary<string, T> GetAll<T>(this ICacheService cache, IEnumerable<string> keys)
 	{
 		var dic = new Dictionary<string, T>();

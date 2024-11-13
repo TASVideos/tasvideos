@@ -1,12 +1,17 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public enum FlagEditResult { Success, Fail, NotFound, DuplicateCode }
 public enum FlagDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IFlagService
 {
+	[RequiresUnreferencedCode(nameof(FlagService.GetAll))]
 	Task<ICollection<Flag>> GetAll();
+	[RequiresUnreferencedCode(nameof(FlagService.GetById))]
 	Task<Flag?> GetById(int id);
+	[RequiresUnreferencedCode(nameof(FlagService.GetDiff))]
 	Task<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds);
 	Task<bool> InUse(int id);
 	Task<FlagEditResult> Add(Flag flag);
@@ -18,6 +23,7 @@ internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlag
 {
 	internal const string FlagsKey = "AllFlags";
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async Task<ICollection<Flag>> GetAll()
 	{
 		if (cache.TryGetValue(FlagsKey, out List<Flag> flags))
@@ -30,12 +36,14 @@ internal class FlagService(ApplicationDbContext db, ICacheService cache) : IFlag
 		return flags;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async Task<Flag?> GetById(int id)
 	{
 		var flags = await GetAll();
 		return flags.SingleOrDefault(t => t.Id == id);
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async Task<ListDiff> GetDiff(IEnumerable<int> currentIds, IEnumerable<int> newIds)
 	{
 		var flags = await GetAll();

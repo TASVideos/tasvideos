@@ -1,7 +1,10 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public interface ITASVideosGrue
 {
+	[RequiresUnreferencedCode(nameof(TASVideosGrue.RejectAndMove))]
 	Task RejectAndMove(int submissionId);
 }
 
@@ -21,6 +24,7 @@ internal class TASVideosGrue(ApplicationDbContext db, IForumService forumService
 			"... 'twas dry"
 		];
 
+	[RequiresUnreferencedCode(nameof(IForumService.CacheLatestPost))]
 	public async Task RejectAndMove(int submissionId)
 	{
 		var topic = await db.ForumTopics.SingleOrDefaultAsync(f => f.SubmissionId == submissionId);

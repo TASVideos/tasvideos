@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.OpenApi.Models;
 
@@ -24,6 +25,7 @@ internal static class RegistrationExtensions
 			});
 	}
 
+	[RequiresUnreferencedCode(nameof(Describe))]
 	public static RouteHandlerBuilder Receives<T>(this RouteHandlerBuilder builder)
 	{
 		return builder.WithOpenApi(g =>
@@ -55,6 +57,7 @@ internal static class RegistrationExtensions
 	}
 
 	// SwaggerParameter from Swashbuckle.AspNetCore.Annotations should be able to do this automatically but there is an outstanding bug, so we need to do this ourselves
+	[RequiresUnreferencedCode(nameof(Type.GetProperties))]
 	private static void Describe<T>(this IList<OpenApiParameter> list)
 	{
 		foreach (var prop in typeof(T).GetProperties())

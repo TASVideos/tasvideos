@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -6,11 +7,13 @@ namespace TASVideos.Core.HttpClientExtensions;
 
 public static class HttpClientExtensions
 {
+	[RequiresUnreferencedCode(nameof(JsonSerializer.Serialize))]
 	public static StringContent ToStringContent(this object obj)
 	{
 		return new StringContent(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
 	}
 
+	[RequiresUnreferencedCode(nameof(JsonSerializer.Deserialize))]
 	public static async Task<T> ReadAsync<T>(this HttpResponseMessage response)
 	{
 		var content = await response.Content.ReadAsStringAsync();

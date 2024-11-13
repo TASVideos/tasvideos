@@ -1,12 +1,16 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public interface IMovieSearchTokens
 {
+	[RequiresUnreferencedCode(nameof(MovieSearchTokens.GetTokens))]
 	ValueTask<IPublicationTokens> GetTokens();
 }
 
 internal class MovieSearchTokens(ApplicationDbContext db, ICacheService cache) : IMovieSearchTokens
 {
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async ValueTask<IPublicationTokens> GetTokens()
 	{
 		if (cache.TryGetValue(CacheKeys.MovieTokens, out MovieTokens cachedResult))

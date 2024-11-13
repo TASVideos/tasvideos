@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine;
@@ -6,6 +7,7 @@ namespace TASVideos.WikiEngine;
 public static class Util
 {
 	// ReSharper disable once UnusedMember.Global
+	[RequiresUnreferencedCode(nameof(JsonSerializer.Serialize))]
 	public static string DebugParseWikiPage(string content)
 	{
 		try

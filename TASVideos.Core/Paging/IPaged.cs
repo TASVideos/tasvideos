@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 
 namespace TASVideos.Core;
 
@@ -15,6 +16,7 @@ public interface IPaged<out T>
 
 public static class RequestExtensions
 {
+	[RequiresUnreferencedCode(nameof(Type.GetProperties))]
 	public static IDictionary<string, string> AdditionalProperties(this IRequest? request)
 	{
 		if (request is null)

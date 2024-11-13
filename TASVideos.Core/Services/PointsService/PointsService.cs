@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public interface IPointsService
 {
@@ -7,12 +9,14 @@ public interface IPointsService
 	/// the calculated player rank is returned. If a user with the given
 	/// <see cref="userId"/> does not exist, 0 is returned
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(PointsService.PlayerPoints))]
 	ValueTask<(double Points, string Rank)> PlayerPoints(int userId);
 
 	/// <summary>
 	/// Calculates the player points that are being awarded for the given publication
 	/// If a publication with the given <see cref="publicationId"/> does not exist, 0 is returned
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(PointsService.PlayerPointsForPublication))]
 	ValueTask<double> PlayerPointsForPublication(int publicationId);
 }
 
@@ -22,6 +26,7 @@ internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPo
 	private const string PlayerPointKey = "PlayerPoints-";
 	private const string AverageNumberOfRatingsKey = "AverageNumberOfRatings";
 
+	[RequiresUnreferencedCode("multiple")]
 	public async ValueTask<(double Points, string Rank)> PlayerPoints(int userId)
 	{
 		string cacheKey = PlayerPointKey + userId;
@@ -42,6 +47,7 @@ internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPo
 		return (playerPoints, PointsCalculator.PlayerRank((decimal)playerPoints));
 	}
 
+	[RequiresUnreferencedCode("multiple")]
 	public async ValueTask<double> PlayerPointsForPublication(int publicationId)
 	{
 		string cacheKey = MoviePlayerPointKey + publicationId;
@@ -67,6 +73,7 @@ internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPo
 	}
 
 	// total ratings / total publications
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	private async ValueTask<double> AverageNumberOfRatingsPerPublication()
 	{
 		if (cache.TryGetValue(AverageNumberOfRatingsKey, out double playerPoints))

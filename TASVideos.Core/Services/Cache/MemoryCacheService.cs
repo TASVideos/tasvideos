@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.Caching.Memory;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services;
 
 public class MemoryCacheService(IMemoryCache cache, AppSettings settings) : ICacheService
 {
+	[RequiresUnreferencedCode(nameof(ICacheService.TryGetValue))]
 	public bool TryGetValue<T>(string key, out T value)
 	{
 		return cache.TryGetValue(key, out value!);
@@ -15,6 +18,7 @@ public class MemoryCacheService(IMemoryCache cache, AppSettings settings) : ICac
 		cache.Remove(key);
 	}
 
+	[RequiresUnreferencedCode(nameof(ICacheService.Set))]
 	public void Set(string key, object? data, int? cacheTime)
 	{
 		cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? settings.CacheSettings.CacheDurationInSeconds));

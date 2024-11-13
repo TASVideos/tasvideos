@@ -1,7 +1,10 @@
-﻿namespace TASVideos.Api.Validators;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Api.Validators;
 
 internal class SubmissionsRequestValidator : AbstractValidator<SubmissionsRequest>
 {
+	[RequiresUnreferencedCode(nameof(ApiRequestValidatorExtensions.ValidateApiRequest))]
 	public SubmissionsRequestValidator()
 	{
 		RuleFor(s => s.Statuses).MaximumLength(5);

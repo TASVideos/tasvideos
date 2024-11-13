@@ -1,11 +1,15 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public enum ClassEditResult { Success, Fail, NotFound, DuplicateName }
 public enum ClassDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IClassService
 {
+	[RequiresUnreferencedCode(nameof(ClassService.GetAll))]
 	ValueTask<IReadOnlyCollection<PublicationClass>> GetAll();
+	[RequiresUnreferencedCode(nameof(ClassService.GetById))]
 	ValueTask<PublicationClass?> GetById(int id);
 	Task<bool> InUse(int id);
 	Task<(int? Id, ClassEditResult Result)> Add(PublicationClass publicationClass);
@@ -17,6 +21,7 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 {
 	internal const string ClassesKey = "AllPublicationClasses";
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async ValueTask<IReadOnlyCollection<PublicationClass>> GetAll()
 	{
 		if (cache.TryGetValue(ClassesKey, out List<PublicationClass> classes))
@@ -29,6 +34,7 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 		return classes;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async ValueTask<PublicationClass?> GetById(int id)
 	{
 		var classes = await GetAll();

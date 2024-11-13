@@ -1,4 +1,6 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 
@@ -19,12 +21,14 @@ public interface IUserFiles
 	/// <summary>
 	/// Returns a collection of file extensions that can be uploaded to user files
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(UserFiles.SupportedFileExtensions))]
 	Task<IReadOnlyCollection<string>> SupportedFileExtensions();
 
 	/// <summary>
 	/// Uploads a file for the user to user files
 	/// </summary>
 	/// <returns>The id of the saved file and an <seealso cref="IParseResult"/> if the file is a movie type</returns>
+	[RequiresUnreferencedCode(nameof(UserFiles.Upload))]
 	Task<(long? Id, IParseResult? ParseResult)> Upload(int userId, UserFileUpload file);
 }
 
@@ -53,6 +57,7 @@ internal class UserFiles(
 		return storageUsed + fileLength <= SiteGlobalConstants.UserFileStorageLimit;
 	}
 
+	[RequiresUnreferencedCode(nameof(SupportedSupplementalFiles))]
 	public async Task<IReadOnlyCollection<string>> SupportedFileExtensions()
 	{
 		return parser.SupportedMovieExtensions
@@ -60,6 +65,7 @@ internal class UserFiles(
 			.ToList();
 	}
 
+	[RequiresUnreferencedCode(nameof(SupportedSupplementalFiles))]
 	public async Task<(long? Id, IParseResult? ParseResult)> Upload(int userId, UserFileUpload file)
 	{
 		var fileExt = Path.GetExtension(file.FileName);
@@ -133,6 +139,7 @@ internal class UserFiles(
 		return (userFile.Id, parseResult);
 	}
 
+	[RequiresUnreferencedCode(nameof(WikiPageExtensions.SystemPage))]
 	internal async Task<IEnumerable<string>> SupportedSupplementalFiles()
 	{
 		var page = await wikiPages.SystemPage(SupplementalUserFileExtensionsPage);

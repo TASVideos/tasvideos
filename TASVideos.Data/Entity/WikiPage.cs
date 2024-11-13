@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using NpgsqlTypes;
 
@@ -99,6 +100,7 @@ public static class WikiQueryableExtensions
 	/// <seealso cref="WikiPage"/>
 	/// <param name="query">The query to filter.</param>
 	/// <param name="pageName">The name of the page to get parent pages from.</param>
+	[RequiresUnreferencedCode(nameof(Queryable.AsQueryable))]
 	public static IQueryable<WikiPage> ThatAreParentsOf(this IQueryable<WikiPage> query, string? pageName)
 	{
 		pageName = (pageName ?? "").Trim('/');

@@ -1,9 +1,12 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.OpenApi.Models;
 
 namespace TASVideos.Api;
 
 internal static class UsersEndpoints
 {
+	[RequiresUnreferencedCode(nameof(EndpointRouteBuilderExtensions.MapPost))]
 	public static WebApplication MapUsers(this WebApplication app)
 	{
 		app.MapPost("api/v1/users/authenticate", async (AuthenticationRequest request, HttpContext context, IJwtAuthenticator jwtAuthenticator) =>

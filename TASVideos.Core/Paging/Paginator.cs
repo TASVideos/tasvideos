@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace TASVideos.Core;
@@ -12,6 +13,7 @@ public static class Paginator
 	/// <param name="query">The query to paginate and run.</param>
 	/// <param name="paging">The paging data to use.</param>
 	/// <typeparam name="TItem">The result type of the query.</typeparam>
+	[RequiresUnreferencedCode(nameof(SortBy))]
 	public static async Task<PageOf<TItem>> SortedPageOf<TItem>(this IQueryable<TItem> query, PagingModel paging)
 		where TItem : class
 	{
@@ -20,6 +22,7 @@ public static class Paginator
 			.PageOf(paging);
 	}
 
+	[RequiresUnreferencedCode(nameof(SortBy))]
 	public static async Task<PageOf<TItem, TRequest>> SortedPageOf<TItem, TRequest>(this IQueryable<TItem> query, TRequest paging)
 		where TItem : class
 		where TRequest : PagingModel
@@ -90,6 +93,7 @@ public static class Paginator
 	/// Orders the given collection based on the <see cref="ISortable.Sort"/> property.
 	/// </summary>
 	/// <typeparam name="T">The type of the elements of source.</typeparam>
+	[RequiresUnreferencedCode(nameof(SortByParam))]
 	public static IQueryable<T> SortBy<T>(this IQueryable<T> source, ISortable? request)
 	{
 		if (string.IsNullOrWhiteSpace(request?.Sort))
@@ -109,6 +113,7 @@ public static class Paginator
 		return source;
 	}
 
+	[RequiresUnreferencedCode("heavy use of reflection")]
 	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy)
 	{
 		bool desc = column?.StartsWith('-') ?? false;

@@ -4,6 +4,8 @@
 * so the record count might be less than the requested count
 * how do we document this? or do we want to try to do dynamic queryable field selection?
 */
+using System.Diagnostics.CodeAnalysis;
+
 namespace TASVideos.Api.Requests;
 
 /// <summary>
@@ -29,6 +31,7 @@ internal class ApiRequest : IFieldSelectable, ISortable, IPageable
 
 internal static class RequestableExtensions
 {
+	[RequiresUnreferencedCode(nameof(Paginator.SortBy))]
 	public static IQueryable<T> SortAndPaginate<T>(this IQueryable<T> source, ApiRequest request)
 	{
 		int offset = request.Offset();

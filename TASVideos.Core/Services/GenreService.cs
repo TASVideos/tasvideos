@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.Logging;
 
 namespace TASVideos.Core.Services;
 
@@ -8,7 +10,9 @@ public enum GenreChangeResult { Success, Fail, NotFound, InUse }
 
 public interface IGenreService
 {
+	[RequiresUnreferencedCode(nameof(GenreService.GetAll))]
 	ValueTask<IReadOnlyCollection<GenreDto>> GetAll();
+	[RequiresUnreferencedCode(nameof(GenreService.GetById))]
 	ValueTask<GenreDto?> GetById(int id);
 	Task<bool> InUse(int id);
 	Task<int?> Add(string displayName);
@@ -21,6 +25,7 @@ internal class GenreService(ApplicationDbContext db, ICacheService cache, ILogge
 {
 	internal const string CacheKey = "AllGameGenres";
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async ValueTask<IReadOnlyCollection<GenreDto>> GetAll()
 	{
 		if (cache.TryGetValue(CacheKey, out List<GenreDto> genres))
@@ -35,6 +40,7 @@ internal class GenreService(ApplicationDbContext db, ICacheService cache, ILogge
 		return genres;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async ValueTask<GenreDto?> GetById(int id)
 	{
 		var genre = await GetAll();

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using Microsoft.Extensions.Logging;
 using NetTools;
 
@@ -9,6 +10,7 @@ public interface IIpBanService
 	/// <summary>
 	/// Returns a value indicating whether the ip address is currently banned.
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(IpBanService.IsBanned))]
 	ValueTask<bool> IsBanned(IPAddress? ipAddress);
 
 	/// <summary>
@@ -37,6 +39,7 @@ internal class IpBanService(
 {
 	internal const string IpBanList = "IpBanList";
 
+	[RequiresUnreferencedCode(nameof(BannedIps))]
 	public async ValueTask<bool> IsBanned(IPAddress? ipAddress)
 	{
 		if (ipAddress is null)
@@ -55,6 +58,7 @@ internal class IpBanService(
 			.ToListAsync();
 	}
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	private async ValueTask<IEnumerable<IPAddressRange>> BannedIps()
 	{
 		if (cache.TryGetValue(IpBanList, out List<IpBan> list))

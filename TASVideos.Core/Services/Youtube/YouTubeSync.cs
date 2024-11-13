@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.HttpClientExtensions;
@@ -13,9 +14,12 @@ public interface IYoutubeSync
 	bool IsYoutubeUrl(string? url);
 	string VideoId(string youtubeUrl);
 
+	[RequiresUnreferencedCode(nameof(YouTubeSync.SyncYouTubeVideo))]
 	Task SyncYouTubeVideo(YoutubeVideo video);
+	[RequiresUnreferencedCode(nameof(YouTubeSync.UnlistVideo))]
 	Task UnlistVideo(string url);
 	string? ConvertToEmbedLink(string? url);
+	[RequiresUnreferencedCode(nameof(YouTubeSync.GetPublicInfo))]
 	Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds);
 }
 
@@ -33,6 +37,7 @@ internal class YouTubeSync(
 	private readonly HttpClient _client = httpClientFactory.CreateClient(HttpClients.Youtube)
 		?? throw new InvalidOperationException($"Unable to initialize {HttpClients.Youtube} client");
 
+	[RequiresUnreferencedCode("multiple")]
 	public async Task SyncYouTubeVideo(YoutubeVideo video)
 	{
 		if (!IsYoutubeUrl(video.Url))
@@ -98,6 +103,7 @@ internal class YouTubeSync(
 		}
 	}
 
+	[RequiresUnreferencedCode(nameof(GetBatchPublicInfo))]
 	public async Task<IEnumerable<YoutubeVideoResponseItem>> GetPublicInfo(IEnumerable<string> videoIds)
 	{
 		if (!googleAuthService.IsYoutubeEnabled())
@@ -119,6 +125,7 @@ internal class YouTubeSync(
 		return items;
 	}
 
+	[RequiresUnreferencedCode(nameof(HttpClientExtensions.HttpClientExtensions.ReadAsync))]
 	private async Task<IEnumerable<YoutubeVideoResponseItem>> GetBatchPublicInfo(IReadOnlyCollection<string> videoIds)
 	{
 		if (videoIds.Count > BatchSize)
@@ -136,6 +143,7 @@ internal class YouTubeSync(
 		return data.Items;
 	}
 
+	[RequiresUnreferencedCode("multiple")]
 	public async Task UnlistVideo(string url)
 	{
 		if (!IsYoutubeUrl(url))
@@ -230,12 +238,14 @@ internal class YouTubeSync(
 		return result;
 	}
 
+	[RequiresUnreferencedCode(nameof(IGoogleAuthService.GetYoutubeAccessToken))]
 	private async Task SetAccessToken()
 	{
 		var accessToken = await googleAuthService.GetYoutubeAccessToken();
 		_client.SetBearerToken(accessToken);
 	}
 
+	[RequiresUnreferencedCode("multiple")]
 	private async Task<YoutubeVideoSnippetResult?> HasAccessToChannel(string videoId)
 	{
 		await SetAccessToken();

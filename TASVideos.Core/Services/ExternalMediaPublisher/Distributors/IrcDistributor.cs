@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Settings;
@@ -30,6 +31,7 @@ public class IrcDistributor : IPostDistributor
 
 	public IEnumerable<PostType> Types => [PostType.Administrative, PostType.General, PostType.Announcement];
 
+	[RequiresUnreferencedCode(nameof(IPostDistributor.Post))]
 	public async Task Post(IPostable post)
 	{
 		// If proper credentials were not provided, the bot was never initialized

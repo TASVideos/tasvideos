@@ -1,17 +1,23 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public enum SystemEditResult { Success, Fail, NotFound, DuplicateCode, DuplicateId }
 public enum SystemDeleteResult { Success, Fail, NotFound, InUse }
 
 public interface IGameSystemService
 {
+	[RequiresUnreferencedCode(nameof(GameSystemService.GetAll))]
 	ValueTask<ICollection<SystemsResponse>> GetAll();
+	[RequiresUnreferencedCode(nameof(GameSystemService.GetById))]
 	ValueTask<SystemsResponse?> GetById(int id);
 	Task<bool> InUse(int id);
+	[RequiresUnreferencedCode(nameof(GameSystemService.NextId))]
 	ValueTask<int> NextId();
 	Task<SystemEditResult> Add(int id, string code, string displayName);
 	Task<SystemEditResult> Edit(int id, string code, string displayName);
 	Task<SystemDeleteResult> Delete(int id);
+	[RequiresUnreferencedCode(nameof(GameSystemService.FlushCache))]
 	Task FlushCache();
 }
 
@@ -19,6 +25,7 @@ internal class GameSystemService(ApplicationDbContext db, ICacheService cache) :
 {
 	internal const string SystemsKey = "AllSystems";
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async ValueTask<ICollection<SystemsResponse>> GetAll()
 	{
 		if (cache.TryGetValue(SystemsKey, out List<SystemsResponse> systems))
@@ -42,6 +49,7 @@ internal class GameSystemService(ApplicationDbContext db, ICacheService cache) :
 		return systems;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async ValueTask<SystemsResponse?> GetById(int id)
 	{
 		var systems = await GetAll();
@@ -73,6 +81,7 @@ internal class GameSystemService(ApplicationDbContext db, ICacheService cache) :
 		return false;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async ValueTask<int> NextId()
 	{
 		var systems = await GetAll();
@@ -179,6 +188,7 @@ internal class GameSystemService(ApplicationDbContext db, ICacheService cache) :
 		return SystemDeleteResult.Success;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetAll))]
 	public async Task FlushCache()
 	{
 		cache.Remove(SystemsKey);

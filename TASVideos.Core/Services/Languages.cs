@@ -1,9 +1,12 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core.Services;
 
 public interface ILanguages
 {
+	[RequiresUnreferencedCode(nameof(Languages.GetTranslations))]
 	Task<ICollection<LanguagePage>> GetTranslations(string pageName);
 }
 
@@ -11,6 +14,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 {
 	internal const string TranslationsCacheKey = "Translations-";
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async Task<ICollection<LanguagePage>> GetTranslations(string pageName)
 	{
 		var key = TranslationsCacheKey + pageName;
@@ -24,6 +28,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 		return languages;
 	}
 
+	[RequiresUnreferencedCode(nameof(MovieSearchTokens))]
 	private async Task<ICollection<LanguagePage>> GetTranslationsInternal(string pageName)
 	{
 		string subPage = pageName;
@@ -67,6 +72,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 			.ToList();
 	}
 
+	[RequiresUnreferencedCode(nameof(AvailableLanguages))]
 	internal async Task<bool> IsLanguagePage(string? pageName)
 	{
 		if (string.IsNullOrWhiteSpace(pageName))
@@ -87,6 +93,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 			|| l.Code == trimmed);
 	}
 
+	[RequiresUnreferencedCode(nameof(WikiPageExtensions.SystemPage))]
 	internal async Task<IEnumerable<Language>> AvailableLanguages()
 	{
 		var languagesMarkup = (await wikiPages.SystemPage("Languages"))?.Markup;

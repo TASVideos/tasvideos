@@ -1,7 +1,10 @@
-﻿namespace TASVideos.Api.Validators;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Api.Validators;
 
 internal class PublicationsRequestValidator : AbstractValidator<PublicationsRequest>
 {
+	[RequiresUnreferencedCode(nameof(ApiRequestValidatorExtensions.ValidateApiRequest))]
 	public PublicationsRequestValidator()
 	{
 		RuleFor(p => p.StartYear).Must(st => st is null or >= 2000).WithMessage("Year must be 2000 or greater");

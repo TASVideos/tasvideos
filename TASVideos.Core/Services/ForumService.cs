@@ -1,20 +1,27 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace TASVideos.Core.Services;
 
 public interface IForumService
 {
 	Task<PostPosition?> GetPostPosition(int postId, bool seeRestricted);
+	[RequiresUnreferencedCode(nameof(ForumService.GetAllCategories))]
 	Task<IReadOnlyCollection<ForumCategoryDisplay>> GetAllCategories();
+	[RequiresUnreferencedCode(nameof(ForumService.CacheLatestPost))]
 	void CacheLatestPost(int forumId, int topicId, LatestPost post);
+	[RequiresUnreferencedCode(nameof(ForumService.CacheNewPostActivity))]
 	void CacheNewPostActivity(int forumId, int topicId, int postId, DateTime createTimestamp);
+	[RequiresUnreferencedCode(nameof(ForumService.CacheEditedPostActivity))]
 	void CacheEditedPostActivity(int forumId, int topicId, int postId, DateTime createTimestamp);
 	void ClearLatestPostCache();
 	void ClearTopicActivityCache();
 	Task CreatePoll(ForumTopic topic, PollCreate poll);
+	[RequiresUnreferencedCode(nameof(ForumService.CreatePost))]
 	Task<int> CreatePost(PostCreate post);
 	Task<bool> IsTopicLocked(int topicId);
 	Task<AvatarUrls> UserAvatars(int userId);
+	[RequiresUnreferencedCode(nameof(ForumService.GetPostActivityOfTopics))]
 	Task<Dictionary<int, (string PostsCreated, string PostsEdited)>> GetPostActivityOfSubforum(int subforumId);
 }
 
@@ -50,6 +57,7 @@ internal class ForumService(
 			post.TopicId ?? 0);
 	}
 
+	[RequiresUnreferencedCode(nameof(ForumService))]
 	public async Task<IReadOnlyCollection<ForumCategoryDisplay>> GetAllCategories()
 	{
 		var latestPostMappings = await GetAllLatestPosts();
@@ -89,6 +97,7 @@ internal class ForumService(
 		return dto;
 	}
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public void CacheLatestPost(int forumId, int topicId, LatestPost post)
 	{
 		if (cacheService.TryGetValue(LatestPostCacheKey, out Dictionary<int, LatestPost?> dict))
@@ -98,6 +107,7 @@ internal class ForumService(
 		}
 	}
 
+	[RequiresUnreferencedCode("multiple")]
 	public void CacheNewPostActivity(int forumId, int topicId, int postId, DateTime createTimestamp)
 	{
 		if (cacheService.TryGetValue(PostActivityOfTopicsCacheKey, out Dictionary<int, Dictionary<int, (string, string)>> forumActivity))
@@ -122,6 +132,7 @@ internal class ForumService(
 		}
 	}
 
+	[RequiresUnreferencedCode("multiple")]
 	public void CacheEditedPostActivity(int forumId, int topicId, int postId, DateTime editTimestamp)
 	{
 		if (cacheService.TryGetValue(PostActivityOfTopicsCacheKey, out Dictionary<int, Dictionary<int, (string, string)>> forumActivity))
@@ -181,6 +192,7 @@ internal class ForumService(
 		await db.SaveChangesAsync();
 	}
 
+	[RequiresUnreferencedCode(nameof(ForumService))]
 	public async Task<int> CreatePost(PostCreate post)
 	{
 		var forumPost = new ForumPost
@@ -214,6 +226,7 @@ internal class ForumService(
 		return forumPost.Id;
 	}
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	internal async Task<IDictionary<int, LatestPost?>> GetAllLatestPosts()
 	{
 		if (cacheService.TryGetValue(LatestPostCacheKey, out Dictionary<int, LatestPost?> dict))
@@ -247,6 +260,7 @@ internal class ForumService(
 		return dict;
 	}
 
+	[RequiresUnreferencedCode(nameof(JsonSerializer.Serialize))]
 	internal async Task<Dictionary<int, Dictionary<int, (string PostsCreated, string PostsEdited)>>> GetPostActivityOfTopics()
 	{
 		if (cacheService.TryGetValue(PostActivityOfTopicsCacheKey, out Dictionary<int, Dictionary<int, (string, string)>> forumActivity))
@@ -293,12 +307,14 @@ internal class ForumService(
 		return forumActivity;
 	}
 
+	[RequiresUnreferencedCode(nameof(GetPostActivityOfTopics))]
 	public async Task<Dictionary<int, (string, string)>> GetPostActivityOfSubforum(int subforumId)
 	{
 		(await GetPostActivityOfTopics()).TryGetValue(subforumId, out var activityTopics);
 		return activityTopics ?? [];
 	}
 
+	[RequiresUnreferencedCode(nameof(JsonSerializer.Serialize))]
 	internal async Task<Dictionary<int, (string PostsCreated, string PostsEdited)>> GetPostActivityOfSubforums()
 	{
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> subforumActivity))

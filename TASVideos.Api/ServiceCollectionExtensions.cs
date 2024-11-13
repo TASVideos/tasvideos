@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +12,7 @@ namespace TASVideos.Api;
 
 public static class ServiceCollectionExtensions
 {
+	[RequiresUnreferencedCode("uses several validators, which in turn all use ApiRequestValidatorExtensions.ValidateApiRequest")]
 	public static IServiceCollection AddTasvideosApi(this IServiceCollection services, AppSettings settings)
 	{
 		return services

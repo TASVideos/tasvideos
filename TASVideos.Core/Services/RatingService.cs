@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Core.Services;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace TASVideos.Core.Services;
 
 public interface IRatingService
 {
@@ -12,6 +14,7 @@ public interface IRatingService
 	/// If user is not found, null is returned
 	/// If user has PublicRatings false, then the ratings will be an empty list
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(RatingService.GetUserRatings))]
 	Task<UserRatings?> GetUserRatings(string userName, RatingRequest paging, bool includeHidden = false);
 }
 
@@ -81,6 +84,7 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 		return await db.TrySaveChanges();
 	}
 
+	[RequiresUnreferencedCode(nameof(Paginator.SortedPageOf))]
 	public async Task<UserRatings?> GetUserRatings(string userName, RatingRequest paging, bool includeHidden = false)
 	{
 		var dto = await db.Users

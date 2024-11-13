@@ -1,4 +1,6 @@
-﻿using TASVideos.Core.Services.Email;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Core.Services;
 
@@ -18,6 +20,7 @@ public interface IPrivateMessageService
 	/// Returns the number of unread <see cref="PrivateMessage"/>
 	/// for the given <see cref="User" />
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(PrivateMessageService.GetUnreadMessageCount))]
 	ValueTask<int> GetUnreadMessageCount(int userId);
 	Task SendMessage(int fromUserId, string toUserName, string subject, string text);
 	Task SendMessageToRole(int fromUserId, string roleName, string subject, string text);
@@ -119,6 +122,7 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 			.ToListAsync();
 	}
 
+	[RequiresUnreferencedCode(nameof(ICacheService))]
 	public async ValueTask<int> GetUnreadMessageCount(int userId)
 	{
 		var cacheKey = UnreadMessageCount + userId;

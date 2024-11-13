@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -43,6 +44,7 @@ public class RedisCacheService : ICacheService
 		}
 	}
 
+	[RequiresUnreferencedCode(nameof(JsonSerializer.Deserialize))]
 	public bool TryGetValue<T>(string key, out T value)
 	{
 		if (!_enabled)
@@ -71,6 +73,7 @@ public class RedisCacheService : ICacheService
 		}
 	}
 
+	[RequiresUnreferencedCode(nameof(JsonSerializer.Serialize))]
 	public void Set(string key, object? data, int? cacheTime = null)
 	{
 		if (_enabled)

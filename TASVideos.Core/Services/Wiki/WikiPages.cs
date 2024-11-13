@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Core.Services.Wiki;
@@ -8,6 +9,7 @@ public interface IWikiPages
 	/// <summary>
 	/// Returns whether any revision of the given page exists
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(WikiPages.Exists))]
 	Task<bool> Exists(string? pageName, bool includeDeleted = false);
 
 	/// <summary>
@@ -16,6 +18,7 @@ public interface IWikiPages
 	/// Else the latest revision is returned
 	/// </summary>
 	/// <returns>A model representing the Wiki page if it exists else null</returns>
+	[RequiresUnreferencedCode(nameof(WikiPages.Page))]
 	ValueTask<IWikiPage?> Page(string? pageName, int? revisionId = null);
 
 	/// <summary>
@@ -23,6 +26,7 @@ public interface IWikiPages
 	/// If the created timestamp is less than the latest revision, the revision will not be added
 	/// </summary>
 	/// <return>The resulting wiki page revision if successfully added, null if it was unable to add</return>
+	[RequiresUnreferencedCode(nameof(WikiPages.Add))]
 	Task<IWikiPage?> Add(WikiCreateRequest addRequest);
 
 	/// <summary>
@@ -32,11 +36,13 @@ public interface IWikiPages
 	/// </summary>
 	/// <returns>Whether the move was successful.
 	/// If false, a conflict was detected and no data was modified</returns>
+	[RequiresUnreferencedCode(nameof(WikiPages.Move))]
 	Task<bool> Move(string originalName, string destinationName);
 
 	/// <summary>
 	/// Moves the given page and all subpages as well
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(WikiPages.MoveAll))]
 	Task<bool> MoveAll(string originalName, string destinationName);
 
 	/// <summary>
@@ -53,6 +59,7 @@ public interface IWikiPages
 	/// If the revision is the latest revision, then <see cref="WikiPageReferral"/>
 	/// will be removed where the given page name is a referrer
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(WikiPages.Delete))]
 	Task Delete(string pageName, int revision);
 
 	/// <summary>
@@ -61,6 +68,7 @@ public interface IWikiPages
 	/// </summary>
 	/// /// <returns>Whether undelete was successful.
 	/// If false, a conflict was detected and no data was modified</returns>
+	[RequiresUnreferencedCode(nameof(WikiPages.Undelete))]
 	Task<bool> Undelete(string pageName);
 
 	/// <summary>
@@ -87,12 +95,14 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 {
 	private WikiResult? this[string pageName]
 	{
+		[RequiresUnreferencedCode(nameof(ICacheService.TryGetValue))]
 		get
 		{
 			cache.TryGetValue($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", out WikiResult page);
 			return page;
 		}
 
+		[RequiresUnreferencedCode(nameof(ICacheService.Set))]
 		set => cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
 	}
 
@@ -122,6 +132,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
 		.ToListAsync();
 
+	[RequiresUnreferencedCode(nameof(WikiPages))]
 	public async Task<bool> Exists(string? pageName, bool includeDeleted = false)
 	{
 		if (string.IsNullOrWhiteSpace(pageName))
@@ -158,6 +169,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		return page is not null;
 	}
 
+	[RequiresUnreferencedCode(nameof(WikiPages))]
 	public async ValueTask<IWikiPage?> Page(string? pageName, int? revisionId = null)
 	{
 		if (string.IsNullOrWhiteSpace(pageName))
@@ -195,6 +207,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		return page;
 	}
 
+	[RequiresUnreferencedCode(nameof(WikiPages))]
 	public async Task<IWikiPage?> Add(WikiCreateRequest addRequest)
 	{
 		if (string.IsNullOrWhiteSpace(addRequest.PageName))
@@ -252,6 +265,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		return result;
 	}
 
+	[RequiresUnreferencedCode("multiple")]
 	public async Task<bool> Move(string originalName, string destinationName)
 	{
 		if (string.IsNullOrWhiteSpace(destinationName))
@@ -317,6 +331,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		return true;
 	}
 
+	[RequiresUnreferencedCode(nameof(Move))]
 	public async Task<bool> MoveAll(string originalName, string destinationName)
 	{
 		var pagesToMove = await db.WikiPages
@@ -378,6 +393,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		return revisions.Count;
 	}
 
+	[RequiresUnreferencedCode(nameof(WikiPages))]
 	public async Task Delete(string pageName, int revision)
 	{
 		pageName = pageName.Trim('/');
@@ -429,6 +445,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		}
 	}
 
+	[RequiresUnreferencedCode(nameof(WikiPages))]
 	public async Task<bool> Undelete(string pageName)
 	{
 		pageName = pageName.Trim('/');
@@ -523,16 +540,19 @@ public static class WikiPageExtensions
 	/// Returns a System page with the given page suffix
 	/// <example>SystemPage("Languages") will return the page System/Languages</example>
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(IWikiPages.Page))]
 	public static ValueTask<IWikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
 	{
 		return pages.Page("System/" + pageName, revisionId);
 	}
 
+	[RequiresUnreferencedCode(nameof(IWikiPages.Page))]
 	public static async Task<IWikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
 	{
 		return await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
 	}
 
+	[RequiresUnreferencedCode(nameof(IWikiPages.Page))]
 	public static async Task<IWikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
 	{
 		return await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));

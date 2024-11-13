@@ -1,4 +1,8 @@
-﻿namespace TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+
+namespace TASVideos.Core.Services.ExternalMediaPublisher;
 
 /// <summary>
 /// Receives an <see cref="IPostable"/> and distributes it
@@ -16,5 +20,6 @@ public interface IPostDistributor
 	/// Takes the given <see cref="post"/> and posts it to a
 	/// single specific media
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(DiscordDistributor.Post))]
 	Task Post(IPostable post);
 }

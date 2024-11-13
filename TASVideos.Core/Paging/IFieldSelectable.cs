@@ -1,4 +1,5 @@
-﻿using System.Dynamic;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Dynamic;
 
 namespace TASVideos.Core;
 
@@ -22,6 +23,7 @@ public static class FieldSelectionExtensions
 	/// properties are specified, all the properties are returned.
 	/// </summary>
 	/// <typeparam name="T">The type of the elements of source.</typeparam>
+	[RequiresUnreferencedCode(nameof(FieldSelect))]
 	public static IEnumerable<ExpandoObject> FieldSelect<T>(this IEnumerable<T> source, IFieldSelectable? fields)
 	{
 		if (string.IsNullOrWhiteSpace(fields?.Fields))
@@ -38,6 +40,7 @@ public static class FieldSelectionExtensions
 	/// Receives a single object and performs a fields selection operation with the given fields.
 	/// </summary>
 	/// <typeparam name="T">The type of the elements of source.</typeparam>
+	[RequiresUnreferencedCode(nameof(Type.GetProperties))]
 	public static ExpandoObject FieldSelect<T>(this T obj, string? fields)
 	{
 		if (string.IsNullOrWhiteSpace(fields))

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 
 namespace TASVideos.Api;
@@ -23,6 +24,7 @@ internal static class Extensions
 	/// The sorting is valid if all parameters match properties in the response, and that
 	/// those properties are declared as sortable.
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(Type.GetProperties))]
 	public static bool IsValidSort(this string requestedSort, Type? response)
 	{
 		if (response is null)

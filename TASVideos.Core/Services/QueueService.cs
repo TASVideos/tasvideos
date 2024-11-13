@@ -1,4 +1,6 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.MovieParsers.Result;
@@ -40,6 +42,7 @@ public interface IQueueService
 	/// <summary>
 	/// Deletes a publication and returns the corresponding submission back to the submission queue
 	/// </summary>
+	[RequiresUnreferencedCode(nameof(QueueService.Unpublish))]
 	Task<UnpublishResult> Unpublish(int publicationId);
 
 	/// <summary>
@@ -55,6 +58,7 @@ public interface IQueueService
 	/// <param name="publicationToObsolete">The movie to obsolete</param>
 	/// <param name="obsoletingPublicationId">The movie that obsoletes it</param>
 	/// <returns>False if publications is not found</returns>
+	[RequiresUnreferencedCode(nameof(QueueService.ObsoleteWith))]
 	Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId);
 
 	/// <summary>
@@ -284,6 +288,7 @@ internal class QueueService(
 		return UnpublishResult.Success(pub.Title);
 	}
 
+	[RequiresUnreferencedCode(nameof(WikiPageExtensions.PublicationPage))]
 	public async Task<UnpublishResult> Unpublish(int publicationId)
 	{
 		var publication = await db.Publications
@@ -440,6 +445,7 @@ internal class QueueService(
 		return "";
 	}
 
+	[RequiresUnreferencedCode(nameof(IWikiPages.Page))]
 	public async Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId)
 	{
 		var toObsolete = await db.Publications
