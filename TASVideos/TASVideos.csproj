@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<EnableConfigurationBindingGenerator>true</EnableConfigurationBindingGenerator>
+		<EnableTrimAnalyzer>false</EnableTrimAnalyzer>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<TargetFramework>net8.0</TargetFramework>
 		<UserSecretsId>aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152</UserSecretsId>

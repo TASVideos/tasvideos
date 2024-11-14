@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Services.Email;
@@ -12,7 +14,10 @@ namespace TASVideos.Core;
 
 public static class ServiceCollectionExtensions
 {
-	public static IServiceCollection AddTasvideosCore<T1, T2>(this IServiceCollection services, bool isDevelopment, AppSettings settings)
+	public static IServiceCollection AddTasvideosCore<
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T1,
+		[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors)] T2
+	>(this IServiceCollection services, bool isDevelopment, AppSettings settings)
 		where T1 : class, IWikiToTextRenderer
 		where T2 : class, IWikiToMetaDescriptionRenderer
 	{

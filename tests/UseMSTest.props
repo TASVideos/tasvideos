@@ -1,6 +1,7 @@
 <Project>
 	<PropertyGroup>
 		<EnableMSTestRunner>true</EnableMSTestRunner>
+		<EnableTrimAnalyzer>false</EnableTrimAnalyzer>
 		<OutputType>Exe</OutputType>
     <RunSettingsFilePath>$(MSBuildProjectDirectory)\..\..\.runsettings</RunSettingsFilePath>
 	</PropertyGroup>
