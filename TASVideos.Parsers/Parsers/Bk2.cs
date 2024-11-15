@@ -13,6 +13,7 @@ internal class Bk2 : Parser, IParser
 	private const double NtscNesFramerate = 60.0988138974405;
 	private const double NtscSnesFramerate = 60.0988138974405;
 	private const double PalSnesFramerate = 50.0069789081886;
+	private const double NtscSatFramerate = 59.8830284837373;
 
 	// mednafen values to match current octoshock
 	private const double NtscPsxFramerate = 59.94006013870239;
@@ -126,6 +127,11 @@ internal class Bk2 : Parser, IParser
 			{
 				platform = SystemCodes.Arcade;
 				result.FrameRateOverride = NtscNesFramerate;
+			}
+			else if (header.GetBoolFor(Keys.ModeStv))
+			{
+				platform = SystemCodes.Arcade;
+				result.FrameRateOverride = NtscSatFramerate;
 			}
 			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
 			{
@@ -295,6 +301,7 @@ internal class Bk2 : Parser, IParser
 		public const string ModeSegaCd = "issegacdmode";
 		public const string ModeGg = "isggmode";
 		public const string ModeSg = "issgmode";
+		public const string ModeStv = "isstv";
 		public const string ModeVs = "isvs";
 		public const string VBlankCount = "vblankcount";
 		public const string CycleCount = "cyclecount";
