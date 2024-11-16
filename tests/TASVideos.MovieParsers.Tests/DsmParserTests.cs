@@ -98,5 +98,4 @@ public class DsmParserTests : BaseParserTests
 		AssertNoErrors(result);
 		Assert.AreEqual(1, result.Warnings.Count());
 	}
-
 }
