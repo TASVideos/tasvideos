@@ -66,9 +66,9 @@ public static class SubmissionHelper
 		return oldS != SubmissionStatus.JudgingUnderWay && newS == SubmissionStatus.JudgingUnderWay;
 	}
 
-	public static bool JudgeIsUnclaiming(SubmissionStatus oldS, SubmissionStatus newS)
+	public static bool JudgeIsUnclaiming(SubmissionStatus newS)
 	{
-		return oldS == SubmissionStatus.JudgingUnderWay && newS == SubmissionStatus.New;
+		return newS == SubmissionStatus.New;
 	}
 
 	public static bool PublisherIsClaiming(SubmissionStatus oldS, SubmissionStatus newS)
