@@ -221,4 +221,15 @@ public static class UserExtensions
 		=> query.Where(u => !u.BannedUntil.HasValue || u.BannedUntil < DateTime.UtcNow);
 
 	public static bool IsBanned(this User user) => user.BannedUntil.HasValue && user.BannedUntil > DateTime.UtcNow;
+
+	public static IQueryable<SubmissionAuthor> ToSubmissionAuthors(this IQueryable<User> query, int submissionId, IList<string> authors)
+		=> query
+			.ForUsers(authors)
+			.Select(u => new SubmissionAuthor
+			{
+				SubmissionId = submissionId,
+				UserId = u.Id,
+				Author = u,
+				Ordinal = authors.IndexOf(u.UserName)
+			});
 }

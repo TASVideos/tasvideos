@@ -152,14 +152,7 @@ public class SubmitModel(
 		});
 
 		db.SubmissionAuthors.AddRange(await db.Users
-			.ForUsers(Authors)
-			.Select(u => new SubmissionAuthor
-			{
-				SubmissionId = submission.Id,
-				UserId = u.Id,
-				Author = u,
-				Ordinal = Authors.IndexOf(u.UserName)
-			})
+			.ToSubmissionAuthors(submission.Id, Authors)
 			.ToListAsync());
 
 		submission.GenerateTitle();

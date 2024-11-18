@@ -312,14 +312,7 @@ public class EditModel(
 
 		submission.SubmissionAuthors.Clear();
 		submission.SubmissionAuthors.AddRange(await db.Users
-			.ForUsers(Submission.Authors)
-			.Select(u => new SubmissionAuthor
-			{
-				SubmissionId = submission.Id,
-				UserId = u.Id,
-				Author = u,
-				Ordinal = Submission.Authors.IndexOf(u.UserName)
-			})
+			.ToSubmissionAuthors(submission.Id, Submission.Authors)
 			.ToListAsync());
 
 		submission.GenerateTitle();
