@@ -75,12 +75,13 @@
 							</div>
 							<br/>
 							<label asp-for="EmailConfirmed"></label>
-							<span condition="Model.EmailConfirmed" class="fa fa-check-square text-success"></span><span> Yes</span>
-							<div><span condition="!Model.EmailConfirmed" class="fa fa-exclamation-triangle text-danger"></span> No</div>
+							<div condition="Model.EmailConfirmed"><i class="fa fa-check-square text-success"></i> No</div>
+							<div condition="!Model.EmailConfirmed"><i class="fa fa-exclamation-triangle text-danger"></i> No</div>
 							<br/>
 							<label asp-for="LockedOutStatus"></label>
-							<span condition="Model.LockedOutStatus" class="fa fa-exclamation-triangle text-danger"></span><span> Locked out</span>
-							<span condition="!Model.LockedOutStatus" class="fa fa-check-square text-success"></span><span> Not locked</span>
+							<div condition="Model.LockedOutStatus"><i class="fa fa-exclamation-triangle text-danger"></i><span> Locked out</span></div>
+							<div condition="!Model.LockedOutStatus"><i class="fa fa-check-square text-success"></i><span> Not locked</span></div>
+							<br />
 							<div>
 								<a permission="ViewPrivateUserData" asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning btn-sm">IP Addresses used</a>
 							</div>
