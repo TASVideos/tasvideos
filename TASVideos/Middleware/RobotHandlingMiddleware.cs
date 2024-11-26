@@ -17,8 +17,12 @@ public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment e
 						Disallow: /MovieMaintenanceLog
 						Disallow: /UserMaintenanceLog
 						Disallow: /InternalSystem/
+						Disallow: /Search
 						Disallow: /*?revision=*
 						Disallow: /Wiki/PageHistory
+						Disallow: /Wiki/PageNotFound
+						Disallow: /Wiki/Referrers
+						Disallow: /Wiki/ViewSource
 
 						User-agent: Fasterfox
 						Disallow: /
