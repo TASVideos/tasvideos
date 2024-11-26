@@ -220,7 +220,7 @@ public class EditModel(ApplicationDbContext db, ExternalMediaPublisher publisher
 		[StringLength(50)]
 		public string? SourceDb { get; init; }
 
-		[StringLength(2000)]
+		[StringLength(30000)]
 		public string? Notes { get; init; }
 	}
 }
