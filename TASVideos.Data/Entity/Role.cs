@@ -4,7 +4,6 @@ namespace TASVideos.Data.Entity;
 
 public class Role : IdentityRole<int>, ITrackable
 {
-	[StringLength(50)]
 	public new string Name
 	{
 		get => base.Name!;
@@ -16,7 +15,6 @@ public class Role : IdentityRole<int>, ITrackable
 	/// </summary>
 	public bool IsDefault { get; set; }
 
-	[StringLength(300)]
 	public string Description { get; set; } = "";
 
 	/// <summary>

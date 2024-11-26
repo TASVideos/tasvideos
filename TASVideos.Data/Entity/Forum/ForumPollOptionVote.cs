@@ -13,6 +13,5 @@ public class ForumPollOptionVote
 
 	public DateTime CreateTimestamp { get; set; }
 
-	[StringLength(50)]
 	public string? IpAddress { get; set; }
 }

@@ -11,10 +11,8 @@ public class PrivateMessage : BaseEntity
 	public int ToUserId { get; set; }
 	public User? ToUser { get; set; }
 
-	[StringLength(500)]
 	public string? Subject { get; set; }
 
-	[StringLength(10000)]
 	public string Text { get; set; } = "";
 
 	public bool EnableHtml { get; set; }

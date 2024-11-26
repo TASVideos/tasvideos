@@ -16,19 +16,14 @@ public class Game : BaseEntity
 	public ICollection<GameGameGroup> GameGroups { get; init; } = [];
 	public ICollection<GameGoal> GameGoals { get; init; } = [];
 
-	[StringLength(100)]
 	public string DisplayName { get; set; } = "";
 
-	[StringLength(24)]
 	public string? Abbreviation { get; set; }
 
-	[StringLength(250)]
 	public string? Aliases { get; set; }
 
-	[StringLength(250)]
 	public string? ScreenshotUrl { get; set; }
 
-	[StringLength(300)]
 	public string? GameResourcesPage { get; set; }
 }
 

@@ -6,7 +6,6 @@ public class GameGoal
 	public int GameId { get; set; }
 	public Game? Game { get; set; }
 
-	[StringLength(50)]
 	public string DisplayName { get; set; } = "";
 
 	public ICollection<Publication> Publications { get; init; } = [];

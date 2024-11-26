@@ -26,30 +26,22 @@ public class GameVersion : BaseEntity
 	public ICollection<Publication> Publications { get; init; } = [];
 	public ICollection<Submission> Submissions { get; init; } = [];
 
-	[StringLength(32)]
 	public string? Md5 { get; set; }
 
-	[StringLength(40)]
 	public string? Sha1 { get; set; }
 
-	[StringLength(255)]
 	public string Name { get; set; } = "";
 
 	public VersionTypes Type { get; set; }
 
-	[StringLength(50)]
 	public string? Region { get; set; }
 
-	[StringLength(50)]
 	public string? Version { get; set; }
 
-	[StringLength(255)]
 	public string? TitleOverride { get; set; }
 
-	[StringLength(50)]
 	public string? SourceDb { get; set; }
 
-	[StringLength(2000)]
 	public string? Notes { get; set; }
 }
 

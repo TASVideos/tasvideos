@@ -23,14 +23,12 @@ public class UserFile
 	public int AuthorId { get; set; }
 	public User? Author { get; set; }
 
-	[StringLength(255)]
 	public string FileName { get; set; } = "";
 
 	public byte[] Content { get; set; } = [];
 
 	public UserFileClass Class { get; set; }
 
-	[StringLength(16)]
 	public string Type { get; set; } = "";
 
 	public DateTime UploadTimestamp { get; set; }
@@ -41,7 +39,6 @@ public class UserFile
 
 	public int Rerecords { get; set; }
 
-	[StringLength(255)]
 	public string Title { get; set; } = "";
 
 	public string? Description { get; set; }
@@ -62,7 +59,6 @@ public class UserFile
 
 	public Compression CompressionType { get; set; }
 
-	[StringLength(3500)]
 	public string? Annotations { get; set; }
 
 	public ICollection<UserFileComment> Comments { get; init; } = [];

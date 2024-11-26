@@ -13,11 +13,9 @@ public class PublicationFile : BaseEntity
 	public int PublicationId { get; set; }
 	public Publication? Publication { get; set; }
 
-	[StringLength(250)]
 	public string Path { get; set; } = "";
 	public FileType Type { get; set; }
 
-	[StringLength(250)]
 	public string? Description { get; set; }
 
 	public byte[]? FileData { get; set; }

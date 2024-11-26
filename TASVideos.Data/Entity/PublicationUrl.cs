@@ -9,12 +9,10 @@ public class PublicationUrl : BaseEntity
 	public Publication? Publication { get; set; }
 
 	[Required]
-	[StringLength(500)]
 	public string? Url { get; set; }
 
 	public PublicationUrlType Type { get; set; } = PublicationUrlType.Streaming;
 
-	[StringLength(100)]
 	public string? DisplayName { get; set; }
 }
 

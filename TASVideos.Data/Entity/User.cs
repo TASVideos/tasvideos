@@ -10,28 +10,24 @@ public enum UserPreference
 [ExcludeFromHistory]
 public class User : IdentityUser<int>, ITrackable
 {
-	[StringLength(50)]
 	public new string UserName
 	{
 		get => base.UserName!;
 		set => base.UserName = value;
 	}
 
-	[StringLength(50)]
 	public new string NormalizedUserName
 	{
 		get => base.NormalizedUserName!;
 		set => base.NormalizedUserName = value;
 	}
 
-	[StringLength(100)]
 	public new string Email
 	{
 		get => base.Email!;
 		set => base.Email = value;
 	}
 
-	[StringLength(100)]
 	public new string NormalizedEmail
 	{
 		get => base.NormalizedEmail!;
@@ -40,24 +36,19 @@ public class User : IdentityUser<int>, ITrackable
 
 	public DateTime? LastLoggedInTimeStamp { get; set; }
 
-	[StringLength(250)]
 	public string TimeZoneId { get; set; } = TimeZoneInfo.Utc.Id;
 
 	public DateTime CreateTimestamp { get; set; } = DateTime.UtcNow;
 	public DateTime LastUpdateTimestamp { get; set; } = DateTime.UtcNow;
 
-	[StringLength(250)]
 	public string? Avatar { get; set; }
 
-	[StringLength(100)]
 	public string? From { get; set; }
 
-	[StringLength(1000)]
 	public string? Signature { get; set; }
 
 	public bool PublicRatings { get; set; } = true;
 
-	[StringLength(250)]
 	public string? MoodAvatarUrlBase { get; set; }
 
 	public DateTime? BannedUntil { get; set; }
@@ -68,7 +59,6 @@ public class User : IdentityUser<int>, ITrackable
 	/// </summary>
 	public bool UseRatings { get; set; } = true;
 
-	[StringLength(1024)]
 	public string? ModeratorComments { get; set; }
 
 	public PreferredPronounTypes PreferredPronouns { get; set; } = PreferredPronounTypes.Unspecified;
