@@ -187,7 +187,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			}
 
 			builder.HasPostgresExtension("citext");
-			builder.HasPostgresExtension("pg_trgm");
 		}
 
 		builder.Entity<Award>(entity =>
@@ -271,9 +270,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 			if (Database.IsNpgsql())
 			{
-				entity.HasIndex(e => e.Markup)
-					.HasMethod("gin")
-					.HasOperators("gin_trgm_ops");
 				entity
 					.HasGeneratedTsVectorColumn(
 						p => p.SearchVector,
@@ -438,9 +434,6 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		{
 			if (Database.IsNpgsql())
 			{
-				entity.HasIndex(e => e.Text)
-					.HasMethod("gin")
-					.HasOperators("gin_trgm_ops");
 				entity
 					.HasGeneratedTsVectorColumn(
 						p => p.SearchVector,
