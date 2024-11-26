@@ -14,6 +14,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	public string SearchTerms { get; set; } = "";
 
 	[FromQuery]
+	[Range(1, int.MaxValue)]
 	public int PageNumber { get; set; } = 1;
 
 	public List<PageResult> PageResults { get; set; } = [];

@@ -13,6 +13,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public string SearchTerms { get; set; } = "";
 
 	[FromQuery]
+	[Range(1, int.MaxValue)]
 	public int PageNumber { get; set; } = 1;
 
 	public List<PageSearch> PageResults { get; set; } = [];
