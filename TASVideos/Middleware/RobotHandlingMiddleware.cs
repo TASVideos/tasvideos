@@ -11,15 +11,11 @@ public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment e
 
 		if (env.IsProduction())
 		{
-			// TODO the format for this was recently codified to basically match what Google was using, anyway each entry has an implicit trailing wildcard so there's a small chance of false positives
 			sb.AppendLine("""
 						User-agent: *
 						Disallow: /Movies-
 						Disallow: /MovieMaintenanceLog
 						Disallow: /UserMaintenanceLog
-						Disallow: /Account/
-						Disallow: /Forum/Posts/User/
-						Disallow: /Forum/Topics/Create/
 						Disallow: /InternalSystem/
 						Disallow: /Search
 						Disallow: /*?revision=*
