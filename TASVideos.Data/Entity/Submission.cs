@@ -39,8 +39,6 @@ public class Submission : BaseEntity, ITimeable
 
 	public byte[] MovieFile { get; set; } = [];
 
-	[StringLength(8)]
-
 	public string? MovieExtension { get; set; }
 
 	public int? GameId { get; set; }
@@ -62,22 +60,16 @@ public class Submission : BaseEntity, ITimeable
 	public int RerecordCount { get; set; }
 
 	// Metadata, user entered
-	[StringLength(100)]
 	public string? EncodeEmbedLink { get; set; }
 
-	[StringLength(100)]
 	public string? SubmittedGameVersion { get; set; }
 
-	[StringLength(100)]
 	public string? GameName { get; set; }
 
-	[StringLength(50)]
 	public string? Branch { get; set; }
 
-	[StringLength(250)]
 	public string? RomName { get; set; }
 
-	[StringLength(50)]
 	public string? EmulatorVersion { get; set; }
 
 	public int? MovieStartType { get; set; }
@@ -88,17 +80,14 @@ public class Submission : BaseEntity, ITimeable
 	/// <summary>
 	/// Gets or sets Any author's that are not a user. If they are a user, they should be linked, and not listed here.
 	/// </summary>
-	[StringLength(200)]
 	public string? AdditionalAuthors { get; set; }
 
 	/// <summary>
 	/// Gets or sets a de-normalized column consisting of the submission title for display when linked or in the queue
 	/// ex: N64 The Legend of Zelda: Majora's Mask "low%" in 1:59:01.
 	/// </summary>
-	[StringLength(500)]
 	public string Title { get; set; } = "";
 
-	[StringLength(3500)]
 	public string? Annotations { get; set; }
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? 0;
@@ -157,7 +146,6 @@ public class Submission : BaseEntity, ITimeable
 	public decimal LegacyTime { get; set; }
 	public decimal ImportedTime { get; set; }
 
-	[StringLength(500)]
 	public string? Warnings { get; set; }
 
 	public long? CycleCount { get; set; }
@@ -166,7 +154,6 @@ public class Submission : BaseEntity, ITimeable
 	public User? SyncedByUser { get; set; }
 	public DateTime? SyncedOn { get; set; }
 
-	[StringLength(3000)]
 	public string? AdditionalSyncNotes { get; set; }
 }
 

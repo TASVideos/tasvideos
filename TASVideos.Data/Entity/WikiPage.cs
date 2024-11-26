@@ -9,7 +9,6 @@ public class WikiPage : BaseEntity, ISoftDeletable
 {
 	public int Id { get; set; }
 
-	[StringLength(250)]
 	public string PageName { get; set; } = "";
 
 	public string Markup { get; set; } = "";
@@ -18,7 +17,6 @@ public class WikiPage : BaseEntity, ISoftDeletable
 
 	public bool MinorEdit { get; set; }
 
-	[StringLength(1000)]
 	public string? RevisionMessage { get; set; }
 
 	public int? ChildId { get; set; }

@@ -62,10 +62,8 @@ public class Publication : BaseEntity, ITimeable
 
 	public byte[] MovieFile { get; set; } = [];
 
-	[StringLength(200)]
 	public string MovieFileName { get; set; } = "";
 
-	[StringLength(50)]
 	public string? EmulatorVersion { get; set; }
 
 	public int Frames { get; set; }
@@ -74,11 +72,9 @@ public class Publication : BaseEntity, ITimeable
 	/// <summary>
 	/// Gets or sets Any author's that are not a user. If they are a user, they should be linked, and not listed here.
 	/// </summary>
-	[StringLength(200)]
 	public string? AdditionalAuthors { get; set; }
 
 	// De-normalized name for easy recreation
-	[StringLength(500)]
 	public string Title { get; set; } = "";
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");

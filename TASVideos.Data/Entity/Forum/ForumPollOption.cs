@@ -5,7 +5,6 @@ public class ForumPollOption : BaseEntity
 {
 	public int Id { get; set; }
 
-	[StringLength(250)]
 	public string Text { get; set; } = "";
 
 	public int Ordinal { get; set; }

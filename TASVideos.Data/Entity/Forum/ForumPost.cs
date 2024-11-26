@@ -17,10 +17,8 @@ public class ForumPost : BaseEntity
 	public int PosterId { get; set; }
 	public User? Poster { get; set; }
 
-	[StringLength(50)]
 	public string? IpAddress { get; set; }
 
-	[StringLength(150)]
 	public string? Subject { get; set; }
 
 	public string Text { get; set; } = "";

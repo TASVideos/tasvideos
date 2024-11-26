@@ -15,10 +15,8 @@ public class GameSystem : BaseEntity
 	public ICollection<Publication> Publications { get; init; } = [];
 	public ICollection<Submission> Submissions { get; init; } = [];
 
-	[StringLength(8)]
 	public string Code { get; set; } = "";
 
-	[StringLength(100)]
 	public string DisplayName { get; set; } = "";
 }
 

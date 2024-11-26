@@ -10,7 +10,6 @@ public class GameSystemFrameRate : BaseEntity
 
 	public double FrameRate { get; set; }
 
-	[StringLength(8)]
 	public string RegionCode { get; set; } = "";
 	public bool Preliminary { get; set; }
 

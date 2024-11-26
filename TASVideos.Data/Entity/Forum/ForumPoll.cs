@@ -8,7 +8,6 @@ public class ForumPoll : BaseEntity
 	public int TopicId { get; set; }
 	public ForumTopic? Topic { get; set; }
 
-	[StringLength(500)]
 	public string Question { get; set; } = "";
 
 	public DateTime? CloseDate { get; set; }

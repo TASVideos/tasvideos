@@ -5,13 +5,10 @@ public class WikiPageReferral
 {
 	public int Id { get; set; }
 
-	[StringLength(250)]
 	public string Referrer { get; set; } = "";
 
-	[StringLength(1000)]
 	public string Referral { get; set; } = "";
 
-	[StringLength(1000)]
 	public string Excerpt { get; set; } = "";
 }
 
