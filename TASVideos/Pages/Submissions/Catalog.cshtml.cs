@@ -313,7 +313,7 @@ public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publis
 		public DateTime? SyncVerifiedOn { get; init; }
 		public string? SyncedBy { get; init; }
 
-		[StringLength(3000)]
+		[StringLength(30000)]
 		public string? AdditionalSyncNotes { get; init; }
 
 		public bool CanSyncVerify => !string.IsNullOrWhiteSpace(Emulator) && this is
