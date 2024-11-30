@@ -36,6 +36,11 @@ public class ResetPasswordModel(UserManager userManager) : BasePageModel
 			return Home();
 		}
 
+		if (!await userManager.VerifyUserTokenAsync(user, userManager.Options.Tokens.PasswordResetTokenProvider, UserManager.ResetPasswordTokenPurpose, Code))
+		{
+			return Home();
+		}
+
 		Email = user.Email;
 		return Page();
 	}
