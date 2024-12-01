@@ -225,6 +225,12 @@ public class EditModel(
 			submission.MovieFile = await Submission.ReplaceMovieFile.ToBytes();
 			submission.SyncedOn = null;
 			submission.SyncedByUserId = null;
+
+			if (parseResult.Hashes.Count > 0)
+			{
+				submission.HashType = parseResult.Hashes.First().Key.ToString();
+				submission.Hash = parseResult.Hashes.First().Value;
+			}
 		}
 
 		if (SubmissionHelper.JudgeIsClaiming(submission.Status, Submission.Status))

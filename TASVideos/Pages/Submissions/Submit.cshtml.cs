@@ -138,6 +138,11 @@ public class SubmitModel(
 
 		submission.MovieFile = await MovieFile.ToBytes();
 		submission.Submitter = await userManager.GetUserAsync(User);
+		if (parseResult.Hashes.Count > 0)
+		{
+			submission.HashType = parseResult.Hashes.First().Key.ToString();
+			submission.Hash = parseResult.Hashes.First().Value;
+		}
 
 		db.Submissions.Add(submission);
 		await db.SaveChangesAsync();

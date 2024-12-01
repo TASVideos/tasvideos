@@ -95,6 +95,9 @@ public class Submission : BaseEntity, ITimeable
 	public int? GameGoalId { get; set; }
 	public GameGoal? GameGoal { get; set; }
 
+	public string? HashType { get; set; }
+	public string? Hash { get; set; }
+
 	public void GenerateTitle()
 	{
 		if (System is null)
