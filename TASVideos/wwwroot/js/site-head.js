@@ -64,6 +64,19 @@ window.addEventListener("DOMContentLoaded", function () {
             rate(btn.dataset.pubId, true);
         };
     });
+
+    // allow middle-clicking the search button to open in new tab
+    const searchBtnElem = document.querySelector(/*ul.navbar-nav */'form[action="/Search/Index"] button[type="submit"]');
+    const linkElem = document.createElement("a");
+    Array.from(searchBtnElem.attributes).forEach(attr => linkElem.setAttribute(attr.name, attr.value));
+    linkElem.onclick = e => {
+        e.preventDefault();
+        e.target.closest("form").requestSubmit();
+    };
+    linkElem.removeAttribute("type");
+    linkElem.setAttribute("href", "/Search/Index");
+    Array.from(searchBtnElem.children).forEach(e => linkElem.appendChild(e));
+    searchBtnElem.replaceWith(linkElem);
 });
 
 function rate(pubId, unrated) {
