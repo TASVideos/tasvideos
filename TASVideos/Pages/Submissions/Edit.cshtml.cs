@@ -231,6 +231,11 @@ public class EditModel(
 				submission.HashType = parseResult.Hashes.First().Key.ToString();
 				submission.Hash = parseResult.Hashes.First().Value;
 			}
+			else
+			{
+				submission.HashType = null;
+				submission.Hash = null;
+			}
 		}
 
 		if (SubmissionHelper.JudgeIsClaiming(submission.Status, Submission.Status))
