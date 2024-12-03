@@ -190,6 +190,10 @@
 				<label>Submitted Game Version</label>
 				<div>@Model.Submission.SubmittedGameVersion</div>
 			</div>
+			<div condition="!string.IsNullOrWhiteSpace(Model.Submission.Hash)" class="sub-info-cell">
+				<label>@Model.Submission.HashType?.ToUpper() Hash</label>
+				<div>@Model.Submission.Hash</div>
+			</div>
 		</div>
 
 		<div condition="!string.IsNullOrWhiteSpace(Model.Submission.Annotations)" class="sub-info-cell mb-2">

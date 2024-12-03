@@ -66,7 +66,9 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 				GameGoalId = s.GameGoalId,
 				SyncedOn = s.SyncedOn,
 				SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null,
-				AdditionalSyncNotes = s.AdditionalSyncNotes
+				AdditionalSyncNotes = s.AdditionalSyncNotes,
+				HashType = s.HashType,
+				Hash = s.Hash
 			})
 			.SingleOrDefaultAsync();
 
@@ -146,5 +148,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 		public string? SyncedBy { get; init; }
 		public DateTime? SyncedOn { get; init; }
 		public string? AdditionalSyncNotes { get; init; }
+		public string? HashType { get; init; }
+		public string? Hash { get; init; }
 	}
 }
