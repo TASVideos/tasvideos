@@ -14,4 +14,14 @@ public class GbmvParserTests : BaseParserTests
 		Assert.AreEqual(true, result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
+
+	[TestMethod]
+	[DataRow("System-Gbal.gbmv", SystemCodes.Gba)]
+	public async Task Systems(string filename, string expectedSystem)
+	{
+		var result = await _gbmvParser.Parse(Embedded(filename), EmbeddedLength(filename));
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual(expectedSystem, result.SystemCode);
+		AssertNoWarningsOrErrors(result);
+	}
 }
