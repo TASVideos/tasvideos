@@ -277,6 +277,7 @@ internal class Bk2 : Parser, IParser
 		["gb3x"] = SystemCodes.GameBoy,
 		["gb4x"] = SystemCodes.GameBoy,
 		["gbl"] = SystemCodes.GameBoy,
+		["gbal"] = SystemCodes.Gba,
 		["a26"] = SystemCodes.Atari2600,
 		["a78"] = SystemCodes.Atari7800,
 		["uze"] = SystemCodes.UzeBox,
