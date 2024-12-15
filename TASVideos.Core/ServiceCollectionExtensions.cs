@@ -38,6 +38,11 @@ public static class ServiceCollectionExtensions
 			{
 				client.BaseAddress = new Uri("https://www.googleapis.com/youtube/v3/");
 			});
+		services
+			.AddHttpClient(HttpClients.Bluesky, client =>
+			{
+				client.BaseAddress = new Uri("https://bsky.social/xrpc/");
+			});
 
 		return services.AddServices(settings);
 	}
@@ -129,6 +134,11 @@ public static class ServiceCollectionExtensions
 		if (settings.Discord.IsEnabled())
 		{
 			services.AddScoped<IPostDistributor, DiscordDistributor>();
+		}
+
+		if (settings.Bluesky.IsEnabled())
+		{
+			services.AddScoped<IPostDistributor, BlueskyDistributor>();
 		}
 
 		return services.AddScoped<IPostDistributor, DistributorStorage>();

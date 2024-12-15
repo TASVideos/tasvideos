@@ -15,6 +15,7 @@ public class AppSettings
 
 	public IrcConnection Irc { get; set; } = new();
 	public DiscordConnection Discord { get; set; } = new();
+	public BlueskyConnection Bluesky { get; set; } = new();
 
 	public JwtSettings Jwt { get; set; } = new();
 	public GoogleAuthSettings YouTube { get; set; } = new();
@@ -74,6 +75,16 @@ public class AppSettings
 		public bool IsPrivateChannelEnabled() => IsEnabled()
 			&& !string.IsNullOrWhiteSpace(PrivateChannelId)
 			&& !string.IsNullOrWhiteSpace(PrivateUserChannelId);
+	}
+
+	public class BlueskyConnection : DistributorConnection
+	{
+		public string Identifier { get; set; } = "";
+		public string Password { get; set; } = "";
+
+		public bool IsEnabled() => Disable != true
+			&& !string.IsNullOrWhiteSpace(Identifier)
+			&& !string.IsNullOrWhiteSpace(Password);
 	}
 
 	public class DistributorConnection
