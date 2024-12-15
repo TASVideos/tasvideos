@@ -42,4 +42,9 @@ public static class HttpClientExtensions
 	{
 		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthHeader);
 	}
+
+	public static void ResetAuthorization(this HttpClient client)
+	{
+		client.DefaultRequestHeaders.Authorization = null;
+	}
 }
