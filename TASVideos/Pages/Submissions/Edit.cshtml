@@ -21,7 +21,7 @@
 			<fieldset>
 				<label asp-for="Submission.ReplaceMovieFile"></label>
 				<input asp-for="Submission.ReplaceMovieFile" />
-				<div>Your movie packed in a ZIP file (max size: 150k)</div>
+				<div>Your movie packed in a ZIP file (max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
 				<span asp-validation-for="Submission.ReplaceMovieFile"></span>
 			</fieldset>
 		</column>

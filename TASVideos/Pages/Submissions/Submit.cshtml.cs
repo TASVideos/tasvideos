@@ -191,10 +191,7 @@ public class SubmitModel(
 			ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
 		}
 
-		if (!MovieFile.LessThanMovieSizeLimit())
-		{
-			ModelState.AddModelError(FileFieldName, ".zip is too big, are you sure this is a valid movie file?");
-		}
+		MovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
 
 		foreach (var author in Authors)
 		{

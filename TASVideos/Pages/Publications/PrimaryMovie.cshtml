@@ -17,7 +17,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="PrimaryMovieFile"></label>
-				<div>Your movie packed in a ZIP file (max size: 150k)</div>
+				<div>Your movie packed in a ZIP file (max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
 				<input asp-for="PrimaryMovieFile" />
 				<span asp-validation-for="PrimaryMovieFile"></span>
 			</fieldset>

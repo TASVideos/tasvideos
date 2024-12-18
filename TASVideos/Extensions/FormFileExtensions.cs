@@ -1,4 +1,8 @@
 ﻿using System.IO.Compression;
+using System.Runtime.CompilerServices;
+using System.Security.Claims;
+
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace TASVideos.Extensions;
 
@@ -44,14 +48,16 @@ public static class FormFileExtensions
 			|| compressedContentTypes.Contains(formFile.ContentType);
 	}
 
-	public static bool LessThanMovieSizeLimit(this IFormFile? formFile)
+	public static void AddModelErrorIfOverSizeLimit(
+		this IFormFile movie,
+		ModelStateDictionary modelState,
+		ClaimsPrincipal user,
+		[CallerArgumentExpression(nameof(movie))] string movieFieldName = default!)
 	{
-		if (formFile is null)
+		if (!user.Has(PermissionTo.OverrideSubmissionConstraints) && movie.Length >= SiteGlobalConstants.MaximumMovieSize)
 		{
-			return true;
+			modelState.AddModelError(movieFieldName, ".zip is too big, are you sure this is a valid movie file?");
 		}
-
-		return formFile.Length < SiteGlobalConstants.MaximumMovieSize;
 	}
 
 	public static bool IsValidImage(this IFormFile? formFile)
