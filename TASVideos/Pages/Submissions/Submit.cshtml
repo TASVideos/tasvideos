@@ -71,7 +71,8 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="EncodeEmbeddedLink"></label>
-				<input asp-for="EncodeEmbeddedLink" placeholder="Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU" />
+				<input asp-for="EncodeEmbeddedLink" placeholder="https://www.youtube.com/embed/0mregEW6kVU" />
+				<div>Embedded link to a video of your movie. Must be YouTube or niconico.</div>
 				<span asp-validation-for="EncodeEmbeddedLink"></span>
 			</fieldset>
 		</column>
