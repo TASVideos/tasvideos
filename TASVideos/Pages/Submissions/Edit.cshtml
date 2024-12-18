@@ -52,8 +52,9 @@
 				<span asp-validation-for="Submission.GameName"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.Emulator"></label>
-				<input asp-for="Submission.Emulator" spellcheck="false" placeholder="Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author." />
+				<label asp-for="Submission.Emulator">Emulator and version</label>
+				<input asp-for="Submission.Emulator" spellcheck="false" placeholder="Example: BizHawk 2.8.0" />
+				<div>Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.</div>
 				<span asp-validation-for="Submission.Emulator"></span>
 			</fieldset>
 		</column>
