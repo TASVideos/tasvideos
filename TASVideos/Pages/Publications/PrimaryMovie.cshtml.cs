@@ -54,6 +54,8 @@ public class PrimaryMoviesModel(
 			ModelState.AddModelError(nameof(PrimaryMovieFile), $"A publication with the filename {PrimaryMovieFile!.FileName} already exists.");
 		}
 
+		PrimaryMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User);
+
 		if (!ModelState.IsValid)
 		{
 			PublicationTitle = publication.Title;

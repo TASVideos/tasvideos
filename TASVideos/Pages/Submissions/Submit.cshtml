@@ -22,7 +22,7 @@
 			<fieldset>
 				<label asp-for="MovieFile"></label>
 				<input asp-for="MovieFile" />
-				<div>Your movie packed in a ZIP file (max size: 500k)</div>
+				<div>Your movie packed in a ZIP file (max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
 				<span asp-validation-for="MovieFile"></span>
 			</fieldset>
 		</column>
@@ -44,7 +44,7 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="GameVersion"></label>
-				<input asp-for="GameVersion" placeholder="Example: USA" />
+				<input asp-for="GameVersion" placeholder="USA v1.0" />
 				<span asp-validation-for="GameVersion"></span>
 			</fieldset>
 			<fieldset>
@@ -71,7 +71,8 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="EncodeEmbeddedLink"></label>
-				<input asp-for="EncodeEmbeddedLink" placeholder="Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU" />
+				<input asp-for="EncodeEmbeddedLink" placeholder="https://www.youtube.com/embed/0mregEW6kVU" />
+				<div>Embedded link to a video of your movie. Must be YouTube or niconico.</div>
 				<span asp-validation-for="EncodeEmbeddedLink"></span>
 			</fieldset>
 		</column>

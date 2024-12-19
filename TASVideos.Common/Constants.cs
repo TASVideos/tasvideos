@@ -70,7 +70,8 @@ public static class SiteGlobalConstants
 
 	public const string DefaultPublicationText = "''[TODO]: describe this movie here''";
 
-	public const int MaximumMovieSize = 2048 * 1024;
+	public const int MaximumMovieSize = 2 * 1024 * 1024;
+	public const string MaximumMovieSizeHumanReadable = "2 MiB";
 	public const int UserFileStorageLimit = 1000 * 1000 * 50; // 50 MB
 
 	public const int GamesForumCategory = 5;

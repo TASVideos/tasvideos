@@ -21,7 +21,7 @@
 			<fieldset>
 				<label asp-for="Submission.ReplaceMovieFile"></label>
 				<input asp-for="Submission.ReplaceMovieFile" />
-				<div>Your movie packed in a ZIP file (max size: 150k)</div>
+				<div>Your movie packed in a ZIP file (max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
 				<span asp-validation-for="Submission.ReplaceMovieFile"></span>
 			</fieldset>
 		</column>
@@ -52,8 +52,9 @@
 				<span asp-validation-for="Submission.GameName"></span>
 			</fieldset>
 			<fieldset>
-				<label asp-for="Submission.Emulator"></label>
-				<input asp-for="Submission.Emulator" spellcheck="false" placeholder="Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author." />
+				<label asp-for="Submission.Emulator">Emulator and version</label>
+				<input asp-for="Submission.Emulator" spellcheck="false" placeholder="Example: BizHawk 2.8.0" />
+				<div>Needs to be a specific version that sync was verified on. Does not necessarily need to be the version used by the author.</div>
 				<span asp-validation-for="Submission.Emulator"></span>
 			</fieldset>
 		</column>
@@ -70,7 +71,8 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Submission.EncodeEmbedLink"></label>
-				<input asp-for="Submission.EncodeEmbedLink" placeholder="Embedded link to a video of your movie, Ex: www.youtube.com/embed/0mregEW6kVU" />
+				<input asp-for="Submission.EncodeEmbedLink" placeholder="https://www.youtube.com/embed/0mregEW6kVU" />
+				<div>Embedded link to a video of your movie. Must be YouTube or niconico.</div>
 				<span asp-validation-for="Submission.EncodeEmbedLink"></span>
 			</fieldset>
 		</column>

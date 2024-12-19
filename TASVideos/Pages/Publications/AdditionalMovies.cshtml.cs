@@ -60,12 +60,7 @@ public class AdditionalMoviesModel(
 			ModelState.AddModelError(nameof(AdditionalMovieFile), "Not a valid .zip file");
 		}
 
-		if (!AdditionalMovieFile.LessThanMovieSizeLimit())
-		{
-			ModelState.AddModelError(
-				nameof(AdditionalMovieFile),
-				".zip is too big, are you sure this is a valid movie file?");
-		}
+		AdditionalMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User);
 
 		if (!ModelState.IsValid)
 		{

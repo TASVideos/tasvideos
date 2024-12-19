@@ -114,10 +114,7 @@ public class EditModel(
 				ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
 			}
 
-			if (!User.Has(PermissionTo.OverrideSubmissionConstraints) && !Submission.ReplaceMovieFile.LessThanMovieSizeLimit())
-			{
-				ModelState.AddModelError(FileFieldName, ".zip is too big, are you sure this is a valid movie file?");
-			}
+			Submission.ReplaceMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
 		}
 		else if (!User.Has(PermissionTo.ReplaceSubmissionMovieFile))
 		{
