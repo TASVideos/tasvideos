@@ -15,12 +15,19 @@ const groupSelect = document.getElementById('group-select');
 groupSelect.addEventListener('change', () => {
 	if (groupSelect.value) {
 		userBox.value = groupSelect.value;
-		formSubmitBtn.removeAttribute('disabled');
+
+		formSubmitBtn.disabled = false;
+		formSubmitBtn.removeAttribute('tabIndex');
+		formSubmitBtn.removeAttribute('aria-disabled');
+		formSubmitBtn.classList.remove('disabled');
 
 		userFormGroup.classList.add('d-none');
 	} else {
 		userBox.value = '';
 		userFormGroup.classList.remove('d-none');
-		formSubmitBtn.setAttribute('disabled', 'disabled');
+		formSubmitBtn.disabled = true;
+		formSubmitBtn.setAttribute('aria-disabled', 'true');
+		formSubmitBtn.classList.add('disabled');
+		formSubmitBtn.setAttribute('tabIndex', '0');
 	}
 });
