@@ -64,6 +64,12 @@ window.addEventListener("DOMContentLoaded", function () {
             rate(btn.dataset.pubId, true);
         };
     });
+
+    const searchBtnElem = document.querySelector('form[action="/Search/Index"] a');
+    searchBtnElem.addEventListener('click', e => {
+        e.preventDefault();
+        e.target.closest("form").requestSubmit();
+    });
 });
 
 function rate(pubId, unrated) {

@@ -124,7 +124,7 @@
 	</standard-table>
 </div>
 
-<fullrow class="my-2 text-center">
+<fullrow class="my-2 text-center" condition="Model.PostResults.Count > 0">
 	<div class="btn-group flex-wrap" role="group">
 		<a disable="prevDisabled" asp-page="/Search/Index" class="@(prevDisabled ? pagerDisabledClass : pagerClass)" asp-route-SearchTerms="@Model.SearchTerms" asp-route-PageNumber="@(Model.PageNumber - 1)"><i class="fa fa-chevron-left"></i></a>
 		<a condition="!prevDisabled" disable="true" class="btn btn-outline-silver border-dark flex-grow-0">...</a>

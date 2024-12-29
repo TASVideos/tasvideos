@@ -29,16 +29,7 @@
 				<submit-button btn-class-override="btn-link" class="navbar-btn nav-link text-nowrap fs-6 border-0"><i class="fa fa-sign-out"></i> Log out</submit-button>
 			</form>
 		</nav-item>
-		<nav-item activate="Search">
-			<form method="GET" action="/Search/Index">
-				<div class="input-group input-group-sm mt-1">
-					<button type="submit" class="btn btn-sm border border-silver nav-link px-2">
-						<i class="fa fa-search"></i>
-					</button>
-					<input type="text" name="SearchTerms" class="form-control" />
-				</div>
-			</form>
-		</nav-item>
+		<partial name="_Search" />
 	</navbar>
 }
 else
@@ -50,15 +41,6 @@ else
 		<nav-item activate="Login">
 			<a class="nav-link text-nowrap" asp-page="/Account/Login" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"><i class="fa fa-sign-in"></i> Log in</a>
 		</nav-item>
-		<nav-item activate="Search">
-			<form method="GET" action="/Search/Index">
-				<div class="input-group mt-1">
-					<button type="submit" class="btn btn-sm border border-silver nav-link">
-						<i class="fa fa-search"></i>
-					</button>
-					<input type="text" name="SearchTerms" class="form-control" />
-				</div>
-			</form>
-		</nav-item>
+		<partial name="_Search" />
 	</navbar>
 }
