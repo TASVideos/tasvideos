@@ -19,6 +19,7 @@ public class ReasonModel(ApplicationDbContext db) : BasePageModel
 
 		RejectionReason = reason.DisplayName;
 		Submissions = await db.Submissions
+			.ThatAreRejected()
 			.Where(s => s.RejectionReasonId == Id)
 			.Select(s => new SubmissionEntry(s.Id, s.Title))
 			.ToListAsync();

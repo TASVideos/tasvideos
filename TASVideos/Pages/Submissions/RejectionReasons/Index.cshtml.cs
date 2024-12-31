@@ -55,7 +55,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	private async Task Initialize()
 	{
 		Reasons = await db.SubmissionRejectionReasons
-			.Select(r => new Rejection(r.Id, r.DisplayName, r.Submissions.Count))
+			.Select(r => new Rejection(r.Id, r.DisplayName, r.Submissions.Count(s => s.Status == SubmissionStatus.Rejected)))
 			.ToListAsync();
 	}
 
