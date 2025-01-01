@@ -60,7 +60,8 @@ public class EditModel(
 				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
 				IntendedPublicationClass = s.IntendedClassId,
 				RejectionReason = s.RejectionReasonId,
-				ExternalAuthors = s.AdditionalAuthors
+				ExternalAuthors = s.AdditionalAuthors,
+				Title = s.Title
 			})
 			.SingleOrDefaultAsync();
 
@@ -498,5 +499,6 @@ public class EditModel(
 		public string? Judge { get; init; }
 		public string? Publisher { get; init; }
 		public string? ExternalAuthors { get; init; }
+		public string Title { get; init; } = "";
 	}
 }

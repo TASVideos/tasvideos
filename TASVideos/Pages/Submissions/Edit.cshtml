@@ -1,7 +1,7 @@
 ﻿@page "{id}"
 @model EditModel
 @{
-	ViewData.SetTitle($"Edit Submission #{Model.Id}");
+	ViewData.SetTitle($"Edit Submission {Model.Submission.Title}");
 	var canEditPublicationClass = User.Has(PermissionTo.JudgeSubmissions)
 		&& Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted);
 }
