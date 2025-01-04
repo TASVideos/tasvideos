@@ -35,13 +35,20 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseStaticFilesWithExtensionMapping(this IApplicationBuilder app, IWebHostEnvironment env)
 	{
-		var provider = new FileExtensionContentTypeProvider();
-		return app.UseStaticFiles(new StaticFileOptions
+		var contentTypeProvider = new FileExtensionContentTypeProvider();
+		var staticFileOptions = new StaticFileOptions
 		{
-			ContentTypeProvider = provider,
+			ContentTypeProvider = contentTypeProvider,
 			ServeUnknownFileTypes = true,
 			DefaultContentType = "text/plain"
-		});
+		};
+
+		if (env.IsDevelopment())
+		{
+			staticFileOptions.FileProvider = new DevFallbackFileProvider(env.WebRootFileProvider);
+		}
+
+		return app.UseStaticFiles(staticFileOptions);
 	}
 
 	public static IApplicationBuilder UseMvcWithOptions(this IApplicationBuilder app, IHostEnvironment env, AppSettings settings)
