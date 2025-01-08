@@ -14,7 +14,6 @@ public class DisableTagHelper : TagHelper
 			return;
 		}
 
-		output.Attributes.Add("disabled", "disabled");
 		output.Attributes.Add("aria-disabled", "true");
 		var tabIndex = output.Attributes.FirstOrDefault(a => a.Name == "tabindex");
 		if (tabIndex is not null)
