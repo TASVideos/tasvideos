@@ -27,7 +27,7 @@
 				<input asp-for="PollOptions[i]" type="hidden" />
 			}
 		</fieldset>
-		<fieldset disable="true">
+		<fieldset disable="Model.HasVotes">
 			<div class="form-check">
 				<label asp-for="MultiSelect" class="form-check-label">Allow Multiple Selections</label>
 				<input disable="@Model.HasVotes" asp-for="MultiSelect" type="checkbox" class="form-check-input" />
