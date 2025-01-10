@@ -8,6 +8,7 @@ public static class ModuleNames
 	public const string AlternateStreaming = "alternatestreaming";
 	public const string Awards = "awards";
 	public const string BannedAvatarSites = "bannedavatarsites";
+	public const string BannedUsers = "bannedusers";
 	public const string BrokenLinks = "brokenlinks";
 	public const string CrossGameObsoletions = "crossgameobsoletions";
 	public const string DisplayGameName = "displaygamename";

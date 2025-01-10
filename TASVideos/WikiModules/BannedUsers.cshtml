@@ -1,0 +1,25 @@
+﻿@model BannedUsers
+
+<partial name="_Pager" model="Model.Users" />
+<standard-table condition="User.Has(PermissionTo.AssignRoles)">
+	<sortable-table-head sorting="@Model.GetPaging()" model-type="typeof(BannedUsers.Entry)" page-override="@Model.CurrentPage" />
+	@foreach (var banned in Model.Users)
+	{
+		<tr>
+			<td><profile-link username="@banned.Name"></profile-link></td>
+			<td><timezone-convert asp-for="@banned.BannedUntil" /></td>
+			<td>
+				@if (banned.LastLoggedIn is not null)
+				{
+					<timezone-convert asp-for="@banned.LastLoggedIn.Value" />
+				}
+				else
+				{
+					@:&mdash;
+				}
+			</td>
+			<td condition="User.Has(PermissionTo.EditUsers)">@(banned.ModeratorComments ?? string.Empty)</td>
+		</tr>
+	}
+</standard-table>
+<partial name="_Pager" model="Model.Users" />

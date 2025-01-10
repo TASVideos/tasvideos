@@ -207,6 +207,9 @@ public static class UserExtensions
 	public static IQueryable<User> ThatHaveCustomLocale(this IQueryable<User> query)
 		=> query.Where(u => u.DateFormat != UserDateFormat.Auto || u.TimeFormat != UserTimeFormat.Auto || u.DecimalFormat != UserDecimalFormat.Auto);
 
+	public static IQueryable<User> ThatAreBanned(this IQueryable<User> query)
+		=> query.Where(u => u.BannedUntil.HasValue && u.BannedUntil > DateTime.UtcNow); // > and < in these methods, but what about ==?
+
 	public static IQueryable<User> ThatAreNotBanned(this IQueryable<User> query)
 		=> query.Where(u => !u.BannedUntil.HasValue || u.BannedUntil < DateTime.UtcNow);
 
