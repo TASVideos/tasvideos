@@ -4,6 +4,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Update="Migrations/**/*.cs" AutoGen="true" />
 		<None Remove="SampleData\SampleData-Postgres.sql" />
 	</ItemGroup>
 
