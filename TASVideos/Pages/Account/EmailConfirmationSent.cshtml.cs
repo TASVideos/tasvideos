@@ -20,7 +20,7 @@ public class EmailConfirmationSentModel : BasePageModel
 	}
 
 	public async Task<IActionResult> OnPost(
-		[FromServices]SignInManager signInManager, [FromServices]IEmailService emailService)
+		[FromServices] SignInManager signInManager, [FromServices] IEmailService emailService)
 	{
 		var user = await signInManager.GetUserByEmailAndUserName(Email, UserName);
 		if (user is not null && !user.EmailConfirmed)

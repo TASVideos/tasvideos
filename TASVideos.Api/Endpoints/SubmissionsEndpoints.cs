@@ -13,7 +13,7 @@ internal static class SubmissionsEndpoints
 					.SingleOrDefaultAsync(p => p.Id == id)))
 			.ProducesFromId<SubmissionsResponse>("submission");
 
-		group.MapGet("", async ([AsParameters]SubmissionsRequest request, HttpContext context, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters] SubmissionsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
 			var validationError = ApiResults.Validate(request, context);
 			if (validationError is not null)

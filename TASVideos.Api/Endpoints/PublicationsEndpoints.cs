@@ -13,7 +13,7 @@ internal static class PublicationsEndpoints
 					.SingleOrDefaultAsync(p => p.Id == id)))
 			.ProducesFromId<PublicationsResponse>("publication");
 
-		group.MapGet("", async ([AsParameters]PublicationsRequest request, HttpContext context, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters] PublicationsRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
 			var validationError = ApiResults.Validate(request, context);
 			if (validationError is not null)
