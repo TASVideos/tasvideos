@@ -20,9 +20,9 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 			Question = SiteGlobalConstants.PollQuestion,
 			PollOptions =
 			[
-				new () { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
-				new () { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
-				new () { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
+				new() { Text = SiteGlobalConstants.PollOptionNo, Ordinal = 0 },
+				new() { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
+				new() { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
 			]
 		};
 
