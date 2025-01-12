@@ -94,7 +94,9 @@ foreach (var wp in toProcess)
 	var revision = wantUpdate ? wp.Revision : existingRevision != -1 ? existingRevision : wp.Revision;
 
 	if (existingRevision == revision && !force)
+	{
 		continue;
+	}
 
 	var markup = context.WikiPages
 		.Where(p => p.Revision == revision && p.PageName == wp.PageName)
