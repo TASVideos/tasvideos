@@ -51,8 +51,21 @@ public partial class HtmlWriter(TextWriter w)
 	private static readonly Regex AllowedAttributeNames = AllowedAttributeNamesRegex();
 	private static readonly HashSet<string> VoidTags = new(
 		[
-			"area", "base", "br", "col", "embed", "hr", "img", "input",
-			"keygen", "link", "meta", "param", "source", "track", "wbr"
+			"area",
+			"base",
+			"br",
+			"col",
+			"embed",
+			"hr",
+			"img",
+			"input",
+			"keygen",
+			"link",
+			"meta",
+			"param",
+			"source",
+			"track",
+			"wbr"
 		],
 		StringComparer.OrdinalIgnoreCase
 	);
