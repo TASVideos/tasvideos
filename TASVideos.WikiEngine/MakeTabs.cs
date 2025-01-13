@@ -31,7 +31,7 @@ public static partial class Builtins
 				child.CharStart,
 				"li",
 				[
-						Attr("class",  liClass)
+						Attr("class", liClass)
 				],
 				new[]
 				{

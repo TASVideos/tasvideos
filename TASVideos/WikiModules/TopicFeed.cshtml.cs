@@ -37,5 +37,5 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public record TopicPost(int Id, bool EnableBbCode, bool EnableHtml, string Text, string? Subject, string PosterName,  DateTime CreateTimestamp);
+	public record TopicPost(int Id, bool EnableBbCode, bool EnableHtml, string Text, string? Subject, string PosterName, DateTime CreateTimestamp);
 }

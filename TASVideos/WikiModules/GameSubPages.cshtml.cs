@@ -28,5 +28,5 @@ public class GameSubPages(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public record Entry(string SystemCode, string SystemDescription,  string PageLink);
+	public record Entry(string SystemCode, string SystemDescription, string PageLink);
 }

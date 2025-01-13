@@ -4,7 +4,7 @@
 public class CatalogModel(ApplicationDbContext db) : BasePageModel
 {
 	[FromRoute]
-	public int Id { get; set;  }
+	public int Id { get; set; }
 
 	public List<SelectListItem> AvailableSystems { get; set; } = [];
 

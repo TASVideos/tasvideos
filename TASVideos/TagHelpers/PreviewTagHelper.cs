@@ -5,7 +5,7 @@ namespace TASVideos.TagHelpers;
 
 public class PreviewTagHelper : TagHelper
 {
-	public virtual string PreviewPath { get; set;  } = "";
+	public virtual string PreviewPath { get; set; } = "";
 
 	[HtmlAttributeNotBound]
 	[ViewContext]
