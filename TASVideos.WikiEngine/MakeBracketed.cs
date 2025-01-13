@@ -60,13 +60,13 @@ public static partial class Builtins
 	{
 		return
 		[
-				new Text(charStart, "[") { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("id", n)], []) { CharEnd = charStart },
-				new Element(charStart, "a", [Attr("href", "#r" + n)], new[]
-				{
-					new Text(charStart, n) { CharEnd = charEnd }
-				}) { CharEnd = charEnd },
-				new Text(charEnd, "]") { CharEnd = charEnd }
+			new Text(charStart, "[") { CharEnd = charStart },
+			new Element(charStart, "a", [Attr("id", n)], []) { CharEnd = charStart },
+			new Element(charStart, "a", [Attr("href", "#r" + n)], new[]
+			{
+				new Text(charStart, n) { CharEnd = charEnd }
+			}) { CharEnd = charEnd },
+			new Text(charEnd, "]") { CharEnd = charEnd }
 		];
 	}
 

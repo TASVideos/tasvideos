@@ -382,14 +382,14 @@ public static class EntityExtensions
 					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
 					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionNo)
 					? new VoteCounts
-				{
-					VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
-					VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
-					VotesNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
-					UserVotedYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
-					UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
-					UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
-				}
+					{
+						VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
+						VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
+						VotesNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
+						UserVotedYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
+						UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
+						UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
+					}
 				: null,
 			});
 	}
