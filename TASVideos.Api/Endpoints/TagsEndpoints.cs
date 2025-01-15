@@ -12,7 +12,7 @@ internal static class TagsEndpoints
 			.ProducesFromId<TagsResponse>("tag")
 			.WithName("GetByTagId");
 
-		group.MapGet("", async ([AsParameters]ApiRequest request, HttpContext context, ITagService tagService) =>
+		group.MapGet("", async ([AsParameters] ApiRequest request, HttpContext context, ITagService tagService) =>
 		{
 			var validationError = ApiResults.Validate(request, context);
 			if (validationError is not null)

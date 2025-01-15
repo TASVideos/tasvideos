@@ -273,7 +273,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 				entity
 					.HasGeneratedTsVectorColumn(
 						p => p.SearchVector,
-						"english",  // Text search config
+						"english", // Text search config
 						p => new { p.PageName, p.Markup })
 					.HasIndex(p => p.SearchVector)
 					.HasMethod("GIN");
@@ -437,7 +437,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 				entity
 					.HasGeneratedTsVectorColumn(
 						p => p.SearchVector,
-						"english",  // Text search config
+						"english", // Text search config
 						p => p.Text)
 					.HasIndex(p => p.SearchVector)
 					.HasMethod("GIN");

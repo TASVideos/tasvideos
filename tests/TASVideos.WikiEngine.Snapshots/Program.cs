@@ -5,7 +5,9 @@ using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
-//namespace TASVideos.WikiEngine.Snapshots;
+#if false
+namespace TASVideos.WikiEngine.Snapshots;
+#endif
 
 /*
 	1. Clone https://github.com/nattthebear/TASVideosWikiSnaps.git to somewhere
@@ -94,7 +96,9 @@ foreach (var wp in toProcess)
 	var revision = wantUpdate ? wp.Revision : existingRevision != -1 ? existingRevision : wp.Revision;
 
 	if (existingRevision == revision && !force)
+	{
 		continue;
+	}
 
 	var markup = context.WikiPages
 		.Where(p => p.Revision == revision && p.PageName == wp.PageName)

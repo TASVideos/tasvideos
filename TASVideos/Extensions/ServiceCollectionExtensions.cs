@@ -24,7 +24,7 @@ public static class ServiceCollectionExtensions
 		new("/RssFeeds/Publications", "/publications.rss"),
 		new("/RssFeeds/Submissions", "/submissions.rss"),
 		new("/RssFeeds/Wiki", "/wiki.rss"),
-		new ("/RssFeeds/News", "/news.rss")
+		new("/RssFeeds/News", "/news.rss")
 	];
 
 	public static readonly List<KeyValuePair<string, string>> LegacyRedirects =

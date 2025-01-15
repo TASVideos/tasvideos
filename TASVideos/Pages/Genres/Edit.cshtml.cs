@@ -49,7 +49,7 @@ public class EditModel(IGenreService genreService) : BasePageModel
 	public async Task<IActionResult> OnPostDelete()
 	{
 		var result = await genreService.Delete(Id);
-		switch(result)
+		switch (result)
 		{
 			default:
 			case GenreChangeResult.Success:

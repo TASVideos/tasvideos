@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 *    text=auto
+# per .editorconfig, C# source files should use \r\n (and VB but who cares)
+*.cs	text eol=crlf

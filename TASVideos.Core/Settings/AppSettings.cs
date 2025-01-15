@@ -11,7 +11,7 @@ public class AppSettings
 
 	public Connections ConnectionStrings { get; set; } = new();
 
-	public SubmissionRateLimit SubmissionRate { get; set; } = new ();
+	public SubmissionRateLimit SubmissionRate { get; set; } = new();
 
 	public IrcConnection Irc { get; set; } = new();
 	public DiscordConnection Discord { get; set; } = new();

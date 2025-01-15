@@ -15,7 +15,7 @@ internal static class GamesEndpoints
 					.SingleOrDefaultAsync(g => g.Id == id)))
 			.ProducesFromId<GamesResponse>("game");
 
-		group.MapGet("", async ([AsParameters]GamesRequest request, HttpContext context, ApplicationDbContext db) =>
+		group.MapGet("", async ([AsParameters] GamesRequest request, HttpContext context, ApplicationDbContext db) =>
 		{
 			var validationError = ApiResults.Validate(request, context);
 			if (validationError is not null)

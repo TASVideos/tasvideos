@@ -665,7 +665,7 @@ public class QueueServiceTests : TestDbBase
 		const string youtubeUrl = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 		const string wikiMarkup = "Test";
 		var pubToObsolete = _db.AddPublication().Entity;
-		pubToObsolete.PublicationUrls.Add(new () { Type = PublicationUrlType.Streaming, Url = youtubeUrl });
+		pubToObsolete.PublicationUrls.Add(new() { Type = PublicationUrlType.Streaming, Url = youtubeUrl });
 		var obsoletingPub = _db.AddPublication().Entity;
 		await _db.SaveChangesAsync();
 		_db.WikiPages.Add(new WikiPage

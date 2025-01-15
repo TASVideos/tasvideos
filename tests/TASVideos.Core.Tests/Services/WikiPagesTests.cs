@@ -291,11 +291,15 @@ public class WikiPagesTests : TestDbBase
 		const string pageName = "TestPage";
 		var firstToStartEditing = new WikiCreateRequest
 		{
-			PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-2), AuthorId = authorId
+			PageName = pageName,
+			CreateTimestamp = DateTime.UtcNow.AddMinutes(-2),
+			AuthorId = authorId
 		};
 		var secondToStartEditing = new WikiCreateRequest
 		{
-			PageName = pageName, CreateTimestamp = DateTime.UtcNow.AddMinutes(-1), AuthorId = authorId
+			PageName = pageName,
+			CreateTimestamp = DateTime.UtcNow.AddMinutes(-1),
+			AuthorId = authorId
 		};
 
 		await _wikiPages.Add(secondToStartEditing);
@@ -315,11 +319,15 @@ public class WikiPagesTests : TestDbBase
 		const string existingPageName = "Existing Page";
 		_db.WikiReferrals.Add(new WikiPageReferral
 		{
-			Excerpt = $"[{oldLink}]", Referral = oldLink, Referrer = existingPageName
+			Excerpt = $"[{oldLink}]",
+			Referral = oldLink,
+			Referrer = existingPageName
 		});
 		var existingPage = new WikiPage
 		{
-			PageName = existingPageName, Markup = $"[{oldLink}]", AuthorId = authorId
+			PageName = existingPageName,
+			Markup = $"[{oldLink}]",
+			AuthorId = authorId
 		};
 		_db.WikiPages.Add(existingPage);
 		await _db.SaveChangesAsync();
@@ -789,7 +797,10 @@ public class WikiPagesTests : TestDbBase
 		var author = _db.AddUser(1, "_").Entity;
 		var existingPage = new WikiPage
 		{
-			PageName = pageName, Markup = $"[{link}]", AuthorId = author.Id, Author = author
+			PageName = pageName,
+			Markup = $"[{link}]",
+			AuthorId = author.Id,
+			Author = author
 		};
 		_db.WikiPages.Add(existingPage);
 		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = pageName, Referral = link });
@@ -942,11 +953,21 @@ public class WikiPagesTests : TestDbBase
 		const string newLink = "NewPage";
 		var currentRevision = new WikiPage
 		{
-			PageName = existingPageName, Revision = 2, ChildId = null, Markup = $"[{newLink}]", AuthorId = authorId, Author = author
+			PageName = existingPageName,
+			Revision = 2,
+			ChildId = null,
+			Markup = $"[{newLink}]",
+			AuthorId = authorId,
+			Author = author
 		};
 		var previousRevision = new WikiPage
 		{
-			PageName = existingPageName, Revision = 1, Child = currentRevision, Markup = $"[{oldLink}]", AuthorId = authorId, Author = author
+			PageName = existingPageName,
+			Revision = 1,
+			Child = currentRevision,
+			Markup = $"[{oldLink}]",
+			AuthorId = authorId,
+			Author = author
 		};
 		_db.WikiPages.Add(previousRevision);
 		_db.WikiPages.Add(currentRevision);
@@ -1172,11 +1193,20 @@ public class WikiPagesTests : TestDbBase
 		const string newLink = "NewLink";
 		var revision1 = new WikiPage
 		{
-			PageName = pageName, Revision = 1, Markup = $"[{oldLink}]", Author = author, AuthorId = author.Id
+			PageName = pageName,
+			Revision = 1,
+			Markup = $"[{oldLink}]",
+			Author = author,
+			AuthorId = author.Id
 		};
 		var revision2 = new WikiPage
 		{
-			PageName = pageName, Revision = 2, Markup = $"[{newLink}]", IsDeleted = true, Author = author, AuthorId = author.Id
+			PageName = pageName,
+			Revision = 2,
+			Markup = $"[{newLink}]",
+			IsDeleted = true,
+			Author = author,
+			AuthorId = author.Id
 		};
 		_db.WikiPages.Add(revision1);
 		_db.WikiPages.Add(revision2);

@@ -208,9 +208,9 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		await _db.SaveChangesAsync();
 
 		await _userManager.AssignAutoAssignableRolesByPost(userId);
-		Assert.AreEqual(1, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role1.Entity.Id ));
-		Assert.AreEqual(0, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role2.Entity.Id ));
-		Assert.AreEqual(1, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role3.Entity.Id ));
+		Assert.AreEqual(1, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role1.Entity.Id));
+		Assert.AreEqual(0, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role2.Entity.Id));
+		Assert.AreEqual(1, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role3.Entity.Id));
 		_ = _tasVideoAgent.DidNotReceive().SendAutoAssignedRole(userId, role2.Entity.Name);
 		_ = _tasVideoAgent.Received().SendAutoAssignedRole(userId, role3.Entity.Name);
 	}

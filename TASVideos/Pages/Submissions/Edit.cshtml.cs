@@ -90,7 +90,7 @@ public class EditModel(
 			&& Submission.Submitter != userName
 			&& !Submission.Authors.Contains(userName))
 		{
-				return AccessDenied();
+			return AccessDenied();
 		}
 
 		await PopulateDropdowns();
@@ -371,15 +371,15 @@ public class EditModel(
 		switch (Submission.Status)
 		{
 			case SubmissionStatus.Accepted:
-			{
-				var publicationClass = (await db.PublicationClasses.FindAsync(Submission.IntendedPublicationClass))!.Name;
-				if (publicationClass != "Standard")
 				{
-					statusStr += $" to {publicationClass}";
-				}
+					var publicationClass = (await db.PublicationClasses.FindAsync(Submission.IntendedPublicationClass))!.Name;
+					if (publicationClass != "Standard")
+					{
+						statusStr += $" to {publicationClass}";
+					}
 
-				break;
-			}
+					break;
+				}
 
 			case SubmissionStatus.NeedsMoreInfo
 				or SubmissionStatus.New

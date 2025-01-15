@@ -9,17 +9,17 @@ internal class TASVideosGrue(ApplicationDbContext db, IForumService forumService
 {
 	private static readonly string[] RandomMessages =
 	[
-			"... minty!",
-			"... blech, salty!",
-			"... blech, bitter!",
-			"... juicy!",
-			"... crunchy!",
-			"... sweet!",
-			"... want more!",
-			"... *burp*!",
-			"... om, nom, nom... nom nom",
-			"... 'twas dry"
-		];
+		"... minty!",
+		"... blech, salty!",
+		"... blech, bitter!",
+		"... juicy!",
+		"... crunchy!",
+		"... sweet!",
+		"... want more!",
+		"... *burp*!",
+		"... om, nom, nom... nom nom",
+		"... 'twas dry"
+	];
 
 	public async Task RejectAndMove(int submissionId)
 	{
