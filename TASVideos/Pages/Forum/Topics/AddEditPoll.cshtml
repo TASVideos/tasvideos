@@ -1,8 +1,7 @@
 ﻿@page "{topicId}"
 @model AddEditPollModel
 @{
-	var mode = Model.PollId.HasValue ? "Edit" : "Add";
-	ViewData.SetTitle($"{mode}ing Poll for Topic {Model.TopicTitle}");
+	ViewData.SetTitle((Model.PollId.HasValue ? "Edit" : "Add") + "ing Poll for Topic " + Model.TopicTitle);
 	ViewData.UseStringList(); // Hack for now, partial views use a different viewDataDictionary, so the component will not work
 }
 
@@ -11,7 +10,7 @@
 <form client-side-validation="true" method="post">
 	<partial name="_PollCreate" model="Model.Poll" />
 	<form-button-bar>
-		<submit-button><i class="fa fa-save"></i> @mode</submit-button>
+		<submit-button><i class="fa fa-save"></i> @(Model.PollId.HasValue ? "Save" : "Add")</submit-button>
 		<cancel-link asp-page="Index" asp-route-id="@Model.TopicId"></cancel-link>
 	</form-button-bar>
 </form>
