@@ -78,7 +78,8 @@ internal class Bk2 : Parser, IParser
 				romHash = header.GetValueFor("MD5");
 			}
 
-			HashType? hashType = romHash.Length switch {
+			HashType? hashType = romHash.Length switch
+			{
 				2 * SHA1.HashSizeInBytes => HashType.Sha1,
 				2 * MD5.HashSizeInBytes => HashType.Md5,
 				8/* 2 * Crc32.HashLengthInBytes w/ System.IO.Hashing */ => HashType.Crc32,

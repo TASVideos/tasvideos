@@ -10,7 +10,7 @@ public class ForgotPasswordModel : BasePageModel
 	public string Email { get; set; } = "";
 
 	public async Task<IActionResult> OnPost(
-		[FromServices]UserManager userManager, [FromServices]IEmailService emailService)
+		[FromServices] UserManager userManager, [FromServices] IEmailService emailService)
 	{
 		if (!ModelState.IsValid)
 		{

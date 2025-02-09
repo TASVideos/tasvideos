@@ -58,14 +58,14 @@ public class IndexModel(ApplicationDbContext db, IForumService forumService) : B
 					&& ft.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
 					&& ft.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionNo)
 					? new VoteCounts
-				{
-					VotesYes = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
-					VotesMeh = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
-					VotesNo = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
-					UserVotedYes = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
-					UserVotedMeh = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
-					UserVotedNo = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
-				}
+					{
+						VotesYes = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
+						VotesMeh = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
+						VotesNo = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
+						UserVotedYes = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
+						UserVotedMeh = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
+						UserVotedNo = ft.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
+					}
 				: null,
 			})
 			.OrderByDescending(ft => ft.Type)

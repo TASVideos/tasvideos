@@ -32,12 +32,12 @@ public class RegisterModel : BasePageModel
 	public bool Coppa { get; set; }
 
 	public async Task<IActionResult> OnPost(
-		[FromServices]SignInManager signInManager,
-		[FromServices]IEmailService emailService,
-		[FromServices]ExternalMediaPublisher publisher,
-		[FromServices]IReCaptchaService reCaptchaService,
-		[FromServices]IHostEnvironment env,
-		[FromServices]IUserMaintenanceLogger userMaintenanceLogger)
+		[FromServices] SignInManager signInManager,
+		[FromServices] IEmailService emailService,
+		[FromServices] ExternalMediaPublisher publisher,
+		[FromServices] IReCaptchaService reCaptchaService,
+		[FromServices] IHostEnvironment env,
+		[FromServices] IUserMaintenanceLogger userMaintenanceLogger)
 	{
 		if (Password != ConfirmPassword)
 		{

@@ -52,11 +52,11 @@ internal class Omr : Parser, IParser
 
 		string system;
 
-		if(Convert.ToInt16(version) >= 4)
+		if (Convert.ToInt16(version) >= 4)
 		{
 			var confVersion = replay.XPathEvaluateList("//snapshots/item/config").FirstAttributeValue("version");
 
-			if(Convert.ToInt16(confVersion) >= 6)
+			if (Convert.ToInt16(confVersion) >= 6)
 			{
 				system = replay.XPathEvaluateList("//snapshots/item/config/config/msxconfig/info")
 					.FirstDescendant("type").Value.ToLower();
