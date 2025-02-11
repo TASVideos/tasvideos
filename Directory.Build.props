@@ -5,10 +5,15 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<Nullable>enable</Nullable>
+		<AnalysisLevel>6</AnalysisLevel>
 		<CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
 		<CodeAnalysisRuleSet>$(SolutionDir)Common.ruleset</CodeAnalysisRuleSet>
+		<EnableNETAnalyzers>true</EnableNETAnalyzers>
+		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+		<Features>strict</Features>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
 	</PropertyGroup>
 	<ItemGroup>
 		<AdditionalFiles Include="$(SolutionDir).stylecop.json" />

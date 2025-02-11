@@ -27,6 +27,9 @@ Most of our code style rules are configured in EditorConfig, so you can use `dot
 - Do not mark lambdas as `static`.
 - Do not use `required` with `init` props.
 
+If possible, please include unit tests when adding new features.
+We don't have Selenium or anything set up so you can't really test the frontend automatically, but any increase in test coverage is welcomed.
+
 ## Site Design
 
 The site has a [design document](DESIGN-SPEC.md) which details the structure, philosophy, and design goals of the frontend segments of the codebase which is great study for aspiring frontend contributors.
