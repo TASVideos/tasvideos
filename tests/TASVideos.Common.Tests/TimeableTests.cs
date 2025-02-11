@@ -20,4 +20,32 @@ public class TimeableTests
 			.Time().ToStringWithOptionalDaysAndHours();
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	[DataRow(0, "Now")]
+	[DataRow(4, "Now")]
+	[DataRow(5, "5 seconds ago")]
+	[DataRow(30, "30 seconds ago")]
+	[DataRow(59, "59 seconds ago")]
+	[DataRow(60, "1 minute ago")]
+	[DataRow(61, "1 minute ago")]
+	[DataRow(119, "1 minute ago")]
+	[DataRow(120, "2 minutes ago")]
+	[DataRow(3599, "59 minutes ago")]
+	[DataRow(3600, "1 hour ago")]
+	[DataRow(7199, "1 hour ago")]
+	[DataRow(7200, "2 hours ago")]
+	[DataRow(86399, "23 hours ago")]
+	[DataRow(86400, "1 day ago")]
+	[DataRow(172799, "1 day ago")]
+	[DataRow(172800, "2 days ago")]
+	[DataRow(259200, "3 days ago")]
+	public void ToRelativeString(int seconds, string expected)
+	{
+		var timeSpan = TimeSpan.FromSeconds(seconds);
+
+		var result = timeSpan.ToRelativeString();
+
+		Assert.AreEqual(expected, result);
+	}
 }
