@@ -18,9 +18,9 @@ public class ForgotPasswordModel : BasePageModel
 		}
 
 		var user = await userManager.FindByEmailAsync(Email);
-		if (user is null || !await userManager.IsEmailConfirmedAsync(user))
+		if (user is null)
 		{
-			// Don't reveal that the user does not exist or is not confirmed
+			// Don't reveal that the user does not exist
 			return RedirectToPage("ForgotPasswordConfirmation");
 		}
 
