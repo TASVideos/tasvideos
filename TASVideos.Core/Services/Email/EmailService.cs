@@ -7,7 +7,7 @@ namespace TASVideos.Core.Services.Email;
 public interface IEmailService
 {
 	Task SendEmail(string recipient, string subject, string message);
-	Task ResetPassword(string recipient, string link);
+	Task ResetPassword(string recipient, string link, string userName);
 	Task EmailConfirmation(string recipient, string link);
 	Task PasswordResetConfirmation(string recipient, string resetLink);
 	Task TopicReplyNotification(IEnumerable<string> recipients, TopicReplyNotificationTemplate template);
@@ -33,13 +33,26 @@ internal class EmailService(
 		});
 	}
 
-	public async Task ResetPassword(string recipient, string link)
+	public async Task ResetPassword(string recipient, string link, string userName)
 	{
 		await emailSender.SendEmail(new SingleEmail
 		{
 			Recipient = recipient,
 			Subject = "TASVideos - Reset Password",
-			Message = $"Please reset your password for your TASVideos user account by clicking here: <a href='{link}'>link</a>",
+			Message = $"""
+						<p>
+							Hello {HtmlEncoder.Default.Encode(userName)},<br>
+							We received a request to reset your password for your TASVideos user account.<br>
+							If you made this request, please click the link below to reset your password:
+						</p>
+						<p>
+							<a href='{HtmlEncoder.Default.Encode(link)}'>Reset your password.</a>
+						</p>
+						<p>
+							If you did not request a password reset, please ignore this email.<br>
+							This link will expire in 24 hours.
+						</p>
+						""",
 			ContainsHtml = true
 		});
 	}

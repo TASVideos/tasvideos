@@ -26,7 +26,7 @@ public class ForgotPasswordModel : BasePageModel
 
 		var code = await userManager.GeneratePasswordResetTokenAsync(user);
 		var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code);
-		await emailService.ResetPassword(Email, callbackUrl);
+		await emailService.ResetPassword(Email, callbackUrl, user.UserName);
 
 		return RedirectToPage("ForgotPasswordConfirmation");
 	}
