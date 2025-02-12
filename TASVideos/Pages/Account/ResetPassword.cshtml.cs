@@ -3,9 +3,9 @@
 [IpBanCheck]
 public class ResetPasswordModel(UserManager userManager) : BasePageModel
 {
-	[BindProperty]
-	[EmailAddress]
 	public string Email { get; set; } = "";
+
+	public string UserName { get; set; } = "";
 
 	[BindProperty]
 	[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 12)]
@@ -42,6 +42,7 @@ public class ResetPasswordModel(UserManager userManager) : BasePageModel
 		}
 
 		Email = user.Email;
+		UserName = user.UserName;
 		return Page();
 	}
 
@@ -52,11 +53,15 @@ public class ResetPasswordModel(UserManager userManager) : BasePageModel
 			return Page();
 		}
 
-		var user = await userManager.FindByEmailAsync(Email);
+		if (string.IsNullOrWhiteSpace(Code))
+		{
+			return Home();
+		}
+
+		var user = await userManager.FindByIdAsync(UserId ?? "");
 		if (user is null)
 		{
-			// Don't reveal that the user does not exist
-			return RedirectToPage("ResetPasswordConfirmation");
+			return Home();
 		}
 
 		var code = Code ?? "";
