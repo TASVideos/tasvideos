@@ -26,7 +26,7 @@ function showCheckNameBtn() {
 }
 
 function hideCheckNameBtn() {
-	checkUserBtn.classList.add("div-none");
+	checkUserBtn.classList.add("d-none");
 	checkUserBtn.parentNode.classList.remove('col-sm-2');
 	userNameDiv.classList.remove('col-sm-10');
 	userNameDiv.classList.add('col-sm-12');
@@ -62,14 +62,14 @@ checkUserBtn.onclick = function () {
 		return;
 	}
 
-	fetch(`/Users/List?handler=VerifyUniqueUserName&userName=${userNameBox.value}`)
+	fetch(`/Users/List?handler=CanRenameUser&oldUserName=${originalUserNameBox.value}&newUserName=${userNameBox.value}`)
 		.then(handleFetchErrors)
 		.then(r => r.text())
 		.then(d => {
 			if (d === "true") {
-				markUserNameBad();
-			} else {
 				markUserNameGood();
+			} else {
+				markUserNameBad();
 			}
 		});
 };

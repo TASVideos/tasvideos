@@ -83,9 +83,16 @@ public class EditModel(
 			? user.UserName
 			: null;
 
-		if (UserToEdit.UserName is not null)
+		if (userNameChange is not null)
 		{
-			user.UserName = UserToEdit.UserName;
+			if (await userManager.CanRenameUser(user.UserName, UserToEdit.UserName!))
+			{
+				user.UserName = UserToEdit.UserName!;
+			}
+			else
+			{
+				userNameChange = null;
+			}
 		}
 
 		user.TimeZoneId = UserToEdit.TimeZone;
