@@ -316,5 +316,20 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		Assert.AreEqual(2, _db.Publications.Count(s => s.Title.Contains(newName)));
 	}
 
+	[TestMethod]
+	[DataRow("OldUser", "NewUser", "OtherExistingUser", true)]
+	[DataRow("User", "user", "OtherExistingUser", true)]
+	[DataRow("User", "CoolUser", "CoolUser", false)]
+	[DataRow("User", "coolUser", "CoolUser", false)]
+	public async Task CanRenameUser(string oldUserName, string newUserName, string otherExistingUserName, bool expected)
+	{
+		_db.AddUser(oldUserName);
+		_db.AddUser(otherExistingUserName);
+		await _db.SaveChangesAsync();
+
+		var actual = await _userManager.CanRenameUser(oldUserName, newUserName);
+		Assert.AreEqual(expected, actual);
+	}
+
 	public void Dispose() => _userManager.Dispose();
 }

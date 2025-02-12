@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
-public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageModel
+public class ListModel(ApplicationDbContext db, ICacheService cache, UserManager userManager) : BasePageModel
 {
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();
@@ -37,15 +37,9 @@ public class ListModel(ApplicationDbContext db, ICacheService cache) : BasePageM
 		return Json(matches);
 	}
 
-	public async Task<IActionResult> OnGetVerifyUniqueUserName(string userName)
+	public async Task<IActionResult> OnGetCanRenameUser(string oldUserName, string newUserName)
 	{
-		if (string.IsNullOrWhiteSpace(userName))
-		{
-			return Json(false);
-		}
-
-		var exists = await db.Users.Exists(userName);
-		return Json(exists);
+		return Json(await userManager.CanRenameUser(oldUserName, newUserName));
 	}
 
 	private async ValueTask<IEnumerable<string>> GetUsersByPartial(string partialUserName)

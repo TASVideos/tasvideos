@@ -406,4 +406,19 @@ public class UserManager(
 		user.BannedUntil = DateTime.UtcNow.AddYears(100);
 		await db.TrySaveChanges();
 	}
+
+	public async Task<bool> CanRenameUser(string oldUserName, string newUserName)
+	{
+		if (string.IsNullOrWhiteSpace(newUserName))
+		{
+			return false;
+		}
+
+		var users = await db.Users
+			.Select(user => user.UserName)
+			.Where(userName => userName == oldUserName || userName == newUserName)
+			.ToListAsync();
+
+		return users.Count == 1 && users[0] == oldUserName;
+	}
 }
