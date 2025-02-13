@@ -98,7 +98,7 @@ internal class EmailService(
 						<p>
 						    Hello,<br>
 						    <br>
-						    The {siteName} forum topic "{template.TopicTitle}" has received a new post since your last visit.
+						    The {siteName} forum topic "{HtmlEncoder.Default.Encode(template.TopicTitle)}" has received a new post since your last visit.
 						</p>
 						<p>
 						    <a href="{template.BaseUrl}/Forum/Posts/{template.PostId}">{template.BaseUrl}/Forum/Posts/{template.PostId}</a>
