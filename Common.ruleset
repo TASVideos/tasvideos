@@ -320,4 +320,7 @@
     <Rule Id="SA1027" Action="Warning" />
     <Rule Id="SA1028" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="TASVideos.Analyzers" RuleNamespace="TASVideos.Analyzers">
+    <Rule Id="TVO1000" Action="Error" /> <!-- Do not use `#if false` -->
+  </Rules>
 </RuleSet>
