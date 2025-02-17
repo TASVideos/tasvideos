@@ -6,6 +6,7 @@ namespace TASVideos.WikiEngine;
 public static class Util
 {
 	// ReSharper disable once UnusedMember.Global
+#if true
 	public static string DebugParseWikiPage(string content)
 	{
 		try
@@ -20,6 +21,7 @@ public static class Util
 				new JsonSerializerOptions { WriteIndented = true });
 		}
 	}
+#endif
 
 	public static NewParser.SyntaxException? ParsePageForErrors(string content)
 	{
