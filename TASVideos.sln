@@ -55,7 +55,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TASVideos.ForumEngineTests"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "analyzers", "analyzers", "{BF2570EE-9067-4BAF-9639-4FD2A12CA8B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Analyzers.Sample", "analyzers\TASVideos.Analyzers.Sample\TASVideos.Analyzers.Sample.csproj", "{E807E84E-0F99-49B6-9553-8A6EE2420C30}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.Analyzers.Style", "analyzers\TASVideos.Analyzers.Style\TASVideos.Analyzers.Style.csproj", "{E807E84E-0F99-49B6-9553-8A6EE2420C30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
