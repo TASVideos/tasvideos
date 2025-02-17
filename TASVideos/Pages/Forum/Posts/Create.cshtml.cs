@@ -153,7 +153,7 @@ public class CreateModel(
 		}
 		else
 		{
-			await publisher.SendForum(
+			await publisher.SendForumCreate(
 				topic.Forum.Restricted,
 				$"[New Post]({{0}}) by {user.UserName}{mood}",
 				$"{topic.Forum.ShortName}: {topic.Title}{subject}",

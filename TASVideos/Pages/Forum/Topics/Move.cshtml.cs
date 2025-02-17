@@ -84,7 +84,7 @@ public class MoveModel(
 		forumService.ClearLatestPostCache();
 		forumService.ClearTopicActivityCache();
 
-		await publisher.SendForum(
+		await publisher.SendForumOther(
 			topicWasRestricted || forum.Restricted,
 			$"[Topic]({{0}}) MOVED by {User.Name()}",
 			$"\"{Topic.Topic}\" from {Topic.CurrentForum} to {forum.Name}",

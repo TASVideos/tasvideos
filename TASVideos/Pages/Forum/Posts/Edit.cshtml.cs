@@ -141,7 +141,7 @@ public class EditModel(
 		if (result.IsSuccess())
 		{
 			forumService.CacheEditedPostActivity(forumPost.ForumId, forumPost.Topic!.Id, forumPost.Id, (DateTime)forumPost.PostEditedTimestamp);
-			await publisher.SendForum(
+			await publisher.SendForumOther(
 				forumPost.Topic!.Forum!.Restricted,
 				$"[Post]({{0}}) edited by {User.Name()}",
 				$"{forumPost.Topic.Forum.ShortName}: {forumPost.Topic.Title}",
@@ -200,7 +200,7 @@ public class EditModel(
 		SuccessStatusMessage($"Post {Id} deleted");
 		forumService.ClearLatestPostCache();
 		forumService.ClearTopicActivityCache();
-		await publisher.SendForum(
+		await publisher.SendForumOther(
 			post.Restricted,
 			$"[{(topicDeleted ? "Topic" : "Post")} DELETED]({{0}}) by {User.Name()}",
 			$"{post.ForumShortName}: {post.TopicTitle}",
@@ -261,7 +261,7 @@ public class EditModel(
 		forumService.ClearLatestPostCache();
 		forumService.ClearTopicActivityCache();
 		await userManager.PermaBanUser(post.PosterId);
-		await publisher.SendForum(
+		await publisher.SendForumOther(
 			true,
 			$"[{(topicDeleted ? "Topic" : "Post")} DELETED as SPAM]({{0}}), and user {post.PosterName} banned by {User.Name()}",
 			$"{post.ForumShortName}: {post.TopicTitle}",

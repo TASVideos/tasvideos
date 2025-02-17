@@ -268,7 +268,7 @@ public class IndexModel(
 			SetMessage(result, $"Topic {topicTitle} set to locked {lockedState}", $"Unable to set {topicTitle} to status of {lockedState}");
 			if (result.IsSuccess())
 			{
-				await publisher.SendForum(
+				await publisher.SendForumOther(
 					topic.Forum!.Restricted,
 					$"[Topic]({{0}}) {lockedState} by {User.Name()}",
 					$"{topic.Forum.ShortName}: {topic.Title}",

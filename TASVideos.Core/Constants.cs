@@ -2,7 +2,8 @@
 
 public static class PostGroups
 {
-	public const string Forum = "Forum";
+	public const string ForumCreate = "ForumCreate";
+	public const string ForumOther = "ForumOther";
 	public const string Wiki = "Wiki";
 	public const string Submission = "Submission";
 	public const string UserManagement = "UserManagement";
