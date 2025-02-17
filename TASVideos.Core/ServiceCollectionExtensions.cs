@@ -4,6 +4,7 @@ using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+using TASVideos.Core.Services.Forum;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
@@ -89,6 +90,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<ITASVideosGrue, TASVideosGrue>();
 
 		services.AddScoped<ForumEngine.IWriterHelper, ForumWriterHelper>();
+		services.AddScoped<IForumToMetaDescriptionRenderer, ForumToMetaDescriptionRenderer>();
 
 		services.AddScoped<IYoutubeSync, YouTubeSync>();
 		services.AddScoped<IGoogleAuthService, GoogleAuthService>();

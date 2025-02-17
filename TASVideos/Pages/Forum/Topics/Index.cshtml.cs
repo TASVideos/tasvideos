@@ -73,6 +73,9 @@ public class IndexModel(
 					PosterAvatar = t.Poster!.Avatar,
 					PosterMoodUrlBase = t.Poster!.MoodAvatarUrlBase,
 					PosterMood = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().PosterMood,
+					Text = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().Text,
+					EnableBbCode = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().EnableBbCode,
+					EnableHtml = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().EnableHtml,
 				}
 			})
 			.SingleOrDefaultAsync(t => t.Id == Id);
