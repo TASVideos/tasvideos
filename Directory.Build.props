@@ -20,4 +20,8 @@
 		<AdditionalFiles Include="$(SolutionDir).stylecop.json" />
 		<PackageReference Include="StyleCop.Analyzers" />
 	</ItemGroup>
+	<ItemGroup Condition=" !$(MSBuildProjectDirectory.StartsWith('$(SolutionDir)analyzers')) ">
+		<ProjectReference Include="$(SolutionDir)analyzers/TASVideos.Analyzers.Sample/TASVideos.Analyzers.Sample.csproj"
+			OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
+	</ItemGroup>
 </Project>

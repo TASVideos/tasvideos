@@ -6,7 +6,4 @@
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
 		<Using Include="Microsoft.CodeAnalysis;Microsoft.CodeAnalysis.CSharp;Microsoft.CodeAnalysis.CSharp.Syntax;Microsoft.CodeAnalysis.Diagnostics;Microsoft.CodeAnalysis.Text" />
 	</ItemGroup>
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(MSBuildThisFileDirectory)/prebuilt/" />
-	</Target>
 </Project>

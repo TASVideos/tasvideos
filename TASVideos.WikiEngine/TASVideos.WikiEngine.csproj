@@ -5,7 +5,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
 	</ItemGroup>
-	<ItemGroup>
-		<Analyzer Include="$(MSBuildProjectDirectory)/../analyzers/prebuilt/TASVideos.Analyzers.Sample.dll" />
-	</ItemGroup>
 </Project>

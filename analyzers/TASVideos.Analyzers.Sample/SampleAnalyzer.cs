@@ -1,5 +1,4 @@
 ﻿using System.Collections.Immutable;
-using System.Text;
 
 namespace TASVideos.Analyzers;
 
@@ -9,7 +8,7 @@ public sealed class SampleAnalyzer : DiagnosticAnalyzer
 	private static readonly DiagnosticDescriptor DiagSample = new(
 		id: "TVO1000",
 		title: "Sample rule: Flags all #if blocks",
-		messageFormat: "this is the condition `{0}`",
+		messageFormat: "new message `{0}`",
 		category: "Usage",
 		defaultSeverity: DiagnosticSeverity.Warning,
 		isEnabledByDefault: true);
