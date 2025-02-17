@@ -195,7 +195,7 @@ public static class ExternalMediaPublisherExtensions
 		{
 			Announcement = "News Post!",
 			Type = PostType.Announcement,
-			Group = PostGroups.Forum,
+			Group = PostGroups.ForumCreate,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,
@@ -203,14 +203,29 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string formattedTitle, string body, string relativeLink)
+	public static async Task SendForumCreate(this ExternalMediaPublisher publisher, bool restricted, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
 			Type = restricted
 				? PostType.Administrative
 				: PostType.General,
-			Group = PostGroups.Forum,
+			Group = PostGroups.ForumCreate,
+			Title = Unformat(formattedTitle),
+			FormattedTitle = formattedTitle,
+			Body = body,
+			Link = publisher.ToAbsolute(relativeLink)
+		});
+	}
+
+	public static async Task SendForumOther(this ExternalMediaPublisher publisher, bool restricted, string formattedTitle, string body, string relativeLink)
+	{
+		await publisher.Send(new Post
+		{
+			Type = restricted
+				? PostType.Administrative
+				: PostType.General,
+			Group = PostGroups.ForumOther,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
 			Body = body,

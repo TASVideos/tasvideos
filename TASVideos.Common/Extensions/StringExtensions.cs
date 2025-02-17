@@ -281,6 +281,11 @@ public static partial class StringExtensions
 		return strList.Where(a => !string.IsNullOrWhiteSpace(a)).ToList();
 	}
 
+	public static string RemoveUrls(this string s)
+	{
+		return SimpleUrlsRegex().Replace(s, "");
+	}
+
 	[GeneratedRegex(@"(\/)|(\p{Ll})(?=[\p{Lu}\p{Nd}])|(\p{Nd})(?=[\p{Lu}])|([\p{L}\p{Nd}])(?=[^\p{L}\p{Nd}])|([^\p{L}\p{Nd}])(?=[\p{L}\p{Nd}])")]
 	private static partial Regex SplitCamelCaseCompiledRegex();
 
@@ -289,4 +294,6 @@ public static partial class StringExtensions
 
 	[GeneratedRegex(@"\r\n?|\n")]
 	private static partial Regex NewLinesToSpacesRegex();
+	[GeneratedRegex(@"https?:\/\/\S*")]
+	private static partial Regex SimpleUrlsRegex();
 }

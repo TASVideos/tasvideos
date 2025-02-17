@@ -91,7 +91,7 @@ public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 		{
 			forumService.ClearLatestPostCache();
 			forumService.ClearTopicActivityCache();
-			await publisher.SendForum(
+			await publisher.SendForumOther(
 				originalTopic.Forum!.Restricted || destinationTopic.Forum!.Restricted,
 				$"[Topics MERGED]({{0}}) by {User.Name()}",
 				$"\"{originalTopic.Title}\" into \"{destinationTopic.Title}\"",

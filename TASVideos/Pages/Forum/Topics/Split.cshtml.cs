@@ -113,7 +113,7 @@ public class SplitModel(
 		forumService.ClearLatestPostCache();
 		forumService.ClearTopicActivityCache();
 
-		await publisher.SendForum(
+		await publisher.SendForumOther(
 			destinationForum.Restricted || topic.Forum!.Restricted,
 			$"[Topic]({{0}}) SPLIT by {User.Name()}",
 			$"\"{newTopic.Title}\" from \"{Topic.Title}\"",

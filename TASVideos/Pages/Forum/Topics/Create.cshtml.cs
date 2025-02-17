@@ -138,7 +138,7 @@ public class CreateModel(
 		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 		await dbTransaction.CommitAsync();
 
-		await publisher.SendForum(
+		await publisher.SendForumCreate(
 			forum.Restricted,
 			$"[New Topic]({{0}}) by {User.Name()}",
 			$"{forum.ShortName}: {Title}",

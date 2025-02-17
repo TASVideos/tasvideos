@@ -73,6 +73,9 @@ public class IndexModel(
 					PosterAvatar = t.Poster!.Avatar,
 					PosterMoodUrlBase = t.Poster!.MoodAvatarUrlBase,
 					PosterMood = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().PosterMood,
+					Text = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().Text,
+					EnableBbCode = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().EnableBbCode,
+					EnableHtml = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().EnableHtml,
 				}
 			})
 			.SingleOrDefaultAsync(t => t.Id == Id);
@@ -265,7 +268,7 @@ public class IndexModel(
 			SetMessage(result, $"Topic {topicTitle} set to locked {lockedState}", $"Unable to set {topicTitle} to status of {lockedState}");
 			if (result.IsSuccess())
 			{
-				await publisher.SendForum(
+				await publisher.SendForumOther(
 					topic.Forum!.Restricted,
 					$"[Topic]({{0}}) {lockedState} by {User.Name()}",
 					$"{topic.Forum.ShortName}: {topic.Title}",

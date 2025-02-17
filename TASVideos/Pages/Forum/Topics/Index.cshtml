@@ -1,14 +1,17 @@
 ﻿@page "{id}"
+@using TASVideos.Core.Services.Forum
 @model IndexModel
+@inject IForumToMetaDescriptionRenderer forumToMetaDescriptionRenderer
 @{
 	ViewData.SetTitle($"{Model.Topic.Title} - Topic {Model.Topic.Id}");
+	var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
 	if (Model.HighlightedPost is not null)
 	{
-		var description = $"{Model.Topic.ForumName} → {Model.Topic.Title}";
 		if (!string.IsNullOrWhiteSpace(Model.HighlightedPost.Subject) && Model.Topic.Title != Model.HighlightedPost.Subject)
 		{
 			description += $"\nSubject: {Model.HighlightedPost.Subject}";
 		}
+		description += "\n\n" + await forumToMetaDescriptionRenderer.RenderForumForMetaDescription(Model.HighlightedPost.Text, Model.HighlightedPost.EnableBbCode, Model.HighlightedPost.EnableHtml);
 
 		ViewData.SetMetaTags(new MetaTag
 		{
@@ -20,10 +23,11 @@
 	}
 	else
 	{
+		description += "\n\n" + await forumToMetaDescriptionRenderer.RenderForumForMetaDescription(Model.Topic.TopicCreator!.Text, Model.Topic.TopicCreator!.EnableBbCode, Model.Topic.TopicCreator!.EnableHtml);
 		ViewData.SetMetaTags(new MetaTag
 		{
 			Title = $"Topic by {Model.Topic.TopicCreator!.PosterName}",
-			Description = $"{Model.Topic.ForumName} → {Model.Topic.Title}",
+			Description = description,
 			Image = Model.Topic.TopicCreator!.GetCurrentAvatar()
 		});
 	}

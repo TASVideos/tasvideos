@@ -82,7 +82,7 @@ public sealed class DiscordDistributor : IPostDistributor
 			}
 			else
 			{
-				var link = post.Type == PostType.Announcement ? post.Link : $"<{post.Link}>";
+				var link = (post.Type == PostType.Announcement || post.Group == PostGroups.ForumCreate) ? post.Link : $"<{post.Link}>";
 				Content = string.IsNullOrWhiteSpace(post.FormattedTitle)
 					? $"{post.Title}{body} {link}"
 					: $"{string.Format(post.FormattedTitle, link)}{body}";

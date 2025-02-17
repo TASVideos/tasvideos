@@ -2,7 +2,7 @@
 using System.Text;
 using System.Web;
 using TASVideos.Common;
-
+using TASVideos.Extensions;
 using RawAttrNameVal = (string Name, string Value);
 
 namespace TASVideos.ForumEngine;
@@ -61,6 +61,8 @@ public class NullWriterHelper : IWriterHelper
 public interface INode
 {
 	Task WriteHtml(HtmlWriter w, IWriterHelper h);
+
+	Task WriteMetaDescription(StringBuilder sb, IWriterHelper h);
 }
 
 public class Text : INode
@@ -69,6 +71,17 @@ public class Text : INode
 	public Task WriteHtml(HtmlWriter w, IWriterHelper h)
 	{
 		w.Text(Content);
+		return Task.CompletedTask;
+	}
+
+	public Task WriteMetaDescription(StringBuilder sb, IWriterHelper h)
+	{
+		if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+		{
+			return Task.CompletedTask;
+		}
+
+		sb.Append(Content.RemoveUrls());
 		return Task.CompletedTask;
 	}
 }
@@ -536,6 +549,94 @@ public class Element : INode
 
 			default:
 				throw new InvalidOperationException("Internal error on tag " + Name);
+		}
+	}
+
+	private async Task WriteMetaDescriptionTransformOrContent(StringBuilder sb, IWriterHelper h, Func<string, Task<string>> transformUrlText)
+	{
+		if (Options == "")
+		{
+			sb.Append((await transformUrlText(Options)).RemoveUrls());
+		}
+		else
+		{
+			foreach (var child in Children)
+			{
+				await child.WriteMetaDescription(sb, h);
+			}
+		}
+	}
+
+	public async Task WriteMetaDescription(StringBuilder sb, IWriterHelper h)
+	{
+		if (sb.Length >= SiteGlobalConstants.MetaDescriptionLength)
+		{
+			return;
+		}
+
+		switch (Name)
+		{
+			case "quote":
+			case "code":
+			case "img":
+			case "email":
+				break;
+			case "thread":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async text => (int.TryParse(text, out var id) ? $"Thread #{text}: {await h.GetTopicTitle(id)}" : null) ?? "Thread #" + text);
+				break;
+			case "post":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => "Post #" + s);
+				break;
+			case "game":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => (int.TryParse(s, out var id) ? await h.GetGameTitle(id) : null) ?? "Game #" + s);
+				break;
+			case "gamegroup":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => (int.TryParse(s, out var id) ? await h.GetGameGroupTitle(id) : null) ?? "Game group #" + s);
+				break;
+			case "movie":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => (int.TryParse(s, out var id) ? await h.GetMovieTitle(id) : null) ?? "Movie #" + s);
+				break;
+			case "submission":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => (int.TryParse(s, out var id) ? await h.GetSubmissionTitle(id) : null) ?? "Submission #" + s);
+				break;
+			case "userfile":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => "User movie #" + s);
+				break;
+			case "wiki":
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => "Wiki: " + s);
+				break;
+			case "frames":
+				{
+					var ss = GetChildText().Split('@');
+					int.TryParse(ss[0], out var n);
+					var fps = 60.0;
+					if (ss.Length > 1)
+					{
+						double.TryParse(ss[1], NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out fps);
+					}
+
+					if (fps <= 0)
+					{
+						fps = 60.0;
+					}
+
+					var timeable = new Timeable
+					{
+						FrameRate = fps,
+						Frames = n
+					};
+					var time = timeable.Time().ToStringWithOptionalDaysAndHours();
+					sb.Append(time);
+					break;
+				}
+
+			default:
+				foreach (var child in Children)
+				{
+					await child.WriteMetaDescription(sb, h);
+				}
+
+				break;
 		}
 	}
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
