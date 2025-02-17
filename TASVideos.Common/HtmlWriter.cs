@@ -36,7 +36,7 @@ public partial class HtmlWriter(TextWriter w)
 			}
 			else if (_list is not null)
 			{
-				classes = _list.SelectMany(static s => s.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToHashSet();
+				classes = _list.SelectMany(s => s.Split(' ', StringSplitOptions.RemoveEmptyEntries)).ToHashSet();
 			}
 			else
 			{
