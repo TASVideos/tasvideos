@@ -556,7 +556,8 @@ public class Element : INode
 	{
 		if (Options == "")
 		{
-			sb.Append((await transformUrlText(Options)).RemoveUrls());
+			var text = Children.Cast<Text>().SingleOrDefault()?.Content ?? "";
+			sb.Append((await transformUrlText(text)).RemoveUrls());
 		}
 		else
 		{
