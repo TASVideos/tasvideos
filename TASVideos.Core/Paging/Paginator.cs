@@ -90,13 +90,14 @@ public static class Paginator
 	/// Orders the given collection based on the <see cref="ISortable.Sort"/> property.
 	/// </summary>
 	/// <typeparam name="T">The type of the elements of source.</typeparam>
-	public static IQueryable<T> SortBy<T>(this IQueryable<T> source, ISortable? request)
+	public static IQueryable<T> SortBy<T>(this IQueryable<T> source0, ISortable? request)
 	{
 		if (string.IsNullOrWhiteSpace(request?.Sort))
 		{
-			return source;
+			return source0;
 		}
 
+		var source = source0;
 		var columns = request.Sort.SplitWithEmpty(",").Select(s => s.Trim());
 
 		bool thenBy = false;
@@ -106,7 +107,9 @@ public static class Paginator
 			thenBy = true;
 		}
 
-		return source;
+		// if the query hasn't changed by now, that must mean we haven't added an `OrderBy` to the chain
+		// the caller is expecting us to, and if they go on to call `Take`/`Skip`, it hits UB
+		return ReferenceEquals(source, source0) ? ApplyDefaultSort(source) : source;
 	}
 
 	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy)
@@ -116,12 +119,13 @@ public static class Paginator
 		column = column?.Trim('-').Trim('+').ToLower() ?? "";
 
 		var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
+		return prop is null
+			? query
+			: SortByParamInner(query, prop, column, desc: desc, thenBy: thenBy);
+	}
 
-		if (prop is null)
-		{
-			return query;
-		}
-
+	private static IQueryable<T> SortByParamInner<T>(IQueryable<T> query, PropertyInfo prop, string column, bool desc, bool thenBy)
+	{
 		if (prop.GetCustomAttribute(typeof(SortableAttribute)) is null)
 		{
 			return query;
@@ -158,5 +162,25 @@ public static class Paginator
 		}
 
 		return (IQueryable<T>)result;
+	}
+
+	private static IQueryable<T> ApplyDefaultSort<T>(IQueryable<T> query)
+	{
+		var allProps = typeof(T).GetProperties();
+		var idProp = allProps.SingleOrDefault(x => string.Equals(x.Name, "id", StringComparison.OrdinalIgnoreCase));
+		if (idProp is not null)
+		{
+			return SortByParamInner(query, idProp, idProp.Name, desc: false, thenBy: false);
+		}
+
+		// worst case, just do everything (DoS potential?)
+		var thenBy = false;
+		foreach (var pi in allProps)
+		{
+			query = SortByParamInner(query, pi, pi.Name.ToLowerInvariant(), desc: false, thenBy: thenBy);
+			thenBy = true;
+		}
+
+		return query;
 	}
 }
