@@ -175,7 +175,7 @@ public static class Paginator
 
 		// worst case, just do everything (DoS potential?)
 		var thenBy = false;
-		foreach (var pi in allProps)
+		foreach (var pi in allProps.Where(pi => pi.GetCustomAttribute<SortableAttribute>() is not null))
 		{
 			query = SortByParamInner(query, pi, pi.Name.ToLowerInvariant(), desc: false, thenBy: thenBy);
 			thenBy = true;
