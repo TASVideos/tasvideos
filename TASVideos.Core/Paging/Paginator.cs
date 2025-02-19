@@ -174,7 +174,7 @@ public static class Paginator
 			return SortByParamInner(query, idProp, idProp.Name, desc: false, thenBy: false);
 		}
 
-		// worst case, just do everything (DoS potential?)
+		// worst case, just do everything
 		var thenBy = false;
 		foreach (var pi in allProps.Where(pi => pi.GetCustomAttribute<SortableAttribute>() is not null))
 		{
