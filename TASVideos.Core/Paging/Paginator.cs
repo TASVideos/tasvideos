@@ -94,7 +94,8 @@ public static class Paginator
 	{
 		if (string.IsNullOrWhiteSpace(request?.Sort))
 		{
-			return source0;
+			// per below, can't noop
+			return ApplyDefaultSort(source0);
 		}
 
 		var source = source0;
