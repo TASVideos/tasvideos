@@ -155,7 +155,7 @@ public static class PublicationExtensions
 	{
 		if (tokens.MovieIds.Any())
 		{
-			return publications.Where(p => tokens.MovieIds.Contains(p.Id));
+			return publications.Where(p => tokens.MovieIds.Contains(p.Id)).OrderBy(p => p.Id);
 		}
 
 		var query = publications;
