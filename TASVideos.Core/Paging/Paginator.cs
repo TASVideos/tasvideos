@@ -90,39 +90,44 @@ public static class Paginator
 	/// Orders the given collection based on the <see cref="ISortable.Sort"/> property.
 	/// </summary>
 	/// <typeparam name="T">The type of the elements of source.</typeparam>
-	public static IQueryable<T> SortBy<T>(this IQueryable<T> source0, ISortable? request)
+	public static IQueryable<T> SortBy<T>(this IQueryable<T> source, ISortable? request)
 	{
 		if (string.IsNullOrWhiteSpace(request?.Sort))
 		{
 			// per below, can't noop
-			return ApplyDefaultSort(source0);
+			return ApplyDefaultSort(source);
 		}
 
-		var source = source0;
 		var columns = request.Sort.SplitWithEmpty(",").Select(s => s.Trim());
-
+		var anySortApplied = false;
 		bool thenBy = false;
 		foreach (var column in columns)
 		{
-			source = SortByParam(source, column, thenBy);
+			source = SortByParam(source, column, thenBy, out var sortApplied);
+			anySortApplied ||= sortApplied;
 			thenBy = true;
 		}
 
-		// if the query hasn't changed by now, that must mean we haven't added an `OrderBy` to the chain
+		// if we haven't added an `OrderBy` to the chain yet, we need to do that now or bad things happen
 		// the caller is expecting us to, and if they go on to call `Take`/`Skip`, it hits UB
-		return ReferenceEquals(source, source0) ? ApplyDefaultSort(source) : source;
+		return anySortApplied ? source : ApplyDefaultSort(source);
 	}
 
-	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy)
+	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy, out bool sortApplied)
 	{
 		bool desc = column?.StartsWith('-') ?? false;
 
 		column = column?.Trim('-').Trim('+').ToLower() ?? "";
 
 		var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
-		return prop?.GetCustomAttribute<SortableAttribute>() is null
-			? query
-			: SortByParamInner(query, prop, column, desc: desc, thenBy: thenBy);
+		if (prop?.GetCustomAttribute<SortableAttribute>() is null)
+		{
+			sortApplied = false;
+			return query;
+		}
+
+		sortApplied = true;
+		return SortByParamInner(query, prop, column, desc: desc, thenBy: thenBy);
 	}
 
 	private static IQueryable<T> SortByParamInner<T>(IQueryable<T> query, PropertyInfo prop, string column, bool desc, bool thenBy)
