@@ -94,39 +94,44 @@ public static class Paginator
 	{
 		if (string.IsNullOrWhiteSpace(request?.Sort))
 		{
-			return source;
+			// per below, can't noop
+			return ApplyDefaultSort(source);
 		}
 
 		var columns = request.Sort.SplitWithEmpty(",").Select(s => s.Trim());
-
+		var anySortApplied = false;
 		bool thenBy = false;
 		foreach (var column in columns)
 		{
-			source = SortByParam(source, column, thenBy);
+			source = SortByParam(source, column, thenBy, out var sortApplied);
+			anySortApplied |= sortApplied;
 			thenBy = true;
 		}
 
-		return source;
+		// if we haven't added an `OrderBy` to the chain yet, we need to do that now or bad things happen
+		// the caller is expecting us to, and if they go on to call `Take`/`Skip`, it hits UB
+		return anySortApplied ? source : ApplyDefaultSort(source);
 	}
 
-	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy)
+	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy, out bool sortApplied)
 	{
 		bool desc = column?.StartsWith('-') ?? false;
 
 		column = column?.Trim('-').Trim('+').ToLower() ?? "";
 
 		var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
-
-		if (prop is null)
+		if (prop?.GetCustomAttribute<SortableAttribute>() is null)
 		{
+			sortApplied = false;
 			return query;
 		}
 
-		if (prop.GetCustomAttribute(typeof(SortableAttribute)) is null)
-		{
-			return query;
-		}
+		sortApplied = true;
+		return SortByParamInner(query, prop, column, desc: desc, thenBy: thenBy);
+	}
 
+	private static IQueryable<T> SortByParamInner<T>(IQueryable<T> query, PropertyInfo prop, string column, bool desc, bool thenBy)
+	{
 		string orderBy;
 		if (thenBy)
 		{
@@ -158,5 +163,25 @@ public static class Paginator
 		}
 
 		return (IQueryable<T>)result;
+	}
+
+	private static IQueryable<T> ApplyDefaultSort<T>(IQueryable<T> query)
+	{
+		var allProps = typeof(T).GetProperties();
+		var idProp = allProps.SingleOrDefault(x => string.Equals(x.Name, "id", StringComparison.OrdinalIgnoreCase));
+		if (idProp?.GetCustomAttribute<SortableAttribute>() is not null)
+		{
+			return SortByParamInner(query, idProp, idProp.Name, desc: false, thenBy: false);
+		}
+
+		// worst case, just do everything
+		var thenBy = false;
+		foreach (var pi in allProps.Where(pi => pi.GetCustomAttribute<SortableAttribute>() is not null))
+		{
+			query = SortByParamInner(query, pi, pi.Name.ToLowerInvariant(), desc: false, thenBy: thenBy);
+			thenBy = true;
+		}
+
+		return query;
 	}
 }
