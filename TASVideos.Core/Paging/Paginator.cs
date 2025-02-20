@@ -104,7 +104,7 @@ public static class Paginator
 		foreach (var column in columns)
 		{
 			source = SortByParam(source, column, thenBy, out var sortApplied);
-			anySortApplied ||= sortApplied;
+			anySortApplied |= sortApplied;
 			thenBy = true;
 		}
 
