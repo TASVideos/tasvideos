@@ -31,7 +31,8 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 			.ToListAsync();
 		UncatalogedFiles = await db.UserFiles
 			.Where(uf => uf.GameId == null)
-			.Where(uf => !uf.Hidden)
+			.ThatArePublic()
+			.ByRecentlyUploaded()
 			.ToUnCatalogedModel()
 			.Take(25)
 			.ToListAsync();
