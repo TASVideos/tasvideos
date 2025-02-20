@@ -120,18 +120,13 @@ public static class Paginator
 		column = column?.Trim('-').Trim('+').ToLower() ?? "";
 
 		var prop = typeof(T).GetProperties().FirstOrDefault(p => p.Name.ToLower() == column);
-		return prop is null
+		return prop?.GetCustomAttribute<SortableAttribute>() is null
 			? query
 			: SortByParamInner(query, prop, column, desc: desc, thenBy: thenBy);
 	}
 
 	private static IQueryable<T> SortByParamInner<T>(IQueryable<T> query, PropertyInfo prop, string column, bool desc, bool thenBy)
 	{
-		if (prop.GetCustomAttribute(typeof(SortableAttribute)) is null)
-		{
-			return query;
-		}
-
 		string orderBy;
 		if (thenBy)
 		{
@@ -169,7 +164,7 @@ public static class Paginator
 	{
 		var allProps = typeof(T).GetProperties();
 		var idProp = allProps.SingleOrDefault(x => string.Equals(x.Name, "id", StringComparison.OrdinalIgnoreCase));
-		if (idProp is not null)
+		if (idProp?.GetCustomAttribute<SortableAttribute>() is not null)
 		{
 			return SortByParamInner(query, idProp, idProp.Name, desc: false, thenBy: false);
 		}
