@@ -1,5 +1,4 @@
-﻿using System.IO.Compression;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -75,15 +74,6 @@ public static class FormFileExtensions
 		return formFile is null
 			? ""
 			: Path.GetExtension(formFile.FileName);
-	}
-
-	public static async Task<byte[]> ActualFileData(this IFormFile formFile)
-	{
-		// TODO: TO avoid zip bombs we should limit the max size of tempStream
-		var tempStream = new MemoryStream((int)formFile.Length);
-		await using var gzip = new GZipStream(formFile.OpenReadStream(), CompressionMode.Decompress);
-		await gzip.CopyToAsync(tempStream);
-		return tempStream.ToArray();
 	}
 
 	public static async Task<byte[]> ToBytes(this IFormFile? formFile)

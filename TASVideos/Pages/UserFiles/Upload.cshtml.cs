@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Pages.UserFiles;
+﻿using System.IO.Compression;
+
+namespace TASVideos.Pages.UserFiles;
 
 [RequirePermission(PermissionTo.UploadUserFiles)]
 public class UploadModel(
@@ -50,7 +52,7 @@ public class UploadModel(
 		{
 			await Initialize();
 			ModelState.AddModelError(
-				$"{nameof(Data.Entity.UserFile)}.{nameof(UserFile)}",
+				nameof(UserFile),
 				"Compressed files are not supported.");
 			return Page();
 		}
@@ -61,7 +63,7 @@ public class UploadModel(
 		{
 			await Initialize();
 			ModelState.AddModelError(
-				$"{nameof(Data.Entity.UserFile)}.{nameof(UserFile)}",
+				nameof(UserFile),
 				$"Unsupported file type: {fileExt}");
 			return Page();
 		}
@@ -70,18 +72,30 @@ public class UploadModel(
 		{
 			await Initialize();
 			ModelState.AddModelError(
-				$"{nameof(Data.Entity.UserFile)}.{nameof(UserFile)}",
+				nameof(UserFile),
 				"File exceeds your available storage space. Remove unnecessary files and try again.");
 			return Page();
 		}
 
-		byte[] actualFileData = await UserFile.ActualFileData();
+		byte[] fileData = await UserFile.ToBytes();
+		try
+		{
+			using var fileStream = new MemoryStream(fileData);
+			using var gzip = new GZipStream(fileStream, CompressionMode.Decompress);
+			using var tempStream = new MemoryStream(fileData.Length); // TODO: TO avoid zip bombs we should limit the max size of tempStream
+			await gzip.CopyToAsync(tempStream);
+			fileData = tempStream.ToArray();
+		}
+		catch (InvalidDataException) // happens if file was uploaded without compression (e.g. no javascript), so we continue and try to parse the raw bytes
+		{
+		}
+
 		var (id, parseResult) = await userFiles.Upload(User.GetUserId(), new(
 			Title,
 			Description,
 			System,
 			Game,
-			actualFileData,
+			fileData,
 			UserFile.FileName,
 			Hidden));
 
