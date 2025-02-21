@@ -23,7 +23,7 @@ public sealed class NoCommentingWithPreprocAnalyzer : DiagnosticAnalyzer
 			snac =>
 			{
 				var idts = (IfDirectiveTriviaSyntax)snac.Node;
-				if (idts.Condition.ToString().Equals("false", StringComparison.OrdinalIgnoreCase))
+				if (idts.Condition.ToString() is "false")
 				{
 					snac.ReportDiagnostic(Diagnostic.Create(DiagNoCommentingWithPreproc, idts.GetLocation()));
 				}
