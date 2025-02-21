@@ -1,0 +1,9 @@
+<Project>
+	<PropertyGroup>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+		<Using Include="Microsoft.CodeAnalysis;Microsoft.CodeAnalysis.CSharp;Microsoft.CodeAnalysis.CSharp.Syntax;Microsoft.CodeAnalysis.Diagnostics;Microsoft.CodeAnalysis.Text" />
+	</ItemGroup>
+</Project>
