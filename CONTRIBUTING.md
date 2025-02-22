@@ -23,9 +23,8 @@ They are also run in CI.
 
 The codebase uses the [Allman style](https://en.wikipedia.org/wiki/Indentation_style#Allman_style), placing braces on their own line. It uses tabs for indentation including in HTML in CSHTML where it acts as a single space when parsed by web browsers. Otherwise, code style should generally follow conventions for .NET 5 and C#.
 
-Most of our code style rules are configured in EditorConfig, so you can use `dotnet format` or any other Roslyn-powered linter to apply them. These rules aren't automated at the moment:
-- Do not mark lambdas as `static`.
-- Do not use `required` with `init` props.
+Most of our code style rules are configured in EditorConfig, so you can use `dotnet format` or any other Roslyn-powered linter to apply them.
+We're down to 0 warnings, and let's keep it that way!
 
 If possible, please include unit tests when adding new features.
 We don't have Selenium or anything set up so you can't really test the frontend automatically, but any increase in test coverage is welcomed.
