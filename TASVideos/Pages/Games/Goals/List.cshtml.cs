@@ -42,6 +42,11 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnPost(string? goalToCreate)
 	{
+		if (!User.Has(PermissionTo.CatalogMovies))
+		{
+			return AccessDenied();
+		}
+
 		if (string.IsNullOrWhiteSpace(goalToCreate))
 		{
 			ErrorStatusMessage("Cannot create empty goal");
@@ -126,22 +131,39 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		return BackToList();
 	}
 
-	public async Task<IActionResult> OnGetDelete(int gameGroupId)
+	public async Task<IActionResult> OnGetDelete(int gameGoalId)
 	{
-		if (await db.Publications.AnyAsync(p => p.GameGoalId == gameGroupId))
+		if (!User.Has(PermissionTo.CatalogMovies))
 		{
-			ErrorStatusMessage("Game Group can not be deleted because it is associated with one or more publications.");
+			return AccessDenied();
+		}
+
+		var gameGoal = await db.GameGoals.FindAsync(gameGoalId);
+		if (gameGoal is null)
+		{
+			return NotFound();
+		}
+
+		if (gameGoal.DisplayName == "baseline")
+		{
+			ErrorStatusMessage("Cannot delete baseline goal.");
 			return BackToList();
 		}
 
-		if (await db.Publications.AnyAsync(p => p.GameGoalId == gameGroupId))
+		if (await db.Publications.AnyAsync(p => p.GameGoalId == gameGoalId))
 		{
-			ErrorStatusMessage("Game Group can not be deleted because it is associated with one or more submissions.");
+			ErrorStatusMessage("Game Goal can not be deleted because it is associated with one or more publications.");
 			return BackToList();
 		}
 
-		db.GameGoals.Attach(new GameGoal { Id = gameGroupId }).State = EntityState.Deleted;
-		SetMessage(await db.TrySaveChanges(), $"Game Group {gameGroupId} deleted", $"Unable to delete Game Group {gameGroupId}");
+		if (await db.Submissions.AnyAsync(p => p.GameGoalId == gameGoalId))
+		{
+			ErrorStatusMessage("Game Goal can not be deleted because it is associated with one or more submissions.");
+			return BackToList();
+		}
+
+		db.GameGoals.Remove(gameGoal);
+		SetMessage(await db.TrySaveChanges(), $"Game Goal {gameGoalId} deleted", $"Unable to delete Game Group {gameGoalId}");
 
 		return BackToList();
 	}

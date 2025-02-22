@@ -2,6 +2,7 @@
 @model ListModel
 @{
 	ViewData.SetTitle($"Goals for {Model.Game}");
+	var canCreate = User.Has(PermissionTo.CatalogMovies);
 }
 @section PageTitle {
 	Goals for <a asp-page="/Games/Index" asp-route-id="@Model.GameId">@Model.Game</a>
@@ -18,7 +19,7 @@
 		.ThenBy(g => g.Name.Length)
 		.ThenBy(g => g.Name))
 	{
-		var canDelete = !goal.Publications.Any() && !goal.Submissions.Any();
+		var canDelete = User.Has(PermissionTo.CatalogMovies) && !goal.Publications.Any() && !goal.Submissions.Any() && goal.Name != "baseline";
 		<tr id="goal-@goal.Id">
 			<td condition="@(goal.Id == Model.GoalToEdit && goal.Name != "baseline")">
 				<form method="post" class="d-flex gap-2" asp-page-handler="Edit">
@@ -65,11 +66,11 @@
 				   class="btn btn-sm btn-primary">
 				   <i class="fa fa-pencil"></i> Edit
 				</a>
-				<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGroupId="@goal.Id" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
+				<a condition="canDelete" asp-page-handler="Delete" asp-route-gameGoalId="@goal.Id" class="btn btn-sm btn-danger"><i class="fa fa-remove"></i> Delete</a>
 			</td-action-column>
 		</tr>
 	}
-	<tr>
+	<tr condition="canCreate">
 		<form method="post">
 			<td colspan="3">
 				<input name="goalToCreate" required class="form-control" />
