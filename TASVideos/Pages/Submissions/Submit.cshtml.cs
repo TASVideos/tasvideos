@@ -1,6 +1,7 @@
 ﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.MovieParsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -99,7 +100,18 @@ public class SubmitModel(
 			return Page();
 		}
 
-		var parseResult = await parser.ParseZip(MovieFile!.OpenReadStream());
+		MemoryStream fileStream = await MovieFile!.DecompressOrTakeRaw();
+
+		IParseResult parseResult;
+		if (MovieFile.IsZip())
+		{
+			parseResult = await parser.ParseZip(fileStream);
+		}
+		else
+		{
+			parseResult = await parser.ParseFile(MovieFile!.FileName, fileStream);
+		}
+
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
@@ -184,11 +196,6 @@ public class SubmitModel(
 			ModelState.AddModelError(
 				$"{nameof(Authors)}",
 				"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
-		}
-
-		if (!MovieFile.IsZip())
-		{
-			ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
 		}
 
 		MovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);

@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.IO.Compression;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -55,7 +56,7 @@ public static class FormFileExtensions
 	{
 		if (!user.Has(PermissionTo.OverrideSubmissionConstraints) && movie.Length >= SiteGlobalConstants.MaximumMovieSize)
 		{
-			modelState.AddModelError(movieFieldName, ".zip is too big, are you sure this is a valid movie file?");
+			modelState.AddModelError(movieFieldName, "File is too big, are you sure this is a valid movie file?");
 		}
 	}
 
@@ -86,5 +87,34 @@ public static class FormFileExtensions
 		await using var memoryStream = new MemoryStream();
 		await formFile.CopyToAsync(memoryStream);
 		return memoryStream.ToArray();
+	}
+
+	/// <summary>
+	/// Attempts to decompress the form file from the gzip format. If decompression fails, it returns the raw bytes.
+	/// </summary>
+	public static async Task<MemoryStream> DecompressOrTakeRaw(this IFormFile? formFile)
+	{
+		if (formFile is null)
+		{
+			return new MemoryStream();
+		}
+
+		var rawFileStream = new MemoryStream();
+		await formFile.CopyToAsync(rawFileStream);
+
+		try
+		{
+			rawFileStream.Position = 0;
+			using var gzip = new GZipStream(rawFileStream, CompressionMode.Decompress, leaveOpen: true); // leaveOpen in case of an exception
+			var decompressedFileStream = new MemoryStream(); // TODO: To avoid zip bombs we should limit the max size of this MemoryStream
+			await gzip.CopyToAsync(decompressedFileStream);
+			await rawFileStream.DisposeAsync(); // manually dispose because we specified leaveOpen
+			return decompressedFileStream;
+		}
+		catch (InvalidDataException) // happens if file was uploaded without compression (e.g. no javascript), so we continue and return the raw bytes
+		{
+			rawFileStream.Position = 0;
+			return rawFileStream;
+		}
 	}
 }
