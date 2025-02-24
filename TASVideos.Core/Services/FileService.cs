@@ -11,6 +11,7 @@ public interface IFileService
 	/// Unzips the file, and re-zips it while renaming the contained file
 	/// </summary>
 	Task<byte[]> CopyZip(byte[] zipBytes, string fileName);
+	Task<byte[]> ZipFile(byte[] fileBytes, string fileName);
 
 	Task<ZippedFile?> GetSubmissionFile(int id);
 	Task<ZippedFile?> GetPublicationFile(int id);
@@ -69,6 +70,11 @@ internal class FileService(ApplicationDbContext db) : IFileService
 		await stream.CopyToAsync(singleStream);
 		var fileBytes = singleStream.ToArray();
 
+		return await ZipFile(fileBytes, fileName);
+	}
+
+	public async Task<byte[]> ZipFile(byte[] fileBytes, string fileName)
+	{
 		await using var outStream = new MemoryStream();
 		using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
 		{

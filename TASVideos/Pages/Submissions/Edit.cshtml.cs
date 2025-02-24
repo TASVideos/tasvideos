@@ -18,7 +18,8 @@ public class EditModel(
 	IQueueService queueService,
 	IYoutubeSync youtubeSync,
 	IForumService forumService,
-	ITopicWatcher topicWatcher)
+	ITopicWatcher topicWatcher,
+	IFileService fileService)
 	: BasePageModel
 {
 	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.ReplaceMovieFile)}";
@@ -110,11 +111,6 @@ public class EditModel(
 	{
 		if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.ReplaceMovieFile is not null)
 		{
-			if (!Submission.ReplaceMovieFile.IsZip())
-			{
-				ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
-			}
-
 			Submission.ReplaceMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
 		}
 		else if (!User.Has(PermissionTo.ReplaceSubmissionMovieFile))
@@ -195,7 +191,10 @@ public class EditModel(
 
 		if (Submission.ReplaceMovieFile is not null)
 		{
-			var parseResult = await parser.ParseZip(Submission.ReplaceMovieFile.OpenReadStream());
+			MemoryStream fileStream = await Submission.ReplaceMovieFile.DecompressOrTakeRaw();
+			byte[] fileBytes = fileStream.ToArray();
+
+			var parseResult = Submission.ReplaceMovieFile.IsZip() ? await parser.ParseZip(fileStream) : await parser.ParseFile(Submission.ReplaceMovieFile.FileName, fileStream);
 			if (!parseResult.Success)
 			{
 				ModelState.AddParseErrors(parseResult);
@@ -220,7 +219,7 @@ public class EditModel(
 				return await ReturnWithModelErrors();
 			}
 
-			submission.MovieFile = await Submission.ReplaceMovieFile.ToBytes();
+			submission.MovieFile = Submission.ReplaceMovieFile.IsZip() ? fileBytes : await fileService.ZipFile(fileBytes, Submission.ReplaceMovieFile.FileName);
 			submission.SyncedOn = null;
 			submission.SyncedByUserId = null;
 

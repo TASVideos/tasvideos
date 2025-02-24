@@ -198,6 +198,11 @@
 				crossorigin="anonymous">
 		</script>
 	}
+	<script condition="ViewData.UsesClientFileCompression()"
+		src="https://cdnjs.cloudflare.com/ajax/libs/pako/2.1.0/pako_deflate.min.js"
+		integrity="sha512-oEsmlMj4bUaKNfYtsxV2eZm+5L0I/JhLsXftLFKeywkgAq8QMLKRlZrMIkMC2AHZQ/gT8YtI+fP1WUwNjF1PoQ=="
+		crossorigin="anonymous"
+		referrerpolicy="no-referrer"></script>
 	<script condition="ViewData.UsesSelectImprover()" src="/js/select-improver.js"></script>
 	<noscript condition="ViewData.UsesSelectImprover()"><style>.d-none-except-noscript { display: block !important; }</style></noscript>
 	<script condition="ViewData.UsesUserSearch()" src="/js/user-search.js"></script>
