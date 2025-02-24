@@ -15,7 +15,8 @@ public class SubmitModel(
 	ITASVideoAgent tasVideoAgent,
 	IYoutubeSync youtubeSync,
 	IMovieFormatDeprecator deprecator,
-	IQueueService queueService)
+	IQueueService queueService,
+	IFileService fileService)
 	: BasePageModel
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
@@ -101,16 +102,9 @@ public class SubmitModel(
 		}
 
 		MemoryStream fileStream = await MovieFile!.DecompressOrTakeRaw();
+		byte[] fileBytes = fileStream.ToArray();
 
-		IParseResult parseResult;
-		if (MovieFile.IsZip())
-		{
-			parseResult = await parser.ParseZip(fileStream);
-		}
-		else
-		{
-			parseResult = await parser.ParseFile(MovieFile!.FileName, fileStream);
-		}
+		IParseResult parseResult = MovieFile.IsZip() ? await parser.ParseZip(fileStream) : await parser.ParseFile(MovieFile!.FileName, fileStream);
 
 		if (!parseResult.Success)
 		{
@@ -148,7 +142,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		submission.MovieFile = await MovieFile.ToBytes();
+		submission.MovieFile = MovieFile.IsZip() ? fileBytes : await fileService.ZipFile(fileBytes, MovieFile!.FileName);
 		submission.Submitter = await userManager.GetUserAsync(User);
 		if (parseResult.Hashes.Count > 0)
 		{
