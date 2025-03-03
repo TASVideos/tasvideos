@@ -23,8 +23,8 @@
 			<fieldset>
 				<label asp-for="MovieFile"></label>
 				<input asp-for="MovieFile" data-id="movie-file" />
-				<div>(Max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
 				<span asp-validation-for="MovieFile"></span>
+				<div data-id="nozip-reminder" class="alert alert-warning d-none">Note: You no longer need to zip your movie file. You can select your original movie file and your browser will automatically compress it before uploading.</div>
 			</fieldset>
 		</column>
 		<column lg="6">
