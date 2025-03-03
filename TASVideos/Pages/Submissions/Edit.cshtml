@@ -2,6 +2,7 @@
 @model EditModel
 @{
 	ViewData.SetTitle($"Edit Submission {Model.Submission.Title}");
+	ViewData.UseClientFileCompression();
 	var canEditPublicationClass = User.Has(PermissionTo.JudgeSubmissions)
 		&& Model.AvailableStatuses.Any(s => s == SubmissionStatus.Accepted);
 }
@@ -20,8 +21,8 @@
 		<column lg="6" permission="ReplaceSubmissionMovieFile">
 			<fieldset>
 				<label asp-for="Submission.ReplaceMovieFile"></label>
-				<input asp-for="Submission.ReplaceMovieFile" />
-				<div>Your movie packed in a ZIP file (max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
+				<input asp-for="Submission.ReplaceMovieFile" data-id="movie-file" />
+				<div>(Max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
 				<span asp-validation-for="Submission.ReplaceMovieFile"></span>
 			</fieldset>
 		</column>
@@ -130,4 +131,5 @@
 
 @section Scripts {
 	<script src="/js/submissions-edit.js"></script>
+	<script src="/js/compress-file.js"></script>
 }

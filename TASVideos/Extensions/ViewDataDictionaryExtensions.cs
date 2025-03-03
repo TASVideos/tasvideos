@@ -147,4 +147,10 @@ public static class ViewDataDictionaryExtensions
 
 	public static bool UsesMoodPreview(this ViewDataDictionary viewData)
 		=> viewData["use-mood-preview"] is not null;
+
+	public static void UseClientFileCompression(this ViewDataDictionary viewData)
+		=> viewData["use-client-file-compression"] = true;
+
+	public static bool UsesClientFileCompression(this ViewDataDictionary viewData)
+		=> viewData["use-client-file-compression"] is not null;
 }

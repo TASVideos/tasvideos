@@ -2,6 +2,7 @@
 @model SubmitModel
 @{
 	ViewData.SetTitle("Submit Movie");
+	ViewData.UseClientFileCompression();
 	var notSupportedError = ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("not currently supported"))); // TODO: a less brittle check
 	var parseErrors = !notSupportedError && ViewData.ModelState.Keys.Any(e => e == "Parser");
 }
@@ -21,9 +22,9 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="MovieFile"></label>
-				<input asp-for="MovieFile" />
-				<div>Your movie packed in a ZIP file (max size: @SiteGlobalConstants.MaximumMovieSizeHumanReadable)</div>
+				<input asp-for="MovieFile" data-id="movie-file" />
 				<span asp-validation-for="MovieFile"></span>
+				<div data-id="nozip-reminder" class="alert alert-warning d-none">Note: You no longer need to zip your movie file. You can select your original movie file and your browser will automatically compress it before uploading.</div>
 			</fieldset>
 		</column>
 		<column lg="6">
@@ -117,10 +118,11 @@
 	</row>
 	<form-button-bar>
 		<preview-button></preview-button>
-		<submit-button id="submit-btn" class="@(Model.Markup.Length > 0 ? "" : "d-none")">Submit</submit-button>
+		<submit-button id="submit-btn">Submit</submit-button>
 	</form-button-bar>
 </form>
 <wiki-preview></wiki-preview>
 @section Scripts {
 	<script src="/js/submit.js"></script>
+	<script src="/js/compress-file.js"></script>
 }

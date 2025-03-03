@@ -1,6 +1,7 @@
 ﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.MovieParsers;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -14,7 +15,8 @@ public class SubmitModel(
 	ITASVideoAgent tasVideoAgent,
 	IYoutubeSync youtubeSync,
 	IMovieFormatDeprecator deprecator,
-	IQueueService queueService)
+	IQueueService queueService,
+	IFileService fileService)
 	: BasePageModel
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
@@ -99,7 +101,11 @@ public class SubmitModel(
 			return Page();
 		}
 
-		var parseResult = await parser.ParseZip(MovieFile!.OpenReadStream());
+		MemoryStream fileStream = await MovieFile!.DecompressOrTakeRaw();
+		byte[] fileBytes = fileStream.ToArray();
+
+		IParseResult parseResult = MovieFile.IsZip() ? await parser.ParseZip(fileStream) : await parser.ParseFile(MovieFile!.FileName, fileStream);
+
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
@@ -136,7 +142,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		submission.MovieFile = await MovieFile.ToBytes();
+		submission.MovieFile = MovieFile.IsZip() ? fileBytes : await fileService.ZipFile(fileBytes, MovieFile!.FileName);
 		submission.Submitter = await userManager.GetUserAsync(User);
 		if (parseResult.Hashes.Count > 0)
 		{
@@ -184,11 +190,6 @@ public class SubmitModel(
 			ModelState.AddModelError(
 				$"{nameof(Authors)}",
 				"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
-		}
-
-		if (!MovieFile.IsZip())
-		{
-			ModelState.AddModelError(FileFieldName, "Not a valid .zip file");
 		}
 
 		MovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
