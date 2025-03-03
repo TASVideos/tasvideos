@@ -109,6 +109,7 @@ public static class FormFileExtensions
 			var decompressedFileStream = new MemoryStream(); // TODO: To avoid zip bombs we should limit the max size of this MemoryStream
 			await gzip.CopyToAsync(decompressedFileStream);
 			await rawFileStream.DisposeAsync(); // manually dispose because we specified leaveOpen
+			decompressedFileStream.Position = 0;
 			return decompressedFileStream;
 		}
 		catch (InvalidDataException) // happens if file was uploaded without compression (e.g. no javascript), so we continue and return the raw bytes
