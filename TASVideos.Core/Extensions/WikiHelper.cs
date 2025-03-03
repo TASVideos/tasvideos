@@ -150,8 +150,9 @@ public static class WikiHelper
 
 	public static bool IsHomePage(string? pageName)
 	{
-		return !string.IsNullOrWhiteSpace(pageName)
-			&& pageName.StartsWith(LinkConstants.HomePages);
+		return !string.IsNullOrEmpty(pageName)
+			&& pageName.StartsWith(LinkConstants.HomePages)
+			&& pageName.Length > LinkConstants.HomePages.Length;
 	}
 
 	public static string ToUserName(string pageName)
@@ -187,13 +188,15 @@ public static class WikiHelper
 	public static bool IsSystemPage(string? pageName)
 	{
 		return !string.IsNullOrWhiteSpace(pageName)
-			&& pageName.StartsWith("System/");
+			&& pageName.StartsWith("System/")
+			&& pageName.Length > "System/".Length;
 	}
 
 	public static bool IsGameResourcesPage(string? pageName)
 	{
 		return !string.IsNullOrWhiteSpace(pageName)
-			&& pageName.StartsWith("GameResources/");
+			&& pageName.StartsWith("GameResources/")
+			&& pageName.Length > "GameResources/".Length;
 	}
 
 	public static bool IsPublicationPage(string? pageName, out int id)
@@ -203,7 +206,7 @@ public static class WikiHelper
 			return int.TryParse(pageName[LinkConstants.PublicationWikiPage.Length..], out id);
 		}
 
-		id = default;
+		id = 0;
 		return false;
 	}
 
@@ -214,7 +217,7 @@ public static class WikiHelper
 			return int.TryParse(pageName[LinkConstants.SubmissionWikiPage.Length..], out id);
 		}
 
-		id = default;
+		id = 0;
 		return false;
 	}
 
