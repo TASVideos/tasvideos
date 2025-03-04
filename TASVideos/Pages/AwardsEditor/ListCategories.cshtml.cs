@@ -44,7 +44,7 @@ public class ListCategoryModel(ApplicationDbContext db, IMediaFileUploader media
 		db.Awards.Attach(new Award { Id = id }).State = EntityState.Deleted;
 		await db.SaveChangesAsync();
 
-		mediaFileUploader.DeleteAwardImage($"{awardCategory.ShortName}_xxxx");
+		mediaFileUploader.DeleteAwardImage(awardCategory.ShortName);
 
 		return BasePageRedirect("ListCategories");
 	}
