@@ -1,0 +1,7 @@
+fceux: https://fontstruct.com/fontstructions/show/1217225/fceux
+x1: Font Size is set to 8, Sharp is used.
+
+Inter Tight (Black): https://fonts.google.com/specimen/Inter+Tight
+x1: Font Size is set to 9.5, Strong is used. Kerning 0. Tracking -40 (-20 for other instances). (NO EMBOSS)
+x2: Font Size is set to 18, Strong is used. Kerning 0. Tracking -40.
+x4: Font Size is set to 38, Strong is used. Kerning 0. Tracking -50 (-30 for other instances).

@@ -1,0 +1,15 @@
+Create an "output" folder.
+
+Step 0: Alpha Trim
+Only do this step if you're unable to remove the alpha borders from the image.
+Used: (Windows) ImageMagick Porable Q16 - magick & mogrify: https://imagemagick.org/script/download.php
+
+Step 1: Double + Quad Res
+Unless the font requirement changes, this part is straightforward.
+This is basically a standard ffmpeg command that does a simple resizing, and correctly annotates it.
+Used: FFMPEG: https://ffmpeg.org/
+
+Step 2: Compress
+THIS WON'T OUTPUT INTO THE FOLDER, IT WILL OVERWRITE THE FILES.
+pingo's used, nothing of complication required. K.I.S.S.
+Used: Pingo: https://css-ig.net/pingo
