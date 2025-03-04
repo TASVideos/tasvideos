@@ -1,0 +1,3 @@
+2x is the original resolution of this so the resizing for 1x is: "scale=iw/2:ih/2:flags=lanczos"
+"Original" is the work from Noxxa and an effort to make it layered for the general use.
+The reason I (Spikestuff) didn't use it was due to spotting the alpha, and requesting/hoping the original files still existed.
