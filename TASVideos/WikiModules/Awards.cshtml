@@ -4,13 +4,13 @@
 <row>
 	@foreach (var award in Model.Assignments.Where(m => m.Type == AwardType.User).OrderBy(m => m.Description))
 	{
-		string awardName = $"{award.ShortName}_{award.Year.ToString()}";
+		string awardPathPrefix = $"/awards/{award.Year}/{award.ShortName}_{award.Year}";
 		<div class="col-md-4 col-sm-6 mt-3">
 			<img alt="@award.Description"
-				 srcset="/awards/@(awardName).png .5x,
-					/awards/@(awardName)-2x.png 1x,
-					/awards/@(awardName)-4x.png 2x"
-				 src="/awards/@(awardName)-2x.png" loading="lazy" />
+				 srcset="@(awardPathPrefix).png .5x,
+						@(awardPathPrefix)-2x.png 1x,
+						@(awardPathPrefix)-4x.png 2x"
+				 src="@(awardPathPrefix)-2x.png" loading="lazy" />
 			<a id="@(award.ShortName)_@(award.Year)"></a><br />
 			<strong>@award.Description</strong><br />
 			@foreach (var user in award.Users)
@@ -25,14 +25,14 @@
 <row>
 	@foreach (var award in Model.Assignments.Where(m => m.Type == AwardType.Movie).OrderBy(m => m.Description))
 	{
-		string awardName = $"{award.ShortName}_{award.Year.ToString()}";
+		string awardPathPrefix = $"/awards/{award.Year}/{award.ShortName}_{award.Year}";
 		<div class="col-md-4 col-sm-6 mt-3">
 			<a id="@(award.ShortName)_@(award.Year)"></a>
 			<img alt="@award.Description"
-				 srcset="/awards/@(awardName).png .5x,
-				/awards/@(awardName)-2x.png 1x,
-				/awards/@(awardName)-4x.png 2x"
-				 src="/awards/@(awardName)-2x.png" loading="lazy" /><br />
+				 srcset="@(awardPathPrefix).png .5x,
+						@(awardPathPrefix)-2x.png 1x,
+						@(awardPathPrefix)-4x.png 2x"
+				 src="@(awardPathPrefix)-2x.png" loading="lazy" /><br />
 			<strong>@award.Description</strong><br />
 			@foreach (var pub in award.Publications)
 			{
