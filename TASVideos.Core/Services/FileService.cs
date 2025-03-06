@@ -102,8 +102,8 @@ internal class FileService(ApplicationDbContext db) : IFileService
 	public async Task<ZippedFile?> GetPublicationFile(int id)
 	{
 		return await db.Publications
-			.Where(s => s.Id == id)
-			.Select(s => new ZippedFile(s.MovieFile, s.MovieFileName))
+			.Where(p => p.Id == id)
+			.Select(p => new ZippedFile(p.MovieFile, p.MovieFileName))
 			.SingleOrDefaultAsync();
 	}
 

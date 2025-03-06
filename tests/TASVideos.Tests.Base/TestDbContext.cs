@@ -123,7 +123,9 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 			MovieFileName = submission.Id.ToString(),
 		};
 		PublicationAuthors.Add(new PublicationAuthor { Author = author, Publication = pub });
-		return Publications.Add(pub);
+		var pubRecord = Publications.Add(pub);
+		SaveChanges();
+		return pubRecord;
 	}
 
 	public EntityEntry<Publication> AddPublication(User author)

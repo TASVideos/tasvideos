@@ -1,4 +1,5 @@
-﻿using TASVideos.Tests.Base;
+﻿using TASVideos.Data.Entity;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.Data.Tests.Context;
 
@@ -61,14 +62,16 @@ public class ApplicationDbContextTests : TestDbBase
 	[TestMethod]
 	public async Task LastUpdateTimestamp_OnCreate_DoesNotOverride_IfProvided()
 	{
-		var pubEntity = _db.AddPublication().Entity;
-		pubEntity.CreateTimestamp = DateTime.Parse("01/01/1970");
+		_db.IpBans.Add(new IpBan
+		{
+			LastUpdateTimestamp = DateTime.Parse("01/01/1970")
+		});
 
 		await _db.SaveChangesAsync();
 
-		Assert.AreEqual(1, _db.Publications.Count());
-		var pub = _db.Publications.Single();
-		Assert.AreEqual(1970, pub.LastUpdateTimestamp.Year);
+		Assert.AreEqual(1, _db.IpBans.Count());
+		var ban = _db.IpBans.Single();
+		Assert.AreEqual(1970, ban.LastUpdateTimestamp.Year);
 	}
 
 	[TestMethod]
