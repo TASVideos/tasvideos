@@ -67,7 +67,7 @@ public static class ApplicationBuilderExtensions
 			"default-src 'self'", // fallback for other `*-src` directives
 			"font-src 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // CSS `font: url();` and `@font-face { src: url(); }` will be blocked unless they're from one of these domains (this also blocks nonstandard fonts installed on the system maybe)
 			"form-action 'self'", // domains allowed for `<form action/>` (POST target page)
-			"frame-src data: 'self' https://embed.nicovideo.jp/watch/ https://www.google.com/recaptcha/ https://www.youtube.com/embed/", // allow these domains in <iframe/>
+			"frame-src data: 'self' https://embed.nicovideo.jp/watch/ https://www.google.com/recaptcha/ https://www.youtube.com/embed/ https://archive.org/embed/", // allow these domains in <iframe/>
 			"img-src * data:", // allow hotlinking images from any domain in UGC (not great)
 			$"script-src 'self' {string.Join(' ', trustedJsHosts)}", // `<script/>`s will be blocked unless they're from one of these domains
 			"style-src 'unsafe-inline' 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // allow `<style/>`, and `<link rel="stylesheet"/>` if it's from our domain or trusted CDN
