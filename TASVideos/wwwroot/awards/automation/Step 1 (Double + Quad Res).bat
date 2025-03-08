@@ -1,2 +1,2 @@
-FOR %%a in (*.png) DO ffmpeg -n -hide_banner -i "%%~fa" -vf "scale=iw*2:ih*2:sws_flags=neighbor" -q:v 1 "output/%%~na-2x.png"
-FOR %%a in (*.png) DO ffmpeg -n -hide_banner -i "%%~fa" -vf "scale=iw*4:ih*4:sws_flags=neighbor" -q:v 1 "output/%%~na-4x.png"
+FOR %%a in (*.png) DO ffmpeg -n -hide_banner -i "%%~fa" -vf "scale=iw*2:ih*2:sws_flags=neighbor" -q:v 1 -pix_fmt rgb32 "output/%%~na-2x.png"
+FOR %%a in (*.png) DO ffmpeg -n -hide_banner -i "%%~fa" -vf "scale=iw*4:ih*4:sws_flags=neighbor" -q:v 1 -pix_fmt rgb32 "output/%%~na-4x.png"
