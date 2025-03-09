@@ -254,6 +254,7 @@ public class EditModel(
 		}
 
 		bool statusHasChanged = submission.Status != Submission.Status;
+		var previousStatus = submission.Status;
 		bool moveTopic = false;
 		if (statusHasChanged)
 		{
@@ -345,7 +346,7 @@ public class EditModel(
 			await tasvideosGrue.RejectAndMove(submission.Id);
 		}
 
-		var formattedTitle = await GetFormattedTitle(statusHasChanged);
+		var formattedTitle = await GetFormattedTitle(previousStatus, submission.Status);
 		var separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
 		await publisher.SendSubmissionEdit(
 			Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{submission.Title}", statusHasChanged);
@@ -353,21 +354,26 @@ public class EditModel(
 		return RedirectToPage("View", new { Id });
 	}
 
-	private async Task<string> GetFormattedTitle(bool statusHasChanged)
+	private async Task<string> GetFormattedTitle(SubmissionStatus previousStatus, SubmissionStatus newStatus)
 	{
-		if (!statusHasChanged)
+		if (previousStatus == newStatus)
 		{
 			return $"[{Id}S]({{0}}) edited by {User.Name()}";
 		}
 
-		string statusStr = Submission.Status.EnumDisplayName();
+		string statusStr = newStatus.EnumDisplayName();
 
-		if (Submission.Status.IsJudgeDecision())
+		if (previousStatus == SubmissionStatus.PublicationUnderway && newStatus == SubmissionStatus.Accepted)
+		{
+			return $"[{Id}S]({{0}}) unset {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Name()}";
+		}
+
+		if (newStatus.IsJudgeDecision())
 		{
 			statusStr = statusStr.ToUpper();
 		}
 
-		switch (Submission.Status)
+		switch (newStatus)
 		{
 			case SubmissionStatus.Accepted:
 				{
