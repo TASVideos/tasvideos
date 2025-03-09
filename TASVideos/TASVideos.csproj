@@ -46,6 +46,7 @@
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" />
 		<PackageReference Include="RoslynCodeTaskFactory" />
 		<PackageReference Include="Serilog.AspNetCore" />
+		<PackageReference Include="Serilog.Expressions" />
 	</ItemGroup>
 
 	<ItemGroup>

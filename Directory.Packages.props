@@ -31,6 +31,7 @@
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
     <PackageVersion Include="RoslynCodeTaskFactory" Version="2.0.7" />
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageVersion Include="Serilog.Expressions" Version="4.0.0" />
     <PackageVersion Include="SharpCompress" Version="0.36.0" />
     <PackageVersion Include="StackExchange.Redis" Version="2.7.10" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
