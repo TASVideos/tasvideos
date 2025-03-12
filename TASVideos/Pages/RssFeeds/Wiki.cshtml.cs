@@ -10,6 +10,7 @@ public class WikiModel(ApplicationDbContext db) : BasePageModel
 		WikiEdits = await db.WikiPages
 			.ByMostRecent()
 			.Select(wp => new RssWiki(
+				wp.Revision,
 				wp.RevisionMessage ?? "",
 				wp.PageName,
 				wp.LastUpdateTimestamp,
@@ -20,5 +21,5 @@ public class WikiModel(ApplicationDbContext db) : BasePageModel
 		return Rss();
 	}
 
-	public record RssWiki(string RevisionMessage, string PageName, DateTime PubDate, bool IsNew, string Author);
+	public record RssWiki(int RevisionId, string RevisionMessage, string PageName, DateTime PubDate, bool IsNew, string Author);
 }

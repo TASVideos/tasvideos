@@ -20,7 +20,7 @@
 				<rss-link>@url</rss-link>
 				<description>@edit.RevisionMessage</description>
 				<comments>@(Settings.BaseUrl)/Forum/</comments>
-				<guid>@url</guid>
+				<guid>@url?revision=@edit.RevisionId</guid>
 				<pubDate>@edit.PubDate.ToString("r", CultureInfo.InvariantCulture)</pubDate>
 			</item>
 		}
