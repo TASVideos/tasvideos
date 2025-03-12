@@ -17,7 +17,9 @@ public class PublicationsModel(ApplicationDbContext db, IWikiPages wikiPages) : 
 				p.MovieFile.Length,
 				p.CreateTimestamp,
 				p.Title,
-				p.PublicationTags.Select(pt => pt.Tag!.DisplayName).ToList(),
+				p.PublicationFlags.Select(pf => pf.Flag!.Token)
+					.Concat(p.PublicationTags.Select(pt => pt.Tag!.DisplayName))
+					.ToList(),
 				p.Files
 					.Select(pf => new PubFile(pf.Path, pf.Type))
 					.ToList(),
@@ -40,7 +42,7 @@ public class PublicationsModel(ApplicationDbContext db, IWikiPages wikiPages) : 
 	}
 
 	public record RssPublication(
-		int Id, int MovieFileSize, DateTime CreateTimestamp, string Title, List<string> TagNames, List<PubFile> Files, List<string> StreamingUrls, List<double> Ratings)
+		int Id, int MovieFileSize, DateTime CreateTimestamp, string Title, List<string> Categories, List<PubFile> Files, List<string> StreamingUrls, List<double> Ratings)
 	{
 		public IWikiPage? Wiki { get; set; }
 		public string ScreenshotPath => Files.First(f => f.Type == FileType.Screenshot).Path;

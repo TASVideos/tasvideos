@@ -25,7 +25,7 @@
 						<wiki-markup markup="@pub.Wiki?.Markup" page-data="@pub.Wiki"></wiki-markup>
 					</html-encode>
 				</description>
-				@foreach (var tag in pub.TagNames)
+				@foreach (var tag in pub.Categories)
 				{
 					<category>@tag</category>
 				}
