@@ -26,7 +26,7 @@
 				<comments condition="@sub.TopicId.HasValue">@(Settings.BaseUrl)/Forum/Topics/@sub.TopicId</comments>
 				<enclosure url="@(subUrl)?handler=Download" />
 				<guid>@subUrl</guid>
-				<pubDate>@sub.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
+				<pubDate>@sub.CreateTimestamp.ToString("r", CultureInfo.InvariantCulture)</pubDate>
 			</item>
 		}
 	</channel>
