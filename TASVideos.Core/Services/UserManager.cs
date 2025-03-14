@@ -54,18 +54,35 @@ public class UserManager(
 	}
 
 	/// <summary>
-	/// Returns a list of all permissions of the <seea cref="User"/> with the given id
+	/// Returns a list of all permissions of the <seea cref="User"/> with the given id. <br />
+	/// By default, "effective" permissions are returned. I.e. even if a banned user has roles with permissions, we still return none. <br />
+	/// Set <paramref name="getRawPermissions"/> to return "raw" permissions from the database, which is useful when modifying permissions.
 	/// </summary>
-	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId)
+	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId, bool getRawPermissions = false)
 	{
-		return await db.Users
-			.Where(u => u.Id == userId)
-			.ThatAreNotBanned()
-			.SelectMany(u => u.UserRoles)
-			.SelectMany(ur => ur.Role!.RolePermission)
-			.Select(rp => rp.PermissionId)
-			.Distinct()
-			.ToListAsync();
+		if (!getRawPermissions)
+		{
+			// effective permissions
+			return await db.Users
+				.Where(u => u.Id == userId)
+				.ThatAreNotBanned()
+				.SelectMany(u => u.UserRoles)
+				.SelectMany(ur => ur.Role!.RolePermission)
+				.Select(rp => rp.PermissionId)
+				.Distinct()
+				.ToListAsync();
+		}
+		else
+		{
+			// raw permissions
+			return await db.Users
+				.Where(u => u.Id == userId)
+				.SelectMany(u => u.UserRoles)
+				.SelectMany(ur => ur.Role!.RolePermission)
+				.Select(rp => rp.PermissionId)
+				.Distinct()
+				.ToListAsync();
+		}
 	}
 
 	public async Task AddStandardRoles(int userId)
@@ -225,7 +242,7 @@ public class UserManager(
 			return;
 		}
 
-		var userPermissions = (await GetUserPermissionsById(userId)).ToList();
+		var userPermissions = (await GetUserPermissionsById(userId, getRawPermissions: true)).ToList();
 
 		var assignableRoles = await db.Roles
 			.Include(r => r.RolePermission)
@@ -290,7 +307,7 @@ public class UserManager(
 				continue;
 			}
 
-			var userPermissions = (await GetUserPermissionsById(userId)).ToList();
+			var userPermissions = (await GetUserPermissionsById(userId, getRawPermissions: true)).ToList();
 
 			foreach (var role in assignableRoles)
 			{
