@@ -19,7 +19,9 @@
 				<title>@news.Subject</title>
 				<rss-link>@postUrl</rss-link>
 				<description>
-					<forum-markup markup="@news.Text" enable-html="@news.EnableHtml" enable-bb-code="@news.EnableBbCode"></forum-markup>
+					<html-encode>
+						<forum-markup markup="@news.Text" enable-html="@news.EnableHtml" enable-bb-code="@news.EnableBbCode"></forum-markup>
+					</html-encode>
 				</description>
 				<comments>@postUrl</comments>
 				<guid>@postUrl</guid>
