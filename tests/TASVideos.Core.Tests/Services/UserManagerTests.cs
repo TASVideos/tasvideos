@@ -265,6 +265,23 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		_ = _tasVideoAgent.DidNotReceive().SendPublishedAuthorRole(userId, Arg.Any<string>(), Arg.Any<string>());
 	}
 
+	[TestMethod]
+	public async Task AssignAutoAssignableRolesByPublication_BannedUserAlreadyHasRole_DoesNotAddRole()
+	{
+		const int userId = 1;
+		var user = _db.AddUser(userId).Entity;
+		user.BannedUntil = DateTime.UtcNow.AddYears(100);
+		_db.AddPublication(user);
+		var role = _db.Roles.Add(new Role { Name = "r1", AutoAssignPublications = true });
+		_db.RolePermission.Add(new RolePermission { Role = role.Entity, PermissionId = PermissionTo.CatalogMovies });
+		_db.UserRoles.Add(new UserRole { UserId = userId, Role = role.Entity });
+		await _db.SaveChangesAsync();
+
+		await _userManager.AssignAutoAssignableRolesByPublication([userId], "some title");
+		Assert.AreEqual(1, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role.Entity.Id));
+		_ = _tasVideoAgent.DidNotReceive().SendPublishedAuthorRole(userId, Arg.Any<string>(), Arg.Any<string>());
+	}
+
 	#endregion
 
 	[TestMethod]
