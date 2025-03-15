@@ -11,7 +11,7 @@
 <rss>
 	<channel>
 		<partial model="@((title, link))" name="_RssChannel" />
-		<atom-link href="@(Settings.BaseUrl)/submissions.rss" />
+		<atom:link rel="self" type="application/rss+xml" href="@(Settings.BaseUrl)/submissions.rss" />
 		@foreach (var sub in Model.Submissions)
 		{
 			var subUrl = $"{Settings.BaseUrl}/{sub.Id}S";
