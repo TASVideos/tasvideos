@@ -24,7 +24,7 @@
 					</html-encode>
 				</description>
 				<comments condition="@sub.TopicId.HasValue">@(Settings.BaseUrl)/Forum/Topics/@sub.TopicId</comments>
-				<enclosure url="@(subUrl)?handler=Download" />
+				@* <enclosure url="@(subUrl)?handler=Download" length="TODO" type="TODO" /> *@
 				<guid>@subUrl</guid>
 				<pubDate>@sub.CreateTimestamp.ToString("r", CultureInfo.InvariantCulture)</pubDate>
 			</item>
