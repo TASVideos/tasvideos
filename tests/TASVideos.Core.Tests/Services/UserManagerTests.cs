@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TASVideos.Core.Services.Wiki;
@@ -38,15 +39,10 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	}
 
 	[TestMethod]
-	[DataRow("test", "test", true)]
-	[DataRow("test", "doesNotExist", false)]
-	public async Task Exists(string userToAdd, string userToLookup, bool expected)
+	public async Task GetRequiredUser_UserDoesNotExist_Throws()
 	{
-		_db.AddUser(userToAdd);
-		await _db.SaveChangesAsync();
-
-		var actual = await _userManager.Exists(userToLookup);
-		Assert.AreEqual(expected, actual);
+		var user = new ClaimsPrincipal();
+		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _userManager.GetRequiredUser(user));
 	}
 
 	[TestMethod]
@@ -272,16 +268,6 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	#endregion
 
 	[TestMethod]
-	public async Task PermaBanUser()
-	{
-		const int userId = 1;
-		var user = _db.AddUser(userId);
-
-		await _userManager.PermaBanUser(userId);
-		Assert.IsTrue(user.Entity.IsBanned());
-	}
-
-	[TestMethod]
 	public async Task UserNameChanged()
 	{
 		const int userId = 1;
@@ -314,6 +300,28 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		Assert.AreEqual(2, _db.Submissions.Count(s => s.Title.Contains(newName)));
 		Assert.AreEqual(0, _db.Publications.Count(s => s.Title.Contains(oldName)));
 		Assert.AreEqual(2, _db.Publications.Count(s => s.Title.Contains(newName)));
+	}
+
+	[TestMethod]
+	[DataRow("test", "test", true)]
+	[DataRow("test", "doesNotExist", false)]
+	public async Task Exists(string userToAdd, string userToLookup, bool expected)
+	{
+		_db.AddUser(userToAdd);
+		await _db.SaveChangesAsync();
+
+		var actual = await _userManager.Exists(userToLookup);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task PermaBanUser()
+	{
+		const int userId = 1;
+		var user = _db.AddUser(userId);
+
+		await _userManager.PermaBanUser(userId);
+		Assert.IsTrue(user.Entity.IsBanned());
 	}
 
 	[TestMethod]

@@ -57,8 +57,7 @@ public class UserManager(
 	/// Returns a list of all permissions of the <seea cref="User"/> with the given id
 	/// </summary>
 	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId)
-	{
-		return await db.Users
+		=> await db.Users
 			.Where(u => u.Id == userId)
 			.ThatAreNotBanned()
 			.SelectMany(u => u.UserRoles)
@@ -66,7 +65,6 @@ public class UserManager(
 			.Select(rp => rp.PermissionId)
 			.Distinct()
 			.ToListAsync();
-	}
 
 	public async Task AddStandardRoles(int userId)
 	{
