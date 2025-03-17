@@ -320,4 +320,9 @@
     <Rule Id="SA1027" Action="Warning" />
     <Rule Id="SA1028" Action="Warning" />
   </Rules>
+  <Rules AnalyzerId="TASVideos.Analyzers" RuleNamespace="TASVideos.Analyzers">
+    <Rule Id="TVO1000" Action="Error" /> <!-- Do not use `#if false` -->
+    <Rule Id="TVO1001" Action="Error" /> <!-- Don't mark expression-bodied delegates ("lambdas") as `static` -->
+    <Rule Id="TVO1002" Action="Error" /> <!-- Properties with an `init` accessor should not be `required` -->
+  </Rules>
 </RuleSet>
