@@ -35,10 +35,24 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseStaticFilesWithExtensionMapping(this IApplicationBuilder app, IWebHostEnvironment env)
 	{
+		static void MaybeSetCacheHeader(StaticFileResponseContext ctx)
+		{
+			var fileType = ctx.Context.Response.ContentType ?? string.Empty;
+			if (fileType.StartsWith("image/"))
+			{
+				// re: `public` directive: without it, the browser will assume that all resources downloaded while logged in are secret, and won't cache them.
+				// (Now, we could theoretically send e.g. profile PII as a dynamically-served SVG, but that seems unreasonable.
+				// And even if we were to do that, it's not clear what kind of attack that would enable, since it's all client-side regardless. MDN doesn't say.)
+				// Static images are currently all things like screenshots and award icons, which aren't private and should absolutely be cached.
+				ctx.Context.Response.Headers.Append("Cache-Control", $"public, max-age={Durations.OneWeekInSeconds}");
+			}
+		}
+
 		var contentTypeProvider = new FileExtensionContentTypeProvider();
 		var staticFileOptions = new StaticFileOptions
 		{
 			ContentTypeProvider = contentTypeProvider,
+			OnPrepareResponse = MaybeSetCacheHeader,
 			ServeUnknownFileTypes = true,
 			DefaultContentType = "text/plain"
 		};
