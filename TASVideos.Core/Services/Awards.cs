@@ -260,7 +260,7 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 
 		var allAwards = userAwards.Concat(publicationAwards);
 
-		cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
+		cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeek);
 
 		return allAwards;
 	}

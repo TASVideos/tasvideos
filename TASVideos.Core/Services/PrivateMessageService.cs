@@ -132,7 +132,7 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 			.SentToUser(userId)
 			.CountAsync(pm => pm.ReadOn == null);
 
-		cache.Set(cacheKey, unreadMessageCount, Durations.OneMinuteInSeconds);
+		cache.Set(cacheKey, unreadMessageCount, Durations.OneMinute);
 		return unreadMessageCount;
 	}
 

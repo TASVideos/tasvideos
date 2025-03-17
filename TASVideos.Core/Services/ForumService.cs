@@ -94,7 +94,7 @@ internal class ForumService(
 		if (cacheService.TryGetValue(LatestPostCacheKey, out Dictionary<int, LatestPost?> dict))
 		{
 			dict[forumId] = post;
-			cacheService.Set(LatestPostCacheKey, dict, Durations.OneDayInSeconds);
+			cacheService.Set(LatestPostCacheKey, dict, Durations.OneDay);
 		}
 	}
 
@@ -109,7 +109,7 @@ internal class ForumService(
 			createPostActivity[postId] = createTimestamp.UnixTimestamp();
 			subforumActivity[topicId] = (JsonSerializer.Serialize(createPostActivity), postActivity.Item2);
 			forumActivity[forumId] = subforumActivity;
-			cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDayInSeconds);
+			cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDay);
 		}
 
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> fullSubforumActivity))
@@ -118,7 +118,7 @@ internal class ForumService(
 			var createPostActivity = postActivity.Item1 == null ? [] : JsonSerializer.Deserialize<Dictionary<int, long>>(postActivity.Item1)!;
 			createPostActivity[postId] = createTimestamp.UnixTimestamp();
 			fullSubforumActivity[forumId] = (JsonSerializer.Serialize(createPostActivity), postActivity.Item2);
-			cacheService.Set(PostActivityOfSubforumsCacheKey, fullSubforumActivity, Durations.OneDayInSeconds);
+			cacheService.Set(PostActivityOfSubforumsCacheKey, fullSubforumActivity, Durations.OneDay);
 		}
 	}
 
@@ -133,7 +133,7 @@ internal class ForumService(
 			editPostActivity[postId] = editTimestamp.UnixTimestamp();
 			subforumActivity[topicId] = (postActivity.Item1, JsonSerializer.Serialize(editPostActivity));
 			forumActivity[forumId] = subforumActivity;
-			cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDayInSeconds);
+			cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDay);
 		}
 
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> fullSubforumActivity))
@@ -142,7 +142,7 @@ internal class ForumService(
 			var editPostActivity = postActivity.Item2 == null ? [] : JsonSerializer.Deserialize<Dictionary<int, long>>(postActivity.Item2)!;
 			editPostActivity[postId] = editTimestamp.UnixTimestamp();
 			fullSubforumActivity[forumId] = (postActivity.Item1, JsonSerializer.Serialize(editPostActivity));
-			cacheService.Set(PostActivityOfSubforumsCacheKey, fullSubforumActivity, Durations.OneDayInSeconds);
+			cacheService.Set(PostActivityOfSubforumsCacheKey, fullSubforumActivity, Durations.OneDay);
 		}
 	}
 
@@ -242,7 +242,7 @@ internal class ForumService(
 				tvalue.LatestPost.CreateTimestamp,
 				tvalue.LatestPost.UserName));
 
-		cacheService.Set(LatestPostCacheKey, dict, Durations.OneDayInSeconds);
+		cacheService.Set(LatestPostCacheKey, dict, Durations.OneDay);
 
 		return dict;
 	}
@@ -288,7 +288,7 @@ internal class ForumService(
 									tttvalue => ((DateTime)tttvalue.PostEditedTimestamp!).UnixTimestamp()))
 						)));
 
-		cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDayInSeconds);
+		cacheService.Set(PostActivityOfTopicsCacheKey, forumActivity, Durations.OneDay);
 
 		return forumActivity;
 	}
@@ -336,7 +336,7 @@ internal class ForumService(
 							ttvalue => ((DateTime)ttvalue.PostEditedTimestamp!).UnixTimestamp()))
 				));
 
-		cacheService.Set(PostActivityOfSubforumsCacheKey, subforumActivity, Durations.OneDayInSeconds);
+		cacheService.Set(PostActivityOfSubforumsCacheKey, subforumActivity, Durations.OneDay);
 
 		return subforumActivity;
 	}

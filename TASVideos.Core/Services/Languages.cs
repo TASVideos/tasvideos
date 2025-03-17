@@ -20,7 +20,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 		}
 
 		languages = await GetTranslationsInternal(pageName);
-		cache.Set(key, languages, Durations.FiveMinutesInSeconds);
+		cache.Set(key, languages, Durations.FiveMinutes);
 		return languages;
 	}
 
