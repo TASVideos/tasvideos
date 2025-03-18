@@ -18,20 +18,20 @@ public class LanguagesTests : TestDbBase
 	}
 
 	[TestMethod]
-	[DataRow(null, false)]
-	[DataRow("", false)]
-	[DataRow("\r \n \t", false)]
-	[DataRow("/", false)]
-	[DataRow("ES", true)]
-	[DataRow("ES/", true)]
-	[DataRow("FRFrontPage", false)]
-	[DataRow("ES/FrontPage", true)]
-	[DataRow("FrontPage", false)]
-	public async Task IsLanguagePage(string pageName, bool expected)
+	[DataRow(null, null)]
+	[DataRow("", null)]
+	[DataRow("\r \n \t", null)]
+	[DataRow("/", null)]
+	[DataRow("ES", "ES")]
+	[DataRow("ES/", "ES")]
+	[DataRow("FRFrontPage", null)]
+	[DataRow("ES/FrontPage", "ES")]
+	[DataRow("FrontPage", null)]
+	public async Task IsLanguagePage(string pageName, string? expected)
 	{
 		MockStandardMarkup();
 		var actual = await _languages.IsLanguagePage(pageName);
-		Assert.AreEqual(expected, actual);
+		Assert.AreEqual(expected, actual?.Code);
 	}
 
 	[TestMethod]

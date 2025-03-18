@@ -28,7 +28,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 	{
 		string subPage = pageName;
 		var languages = new List<LanguagePage>();
-		bool isTranslation = await IsLanguagePage(pageName);
+		bool isTranslation = await IsLanguagePage(pageName) is not null;
 		if (isTranslation)
 		{
 			if (!pageName.Contains('/'))
@@ -67,23 +67,23 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 			.ToList();
 	}
 
-	internal async Task<bool> IsLanguagePage(string? pageName)
+	internal async Task<Language?> IsLanguagePage(string? pageName)
 	{
 		if (string.IsNullOrWhiteSpace(pageName))
 		{
-			return false;
+			return null;
 		}
 
 		string trimmed = pageName.Trim('/');
 
 		if (string.IsNullOrEmpty(trimmed))
 		{
-			return false;
+			return null;
 		}
 
 		var languages = await AvailableLanguages();
 
-		return languages.Any(l => trimmed.StartsWith(l.Code + "/")
+		return languages.FirstOrDefault(l => trimmed.StartsWith(l.Code + "/")
 			|| l.Code == trimmed);
 	}
 
