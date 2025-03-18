@@ -39,11 +39,11 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 			subPage = string.Join("/", pageName.Split('/').Skip(1));
 
 			// Translations should also include the original link to the English version
-			languages.Add(new LanguagePage("EN", "English", subPage));
+			languages.Add(new(Language.English, subPage));
 		}
 
 		languages.AddRange((await AvailableLanguages())
-			.Select(l => new LanguagePage(l.Code, l.DisplayName, l.Code + "/" + subPage))
+			.Select(l => new LanguagePage(l, $"{l.Code}/{subPage}"))
 			.ToList());
 
 		if (!languages.Any())
@@ -122,5 +122,12 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 	}
 }
 
-internal record Language(string Code, string DisplayName);
-public record LanguagePage(string Code, string DisplayName, string Path);
+public record Language(string Code, string DisplayName)
+{
+	public static readonly Language English = new("EN", "English");
+}
+
+public record LanguagePage(Language Lang, string Path)
+{
+	public string Code => Lang.Code;
+}

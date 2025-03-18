@@ -11,7 +11,7 @@
 	<ul class="dropdown-menu" aria-labelledby="translation-menu">
 		@foreach (var l in languages)
 		{
-			<li><a class="dropdown-item" href="/@l.Path">@l.Code | @l.DisplayName</a></li>
+			<li><a class="dropdown-item" href="/@l.Path">@l.Code | @l.Lang.DisplayName</a></li>
 		}
 	</ul>
 </div>
