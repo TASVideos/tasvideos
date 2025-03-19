@@ -1,0 +1,4 @@
+This folder only exists to save you from needing to grab the awards that are incompatible with the automation.
+Then again Nintendo 3D and GameBoy are the only two in this group that change depending on what consoles are submitted.
+
+GameBoy being if there isn't enough GBA submissions to require the need for the award.
