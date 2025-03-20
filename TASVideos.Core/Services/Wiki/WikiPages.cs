@@ -93,7 +93,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 			return page;
 		}
 
-		set => cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDayInSeconds);
+		set => cache.Set($"{CacheKeys.CurrentWikiCache}-{pageName.ToLower()}", value, Durations.OneDay);
 	}
 
 	private void RemovePageFromCache(string pageName) =>

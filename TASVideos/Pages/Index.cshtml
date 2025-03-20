@@ -3,7 +3,7 @@
 	ViewData.IgnorePageTitle();
 }
 
-<cache enabled="@(!User.IsLoggedIn())" expires-after="@TimeSpan.FromSeconds(Durations.FiveMinutesInSeconds)">
+<cache enabled="@(!User.IsLoggedIn())" expires-after="@Durations.FiveMinutes">
 	@await Html.RenderWiki(SystemWiki.FrontPage)
 </cache>
 <edit-link condition="@User.CanEditWiki(SystemWiki.FrontPage)"

@@ -15,7 +15,7 @@ public class CustomLocalizationMiddleware(RequestDelegate next)
 					.Select(u => u.UserName)
 					.ToListAsync())
 					.ToHashSet();
-				cache.Set(CacheKeys.UsersWithCustomLocale, usersWithCustomLocale, Durations.OneYearInSeconds);
+				cache.Set(CacheKeys.UsersWithCustomLocale, usersWithCustomLocale, Durations.OneYear);
 			}
 
 			if (usersWithCustomLocale.Contains(context.User.Name()))
@@ -34,7 +34,7 @@ public class CustomLocalizationMiddleware(RequestDelegate next)
 						})
 						.SingleOrDefaultAsync();
 					customCultureInfo = ConstructCustomCulture(customCultureData);
-					cache.Set(CacheKeys.CustomUserLocalePrefix + userId, customCultureInfo, Durations.OneYearInSeconds);
+					cache.Set(CacheKeys.CustomUserLocalePrefix + userId, customCultureInfo, Durations.OneYear);
 				}
 
 				CultureInfo.CurrentCulture = customCultureInfo;

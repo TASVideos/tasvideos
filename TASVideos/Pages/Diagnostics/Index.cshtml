@@ -27,7 +27,7 @@
 	private bool TestCache()
 	{
 		var key = Guid.NewGuid().ToString();
-		Cache.Set(key, "CacheTest", 60);
+		Cache.Set(key, "CacheTest", TimeSpan.FromMinutes(1));
 		return Cache.TryGetValue(key, out string _);
 	}
 }

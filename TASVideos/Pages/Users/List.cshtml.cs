@@ -57,7 +57,7 @@ public class ListModel(ApplicationDbContext db, ICacheService cache, UserManager
 			.Select(u => u.UserName)
 			.ToListAsync();
 
-		cache.Set(cacheKey, list, Durations.OneMinuteInSeconds);
+		cache.Set(cacheKey, list, Durations.OneMinute);
 
 		return list;
 	}

@@ -57,7 +57,7 @@ internal class GoogleAuthService(
 		if (tokenResponse.ExpiresAt > 10)
 		{
 			// Subtract a bit of time to ensure it does not expire between the time of accessing and using it
-			cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
+			cache.Set(cacheKey, tokenResponse.AccessToken, TimeSpan.FromSeconds(tokenResponse.ExpiresAt - 10));
 		}
 
 		return tokenResponse.AccessToken;
