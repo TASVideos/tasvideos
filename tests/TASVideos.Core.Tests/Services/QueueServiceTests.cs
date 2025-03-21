@@ -15,6 +15,8 @@ namespace TASVideos.Core.Tests.Services;
 public class QueueServiceTests : TestDbBase
 {
 	private const int MinimumHoursBeforeJudgment = 72;
+	private const int SubmissionRateDays = 1;
+	private const int SubmissionRateSubs = 3;
 	private readonly QueueService _queueService;
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
@@ -35,12 +37,18 @@ public class QueueServiceTests : TestDbBase
 		_youtubeSync = Substitute.For<IYoutubeSync>();
 		_tva = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
-		var settings = new AppSettings { MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment };
+		var settings = new AppSettings
+		{
+			MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment,
+			SubmissionRate = new() { Days = SubmissionRateDays, Submissions = SubmissionRateSubs }
+		};
 		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages);
 	}
 
+	#region AvailableStatuses
+
 	[TestMethod]
-	public void Published_CanNotChange()
+	public void AvailableStatuses_Published_CanNotChange()
 	{
 		var result = _queueService.AvailableStatuses(
 			Published,
@@ -65,7 +73,7 @@ public class QueueServiceTests : TestDbBase
 	[DataRow(Cancelled, new[] { New })]
 	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
-	public void Submitter_BasicPerms(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+	public void AvailableStatuses_Submitter_BasicPerms(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
 		var expected = new[] { current }.Concat(canChangeTo).ToList();
 		var result = _queueService.AvailableStatuses(
@@ -94,7 +102,7 @@ public class QueueServiceTests : TestDbBase
 	[DataRow(Cancelled, new[] { New })]
 	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
-	public void Submitter_IsJudge(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+	public void AvailableStatuses_Submitter_IsJudge(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
 		var expected = new[] { current }.Concat(canChangeTo).ToList();
 		var result = _queueService.AvailableStatuses(
@@ -123,7 +131,7 @@ public class QueueServiceTests : TestDbBase
 	[DataRow(Cancelled, new[] { New })]
 	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
-	public void Submitter_IsPublisher(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+	public void AvailableStatuses_Submitter_IsPublisher(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
 		var expected = new[] { current }.Concat(canChangeTo).ToList();
 		var result = _queueService.AvailableStatuses(
@@ -152,7 +160,7 @@ public class QueueServiceTests : TestDbBase
 	[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
 	[DataRow(Playground, new[] { New, JudgingUnderWay })]
 	[TestMethod]
-	public void Judge_ButNotSubmitter_BeforeAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+	public void AvailableStatuses_Judge_ButNotSubmitter_BeforeAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
 		var expected = new[] { current }.Concat(canChangeTo).ToList();
 		var result = _queueService.AvailableStatuses(
@@ -181,7 +189,7 @@ public class QueueServiceTests : TestDbBase
 	[DataRow(Cancelled, new[] { New, JudgingUnderWay })]
 	[DataRow(Playground, new[] { New, JudgingUnderWay })]
 	[TestMethod]
-	public void Judge_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+	public void AvailableStatuses_Judge_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
 		var expected = new[] { current }.Concat(canChangeTo).ToList();
 		var result = _queueService.AvailableStatuses(
@@ -210,7 +218,7 @@ public class QueueServiceTests : TestDbBase
 	[DataRow(Cancelled, new SubmissionStatus[0])]
 	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
-	public void Publisher_ButNotSubmitter_BeforeAllowedJudgmentWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+	public void AvailableStatuses_Publisher_ButNotSubmitter_BeforeAllowedJudgmentWindow_CanNotChangeStatus(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
 		var expected = new[] { current }.Concat(canChangeTo).ToList();
 		var result = _queueService.AvailableStatuses(
@@ -239,7 +247,7 @@ public class QueueServiceTests : TestDbBase
 	[DataRow(Cancelled, new SubmissionStatus[0])]
 	[DataRow(Playground, new SubmissionStatus[0])]
 	[TestMethod]
-	public void Publisher_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
+	public void AvailableStatuses_Publisher_ButNotSubmitter_AfterAllowedJudgmentWindow(SubmissionStatus current, IEnumerable<SubmissionStatus> canChangeTo)
 	{
 		var expected = new[] { current }.Concat(canChangeTo).ToList();
 		var result = _queueService.AvailableStatuses(
@@ -281,6 +289,57 @@ public class QueueServiceTests : TestDbBase
 			Assert.IsTrue(result.SequenceEqual(exceptPublished));
 		}
 	}
+
+	#endregion
+
+	#region HoursRemainingFor
+
+	[TestMethod]
+	[DataRow(Accepted)]
+	[DataRow(PublicationUnderway)]
+	[DataRow(Published)]
+	[DataRow(Rejected)]
+	[DataRow(Cancelled)]
+	[DataRow(Playground)]
+	public void HoursRemainingForJudging_StatusCannotBeJudged_ReturnsZero(SubmissionStatus status)
+	{
+		var submission = Substitute.For<ISubmissionDisplay>();
+		submission.Status.Returns(status);
+		var actual = _queueService.HoursRemainingForJudging(submission);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	[DataRow(New)]
+	[DataRow(Delayed)]
+	[DataRow(NeedsMoreInfo)]
+	[DataRow(JudgingUnderWay)]
+	public void HoursRemainingForJudging_CanBeJudgedAndIsRecent_ReturnsPositiveHours(SubmissionStatus status)
+	{
+		var submission = Substitute.For<ISubmissionDisplay>();
+		submission.Status.Returns(status);
+		submission.Date.Returns(DateTime.UtcNow.AddHours(-(MinimumHoursBeforeJudgment - 1)));
+		var actual = _queueService.HoursRemainingForJudging(submission);
+		Assert.IsTrue(actual > 0);
+	}
+
+	[TestMethod]
+	[DataRow(New)]
+	[DataRow(Delayed)]
+	[DataRow(NeedsMoreInfo)]
+	[DataRow(JudgingUnderWay)]
+	public void HoursRemainingForJudging_CanBeJudgedAndIsOld_ReturnsNegativeHours(SubmissionStatus status)
+	{
+		var submission = Substitute.For<ISubmissionDisplay>();
+		submission.Status.Returns(status);
+		submission.Date.Returns(DateTime.UtcNow.AddHours(-(MinimumHoursBeforeJudgment + 1)));
+		var actual = _queueService.HoursRemainingForJudging(submission);
+		Assert.IsTrue(actual < 0);
+	}
+
+	#endregion
+
+	#region Delete Submission
 
 	[TestMethod]
 	public async Task CanDeleteSubmission_NotFound()
@@ -398,6 +457,10 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(0, _db.ForumPollOptionVotes.Count());
 		await _wikiPages.Received(1).Delete(WikiHelper.ToSubmissionWikiPageName(1));
 	}
+
+	#endregion
+
+	#region Unpublish
 
 	[TestMethod]
 	public async Task CanUnpublish_NotFound()
@@ -562,6 +625,10 @@ public class QueueServiceTests : TestDbBase
 		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}
 
+	#endregion
+
+	#region MapParsedResult
+
 	[TestMethod]
 	public async Task MapParsedResult_ThrowsIfParsingIsFailed()
 	{
@@ -651,6 +718,10 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(entry.Entity, submission.SystemFrameRate.System);
 	}
 
+	#endregion
+
+	#region ObsoleteWith
+
 	[TestMethod]
 	public async Task ObsoleteWith_NoPublication_ReturnsFalse()
 	{
@@ -684,4 +755,55 @@ public class QueueServiceTests : TestDbBase
 
 		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}
+
+	#endregion
+
+	#region ExceededSubmissionLimit
+
+	[TestMethod]
+	public async Task ExceededSubmissionLimit_RecentSubmissionsButUnderLimit_ReturnsNull()
+	{
+		const int submitterId = 1;
+		_db.AddUser(submitterId);
+		_db.Submissions.Add(new Submission { SubmitterId = submitterId });
+		await _db.SaveChangesAsync();
+
+		var actual = await _queueService.ExceededSubmissionLimit(submitterId);
+		Assert.IsNull(actual);
+	}
+
+	[TestMethod]
+	public async Task ExceededSubmissionLimit_ManySubmissionsButOldEnough_ReturnsNull()
+	{
+		const int submitterId = 1;
+		_db.AddUser(submitterId);
+		for (var i = 0; i < SubmissionRateSubs + 1; i++)
+		{
+			_db.Submissions.Add(new Submission { SubmitterId = submitterId, CreateTimestamp = DateTime.UtcNow.AddDays(-SubmissionRateDays).AddHours(-1) });
+		}
+
+		await _db.SaveChangesAsync();
+
+		var actual = await _queueService.ExceededSubmissionLimit(submitterId);
+		Assert.IsNull(actual);
+	}
+
+	[TestMethod]
+	public async Task ExceededSubmissionLimit_ManyRecentSubmissions_ReturnsFutureDate()
+	{
+		const int submitterId = 1;
+		_db.AddUser(submitterId);
+		for (var i = 0; i < SubmissionRateSubs + 1; i++)
+		{
+			_db.Submissions.Add(new Submission { SubmitterId = submitterId, CreateTimestamp = DateTime.UtcNow.AddDays(-SubmissionRateDays).AddHours(1 + i) });
+		}
+
+		await _db.SaveChangesAsync();
+
+		var actual = await _queueService.ExceededSubmissionLimit(submitterId);
+		Assert.IsNotNull(actual);
+		Assert.IsTrue(actual.Value > DateTime.UtcNow);
+	}
+
+	#endregion
 }

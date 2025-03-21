@@ -181,13 +181,13 @@ internal class QueueService(
 
 	public int HoursRemainingForJudging(ISubmissionDisplay submission)
 	{
-		if (submission.Status.CanBeJudged())
+		if (!submission.Status.CanBeJudged())
 		{
-			var diff = (DateTime.UtcNow - submission.Date).TotalHours;
-			return _minimumHoursBeforeJudgment - (int)diff;
+			return 0;
 		}
 
-		return 0;
+		var diff = (DateTime.UtcNow - submission.Date).TotalHours;
+		return _minimumHoursBeforeJudgment - (int)diff;
 	}
 
 	public async Task<DeleteSubmissionResult> CanDeleteSubmission(int submissionId)
