@@ -2,7 +2,40 @@
 @{
 	var isMyPage = User.GetUserId() == Model.Id;
 	ViewData.SetTitle($"Ratings for {Model.UserName}");
+	string userHasString = isMyPage ? "You have" : "User has";
+	int totalUserRatingsCountWithoutOwn = Model.UsersWithLowerRatingsCount + Model.UsersWithEqualRatingsCount + Model.UsersWithHigherRatingsCount;
 }
+<h4>Summary</h4>
+<p>
+	@userHasString rated @(((double)(Model.RatingsCount) / Model.Summary.TotalPublicationCount).ToPercentage(1)) (@Model.RatingsCount of @Model.Summary.TotalPublicationCount) of all non-obsoleted published movies.
+	<br />
+	@userHasString rated more movies than @(((double)(Model.UsersWithLowerRatingsCount) / totalUserRatingsCountWithoutOwn).ToPercentage(1)) of users,
+	and less than @(((double)(Model.UsersWithHigherRatingsCount) / totalUserRatingsCountWithoutOwn).ToPercentage(1)) of users.
+	(@(((double)(Model.UsersWithEqualRatingsCount) / totalUserRatingsCountWithoutOwn).ToPercentage(1)) same.)
+	<br />
+	The raters' top-30 (out of @Model.Summary.TotalRaterCount users who have rated):
+</p>
+<ol style="column-width: 11rem; column-count: 3;">
+	@{
+		int rank = 1;
+	}
+	@foreach (var topRater in Model.Summary.TopRaters)
+	{
+		<li value="@rank">
+			@(((double)(topRater.RatingsCount) / Model.Summary.TotalPublicationCount).ToPercentage(1)):
+			@foreach (var userName in topRater.UserNames)
+			{
+				@(userName == topRater.UserNames.First() ? "" : "&")
+				<a asp-page="/Users/Ratings" asp-route-username="@userName">@userName</a>
+			}
+		</li>
+		rank += topRater.UserNames.Count;
+		if (rank > 30)
+		{
+			break;
+		}
+	}
+</ol>
 <h4 condition="!isMyPage">User: <profile-link username="@Model.UserName"></profile-link></h4>
 <div condition="isMyPage && !Model.PublicRatings" class="alert alert-warning">
 	Your ratings are currently private and will not be visible to others. This can be changed on the

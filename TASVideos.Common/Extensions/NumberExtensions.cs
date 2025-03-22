@@ -62,4 +62,15 @@ public static class NumberExtensions
 	{
 		return Math.Round(overallRating, 2, MidpointRounding.AwayFromZero).ToString();
 	}
+
+	/// <summary>Displays a number between 0 and 1 as a percentage. It rounds down so that 0.999999 is not shown as 100%</summary>
+	public static string ToPercentage(this double ratio, int decimalPlaces = 0)
+	{
+		if (double.IsNaN(ratio) || double.IsInfinity(ratio))
+		{
+			return "n/a";
+		}
+
+		return (Math.Floor(ratio * 100 * Math.Pow(10, decimalPlaces)) / Math.Pow(10, decimalPlaces)).ToString($"F{decimalPlaces}") + "%";
+	}
 }
