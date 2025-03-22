@@ -148,7 +148,7 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 
 		dto.Summary.TotalRaterCount = allTopRaters.Count;
 		dto.UsersWithLowerRatingsCount = allTopRaters.Count(tr => tr.RatingsCount < dto.RatingsCount);
-		dto.UsersWithEqualRatingsCount = allTopRaters.Count(tr => tr.RatingsCount == dto.RatingsCount) - 1; // subtract the user themself
+		dto.UsersWithEqualRatingsCount = dto.RatingsCount == 0 ? 0 : allTopRaters.Count(tr => tr.RatingsCount == dto.RatingsCount) - 1; // subtract the user themself
 		dto.UsersWithHigherRatingsCount = allTopRaters.Count(tr => tr.RatingsCount > dto.RatingsCount);
 
 		return dto;
