@@ -1,4 +1,5 @@
-﻿using TASVideos.Extensions;
+﻿using System.Runtime.InteropServices;
+using TASVideos.Extensions;
 
 namespace TASVideos.Common.Tests.Extensions;
 
@@ -45,6 +46,20 @@ public class NumberExtensions
 	public void ToSizeString(int byteCount, string expected)
 	{
 		var actual = byteCount.ToSizeString();
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[DataRow(0, 0, "0%")]
+	[DataRow(1, 0, "100%")]
+	[DataRow(double.NaN, 0, "n/a")]
+	[DataRow(double.PositiveInfinity, 0, "n/a")]
+	[DataRow(double.NegativeInfinity, 0, "n/a")]
+	[DataRow(0.4567, 1, "45.6%")]
+	[DataRow(0.99999, 1, "99.9%")]
+	public void ToPercentage(double ratio, int decimalPlaces, string expected)
+	{
+		var actual = ratio.ToPercentage(decimalPlaces);
 		Assert.AreEqual(expected, actual);
 	}
 }
