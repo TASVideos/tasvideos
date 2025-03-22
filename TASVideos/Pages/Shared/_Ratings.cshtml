@@ -45,7 +45,7 @@
 	<div class="alert alert-warning">This user's ratings are private</div>
 </div>
 <div condition="isMyPage || Model.PublicRatings || User.Has(PermissionTo.SeePrivateRatings)">
-	<warning-alert condition="!isMyPage && User.Has(PermissionTo.SeePrivateRatings)">
+	<warning-alert condition="!isMyPage && !Model.PublicRatings && User.Has(PermissionTo.SeePrivateRatings)">
 		This user has elected to keep their ratings private. You are seeing this because you have the @nameof(PermissionTo.SeePrivateRatings) permission
 	</warning-alert>
 	<form id="obsolete-form">
