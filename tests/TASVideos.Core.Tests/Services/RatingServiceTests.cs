@@ -1,6 +1,5 @@
 ﻿using TASVideos.Data;
 using TASVideos.Data.Entity;
-using ZstdSharp.Unsafe;
 
 namespace TASVideos.Core.Tests.Services;
 
