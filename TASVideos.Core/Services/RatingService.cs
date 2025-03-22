@@ -98,23 +98,6 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 			return null;
 		}
 
-		if (!dto.PublicRatings && !includeHidden)
-		{
-			return dto;
-		}
-
-		dto.Ratings = await db.PublicationRatings
-			.ForUser(dto.Id)
-			.IncludeObsolete(paging.IncludeObsolete)
-			.Select(pr => new UserRatings.Rating
-			{
-				PublicationId = pr.PublicationId,
-				PublicationTitle = pr.Publication!.Title,
-				IsObsolete = pr.Publication.ObsoletedById.HasValue,
-				Value = pr.Value
-			})
-			.SortedPageOf(paging);
-
 		dto.RatingsCount = await db.PublicationRatings
 			.ForUser(dto.Id)
 			.IncludeObsolete(false)
@@ -150,6 +133,23 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 		dto.UsersWithLowerRatingsCount = allTopRaters.Count(tr => tr.RatingsCount < dto.RatingsCount);
 		dto.UsersWithEqualRatingsCount = dto.RatingsCount == 0 ? 0 : allTopRaters.Count(tr => tr.RatingsCount == dto.RatingsCount) - 1; // subtract the user themself
 		dto.UsersWithHigherRatingsCount = allTopRaters.Count(tr => tr.RatingsCount > dto.RatingsCount);
+
+		if (!dto.PublicRatings && !includeHidden)
+		{
+			return dto;
+		}
+
+		dto.Ratings = await db.PublicationRatings
+			.ForUser(dto.Id)
+			.IncludeObsolete(paging.IncludeObsolete)
+			.Select(pr => new UserRatings.Rating
+			{
+				PublicationId = pr.PublicationId,
+				PublicationTitle = pr.Publication!.Title,
+				IsObsolete = pr.Publication.ObsoletedById.HasValue,
+				Value = pr.Value
+			})
+			.SortedPageOf(paging);
 
 		return dto;
 	}
