@@ -86,9 +86,9 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	public EntityEntry<Submission> AddSubmission(User? submitter = null)
 	{
 		submitter ??= AddUser(0).Entity;
-		var submission = new Submission()
+		var submission = new Submission
 		{
-			Submitter = submitter,
+			Submitter = submitter
 		};
 		return Submissions.Add(submission);
 	}
@@ -96,16 +96,16 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	public EntityEntry<Publication> AddPublication(User? author = null, PublicationClass? publicationClass = null)
 	{
 		var gameSystemId = (GameSystems.Max(gs => (int?)gs.Id) ?? -1) + 1;
-		var gameSystem = new GameSystem() { Id = gameSystemId, Code = gameSystemId.ToString() };
+		var gameSystem = new GameSystem { Id = gameSystemId, Code = gameSystemId.ToString() };
 		GameSystems.Add(gameSystem);
-		var systemFrameRate = new GameSystemFrameRate() { GameSystemId = gameSystem.Id };
+		var systemFrameRate = new GameSystemFrameRate { GameSystemId = gameSystem.Id };
 		GameSystemFrameRates.Add(systemFrameRate);
 		var game = new Game();
 		Games.Add(game);
-		var gameVersion = new GameVersion() { Game = game };
+		var gameVersion = new GameVersion { Game = game };
 		GameVersions.Add(gameVersion);
 		var publicationClassId = (PublicationClasses.Max(pc => (int?)pc.Id) ?? -1) + 1;
-		publicationClass ??= new PublicationClass() { Id = publicationClassId, Name = publicationClassId.ToString() };
+		publicationClass ??= new PublicationClass { Id = publicationClassId, Name = publicationClassId.ToString() };
 		PublicationClasses.Add(publicationClass);
 		author ??= AddUser(0).Entity;
 		var submission = AddSubmission(author).Entity;
@@ -120,7 +120,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 			GameVersion = gameVersion,
 			PublicationClass = publicationClass,
 			Submission = submission,
-			MovieFileName = submission.Id.ToString(),
+			MovieFileName = submission.Id.ToString()
 		};
 		PublicationAuthors.Add(new PublicationAuthor { Author = author, Publication = pub });
 		var pubRecord = Publications.Add(pub);
@@ -141,10 +141,10 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	public void AddForumConstantEntities()
 	{
 		var forumCategory = new ForumCategory();
-		Forums.Add(new Forum() { Id = SiteGlobalConstants.WorkbenchForumId, Category = forumCategory });
-		Forums.Add(new Forum() { Id = SiteGlobalConstants.PlaygroundForumId, Category = forumCategory });
-		Forums.Add(new Forum() { Id = SiteGlobalConstants.PublishedMoviesForumId, Category = forumCategory });
-		Forums.Add(new Forum() { Id = SiteGlobalConstants.GrueFoodForumId, Category = forumCategory });
+		Forums.Add(new Forum { Id = SiteGlobalConstants.WorkbenchForumId, Category = forumCategory });
+		Forums.Add(new Forum { Id = SiteGlobalConstants.PlaygroundForumId, Category = forumCategory });
+		Forums.Add(new Forum { Id = SiteGlobalConstants.PublishedMoviesForumId, Category = forumCategory });
+		Forums.Add(new Forum { Id = SiteGlobalConstants.GrueFoodForumId, Category = forumCategory });
 		AddUser(SiteGlobalConstants.TASVideosGrueId);
 		AddUser(SiteGlobalConstants.TASVideoAgentId);
 	}
@@ -153,8 +153,8 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	{
 		var user = AddUser(0).Entity;
 		var forumCategory = new ForumCategory();
-		var forum = new Forum() { Category = forumCategory };
-		var topic = new ForumTopic() { Forum = forum, Poster = user };
+		var forum = new Forum { Category = forumCategory };
+		var topic = new ForumTopic { Forum = forum, Poster = user };
 		return ForumTopics.Add(topic);
 	}
 

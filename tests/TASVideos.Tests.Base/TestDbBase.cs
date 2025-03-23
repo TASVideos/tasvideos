@@ -9,7 +9,7 @@ namespace TASVideos.Tests.Base;
 
 public abstract class TestDbBase
 {
-	protected TestDbContext _db;
+	protected readonly TestDbContext _db;
 
 	private static IDbContextTransaction? _transaction;
 	private static bool _isInitialized = false;
