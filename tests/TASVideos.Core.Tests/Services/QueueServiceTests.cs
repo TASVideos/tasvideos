@@ -432,7 +432,7 @@ public class QueueServiceTests : TestDbBase
 			Title = submissionTitle,
 			TopicId = topic.Id,
 			Topic = topic,
-			Submitter = user,
+			Submitter = user
 		});
 		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory { SubmissionId = submissionId, Status = New });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = user.Id });
@@ -539,12 +539,12 @@ public class QueueServiceTests : TestDbBase
 		_db.PublicationAuthors.Add(new PublicationAuthor { Publication = pub, UserId = user2.Id });
 		_db.PublicationFiles.Add(new PublicationFile { Publication = pub });
 		_db.PublicationFiles.Add(new PublicationFile { Publication = pub });
-		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag() { Token = "1" } });
-		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag() { Token = "2" } });
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag { Token = "1" } });
+		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = new Flag { Token = "2" } });
 		_db.PublicationRatings.Add(new PublicationRating { Publication = pub, User = user1 });
 		_db.PublicationRatings.Add(new PublicationRating { Publication = pub, User = user2 });
-		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag() { Code = "1" } });
-		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag() { Code = "2" } });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag { Code = "1" } });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag { Code = "2" } });
 		_db.PublicationUrls.Add(new PublicationUrl
 		{
 			Publication = pub,

@@ -18,7 +18,7 @@ public class FieldSelectableTests
 	{
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(fields);
-		var dic = (IDictionary<string, object?>)actual;
+		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(3, dic.Count);
 		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
 		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
@@ -30,7 +30,7 @@ public class FieldSelectableTests
 	{
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(nameof(TestClass.StringValue).PascalToCamelCase());
-		var dic = (IDictionary<string, object?>)actual;
+		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(1, dic.Count);
 		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
 
@@ -44,7 +44,7 @@ public class FieldSelectableTests
 		const string fields = $"{nameof(TestClass.StringValue)},{nameof(TestClass.Int)}";
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(fields);
-		var dic = (IDictionary<string, object?>)actual;
+		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(2, dic.Count);
 		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
 		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
@@ -58,7 +58,7 @@ public class FieldSelectableTests
 		const string fields = $" {nameof(TestClass.StringValue)} , {nameof(TestClass.Int)} ";
 		var testClass = new TestClass();
 		var actual = testClass.FieldSelect(fields);
-		var dic = (IDictionary<string, object?>)actual;
+		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(2, dic.Count);
 		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
 		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);

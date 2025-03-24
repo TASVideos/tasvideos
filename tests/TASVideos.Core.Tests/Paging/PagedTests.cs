@@ -6,7 +6,7 @@ public class PagedTests
 	[TestMethod]
 	public void Paged_LastPage_NullSafe()
 	{
-		var paged = (IPaged<IRequest>?)null;
+		IPaged<IRequest>? paged = null;
 
 		// ReSharper disable once ExpressionIsAlwaysNull
 		var actual = paged.LastPage();
@@ -34,7 +34,7 @@ public class PagedTests
 	[TestMethod]
 	public void Paged_LastRow_NullSafe()
 	{
-		var paged = (IPaged<IRequest>?)null;
+		IPaged<IRequest>? paged = null;
 
 		// ReSharper disable once ExpressionIsAlwaysNull
 		var actual = paged.LastRow();
@@ -63,7 +63,7 @@ public class PagedTests
 	[TestMethod]
 	public void Paged_AdditionalProperties_NullSafe()
 	{
-		var paged = (IPaged<IRequest>?)null;
+		IPaged<IRequest>? paged = null;
 
 		// ReSharper disable once ExpressionIsAlwaysNull
 		var actual = (paged?.Request).AdditionalProperties();
@@ -74,7 +74,7 @@ public class PagedTests
 	public void Paged_AdditionalProperties_EmptyWhenNoAdditional()
 	{
 		var paged = new Paged(1, new(1, 1));
-		var actual = (paged?.Request).AdditionalProperties();
+		var actual = paged.Request.AdditionalProperties();
 		Assert.AreEqual(0, actual.Count);
 	}
 
@@ -87,7 +87,7 @@ public class PagedTests
 			StringFilter = filterVal
 		});
 
-		var actual = (paged?.Request).AdditionalProperties();
+		var actual = paged.Request.AdditionalProperties();
 		Assert.AreEqual(1, actual.Count);
 		Assert.AreEqual(filterVal, actual[nameof(StringRequest.StringFilter)]);
 	}
@@ -100,7 +100,7 @@ public class PagedTests
 			IdList = [1, 2, 3]
 		});
 
-		var actual = (paged?.Request).AdditionalProperties();
+		var actual = paged.Request.AdditionalProperties();
 		Assert.AreEqual(1, actual.Count);
 		Assert.AreEqual("1|2|3", actual[nameof(EnumerableRequest.IdList)]);
 	}

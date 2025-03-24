@@ -21,7 +21,7 @@ public class PublicationHistoryTests : TestDbBase
 	{
 		get
 		{
-			var submission = new Submission()
+			var submission = new Submission
 			{
 				Submitter = new User
 				{
@@ -48,7 +48,7 @@ public class PublicationHistoryTests : TestDbBase
 		SystemFrameRate = GameSystemFrameRate,
 		Submission = Submission,
 		MovieFileName = Smb.DisplayName + "1",
-		SystemId = _gameSystem.Id,
+		SystemId = _gameSystem.Id
 	};
 
 	private Publication SmbWarpsObsolete => new()
@@ -63,7 +63,7 @@ public class PublicationHistoryTests : TestDbBase
 		SystemFrameRate = GameSystemFrameRate,
 		Submission = Submission,
 		MovieFileName = Smb.DisplayName + "2",
-		SystemId = _gameSystem.Id,
+		SystemId = _gameSystem.Id
 	};
 
 	private Publication SmbWarpsObsoleteObsolete => new()
@@ -78,7 +78,7 @@ public class PublicationHistoryTests : TestDbBase
 		SystemFrameRate = GameSystemFrameRate,
 		Submission = Submission,
 		MovieFileName = Smb.DisplayName + "3",
-		SystemId = _gameSystem.Id,
+		SystemId = _gameSystem.Id
 	};
 
 	private Publication SmbWarpsObsoleteGoal => new()
@@ -93,7 +93,7 @@ public class PublicationHistoryTests : TestDbBase
 		SystemFrameRate = GameSystemFrameRate,
 		Submission = Submission,
 		MovieFileName = Smb.DisplayName + "4",
-		SystemId = _gameSystem.Id,
+		SystemId = _gameSystem.Id
 	};
 
 	private Publication SmbWarpless => new()
@@ -107,7 +107,7 @@ public class PublicationHistoryTests : TestDbBase
 		SystemFrameRate = GameSystemFrameRate,
 		Submission = Submission,
 		MovieFileName = Smb.DisplayName + "10",
-		SystemId = _gameSystem.Id,
+		SystemId = _gameSystem.Id
 	};
 
 	private Publication Smb2jWarps => new()
@@ -121,7 +121,7 @@ public class PublicationHistoryTests : TestDbBase
 		SystemFrameRate = GameSystemFrameRate,
 		Submission = Submission,
 		MovieFileName = Smb2j.DisplayName + "20",
-		SystemId = _gameSystem.Id,
+		SystemId = _gameSystem.Id
 	};
 
 	#endregion
@@ -157,7 +157,6 @@ public class PublicationHistoryTests : TestDbBase
 
 		var actual = await _publicationHistory.ForGame(Smb.Id);
 		Assert.IsNotNull(actual);
-		Assert.IsNotNull(actual.Goals);
 		Assert.AreEqual(0, actual.Goals.Count());
 	}
 
@@ -269,9 +268,7 @@ public class PublicationHistoryTests : TestDbBase
 		var currentPub = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, currentPub.Id);
 
-		Assert.IsNotNull(currentPub.Obsoletes);
 		var obsolete = currentPub.Obsoletes.SingleOrDefault();
-
 		Assert.IsNotNull(obsolete);
 		Assert.AreEqual(SmbWarpsObsolete.Id, obsolete.Id);
 	}

@@ -56,7 +56,7 @@ public class RatingServiceTests : TestDbBase
 		var actual = await _ratingService.GetRatingsForPublication(pub.Id);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(actual.Count, 2);
+		Assert.AreEqual(2, actual.Count);
 		Assert.AreEqual(1, actual.Count(pr => pr.UserName == userName1));
 		Assert.AreEqual(1, actual.Count(pr => pr.UserName == userName2));
 	}

@@ -38,7 +38,7 @@ public class PublicationMaintenanceLoggerTests : TestDbBase
 		_db.AddUser(userId, "_");
 		await _db.SaveChangesAsync();
 
-		await _publicationMaintenanceLogger.Log(pub.Id, userId, new[] { message1, message2 });
+		await _publicationMaintenanceLogger.Log(pub.Id, userId, [message1, message2]);
 		var logs = _db.PublicationMaintenanceLogs.ToList();
 		Assert.AreEqual(2, logs.Count);
 		Assert.IsTrue(logs.Any(l => l.PublicationId == pub.Id && l.UserId == userId && l.Log == message1));

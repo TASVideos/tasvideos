@@ -521,14 +521,14 @@ public class WikiPagesTests : TestDbBase
 		});
 
 		Assert.IsNotNull(result1);
-		Assert.AreEqual(result1.PageName, pageName);
-		Assert.AreEqual(result1.AuthorId, author1Id);
-		Assert.AreEqual(result1.AuthorName, author1Name);
+		Assert.AreEqual(pageName, result1.PageName);
+		Assert.AreEqual(author1Id, result1.AuthorId);
+		Assert.AreEqual(author1Name, result1.AuthorName);
 
 		Assert.IsNotNull(result2);
-		Assert.AreEqual(result2.PageName, pageName);
-		Assert.AreEqual(result2.AuthorId, author2Id);
-		Assert.AreEqual(result2.AuthorName, author2Name);
+		Assert.AreEqual(pageName, result2.PageName);
+		Assert.AreEqual(author2Id, result2.AuthorId);
+		Assert.AreEqual(author2Name, result2.AuthorName);
 	}
 
 	[TestMethod]

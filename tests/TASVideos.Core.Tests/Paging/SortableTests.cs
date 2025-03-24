@@ -6,7 +6,7 @@ public class SortableTests
 	[TestMethod]
 	public void SortableIsSortingParam_NullSafe()
 	{
-		var sortable = (ISortable?)null;
+		ISortable? sortable = null;
 
 		// ReSharper disable once ExpressionIsAlwaysNull
 		var actual = sortable.IsSortingParam("Param");
@@ -40,7 +40,7 @@ public class SortableTests
 	[TestMethod]
 	public void SortableIsDescending_NullSafe()
 	{
-		var sortable = (ISortable?)null;
+		ISortable? sortable = null;
 
 		// ReSharper disable once ExpressionIsAlwaysNull
 		var actual = sortable.IsDescending("Param");

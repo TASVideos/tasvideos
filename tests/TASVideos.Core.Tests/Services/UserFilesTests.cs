@@ -151,7 +151,7 @@ public class UserFilesTests : TestDbBase
 	public async Task SupportedFileExtensions_SupportedIfParserSupports()
 	{
 		const string fileExt = ".test";
-		_parser.SupportedMovieExtensions.Returns(new[] { fileExt });
+		_parser.SupportedMovieExtensions.Returns([fileExt]);
 
 		var actual = await _userFiles.SupportedFileExtensions();
 		Assert.IsTrue(actual.Contains(fileExt));
@@ -210,7 +210,7 @@ public class UserFilesTests : TestDbBase
 		const string fileName = "movie.bk2";
 		const bool hidden = true;
 		_fileService.Compress(Arg.Any<byte[]>()).Returns(new CompressedFile(100, 99, Compression.Gzip, fileData));
-		_parser.SupportedMovieExtensions.Returns(new[] { ".bk2" });
+		_parser.SupportedMovieExtensions.Returns([".bk2"]);
 		_parser.ParseFile(Arg.Any<string>(), Arg.Any<Stream>()).Returns(new TestParseResult());
 
 		var (id, parseResult) = await _userFiles.Upload(user.Id, new(title, desc, system.Id, game.Id, fileData, fileName, hidden));
@@ -256,6 +256,6 @@ public class UserFilesTests : TestDbBase
 		public double? FrameRateOverride => null;
 		public long? CycleCount => null;
 		public string? Annotations => null;
-		public Dictionary<HashType, string> Hashes { get; init; } = new Dictionary<HashType, string>();
+		public Dictionary<HashType, string> Hashes { get; } = [];
 	}
 }

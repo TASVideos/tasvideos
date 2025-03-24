@@ -295,14 +295,14 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		var systemFrameRate = _db.GameSystemFrameRates.Add(new GameSystemFrameRate { FrameRate = 60 });
 		var game = _db.Games.Add(new Game { DisplayName = "game" });
 		var gameGoal = _db.GameGoals.Add(new GameGoal { DisplayName = "game", Game = game.Entity });
-		var gameVersion = _db.GameVersions.Add(new GameVersion() { Game = game.Entity });
+		var gameVersion = _db.GameVersions.Add(new GameVersion { Game = game.Entity });
 		var sub1 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Submitter = user.Entity });
 		var sub2 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Submitter = user.Entity });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { UserId = userId, Submission = sub1.Entity });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { UserId = userId, Submission = sub2.Entity });
 		sub1.Entity.GenerateTitle();
 		sub2.Entity.GenerateTitle();
-		var publicationClass = _db.PublicationClasses.Add(new PublicationClass() { Name = "class" });
+		var publicationClass = _db.PublicationClasses.Add(new PublicationClass { Name = "class" });
 		var pub1 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity, GameVersion = gameVersion.Entity, PublicationClass = publicationClass.Entity, Submission = sub1.Entity, MovieFileName = "1" });
 		var pub2 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity, GameVersion = gameVersion.Entity, PublicationClass = publicationClass.Entity, Submission = sub2.Entity, MovieFileName = "2" });
 		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = userId, Publication = pub1.Entity });

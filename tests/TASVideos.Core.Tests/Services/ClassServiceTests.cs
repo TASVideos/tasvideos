@@ -89,7 +89,7 @@ public class ClassServiceTests : TestDbBase
 			Id = identity + 10,
 			Name = "Name",
 			IconPath = "IconPath",
-			Link = "Link",
+			Link = "Link"
 		};
 
 		var (id, result) = await _classService.Add(publicationClass);

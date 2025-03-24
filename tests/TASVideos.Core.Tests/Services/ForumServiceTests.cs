@@ -179,7 +179,6 @@ public class ForumServiceTests : TestDbBase
 
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 		_cache.TryGetValue(ForumService.LatestPostCacheKey, out Dictionary<int, LatestPost?> actual);
-		Assert.IsNotNull(actual);
 		Assert.IsTrue(actual.ContainsKey(forumId));
 		var actualLatest = actual[forumId];
 		Assert.IsNotNull(actualLatest);
@@ -225,7 +224,6 @@ public class ForumServiceTests : TestDbBase
 		Assert.IsNotNull(actualTopic.Poll.CloseDate);
 		Assert.AreEqual(DateTime.UtcNow.AddDays(daysOpen).Day, actualTopic.Poll.CloseDate.Value.Day);
 		Assert.AreEqual(multiSelect, actualTopic.Poll.MultiSelect);
-		Assert.IsNotNull(actualTopic.Poll.PollOptions);
 		var actualOptions = actualTopic.Poll.PollOptions;
 		Assert.AreEqual(options.Count, actualOptions.Count);
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option1 && o.Ordinal == 0));
@@ -280,12 +278,11 @@ public class ForumServiceTests : TestDbBase
 		// Cache must be updated
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 		_cache.TryGetValue(ForumService.LatestPostCacheKey, out Dictionary<int, LatestPost?> mapping);
-		Assert.IsNotNull(mapping);
 		Assert.IsTrue(mapping.ContainsKey(forumId));
 		var actualLatestPost = mapping[forumId];
 		Assert.IsNotNull(actualLatestPost);
-		Assert.AreEqual(actual, actualLatestPost.Id);
-		Assert.AreEqual(posterName, actualLatestPost.PosterName);
+		Assert.AreEqual(actualLatestPost.Id, actual);
+		Assert.AreEqual(actualLatestPost.PosterName, posterName);
 	}
 
 	[TestMethod]
@@ -334,12 +331,11 @@ public class ForumServiceTests : TestDbBase
 		// Cache must be updated
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 		_cache.TryGetValue(ForumService.LatestPostCacheKey, out Dictionary<int, LatestPost?> mapping);
-		Assert.IsNotNull(mapping);
 		Assert.IsTrue(mapping.ContainsKey(forumId));
 		var actualLatestPost = mapping[forumId];
 		Assert.IsNotNull(actualLatestPost);
-		Assert.AreEqual(actual, actualLatestPost.Id);
-		Assert.AreEqual(posterName, actualLatestPost.PosterName);
+		Assert.AreEqual(actualLatestPost.Id, actual);
+		Assert.AreEqual(actualLatestPost.PosterName, posterName);
 	}
 
 	[TestMethod]
