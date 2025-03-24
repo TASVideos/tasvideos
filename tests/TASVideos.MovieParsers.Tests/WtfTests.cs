@@ -14,7 +14,6 @@ public class WtfTests : BaseParserTests
 		var result = await _wtfParser.Parse(Embedded("wrongheader.wtf"), EmbeddedLength("wrongheader.wtf"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 

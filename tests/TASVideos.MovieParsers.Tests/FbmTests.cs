@@ -14,7 +14,6 @@ public class FbmTests : BaseParserTests
 		var result = await _fbmParser.Parse(Embedded("wrongmarker.fbm"), EmbeddedLength("wrongmarker.fbm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 
@@ -24,7 +23,6 @@ public class FbmTests : BaseParserTests
 		var result = await _fbmParser.Parse(Embedded("missinginput.fbm"), EmbeddedLength("missinginput.fbm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 

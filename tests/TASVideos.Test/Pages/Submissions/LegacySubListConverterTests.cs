@@ -28,7 +28,6 @@ public class LegacySubListConverterTests
 	{
 		var request = LegacySubListConverter.ToSearchRequest(queryString);
 		Assert.IsNotNull(request);
-		Assert.IsNotNull(request.Statuses);
 		var actual = request.Statuses.ToList();
 		Assert.AreEqual(expected.Length, actual.Count);
 		foreach (var status in expected)
@@ -48,7 +47,6 @@ public class LegacySubListConverterTests
 	{
 		var request = LegacySubListConverter.ToSearchRequest(queryString);
 		Assert.IsNotNull(request);
-		Assert.IsNotNull(request.Years);
 		var actual = request.Years.ToList();
 		Assert.AreEqual(expected.Length, actual.Count);
 		foreach (var year in expected)

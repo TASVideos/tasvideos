@@ -65,7 +65,6 @@ public class Fm2ParserTests : BaseParserTests
 		var result = await _fm2Parser.Parse(Embedded("norerecords.fm2"), EmbeddedLength("norerecords.fm2"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(1, result.Warnings.Count());
 		AssertNoErrors(result);
 	}

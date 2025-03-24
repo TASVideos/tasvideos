@@ -17,7 +17,6 @@ public class LmpTests : BaseParserTests
 		Assert.IsNotNull(result);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 

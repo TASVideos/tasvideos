@@ -14,7 +14,6 @@ public class DtmParserTests : BaseParserTests
 		var result = await _dtmParser.Parse(Embedded("wrongheader.dtm"), EmbeddedLength("wrongheader.dtm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 
@@ -86,7 +85,6 @@ public class DtmParserTests : BaseParserTests
 		var result = await _dtmParser.Parse(Embedded("2frames-legacy.dtm"), EmbeddedLength("2frames-legacy.dtm"));
 		Assert.IsTrue(result.Success);
 		AssertNoErrors(result);
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(1, result.Warnings.Count());
 		Assert.AreEqual(ParseWarnings.LengthInferred, result.Warnings.Single());
 		Assert.AreEqual(2, result.Frames);

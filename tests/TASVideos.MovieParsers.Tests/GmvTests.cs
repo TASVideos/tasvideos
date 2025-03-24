@@ -14,7 +14,6 @@ public class GmvTests : BaseParserTests
 		var result = await _gmvParser.Parse(Embedded("wrongheader.gmv"), EmbeddedLength("wrongheader.gmv"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 

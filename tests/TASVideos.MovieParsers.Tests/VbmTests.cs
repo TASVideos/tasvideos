@@ -14,7 +14,6 @@ public class VbmTests : BaseParserTests
 		var result = await _vbmParser.Parse(Embedded("wrongheader.vbm"), EmbeddedLength("wrongheader.vbm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 

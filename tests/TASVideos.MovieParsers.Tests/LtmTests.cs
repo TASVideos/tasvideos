@@ -89,7 +89,6 @@ public class LtmTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(Ltm.DefaultFrameRate, result.FrameRateOverride);
 		AssertNoErrors(result);
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(1, result.Warnings.Count());
 	}
 

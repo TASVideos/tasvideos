@@ -23,7 +23,7 @@ public class JrsrTests : BaseParserTests
 	{
 		var result = await _jrsrParser.Parse(Embedded("correctmagic.jrsr"), EmbeddedLength("correctmagic.jrsr"));
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(result.FileExtension, "jrsr");
+		Assert.AreEqual("jrsr", result.FileExtension);
 		AssertNoWarningsOrErrors(result);
 	}
 

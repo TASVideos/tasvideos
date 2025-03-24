@@ -17,7 +17,6 @@ public class Bk2ParserTests : BaseParserTests
 		var result = await _bk2Parser.Parse(Embedded(filename), EmbeddedLength(filename));
 		Assert.AreEqual(false, result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 
@@ -53,7 +52,6 @@ public class Bk2ParserTests : BaseParserTests
 	{
 		var result = await _bk2Parser.Parse(Embedded("RerecordCountMissing.bk2"), EmbeddedLength("RerecordCountMissing.bk2"));
 		Assert.IsTrue(result.Success);
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(1, result.Warnings.Count());
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
 		AssertNoErrors(result);
@@ -64,7 +62,6 @@ public class Bk2ParserTests : BaseParserTests
 	{
 		var result = await _bk2Parser.Parse(Embedded("RerecordCountNegative.bk2"), EmbeddedLength("RerecordCountNegative.bk2"));
 		Assert.IsTrue(result.Success);
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(1, result.Warnings.Count());
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
 		AssertNoErrors(result);
@@ -173,7 +170,6 @@ public class Bk2ParserTests : BaseParserTests
 		var result = await _bk2Parser.Parse(Embedded("SubNesLegacyMissingVBlank.bk2"), EmbeddedLength("SubNesLegacyMissingVBlank.bk2"));
 
 		Assert.IsFalse(result.Success);
-		Assert.IsNotNull(result.Errors);
 		Assert.IsTrue(result.Errors.Any());
 	}
 
@@ -183,7 +179,6 @@ public class Bk2ParserTests : BaseParserTests
 		var result = await _bk2Parser.Parse(Embedded("SubNesLegacyNegativeVBlank.bk2"), EmbeddedLength("SubNesLegacyNegativeVBlank.bk2"));
 
 		Assert.IsFalse(result.Success);
-		Assert.IsNotNull(result.Errors);
 		Assert.IsTrue(result.Errors.Any());
 	}
 
@@ -217,7 +212,6 @@ public class Bk2ParserTests : BaseParserTests
 		var result = await _bk2Parser.Parse(Embedded("SubNesInvalidClockRate.bk2"), EmbeddedLength("SubNesInvalidClockRate.bk2"));
 
 		Assert.IsFalse(result.Success);
-		Assert.IsNotNull(result.Errors);
 		Assert.IsTrue(result.Errors.Any());
 	}
 
@@ -287,7 +281,6 @@ public class Bk2ParserTests : BaseParserTests
 		var result = await _bk2Parser.Parse(Embedded("Mame-NegativeVsyncAttoseconds.bk2"), EmbeddedLength("Mame-NegativeVsyncAttoseconds.bk2"));
 
 		Assert.IsFalse(result.Success);
-		Assert.IsNotNull(result.Errors);
 		Assert.IsTrue(result.Errors.Any());
 	}
 
@@ -297,7 +290,6 @@ public class Bk2ParserTests : BaseParserTests
 		var result = await _bk2Parser.Parse(Embedded("Mame-NoVsyncAttoseconds.bk2"), EmbeddedLength("Mame-NoVsyncAttoseconds.bk2"));
 
 		Assert.IsFalse(result.Success);
-		Assert.IsNotNull(result.Errors);
 		Assert.IsTrue(result.Errors.Any());
 	}
 

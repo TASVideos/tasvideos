@@ -14,7 +14,6 @@ public class MarTests : BaseParserTests
 		var result = await _marParser.Parse(Embedded("wrongheader.mar"), EmbeddedLength("wrongheader.mar"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 

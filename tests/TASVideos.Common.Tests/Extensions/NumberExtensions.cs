@@ -16,7 +16,6 @@ public class NumberExtensions
 	public void Clamp(int source, int start, int end, int expected)
 	{
 		var actual = source.Clamp(start, end);
-		Assert.IsNotNull(actual);
 		Assert.AreEqual(expected, actual);
 	}
 

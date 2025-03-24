@@ -44,13 +44,11 @@ public abstract class BaseParserTests
 
 	protected static void AssertNoWarnings(IParseResult result)
 	{
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(0, result.Warnings.Count());
 	}
 
 	protected static void AssertNoErrors(IParseResult result)
 	{
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(0, result.Errors.Count());
 	}
 

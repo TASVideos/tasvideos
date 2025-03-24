@@ -49,7 +49,6 @@ public class DsmParserTests : BaseParserTests
 		var result = await _dsmParser.Parse(Embedded("norerecords.dsm"), EmbeddedLength("norerecords.dsm"));
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(0, result.RerecordCount, "Rerecord count is assumed to be 0");
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(1, result.Warnings.Count());
 		AssertNoErrors(result);
 	}
@@ -81,6 +80,7 @@ public class DsmParserTests : BaseParserTests
 		AssertNoWarningsOrErrors(result);
 	}
 
+	[TestMethod]
 	public async Task SavestateSetAs0()
 	{
 		var result = await _dsmParser.Parse(Embedded("savestate0.dsm"), EmbeddedLength("savestate0.dsm"));

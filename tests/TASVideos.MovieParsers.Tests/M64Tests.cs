@@ -14,7 +14,6 @@ public class M64Tests : BaseParserTests
 		var result = await _m64Parser.Parse(Embedded("wrongheader.m64"), EmbeddedLength("wrongheader.m64"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 
