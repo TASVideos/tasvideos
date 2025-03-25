@@ -60,6 +60,7 @@ app
 	.UseExceptionHandlers(app.Environment)
 	.UseTasvideosApiEndpoints(builder.Environment)
 	.UseRobots()
+	.UseUserAgentMetrics(settings)
 	.UseMiddleware<HtmlRedirectionMiddleware>()
 	.UseRequestLocalization()
 	.UseGzipCompression(settings)
