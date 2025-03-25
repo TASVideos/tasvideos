@@ -4,7 +4,7 @@ namespace TASVideos.Middleware;
 
 public class UserAgentMetricsMiddleware(RequestDelegate next)
 {
-	public async Task Invoke(HttpContext context, TASVideosMetrics metrics)
+	public async Task Invoke(HttpContext context, ITASVideosMetrics metrics)
 	{
 		metrics.AddUserAgent(context.Request.Headers.UserAgent);
 

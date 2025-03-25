@@ -201,7 +201,11 @@ public static class ServiceCollectionExtensions
 					});
 				});
 
-			services.AddSingleton<TASVideosMetrics>();
+			services.AddSingleton<ITASVideosMetrics, TASVideosMetrics>();
+		}
+		else
+		{
+			services.AddSingleton<ITASVideosMetrics, NullMetrics>();
 		}
 
 		return services;

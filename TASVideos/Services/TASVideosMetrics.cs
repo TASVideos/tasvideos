@@ -2,7 +2,19 @@
 
 namespace TASVideos.Services;
 
-public class TASVideosMetrics
+public interface ITASVideosMetrics
+{
+	public void AddUserAgent(string? userAgent);
+}
+
+public class NullMetrics : ITASVideosMetrics
+{
+	public void AddUserAgent(string? userAgent)
+	{
+	}
+}
+
+public class TASVideosMetrics : ITASVideosMetrics
 {
 	private readonly Counter<long> _userAgentCounter;
 
