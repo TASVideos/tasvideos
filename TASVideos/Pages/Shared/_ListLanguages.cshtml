@@ -1,7 +1,7 @@
 ﻿@model TASVideos.Core.Services.Wiki.IWikiPage
 @inject ILanguages Languages
 @{
-	var languages = await Languages.GetTranslations(Model.PageName);
+	var (_, languages) = await Languages.GetTranslations(Model.PageName);
 }
 
 <div class="dropdown" condition="languages.Any()">

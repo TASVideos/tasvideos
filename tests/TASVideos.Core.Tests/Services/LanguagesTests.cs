@@ -112,7 +112,8 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.AreEqual(0, result.TrPageList.Count);
+		Assert.AreEqual("EN", result.ThisPageLang.Code);
 	}
 
 	[TestMethod]
@@ -127,7 +128,8 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(2, result.Count);
+		Assert.AreEqual(2, result.TrPageList.Count);
+		Assert.AreEqual("EN", result.ThisPageLang.Code);
 	}
 
 	[TestMethod]
@@ -146,10 +148,11 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(translation);
 		Assert.IsNotNull(result);
-		var listResult = result.ToList();
+		var listResult = result.TrPageList;
 		Assert.AreEqual(2, listResult.Count);
 		Assert.IsTrue(listResult.Any(r => r.Code == "EN"), "Translation must link to original english page");
 		Assert.IsFalse(listResult.Any(r => r.Code == "FR"), "Translation must not link to itself");
+		Assert.AreEqual(lang, result.ThisPageLang.Code);
 	}
 
 	private void MockStandardMarkup()
