@@ -1,5 +1,6 @@
 ﻿@using TASVideos.Core.Services.Wiki
 @using Microsoft.AspNetCore.Mvc.TagHelpers
+@inject ILanguages Languages
 @inject IWikiToMetaDescriptionRenderer wikiToMetaDescriptionRenderer
 @{
 	Layout = "_Layout.cshtml";
@@ -14,6 +15,8 @@
 		Title = pageData.PageName.SplitPathCamelCase(),
 		Description = await wikiToMetaDescriptionRenderer.RenderWikiForMetaDescription(pageData),
 	});
+
+	var thisPageLang = (await Languages.GetTranslations(pageData.PageName)).ThisPageLang;
 }
 
 @section PageTitle {
@@ -31,7 +34,7 @@
 	</nav>
 }
 <partial name="_WikiLayoutHeader" model="pageData" />
-@RenderBody()
+<div lang="@(thisPageLang.Code.ToLowerInvariant())">@RenderBody()</div>
 <partial name="_WikiLayoutFooter" model="pageData" />
 
 @section Scripts {
