@@ -1,4 +1,7 @@
-﻿let emailBoxElem = document.querySelector('[data-email-box]');
+﻿const mainGravatarDomain = "gravatar.com";
+const noAvatarImagePath = "/images/empty.png";
+
+let emailBoxElem = document.querySelector('[data-email-box]');
 
 let avatarBoxElem = document.querySelector('[data-avatar-box]');
 let gravatarBoxElem = document.getElementById('gravatar-email');
@@ -6,11 +9,11 @@ let gravatarBoxElem = document.getElementById('gravatar-email');
 document.addEventListener("DOMContentLoaded", validateAvatar);
 document.addEventListener("DOMContentLoaded", onGravatarToggle);
 avatarBoxElem.addEventListener('input', generateAvatarPreview);
-document.getElementById('gravatar-email').addEventListener('input', generateGravatarPreview)
+gravatarBoxElem.addEventListener('input', generateGravatarPreview);
 let avatarImgElem = document.getElementById('avatar-img');
 avatarImgElem.onload = validateAvatar;
 avatarImgElem.onerror = () => {
-    avatarImgElem.src = '/images/empty.png'
+    avatarImgElem.src = noAvatarImagePath;
 };
 Array.from(document.querySelectorAll('[name="UseGravatar"]')).forEach(elem => elem.addEventListener('click', onGravatarToggle));
 
@@ -46,7 +49,7 @@ function preventSave(prevent) {
 }
 
 function avatarIsGravatar() {
-    return avatarBoxElem.value?.includes('gravatar');
+    return avatarBoxElem.value?.includes(`//${mainGravatarDomain}/`);
 }
 
 async function onGravatarToggle() {
@@ -84,7 +87,7 @@ async function getGravatarUrl(boxElem) {
     }
 
     const hash = await createSha256(email);
-    return `https://gravatar.com/avatar/${hash}`;
+    return `https://${mainGravatarDomain}/avatar/${hash}?d=${noAvatarImagePath}`;
 }
 
 async function createSha256(string) {
