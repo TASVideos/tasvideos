@@ -79,7 +79,7 @@ public static class SiteGlobalConstants
 
 	public const int MetaDescriptionLength = 350;
 
-	public const string MainGravatarDomain = "gravatar.com"; // keep in sync with profile-settings.js
+	public const string MainIvatarDomain = "gravatar.com"; // keep in sync with profile-settings.js
 }
 
 public static class ForumConstants
