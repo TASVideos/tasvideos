@@ -1,4 +1,4 @@
-﻿const mainIvatarDomain = "gravatar.com";
+﻿const mainIvatarDomain = "seccdn.libravatar.org";
 const noAvatarImagePath = "/images/empty.png";
 
 let emailBoxElem = document.querySelector('[data-email-box]');
