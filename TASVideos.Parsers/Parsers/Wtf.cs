@@ -22,7 +22,7 @@ internal class Wtf : Parser, IParser
 		br.ReadInt32(); // input frames
 		result.RerecordCount = br.ReadInt32();
 		br.ReadBytes(8); // keyboard type
-		var fps = br.ReadUInt32();
+		var fps = br.ReadUInt32() - 1;
 		if (fps > 0)
 		{
 			result.FrameRateOverride = fps;
