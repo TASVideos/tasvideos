@@ -47,6 +47,7 @@ public class ViewModelTests : TestDbBase
 		Assert.AreEqual(0, _page.PublicationId);
 		Assert.AreEqual(sub.Submitter!.UserName, _page.Submission.LastUpdateUser);
 		Assert.IsTrue(_page.Submission.LastUpdateTimestamp < DateTime.UtcNow.AddDays(-1));
+		Assert.IsFalse(_page.IsPublished);
 	}
 
 	[TestMethod]
@@ -98,6 +99,7 @@ public class ViewModelTests : TestDbBase
 		Assert.AreEqual(sub.System!.DisplayName, _page.Submission.SystemDisplayName);
 		Assert.AreEqual(sub.Game!.DisplayName, _page.Submission.GameName);
 		Assert.AreEqual(sub.GameVersion!.Name, _page.Submission.GameVersion);
+		Assert.IsTrue(_page.IsPublished);
 	}
 
 	private Submission CreateUnpublishedSubmission()
