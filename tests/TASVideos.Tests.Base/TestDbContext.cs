@@ -83,6 +83,18 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return Users.Add(user);
 	}
 
+	public EntityEntry<Submission> AddAndSaveUnpublishedSubmission()
+	{
+		var submission = AddSubmission();
+		var system = GameSystems.Add(new GameSystem { Id = 1, Code = "Default" });
+		var framerate = GameSystemFrameRates.Add(new GameSystemFrameRate { GameSystemId = system.Entity.Id, FrameRate = 60.0 });
+		submission.Entity.System = system.Entity;
+		submission.Entity.SystemFrameRate = framerate.Entity;
+		SaveChanges();
+
+		return submission;
+	}
+
 	public EntityEntry<Submission> AddSubmission(User? submitter = null)
 	{
 		submitter ??= AddUser(0).Entity;
@@ -96,13 +108,13 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	public EntityEntry<Publication> AddPublication(User? author = null, PublicationClass? publicationClass = null)
 	{
 		var gameSystemId = (GameSystems.Max(gs => (int?)gs.Id) ?? -1) + 1;
-		var gameSystem = new GameSystem { Id = gameSystemId, Code = gameSystemId.ToString() };
+		var gameSystem = new GameSystem { Id = gameSystemId, Code = gameSystemId.ToString(), DisplayName = gameSystemId.ToString() };
 		GameSystems.Add(gameSystem);
 		var systemFrameRate = new GameSystemFrameRate { GameSystemId = gameSystem.Id };
 		GameSystemFrameRates.Add(systemFrameRate);
-		var game = new Game();
+		var game = new Game { DisplayName = "TestGame" };
 		Games.Add(game);
-		var gameVersion = new GameVersion { Game = game };
+		var gameVersion = new GameVersion { Game = game, Name = "TestGameVersion" };
 		GameVersions.Add(gameVersion);
 		var publicationClassId = (PublicationClasses.Max(pc => (int?)pc.Id) ?? -1) + 1;
 		publicationClass ??= new PublicationClass { Id = publicationClassId, Name = publicationClassId.ToString() };
