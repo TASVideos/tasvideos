@@ -17,10 +17,10 @@ internal class Lsmv : Parser, IParser
 			Region = RegionType.Ntsc
 		};
 
-		var archive = new ZipArchive(file);
+		var archive = await file.OpenZipArchiveRead();
 
 		// a .lsmv is actually a savestate if a savestate file is present
-		if (archive.Entries.Any(e => e.Name.Equals(Savestate, StringComparison.InvariantCultureIgnoreCase)))
+		if (archive.Entries.Any(e => e.Key.Equals(Savestate, StringComparison.InvariantCultureIgnoreCase)))
 		{
 			return Error("This is a savestate file, not a movie file");
 		}
@@ -29,7 +29,7 @@ internal class Lsmv : Parser, IParser
 		{
 			result.StartType = MovieStartType.Savestate;
 		}
-		else if (archive.Entry(Sram)?.Length > 0)
+		else if (archive.Entry(Sram)?.Size > 0)
 		{
 			result.StartType = MovieStartType.Sram;
 		}
@@ -40,7 +40,7 @@ internal class Lsmv : Parser, IParser
 			return Error("Could not determine the System Code");
 		}
 
-		await using (var stream = gameTypeFile.Open())
+		await using (var stream = gameTypeFile.OpenEntryStream())
 		{
 			using var reader = new StreamReader(stream);
 			var line = (await reader
@@ -94,7 +94,7 @@ internal class Lsmv : Parser, IParser
 		var rerecordCountFile = archive.Entry(RerecordFile);
 		if (rerecordCountFile is not null)
 		{
-			await using var stream = rerecordCountFile.Open();
+			await using var stream = rerecordCountFile.OpenEntryStream();
 			using var reader = new StreamReader(stream);
 			var line = (await reader
 				.ReadToEndAsync())
@@ -125,13 +125,13 @@ internal class Lsmv : Parser, IParser
 
 		// guard against extra branch input files, which have a number in their name
 		var inputLog = archive.Entries.SingleOrDefault(
-			e => e.Name.StartsWith(InputFile, StringComparison.InvariantCultureIgnoreCase) && !e.Name.Any(char.IsDigit));
+			e => e.Key.StartsWith(InputFile, StringComparison.InvariantCultureIgnoreCase) && !e.Key.Any(char.IsDigit));
 		if (inputLog is null)
 		{
 			return Error($"Missing {InputFile}, can not parse");
 		}
 
-		await using (var stream = inputLog.Open())
+		await using (var stream = inputLog.OpenEntryStream())
 		{
 			using var reader = new StreamReader(stream);
 			result.Frames = (await reader
