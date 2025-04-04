@@ -17,7 +17,6 @@
     <PackageVersion Include="Microsoft.ClearScript.Complete" Version="7.4.5" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.5.0" /> <!-- version tied to SDK/compiler version, this one must not be higher than SDK supports -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.AutoHistory" Version="6.0.0" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.6" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.UserSecrets" Version="8.0.0" />
