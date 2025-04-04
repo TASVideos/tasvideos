@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class UserMaintenanceLog
 {
 	public int Id { get; set; }

@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class RolePermission
 {
 	public int RoleId { get; set; }

@@ -1,9 +1,12 @@
-﻿namespace TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.AutoHistory;
+
+namespace TASVideos.Data.Entity.Game;
 
 /// <summary>
 /// Represents a Game
 /// This is the central reference point for all site content
 /// </summary>
+[IncludeInAutoHistory]
 public class Game : BaseEntity
 {
 	public int Id { get; set; }

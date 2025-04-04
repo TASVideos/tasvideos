@@ -3,7 +3,6 @@
 /// <summary>
 /// Data storage for an external media post (such as Irc, Discord).
 /// </summary>
-[ExcludeFromHistory]
 public class MediaPost : BaseEntity
 {
 	public int Id { get; set; }

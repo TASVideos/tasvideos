@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using TASVideos.Data.AutoHistory;
+
+namespace TASVideos.Data.Entity;
 
 public enum ShowVerified { All, Verified, NotVerified }
 public interface ISubmissionFilter
@@ -12,7 +14,7 @@ public interface ISubmissionFilter
 	bool? ShowVerified { get; }
 }
 
-[ExcludeFromHistory]
+[IncludeInAutoHistory]
 public class Submission : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
@@ -37,6 +39,7 @@ public class Submission : BaseEntity, ITimeable
 	public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
 	public ICollection<SubmissionStatusHistory> History { get; init; } = [];
 
+	[ExcludeFromAutoHistory]
 	public byte[] MovieFile { get; set; } = [];
 
 	public string? MovieExtension { get; set; }

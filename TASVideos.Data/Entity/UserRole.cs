@@ -2,7 +2,6 @@
 
 namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class UserRole : IdentityUserRole<int>
 {
 	public User? User { get; set; }

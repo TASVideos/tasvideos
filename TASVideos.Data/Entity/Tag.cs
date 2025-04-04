@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using TASVideos.Data.AutoHistory;
 
+namespace TASVideos.Data.Entity;
+
+[IncludeInAutoHistory]
 public class Tag
 {
 	public int Id { get; set; }

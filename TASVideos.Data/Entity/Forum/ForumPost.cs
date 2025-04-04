@@ -3,7 +3,6 @@ using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity.Forum;
 
-[ExcludeFromHistory]
 public class ForumPost : BaseEntity
 {
 	public int Id { get; set; }

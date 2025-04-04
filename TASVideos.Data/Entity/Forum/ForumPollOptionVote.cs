@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity.Forum;
 
-[ExcludeFromHistory]
 public class ForumPollOptionVote
 {
 	public int Id { get; set; }

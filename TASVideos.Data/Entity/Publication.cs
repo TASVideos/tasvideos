@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using TASVideos.Data.AutoHistory;
+
+namespace TASVideos.Data.Entity;
 
 /// <summary>
 /// Represents filter criteria for filtering publications.
@@ -21,6 +23,7 @@ public interface IPublicationTokens
 	int? Limit { get; }
 }
 
+[IncludeInAutoHistory]
 public class Publication : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
@@ -60,6 +63,7 @@ public class Publication : BaseEntity, ITimeable
 	public Submission? Submission { get; set; }
 	public ICollection<PublicationAuthor> Authors { get; init; } = [];
 
+	[ExcludeFromAutoHistory]
 	public byte[] MovieFile { get; set; } = [];
 
 	public string MovieFileName { get; set; } = "";

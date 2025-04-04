@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class PublicationFlag
 {
 	public int PublicationId { get; set; }

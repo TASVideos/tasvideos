@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using TASVideos.Data.AutoHistory;
 
+namespace TASVideos.Data.Entity;
+
+[IncludeInAutoHistory]
 public class Flag
 {
 	public int Id { get; set; }
