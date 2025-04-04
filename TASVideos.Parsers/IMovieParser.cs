@@ -36,14 +36,14 @@ internal sealed class MovieParser : IMovieParser
 	{
 		try
 		{
-			using var zip = new ZipArchive(stream);
+			using var zip = await stream.OpenZipArchiveRead();
 			if (zip.Entries.Count > 1)
 			{
 				return Error("Multiple files detected in the .zip, only one file is allowed");
 			}
 
-			var movieFile = zip.Entries[0];
-			var ext = Path.GetExtension(movieFile.Name).Trim('.').ToLower();
+			var movieFile = zip.Entries.First();
+			var ext = Path.GetExtension(movieFile.Key).Trim('.').ToLower();
 
 			var parser = GetParser(ext);
 			if (parser is null)
@@ -51,8 +51,8 @@ internal sealed class MovieParser : IMovieParser
 				return Error($".{ext} files are not currently supported.");
 			}
 
-			await using var movieFileStream = movieFile.Open();
-			return await parser.Parse(movieFileStream, movieFile.Length);
+			await using var movieFileStream = movieFile.OpenEntryStream();
+			return await parser.Parse(movieFileStream, movieFile.Size);
 		}
 		catch (Exception)
 		{

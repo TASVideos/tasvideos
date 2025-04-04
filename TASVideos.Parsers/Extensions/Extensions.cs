@@ -1,4 +1,7 @@
-﻿namespace TASVideos.MovieParsers.Extensions;
+﻿using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
+using SharpZipArchiveEntry = SharpCompress.Archives.Zip.ZipArchiveEntry;
+
+namespace TASVideos.MovieParsers.Extensions;
 
 internal static class Extensions
 {
@@ -126,18 +129,28 @@ internal static class Extensions
 		return string.Equals(val, "true", StringComparison.InvariantCultureIgnoreCase);
 	}
 
+	public static async Task<SharpZipArchive> OpenZipArchiveRead(this Stream stream)
+	{
+		// A seekable stream is required for SharpZipArchive.Open
+		// Doing a copy here should be fairly cheap, and is fine for reading
+		// (This is normally done implicitly in BCL's ZipArchive ctor in Read mode)
+		var ms = new MemoryStream();
+		await stream.CopyToAsync(ms);
+		return SharpZipArchive.Open(ms);
+	}
+
 	/// <summary>
 	/// Gets a file that matches or starts with the given name
 	/// with a case-insensitive match.
 	/// </summary>
-	public static ZipArchiveEntry? Entry(this ZipArchive archive, string name)
+	public static SharpZipArchiveEntry? Entry(this SharpZipArchive archive, string name)
 	{
-		return archive.Entries.SingleOrDefault(e => e.Name.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+		return archive.Entries.SingleOrDefault(e => e.Key.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
 	}
 
-	public static bool HasEntry(this ZipArchive archive, string name)
+	public static bool HasEntry(this SharpZipArchive archive, string name)
 	{
-		return archive.Entries.Any(e => string.Equals(e.Name, name, StringComparison.InvariantCultureIgnoreCase));
+		return archive.Entries.Any(e => string.Equals(e.Key, name, StringComparison.InvariantCultureIgnoreCase));
 	}
 
 	// Returns a boolean indicating whether the given git is set in the given byte

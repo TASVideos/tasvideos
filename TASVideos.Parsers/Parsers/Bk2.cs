@@ -36,7 +36,7 @@ internal class Bk2 : Parser, IParser
 			Region = RegionType.Ntsc
 		};
 
-		var archive = new ZipArchive(file);
+		var archive = await file.OpenZipArchiveRead();
 
 		foreach (var entry in InvalidArchiveEntries)
 		{
@@ -48,7 +48,7 @@ internal class Bk2 : Parser, IParser
 
 		// guard against branch header files, which have a number in their name
 		var headerEntry = archive.Entries.SingleOrDefault(
-			e => e.Name.StartsWith(HeaderFile, StringComparison.InvariantCultureIgnoreCase) && !e.Name.Any(char.IsDigit));
+			e => e.Key.StartsWith(HeaderFile, StringComparison.InvariantCultureIgnoreCase) && !e.Key.Any(char.IsDigit));
 		if (headerEntry is null)
 		{
 			return Error($"Missing {HeaderFile}, can not parse");
@@ -59,7 +59,7 @@ internal class Bk2 : Parser, IParser
 		string clockRate;
 		string core;
 
-		await using (var stream = headerEntry.Open())
+		await using (var stream = headerEntry.OpenEntryStream())
 		{
 			using var reader = new StreamReader(stream);
 			var header = (await reader
@@ -190,13 +190,13 @@ internal class Bk2 : Parser, IParser
 			return Error($"Missing {InputFile}, can not parse");
 		}
 
-		await using var inputStream = inputLog.Open();
+		await using var inputStream = inputLog.OpenEntryStream();
 		(_, result.Frames) = await inputStream.PipeBasedMovieHeaderAndFrameCount();
 
-		var commentEntry = archive.Entries.SingleOrDefault(e => e.Name.StartsWith(CommentFile, StringComparison.InvariantCultureIgnoreCase));
+		var commentEntry = archive.Entries.SingleOrDefault(e => e.Key.StartsWith(CommentFile, StringComparison.InvariantCultureIgnoreCase));
 		if (commentEntry is not null)
 		{
-			await using var commentStream = commentEntry.Open();
+			await using var commentStream = commentEntry.OpenEntryStream();
 			using var reader = new StreamReader(commentStream);
 			var annotations = await reader.ReadToEndAsync();
 			if (!string.IsNullOrWhiteSpace(annotations))
