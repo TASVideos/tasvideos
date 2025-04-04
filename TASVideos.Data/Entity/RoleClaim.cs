@@ -2,5 +2,4 @@
 
 namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class RoleClaim : IdentityRoleClaim<int>;

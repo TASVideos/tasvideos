@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.AutoHistory;
+
+namespace TASVideos.Data.Entity.Game;
 
 public enum VersionTypes
 {
@@ -14,6 +16,7 @@ public enum VersionTypes
 	CustomLevelSet
 }
 
+[IncludeInAutoHistory]
 public class GameVersion : BaseEntity
 {
 	public int Id { get; set; }

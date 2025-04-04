@@ -2,5 +2,4 @@
 
 namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class UserClaim : IdentityUserClaim<int>;

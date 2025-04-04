@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class SubmissionRejectionReason
 {
 	public int Id { get; set; }

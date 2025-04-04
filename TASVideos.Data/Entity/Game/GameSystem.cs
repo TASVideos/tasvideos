@@ -3,7 +3,6 @@
 /// <summary>
 /// Represents the system that a game runs on, such as NES, SNES, Commodore 64, PSX, etc
 /// </summary>
-[ExcludeFromHistory]
 public class GameSystem : BaseEntity
 {
 	public int Id { get; set; } // Note that this is Non-auto-incrementing, we need Ids to be identical across any database

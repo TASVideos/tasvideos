@@ -1,5 +1,8 @@
-﻿namespace TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.AutoHistory;
 
+namespace TASVideos.Data.Entity.Game;
+
+[IncludeInAutoHistory]
 public class GameGoal
 {
 	public int Id { get; set; }

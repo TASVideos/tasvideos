@@ -6,7 +6,6 @@ public enum AwardType
 	Movie
 }
 
-[ExcludeFromHistory]
 public class Award
 {
 	public int Id { get; set; }
