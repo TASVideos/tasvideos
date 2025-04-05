@@ -78,6 +78,8 @@ public static class SiteGlobalConstants
 	public const int OtherGamesForum = 5;
 
 	public const int MetaDescriptionLength = 350;
+
+	public const string MainIvatarDomain = "seccdn.libravatar.org"; // keep in sync with profile-settings.js
 }
 
 public static class ForumConstants
