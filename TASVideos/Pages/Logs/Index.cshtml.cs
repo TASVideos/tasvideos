@@ -26,7 +26,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				UserName = user == null ? "Unknown_User" : user.UserName,
 				Created = g.h.Created,
 				TableName = g.h.TableName,
-				Changed = g.h.Changed,
+				Changed = g.h.Changed ?? "",
 				Kind = g.h.Kind
 			});
 
