@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity.Game;
 
-[ExcludeFromHistory]
 public class GameGameGroup
 {
 	public int GameId { get; set; }

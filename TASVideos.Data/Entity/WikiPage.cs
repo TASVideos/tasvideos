@@ -4,7 +4,6 @@ using NpgsqlTypes;
 
 namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class WikiPage : BaseEntity, ISoftDeletable
 {
 	public int Id { get; set; }

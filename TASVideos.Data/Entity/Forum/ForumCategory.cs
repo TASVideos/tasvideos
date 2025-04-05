@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity.Forum;
 
-[ExcludeFromHistory]
 public class ForumCategory : BaseEntity
 {
 	public int Id { get; set; }

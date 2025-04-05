@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity.Awards;
 
-[ExcludeFromHistory]
 public class UserAward
 {
 	public int Id { get; set; }

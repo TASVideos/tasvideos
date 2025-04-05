@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class SubmissionAuthor
 {
 	public int UserId { get; set; }

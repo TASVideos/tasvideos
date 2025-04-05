@@ -1,6 +1,8 @@
-﻿namespace TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.AutoHistory;
 
-[ExcludeFromHistory]
+namespace TASVideos.Data.Entity.Game;
+
+[IncludeInAutoHistory]
 public class GameGroup
 {
 	public int Id { get; set; }

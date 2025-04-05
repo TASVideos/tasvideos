@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class PrivateMessage : BaseEntity
 {
 	public int Id { get; set; }
