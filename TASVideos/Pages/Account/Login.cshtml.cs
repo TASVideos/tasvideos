@@ -31,11 +31,17 @@ public class LoginModel(SignInManager signInManager, IHostEnvironment env) : Bas
 			return Page();
 		}
 
-		var (result, user) = await signInManager.SignIn(UserName, Password, RememberMe);
+		var (result, user, failedDueToBan) = await signInManager.SignIn(UserName, Password, RememberMe);
 
 		if (result.Succeeded)
 		{
 			return BaseReturnUrlRedirect();
+		}
+
+		if (user is not null && failedDueToBan)
+		{
+			TempData[nameof(BannedModel.BannedUserId)] = user.Id;
+			return RedirectToPage("/Account/Banned");
 		}
 
 		if (user is not null && !await signInManager.UserManager.IsEmailConfirmedAsync(user) && !env.IsDevelopment())

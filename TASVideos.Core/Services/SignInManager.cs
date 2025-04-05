@@ -27,24 +27,24 @@ public class SignInManager(
 {
 	public new UserManager UserManager => (UserManager)base.UserManager;
 
-	public async Task<(SignInResult Result, User? User)> SignIn(string userName, string password, bool rememberMe = false)
+	public async Task<(SignInResult Result, User? User, bool FailedDueToBan)> SignIn(string userName, string password, bool rememberMe = false)
 	{
 		userName = userName.Trim().Replace(" ", "_");
 		var user = await db.Users.ForUser(userName).SingleOrDefaultAsync();
 		if (user is null)
 		{
-			return (SignInResult.Failed, null);
-		}
-
-		if (user.IsBanned())
-		{
-			return (SignInResult.Failed, null);
+			return (SignInResult.Failed, null, FailedDueToBan: false);
 		}
 
 		var result = await CheckPasswordSignInAsync(user, password, true);
 
 		if (result.Succeeded)
 		{
+			if (user.IsBanned())
+			{
+				return (SignInResult.Failed, user, FailedDueToBan: true);
+			}
+
 			user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
 			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
@@ -52,7 +52,7 @@ public class SignInManager(
 			await SignInAsync(user, rememberMe);
 		}
 
-		return (result, user);
+		return (result, user, FailedDueToBan: false);
 	}
 
 	public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)

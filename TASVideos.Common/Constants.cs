@@ -78,6 +78,8 @@ public static class SiteGlobalConstants
 	public const int OtherGamesForum = 5;
 
 	public const int MetaDescriptionLength = 350;
+
+	public const int YearsOfBanDisplayedAsIndefinite = 2;
 }
 
 public static class ForumConstants
