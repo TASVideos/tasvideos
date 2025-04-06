@@ -194,7 +194,7 @@ public class SubmitModel(
 
 		foreach (var author in Authors)
 		{
-			if (!await db.Users.Exists(author))
+			if (!await userManager.Exists(author))
 			{
 				ModelState.AddModelError($"{nameof(Authors)}", $"Could not find user: {author}");
 			}
