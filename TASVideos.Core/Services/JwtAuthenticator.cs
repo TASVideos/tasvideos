@@ -17,7 +17,7 @@ internal class JwtAuthenticator(SignInManager signInManager, AppSettings setting
 
 	public async Task<string> Authenticate(string userName, string password)
 	{
-		var (result, user) = await signInManager.SignIn(userName, password);
+		var (result, user, _) = await signInManager.SignIn(userName, password);
 		if (!result.Succeeded)
 		{
 			return "";

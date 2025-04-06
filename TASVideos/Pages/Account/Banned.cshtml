@@ -1,0 +1,15 @@
+﻿@page
+@model TASVideos.Pages.Account.BannedModel
+@{
+	ViewData.SetTitle("Banned");
+}
+<p>
+	Your TASVideos account <strong>@Model.UserName</strong> is banned.
+</p>
+<p condition="Model.BanIsIndefinite">
+	Your ban is indefinite.
+</p>
+<p condition="!Model.BanIsIndefinite">
+	Your ban is temporary and lasts until: <timezone-convert relative-time="false" asp-for="BannedUntil" />
+</p>
+@await Html.RenderWiki(SystemWiki.BannedUserNotice)
