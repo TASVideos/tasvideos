@@ -806,4 +806,48 @@ public class QueueServiceTests : TestDbBase
 	}
 
 	#endregion
+
+	#region GetSubmissionCount
+
+	[TestMethod]
+	public async Task GetSubmissionCount_UserDoesNotExist_ReturnsZero()
+	{
+		var actual = await _queueService.GetSubmissionCount(int.MaxValue);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	public async Task GetSubmissionCount_UserHasNotSubmitted_ReturnsZero()
+	{
+		const int userId = 1;
+		_db.AddUser(userId);
+
+		var actual = await _queueService.GetSubmissionCount(userId);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	public async Task GetSubmissionCount_UserIsAuthorButNotSubmitter_ReturnsZero()
+	{
+		const int authorId = 1;
+		_db.AddUser(authorId);
+		var sub = _db.AddSubmission();
+		_db.SubmissionAuthors.Add(new SubmissionAuthor { UserId = authorId, Submission = sub.Entity });
+		await _db.SaveChangesAsync();
+
+		var actual = await _queueService.GetSubmissionCount(authorId);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	public async Task GetSubmissionCount_ReturnsSubmissionCount()
+	{
+		var sub = _db.AddSubmission();
+		await _db.SaveChangesAsync();
+
+		var actual = await _queueService.GetSubmissionCount(sub.Entity.Submitter!.Id);
+		Assert.AreEqual(1, actual);
+	}
+
+	#endregion
 }

@@ -16,6 +16,8 @@ public interface IForumService
 	Task<bool> IsTopicLocked(int topicId);
 	Task<AvatarUrls> UserAvatars(int userId);
 	Task<Dictionary<int, (string PostsCreated, string PostsEdited)>> GetPostActivityOfSubforum(int subforumId);
+	Task<int> GetTopicCountInForum(int userId, int topicId);
+	Task<int> GetPostCountInTopic(int userId, int topicId);
 }
 
 internal class ForumService(
@@ -298,6 +300,16 @@ internal class ForumService(
 		(await GetPostActivityOfTopics()).TryGetValue(subforumId, out var activityTopics);
 		return activityTopics ?? [];
 	}
+
+	public async Task<int> GetTopicCountInForum(int userId, int forumId)
+		=> await db.ForumTopics
+			.ForForum(forumId)
+			.CountAsync(fp => fp.PosterId == userId);
+
+	public async Task<int> GetPostCountInTopic(int userId, int topicId)
+		=> await db.ForumPosts
+			.ForTopic(topicId)
+			.CountAsync(fp => fp.PosterId == userId);
 
 	internal async Task<Dictionary<int, (string PostsCreated, string PostsEdited)>> GetPostActivityOfSubforums()
 	{

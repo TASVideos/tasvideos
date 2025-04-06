@@ -62,6 +62,11 @@ public interface IQueueService
 	/// </summary>
 	/// <returns>Next time the user can submit, if limit has been exceeded, else null</returns>
 	Task<DateTime?> ExceededSubmissionLimit(int userId);
+
+	/// <summary>
+	/// Returns the total numbers of submissions the given user has submitted
+	/// </summary>
+	Task<int> GetSubmissionCount(int userId);
 }
 
 internal class QueueService(
@@ -499,6 +504,9 @@ internal class QueueService(
 
 		return null;
 	}
+
+	public async Task<int> GetSubmissionCount(int userId)
+		=> await db.Submissions.CountAsync(s => s.SubmitterId == userId);
 }
 
 public interface ISubmissionDisplay

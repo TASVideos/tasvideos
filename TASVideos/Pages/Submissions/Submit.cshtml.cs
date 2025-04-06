@@ -79,9 +79,7 @@ public class SubmitModel(
 		}
 
 		Authors = [User.Name()];
-		BackupSubmissionDeterminator = (await db.Submissions
-			.CountAsync(s => s.SubmitterId == User.GetUserId()))
-			.ToString();
+		BackupSubmissionDeterminator = (await queueService.GetSubmissionCount(User.GetUserId())).ToString();
 
 		return Page();
 	}

@@ -98,11 +98,7 @@ public class CreateModel(
 			.ToListAsync();
 
 		UserAvatars = await forumService.UserAvatars(User.GetUserId());
-
-		BackupSubmissionDeterminator = (await db.ForumPosts
-			.ForTopic(TopicId)
-			.CountAsync(fp => fp.PosterId == user.Id))
-			.ToString();
+		BackupSubmissionDeterminator = (await forumService.GetPostCountInTopic(user.Id, TopicId)).ToString();
 
 		return Page();
 	}

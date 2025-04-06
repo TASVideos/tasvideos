@@ -161,9 +161,9 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		AddUser(SiteGlobalConstants.TASVideoAgentId);
 	}
 
-	public EntityEntry<ForumTopic> AddTopic()
+	public EntityEntry<ForumTopic> AddTopic(User? createdByUser = null)
 	{
-		var user = AddUser(0).Entity;
+		var user = createdByUser ?? AddUser(0).Entity;
 		var forumCategory = new ForumCategory();
 		var forum = new Forum { Category = forumCategory };
 		var topic = new ForumTopic { Forum = forum, Poster = user };

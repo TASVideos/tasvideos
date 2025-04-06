@@ -70,10 +70,7 @@ public class CreateModel(
 			_ => true,
 		};
 
-		BackupSubmissionDeterminator = (await db.ForumTopics
-			.ForForum(ForumId)
-			.CountAsync(t => t.PosterId == User.GetUserId()))
-			.ToString();
+		BackupSubmissionDeterminator = (await forumService.GetTopicCountInForum(User.GetUserId(), ForumId)).ToString();
 
 		return Page();
 	}
