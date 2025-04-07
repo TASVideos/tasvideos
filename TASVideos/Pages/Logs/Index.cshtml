@@ -5,6 +5,8 @@
 	ViewData.UseDiff();
 }
 
+<back-link condition="@(Model.Table.Equals("submissions", StringComparison.InvariantCultureIgnoreCase) && Model.RowId is not null)" href="/@(Model.RowId)S" name-override="Back to Submission"></back-link>
+<back-link condition="@(Model.Table.Equals("publications", StringComparison.InvariantCultureIgnoreCase) && Model.RowId is not null)" href="/@(Model.RowId)M" name-override="Back to Publication"></back-link>
 <partial name="_Pager" model="Model.History" />
 <standard-table>
 	<sortable-table-head sorting="@Model.Search" model-type="typeof(IndexModel.LogEntry)" page-override="@HttpContext.Request.Path" />
