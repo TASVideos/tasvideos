@@ -32,7 +32,8 @@
 					   class="btn btn-secondary btn-sm d-none d-md-inline-block">
 						<i class="fa fa-envelope"></i> PM
 					</a>
-					<a asp-page="/Forum/Posts/Create"
+					<a condition="User.Has(PermissionTo.CreateForumPosts)"
+					   asp-page="/Forum/Posts/Create"
 					   asp-route-topicId="@Model.TopicId"
 					   asp-route-quoteId="@Model.Id"
 					   class="btn btn-secondary btn-sm">
