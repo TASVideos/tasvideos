@@ -6,7 +6,7 @@ public class EditModel(
 	ApplicationDbContext db,
 	ExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
-	UserManager userManager)
+	IUserManager userManager)
 	: BasePageModel
 {
 	[FromRoute]

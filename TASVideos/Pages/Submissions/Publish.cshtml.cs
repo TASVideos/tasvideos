@@ -10,7 +10,7 @@ public class PublishModel(
 	IWikiPages wikiPages,
 	IMediaFileUploader uploader,
 	ITASVideoAgent tasVideoAgent,
-	UserManager userManager,
+	IUserManager userManager,
 	IFileService fileService,
 	IYoutubeSync youtubeSync,
 	IQueueService queueService)

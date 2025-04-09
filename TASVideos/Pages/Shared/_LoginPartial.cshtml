@@ -1,5 +1,5 @@
 @inject IPrivateMessageService PrivateMessages
-@inject SignInManager SignInManager
+@inject ISignInManager SignInManager
 @{
 	bool isSignedIn = SignInManager.IsSignedIn(User);
 	int notificationCount = 0;

@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
-public class ListModel(ApplicationDbContext db, ICacheService cache, UserManager userManager) : BasePageModel
+public class ListModel(ApplicationDbContext db, ICacheService cache, IUserManager userManager) : BasePageModel
 {
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();

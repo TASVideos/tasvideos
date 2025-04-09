@@ -32,7 +32,8 @@ public class RegisterModel : BasePageModel
 	public bool Coppa { get; set; }
 
 	public async Task<IActionResult> OnPost(
-		[FromServices] SignInManager signInManager,
+		[FromServices] ISignInManager signInManager,
+		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
 		[FromServices] ExternalMediaPublisher publisher,
 		[FromServices] IReCaptchaService reCaptchaService,
@@ -86,22 +87,22 @@ public class RegisterModel : BasePageModel
 			EmailOnPrivateMessage = true
 		};
 
-		var result = await signInManager.UserManager.CreateAsync(user, Password);
+		var result = await userManager.Create(user, Password);
 		if (!result.Succeeded)
 		{
 			AddErrors(result);
 			return Page();
 		}
 
-		var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+		var token = await userManager.GenerateEmailConfirmationToken(user);
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token);
 
-		await signInManager.SignInAsync(user, isPersistent: false);
+		await signInManager.SignIn(user, isPersistent: false);
 		await publisher.SendUserManagement($"New User registered! [{user.UserName}]({{0}})", user.UserName);
 		await userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 		await emailService.EmailConfirmation(Email, callbackUrl);
 
-		return signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
+		return userManager.IsConfirmedEmailRequired()
 			? RedirectToPage("EmailConfirmationSent")
 			: BaseReturnUrlRedirect();
 	}

@@ -2,7 +2,7 @@
 
 [Authorize]
 public class ConfirmEmailChangeModel(
-	UserManager userManager,
+	IUserManager userManager,
 	IUserMaintenanceLogger userMaintenanceLogger,
 	ICacheService cache)
 	: BasePageModel
@@ -22,7 +22,7 @@ public class ConfirmEmailChangeModel(
 			return BadRequest("Unrecognized or expired code.");
 		}
 
-		var result = await userManager.ChangeEmailAsync(user, newEmail, code);
+		var result = await userManager.ChangeEmail(user, newEmail, code);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");

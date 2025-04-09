@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class SettingsModel(UserManager userManager, IEmailService emailService, ApplicationDbContext db) : BasePageModel
+public class SettingsModel(IUserManager userManager, IEmailService emailService, ApplicationDbContext db) : BasePageModel
 {
 	public static readonly List<SelectListItem> AvailablePronouns = Enum
 		.GetValues<PreferredPronounTypes>()
@@ -153,7 +153,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 		var user = await userManager.GetRequiredUser(User);
 
-		var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+		var code = await userManager.GenerateEmailConfirmationToken(user);
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code);
 		await emailService.EmailConfirmation(user.Email, callbackUrl);
 

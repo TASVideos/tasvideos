@@ -2,7 +2,8 @@
 
 [AllowAnonymous]
 public class ConfirmEmailModel(
-	SignInManager signInManager,
+	ISignInManager signInManager,
+	IUserManager userManager,
 	ExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
 	ITASVideoAgent tasVideoAgent)
@@ -15,7 +16,7 @@ public class ConfirmEmailModel(
 			return Home();
 		}
 
-		var user = await signInManager.UserManager.FindByIdAsync(userId);
+		var user = await userManager.FindById(userId);
 		if (user is null)
 		{
 			return Home();
@@ -27,15 +28,15 @@ public class ConfirmEmailModel(
 			return Home();
 		}
 
-		var result = await signInManager.UserManager.ConfirmEmailAsync(user, code);
+		var result = await userManager.ConfirmEmail(user, code);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");
 		}
 
-		await signInManager.UserManager.AddStandardRoles(user.Id);
-		await signInManager.UserManager.AddUserPermissionsToClaims(user);
-		await signInManager.SignInAsync(user, isPersistent: false);
+		await userManager.AddStandardRoles(user.Id);
+		await userManager.AddUserPermissionsToClaims(user);
+		await signInManager.SignIn(user, isPersistent: false);
 		await publisher.SendUserManagement($"User [{user.UserName}]({{0}}) activated", user.UserName);
 		await userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
 		await tasVideoAgent.SendWelcomeMessage(user.Id);

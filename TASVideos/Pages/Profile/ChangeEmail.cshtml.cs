@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class ChangeEmailModel(UserManager userManager, ICacheService cache, IEmailService emailService) : BasePageModel
+public class ChangeEmailModel(IUserManager userManager, ICacheService cache, IEmailService emailService) : BasePageModel
 {
 	[BindProperty]
 	public string CurrentEmail { get; set; } = "";

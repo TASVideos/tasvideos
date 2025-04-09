@@ -34,7 +34,7 @@ public class RequireBase : Attribute
 		// for the cookie expiration
 		if (context.HandlerMethod?.HttpMethod == "Post")
 		{
-			var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager>();
+			var userManager = context.HttpContext.RequestServices.GetRequiredService<IUserManager>();
 			return await userManager.GetUserPermissionsById(context.HttpContext.User.GetUserId());
 		}
 

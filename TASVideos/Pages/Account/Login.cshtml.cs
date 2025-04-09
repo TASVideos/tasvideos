@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Account;
 [BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
-public class LoginModel(SignInManager signInManager, IHostEnvironment env) : BasePageModel
+public class LoginModel(ISignInManager signInManager, IUserManager userManager, IHostEnvironment env) : BasePageModel
 {
 	public string UserName { get; set; } = "";
 
@@ -44,7 +44,7 @@ public class LoginModel(SignInManager signInManager, IHostEnvironment env) : Bas
 			return RedirectToPage("/Account/Banned");
 		}
 
-		if (user is not null && !await signInManager.UserManager.IsEmailConfirmedAsync(user) && !env.IsDevelopment())
+		if (user is not null && !await userManager.IsEmailConfirmed(user) && !env.IsDevelopment())
 		{
 			return RedirectToPage("/Account/EmailConfirmationSent");
 		}

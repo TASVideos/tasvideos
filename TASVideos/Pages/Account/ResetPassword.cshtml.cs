@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Account;
 
 [IpBanCheck]
-public class ResetPasswordModel(UserManager userManager) : BasePageModel
+public class ResetPasswordModel(IUserManager userManager) : BasePageModel
 {
 	public string Email { get; set; } = "";
 
@@ -30,13 +30,13 @@ public class ResetPasswordModel(UserManager userManager) : BasePageModel
 			return Home();
 		}
 
-		var user = await userManager.FindByIdAsync(UserId ?? "");
+		var user = await userManager.FindById(UserId);
 		if (user is null)
 		{
 			return Home();
 		}
 
-		if (!await userManager.VerifyUserTokenAsync(user, userManager.Options.Tokens.PasswordResetTokenProvider, UserManager.ResetPasswordTokenPurpose, Code))
+		if (!await userManager.VerifyUserToken(user, Code))
 		{
 			return Home();
 		}
@@ -58,7 +58,7 @@ public class ResetPasswordModel(UserManager userManager) : BasePageModel
 			return Home();
 		}
 
-		var user = await userManager.FindByIdAsync(UserId ?? "");
+		var user = await userManager.FindById(UserId);
 		if (user is null)
 		{
 			return Home();

@@ -11,7 +11,7 @@ public class SubmitModel(
 	ExternalMediaPublisher publisher,
 	IWikiPages wikiPages,
 	IMovieParser parser,
-	UserManager userManager,
+	IUserManager userManager,
 	ITASVideoAgent tasVideoAgent,
 	IYoutubeSync youtubeSync,
 	IMovieFormatDeprecator deprecator,
@@ -141,7 +141,7 @@ public class SubmitModel(
 		}
 
 		submission.MovieFile = MovieFile.IsZip() ? fileBytes : await fileService.ZipFile(fileBytes, MovieFile!.FileName);
-		submission.Submitter = await userManager.GetUserAsync(User);
+		submission.Submitter = await userManager.GetRequiredUser(User);
 		if (parseResult.Hashes.Count > 0)
 		{
 			submission.HashType = parseResult.Hashes.First().Key.ToString();

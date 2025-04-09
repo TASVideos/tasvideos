@@ -8,7 +8,20 @@ using Microsoft.Extensions.Options;
 
 namespace TASVideos.Core.Services;
 
-public class SignInManager(
+public interface ISignInManager
+{
+	Task<(SignInResult Result, User? User, bool FailedDueToBan)> SignIn(string userName, string password, bool rememberMe = false);
+	Task<bool> UsernameIsAllowed(string userName);
+	Task<bool> EmailExists(string email);
+	bool IsPasswordAllowed(string? userName, string? email, string? password);
+	Task SignIn(User user, bool isPersistent, string? authenticationMethod = null);
+	Task Logout(ClaimsPrincipal user);
+	Task<bool> HasPassword(ClaimsPrincipal user);
+	Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword);
+	bool IsSignedIn(ClaimsPrincipal principal);
+}
+
+internal class SignInManager(
 	ApplicationDbContext db,
 	UserManager userManager,
 	IHttpContextAccessor contextAccessor,
@@ -23,9 +36,12 @@ public class SignInManager(
 		optionsAccessor,
 		logger,
 		schemes,
-		confirmation)
+		confirmation), ISignInManager
 {
 	public new UserManager UserManager => (UserManager)base.UserManager;
+
+	public Task SignIn(User user, bool isPersistent, string? authenticationMethod = null)
+		=> SignInAsync(user, isPersistent, authenticationMethod);
 
 	public async Task<(SignInResult Result, User? User, bool FailedDueToBan)> SignIn(string userName, string password, bool rememberMe = false)
 	{
@@ -92,16 +108,6 @@ public class SignInManager(
 
 		var baseEmail = email.Split('+')[0]; // Strip off alias
 		return await db.Users.AnyAsync(u => EF.Functions.Like(u.Email, baseEmail));
-	}
-
-	public async Task<User?> GetUserByEmailAndUserName(string username, string email)
-	{
-		if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username))
-		{
-			return null;
-		}
-
-		return await db.Users.SingleOrDefaultAsync(u => u.Email == email && u.UserName == username);
 	}
 
 	public async Task Logout(ClaimsPrincipal user)

@@ -13,7 +13,7 @@ public class EditModel(
 	ApplicationDbContext db,
 	ExternalMediaPublisher publisher,
 	IForumService forumService,
-	UserManager userManager)
+	IUserManager userManager)
 	: BaseForumModel
 {
 	[FromRoute]

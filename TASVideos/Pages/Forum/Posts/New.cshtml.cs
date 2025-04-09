@@ -4,7 +4,7 @@ namespace TASVideos.Pages.Forum.Posts;
 
 [Authorize]
 [RequireCurrentPermissions]
-public class NewModel(ApplicationDbContext db, UserManager userManager) : BasePageModel
+public class NewModel(ApplicationDbContext db, IUserManager userManager) : BasePageModel
 {
 	[FromQuery]
 	public PagingModel Search { get; set; } = new();

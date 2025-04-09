@@ -20,12 +20,12 @@ public class EmailConfirmationSentModel : BasePageModel
 	}
 
 	public async Task<IActionResult> OnPost(
-		[FromServices] SignInManager signInManager, [FromServices] IEmailService emailService)
+		[FromServices] IUserManager userManager, [FromServices] IEmailService emailService)
 	{
-		var user = await signInManager.GetUserByEmailAndUserName(Email, UserName);
+		var user = await userManager.GetUserByEmailAndUserName(Email, UserName);
 		if (user is not null && !user.EmailConfirmed)
 		{
-			var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+			var token = await userManager.GenerateEmailConfirmationToken(user);
 			var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token);
 
 			await emailService.EmailConfirmation(Email, callbackUrl);

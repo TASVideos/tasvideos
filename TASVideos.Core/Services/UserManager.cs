@@ -6,7 +6,42 @@ using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core.Services;
 
-public class UserManager(
+public interface IUserManager
+{
+	Task<User?> GetUser(ClaimsPrincipal user);
+	Task<User> GetRequiredUser(ClaimsPrincipal user);
+	Task<User?> FindById(string? userId);
+	Task<User?> FindByEmail(string email);
+	Task<UserProfile?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts);
+	string[] GetBannedAvatarSites();
+	string? AvatarSiteIsBanned(string? avatar);
+	Task<IdentityResult> ChangeEmail(User user, string newEmail, string token);
+	Task<bool> Exists(string userName);
+	Task<bool> VerifyUserToken(User user, string token);
+	Task<IdentityResult> ResetPasswordAsync(User user, string token, string newPassword);
+	Task MarkEmailConfirmed(User user);
+	Task<string> GeneratePasswordResetToken(User user);
+	Task AssignAutoAssignableRolesByPost(int userId);
+	Task AssignAutoAssignableRolesByPublication(IEnumerable<int> userIds, string publicationTitle);
+	Task<bool> CanRenameUser(string oldUserName, string newUserName);
+	Task UserNameChanged(User user, string oldName);
+	Task<string> GenerateEmailConfirmationToken(User user);
+	Task PermaBanUser(int userId);
+	void ClearCustomLocaleCache(int userId);
+	Task<string> GenerateChangeEmailToken(ClaimsPrincipal claimsUser, string newEmail);
+	Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId, bool getRawPermissions = false);
+	Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user);
+	bool IsConfirmedEmailRequired();
+	Task<IdentityResult> Create(User user, string password);
+	Task<IdentityResult> ConfirmEmail(User user, string token);
+	Task AddStandardRoles(int userId);
+	Task<IdentityResult> ChangePassword(User user, string currentPassword, string newPassword);
+	Task<User?> GetUserByEmailAndUserName(string username, string email);
+	Task<bool> IsEmailConfirmed(User user);
+	string? NormalizeEmail(string? email);
+}
+
+internal class UserManager(
 	ApplicationDbContext db,
 	ICacheService cache,
 	IPointsService pointsService,
@@ -29,10 +64,41 @@ public class UserManager(
 		keyNormalizer,
 		errors,
 		services,
-		logger)
+		logger), IUserManager
 {
+	public async Task<User?> GetUser(ClaimsPrincipal user) => await GetUserAsync(user);
 	public async Task<User> GetRequiredUser(ClaimsPrincipal user) => await GetUserAsync(user)
-			?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
+		?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
+
+	public Task<User?> FindById(string? userId)
+		=> FindByIdAsync(userId ?? "");
+
+	public Task<User?> FindByEmail(string email)
+		=> FindByEmailAsync(email);
+
+	public Task<IdentityResult> ChangeEmail(User user, string newEmail, string token)
+		=> ChangeEmailAsync(user, newEmail, token);
+
+	public Task<bool> VerifyUserToken(User user, string token)
+		=> VerifyUserTokenAsync(user, Options.Tokens.PasswordResetTokenProvider, ResetPasswordTokenPurpose, token);
+
+	public Task<string> GeneratePasswordResetToken(User user)
+		=> GeneratePasswordResetTokenAsync(user);
+
+	public Task<string> GenerateEmailConfirmationToken(User user)
+		=> GenerateEmailConfirmationTokenAsync(user);
+
+	public bool IsConfirmedEmailRequired() => Options.SignIn.RequireConfirmedEmail;
+	public Task<IdentityResult> Create(User user, string password)
+		=> CreateAsync(user, password);
+
+	public Task<IdentityResult> ConfirmEmail(User user, string token)
+		=> ConfirmEmailAsync(user, token);
+
+	public Task<IdentityResult> ChangePassword(User user, string currentPassword, string newPassword)
+		=> ChangePasswordAsync(user, currentPassword, newPassword);
+
+	public Task<bool> IsEmailConfirmed(User user) => IsEmailConfirmedAsync(user);
 
 	/// <summary>
 	/// Clears the user claims, and adds a distinct list of user permissions, so they can be stored and retrieved from their cookie
@@ -437,5 +503,15 @@ public class UserManager(
 			.ToListAsync();
 
 		return users.Count == 1 && users[0] == oldUserName;
+	}
+
+	public async Task<User?> GetUserByEmailAndUserName(string username, string email)
+	{
+		if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username))
+		{
+			return null;
+		}
+
+		return await db.Users.SingleOrDefaultAsync(u => u.Email == email && u.UserName == username);
 	}
 }
