@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.ObjectModel;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
@@ -55,7 +54,7 @@ public class ViewModelTests : TestDbBase
 	{
 		var sub = CreateUnpublishedSubmission();
 		_page.Id = sub.Id;
-		AddAuthenticatedUser(_page, sub.Submitter!.UserName, []);
+		AddAuthenticatedUser(_page, sub.Submitter!, []);
 
 		var actual = await _page.OnGet();
 
@@ -76,7 +75,7 @@ public class ViewModelTests : TestDbBase
 		});
 		await _db.SaveChangesAsync();
 		_page.Id = sub.Id;
-		AddAuthenticatedUser(_page, user.Entity.UserName, []);
+		AddAuthenticatedUser(_page, user.Entity, []);
 
 		var actual = await _page.OnGet();
 

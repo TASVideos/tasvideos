@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
@@ -11,13 +10,15 @@ namespace TASVideos.RazorPages.Tests;
 
 public static class RazorTestHelpers
 {
-	public static void AddAuthenticatedUser(PageModel page, string userName, IEnumerable<PermissionTo> permissions)
+	public static void AddAuthenticatedUser(PageModel page, User user, IEnumerable<PermissionTo> permissions)
 	{
-		var identity = new GenericIdentity(userName);
+		var identity = new GenericIdentity(user.UserName);
 		foreach (var p in permissions)
 		{
 			identity.AddClaim(new Claim(CustomClaimTypes.Permission, ((int)p).ToString()));
 		}
+
+		identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
 
 		var principle = new ClaimsPrincipal(identity);
 

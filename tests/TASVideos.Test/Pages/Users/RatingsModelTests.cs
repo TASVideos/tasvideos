@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TASVideos.Core;
+﻿using TASVideos.Core;
 using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Users;
@@ -37,8 +36,10 @@ public class RatingModelTests : TestDbBase
 	public async Task UserExists_PrivateRatings_ViewerDoesNotHavePermission_ReturnsNotFound()
 	{
 		const string userName = "RaterExists";
+		var viewer = _db.AddUser("Viewer");
 		SetRatingResult(userName);
-		AddAuthenticatedUser(_page, "Viewer", []);
+		await _db.SaveChangesAsync();
+		AddAuthenticatedUser(_page, viewer.Entity, []);
 
 		var result = await _page.OnGet();
 
@@ -51,7 +52,9 @@ public class RatingModelTests : TestDbBase
 	{
 		const string userName = "RaterExists";
 		SetRatingResult(userName);
-		AddAuthenticatedUser(_page, "Viewer", [PermissionTo.SeePrivateRatings]);
+		var viewer = _db.AddUser("Viewer");
+		await _db.SaveChangesAsync();
+		AddAuthenticatedUser(_page, viewer.Entity, [PermissionTo.SeePrivateRatings]);
 
 		var result = await _page.OnGet();
 		Assert.IsNotNull(result);
@@ -63,8 +66,10 @@ public class RatingModelTests : TestDbBase
 	public async Task UserExists_PrivateRatings_ViewerIsUserAndWithoutPermission_ReturnsRatings()
 	{
 		const string userName = "RaterExists";
+		var user = _db.AddUser(userName);
 		SetRatingResult(userName);
-		AddAuthenticatedUser(_page, userName, []);
+		await _db.SaveChangesAsync();
+		AddAuthenticatedUser(_page, user.Entity, []);
 
 		var result = await _page.OnGet();
 
