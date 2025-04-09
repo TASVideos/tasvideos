@@ -1,4 +1,4 @@
-namespace TASVideos.Pages.Account;
+﻿namespace TASVideos.Pages.Account;
 
 public class BannedModel(ApplicationDbContext db) : BasePageModel
 {
@@ -25,7 +25,7 @@ public class BannedModel(ApplicationDbContext db) : BasePageModel
 			})
 			.FirstOrDefaultAsync();
 
-		if (user == null)
+		if (user is null)
 		{
 			return Home();
 		}
