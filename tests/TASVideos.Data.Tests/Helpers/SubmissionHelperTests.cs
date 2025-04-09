@@ -1,4 +1,7 @@
-﻿using TASVideos.Data.Helpers;
+﻿using TASVideos.Data.Entity;
+using TASVideos.Data.Helpers;
+using static TASVideos.Data.Entity.SubmissionStatus;
+
 namespace TASVideos.Data.Tests.Helpers;
 
 [TestClass]
@@ -96,6 +99,55 @@ public class SubmissionHelperTests
 	public void IsRawGamePageLink(string link, int? expected)
 	{
 		var actual = SubmissionHelper.IsRawGamePageLink(link);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[DataRow(JudgingUnderWay, JudgingUnderWay, false)]
+	[DataRow(New, PublicationUnderway, false)]
+	[DataRow(New, JudgingUnderWay, true)]
+	[DataRow(NeedsMoreInfo, JudgingUnderWay, true)]
+	[DataRow(Accepted, JudgingUnderWay, true)]
+	public void JudgeIsClaiming(SubmissionStatus oldStatus, SubmissionStatus newStatus, bool expected)
+	{
+		var actual = SubmissionHelper.JudgeIsClaiming(oldStatus, newStatus);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[DataRow(New, true)]
+	[DataRow(JudgingUnderWay, false)]
+	[DataRow(NeedsMoreInfo, false)]
+	[DataRow(Cancelled, false)]
+	[DataRow(Accepted, false)]
+	[DataRow(Published, false)]
+	public void JudgeIsUnclaiming(SubmissionStatus status, bool expected)
+	{
+		var actual = SubmissionHelper.JudgeIsUnclaiming(status);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[DataRow(PublicationUnderway, PublicationUnderway, false)]
+	[DataRow(New, JudgingUnderWay, false)]
+	[DataRow(New, PublicationUnderway, true)]
+	[DataRow(JudgingUnderWay, PublicationUnderway, true)]
+	[DataRow(Accepted, PublicationUnderway, true)]
+	public void PublisherIsClaiming(SubmissionStatus oldStatus, SubmissionStatus newStatus, bool expected)
+	{
+		var actual = SubmissionHelper.PublisherIsClaiming(oldStatus, newStatus);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[DataRow(PublicationUnderway, PublicationUnderway, false)]
+	[DataRow(PublicationUnderway, Accepted, true)]
+	[DataRow(Accepted, Accepted, false)]
+	[DataRow(New, Accepted, false)]
+	[DataRow(PublicationUnderway, New, false)]
+	public void PublisherIsUnclaiming(SubmissionStatus oldStatus, SubmissionStatus newStatus, bool expected)
+	{
+		var actual = SubmissionHelper.PublisherIsUnclaiming(oldStatus, newStatus);
 		Assert.AreEqual(expected, actual);
 	}
 }
