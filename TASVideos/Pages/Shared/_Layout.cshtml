@@ -1,13 +1,17 @@
 ﻿<!DOCTYPE html>
 <html>
+@{
+	var title = ViewData.GetTitle();
+	var canonicalUrl = ViewData.GetCanonicalUrl();
+}
 <head>
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<environment include="Production">
 		<meta name="google-site-verification" content="dvluB-ypxKLVGmSQpqBmi9i1xo85I0OmRFD2GhJkTYw" />
 	</environment>
-	@{ var title = ViewData.GetTitle(); }
 	<title>@(title is not null ? title + " - " : "")TASVideos</title>
+	<link condition="!string.IsNullOrEmpty(canonicalUrl)" rel="canonical" href="@canonicalUrl" />
 
 	<link rel="shortcut icon" href="/@(ViewData.GetFavicon())" type="image/x-icon">
 	<link rel="stylesheet" href="/css/bootstrap.css" />
@@ -171,6 +175,7 @@
 		</row>
 	</footer>
 </div>
+	<script condition="!string.IsNullOrEmpty(canonicalUrl)" src="~/js/replace-url.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
 			crossorigin="anonymous"></script>
