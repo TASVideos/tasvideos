@@ -31,7 +31,7 @@ internal class WikiTestCache : ICacheService
 		_cache.Remove(key);
 	}
 
-	public void Set(string key, object? data, TimeSpan? cacheTime = null)
+	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
 		if (data is not WikiResult)
 		{

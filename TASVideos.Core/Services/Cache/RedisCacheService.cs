@@ -71,7 +71,7 @@ public class RedisCacheService : ICacheService
 		}
 	}
 
-	public void Set(string key, object? data, TimeSpan? cacheTime = null)
+	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
 		if (_enabled)
 		{
