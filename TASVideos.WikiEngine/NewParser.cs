@@ -954,7 +954,8 @@ public partial class NewParser
 
 		var headings = NodeUtils.Find(
 				n,
-				e => e.Type == NodeType.Element && Builtins.TocHeadings.Contains(((Element)e).Tag))
+				e => e.Type == NodeType.Element && Builtins.TocHeadings.Contains(((Element)e).Tag),
+				ancestor => ancestor is Element parentElement && parentElement.Tag == "tab")
 			.Cast<Element>();
 		var ids = new HashSet<string>();
 
@@ -991,9 +992,9 @@ public partial class NewParser
 	{
 		var p = new NewParser(content);
 		p.ParseLoop();
-		ReplaceTabs(p._output);
 		AddIdsToHeadings(p._output);
 		ReplaceTocs(p._output);
+		ReplaceTabs(p._output);
 		ReplacePees(p._output);
 		return p._output;
 	}

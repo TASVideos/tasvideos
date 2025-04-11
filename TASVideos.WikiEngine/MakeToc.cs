@@ -14,7 +14,10 @@ public static partial class Builtins
 
 	public static Element MakeToc(List<INode> document, int charStart)
 	{
-		var headings = NodeUtils.Find(document, e => e.Type == NodeType.Element && TocHeadings.Contains(((Element)e).Tag))
+		var headings = NodeUtils.Find(
+				document,
+				e => e.Type == NodeType.Element && TocHeadings.Contains(((Element)e).Tag),
+				ancestor => ancestor is Element parentElement && parentElement.Tag == "tab")
 			.Cast<Element>()
 			.ToList();
 
