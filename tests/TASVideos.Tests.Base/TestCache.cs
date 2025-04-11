@@ -32,7 +32,7 @@ public class TestCache : ICacheService
 		return result;
 	}
 
-	public void Set(string key, object? data, TimeSpan? cacheTime = null)
+	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
 		var str = JsonSerializer.Serialize(data, SerializerSettings);
 		_cache[key] = str;
