@@ -21,6 +21,7 @@ public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 					.GroupBy(p => p.PublicationClass)
 					.Select(gg => new PlatformPublications.Grouping
 					{
+						IsClass = true,
 						Name = gg.Key!.Name,
 						Link = gg.Key.Link,
 						PublicationCount = gg.Count(),
@@ -41,6 +42,7 @@ public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 					.GroupBy(p => p.Flag)
 					.Select(gg => new PlatformPublications.Grouping
 					{
+						IsClass = false,
 						Name = gg.Key!.Name,
 						Link = gg.Key.Token ?? "",
 						PublicationCount = gg.Count(),
@@ -91,6 +93,7 @@ public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 
 		public class Grouping
 		{
+			public bool IsClass { get; set; }
 			public string Name { get; set; } = "";
 			public string Link { get; set; } = "";
 			public int PublicationCount { get; set; }

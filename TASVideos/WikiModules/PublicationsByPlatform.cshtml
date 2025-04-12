@@ -4,7 +4,7 @@
 	{
 		<tr>
 			<td>@platformEntry.Platform</td>
-			<td><a href="/Movies-@platformEntry.PlatformCode">All Publications (@platformEntry.Groupings.Sum(c => c.PublicationCount))</a></td>
+			<td><a href="/Movies-@platformEntry.PlatformCode">All Publications (@platformEntry.Groupings.Where(c => c.IsClass).Sum(c => c.PublicationCount))</a></td>
 			@foreach (var grouping in Model.AllGroupings)
 			{
 				var classEntry = platformEntry.Groupings.FirstOrDefault(c => c.Link == grouping);
