@@ -103,16 +103,6 @@ public class Submission : BaseEntity, ITimeable
 
 	public void GenerateTitle()
 	{
-		if (System is null)
-		{
-			throw new ArgumentNullException($"{nameof(System)} can not be null.");
-		}
-
-		if (SystemFrameRate is null)
-		{
-			throw new ArgumentNullException($"{nameof(SystemFrameRate)} can not be null.");
-		}
-
 		var authorList = SubmissionAuthors
 			.OrderBy(sa => sa.Ordinal)
 			.Select(sa => sa.Author?.UserName)
@@ -143,7 +133,7 @@ public class Submission : BaseEntity, ITimeable
 		};
 
 		Title =
-		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System.Code} {gameName}"
+		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System?.Code ?? "Unknown"} {gameName}"
 			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}
