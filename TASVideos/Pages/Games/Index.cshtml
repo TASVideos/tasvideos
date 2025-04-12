@@ -22,6 +22,8 @@
 	{
 		ViewData.SetNavigation(id, "/{0}G");
 	}
+
+	SortedSet<string> platforms = new(Model.Game.Versions.Select(v => v.SystemCode!));
 }
 
 <card class="mb-3">
@@ -38,7 +40,13 @@
 			<column md="6">
 				<ul>
 					<li>Id: @Model.Game.Id</li>
-					<li>Platforms: @string.Join(", ", Model.Game.Versions.Select(v => v.SystemCode).Distinct())</li>
+					<li>
+						Platforms:
+						@foreach (var platform in platforms)
+						{
+							<span><a href="/Movies-@platform">@platform</a><span condition="platform != platforms.Last()">,</span></span>
+						}
+					</li>
 					<li condition="!string.IsNullOrWhiteSpace(Model.Game.Abbreviation)">Abbreviation: @Model.Game.Abbreviation</li>
 					<li>Display Name: @Model.Game.DisplayName</li>
 					<li condition="!string.IsNullOrWhiteSpace(Model.Game.GameResourcesPage)">Game Resources: <a href="/@Model.Game.GameResourcesPage">@Model.Game.GameResourcesPage</a></li>
