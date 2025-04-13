@@ -25,6 +25,12 @@ public static class ViewDataDictionaryExtensions
 	public static void SetTitle(this ViewDataDictionary viewData, string title)
 		=> viewData["Title"] = title;
 
+	public static void SetCanonicalUrl(this ViewDataDictionary viewData, string canonicalUrl)
+		=> viewData["CanonicalUrl"] = canonicalUrl;
+
+	public static string? GetCanonicalUrl(this ViewDataDictionary viewData)
+		=> viewData["CanonicalUrl"]?.ToString();
+
 	public static string GetFavicon(this ViewDataDictionary viewData) => viewData["Favicon"]?.ToString() ?? "favicon.ico";
 
 	public static void UseGreenFavicon(this ViewDataDictionary viewData)

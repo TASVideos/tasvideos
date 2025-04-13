@@ -76,7 +76,7 @@ public static class WikiHelper
 		return relevantPermissions.Any(userPermissions.Contains);
 	}
 
-	public static bool IsValidWikiPageName(string pageName)
+	public static bool IsValidWikiPageName(string pageName, bool validateLoosely = false)
 	{
 		// If the page is a homepage, then don't validate the username portion
 		// However we want to validate any subpages off the user
@@ -101,8 +101,9 @@ public static class WikiHelper
 			&& !test.EndsWith('/')
 			&& !test.EndsWith(".html")
 			&& Regex.IsMatch(test, @"^\S*$")
-			&& char.IsUpper(test[0])
-			&& IsProperCased(test);
+			&& (validateLoosely || (
+				char.IsUpper(test[0])
+				&& IsProperCased(test)));
 	}
 
 	public static bool IsSystemGameResourcePath(this string path)
