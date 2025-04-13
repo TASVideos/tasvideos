@@ -80,6 +80,8 @@ public static class SiteGlobalConstants
 	public const int MetaDescriptionLength = 350;
 
 	public const int YearsOfBanDisplayedAsIndefinite = 2;
+
+	public const string MainGravatarDomain = "gravatar.com"; // keep in sync with profile-settings.js
 }
 
 public static class ForumConstants
