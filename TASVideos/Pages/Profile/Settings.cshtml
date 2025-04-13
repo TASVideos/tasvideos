@@ -7,7 +7,7 @@
 	const string ratingsFalseId = nameof(Model.PublicRatings) + "-false";
 	const string emailOnPmTrueId = nameof(Model.EmailOnPrivateMessage) + "-true";
 	const string emailOnPmFalseId = nameof(Model.EmailOnPrivateMessage) + "-false";
-	var usingGravatar = Model.AvatarUrl?.Contains($"//{SiteGlobalConstants.MainGravatarDomain}/") ?? false;
+	var usingIvatar = Model.AvatarUrl?.Contains($"//{SiteGlobalConstants.MainIvatarDomain}/") ?? false;
 }
 
 <form client-side-validation="true" method="post">
@@ -116,19 +116,19 @@
 		</column>
 	</row>
 	<hr />
-	<label>Use Gravatar</label>
+	<label>Use ivatar (Gravatar)</label>
 	<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
-		<label class="btn btn-secondary @(usingGravatar ? "active" : "")">
-			<input id="UseGravatar-true" type="radio" value="True" name="UseGravatar" @(usingGravatar ? "checked" : "") /> Yes
+		<label class="btn btn-secondary @(usingIvatar ? "active" : "")">
+			<input id="UseIvatar-true" type="radio" value="True" name="UseIvatar" @(usingIvatar ? "checked" : "") /> Yes
 		</label>
-		<label class="btn btn-secondary" value="True"  @(!usingGravatar ? "active" : "")>
-			<input id="UseGravatar-false" type="radio" value="False" name="UseGravatar" @(!usingGravatar ? "checked" : "") /> No
+		<label class="btn btn-secondary" value="True"  @(!usingIvatar ? "active" : "")>
+			<input id="UseIvatar-false" type="radio" value="False" name="UseIvatar" @(!usingIvatar ? "checked" : "") /> No
 		</label>
 	</div>
-	<div class="mt-3" id="gravatar-section">
+	<div class="mt-3" id="ivatar-section">
 		<fieldset>
-			<label>Email to Use for Gravatar Image</label>
-			<input id="gravatar-email" class="form-control" />
+			<label>Email to Use for ivatar Lookup</label>
+			<input id="ivatar-email" class="form-control" />
 		</fieldset>
 	</div>
 	<fullrow class="mt-3">
