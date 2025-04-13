@@ -18,20 +18,20 @@ public class LanguagesTests : TestDbBase
 	}
 
 	[TestMethod]
-	[DataRow(null, false)]
-	[DataRow("", false)]
-	[DataRow("\r \n \t", false)]
-	[DataRow("/", false)]
-	[DataRow("ES", true)]
-	[DataRow("ES/", true)]
-	[DataRow("FRFrontPage", false)]
-	[DataRow("ES/FrontPage", true)]
-	[DataRow("FrontPage", false)]
-	public async Task IsLanguagePage(string pageName, bool expected)
+	[DataRow(null, null)]
+	[DataRow("", null)]
+	[DataRow("\r \n \t", null)]
+	[DataRow("/", null)]
+	[DataRow("ES", "ES")]
+	[DataRow("ES/", "ES")]
+	[DataRow("FRFrontPage", null)]
+	[DataRow("ES/FrontPage", "ES")]
+	[DataRow("FrontPage", null)]
+	public async Task IsLanguagePage(string pageName, string? expected)
 	{
 		MockStandardMarkup();
 		var actual = await _languages.IsLanguagePage(pageName);
-		Assert.AreEqual(expected, actual);
+		Assert.AreEqual(expected, actual?.Code);
 	}
 
 	[TestMethod]
@@ -112,7 +112,8 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.AreEqual(0, result.TrPageList.Count);
+		Assert.AreEqual("EN", result.ThisPageLang.Code);
 	}
 
 	[TestMethod]
@@ -127,7 +128,8 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(2, result.Count);
+		Assert.AreEqual(2, result.TrPageList.Count);
+		Assert.AreEqual("EN", result.ThisPageLang.Code);
 	}
 
 	[TestMethod]
@@ -146,10 +148,11 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(translation);
 		Assert.IsNotNull(result);
-		var listResult = result.ToList();
+		var listResult = result.TrPageList;
 		Assert.AreEqual(2, listResult.Count);
 		Assert.IsTrue(listResult.Any(r => r.Code == "EN"), "Translation must link to original english page");
 		Assert.IsFalse(listResult.Any(r => r.Code == "FR"), "Translation must not link to itself");
+		Assert.AreEqual(lang, result.ThisPageLang.Code);
 	}
 
 	private void MockStandardMarkup()

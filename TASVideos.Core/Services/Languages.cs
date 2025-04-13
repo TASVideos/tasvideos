@@ -4,51 +4,55 @@ namespace TASVideos.Core.Services;
 
 public interface ILanguages
 {
-	Task<ICollection<LanguagePage>> GetTranslations(string pageName);
+	Task<TranslationsData> GetTranslations(string pageName);
 }
 
 internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheService cache) : ILanguages
 {
 	internal const string TranslationsCacheKey = "Translations-";
 
-	public async Task<ICollection<LanguagePage>> GetTranslations(string pageName)
+	public async Task<TranslationsData> GetTranslations(string pageName)
 	{
 		var key = TranslationsCacheKey + pageName;
 		if (cache.TryGetValue(key, out ICollection<LanguagePage> languages))
 		{
-			return languages;
+			return new(await IsLanguagePage(pageName) ?? Language.English, languages);
 		}
 
-		languages = await GetTranslationsInternal(pageName);
-		cache.Set(key, languages, Durations.FiveMinutes);
-		return languages;
+		var translationsData = await GetTranslationsInternal(pageName);
+		cache.Set(key, translationsData.TrPageList, Durations.FiveMinutes);
+		return translationsData;
 	}
 
-	private async Task<ICollection<LanguagePage>> GetTranslationsInternal(string pageName)
+	private async Task<TranslationsData> GetTranslationsInternal(string pageName)
 	{
 		string subPage = pageName;
 		var languages = new List<LanguagePage>();
-		bool isTranslation = await IsLanguagePage(pageName);
-		if (isTranslation)
+		var thisPageLang = await IsLanguagePage(pageName);
+		if (thisPageLang is not null)
 		{
 			if (!pageName.Contains('/'))
 			{
-				return [];
+				return new(thisPageLang, []);
 			}
 
 			subPage = string.Join("/", pageName.Split('/').Skip(1));
 
 			// Translations should also include the original link to the English version
-			languages.Add(new LanguagePage("EN", "English", subPage));
+			languages.Add(new(Language.English, subPage));
+		}
+		else
+		{
+			thisPageLang = Language.English;
 		}
 
 		languages.AddRange((await AvailableLanguages())
-			.Select(l => new LanguagePage(l.Code, l.DisplayName, l.Code + "/" + subPage))
+			.Select(l => new LanguagePage(l, $"{l.Code}/{subPage}"))
 			.ToList());
 
 		if (!languages.Any())
 		{
-			return [];
+			return new(thisPageLang, []);
 		}
 
 		var existingLanguagePages = languages
@@ -62,28 +66,26 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 			.Select(wp => wp.PageName)
 			.ToListAsync();
 
-		return languages
-			.Where(l => existingPages.Contains(l.Path))
-			.ToList();
+		return new(thisPageLang, languages.Where(l => existingPages.Contains(l.Path)).ToList());
 	}
 
-	internal async Task<bool> IsLanguagePage(string? pageName)
+	internal async Task<Language?> IsLanguagePage(string? pageName)
 	{
 		if (string.IsNullOrWhiteSpace(pageName))
 		{
-			return false;
+			return null;
 		}
 
 		string trimmed = pageName.Trim('/');
 
 		if (string.IsNullOrEmpty(trimmed))
 		{
-			return false;
+			return null;
 		}
 
 		var languages = await AvailableLanguages();
 
-		return languages.Any(l => trimmed.StartsWith(l.Code + "/")
+		return languages.FirstOrDefault(l => trimmed.StartsWith(l.Code + "/")
 			|| l.Code == trimmed);
 	}
 
@@ -122,5 +124,14 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 	}
 }
 
-internal record Language(string Code, string DisplayName);
-public record LanguagePage(string Code, string DisplayName, string Path);
+public record Language(string Code, string DisplayName)
+{
+	public static readonly Language English = new("EN", "English");
+}
+
+public record LanguagePage(Language Lang, string Path)
+{
+	public string Code => Lang.Code;
+}
+
+public record TranslationsData(Language ThisPageLang, ICollection<LanguagePage> TrPageList);
