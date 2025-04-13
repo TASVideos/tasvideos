@@ -3,49 +3,100 @@
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.PublicationsByPlatform)]
-public class PublicationsByPlatform(IGameSystemService platforms, IClassService classes) : WikiViewComponent
+public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 {
-	public IReadOnlyList<(string DisplayName, string Code)> Platforms { get; private set; } = null!;
+	public List<PlatformPublications> PlatformPublicationList { get; set; } = [];
+	public List<string> AllGroupings { get; set; } = [];
 
-	public IReadOnlyCollection<PublicationClass> PubClasses { get; set; } = null!;
-
-	public async Task<IViewComponentResult> InvokeAsync(IList<string> groupings)
+	public async Task<IViewComponentResult> InvokeAsync(IList<string> flags, IList<string> order)
 	{
-		var extant = (await platforms.GetAll()).ToList();
-		List<IReadOnlyList<SystemsResponse>> rows = [];
-		rows.AddRange(groupings
-			.Select(groupStr => ProcessGroup(extant, groupStr))
-			.OfType<List<SystemsResponse>>());
+		PlatformPublicationList = await db.Publications
+			.ThatAreCurrent()
+			.GroupBy(p => p.System)
+			.Select(g => new PlatformPublications
+			{
+				Platform = g.Key!.DisplayName,
+				PlatformCode = g.Key.Code,
+				Groupings = g
+					.GroupBy(p => p.PublicationClass)
+					.Select(gg => new PlatformPublications.Grouping
+					{
+						IsClass = true,
+						Name = gg.Key!.Name,
+						Link = gg.Key.Link,
+						PublicationCount = gg.Count(),
+					})
+					.ToList(),
+			})
+			.ToListAsync();
 
-		Platforms = extant
-			.Select(sys => (sys.DisplayName, sys.Code))
-			.Concat(rows.Select(row => (
-				DisplayName: string.Join(" / ", row.Select(sys => sys.DisplayName)),
-				Code: string.Join("-", row.Select(sys => sys.Code))
-			)))
-			.OrderBy(tuple => tuple.DisplayName)
-			.ToArray();
-		PubClasses = await classes.GetAll();
+		var flagPublications = await db.PublicationFlags
+			.Where(pf => flags.Contains(pf.Flag!.Token))
+			.Where(pf => pf.Publication!.ObsoletedById == null)
+			.GroupBy(pf => pf.Publication!.System)
+			.Select(g => new PlatformPublications
+			{
+				Platform = g.Key!.DisplayName,
+				PlatformCode = g.Key.Code,
+				Groupings = g
+					.GroupBy(p => p.Flag)
+					.Select(gg => new PlatformPublications.Grouping
+					{
+						IsClass = false,
+						Name = gg.Key!.Name,
+						Link = gg.Key.Token ?? "",
+						PublicationCount = gg.Count(),
+					})
+					.ToList()
+			})
+			.ToListAsync();
+
+		PlatformPublicationList = PlatformPublicationList // merge platforms and flags
+			.Concat(flagPublications)
+			.GroupBy(p => p.Platform)
+			.OrderBy(g => g.Key, StringComparer.InvariantCultureIgnoreCase)
+			.Select(g => new PlatformPublications
+			{
+				Platform = g.Key,
+				PlatformCode = g.First().PlatformCode,
+				Groupings = g
+					.SelectMany(p => p.Groupings)
+					.ToList()
+			})
+			.ToList();
+
+		AllGroupings = PlatformPublicationList
+			.SelectMany(p => p.Groupings.Select(c => c.Link))
+			.Distinct()
+			.OrderBy(g => g, StringComparer.InvariantCultureIgnoreCase)
+			.ToList();
+
+		int swapPosition = 0;
+		for (int i = 0; i < order.Count; i++)
+		{
+			var index = AllGroupings.FindIndex(g => g.Equals(order[i], StringComparison.InvariantCultureIgnoreCase));
+			if (index != -1 && index >= swapPosition)
+			{
+				(AllGroupings[swapPosition], AllGroupings[index]) = (AllGroupings[index], AllGroupings[swapPosition]);
+				swapPosition++;
+			}
+		}
 
 		return View();
 	}
 
-	private static List<SystemsResponse>? ProcessGroup(List<SystemsResponse> extant, string groupStr)
+	public class PlatformPublications
 	{
-		List<SystemsResponse> row = [];
-		foreach (var idStr in groupStr.Split('-'))
+		public string Platform { get; set; } = "";
+		public string PlatformCode { get; set; } = "";
+		public List<Grouping> Groupings { get; set; } = [];
+
+		public class Grouping
 		{
-			var found = extant.FirstOrDefault(sys => sys.Code.Equals(idStr, StringComparison.OrdinalIgnoreCase));
-			if (found is null)
-			{
-				// ignore, TODO log?
-				return null;
-			}
-
-			extant.Remove(found);
-			row.Add(found);
+			public bool IsClass { get; set; }
+			public string Name { get; set; } = "";
+			public string Link { get; set; } = "";
+			public int PublicationCount { get; set; }
 		}
-
-		return row;
 	}
 }
