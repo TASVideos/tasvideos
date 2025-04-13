@@ -30,7 +30,7 @@ public static class DbContextExtensions
 			return null;
 		}
 
-		var properties = GetPropertiesWithoutExcluded(entry);
+		var properties = GetPropertiesWithoutExcluded(entry).ToArray();
 		if (!(properties.Any(p => p.IsModified) || entry.State == EntityState.Deleted))
 		{
 			return null;
