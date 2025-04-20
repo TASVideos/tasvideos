@@ -36,4 +36,15 @@ public static class RazorTestHelpers
 			ViewData = viewData
 		};
 	}
+
+	public static ClaimsPrincipal CreateClaimsPrincipalWithPermissions(IEnumerable<PermissionTo> permissions)
+	{
+		var identity = new GenericIdentity("Test User");
+		foreach (var p in permissions)
+		{
+			identity.AddClaim(new Claim(CustomClaimTypes.Permission, ((int)p).ToString()));
+		}
+
+		return new ClaimsPrincipal(identity);
+	}
 }

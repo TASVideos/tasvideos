@@ -9,21 +9,9 @@ namespace TASVideos.Extensions;
 public static class FormFileExtensions
 {
 	public static bool IsZip(this IFormFile? formFile)
-	{
-		if (formFile is null)
-		{
-			return false;
-		}
-
-		var acceptableContentTypes = new[]
-		{
-			"application/x-zip-compressed",
-			"application/zip"
-		};
-
-		return formFile.FileName.EndsWith(".zip")
-			&& acceptableContentTypes.Contains(formFile.ContentType);
-	}
+		=> formFile is not null
+			&& formFile.FileName.EndsWith(".zip")
+			&& formFile.ContentType is "application/x-zip-compressed" or "application/zip";
 
 	public static bool IsCompressed(this IFormFile? formFile)
 	{
@@ -34,7 +22,7 @@ public static class FormFileExtensions
 
 		var compressedExtensions = new[]
 		{
-			".zip", ".gz", "bz2", ".lzma", ".xz"
+			".zip", ".gz", ".bz2", ".lzma", ".xz"
 		};
 
 		var compressedContentTypes = new[]
@@ -61,21 +49,10 @@ public static class FormFileExtensions
 	}
 
 	public static bool IsValidImage(this IFormFile? formFile)
-	{
-		var validImageTypes = new[]
-		{
-			"image/png", "image/jpeg"
-		};
-
-		return validImageTypes.Contains(formFile?.ContentType);
-	}
+		=> formFile?.ContentType is "image/png" or "image/jpeg";
 
 	public static string FileExtension(this IFormFile? formFile)
-	{
-		return formFile is null
-			? ""
-			: Path.GetExtension(formFile.FileName);
-	}
+		=> Path.GetExtension(formFile?.FileName ?? "");
 
 	public static async Task<byte[]> ToBytes(this IFormFile? formFile)
 	{
@@ -112,8 +89,9 @@ public static class FormFileExtensions
 			decompressedFileStream.Position = 0;
 			return decompressedFileStream;
 		}
-		catch (InvalidDataException) // happens if file was uploaded without compression (e.g. no javascript), so we continue and return the raw bytes
+		catch (InvalidDataException ex) // happens if file was uploaded without compression (e.g. no javascript), so we continue and return the raw bytes
 		{
+			var x = ex.ToString();
 			rawFileStream.Position = 0;
 			return rawFileStream;
 		}
