@@ -94,8 +94,6 @@ public class EditUrlsModel(
 			return NotFound();
 		}
 
-		var publicationWiki = await wikiPages.PublicationPage(PublicationId);
-
 		CurrentUrls = publication.PublicationUrls;
 
 		if (CurrentUrls.Any(u => u.Type == Type && u.Url == CurrentUrl && u.Id != UrlId))
@@ -138,6 +136,7 @@ public class EditUrlsModel(
 
 			if (Type == PublicationUrlType.Streaming && youtubeSync.IsYoutubeUrl(CurrentUrl))
 			{
+				var publicationWiki = await wikiPages.PublicationPage(PublicationId);
 				YoutubeVideo video = new(
 					PublicationId,
 					publication.CreateTimestamp,
