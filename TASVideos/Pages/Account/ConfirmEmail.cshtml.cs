@@ -24,7 +24,7 @@ public class ConfirmEmailModel(
 
 		if (user.EmailConfirmed)
 		{
-			// If user has already clicked the email link, no reason to do all the work of confirming
+			// If the user has already clicked the email link, no reason to do all the work of confirming
 			return Home();
 		}
 
