@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Reflection;
 
 namespace TASVideos.Core;
 
@@ -22,7 +23,36 @@ public class PageOf<TItem, TRequest>(IEnumerable<TItem> items, TRequest request)
 /// </summary>
 public class PagingModel : IRequest
 {
+	private static readonly Dictionary<Type, PagingDefaultsAttribute?> Defaults = [];
+
+	public PagingModel()
+	{
+		var exists = Defaults.TryGetValue(GetType(), out var defaults);
+		if (!exists)
+		{
+			defaults = GetType().GetCustomAttribute<PagingDefaultsAttribute>();
+			Defaults[GetType()] = defaults;
+		}
+
+		if (defaults?.PageSize is not null)
+		{
+			PageSize = defaults.PageSize;
+		}
+
+		if (defaults?.Sort is not null)
+		{
+			Sort = defaults.Sort;
+		}
+	}
+
 	public string? Sort { get; set; }
-	public int? PageSize { get; set; } = 25;
-	public int? CurrentPage { get; set; } = 1;
+	public int? PageSize { get; init; } = 25;
+	public int? CurrentPage { get; init; } = 1;
+}
+
+[AttributeUsage(AttributeTargets.Class)]
+public class PagingDefaultsAttribute : Attribute
+{
+	public int PageSize { get; set; }
+	public string? Sort { get; set; }
 }

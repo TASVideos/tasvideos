@@ -27,14 +27,8 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			.SortedPageOf(Search);
 	}
 
-	public class UserFileListRequest : PagingModel
-	{
-		public UserFileListRequest()
-		{
-			PageSize = 50;
-			Sort = $"-{nameof(UserFileEntry.Uploaded)}";
-		}
-	}
+	[PagingDefaults(PageSize = 50, Sort = $"-{nameof(UserFileEntry.Uploaded)}")]
+	public class UserFileListRequest : PagingModel;
 
 	public class UserFileEntry
 	{

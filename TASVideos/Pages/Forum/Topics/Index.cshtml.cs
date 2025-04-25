@@ -303,14 +303,9 @@ public class IndexModel(
 
 	private RedirectToPageResult RedirectToTopic() => RedirectToPage("Index", new { Id });
 
+	[PagingDefaults(PageSize = ForumConstants.PostsPerPage, Sort = $"{nameof(PostEntry.CreateTimestamp)}")]
 	public class TopicRequest : PagingModel
 	{
-		public TopicRequest()
-		{
-			PageSize = ForumConstants.PostsPerPage;
-			Sort = $"{nameof(PostEntry.CreateTimestamp)}";
-		}
-
 		public int? Highlight { get; set; }
 	}
 

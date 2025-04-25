@@ -32,10 +32,8 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 		return Page();
 	}
 
-	public class PublicationRequest : PagingModel
-	{
-		public PublicationRequest() { PageSize = 100; }
-	}
+	[PagingDefaults(PageSize = 100)]
+	public class PublicationRequest : PagingModel;
 
 	public class PublicationDisplay
 	{

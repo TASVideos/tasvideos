@@ -200,13 +200,8 @@ public class UserRatings
 	}
 }
 
+[PagingDefaults(PageSize = 50, Sort = "-Value")]
 public class RatingRequest : PagingModel
 {
-	public RatingRequest()
-	{
-		PageSize = 50;
-		Sort = "-Value";
-	}
-
 	public bool IncludeObsolete { get; set; }
 }

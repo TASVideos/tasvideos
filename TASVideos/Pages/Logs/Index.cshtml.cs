@@ -45,13 +45,8 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
-	public class LogPaging : PagingModel
-	{
-		public LogPaging()
-		{
-			Sort = $"-{nameof(LogEntry.Created)}";
-		}
-	}
+	[PagingDefaults(Sort = $"-{nameof(LogEntry.Created)}")]
+	public class LogPaging : PagingModel;
 
 	public class LogEntry
 	{

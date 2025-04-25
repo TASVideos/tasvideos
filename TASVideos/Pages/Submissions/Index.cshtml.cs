@@ -92,14 +92,9 @@ public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemSe
 		public DateTime? SyncedOn { get; set; }
 	}
 
+	[PagingDefaults(PageSize = 100, Sort = $"{nameof(SubmissionEntry.Date)}")]
 	public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 	{
-		public SubmissionSearchRequest()
-		{
-			Sort = $"{nameof(SubmissionEntry.Date)}";
-			PageSize = 100;
-		}
-
 		public ICollection<int> Years { get; set; } = [];
 
 		public List<int> AvailableYears => [.. Enumerable

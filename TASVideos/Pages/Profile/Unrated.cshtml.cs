@@ -32,12 +32,6 @@ public class UnratedModel(ApplicationDbContext db) : BasePageModel
 		public DateTime Date { get; init; }
 	}
 
-	public class UnratedRequest : PagingModel
-	{
-		public UnratedRequest()
-		{
-			PageSize = 50;
-			Sort = "Date";
-		}
-	}
+	[PagingDefaults(PageSize = 50, Sort = "Date")]
+	public class UnratedRequest : PagingModel;
 }

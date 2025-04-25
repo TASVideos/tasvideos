@@ -98,14 +98,9 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		.SortedPageOf(paging);
 	}
 
+	[PagingDefaults(PageSize = 50, Sort = "Name")]
 	public class GameListRequest : PagingModel
 	{
-		public GameListRequest()
-		{
-			PageSize = 50;
-			Sort = "Name";
-		}
-
 		public string? System { get; set; }
 
 		public string? StartsWith { get; init; }
