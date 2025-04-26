@@ -89,9 +89,8 @@ public static class FormFileExtensions
 			decompressedFileStream.Position = 0;
 			return decompressedFileStream;
 		}
-		catch (InvalidDataException ex) // happens if file was uploaded without compression (e.g. no javascript), so we continue and return the raw bytes
+		catch (InvalidDataException) // happens if the file was uploaded without compression (e.g., no JavaScript), so we continue and return the raw bytes
 		{
-			var x = ex.ToString();
 			rawFileStream.Position = 0;
 			return rawFileStream;
 		}
