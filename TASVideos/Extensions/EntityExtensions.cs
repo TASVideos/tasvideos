@@ -9,7 +9,7 @@ using TASVideos.WikiModules;
 namespace TASVideos.Extensions;
 
 /// <summary>
-/// Web front-end specific extension methods for Entity Framework POCOs
+/// Web front-end-specific extension methods for Entity Framework POCOs
 /// </summary>
 public static class EntityExtensions
 {
@@ -393,6 +393,26 @@ public static class EntityExtensions
 				: null,
 			});
 	}
+
+	public static IQueryable<TASVideos.Pages.Submissions.EditModel.SubmissionEdit> ToSubmissionEditModel(this IQueryable<Submission> query)
+		=> query.Select(s => new TASVideos.Pages.Submissions.EditModel.SubmissionEdit
+		{
+			GameName = s.GameName ?? "",
+			GameVersion = s.SubmittedGameVersion,
+			RomName = s.RomName,
+			Goal = s.Branch,
+			Emulator = s.EmulatorVersion,
+			SubmitDate = s.CreateTimestamp,
+			Submitter = s.Submitter!.UserName,
+			Status = s.Status,
+			EncodeEmbedLink = s.EncodeEmbedLink,
+			Judge = s.Judge != null ? s.Judge.UserName : "",
+			Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+			IntendedPublicationClass = s.IntendedClassId,
+			RejectionReason = s.RejectionReasonId,
+			ExternalAuthors = s.AdditionalAuthors,
+			Title = s.Title
+		});
 
 	public static IQueryable<Pages.Publications.IndexModel.PublicationDisplay> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
 	{

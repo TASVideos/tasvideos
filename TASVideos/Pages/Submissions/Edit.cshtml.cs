@@ -46,24 +46,7 @@ public class EditModel(
 	{
 		var submission = await db.Submissions
 			.Where(s => s.Id == Id)
-			.Select(s => new SubmissionEdit // It is important to use a projection here to avoid querying the file data which not needed and can be slow
-			{
-				GameName = s.GameName ?? "",
-				GameVersion = s.SubmittedGameVersion,
-				RomName = s.RomName,
-				Goal = s.Branch,
-				Emulator = s.EmulatorVersion,
-				SubmitDate = s.CreateTimestamp,
-				Submitter = s.Submitter!.UserName,
-				Status = s.Status,
-				EncodeEmbedLink = s.EncodeEmbedLink,
-				Judge = s.Judge != null ? s.Judge.UserName : "",
-				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-				IntendedPublicationClass = s.IntendedClassId,
-				RejectionReason = s.RejectionReasonId,
-				ExternalAuthors = s.AdditionalAuthors,
-				Title = s.Title
-			})
+			.ToSubmissionEditModel()
 			.SingleOrDefaultAsync();
 
 		if (submission is null)
