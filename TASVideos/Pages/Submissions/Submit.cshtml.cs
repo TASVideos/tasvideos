@@ -156,7 +156,6 @@ public class SubmitModel(
 			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
 			Markup = Markup,
-			MinorEdit = false,
 			AuthorId = User.GetUserId()
 		});
 

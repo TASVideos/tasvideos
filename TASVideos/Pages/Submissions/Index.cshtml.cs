@@ -5,7 +5,11 @@ namespace TASVideos.Pages.Submissions;
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemService) : BasePageModel
 {
-	private static readonly List<SelectListItem> Statuses = Enum.GetValues<SubmissionStatus>().ToDropDown();
+	public static readonly List<SelectListItem> AvailableStatuses = Enum.GetValues<SubmissionStatus>().ToDropDown();
+	public IEnumerable<SelectListItem> AvailableYears => Enumerable
+		.Range(2000, DateTime.UtcNow.Year + 1 - 2000)
+		.OrderByDescending(n => n)
+		.ToDropDown();
 
 	// For legacy routes such as Subs-Rej-422up
 	[FromRoute]
@@ -15,8 +19,6 @@ public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemSe
 	public SubmissionSearchRequest Search { get; set; } = new();
 
 	public PageOf<SubmissionEntry, SubmissionSearchRequest> Submissions { get; set; } = new([], new());
-
-	public List<SelectListItem> AvailableStatuses => Statuses;
 
 	public List<SelectListItem> SystemList { get; set; } = [];
 
@@ -96,11 +98,6 @@ public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemSe
 	public class SubmissionSearchRequest : PagingModel, ISubmissionFilter
 	{
 		public ICollection<int> Years { get; set; } = [];
-
-		public List<int> AvailableYears => [.. Enumerable
-			.Range(2000, DateTime.UtcNow.Year + 1 - 2000)
-			.OrderByDescending(n => n)];
-
 		public string? System { get; init; }
 		public string? User { get; init; }
 		public string? GameId { get; set; }
@@ -121,9 +118,7 @@ public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemSe
 			SubmissionStatus.Delayed
 		];
 
-		public static List<SubmissionStatus> All => Enum
-			.GetValues<SubmissionStatus>()
-			.ToList();
+		public static List<SubmissionStatus> All => [.. Enum.GetValues<SubmissionStatus>()];
 
 		ICollection<string> ISubmissionFilter.Systems => string.IsNullOrWhiteSpace(System)
 			? []

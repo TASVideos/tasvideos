@@ -86,7 +86,7 @@ public class EditModel(
 
 		var userName = User.Name();
 
-		// If user can not edit submissions then they must be an author or the original submitter
+		// If the user cannot edit submissions, then they must be an author or the original submitter
 		if (!User.Has(PermissionTo.EditSubmissions)
 			&& Submission.Submitter != userName
 			&& !Submission.Authors.Contains(userName))

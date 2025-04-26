@@ -213,17 +213,13 @@ public class PublishModel(
 		return Json(pub);
 	}
 
-	private static WikiCreateRequest GenerateWiki(int publicationId, string markup, int userId)
+	private static WikiCreateRequest GenerateWiki(int publicationId, string markup, int userId) => new()
 	{
-		return new WikiCreateRequest
-		{
-			RevisionMessage = $"Auto-generated from Movie #{publicationId}",
-			PageName = WikiHelper.ToPublicationWikiPageName(publicationId),
-			MinorEdit = false,
-			Markup = markup,
-			AuthorId = userId
-		};
-	}
+		RevisionMessage = $"Auto-generated from Movie #{publicationId}",
+		PageName = WikiHelper.ToPublicationWikiPageName(publicationId),
+		Markup = markup,
+		AuthorId = userId
+	};
 
 	private async Task PopulateDropdowns()
 	{

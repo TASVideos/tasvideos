@@ -27,7 +27,7 @@ public interface IWikiPages
 
 	/// <summary>
 	/// Renames the given wiki page to the destination name
-	/// All revisions are renamed to the new page
+	/// All revisions are renamed to the new page,
 	/// and <seealso cref="WikiPageReferral" /> entries are updated
 	/// </summary>
 	/// <returns>Whether the move was successful.
@@ -301,7 +301,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 			return false;
 		}
 
-		// Note that we can not update Referrers since the wiki pages will
+		// Note that we cannot update Referrers since the wiki pages will
 		// still physically refer to the original page. Those links are
 		// broken, and it is important to keep them listed as broken, so they
 		// can show up in the Broken Links module for editors to see and fix.
