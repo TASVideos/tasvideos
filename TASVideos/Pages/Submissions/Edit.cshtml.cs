@@ -20,7 +20,7 @@ public class EditModel(
 	IForumService forumService,
 	ITopicWatcher topicWatcher,
 	IFileService fileService)
-	: BasePageModel
+	: SubmitPageModelBase(parser, fileService)
 {
 	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.ReplaceMovieFile)}";
 
@@ -191,10 +191,7 @@ public class EditModel(
 
 		if (Submission.ReplaceMovieFile is not null)
 		{
-			MemoryStream fileStream = await Submission.ReplaceMovieFile.DecompressOrTakeRaw();
-			byte[] fileBytes = fileStream.ToArray();
-
-			var parseResult = Submission.ReplaceMovieFile.IsZip() ? await parser.ParseZip(fileStream) : await parser.ParseFile(Submission.ReplaceMovieFile.FileName, fileStream);
+			var (parseResult, movieFileBytes) = await ParseMovieFile(Submission.ReplaceMovieFile);
 			if (!parseResult.Success)
 			{
 				ModelState.AddParseErrors(parseResult);
@@ -219,7 +216,7 @@ public class EditModel(
 				return await ReturnWithModelErrors();
 			}
 
-			submission.MovieFile = Submission.ReplaceMovieFile.IsZip() ? fileBytes : await fileService.ZipFile(fileBytes, Submission.ReplaceMovieFile.FileName);
+			submission.MovieFile = movieFileBytes;
 			submission.SyncedOn = null;
 			submission.SyncedByUserId = null;
 

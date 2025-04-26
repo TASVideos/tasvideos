@@ -1,7 +1,6 @@
 ﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.MovieParsers;
-using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -17,7 +16,7 @@ public class SubmitModel(
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
 	IFileService fileService)
-	: BasePageModel
+	: SubmitPageModelBase(parser, fileService)
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
 
@@ -99,11 +98,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		MemoryStream fileStream = await MovieFile!.DecompressOrTakeRaw();
-		byte[] fileBytes = fileStream.ToArray();
-
-		IParseResult parseResult = MovieFile.IsZip() ? await parser.ParseZip(fileStream) : await parser.ParseFile(MovieFile!.FileName, fileStream);
-
+		var (parseResult, movieFileBytes) = await ParseMovieFile(MovieFile!);
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
@@ -140,7 +135,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		submission.MovieFile = MovieFile.IsZip() ? fileBytes : await fileService.ZipFile(fileBytes, MovieFile!.FileName);
+		submission.MovieFile = movieFileBytes;
 		submission.Submitter = await userManager.GetRequiredUser(User);
 		if (parseResult.Hashes.Count > 0)
 		{
