@@ -165,11 +165,11 @@ public class SubmitModel(
 		await dbTransaction.CommitAsync();
 
 		byte[]? screenshotFile = null;
-		if (!string.IsNullOrEmpty(submission.EncodeEmbedLink))
+		if (youtubeSync.IsYoutubeUrl(submission.EncodeEmbedLink))
 		{
 			try
 			{
-				var youtubeEmbedImageLink = "https://i.ytimg.com/vi/" + submission.EncodeEmbedLink.Split('/').Last() + "/hqdefault.jpg";
+				var youtubeEmbedImageLink = "https://i.ytimg.com/vi/" + submission.EncodeEmbedLink!.Split('/').Last() + "/hqdefault.jpg";
 				var client = new HttpClient();
 				var response = await client.GetAsync(youtubeEmbedImageLink);
 				if (response.IsSuccessStatusCode)
