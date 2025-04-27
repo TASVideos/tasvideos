@@ -78,7 +78,7 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceNewSubmission(this ExternalMediaPublisher publisher, Submission submission)
+	public static async Task AnnounceNewSubmission(this ExternalMediaPublisher publisher, Submission submission, byte[]? imageData = null, string? imageMimeType = null, int? imageWidth = null, int? imageHeight = null)
 	{
 		await publisher.Send(new Post
 		{
@@ -88,7 +88,11 @@ public static class ExternalMediaPublisherExtensions
 			Title = $"New Submission! Go and see {submission.Title}",
 			FormattedTitle = $"New Submission! Go and see [{submission.Title}]({{0}})",
 			Body = "",
-			Link = publisher.ToAbsolute($"{submission.Id}S")
+			Link = publisher.ToAbsolute($"{submission.Id}S"),
+			ImageData = imageData,
+			ImageMimeType = imageMimeType,
+			ImageWidth = imageWidth,
+			ImageHeight = imageHeight
 		});
 	}
 
@@ -118,7 +122,7 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceNewPublication(this ExternalMediaPublisher publisher, Publication publication)
+	public static async Task AnnounceNewPublication(this ExternalMediaPublisher publisher, Publication publication, byte[]? imageData = null, string? imageMimeType = null, int? imageWidth = null, int? imageHeight = null)
 	{
 		await publisher.Send(new Post
 		{
@@ -128,7 +132,11 @@ public static class ExternalMediaPublisherExtensions
 			Title = $"New movie published! Go and see {publication.Title}",
 			FormattedTitle = $"New movie published! Go and see [{publication.Title}]({{0}})",
 			Body = "",
-			Link = publisher.ToAbsolute($"{publication.Id}M")
+			Link = publisher.ToAbsolute($"{publication.Id}M"),
+			ImageData = imageData,
+			ImageMimeType = imageMimeType,
+			ImageWidth = imageWidth,
+			ImageHeight = imageHeight
 		});
 	}
 

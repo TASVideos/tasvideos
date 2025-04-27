@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
@@ -34,7 +35,23 @@ public sealed class BlueskyDistributor(
 		var session = await sessionResponse.ReadAsync<BlueskyCreateSessionResponse>();
 		_client.SetBearerToken(session.AccessJwt);
 
-		var postResponse = await _client.PostAsync("com.atproto.repo.createRecord", new BlueskyCreateRecordRequest(session.Did, post).ToStringContent());
+		BlueskyEmbed.BlueskyEmbedImage? embedImage = null;
+		if (post.ImageData is not null && post.ImageMimeType is not null)
+		{
+			var imageContent = new ByteArrayContent(post.ImageData);
+			imageContent.Headers.ContentType = new MediaTypeHeaderValue(post.ImageMimeType);
+			var blobRequest = await _client.PostAsync("com.atproto.repo.uploadBlob", imageContent);
+			if (blobRequest.IsSuccessStatusCode)
+			{
+				var blobResponse = await blobRequest.ReadAsync<BlueskyUploadBlobResponse>();
+				if (blobResponse.Blob is not null)
+				{
+					embedImage = new BlueskyEmbed.BlueskyEmbedImage(blobResponse.Blob, post.ImageWidth, post.ImageHeight);
+				}
+			}
+		}
+
+		var postResponse = await _client.PostAsync("com.atproto.repo.createRecord", new BlueskyCreateRecordRequest(session.Did, post, embedImage).ToStringContent());
 		if (!postResponse.IsSuccessStatusCode)
 		{
 			logger.LogError("Failed to create Bluesky post");
@@ -58,7 +75,7 @@ public sealed class BlueskyDistributor(
 		public string Did { get; set; } = "";
 	}
 
-	public class BlueskyCreateRecordRequest(string repo, IPostable post)
+	public class BlueskyCreateRecordRequest(string repo, IPostable post, BlueskyEmbed.BlueskyEmbedImage? image)
 	{
 		[JsonPropertyName("repo")]
 		public string Repo { get; set; } = repo;
@@ -67,12 +84,12 @@ public sealed class BlueskyDistributor(
 		public string Collection { get; } = "app.bsky.feed.post";
 
 		[JsonPropertyName("record")]
-		public BlueskyPost Record { get; set; } = new BlueskyPost(post);
+		public BlueskyPost Record { get; set; } = new BlueskyPost(post, image);
 	}
 
 	public class BlueskyPost
 	{
-		public BlueskyPost(IPostable post)
+		public BlueskyPost(IPostable post, BlueskyEmbed.BlueskyEmbedImage? image)
 		{
 			var body = post.Group switch
 			{
@@ -103,6 +120,7 @@ public sealed class BlueskyDistributor(
 
 			Text = body;
 			CreatedAt = DateTime.UtcNow.ToUniversalTime().ToString("o", CultureInfo.InvariantCulture);
+			Embed = image is not null ? new BlueskyEmbed(image) : null;
 		}
 
 		[JsonPropertyName("$type")]
@@ -119,6 +137,37 @@ public sealed class BlueskyDistributor(
 
 		[JsonPropertyName("createdAt")]
 		public string CreatedAt { get; set; }
+
+		[JsonPropertyName("embed")]
+		[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+		public BlueskyEmbed? Embed { get; set; }
+	}
+
+	public class BlueskyEmbed(BlueskyEmbed.BlueskyEmbedImage image)
+	{
+		[JsonPropertyName("$type")]
+		public string Type { get; } = "app.bsky.embed.images";
+		[JsonPropertyName("images")]
+		public List<BlueskyEmbedImage> Images { get; set; } = [image];
+
+		public class BlueskyEmbedImage(BlueskyBlob image, int? width, int? height)
+		{
+			[JsonPropertyName("image")]
+			public BlueskyBlob Image { get; set; } = image;
+			[JsonPropertyName("alt")]
+			public string Alt { get; set; } = "";
+
+			[JsonPropertyName("aspectRatio")]
+			[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+			public BlueskyEmbedImageAspectRatio? AspectRatio { get; set; } = width is not null && height is not null ? new BlueskyEmbedImageAspectRatio((int)width, (int)height) : null;
+			public class BlueskyEmbedImageAspectRatio(int width, int height)
+			{
+				[JsonPropertyName("width")]
+				public int Width { get; set; } = width;
+				[JsonPropertyName("height")]
+				public int Height { get; set; } = height;
+			}
+		}
 	}
 
 	public class BlueskyFacet(int byteStart, int byteEnd, string uri)
@@ -145,6 +194,30 @@ public sealed class BlueskyDistributor(
 
 			[JsonPropertyName("uri")]
 			public string Uri { get; set; } = uri;
+		}
+	}
+
+	public class BlueskyUploadBlobResponse
+	{
+		[JsonPropertyName("blob")]
+		public BlueskyBlob? Blob { get; set; }
+	}
+
+	public class BlueskyBlob
+	{
+		[JsonPropertyName("$type")]
+		public string Type { get; set; } = "blob";
+		[JsonPropertyName("ref")]
+		public BlueskyLink? Ref { get; set; }
+		[JsonPropertyName("mimeType")]
+		public string MimeType { get; set; } = "";
+		[JsonPropertyName("size")]
+		public int Size { get; set; }
+
+		public class BlueskyLink
+		{
+			[JsonPropertyName("$link")]
+			public string Link { get; set; } = "";
 		}
 	}
 }

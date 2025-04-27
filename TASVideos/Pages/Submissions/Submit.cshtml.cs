@@ -163,7 +163,26 @@ public class SubmitModel(
 		submission.TopicId = await tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
 		await db.SaveChangesAsync();
 		await dbTransaction.CommitAsync();
-		await publisher.AnnounceNewSubmission(submission);
+
+		byte[]? screenshotFile = null;
+		if (!string.IsNullOrEmpty(submission.EncodeEmbedLink))
+		{
+			try
+			{
+				var youtubeEmbedImageLink = "https://i.ytimg.com/vi/" + submission.EncodeEmbedLink.Split('/').Last() + "/hqdefault.jpg";
+				var client = new HttpClient();
+				var response = await client.GetAsync(youtubeEmbedImageLink);
+				if (response.IsSuccessStatusCode)
+				{
+					screenshotFile = await response.Content.ReadAsByteArrayAsync();
+				}
+			}
+			catch
+			{
+			}
+		}
+
+		await publisher.AnnounceNewSubmission(submission, screenshotFile, screenshotFile is not null ? "image/jpeg" : null, 480, 360);
 
 		return BaseRedirect($"/{submission.Id}S");
 	}
