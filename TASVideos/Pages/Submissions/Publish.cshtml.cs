@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using Microsoft.AspNetCore.StaticFiles;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 
 namespace TASVideos.Pages.Submissions;
@@ -13,7 +14,8 @@ public class PublishModel(
 	IUserManager userManager,
 	IFileService fileService,
 	IYoutubeSync youtubeSync,
-	IQueueService queueService)
+	IQueueService queueService,
+	IWebHostEnvironment env)
 	: BasePageModel
 {
 	[FromRoute]
@@ -160,7 +162,23 @@ public class PublishModel(
 		await userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
 		await tasVideoAgent.PostSubmissionPublished(Id, publication.Id);
 		await dbTransaction.CommitAsync();
-		await publisher.AnnounceNewPublication(publication);
+
+		var screenshotFilePath = publication.Files.Select(f => f.Path).FirstOrDefault();
+		byte[]? screenshotFile = null;
+		string? screenshotMimeType = null;
+		if (!string.IsNullOrEmpty(screenshotFilePath))
+		{
+			new FileExtensionContentTypeProvider().TryGetContentType(screenshotFilePath, out screenshotMimeType);
+			try
+			{
+				screenshotFile = await System.IO.File.ReadAllBytesAsync(Path.Combine(env.WebRootPath, "media", screenshotFilePath));
+			}
+			catch
+			{
+			}
+		}
+
+		await publisher.AnnounceNewPublication(publication, screenshotFile, screenshotMimeType);
 
 		if (youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
 		{
