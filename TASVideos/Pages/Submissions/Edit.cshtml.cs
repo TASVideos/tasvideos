@@ -55,11 +55,6 @@ public class EditModel(
 		}
 
 		Submission = submission;
-		var submissionPage = await wikiPages.SubmissionPage(Id);
-		if (submissionPage is not null)
-		{
-			Markup = submissionPage.Markup;
-		}
 
 		var userName = User.Name();
 
@@ -69,6 +64,12 @@ public class EditModel(
 			&& !Submission.Authors.Contains(userName))
 		{
 			return AccessDenied();
+		}
+
+		var submissionPage = await wikiPages.SubmissionPage(Id);
+		if (submissionPage is not null)
+		{
+			Markup = submissionPage.Markup;
 		}
 
 		await PopulateDropdowns();
