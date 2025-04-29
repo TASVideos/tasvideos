@@ -61,12 +61,6 @@ public class EditModel(
 			Markup = submissionPage.Markup;
 		}
 
-		Submission.Authors = await db.SubmissionAuthors
-			.Where(sa => sa.SubmissionId == Id)
-			.OrderBy(sa => sa.Ordinal)
-			.Select(sa => sa.Author!.UserName)
-			.ToListAsync();
-
 		var userName = User.Name();
 
 		// If the user cannot edit submissions, then they must be an author or the original submitter

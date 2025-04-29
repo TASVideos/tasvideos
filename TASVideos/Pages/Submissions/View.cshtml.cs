@@ -54,7 +54,6 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 					? s.RejectionReason!.DisplayName
 					: null,
 				Authors = s.SubmissionAuthors
-					.Where(sa => sa.SubmissionId == Id)
 					.OrderBy(sa => sa.Ordinal)
 					.Select(sa => sa.Author!.UserName)
 					.ToList(),

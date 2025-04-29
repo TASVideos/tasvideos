@@ -411,7 +411,11 @@ public static class EntityExtensions
 			IntendedPublicationClass = s.IntendedClassId,
 			RejectionReason = s.RejectionReasonId,
 			ExternalAuthors = s.AdditionalAuthors,
-			Title = s.Title
+			Title = s.Title,
+			Authors = s.SubmissionAuthors
+				.OrderBy(sa => sa.Ordinal)
+				.Select(sa => sa.Author!.UserName)
+				.ToList()
 		});
 
 	public static IQueryable<Pages.Publications.IndexModel.PublicationDisplay> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
