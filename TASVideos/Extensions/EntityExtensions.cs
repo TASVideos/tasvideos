@@ -15,8 +15,7 @@ namespace TASVideos.Extensions;
 public static class EntityExtensions
 {
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<string> query)
-	{
-		return query
+		=> query
 			.OrderBy(s => s)
 			.Select(s => new SelectListItem
 			{
@@ -24,50 +23,39 @@ public static class EntityExtensions
 				Value = s
 			})
 			.ToListAsync();
-	}
 
 	public static List<SelectListItem> ToDropDownList(this IEnumerable<SystemsResponse> list)
-	{
-		return list
+		=> [.. list
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
 				Text = s.Code,
 				Value = s.Code
-			})
-			.ToList();
-	}
+			})];
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<string> strings)
-	{
-		return strings.Select(s => new SelectListItem
+		=> strings.Select(s => new SelectListItem
 		{
 			Text = s,
 			Value = s
 		});
-	}
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<PermissionTo> permissions)
-	{
-		return permissions.Select(p => new SelectListItem
+		=> permissions.Select(p => new SelectListItem
 		{
 			Text = p.ToString().SplitCamelCase(),
 			Value = ((int)p).ToString()
 		});
-	}
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<int> ints)
-	{
-		return ints.Select(i => new SelectListItem
+		=> ints.Select(i => new SelectListItem
 		{
 			Text = i.ToString(),
 			Value = i.ToString()
 		});
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<Genre> query)
-	{
-		return query
+		=> query
 			.OrderBy(g => g.DisplayName)
 			.Select(g => new SelectListItem
 			{
@@ -75,11 +63,9 @@ public static class EntityExtensions
 				Value = g.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameGroup> query)
-	{
-		return query
+		=> query
 			.OrderBy(g => g.Name)
 			.Select(g => new SelectListItem
 			{
@@ -87,11 +73,9 @@ public static class EntityExtensions
 				Value = g.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameSystem> query)
-	{
-		return query
+		=> query
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
@@ -99,11 +83,9 @@ public static class EntityExtensions
 				Value = s.Code
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownListWithId(this IQueryable<GameSystem> query)
-	{
-		return query
+		=> query
 			.OrderBy(s => s.Code)
 			.Select(s => new SelectListItem
 			{
@@ -111,11 +93,9 @@ public static class EntityExtensions
 				Value = s.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<PublicationClass> query)
-	{
-		return query
+		=> query
 			.OrderBy(p => p.Name)
 			.Select(p => new SelectListItem
 			{
@@ -123,11 +103,9 @@ public static class EntityExtensions
 				Value = p.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<SubmissionRejectionReason> query)
-	{
-		return query
+		=> query
 			.OrderBy(r => r.DisplayName)
 			.Select(r => new SelectListItem
 			{
@@ -135,11 +113,9 @@ public static class EntityExtensions
 				Value = r.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameSystemFrameRate> query, int systemId)
-	{
-		return query
+		=> query
 			.ForSystem(systemId)
 			.OrderBy(fr => fr.Obsolete)
 			.ThenBy(fr => fr.RegionCode)
@@ -150,11 +126,9 @@ public static class EntityExtensions
 				Value = g.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<Flag> query, IEnumerable<PermissionTo> userPermissions)
-	{
-		return query
+		=> query
 			.OrderBy(f => f.Name)
 			.Select(f => new SelectListItem
 			{
@@ -164,11 +138,9 @@ public static class EntityExtensions
 					&& !userPermissions.Contains(f.PermissionRestriction.Value)
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Tag> query)
-	{
-		return query
+		=> query
 			.OrderBy(t => t.DisplayName)
 			.Select(t => new SelectListItem
 			{
@@ -176,11 +148,9 @@ public static class EntityExtensions
 				Value = t.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Publication> query)
-	{
-		return query
+		=> query
 			.OrderBy(p => p.Title)
 			.Select(p => new SelectListItem
 			{
@@ -188,20 +158,16 @@ public static class EntityExtensions
 				Value = p.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<ForumCategory> query)
-	{
-		return query.Select(c => new SelectListItem
+		=> query.Select(c => new SelectListItem
 		{
 			Text = c.Title,
 			Value = c.Id.ToString()
 		}).ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Forum> query, bool canSeeRestricted, int forumId)
-	{
-		return query
+		=> query
 			.ExcludeRestricted(canSeeRestricted)
 			.Select(f => new SelectListItem
 			{
@@ -210,11 +176,9 @@ public static class EntityExtensions
 				Selected = f.Id == forumId
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<ForumTopic> query, bool canSeeRestricted)
-	{
-		return query
+		=> query
 			.ExcludeRestricted(canSeeRestricted)
 			.Select(t => new SelectListItem
 			{
@@ -222,11 +186,9 @@ public static class EntityExtensions
 				Value = t.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<User> query)
-	{
-		return query
+		=> query
 			.OrderBy(u => u.UserName)
 			.Select(u => new SelectListItem
 			{
@@ -234,11 +196,9 @@ public static class EntityExtensions
 				Value = u.Id.ToString()
 			})
 			.ToListAsync();
-	}
 
 	public static Task<List<SelectListItem>> ToDropdownList(this IQueryable<Award> query, int year)
-	{
-		return query
+		=> query
 			.OrderBy(a => a.Description)
 			.Select(a => new SelectListItem
 			{
@@ -246,17 +206,14 @@ public static class EntityExtensions
 				Value = a.ShortName
 			})
 			.ToListAsync();
-	}
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<AssignableRole> roles)
-	{
-		return roles.Select(r => new SelectListItem
+		=> roles.Select(r => new SelectListItem
 		{
 			Text = r.Name,
 			Value = r.Id.ToString(),
 			Disabled = r.Disabled
 		});
-	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameVersion> query, int? systemId = null, int? gameId = null)
 	{
@@ -315,85 +272,71 @@ public static class EntityExtensions
 	}
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<Tag> tags)
-	{
-		return tags
+		=> tags
 			.OrderBy(t => t.DisplayName)
 			.Select(t => new SelectListItem
 			{
 				Text = t.DisplayName,
 				Value = t.Code.ToLower()
 			});
-	}
 
 	public static IEnumerable<SelectListItem> ToDropDown(this IEnumerable<Flag> flags)
-	{
-		return flags
+		=> flags
 			.OrderBy(f => f.Token)
 			.Select(f => new SelectListItem
 			{
 				Text = f.Name,
 				Value = f.Token.ToLower()
 			});
-	}
 
 	public static List<SelectListItem> ToDropDown<T>(this IEnumerable<T> enums)
 		where T : Enum
-	{
-		return enums
+		=> [.. enums
 			.Select(e => new SelectListItem
 			{
 				Value = ((int)(object)e).ToString(),
 				Text = e.EnumDisplayName()
 			})
-			.OrderBy(s => s.Text)
-			.ToList();
-	}
+			.OrderBy(s => s.Text)];
 
 	public static List<SelectListItem> WithDefaultEntry(this IEnumerable<SelectListItem> items)
-	{
-		return [.. UiDefaults.DefaultEntry, .. items];
-	}
+		=> [.. UiDefaults.DefaultEntry, .. items];
 
 	public static List<SelectListItem> WithAnyEntry(this IEnumerable<SelectListItem> items)
-	{
-		return [.. UiDefaults.AnyEntry, .. items];
-	}
+		=> [.. UiDefaults.AnyEntry, .. items];
 
 	public static IQueryable<Pages.Submissions.IndexModel.SubmissionEntry> ToSubListEntry(this IQueryable<Submission> query, int? userIdForVotes = null)
-	{
-		return query
-			.Select(s => new Pages.Submissions.IndexModel.SubmissionEntry
-			{
-				Id = s.Id,
-				System = s.System != null ? s.System!.Code : "Unknown",
-				Game = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
-				Frames = s.Frames,
-				FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,
-				Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
-				By = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName).ToList(),
-				AdditionalAuthors = s.AdditionalAuthors,
-				Date = s.CreateTimestamp,
-				Status = s.Status,
-				Judge = s.Judge != null ? s.Judge.UserName : null,
-				Publisher = s.Publisher != null ? s.Publisher.UserName : null,
-				IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null,
-				SyncedOn = s.SyncedOn,
-				Votes = s.Topic != null && s.Topic.Poll != null
-					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionYes)
-					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
-					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionNo)
-					? new VoteCounts
-					{
-						VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
-						VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
-						VotesNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
-						UserVotedYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
-						UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
-						UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
-					}
-				: null,
-			});
-	}
+		=> query.Select(s => new Pages.Submissions.IndexModel.SubmissionEntry
+		{
+			Id = s.Id,
+			System = s.System != null ? s.System!.Code : "Unknown",
+			Game = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
+			Frames = s.Frames,
+			FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,
+			Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
+			By = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName).ToList(),
+			AdditionalAuthors = s.AdditionalAuthors,
+			Date = s.CreateTimestamp,
+			Status = s.Status,
+			Judge = s.Judge != null ? s.Judge.UserName : null,
+			Publisher = s.Publisher != null ? s.Publisher.UserName : null,
+			IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null,
+			SyncedOn = s.SyncedOn,
+			Votes = s.Topic != null && s.Topic.Poll != null
+				&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionYes)
+				&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
+				&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionNo)
+				? new VoteCounts
+				{
+					VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
+					VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
+					VotesNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
+					UserVotedYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
+					UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
+					UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
+				}
+			: null,
+		});
 
 	public static IQueryable<TASVideos.Pages.Submissions.EditModel.SubmissionEdit> ToSubmissionEditModel(this IQueryable<Submission> query)
 		=> query.Select(s => new TASVideos.Pages.Submissions.EditModel.SubmissionEdit
@@ -531,8 +474,7 @@ public static class EntityExtensions
 	}
 
 	public static IQueryable<ListModel.RoleDisplay> ToRoleDisplayModel(this IQueryable<Role> roles)
-	{
-		return roles.Select(r => new ListModel.RoleDisplay(
+		=> roles.Select(r => new ListModel.RoleDisplay(
 			r.IsDefault,
 			r.Id,
 			r.Name,
@@ -540,11 +482,9 @@ public static class EntityExtensions
 			r.RolePermission.Select(rp => rp.PermissionId).ToList(),
 			r.RoleLinks.Select(rl => rl.Link).ToList(),
 			r.UserRole.Select(ur => ur.User!.UserName).ToList()));
-	}
 
 	public static IQueryable<Pages.UserFiles.InfoModel.UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles, bool hideComments = true)
-	{
-		return userFiles.Select(uf => new Pages.UserFiles.InfoModel.UserFileModel
+		=> userFiles.Select(uf => new Pages.UserFiles.InfoModel.UserFileModel
 		{
 			Id = uf.Id,
 			Class = uf.Class,
@@ -577,21 +517,17 @@ public static class EntityExtensions
 			HideComments = hideComments,
 			Annotations = uf.Annotations
 		});
-	}
 
 	public static IQueryable<Pages.UserFiles.IndexModel.UserMovie> ToUserMovieListModel(this IQueryable<UserFile> userFiles)
-	{
-		return userFiles.Select(uf => new Pages.UserFiles.IndexModel.UserMovie(
+		=> userFiles.Select(uf => new Pages.UserFiles.IndexModel.UserMovie(
 			uf.Id,
 			uf.Author!.UserName,
 			uf.UploadTimestamp,
 			uf.FileName,
 			uf.Title));
-	}
 
 	public static IQueryable<DisplayMiniMovie.MiniMovieModel> ToMiniMovieModel(this IQueryable<Publication> publications)
-	{
-		return publications.Select(p => new DisplayMiniMovie.MiniMovieModel
+		=> publications.Select(p => new DisplayMiniMovie.MiniMovieModel
 		{
 			Id = p.Id,
 			Title = p.Title,
@@ -607,11 +543,9 @@ public static class EntityExtensions
 			OnlineWatchingUrl = p.PublicationUrls
 				.First(u => u.Type == PublicationUrlType.Streaming).Url
 		});
-	}
 
 	public static IQueryable<Pages.Submissions.PublishModel.SubmissionPublishModel> ToPublishModel(this IQueryable<Submission> submissions)
-	{
-		return submissions.Select(s => new Pages.Submissions.PublishModel.SubmissionPublishModel
+		=> submissions.Select(s => new Pages.Submissions.PublishModel.SubmissionPublishModel
 		{
 			System = s.System!.Code,
 			Region = s.SystemFrameRate!.RegionCode + " " + s.SystemFrameRate.FrameRate,
@@ -631,11 +565,9 @@ public static class EntityExtensions
 			Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
 			GameGoalId = s.GameGoalId
 		});
-	}
 
 	public static IQueryable<AddEditModel.RoleEdit> ToRoleEditModel(this IQueryable<Role> query)
-	{
-		return query.Select(r => new AddEditModel.RoleEdit
+		=> query.Select(r => new AddEditModel.RoleEdit
 		{
 			Name = r.Name,
 			IsDefault = r.IsDefault,
@@ -653,21 +585,17 @@ public static class EntityExtensions
 				.Select(rp => (int)rp.PermissionId)
 				.ToList()
 		});
-	}
 
 	public static IQueryable<Pages.UserFiles.Uncataloged.UncatalogedViewModel> ToUnCatalogedModel(this IQueryable<UserFile> query)
-	{
-		return query.Select(uf => new Pages.UserFiles.Uncataloged.UncatalogedViewModel(
+		=> query.Select(uf => new Pages.UserFiles.Uncataloged.UncatalogedViewModel(
 			uf.Id,
 			uf.FileName,
 			uf.System != null ? uf.System.Code : null,
 			uf.UploadTimestamp,
 			uf.Author!.UserName));
-	}
 
 	public static IQueryable<LatestModel.LatestPost> ToLatestPost(this IQueryable<ForumPost> query)
-	{
-		return query.Select(p => new LatestModel.LatestPost(
+		=> query.Select(p => new LatestModel.LatestPost(
 			p.CreateTimestamp,
 			p.Id,
 			p.TopicId ?? 0,
@@ -676,5 +604,4 @@ public static class EntityExtensions
 			p.Topic!.Forum!.Name,
 			p.Text,
 			p.Poster!.UserName));
-	}
 }
