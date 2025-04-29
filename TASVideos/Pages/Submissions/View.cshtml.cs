@@ -43,7 +43,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 
 		if (Submission.Status == SubmissionStatus.Published)
 		{
-			PublicationId = (await db.Publications.SingleOrDefaultAsync(p => p.SubmissionId == Id))?.Id ?? 0;
+			PublicationId = await db.Publications.Where(p => p.SubmissionId == Id).Select(p => p.Id).SingleOrDefaultAsync();
 		}
 
 		return Page();
