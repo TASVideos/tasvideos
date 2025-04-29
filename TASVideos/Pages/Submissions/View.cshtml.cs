@@ -21,54 +21,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 	{
 		var submission = await db.Submissions
 			.Where(s => s.Id == Id)
-			.Select(s => new SubmissionDisplay // It is important to use a projection here to avoid querying the file data which is not needed and can be slow
-			{
-				StartType = (MovieStartType?)s.MovieStartType,
-				SystemDisplayName = s.System!.DisplayName,
-				GameName = s.GameId != null ? s.Game!.DisplayName : null,
-				SubmittedGameName = s.GameName,
-				GameVersion = s.GameVersionId != null ? s.GameVersion!.Name : "",
-				SubmittedGameVersion = s.SubmittedGameVersion,
-				SubmittedRomName = s.RomName,
-				SubmittedBranch = s.Branch,
-				Goal = s.GameGoal != null
-					? s.GameGoal!.DisplayName
-					: null,
-				Emulator = s.EmulatorVersion,
-				FrameCount = s.Frames,
-				FrameRate = s.SystemFrameRate!.FrameRate,
-				RerecordCount = s.RerecordCount,
-				Date = s.CreateTimestamp,
-				Submitter = s.Submitter!.UserName,
-				Status = s.Status,
-				EncodeEmbedLink = s.EncodeEmbedLink,
-				Judge = s.Judge != null ? s.Judge.UserName : "",
-				Title = s.Title,
-				ClassName = s.IntendedClass != null ? s.IntendedClass.Name : "",
-				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-				SystemId = s.SystemId,
-				SystemFrameRateId = s.SystemFrameRateId,
-				GameId = s.GameId,
-				GameVersionId = s.GameVersionId,
-				RejectionReasonDisplay = s.RejectionReasonId.HasValue
-					? s.RejectionReason!.DisplayName
-					: null,
-				Authors = s.SubmissionAuthors
-					.OrderBy(sa => sa.Ordinal)
-					.Select(sa => sa.Author!.UserName)
-					.ToList(),
-				AdditionalAuthors = s.AdditionalAuthors,
-				TopicId = s.TopicId,
-				Warnings = s.Warnings,
-				CycleCount = s.CycleCount,
-				Annotations = s.Annotations,
-				GameGoalId = s.GameGoalId,
-				SyncedOn = s.SyncedOn,
-				SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null,
-				AdditionalSyncNotes = s.AdditionalSyncNotes,
-				HashType = s.HashType,
-				Hash = s.Hash
-			})
+			.ToSubmissionDisplayModel()
 			.SingleOrDefaultAsync();
 
 		if (submission is null)

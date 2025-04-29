@@ -2,6 +2,7 @@
 using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
+using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Forum.Posts;
 using TASVideos.Pages.Roles;
 using TASVideos.WikiModules;
@@ -416,6 +417,56 @@ public static class EntityExtensions
 				.OrderBy(sa => sa.Ordinal)
 				.Select(sa => sa.Author!.UserName)
 				.ToList()
+		});
+
+	public static IQueryable<Pages.Submissions.ViewModel.SubmissionDisplay> ToSubmissionDisplayModel(this IQueryable<Submission> query)
+		=> query.Select(s => new Pages.Submissions.ViewModel.SubmissionDisplay
+		{
+			StartType = (MovieStartType?)s.MovieStartType,
+			SystemDisplayName = s.System!.DisplayName,
+			GameName = s.GameId != null ? s.Game!.DisplayName : null,
+			SubmittedGameName = s.GameName,
+			GameVersion = s.GameVersionId != null ? s.GameVersion!.Name : "",
+			SubmittedGameVersion = s.SubmittedGameVersion,
+			SubmittedRomName = s.RomName,
+			SubmittedBranch = s.Branch,
+			Goal = s.GameGoal != null
+				? s.GameGoal!.DisplayName
+				: null,
+			Emulator = s.EmulatorVersion,
+			FrameCount = s.Frames,
+			FrameRate = s.SystemFrameRate!.FrameRate,
+			RerecordCount = s.RerecordCount,
+			Date = s.CreateTimestamp,
+			Submitter = s.Submitter!.UserName,
+			Status = s.Status,
+			EncodeEmbedLink = s.EncodeEmbedLink,
+			Judge = s.Judge != null ? s.Judge.UserName : "",
+			Title = s.Title,
+			ClassName = s.IntendedClass != null ? s.IntendedClass.Name : "",
+			Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+			SystemId = s.SystemId,
+			SystemFrameRateId = s.SystemFrameRateId,
+			GameId = s.GameId,
+			GameVersionId = s.GameVersionId,
+			RejectionReasonDisplay = s.RejectionReasonId.HasValue
+				? s.RejectionReason!.DisplayName
+				: null,
+			Authors = s.SubmissionAuthors
+				.OrderBy(sa => sa.Ordinal)
+				.Select(sa => sa.Author!.UserName)
+				.ToList(),
+			AdditionalAuthors = s.AdditionalAuthors,
+			TopicId = s.TopicId,
+			Warnings = s.Warnings,
+			CycleCount = s.CycleCount,
+			Annotations = s.Annotations,
+			GameGoalId = s.GameGoalId,
+			SyncedOn = s.SyncedOn,
+			SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null,
+			AdditionalSyncNotes = s.AdditionalSyncNotes,
+			HashType = s.HashType,
+			Hash = s.Hash
 		});
 
 	public static IQueryable<Pages.Publications.IndexModel.PublicationDisplay> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
