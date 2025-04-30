@@ -1,10 +1,12 @@
 ﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 
 [AllowAnonymous]
-public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileService fileService) : BasePageModel
+public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileService fileService, IMovieParser parser)
+	: SubmitPageModelBase(parser, fileService)
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -37,10 +39,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 			Submission.LastUpdateUser = submissionPage.AuthorName;
 		}
 
-		CanEdit = !string.IsNullOrWhiteSpace(User.Name())
-			&& (User.Name() == Submission.Submitter
-				|| Submission.Authors.Contains(User.Name()));
-
+		CanEdit = CanEditSubmission(Submission.Submitter, Submission.Authors);
 		if (Submission.Status == SubmissionStatus.Published)
 		{
 			PublicationId = await db.Publications.Where(p => p.SubmissionId == Id).Select(p => p.Id).SingleOrDefaultAsync();
