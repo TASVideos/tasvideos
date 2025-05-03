@@ -2,6 +2,7 @@
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.Extensions;
+using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
 using TASVideos.Tests.Base;
 using static TASVideos.RazorPages.Tests.RazorTestHelpers;
@@ -19,7 +20,7 @@ public class ViewModelTests : TestDbBase
 	{
 		_wikiPages = Substitute.For<IWikiPages>();
 		_fileService = Substitute.For<IFileService>();
-		_page = new ViewModel(_db, _wikiPages, _fileService);
+		_page = new ViewModel(_db, _wikiPages, _fileService, Substitute.For<IMovieParser>());
 	}
 
 	[TestMethod]
@@ -54,7 +55,7 @@ public class ViewModelTests : TestDbBase
 	{
 		var sub = CreateUnpublishedSubmission();
 		_page.Id = sub.Id;
-		AddAuthenticatedUser(_page, sub.Submitter!, []);
+		AddAuthenticatedUser(_page, sub.Submitter!, [PermissionTo.SubmitMovies]);
 
 		var actual = await _page.OnGet();
 
@@ -75,7 +76,7 @@ public class ViewModelTests : TestDbBase
 		});
 		await _db.SaveChangesAsync();
 		_page.Id = sub.Id;
-		AddAuthenticatedUser(_page, user.Entity, []);
+		AddAuthenticatedUser(_page, user.Entity, [PermissionTo.SubmitMovies]);
 
 		var actual = await _page.OnGet();
 
