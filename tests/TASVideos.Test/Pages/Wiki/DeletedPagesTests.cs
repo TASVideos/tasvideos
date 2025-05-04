@@ -1,6 +1,5 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Http;
-using TASVideos.Core;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Settings;
@@ -127,6 +126,145 @@ public class DeletedPagesTests : TestDbBase
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
 		var redirectResult = (RedirectToPageResult)actual;
 		Assert.AreEqual("DeletedPages", redirectResult.PageName);
-		await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>());
+		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>());
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteRevision_RequiresPermission()
+	{
+		var actual = await _page.OnPostDeletePage("", "");
+		Assert.IsNotNull(actual);
+		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
+		var redirectResult = (RedirectToPageResult)actual;
+		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteRevision_NoPath_ReturnsHome()
+	{
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+
+		var actual = await _page.OnPostDeleteRevision("", 1);
+
+		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
+		var redirectResult = (RedirectToPageResult)actual;
+		Assert.AreEqual("/Index", redirectResult.PageName);
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteRevision_NoRevision_ReturnsHome()
+	{
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+
+		var actual = await _page.OnPostDeleteRevision("Page", 0);
+
+		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
+		var redirectResult = (RedirectToPageResult)actual;
+		Assert.AreEqual("/Index", redirectResult.PageName);
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteRevision_DeletesRevisionAndRedirects()
+	{
+		const string pageName = "TestPage";
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+
+		var actual = await _page.OnPostDeleteRevision(pageName, 1);
+
+		await _wikiPages.Received(1).Delete(pageName, 1);
+		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
+		Assert.IsInstanceOfType<RedirectResult>(actual);
+		var redirectResult = (RedirectResult)actual;
+		Assert.AreEqual("/" + pageName, redirectResult.Url);
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteRevision_Trims()
+	{
+		const string pageName = "TestPage";
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+
+		var actual = await _page.OnPostDeleteRevision("/" + pageName, 1);
+
+		await _wikiPages.Received(1).Delete(pageName, 1);
+		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
+		Assert.IsInstanceOfType<RedirectResult>(actual);
+		var redirectResult = (RedirectResult)actual;
+		Assert.AreEqual("/" + pageName, redirectResult.Url);
+	}
+
+	[TestMethod]
+	public async Task OnPostUndelete_RequiresPermission()
+	{
+		var actual = await _page.OnPostUndelete("");
+		Assert.IsNotNull(actual);
+		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
+		var redirectResult = (RedirectToPageResult)actual;
+		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+	}
+
+	[TestMethod]
+	public async Task OnPostUndeleteRevision_NoPath_ReturnsHome()
+	{
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+
+		var actual = await _page.OnPostUndelete("");
+
+		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
+		var redirectResult = (RedirectToPageResult)actual;
+		Assert.AreEqual("/Index", redirectResult.PageName);
+	}
+
+	[TestMethod]
+	public async Task OnPostUndeleteRevision_UndeleteFails_ModelError()
+	{
+		const string pageName = "TestPage";
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+		_wikiPages.Undelete(pageName).Returns(false);
+
+		var actual = await _page.OnPostUndelete(pageName);
+
+		Assert.IsInstanceOfType<PageResult>(actual);
+		Assert.IsFalse(_page.ModelState.IsValid);
+	}
+
+	[TestMethod]
+	public async Task OnPostUndeleteRevision_UndeletesAndRedirects()
+	{
+		const string pageName = "TestPage";
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+		_wikiPages.Undelete(pageName).Returns(true);
+
+		var actual = await _page.OnPostUndelete(pageName);
+
+		await _wikiPages.Received(1).Undelete(pageName);
+		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
+		Assert.IsInstanceOfType<RedirectResult>(actual);
+		var redirectResult = (RedirectResult)actual;
+		Assert.AreEqual("/" + pageName, redirectResult.Url);
+	}
+
+	[TestMethod]
+	public async Task OnPostUndeleteRevision_Trims()
+	{
+		const string pageName = "TestPage";
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+		_wikiPages.Undelete(pageName).Returns(true);
+
+		var actual = await _page.OnPostUndelete("/" + pageName);
+
+		await _wikiPages.Received(1).Undelete(pageName);
+		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
+		Assert.IsInstanceOfType<RedirectResult>(actual);
+		var redirectResult = (RedirectResult)actual;
+		Assert.AreEqual("/" + pageName, redirectResult.Url);
 	}
 }

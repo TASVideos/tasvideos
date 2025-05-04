@@ -53,7 +53,7 @@ public class MoveModel(IWikiPages wikiPages, ExternalMediaPublisher publisher) :
 
 		var result = await wikiPages.Move(OriginalPageName, DestinationPageName);
 
-		// At a dummy commit to track the move
+		// Add a dummy commit to track the move
 		var page = (await wikiPages.Page(DestinationPageName))!;
 		await wikiPages.Add(new WikiCreateRequest
 		{
