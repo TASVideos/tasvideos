@@ -27,36 +27,42 @@ public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, Ex
 			return AccessDenied();
 		}
 
-		if (!string.IsNullOrWhiteSpace(path))
+		if (string.IsNullOrWhiteSpace(path))
 		{
-			if (!string.IsNullOrWhiteSpace(reason))
-			{
-				var page = await wikiPages.Page(path);
-				if (page is null)
-				{
-					return BadRequest();
-				}
-
-				await wikiPages.Add(new WikiCreateRequest
-				{
-					PageName = page.PageName,
-					Markup = page.Markup,
-					RevisionMessage = $"Page deleted, reason: {reason}",
-					MinorEdit = true,
-					AuthorId = User.GetUserId()
-				});
-			}
-
-			var result = await wikiPages.Delete(path);
-
-			if (result == -1)
-			{
-				ModelState.AddModelError("", "Unable to delete page, the page may have been modified during the saving of this operation.");
-				return Page();
-			}
-
-			await publisher.SendMessage(PostGroups.Wiki, $"Page {path} DELETED by {User.Name()} ({{result}} revisions\")", reason);
+			ModelState.AddModelError(nameof(path), "Page not found.");
+			return Page();
 		}
+
+		var page = await wikiPages.Page(path);
+		if (page is null)
+		{
+			ModelState.AddModelError(nameof(path), "Page not found.");
+			return Page();
+		}
+
+		if (string.IsNullOrWhiteSpace(reason))
+		{
+			reason = "(No Reason provided)";
+		}
+
+		await wikiPages.Add(new WikiCreateRequest
+		{
+			PageName = page.PageName,
+			Markup = page.Markup,
+			RevisionMessage = $"Page deleted, reason: {reason}",
+			MinorEdit = true,
+			AuthorId = User.GetUserId()
+		});
+
+		var result = await wikiPages.Delete(path);
+
+		if (result == -1)
+		{
+			ModelState.AddModelError("", "Unable to delete page, the page may have been modified during the saving of this operation.");
+			return Page();
+		}
+
+		await publisher.SendMessage(PostGroups.Wiki, $"Page {path} DELETED by {User.Name()} ({result} revisions\")", reason);
 
 		return BasePageRedirect("DeletedPages");
 	}
