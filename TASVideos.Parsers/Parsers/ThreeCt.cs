@@ -9,7 +9,6 @@ internal class ThreeCt : Parser, IParser
 		{
 			Region = RegionType.Ntsc,
 			SystemCode = SystemCodes.Nes,
-			RerecordCount = 100, // Homage to the author, and because an arbitrary number is better than 0 to indicate the intention of no rerecord count
 			FrameRateOverride = 5369318.18181818
 		};
 
