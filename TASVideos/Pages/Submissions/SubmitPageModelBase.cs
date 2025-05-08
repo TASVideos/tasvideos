@@ -5,6 +5,8 @@ namespace TASVideos.Pages.Submissions;
 
 public class SubmitPageModelBase(IMovieParser parser, IFileService fileService) : BasePageModel
 {
+	protected readonly IFileService fileService = fileService;
+
 	public async Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile)
 	{
 		var fileStream = await movieFile.DecompressOrTakeRaw();
