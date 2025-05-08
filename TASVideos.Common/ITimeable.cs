@@ -42,6 +42,11 @@ public static class TimeableExtensions
 			return timeSpan.ToString(@"h\:mm\:ss\.ff");
 		}
 
+		if (timeSpan.TotalSeconds <= 0.01)
+		{
+			return "00:00.01";
+		}
+
 		return timeSpan.ToString(@"mm\:ss\.ff");
 	}
 

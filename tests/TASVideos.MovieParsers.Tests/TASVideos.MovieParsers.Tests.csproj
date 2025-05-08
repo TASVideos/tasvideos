@@ -26,6 +26,7 @@
 		<EmbeddedResource Include="TasprojSampleFiles\*.tasproj" />
 		<EmbeddedResource Include="VbmSampleFiles\*.vbm" />
 		<EmbeddedResource Include="WtfSampleFiles\*.wtf" />
+		<EmbeddedResource Include="ThreeCtSampleFiles\basic.3ct" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -34,5 +35,9 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="ThreeCtSampleFiles\" />
 	</ItemGroup>
 </Project>
