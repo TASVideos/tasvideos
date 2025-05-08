@@ -53,7 +53,6 @@ public interface IPostable
 	string? ImageMimeType { get; }
 	int? ImageWidth { get; }
 	int? ImageHeight { get; }
-
 }
 
 /// <summary>
