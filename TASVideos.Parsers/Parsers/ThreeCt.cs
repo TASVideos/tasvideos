@@ -9,7 +9,8 @@ internal class ThreeCt : Parser, IParser
 		{
 			Region = RegionType.Ntsc,
 			SystemCode = SystemCodes.Nes,
-			RerecordCount = 100 // Homage to the author, and because an arbitrary number is better than 0 to indicate the intention of no rerecord count
+			RerecordCount = 100, // Homage to the author, and because an arbitrary number is better than 0 to indicate the intention of no rerecord count
+			FrameRateOverride = 5369318.18181818
 		};
 
 		var lastLine = "";
@@ -26,6 +27,7 @@ internal class ThreeCt : Parser, IParser
 			// The instructions suggest that the cartridge swap happens before this cycle executes,
 			// so technically the "input" is the cycle before
 			result.CycleCount = cycleCount - 1;
+			result.Frames = (int)result.CycleCount!;
 		}
 
 		return result;
