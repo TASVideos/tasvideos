@@ -15,7 +15,7 @@ public class Bk2ParserTests : BaseParserTests
 	public async Task Errors(string filename)
 	{
 		var result = await _bk2Parser.Parse(Embedded(filename), EmbeddedLength(filename));
-		Assert.AreEqual(false, result.Success);
+		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
@@ -24,7 +24,7 @@ public class Bk2ParserTests : BaseParserTests
 	public async Task Frames_CorrectResult()
 	{
 		var result = await _bk2Parser.Parse(Embedded("2Frames.bk2"), EmbeddedLength("2Frames.bk2"));
-		Assert.AreEqual(true, result.Success);
+		Assert.IsTrue(result.Success);
 		Assert.AreEqual(2, result.Frames);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -33,7 +33,7 @@ public class Bk2ParserTests : BaseParserTests
 	public async Task Frames_NoInputFrames_Returns0()
 	{
 		var result = await _bk2Parser.Parse(Embedded("0Frames.bk2"), EmbeddedLength("0Frames.bk2"));
-		Assert.AreEqual(true, result.Success);
+		Assert.IsTrue(result.Success);
 		Assert.AreEqual(0, result.Frames);
 		AssertNoWarningsOrErrors(result);
 	}

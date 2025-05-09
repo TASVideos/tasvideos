@@ -12,7 +12,7 @@ public class TasprojParserTests : BaseParserTests
 	{
 		var result = await _tasprojParser.Parse(Embedded("branch.tasproj"), EmbeddedLength("branch.tasproj"));
 
-		Assert.AreEqual(true, result.Success);
+		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
 }

@@ -11,7 +11,7 @@ public class GbmvParserTests : BaseParserTests
 	public async Task GBAHawk_NewHeaderValues()
 	{
 		var result = await _gbmvParser.Parse(Embedded("GBAHawk_NewHeaderValues.gbmv"), EmbeddedLength("GBAHawk_NewHeaderValues.gbmv"));
-		Assert.AreEqual(true, result.Success);
+		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
 
