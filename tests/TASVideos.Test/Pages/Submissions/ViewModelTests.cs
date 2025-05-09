@@ -28,7 +28,6 @@ public class ViewModelTests : TestDbBase
 	{
 		_page.Id = 1;
 		var actual = await _page.OnGet();
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
@@ -40,7 +39,6 @@ public class ViewModelTests : TestDbBase
 
 		var actual = await _page.OnGet();
 
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(sub.RerecordCount, _page.Submission.RerecordCount);
 		Assert.IsFalse(_page.CanEdit);
@@ -59,7 +57,6 @@ public class ViewModelTests : TestDbBase
 
 		var actual = await _page.OnGet();
 
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.IsTrue(_page.CanEdit);
 	}
@@ -80,7 +77,6 @@ public class ViewModelTests : TestDbBase
 
 		var actual = await _page.OnGet();
 
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.IsTrue(_page.CanEdit);
 	}
@@ -93,7 +89,6 @@ public class ViewModelTests : TestDbBase
 
 		var actual = await _page.OnGet();
 
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(sub.Publication!.Id, _page.PublicationId);
 		Assert.AreEqual(sub.System!.DisplayName, _page.Submission.SystemDisplayName);
@@ -124,7 +119,6 @@ public class ViewModelTests : TestDbBase
 		_fileService.GetSubmissionFile(nonExistentSubId).Returns((ZippedFile?)null);
 
 		var actual = await _page.OnGetDownload();
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
@@ -139,9 +133,8 @@ public class ViewModelTests : TestDbBase
 		_fileService.GetSubmissionFile(subId).Returns(new ZippedFile(data, path));
 
 		var actual = await _page.OnGetDownload();
-		Assert.IsNotNull(actual);
-		Assert.IsInstanceOfType<FileContentResult>(actual);
 
+		Assert.IsInstanceOfType<FileContentResult>(actual);
 		var fileContentResult = (FileContentResult)actual;
 		Assert.AreEqual(data, fileContentResult.FileContents);
 		Assert.AreEqual($"{path}.zip", fileContentResult.FileDownloadName);

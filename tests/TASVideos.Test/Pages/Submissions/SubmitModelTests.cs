@@ -81,7 +81,6 @@ public class SubmitModelTests : TestDbBase
 		AddAuthenticatedUser(_page, user, []);
 
 		var actual = await _page.OnGet();
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<PageResult>(actual);
 	}
 
@@ -97,7 +96,6 @@ public class SubmitModelTests : TestDbBase
 
 		var actual = await _page.OnPost();
 
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
 		var redirectResult = (RedirectToPageResult)actual;
 		Assert.IsNotNull(redirectResult.RouteValues);
@@ -115,7 +113,6 @@ public class SubmitModelTests : TestDbBase
 
 		var actual = await _page.OnPost();
 
-		Assert.IsNotNull(actual);
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.IsFalse(_page.ModelState.IsValid);
 		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.Authors)));

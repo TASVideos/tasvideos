@@ -23,7 +23,6 @@ public class InfoModelTests : TestDbBase
 	{
 		_page.Id = long.MaxValue;
 		var result = await _page.OnGetDownload();
-		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -39,7 +38,6 @@ public class InfoModelTests : TestDbBase
 		_page.Id = fileId;
 
 		var result = await _page.OnGetDownload();
-		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType<InfoModel.DownloadResult>(result);
 		var fileInDb = await _db.UserFiles.SingleAsync(uf => uf.Id == fileId);
 		Assert.AreEqual(originalViewCount + 1, fileInDb.Downloads);

@@ -28,7 +28,6 @@ public class RatingModelTests : TestDbBase
 
 		var result = await _page.OnGet();
 
-		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -43,7 +42,6 @@ public class RatingModelTests : TestDbBase
 
 		var result = await _page.OnGet();
 
-		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -57,7 +55,7 @@ public class RatingModelTests : TestDbBase
 		AddAuthenticatedUser(_page, viewer.Entity, [PermissionTo.SeePrivateRatings]);
 
 		var result = await _page.OnGet();
-		Assert.IsNotNull(result);
+
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(1, _page.Ratings.Ratings.Count());
 	}
@@ -73,7 +71,6 @@ public class RatingModelTests : TestDbBase
 
 		var result = await _page.OnGet();
 
-		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(1, _page.Ratings.Ratings.Count());
 	}
