@@ -269,7 +269,7 @@ public class AwardsTests : TestDbBase
 	[TestMethod]
 	public async Task AssignUserAward_NotFound_throws()
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _awards.AssignUserAward("DoesNotExist", 1, []));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _awards.AssignUserAward("DoesNotExist", 1, []));
 	}
 
 	[TestMethod]
@@ -318,7 +318,7 @@ public class AwardsTests : TestDbBase
 	[TestMethod]
 	public async Task AssignPublicationAward_NotFound_throws()
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _awards.AssignPublicationAward("DoesNotExist", 1, []));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _awards.AssignPublicationAward("DoesNotExist", 1, []));
 	}
 
 	[TestMethod]

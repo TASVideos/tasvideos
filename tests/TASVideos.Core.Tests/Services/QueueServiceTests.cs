@@ -482,8 +482,8 @@ public class QueueServiceTests : TestDbBase
 		var result = await _queueService.CanUnpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.PublicationTitle));
 	}
 
 	[TestMethod]
@@ -521,8 +521,8 @@ public class QueueServiceTests : TestDbBase
 		var result = await _queueService.Unpublish(pub.Id);
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.NotAllowed, result.Status);
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.ErrorMessage));
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.PublicationTitle));
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.PublicationTitle));
 	}
 
 	[TestMethod]
@@ -632,7 +632,7 @@ public class QueueServiceTests : TestDbBase
 	[TestMethod]
 	public async Task MapParsedResult_ThrowsIfParsingIsFailed()
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _queueService.MapParsedResult(new TestParseResult { Success = false }, new Submission()));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _queueService.MapParsedResult(new TestParseResult { Success = false }, new Submission()));
 	}
 
 	[TestMethod]
@@ -643,7 +643,7 @@ public class QueueServiceTests : TestDbBase
 
 		var actual = await _queueService.MapParsedResult(new TestParseResult { Success = true, SystemCode = "Does not exist" }, new Submission());
 
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(actual));
+		Assert.IsFalse(string.IsNullOrWhiteSpace(actual));
 	}
 
 	[TestMethod]

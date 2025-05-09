@@ -42,7 +42,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	public async Task GetRequiredUser_UserDoesNotExist_Throws()
 	{
 		var user = new ClaimsPrincipal();
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _userManager.GetRequiredUser(user));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _userManager.GetRequiredUser(user));
 	}
 
 	[TestMethod]
@@ -87,7 +87,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	[TestMethod]
 	public async Task AddStandardRoles_ThrowsIfUserDoesNotExist()
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _userManager.AddStandardRoles(-1));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _userManager.AddStandardRoles(-1));
 	}
 
 	[TestMethod]
