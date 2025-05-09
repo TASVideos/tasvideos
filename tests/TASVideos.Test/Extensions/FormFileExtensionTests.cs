@@ -109,7 +109,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		modelState.Received(1).AddModelError("", "");
+		Assert.AreEqual(1, modelState.Count);
 	}
 
 	[TestMethod]
@@ -121,7 +121,7 @@ public class FormFileExtensionTests
 		var user = RazorTestHelpers.CreateClaimsPrincipalWithPermissions([PermissionTo.OverrideSubmissionConstraints]);
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		modelState.Received(0).AddModelError("", "");
+		Assert.AreEqual(0, modelState.Count);
 	}
 
 	[TestMethod]
@@ -133,7 +133,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		modelState.Received(0).AddModelError("", "");
+		Assert.AreEqual(0, modelState.Count);
 	}
 
 	[TestMethod]

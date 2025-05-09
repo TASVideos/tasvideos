@@ -34,7 +34,7 @@ public class BasePageModelTests : TestDbBase
 	[DataRow("/", "/?GameId=12", new[] { "GameId", "12" })]
 	public void AddAdditionalParamsTests(string relativeUrl, string expected, string[] additionalParamsStrings)
 	{
-		Assert.IsTrue(additionalParamsStrings.Length % 2 == 0);
+		Assert.AreEqual(0, additionalParamsStrings.Length % 2);
 
 		NameValueCollection? additionalParams = null;
 		if (additionalParamsStrings.Length > 0)
