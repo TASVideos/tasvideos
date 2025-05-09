@@ -8,7 +8,7 @@ public class StringExtensionTests
 	[TestMethod]
 	public void CapAndEllipse_NegativeLimit_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => "".CapAndEllipse(-1));
+		Assert.ThrowsExactly<ArgumentException>(() => "".CapAndEllipse(-1));
 	}
 
 	[TestMethod]

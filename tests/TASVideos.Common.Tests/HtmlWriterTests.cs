@@ -195,7 +195,7 @@ public sealed class HtmlWriterTests : IDisposable
 	{
 		W.OpenTag("script");
 		W.Text("console.log(location.href);");
-		_ = Assert.ThrowsException<InvalidOperationException>(isVoidElement
+		_ = Assert.ThrowsExactly<InvalidOperationException>(isVoidElement
 			? () => W.VoidTag("br")
 			: () => W.OpenTag("p"));
 		W.CloseTag("script");
@@ -216,8 +216,8 @@ public sealed class HtmlWriterTests : IDisposable
 	[TestMethod]
 	public void TestTagNameRegExInvalid(string tagName)
 	{
-		_ = Assert.ThrowsException<InvalidOperationException>(() => W.OpenTag(tagName), "as normal element");
-		_ = Assert.ThrowsException<InvalidOperationException>(() => W.VoidTag(tagName), "as void element");
+		_ = Assert.ThrowsExactly<InvalidOperationException>(() => W.OpenTag(tagName), "as normal element");
+		_ = Assert.ThrowsExactly<InvalidOperationException>(() => W.VoidTag(tagName), "as void element");
 		W.AssertFinished();
 		AssertOutputIsEmpty();
 	}
@@ -256,7 +256,7 @@ public sealed class HtmlWriterTests : IDisposable
 	[TestMethod]
 	public void TestMayNotUseOpenWithVoidElementOrViceVersa(bool isVoidElement, string tagName)
 	{
-		_ = Assert.ThrowsException<InvalidOperationException>(isVoidElement
+		_ = Assert.ThrowsExactly<InvalidOperationException>(isVoidElement
 			? () => W.OpenTag(tagName)
 			: () => W.VoidTag(tagName));
 		W.AssertFinished();
@@ -275,20 +275,20 @@ public sealed class HtmlWriterTests : IDisposable
 	[TestMethod]
 	public void TestMismatchedClose()
 	{
-		var sNothingToClose = Assert.ThrowsException<InvalidOperationException>(() => W.CloseTag("div"), "nothing to close")
+		var sNothingToClose = Assert.ThrowsExactly<InvalidOperationException>(() => W.CloseTag("div"), "nothing to close")
 			.Message;
 		W.AssertFinished();
 		AssertOutputIsEmpty();
 
 		W.VoidTag("br");
-		var sCantCloseVoid = Assert.ThrowsException<InvalidOperationException>(() => W.CloseTag("br"), "can't close void")
+		var sCantCloseVoid = Assert.ThrowsExactly<InvalidOperationException>(() => W.CloseTag("br"), "can't close void")
 			.Message;
 		Assert.AreNotEqual(sCantCloseVoid, sNothingToClose, "\"can't close void\" distinct from \"nothing to close\"");
 		W.AssertFinished();
 		AssertOutputEquals("<br>");
 
 		W.OpenTag("p");
-		var sMismatchedClose = Assert.ThrowsException<InvalidOperationException>(() => W.CloseTag("span"), "mismatched close")
+		var sMismatchedClose = Assert.ThrowsExactly<InvalidOperationException>(() => W.CloseTag("span"), "mismatched close")
 			.Message;
 		Assert.AreNotEqual(sMismatchedClose, sCantCloseVoid, "\"mismatched close\" distinct from \"can't close void\"");
 		Assert.AreNotEqual(sMismatchedClose, sNothingToClose, "\"mismatched close\" distinct from \"nothing to close\"");
@@ -300,20 +300,20 @@ public sealed class HtmlWriterTests : IDisposable
 	[TestMethod]
 	public void TestNothingToAddAttrTo()
 	{
-		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem1"), "at start");
+		_ = Assert.ThrowsExactly<InvalidOperationException>(() => W.Attribute("id", "elem1"), "at start");
 		W.AssertFinished();
 		AssertOutputIsEmpty();
 
 		W.OpenTag("span");
 		W.Text("Hello, world!");
-		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem2"), "after opening tag");
+		_ = Assert.ThrowsExactly<InvalidOperationException>(() => W.Attribute("id", "elem2"), "after opening tag");
 		W.CloseTag("span");
 		W.AssertFinished();
 		AssertOutputEquals("<span>Hello, world!</span>");
 
 		W.OpenTag("div");
 		W.CloseTag("div");
-		_ = Assert.ThrowsException<InvalidOperationException>(() => W.Attribute("id", "elem3"), "after all closed");
+		_ = Assert.ThrowsExactly<InvalidOperationException>(() => W.Attribute("id", "elem3"), "after all closed");
 		W.AssertFinished();
 		AssertOutputEquals("<span>Hello, world!</span><div></div>");
 	}
