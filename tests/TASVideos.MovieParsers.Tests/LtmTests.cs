@@ -35,7 +35,7 @@ public class LtmTests : BaseParserTests
 	{
 		var result = await _ltmParser.Parse(Embedded("annotations.ltm"), EmbeddedLength("annotations.ltm"));
 		Assert.IsTrue(result.Success);
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.Annotations));
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Annotations));
 		var lines = result.Annotations.SplitWithEmpty("\n");
 		Assert.AreEqual(2, lines.Length);
 	}

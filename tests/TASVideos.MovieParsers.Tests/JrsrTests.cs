@@ -812,7 +812,7 @@ null)]
 		""")]
 	public async Task ParserFormatException(string contents)
 	{
-		await Assert.ThrowsExceptionAsync<FormatException>(() => SerializeFromString(contents));
+		await Assert.ThrowsExactlyAsync<FormatException>(() => SerializeFromString(contents));
 	}
 
 	[TestMethod]
@@ -827,7 +827,7 @@ null)]
 
 						""";
 		await using var reader = new MemoryStream(Encoding.Unicode.GetBytes(contents));
-		await Assert.ThrowsExceptionAsync<FormatException>(() => Serialize(reader));
+		await Assert.ThrowsExactlyAsync<FormatException>(() => Serialize(reader));
 	}
 
 	[TestMethod]
@@ -842,7 +842,7 @@ null)]
 			.Concat(enc.GetBytes("\n!END\n"))
 			.ToArray();
 		await using var reader = new MemoryStream(contents);
-		await Assert.ThrowsExceptionAsync<FormatException>(() => Serialize(reader));
+		await Assert.ThrowsExactlyAsync<FormatException>(() => Serialize(reader));
 	}
 
 	[TestMethod]
@@ -867,7 +867,7 @@ null)]
 		using var parser = await JrsrSectionParser.CreateAsync(reader, 10000);
 
 		// Cannot call NextLine before the first section.
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(parser.NextLine);
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(parser.NextLine);
 
 		Assert.AreEqual("section 1", await parser.NextSection());
 		Assert.AreEqual("line 1.1", await parser.NextLine());
@@ -884,7 +884,7 @@ null)]
 		Assert.IsNull(await parser.NextSection());
 
 		// Cannot call NextLine after the final section.
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(parser.NextLine);
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(parser.NextLine);
 
 		// The result of NextSection should remain null.
 		Assert.IsNull(await parser.NextSection());
@@ -910,8 +910,8 @@ null)]
 				"b", "2", null,
 				null
 			};
-			await Assert.ThrowsExceptionAsync<FormatException>(() => SerializeFromString(contents, -1));
-			await Assert.ThrowsExceptionAsync<FormatException>(() => SerializeFromString(contents, 0));
+			await Assert.ThrowsExactlyAsync<FormatException>(() => SerializeFromString(contents, -1));
+			await Assert.ThrowsExactlyAsync<FormatException>(() => SerializeFromString(contents, 0));
 			CollectionAssert.AreEqual(expected, await SerializeFromString(contents, 1));
 			CollectionAssert.AreEqual(expected, await SerializeFromString(contents, 2));
 		}
@@ -934,7 +934,7 @@ null)]
 				"a", "1", "11", "111", "1111", "11111", null,
 				null
 			};
-			await Assert.ThrowsExceptionAsync<FormatException>(() => SerializeFromString(contents, 4));
+			await Assert.ThrowsExactlyAsync<FormatException>(() => SerializeFromString(contents, 4));
 			CollectionAssert.AreEqual(expected, await SerializeFromString(contents, 5));
 		}
 
@@ -959,7 +959,7 @@ null)]
 				"aaaaa", null,
 				null
 			};
-			await Assert.ThrowsExceptionAsync<FormatException>(() => SerializeFromString(contents, 4));
+			await Assert.ThrowsExactlyAsync<FormatException>(() => SerializeFromString(contents, 4));
 			CollectionAssert.AreEqual(expected, await SerializeFromString(contents, 5));
 		}
 	}
@@ -1003,7 +1003,7 @@ null)]
 	public void DecodeComponentFormatException(string line)
 	{
 		// ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-		Assert.ThrowsException<FormatException>(() => JrsrSectionParser.DecodeComponent(line).ToList());
+		Assert.ThrowsExactly<FormatException>(() => JrsrSectionParser.DecodeComponent(line).ToList());
 	}
 
 	[TestMethod]

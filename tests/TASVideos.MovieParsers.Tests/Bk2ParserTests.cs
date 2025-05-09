@@ -321,7 +321,7 @@ public class Bk2ParserTests : BaseParserTests
 		var result = await _bk2Parser.Parse(Embedded("comments.bk2"), EmbeddedLength("comments.bk2"));
 
 		Assert.IsTrue(result.Success);
-		Assert.IsTrue(!string.IsNullOrWhiteSpace(result.Annotations));
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Annotations));
 		var lines = result.Annotations.SplitWithEmpty("\n");
 		Assert.AreEqual(2, lines.Length);
 	}

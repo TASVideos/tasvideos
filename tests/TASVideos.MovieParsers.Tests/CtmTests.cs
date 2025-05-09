@@ -14,7 +14,6 @@ public class CtmTests : BaseParserTests
 		var result = await _ctmParser.Parse(Embedded("wrongheader.ctm"), EmbeddedLength("wrongheader.ctm"));
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 
