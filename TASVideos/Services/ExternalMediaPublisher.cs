@@ -71,7 +71,6 @@ public static class ExternalMediaPublisherExtensions
 		string unformattedTitle = Unformat(formattedTitle);
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = unlisted
 				? PostType.Administrative
 				: PostType.General,
@@ -178,7 +177,6 @@ public static class ExternalMediaPublisherExtensions
 		var formattedTitle = $"[{publicationId}M]({{0}}) edited by {userName}";
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = title,
@@ -192,7 +190,6 @@ public static class ExternalMediaPublisherExtensions
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = $"{id}M Class changed from {oldClass} to {newClass} by {userName}",
@@ -236,7 +233,6 @@ public static class ExternalMediaPublisherExtensions
 		await publisher.Send(
 		new Post
 		{
-			Announcement = "",
 			Type = PostType.General,
 			Group = PostGroups.Wiki,
 			Title = Unformat(formattedTitle),
@@ -265,7 +261,6 @@ public static class ExternalMediaPublisherExtensions
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = PostType.Administrative,
 			Group = PostGroups.UserManagement,
 			Title = Unformat(formattedTitle),
@@ -291,7 +286,5 @@ public static class ExternalMediaPublisherExtensions
 	// formatted: New [user file]({0}) uploaded by
 	// unformatted: New user file uploaded by
 	private static string Unformat(string formattedTitle)
-	{
-		return formattedTitle.Replace("[", "").Replace("]", "").Replace("({0})", "");
-	}
+		=> formattedTitle.Replace("[", "").Replace("]", "").Replace("({0})", "");
 }
