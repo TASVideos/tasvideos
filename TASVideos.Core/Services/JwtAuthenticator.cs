@@ -1,6 +1,6 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using TASVideos.Core.Settings;
 
@@ -29,19 +29,17 @@ internal class JwtAuthenticator(SignInManager signInManager, AppSettings setting
 		}
 
 		var claims = await signInManager.UserManager.GetClaimsAsync(user);
-		var tokenHandler = new JwtSecurityTokenHandler();
-		var tokenKey = Encoding.ASCII.GetBytes(_settings.SecretKey);
-		var tokenDescriptor = new SecurityTokenDescriptor
+		var key = Encoding.ASCII.GetBytes(_settings.SecretKey);
+
+		var token = new JsonWebTokenHandler().CreateToken(new SecurityTokenDescriptor
 		{
 			Subject = new ClaimsIdentity(claims),
 			Expires = DateTime.UtcNow.AddMinutes(_settings.ExpiresInMinutes),
 			SigningCredentials = new SigningCredentials(
-				new SymmetricSecurityKey(tokenKey),
+				new SymmetricSecurityKey(key),
 				SecurityAlgorithms.HmacSha256Signature)
-		};
+		});
 
-		var token = tokenHandler.CreateToken(tokenDescriptor);
-		var jwtToken = tokenHandler.WriteToken(token);
-		return jwtToken;
+		return token;
 	}
 }

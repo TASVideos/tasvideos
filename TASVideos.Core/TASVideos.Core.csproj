@@ -7,8 +7,8 @@
 		<PackageReference Include="IPAddressRange" />
 		<PackageReference Include="MailKit" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" />
 		<PackageReference Include="StackExchange.Redis" />
-		<PackageReference Include="System.IdentityModel.Tokens.Jwt" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Data\TASVideos.Data.csproj" />
