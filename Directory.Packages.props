@@ -2,7 +2,7 @@
   <ItemGroup>
     <PackageVersion Include="AspNetCore.ReCaptcha" Version="1.8.2" />
     <PackageVersion Include="EFCore.NamingConventions" Version="8.0.3" />
-    <PackageVersion Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageVersion Include="FluentValidation" Version="12.0.0" />
     <PackageVersion Include="GitVersion.MsBuild" Version="5.12.0" />
     <PackageVersion Include="IPAddressRange" Version="6.0.0" />
     <PackageVersion Include="JavaScriptEngineSwitcher.V8" Version="3.24.2" />
