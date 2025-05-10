@@ -342,6 +342,7 @@ internal class QueueService(
 
 		await tva.PostSubmissionUnpublished(publication.SubmissionId);
 		await db.SaveChangesAsync();
+		await wikiPages.Delete(WikiHelper.ToPublicationWikiPageName(publicationId));
 
 		foreach (var url in youtubeUrls)
 		{

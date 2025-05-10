@@ -53,6 +53,6 @@ public class PagingModel : IRequest
 [AttributeUsage(AttributeTargets.Class)]
 public class PagingDefaultsAttribute : Attribute
 {
-	public int PageSize { get; set; }
+	public int PageSize { get; set; } = 25;
 	public string? Sort { get; set; }
 }
