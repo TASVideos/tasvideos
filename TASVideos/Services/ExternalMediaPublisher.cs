@@ -49,7 +49,6 @@ public static class ExternalMediaPublisherExtensions
 	{
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = group,
 			Title = message,
 			Body = body
@@ -105,7 +104,6 @@ public static class ExternalMediaPublisherExtensions
 		await publisher.Send(
 			new Post
 			{
-				Type = PostType.General,
 				Group = PostGroups.Submission,
 				Title = Unformat(formattedTitle),
 				FormattedTitle = formattedTitle,
@@ -119,7 +117,6 @@ public static class ExternalMediaPublisherExtensions
 	{
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = PostGroups.Submission,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle
@@ -177,7 +174,6 @@ public static class ExternalMediaPublisherExtensions
 		var formattedTitle = $"[{publicationId}M]({{0}}) edited by {userName}";
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = title,
 			FormattedTitle = formattedTitle,
@@ -190,7 +186,6 @@ public static class ExternalMediaPublisherExtensions
 	{
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = $"{id}M Class changed from {oldClass} to {newClass} by {userName}",
 			FormattedTitle = $"[{id}M]({{0}}) Class changed from {oldClass} to {newClass} by {userName}",
@@ -233,7 +228,6 @@ public static class ExternalMediaPublisherExtensions
 		await publisher.Send(
 		new Post
 		{
-			Type = PostType.General,
 			Group = PostGroups.Wiki,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
@@ -274,7 +268,6 @@ public static class ExternalMediaPublisherExtensions
 	{
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = PostGroups.Game,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
