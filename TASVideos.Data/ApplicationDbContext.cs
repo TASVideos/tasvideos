@@ -474,6 +474,13 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		{
 			entity.HasIndex(e => e.FileExtension).IsUnique();
 		});
+
+		builder.Entity<AutoHistoryEntry>(entity =>
+		{
+			entity.HasIndex(e => e.RowId);
+			entity.HasIndex(e => e.TableName);
+			entity.HasIndex(e => e.UserId);
+		});
 	}
 
 	private void PerformTrackingUpdates()
