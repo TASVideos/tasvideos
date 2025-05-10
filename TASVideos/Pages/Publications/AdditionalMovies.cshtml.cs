@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Publications;
 [RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
 public class AdditionalMoviesModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger,
 	IMovieParser parser)
 	: BasePageModel

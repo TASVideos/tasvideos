@@ -35,7 +35,7 @@ public class RegisterModel : BasePageModel
 		[FromServices] ISignInManager signInManager,
 		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
-		[FromServices] ExternalMediaPublisher publisher,
+		[FromServices] IExternalMediaPublisher publisher,
 		[FromServices] IReCaptchaService reCaptchaService,
 		[FromServices] IHostEnvironment env,
 		[FromServices] IUserMaintenanceLogger userMaintenanceLogger)

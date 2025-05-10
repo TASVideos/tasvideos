@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Publications;
 [RequirePermission(PermissionTo.EditPublicationMetaData)]
 public class EditModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IWikiPages wikiPages,
 	ITagService tagsService,
 	IFlagService flagsService,

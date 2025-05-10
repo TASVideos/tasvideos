@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.DeleteSubmissions)]
-public class DeleteModel(IQueueService queueService, ExternalMediaPublisher publisher) : BasePageModel
+public class DeleteModel(IQueueService queueService, IExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }

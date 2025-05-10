@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
+public class IndexModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
 	public List<UserWithMovie> UsersWithMovies { get; set; } = [];
 	public List<UserMovie> LatestMovies { get; set; } = [];

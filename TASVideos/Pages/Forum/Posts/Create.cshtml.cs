@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Forum.Posts;
 [RequirePermission(PermissionTo.CreateForumPosts)]
 public class CreateModel(
 	IUserManager userManager,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	ApplicationDbContext db,
 	ITopicWatcher topicWatcher,
 	IForumService forumService)

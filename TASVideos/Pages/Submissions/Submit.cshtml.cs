@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Submissions;
 [RequirePermission(PermissionTo.SubmitMovies)]
 public class SubmitModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IWikiPages wikiPages,
 	IMovieParser parser,
 	IUserManager userManager,

@@ -3,7 +3,7 @@
 [RequirePermission(PermissionTo.SetPublicationClass)]
 public class EditClassModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger)
 	: BasePageModel
 {

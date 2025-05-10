@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.MergeTopics)]
-public class MergeModel(ApplicationDbContext db, ExternalMediaPublisher publisher, IForumService forumService) : BasePageModel
+public class MergeModel(ApplicationDbContext db, IExternalMediaPublisher publisher, IForumService forumService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }

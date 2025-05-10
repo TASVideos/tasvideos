@@ -17,7 +17,7 @@ public class ListUrlsModelTests : TestDbBase
 
 	public ListUrlsModelTests()
 	{
-		var publisher = Substitute.For<ExternalMediaPublisher>(new AppSettings(), new List<IPostDistributor>(), Substitute.For<IHttpContextAccessor>());
+		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_page = new ListUrlsModel(
 			_db,
 			publisher,

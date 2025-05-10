@@ -7,7 +7,7 @@ namespace TASVideos.Pages.Forum.Topics;
 [RequireCurrentPermissions]
 public class IndexModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IAwards awards,
 	IForumService forumService,
 	IPointsService pointsService,

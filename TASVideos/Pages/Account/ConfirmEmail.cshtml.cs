@@ -4,7 +4,7 @@
 public class ConfirmEmailModel(
 	ISignInManager signInManager,
 	IUserManager userManager,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
 	ITASVideoAgent tasVideoAgent)
 	: BasePageModel

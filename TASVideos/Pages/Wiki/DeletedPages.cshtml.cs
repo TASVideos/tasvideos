@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.SeeDeletedWikiPages)]
-public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMediaPublisher publisher)
+public class DeletedPagesModel(IWikiPages wikiPages, ApplicationDbContext db, IExternalMediaPublisher publisher)
 	: BasePageModel
 {
 	public List<DeletedPage> DeletedPages { get; set; } = [];

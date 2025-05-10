@@ -1,8 +1,7 @@
 ﻿using System.Reflection;
-using Microsoft.AspNetCore.Http;
+using TASVideos.Core;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.Pages;
 using TASVideos.Pages.Wiki;
@@ -17,12 +16,12 @@ public class DeletedPagesTests : TestDbBase
 {
 	private readonly IWikiPages _wikiPages;
 	private readonly DeletedPagesModel _page;
-	private readonly ExternalMediaPublisher _publisher;
+	private readonly IExternalMediaPublisher _publisher;
 
 	public DeletedPagesTests()
 	{
 		_wikiPages = Substitute.For<IWikiPages>();
-		_publisher = Substitute.For<ExternalMediaPublisher>(new AppSettings(), new List<IPostDistributor>(), Substitute.For<IHttpContextAccessor>());
+		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_page = new DeletedPagesModel(_wikiPages, _db, _publisher);
 	}
 
@@ -126,7 +125,7 @@ public class DeletedPagesTests : TestDbBase
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
 		var redirectResult = (RedirectToPageResult)actual;
 		Assert.AreEqual("DeletedPages", redirectResult.PageName);
-		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>());
+		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
 	[TestMethod]
@@ -175,28 +174,27 @@ public class DeletedPagesTests : TestDbBase
 		var actual = await _page.OnPostDeleteRevision(pageName, 1);
 
 		await _wikiPages.Received(1).Delete(pageName, 1);
-		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
+		await _publisher.Received(1).Send(Arg.Any<Post>());
 		Assert.IsInstanceOfType<RedirectResult>(actual);
 		var redirectResult = (RedirectResult)actual;
 		Assert.AreEqual("/" + pageName, redirectResult.Url);
 	}
 
-	// This runs fine by itself but fails when running as a group, why???????
-	//// [TestMethod]
-	//// public async Task OnPostDeleteRevision_Trims()
-	//// {
-	//// 	const string pageName = "TestPage";
-	//// 	var user = new User { Id = 1, UserName = "User" };
-	//// 	AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
-	////
-	//// 	var actual = await _page.OnPostDeleteRevision("/" + pageName, 1);
-	////
-	//// 	await _wikiPages.Received(1).Delete(pageName, 1);
-	//// 	////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
-	//// 	Assert.IsInstanceOfType<RedirectResult>(actual);
-	//// 	var redirectResult = (RedirectResult)actual;
-	//// 	Assert.AreEqual("/" + pageName, redirectResult.Url);
-	//// }
+	[TestMethod]
+	public async Task OnPostDeleteRevision_Trims()
+	{
+		const string pageName = "TestPage";
+		var user = new User { Id = 1, UserName = "User" };
+		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
+
+		var actual = await _page.OnPostDeleteRevision("/" + pageName, 1);
+
+		await _wikiPages.Received(1).Delete(pageName, 1);
+		await _publisher.Received(1).Send(Arg.Any<Post>());
+		Assert.IsInstanceOfType<RedirectResult>(actual);
+		var redirectResult = (RedirectResult)actual;
+		Assert.AreEqual("/" + pageName, redirectResult.Url);
+	}
 
 	[TestMethod]
 	public async Task OnPostUndelete_RequiresPermission()
@@ -246,7 +244,7 @@ public class DeletedPagesTests : TestDbBase
 		var actual = await _page.OnPostUndelete(pageName);
 
 		await _wikiPages.Received(1).Undelete(pageName);
-		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
+		await _publisher.Received(1).Send(Arg.Any<Post>());
 		Assert.IsInstanceOfType<RedirectResult>(actual);
 		var redirectResult = (RedirectResult)actual;
 		Assert.AreEqual("/" + pageName, redirectResult.Url);
@@ -263,7 +261,7 @@ public class DeletedPagesTests : TestDbBase
 		var actual = await _page.OnPostUndelete("/" + pageName);
 
 		await _wikiPages.Received(1).Undelete(pageName);
-		////await _publisher.Received(1).SendMessage(PostGroups.Wiki, Arg.Any<string>()); // Cannot have more than one of these in a test class, why? They run separately fine but throw an exception when ran as a group, need to investigate
+		await _publisher.Received(1).Send(Arg.Any<Post>());
 		Assert.IsInstanceOfType<RedirectResult>(actual);
 		var redirectResult = (RedirectResult)actual;
 		Assert.AreEqual("/" + pageName, redirectResult.Url);

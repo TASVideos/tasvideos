@@ -133,7 +133,7 @@ public static class ServiceCollectionExtensions
 			services.AddScoped(component);
 		}
 
-		return services.AddTransient<ExternalMediaPublisher>();
+		return services.AddTransient<IExternalMediaPublisher, ExternalMediaPublisher>();
 	}
 
 	public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)

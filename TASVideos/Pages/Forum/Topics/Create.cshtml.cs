@@ -6,7 +6,7 @@ namespace TASVideos.Pages.Forum.Topics;
 public class CreateModel(
 	IUserManager userManager,
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IForumService forumService)
 	: BaseForumModel
 {

@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.Unpublish)]
-public class UnpublishModel(ExternalMediaPublisher publisher, IQueueService queueService) : BasePageModel
+public class UnpublishModel(IExternalMediaPublisher publisher, IQueueService queueService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }

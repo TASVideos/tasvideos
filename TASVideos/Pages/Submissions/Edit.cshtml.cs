@@ -12,7 +12,7 @@ public class EditModel(
 	ApplicationDbContext db,
 	IMovieParser parser,
 	IWikiPages wikiPages,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	ITASVideosGrue tasvideosGrue,
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,

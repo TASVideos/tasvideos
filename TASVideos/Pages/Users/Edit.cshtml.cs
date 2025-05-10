@@ -4,7 +4,7 @@
 public class EditModel(
 	IRoleService roleService,
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
 	IUserManager userManager)
 	: BasePageModel

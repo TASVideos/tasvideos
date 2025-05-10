@@ -6,7 +6,7 @@ namespace TASVideos.Pages.Publications.Urls;
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class EditUrlsModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IYoutubeSync youtubeSync,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger,
 	IWikiPages wikiPages)

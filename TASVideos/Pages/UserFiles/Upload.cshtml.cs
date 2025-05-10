@@ -4,7 +4,7 @@
 public class UploadModel(
 	IUserFiles userFiles,
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher)
+	IExternalMediaPublisher publisher)
 	: BasePageModel
 {
 	[BindProperty]

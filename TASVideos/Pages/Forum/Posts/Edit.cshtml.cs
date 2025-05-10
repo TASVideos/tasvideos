@@ -11,7 +11,7 @@ namespace TASVideos.Pages.Forum.Posts;
 	PermissionTo.EditUsersForumPosts)]
 public class EditModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IForumService forumService,
 	IUserManager userManager)
 	: BaseForumModel

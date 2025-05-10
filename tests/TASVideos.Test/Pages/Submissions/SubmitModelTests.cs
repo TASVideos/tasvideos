@@ -1,10 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
-using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.Pages;
@@ -18,7 +16,7 @@ namespace TASVideos.RazorPages.Tests.Pages.Submissions;
 [TestClass]
 public class SubmitModelTests : TestDbBase
 {
-	private readonly ExternalMediaPublisher _publisher;
+	private readonly IExternalMediaPublisher _publisher;
 	private readonly IWikiPages _wikiPages;
 	private readonly IMovieParser _movieParser;
 	private readonly IUserManager _userManager;
@@ -31,7 +29,7 @@ public class SubmitModelTests : TestDbBase
 
 	public SubmitModelTests()
 	{
-		_publisher = Substitute.For<ExternalMediaPublisher>(new AppSettings(), new List<IPostDistributor>(), Substitute.For<IHttpContextAccessor>());
+		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		_movieParser = Substitute.For<IMovieParser>();
 		_userManager = Substitute.For<IUserManager>();

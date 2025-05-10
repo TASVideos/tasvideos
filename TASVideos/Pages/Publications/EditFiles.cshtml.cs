@@ -3,7 +3,7 @@
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class EditFilesModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IMediaFileUploader uploader,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger)
 	: BasePageModel

@@ -3,7 +3,7 @@
 [RequirePermission(matchAny: false, PermissionTo.SeeEmails, PermissionTo.EditUsers)]
 public class EditEmailModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
 	ISignInManager signInManager,
 	IUserManager userManager)
