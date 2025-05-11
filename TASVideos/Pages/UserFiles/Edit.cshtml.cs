@@ -53,9 +53,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		var file = await db.UserFiles
-			.SingleOrDefaultAsync(uf => uf.Id == Id);
-
+		var file = await db.UserFiles.FindAsync(Id);
 		if (file is null)
 		{
 			return NotFound();
