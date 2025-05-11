@@ -6,11 +6,9 @@ public static class ViewContextExtensions
 		=> viewContext.ActionDescriptor.DisplayName ?? "";
 
 	public static string PageGroup(this ViewContext viewContext)
-	{
-		return viewContext.ActionDescriptor.DisplayName
+		=> viewContext.ActionDescriptor.DisplayName
 			?.SplitWithEmpty("/")
 			.FirstOrDefault() ?? "";
-	}
 
 	public static bool WikiCondition(this ViewContext viewContext, string condition)
 	{
