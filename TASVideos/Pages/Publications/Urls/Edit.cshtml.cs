@@ -12,9 +12,7 @@ public class EditUrlsModel(
 	IWikiPages wikiPages)
 	: BasePageModel
 {
-	private static readonly IEnumerable<PublicationUrlType> PublicationUrlTypes = Enum.GetValues<PublicationUrlType>();
-
-	public List<SelectListItem> AvailableTypes => PublicationUrlTypes.ToDropDown();
+	public static List<SelectListItem> AvailableTypes => Enum.GetValues<PublicationUrlType>().ToDropDown();
 
 	[FromRoute]
 	public int PublicationId { get; set; }
