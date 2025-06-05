@@ -138,17 +138,15 @@ internal class UserManager(
 				.Distinct()
 				.ToListAsync();
 		}
-		else
-		{
-			// raw permissions
-			return await db.Users
-				.Where(u => u.Id == userId)
-				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role!.RolePermission)
-				.Select(rp => rp.PermissionId)
-				.Distinct()
-				.ToListAsync();
-		}
+
+		// raw permissions
+		return await db.Users
+			.Where(u => u.Id == userId)
+			.SelectMany(u => u.UserRoles)
+			.SelectMany(ur => ur.Role!.RolePermission)
+			.Select(rp => rp.PermissionId)
+			.Distinct()
+			.ToListAsync();
 	}
 
 	public async Task AddStandardRoles(int userId)
