@@ -123,24 +123,33 @@
 </div>
 <br />
 
-<div condition="Model.Game.PlaygroundGoals.Any()">
+<div condition="Model.PlaygroundGoals.Any()">
 	<h3>Playground</h3>
 	<ul class="nav nav-tabs" role="tablist">
-		@foreach (var goal in Model.Game.PlaygroundGoals)
+		@foreach (var goal in Model.PlaygroundGoals)
 		{
 			<li class="nav-item">
-				<a class="nav-link@(goal==Model.Game.PlaygroundGoals.First() ? " active" : "")"
+				<a class="nav-link@(goal==Model.PlaygroundGoals.First() ? " active" : "")"
 				   href="#tab-goal-@(goal.Id)"
-				   data-bs-toggle="tab">
-					"@(goal.Name)"
+                   data-bs-toggle="tab">
+                    @{
+                        bool goalClash = Model.Movies.Any(m => m.TabTitleBold == goal.Name || m.TabTitleRegular == goal.Name)
+                            || Model.PlaygroundGoals.Any(g => g != goal && g.Name == goal.Name);
+                    }
+                    <span condition="@(goalClash)">@goal.GameTitle </span>
+                    @(goal.Name == "(baseline)"
+                        ? goalClash
+                            ? ""
+                            : goal.Name
+                        : $"\"{goal.Name}\"")
 				</a>
 			</li>
 		}
 	</ul>
 	<div class="tab-content">
-		@foreach (var goal in Model.Game.PlaygroundGoals)
+		@foreach (var goal in Model.PlaygroundGoals)
 		{
-			<div id="tab-goal-@(goal.Id)" class="tab-pane fade@(goal==Model.Game.PlaygroundGoals.First() ? " active show" : "")">
+			<div id="tab-goal-@(goal.Id)" class="tab-pane fade@(goal==Model.PlaygroundGoals.First() ? " active show" : "")">
 				<ul>
 					@foreach (var sub in goal.Submissions)
 					{
