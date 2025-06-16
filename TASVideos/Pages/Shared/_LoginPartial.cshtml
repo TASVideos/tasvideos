@@ -19,6 +19,14 @@
 				<span class="fa fa-envelope"></span>
 			</a>
 		</nav-item>
+	}
+	<nav-dropdown activate='<i class="fa fa-adjust"></i>'>
+		<button class="dropdown-item" data-theme="dark"><i class="fa-regular fa-moon"></i> Dark</button>
+		<button class="dropdown-item" data-theme="light"><i class="fa-regular fa-sun"></i> Light</button>
+		<button class="dropdown-item" data-theme="auto">Auto</button>
+	</nav-dropdown>
+	@if (isSignedIn)
+	{
 		<nav-item activate="Profile">
 			<a class="nav-link" asp-page="/Profile/Index" title="Manage">
 				<i class="fa fa-user d-inline"></i>&nbsp;@User.Name()
