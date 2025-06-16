@@ -43,7 +43,7 @@
 				</picture>
 			</div>
 			<a id="icon" asp-page="/Index">
-				<picture>
+				<picture title="To Homepage">
 					<source srcset="/images/logo-light.webp .5x,
 							/images/logo-light-2x.webp 1x,
 							/images/logo-light-4x.webp 2x"
@@ -53,7 +53,7 @@
 							/images/logo-light-2x.png 1x,
 							/images/logo-light-4x.png 2x" loading="lazy">
 				</picture>
-				<picture>
+				<picture title="To Homepage">
 					<source srcset="/images/logo-dark.webp .5x,
 							/images/logo-dark-2x.webp 1x,
 							/images/logo-dark-4x.webp 2x"
@@ -64,7 +64,7 @@
 							/images/logo-dark-4x.png 2x" loading="lazy">
 				</picture>
 			</a>
-			<a id="mantra" asp-page="/Index">
+			<a id="mantra" asp-page="/Index" title="To Homepage">
 				<div id="brand">TASVideos</div>
 				<div id="mantra-1">Tool-assisted game movies</div>
 				<div id="mantra-2">When human skills are just not enough</div>
@@ -163,6 +163,7 @@
 					<a class="btn btn-silver btn-sm mb-2" href="https://github.com/TASVideos/tasvideos/commit/@(sha)">&copy; @DateTime.UtcNow.Year - TASVideos v@(version)</a>
 					<a class="btn btn-info btn-sm mb-2" href="/SiteRules">Terms</a>
 					<a class="btn btn-info btn-sm mb-2" href="/api">API</a>
+					<a class="btn btn-info btn-sm mb-2" href="/DiscordServer"><i class="fa-brands fa-discord"></i></a>
 					@{
 						string? path = null;
 						if (ViewData.GetWikiPage() is null && this.Model is not (Publications.ViewModel or Submissions.ViewModel))
