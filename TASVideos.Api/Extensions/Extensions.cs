@@ -15,7 +15,7 @@ internal static class Extensions
 		var startYear = start ?? 2000; // Well before any TAS movies were created
 		var endYear = end ?? 2050; // Well after the life expectancy of this code
 
-		return Enumerable.Range(startYear, endYear - endYear + 1);
+		return Enumerable.Range(startYear, endYear - startYear + 1);
 	}
 
 	/// <summary>
