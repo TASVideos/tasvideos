@@ -1,9 +1,15 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+﻿using System.Text;
+
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("lmp")]
 internal class Lmp : Parser, IParser
 {
 	private delegate bool TryParseLmp(byte[] movie, ref int frames);
+	private const int MAXPLAYERS = 4;
+	private const int TERMINATOR = 0x80;
+	private const int INVALID = -1;
+	private static int FooterPointer { get; set; } = INVALID;
 
 	// order is important here to minimize false detections
 	// especially the last 3, which are impossible to always detect correctly
@@ -20,29 +26,48 @@ internal class Lmp : Parser, IParser
 
 	private static bool CheckSizeSanity(int len, int headerLen, int inputLen)
 	{
-		if (len < headerLen + 1)
+		// header size + 1 single-player input frame + terminator byte
+		if (len < headerLen + inputLen + 1)
 		{
 			return false;
 		}
 
-		return (len - headerLen - 1) % inputLen == 0;
+		return true;
 	}
 
-	private static int CalcFrames(int len, int headerLen, int inputLen, int playerCount)
+	private static int CalcFrames(byte[] movie, int headerLen, int inputLen, int playerCount)
 	{
-		return (int)Math.Ceiling((len - headerLen - 1) / (double)(inputLen * playerCount));
+		var frameCount = 0;
+		FooterPointer = INVALID;
+
+		for (var pointer = headerLen; pointer < movie.Length; pointer += inputLen * playerCount)
+		{
+			if (movie[pointer] == TERMINATOR)
+			{
+				if (pointer + 1 < movie.Length)
+				{
+					FooterPointer = pointer + 1;
+				}
+
+				return frameCount;
+			}
+
+			frameCount++;
+		}
+
+		return INVALID;
 	}
 
 	private static bool TryParseOldDoom(byte[] movie, ref int frames)
 	{
-		// "Old" Doom has a 7 byte header, and 4 bytes per input
+		// Pre-1.4 Doom has a 7 byte header, and 4 bytes per input
 		if (!CheckSizeSanity(movie.Length, 7, 4))
 		{
 			return false;
 		}
 
 		var players = 0;
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < MAXPLAYERS; i++)
 		{
 			if (movie[3 + i] == 1)
 			{
@@ -56,8 +81,8 @@ internal class Lmp : Parser, IParser
 
 		if (players > 0)
 		{
-			frames = CalcFrames(movie.Length, 7, 4, players);
-			return true;
+			frames = CalcFrames(movie, 7, 4, players);
+			return frames > 0;
 		}
 
 		return false;
@@ -65,7 +90,7 @@ internal class Lmp : Parser, IParser
 
 	private static bool TryParseNewDoom(byte[] movie, ref int frames)
 	{
-		// "New" Doom and Doom II has a 13 byte header, and 4 bytes per input
+		// Regular Doom and Doom II has a 13 byte header, and 4 bytes per input
 		if (!CheckSizeSanity(movie.Length, 13, 4))
 		{
 			return false;
@@ -77,7 +102,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < MAXPLAYERS; i++)
 		{
 			if (movie[9 + i] == 1)
 			{
@@ -94,8 +119,8 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
-		frames = CalcFrames(movie.Length, 13, 4, players);
-		return true;
+		frames = CalcFrames(movie, 13, 4, players);
+		return frames > 0;
 	}
 
 	private static bool TryParseDoomClassic(byte[] movie, ref int frames)
@@ -131,8 +156,8 @@ internal class Lmp : Parser, IParser
 				return false;
 			}
 
-			frames = CalcFrames(movie.Length, 14 + (84 * players), 4, players);
-			return true;
+			frames = CalcFrames(movie, 14 + (84 * players), 4, players);
+			return frames > 0;
 		}
 
 		return false;
@@ -147,7 +172,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < MAXPLAYERS; i++)
 		{
 			if (movie[3 + i] == 1)
 			{
@@ -161,8 +186,8 @@ internal class Lmp : Parser, IParser
 
 		if (players > 0)
 		{
-			frames = CalcFrames(movie.Length, 7, 6, players);
-			return true;
+			frames = CalcFrames(movie, 7, 6, players);
+			return frames > 0;
 		}
 
 		return false;
@@ -177,7 +202,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < MAXPLAYERS; i++)
 		{
 			if (movie[3 + (i * 2)] == 1)
 			{
@@ -192,8 +217,8 @@ internal class Lmp : Parser, IParser
 
 		if (players > 0)
 		{
-			frames = CalcFrames(movie.Length, 11, 6, players);
-			return true;
+			frames = CalcFrames(movie, 11, 6, players);
+			return frames > 0;
 		}
 
 		return false;
@@ -208,7 +233,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < MAXPLAYERS * 2; i++)
 		{
 			if (movie[3 + (i * 2)] == 1)
 			{
@@ -223,8 +248,8 @@ internal class Lmp : Parser, IParser
 
 		if (players > 0)
 		{
-			frames = CalcFrames(movie.Length, 19, 6, players);
-			return true;
+			frames = CalcFrames(movie, 19, 6, players);
+			return frames > 0;
 		}
 
 		return false;
@@ -244,7 +269,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < MAXPLAYERS * 2; i++)
 		{
 			if (movie[8 + i] == 1)
 			{
@@ -258,8 +283,8 @@ internal class Lmp : Parser, IParser
 
 		if (players > 0)
 		{
-			frames = CalcFrames(movie.Length, 16, 6, players);
-			return true;
+			frames = CalcFrames(movie, 16, 6, players);
+			return frames > 0;
 		}
 
 		return false;
@@ -283,12 +308,7 @@ internal class Lmp : Parser, IParser
 		using var br = new BinaryReader(file);
 		var movie = br.ReadBytes((int)length);
 
-		if (movie[length - 1] != 0x80) // fixme: this might be ok if there is a source port footer (not easy to detect however)
-		{
-			return InvalidFormat();
-		}
-
-		int frames = -1;
+		int frames = INVALID;
 		foreach (var tryParseLmp in LmpParsers)
 		{
 			if (tryParseLmp(movie, ref frames))
@@ -297,12 +317,18 @@ internal class Lmp : Parser, IParser
 			}
 		}
 
-		if (frames < 0)
+		if (frames <= 0)
 		{
 			return InvalidFormat();
 		}
 
 		result.Frames = frames;
+
+		if (FooterPointer != INVALID)
+		{
+			result.Annotations = Encoding.UTF8.GetString(movie.AsSpan(FooterPointer).ToArray())
+				.Replace('\0', ' ');
+		}
 
 		return await Task.FromResult(result);
 	}

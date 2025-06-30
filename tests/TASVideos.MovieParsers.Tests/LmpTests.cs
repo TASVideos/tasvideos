@@ -9,6 +9,18 @@ public class LmpTests : BaseParserTests
 	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.LmpSampleFiles.";
 
 	[TestMethod]
+	public async Task FileTooShort_ReturnsError()
+	{
+		var embedded = Embedded("tooshort.lmp");
+		var length = EmbeddedLength("tooshort.lmp");
+		var result = await _lmpParser.Parse(embedded, length);
+		Assert.IsNotNull(result);
+		Assert.IsFalse(result.Success);
+		AssertNoWarnings(result);
+		Assert.AreEqual(1, result.Errors.Count());
+	}
+
+	[TestMethod]
 	public async Task FileDoesNotEndIn0x80_ReturnsError()
 	{
 		var embedded = Embedded("doesnotendin80.lmp");
@@ -32,5 +44,20 @@ public class LmpTests : BaseParserTests
 		Assert.AreEqual(SystemCodes.Doom, result.SystemCode);
 		Assert.AreEqual(7071, result.Frames);
 		Assert.AreEqual(0, result.RerecordCount, "Lmp does not track rerecords");
+		Assert.IsNull(result.Annotations);
+	}
+
+	[TestMethod]
+	public async Task Footer_Success()
+	{
+		var embedded = Embedded("638-footer.lmp");
+		var length = EmbeddedLength("638-footer.lmp");
+		var result = await _lmpParser.Parse(embedded, length);
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(SystemCodes.Doom, result.SystemCode);
+		Assert.AreEqual(638, result.Frames);
+		Assert.IsNotNull(result.Annotations);
 	}
 }
