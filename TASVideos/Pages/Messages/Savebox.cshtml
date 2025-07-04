@@ -15,7 +15,7 @@
 			</td>
 			<td><profile-link username="@entry.From"></profile-link></td>
 			<td><profile-link username="@entry.To"></profile-link></td>
-			<td>@entry.SendDate</td>
+			<td><timezone-convert asp-for="@entry.SendDate" /></td>
 			<td-action-column>
 				<delete-button
 					asp-href="/Messages/InBox/@entry.Id/Delete"
