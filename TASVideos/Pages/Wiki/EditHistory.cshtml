@@ -11,7 +11,7 @@
 	{
 		<tr>
 			<td><a href="/@(revision.PageName)?revision=@revision.Revision">@revision.PageName r@(revision.Revision)</a></td>
-			<td>@revision.CreateTimestamp</td>
+			<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
 			<td>@revision.MinorEdit</td>
 			<td>@revision.RevisionMessage</td>
 			<td-action-column>
