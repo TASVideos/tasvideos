@@ -11,7 +11,7 @@
 <div>
 	<profile-link username="@Model.PrivateMessage.FromUserName"></profile-link> <span class="fa fa-arrow-right"></span> @Model.PrivateMessage.ToUserName
 	<small class="float-end">
-		@Model.PrivateMessage.SentOn
+		<timezone-convert asp-for="@Model.PrivateMessage.SentOn" />
 	</small>
 </div>
 <card>

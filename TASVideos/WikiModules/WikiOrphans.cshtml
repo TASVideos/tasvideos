@@ -8,7 +8,7 @@
 		@foreach (var orphan in Model.Orphans)
 		{
 			<tr>
-				<td>@orphan.LastUpdateTimestamp</td>
+				<td><timezone-convert asp-for="@orphan.LastUpdateTimestamp" /></td>
 				<td>
 					<wiki-link page-name="@orphan.PageName"></wiki-link>
 				</td>
