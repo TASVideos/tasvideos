@@ -324,5 +324,6 @@
     <Rule Id="TVO1000" Action="Error" /> <!-- Do not use `#if false` -->
     <Rule Id="TVO1001" Action="Error" /> <!-- Don't mark expression-bodied delegates ("lambdas") as `static` -->
     <Rule Id="TVO1002" Action="Error" /> <!-- Properties with an `init` accessor should not be `required` -->
+    <Rule Id="TVO1003" Action="Warning" /> <!-- DateTime values should not be written out directly -->
   </Rules>
 </RuleSet>
