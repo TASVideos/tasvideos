@@ -11,6 +11,7 @@ public class LtmTests : BaseParserTests
 	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.LtmSampleFiles.";
 
 	[TestMethod]
+	[DataRow("android.ltm", SystemCodes.Android)]
 	[DataRow("arcade.ltm", SystemCodes.Arcade)]
 	[DataRow("dos.ltm", SystemCodes.Dos)]
 	[DataRow("flash.ltm", SystemCodes.Flash)]
