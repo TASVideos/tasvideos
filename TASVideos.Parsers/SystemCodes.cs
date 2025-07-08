@@ -2,6 +2,7 @@
 
 internal static class SystemCodes
 {
+	public const string Android = "android";
 	public const string AppleII = "appleii";
 	public const string Arcade = "arcade";
 	public const string Atari2600 = "a2600";
