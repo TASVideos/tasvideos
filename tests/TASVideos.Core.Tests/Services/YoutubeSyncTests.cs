@@ -78,6 +78,7 @@ public class YoutubeSyncTests
 	[DataRow("https://www.youtube.com/watch?v=12345", "https://www.youtube.com/embed/12345")]
 	[DataRow("http://www.youtube.com/watch?v=12345", "https://www.youtube.com/embed/12345")]
 	[DataRow("https://www.youtube.com/embed/12345", "https://www.youtube.com/embed/12345")]
+	[DataRow("https://www.youtube.com/embed/12345?si=6789", "https://www.youtube.com/embed/12345")]
 	public void ConvertToEmbedLink(string? url, string? expected)
 	{
 		var actual = _youTubeSync.ConvertToEmbedLink(url);
