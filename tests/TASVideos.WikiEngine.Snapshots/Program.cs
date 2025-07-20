@@ -5,9 +5,9 @@ using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
-#if false
+/*
 namespace TASVideos.WikiEngine.Snapshots;
-#endif
+*/
 
 /*
 	1. Clone https://github.com/nattthebear/TASVideosWikiSnaps.git to somewhere
