@@ -15,6 +15,7 @@ public class PreviewTagHelper : TagHelper
 	{
 		output.TagName = "div";
 		output.Attributes.Add("id", "preview-container");
+		output.Attributes.Add("translate", "no"); // the user typed it so they don't need it translated, and at least Firefox' translator does weird things
 		output.Attributes.Add("data-path", PreviewPath);
 		output.AddCssClass("d-none");
 		output.Content.AppendHtml(
