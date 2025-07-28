@@ -125,12 +125,11 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 
 	public async Task<bool> Exists([NotNullWhen(true)] string? pageName, bool includeDeleted = false)
 	{
+		pageName = pageName?.Trim('/');
 		if (!WikiHelper.IsValidWikiPageName(pageName))
 		{
 			return false;
 		}
-
-		pageName = pageName.Trim('/');
 
 		var existingPage = this[pageName];
 
