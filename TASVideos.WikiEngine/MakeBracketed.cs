@@ -110,9 +110,11 @@ public static partial class Builtins
 
 	private static string NormalizeImageUrl(string text)
 	{
-		return text[0] == '='
-			? text[1] is '/' ? text[1..] : $"/{text[1..]}"
-			: text;
+		if (text[0] != '=')
+		{
+			return text;
+		}
+		return text[1] is '/' ? text[1..] : string.Concat("/", text.AsSpan(1));
 	}
 
 	private static string NormalizeUrl(string text)
@@ -124,12 +126,12 @@ public static partial class Builtins
 				return "/";
 			}
 
-			return NormalizeInternalLink(text[1] is '/' ? text[1..] : $"/{text[1..]}");
+			return NormalizeInternalLink(text[1] is '/' ? text[1..] : string.Concat("/", text.AsSpan(1)));
 		}
 
 		if (text.StartsWith("user:"))
 		{
-			return NormalizeInternalLink("/Users/Profile/" + text[5..]);
+			return NormalizeInternalLink(string.Concat("/Users/Profile/", text.AsSpan(5)));
 		}
 
 		return text;
