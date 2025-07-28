@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Extensions;
@@ -76,14 +77,14 @@ public static class WikiHelper
 		return relevantPermissions.Any(userPermissions.Contains);
 	}
 
-	public static bool IsValidWikiPageName(string pageName, bool validateLoosely = false)
+	public static bool IsValidWikiPageName([NotNullWhen(true)] string? pageName, bool validateLoosely = false)
 	{
 		// If the page is a homepage, then don't validate the username portion
 		// However we want to validate any subpages off the user
 		// Ex:
 		// HomePages/My Bad UserName = valid
 		// HomePages/My Bad UserName/My Bad Subpage = invalid
-		string test = pageName;
+		string? test = pageName;
 		if (IsHomePage(pageName))
 		{
 			test = pageName.Replace(LinkConstants.HomePages, "");
@@ -149,7 +150,7 @@ public static class WikiHelper
 		return IsGameResourcesPage(page.PageName);
 	}
 
-	public static bool IsHomePage(string? pageName)
+	public static bool IsHomePage([NotNullWhen(true)] string? pageName)
 	{
 		return !string.IsNullOrEmpty(pageName)
 			&& pageName.StartsWith(LinkConstants.HomePages)
