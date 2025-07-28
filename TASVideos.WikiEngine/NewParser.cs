@@ -329,7 +329,7 @@ public partial class NewParser
 			if (e.Type == NodeType.Element)
 			{
 				var tag = ((Element)e).Tag;
-				if (tag == "htabs" || tag == "vtabs")
+				if (tag is "htabs" or "vtabs")
 				{
 					FinishText();
 					for (var j = i; j < _stack.Count; j++)

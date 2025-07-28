@@ -33,28 +33,24 @@ public static partial class Builtins
 				[
 					Attr("class", liClass)
 				],
-				new[]
-				{
-						new Element(
+				[
+					new Element(
 							child.CharStart,
 							"a",
 							[Attr("href", "#" + id), Attr("data-bs-toggle", "tab"), Attr("class", (first ? "active " : "") + aClass)],
-							new[]
-							{
+							[
 								new Text(child.CharStart, child.Attributes["data-name"])
-							})
-				}));
+							])
+				]));
 			content.Add(new Element(child.CharStart, "div", [Attr("id", id), Attr("class", "tab-pane fade" + (first ? " active show" : ""))], child.Children));
 			first = false;
 		}
 
-		return new Element(tabset.CharStart, "div", [Attr("class", parentDivClass)], new[]
-		{
-			new Element(tabset.CharStart, "div", [Attr("class", navDivClass)], new[]
-			{
+		return new Element(tabset.CharStart, "div", [Attr("class", parentDivClass)], [
+			new Element(tabset.CharStart, "div", [Attr("class", navDivClass)], [
 				new Element(tabset.CharStart, "ul", [Attr("class", navClass), Attr("role", "tablist")], nav)
-			}),
+			]),
 			new Element(tabset.CharStart, "div", [Attr("class", tabClass)], content)
-		});
+		]);
 	}
 }

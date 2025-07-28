@@ -17,3 +17,6 @@ TASVideos.Data/SampleData/SampleData-Postgres.sql
 TASVideos/logs/
 TASVideos/nohup.out
 TASVideos/tasvideos.pid
+CLAUDE.md
+.claude/
+BenchmarkDotNet.Artifacts/
