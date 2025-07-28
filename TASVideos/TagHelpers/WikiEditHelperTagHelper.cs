@@ -29,6 +29,7 @@ public class WikiEditHelperTagHelper : TagHelper
 					<button type="button" class="btn btn-info btn-sm border-dark" tabindex="-1" data-fmt="[module:frames|amount=,]">frames</button>
 					<button type="button" class="btn btn-info btn-sm border-dark" tabindex="-1" data-fmt="[Forum/Posts/,]">Link Post</button>
 					<button type="button" class="btn btn-info btn-sm border-dark" tabindex="-1" data-fmt="[Forum/Topics/,]">Link Topic</button>
+					<button type="button" class="btn btn-info btn-sm border-dark" tabindex="-1" data-fmt="%%TOC%%,">TOC</button>
 				</div>
 			</div>
 			""");
