@@ -15,6 +15,7 @@
 		<EmbeddedResource Include="DtmSampleFiles\*.dtm" />
 		<EmbeddedResource Include="FbmSampleFiles\*.fbm" />
 		<EmbeddedResource Include="Fm2SampleFiles\*.fm2" />
+		<EmbeddedResource Include="Fm3SampleFiles\*.fm3" />
 		<EmbeddedResource Include="GbmvSampleFiles\*.gbmv" />
 		<EmbeddedResource Include="GmvSampleFiles\*.gmv" />
 		<EmbeddedResource Include="JrsrSampleFiles\*.jrsr" />
