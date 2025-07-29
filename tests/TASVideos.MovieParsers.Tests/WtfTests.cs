@@ -11,7 +11,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidHeader()
 	{
-		var result = await _wtfParser.Parse(Embedded("wrongheader.wtf"), EmbeddedLength("wrongheader.wtf"));
+		var result = await _wtfParser.Parse(Embedded("wrongheader.wtf", out var length), length);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -20,7 +20,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task ValidHeader()
 	{
-		var result = await _wtfParser.Parse(Embedded("2frames.wtf"), EmbeddedLength("2frames.wtf"));
+		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -28,7 +28,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task System()
 	{
-		var result = await _wtfParser.Parse(Embedded("2frames.wtf"), EmbeddedLength("2frames.wtf"));
+		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Windows, result.SystemCode);
@@ -37,7 +37,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task RerecordCount()
 	{
-		var result = await _wtfParser.Parse(Embedded("2frames.wtf"), EmbeddedLength("2frames.wtf"));
+		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(984, result.RerecordCount);
@@ -46,7 +46,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task Ntsc()
 	{
-		var result = await _wtfParser.Parse(Embedded("2frames.wtf"), EmbeddedLength("2frames.wtf"));
+		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -55,7 +55,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _wtfParser.Parse(Embedded("2frames.wtf"), EmbeddedLength("2frames.wtf"));
+		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -64,7 +64,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task FrameRate()
 	{
-		var result = await _wtfParser.Parse(Embedded("2frames.wtf"), EmbeddedLength("2frames.wtf"));
+		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.IsNotNull(result.FrameRateOverride);
@@ -74,7 +74,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task WhenFrameRateIsZero_NoOverride()
 	{
-		var result = await _wtfParser.Parse(Embedded("noframerate.wtf"), EmbeddedLength("noframerate.wtf"));
+		var result = await _wtfParser.Parse(Embedded("noframerate.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.IsNull(result.FrameRateOverride);
@@ -83,7 +83,7 @@ public class WtfTests : BaseParserTests
 	[TestMethod]
 	public async Task Length()
 	{
-		var result = await _wtfParser.Parse(Embedded("2frames.wtf"), EmbeddedLength("2frames.wtf"));
+		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(2, result.Frames);

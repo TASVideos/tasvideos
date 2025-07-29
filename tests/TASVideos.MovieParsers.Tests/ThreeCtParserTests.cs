@@ -10,7 +10,7 @@ public class ThreeCtParserTests : BaseParserTests
 	[TestMethod]
 	public async Task Basic()
 	{
-		var result = await _threeCtParser.Parse(Embedded("basic.3ct"), EmbeddedLength("basic.3ct"));
+		var result = await _threeCtParser.Parse(Embedded("basic.3ct", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Nes, result.SystemCode);

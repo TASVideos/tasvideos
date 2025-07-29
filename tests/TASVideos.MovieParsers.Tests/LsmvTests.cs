@@ -11,7 +11,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task Errors()
 	{
-		var result = await _lsmvParser.Parse(Embedded("noinputlog.lsmv"), EmbeddedLength("noinputlog.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("noinputlog.lsmv", out var length), length);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -20,7 +20,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task SavestateCheck_Error()
 	{
-		var result = await _lsmvParser.Parse(Embedded("savestate.lsmv"), EmbeddedLength("savestate.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("savestate.lsmv", out var length), length);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -29,7 +29,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task Frames_WithSubFrames()
 	{
-		var result = await _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"), EmbeddedLength("2frameswithsub.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("2frameswithsub.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(2, result.Frames);
 		AssertNoWarningsOrErrors(result);
@@ -38,7 +38,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task Frames_NoInputFrames_Returns0()
 	{
-		var result = await _lsmvParser.Parse(Embedded("0frameswithsub.lsmv"), EmbeddedLength("0frameswithsub.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("0frameswithsub.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(0, result.Frames);
 		AssertNoWarningsOrErrors(result);
@@ -47,7 +47,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task NoRerecordEntry_Warning()
 	{
-		var result = await _lsmvParser.Parse(Embedded("norerecordentry.lsmv"), EmbeddedLength("norerecordentry.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("norerecordentry.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoErrors(result);
 		Assert.AreEqual(1, result.Warnings.Count());
@@ -56,7 +56,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task EmptyRerecordEntry_Warning()
 	{
-		var result = await _lsmvParser.Parse(Embedded("emptyrerecordentry.lsmv"), EmbeddedLength("emptyrerecordentry.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("emptyrerecordentry.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoErrors(result);
 		Assert.AreEqual(1, result.Warnings.Count());
@@ -65,7 +65,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidRerecordEntry_Warning()
 	{
-		var result = await _lsmvParser.Parse(Embedded("invalidrerecordentry.lsmv"), EmbeddedLength("invalidrerecordentry.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("invalidrerecordentry.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoErrors(result);
 		Assert.AreEqual(1, result.Warnings.Count());
@@ -74,7 +74,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task ValidRerecordEntry()
 	{
-		var result = await _lsmvParser.Parse(Embedded("2frameswithsub.lsmv"), EmbeddedLength("2frameswithsub.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("2frameswithsub.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(1, result.RerecordCount);
 		AssertNoWarningsOrErrors(result);
@@ -83,7 +83,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task MissingGameType_Error()
 	{
-		var result = await _lsmvParser.Parse(Embedded("gametype-missing.lsmv"), EmbeddedLength("gametype-missing.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("gametype-missing.lsmv", out var length), length);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
@@ -92,7 +92,7 @@ public class LsmvTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidGameType_DefaultsSnesNtsc()
 	{
-		var result = await _lsmvParser.Parse(Embedded("gametype-empty.lsmv"), EmbeddedLength("gametype-empty.lsmv"));
+		var result = await _lsmvParser.Parse(Embedded("gametype-empty.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Snes, result.SystemCode);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -113,7 +113,7 @@ public class LsmvTests : BaseParserTests
 	[DataRow("gametype-ggbca.lsmv", SystemCodes.Gbc, RegionType.Ntsc)]
 	public async Task SystemAndRegion(string file, string expectedSystem, RegionType expectedRegion)
 	{
-		var result = await _lsmvParser.Parse(Embedded(file), EmbeddedLength(file));
+		var result = await _lsmvParser.Parse(Embedded(file, out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(expectedSystem, result.SystemCode);
 		Assert.AreEqual(expectedRegion, result.Region);
@@ -127,7 +127,7 @@ public class LsmvTests : BaseParserTests
 	[DataRow("moviesram-zerosrm.lsmv", MovieStartType.PowerOn)]
 	public async Task StartType(string file, MovieStartType expectedStartType)
 	{
-		var result = await _lsmvParser.Parse(Embedded(file), EmbeddedLength(file));
+		var result = await _lsmvParser.Parse(Embedded(file, out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(expectedStartType, result.StartType);
 		AssertNoWarningsOrErrors(result);
