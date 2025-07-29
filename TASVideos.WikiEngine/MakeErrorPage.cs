@@ -29,7 +29,7 @@ public static partial class Builtins
 
 		var ret = new List<INode>();
 
-		var head = new Element(0, "h1", new[] { new Text(0, "Syntax Error") });
+		var head = new Element(0, "h1", [new Text(0, "Syntax Error")]);
 		ret.Add(head);
 
 		var elt = new Element(0, "pre")

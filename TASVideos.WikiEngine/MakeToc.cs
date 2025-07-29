@@ -73,7 +73,7 @@ public static partial class Builtins
 					[Attr("href", "#" + h.Attributes["id"])],
 					h.Children.SelectMany(c => c.CloneForToc()));
 
-				var li = new Element(charStart, "li", new[] { link });
+				var li = new Element(charStart, "li", [link]);
 				stack.Peek().Children.Add(li);
 				stack.Push(li);
 			}

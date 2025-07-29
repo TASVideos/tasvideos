@@ -270,8 +270,9 @@ internal class UserManager(
 
 		model.Publishing = new()
 		{
-			TotalPublished = await db.Submissions
-				.CountAsync(s => s.PublisherId == model.Id)
+			TotalPublished = await db.Publications
+				.ThatHaveBeenPublishedBy(model.Id)
+				.CountAsync()
 		};
 
 		model.Judgments = new()
