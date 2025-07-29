@@ -11,7 +11,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemMsx()
 	{
-		var result = await _omrParser.Parse(Embedded("2seconds.omr"), EmbeddedLength("2seconds.omr"));
+		var result = await _omrParser.Parse(Embedded("2seconds.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Msx, result.SystemCode);
@@ -20,7 +20,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemMsxNewerFormat()
 	{
-		var result = await _omrParser.Parse(Embedded("msxnewerformat.omr"), EmbeddedLength("msxnewerformat.omr"));
+		var result = await _omrParser.Parse(Embedded("msxnewerformat.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Msx, result.SystemCode);
@@ -29,7 +29,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemSvi()
 	{
-		var result = await _omrParser.Parse(Embedded("svi.omr"), EmbeddedLength("svi.omr"));
+		var result = await _omrParser.Parse(Embedded("svi.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Svi, result.SystemCode);
@@ -38,7 +38,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemSviNewerFormat()
 	{
-		var result = await _omrParser.Parse(Embedded("svinewerformat.omr"), EmbeddedLength("svinewerformat.omr"));
+		var result = await _omrParser.Parse(Embedded("svinewerformat.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Svi, result.SystemCode);
@@ -47,7 +47,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemColeco()
 	{
-		var result = await _omrParser.Parse(Embedded("coleco.omr"), EmbeddedLength("coleco.omr"));
+		var result = await _omrParser.Parse(Embedded("coleco.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Coleco, result.SystemCode);
@@ -56,7 +56,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemColecoNewerFormat()
 	{
-		var result = await _omrParser.Parse(Embedded("coleconewerformat.omr"), EmbeddedLength("coleconewerformat.omr"));
+		var result = await _omrParser.Parse(Embedded("coleconewerformat.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Coleco, result.SystemCode);
@@ -65,7 +65,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemSg()
 	{
-		var result = await _omrParser.Parse(Embedded("sg1000.omr"), EmbeddedLength("sg1000.omr"));
+		var result = await _omrParser.Parse(Embedded("sg1000.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Sg, result.SystemCode);
@@ -74,7 +74,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task Rerecords()
 	{
-		var result = await _omrParser.Parse(Embedded("2seconds.omr"), EmbeddedLength("2seconds.omr"));
+		var result = await _omrParser.Parse(Embedded("2seconds.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(140, result.RerecordCount);
@@ -83,7 +83,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _omrParser.Parse(Embedded("2seconds.omr"), EmbeddedLength("2seconds.omr"));
+		var result = await _omrParser.Parse(Embedded("2seconds.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -92,7 +92,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _omrParser.Parse(Embedded("savestate.omr"), EmbeddedLength("savestate.omr"));
+		var result = await _omrParser.Parse(Embedded("savestate.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
@@ -101,7 +101,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task Ntsc()
 	{
-		var result = await _omrParser.Parse(Embedded("2seconds.omr"), EmbeddedLength("2seconds.omr"));
+		var result = await _omrParser.Parse(Embedded("2seconds.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Ntsc, result.Region);
@@ -110,7 +110,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task Pal()
 	{
-		var result = await _omrParser.Parse(Embedded("pal.omr"), EmbeddedLength("pal.omr"));
+		var result = await _omrParser.Parse(Embedded("pal.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(RegionType.Pal, result.Region);
@@ -119,7 +119,7 @@ public class OmrTests : BaseParserTests
 	[TestMethod]
 	public async Task Frames()
 	{
-		var result = await _omrParser.Parse(Embedded("2seconds.omr"), EmbeddedLength("2seconds.omr"));
+		var result = await _omrParser.Parse(Embedded("2seconds.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(120, result.Frames);

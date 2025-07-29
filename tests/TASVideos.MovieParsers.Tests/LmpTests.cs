@@ -11,9 +11,7 @@ public class LmpTests : BaseParserTests
 	[TestMethod]
 	public async Task FileTooShort_ReturnsError()
 	{
-		var embedded = Embedded("tooshort.lmp");
-		var length = EmbeddedLength("tooshort.lmp");
-		var result = await _lmpParser.Parse(embedded, length);
+		var result = await _lmpParser.Parse(Embedded("tooshort.lmp", out var length), length);
 		Assert.IsNotNull(result);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
@@ -23,9 +21,7 @@ public class LmpTests : BaseParserTests
 	[TestMethod]
 	public async Task FileDoesNotEndIn0x80_ReturnsError()
 	{
-		var embedded = Embedded("doesnotendin80.lmp");
-		var length = EmbeddedLength("doesnotendin80.lmp");
-		var result = await _lmpParser.Parse(embedded, length);
+		var result = await _lmpParser.Parse(Embedded("doesnotendin80.lmp", out var length), length);
 		Assert.IsNotNull(result);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
@@ -35,9 +31,7 @@ public class LmpTests : BaseParserTests
 	[TestMethod]
 	public async Task NewDoom_Success()
 	{
-		var embedded = Embedded("doom.lmp");
-		var length = EmbeddedLength("doom.lmp");
-		var result = await _lmpParser.Parse(embedded, length);
+		var result = await _lmpParser.Parse(Embedded("doom.lmp", out var length), length);
 		Assert.IsNotNull(result);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
@@ -50,9 +44,7 @@ public class LmpTests : BaseParserTests
 	[TestMethod]
 	public async Task Footer_Success()
 	{
-		var embedded = Embedded("638-footer.lmp");
-		var length = EmbeddedLength("638-footer.lmp");
-		var result = await _lmpParser.Parse(embedded, length);
+		var result = await _lmpParser.Parse(Embedded("638-footer.lmp", out var length), length);
 		Assert.IsNotNull(result);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
