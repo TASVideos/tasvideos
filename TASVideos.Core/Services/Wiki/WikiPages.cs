@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.RegularExpressions;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.Core.Services.Wiki;
@@ -122,14 +123,13 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		.Where(wr => !string.IsNullOrWhiteSpace(wr.Referral))
 		.ToListAsync();
 
-	public async Task<bool> Exists(string? pageName, bool includeDeleted = false)
+	public async Task<bool> Exists([NotNullWhen(true)] string? pageName, bool includeDeleted = false)
 	{
-		if (string.IsNullOrWhiteSpace(pageName))
+		pageName = pageName?.Trim('/');
+		if (!WikiHelper.IsValidWikiPageName(pageName))
 		{
 			return false;
 		}
-
-		pageName = pageName.Trim('/');
 
 		var existingPage = this[pageName];
 

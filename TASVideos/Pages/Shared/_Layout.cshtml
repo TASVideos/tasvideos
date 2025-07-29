@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+@using Microsoft.AspNetCore.Http
+@using TASVideos.Core.Services.Wiki
+@inject IWikiPages WikiPages
+<!DOCTYPE html>
 <html lang="en">
 @{
 	var title = ViewData.GetTitle();
@@ -168,6 +171,11 @@
 						if (ViewData.GetWikiPage() is null && this.Model is not (Publications.ViewModel or Submissions.ViewModel))
 						{
 							path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
+						}
+						if (path is "Wiki/Edit")
+						{
+							var editTarget = ((HttpContext) this.Model.HttpContext).Request.Query["path"].SingleOrDefault();
+							<a condition="await WikiPages.Exists(editTarget)" class="btn btn-info btn-sm mb-2" asp-page="/Wiki/PageHistory" asp-route-path="@editTarget"><i class="fa fa-history"></i> Page History</a>
 						}
 					}
 				<a condition="path is not null" class="btn btn-info btn-sm mb-2" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
