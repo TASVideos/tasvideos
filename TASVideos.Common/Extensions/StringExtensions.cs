@@ -151,6 +151,25 @@ public static partial class StringExtensions
 		return str.Split([separator], StringSplitOptions.RemoveEmptyEntries);
 	}
 
+	/// <summary>
+	/// Normalizes a comma-separated list of values by trimming whitespace around each value.
+	/// Returns null if the result would be empty or whitespace-only.
+	/// </summary>
+	public static string? NormalizeCsv(this string? authorList)
+	{
+		if (string.IsNullOrWhiteSpace(authorList))
+		{
+			return null;
+		}
+
+		var authors = authorList.SplitWithEmpty(",")
+			.Select(author => author.Trim())
+			.Where(author => !string.IsNullOrEmpty(author));
+
+		var result = string.Join(",", authors);
+		return string.IsNullOrWhiteSpace(result) ? null : result;
+	}
+
 	private static readonly Regex SplitCamelCaseRegex = SplitCamelCaseCompiledRegex();
 	private static string SplitCamelCaseInternal(this string? str)
 	{

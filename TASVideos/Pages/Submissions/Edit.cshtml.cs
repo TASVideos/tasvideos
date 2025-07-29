@@ -275,7 +275,7 @@ public class EditModel(
 		submission.RomName = Submission.RomName;
 		submission.EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
 		submission.Status = Submission.Status;
-		submission.AdditionalAuthors = Submission.ExternalAuthors.NullIfWhitespace();
+		submission.AdditionalAuthors = Submission.ExternalAuthors.NormalizeCsv();
 
 		if (MarkupChanged)
 		{

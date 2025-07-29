@@ -150,7 +150,7 @@ public class EditModel(
 
 		publication.ObsoletedById = model.ObsoletedBy;
 		publication.EmulatorVersion = model.EmulatorVersion;
-		publication.AdditionalAuthors = model.ExternalAuthors.NullIfWhitespace();
+		publication.AdditionalAuthors = model.ExternalAuthors.NormalizeCsv();
 		publication.Authors.Clear();
 		publication.Authors.AddRange(await db.Users
 			.ForUsers(Publication.Authors)

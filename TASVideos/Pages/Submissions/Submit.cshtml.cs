@@ -121,7 +121,7 @@ public class SubmitModel(
 			RomName = RomName,
 			EmulatorVersion = Emulator,
 			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(EncodeEmbeddedLink),
-			AdditionalAuthors = ExternalAuthors
+			AdditionalAuthors = ExternalAuthors.NormalizeCsv()
 		};
 
 		var error = await queueService.MapParsedResult(parseResult, submission);
