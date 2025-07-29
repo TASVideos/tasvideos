@@ -114,6 +114,7 @@ public static partial class Builtins
 		{
 			return text;
 		}
+
 		return text[1] is '/' ? text[1..] : string.Concat("/", text.AsSpan(1));
 	}
 
