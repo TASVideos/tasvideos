@@ -8,6 +8,9 @@ namespace TASVideos.Pages.Account;
 [IpBanCheck]
 public class RegisterModel : BasePageModel
 {
+	public static readonly List<SelectListItem> AvailableLocations = CountryList.Items
+		.WithDefaultEntry();
+
 	[Required]
 	public string TimeZone { get; set; } = "";
 
@@ -25,7 +28,6 @@ public class RegisterModel : BasePageModel
 	[DataType(DataType.Password)]
 	public string ConfirmPassword { get; set; } = "";
 
-	[StringLength(256)]
 	public string? Location { get; set; }
 
 	[MustBeTrue(ErrorMessage = "You must certify that you are 13 years of age or older")]
@@ -51,6 +53,11 @@ public class RegisterModel : BasePageModel
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
 			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
+		}
+
+		if (!string.IsNullOrEmpty(Location) && !AvailableLocations.Any(l => l.Value == Location))
+		{
+			ModelState.AddModelError(nameof(Location), "Please choose a valid option.");
 		}
 
 		if (!ModelState.IsValid)

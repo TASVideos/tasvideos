@@ -71,6 +71,9 @@
 								<div class="ms-2 ms-md-0" style="line-height: 1">
 									<small>@Model.CalculatedRoles
 										<span condition="!Model.PosterIsBanned && Model.PosterPlayerPoints >= 5">(@Math.Round(Model.PosterPlayerPoints))</span>
+										<div condition="!string.IsNullOrWhiteSpace(Model.PosterLocation)" class="d-block d-md-none mt-1">
+											<span condition="Model.PosterLocation is null || !Model.PosterLocation.IsCountryListValue()">Location: </span>@Model.PosterLocation
+										</div>
 									</small>
 								</div>
 							</div>

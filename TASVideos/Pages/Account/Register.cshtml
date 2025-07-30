@@ -37,7 +37,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="Location"></label>
-				<input asp-for="Location" />
+				<select asp-for="Location" asp-items="@RegisterModel.AvailableLocations"></select>
 				<span asp-validation-for="Location"></span>
 			</fieldset>
 			<fieldset class="mt-3">

@@ -100,3 +100,18 @@
 			.join('');
 	}
 }
+{
+	const locationCountry = document.getElementById("LocationCountry");
+	locationCountry.addEventListener("change", ensureVisibility);
+
+	function ensureVisibility() {
+		const locationCustom = document.getElementById("LocationCustom");
+
+		if (locationCountry.value === "Custom") {
+			locationCustom.classList.remove("d-none");
+		} else {
+			locationCustom.classList.add("d-none");
+		}
+	}
+	ensureVisibility();
+}
