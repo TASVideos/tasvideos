@@ -2,6 +2,7 @@
 using System.IO.Compression;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.ResponseCompression;
 using OpenTelemetry.Metrics;
@@ -86,6 +87,12 @@ public static class ServiceCollectionExtensions
 		if (env.IsDevelopment())
 		{
 			services.AddDatabaseDeveloperPageExceptionFilter();
+		}
+
+		if (env.ShouldIncludeSourceMappingComments())
+		{
+			services.AddSingleton<RazorPageActivator>();
+			services.AddSingleton<IRazorPageActivator, SelfIdentifyRazorPageActivator>();
 		}
 
 		services.AddResponseCaching();
@@ -210,4 +217,7 @@ public static class ServiceCollectionExtensions
 
 		return services;
 	}
+
+	public static bool ShouldIncludeSourceMappingComments(this IHostEnvironment env)
+		=> env.IsDevelopment();
 }

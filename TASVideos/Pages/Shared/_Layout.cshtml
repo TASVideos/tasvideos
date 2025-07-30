@@ -1,5 +1,7 @@
 @using Microsoft.AspNetCore.Http
+﻿@using Microsoft.Extensions.Hosting
 @using TASVideos.Core.Services.Wiki
+@inject IHostEnvironment Env
 @inject IWikiPages WikiPages
 <!DOCTYPE html>
 <html lang="en">
@@ -154,7 +156,9 @@
 		@TempData["Message"]
 	</alert>
 	<div asp-validation-summary="ModelOnly" class="alert alert-danger alert-dismissible" role="alert"></div>
+	@if (Env.ShouldIncludeSourceMappingComments()) { <!--pause @ViewContext.ExecutingFilePath--> }
 	@RenderBody()
+	@if (Env.ShouldIncludeSourceMappingComments()) { <!--resume @ViewContext.ExecutingFilePath--> }
 	<hr/>
 	<footer class="mb-3">
 		<button id="button-scrolltop" class="d-none position-fixed px-3 py-1 m-2 bottom-0 end-0 btn btn-primary fa fa-caret-up"></button>
