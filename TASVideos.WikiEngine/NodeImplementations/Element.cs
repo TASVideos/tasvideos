@@ -192,24 +192,7 @@ public partial class Element : INodeWithChildren
 
 	public string InnerText(IWriterHelper h)
 	{
-		if (Children.Count == 0)
-		{
-			return string.Empty;
-		}
-
-		if (Children.Count == 1)
-		{
-			return Children[0].InnerText(h);
-		}
-
-		// Use string.Concat with array to avoid excessive allocations
-		var texts = new string[Children.Count];
-		for (int i = 0; i < Children.Count; i++)
-		{
-			texts[i] = Children[i].InnerText(h);
-		}
-
-		return string.Concat(texts);
+		return string.Join("", Children.Select(c => c.InnerText(h)));
 	}
 
 	public void DumpContentDescriptive(TextWriter w, string padding)
