@@ -4,7 +4,10 @@
 public class ConfirmEmailChangeModel(
 	IUserManager userManager,
 	IUserMaintenanceLogger userMaintenanceLogger,
-	ICacheService cache)
+	ICacheService cache,
+	ISignInManager signInManager,
+	IExternalMediaPublisher publisher,
+	ITASVideoAgent tasVideoAgent)
 	: BasePageModel
 {
 	public async Task<IActionResult> OnGet(string? code)
@@ -22,14 +25,26 @@ public class ConfirmEmailChangeModel(
 			return BadRequest("Unrecognized or expired code.");
 		}
 
+		var wasConfirmedPreviously = user.EmailConfirmed;
+
 		var result = await userManager.ChangeEmail(user, newEmail, code);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");
 		}
 
+		SuccessStatusMessage("Successfully changed email.");
+
 		cache.Remove(code);
-		await userMaintenanceLogger.Log(user.Id, $"User changed email from {IpAddress}");
+		if (wasConfirmedPreviously)
+		{
+			await userMaintenanceLogger.Log(user.Id, $"User changed email from {IpAddress}");
+		}
+		else
+		{
+			await ConfirmEmailModel.FirstTimeConfirmation(user, userManager, signInManager, publisher, userMaintenanceLogger, tasVideoAgent, IpAddress);
+		}
+
 		return RedirectToPage("/Profile/Settings");
 	}
 }
