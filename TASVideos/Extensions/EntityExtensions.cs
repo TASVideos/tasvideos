@@ -305,6 +305,9 @@ public static class EntityExtensions
 	public static List<SelectListItem> WithAnyEntry(this IEnumerable<SelectListItem> items)
 		=> [.. UiDefaults.AnyEntry, .. items];
 
+	public static List<SelectListItem> WithCustomEntry(this IEnumerable<SelectListItem> items)
+		=> [.. items, .. UiDefaults.CustomEntry];
+
 	public static IQueryable<Pages.Submissions.IndexModel.SubmissionEntry> ToSubListEntry(this IQueryable<Submission> query, int? userIdForVotes = null)
 		=> query.Select(s => new Pages.Submissions.IndexModel.SubmissionEntry
 		{
