@@ -115,7 +115,7 @@ public partial class NewParser
 	private string EatToBracket()
 	{
 		var from = _index;
-		var start = _index;
+		var ret = new StringBuilder();
 		for (var i = 1; i > 0;)
 		{
 			if (Eof())
@@ -137,67 +137,73 @@ public partial class NewParser
 			{
 				i--;
 			}
+
+			if (i > 0)
+			{
+				ret.Append(c);
+			}
 		}
 
-		return _input.AsSpan(start, _index - start - 1).ToString();
+		return ret.ToString();
 	}
 
 	private string EatClassText()
 	{
+		var ret = new StringBuilder();
 		if (!Eof())
 		{
 			Eat(' '); // OK if this fails?
 		}
 
-		var start = _index;
 		while (!Eof() && !EatEol())
 		{
-			Eat();
+			ret.Append(Eat());
 		}
 
-		return _input.AsSpan(start, _index - start).ToString();
+		return ret.ToString();
 	}
 
 	private string EatTabName()
 	{
-		var start = _index;
+		var ret = new StringBuilder();
 		var sawEndOfLine = false;
 		while (!Eof() && !(sawEndOfLine = EatEol()) && !Eat('%'))
 		{
-			Eat();
+			ret.Append(Eat());
 		}
-
-		var result = _input.AsSpan(start, _index - start).ToString();
 
 		if (!sawEndOfLine)
 		{
 			DiscardLine();
 		}
 
-		return result;
+		return ret.ToString();
 	}
 
 	private string EatSrcEmbedText()
 	{
-		var start = _index;
+		var ret = new StringBuilder();
 		while (!Eof() && !Eat("%%END_EMBED"))
 		{
-			Eat();
+			ret.Append(Eat());
 		}
 
-		var result = _input.AsSpan(start, _index - start - 12).ToString(); // -12 for "%%END_EMBED"
 		DiscardLine();
-		return result;
+		return ret.ToString();
 	}
 
 	private string EatBullets()
 	{
-		var start = _index;
+		var ret = new StringBuilder();
 		while (!Eof())
 		{
-			if (Eat('*') || Eat('#'))
+			if (Eat('*'))
 			{
-				// Continue
+				ret.Append('*');
+			}
+			else if (Eat('#'))
+			{
+				ret.Append('#');
 			}
 			else
 			{
@@ -205,7 +211,7 @@ public partial class NewParser
 			}
 		}
 
-		return _input.AsSpan(start, _index - start).ToString();
+		return ret.ToString();
 	}
 
 	private int EatPipes()
@@ -617,21 +623,20 @@ public partial class NewParser
 
 	private string ComputeExistingBullets()
 	{
-		Span<char> bullets = stackalloc char[_stack.Count];
-		int count = 0;
+		var ret = new StringBuilder();
 		foreach (var e in _stack)
 		{
 			if (e.Type == NodeType.Element)
 			{
 				switch (((Element)e).Tag)
 				{
-					case "ul": bullets[count++] = '*'; break;
-					case "ol": bullets[count++] = '#'; break;
+					case "ul": ret.Append('*'); break;
+					case "ol": ret.Append('#'); break;
 				}
 			}
 		}
 
-		return bullets[..count].ToString();
+		return ret.ToString();
 	}
 
 	private bool StartLineLists()
@@ -707,7 +712,7 @@ public partial class NewParser
 			var e = new Element(_index, "figure");
 			if (author != "")
 			{
-				authorBlock.Children.Add(new Text(authorBlock.CharStart, string.Concat("Quoting ", author)));
+				authorBlock.Children.Add(new Text(authorBlock.CharStart, "Quoting " + author));
 				e.Children.Add(authorBlock);
 			}
 
@@ -937,13 +942,13 @@ public partial class NewParser
 		{
 			if (words.Count > 0 && (words[0] == "The" || words[0] == "A"))
 			{
-				yield return string.Concat(words.Skip(1));
+				yield return string.Join("", words.Skip(1));
 			}
 
-			yield return string.Concat(words);
+			yield return string.Join("", words);
 			for (var i = 2; ; i++)
 			{
-				yield return string.Concat(string.Concat(words), "_", i.ToString());
+				yield return string.Join("", words) + "_" + i;
 			}
 		}
 
@@ -959,7 +964,7 @@ public partial class NewParser
 			var originalText = h.InnerText(NullWriterHelper.Instance);
 			var filteredText = AllowedIdChars.Replace(originalText, " ");
 			var splitByWord = filteredText.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-			var titleCased = splitByWord.Select(s => s.Length > 0 ? string.Concat(char.ToUpperInvariant(s[0]).ToString(), s.AsSpan(1).ToString().ToLowerInvariant()) : "");
+			var titleCased = splitByWord.Select(s => s.Length > 0 ? char.ToUpperInvariant(s[0]) + s.ToLowerInvariant()[1..] : "");
 
 			var id = GeneratePossibleIds(titleCased.ToList()).First(s => !ids.Contains(s));
 			ids.Add(id);
