@@ -20,3 +20,4 @@ TASVideos/tasvideos.pid
 CLAUDE.md
 .claude/
 BenchmarkDotNet.Artifacts/
+tests/TASVideos.ForumEngine.Snapshots/.params.json
