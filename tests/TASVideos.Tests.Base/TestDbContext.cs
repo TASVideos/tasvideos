@@ -83,6 +83,27 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return Users.Add(user);
 	}
 
+	public EntityEntry<Submission> CreatePublishableSubmission()
+	{
+		var entry = AddAndSaveUnpublishedSubmission();
+		var submission = entry.Entity;
+		submission.Status = SubmissionStatus.PublicationUnderway;
+		submission.SyncedOn = DateTime.UtcNow;
+
+		var game = Games.Add(new Game { DisplayName = "Test Game" }).Entity;
+		var gameVersion = GameVersions.Add(new GameVersion { Game = game, Name = "Test Version", System = submission.System }).Entity;
+		var gameGoal = GameGoals.Add(new GameGoal { Game = game, DisplayName = "Test Goal" }).Entity;
+		var pubClassId = (PublicationClasses.Max(gs => (int?)gs.Id) ?? 0) + 1;
+		var pubClass = PublicationClasses.Add(new PublicationClass { Id = pubClassId, Name = "Test" }).Entity;
+		submission.Game = game;
+		submission.GameVersion = gameVersion;
+		submission.GameGoal = gameGoal;
+		submission.IntendedClass = pubClass;
+
+		SaveChanges();
+		return entry;
+	}
+
 	public EntityEntry<Submission> AddAndSaveUnpublishedSubmission()
 	{
 		var submission = AddSubmission();
@@ -114,8 +135,10 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		GameSystemFrameRates.Add(systemFrameRate);
 		var game = new Game { DisplayName = "TestGame" };
 		Games.Add(game);
-		var gameVersion = new GameVersion { Game = game, Name = "TestGameVersion" };
+		var gameVersion = new GameVersion { Game = game, Name = "TestGameVersion", System = gameSystem};
 		GameVersions.Add(gameVersion);
+		var gameGoal = new GameGoal { DisplayName = "baseline", Game = game };
+		GameGoals.Add(gameGoal);
 		var publicationClassId = (PublicationClasses.Max(pc => (int?)pc.Id) ?? -1) + 1;
 		publicationClass ??= new PublicationClass { Id = publicationClassId, Name = publicationClassId.ToString() };
 		PublicationClasses.Add(publicationClass);
@@ -127,9 +150,11 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		var pub = new Publication
 		{
 			Title = "Test Publication",
+			System = gameSystem,
 			SystemFrameRate = systemFrameRate,
 			Game = game,
 			GameVersion = gameVersion,
+			GameGoal = gameGoal,
 			PublicationClass = publicationClass,
 			Submission = submission,
 			MovieFileName = submission.Id.ToString()
