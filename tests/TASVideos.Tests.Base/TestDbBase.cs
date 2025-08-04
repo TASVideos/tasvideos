@@ -57,7 +57,7 @@ public abstract class TestDbBase
 	}
 
 	[TestCleanup]
-	public void Cleanup()
+	public virtual void Cleanup()
 	{
 		_transaction?.Dispose();
 	}
