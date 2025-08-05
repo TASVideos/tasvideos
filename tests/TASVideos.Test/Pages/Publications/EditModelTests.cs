@@ -1,4 +1,4 @@
-using TASVideos.Common;
+﻿using TASVideos.Common;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
