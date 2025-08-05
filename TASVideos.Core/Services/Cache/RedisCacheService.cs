@@ -73,7 +73,7 @@ public class RedisCacheService : ICacheService
 
 	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
-		if (_enabled)
+		if (!_enabled)
 		{
 			return;
 		}
@@ -91,7 +91,7 @@ public class RedisCacheService : ICacheService
 
 	public void Remove(string key)
 	{
-		if (_enabled)
+		if (!_enabled)
 		{
 			return;
 		}
