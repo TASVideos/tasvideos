@@ -9,11 +9,11 @@ internal class Lmp : Parser, IParser
 	private const int MAXPLAYERS = 4;
 	private const int TERMINATOR = 0x80;
 	private const int INVALID = -1;
-	private static int FooterPointer { get; set; } = INVALID;
+	private int FooterPointer { get; set; } = INVALID;
 
 	// order is important here to minimize false detections
 	// especially the last 3, which are impossible to always detect correctly
-	private static readonly TryParseLmp[] LmpParsers =
+	private TryParseLmp[] LmpParsers =>
 	[
 		TryParseDoomClassic,
 		TryParseStrife,
@@ -35,7 +35,7 @@ internal class Lmp : Parser, IParser
 		return true;
 	}
 
-	private static int CalcFrames(byte[] movie, int headerLen, int inputLen, int playerCount)
+	private int CalcFrames(byte[] movie, int headerLen, int inputLen, int playerCount)
 	{
 		var frameCount = 0;
 		FooterPointer = INVALID;
@@ -58,7 +58,7 @@ internal class Lmp : Parser, IParser
 		return INVALID;
 	}
 
-	private static bool TryParseOldDoom(byte[] movie, ref int frames)
+	private bool TryParseOldDoom(byte[] movie, ref int frames)
 	{
 		// Pre-1.4 Doom has a 7 byte header, and 4 bytes per input
 		if (!CheckSizeSanity(movie.Length, 7, 4))
@@ -88,7 +88,7 @@ internal class Lmp : Parser, IParser
 		return false;
 	}
 
-	private static bool TryParseNewDoom(byte[] movie, ref int frames)
+	private bool TryParseNewDoom(byte[] movie, ref int frames)
 	{
 		// Regular Doom and Doom II has a 13 byte header, and 4 bytes per input
 		if (!CheckSizeSanity(movie.Length, 13, 4))
@@ -123,7 +123,7 @@ internal class Lmp : Parser, IParser
 		return frames > 0;
 	}
 
-	private static bool TryParseDoomClassic(byte[] movie, ref int frames)
+	private bool TryParseDoomClassic(byte[] movie, ref int frames)
 	{
 		// Doom Classic has a 14 + 84 * player count byte header, and 4 bytes per input
 		if (!CheckSizeSanity(movie.Length, 14, 4))
@@ -163,7 +163,7 @@ internal class Lmp : Parser, IParser
 		return false;
 	}
 
-	private static bool TryParseHeretic(byte[] movie, ref int frames)
+	private bool TryParseHeretic(byte[] movie, ref int frames)
 	{
 		// Heretic has a 7 byte header, and 6 bytes per input
 		if (!CheckSizeSanity(movie.Length, 7, 6))
@@ -193,7 +193,7 @@ internal class Lmp : Parser, IParser
 		return false;
 	}
 
-	private static bool TryParseOldHexen(byte[] movie, ref int frames)
+	private bool TryParseOldHexen(byte[] movie, ref int frames)
 	{
 		// Hexen demo and Hexen 1.0 has an 11 byte header, and 6 bytes per input
 		if (!CheckSizeSanity(movie.Length, 11, 6))
@@ -224,7 +224,7 @@ internal class Lmp : Parser, IParser
 		return false;
 	}
 
-	private static bool TryParseNewHexen(byte[] movie, ref int frames)
+	private bool TryParseNewHexen(byte[] movie, ref int frames)
 	{
 		// Hexen 1.1 has a 19 byte header, and 6 bytes per input
 		if (!CheckSizeSanity(movie.Length, 19, 6))
@@ -255,7 +255,7 @@ internal class Lmp : Parser, IParser
 		return false;
 	}
 
-	private static bool TryParseStrife(byte[] movie, ref int frames)
+	private bool TryParseStrife(byte[] movie, ref int frames)
 	{
 		// Strife has a 16 byte header, and 6 bytes per input
 		if (!CheckSizeSanity(movie.Length, 16, 6))
