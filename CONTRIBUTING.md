@@ -18,6 +18,7 @@ See [Local Development Setup](https://github.com/TASVideos/tasvideos/wiki/Local-
 
 There are several test suites in the `/tests` directory, which you can run in the conventional way (`dotnet test [TASVideos.sln]`).
 They are also run in CI.
+If you want to check coverage locally, it's `dotnet test --collect:'Code Coverage' && dotnet dotnet-coverage merge 'tests/*/TestResults/**/*.coverage' --output-format=cobertura --output=merged.coverage.xml`.
 
 ## Code Style
 

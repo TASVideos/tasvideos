@@ -20,4 +20,6 @@ TASVideos/tasvideos.pid
 CLAUDE.md
 .claude/
 BenchmarkDotNet.Artifacts/
+/tests/*/TestResults
 tests/TASVideos.ForumEngine.Snapshots/.params.json
+merged.coverage.xml
