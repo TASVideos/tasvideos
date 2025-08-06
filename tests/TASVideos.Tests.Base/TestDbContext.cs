@@ -135,7 +135,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		GameSystemFrameRates.Add(systemFrameRate);
 		var game = new Game { DisplayName = "TestGame" };
 		Games.Add(game);
-		var gameVersion = new GameVersion { Game = game, Name = "TestGameVersion", System = gameSystem};
+		var gameVersion = new GameVersion { Game = game, Name = "TestGameVersion", System = gameSystem };
 		GameVersions.Add(gameVersion);
 		var gameGoal = new GameGoal { DisplayName = "baseline", Game = game };
 		GameGoals.Add(gameGoal);
