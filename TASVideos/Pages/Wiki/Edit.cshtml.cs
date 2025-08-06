@@ -24,12 +24,7 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, IExternalM
 	public async Task<IActionResult> OnGet()
 	{
 		Path = Path?.Trim('/');
-		if (string.IsNullOrWhiteSpace(Path))
-		{
-			return NotFound();
-		}
-
-		if (!WikiHelper.IsValidWikiPageName(Path))
+		if (string.IsNullOrWhiteSpace(Path) || !WikiHelper.IsValidWikiPageName(Path))
 		{
 			return NotFound();
 		}
