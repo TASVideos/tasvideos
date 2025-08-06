@@ -20,5 +20,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
+		<InternalsVisibleTo Include="TASVideos.WikiEngine.Snapshots" />
 	</ItemGroup>
 </Project>

@@ -18,6 +18,7 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<AdditionalFiles Include="$(SolutionDir).stylecop.json" />
+		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
 		<PackageReference Include="StyleCop.Analyzers" />
 	</ItemGroup>
 	<ItemGroup Condition=" !$(MSBuildProjectDirectory.StartsWith('$(SolutionDir)analyzers')) ">
