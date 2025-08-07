@@ -6,5 +6,6 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="MSTest" />
+		<AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" /> <!-- don't want to measure test coverage of test code -->
 	</ItemGroup>
 </Project>
