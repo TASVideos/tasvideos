@@ -1605,6 +1605,281 @@ public class WikiPagesTests : TestDbBase
 
 	#endregion
 
+	#region RollbackLatest
+
+	[TestMethod]
+	public async Task RollbackLatest_NullPageName_ThrowsException()
+	{
+		await Assert.ThrowsExactlyAsync<ArgumentException>(() => _wikiPages.RollbackLatest(null!, 1));
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_EmptyPageName_ThrowsException()
+	{
+		await Assert.ThrowsExactlyAsync<ArgumentException>(() => _wikiPages.RollbackLatest("", 1));
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_WhitespacePageName_ThrowsException()
+	{
+		await Assert.ThrowsExactlyAsync<ArgumentException>(() => _wikiPages.RollbackLatest("   ", 1));
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_PageDoesNotExist_ReturnsNull()
+	{
+		var result = await _wikiPages.RollbackLatest("NonExistentPage", 1);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_FirstRevisionOnly_ReturnsNull()
+	{
+		const string pageName = "TestPage";
+		AddPage(pageName);
+
+		var result = await _wikiPages.RollbackLatest(pageName, 1);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_NoPreviousRevision_ReturnsNull()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		var page = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2, // Revision 2 but no revision 1 exists
+			Markup = "Current content",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(page);
+		await _db.SaveChangesAsync();
+		_cache.AddPage(page);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_ValidRollback_CreatesNewRevisionWithPreviousContent()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		// Create revision 1
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Original content",
+			RevisionMessage = "Initial version",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		// Create revision 2 (current)
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Modified content",
+			RevisionMessage = "Updated version",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		// Link revisions
+		revision1.ChildId = revision2.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision2);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(pageName, result.PageName);
+		Assert.AreEqual(3, result.Revision); // New revision should be 3
+		Assert.AreEqual("Original content", result.Markup); // Should have content from revision 1
+		Assert.AreEqual("Rolling back Revision 2 \"Updated version\"", result.RevisionMessage);
+		Assert.AreEqual(authorId, result.AuthorId);
+		Assert.IsFalse(result.MinorEdit);
+
+		// Verify database state
+		Assert.AreEqual(3, _db.WikiPages.Count());
+		var latestRevision = _db.WikiPages.OrderByDescending(wp => wp.Revision).First();
+		Assert.AreEqual(3, latestRevision.Revision);
+		Assert.AreEqual("Original content", latestRevision.Markup);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_MultipleRevisions_RollsBackToMostRecentPrevious()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Version 1",
+			RevisionMessage = "Initial",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Version 2",
+			RevisionMessage = "Second",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		var revision3 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 3,
+			Markup = "Version 3",
+			RevisionMessage = "Latest",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision3);
+		await _db.SaveChangesAsync();
+
+		// Link revisions
+		revision1.ChildId = revision2.Id;
+		revision2.ChildId = revision3.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision3);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual("Version 2", result.Markup); // Should rollback to revision 2, not revision 1
+		Assert.AreEqual(4, result.Revision);
+		Assert.AreEqual($"Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_TrimsSlashesFromPageName()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		// Create two revisions
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Original",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Modified",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		revision1.ChildId = revision2.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision2);
+
+		// Call with slashes around page name
+		var result = await _wikiPages.RollbackLatest($"/{pageName}/", authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(pageName, result.PageName); // Should be trimmed
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_SkipsDeletedRevisions_RollsBackToEarliestNonDeletedRevision()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Version 1",
+			RevisionMessage = "Initial",
+			AuthorId = authorId,
+			Author = user,
+			IsDeleted = false
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Version 2",
+			RevisionMessage = "Second (deleted)",
+			AuthorId = authorId,
+			Author = user,
+			IsDeleted = true // This revision is deleted
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		var revision3 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 3,
+			Markup = "Version 3",
+			RevisionMessage = "Latest",
+			AuthorId = authorId,
+			Author = user,
+			IsDeleted = false
+		};
+		_db.WikiPages.Add(revision3);
+		await _db.SaveChangesAsync();
+
+		// Link revisions (revision 1 -> revision 2 -> revision 3)
+		revision1.ChildId = revision2.Id;
+		revision2.ChildId = revision3.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision3);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual("Version 1", result.Markup); // Should rollback to revision 1, skipping deleted revision 2
+		Assert.AreEqual(4, result.Revision);
+		Assert.AreEqual($"Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
+	}
+
+	#endregion
+
 	private int AddPage(string name, bool isDeleted = false, bool cache = false)
 	{
 		User author = _db.Users.FirstOrDefault()

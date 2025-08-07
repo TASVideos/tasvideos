@@ -81,6 +81,15 @@ public interface IWikiPages
 	/// that exists. These links are considered broken and in need of fixing
 	/// </summary>
 	Task<IReadOnlyCollection<WikiPageReferral>> BrokenLinks();
+
+	/// <summary>
+	/// Rolls back the latest revision of a wiki page by creating a new revision
+	/// with the content of the previous revision.
+	/// </summary>
+	/// <param name="pageName">The name of the page to rollback</param>
+	/// <param name="authorId">The ID of the user performing the rollback</param>
+	/// <returns>The new revision created by the rollback, or null if rollback failed</returns>
+	Task<IWikiPage?> RollbackLatest(string pageName, int authorId);
 }
 
 // TODO: handle DbConcurrency exceptions
@@ -514,6 +523,50 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 
 		db.WikiReferrals.AddRange(referrers);
 		await db.SaveChangesAsync();
+	}
+
+	public async Task<IWikiPage?> RollbackLatest(string pageName, int authorId)
+	{
+		if (string.IsNullOrWhiteSpace(pageName))
+		{
+			throw new ArgumentException("Page name cannot be null or whitespace", nameof(pageName));
+		}
+
+		pageName = pageName.Trim('/');
+		var latestRevision = await Page(pageName);
+
+		if (latestRevision is null)
+		{
+			return null;
+		}
+
+		if (latestRevision.Revision == 1)
+		{
+			return null; // Cannot roll back the first revision
+		}
+
+		var previousRevision = await db.WikiPages
+			.Where(wp => wp.PageName == pageName)
+			.ThatAreNotCurrent()
+			.ThatAreNotDeleted()
+			.OrderByDescending(wp => wp.Revision)
+			.FirstOrDefaultAsync();
+
+		if (previousRevision is null)
+		{
+			return null;
+		}
+
+		var rollbackRevision = new WikiCreateRequest
+		{
+			PageName = pageName,
+			RevisionMessage = $"Rolling back Revision {latestRevision.Revision} \"{latestRevision.RevisionMessage}\"",
+			Markup = previousRevision.Markup,
+			AuthorId = authorId,
+			MinorEdit = false
+		};
+
+		return await Add(rollbackRevision);
 	}
 }
 

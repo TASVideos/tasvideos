@@ -236,11 +236,12 @@ public class EditModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnPostRollbackLatest_PageNotFound_ReturnsNotFound()
+	[DataRow(null)]
+	[DataRow("")]
+	[DataRow(" ")]
+	public async Task OnPostRollbackLatest_NoPath_ReturnsNotFound(string path)
 	{
-		_model.Path = "NonExistentPage";
-		_wikiPages.Page("NonExistentPage").Returns((IWikiPage?)null);
-
+		_model.Path = path;
 		var result = await _model.OnPostRollbackLatest();
 
 		Assert.IsInstanceOfType<NotFoundResult>(result);
@@ -249,12 +250,12 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPostRollbackLatest_FirstRevision_ReturnsBadRequest()
 	{
+		var user = _db.AddUser("TestUser").Entity;
+		await _db.SaveChangesAsync();
+		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
 		_model.Path = "TestPage";
-		_wikiPages.Page("TestPage").Returns(new WikiResult
-		{
-			PageName = "TestPage",
-			Revision = 1
-		});
+		_wikiPages.RollbackLatest(_model.Path, user.Id).Returns((IWikiPage?)null);
+		_wikiPages.Page(_model.Path).Returns(new WikiResult { Revision = 1 });
 
 		var result = await _model.OnPostRollbackLatest();
 
@@ -264,14 +265,13 @@ public class EditModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnPostRollbackLatest_NoPreviousRevision_ReturnsNotFound()
+	public async Task OnPostRollbackLatest_UnableToRollback_ReturnsNotFound()
 	{
+		var user = _db.AddUser("TestUser").Entity;
+		await _db.SaveChangesAsync();
+		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
 		_model.Path = "TestPage";
-		_wikiPages.Page("TestPage").Returns(new WikiResult
-		{
-			PageName = "TestPage",
-			Revision = 2
-		});
+		_wikiPages.RollbackLatest(_model.Path, user.Id).Returns((IWikiPage?)null);
 
 		var result = await _model.OnPostRollbackLatest();
 
@@ -284,39 +284,9 @@ public class EditModelTests : TestDbBase
 		var user = _db.AddUser("TestUser").Entity;
 		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
-		_model.Path = "TestPage";
-		var originalRevision = _db.WikiPages.Add(new WikiPage
-		{
-			PageName = "TestPage",
-			Revision = 1,
-			Markup = "Original content",
-			RevisionMessage = "Original creation"
-		}).Entity;
-		var badRevision = _db.WikiPages.Add(new WikiPage
-		{
-			PageName = "TestPage",
-			Revision = 2,
-			Markup = "Bad markup",
-			RevisionMessage = "Bad edit that needs rollback",
-			Child = null
-		}).Entity;
-		originalRevision.Child = badRevision;
-
 		await _db.SaveChangesAsync();
-
-		_wikiPages.Page("TestPage").Returns(new WikiResult
-		{
-			PageName = badRevision.PageName,
-			Revision = badRevision.Revision,
-			RevisionMessage = badRevision.RevisionMessage
-		});
-
-		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult
-		{
-			PageName = "TestPage",
-			Revision = 3,
-			RevisionMessage = "Rolling back Revision 2 \"Bad edit that needs rollback\""
-		});
+		_model.Path = "TestPage";
+		_wikiPages.RollbackLatest(_model.Path, user.Id).Returns(new WikiResult());
 
 		var result = await _model.OnPostRollbackLatest();
 
@@ -325,12 +295,5 @@ public class EditModelTests : TestDbBase
 		Assert.AreEqual("PageHistory", redirect.PageName);
 		Assert.AreEqual("TestPage", redirect.RouteValues!["Path"]);
 		Assert.IsTrue((bool?)redirect.RouteValues["Latest"]);
-
-		await _wikiPages.Received(1).Add(Arg.Is<WikiCreateRequest>(req =>
-			req.PageName == "TestPage" &&
-			req.Markup == "Original content" &&
-			req.RevisionMessage == "Rolling back Revision 2 \"Bad edit that needs rollback\"" &&
-			req.AuthorId == user.Id &&
-			req.MinorEdit == false));
 	}
 }

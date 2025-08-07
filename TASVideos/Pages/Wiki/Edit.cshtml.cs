@@ -96,43 +96,29 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, IExternalM
 
 	public async Task<IActionResult> OnPostRollbackLatest()
 	{
-		var latestRevision = await wikiPages.Page(Path);
-		if (latestRevision is null)
+		if (string.IsNullOrWhiteSpace(Path))
 		{
 			return NotFound();
 		}
 
-		if (latestRevision.Revision == 1)
+		var result = await wikiPages.RollbackLatest(Path, User.GetUserId());
+		if (result is null)
 		{
-			return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
-		}
+			var latestRevision = await wikiPages.Page(Path);
+			if (latestRevision is null)
+			{
+				return NotFound();
+			}
 
-		var previousRevision = await db.WikiPages
-			.Where(wp => wp.PageName == Path)
-			.ThatAreNotCurrent()
-			.OrderByDescending(wp => wp.Revision)
-			.FirstOrDefaultAsync();
+			if (latestRevision.Revision == 1)
+			{
+				return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
+			}
 
-		if (previousRevision is null)
-		{
 			return NotFound();
 		}
 
-		var rollBackRevision = new WikiCreateRequest
-		{
-			PageName = Path!,
-			RevisionMessage = $"Rolling back Revision {latestRevision.Revision} \"{latestRevision.RevisionMessage}\"",
-			Markup = previousRevision.Markup,
-			AuthorId = User.GetUserId(),
-			MinorEdit = false
-		};
-
-		var result = await wikiPages.Add(rollBackRevision);
-		if (result is not null)
-		{
-			await Announce(result);
-		}
-
+		await Announce(result);
 		return BasePageRedirect("PageHistory", new { Path, Latest = true });
 	}
 
