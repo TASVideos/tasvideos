@@ -5,40 +5,23 @@ namespace TASVideos;
 public static class ClaimsPrincipalExtensions
 {
 	public static bool IsLoggedIn(this ClaimsPrincipal? user)
-	{
-		return user?.Identity?.IsAuthenticated ?? false;
-	}
+		=> user?.Identity?.IsAuthenticated ?? false;
 
 	public static string Name(this ClaimsPrincipal? user)
-	{
-		return user?.Identity?.Name ?? "";
-	}
+		=> user?.Identity?.Name ?? "";
 
 	public static int GetUserId(this ClaimsPrincipal? user)
-	{
-		if (user is null || !user.IsLoggedIn())
-		{
-			return -1;
-		}
-
-		return int.Parse(user.Claims
-			.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "-1");
-	}
+		=> user is null || !user.IsLoggedIn()
+			? -1
+			: int.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "-1");
 
 	public static IReadOnlyCollection<PermissionTo> Permissions(this ClaimsPrincipal? user)
-	{
-		if (user is null || !user.IsLoggedIn())
-		{
-			return [];
-		}
-
-		return user.Claims.Permissions();
-	}
+		=> user is null || !user.IsLoggedIn()
+			? []
+			: user.Claims.Permissions();
 
 	public static bool Has(this ClaimsPrincipal? user, PermissionTo permission)
-	{
-		return user.Permissions().Contains(permission);
-	}
+		=> user.Permissions().Contains(permission);
 
 	public static bool HasAny(this ClaimsPrincipal? user, IEnumerable<PermissionTo> permissions)
 	{
