@@ -22,7 +22,7 @@ public static class ClaimsPrincipalExtensions
 		}
 
 		return int.Parse(user.Claims
-			.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
+			.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "-1");
 	}
 
 	public static IReadOnlyCollection<PermissionTo> Permissions(this ClaimsPrincipal? user)
@@ -35,14 +35,14 @@ public static class ClaimsPrincipalExtensions
 		return user.Claims.Permissions();
 	}
 
-	public static bool Has(this ClaimsPrincipal user, PermissionTo permission)
+	public static bool Has(this ClaimsPrincipal? user, PermissionTo permission)
 	{
 		return user.Permissions().Contains(permission);
 	}
 
-	public static bool HasAny(this ClaimsPrincipal user, IEnumerable<PermissionTo> permissions)
+	public static bool HasAny(this ClaimsPrincipal? user, IEnumerable<PermissionTo> permissions)
 	{
-		var userPermissions = user.Claims.Permissions();
+		var userPermissions = user?.Claims.Permissions() ?? [];
 		return permissions.Any(permission => userPermissions.Contains(permission));
 	}
 
