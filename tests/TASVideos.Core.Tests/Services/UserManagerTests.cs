@@ -312,7 +312,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		await _db.SaveChangesAsync();
 
 		await _userManager.UserNameChanged(user.Entity, oldName);
-		_ = _wikiPages.Received().MoveAll(LinkConstants.HomePages + oldName, LinkConstants.HomePages + newName);
+		_ = _wikiPages.Received().MoveAll(LinkConstants.HomePages + oldName, LinkConstants.HomePages + newName, user.Entity.Id, false);
 		Assert.AreEqual(0, _db.Submissions.Count(s => s.Title.Contains(oldName)));
 		Assert.AreEqual(2, _db.Submissions.Count(s => s.Title.Contains(newName)));
 		Assert.AreEqual(0, _db.Publications.Count(s => s.Title.Contains(oldName)));

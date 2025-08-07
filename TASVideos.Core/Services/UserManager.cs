@@ -441,7 +441,7 @@ internal class UserManager(
 		// Move home page and subpages
 		var oldHomePage = LinkConstants.HomePages + oldName;
 		var newHomePage = LinkConstants.HomePages + user.UserName;
-		await wikiPages.MoveAll(oldHomePage, newHomePage);
+		await wikiPages.MoveAll(oldHomePage, newHomePage, user.Id, createTrackingRevision: false);
 
 		// Update submission titles
 		var subsToUpdate = await db.Submissions

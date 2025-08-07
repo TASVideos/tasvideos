@@ -29,16 +29,26 @@ public interface IWikiPages
 	/// <summary>
 	/// Renames the given wiki page to the destination name
 	/// All revisions are renamed to the new page,
-	/// and <seealso cref="WikiPageReferral" /> entries are updated
+	/// and <seealso cref="WikiPageReferral" /> entries are updated.
+	/// A tracking revision is automatically created on the destination page to track the move unless disabled.
 	/// </summary>
+	/// <param name="originalName">The current page name</param>
+	/// <param name="destinationName">The new page name</param>
+	/// <param name="authorId">The ID of the user performing the move (required for creating the tracking revision)</param>
+	/// <param name="createTrackingRevision">Whether to create a tracking revision (default: true)</param>
 	/// <returns>Whether the move was successful.
 	/// If false, a conflict was detected and no data was modified</returns>
-	Task<bool> Move(string originalName, string destinationName);
+	Task<bool> Move(string originalName, string destinationName, int authorId, bool createTrackingRevision = true);
 
 	/// <summary>
-	/// Moves the given page and all subpages as well
+	/// Moves the given page and all subpages as well.
+	/// A tracking revision is automatically created on each destination page to track the move unless disabled.
 	/// </summary>
-	Task<bool> MoveAll(string originalName, string destinationName);
+	/// <param name="originalName">The current page name prefix</param>
+	/// <param name="destinationName">The new page name prefix</param>
+	/// <param name="authorId">The ID of the user performing the move (required for creating tracking revisions)</param>
+	/// <param name="createTrackingRevision">Whether to create tracking revisions (default: true)</param>
+	Task<bool> MoveAll(string originalName, string destinationName, int authorId, bool createTrackingRevision = true);
 
 	/// <summary>
 	/// Performs a soft delete on all revisions of the given page name,
@@ -261,7 +271,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		return result;
 	}
 
-	public async Task<bool> Move(string originalName, string destinationName)
+	public async Task<bool> Move(string originalName, string destinationName, int authorId, bool createTrackingRevision = true)
 	{
 		if (string.IsNullOrWhiteSpace(destinationName))
 		{
@@ -281,6 +291,12 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		var existingRevisions = await db.WikiPages
 			.ForPage(originalName)
 			.ToListAsync();
+
+		if (!existingRevisions.Any())
+		{
+			// No pages to move, consider it successful
+			return true;
+		}
 
 		foreach (var revision in existingRevisions)
 		{
@@ -310,23 +326,57 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 			return false;
 		}
 
+		// Add a tracking revision to track the move if enabled
+		if (createTrackingRevision)
+		{
+			var latestRevision = existingRevisions
+				.Where(r => r.ChildId == null)
+				.OrderByDescending(r => r.Revision)
+				.FirstOrDefault();
+
+			if (latestRevision is not null)
+			{
+				var moveTrackingRevision = new WikiCreateRequest
+				{
+					PageName = destinationName,
+					Markup = latestRevision.Markup,
+					RevisionMessage = $"Page Moved from {originalName} to {destinationName}",
+					AuthorId = authorId,
+					MinorEdit = false
+				};
+
+				// Add the tracking revision - this will handle updating referrals and cache
+				await Add(moveTrackingRevision);
+			}
+		}
+		else
+		{
+			// When not creating tracking revision, we still need to update cache
+			var latestRevision = existingRevisions
+				.Where(r => r.ChildId == null)
+				.OrderByDescending(r => r.Revision)
+				.FirstOrDefault();
+
+			if (latestRevision is not null)
+			{
+				// Update cache with moved page
+				cache.Set(destinationName, latestRevision.ToWikiResult());
+			}
+		}
+
 		// Note that we cannot update Referrers since the wiki pages will
 		// still physically refer to the original page. Those links are
 		// broken, and it is important to keep them listed as broken, so they
 		// can show up in the Broken Links module for editors to see and fix.
 		// Anyone doing a move operation should know to check broken links afterward
-		var cachedRevision = this[originalName];
-		if (cachedRevision is not null)
-		{
-			RemovePageFromCache(originalName);
-			cachedRevision.SetPageName(destinationName);
-			cache.Set(destinationName, cachedRevision);
-		}
+
+		// Clean up the original cache entry since the page has been moved
+		RemovePageFromCache(originalName);
 
 		return true;
 	}
 
-	public async Task<bool> MoveAll(string originalName, string destinationName)
+	public async Task<bool> MoveAll(string originalName, string destinationName, int authorId, bool createTrackingRevision = true)
 	{
 		var pagesToMove = await db.WikiPages
 			.Where(wp => wp.PageName.StartsWith(originalName))
@@ -337,7 +387,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		{
 			var oldPage = page.PageName;
 			var newPage = destinationName + page.PageName[originalName.Length..];
-			var result = await Move(oldPage, newPage);
+			var result = await Move(oldPage, newPage, authorId, createTrackingRevision);
 
 			if (!result)
 			{

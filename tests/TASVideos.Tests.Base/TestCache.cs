@@ -5,7 +5,7 @@ using TASVideos.Core.Services;
 namespace TASVideos.Tests.Base;
 
 /// <summary>
-/// Provides a dummy cache service that has helpful methods for unit testing
+/// Provides a cache implementation that has helpful methods for unit testing
 /// </summary>
 public class TestCache : ICacheService
 {

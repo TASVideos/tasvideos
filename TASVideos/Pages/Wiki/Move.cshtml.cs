@@ -51,18 +51,7 @@ public class MoveModel(IWikiPages wikiPages, IExternalMediaPublisher publisher) 
 			return Page();
 		}
 
-		var result = await wikiPages.Move(OriginalPageName, DestinationPageName);
-
-		// Add a dummy commit to track the move
-		var page = (await wikiPages.Page(DestinationPageName))!;
-		await wikiPages.Add(new WikiCreateRequest
-		{
-			PageName = DestinationPageName,
-			Markup = page.Markup,
-			RevisionMessage = $"Page Moved from {OriginalPageName} to {DestinationPageName}",
-			AuthorId = User.GetUserId(),
-			MinorEdit = false
-		});
+		var result = await wikiPages.Move(OriginalPageName, DestinationPageName, User.GetUserId());
 
 		if (!result)
 		{
