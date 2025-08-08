@@ -356,5 +356,36 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		Assert.AreEqual(expected, actual);
 	}
 
+	[TestMethod]
+	public async Task GetUserNameByUserName_DoesNotExist_ReturnsNull()
+	{
+		var actual = await _userManager.GetUserNameByUserName("DoesNotExist");
+		Assert.IsNull(actual);
+	}
+
+	[TestMethod]
+	public async Task GetUserNameByUserName_Exists_ReturnsUserName()
+	{
+		const string userName = "TestUser";
+		_db.AddUser(userName);
+		await _db.SaveChangesAsync();
+
+		var actual = await _userManager.GetUserNameByUserName(userName);
+
+		Assert.AreEqual(userName, actual);
+	}
+
+	[TestMethod]
+	public async Task GetUserNameByUserName_IsCaseInsensitive()
+	{
+		const string userName = "TestUser";
+		_db.AddUser(userName);
+		await _db.SaveChangesAsync();
+
+		var actual = await _userManager.GetUserNameByUserName(userName.ToLower());
+
+		Assert.AreEqual(userName, actual);
+	}
+
 	public void Dispose() => _userManager.Dispose();
 }

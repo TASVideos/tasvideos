@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Wiki;
 
 [RequireEdit]
-public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
+public class EditModel(IWikiPages wikiPages, IUserManager userManager, IExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromQuery]
 	public string? Path { get; set; }
@@ -123,13 +123,8 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, IExternalM
 	}
 
 	private async Task<string?> UserName(string path)
-	{
-		var userName = WikiHelper.ToUserName(path);
-		return await db.Users
-			.ForUser(userName)
-			.Select(u => u.UserName)
-			.SingleOrDefaultAsync();
-	}
+		=> await userManager.GetUserNameByUserName(
+			WikiHelper.ToUserName(path));
 
 	private async Task Announce(IWikiPage page, bool force = false)
 		=> await publisher.SendWiki(

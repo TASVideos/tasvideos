@@ -40,6 +40,9 @@ public interface IUserManager
 	Task<User?> GetUserByEmailAndUserName(string username, string email);
 	Task<bool> IsEmailConfirmed(User user);
 	string? NormalizeEmail(string? email);
+
+	// Performs a case-insensitive search for a username
+	Task<string?> GetUserNameByUserName(string username);
 }
 
 internal class UserManager(
@@ -516,4 +519,7 @@ internal class UserManager(
 
 		return await db.Users.SingleOrDefaultAsync(u => u.Email == email && u.UserName == username);
 	}
+
+	public Task<string?> GetUserNameByUserName(string username)
+		=> db.Users.ForUser(username).Select(u => u.UserName).SingleOrDefaultAsync();
 }

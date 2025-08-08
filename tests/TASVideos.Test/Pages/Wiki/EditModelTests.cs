@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;
@@ -11,13 +12,15 @@ namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 public class EditModelTests : TestDbBase
 {
 	private readonly IWikiPages _wikiPages;
+	private readonly IUserManager _userManager;
 	private readonly EditModel _model;
 
 	public EditModelTests()
 	{
 		_wikiPages = Substitute.For<IWikiPages>();
+		_userManager = Substitute.For<IUserManager>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
-		_model = new EditModel(_wikiPages, _db, publisher);
+		_model = new EditModel(_wikiPages, _userManager, publisher);
 	}
 
 	[TestMethod]
@@ -56,11 +59,10 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_HomePageWithExistingUser_ReturnsPage()
 	{
-		_db.AddUser("TestUser");
-		await _db.SaveChangesAsync();
 		_model.Path = "HomePages/TestUser";
 		var wikiPage = new WikiResult { Markup = "Test markup" };
 		_wikiPages.Page("HomePages/TestUser").Returns(wikiPage);
+		_userManager.GetUserNameByUserName("TestUser").Returns("TestUser");
 
 		var result = await _model.OnGet();
 
@@ -150,16 +152,13 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_HomePageWithExistingUser_NormalizesUserName()
 	{
-		_db.AddUser("TestUser");
-		await _db.SaveChangesAsync();
-
 		_model.Path = "HomePages/testuser"; // lowercase
 		_model.Markup = "Test markup";
 		_model.EditComments = "Test edit";
 
 		var authenticatedUser = _db.AddUser("AuthenticatedUser").Entity;
-		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_model, authenticatedUser, [PermissionTo.EditHomePage]);
+		_userManager.GetUserNameByUserName("testuser").Returns("TestUser");
 
 		var wikiResult = new WikiResult
 		{
@@ -191,7 +190,6 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_ValidEdit_CreatesWikiPageAndRedirects()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
 		_model.Path = "TestPage";
 		_model.Markup = "Test markup content";
@@ -221,7 +219,6 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_WikiPageAddFails_AddsModelErrorAndReturnsPage()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
 		_model.Path = "TestPage";
 		_model.Markup = "Test markup";
@@ -251,7 +248,6 @@ public class EditModelTests : TestDbBase
 	public async Task OnPostRollbackLatest_FirstRevision_ReturnsBadRequest()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
 		_model.Path = "TestPage";
 		_wikiPages.RollbackLatest(_model.Path, user.Id).Returns((IWikiPage?)null);
@@ -268,7 +264,6 @@ public class EditModelTests : TestDbBase
 	public async Task OnPostRollbackLatest_UnableToRollback_ReturnsNotFound()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
 		_model.Path = "TestPage";
 		_wikiPages.RollbackLatest(_model.Path, user.Id).Returns((IWikiPage?)null);
@@ -282,9 +277,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnPostRollbackLatest_ValidRollback_CreatesRollbackRevisionAndRedirects()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditWikiPages]);
-		await _db.SaveChangesAsync();
 		_model.Path = "TestPage";
 		_wikiPages.RollbackLatest(_model.Path, user.Id).Returns(new WikiResult());
 
