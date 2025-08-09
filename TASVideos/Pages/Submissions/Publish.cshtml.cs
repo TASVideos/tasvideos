@@ -106,7 +106,7 @@ public class PublishModel(
 			return Page();
 		}
 
-		using var dbTransaction = await db.Database.BeginTransactionAsync();
+		using var dbTransaction = await db.BeginTransactionAsync();
 
 		var publication = new Publication
 		{

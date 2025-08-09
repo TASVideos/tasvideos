@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
 using TASVideos.Data.AutoHistory;
 
 namespace TASVideos.Data;
@@ -20,6 +21,8 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		_httpContext = httpContextAccessor;
 	}
 
+	public virtual Task<IDbContextTransaction> BeginTransactionAsync() => Database.BeginTransactionAsync();
+	public virtual IDbContextTransaction BeginTransaction() => Database.BeginTransaction();
 	public DbSet<AutoHistoryEntry> AutoHistory { get; set; } = null!;
 
 	public DbSet<RolePermission> RolePermission { get; set; } = null!;

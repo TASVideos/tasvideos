@@ -1,21 +1,17 @@
 ﻿using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
 using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.SubmitMovies)]
 public class SubmitModel(
-	ApplicationDbContext db,
-	IExternalMediaPublisher publisher,
-	IWikiPages wikiPages,
 	IMovieParser parser,
 	IUserManager userManager,
-	ITASVideoAgent tasVideoAgent,
-	IYoutubeSync youtubeSync,
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
-	IFileService fileService)
+	IWikiPages wikiPages,
+	IFileService fileService,
+	IExternalMediaPublisher externalMediaPublisher)
 	: SubmitPageModelBase(parser, fileService)
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
@@ -112,79 +108,29 @@ public class SubmitModel(
 			return Page();
 		}
 
-		using var dbTransaction = await db.Database.BeginTransactionAsync();
-		var submission = new Submission
-		{
-			SubmittedGameVersion = GameVersion,
-			GameName = GameName,
-			Branch = GoalName?.Trim('\"'),
-			RomName = RomName,
-			EmulatorVersion = Emulator,
-			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(EncodeEmbeddedLink),
-			AdditionalAuthors = ExternalAuthors.NormalizeCsv()
-		};
+		var request = new SubmitRequest(
+			GameName,
+			RomName,
+			GameVersion,
+			GoalName,
+			Emulator,
+			EncodeEmbeddedLink,
+			Authors,
+			ExternalAuthors,
+			Markup,
+			movieFileBytes,
+			parseResult,
+			await userManager.GetRequiredUser(User));
 
-		var error = await queueService.MapParsedResult(parseResult, submission);
-		if (!string.IsNullOrWhiteSpace(error))
+		var result = await queueService.Submit(request);
+		if (result.Success)
 		{
-			ModelState.AddModelError("", error);
+			await externalMediaPublisher.AnnounceNewSubmission(result.Id, result.Title, result.Screenshot, result.Screenshot is not null ? "image/jpeg" : null, 480, 360);
+			return BaseRedirect($"/{result.Id}S");
 		}
 
-		if (!ModelState.IsValid)
-		{
-			return Page();
-		}
-
-		submission.MovieFile = movieFileBytes;
-		submission.Submitter = await userManager.GetRequiredUser(User);
-		if (parseResult.Hashes.Count > 0)
-		{
-			submission.HashType = parseResult.Hashes.First().Key.ToString();
-			submission.Hash = parseResult.Hashes.First().Value;
-		}
-
-		db.Submissions.Add(submission);
-		await db.SaveChangesAsync();
-
-		await wikiPages.Add(new WikiCreateRequest
-		{
-			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
-			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-			Markup = Markup,
-			AuthorId = User.GetUserId()
-		});
-
-		db.SubmissionAuthors.AddRange(await db.Users
-			.ToSubmissionAuthors(submission.Id, Authors)
-			.ToListAsync());
-
-		submission.GenerateTitle();
-
-		submission.TopicId = await tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
-		await db.SaveChangesAsync();
-		await dbTransaction.CommitAsync();
-
-		byte[]? screenshotFile = null;
-		if (youtubeSync.IsYoutubeUrl(submission.EncodeEmbedLink))
-		{
-			try
-			{
-				var youtubeEmbedImageLink = "https://i.ytimg.com/vi/" + submission.EncodeEmbedLink!.Split('/').Last() + "/hqdefault.jpg";
-				var client = new HttpClient();
-				var response = await client.GetAsync(youtubeEmbedImageLink);
-				if (response.IsSuccessStatusCode)
-				{
-					screenshotFile = await response.Content.ReadAsByteArrayAsync();
-				}
-			}
-			catch
-			{
-			}
-		}
-
-		await publisher.AnnounceNewSubmission(submission, screenshotFile, screenshotFile is not null ? "image/jpeg" : null, 480, 360);
-
-		return BaseRedirect($"/{submission.Id}S");
+		ModelState.AddModelError("", result.ErrorMessage!);
+		return Page();
 	}
 
 	public async Task<IActionResult> OnGetPrefillText()

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Update;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -19,6 +20,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 {
 	private bool _dbConcurrentUpdateConflict;
 	private bool _dbUpdateConflict;
+	private IDbContextTransaction? _transaction;
 
 	/// <summary>
 	/// Simulates a user having logged in.
@@ -29,6 +31,45 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		string[] roles = ["TestRole"];
 		var principal = new GenericPrincipal(identity, roles);
 		testHttpContext.HttpContext!.User = principal;
+	}
+
+	private class TestDbContextTransaction : IDbContextTransaction
+	{
+		public void Dispose() { }
+
+		public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+		public void Commit() { }
+
+		public Task CommitAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+		public void Rollback() { }
+
+		public Task RollbackAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+		public Guid TransactionId => Guid.NewGuid();
+	}
+
+	public async override Task<IDbContextTransaction> BeginTransactionAsync()
+	{
+		if (_transaction is null)
+		{
+			_transaction = await Database.BeginTransactionAsync();
+			return _transaction;
+		}
+
+		return new TestDbContextTransaction(); // Send a fake one to the actual test code
+	}
+
+	public override IDbContextTransaction BeginTransaction()
+	{
+		if (_transaction is null)
+		{
+			_transaction = Database.BeginTransaction();
+			return _transaction;
+		}
+
+		return new TestDbContextTransaction(); // Send a fake one to the actual test code
 	}
 
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

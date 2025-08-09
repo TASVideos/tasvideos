@@ -18,7 +18,7 @@ public abstract class TestDbBase
 	protected TestDbBase()
 	{
 		_db = Create();
-		_transaction = _db.Database.BeginTransaction();
+		_transaction = _db.BeginTransaction();
 	}
 
 	public static void AssemblyInit(TestContext context)

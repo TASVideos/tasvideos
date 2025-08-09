@@ -60,13 +60,19 @@ public interface IQueueService
 	/// <summary>
 	/// Returns whether the user has exceeded the submission limit
 	/// </summary>
-	/// <returns>Next time the user can submit, if limit has been exceeded, else null</returns>
+	/// <returns>Next time the user can submit, if the limit has been exceeded, else null</returns>
 	Task<DateTime?> ExceededSubmissionLimit(int userId);
 
 	/// <summary>
 	/// Returns the total numbers of submissions the given user has submitted
 	/// </summary>
 	Task<int> GetSubmissionCount(int userId);
+
+	/// <summary>
+	/// Creates a new submission
+	/// </summary>
+	/// <returns>The submission on success or error message on error</returns>
+	Task<SubmitResult> Submit(SubmitRequest request);
 }
 
 internal class QueueService(
@@ -508,6 +514,93 @@ internal class QueueService(
 
 	public async Task<int> GetSubmissionCount(int userId)
 		=> await db.Submissions.CountAsync(s => s.SubmitterId == userId);
+
+	public async Task<SubmitResult> Submit(SubmitRequest request)
+	{
+		// Create the submission entity
+		var submission = new Submission
+		{
+			SubmittedGameVersion = request.GameVersion,
+			GameName = request.GameName,
+			Branch = request.GoalName?.Trim('"'),
+			RomName = request.RomName,
+			EmulatorVersion = request.Emulator,
+			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(request.EncodeEmbeddedLink),
+			AdditionalAuthors = request.ExternalAuthors.NormalizeCsv(),
+			MovieFile = request.MovieFile,
+			Submitter = request.Submitter
+		};
+
+		try
+		{
+			using var dbTransaction = await db.BeginTransactionAsync();
+
+			var error = await MapParsedResult(request.ParseResult, submission);
+			if (!string.IsNullOrWhiteSpace(error))
+			{
+				return new FailedSubmitResult($"Failed to map parsed result: {error}");
+			}
+
+			// Set hash information
+			if (request.ParseResult.Hashes.Count > 0)
+			{
+				submission.HashType = request.ParseResult.Hashes.First().Key.ToString();
+				submission.Hash = request.ParseResult.Hashes.First().Value;
+			}
+
+			// Save submission to get ID
+			db.Submissions.Add(submission);
+			await db.SaveChangesAsync();
+
+			// Create wiki page
+			await wikiPages.Add(new WikiCreateRequest
+			{
+				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
+				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
+				Markup = request.Markup,
+				AuthorId = request.Submitter.Id
+			});
+
+			// Create submission authors
+			db.SubmissionAuthors.AddRange(await db.Users
+				.ToSubmissionAuthors(submission.Id, request.Authors)
+				.ToListAsync());
+
+			// Generate title and create the forum topic
+			submission.GenerateTitle();
+			submission.TopicId = await tva.PostSubmissionTopic(submission.Id, submission.Title);
+			await db.SaveChangesAsync();
+
+			// Commit transaction
+			await dbTransaction.CommitAsync();
+		}
+		catch (Exception ex)
+		{
+			return new FailedSubmitResult(ex.ToString());
+		}
+
+		// Handle screenshot download and publisher notification (after transaction commit)
+		byte[]? screenshotFile = null;
+		if (youtubeSync.IsYoutubeUrl(submission.EncodeEmbedLink))
+		{
+			try
+			{
+				var youtubeEmbedImageLink = "https://i.ytimg.com/vi/" + submission.EncodeEmbedLink!.Split('/').Last() + "/hqdefault.jpg";
+				using var client = new HttpClient();
+				var response = await client.GetAsync(youtubeEmbedImageLink);
+				if (response.IsSuccessStatusCode)
+				{
+					screenshotFile = await response.Content.ReadAsByteArrayAsync();
+				}
+			}
+			catch
+			{
+				// Ignore screenshot download failures
+			}
+		}
+
+		return new SubmitResult(null, submission.Id, submission.Title, screenshotFile);
+	}
 }
 
 public interface ISubmissionDisplay
@@ -553,3 +646,24 @@ public record UnpublishResult(
 	internal static UnpublishResult Success(string publicationTitle)
 		=> new(UnpublishStatus.Success, publicationTitle, "");
 }
+
+public record SubmitRequest(
+	string GameName,
+	string RomName,
+	string? GameVersion,
+	string? GoalName,
+	string? Emulator,
+	string? EncodeEmbeddedLink,
+	IList<string> Authors,
+	string? ExternalAuthors,
+	string Markup,
+	byte[] MovieFile,
+	IParseResult ParseResult,
+	User Submitter);
+
+public record SubmitResult(string? ErrorMessage, int Id, string Title, byte[]? Screenshot)
+{
+	public bool Success => ErrorMessage == null;
+}
+
+public record FailedSubmitResult(string ErrorMessage) : SubmitResult(ErrorMessage, -1, "", null);

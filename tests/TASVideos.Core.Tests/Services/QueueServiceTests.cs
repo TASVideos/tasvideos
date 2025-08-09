@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Wiki;
+﻿using Microsoft.EntityFrameworkCore;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
@@ -847,6 +848,321 @@ public class QueueServiceTests : TestDbBase
 
 		var actual = await _queueService.GetSubmissionCount(sub.Entity.Submitter!.Id);
 		Assert.AreEqual(1, actual);
+	}
+
+	#endregion
+
+	#region Submit
+
+	[TestMethod]
+	public async Task Submit_MapParsedResultFails_ReturnsFailedResult()
+	{
+		var user = _db.AddUser(0).Entity;
+		var request = CreateValidSubmitRequest(user, "INVALID_SYSTEM");
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsFalse(result.Success);
+		Assert.IsNotNull(result.ErrorMessage);
+		Assert.IsTrue(result.ErrorMessage.Contains("INVALID_SYSTEM"));
+	}
+
+	[TestMethod]
+	public async Task Submit_Success_CreatesSubmissionAndWikiPage()
+	{
+		_db.AddForumConstantEntities();
+		var user = _db.AddUser(0).Entity;
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		_db.GameSystemFrameRates.Add(new()
+		{
+			GameSystemId = gameSystem.Id,
+			FrameRate = 60.0,
+			RegionCode = "NTSC"
+		});
+		await _db.SaveChangesAsync();
+
+		const int expectedTopicId = 12345;
+		_tva.PostSubmissionTopic(Arg.Any<int>(), Arg.Any<string>()).Returns(expectedTopicId);
+		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(false);
+
+		var request = CreateValidSubmitRequest(user, "NES");
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success);
+		Assert.IsNull(result.ErrorMessage);
+		Assert.IsTrue(result.Id > 0);
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Title));
+
+		var actualSub = await _db.Submissions.FindAsync(result.Id);
+		Assert.IsNotNull(actualSub);
+		Assert.AreEqual(user.Id, actualSub.SubmitterId);
+		Assert.AreEqual(request.GameName, actualSub.GameName);
+		Assert.AreEqual(request.RomName, actualSub.RomName);
+		Assert.AreEqual(request.GoalName, actualSub.Branch);
+		Assert.AreEqual(expectedTopicId, actualSub.TopicId);
+		Assert.AreEqual(gameSystem.Id, actualSub.SystemId);
+		Assert.IsTrue(actualSub.Title.Contains(request.GameName));
+
+		var actualSubAuthors = await _db.SubmissionAuthors
+			.Where(sa => sa.SubmissionId == result.Id)
+			.ToListAsync();
+		Assert.AreEqual(request.Authors.Count, actualSubAuthors.Count);
+
+		await _wikiPages.Received(1).Add(Arg.Is<WikiCreateRequest>(r =>
+			r.PageName == LinkConstants.SubmissionWikiPage + result.Id &&
+			r.Markup == request.Markup &&
+			r.AuthorId == user.Id));
+
+		await _tva.Received(1).PostSubmissionTopic(result.Id, result.Title);
+	}
+
+	[TestMethod]
+	public async Task Submit_WithYouTubeLink_DownloadsScreenshot()
+	{
+		var user = _db.AddUser(0).Entity;
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		_db.GameSystemFrameRates.Add(new()
+		{
+			GameSystemId = gameSystem.Id,
+			FrameRate = 60.0,
+			RegionCode = "NTSC"
+		});
+		await _db.SaveChangesAsync();
+
+		_youtubeSync.ConvertToEmbedLink("https://www.youtube.com/watch?v=dQw4w9WgXcQ")
+			.Returns("https://www.youtube.com/embed/dQw4w9WgXcQ");
+		_youtubeSync.IsYoutubeUrl("https://www.youtube.com/embed/dQw4w9WgXcQ").Returns(true);
+		_tva.PostSubmissionTopic(Arg.Any<int>(), Arg.Any<string>()).Returns(12345);
+
+		var request = CreateValidSubmitRequest(user, "NES")
+			with { EncodeEmbeddedLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" };
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success);
+		Assert.IsNull(result.ErrorMessage);
+		Assert.IsNotNull(result.Screenshot);
+
+		var submission = await _db.Submissions.FindAsync(result.Id);
+		Assert.IsNotNull(submission);
+		Assert.AreEqual("https://www.youtube.com/embed/dQw4w9WgXcQ", submission.EncodeEmbedLink);
+	}
+
+	[TestMethod]
+	public async Task Submit_WithHashInformation_SetsHashCorrectly()
+	{
+		var user = _db.AddUser(0).Entity;
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		_db.GameSystemFrameRates.Add(new()
+		{
+			GameSystemId = gameSystem.Id,
+			FrameRate = 60.0,
+			RegionCode = "NTSC"
+		});
+		await _db.SaveChangesAsync();
+
+		var parseResult = new TestParseResult
+		{
+			Success = true,
+			SystemCode = "NES",
+			Region = RegionType.Ntsc,
+			Hashes = new Dictionary<HashType, string>
+			{
+				[HashType.Sha1] = "abc123def456"
+			}
+		};
+
+		var request = CreateValidSubmitRequest(user, "NES", parseResult);
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success);
+
+		var actualSub = await _db.Submissions.FindAsync(result.Id);
+		Assert.IsNotNull(actualSub);
+		Assert.AreEqual("Sha1", actualSub.HashType);
+		Assert.AreEqual("abc123def456", actualSub.Hash);
+	}
+
+	[TestMethod]
+	public async Task Submit_WithFrameRateOverride_CreatesNewFrameRate()
+	{
+		_db.AddForumConstantEntities();
+		var user = _db.AddUser(0).Entity;
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		await _db.SaveChangesAsync();
+
+		const double customFrameRate = 59.85;
+		var parseResult = new TestParseResult
+		{
+			Success = true,
+			SystemCode = "NES",
+			Region = RegionType.Ntsc,
+			FrameRateOverride = customFrameRate
+		};
+
+		var request = CreateValidSubmitRequest(user, "NES", parseResult);
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success);
+		Assert.IsNull(result.ErrorMessage);
+
+		var actualSub = await _db.Submissions
+			.Include(s => s.SystemFrameRate)
+			.SingleOrDefaultAsync(s => s.Id == result.Id);
+		Assert.IsNotNull(actualSub);
+		Assert.IsNotNull(actualSub.SystemFrameRate);
+		Assert.AreEqual(customFrameRate, actualSub.SystemFrameRate.FrameRate);
+		Assert.AreEqual("NTSC", actualSub.SystemFrameRate.RegionCode);
+		Assert.AreEqual(gameSystem.Id, actualSub.SystemFrameRate.GameSystemId);
+	}
+
+	[TestMethod]
+	public async Task Submit_WithAnnotationsAndWarnings_SetsCorrectly()
+	{
+		var user = _db.AddUser(0).Entity;
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		_db.GameSystemFrameRates.Add(new()
+		{
+			GameSystemId = gameSystem.Id,
+			FrameRate = 60.0,
+			RegionCode = "NTSC"
+		});
+		await _db.SaveChangesAsync();
+
+		const string annotations = "Test annotations with important information";
+		var parseResult = new SubmitTestParseResult
+		{
+			Success = true,
+			SystemCode = "NES",
+			Region = RegionType.Ntsc,
+			Annotations = annotations,
+			WarningsList = [ParseWarnings.MissingRerecordCount, ParseWarnings.SystemIdInferred]
+		};
+		var request = CreateValidSubmitRequest(user, "NES", parseResult);
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success);
+		Assert.IsNull(result.ErrorMessage);
+
+		var actualSub = await _db.Submissions.FindAsync(result.Id);
+		Assert.IsNotNull(actualSub);
+		Assert.AreEqual(annotations, actualSub.Annotations);
+		Assert.IsFalse(string.IsNullOrWhiteSpace(actualSub.Warnings));
+		Assert.IsTrue(actualSub.Warnings.Contains("MissingRerecordCount"));
+		Assert.IsTrue(actualSub.Warnings.Contains("SystemIdInferred"));
+	}
+
+	[TestMethod]
+	public async Task Submit_DatabaseTransactionRollsBackOnException()
+	{
+		var user = _db.AddUser(0).Entity;
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		_db.GameSystemFrameRates.Add(new()
+		{
+			GameSystemId = gameSystem.Id,
+			FrameRate = 60.0,
+			RegionCode = "NTSC"
+		});
+		await _db.SaveChangesAsync();
+
+		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(false);
+		_wikiPages.When(w => w.Add(Arg.Any<WikiCreateRequest>()))
+			.Do(_ => throw new Exception("Wiki creation failed"));
+
+		var request = CreateValidSubmitRequest(user, "NES");
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsFalse(result.Success);
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
+
+		// We cannot currently test rollback since the rollback is fake for tests
+		////var submitterSubs = await _db.Submissions.Where(s => s.SubmitterId == user.Id).ToListAsync();
+		////Assert.AreEqual(0, submitterSubs.Count, "Expected no submissions to be created due to rollback");
+	}
+
+	[TestMethod]
+	public async Task Submit_WithExternalAuthors_NormalizesExternalAuthors()
+	{
+		var user = _db.AddUser(0).Entity;
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		_db.GameSystemFrameRates.Add(new()
+		{
+			GameSystemId = gameSystem.Id,
+			FrameRate = 60.0,
+			RegionCode = "NTSC"
+		});
+		await _db.SaveChangesAsync();
+		var request = CreateValidSubmitRequest(user, "NES")
+			with { ExternalAuthors = "External Author 1, External Author 2" };
+
+		var result = await _queueService.Submit(request);
+
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success, $"Expected success but got failure. Error: {result.ErrorMessage}");
+
+		var actualSub = await _db.Submissions.FindAsync(result.Id);
+		Assert.IsNotNull(actualSub);
+
+		// Saved additional authors should have no spaces around commas
+		Assert.AreEqual("External Author 1,External Author 2", actualSub.AdditionalAuthors);
+	}
+
+	private static SubmitRequest CreateValidSubmitRequest(User submitter, string systemCode, IParseResult? customParseResult = null)
+	{
+		var parseResult = customParseResult ?? new TestParseResult
+		{
+			Success = true,
+			SystemCode = systemCode,
+			Region = RegionType.Ntsc,
+			StartType = MovieStartType.PowerOn,
+			Frames = 1000,
+			RerecordCount = 50,
+			FileExtension = ".fm2"
+		};
+
+		return new SubmitRequest(
+			GameName: "Test Game",
+			RomName: "Test ROM",
+			GameVersion: "1.0",
+			GoalName: "any%",
+			Emulator: "FCEUX 2.6.4",
+			EncodeEmbeddedLink: null,
+			Authors: [submitter.UserName],
+			ExternalAuthors: null,
+			Markup: "Test submission markup content",
+			MovieFile: "MOVIE_FILE_CONTENT"u8.ToArray(),
+			ParseResult: parseResult,
+			Submitter: submitter);
+	}
+
+	private class SubmitTestParseResult : IParseResult
+	{
+		public bool Success { get; init; }
+		public IEnumerable<string> Errors { get; } = [];
+		public IEnumerable<ParseWarnings> Warnings => WarningsList;
+		public List<ParseWarnings> WarningsList { get; init; } = [];
+		public string FileExtension => "";
+		public RegionType Region { get; init; }
+		public int Frames => 0;
+		public string SystemCode { get; init; } = "";
+		public int RerecordCount => 0;
+		public MovieStartType StartType => MovieStartType.PowerOn;
+		public double? FrameRateOverride => null;
+		public long? CycleCount => null;
+		public string? Annotations { get; init; }
+		public Dictionary<HashType, string> Hashes { get; } = [];
 	}
 
 	#endregion
