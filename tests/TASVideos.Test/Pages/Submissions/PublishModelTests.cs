@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
@@ -29,6 +30,8 @@ public class PublishModelTests : TestDbBase
 		var env = Substitute.For<IWebHostEnvironment>();
 		_page = new PublishModel(_db, publisher, _wikiPages, uploader, tasVideoAgent, userManager, fileService, youtubeSync, queueService, env);
 	}
+
+	#region OnGet
 
 	[TestMethod]
 	public async Task OnGet_NoSubmission_ReturnsNotFound()
@@ -71,6 +74,50 @@ public class PublishModelTests : TestDbBase
 		Assert.AreEqual(submission.Title, _page.Submission.Title);
 		Assert.IsTrue(_page.Submission.CanPublish);
 		Assert.AreEqual(markup, _page.Markup);
+	}
+
+	[TestMethod]
+	public async Task OnGetObsoletePublication_ValidId_ReturnsPublicationData()
+	{
+		var pub = _db.AddPublication().Entity;
+		var tag = _db.Tags.Add(new Tag { Id = 1, Code = "test", DisplayName = "Test" }).Entity;
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag });
+		await _db.SaveChangesAsync();
+
+		var wikiPage = new WikiResult { Markup = "Test publication markup" };
+		_wikiPages.Page($"InternalSystem/PublicationContent/M{pub.Id}").Returns(wikiPage);
+
+		var actual = await _page.OnGetObsoletePublication(pub.Id);
+
+		Assert.IsInstanceOfType<JsonResult>(actual);
+		var jsonResult = (JsonResult)actual;
+		Assert.IsNotNull(jsonResult.Value);
+	}
+
+	[TestMethod]
+	public async Task OnGetObsoletePublication_InvalidId_ReturnsBadRequest()
+	{
+		var actual = await _page.OnGetObsoletePublication(999);
+
+		Assert.IsInstanceOfType<BadRequestObjectResult>(actual);
+		var badRequestResult = (BadRequestObjectResult)actual;
+		Assert.IsNotNull(badRequestResult.Value);
+		Assert.IsTrue(badRequestResult.Value.ToString()!.Contains("Unable to find publication"));
+	}
+
+	#endregion
+
+	#region OnPost
+
+	[TestMethod]
+	public async Task OnPost_NonExistentSubmission_ReturnsNotFound()
+	{
+		_page.Id = 999;
+		_page.Submission = CreateValidPublishModel();
+
+		var actual = await _page.OnPost();
+
+		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
 	[TestMethod]
@@ -120,33 +167,78 @@ public class PublishModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnGetObsoletePublication_ValidId_ReturnsPublicationData()
+	public async Task OnPost_UnpublishableSubmissionStatus_ReturnsNotFound()
 	{
-		var pub = _db.AddPublication().Entity;
-		var tag = _db.Tags.Add(new Tag { Id = 1, Code = "test", DisplayName = "Test" }).Entity;
-		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag });
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		submission.Status = SubmissionStatus.New;
 		await _db.SaveChangesAsync();
 
-		var wikiPage = new WikiResult { Markup = "Test publication markup" };
-		_wikiPages.Page($"InternalSystem/PublicationContent/M{pub.Id}").Returns(ValueTask.FromResult((IWikiPage?)wikiPage));
+		_page.Id = submission.Id;
+		_page.Submission = CreateValidPublishModel();
 
-		var actual = await _page.OnGetObsoletePublication(pub.Id);
+		var actual = await _page.OnPost();
 
-		Assert.IsInstanceOfType<JsonResult>(actual);
-		var jsonResult = (JsonResult)actual;
-		Assert.IsNotNull(jsonResult.Value);
+		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
 	[TestMethod]
-	public async Task OnGetObsoletePublication_InvalidId_ReturnsBadRequest()
+	public async Task OnPost_InvalidMovieToObsolete_ShowsError()
 	{
-		var actual = await _page.OnGetObsoletePublication(999);
+		var submission = _db.CreatePublishableSubmission().Entity;
+		_page.Id = submission.Id;
+		_page.Submission = new PublishModel.SubmissionPublishModel
+		{
+			MovieDescription = "Test description",
+			MovieFilename = "test-movie",
+			MovieExtension = "bk2",
+			OnlineWatchingUrl = "https://example.com/video",
+			Screenshot = CreateValidScreenshotFile(),
+			ScreenshotDescription = "Test screenshot",
+			SelectedFlags = [],
+			SelectedTags = [],
+			MovieToObsolete = 999
+		};
 
-		Assert.IsInstanceOfType<BadRequestObjectResult>(actual);
-		var badRequestResult = (BadRequestObjectResult)actual;
-		Assert.IsNotNull(badRequestResult.Value);
-		Assert.IsTrue(badRequestResult.Value.ToString()!.Contains("Unable to find publication"));
+		var actual = await _page.OnPost();
+
+		Assert.IsInstanceOfType<PageResult>(actual);
+		Assert.IsFalse(_page.ModelState.IsValid);
+		Assert.IsTrue(_page.ModelState.ContainsKey("Submission.MovieToObsolete"));
 	}
+
+	[TestMethod]
+	public async Task OnPost_ValidSubmission_CreatesPublicationAndRedirects()
+	{
+		var submission = _db.CreatePublishableSubmission().Entity;
+		_page.Id = submission.Id;
+		_page.Submission = CreateValidPublishModel();
+		_page.Markup = "Test publication markup content";
+
+		var wikiPage = new WikiResult { Markup = "Created publication wiki page" };
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
+		_wikiPages.Page($"InternalSystem/SubmissionContent/S{submission.Id}").Returns(new WikiResult { Markup = "Submission markup" });
+
+		var actual = await _page.OnPost();
+
+		Assert.IsInstanceOfType<RedirectResult>(actual);
+		var redirectResult = (RedirectResult)actual;
+		Assert.IsTrue(redirectResult.Url.Contains('M'), "Should redirect to publication page with M prefix");
+
+		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.SubmissionId == submission.Id);
+		Assert.IsNotNull(publication);
+		Assert.AreEqual(
+			_page.Submission.MovieFilename + "." + _page.Submission.MovieExtension,
+			publication.MovieFileName);
+
+		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
+		Assert.IsNotNull(updatedSubmission);
+		Assert.AreEqual(SubmissionStatus.Published, updatedSubmission.Status);
+
+		// Verify wiki page creation was called
+		await _wikiPages.Received(1).Add(Arg.Any<WikiCreateRequest>());
+	}
+
+	#endregion
 
 	private static PublishModel.SubmissionPublishModel CreateValidPublishModel() => new()
 	{
