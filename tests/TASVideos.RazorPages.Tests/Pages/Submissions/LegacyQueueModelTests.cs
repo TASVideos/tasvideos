@@ -1,4 +1,4 @@
-using TASVideos.Pages.Submissions;
+﻿using TASVideos.Pages.Submissions;
 using TASVideos.Tests.Base;
 using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 

@@ -47,4 +47,19 @@ public static class RazorTestHelpers
 
 		return new ClaimsPrincipal(identity);
 	}
+
+	public static IFormFile CreateMockFormFile(string fileName, string contentType)
+	{
+		var formFile = Substitute.For<IFormFile>();
+		formFile.FileName.Returns(fileName);
+		formFile.ContentType.Returns(contentType);
+		formFile.Length.Returns(100);
+
+		var stream = new MemoryStream([1, 2, 3, 4]);
+		formFile.OpenReadStream().Returns(stream);
+		formFile.CopyToAsync(Arg.Any<Stream>()).Returns(Task.CompletedTask)
+			.AndDoes(x => stream.CopyTo((Stream)x.Args()[0]));
+
+		return formFile;
+	}
 }

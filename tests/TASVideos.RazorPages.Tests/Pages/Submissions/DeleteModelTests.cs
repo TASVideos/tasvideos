@@ -1,4 +1,4 @@
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
