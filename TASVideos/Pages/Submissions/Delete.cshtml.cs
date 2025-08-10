@@ -33,21 +33,17 @@ public class DeleteModel(IQueueService queueService, IExternalMediaPublisher pub
 
 		var result = await queueService.DeleteSubmission(Id);
 
-		if (result.Status == DeleteSubmissionResult.DeleteStatus.NotFound)
+		switch (result.Status)
 		{
-			ErrorStatusMessage($"Submission {Id} not found");
-			return RedirectToPage("View", new { Id });
-		}
-
-		if (result.Status == DeleteSubmissionResult.DeleteStatus.NotAllowed)
-		{
-			ErrorStatusMessage(result.ErrorMessage);
-			return RedirectToPage("View", new { Id });
-		}
-
-		if (result.Status == DeleteSubmissionResult.DeleteStatus.Success)
-		{
-			await publisher.AnnounceSubmissionDelete(result.SubmissionTitle, Id);
+			case DeleteSubmissionResult.DeleteStatus.NotFound:
+				ErrorStatusMessage($"Submission {Id} not found");
+				return RedirectToPage("View", new { Id });
+			case DeleteSubmissionResult.DeleteStatus.NotAllowed:
+				ErrorStatusMessage(result.ErrorMessage);
+				return RedirectToPage("View", new { Id });
+			case DeleteSubmissionResult.DeleteStatus.Success:
+				await publisher.AnnounceSubmissionDelete(result.SubmissionTitle, Id);
+				break;
 		}
 
 		return BaseRedirect("/Subs-List");
