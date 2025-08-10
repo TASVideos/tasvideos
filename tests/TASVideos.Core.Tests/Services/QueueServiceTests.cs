@@ -22,6 +22,9 @@ public class QueueServiceTests : TestDbBase
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
 	private readonly IWikiPages _wikiPages;
+	private readonly IMediaFileUploader _uploader;
+	private readonly IFileService _fileService;
+	private readonly IUserManager _userManager;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -38,12 +41,15 @@ public class QueueServiceTests : TestDbBase
 		_youtubeSync = Substitute.For<IYoutubeSync>();
 		_tva = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
+		_uploader = Substitute.For<IMediaFileUploader>();
+		_fileService = Substitute.For<IFileService>();
+		_userManager = Substitute.For<IUserManager>();
 		var settings = new AppSettings
 		{
 			MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment,
 			SubmissionRate = new() { Days = SubmissionRateDays, Submissions = SubmissionRateSubs }
 		};
-		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages);
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, _uploader, _fileService, _userManager);
 	}
 
 	#region AvailableStatuses
@@ -938,7 +944,8 @@ public class QueueServiceTests : TestDbBase
 		_tva.PostSubmissionTopic(Arg.Any<int>(), Arg.Any<string>()).Returns(12345);
 
 		var request = CreateValidSubmitRequest(user, "NES")
-			with { EncodeEmbeddedLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" };
+			with
+		{ EncodeEmbeddedLink = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" };
 
 		var result = await _queueService.Submit(request);
 
@@ -1105,7 +1112,8 @@ public class QueueServiceTests : TestDbBase
 		});
 		await _db.SaveChangesAsync();
 		var request = CreateValidSubmitRequest(user, "NES")
-			with { ExternalAuthors = "External Author 1, External Author 2" };
+			with
+		{ ExternalAuthors = "External Author 1, External Author 2" };
 
 		var result = await _queueService.Submit(request);
 

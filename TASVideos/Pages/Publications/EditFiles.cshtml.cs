@@ -55,7 +55,7 @@ public class EditFilesModel(
 			return Page();
 		}
 
-		var path = await uploader.UploadScreenshot(Id, NewScreenshot!, Description);
+		var (path, _) = await uploader.UploadScreenshot(Id, NewScreenshot!, Description);
 		await Log($"Added Screenshot file {path}");
 		return RedirectToPage("EditFiles", new { Id });
 	}

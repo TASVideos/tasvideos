@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
 using TASVideos.Data.Entity;
+using TASVideos.Extensions;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -21,14 +19,8 @@ public class PublishModelTests : TestDbBase
 	{
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_wikiPages = Substitute.For<IWikiPages>();
-		var uploader = Substitute.For<IMediaFileUploader>();
-		var tasVideoAgent = Substitute.For<ITASVideoAgent>();
-		var userManager = Substitute.For<IUserManager>();
-		var fileService = Substitute.For<IFileService>();
-		var youtubeSync = Substitute.For<IYoutubeSync>();
 		var queueService = Substitute.For<IQueueService>();
-		var env = Substitute.For<IWebHostEnvironment>();
-		_page = new PublishModel(_db, publisher, _wikiPages, uploader, tasVideoAgent, userManager, fileService, youtubeSync, queueService, env);
+		_page = new PublishModel(_db, publisher, _wikiPages, queueService);
 	}
 
 	#region OnGet
@@ -112,10 +104,17 @@ public class PublishModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_NonExistentSubmission_ReturnsNotFound()
 	{
-		_page.Id = 999;
-		_page.Submission = CreateValidPublishModel();
+		var queueService = Substitute.For<IQueueService>();
+		queueService.Publish(Arg.Any<PublishSubmissionRequest>())
+			.Returns(new FailedPublishSubmissionResult("Submission not found or cannot be published"));
 
-		var actual = await _page.OnPost();
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService)
+		{
+			Id = 999,
+			Submission = CreateValidPublishModel()
+		};
+
+		var actual = await newPage.OnPost();
 
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
@@ -151,19 +150,23 @@ public class PublishModelTests : TestDbBase
 	public async Task OnPost_DuplicateMovieFileName_ShowsError()
 	{
 		var submission = _db.CreatePublishableSubmission().Entity;
-		_page.Id = submission.Id;
-		_page.Submission = CreateValidPublishModel();
+		var publishModel = CreateValidPublishModel();
 
-		// Add existing publication with the same filename
-		var existingPub = _db.AddPublication().Entity;
-		existingPub.MovieFileName = _page.Submission.MovieFilename + "." + _page.Submission.MovieExtension;
-		await _db.SaveChangesAsync();
+		var queueService = Substitute.For<IQueueService>();
+		queueService.Publish(Arg.Any<PublishSubmissionRequest>())
+			.Returns(new FailedPublishSubmissionResult("Movie filename test-movie.bk2 already exists"));
 
-		var actual = await _page.OnPost();
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService)
+		{
+			Id = submission.Id,
+			Submission = publishModel
+		};
+
+		var actual = await newPage.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(actual);
-		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.ContainsKey("Submission.MovieFilename"));
+		Assert.IsFalse(newPage.ModelState.IsValid);
+		Assert.IsTrue(newPage.ModelState.ContainsKey("Submission.MovieFilename"));
 	}
 
 	[TestMethod]
@@ -173,10 +176,17 @@ public class PublishModelTests : TestDbBase
 		submission.Status = SubmissionStatus.New;
 		await _db.SaveChangesAsync();
 
-		_page.Id = submission.Id;
-		_page.Submission = CreateValidPublishModel();
+		var queueService = Substitute.For<IQueueService>();
+		queueService.Publish(Arg.Any<PublishSubmissionRequest>())
+			.Returns(new FailedPublishSubmissionResult("Submission not found or cannot be published"));
 
-		var actual = await _page.OnPost();
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService)
+		{
+			Id = submission.Id,
+			Submission = CreateValidPublishModel()
+		};
+
+		var actual = await newPage.OnPost();
 
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
@@ -185,8 +195,7 @@ public class PublishModelTests : TestDbBase
 	public async Task OnPost_InvalidMovieToObsolete_ShowsError()
 	{
 		var submission = _db.CreatePublishableSubmission().Entity;
-		_page.Id = submission.Id;
-		_page.Submission = new PublishModel.SubmissionPublishModel
+		var publishModel = new PublishModel.SubmissionPublishModel
 		{
 			MovieDescription = "Test description",
 			MovieFilename = "test-movie",
@@ -199,11 +208,21 @@ public class PublishModelTests : TestDbBase
 			MovieToObsolete = 999
 		};
 
-		var actual = await _page.OnPost();
+		var queueService = Substitute.For<IQueueService>();
+		queueService.Publish(Arg.Any<PublishSubmissionRequest>())
+			.Returns(new FailedPublishSubmissionResult("Publication to obsolete does not exist"));
+
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService)
+		{
+			Id = submission.Id,
+			Submission = publishModel
+		};
+
+		var actual = await newPage.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(actual);
-		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.ContainsKey("Submission.MovieToObsolete"));
+		Assert.IsFalse(newPage.ModelState.IsValid);
+		Assert.IsTrue(newPage.ModelState.ContainsKey("Submission.MovieToObsolete"));
 	}
 
 	[TestMethod]
@@ -214,28 +233,63 @@ public class PublishModelTests : TestDbBase
 		_page.Submission = CreateValidPublishModel();
 		_page.Markup = "Test publication markup content";
 
-		var wikiPage = new WikiResult { Markup = "Created publication wiki page" };
-		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
-		_wikiPages.Page($"InternalSystem/SubmissionContent/S{submission.Id}").Returns(new WikiResult { Markup = "Submission markup" });
+		var queueService = Substitute.For<IQueueService>();
 
-		var actual = await _page.OnPost();
+		// Create a new page instance with the mocked service
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService)
+		{
+			Id = submission.Id,
+			Submission = CreateValidPublishModel(),
+			Markup = "Test publication markup content"
+		};
+
+		// Set up the publication for post-transaction queries
+		var publication = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
+		var expectedPublicationId = publication.Id;
+
+		queueService.Publish(Arg.Any<PublishSubmissionRequest>())
+			.Returns(new PublishSubmissionResult(null, expectedPublicationId, "", "", []));
+
+		var publicationPageName = WikiHelper.ToPublicationWikiPageName(expectedPublicationId);
+		_wikiPages.Page(publicationPageName).Returns(new WikiResult { Markup = "Publication wiki page" });
+
+		var actual = await newPage.OnPost();
 
 		Assert.IsInstanceOfType<RedirectResult>(actual);
 		var redirectResult = (RedirectResult)actual;
-		Assert.IsTrue(redirectResult.Url.Contains('M'), "Should redirect to publication page with M prefix");
+		Assert.IsTrue(redirectResult.Url.Contains($"{expectedPublicationId}M"), "Should redirect to publication page");
 
-		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.SubmissionId == submission.Id);
-		Assert.IsNotNull(publication);
-		Assert.AreEqual(
-			_page.Submission.MovieFilename + "." + _page.Submission.MovieExtension,
-			publication.MovieFileName);
+		// Verify the service was called with correct parameters
+		await queueService.Received(1).Publish(Arg.Is<PublishSubmissionRequest>(r =>
+			r.SubmissionId == submission.Id &&
+			r.MovieDescription == newPage.Submission.MovieDescription &&
+			r.MovieFilename == newPage.Submission.MovieFilename));
+	}
 
-		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
-		Assert.IsNotNull(updatedSubmission);
-		Assert.AreEqual(SubmissionStatus.Published, updatedSubmission.Status);
+	[TestMethod]
+	public async Task OnPost_ServiceReturnsError_ShowsError()
+	{
+		var submission = _db.CreatePublishableSubmission().Entity;
+		_page.Id = submission.Id;
+		_page.Submission = CreateValidPublishModel();
 
-		// Verify wiki page creation was called
-		await _wikiPages.Received(1).Add(Arg.Any<WikiCreateRequest>());
+		var queueService = Substitute.For<IQueueService>();
+		queueService.Publish(Arg.Any<PublishSubmissionRequest>())
+			.Returns(new FailedPublishSubmissionResult("Test error message"));
+
+		// Create a new page instance with the mocked service
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService)
+		{
+			Id = submission.Id,
+			Submission = CreateValidPublishModel()
+		};
+
+		var actual = await newPage.OnPost();
+
+		Assert.IsInstanceOfType<PageResult>(actual);
+		Assert.IsFalse(newPage.ModelState.IsValid);
+		Assert.IsTrue(newPage.ModelState.ContainsKey(""));
 	}
 
 	#endregion

@@ -123,17 +123,17 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceNewPublication(this IExternalMediaPublisher publisher, Publication publication, byte[]? imageData = null, string? imageMimeType = null, int? imageWidth = null, int? imageHeight = null)
+	public static async Task AnnounceNewPublication(this IExternalMediaPublisher publisher, int publicationId, string publicationTitle, byte[]? imageData = null, string? imageMimeType = null, int? imageWidth = null, int? imageHeight = null)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "New Movie Published!",
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
-			Title = $"New movie published! Go and see {publication.Title}",
-			FormattedTitle = $"New movie published! Go and see [{publication.Title}]({{0}})",
+			Title = $"New movie published! Go and see {publicationTitle}",
+			FormattedTitle = $"New movie published! Go and see [{publicationTitle}]({{0}})",
 			Body = "",
-			Link = publisher.ToAbsolute($"{publication.Id}M"),
+			Link = publisher.ToAbsolute($"{publicationId}M"),
 			ImageData = imageData,
 			ImageMimeType = imageMimeType,
 			ImageWidth = imageWidth,
