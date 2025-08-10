@@ -80,6 +80,8 @@ public interface IQueueService
 	/// </summary>
 	/// <returns>The publication ID on success or error message on error</returns>
 	Task<PublishSubmissionResult> Publish(PublishSubmissionRequest request);
+
+	Task<ObsoletePublicationResult?> GetObsoletePublicationTags(int publicationId);
 }
 
 internal class QueueService(
@@ -750,6 +752,22 @@ internal class QueueService(
 			return new FailedPublishSubmissionResult(ex.ToString());
 		}
 	}
+
+	public async Task<ObsoletePublicationResult?> GetObsoletePublicationTags(int publicationId)
+	{
+		var pub = await db.Publications
+			.Where(p => p.Id == publicationId)
+			.Select(p => new { p.Title, Tags = p.PublicationTags.Select(pt => pt.TagId).ToList() })
+			.SingleOrDefaultAsync();
+
+		if (pub is null)
+		{
+			return null;
+		}
+
+		var page = await wikiPages.PublicationPage(publicationId);
+		return new ObsoletePublicationResult(pub.Title, pub.Tags, page!.Markup);
+	}
 }
 
 public interface ISubmissionDisplay
@@ -839,3 +857,5 @@ public record PublishSubmissionResult(string? ErrorMessage, int PublicationId, s
 }
 
 public record FailedPublishSubmissionResult(string ErrorMessage) : PublishSubmissionResult(ErrorMessage, -1, "", "", []);
+
+public record ObsoletePublicationResult(string Title, List<int> Tags, string Markup);

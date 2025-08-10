@@ -72,29 +72,57 @@ public class PublishModelTests : TestDbBase
 	public async Task OnGetObsoletePublication_ValidId_ReturnsPublicationData()
 	{
 		var pub = _db.AddPublication().Entity;
-		var tag = _db.Tags.Add(new Tag { Id = 1, Code = "test", DisplayName = "Test" }).Entity;
-		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag });
+		var tag1 = _db.Tags.Add(new Tag { Id = 1, Code = "test1", DisplayName = "Test1" }).Entity;
+		var tag2 = _db.Tags.Add(new Tag { Id = 2, Code = "test2", DisplayName = "Test2" }).Entity;
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag1 });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag2 });
 		await _db.SaveChangesAsync();
 
-		var wikiPage = new WikiResult { Markup = "Test publication markup" };
-		_wikiPages.Page($"InternalSystem/PublicationContent/M{pub.Id}").Returns(wikiPage);
+		const string expectedMarkup = "Test publication markup content";
+		var queueService = Substitute.For<IQueueService>();
+		var expectedResult = new ObsoletePublicationResult(pub.Title, [tag1.Id, tag2.Id], expectedMarkup);
+		queueService.GetObsoletePublicationTags(pub.Id).Returns(expectedResult);
 
-		var actual = await _page.OnGetObsoletePublication(pub.Id);
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService);
+		var actual = await newPage.OnGetObsoletePublication(pub.Id);
 
 		Assert.IsInstanceOfType<JsonResult>(actual);
 		var jsonResult = (JsonResult)actual;
 		Assert.IsNotNull(jsonResult.Value);
+		Assert.AreEqual(expectedResult, jsonResult.Value);
+		await queueService.Received(1).GetObsoletePublicationTags(pub.Id);
 	}
 
 	[TestMethod]
 	public async Task OnGetObsoletePublication_InvalidId_ReturnsBadRequest()
 	{
-		var actual = await _page.OnGetObsoletePublication(999);
+		const int invalidId = 999;
+		var queueService = Substitute.For<IQueueService>();
+		queueService.GetObsoletePublicationTags(invalidId).Returns((ObsoletePublicationResult?)null);
+
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService);
+		var actual = await newPage.OnGetObsoletePublication(invalidId);
 
 		Assert.IsInstanceOfType<BadRequestObjectResult>(actual);
 		var badRequestResult = (BadRequestObjectResult)actual;
 		Assert.IsNotNull(badRequestResult.Value);
-		Assert.IsTrue(badRequestResult.Value.ToString()!.Contains("Unable to find publication"));
+		Assert.AreEqual($"Unable to find publication with an id of {invalidId}", badRequestResult.Value);
+		await queueService.Received(1).GetObsoletePublicationTags(invalidId);
+	}
+
+	[TestMethod]
+	public async Task OnGetObsoletePublication_ServiceThrowsException_PropagatesException()
+	{
+		const int publicationId = 123;
+		var queueService = Substitute.For<IQueueService>();
+		var expectedException = new Exception("Database connection failed");
+		queueService.GetObsoletePublicationTags(publicationId).Returns(Task.FromException<ObsoletePublicationResult?>(expectedException));
+
+		var newPage = new PublishModel(_db, Substitute.For<IExternalMediaPublisher>(), _wikiPages, queueService);
+
+		var actualException = await Assert.ThrowsExactlyAsync<Exception>(() => newPage.OnGetObsoletePublication(publicationId));
+		Assert.AreEqual(expectedException.Message, actualException.Message);
+		await queueService.Received(1).GetObsoletePublicationTags(publicationId);
 	}
 
 	#endregion

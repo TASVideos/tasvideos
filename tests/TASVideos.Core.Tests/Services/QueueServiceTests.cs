@@ -1174,4 +1174,65 @@ public class QueueServiceTests : TestDbBase
 	}
 
 	#endregion
+
+	#region GetObsoletePublicationTags
+
+	[TestMethod]
+	public async Task GetObsoletePublicationTags_PublicationNotFound_ReturnsNull()
+	{
+		var result = await _queueService.GetObsoletePublicationTags(int.MaxValue);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task GetObsoletePublicationTags_PublicationExists_ReturnsCorrectData()
+	{
+		var tag1 = _db.Tags.Add(new Tag { Code = "Test1" }).Entity;
+		var tag2 = _db.Tags.Add(new Tag { Code = "Test2" }).Entity;
+		var pub = _db.AddPublication().Entity;
+		const string publicationTitle = "Test Publication Title";
+		pub.Title = publicationTitle;
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag1 });
+		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag2 });
+		await _db.SaveChangesAsync();
+
+		const string wikiMarkup = "Test wiki page content";
+		var expectedPageName = WikiHelper.ToPublicationWikiPageName(pub.Id);
+		var wikiResult = new WikiResult { Markup = wikiMarkup };
+		_wikiPages.Page(expectedPageName, null).Returns(ValueTask.FromResult<IWikiPage?>(wikiResult));
+
+		var result = await _queueService.GetObsoletePublicationTags(pub.Id);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(publicationTitle, result.Title);
+		Assert.AreEqual(2, result.Tags.Count);
+		Assert.IsTrue(result.Tags.Contains(tag1.Id));
+		Assert.IsTrue(result.Tags.Contains(tag2.Id));
+		Assert.AreEqual(wikiMarkup, result.Markup);
+		await _wikiPages.Received(1).Page(expectedPageName, null);
+	}
+
+	[TestMethod]
+	public async Task GetObsoletePublicationTags_PublicationWithNoTags_ReturnsEmptyTagsList()
+	{
+		var pub = _db.AddPublication().Entity;
+		const string publicationTitle = "Test Publication Without Tags";
+		pub.Title = publicationTitle;
+		await _db.SaveChangesAsync();
+
+		const string wikiMarkup = "Wiki content for publication without tags";
+		var expectedPageName = WikiHelper.ToPublicationWikiPageName(pub.Id);
+		var wikiResult = new WikiResult { Markup = wikiMarkup };
+		_wikiPages.Page(expectedPageName, null).Returns(ValueTask.FromResult<IWikiPage?>(wikiResult));
+
+		var result = await _queueService.GetObsoletePublicationTags(pub.Id);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(publicationTitle, result.Title);
+		Assert.AreEqual(0, result.Tags.Count);
+		Assert.AreEqual(wikiMarkup, result.Markup);
+		await _wikiPages.Received(1).Page(expectedPageName, null);
+	}
+
+	#endregion
 }

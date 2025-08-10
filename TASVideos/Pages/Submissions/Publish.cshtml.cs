@@ -110,18 +110,10 @@ public class PublishModel(
 
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
 	{
-		var pub = await db.Publications
-			.Where(p => p.Id == publicationId)
-			.Select(p => new { p.Title, Tags = p.PublicationTags.Select(pt => pt.TagId).ToList() })
-			.SingleOrDefaultAsync();
-
-		if (pub is null)
-		{
-			return BadRequest($"Unable to find publication with an id of {publicationId}");
-		}
-
-		var page = await wikiPages.PublicationPage(publicationId);
-		return Json(new ObsoletePublicationResult(pub.Title, pub.Tags, page!.Markup));
+		var pub = await queueService.GetObsoletePublicationTags(publicationId);
+		return pub is null
+			? BadRequest($"Unable to find publication with an id of {publicationId}")
+			: Json(pub);
 	}
 
 	private async Task PopulateDropdowns()
