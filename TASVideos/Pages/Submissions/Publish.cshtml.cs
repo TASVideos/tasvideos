@@ -112,7 +112,7 @@ public class PublishModel(
 	{
 		var pub = await db.Publications
 			.Where(p => p.Id == publicationId)
-			.Select(p => new ObsoletePublicationResult(p.Title, p.PublicationTags.Select(pt => pt.TagId).ToList()))
+			.Select(p => new { p.Title, Tags = p.PublicationTags.Select(pt => pt.TagId).ToList() })
 			.SingleOrDefaultAsync();
 
 		if (pub is null)
@@ -121,9 +121,7 @@ public class PublishModel(
 		}
 
 		var page = await wikiPages.PublicationPage(publicationId);
-		pub.Markup = page!.Markup;
-
-		return Json(pub);
+		return Json(new ObsoletePublicationResult(pub.Title, pub.Tags, page!.Markup));
 	}
 
 	private async Task PopulateDropdowns()
@@ -132,10 +130,7 @@ public class PublishModel(
 		AvailableTags = await db.Tags.ToDropdownList();
 	}
 
-	private record ObsoletePublicationResult(string Title, List<int> Tags)
-	{
-		public string Markup { get; set; } = "";
-	}
+	private record ObsoletePublicationResult(string Title, List<int> Tags, string Markup);
 
 	public class SubmissionPublishModel
 	{
