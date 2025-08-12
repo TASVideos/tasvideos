@@ -128,7 +128,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 		var publicationUrl2 = new PublicationUrl
 		{
 			Publication = publication2,
-			Url = "https://www.youtube.com/watch?v=abc123def456",
+			Url = "https://www.youtube.com/watch?v=sVR32jXj68w",
 			Type = PublicationUrlType.Streaming
 		};
 		_db.PublicationUrls.AddRange(publicationUrl1, publicationUrl2);
@@ -136,18 +136,18 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 		_youtubeSync.VideoId("https://www.youtube.com/watch?v=dQw4w9WgXcQ").Returns("dQw4w9WgXcQ");
-		_youtubeSync.VideoId("https://www.youtube.com/watch?v=abc123def456").Returns("abc123def456");
+		_youtubeSync.VideoId("https://www.youtube.com/watch?v=sVR32jXj68w").Returns("sVR32jXj68w");
 
 		_cache.TryGetValue("YoutubeUploaders-dQw4w9WgXcQ", out Arg.Any<string>()).Returns(x =>
 		{
 			x[1] = "Cached Channel";
 			return true;
 		});
-		_cache.TryGetValue("YoutubeUploaders-abc123def456", out Arg.Any<string>()).Returns(false);
+		_cache.TryGetValue("YoutubeUploaders-sVR32jXj68w", out Arg.Any<string>()).Returns(false);
 
 		var youtubeResponse = new YoutubeVideoResponseItem
 		{
-			Id = "abc123def456",
+			Id = "sVR32jXj68w",
 			Snippet = new YoutubeVideoResponseItem.SnippetData
 			{
 				ChannelTitle = "API Channel"
@@ -155,18 +155,18 @@ public class YoutubeUploadersModelTests : TestDbBase
 		};
 
 		// ReSharper disable PossibleMultipleEnumeration
-		_youtubeSync.GetPublicInfo(Arg.Is<IEnumerable<string>>(ids => ids.Contains("abc123def456") && !ids.Contains("dQw4w9WgXcQ")))
+		_youtubeSync.GetPublicInfo(Arg.Is<IEnumerable<string>>(ids => ids.Contains("sVR32jXj68w") && !ids.Contains("dQw4w9WgXcQ")))
 			.Returns([youtubeResponse]);
 
 		await _model.OnGet();
 
 		Assert.AreEqual(2, _model.Videos.Count);
 		var cachedVideo = _model.Videos.First(v => v.VideoId == "dQw4w9WgXcQ");
-		var apiVideo = _model.Videos.First(v => v.VideoId == "abc123def456");
+		var apiVideo = _model.Videos.First(v => v.VideoId == "sVR32jXj68w");
 
 		Assert.AreEqual("Cached Channel", cachedVideo.ChannelTitle);
 		Assert.AreEqual("API Channel", apiVideo.ChannelTitle);
-		_cache.Received(1).Set("YoutubeUploaders-abc123def456", "API Channel", Durations.OneDay);
+		_cache.Received(1).Set("YoutubeUploaders-sVR32jXj68w", "API Channel", Durations.OneDay);
 	}
 
 	[TestMethod]
