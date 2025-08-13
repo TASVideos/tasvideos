@@ -1,5 +1,6 @@
 ﻿namespace TASVideos.Pages.UserFiles;
 
+[AllowAnonymous]
 public class ListModel(ApplicationDbContext db) : BasePageModel
 {
 	[FromQuery]
