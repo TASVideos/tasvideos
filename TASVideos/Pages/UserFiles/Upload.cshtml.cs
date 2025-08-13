@@ -104,9 +104,7 @@ public class UploadModel(
 
 	private async Task Initialize()
 	{
-		SupportedFileExtensions = (await userFiles.SupportedFileExtensions())
-			.Select(s => s.Replace(".", ""))
-			.ToList();
+		SupportedFileExtensions = [.. (await userFiles.SupportedFileExtensions()).Select(s => s.Replace(".", ""))];
 
 		StorageUsed = await userFiles.StorageUsed(User.GetUserId());
 
