@@ -4,16 +4,16 @@
    asp-page-handler="Watch"
    asp-route-id="@Model.Id"
    class="btn btn-info btn-sm"
-   title="Watch this topic">
-	<i class="fa-regular fa-bell-slash"></i>
+   title="Subscribe to notifications">
+	<i class="fa-regular fa-bell-slash"></i> Not subscribed
 </a>
 <a condition="User.IsLoggedIn() && Model.IsWatching"
 	asp-page="Index"
 	asp-page-handler="Unwatch"
 	asp-route-id="@Model.Id"
 	class="btn btn-warning btn-sm"
-	title="Stop watching this topic">
-	<i class="fa-regular fa-bell"></i>
+	title="Unsubscribe from notifications">
+	<i class="fa-regular fa-bell"></i> Subscribed
 </a>
 <a permission="SetTopicType"
 	asp-page="SetType"
