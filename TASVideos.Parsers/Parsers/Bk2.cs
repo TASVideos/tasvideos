@@ -37,10 +37,23 @@ internal class Bk2 : Parser, IParser
 		};
 
 		var archive = await file.OpenZipArchiveRead();
+		if (archive.Entries.Count is 0)
+		{
+			return Error($"{FileExtension} contains no files");
+		}
+
+		// look for top-level dir `BizState/` (actually accept any name and any number of nested dirs with 1 child each)
+		var allFilePaths = archive.Entries.Select(entry => entry.Key).ToArray();
+		string commonPrefix = new(allFilePaths.CommonPrefix());
+		if (commonPrefix is not ([] or [.., '/'] or [.., '\\']))
+		{
+			// not sure what happened but it's not right
+			commonPrefix = string.Empty; // assume it's a tarbomb (no top-level dir), and try reading anyway
+		}
 
 		foreach (var entry in InvalidArchiveEntries)
 		{
-			if (archive.HasEntry(entry))
+			if (archive.HasEntry(commonPrefix + entry))
 			{
 				return Error($"Invalid {FileExtension}, cannot contain a {entry} file");
 			}
@@ -48,7 +61,7 @@ internal class Bk2 : Parser, IParser
 
 		// guard against branch header files, which have a number in their name
 		var headerEntry = archive.Entries.SingleOrDefault(
-			e => e.Key.StartsWith(HeaderFile, StringComparison.InvariantCultureIgnoreCase) && !e.Key.Any(char.IsDigit));
+			e => e.Key.StartsWith(commonPrefix + HeaderFile, StringComparison.InvariantCultureIgnoreCase) && !e.Key.Any(char.IsDigit));
 		if (headerEntry is null)
 		{
 			return Error($"Missing {HeaderFile}, can not parse");
@@ -184,7 +197,7 @@ internal class Bk2 : Parser, IParser
 			core = header.GetValueFor(Keys.Core).ToLower();
 		}
 
-		var inputLog = archive.Entry(InputFile);
+		var inputLog = archive.Entry(commonPrefix + InputFile);
 		if (inputLog is null)
 		{
 			return Error($"Missing {InputFile}, can not parse");
@@ -193,7 +206,7 @@ internal class Bk2 : Parser, IParser
 		await using var inputStream = inputLog.OpenEntryStream();
 		(_, result.Frames) = await inputStream.PipeBasedMovieHeaderAndFrameCount();
 
-		var commentEntry = archive.Entries.SingleOrDefault(e => e.Key.StartsWith(CommentFile, StringComparison.InvariantCultureIgnoreCase));
+		var commentEntry = archive.Entries.SingleOrDefault(e => e.Key.StartsWith(commonPrefix + CommentFile, StringComparison.InvariantCultureIgnoreCase));
 		if (commentEntry is not null)
 		{
 			await using var commentStream = commentEntry.OpenEntryStream();
