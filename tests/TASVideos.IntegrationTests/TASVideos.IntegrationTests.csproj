@@ -18,7 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" />
+		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" BuildReference="true" />
 		<ProjectReference Include="..\..\TASVideos\TASVideos.csproj" />
 	</ItemGroup>
 </Project>
