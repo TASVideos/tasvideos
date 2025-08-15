@@ -36,22 +36,17 @@ public class UnpublishModel(IExternalMediaPublisher publisher, IQueueService que
 		}
 
 		var result = await queueService.Unpublish(Id);
-
-		if (result.Status == UnpublishResult.UnpublishStatus.NotFound)
+		switch (result.Status)
 		{
-			ErrorStatusMessage($"Publication {Id} not found");
-			return RedirectToPage("View", new { Id });
-		}
-
-		if (result.Status == UnpublishResult.UnpublishStatus.NotAllowed)
-		{
-			ErrorStatusMessage(result.ErrorMessage);
-			return RedirectToPage("View", new { Id });
-		}
-
-		if (result.Status == UnpublishResult.UnpublishStatus.Success)
-		{
-			await publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
+			case UnpublishResult.UnpublishStatus.NotFound:
+				ErrorStatusMessage($"Publication {Id} not found");
+				return RedirectToPage("View", new { Id });
+			case UnpublishResult.UnpublishStatus.NotAllowed:
+				ErrorStatusMessage(result.ErrorMessage);
+				return RedirectToPage("View", new { Id });
+			case UnpublishResult.UnpublishStatus.Success:
+				await publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
+				break;
 		}
 
 		return BaseRedirect("/Subs-List");
