@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.ForumEngine.Bench
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.ForumEngine.Snapshots", "tests\TASVideos.ForumEngine.Snapshots\TASVideos.ForumEngine.Snapshots.csproj", "{FDFEEEE7-C261-4268-9CEA-17752006BBC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TASVideos.IntegrationTests", "tests\TASVideos.IntegrationTests\TASVideos.IntegrationTests.csproj", "{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -315,6 +317,18 @@ Global
 		{FDFEEEE7-C261-4268-9CEA-17752006BBC7}.Release|x64.Build.0 = Release|Any CPU
 		{FDFEEEE7-C261-4268-9CEA-17752006BBC7}.Release|x86.ActiveCfg = Release|Any CPU
 		{FDFEEEE7-C261-4268-9CEA-17752006BBC7}.Release|x86.Build.0 = Release|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Debug|x64.Build.0 = Debug|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Debug|x86.Build.0 = Debug|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Release|x64.ActiveCfg = Release|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Release|x64.Build.0 = Release|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Release|x86.ActiveCfg = Release|Any CPU
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -335,6 +349,7 @@ Global
 		{DBEB093D-A1EB-4FAE-A348-A127DF332EB1} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{8982676F-5461-4279-81F2-C9940857A726} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 		{FDFEEEE7-C261-4268-9CEA-17752006BBC7} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
+		{3F76A2E1-2D33-4E99-926C-D5E143E3B22A} = {90FD968F-E914-4E3E-8B68-9D58AE560E7B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67B2E8BD-92C7-442F-9560-C36E143E8E4C}
