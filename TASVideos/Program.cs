@@ -10,9 +10,7 @@ using TASVideos.MovieParsers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// We use <GenerateAssemblyInfo>false</GenerateAssemblyInfo> to support GitVersionTask.
-// This also suppresses the creation of [assembly: UserSecretsId("...")], so builder.Configuration.AddUserSecrets<T>() will not work.
-// Manually specify the secret id (matching the csproj) here as a workaround.
+// Manually specify the secret id (matching the csproj) here. TODO: this is probably unnecessary now
 builder.Configuration.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
 
 AppSettings settings = builder.Configuration.Get<AppSettings>()!;

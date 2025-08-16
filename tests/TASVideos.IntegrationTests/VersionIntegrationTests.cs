@@ -53,16 +53,16 @@ public class VersionIntegrationTests
 			sha.All(c => char.IsDigit(c) || c is >= 'a' and <= 'f'),
 			$"SHA should only contain hex characters, but got: {sha}");
 
-		// Extract version number from footer text (e.g., "© 2025 - TASVideos v2.6.391")
-		var versionMatch = Regex.Match(footerText, @"TASVideos v(\d+)\.(\d+)\.(\d+)");
+		// Extract version number from footer text (e.g., "© 2025 - TASVideos v2.6-01c52d3")
+		var versionMatch = Regex.Match(footerText, @"TASVideos v(\d+)\.(\d+)-([a-f0-9]+)");
 		Assert.IsTrue(versionMatch.Success, $"Could not extract version number from footer text: {footerText}");
 
 		var majorVersion = int.Parse(versionMatch.Groups[1].Value);
 		var minorVersion = int.Parse(versionMatch.Groups[2].Value);
-		var patchVersion = int.Parse(versionMatch.Groups[3].Value);
+		var shortSha = versionMatch.Groups[3].Value;
 
 		Assert.IsTrue(majorVersion > 0, $"Major version should be greater than 0, but got: {majorVersion}");
 		Assert.IsTrue(minorVersion >= 0, $"Minor version should be >= 0, but got: {minorVersion}");
-		Assert.IsTrue(patchVersion >= 0, $"Patch version should be >= 0, but got: {patchVersion}");
+		Assert.IsTrue(shortSha.Length >= 7, $"Short SHA should be at least 7 characters, but got: {shortSha} (length: {shortSha.Length})");
 	}
 }

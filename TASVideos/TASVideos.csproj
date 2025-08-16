@@ -8,7 +8,23 @@
 	<PropertyGroup>
 		<VersionPrefix>2.0.0</VersionPrefix>
 		<VersionSuffix>alpha</VersionSuffix>
+		<GitCommitId Condition="'$(GitCommitId)' == ''">unknown</GitCommitId>
 	</PropertyGroup>
+
+	<Target Name="GetGitCommitId" BeforeTargets="GetAssemblyAttributes">
+		<Exec Command="git rev-parse HEAD" ConsoleToMSBuild="true" ContinueOnError="true" WorkingDirectory="$(MSBuildProjectDirectory)\.." Condition="Exists('$(MSBuildProjectDirectory)\..\.git')">
+			<Output TaskParameter="ConsoleOutput" PropertyName="GitCommitId" />
+		</Exec>
+		<PropertyGroup>
+			<GitCommitId Condition="'$(GitCommitId)' == ''">unknown</GitCommitId>
+			<GitCommitShort Condition="'$(GitCommitId)' != 'unknown' and '$(GitCommitId)' != ''">$(GitCommitId.Substring(0, 7))</GitCommitShort>
+			<GitCommitShort Condition="'$(GitCommitId)' == 'unknown' or '$(GitCommitId)' == ''">unknown</GitCommitShort>
+		</PropertyGroup>
+		<ItemGroup>
+			<AssemblyMetadata Include="GitCommitId" Value="$(GitCommitId)" />
+			<AssemblyMetadata Include="GitCommitShort" Value="$(GitCommitShort)" />
+		</ItemGroup>
+	</Target>
 
 	<ItemGroup>
 		<Compile Remove="logs\**" />
@@ -23,10 +39,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.ReCaptcha" />
-		<PackageReference Include="GitVersion.MsBuild">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
 		<PackageReference Include="JavaScriptEngineSwitcher.V8" />
 		<PackageReference Include="LigerShark.WebOptimizer.Core" />
 		<PackageReference Include="LigerShark.WebOptimizer.Sass" />
@@ -44,7 +56,6 @@
 		<PackageReference Include="Namotion.Reflection" />
 		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" />
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" />
-		<PackageReference Include="RoslynCodeTaskFactory" />
 		<PackageReference Include="Serilog.AspNetCore" />
 		<PackageReference Include="Serilog.Expressions" />
 	</ItemGroup>
