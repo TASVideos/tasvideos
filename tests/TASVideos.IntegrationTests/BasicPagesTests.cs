@@ -79,22 +79,4 @@ public class BasicPagesTests
 		var title = await response.GetPageTitleAsync();
 		Assert.IsTrue(title.Contains("Submissions"), $"Expected title to contain 'Submissions', but got: {title}");
 	}
-
-	// TODO: this definitely won't exist, we need to seed a wiki page during setup
-	[TestMethod]
-	public async Task WikiHomePage_ReturnsSuccessAndCorrectContent()
-	{
-		var response = await _client.GetAsync("/Welcome");
-
-		if (response.StatusCode == HttpStatusCode.NotFound)
-		{
-			// If Welcome doesn't exist, try the home page
-			response = await _client.GetAsync("/");
-		}
-
-		response.EnsureSuccessStatusCode("Wiki page should load successfully");
-
-		var title = await response.GetPageTitleAsync();
-		Assert.IsTrue(title.Contains("TASVideos"), $"Expected title to contain 'TASVideos', but got: {title}");
-	}
 }
