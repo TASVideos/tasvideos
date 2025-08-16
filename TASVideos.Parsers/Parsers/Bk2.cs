@@ -269,6 +269,8 @@ internal class Bk2 : Parser, IParser
 		"5320342.5", // SubNesHawk (PAL/Dendy)
 		"33868800", // NymaShock,
 		"1000", // DOSBox-x
+  		"21477272.7272727", // SubBSNESv115+ (NTSC)
+		"21281370", // SubBSNESv115+ (PAL)
 	];
 
 	private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new()
