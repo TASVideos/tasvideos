@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace TASVideos.IntegrationTests;
 
@@ -14,7 +14,7 @@ public class VersionIntegrationTests
 	public void Setup()
 	{
 		_factory = new TASVideosWebApplicationFactory();
-		_client = _factory.CreateClientWithFreshDatabase();
+		_client = _factory.CreateClientWithFollowRedirects();
 	}
 
 	[TestCleanup]

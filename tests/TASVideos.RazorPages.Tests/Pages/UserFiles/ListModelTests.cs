@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using TASVideos.Data.Entity;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;

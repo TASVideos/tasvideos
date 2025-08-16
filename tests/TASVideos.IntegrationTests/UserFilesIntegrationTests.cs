@@ -12,7 +12,7 @@ public class UserFilesIntegrationTests
 	public void Setup()
 	{
 		_factory = new TASVideosWebApplicationFactory();
-		_client = _factory.CreateClientWithFreshDatabase();
+		_client = _factory.CreateClientWithFollowRedirects();
 	}
 
 	[TestCleanup]

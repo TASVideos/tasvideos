@@ -24,16 +24,16 @@ internal class TASVideosWebApplicationFactory : WebApplicationFactory<Program>
 			});
 
 			// Disable logging for cleaner test output
-			services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Warning));
+			services.AddLogging(b => b.SetMinimumLevel(LogLevel.Warning));
 		});
 
 		builder.UseEnvironment("Testing");
 	}
 
 	/// <summary>
-	/// Creates a new test client with a fresh database
+	/// Creates a new test client with a fresh database and does follow redirects
 	/// </summary>
-	public HttpClient CreateClientWithFreshDatabase()
+	public HttpClient CreateClientWithFollowRedirects()
 	{
 		var client = CreateClient();
 
@@ -48,7 +48,7 @@ internal class TASVideosWebApplicationFactory : WebApplicationFactory<Program>
 	/// <summary>
 	/// Creates a new test client with a fresh database that does not follow redirects
 	/// </summary>
-	public HttpClient CreateClientWithFreshDatabaseNoRedirects()
+	public HttpClient CreateClientWithNoFollowRedirects()
 	{
 		var client = CreateClient(new WebApplicationFactoryClientOptions
 		{
