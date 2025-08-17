@@ -332,7 +332,7 @@ public class SplitModelTests : BasePageModelTests
 			CreateNewTopicIn = restrictedForum.Id,
 			NewTopicName = "Split Topic",
 			Title = topic.Title,
-			Posts = [new SplitModel.TopicSplit.Post { Id = post.Id, Selected = true } ]
+			Posts = [new SplitModel.TopicSplit.Post { Id = post.Id, Selected = true }]
 		};
 
 		var result = await _model.OnPost();
