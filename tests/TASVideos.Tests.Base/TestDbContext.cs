@@ -124,6 +124,15 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return Users.Add(user);
 	}
 
+	public EntityEntry<User> AddUserWithRole(string userName, string? roleName = null)
+	{
+		var user = AddUser(userName);
+		var name = roleName ?? "Default";
+		var role = Roles.Add(new Role { Name = name, NormalizedName = name.ToUpper() }).Entity;
+		UserRoles.Add(new UserRole { User = user.Entity, Role = role });
+		return user;
+	}
+
 	public EntityEntry<Submission> CreatePublishableSubmission()
 	{
 		var entry = AddAndSaveUnpublishedSubmission();
@@ -216,6 +225,67 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return AddPublication(null, publicationClass);
 	}
 
+	public EntityEntry<ForumCategory> AddForumCategory(string? title = null)
+	{
+		return ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category" });
+	}
+
+	public EntityEntry<Forum> AddForum(string? name = null)
+	{
+		name ??= "Test Forum";
+		var category = AddForumCategory($"Category for {name}").Entity;
+		return Forums.Add(new Forum { Name = name, Category = category });
+	}
+
+	public EntityEntry<ForumTopic> AddTopic(User? createdByUser = null)
+	{
+		var user = createdByUser ?? AddUser(0).Entity;
+		var forum = AddForum().Entity;
+		var topic = new ForumTopic { Forum = forum, Poster = user };
+		return ForumTopics.Add(topic);
+	}
+
+	public EntityEntry<ForumPost> CreatePostForTopic(ForumTopic topic, User? poster = null)
+	{
+		var user = poster ?? AddUser(0).Entity;
+		return ForumPosts.Add(new ForumPost
+		{
+			Text = "Test post content",
+			Topic = topic,
+			Forum = topic.Forum,
+			Poster = user,
+			CreateTimestamp = DateTime.UtcNow
+		});
+	}
+
+	public EntityEntry<ForumPoll> CreatePollForTopic(ForumTopic topic, bool isClosed = false)
+	{
+		var poll = ForumPolls.Add(new ForumPoll
+		{
+			Question = "Did you like watching this movie? ",
+			MultiSelect = false,
+			CloseDate = isClosed ? DateTime.UtcNow.AddDays(-1) : DateTime.UtcNow.AddDays(1)
+		});
+
+		topic.Poll = poll.Entity;
+
+		ForumPollOptions.AddRange(
+			new ForumPollOption
+			{
+				Poll = poll.Entity,
+				Text = "Yes",
+				Ordinal = 1
+			},
+			new ForumPollOption
+			{
+				Poll = poll.Entity,
+				Text = "No",
+				Ordinal = 2
+			});
+
+		return poll;
+	}
+
 	public void AddForumConstantEntities()
 	{
 		var forumCategory = new ForumCategory();
@@ -225,15 +295,6 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		Forums.Add(new Forum { Id = SiteGlobalConstants.GrueFoodForumId, Category = forumCategory });
 		AddUser(SiteGlobalConstants.TASVideosGrueId);
 		AddUser(SiteGlobalConstants.TASVideoAgentId);
-	}
-
-	public EntityEntry<ForumTopic> AddTopic(User? createdByUser = null)
-	{
-		var user = createdByUser ?? AddUser(0).Entity;
-		var forumCategory = new ForumCategory();
-		var forum = new Forum { Category = forumCategory };
-		var topic = new ForumTopic { Forum = forum, Poster = user };
-		return ForumTopics.Add(topic);
 	}
 
 	public class TestHttpContextAccessor : IHttpContextAccessor
