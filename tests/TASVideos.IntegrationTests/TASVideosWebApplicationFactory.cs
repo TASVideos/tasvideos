@@ -43,14 +43,7 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 
 	private static string GetPostgreSqlConnectionString()
 	{
-		// Check for environment variable first
-		var connectionString = Environment.GetEnvironmentVariable("INTEGRATION_TEST_DB_CONNECTION");
-		if (!string.IsNullOrEmpty(connectionString))
-		{
-			return connectionString;
-		}
-
-		// Default test database connection string
+		// TODO: get from configuration
 		var testDbName = $"tasvideos_integrationtest_{Guid.NewGuid():N}";
 		return $"Host=localhost;Database={testDbName};Username=postgres;Password=postgres";
 	}
@@ -83,35 +76,25 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 		using var scope = Services.CreateScope();
 		var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
+		context.Database.EnsureDeleted();
 		if (usePostgreSql)
 		{
-			// For PostgreSQL, delete and recreate the database
-			context.Database.EnsureDeleted();
-
-			// Check if there are migrations to apply
 			var pendingMigrations = context.Database.GetPendingMigrations().ToList();
-			if (pendingMigrations.Count != 0)
+			if (pendingMigrations.Count > 0)
 			{
-				// Apply migrations to create the database with proper schema
 				context.Database.Migrate();
 			}
 			else
 			{
-				// No migrations, just create the database
 				context.Database.EnsureCreated();
 			}
 		}
 		else
 		{
-			// For in-memory database, keep existing behavior
-			context.Database.EnsureDeleted();
 			context.Database.EnsureCreated();
 		}
 	}
 
-	/// <summary>
-	/// Seeds the database with test data
-	/// </summary>
 	public void SeedDatabase(Action<ApplicationDbContext> seedAction)
 	{
 		using var scope = Services.CreateScope();
