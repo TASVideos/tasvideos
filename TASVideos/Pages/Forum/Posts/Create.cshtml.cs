@@ -91,8 +91,8 @@ public class CreateModel(
 				fp.Poster!.UserName,
 				fp.Poster.PreferredPronouns,
 				fp.Text,
-				fp.EnableBbCode,
-				fp.EnableHtml))
+				fp.EnableHtml,
+				fp.EnableBbCode))
 			.Take(10)
 			.Reverse()
 			.ToListAsync();
