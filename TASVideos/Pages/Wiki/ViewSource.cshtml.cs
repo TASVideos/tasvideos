@@ -16,6 +16,11 @@ public class ViewSourceModel(IWikiPages wikiPages) : BasePageModel
 	public async Task<IActionResult> OnGet()
 	{
 		Path = Path?.Trim('/') ?? "";
+		if (string.IsNullOrWhiteSpace(Path))
+		{
+			return NotFound();
+		}
+
 		var wikiPage = await wikiPages.Page(Path, Revision);
 
 		if (wikiPage is null)
