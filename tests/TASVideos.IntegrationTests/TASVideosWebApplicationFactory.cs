@@ -3,7 +3,7 @@ using TASVideos.Data;
 
 namespace TASVideos.IntegrationTests;
 
-internal class TASVideosWebApplicationFactory : WebApplicationFactory<Program>
+internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebApplicationFactory<Program>
 {
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
 	{
@@ -17,11 +17,22 @@ internal class TASVideosWebApplicationFactory : WebApplicationFactory<Program>
 				services.Remove(descriptor);
 			}
 
-			// Use in-memory database for testing
-			services.AddDbContext<ApplicationDbContext>(options =>
+			if (usePostgreSql)
 			{
-				options.UseInMemoryDatabase($"IntegrationTestDb_{Guid.NewGuid()}");
-			});
+				var connString = GetPostgreSqlConnectionString();
+				services.AddDbContext<ApplicationDbContext>(options =>
+				{
+					options.UseNpgsql(connString)
+						.UseSnakeCaseNamingConvention();
+				});
+			}
+			else
+			{
+				services.AddDbContext<ApplicationDbContext>(options =>
+				{
+					options.UseInMemoryDatabase($"IntegrationTestDb_{Guid.NewGuid()}");
+				});
+			}
 
 			// Disable logging for cleaner test output
 			services.AddLogging(b => b.SetMinimumLevel(LogLevel.Warning));
@@ -30,18 +41,20 @@ internal class TASVideosWebApplicationFactory : WebApplicationFactory<Program>
 		builder.UseEnvironment("Testing");
 	}
 
+	private static string GetPostgreSqlConnectionString()
+	{
+		// TODO: get from configuration
+		var testDbName = $"tasvideos_integrationtest_{Guid.NewGuid():N}";
+		return $"Host=localhost;Database={testDbName};Username=postgres;Password=postgres";
+	}
+
 	/// <summary>
 	/// Creates a new test client with a fresh database and does follow redirects
 	/// </summary>
 	public HttpClient CreateClientWithFollowRedirects()
 	{
 		var client = CreateClient();
-
-		using var scope = Services.CreateScope();
-		var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-		context.Database.EnsureDeleted();
-		context.Database.EnsureCreated();
-
+		InitializeDatabase();
 		return client;
 	}
 
@@ -54,18 +67,34 @@ internal class TASVideosWebApplicationFactory : WebApplicationFactory<Program>
 		{
 			AllowAutoRedirect = false
 		});
-
-		using var scope = Services.CreateScope();
-		var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-		context.Database.EnsureDeleted();
-		context.Database.EnsureCreated();
-
+		InitializeDatabase();
 		return client;
 	}
 
-	/// <summary>
-	/// Seeds the database with test data
-	/// </summary>
+	private void InitializeDatabase()
+	{
+		using var scope = Services.CreateScope();
+		var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+		context.Database.EnsureDeleted();
+		if (usePostgreSql)
+		{
+			var pendingMigrations = context.Database.GetPendingMigrations().ToList();
+			if (pendingMigrations.Count > 0)
+			{
+				context.Database.Migrate();
+			}
+			else
+			{
+				context.Database.EnsureCreated();
+			}
+		}
+		else
+		{
+			context.Database.EnsureCreated();
+		}
+	}
+
 	public void SeedDatabase(Action<ApplicationDbContext> seedAction)
 	{
 		using var scope = Services.CreateScope();
