@@ -230,11 +230,11 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category" });
 	}
 
-	public EntityEntry<Forum> AddForum(string? name = null)
+	public EntityEntry<Forum> AddForum(string? name = null, bool? restricted = null)
 	{
 		name ??= "Test Forum";
 		var category = AddForumCategory($"Category for {name}").Entity;
-		return Forums.Add(new Forum { Name = name, Category = category });
+		return Forums.Add(new Forum { Name = name, Category = category, Restricted = restricted ?? false });
 	}
 
 	public EntityEntry<ForumTopic> AddTopic(User? createdByUser = null)
