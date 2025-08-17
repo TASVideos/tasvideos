@@ -12,7 +12,7 @@
 	</PropertyGroup>
 
 	<Target Name="GetGitCommitId" BeforeTargets="GetAssemblyAttributes">
-		<Exec Command="git rev-parse HEAD" ConsoleToMSBuild="true" ContinueOnError="true" WorkingDirectory="$(MSBuildProjectDirectory)\.." Condition="Exists('$(MSBuildProjectDirectory)\..\.git')">
+		<Exec Command="git rev-parse HEAD" ConsoleToMSBuild="true" StandardOutputImportance="Low" ContinueOnError="true" WorkingDirectory="$(MSBuildProjectDirectory)\.." Condition="Exists('$(MSBuildProjectDirectory)\..\.git')">
 			<Output TaskParameter="ConsoleOutput" PropertyName="GitCommitId" />
 		</Exec>
 		<PropertyGroup>
