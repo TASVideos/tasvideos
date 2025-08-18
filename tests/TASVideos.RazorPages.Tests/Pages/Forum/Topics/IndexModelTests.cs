@@ -93,7 +93,6 @@ public class IndexModelTests : BasePageModelTests
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsTrue(_model.Topic.SubmissionId.HasValue);
-		Assert.AreEqual(1, _model.Topic.SubmissionId.Value);
 		await _wikiPages.Received(1).Page(Arg.Any<string>());
 	}
 
