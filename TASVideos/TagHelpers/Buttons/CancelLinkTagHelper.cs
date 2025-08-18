@@ -8,6 +8,9 @@ public class CancelLinkTagHelper(IHtmlGenerator generator, IHttpContextAccessor 
 {
 	public string? BtnClassOverride { get; set; }
 
+	public override void Process(TagHelperContext context, TagHelperOutput output)
+		=> ProcessAsync(context, output).Wait();
+
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "a";
@@ -24,7 +27,7 @@ public class CancelLinkTagHelper(IHtmlGenerator generator, IHttpContextAccessor 
 			RouteValues = new Dictionary<string, string>();
 		}
 
-		await base.ProcessAsync(context, output);
+		base.Process(context, output);
 		output.AddCssClass("btn");
 
 		output.AddCssClass(string.IsNullOrEmpty(BtnClassOverride)
