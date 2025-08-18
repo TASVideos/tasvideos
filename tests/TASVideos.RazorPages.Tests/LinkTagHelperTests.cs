@@ -26,7 +26,8 @@ public sealed class LinkTagHelperTests
 	[TestMethod]
 	public void TestGameLinkHelper(int id, string label, string expected)
 	{
-		GameLinkTagHelper gameLinkHelper = new() { Id = id };
+		var generator = TestableHtmlGenerator.Create(out var viewCtx, "{Id:int}G");
+		GameLinkTagHelper gameLinkHelper = new(generator) { Id = id, ViewContext = viewCtx };
 		var output = GetOutputObj(contentsUnencoded: label);
 		gameLinkHelper.Process(GetHelperContext(), output);
 		Assert.AreEqual(expected, output.GetString());
@@ -47,7 +48,8 @@ public sealed class LinkTagHelperTests
 	[TestMethod]
 	public void TestPubLinkHelper(int id, string label, string expected)
 	{
-		PubLinkTagHelper pubLinkHelper = new() { Id = id };
+		var generator = TestableHtmlGenerator.Create(out var viewCtx, "{Id:int}M");
+		PubLinkTagHelper pubLinkHelper = new(generator) { Id = id, ViewContext = viewCtx };
 		var output = GetOutputObj(contentsUnencoded: label);
 		pubLinkHelper.Process(GetHelperContext(), output);
 		Assert.AreEqual(expected, output.GetString());
@@ -57,7 +59,8 @@ public sealed class LinkTagHelperTests
 	[TestMethod]
 	public void TestSubLinkHelper(int id, string label, string expected)
 	{
-		SubLinkTagHelper subLinkHelper = new() { Id = id };
+		var generator = TestableHtmlGenerator.Create(out var viewCtx, "{Id:int}S");
+		SubLinkTagHelper subLinkHelper = new(generator) { Id = id, ViewContext = viewCtx };
 		var output = GetOutputObj(contentsUnencoded: label);
 		subLinkHelper.Process(GetHelperContext(), output);
 		Assert.AreEqual(expected, output.GetString());
@@ -67,7 +70,8 @@ public sealed class LinkTagHelperTests
 	[TestMethod]
 	public void TestWikiLinkHelper(string wikiPageName, string label, string expected)
 	{
-		WikiLinkTagHelper wikiLinkHelper = new() { PageName = wikiPageName };
+		var generator = TestableHtmlGenerator.Create(out var viewCtx, "{PageName}");
+		WikiLinkTagHelper wikiLinkHelper = new(generator) { PageName = wikiPageName, ViewContext = viewCtx };
 		var output = GetOutputObj(contentsUnencoded: label);
 		wikiLinkHelper.Process(GetHelperContext(), output);
 		Assert.AreEqual(expected, output.GetString());

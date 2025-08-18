@@ -5,40 +5,40 @@ using TASVideos.Data.Helpers;
 
 namespace TASVideos.TagHelpers;
 
-public class PubLinkTagHelper : TagHelper
+public class PubLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public int Id { get; set; }
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		output.TagName = "a";
-		output.Attributes.Add("href", $"/{Id}M");
+		Page = $"/{Id}M";
+		base.Process(context, output);
 	}
 }
 
-public class SubLinkTagHelper : TagHelper
+public class SubLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public int Id { get; set; }
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		output.TagName = "a";
-		output.Attributes.Add("href", $"/{Id}S");
+		Page = $"/{Id}S";
+		base.Process(context, output);
 	}
 }
 
-public class GameLinkTagHelper : TagHelper
+public class GameLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public int Id { get; set; }
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		output.TagName = "a";
-		output.Attributes.Add("href", $"/{Id}G");
+		Page = $"/{Id}G";
+		base.Process(context, output);
 	}
 }
 
-public class WikiLinkTagHelper : TagHelper
+public class WikiLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public string PageName { get; set; } = "";
 
@@ -63,8 +63,8 @@ public class WikiLinkTagHelper : TagHelper
 			pageName = $"{gameId}G";
 		}
 
-		output.TagName = "a";
-		output.Attributes.Add("href", $"/{pageName}");
+		Page = $"/{pageName}";
+		base.Process(context, output);
 		output.Content.Clear();
 		output.Content.AppendHtml(pageName);
 	}
