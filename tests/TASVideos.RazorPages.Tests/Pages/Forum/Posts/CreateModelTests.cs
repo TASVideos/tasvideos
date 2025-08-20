@@ -1,4 +1,4 @@
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;

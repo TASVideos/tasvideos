@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics;

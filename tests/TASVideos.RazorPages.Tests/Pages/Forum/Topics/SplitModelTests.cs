@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity;

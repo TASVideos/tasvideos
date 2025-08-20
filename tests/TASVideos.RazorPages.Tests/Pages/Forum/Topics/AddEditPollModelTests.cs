@@ -1,4 +1,4 @@
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics;
