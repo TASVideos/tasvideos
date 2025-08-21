@@ -94,7 +94,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			})
 			.ToListAsync();
 
-		Movies = movies
+		Movies = [.. movies
 			.Select(m => new TabMiniMovieModel(
 				movies.Count(mm => mm.Goal == m.Goal) > 1
 					? m.GameTitle
@@ -111,31 +111,23 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 					Goal = m.Goal,
 					Screenshot = m.Screenshot,
 					OnlineWatchingUrl = m.OnlineWatchingUrl
-				}))
-			.ToList();
+				}))];
 
-		if (Game.PlaygroundSubmissions != null)
-		{
-			PlaygroundGoals = Game.PlaygroundSubmissions
-				.GroupBy(s => new
-				{
-					s.Goal,
-					GameTitle = s.Version!.TitleOverride
-						?? s.GameTitle
-						?? "Unknown Game"
-				})
-				.OrderBy(gg => gg.Key!.Goal!.DisplayName.Length)
-				.Select(gg => new GoalEntry(
-					gg.Key!.Goal!.Id,
-					gg.Key!.Goal!.DisplayName == "baseline"
-						? "(baseline)"
-						: gg.Key!.Goal!.DisplayName,
-					gg.Key!.GameTitle,
-					gg.OrderByDescending(ggs => ggs.Id)
-						.Select(ggs => new SubmissionEntry(ggs.Id, ggs.SubmissionTitle))
-						.ToList()))
-				.ToList();
-		}
+		PlaygroundGoals = [.. Game.PlaygroundSubmissions
+			.GroupBy(s => new
+			{
+				s.Goal,
+				GameTitle = s.Version.TitleOverride
+					?? s.GameTitle
+			})
+			.OrderBy(gg => gg.Key.Goal.DisplayName.Length)
+			.Select(gg => new GoalEntry(
+				gg.Key.Goal.Id,
+				gg.Key.Goal.DisplayName == "baseline"
+					? "(baseline)"
+					: gg.Key.Goal.DisplayName,
+				gg.Key.GameTitle,
+				[.. gg.OrderByDescending(ggs => ggs.Id).Select(ggs => new SubmissionEntry(ggs.Id, ggs.SubmissionTitle))]))];
 
 		WatchFiles = await db.UserFiles
 			.ForGame(Game.Id)
@@ -169,7 +161,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public List<string> Genres { get; init; } = [];
 		public List<GameVersion> Versions { get; init; } = [];
 		public List<GameGroup> GameGroups { get; init; } = [];
-		public List<PlaygroundSubmission> PlaygroundSubmissions { get; set; } = [];
+		public List<PlaygroundSubmission> PlaygroundSubmissions { get; init; } = [];
 		public int PublicationCount { get; init; }
 		public int ObsoletePublicationCount { get; init; }
 		public int SubmissionCount { get; init; }

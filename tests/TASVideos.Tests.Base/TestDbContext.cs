@@ -286,6 +286,31 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return poll;
 	}
 
+	public EntityEntry<Game> AddGame(string? displayName = null)
+	{
+		return Games.Add(new Game { DisplayName = displayName ?? "Test Game" });
+	}
+
+	public EntityEntry<Genre> AddGenre(string? displayName = null)
+	{
+		return Genres.Add(new Genre { DisplayName = displayName ?? "Action" });
+	}
+
+	public EntityEntry<GameGroup> AddGameGroup(string name)
+	{
+		return GameGroups.Add(new GameGroup { Name = name });
+	}
+
+	public EntityEntry<GameGoal> AddGoalForGame(Game game, string? displayName = null)
+	{
+		return GameGoals.Add(new GameGoal { Game = game, DisplayName = displayName ?? "baseline" });
+	}
+
+	public EntityEntry<GameSystem> AddGameSystem(string code)
+	{
+		return GameSystems.Add(new GameSystem { Code = code });
+	}
+
 	public void AddForumConstantEntities()
 	{
 		var forumCategory = new ForumCategory();

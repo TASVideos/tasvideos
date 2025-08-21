@@ -30,21 +30,17 @@ public class CatalogModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithValidId_LoadsUserFile()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
-		var game = new Game { Id = 1, DisplayName = "SMB" };
-		_db.Games.Add(game);
-
+		var system = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("SMB").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			FileName = "test-movie.bk2",
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			Author = author,
 			Class = UserFileClass.Movie,
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 		_page.Id = userFile.Id;
 
@@ -64,7 +60,7 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnGet_WithValidIdButNoGameOrSystem_Loads()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "uncategorized.bk2",
@@ -72,8 +68,7 @@ public class CatalogModelTests : TestDbBase
 			GameId = null,
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = userFile.Id;
@@ -93,8 +88,7 @@ public class CatalogModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_InvalidModelState_ReturnsPage()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
+		_db.AddGameSystem("NES");
 		var author = _db.AddUser("TestAuthor").Entity;
 		var userFile = new UserFile
 		{
@@ -153,31 +147,29 @@ public class CatalogModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_ValidUpdate_UpdatesUserFileAndRedirects()
 	{
-		var system1 = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		var system2 = new GameSystem { Id = 2, Code = "SNES", DisplayName = "Super Nintendo Entertainment System" };
-		_db.GameSystems.AddRange(system1, system2);
+		var system1 = _db.AddGameSystem("NES").Entity;
+		var system2 = _db.Add(new GameSystem { Id = 2, Code = "SNES" }).Entity;
 
-		var game1 = new Game { Id = 1, DisplayName = "Original Game" };
-		var game2 = new Game { Id = 2, DisplayName = "New Game" };
-		_db.Games.AddRange(game1, game2);
+		var game1 = _db.AddGame("Original Game").Entity;
+		var game2 = _db.AddGame("New Game").Entity;
 
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test.bk2",
-			SystemId = system1.Id,
-			GameId = game1.Id,
+			System = system1,
+			Game = game1,
 			Author = author,
 			Class = UserFileClass.Movie,
 			Content = "content"u8.ToArray(),
 			Length = 100
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.CatalogMovies]);
+		await _db.SaveChangesAsync();
 
 		_page.Id = userFile.Id;
 		_page.UserFile = new CatalogModel.Catalog
@@ -206,23 +198,20 @@ public class CatalogModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_UpdateToNullValues_ClearsSystemAndGame()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.GameSystems.Add(system);
-		_db.Games.Add(game);
+		var system = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test.bk2",
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			Author = author,
 			Class = UserFileClass.Movie,
 			Content = "content"u8.ToArray(),
 			Length = 100
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
@@ -252,23 +241,20 @@ public class CatalogModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_NoActualChanges_StillRedirects()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.GameSystems.Add(system);
-		_db.Games.Add(game);
+		var system = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test.bk2",
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			Author = author,
 			Class = UserFileClass.Movie,
 			Content = "content"u8.ToArray(),
 			Length = 100
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
@@ -298,10 +284,9 @@ public class CatalogModelTests : TestDbBase
 	[TestMethod]
 	public async Task Initialize_WithNoSystem_PopulatesOnlyAvailableSystems()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
+		_db.AddGameSystem("NES");
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test.bk2",
@@ -309,8 +294,7 @@ public class CatalogModelTests : TestDbBase
 			GameId = null,
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = userFile.Id;
@@ -332,23 +316,20 @@ public class CatalogModelTests : TestDbBase
 	[TestMethod]
 	public async Task Initialize_WithSelectedSystem_PopulatesSystemsAndGames()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var system = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test.bk2",
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			Author = author,
 			Class = UserFileClass.Movie,
 			Content = "content"u8.ToArray(),
 			Length = 100
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = userFile.Id;

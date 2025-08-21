@@ -29,24 +29,20 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_AsAuthor_LoadsUserFileData()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var system = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test-movie.bk2",
 			Title = "Test Movie Title",
 			Description = "Test movie description",
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			Author = author,
 			Hidden = false,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		// Set up user as author
@@ -72,17 +68,15 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var editor = _db.AddUser("FileEditor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Original Title",
 			Description = "Original description",
 			Author = author,
 			Hidden = true,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		// Set up user with edit permission but not as author
@@ -104,13 +98,11 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Author = author
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		// Set up user without permission and not as author
@@ -127,19 +119,16 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithSystemButNoGame_LoadsSystemDropdownOnly()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
+		var system = _db.AddGameSystem("NES").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			SystemId = system.Id,
 			GameId = null,
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -158,16 +147,14 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_WithNoSystemOrGame_LoadsSystemsOnlyDropdown()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			SystemId = null,
 			GameId = null,
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -186,14 +173,12 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_InvalidModelState_ReturnsPage()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -227,14 +212,12 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		// Set up user without permission and not as author
@@ -257,17 +240,14 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_AsAuthor_UpdatesUserFileAndRedirects()
 	{
-		var system1 = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		var system2 = new GameSystem { Id = 2, Code = "SNES", DisplayName = "Super Nintendo Entertainment System" };
-		_db.GameSystems.AddRange(system1, system2);
+		var system1 = _db.AddGameSystem("NES").Entity;
+		var system2 = _db.GameSystems.Add(new GameSystem { Id = 2, Code = "SNES" }).Entity;
 		var game1 = new Game { Id = 1, DisplayName = "Original Game" };
 		var game2 = new Game { Id = 2, DisplayName = "New Game" };
 		_db.Games.AddRange(game1, game2);
 		var author = _db.AddUser("TestAuthor").Entity;
-
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Original Title",
 			Description = "Original description",
@@ -276,8 +256,7 @@ public class EditModelTests : TestDbBase
 			Hidden = false,
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -314,17 +293,15 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var editor = _db.AddUser("FileEditor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Original Title",
 			Description = "Original description",
 			Hidden = false,
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, editor, [PermissionTo.EditUserFiles]);
@@ -351,22 +328,18 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_UpdateToNullSystemAndGame_ClearsAssociations()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.GameSystems.Add(system);
-		_db.Games.Add(game);
+		var system = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Test Title",
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			Author = author,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -397,17 +370,15 @@ public class EditModelTests : TestDbBase
 		var author = _db.AddUser("TestAuthor").Entity;
 		await _db.SaveChangesAsync();
 
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Same Title",
 			Description = "Same description",
 			Hidden = false,
 			AuthorId = author.Id,
 			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -435,12 +406,10 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task Initialize_WithNoSystem_PopulatesOnlyAvailableSystems()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
+		_db.AddGameSystem("NES");
 		var author = _db.AddUser("TestAuthor").Entity;
 		var userFile = new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			SystemId = null,
 			Author = author,
@@ -461,21 +430,17 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task Initialize_WithSelectedSystem_PopulatesSystemsAndGames()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var system = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			Author = author,
 			Class = UserFileClass.Movie,
-		};
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
