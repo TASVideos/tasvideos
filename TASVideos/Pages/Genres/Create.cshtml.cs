@@ -19,7 +19,7 @@ public class CreateModel(IGenreService genreService) : BasePageModel
 
 		if (id.HasValue)
 		{
-			SuccessStatusMessage($"Genre {Genre.DisplayName} sucessfully created.");
+			SuccessStatusMessage($"Genre {Genre.DisplayName} successfully created.");
 			return BasePageRedirect("Index");
 		}
 
