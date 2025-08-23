@@ -70,7 +70,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 		if (!string.IsNullOrWhiteSpace(SearchTerms))
 		{
 			DisplayPageSize = PageSize;
-			if (new[] { SearchWiki, SearchForumTopics, SearchForumPosts, SearchGames }.Count(b => b) == 1)
+			if (new[] { SearchWiki, SearchForumTopics, SearchForumPosts, SearchGames, SearchPublications, SearchUsers }.Count(b => b) == 1)
 			{
 				DisplayPageSize = PageSizeSingle;
 			}
