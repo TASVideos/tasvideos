@@ -307,7 +307,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 
 	public EntityEntry<GameGroup> AddGameGroup(string name, string? abbreviation = null)
 	{
-		return GameGroups.Add(new GameGroup { Name = name, Abbreviation = abbreviation});
+		return GameGroups.Add(new GameGroup { Name = name, Abbreviation = abbreviation });
 	}
 
 	public EntityEntry<GameGoal> AddGoalForGame(Game game, string? displayName = null)
