@@ -23,6 +23,9 @@ public class EditUrlsModel(
 	[BindProperty]
 	public string Title { get; set; } = "";
 
+	[BindProperty]
+	public string YouTubeTitle { get; set; } = "";
+
 	public ICollection<PublicationUrl> CurrentUrls { get; set; } = [];
 
 	[StringLength(100)]
@@ -49,6 +52,17 @@ public class EditUrlsModel(
 		}
 
 		Title = title;
+		var youtubetitle = await db.Publications
+			.Where(p => p.Id == PublicationId)
+			.Select(p => p.YouTubeTitle)
+			.SingleOrDefaultAsync();
+
+		if (youtubetitle is null)
+		{
+			return NotFound();
+		}
+
+		YouTubeTitle = youtubetitle;
 		CurrentUrls = await db.PublicationUrls
 			.Where(u => u.PublicationId == PublicationId)
 			.ToListAsync();
@@ -140,7 +154,7 @@ public class EditUrlsModel(
 					publication.CreateTimestamp,
 					CurrentUrl,
 					AltTitle,
-					publication.Title,
+					YouTubeTitle,
 					publicationWiki!,
 					publication.SystemCode,
 					publication.Authors,
