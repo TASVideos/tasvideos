@@ -123,8 +123,8 @@ public class Publication : BaseEntity, ITimeable
 		Title =
 			$"{System.Code} {gameName}"
 			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
-			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
-			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
+			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}"
+			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}";
 	}
 }
 
