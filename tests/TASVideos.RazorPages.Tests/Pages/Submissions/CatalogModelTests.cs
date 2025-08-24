@@ -1,10 +1,8 @@
 ﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;
 
@@ -24,29 +22,22 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnGet_SubmissionNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
 	[TestMethod]
 	public async Task OnGet_SubmissionExists_PopulatesCatalogData()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
-		var frameRate = new GameSystemFrameRate { Id = 1, GameSystemId = system.Id, FrameRate = 60.0988 };
-		_db.GameSystemFrameRates.Add(frameRate);
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
-		var version = new GameVersion { Id = 1, Name = "1.0", SystemId = system.Id, GameId = game.Id };
-		_db.GameVersions.Add(version);
-		var goal = new GameGoal { Id = 1, DisplayName = "Test Goal", GameId = game.Id };
-		_db.GameGoals.Add(goal);
+		var system = _db.AddGameSystem("NES").Entity;
+		var frameRate = _db.GameSystemFrameRates.Add(new GameSystemFrameRate { Id = 1, System = system, FrameRate = 60.0988 }).Entity;
+		var game = _db.AddGame("Test Game").Entity;
+		var version = _db.GameVersions.Add(new GameVersion { Id = 1, Name = "1.0", System = system, Game = game }).Entity;
+		var goal = _db.GameGoals.Add(new GameGoal { Id = 1, DisplayName = "Test Goal", Game = game }).Entity;
 		var user = _db.AddUser("TestUser").Entity;
 		await _db.SaveChangesAsync();
 
-		var submission = new Submission
+		var submission = _db.Submissions.Add(new Submission
 		{
 			Title = "Test Submission",
 			GameId = game.Id,
@@ -60,9 +51,7 @@ public class CatalogModelTests : TestDbBase
 			AdditionalSyncNotes = "Test sync notes",
 			Submitter = user,
 			Status = SubmissionStatus.New
-		};
-
-		_db.Submissions.Add(submission);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = submission.Id;
@@ -108,23 +97,17 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnPost_SubmissionNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnPost();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
 	[TestMethod]
 	public async Task OnPost_ValidUpdate_UpdatesSubmissionAndRedirects()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
-		var frameRate = new GameSystemFrameRate { Id = 1, GameSystemId = system.Id, FrameRate = 60.0988 };
-		_db.GameSystemFrameRates.Add(frameRate);
+		var system = _db.AddGameSystem("NES").Entity;
+		var frameRate = _db.GameSystemFrameRates.Add(new GameSystemFrameRate { Id = 1, System = system, FrameRate = 60.0988 }).Entity;
 		var submitter = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
-
-		var submission = new Submission
+		var submission = _db.Submissions.Add(new Submission
 		{
 			Title = "Test Submission",
 			SystemId = system.Id,
@@ -133,9 +116,7 @@ public class CatalogModelTests : TestDbBase
 			AdditionalSyncNotes = "Old notes",
 			Submitter = submitter,
 			Status = SubmissionStatus.New
-		};
-
-		_db.Submissions.Add(submission);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = submission.Id;

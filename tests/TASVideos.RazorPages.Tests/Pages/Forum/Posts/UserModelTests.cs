@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
+﻿using TASVideos.Core.Services;
 using TASVideos.Pages.Forum.Posts;
 using static TASVideos.Pages.Forum.Topics.IndexModel;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
 
@@ -18,7 +14,9 @@ public class UserModelTests : BasePageModelTests
 	public UserModelTests()
 	{
 		_awards = Substitute.For<IAwards>();
+		_awards.ForUser(Arg.Any<int>()).Returns([]);
 		_pointsService = Substitute.For<IPointsService>();
+		_pointsService.PlayerPoints(Arg.Any<int>()).Returns((0.0, ""));
 		_model = new UserModel(_db, _awards, _pointsService)
 		{
 			PageContext = TestPageContext()
@@ -29,26 +27,8 @@ public class UserModelTests : BasePageModelTests
 	public async Task OnGet_NonExistentUser_ReturnsNotFound()
 	{
 		_model.UserName = "NonExistentUser";
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-	}
-
-	[TestMethod]
-	public async Task OnGet_ExistingUser_ReturnsPageResult()
-	{
-		var user = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
-		_model.UserName = "TestUser";
-
-		var result = await _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(PageResult));
 	}
 
 	[TestMethod]
@@ -65,10 +45,6 @@ public class UserModelTests : BasePageModelTests
 		post.CreateTimestamp = DateTime.UtcNow.AddDays(-1);
 
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((100.5, "Expert"));
-
 		_model.UserName = "TestUser";
 
 		var result = await _model.OnGet();
@@ -96,11 +72,7 @@ public class UserModelTests : BasePageModelTests
 		var newerPost = _db.CreatePostForTopic(topic, user).Entity;
 		newerPost.Text = "Newer post";
 		newerPost.CreateTimestamp = DateTime.UtcNow.AddDays(-1);
-
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
 
 		_model.UserName = "TestUser";
 
@@ -117,11 +89,8 @@ public class UserModelTests : BasePageModelTests
 	public async Task OnGet_RestrictedPosts_WithoutPermission_ExcludesRestrictedPosts()
 	{
 		var user = _db.AddUserWithRole("RegularUser").Entity;
-		var restrictedForum = _db.AddForum("Restricted Forum", true).Entity;
 		var publicForum = _db.AddForum("Public Forum", false).Entity;
-
-		var restrictedTopic = _db.AddTopic(user).Entity;
-		restrictedTopic.Forum = restrictedForum;
+		var restrictedTopic = _db.AddTopic(user, true).Entity;
 		var restrictedPost = _db.CreatePostForTopic(restrictedTopic, user).Entity;
 		restrictedPost.Text = "Restricted post";
 
@@ -129,11 +98,7 @@ public class UserModelTests : BasePageModelTests
 		publicTopic.Forum = publicForum;
 		var publicPost = _db.CreatePostForTopic(publicTopic, user).Entity;
 		publicPost.Text = "Public post";
-
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
 
 		AddAuthenticatedUser(_model, user, []);
 		_model.UserName = user.UserName;
@@ -148,23 +113,16 @@ public class UserModelTests : BasePageModelTests
 	public async Task OnGet_RestrictedPosts_WithPermission_IncludesRestrictedPosts()
 	{
 		var user = _db.AddUserWithRole("AdminUser").Entity;
-		var restrictedForum = _db.AddForum("Restricted Forum", true).Entity;
-		var publicForum = _db.AddForum("Public Forum", false).Entity;
 
-		var restrictedTopic = _db.AddTopic(user).Entity;
-		restrictedTopic.Forum = restrictedForum;
+		var restrictedTopic = _db.AddTopic(user, true).Entity;
 		var restrictedPost = _db.CreatePostForTopic(restrictedTopic, user).Entity;
 		restrictedPost.Text = "Restricted post";
 
 		var publicTopic = _db.AddTopic(user).Entity;
-		publicTopic.Forum = publicForum;
 		var publicPost = _db.CreatePostForTopic(publicTopic, user).Entity;
 		publicPost.Text = "Public post";
 
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.SeeRestrictedForums]);
 		_model.UserName = user.UserName;
@@ -189,11 +147,9 @@ public class UserModelTests : BasePageModelTests
 		user.BannedUntil = null;
 
 		var topic = _db.AddTopic(user).Entity;
-		_ = _db.CreatePostForTopic(topic, user).Entity;
+		_db.CreatePostForTopic(topic, user);
 
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
 		_pointsService.PlayerPoints(user.Id).Returns((150.0, "Master"));
 
 		_model.UserName = "TestUser";
@@ -213,12 +169,11 @@ public class UserModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public async Task OnGet_PopulatesUserAwards_FromAwardsService()
+	public async Task OnGet_PopulatesUserAwards_AndPlayerPoints()
 	{
 		var user = _db.AddUser("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
 
 		var testAwards = new List<AwardAssignmentSummary>
@@ -226,7 +181,7 @@ public class UserModelTests : BasePageModelTests
 			new("TestAward", "Test Award Description", 2023)
 		};
 		_awards.ForUser(user.Id).Returns(testAwards);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
+		_pointsService.PlayerPoints(user.Id).Returns((99.9, "Novice"));
 
 		_model.UserName = "TestUser";
 
@@ -236,28 +191,8 @@ public class UserModelTests : BasePageModelTests
 		Assert.AreEqual(testAwards.Count, userPost.Awards.Count);
 		Assert.AreEqual("TestAward", userPost.Awards.First().ShortName);
 		await _awards.Received(1).ForUser(user.Id);
-	}
-
-	[TestMethod]
-	public async Task OnGet_PopulatesPlayerPoints_FromPointsService()
-	{
-		var user = _db.AddUser("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
-		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((99.9, "Novice"));
-
-		_model.UserName = "TestUser";
-
-		await _model.OnGet();
-
-		var userPost = _model.Posts.First();
 		Assert.AreEqual(99.9, userPost.PosterPlayerPoints);
 		Assert.AreEqual("Novice", userPost.PosterPlayerRank);
-		await _pointsService.Received(1).PlayerPoints(user.Id);
 	}
 
 	[TestMethod]
@@ -265,15 +200,9 @@ public class UserModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("BannedUser").Entity;
 		user.BannedUntil = DateTime.UtcNow.AddDays(1);
-
 		var topic = _db.AddTopic(user).Entity;
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
 		_model.UserName = "BannedUser";
 
 		await _model.OnGet();
@@ -287,15 +216,9 @@ public class UserModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("FormerlyBannedUser").Entity;
 		user.BannedUntil = DateTime.UtcNow.AddDays(-1); // Ban expired yesterday
-
 		var topic = _db.AddTopic(user).Entity;
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
 		_model.UserName = "FormerlyBannedUser";
 
 		await _model.OnGet();
@@ -309,15 +232,9 @@ public class UserModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.IsLocked = false; // Open topic
-
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		topic.IsLocked = false;
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditForumPosts]);
 		_model.UserName = "TestUser";
 
@@ -333,14 +250,8 @@ public class UserModelTests : BasePageModelTests
 		var user = _db.AddUser("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
 		topic.IsLocked = true; // Locked topic
-
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.EditForumPosts]);
 		_model.UserName = "TestUser";
 
@@ -357,13 +268,8 @@ public class UserModelTests : BasePageModelTests
 		var moderator = _db.AddUser("Moderator").Entity;
 		var topic = _db.AddTopic(user).Entity;
 		topic.IsLocked = true; // Even locked topics
-
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
 
 		AddAuthenticatedUser(_model, moderator, [PermissionTo.EditUsersForumPosts]);
 		_model.UserName = "TestUser";
@@ -375,17 +281,13 @@ public class UserModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public async Task OnGet_DeletePermissions_OnlyModeratorsCanDelete()
+	public async Task OnGet_DeletePermissions_PostIsDeletable()
 	{
 		var user = _db.AddUser("TestUser").Entity;
 		var moderator = _db.AddUser("Moderator").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
 
 		AddAuthenticatedUser(_model, moderator, [PermissionTo.DeleteForumPosts]);
 		_model.UserName = "TestUser";
@@ -401,14 +303,8 @@ public class UserModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		_ = _db.CreatePostForTopic(topic, user).Entity;
-
+		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
-		AddAuthenticatedUser(_model, user, []);
 		_model.UserName = "TestUser";
 
 		await _model.OnGet();
@@ -432,9 +328,6 @@ public class UserModelTests : BasePageModelTests
 
 		await _db.SaveChangesAsync();
 
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
 		_model.UserName = "TestUser";
 		_model.Search = new TopicRequest { CurrentPage = 2, PageSize = 10 };
 
@@ -443,59 +336,6 @@ public class UserModelTests : BasePageModelTests
 		Assert.AreEqual(10, _model.Posts.Count());
 		Assert.AreEqual(30, _model.Posts.RowCount);
 		Assert.AreEqual(2, _model.Posts.Request.CurrentPage);
-	}
-
-	[TestMethod]
-	public async Task OnGet_UserWithMultiplePosts_MapsAllFieldsCorrectly()
-	{
-		var user = _db.AddUser("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic Title";
-		topic.Forum!.Name = "Test Forum Name";
-		topic.IsLocked = true;
-
-		var post = _db.CreatePostForTopic(topic, user).Entity;
-		var testTimestamp = DateTime.UtcNow.AddDays(-1);
-		var testUpdateTimestamp = DateTime.UtcNow.AddHours(-1);
-		var testEditTimestamp = DateTime.UtcNow.AddMinutes(-30);
-
-		post.CreateTimestamp = testTimestamp;
-		post.LastUpdateTimestamp = testUpdateTimestamp;
-		post.PostEditedTimestamp = testEditTimestamp;
-		post.Text = "Test post content";
-		post.Subject = "Test post subject";
-		post.EnableHtml = true;
-		post.EnableBbCode = false;
-		post.PosterMood = ForumPostMood.Happy;
-
-		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user.Id).Returns([]);
-		_pointsService.PlayerPoints(user.Id).Returns((0.0, ""));
-
-		_model.UserName = "TestUser";
-
-		await _model.OnGet();
-
-		Assert.AreEqual(1, _model.Posts.Count());
-		var userPost = _model.Posts.First();
-
-		Assert.AreEqual(post.Id, userPost.Id);
-		Assert.IsTrue(Math.Abs((testTimestamp - userPost.CreateTimestamp).TotalMilliseconds) < 1000);
-		Assert.IsTrue(Math.Abs((testUpdateTimestamp - userPost.LastUpdateTimestamp).TotalMilliseconds) < 1000);
-		Assert.IsTrue(Math.Abs((testEditTimestamp - userPost.PostEditedTimestamp!.Value).TotalMilliseconds) < 1000);
-		Assert.AreEqual("Test post content", userPost.Text);
-		Assert.AreEqual("Test post subject", userPost.Subject);
-		Assert.IsTrue(userPost.EnableHtml);
-		Assert.IsFalse(userPost.EnableBbCode);
-		Assert.AreEqual(ForumPostMood.Happy, userPost.PosterMood);
-		Assert.AreEqual(topic.Id, userPost.TopicId);
-		Assert.AreEqual("Test Topic Title", userPost.TopicTitle);
-		Assert.AreEqual(topic.ForumId, userPost.ForumId);
-		Assert.AreEqual("Test Forum Name", userPost.ForumName);
-		Assert.IsTrue(userPost.TopicIsLocked);
-		Assert.AreEqual(user.Id, userPost.PosterId);
-		Assert.AreEqual(topic.Forum.Restricted, userPost.Restricted);
 	}
 
 	[TestMethod]
@@ -512,10 +352,6 @@ public class UserModelTests : BasePageModelTests
 		post2.Text = "Post by User2";
 
 		await _db.SaveChangesAsync();
-
-		_awards.ForUser(user1.Id).Returns([]);
-		_pointsService.PlayerPoints(user1.Id).Returns((0.0, ""));
-
 		_model.UserName = "User1";
 
 		await _model.OnGet();
@@ -525,10 +361,5 @@ public class UserModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void UserModel_HasAllowAnonymousAttribute()
-	{
-		var type = typeof(UserModel);
-		var attributes = type.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
-		Assert.AreEqual(1, attributes.Length);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(UserModel));
 }

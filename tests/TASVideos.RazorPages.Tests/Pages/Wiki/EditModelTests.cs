@@ -1,10 +1,8 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 
@@ -30,9 +28,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_NullOrEmptyPath_ReturnsNotFound(string? path)
 	{
 		_model.Path = path;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -40,9 +36,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_InvalidWikiPageName_ReturnsNotFound()
 	{
 		_model.Path = "Invalid/Page.html";
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -50,9 +44,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_HomePageWithoutExistingUser_ReturnsNotFound()
 	{
 		_model.Path = "HomePages/NonExistentUser";
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -130,9 +122,7 @@ public class EditModelTests : TestDbBase
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Index", redirect.PageName);
+		AssertRedirectHome(result);
 	}
 
 	[TestMethod]
@@ -143,9 +133,7 @@ public class EditModelTests : TestDbBase
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Index", redirect.PageName);
+		AssertRedirectHome(result);
 		await _wikiPages.DidNotReceive().Add(Arg.Any<WikiCreateRequest>());
 	}
 

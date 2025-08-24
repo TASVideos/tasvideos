@@ -1,7 +1,5 @@
 ﻿using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Forum.Legacy;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Legacy;
 
@@ -29,9 +27,7 @@ public class TopicModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -50,11 +46,8 @@ public class TopicModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Topics/Index", redirectResult.PageName);
-
-		var routeValues = redirectResult.RouteValues;
+		AssertRedirect(result, "/Forum/Topics/Index");
+		var routeValues = ((RedirectToPageResult)result).RouteValues;
 		Assert.IsNotNull(routeValues);
 		Assert.AreEqual(topicId, routeValues["Id"]);
 		Assert.AreEqual(pageNumber, routeValues["CurrentPage"]);
@@ -73,28 +66,22 @@ public class TopicModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
 	public async Task OnGet_TParameterOnly_RedirectsToTopicWithTValue()
 	{
-		const int topicId = 789;
 		_model.P = null;
-		_model.T = topicId;
+		_model.T = 789;
 		_model.Id = null;
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Topics/Index", redirectResult.PageName);
-
-		var routeValues = redirectResult.RouteValues;
+		AssertRedirect(result, "/Forum/Topics/Index");
+		var routeValues = ((RedirectToPageResult)result).RouteValues;
 		Assert.IsNotNull(routeValues);
-		Assert.AreEqual(topicId, routeValues["Id"]);
+		Assert.AreEqual(789, routeValues["Id"]);
 		Assert.IsFalse(routeValues.ContainsKey("CurrentPage"));
 		Assert.IsFalse(routeValues.ContainsKey("Highlight"));
 	}
@@ -102,20 +89,16 @@ public class TopicModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnGet_IdParameterOnly_RedirectsToTopicWithIdValue()
 	{
-		const int topicId = 321;
 		_model.P = null;
 		_model.T = null;
-		_model.Id = topicId;
+		_model.Id = 321;
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Topics/Index", redirectResult.PageName);
-
-		var routeValues = redirectResult.RouteValues;
+		AssertRedirect(result, "/Forum/Topics/Index");
+		var routeValues = ((RedirectToPageResult)result).RouteValues;
 		Assert.IsNotNull(routeValues);
-		Assert.AreEqual(topicId, routeValues["Id"]);
+		Assert.AreEqual(321, routeValues["Id"]);
 		Assert.IsFalse(routeValues.ContainsKey("CurrentPage"));
 		Assert.IsFalse(routeValues.ContainsKey("Highlight"));
 	}
@@ -123,16 +106,13 @@ public class TopicModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnGet_BothTAndIdSet_PrioritizesTOverId()
 	{
-		const int tValue = 111;
-		const int idValue = 222;
 		_model.P = null;
-		_model.T = tValue;
-		_model.Id = idValue;
+		_model.T = 111;
+		_model.Id = 222;
 
 		var result = await _model.OnGet();
 
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual(tValue, redirectResult.RouteValues!["Id"]);
+		AssertRedirect(result, "/Forum/Topics/Index", 111);
 	}
 
 	[TestMethod]
@@ -187,18 +167,18 @@ public class TopicModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
+		// Uses result from GetPostPosition, not T or Id parameters
+		AssertRedirect(result, "/Forum/Topics/Index", 999);
+		Assert.AreEqual(postId, ((RedirectToPageResult)result).RouteValues!["Highlight"]);
 		await _forumService.Received(1).GetPostPosition(postId, Arg.Any<bool>());
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual(999, redirectResult.RouteValues!["Id"]); // Uses result from GetPostPosition, not T or Id parameters
-		Assert.AreEqual(postId, redirectResult.RouteValues["Highlight"]);
 	}
 
 	[TestMethod]
 	public async Task OnGet_PWithPostOnDifferentPages_RedirectsToCorrectPage()
 	{
-		const int postId = 1111;
-		const int topicId = 2222;
-		const int pageNumber = 25;
+		const int postId = 123;
+		const int topicId = 456;
+		const int pageNumber = 78;
 
 		_model.P = postId;
 		var postPosition = new PostPosition(Page: pageNumber, TopicId: topicId);
@@ -206,9 +186,8 @@ public class TopicModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual(topicId, redirectResult.RouteValues!["Id"]);
-		Assert.AreEqual(pageNumber, redirectResult.RouteValues["CurrentPage"]);
-		Assert.AreEqual(postId, redirectResult.RouteValues["Highlight"]);
+		AssertRedirect(result, "/Forum/Topics/Index", topicId);
+		Assert.AreEqual(pageNumber, ((RedirectToPageResult)result).RouteValues!["CurrentPage"]);
+		Assert.AreEqual(postId, ((RedirectToPageResult)result).RouteValues!["Highlight"]);
 	}
 }

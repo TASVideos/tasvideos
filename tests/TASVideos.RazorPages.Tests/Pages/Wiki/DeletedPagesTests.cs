@@ -1,12 +1,8 @@
-﻿using System.Reflection;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data.Entity;
-using TASVideos.Pages;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 
@@ -22,16 +18,6 @@ public class DeletedPagesTests : TestDbBase
 		_wikiPages = Substitute.For<IWikiPages>();
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_page = new DeletedPagesModel(_wikiPages, _db, _publisher);
-	}
-
-	[TestMethod]
-	public void RequiresPermission()
-	{
-		var attribute = typeof(DeletedPagesModel).GetCustomAttribute(typeof(RequirePermissionAttribute));
-		Assert.IsNotNull(attribute);
-		Assert.IsInstanceOfType<RequirePermissionAttribute>(attribute);
-		var permissionAttribute = (RequirePermissionAttribute)attribute;
-		Assert.IsTrue(permissionAttribute.RequiredPermissions.Contains(PermissionTo.SeeDeletedWikiPages));
 	}
 
 	[TestMethod]
@@ -63,11 +49,9 @@ public class DeletedPagesTests : TestDbBase
 	[TestMethod]
 	public async Task OnPostDeletePage_RequiresPermission()
 	{
-		var actual = await _page.OnPostDeletePage("", "");
-		Assert.IsNotNull(actual);
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		var result = await _page.OnPostDeletePage("", "");
+
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -130,11 +114,8 @@ public class DeletedPagesTests : TestDbBase
 	[TestMethod]
 	public async Task OnPostDeleteRevision_RequiresPermission()
 	{
-		var actual = await _page.OnPostDeletePage("", "");
-		Assert.IsNotNull(actual);
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		var result = await _page.OnPostDeletePage("", "");
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -143,11 +124,9 @@ public class DeletedPagesTests : TestDbBase
 		var user = new User { Id = 1, UserName = "User" };
 		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
 
-		var actual = await _page.OnPostDeleteRevision("", 1);
+		var result = await _page.OnPostDeleteRevision("", 1);
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Index", redirectResult.PageName);
+		AssertRedirectHome(result);
 	}
 
 	[TestMethod]
@@ -156,11 +135,9 @@ public class DeletedPagesTests : TestDbBase
 		var user = new User { Id = 1, UserName = "User" };
 		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
 
-		var actual = await _page.OnPostDeleteRevision("Page", 0);
+		var result = await _page.OnPostDeleteRevision("Page", 0);
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Index", redirectResult.PageName);
+		AssertRedirectHome(result);
 	}
 
 	[TestMethod]
@@ -198,11 +175,9 @@ public class DeletedPagesTests : TestDbBase
 	[TestMethod]
 	public async Task OnPostUndelete_RequiresPermission()
 	{
-		var actual = await _page.OnPostUndelete("");
-		Assert.IsNotNull(actual);
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		var result = await _page.OnPostUndelete("");
+
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -211,11 +186,9 @@ public class DeletedPagesTests : TestDbBase
 		var user = new User { Id = 1, UserName = "User" };
 		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
 
-		var actual = await _page.OnPostUndelete("");
+		var result = await _page.OnPostUndelete("");
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Index", redirectResult.PageName);
+		AssertRedirectHome(result);
 	}
 
 	[TestMethod]
@@ -226,9 +199,9 @@ public class DeletedPagesTests : TestDbBase
 		AddAuthenticatedUser(_page, user, [PermissionTo.DeleteWikiPages]);
 		_wikiPages.Undelete(pageName).Returns(false);
 
-		var actual = await _page.OnPostUndelete(pageName);
+		var result = await _page.OnPostUndelete(pageName);
 
-		Assert.IsInstanceOfType<PageResult>(actual);
+		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_page.ModelState.IsValid);
 	}
 
@@ -265,4 +238,7 @@ public class DeletedPagesTests : TestDbBase
 		var redirectResult = (RedirectResult)actual;
 		Assert.AreEqual("/" + pageName, redirectResult.Url);
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(DeletedPagesModel), PermissionTo.SeeDeletedWikiPages);
 }

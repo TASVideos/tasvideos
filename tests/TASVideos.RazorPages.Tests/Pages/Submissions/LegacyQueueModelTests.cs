@@ -1,6 +1,5 @@
 ﻿using TASVideos.Pages.Submissions;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;
 
@@ -69,7 +68,6 @@ public class LegacyQueueModelTests : TestDbBase
 		_page.Mode = "list";
 		_page.Type = "own";
 
-		// User is not authenticated
 		var result = _page.OnGet();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);

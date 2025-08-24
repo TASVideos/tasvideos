@@ -1,9 +1,6 @@
 ﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
-using TASVideos.Pages;
 using TASVideos.Pages.Games;
 using TASVideos.Services;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Games;
 
@@ -249,12 +246,5 @@ public class RewireModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void RewireModel_HasRequirePermissionAttribute()
-	{
-		var type = typeof(RewireModel);
-		var attribute = type.GetCustomAttributes(typeof(RequirePermissionAttribute), false).FirstOrDefault() as RequirePermissionAttribute;
-
-		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.RewireGames));
-	}
+	public void RequiresPermission() => AssertHasPermission(typeof(RewireModel), PermissionTo.RewireGames);
 }

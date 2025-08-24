@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum;
+﻿using TASVideos.Pages.Forum;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum;
@@ -19,37 +17,24 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_InvalidId_ReturnsNotFound()
 	{
 		_model.Id = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
 	public async Task OnGet_ValidId_ReturnsPageAndPopulatesCategory()
 	{
-		var category = _db.ForumCategories.Add(new ForumCategory
-		{
-			Title = "Test Category",
-			Description = "Test Description",
-			Ordinal = 1
-		}).Entity;
+		var category = _db.AddForumCategory("Test Category").Entity;
+		category.Description = "Test Description";
 
-		_db.Forums.AddRange(
-			new TASVideos.Data.Entity.Forum.Forum
-			{
-				Name = "Forum 1",
-				Description = "Forum 1 Description",
-				Ordinal = 2,
-				Category = category
-			},
-			new TASVideos.Data.Entity.Forum.Forum
-			{
-				Name = "Forum 2",
-				Description = "Forum 2 Description",
-				Ordinal = 1,
-				Category = category
-			});
+		var forum1 = _db.AddForum("Forum 1").Entity;
+		forum1.Ordinal = 2;
+		forum1.Category = category;
+
+		var forum2 = _db.AddForum("Forum 2").Entity;
+		forum2.Ordinal = 1;
+		forum2.Category = category;
+
 		await _db.SaveChangesAsync();
 
 		_model.Id = category.Id;
@@ -71,14 +56,8 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_CategoryWithNoForums_ReturnsPageWithEmptyForumsList()
 	{
-		var category = _db.ForumCategories.Add(new ForumCategory
-		{
-			Title = "Empty Category",
-			Description = "Category with no forums",
-			Ordinal = 1
-		}).Entity;
+		var category = _db.AddForumCategory("Empty Category").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = category.Id;
 
 		var result = await _model.OnGet();
@@ -92,45 +71,33 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_InvalidId_ReturnsNotFound()
 	{
 		_model.Id = 999;
-		_model.Category = new EditModel.CategoryEdit
-		{
-			Title = "Test Title",
-			Description = "Test Description",
-			Forums = []
-		};
-
 		var result = await _model.OnPost();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
-	public async Task OnPost_ValidModel_UpdatesCategoryAndForums()
+	public async Task OnPost_InvalidModelState_ReturnsPage()
 	{
-		var category = _db.ForumCategories.Add(new ForumCategory
-		{
-			Title = "Original Title",
-			Description = "Original Description",
-			Ordinal = 1
-		}).Entity;
+		_model.ModelState.AddModelError("Title", "Title is required");
+		var result = await _model.OnPost();
+		Assert.IsInstanceOfType(result, typeof(PageResult));
+	}
 
-		var forum1 = new TASVideos.Data.Entity.Forum.Forum
-		{
-			Name = "Forum 1",
-			Description = "Forum 1 Description",
-			Ordinal = 2,
-			Category = category
-		};
+	[TestMethod]
+	public async Task OnPost_ValidModel_UpdatesCategoryAndForumsAndReorders()
+	{
+		var category = _db.AddForumCategory("Original Title").Entity;
+		category.Description = "Original Description";
 
-		var forum2 = new TASVideos.Data.Entity.Forum.Forum
-		{
-			Name = "Forum 2",
-			Description = "Forum 2 Description",
-			Ordinal = 1,
-			Category = category
-		};
+		var forum1 = _db.AddForum("Forum 1").Entity;
+		forum1.Description = "Forum 1 Description";
+		forum1.Ordinal = 2;
+		forum1.Category = category;
 
-		_db.Forums.AddRange(forum1, forum2);
+		var forum2 = _db.AddForum("Forum 2").Entity;
+		forum2.Description = "Forum 2 Description";
+		forum2.Ordinal = 1;
+		forum2.Category = category;
 		await _db.SaveChangesAsync();
 
 		_model.Id = category.Id;
@@ -159,14 +126,13 @@ public class EditModelTests : TestDbBase
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 
 		var updatedCategory = await _db.ForumCategories
 			.Include(c => c.Forums)
-			.SingleAsync(c => c.Id == category.Id);
+			.SingleOrDefaultAsync(c => c.Id == category.Id);
 
+		Assert.IsNotNull(updatedCategory);
 		Assert.AreEqual("Updated Title", updatedCategory.Title);
 		Assert.AreEqual("Updated Description", updatedCategory.Description);
 
@@ -174,109 +140,5 @@ public class EditModelTests : TestDbBase
 		var updatedForum2 = updatedCategory.Forums.Single(f => f.Id == forum2.Id);
 		Assert.AreEqual(1, updatedForum1.Ordinal);
 		Assert.AreEqual(2, updatedForum2.Ordinal);
-	}
-
-	[TestMethod]
-	public async Task OnPost_InvalidModelState_ReturnsPage()
-	{
-		var category = _db.ForumCategories.Add(new ForumCategory
-		{
-			Title = "Test Category",
-			Description = "Test Description",
-			Ordinal = 1
-		}).Entity;
-		await _db.SaveChangesAsync();
-
-		_model.Id = category.Id;
-		_model.ModelState.AddModelError("Title", "Title is required");
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(PageResult));
-	}
-
-	[TestMethod]
-	public async Task OnPost_ReorderForums_UpdatesOrdinals()
-	{
-		var category = _db.ForumCategories.Add(new ForumCategory
-		{
-			Title = "Test Category",
-			Description = "Test Description",
-			Ordinal = 1
-		}).Entity;
-
-		var forum1 = new TASVideos.Data.Entity.Forum.Forum
-		{
-			Name = "Forum 1",
-			Description = "Forum 1 Description",
-			Ordinal = 1,
-			Category = category
-		};
-
-		var forum2 = new TASVideos.Data.Entity.Forum.Forum
-		{
-			Name = "Forum 2",
-			Description = "Forum 2 Description",
-			Ordinal = 2,
-			Category = category
-		};
-
-		var forum3 = new TASVideos.Data.Entity.Forum.Forum
-		{
-			Name = "Forum 3",
-			Description = "Forum 3 Description",
-			Ordinal = 3,
-			Category = category
-		};
-
-		_db.Forums.AddRange(forum1, forum2, forum3);
-		await _db.SaveChangesAsync();
-
-		_model.Id = category.Id;
-		_model.Category = new EditModel.CategoryEdit
-		{
-			Title = "Test Category",
-			Description = "Test Description",
-			Forums =
-			[
-				new EditModel.CategoryEdit.ForumEdit
-				{
-					Id = forum3.Id,
-					Name = "Forum 3",
-					Description = "Forum 3 Description",
-					Ordinal = 1
-				},
-				new EditModel.CategoryEdit.ForumEdit
-				{
-					Id = forum1.Id,
-					Name = "Forum 1",
-					Description = "Forum 1 Description",
-					Ordinal = 2
-				},
-				new EditModel.CategoryEdit.ForumEdit
-				{
-					Id = forum2.Id,
-					Name = "Forum 2",
-					Description = "Forum 2 Description",
-					Ordinal = 3
-				}
-			]
-		};
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-
-		var updatedCategory = await _db.ForumCategories
-			.Include(c => c.Forums)
-			.SingleAsync(c => c.Id == category.Id);
-
-		var updatedForum1 = updatedCategory.Forums.Single(f => f.Id == forum1.Id);
-		var updatedForum2 = updatedCategory.Forums.Single(f => f.Id == forum2.Id);
-		var updatedForum3 = updatedCategory.Forums.Single(f => f.Id == forum3.Id);
-
-		Assert.AreEqual(2, updatedForum1.Ordinal);
-		Assert.AreEqual(3, updatedForum2.Ordinal);
-		Assert.AreEqual(1, updatedForum3.Ordinal);
 	}
 }

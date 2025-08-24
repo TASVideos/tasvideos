@@ -1,5 +1,4 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki;
+﻿using TASVideos.Pages.Wiki;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 
@@ -31,9 +30,7 @@ public class PageHistoryModelTests : BasePageModelTests
 	public async Task OnGet_PathWithSlashes_TrimsSlashes()
 	{
 		_model.Path = "/TestPage/";
-
 		await _model.OnGet();
-
 		Assert.AreEqual("TestPage", _model.PageName);
 	}
 

@@ -14,9 +14,6 @@ public class SubmitMovieModelTests : BasePageModelTests
 	public void OnGet_ReturnsRedirectToPermissionsIndex()
 	{
 		var result = _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Submissions/Submit", redirectResult.PageName);
+		AssertRedirect(result, "/Submissions/Submit");
 	}
 }

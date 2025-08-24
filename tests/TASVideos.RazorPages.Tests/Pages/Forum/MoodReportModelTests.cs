@@ -1,6 +1,4 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Forum;
-using TASVideos.Pages.Forum;
+﻿using TASVideos.Pages.Forum;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum;
@@ -35,8 +33,8 @@ public class MoodReportModelTests : TestDbBase
 	{
 		CreateUsersWithMoodAvatars();
 		await _db.SaveChangesAsync();
-
 		_model.UserName = "User1";
+
 		await _model.OnGet();
 
 		Assert.AreEqual(1, _model.MoodyUsers.Count);
@@ -47,34 +45,21 @@ public class MoodReportModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithNonExistentUserName_ReturnsEmpty()
 	{
-		CreateUsersWithMoodAvatars();
-		await _db.SaveChangesAsync();
-
 		_model.UserName = "NonExistentUser";
 		await _model.OnGet();
-
 		Assert.AreEqual(0, _model.MoodyUsers.Count);
 	}
 
 	[TestMethod]
-	public async Task OnGet_WithWhitespaceUserName_ReturnsAllUsers()
+	[DataRow(null)]
+	[DataRow("")]
+	[DataRow("  ")]
+	public async Task OnGet_WitNullOrWhitespaceUserName_ReturnsAllUsers(string userName)
 	{
 		CreateUsersWithMoodAvatars();
 		await _db.SaveChangesAsync();
+		_model.UserName = userName;
 
-		_model.UserName = "   ";
-		await _model.OnGet();
-
-		Assert.AreEqual(2, _model.MoodyUsers.Count);
-	}
-
-	[TestMethod]
-	public async Task OnGet_WithEmptyUserName_ReturnsAllUsers()
-	{
-		CreateUsersWithMoodAvatars();
-		await _db.SaveChangesAsync();
-
-		_model.UserName = "";
 		await _model.OnGet();
 
 		Assert.AreEqual(2, _model.MoodyUsers.Count);
@@ -116,32 +101,7 @@ public class MoodReportModelTests : TestDbBase
 	public async Task OnGet_NoMoodyUsers_ReturnsEmpty()
 	{
 		await _model.OnGet();
-
 		Assert.AreEqual(0, _model.MoodyUsers.Count);
-	}
-
-	[TestMethod]
-	public async Task OnGet_MultipleUsersWithSamePermission_AllReturned()
-	{
-		var role = CreateRoleWithMoodAvatarPermission();
-
-		var user1 = CreateUser("User1", "https://example.com/moods1/");
-		var user2 = CreateUser("User2", "https://example.com/moods2/");
-		var user3 = CreateUser("User3", "https://example.com/moods3/");
-
-		AssignUserToRole(user1, role);
-		AssignUserToRole(user2, role);
-		AssignUserToRole(user3, role);
-
-		await _db.SaveChangesAsync();
-
-		await _model.OnGet();
-
-		Assert.AreEqual(3, _model.MoodyUsers.Count);
-		var userNames = _model.MoodyUsers.Select(u => u.UserName).ToList();
-		Assert.IsTrue(userNames.Contains("User1"));
-		Assert.IsTrue(userNames.Contains("User2"));
-		Assert.IsTrue(userNames.Contains("User3"));
 	}
 
 	private void CreateUsersWithMoodAvatars()

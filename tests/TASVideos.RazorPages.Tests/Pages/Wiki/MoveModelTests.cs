@@ -1,9 +1,7 @@
 ﻿using TASVideos.Core.Services.Wiki;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 
@@ -29,9 +27,7 @@ public class MoveModelTests : TestDbBase
 	public async Task OnGet_NullOrEmptyPath_ReturnsNotFound(string? path)
 	{
 		_model.Path = path;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -102,7 +98,7 @@ public class MoveModelTests : TestDbBase
 		Assert.IsFalse(_model.ModelState.IsValid);
 		Assert.IsNotNull(_model.ModelState["DestinationPageName"]);
 		Assert.IsTrue(_model.ModelState["DestinationPageName"]!.Errors.Any(e => e.ErrorMessage.Contains("already exists")));
-		_ = _wikiPages.DidNotReceive().Move(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
+		await _wikiPages.DidNotReceive().Move(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
 	}
 
 	[TestMethod]
@@ -139,7 +135,7 @@ public class MoveModelTests : TestDbBase
 		var redirect = (RedirectResult)result;
 		Assert.AreEqual("/DestinationPage", redirect.Url);
 
-		_ = _wikiPages.Received(1).Move("OriginalPage", "DestinationPage", user.Id);
+		await _wikiPages.Received(1).Move("OriginalPage", "DestinationPage", user.Id);
 	}
 
 	[TestMethod]
@@ -160,6 +156,9 @@ public class MoveModelTests : TestDbBase
 		Assert.IsNotNull(_model.ModelState[""]);
 		Assert.IsTrue(_model.ModelState[""]!.Errors.Any(e => e.ErrorMessage.Contains("Unable to move page")));
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(MoveModel), PermissionTo.MoveWikiPages);
 
 	#endregion
 }

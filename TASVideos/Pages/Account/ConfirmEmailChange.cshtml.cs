@@ -17,14 +17,13 @@ public class ConfirmEmailChangeModel(
 			return AccessDenied();
 		}
 
-		var user = await userManager.GetRequiredUser(User);
-
 		var cacheResult = cache.TryGetValue(code, out string newEmail);
 		if (!cacheResult)
 		{
 			return BadRequest("Unrecognized or expired code.");
 		}
 
+		var user = await userManager.GetRequiredUser(User);
 		var wasConfirmedPreviously = user.EmailConfirmed;
 
 		var result = await userManager.ChangeEmail(user, newEmail, code);

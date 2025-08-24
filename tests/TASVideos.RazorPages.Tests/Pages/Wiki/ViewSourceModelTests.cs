@@ -27,9 +27,7 @@ public class ViewSourceModelTests : BasePageModelTests
 	public async Task OnGet_NullOrWhitespacePath_ReturnsNotFound(string path)
 	{
 		_model.Path = null;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 

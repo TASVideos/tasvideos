@@ -227,7 +227,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 
 	public EntityEntry<ForumCategory> AddForumCategory(string? title = null)
 	{
-		return ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category" });
+		return ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category", Ordinal = 1 });
 	}
 
 	public EntityEntry<Forum> AddForum(string? name = null, bool? restricted = null)
@@ -237,10 +237,10 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return Forums.Add(new Forum { Name = name, Category = category, Restricted = restricted ?? false });
 	}
 
-	public EntityEntry<ForumTopic> AddTopic(User? createdByUser = null)
+	public EntityEntry<ForumTopic> AddTopic(User? createdByUser = null, bool restricted = false)
 	{
 		var user = createdByUser ?? AddUser(0).Entity;
-		var forum = AddForum().Entity;
+		var forum = AddForum(null, restricted).Entity;
 		var topic = new ForumTopic { Forum = forum, Poster = user };
 		return ForumTopics.Add(topic);
 	}
@@ -264,7 +264,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		{
 			Question = "Did you like watching this movie? ",
 			MultiSelect = false,
-			CloseDate = isClosed ? DateTime.UtcNow.AddDays(-1) : DateTime.UtcNow.AddDays(1)
+			CloseDate = isClosed ? DateTime.UtcNow.AddDays(-5) : DateTime.UtcNow.AddDays(5)
 		});
 
 		topic.Poll = poll.Entity;
@@ -286,9 +286,18 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return poll;
 	}
 
-	public EntityEntry<Game> AddGame(string? displayName = null)
+	public EntityEntry<ForumPollOptionVote> VoteForOption(ForumPollOption option, User user)
 	{
-		return Games.Add(new Game { DisplayName = displayName ?? "Test Game" });
+		return ForumPollOptionVotes.Add(new ForumPollOptionVote
+		{
+			PollOption = option,
+			User = user
+		});
+	}
+
+	public EntityEntry<Game> AddGame(string? displayName = null, string? abbreviation = null)
+	{
+		return Games.Add(new Game { DisplayName = displayName ?? "Test Game", Abbreviation = abbreviation });
 	}
 
 	public EntityEntry<Genre> AddGenre(string? displayName = null)
@@ -296,9 +305,9 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return Genres.Add(new Genre { DisplayName = displayName ?? "Action" });
 	}
 
-	public EntityEntry<GameGroup> AddGameGroup(string name)
+	public EntityEntry<GameGroup> AddGameGroup(string name, string? abbreviation = null)
 	{
-		return GameGroups.Add(new GameGroup { Name = name });
+		return GameGroups.Add(new GameGroup { Name = name, Abbreviation = abbreviation});
 	}
 
 	public EntityEntry<GameGoal> AddGoalForGame(Game game, string? displayName = null)

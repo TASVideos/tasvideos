@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
@@ -29,9 +27,7 @@ public class EditFilesModelTests : TestDbBase
 	public async Task OnGet_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 

@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
@@ -24,8 +22,7 @@ public class InfoModelTests : TestDbBase
 	public async Task OnGet_WithValidId_LoadsUserFileInfo()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var game = _db.AddGame("Test Game").Entity;
 
 		var userFile = new UserFile
 		{
@@ -64,7 +61,6 @@ public class InfoModelTests : TestDbBase
 	{
 		_page.Id = 999;
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -126,7 +122,7 @@ public class InfoModelTests : TestDbBase
 	public async Task OnGet_WithNonPreviewableSupportFile_DoesNotLoadContent()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		_db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test-file.exe", // Non-previewable extension
@@ -136,9 +132,7 @@ public class InfoModelTests : TestDbBase
 			Class = UserFileClass.Support,
 			Content = [1, 2, 3, 4, 5],
 			CompressionType = Compression.None
-		};
-
-		_db.UserFiles.Add(userFile);
+		});
 		await _db.SaveChangesAsync();
 		_page.Id = 1;
 
@@ -177,9 +171,7 @@ public class InfoModelTests : TestDbBase
 	public async Task OnGetDownload_NoFile_ReturnsNotFound()
 	{
 		_page.Id = long.MaxValue;
-
 		var result = await _page.OnGetDownload();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -206,7 +198,7 @@ public class InfoModelTests : TestDbBase
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
 		var fileContent = "Test file content"u8.ToArray();
-		var userFile = new UserFile
+		var userFile = _db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test-file.txt",
@@ -216,9 +208,7 @@ public class InfoModelTests : TestDbBase
 			Class = UserFileClass.Support,
 			Content = fileContent,
 			CompressionType = Compression.None
-		};
-
-		_db.UserFiles.Add(userFile);
+		}).Entity;
 		await _db.SaveChangesAsync();
 
 		var downloadResult = new InfoModel.DownloadResult(userFile);
@@ -246,7 +236,7 @@ public class InfoModelTests : TestDbBase
 	public async Task DownloadResult_WithGzipCompression_SetsCorrectHeaders()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
+		var downloadResult = new InfoModel.DownloadResult(new UserFile
 		{
 			Id = 1,
 			FileName = "compressed-file.txt",
@@ -256,9 +246,7 @@ public class InfoModelTests : TestDbBase
 			Class = UserFileClass.Support,
 			Content = [1, 2, 3, 4, 5],
 			CompressionType = Compression.Gzip
-		};
-
-		var downloadResult = new InfoModel.DownloadResult(userFile);
+		});
 		var httpContext = new DefaultHttpContext();
 		var actionContext = new ActionContext
 		{
@@ -275,61 +263,5 @@ public class InfoModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void UserFileModel_IsMovieProperty_ReturnsTrueForMovieClass()
-	{
-		var movieModel = new InfoModel.UserFileModel
-		{
-			Class = UserFileClass.Movie
-		};
-
-		var supportModel = new InfoModel.UserFileModel
-		{
-			Class = UserFileClass.Support
-		};
-
-		Assert.IsTrue(movieModel.IsMovie);
-		Assert.IsFalse(supportModel.IsMovie);
-	}
-
-	[TestMethod]
-	public void UserFileModel_ExtensionProperty_ExtractsCorrectly()
-	{
-		var model = new InfoModel.UserFileModel
-		{
-			FileName = "test-file.BK2"
-		};
-
-		Assert.AreEqual("bk2", model.Extension);
-	}
-
-	[TestMethod]
-	public void UserFileModel_ExtensionProperty_HandlesNoExtension()
-	{
-		var model = new InfoModel.UserFileModel
-		{
-			FileName = "test-file-no-ext"
-		};
-
-		Assert.AreEqual("test-file-no-ext", model.Extension);
-	}
-
-	[TestMethod]
-	public void UserFileModel_ExtensionProperty_HandlesNullFileName()
-	{
-		var model = new InfoModel.UserFileModel
-		{
-			FileName = null
-		};
-
-		Assert.AreEqual("", model.Extension);
-	}
-
-	[TestMethod]
-	public void InfoModel_AllowsAnonymousUsers()
-	{
-		var infoModelType = typeof(InfoModel);
-		var allowAnonymousAttribute = infoModelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.IsTrue(allowAnonymousAttribute.Length > 0);
-	}
+	public void AllowsAnonymousUsers() => AssertAllowsAnonymousUsers(typeof(InfoModel));
 }

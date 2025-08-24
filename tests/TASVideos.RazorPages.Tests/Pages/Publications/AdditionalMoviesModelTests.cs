@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
@@ -31,9 +28,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 	public async Task OnGet_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -67,9 +62,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 	public async Task OnPost_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnPost();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 

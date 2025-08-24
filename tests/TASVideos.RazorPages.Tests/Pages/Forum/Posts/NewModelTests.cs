@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core;
+﻿using TASVideos.Core;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-using TASVideos.Pages;
 using TASVideos.Pages.Forum.Posts;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
 
@@ -29,7 +25,6 @@ public class NewModelTests : BasePageModelTests
 		var user = _db.AddUser("TestUser").Entity;
 		user.LastLoggedInTimeStamp = DateTime.UtcNow.AddDays(-1);
 		await _db.SaveChangesAsync();
-
 		_userManager.GetRequiredUser(Arg.Any<System.Security.Claims.ClaimsPrincipal>()).Returns(user);
 
 		await _model.OnGet();
@@ -263,18 +258,8 @@ public class NewModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void NewModel_HasAuthorizeAttribute()
-	{
-		var type = typeof(NewModel);
-		var attributes = type.GetCustomAttributes(typeof(AuthorizeAttribute), false);
-		Assert.AreEqual(1, attributes.Length);
-	}
+	public void HasAuthorizeAttribute() => AssertRequiresAuthorization(typeof(NewModel));
 
 	[TestMethod]
-	public void NewModel_HasRequireCurrentPermissionsAttribute()
-	{
-		var type = typeof(NewModel);
-		var attributes = type.GetCustomAttributes(typeof(RequireCurrentPermissions), false);
-		Assert.AreEqual(1, attributes.Length);
-	}
+	public void HasRequireCurrentPermissionsAttribute() => AssertRequiresCurrentPermissions(typeof(NewModel));
 }

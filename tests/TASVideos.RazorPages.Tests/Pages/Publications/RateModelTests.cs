@@ -1,9 +1,7 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Data;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
@@ -23,9 +21,7 @@ public class RateModelTests : TestDbBase
 	public async Task OnGet_NoPublication_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var actual = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
@@ -109,9 +105,7 @@ public class RateModelTests : TestDbBase
 	public async Task OnPost_InvalidModelState_ReturnsPage()
 	{
 		_page.ModelState.AddModelError("Rating", "Invalid rating");
-
 		var actual = await _page.OnPost();
-
 		Assert.IsInstanceOfType<PageResult>(actual);
 	}
 
@@ -129,13 +123,9 @@ public class RateModelTests : TestDbBase
 		_ratingService.UpdateUserRating(user.Id, pub.Id, 8.5)
 			.Returns(Task.FromResult(SaveResult.Success));
 
-		var actual = await _page.OnPost();
+		var result = await _page.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Publications/Rate", redirectResult.PageName);
-		Assert.AreEqual(pub.Id, redirectResult.RouteValues!["Id"]);
-
+		AssertRedirect(result, "/Publications/Rate", pub.Id);
 		await _ratingService.Received(1).UpdateUserRating(user.Id, pub.Id, 8.5);
 	}
 

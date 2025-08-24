@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core;
 using TASVideos.Pages.Forum.Posts;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
 
@@ -33,7 +30,6 @@ public class LatestModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
 
 		var recentPost = _db.CreatePostForTopic(topic, user).Entity;
 		recentPost.CreateTimestamp = DateTime.UtcNow.AddDays(-1);
@@ -46,7 +42,6 @@ public class LatestModelTests : BasePageModelTests
 		Assert.AreEqual(1, _model.Posts.Count());
 		var latestPost = _model.Posts.First();
 		Assert.AreEqual(recentPost.Id, latestPost.Id);
-		Assert.AreEqual("Test Topic", latestPost.TopicTitle);
 		Assert.AreEqual("Recent post text", latestPost.Text);
 		Assert.AreEqual("TestUser", latestPost.PosterName);
 	}
@@ -204,7 +199,6 @@ public class LatestModelTests : BasePageModelTests
 		}
 
 		await _db.SaveChangesAsync();
-
 		_model.Search = new PagingModel { CurrentPage = 2, PageSize = 10 };
 
 		await _model.OnGet();
@@ -215,10 +209,5 @@ public class LatestModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void LatestModel_HasAllowAnonymousAttribute()
-	{
-		var type = typeof(LatestModel);
-		var attributes = type.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
-		Assert.AreEqual(1, attributes.Length);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(LatestModel));
 }

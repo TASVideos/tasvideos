@@ -1,5 +1,4 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Pages.Wiki;
+﻿using TASVideos.Pages.Wiki;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 

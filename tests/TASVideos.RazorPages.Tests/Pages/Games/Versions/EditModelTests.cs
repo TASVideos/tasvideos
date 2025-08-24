@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Versions;
 using TASVideos.Services;
@@ -28,9 +26,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_GameNotFound_ReturnsNotFound()
 	{
 		_model.GameId = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -210,7 +206,8 @@ public class EditModelTests : TestDbBase
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var createdVersion = await _db.GameVersions.SingleAsync(v => v.Name == "New Version");
+		var createdVersion = await _db.GameVersions.SingleOrDefaultAsync(v => v.Name == "New Version");
+		Assert.IsNotNull(createdVersion);
 		Assert.AreEqual(game.Id, createdVersion.GameId);
 		Assert.AreEqual(system.Id, createdVersion.SystemId);
 		Assert.AreEqual("abcdef1234567890abcdef1234567890", createdVersion.Md5);
@@ -250,7 +247,8 @@ public class EditModelTests : TestDbBase
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var updatedVersion = await _db.GameVersions.SingleAsync(v => v.Id == version.Id);
+		var updatedVersion = await _db.GameVersions.SingleOrDefaultAsync(v => v.Id == version.Id);
+		Assert.IsNotNull(updatedVersion);
 		Assert.AreEqual("Updated Version", updatedVersion.Name);
 		Assert.AreEqual("abcdef1234567890abcdef1234567890", updatedVersion.Md5);
 		Assert.AreEqual("Europe", updatedVersion.Region);
@@ -282,9 +280,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnPostDelete_NoId_ReturnsNotFound()
 	{
 		_model.GameId = 1;
-
 		var result = await _model.OnPostDelete();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 

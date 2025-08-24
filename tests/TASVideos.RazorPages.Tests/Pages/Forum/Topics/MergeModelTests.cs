@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Forum.Topics;
 using TASVideos.Services;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Topics;
 
@@ -177,10 +174,7 @@ public class MergeModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirect.PageName);
-		Assert.AreEqual(destinationTopic.Id, redirect.RouteValues!["id"]);
+		AssertRedirect(result, "Index", destinationTopic.Id);
 
 		await _db.Entry(post1).ReloadAsync();
 		await _db.Entry(post2).ReloadAsync();
@@ -216,7 +210,7 @@ public class MergeModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 		_forumService.Received(1).ClearLatestPostCache();
 		_forumService.Received(1).ClearTopicActivityCache();
 		await _publisher.Received(1).Send(Arg.Any<Post>());
@@ -247,26 +241,19 @@ public class MergeModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
 	[TestMethod]
 	public async Task OnGetTopicsForForum_ReturnsTopicsDropdown()
 	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var forum = _db.AddForum("Test Forum").Entity;
-		var topic1 = _db.AddTopic(user).Entity;
-		topic1.Forum = forum;
-		topic1.Title = "Topic 1";
-		var topic2 = _db.AddTopic(user).Entity;
-		topic2.Forum = forum;
-		topic2.Title = "Topic 2";
+		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
 
-		_model.Id = topic1.Id;
+		_model.Id = topic.Id;
 
-		var result = await _model.OnGetTopicsForForum(forum.Id);
+		var result = await _model.OnGetTopicsForForum(topic.ForumId);
 
 		Assert.IsInstanceOfType(result, typeof(PartialViewResult));
 		var partialResult = (PartialViewResult)result;
@@ -303,7 +290,7 @@ public class MergeModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index", destinationTopic.Id);
 
 		await _db.Entry(post).ReloadAsync();
 		Assert.AreEqual(destinationTopic.Id, post.TopicId);

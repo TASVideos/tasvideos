@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.UserFiles;
+﻿using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
@@ -21,17 +17,14 @@ public class GameModelTests : TestDbBase
 	public async Task OnGet_WithNonExistentGameId_ReturnsNotFound()
 	{
 		_page.Id = 999; // Non-existent game ID
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
 	[TestMethod]
 	public async Task OnGet_AnonymousUser_LoadsOnlyPublicFiles()
 	{
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
 		await _db.SaveChangesAsync();
 
@@ -41,7 +34,7 @@ public class GameModelTests : TestDbBase
 			FileName = "public-movie.bk2",
 			Title = "Public Movie",
 			Author = author,
-			GameId = game.Id,
+			Game = game,
 			Hidden = false,
 			Class = UserFileClass.Movie
 		};
@@ -52,7 +45,7 @@ public class GameModelTests : TestDbBase
 			FileName = "hidden-movie.bk2",
 			Title = "Hidden Movie",
 			Author = author,
-			GameId = game.Id,
+			Game = game,
 			Hidden = true,
 			Class = UserFileClass.Movie
 		};
@@ -73,8 +66,7 @@ public class GameModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_AsAuthor_LoadsAllUserFilesForGame()
 	{
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
 		await _db.SaveChangesAsync();
 
@@ -84,7 +76,7 @@ public class GameModelTests : TestDbBase
 			FileName = "public-movie.bk2",
 			Title = "Public Movie",
 			Author = author,
-			GameId = game.Id,
+			Game = game,
 			Hidden = false,
 			Class = UserFileClass.Movie
 		};
@@ -95,7 +87,7 @@ public class GameModelTests : TestDbBase
 			FileName = "hidden-movie.bk2",
 			Title = "Hidden Movie",
 			Author = author,
-			GameId = game.Id,
+			Game = game,
 			Hidden = true,
 			Class = UserFileClass.Movie
 		};
@@ -120,9 +112,8 @@ public class GameModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithValidGame_LoadsOnlyFilesForThatGame()
 	{
-		var game1 = new Game { Id = 1, DisplayName = "Game 1" };
-		var game2 = new Game { Id = 2, DisplayName = "Game 2" };
-		_db.Games.AddRange(game1, game2);
+		var game1 = _db.AddGame("Game 1").Entity;
+		var game2 = _db.AddGame("Game 2").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
 		await _db.SaveChangesAsync();
 
@@ -132,8 +123,7 @@ public class GameModelTests : TestDbBase
 			FileName = "game1-movie.bk2",
 			Title = "Game 1 Movie",
 			Author = author,
-			GameId = game1.Id,
-			Hidden = false,
+			Game = game1,
 			Class = UserFileClass.Movie
 		};
 
@@ -143,8 +133,7 @@ public class GameModelTests : TestDbBase
 			FileName = "game2-movie.bk2",
 			Title = "Game 2 Movie",
 			Author = author,
-			GameId = game2.Id,
-			Hidden = false,
+			Game = game2,
 			Class = UserFileClass.Movie
 		};
 
@@ -164,8 +153,7 @@ public class GameModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_OrdersByUploadTimestampDescending()
 	{
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
 		await _db.SaveChangesAsync();
 
@@ -209,8 +197,7 @@ public class GameModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithGameButNoFiles_ReturnsEmptyList()
 	{
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var game = _db.AddGame("Test Game").Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = game.Id;
@@ -225,8 +212,7 @@ public class GameModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_HidesFilesFromOtherUsers()
 	{
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var game = _db.AddGame("Test Game").Entity;
 		var author1 = _db.AddUser("Author1").Entity;
 		var author2 = _db.AddUser("Author2").Entity;
 		var viewer = _db.AddUser("Viewer").Entity;
@@ -238,7 +224,7 @@ public class GameModelTests : TestDbBase
 			FileName = "author1-public.bk2",
 			Title = "Author1 Public Movie",
 			Author = author1,
-			GameId = game.Id,
+			Game = game,
 			Hidden = false,
 			Class = UserFileClass.Movie
 		};
@@ -249,7 +235,7 @@ public class GameModelTests : TestDbBase
 			FileName = "author1-hidden.bk2",
 			Title = "Author1 Hidden Movie",
 			Author = author1,
-			GameId = game.Id,
+			Game = game,
 			Hidden = true,
 			Class = UserFileClass.Movie
 		};
@@ -260,7 +246,7 @@ public class GameModelTests : TestDbBase
 			FileName = "author2-public.bk2",
 			Title = "Author2 Public Movie",
 			Author = author2,
-			GameId = game.Id,
+			Game = game,
 			Hidden = false,
 			Class = UserFileClass.Movie
 		};
@@ -271,7 +257,7 @@ public class GameModelTests : TestDbBase
 			FileName = "author2-hidden.bk2",
 			Title = "Author2 Hidden Movie",
 			Author = author2,
-			GameId = game.Id,
+			Game = game,
 			Hidden = true,
 			Class = UserFileClass.Movie
 		};
@@ -295,11 +281,5 @@ public class GameModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void GameModel_AllowsAnonymousUsers()
-	{
-		var gameModelType = typeof(GameModel);
-		var allowAnonymousAttribute = gameModelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.IsTrue(allowAnonymousAttribute.Length > 0);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(GameModel));
 }

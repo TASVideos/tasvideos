@@ -1,8 +1,6 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
@@ -111,9 +109,7 @@ public class EditModelTests : TestDbBase
 
 		var result = await _page.OnGet();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirect.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -232,9 +228,7 @@ public class EditModelTests : TestDbBase
 
 		var result = await _page.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirect.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]

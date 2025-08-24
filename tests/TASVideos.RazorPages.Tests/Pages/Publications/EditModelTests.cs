@@ -2,11 +2,9 @@
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
@@ -34,9 +32,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_NoPublication_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var actual = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
@@ -111,8 +107,8 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_ValidEdit_UpdatesPublicationAndRedirects()
 	{
 		var pub = _db.AddPublication().Entity;
-		_ = _db.AddUser("UpdatedAuthor").Entity;
-		_ = _db.Tags.Add(new Tag { Id = 1, Code = "NewTag", DisplayName = "New Tag" }).Entity;
+		_db.AddUser("UpdatedAuthor");
+		_db.Tags.Add(new Tag { Id = 1, Code = "NewTag", DisplayName = "New Tag" });
 		await _db.SaveChangesAsync();
 
 		_page.Id = pub.Id;
@@ -140,12 +136,9 @@ public class EditModelTests : TestDbBase
 		_flagService.GetDiff(Arg.Any<IEnumerable<int>>(), Arg.Any<IEnumerable<int>>())
 			.Returns(new ListDiff([], []));
 
-		var actual = await _page.OnPost();
+		var result = await _page.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("View", redirectResult.PageName);
-		Assert.AreEqual(pub.Id, redirectResult.RouteValues!["Id"]);
+		AssertRedirect(result, "View", pub.Id);
 	}
 
 	[TestMethod]
@@ -216,7 +209,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_EmptyAuthorsRemoved()
 	{
 		var pub = _db.AddPublication().Entity;
-		_ = _db.AddUser("ValidAuthor").Entity;
+		_db.AddUser("ValidAuthor");
 		await _db.SaveChangesAsync();
 
 		_page.Id = pub.Id;
@@ -243,4 +236,7 @@ public class EditModelTests : TestDbBase
 		Assert.AreEqual(1, _page.Publication.Authors.Count);
 		Assert.AreEqual("ValidAuthor", _page.Publication.Authors.First());
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(EditModel), PermissionTo.EditPublicationMetaData);
 }

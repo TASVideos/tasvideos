@@ -1,7 +1,5 @@
 ﻿using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages;
 using TASVideos.Pages.Genres;
 
 namespace TASVideos.RazorPages.Tests.Pages.Genres;
@@ -25,7 +23,6 @@ public class CreateModelTests : BasePageModelTests
 	public async Task OnPost_InvalidModelState_ReturnsPage()
 	{
 		_model.ModelState.AddModelError("Genre.DisplayName", "Name is required");
-		_model.Genre = new Genre { DisplayName = "" };
 
 		var result = await _model.OnPost();
 
@@ -41,9 +38,7 @@ public class CreateModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 		await _genreService.Received(1).Add("Action");
 	}
 
@@ -60,12 +55,5 @@ public class CreateModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void CreateModel_HasRequirePermissionAttribute()
-	{
-		var type = typeof(CreateModel);
-		var attribute = type.GetCustomAttributes(typeof(RequirePermissionAttribute), false).FirstOrDefault() as RequirePermissionAttribute;
-
-		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.TagMaintenance));
-	}
+	public void RequiresPermission() => AssertHasPermission(typeof(CreateModel), PermissionTo.TagMaintenance);
 }

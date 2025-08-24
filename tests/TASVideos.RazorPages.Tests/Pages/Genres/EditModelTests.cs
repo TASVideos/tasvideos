@@ -1,6 +1,4 @@
 ﻿using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
-using TASVideos.Pages;
 using TASVideos.Pages.Genres;
 
 namespace TASVideos.RazorPages.Tests.Pages.Genres;
@@ -84,9 +82,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 		await _genreService.Received(1).Edit(1, "Updated Action");
 	}
 
@@ -124,9 +120,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 		await _genreService.Received(1).Delete(1);
 	}
 
@@ -138,9 +132,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 		await _genreService.Received(1).Delete(1);
 	}
 
@@ -152,9 +144,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 		await _genreService.Received(1).Delete(999);
 	}
 
@@ -166,19 +156,10 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 		await _genreService.Received(1).Delete(1);
 	}
 
 	[TestMethod]
-	public void EditModel_HasRequirePermissionAttribute()
-	{
-		var type = typeof(EditModel);
-		var attribute = type.GetCustomAttributes(typeof(RequirePermissionAttribute), false).FirstOrDefault() as RequirePermissionAttribute;
-
-		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.TagMaintenance));
-	}
+	public void RequiresPermission() => AssertHasPermission(typeof(CreateModel), PermissionTo.TagMaintenance);
 }

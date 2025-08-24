@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.GameGroups;
+﻿using TASVideos.Pages.GameGroups;
 
 namespace TASVideos.RazorPages.Tests.Pages.GameGroups;
 
@@ -21,7 +19,6 @@ public class ListModelTests : BasePageModelTests
 	public async Task OnGet_NoGameGroups_LoadsEmptyList()
 	{
 		await _model.OnGet();
-
 		Assert.AreEqual(0, _model.GameGroups.Count);
 	}
 
@@ -51,11 +48,5 @@ public class ListModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void ListModel_HasAllowAnonymousAttribute()
-	{
-		var type = typeof(ListModel);
-		var attribute = type.GetCustomAttributes(typeof(AllowAnonymousAttribute), false).FirstOrDefault();
-
-		Assert.IsNotNull(attribute);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(ListModel));
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Pages.Genres;
 
 namespace TASVideos.RazorPages.Tests.Pages.Genres;
@@ -50,11 +49,5 @@ public class IndexModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void IndexModel_AllowsAnonymousUsers()
-	{
-		var indexModelType = typeof(IndexModel);
-		var allowAnonymousAttribute = indexModelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.IsTrue(allowAnonymousAttribute.Length > 0);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(IndexModel));
 }

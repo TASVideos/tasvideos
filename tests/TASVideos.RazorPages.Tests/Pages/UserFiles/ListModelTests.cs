@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data.Entity;
-using TASVideos.Pages.UserFiles;
+﻿using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
@@ -134,11 +132,5 @@ public class ListModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void IndexModel_AllowsAnonymousUsers()
-	{
-		var indexModelType = typeof(ListModel);
-		var allowAnonymousAttribute = indexModelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.IsTrue(allowAnonymousAttribute.Length > 0);
-	}
+	public void AllowsAnonymousUsers() => AssertAllowsAnonymousUsers(typeof(ListModel));
 }

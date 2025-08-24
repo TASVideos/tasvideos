@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Account;
 [BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
-public class LoginModel(ISignInManager signInManager, IUserManager userManager, IHostEnvironment env) : BasePageModel
+public class LoginModel : BasePageModel
 {
 	public string UserName { get; set; } = "";
 
@@ -24,7 +24,10 @@ public class LoginModel(ISignInManager signInManager, IUserManager userManager, 
 		return Page();
 	}
 
-	public async Task<IActionResult> OnPost()
+	public async Task<IActionResult> OnPost(
+		[FromServices]ISignInManager signInManager,
+		[FromServices]IUserManager userManager,
+		[FromServices]IHostEnvironment env)
 	{
 		if (!ModelState.IsValid)
 		{

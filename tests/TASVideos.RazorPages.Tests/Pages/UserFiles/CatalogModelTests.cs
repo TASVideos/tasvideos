@@ -1,9 +1,6 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
-using TASVideos.Pages;
+﻿using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
@@ -343,13 +340,5 @@ public class CatalogModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void CatalogModel_HasRequiredPermissionAttribute()
-	{
-		var catalogModelType = typeof(CatalogModel);
-		var requirePermissionAttribute = catalogModelType.GetCustomAttributes(typeof(RequirePermissionAttribute), inherit: false);
-
-		Assert.IsTrue(requirePermissionAttribute.Length > 0);
-		var attribute = (RequirePermissionAttribute)requirePermissionAttribute[0];
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.CatalogMovies));
-	}
+	public void RequiresPermission() => AssertHasPermission(typeof(CatalogModel), PermissionTo.CatalogMovies);
 }

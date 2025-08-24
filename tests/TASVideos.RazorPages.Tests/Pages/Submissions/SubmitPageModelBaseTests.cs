@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;
 

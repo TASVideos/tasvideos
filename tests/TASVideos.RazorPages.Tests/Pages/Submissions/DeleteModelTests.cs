@@ -128,4 +128,7 @@ public class DeleteModelTests : TestDbBase
 		Assert.AreEqual("/Subs-List", redirect.Url);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(DeleteModel), PermissionTo.DeleteSubmissions);
 }

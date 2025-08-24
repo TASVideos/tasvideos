@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Pages.Games;
 using TASVideos.Tests.Base;
 
@@ -44,11 +43,5 @@ public class PublicationHistoryModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void PublicationHistoryModel_HasAllowAnonymousAttribute()
-	{
-		var modelType = typeof(PublicationHistoryModel);
-		var allowAnonymousAttribute = modelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.AreEqual(1, allowAnonymousAttribute.Length);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(PublicationHistoryModel));
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games;
 using TASVideos.Tests.Base;
 
@@ -19,9 +18,7 @@ public class IndexModelTests : TestDbBase
 	public async Task OnGet_WithNonExistentGameId_ReturnsNotFound()
 	{
 		_model.Id = "999";
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -29,9 +26,7 @@ public class IndexModelTests : TestDbBase
 	public async Task OnGet_WithNonExistentGameAbbreviation_ReturnsNotFound()
 	{
 		_model.Id = "NONEXISTENT";
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -42,7 +37,6 @@ public class IndexModelTests : TestDbBase
 		game.Abbreviation = "TG";
 		game.Aliases = "TestAlias";
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -60,7 +54,6 @@ public class IndexModelTests : TestDbBase
 		var game = _db.AddGame("Test Game").Entity;
 		game.Abbreviation = "TG";
 		await _db.SaveChangesAsync();
-
 		_model.Id = "TG";
 
 		var result = await _model.OnGet();
@@ -94,7 +87,7 @@ public class IndexModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithGameVersions_LoadsVersions()
 	{
-		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES", DisplayName = "Nintendo Entertainment System" }).Entity;
+		var gameSystem = _db.AddGameSystem("NES").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 		_db.GameVersions.Add(new GameVersion
 		{
@@ -106,7 +99,6 @@ public class IndexModelTests : TestDbBase
 			TitleOverride = "Custom Title"
 		});
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -144,7 +136,6 @@ public class IndexModelTests : TestDbBase
 	{
 		var game = _db.AddGame("Test Game").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -159,7 +150,6 @@ public class IndexModelTests : TestDbBase
 	{
 		var game = _db.AddGame("Test Game").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -173,7 +163,6 @@ public class IndexModelTests : TestDbBase
 	{
 		var game = _db.AddGame("Test Game").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -187,7 +176,6 @@ public class IndexModelTests : TestDbBase
 	{
 		var game = _db.AddGame("Test Game").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -200,7 +188,6 @@ public class IndexModelTests : TestDbBase
 	{
 		var game = _db.AddGame("Test Game").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -209,11 +196,5 @@ public class IndexModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void IndexModel_AllowsAnonymousUsers()
-	{
-		var indexModelType = typeof(IndexModel);
-		var allowAnonymousAttribute = indexModelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.IsTrue(allowAnonymousAttribute.Length > 0);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(IndexModel));
 }

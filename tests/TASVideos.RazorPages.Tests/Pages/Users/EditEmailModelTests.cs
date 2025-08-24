@@ -1,10 +1,8 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Users;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Users;
 
@@ -45,10 +43,8 @@ public class EditEmailModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_UserNotFound_ReturnsNotFound()
 	{
-		_model.Id = 999; // Non-existent user ID
-
+		_model.Id = 999;
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 

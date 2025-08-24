@@ -18,9 +18,7 @@ public class ListModelTests : TestDbBase
 	public async Task OnGet_GameNotFound_ReturnsNotFound()
 	{
 		_model.GameId = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 

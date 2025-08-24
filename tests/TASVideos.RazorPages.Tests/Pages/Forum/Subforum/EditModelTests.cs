@@ -1,8 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity;
-using TASVideos.Pages;
-using TASVideos.Pages.Forum.Subforum;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
+﻿using TASVideos.Pages.Forum.Subforum;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Subforum;
 
@@ -23,20 +19,15 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnGet_NonExistentForum_ReturnsNotFound()
 	{
 		_model.Id = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
 	public async Task OnGet_RestrictedForumWithoutPermission_ReturnsNotFound()
 	{
-		var user = _db.AddUserWithRole("RegularUser").Entity;
 		var forum = _db.AddForum("Restricted Forum", true).Entity;
 		await _db.SaveChangesAsync();
-
-		AddAuthenticatedUser(_model, user, []);
 		_model.Id = forum.Id;
 
 		var result = await _model.OnGet();
@@ -52,7 +43,6 @@ public class EditModelTests : BasePageModelTests
 		forum.ShortName = "TestForum";
 		forum.Restricted = false;
 		await _db.SaveChangesAsync();
-
 		_model.Id = forum.Id;
 
 		var result = await _model.OnGet();
@@ -71,7 +61,6 @@ public class EditModelTests : BasePageModelTests
 	{
 		var forum = _db.AddForum("Empty Forum").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = forum.Id;
 
 		await _model.OnGet();
@@ -83,12 +72,9 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnGet_ForumWithTopics_CannotDelete()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
-		var forum = _db.AddForum("Forum With Topics").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Forum = forum;
 		await _db.SaveChangesAsync();
-
-		_model.Id = forum.Id;
+		_model.Id = topic.Forum!.Id;
 
 		await _model.OnGet();
 
@@ -99,35 +85,16 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnPost_NonExistentForum_ReturnsNotFound()
 	{
 		_model.Id = 999;
-		_model.Forum = new EditModel.ForumEdit
-		{
-			Name = "Updated Forum",
-			ShortName = "Updated",
-			Category = 1,
-			RestrictedAccess = false
-		};
-
 		var result = await _model.OnPost();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
 	public async Task OnPost_RestrictedForumWithoutPermission_ReturnsNotFound()
 	{
-		var user = _db.AddUserWithRole("RegularUser").Entity;
 		var forum = _db.AddForum("Restricted Forum", true).Entity;
 		await _db.SaveChangesAsync();
-
-		AddAuthenticatedUser(_model, user, []);
 		_model.Id = forum.Id;
-		_model.Forum = new EditModel.ForumEdit
-		{
-			Name = "Updated Forum",
-			ShortName = "Updated",
-			Category = 1,
-			RestrictedAccess = false
-		};
 
 		var result = await _model.OnPost();
 
@@ -137,15 +104,8 @@ public class EditModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnPost_InvalidModelState_ReturnsPageWithCategories()
 	{
-		var category = _db.AddForumCategory("Test Category").Entity;
-		var forum = _db.AddForum("Test Forum").Entity;
+		_db.AddForumCategory("Test Category");
 		await _db.SaveChangesAsync();
-
-		_model.Id = forum.Id;
-		_model.Forum = new EditModel.ForumEdit
-		{
-			Category = category.Id
-		};
 		_model.ModelState.AddModelError("Name", "Name is required");
 
 		var result = await _model.OnPost();
@@ -178,10 +138,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
-		Assert.AreEqual(forum.Id, redirectResult.RouteValues!["Id"]);
+		AssertRedirect(result, "Index", forum.Id);
 
 		var updatedForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == forum.Id);
 		Assert.IsNotNull(updatedForum);
@@ -212,35 +169,27 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 	}
 
 	[TestMethod]
 	public async Task OnPostDelete_NonExistentForum_ReturnsNotFound()
 	{
 		_model.Id = 999;
-
 		var result = await _model.OnPostDelete();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
 	public async Task OnPostDelete_ForumWithTopics_ReturnsBadRequest()
 	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var forum = _db.AddForum("Forum With Topics").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Forum = forum;
+		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
-
-		_model.Id = forum.Id;
+		_model.Id = topic.Forum!.Id;
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
-		var badRequestResult = (BadRequestObjectResult)result;
-		Assert.AreEqual("Cannot delete subforum that contains topics", badRequestResult.Value);
+		AssertBadRequest(result);
 	}
 
 	[TestMethod]
@@ -248,17 +197,12 @@ public class EditModelTests : BasePageModelTests
 	{
 		var forum = _db.AddForum("Empty Forum").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = forum.Id;
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Index", redirectResult.PageName);
-
-		var deletedForum = await _db.Forums.SingleOrDefaultAsync(f => f.Id == forum.Id);
-		Assert.IsNull(deletedForum);
+		AssertRedirect(result, "/Forum/Index");
+		Assert.IsFalse(_db.Forums.Any(f => f.Id == forum.Id));
 	}
 
 	[TestMethod]
@@ -266,22 +210,14 @@ public class EditModelTests : BasePageModelTests
 	{
 		var forum = _db.AddForum("Test Forum").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = forum.Id;
 		_db.CreateUpdateConflict();
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "/Forum/Index");
 	}
 
 	[TestMethod]
-	public void EditModel_HasRequirePermissionAttribute()
-	{
-		var type = typeof(EditModel);
-		var attribute = type.GetCustomAttributes(typeof(RequirePermissionAttribute), false).FirstOrDefault() as RequirePermissionAttribute;
-
-		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.EditForums));
-	}
+	public void RequiresPermission() => AssertHasPermission(typeof(EditModel), PermissionTo.EditForums);
 }

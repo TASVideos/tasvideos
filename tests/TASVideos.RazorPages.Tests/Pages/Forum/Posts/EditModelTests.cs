@@ -1,10 +1,8 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts;
 using TASVideos.Services;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
 
@@ -33,24 +31,16 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnGet_NonExistentPost_ReturnsNotFound()
 	{
 		_model.Id = 999;
-
 		var result = await _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
 	public async Task OnGet_RestrictedPost_WithoutPermission_ReturnsNotFound()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
-		var restrictedForum = _db.AddForum("Restricted Forum", true).Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Forum = restrictedForum;
-		topic.Title = "Restricted Topic";
+		var topic = _db.AddTopic(user, true).Entity;
 		var post = _db.CreatePostForTopic(topic, user).Entity;
-		post.Text = "Restricted post content";
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
@@ -58,9 +48,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -69,7 +57,6 @@ public class EditModelTests : BasePageModelTests
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
 		var post = _db.CreatePostForTopic(topic, otherUser).Entity;
 		post.Text = "Other user's post";
 		await _db.SaveChangesAsync();
@@ -79,9 +66,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -123,7 +108,6 @@ public class EditModelTests : BasePageModelTests
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
 		var post = _db.CreatePostForTopic(topic, otherUser).Entity;
 		post.Text = "Other user's post";
 		await _db.SaveChangesAsync();
@@ -184,7 +168,6 @@ public class EditModelTests : BasePageModelTests
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
 
-		// Create posts with specific timestamps
 		var post1 = _db.CreatePostForTopic(topic, user).Entity;
 		post1.Text = "First post";
 		post1.CreateTimestamp = DateTime.UtcNow.AddMinutes(-20);
@@ -320,9 +303,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -355,9 +336,7 @@ public class EditModelTests : BasePageModelTests
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
-		var forum = topic.Forum!;
-		forum.ShortName = "TestForum";
+		topic.Title = "Original Topic Title";
 		var post = _db.CreatePostForTopic(topic, user).Entity;
 		post.Subject = "Original Subject";
 		post.Text = "Original text";
@@ -387,6 +366,13 @@ public class EditModelTests : BasePageModelTests
 		Assert.AreEqual("Updated text", post.Text);
 		Assert.AreEqual(ForumPostMood.Happy, post.PosterMood);
 		Assert.IsNotNull(post.PostEditedTimestamp);
+
+		// Verify the topic title was NOT updated
+		await _db.Entry(topic).ReloadAsync();
+		Assert.AreEqual("Original Topic Title", topic.Title);
+
+		_forumService.Received(1).CacheEditedPostActivity(topic.Forum!.Id, topic.Id, post.Id, Arg.Any<DateTime>());
+		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
 	[TestMethod]
@@ -394,9 +380,6 @@ public class EditModelTests : BasePageModelTests
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Original Topic Title";
-		var forum = topic.Forum!;
-		forum.ShortName = "TestForum";
 		var firstPost = _db.CreatePostForTopic(topic, user).Entity;
 		firstPost.CreateTimestamp = DateTime.UtcNow.AddMinutes(-10);
 		var secondPost = _db.CreatePostForTopic(topic, user).Entity;
@@ -429,81 +412,11 @@ public class EditModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public async Task OnPost_ValidEditNotFirstPost_DoesNotUpdateTopicTitle()
-	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Original Topic Title";
-		var forum = topic.Forum!;
-		forum.ShortName = "TestForum";
-		var firstPost = _db.CreatePostForTopic(topic, user).Entity;
-		firstPost.CreateTimestamp = DateTime.UtcNow.AddMinutes(-10);
-		var secondPost = _db.CreatePostForTopic(topic, user).Entity;
-		secondPost.CreateTimestamp = DateTime.UtcNow.AddMinutes(-5);
-		await _db.SaveChangesAsync();
-
-		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
-		_model.Id = secondPost.Id;
-		_model.Post = new EditModel.ForumPostEditModel
-		{
-			PosterId = user.Id,
-			TopicId = topic.Id,
-			TopicTitle = "Updated Topic Title",
-			Text = "Updated text"
-		};
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectResult));
-
-		// Verify the topic title was NOT updated
-		await _db.Entry(topic).ReloadAsync();
-		Assert.AreEqual("Original Topic Title", topic.Title);
-	}
-
-	[TestMethod]
-	public async Task OnPost_ValidEdit_CachesEditedPostActivityAndSendsNotification()
-	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		user.UserName = "TestUser";
-		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
-		var forum = topic.Forum!;
-		forum.ShortName = "TestForum";
-		forum.Restricted = false;
-		var post = _db.CreatePostForTopic(topic, user).Entity;
-		await _db.SaveChangesAsync();
-
-		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
-		_model.Id = post.Id;
-		_model.Post = new EditModel.ForumPostEditModel
-		{
-			PosterId = user.Id,
-			TopicId = topic.Id,
-			Text = "Updated text"
-		};
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectResult));
-		_forumService.Received(1).CacheEditedPostActivity(forum.Id, topic.Id, post.Id, Arg.Any<DateTime>());
-		await _publisher.Received(1).Send(Arg.Any<Post>());
-	}
-
-	[TestMethod]
 	public async Task OnPostDelete_NonExistentPost_ReturnsNotFound()
 	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		await _db.SaveChangesAsync();
-
-		AddAuthenticatedUser(_model, user, [PermissionTo.DeleteForumPosts]);
 		_model.Id = 999;
-
 		var result = await _model.OnPostDelete();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -522,9 +435,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -540,9 +451,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostSpam();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -556,18 +465,14 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostSpam();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
 	public async Task OnPostSpam_RestrictedPost_ReturnsNotFound()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
-		var restrictedForum = _db.AddForum("Restricted Forum", true).Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Forum = restrictedForum;
+		var topic = _db.AddTopic(user, true).Entity;
 		var post = _db.CreatePostForTopic(topic, user).Entity;
 		await _db.SaveChangesAsync();
 
@@ -576,9 +481,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostSpam();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -598,16 +501,13 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostSpam();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
 	public async Task OnPostSpam_ValidSpam_MovesPostToSpamAndBansUser()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
-		user.UserName = "TestUser";
 		var spamUser = _db.AddUser("SpamUser").Entity;
 
 		// Create spam forum and topic
@@ -618,9 +518,6 @@ public class EditModelTests : BasePageModelTests
 		spamTopic.Forum = spamForum;
 
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
-		var forum = topic.Forum!;
-		forum.ShortName = "TestForum";
 		var post = _db.CreatePostForTopic(topic, spamUser).Entity;
 		await _db.SaveChangesAsync();
 
@@ -629,9 +526,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostSpam();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Subforum/Index", redirectResult.PageName);
+		AssertRedirect(result, "/Forum/Subforum/Index");
 
 		// Verify post was moved to spam
 		await _db.Entry(post).ReloadAsync();

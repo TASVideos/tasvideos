@@ -1,7 +1,6 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Services.Youtube.Dtos;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications;
 using TASVideos.Tests.Base;
 
@@ -25,7 +24,6 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_NoPublications_ReturnsEmptyVideosList()
 	{
 		await _model.OnGet();
-
 		Assert.AreEqual(0, _model.Videos.Count);
 	}
 
@@ -52,14 +50,12 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_YouTubeUrlsWithCachedChannelTitles_UsesCache()
 	{
 		var publication = _db.AddPublication().Entity;
-
-		var publicationUrl = new PublicationUrl
+		_db.PublicationUrls.Add(new PublicationUrl
 		{
 			Publication = publication,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 			Type = PublicationUrlType.Streaming
-		};
-		_db.PublicationUrls.Add(publicationUrl);
+		});
 		await _db.SaveChangesAsync();
 
 		_youtubeSync.IsYoutubeUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ").Returns(true);
@@ -81,14 +77,12 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_YouTubeUrlsWithoutCache_CallsYouTubeApi()
 	{
 		var publication = _db.AddPublication().Entity;
-
-		var publicationUrl = new PublicationUrl
+		_db.PublicationUrls.Add(new PublicationUrl
 		{
 			Publication = publication,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 			Type = PublicationUrlType.Streaming
-		};
-		_db.PublicationUrls.Add(publicationUrl);
+		});
 		await _db.SaveChangesAsync();
 
 		_youtubeSync.IsYoutubeUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ").Returns(true);
@@ -118,20 +112,19 @@ public class YoutubeUploadersModelTests : TestDbBase
 	{
 		var publication1 = _db.AddPublication().Entity;
 		var publication2 = _db.AddPublication().Entity;
-
-		var publicationUrl1 = new PublicationUrl
-		{
-			Publication = publication1,
-			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-			Type = PublicationUrlType.Streaming
-		};
-		var publicationUrl2 = new PublicationUrl
-		{
-			Publication = publication2,
-			Url = "https://www.youtube.com/watch?v=sVR32jXj68w",
-			Type = PublicationUrlType.Streaming
-		};
-		_db.PublicationUrls.AddRange(publicationUrl1, publicationUrl2);
+		_db.PublicationUrls.AddRange(
+			new PublicationUrl
+			{
+				Publication = publication1,
+				Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+				Type = PublicationUrlType.Streaming
+			},
+			new PublicationUrl
+			{
+				Publication = publication2,
+				Url = "https://www.youtube.com/watch?v=sVR32jXj68w",
+				Type = PublicationUrlType.Streaming
+			});
 		await _db.SaveChangesAsync();
 
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
@@ -175,20 +168,19 @@ public class YoutubeUploadersModelTests : TestDbBase
 		var obsoletePublication = _db.AddPublication().Entity;
 		var currentPublication = _db.AddPublication().Entity;
 		obsoletePublication.ObsoletedById = currentPublication.Id;
-
-		var publicationUrl1 = new PublicationUrl
-		{
-			Publication = obsoletePublication,
-			Url = "https://www.youtube.com/watch?v=obsolete123",
-			Type = PublicationUrlType.Streaming
-		};
-		var publicationUrl2 = new PublicationUrl
-		{
-			Publication = currentPublication,
-			Url = "https://www.youtube.com/watch?v=current456",
-			Type = PublicationUrlType.Streaming
-		};
-		_db.PublicationUrls.AddRange(publicationUrl1, publicationUrl2);
+		_db.PublicationUrls.AddRange(
+			new PublicationUrl
+			{
+				Publication = obsoletePublication,
+				Url = "https://www.youtube.com/watch?v=obsolete123",
+				Type = PublicationUrlType.Streaming
+			},
+			new PublicationUrl
+			{
+				Publication = currentPublication,
+				Url = "https://www.youtube.com/watch?v=current456",
+				Type = PublicationUrlType.Streaming
+			});
 		await _db.SaveChangesAsync();
 
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
@@ -211,20 +203,19 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_DuplicateVideoIds_ReturnsDistinctResults()
 	{
 		var publication = _db.AddPublication().Entity;
-
-		var publicationUrl1 = new PublicationUrl
-		{
-			Publication = publication,
-			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-			Type = PublicationUrlType.Streaming
-		};
-		var publicationUrl2 = new PublicationUrl
-		{
-			Publication = publication,
-			Url = "https://youtu.be/dQw4w9WgXcQ",
-			Type = PublicationUrlType.Streaming
-		};
-		_db.PublicationUrls.AddRange(publicationUrl1, publicationUrl2);
+		_db.PublicationUrls.AddRange(
+			new PublicationUrl
+			{
+				Publication = publication,
+				Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+				Type = PublicationUrlType.Streaming
+			},
+			new PublicationUrl
+			{
+				Publication = publication,
+				Url = "https://youtu.be/dQw4w9WgXcQ",
+				Type = PublicationUrlType.Streaming
+			});
 		await _db.SaveChangesAsync();
 
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
@@ -241,14 +232,12 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_YouTubeApiReturnsNoResults_LeavesChannelTitleEmpty()
 	{
 		var publication = _db.AddPublication().Entity;
-
-		var publicationUrl = new PublicationUrl
+		_db.PublicationUrls.Add(new PublicationUrl
 		{
 			Publication = publication,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 			Type = PublicationUrlType.Streaming
-		};
-		_db.PublicationUrls.Add(publicationUrl);
+		});
 		await _db.SaveChangesAsync();
 
 		_youtubeSync.IsYoutubeUrl("https://www.youtube.com/watch?v=dQw4w9WgXcQ").Returns(true);
@@ -267,14 +256,12 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_OnlyNonStreamingUrls_ReturnsEmptyList()
 	{
 		var publication = _db.AddPublication().Entity;
-
-		var publicationUrl = new PublicationUrl
+		_db.PublicationUrls.Add(new PublicationUrl
 		{
 			Publication = publication,
 			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
 			Type = PublicationUrlType.Mirror
-		};
-		_db.PublicationUrls.Add(publicationUrl);
+		});
 		await _db.SaveChangesAsync();
 
 		await _model.OnGet();
@@ -296,4 +283,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 		entry.ChannelTitle = "Updated Channel";
 		Assert.AreEqual("Updated Channel", entry.ChannelTitle);
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(YoutubeUploadersModel), PermissionTo.EditPublicationMetaData);
 }

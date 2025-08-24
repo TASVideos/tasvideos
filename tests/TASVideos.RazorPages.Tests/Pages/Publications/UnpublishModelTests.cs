@@ -1,10 +1,8 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
@@ -168,4 +166,7 @@ public class UnpublishModelTests : TestDbBase
 		await _queueService.Received(1).Unpublish(321);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(UnpublishModel), PermissionTo.Unpublish);
 }

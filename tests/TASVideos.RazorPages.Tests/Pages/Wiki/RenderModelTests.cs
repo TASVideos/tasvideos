@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging.Abstractions;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 
@@ -27,17 +26,14 @@ public class RenderModelTests : BasePageModelTests
 	public async Task Render_NullUrl_Redirects(string url)
 	{
 		var result = await _model.OnGet(url);
-		Assert.IsNotNull(result);
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Wiki/PageNotFound", redirect.PageName);
+		AssertRedirect(result, "/Wiki/PageNotFound");
 	}
 
 	[TestMethod]
 	public async Task Render_ExistingPage_FindsPage()
 	{
 		const string existingPage = "Test";
-		_mockWikiPages.Page(existingPage, null).Returns(new WikiResult { PageName = existingPage });
+		_mockWikiPages.Page(existingPage).Returns(new WikiResult { PageName = existingPage });
 
 		var result = await _model.OnGet(existingPage);
 
@@ -49,7 +45,7 @@ public class RenderModelTests : BasePageModelTests
 	public async Task Render_WhenUrlEncoded_FindsPage()
 	{
 		const string existingPage = "Foo/Bar";
-		_mockWikiPages.Page(existingPage, null).Returns(new WikiResult { PageName = existingPage });
+		_mockWikiPages.Page(existingPage).Returns(new WikiResult { PageName = existingPage });
 		var encoded = System.Net.WebUtility.UrlEncode(existingPage);
 
 		var result = await _model.OnGet(encoded);

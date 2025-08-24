@@ -1,5 +1,4 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
 
@@ -132,22 +131,17 @@ public class UncatalogedModelTests : TestDbBase
 	public async Task OnGet_ReturnsEmptyListWhenNoUncatalogedFiles()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
-
-		var catalogedFile = new UserFile
+		var game = _db.AddGame("Test Game").Entity;
+		_db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "cataloged.bk2",
 			Title = "Cataloged File",
 			Author = user,
 			Hidden = false,
-			GameId = game.Id,
+			Game = game,
 			UploadTimestamp = DateTime.UtcNow
-		};
-
-		_db.UserFiles.Add(catalogedFile);
+		});
 		await _db.SaveChangesAsync();
 
 		await _page.OnGet();

@@ -1,12 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Topics;
 using TASVideos.Services;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Topics;
 
@@ -14,8 +11,6 @@ namespace TASVideos.RazorPages.Tests.Pages.Forum.Topics;
 public class IndexModelTests : BasePageModelTests
 {
 	private readonly IExternalMediaPublisher _publisher;
-	private readonly IAwards _awards;
-	private readonly IForumService _forumService;
 	private readonly ITopicWatcher _topicWatcher;
 	private readonly IWikiPages _wikiPages;
 	private readonly IndexModel _model;
@@ -23,8 +18,10 @@ public class IndexModelTests : BasePageModelTests
 	public IndexModelTests()
 	{
 		_publisher = Substitute.For<IExternalMediaPublisher>();
-		_awards = Substitute.For<IAwards>();
-		_forumService = Substitute.For<IForumService>();
+		var awards = Substitute.For<IAwards>();
+		awards.ForUser(Arg.Any<int>()).Returns([]);
+		var forumService = Substitute.For<IForumService>();
+		forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns([]);
 		var pointsService = Substitute.For<IPointsService>();
 		_topicWatcher = Substitute.For<ITopicWatcher>();
 		_wikiPages = Substitute.For<IWikiPages>();
@@ -32,8 +29,8 @@ public class IndexModelTests : BasePageModelTests
 		_model = new IndexModel(
 			_db,
 			_publisher,
-			_awards,
-			_forumService,
+			awards,
+			forumService,
 			pointsService,
 			_topicWatcher,
 			_wikiPages)
@@ -46,24 +43,18 @@ public class IndexModelTests : BasePageModelTests
 	public async Task OnGet_NonExistentTopic_ReturnsNotFound()
 	{
 		_model.Id = 999;
-
 		var result = await _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
 	public async Task OnGet_ExistingTopic_PopulatesTopicDisplay()
 	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		_db.CreatePostForTopic(topic, user);
+		var user = _db.AddUser("Test User").Entity;
+		var topic = _db.AddTopic().Entity;
+		_db.CreatePostForTopic(topic);
 		await _db.SaveChangesAsync();
-		_awards.ForUser(Arg.Any<int>()).Returns([]);
-		_forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns([]);
-
+		AddAuthenticatedUser(_model, user, []);
 		_model.Id = topic.Id;
 
 		var result = await _model.OnGet();
@@ -72,21 +63,16 @@ public class IndexModelTests : BasePageModelTests
 		Assert.AreEqual(topic.Id, _model.Topic.Id);
 		Assert.AreEqual(topic.Title, _model.Topic.Title);
 		Assert.AreEqual(topic.Forum!.Name, _model.Topic.ForumName);
+		await _topicWatcher.Received(1).MarkSeen(topic.Id, user.Id);
 	}
 
 	[TestMethod]
 	public async Task OnGet_TopicWithSubmission_SetsSubmissionData()
 	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		_db.CreatePostForTopic(topic, user);
+		var topic = _db.AddTopic().Entity;
+		_db.CreatePostForTopic(topic);
+		topic.Submission = _db.AddSubmission().Entity;
 		await _db.SaveChangesAsync();
-		topic.Submission = _db.AddSubmission(user).Entity;
-
-		await _db.SaveChangesAsync();
-		_awards.ForUser(Arg.Any<int>()).Returns([]);
-		_forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns([]);
-
 		_model.Id = topic.Id;
 
 		var result = await _model.OnGet();
@@ -99,13 +85,10 @@ public class IndexModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnGet_TopicWithPoll_PopulatesPollData()
 	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		_db.CreatePostForTopic(topic, user);
+		var topic = _db.AddTopic().Entity;
+		_db.CreatePostForTopic(topic);
 		var poll = _db.CreatePollForTopic(topic).Entity;
 		await _db.SaveChangesAsync();
-		_awards.ForUser(Arg.Any<int>()).Returns([]);
-		_forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns([]);
 
 		_model.Id = topic.Id;
 
@@ -118,33 +101,12 @@ public class IndexModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public async Task OnGet_WithLoggedInUser_ChecksWatchingStatus()
-	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		_db.CreatePostForTopic(topic, user);
-		await _db.SaveChangesAsync();
-		_awards.ForUser(Arg.Any<int>()).Returns([]);
-		_forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns([]);
-
-		_model.Id = topic.Id;
-		AddAuthenticatedUser(_model, user, []);
-
-		var result = await _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(PageResult));
-		await _topicWatcher.Received(1).MarkSeen(topic.Id, user.Id);
-	}
-
-	[TestMethod]
 	public async Task OnGet_WithHighlightedPost_SetsHighlightedPost()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
 		var post = _db.CreatePostForTopic(topic, user).Entity;
 		await _db.SaveChangesAsync();
-		_awards.ForUser(Arg.Any<int>()).Returns([]);
-		_forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns([]);
 
 		_model.Id = topic.Id;
 		_model.Search.Highlight = post.Id;
@@ -164,9 +126,7 @@ public class IndexModelTests : BasePageModelTests
 
 		var result = await _model.OnPostVote(1, [1]);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -177,9 +137,7 @@ public class IndexModelTests : BasePageModelTests
 
 		var result = await _model.OnPostVote(999, [1]);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -196,9 +154,7 @@ public class IndexModelTests : BasePageModelTests
 
 		var result = await _model.OnPostVote(poll.Id, [1]);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirect.PageName);
+		AssertRedirect(result, "Index");
 	}
 
 	[TestMethod]
@@ -215,7 +171,7 @@ public class IndexModelTests : BasePageModelTests
 
 		var result = await _model.OnPostVote(poll.Id, [1]);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 
 		var vote = await _db.ForumPollOptionVotes.FirstOrDefaultAsync();
 		Assert.IsNotNull(vote);
@@ -226,14 +182,10 @@ public class IndexModelTests : BasePageModelTests
 	public async Task OnPostLock_NonExistentTopic_ReturnsNotFound()
 	{
 		_model.Id = 999;
-		var user = _db.AddUser("TestUser").Entity;
-		AddAuthenticatedUser(_model, user, [PermissionTo.LockTopics]);
 
 		var result = await _model.OnPostLock("Test Topic", true);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -243,14 +195,12 @@ public class IndexModelTests : BasePageModelTests
 		var topic = _db.AddTopic(user).Entity;
 		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
 		_model.Id = topic.Id;
 		AddAuthenticatedUser(_model, user, [PermissionTo.LockTopics]);
 
 		var result = await _model.OnPostLock("Test Topic", true);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-
+		AssertRedirect(result, "Index");
 		await _db.Entry(topic).ReloadAsync();
 		Assert.IsTrue(topic.IsLocked);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
@@ -261,9 +211,7 @@ public class IndexModelTests : BasePageModelTests
 	{
 		var result = await _model.OnGetWatch();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -279,7 +227,7 @@ public class IndexModelTests : BasePageModelTests
 
 		var result = await _model.OnGetWatch();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 		await _topicWatcher.Received(1).WatchTopic(topic.Id, user.Id, Arg.Any<bool>());
 	}
 
@@ -287,10 +235,7 @@ public class IndexModelTests : BasePageModelTests
 	public async Task OnGetUnwatch_NotLoggedIn_ReturnsAccessDenied()
 	{
 		var result = await _model.OnGetUnwatch();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -300,13 +245,12 @@ public class IndexModelTests : BasePageModelTests
 		var topic = _db.AddTopic(user).Entity;
 		_db.CreatePostForTopic(topic, user);
 		await _db.SaveChangesAsync();
-
 		_model.Id = topic.Id;
 		AddAuthenticatedUser(_model, user, []);
 
 		var result = await _model.OnGetUnwatch();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 		await _topicWatcher.Received(1).UnwatchTopic(topic.Id, user.Id);
 	}
 

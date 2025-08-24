@@ -1,12 +1,10 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;
 
@@ -52,11 +50,9 @@ public class EditModelTests : TestDbBase
 		_page.Id = submission.Id;
 		AddAuthenticatedUser(_page, otherUser, [PermissionTo.SubmitMovies]);
 
-		var actual = await _page.OnGet();
+		var result = await _page.OnGet();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -186,13 +182,9 @@ public class EditModelTests : TestDbBase
 		var wikiPage = new WikiResult { Markup = "Updated markup" };
 		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(Task.FromResult((IWikiPage?)wikiPage));
 
-		var actual = await _page.OnPost();
+		var result = await _page.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("View", redirectResult.PageName);
-		Assert.AreEqual(submission.Id, redirectResult.RouteValues!["Id"]);
-
+		AssertRedirect(result, "View", submission.Id);
 		Assert.AreEqual("Updated Game", _page.Submission.GameName);
 		Assert.AreEqual("Updated Version", _page.Submission.GameVersion);
 		Assert.AreEqual("Updated Emulator", _page.Submission.Emulator);
@@ -275,11 +267,9 @@ public class EditModelTests : TestDbBase
 		var user = _db.AddUser("User").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.SubmitMovies]);
 
-		var actual = await _page.OnGetClaimForJudging();
+		var result = await _page.OnGetClaimForJudging();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -321,10 +311,8 @@ public class EditModelTests : TestDbBase
 		var user = _db.AddUser("User").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.SubmitMovies]);
 
-		var actual = await _page.OnGetClaimForPublishing();
+		var result = await _page.OnGetClaimForPublishing();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 }

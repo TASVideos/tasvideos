@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
-using TASVideos.Core.Services;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Urls;
 using TASVideos.Services;
 using TASVideos.Tests.Base;

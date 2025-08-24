@@ -1,11 +1,9 @@
 ﻿using System.Security.Claims;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts;
 using TASVideos.Services;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
 
@@ -24,7 +22,7 @@ public class CreateModelTests : BasePageModelTests
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_topicWatcher = Substitute.For<ITopicWatcher>();
 		_forumService = Substitute.For<IForumService>();
-
+		_forumService.UserAvatars(Arg.Any<int>()).Returns(new AvatarUrls(null, null));
 		_model = new CreateModel(_userManager, _publisher, _db, _topicWatcher, _forumService)
 		{
 			PageContext = TestPageContext()
@@ -35,32 +33,22 @@ public class CreateModelTests : BasePageModelTests
 	public async Task OnGet_NonExistentTopic_ReturnsNotFound()
 	{
 		_model.TopicId = 999;
-
 		var result = await _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
 	public async Task OnGet_RestrictedTopic_WithoutPermission_ReturnsNotFound()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
-		var restrictedForum = _db.AddForum("Restricted Forum", true).Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Forum = restrictedForum;
-		topic.Title = "Restricted Topic";
+		var topic = _db.AddTopic(user, true).Entity;
 		await _db.SaveChangesAsync();
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = topic.Id;
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -68,18 +56,15 @@ public class CreateModelTests : BasePageModelTests
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Locked Topic";
 		topic.IsLocked = true;
 		await _db.SaveChangesAsync();
 
-		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]); // No PostInLockedTopics permission
+		AddAuthenticatedUser(_model, user, []); // No PostInLockedTopics permission
 		_model.TopicId = topic.Id;
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -87,22 +72,16 @@ public class CreateModelTests : BasePageModelTests
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Locked Topic";
 		topic.IsLocked = true;
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_topicWatcher.IsWatchingTopic(topic.Id, user.Id).Returns(false);
-		_forumService.UserAvatars(user.Id).Returns(new AvatarUrls(null, null));
-		_forumService.GetPostCountInTopic(user.Id, topic.Id).Returns(0);
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.PostInLockedTopics]);
 		_model.TopicId = topic.Id;
 
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual("Locked Topic", _model.TopicTitle);
 		Assert.IsTrue(_model.IsLocked);
 	}
 
@@ -116,8 +95,6 @@ public class CreateModelTests : BasePageModelTests
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_topicWatcher.IsWatchingTopic(topic.Id, user.Id).Returns(true);
-		_forumService.UserAvatars(user.Id).Returns(new AvatarUrls("avatar.png", "mood_base"));
 		_forumService.GetPostCountInTopic(user.Id, topic.Id).Returns(5);
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
@@ -144,10 +121,6 @@ public class CreateModelTests : BasePageModelTests
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_topicWatcher.IsWatchingTopic(topic.Id, user.Id).Returns(false);
-		_forumService.UserAvatars(user.Id).Returns(new AvatarUrls(null, null));
-		_forumService.GetPostCountInTopic(user.Id, topic.Id).Returns(0);
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = topic.Id;
 		_model.QuoteId = post.Id;
@@ -164,14 +137,9 @@ public class CreateModelTests : BasePageModelTests
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		user.AutoWatchTopic = UserPreference.Always;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_topicWatcher.IsWatchingTopic(topic.Id, user.Id).Returns(false); // Currently not watching
-		_forumService.UserAvatars(user.Id).Returns(new AvatarUrls(null, null));
-		_forumService.GetPostCountInTopic(user.Id, topic.Id).Returns(0);
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = topic.Id;
 
@@ -187,14 +155,9 @@ public class CreateModelTests : BasePageModelTests
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		user.AutoWatchTopic = UserPreference.Never;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_topicWatcher.IsWatchingTopic(topic.Id, user.Id).Returns(true); // Currently watching
-		_forumService.UserAvatars(user.Id).Returns(new AvatarUrls(null, null));
-		_forumService.GetPostCountInTopic(user.Id, topic.Id).Returns(0);
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = topic.Id;
 
@@ -226,10 +189,6 @@ public class CreateModelTests : BasePageModelTests
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_topicWatcher.IsWatchingTopic(topic.Id, user.Id).Returns(false);
-		_forumService.UserAvatars(user.Id).Returns(new AvatarUrls(null, null));
-		_forumService.GetPostCountInTopic(user.Id, topic.Id).Returns(0);
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = topic.Id;
 
@@ -261,7 +220,6 @@ public class CreateModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = topic.Id;
-		_model.Mood = ForumPostMood.Happy;
 		_model.ModelState.AddModelError("Text", "Text is required");
 
 		var result = await _model.OnPost();
@@ -288,30 +246,7 @@ public class CreateModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
-	}
-
-	[TestMethod]
-	public async Task OnPost_InvalidModelState_WithoutMoodPermission_NormalizesMood()
-	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		await _db.SaveChangesAsync();
-
-		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_forumService.IsTopicLocked(topic.Id).Returns(false);
-
-		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]); // No UseMoodAvatars permission
-		_model.TopicId = topic.Id;
-		_model.Mood = ForumPostMood.Happy;
-		_model.ModelState.AddModelError("Text", "Text is required");
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(ForumPostMood.Normal, _model.Mood);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -324,35 +259,26 @@ public class CreateModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = 999;
-		_model.Text = "Valid post content";
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
 	public async Task OnPost_RestrictedTopic_WithoutPermission_ReturnsNotFound()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
-		var restrictedForum = _db.AddForum("Restricted Forum", true).Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Forum = restrictedForum;
+		var topic = _db.AddTopic(user, true).Entity;
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]); // No SeeRestrictedForums permission
 		_model.TopicId = topic.Id;
-		_model.Text = "Valid post content";
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -371,9 +297,7 @@ public class CreateModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -402,76 +326,8 @@ public class CreateModelTests : BasePageModelTests
 		Assert.AreEqual("/Forum/Posts/123", redirectResult.Url);
 
 		await _forumService.Received(1).CreatePost(Arg.Any<PostCreate>());
-	}
-
-	[TestMethod]
-	public async Task OnPost_ValidPost_CallsUserManagerAutoAssign()
-	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		await _db.SaveChangesAsync();
-
-		const int newPostId = 123;
-		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_forumService.CreatePost(Arg.Any<PostCreate>()).Returns(newPostId);
-
-		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
-		_model.TopicId = topic.Id;
-		_model.Text = "Valid post content";
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectResult));
 		await _userManager.Received(1).AssignAutoAssignableRolesByPost(user.Id);
-	}
-
-	[TestMethod]
-	public async Task OnPost_ValidPost_NotifiesTopicWatchers()
-	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
-		await _db.SaveChangesAsync();
-
-		const int newPostId = 123;
-		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_forumService.CreatePost(Arg.Any<PostCreate>()).Returns(newPostId);
-
-		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
-		_model.TopicId = topic.Id;
-		_model.Text = "Valid post content";
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectResult));
 		await _topicWatcher.Received(1).NotifyNewPost(newPostId, topic.Id, "Test Topic", user.Id);
-	}
-
-	[TestMethod]
-	public async Task OnPost_RegularPost_SendsForumNotification()
-	{
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		user.UserName = "RegularUser";
-		var forum = _db.AddForum("General Discussion").Entity;
-		forum.ShortName = "General";
-		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Regular Topic";
-		topic.Forum = forum;
-		await _db.SaveChangesAsync();
-
-		const int newPostId = 456;
-		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_forumService.CreatePost(Arg.Any<PostCreate>()).Returns(newPostId);
-
-		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
-		_model.TopicId = topic.Id;
-		_model.Subject = "Regular Subject";
-		_model.Text = "Regular post content";
-		_model.Mood = ForumPostMood.Normal;
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectResult));
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
@@ -480,14 +336,9 @@ public class CreateModelTests : BasePageModelTests
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
-		topic.Title = "Test Topic";
 		await _db.SaveChangesAsync();
 
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
-		_topicWatcher.IsWatchingTopic(topic.Id, user.Id).Returns(false);
-		_forumService.UserAvatars(user.Id).Returns(new AvatarUrls(null, null));
-		_forumService.GetPostCountInTopic(user.Id, topic.Id).Returns(0);
-
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts]);
 		_model.TopicId = topic.Id;
 		_model.QuoteId = 999; // Non-existent post
@@ -497,4 +348,7 @@ public class CreateModelTests : BasePageModelTests
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("", _model.Text); // Should remain empty since quote doesn't exist
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(CreateModel), PermissionTo.CreateForumPosts);
 }

@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 
 namespace TASVideos.RazorPages.Tests.Extensions;

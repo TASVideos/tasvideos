@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services;
 using TASVideos.Pages.Forum.Posts;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
 
@@ -29,9 +26,7 @@ public class IndexModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -43,9 +38,7 @@ public class IndexModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
 		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Topics/Index", redirectResult.PageName);
 		Assert.IsNull(redirectResult.PageHandler);
 
 		var routeValues = redirectResult.RouteValues;
@@ -71,7 +64,7 @@ public class IndexModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		await _forumService.Received(1).GetPostPosition(123, true);
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "/Forum/Topics/Index");
 	}
 
 	[TestMethod]
@@ -88,7 +81,7 @@ public class IndexModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		await _forumService.Received(1).GetPostPosition(123, false);
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "/Forum/Topics/Index");
 	}
 
 	[TestMethod]
@@ -101,7 +94,7 @@ public class IndexModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		await _forumService.Received(1).GetPostPosition(123, false);
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "/Forum/Topics/Index");
 	}
 
 	[TestMethod]
@@ -137,23 +130,18 @@ public class IndexModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnGet_DifferentPostIds_MaintainsCorrectIdInFragmentAndHighlight()
 	{
-		const int testPostId = 987654;
-		_model.Id = testPostId;
+		const int postId = 987654;
+		_model.Id = postId;
 		var postPosition = new PostPosition(Page: 10, TopicId: 555);
-		_forumService.GetPostPosition(testPostId, Arg.Any<bool>()).Returns(postPosition);
+		_forumService.GetPostPosition(postId, Arg.Any<bool>()).Returns(postPosition);
 
 		var result = await _model.OnGet();
 
 		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual(testPostId.ToString(), redirectResult.Fragment);
-		Assert.AreEqual(testPostId, redirectResult.RouteValues!["Highlight"]);
+		Assert.AreEqual(postId.ToString(), redirectResult.Fragment);
+		Assert.AreEqual(postId, redirectResult.RouteValues!["Highlight"]);
 	}
 
 	[TestMethod]
-	public void IndexModel_HasAllowAnonymousAttribute()
-	{
-		var type = typeof(IndexModel);
-		var attributes = type.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
-		Assert.AreEqual(1, attributes.Length);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(IndexModel));
 }

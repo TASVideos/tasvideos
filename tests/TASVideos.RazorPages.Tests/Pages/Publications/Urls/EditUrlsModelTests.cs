@@ -2,11 +2,9 @@
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications.Urls;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications.Urls;
 
@@ -38,9 +36,7 @@ public class EditUrlsModelTests : TestDbBase
 	public async Task OnGet_NonExistentPublication_ReturnsNotFound()
 	{
 		_model.PublicationId = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 

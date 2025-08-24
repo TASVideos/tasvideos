@@ -1,9 +1,7 @@
 ﻿using TASVideos.Core;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Users;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Users;
 

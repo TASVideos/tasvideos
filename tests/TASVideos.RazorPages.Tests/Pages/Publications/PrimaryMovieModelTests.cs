@@ -1,10 +1,8 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
@@ -26,9 +24,7 @@ public class PrimaryMovieModelTests : TestDbBase
 	public async Task OnGet_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -52,9 +48,7 @@ public class PrimaryMovieModelTests : TestDbBase
 	public async Task OnPost_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnPost();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -100,11 +94,7 @@ public class PrimaryMovieModelTests : TestDbBase
 
 		var result = await _page.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("Edit", redirect.PageName);
-		Assert.AreEqual(publication.Id, redirect.RouteValues!["Id"]);
-
+		AssertRedirect(result, "Edit", publication.Id);
 		var updatedPublication = await _db.Publications.FindAsync(publication.Id);
 		Assert.IsNotNull(updatedPublication);
 		Assert.AreEqual("new.zip", updatedPublication.MovieFileName);
@@ -185,10 +175,7 @@ public class PrimaryMovieModelTests : TestDbBase
 
 		var result = await _page.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("Edit", redirect.PageName);
-
+		AssertRedirect(result, "Edit");
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 }

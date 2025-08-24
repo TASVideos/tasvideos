@@ -1,12 +1,10 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
@@ -19,10 +17,8 @@ public class UploadModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_InitializesPropertiesCorrectly()
 	{
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		var game = new Game { Id = 2, DisplayName = "Super Mario Bros." };
-		_db.GameSystems.Add(system);
-		_db.Games.Add(game);
+		_db.AddGameSystem("NES");
+		_db.AddGame("Super Mario Bros.");
 		await _db.SaveChangesAsync();
 
 		_userFiles.SupportedFileExtensions().Returns([".bk2", ".fm2", ".lsmv"]);
@@ -212,4 +208,7 @@ public class UploadModelTests : TestDbBase
 			req.FileName == "test.bk2" &&
 			req.Hidden == false));
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(UploadModel), PermissionTo.UploadUserFiles);
 }

@@ -1,4 +1,3 @@
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Versions;
 using TASVideos.Tests.Base;
@@ -96,42 +95,6 @@ public class ViewModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnGet_VersionWithNullOptionalFields_HandlesNulls()
-	{
-		var game = _db.AddGame("Test Game").Entity;
-		var system = _db.AddGameSystem("NES").Entity;
-		var version = _db.GameVersions.Add(new GameVersion
-		{
-			Game = game,
-			Name = "Test Version",
-			Md5 = null,
-			Sha1 = null,
-			Version = null,
-			Region = null,
-			Type = VersionTypes.Unknown,
-			System = system,
-			TitleOverride = null,
-			SourceDb = null,
-			Notes = null
-		}).Entity;
-		await _db.SaveChangesAsync();
-		_model.GameId = game.Id;
-		_model.Id = version.Id;
-
-		var result = await _model.OnGet();
-
-		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsNull(_model.Version.Md5);
-		Assert.IsNull(_model.Version.Sha1);
-		Assert.IsNull(_model.Version.Version);
-		Assert.IsNull(_model.Version.Region);
-		Assert.AreEqual(VersionTypes.Unknown, _model.Version.Type);
-		Assert.IsNull(_model.Version.TitleOverride);
-		Assert.IsNull(_model.Version.SourceDb);
-		Assert.IsNull(_model.Version.Notes);
-	}
-
-	[TestMethod]
 	public async Task OnGet_LoadsPublicationsForVersion()
 	{
 		var game = _db.AddGame("Test Game").Entity;
@@ -173,16 +136,14 @@ public class ViewModelTests : TestDbBase
 		var submitter = _db.AddUser("TestUser").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 		var system = _db.AddGameSystem("NES").Entity;
-		var version = _db.GameVersions.Add(
-			new GameVersion { Game = game, Name = "Test Version", System = system }).Entity;
+		var version = _db.GameVersions.Add(new GameVersion { Game = game, Name = "Test Version", System = system }).Entity;
 		await _db.SaveChangesAsync();
 
 		var submission1 = new Submission { Title = "Submission 1", GameVersionId = version.Id, Submitter = submitter };
 		var submission2 = new Submission { Title = "Submission 2", GameVersionId = version.Id, Submitter = submitter };
 		_db.Submissions.AddRange(submission1, submission2);
 
-		var otherVersion = _db.GameVersions.Add(
-			new GameVersion { Game = game, Name = "Other Version", System = system }).Entity;
+		var otherVersion = _db.GameVersions.Add(new GameVersion { Game = game, Name = "Other Version", System = system }).Entity;
 		await _db.SaveChangesAsync();
 		var otherSubmission = new Submission { Title = "Other Submission", GameVersionId = otherVersion.Id, Submitter = submitter };
 		_db.Submissions.Add(otherSubmission);

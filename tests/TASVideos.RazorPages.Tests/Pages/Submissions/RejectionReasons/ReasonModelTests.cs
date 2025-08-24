@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data.Entity;
-using TASVideos.Pages.Submissions.RejectionReasons;
+﻿using TASVideos.Pages.Submissions.RejectionReasons;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions.RejectionReasons;
@@ -176,21 +174,10 @@ public class ReasonModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void ReasonModel_HasAllowAnonymousAttribute()
-	{
-		var reasonModelType = typeof(ReasonModel);
-		var allowAnonymousAttribute = reasonModelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.IsTrue(allowAnonymousAttribute.Length > 0);
-	}
-
-	[TestMethod]
 	public async Task OnGet_HandlesEmptyDatabase_GracefullyReturnsNotFound()
 	{
 		_model.Id = 1;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -208,4 +195,7 @@ public class ReasonModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Reason with \"quotes\" & <tags>", _model.RejectionReason);
 	}
+
+	[TestMethod]
+	public void AllowsAnonymousAttribute() =>  AssertAllowsAnonymousUsers(typeof(ReasonModel));
 }

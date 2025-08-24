@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core;
 using TASVideos.Pages.Forum.Posts;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
 
@@ -61,12 +58,12 @@ public class UnansweredModelTests : BasePageModelTests
 
 		var unansweredTopic = _db.AddTopic(user1).Entity;
 		unansweredTopic.Title = "Unanswered Topic";
-		_ = _db.CreatePostForTopic(unansweredTopic, user1).Entity;
+		_db.CreatePostForTopic(unansweredTopic, user1);
 
 		var answeredTopic = _db.AddTopic(user1).Entity;
 		answeredTopic.Title = "Answered Topic";
-		_ = _db.CreatePostForTopic(answeredTopic, user1).Entity;
-		_ = _db.CreatePostForTopic(answeredTopic, user2).Entity;
+		_db.CreatePostForTopic(answeredTopic, user1);
+		_db.CreatePostForTopic(answeredTopic, user2);
 
 		await _db.SaveChangesAsync();
 
@@ -85,12 +82,12 @@ public class UnansweredModelTests : BasePageModelTests
 		var olderTopic = _db.AddTopic(user).Entity;
 		olderTopic.Title = "Older Topic";
 		olderTopic.CreateTimestamp = DateTime.UtcNow.AddDays(-2);
-		_ = _db.CreatePostForTopic(olderTopic, user).Entity;
+		_db.CreatePostForTopic(olderTopic, user);
 
 		var newerTopic = _db.AddTopic(user).Entity;
 		newerTopic.Title = "Newer Topic";
 		newerTopic.CreateTimestamp = DateTime.UtcNow.AddDays(-1);
-		_ = _db.CreatePostForTopic(newerTopic, user).Entity;
+		_db.CreatePostForTopic(newerTopic, user);
 
 		await _db.SaveChangesAsync();
 
@@ -113,12 +110,12 @@ public class UnansweredModelTests : BasePageModelTests
 		var restrictedTopic = _db.AddTopic(user).Entity;
 		restrictedTopic.Forum = restrictedForum;
 		restrictedTopic.Title = "Restricted Topic";
-		_ = _db.CreatePostForTopic(restrictedTopic, user).Entity;
+		_db.CreatePostForTopic(restrictedTopic, user);
 
 		var publicTopic = _db.AddTopic(user).Entity;
 		publicTopic.Forum = publicForum;
 		publicTopic.Title = "Public Topic";
-		_ = _db.CreatePostForTopic(publicTopic, user).Entity;
+		_db.CreatePostForTopic(publicTopic, user);
 
 		await _db.SaveChangesAsync();
 
@@ -141,13 +138,12 @@ public class UnansweredModelTests : BasePageModelTests
 		var restrictedTopic = _db.AddTopic(user).Entity;
 		restrictedTopic.Forum = restrictedForum;
 		restrictedTopic.Title = "Restricted Topic";
-		_ = _db.CreatePostForTopic(restrictedTopic, user).Entity;
+		_db.CreatePostForTopic(restrictedTopic, user);
 
 		var publicTopic = _db.AddTopic(user).Entity;
 		publicTopic.Forum = publicForum;
 		publicTopic.Title = "Public Topic";
-		_ = _db.CreatePostForTopic(publicTopic, user).Entity;
-
+		_db.CreatePostForTopic(publicTopic, user);
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.SeeRestrictedForums]);
@@ -169,9 +165,7 @@ public class UnansweredModelTests : BasePageModelTests
 		topic.Forum!.Name = "Test Forum Name";
 		var testTimestamp = DateTime.UtcNow.AddDays(-1);
 		topic.CreateTimestamp = testTimestamp;
-
-		_ = _db.CreatePostForTopic(topic, author).Entity;
-
+		_db.CreatePostForTopic(topic, author);
 		await _db.SaveChangesAsync();
 
 		await _model.OnGet();
@@ -198,7 +192,7 @@ public class UnansweredModelTests : BasePageModelTests
 			var topic = _db.AddTopic(user).Entity;
 			topic.Title = $"Topic {i}";
 			topic.CreateTimestamp = DateTime.UtcNow.AddDays(-1).AddMinutes(i);
-			_ = _db.CreatePostForTopic(topic, user).Entity;
+			_db.CreatePostForTopic(topic, user);
 		}
 
 		await _db.SaveChangesAsync();
@@ -213,10 +207,5 @@ public class UnansweredModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void UnansweredModel_HasAllowAnonymousAttribute()
-	{
-		var type = typeof(UnansweredModel);
-		var attributes = type.GetCustomAttributes(typeof(AllowAnonymousAttribute), false);
-		Assert.AreEqual(1, attributes.Length);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(UnansweredModel));
 }

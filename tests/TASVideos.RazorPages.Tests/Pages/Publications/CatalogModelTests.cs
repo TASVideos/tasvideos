@@ -21,9 +21,7 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnGet_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -88,9 +86,7 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnPost_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnPost();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 

@@ -1,10 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Forum.Topics;
 using TASVideos.Services;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Topics;
 
@@ -187,13 +184,10 @@ public class SplitModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirect.PageName);
+		AssertRedirect(result, "Index");
 
 		// Verify new topic was created
-		var newTopic = await _db.ForumTopics
-			.SingleOrDefaultAsync(t => t.Title == "Split Topic");
+		var newTopic = await _db.ForumTopics.SingleOrDefaultAsync(t => t.Title == "Split Topic");
 		Assert.IsNotNull(newTopic);
 		Assert.AreEqual(topic.ForumId, newTopic.ForumId);
 		Assert.AreEqual(user.Id, newTopic.PosterId);
@@ -234,7 +228,7 @@ public class SplitModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 
 		// Verify new topic was created
 		var newTopic = await _db.ForumTopics
@@ -274,7 +268,7 @@ public class SplitModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 
 		// Verify new topic was created in target forum
 		var newTopic = await _db.ForumTopics
@@ -309,7 +303,7 @@ public class SplitModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 		_forumService.Received(1).ClearLatestPostCache();
 		_forumService.Received(1).ClearTopicActivityCache();
 		await _publisher.Received(1).Send(Arg.Any<Post>());
@@ -337,7 +331,7 @@ public class SplitModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 

@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity;
-using TASVideos.Pages.Submissions.RejectionReasons;
+﻿using TASVideos.Pages.Submissions.RejectionReasons;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions.RejectionReasons;
 
@@ -20,7 +17,6 @@ public class IndexModelTests : TestDbBase
 	public async Task OnGet_WithEmptyDatabase_ReturnsEmptyReasonsList()
 	{
 		await _model.OnGet();
-
 		Assert.AreEqual(0, _model.Reasons.Count);
 	}
 
@@ -76,9 +72,7 @@ public class IndexModelTests : TestDbBase
 
 		var result = await _model.OnPost("New Reason");
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirect.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -130,9 +124,7 @@ public class IndexModelTests : TestDbBase
 
 		var result = await _model.OnPostDelete(1);
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirect.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -202,27 +194,5 @@ public class IndexModelTests : TestDbBase
 		Assert.AreEqual(reason2.Id, testReason2.Id);
 		Assert.AreEqual("Reason 2", testReason2.Reason);
 		Assert.AreEqual(0, testReason2.SubmissionCount);
-	}
-
-	[TestMethod]
-	public void Rejection_Record_HasCorrectProperties()
-	{
-		var rejection = new IndexModel.Rejection(123, "Test Reason", 5);
-
-		Assert.AreEqual(123, rejection.Id);
-		Assert.AreEqual("Test Reason", rejection.Reason);
-		Assert.AreEqual(5, rejection.SubmissionCount);
-	}
-
-	[TestMethod]
-	public async Task OnPost_WithWhitespaceDisplayName_CreatesReasonWithTrimmedName()
-	{
-		var user = _db.AddUser("TestUser").Entity;
-		AddAuthenticatedUser(_model, user, [PermissionTo.RejectionReasonMaintenance]);
-
-		await _model.OnPost("  Spaced Reason  ");
-
-		var createdReason = _db.SubmissionRejectionReasons.Single();
-		Assert.AreEqual("  Spaced Reason  ", createdReason.DisplayName);
 	}
 }

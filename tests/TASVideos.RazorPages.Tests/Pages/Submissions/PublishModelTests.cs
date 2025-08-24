@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
@@ -29,9 +28,7 @@ public class PublishModelTests : TestDbBase
 	public async Task OnGet_NoSubmission_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var actual = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
@@ -44,11 +41,9 @@ public class PublishModelTests : TestDbBase
 
 		_page.Id = submission.Id;
 
-		var actual = await _page.OnGet();
+		var result = await _page.OnGet();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		var redirectResult = (RedirectToPageResult)actual;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -355,4 +350,7 @@ public class PublishModelTests : TestDbBase
 			ContentType = "text/plain"
 		};
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(PublishModel), PermissionTo.PublishMovies);
 }

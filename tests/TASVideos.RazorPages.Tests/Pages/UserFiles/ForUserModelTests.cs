@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Core;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
 
@@ -97,9 +94,7 @@ public class ForUserModelTests : TestDbBase
 	public async Task OnGet_WithNonExistentUser_ReturnsEmptyList()
 	{
 		_page.UserName = "NonExistentUser";
-
 		await _page.OnGet();
-
 		Assert.AreEqual(0, _page.Files.Count());
 	}
 
@@ -169,11 +164,5 @@ public class ForUserModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void ForUserModel_AllowsAnonymousUsers()
-	{
-		var forUserModelType = typeof(ForUserModel);
-		var allowAnonymousAttribute = forUserModelType.GetCustomAttributes(typeof(AllowAnonymousAttribute), inherit: false);
-
-		Assert.IsTrue(allowAnonymousAttribute.Length > 0);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(ForUserModel));
 }

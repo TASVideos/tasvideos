@@ -1,5 +1,6 @@
 ﻿namespace TASVideos.Pages.Account;
 
+[AllowAnonymous]
 public class BannedModel(ApplicationDbContext db) : BasePageModel
 {
 	[TempData]

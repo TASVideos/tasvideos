@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity;
-using TASVideos.Pages.Games.Goals;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
+﻿using TASVideos.Pages.Games.Goals;
 
 namespace TASVideos.RazorPages.Tests.Pages.Games.Goals;
 
@@ -43,9 +40,7 @@ public class ListModelTests : BasePageModelTests
 	public async Task OnGet_GameDoesNotExist_ReturnsNotFound()
 	{
 		_model.GameId = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
@@ -61,9 +56,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPost("new goal");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirect.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -77,10 +70,8 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPost("");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirect.PageName);
-		Assert.IsTrue(_model.Message!.Contains("Cannot create empty goal"));
+		AssertRedirect(result, "List");
+		Assert.AreEqual("danger", _model.MessageType);
 	}
 
 	[TestMethod]
@@ -94,10 +85,8 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPost(null);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirect.PageName);
-		Assert.IsTrue(_model.Message!.Contains("Cannot create empty goal"));
+		AssertRedirect(result, "List");
+		AssertRedirect(result, "List");
 	}
 
 	[TestMethod]
@@ -108,15 +97,12 @@ public class ListModelTests : BasePageModelTests
 		var game = _db.AddGame("Test Game").Entity;
 		_db.AddGoalForGame(game, "existing goal");
 		await _db.SaveChangesAsync();
-
 		_model.GameId = game.Id;
 
 		var result = await _model.OnPost("existing goal");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirect.PageName);
-		Assert.IsTrue(_model.Message!.Contains("Cannot create goal existing goal because it already exists"));
+		AssertRedirect(result, "List");
+		AssertRedirect(result, "List");
 	}
 
 	[TestMethod]
@@ -130,16 +116,15 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPost("new goal");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "List");
 		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirect.PageName);
 		Assert.IsNotNull(redirect.RouteValues);
 		Assert.AreEqual(game.Id, redirect.RouteValues["GameId"]);
 
 		var createdGoal = await _db.GameGoals.SingleOrDefaultAsync(gg => gg.DisplayName == "new goal");
 		Assert.IsNotNull(createdGoal);
 		Assert.AreEqual(game.Id, createdGoal.GameId);
-		Assert.IsTrue(_model.Message!.Contains("Goal new goal created successfully"));
+		Assert.AreEqual("success", _model.MessageType);
 	}
 
 	#endregion
@@ -154,9 +139,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPostEdit(1, "new name");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirect.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -170,8 +153,8 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPostEdit(1, "");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		Assert.IsTrue(_model.Message!.Contains("empty goal"));
+		AssertRedirect(result, "List");
+		Assert.AreEqual("danger", _model.MessageType);
 	}
 
 	[TestMethod]
@@ -198,7 +181,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPostEdit(baselineGoal.Id, "new name");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "List");
 		Assert.AreEqual("danger", _model.MessageType);
 	}
 
@@ -216,7 +199,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPostEdit(goal1.Id, "goal2");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "List");
 		Assert.AreEqual("danger", _model.MessageType);
 	}
 
@@ -233,9 +216,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPostEdit(goal.Id, "new name");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirect.PageName);
+		AssertRedirect(result, "List");
 
 		var updatedGoal = await _db.GameGoals.FindAsync(goal.Id);
 		Assert.AreEqual("new name", updatedGoal!.DisplayName);
@@ -265,7 +246,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnPostEdit(goal.Id, "new goal");
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "List");
 
 		var updatedGoal = await _db.GameGoals.FindAsync(goal.Id);
 		Assert.IsNotNull(updatedGoal);
@@ -287,9 +268,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnGetDelete(1);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirect.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -316,8 +295,8 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnGetDelete(baselineGoal.Id);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		Assert.IsTrue(_model.Message!.Contains("Cannot delete baseline goal"));
+		AssertRedirect(result, "List");
+		Assert.AreEqual("danger", _model.MessageType);
 	}
 
 	[TestMethod]
@@ -334,9 +313,7 @@ public class ListModelTests : BasePageModelTests
 
 		var result = await _model.OnGetDelete(goalId);
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirect = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirect.PageName);
+		AssertRedirect(result, "List");
 
 		var deletedGoal = await _db.GameGoals.FindAsync(goalId);
 		Assert.IsNull(deletedGoal);

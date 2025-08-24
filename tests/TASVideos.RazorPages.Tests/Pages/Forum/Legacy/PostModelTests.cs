@@ -1,7 +1,5 @@
 ﻿using TASVideos.Core.Services;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Forum.Posts;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Legacy;
 
@@ -28,9 +26,7 @@ public class PostModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/NotFound", redirectResult.PageName);
+		AssertForumNotFound(result);
 	}
 
 	[TestMethod]
@@ -46,10 +42,8 @@ public class PostModelTests : BasePageModelTests
 
 		var result = await _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "/Forum/Topics/Index");
 		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Topics/Index", redirectResult.PageName);
-
 		var routeValues = redirectResult.RouteValues;
 		Assert.IsNotNull(routeValues);
 		Assert.AreEqual(topicId, routeValues["Id"]);

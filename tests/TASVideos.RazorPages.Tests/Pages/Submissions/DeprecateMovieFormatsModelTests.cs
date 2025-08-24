@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -41,9 +40,7 @@ public class DeprecateMovieFormatsModelTests : TestDbBase
 	public async Task OnPost_InvalidExtension_ReturnsBadRequest()
 	{
 		_deprecator.IsMovieExtension("invalid").Returns(false);
-
 		var result = await _page.OnPost("invalid", true);
-
 		Assert.IsInstanceOfType<BadRequestObjectResult>(result);
 	}
 

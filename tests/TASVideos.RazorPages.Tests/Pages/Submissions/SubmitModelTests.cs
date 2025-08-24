@@ -1,17 +1,13 @@
-﻿using System.Reflection;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
-using TASVideos.Pages;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;
 
@@ -37,16 +33,6 @@ public class SubmitModelTests : TestDbBase
 		_queueService = Substitute.For<IQueueService>();
 		_fileService = Substitute.For<IFileService>();
 		_page = new SubmitModel(_movieParser, _userManager, _movieFormatDeprecator, _queueService, _wikiPages, _fileService, _publisher);
-	}
-
-	[TestMethod]
-	public void RequiresPermission()
-	{
-		var attribute = typeof(SubmitModel).GetCustomAttribute(typeof(RequirePermissionAttribute));
-		Assert.IsNotNull(attribute);
-		Assert.IsInstanceOfType<RequirePermissionAttribute>(attribute);
-		var permissionAttribute = (RequirePermissionAttribute)attribute;
-		Assert.IsTrue(permissionAttribute.RequiredPermissions.Contains(PermissionTo.SubmitMovies));
 	}
 
 	[TestMethod]
@@ -234,6 +220,9 @@ public class SubmitModelTests : TestDbBase
 		Assert.IsTrue(errors.Count > 0);
 		Assert.AreEqual("Database error occurred", errors[0].ErrorMessage);
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(SubmitModel), PermissionTo.SubmitMovies);
 
 	private static IFormFile CreateMockMovieFile()
 	{

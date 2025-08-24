@@ -15,9 +15,6 @@ public class MoodReportModelTests : BasePageModelTests
 	{
 		var result = _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/MoodReport", redirectResult.PageName);
-		Assert.IsNull(redirectResult.RouteValues);
+		AssertRedirect(result, "/Forum/MoodReport");
 	}
 }

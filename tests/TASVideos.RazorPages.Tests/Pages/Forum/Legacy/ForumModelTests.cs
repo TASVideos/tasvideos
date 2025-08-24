@@ -30,11 +30,7 @@ public class ForumModelTests : BasePageModelTests
 
 		var result = _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Subforum/Index", redirectResult.PageName);
-		Assert.IsNotNull(redirectResult.RouteValues);
-		Assert.AreEqual(forumId, redirectResult.RouteValues["Id"]);
+		AssertRedirectWithId(result, forumId);
 	}
 
 	[TestMethod]
@@ -46,11 +42,7 @@ public class ForumModelTests : BasePageModelTests
 
 		var result = _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Subforum/Index", redirectResult.PageName);
-		Assert.IsNotNull(redirectResult.RouteValues);
-		Assert.AreEqual(forumId, redirectResult.RouteValues["Id"]);
+		AssertRedirectWithId(result, forumId);
 	}
 
 	[TestMethod]
@@ -63,40 +55,14 @@ public class ForumModelTests : BasePageModelTests
 
 		var result = _model.OnGet();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Subforum/Index", redirectResult.PageName);
-		Assert.IsNotNull(redirectResult.RouteValues);
-		Assert.AreEqual(fValue, redirectResult.RouteValues["Id"]);
+		AssertRedirectWithId(result, fValue);
 	}
 
-	[TestMethod]
-	public void OnGet_FIsZero_RedirectsToSubforumWithZero()
+	private static void AssertRedirectWithId(IActionResult result, int id)
 	{
-		_model.F = 0;
-		_model.Id = null;
-
-		var result = _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "/Forum/Subforum/Index");
 		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Subforum/Index", redirectResult.PageName);
 		Assert.IsNotNull(redirectResult.RouteValues);
-		Assert.AreEqual(0, redirectResult.RouteValues["Id"]);
-	}
-
-	[TestMethod]
-	public void OnGet_IdIsZero_RedirectsToSubforumWithZero()
-	{
-		_model.F = null;
-		_model.Id = 0;
-
-		var result = _model.OnGet();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Forum/Subforum/Index", redirectResult.PageName);
-		Assert.IsNotNull(redirectResult.RouteValues);
-		Assert.AreEqual(0, redirectResult.RouteValues["Id"]);
+		Assert.AreEqual(id, redirectResult.RouteValues["Id"]);
 	}
 }

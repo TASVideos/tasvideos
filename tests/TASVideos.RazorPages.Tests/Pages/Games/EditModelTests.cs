@@ -1,13 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services.ExternalMediaPublisher;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages;
 using TASVideos.Pages.Games;
 using TASVideos.Services;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Games;
 
@@ -34,7 +30,6 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnGet_NewGame_InitializesNewGame()
 	{
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 	}
 
@@ -42,9 +37,7 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnGet_NonExistentGame_ReturnsNotFound()
 	{
 		_model.Id = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
@@ -94,7 +87,6 @@ public class EditModelTests : BasePageModelTests
 	{
 		var game = _db.AddGame("Deletable Game").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Id = game.Id;
 
 		await _model.OnGet();
@@ -122,7 +114,6 @@ public class EditModelTests : BasePageModelTests
 	{
 		_db.AddGenre();
 		await _db.SaveChangesAsync();
-
 		_model.ModelState.AddModelError("DisplayName", "DisplayName is required");
 
 		var result = await _model.OnPost();
@@ -154,7 +145,7 @@ public class EditModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnPost_DuplicateAbbreviation_AddsModelError()
 	{
-		_db.Games.Add(new Game { DisplayName = "Existing Game", Abbreviation = "EG" });
+		_db.AddGame("Existing Game", "EG");
 		await _db.SaveChangesAsync();
 
 		_model.Game = new EditModel.GameEdit
@@ -191,9 +182,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 
 		var createdGame = await _db.Games
 			.Include(g => g.GameGenres)
@@ -253,9 +242,14 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 
-		var updatedGame = await _db.Games.Include(g => g.GameGenres).Include(g => g.GameGroups).SingleAsync(g => g.Id == game.Id);
+		var updatedGame = await _db.Games
+			.Include(g => g.GameGenres)
+			.Include(g => g.GameGroups)
+			.SingleOrDefaultAsync(g => g.Id == game.Id);
+
+		Assert.IsNotNull(updatedGame);
 		Assert.AreEqual("Updated Game", updatedGame.DisplayName);
 		Assert.AreEqual("UG", updatedGame.Abbreviation);
 		Assert.AreEqual("UpdatedAlias", updatedGame.Aliases);
@@ -282,7 +276,8 @@ public class EditModelTests : BasePageModelTests
 
 		await _model.OnPost();
 
-		var createdGame = await _db.Games.SingleAsync();
+		var createdGame = await _db.Games.SingleOrDefaultAsync();
+		Assert.IsNotNull(createdGame);
 		Assert.AreEqual("GameResources/TestGame", createdGame.GameResourcesPage);
 	}
 
@@ -297,31 +292,30 @@ public class EditModelTests : BasePageModelTests
 
 		await _model.OnPost();
 
-		var createdGame = await _db.Games.SingleAsync();
+		var createdGame = await _db.Games.SingleOrDefaultAsync();
+		Assert.IsNotNull(createdGame);
 		Assert.AreEqual("Alias1,Alias2,Alias3", createdGame.Aliases);
 	}
 
 	[TestMethod]
 	public async Task OnPost_DatabaseSaveFailure_HandlesGracefully()
 	{
+		_db.CreateUpdateConflict();
 		_model.Game = new EditModel.GameEdit
 		{
 			DisplayName = "Test Game",
 			Abbreviation = "TG"
 		};
 
-		_db.CreateUpdateConflict();
-
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 	}
 
 	[TestMethod]
 	public async Task OnPostDelete_NoId_ReturnsNotFound()
 	{
 		var result = await _model.OnPostDelete();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
@@ -338,9 +332,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -349,8 +341,8 @@ public class EditModelTests : BasePageModelTests
 		var user = _db.AddUser("AdminUser").Entity;
 		AddAuthenticatedUser(_model, user, [PermissionTo.DeleteGameEntries]);
 
-		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES", DisplayName = "Nintendo Entertainment System" }).Entity;
-		var game = _db.Games.Add(new Game { DisplayName = "Game With Submissions" }).Entity;
+		var gameSystem = _db.AddGameSystem("NES").Entity;
+		var game = _db.AddGame("Game With Submissions").Entity;
 		_db.Submissions.Add(new Submission { Submitter = user, System = gameSystem, Game = game });
 		await _db.SaveChangesAsync();
 
@@ -358,13 +350,8 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirectResult.PageName);
-
-		// Game should still exist
-		var existingGame = await _db.Games.SingleOrDefaultAsync(g => g.Id == game.Id);
-		Assert.IsNotNull(existingGame);
+		AssertRedirect(result, "List");
+		Assert.IsTrue(_db.Games.Any(g => g.Id == game.Id));
 	}
 
 	[TestMethod]
@@ -372,7 +359,6 @@ public class EditModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("AdminUser").Entity;
 		AddAuthenticatedUser(_model, user, [PermissionTo.DeleteGameEntries]);
-
 		_model.Id = 999;
 
 		var result = await _model.OnPostDelete();
@@ -393,12 +379,8 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirectResult.PageName);
-
-		var deletedGame = await _db.Games.SingleOrDefaultAsync(g => g.Id == game.Id);
-		Assert.IsNull(deletedGame);
+		AssertRedirect(result, "List");
+		Assert.IsFalse(_db.Games.Any(g => g.Id == game.Id));
 	}
 
 	[TestMethod]
@@ -418,12 +400,5 @@ public class EditModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void EditModel_HasRequirePermissionAttribute()
-	{
-		var type = typeof(EditModel);
-		var attribute = type.GetCustomAttributes(typeof(RequirePermissionAttribute), false).FirstOrDefault() as RequirePermissionAttribute;
-
-		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.CatalogMovies));
-	}
+	public void RequiresPermission() => AssertHasPermission(typeof(EditModel), PermissionTo.CatalogMovies);
 }

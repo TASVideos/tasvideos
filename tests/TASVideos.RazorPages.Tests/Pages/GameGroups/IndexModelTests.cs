@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.GameGroups;
 
 namespace TASVideos.RazorPages.Tests.Pages.GameGroups;
@@ -21,9 +20,7 @@ public class IndexModelTests : BasePageModelTests
 	public async Task OnGet_GameGroupNotFoundById_ReturnsNotFound()
 	{
 		_model.Id = "999";
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
@@ -31,23 +28,16 @@ public class IndexModelTests : BasePageModelTests
 	public async Task OnGet_GameGroupNotFoundByAbbreviation_ReturnsNotFound()
 	{
 		_model.Id = "NONEXISTENT";
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
 	public async Task OnGet_ValidGameGroupById_LoadsGameGroupData()
 	{
-		var gameGroup = _db.GameGroups.Add(new GameGroup
-		{
-			Name = "Test Series",
-			Abbreviation = "TS",
-			Description = "A test game series"
-		}).Entity;
+		var gameGroup = _db.AddGameGroup("Test Series", "TS").Entity;
+		gameGroup.Description = "A test game series";
 		await _db.SaveChangesAsync();
-
 		_model.Id = gameGroup.Id.ToString();
 
 		var result = await _model.OnGet();
@@ -62,22 +52,10 @@ public class IndexModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnGet_GameGroupWithGames_LoadsGameCount()
 	{
-		var gameGroup = _db.GameGroups.Add(new GameGroup
-		{
-			Name = "Test Series",
-			Abbreviation = "TS"
-		}).Entity;
-
-		var game1 = _db.Games.Add(new Game
-		{
-			DisplayName = "Test Game 1",
-			GameResourcesPage = "GameResources/TestGame1"
-		}).Entity;
-
-		var game2 = _db.Games.Add(new Game
-		{
-			DisplayName = "Test Game 2"
-		}).Entity;
+		var gameGroup = _db.AddGameGroup("Test Series", "TS").Entity;
+		var game1 = _db.AddGame("Test Game 1").Entity;
+		game1.GameResourcesPage = "GameResources/TestGame1";
+		var game2 = _db.AddGame("Test Game 2").Entity;
 
 		_db.GameGameGroups.Add(new GameGameGroup { Game = game1, GameGroup = gameGroup });
 		_db.GameGameGroups.Add(new GameGameGroup { Game = game2, GameGroup = gameGroup });
@@ -104,11 +82,5 @@ public class IndexModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public void IndexModel_HasAllowAnonymousAttribute()
-	{
-		var type = typeof(IndexModel);
-		var attribute = type.GetCustomAttributes(typeof(AllowAnonymousAttribute), false).FirstOrDefault();
-
-		Assert.IsNotNull(attribute);
-	}
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(IndexModel));
 }

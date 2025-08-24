@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
 using TASVideos.Pages.Users;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
-using static TASVideos.RazorPages.Tests.RazorTestHelpers;
 
 namespace TASVideos.RazorPages.Tests.Pages.Users;
 
@@ -46,12 +44,8 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_UserNotFound_ReturnsNotFound()
 	{
-		var user = _db.AddUser("TestUser").Entity;
-		AddAuthenticatedUser(_model, user, [PermissionTo.EditUsers]);
 		_model.Id = 999; // Non-existent user ID
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -112,9 +106,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGetUnlock_UserNotFound_ReturnsNotFound()
 	{
 		_model.Id = 999; // Non-existent user ID
-
 		var result = await _model.OnGetUnlock();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -202,9 +194,7 @@ public class EditModelTests : TestDbBase
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("/Account/AccessDenied", redirectResult.PageName);
+		AssertAccessDenied(result);
 	}
 
 	[TestMethod]
@@ -446,6 +436,9 @@ public class EditModelTests : TestDbBase
 		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
 		await _userMaintenanceLogger.DidNotReceive().Log(targetUser.Id, Arg.Any<string>(), authenticatedUser.Id);
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(EditModel), PermissionTo.EditUsers);
 
 	#endregion
 }

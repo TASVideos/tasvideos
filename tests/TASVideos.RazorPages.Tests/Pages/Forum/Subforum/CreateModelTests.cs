@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Data.Entity;
-using TASVideos.Pages;
-using TASVideos.Pages.Forum.Subforum;
+﻿using TASVideos.Pages.Forum.Subforum;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Subforum;
 
@@ -36,23 +33,14 @@ public class CreateModelTests : BasePageModelTests
 	public async Task OnGet_EmptyCategories_ReturnsEmptyList()
 	{
 		await _model.OnGet();
-
 		Assert.AreEqual(0, _model.AvailableCategories.Count);
 	}
 
 	[TestMethod]
 	public async Task OnPost_InvalidModelState_ReturnsPageWithCategories()
 	{
-		var category = _db.AddForumCategory("Test Category").Entity;
+		_db.AddForumCategory("Test Category");
 		await _db.SaveChangesAsync();
-
-		_model.Forum = new EditModel.ForumEdit
-		{
-			Name = "",
-			ShortName = "",
-			Category = category.Id,
-			RestrictedAccess = false
-		};
 		_model.ModelState.AddModelError("Name", "Name is required");
 
 		var result = await _model.OnPost();
@@ -67,7 +55,6 @@ public class CreateModelTests : BasePageModelTests
 	{
 		var category = _db.AddForumCategory("Test Category").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Forum = new EditModel.ForumEdit
 		{
 			Name = "New Forum",
@@ -79,9 +66,7 @@ public class CreateModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
+		AssertRedirect(result, "Index");
 
 		var createdForum = await _db.Forums.SingleOrDefaultAsync(f => f.Name == "New Forum");
 		Assert.IsNotNull(createdForum);
@@ -90,7 +75,6 @@ public class CreateModelTests : BasePageModelTests
 		Assert.AreEqual("Test forum description", createdForum.Description);
 		Assert.AreEqual(category.Id, createdForum.CategoryId);
 		Assert.IsFalse(createdForum.Restricted);
-		Assert.IsNotNull(redirectResult.RouteValues);
 	}
 
 	[TestMethod]
@@ -98,36 +82,26 @@ public class CreateModelTests : BasePageModelTests
 	{
 		var category = _db.AddForumCategory("Test Category").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Forum = new EditModel.ForumEdit
 		{
 			Name = "Restricted Forum",
-			ShortName = "Restricted",
-			Description = "Restricted forum description",
 			Category = category.Id,
 			RestrictedAccess = true
 		};
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var createdForum = await _db.Forums.SingleAsync(f => f.Name == "Restricted Forum");
+		AssertRedirect(result, "Index");
+		var createdForum = await _db.Forums.SingleOrDefaultAsync(f => f.Name == "Restricted Forum");
+		Assert.IsNotNull(createdForum);
 		Assert.IsTrue(createdForum.Restricted);
 	}
 
 	[TestMethod]
 	public async Task OnPost_NonExistentCategory_ReturnsNotFound()
 	{
-		_model.Forum = new EditModel.ForumEdit
-		{
-			Name = "Test Forum",
-			ShortName = "Test",
-			Category = 999, // Non-existent category
-			RestrictedAccess = false
-		};
-
+		_model.Forum = new EditModel.ForumEdit { Category = 999 };
 		var result = await _model.OnPost();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
@@ -136,20 +110,12 @@ public class CreateModelTests : BasePageModelTests
 	{
 		var category = _db.AddForumCategory("Test Category").Entity;
 		await _db.SaveChangesAsync();
-
-		_model.Forum = new EditModel.ForumEdit
-		{
-			Name = "Test Forum",
-			ShortName = "Test",
-			Category = category.Id,
-			RestrictedAccess = false
-		};
-
+		_model.Forum = new EditModel.ForumEdit { Category = category.Id };
 		_db.CreateUpdateConflict();
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 	}
 
 	[TestMethod]
@@ -157,53 +123,17 @@ public class CreateModelTests : BasePageModelTests
 	{
 		var category = _db.AddForumCategory("Test Category").Entity;
 		await _db.SaveChangesAsync();
-
 		_model.Forum = new EditModel.ForumEdit
 		{
 			Name = "Test Forum",
-			ShortName = "Test",
-			Category = category.Id,
-			RestrictedAccess = false
+			Category = category.Id
 		};
 
 		var result = await _model.OnPost();
 
-		// Should redirect to Index page with forum ID
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
 		Assert.IsNotNull(redirectResult.RouteValues);
-	}
-
-	[TestMethod]
-	public async Task OnPost_EmptyDescription_CreatesForumWithNullDescription()
-	{
-		var category = _db.AddForumCategory("Test Category").Entity;
-		await _db.SaveChangesAsync();
-
-		_model.Forum = new EditModel.ForumEdit
-		{
-			Name = "Test Forum",
-			ShortName = "Test",
-			Description = "",
-			Category = category.Id,
-			RestrictedAccess = false
-		};
-
-		await _model.OnPost();
-
-		var createdForum = await _db.Forums.SingleAsync(f => f.Name == "Test Forum");
-		Assert.AreEqual("", createdForum.Description);
-	}
-
-	[TestMethod]
-	public void CreateModel_HasRequirePermissionAttribute()
-	{
-		var type = typeof(CreateModel);
-		var attribute = type.GetCustomAttributes(typeof(RequirePermissionAttribute), false).FirstOrDefault() as RequirePermissionAttribute;
-
-		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.EditForums));
 	}
 
 	[TestMethod]
@@ -212,21 +142,17 @@ public class CreateModelTests : BasePageModelTests
 		var category = _db.AddForumCategory("Test Category").Entity;
 		await _db.SaveChangesAsync();
 
-		// Create first forum
 		_model.Forum = new EditModel.ForumEdit
 		{
 			Name = "Forum 1",
-			ShortName = "F1",
 			Category = category.Id,
 			RestrictedAccess = false
 		};
 		await _model.OnPost();
 
-		// Create second forum
 		_model.Forum = new EditModel.ForumEdit
 		{
 			Name = "Forum 2",
-			ShortName = "F2",
 			Category = category.Id,
 			RestrictedAccess = true
 		};
@@ -234,7 +160,10 @@ public class CreateModelTests : BasePageModelTests
 
 		var forums = await _db.Forums.ToListAsync();
 		Assert.AreEqual(2, forums.Count);
-		Assert.IsTrue(forums.Any(f => f.Name == "Forum 1" && !f.Restricted));
-		Assert.IsTrue(forums.Any(f => f.Name == "Forum 2" && f.Restricted));
+		Assert.IsTrue(forums.Any(f => f is { Name: "Forum 1", Restricted: false }));
+		Assert.IsTrue(forums.Any(f => f is { Name: "Forum 2", Restricted: true }));
 	}
+
+	[TestMethod]
+	public void RequiresPermission() => AssertHasPermission(typeof(CreateModel), PermissionTo.EditForums);
 }

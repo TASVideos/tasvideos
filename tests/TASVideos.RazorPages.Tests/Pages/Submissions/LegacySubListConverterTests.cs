@@ -1,5 +1,4 @@
-﻿using TASVideos.Data.Entity;
-using TASVideos.Pages.Submissions;
+﻿using TASVideos.Pages.Submissions;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;

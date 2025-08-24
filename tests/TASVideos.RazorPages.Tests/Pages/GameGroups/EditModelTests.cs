@@ -1,8 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity;
+﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Game;
-using TASVideos.Pages;
 using TASVideos.Pages.GameGroups;
 using TASVideos.Services;
 
@@ -27,23 +24,16 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnGet_NonExistentGameGroup_ReturnsNotFound()
 	{
 		_model.Id = 999;
-
 		var result = await _model.OnGet();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
 	public async Task OnGet_ExistingGameGroup_LoadsGameGroupData()
 	{
-		var gameGroup = _db.GameGroups.Add(new GameGroup
-		{
-			Name = "Test Series",
-			Abbreviation = "TS",
-			Description = "A test game series"
-		}).Entity;
+		var gameGroup = _db.AddGameGroup("Test Series", "TS").Entity;
+		gameGroup.Description = "A test game series";
 		await _db.SaveChangesAsync();
-
 		_model.Id = gameGroup.Id;
 
 		var result = await _model.OnGet();
@@ -62,7 +52,6 @@ public class EditModelTests : BasePageModelTests
 		var game = _db.AddGame("Test Game").Entity;
 		_db.GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = gameGroup });
 		await _db.SaveChangesAsync();
-
 		_model.Id = gameGroup.Id;
 
 		await _model.OnGet();
@@ -74,18 +63,23 @@ public class EditModelTests : BasePageModelTests
 	public async Task OnPost_InvalidModelState_ReturnsPage()
 	{
 		_model.ModelState.AddModelError("Name", "Name is required");
-
 		var result = await _model.OnPost();
-
 		Assert.IsInstanceOfType(result, typeof(PageResult));
+	}
+
+	[TestMethod]
+	public async Task OnPost_GameGroupNotFound_ReturnsNotFound()
+	{
+		_model.Id = 999;
+		var result = await _model.OnPost();
+		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
 	[TestMethod]
 	public async Task OnPost_DuplicateAbbreviation_AddsModelError()
 	{
-		_db.GameGroups.Add(new GameGroup { Name = "Existing Group", Abbreviation = "EG" });
+		_db.AddGameGroup("Existing Group", "EG");
 		await _db.SaveChangesAsync();
-
 		_model.Name = "New Group";
 		_model.Abbreviation = "EG"; // Same as existing
 
@@ -104,10 +98,7 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("Index", redirectResult.PageName);
-
+		AssertRedirect(result, "Index");
 		var createdGameGroup = await _db.GameGroups.SingleOrDefaultAsync(gg => gg.Name == "New Game Series");
 		Assert.IsNotNull(createdGameGroup);
 		Assert.AreEqual("New Game Series", createdGameGroup.Name);
@@ -133,9 +124,10 @@ public class EditModelTests : BasePageModelTests
 
 		var result = await _model.OnPost();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 
-		var updatedGameGroup = await _db.GameGroups.SingleAsync(gg => gg.Id == gameGroup.Id);
+		var updatedGameGroup = await _db.GameGroups.SingleOrDefaultAsync(gg => gg.Id == gameGroup.Id);
+		Assert.IsNotNull(updatedGameGroup);
 		Assert.AreEqual("Updated Series", updatedGameGroup.Name);
 		Assert.AreEqual("US", updatedGameGroup.Abbreviation);
 		Assert.AreEqual("Updated description", updatedGameGroup.Description);
@@ -144,33 +136,17 @@ public class EditModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
-	public async Task OnPost_GameGroupNotFound_ReturnsNotFound()
-	{
-		_model.Id = 999;
-		_model.Name = "Test Name";
-
-		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-	}
-
-	[TestMethod]
 	public async Task OnPost_DatabaseSaveFailure_HandlesGracefully()
 	{
-		_model.Name = "Test Group";
-
 		_db.CreateUpdateConflict();
-
 		var result = await _model.OnPost();
-
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
+		AssertRedirect(result, "Index");
 	}
 
 	[TestMethod]
 	public async Task OnPostDelete_NoId_ReturnsNotFound()
 	{
 		var result = await _model.OnPostDelete();
-
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
 	}
 
@@ -181,18 +157,12 @@ public class EditModelTests : BasePageModelTests
 		var game = _db.AddGame("Test Game").Entity;
 		_db.GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = gameGroup });
 		await _db.SaveChangesAsync();
-
 		_model.Id = gameGroup.Id;
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirectResult.PageName);
-
-		// Game group should still exist
-		var existingGameGroup = await _db.GameGroups.SingleOrDefaultAsync(gg => gg.Id == gameGroup.Id);
-		Assert.IsNotNull(existingGameGroup);
+		AssertRedirect(result, "List");
+		Assert.IsTrue(_db.GameGroups.Any(gg => gg.Id == gameGroup.Id)); // Game group should still exist
 	}
 
 	[TestMethod]
@@ -201,26 +171,14 @@ public class EditModelTests : BasePageModelTests
 		var gameGroup = _db.AddGameGroup("Deletable Group").Entity;
 		await _db.SaveChangesAsync();
 		_db.ChangeTracker.Clear();
-
 		_model.Id = gameGroup.Id;
 
 		var result = await _model.OnPostDelete();
 
-		Assert.IsInstanceOfType(result, typeof(RedirectToPageResult));
-		var redirectResult = (RedirectToPageResult)result;
-		Assert.AreEqual("List", redirectResult.PageName);
-
-		var deletedGameGroup = await _db.GameGroups.SingleOrDefaultAsync(gg => gg.Id == gameGroup.Id);
-		Assert.IsNull(deletedGameGroup);
+		AssertRedirect(result, "List");
+		Assert.IsFalse(_db.GameGroups.Any(gg => gg.Id == gameGroup.Id));
 	}
 
 	[TestMethod]
-	public void EditModel_HasRequirePermissionAttribute()
-	{
-		var type = typeof(EditModel);
-		var attribute = type.GetCustomAttributes(typeof(RequirePermissionAttribute), false).FirstOrDefault() as RequirePermissionAttribute;
-
-		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(PermissionTo.CatalogMovies));
-	}
+	public void RequiresPermission() => AssertHasPermission(typeof(EditModel), PermissionTo.CatalogMovies);
 }
