@@ -66,5 +66,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Api\TASVideos.Api.csproj" />
+		<InternalsVisibleTo Include="TASVideos.RazorPages.Tests" />
 	</ItemGroup>
 </Project>
