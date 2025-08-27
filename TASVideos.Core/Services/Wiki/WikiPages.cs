@@ -627,23 +627,16 @@ public static class WikiPageExtensions
 	/// <example>SystemPage("Languages") will return the page System/Languages</example>
 	/// </summary>
 	public static ValueTask<IWikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
-	{
-		return pages.Page("System/" + pageName, revisionId);
-	}
+		=> pages.Page("System/" + pageName, revisionId);
 
 	public static async Task<IWikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
-	{
-		return await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
-	}
+		=> await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
 
 	public static async Task<IWikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
-	{
-		return await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
-	}
+		=> await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
 
 	public static WikiPage ToWikiPage(this WikiCreateRequest revision, User user)
-	{
-		return new WikiPage
+		=> new()
 		{
 			PageName = revision.PageName,
 			Markup = revision.Markup,
@@ -654,11 +647,9 @@ public static class WikiPageExtensions
 			Revision = 1,
 			Author = user
 		};
-	}
 
 	public static IQueryable<WikiResult> ToWikiResult(this IQueryable<WikiPage> query)
-	{
-		return query.Select(wp => new WikiResult
+		=> query.Select(wp => new WikiResult
 		{
 			PageName = wp.PageName,
 			Markup = wp.Markup,
@@ -671,7 +662,6 @@ public static class WikiPageExtensions
 			ChildId = wp.ChildId,
 			IsDeleted = wp.IsDeleted
 		});
-	}
 
 	public static WikiResult ToWikiResult(this WikiPage wp)
 	{

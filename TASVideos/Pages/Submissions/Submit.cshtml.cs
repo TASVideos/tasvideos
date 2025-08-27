@@ -135,7 +135,7 @@ public class SubmitModel(
 
 	public async Task<IActionResult> OnGetPrefillText()
 	{
-		var page = await wikiPages.Page("System/SubmissionDefaultMessage");
+		var page = await wikiPages.Page(SystemWiki.SubmissionDefaultMessage);
 		return Json(new { text = page?.Markup });
 	}
 

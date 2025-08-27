@@ -135,7 +135,7 @@ internal class UserFiles(
 
 	internal async Task<IEnumerable<string>> SupportedSupplementalFiles()
 	{
-		var page = await wikiPages.SystemPage(SupplementalUserFileExtensionsPage);
+		var page = await wikiPages.Page(SystemWiki.SupplementalUserFileExtensionsPage);
 		if (page is null)
 		{
 			return [];
