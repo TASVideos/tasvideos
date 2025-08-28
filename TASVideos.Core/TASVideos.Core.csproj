@@ -14,5 +14,6 @@
 		<ProjectReference Include="..\TASVideos.ForumEngine\TASVideos.ForumEngine.csproj" />
 		<ProjectReference Include="..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
 		<ProjectReference Include="..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />
+		<InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
 	</ItemGroup>
 </Project>
