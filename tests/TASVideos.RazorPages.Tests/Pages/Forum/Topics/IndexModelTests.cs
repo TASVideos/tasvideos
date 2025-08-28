@@ -33,7 +33,8 @@ public class IndexModelTests : BasePageModelTests
 			forumService,
 			pointsService,
 			_topicWatcher,
-			_wikiPages)
+			_wikiPages,
+			new NullMetrics())
 		{
 			PageContext = TestPageContext()
 		};
