@@ -622,13 +622,6 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 
 public static class WikiPageExtensions
 {
-	/// <summary>
-	/// Returns a System page with the given page suffix
-	/// <example>SystemPage("Languages") will return the page System/Languages</example>
-	/// </summary>
-	public static ValueTask<IWikiPage?> SystemPage(this IWikiPages pages, string pageName, int? revisionId = null)
-		=> pages.Page("System/" + pageName, revisionId);
-
 	public static async Task<IWikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
 		=> await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
 

@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace TASVideos.Core;
+namespace TASVideos;
 
 public static class PostGroups
 {
