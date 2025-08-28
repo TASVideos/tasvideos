@@ -15,4 +15,13 @@ public class TasprojParserTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
+
+	[TestMethod]
+	public async Task TopLevelDir()
+	{
+		var result = await _tasprojParser.Parse(Embedded("TopLevelDir.tasproj", out var length), length);
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("snes", result.SystemCode);
+		AssertNoErrors(result);
+	}
 }
