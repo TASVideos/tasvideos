@@ -217,6 +217,30 @@ public class Bk2ParserTests : BaseParserTests
 	}
 
 	[TestMethod]
+	public async Task SubSnesNtsc_UsesCycleCount()
+	{
+		var result = await _bk2Parser.Parse(Embedded("SubSnesNtsc.bk2", out var length), length);
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("snes", result.SystemCode);
+		Assert.AreEqual(10, result.Frames);
+		Assert.AreEqual(10 / (3523196 / 21477272.7272727), result.FrameRateOverride); // roughly 60
+		Assert.AreEqual(3523196, result.CycleCount);
+		AssertNoWarningsOrErrors(result);
+	}
+
+	[TestMethod]
+	public async Task SubSnesPal_UsesCycleCount()
+	{
+		var result = await _bk2Parser.Parse(Embedded("SubSnesPal.bk2", out var length), length);
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("snes", result.SystemCode);
+		Assert.AreEqual(10, result.Frames);
+		Assert.AreEqual(10 / (4137012 / 21281370.0), result.FrameRateOverride); // roughly 60
+		Assert.AreEqual(4137012, result.CycleCount);
+		AssertNoWarningsOrErrors(result);
+	}
+
+	[TestMethod]
 	public async Task Gambatte_UsesCycleCount()
 	{
 		var result = await _bk2Parser.Parse(Embedded("Gambatte-CycleCount.bk2", out var length), length);
