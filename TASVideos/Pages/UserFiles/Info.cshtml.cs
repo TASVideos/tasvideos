@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class InfoModel(ApplicationDbContext db, IFileService fileService) : BasePageModel
+public class InfoModel(ApplicationDbContext db, IFileService fileService, ITASVideosMetrics metrics) : BasePageModel
 {
 	private static readonly string[] PreviewableExtensions = ["avs", "bat", "cfg", "conf", "lua", "sh", "uae", "wch", "xml"];
 
@@ -23,6 +23,8 @@ public class InfoModel(ApplicationDbContext db, IFileService fileService) : Base
 		{
 			return NotFound();
 		}
+
+		metrics.AddUserFileView(Id);
 
 		UserFile = file;
 

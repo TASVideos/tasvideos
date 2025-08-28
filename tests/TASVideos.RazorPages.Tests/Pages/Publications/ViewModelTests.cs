@@ -1,5 +1,6 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Pages.Publications;
+using TASVideos.Services;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
@@ -13,7 +14,7 @@ public class ViewModelModelTests : TestDbBase
 	public ViewModelModelTests()
 	{
 		_fileService = Substitute.For<IFileService>();
-		_page = new ViewModel(_db, _fileService);
+		_page = new ViewModel(_db, _fileService, new NullMetrics());
 	}
 
 	[TestMethod]

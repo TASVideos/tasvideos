@@ -12,7 +12,8 @@ public class IndexModel(
 	IForumService forumService,
 	IPointsService pointsService,
 	ITopicWatcher topicWatcher,
-	IWikiPages wikiPages)
+	IWikiPages wikiPages,
+	ITASVideosMetrics metrics)
 	: BaseForumModel
 {
 	[FromRoute]
@@ -84,6 +85,8 @@ public class IndexModel(
 		{
 			return NotFound();
 		}
+
+		metrics.AddForumTopicView(Id);
 
 		Topic = topic;
 		if (Topic.SubmissionId.HasValue)
