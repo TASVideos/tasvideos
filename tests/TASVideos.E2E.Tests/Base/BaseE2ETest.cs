@@ -66,7 +66,7 @@ public abstract class BaseE2ETest : PageTest
 
 		var actualText = await element.TextContentAsync();
 		Assert.IsTrue(
-			actualText?.Contains(expectedText) == true,
+			actualText?.Contains(expectedText),
 			$"Element with selector '{selector}' should contain text '{expectedText}' but contains '{actualText}'{(elementDescription != null ? $" ({elementDescription})" : "")}");
 	}
 
@@ -76,5 +76,19 @@ public abstract class BaseE2ETest : PageTest
 		{
 			Timeout = Settings.RequestTimeoutMs
 		});
+	}
+
+	protected async Task AssertNoErrorIndicators()
+	{
+		var content = await Page.TextContentAsync("body");
+
+		var errorIndicators = new[] { "error", "does not yet exist" };
+
+		foreach (var errorIndicator in errorIndicators)
+		{
+			Assert.IsFalse(
+				content?.Contains(errorIndicator, StringComparison.OrdinalIgnoreCase),
+				$"Page should not contain error indicator '{errorIndicator}' but page content does");
+		}
 	}
 }
