@@ -253,6 +253,11 @@ public class IndexModel(
 
 	public async Task<IActionResult> OnPostLock(string topicTitle, bool locked)
 	{
+		if (!User.Has(PermissionTo.LockTopics))
+		{
+			return AccessDenied();
+		}
+
 		var topic = await db.ForumTopics
 			.Include(t => t.Forum)
 			.ExcludeRestricted(UserCanSeeRestricted)

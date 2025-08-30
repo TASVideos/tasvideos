@@ -180,12 +180,19 @@ public class IndexModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
+	public async Task OnPostLock_NoPermission_ReturnsAccessDenied()
+	{
+		var result = await _model.OnPostLock("Test Topic", true);
+		AssertAccessDenied(result);
+	}
+
+	[TestMethod]
 	public async Task OnPostLock_NonExistentTopic_ReturnsNotFound()
 	{
+		var user = _db.AddUserWithRole("TestUser").Entity;
+		AddAuthenticatedUser(_model, user, [PermissionTo.LockTopics]);
 		_model.Id = 999;
-
 		var result = await _model.OnPostLock("Test Topic", true);
-
 		AssertForumNotFound(result);
 	}
 
