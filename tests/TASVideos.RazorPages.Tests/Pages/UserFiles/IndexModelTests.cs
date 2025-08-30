@@ -343,7 +343,120 @@ public class IndexModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnPostEditComment_WithPermission_UpdatesComment()
+	public async Task OnPostEditComment_AsOwner_UpdatesComment()
+	{
+		var user = _db.AddUser("User").Entity;
+		var userFile = _db.UserFiles.Add(new UserFile
+		{
+			Id = 1,
+			FileName = "test.bk2",
+			Title = "Test Movie",
+			Author = user
+		}).Entity;
+
+		var comment = _db.UserFileComments.Add(new UserFileComment
+		{
+			Id = 1,
+			UserFileId = userFile.Id,
+			Text = "Original comment",
+			User = user,
+			CreationTimeStamp = DateTime.UtcNow
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_page, user, [PermissionTo.CreateForumPosts]);
+
+		var result = await _page.OnPostEditComment(comment.Id, "Updated comment");
+
+		AssertRedirectHome(result);
+		var updatedComment = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNotNull(updatedComment);
+		Assert.AreEqual("Updated comment", updatedComment.Text);
+		await _publisher.Received(1).Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostEditComment_WithEditPermission_UpdatesComment()
+	{
+		var author = _db.AddUser("Author").Entity;
+		var editor = _db.AddUser("Editor").Entity;
+		var userFile = _db.UserFiles.Add(new UserFile
+		{
+			Id = 1,
+			FileName = "test.bk2",
+			Title = "Test Movie",
+			Author = author
+		}).Entity;
+
+		var comment = _db.UserFileComments.Add(new UserFileComment
+		{
+			Id = 1,
+			UserFileId = userFile.Id,
+			Text = "Original comment",
+			User = author,
+			CreationTimeStamp = DateTime.UtcNow
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_page, editor, [PermissionTo.CreateForumPosts, PermissionTo.EditUsersForumPosts]);
+
+		var result = await _page.OnPostEditComment(comment.Id, "Updated by editor");
+
+		AssertRedirectHome(result);
+		var updatedComment = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNotNull(updatedComment);
+		Assert.AreEqual("Updated by editor", updatedComment.Text);
+		await _publisher.Received(1).Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostEditComment_WithoutPermission_DoesNotUpdate()
+	{
+		var author = _db.AddUser("Author").Entity;
+		var otherUser = _db.AddUser("OtherUser").Entity;
+		var userFile = _db.UserFiles.Add(new UserFile
+		{
+			Id = 1,
+			FileName = "test.bk2",
+			Title = "Test Movie",
+			Author = author
+		}).Entity;
+
+		var comment = _db.UserFileComments.Add(new UserFileComment
+		{
+			Id = 1,
+			UserFileId = userFile.Id,
+			Text = "Original comment",
+			User = author,
+			CreationTimeStamp = DateTime.UtcNow
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_page, otherUser, [PermissionTo.CreateForumPosts]); // Has CreateForumPosts but not edit permission
+
+		var result = await _page.OnPostEditComment(comment.Id, "Malicious edit attempt");
+
+		AssertRedirectHome(result);
+		var unchangedComment = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNotNull(unchangedComment);
+		Assert.AreEqual("Original comment", unchangedComment.Text); // Should remain unchanged
+		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostEditComment_NonExistentComment_DoesNotThrow()
+	{
+		var user = _db.AddUser("User").Entity;
+		AddAuthenticatedUser(_page, user, [PermissionTo.CreateForumPosts]);
+
+		var result = await _page.OnPostEditComment(999, "Some comment"); // Non-existent ID
+
+		AssertRedirectHome(result);
+		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostEditComment_EmptyComment_DoesNotUpdate()
 	{
 		var user = _db.AddUser("User").Entity;
 		var userFile = _db.UserFiles.Add(new UserFile
@@ -368,13 +481,158 @@ public class IndexModelTests : TestDbBase
 
 		AddAuthenticatedUser(_page, user, [PermissionTo.CreateForumPosts]);
 
-		var result = await _page.OnPostEditComment(comment.Id, "Updated comment");
+		var result = await _page.OnPostEditComment(comment.Id, "");
 
 		AssertRedirectHome(result);
-		var updatedComment = await _db.UserFileComments.FindAsync(comment.Id);
-		Assert.IsNotNull(updatedComment);
-		Assert.AreEqual("Updated comment", updatedComment.Text);
+		var unchangedComment = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNotNull(unchangedComment);
+		Assert.AreEqual("Original comment", unchangedComment.Text); // Should remain unchanged
+		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteComment_AsOwner_DeletesComment()
+	{
+		var user = _db.AddUser("User").Entity;
+		var userFile = _db.UserFiles.Add(new UserFile
+		{
+			Id = 1,
+			FileName = "test.bk2",
+			Title = "Test Movie",
+			Author = user
+		}).Entity;
+
+		var comment = _db.UserFileComments.Add(new UserFileComment
+		{
+			Id = 1,
+			UserFileId = userFile.Id,
+			Text = "Comment to delete",
+			User = user,
+			CreationTimeStamp = DateTime.UtcNow
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_page, user, [PermissionTo.CreateForumPosts]);
+
+		var result = await _page.OnPostDeleteComment(comment.Id);
+
+		AssertRedirectHome(result);
+		var deletedComment = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNull(deletedComment);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteComment_WithDeletePermission_DeletesComment()
+	{
+		var author = _db.AddUser("Author").Entity;
+		var moderator = _db.AddUser("Moderator").Entity;
+		var userFile = _db.UserFiles.Add(new UserFile
+		{
+			Id = 1,
+			FileName = "test.bk2",
+			Title = "Test Movie",
+			Author = author
+		}).Entity;
+
+		var comment = _db.UserFileComments.Add(new UserFileComment
+		{
+			Id = 1,
+			UserFileId = userFile.Id,
+			Text = "Comment to delete",
+			User = author,
+			CreationTimeStamp = DateTime.UtcNow
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_page, moderator, [PermissionTo.CreateForumPosts, PermissionTo.DeleteForumPosts]);
+
+		var result = await _page.OnPostDeleteComment(comment.Id);
+
+		AssertRedirectHome(result);
+		var deletedComment = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNull(deletedComment);
+		await _publisher.Received(1).Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteComment_WithoutPermission_DoesNotDelete()
+	{
+		var author = _db.AddUser("Author").Entity;
+		var otherUser = _db.AddUser("OtherUser").Entity;
+		var userFile = _db.UserFiles.Add(new UserFile
+		{
+			Id = 1,
+			FileName = "test.bk2",
+			Title = "Test Movie",
+			Author = author
+		}).Entity;
+
+		var comment = _db.UserFileComments.Add(new UserFileComment
+		{
+			Id = 1,
+			UserFileId = userFile.Id,
+			Text = "Comment to delete",
+			User = author,
+			CreationTimeStamp = DateTime.UtcNow
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_page, otherUser, [PermissionTo.CreateForumPosts]); // Has CreateForumPosts but not delete permission
+
+		var result = await _page.OnPostDeleteComment(comment.Id);
+
+		AssertRedirectHome(result);
+		var commentStillExists = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNotNull(commentStillExists);
+		Assert.AreEqual("Comment to delete", commentStillExists.Text);
+		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteComment_NonExistentComment_DoesNotThrow()
+	{
+		var user = _db.AddUser("User").Entity;
+		AddAuthenticatedUser(_page, user, [PermissionTo.CreateForumPosts]);
+
+		var result = await _page.OnPostDeleteComment(999); // Non-existent ID
+
+		AssertRedirectHome(result);
+		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
+	}
+
+	[TestMethod]
+	public async Task OnPostDeleteComment_WithoutCreateForumPostsPermission_DoesNotDelete()
+	{
+		var user = _db.AddUser("User").Entity;
+		var userFile = _db.UserFiles.Add(new UserFile
+		{
+			Id = 1,
+			FileName = "test.bk2",
+			Title = "Test Movie",
+			Author = user,
+			Hidden = false,
+			Class = UserFileClass.Movie
+		}).Entity;
+
+		var comment = _db.UserFileComments.Add(new UserFileComment
+		{
+			Id = 1,
+			UserFileId = userFile.Id,
+			Text = "Comment to delete",
+			User = user,
+			CreationTimeStamp = DateTime.UtcNow
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_page, user, []); // No permissions at all
+
+		var result = await _page.OnPostDeleteComment(comment.Id);
+
+		AssertRedirectHome(result);
+		var commentStillExists = await _db.UserFileComments.FindAsync(comment.Id);
+		Assert.IsNotNull(commentStillExists);
+		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
 	}
 
 	[TestMethod]
