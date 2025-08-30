@@ -162,4 +162,7 @@ public class ListModelTests : TestDbBase
 		Assert.IsTrue(_model.GroupList.Any(g => g.Value == "Series 1"));
 		Assert.IsTrue(_model.GroupList.Any(g => g.Value == "Series 2"));
 	}
+
+	[TestMethod]
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(ListModel));
 }

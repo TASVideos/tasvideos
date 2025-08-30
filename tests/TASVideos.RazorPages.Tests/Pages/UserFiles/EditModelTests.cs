@@ -18,9 +18,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_WithNonExistentId_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -447,4 +445,7 @@ public class EditModelTests : TestDbBase
 		Assert.AreEqual(system.Id, _page.UserFile.System);
 		Assert.AreEqual(game.Id, _page.UserFile.Game);
 	}
+
+	[TestMethod]
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(EditModel));
 }

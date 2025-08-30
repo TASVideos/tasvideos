@@ -104,6 +104,9 @@ public class MoodReportModelTests : TestDbBase
 		Assert.AreEqual(0, _model.MoodyUsers.Count);
 	}
 
+	[TestMethod]
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(MoodReportModel));
+
 	private void CreateUsersWithMoodAvatars()
 	{
 		var role = CreateRoleWithMoodAvatarPermission();
