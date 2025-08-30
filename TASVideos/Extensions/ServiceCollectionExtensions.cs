@@ -76,7 +76,29 @@ public static class ServiceCollectionExtensions
 			{
 				options.Level = CompressionLevel.Fastest;
 			});
-			services.AddResponseCompression(options => options.EnableForHttps = true);
+		}
+
+		if (settings.EnableZstdCompression)
+		{
+			services.Configure<ZstdCompressionProvider.ZstdOptions>(options => options.Level = 5);
+		}
+
+		if (settings.EnableGzipCompression || settings.EnableZstdCompression)
+		{
+			services.AddResponseCompression(options =>
+			{
+				if (settings.EnableGzipCompression)
+				{
+					options.Providers.Add<GzipCompressionProvider>();
+				}
+
+				if (settings.EnableZstdCompression)
+				{
+					options.Providers.Add<ZstdCompressionProvider>();
+				}
+
+				options.EnableForHttps = true;
+			});
 		}
 
 		return services;

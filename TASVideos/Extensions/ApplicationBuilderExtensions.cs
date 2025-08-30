@@ -25,7 +25,7 @@ public static class ApplicationBuilderExtensions
 
 	public static IApplicationBuilder UseGzipCompression(this IApplicationBuilder app, AppSettings settings)
 	{
-		if (settings.EnableGzipCompression)
+		if (settings.EnableGzipCompression || settings.EnableZstdCompression)
 		{
 			app.UseResponseCompression();
 		}
