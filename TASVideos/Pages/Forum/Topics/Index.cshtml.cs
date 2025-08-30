@@ -7,7 +7,6 @@ namespace TASVideos.Pages.Forum.Topics;
 [RequireCurrentPermissions]
 public class IndexModel(
 	ApplicationDbContext db,
-	IExternalMediaPublisher publisher,
 	IAwards awards,
 	IForumService forumService,
 	IPointsService pointsService,
@@ -38,16 +37,14 @@ public class IndexModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		int? userId = User.IsLoggedIn()
-			? User.GetUserId()
-			: null;
+		var userId = User.GetUserId();
 
 		var topic = await db.ForumTopics
 			.ExcludeRestricted(UserCanSeeRestricted)
 			.Select(t => new TopicDisplay
 			{
 				Id = t.Id,
-				IsWatching = userId.HasValue && t.ForumTopicWatches.Any(ft => ft.UserId == userId.Value),
+				IsWatching = userId > 0 && t.ForumTopicWatches.Any(ft => ft.UserId == userId),
 				Title = t.Title,
 				Restricted = t.Forum!.Restricted,
 				ForumId = t.ForumId,
@@ -182,9 +179,9 @@ public class IndexModel(
 				|| (isOwnPost && isOpenTopic && post.IsLastPost);
 		}
 
-		if (userId.HasValue)
+		if (userId > 0)
 		{
-			await topicWatcher.MarkSeen(Id, userId.Value);
+			await topicWatcher.MarkSeen(Id, userId);
 		}
 
 		SaveActivity = (await forumService.GetPostActivityOfSubforum(Topic.ForumId)).ContainsKey(Id);
@@ -251,7 +248,7 @@ public class IndexModel(
 		return RedirectToTopic();
 	}
 
-	public async Task<IActionResult> OnPostLock(string topicTitle, bool locked)
+	public async Task<IActionResult> OnPostLock(string topicTitle, bool locked, [FromServices] IExternalMediaPublisher publisher)
 	{
 		if (!User.Has(PermissionTo.LockTopics))
 		{
