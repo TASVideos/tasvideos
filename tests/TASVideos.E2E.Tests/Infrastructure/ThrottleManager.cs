@@ -2,7 +2,7 @@
 
 namespace TASVideos.E2E.Tests.Infrastructure;
 
-public class ThrottleManager
+public static class ThrottleManager
 {
 	private static readonly object Lock = new();
 	private static DateTime _lastRequestTime = DateTime.MinValue;
@@ -14,6 +14,7 @@ public class ThrottleManager
 			return;
 		}
 
+		TimeSpan remainingWait;
 		lock (Lock)
 		{
 			var timeSinceLastRequest = DateTime.UtcNow - _lastRequestTime;
@@ -21,11 +22,19 @@ public class ThrottleManager
 
 			if (timeSinceLastRequest < minimumDelay)
 			{
-				var remainingWait = minimumDelay - timeSinceLastRequest;
-				Thread.Sleep(remainingWait);
+				remainingWait = minimumDelay - timeSinceLastRequest;
+			}
+			else
+			{
+				remainingWait = TimeSpan.Zero;
 			}
 
 			_lastRequestTime = DateTime.UtcNow;
+		}
+
+		if (remainingWait > TimeSpan.Zero)
+		{
+			await Task.Delay(remainingWait);
 		}
 	}
 

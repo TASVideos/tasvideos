@@ -3,10 +3,9 @@ using TASVideos.E2E.Tests.Infrastructure;
 
 namespace TASVideos.E2E.Tests.Base;
 
-[TestClass]
 public class BaseE2ETest : PageTest
 {
-	protected E2ESettings Settings { get; private set; } = null!;
+	private E2ESettings Settings { get; set; } = null!;
 
 	[TestInitialize]
 	public virtual async Task SetupAsync()
