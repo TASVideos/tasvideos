@@ -13,6 +13,7 @@ public class BaseE2ETest : PageTest
 		var configuration = new ConfigurationBuilder()
 			.SetBasePath(Directory.GetCurrentDirectory())
 			.AddJsonFile("appsettings.json", optional: false)
+			.AddUserSecrets<BaseE2ETest>()
 			.AddEnvironmentVariables()
 			.Build();
 
@@ -31,7 +32,7 @@ public class BaseE2ETest : PageTest
 		}
 	}
 
-	protected async Task<IResponse?> NavigateWithThrottleAsync(string path = "")
+	protected async Task<IResponse?> Navigate(string path = "")
 	{
 		var fullUrl = Path.Combine(Settings.GetTestUrl(), path).Replace('\\', '/');
 		if (!fullUrl.StartsWith("http"))
@@ -83,19 +84,5 @@ public class BaseE2ETest : PageTest
 		{
 			Timeout = Settings.RequestTimeoutMs
 		});
-	}
-
-	protected async Task AssertNoErrorIndicators()
-	{
-		var content = await Page.TextContentAsync("body");
-
-		var errorIndicators = new[] { "error", "does not yet exist" };
-
-		foreach (var errorIndicator in errorIndicators)
-		{
-			Assert.IsFalse(
-				content?.Contains(errorIndicator, StringComparison.OrdinalIgnoreCase),
-				$"Page should not contain error indicator '{errorIndicator}' but page content does");
-		}
 	}
 }

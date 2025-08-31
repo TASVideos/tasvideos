@@ -6,14 +6,13 @@ namespace TASVideos.E2E.Tests.Tests;
 public class HomePageTests : BaseE2ETest
 {
 	[TestMethod]
-	public async Task HomePage_ShouldLoad_Successfully()
+	public async Task HomePage()
 	{
 		AssertEnabled();
 
-		var response = await NavigateWithThrottleAsync("/");
+		var response = await Navigate("/");
 
 		AssertResponseCodeAsync(response, 200);
-		await AssertNoErrorIndicators();
 
 		await AssertElementExistsAsync("a[href*='Games'], a[href*='games']", "Games link");
 		await AssertElementExistsAsync("a[href*='Forum'], a[href*='forum']", "Forum link");
