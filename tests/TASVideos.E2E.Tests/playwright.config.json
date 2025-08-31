@@ -1,0 +1,28 @@
+{
+	"use": {
+		"headless": true,
+		"viewport": { "width": 1280, "height": 720 },
+		"ignoreHTTPSErrors": true,
+		"video": "retain-on-failure",
+		"screenshot": "only-on-failure",
+		"trace": "retain-on-failure"
+	},
+	"timeout": 30000,
+	"expect": {
+		"timeout": 10000
+	},
+	"retries": 1,
+	"workers": 1,
+	"reporter": [
+		["list"],
+		["html", { "outputFolder": "playwright-report" }]
+	],
+	"outputDir": "test-results",
+	"globalTimeout": 600000,
+	"projects": [
+		{
+			"name": "chromium",
+			"use": { "browserName": "chromium" }
+		}
+	]
+}
