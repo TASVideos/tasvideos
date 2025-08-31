@@ -4,7 +4,7 @@ using TASVideos.E2E.Tests.Infrastructure;
 namespace TASVideos.E2E.Tests.Base;
 
 [TestClass]
-public abstract class BaseE2ETest : PageTest
+public class BaseE2ETest : PageTest
 {
 	protected E2ESettings Settings { get; private set; } = null!;
 
@@ -22,6 +22,14 @@ public abstract class BaseE2ETest : PageTest
 		Context.SetDefaultTimeout(Settings.RequestTimeoutMs);
 
 		await ThrottleManager.WaitIfNeededAsync(Settings);
+	}
+
+	protected void AssertEnabled()
+	{
+		if (!Settings.IsEnabled())
+		{
+			Assert.Inconclusive("E2E tests not enabled");
+		}
 	}
 
 	protected async Task<IResponse?> NavigateWithThrottleAsync(string path = "")

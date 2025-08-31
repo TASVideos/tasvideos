@@ -4,7 +4,7 @@ public class E2ESettings
 {
 	public string BaseUrl { get; set; } = "https://tasvideos.org";
 	public string LocalUrl { get; set; } = "https://localhost:44385";
-	public string Environment { get; set; } = "Production";
+	public string Environment { get; set; } = "Disabled";
 	public int ThrottleDelayMs { get; set; } = 2000;
 	public int RequestTimeoutMs { get; set; } = 30000;
 	public int MaxRetryAttempts { get; set; } = 3;
@@ -18,4 +18,8 @@ public class E2ESettings
 
 	public bool IsProductionEnvironment()
 		=> Environment.Equals("Production", StringComparison.OrdinalIgnoreCase);
+
+	public bool IsEnabled()
+		=> Environment.Equals("Production", StringComparison.OrdinalIgnoreCase)
+		|| Environment.Equals("Local", StringComparison.OrdinalIgnoreCase);
 }

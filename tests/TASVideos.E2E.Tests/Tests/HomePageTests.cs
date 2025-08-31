@@ -8,7 +8,8 @@ public class HomePageTests : BaseE2ETest
 	[TestMethod]
 	public async Task HomePage_ShouldLoad_Successfully()
 	{
-		Assert.IsFalse(true);
+		AssertEnabled();
+
 		var response = await NavigateWithThrottleAsync("/");
 
 		AssertResponseCodeAsync(response, 200);
