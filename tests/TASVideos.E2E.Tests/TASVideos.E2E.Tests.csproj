@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup Condition="'$(RunE2ETests)' != 'true'">
+    <PropertyGroup>
+        <EnableMSTestRunner>false</EnableMSTestRunner>
         <IsTestProject>false</IsTestProject>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(RunTheThings)' == 'true'">
+        <IsTestProject>true</IsTestProject>
+        <EnableMSTestRunner>true</EnableMSTestRunner>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -8,7 +13,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<IsPackable>false</IsPackable>
-		<IsTestProject>true</IsTestProject>
 	</PropertyGroup>
 
 	<ItemGroup>

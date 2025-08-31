@@ -40,7 +40,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal --collect:'Code Coverage'
+      run: dotnet test --no-restore --verbosity normal --collect:'Code Coverage' --filter:"FullyQualifiedName!~TASVideos.E2E.Tests"
     - name: Generate coverage report
       run: |
         dotnet tool run dotnet-coverage merge 'tests/*/TestResults/**/*.coverage' --output-format=cobertura --output=merged.coverage.xml
