@@ -28,5 +28,9 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
+	</ItemGroup>
+
 	<Import Project="..\UseMSTest.props" />
 </Project>

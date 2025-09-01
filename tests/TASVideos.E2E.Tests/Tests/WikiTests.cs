@@ -12,7 +12,7 @@ public class WikiTests : BaseE2ETest
 
 		var response = await Navigate("/EmulatorResources");
 		AssertResponseCodeAsync(response, 200);
-		await AssertElementExistsAsync("article ");
+		await AssertElementExistsAsync("article");
 	}
 
 	[TestMethod]
