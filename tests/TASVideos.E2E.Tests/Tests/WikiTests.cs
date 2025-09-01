@@ -1,4 +1,5 @@
-﻿using TASVideos.E2E.Tests.Base;
+﻿using TASVideos;
+using TASVideos.E2E.Tests.Base;
 
 namespace TASVideos.E2E.Tests.Tests;
 
@@ -65,5 +66,19 @@ public class WikiTests : BaseE2ETest
 		var content = await Page.TextContentAsync("body");
 		Assert.IsNotNull(content);
 		Assert.IsTrue(content.Contains("The page you were looking for does not yet exist"));
+	}
+
+	[TestMethod]
+	public async Task SystemWikiPages_MustExist()
+	{
+		AssertEnabled();
+
+		foreach (var page in SystemWiki.Pages)
+		{
+			var response = await Navigate(page);
+			AssertResponseCodeAsync(response, 200);
+			await AssertElementExistsAsync("article");
+			await AssertElementContainsTextAsync("h3", "This page is a system resource");
+		}
 	}
 }

@@ -30,6 +30,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\TASVideos.Parsers\TASVideos.MovieParsers.csproj" />
+        <ProjectReference Include="..\..\TASVideos.Core\TASVideos.Core.csproj" />
 	</ItemGroup>
 
 	<Import Project="..\UseMSTest.props" />
