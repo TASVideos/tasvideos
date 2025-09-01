@@ -1,4 +1,6 @@
 ﻿using System.IO.Compression;
+using System.Net;
+using System.Text.Json;
 using TASVideos.E2E.Tests.Configuration;
 using TASVideos.E2E.Tests.Infrastructure;
 using TASVideos.MovieParsers;
@@ -8,6 +10,11 @@ namespace TASVideos.E2E.Tests.Base;
 
 public class BaseE2ETest : PageTest
 {
+	private static JsonSerializerOptions _serializerOptions = new()
+	{
+		PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+	};
+
 	private E2ESettings Settings { get; set; } = null!;
 
 	[TestInitialize]
@@ -196,7 +203,7 @@ public class BaseE2ETest : PageTest
 			await using var fileStream = File.OpenRead(downloadPath);
 			return await movieParser.ParseZip(fileStream);
 		}
-		catch(Exception ex)
+		catch (Exception ex)
 		{
 			Assert.Fail($"Error parsing movie file: {ex.Message}");
 			return null;
@@ -215,5 +222,40 @@ public class BaseE2ETest : PageTest
 		Assert.IsNotNull(response);
 		AssertResponseCode(response, 200);
 		Assert.IsTrue(response.Url.ToLower().Contains("account/accessdenied"), $"Expected Url Account/AccessDenied but got {response.Url}");
+	}
+
+	protected async Task<IAPIResponse> ApiGetAsync(string endpoint)
+	{
+		var baseUrl = Settings.GetTestUrl().TrimEnd('/');
+		return await Page.APIRequest.GetAsync($"{baseUrl}/api/v1/{endpoint.TrimStart('/')}");
+	}
+
+	protected static void AssertApiOk(IAPIResponse? response)
+	{
+		Assert.IsNotNull(response);
+		Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+	}
+
+	protected static void AssertApiNotFound(IAPIResponse? response)
+	{
+		Assert.IsNotNull(response);
+		Assert.AreEqual((int)HttpStatusCode.NotFound, response.Status);
+	}
+
+	protected static void AssertApiBadRequest(IAPIResponse? response)
+	{
+		Assert.IsNotNull(response);
+		Assert.AreEqual((int)HttpStatusCode.BadRequest, response.Status);
+	}
+
+	protected static async Task<T> Deserialize<T>(IAPIResponse response)
+	{
+		var content = await response.TextAsync();
+		Assert.IsFalse(string.IsNullOrEmpty(content));
+
+		var obj = JsonSerializer.Deserialize<T>(content, _serializerOptions);
+		Assert.IsNotNull(obj);
+
+		return obj;
 	}
 }
