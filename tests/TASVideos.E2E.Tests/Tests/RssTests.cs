@@ -17,7 +17,7 @@ public class RssTests : BaseE2ETest
 
 		var response = await Navigate($"/{feed}.rss");
 
-		AssertResponseCodeAsync(response, 200);
+		AssertResponseCode(response, 200);
 
 		var contentType = response!.Headers["content-type"];
 		Assert.IsTrue(

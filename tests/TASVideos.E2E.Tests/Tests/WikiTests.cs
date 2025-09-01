@@ -1,5 +1,4 @@
-﻿using TASVideos;
-using TASVideos.E2E.Tests.Base;
+﻿using TASVideos.E2E.Tests.Base;
 
 namespace TASVideos.E2E.Tests.Tests;
 
@@ -12,8 +11,14 @@ public class WikiTests : BaseE2ETest
 		AssertEnabled();
 
 		var response = await Navigate("/EmulatorResources");
-		AssertResponseCodeAsync(response, 200);
-		await AssertElementExistsAsync("article");
+		AssertResponseCode(response, 200);
+		await AssertElementExists("article");
+		await AssertHasLink("Wiki/PageHistory?path=EmulatorResources");
+		await AssertHasLink("Wiki/Referrers?path=EmulatorResources");
+		await AssertHasLink("Wiki/ViewSource?path=EmulatorResources");
+		await AssertDoesNotHaveLink("Wiki/Edit", "permission locked edit");
+		await AssertDoesNotHaveLink("Wiki/Move", "permission locked move");
+		await AssertDoesNotHaveLink("Wiki/DeletedPages/DeletePage", "permission locked delete");
 	}
 
 	[TestMethod]
@@ -21,7 +26,9 @@ public class WikiTests : BaseE2ETest
 	{
 		AssertEnabled();
 		var response = await Navigate("/Wiki/PageHistory?path=EmulatorResources");
-		AssertResponseCodeAsync(response, 200);
+		AssertResponseCode(response, 200);
+		await AssertDoesNotHaveLink("Wiki/DeletedPages/DeleteRevision", "permission locked delete");
+		await AssertDoesNotHaveLink("Wiki/Edit/RollbackLatest", "permission locked rollback");
 	}
 
 	[TestMethod]
@@ -29,7 +36,9 @@ public class WikiTests : BaseE2ETest
 	{
 		AssertEnabled();
 		var response = await Navigate("/Wiki/PageHistory?path=EmulatorResources&latest=true");
-		AssertResponseCodeAsync(response, 200);
+		AssertResponseCode(response, 200);
+		await AssertDoesNotHaveLink("Wiki/DeletedPages/DeleteRevision", "permission locked delete");
+		await AssertDoesNotHaveLink("Wiki/Edit/RollbackLatest", "permission locked rollback");
 	}
 
 	[TestMethod]
@@ -37,7 +46,7 @@ public class WikiTests : BaseE2ETest
 	{
 		AssertEnabled();
 		var response = await Navigate("/Wiki/Referrers?path=EmulatorResources");
-		AssertResponseCodeAsync(response, 200);
+		AssertResponseCode(response, 200);
 	}
 
 	[TestMethod]
@@ -45,7 +54,7 @@ public class WikiTests : BaseE2ETest
 	{
 		AssertEnabled();
 		var response = await Navigate("/Wiki/ViewSource?path=EmulatorResources");
-		AssertResponseCodeAsync(response, 200);
+		AssertResponseCode(response, 200);
 	}
 
 	[TestMethod]
@@ -53,7 +62,7 @@ public class WikiTests : BaseE2ETest
 	{
 		AssertEnabled();
 		var response = await Navigate("/Wiki/Preview?Id=EmulatorResources");
-		AssertResponseCodeAsync(response, 200);
+		AssertResponseCode(response, 200);
 	}
 
 	[TestMethod]
@@ -62,7 +71,7 @@ public class WikiTests : BaseE2ETest
 		AssertEnabled();
 
 		var response = await Navigate("/DoesNotExist");
-		AssertResponseCodeAsync(response, 404);
+		AssertResponseCode(response, 404);
 		var content = await Page.TextContentAsync("body");
 		Assert.IsNotNull(content);
 		Assert.IsTrue(content.Contains("The page you were looking for does not yet exist"));
@@ -76,9 +85,41 @@ public class WikiTests : BaseE2ETest
 		foreach (var page in SystemWiki.Pages)
 		{
 			var response = await Navigate(page);
-			AssertResponseCodeAsync(response, 200);
-			await AssertElementExistsAsync("article");
-			await AssertElementContainsTextAsync("h3", "This page is a system resource");
+			AssertResponseCode(response, 200);
+			await AssertElementExists("article");
+			await AssertElementContainsText("h3", "This page is a system resource");
 		}
+	}
+
+	[TestMethod]
+	[DataRow("/Wiki/Edit?path=EmulatorResources")]
+	[DataRow("/Wiki/Move?path=EmulatorResources")]
+	[DataRow("/Wiki/DeletedPages")]
+	public async Task PermissionLockedPages_RedirectToLogin(string path)
+	{
+		AssertEnabled();
+
+		var response = await Navigate(path);
+		AssertRedirectToLogin(response);
+	}
+
+	[TestMethod]
+	public async Task LegacyPrivileges_Redirects()
+	{
+		AssertEnabled();
+
+		var response = await Navigate("privileges");
+		AssertRedirectToLogin(response);
+	}
+
+	[TestMethod]
+	[DataRow("privileges")]
+	[DataRow("submitmovie")]
+	public async Task Legacy_Redirects(string legacy)
+	{
+		AssertEnabled();
+
+		var response = await Navigate(legacy);
+		AssertRedirectToLogin(response);
 	}
 }

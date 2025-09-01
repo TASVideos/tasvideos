@@ -12,10 +12,10 @@ public class HomePageTests : BaseE2ETest
 
 		var response = await Navigate("/");
 
-		AssertResponseCodeAsync(response, 200);
+		AssertResponseCode(response, 200);
 
-		await AssertElementExistsAsync("a[href*='Games'], a[href*='games']", "Games link");
-		await AssertElementExistsAsync("a[href*='Forum'], a[href*='forum']", "Forum link");
+		await AssertHasLink("Games");
+		await AssertHasLink("Forum");
 
 		var pageTitle = await Page.TitleAsync();
 		Assert.IsTrue(

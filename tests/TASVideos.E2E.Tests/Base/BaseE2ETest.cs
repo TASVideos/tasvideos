@@ -8,7 +8,7 @@ namespace TASVideos.E2E.Tests.Base;
 
 public class BaseE2ETest : PageTest
 {
-	protected E2ESettings Settings { get; set; } = null!;
+	private E2ESettings Settings { get; set; } = null!;
 
 	[TestInitialize]
 	public virtual async Task SetupAsync()
@@ -51,7 +51,7 @@ public class BaseE2ETest : PageTest
 			}));
 	}
 
-	protected void AssertResponseCodeAsync(IResponse? response, int expectedStatusCode)
+	protected void AssertResponseCode(IResponse? response, int expectedStatusCode)
 	{
 		Assert.IsNotNull(response, "Response should not be null");
 		Assert.AreEqual(
@@ -60,7 +60,7 @@ public class BaseE2ETest : PageTest
 			$"Expected status code {expectedStatusCode} but got {response.Status}. URL: {response.Url}");
 	}
 
-	protected async Task AssertElementExistsAsync(string selector, string? elementDescription = null)
+	protected async Task AssertElementExists(string selector, string? elementDescription = null)
 	{
 		var element = await Page.QuerySelectorAsync(selector);
 		Assert.IsNotNull(
@@ -68,7 +68,15 @@ public class BaseE2ETest : PageTest
 			$"Element with selector '{selector}' should exist{(elementDescription != null ? $" ({elementDescription})" : "")}");
 	}
 
-	protected async Task AssertElementContainsTextAsync(string selector, string expectedText, string? elementDescription = null)
+	protected async Task AssertElementDoesNotExist(string selector, string? elementDescription = null)
+	{
+		var element = await Page.QuerySelectorAsync(selector);
+		Assert.IsNull(
+			element,
+			$"Element with selector '{selector}' should NOT exist{(elementDescription != null ? $" ({elementDescription})" : "")}");
+	}
+
+	protected async Task AssertElementContainsText(string selector, string expectedText, string? elementDescription = null)
 	{
 		var element = await Page.QuerySelectorAsync(selector);
 		Assert.IsNotNull(
@@ -81,62 +89,97 @@ public class BaseE2ETest : PageTest
 			$"Element with selector '{selector}' should contain text '{expectedText}' but contains '{actualText}'{(elementDescription != null ? $" ({elementDescription})" : "")}");
 	}
 
-	protected async Task WaitForLoadStateAsync(LoadState loadState = LoadState.NetworkIdle)
+	protected async Task AssertPageTitle(string expectedText)
 	{
-		await Page.WaitForLoadStateAsync(loadState, new PageWaitForLoadStateOptions
-		{
-			Timeout = Settings.RequestTimeoutMs
-		});
+		var element = await Page.QuerySelectorAsync("h1.page-title");
+		Assert.IsNotNull(
+			element,
+			"Page Title Element with selector 'h1.page-title' should exist");
+
+		var actualText = await element.TextContentAsync();
+		Assert.IsTrue(actualText?.Contains(expectedText), $"Page title should contain {expectedText}");
 	}
 
-	protected async Task<(string DownloadPath, ZipArchive Archive)> DownloadAndValidateZipAsync(
+	protected Task AssertHasLink(string link, string description = "")
+		=> AssertElementExists($"a[href*='{link}']", description);
+
+	protected Task AssertDoesNotHaveLink(string link, string description = "")
+		=> AssertElementDoesNotExist($"a[href*='{link}']", description);
+
+	protected async Task<(string DownloadPath, string Content)> DownloadAndValidateTextFile(
 		string downloadUrl,
-		string filePrefix = "download",
-		int timeoutMs = 30000)
+		string filePrefix = "download")
 	{
 		// Set up download handling with extended timeout
 		var downloadTask = Page.WaitForDownloadAsync(new PageWaitForDownloadOptions
 		{
-			Timeout = timeoutMs
+			Timeout = 30000
 		});
 
 		// Get the base URL from settings to construct the full download URL
 		var baseUrl = Settings.GetTestUrl().TrimEnd('/');
 		var fullDownloadUrl = $"{baseUrl}/{downloadUrl.TrimStart('/')}";
 
-		// Trigger the download by navigating to the download URL
 		await Page.EvaluateAsync($"window.location.href = '{fullDownloadUrl}';");
 
-		// Wait for the download to complete
 		var download = await downloadTask;
 		Assert.IsNotNull(download, "Download should have started");
 
-		// Save to temporary file
+		var tempDir = Path.GetTempPath();
+		var downloadPath = Path.Combine(tempDir, $"{filePrefix}_{Guid.NewGuid()}");
+
+		await download.SaveAsAsync(downloadPath);
+
+		Assert.IsTrue(File.Exists(downloadPath), "Downloaded file should exist");
+
+		var fileInfo = new FileInfo(downloadPath);
+		Assert.IsTrue(fileInfo.Length > 0, "Downloaded file should not be empty");
+
+		using var sr = fileInfo.OpenText();
+		var str = await sr.ReadToEndAsync();
+
+		Assert.IsNotNull(str, "text should not be null");
+		Assert.IsNotNull(str.Length > 0, "text should not be empty");
+
+		return (downloadPath, str);
+	}
+
+	protected async Task<(string DownloadPath, ZipArchive Archive)> DownloadAndValidateZip(
+		string downloadUrl,
+		string filePrefix = "download")
+	{
+		// Set up download handling with extended timeout
+		var downloadTask = Page.WaitForDownloadAsync(new PageWaitForDownloadOptions
+		{
+			Timeout = 30000
+		});
+
+		// Get the base URL from settings to construct the full download URL
+		var baseUrl = Settings.GetTestUrl().TrimEnd('/');
+		var fullDownloadUrl = $"{baseUrl}/{downloadUrl.TrimStart('/')}";
+
+		await Page.EvaluateAsync($"window.location.href = '{fullDownloadUrl}';");
+
+		var download = await downloadTask;
+		Assert.IsNotNull(download, "Download should have started");
+
 		var tempDir = Path.GetTempPath();
 		var downloadPath = Path.Combine(tempDir, $"{filePrefix}_{Guid.NewGuid()}.zip");
 
 		await download.SaveAsAsync(downloadPath);
 
-		// Verify file exists and is not empty
 		Assert.IsTrue(File.Exists(downloadPath), "Downloaded file should exist");
+
 		var fileInfo = new FileInfo(downloadPath);
 		Assert.IsTrue(fileInfo.Length > 0, "Downloaded file should not be empty");
 
-		// Verify it's a valid ZIP file by attempting to open it
 		var archive = ZipFile.OpenRead(downloadPath);
 		Assert.IsTrue(archive.Entries.Count > 0, "ZIP file should contain at least one entry");
-
-		// Log the contents for verification
-		Console.WriteLine($"{filePrefix} ZIP file contains {archive.Entries.Count} entries:");
-		foreach (var entry in archive.Entries)
-		{
-			Console.WriteLine($"  - {entry.FullName} ({entry.Length} bytes)");
-		}
 
 		return (downloadPath, archive);
 	}
 
-	protected static void CleanupDownload(string downloadPath, ZipArchive? archive = null)
+	protected static void CleanupZipDownload(string downloadPath, ZipArchive? archive = null)
 	{
 		archive?.Dispose();
 		if (File.Exists(downloadPath))
@@ -158,5 +201,19 @@ public class BaseE2ETest : PageTest
 			Assert.Fail($"Error parsing movie file: {ex.Message}");
 			return null;
 		}
+	}
+
+	protected void AssertRedirectToLogin(IResponse? response)
+	{
+		Assert.IsNotNull(response);
+		AssertResponseCode(response, 200);
+		Assert.IsTrue(response.Url.ToLower().Contains("account/login?returnurl="), $"Expected Url Account/Login but got {response.Url}");
+	}
+
+	protected void AssertAccessDenied(IResponse? response)
+	{
+		Assert.IsNotNull(response);
+		AssertResponseCode(response, 200);
+		Assert.IsTrue(response.Url.ToLower().Contains("account/accessdenied"), $"Expected Url Account/AccessDenied but got {response.Url}");
 	}
 }
