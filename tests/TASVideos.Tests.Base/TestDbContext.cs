@@ -133,6 +133,26 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return user;
 	}
 
+	public void AssignUserToRole(User user, Role role)
+		=> UserRoles.Add(new UserRole { User = user, Role = role });
+
+	public EntityEntry<Role> AddRoleWithPermission(PermissionTo permission)
+	{
+		var role = Roles.Add(new Role
+		{
+			Name = permission.ToString(),
+			NormalizedName = permission.ToString().ToUpper()
+		});
+
+		RolePermission.Add(new RolePermission
+		{
+			Role = role.Entity,
+			PermissionId = permission
+		});
+
+		return role;
+	}
+
 	public EntityEntry<Submission> CreatePublishableSubmission()
 	{
 		var entry = AddAndSaveUnpublishedSubmission();
