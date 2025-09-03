@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text.Json;
 using TASVideos.Api.Responses;
 using TASVideos.Data.Entity;

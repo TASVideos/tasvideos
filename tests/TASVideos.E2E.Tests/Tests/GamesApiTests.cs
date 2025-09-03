@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using TASVideos.Api.Responses;
 using TASVideos.E2E.Tests.Base;
 

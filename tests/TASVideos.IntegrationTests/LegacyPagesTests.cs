@@ -1,15 +1,10 @@
-﻿using TASVideos.Data.Entity;
-
-namespace TASVideos.IntegrationTests;
+﻿namespace TASVideos.IntegrationTests;
 
 [TestClass]
 #pragma warning disable CA1001
 public class LegacyPagesTests
 #pragma warning restore CA1001
 {
-	private const string PageName = "Welcome";
-	private const string Markup = "Welcome to TASVideos";
-
 	private TASVideosWebApplicationFactory _factory = null!;
 	private HttpClient _client = null!;
 
