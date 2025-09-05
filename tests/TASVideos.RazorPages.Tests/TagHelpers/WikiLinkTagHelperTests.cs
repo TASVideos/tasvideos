@@ -1,35 +1,22 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using TASVideos.TagHelpers;
+﻿using TASVideos.TagHelpers;
 
-namespace TASVideos.RazorPages.Tests.TagHelpers;
+namespace TASVideos.RazorPages.Tests;
 
 [TestClass]
-public class WikiLinkTagHelperTests
+public sealed class WikiLinkTagHelperTests : LinkTagHelperTestsBase
 {
+	[DataRow("GameResources/NES/SuperMarioBros", "unused", """<a href="/GameResources/NES/SuperMarioBros">GameResources/NES/SuperMarioBros</a>""")]
+	[DataRow("WelcomeToTASVideos", "unused", """<a href="/WelcomeToTASVideos">WelcomeToTASVideos</a>""")]
 	[TestMethod]
-	public void WikiLinkTagHelper_Process_RendersCorrectHtml()
+	public async Task WikiLinkTagHelper_Process_RendersCorrectHtml(string wikiPageName, string label, string expected)
 	{
-		var tagHelper = new WikiLinkTagHelper { PageName = "GameResources/NES/SuperMarioBros" };
-		var context = new TagHelperContext(
-			allAttributes: [],
-			items: new Dictionary<object, object>(),
-			uniqueId: "test");
-		var output = new TagHelperOutput(
-			tagName: "wiki-link",
-			attributes: [],
-			getChildContentAsync: (_, _) =>
-				Task.FromResult<TagHelperContent>(new DefaultTagHelperContent()));
+		var tagHelper = new WikiLinkTagHelper { PageName = wikiPageName };
+		var context = GetHelperContext();
+		var output = GetOutputObj(contentsUnencoded: label, tagName: "wiki-link");
 
-		tagHelper.Process(context, output);
+		await tagHelper.ProcessAsync(context, output);
 
 		var htmlString = GetHtmlString(output);
-		Assert.AreEqual("<a href=\"/GameResources/NES/SuperMarioBros\">GameResources/NES/SuperMarioBros</a>", htmlString);
-	}
-
-	private static string GetHtmlString(TagHelperOutput output)
-	{
-		using var writer = new StringWriter();
-		output.WriteTo(writer, NullHtmlEncoder.Default);
-		return writer.ToString();
+		Assert.AreEqual(expected, htmlString);
 	}
 }
