@@ -298,7 +298,7 @@ public class EditModel(
 		submission.GenerateTitle();
 		await db.SaveChangesAsync();
 
-		var topic = await db.ForumTopics.FirstOrDefaultAsync(t => t.Id == submission.TopicId);
+		var topic = await db.ForumTopics.FindAsync(submission.TopicId);
 		if (topic is not null)
 		{
 			topic.Title = submission.Title;
