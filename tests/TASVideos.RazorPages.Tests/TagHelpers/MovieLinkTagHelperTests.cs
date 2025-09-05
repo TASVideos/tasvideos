@@ -1,4 +1,5 @@
-﻿using TASVideos.TagHelpers;
+﻿using TASVideos.Extensions;
+using TASVideos.TagHelpers;
 
 namespace TASVideos.RazorPages.Tests;
 
@@ -9,7 +10,8 @@ public class MovieLinkTagHelperTests : LinkTagHelperTestsBase
 	[TestMethod]
 	public async Task TestPubLinkHelper(int id, string label, string expected)
 	{
-		PubLinkTagHelper pubLinkHelper = new() { Id = id };
+		var generator = TestableHtmlGenerator.Create(out var viewCtx, ServiceCollectionExtensions.Aliases.First(kvp => kvp.Key is "/Publications/View"));
+		PubLinkTagHelper pubLinkHelper = new(generator) { Id = id, ViewContext = viewCtx };
 		var output = GetOutputObj(contentsUnencoded: label, tagName: "pub-link");
 		await pubLinkHelper.ProcessAsync(GetHelperContext(), output);
 		Assert.AreEqual(expected, GetHtmlString(output));
@@ -19,7 +21,8 @@ public class MovieLinkTagHelperTests : LinkTagHelperTestsBase
 	[TestMethod]
 	public async Task TestSubLinkHelper(int id, string label, string expected)
 	{
-		SubLinkTagHelper subLinkHelper = new() { Id = id };
+		var generator = TestableHtmlGenerator.Create(out var viewCtx, ServiceCollectionExtensions.Aliases.First(kvp => kvp.Key is "/Submissions/View"));
+		SubLinkTagHelper subLinkHelper = new(generator) { Id = id, ViewContext = viewCtx };
 		var output = GetOutputObj(contentsUnencoded: label, tagName: "sub-link");
 		await subLinkHelper.ProcessAsync(GetHelperContext(), output);
 		Assert.AreEqual(expected, GetHtmlString(output));
