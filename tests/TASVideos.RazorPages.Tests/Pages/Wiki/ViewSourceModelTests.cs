@@ -55,7 +55,7 @@ public class ViewSourceModelTests : BasePageModelTests
 	{
 		const string path = "ExistingPage";
 		var mockPage = Substitute.For<IWikiPage>();
-		_mockWikiPages.Page(path, null).Returns(mockPage);
+		_mockWikiPages.Page(path).Returns(mockPage);
 
 		_model.Path = path;
 

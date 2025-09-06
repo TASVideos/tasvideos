@@ -180,7 +180,7 @@ public class EditModelTests : TestDbBase
 			.Returns([SubmissionStatus.New, SubmissionStatus.Cancelled]);
 
 		var wikiPage = new WikiResult { Markup = "Updated markup" };
-		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(Task.FromResult((IWikiPage?)wikiPage));
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
 
 		var result = await _page.OnPost();
 
@@ -290,8 +290,8 @@ public class EditModelTests : TestDbBase
 			PageName = $"Submission/{submission.Id}",
 			Markup = "Original markup"
 		};
-		_wikiPages.Page($"InternalSystem/SubmissionContent/S{submission.Id}").Returns(ValueTask.FromResult((IWikiPage?)wikiPage));
-		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(Task.FromResult((IWikiPage?)wikiPage));
+		_wikiPages.Page($"InternalSystem/SubmissionContent/S{submission.Id}").Returns(wikiPage);
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
 
 		var actual = await _page.OnGetClaimForJudging();
 

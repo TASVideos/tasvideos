@@ -11,7 +11,7 @@ public class PublicationHistoryTests : TestDbBase
 	#region Test Data
 	private readonly PublicationClass _publicationClass = new() { Id = 1 };
 	private readonly GameSystem _gameSystem = new() { Id = 1 };
-	private Game Smb => new() { Id = 1, DisplayName = "Smb" };
+	private static Game Smb => new() { Id = 1, DisplayName = "Smb" };
 	private GameVersion SmbGameVersion => new() { GameId = Smb.Id, System = _gameSystem };
 	private Game Smb2j => new() { Id = 2, DisplayName = "Smb2j" };
 	private GameVersion Smb2jGameVersion => new() { GameId = Smb2j.Id, System = _gameSystem };

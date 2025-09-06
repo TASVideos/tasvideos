@@ -52,24 +52,24 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 
 	public async override Task<IDbContextTransaction> BeginTransactionAsync()
 	{
-		if (_transaction is null)
+		if (_transaction is not null)
 		{
-			_transaction = await Database.BeginTransactionAsync();
-			return _transaction;
+			return new TestDbContextTransaction(); // Send a fake one to the actual test code
 		}
 
-		return new TestDbContextTransaction(); // Send a fake one to the actual test code
+		_transaction = await Database.BeginTransactionAsync();
+		return _transaction;
 	}
 
 	public override IDbContextTransaction BeginTransaction()
 	{
-		if (_transaction is null)
+		if (_transaction is not null)
 		{
-			_transaction = Database.BeginTransaction();
-			return _transaction;
+			return new TestDbContextTransaction(); // Send a fake one to the actual test code
 		}
 
-		return new TestDbContextTransaction(); // Send a fake one to the actual test code
+		_transaction = Database.BeginTransaction();
+		return _transaction;
 	}
 
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

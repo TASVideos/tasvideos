@@ -1837,7 +1837,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.AreEqual("Version 2", result.Markup); // Should rollback to revision 2, not revision 1
 		Assert.AreEqual(4, result.Revision);
-		Assert.AreEqual($"Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
+		Assert.AreEqual("Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
 	}
 
 	[TestMethod]
@@ -1938,7 +1938,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.AreEqual("Version 1", result.Markup); // Should rollback to revision 1, skipping deleted revision 2
 		Assert.AreEqual(4, result.Revision);
-		Assert.AreEqual($"Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
+		Assert.AreEqual("Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
 	}
 
 	#endregion

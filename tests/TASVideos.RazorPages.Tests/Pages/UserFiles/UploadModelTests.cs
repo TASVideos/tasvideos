@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity.Game;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Services;

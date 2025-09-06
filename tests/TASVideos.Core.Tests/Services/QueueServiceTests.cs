@@ -22,9 +22,6 @@ public class QueueServiceTests : TestDbBase
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
 	private readonly IWikiPages _wikiPages;
-	private readonly IMediaFileUploader _uploader;
-	private readonly IFileService _fileService;
-	private readonly IUserManager _userManager;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -41,15 +38,15 @@ public class QueueServiceTests : TestDbBase
 		_youtubeSync = Substitute.For<IYoutubeSync>();
 		_tva = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
-		_uploader = Substitute.For<IMediaFileUploader>();
-		_fileService = Substitute.For<IFileService>();
-		_userManager = Substitute.For<IUserManager>();
+		var uploader = Substitute.For<IMediaFileUploader>();
+		var fileService = Substitute.For<IFileService>();
+		var userManager = Substitute.For<IUserManager>();
 		var settings = new AppSettings
 		{
 			MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment,
 			SubmissionRate = new() { Days = SubmissionRateDays, Submissions = SubmissionRateSubs }
 		};
-		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, _uploader, _fileService, _userManager);
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, uploader, fileService, userManager);
 	}
 
 	#region AvailableStatuses
@@ -1199,7 +1196,7 @@ public class QueueServiceTests : TestDbBase
 		const string wikiMarkup = "Test wiki page content";
 		var expectedPageName = WikiHelper.ToPublicationWikiPageName(pub.Id);
 		var wikiResult = new WikiResult { Markup = wikiMarkup };
-		_wikiPages.Page(expectedPageName, null).Returns(ValueTask.FromResult<IWikiPage?>(wikiResult));
+		_wikiPages.Page(expectedPageName).Returns(wikiResult);
 
 		var result = await _queueService.GetObsoletePublicationTags(pub.Id);
 
@@ -1209,7 +1206,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsTrue(result.Tags.Contains(tag1.Id));
 		Assert.IsTrue(result.Tags.Contains(tag2.Id));
 		Assert.AreEqual(wikiMarkup, result.Markup);
-		await _wikiPages.Received(1).Page(expectedPageName, null);
+		await _wikiPages.Received(1).Page(expectedPageName);
 	}
 
 	[TestMethod]
@@ -1223,7 +1220,7 @@ public class QueueServiceTests : TestDbBase
 		const string wikiMarkup = "Wiki content for publication without tags";
 		var expectedPageName = WikiHelper.ToPublicationWikiPageName(pub.Id);
 		var wikiResult = new WikiResult { Markup = wikiMarkup };
-		_wikiPages.Page(expectedPageName, null).Returns(ValueTask.FromResult<IWikiPage?>(wikiResult));
+		_wikiPages.Page(expectedPageName).Returns(wikiResult);
 
 		var result = await _queueService.GetObsoletePublicationTags(pub.Id);
 
@@ -1231,7 +1228,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(publicationTitle, result.Title);
 		Assert.AreEqual(0, result.Tags.Count);
 		Assert.AreEqual(wikiMarkup, result.Markup);
-		await _wikiPages.Received(1).Page(expectedPageName, null);
+		await _wikiPages.Received(1).Page(expectedPageName);
 	}
 
 	#endregion

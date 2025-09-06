@@ -97,7 +97,7 @@ public class UnpublishModelTests : TestDbBase
 
 		_page.Id = 123;
 		_page.Reason = "Test reason";
-		var errorMessage = "Cannot unpublish a publication that has awards";
+		const string errorMessage = "Cannot unpublish a publication that has awards";
 		_queueService.Unpublish(123).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotAllowed, "Test Publication", errorMessage));
 
 		var result = await _page.OnPost();
@@ -118,7 +118,7 @@ public class UnpublishModelTests : TestDbBase
 
 		_page.Id = 456;
 		_page.Reason = "Obsolete due to improved version";
-		var publicationTitle = "Super Mario Bros.";
+		const string publicationTitle = "Super Mario Bros.";
 		_queueService.Unpublish(456).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, publicationTitle, ""));
 
 		var result = await _page.OnPost();

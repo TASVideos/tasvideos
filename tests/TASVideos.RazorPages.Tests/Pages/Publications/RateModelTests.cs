@@ -158,7 +158,7 @@ public class RateModelTests : TestDbBase
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.RateMovies]);
 
-		var nullRatingJson = "null";
+		const string nullRatingJson = "null";
 		var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(nullRatingJson));
 		_page.HttpContext.Request.Body = stream;
 
