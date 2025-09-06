@@ -25,6 +25,7 @@
 		<EmbeddedResource Include="M64SampleFiles\*.m64" />
 		<EmbeddedResource Include="MarSampleFiles\*.mar" />
 		<EmbeddedResource Include="OmrSampleFiles\*.omr" />
+		<EmbeddedResource Include="P2m2SampleFiles\*.p2m2" />
 		<EmbeddedResource Include="TasprojSampleFiles\*.tasproj" />
 		<EmbeddedResource Include="VbmSampleFiles\*.vbm" />
 		<EmbeddedResource Include="WtfSampleFiles\*.wtf" />
