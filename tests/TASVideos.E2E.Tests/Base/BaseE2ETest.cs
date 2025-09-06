@@ -10,7 +10,7 @@ namespace TASVideos.E2E.Tests.Base;
 
 public class BaseE2ETest : PageTest
 {
-	private static JsonSerializerOptions _serializerOptions = new()
+	private static readonly JsonSerializerOptions SerializerOptions = new()
 	{
 		PropertyNamingPolicy = JsonNamingPolicy.CamelCase
 	};
@@ -58,7 +58,7 @@ public class BaseE2ETest : PageTest
 			}));
 	}
 
-	protected void AssertResponseCode(IResponse? response, int expectedStatusCode)
+	protected static void AssertResponseCode(IResponse? response, int expectedStatusCode)
 	{
 		Assert.IsNotNull(response, "Response should not be null");
 		Assert.AreEqual(
@@ -210,14 +210,14 @@ public class BaseE2ETest : PageTest
 		}
 	}
 
-	protected void AssertRedirectToLogin(IResponse? response)
+	protected static void AssertRedirectToLogin(IResponse? response)
 	{
 		Assert.IsNotNull(response);
 		AssertResponseCode(response, 200);
 		Assert.IsTrue(response.Url.ToLower().Contains("account/login?returnurl="), $"Expected Url Account/Login but got {response.Url}");
 	}
 
-	protected void AssertAccessDenied(IResponse? response)
+	protected static void AssertAccessDenied(IResponse? response)
 	{
 		Assert.IsNotNull(response);
 		AssertResponseCode(response, 200);
@@ -253,7 +253,7 @@ public class BaseE2ETest : PageTest
 		var content = await response.TextAsync();
 		Assert.IsFalse(string.IsNullOrEmpty(content));
 
-		var obj = JsonSerializer.Deserialize<T>(content, _serializerOptions);
+		var obj = JsonSerializer.Deserialize<T>(content, SerializerOptions);
 		Assert.IsNotNull(obj);
 
 		return obj;

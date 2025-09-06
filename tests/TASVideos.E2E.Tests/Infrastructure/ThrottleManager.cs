@@ -38,12 +38,6 @@ public static class ThrottleManager
 		}
 	}
 
-	public static async Task ExecuteWithThrottleAsync(E2ESettings settings, Func<Task> action)
-	{
-		await WaitIfNeededAsync(settings);
-		await action();
-	}
-
 	public static async Task<T> ExecuteWithThrottleAsync<T>(E2ESettings settings, Func<Task<T>> action)
 	{
 		await WaitIfNeededAsync(settings);
