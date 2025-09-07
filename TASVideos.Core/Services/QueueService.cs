@@ -2,6 +2,8 @@
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
+using TASVideos.Data.Helpers;
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
@@ -44,12 +46,6 @@ public interface IQueueService
 	Task<UnpublishResult> Unpublish(int publicationId);
 
 	/// <summary>
-	/// Writes the parsed values from the <see cref="IParseResult"/> into submission data
-	/// </summary>
-	/// <returns>The error message if an error occurred, else an empty string</returns>
-	Task<ParsedSubmissionData?> MapParsedResult(IParseResult parseResult);
-
-	/// <summary>
 	/// Obsoletes a publication with the existing publication.
 	/// In addition, it marks and syncs the obsoleted YouTube videos
 	/// </summary>
@@ -68,6 +64,12 @@ public interface IQueueService
 	/// Returns the total numbers of submissions the given user has submitted
 	/// </summary>
 	Task<int> GetSubmissionCount(int userId);
+
+	/// <summary>
+	/// Updates a submission with the provided data
+	/// </summary>
+	/// <returns>The result of the update operation</returns>
+	Task<UpdateSubmissionResult> UpdateSubmission(UpdateSubmissionRequest request);
 
 	/// <summary>
 	/// Creates a new submission
@@ -92,7 +94,11 @@ internal class QueueService(
 	IWikiPages wikiPages,
 	IMediaFileUploader uploader,
 	IFileService fileService,
-	IUserManager userManager)
+	IUserManager userManager,
+	IMovieParser movieParser,
+	IMovieFormatDeprecator deprecator,
+	IForumService forumService,
+	ITASVideosGrue tasvideosGrue)
 	: IQueueService
 {
 	private readonly int _minimumHoursBeforeJudgment = settings.MinimumHoursBeforeJudgment;
@@ -114,9 +120,7 @@ internal class QueueService(
 		var perms = userPermissions.ToList();
 		if (perms.Contains(PermissionTo.OverrideSubmissionConstraints))
 		{
-			return Enum.GetValues<SubmissionStatus>()
-				.Except([Published]) // Published status must only be set when being published
-				.ToList();
+			return [.. Enum.GetValues<SubmissionStatus>().Except([Published])]; // Published status must only be set when being published
 		}
 
 		var list = new HashSet<SubmissionStatus>
@@ -400,74 +404,6 @@ internal class QueueService(
 		return UnpublishResult.Success(publication.Title);
 	}
 
-	public async Task<ParsedSubmissionData?> MapParsedResult(IParseResult parseResult)
-	{
-		if (!parseResult.Success)
-		{
-			throw new InvalidOperationException("Cannot mapped failed parse result.");
-		}
-
-		var system = await db.GameSystems
-			.ForCode(parseResult.SystemCode)
-			.SingleOrDefaultAsync();
-
-		if (system is null)
-		{
-			return null;
-		}
-
-		var annotations = parseResult.Annotations.CapAndEllipse(3500);
-		var warnings = parseResult.Warnings.ToList();
-		string? warningsString = null;
-		if (warnings.Any())
-		{
-			warningsString = string.Join(",", warnings).Cap(500);
-		}
-
-		GameSystemFrameRate? systemFrameRate;
-		if (parseResult.FrameRateOverride.HasValue)
-		{
-			// ReSharper disable CompareOfFloatsByEqualityOperator
-			var frameRate = await db.GameSystemFrameRates
-				.ForSystem(system.Id)
-				.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
-
-			if (frameRate is null)
-			{
-				frameRate = new GameSystemFrameRate
-				{
-					System = system,
-					FrameRate = parseResult.FrameRateOverride.Value,
-					RegionCode = parseResult.Region.ToString().ToUpper()
-				};
-				db.GameSystemFrameRates.Add(frameRate);
-				await db.SaveChangesAsync();
-			}
-
-			systemFrameRate = frameRate;
-		}
-		else
-		{
-			// SingleOrDefault should work here because the only time there could be more than one for a system and region are formats that return a framerate override
-			// Those systems should never hit this code block.  But just in case.
-			systemFrameRate = await db.GameSystemFrameRates
-				.ForSystem(system.Id)
-				.ForRegion(parseResult.Region.ToString().ToUpper())
-				.FirstOrDefaultAsync();
-		}
-
-		return new ParsedSubmissionData(
-			(int)parseResult.StartType,
-			parseResult.Frames,
-			parseResult.RerecordCount,
-			parseResult.FileExtension,
-			system,
-			parseResult.CycleCount,
-			annotations,
-			warningsString,
-			systemFrameRate);
-	}
-
 	public async Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId)
 	{
 		var toObsolete = await db.Publications
@@ -530,6 +466,203 @@ internal class QueueService(
 
 	public async Task<int> GetSubmissionCount(int userId)
 		=> await db.Submissions.CountAsync(s => s.SubmitterId == userId);
+
+	public async Task<UpdateSubmissionResult> UpdateSubmission(UpdateSubmissionRequest request)
+	{
+		var submission = await db.Submissions
+			.Include(s => s.SubmissionAuthors)
+			.ThenInclude(sa => sa.Author)
+			.Include(s => s.System)
+			.Include(s => s.SystemFrameRate)
+			.Include(s => s.Game)
+			.Include(s => s.GameVersion)
+			.Include(s => s.GameGoal)
+			.Include(gg => gg.GameGoal)
+			.Include(s => s.Topic)
+			.Include(s => s.Judge)
+			.Include(s => s.Publisher)
+			.SingleOrDefaultAsync(s => s.Id == request.SubmissionId);
+
+		if (submission is null)
+		{
+			return UpdateSubmissionResult.Error("Submission not found");
+		}
+
+		if (request.ReplaceMovieFile is not null)
+		{
+			var (parseResult, movieFileBytes) = await ParseMovieFile(request.ReplaceMovieFile);
+			if (!parseResult.Success)
+			{
+				return UpdateSubmissionResult.Error("Movie file parsing failed");
+			}
+
+			var deprecated = await deprecator.IsDeprecated("." + parseResult.FileExtension);
+			if (deprecated)
+			{
+				return UpdateSubmissionResult.Error($".{parseResult.FileExtension} is no longer submittable");
+			}
+
+			var mapResult = await MapParsedResult(parseResult);
+			if (mapResult is null)
+			{
+				return UpdateSubmissionResult.Error($"Unknown system type of {parseResult.SystemCode}");
+			}
+
+			submission.MovieStartType = mapResult.MovieStartType;
+			submission.Frames = mapResult.Frames;
+			submission.RerecordCount = mapResult.RerecordCount;
+			submission.MovieExtension = mapResult.MovieExtension;
+			submission.System = mapResult.System;
+			submission.CycleCount = mapResult.CycleCount;
+			submission.Annotations = mapResult.Annotations;
+			submission.Warnings = mapResult.Warnings;
+			submission.SystemFrameRate = mapResult.SystemFrameRate;
+
+			submission.MovieFile = movieFileBytes;
+			submission.SyncedOn = null;
+			submission.SyncedByUserId = null;
+
+			if (parseResult.Hashes.Count > 0)
+			{
+				submission.HashType = parseResult.Hashes.First().Key.ToString();
+				submission.Hash = parseResult.Hashes.First().Value;
+			}
+			else
+			{
+				submission.HashType = null;
+				submission.Hash = null;
+			}
+		}
+
+		if (SubmissionHelper.JudgeIsClaiming(submission.Status, request.Status))
+		{
+			submission.Judge = await db.Users.SingleAsync(u => u.UserName == request.UserName);
+		}
+		else if (SubmissionHelper.JudgeIsUnclaiming(request.Status))
+		{
+			submission.Judge = null;
+		}
+
+		if (SubmissionHelper.PublisherIsClaiming(submission.Status, request.Status))
+		{
+			submission.Publisher = await db.Users.SingleAsync(u => u.UserName == request.UserName);
+		}
+		else if (SubmissionHelper.PublisherIsUnclaiming(submission.Status, request.Status))
+		{
+			submission.Publisher = null;
+		}
+
+		bool statusHasChanged = submission.Status != request.Status;
+		var previousStatus = submission.Status;
+		bool requiresTopicMove = false;
+		int? moveTopicToForumId = null;
+
+		if (statusHasChanged)
+		{
+			db.SubmissionStatusHistory.Add(submission.Id, request.Status);
+
+			if (submission.Topic is not null)
+			{
+				if (submission.Topic.ForumId != SiteGlobalConstants.PlaygroundForumId
+					&& request.Status == Playground)
+				{
+					requiresTopicMove = true;
+					moveTopicToForumId = SiteGlobalConstants.PlaygroundForumId;
+				}
+				else if (submission.Topic.ForumId != SiteGlobalConstants.WorkbenchForumId
+						&& request.Status.IsWorkInProgress())
+				{
+					requiresTopicMove = true;
+					moveTopicToForumId = SiteGlobalConstants.WorkbenchForumId;
+				}
+			}
+
+			// reject/cancel topic move is handled later with TVG's post
+			if (requiresTopicMove && moveTopicToForumId.HasValue && submission.Topic is not null)
+			{
+				submission.Topic.ForumId = moveTopicToForumId.Value;
+				var postsToMove = await db.ForumPosts
+					.ForTopic(submission.Topic.Id)
+					.ToListAsync();
+				foreach (var post in postsToMove)
+				{
+					post.ForumId = moveTopicToForumId.Value;
+				}
+			}
+		}
+
+		submission.RejectionReasonId = request.Status == Rejected
+			? request.RejectionReason
+			: null;
+
+		submission.IntendedClass = request.IntendedPublicationClass.HasValue
+			? await db.PublicationClasses.FindAsync(request.IntendedPublicationClass.Value)
+			: null;
+
+		submission.SubmittedGameVersion = request.GameVersion;
+		submission.GameName = request.GameName;
+		submission.EmulatorVersion = request.Emulator;
+		submission.Branch = request.Goal;
+		submission.RomName = request.RomName;
+		submission.EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(request.EncodeEmbedLink);
+		submission.Status = request.Status;
+		submission.AdditionalAuthors = request.ExternalAuthors.NormalizeCsv();
+
+		submission.SubmissionAuthors.Clear();
+		submission.SubmissionAuthors.AddRange(await db.Users
+			.ToSubmissionAuthors(submission.Id, request.Authors)
+			.ToListAsync());
+
+		submission.GenerateTitle();
+
+		if (request.MarkupChanged)
+		{
+			var revision = new WikiCreateRequest
+			{
+				PageName = $"{LinkConstants.SubmissionWikiPage}{request.SubmissionId}",
+				Markup = request.Markup ?? "",
+				MinorEdit = request.MinorEdit,
+				RevisionMessage = request.RevisionMessage,
+				AuthorId = request.UserId
+			};
+			_ = await wikiPages.Add(revision) ?? throw new InvalidOperationException("Unable to save wiki revision!");
+		}
+
+		await db.SaveChangesAsync();
+
+		var topic = await db.ForumTopics.FindAsync(submission.TopicId);
+		if (topic is not null)
+		{
+			topic.Title = submission.Title;
+			await db.SaveChangesAsync();
+		}
+
+		if (requiresTopicMove)
+		{
+			forumService.ClearLatestPostCache();
+			forumService.ClearTopicActivityCache();
+		}
+
+		if (statusHasChanged && request.Status.IsGrueFood())
+		{
+			await tasvideosGrue.RejectAndMove(request.SubmissionId);
+		}
+
+		return new UpdateSubmissionResult(
+			null,
+			previousStatus,
+			submission.Title);
+	}
+
+	private async Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile)
+	{
+		using var memoryStream = new MemoryStream();
+		await movieFile.CopyToAsync(memoryStream);
+		var movieFileBytes = memoryStream.ToArray();
+		memoryStream.Position = 0;
+		var parseResult = await movieParser.ParseZip(memoryStream);
+		return (parseResult, movieFileBytes);
+	}
 
 	public async Task<SubmitResult> Submit(SubmitRequest request)
 	{
@@ -778,6 +911,74 @@ internal class QueueService(
 		var page = await wikiPages.PublicationPage(publicationId);
 		return new ObsoletePublicationResult(pub.Title, pub.Tags, page!.Markup);
 	}
+
+	internal async Task<ParsedSubmissionData?> MapParsedResult(IParseResult parseResult)
+	{
+		if (!parseResult.Success)
+		{
+			throw new InvalidOperationException("Cannot mapped failed parse result.");
+		}
+
+		var system = await db.GameSystems
+			.ForCode(parseResult.SystemCode)
+			.SingleOrDefaultAsync();
+
+		if (system is null)
+		{
+			return null;
+		}
+
+		var annotations = parseResult.Annotations.CapAndEllipse(3500);
+		var warnings = parseResult.Warnings.ToList();
+		string? warningsString = null;
+		if (warnings.Any())
+		{
+			warningsString = string.Join(",", warnings).Cap(500);
+		}
+
+		GameSystemFrameRate? systemFrameRate;
+		if (parseResult.FrameRateOverride.HasValue)
+		{
+			// ReSharper disable CompareOfFloatsByEqualityOperator
+			var frameRate = await db.GameSystemFrameRates
+				.ForSystem(system.Id)
+				.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
+
+			if (frameRate is null)
+			{
+				frameRate = new GameSystemFrameRate
+				{
+					System = system,
+					FrameRate = parseResult.FrameRateOverride.Value,
+					RegionCode = parseResult.Region.ToString().ToUpper()
+				};
+				db.GameSystemFrameRates.Add(frameRate);
+				await db.SaveChangesAsync();
+			}
+
+			systemFrameRate = frameRate;
+		}
+		else
+		{
+			// SingleOrDefault should work here because the only time there could be more than one for a system and region are formats that return a framerate override
+			// Those systems should never hit this code block.  But just in case.
+			systemFrameRate = await db.GameSystemFrameRates
+				.ForSystem(system.Id)
+				.ForRegion(parseResult.Region.ToString().ToUpper())
+				.FirstOrDefaultAsync();
+		}
+
+		return new ParsedSubmissionData(
+			(int)parseResult.StartType,
+			parseResult.Frames,
+			parseResult.RerecordCount,
+			parseResult.FileExtension,
+			system,
+			parseResult.CycleCount,
+			annotations,
+			warningsString,
+			systemFrameRate);
+	}
 }
 
 public interface ISubmissionDisplay
@@ -880,3 +1081,34 @@ public record ParsedSubmissionData(
 	string? Annotations,
 	string? Warnings,
 	GameSystemFrameRate? SystemFrameRate);
+
+public record UpdateSubmissionRequest(
+	int SubmissionId,
+	string UserName,
+	IFormFile? ReplaceMovieFile,
+	int? IntendedPublicationClass,
+	int? RejectionReason,
+	string GameName,
+	string? GameVersion,
+	string? RomName,
+	string? Goal,
+	string? Emulator,
+	string? EncodeEmbedLink,
+	List<string> Authors,
+	string? ExternalAuthors,
+	SubmissionStatus Status,
+	bool MarkupChanged,
+	string? Markup,
+	string? RevisionMessage,
+	bool MinorEdit,
+	int UserId);
+
+public record UpdateSubmissionResult(
+	string? ErrorMessage,
+	SubmissionStatus PreviousStatus,
+	string SubmissionTitle)
+{
+	public bool Success => ErrorMessage == null;
+
+	public static UpdateSubmissionResult Error(string message) => new(message, New, "");
+}

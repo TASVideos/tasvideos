@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
-using TASVideos.Data.Entity.Forum;
-using TASVideos.Data.Helpers;
 using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
@@ -10,15 +7,11 @@ namespace TASVideos.Pages.Submissions;
 [RequirePermission(true, PermissionTo.SubmitMovies, PermissionTo.EditSubmissions)]
 public class EditModel(
 	ApplicationDbContext db,
-	IMovieParser parser,
 	IWikiPages wikiPages,
 	IExternalMediaPublisher publisher,
-	ITASVideosGrue tasvideosGrue,
-	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
-	IYoutubeSync youtubeSync,
-	IForumService forumService,
 	ITopicWatcher topicWatcher,
+	IMovieParser parser,
 	IFileService fileService)
 	: SubmitPageModelBase(parser, fileService)
 {
@@ -56,7 +49,6 @@ public class EditModel(
 
 		Submission = submission;
 
-		var userName = User.Name();
 		if (!CanEditSubmission(Submission.Submitter, Submission.Authors))
 		{
 			return AccessDenied();
@@ -70,6 +62,7 @@ public class EditModel(
 
 		await PopulateDropdowns();
 
+		var userName = User.Name();
 		AvailableStatuses = queueService.AvailableStatuses(
 			Submission.Status,
 			User.Permissions(),
@@ -146,184 +139,38 @@ public class EditModel(
 			return await ReturnWithModelErrors();
 		}
 
-		var submission = await db.Submissions
-			.Include(s => s.SubmissionAuthors)
-			.ThenInclude(sa => sa.Author)
-			.Include(s => s.System)
-			.Include(s => s.SystemFrameRate)
-			.Include(s => s.Game)
-			.Include(s => s.GameVersion)
-			.Include(s => s.GameGoal)
-			.Include(gg => gg.GameGoal)
-			.Include(s => s.Topic)
-			.Include(s => s.Judge)
-			.Include(s => s.Publisher)
-			.SingleAsync(s => s.Id == Id);
+		var updateRequest = new UpdateSubmissionRequest(
+			Id,
+			userName,
+			Submission.ReplaceMovieFile,
+			Submission.IntendedPublicationClass,
+			Submission.RejectionReason,
+			Submission.GameName,
+			Submission.GameVersion,
+			Submission.RomName,
+			Submission.Goal,
+			Submission.Emulator,
+			Submission.EncodeEmbedLink,
+			Submission.Authors,
+			Submission.ExternalAuthors,
+			Submission.Status,
+			MarkupChanged,
+			Markup,
+			Submission.RevisionMessage,
+			HttpContext.Request.MinorEdit(),
+			User.GetUserId());
 
-		if (Submission.ReplaceMovieFile is not null)
+		var updateResult = await queueService.UpdateSubmission(updateRequest);
+		if (!updateResult.Success)
 		{
-			var (parseResult, movieFileBytes) = await ParseMovieFile(Submission.ReplaceMovieFile);
-			if (!parseResult.Success)
-			{
-				ModelState.AddParseErrors(parseResult);
-				return await ReturnWithModelErrors();
-			}
-
-			var deprecated = await deprecator.IsDeprecated("." + parseResult.FileExtension);
-			if (deprecated)
-			{
-				ModelState.AddModelError(FileFieldName, $".{parseResult.FileExtension} is no longer submittable");
-				return await ReturnWithModelErrors();
-			}
-
-			var mapResult = await queueService.MapParsedResult(parseResult);
-			if (mapResult is null)
-			{
-				ModelState.AddModelError("", $"Unknown system type of {parseResult.SystemCode}");
-				return await ReturnWithModelErrors();
-			}
-
-			submission.MovieStartType = mapResult.MovieStartType;
-			submission.Frames = mapResult.Frames;
-			submission.RerecordCount = mapResult.RerecordCount;
-			submission.MovieExtension = mapResult.MovieExtension;
-			submission.System = mapResult.System;
-			submission.CycleCount = mapResult.CycleCount;
-			submission.Annotations = mapResult.Annotations;
-			submission.Warnings = mapResult.Warnings;
-			submission.SystemFrameRate = mapResult.SystemFrameRate;
-
-			submission.MovieFile = movieFileBytes;
-			submission.SyncedOn = null;
-			submission.SyncedByUserId = null;
-
-			if (parseResult.Hashes.Count > 0)
-			{
-				submission.HashType = parseResult.Hashes.First().Key.ToString();
-				submission.Hash = parseResult.Hashes.First().Value;
-			}
-			else
-			{
-				submission.HashType = null;
-				submission.Hash = null;
-			}
+			ModelState.AddModelError("", updateResult.ErrorMessage!);
+			return await ReturnWithModelErrors();
 		}
 
-		if (SubmissionHelper.JudgeIsClaiming(submission.Status, Submission.Status))
-		{
-			submission.Judge = await db.Users.SingleAsync(u => u.UserName == userName);
-		}
-		else if (SubmissionHelper.JudgeIsUnclaiming(Submission.Status))
-		{
-			submission.Judge = null;
-		}
-
-		if (SubmissionHelper.PublisherIsClaiming(submission.Status, Submission.Status))
-		{
-			submission.Publisher = await db.Users.SingleAsync(u => u.UserName == userName);
-		}
-		else if (SubmissionHelper.PublisherIsUnclaiming(submission.Status, Submission.Status))
-		{
-			submission.Publisher = null;
-		}
-
-		bool statusHasChanged = submission.Status != Submission.Status;
-		var previousStatus = submission.Status;
-		bool moveTopic = false;
-		if (statusHasChanged)
-		{
-			db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
-
-			int moveTopicTo = -1;
-
-			if (submission.Topic!.ForumId != SiteGlobalConstants.PlaygroundForumId
-				&& Submission.Status == SubmissionStatus.Playground)
-			{
-				moveTopic = true;
-				moveTopicTo = SiteGlobalConstants.PlaygroundForumId;
-			}
-			else if (submission.Topic.ForumId != SiteGlobalConstants.WorkbenchForumId
-					&& Submission.Status.IsWorkInProgress())
-			{
-				moveTopic = true;
-				moveTopicTo = SiteGlobalConstants.WorkbenchForumId;
-			}
-
-			// reject/cancel topic move is handled later with TVG's post
-			if (moveTopic)
-			{
-				submission.Topic.ForumId = moveTopicTo;
-				var postsToMove = await db.ForumPosts
-					.ForTopic(submission.Topic.Id)
-					.ToListAsync();
-				foreach (var post in postsToMove)
-				{
-					post.ForumId = moveTopicTo;
-				}
-			}
-		}
-
-		submission.RejectionReasonId = Submission.Status == SubmissionStatus.Rejected
-			? Submission.RejectionReason
-			: null;
-
-		submission.IntendedClass = Submission.IntendedPublicationClass.HasValue
-			? await db.PublicationClasses.FindAsync(Submission.IntendedPublicationClass.Value)
-			: null;
-
-		submission.SubmittedGameVersion = Submission.GameVersion;
-		submission.GameName = Submission.GameName;
-		submission.EmulatorVersion = Submission.Emulator;
-		submission.Branch = Submission.Goal;
-		submission.RomName = Submission.RomName;
-		submission.EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(Submission.EncodeEmbedLink);
-		submission.Status = Submission.Status;
-		submission.AdditionalAuthors = Submission.ExternalAuthors.NormalizeCsv();
-
-		if (MarkupChanged)
-		{
-			var revision = new WikiCreateRequest
-			{
-				PageName = $"{LinkConstants.SubmissionWikiPage}{Id}",
-				Markup = Markup,
-				MinorEdit = HttpContext.Request.MinorEdit(),
-				RevisionMessage = Submission.RevisionMessage,
-				AuthorId = User.GetUserId()
-			};
-			_ = await wikiPages.Add(revision) ?? throw new InvalidOperationException("Unable to save wiki revision!");
-		}
-
-		submission.SubmissionAuthors.Clear();
-		submission.SubmissionAuthors.AddRange(await db.Users
-			.ToSubmissionAuthors(submission.Id, Submission.Authors)
-			.ToListAsync());
-
-		submission.GenerateTitle();
-		await db.SaveChangesAsync();
-
-		var topic = await db.ForumTopics.FindAsync(submission.TopicId);
-		if (topic is not null)
-		{
-			topic.Title = submission.Title;
-			await db.SaveChangesAsync();
-		}
-
-		if (moveTopic)
-		{
-			forumService.ClearLatestPostCache();
-			forumService.ClearTopicActivityCache();
-		}
-
-		if (submission.Status is SubmissionStatus.Rejected or SubmissionStatus.Cancelled
-			&& statusHasChanged)
-		{
-			await tasvideosGrue.RejectAndMove(submission.Id);
-		}
-
-		var formattedTitle = await GetFormattedTitle(previousStatus, submission.Status);
+		var formattedTitle = await GetFormattedTitle(updateResult.PreviousStatus, Submission.Status);
 		var separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
 		await publisher.SendSubmissionEdit(
-			Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{submission.Title}", statusHasChanged);
+			Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{updateResult.SubmissionTitle}",  updateResult.PreviousStatus != Submission.Status);
 
 		return RedirectToPage("View", new { Id });
 	}

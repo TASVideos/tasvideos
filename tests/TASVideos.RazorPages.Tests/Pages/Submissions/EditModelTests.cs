@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
 using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
@@ -21,14 +20,10 @@ public class EditModelTests : TestDbBase
 		var parser = Substitute.For<IMovieParser>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
-		var tasvideosGrue = Substitute.For<ITASVideosGrue>();
-		var deprecator = Substitute.For<IMovieFormatDeprecator>();
 		_queueService = Substitute.For<IQueueService>();
-		var youtubeSync = Substitute.For<IYoutubeSync>();
-		var forumService = Substitute.For<IForumService>();
 		_topicWatcher = Substitute.For<ITopicWatcher>();
 		var fileService = Substitute.For<IFileService>();
-		_page = new EditModel(_db, parser, _wikiPages, publisher, tasvideosGrue, deprecator, _queueService, youtubeSync, forumService, _topicWatcher, fileService);
+		_page = new EditModel(_db, _wikiPages, publisher, _queueService, _topicWatcher, parser, fileService);
 	}
 
 	[TestMethod]
@@ -178,6 +173,9 @@ public class EditModelTests : TestDbBase
 			Arg.Any<bool>(),
 			Arg.Any<bool>())
 			.Returns([SubmissionStatus.New, SubmissionStatus.Cancelled]);
+
+		_queueService.UpdateSubmission(Arg.Any<UpdateSubmissionRequest>())
+			.Returns(new UpdateSubmissionResult(null, SubmissionStatus.New, "Updated Title"));
 
 		var wikiPage = new WikiResult { Markup = "Updated markup" };
 		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);

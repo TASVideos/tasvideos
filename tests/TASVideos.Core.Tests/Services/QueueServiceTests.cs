@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
@@ -7,6 +8,7 @@ using TASVideos.Data.Entity.Awards;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Extensions;
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 using static TASVideos.Data.Entity.SubmissionStatus;
 
@@ -22,6 +24,7 @@ public class QueueServiceTests : TestDbBase
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
 	private readonly IWikiPages _wikiPages;
+	private readonly ITASVideosGrue _tasvideosGrue;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -41,12 +44,16 @@ public class QueueServiceTests : TestDbBase
 		var uploader = Substitute.For<IMediaFileUploader>();
 		var fileService = Substitute.For<IFileService>();
 		var userManager = Substitute.For<IUserManager>();
+		var movieParser = Substitute.For<IMovieParser>();
+		var deprecator = Substitute.For<IMovieFormatDeprecator>();
+		var forumService = Substitute.For<IForumService>();
+		_tasvideosGrue = Substitute.For<ITASVideosGrue>();
 		var settings = new AppSettings
 		{
 			MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment,
 			SubmissionRate = new() { Days = SubmissionRateDays, Submissions = SubmissionRateSubs }
 		};
-		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, uploader, fileService, userManager);
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, uploader, fileService, userManager, movieParser, deprecator, forumService, _tasvideosGrue);
 	}
 
 	#region AvailableStatuses
@@ -1224,6 +1231,300 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(0, result.Tags.Count);
 		Assert.AreEqual(wikiMarkup, result.Markup);
 		await _wikiPages.Received(1).Page(expectedPageName);
+	}
+
+	#endregion
+
+	#region UpdateSubmission
+
+	[TestMethod]
+	public async Task UpdateSubmission_NonExistentSubmission_ReturnsError()
+	{
+		var request = CreateValidUpdateSubmissionRequest(999);
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsFalse(result.Success);
+		Assert.AreEqual("Submission not found", result.ErrorMessage);
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_ValidUpdate_UpdatesSubmissionAndReturnsSuccess()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			gameName: "Updated Game Name",
+			goal: "Updated Goal",
+			emulator: "Updated Emulator");
+
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult { Markup = "Updated wiki content" });
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual(New, result.PreviousStatus);
+		Assert.IsTrue(result.SubmissionTitle.Contains("Updated Game Name"));
+
+		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
+		Assert.IsNotNull(updatedSubmission);
+		Assert.AreEqual("Updated Game Name", updatedSubmission.GameName);
+		Assert.AreEqual("Updated Emulator", updatedSubmission.EmulatorVersion);
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_WithStatusChangeFromNewToPlayground_ReturnsSuccess()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		submission.Status = New;
+		await _db.SaveChangesAsync();
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			status: Playground);
+
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult { Markup = "Wiki content" });
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual(New, result.PreviousStatus);
+		var updatedSub = await _db.Submissions.FindAsync(submission.Id);
+		Assert.IsNotNull(updatedSub);
+		Assert.AreEqual(Playground, updatedSub.Status);
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_WithAuthorChanges_UpdatesSubmissionAuthors()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		_db.AddUser("Author1");
+		_db.AddUser("Author2");
+		await _db.SaveChangesAsync();
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			authors: ["Author1", "Author2"]);
+
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult { Markup = "Wiki content" });
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+
+		var updatedSub = await _db.Submissions
+			.Include(s => s.SubmissionAuthors)
+			.ThenInclude(sa => sa.Author)
+			.SingleOrDefaultAsync(s => s.Id == submission.Id);
+
+		Assert.IsNotNull(updatedSub);
+		Assert.AreEqual(2, updatedSub.SubmissionAuthors.Count);
+		var authorNames = updatedSub.SubmissionAuthors
+			.OrderBy(sa => sa.Ordinal)
+			.Select(sa => sa.Author!.UserName)
+			.ToList();
+		Assert.AreEqual("Author1", authorNames[0]);
+		Assert.AreEqual("Author2", authorNames[1]);
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_WithMarkupChanges_CallsWikiPagesAdd()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		const string newMarkup = "Updated wiki markup content";
+		const string revisionMessage = "Test revision";
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			markupChanged: true,
+			markup: newMarkup,
+			revisionMessage: revisionMessage,
+			minorEdit: true);
+
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult { Markup = newMarkup });
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+
+		await _wikiPages.Received(1).Add(Arg.Is<WikiCreateRequest>(req =>
+			req.PageName.EndsWith($"S{submission.Id}") &&
+			req.Markup == newMarkup &&
+			req.RevisionMessage == revisionMessage &&
+			req.MinorEdit == true));
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_WithoutMarkupChanges_DoesNotCallWikiPagesAdd()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			markupChanged: false);
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+
+		await _wikiPages.DidNotReceive().Add(Arg.Any<WikiCreateRequest>());
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_StatusChangeToRejected_CallsGrueRejectAndMove()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		submission.Status = New;
+		await _db.SaveChangesAsync();
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			status: Rejected);
+
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult { Markup = "Wiki content" });
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual(New, result.PreviousStatus);
+
+		await _tasvideosGrue.Received(1).RejectAndMove(submission.Id);
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_StatusChangeToCancelled_CallsGrueRejectAndMove()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		submission.Status = New;
+		await _db.SaveChangesAsync();
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			status: Cancelled);
+
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult { Markup = "Wiki content" });
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual(New, result.PreviousStatus);
+
+		await _tasvideosGrue.Received(1).RejectAndMove(submission.Id);
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_WithMovieFileParsingFailure_ReturnsError()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		var movieFile = CreateMockMovieFile("test.bk2", "invalid movie data");
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			replaceMovieFile: movieFile);
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsFalse(result.Success);
+		Assert.IsTrue(result.ErrorMessage!.Contains("Movie file parsing failed") ||
+			result.ErrorMessage!.Contains("Unknown system type"));
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_WithDeprecatedMovieFormat_ReturnsError()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		var movieFile = CreateMockMovieFile("test.deprecated", "deprecated movie data");
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			replaceMovieFile: movieFile);
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsFalse(result.Success);
+		Assert.IsFalse(string.IsNullOrWhiteSpace(result.ErrorMessage));
+	}
+
+	[TestMethod]
+	public async Task UpdateSubmission_WithoutTopic_UpdatesSuccessfully()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		await _db.SaveChangesAsync();
+
+		var request = CreateValidUpdateSubmissionRequest(
+			submission.Id,
+			gameName: "New Game Name");
+
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(new WikiResult { Markup = "Wiki content" });
+
+		var result = await _queueService.UpdateSubmission(request);
+
+		Assert.IsTrue(result.Success);
+
+		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
+		Assert.IsNotNull(updatedSubmission);
+		Assert.AreEqual("New Game Name", updatedSubmission.GameName);
+	}
+
+	private static IFormFile CreateMockMovieFile(string fileName, string content)
+	{
+		var bytes = System.Text.Encoding.UTF8.GetBytes(content);
+		var stream = new MemoryStream(bytes);
+		var file = Substitute.For<IFormFile>();
+		file.FileName.Returns(fileName);
+		file.Length.Returns(bytes.Length);
+		file.OpenReadStream().Returns(stream);
+		file.CopyToAsync(Arg.Any<Stream>()).Returns(async (ci) =>
+		{
+			var targetStream = (Stream)ci[0];
+			stream.Seek(0, SeekOrigin.Begin);
+			await stream.CopyToAsync(targetStream);
+		});
+		return file;
+	}
+
+	private static UpdateSubmissionRequest CreateValidUpdateSubmissionRequest(
+		int submissionId,
+		string userName = "TestUser",
+		IFormFile? replaceMovieFile = null,
+		int? intendedPublicationClass = null,
+		int? rejectionReason = null,
+		string gameName = "Test Game",
+		string? gameVersion = null,
+		string? romName = null,
+		string? goal = null,
+		string? emulator = null,
+		string? encodeEmbedLink = null,
+		List<string>? authors = null,
+		string? externalAuthors = null,
+		SubmissionStatus status = SubmissionStatus.New,
+		bool markupChanged = false,
+		string? markup = null,
+		string? revisionMessage = null,
+		bool minorEdit = false,
+		int userId = 1)
+	{
+		return new UpdateSubmissionRequest(
+			submissionId,
+			userName,
+			replaceMovieFile,
+			intendedPublicationClass,
+			rejectionReason,
+			gameName,
+			gameVersion,
+			romName,
+			goal,
+			emulator,
+			encodeEmbedLink,
+			authors ?? ["TestAuthor"],
+			externalAuthors,
+			status,
+			markupChanged,
+			markup,
+			revisionMessage,
+			minorEdit,
+			userId);
 	}
 
 	#endregion
