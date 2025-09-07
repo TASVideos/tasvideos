@@ -44,10 +44,10 @@ public interface IQueueService
 	Task<UnpublishResult> Unpublish(int publicationId);
 
 	/// <summary>
-	/// Writes the parsed values from the <see cref="IParseResult"/> into the given submission
+	/// Writes the parsed values from the <see cref="IParseResult"/> into submission data
 	/// </summary>
 	/// <returns>The error message if an error occurred, else an empty string</returns>
-	Task<string> MapParsedResult(IParseResult parseResult, Submission submission);
+	Task<ParsedSubmissionData?> MapParsedResult(IParseResult parseResult);
 
 	/// <summary>
 	/// Obsoletes a publication with the existing publication.
@@ -400,7 +400,7 @@ internal class QueueService(
 		return UnpublishResult.Success(publication.Title);
 	}
 
-	public async Task<string> MapParsedResult(IParseResult parseResult, Submission submission)
+	public async Task<ParsedSubmissionData?> MapParsedResult(IParseResult parseResult)
 	{
 		if (!parseResult.Success)
 		{
@@ -413,35 +413,30 @@ internal class QueueService(
 
 		if (system is null)
 		{
-			return $"Unknown system type of {parseResult.SystemCode}";
+			return null;
 		}
 
-		submission.MovieStartType = (int)parseResult.StartType;
-		submission.Frames = parseResult.Frames;
-		submission.RerecordCount = parseResult.RerecordCount;
-		submission.MovieExtension = parseResult.FileExtension;
-		submission.System = system;
-		submission.CycleCount = parseResult.CycleCount;
-		submission.Annotations = parseResult.Annotations.CapAndEllipse(3500);
+		var annotations = parseResult.Annotations.CapAndEllipse(3500);
 		var warnings = parseResult.Warnings.ToList();
-		submission.Warnings = null;
+		string? warningsString = null;
 		if (warnings.Any())
 		{
-			submission.Warnings = string.Join(",", warnings).Cap(500);
+			warningsString = string.Join(",", warnings).Cap(500);
 		}
 
+		GameSystemFrameRate? systemFrameRate;
 		if (parseResult.FrameRateOverride.HasValue)
 		{
 			// ReSharper disable CompareOfFloatsByEqualityOperator
 			var frameRate = await db.GameSystemFrameRates
-				.ForSystem(submission.System.Id)
+				.ForSystem(system.Id)
 				.FirstOrDefaultAsync(sf => sf.FrameRate == parseResult.FrameRateOverride.Value);
 
 			if (frameRate is null)
 			{
 				frameRate = new GameSystemFrameRate
 				{
-					System = submission.System,
+					System = system,
 					FrameRate = parseResult.FrameRateOverride.Value,
 					RegionCode = parseResult.Region.ToString().ToUpper()
 				};
@@ -449,19 +444,28 @@ internal class QueueService(
 				await db.SaveChangesAsync();
 			}
 
-			submission.SystemFrameRate = frameRate;
+			systemFrameRate = frameRate;
 		}
 		else
 		{
 			// SingleOrDefault should work here because the only time there could be more than one for a system and region are formats that return a framerate override
 			// Those systems should never hit this code block.  But just in case.
-			submission.SystemFrameRate = await db.GameSystemFrameRates
-				.ForSystem(submission.System.Id)
+			systemFrameRate = await db.GameSystemFrameRates
+				.ForSystem(system.Id)
 				.ForRegion(parseResult.Region.ToString().ToUpper())
 				.FirstOrDefaultAsync();
 		}
 
-		return "";
+		return new ParsedSubmissionData(
+			(int)parseResult.StartType,
+			parseResult.Frames,
+			parseResult.RerecordCount,
+			parseResult.FileExtension,
+			system,
+			parseResult.CycleCount,
+			annotations,
+			warningsString,
+			systemFrameRate);
 	}
 
 	public async Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId)
@@ -529,31 +533,38 @@ internal class QueueService(
 
 	public async Task<SubmitResult> Submit(SubmitRequest request)
 	{
-		// Create the submission entity
-		var submission = new Submission
-		{
-			SubmittedGameVersion = request.GameVersion,
-			GameName = request.GameName,
-			Branch = request.GoalName?.Trim('"'),
-			RomName = request.RomName,
-			EmulatorVersion = request.Emulator,
-			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(request.EncodeEmbeddedLink),
-			AdditionalAuthors = request.ExternalAuthors.NormalizeCsv(),
-			MovieFile = request.MovieFile,
-			Submitter = request.Submitter
-		};
-
 		try
 		{
 			using var dbTransaction = await db.BeginTransactionAsync();
 
-			var error = await MapParsedResult(request.ParseResult, submission);
-			if (!string.IsNullOrWhiteSpace(error))
+			var mapResult = await MapParsedResult(request.ParseResult);
+			if (mapResult is null)
 			{
-				return new FailedSubmitResult($"Failed to map parsed result: {error}");
+				return new FailedSubmitResult($"Unknown system type of {request.ParseResult.SystemCode}");
 			}
 
-			// Set hash information
+			var submission = db.Submissions.Add(new Submission
+			{
+				SubmittedGameVersion = request.GameVersion,
+				GameName = request.GameName,
+				Branch = request.GoalName?.Trim('"'),
+				RomName = request.RomName,
+				EmulatorVersion = request.Emulator,
+				EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(request.EncodeEmbeddedLink),
+				AdditionalAuthors = request.ExternalAuthors.NormalizeCsv(),
+				MovieFile = request.MovieFile,
+				Submitter = request.Submitter,
+				MovieStartType = mapResult.MovieStartType,
+				Frames = mapResult.Frames,
+				RerecordCount = mapResult.RerecordCount,
+				MovieExtension = mapResult.MovieExtension,
+				System = mapResult.System,
+				CycleCount = mapResult.CycleCount,
+				Annotations = mapResult.Annotations,
+				Warnings = mapResult.Warnings,
+				SystemFrameRate = mapResult.SystemFrameRate
+			}).Entity;
+
 			if (request.ParseResult.Hashes.Count > 0)
 			{
 				submission.HashType = request.ParseResult.Hashes.First().Key.ToString();
@@ -561,7 +572,6 @@ internal class QueueService(
 			}
 
 			// Save submission to get ID
-			db.Submissions.Add(submission);
 			await db.SaveChangesAsync();
 
 			// Create wiki page
@@ -585,33 +595,33 @@ internal class QueueService(
 
 			// Commit transaction
 			await dbTransaction.CommitAsync();
+
+			// Handle screenshot download and publisher notification (after transaction commit)
+			byte[]? screenshotFile = null;
+			if (youtubeSync.IsYoutubeUrl(submission.EncodeEmbedLink))
+			{
+				try
+				{
+					var youtubeEmbedImageLink = "https://i.ytimg.com/vi/" + submission.EncodeEmbedLink!.Split('/').Last() + "/hqdefault.jpg";
+					using var client = new HttpClient();
+					var response = await client.GetAsync(youtubeEmbedImageLink);
+					if (response.IsSuccessStatusCode)
+					{
+						screenshotFile = await response.Content.ReadAsByteArrayAsync();
+					}
+				}
+				catch
+				{
+					// Ignore screenshot download failures
+				}
+			}
+
+			return new SubmitResult(null, submission.Id, submission.Title, screenshotFile);
 		}
 		catch (Exception ex)
 		{
 			return new FailedSubmitResult(ex.ToString());
 		}
-
-		// Handle screenshot download and publisher notification (after transaction commit)
-		byte[]? screenshotFile = null;
-		if (youtubeSync.IsYoutubeUrl(submission.EncodeEmbedLink))
-		{
-			try
-			{
-				var youtubeEmbedImageLink = "https://i.ytimg.com/vi/" + submission.EncodeEmbedLink!.Split('/').Last() + "/hqdefault.jpg";
-				using var client = new HttpClient();
-				var response = await client.GetAsync(youtubeEmbedImageLink);
-				if (response.IsSuccessStatusCode)
-				{
-					screenshotFile = await response.Content.ReadAsByteArrayAsync();
-				}
-			}
-			catch
-			{
-				// Ignore screenshot download failures
-			}
-		}
-
-		return new SubmitResult(null, submission.Id, submission.Title, screenshotFile);
 	}
 
 	public async Task<PublishSubmissionResult> Publish(PublishSubmissionRequest request)
@@ -859,3 +869,14 @@ public record PublishSubmissionResult(string? ErrorMessage, int PublicationId, s
 public record FailedPublishSubmissionResult(string ErrorMessage) : PublishSubmissionResult(ErrorMessage, -1, "", "", []);
 
 public record ObsoletePublicationResult(string Title, List<int> Tags, string Markup);
+
+public record ParsedSubmissionData(
+	int MovieStartType,
+	int Frames,
+	int RerecordCount,
+	string MovieExtension,
+	GameSystem System,
+	long? CycleCount,
+	string? Annotations,
+	string? Warnings,
+	GameSystemFrameRate? SystemFrameRate);

@@ -107,6 +107,7 @@ public class EditModel(
 			Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
 		{
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.IntendedPublicationClass)}", "A submission can not be accepted without a PublicationClass");
+			return await ReturnWithModelErrors();
 		}
 
 		var subInfo = await db.Submissions
@@ -126,6 +127,11 @@ public class EditModel(
 			return NotFound();
 		}
 
+		if (!User.Has(PermissionTo.EditSubmissions) && !subInfo.UserIsAuthorOrSubmitter)
+		{
+			return AccessDenied();
+		}
+
 		AvailableStatuses = queueService.AvailableStatuses(
 			subInfo.CurrentStatus,
 			User.Permissions(),
@@ -137,16 +143,7 @@ public class EditModel(
 		if (!AvailableStatuses.Contains(Submission.Status))
 		{
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Status)}", $"Invalid status: {Submission.Status}");
-		}
-
-		if (!ModelState.IsValid)
-		{
 			return await ReturnWithModelErrors();
-		}
-
-		if (!User.Has(PermissionTo.EditSubmissions) && !subInfo.UserIsAuthorOrSubmitter)
-		{
-			return AccessDenied();
 		}
 
 		var submission = await db.Submissions
@@ -179,16 +176,22 @@ public class EditModel(
 				return await ReturnWithModelErrors();
 			}
 
-			var error = await queueService.MapParsedResult(parseResult, submission);
-			if (!string.IsNullOrWhiteSpace(error))
+			var mapResult = await queueService.MapParsedResult(parseResult);
+			if (mapResult is null)
 			{
-				ModelState.AddModelError("", error);
-			}
-
-			if (!ModelState.IsValid)
-			{
+				ModelState.AddModelError("", $"Unknown system type of {parseResult.SystemCode}");
 				return await ReturnWithModelErrors();
 			}
+
+			submission.MovieStartType = mapResult.MovieStartType;
+			submission.Frames = mapResult.Frames;
+			submission.RerecordCount = mapResult.RerecordCount;
+			submission.MovieExtension = mapResult.MovieExtension;
+			submission.System = mapResult.System;
+			submission.CycleCount = mapResult.CycleCount;
+			submission.Annotations = mapResult.Annotations;
+			submission.Warnings = mapResult.Warnings;
+			submission.SystemFrameRate = mapResult.SystemFrameRate;
 
 			submission.MovieFile = movieFileBytes;
 			submission.SyncedOn = null;

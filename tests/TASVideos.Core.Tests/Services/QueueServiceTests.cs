@@ -636,7 +636,7 @@ public class QueueServiceTests : TestDbBase
 	[TestMethod]
 	public async Task MapParsedResult_ThrowsIfParsingIsFailed()
 	{
-		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _queueService.MapParsedResult(new TestParseResult { Success = false }, new Submission()));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _queueService.MapParsedResult(new TestParseResult { Success = false }));
 	}
 
 	[TestMethod]
@@ -645,9 +645,9 @@ public class QueueServiceTests : TestDbBase
 		_db.GameSystems.Add(new GameSystem { Code = "NES" });
 		await _db.SaveChangesAsync();
 
-		var actual = await _queueService.MapParsedResult(new TestParseResult { Success = true, SystemCode = "Does not exist" }, new Submission());
+		var actual = await _queueService.MapParsedResult(new TestParseResult { Success = true, SystemCode = "Does not exist" });
 
-		Assert.IsFalse(string.IsNullOrWhiteSpace(actual));
+		Assert.IsNull(actual);
 	}
 
 	[TestMethod]
@@ -681,19 +681,16 @@ public class QueueServiceTests : TestDbBase
 			FileExtension = fileExtension
 		};
 
-		var submission = new Submission();
-
-		var actual = await _queueService.MapParsedResult(parseResult, submission);
-		Assert.IsTrue(string.IsNullOrEmpty(actual));
-		Assert.IsNotNull(submission.SystemFrameRate);
-		Assert.AreEqual(frameRate, submission.SystemFrameRate.FrameRate);
-		Assert.AreEqual(region.ToString().ToUpper(), submission.SystemFrameRate.RegionCode);
-		Assert.AreEqual((int)startType, submission.MovieStartType);
-		Assert.AreEqual(frames, submission.Frames);
-		Assert.AreEqual(rerecordCount, submission.RerecordCount);
-		Assert.AreEqual(fileExtension, submission.MovieExtension);
-		Assert.IsNotNull(submission.System);
-		Assert.AreEqual(system, submission.System.Code);
+		var actual = await _queueService.MapParsedResult(parseResult);
+		Assert.IsNotNull(actual);
+		Assert.IsNotNull(actual.SystemFrameRate);
+		Assert.AreEqual(frameRate, actual.SystemFrameRate.FrameRate);
+		Assert.AreEqual(region.ToString().ToUpper(), actual.SystemFrameRate.RegionCode);
+		Assert.AreEqual((int)startType, actual.MovieStartType);
+		Assert.AreEqual(frames, actual.Frames);
+		Assert.AreEqual(rerecordCount, actual.RerecordCount);
+		Assert.AreEqual(fileExtension, actual.MovieExtension);
+		Assert.AreEqual(system, actual.System.Code);
 	}
 
 	[TestMethod]
@@ -712,14 +709,12 @@ public class QueueServiceTests : TestDbBase
 			Region = region
 		};
 
-		var submission = new Submission();
-
-		var actual = await _queueService.MapParsedResult(parseResult, submission);
-		Assert.IsTrue(string.IsNullOrEmpty(actual));
-		Assert.IsNotNull(submission.SystemFrameRate);
-		Assert.AreEqual(frameRateOverride, submission.SystemFrameRate.FrameRate);
-		Assert.AreEqual(region.ToString().ToUpper(), submission.SystemFrameRate.RegionCode);
-		Assert.AreEqual(entry.Entity, submission.SystemFrameRate.System);
+		var actual = await _queueService.MapParsedResult(parseResult);
+		Assert.IsNotNull(actual);
+		Assert.IsNotNull(actual.SystemFrameRate);
+		Assert.AreEqual(frameRateOverride, actual.SystemFrameRate.FrameRate);
+		Assert.AreEqual(region.ToString().ToUpper(), actual.SystemFrameRate.RegionCode);
+		Assert.AreEqual(entry.Entity, actual.SystemFrameRate.System);
 	}
 
 	#endregion
