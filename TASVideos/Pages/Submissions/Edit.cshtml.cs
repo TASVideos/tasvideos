@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -10,10 +9,8 @@ public class EditModel(
 	IWikiPages wikiPages,
 	IExternalMediaPublisher publisher,
 	IQueueService queueService,
-	ITopicWatcher topicWatcher,
-	IMovieParser parser,
-	IFileService fileService)
-	: SubmitPageModelBase(parser, fileService)
+	ITopicWatcher topicWatcher)
+	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.ReplaceMovieFile)}";
 

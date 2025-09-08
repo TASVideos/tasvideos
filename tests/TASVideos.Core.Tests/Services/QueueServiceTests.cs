@@ -25,6 +25,8 @@ public class QueueServiceTests : TestDbBase
 	private readonly ITASVideoAgent _tva;
 	private readonly IWikiPages _wikiPages;
 	private readonly ITASVideosGrue _tasvideosGrue;
+	private readonly IMovieParser _movieParser;
+	private readonly IFileService _fileService;
 
 	private static DateTime TooNewToJudge => DateTime.UtcNow;
 
@@ -42,9 +44,9 @@ public class QueueServiceTests : TestDbBase
 		_tva = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		var uploader = Substitute.For<IMediaFileUploader>();
-		var fileService = Substitute.For<IFileService>();
+		_fileService = Substitute.For<IFileService>();
 		var userManager = Substitute.For<IUserManager>();
-		var movieParser = Substitute.For<IMovieParser>();
+		_movieParser = Substitute.For<IMovieParser>();
 		var deprecator = Substitute.For<IMovieFormatDeprecator>();
 		var forumService = Substitute.For<IForumService>();
 		_tasvideosGrue = Substitute.For<ITASVideosGrue>();
@@ -53,7 +55,7 @@ public class QueueServiceTests : TestDbBase
 			MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment,
 			SubmissionRate = new() { Days = SubmissionRateDays, Submissions = SubmissionRateSubs }
 		};
-		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, uploader, fileService, userManager, movieParser, deprecator, forumService, _tasvideosGrue);
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, uploader, _fileService, userManager, _movieParser, deprecator, forumService, _tasvideosGrue);
 	}
 
 	#region AvailableStatuses
@@ -1525,6 +1527,62 @@ public class QueueServiceTests : TestDbBase
 			revisionMessage,
 			minorEdit,
 			userId);
+	}
+
+	#endregion
+
+	#region ParseMovieFile
+
+	[TestMethod]
+	public async Task ParseMovieFile_NonZipFile_ParsesFileAndZipsResult()
+	{
+		var formFile = Substitute.For<IFormFile>();
+		formFile.FileName.Returns("test.bk2");
+		formFile.ContentType.Returns("application/octet-stream");
+
+		var fileStream = new MemoryStream([1, 2, 3, 4]);
+		formFile.CopyToAsync(Arg.Any<Stream>()).Returns(Task.CompletedTask)
+			.AndDoes(x => fileStream.CopyTo((Stream)x.Args()[0]));
+
+		var parseResult = Substitute.For<IParseResult>();
+		parseResult.Success.Returns(true);
+		parseResult.FileExtension.Returns(".bk2");
+
+		_movieParser.ParseFile("test.bk2", Arg.Any<Stream>()).Returns(parseResult);
+
+		var zippedBytes = new byte[] { 5, 6, 7, 8, 9 };
+		_fileService.ZipFile(Arg.Any<byte[]>(), "test.bk2").Returns(zippedBytes);
+
+		var (result, movieBytes) = await _queueService.ParseMovieFile(formFile);
+
+		Assert.AreEqual(parseResult, result);
+		Assert.AreEqual(zippedBytes, movieBytes);
+		await _movieParser.Received(1).ParseFile("test.bk2", Arg.Any<Stream>());
+		await _fileService.Received(1).ZipFile(Arg.Any<byte[]>(), "test.bk2");
+	}
+
+	[TestMethod]
+	public async Task ParseMovieFile_ZipFile_ParsesZipAndReturnsRawBytes()
+	{
+		var formFile = Substitute.For<IFormFile>();
+		formFile.FileName.Returns("test.zip");
+		formFile.ContentType.Returns("application/zip");
+
+		var fileStream = new MemoryStream([1, 2, 3, 4]);
+		formFile.CopyToAsync(Arg.Any<Stream>()).Returns(Task.CompletedTask)
+			.AndDoes(x => fileStream.CopyTo((Stream)x.Args()[0]));
+
+		var parseResult = Substitute.For<IParseResult>();
+		parseResult.Success.Returns(true);
+
+		_movieParser.ParseZip(Arg.Any<Stream>()).Returns(parseResult);
+
+		var (result, movieBytes) = await _queueService.ParseMovieFile(formFile);
+
+		Assert.AreEqual(parseResult, result);
+		Assert.AreEqual(4, movieBytes.Length); // Raw file bytes
+		await _movieParser.Received(1).ParseZip(Arg.Any<Stream>());
+		await _fileService.DidNotReceive().ZipFile(Arg.Any<byte[]>(), Arg.Any<string>());
 	}
 
 	#endregion

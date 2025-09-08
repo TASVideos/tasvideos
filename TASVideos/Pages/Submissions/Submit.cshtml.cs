@@ -1,18 +1,15 @@
 ﻿using TASVideos.Core.Services.Wiki;
-using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.SubmitMovies)]
 public class SubmitModel(
-	IMovieParser parser,
 	IUserManager userManager,
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
 	IWikiPages wikiPages,
-	IFileService fileService,
 	IExternalMediaPublisher externalMediaPublisher)
-	: SubmitPageModelBase(parser, fileService)
+	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
 
@@ -94,7 +91,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		var (parseResult, movieFileBytes) = await ParseMovieFile(MovieFile!);
+		var (parseResult, movieFileBytes) = await queueService.ParseMovieFile(MovieFile!);
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);

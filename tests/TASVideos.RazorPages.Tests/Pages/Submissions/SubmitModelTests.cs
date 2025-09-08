@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
@@ -16,10 +15,8 @@ public class SubmitModelTests : TestDbBase
 {
 	private readonly IExternalMediaPublisher _publisher;
 	private readonly IWikiPages _wikiPages;
-	private readonly IMovieParser _movieParser;
 	private readonly IUserManager _userManager;
 	private readonly IMovieFormatDeprecator _movieFormatDeprecator;
-	private readonly IFileService _fileService;
 	private readonly IQueueService _queueService;
 	private SubmitModel _page;
 
@@ -27,12 +24,10 @@ public class SubmitModelTests : TestDbBase
 	{
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_wikiPages = Substitute.For<IWikiPages>();
-		_movieParser = Substitute.For<IMovieParser>();
 		_userManager = Substitute.For<IUserManager>();
 		_movieFormatDeprecator = Substitute.For<IMovieFormatDeprecator>();
 		_queueService = Substitute.For<IQueueService>();
-		_fileService = Substitute.For<IFileService>();
-		_page = new SubmitModel(_movieParser, _userManager, _movieFormatDeprecator, _queueService, _wikiPages, _fileService, _publisher);
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher);
 	}
 
 	[TestMethod]
@@ -123,7 +118,7 @@ public class SubmitModelTests : TestDbBase
 		const string existingUser = "Exists";
 		_db.AddUser(existingUser);
 		await _db.SaveChangesAsync();
-		_page = new SubmitModel(_movieParser, _userManager, _movieFormatDeprecator, _queueService, _wikiPages, _fileService, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
 		{
 			MovieFile = GenerateTooLargeMovie(),
 			Authors = [existingUser]
@@ -145,14 +140,14 @@ public class SubmitModelTests : TestDbBase
 		parseResult.Success.Returns(true);
 		parseResult.FileExtension.Returns("bk2");
 
-		_movieParser.ParseFile(Arg.Any<string>(), Arg.Any<Stream>()).Returns(parseResult);
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3 }));
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 		_userManager.Exists("TestUser").Returns(true);
 		_movieFormatDeprecator.IsDeprecated(".bk2").Returns(false);
 		_queueService.ExceededSubmissionLimit(user.Id).Returns((DateTime?)null);
 		_queueService.Submit(Arg.Any<SubmitRequest>()).Returns(new SubmitResult(null, 42, "", null));
 
-		_page = new SubmitModel(_movieParser, _userManager, _movieFormatDeprecator, _queueService, _wikiPages, _fileService, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
 		{
 			GameName = "Test Game",
 			RomName = "test.nes",
@@ -192,7 +187,7 @@ public class SubmitModelTests : TestDbBase
 		parseResult.Success.Returns(true);
 		parseResult.FileExtension.Returns("bk2");
 
-		_movieParser.ParseFile(Arg.Any<string>(), Arg.Any<Stream>()).Returns(parseResult);
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3 }));
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 		_userManager.Exists("TestUser").Returns(true); // Add this line to make validation pass
 		_movieFormatDeprecator.IsDeprecated(".bk2").Returns(false);
@@ -200,7 +195,7 @@ public class SubmitModelTests : TestDbBase
 		_queueService.Submit(Arg.Any<SubmitRequest>())
 			.Returns(new FailedSubmitResult("Database error occurred"));
 
-		_page = new SubmitModel(_movieParser, _userManager, _movieFormatDeprecator, _queueService, _wikiPages, _fileService, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
 		{
 			GameName = "Test Game",
 			RomName = "test.nes",

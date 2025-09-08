@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System.IO.Compression;
+using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
@@ -84,6 +85,11 @@ public interface IQueueService
 	Task<PublishSubmissionResult> Publish(PublishSubmissionRequest request);
 
 	Task<ObsoletePublicationResult?> GetObsoletePublicationTags(int publicationId);
+
+	/// <summary>
+	/// Parses a movie file and returns the parse result along with the movie file bytes
+	/// </summary>
+	Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile);
 }
 
 internal class QueueService(
@@ -654,13 +660,43 @@ internal class QueueService(
 			submission.Title);
 	}
 
-	private async Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile)
+	public async Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile)
 	{
-		using var memoryStream = new MemoryStream();
-		await movieFile.CopyToAsync(memoryStream);
-		var movieFileBytes = memoryStream.ToArray();
-		memoryStream.Position = 0;
-		var parseResult = await movieParser.ParseZip(memoryStream);
+		// Inline implementation of DecompressOrTakeRaw
+		var rawFileStream = new MemoryStream();
+		await movieFile.CopyToAsync(rawFileStream);
+
+		MemoryStream fileStream;
+		try
+		{
+			rawFileStream.Position = 0;
+			using var gzip = new GZipStream(rawFileStream, CompressionMode.Decompress, leaveOpen: true);
+			var decompressedFileStream = new MemoryStream();
+			await gzip.CopyToAsync(decompressedFileStream);
+			await rawFileStream.DisposeAsync();
+			decompressedFileStream.Position = 0;
+			fileStream = decompressedFileStream;
+		}
+		catch (InvalidDataException)
+		{
+			rawFileStream.Position = 0;
+			fileStream = rawFileStream;
+		}
+
+		byte[] fileBytes = fileStream.ToArray();
+
+		// Inline implementation of IsZip
+		bool isZip = movieFile.FileName.EndsWith(".zip")
+			&& movieFile.ContentType is "application/x-zip-compressed" or "application/zip";
+
+		var parseResult = isZip
+			? await movieParser.ParseZip(fileStream)
+			: await movieParser.ParseFile(movieFile.FileName, fileStream);
+
+		byte[] movieFileBytes = isZip
+			? fileBytes
+			: await fileService.ZipFile(fileBytes, movieFile.FileName);
+
 		return (parseResult, movieFileBytes);
 	}
 

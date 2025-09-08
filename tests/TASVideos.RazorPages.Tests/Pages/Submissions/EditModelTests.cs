@@ -1,6 +1,5 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -17,13 +16,11 @@ public class EditModelTests : TestDbBase
 
 	public EditModelTests()
 	{
-		var parser = Substitute.For<IMovieParser>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_queueService = Substitute.For<IQueueService>();
 		_topicWatcher = Substitute.For<ITopicWatcher>();
-		var fileService = Substitute.For<IFileService>();
-		_page = new EditModel(_db, _wikiPages, publisher, _queueService, _topicWatcher, parser, fileService);
+		_page = new EditModel(_db, _wikiPages, publisher, _queueService, _topicWatcher);
 	}
 
 	[TestMethod]
