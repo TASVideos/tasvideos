@@ -11,7 +11,6 @@ public class EditModelTests : TestDbBase
 {
 	private readonly IWikiPages _wikiPages;
 	private readonly IQueueService _queueService;
-	private readonly ITopicWatcher _topicWatcher;
 	private readonly EditModel _page;
 
 	public EditModelTests()
@@ -19,8 +18,7 @@ public class EditModelTests : TestDbBase
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_queueService = Substitute.For<IQueueService>();
-		_topicWatcher = Substitute.For<ITopicWatcher>();
-		_page = new EditModel(_db, _wikiPages, publisher, _queueService, _topicWatcher);
+		_page = new EditModel(_db, _wikiPages, publisher, _queueService);
 	}
 
 	[TestMethod]
@@ -280,24 +278,16 @@ public class EditModelTests : TestDbBase
 		var judge = _db.AddUser("Judge").Entity;
 		AddAuthenticatedUser(_page, judge, [PermissionTo.JudgeSubmissions]);
 
-		var wikiPage = new WikiResult
-		{
-			PageName = $"Submission/{submission.Id}",
-			Markup = "Original markup"
-		};
-		_wikiPages.Page($"InternalSystem/SubmissionContent/S{submission.Id}").Returns(wikiPage);
-		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
+		// Mock the ClaimForJudging method to return success
+		_queueService.ClaimForJudging(submission.Id, judge.Id, judge.UserName)
+			.Returns(ClaimSubmissionResult.Successful(submission.Title));
 
 		var actual = await _page.OnGetClaimForJudging();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
 
-		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
-		Assert.IsNotNull(updatedSubmission);
-		Assert.AreEqual(SubmissionStatus.JudgingUnderWay, updatedSubmission.Status);
-		Assert.AreEqual(judge.Id, updatedSubmission.JudgeId);
-
-		await _topicWatcher.Received(1).WatchTopic(1, judge.Id, true);
+		// Verify that the ClaimForJudging method was called with correct parameters
+		await _queueService.Received(1).ClaimForJudging(submission.Id, judge.Id, judge.UserName);
 	}
 
 	[TestMethod]
@@ -309,5 +299,29 @@ public class EditModelTests : TestDbBase
 		var result = await _page.OnGetClaimForPublishing();
 
 		AssertAccessDenied(result);
+	}
+
+	[TestMethod]
+	public async Task OnGetClaimForPublishing_ValidSubmission_ClaimsAndRedirects()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		submission.Status = SubmissionStatus.Accepted;
+		await _db.SaveChangesAsync();
+
+		_page.Id = submission.Id;
+
+		var publisher = _db.AddUser("Publisher").Entity;
+		AddAuthenticatedUser(_page, publisher, [PermissionTo.PublishMovies]);
+
+		// Mock the ClaimForPublishing method to return success
+		_queueService.ClaimForPublishing(submission.Id, publisher.Id, publisher.UserName)
+			.Returns(ClaimSubmissionResult.Successful(submission.Title));
+
+		var actual = await _page.OnGetClaimForPublishing();
+
+		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
+
+		// Verify that the ClaimForPublishing method was called with correct parameters
+		await _queueService.Received(1).ClaimForPublishing(submission.Id, publisher.Id, publisher.UserName);
 	}
 }

@@ -38,7 +38,8 @@ public class QueueServicePublishSubmissionTests : TestDbBase
 		var deprecator = Substitute.For<IMovieFormatDeprecator>();
 		var forumService = Substitute.For<IForumService>();
 		var tasvideosGrue = Substitute.For<ITASVideosGrue>();
-		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, _uploader, _fileService, _userManager, movieParser, deprecator, forumService, tasvideosGrue);
+		var topicWatcher = Substitute.For<ITopicWatcher>();
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, _uploader, _fileService, _userManager, movieParser, deprecator, forumService, tasvideosGrue, topicWatcher);
 	}
 
 	[TestMethod]

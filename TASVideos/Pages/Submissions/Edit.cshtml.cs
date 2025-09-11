@@ -8,8 +8,7 @@ public class EditModel(
 	ApplicationDbContext db,
 	IWikiPages wikiPages,
 	IExternalMediaPublisher publisher,
-	IQueueService queueService,
-	ITopicWatcher topicWatcher)
+	IQueueService queueService)
 	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.ReplaceMovieFile)}";
@@ -222,7 +221,15 @@ public class EditModel(
 			return AccessDenied();
 		}
 
-		return await Claim(SubmissionStatus.New, SubmissionStatus.JudgingUnderWay, "judging", "Claiming for judging.", true);
+		var result = await queueService.ClaimForJudging(Id, User.GetUserId(), User.Name());
+		SetMessage(result.Success, "", result.ErrorMessage ?? "Unable to claim");
+
+		if (result.Success)
+		{
+			await publisher.SendSubmissionEdit(Id, $"[Submission]({{0}}) {SubmissionStatus.JudgingUnderWay.EnumDisplayName()} by {User.Name()}", result.SubmissionTitle);
+		}
+
+		return RedirectToPage("View", new { Id });
 	}
 
 	public async Task<IActionResult> OnGetClaimForPublishing()
@@ -232,52 +239,12 @@ public class EditModel(
 			return AccessDenied();
 		}
 
-		return await Claim(SubmissionStatus.Accepted, SubmissionStatus.PublicationUnderway, "publication", "Processing...", false);
-	}
+		var result = await queueService.ClaimForPublishing(Id, User.GetUserId(), User.Name());
+		SetMessage(result.Success, "", result.ErrorMessage ?? "Unable to claim");
 
-	private async Task<IActionResult> Claim(SubmissionStatus requiredStatus, SubmissionStatus newStatus, string action, string message, bool isJudge)
-	{
-		var submission = await db.Submissions.FindAsync(Id);
-		if (submission is null)
+		if (result.Success)
 		{
-			return NotFound();
-		}
-
-		if (submission.Status != requiredStatus)
-		{
-			return BadRequest("Submission can not be claimed");
-		}
-
-		var submissionPage = (await wikiPages.SubmissionPage(Id))!;
-		db.SubmissionStatusHistory.Add(submission.Id, Submission.Status);
-
-		submission.Status = newStatus;
-		await wikiPages.Add(new WikiCreateRequest
-		{
-			PageName = submissionPage.PageName,
-			Markup = submissionPage.Markup + $"\n----\n[user:{User.Name()}]: {message}",
-			RevisionMessage = $"Claimed for {action}",
-			AuthorId = User.GetUserId()
-		});
-
-		if (isJudge)
-		{
-			submission.JudgeId = User.GetUserId();
-			if (submission.TopicId.HasValue)
-			{
-				await topicWatcher.WatchTopic(submission.TopicId.Value, User.GetUserId(), true);
-			}
-		}
-		else
-		{
-			submission.PublisherId = User.GetUserId();
-		}
-
-		var result = await db.TrySaveChanges();
-		SetMessage(result, "", "Unable to claim");
-		if (result.IsSuccess())
-		{
-			await publisher.SendSubmissionEdit(Id, $"[Submission]({{0}}) {newStatus.EnumDisplayName()} by {User.Name()}", $"{submission.Title}");
+			await publisher.SendSubmissionEdit(Id, $"[Submission]({{0}}) {SubmissionStatus.PublicationUnderway.EnumDisplayName()} by {User.Name()}", result.SubmissionTitle);
 		}
 
 		return RedirectToPage("View", new { Id });

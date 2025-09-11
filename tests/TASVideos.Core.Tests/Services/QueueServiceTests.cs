@@ -55,7 +55,8 @@ public class QueueServiceTests : TestDbBase
 			MinimumHoursBeforeJudgment = MinimumHoursBeforeJudgment,
 			SubmissionRate = new() { Days = SubmissionRateDays, Submissions = SubmissionRateSubs }
 		};
-		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, uploader, _fileService, userManager, _movieParser, deprecator, forumService, _tasvideosGrue);
+		var topicWatcher = Substitute.For<ITopicWatcher>();
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, uploader, _fileService, userManager, _movieParser, deprecator, forumService, _tasvideosGrue, topicWatcher);
 	}
 
 	#region AvailableStatuses
@@ -1583,6 +1584,126 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(4, movieBytes.Length); // Raw file bytes
 		await _movieParser.Received(1).ParseZip(Arg.Any<Stream>());
 		await _fileService.DidNotReceive().ZipFile(Arg.Any<byte[]>(), Arg.Any<string>());
+	}
+
+	#endregion
+
+	#region ClaimForJudging
+
+	[TestMethod]
+	public async Task ClaimForJudging_NonExistentSubmission_ReturnsError()
+	{
+		var result = await _queueService.ClaimForJudging(999, 1, "TestUser");
+
+		Assert.IsFalse(result.Success);
+		Assert.AreEqual("Submission not found", result.ErrorMessage);
+	}
+
+	[TestMethod]
+	public async Task ClaimForJudging_WrongStatus_ReturnsError()
+	{
+		var submission = _db.Submissions.Add(new Submission
+		{
+			Status = JudgingUnderWay,
+			Submitter = _db.AddUser(1).Entity
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.ClaimForJudging(submission.Id, 2, "TestUser");
+
+		Assert.IsFalse(result.Success);
+		Assert.AreEqual("Submission can not be claimed", result.ErrorMessage);
+	}
+
+	[TestMethod]
+	public async Task ClaimForJudging_ValidRequest_Success()
+	{
+		_db.AddForumConstantEntities();
+		var user = _db.AddUser(100).Entity;
+		var judge = _db.AddUser(101).Entity;
+		var submission = _db.Submissions.Add(new Submission
+		{
+			Status = New,
+			Submitter = user,
+			Title = "Test Submission"
+		}).Entity;
+
+		var wikiPage = Substitute.For<IWikiPage>();
+		wikiPage.PageName.Returns("1S");
+		wikiPage.Markup.Returns("Original markup");
+		_wikiPages.Page(Arg.Any<string>(), Arg.Any<int?>()).Returns(wikiPage);
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.ClaimForJudging(submission.Id, judge.Id, judge.UserName);
+
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("Test Submission", result.SubmissionTitle);
+		Assert.IsNull(result.ErrorMessage);
+
+		await _db.Entry(submission).ReloadAsync();
+		Assert.AreEqual(JudgingUnderWay, submission.Status);
+		Assert.AreEqual(judge.Id, submission.JudgeId);
+	}
+
+	#endregion
+
+	#region ClaimForPublishing
+
+	[TestMethod]
+	public async Task ClaimForPublishing_NonExistentSubmission_ReturnsError()
+	{
+		var result = await _queueService.ClaimForPublishing(999, 1, "TestUser");
+
+		Assert.IsFalse(result.Success);
+		Assert.AreEqual("Submission not found", result.ErrorMessage);
+	}
+
+	[TestMethod]
+	public async Task ClaimForPublishing_WrongStatus_ReturnsError()
+	{
+		var submission = _db.Submissions.Add(new Submission
+		{
+			Status = New,
+			Submitter = _db.AddUser(1).Entity
+		}).Entity;
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.ClaimForPublishing(submission.Id, 2, "TestUser");
+
+		Assert.IsFalse(result.Success);
+		Assert.AreEqual("Submission can not be claimed", result.ErrorMessage);
+	}
+
+	[TestMethod]
+	public async Task ClaimForPublishing_ValidRequest_Success()
+	{
+		_db.AddForumConstantEntities();
+		var user = _db.AddUser(200).Entity;
+		var publisher = _db.AddUser(201).Entity;
+		var submission = _db.Submissions.Add(new Submission
+		{
+			Status = Accepted,
+			Submitter = user,
+			Title = "Test Submission"
+		}).Entity;
+
+		var wikiPage = Substitute.For<IWikiPage>();
+		wikiPage.PageName.Returns("1S");
+		wikiPage.Markup.Returns("Original markup");
+		_wikiPages.Page(Arg.Any<string>(), Arg.Any<int?>()).Returns(wikiPage);
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
+		await _db.SaveChangesAsync();
+
+		var result = await _queueService.ClaimForPublishing(submission.Id, publisher.Id, publisher.UserName);
+
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("Test Submission", result.SubmissionTitle);
+		Assert.IsNull(result.ErrorMessage);
+
+		await _db.Entry(submission).ReloadAsync();
+		Assert.AreEqual(PublicationUnderway, submission.Status);
+		Assert.AreEqual(publisher.Id, submission.PublisherId);
 	}
 
 	#endregion
