@@ -915,15 +915,13 @@ internal class QueueService(
 
 			var (screenshotPath, screenshotBytes) = await uploader.UploadScreenshot(publication.Id, request.Screenshot, request.ScreenshotDescription);
 
-			// Create a wiki page corresponding to this publication
-			var wikiPage = new WikiCreateRequest
+			var addedWikiPage = await wikiPages.Add(new WikiCreateRequest
 			{
 				RevisionMessage = $"Auto-generated from Movie #{publication.Id}",
 				PageName = WikiHelper.ToPublicationWikiPageName(publication.Id),
 				Markup = request.MovieDescription,
 				AuthorId = request.UserId
-			};
-			var addedWikiPage = await wikiPages.Add(wikiPage);
+			});
 
 			submission.Status = Published;
 			db.SubmissionStatusHistory.Add(request.SubmissionId, Published);
