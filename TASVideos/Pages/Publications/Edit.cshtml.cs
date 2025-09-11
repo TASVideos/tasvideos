@@ -98,7 +98,10 @@ public class EditModel(
 
 	public async Task<IActionResult> OnGetTitle(int publicationId)
 	{
-		var title = (await db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId))?.Title;
+		var title = await db.Publications
+			.Where(p => p.Id == publicationId)
+			.Select(p => p.Title)
+			.SingleOrDefaultAsync();
 		return Content(title ?? "");
 	}
 
