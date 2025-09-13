@@ -255,6 +255,27 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return PublicationUrls.Add(new PublicationUrl { Publication = pub, Url = url, Type = PublicationUrlType.Mirror });
 	}
 
+	public EntityEntry<PublicationFile> AddScreenshot(Publication pub, string? path = null)
+	{
+		return PublicationFiles.Add(new PublicationFile
+		{
+			Publication = pub,
+			Type = FileType.Screenshot,
+			Path = path ?? "screenshot.png"
+		});
+	}
+
+	public EntityEntry<PublicationFile> AddMovieFile(Publication pub, string? path = null)
+	{
+		return PublicationFiles.Add(new PublicationFile
+		{
+			Publication = pub,
+			Type = FileType.MovieFile,
+			FileData = [0, 1, 2],
+			Path = path ?? "movie.bk2"
+		});
+	}
+
 	public EntityEntry<ForumCategory> AddForumCategory(string? title = null)
 	{
 		return ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category", Ordinal = 1 });

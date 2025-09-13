@@ -39,20 +39,8 @@ public class EditFilesModelTests : TestDbBase
 	{
 		var pub = _db.AddPublication().Entity;
 		_publications.GetTitle(pub.Id).Returns("Test Publication");
-		_db.PublicationFiles.Add(new PublicationFile
-		{
-			PublicationId = pub.Id,
-			Path = "screenshot1.png",
-			Type = FileType.Screenshot,
-			Description = "Screenshot 1"
-		});
-		_db.PublicationFiles.Add(new PublicationFile
-		{
-			PublicationId = pub.Id,
-			Path = "screenshot2.png",
-			Type = FileType.Screenshot,
-			Description = "Screenshot 2"
-		});
+		_db.AddScreenshot(pub, "screenshot1.png");
+		_db.AddScreenshot(pub, "screenshot2.png");
 		await _db.SaveChangesAsync();
 
 		_page.Id = pub.Id;
@@ -87,13 +75,7 @@ public class EditFilesModelTests : TestDbBase
 	{
 		var pub = _db.AddPublication().Entity;
 		pub.Title = "Test Publication";
-
-		_db.PublicationFiles.Add(new PublicationFile
-		{
-			PublicationId = pub.Id,
-			Path = "screenshot.png",
-			Type = FileType.Screenshot
-		});
+		_db.AddScreenshot(pub);
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;

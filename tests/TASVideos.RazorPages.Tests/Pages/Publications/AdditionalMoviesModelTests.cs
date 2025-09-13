@@ -41,13 +41,8 @@ public class AdditionalMoviesModelTests : TestDbBase
 		var pub = _db.AddPublication().Entity;
 		const string description = "Description";
 		const string path = "Path";
-		_db.PublicationFiles.Add(new PublicationFile
-		{
-			PublicationId = pub.Id,
-			Description = description,
-			Path = path,
-			FileData = [0, 1, 2]
-		});
+		var file = _db.AddMovieFile(pub, path).Entity;
+		file.Description = description;
 		await _db.SaveChangesAsync();
 		_publications.GetTitle(pub.Id).Returns(pub.Title);
 
@@ -157,15 +152,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 	{
 		var pub = _db.AddPublication().Entity;
 		var user = _db.AddUser("TestUser").Entity;
-		var file = new PublicationFile
-		{
-			PublicationId = pub.Id,
-			Path = "test.zip",
-			Description = "Test Movie",
-			Type = FileType.MovieFile,
-			FileData = [1, 2, 3]
-		};
-		_db.PublicationFiles.Add(file);
+		var file = _db.AddMovieFile(pub).Entity;
 		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_page, user, [PermissionTo.CreateAdditionalMovieFiles]);
 		_page.Id = pub.Id;
