@@ -31,13 +31,21 @@ public interface IPublications
 	/// Deletes a publication and returns the corresponding submission back to the submission queue
 	/// </summary>
 	Task<UnpublishResult> Unpublish(int publicationId);
+
+	/// <summary>
+	/// Updates a publication's metadata including authors, flags, tags, and other properties
+	/// </summary>
+	/// <returns>List of change messages for logging/notification purposes</returns>
+	Task<UpdatePublicationResult> UpdatePublication(int publicationId, UpdatePublicationRequest request);
 }
 
 internal class Publications(
 	ApplicationDbContext db,
 	IYoutubeSync youtubeSync,
 	ITASVideoAgent tva,
-	IWikiPages wikiPages)
+	IWikiPages wikiPages,
+	ITagService tagService,
+	IFlagService flagService)
 	: IPublications
 {
 	public Task<string?> GetTitle(int publicationId)
@@ -182,6 +190,123 @@ internal class Publications(
 
 		return UnpublishResult.Success(publication.Title);
 	}
+
+	public async Task<UpdatePublicationResult> UpdatePublication(int publicationId, UpdatePublicationRequest request)
+	{
+		var changeMessages = new List<string>();
+
+		var publication = await db.Publications
+			.Include(p => p.Authors)
+			.ThenInclude(pa => pa.Author)
+			.Include(p => p.System)
+			.Include(p => p.SystemFrameRate)
+			.Include(p => p.Game)
+			.Include(p => p.GameVersion)
+			.Include(p => p.GameGoal)
+			.Include(p => p.PublicationTags)
+			.Include(p => p.PublicationFlags)
+			.Include(p => p.PublicationUrls)
+			.SingleOrDefaultAsync(p => p.Id == publicationId);
+
+		if (publication is null)
+		{
+			return new UpdatePublicationResult(false, []);
+		}
+
+		if (publication.ObsoletedById != request.ObsoletedBy)
+		{
+			changeMessages.Add($"Changed obsoleting movie from \"{publication.ObsoletedById}\" to \"{request.ObsoletedBy}\"");
+		}
+
+		if (publication.AdditionalAuthors != request.ExternalAuthors)
+		{
+			changeMessages.Add($"Changed external authors from \"{publication.AdditionalAuthors}\" to \"{request.ExternalAuthors}\"");
+		}
+
+		publication.ObsoletedById = request.ObsoletedBy;
+		publication.EmulatorVersion = request.EmulatorVersion;
+		publication.AdditionalAuthors = request.ExternalAuthors.NormalizeCsv();
+
+		publication.Authors.Clear();
+		publication.Authors.AddRange(await db.Users
+			.ForUsers(request.Authors)
+			.Select(u => new PublicationAuthor
+			{
+				PublicationId = publicationId,
+				UserId = u.Id,
+				Author = u,
+				Ordinal = request.Authors.IndexOf(u.UserName)
+			})
+			.ToListAsync());
+
+		publication.GenerateTitle();
+
+		// Handle flags with permission filtering
+		List<int> editableFlags = await db.Flags
+			.Where(f => f.PermissionRestriction.HasValue && request.UserPermissions.Contains(f.PermissionRestriction.Value) || f.PermissionRestriction == null)
+			.Select(f => f.Id)
+			.ToListAsync();
+		List<PublicationFlag> existingEditablePublicationFlags = publication.PublicationFlags.Where(pf => editableFlags.Contains(pf.FlagId)).ToList();
+		List<int> selectedEditableFlagIds = request.SelectedFlags.Intersect(editableFlags).ToList();
+
+		var flagsToKeep = publication.PublicationFlags.Except(existingEditablePublicationFlags).ToList();
+		publication.PublicationFlags.Clear();
+		publication.PublicationFlags.AddRange(flagsToKeep);
+		publication.PublicationFlags.AddFlags(selectedEditableFlagIds);
+		changeMessages.AddRange((await flagService
+			.GetDiff(existingEditablePublicationFlags.Select(p => p.FlagId), selectedEditableFlagIds))
+			.ToMessages("flags"));
+
+		// Handle tags
+		changeMessages.AddRange((await tagService
+			.GetDiff(publication.PublicationTags.Select(p => p.TagId), request.SelectedTags))
+			.ToMessages("tags"));
+
+		publication.PublicationTags.Clear();
+		db.PublicationTags.RemoveRange(
+			db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
+
+		publication.PublicationTags.AddTags(request.SelectedTags);
+
+		await db.SaveChangesAsync();
+
+		// Handle wiki page updates
+		var existingWikiPage = await wikiPages.PublicationPage(publicationId);
+		IWikiPage? pageToSync = existingWikiPage;
+
+		if (request.WikiMarkup != existingWikiPage!.Markup)
+		{
+			pageToSync = await wikiPages.Add(new WikiCreateRequest
+			{
+				PageName = WikiHelper.ToPublicationWikiPageName(publicationId),
+				Markup = request.WikiMarkup ?? "",
+				MinorEdit = request.MinorEdit,
+				RevisionMessage = request.RevisionMessage,
+				AuthorId = request.AuthorId
+			});
+			changeMessages.Add("Description updated");
+		}
+
+		// Handle YouTube sync
+		foreach (var url in publication.PublicationUrls.ThatAreStreaming())
+		{
+			if (youtubeSync.IsYoutubeUrl(url.Url))
+			{
+				await youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
+					publicationId,
+					publication.CreateTimestamp,
+					url.Url!,
+					url.DisplayName,
+					publication.Title,
+					pageToSync!,
+					publication.System!.Code,
+					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
+					publication.ObsoletedById));
+			}
+		}
+
+		return new UpdatePublicationResult(true, changeMessages, publication.Title);
+	}
 }
 
 public record UnpublishResult(
@@ -201,3 +326,18 @@ public record UnpublishResult(
 	internal static UnpublishResult Success(string publicationTitle)
 		=> new(UnpublishStatus.Success, publicationTitle, "");
 }
+
+public record UpdatePublicationRequest(
+	int? ObsoletedBy,
+	string? EmulatorVersion,
+	string? ExternalAuthors,
+	List<string> Authors,
+	List<int> SelectedFlags,
+	List<int> SelectedTags,
+	List<PermissionTo> UserPermissions,
+	string? WikiMarkup,
+	string? RevisionMessage,
+	int AuthorId,
+	bool MinorEdit);
+
+public record UpdatePublicationResult(bool Success, List<string> ChangeMessages, string? Title = null);

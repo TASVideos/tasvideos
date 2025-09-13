@@ -19,7 +19,9 @@ public class PublicationsTests : TestDbBase
 		_youtubeSync = Substitute.For<IYoutubeSync>();
 		_tva = Substitute.For<ITASVideoAgent>();
 		var wikiPages = Substitute.For<IWikiPages>();
-		_publications = new Publications(_db, _youtubeSync, _tva, wikiPages);
+		var tagService = Substitute.For<ITagService>();
+		var flagService = Substitute.For<IFlagService>();
+		_publications = new Publications(_db, _youtubeSync, _tva, wikiPages, tagService, flagService);
 	}
 
 	#region GetTitle

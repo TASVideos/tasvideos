@@ -13,9 +13,6 @@ public class EditModelTests : TestDbBase
 {
 	private readonly IPublications _publications;
 	private readonly IWikiPages _wikiPages;
-	private readonly ITagService _tagService;
-	private readonly IFlagService _flagService;
-	private readonly IYoutubeSync _youtubeSync;
 	private readonly EditModel _page;
 
 	public EditModelTests()
@@ -23,11 +20,8 @@ public class EditModelTests : TestDbBase
 		_publications = Substitute.For<IPublications>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_wikiPages = Substitute.For<IWikiPages>();
-		_tagService = Substitute.For<ITagService>();
-		_flagService = Substitute.For<IFlagService>();
 		var maintenanceLogger = Substitute.For<IPublicationMaintenanceLogger>();
-		_youtubeSync = Substitute.For<IYoutubeSync>();
-		_page = new EditModel(_db, _publications, publisher, _wikiPages, _tagService, _flagService, maintenanceLogger, _youtubeSync);
+		_page = new EditModel(_db, _publications, publisher, _wikiPages, maintenanceLogger);
 	}
 
 	[TestMethod]
@@ -133,21 +127,19 @@ public class EditModelTests : TestDbBase
 		_wikiPages.Page($"InternalSystem/PublicationContent/M{pub.Id}").Returns(existingWikiPage);
 		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(newWikiPage);
 
-		_tagService.GetDiff(Arg.Any<IEnumerable<int>>(), Arg.Any<IEnumerable<int>>())
-			.Returns(new ListDiff([], []));
-		_flagService.GetDiff(Arg.Any<IEnumerable<int>>(), Arg.Any<IEnumerable<int>>())
-			.Returns(new ListDiff([], []));
+		_publications.UpdatePublication(pub.Id, Arg.Any<UpdatePublicationRequest>())
+			.Returns(new UpdatePublicationResult(true, [], "Test Publication"));
 
 		var result = await _page.OnPost();
 
 		AssertRedirect(result, "View", pub.Id);
+		await _publications.Received(1).UpdatePublication(pub.Id, Arg.Any<UpdatePublicationRequest>());
 	}
 
 	[TestMethod]
 	public async Task OnPost_YouTubeUrlUpdated_SyncsWithYouTube()
 	{
 		var pub = _db.AddPublication().Entity;
-		const string youtubeUrl = "https://www.youtube.com/watch?v=123";
 		_db.AddStreamingUrl(pub, "https://www.youtube.com/watch?v=123");
 		await _db.SaveChangesAsync();
 
@@ -166,17 +158,12 @@ public class EditModelTests : TestDbBase
 		_wikiPages.Page($"InternalSystem/PublicationContent/M{pub.Id}").Returns(existingWikiPage);
 		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(newWikiPage);
 
-		_youtubeSync.IsYoutubeUrl(youtubeUrl).Returns(true);
-		_tagService.GetDiff(Arg.Any<IEnumerable<int>>(), Arg.Any<IEnumerable<int>>())
-			.Returns(new ListDiff([], []));
-		_flagService.GetDiff(Arg.Any<IEnumerable<int>>(), Arg.Any<IEnumerable<int>>())
-			.Returns(new ListDiff([], []));
+		_publications.UpdatePublication(pub.Id, Arg.Any<UpdatePublicationRequest>())
+			.Returns(new UpdatePublicationResult(true, [], "Test Publication"));
 
 		await _page.OnPost();
 
-		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Is<YoutubeVideo>(v =>
-			v.Id == pub.Id &&
-			v.Url == youtubeUrl));
+		await _publications.Received(1).UpdatePublication(pub.Id, Arg.Any<UpdatePublicationRequest>());
 	}
 
 	[TestMethod]
@@ -223,16 +210,15 @@ public class EditModelTests : TestDbBase
 		var existingWikiPage = new WikiResult { Markup = "Test markup" };
 		_wikiPages.Page($"InternalSystem/PublicationContent/M{pub.Id}").Returns(existingWikiPage);
 
-		_tagService.GetDiff(Arg.Any<IEnumerable<int>>(), Arg.Any<IEnumerable<int>>())
-			.Returns(new ListDiff([], []));
-		_flagService.GetDiff(Arg.Any<IEnumerable<int>>(), Arg.Any<IEnumerable<int>>())
-			.Returns(new ListDiff([], []));
+		_publications.UpdatePublication(pub.Id, Arg.Any<UpdatePublicationRequest>())
+			.Returns(new UpdatePublicationResult(true, [], "Test Publication"));
 
 		await _page.OnPost();
 
-		// Verify only valid author remains
+		// Verify only valid author remains (logic now handled in page before calling service)
 		Assert.AreEqual(1, _page.Publication.Authors.Count);
 		Assert.AreEqual("ValidAuthor", _page.Publication.Authors.First());
+		await _publications.Received(1).UpdatePublication(pub.Id, Arg.Any<UpdatePublicationRequest>());
 	}
 
 	[TestMethod]
