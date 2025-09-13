@@ -148,13 +148,7 @@ public class EditModelTests : TestDbBase
 	{
 		var pub = _db.AddPublication().Entity;
 		const string youtubeUrl = "https://www.youtube.com/watch?v=123";
-
-		_db.PublicationUrls.Add(new PublicationUrl
-		{
-			Publication = pub,
-			Url = youtubeUrl,
-			Type = PublicationUrlType.Streaming
-		});
+		_db.AddStreamingUrl(pub, "https://www.youtube.com/watch?v=123");
 		await _db.SaveChangesAsync();
 
 		_page.Id = pub.Id;

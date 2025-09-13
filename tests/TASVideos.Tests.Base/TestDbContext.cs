@@ -245,6 +245,16 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		return AddPublication(null, publicationClass);
 	}
 
+	public EntityEntry<PublicationUrl> AddStreamingUrl(Publication pub, string? url = null)
+	{
+		return PublicationUrls.Add(new PublicationUrl { Publication = pub, Url = url ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ", Type = PublicationUrlType.Streaming });
+	}
+
+	public EntityEntry<PublicationUrl> AddMirrorUrl(Publication pub, string url)
+	{
+		return PublicationUrls.Add(new PublicationUrl { Publication = pub, Url = url, Type = PublicationUrlType.Mirror });
+	}
+
 	public EntityEntry<ForumCategory> AddForumCategory(string? title = null)
 	{
 		return ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category", Ordinal = 1 });

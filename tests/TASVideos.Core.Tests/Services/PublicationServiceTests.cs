@@ -22,6 +22,8 @@ public class PublicationsTests : TestDbBase
 		_publications = new Publications(_db, _youtubeSync, _tva, wikiPages);
 	}
 
+	#region GetTitle
+
 	[TestMethod]
 	public async Task GetTitle_NotFound_ReturnsNull()
 	{
@@ -37,6 +39,42 @@ public class PublicationsTests : TestDbBase
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(pub.Title, actual);
 	}
+
+	#endregion
+
+	#region GetUrls
+
+	[TestMethod]
+	public async Task GetUrls_NotFound_ReturnsEmptyList()
+	{
+		var actual = await _publications.GetUrls(int.MaxValue);
+		Assert.AreEqual(0, actual.Count);
+	}
+
+	[TestMethod]
+	public async Task GetUrls_FoundWithNoUrls_ReturnsEmptyList()
+	{
+		var pub = _db.AddPublication().Entity;
+		var actual = await _publications.GetUrls(pub.Id);
+		Assert.AreEqual(0, actual.Count);
+	}
+
+	[TestMethod]
+	public async Task GetUrls_FoundWithUrls_ReturnsUrls()
+	{
+		var pub = _db.AddPublication().Entity;
+		_db.AddStreamingUrl(pub, "url1");
+		_db.AddStreamingUrl(pub, "url2");
+		await _db.SaveChangesAsync();
+
+		var urls = await _publications.GetUrls(pub.Id);
+
+		Assert.AreEqual(2,  urls.Count);
+	}
+
+	#endregion
+
+	#region CanUnpublish
 
 	[TestMethod]
 	public async Task CanUnpublish_NotFound()
@@ -76,6 +114,10 @@ public class PublicationsTests : TestDbBase
 		Assert.IsTrue(string.IsNullOrWhiteSpace(result.ErrorMessage));
 		Assert.AreEqual(publicationTitle, result.PublicationTitle);
 	}
+
+	#endregion
+
+	#region Unpublish
 
 	[TestMethod]
 	public async Task Unpublish_NotFound()
@@ -121,12 +163,7 @@ public class PublicationsTests : TestDbBase
 		_db.PublicationRatings.Add(new PublicationRating { Publication = pub, User = user2 });
 		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag { Code = "1" } });
 		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag { Code = "2" } });
-		_db.PublicationUrls.Add(new PublicationUrl
-		{
-			Publication = pub,
-			Type = PublicationUrlType.Streaming,
-			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-		});
+		_db.AddStreamingUrl(pub, "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 		await _db.SaveChangesAsync();
 		int publicationId = pub.Id;
 		int submissionId = pub.Submission!.Id;
@@ -173,12 +210,7 @@ public class PublicationsTests : TestDbBase
 		_youtubeSync.IsYoutubeUrl(Arg.Any<string>()).Returns(true);
 
 		var obsoletedPub = _db.AddPublication().Entity;
-		_db.PublicationUrls.Add(new PublicationUrl
-		{
-			Publication = obsoletedPub,
-			Type = PublicationUrlType.Streaming,
-			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-		});
+		_db.AddStreamingUrl(obsoletedPub, "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 		var pub = _db.AddPublication().Entity;
 
 		obsoletedPub.ObsoletedBy = pub;
@@ -186,7 +218,6 @@ public class PublicationsTests : TestDbBase
 		await _db.SaveChangesAsync();
 		var result = await _publications.Unpublish(pub.Id);
 
-		// Result must be correct
 		Assert.IsNotNull(result);
 		Assert.AreEqual(UnpublishResult.UnpublishStatus.Success, result.Status);
 		Assert.AreEqual(pub.Title, result.PublicationTitle);
@@ -200,4 +231,61 @@ public class PublicationsTests : TestDbBase
 		// Obsoleted movie YouTube url must be synced
 		await _youtubeSync.Received(1).SyncYouTubeVideo(Arg.Any<YoutubeVideo>());
 	}
+
+	#endregion
+
+	#region RemoveUrl
+
+	[TestMethod]
+	public async Task RemoveUrl_NotFound_ReturnsNull()
+	{
+		var result = await _publications.RemoveUrl(int.MaxValue);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task RemoveUrl_Found_RemovesUrlAndReturnsSuccess()
+	{
+		var pub = _db.AddPublication().Entity;
+		var url = _db.AddStreamingUrl(pub, "https://example.com/video").Entity;
+		await _db.SaveChangesAsync();
+
+		var result = await _publications.RemoveUrl(url.Id);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(url.Id, result.Id);
+		Assert.AreEqual(url.Url, result.Url);
+		Assert.AreEqual(url.Type, result.Type);
+		Assert.AreEqual(0, _db.PublicationUrls.Count(u => u.Id == url.Id));
+	}
+
+	[TestMethod]
+	public async Task RemoveUrl_DatabaseFailure_ReturnsNull()
+	{
+		var pub = _db.AddPublication().Entity;
+		var url = _db.AddStreamingUrl(pub, "https://example.com/video").Entity;
+		await _db.SaveChangesAsync();
+
+		_db.CreateUpdateConflict();
+		var result = await _publications.RemoveUrl(url.Id);
+
+		Assert.IsNull(result);
+		Assert.AreEqual(1, _db.PublicationUrls.Count(u => u.Id == url.Id));
+	}
+
+	[TestMethod]
+	public async Task RemoveUrl_ConcurrencyFailure_ReturnsConcurrencyFailure()
+	{
+		var pub = _db.AddPublication().Entity;
+		var url = _db.AddStreamingUrl(pub, "https://example.com/video").Entity;
+		await _db.SaveChangesAsync();
+
+		_db.CreateConcurrentUpdateConflict();
+		var result = await _publications.RemoveUrl(url.Id);
+
+		Assert.IsNull(result);
+		Assert.AreEqual(1, _db.PublicationUrls.Count(u => u.Id == url.Id));
+	}
+
+	#endregion
 }

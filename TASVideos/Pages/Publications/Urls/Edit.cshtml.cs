@@ -46,9 +46,7 @@ public class EditUrlsModel(
 		}
 
 		Title = title;
-		CurrentUrls = await db.PublicationUrls
-			.Where(u => u.PublicationId == PublicationId)
-			.ToListAsync();
+		CurrentUrls = await publications.GetUrls(PublicationId);
 
 		if (!UrlId.HasValue)
 		{

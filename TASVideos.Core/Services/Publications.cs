@@ -12,6 +12,17 @@ public interface IPublications
 	Task<string?> GetTitle(int publicationId);
 
 	/// <summary>
+	/// Returns the publication Urls for a given publication, empty list if publication not found, or it has no urls
+	/// </summary>
+	Task<ICollection<PublicationUrl>> GetUrls(int publicationId);
+
+	/// <summary>
+	/// Removes the publication url
+	/// </summary>
+	/// <returns>Null if url is not found and successfully deleted, else null</returns>
+	Task<PublicationUrl?> RemoveUrl(int urlId);
+
+	/// <summary>
 	/// Returns whether a publication can be unpublished, does not affect the publication
 	/// </summary>
 	Task<UnpublishResult> CanUnpublish(int publicationId);
@@ -34,6 +45,29 @@ internal class Publications(
 			.Where(p => p.Id == publicationId)
 			.Select(p => p.Title)
 			.SingleOrDefaultAsync();
+
+	public async Task<ICollection<PublicationUrl>> GetUrls(int publicationId)
+		=> await db.PublicationUrls
+			.Where(u => u.PublicationId == publicationId)
+			.ToListAsync();
+
+	public async Task<PublicationUrl?> RemoveUrl(int urlId)
+	{
+		var url = await db.PublicationUrls.FindAsync(urlId);
+		if (url is null)
+		{
+			return null;
+		}
+
+		db.PublicationUrls.Remove(url);
+		var saveResult = await db.TrySaveChanges();
+		if (!saveResult.IsSuccess())
+		{
+			return null;
+		}
+
+		return url;
+	}
 
 	public async Task<UnpublishResult> CanUnpublish(int publicationId)
 	{

@@ -60,24 +60,27 @@ public class EditUrlsModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_ValidPublicationWithUrlId_PopulatesUrlData()
 	{
-		var pub = _db.AddPublication().Entity;
-		_publications.GetTitle(pub.Id).Returns(pub.Title);
-		var url = _db.PublicationUrls.Add(new PublicationUrl
+		const int pubId = 123;
+		const string pubTitle = "Test TItle";
+		var url = new PublicationUrl
 		{
-			Publication = pub,
-			Url = "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+			Id = 456,
+			PublicationId = pubId,
+			Url = "https://example.com/video",
 			Type = PublicationUrlType.Streaming,
 			DisplayName = "Test Video"
-		}).Entity;
-		await _db.SaveChangesAsync();
+		};
 
-		_model.PublicationId = pub.Id;
+		_publications.GetTitle(pubId).Returns(pubTitle);
+		_publications.GetUrls(pubId).Returns([url]);
+
+		_model.PublicationId = pubId;
 		_model.UrlId = url.Id;
 
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(pub.Title, _model.Title);
+		Assert.AreEqual(pubTitle, _model.Title);
 		Assert.AreEqual(url.Url, _model.CurrentUrl);
 		Assert.AreEqual(url.Type, _model.Type);
 		Assert.AreEqual(url.DisplayName, _model.AltTitle);
@@ -99,23 +102,12 @@ public class EditUrlsModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_ValidPublicationWithExistingUrls_LoadsAllUrls()
 	{
-		var pub = _db.AddPublication().Entity;
-		var url1 = new PublicationUrl
-		{
-			Publication = pub,
-			Url = "https://example.com/1",
-			Type = PublicationUrlType.Mirror
-		};
-		var url2 = new PublicationUrl
-		{
-			Publication = pub,
-			Url = "https://example.com/2",
-			Type = PublicationUrlType.Streaming
-		};
-		_db.PublicationUrls.AddRange(url1, url2);
-		await _db.SaveChangesAsync();
-
-		_model.PublicationId = pub.Id;
+		const int pubId = 123;
+		_publications.GetUrls(pubId).Returns([
+			new PublicationUrl { Url = "https://example.com/1" },
+			new PublicationUrl { Url = "https://example.com/2" }
+		]);
+		_model.PublicationId = pubId;
 
 		var result = await _model.OnGet();
 
@@ -139,12 +131,7 @@ public class EditUrlsModelTests : TestDbBase
 	public async Task OnPost_DuplicateUrl_AddsModelError()
 	{
 		var pub = _db.AddPublication().Entity;
-		_db.PublicationUrls.Add(new PublicationUrl
-		{
-			Publication = pub,
-			Url = "https://example.com/duplicate",
-			Type = PublicationUrlType.Mirror
-		});
+		_db.AddMirrorUrl(pub, "https://example.com/duplicate");
 		await _db.SaveChangesAsync();
 
 		_model.PublicationId = pub.Id;
@@ -199,13 +186,8 @@ public class EditUrlsModelTests : TestDbBase
 	public async Task OnPost_UpdateExistingUrl_UpdatesUrlAndRedirects()
 	{
 		var pub = _db.AddPublication().Entity;
-		var existingUrl = _db.PublicationUrls.Add(new PublicationUrl
-		{
-			Publication = pub,
-			Url = "https://example.com/old",
-			Type = PublicationUrlType.Mirror,
-			DisplayName = "Old URL"
-		}).Entity;
+		var existingUrl = _db.AddMirrorUrl(pub, "https://example.com/old").Entity;
+		existingUrl.DisplayName = "Old URL";
 		await _db.SaveChangesAsync();
 
 		_model.PublicationId = pub.Id;
@@ -283,12 +265,7 @@ public class EditUrlsModelTests : TestDbBase
 	public async Task OnPost_AllowsEditingSameUrlOnSameRecord()
 	{
 		var pub = _db.AddPublication().Entity;
-		var existingUrl = _db.PublicationUrls.Add(new PublicationUrl
-		{
-			Publication = pub,
-			Url = "https://example.com/same",
-			Type = PublicationUrlType.Mirror
-		}).Entity;
+		var existingUrl = _db.AddMirrorUrl(pub, "https://example.com/same").Entity;
 		await _db.SaveChangesAsync();
 
 		_model.PublicationId = pub.Id;
