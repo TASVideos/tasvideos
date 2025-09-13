@@ -14,20 +14,23 @@ public class AdditionalMoviesModelTests : TestDbBase
 	private readonly IExternalMediaPublisher _publisher;
 	private readonly IPublicationMaintenanceLogger _maintenanceLogger;
 	private readonly IMovieParser _parser;
+	private readonly IPublications _publications;
 	private readonly AdditionalMoviesModel _page;
 
 	public AdditionalMoviesModelTests()
 	{
+		_publications = Substitute.For<IPublications>();
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_maintenanceLogger = Substitute.For<IPublicationMaintenanceLogger>();
 		_parser = Substitute.For<IMovieParser>();
-		_page = new AdditionalMoviesModel(_db, _publisher, _maintenanceLogger, _parser);
+		_page = new AdditionalMoviesModel(_db, _publications, _publisher, _maintenanceLogger, _parser);
 	}
 
 	[TestMethod]
 	public async Task OnGet_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
+		_publications.GetTitle(Arg.Any<int>()).Returns((string?)null);
 		var result = await _page.OnGet();
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
@@ -46,6 +49,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 			FileData = [0, 1, 2]
 		});
 		await _db.SaveChangesAsync();
+		_publications.GetTitle(pub.Id).Returns(pub.Title);
 
 		_page.Id = pub.Id;
 
@@ -62,6 +66,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 	public async Task OnPost_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
+		_publications.GetTitle(Arg.Any<int>()).Returns((string?)null);
 		var result = await _page.OnPost();
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}

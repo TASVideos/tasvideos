@@ -11,6 +11,7 @@ namespace TASVideos.RazorPages.Tests.Pages.Publications;
 [TestClass]
 public class EditModelTests : TestDbBase
 {
+	private readonly IPublications _publications;
 	private readonly IWikiPages _wikiPages;
 	private readonly ITagService _tagService;
 	private readonly IFlagService _flagService;
@@ -19,13 +20,14 @@ public class EditModelTests : TestDbBase
 
 	public EditModelTests()
 	{
+		_publications = Substitute.For<IPublications>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		_tagService = Substitute.For<ITagService>();
 		_flagService = Substitute.For<IFlagService>();
 		var maintenanceLogger = Substitute.For<IPublicationMaintenanceLogger>();
 		_youtubeSync = Substitute.For<IYoutubeSync>();
-		_page = new EditModel(_db, publisher, _wikiPages, _tagService, _flagService, maintenanceLogger, _youtubeSync);
+		_page = new EditModel(_db, _publications, publisher, _wikiPages, _tagService, _flagService, maintenanceLogger, _youtubeSync);
 	}
 
 	[TestMethod]
@@ -186,13 +188,15 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGetTitle_ValidPublicationId_ReturnsTitle()
 	{
-		var pub = _db.AddPublication().Entity;
+		const int id = 123;
+		const string title = "Test Title";
+		_publications.GetTitle(id).Returns(title);
 
-		var actual = await _page.OnGetTitle(pub.Id);
+		var actual = await _page.OnGetTitle(id);
 
 		Assert.IsInstanceOfType<ContentResult>(actual);
 		var contentResult = (ContentResult)actual;
-		Assert.AreEqual(pub.Title, contentResult.Content);
+		Assert.AreEqual(title, contentResult.Content);
 	}
 
 	[TestMethod]

@@ -5,6 +5,7 @@ namespace TASVideos.Pages.Publications.Urls;
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class ListUrlsModel(
 	ApplicationDbContext db,
+	IPublications publications,
 	IExternalMediaPublisher publisher,
 	IYoutubeSync youtubeSync,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger)
@@ -19,11 +20,7 @@ public class ListUrlsModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		var title = await db.Publications
-			.Where(p => p.Id == PublicationId)
-			.Select(p => p.Title)
-			.SingleOrDefaultAsync();
-
+		var title = await publications.GetTitle(PublicationId);
 		if (title is null)
 		{
 			return NotFound();

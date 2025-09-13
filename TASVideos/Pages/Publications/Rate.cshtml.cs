@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.RateMovies)]
-public class RateModel(ApplicationDbContext db, IRatingService ratingService) : BasePageModel
+public class RateModel(IPublications publications, IRatingService ratingService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -25,10 +25,7 @@ public class RateModel(ApplicationDbContext db, IRatingService ratingService) : 
 	public async Task<IActionResult> OnGet()
 	{
 		var userId = User.GetUserId();
-		var title = await db.Publications
-			.Where(p => p.Id == Id)
-			.Select(p => p.Title)
-			.SingleOrDefaultAsync();
+		var title = await publications.GetTitle(Id);
 
 		if (title is null)
 		{

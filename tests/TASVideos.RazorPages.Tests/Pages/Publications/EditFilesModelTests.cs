@@ -10,6 +10,7 @@ namespace TASVideos.RazorPages.Tests.Pages.Publications;
 [TestClass]
 public class EditFilesModelTests : TestDbBase
 {
+	private readonly IPublications _publications;
 	private readonly IExternalMediaPublisher _publisher;
 	private readonly IMediaFileUploader _uploader;
 	private readonly IPublicationMaintenanceLogger _publicationMaintenanceLogger;
@@ -17,16 +18,18 @@ public class EditFilesModelTests : TestDbBase
 
 	public EditFilesModelTests()
 	{
+		_publications = Substitute.For<IPublications>();
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_uploader = Substitute.For<IMediaFileUploader>();
 		_publicationMaintenanceLogger = Substitute.For<IPublicationMaintenanceLogger>();
-		_page = new EditFilesModel(_db, _publisher, _uploader, _publicationMaintenanceLogger);
+		_page = new EditFilesModel(_db, _publications, _publisher, _uploader, _publicationMaintenanceLogger);
 	}
 
 	[TestMethod]
 	public async Task OnGet_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
+		_publications.GetTitle(Arg.Any<int>()).Returns((string?)null);
 		var result = await _page.OnGet();
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
@@ -34,25 +37,25 @@ public class EditFilesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_ValidPublication_PopulatesData()
 	{
-		var publication = _db.AddPublication().Entity;
-		publication.Title = "Test Publication";
+		var pub = _db.AddPublication().Entity;
+		_publications.GetTitle(pub.Id).Returns("Test Publication");
 		_db.PublicationFiles.Add(new PublicationFile
 		{
-			PublicationId = publication.Id,
+			PublicationId = pub.Id,
 			Path = "screenshot1.png",
 			Type = FileType.Screenshot,
 			Description = "Screenshot 1"
 		});
 		_db.PublicationFiles.Add(new PublicationFile
 		{
-			PublicationId = publication.Id,
+			PublicationId = pub.Id,
 			Path = "screenshot2.png",
 			Type = FileType.Screenshot,
 			Description = "Screenshot 2"
 		});
 		await _db.SaveChangesAsync();
 
-		_page.Id = publication.Id;
+		_page.Id = pub.Id;
 
 		var result = await _page.OnGet();
 
@@ -66,11 +69,11 @@ public class EditFilesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_PublicationWithNoFiles_PopulatesEmptyFilesList()
 	{
-		var publication = _db.AddPublication().Entity;
-		publication.Title = "Test Publication";
+		var pub = _db.AddPublication().Entity;
+		_publications.GetTitle(pub.Id).Returns("Test Publication");
 		await _db.SaveChangesAsync();
 
-		_page.Id = publication.Id;
+		_page.Id = pub.Id;
 
 		var result = await _page.OnGet();
 
@@ -82,22 +85,21 @@ public class EditFilesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_InvalidModelState_ReturnsPageWithFiles()
 	{
-		var publication = _db.AddPublication().Entity;
-		publication.Title = "Test Publication";
+		var pub = _db.AddPublication().Entity;
+		pub.Title = "Test Publication";
 
-		var file = new PublicationFile
+		_db.PublicationFiles.Add(new PublicationFile
 		{
-			PublicationId = publication.Id,
+			PublicationId = pub.Id,
 			Path = "screenshot.png",
 			Type = FileType.Screenshot
-		};
-		_db.PublicationFiles.Add(file);
+		});
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.EditPublicationFiles]);
 
-		_page.Id = publication.Id;
+		_page.Id = pub.Id;
 		_page.NewScreenshot = CreateMockFormFile("test.png", "image/png");
 		_page.ModelState.AddModelError("NewScreenshot", "Test error");
 
@@ -112,21 +114,21 @@ public class EditFilesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_ValidFile_UploadsFileAndRedirects()
 	{
-		var publication = _db.AddPublication().Entity;
-		publication.Title = "Test Publication";
+		var pub = _db.AddPublication().Entity;
+		pub.Title = "Test Publication";
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.EditPublicationFiles]);
 
-		_page.Id = publication.Id;
-		_page.Title = publication.Title;
+		_page.Id = pub.Id;
+		_page.Title = pub.Title;
 		_page.NewScreenshot = CreateMockFormFile("screenshot.png", "image/png");
 		_page.Description = "Test screenshot";
 
-		var expectedPath = $"{publication.Id}M.png";
+		var expectedPath = $"{pub.Id}M.png";
 		var expectedData = new byte[] { 1, 2, 3, 4 };
-		_uploader.UploadScreenshot(publication.Id, _page.NewScreenshot, "Test screenshot")
+		_uploader.UploadScreenshot(pub.Id, _page.NewScreenshot, "Test screenshot")
 			.Returns((expectedPath, expectedData));
 
 		var result = await _page.OnPost();
@@ -134,50 +136,50 @@ public class EditFilesModelTests : TestDbBase
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("EditFiles", redirect.PageName);
-		Assert.AreEqual(publication.Id, redirect.RouteValues!["Id"]);
-		await _uploader.Received(1).UploadScreenshot(publication.Id, _page.NewScreenshot, "Test screenshot");
-		await _publicationMaintenanceLogger.Received(1).Log(publication.Id, user.Id, Arg.Any<string>());
+		Assert.AreEqual(pub.Id, redirect.RouteValues!["Id"]);
+		await _uploader.Received(1).UploadScreenshot(pub.Id, _page.NewScreenshot, "Test screenshot");
+		await _publicationMaintenanceLogger.Received(1).Log(pub.Id, user.Id, Arg.Any<string>());
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
 	[TestMethod]
 	public async Task OnPost_FileUploadWithoutDescription_UploadsWithNullDescription()
 	{
-		var publication = _db.AddPublication().Entity;
-		publication.Title = "Test Publication";
+		var pub = _db.AddPublication().Entity;
+		pub.Title = "Test Publication";
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.EditPublicationFiles]);
 
-		_page.Id = publication.Id;
-		_page.Title = publication.Title;
+		_page.Id = pub.Id;
+		_page.Title = pub.Title;
 		_page.NewScreenshot = CreateMockFormFile("screenshot.png", "image/png");
 		_page.Description = null;
 
-		var expectedPath = $"{publication.Id}M.png";
+		var expectedPath = $"{pub.Id}M.png";
 		var expectedData = new byte[] { 1, 2, 3, 4 };
-		_uploader.UploadScreenshot(publication.Id, _page.NewScreenshot, null)
+		_uploader.UploadScreenshot(pub.Id, _page.NewScreenshot, null)
 			.Returns((expectedPath, expectedData));
 
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
-		await _uploader.Received(1).UploadScreenshot(publication.Id, _page.NewScreenshot, null);
-		await _publicationMaintenanceLogger.Received(1).Log(publication.Id, user.Id, Arg.Any<string>());
+		await _uploader.Received(1).UploadScreenshot(pub.Id, _page.NewScreenshot, null);
+		await _publicationMaintenanceLogger.Received(1).Log(pub.Id, user.Id, Arg.Any<string>());
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
 	[TestMethod]
 	public async Task OnPostDelete_FileNotFound_ReturnsRedirectWithoutLogging()
 	{
-		var publication = _db.AddPublication().Entity;
+		var pub = _db.AddPublication().Entity;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.EditPublicationFiles]);
 
-		_page.Id = publication.Id;
+		_page.Id = pub.Id;
 		const int nonExistentFileId = 999;
 
 		_uploader.DeleteFile(nonExistentFileId).Returns((DeletedFile?)null);
@@ -187,7 +189,7 @@ public class EditFilesModelTests : TestDbBase
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("EditFiles", redirect.PageName);
-		Assert.AreEqual(publication.Id, redirect.RouteValues!["Id"]);
+		Assert.AreEqual(pub.Id, redirect.RouteValues!["Id"]);
 		await _uploader.Received(1).DeleteFile(nonExistentFileId);
 		await _publicationMaintenanceLogger.DidNotReceive().Log(Arg.Any<int>(), Arg.Any<int>(), Arg.Any<string>());
 		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
@@ -196,15 +198,15 @@ public class EditFilesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPostDelete_ValidFile_DeletesFileAndLogs()
 	{
-		var publication = _db.AddPublication().Entity;
-		publication.Title = "Test Publication";
+		var pub = _db.AddPublication().Entity;
+		pub.Title = "Test Publication";
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.EditPublicationFiles]);
 
-		_page.Id = publication.Id;
-		_page.Title = publication.Title;
+		_page.Id = pub.Id;
+		_page.Title = pub.Title;
 		const int fileId = 123;
 		var deletedFile = new DeletedFile(fileId, FileType.Screenshot, "screenshot.png");
 
@@ -215,9 +217,9 @@ public class EditFilesModelTests : TestDbBase
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("EditFiles", redirect.PageName);
-		Assert.AreEqual(publication.Id, redirect.RouteValues!["Id"]);
+		Assert.AreEqual(pub.Id, redirect.RouteValues!["Id"]);
 		await _uploader.Received(1).DeleteFile(fileId);
-		await _publicationMaintenanceLogger.Received(1).Log(publication.Id, user.Id, Arg.Any<string>());
+		await _publicationMaintenanceLogger.Received(1).Log(pub.Id, user.Id, Arg.Any<string>());
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 }

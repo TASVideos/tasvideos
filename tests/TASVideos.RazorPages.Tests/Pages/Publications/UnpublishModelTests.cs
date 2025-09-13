@@ -10,38 +10,38 @@ namespace TASVideos.RazorPages.Tests.Pages.Publications;
 public class UnpublishModelTests : TestDbBase
 {
 	private readonly IExternalMediaPublisher _publisher;
-	private readonly IQueueService _queueService;
+	private readonly IPublications _publications;
 	private readonly UnpublishModel _page;
 
 	public UnpublishModelTests()
 	{
 		_publisher = Substitute.For<IExternalMediaPublisher>();
-		_queueService = Substitute.For<IQueueService>();
-		_page = new UnpublishModel(_publisher, _queueService);
+		_publications = Substitute.For<IPublications>();
+		_page = new UnpublishModel(_publisher, _publications);
 	}
 
 	[TestMethod]
 	public async Task OnGet_PublicationNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999;
-		_queueService.CanUnpublish(999).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotFound, "", ""));
+		_publications.CanUnpublish(999).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotFound, "", ""));
 
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<NotFoundResult>(result);
-		await _queueService.Received(1).CanUnpublish(999);
+		await _publications.Received(1).CanUnpublish(999);
 	}
 
 	[TestMethod]
 	public async Task OnGet_UnpublishNotAllowed_ReturnsBadRequest()
 	{
 		_page.Id = 123;
-		_queueService.CanUnpublish(123).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotAllowed, "Test Publication", "Test Error"));
+		_publications.CanUnpublish(123).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotAllowed, "Test Publication", "Test Error"));
 
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<BadRequestObjectResult>(result);
-		await _queueService.Received(1).CanUnpublish(123);
+		await _publications.Received(1).CanUnpublish(123);
 	}
 
 	[TestMethod]
@@ -49,13 +49,13 @@ public class UnpublishModelTests : TestDbBase
 	{
 		_page.Id = 456;
 		const string publicationTitle = "Super Mario Bros.";
-		_queueService.CanUnpublish(456).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, publicationTitle, ""));
+		_publications.CanUnpublish(456).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, publicationTitle, ""));
 
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(publicationTitle, _page.Title);
-		await _queueService.Received(1).CanUnpublish(456);
+		await _publications.Received(1).CanUnpublish(456);
 	}
 
 	[TestMethod]
@@ -77,7 +77,7 @@ public class UnpublishModelTests : TestDbBase
 
 		_page.Id = 999;
 		_page.Reason = "Test reason";
-		_queueService.Unpublish(999).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotFound, "", ""));
+		_publications.Unpublish(999).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotFound, "", ""));
 
 		var result = await _page.OnPost();
 
@@ -86,7 +86,7 @@ public class UnpublishModelTests : TestDbBase
 		Assert.AreEqual("View", redirect.PageName);
 		Assert.AreEqual(999, redirect.RouteValues!["Id"]);
 		Assert.AreEqual("Publication 999 not found", _page.Message);
-		await _queueService.Received(1).Unpublish(999);
+		await _publications.Received(1).Unpublish(999);
 	}
 
 	[TestMethod]
@@ -98,7 +98,7 @@ public class UnpublishModelTests : TestDbBase
 		_page.Id = 123;
 		_page.Reason = "Test reason";
 		const string errorMessage = "Cannot unpublish a publication that has awards";
-		_queueService.Unpublish(123).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotAllowed, "Test Publication", errorMessage));
+		_publications.Unpublish(123).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.NotAllowed, "Test Publication", errorMessage));
 
 		var result = await _page.OnPost();
 
@@ -107,7 +107,7 @@ public class UnpublishModelTests : TestDbBase
 		Assert.AreEqual("View", redirect.PageName);
 		Assert.AreEqual(123, redirect.RouteValues!["Id"]);
 		Assert.AreEqual(errorMessage, _page.Message);
-		await _queueService.Received(1).Unpublish(123);
+		await _publications.Received(1).Unpublish(123);
 	}
 
 	[TestMethod]
@@ -119,14 +119,14 @@ public class UnpublishModelTests : TestDbBase
 		_page.Id = 456;
 		_page.Reason = "Obsolete due to improved version";
 		const string publicationTitle = "Super Mario Bros.";
-		_queueService.Unpublish(456).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, publicationTitle, ""));
+		_publications.Unpublish(456).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, publicationTitle, ""));
 
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<RedirectResult>(result);
 		var redirect = (RedirectResult)result;
 		Assert.AreEqual("/Subs-List", redirect.Url);
-		await _queueService.Received(1).Unpublish(456);
+		await _publications.Received(1).Unpublish(456);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
@@ -138,14 +138,14 @@ public class UnpublishModelTests : TestDbBase
 
 		_page.Id = 789;
 		_page.Reason = "";
-		_queueService.Unpublish(789).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, "SMB", ""));
+		_publications.Unpublish(789).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, "SMB", ""));
 
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<RedirectResult>(result);
 		var redirect = (RedirectResult)result;
 		Assert.AreEqual("/Subs-List", redirect.Url);
-		await _queueService.Received(1).Unpublish(789);
+		await _publications.Received(1).Unpublish(789);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
@@ -156,14 +156,14 @@ public class UnpublishModelTests : TestDbBase
 		AddAuthenticatedUser(_page, user, [PermissionTo.Unpublish]);
 		_page.Id = 321;
 		_page.Reason = "This publication has been removed due to a significant improvement in the TAS techniques that makes this obsolete. The new version provides better entertainment value.";
-		_queueService.Unpublish(321).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, "SMB", ""));
+		_publications.Unpublish(321).Returns(new UnpublishResult(UnpublishResult.UnpublishStatus.Success, "SMB", ""));
 
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<RedirectResult>(result);
 		var redirect = (RedirectResult)result;
 		Assert.AreEqual("/Subs-List", redirect.Url);
-		await _queueService.Received(1).Unpublish(321);
+		await _publications.Received(1).Unpublish(321);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 

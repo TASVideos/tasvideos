@@ -9,13 +9,16 @@ namespace TASVideos.RazorPages.Tests.Pages.Publications.Urls;
 [TestClass]
 public class ListUrlsModelTests : TestDbBase
 {
+	private readonly IPublications _publications;
 	private readonly ListUrlsModel _page;
 
 	public ListUrlsModelTests()
 	{
 		var publisher = Substitute.For<IExternalMediaPublisher>();
+		_publications = Substitute.For<IPublications>();
 		_page = new ListUrlsModel(
 			_db,
+			_publications,
 			publisher,
 			Substitute.For<IYoutubeSync>(),
 			Substitute.For<IPublicationMaintenanceLogger>());
@@ -24,6 +27,7 @@ public class ListUrlsModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_NoPublication_ReturnsNotFound()
 	{
+		_publications.GetTitle(Arg.Any<int>()).Returns((string?)null);
 		var actual = await _page.OnGet();
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
@@ -37,6 +41,7 @@ public class ListUrlsModelTests : TestDbBase
 		_db.PublicationUrls.Add(new PublicationUrl { PublicationId = pub.Id, Url = url1 });
 		_db.PublicationUrls.Add(new PublicationUrl { PublicationId = pub.Id, Url = url2 });
 		await _db.SaveChangesAsync();
+		_publications.GetTitle(pub.Id).Returns(pub.Title);
 		_page.PublicationId = pub.Id;
 
 		var actual = await _page.OnGet();

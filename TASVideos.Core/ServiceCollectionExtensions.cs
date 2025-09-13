@@ -73,6 +73,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IPrivateMessageService, PrivateMessageService>();
 		services.AddScoped<IRoleService, RoleService>();
 		services.AddScoped<IRatingService, RatingService>();
+		services.AddScoped<IPublications, Publications>();
 
 		services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 

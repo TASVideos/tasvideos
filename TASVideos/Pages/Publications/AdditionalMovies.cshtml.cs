@@ -5,6 +5,7 @@ namespace TASVideos.Pages.Publications;
 [RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
 public class AdditionalMoviesModel(
 	ApplicationDbContext db,
+	IPublications publications,
 	IExternalMediaPublisher publisher,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger,
 	IMovieParser parser)
@@ -28,11 +29,7 @@ public class AdditionalMoviesModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publicationTitle = await db.Publications
-			.Where(p => p.Id == Id)
-			.Select(p => p.Title)
-			.SingleOrDefaultAsync();
-
+		var publicationTitle = await publications.GetTitle(Id);
 		if (publicationTitle is null)
 		{
 			return NotFound();
@@ -45,12 +42,8 @@ public class AdditionalMoviesModel(
 
 	public async Task<IActionResult> OnPost()
 	{
-		var publication = await db.Publications
-			.Where(p => p.Id == Id)
-			.Select(p => new { p.Id, p.Title })
-			.SingleOrDefaultAsync();
-
-		if (publication is null)
+		var publicationTitle = await publications.GetTitle(Id);
+		if (publicationTitle is null)
 		{
 			return NotFound();
 		}
@@ -64,7 +57,7 @@ public class AdditionalMoviesModel(
 
 		if (!ModelState.IsValid)
 		{
-			PublicationTitle = publication.Title;
+			PublicationTitle = publicationTitle;
 			await PopulateAvailableMovieFiles();
 			return Page();
 		}
@@ -73,7 +66,7 @@ public class AdditionalMoviesModel(
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
-			PublicationTitle = publication.Title;
+			PublicationTitle = publicationTitle;
 			await PopulateAvailableMovieFiles();
 			return Page();
 		}

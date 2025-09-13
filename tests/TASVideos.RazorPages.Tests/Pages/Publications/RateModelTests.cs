@@ -8,19 +8,22 @@ namespace TASVideos.RazorPages.Tests.Pages.Publications;
 [TestClass]
 public class RateModelTests : TestDbBase
 {
+	private readonly IPublications _publications;
 	private readonly IRatingService _ratingService;
 	private readonly RateModel _page;
 
 	public RateModelTests()
 	{
+		_publications = Substitute.For<IPublications>();
 		_ratingService = Substitute.For<IRatingService>();
-		_page = new RateModel(_db, _ratingService);
+		_page = new RateModel(_publications, _ratingService);
 	}
 
 	[TestMethod]
 	public async Task OnGet_NoPublication_ReturnsNotFound()
 	{
 		_page.Id = 999;
+		_publications.GetTitle(Arg.Any<int>()).Returns((string?)null);
 		var actual = await _page.OnGet();
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
@@ -28,8 +31,10 @@ public class RateModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_ValidPublication_PopulatesData()
 	{
-		var pub = _db.AddPublication().Entity;
-		_page.Id = pub.Id;
+		const int id = 123;
+		const string title = "Test Publication";
+		_publications.GetTitle(id).Returns(title);
+		_page.Id = id;
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.RateMovies]);
@@ -38,14 +43,14 @@ public class RateModelTests : TestDbBase
 		var ratings = new List<RatingEntry> { new("TestUser", 8.5, true) };
 		const double overallRating = 8.2;
 
-		_ratingService.GetUserRatingForPublication(user.Id, pub.Id).Returns(userRating);
-		_ratingService.GetRatingsForPublication(pub.Id).Returns(ratings);
-		_ratingService.GetOverallRatingForPublication(pub.Id).Returns(overallRating);
+		_ratingService.GetUserRatingForPublication(user.Id, id).Returns(userRating);
+		_ratingService.GetRatingsForPublication(id).Returns(ratings);
+		_ratingService.GetOverallRatingForPublication(id).Returns(overallRating);
 
 		var actual = await _page.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(actual);
-		Assert.AreEqual(pub.Title, _page.Title);
+		Assert.AreEqual(title, _page.Title);
 		Assert.AreEqual("8.5", _page.Rating);
 		Assert.AreEqual(1, _page.AllRatings.Count);
 		Assert.AreEqual(overallRating, _page.OverallRating);
@@ -54,8 +59,8 @@ public class RateModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_UserWithoutPrivateRatingPermission_OnlySeesPublicRatings()
 	{
-		var pub = _db.AddPublication().Entity;
-		_page.Id = pub.Id;
+		const int id = 123;
+		_page.Id = id;
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.RateMovies]);
@@ -67,7 +72,7 @@ public class RateModelTests : TestDbBase
 			new("AnotherUser", 7.0, true)
 		};
 
-		_ratingService.GetRatingsForPublication(pub.Id).Returns(ratings);
+		_ratingService.GetRatingsForPublication(id).Returns(ratings);
 
 		await _page.OnGet();
 
@@ -79,8 +84,8 @@ public class RateModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_UserWithPrivateRatingPermission_SeesAllRatings()
 	{
-		var pub = _db.AddPublication().Entity;
-		_page.Id = pub.Id;
+		const int id = 123;
+		_page.Id = id;
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.RateMovies, PermissionTo.SeePrivateRatings]);
@@ -92,7 +97,7 @@ public class RateModelTests : TestDbBase
 			new("AnotherUser", 7.0, true)
 		};
 
-		_ratingService.GetRatingsForPublication(pub.Id).Returns(ratings);
+		_ratingService.GetRatingsForPublication(id).Returns(ratings);
 
 		await _page.OnGet();
 
@@ -112,48 +117,44 @@ public class RateModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_ValidRating_UpdatesRatingAndRedirects()
 	{
-		var pub = _db.AddPublication().Entity;
-		_page.Id = pub.Id;
-		_page.Title = pub.Title;
+		const int id = 123;
+		_page.Id = id;
 		_page.Rating = "8.5";
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.RateMovies]);
 
-		_ratingService.UpdateUserRating(user.Id, pub.Id, 8.5)
-			.Returns(Task.FromResult(SaveResult.Success));
+		_ratingService.UpdateUserRating(user.Id, id, 8.5).Returns(SaveResult.Success);
 
 		var result = await _page.OnPost();
 
-		AssertRedirect(result, "/Publications/Rate", pub.Id);
-		await _ratingService.Received(1).UpdateUserRating(user.Id, pub.Id, 8.5);
+		AssertRedirect(result, "/Publications/Rate", id);
+		await _ratingService.Received(1).UpdateUserRating(user.Id, id, 8.5);
 	}
 
 	[TestMethod]
 	public async Task OnPost_RatingServiceFails_ShowsErrorMessage()
 	{
-		var pub = _db.AddPublication().Entity;
-		_page.Id = pub.Id;
-		_page.Title = pub.Title;
+		const int id = 123;
+		_page.Id = id;
 		_page.Rating = "8.5";
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.RateMovies]);
 
-		_ratingService.UpdateUserRating(user.Id, pub.Id, 8.5)
-			.Returns(Task.FromResult(SaveResult.UpdateFailure));
+		_ratingService.UpdateUserRating(user.Id, id, 8.5).Returns(SaveResult.UpdateFailure);
 
 		var actual = await _page.OnPost();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
-		await _ratingService.Received(1).UpdateUserRating(user.Id, pub.Id, 8.5);
+		await _ratingService.Received(1).UpdateUserRating(user.Id, id, 8.5);
 	}
 
 	[TestMethod]
 	public async Task OnPostInline_NullRating_ClearsRating()
 	{
-		var pub = _db.AddPublication().Entity;
-		_page.Id = pub.Id;
+		const int id = 123;
+		_page.Id = id;
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.RateMovies]);
@@ -163,13 +164,12 @@ public class RateModelTests : TestDbBase
 		_page.HttpContext.Request.Body = stream;
 
 		const double overallRating = 7.8;
-		_ratingService.GetOverallRatingForPublication(pub.Id)
-			.Returns(Task.FromResult(overallRating));
+		_ratingService.GetOverallRatingForPublication(id).Returns(overallRating);
 
 		var actual = await _page.OnPostInline();
 
 		Assert.IsInstanceOfType<JsonResult>(actual);
-		await _ratingService.Received(1).UpdateUserRating(user.Id, pub.Id, null);
-		await _ratingService.Received(1).GetOverallRatingForPublication(pub.Id);
+		await _ratingService.Received(1).UpdateUserRating(user.Id, id, null);
+		await _ratingService.Received(1).GetOverallRatingForPublication(id);
 	}
 }

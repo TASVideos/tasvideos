@@ -7,6 +7,7 @@ namespace TASVideos.Pages.Publications;
 [RequirePermission(PermissionTo.EditPublicationMetaData)]
 public class EditModel(
 	ApplicationDbContext db,
+	IPublications publications,
 	IExternalMediaPublisher publisher,
 	IWikiPages wikiPages,
 	ITagService tagsService,
@@ -98,10 +99,7 @@ public class EditModel(
 
 	public async Task<IActionResult> OnGetTitle(int publicationId)
 	{
-		var title = await db.Publications
-			.Where(p => p.Id == publicationId)
-			.Select(p => p.Title)
-			.SingleOrDefaultAsync();
+		var title = await publications.GetTitle(publicationId);
 		return Content(title ?? "");
 	}
 

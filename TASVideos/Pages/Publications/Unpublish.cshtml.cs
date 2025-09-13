@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.Unpublish)]
-public class UnpublishModel(IExternalMediaPublisher publisher, IQueueService queueService) : BasePageModel
+public class UnpublishModel(IExternalMediaPublisher publisher, IPublications publications) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -14,7 +14,7 @@ public class UnpublishModel(IExternalMediaPublisher publisher, IQueueService que
 
 	public async Task<IActionResult> OnGet()
 	{
-		var result = await queueService.CanUnpublish(Id);
+		var result = await publications.CanUnpublish(Id);
 
 		switch (result.Status)
 		{
@@ -35,7 +35,7 @@ public class UnpublishModel(IExternalMediaPublisher publisher, IQueueService que
 			return Page();
 		}
 
-		var result = await queueService.Unpublish(Id);
+		var result = await publications.Unpublish(Id);
 		switch (result.Status)
 		{
 			case UnpublishResult.UnpublishStatus.NotFound:
