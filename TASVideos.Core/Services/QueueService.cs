@@ -47,15 +47,6 @@ public interface IQueueService
 	Task<UnpublishResult> Unpublish(int publicationId);
 
 	/// <summary>
-	/// Obsoletes a publication with the existing publication.
-	/// In addition, it marks and syncs the obsoleted YouTube videos
-	/// </summary>
-	/// <param name="publicationToObsolete">The movie to obsolete</param>
-	/// <param name="obsoletingPublicationId">The movie that obsoletes it</param>
-	/// <returns>False if publications is not found</returns>
-	Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId);
-
-	/// <summary>
 	/// Returns whether the user has exceeded the submission limit
 	/// </summary>
 	/// <returns>Next time the user can submit, if the limit has been exceeded, else null</returns>
@@ -258,12 +249,9 @@ internal class QueueService(
 			return DeleteSubmissionResult.NotFound();
 		}
 
-		if (sub.IsPublished)
-		{
-			return DeleteSubmissionResult.IsPublished(sub.Title);
-		}
-
-		return DeleteSubmissionResult.Success(sub.Title);
+		return sub.IsPublished
+			? DeleteSubmissionResult.IsPublished(sub.Title)
+			: DeleteSubmissionResult.Success(sub.Title);
 	}
 
 	public async Task<DeleteSubmissionResult> DeleteSubmission(int submissionId)
@@ -328,12 +316,9 @@ internal class QueueService(
 			return UnpublishResult.NotFound();
 		}
 
-		if (pub.HasAwards)
-		{
-			return UnpublishResult.HasAwards(pub.Title);
-		}
-
-		return UnpublishResult.Success(pub.Title);
+		return pub.HasAwards
+			? UnpublishResult.HasAwards(pub.Title)
+			: UnpublishResult.Success(pub.Title);
 	}
 
 	public async Task<UnpublishResult> Unpublish(int publicationId)
@@ -427,50 +412,6 @@ internal class QueueService(
 		}
 
 		return UnpublishResult.Success(publication.Title);
-	}
-
-	public async Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId)
-	{
-		var toObsolete = await db.Publications
-			.Include(p => p.PublicationUrls)
-			.Include(p => p.System)
-			.Include(p => p.Game)
-			.Include(p => p.Authors)
-			.ThenInclude(pa => pa.Author)
-			.SingleOrDefaultAsync(p => p.Id == publicationToObsolete);
-
-		if (toObsolete is null)
-		{
-			return false;
-		}
-
-		var pageName = WikiHelper.ToPublicationWikiPageName(toObsolete.Id);
-		var wikiPage = await wikiPages.Page(pageName);
-
-		toObsolete.ObsoletedById = obsoletingPublicationId;
-		await db.SaveChangesAsync();
-
-		foreach (var url in toObsolete.PublicationUrls
-					.ThatAreStreaming()
-					.Where(pu => youtubeSync.IsYoutubeUrl(pu.Url)))
-		{
-			var obsoleteVideo = new YoutubeVideo(
-				toObsolete.Id,
-				toObsolete.CreateTimestamp,
-				url.Url ?? "",
-				url.DisplayName,
-				toObsolete.Title,
-				wikiPage!,
-				toObsolete.System!.Code,
-				toObsolete.Authors
-					.OrderBy(pa => pa.Ordinal)
-					.Select(pa => pa.Author!.UserName),
-				obsoletingPublicationId);
-
-			await youtubeSync.SyncYouTubeVideo(obsoleteVideo);
-		}
-
-		return true;
 	}
 
 	public async Task<DateTime?> ExceededSubmissionLimit(int userId)
@@ -987,6 +928,50 @@ internal class QueueService(
 
 		var page = await wikiPages.PublicationPage(publicationId);
 		return new ObsoletePublicationResult(pub.Title, pub.Tags, page!.Markup);
+	}
+
+	internal async Task<bool> ObsoleteWith(int publicationToObsolete, int obsoletingPublicationId)
+	{
+		var toObsolete = await db.Publications
+			.Include(p => p.PublicationUrls)
+			.Include(p => p.System)
+			.Include(p => p.Game)
+			.Include(p => p.Authors)
+			.ThenInclude(pa => pa.Author)
+			.SingleOrDefaultAsync(p => p.Id == publicationToObsolete);
+
+		if (toObsolete is null)
+		{
+			return false;
+		}
+
+		var pageName = WikiHelper.ToPublicationWikiPageName(toObsolete.Id);
+		var wikiPage = await wikiPages.Page(pageName);
+
+		toObsolete.ObsoletedById = obsoletingPublicationId;
+		await db.SaveChangesAsync();
+
+		foreach (var url in toObsolete.PublicationUrls
+					.ThatAreStreaming()
+					.Where(pu => youtubeSync.IsYoutubeUrl(pu.Url)))
+		{
+			var obsoleteVideo = new YoutubeVideo(
+				toObsolete.Id,
+				toObsolete.CreateTimestamp,
+				url.Url ?? "",
+				url.DisplayName,
+				toObsolete.Title,
+				wikiPage!,
+				toObsolete.System!.Code,
+				toObsolete.Authors
+					.OrderBy(pa => pa.Ordinal)
+					.Select(pa => pa.Author!.UserName),
+				obsoletingPublicationId);
+
+			await youtubeSync.SyncYouTubeVideo(obsoleteVideo);
+		}
+
+		return true;
 	}
 
 	internal async Task<ParsedSubmissionData?> MapParsedResult(IParseResult parseResult)
