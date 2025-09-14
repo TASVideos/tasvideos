@@ -1,6 +1,7 @@
-﻿using TASVideos.Core.Services;
+﻿using Microsoft.AspNetCore.Http;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.MovieParsers;
+using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
@@ -13,7 +14,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 {
 	private readonly IExternalMediaPublisher _publisher;
 	private readonly IPublicationMaintenanceLogger _maintenanceLogger;
-	private readonly IMovieParser _parser;
+	private readonly IQueueService _queueService;
 	private readonly IPublications _publications;
 	private readonly AdditionalMoviesModel _page;
 
@@ -22,8 +23,8 @@ public class AdditionalMoviesModelTests : TestDbBase
 		_publications = Substitute.For<IPublications>();
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_maintenanceLogger = Substitute.For<IPublicationMaintenanceLogger>();
-		_parser = Substitute.For<IMovieParser>();
-		_page = new AdditionalMoviesModel(_db, _publications, _publisher, _maintenanceLogger, _parser);
+		_queueService = Substitute.For<IQueueService>();
+		_page = new AdditionalMoviesModel(_db, _publications, _publisher, _maintenanceLogger, _queueService);
 	}
 
 	[TestMethod]
@@ -67,33 +68,39 @@ public class AdditionalMoviesModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnPost_NonZipFile_AddsModelError()
+	public async Task OnPost_ZipFile_AddsModelError()
 	{
 		var pub = _db.AddPublication().Entity;
 		await _db.SaveChangesAsync();
+		_publications.GetTitle(pub.Id).Returns(pub.Title);
 
 		_page.Id = pub.Id;
-		_page.AdditionalMovieFile = CreateMockFormFile("test.bk2", "application/octet-stream");
+		_page.AdditionalMovieFile = CreateMockFormFile("test.zip", "application/zip");
+		_page.DisplayName = "Test Movie";
 
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsFalse(_page.ModelState.IsValid);
+		Assert.IsFalse(_page.ModelState.IsValid, "ModelState should be invalid due to zip file rejection");
 		Assert.IsTrue(_page.ModelState.ContainsKey(nameof(_page.AdditionalMovieFile)));
+		Assert.IsTrue(_page.ModelState[nameof(_page.AdditionalMovieFile)]!.Errors[0].ErrorMessage.Contains("Zip files are not allowed"));
 	}
 
 	[TestMethod]
-	public async Task OnPost_ValidZipFileParseError_AddsModelError()
+	public async Task OnPost_ValidMovieFileParseError_AddsModelError()
 	{
 		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
+		_publications.GetTitle(pub.Id).Returns(pub.Title);
+
 		_page.Id = pub.Id;
-		_page.AdditionalMovieFile = CreateMockFormFile("test.zip", "application/zip");
+		_page.AdditionalMovieFile = CreateMockFormFile("test.bk2", "application/octet-stream");
 		_page.DisplayName = "Test Movie";
 
 		var parseResult = Substitute.For<IParseResult>();
 		parseResult.Success.Returns(false);
 		parseResult.Errors.Returns(["Parse error occurred"]);
-		_parser.ParseZip(Arg.Any<Stream>()).Returns(parseResult);
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[0]));
 
 		var result = await _page.OnPost();
 
@@ -102,20 +109,21 @@ public class AdditionalMoviesModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnPost_ValidZipFileParseSuccess_AddsFileAndRedirects()
+	public async Task OnPost_ValidMovieFileParseSuccess_AddsFileAndRedirects()
 	{
 		var pub = _db.AddPublication().Entity;
 		var user = _db.AddUser("TestUser").Entity;
 		await _db.SaveChangesAsync();
+		_publications.GetTitle(pub.Id).Returns(pub.Title);
 		AddAuthenticatedUser(_page, user, [PermissionTo.CreateAdditionalMovieFiles]);
 
 		var parseResult = Substitute.For<IParseResult>();
 		parseResult.Success.Returns(true);
-		_parser.ParseZip(Arg.Any<Stream>()).Returns(parseResult);
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3, 4 }));
 
 		_page.Id = pub.Id;
-		_page.AdditionalMovieFile = CreateMockFormFile("test.zip", "application/zip");
-		_page.DisplayName = "Test Movie";
+		_page.AdditionalMovieFile = CreateMockFormFile("test.bk2", "application/octet-stream");
+		_page.DisplayName = "Test BK2 Movie";
 
 		var result = await _page.OnPost();
 
@@ -127,8 +135,8 @@ public class AdditionalMoviesModelTests : TestDbBase
 			.SingleOrDefaultAsync(pf => pf.PublicationId == pub.Id);
 
 		Assert.IsNotNull(addedFile);
-		Assert.AreEqual("test.zip", addedFile.Path);
-		Assert.AreEqual("Test Movie", addedFile.Description);
+		Assert.AreEqual("test.bk2", addedFile.Path);
+		Assert.AreEqual("Test BK2 Movie", addedFile.Description);
 		Assert.AreEqual(FileType.MovieFile, addedFile.Type);
 
 		await _maintenanceLogger.Received(1).Log(pub.Id, user.Id, Arg.Any<string>());

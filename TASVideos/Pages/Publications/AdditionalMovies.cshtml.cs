@@ -1,6 +1,4 @@
-﻿using TASVideos.MovieParsers;
-
-namespace TASVideos.Pages.Publications;
+﻿namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
 public class AdditionalMoviesModel(
@@ -8,7 +6,7 @@ public class AdditionalMoviesModel(
 	IPublications publications,
 	IExternalMediaPublisher publisher,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger,
-	IMovieParser parser)
+	IQueueService queueService)
 	: BasePageModel
 {
 	[FromRoute]
@@ -48,9 +46,10 @@ public class AdditionalMoviesModel(
 			return NotFound();
 		}
 
-		if (!AdditionalMovieFile.IsZip())
+		// Explicitly reject zip files - only individual movie files are allowed
+		if (AdditionalMovieFile.IsZip())
 		{
-			ModelState.AddModelError(nameof(AdditionalMovieFile), "Not a valid .zip file");
+			ModelState.AddModelError(nameof(AdditionalMovieFile), "Zip files are not allowed. Please upload the individual movie file instead.");
 		}
 
 		AdditionalMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User);
@@ -62,7 +61,8 @@ public class AdditionalMoviesModel(
 			return Page();
 		}
 
-		var parseResult = await parser.ParseZip(AdditionalMovieFile!.OpenReadStream());
+		// Parse the individual movie file (zip files are rejected above)
+		var (parseResult, movieFileBytes) = await queueService.ParseMovieFile(AdditionalMovieFile!);
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
@@ -77,7 +77,7 @@ public class AdditionalMoviesModel(
 			PublicationId = Id,
 			Description = DisplayName,
 			Type = FileType.MovieFile,
-			FileData = await AdditionalMovieFile.ToBytes()
+			FileData = movieFileBytes
 		});
 
 		string log = $"Added new movie file: {DisplayName}";

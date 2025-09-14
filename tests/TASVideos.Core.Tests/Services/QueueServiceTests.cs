@@ -1386,7 +1386,7 @@ public class QueueServiceTests : TestDbBase
 		var zippedBytes = new byte[] { 5, 6, 7, 8, 9 };
 		_fileService.ZipFile(Arg.Any<byte[]>(), "test.bk2").Returns(zippedBytes);
 
-		var (result, movieBytes) = await _queueService.ParseMovieFile(formFile);
+		var (result, movieBytes) = await _queueService.ParseMovieFileOrZip(formFile);
 
 		Assert.AreEqual(parseResult, result);
 		Assert.AreEqual(zippedBytes, movieBytes);
@@ -1410,7 +1410,7 @@ public class QueueServiceTests : TestDbBase
 
 		_movieParser.ParseZip(Arg.Any<Stream>()).Returns(parseResult);
 
-		var (result, movieBytes) = await _queueService.ParseMovieFile(formFile);
+		var (result, movieBytes) = await _queueService.ParseMovieFileOrZip(formFile);
 
 		Assert.AreEqual(parseResult, result);
 		Assert.AreEqual(4, movieBytes.Length); // Raw file bytes
