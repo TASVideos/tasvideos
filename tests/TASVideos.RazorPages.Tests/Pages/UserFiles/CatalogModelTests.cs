@@ -36,7 +36,7 @@ public class CatalogModelTests : TestDbBase
 			System = system,
 			Game = game,
 			Author = author,
-			Class = UserFileClass.Movie,
+			Class = UserFileClass.Movie
 		}).Entity;
 		await _db.SaveChangesAsync();
 		_page.Id = userFile.Id;

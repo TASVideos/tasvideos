@@ -2,6 +2,7 @@
 
 namespace TASVideos.Pages.Forum;
 
+[AllowAnonymous]
 public class MoodReportModel(ApplicationDbContext db) : BasePageModel
 {
 	public static readonly ForumPostMood[] Moods = Enum.GetValues<ForumPostMood>();

@@ -4,6 +4,7 @@ using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity;
+using TASVideos.MovieParsers;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -33,7 +34,12 @@ public class QueueServicePublishSubmissionTests : TestDbBase
 			SubmissionRate = new() { Days = 30, Submissions = 5 }
 		};
 
-		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, _uploader, _fileService, _userManager);
+		var movieParser = Substitute.For<IMovieParser>();
+		var deprecator = Substitute.For<IMovieFormatDeprecator>();
+		var forumService = Substitute.For<IForumService>();
+		var tasvideosGrue = Substitute.For<ITASVideosGrue>();
+		var topicWatcher = Substitute.For<ITopicWatcher>();
+		_queueService = new QueueService(settings, _db, _youtubeSync, _tva, _wikiPages, _uploader, _fileService, _userManager, movieParser, deprecator, forumService, tasvideosGrue, topicWatcher);
 	}
 
 	[TestMethod]

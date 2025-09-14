@@ -117,7 +117,7 @@ public class FormFileExtensionTests
 		var formFile = Substitute.For<IFormFile>();
 		formFile.Length.Returns(SiteGlobalConstants.MaximumMovieSize);
 		var modelState = Substitute.For<ModelStateDictionary>();
-		var user = RazorTestHelpers.CreateClaimsPrincipalWithPermissions([PermissionTo.OverrideSubmissionConstraints]);
+		var user = CreateClaimsPrincipalWithPermissions([PermissionTo.OverrideSubmissionConstraints]);
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
 		Assert.AreEqual(0, modelState.Count);

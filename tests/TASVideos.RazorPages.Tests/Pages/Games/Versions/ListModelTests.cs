@@ -1,4 +1,4 @@
-using TASVideos.Data.Entity.Game;
+﻿using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Versions;
 using TASVideos.Tests.Base;
 

@@ -89,7 +89,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 
 	internal async Task<IEnumerable<Language>> AvailableLanguages()
 	{
-		var languagesMarkup = (await wikiPages.SystemPage("Languages"))?.Markup;
+		var languagesMarkup = (await wikiPages.Page(SystemWiki.Languages))?.Markup;
 
 		if (string.IsNullOrWhiteSpace(languagesMarkup))
 		{

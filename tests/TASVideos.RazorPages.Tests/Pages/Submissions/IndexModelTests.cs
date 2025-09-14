@@ -230,7 +230,7 @@ public class IndexModelTests : TestDbBase
 	public void SubmissionSearchRequest_GameIds_ReturnsCorrectCollection()
 	{
 		// Empty when GameId is null or empty
-		var filter = (ISubmissionFilter)new IndexModel.SubmissionSearchRequest { GameId = null };
+		ISubmissionFilter filter = new IndexModel.SubmissionSearchRequest { GameId = null };
 		Assert.IsFalse(filter.GameIds.Any());
 
 		filter = new IndexModel.SubmissionSearchRequest { GameId = "" };

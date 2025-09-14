@@ -6,18 +6,6 @@ namespace TASVideos.IntegrationTests.Extensions;
 public static class HttpResponseExtensions
 {
 	/// <summary>
-	/// Parses the HTML response into an AngleSharp document for easy querying
-	/// </summary>
-	public static async Task<IHtmlDocument> GetHtmlDocumentAsync(this HttpResponseMessage response)
-	{
-		var content = await response.Content.ReadAsStringAsync();
-		var config = Configuration.Default;
-		var context = BrowsingContext.New(config);
-		return await context.OpenAsync(req => req.Content(content)) as IHtmlDocument
-			?? throw new InvalidOperationException("Failed to parse HTML document");
-	}
-
-	/// <summary>
 	/// Asserts that the response was successful (2xx status code)
 	/// </summary>
 	public static void EnsureSuccessStatusCode(this HttpResponseMessage response, string? context = null)
@@ -65,5 +53,14 @@ public static class HttpResponseExtensions
 	{
 		var document = await response.GetHtmlDocumentAsync();
 		return document.QuerySelector(selector);
+	}
+
+	private static async Task<IHtmlDocument> GetHtmlDocumentAsync(this HttpResponseMessage response)
+	{
+		var content = await response.Content.ReadAsStringAsync();
+		var config = Configuration.Default;
+		var context = BrowsingContext.New(config);
+		return await context.OpenAsync(req => req.Content(content)) as IHtmlDocument
+			?? throw new InvalidOperationException("Failed to parse HTML document");
 	}
 }

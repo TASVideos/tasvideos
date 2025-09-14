@@ -197,5 +197,5 @@ public class ReasonModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public void AllowsAnonymousAttribute() =>  AssertAllowsAnonymousUsers(typeof(ReasonModel));
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(ReasonModel));
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
-using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.UserFiles;
+using TASVideos.Services;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;
@@ -15,7 +15,7 @@ public class InfoModelTests : TestDbBase
 	public InfoModelTests()
 	{
 		_fileService = Substitute.For<IFileService>();
-		_page = new InfoModel(_db, _fileService);
+		_page = new InfoModel(_db, _fileService, new NullMetrics());
 	}
 
 	[TestMethod]

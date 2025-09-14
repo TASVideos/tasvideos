@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Data.AutoHistory;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class IncludeInAutoHistoryAttribute : Attribute { }
+public class IncludeInAutoHistoryAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Property)]
-public class ExcludeFromAutoHistoryAttribute : Attribute { }
+public class ExcludeFromAutoHistoryAttribute : Attribute;

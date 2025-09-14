@@ -2,7 +2,7 @@
 
 public static class TestPosts
 {
-	public static string BasicFormatting = """
+	public const string BasicFormatting = """
 		[b]Bold text[/b] and [i]italic text[/i] with [u]underlined[/u] and [s]strikethrough[/s] formatting.
 		
 		[center]This is centered text[/center]

@@ -16,8 +16,7 @@ public class MoodReportModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_NoUserName_ReturnsAllUsersWithMoodAvatars()
 	{
-		CreateUsersWithMoodAvatars();
-		await _db.SaveChangesAsync();
+		await CreateUsersWithMoodAvatars();
 
 		await _model.OnGet();
 
@@ -31,8 +30,7 @@ public class MoodReportModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithUserName_ReturnsSpecificUser()
 	{
-		CreateUsersWithMoodAvatars();
-		await _db.SaveChangesAsync();
+		await CreateUsersWithMoodAvatars();
 		_model.UserName = "User1";
 
 		await _model.OnGet();
@@ -56,8 +54,7 @@ public class MoodReportModelTests : TestDbBase
 	[DataRow("  ")]
 	public async Task OnGet_WitNullOrWhitespaceUserName_ReturnsAllUsers(string userName)
 	{
-		CreateUsersWithMoodAvatars();
-		await _db.SaveChangesAsync();
+		await CreateUsersWithMoodAvatars();
 		_model.UserName = userName;
 
 		await _model.OnGet();
@@ -68,7 +65,14 @@ public class MoodReportModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_UsersWithoutMoodAvatars_AreExcluded()
 	{
-		CreateUsersWithAndWithoutMoodAvatars();
+		var role = _db.AddRoleWithPermission(PermissionTo.UseMoodAvatars).Entity;
+
+		var userWithMood = _db.AddUser("UserWithMood").Entity;
+		userWithMood.MoodAvatarUrlBase = "https://example.com/moods/";
+		var userWithoutMood = _db.AddUser("UserWithoutMood").Entity;
+
+		_db.AssignUserToRole(userWithMood, role);
+		_db.AssignUserToRole(userWithoutMood, role);
 		await _db.SaveChangesAsync();
 
 		await _model.OnGet();
@@ -80,14 +84,13 @@ public class MoodReportModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_UsersWithoutMoodAvatarPermission_AreExcluded()
 	{
-		var roleWithPermission = CreateRoleWithMoodAvatarPermission();
-		var roleWithoutPermission = CreateRoleWithoutMoodAvatarPermission();
+		var roleWithPermission = _db.AddRoleWithPermission(PermissionTo.UseMoodAvatars).Entity;
+		var userWithPermission = _db.AddUser("UserWithPermission").Entity;
+		userWithPermission.MoodAvatarUrlBase = "https://example.com/moods/";
+		_db.AssignUserToRole(userWithPermission, roleWithPermission);
 
-		var userWithPermission = CreateUser("UserWithPermission", "https://example.com/moods/");
-		var userWithoutPermission = CreateUser("UserWithoutPermission", "https://example.com/moods2/");
-
-		AssignUserToRole(userWithPermission, roleWithPermission);
-		AssignUserToRole(userWithoutPermission, roleWithoutPermission);
+		var userWithoutPermission = _db.AddUserWithRole("UserWithoutPermission").Entity;
+		userWithoutPermission.MoodAvatarUrlBase = "https://example.com/moods2/";
 
 		await _db.SaveChangesAsync();
 
@@ -104,72 +107,20 @@ public class MoodReportModelTests : TestDbBase
 		Assert.AreEqual(0, _model.MoodyUsers.Count);
 	}
 
-	private void CreateUsersWithMoodAvatars()
+	[TestMethod]
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(MoodReportModel));
+
+	private async Task CreateUsersWithMoodAvatars()
 	{
-		var role = CreateRoleWithMoodAvatarPermission();
+		var role = _db.AddRoleWithPermission(PermissionTo.UseMoodAvatars).Entity;
 
-		var user1 = CreateUser("User1", "https://example.com/moods1/");
-		var user2 = CreateUser("User2", "https://example.com/moods2/");
+		var user1 = _db.AddUser("User1").Entity;
+		user1.MoodAvatarUrlBase = "https://example.com/moods1/";
+		var user2 = _db.AddUser("User2").Entity;
+		user2.MoodAvatarUrlBase = "https://example.com/moods2/";
 
-		AssignUserToRole(user1, role);
-		AssignUserToRole(user2, role);
+		_db.AssignUserToRole(user1, role);
+		_db.AssignUserToRole(user2, role);
+		await _db.SaveChangesAsync();
 	}
-
-	private void CreateUsersWithAndWithoutMoodAvatars()
-	{
-		var role = CreateRoleWithMoodAvatarPermission();
-
-		var userWithMood = CreateUser("UserWithMood", "https://example.com/moods/");
-		var userWithoutMood = CreateUser("UserWithoutMood", null);
-
-		AssignUserToRole(userWithMood, role);
-		AssignUserToRole(userWithoutMood, role);
-	}
-
-	private User CreateUser(string userName, string? moodAvatarUrl)
-		=> _db.Users.Add(new User
-		{
-			UserName = userName,
-			NormalizedUserName = userName.ToUpperInvariant(),
-			Email = $"{userName.ToLowerInvariant()}@example.com",
-			NormalizedEmail = $"{userName.ToUpperInvariant()}@EXAMPLE.COM",
-			MoodAvatarUrlBase = moodAvatarUrl
-		}).Entity;
-
-	private Role CreateRoleWithMoodAvatarPermission()
-	{
-		var role = _db.Roles.Add(new Role
-		{
-			Name = "MoodUser",
-			NormalizedName = "MOODUSER"
-		}).Entity;
-
-		role.RolePermission.Add(new RolePermission
-		{
-			Role = role,
-			PermissionId = PermissionTo.UseMoodAvatars
-		});
-
-		return role;
-	}
-
-	private Role CreateRoleWithoutMoodAvatarPermission()
-	{
-		var role = _db.Roles.Add(new Role
-		{
-			Name = "RegularUser",
-			NormalizedName = "REGULARUSER"
-		}).Entity;
-
-		role.RolePermission.Add(new RolePermission
-		{
-			Role = role,
-			PermissionId = PermissionTo.SubmitMovies
-		});
-
-		return role;
-	}
-
-	private void AssignUserToRole(User user, Role role)
-		=> _db.UserRoles.Add(new UserRole { User = user, Role = role });
 }

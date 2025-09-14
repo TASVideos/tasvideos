@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
 using TASVideos.Pages;
@@ -132,5 +133,16 @@ public static class RazorTestHelpers
 			.GetCustomAttributes(attributeType, inherit: false);
 
 		Assert.IsTrue(attribute.Length > 0);
+	}
+
+	public static IUrlHelper GeMockUrlHelper(string url)
+	{
+		var urlHelper = Substitute.For<IUrlHelper>();
+		urlHelper
+			.RouteUrl(Arg.Any<UrlRouteContext>())
+			.Returns(url);
+		urlHelper.ActionContext
+			.Returns(new ActionContext { RouteData = new RouteData() });
+		return urlHelper;
 	}
 }

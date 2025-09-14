@@ -1,6 +1,6 @@
 ﻿public static class TestPages
 {
-	public static string EncoderGuidelines = """
+	public const string EncoderGuidelines = """
 !!! Guidelines for making multimedia files for publication
 
 This page explains general guidelines for making multimedia files up to the standards of the TASVideos website. A more detailed "how to" can be found at the [Encoding Guide].

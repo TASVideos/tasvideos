@@ -21,27 +21,23 @@ public class WikiTextChangeLog(ApplicationDbContext db) : WikiViewComponent
 		}
 
 		Logs = await query
-			.Select(wp => new Log
-			{
-				PageName = wp.PageName,
-				Revision = wp.Revision,
-				Author = wp.Author!.UserName,
-				CreateTimestamp = wp.CreateTimestamp,
-				MinorEdit = wp.MinorEdit,
-				RevisionMessage = wp.RevisionMessage
-			})
+			.Select(wp => new Log(
+				wp.CreateTimestamp,
+				wp.Author!.UserName,
+				wp.PageName,
+				wp.Revision,
+				wp.MinorEdit,
+				wp.RevisionMessage))
 			.PageOf(GetPaging());
 
 		return View();
 	}
 
-	public class Log
-	{
-		public DateTime CreateTimestamp { get; init; }
-		public string? Author { get; init; }
-		public string PageName { get; init; } = "";
-		public int Revision { get; init; }
-		public bool MinorEdit { get; init; }
-		public string? RevisionMessage { get; init; }
-	}
+	public record Log(
+		DateTime CreateTimestamp,
+		string? Author,
+		string PageName,
+		int Revision,
+		bool MinorEdit,
+		string? RevisionMessage);
 }

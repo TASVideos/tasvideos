@@ -1,12 +1,11 @@
 ﻿using TASVideos.Core.Services.Wiki;
-using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 
 [AllowAnonymous]
-public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileService fileService, IMovieParser parser)
-	: SubmitPageModelBase(parser, fileService)
+public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileService fileService, ITASVideosMetrics metrics)
+	: SubmitPageModelBase
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -30,6 +29,8 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 		{
 			return NotFound();
 		}
+
+		metrics.AddSubmissionView(Id);
 
 		Submission = submission;
 		var submissionPage = await wikiPages.SubmissionPage(Id);

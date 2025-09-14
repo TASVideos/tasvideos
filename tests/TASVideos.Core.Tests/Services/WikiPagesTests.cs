@@ -1497,58 +1497,6 @@ public class WikiPagesTests : TestDbBase
 
 	#endregion
 
-	#region SystemPage
-
-	[TestMethod]
-	[DataRow(null)]
-	[DataRow("")]
-	[DataRow("/")]
-	public async Task SystemPage_EmptyChecks(string pageName)
-	{
-		var actual = await _wikiPages.SystemPage(pageName);
-		Assert.IsNull(actual);
-	}
-
-	[TestMethod]
-	public async Task SystemPage_Exists_ReturnsPage()
-	{
-		const string suffix = "Exists";
-		const string systemPageName = "System/" + suffix;
-		var page = new WikiPage { PageName = systemPageName };
-		_db.WikiPages.Add(page);
-		await _db.SaveChangesAsync();
-
-		var actual = await _wikiPages.SystemPage(suffix);
-		Assert.IsNotNull(actual);
-		Assert.AreEqual(systemPageName, actual.PageName);
-	}
-
-	[TestMethod]
-	public async Task SystemPage_DoesNotExists_ReturnsNull()
-	{
-		const string suffix = "Exists";
-		const string systemPageName = "System/" + suffix;
-		var page = new WikiPage { PageName = systemPageName };
-		_db.WikiPages.Add(page);
-		await _db.SaveChangesAsync();
-
-		var actual = await _wikiPages.SystemPage("Does not exist");
-		Assert.IsNull(actual);
-	}
-
-	[TestMethod]
-	public async Task SystemPage_Empty_ReturnsSystem()
-	{
-		var page = new WikiPage { PageName = "System" };
-		_db.WikiPages.Add(page);
-		await _db.SaveChangesAsync();
-
-		var actual = await _wikiPages.SystemPage("");
-		Assert.IsNotNull(actual);
-	}
-
-	#endregion
-
 	#region Orphans
 
 	[TestMethod]
@@ -1889,7 +1837,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.AreEqual("Version 2", result.Markup); // Should rollback to revision 2, not revision 1
 		Assert.AreEqual(4, result.Revision);
-		Assert.AreEqual($"Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
+		Assert.AreEqual("Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
 	}
 
 	[TestMethod]
@@ -1990,7 +1938,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.AreEqual("Version 1", result.Markup); // Should rollback to revision 1, skipping deleted revision 2
 		Assert.AreEqual(4, result.Revision);
-		Assert.AreEqual($"Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
+		Assert.AreEqual("Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
 	}
 
 	#endregion

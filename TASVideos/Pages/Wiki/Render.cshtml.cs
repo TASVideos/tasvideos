@@ -4,7 +4,7 @@ using TASVideos.Core.Services.Wiki;
 namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
-public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<RenderModel> logger) : BasePageModel
+public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<RenderModel> logger, ITASVideosMetrics metrics) : BasePageModel
 {
 	public IWikiPage WikiPage { get; set; } = null!;
 
@@ -47,6 +47,7 @@ public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<
 			ViewData.SetWikiPage(WikiPage);
 			ViewData.SetTitle(WikiPage.PageName);
 			ViewData.SetCanonicalUrl($"{Request.Scheme}://{Request.Host}{Request.PathBase}/{WikiPage.PageName}{Request.QueryString}");
+			metrics.AddWikiPageView(WikiPage.PageName);
 			return Page();
 		}
 

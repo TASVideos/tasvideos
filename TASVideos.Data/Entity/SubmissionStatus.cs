@@ -56,4 +56,8 @@ public static class SubmissionStatusExtensions
 			or SubmissionStatus.Delayed
 			or SubmissionStatus.NeedsMoreInfo
 			or SubmissionStatus.Playground;
+
+	public static bool IsGrueFood(this SubmissionStatus status)
+		=> status is SubmissionStatus.Rejected
+			or SubmissionStatus.Cancelled;
 }

@@ -113,7 +113,7 @@ public class UncatalogedModelTests : TestDbBase
 			Title = "File Without System",
 			Author = user,
 			SystemId = null,
-			GameId = null,
+			GameId = null
 		};
 
 		_db.UserFiles.Add(fileWithoutSystem);

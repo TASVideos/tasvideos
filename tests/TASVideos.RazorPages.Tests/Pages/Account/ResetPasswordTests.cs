@@ -160,4 +160,7 @@ public class ResetPasswordTests : BasePageModelTests
 
 	[TestMethod]
 	public void HasIpBanCheckAttribute() => AssertHasIpBanCheck(typeof(ResetPasswordModel));
+
+	[TestMethod]
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(ResetPasswordModel));
 }

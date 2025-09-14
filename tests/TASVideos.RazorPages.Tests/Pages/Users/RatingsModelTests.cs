@@ -80,6 +80,6 @@ public class RatingModelTests : TestDbBase
 		{
 			Ratings = new PageOf<UserRatings.Rating, RatingRequest>([new()], _page.Search)
 		});
-		_ratingService.GetUserRatings(userName, _page.Search, false).Returns(null as UserRatings);
+		_ratingService.GetUserRatings(userName, _page.Search).Returns(null as UserRatings);
 	}
 }

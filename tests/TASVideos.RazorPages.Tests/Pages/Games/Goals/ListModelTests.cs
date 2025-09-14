@@ -321,4 +321,7 @@ public class ListModelTests : BasePageModelTests
 	}
 
 	#endregion
+
+	[TestMethod]
+	public void AllowsAnonymousAttribute() => AssertAllowsAnonymousUsers(typeof(ListModel));
 }

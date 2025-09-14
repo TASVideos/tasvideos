@@ -2,6 +2,7 @@
 
 namespace TASVideos.Pages.Games;
 
+[AllowAnonymous]
 public class ListModel(ApplicationDbContext db) : BasePageModel
 {
 	[FromQuery]

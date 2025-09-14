@@ -52,24 +52,24 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 
 	public async override Task<IDbContextTransaction> BeginTransactionAsync()
 	{
-		if (_transaction is null)
+		if (_transaction is not null)
 		{
-			_transaction = await Database.BeginTransactionAsync();
-			return _transaction;
+			return new TestDbContextTransaction(); // Send a fake one to the actual test code
 		}
 
-		return new TestDbContextTransaction(); // Send a fake one to the actual test code
+		_transaction = await Database.BeginTransactionAsync();
+		return _transaction;
 	}
 
 	public override IDbContextTransaction BeginTransaction()
 	{
-		if (_transaction is null)
+		if (_transaction is not null)
 		{
-			_transaction = Database.BeginTransaction();
-			return _transaction;
+			return new TestDbContextTransaction(); // Send a fake one to the actual test code
 		}
 
-		return new TestDbContextTransaction(); // Send a fake one to the actual test code
+		_transaction = Database.BeginTransaction();
+		return _transaction;
 	}
 
 	public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -131,6 +131,26 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		var role = Roles.Add(new Role { Name = name, NormalizedName = name.ToUpper() }).Entity;
 		UserRoles.Add(new UserRole { User = user.Entity, Role = role });
 		return user;
+	}
+
+	public void AssignUserToRole(User user, Role role)
+		=> UserRoles.Add(new UserRole { User = user, Role = role });
+
+	public EntityEntry<Role> AddRoleWithPermission(PermissionTo permission)
+	{
+		var role = Roles.Add(new Role
+		{
+			Name = permission.ToString(),
+			NormalizedName = permission.ToString().ToUpper()
+		});
+
+		RolePermission.Add(new RolePermission
+		{
+			Role = role.Entity,
+			PermissionId = permission
+		});
+
+		return role;
 	}
 
 	public EntityEntry<Submission> CreatePublishableSubmission()
@@ -307,7 +327,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 
 	public EntityEntry<GameGroup> AddGameGroup(string name, string? abbreviation = null)
 	{
-		return GameGroups.Add(new GameGroup { Name = name, Abbreviation = abbreviation});
+		return GameGroups.Add(new GameGroup { Name = name, Abbreviation = abbreviation });
 	}
 
 	public EntityEntry<GameGoal> AddGoalForGame(Game game, string? displayName = null)

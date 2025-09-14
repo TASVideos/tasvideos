@@ -28,12 +28,12 @@ public class IndexModelTests : BasePageModelTests
 
 		_model = new IndexModel(
 			_db,
-			_publisher,
 			awards,
 			forumService,
 			pointsService,
 			_topicWatcher,
-			_wikiPages)
+			_wikiPages,
+			new NullMetrics())
 		{
 			PageContext = TestPageContext()
 		};
@@ -179,12 +179,19 @@ public class IndexModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
+	public async Task OnPostLock_NoPermission_ReturnsAccessDenied()
+	{
+		var result = await _model.OnPostLock("Test Topic", true, _publisher);
+		AssertAccessDenied(result);
+	}
+
+	[TestMethod]
 	public async Task OnPostLock_NonExistentTopic_ReturnsNotFound()
 	{
+		var user = _db.AddUserWithRole("TestUser").Entity;
+		AddAuthenticatedUser(_model, user, [PermissionTo.LockTopics]);
 		_model.Id = 999;
-
-		var result = await _model.OnPostLock("Test Topic", true);
-
+		var result = await _model.OnPostLock("Test Topic", true, _publisher);
 		AssertForumNotFound(result);
 	}
 
@@ -198,7 +205,7 @@ public class IndexModelTests : BasePageModelTests
 		_model.Id = topic.Id;
 		AddAuthenticatedUser(_model, user, [PermissionTo.LockTopics]);
 
-		var result = await _model.OnPostLock("Test Topic", true);
+		var result = await _model.OnPostLock("Test Topic", true, _publisher);
 
 		AssertRedirect(result, "Index");
 		await _db.Entry(topic).ReloadAsync();

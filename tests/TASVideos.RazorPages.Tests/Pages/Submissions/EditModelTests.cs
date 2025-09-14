@@ -1,7 +1,5 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
-using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -13,22 +11,14 @@ public class EditModelTests : TestDbBase
 {
 	private readonly IWikiPages _wikiPages;
 	private readonly IQueueService _queueService;
-	private readonly ITopicWatcher _topicWatcher;
 	private readonly EditModel _page;
 
 	public EditModelTests()
 	{
-		var parser = Substitute.For<IMovieParser>();
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
-		var tasvideosGrue = Substitute.For<ITASVideosGrue>();
-		var deprecator = Substitute.For<IMovieFormatDeprecator>();
 		_queueService = Substitute.For<IQueueService>();
-		var youtubeSync = Substitute.For<IYoutubeSync>();
-		var forumService = Substitute.For<IForumService>();
-		_topicWatcher = Substitute.For<ITopicWatcher>();
-		var fileService = Substitute.For<IFileService>();
-		_page = new EditModel(_db, parser, _wikiPages, publisher, tasvideosGrue, deprecator, _queueService, youtubeSync, forumService, _topicWatcher, fileService);
+		_page = new EditModel(_db, _wikiPages, publisher, _queueService);
 	}
 
 	[TestMethod]
@@ -179,8 +169,11 @@ public class EditModelTests : TestDbBase
 			Arg.Any<bool>())
 			.Returns([SubmissionStatus.New, SubmissionStatus.Cancelled]);
 
+		_queueService.UpdateSubmission(Arg.Any<UpdateSubmissionRequest>())
+			.Returns(new UpdateSubmissionResult(null, SubmissionStatus.New, "Updated Title"));
+
 		var wikiPage = new WikiResult { Markup = "Updated markup" };
-		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(Task.FromResult((IWikiPage?)wikiPage));
+		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(wikiPage);
 
 		var result = await _page.OnPost();
 
@@ -285,24 +278,16 @@ public class EditModelTests : TestDbBase
 		var judge = _db.AddUser("Judge").Entity;
 		AddAuthenticatedUser(_page, judge, [PermissionTo.JudgeSubmissions]);
 
-		var wikiPage = new WikiResult
-		{
-			PageName = $"Submission/{submission.Id}",
-			Markup = "Original markup"
-		};
-		_wikiPages.Page($"InternalSystem/SubmissionContent/S{submission.Id}").Returns(ValueTask.FromResult((IWikiPage?)wikiPage));
-		_wikiPages.Add(Arg.Any<WikiCreateRequest>()).Returns(Task.FromResult((IWikiPage?)wikiPage));
+		// Mock the ClaimForJudging method to return success
+		_queueService.ClaimForJudging(submission.Id, judge.Id, judge.UserName)
+			.Returns(ClaimSubmissionResult.Successful(submission.Title));
 
 		var actual = await _page.OnGetClaimForJudging();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
 
-		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
-		Assert.IsNotNull(updatedSubmission);
-		Assert.AreEqual(SubmissionStatus.JudgingUnderWay, updatedSubmission.Status);
-		Assert.AreEqual(judge.Id, updatedSubmission.JudgeId);
-
-		await _topicWatcher.Received(1).WatchTopic(1, judge.Id, true);
+		// Verify that the ClaimForJudging method was called with correct parameters
+		await _queueService.Received(1).ClaimForJudging(submission.Id, judge.Id, judge.UserName);
 	}
 
 	[TestMethod]
@@ -314,5 +299,29 @@ public class EditModelTests : TestDbBase
 		var result = await _page.OnGetClaimForPublishing();
 
 		AssertAccessDenied(result);
+	}
+
+	[TestMethod]
+	public async Task OnGetClaimForPublishing_ValidSubmission_ClaimsAndRedirects()
+	{
+		var submission = _db.AddAndSaveUnpublishedSubmission().Entity;
+		submission.Status = SubmissionStatus.Accepted;
+		await _db.SaveChangesAsync();
+
+		_page.Id = submission.Id;
+
+		var publisher = _db.AddUser("Publisher").Entity;
+		AddAuthenticatedUser(_page, publisher, [PermissionTo.PublishMovies]);
+
+		// Mock the ClaimForPublishing method to return success
+		_queueService.ClaimForPublishing(submission.Id, publisher.Id, publisher.UserName)
+			.Returns(ClaimSubmissionResult.Successful(submission.Title));
+
+		var actual = await _page.OnGetClaimForPublishing();
+
+		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
+
+		// Verify that the ClaimForPublishing method was called with correct parameters
+		await _queueService.Received(1).ClaimForPublishing(submission.Id, publisher.Id, publisher.UserName);
 	}
 }

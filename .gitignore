@@ -24,3 +24,4 @@ BenchmarkDotNet.Artifacts/
 tests/TASVideos.ForumEngine.Snapshots/.params.json
 merged.coverage.xml
 coverage/
+TestResults/

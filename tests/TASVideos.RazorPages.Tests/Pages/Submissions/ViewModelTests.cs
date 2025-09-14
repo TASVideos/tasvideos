@@ -1,8 +1,8 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Extensions;
-using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
+using TASVideos.Services;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;
@@ -18,7 +18,7 @@ public class ViewModelTests : TestDbBase
 	{
 		_wikiPages = Substitute.For<IWikiPages>();
 		_fileService = Substitute.For<IFileService>();
-		_page = new ViewModel(_db, _wikiPages, _fileService, Substitute.For<IMovieParser>());
+		_page = new ViewModel(_db, _wikiPages, _fileService, new NullMetrics());
 	}
 
 	[TestMethod]

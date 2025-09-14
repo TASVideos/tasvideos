@@ -5,10 +5,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
 	public List<Rejection> Reasons { get; set; } = [];
 
-	public async Task OnGet()
-	{
-		await Initialize();
-	}
+	public async Task OnGet() => await Initialize();
 
 	public async Task<IActionResult> OnPost(string displayName)
 	{
@@ -40,7 +37,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			return AccessDenied();
 		}
 
-		var reason = await db.SubmissionRejectionReasons.SingleOrDefaultAsync(r => r.Id == id);
+		var reason = await db.SubmissionRejectionReasons.FindAsync(id);
 		if (reason is null)
 		{
 			return NotFound();

@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using TASVideos.Pages.Account;
+﻿using TASVideos.Pages.Account;
 
 namespace TASVideos.RazorPages.Tests.Pages.Account;
 
@@ -10,11 +9,7 @@ public class BannedTests : BasePageModelTests
 
 	public BannedTests()
 	{
-		_model = new BannedModel(_db)
-		{
-			PageContext = TestPageContext(),
-			TempData = Substitute.For<ITempDataDictionary>()
-		};
+		_model = new BannedModel(_db);
 	}
 
 	[TestMethod]

@@ -1,5 +1,4 @@
 ﻿using System.Security.Claims;
-using System.Security.Principal;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Data.Tests.Extensions;

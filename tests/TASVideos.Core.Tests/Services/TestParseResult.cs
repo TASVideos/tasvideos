@@ -14,7 +14,7 @@ internal class TestParseResult : IParseResult
 	public int RerecordCount { get; init; }
 	public MovieStartType StartType { get; init; }
 	public double? FrameRateOverride { get; init; }
-	public long? CycleCount { get; init; }
-	public string? Annotations { get; init; }
+	public long? CycleCount => null;
+	public string? Annotations => null;
 	public Dictionary<HashType, string> Hashes { get; init; } = [];
 }

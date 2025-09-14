@@ -1,5 +1,4 @@
-﻿using Nager.Country;
-using TASVideos.Core.Services.Email;
+﻿using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Profile;
 
@@ -121,7 +120,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 		site = userManager.AvatarSiteIsBanned(MoodAvatar);
 		if (!string.IsNullOrEmpty(site))
 		{
-			ModelState.AddModelError($"{nameof(AvatarUrl)}", $"Using {site} to host avatars is not allowed.");
+			ModelState.AddModelError($"{nameof(MoodAvatar)}", $"Using {site} to host avatars is not allowed.");
 		}
 
 		if (!ModelState.IsValid)

@@ -1,6 +1,7 @@
 ﻿namespace TASVideos.Pages.Account;
 
 [IpBanCheck]
+[AllowAnonymous]
 public class ResetPasswordModel(IUserManager userManager) : BasePageModel
 {
 	public string Email { get; set; } = "";

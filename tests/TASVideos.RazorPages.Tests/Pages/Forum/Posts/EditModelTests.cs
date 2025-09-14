@@ -420,6 +420,22 @@ public class EditModelTests : BasePageModelTests
 	}
 
 	[TestMethod]
+	public async Task OnPostDeleteWithoutDeletePermission_AndUserNotPoster_ReturnsAccessDenied()
+	{
+		var user = _db.AddUserWithRole("TestUser").Entity;
+		var poster = _db.AddUser("OriginalPoster").Entity;
+		var topic = _db.AddTopic(poster).Entity;
+		var post = _db.CreatePostForTopic(topic, poster).Entity;
+		await _db.SaveChangesAsync();
+		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]); // No DeleteForumPosts
+		_model.Id = post.Id;
+
+		var result = await _model.OnPostDelete();
+
+		AssertAccessDenied(result);
+	}
+
+	[TestMethod]
 	public async Task OnPostDelete_WithoutDeletePermission_NotLastPost_ReturnsNotFound()
 	{
 		var user = _db.AddUserWithRole("TestUser").Entity;

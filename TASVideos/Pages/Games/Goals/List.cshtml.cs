@@ -2,6 +2,7 @@
 
 namespace TASVideos.Pages.Games.Goals;
 
+[AllowAnonymous]
 public class ListModel(ApplicationDbContext db) : BasePageModel
 {
 	public string Game { get; set; } = "";

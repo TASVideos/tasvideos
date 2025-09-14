@@ -85,7 +85,7 @@ var posts = await context.ForumPosts
 		p.Subject,
 		PosterName = p.Poster!.UserName,
 		TopicTitle = p.Topic!.Title,
-		ForumName = p.Forum!.Name,
+		ForumName = p.Forum!.Name
 	})
 	.ToListAsync();
 

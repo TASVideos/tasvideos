@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Pages.Account;
@@ -22,11 +21,7 @@ public class ConfirmEmailChangeTests : BasePageModelTests
 
 	public ConfirmEmailChangeTests()
 	{
-		_model = new ConfirmEmailChangeModel(_userManager, _userMaintenanceLogger, _cache, _signInManager, _publisher, _tasVideoAgent)
-		{
-			PageContext = TestPageContext(),
-			TempData = Substitute.For<ITempDataDictionary>()
-		};
+		_model = new ConfirmEmailChangeModel(_userManager, _userMaintenanceLogger, _cache, _signInManager, _publisher, _tasVideoAgent);
 	}
 
 	[TestMethod]
