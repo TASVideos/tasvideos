@@ -67,7 +67,12 @@ internal class YouTubeSync(
 
 		var obsoleteStr = video.ObsoletedBy.HasValue ? "[Obsoleted] " : "";
 		var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $"[{video.UrlDisplayName}] " : "";
-		string title = $"[TAS] {obsoleteStr}{displayStr}{video.Title}";
+
+		string[] titleSeparators = [" in ", " by "];
+		string[] titleArray = video.Title.Split(titleSeparators, StringSplitOptions.None);
+		var youTubeTitle = titleArray[0] + " in " + titleArray[2] + " by " + titleArray[1];
+		var title = $"[TAS] {obsoleteStr}{displayStr}{youTubeTitle}";
+
 		string description = descriptionBase + renderedDescription + hashTags;
 		if (title.Length > YoutubeTitleMaxLength)
 		{
