@@ -1,5 +1,6 @@
 ﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
+using TASVideos.WikiModules;
 
 namespace TASVideos.Pages.Publications.Urls;
 
@@ -52,17 +53,11 @@ public class EditUrlsModel(
 		}
 
 		Title = title;
-		var youtubetitle = await db.Publications
-			.Where(p => p.Id == PublicationId)
-			.Select(p => p.YouTubeTitle)
-			.SingleOrDefaultAsync();
 
-		if (youtubetitle is null)
-		{
-			return NotFound();
-		}
+		string[] titleSeparators = [" in ", " by "];
+		string[] titleArray = Title.Split(titleSeparators, StringSplitOptions.None);
+		YouTubeTitle = titleArray[0] + " in " + titleArray[2] + " by " + titleArray[1];
 
-		YouTubeTitle = youtubetitle;
 		CurrentUrls = await db.PublicationUrls
 			.Where(u => u.PublicationId == PublicationId)
 			.ToListAsync();

@@ -80,7 +80,6 @@ public class Publication : BaseEntity, ITimeable
 
 	// De-normalized name for easy recreation
 	public string Title { get; set; } = "";
-	public string YouTubeTitle { get; set; } = "";
 
 	double ITimeable.FrameRate => SystemFrameRate?.FrameRate ?? throw new InvalidOperationException($"{nameof(SystemFrameRate)} must not be lazy loaded!");
 
@@ -126,12 +125,6 @@ public class Publication : BaseEntity, ITimeable
 			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
 			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
-
-		YouTubeTitle =
-			$"{System.Code} {gameName}"
-			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
-			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}"
-			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}";
 	}
 }
 
