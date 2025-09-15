@@ -111,10 +111,6 @@ internal class CelTas : Parser, IParser
 			return Error("No FileTime found, cannot parse");
 		}
 
-		/* TODO:
-		 * - Add tests to make sure submitted files work and return appropriate errors if not
-		 * - Maybe add a check for EnforceLegal somewhere? Or at least document this on a TASVideos wiki page for the format
-		 */
 		return result;
 	}
 }
