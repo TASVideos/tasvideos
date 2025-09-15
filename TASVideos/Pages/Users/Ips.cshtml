@@ -15,7 +15,7 @@
 	{
 		<tr>
 			<td>@ip.Ip</td>
-			<td>@ip.UsedOn</td>
+			<td><timezone-convert asp-for="@ip.UsedOn" /></td>
 			<td>
 				<a permission="BanIpAddresses" asp-page="/Users/IpBan" asp-route-banIp="@ip" class="btn btn-danger">Ban</a>
 			</td>

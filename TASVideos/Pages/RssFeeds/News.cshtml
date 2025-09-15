@@ -1,5 +1,6 @@
 ﻿@page
 @inject AppSettings Settings
+@using System.Globalization
 @model NewsModel
 @{
 	Layout = null;
@@ -10,7 +11,7 @@
 <rss>
 	<channel>
 		<partial model="@((title, link))" name="_RssChannel" />
-		<atom-link href="@(Settings.BaseUrl)/news.rss" />
+		<atom:link rel="self" type="application/rss+xml" href="@(Settings.BaseUrl)/news.rss" />
 		@foreach (var news in Model.News)
 		{
 			var postUrl = $"{Settings.BaseUrl}/Forum/Posts/{news.PostId}";
@@ -18,11 +19,13 @@
 				<title>@news.Subject</title>
 				<rss-link>@postUrl</rss-link>
 				<description>
-					<forum-markup markup="@news.Text" enable-html="@news.EnableHtml" enable-bb-code="@news.EnableBbCode"></forum-markup>
+					<html-encode>
+						<forum-markup markup="@news.Text" enable-html="@news.EnableHtml" enable-bb-code="@news.EnableBbCode"></forum-markup>
+					</html-encode>
 				</description>
 				<comments>@postUrl</comments>
 				<guid>@postUrl</guid>
-				<pubDate>@news.PubDate</pubDate>
+				<pubDate>@news.PubDate.ToString("r", CultureInfo.InvariantCulture)</pubDate>
 			</item>
 		}
 	</channel>

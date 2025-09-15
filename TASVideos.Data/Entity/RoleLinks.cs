@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity;
 
-[ExcludeFromHistory]
 public class RoleLink
 {
 	public int Id { get; set; }

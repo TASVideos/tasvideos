@@ -6,15 +6,14 @@ namespace TASVideos.Pages.Publications.Urls;
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class EditUrlsModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IPublications publications,
+	IExternalMediaPublisher publisher,
 	IYoutubeSync youtubeSync,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger,
 	IWikiPages wikiPages)
 	: BasePageModel
 {
-	private static readonly IEnumerable<PublicationUrlType> PublicationUrlTypes = Enum.GetValues<PublicationUrlType>();
-
-	public List<SelectListItem> AvailableTypes => PublicationUrlTypes.ToDropDown();
+	public static List<SelectListItem> AvailableTypes => Enum.GetValues<PublicationUrlType>().ToDropDown();
 
 	[FromRoute]
 	public int PublicationId { get; set; }
@@ -40,20 +39,14 @@ public class EditUrlsModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		var title = await db.Publications
-			.Where(p => p.Id == PublicationId)
-			.Select(p => p.Title)
-			.SingleOrDefaultAsync();
-
+		var title = await publications.GetTitle(PublicationId);
 		if (title is null)
 		{
 			return NotFound();
 		}
 
 		Title = title;
-		CurrentUrls = await db.PublicationUrls
-			.Where(u => u.PublicationId == PublicationId)
-			.ToListAsync();
+		CurrentUrls = await publications.GetUrls(PublicationId);
 
 		if (!UrlId.HasValue)
 		{
@@ -93,8 +86,6 @@ public class EditUrlsModel(
 		{
 			return NotFound();
 		}
-
-		var publicationWiki = await wikiPages.PublicationPage(PublicationId);
 
 		CurrentUrls = publication.PublicationUrls;
 
@@ -138,6 +129,7 @@ public class EditUrlsModel(
 
 			if (Type == PublicationUrlType.Streaming && youtubeSync.IsYoutubeUrl(CurrentUrl))
 			{
+				var publicationWiki = await wikiPages.PublicationPage(PublicationId);
 				YoutubeVideo video = new(
 					PublicationId,
 					publication.CreateTimestamp,

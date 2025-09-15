@@ -3,7 +3,8 @@
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class EditFilesModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IPublications publications,
+	IExternalMediaPublisher publisher,
 	IMediaFileUploader uploader,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger)
 	: BasePageModel
@@ -26,11 +27,7 @@ public class EditFilesModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		var title = await db.Publications
-			.Where(p => p.Id == Id)
-			.Select(p => p.Title)
-			.SingleOrDefaultAsync();
-
+		var title = await publications.GetTitle(Id);
 		if (title is null)
 		{
 			return NotFound();
@@ -55,7 +52,7 @@ public class EditFilesModel(
 			return Page();
 		}
 
-		var path = await uploader.UploadScreenshot(Id, NewScreenshot!, Description);
+		var (path, _) = await uploader.UploadScreenshot(Id, NewScreenshot!, Description);
 		await Log($"Added Screenshot file {path}");
 		return RedirectToPage("EditFiles", new { Id });
 	}
@@ -63,7 +60,6 @@ public class EditFilesModel(
 	public async Task<IActionResult> OnPostDelete(int publicationFileId)
 	{
 		var file = await uploader.DeleteFile(publicationFileId);
-
 		if (file is not null)
 		{
 			await Log($"Deleted {file.Type} file {file.Path}");

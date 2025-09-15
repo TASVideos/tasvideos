@@ -261,7 +261,7 @@ public class WikiPagesTests : TestDbBase
 	public async Task Add_UserDoesNotExist_Throws()
 	{
 		var revision = new WikiCreateRequest { PageName = "Test", AuthorId = int.MaxValue };
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _wikiPages.Add(revision));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _wikiPages.Add(revision));
 	}
 
 	[TestMethod]
@@ -475,7 +475,7 @@ public class WikiPagesTests : TestDbBase
 	[DataRow("\r \n \t")]
 	public async Task Add_NoPageName_Throws(string pageName)
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _wikiPages.Add(new WikiCreateRequest { PageName = pageName }));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _wikiPages.Add(new WikiCreateRequest { PageName = pageName }));
 	}
 
 	[TestMethod]
@@ -521,14 +521,14 @@ public class WikiPagesTests : TestDbBase
 		});
 
 		Assert.IsNotNull(result1);
-		Assert.AreEqual(result1.PageName, pageName);
-		Assert.AreEqual(result1.AuthorId, author1Id);
-		Assert.AreEqual(result1.AuthorName, author1Name);
+		Assert.AreEqual(pageName, result1.PageName);
+		Assert.AreEqual(author1Id, result1.AuthorId);
+		Assert.AreEqual(author1Name, result1.AuthorName);
 
 		Assert.IsNotNull(result2);
-		Assert.AreEqual(result2.PageName, pageName);
-		Assert.AreEqual(result2.AuthorId, author2Id);
-		Assert.AreEqual(result2.AuthorName, author2Name);
+		Assert.AreEqual(pageName, result2.PageName);
+		Assert.AreEqual(author2Id, result2.AuthorId);
+		Assert.AreEqual(author2Name, result2.AuthorName);
 	}
 
 	[TestMethod]
@@ -563,7 +563,7 @@ public class WikiPagesTests : TestDbBase
 	[DataRow("\n \r \t")]
 	public async Task Move_EmptyDestination_Throws(string destination)
 	{
-		await Assert.ThrowsExceptionAsync<ArgumentException>(() => _wikiPages.Move("Test", destination));
+		await Assert.ThrowsExactlyAsync<ArgumentException>(() => _wikiPages.Move("Test", destination, 1));
 	}
 
 	[TestMethod]
@@ -571,13 +571,13 @@ public class WikiPagesTests : TestDbBase
 	{
 		const string existingPage = "InCache";
 		AddPage(existingPage);
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _wikiPages.Move("Original Page", existingPage));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _wikiPages.Move("Original Page", existingPage, 1));
 	}
 
 	[TestMethod]
 	public async Task Move_OriginalDoesNotExist_NothingHappens()
 	{
-		var actual = await _wikiPages.Move("Does not exist", "Also does not exist");
+		var actual = await _wikiPages.Move("Does not exist", "Also does not exist", 1);
 		Assert.IsTrue(actual, "Page not found is considered successful");
 		Assert.AreEqual(0, _db.WikiPages.Count());
 		Assert.AreEqual(0, _cache.PageCache().Count);
@@ -596,12 +596,23 @@ public class WikiPagesTests : TestDbBase
 		await _db.SaveChangesAsync();
 		_cache.AddPage(existingPage);
 
-		var actual = await _wikiPages.Move(existingPageName, newPageName);
+		var actual = await _wikiPages.Move(existingPageName, newPageName, author.Id);
 		Assert.IsTrue(actual);
-		Assert.AreEqual(1, _db.WikiPages.Count());
-		Assert.AreEqual(newPageName, _db.WikiPages.Single().PageName);
+
+		// Should have 2 revisions now - original + tracking revision
+		Assert.AreEqual(2, _db.WikiPages.Count());
+		Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
+
+		// Verify the tracking revision was created
+		var trackingRevision = _db.WikiPages.OrderByDescending(wp => wp.Revision).First();
+		Assert.AreEqual(2, trackingRevision.Revision);
+		Assert.AreEqual($"Page Moved from {existingPageName} to {newPageName}", trackingRevision.RevisionMessage);
+		Assert.AreEqual(author.Id, trackingRevision.AuthorId);
+		Assert.IsFalse(trackingRevision.MinorEdit);
+
 		Assert.AreEqual(1, _cache.PageCache().Count);
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
+		Assert.AreEqual(2, _cache.PageCache().Single().Revision); // Latest revision should be cached
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
 		Assert.AreEqual(newPageName, _db.WikiReferrals.Single().Referrer);
@@ -614,20 +625,31 @@ public class WikiPagesTests : TestDbBase
 		var author = _db.AddUser(1, "_").Entity;
 		const string existingPageName = "ExistingPage";
 		const string newPageName = "NewPageName";
-		var previousRevision = new WikiPage { Id = 1, PageName = existingPageName, ChildId = 2, Author = author, AuthorId = author.Id, Revision = 1 };
-		var existingPage = new WikiPage { Id = 2, PageName = existingPageName, ChildId = null, Author = author, AuthorId = author.Id, Revision = 2 };
+		const string markup = "Test content";
+		var previousRevision = new WikiPage { Id = 1, PageName = existingPageName, ChildId = 2, Author = author, AuthorId = author.Id, Revision = 1, Markup = markup };
+		var existingPage = new WikiPage { Id = 2, PageName = existingPageName, ChildId = null, Author = author, AuthorId = author.Id, Revision = 2, Markup = markup };
 		_db.WikiPages.Add(previousRevision);
 		_db.WikiPages.Add(existingPage);
 		_cache.AddPage(existingPage);
 		await _db.SaveChangesAsync();
 
-		var actual = await _wikiPages.Move(existingPageName, newPageName);
+		var actual = await _wikiPages.Move(existingPageName, newPageName, author.Id);
 		Assert.IsTrue(actual);
-		Assert.AreEqual(2, _db.WikiPages.Count());
+
+		// Should have 3 revisions now - 2 original + 1 tracking revision
+		Assert.AreEqual(3, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
+
+		// Verify the tracking revision was created
+		var trackingRevision = _db.WikiPages.OrderByDescending(wp => wp.Revision).First();
+		Assert.AreEqual(3, trackingRevision.Revision);
+		Assert.AreEqual($"Page Moved from {existingPageName} to {newPageName}", trackingRevision.RevisionMessage);
+		Assert.AreEqual(author.Id, trackingRevision.AuthorId);
+		Assert.AreEqual(markup, trackingRevision.Markup); // Should preserve the content
 
 		Assert.AreEqual(1, _cache.PageCache().Count);
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
+		Assert.AreEqual(3, _cache.PageCache().Single().Revision); // Latest revision should be cached
 	}
 
 	[TestMethod]
@@ -647,7 +669,7 @@ public class WikiPagesTests : TestDbBase
 
 		_db.CreateUpdateConflict();
 
-		var actual = await _wikiPages.Move(origPageName, destPageName);
+		var actual = await _wikiPages.Move(origPageName, destPageName, author.Id);
 		Assert.IsFalse(actual, "The move was unsuccessful");
 
 		// Moved page does not exist
@@ -677,7 +699,7 @@ public class WikiPagesTests : TestDbBase
 
 		_db.CreateConcurrentUpdateConflict();
 
-		var actual = await _wikiPages.Move(origPageName, destPageName);
+		var actual = await _wikiPages.Move(origPageName, destPageName, author.Id);
 		Assert.IsFalse(actual, "The move was unsuccessful");
 
 		// Moved page does not exist
@@ -703,10 +725,12 @@ public class WikiPagesTests : TestDbBase
 		await _db.SaveChangesAsync();
 		_cache.AddPage(existingPage);
 
-		var actual = await _wikiPages.Move(existingPageName, "/" + newPageName + "/");
+		var actual = await _wikiPages.Move(existingPageName, "/" + newPageName + "/", author.Id);
 		Assert.IsTrue(actual);
-		Assert.AreEqual(1, _db.WikiPages.Count());
-		Assert.AreEqual(newPageName, _db.WikiPages.Single().PageName);
+
+		// Should have 2 revisions now - original + tracking revision
+		Assert.AreEqual(2, _db.WikiPages.Count());
+		Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
 		Assert.AreEqual(1, _cache.PageCache().Count);
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
 
@@ -728,10 +752,12 @@ public class WikiPagesTests : TestDbBase
 		await _db.SaveChangesAsync();
 		_cache.AddPage(existingPage);
 
-		var actual = await _wikiPages.Move("/" + existingPageName + "/", newPageName);
+		var actual = await _wikiPages.Move("/" + existingPageName + "/", newPageName, author.Id);
 		Assert.IsTrue(actual);
-		Assert.AreEqual(1, _db.WikiPages.Count());
-		Assert.AreEqual(newPageName, _db.WikiPages.Single().PageName);
+
+		// Should have 2 revisions now - original + tracking revision
+		Assert.AreEqual(2, _db.WikiPages.Count());
+		Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
 		Assert.AreEqual(1, _cache.PageCache().Count);
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
 
@@ -762,14 +788,103 @@ public class WikiPagesTests : TestDbBase
 		_cache.AddPage(existingPage);
 		_cache.AddPage(existingSubPage);
 
-		var actual = await _wikiPages.MoveAll(existingPageName, newPageName);
+		var actual = await _wikiPages.MoveAll(existingPageName, newPageName, author.Id);
 		Assert.IsTrue(actual);
-		Assert.AreEqual(2, _db.WikiPages.Count());
-		Assert.AreEqual(1, _db.WikiPages.Count(wp => wp.PageName == newPageName));
-		Assert.AreEqual(1, _db.WikiPages.Count(wp => wp.PageName == newSubPage));
+
+		// Should have 4 revisions now - 2 original + 2 tracking revisions
+		Assert.AreEqual(4, _db.WikiPages.Count());
+		Assert.AreEqual(2, _db.WikiPages.Count(wp => wp.PageName == newPageName));
+		Assert.AreEqual(2, _db.WikiPages.Count(wp => wp.PageName == newSubPage));
+
+		// Verify tracking revisions were created for both pages
+		var mainPageTrackingRevision = _db.WikiPages
+			.Where(wp => wp.PageName == newPageName)
+			.OrderByDescending(wp => wp.Revision)
+			.First();
+		Assert.AreEqual($"Page Moved from {existingPageName} to {newPageName}", mainPageTrackingRevision.RevisionMessage);
+
+		var subPageTrackingRevision = _db.WikiPages
+			.Where(wp => wp.PageName == newSubPage)
+			.OrderByDescending(wp => wp.Revision)
+			.First();
+		Assert.AreEqual($"Page Moved from {existingPageName}/{subPage} to {newSubPage}", subPageTrackingRevision.RevisionMessage);
+
 		Assert.AreEqual(2, _cache.PageCache().Count);
 		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newPageName));
 		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newSubPage));
+
+		Assert.AreEqual(1, _db.WikiReferrals.Count());
+		Assert.AreEqual(newPageName, _db.WikiReferrals.Single().Referrer);
+		Assert.AreEqual(link, _db.WikiReferrals.Single().Referral);
+	}
+
+	[TestMethod]
+	public async Task MoveAll_MultiplePages_WithoutTrackingRevision()
+	{
+		var author = _db.AddUser(1, "_").Entity;
+		const string existingPageName = "ExistingPage";
+		const string newPageName = "NewPageName";
+		const string subPage = "Sub";
+		const string link = "AnotherPage";
+		const string newSubPage = $"{newPageName}/{subPage}";
+		var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]", Author = author, AuthorId = author.Id };
+		var existingSubPage = new WikiPage { PageName = $"{existingPageName}/{subPage}", Author = author, AuthorId = author.Id };
+		_db.WikiPages.Add(existingPage);
+		_db.WikiPages.Add(existingSubPage);
+		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = existingPageName, Referral = link });
+		await _db.SaveChangesAsync();
+		_cache.AddPage(existingPage);
+		_cache.AddPage(existingSubPage);
+
+		var actual = await _wikiPages.MoveAll(existingPageName, newPageName, author.Id, createTrackingRevision: false);
+		Assert.IsTrue(actual);
+
+		// Should have 2 revisions - 2 original (no tracking revisions)
+		Assert.AreEqual(2, _db.WikiPages.Count());
+		Assert.AreEqual(1, _db.WikiPages.Count(wp => wp.PageName == newPageName));
+		Assert.AreEqual(1, _db.WikiPages.Count(wp => wp.PageName == newSubPage));
+
+		// Verify no tracking revisions were created (all revisions should be revision 1)
+		Assert.IsTrue(_db.WikiPages.All(wp => wp.Revision == 1));
+		Assert.IsFalse(_db.WikiPages.Any(wp => wp.RevisionMessage != null && wp.RevisionMessage.Contains("Page Moved")));
+
+		Assert.AreEqual(2, _cache.PageCache().Count);
+		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newPageName));
+		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newSubPage));
+
+		Assert.AreEqual(1, _db.WikiReferrals.Count());
+		Assert.AreEqual(newPageName, _db.WikiReferrals.Single().Referrer);
+		Assert.AreEqual(link, _db.WikiReferrals.Single().Referral);
+	}
+
+	[TestMethod]
+	public async Task Move_SingleRevision_WithoutTrackingRevision()
+	{
+		var author = _db.AddUser(1, "_").Entity;
+		const string existingPageName = "ExistingPage";
+		const string newPageName = "NewPageName";
+		const string link = "AnotherPage";
+		var existingPage = new WikiPage { PageName = existingPageName, Markup = $"[{link}]", Author = author, AuthorId = author.Id };
+		_db.WikiPages.Add(existingPage);
+		_db.WikiReferrals.Add(new WikiPageReferral { Referrer = existingPageName, Referral = link });
+		await _db.SaveChangesAsync();
+		_cache.AddPage(existingPage);
+
+		var actual = await _wikiPages.Move(existingPageName, newPageName, author.Id, createTrackingRevision: false);
+		Assert.IsTrue(actual);
+
+		// Should have 1 revision - original only (no tracking revision)
+		Assert.AreEqual(1, _db.WikiPages.Count());
+		Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
+
+		// Verify no tracking revision was created (revision should still be 1)
+		var movedPage = _db.WikiPages.Single();
+		Assert.AreEqual(1, movedPage.Revision);
+		Assert.IsNull(movedPage.RevisionMessage);
+
+		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
+		Assert.AreEqual(1, _cache.PageCache().Single().Revision);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
 		Assert.AreEqual(newPageName, _db.WikiReferrals.Single().Referrer);
@@ -1382,58 +1497,6 @@ public class WikiPagesTests : TestDbBase
 
 	#endregion
 
-	#region SystemPage
-
-	[TestMethod]
-	[DataRow(null)]
-	[DataRow("")]
-	[DataRow("/")]
-	public async Task SystemPage_EmptyChecks(string pageName)
-	{
-		var actual = await _wikiPages.SystemPage(pageName);
-		Assert.IsNull(actual);
-	}
-
-	[TestMethod]
-	public async Task SystemPage_Exists_ReturnsPage()
-	{
-		const string suffix = "Exists";
-		const string systemPageName = "System/" + suffix;
-		var page = new WikiPage { PageName = systemPageName };
-		_db.WikiPages.Add(page);
-		await _db.SaveChangesAsync();
-
-		var actual = await _wikiPages.SystemPage(suffix);
-		Assert.IsNotNull(actual);
-		Assert.AreEqual(systemPageName, actual.PageName);
-	}
-
-	[TestMethod]
-	public async Task SystemPage_DoesNotExists_ReturnsNull()
-	{
-		const string suffix = "Exists";
-		const string systemPageName = "System/" + suffix;
-		var page = new WikiPage { PageName = systemPageName };
-		_db.WikiPages.Add(page);
-		await _db.SaveChangesAsync();
-
-		var actual = await _wikiPages.SystemPage("Does not exist");
-		Assert.IsNull(actual);
-	}
-
-	[TestMethod]
-	public async Task SystemPage_Empty_ReturnsSystem()
-	{
-		var page = new WikiPage { PageName = "System" };
-		_db.WikiPages.Add(page);
-		await _db.SaveChangesAsync();
-
-		var actual = await _wikiPages.SystemPage("");
-		Assert.IsNotNull(actual);
-	}
-
-	#endregion
-
 	#region Orphans
 
 	[TestMethod]
@@ -1601,6 +1664,281 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(0, actual.Count);
+	}
+
+	#endregion
+
+	#region RollbackLatest
+
+	[TestMethod]
+	public async Task RollbackLatest_NullPageName_ThrowsException()
+	{
+		await Assert.ThrowsExactlyAsync<ArgumentException>(() => _wikiPages.RollbackLatest(null!, 1));
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_EmptyPageName_ThrowsException()
+	{
+		await Assert.ThrowsExactlyAsync<ArgumentException>(() => _wikiPages.RollbackLatest("", 1));
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_WhitespacePageName_ThrowsException()
+	{
+		await Assert.ThrowsExactlyAsync<ArgumentException>(() => _wikiPages.RollbackLatest("   ", 1));
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_PageDoesNotExist_ReturnsNull()
+	{
+		var result = await _wikiPages.RollbackLatest("NonExistentPage", 1);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_FirstRevisionOnly_ReturnsNull()
+	{
+		const string pageName = "TestPage";
+		AddPage(pageName);
+
+		var result = await _wikiPages.RollbackLatest(pageName, 1);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_NoPreviousRevision_ReturnsNull()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		var page = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2, // Revision 2 but no revision 1 exists
+			Markup = "Current content",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(page);
+		await _db.SaveChangesAsync();
+		_cache.AddPage(page);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+		Assert.IsNull(result);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_ValidRollback_CreatesNewRevisionWithPreviousContent()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		// Create revision 1
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Original content",
+			RevisionMessage = "Initial version",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		// Create revision 2 (current)
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Modified content",
+			RevisionMessage = "Updated version",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		// Link revisions
+		revision1.ChildId = revision2.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision2);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(pageName, result.PageName);
+		Assert.AreEqual(3, result.Revision); // New revision should be 3
+		Assert.AreEqual("Original content", result.Markup); // Should have content from revision 1
+		Assert.AreEqual("Rolling back Revision 2 \"Updated version\"", result.RevisionMessage);
+		Assert.AreEqual(authorId, result.AuthorId);
+		Assert.IsFalse(result.MinorEdit);
+
+		// Verify database state
+		Assert.AreEqual(3, _db.WikiPages.Count());
+		var latestRevision = _db.WikiPages.OrderByDescending(wp => wp.Revision).First();
+		Assert.AreEqual(3, latestRevision.Revision);
+		Assert.AreEqual("Original content", latestRevision.Markup);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_MultipleRevisions_RollsBackToMostRecentPrevious()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Version 1",
+			RevisionMessage = "Initial",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Version 2",
+			RevisionMessage = "Second",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		var revision3 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 3,
+			Markup = "Version 3",
+			RevisionMessage = "Latest",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision3);
+		await _db.SaveChangesAsync();
+
+		// Link revisions
+		revision1.ChildId = revision2.Id;
+		revision2.ChildId = revision3.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision3);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual("Version 2", result.Markup); // Should rollback to revision 2, not revision 1
+		Assert.AreEqual(4, result.Revision);
+		Assert.AreEqual("Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_TrimsSlashesFromPageName()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		// Create two revisions
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Original",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Modified",
+			AuthorId = authorId,
+			Author = user
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		revision1.ChildId = revision2.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision2);
+
+		// Call with slashes around page name
+		var result = await _wikiPages.RollbackLatest($"/{pageName}/", authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual(pageName, result.PageName); // Should be trimmed
+	}
+
+	[TestMethod]
+	public async Task RollbackLatest_SkipsDeletedRevisions_RollsBackToEarliestNonDeletedRevision()
+	{
+		const string pageName = "TestPage";
+		const int authorId = 1;
+		var user = _db.AddUser(authorId, "TestUser").Entity;
+
+		var revision1 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 1,
+			Markup = "Version 1",
+			RevisionMessage = "Initial",
+			AuthorId = authorId,
+			Author = user,
+			IsDeleted = false
+		};
+		_db.WikiPages.Add(revision1);
+		await _db.SaveChangesAsync();
+
+		var revision2 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 2,
+			Markup = "Version 2",
+			RevisionMessage = "Second (deleted)",
+			AuthorId = authorId,
+			Author = user,
+			IsDeleted = true // This revision is deleted
+		};
+		_db.WikiPages.Add(revision2);
+		await _db.SaveChangesAsync();
+
+		var revision3 = new WikiPage
+		{
+			PageName = pageName,
+			Revision = 3,
+			Markup = "Version 3",
+			RevisionMessage = "Latest",
+			AuthorId = authorId,
+			Author = user,
+			IsDeleted = false
+		};
+		_db.WikiPages.Add(revision3);
+		await _db.SaveChangesAsync();
+
+		// Link revisions (revision 1 -> revision 2 -> revision 3)
+		revision1.ChildId = revision2.Id;
+		revision2.ChildId = revision3.Id;
+		await _db.SaveChangesAsync();
+		_cache.AddPage(revision3);
+
+		var result = await _wikiPages.RollbackLatest(pageName, authorId);
+
+		Assert.IsNotNull(result);
+		Assert.AreEqual("Version 1", result.Markup); // Should rollback to revision 1, skipping deleted revision 2
+		Assert.AreEqual(4, result.Revision);
+		Assert.AreEqual("Rolling back Revision 3 \"Latest\"", result.RevisionMessage);
 	}
 
 	#endregion

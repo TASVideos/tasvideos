@@ -1,0 +1,6 @@
+# Ignore all snapshot files and directories
+snapshots/
+*.diff.txt
+
+# Keep the gitignore itself
+!.gitignore

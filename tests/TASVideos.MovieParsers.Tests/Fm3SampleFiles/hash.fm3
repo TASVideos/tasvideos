@@ -1,0 +1,13 @@
+version 3
+emuVersion 20305
+rerecordCount 21
+palFlag 0
+romFilename test.nes
+romChecksum base64:6dg4/u5llt6ktrtqfrshdQ==
+guid {12345678-1234-5678-9012-123456789ABC}
+fourscore 0
+binary 0
+length 2
+comment Test movie with valid hash
+|..|
+|..|

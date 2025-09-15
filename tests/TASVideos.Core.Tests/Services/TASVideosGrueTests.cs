@@ -36,7 +36,7 @@ public class TASVideosGrueTests : TestDbBase
 		{
 			Topic = topic,
 			ForumId = topic.ForumId,
-			PosterId = SiteGlobalConstants.TASVideosGrueId,
+			PosterId = SiteGlobalConstants.TASVideosGrueId
 		});
 		await _db.SaveChangesAsync();
 
@@ -50,7 +50,6 @@ public class TASVideosGrueTests : TestDbBase
 		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, actual.ForumId);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsFalse(actual.EnableBbCode);
-		Assert.IsNotNull(actual.Text);
 		Assert.IsFalse(actual.Text.Contains("stale"));
 	}
 
@@ -73,7 +72,6 @@ public class TASVideosGrueTests : TestDbBase
 		Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsFalse(actual.EnableBbCode);
-		Assert.IsNotNull(actual.Text);
 		Assert.IsTrue(actual.Text.Contains("stale"));
 	}
 }

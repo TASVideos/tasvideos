@@ -10,11 +10,11 @@ public static class LinkConstants
 
 public static class Durations
 {
-	public const int OneMinuteInSeconds = 60;
-	public const int FiveMinutesInSeconds = 60 * 5;
-	public const int OneDayInSeconds = 60 * 60 * 24;
-	public const int OneWeekInSeconds = 60 * 60 * 24 * 7;
-	public const int OneYearInSeconds = 60 * 60 * 24 * 365;
+	public static readonly TimeSpan OneMinute = TimeSpan.FromMinutes(1);
+	public static readonly TimeSpan FiveMinutes = TimeSpan.FromMinutes(5);
+	public static readonly TimeSpan OneDay = TimeSpan.FromDays(1);
+	public static readonly TimeSpan OneWeek = TimeSpan.FromDays(7);
+	public static readonly TimeSpan OneYear = TimeSpan.FromDays(365);
 }
 
 public static class CacheKeys
@@ -78,6 +78,10 @@ public static class SiteGlobalConstants
 	public const int OtherGamesForum = 5;
 
 	public const int MetaDescriptionLength = 350;
+
+	public const int YearsOfBanDisplayedAsIndefinite = 2;
+
+	public const string MainIvatarDomain = "seccdn.libravatar.org"; // keep in sync with profile-settings.js
 }
 
 public static class ForumConstants

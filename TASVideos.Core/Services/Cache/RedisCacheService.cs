@@ -12,7 +12,7 @@ public class RedisCacheService : ICacheService
 	private readonly ILogger<RedisCacheService> _logger;
 	private static IDatabase _cache = null!;
 	private static Lazy<ConnectionMultiplexer>? _connection;
-	private readonly int _cacheDurationInSeconds;
+	private readonly TimeSpan _cacheDuration;
 	private static readonly JsonSerializerOptions SerializerSettings = new()
 	{
 		ReferenceHandler = ReferenceHandler.IgnoreCycles
@@ -31,7 +31,7 @@ public class RedisCacheService : ICacheService
 
 		try
 		{
-			_cacheDurationInSeconds = settings.CacheSettings.CacheDurationInSeconds;
+			_cacheDuration = settings.CacheSettings.CacheDuration;
 			_connection ??= new Lazy<ConnectionMultiplexer>(() => ConnectionMultiplexer.Connect(settings.CacheSettings.ConnectionString));
 			var redis = _connection.Value;
 			_cache = redis.GetDatabase();
@@ -71,9 +71,9 @@ public class RedisCacheService : ICacheService
 		}
 	}
 
-	public void Set(string key, object? data, int? cacheTime = null)
+	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
-		if (_enabled)
+		if (!_enabled)
 		{
 			return;
 		}
@@ -81,8 +81,7 @@ public class RedisCacheService : ICacheService
 		try
 		{
 			var serializedData = JsonSerializer.Serialize(data, SerializerSettings);
-			var timeout = TimeSpan.FromSeconds(cacheTime ?? _cacheDurationInSeconds);
-			_cache.StringSet(key, serializedData, timeout);
+			_cache.StringSet(key, serializedData, cacheTime ?? _cacheDuration);
 		}
 		catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)
 		{
@@ -92,7 +91,7 @@ public class RedisCacheService : ICacheService
 
 	public void Remove(string key)
 	{
-		if (_enabled)
+		if (!_enabled)
 		{
 			return;
 		}

@@ -18,23 +18,25 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		var forum = new Data.Entity.Forum.Forum
+		var categoryExists = await db.ForumCategories.AnyAsync(c => c.Id == Forum.Category);
+		if (!categoryExists)
+		{
+			return NotFound();
+		}
+
+		var forum = db.Forums.Add(new Data.Entity.Forum.Forum
 		{
 			Name = Forum.Name,
 			ShortName = Forum.ShortName,
 			Description = Forum.Description,
 			CategoryId = Forum.Category,
 			Restricted = Forum.RestrictedAccess
-		};
+		}).Entity;
 
-		db.Forums.Add(forum);
 		SetMessage(await db.TrySaveChanges(), $"Forum {forum.Name} created successfully.", "Unable to create forum.");
-
 		return BasePageRedirect("Index", new { forum.Id });
 	}
 
 	private async Task Initialize()
-	{
-		AvailableCategories = await db.ForumCategories.ToDropdownList();
-	}
+		=> AvailableCategories = await db.ForumCategories.ToDropdownList();
 }

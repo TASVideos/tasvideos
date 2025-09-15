@@ -8,7 +8,7 @@ public class NoCacheService : ICacheService
 		return false;
 	}
 
-	public void Set(string key, object? data, int? cacheTime)
+	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
 	}
 

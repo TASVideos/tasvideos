@@ -5,7 +5,7 @@ using TASVideos.Core.Services;
 namespace TASVideos.Tests.Base;
 
 /// <summary>
-/// Provides a dummy cache service that has helpful methods for unit testing
+/// Provides a cache implementation that has helpful methods for unit testing
 /// </summary>
 public class TestCache : ICacheService
 {
@@ -32,7 +32,7 @@ public class TestCache : ICacheService
 		return result;
 	}
 
-	public void Set(string key, object? data, int? cacheTime = null)
+	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
 		var str = JsonSerializer.Serialize(data, SerializerSettings);
 		_cache[key] = str;

@@ -96,6 +96,7 @@ public class AppSettings
 	{
 		public string CacheType { get; set; } = "NoCache";
 		public int CacheDurationInSeconds { get; set; }
+		public TimeSpan CacheDuration => TimeSpan.FromSeconds(CacheDurationInSeconds);
 		public string ConnectionString { get; set; } = "";
 	}
 

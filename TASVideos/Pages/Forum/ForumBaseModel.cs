@@ -8,15 +8,14 @@ public class BaseForumModel : BasePageModel
 		.GetValues<ForumTopicType>()
 		.ToDropDown();
 
-	protected static readonly List<SelectListItem> MoodList = Enum
+	protected static readonly List<SelectListItem> MoodList = [.. Enum
 		.GetValues<ForumPostMood>()
 		.Select(m => new SelectListItem
 		{
 			Value = ((int)m).ToString(),
 			Text = $"{(int)m}: {m.EnumDisplayName()}",
 			Group = m >= ForumPostMood.AltNormal ? AltGroup : StandardGroup
-		})
-		.ToList();
+		})];
 
 	private static readonly SelectListGroup StandardGroup = new() { Name = "Standard" };
 	private static readonly SelectListGroup AltGroup = new() { Name = "Alternate" };

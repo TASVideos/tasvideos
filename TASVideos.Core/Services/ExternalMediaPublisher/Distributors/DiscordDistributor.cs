@@ -18,7 +18,7 @@ public sealed class DiscordDistributor : IPostDistributor
 	{
 		_settings = appSettings.Discord;
 		_client = httpClientFactory.CreateClient(HttpClients.Discord)
-			?? throw new InvalidOperationException($"Unable to initalize {HttpClients.Discord} client");
+			?? throw new InvalidOperationException($"Unable to initialize {HttpClients.Discord} client");
 		_client.SetBotToken(_settings.AccessToken);
 		_logger = logger;
 	}

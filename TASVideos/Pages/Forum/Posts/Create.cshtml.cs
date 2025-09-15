@@ -4,8 +4,8 @@ namespace TASVideos.Pages.Forum.Posts;
 
 [RequirePermission(PermissionTo.CreateForumPosts)]
 public class CreateModel(
-	UserManager userManager,
-	ExternalMediaPublisher publisher,
+	IUserManager userManager,
+	IExternalMediaPublisher publisher,
 	ApplicationDbContext db,
 	ITopicWatcher topicWatcher,
 	IForumService forumService)
@@ -91,18 +91,14 @@ public class CreateModel(
 				fp.Poster!.UserName,
 				fp.Poster.PreferredPronouns,
 				fp.Text,
-				fp.EnableBbCode,
-				fp.EnableHtml))
+				fp.EnableHtml,
+				fp.EnableBbCode))
 			.Take(10)
 			.Reverse()
 			.ToListAsync();
 
 		UserAvatars = await forumService.UserAvatars(User.GetUserId());
-
-		BackupSubmissionDeterminator = (await db.ForumPosts
-			.ForTopic(TopicId)
-			.CountAsync(fp => fp.PosterId == user.Id))
-			.ToString();
+		BackupSubmissionDeterminator = (await forumService.GetPostCountInTopic(user.Id, TopicId)).ToString();
 
 		return Page();
 	}

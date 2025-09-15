@@ -1,6 +1,5 @@
 ﻿namespace TASVideos.Data.Entity.Game;
 
-[ExcludeFromHistory]
 public class GameSystemFrameRate : BaseEntity
 {
 	public int Id { get; set; }

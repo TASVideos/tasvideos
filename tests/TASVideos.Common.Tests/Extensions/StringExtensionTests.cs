@@ -8,7 +8,7 @@ public class StringExtensionTests
 	[TestMethod]
 	public void CapAndEllipse_NegativeLimit_Throws()
 	{
-		Assert.ThrowsException<ArgumentException>(() => "".CapAndEllipse(-1));
+		Assert.ThrowsExactly<ArgumentException>(() => "".CapAndEllipse(-1));
 	}
 
 	[TestMethod]
@@ -209,6 +209,29 @@ public class StringExtensionTests
 	public void ReplaceFirst(string text, string search, string replace, string expected)
 	{
 		var actual = text.ReplaceFirst(search, replace);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	[DataRow(null, null)]
+	[DataRow("", null)]
+	[DataRow("   ", null)]
+	[DataRow(",", null)]
+	[DataRow(",,", null)]
+	[DataRow(" , , ", null)]
+	[DataRow("author1", "author1")]
+	[DataRow("author1,author2", "author1,author2")]
+	[DataRow("author1, author2", "author1,author2")]
+	[DataRow("author1 , author2", "author1,author2")]
+	[DataRow("author1,  author2", "author1,author2")]
+	[DataRow("  author1  ,  author2  ", "author1,author2")]
+	[DataRow("author1, author2, author3", "author1,author2,author3")]
+	[DataRow("author1,, author2", "author1,author2")]
+	[DataRow(",author1,author2,", "author1,author2")]
+	[DataRow("author1, , author2", "author1,author2")]
+	public void NormalizeAuthorList_Tests(string input, string expected)
+	{
+		var actual = input.NormalizeCsv();
 		Assert.AreEqual(expected, actual);
 	}
 }

@@ -1,23 +1,15 @@
 ﻿using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
-using TASVideos.MovieParsers;
-using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.SubmitMovies)]
 public class SubmitModel(
-	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
-	IWikiPages wikiPages,
-	IMovieParser parser,
-	UserManager userManager,
-	ITASVideoAgent tasVideoAgent,
-	IYoutubeSync youtubeSync,
+	IUserManager userManager,
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
-	IFileService fileService)
-	: BasePageModel
+	IWikiPages wikiPages,
+	IExternalMediaPublisher externalMediaPublisher)
+	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
 
@@ -79,9 +71,7 @@ public class SubmitModel(
 		}
 
 		Authors = [User.Name()];
-		BackupSubmissionDeterminator = (await db.Submissions
-			.CountAsync(s => s.SubmitterId == User.GetUserId()))
-			.ToString();
+		BackupSubmissionDeterminator = (await queueService.GetSubmissionCount(User.GetUserId())).ToString();
 
 		return Page();
 	}
@@ -101,11 +91,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		MemoryStream fileStream = await MovieFile!.DecompressOrTakeRaw();
-		byte[] fileBytes = fileStream.ToArray();
-
-		IParseResult parseResult = MovieFile.IsZip() ? await parser.ParseZip(fileStream) : await parser.ParseFile(MovieFile!.FileName, fileStream);
-
+		var (parseResult, movieFileBytes) = await queueService.ParseMovieFileOrZip(MovieFile!);
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
@@ -119,66 +105,34 @@ public class SubmitModel(
 			return Page();
 		}
 
-		using var dbTransaction = await db.Database.BeginTransactionAsync();
-		var submission = new Submission
-		{
-			SubmittedGameVersion = GameVersion,
-			GameName = GameName,
-			Branch = GoalName?.Trim('\"'),
-			RomName = RomName,
-			EmulatorVersion = Emulator,
-			EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(EncodeEmbeddedLink),
-			AdditionalAuthors = ExternalAuthors
-		};
+		var request = new SubmitRequest(
+			GameName,
+			RomName,
+			GameVersion,
+			GoalName,
+			Emulator,
+			EncodeEmbeddedLink,
+			Authors,
+			ExternalAuthors,
+			Markup,
+			movieFileBytes,
+			parseResult,
+			await userManager.GetRequiredUser(User));
 
-		var error = await queueService.MapParsedResult(parseResult, submission);
-		if (!string.IsNullOrWhiteSpace(error))
+		var result = await queueService.Submit(request);
+		if (result.Success)
 		{
-			ModelState.AddModelError("", error);
+			await externalMediaPublisher.AnnounceNewSubmission(result.Id, result.Title, result.Screenshot, result.Screenshot is not null ? "image/jpeg" : null, 480, 360);
+			return BaseRedirect($"/{result.Id}S");
 		}
 
-		if (!ModelState.IsValid)
-		{
-			return Page();
-		}
-
-		submission.MovieFile = MovieFile.IsZip() ? fileBytes : await fileService.ZipFile(fileBytes, MovieFile!.FileName);
-		submission.Submitter = await userManager.GetUserAsync(User);
-		if (parseResult.Hashes.Count > 0)
-		{
-			submission.HashType = parseResult.Hashes.First().Key.ToString();
-			submission.Hash = parseResult.Hashes.First().Value;
-		}
-
-		db.Submissions.Add(submission);
-		await db.SaveChangesAsync();
-
-		await wikiPages.Add(new WikiCreateRequest
-		{
-			PageName = LinkConstants.SubmissionWikiPage + submission.Id,
-			RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
-			Markup = Markup,
-			MinorEdit = false,
-			AuthorId = User.GetUserId()
-		});
-
-		db.SubmissionAuthors.AddRange(await db.Users
-			.ToSubmissionAuthors(submission.Id, Authors)
-			.ToListAsync());
-
-		submission.GenerateTitle();
-
-		submission.TopicId = await tasVideoAgent.PostSubmissionTopic(submission.Id, submission.Title);
-		await db.SaveChangesAsync();
-		await dbTransaction.CommitAsync();
-		await publisher.AnnounceNewSubmission(submission);
-
-		return BaseRedirect($"/{submission.Id}S");
+		ModelState.AddModelError("", result.ErrorMessage!);
+		return Page();
 	}
 
 	public async Task<IActionResult> OnGetPrefillText()
 	{
-		var page = await wikiPages.Page("System/SubmissionDefaultMessage");
+		var page = await wikiPages.Page(SystemWiki.SubmissionDefaultMessage);
 		return Json(new { text = page?.Markup });
 	}
 
@@ -196,7 +150,7 @@ public class SubmitModel(
 
 		foreach (var author in Authors)
 		{
-			if (!await db.Users.Exists(author))
+			if (!await userManager.Exists(author))
 			{
 				ModelState.AddModelError($"{nameof(Authors)}", $"Could not find user: {author}");
 			}

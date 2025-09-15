@@ -48,6 +48,11 @@ public interface IPostable
 	/// Gets the person that posted the message.
 	/// </summary>
 	string User { get; }
+
+	byte[]? ImageData { get; }
+	string? ImageMimeType { get; }
+	int? ImageWidth { get; }
+	int? ImageHeight { get; }
 }
 
 /// <summary>
@@ -55,6 +60,7 @@ public interface IPostable
 /// </summary>
 public class Post : IPostable
 {
+	public PostType Type { get; init; } = PostType.General;
 	public string Announcement { get; init; } = "";
 	public string Title { get; init; } = "";
 	public string FormattedTitle { get; init; } = "";
@@ -62,5 +68,9 @@ public class Post : IPostable
 	public string Body { get; init; } = "";
 	public string Group { get; init; } = "";
 	public string User { get; init; } = "";
-	public PostType Type { get; init; }
+
+	public byte[]? ImageData { get; init; }
+	public string? ImageMimeType { get; init; }
+	public int? ImageWidth { get; init; }
+	public int? ImageHeight { get; init; }
 }

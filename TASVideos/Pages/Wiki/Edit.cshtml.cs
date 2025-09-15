@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Wiki;
 
 [RequireEdit]
-public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
+public class EditModel(IWikiPages wikiPages, IUserManager userManager, IExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromQuery]
 	public string? Path { get; set; }
@@ -24,12 +24,7 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 	public async Task<IActionResult> OnGet()
 	{
 		Path = Path?.Trim('/');
-		if (string.IsNullOrWhiteSpace(Path))
-		{
-			return NotFound();
-		}
-
-		if (!WikiHelper.IsValidWikiPageName(Path))
+		if (string.IsNullOrWhiteSpace(Path) || !WikiHelper.IsValidWikiPageName(Path))
 		{
 			return NotFound();
 		}
@@ -101,54 +96,35 @@ public class EditModel(IWikiPages wikiPages, ApplicationDbContext db, ExternalMe
 
 	public async Task<IActionResult> OnPostRollbackLatest()
 	{
-		var latestRevision = await wikiPages.Page(Path);
-		if (latestRevision is null)
+		if (string.IsNullOrWhiteSpace(Path))
 		{
 			return NotFound();
 		}
 
-		if (latestRevision.Revision == 1)
+		var result = await wikiPages.RollbackLatest(Path, User.GetUserId());
+		if (result is null)
 		{
-			return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
-		}
+			var latestRevision = await wikiPages.Page(Path);
+			if (latestRevision is null)
+			{
+				return NotFound();
+			}
 
-		var previousRevision = await db.WikiPages
-			.Where(wp => wp.PageName == Path)
-			.ThatAreNotCurrent()
-			.OrderByDescending(wp => wp.Revision)
-			.FirstOrDefaultAsync();
+			if (latestRevision.Revision == 1)
+			{
+				return BadRequest("Cannot rollback the first revision of a page, just delete instead.");
+			}
 
-		if (previousRevision is null)
-		{
 			return NotFound();
 		}
 
-		var rollBackRevision = new WikiCreateRequest
-		{
-			PageName = Path!,
-			RevisionMessage = $"Rolling back Revision {latestRevision.Revision} \"{latestRevision.RevisionMessage}\"",
-			Markup = previousRevision.Markup,
-			AuthorId = User.GetUserId(),
-			MinorEdit = false
-		};
-
-		var result = await wikiPages.Add(rollBackRevision);
-		if (result is not null)
-		{
-			await Announce(result);
-		}
-
+		await Announce(result);
 		return BasePageRedirect("PageHistory", new { Path, Latest = true });
 	}
 
 	private async Task<string?> UserName(string path)
-	{
-		var userName = WikiHelper.ToUserName(path);
-		return await db.Users
-			.ForUser(userName)
-			.Select(u => u.UserName)
-			.SingleOrDefaultAsync();
-	}
+		=> await userManager.GetUserNameByUserName(
+			WikiHelper.ToUserName(path));
 
 	private async Task Announce(IWikiPage page, bool force = false)
 		=> await publisher.SendWiki(

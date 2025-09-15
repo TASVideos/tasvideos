@@ -56,7 +56,7 @@ public class RatingServiceTests : TestDbBase
 		var actual = await _ratingService.GetRatingsForPublication(pub.Id);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(actual.Count, 2);
+		Assert.AreEqual(2, actual.Count);
 		Assert.AreEqual(1, actual.Count(pr => pr.UserName == userName1));
 		Assert.AreEqual(1, actual.Count(pr => pr.UserName == userName2));
 	}
@@ -304,5 +304,39 @@ public class RatingServiceTests : TestDbBase
 		var actual = await _ratingService.GetUserRatings(userName, new RatingRequest { IncludeObsolete = true });
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(2, actual.Ratings.RowCount);
+	}
+
+	[TestMethod]
+	public async Task GetUserRatings_Summary_ReturnsSensibleValues()
+	{
+		var userA = _db.AddUser("A").Entity;
+		var userB = _db.AddUser("B").Entity;
+		var userC = _db.AddUser("C").Entity;
+		var userD = _db.AddUser("D").Entity;
+		_db.AddUser("E");
+		var pub1 = _db.AddPublication().Entity;
+		var pub2 = _db.AddPublication().Entity;
+		var pub3 = _db.AddPublication().Entity;
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub1, User = userA });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub2, User = userA });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub3, User = userA });
+
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub1, User = userB });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub2, User = userB });
+
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub1, User = userC });
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub2, User = userC });
+
+		_db.PublicationRatings.Add(new PublicationRating { Publication = pub1, User = userD });
+		await _db.SaveChangesAsync();
+
+		var actual = await _ratingService.GetUserRatings(userB.UserName, new RatingRequest());
+		Assert.IsNotNull(actual);
+		Assert.AreEqual(3, actual.Summary.TotalPublicationCount);
+		Assert.AreEqual(4, actual.Summary.TotalRaterCount);
+		Assert.AreEqual(2, actual.RatingsCount);
+		Assert.AreEqual(1, actual.UsersWithHigherRatingsCount);
+		Assert.AreEqual(1, actual.UsersWithEqualRatingsCount);
+		Assert.AreEqual(1, actual.UsersWithLowerRatingsCount);
 	}
 }

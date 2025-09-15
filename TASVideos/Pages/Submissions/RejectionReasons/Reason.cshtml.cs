@@ -11,7 +11,7 @@ public class ReasonModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var reason = await db.SubmissionRejectionReasons.SingleOrDefaultAsync(r => r.Id == Id);
+		var reason = await db.SubmissionRejectionReasons.FindAsync(Id);
 		if (reason is null)
 		{
 			return NotFound();

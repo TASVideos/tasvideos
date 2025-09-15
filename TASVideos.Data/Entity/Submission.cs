@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using TASVideos.Data.AutoHistory;
+
+namespace TASVideos.Data.Entity;
 
 public enum ShowVerified { All, Verified, NotVerified }
 public interface ISubmissionFilter
@@ -12,7 +14,7 @@ public interface ISubmissionFilter
 	bool? ShowVerified { get; }
 }
 
-[ExcludeFromHistory]
+[IncludeInAutoHistory]
 public class Submission : BaseEntity, ITimeable
 {
 	public int Id { get; set; }
@@ -37,6 +39,7 @@ public class Submission : BaseEntity, ITimeable
 	public SubmissionStatus Status { get; set; } = SubmissionStatus.New;
 	public ICollection<SubmissionStatusHistory> History { get; init; } = [];
 
+	[ExcludeFromAutoHistory]
 	public byte[] MovieFile { get; set; } = [];
 
 	public string? MovieExtension { get; set; }
@@ -100,16 +103,6 @@ public class Submission : BaseEntity, ITimeable
 
 	public void GenerateTitle()
 	{
-		if (System is null)
-		{
-			throw new ArgumentNullException($"{nameof(System)} can not be null.");
-		}
-
-		if (SystemFrameRate is null)
-		{
-			throw new ArgumentNullException($"{nameof(SystemFrameRate)} can not be null.");
-		}
-
 		var authorList = SubmissionAuthors
 			.OrderBy(sa => sa.Ordinal)
 			.Select(sa => sa.Author?.UserName)
@@ -140,7 +133,7 @@ public class Submission : BaseEntity, ITimeable
 		};
 
 		Title =
-		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System.Code} {gameName}"
+		$"#{Id}: {string.Join(", ", authorList).LastCommaToAmpersand()}'s {System?.Code ?? "Unknown"} {gameName}"
 			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
 			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}

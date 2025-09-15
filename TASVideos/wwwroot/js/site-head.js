@@ -21,16 +21,29 @@ const getPreferredTheme = () => {
     return 'auto';
 }
 
+let themeDropdownItems = [];
+const setSelectedThemeItem = theme => themeDropdownItems.forEach(e => {
+    if (e.dataset.theme === theme) {
+        e.classList.add(/*bs*/"active");
+        e.ariaCurrent = true;
+    } else {
+        e.classList.remove(/*bs*/"active");
+        e.ariaCurrent = false;
+    }
+});
+
 const setTheme = theme => {
     if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.setAttribute('data-bs-theme', 'dark');
     } else {
         document.documentElement.setAttribute('data-bs-theme', theme);
     }
+    setSelectedThemeItem(theme);
     setStoredTheme(theme);
 }
 
-setTheme(getPreferredTheme());
+const initThemeSelection = getPreferredTheme();
+setTheme(initThemeSelection);
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     const storedTheme = getStoredTheme();
@@ -40,7 +53,9 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () 
 });
 
 window.addEventListener("DOMContentLoaded", function () {
-    Array.from(document.querySelectorAll('[data-theme]')).forEach(btn => {
+    themeDropdownItems = Array.from(document.querySelectorAll("[data-theme]"));
+    setSelectedThemeItem(initThemeSelection);
+    themeDropdownItems.forEach(btn => {
         btn.addEventListener('click', () => {
             setTheme(btn.dataset.theme);
         });

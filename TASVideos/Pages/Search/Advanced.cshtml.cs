@@ -34,6 +34,9 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 	public bool SearchForumPosts { get; set; }
 
 	[FromQuery]
+	public string? PostsFromUser { get; set; }
+
+	[FromQuery]
 	public bool SearchPublications { get; set; } = true;
 
 	[FromQuery]
@@ -67,7 +70,7 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 		if (!string.IsNullOrWhiteSpace(SearchTerms))
 		{
 			DisplayPageSize = PageSize;
-			if (new[] { SearchWiki, SearchForumTopics, SearchForumPosts, SearchGames }.Count(b => b) == 1)
+			if (new[] { SearchWiki, SearchForumTopics, SearchForumPosts, SearchGames, SearchPublications, SearchUsers }.Count(b => b) == 1)
 			{
 				DisplayPageSize = PageSizeSingle;
 			}
@@ -106,18 +109,25 @@ public class AdvancedModel(ApplicationDbContext db) : BasePageModel
 
 			if (SearchForumPosts)
 			{
-				PostResults = await db.ForumPosts
-				.ExcludeRestricted(UserCanSeeRestricted)
-				.Where(p => Regex.IsMatch(p.Text, "(^|[^A-Za-z])" + SearchTerms))
-				.OrderByDescending(p => p.CreateTimestamp)
-				.Skip(skip)
-				.Take(DisplayPageSize + 1)
-				.Select(p => new PostResult(
-					p.Text,
-					Regex.Match(p.Text, "(^|[^A-Za-z])" + SearchTerms, RegexOptions.IgnoreCase).Index,
-					p.Topic!.Title,
-					p.Id))
-				.ToListAsync();
+				var query = db.ForumPosts
+					.ExcludeRestricted(UserCanSeeRestricted)
+					.Where(p => Regex.IsMatch(p.Text, "(^|[^A-Za-z])" + SearchTerms));
+
+				if (PostsFromUser != null)
+				{
+					query = query.Where(p => p.Poster!.UserName == PostsFromUser);
+				}
+
+				PostResults = await query
+					.OrderByDescending(p => p.CreateTimestamp)
+					.Skip(skip)
+					.Take(DisplayPageSize + 1)
+					.Select(p => new PostResult(
+						p.Text,
+						Regex.Match(p.Text, "(^|[^A-Za-z])" + SearchTerms, RegexOptions.IgnoreCase).Index,
+						p.Topic!.Title,
+						p.Id))
+					.ToListAsync();
 			}
 
 			if (SearchGames)

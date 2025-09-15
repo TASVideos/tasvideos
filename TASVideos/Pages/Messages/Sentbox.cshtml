@@ -15,7 +15,7 @@
 				<a asp-page="Index" asp-route-id="@entry.Id">@entry.Subject</a>
 			</td>
 			<td><profile-link username="@entry.To"></profile-link></td>
-			<td>@entry.SendDate</td>
+			<td><timezone-convert asp-for="@entry.SendDate" /></td>
 			<td-action-column>
 				<form method="post" class="d-inline-block" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id">
 					<submit-button class="btn-sm"></submit-button>

@@ -8,12 +8,17 @@ namespace TASVideos.Services;
 /// Such as IRC, Discord, etc. via a collection of
 /// <see cref="IPostDistributor"/> instances that will deliver posts to specific resources.
 /// </summary>
-/// <remarks>DI as a singleton, pass in a hardcoded list of IMessagingProvider implementations, config drive which implementations to use</remarks>
-public class ExternalMediaPublisher(AppSettings appSettings, IEnumerable<IPostDistributor> providers, IHttpContextAccessor httpContextAccessor)
+public interface IExternalMediaPublisher
+{
+	Task Send(IPostable message, bool force = false);
+	string ToAbsolute(string relativeLink);
+}
+
+internal class ExternalMediaPublisher(AppSettings appSettings, IEnumerable<IPostDistributor> providers, IHttpContextAccessor httpContextAccessor) : IExternalMediaPublisher
 {
 	private readonly string _baseUrl = appSettings.BaseUrl.TrimEnd('/');
 
-	private IEnumerable<IPostDistributor> Providers { get; } = providers.ToList();
+	private IEnumerable<IPostDistributor> Providers { get; } = [.. providers];
 
 	public async Task Send(IPostable message, bool force = false)
 	{
@@ -40,18 +45,17 @@ public class ExternalMediaPublisher(AppSettings appSettings, IEnumerable<IPostDi
 
 public static class ExternalMediaPublisherExtensions
 {
-	public static async Task SendMessage(this ExternalMediaPublisher publisher, string group, string message, string body = "")
+	public static async Task SendMessage(this IExternalMediaPublisher publisher, string group, string message, string body = "")
 	{
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = group,
 			Title = message,
 			Body = body
 		});
 	}
 
-	public static async Task SendAdminMessage(this ExternalMediaPublisher publisher, string group, string message)
+	public static async Task SendAdminMessage(this IExternalMediaPublisher publisher, string group, string message)
 	{
 		await publisher.Send(new Post
 		{
@@ -61,12 +65,11 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendUserFile(this ExternalMediaPublisher publisher, bool unlisted, string formattedTitle, long id, string fileTitle)
+	public static async Task SendUserFile(this IExternalMediaPublisher publisher, bool unlisted, string formattedTitle, long id, string fileTitle)
 	{
 		string unformattedTitle = Unformat(formattedTitle);
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = unlisted
 				? PostType.Administrative
 				: PostType.General,
@@ -78,26 +81,29 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceNewSubmission(this ExternalMediaPublisher publisher, Submission submission)
+	public static async Task AnnounceNewSubmission(this IExternalMediaPublisher publisher, int subId, string subTitle, byte[]? imageData = null, string? imageMimeType = null, int? imageWidth = null, int? imageHeight = null)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "New Submission!",
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
-			Title = $"New Submission! Go and see {submission.Title}",
-			FormattedTitle = $"New Submission! Go and see [{submission.Title}]({{0}})",
+			Title = $"New Submission! Go and see {subTitle}",
+			FormattedTitle = $"New Submission! Go and see [{subTitle}]({{0}})",
 			Body = "",
-			Link = publisher.ToAbsolute($"{submission.Id}S")
+			Link = publisher.ToAbsolute($"{subId}S"),
+			ImageData = imageData,
+			ImageMimeType = imageMimeType,
+			ImageWidth = imageWidth,
+			ImageHeight = imageHeight
 		});
 	}
 
-	public static async Task SendSubmissionEdit(this ExternalMediaPublisher publisher, int subId, string formattedTitle, string body, bool force = false)
+	public static async Task SendSubmissionEdit(this IExternalMediaPublisher publisher, int subId, string formattedTitle, string body, bool force = false)
 	{
 		await publisher.Send(
 			new Post
 			{
-				Type = PostType.General,
 				Group = PostGroups.Submission,
 				Title = Unformat(formattedTitle),
 				FormattedTitle = formattedTitle,
@@ -107,32 +113,35 @@ public static class ExternalMediaPublisherExtensions
 			force);
 	}
 
-	public static async Task SendDeprecation(this ExternalMediaPublisher publisher, string formattedTitle)
+	public static async Task SendDeprecation(this IExternalMediaPublisher publisher, string formattedTitle)
 	{
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = PostGroups.Submission,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle
 		});
 	}
 
-	public static async Task AnnounceNewPublication(this ExternalMediaPublisher publisher, Publication publication)
+	public static async Task AnnounceNewPublication(this IExternalMediaPublisher publisher, int publicationId, string publicationTitle, byte[]? imageData = null, string? imageMimeType = null, int? imageWidth = null, int? imageHeight = null)
 	{
 		await publisher.Send(new Post
 		{
 			Announcement = "New Movie Published!",
 			Type = PostType.Announcement,
 			Group = PostGroups.Submission,
-			Title = $"New movie published! Go and see {publication.Title}",
-			FormattedTitle = $"New movie published! Go and see [{publication.Title}]({{0}})",
+			Title = $"New movie published! Go and see {publicationTitle}",
+			FormattedTitle = $"New movie published! Go and see [{publicationTitle}]({{0}})",
 			Body = "",
-			Link = publisher.ToAbsolute($"{publication.Id}M")
+			Link = publisher.ToAbsolute($"{publicationId}M"),
+			ImageData = imageData,
+			ImageMimeType = imageMimeType,
+			ImageWidth = imageWidth,
+			ImageHeight = imageHeight
 		});
 	}
 
-	public static async Task AnnounceUnpublish(this ExternalMediaPublisher publisher, string publicationTitle, int id, string reason)
+	public static async Task AnnounceUnpublish(this IExternalMediaPublisher publisher, string publicationTitle, int id, string reason)
 	{
 		await publisher.Send(new Post
 		{
@@ -146,7 +155,7 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceSubmissionDelete(this ExternalMediaPublisher publisher, string submissionTitle, int id)
+	public static async Task AnnounceSubmissionDelete(this IExternalMediaPublisher publisher, string submissionTitle, int id)
 	{
 		await publisher.Send(new Post
 		{
@@ -159,14 +168,12 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendPublicationEdit(this ExternalMediaPublisher publisher, string userName, int publicationId, string body)
+	public static async Task SendPublicationEdit(this IExternalMediaPublisher publisher, string userName, int publicationId, string body)
 	{
 		var title = $"{publicationId}M edited by {userName}";
 		var formattedTitle = $"[{publicationId}M]({{0}}) edited by {userName}";
 		await publisher.Send(new Post
 		{
-			Announcement = "",
-			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = title,
 			FormattedTitle = formattedTitle,
@@ -175,12 +182,10 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendPublicationClassChange(this ExternalMediaPublisher publisher, int id, string pubTitle, string userName, string oldClass, string newClass)
+	public static async Task SendPublicationClassChange(this IExternalMediaPublisher publisher, int id, string pubTitle, string userName, string oldClass, string newClass)
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = "",
-			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = $"{id}M Class changed from {oldClass} to {newClass} by {userName}",
 			FormattedTitle = $"[{id}M]({{0}}) Class changed from {oldClass} to {newClass} by {userName}",
@@ -189,7 +194,7 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceNewsPost(this ExternalMediaPublisher publisher, string formattedTitle, string body, int postId)
+	public static async Task AnnounceNewsPost(this IExternalMediaPublisher publisher, string formattedTitle, string body, int postId)
 	{
 		await publisher.Send(new Post
 		{
@@ -203,7 +208,7 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendForum(this ExternalMediaPublisher publisher, bool restricted, string formattedTitle, string body, string relativeLink)
+	public static async Task SendForum(this IExternalMediaPublisher publisher, bool restricted, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
@@ -218,13 +223,11 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendWiki(this ExternalMediaPublisher publisher, string formattedTitle, string body, string path, bool force = false)
+	public static async Task SendWiki(this IExternalMediaPublisher publisher, string formattedTitle, string body, string path, bool force = false)
 	{
 		await publisher.Send(
 		new Post
 		{
-			Announcement = "",
-			Type = PostType.General,
 			Group = PostGroups.Wiki,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
@@ -236,7 +239,7 @@ public static class ExternalMediaPublisherExtensions
 		force);
 	}
 
-	public static async Task SendUserManagement(this ExternalMediaPublisher publisher, string formattedTitle, string userName)
+	public static async Task SendUserManagement(this IExternalMediaPublisher publisher, string formattedTitle, string userName)
 	{
 		await publisher.Send(new Post
 		{
@@ -248,11 +251,10 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendRoleManagement(this ExternalMediaPublisher publisher, string formattedTitle, string roleName)
+	public static async Task SendRoleManagement(this IExternalMediaPublisher publisher, string formattedTitle, string roleName)
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = "",
 			Type = PostType.Administrative,
 			Group = PostGroups.UserManagement,
 			Title = Unformat(formattedTitle),
@@ -262,11 +264,10 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task SendGameManagement(this ExternalMediaPublisher publisher, string formattedTitle, string body, string relativeLink)
+	public static async Task SendGameManagement(this IExternalMediaPublisher publisher, string formattedTitle, string body, string relativeLink)
 	{
 		await publisher.Send(new Post
 		{
-			Type = PostType.General,
 			Group = PostGroups.Game,
 			Title = Unformat(formattedTitle),
 			FormattedTitle = formattedTitle,
@@ -278,7 +279,5 @@ public static class ExternalMediaPublisherExtensions
 	// formatted: New [user file]({0}) uploaded by
 	// unformatted: New user file uploaded by
 	private static string Unformat(string formattedTitle)
-	{
-		return formattedTitle.Replace("[", "").Replace("]", "").Replace("({0})", "");
-	}
+		=> formattedTitle.Replace("[", "").Replace("]", "").Replace("({0})", "");
 }

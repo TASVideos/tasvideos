@@ -1,5 +1,4 @@
 ﻿using TASVideos.Data.Entity;
-using TASVideos.Extensions;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -100,6 +99,6 @@ public class PointsServiceTests : TestDbBase
 
 		var (actualNonWeighted, _) = await _pointsService.PlayerPoints(author1.Entity.Id);
 		var (actualWeighted, _) = await _pointsService.PlayerPoints(author2.Entity.Id);
-		Assert.AreEqual(actualWeighted, actualNonWeighted * 100, 10);
+		Assert.AreEqual(actualNonWeighted * 100, actualWeighted, 10);
 	}
 }

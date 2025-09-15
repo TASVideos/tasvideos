@@ -3,6 +3,9 @@
 		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 	<ItemGroup>
+		<InternalsVisibleTo Include="TASVideos.E2E.Tests" />
+	</ItemGroup>
+	<ItemGroup>
 		<PackageReference Include="SharpCompress" />
 	</ItemGroup>
 	<ItemGroup>

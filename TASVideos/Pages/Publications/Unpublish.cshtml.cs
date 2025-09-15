@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.Unpublish)]
-public class UnpublishModel(ExternalMediaPublisher publisher, IQueueService queueService) : BasePageModel
+public class UnpublishModel(IExternalMediaPublisher publisher, IPublications publications) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -14,7 +14,7 @@ public class UnpublishModel(ExternalMediaPublisher publisher, IQueueService queu
 
 	public async Task<IActionResult> OnGet()
 	{
-		var result = await queueService.CanUnpublish(Id);
+		var result = await publications.CanUnpublish(Id);
 
 		switch (result.Status)
 		{
@@ -35,23 +35,18 @@ public class UnpublishModel(ExternalMediaPublisher publisher, IQueueService queu
 			return Page();
 		}
 
-		var result = await queueService.Unpublish(Id);
-
-		if (result.Status == UnpublishResult.UnpublishStatus.NotFound)
+		var result = await publications.Unpublish(Id);
+		switch (result.Status)
 		{
-			ErrorStatusMessage($"Publication {Id} not found");
-			return RedirectToPage("View", new { Id });
-		}
-
-		if (result.Status == UnpublishResult.UnpublishStatus.NotAllowed)
-		{
-			ErrorStatusMessage(result.ErrorMessage);
-			return RedirectToPage("View", new { Id });
-		}
-
-		if (result.Status == UnpublishResult.UnpublishStatus.Success)
-		{
-			await publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
+			case UnpublishResult.UnpublishStatus.NotFound:
+				ErrorStatusMessage($"Publication {Id} not found");
+				return RedirectToPage("View", new { Id });
+			case UnpublishResult.UnpublishStatus.NotAllowed:
+				ErrorStatusMessage(result.ErrorMessage);
+				return RedirectToPage("View", new { Id });
+			case UnpublishResult.UnpublishStatus.Success:
+				await publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
+				break;
 		}
 
 		return BaseRedirect("/Subs-List");

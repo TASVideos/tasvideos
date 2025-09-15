@@ -179,7 +179,6 @@ public class ForumServiceTests : TestDbBase
 
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 		_cache.TryGetValue(ForumService.LatestPostCacheKey, out Dictionary<int, LatestPost?> actual);
-		Assert.IsNotNull(actual);
 		Assert.IsTrue(actual.ContainsKey(forumId));
 		var actualLatest = actual[forumId];
 		Assert.IsNotNull(actualLatest);
@@ -225,7 +224,6 @@ public class ForumServiceTests : TestDbBase
 		Assert.IsNotNull(actualTopic.Poll.CloseDate);
 		Assert.AreEqual(DateTime.UtcNow.AddDays(daysOpen).Day, actualTopic.Poll.CloseDate.Value.Day);
 		Assert.AreEqual(multiSelect, actualTopic.Poll.MultiSelect);
-		Assert.IsNotNull(actualTopic.Poll.PollOptions);
 		var actualOptions = actualTopic.Poll.PollOptions;
 		Assert.AreEqual(options.Count, actualOptions.Count);
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option1 && o.Ordinal == 0));
@@ -280,12 +278,11 @@ public class ForumServiceTests : TestDbBase
 		// Cache must be updated
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 		_cache.TryGetValue(ForumService.LatestPostCacheKey, out Dictionary<int, LatestPost?> mapping);
-		Assert.IsNotNull(mapping);
 		Assert.IsTrue(mapping.ContainsKey(forumId));
 		var actualLatestPost = mapping[forumId];
 		Assert.IsNotNull(actualLatestPost);
-		Assert.AreEqual(actual, actualLatestPost.Id);
-		Assert.AreEqual(posterName, actualLatestPost.PosterName);
+		Assert.AreEqual(actualLatestPost.Id, actual);
+		Assert.AreEqual(actualLatestPost.PosterName, posterName);
 	}
 
 	[TestMethod]
@@ -334,12 +331,11 @@ public class ForumServiceTests : TestDbBase
 		// Cache must be updated
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 		_cache.TryGetValue(ForumService.LatestPostCacheKey, out Dictionary<int, LatestPost?> mapping);
-		Assert.IsNotNull(mapping);
 		Assert.IsTrue(mapping.ContainsKey(forumId));
 		var actualLatestPost = mapping[forumId];
 		Assert.IsNotNull(actualLatestPost);
-		Assert.AreEqual(actual, actualLatestPost.Id);
-		Assert.AreEqual(posterName, actualLatestPost.PosterName);
+		Assert.AreEqual(actualLatestPost.Id, actual);
+		Assert.AreEqual(actualLatestPost.PosterName, posterName);
 	}
 
 	[TestMethod]
@@ -369,5 +365,77 @@ public class ForumServiceTests : TestDbBase
 
 		var actual = await _forumService.IsTopicLocked(topic.Id);
 		Assert.IsTrue(actual);
+	}
+
+	[TestMethod]
+	public async Task GetTopicCountInTopic_UserDoesNotExist_ReturnsZero()
+	{
+		var category = _db.ForumCategories.Add(new ForumCategory()).Entity;
+		var forum = _db.Forums.Add(new Forum { Category = category }).Entity;
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.GetTopicCountInForum(int.MaxValue, forum.Id);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	public async Task GetTopicCountInTopic_TopicDoesNotExist_ReturnsZero()
+	{
+		var user = _db.AddUser(1);
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.GetTopicCountInForum(user.Entity.Id, int.MaxValue);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	public async Task GetTopicCountInTopic_ReturnsPostCountForTopic()
+	{
+		var user = _db.AddUser(1).Entity;
+		var category = _db.ForumCategories.Add(new ForumCategory()).Entity;
+		var targetForum = _db.Forums.Add(new Forum { Category = category }).Entity;
+		var anotherForum = _db.Forums.Add(new Forum { Category = category }).Entity;
+		_db.ForumPosts.Add(new ForumPost { Forum = targetForum, Topic = new ForumTopic { Forum = targetForum, Poster = user }, Poster = user });
+		_db.ForumPosts.Add(new ForumPost { Forum = anotherForum, Topic = new ForumTopic { Forum = anotherForum, Poster = user }, Poster = user });
+
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.GetTopicCountInForum(user.Id, targetForum.Id);
+		Assert.AreEqual(1, actual);
+	}
+
+	[TestMethod]
+	public async Task GetPostCountInTopic_UserDoesNotExist_ReturnsZero()
+	{
+		var topic = _db.AddTopic().Entity;
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.GetPostCountInTopic(int.MaxValue, topic.Id);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	public async Task GetPostCountInTopic_TopicDoesNotExist_ReturnsZero()
+	{
+		var user = _db.AddUser(1);
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.GetPostCountInTopic(user.Entity.Id, int.MaxValue);
+		Assert.AreEqual(0, actual);
+	}
+
+	[TestMethod]
+	public async Task GetPostCountInTopic_ReturnsPostCountForTopic()
+	{
+		var user = _db.AddUser(1).Entity;
+		var targetTopic = _db.AddTopic(user).Entity;
+		var anotherTopic = _db.AddTopic(user).Entity;
+		_db.ForumPosts.Add(new ForumPost { Forum = targetTopic.Forum, Topic = targetTopic, Poster = user });
+		_db.ForumPosts.Add(new ForumPost { Forum = targetTopic.Forum, Topic = anotherTopic, Poster = user });
+
+		await _db.SaveChangesAsync();
+
+		var actual = await _forumService.GetPostCountInTopic(user.Id, targetTopic.Id);
+		Assert.AreEqual(1, actual);
 	}
 }

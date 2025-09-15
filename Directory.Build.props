@@ -12,11 +12,17 @@
 		<EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 		<Features>strict</Features>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>12.0</LangVersion>
 		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 		<RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
 	</PropertyGroup>
 	<ItemGroup>
 		<AdditionalFiles Include="$(SolutionDir).stylecop.json" />
+		<InternalsVisibleTo Include="$(AssemblyName).Tests" />
 		<PackageReference Include="StyleCop.Analyzers" />
+	</ItemGroup>
+	<ItemGroup Condition=" !$(MSBuildProjectDirectory.StartsWith('$(SolutionDir)analyzers')) ">
+		<ProjectReference Include="$(SolutionDir)analyzers/TASVideos.Analyzers.Style/TASVideos.Analyzers.Style.csproj"
+			OutputItemType="Analyzer" PrivateAssets="all" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 </Project>

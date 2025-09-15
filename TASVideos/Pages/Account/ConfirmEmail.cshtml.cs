@@ -2,8 +2,9 @@
 
 [AllowAnonymous]
 public class ConfirmEmailModel(
-	SignInManager signInManager,
-	ExternalMediaPublisher publisher,
+	ISignInManager signInManager,
+	IUserManager userManager,
+	IExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
 	ITASVideoAgent tasVideoAgent)
 	: BasePageModel
@@ -15,7 +16,7 @@ public class ConfirmEmailModel(
 			return Home();
 		}
 
-		var user = await signInManager.UserManager.FindByIdAsync(userId);
+		var user = await userManager.FindById(userId);
 		if (user is null)
 		{
 			return Home();
@@ -23,22 +24,27 @@ public class ConfirmEmailModel(
 
 		if (user.EmailConfirmed)
 		{
-			// If user has already clicked the email link, no reason to do all the work of confirming
+			// If the user has already clicked the email link, no reason to do all the work of confirming
 			return Home();
 		}
 
-		var result = await signInManager.UserManager.ConfirmEmailAsync(user, code);
+		var result = await userManager.ConfirmEmail(user, code);
 		if (!result.Succeeded)
 		{
 			return RedirectToPage("/Error");
 		}
 
-		await signInManager.UserManager.AddStandardRoles(user.Id);
-		await signInManager.UserManager.AddUserPermissionsToClaims(user);
-		await signInManager.SignInAsync(user, isPersistent: false);
-		await publisher.SendUserManagement($"User [{user.UserName}]({{0}}) activated", user.UserName);
-		await userMaintenanceLogger.Log(user.Id, $"User activated from {IpAddress}");
-		await tasVideoAgent.SendWelcomeMessage(user.Id);
+		await FirstTimeConfirmation(user, userManager, signInManager, publisher, userMaintenanceLogger, tasVideoAgent, IpAddress);
 		return Page();
+	}
+
+	public static async Task FirstTimeConfirmation(User user, IUserManager userManager, ISignInManager signInManager, IExternalMediaPublisher publisher, IUserMaintenanceLogger userMaintenanceLogger, ITASVideoAgent tasVideoAgent, string ipAddress)
+	{
+		await userManager.AddStandardRoles(user.Id);
+		await userManager.AddUserPermissionsToClaims(user);
+		await signInManager.SignIn(user, isPersistent: false);
+		await publisher.SendUserManagement($"User [{user.UserName}]({{0}}) activated", user.UserName);
+		await userMaintenanceLogger.Log(user.Id, $"User activated from {ipAddress}");
+		await tasVideoAgent.SendWelcomeMessage(user.Id);
 	}
 }

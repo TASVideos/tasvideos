@@ -12,7 +12,7 @@ public class TimeableTests
 	[DataRow(50, 6666, "02:13.32")]
 	[DataRow(60.09, 325523, "1:30:17.26")]
 	[DataRow(60, 16997, "04:43.28")]
-	[DataRow(60, 0, "00:00.00")]
+	[DataRow(60, 0, "00:00.01")]
 	[DataRow(0, 1, "10675199:02:48:05.47")]
 	public void TimeableTimespanTest(double frameRate, int frames, string expected)
 	{

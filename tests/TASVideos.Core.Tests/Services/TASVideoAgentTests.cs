@@ -110,13 +110,13 @@ public class TASVideoAgentTests : TestDbBase
 			ForumId = forumId,
 			Title = "Title",
 			SubmissionId = _submission.Id,
-			PosterId = SiteGlobalConstants.TASVideoAgentId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId
 		});
 		var post = _db.ForumPosts.Add(new ForumPost
 		{
 			TopicId = topicId,
 			ForumId = forumId,
-			PosterId = SiteGlobalConstants.TASVideoAgentId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId
 		});
 		await _db.SaveChangesAsync();
 
@@ -149,7 +149,7 @@ public class TASVideoAgentTests : TestDbBase
 			Title = "Title",
 			SubmissionId = _submission.Id,
 			ForumId = SiteGlobalConstants.PublishedMoviesForumId,
-			PosterId = SiteGlobalConstants.TASVideoAgentId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId
 		});
 		await _db.SaveChangesAsync();
 
@@ -200,7 +200,7 @@ public class TASVideoAgentTests : TestDbBase
 			Subject = subject,
 			Topic = topic,
 			Forum = topic.Forum,
-			PosterId = SiteGlobalConstants.TASVideoAgentId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId
 		});
 		await _db.SaveChangesAsync();
 
@@ -252,7 +252,7 @@ public class TASVideoAgentTests : TestDbBase
 			Subject = subject,
 			Topic = topic,
 			Forum = topic.Forum,
-			PosterId = SiteGlobalConstants.TASVideoAgentId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId
 		});
 		await _db.SaveChangesAsync();
 
@@ -305,7 +305,7 @@ public class TASVideoAgentTests : TestDbBase
 			Subject = subject,
 			Topic = topic,
 			Forum = topic.Forum,
-			PosterId = SiteGlobalConstants.TASVideoAgentId,
+			PosterId = SiteGlobalConstants.TASVideoAgentId
 		});
 		await _db.SaveChangesAsync();
 

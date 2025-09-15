@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
-public class ProfileModel(IAwards awards, UserManager userManager) : BasePageModel
+public class ProfileModel(IAwards awards, IUserManager userManager) : BasePageModel
 {
 	// Allows for a query based call to this page for Users/List
 	[FromQuery]

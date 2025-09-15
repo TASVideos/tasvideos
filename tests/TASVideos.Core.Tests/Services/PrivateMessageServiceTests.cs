@@ -43,7 +43,7 @@ public class PrivateMessageServiceTests : TestDbBase
 		{
 			Id = messageId,
 			FromUserId = sentFromId,
-			ToUserId = sentToId,
+			ToUserId = sentToId
 		});
 		await _db.SaveChangesAsync();
 
@@ -413,7 +413,7 @@ public class PrivateMessageServiceTests : TestDbBase
 	{
 		const string toUser = "DoesNotExist";
 		await _privateMessageService.SendMessage(1, toUser, "", "");
-		Assert.AreEqual(_db.PrivateMessages.Count(), 0);
+		Assert.AreEqual(0, _db.PrivateMessages.Count());
 	}
 
 	[TestMethod]
@@ -440,7 +440,7 @@ public class PrivateMessageServiceTests : TestDbBase
 
 		await _privateMessageService.SendMessage(fromUserId, toUserName, subject, text);
 
-		Assert.AreEqual(_db.PrivateMessages.Count(), 1);
+		Assert.AreEqual(1, _db.PrivateMessages.Count());
 		var pm = _db.PrivateMessages.Single();
 		Assert.AreEqual(fromUserId, pm.FromUserId);
 		Assert.AreEqual(toUserId, pm.ToUserId);
@@ -473,7 +473,7 @@ public class PrivateMessageServiceTests : TestDbBase
 
 		await _privateMessageService.SendMessage(fromUserId, toUserName, subject, text);
 
-		Assert.AreEqual(_db.PrivateMessages.Count(), 1);
+		Assert.AreEqual(1, _db.PrivateMessages.Count());
 		var pm = _db.PrivateMessages.Single();
 		Assert.AreEqual(fromUserId, pm.FromUserId);
 		Assert.AreEqual(toUserId, pm.ToUserId);

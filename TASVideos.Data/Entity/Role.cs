@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using TASVideos.Data.AutoHistory;
 
 namespace TASVideos.Data.Entity;
 
+[IncludeInAutoHistory]
 public class Role : IdentityRole<int>, ITrackable
 {
 	public new string Name

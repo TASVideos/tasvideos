@@ -45,7 +45,7 @@ public class YoutubeUploadersModel(ApplicationDbContext db, IYoutubeSync youtube
 			if (result)
 			{
 				record.ChannelTitle = val!.Snippet.ChannelTitle;
-				cache.Set(CachePrefix + record.VideoId, record.ChannelTitle, Durations.OneDayInSeconds);
+				cache.Set(CachePrefix + record.VideoId, record.ChannelTitle, Durations.OneDay);
 			}
 		}
 	}

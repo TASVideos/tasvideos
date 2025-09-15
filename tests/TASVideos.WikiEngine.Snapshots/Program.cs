@@ -5,15 +5,15 @@ using TASVideos.Data.Entity;
 using TASVideos.WikiEngine;
 using TASVideos.WikiEngine.AST;
 
-#if false
+/*
 namespace TASVideos.WikiEngine.Snapshots;
-#endif
+*/
 
 /*
-	1. Clone https://github.com/nattthebear/TASVideosWikiSnaps.git to somewhere
+	1. Clone https://github.com/TASVideos/TASVideosWikiSnaps to somewhere
 	2. Create a `.params.json` file containing 2 keys:
 		ConnectionString - to connect to the database of the tasvideos dev server
-		OutDir - wherever you cloned https://github.com/nattthebear/TASVideosWikiSnaps.git to
+		OutDir - wherever you cloned https://github.com/TASVideos/TASVideosWikiSnaps to
 	3. Build and run the program.  Args:
 		--force:  Rerun parsing and output on a page even if the revision is the same as before.
 			This makes sense whenever you want to observe changes in the parsing or importing code

@@ -35,8 +35,6 @@ internal class UserFiles(
 	IWikiPages wikiPages)
 	: IUserFiles
 {
-	private const string SupplementalUserFileExtensionsPage = "SupplementalUserFileExtensions";
-
 	public async Task<int> StorageUsed(int userId)
 	{
 		return await db.UserFiles
@@ -135,7 +133,7 @@ internal class UserFiles(
 
 	internal async Task<IEnumerable<string>> SupportedSupplementalFiles()
 	{
-		var page = await wikiPages.SystemPage(SupplementalUserFileExtensionsPage);
+		var page = await wikiPages.Page(SystemWiki.SupplementalUserFileExtensions);
 		if (page is null)
 		{
 			return [];

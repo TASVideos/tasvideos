@@ -3,7 +3,7 @@
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.BannedAvatarSites)]
-public class BannedAvatarSites(UserManager userManager) : WikiViewComponent
+public class BannedAvatarSites(IUserManager userManager) : WikiViewComponent
 {
 	public string[] Sites { get; set; } = [];
 

@@ -8,8 +8,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="FluentValidation" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
-		<PackageReference Include="FluentValidation.AspNetCore" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 		<PackageReference Include="Swashbuckle.AspNetCore" />
 		<PackageReference Include="Swashbuckle.AspNetCore.Annotations" />
@@ -18,4 +18,8 @@
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Core\TASVideos.Core.csproj" />
 	</ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="TASVideos.E2E.Tests" />
+    </ItemGroup>
 </Project>

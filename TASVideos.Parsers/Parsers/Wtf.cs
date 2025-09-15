@@ -23,9 +23,9 @@ internal class Wtf : Parser, IParser
 		result.RerecordCount = br.ReadInt32();
 		br.ReadBytes(8); // keyboard type
 		var fps = br.ReadUInt32();
-		if (fps > 0)
+		if (fps > 1)
 		{
-			result.FrameRateOverride = fps;
+			result.FrameRateOverride = fps - 1;
 		}
 
 		return await Task.FromResult(result);

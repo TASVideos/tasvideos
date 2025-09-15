@@ -1,4 +1,6 @@
-﻿namespace TASVideos.Data.Entity;
+﻿using TASVideos.Data.AutoHistory;
+
+namespace TASVideos.Data.Entity;
 
 public interface ITrackable
 {
@@ -8,10 +10,10 @@ public interface ITrackable
 
 public class BaseEntity : ITrackable
 {
-	[ExcludeFromHistory]
+	[ExcludeFromAutoHistory]
 	public DateTime CreateTimestamp { get; set; }
 
-	[ExcludeFromHistory]
+	[ExcludeFromAutoHistory]
 	public DateTime LastUpdateTimestamp { get; set; }
 }
 

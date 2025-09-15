@@ -6,7 +6,46 @@ using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core.Services;
 
-public class UserManager(
+public interface IUserManager
+{
+	Task<User?> GetUser(ClaimsPrincipal user);
+	Task<User> GetRequiredUser(ClaimsPrincipal user);
+	Task<User?> FindById(string? userId);
+	Task<User?> FindByEmail(string email);
+	Task<UserProfile?> GetUserProfile(string userName, bool includeHiddenUserFiles, bool seeRestrictedPosts);
+	string[] GetBannedAvatarSites();
+	string? AvatarSiteIsBanned(string? avatar);
+	Task<IdentityResult> ChangeEmail(User user, string newEmail, string token);
+	Task<bool> Exists(string userName);
+	Task<bool> VerifyUserToken(User user, string token);
+	Task<IdentityResult> ResetPasswordAsync(User user, string token, string newPassword);
+	Task MarkEmailConfirmed(User user);
+	Task<string> GeneratePasswordResetToken(User user);
+	Task AssignAutoAssignableRolesByPost(int userId);
+	Task AssignAutoAssignableRolesByPublication(IEnumerable<int> userIds, string publicationTitle);
+	Task<bool> CanRenameUser(string oldUserName, string newUserName);
+	Task UserNameChanged(User user, string oldName);
+	Task<string> GenerateEmailConfirmationToken(User user);
+	Task PermaBanUser(int userId);
+	void ClearCustomLocaleCache(int userId);
+	Task<string> GenerateChangeEmailToken(ClaimsPrincipal claimsUser, string newEmail);
+	Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId, bool getRawPermissions = false);
+	Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user);
+	Task<IList<Claim>> GetClaims(User user);
+	bool IsConfirmedEmailRequired();
+	Task<IdentityResult> Create(User user, string password);
+	Task<IdentityResult> ConfirmEmail(User user, string token);
+	Task AddStandardRoles(int userId);
+	Task<IdentityResult> ChangePassword(User user, string currentPassword, string newPassword);
+	Task<User?> GetUserByEmailAndUserName(string username, string email);
+	Task<bool> IsEmailConfirmed(User user);
+	string? NormalizeEmail(string? email);
+
+	// Performs a case-insensitive search for a username
+	Task<string?> GetUserNameByUserName(string username);
+}
+
+internal class UserManager(
 	ApplicationDbContext db,
 	ICacheService cache,
 	IPointsService pointsService,
@@ -29,10 +68,43 @@ public class UserManager(
 		keyNormalizer,
 		errors,
 		services,
-		logger)
+		logger), IUserManager
 {
+	public async Task<User?> GetUser(ClaimsPrincipal user) => await GetUserAsync(user);
 	public async Task<User> GetRequiredUser(ClaimsPrincipal user) => await GetUserAsync(user)
-			?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
+		?? throw new InvalidOperationException($"Unknown user {user.Identity?.Name}");
+
+	public Task<User?> FindById(string? userId)
+		=> FindByIdAsync(userId ?? "");
+
+	public Task<User?> FindByEmail(string email)
+		=> FindByEmailAsync(email);
+
+	public Task<IdentityResult> ChangeEmail(User user, string newEmail, string token)
+		=> ChangeEmailAsync(user, newEmail, token);
+
+	public Task<bool> VerifyUserToken(User user, string token)
+		=> VerifyUserTokenAsync(user, Options.Tokens.PasswordResetTokenProvider, ResetPasswordTokenPurpose, token);
+
+	public Task<string> GeneratePasswordResetToken(User user)
+		=> GeneratePasswordResetTokenAsync(user);
+
+	public Task<string> GenerateEmailConfirmationToken(User user)
+		=> GenerateEmailConfirmationTokenAsync(user);
+
+	public bool IsConfirmedEmailRequired() => Options.SignIn.RequireConfirmedEmail;
+	public Task<IdentityResult> Create(User user, string password)
+		=> CreateAsync(user, password);
+
+	public Task<IdentityResult> ConfirmEmail(User user, string token)
+		=> ConfirmEmailAsync(user, token);
+
+	public Task<IdentityResult> ChangePassword(User user, string currentPassword, string newPassword)
+		=> ChangePasswordAsync(user, currentPassword, newPassword);
+
+	public Task<bool> IsEmailConfirmed(User user) => IsEmailConfirmedAsync(user);
+
+	public Task<IList<Claim>> GetClaims(User user) => GetClaimsAsync(user);
 
 	/// <summary>
 	/// Clears the user claims, and adds a distinct list of user permissions, so they can be stored and retrieved from their cookie
@@ -54,13 +126,28 @@ public class UserManager(
 	}
 
 	/// <summary>
-	/// Returns a list of all permissions of the <seea cref="User"/> with the given id
+	/// Returns a list of all permissions of the <seea cref="User"/> with the given id. <br />
+	/// By default, "effective" permissions are returned. I.e. even if a banned user has roles with permissions, we still return none. <br />
+	/// Set <paramref name="getRawPermissions"/> to return "raw" permissions from the database, which is useful when modifying permissions.
 	/// </summary>
-	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId)
+	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId, bool getRawPermissions = false)
 	{
+		if (!getRawPermissions)
+		{
+			// effective permissions
+			return await db.Users
+				.Where(u => u.Id == userId)
+				.ThatAreNotBanned()
+				.SelectMany(u => u.UserRoles)
+				.SelectMany(ur => ur.Role!.RolePermission)
+				.Select(rp => rp.PermissionId)
+				.Distinct()
+				.ToListAsync();
+		}
+
+		// raw permissions
 		return await db.Users
 			.Where(u => u.Id == userId)
-			.ThatAreNotBanned()
 			.SelectMany(u => u.UserRoles)
 			.SelectMany(ur => ur.Role!.RolePermission)
 			.Select(rp => rp.PermissionId)
@@ -189,8 +276,9 @@ public class UserManager(
 
 		model.Publishing = new()
 		{
-			TotalPublished = await db.Submissions
-				.CountAsync(s => s.PublisherId == model.Id)
+			TotalPublished = await db.Publications
+				.ThatHaveBeenPublishedBy(model.Id)
+				.CountAsync()
 		};
 
 		model.Judgments = new()
@@ -225,7 +313,7 @@ public class UserManager(
 			return;
 		}
 
-		var userPermissions = (await GetUserPermissionsById(userId)).ToList();
+		var userPermissions = (await GetUserPermissionsById(userId, getRawPermissions: true)).ToList();
 
 		var assignableRoles = await db.Roles
 			.Include(r => r.RolePermission)
@@ -290,7 +378,7 @@ public class UserManager(
 				continue;
 			}
 
-			var userPermissions = (await GetUserPermissionsById(userId)).ToList();
+			var userPermissions = (await GetUserPermissionsById(userId, getRawPermissions: true)).ToList();
 
 			foreach (var role in assignableRoles)
 			{
@@ -356,7 +444,7 @@ public class UserManager(
 		// Move home page and subpages
 		var oldHomePage = LinkConstants.HomePages + oldName;
 		var newHomePage = LinkConstants.HomePages + user.UserName;
-		await wikiPages.MoveAll(oldHomePage, newHomePage);
+		await wikiPages.MoveAll(oldHomePage, newHomePage, user.Id, createTrackingRevision: false);
 
 		// Update submission titles
 		var subsToUpdate = await db.Submissions
@@ -421,4 +509,17 @@ public class UserManager(
 
 		return users.Count == 1 && users[0] == oldUserName;
 	}
+
+	public async Task<User?> GetUserByEmailAndUserName(string username, string email)
+	{
+		if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username))
+		{
+			return null;
+		}
+
+		return await db.Users.SingleOrDefaultAsync(u => u.Email == email && u.UserName == username);
+	}
+
+	public Task<string?> GetUserNameByUserName(string username)
+		=> db.Users.ForUser(username).Select(u => u.UserName).SingleOrDefaultAsync();
 }

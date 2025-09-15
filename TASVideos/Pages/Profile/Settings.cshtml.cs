@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class SettingsModel(UserManager userManager, IEmailService emailService, ApplicationDbContext db) : BasePageModel
+public class SettingsModel(IUserManager userManager, IEmailService emailService, ApplicationDbContext db) : BasePageModel
 {
 	public static readonly List<SelectListItem> AvailablePronouns = Enum
 		.GetValues<PreferredPronounTypes>()
@@ -25,6 +25,12 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 		.GetValues<UserDecimalFormat>()
 		.ToDropDown();
 
+	public static readonly List<SelectListItem> AvailableLocations = CountryList.Items
+		.WithDefaultEntry()
+		.WithCustomEntry();
+
+	public string Country { get; set; } = "";
+
 	public string Username { get; set; } = "";
 	public string CurrentEmail { get; set; } = "";
 	public bool IsEmailConfirmed { get; set; }
@@ -36,8 +42,11 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 	public bool PublicRatings { get; set; }
 
 	[BindProperty]
+	public string? LocationCountry { get; set; }
+
+	[BindProperty]
 	[StringLength(100)]
-	public string? Location { get; set; }
+	public string? LocationCustom { get; set; }
 
 	[BindProperty]
 	[StringLength(1000)]
@@ -77,7 +86,8 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 		IsEmailConfirmed = user.EmailConfirmed;
 		TimeZone = user.TimeZoneId;
 		PublicRatings = user.PublicRatings;
-		Location = user.From;
+		LocationCountry = AvailableLocations.Any(l => l.Value == user.From) ? user.From : !string.IsNullOrEmpty(user.From) ? UiDefaults.CustomEntry[0].Value : "";
+		LocationCustom = LocationCountry == UiDefaults.CustomEntry[0].Value ? user.From : "";
 		Signature = user.Signature;
 		AvatarUrl = user.Avatar;
 		MoodAvatar = user.MoodAvatarUrlBase;
@@ -91,6 +101,11 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 	public async Task<IActionResult> OnPost()
 	{
+		if (!string.IsNullOrEmpty(LocationCountry) && !AvailableLocations.Any(l => l.Value == LocationCountry))
+		{
+			ModelState.AddModelError(nameof(LocationCountry), "Please choose a valid option.");
+		}
+
 		if (!ModelState.IsValid)
 		{
 			return Page();
@@ -105,7 +120,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 		site = userManager.AvatarSiteIsBanned(MoodAvatar);
 		if (!string.IsNullOrEmpty(site))
 		{
-			ModelState.AddModelError($"{nameof(AvatarUrl)}", $"Using {site} to host avatars is not allowed.");
+			ModelState.AddModelError($"{nameof(MoodAvatar)}", $"Using {site} to host avatars is not allowed.");
 		}
 
 		if (!ModelState.IsValid)
@@ -119,7 +134,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 		user.TimeZoneId = TimeZone ?? TimeZoneInfo.Utc.Id;
 		user.PublicRatings = PublicRatings;
-		user.From = Location;
+		user.From = LocationCountry == UiDefaults.CustomEntry[0].Value ? LocationCustom : LocationCountry;
 		user.Avatar = AvatarUrl;
 		user.MoodAvatarUrlBase = User.Has(PermissionTo.UseMoodAvatars) ? MoodAvatar : null;
 		user.PreferredPronouns = PreferredPronouns;
@@ -153,7 +168,7 @@ public class SettingsModel(UserManager userManager, IEmailService emailService, 
 
 		var user = await userManager.GetRequiredUser(User);
 
-		var code = await userManager.GenerateEmailConfirmationTokenAsync(user);
+		var code = await userManager.GenerateEmailConfirmationToken(user);
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), code);
 		await emailService.EmailConfirmation(user.Email, callbackUrl);
 

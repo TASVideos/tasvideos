@@ -115,7 +115,7 @@ public partial class NewParser
 	private string EatToBracket()
 	{
 		var from = _index;
-		var ret = new StringBuilder();
+		var start = _index;
 		for (var i = 1; i > 0;)
 		{
 			if (Eof())
@@ -137,14 +137,9 @@ public partial class NewParser
 			{
 				i--;
 			}
-
-			if (i > 0)
-			{
-				ret.Append(c);
-			}
 		}
 
-		return ret.ToString();
+		return _input.AsSpan(start, _index - start - 1).ToString();
 	}
 
 	private string EatClassText()
@@ -194,16 +189,12 @@ public partial class NewParser
 
 	private string EatBullets()
 	{
-		var ret = new StringBuilder();
+		var start = _index;
 		while (!Eof())
 		{
-			if (Eat('*'))
+			if (Eat('*') || Eat('#'))
 			{
-				ret.Append('*');
-			}
-			else if (Eat('#'))
-			{
-				ret.Append('#');
+				// Continue
 			}
 			else
 			{
@@ -211,7 +202,7 @@ public partial class NewParser
 			}
 		}
 
-		return ret.ToString();
+		return _input.AsSpan(start, _index - start).ToString();
 	}
 
 	private int EatPipes()
@@ -329,7 +320,7 @@ public partial class NewParser
 			if (e.Type == NodeType.Element)
 			{
 				var tag = ((Element)e).Tag;
-				if (tag == "htabs" || tag == "vtabs")
+				if (tag is "htabs" or "vtabs")
 				{
 					FinishText();
 					for (var j = i; j < _stack.Count; j++)
@@ -623,20 +614,21 @@ public partial class NewParser
 
 	private string ComputeExistingBullets()
 	{
-		var ret = new StringBuilder();
+		Span<char> bullets = stackalloc char[_stack.Count];
+		int count = 0;
 		foreach (var e in _stack)
 		{
 			if (e.Type == NodeType.Element)
 			{
 				switch (((Element)e).Tag)
 				{
-					case "ul": ret.Append('*'); break;
-					case "ol": ret.Append('#'); break;
+					case "ul": bullets[count++] = '*'; break;
+					case "ol": bullets[count++] = '#'; break;
 				}
 			}
 		}
 
-		return ret.ToString();
+		return bullets[..count].ToString();
 	}
 
 	private bool StartLineLists()
@@ -954,7 +946,8 @@ public partial class NewParser
 
 		var headings = NodeUtils.Find(
 				n,
-				e => e.Type == NodeType.Element && Builtins.TocHeadings.Contains(((Element)e).Tag))
+				e => e.Type == NodeType.Element && Builtins.TocHeadings.Contains(((Element)e).Tag),
+				ancestor => ancestor is Element parentElement && parentElement.Tag == "tab")
 			.Cast<Element>();
 		var ids = new HashSet<string>();
 
@@ -991,9 +984,9 @@ public partial class NewParser
 	{
 		var p = new NewParser(content);
 		p.ParseLoop();
-		ReplaceTabs(p._output);
 		AddIdsToHeadings(p._output);
 		ReplaceTocs(p._output);
+		ReplaceTabs(p._output);
 		ReplacePees(p._output);
 		return p._output;
 	}

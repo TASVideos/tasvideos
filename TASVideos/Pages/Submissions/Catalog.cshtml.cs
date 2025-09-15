@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class CatalogModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
+public class CatalogModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }

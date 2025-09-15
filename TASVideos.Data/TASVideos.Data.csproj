@@ -15,11 +15,11 @@
 	<ItemGroup>
 		<PackageReference Include="EFCore.NamingConventions" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.AutoHistory" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\TASVideos.Common\TASVideos.Common.csproj" />
+		<InternalsVisibleTo Include="TASVideos.WikiEngine.Snapshots" />
 	</ItemGroup>
 </Project>

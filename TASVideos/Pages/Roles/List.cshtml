@@ -17,7 +17,7 @@
 
 @foreach (var role in Model.Roles.OrderBy(m => m.Permissions.Count))
 {
-	<partial name="_Role", model="role" />
+	<partial name="_Role" model="role" />
 }
 
 <a asp-page="AddEdit" class="mt-2 btn btn-primary" permission="EditRoles">Create New Role</a>

@@ -98,6 +98,42 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 			return null;
 		}
 
+		dto.RatingsCount = await db.PublicationRatings
+			.ForUser(dto.Id)
+			.IncludeObsolete(false)
+			.CountAsync();
+
+		dto.Summary.TotalPublicationCount = await db.Publications
+			.ThatAreCurrent()
+			.CountAsync();
+
+		var allTopRaters = await db.PublicationRatings
+			.IncludeObsolete(false)
+			.GroupBy(pr => pr.User)
+			.Select(group => new
+			{
+				group.Key!.UserName,
+				RatingsCount = group.Count()
+			})
+			.OrderByDescending(tr => tr.RatingsCount)
+			.ToListAsync();
+
+		dto.Summary.TopRaters = allTopRaters
+			.GroupBy(tr => tr.RatingsCount)
+			.Select(group => new UserRatings.RatingSummary.TopRaterEntry
+			{
+				RatingsCount = group.Key,
+				UserNames = group.Select(tr => tr.UserName).OrderBy(userName => userName).ToList()
+			})
+			.OrderByDescending(group => group.RatingsCount)
+			.Take(30)
+			.ToList();
+
+		dto.Summary.TotalRaterCount = allTopRaters.Count;
+		dto.UsersWithLowerRatingsCount = allTopRaters.Count(tr => tr.RatingsCount < dto.RatingsCount);
+		dto.UsersWithEqualRatingsCount = dto.RatingsCount == 0 ? 0 : allTopRaters.Count(tr => tr.RatingsCount == dto.RatingsCount) - 1; // subtract the user themself
+		dto.UsersWithHigherRatingsCount = allTopRaters.Count(tr => tr.RatingsCount > dto.RatingsCount);
+
 		if (!dto.PublicRatings && !includeHidden)
 		{
 			return dto;
@@ -129,6 +165,12 @@ public class UserRatings
 
 	public PageOf<Rating, RatingRequest> Ratings { get; set; } = new([], new());
 
+	public RatingSummary Summary { get; set; } = new();
+	public int RatingsCount { get; set; }
+	public int UsersWithLowerRatingsCount { get; set; }
+	public int UsersWithEqualRatingsCount { get; set; }
+	public int UsersWithHigherRatingsCount { get; set; }
+
 	public class Rating
 	{
 		[TableIgnore]
@@ -143,15 +185,23 @@ public class UserRatings
 		[Sortable]
 		public bool IsObsolete { get; init; }
 	}
+
+	public class RatingSummary
+	{
+		public List<TopRaterEntry> TopRaters { get; set; } = [];
+		public int TotalRaterCount { get; set; }
+		public int TotalPublicationCount { get; set; }
+
+		public class TopRaterEntry
+		{
+			public int RatingsCount { get; set; }
+			public List<string> UserNames { get; set; } = [];
+		}
+	}
 }
 
+[PagingDefaults(PageSize = 50, Sort = "-Value")]
 public class RatingRequest : PagingModel
 {
-	public RatingRequest()
-	{
-		PageSize = 50;
-		Sort = "-Value";
-	}
-
 	public bool IncludeObsolete { get; set; }
 }

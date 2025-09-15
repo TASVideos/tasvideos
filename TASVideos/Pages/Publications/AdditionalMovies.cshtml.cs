@@ -1,13 +1,12 @@
-﻿using TASVideos.MovieParsers;
-
-namespace TASVideos.Pages.Publications;
+﻿namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
 public class AdditionalMoviesModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IPublications publications,
+	IExternalMediaPublisher publisher,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger,
-	IMovieParser parser)
+	IQueueService queueService)
 	: BasePageModel
 {
 	[FromRoute]
@@ -28,11 +27,7 @@ public class AdditionalMoviesModel(
 
 	public async Task<IActionResult> OnGet()
 	{
-		var publicationTitle = await db.Publications
-			.Where(p => p.Id == Id)
-			.Select(p => p.Title)
-			.SingleOrDefaultAsync();
-
+		var publicationTitle = await publications.GetTitle(Id);
 		if (publicationTitle is null)
 		{
 			return NotFound();
@@ -45,35 +40,33 @@ public class AdditionalMoviesModel(
 
 	public async Task<IActionResult> OnPost()
 	{
-		var publication = await db.Publications
-			.Where(p => p.Id == Id)
-			.Select(p => new { p.Id, p.Title })
-			.SingleOrDefaultAsync();
-
-		if (publication is null)
+		var publicationTitle = await publications.GetTitle(Id);
+		if (publicationTitle is null)
 		{
 			return NotFound();
 		}
 
-		if (!AdditionalMovieFile.IsZip())
+		// Explicitly reject zip files - only individual movie files are allowed
+		if (AdditionalMovieFile.IsZip())
 		{
-			ModelState.AddModelError(nameof(AdditionalMovieFile), "Not a valid .zip file");
+			ModelState.AddModelError(nameof(AdditionalMovieFile), "Zip files are not allowed. Please upload the individual movie file instead.");
 		}
 
 		AdditionalMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User);
 
 		if (!ModelState.IsValid)
 		{
-			PublicationTitle = publication.Title;
+			PublicationTitle = publicationTitle;
 			await PopulateAvailableMovieFiles();
 			return Page();
 		}
 
-		var parseResult = await parser.ParseZip(AdditionalMovieFile!.OpenReadStream());
+		// Parse the individual movie file (zip files are rejected above)
+		var (parseResult, movieFileBytes) = await queueService.ParseMovieFile(AdditionalMovieFile!);
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
-			PublicationTitle = publication.Title;
+			PublicationTitle = publicationTitle;
 			await PopulateAvailableMovieFiles();
 			return Page();
 		}
@@ -84,7 +77,7 @@ public class AdditionalMoviesModel(
 			PublicationId = Id,
 			Description = DisplayName,
 			Type = FileType.MovieFile,
-			FileData = await AdditionalMovieFile.ToBytes()
+			FileData = movieFileBytes
 		});
 
 		string log = $"Added new movie file: {DisplayName}";

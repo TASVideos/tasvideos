@@ -1,4 +1,5 @@
 ﻿using System.IO.Compression;
+using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
 
 namespace TASVideos.Core.Services;
 
@@ -61,12 +62,12 @@ internal class FileService(ApplicationDbContext db) : IFileService
 	public async Task<byte[]> CopyZip(byte[] zipBytes, string fileName)
 	{
 		await using var submissionFileStream = new MemoryStream(zipBytes);
-		using var submissionZipArchive = new ZipArchive(submissionFileStream, ZipArchiveMode.Read);
+		using var submissionZipArchive = SharpZipArchive.Open(submissionFileStream);
 		var entries = submissionZipArchive.Entries.ToList();
 		var single = entries.First();
 
 		await using var singleStream = new MemoryStream();
-		await using var stream = single.Open();
+		await using var stream = single.OpenEntryStream();
 		await stream.CopyToAsync(singleStream);
 		var fileBytes = singleStream.ToArray();
 
@@ -76,12 +77,11 @@ internal class FileService(ApplicationDbContext db) : IFileService
 	public async Task<byte[]> ZipFile(byte[] fileBytes, string fileName)
 	{
 		await using var outStream = new MemoryStream();
-		using (var archive = new ZipArchive(outStream, ZipArchiveMode.Create, true))
+		using (var archive = SharpZipArchive.Create())
 		{
-			var fileInArchive = archive.CreateEntry(fileName, CompressionLevel.Optimal);
-			await using var entryStream = fileInArchive.Open();
-			await using var fileToCompressStream = new MemoryStream(fileBytes);
-			await fileToCompressStream.CopyToAsync(entryStream);
+			await using var inStream = new MemoryStream(fileBytes, writable: false);
+			archive.AddEntry(fileName, inStream, inStream.Length);
+			archive.SaveTo(outStream);
 		}
 
 		return outStream.ToArray();

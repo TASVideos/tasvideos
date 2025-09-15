@@ -4,9 +4,9 @@ namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.CreateForumTopics)]
 public class CreateModel(
-	UserManager userManager,
+	IUserManager userManager,
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IForumService forumService)
 	: BaseForumModel
 {
@@ -70,10 +70,7 @@ public class CreateModel(
 			_ => true,
 		};
 
-		BackupSubmissionDeterminator = (await db.ForumTopics
-			.ForForum(ForumId)
-			.CountAsync(t => t.PosterId == User.GetUserId()))
-			.ToString();
+		BackupSubmissionDeterminator = (await forumService.GetTopicCountInForum(User.GetUserId(), ForumId)).ToString();
 
 		return Page();
 	}
@@ -121,7 +118,7 @@ public class CreateModel(
 			ForumId = ForumId
 		};
 
-		using var dbTransaction = await db.Database.BeginTransactionAsync();
+		using var dbTransaction = await db.BeginTransactionAsync();
 		db.ForumTopics.Add(topic);
 		await db.SaveChangesAsync();
 

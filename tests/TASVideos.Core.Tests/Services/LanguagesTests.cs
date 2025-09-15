@@ -112,7 +112,7 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count());
+		Assert.AreEqual(0, result.Count);
 	}
 
 	[TestMethod]
@@ -127,7 +127,7 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(2, result.Count());
+		Assert.AreEqual(2, result.Count);
 	}
 
 	[TestMethod]

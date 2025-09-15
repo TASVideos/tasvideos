@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.GameGroups;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class EditModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
+public class EditModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromRoute]
 	public int? Id { get; set; }

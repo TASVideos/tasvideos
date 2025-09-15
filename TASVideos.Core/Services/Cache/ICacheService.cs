@@ -3,6 +3,6 @@
 public interface ICacheService
 {
 	bool TryGetValue<T>(string key, out T value);
-	void Set(string key, object? data, int? cacheTime = null);
+	void Set<T>(string key, T data, TimeSpan? cacheTime = null);
 	void Remove(string key);
 }

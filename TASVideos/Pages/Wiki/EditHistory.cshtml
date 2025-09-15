@@ -4,14 +4,14 @@
 	ViewData.SetTitle("Edit History For User " + Model.UserName);
 }
 
-<h4>Edits by <a href="@WikiEngine.Builtins.NormalizeInternalLink("/HomePages/" + Model.UserName)">@Model.UserName</a></h4>
+<h4>Edits by <profile-link username="@Model.UserName"></profile-link></h4>
 <standard-table>
 	<table-head columns="Page,Date,Minor Edit,Revision Message,Actions"></table-head>
 	@foreach (var revision in Model.History)
 	{
 		<tr>
 			<td><a href="/@(revision.PageName)?revision=@revision.Revision">@revision.PageName r@(revision.Revision)</a></td>
-			<td>@revision.CreateTimestamp</td>
+			<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
 			<td>@revision.MinorEdit</td>
 			<td>@revision.RevisionMessage</td>
 			<td-action-column>

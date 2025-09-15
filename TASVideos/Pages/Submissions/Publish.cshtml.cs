@@ -1,18 +1,13 @@
-﻿using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
+﻿using Microsoft.AspNetCore.StaticFiles;
+using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.PublishMovies)]
 public class PublishModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IWikiPages wikiPages,
-	IMediaFileUploader uploader,
-	ITASVideoAgent tasVideoAgent,
-	UserManager userManager,
-	IFileService fileService,
-	IYoutubeSync youtubeSync,
 	IQueueService queueService)
 	: BasePageModel
 {
@@ -66,163 +61,59 @@ public class PublishModel(
 			return Page();
 		}
 
-		int? publicationToObsolete = null;
-		if (Submission.MovieToObsolete.HasValue)
+		var publishRequest = new PublishSubmissionRequest(
+			Id,
+			Submission.MovieDescription,
+			Submission.MovieFilename,
+			Submission.MovieExtension!,
+			Submission.OnlineWatchingUrl,
+			Submission.AlternateOnlineWatchingUrl,
+			Submission.AlternateOnlineWatchUrlName,
+			Submission.MirrorSiteUrl,
+			Submission.Screenshot!,
+			Submission.ScreenshotDescription,
+			Submission.SelectedFlags,
+			Submission.SelectedTags,
+			Submission.MovieToObsolete,
+			User.GetUserId());
+
+		var result = await queueService.Publish(publishRequest);
+
+		if (!result.Success)
 		{
-			publicationToObsolete = (await db.Publications
-				.SingleOrDefaultAsync(p => p.Id == Submission.MovieToObsolete.Value))?.Id;
-			if (publicationToObsolete is null)
+			if (result.ErrorMessage!.Contains("Movie filename") && result.ErrorMessage.Contains("already exists"))
+			{
+				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieFilename)}", $"{nameof(Submission.MovieFilename)} already exists.");
+			}
+			else if (result.ErrorMessage.Contains("Publication to obsolete does not exist"))
 			{
 				ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieToObsolete)}", "Publication does not exist");
-				await PopulateDropdowns();
-				return Page();
 			}
-		}
+			else if (result.ErrorMessage.Contains("Submission not found or cannot be published"))
+			{
+				return NotFound();
+			}
+			else
+			{
+				ModelState.AddModelError("", result.ErrorMessage);
+			}
 
-		var submission = await db.Submissions
-			.Include(s => s.SubmissionAuthors)
-			.ThenInclude(sa => sa.Author)
-			.Include(s => s.System)
-			.Include(s => s.SystemFrameRate)
-			.Include(s => s.Game)
-			.Include(s => s.GameVersion)
-			.Include(s => s.GameGoal)
-			.Include(gg => gg.GameGoal)
-			.Include(s => s.IntendedClass)
-			.SingleOrDefaultAsync(s => s.Id == Id);
-
-		if (submission is null || !submission.CanPublish())
-		{
-			return NotFound();
-		}
-
-		var movieFileName = Submission.MovieFilename + "." + Submission.MovieExtension;
-		if (await db.Publications.AnyAsync(p => p.MovieFileName == movieFileName))
-		{
-			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.MovieFilename)}", $"{nameof(Submission.MovieFilename)} already exists.");
 			await PopulateDropdowns();
 			return Page();
 		}
 
-		using var dbTransaction = await db.Database.BeginTransactionAsync();
+		new FileExtensionContentTypeProvider().TryGetContentType(result.ScreenshotFilePath, out var screenshotMimeType);
+		await publisher.AnnounceNewPublication(result.PublicationId, result.PublicationTitle, result.ScreenshotBytes, screenshotMimeType);
 
-		var publication = new Publication
-		{
-			PublicationClassId = submission.IntendedClass!.Id,
-			SystemId = submission.System!.Id,
-			SystemFrameRateId = submission.SystemFrameRate!.Id,
-			GameId = submission.Game!.Id,
-			GameVersionId = submission.GameVersion!.Id,
-			EmulatorVersion = submission.EmulatorVersion,
-			Frames = submission.Frames,
-			RerecordCount = submission.RerecordCount,
-			MovieFileName = movieFileName,
-			AdditionalAuthors = submission.AdditionalAuthors,
-			Submission = submission,
-			MovieFile = await fileService.CopyZip(submission.MovieFile, movieFileName),
-			GameGoalId = submission.GameGoalId
-		};
-
-		publication.PublicationUrls.AddStreaming(Submission.OnlineWatchingUrl, "");
-		if (!string.IsNullOrWhiteSpace(Submission.MirrorSiteUrl))
-		{
-			publication.PublicationUrls.AddMirror(Submission.MirrorSiteUrl);
-		}
-
-		if (!string.IsNullOrWhiteSpace(Submission.AlternateOnlineWatchingUrl))
-		{
-			publication.PublicationUrls.AddStreaming(Submission.AlternateOnlineWatchingUrl, Submission.AlternateOnlineWatchUrlName);
-		}
-
-		publication.Authors.CopyFromSubmission(submission.SubmissionAuthors);
-		publication.PublicationFlags.AddFlags(Submission.SelectedFlags);
-		publication.PublicationTags.AddTags(Submission.SelectedTags);
-
-		db.Publications.Add(publication);
-
-		await db.SaveChangesAsync(); // Need an ID for the Title
-		publication.GenerateTitle();
-
-		await uploader.UploadScreenshot(publication.Id, Submission.Screenshot!, Submission.ScreenshotDescription);
-
-		// Create a wiki page corresponding to this publication
-		var wikiPage = GenerateWiki(publication.Id, Submission.MovieDescription, User.GetUserId());
-		var addedWikiPage = await wikiPages.Add(wikiPage);
-
-		submission.Status = SubmissionStatus.Published;
-		db.SubmissionStatusHistory.Add(Id, SubmissionStatus.Published);
-
-		if (publicationToObsolete.HasValue)
-		{
-			await queueService.ObsoleteWith(publicationToObsolete.Value, publication.Id);
-		}
-
-		await userManager.AssignAutoAssignableRolesByPublication(publication.Authors.Select(pa => pa.UserId), publication.Title);
-		await tasVideoAgent.PostSubmissionPublished(Id, publication.Id);
-		await dbTransaction.CommitAsync();
-		await publisher.AnnounceNewPublication(publication);
-
-		if (youtubeSync.IsYoutubeUrl(Submission.OnlineWatchingUrl))
-		{
-			var video = new YoutubeVideo(
-				publication.Id,
-				publication.CreateTimestamp,
-				Submission.OnlineWatchingUrl,
-				"",
-				publication.Title,
-				addedWikiPage!,
-				submission.System.Code,
-				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-				null);
-			await youtubeSync.SyncYouTubeVideo(video);
-		}
-
-		if (youtubeSync.IsYoutubeUrl(Submission.AlternateOnlineWatchingUrl))
-		{
-			var video = new YoutubeVideo(
-				publication.Id,
-				publication.CreateTimestamp,
-				Submission.AlternateOnlineWatchingUrl ?? "",
-				Submission.AlternateOnlineWatchUrlName,
-				publication.Title,
-				addedWikiPage!,
-				submission.System.Code,
-				publication.Authors.OrderBy(pa => pa.Ordinal).Select(pa => pa.Author!.UserName),
-				null);
-			await youtubeSync.SyncYouTubeVideo(video);
-		}
-
-		return BaseRedirect($"/{publication.Id}M");
+		return BaseRedirect($"/{result.PublicationId}M");
 	}
 
 	public async Task<IActionResult> OnGetObsoletePublication(int publicationId)
 	{
-		var pub = await db.Publications
-			.Where(p => p.Id == publicationId)
-			.Select(p => new ObsoletePublicationResult(p.Title, p.PublicationTags.Select(pt => pt.TagId).ToList()))
-			.SingleOrDefaultAsync();
-
-		if (pub is null)
-		{
-			return BadRequest($"Unable to find publication with an id of {publicationId}");
-		}
-
-		var page = await wikiPages.PublicationPage(publicationId);
-		pub.Markup = page!.Markup;
-
-		return Json(pub);
-	}
-
-	private static WikiCreateRequest GenerateWiki(int publicationId, string markup, int userId)
-	{
-		return new WikiCreateRequest
-		{
-			RevisionMessage = $"Auto-generated from Movie #{publicationId}",
-			PageName = WikiHelper.ToPublicationWikiPageName(publicationId),
-			MinorEdit = false,
-			Markup = markup,
-			AuthorId = userId
-		};
+		var pub = await queueService.GetObsoletePublicationTags(publicationId);
+		return pub is null
+			? BadRequest($"Unable to find publication with an id of {publicationId}")
+			: Json(pub);
 	}
 
 	private async Task PopulateDropdowns()
@@ -231,10 +122,7 @@ public class PublishModel(
 		AvailableTags = await db.Tags.ToDropdownList();
 	}
 
-	private record ObsoletePublicationResult(string Title, List<int> Tags)
-	{
-		public string Markup { get; set; } = "";
-	}
+	private record ObsoletePublicationResult(string Title, List<int> Tags, string Markup);
 
 	public class SubmissionPublishModel
 	{

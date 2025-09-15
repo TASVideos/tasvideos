@@ -8,7 +8,7 @@ namespace TASVideos.Pages.Games;
 public class EditModel(
 	ApplicationDbContext db,
 	IWikiPages wikiPages,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	AppSettings settings)
 	: BasePageModel
 {

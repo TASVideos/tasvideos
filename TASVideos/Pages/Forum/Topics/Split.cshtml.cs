@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Forum.Topics;
 [RequirePermission(PermissionTo.SplitTopics)]
 public class SplitModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IForumService forumService)
 	: BasePageModel
 {

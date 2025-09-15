@@ -1,4 +1,4 @@
-using TASVideos.Data.Entity;
+﻿using TASVideos.Data.Entity;
 using TASVideos.Extensions;
 
 namespace TASVideos.Core.Tests.Services;
@@ -89,29 +89,31 @@ public class WikiHelperTests
 	}
 
 	[TestMethod]
-	[DataRow(null, false)]
-	[DataRow("", false)]
-	[DataRow(" ", false)]
-	[DataRow("/", false)]
-	[DataRow("WikiPage/", false)]
-	[DataRow("WikiPage.html", false)]
-	[DataRow("/WikiPage", false)]
-	[DataRow("WikiPage", true)]
-	[DataRow("wikipage", false)]
-	[DataRow("WikiPage.html", false)]
-	[DataRow("WikiPage/Subpage", true)]
-	[DataRow("ProperCased", true)]
-	[DataRow("camelCased", false)]
-	[DataRow("Page With Spaces", false)]
-	[DataRow("HomePages/SomeUser", true)]
-	[DataRow("HomePages/user with Invalid Page name", true)]
-	[DataRow("HomePages/[^_^]", true)]
-	[DataRow("HomePages/user with Invalid Page name/Subpage", true)]
-	[DataRow("HomePages/user with Invalid Page name/Subpage that is invalid", false)]
-	public void IsValidWikiPageName(string pageName, bool expected)
+	[DataRow(null, false, false)]
+	[DataRow("", false, false)]
+	[DataRow(" ", false, false)]
+	[DataRow("/", false, false)]
+	[DataRow("WikiPage/", false, false)]
+	[DataRow("WikiPage.html", false, false)]
+	[DataRow("/WikiPage", false, false)]
+	[DataRow("WikiPage", true, true)]
+	[DataRow("wikipage", false, true)]
+	[DataRow("WikiPage.html", false, false)]
+	[DataRow("WikiPage/Subpage", true, true)]
+	[DataRow("ProperCased", true, true)]
+	[DataRow("camelCased", false, true)]
+	[DataRow("Page With Spaces", false, false)]
+	[DataRow("HomePages/SomeUser", true, true)]
+	[DataRow("HomePages/user with Invalid Page name", true, true)]
+	[DataRow("HomePages/[^_^]", true, true)]
+	[DataRow("HomePages/user with Invalid Page name/Subpage", true, true)]
+	[DataRow("HomePages/user with Invalid Page name/Subpage that is invalid", false, false)]
+	public void IsValidWikiPageName(string pageName, bool expectedStrict, bool expectedLoose)
 	{
-		var actual = WikiHelper.IsValidWikiPageName(pageName);
-		Assert.AreEqual(expected, actual);
+		var actualStrict = WikiHelper.IsValidWikiPageName(pageName, validateLoosely: false);
+		var actualLoose = WikiHelper.IsValidWikiPageName(pageName, validateLoosely: true);
+		Assert.AreEqual(expectedStrict, actualStrict);
+		Assert.AreEqual(expectedLoose, actualLoose);
 	}
 
 	[TestMethod]

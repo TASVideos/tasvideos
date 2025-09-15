@@ -68,7 +68,7 @@ public class CatalogModel(ApplicationDbContext db) : BasePageModel
 			var gameExists = GameId.HasValue && await db.Games.AnyAsync(g => g.Id == GameId);
 			if (!gameExists)
 			{
-				return BadRequest();
+				return BadRequest($"Game with ID {GameId.Value} Not Found");
 			}
 		}
 

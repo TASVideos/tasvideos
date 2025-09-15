@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
-public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
+public class IndexModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
 	public List<UserWithMovie> UsersWithMovies { get; set; } = [];
 	public List<UserMovie> LatestMovies { get; set; } = [];
@@ -91,13 +91,16 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 
 			if (fileComment is not null)
 			{
-				fileComment.Text = comment;
-
-				var result = await db.TrySaveChanges();
-				SetMessage(result, "Comment edited", "Unable to edit comment");
-				if (result.IsSuccess())
+				if (User.Has(PermissionTo.EditUsersForumPosts) || fileComment.UserId == User.GetUserId())
 				{
-					await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment edited by {User.Name()}");
+					fileComment.Text = comment;
+
+					var result = await db.TrySaveChanges();
+					SetMessage(result, "Comment edited", "Unable to edit comment");
+					if (result.IsSuccess())
+					{
+						await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment edited by {User.Name()}");
+					}
 				}
 			}
 		}
@@ -116,12 +119,15 @@ public class IndexModel(ApplicationDbContext db, ExternalMediaPublisher publishe
 
 			if (fileComment is not null)
 			{
-				db.UserFileComments.Remove(fileComment);
-				var result = await db.TrySaveChanges();
-				SetMessage(result, "Comment deleted", "Unable to delete comment");
-				if (result.IsSuccess())
+				if (User.Has(PermissionTo.DeleteForumPosts) || fileComment.UserId == User.GetUserId())
 				{
-					await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment DELETED by {User.Name()}");
+					db.UserFileComments.Remove(fileComment);
+					var result = await db.TrySaveChanges();
+					SetMessage(result, "Comment deleted", "Unable to delete comment");
+					if (result.IsSuccess())
+					{
+						await SendUserFile(fileComment.UserFile!, $"[User file]({{0}}) comment DELETED by {User.Name()}");
+					}
 				}
 			}
 		}

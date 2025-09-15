@@ -20,7 +20,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 		}
 
 		languages = await GetTranslationsInternal(pageName);
-		cache.Set(key, languages, Durations.FiveMinutesInSeconds);
+		cache.Set(key, languages, Durations.FiveMinutes);
 		return languages;
 	}
 
@@ -89,7 +89,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 
 	internal async Task<IEnumerable<Language>> AvailableLanguages()
 	{
-		var languagesMarkup = (await wikiPages.SystemPage("Languages"))?.Markup;
+		var languagesMarkup = (await wikiPages.Page(SystemWiki.Languages))?.Markup;
 
 		if (string.IsNullOrWhiteSpace(languagesMarkup))
 		{

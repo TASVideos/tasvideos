@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Storage;
+using TASVideos.Data.AutoHistory;
 
 namespace TASVideos.Data;
 
@@ -19,7 +21,9 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		_httpContext = httpContextAccessor;
 	}
 
-	public DbSet<CustomAutoHistory> AutoHistory { get; set; } = null!;
+	public virtual Task<IDbContextTransaction> BeginTransactionAsync() => Database.BeginTransactionAsync();
+	public virtual IDbContextTransaction BeginTransaction() => Database.BeginTransaction();
+	public DbSet<AutoHistoryEntry> AutoHistory { get; set; } = null!;
 
 	public DbSet<RolePermission> RolePermission { get; set; } = null!;
 	public DbSet<WikiPage> WikiPages { get; set; } = null!;
@@ -99,7 +103,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 								.Where(e => e.State == EntityState.Added)
 								.ToArray();
 
-		this.EnsureAutoHistory(() => new CustomAutoHistory
+		this.EnsureAutoHistory(() => new AutoHistoryEntry
 		{
 			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 		});
@@ -108,7 +112,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		// after "SaveChanges" added entities now have gotten valid ids (if it was necessary)
 		// and the history for them can be ensured and be saved with another "SaveChanges"
 		this.EnsureAddedHistory(
-			() => new CustomAutoHistory
+			() => new AutoHistoryEntry
 			{
 				UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 			},
@@ -133,7 +137,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 								.Where(e => e.State == EntityState.Added)
 								.ToArray();
 
-		this.EnsureAutoHistory(() => new CustomAutoHistory
+		this.EnsureAutoHistory(() => new AutoHistoryEntry
 		{
 			UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 		});
@@ -142,7 +146,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 		// after "SaveChanges" added entities now have gotten valid ids (if it was necessary)
 		// and the history for them can be ensured and be saved with another "SaveChanges"
 		this.EnsureAddedHistory(
-			() => new CustomAutoHistory
+			() => new AutoHistoryEntry
 			{
 				UserId = _httpContext?.HttpContext?.User.GetUserId() ?? -1
 			},
@@ -474,11 +478,11 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 			entity.HasIndex(e => e.FileExtension).IsUnique();
 		});
 
-		builder.EnableAutoHistory<CustomAutoHistory>(o =>
+		builder.Entity<AutoHistoryEntry>(entity =>
 		{
-#pragma warning disable EF1001 // Internal EF Core API usage.
-			o.LimitChangedLength = false;
-#pragma warning restore EF1001 // Internal EF Core API usage.
+			entity.HasIndex(e => e.RowId);
+			entity.HasIndex(e => e.TableName);
+			entity.HasIndex(e => e.UserId);
 		});
 	}
 

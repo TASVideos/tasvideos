@@ -5,7 +5,7 @@ namespace TASVideos.Core.Services;
 
 public interface IMediaFileUploader
 {
-	Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
+	Task<(string Path, byte[] Data)> UploadScreenshot(int publicationId, IFormFile screenshot, string? description);
 	Task<DeletedFile?> DeleteFile(int publicationFileId);
 	Task UploadAwardImage(IFormFile image, IFormFile image2X, IFormFile image4X, string shortName, int? year = null);
 	void DeleteAwardImage(string shortName);
@@ -17,7 +17,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 	private const string AwardLocation = "awards";
 	private const string MediaLocation = "media";
 
-	public async Task<string> UploadScreenshot(int publicationId, IFormFile screenshot, string? description)
+	public async Task<(string, byte[])> UploadScreenshot(int publicationId, IFormFile screenshot, string? description)
 	{
 		await using var memoryStream = new MemoryStream();
 		await screenshot.CopyToAsync(memoryStream);
@@ -60,7 +60,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		}
 
 		await db.SaveChangesAsync();
-		return screenshotFileName;
+		return (screenshotFileName, screenshotBytes);
 	}
 
 	public async Task<DeletedFile?> DeleteFile(int publicationFileId)

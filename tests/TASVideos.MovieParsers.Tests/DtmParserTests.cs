@@ -11,17 +11,16 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task InvalidHeader()
 	{
-		var result = await _dtmParser.Parse(Embedded("wrongheader.dtm"), EmbeddedLength("wrongheader.dtm"));
+		var result = await _dtmParser.Parse(Embedded("wrongheader.dtm", out var length), length);
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
-		Assert.IsNotNull(result.Errors);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
 
 	[TestMethod]
 	public async Task ValidHeader()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm"), EmbeddedLength("2frames-gc.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -29,7 +28,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemGc()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm"), EmbeddedLength("2frames-gc.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.GameCube, result.SystemCode);
@@ -38,7 +37,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task SystemWii()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-wii.dtm"), EmbeddedLength("2frames-wii.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-wii.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Wii, result.SystemCode);
@@ -47,7 +46,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task PowerOn()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm"), EmbeddedLength("2frames-gc.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -56,7 +55,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task Savestate()
 	{
-		var result = await _dtmParser.Parse(Embedded("savestate.dtm"), EmbeddedLength("savestate.dtm"));
+		var result = await _dtmParser.Parse(Embedded("savestate.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
@@ -65,7 +64,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task Sram()
 	{
-		var result = await _dtmParser.Parse(Embedded("sram.dtm"), EmbeddedLength("sram.dtm"));
+		var result = await _dtmParser.Parse(Embedded("sram.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(MovieStartType.Sram, result.StartType);
@@ -74,7 +73,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task RerecordCount()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm"), EmbeddedLength("2frames-gc.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(347, result.RerecordCount);
@@ -83,10 +82,9 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task NoTicks_FallbackAndWarn()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-legacy.dtm"), EmbeddedLength("2frames-legacy.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-legacy.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoErrors(result);
-		Assert.IsNotNull(result.Warnings);
 		Assert.AreEqual(1, result.Warnings.Count());
 		Assert.AreEqual(ParseWarnings.LengthInferred, result.Warnings.Single());
 		Assert.AreEqual(2, result.Frames);
@@ -95,7 +93,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task GcFrames()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm"), EmbeddedLength("2frames-gc.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-gc.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(283, result.Frames);
@@ -104,7 +102,7 @@ public class DtmParserTests : BaseParserTests
 	[TestMethod]
 	public async Task WiiFrames()
 	{
-		var result = await _dtmParser.Parse(Embedded("2frames-wii.dtm"), EmbeddedLength("2frames-wii.dtm"));
+		var result = await _dtmParser.Parse(Embedded("2frames-wii.dtm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(189, result.Frames);

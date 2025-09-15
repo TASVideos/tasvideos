@@ -722,3 +722,10 @@ top-button-bar {
 .d-none-except-noscript {
 	display: none !important;
 }
+
+.minimovie {
+	ol, ul {
+		list-style-position: inside;
+		padding-left: 1rem;
+	}
+}

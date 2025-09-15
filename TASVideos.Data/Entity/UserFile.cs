@@ -15,7 +15,6 @@ public enum Compression
 	Gzip
 }
 
-[ExcludeFromHistory]
 public class UserFile
 {
 	public long Id { get; set; }

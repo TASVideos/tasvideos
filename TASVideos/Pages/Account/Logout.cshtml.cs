@@ -2,7 +2,7 @@
 
 [Authorize]
 [IgnoreAntiforgeryToken]
-public class LogoutModel(SignInManager signInManager) : BasePageModel
+public class LogoutModel(ISignInManager signInManager) : BasePageModel
 {
 	public IActionResult OnGet()
 	{

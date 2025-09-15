@@ -2,38 +2,6 @@
 
 public static class SubmissionHelper
 {
-	private static int? IsNumberedLink(string? link, string suffix)
-	{
-		if (link != null && link.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
-		{
-			var rooted = link.StartsWith('/');
-			var numberText = link.AsSpan(rooted ? 1 : 0, link.Length - (rooted ? 2 : 1));
-			if (int.TryParse(numberText, out int id))
-			{
-				return id;
-			}
-		}
-
-		return null;
-	}
-
-	private static int? IsRawNumberedLink(string? link, string prefix)
-	{
-		link = link?.Trim('/');
-		if (link == null || !link.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-		{
-			return null;
-		}
-
-		var numberText = link.Replace(prefix, "");
-		if (int.TryParse(numberText, out int id))
-		{
-			return id;
-		}
-
-		return null;
-	}
-
 	/// <summary>
 	/// Determines if the link is in the form of valid submission link ex: 100S.
 	/// </summary>
@@ -53,31 +21,57 @@ public static class SubmissionHelper
 	public static int? IsGamePageLink(string link) => IsNumberedLink(link, "G");
 
 	public static int? IsRawSubmissionLink(string link)
-		=> IsRawNumberedLink(link, "InternalSystem/SubmissionContent/S");
+		=> IsRawNumberedLink(link, LinkConstants.SubmissionWikiPage);
 
 	public static int? IsRawPublicationLink(string link)
-		=> IsRawNumberedLink(link, "InternalSystem/PublicationContent/M");
+		=> IsRawNumberedLink(link, LinkConstants.PublicationWikiPage);
 
 	public static int? IsRawGamePageLink(string link)
-		=> IsRawNumberedLink(link, "InternalSystem/GameContent/G");
+		=> IsRawNumberedLink(link, LinkConstants.GameWikiPage);
 
 	public static bool JudgeIsClaiming(SubmissionStatus oldS, SubmissionStatus newS)
-	{
-		return oldS != SubmissionStatus.JudgingUnderWay && newS == SubmissionStatus.JudgingUnderWay;
-	}
+		=> oldS != SubmissionStatus.JudgingUnderWay && newS == SubmissionStatus.JudgingUnderWay;
 
 	public static bool JudgeIsUnclaiming(SubmissionStatus newS)
-	{
-		return newS == SubmissionStatus.New;
-	}
+		=> newS == SubmissionStatus.New;
 
 	public static bool PublisherIsClaiming(SubmissionStatus oldS, SubmissionStatus newS)
-	{
-		return oldS != SubmissionStatus.PublicationUnderway && newS == SubmissionStatus.PublicationUnderway;
-	}
+		=> oldS != SubmissionStatus.PublicationUnderway && newS == SubmissionStatus.PublicationUnderway;
 
 	public static bool PublisherIsUnclaiming(SubmissionStatus oldS, SubmissionStatus newS)
+		=> oldS == SubmissionStatus.PublicationUnderway && newS == SubmissionStatus.Accepted;
+
+	private static int? IsNumberedLink(string link, string suffix)
 	{
-		return oldS == SubmissionStatus.PublicationUnderway && newS == SubmissionStatus.Accepted;
+		link = link.Trim('/');
+		if (!link.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+		{
+			return null;
+		}
+
+		var numberText = link.AsSpan(0, link.Length - 1);
+		if (int.TryParse(numberText, out int id))
+		{
+			return id;
+		}
+
+		return null;
+	}
+
+	private static int? IsRawNumberedLink(string link, string prefix)
+	{
+		link = link.Trim('/');
+		if (!link.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+		{
+			return null;
+		}
+
+		var numberText = link.AsSpan(prefix.Length, link.Length - prefix.Length);
+		if (int.TryParse(numberText, out int id))
+		{
+			return id;
+		}
+
+		return null;
 	}
 }

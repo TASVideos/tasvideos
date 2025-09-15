@@ -51,7 +51,9 @@ public static class ServiceCollectionExtensions
 	private static IServiceCollection AddServices(this IServiceCollection services, AppSettings settings)
 	{
 		services.AddScoped<UserManager>();
+		services.AddScoped<IUserManager, UserManager>();
 		services.AddScoped<SignInManager>();
+		services.AddScoped<ISignInManager, SignInManager>();
 		services.AddScoped<IPointsService, PointsService>();
 		services.AddScoped<IAwards, Awards>();
 		services.AddScoped<IMediaFileUploader, MediaFileUploader>();
@@ -71,6 +73,7 @@ public static class ServiceCollectionExtensions
 		services.AddScoped<IPrivateMessageService, PrivateMessageService>();
 		services.AddScoped<IRoleService, RoleService>();
 		services.AddScoped<IRatingService, RatingService>();
+		services.AddScoped<IPublications, Publications>();
 
 		services.AddScoped<IJwtAuthenticator, JwtAuthenticator>();
 

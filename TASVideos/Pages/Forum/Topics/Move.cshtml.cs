@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Forum.Topics;
 [RequirePermission(PermissionTo.MoveTopics)]
 public class MoveModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IForumService forumService)
 	: BasePageModel
 {

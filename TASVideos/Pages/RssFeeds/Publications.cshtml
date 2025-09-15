@@ -11,7 +11,7 @@
 <rss>
 	<channel>
 		<partial model="@((title, link))" name="_RssChannel" />
-		<atom-link href="@(Settings.BaseUrl)/publications.rss" />
+		<atom:link rel="self" type="application/rss+xml" href="@(Settings.BaseUrl)/publications.rss" />
 		@foreach (var pub in Model.Publications)
 		{
 			var movieUrl = $"{Settings.BaseUrl}/{pub.Id}M";
@@ -29,20 +29,18 @@
 				{
 					<category>@tag</category>
 				}
-				<media:group>
-					<media:content url="@(movieUrl)?handler=Download" fileSize="@pub.MovieFileSize" type="application/zip" medium="document" />
-					<media:thumbnail url="@(Settings.BaseUrl)/media/@pub.ScreenshotPath" />
-					@foreach (var url in secondaryStreaming)
-					{
-						<media:content url="@url" type="video" medium="video" />
-					}
-					<media:player url="@primaryStreaming" />
-					<media:community>
-						<media:starRating average="@pub.RatingAverage" count="@pub.Ratings.Count" min="@pub.RatingMin" max="@pub.RatingMax" />
-					</media:community>
-				</media:group>
+				<media:content url="@(movieUrl)?handler=Download" fileSize="@pub.MovieFileSize" type="application/zip" medium="document" />
+				<media:thumbnail url="@(Settings.BaseUrl)/media/@pub.ScreenshotPath" />
+				@foreach (var url in secondaryStreaming)
+				{
+					<media:content url="@url" type="video" medium="video" />
+				}
+				<media:player url="@primaryStreaming" />
+				<media:community>
+					<media:starRating average="@pub.RatingAverage" count="@pub.Ratings.Count" min="@pub.RatingMin" max="@pub.RatingMax" />
+				</media:community>
 				<guid>@movieUrl</guid>
-				<pubDate>@pub.CreateTimestamp.ToString("u", CultureInfo.InvariantCulture)</pubDate>
+				<pubDate>@pub.CreateTimestamp.ToString("r", CultureInfo.InvariantCulture)</pubDate>
 			</item>
 		}
 	</channel>

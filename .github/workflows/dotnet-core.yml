@@ -31,10 +31,18 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Install dependencies
-      run: dotnet restore
+      run: |
+        dotnet restore
+        dotnet tool restore
+        dotnet tool install --global dotnet-reportgenerator-globaltool
     - name: Unshallow Commits
       run: git fetch --unshallow
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal
+      run: dotnet test --no-restore --verbosity normal --collect:'Code Coverage' --filter:"FullyQualifiedName!~TASVideos.E2E.Tests"
+    - name: Generate coverage report
+      run: |
+        dotnet tool run dotnet-coverage merge 'tests/*/TestResults/**/*.coverage' --output-format=cobertura --output=merged.coverage.xml
+        reportgenerator -reports:merged.coverage.xml -targetdir:. -reporttypes:MarkdownSummaryGithub
+        cat SummaryGithub.md >>"$GITHUB_STEP_SUMMARY"

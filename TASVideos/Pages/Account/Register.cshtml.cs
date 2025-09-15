@@ -8,6 +8,9 @@ namespace TASVideos.Pages.Account;
 [IpBanCheck]
 public class RegisterModel : BasePageModel
 {
+	public static readonly List<SelectListItem> AvailableLocations = CountryList.Items
+		.WithDefaultEntry();
+
 	[Required]
 	public string TimeZone { get; set; } = "";
 
@@ -25,16 +28,16 @@ public class RegisterModel : BasePageModel
 	[DataType(DataType.Password)]
 	public string ConfirmPassword { get; set; } = "";
 
-	[StringLength(256)]
 	public string? Location { get; set; }
 
 	[MustBeTrue(ErrorMessage = "You must certify that you are 13 years of age or older")]
 	public bool Coppa { get; set; }
 
 	public async Task<IActionResult> OnPost(
-		[FromServices] SignInManager signInManager,
+		[FromServices] ISignInManager signInManager,
+		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
-		[FromServices] ExternalMediaPublisher publisher,
+		[FromServices] IExternalMediaPublisher publisher,
 		[FromServices] IReCaptchaService reCaptchaService,
 		[FromServices] IHostEnvironment env,
 		[FromServices] IUserMaintenanceLogger userMaintenanceLogger)
@@ -50,6 +53,11 @@ public class RegisterModel : BasePageModel
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
 			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
+		}
+
+		if (!string.IsNullOrEmpty(Location) && !AvailableLocations.Any(l => l.Value == Location))
+		{
+			ModelState.AddModelError(nameof(Location), "Please choose a valid option.");
 		}
 
 		if (!ModelState.IsValid)
@@ -86,22 +94,22 @@ public class RegisterModel : BasePageModel
 			EmailOnPrivateMessage = true
 		};
 
-		var result = await signInManager.UserManager.CreateAsync(user, Password);
+		var result = await userManager.Create(user, Password);
 		if (!result.Succeeded)
 		{
 			AddErrors(result);
 			return Page();
 		}
 
-		var token = await signInManager.UserManager.GenerateEmailConfirmationTokenAsync(user);
+		var token = await userManager.GenerateEmailConfirmationToken(user);
 		var callbackUrl = Url.EmailConfirmationLink(user.Id.ToString(), token);
 
-		await signInManager.SignInAsync(user, isPersistent: false);
+		await signInManager.SignIn(user, isPersistent: false);
 		await publisher.SendUserManagement($"New User registered! [{user.UserName}]({{0}})", user.UserName);
 		await userMaintenanceLogger.Log(user.Id, $"New registration from {IpAddress}");
 		await emailService.EmailConfirmation(Email, callbackUrl);
 
-		return signInManager.UserManager.Options.SignIn.RequireConfirmedEmail
+		return userManager.IsConfirmedEmailRequired()
 			? RedirectToPage("EmailConfirmationSent")
 			: BaseReturnUrlRedirect();
 	}

@@ -1,3 +1,4 @@
+@use "sass:list";
 @import "../lib/bootstrap/scss/functions";
 
 $primary: #105cb6;
@@ -11,6 +12,8 @@ $warning: #ffa000;
 $custom-colors: ( "publication": #acd, "silver": #666 );
 $theme-colors: map-merge($theme-colors, $custom-colors);
 
+$font-family-sans-serif: list.join("Twemoji Country Flags", $font-family-sans-serif);
+$font-family-monospace: list.join("Twemoji Country Flags", $font-family-monospace);
 
 @import "../lib/bootstrap/scss/maps";
 $utilities-bg-subtle: map-merge( $utilities-bg-subtle, ( "publication-subtle": var(--bs-publication-bg-subtle)));

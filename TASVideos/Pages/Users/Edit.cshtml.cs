@@ -4,9 +4,9 @@
 public class EditModel(
 	IRoleService roleService,
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
-	UserManager userManager)
+	IUserManager userManager)
 	: BasePageModel
 {
 	[FromRoute]
@@ -36,7 +36,7 @@ public class EditModel(
 				UserLastLoggedIn = u.LastLoggedInTimeStamp,
 				Email = u.Email,
 				EmailConfirmed = u.EmailConfirmed,
-				LockedStatus = u.LockoutEnabled && u.LockoutEnd.HasValue,
+				LockedStatus = u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTime.UtcNow,
 				Signature = u.Signature,
 				Avatar = u.Avatar,
 				MoodAvatar = u.MoodAvatarUrlBase,

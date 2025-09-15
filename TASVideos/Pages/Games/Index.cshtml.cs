@@ -16,6 +16,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 	public List<TabMiniMovieModel> Movies { get; set; } = [];
 	public List<WatchFile> WatchFiles { get; set; } = [];
 	public List<TopicEntry> Topics { get; set; } = [];
+	public List<GoalEntry> PlaygroundGoals { get; set; } = [];
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -42,17 +43,18 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
 			SubmissionCount = g.Submissions.Count,
 			UserFilesCount = g.UserFiles.Count(uf => !uf.Hidden),
-			PlaygroundGoals = g.Submissions
-				.Where(s => s.Status == SubmissionStatus.Playground)
-				.GroupBy(s => s.GameGoal)
-				.OrderBy(gg => gg.Key!.DisplayName.Length)
-				.Select(gg => new GoalEntry(
-					gg.Key!.Id,
-					gg.Key!.DisplayName,
-					gg.OrderByDescending(ggs => ggs.Id)
-						.Select(ggs => new SubmissionEntry(ggs.Id, ggs.Title))
-						.ToList()))
-				.ToList(),
+			PlaygroundSubmissions = g.Submissions
+				.Where(s => s.Status == SubmissionStatus.Playground
+					&& s.GameName != null
+					&& s.GameVersion != null
+					&& s.GameGoal != null)
+				.Select(s => new PlaygroundSubmission(
+					s.Id,
+					s.Title,
+					s.GameVersion!.TitleOverride ?? s.GameName!,
+					s.GameGoal!,
+					s.GameVersion))
+				.ToList()
 		});
 
 		query = ParsedId > -2
@@ -77,20 +79,22 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 				p.Title,
 				Goal = p.GameGoal!.DisplayName,
 				Screenshot = p.Files
-				.Where(f => f.Type == FileType.Screenshot)
-				.Select(f => new DisplayMiniMovie.MiniMovieModel.ScreenshotFile
-				{
-					Path = f.Path,
-					Description = f.Description
-				})
-				.First(),
+					.Where(f => f.Type == FileType.Screenshot)
+					.Select(f => new DisplayMiniMovie.MiniMovieModel.ScreenshotFile
+					{
+						Path = f.Path,
+						Description = f.Description
+					})
+					.First(),
 				OnlineWatchingUrl = p.PublicationUrls
-				.First(u => u.Type == PublicationUrlType.Streaming).Url,
-				GameTitle = p.GameVersion != null && p.GameVersion.TitleOverride != null ? p.GameVersion.TitleOverride : p.Game!.DisplayName
+					.First(u => u.Type == PublicationUrlType.Streaming).Url,
+				GameTitle = p.GameVersion != null && p.GameVersion.TitleOverride != null
+					? p.GameVersion.TitleOverride
+					: p.Game!.DisplayName
 			})
 			.ToListAsync();
 
-		Movies = movies
+		Movies = [.. movies
 			.Select(m => new TabMiniMovieModel(
 				movies.Count(mm => mm.Goal == m.Goal) > 1
 					? m.GameTitle
@@ -107,8 +111,23 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 					Goal = m.Goal,
 					Screenshot = m.Screenshot,
 					OnlineWatchingUrl = m.OnlineWatchingUrl
-				}))
-			.ToList();
+				}))];
+
+		PlaygroundGoals = [.. Game.PlaygroundSubmissions
+			.GroupBy(s => new
+			{
+				s.Goal,
+				GameTitle = s.Version.TitleOverride
+					?? s.GameTitle
+			})
+			.OrderBy(gg => gg.Key.Goal.DisplayName.Length)
+			.Select(gg => new GoalEntry(
+				gg.Key.Goal.Id,
+				gg.Key.Goal.DisplayName == "baseline"
+					? "(baseline)"
+					: gg.Key.Goal.DisplayName,
+				gg.Key.GameTitle,
+				[.. gg.OrderByDescending(ggs => ggs.Id).Select(ggs => new SubmissionEntry(ggs.Id, ggs.SubmissionTitle))]))];
 
 		WatchFiles = await db.UserFiles
 			.ForGame(Game.Id)
@@ -127,8 +146,9 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 
 	public record WatchFile(long Id, string FileName);
 	public record TopicEntry(int Id, string Title);
-	public record GoalEntry(int Id, string Name, List<SubmissionEntry> Submissions);
 	public record SubmissionEntry(int Id, string Title);
+	public record GoalEntry(int Id, string Name, string GameTitle, List<SubmissionEntry> Submissions);
+	public record PlaygroundSubmission(int Id, string SubmissionTitle, string GameTitle, GameGoal Goal, GameVersion Version);
 
 	public class GameDisplay
 	{
@@ -141,7 +161,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public List<string> Genres { get; init; } = [];
 		public List<GameVersion> Versions { get; init; } = [];
 		public List<GameGroup> GameGroups { get; init; } = [];
-		public List<GoalEntry> PlaygroundGoals { get; set; } = [];
+		public List<PlaygroundSubmission> PlaygroundSubmissions { get; init; } = [];
 		public int PublicationCount { get; init; }
 		public int ObsoletePublicationCount { get; init; }
 		public int SubmissionCount { get; init; }
@@ -160,5 +180,14 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public record GameGroup(int Id, string Name);
 	}
 
-	public record TabMiniMovieModel(string TabTitleRegular, string TabTitleBold, DisplayMiniMovie.MiniMovieModel Movie);
+	/// <summary>
+	/// Tab for MiniMovieModel
+	/// </summary>
+	/// <param name="TabTitleRegular">for baseline and disambiguating the clashes</param>
+	/// <param name="TabTitleBold">for actual branch labels that appear in movie titles</param>
+	/// <param name="Movie">MiniMovieModel</param>
+	public record TabMiniMovieModel(
+		string TabTitleRegular,
+		string TabTitleBold,
+		DisplayMiniMovie.MiniMovieModel Movie);
 }

@@ -251,16 +251,13 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 				g.Key.Description + " of " + g.Key.Year,
 				g.Key.Year,
 				AwardType.Movie,
-				g.Select(gv => new AwardAssignmentPublication(gv.Publication.Id, gv.Publication.Title))
-					.ToList(),
-				g.SelectMany(gv => gv.Users)
-					.Select(u => new AwardAssignmentUser(u.UserId, u.UserName))
-					.ToList()))
+				[.. g.Select(gv => new AwardAssignmentPublication(gv.Publication.Id, gv.Publication.Title))],
+				[.. g.SelectMany(gv => gv.Users).Select(u => new AwardAssignmentUser(u.UserId, u.UserName))]))
 			.ToList();
 
-		var allAwards = userAwards.Concat(publicationAwards);
+		var allAwards = userAwards.Concat(publicationAwards).ToList();
 
-		cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeekInSeconds);
+		cache.Set(CacheKeys.AwardsCache, allAwards, Durations.OneWeek);
 
 		return allAwards;
 	}

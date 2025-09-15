@@ -3,7 +3,6 @@
 @inject IQueueService QueueService
 @{
 	ViewData.SetTitle("Submissions");
-	var selectAvailableYears = Model.Search.AvailableYears.ToDropDown();
 	var verifiedOptions= new List<SelectListItem>
 	{
 		new() { Value = "", Text = "All" },
@@ -26,13 +25,13 @@
 	<row class="mt-3">
 		<column md="6">
 			<label asp-for="Search.Statuses"></label>
-			<select asp-for="Search.Statuses" multiselect="true" asp-items="Model.AvailableStatuses"></select>
+			<select asp-for="Search.Statuses" multiselect="true" asp-items="IndexModel.AvailableStatuses"></select>
 			<label condition="@User.Has(PermissionTo.CatalogMovies)" asp-for="Search.ShowVerified"></label>
 			<select asp-for="Search.ShowVerified" asp-items="verifiedOptions" condition="@User.Has(PermissionTo.CatalogMovies)" class="form-control"></select>
 		</column>
 		<column md="6">
 			<label asp-for="Search.Years"></label>
-			<select asp-for="Search.Years" asp-items="selectAvailableYears" multiselect="true"></select>
+			<select asp-for="Search.Years" asp-items="Model.AvailableYears" multiselect="true"></select>
 			<label asp-for="Search.User"></label>
 			<input asp-for="Search.User" user-search="true" />
 			<label asp-for="Search.System"></label>

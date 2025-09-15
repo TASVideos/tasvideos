@@ -2,7 +2,7 @@
 
 /// <summary>
 /// Converts legacy query string parameters from Subs-List to a <see cref="IndexModel.SubmissionSearchRequest"/> model
-/// Does not support user filtering since the user is the wiki site id which we do not keep
+/// Does not support user filtering since the user is the wiki site id which we did not keep
 /// </summary>
 public static class LegacySubListConverter
 {

@@ -1,7 +1,7 @@
 ﻿namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
-public class ViewModel(ApplicationDbContext db, IFileService fileService) : BasePageModel
+public class ViewModel(ApplicationDbContext db, IFileService fileService, ITASVideosMetrics metrics) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -18,6 +18,8 @@ public class ViewModel(ApplicationDbContext db, IFileService fileService) : Base
 		{
 			return NotFound();
 		}
+
+		metrics.AddPublicationView(Id);
 
 		Publication = publication;
 		return Page();

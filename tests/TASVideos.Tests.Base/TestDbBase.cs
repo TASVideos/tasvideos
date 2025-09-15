@@ -9,7 +9,7 @@ namespace TASVideos.Tests.Base;
 
 public abstract class TestDbBase
 {
-	protected TestDbContext _db;
+	protected readonly TestDbContext _db;
 
 	private static IDbContextTransaction? _transaction;
 	private static bool _isInitialized = false;
@@ -18,7 +18,7 @@ public abstract class TestDbBase
 	protected TestDbBase()
 	{
 		_db = Create();
-		_transaction = _db.Database.BeginTransaction();
+		_transaction = _db.BeginTransaction();
 	}
 
 	public static void AssemblyInit(TestContext context)
@@ -57,7 +57,7 @@ public abstract class TestDbBase
 	}
 
 	[TestCleanup]
-	public void Cleanup()
+	public virtual void Cleanup()
 	{
 		_transaction?.Dispose();
 	}

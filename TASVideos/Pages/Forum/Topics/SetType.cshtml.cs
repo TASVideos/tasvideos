@@ -51,8 +51,7 @@ public class SetTypeModel(ApplicationDbContext db) : BaseForumModel
 
 		var topic = await db.ForumTopics
 			.ExcludeRestricted(UserCanSeeRestricted)
-			.Where(t => t.Id == TopicId)
-			.SingleOrDefaultAsync();
+			.SingleOrDefaultAsync(t => t.Id == TopicId);
 
 		if (topic is null)
 		{

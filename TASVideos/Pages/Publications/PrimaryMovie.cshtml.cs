@@ -3,7 +3,7 @@
 [RequirePermission(PermissionTo.ReplacePrimaryMovieFile)]
 public class PrimaryMoviesModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger)
 	: BasePageModel
 {

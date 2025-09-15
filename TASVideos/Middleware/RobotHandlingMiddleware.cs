@@ -23,9 +23,7 @@ public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment e
 						Disallow: /Wiki/PageNotFound
 						Disallow: /Wiki/Referrers
 						Disallow: /Wiki/ViewSource
-
-						User-agent: Fasterfox
-						Disallow: /
+						Crawl-delay: 60
 						""");
 		}
 		else

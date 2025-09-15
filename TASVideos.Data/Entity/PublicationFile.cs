@@ -5,7 +5,6 @@ public enum FileType
 	Screenshot, MovieFile
 }
 
-[ExcludeFromHistory]
 public class PublicationFile : BaseEntity
 {
 	public int Id { get; set; }

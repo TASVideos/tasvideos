@@ -8,7 +8,20 @@ using Microsoft.Extensions.Options;
 
 namespace TASVideos.Core.Services;
 
-public class SignInManager(
+public interface ISignInManager
+{
+	Task<(SignInResult Result, User? User, bool FailedDueToBan)> SignIn(string userName, string password, bool rememberMe = false);
+	Task<bool> UsernameIsAllowed(string userName);
+	Task<bool> EmailExists(string email);
+	bool IsPasswordAllowed(string? userName, string? email, string? password);
+	Task SignIn(User user, bool isPersistent, string? authenticationMethod = null);
+	Task Logout(ClaimsPrincipal user);
+	Task<bool> HasPassword(ClaimsPrincipal user);
+	Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword);
+	bool IsSignedIn(ClaimsPrincipal principal);
+}
+
+internal class SignInManager(
 	ApplicationDbContext db,
 	UserManager userManager,
 	IHttpContextAccessor contextAccessor,
@@ -23,28 +36,31 @@ public class SignInManager(
 		optionsAccessor,
 		logger,
 		schemes,
-		confirmation)
+		confirmation), ISignInManager
 {
 	public new UserManager UserManager => (UserManager)base.UserManager;
 
-	public async Task<(SignInResult Result, User? User)> SignIn(string userName, string password, bool rememberMe = false)
+	public Task SignIn(User user, bool isPersistent, string? authenticationMethod = null)
+		=> SignInAsync(user, isPersistent, authenticationMethod);
+
+	public async Task<(SignInResult Result, User? User, bool FailedDueToBan)> SignIn(string userName, string password, bool rememberMe = false)
 	{
 		userName = userName.Trim().Replace(" ", "_");
 		var user = await db.Users.ForUser(userName).SingleOrDefaultAsync();
 		if (user is null)
 		{
-			return (SignInResult.Failed, null);
-		}
-
-		if (user.IsBanned())
-		{
-			return (SignInResult.Failed, null);
+			return (SignInResult.Failed, null, FailedDueToBan: false);
 		}
 
 		var result = await CheckPasswordSignInAsync(user, password, true);
 
 		if (result.Succeeded)
 		{
+			if (user.IsBanned())
+			{
+				return (SignInResult.Failed, user, FailedDueToBan: true);
+			}
+
 			user.LastLoggedInTimeStamp = DateTime.UtcNow;
 
 			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
@@ -52,7 +68,7 @@ public class SignInManager(
 			await SignInAsync(user, rememberMe);
 		}
 
-		return (result, user);
+		return (result, user, FailedDueToBan: false);
 	}
 
 	public async Task<IdentityResult> AddPassword(ClaimsPrincipal principal, string newPassword)
@@ -92,16 +108,6 @@ public class SignInManager(
 
 		var baseEmail = email.Split('+')[0]; // Strip off alias
 		return await db.Users.AnyAsync(u => EF.Functions.Like(u.Email, baseEmail));
-	}
-
-	public async Task<User?> GetUserByEmailAndUserName(string username, string email)
-	{
-		if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(username))
-		{
-			return null;
-		}
-
-		return await db.Users.SingleOrDefaultAsync(u => u.Email == email && u.UserName == username);
 	}
 
 	public async Task Logout(ClaimsPrincipal user)

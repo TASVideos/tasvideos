@@ -1,18 +1,14 @@
-﻿using TASVideos.Common;
-using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
+﻿using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.EditPublicationMetaData)]
 public class EditModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IPublications publications,
+	IExternalMediaPublisher publisher,
 	IWikiPages wikiPages,
-	ITagService tagsService,
-	IFlagService flagsService,
-	IPublicationMaintenanceLogger publicationMaintenanceLogger,
-	IYoutubeSync youtubeSync)
+	IPublicationMaintenanceLogger publicationMaintenanceLogger)
 	: BasePageModel
 {
 	[FromRoute]
@@ -92,13 +88,35 @@ public class EditModel(
 			}
 		}
 
-		await UpdatePublication(Id, Publication);
+		// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
+		Publication.Authors = Publication.Authors.RemoveEmpty();
+
+		var updateRequest = new UpdatePublicationRequest(
+			Publication.ObsoletedBy,
+			Publication.EmulatorVersion,
+			Publication.ExternalAuthors,
+			Publication.Authors,
+			Publication.SelectedFlags,
+			Publication.SelectedTags,
+			User.Permissions().ToList(),
+			Publication.Markup,
+			Publication.RevisionMessage,
+			User.GetUserId(),
+			HttpContext.Request.MinorEdit());
+
+		var updateResult = await publications.UpdatePublication(Id, updateRequest);
+		if (updateResult.Success)
+		{
+			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), updateResult.ChangeMessages);
+			await publisher.SendPublicationEdit(User.Name(), Id, $"{string.Join(", ", updateResult.ChangeMessages)} | {updateResult.Title}");
+		}
+
 		return RedirectToPage("View", new { Id });
 	}
 
 	public async Task<IActionResult> OnGetTitle(int publicationId)
 	{
-		var title = (await db.Publications.SingleOrDefaultAsync(p => p.Id == publicationId))?.Title;
+		var title = await publications.GetTitle(publicationId);
 		return Content(title ?? "");
 	}
 
@@ -111,121 +129,6 @@ public class EditModel(
 			.Select(f => new PublicationFileDisplay(
 				f.Id, f.Path, f.Type, f.Description))
 			.ToListAsync();
-	}
-
-	private async Task UpdatePublication(int id, PublicationEdit model)
-	{
-		var externalMessages = new List<string>();
-
-		var publication = await db.Publications
-			.Include(p => p.Authors)
-			.ThenInclude(pa => pa.Author)
-			.Include(p => p.System)
-			.Include(p => p.SystemFrameRate)
-			.Include(p => p.Game)
-			.Include(p => p.GameVersion)
-			.Include(p => p.GameGoal)
-			.Include(p => p.PublicationUrls)
-			.Include(p => p.PublicationTags)
-			.Include(p => p.PublicationFlags)
-			.SingleOrDefaultAsync(p => p.Id == id);
-
-		if (publication is null)
-		{
-			return;
-		}
-
-		// TODO: this has to be done anytime a string-list TagHelper is used, can we make this automatic with model binders?
-		Publication.Authors = Publication.Authors.RemoveEmpty();
-
-		if (publication.ObsoletedById != model.ObsoletedBy)
-		{
-			externalMessages.Add($"Changed obsoleting movie from \"{publication.ObsoletedById}\" to \"{model.ObsoletedBy}\"");
-		}
-
-		if (publication.AdditionalAuthors != model.ExternalAuthors)
-		{
-			externalMessages.Add($"Changed external authors from \"{publication.AdditionalAuthors}\" to \"{model.ExternalAuthors}\"");
-		}
-
-		publication.ObsoletedById = model.ObsoletedBy;
-		publication.EmulatorVersion = model.EmulatorVersion;
-		publication.AdditionalAuthors = model.ExternalAuthors.NullIfWhitespace();
-		publication.Authors.Clear();
-		publication.Authors.AddRange(await db.Users
-			.ForUsers(Publication.Authors)
-			.Select(u => new PublicationAuthor
-			{
-				PublicationId = publication.Id,
-				UserId = u.Id,
-				Author = u,
-				Ordinal = Publication.Authors.IndexOf(u.UserName)
-			})
-			.ToListAsync());
-
-		publication.GenerateTitle();
-
-		List<int> editableFlags = await db.Flags
-			.Where(f => f.PermissionRestriction.HasValue && User.Permissions().Contains(f.PermissionRestriction.Value) || f.PermissionRestriction == null)
-			.Select(f => f.Id)
-			.ToListAsync();
-		List<PublicationFlag> existingEditablePublicationFlags = publication.PublicationFlags.Where(pf => editableFlags.Contains(pf.FlagId)).ToList();
-		List<int> selectedEditableFlagIds = model.SelectedFlags.Intersect(editableFlags).ToList();
-
-		var flagsToAdd = publication.PublicationFlags.Except(existingEditablePublicationFlags).ToList();
-		publication.PublicationFlags.Clear();
-		publication.PublicationFlags.AddRange(flagsToAdd);
-		publication.PublicationFlags.AddFlags(selectedEditableFlagIds);
-		externalMessages.AddRange((await flagsService
-			.GetDiff(existingEditablePublicationFlags.Select(p => p.FlagId), selectedEditableFlagIds))
-			.ToMessages("flags"));
-
-		externalMessages.AddRange((await tagsService
-			.GetDiff(publication.PublicationTags.Select(p => p.TagId), model.SelectedTags))
-			.ToMessages("tags"));
-
-		publication.PublicationTags.Clear();
-		db.PublicationTags.RemoveRange(
-			db.PublicationTags.Where(pt => pt.PublicationId == publication.Id));
-
-		publication.PublicationTags.AddTags(model.SelectedTags);
-
-		await db.SaveChangesAsync();
-		var existingWikiPage = await wikiPages.PublicationPage(Id);
-		IWikiPage? pageToSync = existingWikiPage;
-
-		if (model.Markup != existingWikiPage!.Markup)
-		{
-			pageToSync = await wikiPages.Add(new WikiCreateRequest
-			{
-				PageName = WikiHelper.ToPublicationWikiPageName(id),
-				Markup = model.Markup,
-				MinorEdit = HttpContext.Request.MinorEdit(),
-				RevisionMessage = model.RevisionMessage,
-				AuthorId = User.GetUserId()
-			});
-			externalMessages.Add("Description updated");
-		}
-
-		foreach (var url in publication.PublicationUrls.ThatAreStreaming())
-		{
-			if (youtubeSync.IsYoutubeUrl(url.Url))
-			{
-				await youtubeSync.SyncYouTubeVideo(new YoutubeVideo(
-					Id,
-					publication.CreateTimestamp,
-					url.Url!,
-					url.DisplayName,
-					publication.Title,
-					pageToSync!,
-					publication.System!.Code,
-					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
-					publication.ObsoletedById));
-			}
-		}
-
-		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), externalMessages);
-		await publisher.SendPublicationEdit(User.Name(), Id, $"{string.Join(", ", externalMessages)} | {publication.Title}");
 	}
 
 	public class PublicationEdit

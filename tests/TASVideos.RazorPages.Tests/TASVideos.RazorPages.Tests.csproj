@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<Import Project="../UseMSTest.props" />
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<MSTestAnalysisMode>All</MSTestAnalysisMode>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NSubstitute" />
+		<PackageReference Include="NSubstitute.Analyzers.CSharp">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" />
+		<ProjectReference Include="..\..\TASVideos\TASVideos.csproj" />
+	</ItemGroup>
+</Project>

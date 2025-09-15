@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Games.Versions;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
-public class EditModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
+public class EditModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
 	private static readonly List<SelectListItem> VersionTypes = Enum
 		.GetValues<VersionTypes>()

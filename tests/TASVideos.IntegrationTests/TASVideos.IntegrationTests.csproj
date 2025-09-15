@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<Import Project="../UseMSTest.props" />
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<IsPackable>false</IsPackable>
+		<MSTestAnalysisMode>All</MSTestAnalysisMode>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+		<PackageReference Include="NSubstitute" />
+		<PackageReference Include="AngleSharp" />
+		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+		<PackageReference Include="NSubstitute.Analyzers.CSharp">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" BuildReference="true" />
+		<ProjectReference Include="..\..\TASVideos\TASVideos.csproj" />
+	</ItemGroup>
+</Project>

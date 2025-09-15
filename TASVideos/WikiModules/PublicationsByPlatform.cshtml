@@ -1,13 +1,21 @@
 ﻿@model PublicationsByPlatform
 <standard-table>
-	@foreach (var platform in Model.Platforms.OrderBy(res => res.DisplayName))
+	@foreach (var platformEntry in Model.PlatformPublicationList)
 	{
 		<tr>
-			<td>@platform.DisplayName</td>
-			<td><a href="/Movies-@platform.Code">All Publications</a></td>
-			@foreach (var pubClass in Model.PubClasses.OrderBy(t => t.Id))
+			<td>@platformEntry.Platform</td>
+			<td><a href="/Movies-@platformEntry.PlatformCode">All Publications (@platformEntry.Groupings.Where(c => c.IsClass).Sum(c => c.PublicationCount))</a></td>
+			@foreach (var grouping in Model.AllGroupings)
 			{
-				<td><a href="/Movies-@platform.Code-@pubClass.Link">@pubClass.Name</a></td>
+				var classEntry = platformEntry.Groupings.FirstOrDefault(c => c.Link == grouping);
+				if (classEntry is not null)
+				{
+					<td><a href="/Movies-@platformEntry.PlatformCode-@classEntry.Link">@classEntry.Name (@classEntry.PublicationCount)</a></td>
+				}
+				else
+				{
+					<td></td>
+				}
 			}
 		</tr>
 	}

@@ -20,7 +20,7 @@ internal class GoogleAuthService(
 {
 	private const string YoutubeCacheKey = "GoogleAuthAccessTokenCacheForYoutube";
 	private readonly HttpClient _client = httpClientFactory.CreateClient(HttpClients.GoogleAuth)
-		?? throw new InvalidOperationException($"Unable to initalize {HttpClients.GoogleAuth} client");
+		?? throw new InvalidOperationException($"Unable to initialize {HttpClients.GoogleAuth} client");
 
 	public bool IsYoutubeEnabled() => settings.YouTube.IsEnabled();
 
@@ -57,7 +57,7 @@ internal class GoogleAuthService(
 		if (tokenResponse.ExpiresAt > 10)
 		{
 			// Subtract a bit of time to ensure it does not expire between the time of accessing and using it
-			cache.Set(cacheKey, tokenResponse.AccessToken, tokenResponse.ExpiresAt - 10);
+			cache.Set(cacheKey, tokenResponse.AccessToken, TimeSpan.FromSeconds(tokenResponse.ExpiresAt - 10));
 		}
 
 		return tokenResponse.AccessToken;

@@ -2,6 +2,7 @@
 using System.IO.Compression;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.ResponseCompression;
 using OpenTelemetry.Metrics;
@@ -88,6 +89,12 @@ public static class ServiceCollectionExtensions
 			services.AddDatabaseDeveloperPageExceptionFilter();
 		}
 
+		if (env.ShouldIncludeSourceMappingComments())
+		{
+			services.AddSingleton<RazorPageActivator>();
+			services.AddSingleton<IRazorPageActivator, SelfIdentifyRazorPageActivator>();
+		}
+
 		services.AddResponseCaching();
 		var pagesResult = services
 			.AddRazorPages(options =>
@@ -133,7 +140,7 @@ public static class ServiceCollectionExtensions
 			services.AddScoped(component);
 		}
 
-		return services.AddTransient<ExternalMediaPublisher>();
+		return services.AddTransient<IExternalMediaPublisher, ExternalMediaPublisher>();
 	}
 
 	public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)
@@ -193,13 +200,24 @@ public static class ServiceCollectionExtensions
 							Boundaries = [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10]
 						});
 
+					builder.AddMeter("TASVideos");
+
 					builder.AddPrometheusExporter(options =>
 					{
 						options.ScrapeEndpointPath = "/Metrics";
 					});
 				});
+
+			services.AddSingleton<ITASVideosMetrics, TASVideosMetrics>();
+		}
+		else
+		{
+			services.AddSingleton<ITASVideosMetrics, NullMetrics>();
 		}
 
 		return services;
 	}
+
+	public static bool ShouldIncludeSourceMappingComments(this IHostEnvironment env)
+		=> env.IsDevelopment();
 }

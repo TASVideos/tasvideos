@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Profile;
 
 [Authorize]
-public class ChangePasswordModel(IEmailService emailService, SignInManager signInManager) : BasePageModel
+public class ChangePasswordModel(IEmailService emailService, ISignInManager signInManager, IUserManager userManager) : BasePageModel
 {
 	[BindProperty]
 	[DataType(DataType.Password)]
@@ -38,7 +38,7 @@ public class ChangePasswordModel(IEmailService emailService, SignInManager signI
 			return Page();
 		}
 
-		var user = await signInManager.UserManager.GetRequiredUser(User);
+		var user = await userManager.GetRequiredUser(User);
 
 		if (!signInManager.IsPasswordAllowed(user.UserName, user.Email, NewPassword))
 		{
@@ -50,15 +50,15 @@ public class ChangePasswordModel(IEmailService emailService, SignInManager signI
 			return Page();
 		}
 
-		var changePasswordResult = await signInManager.UserManager.ChangePasswordAsync(user, CurrentPassword, NewPassword);
+		var changePasswordResult = await userManager.ChangePassword(user, CurrentPassword, NewPassword);
 		if (!changePasswordResult.Succeeded)
 		{
 			AddErrors(changePasswordResult);
 			return Page();
 		}
 
-		await signInManager.SignInAsync(user, isPersistent: false);
-		var code = await signInManager.UserManager.GeneratePasswordResetTokenAsync(user);
+		await signInManager.SignIn(user, isPersistent: false);
+		var code = await userManager.GeneratePasswordResetToken(user);
 		var callbackUrl = Url.ResetPasswordCallbackLink(user.Id.ToString(), code);
 		await emailService.PasswordResetConfirmation(user.Email, callbackUrl);
 		SuccessStatusMessage("Your password has been changed.");

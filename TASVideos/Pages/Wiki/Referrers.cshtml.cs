@@ -11,8 +11,12 @@ public class ReferrersModel(ApplicationDbContext db) : BasePageModel
 	public async Task OnGet()
 	{
 		Path = Path?.Trim('/') ?? "";
-		Referrals = await db.WikiReferrals
-			.ThatReferTo(Path)
-			.ToListAsync();
+		if (!string.IsNullOrWhiteSpace(Path))
+		{
+			Referrals = await db.WikiReferrals
+				.AsNoTracking()
+				.ThatReferTo(Path)
+				.ToListAsync();
+		}
 	}
 }

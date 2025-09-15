@@ -10,8 +10,8 @@ public class GbmvParserTests : BaseParserTests
 	[TestMethod]
 	public async Task GBAHawk_NewHeaderValues()
 	{
-		var result = await _gbmvParser.Parse(Embedded("GBAHawk_NewHeaderValues.gbmv"), EmbeddedLength("GBAHawk_NewHeaderValues.gbmv"));
-		Assert.AreEqual(true, result.Success);
+		var result = await _gbmvParser.Parse(Embedded("GBAHawk_NewHeaderValues.gbmv", out var length), length);
+		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 	}
 
@@ -19,7 +19,7 @@ public class GbmvParserTests : BaseParserTests
 	[DataRow("System-Gbal.gbmv", SystemCodes.Gba)]
 	public async Task Systems(string filename, string expectedSystem)
 	{
-		var result = await _gbmvParser.Parse(Embedded(filename), EmbeddedLength(filename));
+		var result = await _gbmvParser.Parse(Embedded(filename, out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(expectedSystem, result.SystemCode);
 		AssertNoWarningsOrErrors(result);

@@ -25,7 +25,7 @@ namespace TASVideos.Data.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("TASVideos.Data.CustomAutoHistory", b =>
+            modelBuilder.Entity("TASVideos.Data.AutoHistory.AutoHistoryEntry", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,13 +48,11 @@ namespace TASVideos.Data.Migrations
 
                     b.Property<string>("RowId")
                         .IsRequired()
-                        .HasMaxLength(50)
                         .HasColumnType("citext")
                         .HasColumnName("row_id");
 
                     b.Property<string>("TableName")
                         .IsRequired()
-                        .HasMaxLength(128)
                         .HasColumnType("citext")
                         .HasColumnName("table_name");
 
@@ -64,6 +62,15 @@ namespace TASVideos.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_auto_history");
+
+                    b.HasIndex("RowId")
+                        .HasDatabaseName("ix_auto_history_row_id");
+
+                    b.HasIndex("TableName")
+                        .HasDatabaseName("ix_auto_history_table_name");
+
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_auto_history_user_id");
 
                     b.ToTable("auto_history", (string)null);
                 });

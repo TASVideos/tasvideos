@@ -3,7 +3,7 @@
 namespace TASVideos.Pages.Games;
 
 [RequirePermission(PermissionTo.RewireGames)]
-public class RewireModel(ApplicationDbContext db, ExternalMediaPublisher publisher) : BasePageModel
+public class RewireModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
 	[FromQuery]
 	public int? FromGameId { get; set; }

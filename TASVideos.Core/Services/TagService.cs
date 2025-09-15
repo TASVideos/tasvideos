@@ -180,7 +180,7 @@ public class UserProfile
 	public UserFileSummary UserFiles { get; init; } = new();
 	public int SubmissionCount => Submissions.Sum(s => s.Count);
 	public bool IsBanned => BannedUntil.HasValue && BannedUntil >= DateTime.UtcNow;
-	public bool BanIsIndefinite => BannedUntil >= DateTime.UtcNow.AddYears(2);
+	public bool BanIsIndefinite => BannedUntil >= DateTime.UtcNow.AddYears(SiteGlobalConstants.YearsOfBanDisplayedAsIndefinite);
 
 	public class SubmissionEntry
 	{

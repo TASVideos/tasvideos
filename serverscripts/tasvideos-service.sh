@@ -75,7 +75,7 @@ stop() {
 build() {
   echo 'Build()'
 
-  su -c "cd \"$GIT_PULL_LOCATION\" && git fetch --tags --force && git pull && dotnet publish . -c Release -o \"$BUILD_DIRECTORY\"" $ACTIVE_USER
+  su -c "cd \"$GIT_PULL_LOCATION\" && git fetch --tags --force && git pull && dotnet publish TASVideos/TASVideos.csproj -c Release -o \"$BUILD_DIRECTORY\"" $ACTIVE_USER
 }
 
 restart() {

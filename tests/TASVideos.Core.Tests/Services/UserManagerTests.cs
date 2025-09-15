@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TASVideos.Core.Services.Wiki;
@@ -38,15 +39,10 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	}
 
 	[TestMethod]
-	[DataRow("test", "test", true)]
-	[DataRow("test", "doesNotExist", false)]
-	public async Task Exists(string userToAdd, string userToLookup, bool expected)
+	public async Task GetRequiredUser_UserDoesNotExist_Throws()
 	{
-		_db.AddUser(userToAdd);
-		await _db.SaveChangesAsync();
-
-		var actual = await _userManager.Exists(userToLookup);
-		Assert.AreEqual(expected, actual);
+		var user = new ClaimsPrincipal();
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _userManager.GetRequiredUser(user));
 	}
 
 	[TestMethod]
@@ -91,7 +87,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	[TestMethod]
 	public async Task AddStandardRoles_ThrowsIfUserDoesNotExist()
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _userManager.AddStandardRoles(-1));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _userManager.AddStandardRoles(-1));
 	}
 
 	[TestMethod]
@@ -269,17 +265,24 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		_ = _tasVideoAgent.DidNotReceive().SendPublishedAuthorRole(userId, Arg.Any<string>(), Arg.Any<string>());
 	}
 
-	#endregion
-
 	[TestMethod]
-	public async Task PermaBanUser()
+	public async Task AssignAutoAssignableRolesByPublication_BannedUserAlreadyHasRole_DoesNotAddRole()
 	{
 		const int userId = 1;
-		var user = _db.AddUser(userId);
+		var user = _db.AddUser(userId).Entity;
+		user.BannedUntil = DateTime.UtcNow.AddYears(100);
+		_db.AddPublication(user);
+		var role = _db.Roles.Add(new Role { Name = "r1", AutoAssignPublications = true });
+		_db.RolePermission.Add(new RolePermission { Role = role.Entity, PermissionId = PermissionTo.CatalogMovies });
+		_db.UserRoles.Add(new UserRole { UserId = userId, Role = role.Entity });
+		await _db.SaveChangesAsync();
 
-		await _userManager.PermaBanUser(userId);
-		Assert.IsTrue(user.Entity.IsBanned());
+		await _userManager.AssignAutoAssignableRolesByPublication([userId], "some title");
+		Assert.AreEqual(1, _db.UserRoles.Count(ur => ur.UserId == userId && ur.RoleId == role.Entity.Id));
+		_ = _tasVideoAgent.DidNotReceive().SendPublishedAuthorRole(userId, Arg.Any<string>(), Arg.Any<string>());
 	}
+
+	#endregion
 
 	[TestMethod]
 	public async Task UserNameChanged()
@@ -292,14 +295,14 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		var systemFrameRate = _db.GameSystemFrameRates.Add(new GameSystemFrameRate { FrameRate = 60 });
 		var game = _db.Games.Add(new Game { DisplayName = "game" });
 		var gameGoal = _db.GameGoals.Add(new GameGoal { DisplayName = "game", Game = game.Entity });
-		var gameVersion = _db.GameVersions.Add(new GameVersion() { Game = game.Entity });
+		var gameVersion = _db.GameVersions.Add(new GameVersion { Game = game.Entity });
 		var sub1 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Submitter = user.Entity });
 		var sub2 = _db.Submissions.Add(new Submission { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Submitter = user.Entity });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { UserId = userId, Submission = sub1.Entity });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { UserId = userId, Submission = sub2.Entity });
 		sub1.Entity.GenerateTitle();
 		sub2.Entity.GenerateTitle();
-		var publicationClass = _db.PublicationClasses.Add(new PublicationClass() { Name = "class" });
+		var publicationClass = _db.PublicationClasses.Add(new PublicationClass { Name = "class" });
 		var pub1 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity, GameVersion = gameVersion.Entity, PublicationClass = publicationClass.Entity, Submission = sub1.Entity, MovieFileName = "1" });
 		var pub2 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity, GameVersion = gameVersion.Entity, PublicationClass = publicationClass.Entity, Submission = sub2.Entity, MovieFileName = "2" });
 		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = userId, Publication = pub1.Entity });
@@ -309,11 +312,33 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		await _db.SaveChangesAsync();
 
 		await _userManager.UserNameChanged(user.Entity, oldName);
-		_ = _wikiPages.Received().MoveAll(LinkConstants.HomePages + oldName, LinkConstants.HomePages + newName);
+		_ = _wikiPages.Received().MoveAll(LinkConstants.HomePages + oldName, LinkConstants.HomePages + newName, user.Entity.Id, false);
 		Assert.AreEqual(0, _db.Submissions.Count(s => s.Title.Contains(oldName)));
 		Assert.AreEqual(2, _db.Submissions.Count(s => s.Title.Contains(newName)));
 		Assert.AreEqual(0, _db.Publications.Count(s => s.Title.Contains(oldName)));
 		Assert.AreEqual(2, _db.Publications.Count(s => s.Title.Contains(newName)));
+	}
+
+	[TestMethod]
+	[DataRow("test", "test", true)]
+	[DataRow("test", "doesNotExist", false)]
+	public async Task Exists(string userToAdd, string userToLookup, bool expected)
+	{
+		_db.AddUser(userToAdd);
+		await _db.SaveChangesAsync();
+
+		var actual = await _userManager.Exists(userToLookup);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task PermaBanUser()
+	{
+		const int userId = 1;
+		var user = _db.AddUser(userId);
+
+		await _userManager.PermaBanUser(userId);
+		Assert.IsTrue(user.Entity.IsBanned());
 	}
 
 	[TestMethod]
@@ -329,6 +354,37 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 
 		var actual = await _userManager.CanRenameUser(oldUserName, newUserName);
 		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task GetUserNameByUserName_DoesNotExist_ReturnsNull()
+	{
+		var actual = await _userManager.GetUserNameByUserName("DoesNotExist");
+		Assert.IsNull(actual);
+	}
+
+	[TestMethod]
+	public async Task GetUserNameByUserName_Exists_ReturnsUserName()
+	{
+		const string userName = "TestUser";
+		_db.AddUser(userName);
+		await _db.SaveChangesAsync();
+
+		var actual = await _userManager.GetUserNameByUserName(userName);
+
+		Assert.AreEqual(userName, actual);
+	}
+
+	[TestMethod]
+	public async Task GetUserNameByUserName_IsCaseInsensitive()
+	{
+		const string userName = "TestUser";
+		_db.AddUser(userName);
+		await _db.SaveChangesAsync();
+
+		var actual = await _userManager.GetUserNameByUserName(userName.ToLower());
+
+		Assert.AreEqual(userName, actual);
 	}
 
 	public void Dispose() => _userManager.Dispose();

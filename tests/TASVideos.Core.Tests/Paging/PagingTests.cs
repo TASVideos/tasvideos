@@ -6,7 +6,7 @@ public class PageableTests
 	[TestMethod]
 	public void Pageable_Offset_NullSafe()
 	{
-		var pageable = (IPageable?)null;
+		IPageable? pageable = null;
 
 		// ReSharper disable once ExpressionIsAlwaysNull
 		var actual = pageable.Offset();

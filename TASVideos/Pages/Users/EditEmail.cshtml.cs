@@ -3,9 +3,10 @@
 [RequirePermission(matchAny: false, PermissionTo.SeeEmails, PermissionTo.EditUsers)]
 public class EditEmailModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
-	SignInManager signInManager)
+	ISignInManager signInManager,
+	IUserManager userManager)
 	: BasePageModel
 {
 	[FromRoute]
@@ -62,7 +63,7 @@ public class EditEmailModel(
 
 		user.Email = UserToEdit.Email;
 		user.EmailConfirmed = UserToEdit.EmailConfirmed;
-		user.NormalizedEmail = signInManager.UserManager.NormalizeEmail(user.Email);
+		user.NormalizedEmail = userManager.NormalizeEmail(user.Email) ?? "";
 
 		var result = await db.TrySaveChanges();
 		SetMessage(result, "", $"Unable to update user data for {user.UserName}");

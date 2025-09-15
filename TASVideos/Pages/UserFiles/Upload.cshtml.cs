@@ -1,12 +1,10 @@
-﻿using System.IO.Compression;
-
-namespace TASVideos.Pages.UserFiles;
+﻿namespace TASVideos.Pages.UserFiles;
 
 [RequirePermission(PermissionTo.UploadUserFiles)]
 public class UploadModel(
 	IUserFiles userFiles,
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher)
+	IExternalMediaPublisher publisher)
 	: BasePageModel
 {
 	[BindProperty]
@@ -106,9 +104,7 @@ public class UploadModel(
 
 	private async Task Initialize()
 	{
-		SupportedFileExtensions = (await userFiles.SupportedFileExtensions())
-			.Select(s => s.Replace(".", ""))
-			.ToList();
+		SupportedFileExtensions = [.. (await userFiles.SupportedFileExtensions()).Select(s => s.Replace(".", ""))];
 
 		StorageUsed = await userFiles.StorageUsed(User.GetUserId());
 

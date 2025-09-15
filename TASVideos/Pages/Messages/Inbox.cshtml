@@ -32,7 +32,7 @@
 			<td>
 				<profile-link username="@entry.From"></profile-link>
 			</td>
-			<td>@entry.Date</td>
+			<td><timezone-convert asp-for="@entry.Date" /></td>
 			<td-action-column>
 				<form method="post" class="d-inline-block" asp-page="Inbox" asp-page-handler="Save" asp-route-id="@entry.Id">
 					<submit-button class="btn-sm"></submit-button>

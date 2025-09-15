@@ -191,7 +191,8 @@ internal class YouTubeSync(
 
 		if (url!.Contains("/embed"))
 		{
-			return url;
+			var i = url.IndexOf('?');
+			return i < 0 ? url : url[..i]; // strip all queryparams
 		}
 
 		var videoId = VideoId(url);

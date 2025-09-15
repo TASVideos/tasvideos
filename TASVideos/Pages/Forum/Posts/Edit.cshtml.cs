@@ -11,9 +11,9 @@ namespace TASVideos.Pages.Forum.Posts;
 	PermissionTo.EditUsersForumPosts)]
 public class EditModel(
 	ApplicationDbContext db,
-	ExternalMediaPublisher publisher,
+	IExternalMediaPublisher publisher,
 	IForumService forumService,
-	UserManager userManager)
+	IUserManager userManager)
 	: BaseForumModel
 {
 	[FromRoute]
@@ -162,7 +162,8 @@ public class EditModel(
 				p.Topic!.Forum!.Restricted,
 				p.Topic!.ForumId,
 				ForumShortName = p.Topic!.Forum!.ShortName,
-				TopicTitle = p.Topic!.Title
+				TopicTitle = p.Topic!.Title,
+				p.PosterId,
 			})
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
@@ -173,6 +174,11 @@ public class EditModel(
 
 		if (!User.Has(PermissionTo.DeleteForumPosts))
 		{
+			if (User.GetUserId() != post.PosterId)
+			{
+				return AccessDenied();
+			}
+
 			// Check if last post
 			var lastPost = db.ForumPosts
 				.ForTopic(post.TopicId ?? -1)

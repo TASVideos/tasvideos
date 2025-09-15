@@ -5,7 +5,7 @@ namespace TASVideos.Pages.Account;
 [BindProperties]
 [AllowAnonymous]
 [IpBanCheck]
-public class LoginModel(SignInManager signInManager, IHostEnvironment env) : BasePageModel
+public class LoginModel : BasePageModel
 {
 	public string UserName { get; set; } = "";
 
@@ -24,21 +24,30 @@ public class LoginModel(SignInManager signInManager, IHostEnvironment env) : Bas
 		return Page();
 	}
 
-	public async Task<IActionResult> OnPost()
+	public async Task<IActionResult> OnPost(
+		[FromServices]ISignInManager signInManager,
+		[FromServices]IUserManager userManager,
+		[FromServices]IHostEnvironment env)
 	{
 		if (!ModelState.IsValid)
 		{
 			return Page();
 		}
 
-		var (result, user) = await signInManager.SignIn(UserName, Password, RememberMe);
+		var (result, user, failedDueToBan) = await signInManager.SignIn(UserName, Password, RememberMe);
 
 		if (result.Succeeded)
 		{
 			return BaseReturnUrlRedirect();
 		}
 
-		if (user is not null && !await signInManager.UserManager.IsEmailConfirmedAsync(user) && !env.IsDevelopment())
+		if (user is not null && failedDueToBan)
+		{
+			TempData[nameof(BannedModel.BannedUserId)] = user.Id;
+			return RedirectToPage("/Account/Banned");
+		}
+
+		if (user is not null && !await userManager.IsEmailConfirmed(user) && !env.IsDevelopment())
 		{
 			return RedirectToPage("/Account/EmailConfirmationSent");
 		}

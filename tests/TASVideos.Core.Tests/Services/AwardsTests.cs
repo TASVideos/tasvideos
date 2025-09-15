@@ -181,7 +181,6 @@ public class AwardsTests : TestDbBase
 		Assert.AreEqual(award.ShortName, actualAward.ShortName);
 
 		// Publication should match
-		Assert.IsNotNull(actualAward.Publications);
 		var actualPublications = actualAward.Publications.ToList();
 		Assert.AreEqual(1, actualPublications.Count);
 		Assert.AreEqual(pub.Id, actualPublications.Single().Id);
@@ -204,7 +203,6 @@ public class AwardsTests : TestDbBase
 		Assert.AreEqual(award.ShortName, actualAward.ShortName);
 
 		// User should match
-		Assert.IsNotNull(actualAward.Users);
 		var actualUsers = actualAward.Users.ToList();
 		Assert.AreEqual(1, actualUsers.Count);
 		Assert.AreEqual(user.Id, actualUsers.Single().Id);
@@ -271,7 +269,7 @@ public class AwardsTests : TestDbBase
 	[TestMethod]
 	public async Task AssignUserAward_NotFound_throws()
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _awards.AssignUserAward("DoesNotExist", 1, []));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _awards.AssignUserAward("DoesNotExist", 1, []));
 	}
 
 	[TestMethod]
@@ -320,7 +318,7 @@ public class AwardsTests : TestDbBase
 	[TestMethod]
 	public async Task AssignPublicationAward_NotFound_throws()
 	{
-		await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => _awards.AssignPublicationAward("DoesNotExist", 1, []));
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _awards.AssignPublicationAward("DoesNotExist", 1, []));
 	}
 
 	[TestMethod]

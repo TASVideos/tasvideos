@@ -15,8 +15,8 @@ public class MemoryCacheService(IMemoryCache cache, AppSettings settings) : ICac
 		cache.Remove(key);
 	}
 
-	public void Set(string key, object? data, int? cacheTime)
+	public void Set<T>(string key, T data, TimeSpan? cacheTime = null)
 	{
-		cache.Set(key, data, new TimeSpan(0, 0, cacheTime ?? settings.CacheSettings.CacheDurationInSeconds));
+		cache.Set(key, data, cacheTime ?? settings.CacheSettings.CacheDuration);
 	}
 }
