@@ -21,17 +21,9 @@ internal class CelTas : Parser, IParser
 			SystemCode = SystemCodes.Celeste
 		};
 
-		var archive = new ZipArchive(file);
-		var mainTas = archive.Entries.SingleOrDefault(e => e.Name.StartsWith("main.tas", StringComparison.InvariantCultureIgnoreCase));
-		if (mainTas is null)
-		{
-			return Error($"Missing main.tas, cannot parse");
-		}
-
 		var fileTimeFound = 0;
 
-		await using var mainStream = mainTas.Open();
-		using var reader = new StreamReader(mainStream);
+		using var reader = new StreamReader(file);
 		while (await reader.ReadLineAsync() is { } s)
 		{
 			if (s.StartsWith(FileTimeHeader))

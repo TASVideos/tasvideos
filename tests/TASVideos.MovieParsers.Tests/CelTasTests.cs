@@ -9,7 +9,6 @@ public class CelTasTests : BaseParserTests
 	protected override string ResourcesPath => "TASVideos.MovieParsers.Tests.CelTasSampleFiles.";
 
 	[TestMethod]
-	[DataRow("missingmaintas.celtas", DisplayName = "Missing main.tas creates error")]
 	[DataRow("missingfiletime.celtas", DisplayName = "Missing FileTime header creates error")]
 	[DataRow("improperfiletime.celtas", DisplayName = "Improper FileTime header creates error")]
 	public async Task Errors(string filename)
