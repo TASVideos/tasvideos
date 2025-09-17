@@ -117,7 +117,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			var pubs = await db.Publications.IncludeTitleTables().Where(p => p.GameGoalId == gameGoal.Id).ToListAsync();
 			foreach (var pub in pubs)
 			{
-				pub.GenerateTitle(false);
+				pub.Title = pub.GenerateTitle(false);
 			}
 
 			var subs = await db.Submissions.IncludeTitleTables().Where(s => s.GameGoalId == gameGoal.Id).ToListAsync();

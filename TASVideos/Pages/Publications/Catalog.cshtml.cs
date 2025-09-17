@@ -199,7 +199,7 @@ public class CatalogModel(ApplicationDbContext db, IExternalMediaPublisher publi
 		}
 
 		publication.EmulatorVersion = Catalog.Emulator;
-		publication.GenerateTitle(false);
+		publication.Title = publication.GenerateTitle(false);
 
 		var result = await db.TrySaveChanges();
 		SetMessage(result, $"{Id}M catalog updated", $"Unable to save {Id}M catalog");
