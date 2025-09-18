@@ -307,8 +307,8 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		var pub2 = _db.Publications.Add(new Publication { System = system.Entity, SystemFrameRate = systemFrameRate.Entity, Game = game.Entity, GameGoal = gameGoal.Entity, GameVersion = gameVersion.Entity, PublicationClass = publicationClass.Entity, Submission = sub2.Entity, MovieFileName = "2" });
 		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = userId, Publication = pub1.Entity });
 		_db.PublicationAuthors.Add(new PublicationAuthor { UserId = userId, Publication = pub2.Entity });
-		pub1.Entity.GenerateTitle();
-		pub2.Entity.GenerateTitle();
+		pub1.Entity.Title = pub1.Entity.GenerateTitle();
+		pub2.Entity.Title = pub2.Entity.GenerateTitle();
 		await _db.SaveChangesAsync();
 
 		await _userManager.UserNameChanged(user.Entity, oldName);
