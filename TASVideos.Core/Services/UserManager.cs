@@ -463,7 +463,7 @@ internal class UserManager(
 			.ToListAsync();
 		foreach (var pub in pubsToUpdate)
 		{
-			pub.Title = pub.GenerateTitle(false);
+			pub.Title = pub.GenerateTitle();
 		}
 
 		await db.SaveChangesAsync();

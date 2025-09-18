@@ -86,7 +86,7 @@ public class Publication : BaseEntity, ITimeable
 	public int? GameGoalId { get; set; }
 	public GameGoal? GameGoal { get; set; }
 
-	public string GenerateTitle(bool isYouTubeTitle)
+	public string GenerateTitle(bool isYouTubeTitle = false)
 	{
 		var authorList = Authors
 			.OrderBy(sa => sa.Ordinal)

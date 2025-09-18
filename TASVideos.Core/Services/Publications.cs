@@ -239,7 +239,7 @@ internal class Publications(
 			})
 			.ToListAsync());
 
-		publication.Title = publication.GenerateTitle(false);
+		publication.Title = publication.GenerateTitle();
 
 		// Handle flags with permission filtering
 		List<int> editableFlags = await db.Flags
@@ -297,7 +297,7 @@ internal class Publications(
 					publication.CreateTimestamp,
 					url.Url!,
 					url.DisplayName,
-					publication.GenerateTitle(true),
+					publication.GenerateTitleGenerateTitle(true),
 					pageToSync!,
 					publication.System!.Code,
 					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
