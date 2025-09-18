@@ -46,6 +46,15 @@ public class CelTasTests : BaseParserTests
 	}
 
 	[TestMethod]
+	public async Task TotalRerecordCount()
+	{
+		var result = await _celtasParser.Parse(Embedded("2465ms_Integrated.celtas", out var length), length);
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(15, result.RerecordCount);
+	}
+
+	[TestMethod]
 	public async Task Length()
 	{
 		var result = await _celtasParser.Parse(Embedded("2465ms.celtas", out var length), length);

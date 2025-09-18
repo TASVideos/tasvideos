@@ -11,6 +11,7 @@ internal class CelTas : Parser, IParser
 	private const int IGTFrameRate = 1000;
 
 	private const string FileTimeHeader = "FileTime: ";
+	private const string TotalRerecordCountHeader = "TotalRecordCount: ";
 	private const string RerecordCountHeader = "RecordCount: ";
 
 	public async Task<IParseResult> Parse(Stream file, long length)
@@ -22,6 +23,7 @@ internal class CelTas : Parser, IParser
 		};
 
 		var fileTimeFound = 0;
+		var totalRecordCountUsed = false;
 
 		using var reader = new StreamReader(file);
 		while (await reader.ReadLineAsync() is { } s)
@@ -74,7 +76,22 @@ internal class CelTas : Parser, IParser
 				}
 			}
 
-			if (s.StartsWith(RerecordCountHeader))
+			if (s.StartsWith(TotalRerecordCountHeader))
+			{
+				var split = s.SplitWithEmpty(":");
+				if (split.Length > 1)
+				{
+					var intStr = split.Skip(1).First();
+					var test = int.TryParse(intStr, out int val);
+					if (test)
+					{
+						totalRecordCountUsed = true;
+						result.RerecordCount = val;
+					}
+				}
+			}
+
+			if (s.StartsWith(RerecordCountHeader) && !totalRecordCountUsed)
 			{
 				if (string.IsNullOrWhiteSpace(s))
 				{
