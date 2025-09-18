@@ -297,7 +297,7 @@ internal class Publications(
 					publication.CreateTimestamp,
 					url.Url!,
 					url.DisplayName,
-					publication.GenerateTitleGenerateTitle(true),
+					publication.GenerateTitle(true),
 					pageToSync!,
 					publication.System!.Code,
 					publication.Authors.OrderBy(pa => pa.Ordinal).Select(a => a.Author!.UserName),
