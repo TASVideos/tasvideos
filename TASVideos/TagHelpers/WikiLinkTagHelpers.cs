@@ -74,10 +74,19 @@ public class ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : AnchorTagHelpe
 {
 	public string? Username { get; set; }
 
-	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
-		var innerContent = await output.GetChildContentAsync();
-		if (innerContent.IsEmptyOrWhiteSpace)
+		var task = output.GetChildContentAsync();
+		task.Wait();
+		SetOutput(context, output, innerContentIsBlank: task.Result.IsEmptyOrWhiteSpace);
+	}
+
+	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+		=> SetOutput(context, output, innerContentIsBlank: (await output.GetChildContentAsync()).IsEmptyOrWhiteSpace);
+
+	private void SetOutput(TagHelperContext context, TagHelperOutput output, bool innerContentIsBlank)
+	{
+		if (innerContentIsBlank)
 		{
 			output.Content.Clear();
 			output.Content.Append(Username ?? "");
@@ -86,6 +95,6 @@ public class ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : AnchorTagHelpe
 		output.TagName = "a";
 		Page = "/Users/Profile";
 		RouteValues.Add("UserName", Username);
-		await base.ProcessAsync(context, output);
+		base.Process(context, output);
 	}
 }
