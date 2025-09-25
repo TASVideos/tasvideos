@@ -20,7 +20,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#123: 's NES Super Mario Bros. in 00:01.67", submission.Title);
+		Assert.AreEqual("#123: 's NES Super Mario Bros. in 00:01.667", submission.Title);
 	}
 
 	[TestMethod]
@@ -45,7 +45,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#456: AuthorOne's NES The Legend of Zelda in 01:00.00", submission.Title);
+		Assert.AreEqual("#456: AuthorOne's NES The Legend of Zelda in 01:00.000", submission.Title);
 	}
 
 	[TestMethod]
@@ -80,7 +80,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#789: AuthorOne, AuthorTwo & AuthorThree's NES Metroid in 00:30.00", submission.Title);
+		Assert.AreEqual("#789: AuthorOne, AuthorTwo & AuthorThree's NES Metroid in 00:30.000", submission.Title);
 	}
 
 	[TestMethod]
@@ -106,7 +106,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#101: RegisteredUser, UnregisteredUser1 &  UnregisteredUser2's NES Castlevania in 00:40.00", submission.Title);
+		Assert.AreEqual("#101: RegisteredUser, UnregisteredUser1 &  UnregisteredUser2's NES Castlevania in 00:40.000", submission.Title);
 	}
 
 	[TestMethod]
@@ -128,7 +128,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#202: 's SNES Official Game Display Name in 00:19.97", submission.Title);
+		Assert.AreEqual("#202: 's SNES Official Game Display Name in 00:19.967", submission.Title);
 	}
 
 	[TestMethod]
@@ -154,7 +154,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#303: 's GB Version Specific Title in 00:10.05", submission.Title);
+		Assert.AreEqual("#303: 's GB Version Specific Title in 00:10.046", submission.Title);
 	}
 
 	[TestMethod]
@@ -172,7 +172,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#404: 's SNES Super Metroid \"low%\" in 01:19.87", submission.Title);
+		Assert.AreEqual("#404: 's SNES Super Metroid \"low%\" in 01:19.868", submission.Title);
 	}
 
 	[TestMethod]
@@ -194,7 +194,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#505: 's GEN Sonic the Hedgehog \"game end glitch\" in 00:40.05", submission.Title);
+		Assert.AreEqual("#505: 's GEN Sonic the Hedgehog \"game end glitch\" in 00:40.052", submission.Title);
 	}
 
 	[TestMethod]
@@ -216,7 +216,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#606: 's NES Mega Man in 00:50.00", submission.Title);
+		Assert.AreEqual("#606: 's NES Mega Man in 00:50.000", submission.Title);
 	}
 
 	[TestMethod]
@@ -232,7 +232,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#707: 's Unknown Test Game in 00:30.00", submission.Title);
+		Assert.AreEqual("#707: 's Unknown Test Game in 00:30.000", submission.Title);
 	}
 
 	[TestMethod]
@@ -267,7 +267,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#909: First, Second & Third's NES Test Game in 00:30.00", submission.Title);
+		Assert.AreEqual("#909: First, Second & Third's NES Test Game in 00:30.000", submission.Title);
 	}
 
 	[TestMethod]
@@ -284,7 +284,7 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#1010: 's NES Long Game in 2:00:00.00", submission.Title);
+		Assert.AreEqual("#1010: 's NES Long Game in 2:00:00.000", submission.Title);
 	}
 
 	[TestMethod]
@@ -301,6 +301,6 @@ public class SubmissionTests
 
 		submission.GenerateTitle();
 
-		Assert.AreEqual("#1111: 's NES Very Long Game in 1:00:00:00.00", submission.Title);
+		Assert.AreEqual("#1111: 's NES Very Long Game in 1:00:00:00.000", submission.Title);
 	}
 }
