@@ -110,10 +110,8 @@ public class IndexModelTests : TestDbBase
 	{
 		_gameSystemService.GetAll().Returns([]);
 
-		var system = new GameSystem { Code = "NES" };
-		_db.GameSystems.Add(system);
-		var game = new Game { DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var system = _db.GameSystems.Add(new GameSystem { Code = "NES" }).Entity;
+		var game = _db.Games.Add(new Game { DisplayName = "Test Game" }).Entity;
 		var user = _db.AddUser("TestUser").Entity;
 		_db.Submissions.Add(new Submission
 		{

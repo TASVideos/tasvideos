@@ -18,9 +18,7 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnGet_WithNonExistentId_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var result = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -30,14 +28,9 @@ public class CatalogModelTests : TestDbBase
 		var system = _db.AddGameSystem("NES").Entity;
 		var game = _db.AddGame("SMB").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test-movie.bk2",
-			System = system,
-			Game = game,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
+		userFile.System = system;
+		userFile.Game = game;
 		await _db.SaveChangesAsync();
 		_page.Id = userFile.Id;
 
@@ -47,7 +40,7 @@ public class CatalogModelTests : TestDbBase
 		Assert.AreEqual(userFile.Id, _page.UserFile.Id);
 		Assert.AreEqual(system.Id, _page.UserFile.System);
 		Assert.AreEqual(game.Id, _page.UserFile.Game);
-		Assert.AreEqual("test-movie.bk2", _page.UserFile.Filename);
+		Assert.AreEqual("test.bk2", _page.UserFile.Filename);
 		Assert.AreEqual("TestAuthor", _page.UserFile.AuthorName);
 		Assert.IsTrue(_page.AvailableSystems.Count > 0);
 		Assert.IsTrue(_page.AvailableGames.Count > 0);
@@ -57,15 +50,7 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnGet_WithValidIdButNoGameOrSystem_Loads()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "uncategorized.bk2",
-			SystemId = null,
-			GameId = null,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author, "uncategorized.bk2").Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = userFile.Id;
@@ -87,30 +72,13 @@ public class CatalogModelTests : TestDbBase
 	{
 		_db.AddGameSystem("NES");
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Author = author,
-			Class = UserFileClass.Movie,
-			Content = "content"u8.ToArray(),
-			Length = 100
-		};
-		_db.UserFiles.Add(userFile);
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_page, user, [PermissionTo.CatalogMovies]);
 
 		_page.Id = userFile.Id;
-		_page.UserFile = new CatalogModel.Catalog
-		{
-			Id = userFile.Id,
-			System = null, // Invalid - required field
-			Game = null,
-			Filename = "test.bk2",
-			AuthorName = "TestAuthor"
-		};
 		_page.ModelState.AddModelError("System", "System is required");
 
 		var result = await _page.OnPost();
@@ -151,17 +119,9 @@ public class CatalogModelTests : TestDbBase
 		var game2 = _db.AddGame("New Game").Entity;
 
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			System = system1,
-			Game = game1,
-			Author = author,
-			Class = UserFileClass.Movie,
-			Content = "content"u8.ToArray(),
-			Length = 100
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
+		userFile.System = system1;
+		userFile.Game = game1;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
@@ -198,17 +158,9 @@ public class CatalogModelTests : TestDbBase
 		var system = _db.AddGameSystem("NES").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			System = system,
-			Game = game,
-			Author = author,
-			Class = UserFileClass.Movie,
-			Content = "content"u8.ToArray(),
-			Length = 100
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
+		userFile.System = system;
+		userFile.Game = game;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
@@ -241,17 +193,9 @@ public class CatalogModelTests : TestDbBase
 		var system = _db.AddGameSystem("NES").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			System = system,
-			Game = game,
-			Author = author,
-			Class = UserFileClass.Movie,
-			Content = "content"u8.ToArray(),
-			Length = 100
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
+		userFile.System = system;
+		userFile.Game = game;
 		await _db.SaveChangesAsync();
 
 		var user = _db.AddUser("TestUser").Entity;
@@ -283,15 +227,7 @@ public class CatalogModelTests : TestDbBase
 	{
 		_db.AddGameSystem("NES");
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			SystemId = null,
-			GameId = null,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = userFile.Id;
@@ -316,17 +252,9 @@ public class CatalogModelTests : TestDbBase
 		var system = _db.AddGameSystem("NES").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			System = system,
-			Game = game,
-			Author = author,
-			Class = UserFileClass.Movie,
-			Content = "content"u8.ToArray(),
-			Length = 100
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
+		userFile.System = system;
+		userFile.Game = game;
 		await _db.SaveChangesAsync();
 
 		_page.Id = userFile.Id;

@@ -60,13 +60,11 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 			return BackToList();
 		}
 
-		var gameGoal = new GameGoal
+		var gameGoal = db.GameGoals.Add(new GameGoal
 		{
 			GameId = GameId,
 			DisplayName = goalToCreate
-		};
-
-		db.GameGoals.Add(gameGoal);
+		}).Entity;
 
 		SetMessage(await db.TrySaveChanges(), $"Goal {goalToCreate} created successfully", $"Unable to create goal {goalToCreate}");
 		return string.IsNullOrWhiteSpace(Request.ReturnUrl())

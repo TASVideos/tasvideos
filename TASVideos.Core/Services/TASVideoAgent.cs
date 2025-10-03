@@ -15,7 +15,7 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 {
 	public async Task<int> PostSubmissionTopic(int submissionId, string title)
 	{
-		var poll = new ForumPoll
+		var poll = db.ForumPolls.Add(new ForumPoll
 		{
 			Question = SiteGlobalConstants.PollQuestion,
 			PollOptions =
@@ -24,20 +24,20 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 				new() { Text = SiteGlobalConstants.PollOptionYes, Ordinal = 1 },
 				new() { Text = SiteGlobalConstants.PollOptionsMeh, Ordinal = 2 }
 			]
-		};
+		}).Entity;
 
 		// Create Topic in workbench
-		var topic = new ForumTopic
+		var topic = db.ForumTopics.Add(new ForumTopic
 		{
 			ForumId = ForumConstants.WorkBenchForumId,
 			Title = title,
 			PosterId = SiteGlobalConstants.TASVideoAgentId,
 			SubmissionId = submissionId,
 			Poll = poll
-		};
+		}).Entity;
 
 		// Create first post
-		var post = new ForumPost
+		var post = db.ForumPosts.Add(new ForumPost
 		{
 			Topic = topic,
 			ForumId = ForumConstants.WorkBenchForumId,
@@ -46,11 +46,8 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 			EnableHtml = false,
 			EnableBbCode = true,
 			PosterMood = ForumPostMood.Normal
-		};
+		}).Entity;
 
-		db.ForumPolls.Add(poll);
-		db.ForumTopics.Add(topic);
-		db.ForumPosts.Add(post);
 		await db.SaveChangesAsync();
 
 		poll.TopicId = topic.Id;
@@ -58,7 +55,6 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 
 		forumService.CacheLatestPost(
 			ForumConstants.WorkBenchForumId,
-			topic.Id,
 			new LatestPost(post.Id, post.CreateTimestamp, SiteGlobalConstants.TASVideoAgent));
 		forumService.CacheNewPostActivity(post.ForumId, topic.Id, post.Id, post.CreateTimestamp);
 

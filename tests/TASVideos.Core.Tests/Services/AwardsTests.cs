@@ -402,14 +402,12 @@ public class AwardsTests : TestDbBase
 
 	private Award CreateAuthorAward()
 	{
-		var award = new Award
+		var award = _db.Awards.Add(new Award
 		{
 			ShortName = "UserAward",
 			Description = "User Award",
 			Type = AwardType.User
-		};
-
-		_db.Awards.Add(award);
+		}).Entity;
 		_db.SaveChanges();
 		return award;
 	}
@@ -435,14 +433,12 @@ public class AwardsTests : TestDbBase
 
 	private Award CreatePublicationAward()
 	{
-		var award = new Award
+		var award = _db.Awards.Add(new Award
 		{
 			ShortName = "PublicationAward",
 			Description = "Publication Award",
 			Type = AwardType.Movie
-		};
-
-		_db.Awards.Add(award);
+		}).Entity;
 		_db.SaveChanges();
 		return award;
 	}

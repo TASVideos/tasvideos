@@ -28,28 +28,19 @@ public class EditModelTests : TestDbBase
 		var system = _db.AddGameSystem("NES").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test-movie.bk2",
-			Title = "Test Movie Title",
-			Description = "Test movie description",
-			System = system,
-			Game = game,
-			Author = author,
-			Hidden = false,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author, title: "Title", description: "Description").Entity;
+		userFile.System = system;
+		userFile.Game = game;
 		await _db.SaveChangesAsync();
 
-		// Set up user as author
 		AddAuthenticatedUser(_page, author, []);
 		_page.Id = userFile.Id;
 
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual("Test Movie Title", _page.UserFile.Title);
-		Assert.AreEqual("Test movie description", _page.UserFile.Description);
+		Assert.AreEqual("Title", _page.UserFile.Title);
+		Assert.AreEqual("Description", _page.UserFile.Description);
 		Assert.AreEqual(system.Id, _page.UserFile.System);
 		Assert.AreEqual(game.Id, _page.UserFile.Game);
 		Assert.IsFalse(_page.UserFile.Hidden);
@@ -64,26 +55,17 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var editor = _db.AddUser("FileEditor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Title = "Original Title",
-			Description = "Original description",
-			Author = author,
-			Hidden = true,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddHiddenUserFile(author, "test.bk2", "Title", "Description").Entity;
 		await _db.SaveChangesAsync();
 
-		// Set up user with edit permission but not as author
 		AddAuthenticatedUser(_page, editor, [PermissionTo.EditUserFiles]);
 		_page.Id = userFile.Id;
 
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual("Original Title", _page.UserFile.Title);
-		Assert.AreEqual("Original description", _page.UserFile.Description);
+		Assert.AreEqual("Title", _page.UserFile.Title);
+		Assert.AreEqual("Description", _page.UserFile.Description);
 		Assert.IsTrue(_page.UserFile.Hidden);
 		Assert.AreEqual(author.Id, _page.UserFile.UserId);
 		Assert.AreEqual("FileAuthor", _page.UserFile.UserName);
@@ -94,14 +76,9 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Author = author
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author, "test.bk2").Entity;
 		await _db.SaveChangesAsync();
 
-		// Set up user without permission and not as author
 		AddAuthenticatedUser(_page, otherUser, []);
 		_page.Id = userFile.Id;
 
@@ -115,14 +92,8 @@ public class EditModelTests : TestDbBase
 	{
 		var system = _db.AddGameSystem("NES").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			SystemId = system.Id,
-			GameId = null,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author, "test.bk2").Entity;
+		userFile.System = system;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -141,14 +112,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnGet_WithNoSystemOrGame_LoadsSystemsOnlyDropdown()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			SystemId = null,
-			GameId = null,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author, "test.bk2").Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -167,12 +131,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_InvalidModelState_ReturnsPage()
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -195,9 +154,7 @@ public class EditModelTests : TestDbBase
 	public async Task OnPost_UserFileNotFound_ReturnsNotFound()
 	{
 		_page.Id = 999; // Non-existent ID
-
 		var result = await _page.OnPost();
-
 		Assert.IsInstanceOfType<NotFoundResult>(result);
 	}
 
@@ -206,12 +163,7 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		// Set up user without permission and not as author
@@ -234,21 +186,13 @@ public class EditModelTests : TestDbBase
 	{
 		var system1 = _db.AddGameSystem("NES").Entity;
 		var system2 = _db.GameSystems.Add(new GameSystem { Id = 2, Code = "SNES" }).Entity;
-		var game1 = new Game { Id = 1, DisplayName = "Original Game" };
+		var game1 = _db.AddGame("Original Game").Entity;
 		var game2 = new Game { Id = 2, DisplayName = "New Game" };
 		_db.Games.AddRange(game1, game2);
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Title = "Original Title",
-			Description = "Original description",
-			SystemId = system1.Id,
-			GameId = game1.Id,
-			Hidden = false,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author, "test.bk2", "Original Title", "Original description").Entity;
+		userFile.System = system1;
+		userFile.Game = game1;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -285,15 +229,7 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("FileAuthor").Entity;
 		var editor = _db.AddUser("FileEditor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Title = "Original Title",
-			Description = "Original description",
-			Hidden = false,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, editor, [PermissionTo.EditUserFiles]);
@@ -320,18 +256,10 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_UpdateToNullSystemAndGame_ClearsAssociations()
 	{
-		var system = _db.AddGameSystem("NES").Entity;
-		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Title = "Test Title",
-			System = system,
-			Game = game,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
+		userFile.System = _db.AddGameSystem("NES").Entity;
+		userFile.Game = _db.AddGame("Test Game").Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -349,7 +277,6 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 
-		// Verify the update
 		var updatedFile = await _db.UserFiles.FindAsync(userFile.Id);
 		Assert.IsNotNull(updatedFile);
 		Assert.IsNull(updatedFile.SystemId);
@@ -361,16 +288,7 @@ public class EditModelTests : TestDbBase
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
 		await _db.SaveChangesAsync();
-
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			Title = "Same Title",
-			Description = "Same description",
-			Hidden = false,
-			AuthorId = author.Id,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author, "test.bk2", "Same Title", "Same description").Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -400,14 +318,7 @@ public class EditModelTests : TestDbBase
 	{
 		_db.AddGameSystem("NES");
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = new UserFile
-		{
-			FileName = "test.bk2",
-			SystemId = null,
-			Author = author,
-			Class = UserFileClass.Movie
-		};
-		_db.UserFiles.Add(userFile);
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -425,14 +336,9 @@ public class EditModelTests : TestDbBase
 		var system = _db.AddGameSystem("NES").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 		var author = _db.AddUser("TestAuthor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			FileName = "test.bk2",
-			System = system,
-			Game = game,
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
+		userFile.System = system;
+		userFile.Game = game;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);

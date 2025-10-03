@@ -1,7 +1,6 @@
 ﻿using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Settings;
-using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games;
 using TASVideos.Services;
 
@@ -47,18 +46,15 @@ public class EditModelTests : BasePageModelTests
 		var genre1 = _db.AddGenre().Entity;
 		var genre2 = _db.AddGenre("Platformer").Entity;
 		var group1 = _db.AddGameGroup("Mario Series").Entity;
-		var game = _db.Games.Add(new Game
-		{
-			DisplayName = "Test Game",
-			Abbreviation = "TG",
-			Aliases = "TestAlias,GameAlias",
-			ScreenshotUrl = "https://example.com/screenshot.png",
-			GameResourcesPage = "TestGameResources"
-		}).Entity;
 
-		_db.GameGenres.Add(new GameGenre { Game = game, Genre = genre1 });
-		_db.GameGenres.Add(new GameGenre { Game = game, Genre = genre2 });
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = group1 });
+		var game = _db.AddGame("Test Game", "TG").Entity;
+		game.Aliases = "TestAlias,GameAlias";
+		game.ScreenshotUrl = "https://example.com/screenshot.png";
+		game.GameResourcesPage = "TestGameResources";
+
+		_db.AttachGenre(game, genre1);
+		_db.AttachGenre(game, genre2);
+		_db.AttachToGroup(game, group1);
 		await _db.SaveChangesAsync();
 
 		_model.Id = game.Id;
@@ -213,17 +209,13 @@ public class EditModelTests : BasePageModelTests
 		var group1 = _db.AddGameGroup("Old Series").Entity;
 		var group2 = _db.AddGameGroup("New Series").Entity;
 
-		var game = _db.Games.Add(new Game
-		{
-			DisplayName = "Original Game",
-			Abbreviation = "OG",
-			Aliases = "OriginalAlias",
-			ScreenshotUrl = "https://example.com/original.png",
-			GameResourcesPage = "OriginalResources"
-		}).Entity;
+		var game = _db.AddGame("Original Game", "OG").Entity;
+		game.Aliases = "OriginalAlias";
+		game.ScreenshotUrl = "https://example.com/original.png";
+		game.GameResourcesPage = "OriginalResources";
 
-		_db.GameGenres.Add(new GameGenre { Game = game, Genre = genre1 });
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = group1 });
+		_db.AttachGenre(game, genre1);
+		_db.AttachToGroup(game, group1);
 		await _db.SaveChangesAsync();
 
 		_model.Id = game.Id;
@@ -325,7 +317,7 @@ public class EditModelTests : BasePageModelTests
 		var user = _db.AddUser("RegularUser").Entity;
 		AddAuthenticatedUser(_model, user, []); // No delete permission
 
-		var game = _db.Games.Add(new Game { DisplayName = "Test Game" }).Entity;
+		var game = _db.AddGame().Entity;
 		await _db.SaveChangesAsync();
 
 		_model.Id = game.Id;

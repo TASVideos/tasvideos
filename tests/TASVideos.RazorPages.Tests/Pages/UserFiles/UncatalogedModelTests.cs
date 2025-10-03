@@ -18,8 +18,7 @@ public class UncatalogedModelTests : TestDbBase
 	public async Task OnGet_LoadsPublicUncatalogedFiles()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
+		var system = _db.GameSystems.Add(new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" }).Entity;
 
 		var uncatalogedFile = new UserFile
 		{
@@ -28,13 +27,12 @@ public class UncatalogedModelTests : TestDbBase
 			Title = "Uncataloged File",
 			Author = user,
 			Hidden = false,
-			SystemId = system.Id,
+			System = system,
 			GameId = null,
 			UploadTimestamp = DateTime.UtcNow.AddDays(-1)
 		};
 
-		var game = new Game { Id = 1, DisplayName = "Test Game" };
-		_db.Games.Add(game);
+		var game = _db.Games.Add(new Game { Id = 1, DisplayName = "Test Game" }).Entity;
 
 		var catalogedFile = new UserFile
 		{
@@ -43,8 +41,8 @@ public class UncatalogedModelTests : TestDbBase
 			Title = "Cataloged File",
 			Author = user,
 			Hidden = false,
-			SystemId = system.Id,
-			GameId = game.Id,
+			System = system,
+			Game = game,
 			UploadTimestamp = DateTime.UtcNow.AddDays(-2)
 		};
 
@@ -65,8 +63,7 @@ public class UncatalogedModelTests : TestDbBase
 	public async Task OnGet_ExcludesHiddenFiles()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-		var system = new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" };
-		_db.GameSystems.Add(system);
+		var system = _db.GameSystems.Add(new GameSystem { Id = 1, Code = "NES", DisplayName = "Nintendo Entertainment System" }).Entity;
 
 		var publicFile = new UserFile
 		{
@@ -75,7 +72,7 @@ public class UncatalogedModelTests : TestDbBase
 			Title = "Public File",
 			Author = user,
 			Hidden = false,
-			SystemId = system.Id,
+			System = system,
 			GameId = null,
 			UploadTimestamp = DateTime.UtcNow
 		};
@@ -87,7 +84,7 @@ public class UncatalogedModelTests : TestDbBase
 			Title = "Hidden File",
 			Author = user,
 			Hidden = true,
-			SystemId = system.Id,
+			System = system,
 			GameId = null,
 			UploadTimestamp = DateTime.UtcNow
 		};
@@ -105,8 +102,7 @@ public class UncatalogedModelTests : TestDbBase
 	public async Task OnGet_HandlesFilesWithoutSystem()
 	{
 		var user = _db.AddUser("TestUser").Entity;
-
-		var fileWithoutSystem = new UserFile
+		_db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "NoSystem.lua",
@@ -114,9 +110,7 @@ public class UncatalogedModelTests : TestDbBase
 			Author = user,
 			SystemId = null,
 			GameId = null
-		};
-
-		_db.UserFiles.Add(fileWithoutSystem);
+		});
 		await _db.SaveChangesAsync();
 
 		await _page.OnGet();

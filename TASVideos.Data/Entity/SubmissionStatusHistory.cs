@@ -14,11 +14,9 @@ public class SubmissionStatusHistory : BaseEntity
 public static class SubmissionStatusHistoryExtensions
 {
 	public static EntityEntry<SubmissionStatusHistory> Add(this DbSet<SubmissionStatusHistory> history, int submissionId, SubmissionStatus status)
-	{
-		return history.Add(new SubmissionStatusHistory
+		=> history.Add(new SubmissionStatusHistory
 		{
 			SubmissionId = submissionId,
 			Status = status
 		});
-	}
 }

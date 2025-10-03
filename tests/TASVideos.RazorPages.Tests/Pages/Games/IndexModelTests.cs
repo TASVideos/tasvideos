@@ -118,7 +118,7 @@ public class IndexModelTests : TestDbBase
 	{
 		var game = _db.AddGame("Test Game").Entity;
 		var group = _db.AddGameGroup("Test Series").Entity;
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = group });
+		_db.AttachToGroup(game, group);
 		await _db.SaveChangesAsync();
 
 		_model.Id = game.Id.ToString();

@@ -43,7 +43,7 @@ internal class PublicationsRequest : ApiRequest, IPublicationTokens
 
 	ICollection<string> IPublicationTokens.SystemCodes => Systems.CsvToStrings();
 	ICollection<string> IPublicationTokens.Classes => ClassNames.CsvToStrings();
-	ICollection<int> IPublicationTokens.Years => StartYear.YearRange(EndYear).ToList();
+	ICollection<int> IPublicationTokens.Years => [.. StartYear.YearRange(EndYear)];
 	ICollection<string> IPublicationTokens.Genres => GenreNames.CsvToStrings();
 	ICollection<string> IPublicationTokens.Tags => TagNames.CsvToStrings();
 	ICollection<string> IPublicationTokens.Flags => FlagNames.CsvToStrings();

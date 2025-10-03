@@ -2,9 +2,7 @@
 
 namespace TASVideos.Core;
 
-public interface IRequest : IPageable, ISortable
-{
-}
+public interface IRequest : IPageable, ISortable;
 
 public interface IPaged<out T>
 	where T : IRequest

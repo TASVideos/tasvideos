@@ -29,20 +29,16 @@ public class IndexModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnGet_SingleClass_SetsClassesCorrectly()
 	{
-		var publicationClass = new PublicationClass
-		{
-			Id = 1,
-			Name = "Test Class",
-			IconPath = "/icons/test.png",
-			Link = "test-link"
-		};
-		_classService.GetAll().Returns([publicationClass]);
+		var pubClass = _db.AddPublicationClass("Test Class").Entity;
+		pubClass.IconPath = "/icons/test.png";
+		pubClass.Link = "test-link";
+
+		_classService.GetAll().Returns([pubClass]);
 
 		await _model.OnGet();
 
 		Assert.AreEqual(1, _model.Classes.Count);
 		var retrievedClass = _model.Classes.First();
-		Assert.AreEqual(1, retrievedClass.Id);
 		Assert.AreEqual("Test Class", retrievedClass.Name);
 		Assert.AreEqual("/icons/test.png", retrievedClass.IconPath);
 		Assert.AreEqual("test-link", retrievedClass.Link);

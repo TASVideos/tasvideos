@@ -112,16 +112,14 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	public EntityEntry<User> AddUser(int id, string userName)
 	{
 		var email = userName + "@example.com";
-		var user = new User
+		return Users.Add(new User
 		{
 			Id = id,
 			UserName = userName,
 			NormalizedUserName = userName.ToUpper(),
 			Email = email,
 			NormalizedEmail = email.ToUpper()
-		};
-
-		return Users.Add(user);
+		});
 	}
 
 	public EntityEntry<User> AddUserWithRole(string userName, string? roleName = null)
@@ -187,28 +185,19 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	}
 
 	public EntityEntry<Submission> AddSubmission(User? submitter = null)
-	{
-		submitter ??= AddUser(0).Entity;
-		var submission = new Submission
+		=> Submissions.Add(new Submission
 		{
-			Submitter = submitter
-		};
-		return Submissions.Add(submission);
-	}
+			Submitter = submitter ?? AddUser(0).Entity
+		});
 
 	public EntityEntry<Publication> AddPublication(User? author = null, PublicationClass? publicationClass = null)
 	{
 		var gameSystemId = (GameSystems.Max(gs => (int?)gs.Id) ?? -1) + 1;
-		var gameSystem = new GameSystem { Id = gameSystemId, Code = gameSystemId.ToString(), DisplayName = gameSystemId.ToString() };
-		GameSystems.Add(gameSystem);
-		var systemFrameRate = new GameSystemFrameRate { GameSystemId = gameSystem.Id };
-		GameSystemFrameRates.Add(systemFrameRate);
-		var game = new Game { DisplayName = "TestGame" };
-		Games.Add(game);
-		var gameVersion = new GameVersion { Game = game, Name = "TestGameVersion", System = gameSystem };
-		GameVersions.Add(gameVersion);
-		var gameGoal = new GameGoal { DisplayName = "baseline", Game = game };
-		GameGoals.Add(gameGoal);
+		var gameSystem = GameSystems.Add(new GameSystem { Id = gameSystemId, Code = gameSystemId.ToString(), DisplayName = gameSystemId.ToString() }).Entity;
+		var systemFrameRate = GameSystemFrameRates.Add(new GameSystemFrameRate { GameSystemId = gameSystem.Id }).Entity;
+		var game = Games.Add(new Game { DisplayName = "TestGame" }).Entity;
+		var gameVersion = GameVersions.Add(new GameVersion { Game = game, Name = "TestGameVersion", System = gameSystem }).Entity;
+		var gameGoal = GameGoals.Add(new GameGoal { DisplayName = "baseline", Game = game }).Entity;
 		var publicationClassId = (PublicationClasses.Max(pc => (int?)pc.Id) ?? -1) + 1;
 		publicationClass ??= new PublicationClass { Id = publicationClassId, Name = publicationClassId.ToString() };
 		PublicationClasses.Add(publicationClass);
@@ -217,7 +206,7 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 		submission.Status = SubmissionStatus.Published;
 		SaveChanges();
 
-		var pub = new Publication
+		var pubRecord = Publications.Add(new Publication
 		{
 			Title = "Test Publication",
 			System = gameSystem,
@@ -228,58 +217,62 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 			PublicationClass = publicationClass,
 			Submission = submission,
 			MovieFileName = submission.Id.ToString()
-		};
-		PublicationAuthors.Add(new PublicationAuthor { Author = author, Publication = pub });
-		var pubRecord = Publications.Add(pub);
+		});
+		PublicationAuthors.Add(new PublicationAuthor { Author = author, Publication = pubRecord.Entity });
 		SaveChanges();
 		return pubRecord;
 	}
 
-	public EntityEntry<Publication> AddPublication(User author)
+	public EntityEntry<Publication> AddPublication(string authorName)
 	{
-		return AddPublication(author, null);
+		var author = AddUser(authorName).Entity;
+		return AddPublication(author);
 	}
 
 	public EntityEntry<Publication> AddPublication(PublicationClass publicationClass)
-	{
-		return AddPublication(null, publicationClass);
-	}
+		=> AddPublication(null, publicationClass);
 
 	public EntityEntry<PublicationUrl> AddStreamingUrl(Publication pub, string? url = null)
-	{
-		return PublicationUrls.Add(new PublicationUrl { Publication = pub, Url = url ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ", Type = PublicationUrlType.Streaming });
-	}
+		=> PublicationUrls.Add(new PublicationUrl { Publication = pub, Url = url ?? "https://www.youtube.com/watch?v=dQw4w9WgXcQ", Type = PublicationUrlType.Streaming });
 
 	public EntityEntry<PublicationUrl> AddMirrorUrl(Publication pub, string url)
-	{
-		return PublicationUrls.Add(new PublicationUrl { Publication = pub, Url = url, Type = PublicationUrlType.Mirror });
-	}
+		=> PublicationUrls.Add(new PublicationUrl { Publication = pub, Url = url, Type = PublicationUrlType.Mirror });
 
-	public EntityEntry<PublicationFile> AddScreenshot(Publication pub, string? path = null)
-	{
-		return PublicationFiles.Add(new PublicationFile
+	public void AddScreenshot(Publication pub, string? path = null)
+		=> PublicationFiles.Add(new PublicationFile
 		{
 			Publication = pub,
 			Type = FileType.Screenshot,
 			Path = path ?? "screenshot.png"
 		});
-	}
 
 	public EntityEntry<PublicationFile> AddMovieFile(Publication pub, string? path = null)
-	{
-		return PublicationFiles.Add(new PublicationFile
+		=> PublicationFiles.Add(new PublicationFile
 		{
 			Publication = pub,
 			Type = FileType.MovieFile,
 			FileData = [0, 1, 2],
 			Path = path ?? "movie.bk2"
 		});
+
+	public EntityEntry<PublicationClass> AddPublicationClass(string name)
+		=> PublicationClasses.Add(new PublicationClass { Name = name });
+
+	public EntityEntry<Tag> AttachTag(Publication pub, string code)
+	{
+		var tag = AddTag(code);
+		PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag.Entity });
+		return tag;
+	}
+
+	public void AttachFlag(Publication pub, string name)
+	{
+		var flag = AddFlag(name).Entity;
+		PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = flag });
 	}
 
 	public EntityEntry<ForumCategory> AddForumCategory(string? title = null)
-	{
-		return ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category", Ordinal = 1 });
-	}
+		=> ForumCategories.Add(new ForumCategory { Title = title ?? "Test Category", Ordinal = 1 });
 
 	public EntityEntry<Forum> AddForum(string? name = null, bool? restricted = null)
 	{
@@ -292,22 +285,18 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	{
 		var user = createdByUser ?? AddUser(0).Entity;
 		var forum = AddForum(null, restricted).Entity;
-		var topic = new ForumTopic { Forum = forum, Poster = user };
-		return ForumTopics.Add(topic);
+		return ForumTopics.Add(new ForumTopic { Forum = forum, Poster = user });
 	}
 
 	public EntityEntry<ForumPost> CreatePostForTopic(ForumTopic topic, User? poster = null)
-	{
-		var user = poster ?? AddUser(0).Entity;
-		return ForumPosts.Add(new ForumPost
+		=> ForumPosts.Add(new ForumPost
 		{
 			Text = "Test post content",
 			Topic = topic,
 			Forum = topic.Forum,
-			Poster = user,
+			Poster = poster ?? AddUser(0).Entity,
 			CreateTimestamp = DateTime.UtcNow
 		});
-	}
 
 	public EntityEntry<ForumPoll> CreatePollForTopic(ForumTopic topic, bool isClosed = false)
 	{
@@ -338,38 +327,62 @@ public class TestDbContext(DbContextOptions<ApplicationDbContext> options, TestD
 	}
 
 	public EntityEntry<ForumPollOptionVote> VoteForOption(ForumPollOption option, User user)
-	{
-		return ForumPollOptionVotes.Add(new ForumPollOptionVote
+		=> ForumPollOptionVotes.Add(new ForumPollOptionVote
 		{
 			PollOption = option,
 			User = user
 		});
-	}
 
 	public EntityEntry<Game> AddGame(string? displayName = null, string? abbreviation = null)
-	{
-		return Games.Add(new Game { DisplayName = displayName ?? "Test Game", Abbreviation = abbreviation });
-	}
+		=> Games.Add(new Game { DisplayName = displayName ?? "Test Game", Abbreviation = abbreviation });
 
 	public EntityEntry<Genre> AddGenre(string? displayName = null)
-	{
-		return Genres.Add(new Genre { DisplayName = displayName ?? "Action" });
-	}
+		=> Genres.Add(new Genre { DisplayName = displayName ?? "Action" });
 
 	public EntityEntry<GameGroup> AddGameGroup(string name, string? abbreviation = null)
-	{
-		return GameGroups.Add(new GameGroup { Name = name, Abbreviation = abbreviation });
-	}
+		=> GameGroups.Add(new GameGroup { Name = name, Abbreviation = abbreviation });
+
+	public void AttachToGroup(Game game, GameGroup group)
+		=> GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = group });
+
+	public void AttachGenre(Game game, Genre genre)
+		=> GameGenres.Add(new GameGenre { Game = game, Genre = genre });
 
 	public EntityEntry<GameGoal> AddGoalForGame(Game game, string? displayName = null)
-	{
-		return GameGoals.Add(new GameGoal { Game = game, DisplayName = displayName ?? "baseline" });
-	}
+		=> GameGoals.Add(new GameGoal { Game = game, DisplayName = displayName ?? "baseline" });
 
+	public EntityEntry<GameVersion> AddGameVersion(string name, GameSystem system, Game game)
+		=> GameVersions.Add(new GameVersion { Name = name, System = system, Game = game });
 	public EntityEntry<GameSystem> AddGameSystem(string code)
-	{
-		return GameSystems.Add(new GameSystem { Code = code });
-	}
+		=> GameSystems.Add(new GameSystem { Code = code });
+
+	public EntityEntry<GameSystemFrameRate> AddFrameRate(GameSystem system, double rate)
+		=> GameSystemFrameRates.Add(new GameSystemFrameRate { System = system, FrameRate = rate });
+
+	public EntityEntry<Tag> AddTag(string code, string? displayName = null)
+		=> Tags.Add(new Tag { Code = code, DisplayName = displayName ?? code });
+
+	public EntityEntry<Flag> AddFlag(string token, string? name = null)
+		=> Flags.Add(new Flag { Token = token, Name = name ?? token });
+
+	public EntityEntry<SubmissionRejectionReason> AddRejectionReason(string reason)
+		=> SubmissionRejectionReasons.Add(new SubmissionRejectionReason { DisplayName = reason });
+
+	public EntityEntry<UserFile> AddPublicUserFile(User author, string? fileName = null, string? title = null, string? description = null)
+		=> AddUserFile(author, fileName, title, description);
+
+	public EntityEntry<UserFile> AddHiddenUserFile(User author, string? fileName = null, string? title = null, string? description = null)
+		=> AddUserFile(author, fileName, title, description, true);
+	private EntityEntry<UserFile> AddUserFile(User author, string? fileName = null, string? title = null, string? description = null, bool hidden = false)
+		=> UserFiles.Add(new UserFile
+		{
+			Author = author,
+			FileName = fileName ?? "test.bk2",
+			Title = title ?? "Test Title",
+			Description = description ?? "Test description",
+			Hidden = hidden,
+			Class = UserFileClass.Movie
+		});
 
 	public void AddForumConstantEntities()
 	{

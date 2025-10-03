@@ -51,7 +51,7 @@ public class LegacyMoviesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_GameNameByAbbreviation_RedirectsToPublicationsWithGameToken()
 	{
-		var game = _db.Games.Add(new Game { Abbreviation = "LOZ" }).Entity;
+		var game =  _db.AddGame(null, "LOZ").Entity;
 		await _db.SaveChangesAsync();
 		_page.Name = game.Abbreviation;
 

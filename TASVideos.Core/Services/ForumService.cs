@@ -6,7 +6,7 @@ public interface IForumService
 {
 	Task<PostPosition?> GetPostPosition(int postId, bool seeRestricted);
 	Task<IReadOnlyCollection<ForumCategoryDisplay>> GetAllCategories();
-	void CacheLatestPost(int forumId, int topicId, LatestPost post);
+	void CacheLatestPost(int forumId, LatestPost post);
 	void CacheNewPostActivity(int forumId, int topicId, int postId, DateTime createTimestamp);
 	void CacheEditedPostActivity(int forumId, int topicId, int postId, DateTime createTimestamp);
 	void ClearLatestPostCache();
@@ -91,7 +91,7 @@ internal class ForumService(
 		return dto;
 	}
 
-	public void CacheLatestPost(int forumId, int topicId, LatestPost post)
+	public void CacheLatestPost(int forumId, LatestPost post)
 	{
 		if (cacheService.TryGetValue(LatestPostCacheKey, out Dictionary<int, LatestPost?> dict))
 		{
@@ -161,7 +161,7 @@ internal class ForumService(
 
 	public async Task CreatePoll(ForumTopic topic, PollCreate pollDto)
 	{
-		var poll = new ForumPoll
+		var poll = db.ForumPolls.Add(new ForumPoll
 		{
 			TopicId = topic.Id,
 			Question = pollDto.Question ?? "",
@@ -169,23 +169,20 @@ internal class ForumService(
 				? DateTime.UtcNow.AddDays(pollDto.DaysOpen.Value)
 				: null,
 			MultiSelect = pollDto.MultiSelect,
-			PollOptions = pollDto.Options
+			PollOptions = [.. pollDto.Options
 				.Select((po, i) => new ForumPollOption
 				{
 					Text = po,
 					Ordinal = i
-				})
-				.ToList()
-		};
-
-		db.ForumPolls.Add(poll);
+				})]
+		}).Entity;
 		topic.Poll = poll;
 		await db.SaveChangesAsync();
 	}
 
 	public async Task<int> CreatePost(PostCreate post)
 	{
-		var forumPost = new ForumPost
+		var forumPost = db.ForumPosts.Add(new ForumPost
 		{
 			ForumId = post.ForumId,
 			TopicId = post.TopicId,
@@ -198,10 +195,9 @@ internal class ForumService(
 			// New posts are always bbcode = true, html = false
 			EnableHtml = false,
 			EnableBbCode = true
-		};
-		db.ForumPosts.Add(forumPost);
+		}).Entity;
 		await db.SaveChangesAsync();
-		CacheLatestPost(post.ForumId, post.TopicId, new LatestPost(forumPost.Id, forumPost.CreateTimestamp, post.PosterName));
+		CacheLatestPost(post.ForumId, new LatestPost(forumPost.Id, forumPost.CreateTimestamp, post.PosterName));
 		CacheNewPostActivity(post.ForumId, post.TopicId, forumPost.Id, forumPost.CreateTimestamp);
 
 		if (post.WatchTopic)

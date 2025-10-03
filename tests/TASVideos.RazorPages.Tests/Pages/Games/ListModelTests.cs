@@ -17,12 +17,11 @@ public class ListModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithValidModel_LoadsGamesAndLists()
 	{
-		var gameSystem = _db.GameSystems.Add(new GameSystem { Code = "NES", DisplayName = "Nintendo Entertainment System" }).Entity;
+		var gameSystem = _db.AddGameSystem("NES").Entity;
 		_db.AddGenre("Action");
 		_db.AddGameGroup("Test Series");
 		var game = _db.AddGame("Test Game").Entity;
-		var gameVersion = new GameVersion { Game = game, System = gameSystem };
-		_db.GameVersions.Add(gameVersion);
+		_db.GameVersions.Add(new GameVersion { Game = game, System = gameSystem });
 		await _db.SaveChangesAsync();
 
 		await _model.OnGet();
@@ -49,8 +48,8 @@ public class ListModelTests : TestDbBase
 		var platformGenre = _db.AddGenre("Platform").Entity;
 		var actionGame = _db.AddGame("Action Game").Entity;
 		var platformGame = _db.AddGame("Platform Game").Entity;
-		_db.GameGenres.Add(new GameGenre { Game = actionGame, Genre = actionGenre });
-		_db.GameGenres.Add(new GameGenre { Game = platformGame, Genre = platformGenre });
+		_db.AttachGenre(actionGame, actionGenre);
+		_db.AttachGenre(platformGame, platformGenre);
 		await _db.SaveChangesAsync();
 
 		_model.Search = new ListModel.GameListRequest { Genre = "Action" };
@@ -68,8 +67,8 @@ public class ListModelTests : TestDbBase
 		var group2 = _db.AddGameGroup("Group 2").Entity;
 		var game1 = _db.AddGame("Game 1").Entity;
 		var game2 = _db.AddGame("Game 2").Entity;
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game1, GameGroup = group1 });
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game2, GameGroup = group2 });
+		_db.AttachToGroup(game1, group1);
+		_db.AttachToGroup(game2, group2);
 		await _db.SaveChangesAsync();
 
 		_model.Search = new ListModel.GameListRequest { Group = "Group 1" };
@@ -112,7 +111,7 @@ public class ListModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_LoadsSystemListWithAnyEntry()
 	{
-		_db.GameSystems.Add(new GameSystem { Code = "NES", DisplayName = "Nintendo Entertainment System" });
+		_db.AddGameSystem("NES");
 		await _db.SaveChangesAsync();
 
 		await _model.OnGet();

@@ -61,7 +61,7 @@ internal class UserFiles(
 	public async Task<(long? Id, IParseResult? ParseResult)> Upload(int userId, UserFileUpload file)
 	{
 		var fileExt = Path.GetExtension(file.FileName);
-		var userFile = new UserFile
+		var userFile = db.UserFiles.Add(new UserFile
 		{
 			Id = DateTime.UtcNow.Ticks,
 			Title = file.Title,
@@ -77,7 +77,7 @@ internal class UserFiles(
 			Type = fileExt.Replace(".", ""),
 			FileName = file.FileName,
 			Hidden = file.Hidden
-		};
+		}).Entity;
 
 		IParseResult? parseResult = null;
 		if (parser.SupportedMovieExtensions.Contains(fileExt))
@@ -126,7 +126,6 @@ internal class UserFiles(
 		userFile.CompressionType = fileResult.Type;
 		userFile.Content = fileResult.Data;
 
-		db.UserFiles.Add(userFile);
 		await db.SaveChangesAsync();
 		return (userFile.Id, parseResult);
 	}

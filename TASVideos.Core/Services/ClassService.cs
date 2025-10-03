@@ -40,19 +40,19 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 	public async Task<(int? Id, ClassEditResult Result)> Add(PublicationClass publicationClass)
 	{
 		var newId = (await db.PublicationClasses.Select(f => f.Id).MaxAsync()) + 1;
-		var entry = db.PublicationClasses.Add(new PublicationClass
+		var pubClass = db.PublicationClasses.Add(new PublicationClass
 		{
 			Id = newId,
 			Name = publicationClass.Name,
 			IconPath = publicationClass.IconPath,
 			Link = publicationClass.Link,
-		});
+		}).Entity;
 
 		try
 		{
 			await db.SaveChangesAsync();
 			cache.Remove(ClassesKey);
-			return (entry.Entity.Id, ClassEditResult.Success);
+			return (pubClass.Id, ClassEditResult.Success);
 		}
 		catch (DbUpdateConcurrencyException)
 		{

@@ -102,8 +102,7 @@ public class EditModel(
 		}
 		else
 		{
-			game = new Game();
-			db.Games.Add(game);
+			game = db.Games.Add(new Game()).Entity;
 			db.GameGoals.Add(new GameGoal
 			{
 				Game = game,

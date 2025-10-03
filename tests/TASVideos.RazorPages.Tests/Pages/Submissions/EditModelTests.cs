@@ -229,11 +229,7 @@ public class EditModelTests : TestDbBase
 			RejectionReason = 1
 		};
 
-		_db.SubmissionRejectionReasons.Add(new SubmissionRejectionReason
-		{
-			Id = 1,
-			DisplayName = "Test Rejection"
-		});
+		_db.AddRejectionReason("Test Rejection");
 		await _db.SaveChangesAsync();
 
 		var judge = _db.AddUser("Judge").Entity;
@@ -278,7 +274,6 @@ public class EditModelTests : TestDbBase
 		var judge = _db.AddUser("Judge").Entity;
 		AddAuthenticatedUser(_page, judge, [PermissionTo.JudgeSubmissions]);
 
-		// Mock the ClaimForJudging method to return success
 		_queueService.ClaimForJudging(submission.Id, judge.Id, judge.UserName)
 			.Returns(ClaimSubmissionResult.Successful(submission.Title));
 
@@ -286,7 +281,6 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
 
-		// Verify that the ClaimForJudging method was called with correct parameters
 		await _queueService.Received(1).ClaimForJudging(submission.Id, judge.Id, judge.UserName);
 	}
 
@@ -313,7 +307,6 @@ public class EditModelTests : TestDbBase
 		var publisher = _db.AddUser("Publisher").Entity;
 		AddAuthenticatedUser(_page, publisher, [PermissionTo.PublishMovies]);
 
-		// Mock the ClaimForPublishing method to return success
 		_queueService.ClaimForPublishing(submission.Id, publisher.Id, publisher.UserName)
 			.Returns(ClaimSubmissionResult.Successful(submission.Title));
 
@@ -321,7 +314,6 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(actual);
 
-		// Verify that the ClaimForPublishing method was called with correct parameters
 		await _queueService.Received(1).ClaimForPublishing(submission.Id, publisher.Id, publisher.UserName);
 	}
 }

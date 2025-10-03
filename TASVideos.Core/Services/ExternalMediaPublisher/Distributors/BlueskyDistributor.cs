@@ -108,10 +108,9 @@ public sealed class BlueskyDistributor(
 
 				body += post.Link;
 
-				int byteStart = bodyLengthUtf8;
-				int byteEnd = byteStart + linkLengthUtf8;
+				int byteEnd = bodyLengthUtf8 + linkLengthUtf8;
 
-				Facets.Add(new BlueskyFacet(byteStart, byteEnd, post.Link));
+				Facets.Add(new BlueskyFacet(bodyLengthUtf8, byteEnd, post.Link));
 			}
 			else
 			{

@@ -91,15 +91,13 @@ public class SplitModel(
 				.ToList();
 		}
 
-		var newTopic = new ForumTopic
+		var newTopic = db.ForumTopics.Add(new ForumTopic
 		{
 			Type = ForumTopicType.Regular,
 			Title = Topic.NewTopicName,
 			PosterId = User.GetUserId(),
 			ForumId = Topic.CreateNewTopicIn
-		};
-
-		db.ForumTopics.Add(newTopic);
+		}).Entity;
 		await db.SaveChangesAsync();
 
 		foreach (var post in postsToSplit)

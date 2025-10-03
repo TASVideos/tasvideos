@@ -45,16 +45,16 @@ internal class GenreService(ApplicationDbContext db, ICacheService cache, ILogge
 
 	public async Task<int?> Add(string displayName)
 	{
-		var entry = db.Genres.Add(new Genre
+		var genre = db.Genres.Add(new Genre
 		{
 			DisplayName = displayName
-		});
+		}).Entity;
 
 		try
 		{
 			await db.SaveChangesAsync();
 			cache.Remove(CacheKey);
-			return entry.Entity.Id;
+			return genre.Id;
 		}
 		catch (DbUpdateException ex)
 		{
@@ -95,7 +95,7 @@ internal class GenreService(ApplicationDbContext db, ICacheService cache, ILogge
 
 		try
 		{
-			var genre = await db.Genres.SingleOrDefaultAsync(g => g.Id == id);
+			var genre = await db.Genres.FindAsync(id);
 			if (genre is null)
 			{
 				return GenreChangeResult.NotFound;

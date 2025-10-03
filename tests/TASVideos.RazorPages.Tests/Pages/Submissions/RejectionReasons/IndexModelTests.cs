@@ -23,11 +23,9 @@ public class IndexModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithRejectionReasons_LoadsReasonsWithSubmissionCounts()
 	{
-		// Create rejection reasons
-		var reason1 = new SubmissionRejectionReason { DisplayName = "Invalid Input" };
-		var reason2 = new SubmissionRejectionReason { DisplayName = "Suboptimal" };
-		var reason3 = new SubmissionRejectionReason { DisplayName = "Bad ROM" };
-		_db.SubmissionRejectionReasons.AddRange(reason1, reason2, reason3);
+		var reason1 = _db.AddRejectionReason("Invalid Input").Entity;
+		var reason2 = _db.AddRejectionReason("Suboptimal").Entity;
+		_db.AddRejectionReason("Bad ROM");
 		await _db.SaveChangesAsync();
 
 		// Create submissions with different statuses
@@ -98,11 +96,7 @@ public class IndexModelTests : TestDbBase
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_model, user, [PermissionTo.RejectionReasonMaintenance]);
 
-		// Create existing reason
-		_db.SubmissionRejectionReasons.Add(new SubmissionRejectionReason
-		{
-			DisplayName = "Existing Reason"
-		});
+		_db.AddRejectionReason("Existing Reason");
 		await _db.SaveChangesAsync();
 
 		var result = await _model.OnPost("Existing Reason");
@@ -144,9 +138,7 @@ public class IndexModelTests : TestDbBase
 		var user = _db.AddUser("TestUser").Entity;
 		AddAuthenticatedUser(_model, user, [PermissionTo.RejectionReasonMaintenance]);
 
-		// Create reason to delete
-		var reason = new SubmissionRejectionReason { DisplayName = "To Delete" };
-		_db.SubmissionRejectionReasons.Add(reason);
+		var reason = _db.AddRejectionReason("To Delete").Entity;
 		await _db.SaveChangesAsync();
 
 		var result = await _model.OnPostDelete(reason.Id);
@@ -155,19 +147,15 @@ public class IndexModelTests : TestDbBase
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("Index", redirect.PageName);
 
-		// Verify deletion
-		var deletedReason = await _db.SubmissionRejectionReasons
-			.SingleOrDefaultAsync(r => r.Id == reason.Id);
+		var deletedReason = await _db.SubmissionRejectionReasons.FindAsync(reason.Id);
 		Assert.IsNull(deletedReason);
 	}
 
 	[TestMethod]
 	public async Task Initialize_PopulatesReasonsCorrectly()
 	{
-		// Create reasons with different submission counts
-		var reason1 = new SubmissionRejectionReason { DisplayName = "Reason 1" };
-		var reason2 = new SubmissionRejectionReason { DisplayName = "Reason 2" };
-		_db.SubmissionRejectionReasons.AddRange(reason1, reason2);
+		var reason1 = _db.AddRejectionReason("Reason 1").Entity;
+		var reason2 = _db.AddRejectionReason("Reason 2").Entity;
 		await _db.SaveChangesAsync();
 
 		// Add submissions for testing counts

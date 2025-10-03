@@ -69,8 +69,7 @@ public class GameSystemServiceTests : TestDbBase
 	public async Task InUse_PublicationExists_ReturnsTrue()
 	{
 		const int systemId = 1;
-		var gameSystem = new GameSystem { Id = systemId };
-		_db.GameSystems.Add(gameSystem);
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Id = systemId }).Entity;
 		var pub = _db.AddPublication().Entity;
 		pub.System = gameSystem;
 		await _db.SaveChangesAsync();
@@ -83,8 +82,7 @@ public class GameSystemServiceTests : TestDbBase
 	public async Task InUse_SubmissionExists_ReturnsTrue()
 	{
 		const int systemId = 1;
-		var gameSystem = new GameSystem { Id = systemId };
-		_db.GameSystems.Add(gameSystem);
+		var gameSystem = _db.GameSystems.Add(new GameSystem { Id = systemId }).Entity;
 		var sub = _db.AddSubmission().Entity;
 		sub.System = gameSystem;
 		await _db.SaveChangesAsync();
@@ -98,8 +96,7 @@ public class GameSystemServiceTests : TestDbBase
 	{
 		const int systemId = 1;
 		const int gameVersionId = 1;
-		var game = new Game();
-		_db.Games.Add(game);
+		var game = _db.Games.Add(new Game()).Entity;
 		_db.GameSystems.Add(new GameSystem { Id = systemId });
 		_db.GameVersions.Add(new GameVersion { Id = gameVersionId, SystemId = systemId, Game = game });
 		await _db.SaveChangesAsync();
@@ -278,8 +275,7 @@ public class GameSystemServiceTests : TestDbBase
 	{
 		const int id = 1;
 		const string code = "Test";
-		var system = new GameSystem { Id = id, Code = code };
-		_db.GameSystems.Add(system);
+		_db.GameSystems.Add(new GameSystem { Id = id, Code = code });
 		await _db.SaveChangesAsync();
 
 		var result = await _systemService.Delete(id);
@@ -292,8 +288,7 @@ public class GameSystemServiceTests : TestDbBase
 	public async Task Delete_InUse_DoesNotFlushesCache()
 	{
 		const int systemId = 1;
-		var system = new GameSystem { Id = systemId, Code = "Test" };
-		_db.GameSystems.Add(system);
+		var system = _db.GameSystems.Add(new GameSystem { Id = systemId, Code = "Test" }).Entity;
 		_cache.Set(GameSystemService.SystemsKey, new object());
 		var pub = _db.AddPublication().Entity;
 		pub.System = system;

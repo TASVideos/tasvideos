@@ -67,10 +67,8 @@ public class PublishModelTests : TestDbBase
 	public async Task OnGetObsoletePublication_ValidId_ReturnsPublicationData()
 	{
 		var pub = _db.AddPublication().Entity;
-		var tag1 = _db.Tags.Add(new Tag { Id = 1, Code = "test1", DisplayName = "Test1" }).Entity;
-		var tag2 = _db.Tags.Add(new Tag { Id = 2, Code = "test2", DisplayName = "Test2" }).Entity;
-		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag1 });
-		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag2 });
+		var tag1 = _db.AttachTag(pub, "test1").Entity;
+		var tag2 = _db.AttachTag(pub, "test2").Entity;
 		await _db.SaveChangesAsync();
 
 		const string expectedMarkup = "Test publication markup content";

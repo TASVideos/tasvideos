@@ -39,20 +39,19 @@ internal class TASVideosGrue(ApplicationDbContext db, IForumService forumService
 				post.ForumId = SiteGlobalConstants.GrueFoodForumId;
 			}
 
-			var entry = db.ForumPosts.Add(new ForumPost
+			var newPost = db.ForumPosts.Add(new ForumPost
 			{
 				TopicId = topic.Id,
 				ForumId = topic.ForumId,
 				PosterId = SiteGlobalConstants.TASVideosGrueId,
 				Text = RejectionMessage(topic.CreateTimestamp),
 				PosterMood = ForumPostMood.Normal
-			});
+			}).Entity;
 			await db.SaveChangesAsync();
 
 			forumService.CacheLatestPost(
 				topic.ForumId,
-				topic.Id,
-				new LatestPost(entry.Entity.Id, entry.Entity.CreateTimestamp, SiteGlobalConstants.TASVideosGrue));
+				new LatestPost(newPost.Id, newPost.CreateTimestamp, SiteGlobalConstants.TASVideosGrue));
 			forumService.ClearTopicActivityCache();
 		}
 	}

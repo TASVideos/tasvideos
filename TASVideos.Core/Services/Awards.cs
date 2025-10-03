@@ -48,30 +48,26 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 	{
 		var allAwards = await AllAwards();
 
-		return allAwards
+		return [.. allAwards
 			.Where(a => a.Users.Select(u => u.Id).Contains(userId))
 			.SelectMany(a => a.Users
 				.Where(u => u.Id == userId)
-				.Select(_ => new AwardAssignmentSummary(a.ShortName, a.Description, a.Year)))
-			.ToList();
+				.Select(_ => new AwardAssignmentSummary(a.ShortName, a.Description, a.Year)))];
 	}
 
 	public async ValueTask<IEnumerable<AwardAssignmentSummary>> ForPublication(int publicationId)
 	{
 		var allAwards = await AllAwards();
 
-		return allAwards
+		return [.. allAwards
 			.Where(a => a.Publications.Select(p => p.Id).Contains(publicationId))
-			.Select(pa => new AwardAssignmentSummary(pa.ShortName, pa.Description, pa.Year))
-			.ToList();
+			.Select(pa => new AwardAssignmentSummary(pa.ShortName, pa.Description, pa.Year))];
 	}
 
 	public async ValueTask<ICollection<AwardAssignment>> ForYear(int year)
 	{
 		var allAwards = await AllAwards();
-		return allAwards
-			.Where(a => a.Year == year)
-			.ToList();
+		return [.. allAwards.Where(a => a.Year == year)];
 	}
 
 	public async Task<bool> AddAwardCategory(AwardType type, string shortName, string description)
@@ -93,9 +89,7 @@ internal class Awards(ApplicationDbContext db, ICacheService cache) : IAwards
 	}
 
 	public Task<bool> CategoryExists(string shortName)
-	{
-		return db.Awards.AnyAsync(a => EF.Functions.Like(a.ShortName, shortName));
-	}
+		=> db.Awards.AnyAsync(a => EF.Functions.Like(a.ShortName, shortName));
 
 	public IQueryable<Award> AwardCategories() => db.Awards.AsQueryable();
 

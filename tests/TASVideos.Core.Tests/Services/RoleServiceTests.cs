@@ -35,8 +35,7 @@ public class RoleServiceTests : TestDbBase
 	{
 		var user = _db.AddUser(1);
 		const int existingRoleId = 1;
-		var role = new Role { Id = existingRoleId, Name = "TestRole" };
-		_db.Roles.Add(role);
+		var role = _db.Roles.Add(new Role { Id = existingRoleId, Name = "TestRole" }).Entity;
 		_db.UserRoles.Add(new UserRole { User = user.Entity, Role = role });
 		await _db.SaveChangesAsync();
 

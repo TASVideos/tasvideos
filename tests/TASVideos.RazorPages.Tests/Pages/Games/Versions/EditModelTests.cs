@@ -334,8 +334,7 @@ public class EditModelTests : TestDbBase
 		var version = _db.GameVersions.Add(new GameVersion { Game = game, Name = "Version", System = system }).Entity;
 		await _db.SaveChangesAsync();
 
-		var submission = new Submission { GameVersionId = version.Id, Submitter = submitter, Title = "Test" };
-		_db.Submissions.Add(submission);
+		_db.Submissions.Add(new Submission { GameVersionId = version.Id, Submitter = submitter, Title = "Test" });
 		await _db.SaveChangesAsync();
 
 		_model.GameId = game.Id;

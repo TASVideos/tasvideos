@@ -323,13 +323,12 @@ public class WikiPagesTests : TestDbBase
 			Referral = oldLink,
 			Referrer = existingPageName
 		});
-		var existingPage = new WikiPage
+		var existingPage = _db.WikiPages.Add(new WikiPage
 		{
 			PageName = existingPageName,
 			Markup = $"[{oldLink}]",
 			AuthorId = authorId
-		};
-		_db.WikiPages.Add(existingPage);
+		}).Entity;
 		await _db.SaveChangesAsync();
 		_cache.AddPage(existingPage);
 

@@ -205,8 +205,7 @@ public class TagServiceTests : TestDbBase
 	public async Task Delete_Success_FlushesCache()
 	{
 		const int id = 1;
-		var tag = new Tag { Id = id };
-		_db.Tags.Add(tag);
+		_db.Tags.Add(new Tag { Id = id });
 		await _db.SaveChangesAsync();
 
 		var result = await _tagService.Delete(id);
@@ -228,8 +227,7 @@ public class TagServiceTests : TestDbBase
 	public async Task Delete_InUse_DoesNotFlushCache()
 	{
 		const int tagId = 1;
-		var tag = new Tag { Id = tagId };
-		_db.Tags.Add(tag);
+		_db.Tags.Add(new Tag { Id = tagId });
 		_cache.Set(TagService.TagsKey, new object());
 		var pub = _db.AddPublication().Entity;
 		_db.PublicationTags.Add(new PublicationTag { Publication = pub, TagId = tagId });

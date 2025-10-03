@@ -68,8 +68,7 @@ public class ClassServiceTests : TestDbBase
 	public async Task InUse_Exists_ReturnsFalse()
 	{
 		const int classId = 1;
-		var publicationClass = new PublicationClass { Id = classId };
-		_db.PublicationClasses.Add(publicationClass);
+		var publicationClass = _db.PublicationClasses.Add(new PublicationClass { Id = classId }).Entity;
 		_db.AddPublication(publicationClass);
 		await _db.SaveChangesAsync();
 
@@ -199,8 +198,7 @@ public class ClassServiceTests : TestDbBase
 	public async Task Delete_Success_FlushesCache()
 	{
 		const int id = 1;
-		var publicationClass = new PublicationClass { Id = id };
-		_db.PublicationClasses.Add(publicationClass);
+		var publicationClass = _db.PublicationClasses.Add(new PublicationClass { Id = id }).Entity;
 		await _db.SaveChangesAsync();
 
 		var result = await _classService.Delete(id);
@@ -222,8 +220,7 @@ public class ClassServiceTests : TestDbBase
 	public async Task Delete_InUse_FlushesNotCache()
 	{
 		const int classId = 1;
-		var publicationClass = new PublicationClass { Id = classId };
-		_db.PublicationClasses.Add(publicationClass);
+		var publicationClass = _db.PublicationClasses.Add(new PublicationClass { Id = classId }).Entity;
 		_cache.Set(ClassService.ClassesKey, new object());
 		_db.AddPublication(publicationClass);
 		await _db.SaveChangesAsync();

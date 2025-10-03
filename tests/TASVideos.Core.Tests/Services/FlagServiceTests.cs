@@ -214,8 +214,7 @@ public class FlagServiceTests : TestDbBase
 	public async Task Delete_Success_FlushesCache()
 	{
 		const int id = 1;
-		var flag = new Flag { Id = id };
-		_db.Flags.Add(flag);
+		_db.Flags.Add(new Flag { Id = id });
 		await _db.SaveChangesAsync();
 
 		var result = await _flagService.Delete(id);
@@ -237,8 +236,7 @@ public class FlagServiceTests : TestDbBase
 	public async Task Delete_InUse_FlushesNotCache()
 	{
 		const int flagId = 1;
-		var flag = new Flag { Id = flagId };
-		_db.Flags.Add(flag);
+		_db.Flags.Add(new Flag { Id = flagId });
 		_cache.Set(FlagService.FlagsKey, new object());
 		var pub = _db.AddPublication().Entity;
 		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, FlagId = flagId });

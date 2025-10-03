@@ -55,7 +55,7 @@ public static class FieldSelectionExtensions
 		}
 
 		var expando = new ExpandoObject();
-		var dict = (IDictionary<string, object?>)expando;
+		IDictionary<string, object?> dict = expando;
 
 		foreach (var column in columns)
 		{
@@ -74,7 +74,7 @@ public static class FieldSelectionExtensions
 	private static ExpandoObject ToExpando<T>(this T obj)
 	{
 		var expando = new ExpandoObject();
-		var dictionary = (IDictionary<string, object?>)expando;
+		IDictionary<string, object?> dictionary = expando;
 
 		if (obj is not null)
 		{

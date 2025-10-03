@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Extensions;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;

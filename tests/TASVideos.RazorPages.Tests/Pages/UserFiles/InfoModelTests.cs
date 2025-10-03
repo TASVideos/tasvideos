@@ -24,7 +24,7 @@ public class InfoModelTests : TestDbBase
 		var author = _db.AddUser("TestAuthor").Entity;
 		var game = _db.AddGame("Test Game").Entity;
 
-		var userFile = new UserFile
+		_db.UserFiles.Add(new UserFile
 		{
 			Id = 1,
 			FileName = "test-movie.bk2",
@@ -36,9 +36,7 @@ public class InfoModelTests : TestDbBase
 			Frames = 7890,
 			Rerecords = 456,
 			Downloads = 10
-		};
-
-		_db.UserFiles.Add(userFile);
+		});
 		await _db.SaveChangesAsync();
 
 		_page.Id = 1;

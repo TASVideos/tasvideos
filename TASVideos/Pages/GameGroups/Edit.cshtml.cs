@@ -83,8 +83,7 @@ public class EditModel(ApplicationDbContext db, IExternalMediaPublisher publishe
 		}
 		else
 		{
-			gameGroup = new GameGroup();
-			db.GameGroups.Add(gameGroup);
+			gameGroup = db.GameGroups.Add(new GameGroup()).Entity;
 		}
 
 		gameGroup.Name = Name;

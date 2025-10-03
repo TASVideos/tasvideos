@@ -26,8 +26,7 @@ public class ReasonModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithValidId_LoadsReasonAndSubmissions()
 	{
-		var reason = new SubmissionRejectionReason { DisplayName = "Test Reason" };
-		_db.SubmissionRejectionReasons.Add(reason);
+		var reason = _db.AddRejectionReason("Test Reason").Entity;
 		await _db.SaveChangesAsync();
 
 		var submission1 = _db.AddSubmission().Entity;
@@ -45,9 +44,7 @@ public class ReasonModelTests : TestDbBase
 		submission3.RejectionReasonId = reason.Id;
 		submission3.Title = "New Submission";
 
-		// rejected submission with different reason (should not appear)
-		var otherReason = new SubmissionRejectionReason { DisplayName = "Other Reason" };
-		_db.SubmissionRejectionReasons.Add(otherReason);
+		var otherReason = _db.AddRejectionReason("Should not appear").Entity;
 		await _db.SaveChangesAsync();
 
 		var submission4 = _db.AddSubmission().Entity;
@@ -79,8 +76,7 @@ public class ReasonModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithValidIdButNoSubmissions_ReturnsEmptyList()
 	{
-		var reason = new SubmissionRejectionReason { DisplayName = "Unused Reason" };
-		_db.SubmissionRejectionReasons.Add(reason);
+		var reason = _db.AddRejectionReason("Unused Reason").Entity;
 		await _db.SaveChangesAsync();
 
 		_model.Id = reason.Id;
@@ -95,29 +91,28 @@ public class ReasonModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_OnlyIncludesRejectedSubmissions()
 	{
-		var reason = new SubmissionRejectionReason { DisplayName = "Test Reason" };
-		_db.SubmissionRejectionReasons.Add(reason);
+		var reason = _db.AddRejectionReason("Test Reason").Entity;
 		await _db.SaveChangesAsync();
 
 		// Create submissions with different statuses
 		var rejectedSubmission = _db.AddSubmission().Entity;
 		rejectedSubmission.Status = SubmissionStatus.Rejected;
-		rejectedSubmission.RejectionReasonId = reason.Id;
+		rejectedSubmission.RejectionReason = reason;
 		rejectedSubmission.Title = "Rejected";
 
 		var newSubmission = _db.AddSubmission().Entity;
 		newSubmission.Status = SubmissionStatus.New;
-		newSubmission.RejectionReasonId = reason.Id;
+		newSubmission.RejectionReason = reason;
 		newSubmission.Title = "New";
 
 		var publishedSubmission = _db.AddSubmission().Entity;
 		publishedSubmission.Status = SubmissionStatus.Published;
-		publishedSubmission.RejectionReasonId = reason.Id;
+		publishedSubmission.RejectionReason = reason;
 		publishedSubmission.Title = "Published";
 
 		var acceptedSubmission = _db.AddSubmission().Entity;
 		acceptedSubmission.Status = SubmissionStatus.Accepted;
-		acceptedSubmission.RejectionReasonId = reason.Id;
+		acceptedSubmission.RejectionReason = reason;
 		acceptedSubmission.Title = "Accepted";
 
 		await _db.SaveChangesAsync();
@@ -135,8 +130,7 @@ public class ReasonModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithMultipleRejectedSubmissions_OrdersCorrectly()
 	{
-		var reason = new SubmissionRejectionReason { DisplayName = "Multiple Submissions" };
-		_db.SubmissionRejectionReasons.Add(reason);
+		var reason = _db.AddRejectionReason("Multiple Submissions").Entity;
 		await _db.SaveChangesAsync();
 
 		// Create multiple rejected submissions
@@ -145,7 +139,7 @@ public class ReasonModelTests : TestDbBase
 		{
 			var submission = _db.AddSubmission().Entity;
 			submission.Status = SubmissionStatus.Rejected;
-			submission.RejectionReasonId = reason.Id;
+			submission.RejectionReason = reason;
 			submission.Title = $"Submission {i}";
 			submissions.Add(submission);
 		}
@@ -184,8 +178,7 @@ public class ReasonModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_WithSpecialCharactersInReasonName_HandlesCorrectly()
 	{
-		var reason = new SubmissionRejectionReason { DisplayName = "Reason with \"quotes\" & <tags>" };
-		_db.SubmissionRejectionReasons.Add(reason);
+		var reason = _db.AddRejectionReason("Reason with \"quotes\" & <tags>").Entity;
 		await _db.SaveChangesAsync();
 
 		_model.Id = reason.Id;

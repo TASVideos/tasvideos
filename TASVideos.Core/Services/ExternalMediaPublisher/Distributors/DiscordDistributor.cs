@@ -44,20 +44,12 @@ public sealed class DiscordDistributor : IPostDistributor
 		}
 		else
 		{
-			if (post.Group == PostGroups.Game)
+			channel = post.Group switch
 			{
-				channel = _settings.PublicGameChannelId;
-			}
-			else if (post.Group is PostGroups.Publication
-					or PostGroups.Submission
-					or PostGroups.UserFiles)
-			{
-				channel = _settings.PublicTasChannelId;
-			}
-			else
-			{
-				channel = _settings.PublicChannelId;
-			}
+				PostGroups.Game => _settings.PublicGameChannelId,
+				PostGroups.Publication or PostGroups.Submission or PostGroups.UserFiles => _settings.PublicTasChannelId,
+				_ => _settings.PublicChannelId
+			};
 		}
 
 		var response = await _client.PostAsync($"channels/{channel}/messages", messageContent);

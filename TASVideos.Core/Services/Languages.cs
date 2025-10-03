@@ -62,9 +62,7 @@ internal class Languages(ApplicationDbContext db, IWikiPages wikiPages, ICacheSe
 			.Select(wp => wp.PageName)
 			.ToListAsync();
 
-		return languages
-			.Where(l => existingPages.Contains(l.Path))
-			.ToList();
+		return [.. languages.Where(l => existingPages.Contains(l.Path))];
 	}
 
 	internal async Task<bool> IsLanguagePage(string? pageName)

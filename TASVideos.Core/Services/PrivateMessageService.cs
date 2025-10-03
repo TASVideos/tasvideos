@@ -154,16 +154,14 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 			return;
 		}
 
-		var message = new PrivateMessage
+		db.PrivateMessages.Add(new PrivateMessage
 		{
 			FromUserId = fromUserId,
 			ToUserId = toUser.Id,
 			Subject = subject,
 			Text = text,
 			EnableBbCode = true
-		};
-
-		db.PrivateMessages.Add(message);
+		});
 		await db.SaveChangesAsync();
 
 		if (toUser.EmailOnPrivateMessage)

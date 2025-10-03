@@ -33,7 +33,7 @@ public class MovieTokens : IPublicationTokens
 {
 	public ICollection<string> SystemCodes { get; init; } = [];
 	public ICollection<string> Classes { get; init; } = [];
-	public ICollection<int> Years { get; init; } = Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1).ToList();
+	public ICollection<int> Years { get; } = [.. Enumerable.Range(2000, DateTime.UtcNow.AddYears(1).Year - 2000 + 1)];
 	public ICollection<string> Tags { get; init; } = [];
 	public ICollection<string> Genres { get; init; } = [];
 	public ICollection<string> Flags { get; init; } = [];

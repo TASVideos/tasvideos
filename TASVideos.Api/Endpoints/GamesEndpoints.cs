@@ -23,7 +23,7 @@ internal static class GamesEndpoints
 				return validationError;
 			}
 
-			var games = (await db.Games.ForSystemCodes(request.SystemCodes.ToList())
+			var games = (await db.Games.ForSystemCodes([.. request.SystemCodes])
 					.ToGamesResponse()
 					.SortAndPaginate(request)
 					.ToListAsync())

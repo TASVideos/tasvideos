@@ -31,7 +31,7 @@ public class EditClassModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_ValidPublication_PopulatesDataAndAvailableClasses()
 	{
-		var publicationClass = new PublicationClass { Id = 1, Name = "Standard" };
+		var publicationClass = _db.AddPublicationClass("Standard").Entity;
 		var publication = _db.AddPublication(publicationClass: publicationClass).Entity;
 		publication.Title = "Test Publication";
 		await _db.SaveChangesAsync();
@@ -49,19 +49,19 @@ public class EditClassModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_InvalidModelState_ReturnsPageWithAvailableClasses()
 	{
-		var publicationClass = new PublicationClass { Id = 1, Name = "Standard" };
-		var publication = _db.AddPublication(publicationClass: publicationClass).Entity;
+		var pubClass = _db.AddPublicationClass("Standard").Entity;
+		var pub = _db.AddPublication(pubClass).Entity;
 		await _db.SaveChangesAsync();
 
-		_page.Id = publication.Id;
-		_page.PublicationClassId = publicationClass.Id;
+		_page.Id = pub.Id;
+		_page.PublicationClassId = pubClass.Id;
 		_page.ModelState.AddModelError("Title", "Test error");
 
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(1, _page.AvailableClasses.Count);
-		Assert.AreEqual(publicationClass.Name, _page.AvailableClasses[0].Text);
+		Assert.AreEqual(pubClass.Name, _page.AvailableClasses[0].Text);
 	}
 
 	[TestMethod]
@@ -75,12 +75,11 @@ public class EditClassModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_PublicationNotFound_ReturnsNotFound()
 	{
-		var publicationClass = new PublicationClass { Id = 1, Name = "Standard" };
-		_db.PublicationClasses.Add(publicationClass);
+		var pubClass = _db.AddPublicationClass("Standard").Entity;
 		await _db.SaveChangesAsync();
 
 		_page.Id = 999; // Non-existent publication
-		_page.PublicationClassId = publicationClass.Id;
+		_page.PublicationClassId = pubClass.Id;
 
 		var result = await _page.OnPost();
 
@@ -90,8 +89,8 @@ public class EditClassModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_SamePublicationClass_RedirectsWithoutChanges()
 	{
-		var publicationClass = new PublicationClass { Id = 1, Name = "Standard" };
-		var publication = _db.AddPublication(publicationClass: publicationClass).Entity;
+		var publicationClass = _db.AddPublicationClass("Standard").Entity;
+		var publication = _db.AddPublication(publicationClass).Entity;
 		_page.Id = publication.Id;
 		_page.PublicationClassId = publicationClass.Id; // Same class
 
@@ -109,19 +108,16 @@ public class EditClassModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_ValidUpdate_UpdatesClassAndLogsChange()
 	{
-		var oldClass = new PublicationClass { Id = 1, Name = "Standard" };
-		var newClass = new PublicationClass { Id = 2, Name = "Stars" };
-		_db.PublicationClasses.Add(oldClass);
-		_db.PublicationClasses.Add(newClass);
+		var newClass = _db.PublicationClasses.Add(new PublicationClass { Id = 2, Name = "Stars" }).Entity;
+		var oldClass = _db.PublicationClasses.Add(new PublicationClass { Id = 1, Name = "Standard" }).Entity;
 
-		var publication = _db.AddPublication().Entity;
-		publication.PublicationClassId = oldClass.Id;
+		var pub = _db.AddPublication(oldClass).Entity;
 
 		var user = _db.AddUser("TestUser").Entity;
 		await _db.SaveChangesAsync();
 		AddAuthenticatedUser(_page, user, [PermissionTo.SetPublicationClass]);
 
-		_page.Id = publication.Id;
+		_page.Id = pub.Id;
 		_page.PublicationClassId = newClass.Id;
 
 		var result = await _page.OnPost();
@@ -129,12 +125,12 @@ public class EditClassModelTests : TestDbBase
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("Edit", redirect.PageName);
-		Assert.AreEqual(publication.Id, redirect.RouteValues!["Id"]);
+		Assert.AreEqual(pub.Id, redirect.RouteValues!["Id"]);
 
 		// Note: Database update verification is skipped because ExecuteUpdateAsync
 		// doesn't work reliably with in-memory test databases. The fact that
 		// the external services were called indicates the update succeeded.
-		await _publicationMaintenanceLogger.Received(1).Log(publication.Id, user.Id, Arg.Any<string>());
+		await _publicationMaintenanceLogger.Received(1).Log(pub.Id, user.Id, Arg.Any<string>());
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 }

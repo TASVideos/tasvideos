@@ -1,7 +1,5 @@
-﻿using TASVideos.Common;
-using TASVideos.Core.Services;
+﻿using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
-using TASVideos.Core.Services.Youtube;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -35,21 +33,9 @@ public class EditModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_ValidPublication_PopulatesData()
 	{
-		var pub = _db.AddPublication().Entity;
-		var author = _db.AddUser("TestAuthor").Entity;
-
-		_db.PublicationAuthors.Add(new PublicationAuthor
-		{
-			Publication = pub,
-			Author = author,
-			Ordinal = 1
-		});
-
-		var tag = _db.Tags.Add(new Tag { Id = 1, Code = "test", DisplayName = "Test Tag" }).Entity;
-		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = tag });
-
-		var flag = _db.Flags.Add(new Flag { Id = 1, Token = "test", Name = "Test Flag" }).Entity;
-		_db.PublicationFlags.Add(new PublicationFlag { Publication = pub, Flag = flag });
+		var pub = _db.AddPublication("TestAuthor").Entity;
+		_db.AttachTag(pub, "test");
+		_db.AttachFlag(pub, "test");
 
 		await _db.SaveChangesAsync();
 
@@ -104,7 +90,6 @@ public class EditModelTests : TestDbBase
 	{
 		var pub = _db.AddPublication().Entity;
 		_db.AddUser("UpdatedAuthor");
-		_db.Tags.Add(new Tag { Id = 1, Code = "NewTag", DisplayName = "New Tag" });
 		await _db.SaveChangesAsync();
 
 		_page.Id = pub.Id;
@@ -113,8 +98,6 @@ public class EditModelTests : TestDbBase
 			EmulatorVersion = "Updated Version",
 			ExternalAuthors = "External Author",
 			Authors = ["UpdatedAuthor"],
-			SelectedTags = [1],
-			SelectedFlags = [],
 			Markup = "Updated markup",
 			RevisionMessage = "Test update"
 		};

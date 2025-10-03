@@ -7,7 +7,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 /// </summary>
 public class LogDistributor(ILogger<LogDistributor> logger) : IPostDistributor
 {
-	private static readonly IEnumerable<PostType> PostTypes = Enum.GetValues<PostType>().ToList();
+	private static readonly IEnumerable<PostType> PostTypes = [.. Enum.GetValues<PostType>()];
 
 	public IEnumerable<PostType> Types => PostTypes;
 

@@ -1,5 +1,4 @@
 ﻿using TASVideos.Core.Services.ExternalMediaPublisher;
-using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -30,21 +29,21 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnGet_SubmissionExists_PopulatesCatalogData()
 	{
 		var system = _db.AddGameSystem("NES").Entity;
-		var frameRate = _db.GameSystemFrameRates.Add(new GameSystemFrameRate { Id = 1, System = system, FrameRate = 60.0988 }).Entity;
+		var frameRate = _db.AddFrameRate(system, 60.0988).Entity;
 		var game = _db.AddGame("Test Game").Entity;
-		var version = _db.GameVersions.Add(new GameVersion { Id = 1, Name = "1.0", System = system, Game = game }).Entity;
-		var goal = _db.GameGoals.Add(new GameGoal { Id = 1, DisplayName = "Test Goal", Game = game }).Entity;
+		var version = _db.AddGameVersion("1.0", system, game).Entity;
+		var goal = _db.AddGoalForGame(game, "Test Goal").Entity;
 		var user = _db.AddUser("TestUser").Entity;
 		await _db.SaveChangesAsync();
 
 		var submission = _db.Submissions.Add(new Submission
 		{
 			Title = "Test Submission",
-			GameId = game.Id,
-			SystemId = system.Id,
-			SystemFrameRateId = frameRate.Id,
-			GameVersionId = version.Id,
-			GameGoalId = goal.Id,
+			Game = game,
+			System = system,
+			SystemFrameRate = frameRate,
+			GameVersion = version,
+			GameGoal = goal,
 			EmulatorVersion = "Test Emulator",
 			SyncedOn = DateTime.UtcNow,
 			SyncedByUserId = user.Id,
@@ -105,13 +104,13 @@ public class CatalogModelTests : TestDbBase
 	public async Task OnPost_ValidUpdate_UpdatesSubmissionAndRedirects()
 	{
 		var system = _db.AddGameSystem("NES").Entity;
-		var frameRate = _db.GameSystemFrameRates.Add(new GameSystemFrameRate { Id = 1, System = system, FrameRate = 60.0988 }).Entity;
+		var frameRate = _db.AddFrameRate(system, 60.0988).Entity;
 		var submitter = _db.AddUser("TestUser").Entity;
 		var submission = _db.Submissions.Add(new Submission
 		{
 			Title = "Test Submission",
 			SystemId = system.Id,
-			SystemFrameRateId = frameRate.Id,
+			SystemFrameRate = frameRate,
 			EmulatorVersion = "Old Emulator",
 			AdditionalSyncNotes = "Old notes",
 			Submitter = submitter,

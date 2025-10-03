@@ -1,5 +1,4 @@
-﻿using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.GameGroups;
+﻿using TASVideos.Pages.GameGroups;
 
 namespace TASVideos.RazorPages.Tests.Pages.GameGroups;
 
@@ -57,8 +56,8 @@ public class IndexModelTests : BasePageModelTests
 		game1.GameResourcesPage = "GameResources/TestGame1";
 		var game2 = _db.AddGame("Test Game 2").Entity;
 
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game1, GameGroup = gameGroup });
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game2, GameGroup = gameGroup });
+		_db.AttachToGroup(game1, gameGroup);
+		_db.AttachToGroup(game2, gameGroup);
 
 		await _db.SaveChangesAsync();
 

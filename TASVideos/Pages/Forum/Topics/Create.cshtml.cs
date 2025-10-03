@@ -110,16 +110,14 @@ public class CreateModel(
 
 		int userId = User.GetUserId();
 
-		var topic = new ForumTopic
+		using var dbTransaction = await db.BeginTransactionAsync();
+		var topic = db.ForumTopics.Add(new ForumTopic
 		{
 			Type = Type,
 			Title = Title,
 			PosterId = userId,
 			ForumId = ForumId
-		};
-
-		using var dbTransaction = await db.BeginTransactionAsync();
-		db.ForumTopics.Add(topic);
+		}).Entity;
 		await db.SaveChangesAsync();
 
 		await forumService.CreatePost(new PostCreate(

@@ -38,7 +38,7 @@ internal class SignInManager(
 		schemes,
 		confirmation), ISignInManager
 {
-	public new UserManager UserManager => (UserManager)base.UserManager;
+	private new UserManager UserManager => (UserManager)base.UserManager;
 
 	public Task SignIn(User user, bool isPersistent, string? authenticationMethod = null)
 		=> SignInAsync(user, isPersistent, authenticationMethod);

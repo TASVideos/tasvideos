@@ -165,8 +165,7 @@ public class GenreServicesTests : TestDbBase
 	public async Task Delete_Success_FlushesCache()
 	{
 		const int id = 1;
-		var genre = new Genre { Id = id };
-		_db.Genres.Add(genre);
+		_db.Genres.Add(new Genre { Id = id });
 		await _db.SaveChangesAsync();
 
 		var result = await _genreService.Delete(id);
@@ -189,8 +188,7 @@ public class GenreServicesTests : TestDbBase
 	{
 		const int genreId = 1;
 		const int gameId = 1;
-		var genre = new Genre { Id = genreId };
-		_db.Genres.Add(genre);
+		_db.Genres.Add(new Genre { Id = genreId });
 		_cache.Set(GenreService.CacheKey, new object());
 		_db.Games.Add(new Game { Id = gameId });
 		_db.GameGenres.Add(new GameGenre { GameId = gameId, GenreId = genreId });

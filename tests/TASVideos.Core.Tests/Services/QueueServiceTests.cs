@@ -428,8 +428,7 @@ public class QueueServiceTests : TestDbBase
 		var user = _db.AddUser(0).Entity;
 		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
-		var poll = new ForumPoll { Id = pollId, TopicId = topic.Id };
-		_db.ForumPolls.Add(poll);
+		var poll = _db.ForumPolls.Add(new ForumPoll { Id = pollId, TopicId = topic.Id }).Entity;
 		var pollOptions = new ForumPollOption[]
 		{
 			new() { PollId = pollId, Votes = [new() { User = user }] },
@@ -449,10 +448,8 @@ public class QueueServiceTests : TestDbBase
 		});
 		_db.SubmissionStatusHistory.Add(new SubmissionStatusHistory { SubmissionId = submissionId, Status = New });
 		_db.SubmissionAuthors.Add(new SubmissionAuthor { SubmissionId = submissionId, UserId = user.Id });
-		var post1 = new ForumPost { Topic = topic, TopicId = topic.Id, Text = "1", ForumId = topic.ForumId, Poster = user };
-		var post2 = new ForumPost { Topic = topic, TopicId = topic.Id, Text = "2", ForumId = topic.ForumId, Poster = user };
-		_db.ForumPosts.Add(post1);
-		_db.ForumPosts.Add(post2);
+		_db.ForumPosts.Add(new ForumPost { Topic = topic, TopicId = topic.Id, Text = "1", ForumId = topic.ForumId, Poster = user });
+		_db.ForumPosts.Add(new ForumPost { Topic = topic, TopicId = topic.Id, Text = "2", ForumId = topic.ForumId, Poster = user });
 		await _db.SaveChangesAsync();
 
 		var result = await _queueService.DeleteSubmission(submissionId);

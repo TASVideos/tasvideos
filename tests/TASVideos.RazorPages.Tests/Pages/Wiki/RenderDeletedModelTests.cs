@@ -51,7 +51,6 @@ public class RenderDeletedModelTests : BasePageModelTests
 			Markup = "Test content",
 			Revision = 1,
 			IsDeleted = true,
-			AuthorId = author.Id,
 			Author = author
 		});
 		await _db.SaveChangesAsync();

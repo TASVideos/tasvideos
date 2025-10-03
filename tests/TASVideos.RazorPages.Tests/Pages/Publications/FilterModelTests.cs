@@ -137,14 +137,7 @@ public class FilterModelTests : TestDbBase
 		tokens.Tags.Returns([]);
 		tokens.Flags.Returns([]);
 
-		var publication = _db.AddPublication();
-		var author = _db.AddUser("PublishedAuthor");
-		_db.PublicationAuthors.Add(new PublicationAuthor
-		{
-			Publication = publication.Entity,
-			Author = author.Entity,
-			Ordinal = 1
-		});
+		_db.AddPublication("PublishedAuthor");
 
 		_db.AddUser("UnpublishedUser");
 		await _db.SaveChangesAsync();

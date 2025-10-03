@@ -2,10 +2,7 @@
 
 public class DistributorStorage(ApplicationDbContext db) : IPostDistributor
 {
-	private static readonly IEnumerable<PostType> PostTypes = Enum
-		.GetValues(typeof(PostType))
-		.OfType<PostType>()
-		.ToList();
+	private static readonly IEnumerable<PostType> PostTypes = Enum.GetValues<PostType>();
 
 	public IEnumerable<PostType> Types => PostTypes;
 

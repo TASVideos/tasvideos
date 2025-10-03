@@ -121,11 +121,10 @@ public class EditModel(ApplicationDbContext db, IExternalMediaPublisher publishe
 		}
 		else
 		{
-			version = new GameVersion
+			version = db.GameVersions.Add(new GameVersion
 			{
 				Game = await db.Games.SingleAsync(g => g.Id == GameId)
-			};
-			db.GameVersions.Add(version);
+			}).Entity;
 		}
 
 		version.Name = Version.Name;

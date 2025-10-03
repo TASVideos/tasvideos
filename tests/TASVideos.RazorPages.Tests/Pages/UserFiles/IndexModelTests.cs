@@ -192,14 +192,7 @@ public class IndexModelTests : TestDbBase
 	public async Task OnPostDelete_AsAuthor_DeletesFile()
 	{
 		var author = _db.AddUser("Author").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, author, []);
@@ -216,14 +209,7 @@ public class IndexModelTests : TestDbBase
 	{
 		var author = _db.AddUser("Author").Entity;
 		var editor = _db.AddUser("Editor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, editor, [PermissionTo.EditUserFiles]);
@@ -240,14 +226,7 @@ public class IndexModelTests : TestDbBase
 	{
 		var author = _db.AddUser("Author").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, otherUser, []);
@@ -271,15 +250,7 @@ public class IndexModelTests : TestDbBase
 	{
 		var author = _db.AddUser("Author").Entity;
 		var commenter = _db.AddUser("Commenter").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author,
-			Hidden = false,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, commenter, [PermissionTo.CreateForumPosts]);
@@ -300,14 +271,7 @@ public class IndexModelTests : TestDbBase
 	{
 		var author = _db.AddUser("Author").Entity;
 		var user = _db.AddUser("User").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, user, []); // No CreateForumPosts permission
@@ -323,14 +287,7 @@ public class IndexModelTests : TestDbBase
 	public async Task OnPostComment_EmptyComment_DoesNotCreateComment()
 	{
 		var user = _db.AddUser("User").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = user,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(user).Entity;
 		await _db.SaveChangesAsync();
 
 		AddAuthenticatedUser(_page, user, [PermissionTo.CreateForumPosts]);
@@ -346,21 +303,12 @@ public class IndexModelTests : TestDbBase
 	public async Task OnPostEditComment_AsOwner_UpdatesComment()
 	{
 		var user = _db.AddUser("User").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = user
-		}).Entity;
-
+		var userFile = _db.AddPublicUserFile(user).Entity;
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
-			UserFileId = userFile.Id,
+			UserFile = userFile,
 			Text = "Original comment",
-			User = user,
-			CreationTimeStamp = DateTime.UtcNow
+			User = user
 		}).Entity;
 		await _db.SaveChangesAsync();
 
@@ -380,21 +328,12 @@ public class IndexModelTests : TestDbBase
 	{
 		var author = _db.AddUser("Author").Entity;
 		var editor = _db.AddUser("Editor").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author
-		}).Entity;
-
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
-			UserFileId = userFile.Id,
+			UserFile = userFile,
 			Text = "Original comment",
-			User = author,
-			CreationTimeStamp = DateTime.UtcNow
+			User = author
 		}).Entity;
 		await _db.SaveChangesAsync();
 
@@ -414,21 +353,12 @@ public class IndexModelTests : TestDbBase
 	{
 		var author = _db.AddUser("Author").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author
-		}).Entity;
-
+		var userFile = _db.AddPublicUserFile(author).Entity;
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
-			UserFileId = userFile.Id,
+			UserFile = userFile,
 			Text = "Original comment",
-			User = author,
-			CreationTimeStamp = DateTime.UtcNow
+			User = author
 		}).Entity;
 		await _db.SaveChangesAsync();
 
@@ -461,21 +391,16 @@ public class IndexModelTests : TestDbBase
 		var user = _db.AddUser("User").Entity;
 		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Test Movie",
-			Author = user,
-			Hidden = false,
-			Class = UserFileClass.Movie
+			Author = user
 		}).Entity;
 
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
 			UserFileId = userFile.Id,
 			Text = "Original comment",
-			User = user,
-			CreationTimeStamp = DateTime.UtcNow
+			User = user
 		}).Entity;
 		await _db.SaveChangesAsync();
 
@@ -496,7 +421,6 @@ public class IndexModelTests : TestDbBase
 		var user = _db.AddUser("User").Entity;
 		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Test Movie",
 			Author = user
@@ -504,11 +428,9 @@ public class IndexModelTests : TestDbBase
 
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
-			UserFileId = userFile.Id,
+			UserFile = userFile,
 			Text = "Comment to delete",
-			User = user,
-			CreationTimeStamp = DateTime.UtcNow
+			User = user
 		}).Entity;
 		await _db.SaveChangesAsync();
 
@@ -529,7 +451,6 @@ public class IndexModelTests : TestDbBase
 		var moderator = _db.AddUser("Moderator").Entity;
 		var userFile = _db.UserFiles.Add(new UserFile
 		{
-			Id = 1,
 			FileName = "test.bk2",
 			Title = "Test Movie",
 			Author = author
@@ -537,11 +458,9 @@ public class IndexModelTests : TestDbBase
 
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
-			UserFileId = userFile.Id,
+			UserFile = userFile,
 			Text = "Comment to delete",
-			User = author,
-			CreationTimeStamp = DateTime.UtcNow
+			User = author
 		}).Entity;
 		await _db.SaveChangesAsync();
 
@@ -560,21 +479,13 @@ public class IndexModelTests : TestDbBase
 	{
 		var author = _db.AddUser("Author").Entity;
 		var otherUser = _db.AddUser("OtherUser").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = author
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(author).Entity;
 
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
-			UserFileId = userFile.Id,
+			UserFile = userFile,
 			Text = "Comment to delete",
-			User = author,
-			CreationTimeStamp = DateTime.UtcNow
+			User = author
 		}).Entity;
 		await _db.SaveChangesAsync();
 
@@ -605,23 +516,13 @@ public class IndexModelTests : TestDbBase
 	public async Task OnPostDeleteComment_WithoutCreateForumPostsPermission_DoesNotDelete()
 	{
 		var user = _db.AddUser("User").Entity;
-		var userFile = _db.UserFiles.Add(new UserFile
-		{
-			Id = 1,
-			FileName = "test.bk2",
-			Title = "Test Movie",
-			Author = user,
-			Hidden = false,
-			Class = UserFileClass.Movie
-		}).Entity;
+		var userFile = _db.AddPublicUserFile(user).Entity;
 
 		var comment = _db.UserFileComments.Add(new UserFileComment
 		{
-			Id = 1,
-			UserFileId = userFile.Id,
+			UserFile = userFile,
 			Text = "Comment to delete",
-			User = user,
-			CreationTimeStamp = DateTime.UtcNow
+			User = user
 		}).Entity;
 		await _db.SaveChangesAsync();
 

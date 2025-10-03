@@ -153,7 +153,7 @@ public class ForumServiceTests : TestDbBase
 	[TestMethod]
 	public void CacheLatestPost_NoCache_DoesNotUpdate()
 	{
-		_forumService.CacheLatestPost(1, 1, new LatestPost(1, DateTime.UtcNow, "Test"));
+		_forumService.CacheLatestPost(1, new LatestPost(1, DateTime.UtcNow, "Test"));
 		Assert.AreEqual(0, _cache.Count());
 	}
 
@@ -161,7 +161,6 @@ public class ForumServiceTests : TestDbBase
 	public void CacheLatestPost_UpdatesCache()
 	{
 		const int forumId = 1;
-		const int topicId = 1;
 		const int oldPostId = 1;
 		var oldPostTime = DateTime.UtcNow.AddDays(-1);
 		const string oldPoster = "OldPoster";
@@ -175,7 +174,7 @@ public class ForumServiceTests : TestDbBase
 		var newPostTime = DateTime.UtcNow;
 		const string newPoster = "NewPoster";
 
-		_forumService.CacheLatestPost(forumId, topicId, new LatestPost(newPostId, newPostTime, newPoster));
+		_forumService.CacheLatestPost(forumId, new LatestPost(newPostId, newPostTime, newPoster));
 
 		Assert.IsTrue(_cache.ContainsKey(ForumService.LatestPostCacheKey));
 		_cache.TryGetValue(ForumService.LatestPostCacheKey, out Dictionary<int, LatestPost?> actual);

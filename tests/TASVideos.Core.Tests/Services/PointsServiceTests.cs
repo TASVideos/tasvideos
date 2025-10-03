@@ -80,10 +80,8 @@ public class PointsServiceTests : TestDbBase
 		// 2 authors, 1 for a non-weighted pub and 1 for a weighted pub
 		var author1 = _db.AddUser(1, Author);
 		var author2 = _db.AddUser(2, Author2);
-		var nonWeightedFlag = new Flag { Id = 1, Name = "Regular", Weight = 1, Token = "regular" };
-		var weightedFlag = new Flag { Id = 2, Name = "Weighted", Weight = 100, Token = "weighted" };
-		_db.Flags.Add(nonWeightedFlag);
-		_db.Flags.Add(weightedFlag);
+		var nonWeightedFlag = _db.Flags.Add(new Flag { Id = 1, Name = "Regular", Weight = 1, Token = "regular" }).Entity;
+		var weightedFlag = _db.Flags.Add(new Flag { Id = 2, Name = "Weighted", Weight = 100, Token = "weighted" }).Entity;
 
 		var pubNonWeighted = _db.AddPublication(author1.Entity);
 		pubNonWeighted.Entity.PublicationFlags.Add(new PublicationFlag { Flag = nonWeightedFlag });

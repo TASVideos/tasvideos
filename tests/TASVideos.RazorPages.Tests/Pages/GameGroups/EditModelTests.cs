@@ -50,7 +50,7 @@ public class EditModelTests : BasePageModelTests
 	{
 		var gameGroup = _db.AddGameGroup("Group With Games").Entity;
 		var game = _db.AddGame("Test Game").Entity;
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = gameGroup });
+		_db.AttachToGroup(game, gameGroup);
 		await _db.SaveChangesAsync();
 		_model.Id = gameGroup.Id;
 
@@ -155,7 +155,7 @@ public class EditModelTests : BasePageModelTests
 	{
 		var gameGroup = _db.AddGameGroup("Group With Games").Entity;
 		var game = _db.AddGame("Test Game").Entity;
-		_db.GameGameGroups.Add(new GameGameGroup { Game = game, GameGroup = gameGroup });
+		_db.AttachToGroup(game, gameGroup);
 		await _db.SaveChangesAsync();
 		_model.Id = gameGroup.Id;
 

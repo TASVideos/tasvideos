@@ -26,8 +26,8 @@ internal class ExpandoObjectComparer : IEqualityComparer<ExpandoObject>
 			return false;
 		}
 
-		var xKeyValues = (IDictionary<string, object?>)x;
-		var yKeyValues = (IDictionary<string, object?>)y;
+		IDictionary<string, object?> xKeyValues = x;
+		IDictionary<string, object?> yKeyValues = y;
 
 		if (xKeyValues.Count != yKeyValues.Count)
 		{

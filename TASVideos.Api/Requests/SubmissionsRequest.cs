@@ -25,7 +25,7 @@ internal class SubmissionsRequest : ApiRequest, ISubmissionFilter
 
 	public bool? ShowVerified { get; set; }
 
-	ICollection<int> ISubmissionFilter.Years => StartYear.YearRange(EndYear).ToList();
+	ICollection<int> ISubmissionFilter.Years => [.. StartYear.YearRange(EndYear)];
 
 	ICollection<SubmissionStatus> ISubmissionFilter.Statuses => !string.IsNullOrWhiteSpace(Statuses)
 		? Statuses

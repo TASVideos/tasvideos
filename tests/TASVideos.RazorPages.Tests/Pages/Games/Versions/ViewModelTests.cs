@@ -145,8 +145,7 @@ public class ViewModelTests : TestDbBase
 
 		var otherVersion = _db.GameVersions.Add(new GameVersion { Game = game, Name = "Other Version", System = system }).Entity;
 		await _db.SaveChangesAsync();
-		var otherSubmission = new Submission { Title = "Other Submission", GameVersionId = otherVersion.Id, Submitter = submitter };
-		_db.Submissions.Add(otherSubmission);
+		_db.Submissions.Add(new Submission { Title = "Other Submission", GameVersionId = otherVersion.Id, Submitter = submitter });
 
 		await _db.SaveChangesAsync();
 		_model.GameId = game.Id;

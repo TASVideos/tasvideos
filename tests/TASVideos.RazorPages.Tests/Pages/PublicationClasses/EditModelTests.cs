@@ -29,23 +29,20 @@ public class EditModelTests : BasePageModelTests
 	[TestMethod]
 	public async Task OnGet_ValidId_ReturnsPageWithPublicationClass()
 	{
-		var publicationClass = new PublicationClass
-		{
-			Id = 1,
-			Name = "Test Class",
-			IconPath = "/icons/test.png",
-			Link = "test-link"
-		};
-		_classService.GetById(1).Returns(publicationClass);
+		var pubClass = _db.AddPublicationClass("Test Class").Entity;
+		pubClass.IconPath = "Test Class";
+		pubClass.Link = "test-link";
+
+		_classService.GetById(1).Returns(pubClass);
 		_classService.InUse(1).Returns(true);
 		_model.Id = 1;
 
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(publicationClass.Name, _model.PublicationClass.Name);
-		Assert.AreEqual(publicationClass.IconPath, _model.PublicationClass.IconPath);
-		Assert.AreEqual(publicationClass.Link, _model.PublicationClass.Link);
+		Assert.AreEqual(pubClass.Name, _model.PublicationClass.Name);
+		Assert.AreEqual(pubClass.IconPath, _model.PublicationClass.IconPath);
+		Assert.AreEqual(pubClass.Link, _model.PublicationClass.Link);
 		Assert.IsTrue(_model.InUse);
 		await _classService.Received(1).GetById(1);
 		await _classService.Received(1).InUse(1);
