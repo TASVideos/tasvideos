@@ -95,7 +95,7 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 
 		foreach (var pub in pubs)
 		{
-			pub.GenerateTitle();
+			pub.Title = pub.GenerateTitle();
 		}
 
 		var subs = await db.Submissions

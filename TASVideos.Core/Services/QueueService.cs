@@ -766,7 +766,7 @@ internal class QueueService(
 			db.Publications.Add(publication);
 
 			await db.SaveChangesAsync(); // Need an ID for the Title
-			publication.GenerateTitle();
+			publication.Title = publication.GenerateTitle();
 
 			var (screenshotPath, screenshotBytes) = await uploader.UploadScreenshot(publication.Id, request.Screenshot, request.ScreenshotDescription);
 

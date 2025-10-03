@@ -19,9 +19,9 @@ public class PublicationTests
 			GameGoal = new GameGoal { DisplayName = "baseline" }
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("NES Super Mario Bros. by  in 01:00.00", publication.Title);
+		Assert.AreEqual("NES Super Mario Bros. by  in 01:00.000", publication.Title);
 	}
 
 	[TestMethod]
@@ -45,9 +45,9 @@ public class PublicationTests
 			]
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle(false);
 
-		Assert.AreEqual("SNES Super Metroid by AuthorOne in 00:29.95", publication.Title);
+		Assert.AreEqual("SNES Super Metroid by AuthorOne in 00:29.951", publication.Title);
 	}
 
 	[TestMethod]
@@ -81,9 +81,9 @@ public class PublicationTests
 			]
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("GB Tetris by AuthorOne, AuthorTwo & AuthorThree in 00:40.18", publication.Title);
+		Assert.AreEqual("GB Tetris by AuthorOne, AuthorTwo & AuthorThree in 00:40.182", publication.Title);
 	}
 
 	[TestMethod]
@@ -108,9 +108,9 @@ public class PublicationTests
 			AdditionalAuthors = "UnregisteredUser1, UnregisteredUser2"
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("GEN Sonic the Hedgehog by RegisteredUser, UnregisteredUser1 &  UnregisteredUser2 in 00:20.03", publication.Title);
+		Assert.AreEqual("GEN Sonic the Hedgehog by RegisteredUser, UnregisteredUser1 &  UnregisteredUser2 in 00:20.026", publication.Title);
 	}
 
 	[TestMethod]
@@ -130,9 +130,9 @@ public class PublicationTests
 			GameGoal = new GameGoal { DisplayName = "baseline" }
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("N64 The Legend of Zelda: Ocarina of Time (USA v1.2) by  in 01:20.00", publication.Title);
+		Assert.AreEqual("N64 The Legend of Zelda: Ocarina of Time (USA v1.2) by  in 01:20.000", publication.Title);
 	}
 
 	[TestMethod]
@@ -148,9 +148,9 @@ public class PublicationTests
 			GameGoal = new GameGoal { DisplayName = "96 exits" }
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("SNES Super Mario World \"96 exits\" by  in 00:29.95", publication.Title);
+		Assert.AreEqual("SNES Super Mario World \"96 exits\" by  in 00:29.951", publication.Title);
 	}
 
 	[TestMethod]
@@ -166,9 +166,9 @@ public class PublicationTests
 			GameGoal = new GameGoal { DisplayName = "baseline" }
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("NES Mega Man 2 by  in 00:50.00", publication.Title);
+		Assert.AreEqual("NES Mega Man 2 by  in 00:50.000", publication.Title);
 	}
 
 	[TestMethod]
@@ -202,9 +202,9 @@ public class PublicationTests
 			]
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("SMS Alex Kidd in Miracle World by First, Second & Third in 00:30.04", publication.Title);
+		Assert.AreEqual("SMS Alex Kidd in Miracle World by First, Second & Third in 00:30.039", publication.Title);
 	}
 
 	[TestMethod]
@@ -220,9 +220,9 @@ public class PublicationTests
 			GameGoal = new GameGoal { DisplayName = "baseline" }
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("SNES Super Metroid by  in 2:00:00.00", publication.Title);
+		Assert.AreEqual("SNES Super Metroid by  in 2:00:00.000", publication.Title);
 	}
 
 	[TestMethod]
@@ -238,9 +238,9 @@ public class PublicationTests
 			GameGoal = new GameGoal { DisplayName = "baseline" }
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("PC Desert Bus by  in 1:00:00:00.00", publication.Title);
+		Assert.AreEqual("PC Desert Bus by  in 1:00:00:00.000", publication.Title);
 	}
 
 	[TestMethod]
@@ -298,8 +298,8 @@ public class PublicationTests
 			GameGoal = new GameGoal { DisplayName = "" }
 		};
 
-		publication.GenerateTitle();
+		publication.Title = publication.GenerateTitle();
 
-		Assert.AreEqual("NES Test Game by  in 00:30.00", publication.Title);
+		Assert.AreEqual("NES Test Game by  in 00:30.000", publication.Title);
 	}
 }

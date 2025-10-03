@@ -5,6 +5,7 @@ namespace TASVideos.IntegrationTests;
 
 internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebApplicationFactory<Program>
 {
+	private string? _testDatabaseName;
 	protected override void ConfigureWebHost(IWebHostBuilder builder)
 	{
 		builder.ConfigureServices(services =>
@@ -41,11 +42,11 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 		builder.UseEnvironment("Testing");
 	}
 
-	private static string GetPostgreSqlConnectionString()
+	private string GetPostgreSqlConnectionString()
 	{
 		// TODO: get from configuration
-		var testDbName = $"tasvideos_integrationtest_{Guid.NewGuid():N}";
-		return $"Host=localhost;Database={testDbName};Username=postgres;Password=postgres";
+		_testDatabaseName = $"tasvideos_integrationtest_{Guid.NewGuid():N}";
+		return $"Host=localhost;Database={_testDatabaseName};Username=postgres;Password=postgres";
 	}
 
 	/// <summary>
@@ -101,5 +102,47 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 		var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 		seedAction(context);
 		context.SaveChanges();
+	}
+
+	protected override void Dispose(bool disposing)
+	{
+		if (disposing && usePostgreSql && !string.IsNullOrEmpty(_testDatabaseName))
+		{
+			CleanupPostgreSqlDatabase();
+		}
+
+		base.Dispose(disposing);
+	}
+
+	private void CleanupPostgreSqlDatabase()
+	{
+		try
+		{
+			var masterConnectionString = "Host=localhost;Database=postgres;Username=postgres;Password=postgres";
+			using var connection = new Npgsql.NpgsqlConnection(masterConnectionString);
+			connection.Open();
+
+			// Terminate existing connections to the test database
+			var terminateConnections = @"
+				SELECT pg_terminate_backend(pg_stat_activity.pid)
+				FROM pg_stat_activity
+				WHERE pg_stat_activity.datname = $1
+				  AND pid <> pg_backend_pid();";
+
+			using var terminateCommand = new Npgsql.NpgsqlCommand(terminateConnections, connection);
+			terminateCommand.Parameters.AddWithValue(_testDatabaseName!);
+			terminateCommand.ExecuteNonQuery();
+
+			// Drop the database - Note: Database names cannot be parameterized in PostgreSQL
+			// But since _testDatabaseName is generated internally with a GUID, it's safe
+			var dropCommand = $"DROP DATABASE IF EXISTS \"{_testDatabaseName}\";";
+			using var command = new Npgsql.NpgsqlCommand(dropCommand, connection);
+			command.ExecuteNonQuery();
+		}
+		catch (Exception ex)
+		{
+			// Log the error but don't fail the test cleanup
+			Console.WriteLine($"Warning: Failed to cleanup test database '{_testDatabaseName}': {ex.Message}");
+		}
 	}
 }

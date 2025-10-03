@@ -86,7 +86,7 @@ public class Publication : BaseEntity, ITimeable
 	public int? GameGoalId { get; set; }
 	public GameGoal? GameGoal { get; set; }
 
-	public void GenerateTitle()
+	public string GenerateTitle(bool isYouTubeTitle = false)
 	{
 		var authorList = Authors
 			.OrderBy(sa => sa.Ordinal)
@@ -120,11 +120,22 @@ public class Publication : BaseEntity, ITimeable
 			goal = "";
 		}
 
-		Title =
-			$"{System.Code} {gameName}"
-			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
-			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
-			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
+		if (isYouTubeTitle)
+		{
+			return
+				$"{System.Code} {gameName}"
+				+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
+				+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}"
+				+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}";
+		}
+		else
+		{
+			return
+				$"{System.Code} {gameName}"
+				+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
+				+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
+				+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
+		}
 	}
 }
 
