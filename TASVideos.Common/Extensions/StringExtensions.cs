@@ -108,6 +108,20 @@ public static partial class StringExtensions
 		return string.Join(" / ", pathFragments);
 	}
 
+	/// <summary>determines the longest string that all in <paramref name="strings"/> start with, which may be the empty string</summary>
+	/// <remarks>based on <see href="https://stackoverflow.com/a/35081977"/></remarks>
+	public static char[] CommonPrefix(params string[] strings)
+	{
+		var shortest = strings.MinBy(s => s.Length);
+		return string.IsNullOrEmpty(shortest)
+			? []
+			: shortest.TakeWhile((c, i) => Array.TrueForAll(strings, s => s[i] == c)).ToArray();
+	}
+
+	/// <summary>determines the longest string that all in <paramref name="strings"/> start with, which may be the empty string</summary>
+	public static char[] CommonPrefix(this IEnumerable<string> strings)
+		=> CommonPrefix(strings: strings as string[] ?? strings.ToArray());
+
 	/// <summary>
 	/// Takes a comma separated string and returns a list of values.
 	/// </summary>
