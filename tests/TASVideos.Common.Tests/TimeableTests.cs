@@ -4,16 +4,16 @@
 public class TimeableTests
 {
 	[TestMethod]
-	[DataRow(60.1, 421, "00:07.00")]
-	[DataRow(75, 2346, "00:31.28")]
-	[DataRow(60, 412521, "1:54:35.35")]
-	[DataRow(58.643, 5213, "01:28.89")]
-	[DataRow(62.5, 11221, "02:59.54")]
-	[DataRow(50, 6666, "02:13.32")]
-	[DataRow(60.09, 325523, "1:30:17.26")]
-	[DataRow(60, 16997, "04:43.28")]
-	[DataRow(60, 0, "00:00.01")]
-	[DataRow(0, 1, "10675199:02:48:05.47")]
+	[DataRow(60.1, 421, "00:07.005")]
+	[DataRow(75, 2346, "00:31.280")]
+	[DataRow(60, 412521, "1:54:35.350")]
+	[DataRow(58.643, 5213, "01:28.894")]
+	[DataRow(62.5, 11221, "02:59.536")]
+	[DataRow(50, 6666, "02:13.320")]
+	[DataRow(60.09, 325523, "1:30:17.257")]
+	[DataRow(60, 16997, "04:43.283")]
+	[DataRow(60, 0, "00:00.001")]
+	[DataRow(0, 1, "10675199:02:48:05.477")]
 	public void TimeableTimespanTest(double frameRate, int frames, string expected)
 	{
 		var actual = new Timeable { FrameRate = frameRate, Frames = frames }

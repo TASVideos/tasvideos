@@ -27,27 +27,27 @@ public static class TimeableExtensions
 			return TimeSpan.MaxValue;
 		}
 
-		return TimeSpan.FromMilliseconds(Math.Round(timeable.Frames / timeable.FrameRate * 100, MidpointRounding.AwayFromZero) * 10);
+		return TimeSpan.FromMilliseconds(Math.Round(timeable.Frames / timeable.FrameRate * 1000, MidpointRounding.AwayFromZero));
 	}
 
 	public static string ToStringWithOptionalDaysAndHours(this TimeSpan timeSpan)
 	{
 		if (timeSpan.Days >= 1)
 		{
-			return timeSpan.ToString(@"d\:hh\:mm\:ss\.ff");
+			return timeSpan.ToString(@"d\:hh\:mm\:ss\.fff");
 		}
 
 		if (timeSpan.Hours >= 1)
 		{
-			return timeSpan.ToString(@"h\:mm\:ss\.ff");
+			return timeSpan.ToString(@"h\:mm\:ss\.fff");
 		}
 
-		if (timeSpan.TotalSeconds <= 0.01)
+		if (timeSpan.TotalSeconds <= 0.001)
 		{
-			return "00:00.01";
+			return "00:00.001";
 		}
 
-		return timeSpan.ToString(@"mm\:ss\.ff");
+		return timeSpan.ToString(@"mm\:ss\.fff");
 	}
 
 	public static string ToRelativeString(this TimeSpan relativeTime)

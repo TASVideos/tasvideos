@@ -110,7 +110,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 						Title = p.Title,
 
 						// the hackiest of workarounds but just calling Time() makes it explode for hardly fathomable reasons
-						Value = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate!.FrameRate * 100, MidpointRounding.AwayFromZero) * 10)
+						Value = TimeSpan.FromMilliseconds(Math.Round(p.Frames / p.SystemFrameRate!.FrameRate * 1000, MidpointRounding.AwayFromZero))
 					});
 				break;
 
