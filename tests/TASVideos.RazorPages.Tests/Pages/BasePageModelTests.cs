@@ -11,6 +11,17 @@ namespace TASVideos.RazorPages.Tests.Pages;
 [TestClass]
 public class BasePageModelTests : TestDbBase
 {
+	protected static ActionContext TestActionContext()
+	{
+		var httpContext = new DefaultHttpContext();
+		var responseBody = new MemoryStream();
+		httpContext.Response.Body = responseBody;
+		return new ActionContext
+		{
+			HttpContext = httpContext
+		};
+	}
+
 	protected static PageContext TestPageContext()
 	{
 		var httpContext = new DefaultHttpContext();

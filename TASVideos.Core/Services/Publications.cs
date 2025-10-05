@@ -22,6 +22,14 @@ public interface IPublications
 	/// <returns>Null if url is not found and successfully deleted, else null</returns>
 	Task<PublicationUrl?> RemoveUrl(int urlId);
 
+	Task<SaveResult> AddMovieFile(int pubId, string fileName, string description, byte[] file);
+
+	/// <summary>
+	/// Removes the given file from the given publication
+	/// </summary>
+	/// <returns>The deleted file, or null if the file was not found or unable to be removed</returns>
+	Task<(PublicationFile? File, SaveResult Result)> RemoveFile(int fileId);
+
 	/// <summary>
 	/// Returns whether a publication can be unpublished, does not affect the publication
 	/// </summary>
@@ -37,6 +45,11 @@ public interface IPublications
 	/// </summary>
 	/// <returns>List of change messages for logging/notification purposes</returns>
 	Task<UpdatePublicationResult> UpdatePublication(int publicationId, UpdatePublicationRequest request);
+
+	/// <summary>
+	/// Returns the available movie files for a given publication
+	/// </summary>
+	Task<List<FileEntry>> GetAvailableMovieFiles(int publicationId);
 }
 
 internal class Publications(
@@ -45,7 +58,8 @@ internal class Publications(
 	ITASVideoAgent tva,
 	IWikiPages wikiPages,
 	ITagService tagService,
-	IFlagService flagService)
+	IFlagService flagService,
+	IFileService fileService)
 	: IPublications
 {
 	public Task<string?> GetTitle(int publicationId)
@@ -58,6 +72,23 @@ internal class Publications(
 		=> await db.PublicationUrls
 			.Where(u => u.PublicationId == publicationId)
 			.ToListAsync();
+
+	public async Task<SaveResult> AddMovieFile(int pubId, string fileName, string description, byte[] file)
+	{
+		var compressed = await fileService.Compress(file);
+
+		db.PublicationFiles.Add(new PublicationFile
+		{
+			PublicationId = pubId,
+			Path = fileName,
+			Description = description,
+			Type = FileType.MovieFile,
+			FileData = compressed.Data,
+			CompressionType = compressed.Type
+		});
+
+		return await db.TrySaveChanges();
+	}
 
 	public async Task<PublicationUrl?> RemoveUrl(int urlId)
 	{
@@ -75,6 +106,19 @@ internal class Publications(
 		}
 
 		return url;
+	}
+
+	public async Task<(PublicationFile? File, SaveResult Result)> RemoveFile(int fileId)
+	{
+		var file = await db.PublicationFiles.FindAsync(fileId);
+		if (file is null)
+		{
+			return (null, SaveResult.NotFound);
+		}
+
+		db.PublicationFiles.Remove(file);
+		var result = await db.TrySaveChanges();
+		return (file, result);
 	}
 
 	public async Task<UnpublishResult> CanUnpublish(int publicationId)
@@ -307,6 +351,13 @@ internal class Publications(
 
 		return new UpdatePublicationResult(true, changeMessages, publication.Title);
 	}
+
+	public async Task<List<FileEntry>> GetAvailableMovieFiles(int publicationId)
+		=> await db.PublicationFiles
+			.ThatAreMovieFiles()
+			.ForPublication(publicationId)
+			.Select(pf => new FileEntry(pf.Id, pf.Description, pf.Path))
+			.ToListAsync();
 }
 
 public record UnpublishResult(
@@ -341,3 +392,5 @@ public record UpdatePublicationRequest(
 	bool MinorEdit);
 
 public record UpdatePublicationResult(bool Success, List<string> ChangeMessages, string? Title = null);
+
+public record FileEntry(int Id, string? Description, string FileName);

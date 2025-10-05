@@ -150,7 +150,7 @@ public class FileServiceTests : TestDbBase
 
 		var actual = await _fileService.GetAdditionalPublicationFile(publication.Entity.Id, pubFile.Entity.Id);
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(movieFileName, actual.Path);
-		Assert.IsTrue(zippedData.SequenceEqual(actual.Data));
+		Assert.AreEqual(movieFileName, actual.FileName);
+		Assert.IsTrue(zippedData.SequenceEqual(actual.Content));
 	}
 }

@@ -1,5 +1,4 @@
-﻿using TASVideos.Data.Entity.Game;
-using TASVideos.Pages.Publications;
+﻿using TASVideos.Pages.Publications;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
@@ -51,7 +50,7 @@ public class LegacyMoviesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_GameNameByAbbreviation_RedirectsToPublicationsWithGameToken()
 	{
-		var game =  _db.AddGame(null, "LOZ").Entity;
+		var game = _db.AddGame(null, "LOZ").Entity;
 		await _db.SaveChangesAsync();
 		_page.Name = game.Abbreviation;
 

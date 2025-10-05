@@ -2,7 +2,6 @@
 
 [RequirePermission(PermissionTo.CreateAdditionalMovieFiles)]
 public class AdditionalMoviesModel(
-	ApplicationDbContext db,
 	IPublications publications,
 	IExternalMediaPublisher publisher,
 	IPublicationMaintenanceLogger publicationMaintenanceLogger,
@@ -71,22 +70,17 @@ public class AdditionalMoviesModel(
 			return Page();
 		}
 
-		db.PublicationFiles.Add(new PublicationFile
-		{
-			Path = AdditionalMovieFile!.FileName,
-			PublicationId = Id,
-			Description = DisplayName,
-			Type = FileType.MovieFile,
-			FileData = movieFileBytes
-		});
-
-		string log = $"Added new movie file: {DisplayName}";
-		await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
-		var result = await db.TrySaveChanges();
-		SetMessage(result, log, "Unable to add file");
+		var result = await publications.AddMovieFile(Id, AdditionalMovieFile!.FileName, DisplayName, movieFileBytes);
 		if (result.IsSuccess())
 		{
+			string log = $"Added new movie file: {DisplayName}";
+			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {PublicationTitle}");
+			SuccessStatusMessage(log);
+		}
+		else
+		{
+			ErrorStatusMessage("Unable to add file");
 		}
 
 		return RedirectToPage("AdditionalMovies", new { Id });
@@ -94,33 +88,29 @@ public class AdditionalMoviesModel(
 
 	public async Task<IActionResult> OnPostDelete(int publicationFileId)
 	{
-		var file = await db.PublicationFiles.FindAsync(publicationFileId);
+		var (file, result) = await publications.RemoveFile(publicationFileId);
 
-		if (file is not null)
+		if (file is null)
 		{
-			db.PublicationFiles.Remove(file);
+			ErrorStatusMessage($"Unable to find file with id {publicationFileId}");
+			return RedirectToPage("AdditionalMovies", new { Id });
+		}
 
-			string log = $"Removed movie file {file.Path}";
+		if (result.IsSuccess())
+		{
+			var log = $"Removed movie file {file.Path}";
+			SuccessStatusMessage(log);
 			await publicationMaintenanceLogger.Log(file.PublicationId, User.GetUserId(), log);
-			var result = await db.TrySaveChanges();
-			SetMessage(result, log, "Unable to delete file");
-			if (result.IsSuccess())
-			{
-				await publisher.SendPublicationEdit(User.Name(), Id, $"{log}");
-			}
+			await publisher.SendPublicationEdit(User.Name(), Id, $"{log}");
+		}
+		else
+		{
+			ErrorStatusMessage("Unable to delete file");
 		}
 
 		return RedirectToPage("AdditionalMovies", new { Id });
 	}
 
 	private async Task PopulateAvailableMovieFiles()
-	{
-		AvailableMovieFiles = await db.PublicationFiles
-			.ThatAreMovieFiles()
-			.ForPublication(Id)
-			.Select(pf => new FileEntry(pf.Id, pf.Description, pf.Path))
-			.ToListAsync();
-	}
-
-	public record FileEntry(int Id, string? Description, string FileName);
+		=> AvailableMovieFiles = await publications.GetAvailableMovieFiles(Id);
 }

@@ -28,5 +28,5 @@ public class ViewModel(ApplicationDbContext db, IFileService fileService, ITASVi
 	public async Task<IActionResult> OnGetDownload() => ZipFile(await fileService.GetPublicationFile(Id));
 
 	public async Task<IActionResult> OnGetDownloadAdditional(int fileId)
-		=> ZipFile(await fileService.GetAdditionalPublicationFile(Id, fileId));
+		=> new DownloadResult(await fileService.GetAdditionalPublicationFile(Id, fileId));
 }

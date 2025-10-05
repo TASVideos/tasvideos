@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
+using TASVideos.Pages;
 using TASVideos.Pages.UserFiles;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -185,7 +186,7 @@ public class InfoModelTests : TestDbBase
 
 		var result = await _page.OnGetDownload();
 
-		Assert.IsInstanceOfType<InfoModel.DownloadResult>(result);
+		Assert.IsInstanceOfType<DownloadResult>(result);
 		var fileInDb = await _db.UserFiles.FindAsync(fileId);
 		Assert.IsNotNull(fileInDb);
 		Assert.AreEqual(originalViewCount + 1, fileInDb.Downloads);
@@ -209,7 +210,7 @@ public class InfoModelTests : TestDbBase
 		}).Entity;
 		await _db.SaveChangesAsync();
 
-		var downloadResult = new InfoModel.DownloadResult(userFile);
+		var downloadResult = new DownloadResult(new DownloadableFile(userFile.FileName, fileContent, userFile.CompressionType));
 		var httpContext = new DefaultHttpContext();
 		var actionContext = new ActionContext
 		{
@@ -233,18 +234,7 @@ public class InfoModelTests : TestDbBase
 	[TestMethod]
 	public async Task DownloadResult_WithGzipCompression_SetsCorrectHeaders()
 	{
-		var author = _db.AddUser("TestAuthor").Entity;
-		var downloadResult = new InfoModel.DownloadResult(new UserFile
-		{
-			Id = 1,
-			FileName = "compressed-file.txt",
-			Title = "Compressed File",
-			Author = author,
-			Hidden = false,
-			Class = UserFileClass.Support,
-			Content = [1, 2, 3, 4, 5],
-			CompressionType = Compression.Gzip
-		});
+		var downloadResult = new DownloadResult(new DownloadableFile("compressed-file.txt", [1, 2, 3, 4], Compression.Gzip));
 		var httpContext = new DefaultHttpContext();
 		var actionContext = new ActionContext
 		{

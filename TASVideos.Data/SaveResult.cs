@@ -4,7 +4,8 @@ public enum SaveResult
 {
 	ConcurrencyFailure,
 	UpdateFailure,
-	Success
+	Success,
+	NotFound
 }
 
 public static class SaveResultExtensions

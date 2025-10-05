@@ -11,8 +11,9 @@ public enum UserFileClass
 
 public enum Compression
 {
-	None,
-	Gzip
+	None = 0,
+	Gzip = 1,
+	Zip = 2
 }
 
 public class UserFile

@@ -18,6 +18,8 @@ public class PublicationFile : BaseEntity
 	public string? Description { get; set; }
 
 	public byte[]? FileData { get; set; }
+
+	public Compression? CompressionType { get; set; }
 }
 
 public static class PublicationFileExtensions

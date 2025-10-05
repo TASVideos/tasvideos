@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Data;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
@@ -23,7 +24,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_maintenanceLogger = Substitute.For<IPublicationMaintenanceLogger>();
 		_queueService = Substitute.For<IQueueService>();
-		_page = new AdditionalMoviesModel(_db, _publications, _publisher, _maintenanceLogger, _queueService);
+		_page = new AdditionalMoviesModel(_publications, _publisher, _maintenanceLogger, _queueService);
 	}
 
 	[TestMethod]
@@ -38,20 +39,21 @@ public class AdditionalMoviesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnGet_ValidPublication_PopulatesData()
 	{
-		var pub = _db.AddPublication().Entity;
+		const int pubId = 123;
+		const string pubTitle = "title";
 		const string description = "Description";
 		const string path = "Path";
-		var file = _db.AddMovieFile(pub, path).Entity;
-		file.Description = description;
 		await _db.SaveChangesAsync();
-		_publications.GetTitle(pub.Id).Returns(pub.Title);
 
-		_page.Id = pub.Id;
+		_publications.GetTitle(pubId).Returns(pubTitle);
+		_publications.GetAvailableMovieFiles(pubId).Returns([new FileEntry(1, description, path)]);
+
+		_page.Id = pubId;
 
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(pub.Title, _page.PublicationTitle);
+		Assert.AreEqual(pubTitle, _page.PublicationTitle);
 		Assert.AreEqual(1, _page.AvailableMovieFiles.Count);
 		Assert.AreEqual(description, _page.AvailableMovieFiles[0].Description);
 		Assert.AreEqual(path, _page.AvailableMovieFiles[0].FileName);
@@ -69,11 +71,11 @@ public class AdditionalMoviesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_ZipFile_AddsModelError()
 	{
-		var pub = _db.AddPublication().Entity;
-		await _db.SaveChangesAsync();
-		_publications.GetTitle(pub.Id).Returns(pub.Title);
+		const int pubId = 123;
+		_publications.GetTitle(pubId).Returns("title");
+		_publications.GetAvailableMovieFiles(pubId).Returns([]);
 
-		_page.Id = pub.Id;
+		_page.Id = pubId;
 		_page.AdditionalMovieFile = CreateMockFormFile("test.zip", "application/zip");
 		_page.DisplayName = "Test Movie";
 
@@ -88,18 +90,17 @@ public class AdditionalMoviesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_ValidMovieFileParseError_AddsModelError()
 	{
-		var pub = _db.AddPublication().Entity;
-		await _db.SaveChangesAsync();
-		_publications.GetTitle(pub.Id).Returns(pub.Title);
+		const int pubId = 123;
+		_publications.GetTitle(pubId).Returns("title");
 
-		_page.Id = pub.Id;
+		_page.Id = pubId;
 		_page.AdditionalMovieFile = CreateMockFormFile("test.bk2", "application/octet-stream");
 		_page.DisplayName = "Test Movie";
 
 		var parseResult = Substitute.For<IParseResult>();
 		parseResult.Success.Returns(false);
 		parseResult.Errors.Returns(["Parse error occurred"]);
-		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[0]));
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, Array.Empty<byte>()));
 
 		var result = await _page.OnPost();
 
@@ -110,40 +111,34 @@ public class AdditionalMoviesModelTests : TestDbBase
 	[TestMethod]
 	public async Task OnPost_ValidMovieFileParseSuccess_AddsFileAndRedirects()
 	{
-		var pub = _db.AddPublication().Entity;
-		var user = _db.AddUser("TestUser").Entity;
-		await _db.SaveChangesAsync();
-		_publications.GetTitle(pub.Id).Returns(pub.Title);
-		AddAuthenticatedUser(_page, user, [PermissionTo.CreateAdditionalMovieFiles]);
+		const int pubId = 123;
+		_publications.GetTitle(pubId).Returns("title");
 
 		var parseResult = Substitute.For<IParseResult>();
 		parseResult.Success.Returns(true);
-		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3, 4 }));
+		const string movieName = "test.bk2";
+		const string displayName = "Test Movie";
+		byte[] movieFile = [1, 2, 3, 4];
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, movieFile));
+		_publications.AddMovieFile(pubId, movieName, displayName, movieFile).Returns(SaveResult.Success);
 
-		_page.Id = pub.Id;
-		_page.AdditionalMovieFile = CreateMockFormFile("test.bk2", "application/octet-stream");
-		_page.DisplayName = "Test BK2 Movie";
+		_page.Id = pubId;
+		_page.AdditionalMovieFile = CreateMockFormFile(movieName, "application/octet-stream");
+		_page.DisplayName = displayName;
 
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("AdditionalMovies", redirect.PageName);
+		Assert.AreEqual("success", _page.MessageType);
 
-		var addedFile = await _db.PublicationFiles
-			.SingleOrDefaultAsync(pf => pf.PublicationId == pub.Id);
-
-		Assert.IsNotNull(addedFile);
-		Assert.AreEqual("test.bk2", addedFile.Path);
-		Assert.AreEqual("Test BK2 Movie", addedFile.Description);
-		Assert.AreEqual(FileType.MovieFile, addedFile.Type);
-
-		await _maintenanceLogger.Received(1).Log(pub.Id, user.Id, Arg.Any<string>());
+		await _maintenanceLogger.Received(1).Log(pubId, Arg.Any<int>(), Arg.Any<string>());
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 
 	[TestMethod]
-	public async Task OnPostDelete_FileNotFound_RedirectsWithoutError()
+	public async Task OnPostDelete_FileNotFound_RedirectsWithError()
 	{
 		_page.Id = 1;
 
@@ -152,28 +147,40 @@ public class AdditionalMoviesModelTests : TestDbBase
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("AdditionalMovies", redirect.PageName);
+		Assert.AreEqual("danger", _page.MessageType);
+	}
+
+	[TestMethod]
+	public async Task OnPostDelete_SaveFailure_RedirectsWithError()
+	{
+		const int pubId = 123;
+		const int pubFileId = 567;
+		_publications.RemoveFile(pubFileId).Returns((new PublicationFile { PublicationId = pubId }, SaveResult.ConcurrencyFailure));
+		_page.Id = pubId;
+
+		var result = await _page.OnPostDelete(pubFileId);
+		Assert.IsInstanceOfType<RedirectToPageResult>(result);
+		var redirect = (RedirectToPageResult)result;
+		Assert.AreEqual("AdditionalMovies", redirect.PageName);
+		Assert.AreEqual("danger", _page.MessageType);
 	}
 
 	[TestMethod]
 	public async Task OnPostDelete_ValidFile_DeletesFileAndRedirects()
 	{
-		var pub = _db.AddPublication().Entity;
-		var user = _db.AddUser("TestUser").Entity;
-		var file = _db.AddMovieFile(pub).Entity;
-		await _db.SaveChangesAsync();
-		AddAuthenticatedUser(_page, user, [PermissionTo.CreateAdditionalMovieFiles]);
-		_page.Id = pub.Id;
+		const int pubId = 123;
+		const int pubFileId = 567;
 
-		var result = await _page.OnPostDelete(file.Id);
+		_publications.RemoveFile(pubFileId).Returns((new PublicationFile { PublicationId = pubId }, SaveResult.Success));
+		_page.Id = pubId;
+
+		var result = await _page.OnPostDelete(pubFileId);
 
 		Assert.IsInstanceOfType<RedirectToPageResult>(result);
 		var redirect = (RedirectToPageResult)result;
 		Assert.AreEqual("AdditionalMovies", redirect.PageName);
 
-		var deletedFile = await _db.PublicationFiles.FindAsync(file.Id);
-		Assert.IsNull(deletedFile);
-
-		await _maintenanceLogger.Received(1).Log(pub.Id, user.Id, Arg.Any<string>());
+		await _maintenanceLogger.Received(1).Log(pubId, Arg.Any<int>(), Arg.Any<string>());
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 	}
 }

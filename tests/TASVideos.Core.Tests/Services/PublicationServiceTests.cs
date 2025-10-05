@@ -1,5 +1,6 @@
 ﻿using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Awards;
 using static TASVideos.Data.Entity.SubmissionStatus;
@@ -11,6 +12,7 @@ public class PublicationsTests : TestDbBase
 {
 	private readonly IYoutubeSync _youtubeSync;
 	private readonly ITASVideoAgent _tva;
+	private readonly IFileService _fileService;
 
 	private readonly Publications _publications;
 
@@ -18,10 +20,11 @@ public class PublicationsTests : TestDbBase
 	{
 		_youtubeSync = Substitute.For<IYoutubeSync>();
 		_tva = Substitute.For<ITASVideoAgent>();
+		_fileService = Substitute.For<IFileService>();
 		var wikiPages = Substitute.For<IWikiPages>();
 		var tagService = Substitute.For<ITagService>();
 		var flagService = Substitute.For<IFlagService>();
-		_publications = new Publications(_db, _youtubeSync, _tva, wikiPages, tagService, flagService);
+		_publications = new Publications(_db, _youtubeSync, _tva, wikiPages, tagService, flagService, _fileService);
 	}
 
 	#region GetTitle
@@ -287,6 +290,173 @@ public class PublicationsTests : TestDbBase
 
 		Assert.IsNull(result);
 		Assert.AreEqual(1, _db.PublicationUrls.Count(u => u.Id == url.Id));
+	}
+
+	#endregion
+
+	#region AddMovieFile
+
+	[TestMethod]
+	public async Task AddMovieFile_CompressesFileWithGzip_WhenSmallerThanOriginal()
+	{
+		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
+
+		byte[] originalData = [1, 2, 3, 4, 5];
+		byte[] compressedData = [1, 2];
+		_fileService.Compress(originalData)
+			.Returns(new CompressedFile(originalData.Length, compressedData.Length, Compression.Gzip, compressedData));
+
+		var result = await _publications.AddMovieFile(pub.Id, "test.bk2", "Test Movie", originalData);
+
+		Assert.AreEqual(SaveResult.Success, result);
+		var file = _db.PublicationFiles.Single(f => f.PublicationId == pub.Id);
+		Assert.AreEqual("test.bk2", file.Path);
+		Assert.AreEqual("Test Movie", file.Description);
+		Assert.AreEqual(Compression.Gzip, file.CompressionType);
+		CollectionAssert.AreEqual(compressedData, file.FileData);
+	}
+
+	[TestMethod]
+	public async Task AddMovieFile_UsesOriginalData_WhenGzipIsNotSmaller()
+	{
+		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
+
+		byte[] originalData = [1, 2, 3];
+		_fileService.Compress(originalData)
+			.Returns(new CompressedFile(originalData.Length, originalData.Length, Compression.None, originalData));
+
+		var result = await _publications.AddMovieFile(pub.Id, "test.bk2", "Test Movie", originalData);
+
+		Assert.AreEqual(SaveResult.Success, result);
+		var file = _db.PublicationFiles.Single(f => f.PublicationId == pub.Id);
+		Assert.AreEqual("test.bk2", file.Path);
+		Assert.AreEqual("Test Movie", file.Description);
+		Assert.AreEqual(Compression.None, file.CompressionType);
+		CollectionAssert.AreEqual(originalData, file.FileData);
+	}
+
+	#endregion
+
+	#region RemoveFile
+
+	[TestMethod]
+	public async Task RemoveFile_NotFound_ReturnsNotFound()
+	{
+		var (file, result) = await _publications.RemoveFile(int.MaxValue);
+		Assert.IsNull(file);
+		Assert.AreEqual(SaveResult.NotFound, result);
+	}
+
+	[TestMethod]
+	public async Task RemoveFile_Found_RemovesFileAndReturnsSuccess()
+	{
+		var pub = _db.AddPublication().Entity;
+		var file = _db.AddMovieFile(pub, "test.bk2").Entity;
+		file.Description = "Test Movie";
+		await _db.SaveChangesAsync();
+
+		var (removedFile, result) = await _publications.RemoveFile(file.Id);
+
+		Assert.IsNotNull(removedFile);
+		Assert.AreEqual(file.Id, removedFile.Id);
+		Assert.AreEqual(file.Path, removedFile.Path);
+		Assert.AreEqual(file.Description, removedFile.Description);
+		Assert.AreEqual(file.PublicationId, removedFile.PublicationId);
+		Assert.AreEqual(SaveResult.Success, result);
+		Assert.AreEqual(0, _db.PublicationFiles.Count(pf => pf.Id == file.Id));
+	}
+
+	[TestMethod]
+	public async Task RemoveFile_DatabaseFailure_ReturnsFailure()
+	{
+		var pub = _db.AddPublication().Entity;
+		var file = _db.AddMovieFile(pub, "test.bk2").Entity;
+		await _db.SaveChangesAsync();
+
+		_db.CreateUpdateConflict();
+		var (removedFile, result) = await _publications.RemoveFile(file.Id);
+
+		Assert.IsNotNull(removedFile);
+		Assert.AreEqual(file.Id, removedFile.Id);
+		Assert.AreEqual(SaveResult.UpdateFailure, result);
+		Assert.AreEqual(1, _db.PublicationFiles.Count(pf => pf.Id == file.Id));
+	}
+
+	[TestMethod]
+	public async Task RemoveFile_ConcurrencyFailure_ReturnsConcurrencyFailure()
+	{
+		var pub = _db.AddPublication().Entity;
+		var file = _db.AddMovieFile(pub, "test.bk2").Entity;
+		await _db.SaveChangesAsync();
+
+		_db.CreateConcurrentUpdateConflict();
+		var (removedFile, result) = await _publications.RemoveFile(file.Id);
+
+		Assert.IsNotNull(removedFile);
+		Assert.AreEqual(file.Id, removedFile.Id);
+		Assert.AreEqual(SaveResult.ConcurrencyFailure, result);
+		Assert.AreEqual(1, _db.PublicationFiles.Count(pf => pf.Id == file.Id));
+	}
+
+	#endregion
+
+	#region GetAvailableMovieFiles
+
+	[TestMethod]
+	public async Task GetAvailableMovieFiles_NotFound_ReturnsEmptyList()
+	{
+		var actual = await _publications.GetAvailableMovieFiles(int.MaxValue);
+		Assert.AreEqual(0, actual.Count);
+	}
+
+	[TestMethod]
+	public async Task GetAvailableMovieFiles_FoundWithNoMovieFiles_ReturnsEmptyList()
+	{
+		var pub = _db.AddPublication().Entity;
+		await _db.SaveChangesAsync();
+
+		var actual = await _publications.GetAvailableMovieFiles(pub.Id);
+		Assert.AreEqual(0, actual.Count);
+	}
+
+	[TestMethod]
+	public async Task GetAvailableMovieFiles_FoundWithMovieFiles_ReturnsFileEntries()
+	{
+		var pub = _db.AddPublication().Entity;
+		_db.PublicationFiles.Add(new PublicationFile
+		{
+			PublicationId = pub.Id,
+			Path = "test1.bk2",
+			Description = "Test Movie 1",
+			Type = FileType.MovieFile,
+			FileData = [1, 2, 3]
+		});
+		_db.PublicationFiles.Add(new PublicationFile
+		{
+			PublicationId = pub.Id,
+			Path = "test2.fm2",
+			Description = "Test Movie 2",
+			Type = FileType.MovieFile,
+			FileData = [4, 5, 6]
+		});
+		_db.PublicationFiles.Add(new PublicationFile
+		{
+			PublicationId = pub.Id,
+			Path = "screenshot.png",
+			Description = "Screenshot",
+			Type = FileType.Screenshot,
+			FileData = null // Should be excluded from movie files
+		});
+		await _db.SaveChangesAsync();
+
+		var actual = await _publications.GetAvailableMovieFiles(pub.Id);
+
+		Assert.AreEqual(2, actual.Count);
+		Assert.IsTrue(actual.Any(f => f.FileName == "test1.bk2" && f.Description == "Test Movie 1"));
+		Assert.IsTrue(actual.Any(f => f.FileName == "test2.fm2" && f.Description == "Test Movie 2"));
+		Assert.IsFalse(actual.Any(f => f.FileName == "screenshot.png"));
 	}
 
 	#endregion

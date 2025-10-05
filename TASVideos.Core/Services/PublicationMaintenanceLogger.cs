@@ -25,13 +25,11 @@ internal class PublicationMaintenanceLogger(ApplicationDbContext db) : IPublicat
 	}
 
 	private void Add(int publicationId, int userId, string log)
-	{
-		db.PublicationMaintenanceLogs.Add(new PublicationMaintenanceLog
+		=> db.PublicationMaintenanceLogs.Add(new PublicationMaintenanceLog
 		{
 			TimeStamp = DateTime.UtcNow,
 			PublicationId = publicationId,
 			UserId = userId,
 			Log = log
 		});
-	}
 }

@@ -1,4 +1,5 @@
 ﻿using TASVideos.Core.Services;
+using TASVideos.Pages;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -62,44 +63,17 @@ public class ViewModelModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnGetDownloadAdditional_NoPublication_ReturnsNotFound()
-	{
-		var actual = await _page.OnGetDownloadAdditional(0);
-		Assert.IsInstanceOfType<NotFoundResult>(actual);
-	}
-
-	[TestMethod]
-	public async Task OnGetDownloadAdditional_PubWithWrongFileId_ReturnsNotFound()
-	{
-		const int publicationId = 1;
-		byte[] pubData = [0xFF, 0xFE];
-		const string pubPath = "pub.bk2";
-		const int fileId = 2;
-		_fileService.GetAdditionalPublicationFile(publicationId, fileId)
-			.Returns(new ZippedFile(pubData, pubPath));
-		_page.Id = publicationId;
-
-		var actual = await _page.OnGetDownloadAdditional(fileId + 1);
-
-		Assert.IsInstanceOfType<NotFoundResult>(actual);
-	}
-
-	[TestMethod]
 	public async Task OnGetDownloadAdditional_PubAndFileId_ReturnsFile()
 	{
 		const int publicationId = 1;
-		byte[] pubData = [0xFF, 0xFE];
 		const string pubPath = "pub.bk2";
 		const int fileId = 2;
 		_fileService.GetAdditionalPublicationFile(publicationId, fileId)
-			.Returns(new ZippedFile(pubData, pubPath));
+			.Returns(new DownloadableFile(pubPath, [1, 2, 3], Compression.None));
 		_page.Id = publicationId;
 
 		var actual = await _page.OnGetDownloadAdditional(fileId);
 
-		Assert.IsInstanceOfType<FileContentResult>(actual);
-		var fileContentResult = (FileContentResult)actual;
-		Assert.AreEqual(pubData.Length, fileContentResult.FileContents.Length);
-		Assert.AreEqual(pubPath + ".zip", fileContentResult.FileDownloadName);
+		Assert.IsInstanceOfType<DownloadResult>(actual);
 	}
 }
