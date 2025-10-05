@@ -32,7 +32,7 @@ public class VersionIntegrationTests
 		response.EnsureSuccessStatusCode("Home page should load successfully");
 
 		// Check that the version link href contains a valid commit SHA
-		var footerLink = await response.QuerySelectorAsync("a[href*='github.com/TASVideos/tasvideos/commit/']");
+		var footerLink = await response.QuerySelectorAsync("a[href*='github.com/TASVideos/tasvideos/commits/']");
 		Assert.IsNotNull(footerLink, "Version link should be present in footer");
 
 		var href = footerLink.GetAttribute("href");
@@ -43,8 +43,8 @@ public class VersionIntegrationTests
 			footerText.Contains("TASVideos v"),
 			$"Footer should contain 'TASVideos v' but got: {footerText}");
 
-		// Extract SHA from URL (e.g., "https://github.com/TASVideos/tasvideos/commit/e2f009c7e95aa93b732b9c7d59c00fcd30fbd0b4")
-		var shaMatch = Regex.Match(href, "/commit/([a-f0-9]+)$");
+		// Extract SHA from URL (e.g., "https://github.com/TASVideos/tasvideos/commits/e2f009c7e95aa93b732b9c7d59c00fcd30fbd0b4")
+		var shaMatch = Regex.Match(href, "/commits/([a-f0-9]+)$");
 		Assert.IsTrue(shaMatch.Success, $"Could not extract SHA from link href: {href}");
 
 		var sha = shaMatch.Groups[1].Value;
