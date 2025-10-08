@@ -10,7 +10,7 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Bk2SampleFiles\*.bk2" />
-		<EmbeddedResource Include="CelTasSampleFiles\*.celtas" />
+		<EmbeddedResource Include="TasSampleFiles\*.tas" />
 		<EmbeddedResource Include="CtmSampleFiles\*.ctm" />
 		<EmbeddedResource Include="DsmSampleFiles\*.dsm" />
 		<EmbeddedResource Include="DtmSampleFiles\*.dtm" />
@@ -30,6 +30,10 @@
 		<EmbeddedResource Include="TasprojSampleFiles\*.tasproj" />
 		<EmbeddedResource Include="VbmSampleFiles\*.vbm" />
 		<EmbeddedResource Include="WtfSampleFiles\*.wtf" />
+		<EmbeddedResource Include="TasSampleFiles\2465ms.tas" />
+		<EmbeddedResource Include="TasSampleFiles\2465ms_Integrated.tas" />
+		<EmbeddedResource Include="TasSampleFiles\improperfiletime.tas" />
+		<EmbeddedResource Include="TasSampleFiles\missingfiletime.tas" />
 		<EmbeddedResource Include="ThreeCtSampleFiles\basic.3ct" />
 	</ItemGroup>
 
