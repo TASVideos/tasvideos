@@ -19,6 +19,7 @@
 		<EmbeddedResource Include="Fm3SampleFiles\*.fm3" />
 		<EmbeddedResource Include="GbmvSampleFiles\*.gbmv" />
 		<EmbeddedResource Include="GmvSampleFiles\*.gmv" />
+		<EmbeddedResource Include="GzmSampleFiles\*.gzm" />
 		<EmbeddedResource Include="JrsrSampleFiles\*.jrsr" />
 		<EmbeddedResource Include="LmpSampleFiles\*.lmp" />
 		<EmbeddedResource Include="LsmvSampleFiles\*.lsmv" />
