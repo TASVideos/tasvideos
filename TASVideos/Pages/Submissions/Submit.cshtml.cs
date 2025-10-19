@@ -1,4 +1,5 @@
 ﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -8,7 +9,8 @@ public class SubmitModel(
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
 	IWikiPages wikiPages,
-	IExternalMediaPublisher externalMediaPublisher)
+	IExternalMediaPublisher externalMediaPublisher,
+	IMovieParser movieParser)
 	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
@@ -51,6 +53,8 @@ public class SubmitModel(
 	[BindProperty]
 	[Required]
 	public IFormFile? MovieFile { get; init; }
+
+	public IEnumerable<string> MovieFileAccepts { get; init; } = movieParser.SupportedMovieExtensions;
 
 	[BindProperty]
 	[MustBeTrue(ErrorMessage = "You must read and follow the instructions.")]
