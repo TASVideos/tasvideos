@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -12,6 +13,7 @@ public class EditModelTests : TestDbBase
 {
 	private readonly IWikiPages _wikiPages;
 	private readonly IQueueService _queueService;
+	private readonly IMovieParser _movieParser;
 	private readonly EditModel _page;
 
 	public EditModelTests()
@@ -19,7 +21,8 @@ public class EditModelTests : TestDbBase
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_queueService = Substitute.For<IQueueService>();
-		_page = new EditModel(_db, _wikiPages, publisher, _queueService);
+		_movieParser = Substitute.For<IMovieParser>();
+		_page = new EditModel(_db, _wikiPages, publisher, _queueService, _movieParser);
 	}
 
 	[TestMethod]
