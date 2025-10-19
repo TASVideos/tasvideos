@@ -4,8 +4,8 @@ using SharpCompress.Common;
 
 namespace TASVideos.MovieParsers.Parsers;
 
-[FileExtension("celtas")]
-internal class CelTas : Parser, IParser
+[FileExtension("tas")]
+internal class Tas : Parser, IParser
 {
 	private const int FrameRate = 60;
 	private const int IGTFrameRate = 1000;
