@@ -1,4 +1,23 @@
-﻿const markupBox = document.querySelector('[data-id="wiki-edit"]');
+﻿// Client side validation for .zip, consider removing this at some point
+jQuery.validator.addMethod('nozip', function (value, element) {
+    if (!value) {
+        return true; // Let the required validator handle empty values
+    }
+
+    const extension = value.split('.').pop().toLowerCase();
+    return extension !== 'zip';
+}, 'ZIP files are not supported. Please upload the original movie file.');
+
+jQuery(document).ready(function () {
+    const movieFileInput = document.querySelector('[data-id="movie-file"]');
+    if (movieFileInput) {
+        jQuery(movieFileInput).rules('add', {
+            nozip: true
+        });
+    }
+});
+
+const markupBox = document.querySelector('[data-id="wiki-edit"]');
 document.getElementById('prefill-btn').onclick = function () {
 	const markup = markupBox.value;
 	if (markup) {

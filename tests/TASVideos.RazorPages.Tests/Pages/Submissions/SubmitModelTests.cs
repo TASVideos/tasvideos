@@ -62,6 +62,33 @@ public class SubmitModelTests : TestDbBase
 	}
 
 	[TestMethod]
+	public async Task OnPost_ZipFile_ValidationError()
+	{
+		const string existingUser = "Exists";
+		_userManager.Exists(existingUser).Returns(true);
+
+		const string content = "Mock zip file content";
+		const string fileName = "test.zip";
+		var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		{
+			MovieFile = new FormFile(ms, 0, ms.Length, "MovieFile", fileName)
+			{
+				Headers = new HeaderDictionary(),
+				ContentType = "application/zip"
+			}
+		};
+
+		await _page.OnPost();
+
+		Assert.IsFalse(_page.ModelState.IsValid);
+		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.MovieFile)));
+		Assert.IsTrue(_page.ModelState[nameof(_page.MovieFile)]!.Errors
+			.Any(e => e.ErrorMessage.Contains("ZIP files are not supported")));
+	}
+
+	[TestMethod]
 	public async Task OnPost_LimitExceeded_ReturnsWarningWithNextWindow()
 	{
 		var nextWindow = DateTime.UtcNow.AddDays(1);

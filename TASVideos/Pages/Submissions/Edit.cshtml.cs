@@ -72,6 +72,12 @@ public class EditModel(
 
 	public async Task<IActionResult> OnPost()
 	{
+		if (Submission.ReplaceMovieFile.FileExtension() == ".zip")
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.ReplaceMovieFile)}", "ZIP files are not supported. Please upload the original movie file.");
+			return Page();
+		}
+
 		if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.ReplaceMovieFile is not null)
 		{
 			Submission.ReplaceMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);

@@ -138,6 +138,13 @@ public class SubmitModel(
 
 	private async Task ValidateModel()
 	{
+		if (MovieFile.FileExtension() == ".zip")
+		{
+			ModelState.AddModelError(nameof(MovieFile), "ZIP files are not supported. Please upload the original movie file.");
+		}
+
+		MovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
+
 		Authors = Authors.RemoveEmpty();
 		if (!Authors.Any() && string.IsNullOrWhiteSpace(ExternalAuthors))
 		{
@@ -145,8 +152,6 @@ public class SubmitModel(
 				$"{nameof(Authors)}",
 				"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 		}
-
-		MovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
 
 		foreach (var author in Authors)
 		{
