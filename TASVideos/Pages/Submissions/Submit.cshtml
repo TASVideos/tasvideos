@@ -22,9 +22,8 @@
 		<column lg="6">
 			<fieldset>
 				<label asp-for="MovieFile"></label>
-				<input asp-for="MovieFile" data-id="movie-file" />
+				<input asp-for="MovieFile" data-id="movie-file" accept="@string.Join(',', Model.MovieFileAccepts)" />
 				<span asp-validation-for="MovieFile"></span>
-				<div data-id="nozip-reminder" class="alert alert-danger d-none">Note: We no longer support zipping your movie file. Select your original movie file and your browser will automatically compress it before uploading.</div>
 			</fieldset>
 		</column>
 		<column lg="6">

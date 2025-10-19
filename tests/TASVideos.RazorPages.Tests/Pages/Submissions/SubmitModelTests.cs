@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
@@ -18,6 +19,7 @@ public class SubmitModelTests : TestDbBase
 	private readonly IUserManager _userManager;
 	private readonly IMovieFormatDeprecator _movieFormatDeprecator;
 	private readonly IQueueService _queueService;
+	private readonly IMovieParser _movieParser;
 	private SubmitModel _page;
 
 	public SubmitModelTests()
@@ -27,7 +29,8 @@ public class SubmitModelTests : TestDbBase
 		_userManager = Substitute.For<IUserManager>();
 		_movieFormatDeprecator = Substitute.For<IMovieFormatDeprecator>();
 		_queueService = Substitute.For<IQueueService>();
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher);
+		_movieParser = Substitute.For<IMovieParser>();
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser);
 	}
 
 	[TestMethod]
@@ -71,7 +74,7 @@ public class SubmitModelTests : TestDbBase
 		const string fileName = "test.zip";
 		var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
 
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
 		{
 			MovieFile = new FormFile(ms, 0, ms.Length, "MovieFile", fileName)
 			{
@@ -145,7 +148,7 @@ public class SubmitModelTests : TestDbBase
 		const string existingUser = "Exists";
 		_db.AddUser(existingUser);
 		await _db.SaveChangesAsync();
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
 		{
 			MovieFile = GenerateTooLargeMovie(),
 			Authors = [existingUser]
@@ -174,7 +177,7 @@ public class SubmitModelTests : TestDbBase
 		_queueService.ExceededSubmissionLimit(user.Id).Returns((DateTime?)null);
 		_queueService.Submit(Arg.Any<SubmitRequest>()).Returns(new SubmitResult(null, 42, "", null));
 
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
 		{
 			GameName = "Test Game",
 			RomName = "test.nes",
@@ -222,7 +225,7 @@ public class SubmitModelTests : TestDbBase
 		_queueService.Submit(Arg.Any<SubmitRequest>())
 			.Returns(new FailedSubmitResult("Database error occurred"));
 
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
 		{
 			GameName = "Test Game",
 			RomName = "test.nes",
