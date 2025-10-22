@@ -8,9 +8,9 @@ namespace TASVideos.MovieParsers.Parsers;
 internal class Tas : Parser, IParser
 {
 	private const int FrameRate = 60;
-	private const int IGTFrameRate = 1000;
 
 	private const string FileTimeHeader = "FileTime: ";
+	private const string ChapterTimeHeader = "ChapterTime: ";
 	private const string TotalRerecordCountHeader = "TotalRecordCount: ";
 	private const string RerecordCountHeader = "RecordCount: ";
 
@@ -19,10 +19,12 @@ internal class Tas : Parser, IParser
 		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			SystemCode = SystemCodes.Celeste
+			SystemCode = SystemCodes.Celeste,
+			FrameRateOverride = 58.823529411764705
 		};
 
 		var fileTimeFound = 0;
+		var chapterTimeFound = 0;
 		var totalRecordCountUsed = false;
 
 		using var reader = new StreamReader(file);
@@ -36,43 +38,41 @@ internal class Tas : Parser, IParser
 					return Error("No FileTime duration found");
 				}
 
-				var split = s.Split([':', '.', ' ', '(']);
-				if (split.Length > 5) // This should always output at least 6 strings
+				var split = s.Split(['(', ')']);
+				if (split.Length == 3)
 				{
-					var i = split.Length - 2;
-					var test = int.TryParse(split[i], out int milliseconds);
+					var test = int.TryParse(split[1], out int igtFrames);
 					if (test)
 					{
-						result.Frames = milliseconds;
-						i--;
-					}
-
-					test = int.TryParse(split[i], out int seconds);
-					if (test)
-					{
-						result.Frames += seconds * 1000;
-						i--;
-					}
-
-					test = int.TryParse(split[i], out int minutes);
-					if (test)
-					{
-						result.Frames += minutes * 1000 * 60;
-						i--;
-					}
-
-					if (i > 1)
-					{
-						test = int.TryParse(split[i], out int hours);
-						if (test)
-						{
-							result.Frames += hours * 1000 * 60 * 60;
-						}
+						result.Frames = igtFrames;
 					}
 				}
 				else
 				{
 					return Error("FileTime did not meet expected format");
+				}
+			}
+
+			if (fileTimeFound == 0 && s.StartsWith(ChapterTimeHeader))
+			{
+				chapterTimeFound = 1;
+				if (string.IsNullOrWhiteSpace(s))
+				{
+					return Error("No ChapterTime duration found");
+				}
+
+				var split = s.Split(['(', ')']);
+				if (split.Length == 3)
+				{
+					var test = int.TryParse(split[1], out int igtFrames);
+					if (test)
+					{
+						result.Frames = igtFrames;
+					}
+				}
+				else
+				{
+					return Error("ChapterTime did not meet expected format");
 				}
 			}
 
@@ -115,9 +115,9 @@ internal class Tas : Parser, IParser
 			}
 		}
 
-		if (fileTimeFound == 0)
+		if (fileTimeFound == 0 && chapterTimeFound == 0)
 		{
-			return Error("No FileTime found, cannot parse");
+			return Error("No FileTime or ChapterTime found, cannot parse");
 		}
 
 		return result;

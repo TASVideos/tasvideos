@@ -55,11 +55,13 @@ public class TasTests : BaseParserTests
 	}
 
 	[TestMethod]
-	public async Task Length()
+	[DataRow("2465ms.tas")]
+	[DataRow("2465ms_ChapterTime.tas")]
+	public async Task Length(string filename)
 	{
-		var result = await _tasParser.Parse(Embedded("2465ms.tas", out var length), length);
+		var result = await _tasParser.Parse(Embedded(filename, out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(2465, result.Frames);
+		Assert.AreEqual(145, result.Frames);
 	}
 }
