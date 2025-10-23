@@ -20,7 +20,7 @@ internal class Tas : Parser, IParser
 		{
 			Region = RegionType.Ntsc,
 			SystemCode = SystemCodes.Celeste,
-			FrameRateOverride = 58.823529411764705
+			FrameRateOverride = 1000.0 / 17.0
 		};
 
 		var fileTimeFound = 0;
