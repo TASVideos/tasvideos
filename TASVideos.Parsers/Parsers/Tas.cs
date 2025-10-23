@@ -9,10 +9,10 @@ internal class Tas : Parser, IParser
 {
 	private const int FrameRate = 60;
 
-	private const string FileTimeHeader = "FileTime: ";
-	private const string ChapterTimeHeader = "ChapterTime: ";
-	private const string TotalRerecordCountHeader = "TotalRecordCount: ";
-	private const string RerecordCountHeader = "RecordCount: ";
+	private const string FileTimeHeader = "FileTime:";
+	private const string ChapterTimeHeader = "ChapterTime:";
+	private const string TotalRerecordCountHeader = "TotalRecordCount:";
+	private const string RerecordCountHeader = "RecordCount:";
 
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
