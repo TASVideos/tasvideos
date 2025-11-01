@@ -249,9 +249,12 @@ public class CatalogModel(ApplicationDbContext db, IExternalMediaPublisher publi
 			}
 			else
 			{
-				submission.SyncedOn = null;
-				submission.SyncedByUserId = null;
-				unsynced = true;
+				if (submission.SyncedOn.HasValue)
+				{
+					submission.SyncedOn = null;
+					submission.SyncedByUserId = null;
+					unsynced = true;
+				}
 			}
 		}
 
