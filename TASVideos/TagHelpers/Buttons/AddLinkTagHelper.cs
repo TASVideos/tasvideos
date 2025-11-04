@@ -6,14 +6,23 @@ namespace TASVideos.TagHelpers;
 
 public class AddLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
+	public override void Process(TagHelperContext context, TagHelperOutput output)
+	{
+		var task = output.GetChildContentAsync();
+		task.Wait();
+		SetOutput(context, output, task.Result.IsEmptyOrWhiteSpace);
+	}
+
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
+		=> SetOutput(context, output, (await output.GetChildContentAsync()).IsEmptyOrWhiteSpace);
+
+	private void SetOutput(TagHelperContext context, TagHelperOutput output, bool innerContentIsBlank)
 	{
 		output.TagName = "a";
-		await base.ProcessAsync(context, output);
+		base.Process(context, output);
 		output.AddCssClass("btn");
 		output.AddCssClass("btn-primary");
-		var content = (await output.GetChildContentAsync()).GetContent();
-		if (string.IsNullOrWhiteSpace(content))
+		if (innerContentIsBlank)
 		{
 			output.Content.AppendHtml("<i class=\"fa fa-plus\"></i> Add");
 		}
