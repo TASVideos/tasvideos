@@ -45,7 +45,7 @@ public class UnpublishModel(IExternalMediaPublisher publisher, IPublications pub
 				ErrorStatusMessage(result.ErrorMessage);
 				return RedirectToPage("View", new { Id });
 			case UnpublishResult.UnpublishStatus.Success:
-				await publisher.AnnounceUnpublish(result.PublicationTitle, Id, Reason);
+				await publisher.SendUnpublish(result.PublicationTitle, Id, Reason);
 				break;
 		}
 

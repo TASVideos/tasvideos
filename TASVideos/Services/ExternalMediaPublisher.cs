@@ -141,12 +141,11 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceUnpublish(this IExternalMediaPublisher publisher, string publicationTitle, int id, string reason)
+	public static async Task SendUnpublish(this IExternalMediaPublisher publisher, string publicationTitle, int id, string reason)
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = $"{publicationTitle} REMOVED",
-			Type = PostType.Announcement,
+			Type = PostType.General,
 			Group = PostGroups.Publication,
 			Title = "Publication Removed",
 			FormattedTitle = "[Publication]({0}) Removed",
@@ -155,12 +154,11 @@ public static class ExternalMediaPublisherExtensions
 		});
 	}
 
-	public static async Task AnnounceSubmissionDelete(this IExternalMediaPublisher publisher, string submissionTitle, int id)
+	public static async Task SendSubmissionDelete(this IExternalMediaPublisher publisher, string submissionTitle, int id)
 	{
 		await publisher.Send(new Post
 		{
-			Announcement = $"{submissionTitle} REMOVED",
-			Type = PostType.Announcement,
+			Type = PostType.General,
 			Group = PostGroups.Submission,
 			Title = "Submission Removed",
 			FormattedTitle = "[Submission]({0}) Removed",
