@@ -18,25 +18,27 @@
 	@await Html.RenderWiki(SystemWiki.MovieLinkInstruction)
 </div>
 <hr />
-<a asp-page="/Wiki/PageHistory"
-   asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
-   class="btn btn-info btn-sm">
-   <span class="fa fa-history"></span> Page History
-</a>
-<a asp-page="/Wiki/PageHistory"
-   asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
-   asp-route-latest="true"
-   class="btn btn-info btn-sm">
-   Latest diff
-</a>
-<a asp-page="/Wiki/Referrers"
-   asp-route-path="@(Model.Id + "M")"
-   class="btn btn-info btn-sm">
-   List referrers
-</a>
-<a asp-page="/Logs/Index"
-   asp-route-table="Publications"
-   asp-route-rowId="@Model.Id"
-   class="btn btn-info btn-sm">
-	<i class="fa fa-plus-minus"></i> Change Log
-</a>
+<div class="d-flex flex-wrap gap-1">
+	<a asp-page="/Wiki/PageHistory"
+	   asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
+	   class="btn btn-info btn-sm">
+		<span class="fa fa-history"></span> Page History
+	</a>
+	<a asp-page="/Wiki/PageHistory"
+	   asp-route-path="@(LinkConstants.PublicationWikiPage + Model.Id)"
+	   asp-route-latest="true"
+	   class="btn btn-info btn-sm">
+		Latest diff
+	</a>
+	<a asp-page="/Wiki/Referrers"
+	   asp-route-path="@(Model.Id + "M")"
+	   class="btn btn-info btn-sm">
+		List referrers
+	</a>
+	<a asp-page="/Logs/Index"
+	   asp-route-table="Publications"
+	   asp-route-rowId="@Model.Id"
+	   class="btn btn-info btn-sm">
+		<i class="fa fa-plus-minus"></i> Change Log
+	</a>
+</div>
