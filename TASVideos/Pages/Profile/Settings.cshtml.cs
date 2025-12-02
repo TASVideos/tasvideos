@@ -70,6 +70,9 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 	public UserPreference AutoWatchTopic { get; set; }
 
 	[BindProperty]
+	public bool PreselectMinorEditOnPostEdits { get; set; }
+
+	[BindProperty]
 	public UserDateFormat DateFormat { get; set; }
 
 	[BindProperty]
@@ -94,6 +97,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 		PreferredPronouns = user.PreferredPronouns;
 		EmailOnPrivateMessage = user.EmailOnPrivateMessage;
 		AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto;
+		PreselectMinorEditOnPostEdits = user.PreselectMinorEditOnPostEdits;
 		DateFormat = user.DateFormat;
 		TimeFormat = user.TimeFormat;
 		DecimalFormat = user.DecimalFormat;
@@ -140,6 +144,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 		user.PreferredPronouns = PreferredPronouns;
 		user.EmailOnPrivateMessage = EmailOnPrivateMessage;
 		user.AutoWatchTopic = AutoWatchTopic;
+		user.PreselectMinorEditOnPostEdits = PreselectMinorEditOnPostEdits;
 		user.DateFormat = DateFormat;
 		user.TimeFormat = TimeFormat;
 		user.DecimalFormat = DecimalFormat;

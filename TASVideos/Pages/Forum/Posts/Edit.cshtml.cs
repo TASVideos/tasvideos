@@ -27,6 +27,8 @@ public class EditModel(
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
 
+	public bool PreselectMinorEdit { get; set; }
+
 	public async Task<IActionResult> OnGet()
 	{
 		var post = await db.ForumPosts
@@ -85,6 +87,9 @@ public class EditModel(
 		{
 			UserAvatars = await forumService.UserAvatars(User.GetUserId());
 		}
+
+		var user = await userManager.GetRequiredUser(User);
+		PreselectMinorEdit = user.PreselectMinorEditOnPostEdits;
 
 		return Page();
 	}

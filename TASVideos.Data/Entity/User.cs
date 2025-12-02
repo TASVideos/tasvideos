@@ -66,6 +66,8 @@ public class User : IdentityUser<int>, ITrackable
 
 	public UserPreference? AutoWatchTopic { get; set; }
 
+	public bool PreselectMinorEditOnPostEdits { get; set; } = true;
+
 	public UserDateFormat DateFormat { get; set; } = UserDateFormat.Auto;
 	public UserTimeFormat TimeFormat { get; set; } = UserTimeFormat.Auto;
 	public UserDecimalFormat DecimalFormat { get; set; } = UserDecimalFormat.Auto;
