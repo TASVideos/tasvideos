@@ -40,9 +40,13 @@
 				<select asp-for="Location" asp-items="@RegisterModel.AvailableLocations"></select>
 				<span asp-validation-for="Location"></span>
 			</fieldset>
+			<fieldset class="invisible">
+				<label asp-for="HomePage"></label>
+				<input asp-for="HomePage" />
+			</fieldset>
 			<fieldset class="mt-3">
 				<div class="form-check">
-					<label asp-for="Coppa" class="form-check-label">By checking the box below, you certify you are 13 years of age or older</label>
+					<label asp-for="Coppa" class="form-check-label">By checking this box, you certify you are 13 years of age or older</label>
 					<input asp-for="Coppa" type="checkbox" class="form-check-input"/>
 				</div>
 				<span asp-validation-for="Coppa"></span>
