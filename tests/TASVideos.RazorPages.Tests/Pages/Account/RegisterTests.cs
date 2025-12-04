@@ -20,6 +20,7 @@ public class RegisterTests : BasePageModelTests
 	private readonly IReCaptchaService _reCaptchaService = Substitute.For<IReCaptchaService>();
 	private readonly IHostEnvironment _env = Substitute.For<IHostEnvironment>();
 	private readonly IUserMaintenanceLogger _userMaintenanceLogger = Substitute.For<IUserMaintenanceLogger>();
+	private readonly IIpBanService _ipBanService = Substitute.For<IIpBanService>();
 
 	private readonly RegisterModel _model = new();
 
@@ -55,7 +56,7 @@ public class RegisterTests : BasePageModelTests
 		_model.Password = "ValidPassword123!";
 		_model.ConfirmPassword = "DifferentPassword123!";
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
@@ -67,7 +68,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_reCaptchaService.VerifyAsync(Arg.Any<string>()).Returns(false);
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
@@ -79,7 +80,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_model.Location = "InvalidLocation";
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
@@ -91,7 +92,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_signInManager.UsernameIsAllowed(_model.UserName).Returns(false);
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
@@ -103,7 +104,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_signInManager.EmailExists(_model.Email).Returns(true);
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
@@ -115,7 +116,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_signInManager.IsPasswordAllowed(_model.UserName, _model.Email, _model.Password).Returns(false);
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
@@ -127,7 +128,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_userManager.Create(Arg.Any<User>(), _model.Password).Returns(IdentityResult.Failed(new IdentityError { Description = "Creation failed" }));
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
@@ -138,7 +139,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_userManager.IsConfirmedEmailRequired().Returns(true);
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		AssertRedirect(result, "EmailConfirmationSent");
 		await _signInManager.Received(1).SignIn(Arg.Any<User>(), false);
@@ -152,7 +153,7 @@ public class RegisterTests : BasePageModelTests
 	{
 		_userManager.IsConfirmedEmailRequired().Returns(false);
 
-		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger);
+		var result = await _model.OnPost(_signInManager, _userManager, _emailService, _publisher, _reCaptchaService, _env, _userMaintenanceLogger, _ipBanService);
 
 		AssertRedirectHome(result);
 		await _signInManager.Received(1).SignIn(Arg.Any<User>(), false);
