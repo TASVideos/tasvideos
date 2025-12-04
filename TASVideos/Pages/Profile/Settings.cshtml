@@ -7,6 +7,8 @@
 	const string ratingsFalseId = nameof(Model.PublicRatings) + "-false";
 	const string emailOnPmTrueId = nameof(Model.EmailOnPrivateMessage) + "-true";
 	const string emailOnPmFalseId = nameof(Model.EmailOnPrivateMessage) + "-false";
+	const string preselectMinorEditTrueId = nameof(Model.PreselectMinorEditOnPostEdits) + "-true";
+	const string preselectMinorEditFalseId = nameof(Model.PreselectMinorEditOnPostEdits) + "-false";
 	var usingIvatar = Model.AvatarUrl?.Contains($"//{SiteGlobalConstants.MainIvatarDomain}/") ?? false;
 }
 
@@ -61,6 +63,17 @@
 					</label>
 					<label for="@emailOnPmFalseId" class="btn btn-secondary @(!Model.EmailOnPrivateMessage ? "active" : "")">
 						<input id="@emailOnPmFalseId" type="radio" value="False" asp-for="EmailOnPrivateMessage" /> No
+					</label>
+				</div>
+			</fieldset>
+			<fieldset>
+				<label asp-for="PreselectMinorEditOnPostEdits">Preselect "Minor Edit" on Forum Post edits</label>
+				<div class="btn-group btn-group-toggle" data-bs-toggle="buttons">
+					<label for="@preselectMinorEditTrueId" class="btn btn-secondary @(Model.PreselectMinorEditOnPostEdits ? "active" : "")">
+						<input id="@preselectMinorEditTrueId" type="radio" value="True" asp-for="PreselectMinorEditOnPostEdits" /> Yes
+					</label>
+					<label for="@preselectMinorEditFalseId" class="btn btn-secondary @(!Model.PreselectMinorEditOnPostEdits ? "active" : "")">
+						<input id="@preselectMinorEditFalseId" type="radio" value="False" asp-for="PreselectMinorEditOnPostEdits" /> No
 					</label>
 				</div>
 			</fieldset>

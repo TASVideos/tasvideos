@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services;
+﻿using System.Security.Claims;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Posts;
@@ -87,6 +88,7 @@ public class EditModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
 		_model.Id = post.Id;
+		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 
 		var result = await _model.OnGet();
 
@@ -114,6 +116,7 @@ public class EditModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditUsersForumPosts]);
 		_model.Id = post.Id;
+		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 
 		var result = await _model.OnGet();
 
@@ -135,6 +138,7 @@ public class EditModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
 		_model.Id = firstPost.Id;
+		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 
 		var result = await _model.OnGet();
 
@@ -155,6 +159,7 @@ public class EditModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
 		_model.Id = secondPost.Id;
+		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 
 		var result = await _model.OnGet();
 
@@ -188,6 +193,7 @@ public class EditModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
 		_model.Id = currentPost.Id;
+		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 
 		var result = await _model.OnGet();
 
@@ -209,6 +215,7 @@ public class EditModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditForumPosts]);
 		_model.Id = post.Id;
+		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 
 		var result = await _model.OnGet();
 
@@ -229,6 +236,7 @@ public class EditModelTests : BasePageModelTests
 
 		AddAuthenticatedUser(_model, user, [PermissionTo.CreateForumPosts, PermissionTo.EditUsersForumPosts]);
 		_model.Id = post.Id;
+		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 
 		var result = await _model.OnGet();
 
