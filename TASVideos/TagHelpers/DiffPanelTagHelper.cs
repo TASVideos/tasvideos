@@ -17,8 +17,8 @@ public class DiffPanelTagHelper : TagHelper
 
 		output.Content.AppendHtml(
 			"""
-			<div class="card-header">
-				<a class="text-body collapsed" data-bs-toggle="collapse" data-bs-target="#diff-container" role="button"><i class="fa fa-chevron-circle-down"></i> Diff</a>
+			<div class="card-header" data-bs-toggle="collapse" data-bs-target="#diff-container">
+				<a class="text-body collapsed" role="button"><i class="fa fa-chevron-circle-down"></i> Diff</a>
 			</div>
 			<div class="card-body py-0 bg-dark-subtle">
 				<div id="diff-container" class="collapse">
