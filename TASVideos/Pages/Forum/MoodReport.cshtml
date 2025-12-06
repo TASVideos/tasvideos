@@ -18,9 +18,7 @@
 				<div class="mood-box border p-2">
 					<strong>@mood.EnumDisplayName()</strong>
 					<br />
-					<object data="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" type="image/png">
-						<img src="/images/empty.png" alt="mood @mood.ToString()">
-					</object>
+					<img src="@user.MoodAvatarUrl.Replace("$", ((int)mood).ToString())" alt="mood @mood.ToString()">
 				</div>
 			}
 		</card-body>
@@ -42,3 +40,7 @@
 		min-width: 100px;
 	}
 </style>
+
+@section Scripts {
+	<script src="/js/mood.js"></script>
+}
