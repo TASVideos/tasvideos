@@ -30,6 +30,8 @@ public class RegisterModel : BasePageModel
 
 	public string? Location { get; set; }
 
+	public string? HomePage { get; set; } // trap to try and detect bots, invisible for users, should never be filled out
+
 	[MustBeTrue(ErrorMessage = "You must certify that you are 13 years of age or older")]
 	public bool Coppa { get; set; }
 
@@ -40,8 +42,15 @@ public class RegisterModel : BasePageModel
 		[FromServices] IExternalMediaPublisher publisher,
 		[FromServices] IReCaptchaService reCaptchaService,
 		[FromServices] IHostEnvironment env,
-		[FromServices] IUserMaintenanceLogger userMaintenanceLogger)
+		[FromServices] IUserMaintenanceLogger userMaintenanceLogger,
+		[FromServices] IIpBanService ipBanService)
 	{
+		if (!string.IsNullOrEmpty(HomePage)) // bot detected
+		{
+			await ipBanService.Add(IpAddress);
+			return AccessDenied();
+		}
+
 		if (Password != ConfirmPassword)
 		{
 			ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
