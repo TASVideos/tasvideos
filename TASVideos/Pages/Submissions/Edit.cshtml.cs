@@ -94,20 +94,6 @@ public class EditModel(
 		Submission.Authors = Submission.Authors.RemoveEmpty();
 
 		var userName = User.Name();
-
-		// TODO: this is bad, an author can null out these values,
-		// but if we treat null as no choice, then we have no way to unset these values
-		if (!User.Has(PermissionTo.JudgeSubmissions))
-		{
-			Submission.IntendedPublicationClass = null;
-		}
-		else if (Submission.IntendedPublicationClass is null &&
-			Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
-		{
-			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.IntendedPublicationClass)}", "A submission can not be accepted without a PublicationClass");
-			return await ReturnWithModelErrors();
-		}
-
 		var subInfo = await db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => new
@@ -116,7 +102,8 @@ public class EditModel(
 				UserIsPublisher = s.Publisher != null && s.Publisher.UserName == userName,
 				UserIsAuthorOrSubmitter = s.Submitter!.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == userName),
 				CurrentStatus = s.Status,
-				CreateDate = s.CreateTimestamp
+				CreateDate = s.CreateTimestamp,
+				IsSynced = s.SyncedOn != null
 			})
 			.SingleOrDefaultAsync();
 
@@ -138,9 +125,28 @@ public class EditModel(
 			subInfo.UserIsJudge,
 			subInfo.UserIsPublisher);
 
+		// TODO: this is bad, an author can null out these values,
+		// but if we treat null as no choice, then we have no way to unset these values
+		if (!User.Has(PermissionTo.JudgeSubmissions))
+		{
+			Submission.IntendedPublicationClass = null;
+		}
+		else if (Submission.IntendedPublicationClass is null &&
+				Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.IntendedPublicationClass)}", "A submission can not be accepted without a PublicationClass");
+			return await ReturnWithModelErrors();
+		}
+
 		if (!AvailableStatuses.Contains(Submission.Status))
 		{
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Status)}", $"Invalid status: {Submission.Status}");
+			return await ReturnWithModelErrors();
+		}
+
+		if (Submission.Status == SubmissionStatus.Accepted && !subInfo.IsSynced)
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Status)}", "A submission cannot be accepted until it is sync verified");
 			return await ReturnWithModelErrors();
 		}
 

@@ -84,6 +84,7 @@
 				<select data-id="status"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
+				<span asp-validation-for="Submission.Status"></span>
 			</fieldset>
 			<fieldset id="rejection-reason" data-rejection-id="@((int)SubmissionStatus.Rejected)" show="@Model.Submission.Status == SubmissionStatus.Rejected">
 				<label asp-for="Submission.RejectionReason">Reason</label>
