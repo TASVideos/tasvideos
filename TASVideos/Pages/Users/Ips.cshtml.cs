@@ -19,7 +19,7 @@ public class IpsModel(ApplicationDbContext db) : BasePageModel
 		var postIps = await db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
 			.Where(p => p.IpAddress != null)
-			.Select(p => new IpEntry(p.IpAddress ?? "", p.LastUpdateTimestamp))
+			.Select(p => new IpEntry(p.IpAddress ?? "", p.PostEditedTimestamp ?? p.LastUpdateTimestamp))
 			.Distinct()
 			.ToListAsync();
 
@@ -30,10 +30,7 @@ public class IpsModel(ApplicationDbContext db) : BasePageModel
 			.Distinct()
 			.ToListAsync();
 
-		Ips = postIps
-			.Concat(voteIps)
-			.Distinct()
-			.ToList();
+		Ips = [.. postIps.Concat(voteIps).Distinct()];
 
 		return Page();
 	}
