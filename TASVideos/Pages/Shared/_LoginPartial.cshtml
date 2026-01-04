@@ -8,6 +8,8 @@
 	{
 		notificationCount = await PrivateMessages.GetUnreadMessageCount(User.GetUserId());
 	}
+
+	bool returnAfterLogin = Context.Request.Path != "/Account/Login" && Context.Request.Path != "/Account/Register";
 }
 <navbar class="flex-wrap justify-content-end">
 	@if (isSignedIn)
@@ -44,7 +46,8 @@
 			<a class="nav-link" asp-page="/Account/Register">Register</a>
 		</nav-item>
 		<nav-item activate="Login">
-			<a class="nav-link text-nowrap" asp-page="/Account/Login" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"><i class="fa fa-sign-in"></i> Log in</a>
+			<a condition="returnAfterLogin" class="nav-link text-nowrap" asp-page="/Account/Login" asp-route-returnUrl="@Context.CurrentPathToReturnUrl()"><i class="fa fa-sign-in"></i> Log in</a>
+			<a condition="!returnAfterLogin" class="nav-link text-nowrap" asp-page="/Account/Login"><i class="fa fa-sign-in"></i> Log in</a>
 		</nav-item>
 	}
 	<partial name="_Search" />
