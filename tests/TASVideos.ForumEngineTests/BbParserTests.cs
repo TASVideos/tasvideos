@@ -133,4 +133,14 @@ public class BbParserTests
 		var actual = await ParseBbcodeString(input);
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	public async Task CloseNoParse()
+	{
+		const string input = "[b]Hello [noparse]world[/b][/noparse][/b]";
+		const string expected = "<b>Hello world[/b]</b>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
 }
