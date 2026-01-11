@@ -242,6 +242,25 @@ public partial class BbParser
 		return nextTagInfo.RequiredParent == null || nextTagInfo.RequiredParent == popTo.Name;
 	}
 
+	private Element? FindMatchingForPop(string name)
+	{
+		var canPierce = true;
+		if (KnownTags.TryGetValue(_stack.Peek().Name, out var state) && state.Children == TagInfo.ChildrenAllowed.No)
+		{
+			canPierce = false;
+		}
+
+		if (canPierce)
+		{
+			return _stack.FirstOrDefault(elt => elt.Name == name);
+		}
+		else
+		{
+			var ret = _stack.Peek();
+			return ret.Name == name ? ret : null;
+		}
+	}
+
 	private void ParseLoop()
 	{
 		while (_index < _input.Length)
@@ -313,7 +332,7 @@ public partial class BbParser
 				else if ((m = ClosingTag.Match(_input, _index)).Success)
 				{
 					var name = m.Groups[1].Value;
-					var matching = _stack.FirstOrDefault(elt => elt.Name == name);
+					var matching = FindMatchingForPop(name);
 					if (matching != null)
 					{
 						FlushText();
