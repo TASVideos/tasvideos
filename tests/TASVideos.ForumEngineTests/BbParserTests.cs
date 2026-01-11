@@ -123,4 +123,14 @@ public class BbParserTests
 		var actual = await ParseBbcodeString(input);
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	public async Task SelfClosingTables()
+	{
+		const string input = "[table][tr][td]1[td]2[td]3[tr][td]a[td]b[td]c[/table]";
+		const string expected = """<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>a</td><td>b</td><td>c</td></tr></table>""";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
 }
