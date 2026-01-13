@@ -143,4 +143,24 @@ public class BbParserTests
 		var actual = await ParseBbcodeString(input);
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	public async Task CloseConditionalChildYes()
+	{
+		const string input = "[b][url=http://foobar]wow[/b][/url]";
+		const string expected = "<b><a href=\"http://foobar\" rel=\"noopener external\">wow</a></b>[/url]";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task CloseConditionalChildNo()
+	{
+		const string input = "[b][url]http://foobar[/b][/url]";
+		const string expected = "<b><a href=\"http://foobar[/b]\" rel=\"noopener external\">http://foobar[/b]</a></b>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
 }

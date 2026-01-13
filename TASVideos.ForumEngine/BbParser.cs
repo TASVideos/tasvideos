@@ -244,13 +244,7 @@ public partial class BbParser
 
 	private Element? FindMatchingForPop(string name)
 	{
-		var canPierce = true;
-		if (KnownTags.TryGetValue(_stack.Peek().Name, out var state) && state.Children == TagInfo.ChildrenAllowed.No)
-		{
-			canPierce = false;
-		}
-
-		if (canPierce)
+		if (ChildrenExpected())
 		{
 			return _stack.FirstOrDefault(elt => elt.Name == name);
 		}
