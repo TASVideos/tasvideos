@@ -123,4 +123,44 @@ public class BbParserTests
 		var actual = await ParseBbcodeString(input);
 		Assert.AreEqual(expected, actual);
 	}
+
+	[TestMethod]
+	public async Task SelfClosingTables()
+	{
+		const string input = "[table][tr][td]1[td]2[td]3[tr][td]a[td]b[td]c[/table]";
+		const string expected = """<table><tr><td>1</td><td>2</td><td>3</td></tr><tr><td>a</td><td>b</td><td>c</td></tr></table>""";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task CloseNoParse()
+	{
+		const string input = "[b]Hello [noparse]world[/b][/noparse][/b]";
+		const string expected = "<b>Hello world[/b]</b>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task CloseConditionalChildYes()
+	{
+		const string input = "[b][url=http://foobar]wow[/b][/url]";
+		const string expected = "<b><a href=\"http://foobar\" rel=\"noopener external\">wow</a></b>[/url]";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public async Task CloseConditionalChildNo()
+	{
+		const string input = "[b][url]http://foobar[/b][/url]";
+		const string expected = "<b><a href=\"http://foobar[/b]\" rel=\"noopener external\">http://foobar[/b]</a></b>";
+
+		var actual = await ParseBbcodeString(input);
+		Assert.AreEqual(expected, actual);
+	}
 }
