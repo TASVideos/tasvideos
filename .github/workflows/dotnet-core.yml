@@ -40,7 +40,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore --verbosity normal -p:TestingPlatformCommandLineArguments="--filter FullyQualifiedName!~TASVideos.E2E.Tests"
+      run: dotnet test --no-restore --verbosity normal -p:TestingPlatformCommandLineArguments="--filter FullyQualifiedName!~TASVideos.E2E.Tests --settings .runsettings"
 
     # The following steps were for code coverage, but do not work anymore since .NET 10 changed the dotnet test command from VSTest to Microsoft.Testing.Platform (MTP).
     #   run: dotnet test --no-restore --verbosity normal --collect:'Code Coverage' --filter:"FullyQualifiedName!~TASVideos.E2E.Tests"
