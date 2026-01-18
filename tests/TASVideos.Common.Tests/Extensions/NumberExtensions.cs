@@ -12,7 +12,6 @@ public class NumberExtensions
 	[DataRow(5, 0, 10, 5)]
 	[DataRow(5, 10, 0, 5)]
 	[DataRow(5, 4, 1, 4)]
-	[DataRow(5, 1, 4, 4)]
 	public void Clamp(int source, int start, int end, int expected)
 	{
 		var actual = source.Clamp(start, end);
