@@ -180,6 +180,17 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 	protected override void OnModelCreating(ModelBuilder builder)
 	{
+		// we copy the table names used by Identity before calling base.OnModelCreating, because it renames them to bad ones
+		var tableNameUser = builder.Entity<User>().Metadata.GetTableName();
+		var tableNameUserToken = builder.Entity<UserToken>().Metadata.GetTableName();
+		var tableNameUserRole = builder.Entity<UserRole>().Metadata.GetTableName();
+		var tableNameUserLogin = builder.Entity<UserLogin>().Metadata.GetTableName();
+		var tableNameUserClaim = builder.Entity<UserClaim>().Metadata.GetTableName();
+		var tableNameRole = builder.Entity<Role>().Metadata.GetTableName();
+		var tableNameRoleClaim = builder.Entity<RoleClaim>().Metadata.GetTableName();
+
+		base.OnModelCreating(builder);
+
 		if (Database.IsNpgsql())
 		{
 			foreach (var entity in builder.Model.GetEntityTypes())
@@ -200,7 +211,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<User>(entity =>
 		{
-			entity.HasIndex(e => e.NormalizedUserName).IsUnique();
+			entity.ToTable(tableNameUser);
 
 			entity.HasMany(e => e.SentPrivateMessages)
 				.WithOne(e => e.FromUser!)
@@ -234,29 +245,40 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 
 		builder.Entity<UserLogin>(entity =>
 		{
-			entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-			entity.HasIndex(e => e.UserId);
+			entity.ToTable(tableNameUserLogin);
+		});
+
+		builder.Entity<Role>(entity =>
+		{
+			entity.ToTable(tableNameRole);
 		});
 
 		builder.Entity<RoleClaim>(entity =>
 		{
-			entity.HasIndex(e => e.RoleId);
+			entity.ToTable(tableNameRoleClaim);
 		});
 
 		builder.Entity<UserClaim>(entity =>
 		{
-			entity.HasIndex(e => e.UserId);
+			entity.ToTable(tableNameUserClaim);
 		});
 
 		builder.Entity<UserRole>(entity =>
 		{
-			entity.HasKey(e => new { e.UserId, e.RoleId });
-			entity.HasIndex(e => e.RoleId);
+			entity.ToTable(tableNameUserRole);
+			entity
+				.HasOne(e => e.User)
+				.WithMany(e => e.UserRoles)
+				.HasForeignKey(e => e.UserId);
+			entity
+				.HasOne(e => e.Role)
+				.WithMany(e => e.UserRole)
+				.HasForeignKey(e => e.RoleId);
 		});
 
 		builder.Entity<UserToken>(entity =>
 		{
-			entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+			entity.ToTable(tableNameUserToken);
 		});
 
 		builder.Entity<RolePermission>()

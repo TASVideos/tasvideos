@@ -470,6 +470,26 @@ internal class TestUpdateEntry : IUpdateEntry
 		throw new NotImplementedException();
 	}
 
+	public bool IsModified(IComplexProperty property)
+	{
+		throw new NotImplementedException();
+	}
+
+	public bool HasExplicitValue(IProperty property)
+	{
+		throw new NotImplementedException();
+	}
+
+	public bool HasStoreGeneratedValue(IProperty property)
+	{
+		throw new NotImplementedException();
+	}
+
+	public bool CanHaveOriginalValue(IPropertyBase propertyBase)
+	{
+		throw new NotImplementedException();
+	}
+
 	public DbContext Context => null!;
 
 	// ReSharper disable once UnassignedGetOnlyAutoProperty
