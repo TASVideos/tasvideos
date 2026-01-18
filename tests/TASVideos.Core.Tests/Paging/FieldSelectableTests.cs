@@ -20,9 +20,9 @@ public class FieldSelectableTests
 		var actual = testClass.FieldSelect(fields);
 		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(3, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
-		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
-		Assert.AreEqual(dic[nameof(TestClass.Bool).PascalToCamelCase()], TestBool);
+		Assert.AreEqual(TestString, dic[nameof(TestClass.StringValue).PascalToCamelCase()]);
+		Assert.AreEqual(TestInt, dic[nameof(TestClass.Int).PascalToCamelCase()]);
+		Assert.AreEqual(TestBool, dic[nameof(TestClass.Bool).PascalToCamelCase()]);
 	}
 
 	[TestMethod]
@@ -32,7 +32,7 @@ public class FieldSelectableTests
 		var actual = testClass.FieldSelect(nameof(TestClass.StringValue).PascalToCamelCase());
 		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(1, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
+		Assert.AreEqual(TestString, dic[nameof(TestClass.StringValue).PascalToCamelCase()]);
 
 		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Int).PascalToCamelCase()));
 		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool).PascalToCamelCase()));
@@ -46,8 +46,8 @@ public class FieldSelectableTests
 		var actual = testClass.FieldSelect(fields);
 		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(2, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
-		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
+		Assert.AreEqual(TestString, dic[nameof(TestClass.StringValue).PascalToCamelCase()]);
+		Assert.AreEqual(TestInt, dic[nameof(TestClass.Int).PascalToCamelCase()]);
 
 		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool).PascalToCamelCase()));
 	}
@@ -60,8 +60,8 @@ public class FieldSelectableTests
 		var actual = testClass.FieldSelect(fields);
 		IDictionary<string, object?> dic = actual;
 		Assert.AreEqual(2, dic.Count);
-		Assert.AreEqual(dic[nameof(TestClass.StringValue).PascalToCamelCase()], TestString);
-		Assert.AreEqual(dic[nameof(TestClass.Int).PascalToCamelCase()], TestInt);
+		Assert.AreEqual(TestString, dic[nameof(TestClass.StringValue).PascalToCamelCase()]);
+		Assert.AreEqual(TestInt, dic[nameof(TestClass.Int).PascalToCamelCase()]);
 
 		Assert.IsFalse(dic.ContainsKey(nameof(TestClass.Bool)));
 	}
