@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using TASVideos.Data;
 
 namespace TASVideos.IntegrationTests;
@@ -12,7 +13,7 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 		{
 			// Remove the existing DbContext registration
 			var descriptor = services.SingleOrDefault(
-				d => d.ServiceType == typeof(DbContextOptions<ApplicationDbContext>));
+				d => d.ServiceType == typeof(IDbContextOptionsConfiguration<ApplicationDbContext>));
 			if (descriptor != null)
 			{
 				services.Remove(descriptor);
