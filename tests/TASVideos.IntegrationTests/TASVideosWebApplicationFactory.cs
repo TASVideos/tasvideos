@@ -134,10 +134,12 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 			terminateCommand.Parameters.AddWithValue(_testDatabaseName!);
 			terminateCommand.ExecuteNonQuery();
 
+#pragma warning disable CA2100
 			// Drop the database - Note: Database names cannot be parameterized in PostgreSQL
 			// But since _testDatabaseName is generated internally with a GUID, it's safe
 			var dropCommand = $"DROP DATABASE IF EXISTS \"{_testDatabaseName}\";";
 			using var command = new Npgsql.NpgsqlCommand(dropCommand, connection);
+#pragma warning restore CA2100
 			command.ExecuteNonQuery();
 		}
 		catch (Exception ex)
