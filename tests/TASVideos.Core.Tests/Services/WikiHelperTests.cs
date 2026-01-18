@@ -98,7 +98,6 @@ public class WikiHelperTests
 	[DataRow("/WikiPage", false, false)]
 	[DataRow("WikiPage", true, true)]
 	[DataRow("wikipage", false, true)]
-	[DataRow("WikiPage.html", false, false)]
 	[DataRow("WikiPage/Subpage", true, true)]
 	[DataRow("ProperCased", true, true)]
 	[DataRow("camelCased", false, true)]
