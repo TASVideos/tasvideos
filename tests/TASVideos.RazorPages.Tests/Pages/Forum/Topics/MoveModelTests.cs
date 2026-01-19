@@ -56,7 +56,7 @@ public class MoveModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsGreaterThan(0, _model.AvailableForums.Count);
+		Assert.IsNotEmpty(_model.AvailableForums);
 	}
 
 	[TestMethod]

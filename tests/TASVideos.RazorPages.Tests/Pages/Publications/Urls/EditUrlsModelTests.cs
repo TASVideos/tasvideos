@@ -288,7 +288,7 @@ public class EditUrlsModelTests : TestDbBase
 	{
 		var availableTypes = EditUrlsModel.AvailableTypes;
 
-		Assert.IsGreaterThan(0, availableTypes.Count);
+		Assert.IsNotEmpty(availableTypes);
 		var enumValues = Enum.GetValues<PublicationUrlType>();
 		Assert.HasCount(enumValues.Length, availableTypes);
 	}

@@ -242,7 +242,7 @@ public class SubmitModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsTrue(_page.ModelState.ContainsKey(""));
 		var errors = _page.ModelState[""]!.Errors;
-		Assert.IsGreaterThan(0, errors.Count);
+		Assert.IsNotEmpty(errors);
 		Assert.AreEqual("Database error occurred", errors[0].ErrorMessage);
 	}
 

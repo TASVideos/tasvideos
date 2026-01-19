@@ -43,7 +43,7 @@ public class CatalogModelTests : BasePageModelTests
 		Assert.AreEqual("Test Topic", _model.Title);
 		Assert.IsNull(_model.SystemId);
 		Assert.IsNull(_model.GameId);
-		Assert.IsGreaterThan(0, _model.AvailableSystems.Count);
+		Assert.IsNotEmpty(_model.AvailableSystems);
 		Assert.HasCount(0, _model.AvailableGames);
 	}
 
@@ -65,8 +65,8 @@ public class CatalogModelTests : BasePageModelTests
 		Assert.AreEqual("SMB TAS Topic", _model.Title);
 		Assert.AreEqual(system.Id, _model.SystemId);
 		Assert.AreEqual(game.Id, _model.GameId);
-		Assert.IsGreaterThan(0, _model.AvailableSystems.Count);
-		Assert.IsGreaterThan(0, _model.AvailableGames.Count);
+		Assert.IsNotEmpty(_model.AvailableSystems);
+		Assert.IsNotEmpty(_model.AvailableGames);
 	}
 
 	[TestMethod]
@@ -96,7 +96,7 @@ public class CatalogModelTests : BasePageModelTests
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsGreaterThan(0, _model.AvailableSystems.Count);
+		Assert.IsNotEmpty(_model.AvailableSystems);
 	}
 
 	[TestMethod]

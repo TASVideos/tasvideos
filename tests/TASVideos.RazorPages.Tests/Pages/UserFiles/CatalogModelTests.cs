@@ -42,8 +42,8 @@ public class CatalogModelTests : TestDbBase
 		Assert.AreEqual(game.Id, _page.UserFile.Game);
 		Assert.AreEqual("test.bk2", _page.UserFile.Filename);
 		Assert.AreEqual("TestAuthor", _page.UserFile.AuthorName);
-		Assert.IsGreaterThan(0, _page.AvailableSystems.Count);
-		Assert.IsGreaterThan(0, _page.AvailableGames.Count);
+		Assert.IsNotEmpty(_page.AvailableSystems);
+		Assert.IsNotEmpty(_page.AvailableGames);
 	}
 
 	[TestMethod]
@@ -63,7 +63,7 @@ public class CatalogModelTests : TestDbBase
 		Assert.IsNull(_page.UserFile.Game);
 		Assert.AreEqual("uncategorized.bk2", _page.UserFile.Filename);
 		Assert.AreEqual("TestAuthor", _page.UserFile.AuthorName);
-		Assert.IsGreaterThan(0, _page.AvailableSystems.Count);
+		Assert.IsNotEmpty(_page.AvailableSystems);
 		Assert.HasCount(0, _page.AvailableGames); // No games because no system selected
 	}
 
@@ -85,7 +85,7 @@ public class CatalogModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsGreaterThan(0, _page.AvailableSystems.Count);
+		Assert.IsNotEmpty(_page.AvailableSystems);
 	}
 
 	[TestMethod]
@@ -242,7 +242,7 @@ public class CatalogModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.IsGreaterThan(0, _page.AvailableSystems.Count);
+		Assert.IsNotEmpty(_page.AvailableSystems);
 		Assert.HasCount(0, _page.AvailableGames);
 	}
 
@@ -261,8 +261,8 @@ public class CatalogModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.IsGreaterThan(0, _page.AvailableSystems.Count);
-		Assert.IsGreaterThan(0, _page.AvailableGames.Count);
+		Assert.IsNotEmpty(_page.AvailableSystems);
+		Assert.IsNotEmpty(_page.AvailableGames);
 		Assert.AreEqual(system.Id, _page.UserFile.System);
 		Assert.AreEqual(game.Id, _page.UserFile.Game);
 	}

@@ -31,8 +31,8 @@ public class UploadModelTests : TestDbBase
 		Assert.Contains("fm2", page.SupportedFileExtensions);
 		Assert.Contains("lsmv", page.SupportedFileExtensions);
 		Assert.AreEqual(1024, page.StorageUsed);
-		Assert.IsGreaterThan(0, page.AvailableSystems.Count);
-		Assert.IsGreaterThan(0, page.AvailableGames.Count);
+		Assert.IsNotEmpty(page.AvailableSystems);
+		Assert.IsNotEmpty(page.AvailableGames);
 	}
 
 	[TestMethod]
