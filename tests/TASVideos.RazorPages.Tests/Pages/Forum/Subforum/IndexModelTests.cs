@@ -68,8 +68,8 @@ public class IndexModelTests : BasePageModelTests
 	public async Task OnGet_ExistingForum_PopulatesCorrectly()
 	{
 		_forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns(new Dictionary<int, (string, string)>());
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var user2 = _db.AddUserWithRole("User2").Entity;
+		var user = _db.AddUser("TestUser").Entity;
+		var user2 = _db.AddUser("User2").Entity;
 		var forum = _db.AddForum("Test Forum").Entity;
 		forum.CanCreateTopics = true;
 		var topic = _db.AddTopic(user).Entity;

@@ -74,7 +74,7 @@ public static class ApplicationBuilderExtensions
 			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
 		];
 		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);
-		var permissionsPolicyValue = string.Join(", ", [
+		var permissionsPolicyValue = string.Join(", ", value: [
 			"camera=()", // defaults to `self`
 			"display-capture=()", // defaults to `self`
 			"fullscreen=()", // defaults to `self`

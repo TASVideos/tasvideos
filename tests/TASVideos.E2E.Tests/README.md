@@ -140,7 +140,7 @@ public async Task SamplePage_ShouldLoad_Successfully()
 1. **Install Playwright browsers** (first time only):
    ```bash
    cd tests/TASVideos.E2E.Tests
-   powershell bin/Debug/net8.0/playwright.ps1 install
+   powershell bin/Debug/net10.0/playwright.ps1 install
    ```
 
 2. **Build the test project**:
@@ -163,7 +163,7 @@ The implementation successfully demonstrates:
 
 ### Common Issues
 
-1. **Browser Installation**: Run `powershell bin/Debug/net8.0/playwright.ps1 install` in project directory
+1. **Browser Installation**: Run `powershell bin/Debug/net10.0/playwright.ps1 install` in project directory
 2. **Timeout Errors**: Increase `RequestTimeoutMs` in configuration
 3. **Throttling Too Aggressive**: Reduce `ThrottleDelayMs` for faster testing
 4. **SSL Certificate Issues**: Tests ignore HTTPS errors by default
