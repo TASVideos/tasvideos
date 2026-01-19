@@ -1,6 +1,7 @@
 <Project>
 	<PropertyGroup>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<NoWarn>$(NoWarn);RS2008</NoWarn> <!-- "Enable analyzer release tracking"; this is only useful for Analyzers intended to be published to NuGet -->
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
