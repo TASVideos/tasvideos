@@ -149,7 +149,7 @@ public class EditHistoryModelTests : BasePageModelTests
 		var pageNames = _model.History.Select(h => h.PageName).ToList();
 		Assert.Contains("TargetPage1", pageNames);
 		Assert.Contains("TargetPage2", pageNames);
-		Assert.IsFalse(pageNames.Contains("OtherPage1"));
+		Assert.DoesNotContain("OtherPage1", pageNames);
 	}
 
 	[TestMethod]

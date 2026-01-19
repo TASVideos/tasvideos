@@ -276,8 +276,8 @@ public class GameModelTests : TestDbBase
 		var titles = _page.Files.Select(f => f.Title).ToList();
 		Assert.Contains("Author1 Public Movie", titles);
 		Assert.Contains("Author2 Public Movie", titles);
-		Assert.IsFalse(titles.Contains("Author1 Hidden Movie"));
-		Assert.IsFalse(titles.Contains("Author2 Hidden Movie"));
+		Assert.DoesNotContain("Author1 Hidden Movie", titles);
+		Assert.DoesNotContain("Author2 Hidden Movie", titles);
 	}
 
 	[TestMethod]
