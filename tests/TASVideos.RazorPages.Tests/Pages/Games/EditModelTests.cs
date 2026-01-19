@@ -68,10 +68,10 @@ public class EditModelTests : BasePageModelTests
 		Assert.AreEqual("https://example.com/screenshot.png", _model.Game.ScreenshotUrl);
 		Assert.AreEqual("TestGameResources", _model.Game.GameResourcesPage);
 		Assert.AreEqual(2, _model.Game.Genres.Count);
-		Assert.IsTrue(_model.Game.Genres.Contains(genre1.Id));
-		Assert.IsTrue(_model.Game.Genres.Contains(genre2.Id));
+		Assert.Contains(genre1.Id, _model.Game.Genres);
+		Assert.Contains(genre2.Id, _model.Game.Genres);
 		Assert.AreEqual(1, _model.Game.Groups.Count);
-		Assert.IsTrue(_model.Game.Groups.Contains(group1.Id));
+		Assert.Contains(group1.Id, _model.Game.Groups);
 
 		Assert.IsTrue(_model.AvailableGenres.Any(g => g.Text == "Action"));
 		Assert.IsTrue(_model.AvailableGenres.Any(g => g.Text == "Platformer"));

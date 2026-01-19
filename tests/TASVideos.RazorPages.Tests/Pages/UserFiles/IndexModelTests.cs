@@ -50,8 +50,8 @@ public class IndexModelTests : TestDbBase
 
 		Assert.AreEqual(2, _page.UsersWithMovies.Count);
 		var userNames = _page.UsersWithMovies.Select(u => u.UserName).ToList();
-		Assert.IsTrue(userNames.Contains("User1"));
-		Assert.IsTrue(userNames.Contains("User2"));
+		Assert.Contains("User1", userNames);
+		Assert.Contains("User2", userNames);
 	}
 
 	[TestMethod]

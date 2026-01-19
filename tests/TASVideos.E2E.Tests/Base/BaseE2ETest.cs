@@ -214,14 +214,14 @@ public class BaseE2ETest : PageTest
 	{
 		Assert.IsNotNull(response);
 		AssertResponseCode(response, 200);
-		Assert.IsTrue(response.Url.ToLower().Contains("account/login?returnurl="), $"Expected Url Account/Login but got {response.Url}");
+		Assert.Contains("account/login?returnurl=", response.Url.ToLower(), $"Expected Url Account/Login but got {response.Url}");
 	}
 
 	protected static void AssertAccessDenied(IResponse? response)
 	{
 		Assert.IsNotNull(response);
 		AssertResponseCode(response, 200);
-		Assert.IsTrue(response.Url.ToLower().Contains("account/accessdenied"), $"Expected Url Account/AccessDenied but got {response.Url}");
+		Assert.Contains("account/accessdenied", response.Url.ToLower(), $"Expected Url Account/AccessDenied but got {response.Url}");
 	}
 
 	protected async Task<IAPIResponse> ApiGetAsync(string endpoint)

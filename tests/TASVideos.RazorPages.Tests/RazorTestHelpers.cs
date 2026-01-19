@@ -112,7 +112,7 @@ public static class RazorTestHelpers
 			.FirstOrDefault() as RequirePermissionAttribute;
 
 		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(permission));
+		Assert.Contains(permission, attribute.RequiredPermissions);
 	}
 
 	public static void AssertAllowsAnonymousUsers(Type pageModelType)

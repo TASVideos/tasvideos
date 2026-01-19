@@ -39,8 +39,9 @@ public class VersionIntegrationTests
 		Assert.IsNotNull(href, "Version link should have an href attribute");
 
 		var footerText = footerLink.TextContent;
-		Assert.IsTrue(
-			footerText.Contains("TASVideos v"),
+		Assert.Contains(
+			"TASVideos v",
+			footerText,
 			$"Footer should contain 'TASVideos v' but got: {footerText}");
 
 		// Extract SHA from URL (e.g., "https://github.com/TASVideos/tasvideos/commits/e2f009c7e95aa93b732b9c7d59c00fcd30fbd0b4")

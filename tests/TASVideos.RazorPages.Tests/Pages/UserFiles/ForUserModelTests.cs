@@ -86,8 +86,8 @@ public class ForUserModelTests : TestDbBase
 		// Should show all files when viewed by the author
 		Assert.AreEqual(2, _page.Files.Count());
 		var titles = _page.Files.Select(f => f.Title).ToList();
-		Assert.IsTrue(titles.Contains("Public Movie 2"));
-		Assert.IsTrue(titles.Contains("Hidden Movie 2"));
+		Assert.Contains("Public Movie 2", titles);
+		Assert.Contains("Hidden Movie 2", titles);
 	}
 
 	[TestMethod]

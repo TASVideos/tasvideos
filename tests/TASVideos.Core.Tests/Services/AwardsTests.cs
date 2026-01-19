@@ -41,7 +41,7 @@ public class AwardsTests : TestDbBase
 		var actualUserAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualUserAward.ShortName);
 		Assert.AreEqual(CurrentYear, actualUserAward.Year);
-		Assert.IsTrue(actualUserAward.Description.Contains(CurrentYear.ToString()));
+		Assert.Contains(CurrentYear.ToString(), actualUserAward.Description);
 	}
 
 	[TestMethod]
@@ -60,7 +60,7 @@ public class AwardsTests : TestDbBase
 		var actualUserAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualUserAward.ShortName);
 		Assert.AreEqual(CurrentYear, actualUserAward.Year);
-		Assert.IsTrue(actualUserAward.Description.Contains(CurrentYear.ToString()));
+		Assert.Contains(CurrentYear.ToString(), actualUserAward.Description);
 	}
 
 	[TestMethod]
@@ -107,7 +107,7 @@ public class AwardsTests : TestDbBase
 		var actualPubAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualPubAward.ShortName);
 		Assert.AreEqual(CurrentYear, actualPubAward.Year);
-		Assert.IsTrue(actualPubAward.Description.Contains(CurrentYear.ToString()));
+		Assert.Contains(CurrentYear.ToString(), actualPubAward.Description);
 	}
 
 	[TestMethod]

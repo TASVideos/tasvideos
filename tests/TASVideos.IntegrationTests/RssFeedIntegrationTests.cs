@@ -36,7 +36,7 @@ public class RssFeedIntegrationTests
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, $"{feedDescription} should return 200 OK status code");
 		Assert.IsNotNull(response.Content.Headers.ContentType);
 		Assert.IsNotNull(response.Content.Headers.ContentType.MediaType);
-		Assert.IsTrue(response.Content.Headers.ContentType.MediaType.Contains("xml"), $"{feedDescription} should return XML content type");
+		Assert.Contains("xml", response.Content.Headers.ContentType.MediaType, $"{feedDescription} should return XML content type");
 
 		var rssContent = await response.Content.ReadAsStringAsync();
 		Assert.IsFalse(string.IsNullOrWhiteSpace(rssContent), $"{feedDescription} should return non-empty content");
@@ -66,7 +66,7 @@ public class RssFeedIntegrationTests
 		var generatorValue = generatorElement.Value;
 		Assert.IsFalse(string.IsNullOrWhiteSpace(generatorValue), $"{feedDescription} generator should not be empty");
 
-		Assert.IsTrue(generatorValue.Contains("TASVideos"), $"{feedDescription} generator should contain 'TASVideos', but got: {generatorValue}");
+		Assert.Contains("TASVideos", generatorValue, $"{feedDescription} generator should contain 'TASVideos', but got: {generatorValue}");
 
 		var titleElement = channelElement.Element("title");
 		Assert.IsNotNull(titleElement, $"{feedDescription} should have a title element");

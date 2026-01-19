@@ -166,9 +166,9 @@ public class FilterModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<RedirectResult>(actual);
 		var redirectResult = (RedirectResult)actual;
-		Assert.IsTrue(redirectResult.Url.Contains("/Movies-"));
-		Assert.IsTrue(redirectResult.Url.Contains("NES"));
-		Assert.IsTrue(redirectResult.Url.Contains("Standard"));
+		Assert.Contains("/Movies-", redirectResult.Url);
+		Assert.Contains("NES", redirectResult.Url);
+		Assert.Contains("Standard", redirectResult.Url);
 	}
 
 	[TestMethod]

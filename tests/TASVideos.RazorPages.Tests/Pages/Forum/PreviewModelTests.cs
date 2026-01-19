@@ -32,7 +32,7 @@ public class PreviewModelTests : BasePageModelTests
 		AssertContent(result);
 		if (!string.IsNullOrWhiteSpace(content))
 		{
-			Assert.IsTrue(((ContentResult)result).Content!.Contains(expected ?? content));
+			Assert.Contains(expected ?? content, ((ContentResult)result).Content!);
 		}
 	}
 
@@ -69,6 +69,6 @@ public class PreviewModelTests : BasePageModelTests
 		Assert.IsInstanceOfType(result, typeof(ContentResult));
 		var contentResult = (ContentResult)result;
 		Assert.IsNotNull(contentResult.Content);
-		Assert.IsTrue(contentResult.Content.Contains("postbody"));
+		Assert.Contains("postbody", contentResult.Content);
 	}
 }

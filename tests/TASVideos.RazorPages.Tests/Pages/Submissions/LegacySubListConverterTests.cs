@@ -31,7 +31,7 @@ public class LegacySubListConverterTests
 		Assert.AreEqual(expected.Length, actual.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(actual.Contains(status));
+			Assert.Contains(status, actual);
 		}
 	}
 
@@ -50,7 +50,7 @@ public class LegacySubListConverterTests
 		Assert.AreEqual(expected.Length, actual.Count);
 		foreach (var year in expected)
 		{
-			Assert.IsTrue(actual.Contains(year));
+			Assert.Contains(year, actual);
 		}
 	}
 }

@@ -52,7 +52,7 @@ public class EditModelTests : TestDbBase
 		Assert.AreEqual(pub.MovieFileName, _page.Publication.MovieFileName);
 		Assert.AreEqual(markup, _page.Publication.Markup);
 		Assert.IsTrue(_page.Publication.Authors.Count >= 1);
-		Assert.IsTrue(_page.Publication.Authors.Contains("TestAuthor"));
+		Assert.Contains("TestAuthor", _page.Publication.Authors);
 		Assert.AreEqual(1, _page.Publication.SelectedTags.Count);
 		Assert.AreEqual(1, _page.Publication.SelectedFlags.Count);
 	}

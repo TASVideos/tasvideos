@@ -74,7 +74,7 @@ public class PrimaryMovieModelTests : TestDbBase
 		Assert.IsTrue(_page.ModelState.ContainsKey(nameof(_page.PrimaryMovieFile)));
 		var error = _page.ModelState[nameof(_page.PrimaryMovieFile)]?.Errors.FirstOrDefault();
 		Assert.IsNotNull(error);
-		Assert.IsTrue(error.ErrorMessage.Contains("existing.zip already exists"));
+		Assert.Contains("existing.zip already exists", error.ErrorMessage);
 	}
 
 	[TestMethod]

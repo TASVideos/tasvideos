@@ -105,8 +105,8 @@ public class GameModelTests : TestDbBase
 		Assert.AreEqual("Test Game", _page.GameName);
 		Assert.AreEqual(2, _page.Files.Count);
 		var titles = _page.Files.Select(f => f.Title).ToList();
-		Assert.IsTrue(titles.Contains("Public Movie"));
-		Assert.IsTrue(titles.Contains("Hidden Movie"));
+		Assert.Contains("Public Movie", titles);
+		Assert.Contains("Hidden Movie", titles);
 	}
 
 	[TestMethod]
@@ -274,10 +274,10 @@ public class GameModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(2, _page.Files.Count); // Only public files
 		var titles = _page.Files.Select(f => f.Title).ToList();
-		Assert.IsTrue(titles.Contains("Author1 Public Movie"));
-		Assert.IsTrue(titles.Contains("Author2 Public Movie"));
-		Assert.IsFalse(titles.Contains("Author1 Hidden Movie"));
-		Assert.IsFalse(titles.Contains("Author2 Hidden Movie"));
+		Assert.Contains("Author1 Public Movie", titles);
+		Assert.Contains("Author2 Public Movie", titles);
+		Assert.DoesNotContain("Author1 Hidden Movie", titles);
+		Assert.DoesNotContain("Author2 Hidden Movie", titles);
 	}
 
 	[TestMethod]

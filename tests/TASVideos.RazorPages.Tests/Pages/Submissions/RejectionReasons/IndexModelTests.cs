@@ -104,7 +104,7 @@ public class IndexModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_model.ModelState.IsValid);
 		Assert.IsTrue(_model.ModelState.ContainsKey("displayName"));
-		Assert.IsTrue(_model.ModelState["displayName"]!.Errors[0].ErrorMessage.Contains("already exists"));
+		Assert.Contains("already exists", _model.ModelState["displayName"]!.Errors[0].ErrorMessage);
 
 		// Should not create duplicate
 		Assert.AreEqual(1, _db.SubmissionRejectionReasons.Count(r => r.DisplayName == "Existing Reason"));

@@ -101,7 +101,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expected.Count, result.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -130,7 +130,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expected.Count, result.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -159,7 +159,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expected.Count, result.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -188,7 +188,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expected.Count, result.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expected.Count, result.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -246,7 +246,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expected.Count, result.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -275,7 +275,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expected.Count, result.Count);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -702,7 +702,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.IsFalse(result.Success);
 		Assert.IsNotNull(result.ErrorMessage);
-		Assert.IsTrue(result.ErrorMessage.Contains("INVALID_SYSTEM"));
+		Assert.Contains("INVALID_SYSTEM", result.ErrorMessage);
 	}
 
 	[TestMethod]
@@ -741,7 +741,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(request.GoalName, actualSub.Branch);
 		Assert.AreEqual(expectedTopicId, actualSub.TopicId);
 		Assert.AreEqual(gameSystem.Id, actualSub.SystemId);
-		Assert.IsTrue(actualSub.Title.Contains(request.GameName));
+		Assert.Contains(request.GameName, actualSub.Title);
 
 		var actualSubAuthors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == result.Id)
@@ -896,8 +896,8 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsNotNull(actualSub);
 		Assert.AreEqual(annotations, actualSub.Annotations);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(actualSub.Warnings));
-		Assert.IsTrue(actualSub.Warnings.Contains("MissingRerecordCount"));
-		Assert.IsTrue(actualSub.Warnings.Contains("SystemIdInferred"));
+		Assert.Contains("MissingRerecordCount", actualSub.Warnings);
+		Assert.Contains("SystemIdInferred", actualSub.Warnings);
 	}
 
 	[TestMethod]
@@ -1037,8 +1037,8 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.AreEqual(publicationTitle, result.Title);
 		Assert.AreEqual(2, result.Tags.Count);
-		Assert.IsTrue(result.Tags.Contains(tag1.Id));
-		Assert.IsTrue(result.Tags.Contains(tag2.Id));
+		Assert.Contains(tag1.Id, result.Tags);
+		Assert.Contains(tag2.Id, result.Tags);
 		Assert.AreEqual(wikiMarkup, result.Markup);
 		await _wikiPages.Received(1).Page(expectedPageName);
 	}
@@ -1097,7 +1097,7 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(New, result.PreviousStatus);
-		Assert.IsTrue(result.SubmissionTitle.Contains("Updated Game Name"));
+		Assert.Contains("Updated Game Name", result.SubmissionTitle);
 
 		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
 		Assert.IsNotNull(updatedSubmission);

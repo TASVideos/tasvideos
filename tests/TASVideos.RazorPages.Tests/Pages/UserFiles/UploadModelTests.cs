@@ -27,9 +27,9 @@ public class UploadModelTests : TestDbBase
 		await page.OnGet();
 
 		Assert.AreEqual(3, page.SupportedFileExtensions.Count);
-		Assert.IsTrue(page.SupportedFileExtensions.Contains("bk2"));
-		Assert.IsTrue(page.SupportedFileExtensions.Contains("fm2"));
-		Assert.IsTrue(page.SupportedFileExtensions.Contains("lsmv"));
+		Assert.Contains("bk2", page.SupportedFileExtensions);
+		Assert.Contains("fm2", page.SupportedFileExtensions);
+		Assert.Contains("lsmv", page.SupportedFileExtensions);
 		Assert.AreEqual(1024, page.StorageUsed);
 		Assert.IsTrue(page.AvailableSystems.Count > 0);
 		Assert.IsTrue(page.AvailableGames.Count > 0);

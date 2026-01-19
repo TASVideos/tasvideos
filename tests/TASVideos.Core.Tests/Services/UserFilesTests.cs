@@ -154,7 +154,7 @@ public class UserFilesTests : TestDbBase
 		_parser.SupportedMovieExtensions.Returns([fileExt]);
 
 		var actual = await _userFiles.SupportedFileExtensions();
-		Assert.IsTrue(actual.Contains(fileExt));
+		Assert.Contains(fileExt, actual);
 	}
 
 	[TestMethod]
@@ -164,7 +164,7 @@ public class UserFilesTests : TestDbBase
 		_wikiPages.Page(Arg.Any<string>()).Returns(new WikiResult { Markup = fileExt + ", .nothing" });
 
 		var actual = await _userFiles.SupportedFileExtensions();
-		Assert.IsTrue(actual.Contains(fileExt));
+		Assert.Contains(fileExt, actual);
 	}
 
 	[TestMethod]

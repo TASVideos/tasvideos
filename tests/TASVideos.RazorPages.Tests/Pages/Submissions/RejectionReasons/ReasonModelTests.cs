@@ -63,8 +63,8 @@ public class ReasonModelTests : TestDbBase
 		Assert.AreEqual(2, _model.Submissions.Count);
 
 		var submissionIds = _model.Submissions.Select(s => s.SubmissionId).ToList();
-		Assert.IsTrue(submissionIds.Contains(submission1.Id));
-		Assert.IsTrue(submissionIds.Contains(submission2.Id));
+		Assert.Contains(submission1.Id, submissionIds);
+		Assert.Contains(submission2.Id, submissionIds);
 
 		var submission1Entry = _model.Submissions.First(s => s.SubmissionId == submission1.Id);
 		Assert.AreEqual("Rejected Submission 1", submission1Entry.SubmissionTitle);

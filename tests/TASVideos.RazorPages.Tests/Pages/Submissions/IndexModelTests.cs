@@ -46,7 +46,7 @@ public class IndexModelTests : TestDbBase
 		Assert.AreEqual(IndexModel.SubmissionSearchRequest.Default.Count, _page.Search.Statuses.Count);
 		foreach (var status in IndexModel.SubmissionSearchRequest.Default)
 		{
-			Assert.IsTrue(_page.Search.Statuses.Contains(status));
+			Assert.Contains(status, _page.Search.Statuses);
 		}
 	}
 
@@ -61,7 +61,7 @@ public class IndexModelTests : TestDbBase
 		Assert.AreEqual(IndexModel.SubmissionSearchRequest.All.Count, _page.Search.Statuses.Count);
 		foreach (var status in IndexModel.SubmissionSearchRequest.All)
 		{
-			Assert.IsTrue(_page.Search.Statuses.Contains(status));
+			Assert.Contains(status, _page.Search.Statuses);
 		}
 	}
 
@@ -76,7 +76,7 @@ public class IndexModelTests : TestDbBase
 		Assert.AreEqual(IndexModel.SubmissionSearchRequest.All.Count, _page.Search.Statuses.Count);
 		foreach (var status in IndexModel.SubmissionSearchRequest.All)
 		{
-			Assert.IsTrue(_page.Search.Statuses.Contains(status));
+			Assert.Contains(status, _page.Search.Statuses);
 		}
 	}
 
@@ -101,8 +101,8 @@ public class IndexModelTests : TestDbBase
 		await _page.OnGet();
 
 		Assert.AreEqual(2, _page.Search.Statuses.Count);
-		Assert.IsTrue(_page.Search.Statuses.Contains(SubmissionStatus.New));
-		Assert.IsTrue(_page.Search.Statuses.Contains(SubmissionStatus.Accepted));
+		Assert.Contains(SubmissionStatus.New, _page.Search.Statuses);
+		Assert.Contains(SubmissionStatus.Accepted, _page.Search.Statuses);
 	}
 
 	[TestMethod]
@@ -184,7 +184,7 @@ public class IndexModelTests : TestDbBase
 		Assert.AreEqual(expectedStatuses.Length, defaultStatuses.Count);
 		foreach (var status in expectedStatuses)
 		{
-			Assert.IsTrue(defaultStatuses.Contains(status));
+			Assert.Contains(status, defaultStatuses);
 		}
 	}
 
@@ -197,7 +197,7 @@ public class IndexModelTests : TestDbBase
 		Assert.AreEqual(allStatuses.Count, allFromSearchRequest.Count);
 		foreach (var status in allStatuses)
 		{
-			Assert.IsTrue(allFromSearchRequest.Contains(status));
+			Assert.Contains(status, allFromSearchRequest);
 		}
 	}
 

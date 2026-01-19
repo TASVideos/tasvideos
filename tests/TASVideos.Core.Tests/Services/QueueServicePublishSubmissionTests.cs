@@ -81,7 +81,7 @@ public class QueueServicePublishSubmissionTests : TestDbBase
 		var result = await _queueService.Publish(request);
 
 		Assert.IsFalse(result.Success);
-		Assert.IsTrue(result.ErrorMessage!.Contains("Movie filename test-movie.bk2 already exists"));
+		Assert.Contains("Movie filename test-movie.bk2 already exists", result.ErrorMessage!);
 	}
 
 	[TestMethod]

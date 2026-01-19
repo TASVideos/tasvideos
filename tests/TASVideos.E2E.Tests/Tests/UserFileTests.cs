@@ -61,7 +61,7 @@ public class UserFileTests : BaseE2ETest
 			$"UserFiles/Info/{fileId}?handler=Download",
 			$"userfile_{fileId}");
 
-		Assert.IsTrue(contentStr.Contains("while true do"));
+		Assert.Contains("while true do", contentStr);
 
 		CleanupZipDownload(downloadPath);
 	}

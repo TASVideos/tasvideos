@@ -32,6 +32,6 @@ public class EnumerableExtensionTests
 	{
 		var collection = new[] { 1, 2, 3, 4, 5 };
 		var actual = collection.AtRandom();
-		Assert.IsTrue(collection.Contains(actual));
+		Assert.Contains(actual, collection);
 	}
 }

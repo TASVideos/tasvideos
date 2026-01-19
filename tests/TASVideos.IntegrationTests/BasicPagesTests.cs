@@ -30,7 +30,7 @@ public class BasicPagesTests
 		response.EnsureSuccessStatusCode("Home page should load successfully");
 
 		var title = await response.GetPageTitleAsync();
-		Assert.IsTrue(title.Contains("TASVideos"), $"Expected title to contain 'TASVideos', but got: {title}");
+		Assert.Contains("TASVideos", title, $"Expected title to contain 'TASVideos', but got: {title}");
 	}
 
 	[TestMethod]
@@ -49,7 +49,7 @@ public class BasicPagesTests
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
 		var title = await response.GetPageTitleAsync();
-		Assert.IsTrue(title.Contains("Uncataloged"), $"Expected title to contain 'Uncataloged', but got: {title}");
+		Assert.Contains("Uncataloged", title, $"Expected title to contain 'Uncataloged', but got: {title}");
 
 		var uploadButton = await response.QuerySelectorAsync("a[href*='/UserFiles/Upload']");
 		Assert.IsNotNull(uploadButton);
@@ -66,7 +66,7 @@ public class BasicPagesTests
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
 		var title = await response.GetPageTitleAsync();
-		Assert.IsTrue(title.Contains("Movie Storage"), $"Expected title to contain 'Movie Storage' but got: {title}");
+		Assert.Contains("Movie Storage", title, $"Expected title to contain 'Movie Storage' but got: {title}");
 	}
 
 	[TestMethod]
@@ -77,6 +77,6 @@ public class BasicPagesTests
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
 		var title = await response.GetPageTitleAsync();
-		Assert.IsTrue(title.Contains("Submissions"), $"Expected title to contain 'Submissions', but got: {title}");
+		Assert.Contains("Submissions", title, $"Expected title to contain 'Submissions', but got: {title}");
 	}
 }
