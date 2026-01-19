@@ -22,11 +22,11 @@ internal static class UsersEndpoints
 		.WithTags("Users")
 		.WithSummary("Signs in a user and returns a JWT token.")
 		.Produces<string>()
-		.WithOpenApi(g =>
+		.AddOpenApiOperationTransformer((g, _, _) =>
 		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add("401", new OpenApiResponse { Description = "The sign in failed." });
-			return g;
+			g.Responses!.AddGeneric400();
+			g.Responses!.Add("401", new OpenApiResponse { Description = "The sign in failed." });
+			return Task.CompletedTask;
 		});
 
 		return app;

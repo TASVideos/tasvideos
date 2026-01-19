@@ -55,12 +55,12 @@ internal static class TagsEndpoints
 			};
 		})
 		.WithSummary("Creates a new tag")
-		.WithOpenApi(g =>
+		.AddOpenApiOperationTransformer((g, _, _) =>
 		{
-			g.Responses.Add(201, "The Tag was created successfully.");
-			g.Responses.Add(409, "A Tag with the given code already exists.");
-			g.Responses.AddGeneric400();
-			return g;
+			g.Responses!.Add(201, "The Tag was created successfully.");
+			g.Responses!.Add(409, "A Tag with the given code already exists.");
+			g.Responses!.AddGeneric400();
+			return Task.CompletedTask;
 		});
 
 		group.MapPut("{id:int}", async (int id, TagAddEditRequest request, ITagService tagService, HttpContext context) =>
@@ -87,12 +87,12 @@ internal static class TagsEndpoints
 			};
 		})
 		.WithSummary("Updates an existing tag")
-		.WithOpenApi(g =>
+		.AddOpenApiOperationTransformer((g, _, _) =>
 		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("tag");
-			g.Responses.Add(409, "A Tag with the given code already exists.");
-			return g;
+			g.Responses!.AddGeneric400();
+			g.Responses!.Add404ById("tag");
+			g.Responses!.Add(409, "A Tag with the given code already exists.");
+			return Task.CompletedTask;
 		});
 
 		group.MapDelete("{id:int}", async (int id, ITagService tagService, HttpContext context) =>
@@ -113,12 +113,12 @@ internal static class TagsEndpoints
 			};
 		})
 		.WithSummary("Deletes an existing tag")
-		.WithOpenApi(g =>
+		.AddOpenApiOperationTransformer((g, _, _) =>
 		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("tag");
-			g.Responses.Add(409, "The Tag is in use and cannot be deleted.");
-			return g;
+			g.Responses!.AddGeneric400();
+			g.Responses!.Add404ById("tag");
+			g.Responses!.Add(409, "The Tag is in use and cannot be deleted.");
+			return Task.CompletedTask;
 		});
 
 		return app;
