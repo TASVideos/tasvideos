@@ -344,7 +344,7 @@ public class PrivateMessageServiceTests : TestDbBase
 
 		var actual = await _privateMessageService.GetSavebox(saveBoxUser);
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(2, actual.Count);
+		Assert.HasCount(2, actual);
 		Assert.IsTrue(actual.All(m => m.Subject == expectedSubject));
 	}
 

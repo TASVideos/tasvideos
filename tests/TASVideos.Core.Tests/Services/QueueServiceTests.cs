@@ -72,7 +72,7 @@ public class QueueServiceTests : TestDbBase
 			true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.AreEqual(Published, result.Single());
 	}
 
@@ -98,7 +98,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.HasCount(expected.Count, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -127,7 +127,7 @@ public class QueueServiceTests : TestDbBase
 			false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.HasCount(expected.Count, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -156,7 +156,7 @@ public class QueueServiceTests : TestDbBase
 			false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.HasCount(expected.Count, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -185,7 +185,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.HasCount(expected.Count, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -214,7 +214,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.HasCount(expected.Count, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -243,7 +243,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.HasCount(expected.Count, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -272,7 +272,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.HasCount(expected.Count, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -298,7 +298,7 @@ public class QueueServiceTests : TestDbBase
 				false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(exceptPublished.Count, result.Count);
+			Assert.HasCount(exceptPublished.Count, result);
 			Assert.IsTrue(result.SequenceEqual(exceptPublished));
 		}
 	}
@@ -746,7 +746,7 @@ public class QueueServiceTests : TestDbBase
 		var actualSubAuthors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == result.Id)
 			.ToListAsync();
-		Assert.AreEqual(request.Authors.Count, actualSubAuthors.Count);
+		Assert.HasCount(request.Authors.Count, actualSubAuthors);
 
 		await _wikiPages.Received(1).Add(Arg.Is<WikiCreateRequest>(r =>
 			r.PageName == LinkConstants.SubmissionWikiPage + result.Id &&
@@ -1036,7 +1036,7 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(publicationTitle, result.Title);
-		Assert.AreEqual(2, result.Tags.Count);
+		Assert.HasCount(2, result.Tags);
 		Assert.Contains(tag1.Id, result.Tags);
 		Assert.Contains(tag2.Id, result.Tags);
 		Assert.AreEqual(wikiMarkup, result.Markup);
@@ -1060,7 +1060,7 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(publicationTitle, result.Title);
-		Assert.AreEqual(0, result.Tags.Count);
+		Assert.HasCount(0, result.Tags);
 		Assert.AreEqual(wikiMarkup, result.Markup);
 		await _wikiPages.Received(1).Page(expectedPageName);
 	}
@@ -1151,7 +1151,7 @@ public class QueueServiceTests : TestDbBase
 			.SingleOrDefaultAsync(s => s.Id == submission.Id);
 
 		Assert.IsNotNull(updatedSub);
-		Assert.AreEqual(2, updatedSub.SubmissionAuthors.Count);
+		Assert.HasCount(2, updatedSub.SubmissionAuthors);
 		var authorNames = updatedSub.SubmissionAuthors
 			.OrderBy(sa => sa.Ordinal)
 			.Select(sa => sa.Author!.UserName)

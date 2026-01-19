@@ -66,7 +66,7 @@ public class TASVideoAgentTests : TestDbBase
 		await _tasVideoAgent.PostSubmissionTopic(_submission.Id, SubmissionTitle);
 		var actual = await _db.ForumPollOptions.ToListAsync();
 
-		Assert.AreEqual(3, actual.Count);
+		Assert.HasCount(3, actual);
 		Assert.IsTrue(actual.Any(o => o.Text == SiteGlobalConstants.PollOptionNo));
 		Assert.IsTrue(actual.Any(o => o.Text == SiteGlobalConstants.PollOptionYes));
 		Assert.IsTrue(actual.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh));

@@ -44,7 +44,7 @@ public class CatalogModelTests : BasePageModelTests
 		Assert.IsNull(_model.SystemId);
 		Assert.IsNull(_model.GameId);
 		Assert.IsTrue(_model.AvailableSystems.Count > 0);
-		Assert.AreEqual(0, _model.AvailableGames.Count);
+		Assert.HasCount(0, _model.AvailableGames);
 	}
 
 	[TestMethod]
@@ -181,6 +181,6 @@ public class CatalogModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual(1, _model.AvailableSystems.Count(s => s.Text == "NES"));
-		Assert.AreEqual(0, _model.AvailableGames.Count);
+		Assert.HasCount(0, _model.AvailableGames);
 	}
 }

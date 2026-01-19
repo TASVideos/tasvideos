@@ -21,7 +21,7 @@ public class PublicationMaintenanceLoggerTests : TestDbBase
 
 		await _publicationMaintenanceLogger.Log(pub.Id, userId, logMessage);
 		var logs = _db.PublicationMaintenanceLogs.ToList();
-		Assert.AreEqual(1, logs.Count);
+		Assert.HasCount(1, logs);
 		var log = logs.Single();
 		Assert.AreEqual(pub.Id, log.PublicationId);
 		Assert.AreEqual(userId, log.UserId);
@@ -40,7 +40,7 @@ public class PublicationMaintenanceLoggerTests : TestDbBase
 
 		await _publicationMaintenanceLogger.Log(pub.Id, userId, [message1, message2]);
 		var logs = _db.PublicationMaintenanceLogs.ToList();
-		Assert.AreEqual(2, logs.Count);
+		Assert.HasCount(2, logs);
 		Assert.IsTrue(logs.Any(l => l.PublicationId == pub.Id && l.UserId == userId && l.Log == message1));
 		Assert.IsTrue(logs.Any(l => l.PublicationId == pub.Id && l.UserId == userId && l.Log == message2));
 	}

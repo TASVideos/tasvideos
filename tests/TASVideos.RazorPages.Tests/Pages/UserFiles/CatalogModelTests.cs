@@ -64,7 +64,7 @@ public class CatalogModelTests : TestDbBase
 		Assert.AreEqual("uncategorized.bk2", _page.UserFile.Filename);
 		Assert.AreEqual("TestAuthor", _page.UserFile.AuthorName);
 		Assert.IsTrue(_page.AvailableSystems.Count > 0);
-		Assert.AreEqual(0, _page.AvailableGames.Count); // No games because no system selected
+		Assert.HasCount(0, _page.AvailableGames); // No games because no system selected
 	}
 
 	[TestMethod]
@@ -243,7 +243,7 @@ public class CatalogModelTests : TestDbBase
 		await _page.OnGet();
 
 		Assert.IsTrue(_page.AvailableSystems.Count > 0);
-		Assert.AreEqual(0, _page.AvailableGames.Count);
+		Assert.HasCount(0, _page.AvailableGames);
 	}
 
 	[TestMethod]

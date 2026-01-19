@@ -34,7 +34,7 @@ public class DeletedPagesTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(2, _page.DeletedPages.Count);
+		Assert.HasCount(2, _page.DeletedPages);
 		Assert.IsTrue(_page.DeletedPages.Any(p => p.PageName == partiallyDeleted));
 		var partiallyDeletedResult = _page.DeletedPages.Single(p => p.PageName == partiallyDeleted);
 		Assert.IsTrue(partiallyDeletedResult.HasExistingRevisions);

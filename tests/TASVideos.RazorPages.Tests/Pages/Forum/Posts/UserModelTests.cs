@@ -188,7 +188,7 @@ public class UserModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		var userPost = _model.Posts.First();
-		Assert.AreEqual(testAwards.Count, userPost.Awards.Count);
+		Assert.HasCount(testAwards.Count, userPost.Awards);
 		Assert.AreEqual("TestAward", userPost.Awards.First().ShortName);
 		await _awards.Received(1).ForUser(user.Id);
 		Assert.AreEqual(99.9, userPost.PosterPlayerPoints);

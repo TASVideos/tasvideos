@@ -198,7 +198,7 @@ public class EditModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(2, _model.PreviousPosts.Count);
+		Assert.HasCount(2, _model.PreviousPosts);
 		Assert.AreEqual("First post", _model.PreviousPosts[0].Text);
 		Assert.AreEqual("Second post", _model.PreviousPosts[1].Text);
 	}

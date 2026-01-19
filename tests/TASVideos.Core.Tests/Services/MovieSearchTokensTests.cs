@@ -67,11 +67,11 @@ public class MovieSearchTokensTests : TestDbBase
 		var result = await _movieSearchTokens.GetTokens();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.SystemCodes.Count);
-		Assert.AreEqual(0, result.Classes.Count);
-		Assert.AreEqual(0, result.Tags.Count);
-		Assert.AreEqual(0, result.Genres.Count);
-		Assert.AreEqual(0, result.Flags.Count);
+		Assert.HasCount(0, result.SystemCodes);
+		Assert.HasCount(0, result.Classes);
+		Assert.HasCount(0, result.Tags);
+		Assert.HasCount(0, result.Genres);
+		Assert.HasCount(0, result.Flags);
 		Assert.IsTrue(_testCache.ContainsKey(CacheKeys.MovieTokens));
 	}
 
@@ -120,11 +120,11 @@ public class MovieSearchTokensTests : TestDbBase
 
 		var result = await _movieSearchTokens.GetTokens();
 
-		Assert.AreEqual(itemCount, result.SystemCodes.Count);
-		Assert.AreEqual(itemCount, result.Classes.Count);
-		Assert.AreEqual(itemCount, result.Tags.Count);
-		Assert.AreEqual(itemCount, result.Genres.Count);
-		Assert.AreEqual(itemCount, result.Flags.Count);
+		Assert.HasCount(itemCount, result.SystemCodes);
+		Assert.HasCount(itemCount, result.Classes);
+		Assert.HasCount(itemCount, result.Tags);
+		Assert.HasCount(itemCount, result.Genres);
+		Assert.HasCount(itemCount, result.Flags);
 
 		Assert.Contains("system1", result.SystemCodes);
 		Assert.Contains("system5", result.SystemCodes);
@@ -150,7 +150,7 @@ public class MovieSearchTokensTests : TestDbBase
 		Assert.Contains(expectedMinYear, movieTokens.Years);
 		Assert.Contains(currentYear, movieTokens.Years);
 		Assert.Contains(expectedMaxYear, movieTokens.Years);
-		Assert.AreEqual(expectedMaxYear - expectedMinYear + 1, movieTokens.Years.Count);
+		Assert.HasCount(expectedMaxYear - expectedMinYear + 1, movieTokens.Years);
 
 		// Verify default boolean values
 		Assert.IsFalse(movieTokens.ShowObsoleted);
