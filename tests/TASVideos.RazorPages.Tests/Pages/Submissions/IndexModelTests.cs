@@ -162,12 +162,8 @@ public class IndexModelTests : TestDbBase
 		Assert.IsTrue(years.Any(y => y.Value == "2000"));
 		Assert.IsTrue(years.Any(y => y.Value == currentYear.ToString()));
 
-		// Should be in descending order
 		var yearValues = years.Select(y => int.Parse(y.Value!)).ToList();
-		for (var i = 1; i < yearValues.Count; i++)
-		{
-			Assert.IsTrue(yearValues[i - 1] > yearValues[i]);
-		}
+		CollectionAssert.AreEqual(yearValues.OrderDescending().ToList(), yearValues);
 	}
 
 	[TestMethod]
