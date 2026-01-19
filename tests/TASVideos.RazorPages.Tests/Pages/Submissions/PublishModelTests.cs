@@ -279,7 +279,7 @@ public class PublishModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<RedirectResult>(actual);
 		var redirectResult = (RedirectResult)actual;
-		Assert.IsTrue(redirectResult.Url.Contains($"{expectedPublicationId}M"), "Should redirect to publication page");
+		Assert.Contains($"{expectedPublicationId}M", redirectResult.Url, "Should redirect to publication page");
 
 		// Verify the service was called with correct parameters
 		await queueService.Received(1).Publish(Arg.Is<PublishSubmissionRequest>(r =>

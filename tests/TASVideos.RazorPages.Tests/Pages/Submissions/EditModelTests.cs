@@ -72,7 +72,7 @@ public class EditModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(submission.Submitter!.UserName, _page.Submission.Submitter);
 		Assert.AreEqual(markup, _page.Markup);
-		Assert.AreEqual(2, _page.AvailableStatuses.Count);
+		Assert.HasCount(2, _page.AvailableStatuses);
 	}
 
 	[TestMethod]

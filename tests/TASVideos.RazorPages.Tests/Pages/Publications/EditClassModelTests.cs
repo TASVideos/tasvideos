@@ -42,7 +42,7 @@ public class EditClassModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Publication", _page.Title);
 		Assert.AreEqual(publicationClass.Id, _page.PublicationClassId);
-		Assert.AreEqual(1, _page.AvailableClasses.Count);
+		Assert.HasCount(1, _page.AvailableClasses);
 		Assert.AreEqual(publicationClass.Name, _page.AvailableClasses[0].Text);
 	}
 
@@ -60,7 +60,7 @@ public class EditClassModelTests : TestDbBase
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _page.AvailableClasses.Count);
+		Assert.HasCount(1, _page.AvailableClasses);
 		Assert.AreEqual(pubClass.Name, _page.AvailableClasses[0].Text);
 	}
 

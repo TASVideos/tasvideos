@@ -69,8 +69,8 @@ public class DownloadResultTests : BasePageModelTests
 		await downloadResult.ExecuteResultAsync(actionContext);
 
 		var contentDisposition = actionContext.HttpContext.Response.Headers.ContentDisposition.ToString();
-		Assert.IsTrue(contentDisposition.Contains("attachment"));
-		Assert.IsTrue(contentDisposition.Contains("test.bk2"));
+		Assert.Contains("attachment", contentDisposition);
+		Assert.Contains("test.bk2", contentDisposition);
 	}
 
 	[TestMethod]

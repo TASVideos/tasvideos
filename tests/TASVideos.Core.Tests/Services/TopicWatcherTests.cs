@@ -55,7 +55,7 @@ public class TopicWatcherTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var list = actual.ToList();
-		Assert.AreEqual(2, list.Count);
+		Assert.HasCount(2, list);
 		Assert.AreEqual(1, list.Count(l => l.TopicId == topic1.Id));
 		Assert.AreEqual(1, list.Count(l => l.TopicId == topic2.Id));
 	}

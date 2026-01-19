@@ -55,7 +55,7 @@ public class ListUrlsModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(pubTitle, _page.Title);
-		Assert.AreEqual(2, _page.CurrentUrls.Count);
+		Assert.HasCount(2, _page.CurrentUrls);
 		Assert.IsTrue(_page.CurrentUrls.All(u => u.PublicationId == pubId));
 		Assert.AreEqual(1, _page.CurrentUrls.Count(u => u.Url == url1));
 		Assert.AreEqual(1, _page.CurrentUrls.Count(u => u.Url == url2));

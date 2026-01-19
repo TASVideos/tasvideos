@@ -15,7 +15,7 @@ public class PageExtensionTests
 		var actual = source.ToTokens();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.HasCount(0, actual);
 	}
 
 	[TestMethod]
@@ -31,7 +31,7 @@ public class PageExtensionTests
 		var actual = source.ToTokens();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(expected.Length, actual.Count);
+		Assert.HasCount(expected.Length, actual);
 		Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 	}
 
@@ -45,7 +45,7 @@ public class PageExtensionTests
 		var result = source.ToIdList(suffix);
 		Assert.IsNotNull(result);
 		var actual = result.ToList();
-		Assert.AreEqual(expected.Length, actual.Count);
+		Assert.HasCount(expected.Length, actual);
 		Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 	}
 
@@ -56,7 +56,7 @@ public class PageExtensionTests
 		var result = source.ToIdListPrefix(prefix);
 		Assert.IsNotNull(result);
 		var actual = result.ToList();
-		Assert.AreEqual(expected.Length, actual.Count);
+		Assert.HasCount(expected.Length, actual);
 		Assert.IsTrue(expected.OrderBy(e => e).SequenceEqual(actual.OrderBy(a => a)));
 	}
 }

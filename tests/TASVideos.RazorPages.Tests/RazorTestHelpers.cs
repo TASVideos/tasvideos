@@ -112,7 +112,7 @@ public static class RazorTestHelpers
 			.FirstOrDefault() as RequirePermissionAttribute;
 
 		Assert.IsNotNull(attribute);
-		Assert.IsTrue(attribute.RequiredPermissions.Contains(permission));
+		Assert.Contains(permission, attribute.RequiredPermissions);
 	}
 
 	public static void AssertAllowsAnonymousUsers(Type pageModelType)
@@ -132,7 +132,7 @@ public static class RazorTestHelpers
 		var attribute = pageModelType
 			.GetCustomAttributes(attributeType, inherit: false);
 
-		Assert.IsTrue(attribute.Length > 0);
+		Assert.IsGreaterThan(0, attribute.Length);
 	}
 
 	public static IUrlHelper GeMockUrlHelper(string url)

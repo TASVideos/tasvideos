@@ -63,7 +63,7 @@ public class SortableTests
 	[DataRow("-Param", "param", true, DisplayName = "Case insensitive")]
 	[DataRow("-param", "param", true, DisplayName = "Case insensitive")]
 	[DataRow("-parAm", "paRam", true, DisplayName = "Case insensitive")]
-	[DataRow("+Param", "Param", false, DisplayName = "Spaces")]
+	[DataRow(" Param ", "Param", false, DisplayName = "Spaces")]
 	public void Sortable_IsDescendingTests(string? sortStr, string? param, bool expected)
 	{
 		var sortable = new Sortable(sortStr);

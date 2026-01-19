@@ -177,7 +177,7 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.AreEqual(Smb.Id, actual.GameId);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(1, goalList.Count);
+		Assert.HasCount(1, goalList);
 		Assert.AreEqual(SmbWarps.Id, goalList.Single().Id);
 	}
 
@@ -192,7 +192,7 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(1, goalList.Count);
+		Assert.HasCount(1, goalList);
 
 		var movie = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, movie.Id);
@@ -211,7 +211,7 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(1, goalList.Count);
+		Assert.HasCount(1, goalList);
 
 		var movie = goalList.Single();
 		Assert.AreEqual(0, movie.Obsoletes.Count());
@@ -229,7 +229,7 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(2, goalList.Count);
+		Assert.HasCount(2, goalList);
 
 		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarps.GameGoal!.DisplayName));
 		Assert.AreEqual(1, goalList.Count(b => b.Goal == SmbWarpless.GameGoal!.DisplayName));
@@ -247,7 +247,7 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(1, goalList.Count);
+		Assert.HasCount(1, goalList);
 		Assert.AreEqual(SmbWarps.GameGoal!.DisplayName, goalList.Single().Goal);
 	}
 
@@ -263,7 +263,7 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(1, goalList.Count);
+		Assert.HasCount(1, goalList);
 
 		var currentPub = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, currentPub.Id);
@@ -286,13 +286,13 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(1, goalList.Count);
+		Assert.HasCount(1, goalList);
 
 		var currentPub = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, currentPub.Id);
 
 		var obsoletes = currentPub.Obsoletes.ToList();
-		Assert.AreEqual(2, obsoletes.Count);
+		Assert.HasCount(2, obsoletes);
 		Assert.AreEqual(1, obsoletes.Count(o => o.Id == SmbWarpsObsolete.Id));
 		Assert.AreEqual(1, obsoletes.Count(o => o.Id == SmbWarpsObsoleteGoal.Id));
 	}
@@ -310,18 +310,18 @@ public class PublicationHistoryTests : TestDbBase
 		Assert.IsNotNull(actual);
 
 		var goalList = actual.Goals.ToList();
-		Assert.AreEqual(1, goalList.Count);
+		Assert.HasCount(1, goalList);
 
 		var currentPub = goalList.Single();
 		Assert.AreEqual(SmbWarps.Id, currentPub.Id);
 
 		var obsoletes = currentPub.Obsoletes.ToList();
-		Assert.AreEqual(1, obsoletes.Count);
+		Assert.HasCount(1, obsoletes);
 
 		var nestedObsoleteList = obsoletes.Single().Obsoletes.ToList();
 
 		Assert.IsNotNull(nestedObsoleteList);
-		Assert.AreEqual(1, nestedObsoleteList.Count);
+		Assert.HasCount(1, nestedObsoleteList);
 		var nestObsoletePub = nestedObsoleteList.Single();
 		Assert.AreEqual(SmbWarpsObsoleteObsolete.Id, nestObsoletePub.Id);
 	}

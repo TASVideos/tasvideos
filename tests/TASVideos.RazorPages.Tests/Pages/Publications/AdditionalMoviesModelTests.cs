@@ -54,7 +54,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(pubTitle, _page.PublicationTitle);
-		Assert.AreEqual(1, _page.AvailableMovieFiles.Count);
+		Assert.HasCount(1, _page.AvailableMovieFiles);
 		Assert.AreEqual(description, _page.AvailableMovieFiles[0].Description);
 		Assert.AreEqual(path, _page.AvailableMovieFiles[0].FileName);
 	}
@@ -84,7 +84,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_page.ModelState.IsValid, "ModelState should be invalid due to zip file rejection");
 		Assert.IsTrue(_page.ModelState.ContainsKey(nameof(_page.AdditionalMovieFile)));
-		Assert.IsTrue(_page.ModelState[nameof(_page.AdditionalMovieFile)]!.Errors[0].ErrorMessage.Contains("Zip files are not allowed"));
+		Assert.Contains("Zip files are not allowed", _page.ModelState[nameof(_page.AdditionalMovieFile)]!.Errors[0].ErrorMessage);
 	}
 
 	[TestMethod]

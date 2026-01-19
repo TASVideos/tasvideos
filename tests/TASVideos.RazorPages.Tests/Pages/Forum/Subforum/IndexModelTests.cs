@@ -162,7 +162,7 @@ public class IndexModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		var topics = _model.Topics.ToList();
-		Assert.AreEqual(2, topics.Count);
+		Assert.HasCount(2, topics);
 
 		// Sticky topics should come first (ordered by Type descending)
 		Assert.AreEqual(ForumTopicType.Sticky, topics[0].Type);

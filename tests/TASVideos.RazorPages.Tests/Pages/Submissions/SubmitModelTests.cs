@@ -86,7 +86,7 @@ public class SubmitModelTests : TestDbBase
 		await _page.OnPost();
 
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.MovieFile)));
+		Assert.Contains(nameof(_page.MovieFile), _page.ModelState.Keys);
 		Assert.IsTrue(_page.ModelState[nameof(_page.MovieFile)]!.Errors
 			.Any(e => e.ErrorMessage.Contains("ZIP files are not supported")));
 	}
@@ -122,7 +122,7 @@ public class SubmitModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.Authors)));
+		Assert.Contains(nameof(_page.Authors), _page.ModelState.Keys);
 	}
 
 	[TestMethod]
@@ -138,7 +138,7 @@ public class SubmitModelTests : TestDbBase
 		await _page.OnPost();
 
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.Authors)));
+		Assert.Contains(nameof(_page.Authors), _page.ModelState.Keys);
 		Assert.IsTrue(_page.ModelState.Where(ms => ms.Value is not null).SelectMany(ms => ms.Value!.Errors).Any(ms => ms.ErrorMessage.Contains(nonexistentUser)));
 	}
 
@@ -157,7 +157,7 @@ public class SubmitModelTests : TestDbBase
 		await _page.OnPost();
 
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.MovieFile)));
+		Assert.Contains(nameof(_page.MovieFile), _page.ModelState.Keys);
 	}
 
 	[TestMethod]
@@ -242,7 +242,7 @@ public class SubmitModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsTrue(_page.ModelState.ContainsKey(""));
 		var errors = _page.ModelState[""]!.Errors;
-		Assert.IsTrue(errors.Count > 0);
+		Assert.IsNotEmpty(errors);
 		Assert.AreEqual("Database error occurred", errors[0].ErrorMessage);
 	}
 

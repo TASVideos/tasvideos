@@ -128,7 +128,7 @@ public class CreateModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsTrue(_model.Text.Contains($"[quote=\"[post={post.Id}][/post] QuotedUser\"]Original post content[/quote]"));
+		Assert.Contains($"[quote=\"[post={post.Id}][/post] QuotedUser\"]Original post content[/quote]", _model.Text);
 	}
 
 	[TestMethod]
@@ -195,7 +195,7 @@ public class CreateModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(10, _model.PreviousPosts.Count);
+		Assert.HasCount(10, _model.PreviousPosts);
 
 		// Should be the most recent 10 posts (6-15), in chronological order
 		Assert.AreEqual("Post content 6", _model.PreviousPosts[0].Text);
