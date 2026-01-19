@@ -43,7 +43,7 @@ internal sealed class MovieParser : IMovieParser
 			}
 
 			var movieFile = zip.Entries.First();
-			var ext = Path.GetExtension(movieFile.Key).Trim('.').ToLower();
+			var ext = Path.GetExtension(movieFile.Key ?? "").Trim('.').ToLower();
 
 			var parser = GetParser(ext);
 			if (parser is null)

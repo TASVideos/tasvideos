@@ -48,7 +48,7 @@ internal class Bk2 : Parser, IParser
 
 		// guard against branch header files, which have a number in their name
 		var headerEntry = archive.Entries.SingleOrDefault(
-			e => e.Key.StartsWith(HeaderFile, StringComparison.InvariantCultureIgnoreCase) && !e.Key.Any(char.IsDigit));
+			e => e.Key?.StartsWith(HeaderFile, StringComparison.InvariantCultureIgnoreCase) == true && !e.Key.Any(char.IsDigit));
 		if (headerEntry is null)
 		{
 			return Error($"Missing {HeaderFile}, can not parse");
@@ -193,7 +193,7 @@ internal class Bk2 : Parser, IParser
 		await using var inputStream = inputLog.OpenEntryStream();
 		(_, result.Frames) = await inputStream.PipeBasedMovieHeaderAndFrameCount();
 
-		var commentEntry = archive.Entries.SingleOrDefault(e => e.Key.StartsWith(CommentFile, StringComparison.InvariantCultureIgnoreCase));
+		var commentEntry = archive.Entries.SingleOrDefault(e => e.Key?.StartsWith(CommentFile, StringComparison.InvariantCultureIgnoreCase) == true);
 		if (commentEntry is not null)
 		{
 			await using var commentStream = commentEntry.OpenEntryStream();

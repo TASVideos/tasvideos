@@ -145,7 +145,7 @@ internal static class Extensions
 	/// </summary>
 	public static SharpZipArchiveEntry? Entry(this SharpZipArchive archive, string name)
 	{
-		return archive.Entries.SingleOrDefault(e => e.Key.StartsWith(name, StringComparison.InvariantCultureIgnoreCase));
+		return archive.Entries.SingleOrDefault(e => e.Key?.StartsWith(name, StringComparison.InvariantCultureIgnoreCase) == true);
 	}
 
 	public static bool HasEntry(this SharpZipArchive archive, string name)
