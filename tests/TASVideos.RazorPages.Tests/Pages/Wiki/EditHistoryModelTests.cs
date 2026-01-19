@@ -147,8 +147,8 @@ public class EditHistoryModelTests : BasePageModelTests
 		Assert.AreEqual(2, _model.History.RowCount);
 
 		var pageNames = _model.History.Select(h => h.PageName).ToList();
-		Assert.IsTrue(pageNames.Contains("TargetPage1"));
-		Assert.IsTrue(pageNames.Contains("TargetPage2"));
+		Assert.Contains("TargetPage1", pageNames);
+		Assert.Contains("TargetPage2", pageNames);
 		Assert.IsFalse(pageNames.Contains("OtherPage1"));
 	}
 

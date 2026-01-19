@@ -89,8 +89,8 @@ public class ReferrersModelTests : BasePageModelTests
 		Assert.AreEqual(2, _model.Referrals.Count);
 
 		var referrers = _model.Referrals.Select(r => r.Referrer).ToList();
-		Assert.IsTrue(referrers.Contains(referrerPage1));
-		Assert.IsTrue(referrers.Contains(referrerPage2));
+		Assert.Contains(referrerPage1, referrers);
+		Assert.Contains(referrerPage2, referrers);
 
 		var referral1 = _model.Referrals.First(r => r.Referrer == referrerPage1);
 		var referral2 = _model.Referrals.First(r => r.Referrer == referrerPage2);
@@ -162,8 +162,8 @@ public class ReferrersModelTests : BasePageModelTests
 		Assert.IsTrue(_model.Referrals.All(r => r.Referral == targetPage));
 
 		var excerpts = _model.Referrals.Select(r => r.Excerpt).ToList();
-		Assert.IsTrue(excerpts.Contains("First reference from same page"));
-		Assert.IsTrue(excerpts.Contains("Second reference from same page"));
+		Assert.Contains("First reference from same page", excerpts);
+		Assert.Contains("Second reference from same page", excerpts);
 	}
 
 	[TestMethod]

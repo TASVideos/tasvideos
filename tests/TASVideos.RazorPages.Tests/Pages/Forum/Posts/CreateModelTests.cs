@@ -128,7 +128,7 @@ public class CreateModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsTrue(_model.Text.Contains($"[quote=\"[post={post.Id}][/post] QuotedUser\"]Original post content[/quote]"));
+		Assert.Contains($"[quote=\"[post={post.Id}][/post] QuotedUser\"]Original post content[/quote]", _model.Text);
 	}
 
 	[TestMethod]

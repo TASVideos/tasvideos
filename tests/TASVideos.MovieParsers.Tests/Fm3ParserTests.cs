@@ -85,7 +85,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Invalid FM3 version"));
+		Assert.Contains("Invalid FM3 version", result.Errors.First());
 	}
 
 	[TestMethod]
@@ -95,7 +95,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Missing required romFilename field"));
+		Assert.Contains("Missing required romFilename field", result.Errors.First());
 	}
 
 	[TestMethod]
@@ -105,7 +105,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Missing required romChecksum field"));
+		Assert.Contains("Missing required romChecksum field", result.Errors.First());
 	}
 
 	[TestMethod]
@@ -115,7 +115,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Missing required guid field"));
+		Assert.Contains("Missing required guid field", result.Errors.First());
 	}
 
 	[TestMethod]

@@ -80,8 +80,8 @@ public class IndexModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(2, _model.Game.Genres.Count);
-		Assert.IsTrue(_model.Game.Genres.Contains("Action"));
-		Assert.IsTrue(_model.Game.Genres.Contains("Platform"));
+		Assert.Contains("Action", _model.Game.Genres);
+		Assert.Contains("Platform", _model.Game.Genres);
 	}
 
 	[TestMethod]

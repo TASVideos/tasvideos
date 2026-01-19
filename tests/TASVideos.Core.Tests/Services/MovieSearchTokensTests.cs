@@ -28,11 +28,11 @@ public class MovieSearchTokensTests : TestDbBase
 		var result = await _movieSearchTokens.GetTokens();
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.SystemCodes.Contains("testsystem"));
-		Assert.IsTrue(result.Classes.Contains("testclass"));
-		Assert.IsTrue(result.Tags.Contains("testtag"));
-		Assert.IsTrue(result.Genres.Contains("testgenre"));
-		Assert.IsTrue(result.Flags.Contains("test-token"));
+		Assert.Contains("testsystem", result.SystemCodes);
+		Assert.Contains("testclass", result.Classes);
+		Assert.Contains("testtag", result.Tags);
+		Assert.Contains("testgenre", result.Genres);
+		Assert.Contains("test-token", result.Flags);
 
 		Assert.IsTrue(_testCache.ContainsKey(CacheKeys.MovieTokens));
 		Assert.AreEqual(1, _testCache.Count());
@@ -54,8 +54,8 @@ public class MovieSearchTokensTests : TestDbBase
 		var result = await _movieSearchTokens.GetTokens();
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.SystemCodes.Contains("cachedsystem"));
-		Assert.IsTrue(result.Classes.Contains("cachedclass"));
+		Assert.Contains("cachedsystem", result.SystemCodes);
+		Assert.Contains("cachedclass", result.Classes);
 		Assert.IsFalse(result.SystemCodes.Contains("newsystem"));
 		Assert.IsFalse(result.Classes.Contains("newclass"));
 		Assert.AreEqual(1, _testCache.Count());
@@ -88,11 +88,11 @@ public class MovieSearchTokensTests : TestDbBase
 		var result = await _movieSearchTokens.GetTokens();
 
 		// All values should be lowercase
-		Assert.IsTrue(result.SystemCodes.Contains("mixedcasesystem"));
-		Assert.IsTrue(result.Classes.Contains("mixedcaseclass"));
-		Assert.IsTrue(result.Tags.Contains("mixedcasetag"));
-		Assert.IsTrue(result.Genres.Contains("mixed case genre"));
-		Assert.IsTrue(result.Flags.Contains("mixed-case-token"));
+		Assert.Contains("mixedcasesystem", result.SystemCodes);
+		Assert.Contains("mixedcaseclass", result.Classes);
+		Assert.Contains("mixedcasetag", result.Tags);
+		Assert.Contains("mixed case genre", result.Genres);
+		Assert.Contains("mixed-case-token", result.Flags);
 
 		// Verify no uppercase versions exist
 		Assert.IsFalse(result.SystemCodes.Contains("MixedCaseSystem"));
@@ -126,16 +126,16 @@ public class MovieSearchTokensTests : TestDbBase
 		Assert.AreEqual(itemCount, result.Genres.Count);
 		Assert.AreEqual(itemCount, result.Flags.Count);
 
-		Assert.IsTrue(result.SystemCodes.Contains("system1"));
-		Assert.IsTrue(result.SystemCodes.Contains("system5"));
-		Assert.IsTrue(result.Classes.Contains("class1"));
-		Assert.IsTrue(result.Classes.Contains("class5"));
-		Assert.IsTrue(result.Tags.Contains("tag1"));
-		Assert.IsTrue(result.Tags.Contains("tag5"));
-		Assert.IsTrue(result.Genres.Contains("genre1"));
-		Assert.IsTrue(result.Genres.Contains("genre5"));
-		Assert.IsTrue(result.Flags.Contains("token1"));
-		Assert.IsTrue(result.Flags.Contains("token5"));
+		Assert.Contains("system1", result.SystemCodes);
+		Assert.Contains("system5", result.SystemCodes);
+		Assert.Contains("class1", result.Classes);
+		Assert.Contains("class5", result.Classes);
+		Assert.Contains("tag1", result.Tags);
+		Assert.Contains("tag5", result.Tags);
+		Assert.Contains("genre1", result.Genres);
+		Assert.Contains("genre5", result.Genres);
+		Assert.Contains("token1", result.Flags);
+		Assert.Contains("token5", result.Flags);
 	}
 
 	[TestMethod]
@@ -147,9 +147,9 @@ public class MovieSearchTokensTests : TestDbBase
 		var currentYear = DateTime.UtcNow.Year;
 		const int expectedMinYear = 2000;
 		var expectedMaxYear = currentYear + 1;
-		Assert.IsTrue(movieTokens.Years.Contains(expectedMinYear));
-		Assert.IsTrue(movieTokens.Years.Contains(currentYear));
-		Assert.IsTrue(movieTokens.Years.Contains(expectedMaxYear));
+		Assert.Contains(expectedMinYear, movieTokens.Years);
+		Assert.Contains(currentYear, movieTokens.Years);
+		Assert.Contains(expectedMaxYear, movieTokens.Years);
 		Assert.AreEqual(expectedMaxYear - expectedMinYear + 1, movieTokens.Years.Count);
 
 		// Verify default boolean values
