@@ -64,8 +64,8 @@ public class MergeModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsTrue(_model.AvailableForums.Count > 0);
-		Assert.IsTrue(_model.AvailableTopics.Count >= 0);
+		Assert.IsGreaterThan(0, _model.AvailableForums.Count);
+		Assert.IsGreaterThanOrEqualTo(0, _model.AvailableTopics.Count);
 	}
 
 	[TestMethod]

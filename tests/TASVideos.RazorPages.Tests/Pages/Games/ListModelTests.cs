@@ -26,8 +26,8 @@ public class ListModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.IsTrue(_model.SystemList.Count > 0);
-		Assert.IsTrue(_model.LetterList.Count > 0);
+		Assert.IsGreaterThan(0, _model.SystemList.Count);
+		Assert.IsGreaterThan(0, _model.LetterList.Count);
 	}
 
 	[TestMethod]

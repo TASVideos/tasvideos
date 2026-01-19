@@ -72,7 +72,7 @@ public class RegisterTests : BasePageModelTests
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.IsFalse(_model.ModelState.IsValid);
-		Assert.IsTrue(_model.ModelState.ErrorCount > 0);
+		Assert.IsGreaterThan(0, _model.ModelState.ErrorCount);
 	}
 
 	[TestMethod]

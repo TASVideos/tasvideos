@@ -51,7 +51,7 @@ public class EditModelTests : TestDbBase
 		Assert.AreEqual(pub.Title, _page.Publication.Title);
 		Assert.AreEqual(pub.MovieFileName, _page.Publication.MovieFileName);
 		Assert.AreEqual(markup, _page.Publication.Markup);
-		Assert.IsTrue(_page.Publication.Authors.Count >= 1);
+		Assert.IsGreaterThanOrEqualTo(1, _page.Publication.Authors.Count);
 		Assert.Contains("TestAuthor", _page.Publication.Authors);
 		Assert.HasCount(1, _page.Publication.SelectedTags);
 		Assert.HasCount(1, _page.Publication.SelectedFlags);
