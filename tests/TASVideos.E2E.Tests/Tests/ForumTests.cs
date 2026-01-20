@@ -176,7 +176,7 @@ public class ForumTests : BaseE2ETest
 	{
 		AssertEnabled();
 
-		var response = await Navigate("/forum/moodreport.php");
+		var response = await Navigate("/forum/moodreport.php", WaitUntilState.DOMContentLoaded);
 		AssertResponseCode(response, 200);
 		Assert.IsNotNull(response);
 		Assert.IsTrue(response.Url.Contains("Forum/MoodReport"));

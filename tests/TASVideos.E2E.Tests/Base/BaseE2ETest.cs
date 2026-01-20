@@ -42,7 +42,7 @@ public class BaseE2ETest : PageTest
 		}
 	}
 
-	protected async Task<IResponse?> Navigate(string path = "")
+	protected async Task<IResponse?> Navigate(string path = "", WaitUntilState waitUntil = WaitUntilState.NetworkIdle)
 	{
 		var fullUrl = Path.Combine(Settings.GetTestUrl(), path).Replace('\\', '/');
 		if (!fullUrl.StartsWith("http"))
@@ -53,7 +53,7 @@ public class BaseE2ETest : PageTest
 		return await ThrottleManager.ExecuteWithThrottleAsync(
 			Settings, async () => await Page.GotoAsync(fullUrl, new PageGotoOptions
 			{
-				WaitUntil = WaitUntilState.NetworkIdle,
+				WaitUntil = waitUntil,
 				Timeout = Settings.RequestTimeoutMs
 			}));
 	}
