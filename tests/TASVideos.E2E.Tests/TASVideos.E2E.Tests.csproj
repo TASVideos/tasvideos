@@ -9,6 +9,10 @@
 		<UserSecretsId>e2e-tests-secrets</UserSecretsId>
 	</PropertyGroup>
 
+    <ItemGroup>
+        <AdditionalFiles Include="CodeMetricsConfig.txt" />
+    </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 		<PackageReference Include="Microsoft.Playwright" />
