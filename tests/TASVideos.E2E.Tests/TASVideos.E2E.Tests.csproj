@@ -7,7 +7,6 @@
 		<IsTestProject>true</IsTestProject>
 		<EnableMSTestRunner>true</EnableMSTestRunner>
 		<UserSecretsId>e2e-tests-secrets</UserSecretsId>
-        <PlaywrightInstallOnBuild>true</PlaywrightInstallOnBuild>
 	</PropertyGroup>
 
 	<ItemGroup>
