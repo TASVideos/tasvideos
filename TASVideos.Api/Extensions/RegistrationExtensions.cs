@@ -16,27 +16,27 @@ internal static class RegistrationExtensions
 		return builder
 			.Produces<T>()
 			.WithSummary($"Returns a {resource} with the given id.")
-			.WithOpenApi(g =>
+			.AddOpenApiOperationTransformer((g, _, _) =>
 			{
-				g.Responses.AddGeneric400();
-				g.Responses.Add404ById(resource);
-				return g;
+				g.Responses!.AddGeneric400();
+				g.Responses!.Add404ById(resource);
+				return Task.CompletedTask;
 			});
 	}
 
 	public static RouteHandlerBuilder Receives<T>(this RouteHandlerBuilder builder)
 	{
-		return builder.WithOpenApi(g =>
+		return builder.AddOpenApiOperationTransformer((g, _, _) =>
 		{
-			g.Parameters.Describe<T>();
-			g.Responses.AddGeneric400();
-			return g;
+			g.Parameters!.Describe<T>();
+			g.Responses!.AddGeneric400();
+			return Task.CompletedTask;
 		});
 	}
 
 	public static RouteHandlerBuilder ProducesList<T>(this RouteHandlerBuilder builder, string summary)
 	{
-		return builder.WithSummary($"Returns {summary}").Produces<IEnumerable<T>>().WithOpenApi();
+		return builder.WithSummary($"Returns {summary}").Produces<IEnumerable<T>>();
 	}
 
 	public static void Add(this OpenApiResponses responses, int statusCode, string description)
