@@ -1,0 +1,60 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/analyzers/">
+    <Project Path="analyzers/TASVideos.Analyzers.Style/TASVideos.Analyzers.Style.csproj" />
+  </Folder>
+  <Folder Name="/Engines/">
+    <Project Path="TASVideos.ForumEngine/TASVideos.ForumEngine.csproj" />
+    <Project Path="TASVideos.WikiEngine/TASVideos.WikiEngine.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".stylecop.json" />
+    <File Path="Common.ruleset" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="Migrations.Readme.txt" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TASVideos.Common.Tests/TASVideos.Common.Tests.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/TASVideos.Core.Tests/TASVideos.Core.Tests.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/TASVideos.Data.Tests/TASVideos.Data.Tests.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/TASVideos.E2E.Tests/TASVideos.E2E.Tests.csproj" />
+    <Project Path="tests/TASVideos.ForumEngine.Benchmarks/TASVideos.ForumEngine.Benchmarks.csproj" />
+    <Project Path="tests/TASVideos.ForumEngine.Snapshots/TASVideos.ForumEngine.Snapshots.csproj" />
+    <Project Path="tests/TASVideos.ForumEngineTests/TASVideos.ForumEngineTests.csproj" />
+    <Project Path="tests/TASVideos.IntegrationTests/TASVideos.IntegrationTests.csproj" />
+    <Project Path="tests/TASVideos.MovieParsers.Tests/TASVideos.MovieParsers.Tests.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/TASVideos.RazorPages.Tests/TASVideos.RazorPages.Tests.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/TASVideos.Tests.Base/TASVideos.Tests.Base.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/TASVideos.WikiEngine.Benchmarks/TASVideos.WikiEngine.Benchmarks.csproj" />
+    <Project Path="tests/TASVideos.WikiEngine.Snapshots/TASVideos.WikiEngine.Snapshots.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+    <Project Path="tests/TASVideos.WikiEngine.Tests/TASVideos.WikiEngine.Tests.csproj">
+      <Build Solution="Release|Any CPU" Project="false" />
+    </Project>
+  </Folder>
+  <Project Path="TASVideos.Api/TASVideos.Api.csproj" />
+  <Project Path="TASVideos.Common/TASVideos.Common.csproj" />
+  <Project Path="TASVideos.Core/TASVideos.Core.csproj" />
+  <Project Path="TASVideos.Data/TASVideos.Data.csproj" />
+  <Project Path="TASVideos.Parsers/TASVideos.MovieParsers.csproj" />
+  <Project Path="TASVideos/TASVideos.csproj" />
+</Solution>
