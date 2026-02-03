@@ -115,20 +115,25 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 		base.Dispose(disposing);
 	}
 
+	[System.Diagnostics.CodeAnalysis.SuppressMessage(
+		"Security",
+		"CA2100:Review SQL queries for security vulnerabilities",
+		Justification = "Database name is internally generated with a guid and not user-controlled")]
 	private void CleanupPostgreSqlDatabase()
 	{
 		try
 		{
-			var masterConnectionString = "Host=localhost;Database=postgres;Username=postgres;Password=postgres";
+			const string masterConnectionString = "Host=localhost;Database=postgres;Username=postgres;Password=postgres";
 			using var connection = new Npgsql.NpgsqlConnection(masterConnectionString);
 			connection.Open();
 
 			// Terminate existing connections to the test database
-			var terminateConnections = @"
-				SELECT pg_terminate_backend(pg_stat_activity.pid)
-				FROM pg_stat_activity
-				WHERE pg_stat_activity.datname = $1
-				  AND pid <> pg_backend_pid();";
+			const string terminateConnections = """
+												SELECT pg_terminate_backend(pg_stat_activity.pid)
+												FROM pg_stat_activity
+												WHERE pg_stat_activity.datname = $1
+												  AND pid <> pg_backend_pid();
+												""";
 
 			using var terminateCommand = new Npgsql.NpgsqlCommand(terminateConnections, connection);
 			terminateCommand.Parameters.AddWithValue(_testDatabaseName!);
