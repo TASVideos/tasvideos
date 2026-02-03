@@ -55,13 +55,14 @@ internal static class TagsEndpoints
 			};
 		})
 		.WithSummary("Creates a new tag")
-		.WithOpenApi(g =>
-		{
-			g.Responses.Add(201, "The Tag was created successfully.");
-			g.Responses.Add(409, "A Tag with the given code already exists.");
-			g.Responses.AddGeneric400();
-			return g;
-		});
+		.WithDescription("""
+						<p>201 if the tag was created successfully<p>
+						<p>400 if the request parameters are invalid</p>
+						<p>409 if a tag with the given code already exists<p>
+						""")
+		.Produces(StatusCodes.Status201Created)
+		.Produces(StatusCodes.Status400BadRequest)
+		.Produces(StatusCodes.Status409Conflict);
 
 		group.MapPut("{id:int}", async (int id, TagAddEditRequest request, ITagService tagService, HttpContext context) =>
 		{
@@ -87,13 +88,16 @@ internal static class TagsEndpoints
 			};
 		})
 		.WithSummary("Updates an existing tag")
-		.WithOpenApi(g =>
-		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("tag");
-			g.Responses.Add(409, "A Tag with the given code already exists.");
-			return g;
-		});
+		.WithDescription("""
+						<p>200 if the tag was updated successfully<p>
+						<p>400 if the request parameters are invalid</p>
+						<p>404 if a tag with the given id was not found</p>
+						<p>409 if a tag with the given code already exists<p>
+						""")
+		.Produces(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status400BadRequest)
+		.Produces(StatusCodes.Status404NotFound)
+		.Produces(StatusCodes.Status409Conflict);
 
 		group.MapDelete("{id:int}", async (int id, ITagService tagService, HttpContext context) =>
 		{
@@ -113,13 +117,12 @@ internal static class TagsEndpoints
 			};
 		})
 		.WithSummary("Deletes an existing tag")
-		.WithOpenApi(g =>
-		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add404ById("tag");
-			g.Responses.Add(409, "The Tag is in use and cannot be deleted.");
-			return g;
-		});
+		.WithDescription("""
+						<p>200 if the tag was deleted successfully<p>
+						<p>409 if the tag is in use and cannot be deleted<p>
+						""")
+		.Produces(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status409Conflict);
 
 		return app;
 	}

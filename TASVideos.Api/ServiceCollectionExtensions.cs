@@ -48,6 +48,7 @@ public static class ServiceCollectionExtensions
 		services.AddEndpointsApiExplorer();
 		return services.AddSwaggerGen(c =>
 		{
+			c.EnableAnnotations();
 			c.SwaggerDoc(
 				"v1",
 				new OpenApiInfo

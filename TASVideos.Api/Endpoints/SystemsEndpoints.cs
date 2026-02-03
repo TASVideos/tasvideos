@@ -12,7 +12,7 @@ internal static class SystemsEndpoints
 
 		group
 			.MapGet("", async (IGameSystemService systemService) => Results.Ok(await systemService.GetAll()))
-			.ProducesList<SystemsResponse>("a list of available game sytems, including supported framerates.");
+			.ProducesList<SystemsResponse>("a list of available game systems, including supported framerates.");
 
 		return app;
 	}
