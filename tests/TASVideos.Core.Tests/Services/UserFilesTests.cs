@@ -184,7 +184,9 @@ public class UserFilesTests : TestDbBase
 
 		var (id, parseResult) = await _userFiles.Upload(user.Id, new(title, desc, system.Id, game.Id, fileData, fileName, hidden));
 
+#pragma warning disable MSTEST0037 // false positive; value is nullable
 		Assert.IsTrue(id > 0);
+#pragma warning restore MSTEST0037
 		Assert.IsNull(parseResult);
 		Assert.AreEqual(1, _db.UserFiles.Count());
 		var userFile = _db.UserFiles.Single();
@@ -215,7 +217,9 @@ public class UserFilesTests : TestDbBase
 
 		var (id, parseResult) = await _userFiles.Upload(user.Id, new(title, desc, system.Id, game.Id, fileData, fileName, hidden));
 
+#pragma warning disable MSTEST0037 // false positive; value is nullable
 		Assert.IsTrue(id > 0);
+#pragma warning restore MSTEST0037
 		Assert.IsNotNull(parseResult);
 		Assert.AreEqual(1, _db.UserFiles.Count());
 		var userFile = _db.UserFiles.Single();

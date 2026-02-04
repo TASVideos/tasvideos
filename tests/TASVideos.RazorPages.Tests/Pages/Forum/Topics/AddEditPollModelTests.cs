@@ -64,7 +64,9 @@ public class AddEditPollModelTests : BasePageModelTests
 		Assert.AreEqual(poll.Id, _model.PollId);
 		Assert.AreEqual(poll.Question, _model.Poll.Question);
 		Assert.IsTrue(_model.Poll.MultiSelect);
+#pragma warning disable MSTEST0037 // false positive; value is nullable
 		Assert.IsTrue(_model.Poll.DaysOpen > 0);
+#pragma warning restore MSTEST0037
 		Assert.HasCount(2, _model.Poll.PollOptions);
 		Assert.IsTrue(_model.Poll.HasVotes);
 	}
