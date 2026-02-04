@@ -141,8 +141,8 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.Game.PublicationCount >= 0);
-		Assert.IsTrue(_model.Game.ObsoletePublicationCount >= 0);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.PublicationCount);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.ObsoletePublicationCount);
 	}
 
 	[TestMethod]
@@ -155,7 +155,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.Game.SubmissionCount >= 0);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.SubmissionCount);
 	}
 
 	[TestMethod]
@@ -168,7 +168,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.Game.UserFilesCount >= 0);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.UserFilesCount);
 	}
 
 	[TestMethod]

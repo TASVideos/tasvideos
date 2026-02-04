@@ -70,8 +70,8 @@ public class PointsServiceTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		var (actual, _) = await _pointsService.PlayerPoints(user.Entity.Id);
-		Assert.IsTrue(actual > 0);
-		Assert.IsTrue(actual < 0.5);
+		Assert.IsGreaterThan(0, actual);
+		Assert.IsLessThan(0.5, actual);
 	}
 
 	[TestMethod]

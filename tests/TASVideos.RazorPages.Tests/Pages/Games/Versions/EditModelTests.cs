@@ -273,7 +273,7 @@ public class EditModelTests : TestDbBase
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.ModelState.ErrorCount > 0);
+		Assert.IsGreaterThan(0, _model.ModelState.ErrorCount);
 	}
 
 	[TestMethod]

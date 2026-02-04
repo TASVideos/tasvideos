@@ -49,7 +49,7 @@ public class VersionIntegrationTests
 		Assert.IsTrue(shaMatch.Success, $"Could not extract SHA from link href: {href}");
 
 		var sha = shaMatch.Groups[1].Value;
-		Assert.IsTrue(sha.Length >= 7, $"SHA should be at least 7 characters, but got: {sha} (length: {sha.Length})");
+		Assert.IsGreaterThanOrEqualTo(7, sha.Length, $"SHA should be at least 7 characters, but got: {sha} (length: {sha.Length})");
 		Assert.IsTrue(
 			sha.All(c => char.IsDigit(c) || c is >= 'a' and <= 'f'),
 			$"SHA should only contain hex characters, but got: {sha}");
@@ -62,8 +62,8 @@ public class VersionIntegrationTests
 		var minorVersion = int.Parse(versionMatch.Groups[2].Value);
 		var shortSha = versionMatch.Groups[3].Value;
 
-		Assert.IsTrue(majorVersion > 0, $"Major version should be greater than 0, but got: {majorVersion}");
-		Assert.IsTrue(minorVersion >= 0, $"Minor version should be >= 0, but got: {minorVersion}");
-		Assert.IsTrue(shortSha.Length >= 7, $"Short SHA should be at least 7 characters, but got: {shortSha} (length: {shortSha.Length})");
+		Assert.IsGreaterThan(0, majorVersion, $"Major version should be greater than 0, but got: {majorVersion}");
+		Assert.IsGreaterThanOrEqualTo(0, minorVersion, $"Minor version should be >= 0, but got: {minorVersion}");
+		Assert.IsGreaterThanOrEqualTo(7, shortSha.Length, $"Short SHA should be at least 7 characters, but got: {shortSha} (length: {shortSha.Length})");
 	}
 }

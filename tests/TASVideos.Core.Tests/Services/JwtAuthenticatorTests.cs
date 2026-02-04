@@ -61,7 +61,7 @@ public class JwtAuthenticatorTests : TestDbBase
 		var result = await _jwtAuthenticator.Authenticate(username, password);
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.Length > 0);
+		Assert.IsGreaterThan(0, result.Length);
 
 		var tokenHandler = new JsonWebTokenHandler();
 		var key = Encoding.ASCII.GetBytes(_appSettings.Jwt.SecretKey);
@@ -138,7 +138,7 @@ public class JwtAuthenticatorTests : TestDbBase
 		var result = await _jwtAuthenticator.Authenticate(username, password);
 
 		Assert.IsNotNull(result);
-		Assert.IsTrue(result.Length > 0);
+		Assert.IsGreaterThan(0, result.Length);
 
 		var tokenHandler = new JsonWebTokenHandler();
 		var key = Encoding.ASCII.GetBytes(_appSettings.Jwt.SecretKey);
@@ -187,7 +187,7 @@ public class JwtAuthenticatorTests : TestDbBase
 		// The token should expire approximately 60 minutes from now (within a 5-minute window for test execution time)
 		var expectedExpiry = beforeAuth.AddMinutes(_appSettings.Jwt.ExpiresInMinutes);
 		var timeDifference = Math.Abs((expiry - expectedExpiry).TotalMinutes);
-		Assert.IsTrue(timeDifference < 5, $"Token expiry time difference was {timeDifference} minutes, expected less than 5");
+		Assert.IsLessThan(5, timeDifference, $"Token expiry time difference was {timeDifference} minutes, expected less than 5");
 		Assert.IsTrue(expiry > afterAuth, "Token should expire in the future");
 	}
 

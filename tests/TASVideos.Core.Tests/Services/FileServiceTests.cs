@@ -57,7 +57,7 @@ public class FileServiceTests : TestDbBase
 		// Assert
 		Assert.IsNotNull(result);
 		Assert.AreEqual(bytes.Length, result.OriginalSize);
-		Assert.IsTrue(result.CompressedSize < result.OriginalSize);
+		Assert.IsLessThan(result.OriginalSize, result.CompressedSize);
 		Assert.AreEqual(Compression.Gzip, result.Type);
 	}
 
@@ -73,7 +73,7 @@ public class FileServiceTests : TestDbBase
 		// Assert
 		Assert.IsNotNull(result);
 		Assert.AreEqual(bytes.Length, result.OriginalSize);
-		Assert.IsTrue(result.CompressedSize >= result.OriginalSize);
+		Assert.IsGreaterThanOrEqualTo(result.OriginalSize, result.CompressedSize);
 		Assert.AreEqual(Compression.None, result.Type);
 	}
 

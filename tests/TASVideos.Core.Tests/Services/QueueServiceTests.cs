@@ -333,7 +333,7 @@ public class QueueServiceTests : TestDbBase
 		submission.Status.Returns(status);
 		submission.Date.Returns(DateTime.UtcNow.AddHours(-(MinimumHoursBeforeJudgment - 1)));
 		var actual = _queueService.HoursRemainingForJudging(submission);
-		Assert.IsTrue(actual > 0);
+		Assert.IsGreaterThan(0, actual);
 	}
 
 	[TestMethod]
@@ -347,7 +347,7 @@ public class QueueServiceTests : TestDbBase
 		submission.Status.Returns(status);
 		submission.Date.Returns(DateTime.UtcNow.AddHours(-(MinimumHoursBeforeJudgment + 1)));
 		var actual = _queueService.HoursRemainingForJudging(submission);
-		Assert.IsTrue(actual < 0);
+		Assert.IsLessThan(0, actual);
 	}
 
 	#endregion
@@ -730,7 +730,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.IsTrue(result.Success);
 		Assert.IsNull(result.ErrorMessage);
-		Assert.IsTrue(result.Id > 0);
+		Assert.IsGreaterThan(0, result.Id);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Title));
 
 		var actualSub = await _db.Submissions.FindAsync(result.Id);

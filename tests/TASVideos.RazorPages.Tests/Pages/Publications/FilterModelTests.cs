@@ -148,7 +148,7 @@ public class FilterModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.IsTrue(_page.AvailableAuthors.Count >= 1);
+		Assert.IsGreaterThanOrEqualTo(1, _page.AvailableAuthors.Count);
 		Assert.IsTrue(_page.AvailableAuthors.Any(a => a.Text == "PublishedAuthor"));
 	}
 

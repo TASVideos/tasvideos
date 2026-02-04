@@ -140,7 +140,7 @@ public class BaseE2ETest : PageTest
 		Assert.IsTrue(File.Exists(downloadPath), "Downloaded file should exist");
 
 		var fileInfo = new FileInfo(downloadPath);
-		Assert.IsTrue(fileInfo.Length > 0, "Downloaded file should not be empty");
+		Assert.IsGreaterThan(0, fileInfo.Length, "Downloaded file should not be empty");
 
 		using var sr = fileInfo.OpenText();
 		var str = await sr.ReadToEndAsync();
@@ -178,10 +178,10 @@ public class BaseE2ETest : PageTest
 		Assert.IsTrue(File.Exists(downloadPath), "Downloaded file should exist");
 
 		var fileInfo = new FileInfo(downloadPath);
-		Assert.IsTrue(fileInfo.Length > 0, "Downloaded file should not be empty");
+		Assert.IsGreaterThan(0, fileInfo.Length, "Downloaded file should not be empty");
 
 		var archive = ZipFile.OpenRead(downloadPath);
-		Assert.IsTrue(archive.Entries.Count > 0, "ZIP file should contain at least one entry");
+		Assert.IsGreaterThan(0, archive.Entries.Count, "ZIP file should contain at least one entry");
 
 		return (downloadPath, archive);
 	}

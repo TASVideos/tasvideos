@@ -179,7 +179,7 @@ public class UnansweredModelTests : BasePageModelTests
 		Assert.AreEqual("Test Topic Title", unansweredPost.TopicName);
 		Assert.AreEqual(author.Id, unansweredPost.AuthorId);
 		Assert.AreEqual("TestAuthor", unansweredPost.AuthorName);
-		Assert.IsTrue(Math.Abs((testTimestamp - unansweredPost.PostDate).TotalMilliseconds) < 1000, "Timestamps should be within 1 second");
+		Assert.IsLessThan(1000, Math.Abs((testTimestamp - unansweredPost.PostDate).TotalMilliseconds), "Timestamps should be within 1 second");
 	}
 
 	[TestMethod]

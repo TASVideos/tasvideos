@@ -15,7 +15,7 @@ public class ApplicationDbContextTests : TestDbBase
 
 		Assert.AreEqual(1, _db.Publications.Count());
 		var pub = _db.Publications.Single();
-		Assert.IsTrue(pub.CreateTimestamp.Year > 1);
+		Assert.IsGreaterThan(1, pub.CreateTimestamp.Year);
 	}
 
 	[TestMethod]
@@ -56,7 +56,7 @@ public class ApplicationDbContextTests : TestDbBase
 
 		Assert.AreEqual(1, _db.Publications.Count());
 		var pub = _db.Publications.Single();
-		Assert.IsTrue(pub.LastUpdateTimestamp.Year > 1);
+		Assert.IsGreaterThan(1, pub.LastUpdateTimestamp.Year);
 	}
 
 	[TestMethod]
