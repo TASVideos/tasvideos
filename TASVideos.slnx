@@ -13,11 +13,16 @@
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
+    <File Path=".runsettings" />
     <File Path=".stylecop.json" />
+    <File Path="analyzers/AnalyzersCommon.props" />
     <File Path="Common.ruleset" />
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
+    <File Path=".config/dotnet-tools.json" />
     <File Path="Migrations.Readme.txt" />
+    <File Path="NuGet.Config" />
+    <File Path="tests/UseMSTest.props" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/TASVideos.Common.Tests/TASVideos.Common.Tests.csproj">
