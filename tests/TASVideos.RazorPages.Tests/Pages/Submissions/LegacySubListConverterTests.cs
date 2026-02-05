@@ -1,4 +1,6 @@
 ﻿using TASVideos.Pages.Submissions;
+using TASVideos.Tests.Base;
+
 using static TASVideos.Data.Entity.SubmissionStatus;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;
@@ -28,7 +30,7 @@ public class LegacySubListConverterTests
 		var request = LegacySubListConverter.ToSearchRequest(queryString);
 		Assert.IsNotNull(request);
 		var actual = request.Statuses.ToList();
-		Assert.AreEqual(expected.Length, actual.Count);
+		Assert.That.AreSameLength(expected, actual);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, actual);
@@ -47,7 +49,7 @@ public class LegacySubListConverterTests
 		var request = LegacySubListConverter.ToSearchRequest(queryString);
 		Assert.IsNotNull(request);
 		var actual = request.Years.ToList();
-		Assert.AreEqual(expected.Length, actual.Count);
+		Assert.That.AreSameLength(expected, actual);
 		foreach (var year in expected)
 		{
 			Assert.Contains(year, actual);

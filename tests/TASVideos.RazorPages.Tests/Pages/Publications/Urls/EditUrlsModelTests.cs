@@ -290,6 +290,6 @@ public class EditUrlsModelTests : TestDbBase
 
 		Assert.IsNotEmpty(availableTypes);
 		var enumValues = Enum.GetValues<PublicationUrlType>();
-		Assert.AreEqual(enumValues.Length, availableTypes.Count);
+		Assert.That.AreSameLength(enumValues, availableTypes);
 	}
 }

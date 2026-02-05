@@ -103,7 +103,7 @@ public class RateModelTests : TestDbBase
 
 		var visibleRatings = _page.VisibleRatings.ToList();
 		Assert.AreEqual(3, visibleRatings.Count);
-		Assert.AreEqual(ratings.Count, visibleRatings.Count);
+		Assert.That.AreSameLength(ratings, visibleRatings);
 	}
 
 	[TestMethod]

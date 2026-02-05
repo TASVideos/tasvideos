@@ -98,7 +98,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -127,7 +127,7 @@ public class QueueServiceTests : TestDbBase
 			false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -156,7 +156,7 @@ public class QueueServiceTests : TestDbBase
 			false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -185,7 +185,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -214,7 +214,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -243,7 +243,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -272,7 +272,7 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
 			Assert.Contains(status, result);
@@ -298,7 +298,7 @@ public class QueueServiceTests : TestDbBase
 				false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(exceptPublished.Count, result.Count);
+			Assert.That.AreSameLength(exceptPublished, result);
 			Assert.IsTrue(result.SequenceEqual(exceptPublished));
 		}
 	}
@@ -746,7 +746,7 @@ public class QueueServiceTests : TestDbBase
 		var actualSubAuthors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == result.Id)
 			.ToListAsync();
-		Assert.AreEqual(request.Authors.Count, actualSubAuthors.Count);
+		Assert.That.AreSameLength(request.Authors, actualSubAuthors);
 
 		await _wikiPages.Received(1).Add(Arg.Is<WikiCreateRequest>(r =>
 			r.PageName == LinkConstants.SubmissionWikiPage + result.Id &&

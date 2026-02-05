@@ -24,7 +24,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreSubpagesOf(testPageName).ToList();
-		Assert.AreEqual(pages.Length, result.Count);
+		Assert.That.AreSameLength(pages, result);
 	}
 
 	[TestMethod]

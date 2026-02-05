@@ -1,5 +1,7 @@
 ﻿using TASVideos.Core.Services;
 using TASVideos.Pages.Forum.Posts;
+using TASVideos.Tests.Base;
+
 using static TASVideos.Pages.Forum.Topics.IndexModel;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
@@ -188,7 +190,7 @@ public class UserModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		var userPost = _model.Posts.First();
-		Assert.AreEqual(testAwards.Count, userPost.Awards.Count);
+		Assert.That.AreSameLength(testAwards, userPost.Awards);
 		Assert.AreEqual("TestAward", userPost.Awards.First().ShortName);
 		await _awards.Received(1).ForUser(user.Id);
 		Assert.AreEqual(99.9, userPost.PosterPlayerPoints);

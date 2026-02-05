@@ -43,7 +43,7 @@ public class IndexModelTests : TestDbBase
 		await _page.OnGet();
 
 		Assert.IsTrue(_page.Search.Statuses.Any());
-		Assert.AreEqual(IndexModel.SubmissionSearchRequest.Default.Count, _page.Search.Statuses.Count);
+		Assert.That.AreSameLength(IndexModel.SubmissionSearchRequest.Default, _page.Search.Statuses);
 		foreach (var status in IndexModel.SubmissionSearchRequest.Default)
 		{
 			Assert.Contains(status, _page.Search.Statuses);
@@ -58,7 +58,7 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(IndexModel.SubmissionSearchRequest.All.Count, _page.Search.Statuses.Count);
+		Assert.That.AreSameLength(IndexModel.SubmissionSearchRequest.All, _page.Search.Statuses);
 		foreach (var status in IndexModel.SubmissionSearchRequest.All)
 		{
 			Assert.Contains(status, _page.Search.Statuses);
@@ -73,7 +73,7 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(IndexModel.SubmissionSearchRequest.All.Count, _page.Search.Statuses.Count);
+		Assert.That.AreSameLength(IndexModel.SubmissionSearchRequest.All, _page.Search.Statuses);
 		foreach (var status in IndexModel.SubmissionSearchRequest.All)
 		{
 			Assert.Contains(status, _page.Search.Statuses);
@@ -146,7 +146,7 @@ public class IndexModelTests : TestDbBase
 		var allStatuses = Enum.GetValues<SubmissionStatus>().ToList();
 		var availableStatuses = IndexModel.AvailableStatuses;
 
-		Assert.AreEqual(allStatuses.Count, availableStatuses.Count);
+		Assert.That.AreSameLength(allStatuses, availableStatuses);
 		foreach (var status in allStatuses)
 		{
 			Assert.IsTrue(availableStatuses.Any(s => s.Value == ((int)status).ToString()));
@@ -181,7 +181,7 @@ public class IndexModelTests : TestDbBase
 
 		var defaultStatuses = IndexModel.SubmissionSearchRequest.Default;
 
-		Assert.AreEqual(expectedStatuses.Length, defaultStatuses.Count);
+		Assert.That.AreSameLength(expectedStatuses, defaultStatuses);
 		foreach (var status in expectedStatuses)
 		{
 			Assert.Contains(status, defaultStatuses);
@@ -194,7 +194,7 @@ public class IndexModelTests : TestDbBase
 		var allStatuses = Enum.GetValues<SubmissionStatus>().ToList();
 		var allFromSearchRequest = IndexModel.SubmissionSearchRequest.All;
 
-		Assert.AreEqual(allStatuses.Count, allFromSearchRequest.Count);
+		Assert.That.AreSameLength(allStatuses, allFromSearchRequest);
 		foreach (var status in allStatuses)
 		{
 			Assert.Contains(status, allFromSearchRequest);

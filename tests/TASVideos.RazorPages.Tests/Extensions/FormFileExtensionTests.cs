@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TASVideos.Extensions;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Extensions;
 
@@ -202,7 +203,7 @@ public class FormFileExtensionTests
 
 		var actual = await formFile.ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(bytes.Length, actual.Length);
+		Assert.That.AreSameLength(bytes, actual);
 	}
 
 	[TestMethod]

@@ -1,4 +1,5 @@
 ﻿using TASVideos.Pages.Forum.Subforum;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Subforum;
 
@@ -111,7 +112,7 @@ public class EditModelTests : BasePageModelTests
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(_db.ForumCategories.Count(), _model.AvailableCategories.Count);
+		Assert.That.AreSameLength(_db.ForumCategories, _model.AvailableCategories);
 	}
 
 	[TestMethod]
