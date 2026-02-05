@@ -88,7 +88,7 @@ public class SplitModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(2, _model.Topic.Posts.Count);
+		Assert.HasCount(2, _model.Topic.Posts);
 		Assert.AreEqual("First Post", _model.Topic.Posts[0].Subject);
 		Assert.AreEqual("Second Post", _model.Topic.Posts[1].Subject);
 		Assert.AreEqual(user.UserName, _model.Topic.Posts[0].PosterName);
@@ -384,6 +384,6 @@ public class SplitModelTests : BasePageModelTests
 		Assert.AreEqual(502, _model.Topic.PostsCount);
 		Assert.AreEqual(2, _model.TotalPages);
 		Assert.AreEqual(1, _model.CurrentPage);
-		Assert.AreEqual(2, _model.Topic.Posts.Count); // Should load remainder posts (502 % 500 = 2)
+		Assert.HasCount(2, _model.Topic.Posts); // Should load remainder posts (502 % 500 = 2)
 	}
 }

@@ -24,7 +24,7 @@ public class CreateModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.AvailableCategories.Count);
+		Assert.HasCount(2, _model.AvailableCategories);
 		Assert.IsTrue(_model.AvailableCategories.Any(c => c.Text == category1.Title));
 		Assert.IsTrue(_model.AvailableCategories.Any(c => c.Text == category2.Title));
 	}
@@ -46,7 +46,7 @@ public class CreateModelTests : BasePageModelTests
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(1, _model.AvailableCategories.Count);
+		Assert.HasCount(1, _model.AvailableCategories);
 		Assert.IsFalse(await _db.Forums.AnyAsync());
 	}
 
@@ -159,7 +159,7 @@ public class CreateModelTests : BasePageModelTests
 		await _model.OnPost();
 
 		var forums = await _db.Forums.ToListAsync();
-		Assert.AreEqual(2, forums.Count);
+		Assert.HasCount(2, forums);
 		Assert.IsTrue(forums.Any(f => f is { Name: "Forum 1", Restricted: false }));
 		Assert.IsTrue(forums.Any(f => f is { Name: "Forum 2", Restricted: true }));
 	}

@@ -59,7 +59,7 @@ public class RenderDeletedModelTests : BasePageModelTests
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(1, _model.WikiPages.Count);
+		Assert.HasCount(1, _model.WikiPages);
 		Assert.AreEqual(pageName, _model.WikiPages[0].PageName);
 		Assert.IsTrue(_model.WikiPages[0].IsDeleted);
 	}
@@ -102,7 +102,7 @@ public class RenderDeletedModelTests : BasePageModelTests
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(1, _model.WikiPages.Count);
+		Assert.HasCount(1, _model.WikiPages);
 		Assert.AreEqual(targetRevision, _model.WikiPages[0].Revision);
 		Assert.AreEqual("Second revision", _model.WikiPages[0].Markup);
 	}
@@ -144,7 +144,7 @@ public class RenderDeletedModelTests : BasePageModelTests
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(1, _model.WikiPages.Count);
+		Assert.HasCount(1, _model.WikiPages);
 		Assert.AreEqual(2, _model.WikiPages[0].Revision);
 		Assert.AreEqual("Current revision", _model.WikiPages[0].Markup);
 	}
@@ -220,7 +220,7 @@ public class RenderDeletedModelTests : BasePageModelTests
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(1, _model.WikiPages.Count);
+		Assert.HasCount(1, _model.WikiPages);
 		Assert.IsNotNull(_model.WikiPages[0].Author);
 		Assert.AreEqual(authorName, _model.WikiPages[0].Author!.UserName);
 	}

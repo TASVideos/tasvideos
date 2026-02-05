@@ -54,7 +54,7 @@ public class EditModelTests : BasePageModelTests
 		Assert.AreEqual("Test description", _model.Forum.Description);
 		Assert.AreEqual(forum.CategoryId, _model.Forum.Category);
 		Assert.IsFalse(_model.Forum.RestrictedAccess);
-		Assert.AreEqual(1, _model.AvailableCategories.Count);
+		Assert.HasCount(1, _model.AvailableCategories);
 	}
 
 	[TestMethod]

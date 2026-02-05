@@ -37,7 +37,7 @@ public class AwardsTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(1, list.Count);
+		Assert.HasCount(1, list);
 		var actualUserAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualUserAward.ShortName);
 		Assert.AreEqual(CurrentYear, actualUserAward.Year);
@@ -56,7 +56,7 @@ public class AwardsTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(1, list.Count);
+		Assert.HasCount(1, list);
 		var actualUserAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualUserAward.ShortName);
 		Assert.AreEqual(CurrentYear, actualUserAward.Year);
@@ -103,7 +103,7 @@ public class AwardsTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(1, list.Count);
+		Assert.HasCount(1, list);
 		var actualPubAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualPubAward.ShortName);
 		Assert.AreEqual(CurrentYear, actualPubAward.Year);
@@ -139,7 +139,7 @@ public class AwardsTests : TestDbBase
 		var actual = await _awards.ForUser(author.Id);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(2, actual.Count);
+		Assert.HasCount(2, actual);
 	}
 
 	[TestMethod]
@@ -176,13 +176,13 @@ public class AwardsTests : TestDbBase
 		// Award should match
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(1, list.Count);
+		Assert.HasCount(1, list);
 		var actualAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualAward.ShortName);
 
 		// Publication should match
 		var actualPublications = actualAward.Publications.ToList();
-		Assert.AreEqual(1, actualPublications.Count);
+		Assert.HasCount(1, actualPublications);
 		Assert.AreEqual(pub.Id, actualPublications.Single().Id);
 	}
 
@@ -198,13 +198,13 @@ public class AwardsTests : TestDbBase
 		// Award should match
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(1, list.Count);
+		Assert.HasCount(1, list);
 		var actualAward = list.Single();
 		Assert.AreEqual(award.ShortName, actualAward.ShortName);
 
 		// User should match
 		var actualUsers = actualAward.Users.ToList();
-		Assert.AreEqual(1, actualUsers.Count);
+		Assert.HasCount(1, actualUsers);
 		Assert.AreEqual(user.Id, actualUsers.Single().Id);
 	}
 
@@ -288,7 +288,7 @@ public class AwardsTests : TestDbBase
 		Assert.AreEqual(1, _db.UserAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
 		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
-		Assert.AreEqual(1, cache.Count);
+		Assert.HasCount(1, cache);
 		var cachedAward = cache.Single();
 		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
 		Assert.AreEqual(year, cachedAward.Year);
@@ -309,7 +309,7 @@ public class AwardsTests : TestDbBase
 		Assert.AreEqual(1, _db.UserAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
 		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
-		Assert.AreEqual(1, cache.Count);
+		Assert.HasCount(1, cache);
 		var cachedAward = cache.Single();
 		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
 		Assert.AreEqual(CurrentYear, cachedAward.Year);
@@ -338,7 +338,7 @@ public class AwardsTests : TestDbBase
 		Assert.AreEqual(1, _db.PublicationAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
 		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
-		Assert.AreEqual(1, cache.Count);
+		Assert.HasCount(1, cache);
 		var cachedAward = cache.Single();
 		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
 		Assert.AreEqual(year, cachedAward.Year);
@@ -360,7 +360,7 @@ public class AwardsTests : TestDbBase
 		Assert.AreEqual(1, _db.PublicationAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
 		var cache = _cache.Get<List<AwardAssignmentSummary>>(CacheKeys.AwardsCache);
-		Assert.AreEqual(1, cache.Count);
+		Assert.HasCount(1, cache);
 		var cachedAward = cache.Single();
 		Assert.AreEqual(award.ShortName, cachedAward.ShortName);
 		Assert.AreEqual(CurrentYear, cachedAward.Year);

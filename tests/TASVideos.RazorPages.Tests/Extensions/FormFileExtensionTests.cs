@@ -109,7 +109,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(1, modelState.Count);
+		Assert.HasCount(1, modelState);
 	}
 
 	[TestMethod]

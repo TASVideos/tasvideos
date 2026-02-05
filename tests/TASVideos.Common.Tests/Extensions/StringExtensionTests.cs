@@ -264,7 +264,7 @@ public class StringExtensionTests
 
 		var result = input.SplitWithEmpty(",");
 
-		Assert.AreEqual(1, result.Length);
+		Assert.HasCount(1, result);
 		Assert.AreEqual("abc", result[0]);
 	}
 

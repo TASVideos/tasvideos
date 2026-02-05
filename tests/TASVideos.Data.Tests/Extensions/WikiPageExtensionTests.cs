@@ -45,7 +45,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreSubpagesOf(testPage).ToList();
-		Assert.AreEqual(2, result.Count);
+		Assert.HasCount(2, result);
 	}
 
 	[TestMethod]
@@ -84,7 +84,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreSubpagesOf(testPage).ToList();
-		Assert.AreEqual(2, result.Count);
+		Assert.HasCount(2, result);
 	}
 
 	[TestMethod]
@@ -102,7 +102,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreSubpagesOf("/" + testPage + "/").ToList();
-		Assert.AreEqual(2, result.Count);
+		Assert.HasCount(2, result);
 	}
 
 	#endregion
@@ -155,7 +155,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreParentsOf(parent + "/Child1").ToList();
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 	}
 
 	[TestMethod]
@@ -173,7 +173,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreParentsOf(testName).ToList();
-		Assert.AreEqual(2, result.Count);
+		Assert.HasCount(2, result);
 		Assert.IsTrue(result.All(wp => wp.PageName.StartsWith("Parent2")));
 	}
 
@@ -192,7 +192,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreParentsOf("/" + childPage + "/").ToList();
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 	}
 
 	[TestMethod]
@@ -212,7 +212,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreParentsOf(childPage).ToList();
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.AreEqual(parentPage, result.Single().PageName);
 	}
 

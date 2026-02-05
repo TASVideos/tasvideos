@@ -31,7 +31,7 @@ public class ListModelTests : BasePageModelTests
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Test Game", _model.Game);
-		Assert.AreEqual(2, _model.Goals.Count);
+		Assert.HasCount(2, _model.Goals);
 		Assert.IsTrue(_model.Goals.Any(g => g.Name == "baseline"));
 		Assert.IsTrue(_model.Goals.Any(g => g.Name == "any%"));
 	}

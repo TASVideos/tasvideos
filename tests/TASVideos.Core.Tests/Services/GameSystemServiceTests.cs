@@ -32,7 +32,7 @@ public class GameSystemServiceTests : TestDbBase
 
 		var result = await _systemService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.IsTrue(_cache.ContainsKey(GameSystemService.SystemsKey));
 	}
 

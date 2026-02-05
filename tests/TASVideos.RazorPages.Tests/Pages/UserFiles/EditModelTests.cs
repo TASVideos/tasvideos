@@ -124,7 +124,7 @@ public class EditModelTests : TestDbBase
 		Assert.IsNull(_page.UserFile.System);
 		Assert.IsNull(_page.UserFile.Game);
 		Assert.IsNotEmpty(_page.AvailableSystems);
-		Assert.AreEqual(1, _page.AvailableGames.Count); // Should only have default entry
+		Assert.HasCount(1, _page.AvailableGames); // Should only have default entry
 	}
 
 	[TestMethod]
@@ -327,7 +327,7 @@ public class EditModelTests : TestDbBase
 		await _page.OnGet();
 
 		Assert.IsNotEmpty(_page.AvailableSystems);
-		Assert.AreEqual(1, _page.AvailableGames.Count); // Only default entry
+		Assert.HasCount(1, _page.AvailableGames); // Only default entry
 	}
 
 	[TestMethod]

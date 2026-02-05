@@ -72,7 +72,7 @@ public class QueueServiceTests : TestDbBase
 			true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.AreEqual(Published, result.Single());
 	}
 
@@ -1036,7 +1036,7 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(publicationTitle, result.Title);
-		Assert.AreEqual(2, result.Tags.Count);
+		Assert.HasCount(2, result.Tags);
 		Assert.Contains(tag1.Id, result.Tags);
 		Assert.Contains(tag2.Id, result.Tags);
 		Assert.AreEqual(wikiMarkup, result.Markup);
@@ -1151,7 +1151,7 @@ public class QueueServiceTests : TestDbBase
 			.SingleOrDefaultAsync(s => s.Id == submission.Id);
 
 		Assert.IsNotNull(updatedSub);
-		Assert.AreEqual(2, updatedSub.SubmissionAuthors.Count);
+		Assert.HasCount(2, updatedSub.SubmissionAuthors);
 		var authorNames = updatedSub.SubmissionAuthors
 			.OrderBy(sa => sa.Ordinal)
 			.Select(sa => sa.Author!.UserName)
@@ -1410,7 +1410,7 @@ public class QueueServiceTests : TestDbBase
 		var (result, movieBytes) = await _queueService.ParseMovieFileOrZip(formFile);
 
 		Assert.AreEqual(parseResult, result);
-		Assert.AreEqual(4, movieBytes.Length); // Raw file bytes
+		Assert.HasCount(4, movieBytes); // Raw file bytes
 		await _movieParser.Received(1).ParseZip(Arg.Any<Stream>());
 		await _fileService.DidNotReceive().ZipFile(Arg.Any<byte[]>(), Arg.Any<string>());
 	}

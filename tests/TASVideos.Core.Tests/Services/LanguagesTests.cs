@@ -66,7 +66,7 @@ public class LanguagesTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(1, list.Count);
+		Assert.HasCount(1, list);
 		Assert.AreEqual(junk, list.Single().Code);
 		Assert.AreEqual(junk, list.Single().DisplayName);
 	}
@@ -80,7 +80,7 @@ public class LanguagesTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(2, list.Count);
+		Assert.HasCount(2, list);
 		Assert.IsTrue(list.Any(l => l.Code == "FR" && l.DisplayName == "French"));
 		Assert.IsTrue(list.Any(l => l.Code == "ES" && l.DisplayName == "Español"));
 	}
@@ -99,7 +99,7 @@ public class LanguagesTests : TestDbBase
 		var actual = await _languages.AvailableLanguages();
 		Assert.IsNotNull(actual);
 		var list = actual.ToList();
-		Assert.AreEqual(2, list.Count);
+		Assert.HasCount(2, list);
 		Assert.IsTrue(list.Any(l => l.Code == "FR" && l.DisplayName == "French"));
 		Assert.IsTrue(list.Any(l => l.Code == "ES" && l.DisplayName == "Español"));
 	}
@@ -127,7 +127,7 @@ public class LanguagesTests : TestDbBase
 
 		var result = await _languages.GetTranslations(page);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(2, result.Count);
+		Assert.HasCount(2, result);
 	}
 
 	[TestMethod]
@@ -147,7 +147,7 @@ public class LanguagesTests : TestDbBase
 		var result = await _languages.GetTranslations(translation);
 		Assert.IsNotNull(result);
 		var listResult = result.ToList();
-		Assert.AreEqual(2, listResult.Count);
+		Assert.HasCount(2, listResult);
 		Assert.IsTrue(listResult.Any(r => r.Code == "EN"), "Translation must link to original english page");
 		Assert.IsFalse(listResult.Any(r => r.Code == "FR"), "Translation must not link to itself");
 	}

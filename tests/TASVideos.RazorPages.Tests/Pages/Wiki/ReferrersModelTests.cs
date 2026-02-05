@@ -86,7 +86,7 @@ public class ReferrersModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual(targetPage, _model.Path);
-		Assert.AreEqual(2, _model.Referrals.Count);
+		Assert.HasCount(2, _model.Referrals);
 
 		var referrers = _model.Referrals.Select(r => r.Referrer).ToList();
 		Assert.Contains(referrerPage1, referrers);
@@ -127,7 +127,7 @@ public class ReferrersModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Referrals.Count);
+		Assert.HasCount(1, _model.Referrals);
 		Assert.AreEqual(targetPage, _model.Referrals[0].Referral);
 		Assert.AreEqual("Reference to target page", _model.Referrals[0].Excerpt);
 	}
@@ -157,7 +157,7 @@ public class ReferrersModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.Referrals.Count);
+		Assert.HasCount(2, _model.Referrals);
 		Assert.IsTrue(_model.Referrals.All(r => r.Referrer == referrerPage));
 		Assert.IsTrue(_model.Referrals.All(r => r.Referral == targetPage));
 
@@ -184,7 +184,7 @@ public class ReferrersModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Referrals.Count);
+		Assert.HasCount(1, _model.Referrals);
 		Assert.AreEqual(specialPath, _model.Referrals[0].Referral);
 	}
 }

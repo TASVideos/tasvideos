@@ -79,7 +79,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		await _db.SaveChangesAsync();
 
 		var actual = await _userManager.GetUserPermissionsById(user.Entity.Id);
-		Assert.AreEqual(3, actual.Count);
+		Assert.HasCount(3, actual);
 	}
 
 	#region AddStandardRoles()

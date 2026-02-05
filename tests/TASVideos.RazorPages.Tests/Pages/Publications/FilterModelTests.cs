@@ -40,13 +40,13 @@ public class FilterModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.Search.SystemCodes.Count);
+		Assert.HasCount(1, _page.Search.SystemCodes);
 		Assert.IsTrue(_page.Search.SystemCodes.Any(s => s == systemCode));
-		Assert.AreEqual(1, _page.Search.Classes.Count);
+		Assert.HasCount(1, _page.Search.Classes);
 		Assert.IsTrue(_page.Search.Classes.Any(c => c == pubClass));
-		Assert.AreEqual(1, _page.Search.Tags.Count);
+		Assert.HasCount(1, _page.Search.Tags);
 		Assert.IsTrue(_page.Search.Tags.Any(t => t == tag));
-		Assert.AreEqual(1, _page.Search.Flags.Count);
+		Assert.HasCount(1, _page.Search.Flags);
 		Assert.IsTrue(_page.Search.Flags.Any(f => f == flag));
 	}
 
@@ -71,7 +71,7 @@ public class FilterModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(2, _page.AvailableTags.Count);
+		Assert.HasCount(2, _page.AvailableTags);
 		Assert.IsTrue(_page.AvailableTags.Any(t => t.Text == "Single Player"));
 		Assert.IsTrue(_page.AvailableTags.Any(t => t.Text == "Two Players"));
 	}
@@ -97,7 +97,7 @@ public class FilterModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(2, _page.AvailableFlags.Count);
+		Assert.HasCount(2, _page.AvailableFlags);
 		Assert.IsTrue(_page.AvailableFlags.Any(f => f.Text == "Atlas"));
 		Assert.IsTrue(_page.AvailableFlags.Any(f => f.Text == "Verified"));
 	}
@@ -124,7 +124,7 @@ public class FilterModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.AvailableGameGroups.Count);
+		Assert.HasCount(1, _page.AvailableGameGroups);
 		Assert.AreEqual("Super Mario", _page.AvailableGameGroups.First().Text);
 	}
 

@@ -123,7 +123,7 @@ public class Fm3ParserTests : BaseParserTests
 	{
 		var result = await _fm3Parser.Parse(Embedded("hash.fm3", out var length), length);
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.HasCount(1, result.Hashes);
 		Assert.AreEqual(HashType.Md5, result.Hashes.First().Key);
 		Assert.AreEqual("e9d838feee6596dea4b6bb6a7ebb2176", result.Hashes.First().Value);
 		AssertNoWarningsOrErrors(result);

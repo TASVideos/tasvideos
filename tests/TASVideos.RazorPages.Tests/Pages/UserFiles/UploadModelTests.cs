@@ -26,7 +26,7 @@ public class UploadModelTests : TestDbBase
 
 		await page.OnGet();
 
-		Assert.AreEqual(3, page.SupportedFileExtensions.Count);
+		Assert.HasCount(3, page.SupportedFileExtensions);
 		Assert.Contains("bk2", page.SupportedFileExtensions);
 		Assert.Contains("fm2", page.SupportedFileExtensions);
 		Assert.Contains("lsmv", page.SupportedFileExtensions);

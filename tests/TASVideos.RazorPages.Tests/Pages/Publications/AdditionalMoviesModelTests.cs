@@ -54,7 +54,7 @@ public class AdditionalMoviesModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(pubTitle, _page.PublicationTitle);
-		Assert.AreEqual(1, _page.AvailableMovieFiles.Count);
+		Assert.HasCount(1, _page.AvailableMovieFiles);
 		Assert.AreEqual(description, _page.AvailableMovieFiles[0].Description);
 		Assert.AreEqual(path, _page.AvailableMovieFiles[0].FileName);
 	}

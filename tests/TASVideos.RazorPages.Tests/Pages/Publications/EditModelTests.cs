@@ -53,8 +53,8 @@ public class EditModelTests : TestDbBase
 		Assert.AreEqual(markup, _page.Publication.Markup);
 		Assert.IsTrue(_page.Publication.Authors.Count >= 1);
 		Assert.Contains("TestAuthor", _page.Publication.Authors);
-		Assert.AreEqual(1, _page.Publication.SelectedTags.Count);
-		Assert.AreEqual(1, _page.Publication.SelectedFlags.Count);
+		Assert.HasCount(1, _page.Publication.SelectedTags);
+		Assert.HasCount(1, _page.Publication.SelectedFlags);
 	}
 
 	[TestMethod]
@@ -199,7 +199,7 @@ public class EditModelTests : TestDbBase
 		await _page.OnPost();
 
 		// Verify only valid author remains (logic now handled in page before calling service)
-		Assert.AreEqual(1, _page.Publication.Authors.Count);
+		Assert.HasCount(1, _page.Publication.Authors);
 		Assert.AreEqual("ValidAuthor", _page.Publication.Authors.First());
 		await _publications.Received(1).UpdatePublication(pub.Id, Arg.Any<UpdatePublicationRequest>());
 	}

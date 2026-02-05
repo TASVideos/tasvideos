@@ -101,7 +101,7 @@ public class PublicationsApiTests : BaseE2ETest
 		AssertApiOk(response);
 
 		var publications = await Deserialize<PublicationsResponse[]>(response);
-		Assert.AreEqual(5, publications.Length);
+		Assert.HasCount(5, publications);
 	}
 
 	[TestMethod]

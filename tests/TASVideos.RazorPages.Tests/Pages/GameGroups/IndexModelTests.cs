@@ -67,7 +67,7 @@ public class IndexModelTests : BasePageModelTests
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Test Series", _model.Name);
-		Assert.AreEqual(2, _model.Games.Count);
+		Assert.HasCount(2, _model.Games);
 
 		var game1Entry = _model.Games.FirstOrDefault(g => g.Name == "Test Game 1");
 		Assert.IsNotNull(game1Entry);

@@ -75,7 +75,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
@@ -124,7 +124,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
@@ -144,7 +144,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		Assert.IsNull(actual[topic.ForumId]);
 		Assert.AreEqual(1, _cache.Count());

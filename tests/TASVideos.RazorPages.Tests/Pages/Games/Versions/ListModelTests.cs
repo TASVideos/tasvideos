@@ -74,7 +74,7 @@ public class ListModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _model.Versions.Count);
+		Assert.HasCount(2, _model.Versions);
 
 		var firstVersion = _model.Versions.First(v => v.Name == "Version 1");
 		Assert.AreEqual(version1.Id, firstVersion.Id);
@@ -114,7 +114,7 @@ public class ListModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _model.Versions.Count);
+		Assert.HasCount(1, _model.Versions);
 		Assert.AreEqual("Game 1 Version", _model.Versions.Single().Name);
 	}
 }

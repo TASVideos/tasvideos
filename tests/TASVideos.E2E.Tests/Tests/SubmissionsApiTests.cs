@@ -119,7 +119,7 @@ public class SubmissionsApiTests : BaseE2ETest
 		AssertApiOk(response);
 
 		var submissions = await Deserialize<SubmissionsResponse[]>(response);
-		Assert.AreEqual(3, submissions.Length);
+		Assert.HasCount(3, submissions);
 	}
 
 	[TestMethod]

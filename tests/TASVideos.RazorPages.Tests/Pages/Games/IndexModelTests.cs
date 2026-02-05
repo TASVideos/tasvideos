@@ -79,7 +79,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _model.Game.Genres.Count);
+		Assert.HasCount(2, _model.Game.Genres);
 		Assert.Contains("Action", _model.Game.Genres);
 		Assert.Contains("Platform", _model.Game.Genres);
 	}
@@ -104,7 +104,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _model.Game.Versions.Count);
+		Assert.HasCount(1, _model.Game.Versions);
 		var gameVersion = _model.Game.Versions.First();
 		Assert.AreEqual("Version 1.0", gameVersion.Name);
 		Assert.AreEqual("NES", gameVersion.SystemCode);
@@ -126,7 +126,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _model.Game.GameGroups.Count);
+		Assert.HasCount(1, _model.Game.GameGroups);
 		Assert.AreEqual(group.Id, _model.Game.GameGroups.First().Id);
 		Assert.AreEqual("Test Series", _model.Game.GameGroups.First().Name);
 	}

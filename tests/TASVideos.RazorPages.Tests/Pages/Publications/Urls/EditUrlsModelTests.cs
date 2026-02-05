@@ -84,7 +84,7 @@ public class EditUrlsModelTests : TestDbBase
 		Assert.AreEqual(url.Url, _model.CurrentUrl);
 		Assert.AreEqual(url.Type, _model.Type);
 		Assert.AreEqual(url.DisplayName, _model.AltTitle);
-		Assert.AreEqual(1, _model.CurrentUrls.Count);
+		Assert.HasCount(1, _model.CurrentUrls);
 	}
 
 	[TestMethod]
@@ -112,7 +112,7 @@ public class EditUrlsModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _model.CurrentUrls.Count);
+		Assert.HasCount(2, _model.CurrentUrls);
 	}
 
 	[TestMethod]

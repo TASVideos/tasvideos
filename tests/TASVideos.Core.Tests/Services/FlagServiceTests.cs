@@ -31,7 +31,7 @@ public class FlagServiceTests : TestDbBase
 
 		var result = await _flagService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.IsTrue(_cache.ContainsKey(FlagService.FlagsKey));
 	}
 
@@ -70,8 +70,8 @@ public class FlagServiceTests : TestDbBase
 
 		var result = await _flagService.GetDiff([id1], [id2]);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Added.Count);
-		Assert.AreEqual(1, result.Removed.Count);
+		Assert.HasCount(1, result.Added);
+		Assert.HasCount(1, result.Removed);
 	}
 
 	[TestMethod]

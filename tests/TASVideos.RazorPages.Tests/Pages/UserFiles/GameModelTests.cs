@@ -59,7 +59,7 @@ public class GameModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Game", _page.GameName);
-		Assert.AreEqual(1, _page.Files.Count);
+		Assert.HasCount(1, _page.Files);
 		Assert.AreEqual("Public Movie", _page.Files.First().Title);
 	}
 
@@ -103,7 +103,7 @@ public class GameModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Game", _page.GameName);
-		Assert.AreEqual(2, _page.Files.Count);
+		Assert.HasCount(2, _page.Files);
 		var titles = _page.Files.Select(f => f.Title).ToList();
 		Assert.Contains("Public Movie", titles);
 		Assert.Contains("Hidden Movie", titles);
@@ -146,7 +146,7 @@ public class GameModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Game 1", _page.GameName);
-		Assert.AreEqual(1, _page.Files.Count);
+		Assert.HasCount(1, _page.Files);
 		Assert.AreEqual("Game 1 Movie", _page.Files.First().Title);
 	}
 
@@ -189,7 +189,7 @@ public class GameModelTests : TestDbBase
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _page.Files.Count);
+		Assert.HasCount(2, _page.Files);
 		Assert.AreEqual("Newer Movie", _page.Files.First().Title);
 		Assert.AreEqual("Older Movie", _page.Files.Last().Title);
 	}
@@ -272,7 +272,7 @@ public class GameModelTests : TestDbBase
 		var result = await _page.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _page.Files.Count); // Only public files
+		Assert.HasCount(2, _page.Files); // Only public files
 		var titles = _page.Files.Select(f => f.Title).ToList();
 		Assert.Contains("Author1 Public Movie", titles);
 		Assert.Contains("Author2 Public Movie", titles);

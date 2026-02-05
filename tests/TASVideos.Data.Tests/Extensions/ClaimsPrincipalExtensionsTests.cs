@@ -174,7 +174,7 @@ public class ClaimsPrincipalExtensionsTests
 
 		var result = user.Permissions();
 
-		Assert.AreEqual(2, result.Count);
+		Assert.HasCount(2, result);
 		Assert.Contains(PermissionTo.CreateForumPosts, result);
 		Assert.Contains(PermissionTo.EditHomePage, result);
 	}
@@ -337,7 +337,7 @@ public class ClaimsPrincipalExtensionsTests
 		user.ReplacePermissionClaims(newPermissions);
 
 		var result = user.Permissions();
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.Contains(PermissionTo.CreateForumPosts, result);
 
 		// Non-permission claims should remain

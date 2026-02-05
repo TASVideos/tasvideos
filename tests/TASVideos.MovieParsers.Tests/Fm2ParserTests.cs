@@ -101,7 +101,7 @@ public class Fm2ParserTests : BaseParserTests
 	public async Task Hash()
 	{
 		var result = await _fm2Parser.Parse(Embedded("hash.fm2", out var length), length);
-		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.HasCount(1, result.Hashes);
 		Assert.AreEqual(HashType.Md5, result.Hashes.First().Key);
 		Assert.AreEqual("e9d82f825725c616b0be66ac85dc1b7a", result.Hashes.First().Value);
 	}

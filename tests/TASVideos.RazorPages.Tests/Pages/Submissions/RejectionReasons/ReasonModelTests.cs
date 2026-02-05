@@ -60,7 +60,7 @@ public class ReasonModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Reason", _model.RejectionReason);
-		Assert.AreEqual(2, _model.Submissions.Count);
+		Assert.HasCount(2, _model.Submissions);
 
 		var submissionIds = _model.Submissions.Select(s => s.SubmissionId).ToList();
 		Assert.Contains(submission1.Id, submissionIds);
@@ -122,7 +122,7 @@ public class ReasonModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _model.Submissions.Count);
+		Assert.HasCount(1, _model.Submissions);
 		Assert.AreEqual(rejectedSubmission.Id, _model.Submissions[0].SubmissionId);
 		Assert.AreEqual("Rejected", _model.Submissions[0].SubmissionTitle);
 	}
@@ -150,7 +150,7 @@ public class ReasonModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(5, _model.Submissions.Count);
+		Assert.HasCount(5, _model.Submissions);
 
 		foreach (var submission in submissions)
 		{

@@ -20,7 +20,7 @@ public class MoodReportModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.MoodyUsers.Count);
+		Assert.HasCount(2, _model.MoodyUsers);
 		Assert.IsTrue(_model.MoodyUsers.Any(u => u.UserName == "User1"));
 		Assert.IsTrue(_model.MoodyUsers.Any(u => u.UserName == "User2"));
 		Assert.AreEqual("https://example.com/moods1/", _model.MoodyUsers.First(u => u.UserName == "User1").MoodAvatarUrl);
@@ -35,7 +35,7 @@ public class MoodReportModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.MoodyUsers.Count);
+		Assert.HasCount(1, _model.MoodyUsers);
 		Assert.AreEqual("User1", _model.MoodyUsers.First().UserName);
 		Assert.AreEqual("https://example.com/moods1/", _model.MoodyUsers.First().MoodAvatarUrl);
 	}
@@ -59,7 +59,7 @@ public class MoodReportModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.MoodyUsers.Count);
+		Assert.HasCount(2, _model.MoodyUsers);
 	}
 
 	[TestMethod]
@@ -77,7 +77,7 @@ public class MoodReportModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.MoodyUsers.Count);
+		Assert.HasCount(1, _model.MoodyUsers);
 		Assert.AreEqual("UserWithMood", _model.MoodyUsers.First().UserName);
 	}
 
@@ -96,7 +96,7 @@ public class MoodReportModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.MoodyUsers.Count);
+		Assert.HasCount(1, _model.MoodyUsers);
 		Assert.AreEqual("UserWithPermission", _model.MoodyUsers.First().UserName);
 	}
 

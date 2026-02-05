@@ -98,7 +98,7 @@ public class PrimaryMovieModelTests : TestDbBase
 		var updatedPublication = await _db.Publications.FindAsync(publication.Id);
 		Assert.IsNotNull(updatedPublication);
 		Assert.AreEqual("new.zip", updatedPublication.MovieFileName);
-		Assert.AreEqual(4, updatedPublication.MovieFile.Length);
+		Assert.HasCount(4, updatedPublication.MovieFile);
 
 		await _maintenanceLogger.Received(1).Log(publication.Id, user.Id, "Primary movie file replaced, Reason: Improved movie file");
 		await _publisher.Received(1).Send(Arg.Any<Post>());

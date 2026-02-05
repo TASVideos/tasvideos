@@ -70,7 +70,7 @@ public class GamesApiTests : BaseE2ETest
 		AssertApiOk(response);
 
 		var games = await Deserialize<GamesResponse[]>(response);
-		Assert.AreEqual(5, games.Length);
+		Assert.HasCount(5, games);
 	}
 
 	[TestMethod]

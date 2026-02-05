@@ -40,7 +40,7 @@ public class FileServiceTests : TestDbBase
 		await using var resultStream = new MemoryStream(result);
 		using var resultZipArchive = new ZipArchive(resultStream, ZipArchiveMode.Read);
 
-		Assert.AreEqual(1, resultZipArchive.Entries.Count);
+		Assert.HasCount(1, resultZipArchive.Entries);
 		var entry = resultZipArchive.Entries.Single();
 		Assert.AreEqual(newName, entry.Name);
 	}

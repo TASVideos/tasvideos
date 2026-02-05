@@ -88,7 +88,7 @@ public class PagedTests
 		});
 
 		var actual = paged.Request.AdditionalProperties();
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.AreEqual(filterVal, actual[nameof(StringRequest.StringFilter)]);
 	}
 
@@ -101,7 +101,7 @@ public class PagedTests
 		});
 
 		var actual = paged.Request.AdditionalProperties();
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.AreEqual("1|2|3", actual[nameof(EnumerableRequest.IdList)]);
 	}
 

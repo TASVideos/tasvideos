@@ -76,7 +76,7 @@ public class IndexModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.Categories.Count);
+		Assert.HasCount(2, _model.Categories);
 
 		var generalCategory = _model.Categories.SingleOrDefault(c => c.Title == "General");
 		Assert.IsNotNull(generalCategory);
