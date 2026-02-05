@@ -56,8 +56,8 @@ public class MovieSearchTokensTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.Contains("cachedsystem", result.SystemCodes);
 		Assert.Contains("cachedclass", result.Classes);
-		Assert.IsFalse(result.SystemCodes.Contains("newsystem"));
-		Assert.IsFalse(result.Classes.Contains("newclass"));
+		Assert.DoesNotContain("newsystem", result.SystemCodes);
+		Assert.DoesNotContain("newclass", result.Classes);
 		Assert.AreEqual(1, _testCache.Count());
 	}
 
@@ -95,11 +95,11 @@ public class MovieSearchTokensTests : TestDbBase
 		Assert.Contains("mixed-case-token", result.Flags);
 
 		// Verify no uppercase versions exist
-		Assert.IsFalse(result.SystemCodes.Contains("MixedCaseSystem"));
-		Assert.IsFalse(result.Classes.Contains("MixedCaseClass"));
-		Assert.IsFalse(result.Tags.Contains("MixedCaseTag"));
-		Assert.IsFalse(result.Genres.Contains("Mixed Case Genre"));
-		Assert.IsFalse(result.Flags.Contains("Mixed-Case-Token"));
+		Assert.DoesNotContain("MixedCaseSystem", result.SystemCodes);
+		Assert.DoesNotContain("MixedCaseClass", result.Classes);
+		Assert.DoesNotContain("MixedCaseTag", result.Tags);
+		Assert.DoesNotContain("Mixed Case Genre", result.Genres);
+		Assert.DoesNotContain("Mixed-Case-Token", result.Flags);
 	}
 
 	[TestMethod]
