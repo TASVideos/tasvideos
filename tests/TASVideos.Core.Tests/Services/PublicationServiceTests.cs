@@ -74,7 +74,7 @@ public class PublicationsTests : TestDbBase
 
 		var urls = await _publications.GetUrls(pub.Id);
 
-		Assert.AreEqual(2,  urls.Count);
+		Assert.AreEqual(2, urls.Count);
 	}
 
 	#endregion

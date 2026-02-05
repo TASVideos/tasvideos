@@ -181,7 +181,10 @@ public class EditModel(
 		var formattedTitle = await GetFormattedTitle(updateResult.PreviousStatus, Submission.Status);
 		var separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
 		await publisher.SendSubmissionEdit(
-			Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{updateResult.SubmissionTitle}",  updateResult.PreviousStatus != Submission.Status);
+			Id,
+			formattedTitle: formattedTitle,
+			body: $"{Submission.RevisionMessage}{separator}{updateResult.SubmissionTitle}",
+			force: updateResult.PreviousStatus != Submission.Status);
 
 		return RedirectToPage("View", new { Id });
 	}

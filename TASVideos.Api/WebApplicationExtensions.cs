@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 
 namespace TASVideos.Api;
+
 public static class WebApplicationExtensions
 {
 	public static IApplicationBuilder UseTasvideosApiEndpoints(this WebApplication app, IHostEnvironment env)

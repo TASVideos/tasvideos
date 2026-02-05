@@ -57,7 +57,8 @@ public class ConfirmEmailTests : BasePageModelTests
 	{
 		_userManager.FindById("123").Returns(new User
 		{
-			Id = 123, EmailConfirmed = true
+			Id = 123,
+			EmailConfirmed = true,
 		});
 
 		var result = await _model.OnGet("123", "test-code");
@@ -71,7 +72,8 @@ public class ConfirmEmailTests : BasePageModelTests
 	{
 		var user = new User
 		{
-			Id = 123, EmailConfirmed = false
+			Id = 123,
+			EmailConfirmed = false,
 		};
 		_userManager.FindById("123").Returns(user);
 		_userManager.ConfirmEmail(user, "test-code").Returns(IdentityResult.Failed());
