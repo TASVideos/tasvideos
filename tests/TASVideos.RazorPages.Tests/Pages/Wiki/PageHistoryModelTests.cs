@@ -23,7 +23,7 @@ public class PageHistoryModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("", _model.PageName);
-		Assert.AreEqual(0, _model.Revisions.Count);
+		Assert.IsEmpty(_model.Revisions);
 	}
 
 	[TestMethod]
@@ -42,7 +42,7 @@ public class PageHistoryModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("NonExistentPage", _model.PageName);
-		Assert.AreEqual(0, _model.Revisions.Count);
+		Assert.IsEmpty(_model.Revisions);
 	}
 
 	[TestMethod]

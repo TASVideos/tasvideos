@@ -67,11 +67,11 @@ public class MovieSearchTokensTests : TestDbBase
 		var result = await _movieSearchTokens.GetTokens();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.SystemCodes.Count);
-		Assert.AreEqual(0, result.Classes.Count);
-		Assert.AreEqual(0, result.Tags.Count);
-		Assert.AreEqual(0, result.Genres.Count);
-		Assert.AreEqual(0, result.Flags.Count);
+		Assert.IsEmpty(result.SystemCodes);
+		Assert.IsEmpty(result.Classes);
+		Assert.IsEmpty(result.Tags);
+		Assert.IsEmpty(result.Genres);
+		Assert.IsEmpty(result.Flags);
 		Assert.IsTrue(_testCache.ContainsKey(CacheKeys.MovieTokens));
 	}
 

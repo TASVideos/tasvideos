@@ -54,7 +54,7 @@ public class EditUrlsModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(pub.Title, _model.Title);
-		Assert.AreEqual(0, _model.CurrentUrls.Count);
+		Assert.IsEmpty(_model.CurrentUrls);
 	}
 
 	[TestMethod]
@@ -288,7 +288,7 @@ public class EditUrlsModelTests : TestDbBase
 	{
 		var availableTypes = EditUrlsModel.AvailableTypes;
 
-		Assert.IsTrue(availableTypes.Count > 0);
+		Assert.IsNotEmpty(availableTypes);
 		var enumValues = Enum.GetValues<PublicationUrlType>();
 		Assert.AreEqual(enumValues.Length, availableTypes.Count);
 	}

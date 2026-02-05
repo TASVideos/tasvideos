@@ -139,20 +139,20 @@ public class LtmTests : BaseParserTests
 	public async Task NoHash()
 	{
 		var result = await _ltmParser.Parse(Embedded("no-hash.ltm", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 
 	[TestMethod]
 	public async Task MissingHash()
 	{
 		var result = await _ltmParser.Parse(Embedded("missing-hash.ltm", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 
 	[TestMethod]
 	public async Task InvalidHash()
 	{
 		var result = await _ltmParser.Parse(Embedded("invalid-hash.ltm", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 }

@@ -23,7 +23,7 @@ public class ReferrersModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("", _model.Path);
-		Assert.AreEqual(0, _model.Referrals.Count);
+		Assert.IsEmpty(_model.Referrals);
 	}
 
 	[TestMethod]
@@ -37,7 +37,7 @@ public class ReferrersModelTests : BasePageModelTests
 		_model.Path = path;
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Referrals.Count);
+		Assert.IsEmpty(_model.Referrals);
 	}
 
 	[TestMethod]
@@ -56,7 +56,7 @@ public class ReferrersModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("PageWithNoReferrals", _model.Path);
-		Assert.AreEqual(0, _model.Referrals.Count);
+		Assert.IsEmpty(_model.Referrals);
 	}
 
 	[TestMethod]

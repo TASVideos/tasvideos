@@ -23,7 +23,7 @@ public class AwardsTests : TestDbBase
 		var actual = await _awards.ForUser(int.MaxValue);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -79,7 +79,7 @@ public class AwardsTests : TestDbBase
 		var actual = await _awards.ForUser(authorWithNoAward.Id);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -160,7 +160,7 @@ public class AwardsTests : TestDbBase
 	{
 		var actual = await _awards.ForYear(int.MaxValue);
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -221,7 +221,7 @@ public class AwardsTests : TestDbBase
 		var actual = await _awards.ForYear(CurrentYear - 1);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -389,7 +389,7 @@ public class AwardsTests : TestDbBase
 		Assert.AreEqual(0, _db.PublicationAwards.Count());
 		Assert.IsTrue(_cache.ContainsKey(CacheKeys.AwardsCache));
 		var awardCache = _cache.Get<List<AwardAssignment>>(CacheKeys.AwardsCache);
-		Assert.AreEqual(0, awardCache.Count);
+		Assert.IsEmpty(awardCache);
 	}
 
 	private User CreateUser()

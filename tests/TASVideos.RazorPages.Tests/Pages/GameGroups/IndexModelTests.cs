@@ -45,7 +45,7 @@ public class IndexModelTests : BasePageModelTests
 		Assert.AreEqual("Test Series", _model.Name);
 		Assert.AreEqual("TS", _model.Abbreviation);
 		Assert.AreEqual("A test game series", _model.Description);
-		Assert.AreEqual(0, _model.Games.Count);
+		Assert.IsEmpty(_model.Games);
 	}
 
 	[TestMethod]

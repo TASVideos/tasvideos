@@ -19,7 +19,7 @@ public class ClassServiceTests : TestDbBase
 	{
 		var result = await _classService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 		Assert.IsTrue(_cache.ContainsKey(ClassService.ClassesKey));
 	}
 

@@ -140,6 +140,6 @@ public class UncatalogedModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(0, _page.Files.Count);
+		Assert.IsEmpty(_page.Files);
 	}
 }

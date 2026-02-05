@@ -17,7 +17,7 @@ public class AuthorsModelTests : TestDbBase
 	public async Task OnGet_NoAuthors_ReturnsEmptyList()
 	{
 		await _page.OnGet();
-		Assert.AreEqual(0, _page.Authors.Count);
+		Assert.IsEmpty(_page.Authors);
 	}
 
 	[TestMethod]

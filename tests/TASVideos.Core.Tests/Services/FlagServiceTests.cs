@@ -19,7 +19,7 @@ public class FlagServiceTests : TestDbBase
 	{
 		var result = await _flagService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 		Assert.IsTrue(_cache.ContainsKey(FlagService.FlagsKey));
 	}
 

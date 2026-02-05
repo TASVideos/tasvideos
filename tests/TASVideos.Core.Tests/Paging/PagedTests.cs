@@ -67,7 +67,7 @@ public class PagedTests
 
 		// ReSharper disable once ExpressionIsAlwaysNull
 		var actual = (paged?.Request).AdditionalProperties();
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -75,7 +75,7 @@ public class PagedTests
 	{
 		var paged = new Paged(1, new(1, 1));
 		var actual = paged.Request.AdditionalProperties();
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

@@ -46,8 +46,8 @@ public class EditModelTests : TestDbBase
 		Assert.IsFalse(_page.UserFile.Hidden);
 		Assert.AreEqual(author.Id, _page.UserFile.UserId);
 		Assert.AreEqual("TestAuthor", _page.UserFile.UserName);
-		Assert.IsTrue(_page.AvailableSystems.Count > 0);
-		Assert.IsTrue(_page.AvailableGames.Count > 0);
+		Assert.IsNotEmpty(_page.AvailableSystems);
+		Assert.IsNotEmpty(_page.AvailableGames);
 	}
 
 	[TestMethod]
@@ -104,8 +104,8 @@ public class EditModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(system.Id, _page.UserFile.System);
 		Assert.IsNull(_page.UserFile.Game);
-		Assert.IsTrue(_page.AvailableSystems.Count > 0);
-		Assert.IsTrue(_page.AvailableGames.Count > 0); // Should have games for the selected system
+		Assert.IsNotEmpty(_page.AvailableSystems);
+		Assert.IsNotEmpty(_page.AvailableGames); // Should have games for the selected system
 	}
 
 	[TestMethod]
@@ -123,7 +123,7 @@ public class EditModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsNull(_page.UserFile.System);
 		Assert.IsNull(_page.UserFile.Game);
-		Assert.IsTrue(_page.AvailableSystems.Count > 0);
+		Assert.IsNotEmpty(_page.AvailableSystems);
 		Assert.AreEqual(1, _page.AvailableGames.Count); // Should only have default entry
 	}
 
@@ -147,7 +147,7 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.AvailableSystems.Count > 0);
+		Assert.IsNotEmpty(_page.AvailableSystems);
 	}
 
 	[TestMethod]
@@ -326,7 +326,7 @@ public class EditModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.IsTrue(_page.AvailableSystems.Count > 0);
+		Assert.IsNotEmpty(_page.AvailableSystems);
 		Assert.AreEqual(1, _page.AvailableGames.Count); // Only default entry
 	}
 
@@ -346,8 +346,8 @@ public class EditModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.IsTrue(_page.AvailableSystems.Count > 0);
-		Assert.IsTrue(_page.AvailableGames.Count > 0);
+		Assert.IsNotEmpty(_page.AvailableSystems);
+		Assert.IsNotEmpty(_page.AvailableGames);
 		Assert.AreEqual(system.Id, _page.UserFile.System);
 		Assert.AreEqual(game.Id, _page.UserFile.Game);
 	}

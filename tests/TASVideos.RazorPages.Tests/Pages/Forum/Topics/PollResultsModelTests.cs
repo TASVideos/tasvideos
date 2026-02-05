@@ -42,7 +42,7 @@ public class PollResultsModelTests : BasePageModelTests
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Test Topic", _model.Poll.TopicTitle);
 		Assert.AreEqual("Did you like watching this movie? ", _model.Poll.Question);
-		Assert.AreEqual(0, _model.Poll.Votes.Count);
+		Assert.IsEmpty(_model.Poll.Votes);
 	}
 
 	[TestMethod]
@@ -162,7 +162,7 @@ public class PollResultsModelTests : BasePageModelTests
 
 		// Verify all votes from user were removed
 		var remainingVotes = await _db.ForumPollOptionVotes.ToListAsync();
-		Assert.AreEqual(0, remainingVotes.Count);
+		Assert.IsEmpty(remainingVotes);
 	}
 
 	[TestMethod]

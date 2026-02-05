@@ -20,7 +20,7 @@ public class GameSystemServiceTests : TestDbBase
 	{
 		var result = await _systemService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 		Assert.IsTrue(_cache.ContainsKey(GameSystemService.SystemsKey));
 	}
 

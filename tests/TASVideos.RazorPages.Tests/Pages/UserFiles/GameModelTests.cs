@@ -206,7 +206,7 @@ public class GameModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Game", _page.GameName);
-		Assert.AreEqual(0, _page.Files.Count);
+		Assert.IsEmpty(_page.Files);
 	}
 
 	[TestMethod]

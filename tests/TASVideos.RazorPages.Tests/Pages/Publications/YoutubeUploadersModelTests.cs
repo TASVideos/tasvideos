@@ -24,7 +24,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_NoPublications_ReturnsEmptyVideosList()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Videos.Count);
+		Assert.IsEmpty(_model.Videos);
 	}
 
 	[TestMethod]
@@ -37,7 +37,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Videos.Count);
+		Assert.IsEmpty(_model.Videos);
 	}
 
 	[TestMethod]
@@ -207,7 +207,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Videos.Count);
+		Assert.IsEmpty(_model.Videos);
 	}
 
 	[TestMethod]

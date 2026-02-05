@@ -1060,7 +1060,7 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(publicationTitle, result.Title);
-		Assert.AreEqual(0, result.Tags.Count);
+		Assert.IsEmpty(result.Tags);
 		Assert.AreEqual(wikiMarkup, result.Markup);
 		await _wikiPages.Received(1).Page(expectedPageName);
 	}

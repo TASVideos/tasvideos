@@ -64,7 +64,7 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Empty Category", _model.Category.Title);
-		Assert.AreEqual(0, _model.Category.Forums.Count);
+		Assert.IsEmpty(_model.Category.Forums);
 	}
 
 	[TestMethod]

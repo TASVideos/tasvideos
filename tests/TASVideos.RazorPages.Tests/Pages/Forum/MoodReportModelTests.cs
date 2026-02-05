@@ -45,7 +45,7 @@ public class MoodReportModelTests : TestDbBase
 	{
 		_model.UserName = "NonExistentUser";
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.MoodyUsers.Count);
+		Assert.IsEmpty(_model.MoodyUsers);
 	}
 
 	[TestMethod]
@@ -104,7 +104,7 @@ public class MoodReportModelTests : TestDbBase
 	public async Task OnGet_NoMoodyUsers_ReturnsEmpty()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.MoodyUsers.Count);
+		Assert.IsEmpty(_model.MoodyUsers);
 	}
 
 	[TestMethod]

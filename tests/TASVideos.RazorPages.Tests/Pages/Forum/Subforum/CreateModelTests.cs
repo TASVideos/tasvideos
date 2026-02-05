@@ -33,7 +33,7 @@ public class CreateModelTests : BasePageModelTests
 	public async Task OnGet_EmptyCategories_ReturnsEmptyList()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.AvailableCategories.Count);
+		Assert.IsEmpty(_model.AvailableCategories);
 	}
 
 	[TestMethod]

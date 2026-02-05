@@ -17,7 +17,7 @@ public class IndexModelTests : TestDbBase
 	public async Task OnGet_WithEmptyDatabase_ReturnsEmptyReasonsList()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Reasons.Count);
+		Assert.IsEmpty(_model.Reasons);
 	}
 
 	[TestMethod]

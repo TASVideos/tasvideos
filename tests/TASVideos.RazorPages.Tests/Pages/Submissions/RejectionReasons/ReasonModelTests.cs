@@ -85,7 +85,7 @@ public class ReasonModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Unused Reason", _model.RejectionReason);
-		Assert.AreEqual(0, _model.Submissions.Count);
+		Assert.IsEmpty(_model.Submissions);
 	}
 
 	[TestMethod]

@@ -61,7 +61,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		await _db.SaveChangesAsync();
 
 		var actual = await _userManager.GetUserPermissionsById(user.Entity.Id);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

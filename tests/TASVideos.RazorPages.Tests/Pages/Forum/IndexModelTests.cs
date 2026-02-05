@@ -23,7 +23,7 @@ public class IndexModelTests : BasePageModelTests
 	{
 		_forumService.GetAllCategories().Returns([]);
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Categories.Count);
+		Assert.IsEmpty(_model.Categories);
 	}
 
 	[TestMethod]

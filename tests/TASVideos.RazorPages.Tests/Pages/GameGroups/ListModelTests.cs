@@ -19,7 +19,7 @@ public class ListModelTests : BasePageModelTests
 	public async Task OnGet_NoGameGroups_LoadsEmptyList()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.GameGroups.Count);
+		Assert.IsEmpty(_model.GameGroups);
 	}
 
 	[TestMethod]

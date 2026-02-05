@@ -173,7 +173,7 @@ public class ViewModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(0, _model.Publications.Count);
-		Assert.AreEqual(0, _model.Submissions.Count);
+		Assert.IsEmpty(_model.Publications);
+		Assert.IsEmpty(_model.Submissions);
 	}
 }

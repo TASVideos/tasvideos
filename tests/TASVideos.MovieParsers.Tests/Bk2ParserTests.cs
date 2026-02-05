@@ -371,6 +371,6 @@ public class Bk2ParserTests : BaseParserTests
 	public async Task HashesMissing(string filename)
 	{
 		var result = await _bk2Parser.Parse(Embedded(filename + ".bk2", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 }

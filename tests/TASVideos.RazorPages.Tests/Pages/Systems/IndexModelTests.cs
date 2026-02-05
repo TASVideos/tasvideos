@@ -23,7 +23,7 @@ public class IndexModelTests : BasePageModelTests
 	{
 		_systemService.GetAll().Returns([]);
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Systems.Count);
+		Assert.IsEmpty(_model.Systems);
 	}
 
 	[TestMethod]

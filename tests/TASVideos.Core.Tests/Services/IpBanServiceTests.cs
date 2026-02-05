@@ -96,7 +96,7 @@ public class IpBanServiceTests : TestDbBase
 	{
 		var actual = await _banService.GetAll();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

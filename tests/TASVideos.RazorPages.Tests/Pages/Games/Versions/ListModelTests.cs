@@ -33,7 +33,7 @@ public class ListModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Game", _model.GameDisplayName);
-		Assert.AreEqual(0, _model.Versions.Count);
+		Assert.IsEmpty(_model.Versions);
 	}
 
 	[TestMethod]

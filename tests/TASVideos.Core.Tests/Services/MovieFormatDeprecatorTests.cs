@@ -24,7 +24,7 @@ public class MovieFormatDeprecatorTests : TestDbBase
 
 		var actual = await _deprecator.GetAll();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

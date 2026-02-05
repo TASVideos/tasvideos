@@ -64,7 +64,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreSubpagesOf(testPage).ToList();
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -125,7 +125,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreParentsOf(testName).ToList();
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -140,7 +140,7 @@ public class WikiPageExtensionTests : TestDbBase
 		_db.SaveChanges();
 
 		var result = _db.WikiPages.ThatAreParentsOf(parent).ToList();
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]

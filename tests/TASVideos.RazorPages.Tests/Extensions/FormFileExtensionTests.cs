@@ -120,7 +120,7 @@ public class FormFileExtensionTests
 		var user = CreateClaimsPrincipalWithPermissions([PermissionTo.OverrideSubmissionConstraints]);
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(0, modelState.Count);
+		Assert.IsEmpty(modelState);
 	}
 
 	[TestMethod]
@@ -132,7 +132,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(0, modelState.Count);
+		Assert.IsEmpty(modelState);
 	}
 
 	[TestMethod]
@@ -190,7 +190,7 @@ public class FormFileExtensionTests
 	{
 		var actual = await ((IFormFile?)null).ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Length);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -210,7 +210,7 @@ public class FormFileExtensionTests
 	{
 		var actual = await ((IFormFile?)null).ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Length);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

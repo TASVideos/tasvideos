@@ -15,7 +15,7 @@ public class PageExtensionTests
 		var actual = source.ToTokens();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

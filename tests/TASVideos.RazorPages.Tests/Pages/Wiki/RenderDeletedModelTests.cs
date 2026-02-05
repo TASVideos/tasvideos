@@ -36,7 +36,7 @@ public class RenderDeletedModelTests : BasePageModelTests
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-		Assert.AreEqual(0, _model.WikiPages.Count);
+		Assert.IsEmpty(_model.WikiPages);
 	}
 
 	[TestMethod]
@@ -170,7 +170,7 @@ public class RenderDeletedModelTests : BasePageModelTests
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-		Assert.AreEqual(0, _model.WikiPages.Count);
+		Assert.IsEmpty(_model.WikiPages);
 	}
 
 	[TestMethod]
@@ -195,7 +195,7 @@ public class RenderDeletedModelTests : BasePageModelTests
 
 		Assert.IsNotNull(result);
 		Assert.IsInstanceOfType(result, typeof(NotFoundResult));
-		Assert.AreEqual(0, _model.WikiPages.Count);
+		Assert.IsEmpty(_model.WikiPages);
 	}
 
 	[TestMethod]

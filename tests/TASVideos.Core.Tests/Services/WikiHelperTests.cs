@@ -64,7 +64,7 @@ public class WikiHelperTests
 		}
 		else
 		{
-			Assert.AreEqual(0, relevantPermissions.Count);
+			Assert.IsEmpty(relevantPermissions);
 		}
 	}
 

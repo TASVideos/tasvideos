@@ -47,7 +47,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Exists(existingPage, includeDeleted: true);
-		Assert.AreEqual(0, _cache.PageCache().Count, "Cache should have no records");
+		Assert.IsEmpty(_cache.PageCache(), "Cache should have no records");
 		Assert.IsTrue(actual);
 	}
 
@@ -58,7 +58,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Exists(existingPage);
-		Assert.AreEqual(0, _cache.PageCache().Count, "Non-existent page was not cached.");
+		Assert.IsEmpty(_cache.PageCache(), "Non-existent page was not cached.");
 		Assert.IsFalse(actual);
 	}
 
@@ -143,7 +143,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Page(existingPage);
-		Assert.AreEqual(0, _cache.PageCache().Count, "Non-existent page was not cached.");
+		Assert.IsEmpty(_cache.PageCache(), "Non-existent page was not cached.");
 		Assert.IsNull(actual);
 	}
 
@@ -579,7 +579,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Move("Does not exist", "Also does not exist", 1);
 		Assert.IsTrue(actual, "Page not found is considered successful");
 		Assert.AreEqual(0, _db.WikiPages.Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -900,7 +900,7 @@ public class WikiPagesTests : TestDbBase
 		await _wikiPages.Delete("DoesNotExist");
 
 		Assert.AreEqual(0, _db.WikiPages.Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -927,7 +927,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(1, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.Single().IsDeleted);
 		Assert.IsNull(_db.WikiPages.Single().ChildId);
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -954,7 +954,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(2, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.IsDeleted));
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.ChildId == null));
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -998,7 +998,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(1, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.Single().IsDeleted);
 		Assert.IsNull(_db.WikiPages.Single().ChildId);
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -1053,7 +1053,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.AreEqual(0, _db.WikiPages.ThatAreNotDeleted().Count());
 		Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -1263,7 +1263,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Undelete("Does not exist");
 		Assert.IsTrue(actual, "Page does not exist is considered successful");
 		Assert.AreEqual(0, _db.WikiPages.Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -1471,7 +1471,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.IsFalse(actual);
 		Assert.AreEqual(0, _db.WikiPages.ThatAreNotDeleted().Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -1503,7 +1503,7 @@ public class WikiPagesTests : TestDbBase
 	{
 		var actual = await _wikiPages.Orphans();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1513,7 +1513,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1531,7 +1531,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1589,7 +1589,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	#endregion
@@ -1601,7 +1601,7 @@ public class WikiPagesTests : TestDbBase
 	{
 		var actual = await _wikiPages.BrokenLinks();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1613,7 +1613,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1627,7 +1627,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1662,7 +1662,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	#endregion

@@ -53,7 +53,7 @@ public class PublicationsTests : TestDbBase
 	public async Task GetUrls_NotFound_ReturnsEmptyList()
 	{
 		var actual = await _publications.GetUrls(int.MaxValue);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -61,7 +61,7 @@ public class PublicationsTests : TestDbBase
 	{
 		var pub = _db.AddPublication().Entity;
 		var actual = await _publications.GetUrls(pub.Id);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -408,7 +408,7 @@ public class PublicationsTests : TestDbBase
 	public async Task GetAvailableMovieFiles_NotFound_ReturnsEmptyList()
 	{
 		var actual = await _publications.GetAvailableMovieFiles(int.MaxValue);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -418,7 +418,7 @@ public class PublicationsTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		var actual = await _publications.GetAvailableMovieFiles(pub.Id);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

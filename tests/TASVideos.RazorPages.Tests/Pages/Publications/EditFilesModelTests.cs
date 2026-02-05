@@ -67,7 +67,7 @@ public class EditFilesModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Publication", _page.Title);
-		Assert.AreEqual(0, _page.Files.Count);
+		Assert.IsEmpty(_page.Files);
 	}
 
 	[TestMethod]

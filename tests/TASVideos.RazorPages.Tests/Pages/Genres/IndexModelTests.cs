@@ -25,7 +25,7 @@ public class IndexModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Genres.Count);
+		Assert.IsEmpty(_model.Genres);
 		await _genreService.Received(1).GetAll();
 	}
 

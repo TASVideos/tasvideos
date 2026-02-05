@@ -42,7 +42,7 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Game", _model.GameName);
-		Assert.IsTrue(_model.AvailableSystems.Count > 0);
+		Assert.IsNotEmpty(_model.AvailableSystems);
 	}
 
 	[TestMethod]
@@ -162,7 +162,7 @@ public class EditModelTests : TestDbBase
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.AvailableSystems.Count > 0);
+		Assert.IsNotEmpty(_model.AvailableSystems);
 	}
 
 	[TestMethod]
