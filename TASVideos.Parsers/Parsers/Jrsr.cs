@@ -66,10 +66,10 @@ internal class Jrsr : Parser, IParser
 		};
 
 		var sectionsSeen = new HashSet<string>();
-		bool hasRerecordCount = false;
-		long lastTimestamp = 0L;
-		long lastNonSpecialTimestamp = 0L;
-		bool optionRelative = false; // "By default [timestamps] are relative to initial power-on."
+		var hasRerecordCount = false;
+		var lastTimestamp = 0L;
+		var lastNonSpecialTimestamp = 0L;
+		var optionRelative = false; // "By default [timestamps] are relative to initial power-on."
 		try
 		{
 			using var parser = await JrsrSectionParser.CreateAsync(file, LengthLimit);
@@ -80,120 +80,119 @@ internal class Jrsr : Parser, IParser
 					throw new FormatException($"Duplicate section {sectionName}");
 				}
 
-				if (sectionName == "savestate")
+				switch (sectionName)
 				{
-					return Error("File contains a savestate");
-				}
-
-				if (sectionName == "header")
-				{
-					// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#HeaderSection
-					while (await parser.NextLine() is { } line)
+					case "savestate":
+						return Error("File contains a savestate");
+					case "header":
 					{
-						var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
-						if (tokens.Count < 1)
+						// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#HeaderSection
+						while (await parser.NextLine() is { } line)
 						{
-							continue;
-						}
-
-						if (tokens[0] == Keys.RerecordCount)
-						{
-							if (hasRerecordCount)
+							var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
+							if (tokens.Count < 1)
 							{
-								throw new FormatException($"More than one {sectionName}.{tokens[0]} line");
+								continue;
 							}
 
-							hasRerecordCount = true;
-
-							if (tokens.Count != 2)
+							switch (tokens[0])
 							{
-								throw new FormatException($"Bad format for {sectionName}.{tokens[0]} line");
-							}
+								case Keys.RerecordCount when hasRerecordCount:
+									throw new FormatException($"More than one {sectionName}.{tokens[0]} line");
+								case Keys.RerecordCount:
+								{
+									hasRerecordCount = true;
 
-							if (!int.TryParse(tokens[1], IntegerStyle, null, out var rerecordValue) || rerecordValue < 0)
-							{
-								throw new FormatException($"Invalid {sectionName}.{tokens[0]} count {tokens[1]}");
-							}
+									if (tokens.Count != 2)
+									{
+										throw new FormatException($"Bad format for {sectionName}.{tokens[0]} line");
+									}
 
-							result.RerecordCount = rerecordValue;
+									if (!int.TryParse(tokens[1], IntegerStyle, null, out var rerecordValue) || rerecordValue < 0)
+									{
+										throw new FormatException($"Invalid {sectionName}.{tokens[0]} count {tokens[1]}");
+									}
+
+									result.RerecordCount = rerecordValue;
+									break;
+								}
+								case Keys.StartsFromSavestate:
+									result.StartType = MovieStartType.Savestate;
+									break;
+							}
 						}
-						else if (tokens[0] == Keys.StartsFromSavestate)
-						{
-							result.StartType = MovieStartType.Savestate;
-						}
+
+						break;
 					}
-				}
-				else if (sectionName == "events")
-				{
-					// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#EventsSection
-					while (await parser.NextLine() is { } line)
+					case "events":
 					{
-						var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
-						if (tokens.Count < 1)
+						// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#EventsSection
+						while (await parser.NextLine() is { } line)
 						{
-							continue;
-						}
-
-						if (tokens.Count < 2)
-						{
-							throw new FormatException("Missing event timestamp and class");
-						}
-
-						if (!long.TryParse(tokens[0], IntegerStyle, null, out var timestamp) || timestamp < 0)
-						{
-							throw new FormatException($"Cannot parse timestamp {tokens[0]}");
-						}
-
-						if (optionRelative)
-						{
-							timestamp = checked(lastTimestamp + timestamp);
-						}
-
-						// "Events must be in time order from first to last."
-						if (timestamp < lastTimestamp)
-						{
-							throw new FormatException($"Event timestamp {timestamp} is before preceding timestamp {lastTimestamp}");
-						}
-
-						lastTimestamp = timestamp;
-
-						var eventClass = tokens[1];
-						if (eventClass == "OPTION")
-						{
-							if (tokens.Count != 3)
+							var tokens = JrsrSectionParser.DecodeComponent(line).ToList();
+							switch (tokens.Count)
 							{
-								throw new FormatException($"Bad format for {eventClass} special event");
+								case < 1:
+									continue;
+								case < 2:
+									throw new FormatException("Missing event timestamp and class");
 							}
 
-							if (tokens[2] == "RELATIVE")
+							if (!long.TryParse(tokens[0], IntegerStyle, null, out var timestamp) || timestamp < 0)
 							{
-								optionRelative = true;
+								throw new FormatException($"Cannot parse timestamp {tokens[0]}");
 							}
-							else if (tokens[2] == "ABSOLUTE")
+
+							if (optionRelative)
 							{
-								optionRelative = false;
+								timestamp = checked(lastTimestamp + timestamp);
 							}
-							else
+
+							// "Events must be in time order from first to last."
+							if (timestamp < lastTimestamp)
 							{
-								throw new FormatException($"Unknown {eventClass} parameter {tokens[2]}");
+								throw new FormatException($"Event timestamp {timestamp} is before preceding timestamp {lastTimestamp}");
+							}
+
+							lastTimestamp = timestamp;
+
+							var eventClass = tokens[1];
+							switch (eventClass)
+							{
+								case "OPTION" when tokens.Count != 3:
+									throw new FormatException($"Bad format for {eventClass} special event");
+								case "OPTION":
+									optionRelative = tokens[2] switch
+									{
+										"RELATIVE" => true,
+										"ABSOLUTE" => false,
+										_ => throw new FormatException($"Unknown {eventClass} parameter {tokens[2]}")
+									};
+									break;
+								case "SAVESTATE":
+								{
+									// Just check the syntax.
+									if (tokens.Count != 4)
+									{
+										throw new FormatException($"Bad format for {eventClass} special event");
+									}
+
+									break;
+								}
+								default:
+								{
+									if (JrsrSectionParser.IsSpecialEventClass(eventClass))
+									{
+										throw new FormatException($"Unknown special event class {eventClass}");
+									}
+
+									lastNonSpecialTimestamp = lastTimestamp;
+									break;
+								}
 							}
 						}
-						else if (eventClass == "SAVESTATE")
-						{
-							// Just check the syntax.
-							if (tokens.Count != 4)
-							{
-								throw new FormatException($"Bad format for {eventClass} special event");
-							}
-						}
-						else if (JrsrSectionParser.IsSpecialEventClass(eventClass))
-						{
-							throw new FormatException($"Unknown special event class {eventClass}");
-						}
-						else
-						{
-							lastNonSpecialTimestamp = lastTimestamp;
-						}
+
+						break;
 					}
 				}
 
@@ -205,7 +204,7 @@ internal class Jrsr : Parser, IParser
 				// Get total duration in seconds.
 				// "When computing movie length, it is
 				// customary to ignore all special events."
-				double duration = lastNonSpecialTimestamp / 1e9;
+				var duration = lastNonSpecialTimestamp / 1e9;
 
 				// Compute an integer number of frames,
 				// assuming a frame rate close to 60 fps.
@@ -484,54 +483,23 @@ internal class JrsrSectionParser : IDisposable
 				{
 					throw new FormatException("Expected !END before end of file");
 				}
-				else
-				{
-					// EOF and not in a section, we are done.
-					return null;
-				}
+
+				// EOF and not in a section, we are done.
+				return null;
 			}
-			else if (IsLinefeed((char)c))
+
+			if (IsLinefeed((char)c))
 			{
 				// Blank lines are ignored.
 			}
-			else if ((char)c == '!')
+			else switch ((char)c)
 			{
-				// Command is expected to be "BEGIN" or "END". cc is the
-				// character that immediately follows the command.
-				var command = new StringBuilder();
-				int cc;
-				while (true)
+				case '!':
 				{
-					cc = await ReadChar();
-					if (cc == -1)
-					{
-						throw new FormatException("Unexpected end of file");
-					}
-					else if (IsSpace((char)cc) || IsLinefeed((char)cc))
-					{
-						break;
-					}
-
-					// We are only expecting BEGIN or END here. If we read
-					// more than 5 characters without finding a space or a
-					// linefeed, it's an error.
-					if (command.Length >= 5)
-					{
-						throw new FormatException("Expected BEGIN or END after !");
-					}
-
-					command.Append((char)cc);
-				}
-
-				if (command.ToString() == "BEGIN")
-				{
-					// Skip over the spaces that follow !BEGIN. There must
-					// be at least one.
-					if (!IsSpace((char)cc))
-					{
-						throw new FormatException("Expected space after !BEGIN");
-					}
-
+					// Command is expected to be "BEGIN" or "END". cc is the
+					// character that immediately follows the command.
+					var command = new StringBuilder();
+					int cc;
 					while (true)
 					{
 						cc = await ReadChar();
@@ -539,93 +507,123 @@ internal class JrsrSectionParser : IDisposable
 						{
 							throw new FormatException("Unexpected end of file");
 						}
-						else if (!IsSpace((char)cc))
+
+						if (IsSpace((char)cc) || IsLinefeed((char)cc))
 						{
 							break;
 						}
+
+						// We are only expecting BEGIN or END here. If we read
+						// more than 5 characters without finding a space or a
+						// linefeed, it's an error.
+						if (command.Length >= 5)
+						{
+							throw new FormatException("Expected BEGIN or END after !");
+						}
+
+						command.Append((char)cc);
 					}
 
-					// The section name is everything to the end of the
-					// line, including spaces.
-					var sectionName = new StringBuilder();
+					switch (command.ToString())
+					{
+						// Skip over the spaces that follow !BEGIN. There must
+						// be at least one.
+						case "BEGIN" when !IsSpace((char)cc):
+							throw new FormatException("Expected space after !BEGIN");
+						case "BEGIN":
+						{
+							while (true)
+							{
+								cc = await ReadChar();
+								if (cc == -1)
+								{
+									throw new FormatException("Unexpected end of file");
+								}
+
+								if (!IsSpace((char)cc))
+								{
+									break;
+								}
+							}
+
+							// The section name is everything to the end of the
+							// line, including spaces.
+							var sectionName = new StringBuilder();
+							while (true)
+							{
+								if (cc == -1)
+								{
+									throw new FormatException("Unexpected end of file");
+								}
+
+								if (IsLinefeed((char)cc))
+								{
+									break;
+								}
+
+								if (sectionName.Length >= _lengthLimit)
+								{
+									throw new FormatException("Section name exceeds length limit");
+								}
+
+								sectionName.Append((char)cc);
+								cc = await ReadChar();
+							}
+
+							if (sectionName.Length == 0)
+							{
+								throw new FormatException("Expected section name after !BEGIN");
+							}
+
+							// We have found the name of the next section, and are
+							// ready to start reading the section's lines.
+							_inSection = true;
+							return sectionName.ToString();
+						}
+						case "END" when !IsLinefeed((char)cc):
+							throw new FormatException("Expected linefeed after !END");
+						case "END" when !_inSection:
+							throw new FormatException("Expected !BEGIN before !END");
+						// The current section is ended (so now '+' at the
+						// beginning of a line is a syntax error, not a line to
+						// be skipped). We are still looking for the beginning
+						// of the next section and its section name.
+						case "END":
+							_inSection = false;
+							break;
+						default:
+							throw new FormatException("Expected BEGIN or END after !");
+					}
+
+					break;
+				}
+				case '+' when _inSection:
+				{
+					// We are looking for the next section, so skip over any
+					// lines in the current section.
 					while (true)
 					{
+						var cc = await ReadChar();
 						if (cc == -1)
 						{
 							throw new FormatException("Unexpected end of file");
 						}
-						else if (IsLinefeed((char)cc))
+
+						if (IsLinefeed((char)cc))
 						{
 							break;
 						}
-
-						if (sectionName.Length >= _lengthLimit)
-						{
-							throw new FormatException("Section name exceeds length limit");
-						}
-
-						sectionName.Append((char)cc);
-						cc = await ReadChar();
 					}
 
-					if (sectionName.Length == 0)
-					{
-						throw new FormatException("Expected section name after !BEGIN");
-					}
-
-					// We have found the name of the next section, and are
-					// ready to start reading the section's lines.
-					_inSection = true;
-					return sectionName.ToString();
+					break;
 				}
-				else if (command.ToString() == "END")
+				default:
 				{
-					if (!IsLinefeed((char)cc))
-					{
-						throw new FormatException("Expected linefeed after !END");
-					}
-
 					if (!_inSection)
 					{
-						throw new FormatException("Expected !BEGIN before !END");
+						throw new FormatException("Expected !BEGIN");
 					}
 
-					// The current section is ended (so now '+' at the
-					// beginning of a line is a syntax error, not a line to
-					// be skipped). We are still looking for the beginning
-					// of the next section and its section name.
-					_inSection = false;
-				}
-				else
-				{
-					throw new FormatException("Expected BEGIN or END after !");
-				}
-			}
-			else if ((char)c == '+' && _inSection)
-			{
-				// We are looking for the next section, so skip over any
-				// lines in the current section.
-				while (true)
-				{
-					var cc = await ReadChar();
-					if (cc == -1)
-					{
-						throw new FormatException("Unexpected end of file");
-					}
-					else if (IsLinefeed((char)cc))
-					{
-						break;
-					}
-				}
-			}
-			else
-			{
-				if (!_inSection)
-				{
-					throw new FormatException("Expected !BEGIN");
-				}
-				else
-				{
 					throw new FormatException("Expected !END");
 				}
 			}
@@ -761,59 +759,60 @@ internal class JrsrSectionParser : IDisposable
 					token.Append(c);
 				}
 			}
-			else if (c == '(')
+			else switch (c)
 			{
-				if (depth == 0)
+				case '(':
 				{
-					// This left parenthesis terminates the current token
-					// and begins a new token.
-					if (token.Length > 0)
+					if (depth == 0)
 					{
-						yield return token.ToString();
-						token.Clear();
+						// This left parenthesis terminates the current token
+						// and begins a new token.
+						if (token.Length > 0)
+						{
+							yield return token.ToString();
+							token.Clear();
+						}
 					}
-				}
-				else
-				{
-					// This left parenthesis is itself enclosed within
-					// parentheses and counts as part of the token.
-					token.Append(c);
-				}
+					else
+					{
+						// This left parenthesis is itself enclosed within
+						// parentheses and counts as part of the token.
+						token.Append(c);
+					}
 
-				depth = checked(depth + 1);
-			}
-			else if (c == ')')
-			{
-				if (depth == 0)
-				{
+					depth = checked(depth + 1);
+					break;
+				}
+				case ')' when depth == 0:
 					throw new FormatException("Unmatched ')'");
-				}
-				else if (depth == 1)
+				case ')':
 				{
-					// This right parenthesis terminates the current token,
-					// which was begun by a left parenthesis.
-					if (token.Length > 0)
+					if (depth == 1)
 					{
-						yield return token.ToString();
-						token.Clear();
+						// This right parenthesis terminates the current token,
+						// which was begun by a left parenthesis.
+						if (token.Length > 0)
+						{
+							yield return token.ToString();
+							token.Clear();
+						}
 					}
-				}
-				else
-				{
-					// This right parenthesis is itself enclosed within
-					// parentheses and counts as part of the token.
-					token.Append(c);
-				}
+					else
+					{
+						// This right parenthesis is itself enclosed within
+						// parentheses and counts as part of the token.
+						token.Append(c);
+					}
 
-				depth -= 1;
-			}
-			else if (c == '\\')
-			{
-				escaped = true;
-			}
-			else
-			{
-				token.Append(c);
+					depth -= 1;
+					break;
+				}
+				case '\\':
+					escaped = true;
+					break;
+				default:
+					token.Append(c);
+					break;
 			}
 		}
 

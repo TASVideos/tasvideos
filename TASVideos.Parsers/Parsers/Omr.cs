@@ -98,15 +98,21 @@ internal class Omr : Parser, IParser
 
 internal static class XPathExtensions
 {
-	public static IEnumerable<XElement> XPathEvaluateList(this XElement element, string path)
-		=> ((IEnumerable)element.XPathEvaluate(path)).Cast<XElement>();
+	extension(XElement element)
+	{
+		public IEnumerable<XElement> XPathEvaluateList(string path)
+			=> ((IEnumerable)element.XPathEvaluate(path)).Cast<XElement>();
 
-	public static XElement FirstDescendant(this XElement element, string name)
-		=> element.Descendants().First(x => x.Name == name);
+		public XElement FirstDescendant(string name)
+			=> element.Descendants().First(x => x.Name == name);
+	}
 
-	public static XElement FirstDescendant(this IEnumerable<XElement> element, string name)
-		=> element.Descendants().First(x => x.Name == name);
+	extension(IEnumerable<XElement> element)
+	{
+		public XElement FirstDescendant(string name)
+			=> element.Descendants().First(x => x.Name == name);
 
-	public static string FirstAttributeValue(this IEnumerable<XElement> element, string name)
-		=> element.Attributes().First(x => x.Name == name).Value;
+		public string FirstAttributeValue(string name)
+			=> element.Attributes().First(x => x.Name == name).Value;
+	}
 }

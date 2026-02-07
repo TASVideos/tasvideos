@@ -1,14 +1,8 @@
-﻿using System.Security.Cryptography;
-using System.Text;
-using SharpCompress.Common;
-
-namespace TASVideos.MovieParsers.Parsers;
+﻿namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("tas")]
 internal class Tas : Parser, IParser
 {
-	private const int FrameRate = 60;
-
 	private const string FileTimeHeader = "FileTime:";
 	private const string ChapterTimeHeader = "ChapterTime:";
 	private const string TotalRerecordCountHeader = "TotalRecordCount:";
@@ -38,10 +32,10 @@ internal class Tas : Parser, IParser
 					return Error("No FileTime duration found");
 				}
 
-				var split = s.Split(['(', ')']);
+				var split = s.Split('(', ')');
 				if (split.Length == 3)
 				{
-					var test = int.TryParse(split[1], out int igtFrames);
+					var test = int.TryParse(split[1], out var igtFrames);
 					if (test)
 					{
 						result.Frames = igtFrames;
@@ -61,10 +55,10 @@ internal class Tas : Parser, IParser
 					return Error("No ChapterTime duration found");
 				}
 
-				var split = s.Split(['(', ')']);
+				var split = s.Split('(', ')');
 				if (split.Length == 3)
 				{
-					var test = int.TryParse(split[1], out int igtFrames);
+					var test = int.TryParse(split[1], out var igtFrames);
 					if (test)
 					{
 						result.Frames = igtFrames;
@@ -82,7 +76,7 @@ internal class Tas : Parser, IParser
 				if (split.Length > 1)
 				{
 					var intStr = split.Skip(1).First();
-					var test = int.TryParse(intStr, out int val);
+					var test = int.TryParse(intStr, out var val);
 					if (test)
 					{
 						totalRecordCountUsed = true;
@@ -102,7 +96,7 @@ internal class Tas : Parser, IParser
 				if (split.Length > 1)
 				{
 					var intStr = split.Skip(1).First();
-					var test = int.TryParse(intStr, out int val);
+					var test = int.TryParse(intStr, out var val);
 					if (test)
 					{
 						result.RerecordCount = val;

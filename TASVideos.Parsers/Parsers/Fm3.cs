@@ -13,7 +13,7 @@ internal class Fm3 : Parser, IParser
 			SystemCode = SystemCodes.Nes
 		};
 
-		(var header, int initialFrameCount) = await file.PipeBasedMovieHeaderAndFrameCount();
+		var (header, initialFrameCount) = await file.PipeBasedMovieHeaderAndFrameCount();
 
 		// Validate this is actually an FM3 file by checking version
 		var version = header.GetPositiveIntFor(Keys.Version);
@@ -46,7 +46,7 @@ internal class Fm3 : Parser, IParser
 		// Handle frame count - similar to FM2 logic
 		if (header.GetBoolFor(Keys.Binary))
 		{
-			int? frameCount = header.GetPositiveIntFor(Keys.Length);
+			var frameCount = header.GetPositiveIntFor(Keys.Length);
 			if (frameCount.HasValue)
 			{
 				result.Frames = frameCount.Value;
@@ -68,7 +68,7 @@ internal class Fm3 : Parser, IParser
 		}
 
 		// Handle rerecord count
-		int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
+		var rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
 		if (rerecordVal.HasValue)
 		{
 			result.RerecordCount = rerecordVal.Value;
@@ -100,8 +100,8 @@ internal class Fm3 : Parser, IParser
 			{
 				try
 				{
-					byte[] data = Convert.FromBase64String(base64Line);
-					string hash = BytesToHexString(data.AsSpan());
+					var data = Convert.FromBase64String(base64Line);
+					var hash = BytesToHexString(data.AsSpan());
 					if (hash.Length == 32)
 					{
 						result.Hashes.Add(HashType.Md5, hash.ToLower());
@@ -140,10 +140,5 @@ internal class Fm3 : Parser, IParser
 		public const string Length = "length";
 		public const string Fds = "FDS";
 		public const string StartsFromSavestate = "savestate";
-		public const string Comment = "comment";
-		public const string Subtitle = "subtitle";
-		public const string EmuVersion = "emuVersion";
-		public const string NewPpu = "NewPPU";
-		public const string Fourscore = "fourscore";
 	}
 }

@@ -26,18 +26,21 @@ internal class SuccessResult(string fileExtension) : IParseResult
 
 internal static class ParseResultExtensions
 {
-	internal static void WarnNoRerecords(this SuccessResult successResult)
+	extension(SuccessResult successResult)
 	{
-		successResult.WarningList.Add(ParseWarnings.MissingRerecordCount);
-	}
+		internal void WarnNoRerecords()
+		{
+			successResult.WarningList.Add(ParseWarnings.MissingRerecordCount);
+		}
 
-	internal static void WarnNoFrameRate(this SuccessResult successResult)
-	{
-		successResult.WarningList.Add(ParseWarnings.FrameRateInferred);
-	}
+		internal void WarnNoFrameRate()
+		{
+			successResult.WarningList.Add(ParseWarnings.FrameRateInferred);
+		}
 
-	internal static void WarnLengthInferred(this SuccessResult successResult)
-	{
-		successResult.WarningList.Add(ParseWarnings.LengthInferred);
+		internal void WarnLengthInferred()
+		{
+			successResult.WarningList.Add(ParseWarnings.LengthInferred);
+		}
 	}
 }

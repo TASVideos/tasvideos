@@ -9,124 +9,126 @@ internal static class Extensions
 	/// Splits by line, Null safe, removes empty entries.
 	/// </summary>
 	public static string[] LineSplit(this string? str)
-	{
-		return str is null
+		=> str is null
 			? []
 			: str.Split(["\r\n", "\r", "\n"], StringSplitOptions.RemoveEmptyEntries);
-	}
 
-	/// <summary>
-	/// Searches through a list of strings that represents a space separated
-	/// key/value pair, for the given key (case-insensitive and returns the value).
-	/// </summary>
 	/// <param name="lines">The key/value pairs to search.</param>
-	/// <param name="key">The key to search for.</param>
-	/// <returns>The value if found, else an empty string.</returns>
-	public static string GetValueFor(this string[]? lines, string key)
+	extension(string[]? lines)
 	{
-		if (lines is null || !lines.Any() || string.IsNullOrWhiteSpace(key))
+		/// <summary>
+		/// Searches through a list of strings that represents a space separated
+		/// key/value pair, for the given key (case-insensitive and returns the value).
+		/// </summary>
+		/// <param name="key">The key to search for.</param>
+		/// <returns>The value if found, else an empty string.</returns>
+		public string GetValueFor(string key)
 		{
+			if (lines is null || !lines.Any() || string.IsNullOrWhiteSpace(key))
+			{
+				return "";
+			}
+
+			var row = lines.FirstOrDefault(l => l.StartsWith(key, StringComparison.InvariantCultureIgnoreCase))?.ToLower();
+			if (!string.IsNullOrWhiteSpace(row))
+			{
+				var valStr = row
+					.Replace(key.ToLower(), "")
+					.Trim()
+					.Replace("\r", "")
+					.Replace("\n", "");
+
+				return valStr;
+			}
+
 			return "";
 		}
 
-		var row = lines.FirstOrDefault(l => l.StartsWith(key, StringComparison.InvariantCultureIgnoreCase))?.ToLower();
-		if (!string.IsNullOrWhiteSpace(row))
+		public bool HasValue(string key)
 		{
-			var valStr = row
-				.Replace(key.ToLower(), "")
-				.Trim()
-				.Replace("\r", "")
-				.Replace("\n", "");
+			if (lines is null || !lines.Any() || string.IsNullOrWhiteSpace(key))
+			{
+				return false;
+			}
 
-			return valStr;
+			var row = lines.FirstOrDefault(l => l.StartsWith(key, StringComparison.InvariantCultureIgnoreCase))?.ToLower();
+			return !string.IsNullOrWhiteSpace(row);
 		}
 
-		return "";
+		/// <summary>
+		/// Searches through a list of strings that represents a space separated
+		/// key/value pair, for the given key (case-insensitive and returns the value) and parses as a boolean.
+		/// </summary>
+		/// <returns>True if value is a case-insensitive true, or a 1.</returns>
+		public bool GetBoolFor(string key) => lines.GetValueFor(key).ToBool();
+
+		/// <summary>
+		/// Searches through a list of strings that represents a space separated
+		/// and parses the resulting string as an integer.
+		/// If value can not be parsed, null is returned.
+		/// If the value is negative or greater than the max
+		/// value of an int, null is returned.
+		/// </summary>
+		public int? GetPositiveIntFor(string key) => lines.GetValueFor(key).ToPositiveInt();
+
+		/// <summary>
+		/// Searches through a list of strings that represents a space separated
+		/// and parses the resulting string as an integer.
+		/// If value can not be parsed, null is returned.
+		/// If the value is negative or greater than the max
+		/// value of a long, null is returned.
+		/// </summary>
+		public long? GetPositiveLongFor(string key) => lines.GetValueFor(key).ToPositiveLong();
 	}
 
-	public static bool HasValue(this string[]? lines, string key)
+	extension(string val)
 	{
-		if (lines is null || !lines.Any() || string.IsNullOrWhiteSpace(key))
+		internal int? ToPositiveInt()
 		{
-			return false;
-		}
+			var result = int.TryParse(val, out var parsedVal);
+			if (!result)
+			{
+				return null;
+			}
 
-		var row = lines.FirstOrDefault(l => l.StartsWith(key, StringComparison.InvariantCultureIgnoreCase))?.ToLower();
-		return !string.IsNullOrWhiteSpace(row);
-	}
+			if (parsedVal >= 0)
+			{
+				return parsedVal;
+			}
 
-	/// <summary>
-	/// Searches through a list of strings that represents a space separated
-	/// key/value pair, for the given key (case-insensitive and returns the value) and parses as a boolean.
-	/// </summary>
-	/// <returns>True if value is a case-insensitive true, or a 1.</returns>
-	public static bool GetBoolFor(this string[]? lines, string key) => GetValueFor(lines, key).ToBool();
-
-	/// <summary>
-	/// Searches through a list of strings that represents a space separated
-	/// and parses the resulting string as an integer.
-	/// If value can not be parsed, null is returned.
-	/// If the value is negative or greater than the max
-	/// value of an int, null is returned.
-	/// </summary>
-	public static int? GetPositiveIntFor(this string[]? lines, string key)
-		=> GetValueFor(lines, key).ToPositiveInt();
-
-	/// <summary>
-	/// Searches through a list of strings that represents a space separated
-	/// and parses the resulting string as an integer.
-	/// If value can not be parsed, null is returned.
-	/// If the value is negative or greater than the max
-	/// value of a long, null is returned.
-	/// </summary>
-	public static long? GetPositiveLongFor(this string[]? lines, string key)
-		=> GetValueFor(lines, key).ToPositiveLong();
-
-	internal static int? ToPositiveInt(this string val)
-	{
-		var result = int.TryParse(val, out var parsedVal);
-		if (!result)
-		{
 			return null;
 		}
 
-		if (parsedVal >= 0)
+		internal long? ToPositiveLong()
 		{
-			return parsedVal;
-		}
+			var result = long.TryParse(val, out var parsedVal);
+			if (!result)
+			{
+				return null;
+			}
 
-		return null;
-	}
+			if (parsedVal >= 0)
+			{
+				return parsedVal;
+			}
 
-	internal static long? ToPositiveLong(this string val)
-	{
-		var result = long.TryParse(val, out var parsedVal);
-		if (!result)
-		{
 			return null;
 		}
 
-		if (parsedVal >= 0)
+		internal bool ToBool()
 		{
-			return parsedVal;
+			if (string.IsNullOrWhiteSpace(val))
+			{
+				return false;
+			}
+
+			if (int.TryParse(val, out var parsedVal))
+			{
+				return parsedVal == 1;
+			}
+
+			return string.Equals(val, "true", StringComparison.InvariantCultureIgnoreCase);
 		}
-
-		return null;
-	}
-
-	internal static bool ToBool(this string val)
-	{
-		if (string.IsNullOrWhiteSpace(val))
-		{
-			return false;
-		}
-
-		if (int.TryParse(val, out int parsedVal))
-		{
-			return parsedVal == 1;
-		}
-
-		return string.Equals(val, "true", StringComparison.InvariantCultureIgnoreCase);
 	}
 
 	public static async Task<SharpZipArchive> OpenZipArchiveRead(this Stream stream)
@@ -139,25 +141,21 @@ internal static class Extensions
 		return SharpZipArchive.Open(ms);
 	}
 
-	/// <summary>
-	/// Gets a file that matches or starts with the given name
-	/// with a case-insensitive match.
-	/// </summary>
-	public static SharpZipArchiveEntry? Entry(this SharpZipArchive archive, string name)
+	extension(SharpZipArchive archive)
 	{
-		return archive.Entries.SingleOrDefault(e => e.Key?.StartsWith(name, StringComparison.InvariantCultureIgnoreCase) == true);
-	}
+		/// <summary>
+		/// Gets a file that matches or starts with the given name
+		/// with a case-insensitive match.
+		/// </summary>
+		public SharpZipArchiveEntry? Entry(string name)
+			=> archive.Entries.SingleOrDefault(e => e.Key?.StartsWith(name, StringComparison.InvariantCultureIgnoreCase) == true);
 
-	public static bool HasEntry(this SharpZipArchive archive, string name)
-	{
-		return archive.Entries.Any(e => string.Equals(e.Key, name, StringComparison.InvariantCultureIgnoreCase));
+		public bool HasEntry(string name)
+			=> archive.Entries.Any(e => string.Equals(e.Key, name, StringComparison.InvariantCultureIgnoreCase));
 	}
 
 	// Returns a boolean indicating whether the given git is set in the given byte
-	public static bool Bit(this byte b, int index)
-	{
-		return (b & (1 << index)) != 0;
-	}
+	public static bool Bit(this byte b, int index) => (b & (1 << index)) != 0;
 
 	/// <summary>
 	/// Returns the header and frame count for a given stream of an input log. A frame here

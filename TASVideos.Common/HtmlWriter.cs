@@ -14,7 +14,7 @@ public partial class HtmlWriter(TextWriter w)
 		{
 			if (_single is not null)
 			{
-				_list = new() { _single, item };
+				_list = [_single, item];
 				_single = null;
 			}
 			else if (_list is not null)
@@ -70,9 +70,9 @@ public partial class HtmlWriter(TextWriter w)
 		StringComparer.OrdinalIgnoreCase
 	);
 
-	private HtmlClassList _currentElemClassAttr = default;
+	private HtmlClassList _currentElemClassAttr;
 
-	private HtmlClassList _currentElemRelAttr = default;
+	private HtmlClassList _currentElemRelAttr;
 
 	private bool _inTagOpen;
 	private readonly Stack<string> _openTags = new();
@@ -167,17 +167,17 @@ public partial class HtmlWriter(TextWriter w)
 			throw new InvalidOperationException($"Invalid attribute name {name}");
 		}
 
-		if (name is "class")
+		switch (name)
 		{
-			_currentElemClassAttr.Add(value);
-		}
-		else if (name is "rel")
-		{
-			_currentElemRelAttr.Add(value);
-		}
-		else
-		{
-			EscapeAndWriteAttribute(name, value);
+			case "class":
+				_currentElemClassAttr.Add(value);
+				break;
+			case "rel":
+				_currentElemRelAttr.Add(value);
+				break;
+			default:
+				EscapeAndWriteAttribute(name, value);
+				break;
 		}
 	}
 

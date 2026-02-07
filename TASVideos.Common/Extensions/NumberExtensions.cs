@@ -3,7 +3,7 @@
 public static class NumberExtensions
 {
 	/// <summary>
-	///   Limit a value to a certain range. When the value is smaller/bigger than the range, snap it to the range border.
+	/// Limit a value to a certain range. When the value is smaller/bigger than the range, snap it to the range border.
 	/// </summary>
 	/// <typeparam name = "T">The type of the value to limit.</typeparam>
 	/// <param name = "source">The source for this extension method.</param>
@@ -12,9 +12,9 @@ public static class NumberExtensions
 	public static T Clamp<T>(this T source, T start, T end)
 		where T : IComparable
 	{
-		bool isReversed = start.CompareTo(end) > 0;
-		T smallest = isReversed ? end : start;
-		T biggest = isReversed ? start : end;
+		var isReversed = start.CompareTo(end) > 0;
+		var smallest = isReversed ? end : start;
+		var biggest = isReversed ? start : end;
 
 		return source.CompareTo(smallest) < 0
 			? smallest
@@ -23,54 +23,47 @@ public static class NumberExtensions
 				: source;
 	}
 
-	public static decimal ToPercent(this int val, int total, int precision = 1)
+	extension(int val)
 	{
-		if (total == 0)
+		public decimal ToPercent(int total, int precision = 1)
 		{
-			return 0;
+			if (total == 0)
+			{
+				return 0;
+			}
+
+			var p = val / (decimal)total;
+			return Math.Round(p * 100, precision);
 		}
 
-		var p = val / (decimal)total;
-		return Math.Round(p * 100, precision);
+		/// <summary>
+		/// Returns the number of bytes as a format file size string
+		/// such as 1 KB, 1 MB, 1GB.
+		/// </summary>
+		public string ToSizeString()
+			=> val switch
+			{
+				> 1_000_000_000 => $"{val / 1_000_000_000f:f2} GB",
+				> 1_000_000 => $"{val / 1_000_000:f2} MB",
+				> 1_000 => $"{val / 1_000f:f2} KB",
+				_ => $"{val} bytes"
+			};
 	}
 
-	/// <summary>
-	/// Returns the number of bytes as a format file size string
-	/// such as 1 KB, 1 MB, 1GB.
-	/// </summary>
-	public static string ToSizeString(this int byteCount)
+	extension(double overallRating)
 	{
-		if (byteCount > 1_000_000_000)
+		public string ToOverallRatingString()
+			=> Math.Round(overallRating, 2, MidpointRounding.AwayFromZero).ToString();
+
+		/// <summary>Displays a number between 0 and 1 as a percentage. It rounds down so that 0.999999 is not shown as 100%</summary>
+		public string ToPercentage(int decimalPlaces = 0)
 		{
-			return $"{byteCount / 1_000_000_000f:f2} GB";
+			if (double.IsNaN(overallRating) || double.IsInfinity(overallRating))
+			{
+				return "n/a";
+			}
+
+			return (Math.Floor(overallRating * 100 * Math.Pow(10, decimalPlaces)) / Math.Pow(10, decimalPlaces)).ToString($"F{decimalPlaces}") + "%";
 		}
-
-		if (byteCount > 1_000_000)
-		{
-			return $"{byteCount / 1_000_000:f2} MB";
-		}
-
-		if (byteCount > 1_000)
-		{
-			return $"{byteCount / 1_000f:f2} KB";
-		}
-
-		return $"{byteCount} bytes";
-	}
-
-	public static string ToOverallRatingString(this double overallRating)
-	{
-		return Math.Round(overallRating, 2, MidpointRounding.AwayFromZero).ToString();
-	}
-
-	/// <summary>Displays a number between 0 and 1 as a percentage. It rounds down so that 0.999999 is not shown as 100%</summary>
-	public static string ToPercentage(this double ratio, int decimalPlaces = 0)
-	{
-		if (double.IsNaN(ratio) || double.IsInfinity(ratio))
-		{
-			return "n/a";
-		}
-
-		return (Math.Floor(ratio * 100 * Math.Pow(10, decimalPlaces)) / Math.Pow(10, decimalPlaces)).ToString($"F{decimalPlaces}") + "%";
 	}
 }

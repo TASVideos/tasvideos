@@ -13,11 +13,11 @@ internal class Fm2 : Parser, IParser
 			SystemCode = SystemCodes.Nes
 		};
 
-		(var header, int initialFrameCount) = await file.PipeBasedMovieHeaderAndFrameCount();
+		var (header, initialFrameCount) = await file.PipeBasedMovieHeaderAndFrameCount();
 
 		if (header.GetBoolFor(Keys.Binary))
 		{
-			int? frameCount = header.GetPositiveIntFor(Keys.Length);
+			var frameCount = header.GetPositiveIntFor(Keys.Length);
 			if (frameCount.HasValue)
 			{
 				result.Frames = frameCount.Value;
@@ -37,7 +37,7 @@ internal class Fm2 : Parser, IParser
 			result.SystemCode = SystemCodes.Fds;
 		}
 
-		int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
+		var rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
 		if (rerecordVal.HasValue)
 		{
 			result.RerecordCount = rerecordVal.Value;
@@ -66,8 +66,8 @@ internal class Fm2 : Parser, IParser
 			{
 				try
 				{
-					byte[] data = Convert.FromBase64String(base64Line);
-					string hash = BytesToHexString(data.AsSpan());
+					var data = Convert.FromBase64String(base64Line);
+					var hash = BytesToHexString(data.AsSpan());
 					if (hash.Length == 32)
 					{
 						result.Hashes.Add(HashType.Md5, hash.ToLower());

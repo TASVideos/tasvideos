@@ -16,7 +16,7 @@ internal class Ctm : Parser, IParser
 
 		using var br = new BinaryReader(file);
 		var header = new string(br.ReadChars(4));
-		if (header != "CTM\x1b")
+		if (header != "CTM\e")
 		{
 			return InvalidFormat();
 		}

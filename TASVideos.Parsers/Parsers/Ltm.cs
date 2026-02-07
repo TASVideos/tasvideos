@@ -30,7 +30,7 @@ internal class Ltm : Parser, IParser
 		double? frameRateNumerator = null;
 		double? lengthSeconds = null;
 		double? lengthNanoseconds = null;
-		bool isVariableFramerate = false;
+		var isVariableFramerate = false;
 
 		using var reader = ReaderFactory.Open(file);
 		while (reader.MoveToNextEntry())
@@ -154,7 +154,7 @@ internal class Ltm : Parser, IParser
 		if (split.Length > 1)
 		{
 			var intStr = split.Skip(1).First();
-			var result = int.TryParse(intStr, out int val);
+			var result = int.TryParse(intStr, out var val);
 			if (result)
 			{
 				return val;
@@ -175,7 +175,7 @@ internal class Ltm : Parser, IParser
 		if (split.Length > 1)
 		{
 			var doubleStr = split.Skip(1).First();
-			var result = double.TryParse(doubleStr, NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out double val);
+			var result = double.TryParse(doubleStr, NumberStyles.Float | NumberStyles.AllowThousands, NumberFormatInfo.InvariantInfo, out var val);
 			if (result)
 			{
 				return val;
@@ -189,16 +189,13 @@ internal class Ltm : Parser, IParser
 	{
 		if (string.IsNullOrWhiteSpace(str))
 		{
-			return string.Empty;
+			return "";
 		}
 
 		var split = str.SplitWithEmpty("=");
-		if (split.Length > 1)
-		{
-			return split[1].Trim();
-		}
-
-		return string.Empty;
+		return split.Length > 1
+			? split[1].Trim()
+			: "";
 	}
 
 	private static bool ParseBoolFromConfig(string str)
@@ -215,7 +212,7 @@ internal class Ltm : Parser, IParser
 		}
 
 		var boolStr = split.Skip(1).First();
-		var result = bool.TryParse(boolStr, out bool val);
+		var result = bool.TryParse(boolStr, out var val);
 		return result && val;
 	}
 
@@ -231,12 +228,7 @@ internal class Ltm : Parser, IParser
 	}
 
 	private static string CalculatePlatform(string str)
-	{
-		if (typeof(SystemCodes).GetFields().Select(f => f.GetValue(f)).Contains(str))
-		{
-			return str;
-		}
-
-		return SystemCodes.Linux;
-	}
+		=> typeof(SystemCodes).GetFields().Select(f => f.GetValue(f)).Contains(str)
+			? str
+			: SystemCodes.Linux;
 }

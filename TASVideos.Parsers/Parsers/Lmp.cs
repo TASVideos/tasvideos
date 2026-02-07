@@ -6,10 +6,10 @@ namespace TASVideos.MovieParsers.Parsers;
 internal class Lmp : Parser, IParser
 {
 	private delegate bool TryParseLmp(byte[] movie, ref int frames);
-	private const int MAXPLAYERS = 4;
-	private const int TERMINATOR = 0x80;
-	private const int INVALID = -1;
-	private int FooterPointer { get; set; } = INVALID;
+	private const int Maxplayers = 4;
+	private const int Terminator = 0x80;
+	private const int Invalid = -1;
+	private int FooterPointer { get; set; } = Invalid;
 
 	// order is important here to minimize false detections
 	// especially the last 3, which are impossible to always detect correctly
@@ -21,28 +21,23 @@ internal class Lmp : Parser, IParser
 		TryParseOldHexen,
 		TryParseNewHexen,
 		TryParseHeretic,
-		TryParseOldDoom,
+		TryParseOldDoom
 	];
 
 	private static bool CheckSizeSanity(int len, int headerLen, int inputLen)
 	{
 		// header size + 1 single-player input frame + terminator byte
-		if (len < headerLen + inputLen + 1)
-		{
-			return false;
-		}
-
-		return true;
+		return len >= headerLen + inputLen + 1;
 	}
 
 	private int CalcFrames(byte[] movie, int headerLen, int inputLen, int playerCount)
 	{
 		var frameCount = 0;
-		FooterPointer = INVALID;
+		FooterPointer = Invalid;
 
 		for (var pointer = headerLen; pointer < movie.Length; pointer += inputLen * playerCount)
 		{
-			if (movie[pointer] == TERMINATOR)
+			if (movie[pointer] == Terminator)
 			{
 				if (pointer + 1 < movie.Length)
 				{
@@ -55,7 +50,7 @@ internal class Lmp : Parser, IParser
 			frameCount++;
 		}
 
-		return INVALID;
+		return Invalid;
 	}
 
 	private bool TryParseOldDoom(byte[] movie, ref int frames)
@@ -67,7 +62,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < MAXPLAYERS; i++)
+		for (var i = 0; i < Maxplayers; i++)
 		{
 			if (movie[3 + i] == 1)
 			{
@@ -102,7 +97,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < MAXPLAYERS; i++)
+		for (var i = 0; i < Maxplayers; i++)
 		{
 			if (movie[9 + i] == 1)
 			{
@@ -137,7 +132,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < 4; i++)
+		for (var i = 0; i < 4; i++)
 		{
 			if (movie[10 + i] == 1)
 			{
@@ -149,18 +144,19 @@ internal class Lmp : Parser, IParser
 			}
 		}
 
-		if (players > 0)
+		if (players <= 0)
 		{
-			if (movie.Length < 14 + (84 * players) + 1)
-			{
-				return false;
-			}
-
-			frames = CalcFrames(movie, 14 + (84 * players), 4, players);
-			return frames > 0;
+			return false;
 		}
 
-		return false;
+		if (movie.Length < 14 + (84 * players) + 1)
+		{
+			return false;
+		}
+
+		frames = CalcFrames(movie, 14 + (84 * players), 4, players);
+		return frames > 0;
+
 	}
 
 	private bool TryParseHeretic(byte[] movie, ref int frames)
@@ -172,7 +168,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < MAXPLAYERS; i++)
+		for (var i = 0; i < Maxplayers; i++)
 		{
 			if (movie[3 + i] == 1)
 			{
@@ -184,13 +180,14 @@ internal class Lmp : Parser, IParser
 			}
 		}
 
-		if (players > 0)
+		if (players <= 0)
 		{
-			frames = CalcFrames(movie, 7, 6, players);
-			return frames > 0;
+			return false;
 		}
 
-		return false;
+		frames = CalcFrames(movie, 7, 6, players);
+		return frames > 0;
+
 	}
 
 	private bool TryParseOldHexen(byte[] movie, ref int frames)
@@ -202,7 +199,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < MAXPLAYERS; i++)
+		for (var i = 0; i < Maxplayers; i++)
 		{
 			if (movie[3 + (i * 2)] == 1)
 			{
@@ -233,7 +230,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < MAXPLAYERS * 2; i++)
+		for (var i = 0; i < Maxplayers * 2; i++)
 		{
 			if (movie[3 + (i * 2)] == 1)
 			{
@@ -269,7 +266,7 @@ internal class Lmp : Parser, IParser
 		}
 
 		var players = 0;
-		for (int i = 0; i < MAXPLAYERS * 2; i++)
+		for (var i = 0; i < Maxplayers * 2; i++)
 		{
 			if (movie[8 + i] == 1)
 			{
@@ -308,7 +305,7 @@ internal class Lmp : Parser, IParser
 		using var br = new BinaryReader(file);
 		var movie = br.ReadBytes((int)length);
 
-		int frames = INVALID;
+		var frames = Invalid;
 		foreach (var tryParseLmp in LmpParsers)
 		{
 			if (tryParseLmp(movie, ref frames))
@@ -324,7 +321,7 @@ internal class Lmp : Parser, IParser
 
 		result.Frames = frames;
 
-		if (FooterPointer != INVALID)
+		if (FooterPointer != Invalid)
 		{
 			result.Annotations = Encoding.UTF8.GetString(movie.AsSpan(FooterPointer).ToArray())
 				.Replace('\0', ' ');

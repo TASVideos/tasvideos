@@ -24,7 +24,7 @@ internal class Fbm : Parser, IParser
 		{
 			result.StartType = MovieStartType.Savestate;
 			br.ReadBytes(16);
-			int stateLength = br.ReadInt32();
+			var stateLength = br.ReadInt32();
 			br.ReadBytes(32); // Name of the game
 			br.ReadBytes(4); // Number of frames before savestate
 			br.ReadBytes(12); // Reserved

@@ -66,13 +66,13 @@ internal class Bk2 : Parser, IParser
 				.ReadToEndAsync())
 				.LineSplit();
 
-			string platform = header.GetValueFor(Keys.Platform);
+			var platform = header.GetValueFor(Keys.Platform);
 			if (string.IsNullOrWhiteSpace(platform))
 			{
 				return Error("Could not determine the System Code");
 			}
 
-			string romHash = header.GetValueFor("SHA1");
+			var romHash = header.GetValueFor("SHA1");
 			if (string.IsNullOrEmpty(romHash))
 			{
 				romHash = header.GetValueFor("MD5");
@@ -90,7 +90,7 @@ internal class Bk2 : Parser, IParser
 				result.Hashes[hashType.Value] = romHash.ToLower();
 			}
 
-			int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
+			var rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
 			if (rerecordVal.HasValue)
 			{
 				result.RerecordCount = rerecordVal.Value;
@@ -220,7 +220,7 @@ internal class Bk2 : Parser, IParser
 				var seconds = result.CycleCount.Value / double.Parse(clockRate, CultureInfo.InvariantCulture);
 				result.FrameRateOverride = result.Frames / seconds;
 			}
-			else if (CycleBasedCores.TryGetValue(core, out int cyclesPerFrame))
+			else if (CycleBasedCores.TryGetValue(core, out var cyclesPerFrame))
 			{
 				var seconds = result.CycleCount.Value / (double)cyclesPerFrame;
 				result.FrameRateOverride = result.Frames / seconds;
@@ -230,24 +230,21 @@ internal class Bk2 : Parser, IParser
 				return Error($"Missing or invalid {Keys.ClockRate}, could not parse movie time (is {nameof(ValidClockRates)} up-to-date?)");
 			}
 		}
-		else if (core == "subneshawk")
+		else switch (core)
 		{
-			if (!vBlankCount.HasValue)
-			{
+			case "subneshawk" when !vBlankCount.HasValue:
 				return Error($"Missing {Keys.VBlankCount}, could not parse movie time");
-			}
-
-			result.Frames = vBlankCount.Value;
-		}
-		else if (core == "mame")
-		{
-			if (!vsyncAttoseconds.HasValue)
-			{
+			case "subneshawk":
+				result.Frames = vBlankCount.Value;
+				break;
+			case "mame" when !vsyncAttoseconds.HasValue:
 				return Error($"Missing {Keys.VsyncAttoseconds}, could not parse movie time");
+			case "mame":
+			{
+				const decimal attosecondsInSecond = 1000000000000000000;
+				result.FrameRateOverride = (double)(attosecondsInSecond / vsyncAttoseconds.Value);
+				break;
 			}
-
-			const decimal attosecondsInSecond = 1000000000000000000;
-			result.FrameRateOverride = (double)(attosecondsInSecond / vsyncAttoseconds.Value);
 		}
 
 		return result;
@@ -258,7 +255,7 @@ internal class Bk2 : Parser, IParser
 	private static readonly Dictionary<string, int> CycleBasedCores = new()
 	{
 		["subgbhawk"] = 4194304,
-		["gambatte"] = 2097152,
+		["gambatte"] = 2097152
 	};
 
 	private static readonly IReadOnlyList<string> ValidClockRates =
@@ -270,7 +267,7 @@ internal class Bk2 : Parser, IParser
 		"33868800", // NymaShock,
 		"1000", // DOSBox-x
 		"21477272.7272727", // SubBSNESv115+ (NTSC)
-		"21281370", // SubBSNESv115+ (PAL)
+		"21281370" // SubBSNESv115+ (PAL)
 	];
 
 	private static readonly Dictionary<string, string> BizToTasvideosSystemIds = new()

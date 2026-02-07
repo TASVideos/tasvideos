@@ -30,45 +30,48 @@ public static class TimeableExtensions
 		return TimeSpan.FromMilliseconds(Math.Round(timeable.Frames / timeable.FrameRate * 1000, MidpointRounding.AwayFromZero));
 	}
 
-	public static string ToStringWithOptionalDaysAndHours(this TimeSpan timeSpan)
+	extension(TimeSpan timeSpan)
 	{
-		if (timeSpan.Days >= 1)
+		public string ToStringWithOptionalDaysAndHours()
 		{
-			return timeSpan.ToString(@"d\:hh\:mm\:ss\.fff");
-		}
-
-		if (timeSpan.Hours >= 1)
-		{
-			return timeSpan.ToString(@"h\:mm\:ss\.fff");
-		}
-
-		if (timeSpan.TotalSeconds <= 0.001)
-		{
-			return "00:00.001";
-		}
-
-		return timeSpan.ToString(@"mm\:ss\.fff");
-	}
-
-	public static string ToRelativeString(this TimeSpan relativeTime)
-	{
-		return relativeTime.TotalSeconds switch
-		{
-			< 5 => "Now",
-			< 60 => $"{relativeTime.Seconds} seconds ago",
-			_ => relativeTime.TotalMinutes switch
+			if (timeSpan.Days >= 1)
 			{
-				< 2 => "1 minute ago",
-				< 60 => $"{relativeTime.Minutes} minutes ago",
-				_ => relativeTime.TotalHours switch
-				{
-					< 2 => "1 hour ago",
-					< 24 => $"{relativeTime.Hours} hours ago",
-					_ => relativeTime.TotalDays < 2
-						? "1 day ago"
-						: $"{relativeTime.Days} days ago"
-				}
+				return timeSpan.ToString(@"d\:hh\:mm\:ss\.fff");
 			}
-		};
+
+			if (timeSpan.Hours >= 1)
+			{
+				return timeSpan.ToString(@"h\:mm\:ss\.fff");
+			}
+
+			if (timeSpan.TotalSeconds <= 0.001)
+			{
+				return "00:00.001";
+			}
+
+			return timeSpan.ToString(@"mm\:ss\.fff");
+		}
+
+		public string ToRelativeString()
+		{
+			return timeSpan.TotalSeconds switch
+			{
+				< 5 => "Now",
+				< 60 => $"{timeSpan.Seconds} seconds ago",
+				_ => timeSpan.TotalMinutes switch
+				{
+					< 2 => "1 minute ago",
+					< 60 => $"{timeSpan.Minutes} minutes ago",
+					_ => timeSpan.TotalHours switch
+					{
+						< 2 => "1 hour ago",
+						< 24 => $"{timeSpan.Hours} hours ago",
+						_ => timeSpan.TotalDays < 2
+							? "1 day ago"
+							: $"{timeSpan.Days} days ago"
+					}
+				}
+			};
+		}
 	}
 }

@@ -107,7 +107,7 @@ internal class Lsmv : Parser, IParser
 			}
 			else
 			{
-				var parseResult = int.TryParse(line, out int rerecords);
+				var parseResult = int.TryParse(line, out var rerecords);
 				if (parseResult)
 				{
 					result.RerecordCount = rerecords;

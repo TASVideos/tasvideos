@@ -1,11 +1,9 @@
-﻿using System.Collections.Immutable;
-
-namespace TASVideos.Common;
+﻿namespace TASVideos.Common;
 
 public class ListDiff(IReadOnlyCollection<string> currentItems, ICollection<string> newItems)
 {
-	public IReadOnlyCollection<string> Added => newItems.Except(currentItems).ToImmutableArray();
-	public IReadOnlyCollection<string> Removed => currentItems.Except(newItems).ToImmutableList();
+	public IReadOnlyCollection<string> Added => [..newItems.Except(currentItems)];
+	public IReadOnlyCollection<string> Removed => [.. currentItems.Except(newItems)];
 }
 
 public static class ListDiffExtensions
