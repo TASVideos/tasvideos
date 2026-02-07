@@ -13,7 +13,7 @@ public class MoviesList(ApplicationDbContext db) : WikiViewComponent
 	public async Task<IViewComponentResult> InvokeAsync(string? platform)
 	{
 		SystemCode = platform;
-		bool isAll = string.IsNullOrWhiteSpace(SystemCode);
+		var isAll = string.IsNullOrWhiteSpace(SystemCode);
 		GameSystem? system = null;
 
 		if (!isAll)

@@ -5,56 +5,59 @@ namespace TASVideos.Extensions;
 
 public static class ReflectionExtensions
 {
-	/// <summary>
-	/// Returns the <seealso cref="DescriptionAttribute"/> of an Enum if it exists
-	/// Else it will return and empty string
-	/// If the value is null, an empty string will be returned
-	/// </summary>
-	public static string Description(this Enum? enumValue)
+	extension(Enum? enumValue)
 	{
-		var descriptionAttribute = enumValue?.GetType()
-			.GetMember(enumValue.ToString())
-			.Single()
-			.GetCustomAttribute<DescriptionAttribute>();
-
-		if (descriptionAttribute is not null)
+		/// <summary>
+		/// Returns the <seealso cref="DescriptionAttribute"/> of an Enum if it exists
+		/// Else it will return and empty string
+		/// If the value is null, an empty string will be returned
+		/// </summary>
+		public string Description()
 		{
-			return descriptionAttribute.Description;
-		}
+			var descriptionAttribute = enumValue?.GetType()
+				.GetMember(enumValue.ToString())
+				.Single()
+				.GetCustomAttribute<DescriptionAttribute>();
 
-		var displayAttribute = enumValue?.GetType()
-			.GetMember(enumValue.ToString())
-			.Single()
-			.GetCustomAttribute<DisplayAttribute>();
+			if (descriptionAttribute is not null)
+			{
+				return descriptionAttribute.Description;
+			}
 
-		if (displayAttribute is not null)
-		{
-			return displayAttribute.Description ?? "";
-		}
+			var displayAttribute = enumValue?.GetType()
+				.GetMember(enumValue.ToString())
+				.Single()
+				.GetCustomAttribute<DisplayAttribute>();
 
-		return "";
-	}
+			if (displayAttribute is not null)
+			{
+				return displayAttribute.Description ?? "";
+			}
 
-	/// <summary>
-	/// Returns the DisplayAttribute value of an Enum if exists
-	/// Else it will return the name of the enum
-	/// If the value is null, an empty string will be returned
-	/// </summary>
-	public static string EnumDisplayName(this Enum? enumValue)
-	{
-		if (enumValue is null)
-		{
 			return "";
 		}
 
-		var displayName = enumValue
-			.GetType()
-			.GetMember(enumValue.ToString())
-			.Single()
-			.GetCustomAttribute<DisplayAttribute>();
+		/// <summary>
+		/// Returns the DisplayAttribute value of an Enum if exists
+		/// Else it will return the name of the enum
+		/// If the value is null, an empty string will be returned
+		/// </summary>
+		public string EnumDisplayName()
+		{
+			if (enumValue is null)
+			{
+				return "";
+			}
 
-		return displayName is not null
-			? displayName.GetName() ?? ""
-			: enumValue.ToString();
+			var displayName = enumValue
+				.GetType()
+				.GetMember(enumValue.ToString())
+				.Single()
+				.GetCustomAttribute<DisplayAttribute>();
+
+			return displayName is not null
+				? displayName.GetName() ?? ""
+				: enumValue.ToString();
+		}
 	}
 }

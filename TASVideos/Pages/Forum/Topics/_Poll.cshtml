@@ -1,15 +1,15 @@
 ﻿@model IndexModel.TopicDisplay.PollModel
 @{
-	int totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
-	bool viewResults = Model.ViewPollResults;
-	bool canVote = false;
-	int userId = -1;
+	var totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
+	var viewResults = Model.ViewPollResults;
+	var canVote = false;
+	var userId = -1;
 	if (User.IsLoggedIn())
 	{
 		userId = User.GetUserId();
-		bool votePermission = User.Has(PermissionTo.VoteInPolls);
-		bool hasAlreadyVoted = Model.Options.Any(o => o.Voters.Any(v => v == userId));
-		bool pollIsClosed = Model.CloseDate <= DateTime.UtcNow;
+		var votePermission = User.Has(PermissionTo.VoteInPolls);
+		var hasAlreadyVoted = Model.Options.Any(o => o.Voters.Any(v => v == userId));
+		var pollIsClosed = Model.CloseDate <= DateTime.UtcNow;
 		canVote = votePermission && !hasAlreadyVoted && !pollIsClosed;
 	}
 	if (!canVote)
@@ -24,7 +24,7 @@
 		<input type="hidden" asp-for="@Model.PollId" />
 		@foreach (var option in Model.Options.OrderBy(o => o.Ordinal))
 		{
-			int percent = 0;
+			var percent = 0;
 			if (totalVotes > 0)
 			{
 				percent = (int)(option.Voters.Count / (double)totalVotes * 100);

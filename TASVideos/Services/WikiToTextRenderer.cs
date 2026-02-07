@@ -20,7 +20,7 @@ public class WikiToTextRenderer(AppSettings settings, IServiceProvider servicePr
 	{
 		public bool CheckCondition(string condition)
 		{
-			bool result = false;
+			var result = false;
 
 			if (condition.StartsWith('!'))
 			{
@@ -28,22 +28,18 @@ public class WikiToTextRenderer(AppSettings settings, IServiceProvider servicePr
 				condition = condition.TrimStart('!');
 			}
 
-			switch (condition)
+			result ^= condition switch
 			{
-				case "1":
-					result ^= true;
-					break;
-				default:
-					result ^= false;
-					break;
-			}
+				"1" => true,
+				_ => false
+			};
 
 			return result;
 		}
 
 		public async Task RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 		{
-			var componentExists = ModuleParamHelpers.TextComponents.TryGetValue(name, out Type? textComponent);
+			var componentExists = ModuleParamHelpers.TextComponents.TryGetValue(name, out var textComponent);
 			if (!componentExists)
 			{
 				return;

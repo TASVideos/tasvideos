@@ -32,12 +32,7 @@ public class ResetPasswordModel(IUserManager userManager) : BasePageModel
 		}
 
 		var user = await userManager.FindById(UserId);
-		if (user is null)
-		{
-			return Home();
-		}
-
-		if (!await userManager.VerifyUserToken(user, Code))
+		if (user is null || !await userManager.VerifyUserToken(user, Code))
 		{
 			return Home();
 		}

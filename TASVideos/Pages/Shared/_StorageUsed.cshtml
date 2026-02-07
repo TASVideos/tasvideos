@@ -4,24 +4,14 @@
 {
 	string ProgressColor(double percent)
 	{
-		if (percent > 80)
+		return percent switch
 		{
-			return "danger";
-		}
-
-		if (percent > 50)
-		{
-			return "warning";
-		}
-
-		if (percent > 10)
-		{
-			return "success";
-		}
-
-		return "info";
+			> 80 => "danger",
+			> 50 => "warning",
+			> 10 => "success",
+			_ => "info"
+		};
 	}
-
 }
 
 @{

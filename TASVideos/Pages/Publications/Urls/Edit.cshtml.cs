@@ -118,7 +118,7 @@ public class EditUrlsModel(
 		url.Type = Type;
 		url.Url = CurrentUrl;
 
-		string log = $"{logWording[0]}ed {AltTitle} {Type} URL {CurrentUrl}";
+		var log = $"{logWording[0]}ed {AltTitle} {Type} URL {CurrentUrl}";
 		await publicationMaintenanceLogger.Log(PublicationId, User.GetUserId(), log);
 		var result = await db.TrySaveChanges();
 		SetMessage(result, log, $"Unable to {logWording[1]} URL.");

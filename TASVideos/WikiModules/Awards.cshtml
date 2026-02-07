@@ -4,7 +4,7 @@
 <row>
 	@foreach (var award in Model.Assignments.Where(m => m.Type == AwardType.User).OrderBy(m => m.Description))
 	{
-		string awardPathPrefix = $"/awards/{award.Year}/{award.ShortName}_{award.Year}";
+		var awardPathPrefix = $"/awards/{award.Year}/{award.ShortName}_{award.Year}";
 		<div class="col-md-4 col-sm-6 mt-3">
 			<img alt="@award.Description"
 				 srcset="@(awardPathPrefix).png .5x,
@@ -25,7 +25,7 @@
 <row>
 	@foreach (var award in Model.Assignments.Where(m => m.Type == AwardType.Movie).OrderBy(m => m.Description))
 	{
-		string awardPathPrefix = $"/awards/{award.Year}/{award.ShortName}_{award.Year}";
+		var awardPathPrefix = $"/awards/{award.Year}/{award.ShortName}_{award.Year}";
 		<div class="col-md-4 col-sm-6 mt-3">
 			<a id="@(award.ShortName)_@(award.Year)"></a>
 			<img alt="@award.Description"

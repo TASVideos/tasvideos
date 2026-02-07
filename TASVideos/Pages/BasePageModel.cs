@@ -110,7 +110,7 @@ public class BasePageModel : PageModel
 		{
 			var uri = new UriBuilder($"https://localhost/{relativeUrl.TrimStart('/')}");
 			var returnQuery = HttpUtility.ParseQueryString(uri.Query);
-			foreach (string? key in additionalParams.AllKeys)
+			foreach (var key in additionalParams.AllKeys)
 			{
 				returnQuery[key] = additionalParams[key];
 			}

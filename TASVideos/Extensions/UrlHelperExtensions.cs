@@ -2,12 +2,15 @@
 
 public static class UrlHelperExtensions
 {
-	public static string EmailConfirmationLink(this IUrlHelper urlHelper, string userId, string code)
-		=> urlHelper.Page("/Account/ConfirmEmail", null, new { userId, code }, "https") ?? "";
+	extension(IUrlHelper urlHelper)
+	{
+		public string EmailConfirmationLink(string userId, string code)
+			=> urlHelper.Page("/Account/ConfirmEmail", null, new { userId, code }, "https") ?? "";
 
-	public static string EmailChangeConfirmationLink(this IUrlHelper urlHelper, string code)
-		=> urlHelper.Page("/Account/ConfirmEmailChange", null, new { code }, "https") ?? "";
+		public string EmailChangeConfirmationLink(string code)
+			=> urlHelper.Page("/Account/ConfirmEmailChange", null, new { code }, "https") ?? "";
 
-	public static string ResetPasswordCallbackLink(this IUrlHelper urlHelper, string userId, string code)
-		=> urlHelper.Page("/Account/ResetPassword", null, new { userId, code }, "https") ?? "";
+		public string ResetPasswordCallbackLink(string userId, string code)
+			=> urlHelper.Page("/Account/ResetPassword", null, new { userId, code }, "https") ?? "";
+	}
 }

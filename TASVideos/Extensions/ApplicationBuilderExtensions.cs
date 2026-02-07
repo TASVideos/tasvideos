@@ -60,7 +60,7 @@ public static class ApplicationBuilderExtensions
 			"https://embed.nicovideo.jp/watch/",
 			"https://www.google.com/recaptcha/",
 			"https://www.gstatic.com/recaptcha/",
-			"https://www.youtube.com",
+			"https://www.youtube.com"
 		];
 		string[] cspDirectives = [
 			"base-uri 'none'", // neutralises the `<base/>` footgun
@@ -71,7 +71,7 @@ public static class ApplicationBuilderExtensions
 			"img-src * data:", // allow hotlinking images from any domain in UGC (not great)
 			$"script-src 'self' {string.Join(' ', trustedJsHosts)}", // `<script/>`s will be blocked unless they're from one of these domains
 			"style-src 'unsafe-inline' 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // allow `<style/>`, and `<link rel="stylesheet"/>` if it's from our domain or trusted CDN
-			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
+			"upgrade-insecure-requests" // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
 		];
 		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);
 		var permissionsPolicyValue = string.Join(", ", value: [
@@ -82,7 +82,7 @@ public static class ApplicationBuilderExtensions
 			"microphone=()", // defaults to `self`
 			"publickey-credentials-get=()", // defaults to `self`
 			"screen-wake-lock=()", // defaults to `self`
-			"web-share=()", // defaults to `self`
+			"web-share=()" // defaults to `self`
 
 			// ...and that's all the non-experimental options listed on MDN as of 2024-04
 		]);

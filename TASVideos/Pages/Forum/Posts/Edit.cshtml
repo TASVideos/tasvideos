@@ -2,7 +2,7 @@
 @model EditModel
 @{
 	ViewData.SetTitle($"Editing Post in Topic: {Model.Post.TopicTitle}");
-	bool isUserEdit = Model.Post.PosterId == User.GetUserId();
+	var isUserEdit = Model.Post.PosterId == User.GetUserId();
 }
 
 @section PageTitle {

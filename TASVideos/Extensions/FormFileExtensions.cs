@@ -8,91 +8,95 @@ namespace TASVideos.Extensions;
 
 public static class FormFileExtensions
 {
-	public static bool IsZip(this IFormFile? formFile)
-		=> formFile is not null
-			&& formFile.FileName.EndsWith(".zip")
-			&& formFile.ContentType is "application/x-zip-compressed" or "application/zip";
-
-	public static bool IsCompressed(this IFormFile? formFile)
+	extension(IFormFile? formFile)
 	{
-		if (formFile is null)
+		public bool IsZip()
+			=> formFile is not null
+				&& formFile.FileName.EndsWith(".zip")
+				&& formFile.ContentType is "application/x-zip-compressed" or "application/zip";
+
+		public bool IsCompressed()
 		{
-			return false;
+			if (formFile is null)
+			{
+				return false;
+			}
+
+			var compressedExtensions = new[]
+			{
+				".zip", ".gz", ".bz2", ".lzma", ".xz"
+			};
+
+			var compressedContentTypes = new[]
+			{
+				"application/x-zip-compressed",
+				"application/zip",
+				"applicationx-gzip"
+			};
+
+			return compressedExtensions.Contains(Path.GetExtension(formFile.FileName))
+				|| compressedContentTypes.Contains(formFile.ContentType);
 		}
 
-		var compressedExtensions = new[]
+		public void AddModelErrorIfOverSizeLimit(
+			ModelStateDictionary modelState,
+			ClaimsPrincipal user,
+			[CallerArgumentExpression(nameof(formFile))] string movieFieldName = default!)
 		{
-			".zip", ".gz", ".bz2", ".lzma", ".xz"
-		};
+			if (formFile is null)
+			{
+				return;
+			}
 
-		var compressedContentTypes = new[]
-		{
-			"application/x-zip-compressed",
-			"application/zip",
-			"applicationx-gzip"
-		};
-
-		return compressedExtensions.Contains(Path.GetExtension(formFile.FileName))
-			|| compressedContentTypes.Contains(formFile.ContentType);
-	}
-
-	public static void AddModelErrorIfOverSizeLimit(
-		this IFormFile movie,
-		ModelStateDictionary modelState,
-		ClaimsPrincipal user,
-		[CallerArgumentExpression(nameof(movie))] string movieFieldName = default!)
-	{
-		if (!user.Has(PermissionTo.OverrideSubmissionConstraints) && movie.Length >= SiteGlobalConstants.MaximumMovieSize)
-		{
-			modelState.AddModelError(movieFieldName, "File is too big, are you sure this is a valid movie file?");
-		}
-	}
-
-	public static bool IsValidImage(this IFormFile? formFile)
-		=> formFile?.ContentType is "image/png" or "image/jpeg";
-
-	public static string FileExtension(this IFormFile? formFile)
-		=> Path.GetExtension(formFile?.FileName ?? "");
-
-	public static async Task<byte[]> ToBytes(this IFormFile? formFile)
-	{
-		if (formFile is null)
-		{
-			return [];
+			if (!user.Has(PermissionTo.OverrideSubmissionConstraints) && formFile.Length >= SiteGlobalConstants.MaximumMovieSize)
+			{
+				modelState.AddModelError(movieFieldName, "File is too big, are you sure this is a valid movie file?");
+			}
 		}
 
-		await using var memoryStream = new MemoryStream();
-		await formFile.CopyToAsync(memoryStream);
-		return memoryStream.ToArray();
-	}
+		public bool IsValidImage() => formFile?.ContentType is "image/png" or "image/jpeg";
+		public string FileExtension() => Path.GetExtension(formFile?.FileName ?? "");
 
-	/// <summary>
-	/// Attempts to decompress the form file from the gzip format. If decompression fails, it returns the raw bytes.
-	/// </summary>
-	public static async Task<MemoryStream> DecompressOrTakeRaw(this IFormFile? formFile)
-	{
-		if (formFile is null)
+		public async Task<byte[]> ToBytes()
 		{
-			return new MemoryStream();
+			if (formFile is null)
+			{
+				return [];
+			}
+
+			await using var memoryStream = new MemoryStream();
+			await formFile.CopyToAsync(memoryStream);
+			return memoryStream.ToArray();
 		}
 
-		var rawFileStream = new MemoryStream();
-		await formFile.CopyToAsync(rawFileStream);
+		/// <summary>
+		/// Attempts to decompress the form file from the gzip format. If decompression fails, it returns the raw bytes.
+		/// </summary>
+		public async Task<MemoryStream> DecompressOrTakeRaw()
+		{
+			if (formFile is null)
+			{
+				return new MemoryStream();
+			}
 
-		try
-		{
-			rawFileStream.Position = 0;
-			using var gzip = new GZipStream(rawFileStream, CompressionMode.Decompress, leaveOpen: true); // leaveOpen in case of an exception
-			var decompressedFileStream = new MemoryStream(); // TODO: To avoid zip bombs we should limit the max size of this MemoryStream
-			await gzip.CopyToAsync(decompressedFileStream);
-			await rawFileStream.DisposeAsync(); // manually dispose because we specified leaveOpen
-			decompressedFileStream.Position = 0;
-			return decompressedFileStream;
-		}
-		catch (InvalidDataException) // happens if the file was uploaded without compression (e.g., no JavaScript), so we continue and return the raw bytes
-		{
-			rawFileStream.Position = 0;
-			return rawFileStream;
+			var rawFileStream = new MemoryStream();
+			await formFile.CopyToAsync(rawFileStream);
+
+			try
+			{
+				rawFileStream.Position = 0;
+				using var gzip = new GZipStream(rawFileStream, CompressionMode.Decompress, leaveOpen: true); // leaveOpen in case of an exception
+				var decompressedFileStream = new MemoryStream(); // TODO: To avoid zip bombs we should limit the max size of this MemoryStream
+				await gzip.CopyToAsync(decompressedFileStream);
+				await rawFileStream.DisposeAsync(); // manually dispose because we specified leaveOpen
+				decompressedFileStream.Position = 0;
+				return decompressedFileStream;
+			}
+			catch (InvalidDataException) // happens if the file was uploaded without compression (e.g., no JavaScript), so we continue and return the raw bytes
+			{
+				rawFileStream.Position = 0;
+				return rawFileStream;
+			}
 		}
 	}
 }

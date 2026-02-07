@@ -135,7 +135,7 @@ public class EditModel(
 		{
 			await publisher.SendUserManagement(
 				$"Username {userNameChange} changed to [{user.UserName}]({{0}}) by {User.Name()}", user.UserName);
-			string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
+			var message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
 			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			await userManager.UserNameChanged(user, userNameChange);
 		}

@@ -33,19 +33,9 @@ public class WikiLink(ApplicationDbContext db, AppSettings settings) : WikiViewC
 	}
 
 	private string AbsoluteUrl(string url)
-	{
-		if (!Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsed))
-		{
-			return url;
-		}
-
-		if (!parsed.IsAbsoluteUri)
-		{
-			return $"{settings.BaseUrl}/{url.TrimStart('/')}";
-		}
-
-		return url;
-	}
+		=> !Uri.TryCreate(url, UriKind.RelativeOrAbsolute, out var parsed) || parsed.IsAbsoluteUri
+			? url
+			: $"{settings.BaseUrl}/{url.TrimStart('/')}";
 
 	private async Task GenerateLink(string href, string? displayText, string? implicitDisplayText)
 	{
@@ -101,23 +91,17 @@ public class WikiLink(ApplicationDbContext db, AppSettings settings) : WikiViewC
 	}
 
 	private async Task<string?> GetPublicationTitle(int id)
-	{
-		return (await db.Publications
+		=> (await db.Publications
 			.Select(s => new { s.Id, s.Title })
 			.SingleOrDefaultAsync(s => s.Id == id))?.Title;
-	}
 
 	private async Task<string?> GetSubmissionTitle(int id)
-	{
-		return (await db.Submissions
+		=> (await db.Submissions
 			.Select(s => new { s.Id, s.Title })
 			.SingleOrDefaultAsync(s => s.Id == id))?.Title;
-	}
 
 	private async Task<string?> GetGameTitle(int id)
-	{
-		return (await db.Games
+		=> (await db.Games
 			.Select(g => new { g.Id, g.DisplayName })
 			.SingleOrDefaultAsync(g => g.Id == id))?.DisplayName;
-	}
 }

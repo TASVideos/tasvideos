@@ -20,11 +20,11 @@ public class CustomLocalizationMiddleware(RequestDelegate next)
 
 			if (usersWithCustomLocale.Contains(context.User.Name()))
 			{
-				int userId = context.User.GetUserId();
+				var userId = context.User.GetUserId();
 
 				if (!cache.TryGetValue(CacheKeys.CustomUserLocalePrefix + userId, out CultureInfo customCultureInfo))
 				{
-					CustomCultureData? customCultureData = await db.Users
+					var customCultureData = await db.Users
 						.Where(u => u.Id == userId)
 						.Select(u => new CustomCultureData
 						{
@@ -58,7 +58,7 @@ public class CustomLocalizationMiddleware(RequestDelegate next)
 			return CultureInfo.CurrentCulture;
 		}
 
-		CultureInfo cultureInfo = (CultureInfo)CultureInfo.CurrentCulture.Clone(); // clone to make it editable
+		var cultureInfo = (CultureInfo)CultureInfo.CurrentCulture.Clone(); // clone to make it editable
 		switch (customCultureData.DateFormat)
 		{
 			default:

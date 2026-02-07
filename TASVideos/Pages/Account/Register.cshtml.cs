@@ -57,14 +57,14 @@ public class RegisterModel : BasePageModel
 		}
 
 		var encodedResponse = Request.Form["g-recaptcha-response"];
-		bool isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
+		var isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
 
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
 			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
 		}
 
-		if (!string.IsNullOrEmpty(Location) && !AvailableLocations.Any(l => l.Value == Location))
+		if (!string.IsNullOrEmpty(Location) && AvailableLocations.All(l => l.Value != Location))
 		{
 			ModelState.AddModelError(nameof(Location), "Please choose a valid option.");
 		}

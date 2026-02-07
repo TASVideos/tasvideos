@@ -172,7 +172,7 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 				.Select(t => t.Replace("limit", ""))
 				.FirstOrDefault();
 			int? limit = null;
-			if (int.TryParse(limitStr, out int l))
+			if (int.TryParse(limitStr, out var l))
 			{
 				limit = l;
 			}

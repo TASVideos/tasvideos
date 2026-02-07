@@ -11,9 +11,9 @@ public sealed class RatingString : ValidationAttribute
 			return null;
 		}
 
-		NumberFormatInfo customFormat = new CultureInfo("en-US").NumberFormat;
+		var customFormat = new CultureInfo("en-US").NumberFormat;
 		customFormat.NumberDecimalSeparator = ".";
-		var result = double.TryParse(ratingString, NumberStyles.AllowDecimalPoint, customFormat, out double ratingNumber);
+		var result = double.TryParse(ratingString, NumberStyles.AllowDecimalPoint, customFormat, out var ratingNumber);
 		if (!result)
 		{
 			customFormat.NumberDecimalSeparator = ",";

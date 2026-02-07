@@ -25,7 +25,7 @@ public class PublicationPoints(ApplicationDbContext db, IPointsService pointsSer
 
 		Pubs = [.. publications.OrderByDescending(u => u.Points)];
 
-		int counter = 0;
+		var counter = 0;
 		foreach (var pub in Pubs)
 		{
 			pub.Position = ++counter;

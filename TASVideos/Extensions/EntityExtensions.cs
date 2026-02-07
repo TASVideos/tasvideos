@@ -74,25 +74,28 @@ public static class EntityExtensions
 			})
 			.ToListAsync();
 
-	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameSystem> query)
-		=> query
-			.OrderBy(s => s.Code)
-			.Select(s => new SelectListItem
-			{
-				Text = s.Code,
-				Value = s.Code
-			})
-			.ToListAsync();
+	extension(IQueryable<GameSystem> query)
+	{
+		public Task<List<SelectListItem>> ToDropDownList()
+			=> query
+				.OrderBy(s => s.Code)
+				.Select(s => new SelectListItem
+				{
+					Text = s.Code,
+					Value = s.Code
+				})
+				.ToListAsync();
 
-	public static Task<List<SelectListItem>> ToDropDownListWithId(this IQueryable<GameSystem> query)
-		=> query
-			.OrderBy(s => s.Code)
-			.Select(s => new SelectListItem
-			{
-				Text = s.Code,
-				Value = s.Id.ToString()
-			})
-			.ToListAsync();
+		public Task<List<SelectListItem>> ToDropDownListWithId()
+			=> query
+				.OrderBy(s => s.Code)
+				.Select(s => new SelectListItem
+				{
+					Text = s.Code,
+					Value = s.Id.ToString()
+				})
+				.ToListAsync();
+	}
 
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<PublicationClass> query)
 		=> query
@@ -299,121 +302,122 @@ public static class EntityExtensions
 			})
 			.OrderBy(s => s.Text)];
 
-	public static List<SelectListItem> WithDefaultEntry(this IEnumerable<SelectListItem> items)
-		=> [.. UiDefaults.DefaultEntry, .. items];
+	extension(IEnumerable<SelectListItem> items)
+	{
+		public List<SelectListItem> WithDefaultEntry() => [.. UiDefaults.DefaultEntry, .. items];
+		public List<SelectListItem> WithAnyEntry() => [.. UiDefaults.AnyEntry, .. items];
+		public List<SelectListItem> WithCustomEntry() => [.. items, .. UiDefaults.CustomEntry];
+	}
 
-	public static List<SelectListItem> WithAnyEntry(this IEnumerable<SelectListItem> items)
-		=> [.. UiDefaults.AnyEntry, .. items];
+	extension(IQueryable<Submission> query)
+	{
+		public IQueryable<Pages.Submissions.IndexModel.SubmissionEntry> ToSubListEntry(int? userIdForVotes = null)
+			=> query.Select(s => new Pages.Submissions.IndexModel.SubmissionEntry
+			{
+				Id = s.Id,
+				System = s.System != null ? s.System!.Code : "Unknown",
+				Game = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
+				Frames = s.Frames,
+				FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,
+				Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
+				By = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName).ToList(),
+				AdditionalAuthors = s.AdditionalAuthors,
+				Date = s.CreateTimestamp,
+				Status = s.Status,
+				Judge = s.Judge != null ? s.Judge.UserName : null,
+				Publisher = s.Publisher != null ? s.Publisher.UserName : null,
+				IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null,
+				SyncedOn = s.SyncedOn,
+				Votes = s.Topic != null && s.Topic.Poll != null
+					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionYes)
+					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
+					&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionNo)
+						? new VoteCounts
+						{
+							VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
+							VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
+							VotesNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
+							UserVotedYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
+							UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
+							UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes)
+						}
+						: null
+			});
 
-	public static List<SelectListItem> WithCustomEntry(this IEnumerable<SelectListItem> items)
-		=> [.. items, .. UiDefaults.CustomEntry];
+		public IQueryable<TASVideos.Pages.Submissions.EditModel.SubmissionEdit> ToSubmissionEditModel()
+			=> query.Select(s => new TASVideos.Pages.Submissions.EditModel.SubmissionEdit
+			{
+				GameName = s.GameName ?? "",
+				GameVersion = s.SubmittedGameVersion,
+				RomName = s.RomName,
+				Goal = s.Branch,
+				Emulator = s.EmulatorVersion,
+				SubmitDate = s.CreateTimestamp,
+				Submitter = s.Submitter!.UserName,
+				Status = s.Status,
+				EncodeEmbedLink = s.EncodeEmbedLink,
+				Judge = s.Judge != null ? s.Judge.UserName : "",
+				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+				IntendedPublicationClass = s.IntendedClassId,
+				RejectionReason = s.RejectionReasonId,
+				ExternalAuthors = s.AdditionalAuthors,
+				Title = s.Title,
+				Authors = s.SubmissionAuthors
+					.OrderBy(sa => sa.Ordinal)
+					.Select(sa => sa.Author!.UserName)
+					.ToList()
+			});
 
-	public static IQueryable<Pages.Submissions.IndexModel.SubmissionEntry> ToSubListEntry(this IQueryable<Submission> query, int? userIdForVotes = null)
-		=> query.Select(s => new Pages.Submissions.IndexModel.SubmissionEntry
-		{
-			Id = s.Id,
-			System = s.System != null ? s.System!.Code : "Unknown",
-			Game = s.GameVersion != null && !string.IsNullOrWhiteSpace(s.GameVersion.TitleOverride) ? s.GameVersion.TitleOverride : s.Game != null ? s.Game.DisplayName : s.GameName,
-			Frames = s.Frames,
-			FrameRate = s.SystemFrameRateId != null ? s.SystemFrameRate!.FrameRate : 60,
-			Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
-			By = s.SubmissionAuthors.OrderBy(sa => sa.Ordinal).Select(sa => sa.Author!.UserName).ToList(),
-			AdditionalAuthors = s.AdditionalAuthors,
-			Date = s.CreateTimestamp,
-			Status = s.Status,
-			Judge = s.Judge != null ? s.Judge.UserName : null,
-			Publisher = s.Publisher != null ? s.Publisher.UserName : null,
-			IntendedClass = s.IntendedClass != null ? s.IntendedClass.Name : null,
-			SyncedOn = s.SyncedOn,
-			Votes = s.Topic != null && s.Topic.Poll != null
-				&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionYes)
-				&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh)
-				&& s.Topic.Poll.PollOptions.Any(o => o.Text == SiteGlobalConstants.PollOptionNo)
-				? new VoteCounts
-				{
-					VotesYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Count,
-					VotesMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Count,
-					VotesNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Count,
-					UserVotedYes = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionYes).Votes.Any(v => v.UserId == userIdForVotes),
-					UserVotedMeh = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionsMeh).Votes.Any(v => v.UserId == userIdForVotes),
-					UserVotedNo = s.Topic.Poll.PollOptions.Single(o => o.Text == SiteGlobalConstants.PollOptionNo).Votes.Any(v => v.UserId == userIdForVotes),
-				}
-			: null,
-		});
-
-	public static IQueryable<TASVideos.Pages.Submissions.EditModel.SubmissionEdit> ToSubmissionEditModel(this IQueryable<Submission> query)
-		=> query.Select(s => new TASVideos.Pages.Submissions.EditModel.SubmissionEdit
-		{
-			GameName = s.GameName ?? "",
-			GameVersion = s.SubmittedGameVersion,
-			RomName = s.RomName,
-			Goal = s.Branch,
-			Emulator = s.EmulatorVersion,
-			SubmitDate = s.CreateTimestamp,
-			Submitter = s.Submitter!.UserName,
-			Status = s.Status,
-			EncodeEmbedLink = s.EncodeEmbedLink,
-			Judge = s.Judge != null ? s.Judge.UserName : "",
-			Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-			IntendedPublicationClass = s.IntendedClassId,
-			RejectionReason = s.RejectionReasonId,
-			ExternalAuthors = s.AdditionalAuthors,
-			Title = s.Title,
-			Authors = s.SubmissionAuthors
-				.OrderBy(sa => sa.Ordinal)
-				.Select(sa => sa.Author!.UserName)
-				.ToList()
-		});
-
-	public static IQueryable<Pages.Submissions.ViewModel.SubmissionDisplay> ToSubmissionDisplayModel(this IQueryable<Submission> query)
-		=> query.Select(s => new Pages.Submissions.ViewModel.SubmissionDisplay
-		{
-			StartType = (MovieStartType?)s.MovieStartType,
-			SystemDisplayName = s.System!.DisplayName,
-			GameName = s.GameId != null ? s.Game!.DisplayName : null,
-			SubmittedGameName = s.GameName,
-			GameVersion = s.GameVersionId != null ? s.GameVersion!.Name : "",
-			SubmittedGameVersion = s.SubmittedGameVersion,
-			SubmittedRomName = s.RomName,
-			SubmittedBranch = s.Branch,
-			Goal = s.GameGoal != null
-				? s.GameGoal!.DisplayName
-				: null,
-			Emulator = s.EmulatorVersion,
-			FrameCount = s.Frames,
-			FrameRate = s.SystemFrameRate!.FrameRate,
-			RerecordCount = s.RerecordCount,
-			Date = s.CreateTimestamp,
-			Submitter = s.Submitter!.UserName,
-			Status = s.Status,
-			EncodeEmbedLink = s.EncodeEmbedLink,
-			Judge = s.Judge != null ? s.Judge.UserName : "",
-			Title = s.Title,
-			ClassName = s.IntendedClass != null ? s.IntendedClass.Name : "",
-			Publisher = s.Publisher != null ? s.Publisher.UserName : "",
-			SystemId = s.SystemId,
-			SystemFrameRateId = s.SystemFrameRateId,
-			GameId = s.GameId,
-			GameVersionId = s.GameVersionId,
-			RejectionReasonDisplay = s.RejectionReasonId.HasValue
-				? s.RejectionReason!.DisplayName
-				: null,
-			Authors = s.SubmissionAuthors
-				.OrderBy(sa => sa.Ordinal)
-				.Select(sa => sa.Author!.UserName)
-				.ToList(),
-			AdditionalAuthors = s.AdditionalAuthors,
-			TopicId = s.TopicId,
-			Warnings = s.Warnings,
-			CycleCount = s.CycleCount,
-			Annotations = s.Annotations,
-			GameGoalId = s.GameGoalId,
-			SyncedOn = s.SyncedOn,
-			SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null,
-			AdditionalSyncNotes = s.AdditionalSyncNotes,
-			HashType = s.HashType,
-			Hash = s.Hash
-		});
+		public IQueryable<Pages.Submissions.ViewModel.SubmissionDisplay> ToSubmissionDisplayModel()
+			=> query.Select(s => new Pages.Submissions.ViewModel.SubmissionDisplay
+			{
+				StartType = (MovieStartType?)s.MovieStartType,
+				SystemDisplayName = s.System!.DisplayName,
+				GameName = s.GameId != null ? s.Game!.DisplayName : null,
+				SubmittedGameName = s.GameName,
+				GameVersion = s.GameVersionId != null ? s.GameVersion!.Name : "",
+				SubmittedGameVersion = s.SubmittedGameVersion,
+				SubmittedRomName = s.RomName,
+				SubmittedBranch = s.Branch,
+				Goal = s.GameGoal != null
+					? s.GameGoal!.DisplayName
+					: null,
+				Emulator = s.EmulatorVersion,
+				FrameCount = s.Frames,
+				FrameRate = s.SystemFrameRate!.FrameRate,
+				RerecordCount = s.RerecordCount,
+				Date = s.CreateTimestamp,
+				Submitter = s.Submitter!.UserName,
+				Status = s.Status,
+				EncodeEmbedLink = s.EncodeEmbedLink,
+				Judge = s.Judge != null ? s.Judge.UserName : "",
+				Title = s.Title,
+				ClassName = s.IntendedClass != null ? s.IntendedClass.Name : "",
+				Publisher = s.Publisher != null ? s.Publisher.UserName : "",
+				SystemId = s.SystemId,
+				SystemFrameRateId = s.SystemFrameRateId,
+				GameId = s.GameId,
+				GameVersionId = s.GameVersionId,
+				RejectionReasonDisplay = s.RejectionReasonId.HasValue
+					? s.RejectionReason!.DisplayName
+					: null,
+				Authors = s.SubmissionAuthors
+					.OrderBy(sa => sa.Ordinal)
+					.Select(sa => sa.Author!.UserName)
+					.ToList(),
+				AdditionalAuthors = s.AdditionalAuthors,
+				TopicId = s.TopicId,
+				Warnings = s.Warnings,
+				CycleCount = s.CycleCount,
+				Annotations = s.Annotations,
+				GameGoalId = s.GameGoalId,
+				SyncedOn = s.SyncedOn,
+				SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null,
+				AdditionalSyncNotes = s.AdditionalSyncNotes,
+				HashType = s.HashType,
+				Hash = s.Hash
+			});
+	}
 
 	public static IQueryable<Pages.Publications.IndexModel.PublicationDisplay> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
 	{
@@ -486,48 +490,51 @@ public static class EntityExtensions
 			r.RoleLinks.Select(rl => rl.Link).ToList(),
 			r.UserRole.Select(ur => ur.User!.UserName).ToList()));
 
-	public static IQueryable<Pages.UserFiles.InfoModel.UserFileModel> ToUserFileModel(this IQueryable<UserFile> userFiles, bool hideComments = true)
-		=> userFiles.Select(uf => new Pages.UserFiles.InfoModel.UserFileModel
-		{
-			Id = uf.Id,
-			Class = uf.Class,
-			Title = uf.Title,
-			Description = uf.Description,
-			UploadTimestamp = uf.UploadTimestamp,
-			Author = uf.Author!.UserName,
-			AuthorUserFilesCount = uf.Author!.UserFiles.Count(auf => !auf.Hidden),
-			Downloads = uf.Downloads,
-			Hidden = uf.Hidden,
-			FileName = uf.FileName,
-			FileSizeUncompressed = uf.LogicalLength,
-			FileSizeCompressed = uf.PhysicalLength,
-			GameId = uf.GameId,
-			GameName = uf.Game != null
-				? uf.Game.DisplayName
-				: "",
-			GameSystem = uf.System != null
-				? uf.System.Code
-				: "",
-			System = uf.System != null
-				? uf.System.DisplayName
-				: "",
-			Length = uf.Length,
-			Frames = uf.Frames,
-			Rerecords = uf.Rerecords,
-			Comments = uf.Comments
-				.Select(c => new Pages.UserFiles.InfoModel.UserFileModel.Comment(c.Id, c.Text, c.CreationTimeStamp, c.UserId, c.User!.UserName))
-				.ToList(),
-			HideComments = hideComments,
-			Annotations = uf.Annotations
-		});
+	extension(IQueryable<UserFile> userFiles)
+	{
+		public IQueryable<Pages.UserFiles.InfoModel.UserFileModel> ToUserFileModel(bool hideComments = true)
+			=> userFiles.Select(uf => new Pages.UserFiles.InfoModel.UserFileModel
+			{
+				Id = uf.Id,
+				Class = uf.Class,
+				Title = uf.Title,
+				Description = uf.Description,
+				UploadTimestamp = uf.UploadTimestamp,
+				Author = uf.Author!.UserName,
+				AuthorUserFilesCount = uf.Author!.UserFiles.Count(auf => !auf.Hidden),
+				Downloads = uf.Downloads,
+				Hidden = uf.Hidden,
+				FileName = uf.FileName,
+				FileSizeUncompressed = uf.LogicalLength,
+				FileSizeCompressed = uf.PhysicalLength,
+				GameId = uf.GameId,
+				GameName = uf.Game != null
+					? uf.Game.DisplayName
+					: "",
+				GameSystem = uf.System != null
+					? uf.System.Code
+					: "",
+				System = uf.System != null
+					? uf.System.DisplayName
+					: "",
+				Length = uf.Length,
+				Frames = uf.Frames,
+				Rerecords = uf.Rerecords,
+				Comments = uf.Comments
+					.Select(c => new Pages.UserFiles.InfoModel.UserFileModel.Comment(c.Id, c.Text, c.CreationTimeStamp, c.UserId, c.User!.UserName))
+					.ToList(),
+				HideComments = hideComments,
+				Annotations = uf.Annotations
+			});
 
-	public static IQueryable<Pages.UserFiles.IndexModel.UserMovie> ToUserMovieListModel(this IQueryable<UserFile> userFiles)
-		=> userFiles.Select(uf => new Pages.UserFiles.IndexModel.UserMovie(
-			uf.Id,
-			uf.Author!.UserName,
-			uf.UploadTimestamp,
-			uf.FileName,
-			uf.Title));
+		public IQueryable<Pages.UserFiles.IndexModel.UserMovie> ToUserMovieListModel()
+			=> userFiles.Select(uf => new Pages.UserFiles.IndexModel.UserMovie(
+				uf.Id,
+				uf.Author!.UserName,
+				uf.UploadTimestamp,
+				uf.FileName,
+				uf.Title));
+	}
 
 	public static IQueryable<DisplayMiniMovie.MiniMovieModel> ToMiniMovieModel(this IQueryable<Publication> publications)
 		=> publications.Select(p => new DisplayMiniMovie.MiniMovieModel

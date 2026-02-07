@@ -97,7 +97,7 @@
 		var heading = ViewData.GetHeading();
 		int? prev = null;
 		int? next = null;
-		string fmtStr = ViewData.GetNavigationFormatStr();
+		var fmtStr = ViewData.GetNavigationFormatStr();
 		if (User.Has(PermissionTo.CatalogMovies))
 		{
 			var id = ViewData.Int("NavigationId");
@@ -108,12 +108,12 @@
 			}
 		}
 
-		var permissionsRequired = Context.GetRequiredPermissionsView() as RequirePermissionsView;
-		bool requiresPermissions = permissionsRequired is not null && permissionsRequired.Permissions.Count > 0;
+		var permissionsRequired = Context.GetRequiredPermissionsView();
+		var requiresPermissions = permissionsRequired is not null && permissionsRequired.Permissions.Count > 0;
 
 		<div class="container mb-2">
 			<h1 class="page-title card card-body d-block">
-				<a condition="prev.HasValue" href="@string.Format(fmtStr!, prev)"><i class="fa fa-arrow-left"></i></a>
+				<a condition="prev.HasValue" href="@string.Format(fmtStr, prev)"><i class="fa fa-arrow-left"></i></a>
 				@if (IsSectionDefined("PageTitle"))
 				{
 					@await RenderSectionAsync("PageTitle")
@@ -122,7 +122,7 @@
 				{
 					@heading
 				}
-				<a condition="next.HasValue" class="float-end" href="@string.Format(fmtStr!, next)"><i class="fa fa-arrow-right"></i></a>
+				<a condition="next.HasValue" class="float-end" href="@string.Format(fmtStr, next)"><i class="fa fa-arrow-right"></i></a>
 				<a condition="requiresPermissions" class="float-end text-body-secondary" data-id="permission-modal-button" href="#"><i class="fa-solid fa-shield-halved"></i></a>
 			</h1>
 		</div>

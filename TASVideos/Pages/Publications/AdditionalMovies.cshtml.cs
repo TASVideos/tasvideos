@@ -73,7 +73,7 @@ public class AdditionalMoviesModel(
 		var result = await publications.AddMovieFile(Id, AdditionalMovieFile!.FileName, DisplayName, movieFileBytes);
 		if (result.IsSuccess())
 		{
-			string log = $"Added new movie file: {DisplayName}";
+			var log = $"Added new movie file: {DisplayName}";
 			await publicationMaintenanceLogger.Log(Id, User.GetUserId(), log);
 			await publisher.SendPublicationEdit(User.Name(), Id, $"{log} | {PublicationTitle}");
 			SuccessStatusMessage(log);

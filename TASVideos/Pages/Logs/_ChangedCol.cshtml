@@ -3,26 +3,35 @@
 @using Microsoft.EntityFrameworkCore
 
 @{
-	string before = "";
-	string after = "";
+	var before = "";
+	var after = "";
 	var options = new JsonSerializerOptions { WriteIndented = true };
 }
 
-@if (Model.Kind == EntityState.Modified)
+
+@switch (Model.Kind)
 {
-	var temp = JsonSerializer.Deserialize<IndexModel.ModifiedEntry>(Model.Changed);
-	before = JsonSerializer.Serialize(temp!.Before, options);
-	after = JsonSerializer.Serialize(temp.After, options);
-}
-else if (Model.Kind == EntityState.Added)
-{
-	var temp = JsonSerializer.Deserialize<object>(Model.Changed);
-	after = JsonSerializer.Serialize(temp, options);
-}
-else if (Model.Kind == EntityState.Deleted)
-{
-	var temp = JsonSerializer.Deserialize<object>(Model.Changed);
-	before = JsonSerializer.Serialize(temp, options);
+	case EntityState.Modified:
+	{
+		var temp = JsonSerializer.Deserialize<IndexModel.ModifiedEntry>(Model.Changed);
+		before = JsonSerializer.Serialize(temp!.Before, options);
+		after = JsonSerializer.Serialize(temp.After, options);
+		break;
+	}
+
+	case EntityState.Added:
+	{
+		var temp = JsonSerializer.Deserialize<object>(Model.Changed);
+		after = JsonSerializer.Serialize(temp, options);
+		break;
+	}
+
+	case EntityState.Deleted:
+	{
+		var temp = JsonSerializer.Deserialize<object>(Model.Changed);
+		before = JsonSerializer.Serialize(temp, options);
+		break;
+	}
 }
 
 <td class="change">

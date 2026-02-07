@@ -13,9 +13,9 @@ public class MediaPosts(ApplicationDbContext db) : WikiViewComponent
 		var canSeeRestricted = UserClaimsPrincipal.Has(PermissionTo.SeeRestrictedForums);
 
 		Posts = await db.MediaPosts
-			.Where(m => canSeeRestricted || m.Type != PostType.Critical.ToString())
-			.Where(m => canSeeRestricted || m.Type != PostType.Administrative.ToString())
-			.Where(m => canSeeRestricted || m.Type != PostType.Log.ToString())
+			.Where(m => canSeeRestricted || m.Type != nameof(PostType.Critical))
+			.Where(m => canSeeRestricted || m.Type != nameof(PostType.Administrative))
+			.Where(m => canSeeRestricted || m.Type != nameof(PostType.Log))
 			.ByMostRecent()
 			.PageOf(GetPaging());
 

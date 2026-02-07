@@ -2,8 +2,8 @@
 @{
 	var isMyPage = User.GetUserId() == Model.Id;
 	ViewData.SetTitle($"Ratings for {Model.UserName}");
-	string userHasString = isMyPage ? "You have" : "User has";
-	int totalUserRatingsCountWithoutOwn = Model.UsersWithLowerRatingsCount + Model.UsersWithEqualRatingsCount + Model.UsersWithHigherRatingsCount;
+	var userHasString = isMyPage ? "You have" : "User has";
+	var totalUserRatingsCountWithoutOwn = Model.UsersWithLowerRatingsCount + Model.UsersWithEqualRatingsCount + Model.UsersWithHigherRatingsCount;
 }
 <h4>Summary</h4>
 <p>
@@ -17,7 +17,7 @@
 </p>
 <ol style="column-width: 11rem; column-count: 3;">
 	@{
-		int rank = 1;
+		var rank = 1;
 	}
 	@foreach (var topRater in Model.Summary.TopRaters)
 	{

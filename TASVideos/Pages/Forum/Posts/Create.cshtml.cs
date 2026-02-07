@@ -80,7 +80,7 @@ public class CreateModel(
 			UserPreference.Auto => WatchTopic,
 			UserPreference.Always => true,
 			UserPreference.Never => false,
-			_ => WatchTopic,
+			_ => WatchTopic
 		};
 
 		PreviousPosts = await db.ForumPosts

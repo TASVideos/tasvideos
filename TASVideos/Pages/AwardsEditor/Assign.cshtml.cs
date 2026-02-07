@@ -39,14 +39,14 @@ public class AssignModel(ApplicationDbContext db, IMediaFileUploader mediaFileUp
 			.Select(c => c.Type)
 			.SingleAsync();
 
-		if (type == AwardType.Movie && AwardToAssign.Users.Any())
+		switch (type)
 		{
-			ModelState.AddModelError("", "Cannot assign a publication award to a user.");
-		}
-
-		if (type == AwardType.User && AwardToAssign.Publications.Any())
-		{
-			ModelState.AddModelError("", "Cannot assign a user award to a publication.");
+			case AwardType.Movie when AwardToAssign.Users.Any():
+				ModelState.AddModelError("", "Cannot assign a publication award to a user.");
+				break;
+			case AwardType.User when AwardToAssign.Publications.Any():
+				ModelState.AddModelError("", "Cannot assign a user award to a publication.");
+				break;
 		}
 
 		if (!ModelState.IsValid)

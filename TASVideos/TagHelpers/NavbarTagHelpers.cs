@@ -39,7 +39,7 @@ public class NavDropdownTagHelper : NavItemBase
 
 		output.TagName = "li";
 		output.AddCssClass("nav-item dropdown");
-		string addClass = "nav-link dropdown-toggle";
+		var addClass = "nav-link dropdown-toggle";
 		if (IsActive())
 		{
 			addClass += " active";

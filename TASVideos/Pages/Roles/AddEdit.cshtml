@@ -1,7 +1,7 @@
 ﻿@page "{id?}/{handler?}"
 @model AddEditModel
 @{
-	bool canDelete = Model.Id.HasValue && User.Has(PermissionTo.DeleteRoles) && Model.IsInUse;
+	var canDelete = Model.Id.HasValue && User.Has(PermissionTo.DeleteRoles) && Model.IsInUse;
 	ViewData.SetTitle(Model.Id.HasValue ? "Modifying Role: " + Model.Role.Name : "Create a New Role");
 }
 <top-button-bar>

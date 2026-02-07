@@ -67,7 +67,7 @@ public class CreateModel(
 			UserPreference.Auto => true,
 			UserPreference.Always => true,
 			UserPreference.Never => false,
-			_ => true,
+			_ => true
 		};
 
 		BackupSubmissionDeterminator = (await forumService.GetTopicCountInForum(User.GetUserId(), ForumId)).ToString();
@@ -98,17 +98,12 @@ public class CreateModel(
 		}
 
 		var forum = await db.Forums.SingleOrDefaultAsync(f => f.Id == ForumId);
-		if (forum is null)
+		if (forum is null || forum.Restricted && !User.Has(PermissionTo.SeeRestrictedForums))
 		{
 			return NotFound();
 		}
 
-		if (forum.Restricted && !User.Has(PermissionTo.SeeRestrictedForums))
-		{
-			return NotFound();
-		}
-
-		int userId = User.GetUserId();
+		var userId = User.GetUserId();
 
 		using var dbTransaction = await db.BeginTransactionAsync();
 		var topic = db.ForumTopics.Add(new ForumTopic

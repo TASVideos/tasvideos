@@ -12,7 +12,7 @@
 
 <partial Name="_ForumHeader" />
 <div condition="Model.TotalPages > 1" class="btn-group flex-wrap" role="group">
-	@for (int iteratorPage = 1; iteratorPage <= Model.TotalPages; iteratorPage++)
+	@for (var iteratorPage = 1; iteratorPage <= Model.TotalPages; iteratorPage++)
 	{
 		<a asp-page="@ViewContext.Page()"
 		   asp-route-CurrentPage="@iteratorPage"
@@ -44,7 +44,7 @@
 					<label>Split Selected Posts</label>
 				</div>
 			</row>
-			@for (int i = 0; i < Model.Topic.Posts.Count; i++)
+			@for (var i = 0; i < Model.Topic.Posts.Count; i++)
 			{
 				<row class="align-items-center">
 					<div class="col-2 col-md-1">

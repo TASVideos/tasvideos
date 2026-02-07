@@ -60,7 +60,7 @@
 		<td>
 			@Cache.GetType().Name
 			@{
-				bool cacheWorks = TestCache();
+				var cacheWorks = TestCache();
 			}
 			<span condition="cacheWorks" class="text-success"><i class="fa fa-check"></i> Working as expected</span>
 			<span condition="!cacheWorks" class="text-danger"><i class="fa fa-exclamation"></i> Failing to cache</span>

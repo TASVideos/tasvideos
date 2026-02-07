@@ -28,7 +28,7 @@ public class StringListTagHelper : TagHelper
 		output.Attributes.Add("data-model-id", modelId);
 		output.Content.AppendHtml("<div class='string-list-container'>");
 
-		List<string> stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? [];
+		var stringList = (AspFor.Model as IEnumerable<string>)?.ToList() ?? [];
 		stringList = stringList.Where(s => !string.IsNullOrWhiteSpace(s)).ToList();
 
 		// We need at least one line to clone, todo: refactor so this doesn't force the server side to strip out empty strings
@@ -37,7 +37,7 @@ public class StringListTagHelper : TagHelper
 			stringList.Add("");
 		}
 
-		for (int i = 0; i < stringList.Count; i++)
+		for (var i = 0; i < stringList.Count; i++)
 		{
 			output.Content.AppendHtml(
 				$"""

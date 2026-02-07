@@ -15,7 +15,7 @@ public class UncatalogedTopics(ApplicationDbContext db) : WikiViewComponent
 			.Where(t => !t.Title.ToLower().Contains("wishlist"))
 			.Where(t => t.GameId == null);
 
-		int? forumId = Request.QueryStringIntValue("forumId");
+		var forumId = Request.QueryStringIntValue("forumId");
 		if (forumId.HasValue)
 		{
 			query = query.Where(t => t.ForumId == forumId.Value);

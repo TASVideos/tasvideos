@@ -54,21 +54,15 @@ public partial class WikiMarkup
 	private class StringArrayConverter : ModuleParameterTypeAdapter<IList<string>>
 	{
 		public override IList<string> Convert(string? input)
-		{
-			return (input ?? "")
+			=> [.. (input ?? "")
 				.Split(',')
 				.Where(s => !string.IsNullOrWhiteSpace(s))
-				.Select(s => s.Trim())
-				.ToList();
-		}
+				.Select(s => s.Trim())];
 	}
 
 	private class BoolConverter : ModuleParameterTypeAdapter<bool?>
 	{
-		public override bool? Convert(string? input)
-		{
-			return input is not null;
-		}
+		public override bool? Convert(string? input) => input is not null;
 	}
 
 	private class DateTimeConverter : ModuleParameterTypeAdapter<DateTime?>

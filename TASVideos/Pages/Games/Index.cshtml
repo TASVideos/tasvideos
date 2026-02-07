@@ -3,9 +3,9 @@
 @model IndexModel
 @{
 	ViewData.SetTitle($"{Model.Game.DisplayName}");
-	string wiki = LinkConstants.GameWikiPage + Model.Game.Id;
-	bool canEdit = User.CanEditWiki(wiki);
-	string? url = !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any()
+	var wiki = LinkConstants.GameWikiPage + Model.Game.Id;
+	var canEdit = User.CanEditWiki(wiki);
+	var url = !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl) || Model.Movies.Any()
 		? !string.IsNullOrWhiteSpace(Model.Game.ScreenshotUrl)
 			? Model.Game.ScreenshotUrl
 			: $"{HttpContext.Request.ToBaseUrl()}/media/{Model.Movies.First().Movie.Screenshot.Path}"
@@ -16,7 +16,7 @@
 		Image = url
 	});
 
-	if (int.TryParse(Model.Id, out int id))
+	if (int.TryParse(Model.Id, out var id))
 	{
 		ViewData.SetNavigation(id, "/{0}G");
 	}
@@ -131,7 +131,7 @@
 				   href="#tab-goal-@(goal.Id)"
                    data-bs-toggle="tab">
                     @{
-                        bool goalClash = Model.Movies.Any(m => m.TabTitleBold == goal.Name || m.TabTitleRegular == goal.Name)
+                        var goalClash = Model.Movies.Any(m => m.TabTitleBold == goal.Name || m.TabTitleRegular == goal.Name)
                             || Model.PlaygroundGoals.Any(g => g != goal && g.Name == goal.Name);
                     }
                     <span condition="@(goalClash)">@goal.GameTitle </span>

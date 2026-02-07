@@ -1,9 +1,9 @@
 ﻿@model TASVideos.Pages.Forum.Topics.IndexModel.PostEntry
 @{
-	DateTime minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysPostsCountAsActive);
-	bool isCreateActivity = Model.CreateTimestamp > minimumDate;
-	bool isEditActivity = Model.PostEditedTimestamp > minimumDate;
-	string addClass = isCreateActivity || isEditActivity ? "activity-post" : "";
+	var minimumDate = DateTime.UtcNow.AddDays(-ForumConstants.DaysPostsCountAsActive);
+	var isCreateActivity = Model.CreateTimestamp > minimumDate;
+	var isEditActivity = Model.PostEditedTimestamp > minimumDate;
+	var addClass = isCreateActivity || isEditActivity ? "activity-post" : "";
 }
 <card id="@Model.Id" class="@(Model.Highlight ? "forum-post-highlight border-warning-subtle border-2" : "border-primary-subtle") border mb-2">
 	<card-header class="px-2 py-1">

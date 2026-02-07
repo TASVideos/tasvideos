@@ -15,7 +15,7 @@ public class PostHelperTagHelper : TagHelper
 		output.TagName = "div";
 		output.AddCssClass("row");
 		output.Content.AppendHtml(
-			$"""
+			"""
 			<div class="col-12">
 				<div class="btn-group mt-1 mb-1">
 					<button type="button" class="btn btn-info btn-sm border-dark" tabindex="-1" data-fmt="[b],[/b]" data-key="b"><strong>b</strong></button>

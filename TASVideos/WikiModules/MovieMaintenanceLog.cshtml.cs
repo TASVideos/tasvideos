@@ -10,10 +10,10 @@ public class MovieMaintenanceLog(ApplicationDbContext db) : WikiViewComponent
 	public int Next { get; set; }
 	public async Task<IViewComponentResult> InvokeAsync()
 	{
-		IsSinglePub = int.TryParse(Request.Query["id"], out int publicationId);
+		IsSinglePub = int.TryParse(Request.Query["id"], out var publicationId);
 
 		const int pageSize = 50;
-		int.TryParse(Request.Query["begin"], out int begin);
+		int.TryParse(Request.Query["begin"], out var begin);
 		Next = begin + pageSize;
 
 		var query = db.PublicationMaintenanceLogs.OrderByDescending(l => l.TimeStamp).AsQueryable();

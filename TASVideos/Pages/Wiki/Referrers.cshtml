@@ -1,7 +1,7 @@
 @page
 @model ReferrersModel
 @{
-	string link = WikiHelper.ProcessLink(Model.Path ?? "");
+	var link = WikiHelper.ProcessLink(Model.Path ?? "");
 	ViewData.SetTitle($"Referrers for {link}");
 }
 

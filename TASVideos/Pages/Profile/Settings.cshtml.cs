@@ -105,7 +105,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (!string.IsNullOrEmpty(LocationCountry) && !AvailableLocations.Any(l => l.Value == LocationCountry))
+		if (!string.IsNullOrEmpty(LocationCountry) && AvailableLocations.All(l => l.Value != LocationCountry))
 		{
 			ModelState.AddModelError(nameof(LocationCountry), "Please choose a valid option.");
 		}
@@ -134,7 +134,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 
 		var user = await userManager.GetRequiredUser(User);
 
-		bool hasUserCustomLocaleChanged = user.DateFormat != DateFormat || user.TimeFormat != TimeFormat || user.DecimalFormat != DecimalFormat;
+		var hasUserCustomLocaleChanged = user.DateFormat != DateFormat || user.TimeFormat != TimeFormat || user.DecimalFormat != DecimalFormat;
 
 		user.TimeZoneId = TimeZone ?? TimeZoneInfo.Utc.Id;
 		user.PublicRatings = PublicRatings;

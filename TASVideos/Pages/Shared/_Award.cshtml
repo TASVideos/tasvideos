@@ -1,7 +1,7 @@
 ﻿@model TASVideos.Core.Services.AwardAssignmentSummary
 @{
-	string awardPathPrefix = $"/awards/{Model.Year}/{Model.ShortName}_{Model.Year}";
-	int maxHeight = ViewContext.PageGroup() is "Users" or "Profile"
+	var awardPathPrefix = $"/awards/{Model.Year}/{Model.ShortName}_{Model.Year}";
+	var maxHeight = ViewContext.PageGroup() is "Users" or "Profile"
 		? 92
 		: 48;
 }

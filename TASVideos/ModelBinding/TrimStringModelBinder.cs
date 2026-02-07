@@ -7,7 +7,7 @@ public class TrimStringModelBinder : IModelBinder
 {
 	public Task BindModelAsync(ModelBindingContext bindingContext)
 	{
-		string? value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName).FirstValue;
+		var value = bindingContext.ValueProvider.GetValue(bindingContext.ModelName).FirstValue;
 		if (!string.IsNullOrWhiteSpace(value))
 		{
 			value = value.Trim();

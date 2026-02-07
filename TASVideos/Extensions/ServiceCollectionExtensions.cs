@@ -42,182 +42,184 @@ public static class ServiceCollectionExtensions
 		new("/Wiki/Legacy/SubmitMovie", "SubmitMovie")
 	];
 
-	public static IServiceCollection AddAppSettings(this IServiceCollection services, IConfiguration configuration)
+	extension(IServiceCollection services)
 	{
-		services.Configure<AppSettings>(configuration);
-		var settings = configuration.Get<AppSettings>()!;
-		return services.AddSingleton(settings);
-	}
-
-	public static IServiceCollection AddRequestLocalization(this IServiceCollection services)
-	{
-		return services.Configure<RequestLocalizationOptions>(options =>
+		public IServiceCollection AddAppSettings(IConfiguration configuration)
 		{
-			options.DefaultRequestCulture = new RequestCulture("en-US");
-			options.SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
-		});
-	}
+			services.Configure<AppSettings>(configuration);
+			var settings = configuration.Get<AppSettings>()!;
+			return services.AddSingleton(settings);
+		}
 
-	public static IServiceCollection AddCookieConfiguration(this IServiceCollection services)
-	{
-		services.ConfigureApplicationCookie(options =>
+		public IServiceCollection AddRequestLocalization()
 		{
-			options.ExpireTimeSpan = TimeSpan.FromDays(90);
-		});
-
-		return services;
-	}
-
-	public static IServiceCollection AddGzipCompression(this IServiceCollection services, AppSettings settings)
-	{
-		if (settings.EnableGzipCompression)
-		{
-			services.Configure<GzipCompressionProviderOptions>(options =>
+			return services.Configure<RequestLocalizationOptions>(options =>
 			{
-				options.Level = CompressionLevel.Fastest;
+				options.DefaultRequestCulture = new RequestCulture("en-US");
+				options.SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 			});
-			services.AddResponseCompression(options => options.EnableForHttps = true);
 		}
 
-		return services;
-	}
-
-	public static IServiceCollection AddRazorPages(this IServiceCollection services, IHostEnvironment env)
-	{
-		if (env.IsDevelopment())
+		public IServiceCollection AddCookieConfiguration()
 		{
-			services.AddDatabaseDeveloperPageExceptionFilter();
-		}
-
-		if (env.ShouldIncludeSourceMappingComments())
-		{
-			services.AddSingleton<RazorPageActivator>();
-			services.AddSingleton<IRazorPageActivator, SelfIdentifyRazorPageActivator>();
-		}
-
-		services.AddResponseCaching();
-		var pagesResult = services
-			.AddRazorPages(options =>
+			services.ConfigureApplicationCookie(options =>
 			{
-				options.Conventions.AddPageRoute("/Wiki/Render", "{*url}");
-
-				foreach (var alias in Aliases)
-				{
-					options.Conventions.AddPageRoute(alias.Key, alias.Value);
-				}
-
-				foreach (var redirect in LegacyRedirects)
-				{
-					options.Conventions.AddPageRoute(redirect.Key, redirect.Value);
-				}
+				options.ExpireTimeSpan = TimeSpan.FromDays(90);
 			});
 
-		if (!env.IsProduction())
-		{
-			pagesResult.AddRazorRuntimeCompilation();
+			return services;
 		}
 
-		services.AddAntiforgery(options =>
+		public IServiceCollection AddGzipCompression(AppSettings settings)
 		{
-			options.Cookie.SameSite = SameSiteMode.Lax;
-		});
-
-		services.AddHttpContext();
-		services.AddMvc(options =>
-		{
-			options.ValueProviderFactories.AddDelimitedValueProviderFactory('|');
-			options.ModelBinderProviders.Insert(0, new TrimStringModelBinderProvider());
-		});
-
-		services.AddSingleton<IHtmlGenerator, OverrideHtmlGenerator>();
-		return services;
-	}
-
-	public static IServiceCollection AddServices(this IServiceCollection services)
-	{
-		foreach (var component in ModuleParamHelpers.TextComponents.Values)
-		{
-			services.AddScoped(component);
-		}
-
-		return services.AddTransient<IExternalMediaPublisher, ExternalMediaPublisher>();
-	}
-
-	public static IServiceCollection AddIdentity(this IServiceCollection services, IHostEnvironment env)
-	{
-		services.Configure<PasswordHasherOptions>(options => options.IterationCount = 720_000);
-		services.AddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User>>(); // the default would use UserClaimsPrincipalFactory<User, Role>, but like this we prevent it putting roles in the principal and thus in the identity cookie
-		services.AddIdentity<User, Role>(config =>
+			if (settings.EnableGzipCompression)
 			{
-				config.SignIn.RequireConfirmedEmail = env.IsProduction() || env.IsStaging();
-				config.Password.RequiredLength = 12;
-				config.Password.RequireDigit = false;
-				config.Password.RequireLowercase = false;
-				config.Password.RequireNonAlphanumeric = false;
-				config.Password.RequiredUniqueChars = 4;
-				config.User.RequireUniqueEmail = true;
-				config.User.AllowedUserNameCharacters += "āàâãáäéèëêíîïóôöúüûý£ŉçÑñ";
-			})
-			.AddEntityFrameworkStores<ApplicationDbContext>()
-			.AddDefaultTokenProviders();
-
-		return services;
-	}
-
-	private static IServiceCollection AddHttpContext(this IServiceCollection services)
-	{
-		return services
-			.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
-			.AddTransient(provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
-	}
-
-	public static IServiceCollection AddMetrics(this IServiceCollection services, AppSettings settings)
-	{
-		if (settings.EnableMetrics)
-		{
-			services
-				.AddOpenTelemetry()
-				.WithMetrics(builder =>
+				services.Configure<GzipCompressionProviderOptions>(options =>
 				{
-					builder.AddMeter("Microsoft.AspNetCore.Hosting")
-						.AddView("http.server.request.duration", new ExplicitBucketHistogramConfiguration
-						{
-							Boundaries = [] // disable duration histograms of endpoints, which is a LOT of data, but keep total counts
-						});
+					options.Level = CompressionLevel.Fastest;
+				});
+				services.AddResponseCompression(options => options.EnableForHttps = true);
+			}
 
-					builder.AddMeter(
-						"Microsoft.AspNetCore.Server.Kestrel",
-						"Microsoft.AspNetCore.Routing",
-						"Microsoft.AspNetCore.Diagnostics");
+			return services;
+		}
 
-					builder.AddMeter("Npgsql")
-						.AddView("db.client.commands.duration", new ExplicitBucketHistogramConfiguration
-						{
-							Boundaries = [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10]
-						})
-						.AddView("db.client.connections.create_time", new ExplicitBucketHistogramConfiguration
-						{
-							Boundaries = [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10]
-						});
+		public IServiceCollection AddRazorPages(IHostEnvironment env)
+		{
+			if (env.IsDevelopment())
+			{
+				services.AddDatabaseDeveloperPageExceptionFilter();
+			}
 
-					builder.AddMeter("TASVideos");
+			if (env.ShouldIncludeSourceMappingComments())
+			{
+				services.AddSingleton<RazorPageActivator>();
+				services.AddSingleton<IRazorPageActivator, SelfIdentifyRazorPageActivator>();
+			}
 
-					builder.AddPrometheusExporter(options =>
+			services.AddResponseCaching();
+			var pagesResult = services
+				.AddRazorPages(options =>
+				{
+					options.Conventions.AddPageRoute("/Wiki/Render", "{*url}");
+
+					foreach (var alias in Aliases)
 					{
-						options.ScrapeEndpointPath = "/Metrics";
-					});
+						options.Conventions.AddPageRoute(alias.Key, alias.Value);
+					}
+
+					foreach (var redirect in LegacyRedirects)
+					{
+						options.Conventions.AddPageRoute(redirect.Key, redirect.Value);
+					}
 				});
 
-			services.AddSingleton<ITASVideosMetrics, TASVideosMetrics>();
-		}
-		else
-		{
-			services.AddSingleton<ITASVideosMetrics, NullMetrics>();
+			if (!env.IsProduction())
+			{
+				pagesResult.AddRazorRuntimeCompilation();
+			}
+
+			services.AddAntiforgery(options =>
+			{
+				options.Cookie.SameSite = SameSiteMode.Lax;
+			});
+
+			services.AddHttpContext();
+			services.AddMvc(options =>
+			{
+				options.ValueProviderFactories.AddDelimitedValueProviderFactory('|');
+				options.ModelBinderProviders.Insert(0, new TrimStringModelBinderProvider());
+			});
+
+			services.AddSingleton<IHtmlGenerator, OverrideHtmlGenerator>();
+			return services;
 		}
 
-		return services;
+		public IServiceCollection AddServices()
+		{
+			foreach (var component in ModuleParamHelpers.TextComponents.Values)
+			{
+				services.AddScoped(component);
+			}
+
+			return services.AddTransient<IExternalMediaPublisher, ExternalMediaPublisher>();
+		}
+
+		public IServiceCollection AddIdentity(IHostEnvironment env)
+		{
+			services.Configure<PasswordHasherOptions>(options => options.IterationCount = 720_000);
+			services.AddScoped<IUserClaimsPrincipalFactory<User>, UserClaimsPrincipalFactory<User>>(); // the default would use UserClaimsPrincipalFactory<User, Role>, but like this we prevent it putting roles in the principal and thus in the identity cookie
+			services.AddIdentity<User, Role>(config =>
+				{
+					config.SignIn.RequireConfirmedEmail = env.IsProduction() || env.IsStaging();
+					config.Password.RequiredLength = 12;
+					config.Password.RequireDigit = false;
+					config.Password.RequireLowercase = false;
+					config.Password.RequireNonAlphanumeric = false;
+					config.Password.RequiredUniqueChars = 4;
+					config.User.RequireUniqueEmail = true;
+					config.User.AllowedUserNameCharacters += "āàâãáäéèëêíîïóôöúüûý£ŉçÑñ";
+				})
+				.AddEntityFrameworkStores<ApplicationDbContext>()
+				.AddDefaultTokenProviders();
+
+			return services;
+		}
+
+		private IServiceCollection AddHttpContext()
+		{
+			return services
+				.AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
+				.AddTransient(provider => provider.GetRequiredService<IHttpContextAccessor>().HttpContext!.User);
+		}
+
+		public IServiceCollection AddMetrics(AppSettings settings)
+		{
+			if (settings.EnableMetrics)
+			{
+				services
+					.AddOpenTelemetry()
+					.WithMetrics(builder =>
+					{
+						builder.AddMeter("Microsoft.AspNetCore.Hosting")
+							.AddView("http.server.request.duration", new ExplicitBucketHistogramConfiguration
+							{
+								Boundaries = [] // disable duration histograms of endpoints, which is a LOT of data, but keep total counts
+							});
+
+						builder.AddMeter(
+							"Microsoft.AspNetCore.Server.Kestrel",
+							"Microsoft.AspNetCore.Routing",
+							"Microsoft.AspNetCore.Diagnostics");
+
+						builder.AddMeter("Npgsql")
+							.AddView("db.client.commands.duration", new ExplicitBucketHistogramConfiguration
+							{
+								Boundaries = [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10]
+							})
+							.AddView("db.client.connections.create_time", new ExplicitBucketHistogramConfiguration
+							{
+								Boundaries = [0.005, 0.01, 0.025, 0.05, 0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10]
+							});
+
+						builder.AddMeter("TASVideos");
+
+						builder.AddPrometheusExporter(options =>
+						{
+							options.ScrapeEndpointPath = "/Metrics";
+						});
+					});
+
+				services.AddSingleton<ITASVideosMetrics, TASVideosMetrics>();
+			}
+			else
+			{
+				services.AddSingleton<ITASVideosMetrics, NullMetrics>();
+			}
+
+			return services;
+		}
 	}
 
-	public static bool ShouldIncludeSourceMappingComments(this IHostEnvironment env)
-		=> env.IsDevelopment();
+	public static bool ShouldIncludeSourceMappingComments(this IHostEnvironment env) => env.IsDevelopment();
 }

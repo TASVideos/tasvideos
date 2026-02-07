@@ -23,8 +23,8 @@
 @{
 	const string pagerClass = "btn btn-secondary border-dark flex-grow-0";
 	const string pagerDisabledClass = "btn btn-silver border-dark flex-grow-0";
-	bool prevDisabled = Model.PageNumber <= 1;
-	bool nextDisabled = Model.PageResults.Count <= IndexModel.PageSize && Model.PostResults.Count <= IndexModel.PageSize && Model.GameResults.Count <= IndexModel.PageSize;
+	var prevDisabled = Model.PageNumber <= 1;
+	var nextDisabled = Model.PageResults.Count <= IndexModel.PageSize && Model.PostResults.Count <= IndexModel.PageSize && Model.GameResults.Count <= IndexModel.PageSize;
 }
 
 <fullrow class="my-2 text-center">

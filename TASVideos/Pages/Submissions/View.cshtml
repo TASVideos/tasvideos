@@ -6,21 +6,21 @@
 	ViewData.SetTitle($"{Model.Submission.Title} - Submission #{Model.Id}");
 	ViewData.SetHeading($"Submission {Model.Submission.Title}");
 	ViewData.SetNavigation(Model.Id, "/{0}S");
-	bool hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
-	bool showPublicationClass = !string.IsNullOrWhiteSpace(Model.Submission.ClassName) && Model.Submission.Status != SubmissionStatus.Rejected && Model.Submission.ClassName != "Standard";
-	bool canPublish = User.Has(PermissionTo.PublishMovies)
+	var hasEncode = !string.IsNullOrWhiteSpace(Model.Submission.EncodeEmbedLink);
+	var showPublicationClass = !string.IsNullOrWhiteSpace(Model.Submission.ClassName) && Model.Submission.Status != SubmissionStatus.Rejected && Model.Submission.ClassName != "Standard";
+	var canPublish = User.Has(PermissionTo.PublishMovies)
 		&& Model.Submission.Status == SubmissionStatus.PublicationUnderway
 		&& Model.Submission.IsCataloged
 		&& (Model.Submission.Publisher == User.Name() || User.Has(PermissionTo.OverrideSubmissionConstraints))
 		&& Model.Submission.SyncedOn.HasValue;
-	string statusColor = StatusColor(Model.Submission.Status);
+	var statusColor = StatusColor(Model.Submission.Status);
 
-	bool canClaimAsJudge = User.Has(PermissionTo.JudgeSubmissions)
+	var canClaimAsJudge = User.Has(PermissionTo.JudgeSubmissions)
 		&& User.Has(PermissionTo.EditSubmissions)
 		&& Model.Submission.Status == SubmissionStatus.New
 		&& Model.Submission.Authors.All(a => a != User.Name());
 
-	bool canClaimAsPublisher = User.Has(PermissionTo.PublishMovies)
+	var canClaimAsPublisher = User.Has(PermissionTo.PublishMovies)
 		&& User.Has(PermissionTo.EditSubmissions)
 		&& Model.Submission.Status == SubmissionStatus.Accepted;
 

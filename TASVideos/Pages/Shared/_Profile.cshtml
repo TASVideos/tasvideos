@@ -1,7 +1,7 @@
 ﻿@model UserProfile
 @{
 	var lastLoggedIn = Model.LastLoggedIn ?? DateTime.UtcNow;
-	bool canViewPrivateData = User.Has(PermissionTo.ViewPrivateUserData) || Model.Id == User.GetUserId();
+	var canViewPrivateData = User.Has(PermissionTo.ViewPrivateUserData) || Model.Id == User.GetUserId();
 }
 <row>
 	<column md="6">

@@ -122,7 +122,7 @@ public class SplitModel(
 
 	private async Task<TopicSplit?> PopulatePosts()
 	{
-		TopicSplit? topicSplit = await db.ForumTopics
+		var topicSplit = await db.ForumTopics
 			.ExcludeRestricted(CanSeeRestricted)
 			.Where(t => t.Id == Id)
 			.Select(t => new TopicSplit
@@ -132,23 +132,23 @@ public class SplitModel(
 				CreateNewTopicIn = t.Forum!.Id,
 				ForumId = t.Forum.Id,
 				ForumName = t.Forum.Name,
-				PostsCount = t.ForumPosts.Count,
+				PostsCount = t.ForumPosts.Count
 			})
 			.SingleOrDefaultAsync();
 
 		if (topicSplit is not null)
 		{
-			const int PageSize = 500;
-			TotalPages = ((topicSplit!.PostsCount - 1) / PageSize) + 1;
+			const int pageSize = 500;
+			TotalPages = ((topicSplit.PostsCount - 1) / pageSize) + 1;
 
 			if (CurrentPage <= 0 || CurrentPage > TotalPages)
 			{
 				CurrentPage = TotalPages;
 			}
 
-			int leftover = topicSplit!.PostsCount % PageSize;
-			int take = CurrentPage == 1 ? leftover : PageSize;
-			int skip = CurrentPage == 1 ? 0 : leftover + (PageSize * (CurrentPage - 2));
+			var leftover = topicSplit.PostsCount % pageSize;
+			var take = CurrentPage == 1 ? leftover : pageSize;
+			var skip = CurrentPage == 1 ? 0 : leftover + (pageSize * (CurrentPage - 2));
 
 			topicSplit.Posts = await db.ForumPosts
 				.Where(fp => fp.TopicId == Id)
@@ -173,9 +173,7 @@ public class SplitModel(
 	}
 
 	private async Task PopulateAvailableForums()
-	{
-		AvailableForums = await db.Forums.ToDropdownList(CanSeeRestricted, Topic.ForumId);
-	}
+		=> AvailableForums = await db.Forums.ToDropdownList(CanSeeRestricted, Topic.ForumId);
 
 	public class TopicSplit
 	{
@@ -185,7 +183,7 @@ public class SplitModel(
 		public string Title { get; init; } = "";
 		public int ForumId { get; init; }
 		public string ForumName { get; init; } = "";
-		public int PostsCount { get; set; }
+		public int PostsCount { get; init; }
 		public List<Post> Posts { get; set; } = [];
 
 		public class Post

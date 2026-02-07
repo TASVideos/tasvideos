@@ -1,15 +1,15 @@
 @inject IPrivateMessageService PrivateMessages
 @inject ISignInManager SignInManager
 @{
-	bool isSignedIn = SignInManager.IsSignedIn(User);
-	int notificationCount = 0;
+	var isSignedIn = SignInManager.IsSignedIn(User);
+	var notificationCount = 0;
 
 	if (isSignedIn)
 	{
 		notificationCount = await PrivateMessages.GetUnreadMessageCount(User.GetUserId());
 	}
 
-	bool returnAfterLogin = Context.Request.Path != "/Account/Login" && Context.Request.Path != "/Account/Register";
+	var returnAfterLogin = Context.Request.Path != "/Account/Login" && Context.Request.Path != "/Account/Register";
 }
 <navbar class="flex-wrap justify-content-end">
 	@if (isSignedIn)

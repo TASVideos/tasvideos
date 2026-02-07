@@ -24,9 +24,9 @@ public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 						IsClass = true,
 						Name = gg.Key!.Name,
 						Link = gg.Key.Link,
-						PublicationCount = gg.Count(),
+						PublicationCount = gg.Count()
 					})
-					.ToList(),
+					.ToList()
 			})
 			.ToListAsync();
 
@@ -45,7 +45,7 @@ public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 						IsClass = false,
 						Name = gg.Key!.Name,
 						Link = gg.Key.Token ?? "",
-						PublicationCount = gg.Count(),
+						PublicationCount = gg.Count()
 					})
 					.ToList()
 			})
@@ -71,10 +71,10 @@ public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 			.OrderBy(g => g, StringComparer.InvariantCultureIgnoreCase)
 			.ToList();
 
-		int swapPosition = 0;
-		for (int i = 0; i < order.Count; i++)
+		var swapPosition = 0;
+		foreach (var o in order)
 		{
-			var index = AllGroupings.FindIndex(g => g.Equals(order[i], StringComparison.InvariantCultureIgnoreCase));
+			var index = AllGroupings.FindIndex(g => g.Equals(o, StringComparison.InvariantCultureIgnoreCase));
 			if (index != -1 && index >= swapPosition)
 			{
 				(AllGroupings[swapPosition], AllGroupings[index]) = (AllGroupings[index], AllGroupings[swapPosition]);
@@ -87,16 +87,16 @@ public class PublicationsByPlatform(ApplicationDbContext db) : WikiViewComponent
 
 	public class PlatformPublications
 	{
-		public string Platform { get; set; } = "";
-		public string PlatformCode { get; set; } = "";
-		public List<Grouping> Groupings { get; set; } = [];
+		public string Platform { get; init; } = "";
+		public string PlatformCode { get; init; } = "";
+		public List<Grouping> Groupings { get; init; } = [];
 
 		public class Grouping
 		{
-			public bool IsClass { get; set; }
-			public string Name { get; set; } = "";
-			public string Link { get; set; } = "";
-			public int PublicationCount { get; set; }
+			public bool IsClass { get; init; }
+			public string Name { get; init; } = "";
+			public string Link { get; init; } = "";
+			public int PublicationCount { get; init; }
 		}
 	}
 }

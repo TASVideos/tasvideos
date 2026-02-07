@@ -65,7 +65,7 @@ public class IndexModel(
 						ViewPollResults = ViewPollResults
 					}
 					: null,
-				TopicCreator = new PostEntry()
+				TopicCreator = new PostEntry
 				{
 					PosterName = t.Poster!.UserName,
 					PosterAvatar = t.Poster!.Avatar,
@@ -73,7 +73,7 @@ public class IndexModel(
 					PosterMood = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().PosterMood,
 					Text = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().Text,
 					EnableBbCode = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().EnableBbCode,
-					EnableHtml = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().EnableHtml,
+					EnableHtml = t.ForumPosts.OrderBy(p => p.CreateTimestamp).First().EnableHtml
 				}
 			})
 			.SingleOrDefaultAsync(t => t.Id == Id);
@@ -147,26 +147,20 @@ public class IndexModel(
 			post.PosterPlayerRank = rank;
 		}
 
-		if (Topic.Poll is not null)
-		{
-			Topic.Poll.Options = await db.ForumPollOptions
-				.ForPoll(Topic.Poll.PollId)
-				.Select(o => new TopicDisplay.PollOption(
-					o.Text,
-					o.Ordinal,
-					o.Votes
-						.Select(v => v.UserId)
-						.ToList()))
-				.ToListAsync();
-		}
+		Topic.Poll?.Options = await db.ForumPollOptions
+			.ForPoll(Topic.Poll.PollId)
+			.Select(o => new TopicDisplay.PollOption(
+				o.Text,
+				o.Ordinal,
+				o.Votes
+					.Select(v => v.UserId)
+					.ToList()))
+			.ToListAsync();
 
 		if (Search.Highlight.HasValue)
 		{
 			HighlightedPost = Topic.Posts.SingleOrDefault(p => p.Id == Search.Highlight);
-			if (HighlightedPost is not null)
-			{
-				HighlightedPost.Highlight = true;
-			}
+			HighlightedPost?.Highlight = true;
 		}
 
 		foreach (var post in Topic.Posts)

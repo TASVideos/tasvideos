@@ -50,7 +50,7 @@
 						var totalPages = (topic.Replies - 1) / ForumConstants.PostsPerPage + 1;
 						if (totalPages > 1)
 						{
-							for (int pageNumber = 1; pageNumber <= totalPages; pageNumber++)
+							for (var pageNumber = 1; pageNumber <= totalPages; pageNumber++)
 							{
 									<text>
 										<a asp-page="/Forum/Topics/Index"

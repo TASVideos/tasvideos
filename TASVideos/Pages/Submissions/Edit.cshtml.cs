@@ -193,7 +193,7 @@ public class EditModel(
 			return $"[{Id}S]({{0}}) edited by {User.Name()}";
 		}
 
-		string statusStr = newStatus.EnumDisplayName();
+		var statusStr = newStatus.EnumDisplayName();
 
 		if (previousStatus == SubmissionStatus.PublicationUnderway && newStatus == SubmissionStatus.Accepted)
 		{

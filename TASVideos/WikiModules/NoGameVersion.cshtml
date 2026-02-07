@@ -37,7 +37,7 @@
 				</ul>
 				Submissions: <span condition="!version.Subs.Any()" class="n-a">None</span><br />
 				<ul condition="@version.Subs.Any()">
-					@foreach(var sub in @version.Subs)
+					@foreach(var sub in version.Subs)
 					{
 						<li><sub-link id="@sub.Id">@sub.Title</sub-link></li>
 					}
@@ -70,14 +70,14 @@
 			<p>MD5: @version.Md5</p>
 			Publications:
 			<ul>
-				@foreach(var pub in @version.Pubs)
+				@foreach(var pub in version.Pubs)
 				{
 				<li><pub-link id="@pub.Id">@pub.Title</pub-link></li>
 				}
 			</ul>
 			Submissions:
 			<ul>
-				@foreach(var sub in @version.Subs)
+				@foreach(var sub in version.Subs)
 				{
 				<li><sub-link id="@sub.Id">@sub.Title</sub-link></li>
 				}

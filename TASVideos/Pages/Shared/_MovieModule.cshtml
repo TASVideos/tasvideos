@@ -1,5 +1,5 @@
 ﻿@model TASVideos.Pages.Publications.IndexModel.PublicationDisplay
-@inject Microsoft.AspNetCore.Http.IHttpContextAccessor Accessor
+@inject IHttpContextAccessor Accessor
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
 	var requestToken = Antiforgery.GetAndStoreTokens(Context).RequestToken;
@@ -188,14 +188,16 @@
 						@foreach (var url in Model.MirrorSiteUrls)
 						{
 							var text = System.IO.Path.GetExtension(url.Url!).Replace(".", "").ToUpper();
-							if (text == "MKV")
+							switch (text)
 							{
-								text = "High Quality " + text;
+								case "MKV":
+									text = "High Quality " + text;
+									break;
+								case "MP4":
+									text = "Compatibility " + text;
+									break;
 							}
-							else if (text == "MP4")
-							{
-								text = "Compatibility " + text;
-							}
+
 							if (!string.IsNullOrEmpty(url.DisplayName))
 							{
 								text += $" ({url.DisplayName})";

@@ -59,13 +59,13 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 	public async Task<IViewComponentResult> InvokeAsync(string? comp, int? minAge, int? minVotes, int? top)
 	{
 		comp ??= "";
-		int count = top ?? 10;
+		var count = top ?? 10;
 
 		// these are only used for rating statistics
-		int minimumVotes = minVotes ?? 1;
-		DateTime minimumAgeTime = DateTime.UtcNow.AddDays(-(minAge ?? 0));
+		var minimumVotes = minVotes ?? 1;
+		var minimumAgeTime = DateTime.UtcNow.AddDays(-(minAge ?? 0));
 
-		bool reverse = comp.StartsWith('-');
+		var reverse = comp.StartsWith('-');
 		if (reverse)
 		{
 			comp = comp[1..];
@@ -73,7 +73,7 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 
 		var comparisonMetric = ParameterList.GetValueOrDefault(comp);
 
-		IQueryable<Publication> query = db.Publications.ThatAreCurrent();
+		var query = db.Publications.ThatAreCurrent();
 		IQueryable<MovieStatisticsEntry> statQuery;
 
 		switch (comparisonMetric)
@@ -230,18 +230,11 @@ public class MovieStatistics(ApplicationDbContext db) : WikiViewComponent
 		public object Value { get; init; } = new();
 
 		public string? DisplayString()
-		{
-			if (Value is TimeSpan t)
+			=> Value switch
 			{
-				return t.ToStringWithOptionalDaysAndHours();
-			}
-
-			if (Value is double f)
-			{
-				return f.ToString(CultureInfo.CurrentCulture);
-			}
-
-			return Value.ToString();
-		}
+				TimeSpan t => t.ToStringWithOptionalDaysAndHours(),
+				double f => f.ToString(CultureInfo.CurrentCulture),
+				_ => Value.ToString()
+			};
 	}
 }

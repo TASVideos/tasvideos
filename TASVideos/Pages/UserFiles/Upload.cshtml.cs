@@ -75,7 +75,7 @@ public class UploadModel(
 			return Page();
 		}
 
-		byte[] fileData = (await UserFile.DecompressOrTakeRaw()).ToArray();
+		var fileData = (await UserFile.DecompressOrTakeRaw()).ToArray();
 
 		var (id, parseResult) = await userFiles.Upload(User.GetUserId(), new(
 			Title,

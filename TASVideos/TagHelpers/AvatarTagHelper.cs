@@ -20,7 +20,7 @@ public class AvatarTagHelper : TagHelper
 		output.TagName = "img";
 		output.Attributes.Add("loading", "lazy");
 
-		string? avatarUrl = Avatar;
+		var avatarUrl = Avatar;
 
 		if (!string.IsNullOrWhiteSpace(MoodAvatarBase))
 		{

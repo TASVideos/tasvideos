@@ -20,7 +20,7 @@ public class RequireEdit : RequireBase, IAsyncPageFilter
 			return;
 		}
 
-		string pageToEdit = "";
+		var pageToEdit = "";
 		if (context.HttpContext.Request.QueryString.Value?.Contains("path=") ?? false)
 		{
 			pageToEdit = WebUtility.UrlDecode((context.HttpContext.Request.QueryString.Value ?? "path=").Split("path=")[1]);
@@ -28,7 +28,7 @@ public class RequireEdit : RequireBase, IAsyncPageFilter
 
 		var userPerms = await GetUserPermissions(context);
 		var canEdit = WikiHelper
-			.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms, out HashSet<PermissionTo> relevantPermissions);
+			.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms, out var relevantPermissions);
 
 		if (canEdit)
 		{

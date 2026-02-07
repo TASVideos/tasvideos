@@ -21,7 +21,7 @@ public abstract class WikiViewComponent : ViewComponent
 
 	public PagingModel GetPaging()
 	{
-		string? sort = Request.QueryStringValue("Sort");
+		var sort = Request.QueryStringValue("Sort");
 		if (string.IsNullOrWhiteSpace(sort))
 		{
 			sort = DefaultSort;
