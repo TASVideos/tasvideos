@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TASVideos.Api.Endpoints;
 
 namespace TASVideos.Api;
 public static class WebApplicationExtensions

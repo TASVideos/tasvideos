@@ -1,6 +1,6 @@
 ﻿using TASVideos.Data.Entity.Game;
 
-namespace TASVideos.Api;
+namespace TASVideos.Api.Endpoints;
 
 internal static class GamesEndpoints
 {
