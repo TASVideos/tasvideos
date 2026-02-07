@@ -156,7 +156,6 @@ internal class Lmp : Parser, IParser
 
 		frames = CalcFrames(movie, 14 + (84 * players), 4, players);
 		return frames > 0;
-
 	}
 
 	private bool TryParseHeretic(byte[] movie, ref int frames)
@@ -187,7 +186,6 @@ internal class Lmp : Parser, IParser
 
 		frames = CalcFrames(movie, 7, 6, players);
 		return frames > 0;
-
 	}
 
 	private bool TryParseOldHexen(byte[] movie, ref int frames)

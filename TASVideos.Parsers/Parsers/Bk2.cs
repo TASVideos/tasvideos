@@ -230,20 +230,23 @@ internal class Bk2 : Parser, IParser
 				return Error($"Missing or invalid {Keys.ClockRate}, could not parse movie time (is {nameof(ValidClockRates)} up-to-date?)");
 			}
 		}
-		else switch (core)
+		else
 		{
-			case "subneshawk" when !vBlankCount.HasValue:
-				return Error($"Missing {Keys.VBlankCount}, could not parse movie time");
-			case "subneshawk":
-				result.Frames = vBlankCount.Value;
-				break;
-			case "mame" when !vsyncAttoseconds.HasValue:
-				return Error($"Missing {Keys.VsyncAttoseconds}, could not parse movie time");
-			case "mame":
+			switch (core)
 			{
-				const decimal attosecondsInSecond = 1000000000000000000;
-				result.FrameRateOverride = (double)(attosecondsInSecond / vsyncAttoseconds.Value);
-				break;
+				case "subneshawk" when !vBlankCount.HasValue:
+					return Error($"Missing {Keys.VBlankCount}, could not parse movie time");
+				case "subneshawk":
+					result.Frames = vBlankCount.Value;
+					break;
+				case "mame" when !vsyncAttoseconds.HasValue:
+					return Error($"Missing {Keys.VsyncAttoseconds}, could not parse movie time");
+				case "mame":
+					{
+						const decimal attosecondsInSecond = 1000000000000000000;
+						result.FrameRateOverride = (double)(attosecondsInSecond / vsyncAttoseconds.Value);
+						break;
+					}
 			}
 		}
 

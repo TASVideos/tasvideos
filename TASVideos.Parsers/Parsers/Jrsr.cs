@@ -116,6 +116,7 @@ internal class Jrsr : Parser, IParser
 									result.RerecordCount = rerecordValue;
 									break;
 								}
+
 								case Keys.StartsFromSavestate:
 									result.StartType = MovieStartType.Savestate;
 									break;
@@ -124,6 +125,7 @@ internal class Jrsr : Parser, IParser
 
 						break;
 					}
+
 					case "events":
 					{
 						// https://tasvideos.org/EmulatorResources/JPC/JRSRFormat#EventsSection
@@ -179,6 +181,7 @@ internal class Jrsr : Parser, IParser
 
 									break;
 								}
+
 								default:
 								{
 									if (JrsrSectionParser.IsSpecialEventClass(eventClass))
@@ -492,139 +495,146 @@ internal class JrsrSectionParser : IDisposable
 			{
 				// Blank lines are ignored.
 			}
-			else switch ((char)c)
+			else
 			{
-				case '!':
+				switch ((char)c)
 				{
-					// Command is expected to be "BEGIN" or "END". cc is the
-					// character that immediately follows the command.
-					var command = new StringBuilder();
-					int cc;
-					while (true)
+					case '!':
 					{
-						cc = await ReadChar();
-						if (cc == -1)
+						// Command is expected to be "BEGIN" or "END". cc is the
+						// character that immediately follows the command.
+						var command = new StringBuilder();
+						int cc;
+						while (true)
 						{
-							throw new FormatException("Unexpected end of file");
-						}
-
-						if (IsSpace((char)cc) || IsLinefeed((char)cc))
-						{
-							break;
-						}
-
-						// We are only expecting BEGIN or END here. If we read
-						// more than 5 characters without finding a space or a
-						// linefeed, it's an error.
-						if (command.Length >= 5)
-						{
-							throw new FormatException("Expected BEGIN or END after !");
-						}
-
-						command.Append((char)cc);
-					}
-
-					switch (command.ToString())
-					{
-						// Skip over the spaces that follow !BEGIN. There must
-						// be at least one.
-						case "BEGIN" when !IsSpace((char)cc):
-							throw new FormatException("Expected space after !BEGIN");
-						case "BEGIN":
-						{
-							while (true)
+							cc = await ReadChar();
+							if (cc == -1)
 							{
-								cc = await ReadChar();
-								if (cc == -1)
-								{
-									throw new FormatException("Unexpected end of file");
-								}
-
-								if (!IsSpace((char)cc))
-								{
-									break;
-								}
+								throw new FormatException("Unexpected end of file");
 							}
 
-							// The section name is everything to the end of the
-							// line, including spaces.
-							var sectionName = new StringBuilder();
-							while (true)
+							if (IsSpace((char)cc) || IsLinefeed((char)cc))
 							{
-								if (cc == -1)
-								{
-									throw new FormatException("Unexpected end of file");
-								}
-
-								if (IsLinefeed((char)cc))
-								{
-									break;
-								}
-
-								if (sectionName.Length >= _lengthLimit)
-								{
-									throw new FormatException("Section name exceeds length limit");
-								}
-
-								sectionName.Append((char)cc);
-								cc = await ReadChar();
+								break;
 							}
 
-							if (sectionName.Length == 0)
+							// We are only expecting BEGIN or END here. If we read
+							// more than 5 characters without finding a space or a
+							// linefeed, it's an error.
+							if (command.Length >= 5)
 							{
-								throw new FormatException("Expected section name after !BEGIN");
+								throw new FormatException("Expected BEGIN or END after !");
 							}
 
-							// We have found the name of the next section, and are
-							// ready to start reading the section's lines.
-							_inSection = true;
-							return sectionName.ToString();
+							command.Append((char)cc);
 						}
-						case "END" when !IsLinefeed((char)cc):
-							throw new FormatException("Expected linefeed after !END");
-						case "END" when !_inSection:
-							throw new FormatException("Expected !BEGIN before !END");
-						// The current section is ended (so now '+' at the
-						// beginning of a line is a syntax error, not a line to
-						// be skipped). We are still looking for the beginning
-						// of the next section and its section name.
-						case "END":
-							_inSection = false;
-							break;
-						default:
-							throw new FormatException("Expected BEGIN or END after !");
-					}
 
-					break;
-				}
-				case '+' when _inSection:
-				{
-					// We are looking for the next section, so skip over any
-					// lines in the current section.
-					while (true)
-					{
-						var cc = await ReadChar();
-						if (cc == -1)
+						switch (command.ToString())
 						{
-							throw new FormatException("Unexpected end of file");
+							// Skip over the spaces that follow !BEGIN. There must
+							// be at least one.
+							case "BEGIN" when !IsSpace((char)cc):
+								throw new FormatException("Expected space after !BEGIN");
+							case "BEGIN":
+							{
+								while (true)
+								{
+									cc = await ReadChar();
+									if (cc == -1)
+									{
+										throw new FormatException("Unexpected end of file");
+									}
+
+									if (!IsSpace((char)cc))
+									{
+										break;
+									}
+								}
+
+								// The section name is everything to the end of the
+								// line, including spaces.
+								var sectionName = new StringBuilder();
+								while (true)
+								{
+									if (cc == -1)
+									{
+										throw new FormatException("Unexpected end of file");
+									}
+
+									if (IsLinefeed((char)cc))
+									{
+										break;
+									}
+
+									if (sectionName.Length >= _lengthLimit)
+									{
+										throw new FormatException("Section name exceeds length limit");
+									}
+
+									sectionName.Append((char)cc);
+									cc = await ReadChar();
+								}
+
+								if (sectionName.Length == 0)
+								{
+									throw new FormatException("Expected section name after !BEGIN");
+								}
+
+								// We have found the name of the next section, and are
+								// ready to start reading the section's lines.
+								_inSection = true;
+								return sectionName.ToString();
+							}
+
+							case "END" when !IsLinefeed((char)cc):
+								throw new FormatException("Expected linefeed after !END");
+							case "END" when !_inSection:
+								throw new FormatException("Expected !BEGIN before !END");
+
+							// The current section is ended (so now '+' at the
+							// beginning of a line is a syntax error, not a line to
+							// be skipped). We are still looking for the beginning
+							// of the next section and its section name.
+							case "END":
+								_inSection = false;
+								break;
+							default:
+								throw new FormatException("Expected BEGIN or END after !");
 						}
 
-						if (IsLinefeed((char)cc))
-						{
-							break;
-						}
+						break;
 					}
 
-					break;
-				}
-				default:
-				{
-					if (!_inSection)
+					case '+' when _inSection:
 					{
-						throw new FormatException("Expected !BEGIN");
+						// We are looking for the next section, so skip over any
+						// lines in the current section.
+						while (true)
+						{
+							var cc = await ReadChar();
+							if (cc == -1)
+							{
+								throw new FormatException("Unexpected end of file");
+							}
+
+							if (IsLinefeed((char)cc))
+							{
+								break;
+							}
+						}
+
+						break;
 					}
 
-					throw new FormatException("Expected !END");
+					default:
+					{
+						if (!_inSection)
+						{
+							throw new FormatException("Expected !BEGIN");
+						}
+
+						throw new FormatException("Expected !END");
+					}
 				}
 			}
 		}
@@ -759,60 +769,65 @@ internal class JrsrSectionParser : IDisposable
 					token.Append(c);
 				}
 			}
-			else switch (c)
+			else
 			{
-				case '(':
+				switch (c)
 				{
-					if (depth == 0)
+					case '(':
 					{
-						// This left parenthesis terminates the current token
-						// and begins a new token.
-						if (token.Length > 0)
+						if (depth == 0)
 						{
-							yield return token.ToString();
-							token.Clear();
+							// This left parenthesis terminates the current token
+							// and begins a new token.
+							if (token.Length > 0)
+							{
+								yield return token.ToString();
+								token.Clear();
+							}
 						}
-					}
-					else
-					{
-						// This left parenthesis is itself enclosed within
-						// parentheses and counts as part of the token.
-						token.Append(c);
+						else
+						{
+							// This left parenthesis is itself enclosed within
+							// parentheses and counts as part of the token.
+							token.Append(c);
+						}
+
+						depth = checked(depth + 1);
+						break;
 					}
 
-					depth = checked(depth + 1);
-					break;
-				}
-				case ')' when depth == 0:
-					throw new FormatException("Unmatched ')'");
-				case ')':
-				{
-					if (depth == 1)
+					case ')' when depth == 0:
+						throw new FormatException("Unmatched ')'");
+					case ')':
 					{
-						// This right parenthesis terminates the current token,
-						// which was begun by a left parenthesis.
-						if (token.Length > 0)
+						if (depth == 1)
 						{
-							yield return token.ToString();
-							token.Clear();
+							// This right parenthesis terminates the current token,
+							// which was begun by a left parenthesis.
+							if (token.Length > 0)
+							{
+								yield return token.ToString();
+								token.Clear();
+							}
 						}
-					}
-					else
-					{
-						// This right parenthesis is itself enclosed within
-						// parentheses and counts as part of the token.
-						token.Append(c);
+						else
+						{
+							// This right parenthesis is itself enclosed within
+							// parentheses and counts as part of the token.
+							token.Append(c);
+						}
+
+						depth -= 1;
+						break;
 					}
 
-					depth -= 1;
-					break;
+					case '\\':
+						escaped = true;
+						break;
+					default:
+						token.Append(c);
+						break;
 				}
-				case '\\':
-					escaped = true;
-					break;
-				default:
-					token.Append(c);
-					break;
 			}
 		}
 
