@@ -13,9 +13,11 @@ public class ForumTopicWatch
 
 public static class ForumTopicWatchQueryableExtensions
 {
-	public static IQueryable<ForumTopicWatch> ExcludeRestricted(this IQueryable<ForumTopicWatch> query, bool seeRestricted)
-		=> query.Where(f => seeRestricted || !f.ForumTopic!.Forum!.Restricted);
+	extension(IQueryable<ForumTopicWatch> query)
+	{
+		public IQueryable<ForumTopicWatch> ExcludeRestricted(bool seeRestricted)
+			=> query.Where(f => seeRestricted || !f.ForumTopic!.Forum!.Restricted);
 
-	public static IQueryable<ForumTopicWatch> ForUser(this IQueryable<ForumTopicWatch> query, int userId)
-		=> query.Where(pr => pr.UserId == userId);
+		public IQueryable<ForumTopicWatch> ForUser(int userId) => query.Where(pr => pr.UserId == userId);
+	}
 }

@@ -4,50 +4,50 @@ namespace TASVideos;
 
 public static class ClaimsPrincipalExtensions
 {
-	public static bool IsLoggedIn(this ClaimsPrincipal? user)
-		=> user?.Identity?.IsAuthenticated ?? false;
-
-	public static string Name(this ClaimsPrincipal? user)
-		=> user?.Identity?.Name ?? "";
-
-	public static int GetUserId(this ClaimsPrincipal? user)
-		=> user is null || !user.IsLoggedIn()
-			? -1
-			: int.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "-1");
-
-	public static IReadOnlyCollection<PermissionTo> Permissions(this ClaimsPrincipal? user)
-		=> user is null || !user.IsLoggedIn()
-			? []
-			: user.Claims.Permissions();
-
-	public static bool Has(this ClaimsPrincipal? user, PermissionTo permission)
-		=> user.Permissions().Contains(permission);
-
-	public static bool HasAny(this ClaimsPrincipal? user, IEnumerable<PermissionTo> permissions)
+	extension(ClaimsPrincipal? user)
 	{
-		var userPermissions = user?.Claims.Permissions() ?? [];
-		return permissions.Any(permission => userPermissions.Contains(permission));
-	}
+		public bool IsLoggedIn() => user?.Identity?.IsAuthenticated ?? false;
 
-	public static void ReplacePermissionClaims(this ClaimsPrincipal? user, IEnumerable<Claim> permissions)
-	{
-		if (user is null || !user.IsLoggedIn())
+		public string Name() => user?.Identity?.Name ?? "";
+
+		public int GetUserId()
+			=> user is null || !user.IsLoggedIn()
+				? -1
+				: int.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "-1");
+
+		public IReadOnlyCollection<PermissionTo> Permissions()
+			=> user is null || !user.IsLoggedIn()
+				? []
+				: user.Claims.Permissions();
+
+		public bool Has(PermissionTo permission) => user.Permissions().Contains(permission);
+
+		public bool HasAny(IEnumerable<PermissionTo> permissions)
 		{
-			return;
+			var userPermissions = user?.Claims.Permissions() ?? [];
+			return permissions.Any(permission => userPermissions.Contains(permission));
 		}
 
-		if (user.Identity is not ClaimsIdentity ci)
+		public void ReplacePermissionClaims(IEnumerable<Claim> permissions)
 		{
-			return;
-		}
+			if (user is null || !user.IsLoggedIn())
+			{
+				return;
+			}
 
-		foreach (var claim in user.Claims
-			.ThatArePermissions()
-			.ToList())
-		{
-			ci.RemoveClaim(claim);
-		}
+			if (user.Identity is not ClaimsIdentity ci)
+			{
+				return;
+			}
 
-		ci.AddClaims(permissions);
+			foreach (var claim in user.Claims
+						.ThatArePermissions()
+						.ToList())
+			{
+				ci.RemoveClaim(claim);
+			}
+
+			ci.AddClaims(permissions);
+		}
 	}
 }

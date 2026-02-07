@@ -20,12 +20,15 @@ public class GameSystemFrameRate : BaseEntity
 
 public static class GameSystemFrameRateExtensions
 {
-	public static IQueryable<GameSystemFrameRate> ForSystem(this IQueryable<GameSystemFrameRate> query, int systemId)
-		=> query.Where(sf => sf.GameSystemId == systemId);
+	extension(IQueryable<GameSystemFrameRate> query)
+	{
+		public IQueryable<GameSystemFrameRate> ForSystem(int systemId)
+			=> query.Where(sf => sf.GameSystemId == systemId);
 
-	public static IQueryable<GameSystemFrameRate> ForRegion(this IQueryable<GameSystemFrameRate> query, string region)
-		=> query.Where(sf => sf.RegionCode == region);
+		public IQueryable<GameSystemFrameRate> ForRegion(string region)
+			=> query.Where(sf => sf.RegionCode == region);
 
-	public static IQueryable<GameSystemFrameRate> ThatAreCurrent(this IQueryable<GameSystemFrameRate> query)
-		=> query.Where(sf => !sf.Obsolete);
+		public IQueryable<GameSystemFrameRate> ThatAreCurrent()
+			=> query.Where(sf => !sf.Obsolete);
+	}
 }

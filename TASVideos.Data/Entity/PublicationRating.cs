@@ -13,14 +13,17 @@ public class PublicationRating
 
 public static class PublicationRatingExtensions
 {
-	public static IQueryable<PublicationRating> ForPublication(this IQueryable<PublicationRating> query, int publicationId)
-		=> query.Where(pr => pr.PublicationId == publicationId);
+	extension(IQueryable<PublicationRating> query)
+	{
+		public IQueryable<PublicationRating> ForPublication(int publicationId)
+			=> query.Where(pr => pr.PublicationId == publicationId);
 
-	public static IQueryable<PublicationRating> ForUser(this IQueryable<PublicationRating> query, int userId)
-		=> query.Where(pr => pr.UserId == userId);
+		public IQueryable<PublicationRating> ForUser(int userId)
+			=> query.Where(pr => pr.UserId == userId);
 
-	public static IQueryable<PublicationRating> IncludeObsolete(this IQueryable<PublicationRating> query, bool includeObsolete)
-		=> !includeObsolete
-			? query.Where(pr => pr.Publication!.ObsoletedById == null)
-			: query;
+		public IQueryable<PublicationRating> IncludeObsolete(bool includeObsolete)
+			=> !includeObsolete
+				? query.Where(pr => pr.Publication!.ObsoletedById == null)
+				: query;
+	}
 }

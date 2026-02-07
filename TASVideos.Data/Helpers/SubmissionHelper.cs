@@ -50,7 +50,7 @@ public static class SubmissionHelper
 		}
 
 		var numberText = link.AsSpan(0, link.Length - 1);
-		if (int.TryParse(numberText, out int id))
+		if (int.TryParse(numberText, out var id))
 		{
 			return id;
 		}
@@ -67,7 +67,7 @@ public static class SubmissionHelper
 		}
 
 		var numberText = link.AsSpan(prefix.Length, link.Length - prefix.Length);
-		if (int.TryParse(numberText, out int id))
+		if (int.TryParse(numberText, out var id))
 		{
 			return id;
 		}

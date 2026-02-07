@@ -34,87 +34,84 @@ public class WikiPage : BaseEntity, ISoftDeletable
 
 public static class WikiQueryableExtensions
 {
-	public static IQueryable<WikiPage> ThatAreCurrent(this IQueryable<WikiPage> list)
-		=> list.Where(wp => wp.ChildId == null);
-
-	public static IQueryable<WikiPage> ThatAreNotCurrent(this IQueryable<WikiPage> list)
-		=> list.Where(wp => wp.ChildId != null);
-
-	/// <summary>
-	/// Filters to pages at a specific indentation level
-	/// Foo = 1
-	/// Foo/Bar = 2
-	/// Foo/Bar/Baz = 3
-	/// </summary>
-	public static IQueryable<WikiPage> ForPageLevel(this IQueryable<WikiPage> query, int indentationLevel)
+	/// <param name="list">The query to filter.</param>
+	extension(IQueryable<WikiPage> list)
 	{
-		int slashCount = indentationLevel - 1;
-		return query.Where(wp => Regex.IsMatch(wp.PageName, $"^[^\\/]+(\\/[^\\/]+){{{slashCount}}}$"));
-	}
+		public IQueryable<WikiPage> ThatAreCurrent() => list.Where(wp => wp.ChildId == null);
 
-	public static IQueryable<WikiPage> ForPage(this IQueryable<WikiPage> query, string pageName)
-		=> query.Where(w => w.PageName == pageName);
+		public IQueryable<WikiPage> ThatAreNotCurrent() => list.Where(wp => wp.ChildId != null);
 
-	public static IQueryable<WikiPage> Revision(this IQueryable<WikiPage> query, string pageName, int revision)
-		=> query.Where(w => w.PageName == pageName && w.Revision == revision);
-
-	public static IQueryable<WikiPage> ExcludingMinorEdits(this IQueryable<WikiPage> query)
-		=> query.Where(w => !w.MinorEdit);
-
-	public static IQueryable<WikiPage> CreatedBy(this IQueryable<WikiPage> query, string userName)
-		=> query.Where(t => t.Author!.UserName == userName);
-
-	/// <summary>
-	/// Filters the list of wiki pages to only pages that are nest beneath the given page.
-	/// If no pageName is provided, then a master list of subpages is provided
-	/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo.
-	/// </summary>
-	/// <param name="query">The query to filter.</param>
-	/// <seealso cref="WikiPage"/>
-	/// <param name="pageName">The name of the page to get Subpages from.</param>
-	public static IQueryable<WikiPage> ThatAreSubpagesOf(this IQueryable<WikiPage> query, string? pageName)
-	{
-		pageName = (pageName ?? "").Trim('/');
-		query = query
-			.ThatAreNotDeleted()
-			.ThatAreCurrent()
-			.Where(wp => wp.PageName != pageName);
-
-		if (!string.IsNullOrWhiteSpace(pageName))
+		/// <summary>
+		/// Filters to pages at a specific indentation level
+		/// Foo = 1
+		/// Foo/Bar = 2
+		/// Foo/Bar/Baz = 3
+		/// </summary>
+		public IQueryable<WikiPage> ForPageLevel(int indentationLevel)
 		{
-			query = query.Where(wp => wp.PageName.StartsWith(pageName + "/"));
+			var slashCount = indentationLevel - 1;
+			return list.Where(wp => Regex.IsMatch(wp.PageName, $@"^[^\/]+(\/[^\/]+){{{slashCount}}}$"));
 		}
 
-		return query;
-	}
+		public IQueryable<WikiPage> ForPage(string pageName) => list.Where(w => w.PageName == pageName);
 
-	/// <summary>
-	/// Filters the list of wiki pages to only pages that are parents of the given page
-	/// ex: /Foo is a parent of /Foo/Bar
-	/// ex: /Foo and /Foo/Bar are parents of /Foo/Bar/Baz.
-	/// </summary>
-	/// <seealso cref="WikiPage"/>
-	/// <param name="query">The query to filter.</param>
-	/// <param name="pageName">The name of the page to get parent pages from.</param>
-	public static IQueryable<WikiPage> ThatAreParentsOf(this IQueryable<WikiPage> query, string? pageName)
-	{
-		pageName = (pageName ?? "").Trim('/');
-		if (string.IsNullOrWhiteSpace(pageName)
-			|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
+		public IQueryable<WikiPage> Revision(string pageName, int revision)
+			=> list.Where(w => w.PageName == pageName && w.Revision == revision);
+
+		public IQueryable<WikiPage> ExcludingMinorEdits() => list.Where(w => !w.MinorEdit);
+
+		public IQueryable<WikiPage> CreatedBy(string userName) => list.Where(t => t.Author!.UserName == userName);
+
+		/// <summary>
+		/// Filters the list of wiki pages to only pages that are nest beneath the given page.
+		/// If no pageName is provided, then a master list of subpages is provided
+		/// ex: /Foo/Bar, /Foo/Bar2 and /Foo/Bar/Baz are all subpages of /Foo.
+		/// </summary>
+		/// <seealso cref="WikiPage"/>
+		/// <param name="pageName">The name of the page to get Subpages from.</param>
+		public IQueryable<WikiPage> ThatAreSubpagesOf(string? pageName)
 		{
-			return Enumerable.Empty<WikiPage>().AsQueryable();
+			pageName = (pageName ?? "").Trim('/');
+			list = list
+				.ThatAreNotDeleted()
+				.ThatAreCurrent()
+				.Where(wp => wp.PageName != pageName);
+
+			if (!string.IsNullOrWhiteSpace(pageName))
+			{
+				list = list.Where(wp => wp.PageName.StartsWith(pageName + "/"));
+			}
+
+			return list;
 		}
 
-		return query
-			.ThatAreNotDeleted()
-			.ThatAreCurrent()
-			.Where(wp => wp.PageName != pageName)
-			.Where(wp => pageName.StartsWith(wp.PageName + "/"));
+		/// <summary>
+		/// Filters the list of wiki pages to only pages that are parents of the given page
+		/// ex: /Foo is a parent of /Foo/Bar
+		/// ex: /Foo and /Foo/Bar are parents of /Foo/Bar/Baz.
+		/// </summary>
+		/// <seealso cref="WikiPage"/>
+		/// <param name="pageName">The name of the page to get parent pages from.</param>
+		public IQueryable<WikiPage> ThatAreParentsOf(string? pageName)
+		{
+			pageName = (pageName ?? "").Trim('/');
+			if (string.IsNullOrWhiteSpace(pageName)
+				|| !pageName.Contains('/')) // Easy optimization, pages without a / have no parents
+			{
+				return Enumerable.Empty<WikiPage>().AsQueryable();
+			}
+
+			return list
+				.ThatAreNotDeleted()
+				.ThatAreCurrent()
+				.Where(wp => wp.PageName != pageName)
+				.Where(wp => pageName.StartsWith(wp.PageName + "/"));
+		}
+
+		public IQueryable<WikiPage> WebSearch(string searchTerms)
+			=> list.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerms)));
+
+		public IOrderedQueryable<WikiPage> ByWebRanking(string searchTerms)
+			=> list.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(searchTerms)));
 	}
-
-	public static IQueryable<WikiPage> WebSearch(this IQueryable<WikiPage> query, string searchTerms)
-		=> query.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerms)));
-
-	public static IOrderedQueryable<WikiPage> ByWebRanking(this IQueryable<WikiPage> query, string searchTerms)
-		=> query.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(searchTerms)));
 }

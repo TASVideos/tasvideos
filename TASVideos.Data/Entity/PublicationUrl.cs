@@ -21,32 +21,31 @@ public class PublicationUrl : BaseEntity
 
 public static class PublicationUrlExtensions
 {
-	public static void AddMirror(this ICollection<PublicationUrl> urls, string url)
+	extension(ICollection<PublicationUrl> urls)
 	{
-		urls.Add(new PublicationUrl
+		public void AddMirror(string url)
 		{
-			Url = url,
-			Type = PublicationUrlType.Mirror
-		});
-	}
+			urls.Add(new PublicationUrl
+			{
+				Url = url,
+				Type = PublicationUrlType.Mirror
+			});
+		}
 
-	public static void AddStreaming(this ICollection<PublicationUrl> urls, string url, string? displayName)
-	{
-		urls.Add(new PublicationUrl
+		public void AddStreaming(string url, string? displayName)
 		{
-			Url = url,
-			DisplayName = displayName.NullIfWhitespace(),
-			Type = PublicationUrlType.Streaming
-		});
+			urls.Add(new PublicationUrl
+			{
+				Url = url,
+				DisplayName = displayName.NullIfWhitespace(),
+				Type = PublicationUrlType.Streaming
+			});
+		}
 	}
 
 	public static IQueryable<PublicationUrl> ThatAreStreaming(this IQueryable<PublicationUrl> urls)
-	{
-		return urls.Where(u => u.Type == PublicationUrlType.Streaming);
-	}
+		=> urls.Where(u => u.Type == PublicationUrlType.Streaming);
 
 	public static IEnumerable<PublicationUrl> ThatAreStreaming(this IEnumerable<PublicationUrl> urls)
-	{
-		return urls.Where(u => u.Type == PublicationUrlType.Streaming);
-	}
+		=> urls.Where(u => u.Type == PublicationUrlType.Streaming);
 }

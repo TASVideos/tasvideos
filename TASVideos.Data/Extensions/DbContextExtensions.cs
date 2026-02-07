@@ -2,10 +2,13 @@
 
 public static class DbContextExtensions
 {
-	public static void ExtendTimeoutForSearch(this DbContext db)
+	extension(DbContext db)
 	{
-		db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
-	}
+		public void ExtendTimeoutForSearch()
+		{
+			db.Database.SetCommandTimeout(TimeSpan.FromSeconds(30));
+		}
 
-	public static bool HasFullTextSearch(this DbContext db) => db.Database.IsNpgsql();
+		public bool HasFullTextSearch() => db.Database.IsNpgsql();
+	}
 }

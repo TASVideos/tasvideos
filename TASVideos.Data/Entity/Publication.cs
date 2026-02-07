@@ -114,7 +114,7 @@ public class Publication : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
-		string goal = GameGoal!.DisplayName;
+		var goal = GameGoal!.DisplayName;
 		if (goal == "baseline")
 		{
 			goal = "";
@@ -128,136 +128,135 @@ public class Publication : BaseEntity, ITimeable
 				+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}"
 				+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}";
 		}
-		else
-		{
-			return
-				$"{System.Code} {gameName}"
-				+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
-				+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
-				+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
-		}
+
+		return
+			$"{System.Code} {gameName}"
+			+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "")
+			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
+			+ $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
 	}
 }
 
 public static class PublicationExtensions
 {
-	public static IQueryable<Publication> ThatAreCurrent(this IQueryable<Publication> query)
-		=> query.Where(p => p.ObsoletedById == null);
+	extension(IQueryable<Publication> query)
+	{
+		public IQueryable<Publication> ThatAreCurrent() => query.Where(p => p.ObsoletedById == null);
+
+		public IQueryable<Publication> ThatAreObsolete() => query.Where(p => p.ObsoletedById != null);
+
+		public IQueryable<Publication> ForYearRange(int before, int after)
+			=> query
+				.Where(p => p.CreateTimestamp.Year < before)
+				.Where(p => p.CreateTimestamp.Year >= after);
+
+		public IQueryable<Publication> ForDateRange(DateTime before, DateTime after)
+			=> query
+				.Where(p => p.CreateTimestamp < before)
+				.Where(p => p.CreateTimestamp >= after);
+
+		public IQueryable<Publication> ThatHaveBeenPublishedBy(int userId)
+			=> query.Where(p => p.Submission!.PublisherId == userId);
+
+		public IQueryable<Publication> ForAuthor(int userId)
+			=> query.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId));
+
+		public IQueryable<Publication> FilterByTokens(IPublicationTokens tokens)
+		{
+			if (tokens.MovieIds.Any())
+			{
+				return query.Where(p => tokens.MovieIds.Contains(p.Id)).OrderBy(p => p.Id);
+			}
+
+			var query1 = query;
+			if (tokens.SystemCodes.Any())
+			{
+				query1 = query1.Where(p => tokens.SystemCodes.Contains(p.System!.Code));
+			}
+
+			if (tokens.Games.Any())
+			{
+				query1 = query1.Where(p => tokens.Games.Contains(p.GameId));
+			}
+
+			if (tokens.GameGroups.Any())
+			{
+				query1 = query1.Where(p => p.Game!.GameGroups.Any(gg => tokens.GameGroups.Contains(gg.GameGroupId)));
+			}
+
+			if (tokens.Classes.Any())
+			{
+				query1 = query1.Where(p => tokens.Classes.Contains(p.PublicationClass!.Name));
+			}
+
+			if (tokens.OnlyObsoleted)
+			{
+				query1 = query1.ThatAreObsolete();
+			}
+			else if (!tokens.ShowObsoleted)
+			{
+				query1 = query1.ThatAreCurrent();
+			}
+
+			if (tokens.Years.Any())
+			{
+				query1 = query1.Where(p => tokens.Years.Contains(p.CreateTimestamp.Year));
+			}
+
+			if (tokens.Tags.Any())
+			{
+				query1 = query1.Where(p => p.PublicationTags.Any(t => tokens.Tags.Contains(t.Tag!.Code)));
+			}
+
+			if (tokens.Genres.Any())
+			{
+				query1 = query1.Where(p => p.Game!.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre!.DisplayName)));
+			}
+
+			if (tokens.Flags.Any())
+			{
+				query1 = query1.Where(p => p.PublicationFlags.Any(f => tokens.Flags.Contains(f.Flag!.Token)));
+			}
+
+			if (tokens.Authors.Any())
+			{
+				query1 = query1.Where(p => p.Authors.Select(a => a.UserId).Any(a => tokens.Authors.Contains(a)));
+			}
+
+			IOrderedQueryable<Publication> orderedQuery;
+			if (!string.IsNullOrEmpty(tokens.SortBy))
+			{
+				orderedQuery = tokens.SortBy switch
+				{
+					"v" => query1.OrderBy(p => p.CreateTimestamp),
+					"u" => query1.OrderByDescending(p => p.CreateTimestamp),
+					"s" => query1.OrderBy(p => p.Frames / (p.SystemFrameRate == null ? 60 : p.SystemFrameRate.FrameRate)),
+					"l" => query1.OrderByDescending(p => p.Frames / (p.SystemFrameRate == null ? 60 : p.SystemFrameRate.FrameRate)),
+					_ => query1
+						.OrderBy(p => p.System!.Code)
+						.ThenBy(p => p.Game!.DisplayName)
+				};
+			}
+			else
+			{
+				orderedQuery = query1
+					.OrderBy(p => p.System!.Code)
+					.ThenBy(p => p.Game!.DisplayName);
+			}
+
+			query1 = orderedQuery.ThenBy(p => p.Id);
+
+			if (tokens.Limit.HasValue)
+			{
+				query1 = query1.Take(tokens.Limit.Value);
+			}
+
+			return query1;
+		}
+	}
 
 	public static IEnumerable<Publication> ThatAreCurrent(this IEnumerable<Publication> query)
 		=> query.Where(p => p.ObsoletedById == null);
-
-	public static IQueryable<Publication> ThatAreObsolete(this IQueryable<Publication> query)
-		=> query.Where(p => p.ObsoletedById != null);
-
-	public static IQueryable<Publication> ForYearRange(this IQueryable<Publication> query, int before, int after)
-		=> query
-			.Where(p => p.CreateTimestamp.Year < before)
-			.Where(p => p.CreateTimestamp.Year >= after);
-
-	public static IQueryable<Publication> ForDateRange(this IQueryable<Publication> query, DateTime before, DateTime after)
-		=> query
-			.Where(p => p.CreateTimestamp < before)
-			.Where(p => p.CreateTimestamp >= after);
-
-	public static IQueryable<Publication> ThatHaveBeenPublishedBy(this IQueryable<Publication> query, int userId)
-		=> query.Where(p => p.Submission!.PublisherId == userId);
-
-	public static IQueryable<Publication> ForAuthor(this IQueryable<Publication> query, int userId)
-		=> query.Where(p => p.Authors.Select(pa => pa.UserId).Contains(userId));
-
-	public static IQueryable<Publication> FilterByTokens(this IQueryable<Publication> publications, IPublicationTokens tokens)
-	{
-		if (tokens.MovieIds.Any())
-		{
-			return publications.Where(p => tokens.MovieIds.Contains(p.Id)).OrderBy(p => p.Id);
-		}
-
-		var query = publications;
-		if (tokens.SystemCodes.Any())
-		{
-			query = query.Where(p => tokens.SystemCodes.Contains(p.System!.Code));
-		}
-
-		if (tokens.Games.Any())
-		{
-			query = query.Where(p => tokens.Games.Contains(p.GameId));
-		}
-
-		if (tokens.GameGroups.Any())
-		{
-			query = query.Where(p => p.Game!.GameGroups.Any(gg => tokens.GameGroups.Contains(gg.GameGroupId)));
-		}
-
-		if (tokens.Classes.Any())
-		{
-			query = query.Where(p => tokens.Classes.Contains(p.PublicationClass!.Name));
-		}
-
-		if (tokens.OnlyObsoleted)
-		{
-			query = query.ThatAreObsolete();
-		}
-		else if (!tokens.ShowObsoleted)
-		{
-			query = query.ThatAreCurrent();
-		}
-
-		if (tokens.Years.Any())
-		{
-			query = query.Where(p => tokens.Years.Contains(p.CreateTimestamp.Year));
-		}
-
-		if (tokens.Tags.Any())
-		{
-			query = query.Where(p => p.PublicationTags.Any(t => tokens.Tags.Contains(t.Tag!.Code)));
-		}
-
-		if (tokens.Genres.Any())
-		{
-			query = query.Where(p => p.Game!.GameGenres.Any(gg => tokens.Genres.Contains(gg.Genre!.DisplayName)));
-		}
-
-		if (tokens.Flags.Any())
-		{
-			query = query.Where(p => p.PublicationFlags.Any(f => tokens.Flags.Contains(f.Flag!.Token)));
-		}
-
-		if (tokens.Authors.Any())
-		{
-			query = query.Where(p => p.Authors.Select(a => a.UserId).Any(a => tokens.Authors.Contains(a)));
-		}
-
-		IOrderedQueryable<Publication> orderedQuery;
-		if (!string.IsNullOrEmpty(tokens.SortBy))
-		{
-			orderedQuery = tokens.SortBy switch
-			{
-				"v" => query.OrderBy(p => p.CreateTimestamp),
-				"u" => query.OrderByDescending(p => p.CreateTimestamp),
-				"s" => query.OrderBy(p => p.Frames / (p.SystemFrameRate == null ? 60 : p.SystemFrameRate.FrameRate)),
-				"l" => query.OrderByDescending(p => p.Frames / (p.SystemFrameRate == null ? 60 : p.SystemFrameRate.FrameRate)),
-				_ => query
-					.OrderBy(p => p.System!.Code)
-					.ThenBy(p => p.Game!.DisplayName)
-			};
-		}
-		else
-		{
-			orderedQuery = query
-				.OrderBy(p => p.System!.Code)
-				.ThenBy(p => p.Game!.DisplayName);
-		}
-
-		query = orderedQuery.ThenBy(p => p.Id);
-
-		if (tokens.Limit.HasValue)
-		{
-			query = query.Take(tokens.Limit.Value);
-		}
-
-		return query;
-	}
 
 	public static IQueryable<Publication> IncludeTitleTables(this DbSet<Publication> query)
 		=> query

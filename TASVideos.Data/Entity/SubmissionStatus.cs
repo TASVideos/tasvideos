@@ -35,29 +35,32 @@ public enum SubmissionStatus
 
 public static class SubmissionStatusExtensions
 {
-	public static bool CanBeJudged(this SubmissionStatus status)
-		=> status is SubmissionStatus.New
-			or SubmissionStatus.Delayed
-			or SubmissionStatus.NeedsMoreInfo
-			or SubmissionStatus.JudgingUnderWay;
+	extension(SubmissionStatus status)
+	{
+		public bool CanBeJudged()
+			=> status is SubmissionStatus.New
+				or SubmissionStatus.Delayed
+				or SubmissionStatus.NeedsMoreInfo
+				or SubmissionStatus.JudgingUnderWay;
 
-	public static bool IsWorkInProgress(this SubmissionStatus status)
-		=> status is SubmissionStatus.New
-			or SubmissionStatus.Delayed
-			or SubmissionStatus.NeedsMoreInfo
-			or SubmissionStatus.JudgingUnderWay
-			or SubmissionStatus.Accepted
-			or SubmissionStatus.PublicationUnderway;
+		public bool IsWorkInProgress()
+			=> status is SubmissionStatus.New
+				or SubmissionStatus.Delayed
+				or SubmissionStatus.NeedsMoreInfo
+				or SubmissionStatus.JudgingUnderWay
+				or SubmissionStatus.Accepted
+				or SubmissionStatus.PublicationUnderway;
 
-	public static bool IsJudgeDecision(this SubmissionStatus status)
-		=> status is SubmissionStatus.Accepted
-			or SubmissionStatus.Rejected
-			or SubmissionStatus.Cancelled
-			or SubmissionStatus.Delayed
-			or SubmissionStatus.NeedsMoreInfo
-			or SubmissionStatus.Playground;
+		public bool IsJudgeDecision()
+			=> status is SubmissionStatus.Accepted
+				or SubmissionStatus.Rejected
+				or SubmissionStatus.Cancelled
+				or SubmissionStatus.Delayed
+				or SubmissionStatus.NeedsMoreInfo
+				or SubmissionStatus.Playground;
 
-	public static bool IsGrueFood(this SubmissionStatus status)
-		=> status is SubmissionStatus.Rejected
-			or SubmissionStatus.Cancelled;
+		public bool IsGrueFood()
+			=> status is SubmissionStatus.Rejected
+				or SubmissionStatus.Cancelled;
+	}
 }

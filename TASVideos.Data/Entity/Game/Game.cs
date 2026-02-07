@@ -32,39 +32,40 @@ public class Game : BaseEntity
 
 public static class GameExtensions
 {
-	public static IQueryable<Game> ForGroup(this IQueryable<Game> query, int gameGroupId)
-		=> query.Where(g => g.GameGroups.Any(gg => gg.GameGroupId == gameGroupId));
-
-	public static IQueryable<Game> ForSystem(this IQueryable<Game> query, int systemId)
-		=> query.Where(g => g.GameVersions.Count == 0 || g.GameVersions.Any(r => r.SystemId == systemId));
-
-	public static IQueryable<Game> ForSystemCode(this IQueryable<Game> query, string? code)
-		=> !string.IsNullOrWhiteSpace(code)
-			? query.Where(g => g.GameVersions.Count == 0 || g.GameVersions.Any(r => r.System!.Code == code))
-			: query;
-
-	public static IQueryable<Game> ForSystemCodes(this IQueryable<Game> query, ICollection<string> codes)
+	extension(IQueryable<Game> query)
 	{
-		return codes.Any()
-			? query.Where(g => g.GameVersions.Select(r => r.System!.Code).Any(c => codes.Contains(c)))
-			: query;
+		public IQueryable<Game> ForGroup(int gameGroupId)
+			=> query.Where(g => g.GameGroups.Any(gg => gg.GameGroupId == gameGroupId));
+
+		public IQueryable<Game> ForSystem(int systemId)
+			=> query.Where(g => g.GameVersions.Count == 0 || g.GameVersions.Any(r => r.SystemId == systemId));
+
+		public IQueryable<Game> ForSystemCode(string? code)
+			=> !string.IsNullOrWhiteSpace(code)
+				? query.Where(g => g.GameVersions.Count == 0 || g.GameVersions.Any(r => r.System!.Code == code))
+				: query;
+
+		public IQueryable<Game> ForSystemCodes(ICollection<string> codes)
+			=> codes.Any()
+				? query.Where(g => g.GameVersions.Select(r => r.System!.Code).Any(c => codes.Contains(c)))
+				: query;
+
+		public IQueryable<Game> ForGenre(string? genre)
+			=> !string.IsNullOrWhiteSpace(genre)
+				? query.Where(g => g.GameGenres.Any(gg => gg.Genre!.DisplayName == genre))
+				: query;
+
+		public IQueryable<Game> ForGroup(string? group)
+			=> !string.IsNullOrWhiteSpace(group)
+				? query.Where(g => g.GameGroups.Any(gg => gg.GameGroup!.Name == group))
+				: query;
+
+		public IQueryable<Game> WebSearch(string searchTerms)
+			=> query.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", searchTerms)));
+
+		public IOrderedQueryable<Game> ByWebRanking(string searchTerms)
+			=> query.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ")).ToStripped().Rank(EF.Functions.WebSearchToTsQuery("simple", searchTerms), NpgsqlTsRankingNormalization.DivideByLength));
 	}
-
-	public static IQueryable<Game> ForGenre(this IQueryable<Game> query, string? genre)
-		=> !string.IsNullOrWhiteSpace(genre)
-			? query.Where(g => g.GameGenres.Any(gg => gg.Genre!.DisplayName == genre))
-			: query;
-
-	public static IQueryable<Game> ForGroup(this IQueryable<Game> query, string? group)
-		=> !string.IsNullOrWhiteSpace(group)
-			? query.Where(g => g.GameGroups.Any(gg => gg.GameGroup!.Name == group))
-			: query;
-
-	public static IQueryable<Game> WebSearch(this IQueryable<Game> query, string searchTerms)
-		=> query.Where(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ") + " || " + g.Aliases + " || " + g.Abbreviation).Matches(EF.Functions.WebSearchToTsQuery("simple", searchTerms)));
-
-	public static IOrderedQueryable<Game> ByWebRanking(this IQueryable<Game> query, string searchTerms)
-		=> query.OrderByDescending(g => EF.Functions.ToTsVector("simple", g.DisplayName.Replace("/", " ")).ToStripped().Rank(EF.Functions.WebSearchToTsQuery("simple", searchTerms), NpgsqlTsRankingNormalization.DivideByLength));
 
 	public static void SetGenres(this ICollection<GameGenre> genres, IEnumerable<int> genreIds)
 	{

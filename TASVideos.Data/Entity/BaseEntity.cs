@@ -19,12 +19,11 @@ public class BaseEntity : ITrackable
 
 public static class TrackableQueryableExtensions
 {
-	public static IQueryable<T> OldestToNewest<T>(this IQueryable<T> query)
-		where T : ITrackable => query.OrderBy(t => t.CreateTimestamp);
-
-	public static IQueryable<T> ByMostRecent<T>(this IQueryable<T> query)
-		where T : ITrackable => query.OrderByDescending(t => t.CreateTimestamp);
-
-	public static IQueryable<T> Since<T>(this IQueryable<T> query, DateTime target)
-		where T : ITrackable => query.Where(t => t.CreateTimestamp >= target);
+	extension<T>(IQueryable<T> query)
+		where T : ITrackable
+	{
+		public IQueryable<T> OldestToNewest() => query.OrderBy(t => t.CreateTimestamp);
+		public IQueryable<T> ByMostRecent() => query.OrderByDescending(t => t.CreateTimestamp);
+		public IQueryable<T> Since(DateTime target) => query.Where(t => t.CreateTimestamp >= target);
+	}
 }

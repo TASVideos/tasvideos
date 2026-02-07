@@ -124,7 +124,7 @@ public class Submission : BaseEntity, ITimeable
 			gameName = GameVersion.TitleOverride;
 		}
 
-		string? goal = GameGoal?.DisplayName;
+		var goal = GameGoal?.DisplayName;
 		goal = goal switch
 		{
 			null => Branch,
@@ -166,69 +166,76 @@ public static class SubmissionExtensions
 		SyncedOn: not null
 	};
 
-	public static IQueryable<Submission> FilterBy(this IQueryable<Submission> query, ISubmissionFilter criteria)
+	extension(IQueryable<Submission> query)
 	{
-		if (!string.IsNullOrWhiteSpace(criteria.User))
+		public IQueryable<Submission> FilterBy(ISubmissionFilter criteria)
 		{
-			query = query.Where(s => s.SubmissionAuthors.Any(sa => sa.Author!.UserName == criteria.User)
-				|| s.Submitter != null && s.Submitter.UserName == criteria.User);
+			if (!string.IsNullOrWhiteSpace(criteria.User))
+			{
+				query = query.Where(s => s.SubmissionAuthors.Any(sa => sa.Author!.UserName == criteria.User)
+					|| s.Submitter != null && s.Submitter.UserName == criteria.User);
+			}
+
+			if (criteria.Years.Any())
+			{
+				query = query.Where(p => criteria.Years.Contains(p.CreateTimestamp.Year));
+			}
+
+			if (criteria.Statuses.Any())
+			{
+				query = query.Where(s => criteria.Statuses.Contains(s.Status));
+			}
+
+			if (criteria.Systems.Any())
+			{
+				query = query.Where(s => s.System != null && criteria.Systems.Contains(s.System.Code));
+			}
+
+			if (criteria.GameIds.Any())
+			{
+				query = query.Where(s => criteria.GameIds.Contains(s.GameId ?? 0));
+			}
+
+			if (criteria.StartType.HasValue)
+			{
+				query = query.Where(s => s.MovieStartType == criteria.StartType);
+			}
+
+			if (criteria.ShowVerified.HasValue)
+			{
+				query = criteria.ShowVerified.Value
+					? query.ThatAreVerified()
+					: query.ThatAreUnverified();
+			}
+
+			return query;
 		}
 
-		if (criteria.Years.Any())
-		{
-			query = query.Where(p => criteria.Years.Contains(p.CreateTimestamp.Year));
-		}
+		public IQueryable<Submission> ThatAreActive()
+			=> query.Where(s => s.Status != SubmissionStatus.Published
+				&& s.Status != SubmissionStatus.Playground
+				&& s.Status != SubmissionStatus.Cancelled
+				&& s.Status != SubmissionStatus.Rejected);
 
-		if (criteria.Statuses.Any())
-		{
-			query = query.Where(s => criteria.Statuses.Contains(s.Status));
-		}
+		public IQueryable<Submission> ThatAreInActive()
+			=> query.Where(s => s.Status == SubmissionStatus.Published
+				|| s.Status == SubmissionStatus.Playground
+				|| s.Status == SubmissionStatus.Cancelled
+				|| s.Status == SubmissionStatus.Rejected);
 
-		if (criteria.Systems.Any())
-		{
-			query = query.Where(s => s.System != null && criteria.Systems.Contains(s.System.Code));
-		}
+		public IQueryable<Submission> ThatAreRejected()
+			=> query.Where(s => s.Status == SubmissionStatus.Rejected);
 
-		if (criteria.GameIds.Any())
-		{
-			query = query.Where(s => criteria.GameIds.Contains(s.GameId ?? 0));
-		}
+		public IQueryable<Submission> ThatHaveBeenJudgedBy(string userName)
+			=> query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
 
-		if (criteria.StartType.HasValue)
-		{
-			query = query.Where(s => s.MovieStartType == criteria.StartType);
-		}
+		public IQueryable<Submission> ForAuthor(int userId)
+			=> query.Where(p => p.SubmissionAuthors.Select(pa => pa.UserId).Contains(userId));
 
-		if (criteria.ShowVerified.HasValue)
-		{
-			query = criteria.ShowVerified.Value
-				? query.ThatAreVerified()
-				: query.ThatAreUnverified();
-		}
+		public IQueryable<Submission> ThatAreVerified() => query.Where(s => s.SyncedOn.HasValue);
 
-		return query;
+		public IQueryable<Submission> ThatAreUnverified() => query.Where(s => !s.SyncedOn.HasValue);
 	}
-
-	public static IQueryable<Submission> ThatAreActive(this IQueryable<Submission> query)
-		=> query.Where(s => s.Status != SubmissionStatus.Published
-			&& s.Status != SubmissionStatus.Playground
-			&& s.Status != SubmissionStatus.Cancelled
-			&& s.Status != SubmissionStatus.Rejected);
-
-	public static IQueryable<Submission> ThatAreInActive(this IQueryable<Submission> query)
-		=> query.Where(s => s.Status == SubmissionStatus.Published
-			|| s.Status == SubmissionStatus.Playground
-			|| s.Status == SubmissionStatus.Cancelled
-			|| s.Status == SubmissionStatus.Rejected);
-
-	public static IQueryable<Submission> ThatAreRejected(this IQueryable<Submission> query)
-		=> query.Where(s => s.Status == SubmissionStatus.Rejected);
-
-	public static IQueryable<Submission> ThatHaveBeenJudgedBy(this IQueryable<Submission> query, string userName)
-		=> query.Where(s => s.JudgeId.HasValue && s.Judge!.UserName == userName);
-
-	public static IQueryable<Submission> ForAuthor(this IQueryable<Submission> submissions, int userId)
-		=> submissions.Where(p => p.SubmissionAuthors.Select(pa => pa.UserId).Contains(userId));
 
 	/// <summary>
 	/// Includes all the necessary sub-tables in order to generate a title
@@ -243,10 +250,4 @@ public static class SubmissionExtensions
 			.Include(s => s.GameVersion)
 			.Include(s => s.GameGoal)
 			.Include(gg => gg.GameGoal);
-
-	public static IQueryable<Submission> ThatAreVerified(this IQueryable<Submission> query)
-		=> query.Where(s => s.SyncedOn.HasValue);
-
-	public static IQueryable<Submission> ThatAreUnverified(this IQueryable<Submission> query)
-		=> query.Where(s => !s.SyncedOn.HasValue);
 }

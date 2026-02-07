@@ -38,12 +38,13 @@ public class ForumTopic : BaseEntity
 
 public static class ForumTopicQueryableExtensions
 {
-	public static IQueryable<ForumTopic> ExcludeRestricted(this IQueryable<ForumTopic> query, bool seeRestricted)
-		=> seeRestricted ? query : query.Where(f => !f.Forum!.Restricted);
+	extension(IQueryable<ForumTopic> query)
+	{
+		public IQueryable<ForumTopic> ExcludeRestricted(bool seeRestricted)
+			=> seeRestricted ? query : query.Where(f => !f.Forum!.Restricted);
 
-	public static IQueryable<ForumTopic> ForForum(this IQueryable<ForumTopic> query, int forumId)
-		=> query.Where(t => t.ForumId == forumId);
+		public IQueryable<ForumTopic> ForForum(int forumId) => query.Where(t => t.ForumId == forumId);
 
-	public static IQueryable<ForumTopic> ForGame(this IQueryable<ForumTopic> query, int gameId)
-		=> query.Where(t => t.GameId == gameId);
+		public IQueryable<ForumTopic> ForGame(int gameId) => query.Where(t => t.GameId == gameId);
+	}
 }

@@ -43,9 +43,12 @@ public class Role : IdentityRole<int>, ITrackable
 
 public static class RoleExtensions
 {
-	public static IQueryable<Role> ThatCanBeAssignedBy(this IQueryable<Role> query, IEnumerable<PermissionTo> permissions)
-		=> query.Where(r => r.RolePermission
+	extension(IQueryable<Role> query)
+	{
+		public IQueryable<Role> ThatCanBeAssignedBy(IEnumerable<PermissionTo> permissions)
+			=> query.Where(r => r.RolePermission
 				.All(rp => permissions.Contains(rp.PermissionId)));
 
-	public static IQueryable<Role> ThatAreDefault(this IQueryable<Role> query) => query.Where(r => r.IsDefault);
+		public IQueryable<Role> ThatAreDefault() => query.Where(r => r.IsDefault);
+	}
 }

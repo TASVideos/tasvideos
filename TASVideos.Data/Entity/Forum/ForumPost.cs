@@ -35,15 +35,17 @@ public class ForumPost : BaseEntity
 
 public static class ForumPostQueryableExtensions
 {
-	public static IQueryable<ForumPost> ExcludeRestricted(this IQueryable<ForumPost> query, bool seeRestricted)
-		=> query.Where(f => seeRestricted || !f.Topic!.Forum!.Restricted);
+	extension(IQueryable<ForumPost> query)
+	{
+		public IQueryable<ForumPost> ExcludeRestricted(bool seeRestricted)
+			=> query.Where(f => seeRestricted || !f.Topic!.Forum!.Restricted);
 
-	public static IQueryable<ForumPost> ForTopic(this IQueryable<ForumPost> query, int topicId)
-		=> query.Where(p => p.TopicId == topicId);
+		public IQueryable<ForumPost> ForTopic(int topicId) => query.Where(p => p.TopicId == topicId);
 
-	public static IQueryable<ForumPost> WebSearch(this IQueryable<ForumPost> query, string searchTerms)
-		=> query.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerms)));
+		public IQueryable<ForumPost> WebSearch(string searchTerms)
+			=> query.Where(w => w.SearchVector.Matches(EF.Functions.WebSearchToTsQuery(searchTerms)));
 
-	public static IOrderedQueryable<ForumPost> ByWebRanking(this IQueryable<ForumPost> query, string searchTerms)
-		=> query.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(searchTerms)));
+		public IOrderedQueryable<ForumPost> ByWebRanking(string searchTerms)
+			=> query.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(searchTerms)));
+	}
 }

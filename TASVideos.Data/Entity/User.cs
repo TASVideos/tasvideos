@@ -177,53 +177,51 @@ public enum UserDecimalFormat
 
 public static class UserExtensions
 {
-	public static async Task<bool> Exists(this IQueryable<User> query, string userName)
-		=> await query.AnyAsync(q => q.UserName == userName);
-
-	public static IQueryable<User> ThatHaveSubmissions(this IQueryable<User> query)
-		=> query.Where(u => u.Submissions.Any());
-
-	public static IQueryable<User> ThatPartiallyMatch(this IQueryable<User> query, string? partial)
+	extension(IQueryable<User> query)
 	{
-		var upper = partial?.ToUpper() ?? "";
-		return query.Where(u => u.NormalizedUserName.Contains(upper));
+		public async Task<bool> Exists(string userName) => await query.AnyAsync(q => q.UserName == userName);
+
+		public IQueryable<User> ThatHaveSubmissions() => query.Where(u => u.Submissions.Any());
+
+		public IQueryable<User> ThatPartiallyMatch(string? partial)
+		{
+			var upper = partial?.ToUpper() ?? "";
+			return query.Where(u => u.NormalizedUserName.Contains(upper));
+		}
+
+		public IQueryable<User> ThatArePublishedAuthors() => query.Where(u => u.Publications.Any());
+
+		public IQueryable<User> ThatHavePermission(PermissionTo permission)
+			=> query.Where(u => u.UserRoles
+				.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId == permission)));
+
+		public IQueryable<User> ThatHaveRole(string role)
+			=> query.Where(u => u.UserRoles.Any(ur => ur.Role!.Name == role));
+
+		public IQueryable<User> ForUsers(IEnumerable<string> users) => query.Where(u => users.Contains(u.UserName));
+
+		public IQueryable<User> ForUser(string? userName) => query.Where(u => u.UserName == userName);
+
+		public IQueryable<User> ThatHaveCustomLocale()
+			=> query.Where(u => u.DateFormat != UserDateFormat.Auto || u.TimeFormat != UserTimeFormat.Auto || u.DecimalFormat != UserDecimalFormat.Auto);
+
+		public IQueryable<User> ThatAreBanned()
+			=> query.Where(u => u.BannedUntil.HasValue && u.BannedUntil > DateTime.UtcNow); // > and < in these methods, but what about ==?
+
+		public IQueryable<User> ThatAreNotBanned()
+			=> query.Where(u => !u.BannedUntil.HasValue || u.BannedUntil < DateTime.UtcNow);
+
+		public IQueryable<SubmissionAuthor> ToSubmissionAuthors(int submissionId, IList<string> authors)
+			=> query
+				.ForUsers(authors)
+				.Select(u => new SubmissionAuthor
+				{
+					SubmissionId = submissionId,
+					UserId = u.Id,
+					Author = u,
+					Ordinal = authors.IndexOf(u.UserName)
+				});
 	}
 
-	public static IQueryable<User> ThatArePublishedAuthors(this IQueryable<User> query)
-		=> query.Where(u => u.Publications.Any());
-
-	public static IQueryable<User> ThatHavePermission(this IQueryable<User> query, PermissionTo permission)
-		=> query.Where(u => u.UserRoles
-			.Any(r => r.Role!.RolePermission.Any(rp => rp.PermissionId == permission)));
-
-	public static IQueryable<User> ThatHaveRole(this IQueryable<User> query, string role)
-		=> query.Where(u => u.UserRoles.Any(ur => ur.Role!.Name == role));
-
-	public static IQueryable<User> ForUsers(this IQueryable<User> query, IEnumerable<string> users)
-		=> query.Where(u => users.Contains(u.UserName));
-
-	public static IQueryable<User> ForUser(this IQueryable<User> query, string? userName)
-		=> query.Where(u => u.UserName == userName);
-
-	public static IQueryable<User> ThatHaveCustomLocale(this IQueryable<User> query)
-		=> query.Where(u => u.DateFormat != UserDateFormat.Auto || u.TimeFormat != UserTimeFormat.Auto || u.DecimalFormat != UserDecimalFormat.Auto);
-
-	public static IQueryable<User> ThatAreBanned(this IQueryable<User> query)
-		=> query.Where(u => u.BannedUntil.HasValue && u.BannedUntil > DateTime.UtcNow); // > and < in these methods, but what about ==?
-
-	public static IQueryable<User> ThatAreNotBanned(this IQueryable<User> query)
-		=> query.Where(u => !u.BannedUntil.HasValue || u.BannedUntil < DateTime.UtcNow);
-
 	public static bool IsBanned(this User user) => user.BannedUntil.HasValue && user.BannedUntil > DateTime.UtcNow;
-
-	public static IQueryable<SubmissionAuthor> ToSubmissionAuthors(this IQueryable<User> query, int submissionId, IList<string> authors)
-		=> query
-			.ForUsers(authors)
-			.Select(u => new SubmissionAuthor
-			{
-				SubmissionId = submissionId,
-				UserId = u.Id,
-				Author = u,
-				Ordinal = authors.IndexOf(u.UserName)
-			});
 }

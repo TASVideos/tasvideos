@@ -10,7 +10,7 @@ public static class DbContextExtensions
 		// Must ToArray() here for excluding the AutoHistory model.
 		// Currently, only support Modified and Deleted entity.
 		var entries = context.ChangeTracker.Entries()
-			.Where(e => e.State == EntityState.Modified || e.State == EntityState.Deleted)
+			.Where(e => e.State is EntityState.Modified or EntityState.Deleted)
 			.ToArray();
 		foreach (var entry in entries)
 		{
@@ -20,42 +20,6 @@ public static class DbContextExtensions
 				context.Add(autoHistory);
 			}
 		}
-	}
-
-	internal static TAutoHistory? AutoHistory<TAutoHistory>(this EntityEntry entry, Func<TAutoHistory> createHistoryFactory)
-		where TAutoHistory : AutoHistoryEntry
-	{
-		if (!IsEntityIncluded(entry))
-		{
-			return null;
-		}
-
-		var properties = GetPropertiesWithoutExcluded(entry).ToArray();
-		if (!(properties.Any(p => p.IsModified) || entry.State == EntityState.Deleted))
-		{
-			return null;
-		}
-
-		var history = createHistoryFactory();
-		history.TableName = entry.Metadata.GetTableName() ?? "";
-		switch (entry.State)
-		{
-			case EntityState.Added:
-				WriteHistoryAddedState(history, properties);
-				break;
-			case EntityState.Modified:
-				WriteHistoryModifiedState(history, entry, properties);
-				break;
-			case EntityState.Deleted:
-				WriteHistoryDeletedState(history, entry, properties);
-				break;
-			case EntityState.Detached:
-			case EntityState.Unchanged:
-			default:
-				throw new NotSupportedException("AutoHistory only support Deleted and Modified entity.");
-		}
-
-		return history;
 	}
 
 	private static bool IsEntityIncluded(EntityEntry entry) =>
@@ -89,52 +53,89 @@ public static class DbContextExtensions
 		}
 	}
 
-	internal static TAutoHistory? AddedHistory<TAutoHistory>(
-		this EntityEntry entry,
-		Func<TAutoHistory> createHistoryFactory)
-		where TAutoHistory : AutoHistoryEntry
+	extension(EntityEntry entry)
 	{
-		if (!IsEntityIncluded(entry))
+		internal TAutoHistory? AddedHistory<TAutoHistory>(Func<TAutoHistory> createHistoryFactory)
+			where TAutoHistory : AutoHistoryEntry
 		{
-			return null;
-		}
-
-		var properties = GetPropertiesWithoutExcluded(entry);
-
-		var json = new Dictionary<string, object?>();
-		foreach (var prop in properties)
-		{
-			json[prop.Metadata.Name] = prop?.OriginalValue;
-		}
-
-		var history = createHistoryFactory();
-		history.TableName = entry.Metadata.GetTableName() ?? "";
-		history.RowId = entry.PrimaryKey();
-		history.Kind = EntityState.Added;
-		history.Changed = JsonSerializer.Serialize(json);
-		return history;
-	}
-
-	private static string PrimaryKey(this EntityEntry entry)
-	{
-		var key = entry.Metadata.FindPrimaryKey();
-
-		if (key == null)
-		{
-			return "";
-		}
-
-		var values = new List<object>();
-		foreach (var property in key.Properties)
-		{
-			var value = entry.Property(property.Name).CurrentValue;
-			if (value != null)
+			if (!IsEntityIncluded(entry))
 			{
-				values.Add(value);
+				return null;
 			}
+
+			var properties = GetPropertiesWithoutExcluded(entry);
+
+			var json = new Dictionary<string, object?>();
+			foreach (var prop in properties)
+			{
+				json[prop.Metadata.Name] = prop.OriginalValue;
+			}
+
+			var history = createHistoryFactory();
+			history.TableName = entry.Metadata.GetTableName() ?? "";
+			history.RowId = entry.PrimaryKey();
+			history.Kind = EntityState.Added;
+			history.Changed = JsonSerializer.Serialize(json);
+			return history;
 		}
 
-		return string.Join(",", values);
+		private string PrimaryKey()
+		{
+			var key = entry.Metadata.FindPrimaryKey();
+
+			if (key == null)
+			{
+				return "";
+			}
+
+			var values = new List<object>();
+			foreach (var property in key.Properties)
+			{
+				var value = entry.Property(property.Name).CurrentValue;
+				if (value != null)
+				{
+					values.Add(value);
+				}
+			}
+
+			return string.Join(",", values);
+		}
+
+		internal TAutoHistory? AutoHistory<TAutoHistory>(Func<TAutoHistory> createHistoryFactory)
+			where TAutoHistory : AutoHistoryEntry
+		{
+			if (!IsEntityIncluded(entry))
+			{
+				return null;
+			}
+
+			var properties = GetPropertiesWithoutExcluded(entry).ToArray();
+			if (!(properties.Any(p => p.IsModified) || entry.State == EntityState.Deleted))
+			{
+				return null;
+			}
+
+			var history = createHistoryFactory();
+			history.TableName = entry.Metadata.GetTableName() ?? "";
+			switch (entry.State)
+			{
+				case EntityState.Added:
+					WriteHistoryAddedState(history, properties);
+					break;
+				case EntityState.Modified:
+					WriteHistoryModifiedState(history, entry, properties);
+					break;
+				case EntityState.Deleted:
+					WriteHistoryDeletedState(history, entry, properties);
+					break;
+				case EntityState.Detached:
+				case EntityState.Unchanged:
+				default:
+					throw new NotSupportedException("AutoHistory only support Deleted and Modified entity.");
+			}
+
+			return history;
+		}
 	}
 
 	private static void WriteHistoryAddedState(AutoHistoryEntry history, IEnumerable<PropertyEntry> properties)
@@ -148,7 +149,7 @@ public static class DbContextExtensions
 				continue;
 			}
 
-			json[prop.Metadata.Name] = prop?.CurrentValue;
+			json[prop.Metadata.Name] = prop.CurrentValue;
 		}
 
 		// REVIEW: what's the best way to set the RowId?
