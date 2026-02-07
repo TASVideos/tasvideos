@@ -193,7 +193,7 @@ internal class PrivateMessageService(ApplicationDbContext db, ICacheService cach
 			.Where(u => u.UserRoles.Any(ur => ur.RoleId == role.Id))
 			.ToListAsync();
 
-		string bulkSubject = $"Sent to role {role}: {subject}";
+		var bulkSubject = $"Sent to role {role}: {subject}";
 
 		foreach (var user in users)
 		{

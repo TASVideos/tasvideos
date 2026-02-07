@@ -34,56 +34,59 @@ public static class FieldSelectionExtensions
 			.Distinct(ExpandoObjectComparer.Default());
 	}
 
-	/// <summary>
-	/// Receives a single object and performs a fields selection operation with the given fields.
-	/// </summary>
 	/// <typeparam name="T">The type of the elements of source.</typeparam>
-	public static ExpandoObject FieldSelect<T>(this T obj, string? fields)
+	extension<T>(T obj)
 	{
-		if (string.IsNullOrWhiteSpace(fields))
+		/// <summary>
+		/// Receives a single object and performs a fields selection operation with the given fields.
+		/// </summary>
+		public ExpandoObject FieldSelect(string? fields)
 		{
-			return ToExpando(obj);
-		}
-
-		var columns = fields
-			.SplitWithEmpty(",")
-			.Select(f => f.Trim())
-			.ToList();
-		if (columns.All(string.IsNullOrWhiteSpace))
-		{
-			return ToExpando(obj);
-		}
-
-		var expando = new ExpandoObject();
-		IDictionary<string, object?> dict = expando;
-
-		foreach (var column in columns)
-		{
-			var property = typeof(T)
-				.GetProperties()
-				.FirstOrDefault(p => string.Equals(p.Name, column, StringComparison.CurrentCultureIgnoreCase));
-			if (property is not null)
+			if (string.IsNullOrWhiteSpace(fields))
 			{
-				dict[property.Name.PascalToCamelCase()] = property.GetValue(obj);
+				return obj.ToExpando();
 			}
-		}
 
-		return expando;
-	}
-
-	private static ExpandoObject ToExpando<T>(this T obj)
-	{
-		var expando = new ExpandoObject();
-		IDictionary<string, object?> dictionary = expando;
-
-		if (obj is not null)
-		{
-			foreach (var property in obj.GetType().GetProperties())
+			var columns = fields
+				.SplitWithEmpty(",")
+				.Select(f => f.Trim())
+				.ToList();
+			if (columns.All(string.IsNullOrWhiteSpace))
 			{
-				dictionary.Add(property.Name.PascalToCamelCase(), property.GetValue(obj));
+				return obj.ToExpando();
 			}
+
+			var expando = new ExpandoObject();
+			IDictionary<string, object?> dict = expando;
+
+			foreach (var column in columns)
+			{
+				var property = typeof(T)
+					.GetProperties()
+					.FirstOrDefault(p => string.Equals(p.Name, column, StringComparison.CurrentCultureIgnoreCase));
+				if (property is not null)
+				{
+					dict[property.Name.PascalToCamelCase()] = property.GetValue(obj);
+				}
+			}
+
+			return expando;
 		}
 
-		return expando;
+		private ExpandoObject ToExpando()
+		{
+			var expando = new ExpandoObject();
+			IDictionary<string, object?> dictionary = expando;
+
+			if (obj is not null)
+			{
+				foreach (var property in obj.GetType().GetProperties())
+				{
+					dictionary.Add(property.Name.PascalToCamelCase(), property.GetValue(obj));
+				}
+			}
+
+			return expando;
+		}
 	}
 }

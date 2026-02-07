@@ -44,25 +44,27 @@ public static class RequestExtensions
 
 public static class PagedExtensions
 {
-	public static int LastPage<T>(this IPaged<T>? paged)
+	extension<T>(IPaged<T>? paged)
 		where T : IRequest
 	{
-		var size = paged?.Request.PageSize ?? 0;
-		var count = paged?.RowCount ?? 0;
-		if (count <= 0 || size <= 0)
+		public int LastPage()
 		{
-			return 0;
+			var size = paged?.Request.PageSize ?? 0;
+			var count = paged?.RowCount ?? 0;
+			if (count <= 0 || size <= 0)
+			{
+				return 0;
+			}
+
+			return (int)Math.Ceiling(count / (double)size);
 		}
 
-		return (int)Math.Ceiling(count / (double)size);
-	}
-
-	public static int LastRow<T>(this IPaged<T>? paged)
-		where T : IRequest
-	{
-		var size = paged?.Request.PageSize ?? 0;
-		var rowCount = paged?.RowCount ?? 0;
-		T? request = paged is null ? default : paged.Request;
-		return Math.Min(rowCount, request.Offset() + size);
+		public int LastRow()
+		{
+			var size = paged?.Request.PageSize ?? 0;
+			var rowCount = paged?.RowCount ?? 0;
+			var request = paged is null ? default : paged.Request;
+			return Math.Min(rowCount, request.Offset() + size);
+		}
 	}
 }

@@ -67,8 +67,8 @@ internal class YouTubeSync(
 
 		var obsoleteStr = video.ObsoletedBy.HasValue ? "[Obsoleted] " : "";
 		var displayStr = !string.IsNullOrWhiteSpace(video.UrlDisplayName) ? $"[{video.UrlDisplayName}] " : "";
-		string title = $"[TAS] {obsoleteStr}{displayStr}{video.Title}";
-		string description = descriptionBase + renderedDescription + hashTags;
+		var title = $"[TAS] {obsoleteStr}{displayStr}{video.Title}";
+		var description = descriptionBase + renderedDescription + hashTags;
 		if (title.Length > YoutubeTitleMaxLength)
 		{
 			description = title + "\n" + descriptionBase + renderedDescription + hashTags;
@@ -192,17 +192,14 @@ internal class YouTubeSync(
 		if (url!.Contains("/embed"))
 		{
 			var i = url.IndexOf('?');
-			return i < 0 ? url : url[..i]; // strip all queryparams
+			return i < 0 ? url : url[..i]; // strip all query params
 		}
 
 		var videoId = VideoId(url);
 
-		if (string.IsNullOrWhiteSpace(videoId))
-		{
-			return url;
-		}
-
-		return $"https://www.youtube.com/embed/{videoId}";
+		return string.IsNullOrWhiteSpace(videoId)
+			? url
+			: $"https://www.youtube.com/embed/{videoId}";
 	}
 
 	public string VideoId(string youtubeUrl)

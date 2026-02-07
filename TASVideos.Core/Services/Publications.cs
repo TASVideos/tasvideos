@@ -100,12 +100,7 @@ internal class Publications(
 
 		db.PublicationUrls.Remove(url);
 		var saveResult = await db.TrySaveChanges();
-		if (!saveResult.IsSuccess())
-		{
-			return null;
-		}
-
-		return url;
+		return saveResult.IsSuccess() ? url : null;
 	}
 
 	public async Task<(PublicationFile? File, SaveResult Result)> RemoveFile(int fileId)
@@ -286,12 +281,12 @@ internal class Publications(
 		publication.Title = publication.GenerateTitle();
 
 		// Handle flags with permission filtering
-		List<int> editableFlags = await db.Flags
+		var editableFlags = await db.Flags
 			.Where(f => f.PermissionRestriction.HasValue && request.UserPermissions.Contains(f.PermissionRestriction.Value) || f.PermissionRestriction == null)
 			.Select(f => f.Id)
 			.ToListAsync();
-		List<PublicationFlag> existingEditablePublicationFlags = publication.PublicationFlags.Where(pf => editableFlags.Contains(pf.FlagId)).ToList();
-		List<int> selectedEditableFlagIds = request.SelectedFlags.Intersect(editableFlags).ToList();
+		var existingEditablePublicationFlags = publication.PublicationFlags.Where(pf => editableFlags.Contains(pf.FlagId)).ToList();
+		var selectedEditableFlagIds = request.SelectedFlags.Intersect(editableFlags).ToList();
 
 		var flagsToKeep = publication.PublicationFlags.Except(existingEditablePublicationFlags).ToList();
 		publication.PublicationFlags.Clear();
@@ -316,7 +311,7 @@ internal class Publications(
 
 		// Handle wiki page updates
 		var existingWikiPage = await wikiPages.PublicationPage(publicationId);
-		IWikiPage? pageToSync = existingWikiPage;
+		var pageToSync = existingWikiPage;
 
 		if (request.WikiMarkup != existingWikiPage!.Markup)
 		{

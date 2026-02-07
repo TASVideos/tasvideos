@@ -40,7 +40,7 @@ internal class ExpandoObjectComparer : IEqualityComparer<ExpandoObject>
 			return false;
 		}
 
-		foreach ((var key, object? value) in xKeyValues)
+		foreach (var (key, value) in xKeyValues)
 		{
 			var xValueItem = value ?? new object();
 			var yValueItem = yKeyValues[key];
@@ -61,15 +61,15 @@ internal class ExpandoObjectComparer : IEqualityComparer<ExpandoObject>
 
 	public int GetHashCode(ExpandoObject obj)
 	{
-		int hashCode = 0;
+		var hashCode = 0;
+
+		var fieldValues = new Dictionary<string, object?>(obj);
+		fieldValues.Values.ToList().ForEach(v => hashCode ^= GetHash(v ?? new object()));
+		return hashCode;
 
 		static int GetHash(object item)
 		{
 			return item.GetHashCode();
 		}
-
-		var fieldValues = new Dictionary<string, object?>(obj);
-		fieldValues.Values.ToList().ForEach(v => hashCode ^= GetHash(v ?? new object()));
-		return hashCode;
 	}
 }

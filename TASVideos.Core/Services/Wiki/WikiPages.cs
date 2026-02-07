@@ -241,10 +241,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		newRevision.CreateTimestamp = DateTime.UtcNow; // we want the actual save time recorded
 		db.WikiPages.Add(newRevision);
 
-		if (currentRevision is not null)
-		{
-			currentRevision.Child = newRevision;
-		}
+		currentRevision?.Child = newRevision;
 
 		// We cannot assume the "current" revision is the latest
 		// We might have a deleted revision after it
@@ -382,7 +379,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 			.Where(wp => wp.PageName.StartsWith(originalName))
 			.ThatAreCurrent()
 			.ToListAsync();
-		bool allSucceeded = true;
+		var allSucceeded = true;
 		foreach (var page in pagesToMove)
 		{
 			var oldPage = page.PageName;
@@ -507,10 +504,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 				revision.IsDeleted = false;
 				var previous = allRevisions
 					.FirstOrDefault(r => r.Revision == revision.Revision - 1);
-				if (previous is not null)
-				{
-					previous.ChildId = revision.Id;
-				}
+				previous?.ChildId = revision.Id;
 			}
 
 			var current = revisions
@@ -551,9 +545,7 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 	}
 
 	private void ClearCache(string pageName)
-	{
-		cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName.ToLower());
-	}
+		=> cache.Remove(CacheKeys.CurrentWikiCache + "-" + pageName.ToLower());
 
 	private async Task GenerateReferrals(string pageName, string markup)
 	{
@@ -622,11 +614,14 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 
 public static class WikiPageExtensions
 {
-	public static async Task<IWikiPage?> PublicationPage(this IWikiPages pages, int publicationId)
-		=> await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
+	extension(IWikiPages pages)
+	{
+		public async Task<IWikiPage?> PublicationPage(int publicationId)
+			=> await pages.Page(WikiHelper.ToPublicationWikiPageName(publicationId));
 
-	public static async Task<IWikiPage?> SubmissionPage(this IWikiPages pages, int submissionId)
-		=> await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
+		public async Task<IWikiPage?> SubmissionPage(int submissionId)
+			=> await pages.Page(WikiHelper.ToSubmissionWikiPageName(submissionId));
+	}
 
 	public static WikiPage ToWikiPage(this WikiCreateRequest revision, User user)
 		=> new()

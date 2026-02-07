@@ -152,7 +152,7 @@ public static class AppSettingsExtensions
 		var strategy = settings.StartupStrategy;
 		if (!string.IsNullOrWhiteSpace(settings.StartupStrategy))
 		{
-			var result = Enum.TryParse(typeof(StartupStrategy), strategy, true, out object? strategyObj);
+			var result = Enum.TryParse(typeof(StartupStrategy), strategy, true, out var strategyObj);
 
 			if (result)
 			{

@@ -33,7 +33,7 @@ public static class DbInitializer
 		await context.Database.EnsureDeletedAsync();
 
 		// create db without filling schema
-		IRelationalDatabaseCreator creator = context.GetService<IRelationalDatabaseCreator>();
+		var creator = context.GetService<IRelationalDatabaseCreator>();
 		await creator.CreateAsync();
 
 		await GenerateDevSampleData(context);
@@ -86,7 +86,7 @@ public static class DbInitializer
 	private static async Task<byte[]> GetSampleDataFile()
 	{
 		byte[] bytes;
-		string sampleDataPath = Path.Combine(Path.GetTempPath(), "sample-data.sql.gz");
+		var sampleDataPath = Path.Combine(Path.GetTempPath(), "sample-data.sql.gz");
 		if (!File.Exists(sampleDataPath))
 		{
 			bytes = await DownloadSampleDataFile();

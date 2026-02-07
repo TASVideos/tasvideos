@@ -26,8 +26,7 @@ internal static class PointsCalculator
 	/// Determines the player rank based on the given amount of player points
 	/// </summary>
 	public static string PlayerRank(decimal points)
-	{
-		return points switch
+		=> points switch
 		{
 			<= 0 => "",
 			< 1 => PlayerRanks.FormerPlayer,
@@ -37,7 +36,6 @@ internal static class PointsCalculator
 			< 2000 => PlayerRanks.SkilledPlayer,
 			_ => PlayerRanks.ExpertPlayer
 		};
-	}
 
 	internal static double PlayerPointsForMovie(Publication publication, double averageRatingCount)
 	{

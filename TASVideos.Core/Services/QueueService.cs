@@ -401,9 +401,9 @@ internal class QueueService(
 			submission.Publisher = null;
 		}
 
-		bool statusHasChanged = submission.Status != request.Status;
+		var statusHasChanged = submission.Status != request.Status;
 		var previousStatus = submission.Status;
-		bool requiresTopicMove = false;
+		var requiresTopicMove = false;
 		int? moveTopicToForumId = null;
 
 		if (statusHasChanged)
@@ -526,17 +526,17 @@ internal class QueueService(
 			fileStream = rawFileStream;
 		}
 
-		byte[] fileBytes = fileStream.ToArray();
+		var fileBytes = fileStream.ToArray();
 
 		// Inline implementation of IsZip
-		bool isZip = movieFile.FileName.EndsWith(".zip")
+		var isZip = movieFile.FileName.EndsWith(".zip")
 			&& movieFile.ContentType is "application/x-zip-compressed" or "application/zip";
 
 		var parseResult = isZip
 			? await movieParser.ParseZip(fileStream)
 			: await movieParser.ParseFile(movieFile.FileName, fileStream);
 
-		byte[] movieFileBytes = isZip
+		var movieFileBytes = isZip
 			? fileBytes
 			: await fileService.ZipFile(fileBytes, movieFile.FileName);
 
@@ -569,7 +569,7 @@ internal class QueueService(
 		var parseResult = await movieParser.ParseFile(movieFile.FileName, fileStream);
 
 		// Get the file bytes for storage
-		byte[] movieFileBytes = fileStream.ToArray();
+		var movieFileBytes = fileStream.ToArray();
 
 		return (parseResult, movieFileBytes);
 	}

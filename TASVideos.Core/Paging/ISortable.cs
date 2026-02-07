@@ -15,53 +15,56 @@ public interface ISortable
 
 public static class SortableExtensions
 {
-	/// <summary>
-	/// Returns whether the given parameter is specified.
-	/// </summary>
-	public static bool IsSortingParam(this ISortable? sortable, string? param)
+	extension(ISortable? sortable)
 	{
-		if (string.IsNullOrWhiteSpace(sortable?.Sort))
+		/// <summary>
+		/// Returns whether the given parameter is specified.
+		/// </summary>
+		public bool IsSortingParam(string? param)
 		{
-			return false;
-		}
+			if (string.IsNullOrWhiteSpace(sortable?.Sort))
+			{
+				return false;
+			}
 
-		if (string.IsNullOrWhiteSpace(param))
-		{
-			return false;
-		}
+			if (string.IsNullOrWhiteSpace(param))
+			{
+				return false;
+			}
 
-		return sortable.Sort
-			.SplitWithEmpty(",")
-			.Select(str => str.Trim())
-			.Any(str => string.Equals(
-				str.Replace("-", "").Replace("+", ""),
-				param,
-				StringComparison.OrdinalIgnoreCase));
-	}
-
-	/// <summary>
-	/// Returns whether the given parameter is specified and
-	/// is specified as a descending sort.
-	/// </summary>
-	public static bool IsDescending(this ISortable? sortable, string? param)
-	{
-		if (string.IsNullOrWhiteSpace(sortable?.Sort))
-		{
-			return false;
-		}
-
-		if (string.IsNullOrWhiteSpace(param))
-		{
-			return false;
-		}
-
-		return sortable.Sort
-			.SplitWithEmpty(",")
-			.Select(str => str.Trim())
-			.Any(str => string.Equals(
+			return sortable.Sort
+				.SplitWithEmpty(",")
+				.Select(str => str.Trim())
+				.Any(str => string.Equals(
 					str.Replace("-", "").Replace("+", ""),
 					param,
-					StringComparison.OrdinalIgnoreCase)
-				&& str.StartsWith('-'));
+					StringComparison.OrdinalIgnoreCase));
+		}
+
+		/// <summary>
+		/// Returns whether the given parameter is specified and
+		/// is specified as a descending sort.
+		/// </summary>
+		public bool IsDescending(string? param)
+		{
+			if (string.IsNullOrWhiteSpace(sortable?.Sort))
+			{
+				return false;
+			}
+
+			if (string.IsNullOrWhiteSpace(param))
+			{
+				return false;
+			}
+
+			return sortable.Sort
+				.SplitWithEmpty(",")
+				.Select(str => str.Trim())
+				.Any(str => string.Equals(
+						str.Replace("-", "").Replace("+", ""),
+						param,
+						StringComparison.OrdinalIgnoreCase)
+					&& str.StartsWith('-'));
+		}
 	}
 }

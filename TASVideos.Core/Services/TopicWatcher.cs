@@ -105,11 +105,9 @@ internal class TopicWatcher(
 	}
 
 	public async Task MarkSeen(int topicId, int userId)
-	{
-		await db.ForumTopicWatches
+		=> await db.ForumTopicWatches
 			.Where(w => w.UserId == userId && w.ForumTopicId == topicId)
 			.ExecuteUpdateAsync(s => s.SetProperty(w => w.IsNotified, false));
-	}
 
 	public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
 	{
@@ -142,18 +140,14 @@ internal class TopicWatcher(
 	}
 
 	public async Task UnwatchTopic(int topicId, int userId)
-	{
-		await db.ForumTopicWatches
+		=> await db.ForumTopicWatches
 			.Where(w => w.UserId == userId && w.ForumTopicId == topicId)
 			.ExecuteDeleteAsync();
-	}
 
 	public async Task UnwatchAllTopics(int userId)
-	{
-		await db.ForumTopicWatches
+		=> await db.ForumTopicWatches
 			.Where(w => w.UserId == userId)
 			.ExecuteDeleteAsync();
-	}
 
 	public async Task<bool> IsWatchingTopic(int topicId, int userId)
 		=> await db.ForumTopicWatches.AnyAsync(w => w.UserId == userId && w.ForumTopicId == topicId);

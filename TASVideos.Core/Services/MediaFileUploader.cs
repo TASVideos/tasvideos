@@ -23,8 +23,8 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		await screenshot.CopyToAsync(memoryStream);
 		var screenshotBytes = memoryStream.ToArray();
 
-		string screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
-		string screenshotPath = Path.Combine(env.WebRootPath, MediaLocation, screenshotFileName);
+		var screenshotFileName = $"{publicationId}M{Path.GetExtension(screenshot.FileName)}";
+		var screenshotPath = Path.Combine(env.WebRootPath, MediaLocation, screenshotFileName);
 
 		var screenShotExists = File.Exists(screenshotPath);
 		await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
@@ -73,7 +73,7 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 			return null;
 		}
 
-		string path = Path.Combine(env.WebRootPath, file.Path);
+		var path = Path.Combine(env.WebRootPath, file.Path);
 		File.Delete(path);
 
 		db.PublicationFiles.Remove(file);
@@ -100,14 +100,14 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 		await using var memoryStream = new MemoryStream();
 		await image.CopyToAsync(memoryStream);
 		var screenshotBytes = memoryStream.ToArray();
-		string screenshotPath = ToFullAwardPath(shortName, year, size);
+		var screenshotPath = ToFullAwardPath(shortName, year, size);
 
 		await File.WriteAllBytesAsync(screenshotPath, screenshotBytes);
 	}
 
 	private void DeleteAwardImageBase(string shortName, AwardSizeVariant size)
 	{
-		string path = ToFullAwardPath(shortName, size: size);
+		var path = ToFullAwardPath(shortName, size: size);
 		if (File.Exists(path))
 		{
 			File.Delete(path);
@@ -122,13 +122,13 @@ internal class MediaFileUploader(ApplicationDbContext db, IWebHostEnvironment en
 
 	private string ToFullAwardPath(string shortName, int? year = null, AwardSizeVariant size = AwardSizeVariant.X1)
 	{
-		string yearString = year is not null ? ((int)year).ToString() : "xxxx";
-		string suffix = size switch
+		var yearString = year is not null ? ((int)year).ToString() : "xxxx";
+		var suffix = size switch
 		{
 			AwardSizeVariant.X1 => "",
 			AwardSizeVariant.X2 => "-2x",
 			AwardSizeVariant.X4 => "-4x",
-			_ => "",
+			_ => ""
 		};
 		return Path.Combine(env.WebRootPath, AwardLocation, yearString, $"{shortName}_{yearString}{suffix}.png");
 	}
@@ -140,5 +140,5 @@ public enum AwardSizeVariant
 {
 	X1,
 	X2,
-	X4,
+	X4
 }

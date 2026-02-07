@@ -53,7 +53,7 @@ public class RedisCacheService : ICacheService
 
 		try
 		{
-			RedisValue data = _cache.StringGet(key);
+			var data = _cache.StringGet(key);
 			if (data.IsNullOrEmpty)
 			{
 				value = default!;

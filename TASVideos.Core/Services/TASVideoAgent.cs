@@ -137,20 +137,16 @@ internal class TASVideoAgent(ApplicationDbContext db, IForumService forumService
 		=> SendPm(userId, SiteGlobalConstants.WelcomeToTasvideosPostId, t => t);
 
 	public Task SendAutoAssignedRole(int userId, string roleName)
-	{
-		return SendPm(
+		=> SendPm(
 			userId,
 			SiteGlobalConstants.AutoAssignedRolePostId,
 			t => t.Replace("[[role]]", roleName));
-	}
 
 	public Task SendPublishedAuthorRole(int userId, string roleName, string publicationTitle)
-	{
-		return SendPm(
+		=> SendPm(
 			userId,
 			SiteGlobalConstants.PublishedAuthorRoleAddedPostId,
 			t => t.Replace("[[role]]", roleName).Replace("[[publicationTitle]]", publicationTitle));
-	}
 
 	private async Task SendPm(int userId, int postId, Func<string, string> processTemplate)
 	{

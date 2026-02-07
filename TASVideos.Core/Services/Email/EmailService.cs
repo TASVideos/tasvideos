@@ -87,14 +87,14 @@ internal class EmailService(
 			return;
 		}
 
-		string siteName = "TASVideos";
+		var siteName = "TASVideos";
 		if (!env.IsProduction())
 		{
 			siteName += $" - {env.EnvironmentName} environment";
 		}
 
-		string subject = "Topic Reply Notification - " + template.TopicTitle;
-		string message = $"""
+		var subject = "Topic Reply Notification - " + template.TopicTitle;
+		var message = $"""
 						<p>
 						    Hello,<br>
 						    <br>
@@ -130,7 +130,7 @@ internal class EmailService(
 
 	public async Task NewPrivateMessage(string recipient, string userName)
 	{
-		string link = $"{_baseUrl}/Messages/Inbox";
+		var link = $"{_baseUrl}/Messages/Inbox";
 
 		await emailSender.SendEmail(new SingleEmail
 		{

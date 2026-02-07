@@ -24,7 +24,7 @@ internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPo
 
 	public async ValueTask<(double Points, string Rank)> PlayerPoints(int userId)
 	{
-		string cacheKey = PlayerPointKey + userId;
+		var cacheKey = PlayerPointKey + userId;
 		if (cache.TryGetValue(cacheKey, out double playerPoints))
 		{
 			return (playerPoints, PointsCalculator.PlayerRank((decimal)playerPoints));
@@ -44,7 +44,7 @@ internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPo
 
 	public async ValueTask<double> PlayerPointsForPublication(int publicationId)
 	{
-		string cacheKey = MoviePlayerPointKey + publicationId;
+		var cacheKey = MoviePlayerPointKey + publicationId;
 		if (cache.TryGetValue(cacheKey, out double playerPoints))
 		{
 			return playerPoints;
@@ -90,8 +90,7 @@ internal class PointsService(ApplicationDbContext db, ICacheService cache) : IPo
 internal static class PointsEntityExtensions
 {
 	public static IQueryable<PointsCalculator.Publication> ToCalcPublication(this IQueryable<Publication> query)
-	{
-		return query.Select(p => new PointsCalculator.Publication(
+		=> query.Select(p => new PointsCalculator.Publication(
 			p.ObsoletedById.HasValue,
 			p.PublicationRatings.Count,
 			p.Authors.Count,
@@ -100,5 +99,4 @@ internal static class PointsEntityExtensions
 				.Where(pr => !pr.Publication!.Authors.Select(a => a.UserId).Contains(pr.UserId))
 				.Where(pr => pr.User!.UseRatings)
 				.Average(pr => pr.Value) : null));
-	}
 }

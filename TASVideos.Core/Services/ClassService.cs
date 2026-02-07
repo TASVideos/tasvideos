@@ -45,7 +45,7 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 			Id = newId,
 			Name = publicationClass.Name,
 			IconPath = publicationClass.IconPath,
-			Link = publicationClass.Link,
+			Link = publicationClass.Link
 		}).Entity;
 
 		try

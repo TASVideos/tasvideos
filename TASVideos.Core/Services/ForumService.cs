@@ -104,9 +104,9 @@ internal class ForumService(
 	{
 		if (cacheService.TryGetValue(PostActivityOfTopicsCacheKey, out Dictionary<int, Dictionary<int, (string, string)>> forumActivity))
 		{
-			forumActivity.TryGetValue(forumId, out Dictionary<int, (string, string)>? subforumActivity);
+			forumActivity.TryGetValue(forumId, out var subforumActivity);
 			subforumActivity ??= [];
-			subforumActivity.TryGetValue(topicId, out (string, string) postActivity);
+			subforumActivity.TryGetValue(topicId, out var postActivity);
 			var createPostActivity = postActivity.Item1 == null ? [] : JsonSerializer.Deserialize<Dictionary<int, long>>(postActivity.Item1)!;
 			createPostActivity[postId] = createTimestamp.UnixTimestamp();
 			subforumActivity[topicId] = (JsonSerializer.Serialize(createPostActivity), postActivity.Item2);
@@ -116,7 +116,7 @@ internal class ForumService(
 
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> fullSubforumActivity))
 		{
-			fullSubforumActivity.TryGetValue(forumId, out (string, string) postActivity);
+			fullSubforumActivity.TryGetValue(forumId, out var postActivity);
 			var createPostActivity = postActivity.Item1 == null ? [] : JsonSerializer.Deserialize<Dictionary<int, long>>(postActivity.Item1)!;
 			createPostActivity[postId] = createTimestamp.UnixTimestamp();
 			fullSubforumActivity[forumId] = (JsonSerializer.Serialize(createPostActivity), postActivity.Item2);
@@ -128,9 +128,9 @@ internal class ForumService(
 	{
 		if (cacheService.TryGetValue(PostActivityOfTopicsCacheKey, out Dictionary<int, Dictionary<int, (string, string)>> forumActivity))
 		{
-			forumActivity.TryGetValue(forumId, out Dictionary<int, (string, string)>? subforumActivity);
+			forumActivity.TryGetValue(forumId, out var subforumActivity);
 			subforumActivity ??= [];
-			subforumActivity.TryGetValue(topicId, out (string, string) postActivity);
+			subforumActivity.TryGetValue(topicId, out var postActivity);
 			var editPostActivity = postActivity.Item2 == null ? [] : JsonSerializer.Deserialize<Dictionary<int, long>>(postActivity.Item2)!;
 			editPostActivity[postId] = editTimestamp.UnixTimestamp();
 			subforumActivity[topicId] = (postActivity.Item1, JsonSerializer.Serialize(editPostActivity));
@@ -140,7 +140,7 @@ internal class ForumService(
 
 		if (cacheService.TryGetValue(PostActivityOfSubforumsCacheKey, out Dictionary<int, (string, string)> fullSubforumActivity))
 		{
-			fullSubforumActivity.TryGetValue(forumId, out (string, string) postActivity);
+			fullSubforumActivity.TryGetValue(forumId, out var postActivity);
 			var editPostActivity = postActivity.Item2 == null ? [] : JsonSerializer.Deserialize<Dictionary<int, long>>(postActivity.Item2)!;
 			editPostActivity[postId] = editTimestamp.UnixTimestamp();
 			fullSubforumActivity[forumId] = (postActivity.Item1, JsonSerializer.Serialize(editPostActivity));
@@ -252,7 +252,7 @@ internal class ForumService(
 			return forumActivity;
 		}
 
-		DateTime minimumDate = DateTime.UtcNow.AddDays(-(ForumConstants.DaysPostsCountAsActive - 1)); // we subtract 1 day here because we cache activity for 1 day
+		var minimumDate = DateTime.UtcNow.AddDays(-(ForumConstants.DaysPostsCountAsActive - 1)); // we subtract 1 day here because we cache activity for 1 day
 
 		var fullrow = await db.ForumPosts
 			.Where(fp => fp.CreateTimestamp > minimumDate || fp.PostEditedTimestamp > minimumDate)
@@ -314,7 +314,7 @@ internal class ForumService(
 			return subforumActivity;
 		}
 
-		DateTime minimumDate = DateTime.UtcNow.AddDays(-(ForumConstants.DaysPostsCountAsActive - 1)); // we subtract 1 day here because we cache activity for 1 day
+		var minimumDate = DateTime.UtcNow.AddDays(-(ForumConstants.DaysPostsCountAsActive - 1)); // we subtract 1 day here because we cache activity for 1 day
 
 		var fullrow = await db.ForumPosts
 			.Where(fp => fp.CreateTimestamp > minimumDate || fp.PostEditedTimestamp > minimumDate)

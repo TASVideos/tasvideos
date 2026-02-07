@@ -79,7 +79,7 @@ internal class IpBanService(
 	{
 		try
 		{
-			string processed = "";
+			var processed = "";
 			if (mask.Contains('*'))
 			{
 				if (mask.EndsWith("*.*.*"))

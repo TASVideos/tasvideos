@@ -23,7 +23,7 @@ public class MovieFormatDeprecator(ApplicationDbContext db, IMovieParser parser)
 				from d in dd.DefaultIfEmpty()
 				orderby ext
 				select new { ext, d })
-			.ToDictionary(tkey => tkey.ext, tvalue => (DeprecatedMovieFormat?)tvalue.d);
+			.ToDictionary(tkey => tkey.ext, DeprecatedMovieFormat? (tvalue) => tvalue.d);
 	}
 
 	public bool IsMovieExtension(string extension) => parser.SupportedMovieExtensions.Any(s => s == extension);

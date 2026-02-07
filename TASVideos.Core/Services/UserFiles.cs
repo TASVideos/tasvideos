@@ -36,11 +36,9 @@ internal class UserFiles(
 	: IUserFiles
 {
 	public async Task<int> StorageUsed(int userId)
-	{
-		return await db.UserFiles
+		=> await db.UserFiles
 			.Where(uf => uf.AuthorId == userId)
 			.SumAsync(uf => uf.Content.Length);
-	}
 
 	public async Task<bool> SpaceAvailable(int userId, long fileLength)
 	{
@@ -52,11 +50,7 @@ internal class UserFiles(
 	}
 
 	public async Task<IReadOnlyCollection<string>> SupportedFileExtensions()
-	{
-		return parser.SupportedMovieExtensions
-			.Concat(await SupportedSupplementalFiles())
-			.ToList();
-	}
+		=> [.. parser.SupportedMovieExtensions, .. await SupportedSupplementalFiles()];
 
 	public async Task<(long? Id, IParseResult? ParseResult)> Upload(int userId, UserFileUpload file)
 	{
@@ -95,7 +89,7 @@ internal class UserFiles(
 				userFile.Annotations = parseResult.Annotations.CapAndEllipse(3500);
 			}
 
-			decimal frameRate = 60.0M;
+			var frameRate = 60.0M;
 			if (parseResult.FrameRateOverride.HasValue)
 			{
 				frameRate = (decimal)parseResult.FrameRateOverride.Value;

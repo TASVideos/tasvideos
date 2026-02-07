@@ -18,28 +18,20 @@ public static class HttpClientExtensions
 		return result ?? throw new InvalidCastException($"Unable to deserialize {content} to type {typeof(T)}");
 	}
 
-	public static void SetBearerToken(this HttpClient client, string token)
+	extension(HttpClient client)
 	{
-		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-	}
+		public void SetBearerToken(string token)
+			=> client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-	public static void SetOAuthToken(this HttpClient client, string token)
-	{
-		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", token);
-	}
+		public void SetOAuthToken(string token)
+			=> client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("OAuth", token);
 
-	public static void SetBotToken(this HttpClient client, string token)
-	{
-		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bot", token);
-	}
+		public void SetBotToken(string token)
+			=> client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bot", token);
 
-	public static void SetBasicAuth(this HttpClient client, string basicAuthHeader)
-	{
-		client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthHeader);
-	}
+		public void SetBasicAuth(string basicAuthHeader)
+			=> client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", basicAuthHeader);
 
-	public static void ResetAuthorization(this HttpClient client)
-	{
-		client.DefaultRequestHeaders.Authorization = null;
+		public void ResetAuthorization() => client.DefaultRequestHeaders.Authorization = null;
 	}
 }

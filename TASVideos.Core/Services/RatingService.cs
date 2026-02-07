@@ -118,16 +118,15 @@ internal class RatingService(ApplicationDbContext db) : IRatingService
 			.OrderByDescending(tr => tr.RatingsCount)
 			.ToListAsync();
 
-		dto.Summary.TopRaters = allTopRaters
+		dto.Summary.TopRaters = [.. allTopRaters
 			.GroupBy(tr => tr.RatingsCount)
 			.Select(group => new UserRatings.RatingSummary.TopRaterEntry
 			{
 				RatingsCount = group.Key,
-				UserNames = group.Select(tr => tr.UserName).OrderBy(userName => userName).ToList()
+				UserNames = [.. group.Select(tr => tr.UserName).OrderBy(name => name)]
 			})
 			.OrderByDescending(group => group.RatingsCount)
-			.Take(30)
-			.ToList();
+			.Take(30)];
 
 		dto.Summary.TotalRaterCount = allTopRaters.Count;
 		dto.UsersWithLowerRatingsCount = allTopRaters.Count(tr => tr.RatingsCount < dto.RatingsCount);
@@ -165,7 +164,7 @@ public class UserRatings
 
 	public PageOf<Rating, RatingRequest> Ratings { get; set; } = new([], new());
 
-	public RatingSummary Summary { get; set; } = new();
+	public RatingSummary Summary { get; } = new();
 	public int RatingsCount { get; set; }
 	public int UsersWithLowerRatingsCount { get; set; }
 	public int UsersWithEqualRatingsCount { get; set; }

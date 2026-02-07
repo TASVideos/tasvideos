@@ -8,7 +8,7 @@ namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
 public class IrcDistributor : IPostDistributor
 {
-	private static readonly object Sync = new();
+	private static readonly Lock Sync = new();
 	private static IrcBot? _bot;
 	private readonly AppSettings.IrcConnection _settings;
 
@@ -38,7 +38,7 @@ public class IrcDistributor : IPostDistributor
 			return;
 		}
 
-		string channel = post.Type == PostType.Administrative
+		var channel = post.Type == PostType.Administrative
 			? _settings.SecureChannel
 			: _settings.Channel;
 
@@ -101,11 +101,11 @@ public class IrcDistributor : IPostDistributor
 					}
 
 					// split the lines sent from the server by spaces (seems to be the easiest way to parse them)
-					string[] splitInput = inputLine.Split(' ');
+					var splitInput = inputLine.Split(' ');
 
 					if (splitInput[0] == "PING")
 					{
-						string pongReply = splitInput[1];
+						var pongReply = splitInput[1];
 						await writer.WriteLineAsync("PONG " + pongReply);
 						await writer.FlushAsync();
 					}
