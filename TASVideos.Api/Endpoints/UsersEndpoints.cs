@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi;
-
-namespace TASVideos.Api;
+﻿namespace TASVideos.Api;
 
 internal static class UsersEndpoints
 {

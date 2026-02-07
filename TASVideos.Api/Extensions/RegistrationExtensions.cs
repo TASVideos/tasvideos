@@ -6,37 +6,32 @@ namespace TASVideos.Api;
 internal static class RegistrationExtensions
 {
 	public static RouteGroupBuilder MapApiGroup(this WebApplication app, string group)
-	{
-		return app.MapGroup($"api/v1/{group.ToLower()}").WithTags(group);
-	}
+		=> app.MapGroup($"api/v1/{group.ToLower()}").WithTags(group);
 
-	public static RouteHandlerBuilder ProducesFromId<T>(this RouteHandlerBuilder builder, string resource)
+	extension(RouteHandlerBuilder builder)
 	{
-		return builder
-			.WithDescription($"""
-							<p>200 If a {resource} is found with the given id</p>
-							<p>404 if no {resource} was found<p>
-							""")
-			.Produces<T>()
-			.Produces<NotFoundResponse>(StatusCodes.Status404NotFound)
-			.WithSummary($"Returns a {resource} with the given id.");
-	}
+		public RouteHandlerBuilder ProducesFromId<T>(string resource)
+			=> builder
+				.WithDescription($"""
+								<p>200 If a {resource} is found with the given id</p>
+								<p>404 if no {resource} was found<p>
+								""")
+				.Produces<T>()
+				.Produces<NotFoundResponse>(StatusCodes.Status404NotFound)
+				.WithSummary($"Returns a {resource} with the given id.");
 
-	public static RouteHandlerBuilder Receives<T>(this RouteHandlerBuilder builder)
-	{
-		return builder
-			.Produces<T>()
-			.Produces(StatusCodes.Status400BadRequest);
-	}
+		public RouteHandlerBuilder Receives<T>()
+			=> builder
+				.Produces<T>()
+				.Produces(StatusCodes.Status400BadRequest);
 
-	public static RouteHandlerBuilder ProducesList<T>(this RouteHandlerBuilder builder, string summary)
-	{
-		return builder
-			.WithDescription($"""
-							<p>200 If request parameters are valid, returns {summary}</p>
-							<p>400 if the request parameters are invalid</p>
-							""")
-			.WithSummary($"Returns {summary}").Produces<IEnumerable<T>>();
+		public RouteHandlerBuilder ProducesList<T>(string summary)
+			=> builder
+				.WithDescription($"""
+								<p>200 If request parameters are valid, returns {summary}</p>
+								<p>400 if the request parameters are invalid</p>
+								""")
+				.WithSummary($"Returns {summary}").Produces<IEnumerable<T>>();
 	}
 
 	// ReSharper disable once ClassNeverInstantiated.Local

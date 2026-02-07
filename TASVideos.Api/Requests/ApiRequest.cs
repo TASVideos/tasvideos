@@ -31,8 +31,8 @@ internal static class RequestableExtensions
 {
 	public static IQueryable<T> SortAndPaginate<T>(this IQueryable<T> source, ApiRequest request)
 	{
-		int offset = request.Offset();
-		int limit = request.PageSize ?? ApiRequest.MaxPageSize;
+		var offset = request.Offset();
+		var limit = request.PageSize ?? ApiRequest.MaxPageSize;
 		return source
 			.SortBy(request)
 			.Skip(offset)
