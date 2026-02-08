@@ -77,7 +77,7 @@ internal class TopicWatcher(
 			.Include(w => w.User)
 			.Where(w => w.ForumTopicId == topicId)
 			.Where(w => w.UserId != posterId)
-			.Where(w => !w.User!.BannedUntil.HasValue || w.User.BannedUntil > DateTime.UtcNow)
+			.Where(w => !w.User!.BannedUntil.HasValue || w.User.BannedUntil < DateTime.UtcNow)
 			.Where(w => !w.IsNotified)
 			.ToListAsync();
 
