@@ -108,7 +108,7 @@ public class MergeModel(ApplicationDbContext db, IExternalMediaPublisher publish
 
 	private async Task PopulateAvailableForums()
 	{
-		AvailableForums = await db.Forums.ToDropdownList(UserCanSeeRestricted, Topic.ForumId);
+		AvailableForums = await db.Forums.OrderBy(f => f.Name).ToDropdownList(UserCanSeeRestricted, Topic.ForumId);
 		AvailableTopics = (await GetTopicsForForum(Topic.ForumId)).WithDefaultEntry();
 	}
 
@@ -117,6 +117,7 @@ public class MergeModel(ApplicationDbContext db, IExternalMediaPublisher publish
 		return await db.ForumTopics
 			.ForForum(forumId)
 			.Where(t => t.Id != Id)
+			.OrderBy(t => t.Title)
 			.ToDropdownList(UserCanSeeRestricted);
 	}
 
