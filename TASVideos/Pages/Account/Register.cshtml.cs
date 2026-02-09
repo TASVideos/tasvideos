@@ -1,5 +1,4 @@
-﻿using AspNetCore.ReCaptcha;
-using TASVideos.Core.Services.Email;
+﻿using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Account;
 
@@ -40,7 +39,6 @@ public class RegisterModel : BasePageModel
 		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
 		[FromServices] IExternalMediaPublisher publisher,
-		[FromServices] IReCaptchaService reCaptchaService,
 		[FromServices] IHostEnvironment env,
 		[FromServices] IUserMaintenanceLogger userMaintenanceLogger,
 		[FromServices] IIpBanService ipBanService)
@@ -56,8 +54,7 @@ public class RegisterModel : BasePageModel
 			ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
 		}
 
-		var encodedResponse = Request.Form["g-recaptcha-response"];
-		var isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
+		var isCaptchaValid = true; // TODO CAPTCHA
 
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
