@@ -1,5 +1,4 @@
 @page
-@addTagHelper *, AspNetCore.ReCaptcha
 @model EmailConfirmationSentModel
 @{
 	ViewData.SetTitle("Email Sent");
@@ -23,14 +22,14 @@
 	</row>
 	<form-button-bar>
 		<environment exclude="Development">
-			<recaptcha class-name="btn btn-primary" callback="onSubmit" text="Resend Confirmation Email"/>
+			@*TODO CAPTCHA*@
 		</environment>
-		<environment include="Development">
-			<submit-button>Resend Confirmation Email</submit-button>
-		</environment>
+		<submit-button>Resend Confirmation Email</submit-button>
 	</form-button-bar>
 </form>
 
 @section Scripts {
+	@*
 	<script src="/js/captcha-form.js"></script>
+	*@
 }

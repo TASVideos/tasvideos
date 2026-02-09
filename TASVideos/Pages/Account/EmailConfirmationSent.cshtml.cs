@@ -1,4 +1,3 @@
-using AspNetCore.ReCaptcha;
 using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Account;
@@ -23,11 +22,9 @@ public class EmailConfirmationSentModel : BasePageModel
 	public async Task<IActionResult> OnPost(
 		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
-		[FromServices] IHostEnvironment env,
-		[FromServices] IReCaptchaService reCaptchaService)
+		[FromServices] IHostEnvironment env)
 	{
-		var encodedResponse = Request.Form["g-recaptcha-response"];
-		var isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
+		var isCaptchaValid = true; // TODO CAPTCHA
 
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
