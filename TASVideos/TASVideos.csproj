@@ -38,6 +38,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+        <PackageReference Include="Ixnas.AltchaNet" />
 		<PackageReference Include="JavaScriptEngineSwitcher.V8" />
 		<PackageReference Include="LigerShark.WebOptimizer.Core" />
 		<PackageReference Include="LigerShark.WebOptimizer.Sass" />

@@ -69,7 +69,8 @@ public static class ApplicationBuilderExtensions
 			"img-src * data:", // allow hotlinking images from any domain in UGC (not great)
 			$"script-src 'self' {string.Join(' ', trustedJsHosts)}", // `<script/>`s will be blocked unless they're from one of these domains
 			"style-src 'unsafe-inline' 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // allow `<style/>`, and `<link rel="stylesheet"/>` if it's from our domain or trusted CDN
-			"upgrade-insecure-requests" // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
+			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
+			"worker-src blob: 'self'", // ALTCHA uses `blob:`
 		];
 		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);
 		var permissionsPolicyValue = string.Join(", ", value: [

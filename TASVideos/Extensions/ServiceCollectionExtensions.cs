@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.IO.Compression;
+using Ixnas.AltchaNet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
@@ -58,6 +59,33 @@ public static class ServiceCollectionExtensions
 				options.DefaultRequestCulture = new RequestCulture("en-US");
 				options.SupportedCultures = CultureInfo.GetCultures(CultureTypes.AllCultures);
 			});
+		}
+
+		public IServiceCollection AddCaptcha(byte[] selfHostedKey/*, string apiSecret*/)
+		{
+			/*
+			services.AddScoped<IAltchaCancellableChallengeStore, AltchaChallengeStore>();
+			services.AddScoped(sp => Altcha.CreateServiceBuilder()
+				.UseStore(sp.GetService<IAltchaCancellableChallengeStore>)
+				.UseSha256(selfHostedKey)
+				.SetComplexity(complexity: new AltchaComplexity(50_000, 100_000))
+				.SetExpiry(AltchaExpiry.FromSeconds(120))
+				.Build());
+			*/
+			services.AddScoped(_ => Altcha.CreateServiceBuilder()
+				.UseInMemoryStore() // TODO they want you to make a bespoke wrapper over your DB, example: https://github.com/ixnas/altcha-dotnet/tree/main/Ixnas.AltchaNet.AspNetCoreExample/Data
+				.UseSha256(selfHostedKey)
+				.SetComplexity(complexity: new AltchaComplexity(50_000, 100_000))
+				.SetExpiry(AltchaExpiry.FromSeconds(120))
+				.Build());
+			/*
+			services.AddScoped(sp => Altcha.CreateApiServiceBuilder()
+				.UseApiSecret(apiSecret)
+				.UseStore(sp.GetService<IAltchaCancellableChallengeStore>)
+				.Build());
+			*/
+			services.AddScoped(_ => Altcha.CreateSolverBuilder().Build());
+			return services.AddScoped<ICaptchaService, AltchaWrapper>();
 		}
 
 		public IServiceCollection AddCookieConfiguration()
@@ -222,4 +250,18 @@ public static class ServiceCollectionExtensions
 	}
 
 	public static bool ShouldIncludeSourceMappingComments(this IHostEnvironment env) => env.IsDevelopment();
+
+	private sealed class AltchaWrapper(AltchaService altcha) : ICaptchaService
+	{
+		public string ProviderName => "ALTCHA";
+
+		public Task<object> GenerateChallengeAsync()
+			=> Task.FromResult<object>(altcha.Generate());
+
+		public async Task<(bool IsValid, string FailureReason)> VerifyAsync(string responseBase64)
+		{
+			var result = await altcha.Validate(responseBase64);
+			return (result.IsValid, result.ValidationError?.Message ?? string.Empty);
+		}
+	}
 }

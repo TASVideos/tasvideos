@@ -39,6 +39,7 @@ public class RegisterModel : BasePageModel
 		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
 		[FromServices] IExternalMediaPublisher publisher,
+		[FromServices] ICaptchaService captcha,
 		[FromServices] IHostEnvironment env,
 		[FromServices] IUserMaintenanceLogger userMaintenanceLogger,
 		[FromServices] IIpBanService ipBanService)
@@ -54,11 +55,10 @@ public class RegisterModel : BasePageModel
 			ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
 		}
 
-		var isCaptchaValid = true; // TODO CAPTCHA
-
+		var (isCaptchaValid, captchaFailureReason) = await captcha.VerifyAsync(Request.Form["altcha"]!);
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
-			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
+			ModelState.AddModelError("", $"TASVideos prefers human users. If you believe you have received this message in error, please contact admin@tasvideos.org. {captcha.ProviderName} says: {captchaFailureReason}");
 		}
 
 		if (!string.IsNullOrEmpty(Location) && AvailableLocations.All(l => l.Value != Location))
