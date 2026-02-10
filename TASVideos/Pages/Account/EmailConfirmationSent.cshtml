@@ -21,9 +21,11 @@
 		</column>
 	</row>
 	<form-button-bar>
-		<environment exclude="Development">
-			@*TODO CAPTCHA*@
-		</environment>
-		<submit-button>Resend Confirmation Email</submit-button>
+		<div style="align-items: center; display: flex; flex-flow: column nowrap;">
+			<environment exclude="Development">
+				<altcha-widget challengeurl="/Account/GenerateCaptchaChallenge"></altcha-widget>
+			</environment>
+			<submit-button>Resend Confirmation Email</submit-button>
+		</div>
 	</form-button-bar>
 </form>

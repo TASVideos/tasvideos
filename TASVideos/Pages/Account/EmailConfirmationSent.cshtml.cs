@@ -20,8 +20,17 @@ public class EmailConfirmationSentModel : BasePageModel
 	}
 
 	public async Task<IActionResult> OnPost(
-		[FromServices] IUserManager userManager, [FromServices] IEmailService emailService)
+		[FromServices] IUserManager userManager,
+		[FromServices] IEmailService emailService,
+		[FromServices] ICaptchaService captcha,
+		[FromServices] IHostEnvironment env)
 	{
+		var (isCaptchaValid, captchaFailureReason) = await captcha.VerifyAsync(Request.Form["altcha"]!);
+		if (!env.IsDevelopment() && !isCaptchaValid)
+		{
+			ModelState.AddModelError("", $"TASVideos prefers human users. If you believe you have received this message in error, please contact admin@tasvideos.org. {captcha.ProviderName} says: {captchaFailureReason}");
+		}
+
 		var user = await userManager.GetUserByEmailAndUserName(Email, UserName);
 		if (user is not null && !user.EmailConfirmed)
 		{
