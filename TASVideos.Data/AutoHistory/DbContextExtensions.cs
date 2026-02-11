@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace TASVideos.Data.AutoHistory;
+
 public static class DbContextExtensions
 {
 	public static void EnsureAutoHistory<TAutoHistory>(this DbContext context, Func<TAutoHistory> createHistoryFactory)

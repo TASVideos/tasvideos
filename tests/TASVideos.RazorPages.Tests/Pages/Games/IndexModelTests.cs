@@ -79,9 +79,9 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _model.Game.Genres.Count);
-		Assert.IsTrue(_model.Game.Genres.Contains("Action"));
-		Assert.IsTrue(_model.Game.Genres.Contains("Platform"));
+		Assert.HasCount(2, _model.Game.Genres);
+		Assert.Contains("Action", _model.Game.Genres);
+		Assert.Contains("Platform", _model.Game.Genres);
 	}
 
 	[TestMethod]
@@ -104,7 +104,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _model.Game.Versions.Count);
+		Assert.HasCount(1, _model.Game.Versions);
 		var gameVersion = _model.Game.Versions.First();
 		Assert.AreEqual("Version 1.0", gameVersion.Name);
 		Assert.AreEqual("NES", gameVersion.SystemCode);
@@ -126,7 +126,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _model.Game.GameGroups.Count);
+		Assert.HasCount(1, _model.Game.GameGroups);
 		Assert.AreEqual(group.Id, _model.Game.GameGroups.First().Id);
 		Assert.AreEqual("Test Series", _model.Game.GameGroups.First().Name);
 	}
@@ -141,8 +141,8 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.Game.PublicationCount >= 0);
-		Assert.IsTrue(_model.Game.ObsoletePublicationCount >= 0);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.PublicationCount);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.ObsoletePublicationCount);
 	}
 
 	[TestMethod]
@@ -155,7 +155,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.Game.SubmissionCount >= 0);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.SubmissionCount);
 	}
 
 	[TestMethod]
@@ -168,7 +168,7 @@ public class IndexModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.IsTrue(_model.Game.UserFilesCount >= 0);
+		Assert.IsGreaterThanOrEqualTo(0, _model.Game.UserFilesCount);
 	}
 
 	[TestMethod]

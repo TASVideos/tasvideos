@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TASVideos.Extensions;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Extensions;
 
@@ -108,7 +109,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(1, modelState.Count);
+		Assert.HasCount(1, modelState);
 	}
 
 	[TestMethod]
@@ -120,7 +121,7 @@ public class FormFileExtensionTests
 		var user = CreateClaimsPrincipalWithPermissions([PermissionTo.OverrideSubmissionConstraints]);
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(0, modelState.Count);
+		Assert.IsEmpty(modelState);
 	}
 
 	[TestMethod]
@@ -132,7 +133,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(0, modelState.Count);
+		Assert.IsEmpty(modelState);
 	}
 
 	[TestMethod]
@@ -190,7 +191,7 @@ public class FormFileExtensionTests
 	{
 		var actual = await ((IFormFile?)null).ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Length);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -202,7 +203,7 @@ public class FormFileExtensionTests
 
 		var actual = await formFile.ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(bytes.Length, actual.Length);
+		Assert.That.AreSameLength(bytes, actual);
 	}
 
 	[TestMethod]
@@ -210,7 +211,7 @@ public class FormFileExtensionTests
 	{
 		var actual = await ((IFormFile?)null).ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Length);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]

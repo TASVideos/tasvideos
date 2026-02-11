@@ -53,7 +53,7 @@ public class PublicationsTests : TestDbBase
 	public async Task GetUrls_NotFound_ReturnsEmptyList()
 	{
 		var actual = await _publications.GetUrls(int.MaxValue);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -61,7 +61,7 @@ public class PublicationsTests : TestDbBase
 	{
 		var pub = _db.AddPublication().Entity;
 		var actual = await _publications.GetUrls(pub.Id);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -74,7 +74,7 @@ public class PublicationsTests : TestDbBase
 
 		var urls = await _publications.GetUrls(pub.Id);
 
-		Assert.AreEqual(2,  urls.Count);
+		Assert.HasCount(2, urls);
 	}
 
 	#endregion
@@ -408,7 +408,7 @@ public class PublicationsTests : TestDbBase
 	public async Task GetAvailableMovieFiles_NotFound_ReturnsEmptyList()
 	{
 		var actual = await _publications.GetAvailableMovieFiles(int.MaxValue);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -418,7 +418,7 @@ public class PublicationsTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		var actual = await _publications.GetAvailableMovieFiles(pub.Id);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -453,7 +453,7 @@ public class PublicationsTests : TestDbBase
 
 		var actual = await _publications.GetAvailableMovieFiles(pub.Id);
 
-		Assert.AreEqual(2, actual.Count);
+		Assert.HasCount(2, actual);
 		Assert.IsTrue(actual.Any(f => f.FileName == "test1.bk2" && f.Description == "Test Movie 1"));
 		Assert.IsTrue(actual.Any(f => f.FileName == "test2.fm2" && f.Description == "Test Movie 2"));
 		Assert.IsFalse(actual.Any(f => f.FileName == "screenshot.png"));

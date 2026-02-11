@@ -19,7 +19,7 @@ public class TagServiceTests : TestDbBase
 	{
 		var result = await _tagService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 		Assert.IsTrue(_cache.ContainsKey(TagService.TagsKey));
 	}
 
@@ -31,7 +31,7 @@ public class TagServiceTests : TestDbBase
 
 		var result = await _tagService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.IsTrue(_cache.ContainsKey(TagService.TagsKey));
 	}
 
@@ -70,8 +70,8 @@ public class TagServiceTests : TestDbBase
 
 		var result = await _tagService.GetDiff([id1], [id2]);
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Added.Count);
-		Assert.AreEqual(1, result.Removed.Count);
+		Assert.HasCount(1, result.Added);
+		Assert.HasCount(1, result.Removed);
 	}
 
 	[TestMethod]

@@ -2,7 +2,7 @@
 
 public class ListDiff(IReadOnlyCollection<string> currentItems, ICollection<string> newItems)
 {
-	public IReadOnlyCollection<string> Added => [..newItems.Except(currentItems)];
+	public IReadOnlyCollection<string> Added => [.. newItems.Except(currentItems)];
 	public IReadOnlyCollection<string> Removed => [.. currentItems.Except(newItems)];
 }
 

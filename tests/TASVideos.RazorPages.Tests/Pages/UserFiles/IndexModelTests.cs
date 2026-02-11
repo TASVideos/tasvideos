@@ -48,10 +48,10 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(2, _page.UsersWithMovies.Count);
+		Assert.HasCount(2, _page.UsersWithMovies);
 		var userNames = _page.UsersWithMovies.Select(u => u.UserName).ToList();
-		Assert.IsTrue(userNames.Contains("User1"));
-		Assert.IsTrue(userNames.Contains("User2"));
+		Assert.Contains("User1", userNames);
+		Assert.Contains("User2", userNames);
 	}
 
 	[TestMethod]
@@ -78,7 +78,7 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(10, _page.LatestMovies.Count); // Should limit to 10
+		Assert.HasCount(10, _page.LatestMovies); // Should limit to 10
 		Assert.AreEqual("Movie 1", _page.LatestMovies.First().Title); // Most recent first
 	}
 
@@ -111,7 +111,7 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(2, _page.GamesWithMovies.Count);
+		Assert.HasCount(2, _page.GamesWithMovies);
 
 		// Should be ordered by game name
 		Assert.AreEqual("Game A", _page.GamesWithMovies.First().GameName);
@@ -150,7 +150,7 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.UncatalogedFiles.Count);
+		Assert.HasCount(1, _page.UncatalogedFiles);
 		Assert.AreEqual("uncataloged.bk2", _page.UncatalogedFiles.First().FileName);
 	}
 
@@ -183,8 +183,8 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.UsersWithMovies.Count);
-		Assert.AreEqual(1, _page.LatestMovies.Count);
+		Assert.HasCount(1, _page.UsersWithMovies);
+		Assert.HasCount(1, _page.LatestMovies);
 		Assert.AreEqual("Public Movie", _page.LatestMovies.First().Title);
 	}
 

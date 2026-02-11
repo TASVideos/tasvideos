@@ -20,7 +20,7 @@ public class SaveboxModelTests : BasePageModelTests
 		_privateMessageService.GetSavebox(Arg.Any<int>()).Returns([]);
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.SaveBox.Count);
+		Assert.IsEmpty(_model.SaveBox);
 	}
 
 	[TestMethod]
@@ -38,7 +38,7 @@ public class SaveboxModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.SaveBox.Count);
+		Assert.HasCount(2, _model.SaveBox);
 		Assert.IsTrue(_model.SaveBox.Any(m => m.Subject == "First Saved Message"));
 		Assert.IsTrue(_model.SaveBox.Any(m => m.Subject == "Second Saved Message"));
 	}

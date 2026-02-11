@@ -24,7 +24,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 	public async Task OnGet_NoPublications_ReturnsEmptyVideosList()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Videos.Count);
+		Assert.IsEmpty(_model.Videos);
 	}
 
 	[TestMethod]
@@ -37,7 +37,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Videos.Count);
+		Assert.IsEmpty(_model.Videos);
 	}
 
 	[TestMethod]
@@ -58,7 +58,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Videos.Count);
+		Assert.HasCount(1, _model.Videos);
 		Assert.AreEqual("Cached Channel", _model.Videos[0].ChannelTitle);
 	}
 
@@ -86,7 +86,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Videos.Count);
+		Assert.HasCount(1, _model.Videos);
 		Assert.AreEqual("Definitely a Legit TAS Video", _model.Videos[0].ChannelTitle);
 		_cache.Received(1).Set("YoutubeUploaders-dQw4w9WgXcQ", "Definitely a Legit TAS Video", Durations.OneDay);
 	}
@@ -126,7 +126,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.Videos.Count);
+		Assert.HasCount(2, _model.Videos);
 		var cachedVideo = _model.Videos.First(v => v.VideoId == "dQw4w9WgXcQ");
 		var apiVideo = _model.Videos.First(v => v.VideoId == "sVR32jXj68w");
 
@@ -153,7 +153,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.Videos.Count);
+		Assert.HasCount(2, _model.Videos);
 		var obsoleteVideo = _model.Videos.First(v => v.PublicationId == obsoletePub.Id);
 		var currentVideo = _model.Videos.First(v => v.PublicationId == currentPub.Id);
 
@@ -176,7 +176,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Videos.Count);
+		Assert.HasCount(1, _model.Videos);
 	}
 
 	[TestMethod]
@@ -193,7 +193,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Videos.Count);
+		Assert.HasCount(1, _model.Videos);
 		Assert.AreEqual("", _model.Videos[0].ChannelTitle);
 		_cache.DidNotReceive().Set(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<TimeSpan>());
 	}
@@ -207,7 +207,7 @@ public class YoutubeUploadersModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Videos.Count);
+		Assert.IsEmpty(_model.Videos);
 	}
 
 	[TestMethod]

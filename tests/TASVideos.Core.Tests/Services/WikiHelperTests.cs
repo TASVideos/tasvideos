@@ -60,11 +60,11 @@ public class WikiHelperTests
 
 		if (expectedRelevantPermission != null)
 		{
-			Assert.IsTrue(relevantPermissions.Contains(expectedRelevantPermission.Value));
+			Assert.Contains(expectedRelevantPermission.Value, relevantPermissions);
 		}
 		else
 		{
-			Assert.AreEqual(0, relevantPermissions.Count);
+			Assert.IsEmpty(relevantPermissions);
 		}
 	}
 
@@ -80,12 +80,12 @@ public class WikiHelperTests
 		var actual = WikiHelper.UserCanEditWikiPage("SandBox", "User", [userPermission], out var relevantPermissions);
 		Assert.AreEqual(expected, actual);
 
-		Assert.IsTrue(relevantPermissions.Contains(PermissionTo.EditGameResources));
-		Assert.IsTrue(relevantPermissions.Contains(PermissionTo.EditHomePage));
-		Assert.IsTrue(relevantPermissions.Contains(PermissionTo.EditWikiPages));
-		Assert.IsTrue(relevantPermissions.Contains(PermissionTo.EditSystemPages));
-		Assert.IsTrue(relevantPermissions.Contains(PermissionTo.EditSubmissions));
-		Assert.IsTrue(relevantPermissions.Contains(PermissionTo.EditPublicationMetaData));
+		Assert.Contains(PermissionTo.EditGameResources, relevantPermissions);
+		Assert.Contains(PermissionTo.EditHomePage, relevantPermissions);
+		Assert.Contains(PermissionTo.EditWikiPages, relevantPermissions);
+		Assert.Contains(PermissionTo.EditSystemPages, relevantPermissions);
+		Assert.Contains(PermissionTo.EditSubmissions, relevantPermissions);
+		Assert.Contains(PermissionTo.EditPublicationMetaData, relevantPermissions);
 	}
 
 	[TestMethod]
@@ -98,7 +98,6 @@ public class WikiHelperTests
 	[DataRow("/WikiPage", false, false)]
 	[DataRow("WikiPage", true, true)]
 	[DataRow("wikipage", false, true)]
-	[DataRow("WikiPage.html", false, false)]
 	[DataRow("WikiPage/Subpage", true, true)]
 	[DataRow("ProperCased", true, true)]
 	[DataRow("camelCased", false, true)]

@@ -347,7 +347,7 @@ public class Bk2ParserTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Annotations));
 		var lines = result.Annotations.SplitWithEmpty("\n");
-		Assert.AreEqual(2, lines.Length);
+		Assert.HasCount(2, lines);
 	}
 
 	[TestMethod]
@@ -360,7 +360,7 @@ public class Bk2ParserTests : BaseParserTests
 	public async Task Hashes(string filename, HashType hashType, string hash)
 	{
 		var result = await _bk2Parser.Parse(Embedded(filename + ".bk2", out var length), length);
-		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.HasCount(1, result.Hashes);
 		Assert.AreEqual(hashType, result.Hashes.First().Key);
 		Assert.AreEqual(hash, result.Hashes.First().Value);
 	}
@@ -371,6 +371,6 @@ public class Bk2ParserTests : BaseParserTests
 	public async Task HashesMissing(string filename)
 	{
 		var result = await _bk2Parser.Parse(Embedded(filename + ".bk2", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 }

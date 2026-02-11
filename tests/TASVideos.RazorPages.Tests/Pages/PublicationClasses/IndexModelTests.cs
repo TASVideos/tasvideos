@@ -23,7 +23,7 @@ public class IndexModelTests : BasePageModelTests
 	{
 		_classService.GetAll().Returns([]);
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Classes.Count);
+		Assert.IsEmpty(_model.Classes);
 	}
 
 	[TestMethod]
@@ -37,7 +37,7 @@ public class IndexModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Classes.Count);
+		Assert.HasCount(1, _model.Classes);
 		var retrievedClass = _model.Classes.First();
 		Assert.AreEqual("Test Class", retrievedClass.Name);
 		Assert.AreEqual("/icons/test.png", retrievedClass.IconPath);

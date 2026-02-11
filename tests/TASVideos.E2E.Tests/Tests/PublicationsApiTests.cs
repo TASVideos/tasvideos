@@ -40,10 +40,10 @@ public class PublicationsApiTests : BaseE2ETest
 
 		var publications = await Deserialize<PublicationsResponse[]>(response);
 
-		Assert.IsTrue(publications.Length > 0);
+		Assert.IsGreaterThan(0, publications.Length);
 
 		var pub = publications[0];
-		Assert.IsTrue(pub.Id > 0);
+		Assert.IsGreaterThan(0, pub.Id);
 		Assert.IsFalse(string.IsNullOrEmpty(pub.Title));
 	}
 
@@ -58,7 +58,7 @@ public class PublicationsApiTests : BaseE2ETest
 
 		var publications = await Deserialize<PublicationsResponse[]>(response);
 
-		Assert.IsTrue(publications.Length > 0);
+		Assert.IsGreaterThan(0, publications.Length);
 		Assert.IsTrue(publications.All(p => p.SystemCode == system));
 	}
 
@@ -73,7 +73,7 @@ public class PublicationsApiTests : BaseE2ETest
 
 		var publications = await Deserialize<PublicationsResponse[]>(response);
 
-		Assert.IsTrue(publications.Length > 0);
+		Assert.IsGreaterThan(0, publications.Length);
 		Assert.IsTrue(publications.All(p => p.Class == className));
 	}
 
@@ -88,7 +88,7 @@ public class PublicationsApiTests : BaseE2ETest
 
 		var publications = await Deserialize<PublicationsResponse[]>(response);
 
-		Assert.IsTrue(publications.Length > 0);
+		Assert.IsGreaterThan(0, publications.Length);
 		Assert.IsTrue(publications.All(p => p.CreateTimestamp.Year == year));
 	}
 
@@ -101,7 +101,7 @@ public class PublicationsApiTests : BaseE2ETest
 		AssertApiOk(response);
 
 		var publications = await Deserialize<PublicationsResponse[]>(response);
-		Assert.AreEqual(5, publications.Length);
+		Assert.HasCount(5, publications);
 	}
 
 	[TestMethod]
@@ -114,12 +114,12 @@ public class PublicationsApiTests : BaseE2ETest
 
 		var publications = await Deserialize<PublicationsResponse[]>(response);
 
-		Assert.IsTrue(publications.Length > 1);
+		Assert.IsGreaterThan(1, publications.Length);
 
 		var previousId = 0;
 		foreach (var publication in publications)
 		{
-			Assert.IsTrue(publication.Id >= previousId, $"IDs should be in ascending order. Previous: {previousId}, Current: {publication.Id}");
+			Assert.IsGreaterThanOrEqualTo(previousId, publication.Id, $"IDs should be in ascending order. Previous: {previousId}, Current: {publication.Id}");
 			previousId = publication.Id;
 		}
 	}
@@ -139,7 +139,7 @@ public class PublicationsApiTests : BaseE2ETest
 		var root = json.RootElement;
 
 		Assert.AreEqual(JsonValueKind.Array, root.ValueKind);
-		Assert.IsTrue(root.GetArrayLength() > 0);
+		Assert.IsGreaterThan(0, root.GetArrayLength());
 
 		var publication = root[0];
 

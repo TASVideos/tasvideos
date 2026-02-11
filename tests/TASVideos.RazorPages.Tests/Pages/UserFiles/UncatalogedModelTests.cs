@@ -51,7 +51,7 @@ public class UncatalogedModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.Files.Count);
+		Assert.HasCount(1, _page.Files);
 		var file = _page.Files.First();
 		Assert.AreEqual(1, file.Id);
 		Assert.AreEqual("uncataloged.bk2", file.FileName);
@@ -94,7 +94,7 @@ public class UncatalogedModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.Files.Count);
+		Assert.HasCount(1, _page.Files);
 		Assert.AreEqual("public.bk2", _page.Files.First().FileName);
 	}
 
@@ -115,7 +115,7 @@ public class UncatalogedModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.Files.Count);
+		Assert.HasCount(1, _page.Files);
 		var file = _page.Files.First();
 		Assert.AreEqual("NoSystem.lua", file.FileName);
 		Assert.IsNull(file.SystemCode);
@@ -140,6 +140,6 @@ public class UncatalogedModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(0, _page.Files.Count);
+		Assert.IsEmpty(_page.Files);
 	}
 }

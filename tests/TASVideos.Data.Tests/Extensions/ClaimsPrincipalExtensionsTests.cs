@@ -140,7 +140,7 @@ public class ClaimsPrincipalExtensionsTests
 	{
 		ClaimsPrincipal? user = null;
 		var result = user.Permissions();
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -148,7 +148,7 @@ public class ClaimsPrincipalExtensionsTests
 	{
 		var user = new ClaimsPrincipal(new ClaimsIdentity());
 		var result = user.Permissions();
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -160,7 +160,7 @@ public class ClaimsPrincipalExtensionsTests
 
 		var result = user.Permissions();
 
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -174,9 +174,9 @@ public class ClaimsPrincipalExtensionsTests
 
 		var result = user.Permissions();
 
-		Assert.AreEqual(2, result.Count);
-		Assert.IsTrue(result.Contains(PermissionTo.CreateForumPosts));
-		Assert.IsTrue(result.Contains(PermissionTo.EditHomePage));
+		Assert.HasCount(2, result);
+		Assert.Contains(PermissionTo.CreateForumPosts, result);
+		Assert.Contains(PermissionTo.EditHomePage, result);
 	}
 
 	#endregion
@@ -321,7 +321,7 @@ public class ClaimsPrincipalExtensionsTests
 
 		user.ReplacePermissionClaims(newPermissions);
 
-		Assert.AreEqual(0, user.Permissions().Count);
+		Assert.IsEmpty(user.Permissions());
 	}
 
 	[TestMethod]
@@ -337,8 +337,8 @@ public class ClaimsPrincipalExtensionsTests
 		user.ReplacePermissionClaims(newPermissions);
 
 		var result = user.Permissions();
-		Assert.AreEqual(1, result.Count);
-		Assert.IsTrue(result.Contains(PermissionTo.CreateForumPosts));
+		Assert.HasCount(1, result);
+		Assert.Contains(PermissionTo.CreateForumPosts, result);
 
 		// Non-permission claims should remain
 		Assert.AreEqual("TestUser", user.Name());
@@ -356,7 +356,7 @@ public class ClaimsPrincipalExtensionsTests
 		user.ReplacePermissionClaims([]);
 
 		var result = user.Permissions();
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 
 		// Non-permission claims should remain
 		Assert.AreEqual("TestUser", user.Name());

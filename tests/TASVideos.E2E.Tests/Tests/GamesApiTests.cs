@@ -40,7 +40,7 @@ public class GamesApiTests : BaseE2ETest
 
 		var games = await Deserialize<GamesResponse[]>(response);
 
-		Assert.IsTrue(games.Length > 0);
+		Assert.IsGreaterThan(0, games.Length);
 
 		var firstGame = games[0];
 		Assert.IsFalse(string.IsNullOrEmpty(firstGame.DisplayName));
@@ -57,7 +57,7 @@ public class GamesApiTests : BaseE2ETest
 
 		var games = await Deserialize<GamesResponse[]>(response);
 
-		Assert.IsTrue(games.Length > 0);
+		Assert.IsGreaterThan(0, games.Length);
 		Assert.IsTrue(games.All(g => g.Versions.Any(v => v.SystemCode == system)));
 	}
 
@@ -70,7 +70,7 @@ public class GamesApiTests : BaseE2ETest
 		AssertApiOk(response);
 
 		var games = await Deserialize<GamesResponse[]>(response);
-		Assert.AreEqual(5, games.Length);
+		Assert.HasCount(5, games);
 	}
 
 	[TestMethod]
@@ -84,13 +84,13 @@ public class GamesApiTests : BaseE2ETest
 
 		var games = await Deserialize<GamesResponse[]>(response);
 
-		Assert.IsTrue(games.Length > 1);
+		Assert.IsGreaterThan(1, games.Length);
 
 		// Verify ascending order
 		var previousId = 0;
 		foreach (var game in games)
 		{
-			Assert.IsTrue(game.Id >= previousId, $"IDs should be in ascending order. Previous: {previousId}, Current: {game.Id}");
+			Assert.IsGreaterThanOrEqualTo(previousId, game.Id, $"IDs should be in ascending order. Previous: {previousId}, Current: {game.Id}");
 			previousId = game.Id;
 		}
 	}
@@ -110,7 +110,7 @@ public class GamesApiTests : BaseE2ETest
 		var root = json.RootElement;
 
 		Assert.AreEqual(JsonValueKind.Array, root.ValueKind);
-		Assert.IsTrue(root.GetArrayLength() > 0);
+		Assert.IsGreaterThan(0, root.GetArrayLength());
 
 		var game = root[0];
 

@@ -17,7 +17,7 @@ public class AuthorsModelTests : TestDbBase
 	public async Task OnGet_NoAuthors_ReturnsEmptyList()
 	{
 		await _page.OnGet();
-		Assert.AreEqual(0, _page.Authors.Count);
+		Assert.IsEmpty(_page.Authors);
 	}
 
 	[TestMethod]
@@ -28,7 +28,7 @@ public class AuthorsModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.Authors.Count);
+		Assert.HasCount(1, _page.Authors);
 		Assert.AreEqual("TestAuthor", _page.Authors[0].Author);
 		Assert.AreEqual(1, _page.Authors[0].Id);
 		Assert.AreEqual(1, _page.Authors[0].ActivePubCount);
@@ -46,7 +46,7 @@ public class AuthorsModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(1, _page.Authors.Count);
+		Assert.HasCount(1, _page.Authors);
 		Assert.AreEqual(1, _page.Authors[0].ActivePubCount);
 		Assert.AreEqual(1, _page.Authors[0].ObsoletePubCount);
 	}

@@ -43,8 +43,8 @@ public class CatalogModelTests : BasePageModelTests
 		Assert.AreEqual("Test Topic", _model.Title);
 		Assert.IsNull(_model.SystemId);
 		Assert.IsNull(_model.GameId);
-		Assert.IsTrue(_model.AvailableSystems.Count > 0);
-		Assert.AreEqual(0, _model.AvailableGames.Count);
+		Assert.IsNotEmpty(_model.AvailableSystems);
+		Assert.IsEmpty(_model.AvailableGames);
 	}
 
 	[TestMethod]
@@ -65,8 +65,8 @@ public class CatalogModelTests : BasePageModelTests
 		Assert.AreEqual("SMB TAS Topic", _model.Title);
 		Assert.AreEqual(system.Id, _model.SystemId);
 		Assert.AreEqual(game.Id, _model.GameId);
-		Assert.IsTrue(_model.AvailableSystems.Count > 0);
-		Assert.IsTrue(_model.AvailableGames.Count > 0);
+		Assert.IsNotEmpty(_model.AvailableSystems);
+		Assert.IsNotEmpty(_model.AvailableGames);
 	}
 
 	[TestMethod]
@@ -96,7 +96,7 @@ public class CatalogModelTests : BasePageModelTests
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsTrue(_model.AvailableSystems.Count > 0);
+		Assert.IsNotEmpty(_model.AvailableSystems);
 	}
 
 	[TestMethod]
@@ -181,6 +181,6 @@ public class CatalogModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual(1, _model.AvailableSystems.Count(s => s.Text == "NES"));
-		Assert.AreEqual(0, _model.AvailableGames.Count);
+		Assert.IsEmpty(_model.AvailableGames);
 	}
 }

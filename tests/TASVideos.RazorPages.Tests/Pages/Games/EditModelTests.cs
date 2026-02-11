@@ -67,11 +67,11 @@ public class EditModelTests : BasePageModelTests
 		Assert.AreEqual("TestAlias,GameAlias", _model.Game.Aliases);
 		Assert.AreEqual("https://example.com/screenshot.png", _model.Game.ScreenshotUrl);
 		Assert.AreEqual("TestGameResources", _model.Game.GameResourcesPage);
-		Assert.AreEqual(2, _model.Game.Genres.Count);
-		Assert.IsTrue(_model.Game.Genres.Contains(genre1.Id));
-		Assert.IsTrue(_model.Game.Genres.Contains(genre2.Id));
-		Assert.AreEqual(1, _model.Game.Groups.Count);
-		Assert.IsTrue(_model.Game.Groups.Contains(group1.Id));
+		Assert.HasCount(2, _model.Game.Genres);
+		Assert.Contains(genre1.Id, _model.Game.Genres);
+		Assert.Contains(genre2.Id, _model.Game.Genres);
+		Assert.HasCount(1, _model.Game.Groups);
+		Assert.Contains(group1.Id, _model.Game.Groups);
 
 		Assert.IsTrue(_model.AvailableGenres.Any(g => g.Text == "Action"));
 		Assert.IsTrue(_model.AvailableGenres.Any(g => g.Text == "Platformer"));
@@ -190,9 +190,9 @@ public class EditModelTests : BasePageModelTests
 		Assert.AreEqual("NewGameAlias", createdGame.Aliases);
 		Assert.AreEqual("https://example.com/new.png", createdGame.ScreenshotUrl);
 		Assert.AreEqual("NewGameResources", createdGame.GameResourcesPage);
-		Assert.AreEqual(1, createdGame.GameGenres.Count);
+		Assert.HasCount(1, createdGame.GameGenres);
 		Assert.AreEqual(genre.Id, createdGame.GameGenres.First().GenreId);
-		Assert.AreEqual(1, createdGame.GameGroups.Count);
+		Assert.HasCount(1, createdGame.GameGroups);
 		Assert.AreEqual(group.Id, createdGame.GameGroups.First().GameGroupId);
 
 		// Verify baseline goal was created
@@ -247,9 +247,9 @@ public class EditModelTests : BasePageModelTests
 		Assert.AreEqual("UpdatedAlias", updatedGame.Aliases);
 		Assert.AreEqual("https://example.com/updated.png", updatedGame.ScreenshotUrl);
 		Assert.AreEqual("UpdatedResources", updatedGame.GameResourcesPage);
-		Assert.AreEqual(1, updatedGame.GameGenres.Count);
+		Assert.HasCount(1, updatedGame.GameGenres);
 		Assert.AreEqual(genre2.Id, updatedGame.GameGenres.First().GenreId);
-		Assert.AreEqual(1, updatedGame.GameGroups.Count);
+		Assert.HasCount(1, updatedGame.GameGroups);
 		Assert.AreEqual(group2.Id, updatedGame.GameGroups.First().GameGroupId);
 
 		await _publisher.Received(1).Send(Arg.Any<Post>());

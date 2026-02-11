@@ -52,7 +52,7 @@ public class RateModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(title, _page.Title);
 		Assert.AreEqual("8.5", _page.Rating);
-		Assert.AreEqual(1, _page.AllRatings.Count);
+		Assert.HasCount(1, _page.AllRatings);
 		Assert.AreEqual(overallRating, _page.OverallRating);
 	}
 
@@ -77,7 +77,7 @@ public class RateModelTests : TestDbBase
 		await _page.OnGet();
 
 		var visibleRatings = _page.VisibleRatings.ToList();
-		Assert.AreEqual(2, visibleRatings.Count);
+		Assert.HasCount(2, visibleRatings);
 		Assert.IsTrue(visibleRatings.All(r => r.IsPublic || r.UserName == "TestUser"));
 	}
 
@@ -102,8 +102,8 @@ public class RateModelTests : TestDbBase
 		await _page.OnGet();
 
 		var visibleRatings = _page.VisibleRatings.ToList();
-		Assert.AreEqual(3, visibleRatings.Count);
-		Assert.AreEqual(ratings.Count, visibleRatings.Count);
+		Assert.HasCount(3, visibleRatings);
+		Assert.That.AreSameLength(ratings, visibleRatings);
 	}
 
 	[TestMethod]

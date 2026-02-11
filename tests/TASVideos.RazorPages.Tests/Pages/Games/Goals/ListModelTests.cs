@@ -31,7 +31,7 @@ public class ListModelTests : BasePageModelTests
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Test Game", _model.Game);
-		Assert.AreEqual(2, _model.Goals.Count);
+		Assert.HasCount(2, _model.Goals);
 		Assert.IsTrue(_model.Goals.Any(g => g.Name == "baseline"));
 		Assert.IsTrue(_model.Goals.Any(g => g.Name == "any%"));
 	}
@@ -251,8 +251,8 @@ public class ListModelTests : BasePageModelTests
 		var updatedGoal = await _db.GameGoals.FindAsync(goal.Id);
 		Assert.IsNotNull(updatedGoal);
 		Assert.AreEqual("new goal", updatedGoal.DisplayName);
-		Assert.IsTrue(sub.Title.Contains(goal.DisplayName));
-		Assert.IsTrue(pub.Title.Contains(goal.DisplayName));
+		Assert.Contains(goal.DisplayName, sub.Title);
+		Assert.Contains(goal.DisplayName, pub.Title);
 		Assert.AreEqual("success", _model.MessageType);
 	}
 

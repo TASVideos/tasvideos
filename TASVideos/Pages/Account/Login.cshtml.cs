@@ -25,9 +25,9 @@ public class LoginModel : BasePageModel
 	}
 
 	public async Task<IActionResult> OnPost(
-		[FromServices]ISignInManager signInManager,
-		[FromServices]IUserManager userManager,
-		[FromServices]IHostEnvironment env)
+		[FromServices] ISignInManager signInManager,
+		[FromServices] IUserManager userManager,
+		[FromServices] IHostEnvironment env)
 	{
 		if (!ModelState.IsValid)
 		{

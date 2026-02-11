@@ -83,7 +83,7 @@ public class StringExtensionTests
 	{
 		var actual = str.CsvToStrings();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -108,7 +108,7 @@ public class StringExtensionTests
 	{
 		var actual = str.CsvToInts();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -243,7 +243,7 @@ public class StringExtensionTests
 		var result = input.SplitWithEmpty(",");
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Length);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -254,7 +254,7 @@ public class StringExtensionTests
 		var result = input.SplitWithEmpty(",");
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Length);
+		Assert.IsEmpty(result);
 	}
 
 	[TestMethod]
@@ -264,7 +264,7 @@ public class StringExtensionTests
 
 		var result = input.SplitWithEmpty(",");
 
-		Assert.AreEqual(1, result.Length);
+		Assert.HasCount(1, result);
 		Assert.AreEqual("abc", result[0]);
 	}
 

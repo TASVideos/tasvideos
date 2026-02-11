@@ -85,7 +85,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Invalid FM3 version"));
+		Assert.Contains("Invalid FM3 version", result.Errors.First());
 	}
 
 	[TestMethod]
@@ -95,7 +95,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Missing required romFilename field"));
+		Assert.Contains("Missing required romFilename field", result.Errors.First());
 	}
 
 	[TestMethod]
@@ -105,7 +105,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Missing required romChecksum field"));
+		Assert.Contains("Missing required romChecksum field", result.Errors.First());
 	}
 
 	[TestMethod]
@@ -115,7 +115,7 @@ public class Fm3ParserTests : BaseParserTests
 		Assert.IsFalse(result.Success);
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
-		Assert.IsTrue(result.Errors.First().Contains("Missing required guid field"));
+		Assert.Contains("Missing required guid field", result.Errors.First());
 	}
 
 	[TestMethod]
@@ -123,7 +123,7 @@ public class Fm3ParserTests : BaseParserTests
 	{
 		var result = await _fm3Parser.Parse(Embedded("hash.fm3", out var length), length);
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.HasCount(1, result.Hashes);
 		Assert.AreEqual(HashType.Md5, result.Hashes.First().Key);
 		Assert.AreEqual("e9d838feee6596dea4b6bb6a7ebb2176", result.Hashes.First().Value);
 		AssertNoWarningsOrErrors(result);

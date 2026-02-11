@@ -124,7 +124,7 @@ public class ViewModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _model.Publications.Count);
+		Assert.HasCount(2, _model.Publications);
 		Assert.IsTrue(_model.Publications.Any(p => p.Title == "Publication 1"));
 		Assert.IsTrue(_model.Publications.Any(p => p.Title == "Publication 2"));
 		Assert.IsFalse(_model.Publications.Any(p => p.Title == "Other Publication"));
@@ -154,7 +154,7 @@ public class ViewModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _model.Submissions.Count);
+		Assert.HasCount(2, _model.Submissions);
 		Assert.IsTrue(_model.Submissions.Any(s => s.Title == "Submission 1"));
 		Assert.IsTrue(_model.Submissions.Any(s => s.Title == "Submission 2"));
 		Assert.IsFalse(_model.Submissions.Any(s => s.Title == "Other Submission"));
@@ -173,7 +173,7 @@ public class ViewModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(0, _model.Publications.Count);
-		Assert.AreEqual(0, _model.Submissions.Count);
+		Assert.IsEmpty(_model.Publications);
+		Assert.IsEmpty(_model.Submissions);
 	}
 }

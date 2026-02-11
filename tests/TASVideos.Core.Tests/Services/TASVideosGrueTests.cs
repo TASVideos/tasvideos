@@ -50,7 +50,7 @@ public class TASVideosGrueTests : TestDbBase
 		Assert.AreEqual(SiteGlobalConstants.GrueFoodForumId, actual.ForumId);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsFalse(actual.EnableBbCode);
-		Assert.IsFalse(actual.Text.Contains("stale"));
+		Assert.DoesNotContain("stale", actual.Text);
 	}
 
 	[TestMethod]
@@ -72,6 +72,6 @@ public class TASVideosGrueTests : TestDbBase
 		Assert.AreEqual(SiteGlobalConstants.TASVideosGrueId, actual.PosterId);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsFalse(actual.EnableBbCode);
-		Assert.IsTrue(actual.Text.Contains("stale"));
+		Assert.Contains("stale", actual.Text);
 	}
 }

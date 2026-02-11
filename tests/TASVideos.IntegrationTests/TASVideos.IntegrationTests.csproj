@@ -5,6 +5,7 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<IsPackable>false</IsPackable>
 		<MSTestAnalysisMode>All</MSTestAnalysisMode>
+		<NoWarn>MSTEST0049</NoWarn> <!-- TODO adopt TestContext.CancellationTokenSource.Token -->
 	</PropertyGroup>
 
 	<ItemGroup>

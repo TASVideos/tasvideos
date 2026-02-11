@@ -17,7 +17,7 @@ public class IndexModelTests : TestDbBase
 	public async Task OnGet_WithEmptyDatabase_ReturnsEmptyReasonsList()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Reasons.Count);
+		Assert.IsEmpty(_model.Reasons);
 	}
 
 	[TestMethod]
@@ -50,7 +50,7 @@ public class IndexModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.AreEqual(3, _model.Reasons.Count);
+		Assert.HasCount(3, _model.Reasons);
 
 		var loadedReason1 = _model.Reasons.First(r => r.Reason == "Invalid Input");
 		Assert.AreEqual(2, loadedReason1.SubmissionCount);
@@ -104,7 +104,7 @@ public class IndexModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_model.ModelState.IsValid);
 		Assert.IsTrue(_model.ModelState.ContainsKey("displayName"));
-		Assert.IsTrue(_model.ModelState["displayName"]!.Errors[0].ErrorMessage.Contains("already exists"));
+		Assert.Contains("already exists", _model.ModelState["displayName"]!.Errors[0].ErrorMessage);
 
 		// Should not create duplicate
 		Assert.AreEqual(1, _db.SubmissionRejectionReasons.Count(r => r.DisplayName == "Existing Reason"));
@@ -172,7 +172,7 @@ public class IndexModelTests : TestDbBase
 		// Call Initialize through OnGet
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.Reasons.Count);
+		Assert.HasCount(2, _model.Reasons);
 		var testReason1 = _model.Reasons.First(r => r.Reason == "Reason 1");
 		Assert.AreEqual(reason1.Id, testReason1.Id);
 		Assert.AreEqual("Reason 1", testReason1.Reason);

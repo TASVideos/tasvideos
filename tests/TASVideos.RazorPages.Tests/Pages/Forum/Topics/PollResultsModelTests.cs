@@ -42,7 +42,7 @@ public class PollResultsModelTests : BasePageModelTests
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Test Topic", _model.Poll.TopicTitle);
 		Assert.AreEqual("Did you like watching this movie? ", _model.Poll.Question);
-		Assert.AreEqual(0, _model.Poll.Votes.Count);
+		Assert.IsEmpty(_model.Poll.Votes);
 	}
 
 	[TestMethod]
@@ -74,7 +74,7 @@ public class PollResultsModelTests : BasePageModelTests
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Voting Topic", _model.Poll.TopicTitle);
 		Assert.AreEqual("Which option do you prefer?", _model.Poll.Question);
-		Assert.AreEqual(2, _model.Poll.Votes.Count);
+		Assert.HasCount(2, _model.Poll.Votes);
 
 		var resultVote1 = _model.Poll.Votes.First(v => v.UserId == voter1.Id);
 		Assert.AreEqual("Voter1", resultVote1.UserName);
@@ -106,7 +106,7 @@ public class PollResultsModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(2, _model.Poll.Votes.Count);
+		Assert.HasCount(2, _model.Poll.Votes);
 		Assert.IsTrue(_model.Poll.Votes.All(v => v.UserId == voter.Id));
 		Assert.IsTrue(_model.Poll.Votes.All(v => v.UserName == "MultiVoter"));
 	}
@@ -162,7 +162,7 @@ public class PollResultsModelTests : BasePageModelTests
 
 		// Verify all votes from user were removed
 		var remainingVotes = await _db.ForumPollOptionVotes.ToListAsync();
-		Assert.AreEqual(0, remainingVotes.Count);
+		Assert.IsEmpty(remainingVotes);
 	}
 
 	[TestMethod]
@@ -193,7 +193,7 @@ public class PollResultsModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(3, _model.Poll.Votes.Count);
+		Assert.HasCount(3, _model.Poll.Votes);
 
 		// Verify votes are ordered by ordinal (option 1 votes first, then option 2 votes)
 		var ordinals = _model.Poll.Votes.Select(v => v.Ordinal).ToList();

@@ -44,7 +44,7 @@ public class EditModelTests : TestDbBase
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Test Category", _model.Category.Title);
 		Assert.AreEqual("Test Description", _model.Category.Description);
-		Assert.AreEqual(2, _model.Category.Forums.Count);
+		Assert.HasCount(2, _model.Category.Forums);
 
 		var orderedForums = _model.Category.Forums.OrderBy(f => f.Ordinal).ToList();
 		Assert.AreEqual("Forum 2", orderedForums[0].Name);
@@ -64,7 +64,7 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("Empty Category", _model.Category.Title);
-		Assert.AreEqual(0, _model.Category.Forums.Count);
+		Assert.IsEmpty(_model.Category.Forums);
 	}
 
 	[TestMethod]

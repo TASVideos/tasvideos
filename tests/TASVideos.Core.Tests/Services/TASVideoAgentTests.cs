@@ -32,7 +32,7 @@ public class TASVideoAgentTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(SiteGlobalConstants.TASVideoAgentId, actual.PosterId);
-		Assert.IsTrue(actual.Text.Contains(_submission.Id.ToString()));
+		Assert.Contains(_submission.Id.ToString(), actual.Text);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsTrue(actual.EnableBbCode);
 	}
@@ -66,7 +66,7 @@ public class TASVideoAgentTests : TestDbBase
 		await _tasVideoAgent.PostSubmissionTopic(_submission.Id, SubmissionTitle);
 		var actual = await _db.ForumPollOptions.ToListAsync();
 
-		Assert.AreEqual(3, actual.Count);
+		Assert.HasCount(3, actual);
 		Assert.IsTrue(actual.Any(o => o.Text == SiteGlobalConstants.PollOptionNo));
 		Assert.IsTrue(actual.Any(o => o.Text == SiteGlobalConstants.PollOptionYes));
 		Assert.IsTrue(actual.Any(o => o.Text == SiteGlobalConstants.PollOptionsMeh));
@@ -130,7 +130,7 @@ public class TASVideoAgentTests : TestDbBase
 		Assert.AreEqual(SiteGlobalConstants.NewPublicationPostSubject, actual.Subject);
 		Assert.IsFalse(actual.EnableHtml);
 		Assert.IsTrue(actual.EnableBbCode);
-		Assert.IsTrue(actual.Text.Contains(PublicationId.ToString()));
+		Assert.Contains(PublicationId.ToString(), actual.Text);
 	}
 
 	[TestMethod]
@@ -212,7 +212,7 @@ public class TASVideoAgentTests : TestDbBase
 		Assert.AreEqual(userEntry.Entity.Id, message.ToUserId);
 		Assert.IsTrue(message.EnableBbCode);
 		Assert.IsFalse(message.EnableHtml);
-		Assert.IsTrue(message.Text.Contains(userEntry.Entity.UserName));
+		Assert.Contains(userEntry.Entity.UserName, message.Text);
 		Assert.AreEqual(subject, message.Subject);
 	}
 
@@ -264,7 +264,7 @@ public class TASVideoAgentTests : TestDbBase
 		Assert.AreEqual(userEntry.Entity.Id, message.ToUserId);
 		Assert.IsTrue(message.EnableBbCode);
 		Assert.IsFalse(message.EnableHtml);
-		Assert.IsTrue(message.Text.Contains(roleName));
+		Assert.Contains(roleName, message.Text);
 		Assert.AreEqual(subject, message.Subject);
 	}
 
@@ -317,8 +317,8 @@ public class TASVideoAgentTests : TestDbBase
 		Assert.AreEqual(userEntry.Entity.Id, message.ToUserId);
 		Assert.IsTrue(message.EnableBbCode);
 		Assert.IsFalse(message.EnableHtml);
-		Assert.IsTrue(message.Text.Contains(roleName));
-		Assert.IsTrue(message.Text.Contains(publicationTitle));
+		Assert.Contains(roleName, message.Text);
+		Assert.Contains(publicationTitle, message.Text);
 		Assert.AreEqual(subject, message.Subject);
 	}
 }

@@ -74,7 +74,7 @@ public class WikiTests : BaseE2ETest
 		AssertResponseCode(response, 404);
 		var content = await Page.TextContentAsync("body");
 		Assert.IsNotNull(content);
-		Assert.IsTrue(content.Contains("The page you were looking for does not yet exist"));
+		Assert.Contains("The page you were looking for does not yet exist", content);
 	}
 
 	[TestMethod]

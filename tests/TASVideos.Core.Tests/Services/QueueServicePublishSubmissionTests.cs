@@ -81,7 +81,7 @@ public class QueueServicePublishSubmissionTests : TestDbBase
 		var result = await _queueService.Publish(request);
 
 		Assert.IsFalse(result.Success);
-		Assert.IsTrue(result.ErrorMessage!.Contains("Movie filename test-movie.bk2 already exists"));
+		Assert.Contains("Movie filename test-movie.bk2 already exists", result.ErrorMessage!);
 	}
 
 	[TestMethod]
@@ -108,7 +108,7 @@ public class QueueServicePublishSubmissionTests : TestDbBase
 		var result = await _queueService.Publish(request);
 
 		Assert.IsTrue(result.Success);
-		Assert.IsTrue(result.PublicationId > 0); // Should be set by SaveChanges
+		Assert.IsGreaterThan(0, result.PublicationId); // Should be set by SaveChanges
 
 		var publication = await _db.Publications.SingleOrDefaultAsync(p => p.SubmissionId == submission.Id);
 		Assert.IsNotNull(publication);

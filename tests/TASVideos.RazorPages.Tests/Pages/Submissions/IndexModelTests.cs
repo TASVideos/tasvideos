@@ -28,7 +28,7 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(3, _page.SystemList.Count); // 2 systems + default entry
+		Assert.HasCount(3, _page.SystemList); // 2 systems + default entry
 		Assert.AreEqual("", _page.SystemList[0].Value); // Default entry
 		Assert.AreEqual("NES", _page.SystemList[1].Value);
 		Assert.AreEqual("SNES", _page.SystemList[2].Value);
@@ -43,10 +43,10 @@ public class IndexModelTests : TestDbBase
 		await _page.OnGet();
 
 		Assert.IsTrue(_page.Search.Statuses.Any());
-		Assert.AreEqual(IndexModel.SubmissionSearchRequest.Default.Count, _page.Search.Statuses.Count);
+		Assert.That.AreSameLength(IndexModel.SubmissionSearchRequest.Default, _page.Search.Statuses);
 		foreach (var status in IndexModel.SubmissionSearchRequest.Default)
 		{
-			Assert.IsTrue(_page.Search.Statuses.Contains(status));
+			Assert.Contains(status, _page.Search.Statuses);
 		}
 	}
 
@@ -58,10 +58,10 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(IndexModel.SubmissionSearchRequest.All.Count, _page.Search.Statuses.Count);
+		Assert.That.AreSameLength(IndexModel.SubmissionSearchRequest.All, _page.Search.Statuses);
 		foreach (var status in IndexModel.SubmissionSearchRequest.All)
 		{
-			Assert.IsTrue(_page.Search.Statuses.Contains(status));
+			Assert.Contains(status, _page.Search.Statuses);
 		}
 	}
 
@@ -73,10 +73,10 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(IndexModel.SubmissionSearchRequest.All.Count, _page.Search.Statuses.Count);
+		Assert.That.AreSameLength(IndexModel.SubmissionSearchRequest.All, _page.Search.Statuses);
 		foreach (var status in IndexModel.SubmissionSearchRequest.All)
 		{
-			Assert.IsTrue(_page.Search.Statuses.Contains(status));
+			Assert.Contains(status, _page.Search.Statuses);
 		}
 	}
 
@@ -100,9 +100,9 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.AreEqual(2, _page.Search.Statuses.Count);
-		Assert.IsTrue(_page.Search.Statuses.Contains(SubmissionStatus.New));
-		Assert.IsTrue(_page.Search.Statuses.Contains(SubmissionStatus.Accepted));
+		Assert.HasCount(2, _page.Search.Statuses);
+		Assert.Contains(SubmissionStatus.New, _page.Search.Statuses);
+		Assert.Contains(SubmissionStatus.Accepted, _page.Search.Statuses);
 	}
 
 	[TestMethod]
@@ -137,7 +137,7 @@ public class IndexModelTests : TestDbBase
 		await _page.OnGet();
 
 		Assert.IsFalse(_page.Submissions.Any());
-		Assert.AreEqual(1, _page.SystemList.Count); // Just the default entry
+		Assert.HasCount(1, _page.SystemList); // Just the default entry
 	}
 
 	[TestMethod]
@@ -146,7 +146,7 @@ public class IndexModelTests : TestDbBase
 		var allStatuses = Enum.GetValues<SubmissionStatus>().ToList();
 		var availableStatuses = IndexModel.AvailableStatuses;
 
-		Assert.AreEqual(allStatuses.Count, availableStatuses.Count);
+		Assert.That.AreSameLength(allStatuses, availableStatuses);
 		foreach (var status in allStatuses)
 		{
 			Assert.IsTrue(availableStatuses.Any(s => s.Value == ((int)status).ToString()));
@@ -162,12 +162,8 @@ public class IndexModelTests : TestDbBase
 		Assert.IsTrue(years.Any(y => y.Value == "2000"));
 		Assert.IsTrue(years.Any(y => y.Value == currentYear.ToString()));
 
-		// Should be in descending order
 		var yearValues = years.Select(y => int.Parse(y.Value!)).ToList();
-		for (var i = 1; i < yearValues.Count; i++)
-		{
-			Assert.IsTrue(yearValues[i - 1] > yearValues[i]);
-		}
+		CollectionAssert.AreEqual(yearValues.OrderDescending().ToList(), yearValues);
 	}
 
 	[TestMethod]
@@ -185,10 +181,10 @@ public class IndexModelTests : TestDbBase
 
 		var defaultStatuses = IndexModel.SubmissionSearchRequest.Default;
 
-		Assert.AreEqual(expectedStatuses.Length, defaultStatuses.Count);
+		Assert.That.AreSameLength(expectedStatuses, defaultStatuses);
 		foreach (var status in expectedStatuses)
 		{
-			Assert.IsTrue(defaultStatuses.Contains(status));
+			Assert.Contains(status, defaultStatuses);
 		}
 	}
 
@@ -198,10 +194,10 @@ public class IndexModelTests : TestDbBase
 		var allStatuses = Enum.GetValues<SubmissionStatus>().ToList();
 		var allFromSearchRequest = IndexModel.SubmissionSearchRequest.All;
 
-		Assert.AreEqual(allStatuses.Count, allFromSearchRequest.Count);
+		Assert.That.AreSameLength(allStatuses, allFromSearchRequest);
 		foreach (var status in allStatuses)
 		{
-			Assert.IsTrue(allFromSearchRequest.Contains(status));
+			Assert.Contains(status, allFromSearchRequest);
 		}
 	}
 
@@ -220,7 +216,7 @@ public class IndexModelTests : TestDbBase
 
 		// Contains the system when set
 		filter = new IndexModel.SubmissionSearchRequest { System = "NES" };
-		Assert.AreEqual(1, filter.Systems.Count);
+		Assert.HasCount(1, filter.Systems);
 		Assert.AreEqual("NES", filter.Systems.First());
 	}
 
@@ -246,7 +242,7 @@ public class IndexModelTests : TestDbBase
 
 		// Contains game ID when valid integer
 		filter = new IndexModel.SubmissionSearchRequest { GameId = "123" };
-		Assert.AreEqual(1, filter.GameIds.Count);
+		Assert.HasCount(1, filter.GameIds);
 		Assert.AreEqual(123, filter.GameIds.First());
 	}
 }

@@ -44,10 +44,10 @@ public class SubmissionsApiTests : BaseE2ETest
 
 		var submissions = await Deserialize<SubmissionsResponse[]>(response);
 
-		Assert.IsTrue(submissions.Length > 0);
+		Assert.IsGreaterThan(0, submissions.Length);
 
 		var firstSubmission = submissions[0];
-		Assert.IsTrue(firstSubmission.Id > 0);
+		Assert.IsGreaterThan(0, firstSubmission.Id);
 		Assert.IsFalse(string.IsNullOrEmpty(firstSubmission.Title));
 	}
 
@@ -62,7 +62,7 @@ public class SubmissionsApiTests : BaseE2ETest
 
 		var submissions = await Deserialize<SubmissionsResponse[]>(response);
 
-		Assert.IsTrue(submissions.Length > 0);
+		Assert.IsGreaterThan(0, submissions.Length);
 
 		var hasAuthor = submissions.Any(s => s.Authors.Contains(author)); // author could be submitter
 		Assert.IsTrue(hasAuthor, "submissions author list should contain author");
@@ -91,7 +91,7 @@ public class SubmissionsApiTests : BaseE2ETest
 
 		var submissions = await Deserialize<SubmissionsResponse[]>(response);
 
-		Assert.IsTrue(submissions.Length > 0);
+		Assert.IsGreaterThan(0, submissions.Length);
 		Assert.IsTrue(submissions.All(s => s.SystemCode == system));
 	}
 
@@ -106,7 +106,7 @@ public class SubmissionsApiTests : BaseE2ETest
 
 		var submissions = await Deserialize<SubmissionsResponse[]>(response);
 
-		Assert.IsTrue(submissions.Length > 0);
+		Assert.IsGreaterThan(0, submissions.Length);
 		Assert.IsTrue(submissions.All(s => s.CreateTimestamp.Year == year));
 	}
 
@@ -119,7 +119,7 @@ public class SubmissionsApiTests : BaseE2ETest
 		AssertApiOk(response);
 
 		var submissions = await Deserialize<SubmissionsResponse[]>(response);
-		Assert.AreEqual(3, submissions.Length);
+		Assert.HasCount(3, submissions);
 	}
 
 	[TestMethod]
@@ -133,13 +133,13 @@ public class SubmissionsApiTests : BaseE2ETest
 
 		var submissions = await Deserialize<SubmissionsResponse[]>(response);
 
-		Assert.IsTrue(submissions.Length > 1);
+		Assert.IsGreaterThan(1, submissions.Length);
 
 		// Verify ascending order
 		var previousId = 0;
 		foreach (var submission in submissions)
 		{
-			Assert.IsTrue(submission.Id >= previousId, $"IDs should be in ascending order. Previous: {previousId}, Current: {submission.Id}");
+			Assert.IsGreaterThanOrEqualTo(previousId, submission.Id, $"IDs should be in ascending order. Previous: {previousId}, Current: {submission.Id}");
 			previousId = submission.Id;
 		}
 	}
@@ -169,7 +169,7 @@ public class SubmissionsApiTests : BaseE2ETest
 		var root = json.RootElement;
 
 		Assert.AreEqual(JsonValueKind.Array, root.ValueKind);
-		Assert.IsTrue(root.GetArrayLength() > 0);
+		Assert.IsGreaterThan(0, root.GetArrayLength());
 
 		var submission = root[0];
 

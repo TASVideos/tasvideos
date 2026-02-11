@@ -58,7 +58,7 @@ public class ViewModelModelTests : TestDbBase
 		var actual = await _page.OnGetDownload();
 		Assert.IsInstanceOfType<FileContentResult>(actual);
 		var fileContentResult = (FileContentResult)actual;
-		Assert.AreEqual(pubData.Length, fileContentResult.FileContents.Length);
+		Assert.That.AreSameLength(pubData, fileContentResult.FileContents);
 		Assert.AreEqual(pubPath + ".zip", fileContentResult.FileDownloadName);
 	}
 

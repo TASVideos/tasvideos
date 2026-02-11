@@ -23,7 +23,7 @@ public class PageHistoryModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("", _model.PageName);
-		Assert.AreEqual(0, _model.Revisions.Count);
+		Assert.IsEmpty(_model.Revisions);
 	}
 
 	[TestMethod]
@@ -42,7 +42,7 @@ public class PageHistoryModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("NonExistentPage", _model.PageName);
-		Assert.AreEqual(0, _model.Revisions.Count);
+		Assert.IsEmpty(_model.Revisions);
 	}
 
 	[TestMethod]
@@ -86,7 +86,7 @@ public class PageHistoryModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual(pageName, _model.PageName);
-		Assert.AreEqual(2, _model.Revisions.Count);
+		Assert.HasCount(2, _model.Revisions);
 
 		// Should be ordered by revision number
 		Assert.AreEqual(1, _model.Revisions[0].Revision);
@@ -134,7 +134,7 @@ public class PageHistoryModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Revisions.Count);
+		Assert.HasCount(1, _model.Revisions);
 		Assert.AreEqual(1, _model.Revisions[0].Revision);
 	}
 
@@ -374,7 +374,7 @@ public class PageHistoryModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.Revisions.Count);
+		Assert.HasCount(2, _model.Revisions);
 		Assert.AreEqual("Added important content", _model.Revisions[0].RevisionMessage);
 		Assert.IsNull(_model.Revisions[1].RevisionMessage);
 		Assert.IsFalse(_model.Revisions[0].MinorEdit);
@@ -404,7 +404,7 @@ public class PageHistoryModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Revisions.Count);
+		Assert.HasCount(1, _model.Revisions);
 		Assert.AreEqual(authorName, _model.Revisions[0].CreateUserName);
 	}
 }

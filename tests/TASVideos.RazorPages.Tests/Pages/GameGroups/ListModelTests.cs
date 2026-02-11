@@ -19,7 +19,7 @@ public class ListModelTests : BasePageModelTests
 	public async Task OnGet_NoGameGroups_LoadsEmptyList()
 	{
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.GameGroups.Count);
+		Assert.IsEmpty(_model.GameGroups);
 	}
 
 	[TestMethod]
@@ -32,7 +32,7 @@ public class ListModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(3, _model.GameGroups.Count);
+		Assert.HasCount(3, _model.GameGroups);
 
 		var loadedGroup1 = _model.GameGroups.FirstOrDefault(g => g.Id == group1.Id);
 		Assert.IsNotNull(loadedGroup1);

@@ -75,7 +75,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
@@ -124,7 +124,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
@@ -144,7 +144,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		Assert.IsNull(actual[topic.ForumId]);
 		Assert.AreEqual(1, _cache.Count());
@@ -224,7 +224,7 @@ public class ForumServiceTests : TestDbBase
 		Assert.AreEqual(DateTime.UtcNow.AddDays(daysOpen).Day, actualTopic.Poll.CloseDate.Value.Day);
 		Assert.AreEqual(multiSelect, actualTopic.Poll.MultiSelect);
 		var actualOptions = actualTopic.Poll.PollOptions;
-		Assert.AreEqual(options.Count, actualOptions.Count);
+		Assert.That.AreSameLength(options, actualOptions);
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option1 && o.Ordinal == 0));
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option2 && o.Ordinal == 1));
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option3 && o.Ordinal == 2));

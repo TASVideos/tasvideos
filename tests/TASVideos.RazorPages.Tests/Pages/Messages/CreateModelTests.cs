@@ -26,7 +26,7 @@ public class CreateModelTests : BasePageModelTests
 		Assert.AreEqual("TestUser", _model.ToUser);
 		Assert.IsFalse(_model.IsReply);
 		Assert.IsNull(_model.ReplyingTo);
-		Assert.AreEqual(3, _model.AvailableGroupRoles.Count); // 2 roles + default entry
+		Assert.HasCount(3, _model.AvailableGroupRoles); // 2 roles + default entry
 	}
 
 	[TestMethod]

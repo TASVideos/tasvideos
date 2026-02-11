@@ -23,7 +23,7 @@ public class IndexModelTests : BasePageModelTests
 	{
 		_systemService.GetAll().Returns([]);
 		await _model.OnGet();
-		Assert.AreEqual(0, _model.Systems.Count);
+		Assert.IsEmpty(_model.Systems);
 	}
 
 	[TestMethod]
@@ -34,7 +34,7 @@ public class IndexModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Systems.Count);
+		Assert.HasCount(1, _model.Systems);
 		var retrievedSystem = _model.Systems.First();
 		Assert.AreEqual(123, retrievedSystem.Id);
 		Assert.AreEqual("NES", retrievedSystem.Code);

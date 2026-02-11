@@ -24,7 +24,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Exists(existingPage);
-		Assert.AreEqual(1, _cache.PageCache().Count, "Cache should have 1 record");
+		Assert.HasCount(1, _cache.PageCache(), "Cache should have 1 record");
 		Assert.AreEqual(existingPage, _cache.PageCache().First().PageName, "Cache should match page checked");
 		Assert.IsTrue(actual);
 	}
@@ -47,7 +47,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Exists(existingPage, includeDeleted: true);
-		Assert.AreEqual(0, _cache.PageCache().Count, "Cache should have no records");
+		Assert.IsEmpty(_cache.PageCache(), "Cache should have no records");
 		Assert.IsTrue(actual);
 	}
 
@@ -58,7 +58,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Exists(existingPage);
-		Assert.AreEqual(0, _cache.PageCache().Count, "Non-existent page was not cached.");
+		Assert.IsEmpty(_cache.PageCache(), "Non-existent page was not cached.");
 		Assert.IsFalse(actual);
 	}
 
@@ -79,7 +79,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Exists("/" + existingPage + "/");
-		Assert.AreEqual(1, _cache.PageCache().Count, "Cache should have 1 record");
+		Assert.HasCount(1, _cache.PageCache(), "Cache should have 1 record");
 		Assert.AreEqual(existingPage, _cache.PageCache().First().PageName, "Cache should match page checked");
 		Assert.IsTrue(actual);
 	}
@@ -95,7 +95,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage);
 
 		var actual = await _wikiPages.Page(existingPage);
-		Assert.AreEqual(1, _cache.PageCache().Count, "Cache should have  1 record");
+		Assert.HasCount(1, _cache.PageCache(), "Cache should have  1 record");
 		Assert.AreEqual(existingPage, _cache.PageCache().First().PageName, "Cache should match page checked");
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(existingPage, actual.PageName);
@@ -108,7 +108,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage, cache: true);
 
 		var actual = await _wikiPages.Page(existingPage.ToUpper());
-		Assert.AreEqual(1, _cache.PageCache().Count, "Cache should have  1 record");
+		Assert.HasCount(1, _cache.PageCache(), "Cache should have  1 record");
 		Assert.AreEqual(existingPage, _cache.PageCache().First().PageName, "Cache should match page checked");
 		Assert.IsNotNull(actual);
 		Assert.AreEqual(existingPage, actual.PageName);
@@ -143,7 +143,7 @@ public class WikiPagesTests : TestDbBase
 		AddPage(existingPage, isDeleted: true);
 
 		var actual = await _wikiPages.Page(existingPage);
-		Assert.AreEqual(0, _cache.PageCache().Count, "Non-existent page was not cached.");
+		Assert.IsEmpty(_cache.PageCache(), "Non-existent page was not cached.");
 		Assert.IsNull(actual);
 	}
 
@@ -247,7 +247,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNull(_db.WikiPages.Single().ChildId);
 
 		var pageCache = _cache.PageCache();
-		Assert.AreEqual(1, pageCache.Count);
+		Assert.HasCount(1, pageCache);
 		Assert.AreEqual(newPage, pageCache.Single().PageName);
 		Assert.AreEqual(1, pageCache.Single().Revision);
 		Assert.IsNull(pageCache.Single().ChildId);
@@ -354,7 +354,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(2, current.Revision);
 		Assert.IsNull(current.ChildId);
 
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(current.Revision, _cache.PageCache().Single().Revision);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
@@ -402,7 +402,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(3, latest.Revision);
 		Assert.IsNull(latest.ChildId);
 
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(latest.Markup, _cache.PageCache().Single().Markup);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
@@ -447,7 +447,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(4, latest.Revision);
 		Assert.IsNull(latest.ChildId);
 
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(4, _cache.PageCache().Single().Revision);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
@@ -579,7 +579,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Move("Does not exist", "Also does not exist", 1);
 		Assert.IsTrue(actual, "Page not found is considered successful");
 		Assert.AreEqual(0, _db.WikiPages.Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -609,7 +609,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(author.Id, trackingRevision.AuthorId);
 		Assert.IsFalse(trackingRevision.MinorEdit);
 
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
 		Assert.AreEqual(2, _cache.PageCache().Single().Revision); // Latest revision should be cached
 
@@ -646,7 +646,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(author.Id, trackingRevision.AuthorId);
 		Assert.AreEqual(markup, trackingRevision.Markup); // Should preserve the content
 
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
 		Assert.AreEqual(3, _cache.PageCache().Single().Revision); // Latest revision should be cached
 	}
@@ -730,7 +730,7 @@ public class WikiPagesTests : TestDbBase
 		// Should have 2 revisions now - original + tracking revision
 		Assert.AreEqual(2, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
@@ -757,7 +757,7 @@ public class WikiPagesTests : TestDbBase
 		// Should have 2 revisions now - original + tracking revision
 		Assert.AreEqual(2, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.PageName == newPageName));
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
 
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
@@ -808,7 +808,7 @@ public class WikiPagesTests : TestDbBase
 			.First();
 		Assert.AreEqual($"Page Moved from {existingPageName}/{subPage} to {newSubPage}", subPageTrackingRevision.RevisionMessage);
 
-		Assert.AreEqual(2, _cache.PageCache().Count);
+		Assert.HasCount(2, _cache.PageCache());
 		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newPageName));
 		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newSubPage));
 
@@ -847,7 +847,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.Revision == 1));
 		Assert.IsFalse(_db.WikiPages.Any(wp => wp.RevisionMessage != null && wp.RevisionMessage.Contains("Page Moved")));
 
-		Assert.AreEqual(2, _cache.PageCache().Count);
+		Assert.HasCount(2, _cache.PageCache());
 		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newPageName));
 		Assert.AreEqual(1, _cache.PageCache().Count(c => c.PageName == newSubPage));
 
@@ -881,7 +881,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(1, movedPage.Revision);
 		Assert.IsNull(movedPage.RevisionMessage);
 
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(newPageName, _cache.PageCache().Single().PageName);
 		Assert.AreEqual(1, _cache.PageCache().Single().Revision);
 
@@ -900,7 +900,7 @@ public class WikiPagesTests : TestDbBase
 		await _wikiPages.Delete("DoesNotExist");
 
 		Assert.AreEqual(0, _db.WikiPages.Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -927,7 +927,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(1, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.Single().IsDeleted);
 		Assert.IsNull(_db.WikiPages.Single().ChildId);
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -954,7 +954,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(2, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.IsDeleted));
 		Assert.IsTrue(_db.WikiPages.All(wp => wp.ChildId == null));
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -976,7 +976,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.AreEqual(-1, actual);
 		Assert.AreEqual(0, _db.WikiPages.ThatAreDeleted().Count());
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
 	}
 
@@ -998,7 +998,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(1, _db.WikiPages.Count());
 		Assert.IsTrue(_db.WikiPages.Single().IsDeleted);
 		Assert.IsNull(_db.WikiPages.Single().ChildId);
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -1026,7 +1026,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(2, _db.WikiPages.ThatAreNotDeleted().Single().Revision);
 
 		var pageCache = _cache.PageCache();
-		Assert.AreEqual(1, pageCache.Count);
+		Assert.HasCount(1, pageCache);
 		Assert.AreEqual(existingPageName, pageCache.Single().PageName);
 		Assert.AreEqual(2, pageCache.Single().Revision);
 	}
@@ -1040,7 +1040,7 @@ public class WikiPagesTests : TestDbBase
 		await _wikiPages.Delete(pageName, int.MaxValue);
 
 		Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 	}
 
 	[TestMethod]
@@ -1053,7 +1053,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.AreEqual(0, _db.WikiPages.ThatAreNotDeleted().Count());
 		Assert.AreEqual(1, _db.WikiPages.ThatAreDeleted().Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -1110,7 +1110,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNull(deleted.ChildId);
 
 		// Revision 1 should be in cache
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(1, _cache.PageCache().Single().Revision);
 
 		// Referrers should be based on Revision 1
@@ -1166,7 +1166,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNull(deleted3.ChildId);
 
 		// Revision 1 should be in cache
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(1, _cache.PageCache().Single().Revision);
 
 		// Referrers should be based on Revision 1
@@ -1219,7 +1219,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNull(deleted3.ChildId);
 
 		// Revision 1 should be in cache
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(1, _cache.PageCache().Single().Revision);
 
 		// Referrers should be based on Revision 1
@@ -1248,7 +1248,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(2, _db.WikiPages.ThatAreNotDeleted().Single().Revision);
 
 		var pageCache = _cache.PageCache();
-		Assert.AreEqual(1, pageCache.Count);
+		Assert.HasCount(1, pageCache);
 		Assert.AreEqual(existingPageName, pageCache.Single().PageName);
 		Assert.AreEqual(2, pageCache.Single().Revision);
 	}
@@ -1263,7 +1263,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Undelete("Does not exist");
 		Assert.IsTrue(actual, "Page does not exist is considered successful");
 		Assert.AreEqual(0, _db.WikiPages.Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 	}
 
 	[TestMethod]
@@ -1275,7 +1275,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Undelete(pageName);
 		Assert.IsTrue(actual, "Page already exists considered successful");
 		Assert.AreEqual(1, _db.WikiPages.Count());
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.IsFalse(_db.WikiPages.Single().IsDeleted);
 	}
 
@@ -1292,7 +1292,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Undelete(pageName);
 		Assert.IsTrue(actual);
 		Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
 		Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
 		Assert.AreEqual(link, _db.WikiReferrals.Single().Referral);
@@ -1346,7 +1346,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNull(newRevision2.ChildId);
 
 		// Revision 2 is in cache
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		var cached = _cache.PageCache().Single();
 		Assert.AreEqual(pageName, cached.PageName);
 		Assert.AreEqual(2, cached.Revision);
@@ -1400,7 +1400,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNull(newRevision3.ChildId);
 
 		// Revision 3 is in cache
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		var cached = _cache.PageCache().Single();
 		Assert.AreEqual(pageName, cached.PageName);
 		Assert.AreEqual(3, cached.Revision);
@@ -1444,7 +1444,7 @@ public class WikiPagesTests : TestDbBase
 		Assert.IsNull(newRevision2.ChildId);
 
 		// Revision 2 is in cache
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		var cached = _cache.PageCache().Single();
 		Assert.AreEqual(pageName, cached.PageName);
 		Assert.AreEqual(2, cached.Revision);
@@ -1471,7 +1471,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.IsFalse(actual);
 		Assert.AreEqual(0, _db.WikiPages.ThatAreNotDeleted().Count());
-		Assert.AreEqual(0, _cache.PageCache().Count);
+		Assert.IsEmpty(_cache.PageCache());
 		Assert.AreEqual(0, _db.WikiReferrals.Count());
 	}
 
@@ -1488,7 +1488,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Undelete("/" + pageName + "/");
 		Assert.IsTrue(actual);
 		Assert.AreEqual(1, _db.WikiPages.ThatAreNotDeleted().Count());
-		Assert.AreEqual(1, _cache.PageCache().Count);
+		Assert.HasCount(1, _cache.PageCache());
 		Assert.AreEqual(1, _db.WikiReferrals.Count());
 		Assert.AreEqual(pageName, _db.WikiReferrals.Single().Referrer);
 		Assert.AreEqual(link, _db.WikiReferrals.Single().Referral);
@@ -1503,7 +1503,7 @@ public class WikiPagesTests : TestDbBase
 	{
 		var actual = await _wikiPages.Orphans();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1513,7 +1513,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1531,7 +1531,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1544,7 +1544,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var orphans = actual.ToList();
-		Assert.AreEqual(1, orphans.Count);
+		Assert.HasCount(1, orphans);
 		Assert.AreEqual(orphan, orphans.Single().PageName);
 	}
 
@@ -1560,7 +1560,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var orphans = actual.ToList();
-		Assert.AreEqual(1, orphans.Count);
+		Assert.HasCount(1, orphans);
 		Assert.AreEqual(orphan, orphans.Single().PageName);
 	}
 
@@ -1576,7 +1576,7 @@ public class WikiPagesTests : TestDbBase
 		// Parent should be an orphan but not child
 		Assert.IsNotNull(actual);
 		var orphans = actual.ToList();
-		Assert.AreEqual(1, orphans.Count);
+		Assert.HasCount(1, orphans);
 		Assert.AreEqual(parent, orphans.Single().PageName);
 	}
 
@@ -1589,7 +1589,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.Orphans();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	#endregion
@@ -1601,7 +1601,7 @@ public class WikiPagesTests : TestDbBase
 	{
 		var actual = await _wikiPages.BrokenLinks();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1613,7 +1613,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1627,7 +1627,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -1647,7 +1647,7 @@ public class WikiPagesTests : TestDbBase
 
 		Assert.IsNotNull(actual);
 		var brokenLinks = actual.ToList();
-		Assert.AreEqual(1, brokenLinks.Count);
+		Assert.HasCount(1, brokenLinks);
 		var brokenLink = brokenLinks.Single();
 		Assert.AreEqual(page, brokenLink.Referrer);
 		Assert.AreEqual(doesNotExist, brokenLink.Referral);
@@ -1662,7 +1662,7 @@ public class WikiPagesTests : TestDbBase
 		var actual = await _wikiPages.BrokenLinks();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	#endregion

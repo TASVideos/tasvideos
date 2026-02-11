@@ -54,7 +54,7 @@ public class EditUrlsModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual(pub.Title, _model.Title);
-		Assert.AreEqual(0, _model.CurrentUrls.Count);
+		Assert.IsEmpty(_model.CurrentUrls);
 	}
 
 	[TestMethod]
@@ -84,7 +84,7 @@ public class EditUrlsModelTests : TestDbBase
 		Assert.AreEqual(url.Url, _model.CurrentUrl);
 		Assert.AreEqual(url.Type, _model.Type);
 		Assert.AreEqual(url.DisplayName, _model.AltTitle);
-		Assert.AreEqual(1, _model.CurrentUrls.Count);
+		Assert.HasCount(1, _model.CurrentUrls);
 	}
 
 	[TestMethod]
@@ -112,7 +112,7 @@ public class EditUrlsModelTests : TestDbBase
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(2, _model.CurrentUrls.Count);
+		Assert.HasCount(2, _model.CurrentUrls);
 	}
 
 	[TestMethod]
@@ -288,8 +288,8 @@ public class EditUrlsModelTests : TestDbBase
 	{
 		var availableTypes = EditUrlsModel.AvailableTypes;
 
-		Assert.IsTrue(availableTypes.Count > 0);
+		Assert.IsNotEmpty(availableTypes);
 		var enumValues = Enum.GetValues<PublicationUrlType>();
-		Assert.AreEqual(enumValues.Length, availableTypes.Count);
+		Assert.That.AreSameLength(enumValues, availableTypes);
 	}
 }

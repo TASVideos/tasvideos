@@ -1,4 +1,5 @@
 ﻿using TASVideos.Pages.Forum.Subforum;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Subforum;
 
@@ -53,7 +54,7 @@ public class EditModelTests : BasePageModelTests
 		Assert.AreEqual("Test description", _model.Forum.Description);
 		Assert.AreEqual(forum.CategoryId, _model.Forum.Category);
 		Assert.IsFalse(_model.Forum.RestrictedAccess);
-		Assert.AreEqual(1, _model.AvailableCategories.Count);
+		Assert.HasCount(1, _model.AvailableCategories);
 	}
 
 	[TestMethod]
@@ -111,7 +112,7 @@ public class EditModelTests : BasePageModelTests
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(_db.ForumCategories.Count(), _model.AvailableCategories.Count);
+		Assert.That.AreSameLength(_db.ForumCategories, _model.AvailableCategories);
 	}
 
 	[TestMethod]

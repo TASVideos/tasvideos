@@ -49,7 +49,7 @@ public class EditFilesModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Publication", _page.Title);
-		Assert.AreEqual(2, _page.Files.Count);
+		Assert.HasCount(2, _page.Files);
 		Assert.IsTrue(_page.Files.Any(f => f.Path == "screenshot1.png"));
 		Assert.IsTrue(_page.Files.Any(f => f.Path == "screenshot2.png"));
 	}
@@ -67,7 +67,7 @@ public class EditFilesModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.AreEqual("Test Publication", _page.Title);
-		Assert.AreEqual(0, _page.Files.Count);
+		Assert.IsEmpty(_page.Files);
 	}
 
 	[TestMethod]
@@ -88,7 +88,7 @@ public class EditFilesModelTests : TestDbBase
 		var result = await _page.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(result);
-		Assert.AreEqual(1, _page.Files.Count);
+		Assert.HasCount(1, _page.Files);
 		Assert.AreEqual("screenshot.png", _page.Files[0].Path);
 		await _uploader.DidNotReceive().UploadScreenshot(Arg.Any<int>(), Arg.Any<IFormFile>(), Arg.Any<string>());
 	}

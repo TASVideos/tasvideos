@@ -74,7 +74,7 @@ public class PrimaryMovieModelTests : TestDbBase
 		Assert.IsTrue(_page.ModelState.ContainsKey(nameof(_page.PrimaryMovieFile)));
 		var error = _page.ModelState[nameof(_page.PrimaryMovieFile)]?.Errors.FirstOrDefault();
 		Assert.IsNotNull(error);
-		Assert.IsTrue(error.ErrorMessage.Contains("existing.zip already exists"));
+		Assert.Contains("existing.zip already exists", error.ErrorMessage);
 	}
 
 	[TestMethod]
@@ -98,7 +98,7 @@ public class PrimaryMovieModelTests : TestDbBase
 		var updatedPublication = await _db.Publications.FindAsync(publication.Id);
 		Assert.IsNotNull(updatedPublication);
 		Assert.AreEqual("new.zip", updatedPublication.MovieFileName);
-		Assert.AreEqual(4, updatedPublication.MovieFile.Length);
+		Assert.HasCount(4, updatedPublication.MovieFile);
 
 		await _maintenanceLogger.Received(1).Log(publication.Id, user.Id, "Primary movie file replaced, Reason: Improved movie file");
 		await _publisher.Received(1).Send(Arg.Any<Post>());

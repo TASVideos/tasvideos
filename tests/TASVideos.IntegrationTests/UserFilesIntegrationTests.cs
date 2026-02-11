@@ -31,8 +31,9 @@ public class UserFilesIntegrationTests
 		response.EnsureSuccessStatusCode("Uncataloged page should load successfully even with no data");
 
 		var title = await response.GetPageTitleAsync();
-		Assert.IsTrue(
-			title.Contains("Uncataloged User Files (0)"),
+		Assert.Contains(
+			"Uncataloged User Files (0)",
+			title,
 			$"Title should indicate 0 files, but got: {title}");
 	}
 

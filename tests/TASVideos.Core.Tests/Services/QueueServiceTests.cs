@@ -72,7 +72,7 @@ public class QueueServiceTests : TestDbBase
 			true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.AreEqual(Published, result.Single());
 	}
 
@@ -98,10 +98,10 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -127,10 +127,10 @@ public class QueueServiceTests : TestDbBase
 			false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -156,10 +156,10 @@ public class QueueServiceTests : TestDbBase
 			false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -185,10 +185,10 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -214,10 +214,10 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: false).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -243,10 +243,10 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -272,10 +272,10 @@ public class QueueServiceTests : TestDbBase
 			isPublisher: true).ToList();
 
 		Assert.IsNotNull(result);
-		Assert.AreEqual(expected.Count, result.Count);
+		Assert.That.AreSameLength(expected, result);
 		foreach (var status in expected)
 		{
-			Assert.IsTrue(result.Contains(status));
+			Assert.Contains(status, result);
 		}
 	}
 
@@ -298,7 +298,7 @@ public class QueueServiceTests : TestDbBase
 				false).ToList();
 
 			Assert.IsNotNull(result);
-			Assert.AreEqual(exceptPublished.Count, result.Count);
+			Assert.That.AreSameLength(exceptPublished, result);
 			Assert.IsTrue(result.SequenceEqual(exceptPublished));
 		}
 	}
@@ -333,7 +333,7 @@ public class QueueServiceTests : TestDbBase
 		submission.Status.Returns(status);
 		submission.Date.Returns(DateTime.UtcNow.AddHours(-(MinimumHoursBeforeJudgment - 1)));
 		var actual = _queueService.HoursRemainingForJudging(submission);
-		Assert.IsTrue(actual > 0);
+		Assert.IsGreaterThan(0, actual);
 	}
 
 	[TestMethod]
@@ -347,7 +347,7 @@ public class QueueServiceTests : TestDbBase
 		submission.Status.Returns(status);
 		submission.Date.Returns(DateTime.UtcNow.AddHours(-(MinimumHoursBeforeJudgment + 1)));
 		var actual = _queueService.HoursRemainingForJudging(submission);
-		Assert.IsTrue(actual < 0);
+		Assert.IsLessThan(0, actual);
 	}
 
 	#endregion
@@ -702,7 +702,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.IsFalse(result.Success);
 		Assert.IsNotNull(result.ErrorMessage);
-		Assert.IsTrue(result.ErrorMessage.Contains("INVALID_SYSTEM"));
+		Assert.Contains("INVALID_SYSTEM", result.ErrorMessage);
 	}
 
 	[TestMethod]
@@ -730,7 +730,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsNotNull(result);
 		Assert.IsTrue(result.Success);
 		Assert.IsNull(result.ErrorMessage);
-		Assert.IsTrue(result.Id > 0);
+		Assert.IsGreaterThan(0, result.Id);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Title));
 
 		var actualSub = await _db.Submissions.FindAsync(result.Id);
@@ -741,12 +741,12 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(request.GoalName, actualSub.Branch);
 		Assert.AreEqual(expectedTopicId, actualSub.TopicId);
 		Assert.AreEqual(gameSystem.Id, actualSub.SystemId);
-		Assert.IsTrue(actualSub.Title.Contains(request.GameName));
+		Assert.Contains(request.GameName, actualSub.Title);
 
 		var actualSubAuthors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == result.Id)
 			.ToListAsync();
-		Assert.AreEqual(request.Authors.Count, actualSubAuthors.Count);
+		Assert.That.AreSameLength(request.Authors, actualSubAuthors);
 
 		await _wikiPages.Received(1).Add(Arg.Is<WikiCreateRequest>(r =>
 			r.PageName == LinkConstants.SubmissionWikiPage + result.Id &&
@@ -896,8 +896,8 @@ public class QueueServiceTests : TestDbBase
 		Assert.IsNotNull(actualSub);
 		Assert.AreEqual(annotations, actualSub.Annotations);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(actualSub.Warnings));
-		Assert.IsTrue(actualSub.Warnings.Contains("MissingRerecordCount"));
-		Assert.IsTrue(actualSub.Warnings.Contains("SystemIdInferred"));
+		Assert.Contains("MissingRerecordCount", actualSub.Warnings);
+		Assert.Contains("SystemIdInferred", actualSub.Warnings);
 	}
 
 	[TestMethod]
@@ -1036,9 +1036,9 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(publicationTitle, result.Title);
-		Assert.AreEqual(2, result.Tags.Count);
-		Assert.IsTrue(result.Tags.Contains(tag1.Id));
-		Assert.IsTrue(result.Tags.Contains(tag2.Id));
+		Assert.HasCount(2, result.Tags);
+		Assert.Contains(tag1.Id, result.Tags);
+		Assert.Contains(tag2.Id, result.Tags);
 		Assert.AreEqual(wikiMarkup, result.Markup);
 		await _wikiPages.Received(1).Page(expectedPageName);
 	}
@@ -1060,7 +1060,7 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsNotNull(result);
 		Assert.AreEqual(publicationTitle, result.Title);
-		Assert.AreEqual(0, result.Tags.Count);
+		Assert.IsEmpty(result.Tags);
 		Assert.AreEqual(wikiMarkup, result.Markup);
 		await _wikiPages.Received(1).Page(expectedPageName);
 	}
@@ -1097,7 +1097,7 @@ public class QueueServiceTests : TestDbBase
 
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(New, result.PreviousStatus);
-		Assert.IsTrue(result.SubmissionTitle.Contains("Updated Game Name"));
+		Assert.Contains("Updated Game Name", result.SubmissionTitle);
 
 		var updatedSubmission = await _db.Submissions.FindAsync(submission.Id);
 		Assert.IsNotNull(updatedSubmission);
@@ -1151,7 +1151,7 @@ public class QueueServiceTests : TestDbBase
 			.SingleOrDefaultAsync(s => s.Id == submission.Id);
 
 		Assert.IsNotNull(updatedSub);
-		Assert.AreEqual(2, updatedSub.SubmissionAuthors.Count);
+		Assert.HasCount(2, updatedSub.SubmissionAuthors);
 		var authorNames = updatedSub.SubmissionAuthors
 			.OrderBy(sa => sa.Ordinal)
 			.Select(sa => sa.Author!.UserName)
@@ -1410,7 +1410,7 @@ public class QueueServiceTests : TestDbBase
 		var (result, movieBytes) = await _queueService.ParseMovieFileOrZip(formFile);
 
 		Assert.AreEqual(parseResult, result);
-		Assert.AreEqual(4, movieBytes.Length); // Raw file bytes
+		Assert.HasCount(4, movieBytes); // Raw file bytes
 		await _movieParser.Received(1).ParseZip(Arg.Any<Stream>());
 		await _fileService.DidNotReceive().ZipFile(Arg.Any<byte[]>(), Arg.Any<string>());
 	}

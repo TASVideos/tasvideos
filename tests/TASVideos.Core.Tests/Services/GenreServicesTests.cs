@@ -20,7 +20,7 @@ public class GenreServicesTests : TestDbBase
 	{
 		var result = await _genreService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 		Assert.IsTrue(_cache.ContainsKey(GenreService.CacheKey));
 	}
 
@@ -36,7 +36,7 @@ public class GenreServicesTests : TestDbBase
 
 		var result = await _genreService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		var genre = result.Single();
 		Assert.AreEqual(genreId, genre.Id);
 		Assert.AreEqual(1, genre.GameCount);

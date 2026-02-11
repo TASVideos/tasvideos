@@ -25,7 +25,7 @@ public class IndexModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Genres.Count);
+		Assert.IsEmpty(_model.Genres);
 		await _genreService.Received(1).GetAll();
 	}
 
@@ -41,7 +41,7 @@ public class IndexModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(3, _model.Genres.Count);
+		Assert.HasCount(3, _model.Genres);
 		Assert.IsTrue(_model.Genres.Any(g => g is { DisplayName: "Action", GameCount: 10 }));
 		Assert.IsTrue(_model.Genres.Any(g => g is { DisplayName: "Adventure", GameCount: 5 }));
 		Assert.IsTrue(_model.Genres.Any(g => g is { DisplayName: "RPG", GameCount: 15 }));

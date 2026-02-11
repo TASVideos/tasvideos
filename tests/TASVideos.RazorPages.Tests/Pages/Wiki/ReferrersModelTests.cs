@@ -23,7 +23,7 @@ public class ReferrersModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("", _model.Path);
-		Assert.AreEqual(0, _model.Referrals.Count);
+		Assert.IsEmpty(_model.Referrals);
 	}
 
 	[TestMethod]
@@ -37,7 +37,7 @@ public class ReferrersModelTests : BasePageModelTests
 		_model.Path = path;
 		await _model.OnGet();
 
-		Assert.AreEqual(0, _model.Referrals.Count);
+		Assert.IsEmpty(_model.Referrals);
 	}
 
 	[TestMethod]
@@ -56,7 +56,7 @@ public class ReferrersModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual("PageWithNoReferrals", _model.Path);
-		Assert.AreEqual(0, _model.Referrals.Count);
+		Assert.IsEmpty(_model.Referrals);
 	}
 
 	[TestMethod]
@@ -86,11 +86,11 @@ public class ReferrersModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		Assert.AreEqual(targetPage, _model.Path);
-		Assert.AreEqual(2, _model.Referrals.Count);
+		Assert.HasCount(2, _model.Referrals);
 
 		var referrers = _model.Referrals.Select(r => r.Referrer).ToList();
-		Assert.IsTrue(referrers.Contains(referrerPage1));
-		Assert.IsTrue(referrers.Contains(referrerPage2));
+		Assert.Contains(referrerPage1, referrers);
+		Assert.Contains(referrerPage2, referrers);
 
 		var referral1 = _model.Referrals.First(r => r.Referrer == referrerPage1);
 		var referral2 = _model.Referrals.First(r => r.Referrer == referrerPage2);
@@ -127,7 +127,7 @@ public class ReferrersModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Referrals.Count);
+		Assert.HasCount(1, _model.Referrals);
 		Assert.AreEqual(targetPage, _model.Referrals[0].Referral);
 		Assert.AreEqual("Reference to target page", _model.Referrals[0].Excerpt);
 	}
@@ -157,13 +157,13 @@ public class ReferrersModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(2, _model.Referrals.Count);
+		Assert.HasCount(2, _model.Referrals);
 		Assert.IsTrue(_model.Referrals.All(r => r.Referrer == referrerPage));
 		Assert.IsTrue(_model.Referrals.All(r => r.Referral == targetPage));
 
 		var excerpts = _model.Referrals.Select(r => r.Excerpt).ToList();
-		Assert.IsTrue(excerpts.Contains("First reference from same page"));
-		Assert.IsTrue(excerpts.Contains("Second reference from same page"));
+		Assert.Contains("First reference from same page", excerpts);
+		Assert.Contains("Second reference from same page", excerpts);
 	}
 
 	[TestMethod]
@@ -184,7 +184,7 @@ public class ReferrersModelTests : BasePageModelTests
 
 		await _model.OnGet();
 
-		Assert.AreEqual(1, _model.Referrals.Count);
+		Assert.HasCount(1, _model.Referrals);
 		Assert.AreEqual(specialPath, _model.Referrals[0].Referral);
 	}
 }

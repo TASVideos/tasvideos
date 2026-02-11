@@ -38,7 +38,7 @@ public class LtmTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		Assert.IsFalse(string.IsNullOrWhiteSpace(result.Annotations));
 		var lines = result.Annotations.SplitWithEmpty("\n");
-		Assert.AreEqual(2, lines.Length);
+		Assert.HasCount(2, lines);
 	}
 
 	[TestMethod]
@@ -130,7 +130,7 @@ public class LtmTests : BaseParserTests
 	public async Task Hash()
 	{
 		var result = await _ltmParser.Parse(Embedded("hash.ltm", out var length), length);
-		Assert.AreEqual(1, result.Hashes.Count);
+		Assert.HasCount(1, result.Hashes);
 		Assert.AreEqual(HashType.Md5, result.Hashes.First().Key);
 		Assert.AreEqual("7d66e47fdc0807927c40ce1491c68ad3", result.Hashes.First().Value);
 	}
@@ -139,20 +139,20 @@ public class LtmTests : BaseParserTests
 	public async Task NoHash()
 	{
 		var result = await _ltmParser.Parse(Embedded("no-hash.ltm", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 
 	[TestMethod]
 	public async Task MissingHash()
 	{
 		var result = await _ltmParser.Parse(Embedded("missing-hash.ltm", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 
 	[TestMethod]
 	public async Task InvalidHash()
 	{
 		var result = await _ltmParser.Parse(Embedded("invalid-hash.ltm", out var length), length);
-		Assert.AreEqual(0, result.Hashes.Count);
+		Assert.IsEmpty(result.Hashes);
 	}
 }

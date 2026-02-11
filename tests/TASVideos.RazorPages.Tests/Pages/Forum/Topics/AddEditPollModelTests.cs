@@ -64,8 +64,10 @@ public class AddEditPollModelTests : BasePageModelTests
 		Assert.AreEqual(poll.Id, _model.PollId);
 		Assert.AreEqual(poll.Question, _model.Poll.Question);
 		Assert.IsTrue(_model.Poll.MultiSelect);
+#pragma warning disable MSTEST0037 // false positive; value is nullable
 		Assert.IsTrue(_model.Poll.DaysOpen > 0);
-		Assert.AreEqual(2, _model.Poll.PollOptions.Count);
+#pragma warning restore MSTEST0037
+		Assert.HasCount(2, _model.Poll.PollOptions);
 		Assert.IsTrue(_model.Poll.HasVotes);
 	}
 
@@ -209,7 +211,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		Assert.AreEqual("New question?", poll.Question);
 		Assert.IsTrue(poll.MultiSelect);
 		Assert.IsTrue(poll.CloseDate.HasValue);
-		Assert.AreEqual(2, poll.PollOptions.Count);
+		Assert.HasCount(2, poll.PollOptions);
 		Assert.IsTrue(poll.PollOptions.Any(o => o.Text == "New Option 1"));
 		Assert.IsTrue(poll.PollOptions.Any(o => o.Text == "New Option 2"));
 	}
@@ -247,7 +249,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		Assert.AreEqual("Original question", poll.Question); // Unchanged
 		Assert.IsFalse(poll.MultiSelect); // Unchanged
 		Assert.IsTrue(poll.CloseDate.HasValue); // Updated
-		Assert.AreEqual(2, poll.PollOptions.Count); // Unchanged
+		Assert.HasCount(2, poll.PollOptions); // Unchanged
 	}
 
 	[TestMethod]

@@ -7,6 +7,7 @@ using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+
 public sealed class BlueskyDistributor(
 	AppSettings appSettings,
 	IHttpClientFactory httpClientFactory,
