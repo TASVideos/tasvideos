@@ -58,8 +58,6 @@ public static class ApplicationBuilderExtensions
 			"https://cdnjs.cloudflare.com",
 			"https://code.jquery.com",
 			"https://embed.nicovideo.jp/watch/",
-			"https://www.google.com/recaptcha/",
-			"https://www.gstatic.com/recaptcha/",
 			"https://www.youtube.com"
 		];
 		string[] cspDirectives = [
@@ -67,11 +65,12 @@ public static class ApplicationBuilderExtensions
 			"default-src 'self'", // fallback for other `*-src` directives
 			"font-src 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/ https://cdn.jsdelivr.net/", // CSS `font: url();` and `@font-face { src: url(); }` will be blocked unless they're from one of these domains (this also blocks nonstandard fonts installed on the system maybe)
 			"form-action 'self'", // domains allowed for `<form action/>` (POST target page)
-			"frame-src data: 'self' https://embed.nicovideo.jp/watch/ https://www.google.com/recaptcha/ https://www.youtube.com/embed/ https://archive.org/embed/", // allow these domains in <iframe/>
+			"frame-src data: 'self' https://embed.nicovideo.jp/watch/ https://www.youtube.com/embed/ https://archive.org/embed/", // allow these domains in <iframe/>
 			"img-src * data:", // allow hotlinking images from any domain in UGC (not great)
 			$"script-src 'self' {string.Join(' ', trustedJsHosts)}", // `<script/>`s will be blocked unless they're from one of these domains
 			"style-src 'unsafe-inline' 'self' https://cdnjs.cloudflare.com/ajax/libs/font-awesome/", // allow `<style/>`, and `<link rel="stylesheet"/>` if it's from our domain or trusted CDN
-			"upgrade-insecure-requests" // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
+			"upgrade-insecure-requests", // browser should automagically replace links to any `http://tasvideos.org/...` URL (in UGC, for example) with HTTPS
+			"worker-src blob: 'self'", // ALTCHA uses `blob:`
 		];
 		var contentSecurityPolicyValue = string.Join("; ", cspDirectives);
 		var permissionsPolicyValue = string.Join(", ", value: [
