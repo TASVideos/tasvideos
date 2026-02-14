@@ -6,7 +6,7 @@
 }
 
 @await Html.RenderWiki(SystemWiki.EmailConfirmationSentMessage)
-<form client-side-validation="true" method="post">
+<form client-side-validation="true" method="post" id="email-confirmation-sent-form">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -30,3 +30,8 @@
 		</environment>
 	</form-button-bar>
 </form>
+
+@section Scripts {
+	<script src="https://www.google.com/recaptcha/api.js"></script>
+	<script src="/js/account-email.js"></script>
+}
