@@ -15,6 +15,8 @@ public static class WebApplicationExtensions
 			.MapUsers()
 			.MapTags()
 			.MapClasses()
+			.MapForumTopics()
+			.MapSubforums()
 			.UseSwaggerUi(env)
 			.UseExceptionHandler(exceptionHandlerApp =>
 			{
