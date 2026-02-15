@@ -55,6 +55,7 @@ internal static class ForumTopicEndpoints
 						p.CreateTimestamp,
 						p.LastUpdateTimestamp
 					})
+					.OrderBy(p => p.CreateTimestamp)
 					.ToListAsync();
 
 				return Results.Ok(posts);
