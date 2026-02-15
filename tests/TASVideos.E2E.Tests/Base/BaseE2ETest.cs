@@ -180,7 +180,7 @@ public class BaseE2ETest : PageTest
 		var fileInfo = new FileInfo(downloadPath);
 		Assert.IsGreaterThan(0, fileInfo.Length, "Downloaded file should not be empty");
 
-		var archive = ZipFile.OpenRead(downloadPath);
+		var archive = await ZipFile.OpenReadAsync(downloadPath);
 		Assert.IsGreaterThan(0, archive.Entries.Count, "ZIP file should contain at least one entry");
 
 		return (downloadPath, archive);

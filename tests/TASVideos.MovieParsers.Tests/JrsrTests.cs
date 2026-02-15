@@ -632,8 +632,8 @@ null)]
 		"bar", "line 1", null, null)]
 	// All space and linefeed characters.
 	[DataRow(
-	"JRSR\u000a" +
-	"!BEGIN\u0009\u000c\u0020foo\u000d" +
+	"JRSR\n" +
+	"!BEGIN\t\f\u0020foo\r" +
 	"+line\u1680\u180e1\u2028\u205f\u001c" +
 	"+line\u3000\u20002\u2001\u2002\u001d" +
 	"+line\u2003\u20043\u2005\u2006\u001e" +
@@ -966,7 +966,7 @@ null)]
 
 	[TestMethod]
 	[DataRow("")]
-	[DataRow("\u0009\u0020\u1680\u180e\u2028\u205f\u3000\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a")]
+	[DataRow("\t\u0020\u1680\u180e\u2028\u205f\u3000\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a")]
 	[DataRow("foo", "foo")]
 	[DataRow(@"foo\\", "foo\\")]
 	[DataRow("foo\U0001f427bar", "foo\U0001f427bar")]
@@ -984,8 +984,8 @@ null)]
 	[DataRow("COMMENT(Entry: 19900101000000 10ac35dd6bc6314cd5caf08a4ffb4275      76586 /DAVE.EXE)", "COMMENT", "Entry: 19900101000000 10ac35dd6bc6314cd5caf08a4ffb4275      76586 /DAVE.EXE")]
 	// The following contain linefeeds and cannot actually appear in the
 	// context of a JRSR file.
-	[DataRow("hello\\\u000aworld", "hello\u000aworld")]
-	[DataRow("hello\u000aworld", "hello\u000aworld")]
+	[DataRow("hello\\\nworld", "hello\nworld")]
+	[DataRow("hello\nworld", "hello\nworld")]
 	public void DecodeComponentGood(string line, params string[] expected)
 	{
 		CollectionAssert.AreEqual(expected, JrsrSectionParser.DecodeComponent(line).ToList());

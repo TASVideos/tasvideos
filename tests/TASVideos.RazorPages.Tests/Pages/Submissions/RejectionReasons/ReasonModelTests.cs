@@ -135,7 +135,7 @@ public class ReasonModelTests : TestDbBase
 
 		// Create multiple rejected submissions
 		var submissions = new List<Submission>();
-		for (int i = 1; i <= 5; i++)
+		for (var i = 1; i <= 5; i++)
 		{
 			var submission = _db.AddSubmission().Entity;
 			submission.Status = SubmissionStatus.Rejected;

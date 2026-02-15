@@ -98,7 +98,7 @@ public class ListModelTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		// Create 10 files
-		for (int i = 1; i <= 10; i++)
+		for (var i = 1; i <= 10; i++)
 		{
 			_db.UserFiles.Add(new UserFile
 			{

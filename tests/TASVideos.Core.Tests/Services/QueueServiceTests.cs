@@ -1307,7 +1307,7 @@ public class QueueServiceTests : TestDbBase
 		file.FileName.Returns(fileName);
 		file.Length.Returns(bytes.Length);
 		file.OpenReadStream().Returns(stream);
-		file.CopyToAsync(Arg.Any<Stream>()).Returns(async (ci) =>
+		file.CopyToAsync(Arg.Any<Stream>()).Returns(async ci =>
 		{
 			var targetStream = (Stream)ci[0];
 			stream.Seek(0, SeekOrigin.Begin);
@@ -1330,7 +1330,7 @@ public class QueueServiceTests : TestDbBase
 		string? encodeEmbedLink = null,
 		List<string>? authors = null,
 		string? externalAuthors = null,
-		SubmissionStatus status = SubmissionStatus.New,
+		SubmissionStatus status = New,
 		bool markupChanged = false,
 		string? markup = null,
 		string? revisionMessage = null,

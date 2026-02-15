@@ -98,7 +98,7 @@ public static class RazorTestHelpers
 		var redirectResult = (RedirectToPageResult)result;
 		Assert.AreEqual(path, redirectResult.PageName);
 
-		if (routeId != null)
+		if (routeId.HasValue)
 		{
 			Assert.IsNotNull(redirectResult.RouteValues);
 			Assert.AreEqual(routeId, redirectResult.RouteValues!["Id"]);

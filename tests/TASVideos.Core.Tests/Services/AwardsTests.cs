@@ -279,7 +279,7 @@ public class AwardsTests : TestDbBase
 		var award = CreateAuthorAward();
 		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new(0, "PreviouslyCached", "", 2000, AwardType.Movie, [], []) });
 
-		int year = DateTime.UtcNow.Year - 1;
+		var year = DateTime.UtcNow.Year - 1;
 		await _awards.AssignUserAward(
 			award.ShortName,
 			year,
@@ -329,7 +329,7 @@ public class AwardsTests : TestDbBase
 		var award = CreatePublicationAward();
 		_cache.Set(CacheKeys.AwardsCache, new List<AwardAssignment> { new(0, "PreviouslyCached", "", 2000, AwardType.Movie, [], []) });
 
-		int year = DateTime.UtcNow.Year - 1;
+		var year = DateTime.UtcNow.Year - 1;
 		await _awards.AssignPublicationAward(
 			award.ShortName,
 			year,

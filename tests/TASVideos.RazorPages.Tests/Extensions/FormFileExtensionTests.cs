@@ -240,7 +240,7 @@ public class FormFileExtensionTests
 	[TestMethod]
 	public async Task DecompressOrTakeRaw_ValidGzip_ReturnsGzip()
 	{
-		(byte[] bytes, int uncompressedLength) = GZippedBytes();
+		var (bytes, uncompressedLength) = GZippedBytes();
 		var ms = new MemoryStream(bytes);
 		var formFile = new FormFile(ms, 0, bytes.Length, "Data", "test.bk2");
 
@@ -251,7 +251,7 @@ public class FormFileExtensionTests
 
 	private static (byte[] GzippedBytes, int UncompressedLength) GZippedBytes()
 	{
-		byte[] data = "Hello World"u8.ToArray();
+		var data = "Hello World"u8.ToArray();
 		using var ms = new MemoryStream();
 		using var zipStream = new GZipStream(ms, CompressionMode.Compress);
 		zipStream.Write(data, 0, data.Length);

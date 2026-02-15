@@ -23,9 +23,6 @@ public sealed class HtmlWriterTests : IDisposable
 
 	private void AssertOutputStartsWith(ReadOnlySpan<char> expected, out bool continues)
 	{
-		static void Fail(ReadOnlySpan<char> ex, ReadOnlySpan<char> ac)
-			=> Assert.Fail($"expected string prefixed with\n{ex}\nbut got\n{ac}");
-
 		// I've written a `StringBuilder.StartsWith` extension which avoids the `ToString` copying, but it's not much faster, and I'd need to copy for the error message anyway --yoshi
 		var str = GetOutput().ToString();
 		if (str.Length < expected.Length)
@@ -45,6 +42,11 @@ public sealed class HtmlWriterTests : IDisposable
 		{
 			Fail(expected, str);
 		}
+
+		return;
+
+		static void Fail(ReadOnlySpan<char> ex, ReadOnlySpan<char> ac)
+			=> Assert.Fail($"expected string prefixed with\n{ex}\nbut got\n{ac}");
 	}
 
 	public void Dispose() => _w.Value?.BaseWriter.Dispose();

@@ -89,7 +89,7 @@ public class ListUrlsModelTests : TestDbBase
 		const string urlValue = "https://www.youtube.com/watch?v=test";
 		const string displayName = "Test Video";
 		const string userName = "TestUser";
-		var userId = 789;
+		const int userId = 789;
 
 		var url = new PublicationUrl
 		{
@@ -125,7 +125,7 @@ public class ListUrlsModelTests : TestDbBase
 		const int urlId = 456;
 		const string urlValue = "https://example.com/video";
 		const string userName = "TestUser";
-		var userId = 789;
+		const int userId = 789;
 
 		var url = new PublicationUrl
 		{

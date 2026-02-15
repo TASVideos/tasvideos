@@ -187,7 +187,7 @@ public class UnansweredModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("TestUser").Entity;
 
-		for (int i = 0; i < 30; i++)
+		for (var i = 0; i < 30; i++)
 		{
 			var topic = _db.AddTopic(user).Entity;
 			topic.Title = $"Topic {i}";

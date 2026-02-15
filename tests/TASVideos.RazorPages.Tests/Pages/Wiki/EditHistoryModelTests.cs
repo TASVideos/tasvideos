@@ -301,7 +301,7 @@ public class EditHistoryModelTests : BasePageModelTests
 		const string userName = "TestUser";
 		var author = _db.AddUser(userName).Entity;
 
-		for (int i = 1; i <= 30; i++)
+		for (var i = 1; i <= 30; i++)
 		{
 			_db.WikiPages.Add(new WikiPage
 			{

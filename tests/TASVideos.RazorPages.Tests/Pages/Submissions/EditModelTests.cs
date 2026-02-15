@@ -13,7 +13,6 @@ public class EditModelTests : TestDbBase
 {
 	private readonly IWikiPages _wikiPages;
 	private readonly IQueueService _queueService;
-	private readonly IMovieParser _movieParser;
 	private readonly EditModel _page;
 
 	public EditModelTests()
@@ -21,8 +20,8 @@ public class EditModelTests : TestDbBase
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_queueService = Substitute.For<IQueueService>();
-		_movieParser = Substitute.For<IMovieParser>();
-		_page = new EditModel(_db, _wikiPages, publisher, _queueService, _movieParser);
+		var movieParser = Substitute.For<IMovieParser>();
+		_page = new EditModel(_db, _wikiPages, publisher, _queueService, movieParser);
 	}
 
 	[TestMethod]

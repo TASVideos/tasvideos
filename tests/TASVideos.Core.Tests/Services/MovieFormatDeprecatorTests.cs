@@ -36,7 +36,7 @@ public class MovieFormatDeprecatorTests : TestDbBase
 		var actual = await _deprecator.GetAll();
 		Assert.IsNotNull(actual);
 		Assert.That.AreSameLength(formats, actual);
-		foreach (string format in formats)
+		foreach (var format in formats)
 		{
 			Assert.IsTrue(actual.ContainsKey(format));
 			var entry = actual[format];

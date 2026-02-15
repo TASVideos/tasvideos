@@ -4,7 +4,7 @@ namespace TASVideos.E2E.Tests.Infrastructure;
 
 public static class ThrottleManager
 {
-	private static readonly object Lock = new();
+	private static readonly Lock Lock = new();
 	private static DateTime _lastRequestTime = DateTime.MinValue;
 
 	public static async Task WaitIfNeededAsync(E2ESettings settings)

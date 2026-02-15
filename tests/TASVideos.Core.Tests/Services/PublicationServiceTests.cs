@@ -170,8 +170,8 @@ public class PublicationsTests : TestDbBase
 		_db.PublicationTags.Add(new PublicationTag { Publication = pub, Tag = new Tag { Code = "2" } });
 		_db.AddStreamingUrl(pub, "https://www.youtube.com/watch?v=dQw4w9WgXcQ");
 		await _db.SaveChangesAsync();
-		int publicationId = pub.Id;
-		int submissionId = pub.Submission!.Id;
+		var publicationId = pub.Id;
+		var submissionId = pub.Submission!.Id;
 
 		var result = await _publications.Unpublish(publicationId);
 

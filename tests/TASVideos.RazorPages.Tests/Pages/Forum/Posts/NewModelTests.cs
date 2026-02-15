@@ -238,7 +238,7 @@ public class NewModelTests : BasePageModelTests
 		user.LastLoggedInTimeStamp = DateTime.UtcNow.AddDays(-2);
 		var topic = _db.AddTopic(user).Entity;
 
-		for (int i = 0; i < 30; i++)
+		for (var i = 0; i < 30; i++)
 		{
 			var post = _db.CreatePostForTopic(topic, user).Entity;
 			post.CreateTimestamp = DateTime.UtcNow.AddDays(-1).AddMinutes(i);

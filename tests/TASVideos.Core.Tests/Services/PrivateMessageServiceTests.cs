@@ -202,7 +202,7 @@ public class PrivateMessageServiceTests : TestDbBase
 		});
 		await _db.SaveChangesAsync();
 
-		string cacheKey = PrivateMessageService.UnreadMessageCount + sentToId;
+		var cacheKey = PrivateMessageService.UnreadMessageCount + sentToId;
 		_cache.Set(cacheKey, 1);
 
 		var actual = await _privateMessageService.GetMessage(sentToId, messageId);

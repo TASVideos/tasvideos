@@ -50,13 +50,13 @@ public class BasePageModelTests : TestDbBase
 		if (additionalParamsStrings.Length > 0)
 		{
 			additionalParams = [];
-			for (int i = 0; i < additionalParamsStrings.Length; i += 2)
+			for (var i = 0; i < additionalParamsStrings.Length; i += 2)
 			{
 				additionalParams[additionalParamsStrings[i]] = additionalParamsStrings[i + 1];
 			}
 		}
 
-		string actual = BasePageModel.AddAdditionalParams(relativeUrl, additionalParams);
+		var actual = BasePageModel.AddAdditionalParams(relativeUrl, additionalParams);
 		Assert.AreEqual(expected, actual);
 	}
 }

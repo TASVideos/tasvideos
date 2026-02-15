@@ -236,14 +236,14 @@ public class ForumServiceTests : TestDbBase
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
 		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
-		int forumId = topic.ForumId;
-		int topicId = topic.Id;
+		var forumId = topic.ForumId;
+		var topicId = topic.Id;
 		const string subject = "Test Subject";
 		const string postText = "This is a post";
 		var poster = _db.AddUser("Test User").Entity;
 		await _db.SaveChangesAsync();
-		int posterId = poster.Id;
-		string posterName = poster.UserName;
+		var posterId = poster.Id;
+		var posterName = poster.UserName;
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = false;
@@ -258,7 +258,7 @@ public class ForumServiceTests : TestDbBase
 			ipAddress,
 			watchTopic);
 
-		int actual = await _forumService.CreatePost(dto);
+		var actual = await _forumService.CreatePost(dto);
 
 		// Post must match
 		Assert.AreEqual(1, _db.ForumPosts.Count(p => p.Id == actual));
@@ -290,19 +290,19 @@ public class ForumServiceTests : TestDbBase
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
 		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
-		int forumId = topic.ForumId;
-		int topicId = topic.Id;
+		var forumId = topic.ForumId;
+		var topicId = topic.Id;
 		const string subject = "Test Subject";
 		const string postText = "This is a post";
 		var poster = _db.AddUser("Test User").Entity;
 		await _db.SaveChangesAsync();
-		int posterId = poster.Id;
-		string posterName = poster.UserName;
+		var posterId = poster.Id;
+		var posterName = poster.UserName;
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = true;
 
-		int actual = await _forumService.CreatePost(new PostCreate(
+		var actual = await _forumService.CreatePost(new PostCreate(
 			forumId,
 			topicId,
 			subject,

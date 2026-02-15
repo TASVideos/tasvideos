@@ -1944,7 +1944,7 @@ public class WikiPagesTests : TestDbBase
 
 	private int AddPage(string name, bool isDeleted = false, bool cache = false)
 	{
-		User author = _db.Users.FirstOrDefault()
+		var author = _db.Users.FirstOrDefault()
 			?? new User
 			{
 				Id = 1,

@@ -177,7 +177,7 @@ public class CreateModelTests : BasePageModelTests
 		topic.Title = "Test Topic";
 
 		// Create 15 posts to test the limit of 10
-		for (int i = 1; i <= 15; i++)
+		for (var i = 1; i <= 15; i++)
 		{
 			var post = _db.CreatePostForTopic(topic, poster).Entity;
 			post.Text = $"Post content {i}";

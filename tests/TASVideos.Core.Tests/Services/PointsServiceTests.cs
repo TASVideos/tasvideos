@@ -36,7 +36,7 @@ public class PointsServiceTests : TestDbBase
 		const int numMovies = 2;
 		var user = _db.AddUser(1, Author);
 
-		for (int i = 0; i < numMovies; i++)
+		for (var i = 0; i < numMovies; i++)
 		{
 			_db.AddPublication();
 		}

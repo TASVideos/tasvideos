@@ -114,7 +114,7 @@ public class IndexModelTests : BasePageModelTests
 		var forum = _db.AddForum("Test Forum").Entity;
 
 		// Create multiple topics
-		for (int i = 0; i < 30; i++)
+		for (var i = 0; i < 30; i++)
 		{
 			var topic = _db.AddTopic(user).Entity;
 			topic.Forum = forum;

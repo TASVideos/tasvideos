@@ -29,7 +29,7 @@ public abstract class TestDbBase
 		_connectionString = builder.ToString();
 	}
 
-	public static TestDbContext Create()
+	private static TestDbContext Create()
 	{
 		AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 		var options = new DbContextOptionsBuilder<ApplicationDbContext>()

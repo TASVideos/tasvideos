@@ -60,7 +60,7 @@ public class IndexModelTests : TestDbBase
 		var user = _db.AddUser("TestUser").Entity;
 
 		// Create 12 files to test the limit of 10
-		for (int i = 1; i <= 12; i++)
+		for (var i = 1; i <= 12; i++)
 		{
 			_db.UserFiles.Add(new UserFile
 			{

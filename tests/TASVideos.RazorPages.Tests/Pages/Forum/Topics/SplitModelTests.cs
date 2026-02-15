@@ -366,7 +366,7 @@ public class SplitModelTests : BasePageModelTests
 		var topic = _db.AddTopic(user).Entity;
 
 		// Create enough posts to test pagination (more than 500)
-		for (int i = 1; i <= 502; i++)
+		for (var i = 1; i <= 502; i++)
 		{
 			var post = _db.CreatePostForTopic(topic, user).Entity;
 			post.Subject = $"Post {i}";

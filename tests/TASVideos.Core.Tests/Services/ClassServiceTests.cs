@@ -198,7 +198,7 @@ public class ClassServiceTests : TestDbBase
 	public async Task Delete_Success_FlushesCache()
 	{
 		const int id = 1;
-		var publicationClass = _db.PublicationClasses.Add(new PublicationClass { Id = id }).Entity;
+		_db.PublicationClasses.Add(new PublicationClass { Id = id });
 		await _db.SaveChangesAsync();
 
 		var result = await _classService.Delete(id);

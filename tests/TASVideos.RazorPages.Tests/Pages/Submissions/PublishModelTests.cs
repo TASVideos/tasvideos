@@ -340,7 +340,7 @@ public class PublishModelTests : TestDbBase
 
 	private static IFormFile CreateInvalidScreenshotFile()
 	{
-		byte[] bytes = [0x00, 0x00, 0x00, 0x00]; // Invalid header
+		var bytes = "\0\0\0\0"u8.ToArray(); // Invalid header
 		var stream = new MemoryStream(bytes);
 		return new FormFile(stream, 0, bytes.Length, "screenshot", "screenshot.txt")
 		{

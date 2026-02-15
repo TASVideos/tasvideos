@@ -141,7 +141,7 @@ public class ForUserModelTests : TestDbBase
 	{
 		var author = _db.AddUser("TestAuthor").Entity;
 
-		for (int i = 1; i <= 5; i++)
+		for (var i = 1; i <= 5; i++)
 		{
 			_db.UserFiles.Add(new UserFile
 			{
