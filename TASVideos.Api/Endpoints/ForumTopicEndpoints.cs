@@ -34,29 +34,16 @@ internal static class ForumTopicEndpoints
 				return ApiResults.OkOr404(topics);
 			});
 
-			group.MapGet("{id:int}/posts", async (int id, HttpContext context, ApplicationDbContext db) =>
+			group.MapGet("{id:int}/posts", async (int id, [AsParameters] ApiRequest request, HttpContext context, ApplicationDbContext db) =>
 			{
 				var canSeeRestricted = context.User.Has(PermissionTo.SeeRestrictedForums);
-				var posts = await db.ForumPosts
+				var posts = (await db.ForumPosts
 					.ExcludeRestricted(canSeeRestricted)
 					.ForTopic(id)
-					.Select(p => new
-					{
-						p.Id,
-						p.TopicId,
-						p.ForumId,
-						p.PosterId,
-						p.Subject,
-						p.Text,
-						p.PostEditedTimestamp,
-						p.EnableBbCode,
-						p.EnableHtml,
-						p.PosterMood,
-						p.CreateTimestamp,
-						p.LastUpdateTimestamp
-					})
-					.OrderBy(p => p.CreateTimestamp)
-					.ToListAsync();
+					.ToForumPostResponse()
+					.SortAndPaginate(request)
+					.ToListAsync())
+					.FieldSelect(request);
 
 				return Results.Ok(posts);
 			});
