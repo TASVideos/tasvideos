@@ -48,6 +48,35 @@ internal static class ForumTopicEndpoints
 				return Results.Ok(posts);
 			});
 
+			group.MapGet("{id:int}/poll", async (int id, HttpContext context, ApplicationDbContext db) =>
+			{
+				var canSeeRestricted = context.User.Has(PermissionTo.SeeRestrictedForums);
+
+				var topicExists = await db.ForumTopics
+					.ExcludeRestricted(canSeeRestricted)
+					.AnyAsync(f => f.Id == id);
+				if (!topicExists)
+				{
+					return Results.NotFound();
+				}
+
+				var poll = await db.ForumPolls
+					.Where(p => p.TopicId == id)
+					.Select(p => new
+					{
+						p.Id,
+						p.TopicId,
+						p.Question,
+						p.CloseDate,
+						p.MultiSelect,
+						p.CreateTimestamp,
+						p.LastUpdateTimestamp
+					})
+					.SingleOrDefaultAsync();
+
+				return ApiResults.OkOr404(poll);
+			});
+
 			return app;
 		}
 
