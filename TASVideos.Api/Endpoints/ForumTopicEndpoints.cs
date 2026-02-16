@@ -15,20 +15,7 @@ internal static class ForumTopicEndpoints
 				var canSeeRestricted = context.User.Has(PermissionTo.SeeRestrictedForums);
 				var topics = await db.ForumTopics
 					.ExcludeRestricted(canSeeRestricted)
-					.Select(t => new
-					{
-						t.Id,
-						t.ForumId,
-						t.Title,
-						t.PosterId,
-						Type = t.Type.ToString(),
-						t.IsLocked,
-						t.PollId,
-						t.SubmissionId,
-						t.GameId,
-						t.CreateTimestamp,
-						t.LastUpdateTimestamp
-					})
+					.ToForumTopicResponse()
 					.SingleOrDefaultAsync(t => t.Id == id);
 
 				return ApiResults.OkOr404(topics);
@@ -105,6 +92,20 @@ internal static class ForumTopicEndpoints
 					.SingleOrDefaultAsync(t => t.Id == id);
 
 				return ApiResults.OkOr404(topics);
+			});
+
+			group.MapGet("{id:int}/topics", async (int id, [AsParameters] ApiRequest request, HttpContext context, ApplicationDbContext db) =>
+			{
+				var canSeeRestricted = context.User.Has(PermissionTo.SeeRestrictedForums);
+				var topics = (await db.ForumTopics
+					.ForForum(id)
+					.ExcludeRestricted(canSeeRestricted)
+					.ToForumTopicResponse()
+					.SortAndPaginate(request)
+					.ToListAsync())
+					.FieldSelect(request);
+
+				return Results.Ok(topics);
 			});
 
 			return app;

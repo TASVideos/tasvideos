@@ -131,4 +131,20 @@ internal static class EntityExtensions
 			CreateTimestamp = p.CreateTimestamp,
 			LastUpdateTimestamp = p.LastUpdateTimestamp
 		});
+
+	public static IQueryable<ForumTopicResponse> ToForumTopicResponse(this IQueryable<ForumTopic> query)
+		=> query.Select(t => new ForumTopicResponse
+		{
+			Id = t.Id,
+			ForumId = t.ForumId,
+			Title = t.Title,
+			PosterId = t.PosterId,
+			Type = t.Type.ToString(),
+			IsLocked = t.IsLocked,
+			PollId = t.PollId,
+			SubmissionId = t.SubmissionId,
+			GameId = t.GameId,
+			CreateTimestamp = t.CreateTimestamp,
+			LastUpdateTimestamp = t.LastUpdateTimestamp
+		});
 }
