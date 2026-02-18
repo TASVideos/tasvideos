@@ -18,14 +18,14 @@ internal class Gzm : Parser, IParser
 		using var reader = new BinaryReader(file);
 		try
 		{
-			int framecount = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
-			int n_seed = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
+			var frameCount = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
+			var seed = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 
 			reader.ReadUInt16();
 			reader.ReadByte();
 			reader.ReadByte();
 
-			for (int i = 0; i < framecount; i++)
+			for (var i = 0; i < frameCount; i++)
 			{
 				reader.ReadUInt16();
 				reader.ReadByte();
@@ -33,28 +33,28 @@ internal class Gzm : Parser, IParser
 				reader.ReadUInt16();
 			}
 
-			for (int j = 0; j < n_seed; j++)
+			for (var j = 0; j < seed; j++)
 			{
 				reader.ReadInt32();
 				reader.ReadUInt32();
 				reader.ReadUInt32();
 			}
 
-			int n_oca_input = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
-			int n_oca_sync = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
-			int n_room_load = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
+			var ocaInput = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
+			var ocaSync = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
+			var roomLoad = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 
-			for (int a = 0; a < n_oca_input; a++)
+			for (var a = 0; a < ocaInput; a++)
 			{
 				reader.ReadBytes(8);
 			}
 
-			for (int a = 0; a < n_oca_sync; a++)
+			for (var a = 0; a < ocaSync; a++)
 			{
 				reader.ReadBytes(8);
 			}
 
-			for (int a = 0; a < n_room_load; a++)
+			for (var a = 0; a < roomLoad; a++)
 			{
 				reader.ReadBytes(4);
 			}
@@ -64,7 +64,7 @@ internal class Gzm : Parser, IParser
 			// reading movie_last_recorded_frame for frame count
 			result.Frames = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 		}
-		catch (System.IO.EndOfStreamException e)
+		catch (EndOfStreamException)
 		{
 			return Error("Misformatted file");
 		}

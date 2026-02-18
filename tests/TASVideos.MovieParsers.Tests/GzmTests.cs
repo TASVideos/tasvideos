@@ -1,5 +1,3 @@
-using System.ComponentModel;
-
 namespace TASVideos.MovieParsers.Tests;
 
 [TestClass]
