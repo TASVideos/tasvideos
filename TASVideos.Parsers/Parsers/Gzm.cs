@@ -5,27 +5,27 @@ namespace TASVideos.MovieParsers.Parsers;
 [FileExtension("gzm")]
 internal class Gzm : Parser, IParser
 {
-	private const decimal FrameRate = 60;
+	private const double FrameRate = 60;
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
 			SystemCode = SystemCodes.N64,
-			FrameRateOverride = 20
+			FrameRateOverride = FrameRate
 		};
 
 		using var reader = new BinaryReader(file);
 		try
 		{
-			result.Frames = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
+			int framecount = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 			int n_seed = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 
 			reader.ReadUInt16();
 			reader.ReadByte();
 			reader.ReadByte();
 
-			for (int i = 0; i < result.Frames; i++)
+			for (int i = 0; i < framecount; i++)
 			{
 				reader.ReadUInt16();
 				reader.ReadByte();
@@ -60,7 +60,9 @@ internal class Gzm : Parser, IParser
 			}
 
 			result.RerecordCount = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
-			int lastframe = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
+
+			// reading movie_last_recorded_frame for frame count
+			result.Frames = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 		}
 		catch (System.IO.EndOfStreamException e)
 		{
