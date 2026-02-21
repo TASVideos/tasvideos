@@ -10,7 +10,7 @@ using TASVideos.MovieParsers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Manually specify the secret id (matching the csproj) here. TODO: this is probably unnecessary now
+// Manually specify the secret id (matching the csproj) here.
 builder.Configuration.AddUserSecrets("aspnet-TASVideos-02A8A629-2080-412F-A29C-61E23228B152");
 
 var settings = builder.Configuration.Get<AppSettings>()!;
