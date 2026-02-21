@@ -91,6 +91,7 @@ try
 catch (Exception ex) when (!builder.Environment.IsDevelopment()) // let exceptions propagate in development for better debugging support from IDEs
 {
 	Log.Fatal(ex, "Application terminated unexpectedly");
+	throw; // rethrow the exception to make the application exit with a non-zero code
 }
 finally
 {
