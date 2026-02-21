@@ -56,7 +56,6 @@
 		<PackageReference Include="OpenTelemetry.Exporter.Prometheus.AspNetCore" />
 		<PackageReference Include="OpenTelemetry.Extensions.Hosting" />
 		<PackageReference Include="Serilog.AspNetCore" />
-		<PackageReference Include="Serilog.Expressions" />
 	</ItemGroup>
 
 	<ItemGroup>
