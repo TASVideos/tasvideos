@@ -54,9 +54,8 @@ try
 			pipeline.AddScssBundle("/css/forum.css", "/css/forum.scss");
 			pipeline.AddFiles("text/javascript", "/js/*");
 		})
-		.AddMetrics(settings);
-
-	builder.Host.UseSerilog();
+		.AddMetrics(settings)
+		.AddSerilog();
 
 	var app = builder.Build();
 
