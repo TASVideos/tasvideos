@@ -286,7 +286,6 @@ public class EditModel(
 			&& (await queueService.CanDeleteSubmission(Id)).True;
 
 		AvailableClasses = await db.PublicationClasses.ToDropDownList();
-		AvailableRejectionReasons = await db.SubmissionRejectionReasons.ToDropDownList();
 
 		var subInfo = await db.Submissions
 			.Where(s => s.Id == Id)
@@ -295,12 +294,13 @@ public class EditModel(
 				RejectionReason = s.RejectionReason
 			})
 			.SingleOrDefaultAsync();
-		if (subInfo is not null)
+		if (subInfo is not null && subInfo.RejectionReason is not null && !User.Has(PermissionTo.RejectionReasonMaintenance))
 		{
-			if (subInfo.RejectionReason is not null && !User.Has(PermissionTo.RejectionReasonMaintenance))
-			{
-				AvailableRejectionReasons = await db.SubmissionRejectionReasons.Where(r => r.Id == subInfo.RejectionReason.Id).ToDropDownList();
-			}
+			AvailableRejectionReasons = new List<SubmissionRejectionReason> { subInfo.RejectionReason }.ToDropDownList();
+		}
+		else
+		{
+			AvailableRejectionReasons = await db.SubmissionRejectionReasons.ToDropDownList();
 		}
 	}
 
