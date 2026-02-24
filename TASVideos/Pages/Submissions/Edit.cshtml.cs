@@ -103,7 +103,8 @@ public class EditModel(
 				UserIsAuthorOrSubmitter = s.Submitter!.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == userName),
 				CurrentStatus = s.Status,
 				CreateDate = s.CreateTimestamp,
-				IsSynced = s.SyncedOn != null
+				IsSynced = s.SyncedOn != null,
+				RejectionReason = s.RejectionReason
 			})
 			.SingleOrDefaultAsync();
 
@@ -113,6 +114,11 @@ public class EditModel(
 		}
 
 		if (!User.Has(PermissionTo.EditSubmissions) && !subInfo.UserIsAuthorOrSubmitter)
+		{
+			return AccessDenied();
+		}
+
+		if (subInfo.RejectionReason is not null && !User.Has(PermissionTo.RejectionReasonMaintenance) && Submission.RejectionReason != subInfo.RejectionReason.Id)
 		{
 			return AccessDenied();
 		}
@@ -281,6 +287,21 @@ public class EditModel(
 
 		AvailableClasses = await db.PublicationClasses.ToDropDownList();
 		AvailableRejectionReasons = await db.SubmissionRejectionReasons.ToDropDownList();
+
+		var subInfo = await db.Submissions
+			.Where(s => s.Id == Id)
+			.Select(s => new
+			{
+				RejectionReason = s.RejectionReason
+			})
+			.SingleOrDefaultAsync();
+		if (subInfo is not null)
+		{
+			if (subInfo.RejectionReason is not null && !User.Has(PermissionTo.RejectionReasonMaintenance))
+			{
+				AvailableRejectionReasons = await db.SubmissionRejectionReasons.Where(r => r.Id == subInfo.RejectionReason.Id).ToDropDownList();
+			}
+		}
 	}
 
 	public class SubmissionEdit
