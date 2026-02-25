@@ -83,7 +83,7 @@ public class InfoModel(ApplicationDbContext db, IFileService fileService, ITASVi
 		public string? System { get; init; }
 
 		// Only relevant to Movies
-		public TimeSpan Time => TimeSpan.FromSeconds(Math.Round((double)Length, 2, MidpointRounding.AwayFromZero));
+		public TimeSpan Time => TimeSpan.FromMilliseconds(Math.Round((double)Length * 1000, MidpointRounding.AwayFromZero));
 		public bool IsMovie => Class == UserFileClass.Movie;
 
 		public decimal Length { get; init; }
