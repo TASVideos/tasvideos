@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.UserFiles;
+using TASVideos.Pages.UserFiles;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.UserFiles;

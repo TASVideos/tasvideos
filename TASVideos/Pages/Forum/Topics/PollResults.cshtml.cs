@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Forum.Topics;
+namespace TASVideos.Pages.Forum.Topics;
 
 [RequirePermission(PermissionTo.SeePollResults)]
 public class PollResultsModel(ApplicationDbContext db) : BasePageModel

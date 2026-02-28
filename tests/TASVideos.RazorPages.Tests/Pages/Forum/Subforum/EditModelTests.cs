@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Forum.Subforum;
+using TASVideos.Pages.Forum.Subforum;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Subforum;

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 using TASVideos.Data.Entity.Forum;

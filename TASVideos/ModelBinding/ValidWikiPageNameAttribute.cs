@@ -1,4 +1,4 @@
-﻿namespace TASVideos.ModelBinding;
+namespace TASVideos.ModelBinding;
 
 public class ValidWikiPageNameAttribute : ValidationAttribute
 {

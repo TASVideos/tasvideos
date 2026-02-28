@@ -1,4 +1,4 @@
-﻿@model UserProfile
+@model UserProfile
 @{
 	var lastLoggedIn = Model.LastLoggedIn ?? DateTime.UtcNow;
 	var canViewPrivateData = User.Has(PermissionTo.ViewPrivateUserData) || Model.Id == User.GetUserId();

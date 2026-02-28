@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Services;
+namespace TASVideos.Services;
 
 public interface IModuleParameterTypeAdapter
 {

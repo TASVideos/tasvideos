@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", findSubmitButtons);
+document.addEventListener("DOMContentLoaded", findSubmitButtons);
 
 function findSubmitButtons() {
 	Array.from(document.querySelectorAll('button[type="submit"]')).forEach(btn => {

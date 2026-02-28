@@ -1,4 +1,4 @@
-﻿@model TASVideos.Core.Services.Wiki.IWikiPage
+@model TASVideos.Core.Services.Wiki.IWikiPage
 @inject ILanguages Languages
 @{
 	var languages = await Languages.GetTranslations(Model.PageName);

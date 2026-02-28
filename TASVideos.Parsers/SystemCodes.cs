@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers;
+namespace TASVideos.MovieParsers;
 
 internal static class SystemCodes
 {

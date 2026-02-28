@@ -1,4 +1,4 @@
-﻿const changeColumns = document.querySelectorAll('td.change');
+const changeColumns = document.querySelectorAll('td.change');
 changeColumns.forEach(function (elem) {
 	const before = elem.querySelector('.before');
 	const after = elem.querySelector('.after');

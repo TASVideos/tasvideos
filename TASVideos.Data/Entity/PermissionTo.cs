@@ -1,4 +1,4 @@
-﻿using TASVideos.Attributes;
+using TASVideos.Attributes;
 
 namespace TASVideos.Data.Entity;
 

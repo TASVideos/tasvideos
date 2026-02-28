@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Result;
+namespace TASVideos.MovieParsers.Result;
 
 /// <summary>
 /// An implementation of <seealso cref="IParseResult"/> that represents a successful result.

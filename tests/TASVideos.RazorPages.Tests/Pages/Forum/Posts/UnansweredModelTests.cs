@@ -1,4 +1,4 @@
-﻿using TASVideos.Core;
+using TASVideos.Core;
 using TASVideos.Pages.Forum.Posts;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;

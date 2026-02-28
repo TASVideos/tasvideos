@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services;
+namespace TASVideos.Core.Services;
 
 internal static class PointsCalculator
 {

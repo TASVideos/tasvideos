@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using TASVideos.Common;
 using TASVideos.WikiEngine;
 

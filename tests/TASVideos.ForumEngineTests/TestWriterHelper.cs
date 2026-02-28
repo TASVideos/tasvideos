@@ -1,4 +1,4 @@
-﻿namespace TASVideos.ForumEngineTests;
+namespace TASVideos.ForumEngineTests;
 
 internal class TestWriterHelper : IWriterHelper
 {

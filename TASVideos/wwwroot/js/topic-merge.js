@@ -1,4 +1,4 @@
-﻿const forumModel = document.querySelector('[data-id="destination-forum-id"]');
+const forumModel = document.querySelector('[data-id="destination-forum-id"]');
 const topicModel = document.querySelector('[data-id="destination-topic-id"]');
 const id = document.getElementById('Id').value;
 forumModel.onchange = function () {

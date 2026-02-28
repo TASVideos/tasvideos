@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+using TASVideos.Data.Entity;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.Data.Tests.Context;

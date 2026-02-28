@@ -1,4 +1,4 @@
-﻿@model IndexModel.TopicDisplay.PollModel
+@model IndexModel.TopicDisplay.PollModel
 @{
 	var totalVotes = Model.Options.SelectMany(m => m.Voters).Count();
 	var viewResults = Model.ViewPollResults;

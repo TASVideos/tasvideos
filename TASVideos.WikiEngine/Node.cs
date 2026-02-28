@@ -1,4 +1,4 @@
-﻿namespace TASVideos.WikiEngine.AST;
+namespace TASVideos.WikiEngine.AST;
 
 public enum NodeType
 {

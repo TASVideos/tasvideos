@@ -1,4 +1,4 @@
-﻿using System.Collections.Specialized;
+using System.Collections.Specialized;
 using System.Net.Mime;
 using System.Web;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.WikiModules;
+namespace TASVideos.WikiModules;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class WikiModuleAttribute(string name) : Attribute

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.WikiEngine;
+namespace TASVideos.WikiEngine;
 
 public static partial class Builtins
 {

@@ -1,4 +1,4 @@
-﻿using TASVideos.Common;
+using TASVideos.Common;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine;

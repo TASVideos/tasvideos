@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Submissions;
+using TASVideos.Pages.Submissions;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;

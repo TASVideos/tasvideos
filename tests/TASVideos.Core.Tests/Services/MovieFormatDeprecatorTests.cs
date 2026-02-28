@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+using TASVideos.Data.Entity;
 using TASVideos.MovieParsers;
 
 namespace TASVideos.Core.Tests.Services;

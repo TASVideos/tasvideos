@@ -1,4 +1,4 @@
-﻿@page "{id?}/{handler?}"
+@page "{id?}/{handler?}"
 @model AddEditModel
 @{
 	var canDelete = Model.Id.HasValue && User.Has(PermissionTo.DeleteRoles) && Model.IsInUse;

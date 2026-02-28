@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Users;
+namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.BanIpAddresses)]
 public class IpBanModel(IIpBanService banService) : BasePageModel

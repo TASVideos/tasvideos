@@ -1,4 +1,4 @@
-﻿using TASVideos.MovieParsers;
+using TASVideos.MovieParsers;
 
 namespace TASVideos.Core.Services;
 

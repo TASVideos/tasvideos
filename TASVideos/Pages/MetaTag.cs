@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages;
+namespace TASVideos.Pages;
 
 public class MetaTag
 {

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Messages;
+namespace TASVideos.Pages.Messages;
 
 [Authorize]
 public class SentboxModel(IPrivateMessageService privateMessageService) : BasePageModel

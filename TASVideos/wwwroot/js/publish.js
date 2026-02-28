@@ -1,4 +1,4 @@
-﻿const id = document.getElementById('Id').value;
+const id = document.getElementById('Id').value;
 const obsoletionModel = document.querySelector('[data-id="obsolete"]');
 const descriptionModel = document.querySelector('[data-id="wiki-edit"]');
 let originalDescription = descriptionModel.value;

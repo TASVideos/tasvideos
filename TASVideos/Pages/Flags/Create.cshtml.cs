@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Flags;
+namespace TASVideos.Pages.Flags;
 
 [RequirePermission(PermissionTo.FlagMaintenance)]
 public class CreateModel(IFlagService flagService) : BasePageModel

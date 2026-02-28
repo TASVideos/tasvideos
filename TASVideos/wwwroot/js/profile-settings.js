@@ -1,4 +1,4 @@
-﻿{
+{
 	const mainIvatarDomain = "seccdn.libravatar.org";
 	const noAvatarImagePath = "/images/empty.png";
 

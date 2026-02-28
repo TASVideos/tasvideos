@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services;
+namespace TASVideos.Core.Services;
 
 public enum ClassEditResult { Success, Fail, NotFound, DuplicateName }
 public enum ClassDeleteResult { Success, Fail, NotFound, InUse }

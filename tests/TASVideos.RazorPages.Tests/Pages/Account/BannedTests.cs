@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Account;
+using TASVideos.Pages.Account;
 
 namespace TASVideos.RazorPages.Tests.Pages.Account;
 

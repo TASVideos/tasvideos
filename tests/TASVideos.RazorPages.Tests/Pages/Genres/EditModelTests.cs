@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Pages.Genres;
 
 namespace TASVideos.RazorPages.Tests.Pages.Genres;

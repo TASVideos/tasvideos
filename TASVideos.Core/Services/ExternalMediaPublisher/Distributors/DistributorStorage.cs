@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
 
 public class DistributorStorage(ApplicationDbContext db) : IPostDistributor
 {

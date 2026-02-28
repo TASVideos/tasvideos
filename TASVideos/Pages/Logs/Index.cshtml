@@ -1,4 +1,4 @@
-﻿@page "{table?}/{rowId?}"
+@page "{table?}/{rowId?}"
 @model IndexModel
 @{
 	ViewData.SetTitle(!string.IsNullOrWhiteSpace(Model.Table) ? $"History for {Model.Table}" : "All History");

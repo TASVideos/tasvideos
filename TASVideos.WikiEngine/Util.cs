@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.WikiEngine;

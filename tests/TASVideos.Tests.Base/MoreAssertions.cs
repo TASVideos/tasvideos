@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Tests.Base;
+namespace TASVideos.Tests.Base;
 
 public static class MoreAssertions
 {

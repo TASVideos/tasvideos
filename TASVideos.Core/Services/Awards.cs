@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Awards;
+using TASVideos.Data.Entity.Awards;
 
 namespace TASVideos.Core.Services;
 

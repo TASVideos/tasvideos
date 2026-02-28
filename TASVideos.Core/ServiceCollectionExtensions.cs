@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Cache;
 using TASVideos.Core.Services.Email;

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Api.Endpoints;
+namespace TASVideos.Api.Endpoints;
 
 internal static class ClassesEndpoints
 {

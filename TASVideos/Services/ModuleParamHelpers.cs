@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Namotion.Reflection;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.TagHelpers;

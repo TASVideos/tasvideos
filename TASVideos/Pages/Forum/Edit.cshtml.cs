@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Forum;
+namespace TASVideos.Pages.Forum;
 
 [RequirePermission(PermissionTo.EditCategories)]
 public class EditModel(ApplicationDbContext db) : BasePageModel

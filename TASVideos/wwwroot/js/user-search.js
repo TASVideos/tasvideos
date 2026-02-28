@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", wireUpUserSearchBoxes);
+document.addEventListener("DOMContentLoaded", wireUpUserSearchBoxes);
 function wireUpUserSearchBoxes() {
 	const userSearches = Array.from(document.querySelectorAll('[data-user-search="true"]'));
 	userSearches.forEach(search => {

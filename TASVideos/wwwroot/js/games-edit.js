@@ -1,4 +1,4 @@
-﻿let dropArea = document.getElementById('hash-drop-area');
+let dropArea = document.getElementById('hash-drop-area');
 let hashInput = document.getElementById('hash-input');
 let hashProgress = document.getElementById('hash-progress');
 let sha1Input = document.querySelector('[data-id="sha1"]');

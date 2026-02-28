@@ -1,4 +1,4 @@
-﻿[assembly: Parallelize(Scope = ExecutionScope.MethodLevel)]
+[assembly: Parallelize(Scope = ExecutionScope.MethodLevel)]
 
 namespace TASVideos.WikiEngine.Tests;
 

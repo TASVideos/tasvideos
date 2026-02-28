@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Pages.Messages;
 
 namespace TASVideos.RazorPages.Tests.Pages.Messages;

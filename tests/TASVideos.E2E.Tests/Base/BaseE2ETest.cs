@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Net;
 using System.Text.Json;
 using TASVideos.E2E.Tests.Configuration;

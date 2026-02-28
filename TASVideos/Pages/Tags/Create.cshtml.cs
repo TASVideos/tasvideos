@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Tags;
+namespace TASVideos.Pages.Tags;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
 public class CreateModel(ITagService tagService) : BasePageModel

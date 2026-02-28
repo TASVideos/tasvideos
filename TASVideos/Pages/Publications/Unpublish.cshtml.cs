@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Publications;
+namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.Unpublish)]
 public class UnpublishModel(IExternalMediaPublisher publisher, IPublications publications) : BasePageModel

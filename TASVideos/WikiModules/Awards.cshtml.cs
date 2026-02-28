@@ -1,4 +1,4 @@
-﻿using TASVideos.WikiEngine;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 

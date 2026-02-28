@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Wiki;
+namespace TASVideos.Pages.Wiki;
 
 [AllowAnonymous]
 public class EditHistoryModel(ApplicationDbContext db) : BasePageModel

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.ForumEngineTests;
+namespace TASVideos.ForumEngineTests;
 
 [TestClass]
 public class BbParserTests

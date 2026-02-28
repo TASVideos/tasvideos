@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", registerFileInputs);
+document.addEventListener("DOMContentLoaded", registerFileInputs);
 
 function registerFileInputs() {
 	Array.from(document.querySelectorAll('[data-id="movie-file"]')).forEach(elem => {

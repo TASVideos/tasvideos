@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace TASVideos.Data.AutoHistory;

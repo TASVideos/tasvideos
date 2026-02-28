@@ -1,4 +1,4 @@
-﻿using AspNetCore.ReCaptcha;
+using AspNetCore.ReCaptcha;
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
 using Serilog;

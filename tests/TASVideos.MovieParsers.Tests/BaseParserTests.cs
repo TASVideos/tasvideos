@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
 
 namespace TASVideos.MovieParsers.Tests;

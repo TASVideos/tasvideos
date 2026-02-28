@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages;
+using TASVideos.Pages;
 
 namespace TASVideos.Extensions;
 

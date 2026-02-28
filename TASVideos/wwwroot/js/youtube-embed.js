@@ -1,4 +1,4 @@
-﻿const youtubeScriptId = 'youtube-api';
+const youtubeScriptId = 'youtube-api';
 let youtubeScript = document.getElementById(youtubeScriptId);
 let player;
 // Loads the scripts which run the YouTube Player API asynchronously * @

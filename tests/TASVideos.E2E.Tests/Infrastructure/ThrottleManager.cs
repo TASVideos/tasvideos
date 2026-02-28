@@ -1,4 +1,4 @@
-﻿using TASVideos.E2E.Tests.Configuration;
+using TASVideos.E2E.Tests.Configuration;
 
 namespace TASVideos.E2E.Tests.Infrastructure;
 

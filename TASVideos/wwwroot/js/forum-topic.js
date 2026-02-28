@@ -1,4 +1,4 @@
-﻿{
+{
 	let currentTime = Number(document.getElementById('serverUnixTime').textContent);
 	let activityPosts = document.getElementsByClassName('activity-post');
 	let visitedPosts = localStorage.getItem('VisitedPosts');

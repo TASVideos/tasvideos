@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Data.Helpers;
+namespace TASVideos.Data.Helpers;
 
 public static class SubmissionHelper
 {

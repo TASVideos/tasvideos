@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.Wiki;

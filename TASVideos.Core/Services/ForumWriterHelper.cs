@@ -1,4 +1,4 @@
-﻿using TASVideos.ForumEngine;
+using TASVideos.ForumEngine;
 
 namespace TASVideos.Core.Services;
 

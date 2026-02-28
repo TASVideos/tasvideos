@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Forum;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;

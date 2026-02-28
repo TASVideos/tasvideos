@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Result;
+namespace TASVideos.MovieParsers.Result;
 
 /// <summary>
 /// Represents the result of parsing a movie file.

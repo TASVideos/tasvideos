@@ -1,4 +1,4 @@
-﻿namespace TASVideos.ForumEngine;
+namespace TASVideos.ForumEngine;
 
 public class VideoParameters(string host, string path)
 {

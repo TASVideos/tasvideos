@@ -1,4 +1,4 @@
-﻿const selectedPermissionsModelName = 'Role.SelectedPermissions';
+const selectedPermissionsModelName = 'Role.SelectedPermissions';
 const selectedAssignableModelName = 'Role.SelectedAssignablePermissions';
 const assignRolesValue = '504';
 const id = document.getElementById('Id').value

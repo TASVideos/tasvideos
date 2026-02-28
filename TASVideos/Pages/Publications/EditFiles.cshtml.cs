@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Publications;
+namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.EditPublicationFiles)]
 public class EditFilesModel(

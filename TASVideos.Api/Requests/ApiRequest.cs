@@ -1,4 +1,4 @@
-﻿/*
+/*
 * General API TODOs:
 * Field selection is purely post-processing and returns distinct objects,
 * so the record count might be less than the requested count

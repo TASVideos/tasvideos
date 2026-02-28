@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services.Email;
+namespace TASVideos.Core.Services.Email;
 
 internal interface IEmailSender
 {

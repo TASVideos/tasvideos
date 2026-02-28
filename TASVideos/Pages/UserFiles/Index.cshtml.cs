@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.UserFiles;
+namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel

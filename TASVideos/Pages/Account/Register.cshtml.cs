@@ -1,4 +1,4 @@
-﻿using AspNetCore.ReCaptcha;
+using AspNetCore.ReCaptcha;
 using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Account;
