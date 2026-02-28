@@ -75,7 +75,22 @@ public class MergeModel(ApplicationDbContext db, IExternalMediaPublisher publish
 
 		var oldPosts = await db.ForumPosts
 			.ForTopic(Id)
+			.OrderBy(p => p.CreateTimestamp)
 			.ToListAsync();
+
+		var firstPostOldTopic = oldPosts.FirstOrDefault();
+		if (firstPostOldTopic is not null)
+		{
+			var firstPostDestinationTopic = await db.ForumPosts
+				.ForTopic(Topic.DestinationTopicId)
+				.OrderBy(p => p.CreateTimestamp)
+				.FirstOrDefaultAsync();
+
+			if (firstPostDestinationTopic is not null && firstPostOldTopic.CreateTimestamp < firstPostDestinationTopic.CreateTimestamp)
+			{
+				destinationTopic.PosterId = firstPostOldTopic.PosterId;
+			}
+		}
 
 		foreach (var post in oldPosts)
 		{
