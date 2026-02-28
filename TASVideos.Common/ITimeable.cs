@@ -54,21 +54,24 @@ public static class TimeableExtensions
 
 		public string ToRelativeString()
 		{
-			return timeSpan.TotalSeconds switch
+			var isFuture = timeSpan.Ticks > 0;
+			var duration = timeSpan.Duration();
+
+			return duration.TotalSeconds switch
 			{
 				< 5 => "Now",
-				< 60 => $"{timeSpan.Seconds} seconds ago",
-				_ => timeSpan.TotalMinutes switch
+				< 60 => isFuture ? $"In {duration.Seconds} seconds" : $"{duration.Seconds} seconds ago",
+				_ => duration.TotalMinutes switch
 				{
-					< 2 => "1 minute ago",
-					< 60 => $"{timeSpan.Minutes} minutes ago",
-					_ => timeSpan.TotalHours switch
+					< 2 => isFuture ? "In 1 minute" : "1 minute ago",
+					< 60 => isFuture ? $"In {duration.Minutes} minutes" : $"{duration.Minutes} minutes ago",
+					_ => duration.TotalHours switch
 					{
-						< 2 => "1 hour ago",
-						< 24 => $"{timeSpan.Hours} hours ago",
-						_ => timeSpan.TotalDays < 2
-							? "1 day ago"
-							: $"{timeSpan.Days} days ago"
+						< 2 => isFuture ? "In 1 hour" : "1 hour ago",
+						< 24 => isFuture ? $"In {duration.Hours} hours" : $"{duration.Hours} hours ago",
+						_ => duration.TotalDays < 2
+							? isFuture ? "Tomorrow" : "Yesterday"
+							: isFuture ? $"In {duration.Days} days" : $"{duration.Days} days ago"
 					}
 				}
 			};
