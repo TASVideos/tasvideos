@@ -117,6 +117,15 @@ public static class EntityExtensions
 			})
 			.ToListAsync();
 
+	public static List<SelectListItem> ToDropDownList(this IEnumerable<SubmissionRejectionReason> reasons)
+		=> [..reasons
+			.OrderBy(r => r.DisplayName)
+			.Select(r => new SelectListItem
+			{
+				Text = r.DisplayName,
+				Value = r.Id.ToString()
+			})];
+
 	public static Task<List<SelectListItem>> ToDropDownList(this IQueryable<GameSystemFrameRate> query, int systemId)
 		=> query
 			.ForSystem(systemId)
