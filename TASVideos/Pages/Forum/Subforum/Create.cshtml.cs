@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Forum.Subforum;
+namespace TASVideos.Pages.Forum.Subforum;
 
 [RequirePermission(PermissionTo.EditForums)]
 public class CreateModel(ApplicationDbContext db) : BasePageModel

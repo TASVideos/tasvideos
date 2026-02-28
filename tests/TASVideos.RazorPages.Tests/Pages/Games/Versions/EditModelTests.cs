@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games.Versions;

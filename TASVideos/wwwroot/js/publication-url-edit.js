@@ -1,4 +1,4 @@
-﻿window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("DOMContentLoaded", function () {
 	const urlBox = document.querySelector('[data-id="url"]');
 	urlBox.addEventListener('input', () => {
 		if (urlBox.value && urlBox.value.includes('archive.org')) {

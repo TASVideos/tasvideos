@@ -1,4 +1,4 @@
-﻿@model PlatformAuthorLists
+@model PlatformAuthorLists
 @{
 	var authors = Model.Publications.SelectMany(p => p.Authors).Distinct().ToList();
 

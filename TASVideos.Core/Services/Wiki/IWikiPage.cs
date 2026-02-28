@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services.Wiki;
+namespace TASVideos.Core.Services.Wiki;
 
 /// <summary>
 /// Represents a wiki page revision

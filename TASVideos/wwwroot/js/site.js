@@ -1,4 +1,4 @@
-﻿function showHideScrollToTop() {
+function showHideScrollToTop() {
 	if (window.scrollY > 20) {
 		document.getElementById("button-scrolltop").classList.remove("d-none");
 	} else {

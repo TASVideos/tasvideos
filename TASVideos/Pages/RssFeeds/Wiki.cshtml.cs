@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.RssFeeds;
+namespace TASVideos.Pages.RssFeeds;
 
 [ResponseCache(Duration = 1200)]
 public class WikiModel(ApplicationDbContext db) : BasePageModel

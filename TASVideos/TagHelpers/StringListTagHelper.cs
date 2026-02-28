@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using static TASVideos.TagHelpers.TagHelperExtensions;

@@ -1,4 +1,4 @@
-﻿let welcomeHeader = document.getElementById("welcome-header");
+let welcomeHeader = document.getElementById("welcome-header");
 let dismissBtn = document.getElementById("welcome-header-dismiss");
 const dismiss = localStorage.getItem("DismissWelcomeHeader");
 if (dismiss !== "true") {

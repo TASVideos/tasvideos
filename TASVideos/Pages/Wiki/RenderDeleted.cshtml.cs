@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Wiki;
+namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.SeeDeletedWikiPages)]
 public class RenderDeletedModel(ApplicationDbContext db) : BasePageModel

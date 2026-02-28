@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", findWikiEditBox);
+document.addEventListener("DOMContentLoaded", findWikiEditBox);
 
 function findWikiEditBox() {
 	const textArea = document.querySelector('[data-id="wiki-edit"]');

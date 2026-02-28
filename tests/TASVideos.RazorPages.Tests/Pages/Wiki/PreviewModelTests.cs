@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 

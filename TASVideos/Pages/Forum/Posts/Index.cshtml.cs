@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Forum.Posts;
+namespace TASVideos.Pages.Forum.Posts;
 
 // TODO: how to do this without a redirect
 [AllowAnonymous]

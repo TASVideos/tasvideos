@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using TASVideos.Data.AutoHistory;
 
 namespace TASVideos.Data.Entity;

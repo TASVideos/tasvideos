@@ -1,4 +1,4 @@
-﻿using AspNetCore.ReCaptcha;
+using AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Hosting;
 using TASVideos.Core.Services;

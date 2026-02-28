@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers;
 

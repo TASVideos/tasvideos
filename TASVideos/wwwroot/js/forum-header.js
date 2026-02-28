@@ -1,4 +1,4 @@
-﻿let forumHeader = document.getElementById("forum-header");
+let forumHeader = document.getElementById("forum-header");
 let forumHeaderRestore = document.getElementById("forum-header-restore");
 let dismissBtn = document.getElementById("forum-header-dismiss");
 

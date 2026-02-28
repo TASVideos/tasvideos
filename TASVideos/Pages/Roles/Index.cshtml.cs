@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Roles;
+namespace TASVideos.Pages.Roles;
 
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db) : BasePageModel

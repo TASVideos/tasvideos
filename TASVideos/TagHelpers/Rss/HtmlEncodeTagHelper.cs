@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers;

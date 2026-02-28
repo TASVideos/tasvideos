@@ -1,4 +1,4 @@
-﻿document.querySelector('[data-id="status"]').addEventListener("change", function () {
+document.querySelector('[data-id="status"]').addEventListener("change", function () {
 	const rejectionReasonElem = document.getElementById('rejection-reason');
 	const reject = rejectionReasonElem.dataset.rejectionId;
 	if (this.value === reject) {

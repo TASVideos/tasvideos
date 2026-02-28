@@ -1,4 +1,4 @@
-﻿namespace TASVideos.IntegrationTests;
+namespace TASVideos.IntegrationTests;
 
 [TestClass]
 #pragma warning disable CA1001

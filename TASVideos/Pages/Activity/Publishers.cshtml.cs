@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Activity;
+namespace TASVideos.Pages.Activity;
 
 [AllowAnonymous]
 public class PublishersModel(ApplicationDbContext db) : BasePageModel

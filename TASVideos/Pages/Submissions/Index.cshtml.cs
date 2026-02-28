@@ -1,4 +1,4 @@
-﻿using TASVideos.Common;
+using TASVideos.Common;
 
 namespace TASVideos.Pages.Submissions;
 

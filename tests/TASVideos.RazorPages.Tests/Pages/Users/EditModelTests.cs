@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Pages.Users;

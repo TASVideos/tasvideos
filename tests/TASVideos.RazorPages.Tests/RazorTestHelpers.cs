@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;

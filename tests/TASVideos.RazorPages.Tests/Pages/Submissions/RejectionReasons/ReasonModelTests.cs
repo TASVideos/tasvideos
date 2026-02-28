@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Submissions.RejectionReasons;
+using TASVideos.Pages.Submissions.RejectionReasons;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions.RejectionReasons;

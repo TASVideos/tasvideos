@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("fbm")]
 internal class Fbm : Parser, IParser

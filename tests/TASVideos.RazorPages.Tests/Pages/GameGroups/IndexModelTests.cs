@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.GameGroups;
+using TASVideos.Pages.GameGroups;
 
 namespace TASVideos.RazorPages.Tests.Pages.GameGroups;
 

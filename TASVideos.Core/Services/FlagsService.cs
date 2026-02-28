@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services;
+namespace TASVideos.Core.Services;
 
 public enum FlagEditResult { Success, Fail, NotFound, DuplicateCode }
 public enum FlagDeleteResult { Success, Fail, NotFound, InUse }

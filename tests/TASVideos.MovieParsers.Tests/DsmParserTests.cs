@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Tests;
+namespace TASVideos.MovieParsers.Tests;
 
 [TestClass]
 [TestCategory("DsmParsers")]

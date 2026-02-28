@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Systems;
+namespace TASVideos.Pages.Systems;
 
 [RequirePermission(PermissionTo.GameSystemMaintenance)]
 public class EditModel(IGameSystemService systemService) : BasePageModel

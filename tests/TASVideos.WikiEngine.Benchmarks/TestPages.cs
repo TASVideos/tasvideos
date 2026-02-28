@@ -1,4 +1,4 @@
-﻿public static class TestPages
+public static class TestPages
 {
 	public const string EncoderGuidelines = """
 !!! Guidelines for making multimedia files for publication

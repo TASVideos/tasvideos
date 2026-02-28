@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("dsm")]
 internal class Dsm : Parser, IParser

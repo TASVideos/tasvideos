@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Wiki.Legacy;
+using TASVideos.Pages.Wiki.Legacy;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki.Legacy;
 

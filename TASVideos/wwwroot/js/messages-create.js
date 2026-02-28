@@ -1,4 +1,4 @@
-﻿const userFormGroup = document.getElementById('user-form-group');
+const userFormGroup = document.getElementById('user-form-group');
 const userBox = document.querySelector('[data-id="to-user"]');
 const formSubmitBtn = userBox
 	.closest('form')

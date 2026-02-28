@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
 
 namespace TASVideos.Core.Services;

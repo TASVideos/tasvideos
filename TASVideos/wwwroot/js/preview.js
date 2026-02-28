@@ -1,4 +1,4 @@
-﻿document.getElementById('preview-button').addEventListener('click', function () {
+document.getElementById('preview-button').addEventListener('click', function () {
 	const previewContainer = document.getElementById('preview-container');
 	const previewPath = previewContainer.dataset.path;
 	const targetElem = document.querySelector('[data-id="wiki-edit"]')

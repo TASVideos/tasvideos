@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Extensions;

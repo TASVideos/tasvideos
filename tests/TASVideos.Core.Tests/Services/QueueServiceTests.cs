@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;

@@ -1,3 +1,3 @@
-﻿function onSubmit() {
+function onSubmit() {
 	document.querySelector("[data-id='captcha-form']").submit();
 }

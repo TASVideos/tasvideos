@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using SharpCompress.Readers;
 
 namespace TASVideos.MovieParsers.Parsers;

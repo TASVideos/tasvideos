@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services.ExternalMediaPublisher;
+using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;

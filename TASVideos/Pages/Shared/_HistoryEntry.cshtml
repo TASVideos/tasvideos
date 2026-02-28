@@ -1,4 +1,4 @@
-﻿@model TASVideos.Core.Services.PublicationHistoryNode
+@model TASVideos.Core.Services.PublicationHistoryNode
 @{
 	var highlight = Model.Id == ViewData.Int("Highlight") ? "fw-bold fst-italic border border-info p-1" : "";
 	var strikethrough = Model.ObsoletedById is null ? "" : "text-decoration-line-through";

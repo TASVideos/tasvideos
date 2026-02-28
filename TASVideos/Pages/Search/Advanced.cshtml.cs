@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Search;

@@ -1,4 +1,4 @@
-﻿window.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("DOMContentLoaded", function () {
 	const awardDropdown = document.querySelector('[data-id="award-dropdown"]');
 	awardDropdown.addEventListener('change', awardDropdownChanged);
 

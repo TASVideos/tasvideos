@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Genres;
+namespace TASVideos.Pages.Genres;
 
 [RequirePermission(PermissionTo.TagMaintenance)]
 public class EditModel(IGenreService genreService) : BasePageModel

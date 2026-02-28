@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Data;
+namespace TASVideos.Data;
 
 public enum SaveResult
 {

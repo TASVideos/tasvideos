@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", findAndEngageStringLists);
+document.addEventListener("DOMContentLoaded", findAndEngageStringLists);
 
 function findAndEngageStringLists() {
 	const containers = Array.from(document.querySelectorAll('.string-list-container'));

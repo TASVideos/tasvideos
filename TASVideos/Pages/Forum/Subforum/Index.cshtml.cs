@@ -1,4 +1,4 @@
-﻿using TASVideos.Common;
+using TASVideos.Common;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Subforum;

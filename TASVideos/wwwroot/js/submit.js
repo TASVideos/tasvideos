@@ -1,4 +1,4 @@
-﻿// Client side validation for .zip, consider removing this at some point
+// Client side validation for .zip, consider removing this at some point
 jQuery.validator.addMethod('nozip', function (value, element) {
     if (!value) {
         return true; // Let the required validator handle empty values

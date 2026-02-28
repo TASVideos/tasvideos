@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;

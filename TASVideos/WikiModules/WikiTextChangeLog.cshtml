@@ -1,4 +1,4 @@
-﻿@model WikiTextChangeLog
+@model WikiTextChangeLog
 @{
 	var grouped = Model.Logs.GroupBy(m => m.CreateTimestamp.Date);
 }

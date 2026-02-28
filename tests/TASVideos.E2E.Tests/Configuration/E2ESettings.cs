@@ -1,4 +1,4 @@
-﻿namespace TASVideos.E2E.Tests.Configuration;
+namespace TASVideos.E2E.Tests.Configuration;
 
 public class E2ESettings
 {

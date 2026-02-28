@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("tasproj")]
 internal class Tasproj : Bk2

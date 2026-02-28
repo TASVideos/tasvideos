@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", findForumEditBox);
+document.addEventListener("DOMContentLoaded", findForumEditBox);
 
 function findForumEditBox() {
 	const textArea = document.querySelector('[data-id="forum-edit"]');

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Users;
+namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditDisallows)]
 public class DisallowModel(ApplicationDbContext db) : BasePageModel

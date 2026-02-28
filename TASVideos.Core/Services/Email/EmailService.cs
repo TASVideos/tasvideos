@@ -1,4 +1,4 @@
-﻿using System.Text.Encodings.Web;
+using System.Text.Encodings.Web;
 using Microsoft.Extensions.Hosting;
 using TASVideos.Core.Settings;
 

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("p2m2")]
 internal class P2m2 : Parser, IParser

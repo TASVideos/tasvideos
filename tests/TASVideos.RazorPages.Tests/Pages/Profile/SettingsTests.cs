@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Submissions;
+namespace TASVideos.Pages.Submissions;
 
 /// <summary>
 /// Converts legacy query string parameters from Subs-List to a <see cref="IndexModel.SubmissionSearchRequest"/> model

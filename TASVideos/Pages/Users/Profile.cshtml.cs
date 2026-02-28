@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Users;
+namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
 public class ProfileModel(IAwards awards, IUserManager userManager) : BasePageModel

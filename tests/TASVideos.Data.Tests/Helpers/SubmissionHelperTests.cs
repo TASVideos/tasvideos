@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Helpers;
 using static TASVideos.Data.Entity.SubmissionStatus;
 

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using Microsoft.Extensions.Logging;
 using TASVideos.Core.Settings;

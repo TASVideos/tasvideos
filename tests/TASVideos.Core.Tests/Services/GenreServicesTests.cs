@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Core.Tests.Services;

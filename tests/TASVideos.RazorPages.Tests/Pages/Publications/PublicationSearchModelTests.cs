@@ -1,4 +1,4 @@
-﻿using static TASVideos.Pages.Publications.IndexModel;
+using static TASVideos.Pages.Publications.IndexModel;
 namespace TASVideos.RazorPages.Tests.Pages.Publications;
 
 [TestClass]

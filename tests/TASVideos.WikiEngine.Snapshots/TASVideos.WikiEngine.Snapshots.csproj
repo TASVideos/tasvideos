@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<ItemGroup>
 		<ProjectReference Include="..\..\TASVideos.Data\TASVideos.Data.csproj" />
 		<ProjectReference Include="..\..\TASVideos.WikiEngine\TASVideos.WikiEngine.csproj" />

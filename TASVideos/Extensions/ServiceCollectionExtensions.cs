@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.IO.Compression;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;

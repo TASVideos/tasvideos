@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Games.Goals;
+using TASVideos.Pages.Games.Goals;
 
 namespace TASVideos.RazorPages.Tests.Pages.Games.Goals;
 

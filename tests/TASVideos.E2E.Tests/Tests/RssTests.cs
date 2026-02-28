@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using TASVideos.E2E.Tests.Base;
 
 namespace TASVideos.E2E.Tests.Tests;

@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Data;
+using TASVideos.Core.Data;
 
 namespace TASVideos.Core.Settings;
 

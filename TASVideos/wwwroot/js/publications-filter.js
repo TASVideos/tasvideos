@@ -1,4 +1,4 @@
-﻿window.addEventListener('load', validateForm);
+window.addEventListener('load', validateForm);
 const classes = document.querySelector('[data-id="classes"]');
 const years = document.querySelector('[data-id="years"]');
 const genres = document.querySelector('[data-id="genres"]');

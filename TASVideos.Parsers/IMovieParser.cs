@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using TASVideos.MovieParsers.Parsers;
 
 namespace TASVideos.MovieParsers;

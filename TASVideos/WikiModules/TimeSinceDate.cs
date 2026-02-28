@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;

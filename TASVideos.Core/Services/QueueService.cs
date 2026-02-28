@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Core.Services.Youtube;

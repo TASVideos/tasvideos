@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Publications;
+namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
 public class ViewModel(ApplicationDbContext db, IFileService fileService, ITASVideosMetrics metrics) : BasePageModel

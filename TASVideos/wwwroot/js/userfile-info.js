@@ -1,4 +1,4 @@
-﻿Array.from(document.querySelectorAll('[data-edit-btn]')).forEach(btn => {
+Array.from(document.querySelectorAll('[data-edit-btn]')).forEach(btn => {
 	btn.addEventListener('click', () => {
 		const commentId = btn.dataset.commentId;
 		btn.classList.add('d-none');

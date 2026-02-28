@@ -1,4 +1,4 @@
-﻿@model TASVideos.Pages.UserFiles.InfoModel.UserFileModel
+@model TASVideos.Pages.UserFiles.InfoModel.UserFileModel
 @{
 	var canEdit = Model.Author == User.Name() || User.Has(PermissionTo.EditUserFiles);
 }

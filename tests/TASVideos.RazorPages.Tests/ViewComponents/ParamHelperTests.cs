@@ -1,4 +1,4 @@
-﻿using TASVideos.TagHelpers;
+using TASVideos.TagHelpers;
 using TASVideos.WikiEngine.AST;
 
 namespace TASVideos.RazorPages.Tests.ViewComponents;

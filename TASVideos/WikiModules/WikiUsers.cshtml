@@ -1,4 +1,4 @@
-﻿@model WikiUsers
+@model WikiUsers
 
 @foreach (var user in Model.Users
 	.OrderByDescending(u => u.PublicationCount)

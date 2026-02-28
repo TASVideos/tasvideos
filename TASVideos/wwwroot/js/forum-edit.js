@@ -1,4 +1,4 @@
-﻿Array.from(document.querySelectorAll('[data-id="move-up"]')).forEach(moveUpBtn => {
+Array.from(document.querySelectorAll('[data-id="move-up"]')).forEach(moveUpBtn => {
 	moveUpBtn.addEventListener('click', () => decrementOrdinal(moveUpBtn));
 });
 

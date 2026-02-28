@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Users;
+namespace TASVideos.Pages.Users;
 
 [AllowAnonymous]
 public class RatingsModel(IRatingService ratingService) : BasePageModel

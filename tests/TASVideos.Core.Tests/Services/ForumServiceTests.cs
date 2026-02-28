@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Tests.Services;

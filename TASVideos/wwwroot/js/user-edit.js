@@ -1,4 +1,4 @@
-﻿const checkUserBtn = document.getElementById('check-username');
+const checkUserBtn = document.getElementById('check-username');
 const userNameBox = document.querySelector('[data-id="username"]');
 const userNameStatus = document.getElementById('user-name-status');
 const userNameExistsMessage = document.getElementById('username-exists-message');

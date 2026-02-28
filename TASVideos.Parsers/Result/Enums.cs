@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Result;
+namespace TASVideos.MovieParsers.Result;
 
 /// <summary>
 /// Indicates the region type used in by the parsed movie.

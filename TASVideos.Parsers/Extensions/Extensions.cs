@@ -1,4 +1,4 @@
-﻿using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
+using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
 using SharpZipArchiveEntry = SharpCompress.Archives.Zip.ZipArchiveEntry;
 
 namespace TASVideos.MovieParsers.Extensions;

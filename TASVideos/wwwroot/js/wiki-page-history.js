@@ -1,4 +1,4 @@
-﻿window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', function () {
 	if (document.getElementById('has-diff')) {
 		generateDiff();
 	}

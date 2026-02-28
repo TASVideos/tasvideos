@@ -1,4 +1,4 @@
-﻿namespace TASVideos;
+namespace TASVideos;
 
 public static class LinkConstants
 {

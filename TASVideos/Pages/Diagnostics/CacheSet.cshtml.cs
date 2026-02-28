@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Diagnostics;
+namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
 public class CacheSetModel(ICacheService cache) : BasePageModel

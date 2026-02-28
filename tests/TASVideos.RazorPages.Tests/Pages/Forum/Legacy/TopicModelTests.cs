@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Pages.Forum.Legacy;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Legacy;

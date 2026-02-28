@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Core.Services.Youtube;
 

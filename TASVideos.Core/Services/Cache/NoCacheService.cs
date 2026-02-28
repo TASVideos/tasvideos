@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services;
+namespace TASVideos.Core.Services;
 
 public class NoCacheService : ICacheService
 {

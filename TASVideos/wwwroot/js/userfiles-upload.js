@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 {
 	const fileInput = document.querySelector('[data-id="user-form-file"]');
 	const storageAvailable = parseFloat(document.getElementById("StorageAvailable").value);

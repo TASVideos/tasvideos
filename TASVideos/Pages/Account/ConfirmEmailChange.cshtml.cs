@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Account;
+namespace TASVideos.Pages.Account;
 
 [Authorize]
 public class ConfirmEmailChangeModel(

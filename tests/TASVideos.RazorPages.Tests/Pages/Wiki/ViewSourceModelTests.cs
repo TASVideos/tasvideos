@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki;

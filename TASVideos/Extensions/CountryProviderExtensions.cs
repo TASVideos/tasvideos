@@ -1,4 +1,4 @@
-﻿using Nager.Country;
+using Nager.Country;
 
 namespace TASVideos.Extensions;
 

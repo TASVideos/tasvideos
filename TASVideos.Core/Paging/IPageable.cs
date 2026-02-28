@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core;
+namespace TASVideos.Core;
 
 /// <summary>
 /// Represents a request for a data collection that can be paged

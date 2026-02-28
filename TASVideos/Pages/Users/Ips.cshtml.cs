@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Users;
+namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.ViewPrivateUserData)]
 public class IpsModel(ApplicationDbContext db) : BasePageModel

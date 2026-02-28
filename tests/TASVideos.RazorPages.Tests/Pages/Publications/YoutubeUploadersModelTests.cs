@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Services.Youtube.Dtos;
 using TASVideos.Pages.Publications;

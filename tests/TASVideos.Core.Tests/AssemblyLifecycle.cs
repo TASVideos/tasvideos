@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Tests;
+namespace TASVideos.Core.Tests;
 
 [TestClass]
 public static class AssemblyLifecycle

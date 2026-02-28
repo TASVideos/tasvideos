@@ -1,4 +1,4 @@
-﻿namespace TASVideos.WikiEngine.AST;
+namespace TASVideos.WikiEngine.AST;
 
 /// <summary>
 /// Provides helpers that the wiki engine needs to render page results

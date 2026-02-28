@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages;

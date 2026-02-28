@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Api.Validators;
+namespace TASVideos.Api.Validators;
 
 internal class ApiRequestValidator : AbstractValidator<ApiRequest>
 {
