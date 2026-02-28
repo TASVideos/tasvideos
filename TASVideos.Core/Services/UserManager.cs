@@ -205,7 +205,8 @@ internal class UserManager(
 				Signature = u.Signature,
 				PublicRatings = u.PublicRatings,
 				TimeZone = u.TimeZoneId,
-				LockedOutStatus = u.LockoutEnabled && u.LockoutEnd.HasValue,
+				IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTime.UtcNow,
+				LockedOutUntil = u.LockoutEnd,
 				BannedUntil = u.BannedUntil,
 				PublicationActiveCount = u.Publications
 					.Count(p => !p.Publication!.ObsoletedById.HasValue),
@@ -543,7 +544,8 @@ public class UserProfile
 	// Private info
 	public string? Email { get; init; }
 	public bool EmailConfirmed { get; init; }
-	public bool LockedOutStatus { get; init; }
+	public bool IsLockedOut { get; init; }
+	public DateTimeOffset? LockedOutUntil { get; init; }
 	public DateTime? BannedUntil { get; init; }
 	public string? ModeratorComments { get; init; }
 	public int PublicationActiveCount { get; init; }

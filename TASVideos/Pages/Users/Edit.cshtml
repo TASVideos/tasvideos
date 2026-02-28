@@ -19,15 +19,15 @@
 				<label asp-for="UserToEdit.AccountCreatedOn"></label>
 				<div><timezone-convert asp-for="@Model.UserToEdit.AccountCreatedOn"/></div>
 			</fieldset>
-			<fieldset condition="Model.UserToEdit.LockedStatus">
-				<label asp-for="UserToEdit.LockedStatus"></label>
+			<fieldset condition="Model.UserToEdit.IsLockedOut">
+				<label asp-for="UserToEdit.IsLockedOut"></label>
 				<div>
-					<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out</label>
+					<label class="text-danger"><span class="fa fa-exclamation-triangle"></span> This user is currently locked out until <timezone-convert asp-for="@Model.UserToEdit.LockedOutUntil!.Value.UtcDateTime" relative-time="false" /></label>
 					<a class="btn btn-secondary" asp-page="Edit" asp-page-handler="Unlock" asp-route-returnurl="@HttpContext.CurrentPathToReturnUrl()" asp-route-id="@Model.Id">Unlock</a>
 				</div>
 			</fieldset>
-			<fieldset condition="!Model.UserToEdit.LockedStatus">
-				<label asp-for="UserToEdit.LockedStatus"></label>
+			<fieldset condition="!Model.UserToEdit.IsLockedOut">
+				<label asp-for="UserToEdit.IsLockedOut"></label>
 				<div>
 					<span class="fa fa-check-square text-success"></span> Not locked
 				</div>

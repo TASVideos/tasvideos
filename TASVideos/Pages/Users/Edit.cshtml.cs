@@ -36,7 +36,8 @@ public class EditModel(
 				UserLastLoggedIn = u.LastLoggedInTimeStamp,
 				Email = u.Email,
 				EmailConfirmed = u.EmailConfirmed,
-				LockedStatus = u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTime.UtcNow,
+				IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTime.UtcNow,
+				LockedOutUntil = u.LockoutEnd,
 				Signature = u.Signature,
 				Avatar = u.Avatar,
 				MoodAvatar = u.MoodAvatarUrlBase,
@@ -212,7 +213,8 @@ public class EditModel(
 		[EmailAddress]
 		public string? Email { get; init; }
 		public bool EmailConfirmed { get; init; }
-		public bool LockedStatus { get; init; }
+		public bool IsLockedOut { get; init; }
+		public DateTimeOffset? LockedOutUntil { get; init; }
 		public string? Signature { get; init; }
 		public string? Avatar { get; init; }
 		public string? MoodAvatar { get; init; }
