@@ -5,7 +5,7 @@
 	ViewData.SetTitle("Create a new account");
 }
 
-<form method="post" id="register-form">
+<form method="post" data-id="captcha-form">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -68,7 +68,6 @@
 </form>
 
 @section Scripts {
-	@*For manual implementation of Google's ReCaptcha scripts, will require embedding site's public key.*@
-	<script src="https://www.google.com/recaptcha/api.js"></script>
 	<script src="/js/account-register.js"></script>
+	<script src="/js/captcha-form.js"></script>
 }

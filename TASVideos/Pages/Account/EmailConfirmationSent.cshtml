@@ -6,7 +6,7 @@
 }
 
 @await Html.RenderWiki(SystemWiki.EmailConfirmationSentMessage)
-<form client-side-validation="true" method="post">
+<form method="post" data-id="captcha-form">
 	<row>
 		<column md="6">
 			<fieldset>
@@ -30,3 +30,7 @@
 		</environment>
 	</form-button-bar>
 </form>
+
+@section Scripts {
+	<script src="/js/captcha-form.js"></script>
+}
