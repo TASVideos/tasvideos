@@ -58,14 +58,16 @@
 <partial Name="_ForumHeader" />
 <div class="row mb-2">
 	<div class="col-12">
-		<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2"><i class="fa fa-lock"></i> Locked</p>
-		<partial name="_TopicActionBar" model="Model.Topic"/>
-		<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
-			asp-page="/Forum/Posts/Create"
-			asp-route-topicId="@Model.Id"
-			class="btn btn-primary btn-sm float-end">
-			<span class="fa fa-plus"></span> New Post
-		</a>
+		<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 mb-2"><i class="fa fa-lock"></i> Locked</p>
+		<div class="d-flex flex-wrap gap-1">
+			<partial name="_TopicActionBar" model="Model.Topic" />
+			<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
+			   asp-page="/Forum/Posts/Create"
+			   asp-route-topicId="@Model.Id"
+			   class="btn btn-primary btn-sm ms-auto">
+				<span class="fa fa-plus"></span> New Post
+			</a>
+		</div>
 	</div>
 </div>
 
@@ -109,14 +111,16 @@
 <partial name="_Pager" model="Model.Topic.Posts" />
 <hr class="mb-1"/>
 <fullrow class="mt-2">
-	<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2"><i class="fa fa-lock"></i> Locked</p>
-	<partial name="_TopicActionBar" model="Model.Topic"/>
-	<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
-		asp-page="/Forum/Posts/Create"
-		asp-route-topicId="@Model.Id"
-		class="btn btn-primary btn-sm float-end">
-		<span class="fa fa-plus"></span> New Post
-	</a>
+	<p condition="@Model.Topic.IsLocked" class="alert alert-danger py-2 mb-2"><i class="fa fa-lock"></i> Locked</p>
+	<div class="d-flex flex-wrap gap-1">
+		<partial name="_TopicActionBar" model="Model.Topic" />
+		<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
+		   asp-page="/Forum/Posts/Create"
+		   asp-route-topicId="@Model.Id"
+		   class="btn btn-primary btn-sm ms-auto">
+			<span class="fa fa-plus"></span> New Post
+		</a>
+	</div>
 	<nav aria-label="breadcrumb" class="card card-header d-block mt-2">
 		<ol class="breadcrumb m-0">
 			<li class="breadcrumb-item"><a asp-page="/Forum/Index">Forum</a></li>

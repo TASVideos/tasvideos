@@ -4,24 +4,22 @@
 	ViewData.SetTitle("Forum");
 }
 
-<div class="clearfix">
-	<partial Name="_ForumHeader" />
-	<top-button-bar>
-		<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm">
-			Latest Posts
-		</a>
-		<a asp-page="/Forum/Posts/New" condition="@User.IsLoggedIn()" class="btn btn-secondary btn-sm">
-			Posts since last visit
-		</a>
-		<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm">
-			Unanswered Posts
-		</a>
-		<button type="button" id="mark-all-posts" class="btn btn-secondary btn-sm">
-			Mark all Posts as read
-		</button>
-		<add-link asp-page="/Forum/Subforum/Create" permission="EditForums" class="btn-sm"></add-link>
-	</top-button-bar>
-</div>
+<partial Name="_ForumHeader" />
+<top-button-bar>
+	<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm">
+		Latest Posts
+	</a>
+	<a asp-page="/Forum/Posts/New" condition="@User.IsLoggedIn()" class="btn btn-secondary btn-sm">
+		Posts since last visit
+	</a>
+	<a asp-page="/Forum/Posts/Unanswered" class="btn btn-secondary btn-sm">
+		Unanswered Posts
+	</a>
+	<button type="button" id="mark-all-posts" class="btn btn-secondary btn-sm">
+		Mark all Posts as read
+	</button>
+	<add-link asp-page="/Forum/Subforum/Create" permission="EditForums" class="btn-sm"></add-link>
+</top-button-bar>
 <div class="clearfix flex-wrap d-flex d-md-block">
 	@foreach (var cat in Model.Categories.OrderBy(c => ((c.Ordinal + 21) % 31) % 22)) // please don't ban me
 	{
