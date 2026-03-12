@@ -30,6 +30,10 @@
 		<cancel-link href="/@Model.Path"></cancel-link>
 	</form-button-bar>
 	<div class="text-center alert-info mt-2" role="alert">
+		<label class="d-none" id="unsecure-link-warning">
+			<i class="fa fa-warning"></i><strong>Warning</strong>: There appear to be one or more <code>http:</code> links in this page,
+			which are not secure. Change them to <code>https:</code> if able.
+		</label>
 		<label class="alert-info">
 			@await Html.RenderWiki(SystemWiki.WikiEditNote)
 		</label>
@@ -38,3 +42,7 @@
 
 <diff-panel></diff-panel>
 <wiki-preview preview-path="@("/Wiki/Preview?Id=" + Model.Path)"></wiki-preview>
+
+@section Scripts {
+	<script src="/js/editor-content-warnings.js"></script>
+}
