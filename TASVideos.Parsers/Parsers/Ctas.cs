@@ -18,7 +18,7 @@ internal class Ctas : Parser, IParser
 		try
 		{
 			var magic = reader.ReadUInt32();
-			if (m_magic != Magic)
+			if (magic != Magic)
 			{
 				return InvalidFormat();
 			}
