@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Publications;
+namespace TASVideos.Pages.Publications;
 
 [AllowAnonymous]
 public class AuthorsModel(ApplicationDbContext db) : BasePageModel

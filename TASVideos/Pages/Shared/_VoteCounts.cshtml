@@ -1,8 +1,8 @@
-﻿@model VoteCounts?
+@model VoteCounts?
 
 <span condition="Model is not null">
 	@{
-		int totalCount = Model!.VotesYes + Model.VotesMeh + Model.VotesNo;
+		var totalCount = Model!.VotesYes + Model.VotesMeh + Model.VotesNo;
 		if (totalCount == 0)
 		{
 			<text>No votes</text>

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication;
 
 namespace TASVideos.Pages.Account;
 
@@ -25,9 +25,9 @@ public class LoginModel : BasePageModel
 	}
 
 	public async Task<IActionResult> OnPost(
-		[FromServices]ISignInManager signInManager,
-		[FromServices]IUserManager userManager,
-		[FromServices]IHostEnvironment env)
+		[FromServices] ISignInManager signInManager,
+		[FromServices] IUserManager userManager,
+		[FromServices] IHostEnvironment env)
 	{
 		if (!ModelState.IsValid)
 		{

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Activity;
+namespace TASVideos.Pages.Activity;
 
 [AllowAnonymous]
 public class JudgesModel(ApplicationDbContext db) : BasePageModel

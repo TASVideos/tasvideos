@@ -1,8 +1,9 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TASVideos.Extensions;
+using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Extensions;
 
@@ -108,7 +109,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(1, modelState.Count);
+		Assert.HasCount(1, modelState);
 	}
 
 	[TestMethod]
@@ -120,7 +121,7 @@ public class FormFileExtensionTests
 		var user = CreateClaimsPrincipalWithPermissions([PermissionTo.OverrideSubmissionConstraints]);
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(0, modelState.Count);
+		Assert.IsEmpty(modelState);
 	}
 
 	[TestMethod]
@@ -132,7 +133,7 @@ public class FormFileExtensionTests
 		var user = new ClaimsPrincipal();
 
 		formFile.AddModelErrorIfOverSizeLimit(modelState, user);
-		Assert.AreEqual(0, modelState.Count);
+		Assert.IsEmpty(modelState);
 	}
 
 	[TestMethod]
@@ -190,7 +191,7 @@ public class FormFileExtensionTests
 	{
 		var actual = await ((IFormFile?)null).ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Length);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -202,7 +203,7 @@ public class FormFileExtensionTests
 
 		var actual = await formFile.ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(bytes.Length, actual.Length);
+		Assert.That.AreSameLength(bytes, actual);
 	}
 
 	[TestMethod]
@@ -210,7 +211,7 @@ public class FormFileExtensionTests
 	{
 		var actual = await ((IFormFile?)null).ToBytes();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Length);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -239,7 +240,7 @@ public class FormFileExtensionTests
 	[TestMethod]
 	public async Task DecompressOrTakeRaw_ValidGzip_ReturnsGzip()
 	{
-		(byte[] bytes, int uncompressedLength) = GZippedBytes();
+		var (bytes, uncompressedLength) = GZippedBytes();
 		var ms = new MemoryStream(bytes);
 		var formFile = new FormFile(ms, 0, bytes.Length, "Data", "test.bk2");
 
@@ -250,7 +251,7 @@ public class FormFileExtensionTests
 
 	private static (byte[] GzippedBytes, int UncompressedLength) GZippedBytes()
 	{
-		byte[] data = "Hello World"u8.ToArray();
+		var data = "Hello World"u8.ToArray();
 		using var ms = new MemoryStream();
 		using var zipStream = new GZipStream(ms, CompressionMode.Compress);
 		zipStream.Write(data, 0, data.Length);

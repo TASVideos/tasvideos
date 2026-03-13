@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using TASVideos.Api.Endpoints;
 
 namespace TASVideos.Api;
+
 public static class WebApplicationExtensions
 {
 	public static IApplicationBuilder UseTasvideosApiEndpoints(this WebApplication app, IHostEnvironment env)
@@ -13,6 +15,8 @@ public static class WebApplicationExtensions
 			.MapUsers()
 			.MapTags()
 			.MapClasses()
+			.MapForumTopics()
+			.MapSubforums()
 			.UseSwaggerUi(env)
 			.UseExceptionHandler(exceptionHandlerApp =>
 			{

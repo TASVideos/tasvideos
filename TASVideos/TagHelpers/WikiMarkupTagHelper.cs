@@ -1,4 +1,4 @@
-﻿using System.Text.Encodings.Web;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Core.Services.Wiki;
@@ -31,7 +31,7 @@ public partial class WikiMarkup(IViewComponentHelper viewComponentHelper) : TagH
 
 	async Task IWriterHelper.RunViewComponentAsync(TextWriter w, string name, IReadOnlyDictionary<string, string> pp)
 	{
-		var componentExists = ModuleParamHelpers.ViewComponents.TryGetValue(name, out Type? viewComponent);
+		var componentExists = ModuleParamHelpers.ViewComponents.TryGetValue(name, out var viewComponent);
 		if (!componentExists)
 		{
 			throw new InvalidOperationException($"Unknown ViewComponent: {name}");

@@ -1,4 +1,4 @@
-﻿function disableSubmit() {
+function disableSubmit() {
 	const btn = document.getElementById("submit-btn");
 	btn.classList.add("disabled");
 	btn.disabled = true;

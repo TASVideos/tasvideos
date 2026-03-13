@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Roles;
+namespace TASVideos.Pages.Roles;
 
 [RequirePermission(PermissionTo.EditRoles)]
 public class AddEditModel(ApplicationDbContext db, IRoleService roleService, IExternalMediaPublisher publisher) : BasePageModel

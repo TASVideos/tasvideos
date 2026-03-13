@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", findAndEngageMultiselects);
+document.addEventListener("DOMContentLoaded", findAndEngageMultiselects);
 
 function findAndEngageMultiselects() {
 	const selects = Array.from(document.querySelectorAll('[data-multiselect="true"]'));

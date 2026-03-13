@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -8,7 +9,8 @@ public class EditModel(
 	ApplicationDbContext db,
 	IWikiPages wikiPages,
 	IExternalMediaPublisher publisher,
-	IQueueService queueService)
+	IQueueService queueService,
+	IMovieParser movieParser)
 	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(Submission)}.{nameof(SubmissionEdit.ReplaceMovieFile)}";
@@ -18,6 +20,7 @@ public class EditModel(
 
 	[BindProperty]
 	public SubmissionEdit Submission { get; set; } = new();
+	public IEnumerable<string> MovieFileAccepts { get; init; } = movieParser.SupportedMovieExtensions;
 
 	[BindProperty]
 	[DoNotTrim]
@@ -72,6 +75,12 @@ public class EditModel(
 
 	public async Task<IActionResult> OnPost()
 	{
+		if (Submission.ReplaceMovieFile.FileExtension() == ".zip")
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.ReplaceMovieFile)}", "ZIP files are not supported. Please upload the original movie file.");
+			return Page();
+		}
+
 		if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.ReplaceMovieFile is not null)
 		{
 			Submission.ReplaceMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
@@ -85,20 +94,6 @@ public class EditModel(
 		Submission.Authors = Submission.Authors.RemoveEmpty();
 
 		var userName = User.Name();
-
-		// TODO: this is bad, an author can null out these values,
-		// but if we treat null as no choice, then we have no way to unset these values
-		if (!User.Has(PermissionTo.JudgeSubmissions))
-		{
-			Submission.IntendedPublicationClass = null;
-		}
-		else if (Submission.IntendedPublicationClass is null &&
-			Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
-		{
-			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.IntendedPublicationClass)}", "A submission can not be accepted without a PublicationClass");
-			return await ReturnWithModelErrors();
-		}
-
 		var subInfo = await db.Submissions
 			.Where(s => s.Id == Id)
 			.Select(s => new
@@ -107,7 +102,9 @@ public class EditModel(
 				UserIsPublisher = s.Publisher != null && s.Publisher.UserName == userName,
 				UserIsAuthorOrSubmitter = s.Submitter!.UserName == userName || s.SubmissionAuthors.Any(sa => sa.Author!.UserName == userName),
 				CurrentStatus = s.Status,
-				CreateDate = s.CreateTimestamp
+				CreateDate = s.CreateTimestamp,
+				IsSynced = s.SyncedOn != null,
+				RejectionReason = s.RejectionReason
 			})
 			.SingleOrDefaultAsync();
 
@@ -121,6 +118,11 @@ public class EditModel(
 			return AccessDenied();
 		}
 
+		if (subInfo.RejectionReason is not null && !User.Has(PermissionTo.RejectionReasonMaintenance) && Submission.RejectionReason != subInfo.RejectionReason.Id)
+		{
+			return AccessDenied();
+		}
+
 		AvailableStatuses = queueService.AvailableStatuses(
 			subInfo.CurrentStatus,
 			User.Permissions(),
@@ -129,9 +131,28 @@ public class EditModel(
 			subInfo.UserIsJudge,
 			subInfo.UserIsPublisher);
 
+		// TODO: this is bad, an author can null out these values,
+		// but if we treat null as no choice, then we have no way to unset these values
+		if (!User.Has(PermissionTo.JudgeSubmissions))
+		{
+			Submission.IntendedPublicationClass = null;
+		}
+		else if (Submission.IntendedPublicationClass is null &&
+				Submission.Status is SubmissionStatus.Accepted or SubmissionStatus.PublicationUnderway)
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.IntendedPublicationClass)}", "A submission can not be accepted without a PublicationClass");
+			return await ReturnWithModelErrors();
+		}
+
 		if (!AvailableStatuses.Contains(Submission.Status))
 		{
 			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Status)}", $"Invalid status: {Submission.Status}");
+			return await ReturnWithModelErrors();
+		}
+
+		if (Submission.Status == SubmissionStatus.Accepted && !subInfo.IsSynced)
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.Status)}", "A submission cannot be accepted until it is sync verified");
 			return await ReturnWithModelErrors();
 		}
 
@@ -166,7 +187,10 @@ public class EditModel(
 		var formattedTitle = await GetFormattedTitle(updateResult.PreviousStatus, Submission.Status);
 		var separator = !string.IsNullOrEmpty(Submission.RevisionMessage) ? " | " : "";
 		await publisher.SendSubmissionEdit(
-			Id, formattedTitle, $"{Submission.RevisionMessage}{separator}{updateResult.SubmissionTitle}",  updateResult.PreviousStatus != Submission.Status);
+			Id,
+			formattedTitle: formattedTitle,
+			body: $"{Submission.RevisionMessage}{separator}{updateResult.SubmissionTitle}",
+			force: updateResult.PreviousStatus != Submission.Status);
 
 		return RedirectToPage("View", new { Id });
 	}
@@ -178,7 +202,7 @@ public class EditModel(
 			return $"[{Id}S]({{0}}) edited by {User.Name()}";
 		}
 
-		string statusStr = newStatus.EnumDisplayName();
+		var statusStr = newStatus.EnumDisplayName();
 
 		if (previousStatus == SubmissionStatus.PublicationUnderway && newStatus == SubmissionStatus.Accepted)
 		{
@@ -262,7 +286,22 @@ public class EditModel(
 			&& (await queueService.CanDeleteSubmission(Id)).True;
 
 		AvailableClasses = await db.PublicationClasses.ToDropDownList();
-		AvailableRejectionReasons = await db.SubmissionRejectionReasons.ToDropDownList();
+
+		var subInfo = await db.Submissions
+			.Where(s => s.Id == Id)
+			.Select(s => new
+			{
+				RejectionReason = s.RejectionReason
+			})
+			.SingleOrDefaultAsync();
+		if (subInfo is not null && subInfo.RejectionReason is not null && !User.Has(PermissionTo.RejectionReasonMaintenance))
+		{
+			AvailableRejectionReasons = new List<SubmissionRejectionReason> { subInfo.RejectionReason }.ToDropDownList();
+		}
+		else
+		{
+			AvailableRejectionReasons = await db.SubmissionRejectionReasons.ToDropDownList();
+		}
 	}
 
 	public class SubmissionEdit

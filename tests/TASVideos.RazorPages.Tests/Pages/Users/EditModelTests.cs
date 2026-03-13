@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Pages.Users;
@@ -93,9 +93,9 @@ public class EditModelTests : TestDbBase
 		Assert.AreEqual("mood.png", _model.UserToEdit.MoodAvatar);
 		Assert.IsTrue(_model.UserToEdit.UseRatings);
 		Assert.AreEqual("Test comments", _model.UserToEdit.ModeratorComments);
-		Assert.AreEqual(1, _model.UserToEdit.SelectedRoles.Count);
+		Assert.HasCount(1, _model.UserToEdit.SelectedRoles);
 		Assert.AreEqual(1, _model.UserToEdit.SelectedRoles[0]);
-		Assert.AreEqual(2, _model.AvailableRoles.Count);
+		Assert.HasCount(2, _model.AvailableRoles);
 	}
 
 	#endregion
@@ -155,7 +155,7 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_model.ModelState.IsValid);
-		Assert.AreEqual(1, _model.AvailableRoles.Count);
+		Assert.HasCount(1, _model.AvailableRoles);
 	}
 
 	[TestMethod]

@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -39,7 +39,7 @@ public class DeleteButtonTagHelper(IHtmlHelper helper) : TagHelper
 
 		var antiForgeryToken = helper.AntiForgeryToken().GetString();
 
-		string reasonInput = "";
+		var reasonInput = "";
 		if (AskReason)
 		{
 			reasonInput = """

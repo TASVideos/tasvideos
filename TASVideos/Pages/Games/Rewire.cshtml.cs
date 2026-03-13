@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Game;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games;
 
@@ -54,7 +54,7 @@ public class RewireModel(ApplicationDbContext db, IExternalMediaPublisher publis
 			ValidIds = await db.Games.CountAsync(g => g.Id == FromGameId || g.Id == IntoGameId) == 2;
 			if (ValidIds)
 			{
-				int intoGameId = (int)IntoGameId;
+				var intoGameId = (int)IntoGameId;
 
 				var rewirePublications = await db.Publications
 					.Where(p => p.GameId == FromGameId)

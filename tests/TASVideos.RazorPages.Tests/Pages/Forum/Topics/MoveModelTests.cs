@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Pages.Forum.Topics;
 using TASVideos.Services;
@@ -56,7 +56,7 @@ public class MoveModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsTrue(_model.AvailableForums.Count > 0);
+		Assert.IsNotEmpty(_model.AvailableForums);
 	}
 
 	[TestMethod]

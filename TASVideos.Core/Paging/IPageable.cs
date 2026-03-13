@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core;
+namespace TASVideos.Core;
 
 /// <summary>
 /// Represents a request for a data collection that can be paged
@@ -20,8 +20,8 @@ public static class PageableExtensions
 {
 	public static int Offset(this IPageable? pageable)
 	{
-		var current = Math.Max(pageable?.CurrentPage ?? 0, 1);
-		var size = Math.Max(pageable?.PageSize ?? 0, 1);
+		var current = Math.Max(pageable?.CurrentPage ?? 1, 1);
+		var size = Math.Max(pageable?.PageSize ?? 100, 1);
 		return (current - 1) * size;
 	}
 }

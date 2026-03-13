@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using TASVideos.Common;
@@ -59,10 +59,10 @@ public class TimeZoneConvert(
 		TimeSpan? relativeTime = null;
 		if (RelativeTime)
 		{
-			relativeTime = DateTime.UtcNow - ConvertedDateTime;
+			relativeTime = ConvertedDateTime - DateTime.UtcNow;
 		}
 
-		if (relativeTime?.Days < 30)
+		if (relativeTime?.Duration().Days < 30)
 		{
 			dateStr = ((TimeSpan)relativeTime).ToRelativeString();
 		}

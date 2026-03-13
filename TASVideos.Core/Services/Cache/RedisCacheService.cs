@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
@@ -53,14 +53,15 @@ public class RedisCacheService : ICacheService
 
 		try
 		{
-			RedisValue data = _cache.StringGet(key);
+			var data = _cache.StringGet(key);
 			if (data.IsNullOrEmpty)
 			{
 				value = default!;
 				return false;
 			}
 
-			value = JsonSerializer.Deserialize<T>(data!) ?? default!;
+			var json = data.ToString();
+			value = JsonSerializer.Deserialize<T>(json) ?? default!;
 			return true;
 		}
 		catch (Exception ex) when (ex is RedisConnectionException or RedisTimeoutException)

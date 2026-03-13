@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -7,6 +7,7 @@ using TASVideos.Core.HttpClientExtensions;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Core.Services.ExternalMediaPublisher.Distributors;
+
 public sealed class BlueskyDistributor(
 	AppSettings appSettings,
 	IHttpClientFactory httpClientFactory,
@@ -108,7 +109,7 @@ public sealed class BlueskyDistributor(
 
 				body += post.Link;
 
-				int byteEnd = bodyLengthUtf8 + linkLengthUtf8;
+				var byteEnd = bodyLengthUtf8 + linkLengthUtf8;
 
 				Facets.Add(new BlueskyFacet(bodyLengthUtf8, byteEnd, post.Link));
 			}

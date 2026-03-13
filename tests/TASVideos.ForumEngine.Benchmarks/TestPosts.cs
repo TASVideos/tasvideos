@@ -1,4 +1,4 @@
-﻿namespace TASVideos.ForumEngine.Benchmarks;
+namespace TASVideos.ForumEngine.Benchmarks;
 
 public static class TestPosts
 {

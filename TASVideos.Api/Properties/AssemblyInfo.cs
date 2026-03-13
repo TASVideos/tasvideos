@@ -1,1 +1,1 @@
-﻿[assembly: ApiController]
+[assembly: ApiController]

@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -29,7 +29,7 @@ public abstract class TestDbBase
 		_connectionString = builder.ToString();
 	}
 
-	public static TestDbContext Create()
+	private static TestDbContext Create()
 	{
 		AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 		var options = new DbContextOptionsBuilder<ApplicationDbContext>()

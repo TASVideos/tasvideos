@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers;
@@ -39,7 +39,7 @@ public class NavDropdownTagHelper : NavItemBase
 
 		output.TagName = "li";
 		output.AddCssClass("nav-item dropdown");
-		string addClass = "nav-link dropdown-toggle";
+		var addClass = "nav-link dropdown-toggle";
 		if (IsActive())
 		{
 			addClass += " active";
@@ -96,12 +96,16 @@ public class NavItemBase : TagHelper
 		switch (Activate)
 		{
 			case "Home" when page == "/Index":
-			case "Movies" when MoviesGroup.Contains(pageGroup):
-			case "Articles" when ArticlesGroup.Contains(viewActiveTab):
-			case "Admin" when AdminGroup.Contains(pageGroup):
+			case "Movies" when MoviesGroup.Contains(pageGroup) || MoviesWikiGroup.Contains(viewActiveTab):
+			case "Games" when GamesWikiGroup.Contains(viewActiveTab):
+			case "Tools" when ToolsWikiGroup.Contains(viewActiveTab):
+			case "Community" when CommunityGroup.Contains(pageGroup) || CommunityWikiGroup.Contains(viewActiveTab):
+			case "Resources" when ResourcesWikiGroup.Contains(viewActiveTab):
+			case "About" when AboutWikiGroup.Contains(viewActiveTab):
+			case "Wiki" when WikiGroup.Contains(viewActiveTab):
+			case "Admin" when AdminGroup.Contains(pageGroup) || AdminWikiGroup.Contains(viewActiveTab):
 			case "Register" when page == "/Account/Register":
 			case "Login" when page == "/Account/Login":
-			case "Wiki" when WikiGroup.Contains(viewActiveTab):
 				return true;
 		}
 
@@ -110,8 +114,15 @@ public class NavItemBase : TagHelper
 			&& Activate == "Wiki" && pageGroup == "Wiki";
 	}
 
-	private static readonly string[] MoviesGroup = ["Publications", "Submissions", "UserFiles"];
-	private static readonly string[] ArticlesGroup = ["ArticleIndex", "Game Resources", "EmulatorResources"];
-	private static readonly string[] AdminGroup = ["Roles", "Users", "Permissions"];
+	private static readonly string[] MoviesGroup = ["Publications", "UserFiles"];
+	private static readonly string[] MoviesWikiGroup = ["Class"];
+	private static readonly string[] GamesWikiGroup = ["GameResources", "Platforms"];
+	private static readonly string[] ToolsWikiGroup = ["Bizhawk", "EmulatorResources"];
+	private static readonly string[] CommunityGroup = ["Forum"];
+	private static readonly string[] CommunityWikiGroup = ["LiveChat", "Communities"];
+	private static readonly string[] ResourcesWikiGroup = ["ArticleIndex", "FAQ", "TasingGuide"];
+	private static readonly string[] AboutWikiGroup = ["WelcomeToTASVideos", "Staff", "Helping", "SiteHistory"];
 	private static readonly string[] WikiGroup = ["SandBox", "RecentChanges", "WikiOrphans", "TODO", "System", "DeletedPages"];
+	private static readonly string[] AdminGroup = ["Roles", "Users", "Permissions", "Tags", "Flags", "Genres", "PublicationClasses", "AwardsEditor", "Systems"];
+	private static readonly string[] AdminWikiGroup = ["MediaPosts"];
 }

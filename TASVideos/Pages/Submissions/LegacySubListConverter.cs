@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Submissions;
+namespace TASVideos.Pages.Submissions;
 
 /// <summary>
 /// Converts legacy query string parameters from Subs-List to a <see cref="IndexModel.SubmissionSearchRequest"/> model
@@ -18,7 +18,7 @@ public static class LegacySubListConverter
 		var request = new IndexModel.SubmissionSearchRequest();
 
 		var statuses = new List<SubmissionStatus>();
-		foreach ((var key, SubmissionStatus value) in StatusTokenMapping)
+		foreach (var (key, value) in StatusTokenMapping)
 		{
 			if (tokens.Any(t => t == key))
 			{

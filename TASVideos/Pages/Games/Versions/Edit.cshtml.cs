@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Game;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games.Versions;
 
@@ -174,7 +174,7 @@ public class EditModel(ApplicationDbContext db, IExternalMediaPublisher publishe
 
 		db.GameVersions.Attach(new GameVersion { Id = Id ?? 0 }).State = EntityState.Deleted;
 		var saveResult = await db.TrySaveChanges();
-		string saveMessage = $"Game Version {Id} deleted";
+		var saveMessage = $"Game Version {Id} deleted";
 		SetMessage(saveResult, saveMessage, $"Unable to delete Game Version {Id}");
 		if (saveResult.IsSuccess())
 		{

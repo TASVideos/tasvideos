@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace TASVideos.TagHelpers;
@@ -12,7 +12,7 @@ public class HtmlEncodeTagHelper : TagHelper
 			? output.Content.GetContent()
 			: (await output.GetChildContentAsync()).GetContent();
 
-		string encodedChildContent = WebUtility.HtmlEncode(childContent ?? "");
+		var encodedChildContent = WebUtility.HtmlEncode(childContent ?? "");
 
 		output.TagName = null;
 		output.Content.SetHtmlContent(encodedChildContent);

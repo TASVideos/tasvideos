@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <RuleSet Name="TASVideos Rules" Description="Applies to all projects in the solution" ToolsVersion="17.0">
   <Rules AnalyzerId="Menees.Analyzers" RuleNamespace="Menees.Analyzers">
     <Rule Id="MEN002" Action="Hidden" />
@@ -281,7 +281,7 @@
     <Rule Id="SA1401" Action="None" />
     <Rule Id="SA1402" Action="None" />
     <Rule Id="SA1408" Action="None" />
-    <Rule Id="SA1412" Action="Warning" />
+    <Rule Id="SA1412" Action="None" />
     <Rule Id="SA1413" Action="None" />
     <Rule Id="SA1502" Action="None" />
     <Rule Id="SA1516" Action="None" />

@@ -1,4 +1,4 @@
-﻿@page "{id}"
+@page "{id}"
 @model EditModel
 @{
 	ViewData.SetTitle($"Edit Submission {Model.Submission.Title}");
@@ -21,9 +21,8 @@
 		<column lg="6" permission="ReplaceSubmissionMovieFile">
 			<fieldset>
 				<label asp-for="Submission.ReplaceMovieFile"></label>
-				<input asp-for="Submission.ReplaceMovieFile" data-id="movie-file" />
+				<input asp-for="Submission.ReplaceMovieFile" data-id="movie-file" accept="@string.Join(',', Model.MovieFileAccepts)" />
 				<span asp-validation-for="Submission.ReplaceMovieFile"></span>
-				<div data-id="nozip-reminder" class="alert alert-warning d-none">Note: You no longer need to zip the movie file. You can select the original movie file and your browser will automatically compress it before uploading.</div>
 			</fieldset>
 		</column>
 		<column lg="6">
@@ -85,6 +84,7 @@
 				<select data-id="status"
 						asp-for="Submission.Status"
 						asp-items="@Model.AvailableStatuses.Select(s => new SelectListItem { Text = s.EnumDisplayName(), Value = ((int)s).ToString(), Selected = s == Model.Submission.Status })"></select>
+				<span asp-validation-for="Submission.Status"></span>
 			</fieldset>
 			<fieldset id="rejection-reason" data-rejection-id="@((int)SubmissionStatus.Rejected)" show="@Model.Submission.Status == SubmissionStatus.Rejected">
 				<label asp-for="Submission.RejectionReason">Reason</label>

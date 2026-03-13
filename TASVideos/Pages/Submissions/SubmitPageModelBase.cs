@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Submissions;
+namespace TASVideos.Pages.Submissions;
 
 public class SubmitPageModelBase : BasePageModel
 {

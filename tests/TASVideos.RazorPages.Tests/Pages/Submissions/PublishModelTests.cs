@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Extensions;
@@ -279,7 +279,7 @@ public class PublishModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<RedirectResult>(actual);
 		var redirectResult = (RedirectResult)actual;
-		Assert.IsTrue(redirectResult.Url.Contains($"{expectedPublicationId}M"), "Should redirect to publication page");
+		Assert.Contains($"{expectedPublicationId}M", redirectResult.Url, "Should redirect to publication page");
 
 		// Verify the service was called with correct parameters
 		await queueService.Received(1).Publish(Arg.Is<PublishSubmissionRequest>(r =>
@@ -340,7 +340,7 @@ public class PublishModelTests : TestDbBase
 
 	private static IFormFile CreateInvalidScreenshotFile()
 	{
-		byte[] bytes = [0x00, 0x00, 0x00, 0x00]; // Invalid header
+		var bytes = "\0\0\0\0"u8.ToArray(); // Invalid header
 		var stream = new MemoryStream(bytes);
 		return new FormFile(stream, 0, bytes.Length, "screenshot", "screenshot.txt")
 		{

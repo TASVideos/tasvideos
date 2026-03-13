@@ -16,7 +16,7 @@ Contributors are expected to uphold a basic [code of conduct](CODE_OF_CONDUCT.md
 
 See [Local Development Setup](https://github.com/TASVideos/tasvideos/wiki/Local-Development-Setup) in the readme for instructions on running the site locally for development.
 
-There are several test suites in the `/tests` directory, which you can run in the conventional way (`dotnet test [TASVideos.sln]`).
+There are several test suites in the `/tests` directory, which you can run in the conventional way (`dotnet test [TASVideos.slnx]`).
 They are also run in CI.
 If you want to check coverage locally, it's `dotnet test --collect:'Code Coverage' && dotnet dotnet-coverage merge 'tests/*/TestResults/**/*.coverage' --output-format=cobertura --output=merged.coverage.xml`.
 

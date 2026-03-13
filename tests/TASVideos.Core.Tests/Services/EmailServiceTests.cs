@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Hosting;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 

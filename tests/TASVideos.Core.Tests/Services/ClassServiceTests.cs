@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -19,7 +19,7 @@ public class ClassServiceTests : TestDbBase
 	{
 		var result = await _classService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(0, result.Count);
+		Assert.IsEmpty(result);
 		Assert.IsTrue(_cache.ContainsKey(ClassService.ClassesKey));
 	}
 
@@ -31,7 +31,7 @@ public class ClassServiceTests : TestDbBase
 
 		var result = await _classService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 		Assert.IsTrue(_cache.ContainsKey(ClassService.ClassesKey));
 	}
 
@@ -198,7 +198,7 @@ public class ClassServiceTests : TestDbBase
 	public async Task Delete_Success_FlushesCache()
 	{
 		const int id = 1;
-		var publicationClass = _db.PublicationClasses.Add(new PublicationClass { Id = id }).Entity;
+		_db.PublicationClasses.Add(new PublicationClass { Id = id });
 		await _db.SaveChangesAsync();
 
 		var result = await _classService.Delete(id);

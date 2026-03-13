@@ -1,4 +1,4 @@
-﻿document.addEventListener("DOMContentLoaded", findShowMores);
+document.addEventListener("DOMContentLoaded", findShowMores);
 
 function findShowMores() {
     Array.from(document.querySelectorAll('[data-show-more="true"]')).forEach(elem => {

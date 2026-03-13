@@ -1,4 +1,4 @@
-﻿using System.Security.Principal;
+using System.Security.Principal;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -466,6 +466,26 @@ internal class TestUpdateEntry : IUpdateEntry
 	}
 
 	public bool IsConceptualNull(IProperty property)
+	{
+		throw new NotImplementedException();
+	}
+
+	public bool IsModified(IComplexProperty property)
+	{
+		throw new NotImplementedException();
+	}
+
+	public bool HasExplicitValue(IProperty property)
+	{
+		throw new NotImplementedException();
+	}
+
+	public bool HasStoreGeneratedValue(IProperty property)
+	{
+		throw new NotImplementedException();
+	}
+
+	public bool CanHaveOriginalValue(IPropertyBase propertyBase)
 	{
 		throw new NotImplementedException();
 	}

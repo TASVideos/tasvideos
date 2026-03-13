@@ -1,4 +1,4 @@
-﻿using TASVideos.Common;
+using TASVideos.Common;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -124,7 +124,7 @@ public class IndexModel(ApplicationDbContext db, IGameSystemService gameSystemSe
 			? []
 			: [System];
 
-		ICollection<int> ISubmissionFilter.GameIds => !string.IsNullOrWhiteSpace(GameId) && int.TryParse(GameId, out int _)
+		ICollection<int> ISubmissionFilter.GameIds => !string.IsNullOrWhiteSpace(GameId) && int.TryParse(GameId, out _)
 			? [int.Parse(GameId)]
 			: [];
 	}

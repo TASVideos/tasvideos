@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.AspNetCore.StaticFiles;
 using TASVideos.Core.Services.Wiki;
 
 namespace TASVideos.Pages.Submissions;

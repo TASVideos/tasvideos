@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services.Youtube;
+using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 
 namespace TASVideos.Pages.Diagnostics;

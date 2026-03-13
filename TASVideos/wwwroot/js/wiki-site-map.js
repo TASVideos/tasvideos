@@ -1,4 +1,4 @@
-﻿const onlyWikiCheckbox = document.getElementById('only-wiki-checkbox');
+const onlyWikiCheckbox = document.getElementById('only-wiki-checkbox');
 onlyWikiCheckbox.addEventListener('click', () => {
 	let hide = false;
 	if (onlyWikiCheckbox.checked) {

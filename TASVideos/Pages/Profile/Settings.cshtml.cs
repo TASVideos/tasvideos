@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services.Email;
+using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Profile;
 
@@ -70,6 +70,9 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 	public UserPreference AutoWatchTopic { get; set; }
 
 	[BindProperty]
+	public bool PreselectMinorEditOnPostEdits { get; set; }
+
+	[BindProperty]
 	public UserDateFormat DateFormat { get; set; }
 
 	[BindProperty]
@@ -94,6 +97,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 		PreferredPronouns = user.PreferredPronouns;
 		EmailOnPrivateMessage = user.EmailOnPrivateMessage;
 		AutoWatchTopic = user.AutoWatchTopic ?? UserPreference.Auto;
+		PreselectMinorEditOnPostEdits = user.PreselectMinorEditOnPostEdits;
 		DateFormat = user.DateFormat;
 		TimeFormat = user.TimeFormat;
 		DecimalFormat = user.DecimalFormat;
@@ -101,7 +105,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 
 	public async Task<IActionResult> OnPost()
 	{
-		if (!string.IsNullOrEmpty(LocationCountry) && !AvailableLocations.Any(l => l.Value == LocationCountry))
+		if (!string.IsNullOrEmpty(LocationCountry) && AvailableLocations.All(l => l.Value != LocationCountry))
 		{
 			ModelState.AddModelError(nameof(LocationCountry), "Please choose a valid option.");
 		}
@@ -130,7 +134,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 
 		var user = await userManager.GetRequiredUser(User);
 
-		bool hasUserCustomLocaleChanged = user.DateFormat != DateFormat || user.TimeFormat != TimeFormat || user.DecimalFormat != DecimalFormat;
+		var hasUserCustomLocaleChanged = user.DateFormat != DateFormat || user.TimeFormat != TimeFormat || user.DecimalFormat != DecimalFormat;
 
 		user.TimeZoneId = TimeZone ?? TimeZoneInfo.Utc.Id;
 		user.PublicRatings = PublicRatings;
@@ -140,6 +144,7 @@ public class SettingsModel(IUserManager userManager, IEmailService emailService,
 		user.PreferredPronouns = PreferredPronouns;
 		user.EmailOnPrivateMessage = EmailOnPrivateMessage;
 		user.AutoWatchTopic = AutoWatchTopic;
+		user.PreselectMinorEditOnPostEdits = PreselectMinorEditOnPostEdits;
 		user.DateFormat = DateFormat;
 		user.TimeFormat = TimeFormat;
 		user.DecimalFormat = DecimalFormat;

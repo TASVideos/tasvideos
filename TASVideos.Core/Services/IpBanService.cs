@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.Extensions.Logging;
 using NetTools;
 
@@ -79,7 +79,7 @@ internal class IpBanService(
 	{
 		try
 		{
-			string processed = "";
+			var processed = "";
 			if (mask.Contains('*'))
 			{
 				if (mask.EndsWith("*.*.*"))

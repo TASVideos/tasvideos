@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Messages;
+namespace TASVideos.Pages.Messages;
 
 [RequirePermission(PermissionTo.SendPrivateMessages)]
 public class CreateModel(IUserManager userManager, IPrivateMessageService privateMessageService) : BasePageModel

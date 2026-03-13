@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -26,6 +26,8 @@ public class EditModel(
 	public List<CreateModel.MiniPost> PreviousPosts { get; set; } = [];
 
 	public AvatarUrls UserAvatars { get; set; } = new(null, null);
+
+	public bool PreselectMinorEdit { get; set; }
 
 	public async Task<IActionResult> OnGet()
 	{
@@ -85,6 +87,9 @@ public class EditModel(
 		{
 			UserAvatars = await forumService.UserAvatars(User.GetUserId());
 		}
+
+		var user = await userManager.GetRequiredUser(User);
+		PreselectMinorEdit = user.PreselectMinorEditOnPostEdits;
 
 		return Page();
 	}
@@ -163,7 +168,7 @@ public class EditModel(
 				p.Topic!.ForumId,
 				ForumShortName = p.Topic!.Forum!.ShortName,
 				TopicTitle = p.Topic!.Title,
-				p.PosterId,
+				p.PosterId
 			})
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
@@ -185,7 +190,7 @@ public class EditModel(
 				.ByMostRecent()
 				.First();
 
-			bool isLastPost = lastPost.Id == post.Id;
+			var isLastPost = lastPost.Id == post.Id;
 			if (!isLastPost)
 			{
 				return NotFound();
@@ -196,7 +201,7 @@ public class EditModel(
 
 		await db.ForumPosts.Where(p => p.Id == Id).ExecuteDeleteAsync();
 
-		bool topicDeleted = false;
+		var topicDeleted = false;
 		if (postCount == 1)
 		{
 			await db.ForumTopics.Where(t => t.Id == post.TopicId).ExecuteDeleteAsync();
@@ -256,7 +261,7 @@ public class EditModel(
 				.SetProperty(p => p.TopicId, SiteGlobalConstants.SpamTopicId)
 				.SetProperty(p => p.ForumId, SiteGlobalConstants.SpamForumId));
 
-		bool topicDeleted = false;
+		var topicDeleted = false;
 		if (postCount == 1)
 		{
 			await db.ForumTopics.Where(t => t.Id == post.TopicId).ExecuteDeleteAsync();

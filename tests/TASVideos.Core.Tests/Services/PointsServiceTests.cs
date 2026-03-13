@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
 
@@ -36,7 +36,7 @@ public class PointsServiceTests : TestDbBase
 		const int numMovies = 2;
 		var user = _db.AddUser(1, Author);
 
-		for (int i = 0; i < numMovies; i++)
+		for (var i = 0; i < numMovies; i++)
 		{
 			_db.AddPublication();
 		}
@@ -70,8 +70,8 @@ public class PointsServiceTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		var (actual, _) = await _pointsService.PlayerPoints(user.Entity.Id);
-		Assert.IsTrue(actual > 0);
-		Assert.IsTrue(actual < 0.5);
+		Assert.IsGreaterThan(0, actual);
+		Assert.IsLessThan(0.5, actual);
 	}
 
 	[TestMethod]

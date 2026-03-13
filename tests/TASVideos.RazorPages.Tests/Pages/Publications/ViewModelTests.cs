@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Pages;
 using TASVideos.Pages.Publications;
 using TASVideos.Services;
@@ -58,7 +58,7 @@ public class ViewModelModelTests : TestDbBase
 		var actual = await _page.OnGetDownload();
 		Assert.IsInstanceOfType<FileContentResult>(actual);
 		var fileContentResult = (FileContentResult)actual;
-		Assert.AreEqual(pubData.Length, fileContentResult.FileContents.Length);
+		Assert.That.AreSameLength(pubData, fileContentResult.FileContents);
 		Assert.AreEqual(pubPath + ".zip", fileContentResult.FileDownloadName);
 	}
 

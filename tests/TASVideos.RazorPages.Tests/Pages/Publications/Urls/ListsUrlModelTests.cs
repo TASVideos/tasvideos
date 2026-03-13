@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Pages.Publications.Urls;
@@ -55,7 +55,7 @@ public class ListUrlsModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(pubTitle, _page.Title);
-		Assert.AreEqual(2, _page.CurrentUrls.Count);
+		Assert.HasCount(2, _page.CurrentUrls);
 		Assert.IsTrue(_page.CurrentUrls.All(u => u.PublicationId == pubId));
 		Assert.AreEqual(1, _page.CurrentUrls.Count(u => u.Url == url1));
 		Assert.AreEqual(1, _page.CurrentUrls.Count(u => u.Url == url2));
@@ -89,7 +89,7 @@ public class ListUrlsModelTests : TestDbBase
 		const string urlValue = "https://www.youtube.com/watch?v=test";
 		const string displayName = "Test Video";
 		const string userName = "TestUser";
-		var userId = 789;
+		const int userId = 789;
 
 		var url = new PublicationUrl
 		{
@@ -125,7 +125,7 @@ public class ListUrlsModelTests : TestDbBase
 		const int urlId = 456;
 		const string urlValue = "https://example.com/video";
 		const string userName = "TestUser";
-		var userId = 789;
+		const int userId = 789;
 
 		var url = new PublicationUrl
 		{

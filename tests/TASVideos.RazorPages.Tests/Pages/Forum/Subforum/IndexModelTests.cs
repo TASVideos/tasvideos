@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.Pages.Forum.Subforum;
 
@@ -68,8 +68,8 @@ public class IndexModelTests : BasePageModelTests
 	public async Task OnGet_ExistingForum_PopulatesCorrectly()
 	{
 		_forumService.GetPostActivityOfSubforum(Arg.Any<int>()).Returns(new Dictionary<int, (string, string)>());
-		var user = _db.AddUserWithRole("TestUser").Entity;
-		var user2 = _db.AddUserWithRole("User2").Entity;
+		var user = _db.AddUser("TestUser").Entity;
+		var user2 = _db.AddUser("User2").Entity;
 		var forum = _db.AddForum("Test Forum").Entity;
 		forum.CanCreateTopics = true;
 		var topic = _db.AddTopic(user).Entity;
@@ -114,7 +114,7 @@ public class IndexModelTests : BasePageModelTests
 		var forum = _db.AddForum("Test Forum").Entity;
 
 		// Create multiple topics
-		for (int i = 0; i < 30; i++)
+		for (var i = 0; i < 30; i++)
 		{
 			var topic = _db.AddTopic(user).Entity;
 			topic.Forum = forum;
@@ -162,7 +162,7 @@ public class IndexModelTests : BasePageModelTests
 		await _model.OnGet();
 
 		var topics = _model.Topics.ToList();
-		Assert.AreEqual(2, topics.Count);
+		Assert.HasCount(2, topics);
 
 		// Sticky topics should come first (ordered by Type descending)
 		Assert.AreEqual(ForumTopicType.Sticky, topics[0].Type);

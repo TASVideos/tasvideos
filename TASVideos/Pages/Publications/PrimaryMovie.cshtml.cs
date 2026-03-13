@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Publications;
+namespace TASVideos.Pages.Publications;
 
 [RequirePermission(PermissionTo.ReplacePrimaryMovieFile)]
 public class PrimaryMoviesModel(
@@ -63,7 +63,7 @@ public class PrimaryMoviesModel(
 			return Page();
 		}
 
-		string log = $"Primary movie file replaced, Reason: {Reason}";
+		var log = $"Primary movie file replaced, Reason: {Reason}";
 		publication.MovieFileName = PrimaryMovieFile!.FileName;
 		publication.MovieFile = await PrimaryMovieFile.ToBytes();
 

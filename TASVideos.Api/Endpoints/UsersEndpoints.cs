@@ -1,6 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
-
-namespace TASVideos.Api;
+namespace TASVideos.Api.Endpoints;
 
 internal static class UsersEndpoints
 {
@@ -21,13 +19,13 @@ internal static class UsersEndpoints
 		})
 		.WithTags("Users")
 		.WithSummary("Signs in a user and returns a JWT token.")
+		.WithDescription("""
+						<p>200 if the sign in was successful</p>
+						<p>401 if the sign in failed</p>
+						""")
 		.Produces<string>()
-		.WithOpenApi(g =>
-		{
-			g.Responses.AddGeneric400();
-			g.Responses.Add("401", new OpenApiResponse { Description = "The sign in failed." });
-			return g;
-		});
+		.Produces(StatusCodes.Status400BadRequest)
+		.Produces(StatusCodes.Status401Unauthorized);
 
 		return app;
 	}

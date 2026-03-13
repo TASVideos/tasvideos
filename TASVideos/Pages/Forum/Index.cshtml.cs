@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Forum;
+namespace TASVideos.Pages.Forum;
 
 [AllowAnonymous]
 public class IndexModel(IForumService forumService) : BasePageModel

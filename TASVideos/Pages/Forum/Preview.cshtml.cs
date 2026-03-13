@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using TASVideos.Common;
 using TASVideos.ForumEngine;
 

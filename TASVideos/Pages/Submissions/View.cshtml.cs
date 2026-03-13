@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Submissions;

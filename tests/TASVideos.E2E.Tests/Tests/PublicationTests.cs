@@ -1,4 +1,4 @@
-﻿using TASVideos.E2E.Tests.Base;
+using TASVideos.E2E.Tests.Base;
 
 namespace TASVideos.E2E.Tests.Tests;
 
@@ -110,6 +110,6 @@ public class PublicationTests : BaseE2ETest
 		var response = await Navigate($"/movies.cgi?{query}");
 		AssertResponseCode(response, 200);
 		Assert.IsNotNull(response);
-		Assert.IsTrue(response.Url.Contains($"Movies-{expected}"));
+		Assert.Contains($"Movies-{expected}", response.Url);
 	}
 }

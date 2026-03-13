@@ -1,4 +1,4 @@
-﻿namespace TASVideos.WikiEngine.AST;
+namespace TASVideos.WikiEngine.AST;
 
 public class Text(int charStart, string content) : INode
 {

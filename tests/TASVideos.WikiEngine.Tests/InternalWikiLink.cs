@@ -1,4 +1,3 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 [assembly: Parallelize(Scope = ExecutionScope.MethodLevel)]
 
 namespace TASVideos.WikiEngine.Tests;
@@ -31,7 +30,7 @@ public class InternalWikiLink
 		var actual = Util.GetReferrals($"[{link}]");
 		Assert.IsNotNull(actual);
 		var actualList = actual.ToList();
-		Assert.AreEqual(1, actualList.Count);
+		Assert.HasCount(1, actualList);
 		Assert.AreEqual(expected, actualList.Single().Link);
 	}
 
@@ -46,7 +45,7 @@ public class InternalWikiLink
 
 		Assert.IsNotNull(actual);
 		var actualList = actual.ToList();
-		Assert.AreEqual(1, actualList.Count);
+		Assert.HasCount(1, actualList);
 		Assert.AreEqual(link, actualList.Single().Link);
 	}
 
@@ -80,7 +79,7 @@ public class InternalWikiLink
 
 		Assert.IsNotNull(actual);
 		var actualList = actual.ToList();
-		Assert.AreEqual(2, actualList.Count);
+		Assert.HasCount(2, actualList);
 		Assert.IsTrue(actualList.Any(l => l.Link == link1));
 		Assert.IsTrue(actualList.Any(l => l.Link == link2));
 	}

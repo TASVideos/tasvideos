@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.Extensions.Logging.Abstractions;
 using TASVideos.Data.Entity;
 
@@ -96,7 +96,7 @@ public class IpBanServiceTests : TestDbBase
 	{
 		var actual = await _banService.GetAll();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -107,6 +107,6 @@ public class IpBanServiceTests : TestDbBase
 
 		var result = await _banService.GetAll();
 		Assert.IsNotNull(result);
-		Assert.AreEqual(1, result.Count);
+		Assert.HasCount(1, result);
 	}
 }

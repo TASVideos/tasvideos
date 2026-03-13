@@ -1,4 +1,4 @@
-﻿using TASVideos.Data;
+using TASVideos.Data;
 using TASVideos.Data.Entity;
 
 namespace TASVideos.Core.Tests.Services;
@@ -56,7 +56,7 @@ public class RatingServiceTests : TestDbBase
 		var actual = await _ratingService.GetRatingsForPublication(pub.Id);
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(2, actual.Count);
+		Assert.HasCount(2, actual);
 		Assert.AreEqual(1, actual.Count(pr => pr.UserName == userName1));
 		Assert.AreEqual(1, actual.Count(pr => pr.UserName == userName2));
 	}

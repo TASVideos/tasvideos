@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Genres;
+namespace TASVideos.Pages.Genres;
 
 [AllowAnonymous]
 public class IndexModel(IGenreService genreService) : BasePageModel

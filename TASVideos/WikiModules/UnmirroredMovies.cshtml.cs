@@ -1,4 +1,4 @@
-﻿using TASVideos.WikiEngine;
+using TASVideos.WikiEngine;
 using static TASVideos.Data.Entity.PublicationUrlType;
 
 namespace TASVideos.WikiModules;

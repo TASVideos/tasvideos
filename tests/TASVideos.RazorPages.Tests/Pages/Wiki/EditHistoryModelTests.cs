@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Wiki;
+using TASVideos.Pages.Wiki;
 
 namespace TASVideos.RazorPages.Tests.Pages.Wiki;
 
@@ -147,9 +147,9 @@ public class EditHistoryModelTests : BasePageModelTests
 		Assert.AreEqual(2, _model.History.RowCount);
 
 		var pageNames = _model.History.Select(h => h.PageName).ToList();
-		Assert.IsTrue(pageNames.Contains("TargetPage1"));
-		Assert.IsTrue(pageNames.Contains("TargetPage2"));
-		Assert.IsFalse(pageNames.Contains("OtherPage1"));
+		Assert.Contains("TargetPage1", pageNames);
+		Assert.Contains("TargetPage2", pageNames);
+		Assert.DoesNotContain("OtherPage1", pageNames);
 	}
 
 	[TestMethod]
@@ -301,7 +301,7 @@ public class EditHistoryModelTests : BasePageModelTests
 		const string userName = "TestUser";
 		var author = _db.AddUser(userName).Entity;
 
-		for (int i = 1; i <= 30; i++)
+		for (var i = 1; i <= 30; i++)
 		{
 			_db.WikiPages.Add(new WikiPage
 			{

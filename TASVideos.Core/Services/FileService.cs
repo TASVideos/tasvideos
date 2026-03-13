@@ -1,4 +1,4 @@
-﻿using System.IO.Compression;
+using System.IO.Compression;
 using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
 
 namespace TASVideos.Core.Services;
@@ -33,7 +33,7 @@ internal class FileService(ApplicationDbContext db) : IFileService
 			await originalStream.CopyToAsync(gzipStream, bufferSize);
 		}
 
-		byte[] gzipContents = compressedStream.ToArray();
+		var gzipContents = compressedStream.ToArray();
 
 		if (gzipContents.Length < contents.Length)
 		{

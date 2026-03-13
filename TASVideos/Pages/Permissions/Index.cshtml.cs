@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Permissions;
+namespace TASVideos.Pages.Permissions;
 
 [Authorize]
 public class IndexModel(ApplicationDbContext db) : BasePageModel

@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Settings;
+using TASVideos.Core.Settings;
 using TASVideos.Services;
 
 namespace TASVideos.Core.Tests.Services;

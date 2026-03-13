@@ -1,4 +1,4 @@
-﻿using TASVideos.E2E.Tests.Base;
+using TASVideos.E2E.Tests.Base;
 
 namespace TASVideos.E2E.Tests.Tests;
 
@@ -153,7 +153,7 @@ public class ForumTests : BaseE2ETest
 
 		AssertResponseCode(response, 200);
 		Assert.IsNotNull(response);
-		Assert.IsTrue(response.Url.Contains("Forum/Subforum"));
+		Assert.Contains("Forum/Subforum", response.Url);
 	}
 
 	[TestMethod]
@@ -168,7 +168,7 @@ public class ForumTests : BaseE2ETest
 
 		AssertResponseCode(response, 200);
 		Assert.IsNotNull(response);
-		Assert.IsTrue(response.Url.Contains("Forum/Topics"));
+		Assert.Contains("Forum/Topics", response.Url);
 	}
 
 	[TestMethod]
@@ -176,9 +176,9 @@ public class ForumTests : BaseE2ETest
 	{
 		AssertEnabled();
 
-		var response = await Navigate("/forum/moodreport.php");
+		var response = await Navigate("/forum/moodreport.php", WaitUntilState.DOMContentLoaded);
 		AssertResponseCode(response, 200);
 		Assert.IsNotNull(response);
-		Assert.IsTrue(response.Url.Contains("Forum/MoodReport"));
+		Assert.Contains("Forum/MoodReport", response.Url);
 	}
 }

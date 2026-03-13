@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Profile;
+namespace TASVideos.Pages.Profile;
 
 [Authorize]
 public class UserFilesModel(ApplicationDbContext db) : BasePageModel

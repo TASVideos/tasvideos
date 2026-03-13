@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services;
+namespace TASVideos.Core.Services;
 
 public enum ClassEditResult { Success, Fail, NotFound, DuplicateName }
 public enum ClassDeleteResult { Success, Fail, NotFound, InUse }
@@ -45,7 +45,7 @@ internal class ClassService(ApplicationDbContext db, ICacheService cache) : ICla
 			Id = newId,
 			Name = publicationClass.Name,
 			IconPath = publicationClass.IconPath,
-			Link = publicationClass.Link,
+			Link = publicationClass.Link
 		}).Entity;
 
 		try

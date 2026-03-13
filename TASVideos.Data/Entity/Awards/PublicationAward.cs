@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Data.Entity.Awards;
+namespace TASVideos.Data.Entity.Awards;
 
 public class PublicationAward
 {

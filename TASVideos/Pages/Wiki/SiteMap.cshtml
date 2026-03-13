@@ -8,9 +8,9 @@
 </div>
 @foreach (var rootPage in Model.Map.GroupBy(m => m.PageName.SplitWithEmpty("/").First()).OrderBy(g => g.Key))
 {
-	bool isPage = rootPage.Any(p => p.PageName == rootPage.Key);
-	bool hasSubpages = rootPage.Count(p => p.PageName != rootPage.Key) > 0;
-	bool isWiki = rootPage.Any(p => p.IsWiki);
+	var isPage = rootPage.Any(p => p.PageName == rootPage.Key);
+	var hasSubpages = rootPage.Count(p => p.PageName != rootPage.Key) > 0;
+	var isWiki = rootPage.Any(p => p.IsWiki);
 	<div class="@(isWiki ? "wiki" : "developed")">
 		<i condition="@hasSubpages" class="fa fa-plus" data-bs-toggle="collapse" href="#collapse@(rootPage.Key)" style="cursor: pointer"></i>
 		<label>

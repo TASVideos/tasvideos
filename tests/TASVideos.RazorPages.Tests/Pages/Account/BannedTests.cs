@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Account;
+using TASVideos.Pages.Account;
 
 namespace TASVideos.RazorPages.Tests.Pages.Account;
 
@@ -39,7 +39,7 @@ public class BannedTests : BasePageModelTests
 		Assert.IsInstanceOfType(result, typeof(PageResult));
 		Assert.AreEqual("BannedUser", _model.UserName);
 		Assert.IsNotNull(_model.BannedUntil);
-		Assert.IsTrue(Math.Abs((_model.BannedUntil.Value - bannedUntil).TotalMilliseconds) < 1000);
+		Assert.IsLessThan(1000, Math.Abs((_model.BannedUntil.Value - bannedUntil).TotalMilliseconds));
 	}
 
 	[TestMethod]

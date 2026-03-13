@@ -1,8 +1,9 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 using TASVideos.MovieParsers.Result;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
@@ -18,6 +19,7 @@ public class SubmitModelTests : TestDbBase
 	private readonly IUserManager _userManager;
 	private readonly IMovieFormatDeprecator _movieFormatDeprecator;
 	private readonly IQueueService _queueService;
+	private readonly IMovieParser _movieParser;
 	private SubmitModel _page;
 
 	public SubmitModelTests()
@@ -27,7 +29,8 @@ public class SubmitModelTests : TestDbBase
 		_userManager = Substitute.For<IUserManager>();
 		_movieFormatDeprecator = Substitute.For<IMovieFormatDeprecator>();
 		_queueService = Substitute.For<IQueueService>();
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher);
+		_movieParser = Substitute.For<IMovieParser>();
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser);
 	}
 
 	[TestMethod]
@@ -62,6 +65,33 @@ public class SubmitModelTests : TestDbBase
 	}
 
 	[TestMethod]
+	public async Task OnPost_ZipFile_ValidationError()
+	{
+		const string existingUser = "Exists";
+		_userManager.Exists(existingUser).Returns(true);
+
+		const string content = "Mock zip file content";
+		const string fileName = "test.zip";
+		var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
+		{
+			MovieFile = new FormFile(ms, 0, ms.Length, "MovieFile", fileName)
+			{
+				Headers = new HeaderDictionary(),
+				ContentType = "application/zip"
+			}
+		};
+
+		await _page.OnPost();
+
+		Assert.IsFalse(_page.ModelState.IsValid);
+		Assert.Contains(nameof(_page.MovieFile), _page.ModelState.Keys);
+		Assert.IsTrue(_page.ModelState[nameof(_page.MovieFile)]!.Errors
+			.Any(e => e.ErrorMessage.Contains("ZIP files are not supported")));
+	}
+
+	[TestMethod]
 	public async Task OnPost_LimitExceeded_ReturnsWarningWithNextWindow()
 	{
 		var nextWindow = DateTime.UtcNow.AddDays(1);
@@ -92,7 +122,7 @@ public class SubmitModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.Authors)));
+		Assert.Contains(nameof(_page.Authors), _page.ModelState.Keys);
 	}
 
 	[TestMethod]
@@ -108,7 +138,7 @@ public class SubmitModelTests : TestDbBase
 		await _page.OnPost();
 
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.Authors)));
+		Assert.Contains(nameof(_page.Authors), _page.ModelState.Keys);
 		Assert.IsTrue(_page.ModelState.Where(ms => ms.Value is not null).SelectMany(ms => ms.Value!.Errors).Any(ms => ms.ErrorMessage.Contains(nonexistentUser)));
 	}
 
@@ -118,7 +148,7 @@ public class SubmitModelTests : TestDbBase
 		const string existingUser = "Exists";
 		_db.AddUser(existingUser);
 		await _db.SaveChangesAsync();
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
 		{
 			MovieFile = GenerateTooLargeMovie(),
 			Authors = [existingUser]
@@ -127,7 +157,7 @@ public class SubmitModelTests : TestDbBase
 		await _page.OnPost();
 
 		Assert.IsFalse(_page.ModelState.IsValid);
-		Assert.IsTrue(_page.ModelState.Keys.Contains(nameof(_page.MovieFile)));
+		Assert.Contains(nameof(_page.MovieFile), _page.ModelState.Keys);
 	}
 
 	[TestMethod]
@@ -147,7 +177,7 @@ public class SubmitModelTests : TestDbBase
 		_queueService.ExceededSubmissionLimit(user.Id).Returns((DateTime?)null);
 		_queueService.Submit(Arg.Any<SubmitRequest>()).Returns(new SubmitResult(null, 42, "", null));
 
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
 		{
 			GameName = "Test Game",
 			RomName = "test.nes",
@@ -195,7 +225,7 @@ public class SubmitModelTests : TestDbBase
 		_queueService.Submit(Arg.Any<SubmitRequest>())
 			.Returns(new FailedSubmitResult("Database error occurred"));
 
-		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher)
+		_page = new SubmitModel(_userManager, _movieFormatDeprecator, _queueService, _wikiPages, _publisher, _movieParser)
 		{
 			GameName = "Test Game",
 			RomName = "test.nes",
@@ -212,7 +242,7 @@ public class SubmitModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsTrue(_page.ModelState.ContainsKey(""));
 		var errors = _page.ModelState[""]!.Errors;
-		Assert.IsTrue(errors.Count > 0);
+		Assert.IsNotEmpty(errors);
 		Assert.AreEqual("Database error occurred", errors[0].ErrorMessage);
 	}
 

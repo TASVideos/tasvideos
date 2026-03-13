@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.UserFiles;
+namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
 public class Uncataloged(ApplicationDbContext db) : BasePageModel

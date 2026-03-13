@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Common;
+namespace TASVideos.Common;
 
 public class VoteCounts
 {

@@ -1,7 +1,7 @@
-﻿<small>
-	<i id="forum-header-restore" class="fa fa-chevron-down border border-info btn-info p-1 mb-1 border-r d-none" style="cursor: pointer; border-radius: 5px"></i>
-</small>
-<info-alert id="forum-header" class="d-none">
+<button id="forum-header-restore" role="button" class="btn btn-sm border border-info btn-sm mb-2 me-1 float-start">
+	<i class="fa fa-chevron-down"></i>
+</button>
+<info-alert id="forum-header" class="mb-2 d-none">
 	<button id="forum-header-dismiss" type="button" class="btn-close float-end" aria-label="close"></button>
 	@await Html.RenderWiki(SystemWiki.ForumHeader)
 	<script src="/js/forum-header.js"></script>

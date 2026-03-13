@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Pages.Forum.Topics;
 using TASVideos.Services;
@@ -67,7 +67,7 @@ public class SplitModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsTrue(_model.AvailableForums.Count > 0);
+		Assert.IsNotEmpty(_model.AvailableForums);
 	}
 
 	[TestMethod]
@@ -88,7 +88,7 @@ public class SplitModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.AreEqual(2, _model.Topic.Posts.Count);
+		Assert.HasCount(2, _model.Topic.Posts);
 		Assert.AreEqual("First Post", _model.Topic.Posts[0].Subject);
 		Assert.AreEqual("Second Post", _model.Topic.Posts[1].Subject);
 		Assert.AreEqual(user.UserName, _model.Topic.Posts[0].PosterName);
@@ -366,7 +366,7 @@ public class SplitModelTests : BasePageModelTests
 		var topic = _db.AddTopic(user).Entity;
 
 		// Create enough posts to test pagination (more than 500)
-		for (int i = 1; i <= 502; i++)
+		for (var i = 1; i <= 502; i++)
 		{
 			var post = _db.CreatePostForTopic(topic, user).Entity;
 			post.Subject = $"Post {i}";
@@ -384,6 +384,6 @@ public class SplitModelTests : BasePageModelTests
 		Assert.AreEqual(502, _model.Topic.PostsCount);
 		Assert.AreEqual(2, _model.TotalPages);
 		Assert.AreEqual(1, _model.CurrentPage);
-		Assert.AreEqual(2, _model.Topic.Posts.Count); // Should load remainder posts (502 % 500 = 2)
+		Assert.HasCount(2, _model.Topic.Posts); // Should load remainder posts (502 % 500 = 2)
 	}
 }

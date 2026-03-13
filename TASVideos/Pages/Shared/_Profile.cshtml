@@ -1,7 +1,7 @@
-﻿@model UserProfile
+@model UserProfile
 @{
 	var lastLoggedIn = Model.LastLoggedIn ?? DateTime.UtcNow;
-	bool canViewPrivateData = User.Has(PermissionTo.ViewPrivateUserData) || Model.Id == User.GetUserId();
+	var canViewPrivateData = User.Has(PermissionTo.ViewPrivateUserData) || Model.Id == User.GetUserId();
 }
 <row>
 	<column md="6">
@@ -78,9 +78,9 @@
 							<div condition="Model.EmailConfirmed"><i class="fa fa-check-square text-success"></i> Yes</div>
 							<div condition="!Model.EmailConfirmed"><i class="fa fa-exclamation-triangle text-danger"></i> No</div>
 							<br/>
-							<label asp-for="LockedOutStatus"></label>
-							<div condition="Model.LockedOutStatus"><i class="fa fa-exclamation-triangle text-danger"></i><span> Locked out</span></div>
-							<div condition="!Model.LockedOutStatus"><i class="fa fa-check-square text-success"></i><span> Not locked</span></div>
+							<label asp-for="IsLockedOut"></label>
+							<div condition="Model.IsLockedOut"><i class="fa fa-exclamation-triangle text-danger"></i><span> Locked out until <timezone-convert asp-for="@Model.LockedOutUntil!.Value.UtcDateTime" relative-time="false"/> </span></div>
+							<div condition="!Model.IsLockedOut"><i class="fa fa-check-square text-success"></i><span> Not locked</span></div>
 							<br />
 							<div>
 								<a permission="ViewPrivateUserData" asp-page="/Users/Ips" asp-route-username="@Model.UserName" class="btn btn-warning btn-sm">IP Addresses used</a>

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using AspNetCore.ReCaptcha;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.Extensions.Hosting;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Pages.Account;
@@ -10,12 +12,20 @@ public class EmailConfirmationSentTests : BasePageModelTests
 {
 	private readonly IUserManager _userManager = Substitute.For<IUserManager>();
 	private readonly IEmailService _emailService = Substitute.For<IEmailService>();
-	private readonly EmailConfirmationSentModel _model = new()
+	private readonly IHostEnvironment _env = Substitute.For<IHostEnvironment>();
+	private readonly IReCaptchaService _reCaptchaService = Substitute.For<IReCaptchaService>();
+	private readonly EmailConfirmationSentModel _model = new();
+
+	public EmailConfirmationSentTests()
 	{
-		PageContext = TestPageContext(),
-		TempData = Substitute.For<ITempDataDictionary>(),
-		Url = GeMockUrlHelper("https://example.com/Account/ConfirmEmail?userId=123&code=test-token")
-	};
+		_model.PageContext = TestPageContext();
+		_model.PageContext.HttpContext.Request.ContentType = "application/x-www-form-urlencoded";
+		_model.TempData = Substitute.For<ITempDataDictionary>();
+		_model.Url = GeMockUrlHelper("https://example.com/Account/ConfirmEmail?userId=123&code=test-token");
+
+		_env.EnvironmentName.Returns("Production");
+		_reCaptchaService.VerifyAsync(Arg.Any<string>()).Returns(true);
+	}
 
 	[TestMethod]
 	public void OnGet_UserLoggedIn_RedirectsToBaseReturnUrl()
@@ -39,7 +49,7 @@ public class EmailConfirmationSentTests : BasePageModelTests
 		_model.UserName = "NonExistentUser";
 		_userManager.GetUserByEmailAndUserName("nonexistent@example.com", "NonExistentUser").Returns((User?)null);
 
-		var result = await _model.OnPost(_userManager, _emailService);
+		var result = await _model.OnPost(_userManager, _emailService, _env, _reCaptchaService);
 
 		AssertRedirect(result, "EmailConfirmationSent");
 		await _emailService.DidNotReceive().EmailConfirmation(Arg.Any<string>(), Arg.Any<string>());
@@ -60,7 +70,7 @@ public class EmailConfirmationSentTests : BasePageModelTests
 		_model.UserName = "TestUser";
 		_userManager.GetUserByEmailAndUserName("test@example.com", "TestUser").Returns(user);
 
-		var result = await _model.OnPost(_userManager, _emailService);
+		var result = await _model.OnPost(_userManager, _emailService, _env, _reCaptchaService);
 
 		AssertRedirect(result, "EmailConfirmationSent");
 		await _userManager.DidNotReceive().GenerateEmailConfirmationToken(Arg.Any<User>());
@@ -83,7 +93,7 @@ public class EmailConfirmationSentTests : BasePageModelTests
 		_userManager.GetUserByEmailAndUserName("test@example.com", "TestUser").Returns(user);
 		_userManager.GenerateEmailConfirmationToken(user).Returns("generated-token");
 
-		var result = await _model.OnPost(_userManager, _emailService);
+		var result = await _model.OnPost(_userManager, _emailService, _env, _reCaptchaService);
 
 		AssertRedirect(result, "EmailConfirmationSent");
 		await _userManager.Received(1).GetUserByEmailAndUserName("test@example.com", "TestUser");

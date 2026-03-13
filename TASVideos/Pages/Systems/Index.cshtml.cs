@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Systems;
+namespace TASVideos.Pages.Systems;
 
 [AllowAnonymous]
 public class IndexModel(IGameSystemService systemService) : BasePageModel

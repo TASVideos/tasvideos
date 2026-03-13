@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Youtube;
 using TASVideos.Core.Settings;
 

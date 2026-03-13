@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using TASVideos.Core.Services;
 using TASVideos.Pages.Account;
 

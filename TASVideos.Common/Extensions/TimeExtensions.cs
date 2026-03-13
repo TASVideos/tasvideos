@@ -1,16 +1,16 @@
-﻿namespace TASVideos.Extensions;
+namespace TASVideos.Extensions;
 
 public static class TimeExtensions
 {
-	public static int DaysAgo(this DateTime startDate)
+	extension(DateTime startDate)
 	{
-		TimeSpan elapsed = DateTime.UtcNow.Subtract(startDate);
-		double daysAgo = elapsed.TotalDays;
-		return (int)Math.Round(daysAgo);
-	}
+		public int DaysAgo()
+		{
+			var elapsed = DateTime.UtcNow.Subtract(startDate);
+			var daysAgo = elapsed.TotalDays;
+			return (int)Math.Round(daysAgo);
+		}
 
-	public static long UnixTimestamp(this DateTime dateTime)
-	{
-		return ((DateTimeOffset)DateTime.SpecifyKind(dateTime, DateTimeKind.Utc)).ToUnixTimeSeconds();
+		public long UnixTimestamp() => ((DateTimeOffset)DateTime.SpecifyKind(startDate, DateTimeKind.Utc)).ToUnixTimeSeconds();
 	}
 }

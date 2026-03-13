@@ -1,4 +1,4 @@
-﻿using TASVideos.WikiEngine;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -30,7 +30,7 @@ public class PlayerPointsTable(ApplicationDbContext db, IPointsService pointsSer
 			.Take(showCount)
 			.ToList();
 
-		int counter = 0;
+		var counter = 0;
 		foreach (var user in Authors)
 		{
 			user.Position = ++counter;

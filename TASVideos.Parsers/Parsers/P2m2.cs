@@ -1,5 +1,3 @@
-﻿using System.Text;
-
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("p2m2")]

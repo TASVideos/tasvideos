@@ -1,4 +1,4 @@
-﻿using TASVideos.WikiEngine;
+using TASVideos.WikiEngine;
 
 namespace TASVideos.WikiModules;
 
@@ -17,7 +17,7 @@ public class BannedUsers(ApplicationDbContext db) : WikiViewComponent
 				Name = u.UserName,
 				BannedUntil = u.BannedUntil!.Value,
 				LastLoggedIn = u.LastLoggedInTimeStamp,
-				ModeratorComments = u.ModeratorComments,
+				ModeratorComments = u.ModeratorComments
 			})
 			.SortedPageOf(GetPaging());
 		return View();

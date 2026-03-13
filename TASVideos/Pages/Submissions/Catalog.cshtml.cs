@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -234,8 +234,8 @@ public class CatalogModel(ApplicationDbContext db, IExternalMediaPublisher publi
 		submission.AdditionalSyncNotes = Catalog.AdditionalSyncNotes;
 		submission.GenerateTitle();
 
-		bool synced = false;
-		bool unsynced = false;
+		var synced = false;
+		var unsynced = false;
 		if (Catalog.CanSyncVerify)
 		{
 			if (Catalog.SyncVerified)
@@ -249,9 +249,12 @@ public class CatalogModel(ApplicationDbContext db, IExternalMediaPublisher publi
 			}
 			else
 			{
-				submission.SyncedOn = null;
-				submission.SyncedByUserId = null;
-				unsynced = true;
+				if (submission.SyncedOn.HasValue)
+				{
+					submission.SyncedOn = null;
+					submission.SyncedByUserId = null;
+					unsynced = true;
+				}
 			}
 		}
 
@@ -259,7 +262,7 @@ public class CatalogModel(ApplicationDbContext db, IExternalMediaPublisher publi
 		SetMessage(result, $"{Id}S catalog updated", $"Unable to save {Id}S catalog");
 		if (result.IsSuccess())
 		{
-			string message = $"[{Id}S]({{0}}) Catalog edited by {User.Name()}";
+			var message = $"[{Id}S]({{0}}) Catalog edited by {User.Name()}";
 			if (synced)
 			{
 				message += " (Sync Verified)";

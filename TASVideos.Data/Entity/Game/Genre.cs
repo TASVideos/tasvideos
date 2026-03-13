@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.AutoHistory;
+using TASVideos.Data.AutoHistory;
 
 namespace TASVideos.Data.Entity.Game;
 

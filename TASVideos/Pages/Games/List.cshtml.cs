@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Game;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Pages.Games;
 
@@ -78,7 +78,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 	private async Task<PageOf<GameEntry, GameListRequest>> GetPageOfGames(GameListRequest paging)
 	{
-		IQueryable<Game> query = db.Games
+		var query = db.Games
 			.ForSystemCode(paging.System)
 			.ForGenre(paging.Genre)
 			.ForGroup(paging.Group)

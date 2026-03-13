@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Api.Responses;
+namespace TASVideos.Api.Responses;
 
 // Only used for documentation because swagger cannot handle the fact that the entity object has a circular reference
 internal class TagsResponse

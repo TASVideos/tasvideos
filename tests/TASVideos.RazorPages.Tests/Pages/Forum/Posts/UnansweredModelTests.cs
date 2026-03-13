@@ -1,4 +1,4 @@
-﻿using TASVideos.Core;
+using TASVideos.Core;
 using TASVideos.Pages.Forum.Posts;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
@@ -179,7 +179,7 @@ public class UnansweredModelTests : BasePageModelTests
 		Assert.AreEqual("Test Topic Title", unansweredPost.TopicName);
 		Assert.AreEqual(author.Id, unansweredPost.AuthorId);
 		Assert.AreEqual("TestAuthor", unansweredPost.AuthorName);
-		Assert.IsTrue(Math.Abs((testTimestamp - unansweredPost.PostDate).TotalMilliseconds) < 1000, "Timestamps should be within 1 second");
+		Assert.IsLessThan(1000, Math.Abs((testTimestamp - unansweredPost.PostDate).TotalMilliseconds), "Timestamps should be within 1 second");
 	}
 
 	[TestMethod]
@@ -187,7 +187,7 @@ public class UnansweredModelTests : BasePageModelTests
 	{
 		var user = _db.AddUser("TestUser").Entity;
 
-		for (int i = 0; i < 30; i++)
+		for (var i = 0; i < 30; i++)
 		{
 			var topic = _db.AddTopic(user).Entity;
 			topic.Title = $"Topic {i}";

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.AwardsEditor;
+namespace TASVideos.Pages.AwardsEditor;
 
 [RequirePermission(PermissionTo.CreateAwards)]
 public class UploadImageModel(IMediaFileUploader mediaFileUploader, IAwards awards) : BasePageModel

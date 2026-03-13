@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Data;
+namespace TASVideos.Core.Data;
 
 public enum StartupStrategy
 {

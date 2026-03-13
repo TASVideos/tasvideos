@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using TASVideos.Common;

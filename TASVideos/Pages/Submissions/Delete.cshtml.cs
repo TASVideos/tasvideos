@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Submissions;
+namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.DeleteSubmissions)]
 public class DeleteModel(IQueueService queueService, IExternalMediaPublisher publisher) : BasePageModel
@@ -42,7 +42,7 @@ public class DeleteModel(IQueueService queueService, IExternalMediaPublisher pub
 				ErrorStatusMessage(result.ErrorMessage);
 				return RedirectToPage("View", new { Id });
 			case DeleteSubmissionResult.DeleteStatus.Success:
-				await publisher.AnnounceSubmissionDelete(result.SubmissionTitle, Id);
+				await publisher.SendSubmissionDelete(result.SubmissionTitle, Id);
 				break;
 		}
 

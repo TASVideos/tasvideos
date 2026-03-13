@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 using TASVideos.Core.Services.Email;
 using TASVideos.Core.Settings;
 
@@ -77,6 +77,7 @@ internal class TopicWatcher(
 			.Include(w => w.User)
 			.Where(w => w.ForumTopicId == topicId)
 			.Where(w => w.UserId != posterId)
+			.Where(w => !w.User!.BannedUntil.HasValue || w.User.BannedUntil < DateTime.UtcNow)
 			.Where(w => !w.IsNotified)
 			.ToListAsync();
 
@@ -105,11 +106,9 @@ internal class TopicWatcher(
 	}
 
 	public async Task MarkSeen(int topicId, int userId)
-	{
-		await db.ForumTopicWatches
+		=> await db.ForumTopicWatches
 			.Where(w => w.UserId == userId && w.ForumTopicId == topicId)
 			.ExecuteUpdateAsync(s => s.SetProperty(w => w.IsNotified, false));
-	}
 
 	public async Task WatchTopic(int topicId, int userId, bool canSeeRestricted)
 	{
@@ -142,18 +141,14 @@ internal class TopicWatcher(
 	}
 
 	public async Task UnwatchTopic(int topicId, int userId)
-	{
-		await db.ForumTopicWatches
+		=> await db.ForumTopicWatches
 			.Where(w => w.UserId == userId && w.ForumTopicId == topicId)
 			.ExecuteDeleteAsync();
-	}
 
 	public async Task UnwatchAllTopics(int userId)
-	{
-		await db.ForumTopicWatches
+		=> await db.ForumTopicWatches
 			.Where(w => w.UserId == userId)
 			.ExecuteDeleteAsync();
-	}
 
 	public async Task<bool> IsWatchingTopic(int topicId, int userId)
 		=> await db.ForumTopicWatches.AnyAsync(w => w.UserId == userId && w.ForumTopicId == topicId);

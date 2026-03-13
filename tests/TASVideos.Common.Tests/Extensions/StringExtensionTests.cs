@@ -1,4 +1,4 @@
-﻿using TASVideos.Extensions;
+using TASVideos.Extensions;
 
 namespace TASVideos.Common.Tests.Extensions;
 
@@ -83,7 +83,7 @@ public class StringExtensionTests
 	{
 		var actual = str.CsvToStrings();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -108,7 +108,7 @@ public class StringExtensionTests
 	{
 		var actual = str.CsvToInts();
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(0, actual.Count);
+		Assert.IsEmpty(actual);
 	}
 
 	[TestMethod]
@@ -140,7 +140,7 @@ public class StringExtensionTests
 			var threw = false;
 			try
 			{
-				s.UnicodeAwareSubstring(i);
+				s.UnicodeAwareSubstring(i, s.Length - i);
 			}
 			catch
 			{
@@ -151,7 +151,7 @@ public class StringExtensionTests
 		}
 		else
 		{
-			var actual = s.UnicodeAwareSubstring(i);
+			var actual = s.UnicodeAwareSubstring(i, s.Length - i);
 			Assert.AreEqual(expected, actual);
 		}
 	}
@@ -233,5 +233,58 @@ public class StringExtensionTests
 	{
 		var actual = input.NormalizeCsv();
 		Assert.AreEqual(expected, actual);
+	}
+
+	[TestMethod]
+	public void SplitWithEmpty_NullString_ReturnsEmptyArray()
+	{
+		string? input = null;
+
+		var result = input.SplitWithEmpty(",");
+
+		Assert.IsNotNull(result);
+		Assert.IsEmpty(result);
+	}
+
+	[TestMethod]
+	public void SplitWithEmpty_EmptyString_ReturnsEmptyArray()
+	{
+		var input = string.Empty;
+
+		var result = input.SplitWithEmpty(",");
+
+		Assert.IsNotNull(result);
+		Assert.IsEmpty(result);
+	}
+
+	[TestMethod]
+	public void SplitWithEmpty_NoSeparator_ReturnsOriginalString()
+	{
+		const string input = "abc";
+
+		var result = input.SplitWithEmpty(",");
+
+		Assert.HasCount(1, result);
+		Assert.AreEqual("abc", result[0]);
+	}
+
+	[TestMethod]
+	public void SplitWithEmpty_NormalSplit_ReturnsParts()
+	{
+		const string input = "a,b,c";
+
+		var result = input.SplitWithEmpty(",");
+
+		CollectionAssert.AreEqual(new[] { "a", "b", "c" }, result);
+	}
+
+	[TestMethod]
+	public void SplitWithEmpty_ConsecutiveSeparators_RemovesEmptyEntries()
+	{
+		const string input = "a,,b,,c,";
+
+		var result = input.SplitWithEmpty(",");
+
+		CollectionAssert.AreEqual(new[] { "a", "b", "c" }, result);
 	}
 }

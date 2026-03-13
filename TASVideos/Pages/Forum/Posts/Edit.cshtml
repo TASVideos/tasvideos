@@ -1,8 +1,8 @@
-﻿@page "{id}"
+@page "{id}"
 @model EditModel
 @{
 	ViewData.SetTitle($"Editing Post in Topic: {Model.Post.TopicTitle}");
-	bool isUserEdit = Model.Post.PosterId == User.GetUserId();
+	var isUserEdit = Model.Post.PosterId == User.GetUserId();
 }
 
 @section PageTitle {
@@ -56,7 +56,7 @@
 		<preview-button></preview-button>
 		<submit-button></submit-button>
 		<cancel-link asp-page="/Forum/Topics/Index" asp-route-id="@Model.Post.TopicId"></cancel-link>
-		<minor-edit checked="Model.Post.PosterId == User.GetUserId()"></minor-edit>
+		<minor-edit checked="Model.PreselectMinorEdit"></minor-edit>
 	</form-button-bar>
 </form>
 <div class="alert alert-light p-0">

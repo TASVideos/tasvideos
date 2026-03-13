@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.UserFiles;
+namespace TASVideos.Pages.UserFiles;
 
 [RequirePermission(PermissionTo.CatalogMovies)]
 public class CatalogModel(ApplicationDbContext db) : BasePageModel

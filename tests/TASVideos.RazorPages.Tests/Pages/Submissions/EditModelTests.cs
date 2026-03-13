@@ -1,5 +1,7 @@
-﻿using TASVideos.Core.Services;
+using Microsoft.AspNetCore.Http;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 using TASVideos.Pages.Submissions;
 using TASVideos.Services;
 using TASVideos.Tests.Base;
@@ -18,16 +20,15 @@ public class EditModelTests : TestDbBase
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		_queueService = Substitute.For<IQueueService>();
-		_page = new EditModel(_db, _wikiPages, publisher, _queueService);
+		var movieParser = Substitute.For<IMovieParser>();
+		_page = new EditModel(_db, _wikiPages, publisher, _queueService, movieParser);
 	}
 
 	[TestMethod]
 	public async Task OnGet_NoSubmission_ReturnsNotFound()
 	{
 		_page.Id = 999;
-
 		var actual = await _page.OnGet();
-
 		Assert.IsInstanceOfType<NotFoundResult>(actual);
 	}
 
@@ -70,7 +71,7 @@ public class EditModelTests : TestDbBase
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(submission.Submitter!.UserName, _page.Submission.Submitter);
 		Assert.AreEqual(markup, _page.Markup);
-		Assert.AreEqual(2, _page.AvailableStatuses.Count);
+		Assert.HasCount(2, _page.AvailableStatuses);
 	}
 
 	[TestMethod]
@@ -106,6 +107,31 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<PageResult>(actual);
 		Assert.AreEqual(submission.Submitter!.UserName, _page.Submission.Submitter);
+	}
+
+	[TestMethod]
+	public async Task OnPost_ZipFile_ValidationError()
+	{
+		const string content = "Mock zip file content";
+		const string fileName = "test.zip";
+		var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(content));
+
+		_page.Submission = new EditModel.SubmissionEdit
+		{
+			ReplaceMovieFile = new FormFile(ms, 0, ms.Length, "ReplaceMovieFile", fileName)
+			{
+				Headers = new HeaderDictionary(),
+				ContentType = "application/zip"
+			}
+		};
+
+		var actual = await _page.OnPost();
+
+		Assert.IsInstanceOfType<PageResult>(actual);
+		Assert.IsFalse(_page.ModelState.IsValid);
+		Assert.IsTrue(_page.ModelState.ContainsKey($"{nameof(_page.Submission)}.{nameof(_page.Submission.ReplaceMovieFile)}"));
+		Assert.IsTrue(_page.ModelState[$"{nameof(_page.Submission)}.{nameof(_page.Submission.ReplaceMovieFile)}"]!.Errors
+			.Any(e => e.ErrorMessage.Contains("ZIP files are not supported")));
 	}
 
 	[TestMethod]

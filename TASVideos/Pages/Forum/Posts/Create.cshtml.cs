@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Pages.Forum.Posts;
 
@@ -80,7 +80,7 @@ public class CreateModel(
 			UserPreference.Auto => WatchTopic,
 			UserPreference.Always => true,
 			UserPreference.Never => false,
-			_ => WatchTopic,
+			_ => WatchTopic
 		};
 
 		PreviousPosts = await db.ForumPosts

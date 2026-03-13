@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Services.Email;
+namespace TASVideos.Core.Services.Email;
 
 /// <summary>
 /// Represents an email that can be sent to an <see cref="IEmailSender"/>

@@ -1,4 +1,4 @@
-﻿using TASVideos.Core;
+using TASVideos.Core;
 using TASVideos.Pages.Forum.Posts;
 
 namespace TASVideos.RazorPages.Tests.Pages.Forum.Posts;
@@ -175,7 +175,7 @@ public class LatestModelTests : BasePageModelTests
 		Assert.AreEqual(1, _model.Posts.Count());
 		var latestPost = _model.Posts.First();
 
-		Assert.IsTrue(Math.Abs((testTimestamp - latestPost.CreateTimestamp).TotalMilliseconds) < 1000, "Timestamps should be within 1 second");
+		Assert.IsLessThan(1000, Math.Abs((testTimestamp - latestPost.CreateTimestamp).TotalMilliseconds), "Timestamps should be within 1 second");
 		Assert.AreEqual(post.Id, latestPost.Id);
 		Assert.AreEqual(topic.Id, latestPost.TopicId);
 		Assert.AreEqual("Test Topic Title", latestPost.TopicTitle);
@@ -191,7 +191,7 @@ public class LatestModelTests : BasePageModelTests
 		var user = _db.AddUser("TestUser").Entity;
 		var topic = _db.AddTopic(user).Entity;
 
-		for (int i = 0; i < 30; i++)
+		for (var i = 0; i < 30; i++)
 		{
 			var post = _db.CreatePostForTopic(topic, user).Entity;
 			post.CreateTimestamp = DateTime.UtcNow.AddDays(-1).AddMinutes(i);

@@ -1,4 +1,4 @@
-﻿// ReSharper disable MethodHasAsyncOverload
+// ReSharper disable MethodHasAsyncOverload
 
 namespace TASVideos.WikiEngine.AST;
 

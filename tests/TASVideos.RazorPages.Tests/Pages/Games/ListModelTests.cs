@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity.Game;
+using TASVideos.Data.Entity.Game;
 using TASVideos.Pages.Games;
 using TASVideos.Tests.Base;
 
@@ -26,8 +26,8 @@ public class ListModelTests : TestDbBase
 
 		await _model.OnGet();
 
-		Assert.IsTrue(_model.SystemList.Count > 0);
-		Assert.IsTrue(_model.LetterList.Count > 0);
+		Assert.IsNotEmpty(_model.SystemList);
+		Assert.IsNotEmpty(_model.LetterList);
 	}
 
 	[TestMethod]

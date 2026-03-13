@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Forum.Legacy;
+namespace TASVideos.Pages.Forum.Legacy;
 
 // Handles legacy forum links to viewForum.php
 [AllowAnonymous]

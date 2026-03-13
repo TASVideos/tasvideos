@@ -1,9 +1,9 @@
-﻿@page "{year?}"
+@page "{year?}"
 @using TASVideos.Data.Entity.Awards
 @model IndexModel
 @{
 	ViewData.SetTitle($"Awards Editor for {Model.Year}");
-	string status = DateTime.UtcNow.Year - Model.Year!.Value > 1
+	var status = DateTime.UtcNow.Year - Model.Year!.Value > 1
 		? "Closed"
 		: "Open";
 }

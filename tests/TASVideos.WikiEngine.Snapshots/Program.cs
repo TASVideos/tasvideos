@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using TASVideos.Data;
 using TASVideos.Data.Entity;
@@ -86,7 +86,7 @@ foreach (var wp in toProcess)
 	if (File.Exists(path))
 	{
 		using var tr = new StreamReader(path);
-		var result = int.TryParse(tr.ReadLine(), out int parsedRevision);
+		var result = int.TryParse(tr.ReadLine(), out var parsedRevision);
 		if (result)
 		{
 			existingRevision = parsedRevision;

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Data.AutoHistory;
+namespace TASVideos.Data.AutoHistory;
 
 public class AutoHistoryEntry
 {

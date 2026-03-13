@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Users;
+namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditUsers)]
 public class EditModel(
@@ -36,7 +36,8 @@ public class EditModel(
 				UserLastLoggedIn = u.LastLoggedInTimeStamp,
 				Email = u.Email,
 				EmailConfirmed = u.EmailConfirmed,
-				LockedStatus = u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTime.UtcNow,
+				IsLockedOut = u.LockoutEnabled && u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTime.UtcNow,
+				LockedOutUntil = u.LockoutEnd,
 				Signature = u.Signature,
 				Avatar = u.Avatar,
 				MoodAvatar = u.MoodAvatarUrlBase,
@@ -135,7 +136,7 @@ public class EditModel(
 		{
 			await publisher.SendUserManagement(
 				$"Username {userNameChange} changed to [{user.UserName}]({{0}}) by {User.Name()}", user.UserName);
-			string message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
+			var message = $"Username {userNameChange} changed to {user.UserName} by {User.Name()}";
 			await userMaintenanceLogger.Log(user.Id, message, User.GetUserId());
 			await userManager.UserNameChanged(user, userNameChange);
 		}
@@ -212,7 +213,8 @@ public class EditModel(
 		[EmailAddress]
 		public string? Email { get; init; }
 		public bool EmailConfirmed { get; init; }
-		public bool LockedStatus { get; init; }
+		public bool IsLockedOut { get; init; }
+		public DateTimeOffset? LockedOutUntil { get; init; }
 		public string? Signature { get; init; }
 		public string? Avatar { get; init; }
 		public string? MoodAvatar { get; init; }

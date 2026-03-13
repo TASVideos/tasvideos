@@ -1,12 +1,12 @@
-﻿using TASVideos.Data.Entity.Game;
+using TASVideos.Data.Entity.Forum;
+using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Api;
 
 internal static class EntityExtensions
 {
 	public static IQueryable<GamesResponse> ToGamesResponse(this IQueryable<Game> query)
-	{
-		return query.Select(q => new GamesResponse
+		=> query.Select(q => new GamesResponse
 		{
 			Id = q.Id,
 			DisplayName = q.DisplayName,
@@ -26,11 +26,9 @@ internal static class EntityExtensions
 				SourceDb = gv.SourceDb
 			})
 		});
-	}
 
 	public static IQueryable<PublicationsResponse> ToPublicationsResponse(this IQueryable<Publication> query)
-	{
-		return query.Select(p => new PublicationsResponse
+		=> query.Select(p => new PublicationsResponse
 		{
 			Id = p.Id,
 			Title = p.Title,
@@ -62,11 +60,9 @@ internal static class EntityExtensions
 			FilePaths = p.Files
 				.Select(f => f.Path)
 		});
-	}
 
 	public static IQueryable<SubmissionsResponse> ToSubmissionsResponse(this IQueryable<Submission> query)
-	{
-		return query.Select(s => new SubmissionsResponse
+		=> query.Select(s => new SubmissionsResponse
 		{
 			Id = s.Id,
 			PublicationId = s.Publication != null
@@ -118,5 +114,37 @@ internal static class EntityExtensions
 				? s.SyncedByUser.UserName
 				: null
 		});
-	}
+
+	public static IQueryable<ForumPostResponse> ToForumPostResponse(this IQueryable<ForumPost> query)
+		=> query.Select(p => new ForumPostResponse
+		{
+			Id = p.Id,
+			TopicId = p.TopicId,
+			ForumId = p.ForumId,
+			PosterId = p.PosterId,
+			Subject = p.Subject,
+			Text = p.Text,
+			PostEditedTimestamp = p.PostEditedTimestamp,
+			EnableBbCode = p.EnableBbCode,
+			EnableHtml = p.EnableHtml,
+			PosterMood = p.PosterMood,
+			CreateTimestamp = p.CreateTimestamp,
+			LastUpdateTimestamp = p.LastUpdateTimestamp
+		});
+
+	public static IQueryable<ForumTopicResponse> ToForumTopicResponse(this IQueryable<ForumTopic> query)
+		=> query.Select(t => new ForumTopicResponse
+		{
+			Id = t.Id,
+			ForumId = t.ForumId,
+			Title = t.Title,
+			PosterId = t.PosterId,
+			Type = t.Type.ToString(),
+			IsLocked = t.IsLocked,
+			PollId = t.PollId,
+			SubmissionId = t.SubmissionId,
+			GameId = t.GameId,
+			CreateTimestamp = t.CreateTimestamp,
+			LastUpdateTimestamp = t.LastUpdateTimestamp
+		});
 }

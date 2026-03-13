@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.ExternalMediaPublisher;
 using TASVideos.Pages.Forum.Topics;
 using TASVideos.Services;
@@ -64,8 +64,7 @@ public class MergeModelTests : BasePageModelTests
 		var result = await _model.OnGet();
 
 		Assert.IsInstanceOfType(result, typeof(PageResult));
-		Assert.IsTrue(_model.AvailableForums.Count > 0);
-		Assert.IsTrue(_model.AvailableTopics.Count >= 0);
+		Assert.IsNotEmpty(_model.AvailableForums);
 	}
 
 	[TestMethod]
@@ -295,5 +294,39 @@ public class MergeModelTests : BasePageModelTests
 		await _db.Entry(post).ReloadAsync();
 		Assert.AreEqual(destinationTopic.Id, post.TopicId);
 		Assert.AreEqual(targetForum.Id, post.ForumId);
+	}
+
+	[TestMethod]
+	public async Task OnPost_MergeOlderIntoNewer_UpdatesPoster()
+	{
+		var originalUser = _db.AddUser("OriginalUser").Entity;
+		var originalTopic = _db.AddTopic(originalUser).Entity;
+		originalTopic.Title = "Original Topic";
+		var originalPost = _db.CreatePostForTopic(originalTopic, originalUser).Entity;
+		originalTopic.Poster = originalPost.Poster;
+
+		var destinationUser = _db.AddUser("DestinationUser").Entity;
+		var destinationTopic = _db.AddTopic(destinationUser).Entity;
+		destinationTopic.Title = "Destination Topic";
+		var destinationPost = _db.CreatePostForTopic(destinationTopic, destinationUser).Entity;
+		destinationTopic.Poster = destinationPost.Poster;
+
+		originalPost.CreateTimestamp = destinationPost.CreateTimestamp.AddHours(-1);
+		await _db.SaveChangesAsync();
+
+		AddAuthenticatedUser(_model, originalUser, [PermissionTo.MergeTopics]);
+		_model.Id = originalTopic.Id;
+		_model.Topic = new MergeModel.TopicMerge
+		{
+			DestinationTopicId = destinationTopic.Id,
+			Title = originalTopic.Title,
+			ForumId = originalTopic.ForumId,
+			ForumName = originalTopic.Forum!.Name
+		};
+
+		var result = await _model.OnPost();
+
+		AssertRedirect(result, "Index");
+		Assert.AreEqual(destinationTopic.PosterId, originalPost.PosterId);
 	}
 }

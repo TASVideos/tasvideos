@@ -1,4 +1,4 @@
-﻿using TASVideos.Core.Services;
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;
@@ -245,7 +245,7 @@ public class EditModelTests : TestDbBase
 
 		Assert.IsInstanceOfType<BadRequestObjectResult>(result);
 		var badRequest = (BadRequestObjectResult)result;
-		Assert.IsTrue(badRequest.Value!.ToString()!.Contains("Cannot rollback"));
+		Assert.Contains("Cannot rollback", badRequest.Value!.ToString()!);
 	}
 
 	[TestMethod]

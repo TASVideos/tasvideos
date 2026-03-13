@@ -1,4 +1,4 @@
-﻿using TASVideos.Data.Entity;
+using TASVideos.Data.Entity;
 using TASVideos.Data.Entity.Game;
 
 namespace TASVideos.Data.Tests.Entity;
@@ -45,7 +45,7 @@ public class PublicationTests
 			]
 		};
 
-		publication.Title = publication.GenerateTitle(false);
+		publication.Title = publication.GenerateTitle();
 
 		Assert.AreEqual("SNES Super Metroid by AuthorOne in 00:29.951", publication.Title);
 	}

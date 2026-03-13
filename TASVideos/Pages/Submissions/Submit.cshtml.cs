@@ -1,4 +1,5 @@
-﻿using TASVideos.Core.Services.Wiki;
+using TASVideos.Core.Services.Wiki;
+using TASVideos.MovieParsers;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -8,7 +9,8 @@ public class SubmitModel(
 	IMovieFormatDeprecator deprecator,
 	IQueueService queueService,
 	IWikiPages wikiPages,
-	IExternalMediaPublisher externalMediaPublisher)
+	IExternalMediaPublisher externalMediaPublisher,
+	IMovieParser movieParser)
 	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
@@ -51,6 +53,8 @@ public class SubmitModel(
 	[BindProperty]
 	[Required]
 	public IFormFile? MovieFile { get; init; }
+
+	public IEnumerable<string> MovieFileAccepts { get; init; } = movieParser.SupportedMovieExtensions;
 
 	[BindProperty]
 	[MustBeTrue(ErrorMessage = "You must read and follow the instructions.")]
@@ -138,6 +142,13 @@ public class SubmitModel(
 
 	private async Task ValidateModel()
 	{
+		if (MovieFile.FileExtension() == ".zip")
+		{
+			ModelState.AddModelError(nameof(MovieFile), "ZIP files are not supported. Please upload the original movie file.");
+		}
+
+		MovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
+
 		Authors = Authors.RemoveEmpty();
 		if (!Authors.Any() && string.IsNullOrWhiteSpace(ExternalAuthors))
 		{
@@ -145,8 +156,6 @@ public class SubmitModel(
 				$"{nameof(Authors)}",
 				"A submission must have at least one author"); // TODO: need to use the AtLeastOne attribute error message since it will be localized
 		}
-
-		MovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
 
 		foreach (var author in Authors)
 		{

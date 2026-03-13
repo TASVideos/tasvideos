@@ -1,4 +1,4 @@
-﻿@model FirstEditionTas
+@model FirstEditionTas
 @{
 	var groups = Model.Movies.GroupBy(gkey => new { gkey.ClassId, gkey.ClassIconPath, gkey.ClassName });
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TASVideos.Data.Entity.Forum;
 
 namespace TASVideos.Core.Tests.Services;
@@ -75,7 +75,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
@@ -124,7 +124,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		var latestPost = actual[topic.ForumId];
 		Assert.IsNotNull(latestPost);
@@ -144,7 +144,7 @@ public class ForumServiceTests : TestDbBase
 		var actual = await _forumService.GetAllLatestPosts();
 
 		Assert.IsNotNull(actual);
-		Assert.AreEqual(1, actual.Count);
+		Assert.HasCount(1, actual);
 		Assert.IsTrue(actual.ContainsKey(topic.ForumId));
 		Assert.IsNull(actual[topic.ForumId]);
 		Assert.AreEqual(1, _cache.Count());
@@ -224,7 +224,7 @@ public class ForumServiceTests : TestDbBase
 		Assert.AreEqual(DateTime.UtcNow.AddDays(daysOpen).Day, actualTopic.Poll.CloseDate.Value.Day);
 		Assert.AreEqual(multiSelect, actualTopic.Poll.MultiSelect);
 		var actualOptions = actualTopic.Poll.PollOptions;
-		Assert.AreEqual(options.Count, actualOptions.Count);
+		Assert.That.AreSameLength(options, actualOptions);
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option1 && o.Ordinal == 0));
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option2 && o.Ordinal == 1));
 		Assert.AreEqual(1, actualOptions.Count(o => o.Text == option3 && o.Ordinal == 2));
@@ -236,14 +236,14 @@ public class ForumServiceTests : TestDbBase
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
 		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
-		int forumId = topic.ForumId;
-		int topicId = topic.Id;
+		var forumId = topic.ForumId;
+		var topicId = topic.Id;
 		const string subject = "Test Subject";
 		const string postText = "This is a post";
 		var poster = _db.AddUser("Test User").Entity;
 		await _db.SaveChangesAsync();
-		int posterId = poster.Id;
-		string posterName = poster.UserName;
+		var posterId = poster.Id;
+		var posterName = poster.UserName;
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = false;
@@ -258,7 +258,7 @@ public class ForumServiceTests : TestDbBase
 			ipAddress,
 			watchTopic);
 
-		int actual = await _forumService.CreatePost(dto);
+		var actual = await _forumService.CreatePost(dto);
 
 		// Post must match
 		Assert.AreEqual(1, _db.ForumPosts.Count(p => p.Id == actual));
@@ -290,19 +290,19 @@ public class ForumServiceTests : TestDbBase
 		_cache.Set(ForumService.LatestPostCacheKey, new Dictionary<int, LatestPost?>());
 		var topic = _db.AddTopic().Entity;
 		await _db.SaveChangesAsync();
-		int forumId = topic.ForumId;
-		int topicId = topic.Id;
+		var forumId = topic.ForumId;
+		var topicId = topic.Id;
 		const string subject = "Test Subject";
 		const string postText = "This is a post";
 		var poster = _db.AddUser("Test User").Entity;
 		await _db.SaveChangesAsync();
-		int posterId = poster.Id;
-		string posterName = poster.UserName;
+		var posterId = poster.Id;
+		var posterName = poster.UserName;
 		const ForumPostMood mood = ForumPostMood.Normal;
 		const string ipAddress = "8.8.8.8";
 		const bool watchTopic = true;
 
-		int actual = await _forumService.CreatePost(new PostCreate(
+		var actual = await _forumService.CreatePost(new PostCreate(
 			forumId,
 			topicId,
 			subject,

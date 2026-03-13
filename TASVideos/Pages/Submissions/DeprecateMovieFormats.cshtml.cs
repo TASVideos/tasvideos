@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Submissions;
+namespace TASVideos.Pages.Submissions;
 
 [RequirePermission(PermissionTo.DeprecateMovieParsers)]
 public class DeprecateMovieFormatsModel(IMovieFormatDeprecator deprecator, IExternalMediaPublisher publisher) : BasePageModel

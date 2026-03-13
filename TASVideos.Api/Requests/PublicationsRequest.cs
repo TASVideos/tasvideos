@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Api.Requests;
+namespace TASVideos.Api.Requests;
 
 internal class PublicationsRequest : ApiRequest, IPublicationTokens
 {

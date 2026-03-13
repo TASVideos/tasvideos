@@ -1,4 +1,4 @@
-﻿namespace TASVideos.MovieParsers.Parsers;
+namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("dsm")]
 internal class Dsm : Parser, IParser
@@ -13,7 +13,7 @@ internal class Dsm : Parser, IParser
 
 		(var header, result.Frames) = await file.PipeBasedMovieHeaderAndFrameCount();
 
-		int? rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
+		var rerecordVal = header.GetPositiveIntFor(Keys.RerecordCount);
 		if (rerecordVal.HasValue)
 		{
 			result.RerecordCount = rerecordVal.Value;

@@ -1,4 +1,4 @@
-﻿using TASVideos.Pages.Submissions;
+using TASVideos.Pages.Submissions;
 using TASVideos.Tests.Base;
 
 namespace TASVideos.RazorPages.Tests.Pages.Submissions;

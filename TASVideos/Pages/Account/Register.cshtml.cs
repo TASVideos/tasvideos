@@ -1,4 +1,4 @@
-﻿using AspNetCore.ReCaptcha;
+using AspNetCore.ReCaptcha;
 using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Account;
@@ -30,6 +30,8 @@ public class RegisterModel : BasePageModel
 
 	public string? Location { get; set; }
 
+	public string? HomePage { get; set; } // trap to try and detect bots, invisible for users, should never be filled out
+
 	[MustBeTrue(ErrorMessage = "You must certify that you are 13 years of age or older")]
 	public bool Coppa { get; set; }
 
@@ -40,22 +42,29 @@ public class RegisterModel : BasePageModel
 		[FromServices] IExternalMediaPublisher publisher,
 		[FromServices] IReCaptchaService reCaptchaService,
 		[FromServices] IHostEnvironment env,
-		[FromServices] IUserMaintenanceLogger userMaintenanceLogger)
+		[FromServices] IUserMaintenanceLogger userMaintenanceLogger,
+		[FromServices] IIpBanService ipBanService)
 	{
+		if (!string.IsNullOrEmpty(HomePage)) // bot detected
+		{
+			await ipBanService.Add(IpAddress);
+			return AccessDenied();
+		}
+
 		if (Password != ConfirmPassword)
 		{
 			ModelState.AddModelError(nameof(ConfirmPassword), "The password and confirmation password do not match.");
 		}
 
 		var encodedResponse = Request.Form["g-recaptcha-response"];
-		bool isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
+		var isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
 
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
 			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
 		}
 
-		if (!string.IsNullOrEmpty(Location) && !AvailableLocations.Any(l => l.Value == Location))
+		if (!string.IsNullOrEmpty(Location) && AvailableLocations.All(l => l.Value != Location))
 		{
 			ModelState.AddModelError(nameof(Location), "Please choose a valid option.");
 		}

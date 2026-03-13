@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Api.Responses;
+namespace TASVideos.Api.Responses;
 
 internal class SubmissionsResponse
 {

@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Pages.Wiki.Legacy;
+namespace TASVideos.Pages.Wiki.Legacy;
 
 [AllowAnonymous]
 public class PrivilegesModel : BasePageModel

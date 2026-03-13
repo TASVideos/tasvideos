@@ -1,4 +1,4 @@
-﻿namespace TASVideos.Core.Tests.Services;
+namespace TASVideos.Core.Tests.Services;
 
 [TestClass]
 public class UserMaintenanceLoggerTests : TestDbBase
@@ -22,7 +22,7 @@ public class UserMaintenanceLoggerTests : TestDbBase
 
 		await _publicationMaintenanceLogger.Log(userId, logMessage, editorId);
 		var logs = _db.UserMaintenanceLogs.ToList();
-		Assert.AreEqual(1, logs.Count);
+		Assert.HasCount(1, logs);
 		var log = logs.Single();
 		Assert.AreEqual(userId, log.UserId);
 		Assert.AreEqual(editorId, log.EditorId);

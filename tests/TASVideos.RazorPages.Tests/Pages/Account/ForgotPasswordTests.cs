@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using TASVideos.Core.Services;
 using TASVideos.Core.Services.Email;
 using TASVideos.Pages.Account;
