@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<Import Project="../UseMSTest.props" />
 
@@ -10,6 +10,8 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="Bk2SampleFiles\*.bk2" />
+		<EmbeddedResource Include="CelTasSampleFiles\*.celtas" />
+		<EmbeddedResource Include="CtasSampleFiles\*.ctas" />
 		<EmbeddedResource Include="CtmSampleFiles\*.ctm" />
 		<EmbeddedResource Include="DsmSampleFiles\*.dsm" />
 		<EmbeddedResource Include="DtmSampleFiles\*.dtm" />
