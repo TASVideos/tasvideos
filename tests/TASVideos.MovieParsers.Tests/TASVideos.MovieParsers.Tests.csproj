@@ -11,6 +11,7 @@
 	<ItemGroup>
 		<EmbeddedResource Include="Bk2SampleFiles\*.bk2" />
 		<EmbeddedResource Include="CelTasSampleFiles\*.celtas" />
+		<EmbeddedResource Include="CTasSampleFiles\*.ctas" />
 		<EmbeddedResource Include="CtmSampleFiles\*.ctm" />
 		<EmbeddedResource Include="DsmSampleFiles\*.dsm" />
 		<EmbeddedResource Include="DtmSampleFiles\*.dtm" />
