@@ -643,6 +643,7 @@ fieldset {
 	background-color: var(--bs-tertiary-bg);
 	border: 1px solid var(--bs-light-border-subtle);
 	padding: 0.5em 1em;
+	word-break: break-word;
 
 	label {
 		font-weight: bold;
