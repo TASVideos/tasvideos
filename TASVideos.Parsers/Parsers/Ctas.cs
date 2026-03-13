@@ -42,7 +42,7 @@ internal class Ctas : Parser, IParser
 				reader.ReadInt64();
 			}
 		}
-		catch (System.IO.EndOfStreamException e)
+		catch (System.IO.EndOfStreamException)
 		{
 			return InvalidFormat();
 		}
