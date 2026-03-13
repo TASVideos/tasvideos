@@ -17,7 +17,7 @@ internal class Ctas : Parser, IParser
 		using var reader = new BinaryReader(file);
 		try
 		{
-			uint m_magic = reader.ReadUInt32();
+			var magic = reader.ReadUInt32();
 			if (m_magic != Magic)
 			{
 				return InvalidFormat();
