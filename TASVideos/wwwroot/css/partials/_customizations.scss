@@ -206,15 +206,17 @@ body {
 	border: 0;
 
 	&left {
-		margin-right: 10px;
+		margin-inline-end: 10px;
 		border: 0;
-		float: left;
+		clear: inline-start;
+		float: inline-start;
 	}
 
 	&right {
-		margin-left: 10px;
+		margin-inline-start: 10px;
 		border: 0;
-		float: right;
+		clear: inline-end;
+		float: inline-end;
 	}
 }
 
