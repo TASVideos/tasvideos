@@ -208,12 +208,14 @@ body {
 	&left {
 		margin-right: 10px;
 		border: 0;
+		clear: left;
 		float: left;
 	}
 
 	&right {
 		margin-left: 10px;
 		border: 0;
+		clear: right;
 		float: right;
 	}
 }
