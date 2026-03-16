@@ -21,10 +21,12 @@
 		<a class="dropdown-item" href="/EmulatorResources/LibTAS">libTAS</a>
 		<a class="dropdown-item" href="/EmulatorResources">Emulator List</a>
 	</nav-dropdown>
-	<nav-dropdown activate="Community">
-		<a class="dropdown-item" asp-page="/Forum/Index">Forum</a>
+	<nav-item activate="Forum">
+		<a class="nav-link" asp-page="/Forum/Index">Forum</a>
+	</nav-item>
+	<nav-dropdown activate="Chat">
 		<a class="dropdown-item" href="/LiveChat">Discord and IRC</a>
-		<a class="dropdown-item" href="/Communities">Communities</a>
+		<a class="dropdown-item" href="/Communities">Other TAS Communities</a>
 	</nav-dropdown>
 	<nav-dropdown activate="Resources">
 		<a class="dropdown-item" href="/ArticleIndex">Articles</a>

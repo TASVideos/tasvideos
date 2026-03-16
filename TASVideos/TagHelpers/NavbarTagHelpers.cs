@@ -99,7 +99,7 @@ public class NavItemBase : TagHelper
 			case "Movies" when MoviesGroup.Contains(pageGroup) || MoviesWikiGroup.Contains(viewActiveTab):
 			case "Games" when GamesWikiGroup.Contains(viewActiveTab):
 			case "Tools" when ToolsWikiGroup.Contains(viewActiveTab):
-			case "Community" when CommunityGroup.Contains(pageGroup) || CommunityWikiGroup.Contains(viewActiveTab):
+			case "Chat" when ChatWikiGroup.Contains(viewActiveTab):
 			case "Resources" when ResourcesWikiGroup.Contains(viewActiveTab):
 			case "About" when AboutWikiGroup.Contains(viewActiveTab):
 			case "Wiki" when WikiGroup.Contains(viewActiveTab):
@@ -118,8 +118,7 @@ public class NavItemBase : TagHelper
 	private static readonly string[] MoviesWikiGroup = ["Class"];
 	private static readonly string[] GamesWikiGroup = ["GameResources", "Platforms"];
 	private static readonly string[] ToolsWikiGroup = ["Bizhawk", "EmulatorResources"];
-	private static readonly string[] CommunityGroup = ["Forum"];
-	private static readonly string[] CommunityWikiGroup = ["LiveChat", "Communities"];
+	private static readonly string[] ChatWikiGroup = ["LiveChat", "Communities"];
 	private static readonly string[] ResourcesWikiGroup = ["ArticleIndex", "FAQ", "TasingGuide"];
 	private static readonly string[] AboutWikiGroup = ["WelcomeToTASVideos", "Staff", "Helping", "SiteHistory"];
 	private static readonly string[] WikiGroup = ["SandBox", "RecentChanges", "WikiOrphans", "TODO", "System", "DeletedPages"];
