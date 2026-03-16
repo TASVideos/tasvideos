@@ -1,0 +1,5 @@
+# This file can be used for git blame using --ignore-revs-file
+# or by setting blame.ignoreRevsFile in the git config.
+
+# remove UTF-8 BOM from all text files (#2273)
+95b3aca7ac18fff38ada1e4607b43c6ea288d474
