@@ -44,6 +44,7 @@ try
 	builder.Services
 		.AddRazorPages(builder.Environment)
 		.AddIdentity(builder.Environment)
+		.AddCaptcha(Convert.FromBase64String(settings.AltchaSelfHostedKey))
 		.AddSingleton<IJsEngineSwitcher>(new JsEngineSwitcher([new V8JsEngineFactory()], V8JsEngine.EngineName))
 		.AddWebOptimizer(pipeline =>
 		{

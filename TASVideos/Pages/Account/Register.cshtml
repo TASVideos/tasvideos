@@ -56,9 +56,9 @@
 			</fieldset>
 		</column>
 	</row>
-	<div class="text-center">
-		<environment exclude="Development">
-			@*TODO CAPTCHA*@
+	<div class="d-flex flex-column align-items-center">
+		<environment exclude="notDevelopment">
+			<altcha-widget challengeurl="/Account/GenerateCaptchaChallenge"></altcha-widget>
 		</environment>
 		<submit-button>Register</submit-button>
 	</div>
@@ -66,6 +66,7 @@
 
 @section Scripts {
 	<script src="/js/account-register.js"></script>
+	<script async defer src="https://cdn.jsdelivr.net/npm/altcha/dist/altcha.min.js" type="module"></script>
 	@*
 	<script src="/js/captcha-form.js"></script>
 	*@

@@ -20,15 +20,16 @@
 			</fieldset>
 		</column>
 	</row>
-	<form-button-bar>
-		<environment exclude="Development">
-			@*TODO CAPTCHA*@
+	<div class="d-flex flex-column align-items-center">
+		<environment exclude="notDevelopment">
+			<altcha-widget challengeurl="/Account/GenerateCaptchaChallenge"></altcha-widget>
 		</environment>
 		<submit-button>Resend Confirmation Email</submit-button>
-	</form-button-bar>
+	</div>
 </form>
 
 @section Scripts {
+	<script async defer src="https://cdn.jsdelivr.net/npm/altcha/dist/altcha.min.js" type="module"></script>
 	@*
 	<script src="/js/captcha-form.js"></script>
 	*@

@@ -22,13 +22,13 @@ public class EmailConfirmationSentModel : BasePageModel
 	public async Task<IActionResult> OnPost(
 		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
-		[FromServices] IHostEnvironment env)
+		[FromServices] IHostEnvironment env,
+		[FromServices] ICaptchaService captcha)
 	{
-		var isCaptchaValid = true; // TODO CAPTCHA
-
+		var (isCaptchaValid, captchaFailureReason) = await captcha.VerifyAsync(Request.Form["altcha"].FirstOrDefault());
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
-			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
+			ModelState.AddModelError("", $"TASVideos prefers human users. If you believe you have received this message in error, please contact admin@tasvideos.org. {captcha.ProviderName} says: {captchaFailureReason}");
 		}
 
 		if (!ModelState.IsValid)
