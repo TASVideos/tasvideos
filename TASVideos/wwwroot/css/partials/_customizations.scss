@@ -163,6 +163,11 @@ h4 {
 	color: RGBA(255,255,255,.6);
 }
 
+/** to complement the underline on `a.nav-link` (all hyperlinks actually) */
+button.nav-link:hover {
+	text-decoration: underline dashed;
+}
+
 .breadcrumb-item {
 	font-size: 1.25em;
 	line-height: 1.25em;
