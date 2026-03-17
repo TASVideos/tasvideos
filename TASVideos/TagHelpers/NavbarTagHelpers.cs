@@ -51,7 +51,7 @@ public class NavDropdownTagHelper : NavItemBase
 		}
 
 		output.Content.SetHtmlContent(
-			$"<a href='#' class='{addClass}' data-bs-toggle='dropdown'>{Name ?? ""}<span class='caret'></span></a>");
+			$"<a href='#' class='{addClass}' data-bs-toggle='dropdown'>{Name ?? ""}</a>");
 
 		output.Content.AppendHtml($"<div class='dropdown-menu'>{content}</div>");
 	}
