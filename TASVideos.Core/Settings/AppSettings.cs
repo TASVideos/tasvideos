@@ -17,6 +17,8 @@ public class AppSettings
 	public DiscordConnection Discord { get; set; } = new();
 	public BlueskyConnection Bluesky { get; set; } = new();
 
+	public string AltchaSelfHostedKey { get; set; } = "";
+
 	public JwtSettings Jwt { get; set; } = new();
 	public GoogleAuthSettings YouTube { get; set; } = new();
 	public EmailBasicAuthSettings Email { get; set; } = new();
@@ -26,8 +28,6 @@ public class AppSettings
 
 	// Minimum number of hours before a judge can set a submission to accepted/rejected
 	public int MinimumHoursBeforeJudgment { get; set; }
-
-	public ReCaptchaSettings ReCaptcha { get; set; } = new();
 
 	public bool EnableMetrics { get; set; }
 
@@ -137,11 +137,6 @@ public class AppSettings
 				&& !string.IsNullOrWhiteSpace(Password)
 				&& !string.IsNullOrWhiteSpace(SmtpServer);
 		}
-	}
-
-	public class ReCaptchaSettings
-	{
-		public string Version { get; set; } = "";
 	}
 }
 
