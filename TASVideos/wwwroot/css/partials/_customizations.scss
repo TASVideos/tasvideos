@@ -179,6 +179,11 @@ button.nav-link:hover {
 	}
 }
 
+/** `.dropdown-item` overrides the weight otherwise; this is seen in the navbar */
+.fw-bold .dropdown-item {
+	font-weight: 600;
+}
+
 .breadcrumb-item {
 	font-size: 1.25em;
 	line-height: 1.25em;
