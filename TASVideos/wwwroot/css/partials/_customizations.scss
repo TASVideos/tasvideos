@@ -168,6 +168,17 @@ button.nav-link:hover {
 	text-decoration: underline dashed;
 }
 
+.nav-link.dropdown-toggle {
+	/** these are the little arrows (drawn with borders!) */
+	&::after {
+		transform: scaleX(1.15) scaleY(1.15);
+		vertical-align: 0;
+	}
+	&[aria-expanded="true"]::after {
+		transform: scaleX(1.15) scaleY(-1.15);
+	}
+}
+
 .breadcrumb-item {
 	font-size: 1.25em;
 	line-height: 1.25em;
