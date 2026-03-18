@@ -9,7 +9,7 @@
 	<a asp-page="/Profile/UserFiles" class="float-end btn btn-secondary">My Movies</a>
 </fullrow>
 
-<row>
+<row class="flex-row-reverse">
 	<column md="6">
 		<card>
 			<card-header>
@@ -24,11 +24,12 @@
 				}
 			</card-body>
 		</card>
+		@*TODO by filetype*@
 	</column>
 	<column md="6">
 		<card>
 			<card-header>
-				Latest Movies
+				Latest Movies <a class="btn btn-primary btn-sm" asp-page="List">See all</a>
 			</card-header>
 			<card-body>
 				@foreach (var file in Model.LatestMovies)
@@ -41,10 +42,9 @@
 						</small>
 					</div>
 				}
-				<a asp-page="List">More...</a>
 			</card-body>
 		</card>
-		<card>
+		<card class="mt-2">
 			<card-header>
 				Games with movies
 			</card-header>
