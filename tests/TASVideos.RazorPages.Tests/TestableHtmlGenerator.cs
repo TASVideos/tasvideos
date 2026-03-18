@@ -22,24 +22,6 @@ using Microsoft.Extensions.WebEncoders.Testing;
 
 namespace TASVideos.RazorPages.Tests;
 
-file static class ConfigureSubstitute
-{
-	public static T For<T>(Action<T> configure)
-		where T : class
-	{
-		var mock = Substitute.For<T>();
-		configure(mock);
-		return mock;
-	}
-
-	public static IOptions<T> ForIOptions<T>(T? optionsObj = null)
-		where T : class, new()
-	{
-		optionsObj ??= new();
-		return For<IOptions<T>>(mock => _ = mock.Value.Returns(optionsObj));
-	}
-}
-
 // ReSharper disable EmptyConstructor
 internal class TestableHtmlGenerator(
 	IOptions<MvcViewOptions> options,
@@ -47,12 +29,18 @@ internal class TestableHtmlGenerator(
 		Substitute.For<IAntiforgery>(),
 		options,
 		metadataProvider,
-		ConfigureSubstitute.For<IUrlHelperFactory>(
-			mock => _ = mock.GetUrlHelper(Arg.Any<ActionContext>())
-				.Returns(callInfo => new FakeUrlHelper(callInfo.ArgAt<ActionContext>(0)))),
+		CreateUrlHelperFactory(),
 		new HtmlTestEncoder(),
 		new DefaultValidationHtmlAttributeProvider(options, metadataProvider, new()))
 {
+	private static IUrlHelperFactory CreateUrlHelperFactory()
+	{
+		var urlHelperFactory = Substitute.For<IUrlHelperFactory>();
+		urlHelperFactory.GetUrlHelper(Arg.Any<ActionContext>())
+			.Returns(callInfo => new FakeUrlHelper(callInfo.ArgAt<ActionContext>(0)));
+		return urlHelperFactory;
+	}
+
 	private sealed class FakeUrlHelper(ActionContext context) : UrlHelperBase(context)
 	{
 		public override string Action(UrlActionContext actionContext)
@@ -78,7 +66,9 @@ internal class TestableHtmlGenerator(
 	{
 		ServiceCollection services = [];
 		services.AddSingleton<ILoggerFactory, NullLoggerFactory>();
-		var routeOptionsWrapper = ConfigureSubstitute.ForIOptions<RouteOptions>();
+
+		var routeOptionsWrapper = Substitute.For<IOptions<RouteOptions>>();
+		routeOptionsWrapper.Value.Returns(new RouteOptions());
 		services.AddSingleton(routeOptionsWrapper);
 
 		// equivalent to:
@@ -126,7 +116,10 @@ internal class TestableHtmlGenerator(
 			Substitute.For<ITempDataDictionary>(),
 			TextWriter.Null,
 			new());
-		return new(ConfigureSubstitute.ForIOptions<MvcViewOptions>(), metadataProvider);
+
+		IOptions<MvcViewOptions> mvcViewOptions = Substitute.For<IOptions<MvcViewOptions>>();
+		mvcViewOptions.Value.Returns(new MvcViewOptions());
+		return new(mvcViewOptions, metadataProvider);
 	}
 
 	protected override void AddValidationAttributes(
