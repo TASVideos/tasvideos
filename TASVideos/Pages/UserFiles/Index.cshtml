@@ -49,13 +49,34 @@
 				Games with movies
 			</card-header>
 			<card-body>
-				@foreach (var game in Model.GamesWithMovies)
-				{
-					<div>
-						<a asp-page="Game" asp-route-id="@game.GameId">@game.GameName</a>
-						<small>(latest <timezone-convert asp-for="@game.Latest"/>)</small>
-					</div>
-				}
+				<ul class="nav nav-tabs" role="tablist">
+					@foreach (var (i, (key, label, _)) in Model.GroupedGames.Index())
+					{
+						<li class="nav-item" role="presentation">
+							<button type="button" class="nav-link @(i is 0 ? "active" : "")" data-bs-toggle="tab"
+									data-bs-target="#tab-games-@key" aria-controls="tab-games-@key"
+									id="#label-games-@key">
+								@label
+							</button>
+						</li>
+					}
+				</ul>
+				<div class="tab-content">
+					@foreach (var (i, (key, _, games)) in Model.GroupedGames.Index())
+					{
+						<div class="tab-pane fade @(i is 0 ? "active show" : "")" role="tabpanel"
+								id="tab-games-@key"
+								aria-labelledby="label-games-@key">
+							@foreach (var game in games)
+							{
+								<div>
+									<a asp-page="Game" asp-route-id="@game.GameId">@game.GameName</a>
+									<small>(latest <timezone-convert asp-for="@game.Latest"/>)</small>
+								</div>
+							}
+						</div>
+					}
+				</div>
 			</card-body>
 		</card>
 	</column>

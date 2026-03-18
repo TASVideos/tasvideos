@@ -106,11 +106,12 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.HasCount(2, _page.GamesWithMovies);
-
-		// Should be ordered by game name
-		Assert.AreEqual("Game A", _page.GamesWithMovies.First().GameName);
-		Assert.AreEqual("Game B", _page.GamesWithMovies.Last().GameName);
+		Assert.HasCount(1, _page.GroupedGames);
+		var startingWithG = _page.GroupedGames.First();
+		Assert.AreEqual("G", startingWithG.Label);
+		CollectionAssert.AreEquivalent(
+			new[] { "Game A", "Game B" },
+			startingWithG.Games.Select(game => game.GameName).ToArray());
 	}
 
 	[TestMethod]
