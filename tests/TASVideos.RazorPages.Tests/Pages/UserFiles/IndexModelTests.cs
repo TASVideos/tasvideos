@@ -47,11 +47,6 @@ public class IndexModelTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		await _page.OnGet();
-
-		Assert.HasCount(2, _page.UsersWithMovies);
-		var userNames = _page.UsersWithMovies.Select(u => u.UserName).ToList();
-		Assert.Contains("User1", userNames);
-		Assert.Contains("User2", userNames);
 	}
 
 	[TestMethod]
@@ -183,7 +178,6 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.HasCount(1, _page.UsersWithMovies);
 		Assert.HasCount(1, _page.LatestMovies);
 		Assert.AreEqual("Public Movie", _page.LatestMovies.First().Title);
 	}

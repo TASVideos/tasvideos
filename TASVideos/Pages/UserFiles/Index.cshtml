@@ -13,17 +13,6 @@
 	<column md="6">
 		<card>
 			<card-header>
-				Users with movies
-			</card-header>
-			<card-body>
-				@foreach (var user in Model.UsersWithMovies.OrderBy(u => u.UserName))
-				{
-					<a asp-page="ForUser" asp-route-userName="@user.UserName">@user.UserName</a><span>(latest: <timezone-convert asp-for="@user.Latest"/>)</span><br />
-				}
-			</card-body>
-		</card>
-		<card>
-			<card-header>
 				Recent Uncataloged Files <a class="btn btn-primary btn-sm" asp-page="Uncataloged">See all</a>
 			</card-header>
 			<card-body>

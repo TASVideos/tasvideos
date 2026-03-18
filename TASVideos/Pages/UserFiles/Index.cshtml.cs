@@ -3,18 +3,12 @@ namespace TASVideos.Pages.UserFiles;
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
-	public List<UserWithMovie> UsersWithMovies { get; set; } = [];
 	public List<UserMovie> LatestMovies { get; set; } = [];
 	public List<GameWithMovie> GamesWithMovies { get; set; } = [];
 	public List<Uncataloged.UncatalogedViewModel> UncatalogedFiles { get; set; } = [];
 
 	public async Task OnGet()
 	{
-		UsersWithMovies = await db.UserFiles
-			.ThatArePublic()
-			.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp)
-			.Select(uf => new UserWithMovie(uf.Key, uf.Max()))
-			.ToListAsync();
 		LatestMovies = await db.UserFiles
 			.ThatArePublic()
 			.ByRecentlyUploaded()
