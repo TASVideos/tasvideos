@@ -65,13 +65,6 @@ internal class TestableHtmlGenerator(
 				AmbientValues,
 				GetValuesDictionary(routeContext.Values),
 				routeContext.RouteName))?.VirtualPath;
-			if (virtualPath is not null)
-			{
-				// not sure why, but the inner Route adds the whole path again as `?path=`, so strip that
-				// TODO hmm, the queryparam reflects AnchorTagHelper.Page, while the actual path reflects the route template, meaning this is discarding info that should be asserted against
-				var iQuerystring = virtualPath.IndexOf('?');
-				virtualPath = virtualPath[..iQuerystring];
-			}
 
 			return GenerateUrl(
 				protocol: routeContext.Protocol,
@@ -114,7 +107,7 @@ internal class TestableHtmlGenerator(
 				routeHandler,
 				routeName: name,
 				routeTemplate: template,
-				defaults: null,
+				defaults: new([new KeyValuePair<string, string?>("page", name)]),
 				constraints: null,
 				dataTokens: null,
 				constraintResolver));
