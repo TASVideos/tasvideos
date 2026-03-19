@@ -47,11 +47,6 @@ public class IndexModelTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		await _page.OnGet();
-
-		Assert.HasCount(2, _page.UsersWithMovies);
-		var userNames = _page.UsersWithMovies.Select(u => u.UserName).ToList();
-		Assert.Contains("User1", userNames);
-		Assert.Contains("User2", userNames);
 	}
 
 	[TestMethod]
@@ -111,11 +106,12 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.HasCount(2, _page.GamesWithMovies);
-
-		// Should be ordered by game name
-		Assert.AreEqual("Game A", _page.GamesWithMovies.First().GameName);
-		Assert.AreEqual("Game B", _page.GamesWithMovies.Last().GameName);
+		Assert.HasCount(1, _page.GroupedGames);
+		var startingWithG = _page.GroupedGames.First();
+		Assert.AreEqual("G", startingWithG.Label);
+		CollectionAssert.AreEquivalent(
+			new[] { "Game A", "Game B" },
+			startingWithG.Games.Select(game => game.GameName).ToArray());
 	}
 
 	[TestMethod]
@@ -183,7 +179,6 @@ public class IndexModelTests : TestDbBase
 
 		await _page.OnGet();
 
-		Assert.HasCount(1, _page.UsersWithMovies);
 		Assert.HasCount(1, _page.LatestMovies);
 		Assert.AreEqual("Public Movie", _page.LatestMovies.First().Title);
 	}
