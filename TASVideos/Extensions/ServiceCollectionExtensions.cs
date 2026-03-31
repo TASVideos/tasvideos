@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.ResponseCompression;
 using OpenTelemetry.Metrics;
 using TASVideos.Core.Settings;
+using TASVideos.Pages.Feed;
 using TASVideos.TagHelpers;
 
 namespace TASVideos.Extensions;
@@ -25,7 +26,10 @@ public static class ServiceCollectionExtensions
 		new("/RssFeeds/Publications", "/publications.rss"),
 		new("/RssFeeds/Submissions", "/submissions.rss"),
 		new("/RssFeeds/Wiki", "/wiki.rss"),
-		new("/RssFeeds/News", "/news.rss")
+		new("/RssFeeds/News", "/news.rss"),
+		new("/Feed/Index", "/Feed/{postId:int}/{postTitle}/{commentId?}"),
+		new("/Feed/Index", "/Feed/{postId:int}/{postTitle?}"),
+		new("/Feed/Index", "/Feed/{pageRoute}")
 	];
 
 	public static readonly List<KeyValuePair<string, string>> LegacyRedirects =
@@ -132,6 +136,9 @@ public static class ServiceCollectionExtensions
 			});
 
 			services.AddSingleton<IHtmlGenerator, OverrideHtmlGenerator>();
+
+			services.AddSingleton<UserNameCache>();
+
 			return services;
 		}
 

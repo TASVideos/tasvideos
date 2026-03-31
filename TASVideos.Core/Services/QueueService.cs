@@ -642,7 +642,7 @@ internal class QueueService(
 			await db.SaveChangesAsync();
 
 			// Create wiki page
-			await wikiPages.Add(new WikiCreateRequest
+			var wikiPage = await wikiPages.Add(new WikiCreateRequest
 			{
 				PageName = LinkConstants.SubmissionWikiPage + submission.Id,
 				RevisionMessage = $"Auto-generated from Submission #{submission.Id}",
@@ -683,7 +683,7 @@ internal class QueueService(
 				}
 			}
 
-			return new SubmitResult(null, submission.Id, submission.Title, screenshotFile);
+			return new SubmitResult(null, submission.Id, submission.Title, screenshotFile, youtubeSync.IsYoutubeUrl(submission.EncodeEmbedLink) ? submission.EncodeEmbedLink! : "", wikiPage);
 		}
 		catch (Exception ex)
 		{
@@ -820,7 +820,7 @@ internal class QueueService(
 				await youtubeSync.SyncYouTubeVideo(video);
 			}
 
-			return new PublishSubmissionResult(null, publication.Id, publication.Title, screenshotPath, screenshotBytes);
+			return new PublishSubmissionResult(null, publication.Id, publication.Title, screenshotPath, screenshotBytes, youtubeSync.IsYoutubeUrl(request.OnlineWatchingUrl) ? youtubeSync.ConvertToEmbedLink(request.OnlineWatchingUrl)! : "", addedWikiPage);
 		}
 		catch (Exception ex)
 		{
@@ -1051,7 +1051,7 @@ public record SubmitRequest(
 	IParseResult ParseResult,
 	User Submitter);
 
-public record SubmitResult(string? ErrorMessage, int Id, string Title, byte[]? Screenshot)
+public record SubmitResult(string? ErrorMessage, int Id, string Title, byte[]? Screenshot, string YtEncodeUrl = "", IWikiPage? WikiPage = null)
 {
 	public bool Success => ErrorMessage == null;
 }
@@ -1074,7 +1074,7 @@ public record PublishSubmissionRequest(
 	int? MovieToObsolete,
 	int UserId);
 
-public record PublishSubmissionResult(string? ErrorMessage, int PublicationId, string PublicationTitle, string ScreenshotFilePath, byte[] ScreenshotBytes)
+public record PublishSubmissionResult(string? ErrorMessage, int PublicationId, string PublicationTitle, string ScreenshotFilePath, byte[] ScreenshotBytes, string YtEncodeUrl = "", IWikiPage? WikiPage = null)
 {
 	public bool Success => ErrorMessage == null;
 }

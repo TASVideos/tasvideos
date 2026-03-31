@@ -39,7 +39,7 @@
 	<partial name="_MetaTags" />
 </head>
 <body>
-	<nav id="banner" class="navbar navbar-expand-md navbar-dark mb-4">
+	<nav id="banner" class="navbar navbar-expand-md navbar-dark">
 		<div class="container-fluid">
 			<div class="site-banner w-100 overflow-hidden position-absolute start-0 top-0">
 				<picture>
@@ -91,6 +91,12 @@
 			</div>
 		</div>
 	</nav>
+	<div class="container d-flex justify-content-center">
+		<div data-id="feed-header" class="alert alert-info mb-2 py-2 d-none">
+			<button data-id="feed-header-dismiss" type="button" class="btn-close float-end ms-3" aria-label="close"></button>
+			<span>Check out the new <a href="/Feed">TASVideos Feed</a>!</span>
+		</div>
+	</div>
 
 	@if (ViewData.UsePageTitle())
 	{
@@ -231,6 +237,7 @@
 	<script condition="ViewData.UsesDiff()" src="/js/diff_view.js"></script>
 	<script condition="ViewData.UsesMoodPreview()" src="/js/mood-preview.js"></script>
 	<script src="/js/prevent-double-submit.js"></script>
+	<script src="/js/feed-header.js"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -1,12 +1,14 @@
 using AspNetCore.ReCaptcha;
 using JavaScriptEngineSwitcher.Core;
 using JavaScriptEngineSwitcher.V8;
+using Microsoft.Data.Sqlite;
 using Serilog;
 using TASVideos.Api;
 using TASVideos.Core.Data;
 using TASVideos.Core.Settings;
 using TASVideos.Middleware;
 using TASVideos.MovieParsers;
+using TASVideos.Pages.Feed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,15 @@ try
 		.AddTasvideosMovieParsers()
 		.AddTasvideosApi(settings);
 
+	builder.Services.AddDbContext<FeedDbContext>(options =>
+	{
+		options.UseSqlite($"DataSource={Path.Combine(builder.Environment.ContentRootPath, "feed.db")}");
+		if (builder.Environment.IsDevelopment())
+		{
+			options.EnableSensitiveDataLogging();
+		}
+	});
+
 	// 3rd Party
 	JsEngineSwitcher.AllowCurrentProperty = false;
 	builder.Services
@@ -58,6 +69,12 @@ try
 		.AddSerilog();
 
 	var app = builder.Build();
+
+	using (var scope = app.Services.CreateScope())
+	{
+		var db = scope.ServiceProvider.GetRequiredService<FeedDbContext>();
+		db.Database.EnsureCreated();
+	}
 
 	app
 		.UseExceptionHandlers(app.Environment)

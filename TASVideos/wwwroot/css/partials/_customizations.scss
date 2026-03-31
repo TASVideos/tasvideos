@@ -726,3 +726,111 @@ top-button-bar {
 		padding-left: 1rem;
 	}
 }
+
+body:has(#feedapp) {
+	.container:has(.page-title) {
+		margin-bottom: 1rem !important;
+		--bs-gutter-x: 0;
+	}
+
+	.container:has(#feedapp) {
+		border: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
+		background-color: var(--bs-body-bg);
+	}
+}
+#feedapp {
+	word-break: break-word;
+
+	& hr {
+		margin-block: 0.75rem;
+	}
+
+	& h4 {
+		margin: 0;
+	}
+
+	& p {
+		margin: .5rem 0;
+
+		&:first-child {
+			margin-top: 0;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	& label {
+		font-size: 1rem;
+	}
+
+	& .form-control {
+		font-size: 1rem;
+	}
+
+	& blockquote {
+		padding: 0 8px;
+		border-left: 2px solid var(--bs-secondary-color);
+		margin: 0 0 5px 5px;
+		color: var(--bs-secondary-color);
+	}
+
+	& .post-title {
+		&:visited {
+			--bs-text-opacity: 1;
+			color: #595c5f !important;
+		}
+	}
+
+	$tile-width: 42px;
+	$tile-height: 50px;
+	$cols: 3;
+	$rows: 8;
+
+	.feedtile {
+		width: $tile-width;
+		height: $tile-height;
+		background-image: url("../../images/icongrid.png");
+		background-repeat: no-repeat;
+
+		&-bg {
+			border-radius: 10px;
+			background: linear-gradient(135deg,#e9c91d,#9d620b);
+
+			&.inactive {
+				filter: grayscale(1) contrast(0.4);
+			}
+
+			&.bronze {
+				border: 3px solid #9f5412;
+			}
+
+			&.silver {
+				border: 3px solid #b6b6b6
+			}
+
+			&.gold {
+				border: 3px solid #e9c31d
+			}
+		}
+	}
+
+	@for $row from 0 through ($rows - 1) {
+		@for $col from 0 through ($cols - 1) {
+			.feedtile-#{$row}-#{$col} {
+				background-position: #{-($col * $tile-width)} #{-($row * $tile-height)};
+			}
+		}
+	}
+}
+
+@include color-mode(dark) {
+	#feedapp {
+		& .post-title {
+			&:visited {
+				color: #aeb2b6 !important;
+			}
+		}
+	}
+}

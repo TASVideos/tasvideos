@@ -1,5 +1,6 @@
 using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers;
+using TASVideos.Pages.Feed;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -10,7 +11,9 @@ public class SubmitModel(
 	IQueueService queueService,
 	IWikiPages wikiPages,
 	IExternalMediaPublisher externalMediaPublisher,
-	IMovieParser movieParser)
+	IMovieParser movieParser,
+	FeedDbContext? feedDb = null,
+	IWikiToMetaDescriptionRenderer? wikiRenderer = null)
 	: SubmitPageModelBase
 {
 	private const string FileFieldName = $"{nameof(MovieFile)}";
@@ -127,6 +130,36 @@ public class SubmitModel(
 		if (result.Success)
 		{
 			await externalMediaPublisher.AnnounceNewSubmission(result.Id, result.Title, result.Screenshot, result.Screenshot is not null ? "image/jpeg" : null, 480, 360);
+
+			try
+			{
+				if (feedDb is not null)
+				{
+					var post = new Post
+					{
+						Title = result.Title,
+						Date = DateTime.UtcNow,
+						ContentType = "Submission",
+						Content = wikiRenderer == null || result.WikiPage == null ? "" : await wikiRenderer.RenderWikiForMetaDescription(result.WikiPage),
+						ExtraOverrideLink = $"/{result.Id}S",
+						ExtraVideoContent = result.YtEncodeUrl,
+						UserId = SiteGlobalConstants.TASVideoAgentId,
+						Votes = [new()
+							{
+								UserId = SiteGlobalConstants.TASVideoAgentId,
+								Value = 1
+							}
+						],
+					};
+
+					feedDb.Posts.Add(post);
+					await feedDb.SaveChangesAsync();
+				}
+			}
+			catch
+			{
+			}
+
 			return BaseRedirect($"/{result.Id}S");
 		}
 

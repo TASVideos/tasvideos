@@ -1,0 +1,75 @@
+@page
+@model TASVideos.Pages.Feed.IndexModel
+@using System.Text.Json;
+@{
+	string pageTitle = "Feed";
+	string? metaTitle = null;
+	string? metaDescription = null;
+	string? metaImage = null;
+	if (Model.PostId != null)
+	{
+		if (Model.CommentId != null)
+		{
+			pageTitle = $"Feed - Comment #{Model.CommentId}";
+			metaTitle = pageTitle;
+			if (Model.PageState.Post != null && Model.PageState.Post.Comments.Count > 0)
+			{
+				var comment = Model.PageState.Post.Comments.First();
+				while (comment.Id != Model.CommentId && comment.Replies.Count > 0)
+				{
+					comment = comment.Replies.First();
+				}
+				if (comment.Id == Model.CommentId)
+				{
+					metaDescription = comment.Content;
+				}
+			}
+		}
+		else
+		{
+			pageTitle = $"Feed - Post #{Model.PostId}";
+			metaTitle = pageTitle;
+			if (Model.PageState.Post != null && !string.IsNullOrEmpty(Model.PageState.Post.Title))
+			{
+				metaTitle = $"Feed - \"{Model.PageState.Post.Title}\"";
+				if (Model.PageState.Post.ContentType == "Text")
+				{
+					metaDescription = Model.PageState.Post.Content;
+				}
+				else if (Model.PageState.Post.ContentType == "Image")
+				{
+					metaDescription = "";
+					metaImage = Model.PageState.Post.Content;
+				}
+			}
+		}
+	}
+	else if (Model.PageState.Type == "My")
+	{
+		pageTitle = "Feed - My";
+		metaTitle = "Feed - My Page";
+		metaDescription = "View your feed achievements, posts, and comments.";
+	}
+	else
+	{
+		pageTitle = "Feed";
+		metaTitle = pageTitle;
+		metaDescription = "The TASVideos Feed is a stream of recent community activity and more. Make posts, vote, and come see what others are up to!";
+	}
+	ViewData.SetTitle(pageTitle);
+	ViewData.SetMetaTags(new MetaTag
+	{
+		Title = metaTitle,
+		Description = metaDescription,
+		Image = metaImage,
+	});
+
+	var serializerOptions = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+	var state = JsonSerializer.Serialize(Model.PageState, serializerOptions);
+}
+@Html.AntiForgeryToken()
+<div id="feedappstate" data-state="@state"></div>
+<div id="feedapp"></div>
+@section Scripts {
+	<script src="~/js/feed.min.js" asp-append-version="true"></script>
+}

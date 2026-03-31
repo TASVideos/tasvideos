@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.StaticFiles;
 using TASVideos.Core.Services.Wiki;
+using TASVideos.Pages.Feed;
 
 namespace TASVideos.Pages.Submissions;
 
@@ -8,7 +9,9 @@ public class PublishModel(
 	ApplicationDbContext db,
 	IExternalMediaPublisher publisher,
 	IWikiPages wikiPages,
-	IQueueService queueService)
+	IQueueService queueService,
+	FeedDbContext? feedDb = null,
+	IWikiToMetaDescriptionRenderer? wikiRenderer = null)
 	: BasePageModel
 {
 	[FromRoute]
@@ -104,6 +107,35 @@ public class PublishModel(
 
 		new FileExtensionContentTypeProvider().TryGetContentType(result.ScreenshotFilePath, out var screenshotMimeType);
 		await publisher.AnnounceNewPublication(result.PublicationId, result.PublicationTitle, result.ScreenshotBytes, screenshotMimeType);
+
+		try
+		{
+			if (feedDb is not null)
+			{
+				var post = new Post
+				{
+					Title = result.PublicationTitle,
+					Date = DateTime.UtcNow,
+					ContentType = "Publication",
+					Content = wikiRenderer == null || result.WikiPage == null ? "" : await wikiRenderer.RenderWikiForMetaDescription(result.WikiPage),
+					ExtraOverrideLink = $"/{result.PublicationId}M",
+					ExtraVideoContent = result.YtEncodeUrl,
+					UserId = SiteGlobalConstants.TASVideoAgentId,
+					Votes = [new()
+						{
+							UserId = SiteGlobalConstants.TASVideoAgentId,
+							Value = 1
+						}
+					],
+				};
+
+				feedDb.Posts.Add(post);
+				await feedDb.SaveChangesAsync();
+			}
+		}
+		catch
+		{
+		}
 
 		return BaseRedirect($"/{result.PublicationId}M");
 	}
