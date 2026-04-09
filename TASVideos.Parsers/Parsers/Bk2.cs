@@ -215,7 +215,13 @@ internal class Bk2 : Parser, IParser
 
 		if (result.CycleCount.HasValue)
 		{
-			if (ValidClockRates.Contains(clockRate))
+			if (clockRate == "1000") // special case for a clock rate of 1000, which indicates that the cycle count is actually the millisecond count, so we ignore the parsed input frame count
+			{
+				result.Frames = (int)result.CycleCount.Value;
+				result.CycleCount = null;
+				result.FrameRateOverride = 1000;
+			}
+			else if (ValidClockRates.Contains(clockRate))
 			{
 				var seconds = result.CycleCount.Value / double.Parse(clockRate, CultureInfo.InvariantCulture);
 				result.FrameRateOverride = result.Frames / seconds;
@@ -268,7 +274,6 @@ internal class Bk2 : Parser, IParser
 		"5369318.18181818", // SubNesHawk (NTSC)
 		"5320342.5", // SubNesHawk (PAL/Dendy)
 		"33868800", // NymaShock,
-		"1000", // DOSBox-x
 		"21477272.7272727", // SubBSNESv115+ (NTSC)
 		"21281370" // SubBSNESv115+ (PAL)
 	];
