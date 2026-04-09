@@ -44,19 +44,22 @@ internal class Gzm : Parser, IParser
 			var ocaSync = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 			var roomLoad = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
 
+			var ocaInputBuffer = new byte[8];
 			for (var a = 0; a < ocaInput; a++)
 			{
-				reader.ReadBytes(8);
+				reader.ReadExactly(ocaInputBuffer);
 			}
 
+			var ocaSyncBuffer = new byte[8];
 			for (var a = 0; a < ocaSync; a++)
 			{
-				reader.ReadBytes(8);
+				reader.ReadExactly(ocaSyncBuffer);
 			}
 
+			var roomLoadBuffer = new byte[4];
 			for (var a = 0; a < roomLoad; a++)
 			{
-				reader.ReadBytes(4);
+				reader.ReadExactly(roomLoadBuffer);
 			}
 
 			result.RerecordCount = (int)BinaryPrimitives.ReverseEndianness(reader.ReadUInt32());
