@@ -217,7 +217,15 @@ internal class Bk2 : Parser, IParser
 		{
 			if (clockRate == "1000") // special case for a clock rate of 1000, which indicates that the cycle count is actually the millisecond count, so we ignore the parsed input frame count
 			{
-				result.Frames = (int)result.CycleCount.Value;
+				try
+				{
+					result.Frames = checked((int)result.CycleCount.Value);
+				}
+				catch (OverflowException)
+				{
+					return Error("Cycle count value is too large to fit into the frame count integer");
+				}
+
 				result.CycleCount = null;
 				result.FrameRateOverride = 1000;
 			}
