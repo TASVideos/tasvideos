@@ -7,7 +7,8 @@
 		.Select(i => new { Ip = i.Key, UsedOn = i.Max(ii => ii.UsedOn) })
 		.ToList();
 }
-<fullrow>This list shows IP addresses the user used for forum posts and forum poll votes.</fullrow>
+<fullrow permission="BanIpAddresses"><a asp-page="/Users/IpBan">View existing IP bans.</a></fullrow>
+<fullrow>The following list shows IP addresses the user used for forum posts and forum poll votes.</fullrow>
 <standard-table>
 	<caption>Total: @ipList.Count</caption>
 	<table-head columns="IP Address,Last Used,"></table-head>
@@ -17,7 +18,7 @@
 			<td>@ip.Ip</td>
 			<td><timezone-convert asp-for="@ip.UsedOn" /></td>
 			<td>
-				<a permission="BanIpAddresses" asp-page="/Users/IpBan" asp-route-banIp="@ip" class="btn btn-danger">Ban</a>
+				<a permission="BanIpAddresses" asp-page="/Users/IpBan" asp-route-banIp="@ip.Ip" class="btn btn-danger">Ban</a>
 			</td>
 		</tr>
 	}
