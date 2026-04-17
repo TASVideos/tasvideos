@@ -19,7 +19,7 @@ public class IpsModel(ApplicationDbContext db) : BasePageModel
 		var postIps = await db.ForumPosts
 			.Where(p => p.PosterId == user.Id)
 			.Where(p => p.IpAddress != null)
-			.Select(p => new IpEntry(p.IpAddress ?? "", p.PostEditedTimestamp ?? p.LastUpdateTimestamp))
+			.Select(p => new IpEntry(p.IpAddress ?? "", p.PostEditedTimestamp ?? p.CreateTimestamp))
 			.Distinct()
 			.ToListAsync();
 

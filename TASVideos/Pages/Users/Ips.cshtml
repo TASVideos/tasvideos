@@ -7,7 +7,7 @@
 		.Select(i => new { Ip = i.Key, UsedOn = i.Max(ii => ii.UsedOn) })
 		.ToList();
 }
-
+<fullrow>This list shows IP addresses the user used for forum posts and forum poll votes.</fullrow>
 <standard-table>
 	<caption>Total: @ipList.Count</caption>
 	<table-head columns="IP Address,Last Used,"></table-head>
