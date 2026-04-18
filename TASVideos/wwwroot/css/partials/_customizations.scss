@@ -655,8 +655,10 @@ fieldset {
 .action-column {
 	display: flex;
 	gap: 4px;
-	& > * {
-		text-wrap: nowrap;
+	text-wrap: nowrap;
+
+	& .modal {
+		text-wrap: initial;
 	}
 }
 
