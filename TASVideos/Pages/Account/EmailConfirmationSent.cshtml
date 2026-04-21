@@ -1,5 +1,4 @@
 @page
-@addTagHelper *, AspNetCore.ReCaptcha
 @model EmailConfirmationSentModel
 @{
 	ViewData.SetTitle("Email Sent");
@@ -21,16 +20,17 @@
 			</fieldset>
 		</column>
 	</row>
-	<form-button-bar>
-		<environment exclude="Development">
-			<recaptcha class-name="btn btn-primary" callback="onSubmit" text="Resend Confirmation Email"/>
+	<div class="d-flex flex-column align-items-center">
+		<environment exclude="notDevelopment">
+			<altcha-widget challengeurl="/Account/GenerateCaptchaChallenge"></altcha-widget>
 		</environment>
-		<environment include="Development">
-			<submit-button>Resend Confirmation Email</submit-button>
-		</environment>
-	</form-button-bar>
+		<submit-button>Resend Confirmation Email</submit-button>
+	</div>
 </form>
 
 @section Scripts {
+	<script async defer src="https://cdn.jsdelivr.net/npm/altcha/dist/altcha.min.js" type="module"></script>
+	@*
 	<script src="/js/captcha-form.js"></script>
+	*@
 }

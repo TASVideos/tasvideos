@@ -1,4 +1,3 @@
-using AspNetCore.ReCaptcha;
 using TASVideos.Core.Services.Email;
 
 namespace TASVideos.Pages.Account;
@@ -24,14 +23,12 @@ public class EmailConfirmationSentModel : BasePageModel
 		[FromServices] IUserManager userManager,
 		[FromServices] IEmailService emailService,
 		[FromServices] IHostEnvironment env,
-		[FromServices] IReCaptchaService reCaptchaService)
+		[FromServices] ICaptchaService captcha)
 	{
-		var encodedResponse = Request.Form["g-recaptcha-response"];
-		var isCaptchaValid = await reCaptchaService.VerifyAsync(encodedResponse);
-
+		var (isCaptchaValid, captchaFailureReason) = await captcha.VerifyAsync(Request.Form["altcha"].FirstOrDefault());
 		if (!env.IsDevelopment() && !isCaptchaValid)
 		{
-			ModelState.AddModelError("", "TASVideos prefers human users.  If you believe you have received this message in error, please contact admin@tasvideos.org");
+			ModelState.AddModelError("", $"TASVideos prefers human users. If you believe you have received this message in error, please contact admin@tasvideos.org. {captcha.ProviderName} says: {captchaFailureReason}");
 		}
 
 		if (!ModelState.IsValid)
