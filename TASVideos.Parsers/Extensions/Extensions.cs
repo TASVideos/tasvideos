@@ -1,3 +1,5 @@
+using SharpGZipArchive = SharpCompress.Archives.GZip.GZipArchive;
+using SharpTarArchive = SharpCompress.Archives.Tar.TarArchive;
 using SharpZipArchive = SharpCompress.Archives.Zip.ZipArchive;
 using SharpZipArchiveEntry = SharpCompress.Archives.Zip.ZipArchiveEntry;
 
@@ -131,14 +133,62 @@ internal static class Extensions
 		}
 	}
 
-	public static async Task<SharpZipArchive> OpenZipArchiveRead(this Stream stream)
+	extension(Stream stream)
 	{
-		// A seekable stream is required for SharpZipArchive.Open
-		// Doing a copy here should be fairly cheap, and is fine for reading
-		// (This is normally done implicitly in BCL's ZipArchive ctor in Read mode)
-		var ms = new MemoryStream();
-		await stream.CopyToAsync(ms);
-		return SharpZipArchive.Open(ms);
+		public async Task<SharpZipArchive> OpenZipArchiveRead()
+		{
+			// A seekable stream is required for SharpZipArchive.Open
+			// Doing a copy here should be fairly cheap, and is fine for reading
+			// (This is normally done implicitly in BCL's ZipArchive ctor in Read mode)
+			var ms = new MemoryStream();
+			await stream.CopyToAsync(ms);
+			return SharpZipArchive.Open(ms);
+		}
+
+		public async Task<SharpTarArchive?> OpenTarGzArchiveRead()
+		{
+			// A .tar.gz is really 2 archives
+			// .gz compresses a single .tar with gzip (as a .gz can only store 1 file)
+			// .tar stores all the actual files in the archive (as a .tar cannot compress files)
+
+			// A seekable stream is required for SharpGZipArchive.Open
+			// Doing a copy here should be fairly cheap, and is fine for reading
+			using var ms = new MemoryStream();
+			await stream.CopyToAsync(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+
+			// Make sure this is actually a gzip file
+			if (!SharpGZipArchive.IsGZipFile(ms))
+			{
+				return null;
+			}
+
+			ms.Seek(0, SeekOrigin.Begin);
+			using var gzipArchive = SharpGZipArchive.Open(ms);
+			var gzipArchiveEntry = gzipArchive.Entries.SingleOrDefault();
+			if (gzipArchiveEntry == null)
+			{
+				// If the gzip file has no entries, then there's no tar file
+				return null;
+			}
+
+			await using var gzipArchiveEntryStream = gzipArchiveEntry.OpenEntryStream();
+
+			// A seekable stream is required for SharpTarArchive.Open
+			// Doing a copy here should be fairly cheap, and is fine for reading
+			var gzipMs = new MemoryStream();
+			await gzipArchiveEntryStream.CopyToAsync(gzipMs);
+			gzipMs.Seek(0, SeekOrigin.Begin);
+
+			// Make sure this is actually a tar file
+			if (!SharpTarArchive.IsTarFile(gzipMs))
+			{
+				return null;
+			}
+
+			gzipMs.Seek(0, SeekOrigin.Begin);
+			return SharpTarArchive.Open(gzipMs);
+		}
 	}
 
 	extension(SharpZipArchive archive)
