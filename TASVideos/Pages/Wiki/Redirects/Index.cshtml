@@ -1,0 +1,23 @@
+@page
+@model IndexModel
+@{
+	ViewData.SetTitle("Wiki Redirects");
+}
+<top-button-bar>
+	<add-link asp-page="Create"></add-link>
+</top-button-bar>
+<standard-table>
+	<table-head columns="From,To,"></table-head>
+	@foreach (var redirect in Model.Redirects)
+	{
+		<tr>
+			<td>@redirect.PageNameFrom</td>
+			<td>@redirect.PageNameTo</td>
+			<td-action-column>
+				<edit-link asp-page="Edit" asp-route-id="@redirect.Id"></edit-link>
+				<delete-button asp-href="/Wiki/Redirects/Index?handler=Delete&id=@redirect.Id"
+							   warning-message="Are you sure you want to remove this redirect?"></delete-button>
+			</td-action-column>
+		</tr>
+	}
+</standard-table>

@@ -47,6 +47,7 @@
 		<a class="dropdown-item" href="/TODO">To Do</a>
 		<a class="dropdown-item" href="/System">System Pages</a>
 		<a permission="SeeDeletedWikiPages" asp-page="/Wiki/DeletedPages" class="dropdown-item">Deleted Pages</a>
+		<a permission="EditWikiRedirects" asp-page="/Wiki/Redirects/Index" class="dropdown-item">Redirects</a>
 	</nav-dropdown>
 	<nav-dropdown activate="Admin"
 				  permissions="new[] { PermissionTo.ViewPrivateUserData, PermissionTo.EditUsers, PermissionTo.EditRoles, PermissionTo.TagMaintenance, PermissionTo.GameSystemMaintenance, PermissionTo.CreateAwards }">

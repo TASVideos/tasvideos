@@ -57,6 +57,12 @@ public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<
 			return Redirect("/" + url);
 		}
 
+		var redirect = await db.WikiRedirects.FirstOrDefaultAsync(r => r.PageNameFrom == url);
+		if (redirect != null)
+		{
+			return Redirect("/" + redirect.PageNameTo);
+		}
+
 		return RedirectToPage("/Wiki/PageDoesNotExist", new { url });
 	}
 
