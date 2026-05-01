@@ -68,7 +68,7 @@ public class DftTests : BaseParserTests
 		var result = await _dftParser.Parse(Embedded("2frames.dft", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(SystemCodes.Windows, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 	}
 
 	[TestMethod]
