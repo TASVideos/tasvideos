@@ -10,7 +10,6 @@ internal static class SystemCodes
 	public const string Bsx = "bsx";
 	public const string C64 = "c64";
 	public const string Cdi = "cdi";
-	public const string Celeste = "celeste";
 	public const string Coleco = "coleco";
 	public const string Dos = "dos";
 	public const string Ds = "ds";
