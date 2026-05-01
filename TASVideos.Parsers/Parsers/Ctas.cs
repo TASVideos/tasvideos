@@ -10,7 +10,7 @@ internal class Ctas : Parser, IParser
 		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			SystemCode = SystemCodes.Windows,
+			SystemCode = SystemCodes.Pc,
 			FrameRateOverride = FrameRate
 		};
 

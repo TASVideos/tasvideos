@@ -19,8 +19,6 @@ internal class Ltm : Parser, IParser
 	private const string LengthNanosecondsHeader = "length_nsec=";
 	private const string Md5 = "md5=";
 
-	private static readonly List<string> _mergedPcCodes = [SystemCodes.Doom, SystemCodes.Linux, SystemCodes.Windows];
-
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new SuccessResult(FileExtension)
@@ -234,7 +232,6 @@ internal class Ltm : Parser, IParser
 		=> typeof(SystemCodes)
 			.GetFields()
 			.Select(f => f.GetValue(f))
-			.Where(f => !_mergedPcCodes.Contains(f))
 			.Contains(str)
 			? str
 			: SystemCodes.Pc;
