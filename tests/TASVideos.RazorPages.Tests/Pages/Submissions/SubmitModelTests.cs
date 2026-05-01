@@ -51,8 +51,9 @@ public class SubmitModelTests : TestDbBase
 		var nextWindowRouteValue = redirectResult.RouteValues["NextWindow"];
 		Assert.IsNotNull(nextWindowRouteValue);
 		Assert.IsInstanceOfType<string>(nextWindowRouteValue);
-		var nextWindowRouteValueAsDateTime = DateTime.Parse((string)nextWindowRouteValue, CultureInfo.InvariantCulture);
-		Assert.AreEqual(nextWindow, nextWindowRouteValueAsDateTime);
+		var nextWindowAsString = nextWindow.ToString(CultureInfo.InvariantCulture);
+		var nextWindowRouteValueAsString = (string)nextWindowRouteValue;
+		Assert.AreEqual(nextWindowAsString, nextWindowRouteValueAsString);
 	}
 
 	[TestMethod]
@@ -110,8 +111,9 @@ public class SubmitModelTests : TestDbBase
 		var nextWindowRouteValue = redirectResult.RouteValues["NextWindow"];
 		Assert.IsNotNull(nextWindowRouteValue);
 		Assert.IsInstanceOfType<string>(nextWindowRouteValue);
-		var nextWindowRouteValueAsDateTime = DateTime.Parse((string)nextWindowRouteValue, CultureInfo.InvariantCulture);
-		Assert.AreEqual(nextWindow, nextWindowRouteValueAsDateTime);
+		var nextWindowAsString = nextWindow.ToString(CultureInfo.InvariantCulture);
+		var nextWindowRouteValueAsString = (string)nextWindowRouteValue;
+		Assert.AreEqual(nextWindowAsString, nextWindowRouteValueAsString);
 	}
 
 	[TestMethod]
