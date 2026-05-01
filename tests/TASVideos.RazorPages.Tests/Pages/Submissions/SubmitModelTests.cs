@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using TASVideos.Core.Services;
@@ -49,8 +50,8 @@ public class SubmitModelTests : TestDbBase
 		Assert.IsNotNull(redirectResult.RouteValues);
 		var nextWindowRouteValue = redirectResult.RouteValues["NextWindow"];
 		Assert.IsNotNull(nextWindowRouteValue);
-		Assert.IsInstanceOfType<DateTime>(nextWindowRouteValue);
-		var nextWindowRouteValueAsDateTime = (DateTime)nextWindowRouteValue;
+		Assert.IsInstanceOfType<string>(nextWindowRouteValue);
+		var nextWindowRouteValueAsDateTime = DateTime.Parse((string)nextWindowRouteValue, CultureInfo.InvariantCulture);
 		Assert.AreEqual(nextWindow, nextWindowRouteValueAsDateTime);
 	}
 
@@ -108,8 +109,8 @@ public class SubmitModelTests : TestDbBase
 		Assert.IsNotNull(redirectResult.RouteValues);
 		var nextWindowRouteValue = redirectResult.RouteValues["NextWindow"];
 		Assert.IsNotNull(nextWindowRouteValue);
-		Assert.IsInstanceOfType<DateTime>(nextWindowRouteValue);
-		var nextWindowRouteValueAsDateTime = (DateTime)nextWindowRouteValue;
+		Assert.IsInstanceOfType<string>(nextWindowRouteValue);
+		var nextWindowRouteValueAsDateTime = DateTime.Parse((string)nextWindowRouteValue, CultureInfo.InvariantCulture);
 		Assert.AreEqual(nextWindow, nextWindowRouteValueAsDateTime);
 	}
 
