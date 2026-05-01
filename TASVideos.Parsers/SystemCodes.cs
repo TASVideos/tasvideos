@@ -37,6 +37,7 @@ internal static class SystemCodes
 	public const string Nes = "nes";
 	public const string Ngp = "ngp";
 	public const string Odyssey2 = "o2";
+	public const string Pc = "pc";
 	public const string Pc98 = "pc98";
 	public const string Pce = "pce";
 	public const string PceCd = "pcecd";

@@ -18,12 +18,15 @@ internal class Ltm : Parser, IParser
 	private const string LengthSecondsHeader = "length_sec=";
 	private const string LengthNanosecondsHeader = "length_nsec=";
 	private const string Md5 = "md5=";
+
+	private static readonly List<string> _mergedPcCodes = [SystemCodes.Doom, SystemCodes.Linux, SystemCodes.Windows];
+
 	public async Task<IParseResult> Parse(Stream file, long length)
 	{
 		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			SystemCode = SystemCodes.Linux
+			SystemCode = SystemCodes.Pc
 		};
 
 		double? frameRateDenominator = null;
@@ -228,7 +231,11 @@ internal class Ltm : Parser, IParser
 	}
 
 	private static string CalculatePlatform(string str)
-		=> typeof(SystemCodes).GetFields().Select(f => f.GetValue(f)).Contains(str)
+		=> typeof(SystemCodes)
+			.GetFields()
+			.Select(f => f.GetValue(f))
+			.Where(f => !_mergedPcCodes.Contains(f))
+			.Contains(str)
 			? str
-			: SystemCodes.Linux;
+			: SystemCodes.Pc;
 }

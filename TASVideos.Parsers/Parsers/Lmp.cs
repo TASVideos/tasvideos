@@ -290,7 +290,7 @@ internal class Lmp : Parser, IParser
 		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			SystemCode = SystemCodes.Doom
+			SystemCode = SystemCodes.Pc
 		};
 
 		/* A lmp consists of a header, inputs, and a terminator byte
