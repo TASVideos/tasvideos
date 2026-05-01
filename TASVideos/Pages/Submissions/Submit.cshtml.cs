@@ -1,3 +1,4 @@
+using System.Globalization;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers;
 
@@ -71,7 +72,10 @@ public class SubmitModel(
 		var nextWindow = await queueService.ExceededSubmissionLimit(User.GetUserId());
 		if (nextWindow is not null)
 		{
-			return RedirectToPage("ExceededLimit", new { NextWindow = nextWindow.Value });
+			return RedirectToPage("ExceededLimit", new
+			{
+				NextWindow = nextWindow.Value.ToString(CultureInfo.InvariantCulture)
+			});
 		}
 
 		Authors = [User.Name()];
@@ -85,7 +89,10 @@ public class SubmitModel(
 		var nextWindow = await queueService.ExceededSubmissionLimit(User.GetUserId());
 		if (nextWindow is not null)
 		{
-			return RedirectToPage("ExceededLimit", new { NextWindow = nextWindow.Value });
+			return RedirectToPage("ExceededLimit", new
+			{
+				NextWindow = nextWindow.Value.ToString(CultureInfo.InvariantCulture)
+			});
 		}
 
 		await ValidateModel();
