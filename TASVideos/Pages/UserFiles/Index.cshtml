@@ -1,19 +1,19 @@
 @page
 @model IndexModel
 @{
-	ViewData.SetTitle("Movie Storage Space");
+	ViewData.SetTitle("User Files");
 }
 
 <fullrow class="mt-2 mb-2">
 	<a asp-page="/UserFiles/Upload" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</a>
-	<a asp-page="/Profile/UserFiles" class="float-end btn btn-secondary">My Movies</a>
+	<a asp-page="/Profile/UserFiles" class="float-end btn btn-secondary">My Files</a>
 </fullrow>
 
 <row class="flex-row-reverse">
 	<column md="6">
 		<card>
 			<card-header>
-				Recent Uncataloged Files <a class="btn btn-primary btn-sm" asp-page="Uncataloged">See all</a>
+				Recent Uncataloged Files <a class="btn btn-secondary btn-sm" asp-page="Uncataloged">See all</a>
 			</card-header>
 			<card-body>
 				@foreach (var file in Model.UncatalogedFiles.OrderBy(u => u.SystemCode).ThenByDescending(uf => uf.UploadTimestamp))
@@ -24,12 +24,11 @@
 				}
 			</card-body>
 		</card>
-		@*TODO by filetype*@
 	</column>
 	<column md="6">
 		<card>
 			<card-header>
-				Latest Movies <a class="btn btn-primary btn-sm" asp-page="List">See all</a>
+				Latest Files <a class="btn btn-secondary btn-sm" asp-page="List">See all</a>
 			</card-header>
 			<card-body>
 				@foreach (var file in Model.LatestMovies)
@@ -46,7 +45,7 @@
 		</card>
 		<card class="mt-2">
 			<card-header>
-				Games with movies
+				Games with Files
 			</card-header>
 			<card-body>
 				<ul class="nav nav-tabs" role="tablist">
