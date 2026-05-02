@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.Linq.Expressions;
-
 namespace TASVideos.Api.Endpoints;
 
 internal static class PublicationsEndpoints
