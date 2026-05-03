@@ -34,7 +34,8 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 				wp.CreateTimestamp,
 				wp.Author!.UserName,
 				wp.MinorEdit,
-				wp.RevisionMessage))
+				wp.RevisionMessage,
+				wp.Markup.Length))
 			.ToListAsync();
 
 		if (Latest == true)
@@ -95,5 +96,5 @@ public class PageHistoryModel(ApplicationDbContext db) : BasePageModel
 
 	public record WikiDiffModel(string LeftMarkup, string RightMarkup);
 
-	public record WikiRevisionModel(int Revision, DateTime CreateTimestamp, string? CreateUserName, bool MinorEdit, string? RevisionMessage);
+	public record WikiRevisionModel(int Revision, DateTime CreateTimestamp, string? CreateUserName, bool MinorEdit, string? RevisionMessage, int Length);
 }
