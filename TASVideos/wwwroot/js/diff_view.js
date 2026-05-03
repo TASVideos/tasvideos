@@ -35,7 +35,7 @@ function renderDiff(from, to, destEl, inline, contextSize) {
 	dmp.Diff_EditCost = 20;
 
 	const d = dmp.diff_main(cleanCr(from.text), cleanCr(to.text));
-	dmp.diff_cleanupEfficiency(d);
+	dmp.diff_cleanupSemantic(d);
 
 	const allLines = [];
 
