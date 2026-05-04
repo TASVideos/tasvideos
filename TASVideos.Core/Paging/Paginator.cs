@@ -84,25 +84,20 @@ public static class Paginator
 	/// <typeparam name="T">The type of the elements of source.</typeparam>
 	public static IQueryable<T> SortBy<T>(this IQueryable<T> source, ISortable? request)
 	{
-		if (string.IsNullOrWhiteSpace(request?.Sort))
-		{
-			// per below, can't noop
-			return ApplyDefaultSort(source);
-		}
-
-		var columns = request.Sort.SplitWithEmpty(",").Select(s => s.Trim());
-		var anySortApplied = false;
 		var thenBy = false;
-		foreach (var column in columns)
+
+		if (!string.IsNullOrWhiteSpace(request?.Sort))
 		{
-			source = SortByParam(source, column, thenBy, out var sortApplied);
-			anySortApplied |= sortApplied;
-			thenBy = true;
+			var columns = request.Sort.SplitWithEmpty(",").Select(s => s.Trim());
+			foreach (var column in columns)
+			{
+				source = SortByParam(source, column, thenBy, out var sortApplied);
+				thenBy |= sortApplied;
+			}
 		}
 
-		// if we haven't added an `OrderBy` to the chain yet, we need to do that now or bad things happen
-		// the caller is expecting us to, and if they go on to call `Take`/`Skip`, it hits UB
-		return anySortApplied ? source : ApplyDefaultSort(source);
+		// we always add a default sort for deterministic paging
+		return ApplyDefaultSort(source, thenBy);
 	}
 
 	private static IQueryable<T> SortByParam<T>(IQueryable<T> query, string? column, bool thenBy, out bool sortApplied)
@@ -157,17 +152,16 @@ public static class Paginator
 		return (IQueryable<T>)result;
 	}
 
-	private static IQueryable<T> ApplyDefaultSort<T>(IQueryable<T> query)
+	private static IQueryable<T> ApplyDefaultSort<T>(IQueryable<T> query, bool thenBy)
 	{
 		var allProps = typeof(T).GetProperties();
 		var idProp = allProps.SingleOrDefault(x => string.Equals(x.Name, "id", StringComparison.OrdinalIgnoreCase));
-		if (idProp?.GetCustomAttribute<SortableAttribute>() is not null)
+		if (idProp is not null)
 		{
-			return SortByParamInner(query, idProp.Name, desc: false, thenBy: false);
+			return SortByParamInner(query, idProp.Name, desc: false, thenBy: thenBy);
 		}
 
-		// worst case, just do everything
-		var thenBy = false;
+		// worst case, just sort by all sortables
 		foreach (var pi in allProps.Where(pi => pi.GetCustomAttribute<SortableAttribute>() is not null))
 		{
 			query = SortByParamInner(query, pi.Name.ToLowerInvariant(), desc: false, thenBy: thenBy);
