@@ -173,7 +173,7 @@ public class SubmitModelTests : TestDbBase
 		parseResult.Success.Returns(true);
 		parseResult.FileExtension.Returns("bk2");
 
-		_queueService.ParseMovieFileOrZip(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3 }));
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3 }));
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 		_userManager.Exists("TestUser").Returns(true);
 		_movieFormatDeprecator.IsDeprecated(".bk2").Returns(false);
@@ -220,7 +220,7 @@ public class SubmitModelTests : TestDbBase
 		parseResult.Success.Returns(true);
 		parseResult.FileExtension.Returns("bk2");
 
-		_queueService.ParseMovieFileOrZip(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3 }));
+		_queueService.ParseMovieFile(Arg.Any<IFormFile>()).Returns((parseResult, new byte[] { 1, 2, 3 }));
 		_userManager.GetRequiredUser(Arg.Any<ClaimsPrincipal>()).Returns(user);
 		_userManager.Exists("TestUser").Returns(true); // Add this line to make validation pass
 		_movieFormatDeprecator.IsDeprecated(".bk2").Returns(false);

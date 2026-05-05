@@ -14,7 +14,6 @@ namespace TASVideos.MovieParsers;
 public interface IMovieParser
 {
 	IEnumerable<string> SupportedMovieExtensions { get; }
-	Task<IParseResult> ParseZip(Stream stream);
 	Task<IParseResult> ParseFile(string fileName, Stream stream);
 }
 
@@ -31,43 +30,6 @@ internal sealed class MovieParser : IMovieParser
 	public IEnumerable<string> SupportedMovieExtensions => ParserTypes
 		.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
 				?.Extension);
-
-	public async Task<IParseResult> ParseZip(Stream stream)
-	{
-		try
-		{
-			using var zip = await stream.OpenZipArchiveRead();
-			if (zip == null)
-			{
-				return Error("Invalid file format, does not seem to be a .zip");
-			}
-
-			switch (zip.Entries.Count)
-			{
-				case 0:
-					return Error("No files are present in the .zip");
-				case > 1:
-					return Error("Multiple files detected in the .zip, only one file is allowed");
-			}
-
-			var movieFile = zip.Entries.First();
-			var ext = Path.GetExtension(movieFile.Key ?? "").Trim('.').ToLower();
-
-			var parser = GetParser(ext);
-			if (parser is null)
-			{
-				return Error($".{ext} files are not currently supported.");
-			}
-
-			await using var movieFileStream = movieFile.OpenEntryStream();
-			return await parser.Parse(movieFileStream, movieFile.Size);
-		}
-		catch (Exception)
-		{
-			// TODO: do we want to log here? or catch at a higher layer?
-			return Error("A general error occured while processing the movie file.");
-		}
-	}
 
 	public async Task<IParseResult> ParseFile(string fileName, Stream stream)
 	{

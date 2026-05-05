@@ -102,7 +102,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		var (parseResult, movieFileBytes) = await queueService.ParseMovieFileOrZip(MovieFile!);
+		var (parseResult, movieFileBytes) = await queueService.ParseMovieFile(MovieFile!);
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
