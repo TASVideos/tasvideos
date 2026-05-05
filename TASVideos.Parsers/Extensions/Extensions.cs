@@ -135,13 +135,22 @@ internal static class Extensions
 
 	extension(Stream stream)
 	{
-		public async Task<SharpZipArchive> OpenZipArchiveRead()
+		public async Task<SharpZipArchive?> OpenZipArchiveRead()
 		{
 			// A seekable stream is required for SharpZipArchive.Open
 			// Doing a copy here should be fairly cheap, and is fine for reading
 			// (This is normally done implicitly in BCL's ZipArchive ctor in Read mode)
 			var ms = new MemoryStream();
 			await stream.CopyToAsync(ms);
+			ms.Seek(0, SeekOrigin.Begin);
+
+			// Make sure this is actually a zip file
+			if (!SharpZipArchive.IsZipFile(ms))
+			{
+				return null;
+			}
+
+			ms.Seek(0, SeekOrigin.Begin);
 			return SharpZipArchive.Open(ms);
 		}
 

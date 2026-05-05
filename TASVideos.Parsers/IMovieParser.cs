@@ -37,9 +37,17 @@ internal sealed class MovieParser : IMovieParser
 		try
 		{
 			using var zip = await stream.OpenZipArchiveRead();
-			if (zip.Entries.Count > 1)
+			if (zip == null)
 			{
-				return Error("Multiple files detected in the .zip, only one file is allowed");
+				return Error("Invalid file format, does not seem to be a .zip");
+			}
+
+			switch (zip.Entries.Count)
+			{
+				case 0:
+					return Error("No files are present in the .zip");
+				case > 1:
+					return Error("Multiple files detected in the .zip, only one file is allowed");
 			}
 
 			var movieFile = zip.Entries.First();

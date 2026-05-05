@@ -37,6 +37,10 @@ internal class Bk2 : Parser, IParser
 		};
 
 		var archive = await file.OpenZipArchiveRead();
+		if (archive == null)
+		{
+			return InvalidFormat();
+		}
 
 		foreach (var entry in InvalidArchiveEntries)
 		{
