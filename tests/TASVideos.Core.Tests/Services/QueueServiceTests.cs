@@ -1364,7 +1364,7 @@ public class QueueServiceTests : TestDbBase
 	#region ParseMovieFile
 
 	[TestMethod]
-	public async Task ParseMovieFile_ParsesZipAndReturnsRawBytes()
+	public async Task ParseMovieFile_ParsesFileAndReturnsRawBytes()
 	{
 		var formFile = Substitute.For<IFormFile>();
 		formFile.FileName.Returns("test.bk2");
