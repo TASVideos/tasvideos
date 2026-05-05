@@ -69,7 +69,6 @@ public interface IQueueService
 
 	/// <summary>
 	/// Parses an individual movie file and returns the parse result along with the movie file bytes
-	/// Does not support zip files - only individual movie files
 	/// </summary>
 	Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile);
 

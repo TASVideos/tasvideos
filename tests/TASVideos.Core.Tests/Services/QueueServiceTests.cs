@@ -1364,7 +1364,7 @@ public class QueueServiceTests : TestDbBase
 	#region ParseMovieFile
 
 	[TestMethod]
-	public async Task ParseMovieFile_ParsesFileAndZipsResult()
+	public async Task ParseMovieFile_ParsesZipAndReturnsRawBytes()
 	{
 		var formFile = Substitute.For<IFormFile>();
 		formFile.FileName.Returns("test.bk2");
@@ -1380,15 +1380,12 @@ public class QueueServiceTests : TestDbBase
 
 		_movieParser.ParseFile("test.bk2", Arg.Any<Stream>()).Returns(parseResult);
 
-		var zippedBytes = new byte[] { 5, 6, 7, 8, 9 };
-		_fileService.ZipFile(Arg.Any<byte[]>(), "test.bk2").Returns(zippedBytes);
-
 		var (result, movieBytes) = await _queueService.ParseMovieFile(formFile);
 
 		Assert.AreEqual(parseResult, result);
-		Assert.AreEqual(zippedBytes, movieBytes);
+		Assert.HasCount(4, movieBytes); // Raw file bytes
 		await _movieParser.Received(1).ParseFile("test.bk2", Arg.Any<Stream>());
-		await _fileService.Received(1).ZipFile(Arg.Any<byte[]>(), "test.bk2");
+		await _fileService.DidNotReceive().ZipFile(Arg.Any<byte[]>(), Arg.Any<string>());
 	}
 
 	#endregion

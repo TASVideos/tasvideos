@@ -5,8 +5,7 @@ namespace TASVideos.MovieParsers;
 
 /// <summary>
 /// The entry point for movie file parsers
-/// Takes a stream of the zip file containing a movie file
-/// The file must have precisely one file
+/// Takes a stream of the movie file
 /// The file is processed and an <see cref="IParseResult"/>
 /// is returned.
 /// </summary>
