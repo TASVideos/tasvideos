@@ -6,6 +6,9 @@
 <top-button-bar>
 	<add-link asp-page="Create"></add-link>
 </top-button-bar>
+<fullrow class="mb-2">
+	The following redirects will only be performed for pages that would otherwise lead to a "PageDoesNotExist" page.
+</fullrow>
 <standard-table>
 	<table-head columns="From,To,"></table-head>
 	@foreach (var redirect in Model.Redirects)
