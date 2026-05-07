@@ -4,8 +4,8 @@
 	ViewData.SetTitle("Forum");
 }
 
-<partial Name="_ForumHeader" />
 <top-button-bar>
+	<partial Name="_ForumHeader" model="true" />
 	<a asp-page="/Forum/Posts/Latest" class="btn btn-secondary btn-sm">
 		Latest Posts
 	</a>

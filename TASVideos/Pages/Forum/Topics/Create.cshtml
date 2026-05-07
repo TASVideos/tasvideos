@@ -9,7 +9,7 @@
 	Creating topic for: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a>
 }
 
-<partial Name="_ForumHeader" />
+<partial Name="_ForumHeader" model="false" />
 <span id="backup-submission-determinator" class="d-none">@Model.BackupSubmissionDeterminator</span>
 <form client-side-validation="true" method="post">
 	<div permission="CreateForumPolls">
