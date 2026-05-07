@@ -526,11 +526,6 @@ figure {
 @include color-mode(dark) {
 	.card {
 		background-color: $card-bg-color;
-		border: 2px solid rgba(255, 255, 255, .125);
-
-		&-header {
-			border-bottom: 2px solid rgba(255, 255, 255, .125);
-		}
 	}
 }
 
@@ -552,19 +547,7 @@ figure {
 }
 
 .right-align-topic {
-	border: 1px solid var(--border-color);
-	border-radius: 5px;
 	margin-top: 15px;
-
-	&:last-child {
-		border: none;
-	}
-
-	.card {
-		border: none;
-		border-radius: 0;
-		border-bottom: 2px solid var (--border-color);
-	}
 }
 
 @media (min-width: 768px) {
