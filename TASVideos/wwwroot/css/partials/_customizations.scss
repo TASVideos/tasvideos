@@ -22,6 +22,10 @@
 			--code-bg: var(--bs-body-bg);
 		}
 	}
+
+	.card-body + .card-body {
+		border-top: var(--bs-card-border-width) solid var(--bs-card-border-color);
+	}
 }
 @include color-mode(dark) {
 	--bs-publication: var(--bs-publication-border-subtle);
