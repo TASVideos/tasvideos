@@ -47,7 +47,7 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 		}
 		catch (DbUpdateConcurrencyException)
 		{
-			ErrorStatusMessage("Unable to edit tag due to an unknown error");
+			ErrorStatusMessage("Unable to create redirect due to an unknown error");
 			return Page();
 		}
 		catch (DbUpdateException ex)
@@ -58,7 +58,7 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 				return Page();
 			}
 
-			ErrorStatusMessage("Unable to edit tag due to an unknown error");
+			ErrorStatusMessage("Unable to create redirect due to an unknown error");
 			return Page();
 		}
 

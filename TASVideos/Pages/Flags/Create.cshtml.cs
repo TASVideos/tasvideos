@@ -18,14 +18,14 @@ public class CreateModel(IFlagService flagService) : BasePageModel
 		{
 			default:
 			case FlagEditResult.Success:
-				SuccessStatusMessage("Tag successfully created.");
+				SuccessStatusMessage("Flag successfully created.");
 				return BasePageRedirect("Index");
 			case FlagEditResult.DuplicateCode:
 				ModelState.AddModelError($"{nameof(Flag)}.{nameof(Flag.Token)}", $"{nameof(Flag.Token)} {Flag.Token} already exists");
 				ClearStatusMessage();
 				return Page();
 			case FlagEditResult.Fail:
-				ErrorStatusMessage("Unable to edit tag due to an unknown error");
+				ErrorStatusMessage("Unable to create flag due to an unknown error");
 				return Page();
 		}
 	}
