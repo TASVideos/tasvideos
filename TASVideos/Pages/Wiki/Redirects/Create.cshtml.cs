@@ -35,7 +35,13 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 
 		if (await db.WikiRedirects.AnyAsync(r => r.PageNameFrom == WikiRedirect.PageNameTo))
 		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", $"Page name '{WikiRedirect.PageNameTo}' already redirects to a different page. Avoid multiple redirects.");
+			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", $"Page name '{WikiRedirect.PageNameTo}' already redirects to a different page. Avoid chaining redirects.");
+			return Page();
+		}
+
+		if (await db.WikiRedirects.AnyAsync(r => r.PageNameTo == WikiRedirect.PageNameFrom))
+		{
+			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", $"Another page already redirects to '{WikiRedirect.PageNameFrom}'. Avoid chaining redirects.");
 			return Page();
 		}
 
