@@ -15,7 +15,7 @@ public class MoveModelTests : TestDbBase
 	{
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
-		_model = new MoveModel(_wikiPages, publisher);
+		_model = new MoveModel(_wikiPages, publisher, _db);
 	}
 
 	#region OnGet Tests
