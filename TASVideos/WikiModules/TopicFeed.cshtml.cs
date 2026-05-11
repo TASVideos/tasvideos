@@ -12,7 +12,7 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 	public string? WikiLink { get; set; }
 	public List<TopicPost> Posts { get; set; } = [];
 
-	public async Task<IViewComponentResult> InvokeAsync(int? l, int t, bool right, string? heading, bool hideContent, string wikiLink)
+	public async Task<IViewComponentResult> InvokeAsync(int? l, IList<int> t, bool right, string? heading, bool hideContent, string wikiLink)
 	{
 		Heading = heading;
 		RightAlign = right;
@@ -20,7 +20,7 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 		WikiLink = wikiLink;
 
 		Posts = await db.ForumPosts
-			.ForTopic(t)
+			.Where(p => p.TopicId != null && t.Contains(p.TopicId.Value))
 			.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
 			.ByMostRecent()
 			.Select(p => new TopicPost(
