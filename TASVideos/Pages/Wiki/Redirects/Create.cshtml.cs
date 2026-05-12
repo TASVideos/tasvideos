@@ -1,7 +1,7 @@
 namespace TASVideos.Pages.Wiki.Redirects;
 
 [RequirePermission(PermissionTo.EditWikiRedirects)]
-public class CreateModel(ApplicationDbContext db) : BasePageModel
+public class CreateModel(IWikiRedirectService wikiRedirectService) : BasePageModel
 {
 	[BindProperty]
 	public WikiRedirect WikiRedirect { get; set; } = new();
@@ -13,59 +13,30 @@ public class CreateModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		if (WikiRedirect.PageNameFrom == WikiRedirect.PageNameTo)
+		var result = await wikiRedirectService.Add(WikiRedirect);
+		switch (result)
 		{
-			ModelState.AddModelError("", "Page names must be different");
-		}
-
-		if (!WikiHelper.IsValidWikiPageName(WikiRedirect.PageNameFrom))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", "Page name is not valid");
-		}
-
-		if (!WikiHelper.IsValidWikiPageName(WikiRedirect.PageNameTo))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", "Page name is not valid");
-		}
-
-		if (!ModelState.IsValid)
-		{
-			return Page();
-		}
-
-		if (await db.WikiRedirects.AnyAsync(r => r.PageNameFrom == WikiRedirect.PageNameTo))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", $"Page name '{WikiRedirect.PageNameTo}' already redirects to a different page. Avoid chaining redirects.");
-			return Page();
-		}
-
-		if (await db.WikiRedirects.AnyAsync(r => r.PageNameTo == WikiRedirect.PageNameFrom))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", $"Another page already redirects to '{WikiRedirect.PageNameFrom}'. Avoid chaining redirects.");
-			return Page();
-		}
-
-		db.WikiRedirects.Add(WikiRedirect);
-
-		try
-		{
-			await db.SaveChangesAsync();
-		}
-		catch (DbUpdateConcurrencyException)
-		{
-			ErrorStatusMessage("Unable to create redirect due to an unknown error");
-			return Page();
-		}
-		catch (DbUpdateException ex)
-		{
-			if (ex.InnerException?.Message.Contains("unique constraint") ?? false)
-			{
+			case WikiRedirectAddEditResult.SamePageName:
+				ModelState.AddModelError("", "Page names must be different");
+				return Page();
+			case WikiRedirectAddEditResult.InvalidPageNameFrom:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", "Page name is not valid");
+				return Page();
+			case WikiRedirectAddEditResult.InvalidPageNameTo:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", "Page name is not valid");
+				return Page();
+			case WikiRedirectAddEditResult.ChainedRedirectTo:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", $"Page name '{WikiRedirect.PageNameTo}' already redirects to a different page. Avoid chaining redirects.");
+				return Page();
+			case WikiRedirectAddEditResult.ChainedRedirectFrom:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", $"Another page already redirects to '{WikiRedirect.PageNameFrom}'. Avoid chaining redirects.");
+				return Page();
+			case WikiRedirectAddEditResult.DuplicateSource:
 				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", $"Redirect from '{WikiRedirect.PageNameFrom}' already exists");
 				return Page();
-			}
-
-			ErrorStatusMessage("Unable to create redirect due to an unknown error");
-			return Page();
+			case WikiRedirectAddEditResult.Fail:
+				ErrorStatusMessage("Unable to create redirect due to an unknown error");
+				return Page();
 		}
 
 		SuccessStatusMessage("Redirect successfully created.");

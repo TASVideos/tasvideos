@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
-
 namespace TASVideos.Pages.Wiki.Redirects;
 
 [RequirePermission(PermissionTo.EditWikiRedirects)]
-public class EditModel(ApplicationDbContext db) : BasePageModel
+public class EditModel(IWikiRedirectService wikiRedirectService) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -13,7 +11,7 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnGet()
 	{
-		var redirect = await db.WikiRedirects.FindAsync(Id);
+		var redirect = await wikiRedirectService.GetById(Id);
 		if (redirect == null)
 		{
 			return NotFound();
@@ -31,66 +29,32 @@ public class EditModel(ApplicationDbContext db) : BasePageModel
 			return Page();
 		}
 
-		if (WikiRedirect.PageNameFrom == WikiRedirect.PageNameTo)
+		var result = await wikiRedirectService.Edit(Id, WikiRedirect);
+		switch (result)
 		{
-			ModelState.AddModelError("", "Page names must be different");
-		}
-
-		if (!WikiHelper.IsValidWikiPageName(WikiRedirect.PageNameFrom))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", "Page name is not valid");
-		}
-
-		if (!WikiHelper.IsValidWikiPageName(WikiRedirect.PageNameTo))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", "Page name is not valid");
-		}
-
-		if (!ModelState.IsValid)
-		{
-			return Page();
-		}
-
-		if (await db.WikiRedirects.AnyAsync(r => r.Id != Id && r.PageNameFrom == WikiRedirect.PageNameTo))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", $"Page name '{WikiRedirect.PageNameTo}' already redirects to a different page. Avoid chaining redirects.");
-			return Page();
-		}
-
-		if (await db.WikiRedirects.AnyAsync(r => r.Id != Id && r.PageNameTo == WikiRedirect.PageNameFrom))
-		{
-			ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", $"Another page already redirects to '{WikiRedirect.PageNameFrom}'. Avoid chaining redirects.");
-			return Page();
-		}
-
-		var redirect = await db.WikiRedirects.FindAsync(Id);
-		if (redirect == null)
-		{
-			return NotFound();
-		}
-
-		redirect.PageNameFrom = WikiRedirect.PageNameFrom;
-		redirect.PageNameTo = WikiRedirect.PageNameTo;
-
-		try
-		{
-			await db.SaveChangesAsync();
-		}
-		catch (DbUpdateConcurrencyException)
-		{
-			ErrorStatusMessage("Unable to edit redirect due to an unknown error");
-			return Page();
-		}
-		catch (DbUpdateException ex)
-		{
-			if (ex.InnerException?.Message.Contains("unique constraint") ?? false)
-			{
+			case WikiRedirectAddEditResult.NotFound:
+				return NotFound();
+			case WikiRedirectAddEditResult.SamePageName:
+				ModelState.AddModelError("", "Page names must be different");
+				return Page();
+			case WikiRedirectAddEditResult.InvalidPageNameFrom:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", "Page name is not valid");
+				return Page();
+			case WikiRedirectAddEditResult.InvalidPageNameTo:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", "Page name is not valid");
+				return Page();
+			case WikiRedirectAddEditResult.ChainedRedirectTo:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameTo)}", $"Page name '{WikiRedirect.PageNameTo}' already redirects to a different page. Avoid chaining redirects.");
+				return Page();
+			case WikiRedirectAddEditResult.ChainedRedirectFrom:
+				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", $"Another page already redirects to '{WikiRedirect.PageNameFrom}'. Avoid chaining redirects.");
+				return Page();
+			case WikiRedirectAddEditResult.DuplicateSource:
 				ModelState.AddModelError($"{nameof(WikiRedirect)}.{nameof(WikiRedirect.PageNameFrom)}", $"Redirect from '{WikiRedirect.PageNameFrom}' already exists");
 				return Page();
-			}
-
-			ErrorStatusMessage("Unable to edit redirect due to an unknown error");
-			return Page();
+			case WikiRedirectAddEditResult.Fail:
+				ErrorStatusMessage("Unable to edit redirect due to an unknown error");
+				return Page();
 		}
 
 		SuccessStatusMessage("Redirect successfully updated.");

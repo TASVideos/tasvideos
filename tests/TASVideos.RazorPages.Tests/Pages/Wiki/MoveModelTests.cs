@@ -1,3 +1,4 @@
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;
@@ -15,7 +16,8 @@ public class MoveModelTests : TestDbBase
 	{
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
-		_model = new MoveModel(_wikiPages, publisher, _db);
+		var wikiRedirectService = Substitute.For<IWikiRedirectService>();
+		_model = new MoveModel(_wikiPages, publisher, wikiRedirectService);
 	}
 
 	#region OnGet Tests

@@ -1,28 +1,34 @@
 namespace TASVideos.Pages.Wiki.Redirects;
 
 [RequirePermission(PermissionTo.EditWikiRedirects)]
-public class IndexModel(ApplicationDbContext db) : BasePageModel
+public class IndexModel(IWikiRedirectService wikiRedirectService) : BasePageModel
 {
-	public List<WikiRedirect> Redirects { get; set; } = [];
+	public ICollection<WikiRedirect> Redirects { get; set; } = [];
 
 	public async Task OnGet()
 	{
-		Redirects = await db.WikiRedirects
-			.OrderBy(r => r.PageNameFrom)
-			.ThenBy(r => r.PageNameTo)
-			.ToListAsync();
+		Redirects = await wikiRedirectService.GetAll();
 	}
 
 	public async Task<IActionResult> OnPostDelete(int id)
 	{
-		var redirect = await db.WikiRedirects.FindAsync(id);
+		var redirect = await wikiRedirectService.GetById(id);
 		if (redirect is null)
 		{
 			return NotFound();
 		}
 
-		db.WikiRedirects.Remove(redirect);
-		SetMessage(await db.TrySaveChanges(), $"Redirect from '{redirect.PageNameFrom}' to '{redirect.PageNameTo}' deleted successfully", $"Unable to delete redirect from '{redirect.PageNameFrom}' to '{redirect.PageNameTo}'");
+		var pageNameFrom = redirect.PageNameFrom;
+		var pageNameTo = redirect.PageNameTo;
+		var result = await wikiRedirectService.Delete(id);
+		if (result == WikiRedirectDeleteResult.Success)
+		{
+			SuccessStatusMessage($"Redirect from '{pageNameFrom}' to '{pageNameTo}' deleted successfully");
+		}
+		else
+		{
+			ErrorStatusMessage($"Unable to delete redirect from '{pageNameFrom}' to '{pageNameTo}'");
+		}
 
 		return BasePageRedirect("Index");
 	}
