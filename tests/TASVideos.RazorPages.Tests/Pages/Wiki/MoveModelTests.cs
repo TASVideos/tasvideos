@@ -17,7 +17,7 @@ public class MoveModelTests : TestDbBase
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
 		var wikiRedirectService = Substitute.For<IWikiRedirectService>();
-		_model = new MoveModel(_wikiPages, publisher, wikiRedirectService);
+		_model = new MoveModel(_wikiPages, publisher, wikiRedirectService, _db);
 	}
 
 	#region OnGet Tests
