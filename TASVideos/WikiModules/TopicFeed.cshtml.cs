@@ -12,15 +12,20 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 	public string? WikiLink { get; set; }
 	public List<TopicPost> Posts { get; set; } = [];
 
-	public async Task<IViewComponentResult> InvokeAsync(int? l, IList<int> t, bool right, string? heading, bool hideContent, string wikiLink)
+	public async Task<IViewComponentResult> InvokeAsync(int? l, IList<int> t, bool right, string? heading, bool hideContent, string wikiLink, bool specialTopics)
 	{
 		Heading = heading;
 		RightAlign = right;
 		HideContent = hideContent;
 		WikiLink = wikiLink;
 
-		Posts = await db.ForumPosts
-			.Where(p => p.TopicId != null && t.Contains(p.TopicId.Value))
+		IQueryable<ForumPost> query = db.ForumPosts;
+
+		query = specialTopics
+			? query.WhereSpecialContentType()
+			: query.Where(p => p.TopicId != null && t.Contains(p.TopicId.Value));
+
+		Posts = await query
 			.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
 			.ByMostRecent()
 			.Select(p => new TopicPost(
