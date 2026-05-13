@@ -8,6 +8,10 @@ public class BaseForumModel : BasePageModel
 		.GetValues<ForumTopicType>()
 		.ToDropDown();
 
+	protected static readonly List<SelectListItem> TopicContentTypeList = Enum
+		.GetValues<ForumTopicContentType>()
+		.ToDropDown();
+
 	protected static readonly List<SelectListItem> MoodList = [.. Enum
 		.GetValues<ForumPostMood>()
 		.Select(m => new SelectListItem
@@ -22,6 +26,7 @@ public class BaseForumModel : BasePageModel
 
 	public List<SelectListItem> Moods => MoodList;
 	public List<SelectListItem> TopicTypes => TopicTypeList;
+	public List<SelectListItem> TopicContentTypes => TopicContentTypeList;
 
 	public new RedirectToPageResult NotFound() => RedirectToPage("/Forum/NotFound");
 }

@@ -88,7 +88,6 @@ public static class ForumConstants
 {
 	public const int PostsPerPage = 25;
 	public const int WorkBenchForumId = 7;
-	public const int NewsTopicId = 8694;
 	public const int DaysPostsCountAsActive = 14;
 }
 

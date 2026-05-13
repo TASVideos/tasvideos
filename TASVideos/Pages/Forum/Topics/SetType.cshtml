@@ -1,10 +1,10 @@
 @page "{topicId}"
 @model SetTypeModel
 @{
-	ViewData.SetTitle($"Setting type for topic for: {Model.TopicTitle}");
+	ViewData.SetTitle($"Setting types for topic: {Model.TopicTitle}");
 }
 @section PageTitle {
-	Setting type for topic: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a> →
+	Setting types for topic: <a asp-page="/Forum/Subforum/Index" asp-route-id="@Model.ForumId">@Model.ForumName</a> →
 	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.TopicId">@Model.TopicTitle</a>
 }
 
@@ -12,11 +12,20 @@
 	<input type="hidden" asp-for="ForumId"/>
 	<input type="hidden" asp-for="ForumName" />
 	<input type="hidden" asp-for="TopicTitle"/>
-	<row>
+	<row class="mb-2">
 		<column md="6">
 			<label asp-for="Type"></label>
 			<select asp-for="Type" asp-items="Model.TopicTypes"></select>
 			<span asp-validation-for="Type"></span>
+			<div><small class="text-body-secondary">The Type determines the sorting priority of the topic in forums.</small></div>
+		</column>
+	</row>
+	<row>
+		<column md="6">
+			<label asp-for="ContentType"></label>
+			<select asp-for="ContentType" asp-items="Model.TopicContentTypes"></select>
+			<span asp-validation-for="ContentType"></span>
+			<div><small class="text-body-secondary">Content Types other than 'Regular' give topics a special status. Their posts will be announced in external media publishers and shown on the front page.</small></div>
 		</column>
 	</row>
 	<form-button-bar>
