@@ -1,4 +1,3 @@
-using NUglify.Helpers;
 using TASVideos.Data.Entity.Forum;
 using TASVideos.WikiEngine;
 
@@ -29,7 +28,8 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 				p.EnableBbCode,
 				p.EnableHtml,
 				p.Text,
-				p.Subject.IfNullOrWhiteSpace(p.Topic!.Title),
+				p.Subject,
+				p.Topic!.Title,
 				p.Poster!.UserName,
 				p.CreateTimestamp))
 			.Take(l ?? 5)
@@ -38,5 +38,5 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public record TopicPost(int Id, bool EnableBbCode, bool EnableHtml, string Text, string? Subject, string PosterName, DateTime CreateTimestamp);
+	public record TopicPost(int Id, bool EnableBbCode, bool EnableHtml, string Text, string? Subject, string Title, string PosterName, DateTime CreateTimestamp);
 }
