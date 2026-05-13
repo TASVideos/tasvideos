@@ -3,7 +3,7 @@ using TASVideos.Core.Services.Wiki;
 namespace TASVideos.Pages.Wiki;
 
 [RequirePermission(PermissionTo.MoveWikiPages)]
-public class MoveModel(IWikiPages wikiPages, IExternalMediaPublisher publisher, IWikiRedirectService wikiRedirectService) : BasePageModel
+public class MoveModel(IWikiPages wikiPages, IExternalMediaPublisher publisher, IWikiRedirectService wikiRedirectService, ApplicationDbContext db) : BasePageModel
 {
 	[FromQuery]
 	public string? Path { get; set; }
@@ -50,6 +50,8 @@ public class MoveModel(IWikiPages wikiPages, IExternalMediaPublisher publisher, 
 			return Page();
 		}
 
+		var transaction = await db.BeginTransactionAsync();
+
 		if (LeaveRedirect)
 		{
 			var redirectResult = await wikiRedirectService.Add(new WikiRedirect
@@ -57,6 +59,7 @@ public class MoveModel(IWikiPages wikiPages, IExternalMediaPublisher publisher, 
 				PageNameFrom = OriginalPageName,
 				PageNameTo = DestinationPageName
 			});
+
 			switch (redirectResult)
 			{
 				case WikiRedirectAddEditResult.ChainedRedirectFrom:
@@ -78,17 +81,19 @@ public class MoveModel(IWikiPages wikiPages, IExternalMediaPublisher publisher, 
 
 		var result = await wikiPages.Move(OriginalPageName, DestinationPageName, User.GetUserId());
 
-		if (!result)
+		if (result)
 		{
-			ModelState.AddModelError("", "Unable to move page, the page may have been modified during the saving of this operation.");
-			return Page();
+			await transaction.CommitAsync();
+
+			await publisher.SendWiki(
+				$"Page {OriginalPageName} moved to [{DestinationPageName}]({{0}}) by {User.Name()}",
+				"",
+				DestinationPageName);
+
+			return BaseRedirect("/" + DestinationPageName);
 		}
 
-		await publisher.SendWiki(
-			$"Page {OriginalPageName} moved to [{DestinationPageName}]({{0}}) by {User.Name()}",
-			"",
-			DestinationPageName);
-
-		return BaseRedirect("/" + DestinationPageName);
+		ModelState.AddModelError("", "Unable to move page, the page may have been modified during the saving of this operation.");
+		return Page();
 	}
 }
