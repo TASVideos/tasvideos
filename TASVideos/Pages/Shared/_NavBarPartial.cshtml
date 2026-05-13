@@ -2,6 +2,11 @@
 	<nav-item activate="Home">
 		<a class="nav-link" href="/">Home</a>
 	</nav-item>
+	<nav-dropdown activate="Games">
+		<a class="dropdown-item" asp-page="/Games/List">Games List</a>
+		<a class="dropdown-item" href="/GameResources">Game Resources</a>
+		<a class="dropdown-item" href="/Platforms">Platforms</a>
+	</nav-dropdown>
 	<nav-dropdown activate="Movies">
 		<a class="dropdown-item" href="/Movies">Publications</a>
 		<a class="dropdown-item" href="/UserFiles">User Files</a>
@@ -10,11 +15,6 @@
 	<nav-dropdown activate="Submissions">
 		<a class="dropdown-item" asp-page="/Submissions/Index">Submission Workbench</a>
 		<a class="dropdown-item" asp-page="/Submissions/Submit">Submit a Movie</a>
-	</nav-dropdown>
-	<nav-dropdown activate="Games">
-		<a class="dropdown-item" asp-page="/Games/List">Games List</a>
-		<a class="dropdown-item" href="/GameResources">Game Resources</a>
-		<a class="dropdown-item" href="/Platforms">Platforms</a>
 	</nav-dropdown>
 	<nav-dropdown activate="Tools">
 		<a class="dropdown-item" href="/Bizhawk">BizHawk</a>
