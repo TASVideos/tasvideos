@@ -15,6 +15,7 @@ public class NewsModel(ApplicationDbContext db) : BasePageModel
 			.Select(p => new RssNews(
 				p.Id,
 				p.LastUpdateTimestamp,
+				p.Topic!.Title,
 				p.Subject ?? "",
 				p.Text,
 				p.EnableHtml,
@@ -24,5 +25,5 @@ public class NewsModel(ApplicationDbContext db) : BasePageModel
 		return Rss();
 	}
 
-	public record RssNews(int PostId, DateTime PubDate, string Subject, string Text, bool EnableHtml, bool EnableBbCode);
+	public record RssNews(int PostId, DateTime PubDate, string Title, string Subject, string Text, bool EnableHtml, bool EnableBbCode);
 }
