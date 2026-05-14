@@ -102,7 +102,7 @@ public class SubmitModel(
 			return Page();
 		}
 
-		var (parseResult, movieFileBytes) = await queueService.ParseMovieFile(MovieFile!);
+		var (parseResult, zippedMovieFileBytes) = await queueService.ParseMovieFileAndZip(MovieFile!);
 		if (!parseResult.Success)
 		{
 			ModelState.AddParseErrors(parseResult);
@@ -126,7 +126,7 @@ public class SubmitModel(
 			Authors,
 			ExternalAuthors,
 			Markup,
-			movieFileBytes,
+			zippedMovieFileBytes,
 			parseResult,
 			await userManager.GetRequiredUser(User));
 
