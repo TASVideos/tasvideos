@@ -94,6 +94,7 @@ public class SplitModel(
 		var newTopic = db.ForumTopics.Add(new ForumTopic
 		{
 			Type = ForumTopicType.Regular,
+			ContentType = ForumTopicContentType.Regular,
 			Title = Topic.NewTopicName,
 			PosterId = User.GetUserId(),
 			ForumId = Topic.CreateNewTopicIn

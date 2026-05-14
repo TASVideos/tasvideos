@@ -32,6 +32,7 @@
 			<label asp-for="Type"></label>
 			<select asp-for="Type" asp-items="Model.TopicTypes"></select>
 			<span asp-validation-for="Type"></span>
+			<div><small class="text-body-secondary">The Type determines the sorting priority of the topic in forums.</small></div>
 		</column>
 	</row>
 	<row>
@@ -42,6 +43,12 @@
 		</column>
 		<column md="2">
 			<mood-preview current-mood="@Model.Mood" avatar="@Model.UserAvatars"></mood-preview>
+		</column>
+		<column permission="SetTopicType" md="6">
+			<label asp-for="ContentType"></label>
+			<select asp-for="ContentType" asp-items="Model.TopicContentTypes"></select>
+			<span asp-validation-for="ContentType"></span>
+			<div><small class="text-body-secondary">Content Types other than 'Regular' give topics a special status. Their posts will be announced in external media publishers and shown on the front page.</small></div>
 		</column>
 	</row>
 	<post-helper class="mt-2"></post-helper>
