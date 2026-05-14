@@ -193,10 +193,11 @@ public class CreateModelTests : BasePageModelTests
 			Title = "Test Topic Title",
 			Post = "This is a test post content",
 			Type = ForumTopicType.Sticky,
+			ContentType = ForumTopicContentType.Community,
 			WatchTopic = true,
 			Mood = ForumPostMood.Playful
 		};
-		AddAuthenticatedUser(createModel, user, [PermissionTo.CreateForumTopics]);
+		AddAuthenticatedUser(createModel, user, [PermissionTo.CreateForumTopics, PermissionTo.SetTopicType]);
 
 		var result = await createModel.OnPost();
 
@@ -207,6 +208,7 @@ public class CreateModelTests : BasePageModelTests
 		Assert.AreEqual(forum.Id, createdTopic.ForumId);
 		Assert.AreEqual(user.Id, createdTopic.PosterId);
 		Assert.AreEqual(ForumTopicType.Sticky, createdTopic.Type);
+		Assert.AreEqual(ForumTopicContentType.Community, createdTopic.ContentType);
 
 		await _userManager.Received(1).AssignAutoAssignableRolesByPost(user.Id);
 		await _publisher.Received(1).Send(Arg.Any<IPostable>());
