@@ -33,11 +33,16 @@ internal class Ctas : Parser, IParser
 				result.RerecordCount = (int)reader.ReadUInt32();
 				reportedTime = reader.ReadUInt32();
 				result.Frames = (int)(reportedTime / (1000 / 60));
+				byte[] buf = new byte[1000];
+
+				reader.Read(buf);
 			}
+			else
+			{
+				byte[] buf = new byte[1008];
 
-			byte[] buf = new byte[1000];
-
-			reader.Read(buf);
+				reader.Read(buf);
+			}
 
 			for (int i = 0; i < framecount; i++)
 			{
