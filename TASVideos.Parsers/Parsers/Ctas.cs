@@ -26,7 +26,7 @@ internal class Ctas : Parser, IParser
 			var version = reader.ReadUInt32();
 			var framecount = reader.ReadUInt32();
 			var rngLen = reader.ReadUInt32();
-			var reportedTime = 0;
+			uint reportedTime = 0;
 
 			if (version >= 4)
 			{
