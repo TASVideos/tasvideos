@@ -63,6 +63,6 @@ public class LmpTests : BaseParserTests
 		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(42202, result.Frames);
 		Assert.AreEqual(0, result.RerecordCount, "Lmp does not track rerecords");
-		Assert.IsNull(result.Annotations);
+		Assert.IsNotNull(result.Annotations);
 	}
 }
