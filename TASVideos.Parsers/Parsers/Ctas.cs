@@ -1,9 +1,7 @@
-using System.Buffers.Binary;
-
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("ctas")]
-internal class CTas : Parser, IParser
+internal class Ctas : Parser, IParser
 {
 	private const double FrameRate = 60;
 	private const uint Magic = 0x53415443;
@@ -12,23 +10,23 @@ internal class CTas : Parser, IParser
 		var result = new SuccessResult(FileExtension)
 		{
 			Region = RegionType.Ntsc,
-			SystemCode = SystemCodes.Windows,
+			SystemCode = SystemCodes.Pc,
 			FrameRateOverride = FrameRate
 		};
 
 		using var reader = new BinaryReader(file);
 		try
 		{
-			uint m_magic = reader.ReadUInt32();
-			if(m_magic != Magic)
+			var magic = reader.ReadUInt32();
+			if (magic != Magic)
 			{
 				return InvalidFormat();
 			}
 
-			uint version = reader.ReadUInt32();
-			uint framecount = reader.ReadUInt32();
-			uint rngLen = reader.ReadUInt32();
-			uint reportedTime = 0;
+			var version = reader.ReadUInt32();
+			var framecount = reader.ReadUInt32();
+			var rngLen = reader.ReadUInt32();
+			var reportedTime = 0;
 
 			if (version >= 4)
 			{
@@ -37,7 +35,9 @@ internal class CTas : Parser, IParser
 				result.Frames = (int)(reportedTime / (1000 / 60));
 			}
 
-			file.Seek(1024, SeekOrigin.Begin);
+			byte[] buf = new byte[1000];
+
+			reader.Read(buf);
 
 			for (int i = 0; i < framecount; i++)
 			{
@@ -56,6 +56,12 @@ internal class CTas : Parser, IParser
 			}
 		}
 		catch (System.IO.EndOfStreamException)
+		{
+			return InvalidFormat();
+		}
+
+		// check we hit the end of the file
+		if(reader.PeekChar() != -1)
 		{
 			return InvalidFormat();
 		}

@@ -5,36 +5,42 @@ using TASVideos.Data.Helpers;
 
 namespace TASVideos.TagHelpers;
 
-public class PubLinkTagHelper : TagHelper
+public class PubLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public int Id { get; set; }
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "a";
-		output.Attributes.Add("href", $"/{Id}M");
+		Page = "/Publications/View";
+		RouteValues.Add(nameof(Pages.Publications.ViewModel.Id), Id.ToString());
+		base.Process(context, output);
 	}
 }
 
-public class SubLinkTagHelper : TagHelper
+public class SubLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public int Id { get; set; }
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "a";
-		output.Attributes.Add("href", $"/{Id}S");
+		Page = "/Submissions/View";
+		RouteValues.Add(nameof(Pages.Submissions.ViewModel.Id), Id.ToString());
+		base.Process(context, output);
 	}
 }
 
-public class GameLinkTagHelper : TagHelper
+public class GameLinkTagHelper(IHtmlGenerator generator) : AnchorTagHelper(generator)
 {
 	public int Id { get; set; }
 
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "a";
-		output.Attributes.Add("href", $"/{Id}G");
+		Page = "/Games/Index";
+		RouteValues.Add(nameof(Pages.Games.IndexModel.Id), Id.ToString());
+		base.Process(context, output);
 	}
 }
 
@@ -85,7 +91,7 @@ public class ProfileLinkTagHelper(IHtmlGenerator htmlGenerator) : AnchorTagHelpe
 
 		output.TagName = "a";
 		Page = "/Users/Profile";
-		RouteValues.Add("UserName", Username);
+		RouteValues.Add(nameof(Pages.Users.ProfileModel.UserName), Username);
 		await base.ProcessAsync(context, output);
 	}
 }

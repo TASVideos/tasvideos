@@ -10,9 +10,7 @@ internal static class SystemCodes
 	public const string Bsx = "bsx";
 	public const string C64 = "c64";
 	public const string Cdi = "cdi";
-	public const string Celeste = "celeste";
 	public const string Coleco = "coleco";
-	public const string Doom = "doom";
 	public const string Dos = "dos";
 	public const string Ds = "ds";
 	public const string Dsi = "dsi";
@@ -27,7 +25,6 @@ internal static class SystemCodes
 	public const string Intellivision = "intv";
 	public const string Jaguar = "jaguar";
 	public const string JaguarCd = "jaguarcd";
-	public const string Linux = "linux";
 	public const string Lynx = "lynx";
 	public const string MacOs = "macos";
 	public const string Msx = "msx";
@@ -37,6 +34,7 @@ internal static class SystemCodes
 	public const string Nes = "nes";
 	public const string Ngp = "ngp";
 	public const string Odyssey2 = "o2";
+	public const string Pc = "pc";
 	public const string Pc98 = "pc98";
 	public const string Pce = "pce";
 	public const string PceCd = "pcecd";
@@ -56,7 +54,6 @@ internal static class SystemCodes
 	public const string UzeBox = "uzebox";
 	public const string VirtualBoy = "vboy";
 	public const string Wii = "wii";
-	public const string Windows = "windows";
 	public const string WSwan = "wswan";
 	public const string X1 = "x1";
 	public const string X32 = "32x";

@@ -33,7 +33,7 @@ public class TasTests : BaseParserTests
 		var result = await _tasParser.Parse(Embedded("2465ms.tas", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(SystemCodes.Celeste, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 	}
 
 	[TestMethod]

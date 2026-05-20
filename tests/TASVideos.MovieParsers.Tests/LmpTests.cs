@@ -35,7 +35,7 @@ public class LmpTests : BaseParserTests
 		Assert.IsNotNull(result);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(SystemCodes.Doom, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(7071, result.Frames);
 		Assert.AreEqual(0, result.RerecordCount, "Lmp does not track rerecords");
 		Assert.IsNull(result.Annotations);
@@ -48,7 +48,7 @@ public class LmpTests : BaseParserTests
 		Assert.IsNotNull(result);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(SystemCodes.Doom, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(638, result.Frames);
 		Assert.IsNotNull(result.Annotations);
 	}

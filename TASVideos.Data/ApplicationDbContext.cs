@@ -28,6 +28,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	public DbSet<RolePermission> RolePermission { get; set; } = null!;
 	public DbSet<WikiPage> WikiPages { get; set; } = null!;
 	public DbSet<WikiPageReferral> WikiReferrals { get; set; } = null!;
+	public DbSet<WikiRedirect> WikiRedirects { get; set; } = null!;
 	public DbSet<RoleLink> RoleLinks { get; set; } = null!;
 	public DbSet<Submission> Submissions { get; set; } = null!;
 	public DbSet<SubmissionAuthor> SubmissionAuthors { get; set; } = null!;

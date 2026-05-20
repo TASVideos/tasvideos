@@ -94,12 +94,14 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		{
 			Id = g.Id,
 			Name = g.DisplayName,
-			Systems = g.GameVersions.Select(v => v.System!.Code).ToList()
+			Systems = g.GameVersions.Select(v => v.System!.Code).ToList(),
+			Publications = g.Publications.Count,
+			Submissions = g.Submissions.Count
 		})
 		.SortedPageOf(paging);
 	}
 
-	[PagingDefaults(PageSize = 50, Sort = "Name")]
+	[PagingDefaults(PageSize = 50, Sort = "-Publications")]
 	public class GameListRequest : PagingModel
 	{
 		public string? System { get; set; }
@@ -121,5 +123,9 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		[Sortable]
 		public string Name { get; init; } = "";
 		public List<string> Systems { get; init; } = [];
+		[Sortable]
+		public int Publications { get; init; }
+		[Sortable]
+		public int Submissions { get; init; }
 	}
 }

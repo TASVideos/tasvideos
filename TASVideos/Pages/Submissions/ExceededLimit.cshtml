@@ -1,8 +1,9 @@
 @page
+@using System.Globalization
 @inject AppSettings Settings
 @{
 	DateTime? nextWindow = null;
-	if (DateTime.TryParse(Request.QueryStringValue("NextWindow"), out var date))
+	if (DateTime.TryParse(Request.QueryStringValue("NextWindow"), CultureInfo.InvariantCulture, out var date))
 	{
 		nextWindow = date;
 	}

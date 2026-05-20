@@ -10,7 +10,6 @@
 	<a asp-page="/Forum/Topics/Index" asp-route-id="@Model.Id">@Model.Topic.Topic</a>
 }
 
-<partial Name="_ForumHeader" />
 <form client-side-validation="true" method="post">
 	<input type="hidden" asp-for="Topic.Topic" />
 	<input type="hidden" asp-for="Topic.CurrentForum" />

@@ -17,6 +17,10 @@
 				<input asp-for="DestinationPageName" />
 				<span asp-validation-for="DestinationPageName"></span>
 			</fieldset>
+			<fieldset>
+				<input class="form-check-input" type="checkbox" asp-for="LeaveRedirect">
+				<label class="form-check-label" asp-for="LeaveRedirect">Leave a redirect behind</label>
+			</fieldset>
 			<form-button-bar>
 				<submit-button><i class="fa fa-save"></i> Move</submit-button>
 				<cancel-link href="/@Model.OriginalPageName"></cancel-link>

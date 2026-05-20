@@ -15,15 +15,15 @@ public class LtmTests : BaseParserTests
 	[DataRow("arcade.ltm", SystemCodes.Arcade)]
 	[DataRow("dos.ltm", SystemCodes.Dos)]
 	[DataRow("flash.ltm", SystemCodes.Flash)]
-	[DataRow("flash-extrachars-linuxfallback.ltm", SystemCodes.Linux)]
-	[DataRow("linux.ltm", SystemCodes.Linux)]
+	[DataRow("flash-extrachars-linuxfallback.ltm", SystemCodes.Pc)]
+	[DataRow("linux.ltm", SystemCodes.Pc)]
 	[DataRow("macos.ltm", SystemCodes.MacOs)]
 	[DataRow("pc98.ltm", SystemCodes.Pc98)]
 	[DataRow("pico8.ltm", SystemCodes.Pico8)]
 	[DataRow("ruffle.ltm", SystemCodes.Flash)]
-	[DataRow("ruffle-windows-override.ltm", SystemCodes.Windows)]
-	[DataRow("unknown-linuxfallback.ltm", SystemCodes.Linux)]
-	[DataRow("windows.ltm", SystemCodes.Windows)]
+	[DataRow("ruffle-windows-override.ltm", SystemCodes.Pc)]
+	[DataRow("unknown-linuxfallback.ltm", SystemCodes.Pc)]
+	[DataRow("windows.ltm", SystemCodes.Pc)]
 	public async Task SystemId(string filename, string expectedSystemCode)
 	{
 		var actual = await _ltmParser.Parse(Embedded(filename, out var length), length);
@@ -56,7 +56,7 @@ public class LtmTests : BaseParserTests
 		var result = await _ltmParser.Parse(Embedded("2frames.ltm", out var length), length);
 
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(2, result.Frames);
 	}
 
@@ -66,7 +66,7 @@ public class LtmTests : BaseParserTests
 		var result = await _ltmParser.Parse(Embedded("2frames.ltm", out var length), length);
 
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(7, result.RerecordCount);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -77,7 +77,7 @@ public class LtmTests : BaseParserTests
 		var result = await _ltmParser.Parse(Embedded("2frames.ltm", out var length), length);
 
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(120, result.FrameRateOverride);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -99,7 +99,7 @@ public class LtmTests : BaseParserTests
 		var result = await _ltmParser.Parse(Embedded("2frames.ltm", out var length), length);
 
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -110,7 +110,7 @@ public class LtmTests : BaseParserTests
 		var result = await _ltmParser.Parse(Embedded("savestate.ltm", out var length), length);
 
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);
 		AssertNoWarningsOrErrors(result);
 	}
@@ -121,7 +121,7 @@ public class LtmTests : BaseParserTests
 		var result = await _ltmParser.Parse(Embedded("variableframerate.ltm", out var length), length);
 
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(SystemCodes.Linux, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 		Assert.AreEqual(30.002721239119342, result.FrameRateOverride);
 		AssertNoWarningsOrErrors(result);
 	}

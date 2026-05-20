@@ -16,7 +16,7 @@
 		{
 			var postUrl = $"{Settings.BaseUrl}/Forum/Posts/{news.PostId}";
 			<item>
-				<title>@news.Subject</title>
+				<title>@(string.IsNullOrEmpty(news.Subject) ? news.Title : news.Subject)</title>
 				<rss-link>@postUrl</rss-link>
 				<description>
 					<html-encode>

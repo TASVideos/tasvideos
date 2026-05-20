@@ -12,15 +12,20 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 	public string? WikiLink { get; set; }
 	public List<TopicPost> Posts { get; set; } = [];
 
-	public async Task<IViewComponentResult> InvokeAsync(int? l, int t, bool right, string? heading, bool hideContent, string wikiLink)
+	public async Task<IViewComponentResult> InvokeAsync(int? l, IList<int> t, bool right, string? heading, bool hideContent, string wikiLink, bool specialTopics)
 	{
 		Heading = heading;
 		RightAlign = right;
 		HideContent = hideContent;
 		WikiLink = wikiLink;
 
-		Posts = await db.ForumPosts
-			.ForTopic(t)
+		IQueryable<ForumPost> query = db.ForumPosts;
+
+		query = specialTopics
+			? query.WhereSpecialContentType()
+			: query.Where(p => p.TopicId != null && t.Contains(p.TopicId.Value));
+
+		Posts = await query
 			.ExcludeRestricted(false) // By design, let's not allow restricted topics as wiki feeds
 			.ByMostRecent()
 			.Select(p => new TopicPost(
@@ -29,6 +34,7 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 				p.EnableHtml,
 				p.Text,
 				p.Subject,
+				p.Topic!.Title,
 				p.Poster!.UserName,
 				p.CreateTimestamp))
 			.Take(l ?? 5)
@@ -37,5 +43,5 @@ public class TopicFeed(ApplicationDbContext db) : WikiViewComponent
 		return View();
 	}
 
-	public record TopicPost(int Id, bool EnableBbCode, bool EnableHtml, string Text, string? Subject, string PosterName, DateTime CreateTimestamp);
+	public record TopicPost(int Id, bool EnableBbCode, bool EnableHtml, string Text, string? Subject, string Title, string PosterName, DateTime CreateTimestamp);
 }

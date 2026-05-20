@@ -66,7 +66,7 @@ public class BasicPagesTests
 		Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
 
 		var title = await response.GetPageTitleAsync();
-		Assert.Contains("Movie Storage", title, $"Expected title to contain 'Movie Storage' but got: {title}");
+		Assert.Contains("User Files", title, $"Expected title to contain 'User Files' but got: {title}");
 	}
 
 	[TestMethod]

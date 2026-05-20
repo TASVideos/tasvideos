@@ -7,7 +7,9 @@ public class EditModel(IGameSystemService systemService) : BasePageModel
 	public int Id { get; set; }
 
 	[BindProperty]
-	public SystemsResponse System { get; set; } = null!;
+	public SystemsEditModel System { get; set; } = null!;
+
+	public IEnumerable<FrameRatesResponse>? SystemFrameRates { get; set; }
 
 	public bool InUse { get; set; } = true;
 
@@ -19,7 +21,8 @@ public class EditModel(IGameSystemService systemService) : BasePageModel
 			return NotFound();
 		}
 
-		System = system;
+		System = new SystemsEditModel(system.Id, system.Code, system.DisplayName);
+		SystemFrameRates = system.SystemFrameRates;
 		InUse = await systemService.InUse(Id);
 		return Page();
 	}
@@ -73,3 +76,5 @@ public class EditModel(IGameSystemService systemService) : BasePageModel
 		return BasePageRedirect("Index");
 	}
 }
+
+public record SystemsEditModel(int Id, string Code, string DisplayName);

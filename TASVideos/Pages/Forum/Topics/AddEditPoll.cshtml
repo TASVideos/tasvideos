@@ -5,8 +5,6 @@
 	ViewData.UseStringList(); // Hack for now, partial views use a different viewDataDictionary, so the component will not work
 }
 
-<partial Name="_ForumHeader" />
-
 <form client-side-validation="true" method="post">
 	<partial name="_PollCreate" model="Model.Poll" />
 	<form-button-bar>

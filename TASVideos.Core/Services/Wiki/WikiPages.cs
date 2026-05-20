@@ -100,6 +100,12 @@ public interface IWikiPages
 	/// <param name="authorId">The ID of the user performing the rollback</param>
 	/// <returns>The new revision created by the rollback, or null if rollback failed</returns>
 	Task<IWikiPage?> RollbackLatest(string pageName, int authorId);
+
+	/// <summary>
+	/// Returns whether a page can be moved to a different page name.
+	/// Moves are only allowed if the new page does not exist or is the same page as the old page.
+	/// </summary>
+	Task<bool> CanMove(string oldPageName, string newPageName);
 }
 
 // TODO: handle DbConcurrency exceptions
@@ -280,9 +286,9 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 
 		// TODO: support moving a page to a deleted page
 		// Revision ids would have to be adjusted, but it could be done
-		if (await Exists(destinationName, includeDeleted: true))
+		if (!await CanMove(originalName, destinationName))
 		{
-			throw new InvalidOperationException($"Cannot move {originalName} to {destinationName} because {destinationName} already exists.");
+			throw new InvalidOperationException($"Cannot move {originalName} to {destinationName} because either {originalName} does not exist, or {destinationName} already exists or has an invalid format.");
 		}
 
 		var existingRevisions = await db.WikiPages
@@ -609,6 +615,24 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 		};
 
 		return await Add(rollbackRevision);
+	}
+
+	public async Task<bool> CanMove(string oldPageName, string newPageName)
+	{
+		oldPageName = oldPageName.Trim('/');
+		newPageName = newPageName.Trim('/');
+		if (!WikiHelper.IsValidWikiPageName(newPageName))
+		{
+			return false;
+		}
+
+		var pages = await db.WikiPages
+			.ThatAreCurrent()
+			.Select(wp => wp.PageName)
+			.Where(pageName => pageName == oldPageName || pageName == newPageName)
+			.ToListAsync();
+
+		return pages.Count == 1 && pages[0] == oldPageName;
 	}
 }
 
