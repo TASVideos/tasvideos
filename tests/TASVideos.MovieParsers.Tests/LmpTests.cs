@@ -52,4 +52,17 @@ public class LmpTests : BaseParserTests
 		Assert.AreEqual(638, result.Frames);
 		Assert.IsNotNull(result.Annotations);
 	}
+
+	[TestMethod]
+	public async Task Boom_Success()
+	{
+		var result = await _lmpParser.Parse(Embedded("boom.lmp", out var length), length);
+		Assert.IsNotNull(result);
+		Assert.IsTrue(result.Success);
+		AssertNoWarningsOrErrors(result);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
+		Assert.AreEqual(42202, result.Frames);
+		Assert.AreEqual(0, result.RerecordCount, "Lmp does not track rerecords");
+		Assert.IsNull(result.Annotations);
+	}
 }
