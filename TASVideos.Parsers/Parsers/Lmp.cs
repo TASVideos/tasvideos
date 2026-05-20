@@ -23,7 +23,8 @@ internal class Lmp : Parser, IParser
 		TryParseOldHexen,
 		TryParseNewHexen,
 		TryParseHeretic,
-		TryParseOldDoom
+		TryParseOldDoom,
+		TryParseBoom
 	];
 
 	private static bool CheckSizeSanity(int len, int headerLen, int inputLen)
@@ -63,14 +64,15 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
+		var playerOneAddress = 3;
 		var players = 0;
 		for (var i = 0; i < Maxplayers; i++)
 		{
-			if (movie[3 + i] == 1)
+			if (movie[playerOneAddress + i] == 1)
 			{
 				players++;
 			}
-			else if (movie[3 + i] != 0) // invalid value
+			else if (movie[playerOneAddress + i] != 0) // invalid value
 			{
 				return false;
 			}
@@ -98,14 +100,15 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
+		var playerOneAddress = 9;
 		var players = 0;
 		for (var i = 0; i < Maxplayers; i++)
 		{
-			if (movie[9 + i] == 1)
+			if (movie[playerOneAddress + i] == 1)
 			{
 				players++;
 			}
-			else if (movie[9 + i] != 0) // invalid value
+			else if (movie[playerOneAddress + i] != 0) // invalid value
 			{
 				return false;
 			}
@@ -117,6 +120,42 @@ internal class Lmp : Parser, IParser
 		}
 
 		frames = CalcFrames(movie, 13, 4, players);
+		return frames > 0;
+	}
+
+	private bool TryParseBoom(byte[] movie, ref int frames)
+	{
+		// Boom and MBF have a 109 byte header, and 4 bytes per input
+		if (!CheckSizeSanity(movie.Length, 109, 4))
+		{
+			return false;
+		}
+
+		if (movie[0] < 200 || movie[0] > 221) // version
+		{
+			return false;
+		}
+
+		var playerOneAddress = 0x4D;
+		var players = 0;
+		for (var i = 0; i < Maxplayers; i++)
+		{
+			if (movie[playerOneAddress + i] == 1)
+			{
+				players++;
+			}
+			else if (movie[playerOneAddress + i] != 0) // invalid value
+			{
+				return false;
+			}
+		}
+
+		if (players == 0)
+		{
+			return false;
+		}
+
+		frames = CalcFrames(movie, 109, 4, players);
 		return frames > 0;
 	}
 
@@ -133,14 +172,15 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
+		var playerOneAddress = 10;
 		var players = 0;
 		for (var i = 0; i < 4; i++)
 		{
-			if (movie[10 + i] == 1)
+			if (movie[playerOneAddress + i] == 1)
 			{
 				players++;
 			}
-			else if (movie[10 + i] != 0) // invalid value
+			else if (movie[playerOneAddress + i] != 0) // invalid value
 			{
 				return false;
 			}
@@ -168,14 +208,15 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
+		var playerOneAddress = 3;
 		var players = 0;
 		for (var i = 0; i < Maxplayers; i++)
 		{
-			if (movie[3 + i] == 1)
+			if (movie[playerOneAddress + i] == 1)
 			{
 				players++;
 			}
-			else if (movie[3 + i] != 0) // invalid value
+			else if (movie[playerOneAddress + i] != 0) // invalid value
 			{
 				return false;
 			}
@@ -198,15 +239,17 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
+		var playerOneAddress = 3;
 		var players = 0;
 		for (var i = 0; i < Maxplayers; i++)
 		{
-			if (movie[3 + (i * 2)] == 1)
+			if (movie[playerOneAddress + (i * 2)] == 1)
 			{
 				players++;
 			}
 
-			if (movie[3 + (i * 2)] is not (0 or 1) || movie[3 + (i * 2) + 1] > 2) // invalid values
+			if (movie[playerOneAddress + (i * 2)] is not (0 or 1)
+				|| movie[playerOneAddress + (i * 2) + 1] > 2) // invalid values
 			{
 				return false;
 			}
@@ -229,15 +272,17 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
+		var playerOneAddress = 3;
 		var players = 0;
 		for (var i = 0; i < Maxplayers * 2; i++)
 		{
-			if (movie[3 + (i * 2)] == 1)
+			if (movie[playerOneAddress + (i * 2)] == 1)
 			{
 				players++;
 			}
 
-			if (movie[3 + (i * 2)] is not (0 or 1) || movie[3 + (i * 2) + 1] > 2) // invalid values
+			if (movie[playerOneAddress + (i * 2)] is not (0 or 1)
+				|| movie[playerOneAddress + (i * 2) + 1] > 2) // invalid values
 			{
 				return false;
 			}
@@ -265,14 +310,15 @@ internal class Lmp : Parser, IParser
 			return false;
 		}
 
+		var playerOneAddress = 8;
 		var players = 0;
 		for (var i = 0; i < Maxplayers * 2; i++)
 		{
-			if (movie[8 + i] == 1)
+			if (movie[playerOneAddress + i] == 1)
 			{
 				players++;
 			}
-			else if (movie[8 + i] != 0) // invalid value
+			else if (movie[playerOneAddress + i] != 0) // invalid value
 			{
 				return false;
 			}
