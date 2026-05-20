@@ -76,7 +76,7 @@
 		<row condition="!string.IsNullOrWhiteSpace(Model.Version.Notes)" class="mt-2">
 			<column sm="12">
 				<h4>Notes</h4>
-				@Model.Version.Notes
+				<pre style="white-space: pre-wrap">@Model.Version.Notes</pre>
 			</column>
 		</row>
 	</card-body>
