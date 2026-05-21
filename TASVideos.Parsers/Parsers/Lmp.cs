@@ -1,7 +1,7 @@
 using System.Text;
 
 /*
- * https://github.com/kraflab/dsda-doom/blob/master/prboom2/src/g_game.c#L3948
+ * https://github.com/kraflab/dsda-doom/blob/d71c50c7160ea73d3c6f9b815383b39bc0fb865c/prboom2/src/g_game.c#L3948
  *
  * online info on LMP format is either wrong or outdated, so we have to rely on
  * source code of the source port that explicitly aims to support all the insanity
