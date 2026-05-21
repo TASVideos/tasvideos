@@ -1,5 +1,17 @@
 using System.Text;
 
+/*
+ * https://github.com/kraflab/dsda-doom/blob/master/prboom2/src/g_game.c#L3948
+ *
+ * online info on LMP format is either wrong or outdated, so we have to rely on
+ * source code of the source port that explicitly aims to support all the insanity
+ * of the demo format that kept evolving for 30 years (thanks to doom engine being
+ * open source). dsda-doom is also directly affeliated with the dsda site, so its
+ * support of all those kinds of demos is quite effective. but writing comperensive
+ * exhausting docs is not a very worthwhile task, because of how complex this format
+ * is, so just reading this source should be enough for any future reference.
+ */
+
 namespace TASVideos.MovieParsers.Parsers;
 
 [FileExtension("lmp")]
