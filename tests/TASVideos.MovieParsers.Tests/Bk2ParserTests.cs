@@ -384,4 +384,24 @@ public class Bk2ParserTests : BaseParserTests
 		Assert.IsNull(result.CycleCount);
 		AssertNoWarningsOrErrors(result);
 	}
+
+	[TestMethod]
+	public async Task OverrideFlash()
+	{
+		var result = await _bk2Parser.Parse(Embedded("System-Nes-Flash.bk2", out var length), length);
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("flash", result.SystemCode);
+		Assert.AreEqual(1, result.Frames);
+		AssertNoWarningsOrErrors(result);
+	}
+
+	[TestMethod]
+	public async Task OverrideGarbage()
+	{
+		var result = await _bk2Parser.Parse(Embedded("System-Nes-Garbage.bk2", out var length), length);
+		Assert.IsTrue(result.Success);
+		Assert.AreEqual("nes", result.SystemCode);
+		Assert.AreEqual(1, result.Frames);
+		AssertNoWarningsOrErrors(result);
+	}
 }

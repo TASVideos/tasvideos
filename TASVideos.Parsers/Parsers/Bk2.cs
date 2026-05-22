@@ -205,6 +205,17 @@ internal class Bk2 : Parser, IParser
 			var annotations = await reader.ReadToEndAsync();
 			if (!string.IsNullOrWhiteSpace(annotations))
 			{
+				using var lineReader = new StringReader(annotations);
+				var firstLine = await lineReader.ReadLineAsync();
+				if (firstLine!.StartsWith("platform:", StringComparison.InvariantCultureIgnoreCase))
+				{
+					var systemOverride = CalculatePlatformOverride(GetPlatformValue(firstLine));
+					if (systemOverride is not null)
+					{
+						result.SystemCode = systemOverride;
+					}
+				}
+
 				result.Annotations = annotations;
 			}
 		}
@@ -332,4 +343,23 @@ internal class Bk2 : Parser, IParser
 		public const string VsyncAttoseconds = "vsyncattoseconds";
 		public const string Core = "core";
 	}
+
+	private static string GetPlatformValue(string str)
+	{
+		if (string.IsNullOrWhiteSpace(str))
+		{
+			return "";
+		}
+
+		var split = str.ToLower().SplitWithEmpty("platform:");
+		return split.Length == 1 ? split[0].Trim().ToLowerInvariant() : "";
+	}
+
+	private static string? CalculatePlatformOverride(string str)
+		=> typeof(SystemCodes)
+			.GetFields()
+			.Select(f => f.GetValue(f))
+			.Contains(str)
+			? str
+			: null;
 }
