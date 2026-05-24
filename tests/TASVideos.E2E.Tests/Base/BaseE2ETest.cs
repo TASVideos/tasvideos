@@ -200,8 +200,10 @@ public class BaseE2ETest : PageTest
 		try
 		{
 			var movieParser = new MovieParser();
-			await using var fileStream = File.OpenRead(downloadPath);
-			return await movieParser.ParseZip(fileStream);
+			await using var archive = await ZipFile.OpenReadAsync(downloadPath);
+			var movieFile = archive.Entries.Single();
+			await using var zipStream = await movieFile.OpenAsync();
+			return await movieParser.ParseFile(movieFile.Name, zipStream);
 		}
 		catch (Exception ex)
 		{

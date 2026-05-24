@@ -25,7 +25,7 @@ public class CreateModel(IClassService classService) : BasePageModel
 				ClearStatusMessage();
 				return Page();
 			case ClassEditResult.Fail:
-				ErrorStatusMessage("Unable to edit publicationClass due to an unknown error");
+				ErrorStatusMessage("Unable to create PublicationClass due to an unknown error");
 				return Page();
 		}
 	}

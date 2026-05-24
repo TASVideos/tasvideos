@@ -6,8 +6,8 @@
 	HttpContext.Response.StatusCode = 404;
 }
 <h2>The page you were looking for does not yet exist.</h2>
-<p>The page ( <a href="/@url">@($"{HttpContext.Request.ToBaseUrl()}/{url}")</a> ) does not exist. <a href="javascript:history.back()">Click here</a> to go back.</p>
-<p>You can also <a asp-page="/Search/Index" asp-route-searchTerms="@url">search</a> for alternative titles or spellings.</p>
+<p>The page ( <a href="/@url">@($"{HttpContext.Request.ToBaseUrl()}/{url}")</a> ) does not exist.</p>
+<p>You can <a asp-page="/Search/Index" asp-route-searchTerms="@url">search</a> for alternative titles or spellings.</p>
 <hr />
 Want to create the page?
 <br />

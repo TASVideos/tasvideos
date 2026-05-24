@@ -33,19 +33,23 @@
 	<label><input name="context-size" type="number" value="5" min="0" max="9999" /> Context Size</label>
 </div>
 <standard-table>
-	<table-head columns="Revision,Date,Author,Minor Edit,Revision Message,Diff,Actions"></table-head>
+	<table-head columns="Revision,Date,Author,Minor Edit,Revision Message,Length,Diff,Actions"></table-head>
 	<tbody data-hasrevisions="true">
 		@{ var revisions = Model.Revisions.OrderByDescending(r => r.Revision).ToList(); }
 		@for (var i = 0; i < revisions.Count; i++)
 		{
 			var revision = revisions[i];
 			var previousId = i < revisions.Count - 1 ? revisions[i + 1].Revision : (int?)null;
+			var lengthDelta = i < revisions.Count - 1 ? revision.Length - revisions[i + 1].Length : (int?)null;
+			var lengthDeltaClassColor = lengthDelta > 0 ? "text-success" : lengthDelta < 0 ? "text-danger" : "text-body-tertiary";
+			var lengthDeltaClassBold = lengthDelta.HasValue ? Math.Abs(lengthDelta.Value) > 500 ? "fw-bold" : "" : "";
 			<tr data-revision="@revision.Revision">
-				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a> (<a asp-page="ViewSource" asp-route-path="@Model.Path" asp-route-revision="@revision.Revision">source</a>)</td>
+				<td><a href="/@(Model.PageName)?revision=@revision.Revision">@revision.Revision</a>&nbsp;(<a asp-page="ViewSource" asp-route-path="@Model.Path" asp-route-revision="@revision.Revision">source</a>)</td>
 				<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
 				<td><profile-link username="@revision.CreateUserName"></profile-link></td>
 				<td>@revision.MinorEdit</td>
 				<td>@revision.RevisionMessage</td>
+				<td>@revision.Length&nbsp;<span condition="lengthDelta.HasValue" class="@lengthDeltaClassColor @lengthDeltaClassBold">(@lengthDelta!.Value.ToString("+0;-0;0"))</span></td>
 				<td style="min-width: 100px">
 					<div class="btn-group" role="button" aria-label="diff picker">
 						<a

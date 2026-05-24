@@ -31,7 +31,7 @@ public class WtfTests : BaseParserTests
 		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(SystemCodes.Windows, result.SystemCode);
+		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
 	}
 
 	[TestMethod]

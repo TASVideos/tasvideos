@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Latest Forum Posts");
 }
 
-<partial Name="_ForumHeader" />
+<partial Name="_ForumHeader" model="false" />
 <div condition="@Model.Posts.Any()">
 	<partial name="_Pager" model="Model.Posts" />
 	<standard-table>

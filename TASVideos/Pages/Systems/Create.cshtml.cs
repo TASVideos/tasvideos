@@ -37,7 +37,7 @@ public class CreateModel(IGameSystemService systemService) : BasePageModel
 				ClearStatusMessage();
 				return Page();
 			case SystemEditResult.Fail:
-				ErrorStatusMessage("Unable to edit tag due to an unknown error");
+				ErrorStatusMessage("Unable to create system due to an unknown error");
 				return Page();
 		}
 	}

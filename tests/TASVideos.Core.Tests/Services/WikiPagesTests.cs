@@ -576,8 +576,7 @@ public class WikiPagesTests : TestDbBase
 	[TestMethod]
 	public async Task Move_OriginalDoesNotExist_NothingHappens()
 	{
-		var actual = await _wikiPages.Move("Does not exist", "Also does not exist", 1);
-		Assert.IsTrue(actual, "Page not found is considered successful");
+		await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => _wikiPages.Move("Does not exist", "Also does not exist", 1));
 		Assert.AreEqual(0, _db.WikiPages.Count());
 		Assert.IsEmpty(_cache.PageCache());
 	}
@@ -1966,5 +1965,60 @@ public class WikiPagesTests : TestDbBase
 		}
 
 		return wp.Id;
+	}
+
+	[TestMethod]
+	public async Task CanMove_DestinationDoesNotExist_ReturnsTrue()
+	{
+		const string sourcePage = "Source";
+		const string destinationPage = "Destination";
+		AddPage(sourcePage);
+
+		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
+		Assert.IsTrue(actual);
+	}
+
+	[TestMethod]
+	public async Task CanMove_DestinationAlreadyExists_ReturnsFalse()
+	{
+		const string sourcePage = "Source";
+		const string destinationPage = "Destination";
+		AddPage(sourcePage);
+		AddPage(destinationPage);
+
+		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
+		Assert.IsFalse(actual);
+	}
+
+	[TestMethod]
+	public async Task CanMove_DestinationIsSameAsSource_ReturnsTrue()
+	{
+		const string sourcePage = "Source";
+		const string destinationPage = "SOURCE";
+		AddPage(sourcePage);
+
+		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
+		Assert.IsTrue(actual);
+	}
+
+	[TestMethod]
+	public async Task CanMove_OnlyDestinationExists_ReturnsFalse()
+	{
+		const string sourcePage = "Source";
+		const string destinationPage = "Destination";
+		AddPage(destinationPage);
+
+		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
+		Assert.IsFalse(actual);
+	}
+
+	[TestMethod]
+	public async Task CanMove_NoPagesExist_ReturnsFalse()
+	{
+		const string sourcePage = "Source";
+		const string destinationPage = "Destination";
+
+		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
+		Assert.IsFalse(actual);
 	}
 }

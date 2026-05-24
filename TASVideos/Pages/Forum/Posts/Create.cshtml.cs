@@ -140,7 +140,7 @@ public class CreateModel(
 
 		var mood = Mood != ForumPostMood.Normal ? $" (Mood: {Mood})" : "";
 		var subject = string.IsNullOrWhiteSpace(Subject) ? "" : $" ({Subject})";
-		if (TopicId == ForumConstants.NewsTopicId)
+		if (!topic.Forum.Restricted && topic.ContentType != ForumTopicContentType.Regular)
 		{
 			await publisher.AnnounceNewsPost(
 				$"[News Post]({{0}}) by {user.UserName}{mood}",

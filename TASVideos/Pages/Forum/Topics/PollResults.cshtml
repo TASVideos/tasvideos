@@ -3,7 +3,6 @@
 @{
 	ViewData.SetTitle($"Poll Results for {Model.Poll.TopicTitle}");
 }
-<partial Name="_ForumHeader" />
 <top-button-bar>
 	<back-link asp-page="/Forum/Topics/Index" asp-route-id="@Model.Poll.TopicId"></back-link>
 </top-button-bar>

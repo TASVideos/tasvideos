@@ -4,7 +4,7 @@
 	ViewData.SetTitle("Unanswered Posts");
 }
 
-<partial Name="_ForumHeader" />
+<partial Name="_ForumHeader" model="false" />
 <partial name="_Pager" model="Model.Posts" />
 <standard-table>
 	<table-head columns="Forum,Topic,Author,Posted On"></table-head>

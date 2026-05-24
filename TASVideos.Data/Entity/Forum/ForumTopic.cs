@@ -1,10 +1,19 @@
 namespace TASVideos.Data.Entity.Forum;
 
+/// <summary>The topic type gives the topic a special display and sorting priority.</summary>
 public enum ForumTopicType
 {
 	Regular = 0,
 	Sticky = 1,
 	Announcement = 2
+}
+
+/// <summary>The content type gives topics a special status, being announced in external media publishers and shown on the front page.</summary>
+public enum ForumTopicContentType
+{
+	Regular = 0,
+	SiteNews = 1,
+	Community = 2,
 }
 
 public class ForumTopic : BaseEntity
@@ -23,6 +32,7 @@ public class ForumTopic : BaseEntity
 	public User? Poster { get; set; }
 
 	public ForumTopicType Type { get; set; }
+	public ForumTopicContentType ContentType { get; set; }
 
 	public bool IsLocked { get; set; }
 

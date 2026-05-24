@@ -25,7 +25,7 @@ public class CreateModel(ITagService tagService) : BasePageModel
 				ClearStatusMessage();
 				return Page();
 			case TagEditResult.Fail:
-				ErrorStatusMessage("Unable to edit tag due to an unknown error");
+				ErrorStatusMessage("Unable to create tag due to an unknown error");
 				return Page();
 		}
 	}

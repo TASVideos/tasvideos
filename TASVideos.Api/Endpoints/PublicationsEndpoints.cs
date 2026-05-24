@@ -33,6 +33,33 @@ internal static class PublicationsEndpoints
 		.Receives<PublicationsRequest>()
 		.ProducesList<PublicationsResponse>("a list of publications, searchable by the given criteria");
 
+		group.MapPost("{id:int}/regenerate-title", async (int id, ApplicationDbContext db, HttpContext context) =>
+		{
+			var authError = ApiResults.Authorize(PermissionTo.EditPublicationMetaData, context);
+			if (authError is not null)
+			{
+				return authError;
+			}
+
+			var publication = await db.Publications
+				.IncludeTitleTables()
+				.FirstOrDefaultAsync(p => p.Id == id);
+
+			if (publication is null)
+			{
+				return Results.NotFound();
+			}
+
+			publication.Title = publication.GenerateTitle();
+
+			await db.SaveChangesAsync();
+
+			return Results.Ok();
+		})
+		.WithSummary("Regenerates the title of the publication with the given id. This does not affect any YouTube titles.")
+		.Produces(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status404NotFound);
+
 		return app;
 	}
 }

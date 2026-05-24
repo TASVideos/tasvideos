@@ -33,6 +33,36 @@ internal static class SubmissionsEndpoints
 		.Receives<SubmissionsRequest>()
 		.ProducesList<SubmissionsResponse>("a list of submissions, searchable by the given criteria.");
 
+		group.MapPost("{id:int}/regenerate-title", async (int id, ApplicationDbContext db, HttpContext context) =>
+		{
+			var authError = ApiResults.Authorize(PermissionTo.EditSubmissions, context);
+			if (authError is not null)
+			{
+				return authError;
+			}
+
+			var submission = await db.Submissions
+				.IncludeTitleTables()
+				.FirstOrDefaultAsync(p => p.Id == id);
+
+			if (submission is null)
+			{
+				return Results.NotFound();
+			}
+
+			submission.GenerateTitle();
+
+			var topic = await db.ForumTopics.FindAsync(submission.TopicId);
+			topic?.Title = submission.Title;
+
+			await db.SaveChangesAsync();
+
+			return Results.Ok();
+		})
+		.WithSummary("Regenerates the title of the submission with the given id.")
+		.Produces(StatusCodes.Status200OK)
+		.Produces(StatusCodes.Status404NotFound);
+
 		return app;
 	}
 }

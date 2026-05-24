@@ -3,6 +3,6 @@
 	ViewData.SetTitle("Not Found");
 	HttpContext.Response.StatusCode = 404;
 }
-<partial Name="_ForumHeader" />
+<partial Name="_ForumHeader" model="false" />
 <h4><a asp-page="Index">Forum Index</a></h4>
 <warning-alert>The topic or post you requested does not exist</warning-alert>

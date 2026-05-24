@@ -68,16 +68,18 @@ public interface IQueueService
 	Task<ObsoletePublicationResult?> GetObsoletePublicationTags(int publicationId);
 
 	/// <summary>
-	/// Parses a movie file and returns the parse result along with the movie file bytes
-	/// Supports both zip files and individual movie files
-	/// </summary>
-	Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFileOrZip(IFormFile movieFile);
-
-	/// <summary>
-	/// Parses an individual movie file and returns the parse result along with the movie file bytes
-	/// Does not support zip files - only individual movie files
+	/// Parses an individual movie file and returns the parse result along with the movie file bytes.
+	/// <see cref="IFormFile"/> may be gzipped, but <see cref="IFormFile.FileName"/> must not have a .gz extension
+	/// <returns>The parse result and the raw movie file (after potential un-gzipping)</returns>
 	/// </summary>
 	Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile);
+
+	/// <summary>
+	/// Parses an individual movie file and returns the parse result along with the zipped movie file bytes.
+	/// <see cref="IFormFile"/> may be gzipped, but <see cref="IFormFile.FileName"/> must not have a .gz extension
+	/// <returns>The parse result and the raw movie file (after potential un-gzipping) placed into a .zip file</returns>
+	/// </summary>
+	Task<(IParseResult ParseResult, byte[] ZippedMovieFileBytes)> ParseMovieFileAndZip(IFormFile movieFile);
 
 	/// <summary>
 	/// Claims a submission for judging by the specified user
@@ -339,7 +341,7 @@ internal class QueueService(
 
 		if (request.ReplaceMovieFile is not null)
 		{
-			var (parseResult, movieFileBytes) = await ParseMovieFileOrZip(request.ReplaceMovieFile);
+			var (parseResult, zippedMovieFileBytes) = await ParseMovieFileAndZip(request.ReplaceMovieFile);
 			if (!parseResult.Success)
 			{
 				return UpdateSubmissionResult.Error("Movie file parsing failed");
@@ -367,7 +369,7 @@ internal class QueueService(
 			submission.Warnings = mapResult.Warnings;
 			submission.SystemFrameRate = mapResult.SystemFrameRate;
 
-			submission.MovieFile = movieFileBytes;
+			submission.MovieFile = zippedMovieFileBytes;
 			submission.SyncedOn = null;
 			submission.SyncedByUserId = null;
 
@@ -503,7 +505,7 @@ internal class QueueService(
 			submission.Title);
 	}
 
-	public async Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFileOrZip(IFormFile movieFile)
+	public async Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile)
 	{
 		// Inline implementation of DecompressOrTakeRaw
 		var rawFileStream = new MemoryStream();
@@ -526,52 +528,20 @@ internal class QueueService(
 			fileStream = rawFileStream;
 		}
 
-		var fileBytes = fileStream.ToArray();
-
-		// Inline implementation of IsZip
-		var isZip = movieFile.FileName.EndsWith(".zip")
-			&& movieFile.ContentType is "application/x-zip-compressed" or "application/zip";
-
-		var parseResult = isZip
-			? await movieParser.ParseZip(fileStream)
-			: await movieParser.ParseFile(movieFile.FileName, fileStream);
-
-		var movieFileBytes = isZip
-			? fileBytes
-			: await fileService.ZipFile(fileBytes, movieFile.FileName);
-
-		return (parseResult, movieFileBytes);
-	}
-
-	public async Task<(IParseResult ParseResult, byte[] MovieFileBytes)> ParseMovieFile(IFormFile movieFile)
-	{
-		var rawFileStream = new MemoryStream();
-		await movieFile.CopyToAsync(rawFileStream);
-
-		MemoryStream fileStream;
-		try
-		{
-			rawFileStream.Position = 0;
-			using var gzip = new GZipStream(rawFileStream, CompressionMode.Decompress, leaveOpen: true);
-			var decompressedFileStream = new MemoryStream();
-			await gzip.CopyToAsync(decompressedFileStream);
-			await rawFileStream.DisposeAsync();
-			decompressedFileStream.Position = 0;
-			fileStream = decompressedFileStream;
-		}
-		catch (InvalidDataException)
-		{
-			rawFileStream.Position = 0;
-			fileStream = rawFileStream;
-		}
-
-		// Parse the individual movie file (not a zip)
+		// Parse the individual movie file
 		var parseResult = await movieParser.ParseFile(movieFile.FileName, fileStream);
 
 		// Get the file bytes for storage
 		var movieFileBytes = fileStream.ToArray();
 
 		return (parseResult, movieFileBytes);
+	}
+
+	public async Task<(IParseResult ParseResult, byte[] ZippedMovieFileBytes)> ParseMovieFileAndZip(IFormFile movieFile)
+	{
+		var (parseResult, movieFileBytes) = await ParseMovieFile(movieFile);
+		var zippedMovieFileBytes = await fileService.ZipFile(movieFileBytes, movieFile.FileName);
+		return (parseResult, zippedMovieFileBytes);
 	}
 
 	public Task<ClaimSubmissionResult> ClaimForJudging(int submissionId, int userId, string userName)

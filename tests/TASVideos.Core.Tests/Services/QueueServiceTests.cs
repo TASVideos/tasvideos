@@ -1364,7 +1364,7 @@ public class QueueServiceTests : TestDbBase
 	#region ParseMovieFile
 
 	[TestMethod]
-	public async Task ParseMovieFile_NonZipFile_ParsesFileAndZipsResult()
+	public async Task ParseMovieFile_ParsesFileAndReturnsRawBytes()
 	{
 		var formFile = Substitute.For<IFormFile>();
 		formFile.FileName.Returns("test.bk2");
@@ -1380,38 +1380,11 @@ public class QueueServiceTests : TestDbBase
 
 		_movieParser.ParseFile("test.bk2", Arg.Any<Stream>()).Returns(parseResult);
 
-		var zippedBytes = new byte[] { 5, 6, 7, 8, 9 };
-		_fileService.ZipFile(Arg.Any<byte[]>(), "test.bk2").Returns(zippedBytes);
-
-		var (result, movieBytes) = await _queueService.ParseMovieFileOrZip(formFile);
-
-		Assert.AreEqual(parseResult, result);
-		Assert.AreEqual(zippedBytes, movieBytes);
-		await _movieParser.Received(1).ParseFile("test.bk2", Arg.Any<Stream>());
-		await _fileService.Received(1).ZipFile(Arg.Any<byte[]>(), "test.bk2");
-	}
-
-	[TestMethod]
-	public async Task ParseMovieFile_ZipFile_ParsesZipAndReturnsRawBytes()
-	{
-		var formFile = Substitute.For<IFormFile>();
-		formFile.FileName.Returns("test.zip");
-		formFile.ContentType.Returns("application/zip");
-
-		var fileStream = new MemoryStream([1, 2, 3, 4]);
-		formFile.CopyToAsync(Arg.Any<Stream>()).Returns(Task.CompletedTask)
-			.AndDoes(x => fileStream.CopyTo((Stream)x.Args()[0]));
-
-		var parseResult = Substitute.For<IParseResult>();
-		parseResult.Success.Returns(true);
-
-		_movieParser.ParseZip(Arg.Any<Stream>()).Returns(parseResult);
-
-		var (result, movieBytes) = await _queueService.ParseMovieFileOrZip(formFile);
+		var (result, movieBytes) = await _queueService.ParseMovieFile(formFile);
 
 		Assert.AreEqual(parseResult, result);
 		Assert.HasCount(4, movieBytes); // Raw file bytes
-		await _movieParser.Received(1).ParseZip(Arg.Any<Stream>());
+		await _movieParser.Received(1).ParseFile("test.bk2", Arg.Any<Stream>());
 		await _fileService.DidNotReceive().ZipFile(Arg.Any<byte[]>(), Arg.Any<string>());
 	}
 

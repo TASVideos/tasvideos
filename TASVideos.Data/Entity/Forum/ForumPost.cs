@@ -47,5 +47,7 @@ public static class ForumPostQueryableExtensions
 
 		public IOrderedQueryable<ForumPost> ByWebRanking(string searchTerms)
 			=> query.OrderByDescending(p => p.SearchVector.Rank(EF.Functions.WebSearchToTsQuery(searchTerms)));
+
+		public IQueryable<ForumPost> WhereSpecialContentType() => query.Where(p => p.Topic!.ContentType != ForumTopicContentType.Regular);
 	}
 }

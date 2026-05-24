@@ -1,0 +1,27 @@
+@page
+@model IndexModel
+@{
+	ViewData.SetTitle("Wiki Redirects");
+}
+<top-button-bar>
+	<a class="btn btn-secondary" asp-page="/Logs/Index" asp-route-table="Wiki_Redirects">History</a>
+	<add-link asp-page="Create"></add-link>
+</top-button-bar>
+<fullrow class="mb-2">
+	The following redirects will only be performed for pages that would otherwise lead to a "PageDoesNotExist" page.
+</fullrow>
+<standard-table>
+	<table-head columns="From,To,"></table-head>
+	@foreach (var redirect in Model.Redirects)
+	{
+		<tr>
+			<td>@redirect.PageNameFrom</td>
+			<td>@redirect.PageNameTo</td>
+			<td-action-column>
+				<edit-link asp-page="Edit" asp-route-id="@redirect.Id"></edit-link>
+				<delete-button asp-href="/Wiki/Redirects/Index?handler=Delete&id=@redirect.Id"
+							   warning-message="Are you sure you want to remove this redirect?"></delete-button>
+			</td-action-column>
+		</tr>
+	}
+</standard-table>

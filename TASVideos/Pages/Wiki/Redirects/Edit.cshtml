@@ -1,0 +1,28 @@
+@page "{id}"
+@model EditModel
+@{
+	ViewData.SetTitle($"Editing Redirect from '{Model.WikiRedirect.PageNameFrom}' to '{Model.WikiRedirect.PageNameTo}'");
+}
+
+<form client-side-validation="true" method="post">
+	<row>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="WikiRedirect.PageNameFrom"></label>
+				<input asp-for="WikiRedirect.PageNameFrom" placeholder="OldPage/Example" />
+				<span asp-validation-for="WikiRedirect.PageNameFrom"></span>
+			</fieldset>
+		</column>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="WikiRedirect.PageNameTo"></label>
+				<input asp-for="WikiRedirect.PageNameTo" placeholder="NewPage/Example" />
+				<span asp-validation-for="WikiRedirect.PageNameTo"></span>
+			</fieldset>
+		</column>
+	</row>
+	<form-button-bar>
+		<submit-button></submit-button>
+		<cancel-link asp-page="Index"></cancel-link>
+	</form-button-bar>
+</form>

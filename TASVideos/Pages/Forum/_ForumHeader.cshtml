@@ -1,7 +1,13 @@
-<button id="forum-header-restore" role="button" class="btn btn-sm border border-info btn-sm mb-2 me-1 float-start">
+@model bool
+@{
+	var isInsideTopButtonBar = Model;
+	var restoreButtonClass = isInsideTopButtonBar ? "me-auto" : "mb-2";
+	var headerClass = isInsideTopButtonBar ? "w-100" : "";
+}
+<button id="forum-header-restore" role="button" class="btn btn-sm border border-info btn-sm @restoreButtonClass">
 	<i class="fa fa-chevron-down"></i>
 </button>
-<info-alert id="forum-header" class="mb-2 d-none">
+<info-alert id="forum-header" class="mb-2 d-none @headerClass">
 	<button id="forum-header-dismiss" type="button" class="btn-close float-end" aria-label="close"></button>
 	@await Html.RenderWiki(SystemWiki.ForumHeader)
 	<script src="/js/forum-header.js"></script>

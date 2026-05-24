@@ -12,6 +12,9 @@ public class SetTypeModel(ApplicationDbContext db) : BaseForumModel
 	public ForumTopicType Type { get; set; }
 
 	[BindProperty]
+	public ForumTopicContentType ContentType { get; set; }
+
+	[BindProperty]
 	public string TopicTitle { get; set; } = "";
 
 	[BindProperty]
@@ -37,6 +40,7 @@ public class SetTypeModel(ApplicationDbContext db) : BaseForumModel
 
 		TopicTitle = topic.Title;
 		Type = topic.Type;
+		ContentType = topic.ContentType;
 		ForumId = topic.ForumId;
 		ForumName = topic.Forum!.Name;
 		return Page();
@@ -59,8 +63,9 @@ public class SetTypeModel(ApplicationDbContext db) : BaseForumModel
 		}
 
 		topic.Type = Type;
+		topic.ContentType = ContentType;
 
-		SetMessage(await db.TrySaveChanges(), $"Topic set to {Type}", "Unable to set the topic type");
+		SetMessage(await db.TrySaveChanges(), $"Topic set to Type '{Type}' and Content Type '{ContentType}'", "Unable to set the topic types");
 		return RedirectToPage("Index", new { topic.Id });
 	}
 }

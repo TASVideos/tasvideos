@@ -1,0 +1,28 @@
+@page
+@model CreateModel
+@{
+	ViewData.SetTitle("Creating a new Wiki Redirect");
+}
+
+<form client-side-validation="true" method="post">
+	<row>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="WikiRedirect.PageNameFrom"></label>
+				<input asp-for="WikiRedirect.PageNameFrom" placeholder="OldPage/Example" />
+				<span asp-validation-for="WikiRedirect.PageNameFrom"></span>
+			</fieldset>
+		</column>
+		<column lg="6">
+			<fieldset>
+				<label asp-for="WikiRedirect.PageNameTo"></label>
+				<input asp-for="WikiRedirect.PageNameTo" placeholder="NewPage/Example" />
+				<span asp-validation-for="WikiRedirect.PageNameTo"></span>
+			</fieldset>
+		</column>
+	</row>
+	<form-button-bar>
+		<submit-button edit="false"></submit-button>
+		<cancel-link asp-page="Index"></cancel-link>
+	</form-button-bar>
+</form>

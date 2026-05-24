@@ -24,7 +24,10 @@ public class CreateModel(
 	public string Post { get; init; } = "";
 
 	[BindProperty]
-	public ForumTopicType Type { get; init; } = ForumTopicType.Regular;
+	public ForumTopicType Type { get; set; } = ForumTopicType.Regular;
+
+	[BindProperty]
+	public ForumTopicContentType ContentType { get; set; } = ForumTopicContentType.Regular;
 
 	[BindProperty]
 	public ForumPostMood Mood { get; init; } = ForumPostMood.Normal;
@@ -103,19 +106,26 @@ public class CreateModel(
 			return NotFound();
 		}
 
+		if (!User.Has(PermissionTo.SetTopicType))
+		{
+			Type = ForumTopicType.Regular;
+			ContentType = ForumTopicContentType.Regular;
+		}
+
 		var userId = User.GetUserId();
 
 		using var dbTransaction = await db.BeginTransactionAsync();
 		var topic = db.ForumTopics.Add(new ForumTopic
 		{
 			Type = Type,
+			ContentType = ContentType,
 			Title = Title,
 			PosterId = userId,
 			ForumId = ForumId
 		}).Entity;
 		await db.SaveChangesAsync();
 
-		await forumService.CreatePost(new PostCreate(
+		var postId = await forumService.CreatePost(new PostCreate(
 			ForumId, topic.Id, null, Post, userId, User.Name(), Mood, IpAddress, WatchTopic));
 
 		if (User.Has(PermissionTo.CreateForumPolls) && Poll.IsValid)
@@ -128,11 +138,23 @@ public class CreateModel(
 		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());
 		await dbTransaction.CommitAsync();
 
-		await publisher.SendForum(
-			forum.Restricted,
-			$"[New Topic]({{0}}) by {User.Name()}",
-			$"{forum.ShortName}: {Title}",
-			$"Forum/Topics/{topic.Id}");
+		if (topic.ContentType == ForumTopicContentType.Regular)
+		{
+			await publisher.SendForum(
+				forum.Restricted,
+				$"[New Topic]({{0}}) by {User.Name()}",
+				$"{forum.ShortName}: {Title}",
+				$"Forum/Topics/{topic.Id}");
+		}
+		else
+		{
+			var mood = Mood != ForumPostMood.Normal ? $" (Mood: {Mood})" : "";
+
+			await publisher.AnnounceNewsPost(
+				$"[News Post]({{0}}) by {User.Name()}{mood}",
+				$"{forum.ShortName}: {topic.Title}",
+				postId);
+		}
 
 		return RedirectToPage("Index", new { topic.Id });
 	}

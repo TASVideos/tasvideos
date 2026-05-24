@@ -15,7 +15,8 @@ public class EditModelTests : BasePageModelTests
 		_model = new EditModel(_systemService)
 		{
 			PageContext = TestPageContext(),
-			System = new(123, "NES", "Nintendo", [new FrameRatesResponse(456, 60, "NTSC", true, true)])
+			System = new(123, "NES", "Nintendo"),
+			SystemFrameRates = [new FrameRatesResponse(456, 60, "NTSC", true, true)],
 		};
 	}
 

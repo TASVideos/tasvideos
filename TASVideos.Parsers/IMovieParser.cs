@@ -5,8 +5,7 @@ namespace TASVideos.MovieParsers;
 
 /// <summary>
 /// The entry point for movie file parsers
-/// Takes a stream of the zip file containing a movie file
-/// The file must have precisely one file
+/// Takes a stream of the movie file
 /// The file is processed and an <see cref="IParseResult"/>
 /// is returned.
 /// </summary>
@@ -14,7 +13,6 @@ namespace TASVideos.MovieParsers;
 public interface IMovieParser
 {
 	IEnumerable<string> SupportedMovieExtensions { get; }
-	Task<IParseResult> ParseZip(Stream stream);
 	Task<IParseResult> ParseFile(string fileName, Stream stream);
 }
 
@@ -31,35 +29,6 @@ internal sealed class MovieParser : IMovieParser
 	public IEnumerable<string> SupportedMovieExtensions => ParserTypes
 		.Select(t => "." + (t.GetCustomAttribute(typeof(FileExtensionAttribute)) as FileExtensionAttribute)
 				?.Extension);
-
-	public async Task<IParseResult> ParseZip(Stream stream)
-	{
-		try
-		{
-			using var zip = await stream.OpenZipArchiveRead();
-			if (zip.Entries.Count > 1)
-			{
-				return Error("Multiple files detected in the .zip, only one file is allowed");
-			}
-
-			var movieFile = zip.Entries.First();
-			var ext = Path.GetExtension(movieFile.Key ?? "").Trim('.').ToLower();
-
-			var parser = GetParser(ext);
-			if (parser is null)
-			{
-				return Error($".{ext} files are not currently supported.");
-			}
-
-			await using var movieFileStream = movieFile.OpenEntryStream();
-			return await parser.Parse(movieFileStream, movieFile.Size);
-		}
-		catch (Exception)
-		{
-			// TODO: do we want to log here? or catch at a higher layer?
-			return Error("A general error occured while processing the movie file.");
-		}
-	}
 
 	public async Task<IParseResult> ParseFile(string fileName, Stream stream)
 	{

@@ -1,34 +1,54 @@
+using System.Text;
+
 namespace TASVideos.Pages.UserFiles;
 
 [AllowAnonymous]
 public class IndexModel(ApplicationDbContext db, IExternalMediaPublisher publisher) : BasePageModel
 {
-	public List<UserWithMovie> UsersWithMovies { get; set; } = [];
 	public List<UserMovie> LatestMovies { get; set; } = [];
-	public List<GameWithMovie> GamesWithMovies { get; set; } = [];
+	public List<(string Key, string Label, IEnumerable<GameWithMovie> Games)> GroupedGames { get; set; } = [];
 	public List<Uncataloged.UncatalogedViewModel> UncatalogedFiles { get; set; } = [];
 
 	public async Task OnGet()
 	{
-		UsersWithMovies = await db.UserFiles
-			.ThatArePublic()
-			.GroupBy(gkey => gkey.Author!.UserName, gvalue => gvalue.UploadTimestamp)
-			.Select(uf => new UserWithMovie(uf.Key, uf.Max()))
-			.ToListAsync();
 		LatestMovies = await db.UserFiles
 			.ThatArePublic()
 			.ByRecentlyUploaded()
 			.ToUserMovieListModel()
 			.Take(10)
 			.ToListAsync();
-		GamesWithMovies = await db.Games
+		var gamesWithMovies = await db.Games
 			.Where(g => g.UserFiles.Any(uf => !uf.Hidden))
-			.OrderBy(g => g.DisplayName)
 			.Select(g => new GameWithMovie(
 				g.Id,
 				g.DisplayName,
 				g.UserFiles.Select(uf => uf.UploadTimestamp).ToList()))
 			.ToListAsync();
+		GroupedGames = gamesWithMovies
+			.GroupBy(g =>
+			{
+				var c = g.GameName[..1].Normalize(NormalizationForm.FormD)[0]; // first char w/o diacritics (with apologies to non-English languages)
+				return char.IsAscii(c)
+					? char.IsAsciiLetterOrDigit(c)
+						? char.IsAsciiDigit(c)
+							? '#'
+							: char.ToUpperInvariant(c)
+						: '@'
+					: '?';
+			})
+			.Select(grouping => (
+				grouping.Key switch
+				{
+					'?' => "zz-unk",
+					'@' => "zz-sym",
+					'#' => "zz-num",
+					_ => grouping.Key.ToString(),
+				},
+				grouping.Key.ToString(),
+				grouping.AsEnumerable()
+			))
+			.OrderBy(tuple => tuple.Item1)
+			.ToList();
 		UncatalogedFiles = await db.UserFiles
 			.Where(uf => uf.GameId == null)
 			.ThatArePublic()

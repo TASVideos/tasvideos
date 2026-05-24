@@ -1,3 +1,4 @@
+using TASVideos.Core.Services;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.Pages.Wiki;
 using TASVideos.Services;
@@ -15,7 +16,8 @@ public class MoveModelTests : TestDbBase
 	{
 		_wikiPages = Substitute.For<IWikiPages>();
 		var publisher = Substitute.For<IExternalMediaPublisher>();
-		_model = new MoveModel(_wikiPages, publisher);
+		var wikiRedirectService = Substitute.For<IWikiRedirectService>();
+		_model = new MoveModel(_wikiPages, publisher, wikiRedirectService, _db);
 	}
 
 	#region OnGet Tests
@@ -86,18 +88,18 @@ public class MoveModelTests : TestDbBase
 	}
 
 	[TestMethod]
-	public async Task OnPost_DestinationPageExists_AddsModelErrorAndReturnsPage()
+	public async Task OnPost_CanMoveReturnsFalse_AddsModelErrorAndReturnsPage()
 	{
 		_model.OriginalPageName = "TestPage";
 		_model.DestinationPageName = "ExistingPage";
-		_wikiPages.Exists("ExistingPage", includeDeleted: true).Returns(true);
+		_wikiPages.CanMove("TestPage", "ExistingPage").Returns(false);
 
 		var result = await _model.OnPost();
 
 		Assert.IsInstanceOfType<PageResult>(result);
 		Assert.IsFalse(_model.ModelState.IsValid);
-		Assert.IsNotNull(_model.ModelState["DestinationPageName"]);
-		Assert.IsTrue(_model.ModelState["DestinationPageName"]!.Errors.Any(e => e.ErrorMessage.Contains("already exists")));
+		Assert.IsNotNull(_model.ModelState[""]);
+		Assert.IsTrue(_model.ModelState[""]!.Errors.Any(e => e.ErrorMessage.Contains("already exists")));
 		await _wikiPages.DidNotReceive().Move(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
 	}
 
@@ -109,7 +111,7 @@ public class MoveModelTests : TestDbBase
 		AddAuthenticatedUser(_model, user, [PermissionTo.MoveWikiPages]);
 		_model.OriginalPageName = "/TestPage/";
 		_model.DestinationPageName = "/NewPage/";
-		_wikiPages.Exists("NewPage", includeDeleted: true).Returns(false);
+		_wikiPages.CanMove("TestPage", "NewPage").Returns(true);
 		_wikiPages.Move("TestPage", "NewPage", user.Id).Returns(true);
 
 		var result = await _model.OnPost();
@@ -126,7 +128,7 @@ public class MoveModelTests : TestDbBase
 		AddAuthenticatedUser(_model, user, [PermissionTo.MoveWikiPages]);
 		_model.OriginalPageName = "OriginalPage";
 		_model.DestinationPageName = "DestinationPage";
-		_wikiPages.Exists("DestinationPage", includeDeleted: true).Returns(false);
+		_wikiPages.CanMove("OriginalPage", "DestinationPage").Returns(true);
 		_wikiPages.Move("OriginalPage", "DestinationPage", user.Id).Returns(true);
 
 		var result = await _model.OnPost();
@@ -146,7 +148,7 @@ public class MoveModelTests : TestDbBase
 		AddAuthenticatedUser(_model, user, [PermissionTo.MoveWikiPages]);
 		_model.OriginalPageName = "TestPage";
 		_model.DestinationPageName = "NewPage";
-		_wikiPages.Exists("NewPage", includeDeleted: true).Returns(false);
+		_wikiPages.CanMove("TestPage", "NewPage").Returns(true);
 		_wikiPages.Move("TestPage", "NewPage", user.Id).Returns(false);
 
 		var result = await _model.OnPost();

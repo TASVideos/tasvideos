@@ -18,6 +18,10 @@ internal class Lsmv : Parser, IParser
 		};
 
 		var archive = await file.OpenZipArchiveRead();
+		if (archive == null)
+		{
+			return InvalidFormat();
+		}
 
 		// a .lsmv is actually a savestate if a savestate file is present
 		if (archive.Entries.Any(e => e.Key is not null && e.Key.Equals(Savestate, StringComparison.InvariantCultureIgnoreCase)))
