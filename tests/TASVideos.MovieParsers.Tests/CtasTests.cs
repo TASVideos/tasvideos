@@ -43,4 +43,13 @@ public class CtasTests : BaseParserTests
 		AssertNoWarnings(result);
 		Assert.AreEqual(1, result.Errors.Count());
 	}
+
+	[TestMethod]
+	public async Task Version4Timing()
+	{
+		var result = await _ctasParser.Parse(Embedded("version4.ctas", out var length), length);
+		Assert.IsTrue(result.Success);
+		AssertNoWarnings(result);
+		Assert.AreEqual(47027, result.Frames);
+	}
 }
