@@ -48,7 +48,7 @@
 				<td><timezone-convert asp-for="@revision.CreateTimestamp" /></td>
 				<td><profile-link username="@revision.CreateUserName"></profile-link></td>
 				<td>@revision.MinorEdit</td>
-				<td>@revision.RevisionMessage</td>
+				<td style="overflow-wrap: anywhere">@revision.RevisionMessage</td>
 				<td>@revision.Length&nbsp;<span condition="lengthDelta.HasValue" class="@lengthDeltaClassColor @lengthDeltaClassBold">(@lengthDelta!.Value.ToString("+0;-0;0"))</span></td>
 				<td style="min-width: 100px">
 					<div class="btn-group" role="button" aria-label="diff picker">

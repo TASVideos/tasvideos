@@ -30,20 +30,22 @@
 			<td>@version.TitleOverride</td>
 			<td>@version.Version</td>
 			<td>@version.Region</td>
-			<td>
-				<small condition="!string.IsNullOrEmpty(version.Sha1)" class="text-nowrap">SHA1: @version.Sha1</small>
-				<small condition="!string.IsNullOrEmpty(version.Md5)" class="text-nowrap">MD5: @version.Md5</small><br />
+			<td style="overflow-wrap: anywhere">
+				<small condition="!string.IsNullOrEmpty(version.Sha1)">SHA1: @version.Sha1</small><br />
+				<small condition="!string.IsNullOrEmpty(version.Md5)">MD5: @version.Md5</small>
 			</td>
 			<td>@version.System</td>
 			<td-action-column>
-				<a
-					class="btn btn-secondary btn-sm"
-					asp-page="/Games/Versions/View"
-					asp-route-gameId="@Model.GameId"
-					asp-route-id="@version.Id">
-					<i class="fa fa-eye"></i> View
-				</a>
-				<edit-link class="btn-sm" asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId"></edit-link>
+				<div class="d-flex flex-wrap gap-1">
+					<a
+						class="btn btn-secondary btn-sm"
+						asp-page="/Games/Versions/View"
+						asp-route-gameId="@Model.GameId"
+						asp-route-id="@version.Id">
+						<i class="fa fa-eye"></i> View
+					</a>
+					<edit-link class="btn-sm" asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId"></edit-link>
+				</div>
 			</td-action-column>
 		</tr>
 	}
