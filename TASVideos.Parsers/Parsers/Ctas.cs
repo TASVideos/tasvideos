@@ -34,9 +34,6 @@ internal class Ctas : Parser, IParser
 			{
 				result.RerecordCount = (int)reader.ReadUInt32();
 				reportedTime = reader.ReadUInt32() / 1000.0;
-				byte[] buf = new byte[1000];
-
-				reader.Read(buf);
 			}
 			else
 			{
