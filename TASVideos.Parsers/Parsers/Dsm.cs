@@ -7,7 +7,7 @@ internal class Dsm : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.World,
 			SystemCode = SystemCodes.Ds
 		};
 

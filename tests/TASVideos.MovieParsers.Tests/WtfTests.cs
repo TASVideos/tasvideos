@@ -44,12 +44,12 @@ public class WtfTests : BaseParserTests
 	}
 
 	[TestMethod]
-	public async Task Ntsc()
+	public async Task World()
 	{
 		var result = await _wtfParser.Parse(Embedded("2frames.wtf", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.World, result.Region);
 	}
 
 	[TestMethod]

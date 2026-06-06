@@ -27,12 +27,12 @@ public class DftTests : BaseParserTests
 	}
 
 	[TestMethod]
-	public async Task Ntsc()
+	public async Task World()
 	{
 		var result = await _dftParser.Parse(Embedded("2frames.dft", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.World, result.Region);
 	}
 
 	[TestMethod]

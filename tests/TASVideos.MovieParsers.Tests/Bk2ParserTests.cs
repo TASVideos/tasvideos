@@ -381,6 +381,7 @@ public class Bk2ParserTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(420782, result.Frames);
 		Assert.AreEqual(1000, result.FrameRateOverride);
+		Assert.AreEqual(RegionType.World, result.Region);
 		Assert.IsNull(result.CycleCount);
 		AssertNoWarningsOrErrors(result);
 	}

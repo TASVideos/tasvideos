@@ -7,7 +7,7 @@ internal class Vbm : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.World,
 			SystemCode = SystemCodes.GameBoy
 		};
 

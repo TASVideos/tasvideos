@@ -108,9 +108,9 @@ public class LsmvTests : BaseParserTests
 	[DataRow("gametype-sufamiturbo.lsmv", SystemCodes.Snes, RegionType.Ntsc)]
 	[DataRow("gametype-sgb_ntsc.lsmv", SystemCodes.Sgb, RegionType.Ntsc)]
 	[DataRow("gametype-sgb_pal.lsmv", SystemCodes.Sgb, RegionType.Pal)]
-	[DataRow("gametype-gdmg.lsmv", SystemCodes.GameBoy, RegionType.Ntsc)]
-	[DataRow("gametype-ggbc.lsmv", SystemCodes.Gbc, RegionType.Ntsc)]
-	[DataRow("gametype-ggbca.lsmv", SystemCodes.Gbc, RegionType.Ntsc)]
+	[DataRow("gametype-gdmg.lsmv", SystemCodes.GameBoy, RegionType.World)]
+	[DataRow("gametype-ggbc.lsmv", SystemCodes.Gbc, RegionType.World)]
+	[DataRow("gametype-ggbca.lsmv", SystemCodes.Gbc, RegionType.World)]
 	public async Task SystemAndRegion(string file, string expectedSystem, RegionType expectedRegion)
 	{
 		var result = await _lsmvParser.Parse(Embedded(file, out var length), length);

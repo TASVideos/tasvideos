@@ -47,7 +47,7 @@ public class LtmTests : BaseParserTests
 		var result = await _ltmParser.Parse(Embedded("2frames.ltm", out var length), length);
 
 		Assert.IsTrue(result.Success);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.World, result.Region);
 	}
 
 	[TestMethod]

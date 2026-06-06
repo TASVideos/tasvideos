@@ -19,7 +19,12 @@ public enum RegionType
 	/// <summary>
 	/// Indicates that the region is the PAL standard
 	/// </summary>
-	Pal
+	Pal,
+
+	/// <summary>
+	/// Indicates the system is not TV based
+	/// </summary>
+	World
 }
 
 /// <summary>

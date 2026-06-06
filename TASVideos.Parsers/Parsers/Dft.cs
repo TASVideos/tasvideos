@@ -11,7 +11,7 @@ internal class Dft : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.World,
 			SystemCode = SystemCodes.Pc,
 			FrameRateOverride = FrameRate,
 		};

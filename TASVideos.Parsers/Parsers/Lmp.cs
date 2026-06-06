@@ -21,7 +21,7 @@ internal class Lmp : Parser, IParser
 	private const int Maxplayers = 4;
 	private const int Terminator = 0x80;
 	private const int Invalid = -1;
-	private const double NtscDoomFramerate = 35.0029869215506;
+	private const double DoomFramerate = 35.0029869215506;
 
 	private int FooterPointer { get; set; } = Invalid;
 
@@ -349,9 +349,9 @@ internal class Lmp : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.World,
 			SystemCode = SystemCodes.Pc,
-			FrameRateOverride = NtscDoomFramerate
+			FrameRateOverride = DoomFramerate
 		};
 
 		/* A lmp consists of a header, inputs, and a terminator byte

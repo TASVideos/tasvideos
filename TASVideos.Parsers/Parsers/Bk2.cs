@@ -115,6 +115,12 @@ internal class Bk2 : Parser, IParser
 				platform = systemId;
 			}
 
+			// dosbox-x core can run several non-tv-based systems in addition to dos
+			if (platform == SystemCodes.Dos)
+			{
+				result.Region = RegionType.World;
+			}
+
 			// Check various subsystem flags
 			if (header.GetBoolFor(Keys.Mode32X))
 			{

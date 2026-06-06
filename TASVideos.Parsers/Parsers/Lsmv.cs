@@ -80,12 +80,12 @@ internal class Lsmv : Parser, IParser
 						break;
 					case "gdmg":
 						result.SystemCode = SystemCodes.GameBoy;
-						result.Region = RegionType.Ntsc;
+						result.Region = RegionType.World;
 						break;
 					case "ggbc":
 					case "ggbca":
 						result.SystemCode = SystemCodes.Gbc;
-						result.Region = RegionType.Ntsc;
+						result.Region = RegionType.World;
 						break;
 				}
 			}
