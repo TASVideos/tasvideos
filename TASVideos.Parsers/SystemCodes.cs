@@ -23,6 +23,7 @@ internal static class SystemCodes
 	public const string Genesis = "genesis";
 	public const string Gg = "gg";
 	public const string Intellivision = "intv";
+	public const string J2me = "j2me";
 	public const string Jaguar = "jaguar";
 	public const string JaguarCd = "jaguarcd";
 	public const string Lynx = "lynx";
