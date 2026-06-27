@@ -14,7 +14,7 @@ public class ThreeCtParserTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Nes, result.SystemCode);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 		Assert.AreEqual(0, result.RerecordCount);
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
 		Assert.AreEqual("3ct", result.FileExtension);

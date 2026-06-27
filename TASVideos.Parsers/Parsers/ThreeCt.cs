@@ -7,7 +7,7 @@ internal class ThreeCt : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.Nes,
 			FrameRateOverride = 5369318.18181818
 		};

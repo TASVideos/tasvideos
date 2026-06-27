@@ -10,7 +10,7 @@ internal class Ctm : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.N3ds
 		};
 

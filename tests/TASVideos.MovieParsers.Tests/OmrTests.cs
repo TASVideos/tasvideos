@@ -104,7 +104,7 @@ public class OmrTests : BaseParserTests
 		var result = await _omrParser.Parse(Embedded("2seconds.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 	}
 
 	[TestMethod]
@@ -113,7 +113,7 @@ public class OmrTests : BaseParserTests
 		var result = await _omrParser.Parse(Embedded("pal.omr", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Pal, result.Region);
+		Assert.AreEqual(RegionType.PAL, result.Region);
 	}
 
 	[TestMethod]

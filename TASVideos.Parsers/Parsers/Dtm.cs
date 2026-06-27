@@ -10,7 +10,7 @@ internal class Dtm : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.GameCube
 		};
 
@@ -59,7 +59,7 @@ internal class Dtm : Parser, IParser
 		br.ReadByte(); // PAL60 setting (this setting only applies to Wii games that support both 50 Hz and 60 Hz)
 		br.ReadBytes(12); // Reserved
 		br.ReadBytes(40); // Name of second disc iso
-		br.ReadBytes(20); // SHA-1 has of git revision
+		br.ReadBytes(20); // SHA-1 hash of git revision
 		br.ReadBytes(4); // DSP
 		br.ReadBytes(4); // DSP
 		result.CycleCount = br.ReadInt64(); // (486 MHz when a GameCube game is running, 729 MHz when a Wii game is running)

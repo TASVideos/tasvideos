@@ -68,8 +68,8 @@ public class Bk2ParserTests : BaseParserTests
 	}
 
 	[TestMethod]
-	[DataRow("Pal1.bk2", RegionType.Pal)]
-	[DataRow("0Frames.bk2", RegionType.Ntsc, DisplayName = "Missing flag defaults to Ntsc")]
+	[DataRow("Pal1.bk2", RegionType.PAL)]
+	[DataRow("0Frames.bk2", RegionType.NTSC, DisplayName = "Missing flag defaults to Ntsc")]
 	public async Task PalFlag_True(string fileName, RegionType expected)
 	{
 		var result = await _bk2Parser.Parse(Embedded(fileName, out var length), length);

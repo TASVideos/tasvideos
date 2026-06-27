@@ -49,7 +49,7 @@ public class CtmTests : BaseParserTests
 		var result = await _ctmParser.Parse(Embedded("2frames.ctm", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 	}
 
 	[TestMethod]

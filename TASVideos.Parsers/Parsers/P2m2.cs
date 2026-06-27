@@ -7,7 +7,7 @@ internal class P2m2 : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.Ps2
 		};
 

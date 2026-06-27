@@ -7,7 +7,7 @@ internal class Mar : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.Arcade
 		};
 

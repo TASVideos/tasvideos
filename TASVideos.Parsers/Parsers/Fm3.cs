@@ -9,7 +9,7 @@ internal class Fm3 : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.Nes
 		};
 
@@ -81,7 +81,7 @@ internal class Fm3 : Parser, IParser
 		// Handle region detection
 		if (header.GetBoolFor(Keys.Pal))
 		{
-			result.Region = RegionType.Pal;
+			result.Region = RegionType.PAL;
 		}
 
 		// Handle start type

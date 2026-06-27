@@ -49,7 +49,7 @@ public class M64Tests : BaseParserTests
 		var result = await _m64Parser.Parse(Embedded("2frames.m64", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 	}
 
 	[TestMethod]
@@ -58,7 +58,7 @@ public class M64Tests : BaseParserTests
 		var result = await _m64Parser.Parse(Embedded("pal.m64", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Pal, result.Region);
+		Assert.AreEqual(RegionType.PAL, result.Region);
 	}
 
 	[TestMethod]

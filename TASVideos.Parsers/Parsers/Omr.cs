@@ -11,7 +11,7 @@ internal class Omr : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.Msx
 		};
 
@@ -34,7 +34,7 @@ internal class Omr : Parser, IParser
 
 		if (isPal)
 		{
-			result.Region = RegionType.Pal;
+			result.Region = RegionType.PAL;
 		}
 
 		var lengthTimestamp = long.Parse(replay.XPathEvaluateList("//events/item")
@@ -46,7 +46,7 @@ internal class Omr : Parser, IParser
 
 		var seconds = ConvertTimestamp(lengthTimestamp);
 
-		result.Frames = (int)Math.Round(seconds * (result.Region == RegionType.Pal ? 50.1589758045661 : 59.9227510135505));
+		result.Frames = (int)Math.Round(seconds * (result.Region == RegionType.PAL ? 50.1589758045661 : 59.9227510135505));
 
 		var version = replay.XPathEvaluateList("//snapshots/item").FirstAttributeValue("version");
 

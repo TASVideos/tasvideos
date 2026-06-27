@@ -36,6 +36,7 @@ public class LmpTests : BaseParserTests
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
 		Assert.AreEqual(SystemCodes.Pc, result.SystemCode);
+		Assert.AreEqual(RegionType.World, result.Region);
 		Assert.AreEqual(7071, result.Frames);
 		Assert.AreEqual(0, result.RerecordCount, "Lmp does not track rerecords");
 		Assert.IsNull(result.Annotations);

@@ -33,7 +33,7 @@ internal class Bk2 : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc
+			Region = RegionType.NTSC
 		};
 
 		var archive = await file.OpenZipArchiveRead();
@@ -106,7 +106,7 @@ internal class Bk2 : Parser, IParser
 
 			if (header.GetBoolFor(Keys.Pal))
 			{
-				result.Region = RegionType.Pal;
+				result.Region = RegionType.PAL;
 			}
 
 			// Some biz system ids do not match tasvideos, convert if needed
@@ -147,7 +147,7 @@ internal class Bk2 : Parser, IParser
 			else if (header.GetValueFor(Keys.Board) == SystemCodes.Sgb)
 			{
 				platform = SystemCodes.Sgb;
-				result.FrameRateOverride = result.Region == RegionType.Pal
+				result.FrameRateOverride = result.Region == RegionType.PAL
 					? PalSnesFramerate
 					: NtscSnesFramerate;
 			}
@@ -229,7 +229,7 @@ internal class Bk2 : Parser, IParser
 		// MapParsedResult() implies we only ever have a list of framerates for cores with framerate overrides, but it doesn't distinguish by core. nymashock has cycle count but octoshock has to rely on mednafen framerates for now. so we override with a constant for octoshock, to prevent picking random wrong values from nymashock overrides
 		if (core == "octoshock")
 		{
-			result.FrameRateOverride = result.Region == RegionType.Pal
+			result.FrameRateOverride = result.Region == RegionType.PAL
 				? PalPsxFramerate
 				: NtscPsxFramerate;
 		}

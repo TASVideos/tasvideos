@@ -95,19 +95,19 @@ public class LsmvTests : BaseParserTests
 		var result = await _lsmvParser.Parse(Embedded("gametype-empty.lsmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		Assert.AreEqual(SystemCodes.Snes, result.SystemCode);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 		Assert.AreEqual(2, result.Warnings.Count());
 		AssertNoErrors(result);
 	}
 
 	[TestMethod]
-	[DataRow("gametype-snesntsc.lsmv", SystemCodes.Snes, RegionType.Ntsc)]
-	[DataRow("gametype-snespal.lsmv", SystemCodes.Snes, RegionType.Pal)]
-	[DataRow("gametype-bsx.lsmv", SystemCodes.Snes, RegionType.Ntsc)]
-	[DataRow("gametype-bsxslotted.lsmv", SystemCodes.Snes, RegionType.Ntsc)]
-	[DataRow("gametype-sufamiturbo.lsmv", SystemCodes.Snes, RegionType.Ntsc)]
-	[DataRow("gametype-sgb_ntsc.lsmv", SystemCodes.Sgb, RegionType.Ntsc)]
-	[DataRow("gametype-sgb_pal.lsmv", SystemCodes.Sgb, RegionType.Pal)]
+	[DataRow("gametype-snesntsc.lsmv", SystemCodes.Snes, RegionType.NTSC)]
+	[DataRow("gametype-snespal.lsmv", SystemCodes.Snes, RegionType.PAL)]
+	[DataRow("gametype-bsx.lsmv", SystemCodes.Snes, RegionType.NTSC)]
+	[DataRow("gametype-bsxslotted.lsmv", SystemCodes.Snes, RegionType.NTSC)]
+	[DataRow("gametype-sufamiturbo.lsmv", SystemCodes.Snes, RegionType.NTSC)]
+	[DataRow("gametype-sgb_ntsc.lsmv", SystemCodes.Sgb, RegionType.NTSC)]
+	[DataRow("gametype-sgb_pal.lsmv", SystemCodes.Sgb, RegionType.PAL)]
 	[DataRow("gametype-gdmg.lsmv", SystemCodes.GameBoy, RegionType.World)]
 	[DataRow("gametype-ggbc.lsmv", SystemCodes.Gbc, RegionType.World)]
 	[DataRow("gametype-ggbca.lsmv", SystemCodes.Gbc, RegionType.World)]

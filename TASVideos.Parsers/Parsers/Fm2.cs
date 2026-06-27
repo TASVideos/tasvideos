@@ -9,7 +9,7 @@ internal class Fm2 : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.Nes
 		};
 
@@ -49,7 +49,7 @@ internal class Fm2 : Parser, IParser
 
 		if (header.GetBoolFor(Keys.Pal))
 		{
-			result.Region = RegionType.Pal;
+			result.Region = RegionType.PAL;
 		}
 
 		if (header.HasValue(Keys.StartsFromSavestate))

@@ -494,7 +494,7 @@ public class QueueServiceTests : TestDbBase
 	{
 		const string system = "NES";
 		const double frameRate = 60.0;
-		const RegionType region = RegionType.Ntsc;
+		const RegionType region = RegionType.NTSC;
 		const MovieStartType startType = MovieStartType.Savestate;
 		const int frames = 42069;
 		const int rerecordCount = 420;
@@ -537,7 +537,7 @@ public class QueueServiceTests : TestDbBase
 	{
 		const string system = "NES";
 		const double frameRateOverride = 61.0;
-		const RegionType region = RegionType.Ntsc;
+		const RegionType region = RegionType.NTSC;
 		var entry = _db.GameSystems.Add(new GameSystem { Code = system });
 		await _db.SaveChangesAsync();
 		var parseResult = new TestParseResult
@@ -807,7 +807,7 @@ public class QueueServiceTests : TestDbBase
 		{
 			Success = true,
 			SystemCode = "NES",
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			Hashes = new Dictionary<HashType, string>
 			{
 				[HashType.Sha1] = "abc123def456"
@@ -840,7 +840,7 @@ public class QueueServiceTests : TestDbBase
 		{
 			Success = true,
 			SystemCode = "NES",
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			FrameRateOverride = customFrameRate
 		};
 
@@ -880,7 +880,7 @@ public class QueueServiceTests : TestDbBase
 		{
 			Success = true,
 			SystemCode = "NES",
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			Annotations = annotations,
 			WarningsList = [ParseWarnings.MissingRerecordCount, ParseWarnings.SystemIdInferred]
 		};
@@ -964,7 +964,7 @@ public class QueueServiceTests : TestDbBase
 		{
 			Success = true,
 			SystemCode = systemCode,
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			StartType = MovieStartType.PowerOn,
 			Frames = 1000,
 			RerecordCount = 50,

@@ -7,7 +7,7 @@ internal class M64 : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.N64
 		};
 
@@ -25,7 +25,7 @@ internal class M64 : Parser, IParser
 		var fps = br.ReadByte(); // Vertical interrupts per second
 		if (fps == 50)
 		{
-			result.Region = RegionType.Pal;
+			result.Region = RegionType.PAL;
 		}
 
 		br.ReadByte(); // Number of controllers

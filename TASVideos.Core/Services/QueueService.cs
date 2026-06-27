@@ -896,7 +896,7 @@ internal class QueueService(
 				{
 					System = system,
 					FrameRate = parseResult.FrameRateOverride.Value,
-					RegionCode = parseResult.Region.ToString().ToUpper()
+					RegionCode = parseResult.Region.ToString()
 				};
 				db.GameSystemFrameRates.Add(frameRate);
 				await db.SaveChangesAsync();
@@ -910,7 +910,7 @@ internal class QueueService(
 			// Those systems should never hit this code block.  But just in case.
 			systemFrameRate = await db.GameSystemFrameRates
 				.ForSystem(system.Id)
-				.ForRegion(parseResult.Region.ToString().ToUpper())
+				.ForRegion(parseResult.Region.ToString())
 				.FirstOrDefaultAsync();
 		}
 

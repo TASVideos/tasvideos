@@ -7,7 +7,7 @@ internal class Gmv : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.Genesis
 		};
 
@@ -24,7 +24,7 @@ internal class Gmv : Parser, IParser
 
 		if (flags.Bit(7))
 		{
-			result.Region = RegionType.Pal;
+			result.Region = RegionType.PAL;
 		}
 
 		if (flags.Bit(6))

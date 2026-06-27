@@ -49,7 +49,7 @@ public class GmvTests : BaseParserTests
 		var result = await _gmvParser.Parse(Embedded("2frames.gmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 	}
 
 	[TestMethod]
@@ -58,7 +58,7 @@ public class GmvTests : BaseParserTests
 		var result = await _gmvParser.Parse(Embedded("pal.gmv", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Pal, result.Region);
+		Assert.AreEqual(RegionType.PAL, result.Region);
 	}
 
 	[TestMethod]

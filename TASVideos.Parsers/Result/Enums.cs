@@ -14,12 +14,12 @@ public enum RegionType
 	/// <summary>
 	/// Indicates that the region is the NTSC standard
 	/// </summary>
-	Ntsc,
+	NTSC,
 
 	/// <summary>
 	/// Indicates that the region is the PAL standard
 	/// </summary>
-	Pal,
+	PAL,
 
 	/// <summary>
 	/// Indicates the system is not TV based

@@ -13,7 +13,7 @@ public class Fm2ParserTests : BaseParserTests
 		var result = await _fm2Parser.Parse(Embedded("ntsc.fm2", out var length), length);
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 		Assert.AreEqual(21, result.RerecordCount);
 		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System should be NES");
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -26,7 +26,7 @@ public class Fm2ParserTests : BaseParserTests
 		var result = await _fm2Parser.Parse(Embedded("pal.fm2", out var length), length);
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
-		Assert.AreEqual(RegionType.Pal, result.Region);
+		Assert.AreEqual(RegionType.PAL, result.Region);
 		Assert.AreEqual(21, result.RerecordCount);
 		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System should be NES");
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -39,7 +39,7 @@ public class Fm2ParserTests : BaseParserTests
 		var result = await _fm2Parser.Parse(Embedded("fds.fm2", out var length), length);
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 		Assert.AreEqual(21, result.RerecordCount);
 		Assert.AreEqual(SystemCodes.Fds, result.SystemCode, "System should be FDS");
 		Assert.AreEqual(MovieStartType.PowerOn, result.StartType);
@@ -52,7 +52,7 @@ public class Fm2ParserTests : BaseParserTests
 		var result = await _fm2Parser.Parse(Embedded("savestate.fm2", out var length), length);
 		Assert.IsTrue(result.Success, "Result is successful");
 		Assert.AreEqual(2, result.Frames, "Frame count should be 2");
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 		Assert.AreEqual(21, result.RerecordCount);
 		Assert.AreEqual(SystemCodes.Nes, result.SystemCode, "System should be NES");
 		Assert.AreEqual(MovieStartType.Savestate, result.StartType);

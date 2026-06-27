@@ -40,7 +40,7 @@ public class MarTests : BaseParserTests
 		var result = await _marParser.Parse(Embedded("2frames.mar", out var length), length);
 		Assert.IsTrue(result.Success);
 		AssertNoWarningsOrErrors(result);
-		Assert.AreEqual(RegionType.Ntsc, result.Region);
+		Assert.AreEqual(RegionType.NTSC, result.Region);
 	}
 
 	[TestMethod]

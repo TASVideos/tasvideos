@@ -10,7 +10,7 @@ internal class Gzm : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc,
+			Region = RegionType.NTSC,
 			SystemCode = SystemCodes.N64,
 			FrameRateOverride = FrameRate
 		};

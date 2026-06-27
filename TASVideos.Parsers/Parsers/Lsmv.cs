@@ -14,7 +14,7 @@ internal class Lsmv : Parser, IParser
 	{
 		var result = new SuccessResult(FileExtension)
 		{
-			Region = RegionType.Ntsc
+			Region = RegionType.NTSC
 		};
 
 		var archive = await file.OpenZipArchiveRead();
@@ -64,19 +64,19 @@ internal class Lsmv : Parser, IParser
 					case "bsxslotted":
 					case "sufamiturbo":
 						result.SystemCode = SystemCodes.Snes;
-						result.Region = RegionType.Ntsc;
+						result.Region = RegionType.NTSC;
 						break;
 					case "snes_pal":
 						result.SystemCode = SystemCodes.Snes;
-						result.Region = RegionType.Pal;
+						result.Region = RegionType.PAL;
 						break;
 					case "sgb_ntsc":
 						result.SystemCode = SystemCodes.Sgb;
-						result.Region = RegionType.Ntsc;
+						result.Region = RegionType.NTSC;
 						break;
 					case "sgb_pal":
 						result.SystemCode = SystemCodes.Sgb;
-						result.Region = RegionType.Pal;
+						result.Region = RegionType.PAL;
 						break;
 					case "gdmg":
 						result.SystemCode = SystemCodes.GameBoy;
@@ -150,7 +150,7 @@ internal class Lsmv : Parser, IParser
 	private static void DefaultGameType(SuccessResult result)
 	{
 		result.SystemCode = SystemCodes.Snes;
-		result.Region = RegionType.Ntsc;
+		result.Region = RegionType.NTSC;
 		result.WarningList.Add(ParseWarnings.SystemIdInferred);
 		result.WarningList.Add(ParseWarnings.RegionInferred);
 	}
