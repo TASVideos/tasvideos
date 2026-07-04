@@ -50,7 +50,7 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 			SystemId = dbValues.Id,
 			SystemCode = dbValues.Code,
 			FrameRate = dbValues.FrameRate,
-			RegionCode =  parseResult ? regionCode : RegionType.Unknown,
+			RegionCode = parseResult ? regionCode : RegionType.Unknown,
 			Preliminary = dbValues.Preliminary,
 			Obsolete = dbValues.Obsolete
 		};
