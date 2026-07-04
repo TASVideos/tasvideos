@@ -25,9 +25,6 @@ public class CreateFramerateModel(IGameSystemService systemService, ApplicationD
 	[BindProperty]
 	public bool Preliminary { get; set; }
 
-	[BindProperty]
-	public bool Obsolete { get; set; }
-
 	public List<SelectListItem> RegionTypes => RegionTypeList;
 
 	public async Task<IActionResult> OnGet()
