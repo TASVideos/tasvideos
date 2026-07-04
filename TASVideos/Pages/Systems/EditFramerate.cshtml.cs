@@ -1,10 +1,15 @@
 using System.Globalization;
+using TASVideos.MovieParsers.Result;
 
 namespace TASVideos.Pages.Systems;
 
 [RequirePermission(PermissionTo.GameSystemMaintenance)]
 public class EditFramerateModel(ApplicationDbContext db, IGameSystemService gameSystemService) : BasePageModel
 {
+	protected static readonly List<SelectListItem> RegionTypeList = Enum
+		.GetValues<RegionType>()
+		.ToDropDown();
+
 	[FromRoute]
 	public int Id { get; set; }
 
@@ -15,6 +20,8 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 	public List<UsageEntry> SubmissionEntries = [];
 
 	public bool InUse => PublicationEntries.Any() || SubmissionEntries.Any();
+
+	public List<SelectListItem> RegionTypes => RegionTypeList;
 
 	public async Task<IActionResult> OnGet()
 	{

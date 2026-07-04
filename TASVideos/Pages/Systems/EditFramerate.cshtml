@@ -45,7 +45,7 @@
 			</fieldset>
 			<fieldset>
 				<label asp-for="FrameRate.RegionCode"></label>
-				<input asp-for="FrameRate.RegionCode" />
+				<select asp-for="FrameRate.RegionCode" asp-items="Model.RegionTypes"></select>
 				<span asp-validation-for="FrameRate.RegionCode"></span>
 			</fieldset>
 			<fieldset>
