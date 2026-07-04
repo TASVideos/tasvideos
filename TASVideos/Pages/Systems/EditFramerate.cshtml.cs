@@ -25,25 +25,35 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 
 	public async Task<IActionResult> OnGet()
 	{
-		var frameRate = await db.GameSystemFrameRates
+		var dbValues = await db.GameSystemFrameRates
 			.Where(sf => sf.Id == Id)
-			.Select(sf => new FrameRateEdit
+			.Select(sf => new
 			{
-				SystemId = sf.System!.Id,
-				SystemCode = sf.System!.Code,
-				FrameRate = sf.FrameRate,
-				RegionCode = sf.RegionCode,
-				Preliminary = sf.Preliminary,
-				Obsolete = sf.Obsolete
+				sf.System!.Id,
+				sf.System!.Code,
+				sf.FrameRate,
+				sf.RegionCode,
+				sf.Preliminary,
+				sf.Obsolete
 			})
 			.SingleOrDefaultAsync();
 
-		if (frameRate is null)
+		if (dbValues is null)
 		{
 			return NotFound();
 		}
 
-		FrameRate = frameRate;
+		var parseResult = Enum.TryParse<RegionType>(dbValues.RegionCode, out var regionCode);
+
+		FrameRate = new FrameRateEdit
+		{
+			SystemId = dbValues.Id,
+			SystemCode = dbValues.Code,
+			FrameRate = dbValues.FrameRate,
+			RegionCode =  parseResult ? regionCode : RegionType.Unknown,
+			Preliminary = dbValues.Preliminary,
+			Obsolete = dbValues.Obsolete
+		};
 
 		await PopulateUsages();
 		return Page();
@@ -66,7 +76,7 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 		}
 
 		frameRate.FrameRate = FrameRate.FrameRate;
-		frameRate.RegionCode = FrameRate.RegionCode;
+		frameRate.RegionCode = FrameRate.RegionCode.ToString();
 		frameRate.Preliminary = FrameRate.Preliminary;
 		frameRate.Obsolete = FrameRate.Obsolete;
 
@@ -121,8 +131,7 @@ public class EditFramerateModel(ApplicationDbContext db, IGameSystemService game
 		public string SystemCode { get; init; } = "";
 		public double FrameRate { get; init; }
 
-		[StringLength(8)]
-		public string RegionCode { get; init; } = "";
+		public RegionType RegionCode { get; init; }
 		public bool Preliminary { get; init; }
 
 		public bool Obsolete { get; init; }
