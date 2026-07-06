@@ -1,3 +1,4 @@
+@using System.Globalization
 @using TASVideos.Data.Entity.Game
 @model TASVideos.Pages.Games.Versions.ListModel.VersionEntry
 
@@ -16,9 +17,20 @@
 	<td>@Model.Region</td>
 	<td>@Model.Version</td>
 	<td>@Model.System</td>
-	<td style="overflow-wrap: anywhere">
-		<small condition="!string.IsNullOrEmpty(Model.Sha1)">SHA-1: @Model.Sha1</small><br />
-		<small condition="!string.IsNullOrEmpty(Model.Md5)">MD5: @Model.Md5</small>
+	<td>
+		@{
+			byte Sample(string digest, int from)
+				=> byte.TryParse(digest.AsSpan(start: from, length: 2), NumberStyles.AllowHexSpecifier, null, out var b) ? b : default;
+			// re: wbr, we could simply insert a U+200B ZWSP in the middle of the string, but then it would be there when copied
+		}
+		<div condition="!string.IsNullOrEmpty(Model.Sha1)" class="d-flex game-version-checksums">
+			<label for="@Model.Sha1">SHA<span style="user-select: none;">-</span>1:</label>
+			<output id="@Model.Sha1"><samp data-sample-byte="@Sample(Model.Sha1!, 19)">@Model.Sha1![..20]<wbr>@Model.Sha1![20..]</samp></output>
+		</div>
+		<div condition="!string.IsNullOrEmpty(Model.Md5)" class="d-flex game-version-checksums">
+			<label for="@Model.Md5">MD5:</label>
+			<output id="@Model.Md5"><samp data-sample-byte="@Sample(Model.Sha1!, 15)">@Model.Md5![..16]<wbr>@Model.Md5![16..]</samp></output>
+		</div>
 	</td>
 	<td-action-column condition="@ViewData.ContainsKey("GameID")">
 		<div class="d-flex flex-wrap gap-1">
