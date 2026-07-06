@@ -18,7 +18,7 @@
 </top-button-bar>
 <standard-table>
 	<table-head columns="Type,Name,Title Override,Region,Version,Platform,Hashes,"></table-head>
-	@foreach (var version in Model.Versions.OrderBy(v => v.Name))
+	@foreach (var version in Model.Versions)
 	{
 		<partial name="_GameVersionTableRow" model="version" view-data="viewDataForRowHelper" />
 	}

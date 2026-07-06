@@ -31,7 +31,10 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			ScreenshotUrl = g.ScreenshotUrl,
 			GameResourcesPage = g.GameResourcesPage,
 			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName).ToList(),
-			Versions = g.GameVersions.Select(gv => new VersionEntry(
+			Versions = g.GameVersions.OrderBy(v => v.Type)
+				.ThenBy(v => v.System!.Code)
+				.ThenBy(v => v.Region)
+				.Select(gv => new VersionEntry(
 				gv.Id,
 				gv.Name,
 				gv.Md5,

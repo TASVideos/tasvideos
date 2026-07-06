@@ -218,7 +218,7 @@
 </alert>
 <standard-table condition="Model.Game.Versions.Any()">
 	<table-head columns="Type,Name,Title Override,Region,Version,Platform,Hashes"></table-head>
-	@foreach (var version in Model.Game.Versions.OrderBy(v => v.Name))
+	@foreach (var version in Model.Game.Versions)
 	{
 		<partial name="_GameVersionTableRow" model="version" />
 	}
