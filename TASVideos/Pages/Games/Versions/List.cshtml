@@ -1,8 +1,12 @@
 @page "/Games/{gameId}/Versions/List"
-@using TASVideos.Data.Entity.Game
 @model ListModel
 @{
 	ViewData.SetTitle($"Versions for {Model.GameDisplayName}");
+	ViewDataDictionary viewDataForRowHelper = new(ViewData)
+	{
+		["GameID"] = Model.GameId,
+		["ShowSourceDB"] = true, // could use the presence of GameID for this too
+	};
 }
 
 @section PageTitle {
@@ -13,41 +17,10 @@
 	<add-link asp-page="Edit" permission="CatalogMovies" asp-route-gameId="@Model.GameId"></add-link>
 </top-button-bar>
 <standard-table>
-	<table-head columns="Type,Name,Title Override,Version,Region,Hashes,System,"></table-head>
+	<table-head columns="Type,Name,Title Override,Region,Version,Platform,Hashes,"></table-head>
 	@foreach (var version in Model.Versions.OrderBy(v => v.Name))
 	{
-		<tr>
-			<td>
-				<span class="text-nowrap"><i condition="@version.Type == VersionTypes.Unknown" class="fa fa-circle-question"></i> @version.Type</span>
-			</td>
-			<td>
-				@version.Name
-				@if (!string.IsNullOrWhiteSpace(version.SourceDb))
-				{
-					<br /><span>SourceDB: @version.SourceDb</span>
-				}
-			</td>
-			<td>@version.TitleOverride</td>
-			<td>@version.Version</td>
-			<td>@version.Region</td>
-			<td style="overflow-wrap: anywhere">
-				<small condition="!string.IsNullOrEmpty(version.Sha1)">SHA-1: @version.Sha1</small><br />
-				<small condition="!string.IsNullOrEmpty(version.Md5)">MD5: @version.Md5</small>
-			</td>
-			<td>@version.System</td>
-			<td-action-column>
-				<div class="d-flex flex-wrap gap-1">
-					<a
-						class="btn btn-secondary btn-sm"
-						asp-page="/Games/Versions/View"
-						asp-route-gameId="@Model.GameId"
-						asp-route-id="@version.Id">
-						<i class="fa fa-eye"></i> View
-					</a>
-					<edit-link class="btn-sm" asp-page="Edit" permission="CatalogMovies" asp-route-id="@version.Id" asp-route-gameId="@Model.GameId"></edit-link>
-				</div>
-			</td-action-column>
-		</tr>
+		<partial name="_GameVersionTableRow" model="version" view-data="viewDataForRowHelper" />
 	}
 </standard-table>
 

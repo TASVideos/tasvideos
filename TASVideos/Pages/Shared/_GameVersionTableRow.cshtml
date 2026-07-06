@@ -1,0 +1,35 @@
+@using TASVideos.Data.Entity.Game
+@model TASVideos.Pages.Games.Versions.ListModel.VersionEntry
+
+<tr>
+	<td>
+		<span class="text-nowrap"><i condition="@Model.Type == VersionTypes.Unknown" class="fa fa-circle-question"></i> @Model.Type</span>
+	</td>
+	<td>
+		@Model.Name
+		@if (!string.IsNullOrWhiteSpace(Model.SourceDb) && ViewData.ContainsKey("ShowSourceDB"))
+		{
+			<br /><span>SourceDB: @Model.SourceDb</span>
+		}
+	</td>
+	<td>@Model.TitleOverride</td>
+	<td>@Model.Region</td>
+	<td>@Model.Version</td>
+	<td>@Model.System</td>
+	<td style="overflow-wrap: anywhere">
+		<small condition="!string.IsNullOrEmpty(Model.Sha1)">SHA-1: @Model.Sha1</small><br />
+		<small condition="!string.IsNullOrEmpty(Model.Md5)">MD5: @Model.Md5</small>
+	</td>
+	<td-action-column condition="@ViewData.ContainsKey("GameID")">
+		<div class="d-flex flex-wrap gap-1">
+			<a
+				class="btn btn-secondary btn-sm"
+				asp-page="/Games/Versions/View"
+				asp-route-gameId="@ViewData["GameID"]"
+				asp-route-id="@Model.Id">
+				<i class="fa fa-eye"></i> View
+			</a>
+			<edit-link class="btn-sm" asp-page="Edit" permission="CatalogMovies" asp-route-id="@Model.Id" asp-route-gameId="@ViewData["GameID"]"></edit-link>
+		</div>
+	</td-action-column>
+</tr>
