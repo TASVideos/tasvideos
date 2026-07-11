@@ -15,8 +15,8 @@
 	@foreach (var redirect in Model.Redirects)
 	{
 		<tr>
-			<td>@redirect.PageNameFrom</td>
-			<td>@redirect.PageNameTo</td>
+			<td>/@redirect.PageNameFrom</td>
+			<td><a href="/@redirect.PageNameTo">/@redirect.PageNameTo</a></td>
 			<td-action-column>
 				<edit-link asp-page="Edit" asp-route-id="@redirect.Id"></edit-link>
 				<delete-button asp-href="/Wiki/Redirects/Index?handler=Delete&id=@redirect.Id"
