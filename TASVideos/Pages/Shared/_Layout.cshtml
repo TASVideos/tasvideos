@@ -167,7 +167,9 @@
 					var (version, sha) = Versioning.GetVersion();
 				}
 				<a class="btn btn-silver btn-sm" href="https://github.com/TASVideos/tasvideos/commits/@(sha)">&copy; @DateTime.UtcNow.Year - TASVideos v@(version)</a>
-				<a class="btn btn-info btn-sm" href="/SiteRules">Terms</a>
+				<a class="btn btn-info btn-sm" href="/SiteLicense" rel="license" style="--bs-btn-padding-y: 0;">Licensing info</a>
+				<a class="btn btn-info btn-sm" href="/SiteRules" rel="terms-of-service">Terms</a>
+				<a class="btn btn-info btn-sm" href="/Privacy" rel="privacy-policy">Privacy</a>
 				<a class="btn btn-info btn-sm" href="/api">API</a>
 				@{
 					string? path = null;
