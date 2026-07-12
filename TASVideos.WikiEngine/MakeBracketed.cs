@@ -305,8 +305,6 @@ public static partial class Builtins
 			}
 		}
 
-		classString.Append(" mw-100");
-
 		attrs.Add(Attr("class", classString.ToString()));
 
 		return new Element(charStart, "img", attrs, []) { CharEnd = charEnd };
