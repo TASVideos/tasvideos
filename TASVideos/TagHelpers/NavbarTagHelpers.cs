@@ -114,7 +114,7 @@ public class NavItemBase : TagHelper
 			&& Activate == "Wiki" && pageGroup == "Wiki";
 	}
 
-	private static readonly string[] MoviesGroup = ["Publications", "UserFiles"];
+	private static readonly string[] MoviesGroup = ["Publications", "UserFiles", "Stars", "NewcomerCorner"];
 	private static readonly string[] MoviesWikiGroup = ["Class"];
 	private static readonly string[] GamesWikiGroup = ["GameResources", "Platforms"];
 	private static readonly string[] ToolsWikiGroup = ["Bizhawk", "EmulatorResources"];
