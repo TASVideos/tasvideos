@@ -8,7 +8,7 @@ using TASVideos.WikiEngine;
 namespace TASVideos.WikiModules;
 
 [WikiModule(ModuleNames.BrokenLinks)]
-public class BrokenLinks(IWikiPages wikiPages) : WikiViewComponent
+public class BrokenLinks(ApplicationDbContext db, IWikiPages wikiPages) : WikiViewComponent
 {
 	private static readonly List<PageEntry> CorePages = Assembly
 		.GetAssembly(typeof(SiteMapModel))
@@ -56,11 +56,14 @@ public class BrokenLinks(IWikiPages wikiPages) : WikiViewComponent
 			.Select(c => c.Name.ToLowerInvariant())
 			.ToList();
 
+		var redirects = db.WikiRedirects.Select(entry => entry.PageNameFrom).ToHashSet();
+
 		var brokenLinks = await wikiPages.BrokenLinks();
 
 		var filtered = brokenLinks
 			.Where(b => !generalPages.Contains(b.Referral.Split('?')[0].ToLowerInvariant()))
 			.Where(b => !routedPages.Any(r => b.Referral.StartsWith(r, StringComparison.InvariantCultureIgnoreCase)))
+			.Where(b => !redirects.Contains(b.Referral))
 			.ToList();
 
 		Links = await FilterRevisionLinks(filtered);
