@@ -56,7 +56,7 @@ public class BrokenLinks(ApplicationDbContext db, IWikiPages wikiPages) : WikiVi
 			.Select(c => c.Name.ToLowerInvariant())
 			.ToList();
 
-		var redirects = db.WikiRedirects.Select(entry => entry.PageNameFrom).ToHashSet();
+		var redirects = await db.WikiRedirects.Select(entry => entry.PageNameFrom).ToHashSetAsync();
 
 		var brokenLinks = await wikiPages.BrokenLinks();
 
