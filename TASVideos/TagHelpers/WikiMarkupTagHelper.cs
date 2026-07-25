@@ -21,7 +21,8 @@ public partial class WikiMarkup(IViewComponentHelper viewComponentHelper) : TagH
 		((IViewContextAware)viewComponentHelper).Contextualize(ViewContext);
 		output.TagName = "article";
 		output.AddCssClass("wiki");
-		await Util.RenderHtmlAsync(Markup ?? "", new TagHelperTextWriter(output.Content), this);
+		Console.WriteLine($"===== in WikiMarkup, PageData is {(PageData is null ? "null" : "not null")} and PageData.PageName is {PageData?.PageName ?? "(null)"}");
+		await Util.RenderHtmlAsync(Markup ?? "", new TagHelperTextWriter(output.Content), this, allowMoreStyling: PageData?.PageName is null/*editor preview*/ or SystemWiki.NavbarMain or SystemWiki.NavbarWikiTop);
 	}
 
 	bool IWriterHelper.CheckCondition(string condition)
