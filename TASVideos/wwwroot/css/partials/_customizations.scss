@@ -1,7 +1,6 @@
 /// <reference path="../bootstrap.scss" />
 /// <reference path="colors.scss" />
 /// <reference path="variables.scss" />
-@use "sass:map";
 
 :root {
 	--tasvideos-bg: #{$tasvideos-bg};
@@ -215,34 +214,32 @@ body {
 .embed {
 	border: 0;
 
-	&left {
-		margin-inline-end: 10px;
-		border: 0;
-		clear: inline-start;
-		float: inline-start;
+	&left, &right {
+		display: flex;
+		margin-inline: auto;
+		max-width: 100%;
 	}
 
-	&right {
-		margin-inline-start: 10px;
-		border: 0;
-		clear: inline-end;
-		float: inline-end;
-	}
-}
-@each $size, $width in $container-max-widths {
-	@media (min-width: $width) {
-		// doesn't look good in motion, but this does its job of keeping the accompanying text wide enough to read comfortably
-		.container :is(.embedright, .embedleft) {
-			max-width: calc($width * 2 / 5);
+	@include media-breakpoint-up(sm) {
+		&left {
+			display: block;
+			margin-inline: 0;
+			margin-inline-end: 10px;
+			border: 0;
+			clear: inline-start;
+			float: inline-start;
+			max-width: 50%;
 		}
-	}
-}
-// this is an override for the "extra small" size, which isn't in the map -_-
-@media (max-width: #{map.get($container-max-widths, "sm") - 1px}) {
-	.container .embedright, .container .embedleft {
-		float: unset;
-		margin-inline: 0;
-		width: 100%;
+
+		&right {
+			display: block;
+			margin-inline: 0;
+			margin-inline-start: 10px;
+			border: 0;
+			clear: inline-end;
+			float: inline-end;
+			max-width: 50%;
+		}
 	}
 }
 
