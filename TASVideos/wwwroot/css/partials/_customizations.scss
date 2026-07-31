@@ -295,6 +295,16 @@ ol, ul, dl {
     }
 }
 
+.banned-image-host-warning {
+	background: var(--bs-danger);
+	border-radius: 0.5em;
+	display: none;
+	padding: 0 0.25em;
+	#preview-container & {
+		display: table; // https://stackoverflow.com/a/32919558
+	}
+}
+
 .error-code {
 	border: 2px solid var(--bs-danger);
 	padding: 20px;

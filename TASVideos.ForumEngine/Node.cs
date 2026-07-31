@@ -339,8 +339,26 @@ public class Element : INode
 				break;
 			case "img":
 				{
-					w.VoidTag("img");
 					TryParseSize(out var width, out var height);
+					var imageUrl = GetChildText();
+					var banned = SiteGlobalConstants.LinkIsBannedImageHost(imageUrl);
+					if (banned)
+					{
+						w.OpenTag("div");
+						w.OpenTag("span");
+						w.Attribute("class", "banned-image-host-warning");
+						w.Text("WARNING: This image host is unreliable. (");
+						w.OpenTag("a");
+						w.Attribute("href", "/SiteRules#SitesNotAllowedForAvatars");
+						w.Text("Full list here");
+						w.CloseTag("a");
+						w.Text(".)");
+						w.VoidTag("br");
+						w.Text("To ensure it can be viewed in the future, reupload it to another host.");
+						w.CloseTag("span");
+					}
+
+					w.VoidTag("img");
 					if (width != null)
 					{
 						w.Attribute("width", width.ToString()!);
@@ -351,8 +369,12 @@ public class Element : INode
 						w.Attribute("height", height.ToString()!);
 					}
 
-					w.Attribute("src", GetChildText());
+					w.Attribute("src", imageUrl);
 					w.Attribute("class", "mw-100");
+					if (banned)
+					{
+						w.CloseTag("div");
+					}
 				}
 
 				break;
