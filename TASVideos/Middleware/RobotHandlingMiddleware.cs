@@ -23,6 +23,7 @@ public class RobotHandlingMiddleware(RequestDelegate request, IHostEnvironment e
 						Disallow: /Wiki/PageNotFound
 						Disallow: /Wiki/Referrers
 						Disallow: /Wiki/ViewSource
+						Disallow: /*?handler=Download
 						Crawl-delay: 60
 						""");
 		}

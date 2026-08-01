@@ -56,7 +56,7 @@
 				</div>
 
 				<div class="mt-2">
-					<a asp-page="/UserFiles/Info" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-secondary">
+					<a asp-page="/UserFiles/Info" asp-page-handler="Download" asp-route-id="@Model.Id" class="btn btn-secondary" rel="nofollow">
 						<i class="fa fa-download"></i> Download (@Model.FileSizeUncompressed.ToSizeString())
 					</a>
 					<a condition="@(ViewContext.Page() != "/UserFiles/Info")" asp-page="/UserFiles/Info" asp-route-id="@Model.Id" class="btn btn-secondary">
