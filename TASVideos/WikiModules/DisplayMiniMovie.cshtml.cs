@@ -25,11 +25,9 @@ public class DisplayMiniMovie(ApplicationDbContext db) : WikiViewComponent
 			.Select(p => p.Id)
 			.ToListAsync();
 
-		var id = candidateIds.ToList().AtRandom();
-
-		// id == 0 means there are no publications, which is an out-of-the-box problem only
-		if (id != 0)
+		if (candidateIds.Count > 0)
 		{
+			var id = candidateIds.AtRandom();
 			Movie = await db.Publications
 				.ToMiniMovieModel()
 				.SingleAsync(p => p.Id == id);
