@@ -132,7 +132,7 @@ public static partial class Builtins
 
 		if (text.StartsWith("user:"))
 		{
-			return NormalizeInternalLink(string.Concat("/Users/Profile/", text.AsSpan(5)));
+			return NormalizeInternalLink(string.Concat("/Users/Profile/", text.AsSpan(5).Trim()));
 		}
 
 		return text;
