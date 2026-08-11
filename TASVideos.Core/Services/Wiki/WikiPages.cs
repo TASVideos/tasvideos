@@ -628,8 +628,8 @@ internal class WikiPages(ApplicationDbContext db, ICacheService cache) : IWikiPa
 
 		var pages = await db.WikiPages
 			.ThatAreCurrent()
+			.Where(wp => (wp.PageName == oldPageName && !wp.IsDeleted) || wp.PageName == newPageName)
 			.Select(wp => wp.PageName)
-			.Where(pageName => pageName == oldPageName || pageName == newPageName)
 			.ToListAsync();
 
 		return pages.Count == 1 && pages[0] == oldPageName;

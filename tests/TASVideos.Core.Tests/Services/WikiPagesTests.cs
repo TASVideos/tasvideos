@@ -889,6 +889,31 @@ public class WikiPagesTests : TestDbBase
 		Assert.AreEqual(link, _db.WikiReferrals.Single().Referral);
 	}
 
+	[TestMethod]
+	public async Task Move_SinglePages_WithDeletedRevisionsAndMultipleCurrent()
+	{
+		var author = _db.AddUser(1, "_").Entity;
+		const string sourcePage = "Source";
+		const string destinationPage = "Destination";
+		_db.WikiPages.Add(new WikiPage { ChildId = null, PageName = sourcePage, Revision = 1, IsDeleted = true, AuthorId = author.Id });
+		_db.WikiPages.Add(new WikiPage { ChildId = null, PageName = sourcePage, Revision = 2, IsDeleted = true, AuthorId = author.Id });
+		var parent = new WikiPage { ChildId = null, PageName = sourcePage, Revision = 3, AuthorId = author.Id };
+		_db.WikiPages.Add(parent);
+		_db.SaveChanges();
+		var child = new WikiPage { ChildId = null, PageName = sourcePage, Revision = 4, AuthorId = author.Id };
+		parent.Child = child;
+		_db.WikiPages.Add(child);
+		_db.SaveChanges();
+
+		var actual = await _wikiPages.Move(sourcePage, destinationPage, author.Id);
+		Assert.IsTrue(actual);
+
+		// 4 original, plus 1 tracking revision
+		Assert.AreEqual(5, _db.WikiPages.Count());
+		Assert.AreEqual(destinationPage, _db.WikiPages.Select(wp => wp.PageName).First());
+		Assert.AreEqual(1, _db.WikiPages.Select(wp => wp.PageName).Distinct().Count());
+	}
+
 	#endregion
 
 	#region Delete Page
@@ -2017,6 +2042,37 @@ public class WikiPagesTests : TestDbBase
 	{
 		const string sourcePage = "Source";
 		const string destinationPage = "Destination";
+
+		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
+		Assert.IsFalse(actual);
+	}
+
+	[TestMethod]
+	public async Task CanMove_MultipleSourcePagesAreCurrentAndNoDestination_ReturnsTrue()
+	{
+		const string sourcePage = "Source";
+		const string destinationPage = "Destination";
+		_db.WikiPages.Add(new WikiPage { Id = 1, ChildId = null, PageName = sourcePage, Revision = 1, IsDeleted = true });
+		_db.WikiPages.Add(new WikiPage { Id = 2, ChildId = null, PageName = sourcePage, Revision = 2, IsDeleted = true });
+		_db.WikiPages.Add(new WikiPage { Id = 3, ChildId = 4, PageName = sourcePage, Revision = 3 });
+		_db.WikiPages.Add(new WikiPage { Id = 4, ChildId = null, PageName = sourcePage, Revision = 4 });
+		_db.SaveChanges();
+
+		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
+		Assert.IsTrue(actual);
+	}
+
+	[TestMethod]
+	public async Task CanMove_MultipleSourcePagesAreCurrentWithDestination_ReturnsFalse()
+	{
+		const string sourcePage = "Source";
+		const string destinationPage = "Destination";
+		_db.WikiPages.Add(new WikiPage { Id = 1, ChildId = null, PageName = sourcePage, Revision = 1, IsDeleted = true });
+		_db.WikiPages.Add(new WikiPage { Id = 2, ChildId = null, PageName = sourcePage, Revision = 2, IsDeleted = true });
+		_db.WikiPages.Add(new WikiPage { Id = 3, ChildId = 4, PageName = sourcePage, Revision = 3 });
+		_db.WikiPages.Add(new WikiPage { Id = 4, ChildId = null, PageName = sourcePage, Revision = 4 });
+		_db.WikiPages.Add(new WikiPage { Id = 5, ChildId = null, PageName = destinationPage, Revision = 1 });
+		_db.SaveChanges();
 
 		var actual = await _wikiPages.CanMove(sourcePage, destinationPage);
 		Assert.IsFalse(actual);
