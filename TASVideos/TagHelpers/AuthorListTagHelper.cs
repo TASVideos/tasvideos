@@ -10,7 +10,7 @@ public class AuthorListTagHelper : TagHelper
 	public override void Process(TagHelperContext context, TagHelperOutput output)
 	{
 		output.TagName = "span";
-		output.Content.SetHtmlContent(GetAuthorString());
+		output.Content.SetContent(GetAuthorString());
 	}
 
 	private string GetAuthorString()
