@@ -154,6 +154,10 @@ public static partial class Builtins
 		{
 			skip = 2; // "/HomePages/{user}"
 		}
+		else if (ss.Length == 2 && ss[1].StartsWith("movies-", StringComparison.OrdinalIgnoreCase))
+		{
+			skip = 1; // "/Movies-{tokens}"
+		}
 
 		for (var i = 0; i < ss.Length; i++)
 		{
