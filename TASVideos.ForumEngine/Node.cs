@@ -401,7 +401,7 @@ public class Element : INode
 					async s => (int.TryParse(s, out var id) ? await h.GetSubmissionTitle(id) : null) ?? "Submission #" + s);
 				break;
 			case "userfile":
-				await WriteHref(w, h, s => "/userfiles/info/" + s, async s => "User movie #" + s);
+				await WriteHref(w, h, s => "/userfiles/info/" + s, async s => "User file #" + s);
 				break;
 			case "wiki":
 				await WriteHref(w, h, s => "/" + s, async s => "Wiki: " + s);
@@ -601,7 +601,7 @@ public class Element : INode
 				await WriteMetaDescriptionTransformOrContent(sb, h, async s => (int.TryParse(s, out var id) ? await h.GetSubmissionTitle(id) : null) ?? "Submission #" + s);
 				break;
 			case "userfile":
-				await WriteMetaDescriptionTransformOrContent(sb, h, async s => "User movie #" + s);
+				await WriteMetaDescriptionTransformOrContent(sb, h, async s => "User file #" + s);
 				break;
 			case "wiki":
 				await WriteMetaDescriptionTransformOrContent(sb, h, async s => "Wiki: " + s);
