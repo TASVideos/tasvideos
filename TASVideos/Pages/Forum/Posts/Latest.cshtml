@@ -5,6 +5,7 @@
 }
 
 <partial Name="_ForumHeader" model="false" />
+<div class="text-muted">All topics with posts created in the last 3 days.</div>
 <div condition="@Model.Posts.Any()">
 	<partial name="_Pager" model="Model.Posts" />
 	<standard-table>
@@ -12,8 +13,8 @@
 			<tr>
 				<th class="d-none d-md-table-cell">Forum</th>
 				<th>Topic</th>
+				<th>Latest Post</th>
 				<th>Posted</th>
-				<th>Post</th>
 			</tr>
 		</thead>
 		@foreach (var post in Model.Posts)
@@ -22,18 +23,14 @@
 				<td class="d-none d-md-table-cell">
 					<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a>
 				</td>
-				<td>
+				<td class="color-visited">
 					<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicTitle</a>
 				</td>
 				<td>
-					<timezone-convert asp-for="@post.CreateTimestamp"/>
+					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa-regular fa-bookmark"></i> @post.PosterName</a>
 				</td>
 				<td>
-					<a asp-page="/Forum/Posts/Index" asp-route-id="@post.Id"><i class="fa-regular fa-bookmark"></i> @post.PosterName</a>
-					<br/>
-					<small class="d-none d-md-inline-block">
-						@post.Text.CapAndEllipse(50)
-					</small>
+					<timezone-convert asp-for="@post.CreateTimestamp" />
 				</td>
 			</tr>
 		}

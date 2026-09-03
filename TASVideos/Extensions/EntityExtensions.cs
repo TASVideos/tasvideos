@@ -627,6 +627,5 @@ public static class EntityExtensions
 			p.Topic!.Title,
 			p.Topic.ForumId,
 			p.Topic!.Forum!.Name,
-			p.Text,
 			p.Poster!.UserName));
 }

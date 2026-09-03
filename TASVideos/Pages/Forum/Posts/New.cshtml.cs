@@ -17,6 +17,14 @@ public class NewModel(ApplicationDbContext db, IUserManager userManager) : BaseP
 		Posts = await db.ForumPosts
 			.ExcludeRestricted(UserCanSeeRestricted)
 			.Since(user.LastLoggedInTimeStamp ?? DateTime.UtcNow)
+			.Select(p => p.TopicId)
+			.Distinct()
+			.Select(id => db.ForumPosts
+				.ExcludeRestricted(UserCanSeeRestricted)
+				.Since(user.LastLoggedInTimeStamp ?? DateTime.UtcNow)
+				.Where(p => p.TopicId == id)
+				.OrderByDescending(p => p.CreateTimestamp)
+				.First())
 			.OrderByDescending(p => p.CreateTimestamp)
 			.ToLatestPost()
 			.PageOf(Search);

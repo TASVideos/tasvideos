@@ -5,16 +5,17 @@
 }
 
 <partial Name="_ForumHeader" model="false" />
+<div class="text-muted">All topics with no replies beyond the opening post.</div>
 <partial name="_Pager" model="Model.Posts" />
 <standard-table>
-	<table-head columns="Forum,Topic,Author,Posted On"></table-head>
+	<table-head columns="Forum,Topic,Author,Posted"></table-head>
 	@foreach (var post in Model.Posts)
 	{
 		<tr>
 			<td>
 				<a asp-page="/Forum/Subforum/Index" asp-route-id="@post.ForumId">@post.ForumName</a>
 			</td>
-			<td>
+			<td class="color-visited">
 				<a asp-page="/Forum/Topics/Index" asp-route-id="@post.TopicId">@post.TopicName</a>
 			</td>
 			<td>

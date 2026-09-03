@@ -9,6 +9,7 @@
 	--bs-link-color-rgb: 13,110,253;
 	--bs-link-hover-color: #0a58ca;
 	--bs-link-hover-color-rgb: 10,88,202;
+	--bs-link-visited-color: #64a3ff;
 	--code-bg: var(--bs-body-bg);
 
 	.card {
@@ -36,6 +37,7 @@
 	--bs-body-color-rgb: 248,249,250;
 	--bs-link-color: #5099f1;
 	--bs-link-color-rgb: 80,153,241;
+	--bs-link-visited-color: #769bbe;
 
 	.card {
 		--bs-card-cap-bg: #212529;
@@ -80,6 +82,11 @@ a {
 	&[disabled] {
 		pointer-events: none;
 	}
+}
+.color-visited {
+    a:visited {
+        color: var(--bs-link-visited-color);
+    }
 }
 
 .page-title {

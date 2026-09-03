@@ -15,6 +15,13 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 		Posts = await db.ForumPosts
 			.ExcludeRestricted(UserCanSeeRestricted)
 			.Since(DateTime.UtcNow.AddDays(-3))
+			.Select(p => p.TopicId)
+			.Distinct()
+			.Select(id => db.ForumPosts
+				.ExcludeRestricted(UserCanSeeRestricted)
+				.Where(p => p.TopicId == id)
+				.OrderByDescending(p => p.CreateTimestamp)
+				.First())
 			.OrderByDescending(p => p.CreateTimestamp)
 			.ToLatestPost()
 			.PageOf(Search);
@@ -27,6 +34,5 @@ public class LatestModel(ApplicationDbContext db) : BasePageModel
 		string TopicTitle,
 		int ForumId,
 		string ForumName,
-		string Text,
 		string PosterName);
 }
