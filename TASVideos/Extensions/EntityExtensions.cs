@@ -434,7 +434,7 @@ public static class EntityExtensions
 			});
 	}
 
-	public static IQueryable<Pages.Publications.IndexModel.PublicationDisplay> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1, bool isSingleMovie = false)
+	public static IQueryable<Pages.Publications.IndexModel.PublicationDisplay> ToViewModel(this IQueryable<Publication> query, bool ratingSort = false, int userId = -1)
 	{
 		var q = query
 			.Select(p => new Pages.Publications.IndexModel.PublicationDisplay
@@ -502,8 +502,7 @@ public static class EntityExtensions
 					.Average(pr => pr.Value),
 				Rating = new Pages.Publications.IndexModel.PublicationDisplay.CurrentRating(
 					p.PublicationRatings.Where(pr => pr.UserId == userId).Select(pr => pr.Value.ToString()).FirstOrDefault(),
-					p.PublicationRatings.All(pr => pr.UserId != userId)),
-				IsSingleMovie = isSingleMovie
+					p.PublicationRatings.All(pr => pr.UserId != userId))
 			});
 
 		if (ratingSort)

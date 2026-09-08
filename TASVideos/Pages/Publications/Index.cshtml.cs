@@ -68,7 +68,6 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 		public int RatingCount { get; init; }
 		public double? OverallRating { get; init; }
 		public CurrentRating Rating { get; init; } = null!;
-		public bool IsSingleMovie { get; init; }
 
 		public record Tag(string DisplayName, string Code);
 		public record Flag(string? IconPath, string? LinkPath, string Name);

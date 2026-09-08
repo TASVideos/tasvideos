@@ -11,7 +11,7 @@ public class ViewModel(ApplicationDbContext db, IFileService fileService, ITASVi
 	public async Task<IActionResult> OnGet()
 	{
 		var publication = await db.Publications
-			.ToViewModel(false, User.GetUserId(), isSingleMovie: true)
+			.ToViewModel(false, User.GetUserId())
 			.SingleOrDefaultAsync(p => p.Id == Id);
 
 		if (publication is null)

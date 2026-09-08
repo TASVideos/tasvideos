@@ -40,7 +40,7 @@
 }
 
 <card class="border border-publication">
-	<card-header class="bg-publication p-2">
+	<card-header class="bg-publication p-2 position-relative">
 		<div class="gx-3 clearfix">
 			<div class="float-start me-2" condition="!string.IsNullOrWhiteSpace(Model.ClassIconPath)">
 				<icon path="@Model.ClassIconPath" title="@Model.Class" />
@@ -48,21 +48,15 @@
 			<div class="float-end">
 				@foreach (var flag in Model.Flags.Where(f => !string.IsNullOrWhiteSpace(f.IconPath)))
 				{
-					<a href="/@flag.LinkPath">
+					<a href="/@flag.LinkPath" class="position-relative z-2">
 						<img class="ms-1" title="@flag.Name" alt="[@flag.Name]" src="/@flag.IconPath" />
 					</a>
 				}
 			</div>
 			<h4>
-                <span class="text-body-emphasis">
-                    @if (Model.IsSingleMovie)
-                    {
-                        <partial name="_MovieModuleTitle" model="Model.DisplayTitle" />
-                    }
-                    else
-                    {
-                        <a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Title</span></a>
-                    }
+				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="stretched-link"></a>
+				<span class="text-body-emphasis">
+					<partial name="_MovieModuleTitle" model="Model.DisplayTitle" />
                 </span>
 			</h4>
 		</div>
