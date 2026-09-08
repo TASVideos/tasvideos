@@ -1,15 +1,17 @@
 @model TASVideos.Pages.Publications.IndexModel.PublicationDisplayTitle
 @{
-	var gameName = !string.IsNullOrEmpty(Model.GameVersionTitleOverride) ? Model.GameVersionTitleOverride : Model.GameName;
-	var allAuthors = Model.Authors.Concat(Model.AdditionalAuthors
+    var allAuthors = Model.Authors.Concat(Model.AdditionalAuthors
         .SplitWithEmpty(",")
         .Select(a => new Pages.Publications.IndexModel.PublicationDisplayTitle.AuthorIdName
 	    {
 		    Id = -1,
 		    Name = a
 	    })).ToList();
-	
-	var gameAndGoal = $"{Model.SystemCode} {gameName}" + (!string.IsNullOrWhiteSpace(Model.Goal) ? $" \"{Model.Goal}\"" : "");
+
+    var gameName = !string.IsNullOrEmpty(Model.GameVersionTitleOverride) ? Model.GameVersionTitleOverride : Model.GameName;
+    var goal = Model.Goal == "baseline" ? "" : Model.Goal;
+
+    var gameAndGoal = $"{Model.SystemCode} {gameName}" + (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "");
 	var time = Model.Time().ToStringWithOptionalDaysAndHours();
 	var metricValue = Model.MetricValue;
 	var metricTag = Model.Metric.TitleTag();

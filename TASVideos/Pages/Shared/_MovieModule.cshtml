@@ -54,11 +54,16 @@
 				}
 			</div>
 			<h4>
-				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none">
-					<span class="text-body-emphasis">
+                <span class="text-body-emphasis">
+                    @if (Model.IsSingleMovie)
+                    {
                         <partial name="_MovieModuleTitle" model="Model.DisplayTitle" />
-					</span>
-				</a>
+                    }
+                    else
+                    {
+                        <a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Title</span></a>
+                    }
+                </span>
 			</h4>
 		</div>
 	</card-header>

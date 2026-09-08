@@ -35,11 +35,25 @@ public class PublicationTitleTests
 				NormalizedEmail = "TEST2@EXAMPLE.COM",
 			}).Entity;
 
-			var game = db.Games.Add(new Game
+			var game1 = db.Games.Add(new Game
 			{
 				DisplayName = "TestGame",
 				GameGoals = [new() { DisplayName = "TestGoal" }],
 				GameVersions = [new() { Name = "TestGame" }]
+			}).Entity;
+
+			var game2 = db.Games.Add(new Game
+			{
+				DisplayName = "TestGame2",
+				GameGoals = [new() { DisplayName = "baseline" }],
+				GameVersions = [new() { Name = "TestGame2" }]
+			}).Entity;
+
+			var game3 = db.Games.Add(new Game
+			{
+				DisplayName = "TestGame3",
+				GameGoals = [new() { DisplayName = "TestGoal" }],
+				GameVersions = [new() { Name = "TestGame3", TitleOverride = "TestGame3Override" }]
 			}).Entity;
 
 			var pubClass = db.PublicationClasses.Add(new PublicationClass { Name = "Standard" }).Entity;
@@ -49,9 +63,9 @@ public class PublicationTitleTests
 			{
 				Id = 1,
 				System = gameSystem,
-				Game = game,
-				GameVersion = game.GameVersions.First(),
-				GameGoal = game.GameGoals.First(),
+				Game = game1,
+				GameVersion = game1.GameVersions.First(),
+				GameGoal = game1.GameGoals.First(),
 				Authors = [new() { Author = author1, Ordinal = 1 }, new() { Author = author2, Ordinal = 2 }],
 				AdditionalAuthors = "AdditionalDude,NiceDude",
 				Frames = 1234,
@@ -68,9 +82,9 @@ public class PublicationTitleTests
 			{
 				Id = 2,
 				System = gameSystem,
-				Game = game,
-				GameVersion = game.GameVersions.First(),
-				GameGoal = game.GameGoals.First(),
+				Game = game2,
+				GameVersion = game2.GameVersions.First(),
+				GameGoal = game2.GameGoals.First(),
 				Authors = [new() { Author = author1, Ordinal = 1 }, new() { Author = author2, Ordinal = 2 }],
 				AdditionalAuthors = "AdditionalDude,NiceDude",
 				Frames = 1234,
@@ -88,9 +102,9 @@ public class PublicationTitleTests
 			{
 				Id = 3,
 				System = gameSystem,
-				Game = game,
-				GameVersion = game.GameVersions.First(),
-				GameGoal = game.GameGoals.First(),
+				Game = game1,
+				GameVersion = game1.GameVersions.First(),
+				GameGoal = game1.GameGoals.First(),
 				Authors = [new() { Author = author1, Ordinal = 1 }, new() { Author = author2, Ordinal = 2 }],
 				AdditionalAuthors = "AdditionalDude,NiceDude",
 				Frames = 1234,
