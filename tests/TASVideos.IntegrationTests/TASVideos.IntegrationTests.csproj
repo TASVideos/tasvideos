@@ -23,4 +23,8 @@
 		<ProjectReference Include="..\TASVideos.Tests.Base\TASVideos.Tests.Base.csproj" BuildReference="true" />
 		<ProjectReference Include="..\..\TASVideos\TASVideos.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Properties\" />
+	</ItemGroup>
 </Project>

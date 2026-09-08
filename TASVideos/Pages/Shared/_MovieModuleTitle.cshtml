@@ -1,0 +1,29 @@
+@model TASVideos.Pages.Publications.IndexModel.PublicationDisplayTitle
+@{
+	var gameName = !string.IsNullOrEmpty(Model.GameVersionTitleOverride) ? Model.GameVersionTitleOverride : Model.GameName;
+	var allAuthors = Model.Authors.Concat(Model.AdditionalAuthors
+        .SplitWithEmpty(",")
+        .Select(a => new Pages.Publications.IndexModel.PublicationDisplayTitle.AuthorIdName
+	    {
+		    Id = -1,
+		    Name = a
+	    })).ToList();
+	
+	var gameAndGoal = $"{Model.SystemCode} {gameName}" + (!string.IsNullOrWhiteSpace(Model.Goal) ? $" \"{Model.Goal}\"" : "");
+	var time = Model.Time().ToStringWithOptionalDaysAndHours();
+	var metricValue = Model.MetricValue;
+	var metricTag = Model.Metric.TitleTag();
+
+    if (Model.Metric.IsScore())
+    {
+        <text>@gameAndGoal (@metricValue) by <partial name="_MovieModuleTitleAuthors" model="allAuthors" /> in @time</text>
+    }
+    else if (Model.Metric.IsTimeOverride())
+    {
+        <text>@gameAndGoal by <partial name="_MovieModuleTitleAuthors" model="allAuthors" /> in @metricValue @Model.Metric.TitleTag()</text>
+    }
+    else
+    {
+        <text>@gameAndGoal by <partial name="_MovieModuleTitleAuthors" model="allAuthors" /> in @time</text>
+    }
+}

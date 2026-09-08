@@ -444,6 +444,26 @@ public static class EntityExtensions
 				GameName = p.Game!.DisplayName,
 				GameVersionId = p.GameVersionId,
 				GameVersionName = p.GameVersion!.Name,
+				DisplayTitle = new Pages.Publications.IndexModel.PublicationDisplayTitle
+				{
+					SystemCode = p.System!.Code,
+					GameName = p.Game!.DisplayName,
+					GameVersionTitleOverride = p.GameVersion!.TitleOverride,
+					Goal = p.GameGoal!.DisplayName,
+					Authors = p.Authors
+						.OrderBy(a => a.Ordinal)
+						.Select(a => new Pages.Publications.IndexModel.PublicationDisplayTitle.AuthorIdName
+						{
+							Id = a.Author!.Id,
+							Name = a.Author.UserName
+						})
+						.ToList(),
+					AdditionalAuthors = p.AdditionalAuthors,
+					FrameRate = p.SystemFrameRate!.FrameRate,
+					Frames = p.Frames,
+					MetricValue = p.MetricValue,
+					Metric = p.Metric
+				},
 				CreateTimestamp = p.CreateTimestamp,
 				LastUpdateTimestamp = p.LastUpdateTimestamp,
 				ObsoletedById = p.ObsoletedById,

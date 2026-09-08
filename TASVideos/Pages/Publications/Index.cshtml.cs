@@ -1,4 +1,5 @@
 using System.Text;
+using TASVideos.Common;
 
 namespace TASVideos.Pages.Publications;
 
@@ -42,6 +43,7 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 		public string GameName { get; init; } = "";
 		public int GameVersionId { get; init; }
 		public string GameVersionName { get; init; } = "";
+		public PublicationDisplayTitle DisplayTitle { get; init; } = new();
 		public DateTime CreateTimestamp { get; init; }
 		public DateTime LastUpdateTimestamp { get; init; }
 		public int? ObsoletedById { get; init; }
@@ -73,6 +75,26 @@ public class IndexModel(ApplicationDbContext db, IMovieSearchTokens movieTokens)
 		public record ObsoleteMovie(int Id, string Title);
 		public record PublicationUrl(PublicationUrlType Type, string? Url, string? DisplayName);
 		public record CurrentRating(string? Rating, bool Unrated);
+	}
+
+	public class PublicationDisplayTitle : ITimeable
+	{
+		public string SystemCode { get; init; } = "";
+		public string GameName { get; init; } = "";
+		public string? GameVersionTitleOverride { get; init; }
+		public string Goal { get; init; } = "";
+		public List<AuthorIdName> Authors { get; init; } = [];
+		public string? AdditionalAuthors { get; init; }
+		public double FrameRate { get; init; }
+		public int Frames { get; init; }
+		public string? MetricValue { get; init; } = "";
+		public OptimizationMetric Metric { get; init; }
+
+		public class AuthorIdName
+		{
+			public int Id { get; init; }
+			public string Name { get; init; } = "";
+		}
 	}
 
 	public class PublicationSearch : IPublicationTokens

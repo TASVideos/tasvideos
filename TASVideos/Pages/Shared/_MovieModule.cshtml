@@ -54,7 +54,11 @@
 				}
 			</div>
 			<h4>
-				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none"><span class="text-body-emphasis">@Model.Title</span></a>
+				<a asp-page="/Publications/View" asp-route-id="@Model.Id" class="text-decoration-none">
+					<span class="text-body-emphasis">
+                        <partial name="_MovieModuleTitle" model="Model.DisplayTitle" />
+					</span>
+				</a>
 			</h4>
 		</div>
 	</card-header>
