@@ -586,6 +586,7 @@ tt {
 	font-size: 1em;
 	direction: ltr;
 	unicode-bidi: bidi-override;
+	color: var(--bs-code-color);
 }
 
 tt, code, kbd, pre, samp, .wiki blockquote {
