@@ -162,26 +162,38 @@
 		<hr/>
 		<footer class="mb-3">
 			<button id="button-scrolltop" class="d-none position-fixed px-3 py-1 m-2 bottom-0 end-0 btn btn-primary fa fa-caret-up"></button>
-			<div class="d-flex flex-wrap gap-1">
+			<div class="d-flex flex-wrap gap-3">
 				@{
 					var (version, sha) = Versioning.GetVersion();
 				}
-				<a class="btn btn-silver btn-sm" href="https://github.com/TASVideos/tasvideos/commits/@(sha)">&copy; @DateTime.UtcNow.Year - TASVideos v@(version)</a>
-				<a class="btn btn-info btn-sm" href="/SiteRules">Terms</a>
-				<a class="btn btn-info btn-sm" href="/api">API</a>
-				@{
-					string? path = null;
-					if (ViewData.GetWikiPage() is null && this.Model is not (Publications.ViewModel or Submissions.ViewModel))
-					{
-						path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
+				<div class="d-flex flex-wrap gap-1">
+					<a class="btn btn-silver btn-sm" href="https://github.com/TASVideos/tasvideos/commits/@(sha)">&copy; @DateTime.UtcNow.Year - TASVideos v@(version)</a>
+					<a class="btn btn-info btn-sm" href="/SiteLicense" rel="license">License</a>
+					<a class="btn btn-info btn-sm" href="/SiteRules" rel="terms-of-service">Terms</a>
+					<a class="btn btn-info btn-sm" href="/Privacy" rel="privacy-policy">Privacy</a>
+					<a class="btn btn-info btn-sm" href="/api">API</a>
+					@{
+						string? path = null;
+						if (ViewData.GetWikiPage() is null && this.Model is not (Publications.ViewModel or Submissions.ViewModel))
+						{
+							path = this.Model.HttpContext.Request.Path.ToString().TrimStart('/');
+						}
+						if (path is "Wiki/Edit")
+						{
+							var editTarget = ((HttpContext)this.Model.HttpContext).Request.Query["path"].SingleOrDefault();
+							<a condition="await WikiPages.Exists(editTarget)" class="btn btn-info btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@editTarget"><i class="fa fa-history"></i> Page History</a>
+						}
 					}
-					if (path is "Wiki/Edit")
-					{
-						var editTarget = ((HttpContext)this.Model.HttpContext).Request.Query["path"].SingleOrDefault();
-						<a condition="await WikiPages.Exists(editTarget)" class="btn btn-info btn-sm" asp-page="/Wiki/PageHistory" asp-route-path="@editTarget"><i class="fa fa-history"></i> Page History</a>
-					}
-				}
-				<a condition="path is not null" class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
+					<a condition="path is not null" class="btn btn-info btn-sm" asp-page="/Wiki/Referrers" asp-route-path="@path">List referrers</a>
+				</div>
+				<div class="d-flex flex-wrap gap-1">
+					<a class="btn btn-info btn-sm d-flex align-items-center" href="https://www.youtube.com/@@TASVideosChannel" title="YouTube channel"
+						style="color: #FF0033; background-color: #FFFFFF !important; font-size: 20px; border-color: #00000040"><i class="fa-brands fa-youtube" style="line-height: 0"></i></a>
+					<a class="btn btn-info btn-sm d-flex align-items-center" href="https://bsky.app/profile/tasvideos.org" title="Bluesky account"
+						style="color: #1185FE; background-color: #FFFFFF !important; font-size: 16px; border-color: #00000040"><i class="fa-brands fa-bluesky"></i></a>
+					<a class="btn btn-info btn-sm d-flex align-items-center" href="https://discord.gg/7KSr7eZVzG" title="Discord server"
+						style="color: #FFFFFF; background-color: #5865F2 !important; font-size: 16px; border-color: #00000040"><i class="fa-brands fa-discord"></i></a>
+				</div>
 			</div>
 		</footer>
 	</div>
