@@ -21,15 +21,15 @@ public abstract class BaseParserTests
 		// in the real site will always be from within a zip file.
 		var ms = new MemoryStream();
 
-		using (var zip = SharpZipArchive.Create())
+		using (var zip = SharpZipArchive.CreateArchive())
 		{
-			zip.AddEntry("foobar", input, input.Length);
-			zip.SaveTo(ms);
+			zip.AddEntry("foobar", input, closeStream: false, input.Length);
+			zip.SaveTo(ms, new(SharpCompress.Common.CompressionType.Deflate));
 		}
 
 		ms.Position = 0;
 
-		var zip2 = SharpZipArchive.Open(ms);
+		var zip2 = SharpZipArchive.OpenArchive(ms);
 		var movieFile = zip2.Entries.First();
 		var movieFileStream = movieFile.OpenEntryStream();
 		return movieFileStream;

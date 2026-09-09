@@ -151,7 +151,7 @@ internal static class Extensions
 			}
 
 			ms.Seek(0, SeekOrigin.Begin);
-			return SharpZipArchive.Open(ms);
+			return (SharpZipArchive)SharpZipArchive.OpenArchive(ms);
 		}
 
 		public async Task<SharpTarArchive?> OpenTarGzArchiveRead()
@@ -173,7 +173,7 @@ internal static class Extensions
 			}
 
 			ms.Seek(0, SeekOrigin.Begin);
-			using var gzipArchive = SharpGZipArchive.Open(ms);
+			using var gzipArchive = SharpGZipArchive.OpenArchive(ms);
 			var gzipArchiveEntry = gzipArchive.Entries.SingleOrDefault();
 			if (gzipArchiveEntry == null)
 			{
@@ -196,7 +196,7 @@ internal static class Extensions
 			}
 
 			gzipMs.Seek(0, SeekOrigin.Begin);
-			return SharpTarArchive.Open(gzipMs);
+			return (SharpTarArchive)SharpTarArchive.OpenArchive(gzipMs);
 		}
 	}
 
