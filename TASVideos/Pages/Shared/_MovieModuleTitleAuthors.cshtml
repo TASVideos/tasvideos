@@ -1,0 +1,23 @@
+@model List<Pages.Publications.IndexModel.PublicationDisplayTitle.AuthorIdName>
+@{
+	for (int i = 0; i < Model.Count; i++)
+	{
+		if (Model[i].Id > 0)
+		{
+			<text><a href="/Movies-Author@(Model[i].Id)-obs" class="position-relative z-2">@Model[i].Name</a></text>
+		}
+		else
+		{
+			<text>@Model[i].Name</text>
+		}
+
+		if (i < Model.Count - 2)
+		{
+			<text>, </text>
+		}
+		else if (i == Model.Count - 2)
+		{
+			<text> & </text>
+		}
+	}
+}

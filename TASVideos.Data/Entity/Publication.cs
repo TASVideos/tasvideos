@@ -127,42 +127,45 @@ public class Publication : BaseEntity, ITimeable
 			goal = "";
 		}
 
-		var title = $"{System.Code} {gameName}"
-					+ (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "");
+		var gameAndGoal = $"{System.Code} {gameName}" + (!string.IsNullOrWhiteSpace(goal) ? $" \"{goal}\"" : "");
+		var authors = string.Join(", ", authorList).LastCommaToAmpersand();
+		var time = this.Time().ToStringWithOptionalDaysAndHours();
+		var metricValue = MetricValue;
+		var metricTag = Metric.TitleTag();
 
-		string metricTitle;
-		var tasTime = "";
-		if (Metric.IsScore())
+		string format;
+		if (isYouTubeTitle)
 		{
-			metricTitle = $" ({MetricValue})";
-			tasTime = $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
-		}
-		else if (Metric.IsTimeOverride())
-		{
-			metricTitle = $" in {MetricValue} {Metric.TitleTag()}";
+			if (Metric.IsScore())
+			{
+				format = "{0} ({3}) by {1}";
+			}
+			else if (Metric.IsTimeOverride())
+			{
+				format = "{0} in {3} {4} by {1}";
+			}
+			else
+			{
+				format = "{0} in {2} by {1}";
+			}
 		}
 		else
 		{
-			metricTitle = $" in {this.Time().ToStringWithOptionalDaysAndHours()}";
+			if (Metric.IsScore())
+			{
+				format = "{0} ({3}) by {1} in {2}";
+			}
+			else if (Metric.IsTimeOverride())
+			{
+				format = "{0} by {1} in {3} {4}";
+			}
+			else
+			{
+				format = "{0} by {1} in {2}";
+			}
 		}
 
-		if (isYouTubeTitle)
-		{
-			return title + metricTitle
-				+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}";
-		}
-
-		if (Metric.IsScore())
-		{
-			return title + metricTitle
-				+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
-				+ tasTime;
-		}
-
-		return
-			title
-			+ $" by {string.Join(", ", authorList).LastCommaToAmpersand()}"
-			+ metricTitle;
+		return string.Format(format, gameAndGoal, authors, time, metricValue, metricTag);
 	}
 }
 
