@@ -1024,7 +1024,7 @@ public record SubmitRequest(
 	IList<string> Authors,
 	string? ExternalAuthors,
 	OptimizationMetric Metric,
-	string MetricValue,
+	string? MetricValue,
 	string Markup,
 	byte[] MovieFile,
 	IParseResult ParseResult,
