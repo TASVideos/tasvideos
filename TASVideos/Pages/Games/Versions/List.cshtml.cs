@@ -26,6 +26,9 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 		GameDisplayName = displayName;
 		Versions = await db.GameVersions
 			.Where(v => v.GameId == GameId)
+			.OrderBy(v => v.Type)
+			.ThenBy(v => v.System!.Code)
+			.ThenBy(v => v.Region)
 			.Select(v => new VersionEntry(
 				v.Id,
 				v.Name,

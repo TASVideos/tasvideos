@@ -2,6 +2,8 @@ using TASVideos.Data.Entity.Forum;
 using TASVideos.Data.Entity.Game;
 using TASVideos.WikiModules;
 
+using static TASVideos.Pages.Games.Versions.ListModel;
+
 namespace TASVideos.Pages.Games;
 
 [AllowAnonymous]
@@ -29,15 +31,20 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			ScreenshotUrl = g.ScreenshotUrl,
 			GameResourcesPage = g.GameResourcesPage,
 			Genres = g.GameGenres.Select(gg => gg.Genre!.DisplayName).ToList(),
-			Versions = g.GameVersions.Select(gv => new GameDisplay.GameVersion(
-				gv.Type,
+			Versions = g.GameVersions.OrderBy(v => v.Type)
+				.ThenBy(v => v.System!.Code)
+				.ThenBy(v => v.Region)
+				.Select(gv => new VersionEntry(
+				gv.Id,
+				gv.Name,
 				gv.Md5,
 				gv.Sha1,
-				gv.Name,
-				gv.Region,
 				gv.Version,
+				gv.Region,
+				gv.Type,
 				gv.System!.Code,
-				gv.TitleOverride)).ToList(),
+				gv.TitleOverride,
+				gv.SourceDb)).ToList(),
 			GameGroups = g.GameGroups.Select(gg => new GameDisplay.GameGroup(gg.GameGroupId, gg.GameGroup!.Name)).ToList(),
 			PublicationCount = g.Publications.Count(p => p.ObsoletedById == null),
 			ObsoletePublicationCount = g.Publications.Count(p => p.ObsoletedById != null),
@@ -159,23 +166,13 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public string? ScreenshotUrl { get; init; }
 		public string? GameResourcesPage { get; init; }
 		public List<string> Genres { get; init; } = [];
-		public List<GameVersion> Versions { get; init; } = [];
+		public List<VersionEntry> Versions { get; init; } = [];
 		public List<GameGroup> GameGroups { get; init; } = [];
 		public List<PlaygroundSubmission> PlaygroundSubmissions { get; init; } = [];
 		public int PublicationCount { get; init; }
 		public int ObsoletePublicationCount { get; init; }
 		public int SubmissionCount { get; init; }
 		public int UserFilesCount { get; init; }
-
-		public record GameVersion(
-			VersionTypes Type,
-			string? Md5,
-			string? Sha1,
-			string Name,
-			string? Region,
-			string? Version,
-			string? SystemCode,
-			string? TitleOverride);
 
 		public record GameGroup(int Id, string Name);
 	}

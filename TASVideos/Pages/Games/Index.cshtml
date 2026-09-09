@@ -1,5 +1,4 @@
 @page "{id}"
-@using TASVideos.Data.Entity.Game
 @model IndexModel
 @{
 	ViewData.SetTitle($"{Model.Game.DisplayName}");
@@ -21,7 +20,7 @@
 		ViewData.SetNavigation(id, "/{0}G");
 	}
 
-	SortedSet<string> platforms = new(Model.Game.Versions.Select(v => v.SystemCode!));
+	SortedSet<string> platforms = new(Model.Game.Versions.Select(v => v.System));
 }
 
 <card class="mb-3">
@@ -219,21 +218,8 @@
 </alert>
 <standard-table condition="Model.Game.Versions.Any()">
 	<table-head columns="Type,Name,Title Override,Region,Version,Platform,Hashes"></table-head>
-	@foreach (var version in Model.Game.Versions.OrderBy(v => v.Name))
+	@foreach (var version in Model.Game.Versions)
 	{
-		<tr>
-			<td>
-				<span class="text-nowrap"><i condition="@version.Type == VersionTypes.Unknown" class="fa fa-circle-question"></i> @version.Type</span>
-			</td>
-			<td>@version.Name</td>
-			<td>@version.TitleOverride</td>
-			<td>@version.Region</td>
-			<td>@version.Version</td>
-			<td>@version.SystemCode</td>
-			<td style="overflow-wrap: anywhere">
-				<small condition="!string.IsNullOrWhiteSpace(version.Sha1)">SHA-1: @version.Sha1</small><br />
-				<small condition="!string.IsNullOrWhiteSpace(version.Md5)">MD5: @version.Md5</small>
-			</td>
-		</tr>
+		<partial name="_GameVersionTableRow" model="version" />
 	}
 </standard-table>

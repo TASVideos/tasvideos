@@ -107,7 +107,7 @@ public class IndexModelTests : TestDbBase
 		Assert.HasCount(1, _model.Game.Versions);
 		var gameVersion = _model.Game.Versions.First();
 		Assert.AreEqual("Version 1.0", gameVersion.Name);
-		Assert.AreEqual("NES", gameVersion.SystemCode);
+		Assert.AreEqual("NES", gameVersion.System);
 		Assert.AreEqual("USA", gameVersion.Region);
 		Assert.AreEqual(VersionTypes.Good, gameVersion.Type);
 		Assert.AreEqual("Custom Title", gameVersion.TitleOverride);

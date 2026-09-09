@@ -735,3 +735,21 @@ top-button-bar {
 		padding-left: 1rem;
 	}
 }
+
+.game-version-checksums {
+	& > label {
+		opacity: 0.6;
+	}
+	& > output > samp {
+		--sample-byte: attr(data-sample-byte type(#{'<number>'})); // workaround for https://github.com/sass/sass/issues/4030
+		color: oklch(30% 40% calc(var(--sample-byte) / 255 * 360));
+		font-size: 95%; // Bootstrap would otherwise have it at 85%
+		padding: 0;
+		text-transform: uppercase;
+	}
+}
+@include color-mode(dark) {
+	.game-version-checksums > output > samp {
+		color: oklch(90% 10% calc(var(--sample-byte) / 255 * 360));
+	}
+}
