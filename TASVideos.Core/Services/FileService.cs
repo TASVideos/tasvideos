@@ -62,7 +62,7 @@ internal class FileService(ApplicationDbContext db) : IFileService
 	public async Task<byte[]> CopyZip(byte[] zipBytes, string fileName)
 	{
 		await using var submissionFileStream = new MemoryStream(zipBytes);
-		using var submissionZipArchive = SharpZipArchive.Open(submissionFileStream);
+		using var submissionZipArchive = SharpZipArchive.OpenArchive(submissionFileStream);
 		var entries = submissionZipArchive.Entries.ToList();
 		var single = entries.First();
 
@@ -77,11 +77,11 @@ internal class FileService(ApplicationDbContext db) : IFileService
 	public async Task<byte[]> ZipFile(byte[] fileBytes, string fileName)
 	{
 		await using var outStream = new MemoryStream();
-		using (var archive = SharpZipArchive.Create())
+		using (var archive = SharpZipArchive.CreateArchive())
 		{
 			await using var inStream = new MemoryStream(fileBytes, writable: false);
-			archive.AddEntry(fileName, inStream, inStream.Length);
-			archive.SaveTo(outStream);
+			archive.AddEntry(fileName, inStream, closeStream: false, inStream.Length);
+			archive.SaveTo(outStream, new(SharpCompress.Common.CompressionType.Deflate));
 		}
 
 		return outStream.ToArray();

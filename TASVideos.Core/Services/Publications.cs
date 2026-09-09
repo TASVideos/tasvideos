@@ -381,7 +381,7 @@ public record UpdatePublicationRequest(
 	string? ExternalAuthors,
 	List<string> Authors,
 	OptimizationMetric Metric,
-	string MetricValue,
+	string? MetricValue,
 	List<int> SelectedFlags,
 	List<int> SelectedTags,
 	List<PermissionTo> UserPermissions,
