@@ -271,9 +271,10 @@ public static partial class Builtins
 	private static Element MakeImage(int charStart, int charEnd, string[] pp, int index, out bool unusedParams)
 	{
 		unusedParams = false;
+		var imageUrl = NormalizeImageUrl(pp[index++]);
 		var attrs = new List<KeyValuePair<string, string>>
 		{
-			Attr("src", NormalizeImageUrl(pp[index++]))
+			Attr("src", imageUrl),
 		};
 		StringBuilder classString = new("embed");
 		for (; index < pp.Length; index++)
@@ -311,7 +312,21 @@ public static partial class Builtins
 
 		attrs.Add(Attr("class", classString.ToString()));
 
-		return new Element(charStart, "img", attrs, []) { CharEnd = charEnd };
+		var imgElem = new Element(charStart, "img", attrs, []) { CharEnd = charEnd };
+		return SiteGlobalConstants.LinkIsBannedImageHost(imageUrl)
+			? new Element(charStart, "div", [
+				new Element(charStart, "span", [new("class", "banned-image-host-warning")], [
+					new Text(charStart, "WARNING: This image host is unreliable. (") { CharEnd = charEnd },
+					new Element(charStart, "a", [new("href", "/SiteRules#SitesNotAllowedForAvatars")], [
+						new Text(charStart, "Full list here") { CharEnd = charEnd },
+					]) { CharEnd = charEnd },
+					new Text(charStart, ".)") { CharEnd = charEnd },
+					new Element(charStart, "br") { CharEnd = charEnd },
+					new Text(charStart, "To ensure it can be viewed in the future, reupload it to another host.") { CharEnd = charEnd },
+				]) { CharEnd = charEnd },
+				imgElem,
+			]) { CharEnd = charEnd }
+			: imgElem;
 	}
 
 	[GeneratedRegex(@"^(\d+)$")]

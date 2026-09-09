@@ -82,6 +82,25 @@ public static class SiteGlobalConstants
 	public const int YearsOfBanDisplayedAsIndefinite = 2;
 
 	public const string MainIvatarDomain = "seccdn.libravatar.org"; // keep in sync with profile-settings.js
+
+	// Hardcoded for now, we can make a database table if this becomes a maintenance burden
+	public static readonly string[] BannedAvatarSites = [
+		"cdn.discordapp.com",
+		"media.discordapp.net",
+		"membres.lycos.fr",
+		"rphaven.org",
+		"usuarios.lycos.es"
+	];
+
+	public static bool LinkIsBannedImageHost(string url)
+	{
+		static string RemovePrefix(string str, string pfx)
+			=> str.StartsWith(pfx, StringComparison.InvariantCultureIgnoreCase) ? str[pfx.Length..] : str;
+		url = RemovePrefix(url, "https:");
+		url = RemovePrefix(url, "http:");
+		url = RemovePrefix(url, "//");
+		return BannedAvatarSites.Any(domain => url.StartsWith($"{domain}/", StringComparison.InvariantCultureIgnoreCase));
+	}
 }
 
 public static class ForumConstants
