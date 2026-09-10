@@ -735,3 +735,7 @@ top-button-bar {
 		padding-left: 1rem;
 	}
 }
+
+.reaction-bar {
+	--bs-btn-hover-bg: var(--bs-card-cap-bg);
+}

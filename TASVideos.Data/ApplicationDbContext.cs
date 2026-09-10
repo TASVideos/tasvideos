@@ -69,6 +69,7 @@ public class ApplicationDbContext : IdentityDbContext<User, Role, int, UserClaim
 	public DbSet<Forum> Forums { get; set; } = null!;
 	public DbSet<ForumTopic> ForumTopics { get; set; } = null!;
 	public DbSet<ForumPost> ForumPosts { get; set; } = null!;
+	public DbSet<ForumPostReaction> ForumPostReactions { get; set; } = null!;
 	public DbSet<ForumPoll> ForumPolls { get; set; } = null!;
 	public DbSet<ForumPollOption> ForumPollOptions { get; set; } = null!;
 	public DbSet<ForumPollOptionVote> ForumPollOptionVotes { get; set; } = null!;

@@ -242,6 +242,8 @@
 	<script condition="ViewData.UsesDiff()" src="/js/diff_match_patch.js"></script>
 	<script condition="ViewData.UsesDiff()" src="/js/diff_view.js"></script>
 	<script condition="ViewData.UsesMoodPreview()" src="/js/mood-preview.js"></script>
+	<script condition="ViewData.UsesForumReactions()" src="/js/forum-reactions.js"></script>
+	<div condition="ViewData.UsesForumReactions()" class="d-none">@Html.AntiForgeryToken()</div>
 	<script src="/js/prevent-double-submit.js"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
