@@ -82,6 +82,8 @@ public static class SiteGlobalConstants
 	public const int YearsOfBanDisplayedAsIndefinite = 2;
 
 	public const string MainIvatarDomain = "seccdn.libravatar.org"; // keep in sync with profile-settings.js
+
+	public static readonly string[] AllowedReactions = ["👍", "👎", "😄", "😕", "❤️", "🎉", "🚀", "👀"];
 }
 
 public static class ForumConstants

@@ -31,6 +31,10 @@
 			Image = Model.Topic.TopicCreator!.GetCurrentAvatar()
 		});
 	}
+	if (User.Has(PermissionTo.CreateForumPosts))
+	{
+		ViewData.UseForumReactions();
+	}
 }
 
 @section PageTitle {
