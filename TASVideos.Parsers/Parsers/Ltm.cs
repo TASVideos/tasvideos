@@ -33,7 +33,7 @@ internal class Ltm : Parser, IParser
 		double? lengthNanoseconds = null;
 		var isVariableFramerate = false;
 
-		using var reader = ReaderFactory.Open(file);
+		using var reader = ReaderFactory.OpenReader(file);
 		while (reader.MoveToNextEntry())
 		{
 			if (reader.Entry.IsDirectory)
