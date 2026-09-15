@@ -31,6 +31,8 @@ public class ForumPost : BaseEntity
 
 	[JsonIgnore]
 	public NpgsqlTsVector SearchVector { get; set; } = null!;
+
+	public ICollection<ForumPostReaction> Reactions { get; init; } = [];
 }
 
 public static class ForumPostQueryableExtensions

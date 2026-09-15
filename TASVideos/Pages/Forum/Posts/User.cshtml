@@ -2,6 +2,10 @@
 @model UserModel
 @{
 	ViewData.SetTitle($"Posts for {Model.UserName}");
+	if (User.Has(PermissionTo.CreateForumPosts))
+	{
+		ViewData.UseForumReactions();
+	}
 }
 
 <partial Name="_ForumHeader" model="false" />

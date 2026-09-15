@@ -1,0 +1,16 @@
+@page "/Forum/Posts/{id:int}/Reactions"
+@model TASVideos.Pages.Forum.Posts.ReactionsModel
+@{
+	ViewData.SetTitle($"Reactions for Forum Post {Model.Id}");
+}
+
+<standard-table>
+	<table-head columns="User,Reaction"></table-head>
+	@foreach (var reaction in Model.Reactions)
+	{
+		<tr>
+			<td>@reaction.UserName</td>
+			<td>@reaction.Reaction</td>
+		</tr>
+	}
+</standard-table>

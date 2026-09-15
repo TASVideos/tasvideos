@@ -101,6 +101,7 @@
 				<div class="mb-auto">
 					<forum-markup markup="@Model.Text" enable-html="@Model.EnableHtml" enable-bb-code="@Model.EnableBbCode"></forum-markup>
 				</div>
+				<partial name="_ReactionBar" model="Model.Reactions" condition="Model.PosterId != SiteGlobalConstants.TASVideoAgentId && Model.PosterId != SiteGlobalConstants.TASVideosGrueId" />
 				<div condition="!string.IsNullOrWhiteSpace(Model.Signature)" class="forum-signature mt-2 text-body-tertiary lh-sm d-none d-md-block">
 					<small>
 						<forum-markup markup="@Model.Signature" enable-html="false" enable-bb-code="true"></forum-markup>
