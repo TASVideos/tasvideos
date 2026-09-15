@@ -461,6 +461,7 @@ figure {
 	position: absolute;
 	left: -3.5rem;
 	top: -1rem;
+	z-index: 1;
 	width: 121px;
 
 	&-dark {
@@ -469,6 +470,10 @@ figure {
 }
 #banner {
 	background: $banner;
+
+	.navbar-toggler, .navbar-collapse {
+		z-index: 1;
+	}
 }
 @include color-mode(dark) {
 	.site-icon {
@@ -496,6 +501,7 @@ figure {
 
 #mantra {
 	font-weight: bold;
+	z-index: 1;
 	color: $gray-100;
 	text-decoration: none;
 
@@ -522,6 +528,7 @@ figure {
 	.site-banner {
 		height: $banner-height;
 		background: $banner;
+		z-index: -1;
 	}
 }
 
