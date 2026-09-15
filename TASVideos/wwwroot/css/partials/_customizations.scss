@@ -470,6 +470,10 @@ figure {
 }
 #banner {
 	background: $banner;
+
+	.navbar-toggler, .navbar-collapse {
+		z-index: 1;
+	}
 }
 @include color-mode(dark) {
 	.site-icon {
