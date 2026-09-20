@@ -71,6 +71,7 @@ public class EditUrlsModel(
 	{
 		var publication = await db.Publications
 			.IncludeTitleTables()
+			.Include(p => p.PublicationUrls)
 			.Where(p => p.Id == PublicationId)
 			.SingleOrDefaultAsync();
 
