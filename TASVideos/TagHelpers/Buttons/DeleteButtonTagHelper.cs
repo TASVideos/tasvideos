@@ -63,7 +63,7 @@ public class DeleteButtonTagHelper(IHtmlHelper helper) : TagHelper
 							<div class='modal-body'>
 								<p>{TagHelperExtensions.Text(WarningMessage)}</p>
 							</div>
-							<form action='{WebUtility.UrlDecode(AspHref)}' method='post'>
+							<form action='{WebUtility.HtmlEncode(AspHref)}' method='post'>
 								<div class='modal-footer'>
 									{antiForgeryToken}
 									{reasonInput}

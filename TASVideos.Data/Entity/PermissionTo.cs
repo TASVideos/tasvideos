@@ -54,6 +54,10 @@ public enum PermissionTo
 	[Description("The ability to send private messages.")]
 	SendPrivateMessages = 20,
 
+	[Group("User")]
+	[Description("The ability to react with emojis.")]
+	CreateReactions = 21,
+
 	#endregion
 
 	#region Wiki 100
@@ -253,6 +257,10 @@ public enum PermissionTo
 	[Group("Forum Administration")]
 	[Description("Ability to edit username patterns that are disallowed for registration.")]
 	EditDisallows = 411,
+
+	[Group("Forum Administration")]
+	[Description("The ability to moderate reactions.")]
+	ModerateReactions = 412,
 
 	[Group("Forum Administration")]
 	[Description("The ability to see forums that are restricted from general access.")]

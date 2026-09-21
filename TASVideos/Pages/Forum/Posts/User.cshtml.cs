@@ -62,7 +62,20 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 				PosterMood = p.PosterMood,
 				PosterId = p.PosterId,
 				PostEditedTimestamp = p.PostEditedTimestamp,
-				TopicIsLocked = p.Topic!.IsLocked
+				TopicIsLocked = p.Topic!.IsLocked,
+				Reactions = new PostEntry.ReactionSummary
+				{
+					PostId = p.Id,
+					IsTopicLocked = p.Topic.IsLocked,
+					Reactions = p.Reactions
+						.Select(r => new PostEntry.ReactionSummary.Entry
+						{
+							UserName = r.User!.UserName,
+							Reaction = r.Reaction,
+							Date = r.LastUpdateTimestamp
+						})
+						.ToList()
+				}
 			})
 			.PageOf(Search);
 

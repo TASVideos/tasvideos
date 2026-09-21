@@ -134,7 +134,20 @@ public class IndexModel(
 				PostEditedTimestamp = p.PostEditedTimestamp,
 				Subject = p.Subject,
 				Signature = p.Poster.Signature,
-				IsLastPost = p.Id == Topic.LastPostId
+				IsLastPost = p.Id == Topic.LastPostId,
+				Reactions = new PostEntry.ReactionSummary
+				{
+					PostId = p.Id,
+					IsTopicLocked = topic.IsLocked,
+					Reactions = p.Reactions
+						.Select(r => new PostEntry.ReactionSummary.Entry
+						{
+							UserName = r.User!.UserName,
+							Reaction = r.Reaction,
+							Date = r.LastUpdateTimestamp
+						})
+						.ToList()
+				}
 			})
 			.OrderBy(p => p.CreateTimestamp)
 			.PageOf(Search);
@@ -364,6 +377,7 @@ public class IndexModel(
 		public string? Signature { get; set; }
 
 		public ICollection<AwardAssignmentSummary> Awards { get; set; } = [];
+		public ReactionSummary Reactions { get; set; } = new();
 
 		public bool EnableHtml { get; init; }
 		public bool EnableBbCode { get; init; }
@@ -400,6 +414,19 @@ public class IndexModel(
 					.Append(PosterPlayerRank)
 					.Where(s => !string.IsNullOrEmpty(s))
 					.Select(s => s!.Replace(' ', '\u00A0')));
+			}
+		}
+
+		public class ReactionSummary
+		{
+			public int PostId { get; init; }
+			public bool IsTopicLocked { get; init; }
+			public List<Entry> Reactions { get; init; } = [];
+			public class Entry
+			{
+				public string UserName { get; init; } = "";
+				public string Reaction { get; init; } = "";
+				public DateTime Date { get; init; }
 			}
 		}
 	}

@@ -83,5 +83,7 @@ public static class ViewDataDictionaryExtensions
 		public bool UsesMoodPreview() => viewData["use-mood-preview"] is not null;
 		public void UseClientFileCompression() => viewData["use-client-file-compression"] = true;
 		public bool UsesClientFileCompression() => viewData["use-client-file-compression"] is not null;
+		public void UseForumReactions() => viewData["use-forum-reactions"] = true;
+		public bool UsesForumReactions() => viewData["use-forum-reactions"] is not null;
 	}
 }
