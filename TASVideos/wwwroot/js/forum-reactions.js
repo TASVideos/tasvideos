@@ -18,9 +18,9 @@ window.addEventListener('DOMContentLoaded', function () {
 				const reaction = btn.dataset.reaction;
 				const postId = bar.dataset.postId;
 
-				var response = await fetch(`/Forum/Posts/${postId}/Reactions`, {
+				var response = await fetch(`/Reactions/Index`, {
 					method: 'POST',
-					body: JSON.stringify({ "Reaction": reaction }),
+					body: JSON.stringify({ "PostId": postId, "Reaction": reaction }),
 					headers: {
 						'Content-Type': 'application/json',
 						'RequestVerificationToken': token,
@@ -35,9 +35,9 @@ window.addEventListener('DOMContentLoaded', function () {
 				const reaction = btn.dataset.reaction;
 				const postId = bar.dataset.postId;
 				const isOwnReaction = bar.dataset.ownReaction === reaction;
-				const body = isOwnReaction ? null : JSON.stringify({ "Reaction": reaction });
+				const body = JSON.stringify({ "PostId": postId, "Reaction": isOwnReaction ? null : reaction });
 
-				var response = await fetch(`/Forum/Posts/${postId}/Reactions`, {
+				var response = await fetch(`/Reactions/Index`, {
 					method: 'POST',
 					body: body,
 					headers: {

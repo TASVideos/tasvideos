@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using TASVideos.Data.Entity.Forum;
+using static TASVideos.Pages.Forum.Topics.IndexModel.PostEntry;
 
 namespace TASVideos.Pages.Reactions;
 
+[Authorize]
 public class IndexModel(ApplicationDbContext db) : BasePageModel
 {
 	[FromQuery]
@@ -62,6 +63,91 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		return Page();
 	}
 
+	public async Task<IActionResult> OnPost([FromBody] ReactionRequest? request)
+	{
+		if (!User.Has(PermissionTo.CreateReactions))
+		{
+			return AccessDenied();
+		}
+
+		if (request is null)
+		{
+			return BadRequest();
+		}
+
+		var userCanSeeRestricted = User.Has(PermissionTo.SeeRestrictedForums);
+
+		var post = await db.ForumPosts
+			.Include(p => p.Reactions)
+			.Include(p => p.Topic)
+			.ExcludeRestricted(userCanSeeRestricted)
+			.FirstOrDefaultAsync(p => p.Id == request.PostId);
+
+		if (post is null)
+		{
+			return NotFound();
+		}
+
+		if (post.Topic!.IsLocked)
+		{
+			return BadRequest("Cannot react to posts in a locked topic.");
+		}
+
+		var reaction = request.Reaction;
+		if (!string.IsNullOrEmpty(reaction) && !SiteGlobalConstants.AllowedReactions.Contains(reaction))
+		{
+			return BadRequest("Invalid reaction.");
+		}
+
+		var existingReaction = post.Reactions.SingleOrDefault(r => r.UserId == User.GetUserId());
+
+		if (existingReaction is not null)
+		{
+			if (string.IsNullOrEmpty(reaction))
+			{
+				db.ForumPostReactions.Remove(existingReaction);
+			}
+			else
+			{
+				existingReaction.Reaction = reaction;
+			}
+		}
+		else
+		{
+			if (!string.IsNullOrEmpty(reaction))
+			{
+				var newReaction = new ForumPostReaction
+				{
+					UserId = User.GetUserId(),
+					PostId = post.Id,
+					Reaction = reaction
+				};
+				db.ForumPostReactions.Add(newReaction);
+			}
+		}
+
+		await db.SaveChangesAsync();
+
+		var updatedPost = await db.ForumPosts
+			.Include(p => p.Reactions)
+			.ThenInclude(r => r.User)
+			.Include(p => p.Topic)
+			.ExcludeRestricted(userCanSeeRestricted)
+			.FirstAsync(p => p.Id == request.PostId);
+
+		return Partial("/Pages/Forum/Topics/_ReactionBar.cshtml", new ReactionSummary
+		{
+			PostId = request.PostId,
+			IsTopicLocked = updatedPost.Topic!.IsLocked,
+			Reactions = updatedPost.Reactions.Select(r => new ReactionSummary.Entry()
+			{
+				UserName = r.User!.UserName,
+				Reaction = r.Reaction,
+				Date = r.LastUpdateTimestamp
+			}).ToList(),
+		});
+	}
+
 	public async Task<IActionResult> OnPostDelete(int? reactionId)
 	{
 		if (!User.Has(PermissionTo.ModerateReactions))
@@ -112,4 +198,6 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 		public int? PostId { get; set; }
 		public int? UserId { get; set; }
 	}
+
+	public record ReactionRequest(int PostId, string? Reaction);
 }
