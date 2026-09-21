@@ -66,6 +66,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 				Reactions = new PostEntry.ReactionSummary
 				{
 					PostId = p.Id,
+					IsTopicLocked = p.Topic.IsLocked,
 					Reactions = p.Reactions
 						.Select(r => new PostEntry.ReactionSummary.Entry
 						{

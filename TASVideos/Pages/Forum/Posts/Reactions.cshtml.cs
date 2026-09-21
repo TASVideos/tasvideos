@@ -36,7 +36,7 @@ public class ReactionsModel(ApplicationDbContext db) : BasePageModel
 
 	public async Task<IActionResult> OnPost([FromBody] ReactionRequest? request)
 	{
-		if (!User.Has(PermissionTo.CreateForumPosts))
+		if (!User.Has(PermissionTo.CreateReactions))
 		{
 			return AccessDenied();
 		}
@@ -45,12 +45,18 @@ public class ReactionsModel(ApplicationDbContext db) : BasePageModel
 
 		var post = await db.ForumPosts
 			.Include(p => p.Reactions)
+			.Include(p => p.Topic)
 			.ExcludeRestricted(userCanSeeRestricted)
 			.FirstOrDefaultAsync(p => p.Id == Id);
 
 		if (post is null)
 		{
 			return NotFound();
+		}
+
+		if (post.Topic!.IsLocked)
+		{
+			return BadRequest("Cannot react to posts in a locked topic.");
 		}
 
 		var reaction = request?.Reaction;
@@ -91,12 +97,14 @@ public class ReactionsModel(ApplicationDbContext db) : BasePageModel
 		var updatedPost = await db.ForumPosts
 			.Include(p => p.Reactions)
 			.ThenInclude(r => r.User)
+			.Include(p => p.Topic)
 			.ExcludeRestricted(userCanSeeRestricted)
 			.FirstAsync(p => p.Id == Id);
 
 		return Partial("/Pages/Forum/Topics/_ReactionBar.cshtml", new ReactionSummary
 		{
 			PostId = Id,
+			IsTopicLocked = updatedPost.Topic!.IsLocked,
 			Reactions = updatedPost.Reactions.Select(r => new ReactionSummary.Entry()
 			{
 				UserName = r.User!.UserName,

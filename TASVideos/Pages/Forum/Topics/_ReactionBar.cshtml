@@ -3,8 +3,13 @@
 	var reactionDictionary = Model.Reactions.GroupBy(r => r.Reaction).OrderByDescending(r => SiteGlobalConstants.AllowedReactions.IndexOf(r.Key)).Reverse().ToList();
 	var ownReaction = Model.Reactions.FirstOrDefault(r => r.UserName == User.Name())?.Reaction;
 }
-<div class="d-flex flex-wrap gap-1 mt-2 reaction-bar" data-id="reaction-bar" data-post-id="@Model.PostId" data-own-reaction="@ownReaction">
-	<button permission="@PermissionTo.CreateForumPosts" class="btn rounded-5 p-2 d-flex align-items-center border text-body-tertiary" data-id="reaction-toggle"><i class="fa-regular fa-face-smile"></i></button>
+<div class="d-flex flex-wrap gap-1 mt-2 reaction-bar" data-id="reaction-bar" data-post-id="@Model.PostId" data-own-reaction="@ownReaction" data-is-locked="@Model.IsTopicLocked">
+    <button permission="@PermissionTo.CreateReactions"
+            condition="!Model.IsTopicLocked"
+            class="btn rounded-5 p-2 d-flex align-items-center border text-body-tertiary"
+            data-id="reaction-toggle">
+        <i class="fa-regular fa-face-smile"></i>
+    </button>
 	<div class="d-flex flex-wrap gap-1">
 		@foreach (var reaction in reactionDictionary)
 		{

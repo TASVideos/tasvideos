@@ -1,18 +1,21 @@
 window.addEventListener('DOMContentLoaded', function () {
 	const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-	function registerReactionBars(parent) {
-		Array.from(parent.querySelectorAll('[data-id="reaction-toggle"]')).forEach(toggle => {
-			console.log(toggle);
-			toggle.addEventListener('click', function (e) {
-				const choices = toggle.closest('[data-id="reaction-bar"]').querySelector('[data-id="reaction-choices"]');
+
+	function registerReactionBar(bar) {
+		if (bar.dataset.isLocked === "True") {
+			return;
+		}
+
+		Array.from(bar.querySelectorAll('[data-id="reaction-toggle"]')).forEach(toggle => {
+			toggle.addEventListener('click', function(e) {
+				const choices = bar.querySelector('[data-id="reaction-choices"]');
 				choices.classList.toggle('d-none');
 			});
 		});
 
-		Array.from(parent.querySelectorAll('[data-id="reaction-btn"]')).forEach(btn => {
-			btn.addEventListener('click', async function (e) {
+		Array.from(bar.querySelectorAll('[data-id="reaction-btn"]')).forEach(btn => {
+			btn.addEventListener('click', async function(e) {
 				const reaction = btn.dataset.reaction;
-				const bar = btn.closest('[data-id="reaction-bar"]');
 				const postId = bar.dataset.postId;
 
 				var response = await fetch(`/Forum/Posts/${postId}/Reactions`, {
@@ -27,10 +30,9 @@ window.addEventListener('DOMContentLoaded', function () {
 			});
 		});
 
-		Array.from(parent.querySelectorAll('[data-id="reaction-display"]')).forEach(btn => {
-			btn.addEventListener('click', async function (e) {
+		Array.from(bar.querySelectorAll('[data-id="reaction-display"]')).forEach(btn => {
+			btn.addEventListener('click', async function(e) {
 				const reaction = btn.dataset.reaction;
-				const bar = btn.closest('[data-id="reaction-bar"]');
 				const postId = bar.dataset.postId;
 				const isOwnReaction = bar.dataset.ownReaction === reaction;
 				const body = isOwnReaction ? null : JSON.stringify({ "Reaction": reaction });
@@ -48,7 +50,9 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
-	registerReactionBars(document);
+	Array.from(document.querySelectorAll('[data-id="reaction-bar"]')).forEach(bar => {
+		registerReactionBar(bar);
+	});
 
 	async function updateReactionBar(response, bar) {
 		if (response.ok) {
@@ -58,7 +62,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			template.innerHTML = newHtml;
 			const newBar = template.content.firstElementChild;
 			bar.replaceWith(newBar);
-			registerReactionBars(newBar);
+			registerReactionBar(newBar);
 		}
 	}
 });

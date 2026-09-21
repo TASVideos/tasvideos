@@ -138,6 +138,7 @@ public class IndexModel(
 				Reactions = new PostEntry.ReactionSummary
 				{
 					PostId = p.Id,
+					IsTopicLocked = topic.IsLocked,
 					Reactions = p.Reactions
 						.Select(r => new PostEntry.ReactionSummary.Entry
 						{
@@ -418,6 +419,7 @@ public class IndexModel(
 		public class ReactionSummary
 		{
 			public int PostId { get; init; }
+			public bool IsTopicLocked { get; init; }
 			public List<Entry> Reactions { get; init; } = [];
 			public class Entry
 			{

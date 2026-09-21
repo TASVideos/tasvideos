@@ -54,6 +54,10 @@ public enum PermissionTo
 	[Description("The ability to send private messages.")]
 	SendPrivateMessages = 20,
 
+	[Group("User")]
+	[Description("The ability to react with emojis.")]
+	CreateReactions = 21,
+
 	#endregion
 
 	#region Wiki 100
