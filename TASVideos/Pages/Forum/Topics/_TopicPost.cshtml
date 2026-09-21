@@ -29,8 +29,8 @@
 					<a condition="User.IsLoggedIn() && Model.Reactions.Reactions.Any()"
 					   asp-page="/Reactions/Index"
 					   asp-route-PostId="@Model.Id"
-					   class="btn btn-secondary btn-sm d-none d-md-inline-block">
-						<i class="fa-regular fa-face-smile"></i> Reactions
+					   class="btn btn-secondary btn-sm">
+						<i class="fa-regular fa-face-smile"></i><span class="d-none d-md-inline"> Reactions</span>
 					</a>
 					<a condition="User.IsLoggedIn()"
 					   asp-page="/Messages/Create"
