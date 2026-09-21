@@ -1,6 +1,11 @@
 @model IndexModel.PostEntry.ReactionSummary
 @{
-	var reactionDictionary = Model.Reactions.GroupBy(r => r.Reaction).OrderByDescending(r => SiteGlobalConstants.AllowedReactions.IndexOf(r.Key)).Reverse().ToList();
+	var reactionDictionary = Model.Reactions
+		.OrderBy(r => r.Date)
+		.GroupBy(r => r.Reaction)
+		.OrderByDescending(r => SiteGlobalConstants.AllowedReactions.IndexOf(r.Key))
+		.Reverse()
+		.ToList();
 	var ownReaction = Model.Reactions.FirstOrDefault(r => r.UserName == User.Name())?.Reaction;
 }
 <div class="d-flex flex-wrap gap-1 mt-2 reaction-bar" data-id="reaction-bar" data-post-id="@Model.PostId" data-own-reaction="@ownReaction" data-is-locked="@Model.IsTopicLocked">
@@ -13,10 +18,13 @@
 	<div class="d-flex flex-wrap gap-1">
 		@foreach (var reaction in reactionDictionary)
 		{
-			<button class="btn rounded-5 px-2 py-1 d-flex align-items-center text-body @(ownReaction == reaction.Key ? "btn-outline-primary" : "border")" data-id="reaction-display" data-reaction="@reaction.Key">
-				<span>@reaction.Key</span>
-				<span class="ms-1 @(ownReaction == reaction.Key ? "fw-bold" : "")">@reaction.Count()</span>
-			</button>
+            <button class="btn rounded-5 px-2 py-1 d-flex align-items-center text-body @(ownReaction == reaction.Key ? "btn-outline-primary" : "border")"
+                    data-id="reaction-display"
+                    data-reaction="@reaction.Key"
+					title="@string.Join(", ", reaction.Select(r => r.UserName))">
+                <span>@reaction.Key</span>
+                <span class="ms-1 @(ownReaction == reaction.Key ? "fw-bold" : "")">@reaction.Count()</span>
+            </button>
 		}
 	</div>
 	<div class="d-none d-flex flex-wrap gap-1" data-id="reaction-choices">

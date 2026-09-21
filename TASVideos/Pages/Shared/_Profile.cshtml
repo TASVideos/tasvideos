@@ -60,6 +60,10 @@
 						</a>
 					</label>
 					<br/>
+					<span permission="@PermissionTo.ModerateReactions">
+						<a asp-page="/Reactions/Index" asp-route-UserId="@Model.Id">Reactions</a>
+						<br/>
+					</span>
 					<a condition="canViewPrivateData" class="btn btn-warning btn-sm mt-1 mb-2" data-bs-toggle="collapse" href="#pii">Private Data</a>
 					<div class="collapse" id="pii">
 						<div class="alert alert-info" condition="canViewPrivateData">

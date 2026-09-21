@@ -143,7 +143,8 @@ public class IndexModel(
 						.Select(r => new PostEntry.ReactionSummary.Entry
 						{
 							UserName = r.User!.UserName,
-							Reaction = r.Reaction
+							Reaction = r.Reaction,
+							Date = r.LastUpdateTimestamp
 						})
 						.ToList()
 				}
@@ -425,6 +426,7 @@ public class IndexModel(
 			{
 				public string UserName { get; init; } = "";
 				public string Reaction { get; init; } = "";
+				public DateTime Date { get; init; }
 			}
 		}
 	}

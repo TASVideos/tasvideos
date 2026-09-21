@@ -72,6 +72,7 @@ public class UserModel(ApplicationDbContext db, IAwards awards, IPointsService p
 						{
 							UserName = r.User!.UserName,
 							Reaction = r.Reaction,
+							Date = r.LastUpdateTimestamp
 						})
 						.ToList()
 				}

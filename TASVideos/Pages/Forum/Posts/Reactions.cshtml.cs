@@ -108,7 +108,8 @@ public class ReactionsModel(ApplicationDbContext db) : BasePageModel
 			Reactions = updatedPost.Reactions.Select(r => new ReactionSummary.Entry()
 			{
 				UserName = r.User!.UserName,
-				Reaction = r.Reaction
+				Reaction = r.Reaction,
+				Date = r.LastUpdateTimestamp
 			}).ToList(),
 		});
 	}

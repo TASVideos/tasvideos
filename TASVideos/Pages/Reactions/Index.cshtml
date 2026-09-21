@@ -1,0 +1,45 @@
+@page
+@model TASVideos.Pages.Reactions.IndexModel
+@{
+    if (Model.Search.UserId is not null && Model.Reactions.Any())
+    {
+        ViewData.SetTitle($"Reactions by {Model.Reactions.FirstOrDefault()?.User}");
+    }
+    else if (Model.Search.PostId is not null)
+    {
+        ViewData.SetTitle($"Reactions for Post #{Model.Search.PostId}");
+    }
+    else
+    {
+        ViewData.SetTitle($"Reactions");
+    }
+
+    var returnUrl = Request.PathBase + Request.Path + Request.QueryString;
+}
+<back-link condition="Model.Search.UserId is not null && Model.Reactions.Any()" href="/Users/Profile/@Model.Reactions.FirstOrDefault()?.User" name-override="Back to User"></back-link>
+<back-link condition="Model.Search.PostId is not null" asp-page="/Forum/Posts/Index" asp-route-Id="@Model.Search.PostId" name-override="Back to Post"></back-link>
+<partial name="_Pager" model="Model.Reactions" />
+<standard-table>
+    <sortable-table-head sorting="@Model.Search" model-type="typeof(IndexModel.ReactionEntry)" action-column-name="Actions" page-override="@HttpContext.Request.Path" />
+    @foreach (var reaction in Model.Reactions)
+    {
+        var deleteHref = Url.Page("/Reactions/Index", new
+        {
+            handler = "Delete",
+            reactionId = reaction.Id,
+            returnUrl
+        });
+        <tr>
+            <td>@reaction.Reaction</td>
+            <td>@reaction.User</td>
+            <td><timezone-convert asp-for="@reaction.Date" /></td>
+            <td><a asp-page="/Forum/Posts/Index" asp-route-Id="@reaction.Post">Post #@reaction.Post</a></td>
+            <td-action-column>
+                <delete-button permission="@PermissionTo.ModerateReactions"
+                               warning-message="Are you sure you want to delete this reaction?"
+                               asp-href="@deleteHref"></delete-button>
+            </td-action-column>
+        </tr>
+    }
+</standard-table>
+<partial name="_Pager" model="Model.Reactions" />

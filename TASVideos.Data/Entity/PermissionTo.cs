@@ -259,6 +259,10 @@ public enum PermissionTo
 	EditDisallows = 411,
 
 	[Group("Forum Administration")]
+	[Description("The ability to moderate reactions.")]
+	ModerateReactions = 412,
+
+	[Group("Forum Administration")]
 	[Description("The ability to see forums that are restricted from general access.")]
 	SeeRestrictedForums = 490,
 
