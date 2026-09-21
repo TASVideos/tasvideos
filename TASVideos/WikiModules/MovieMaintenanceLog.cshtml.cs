@@ -14,6 +14,7 @@ public class MovieMaintenanceLog(ApplicationDbContext db) : WikiViewComponent
 
 		const int pageSize = 50;
 		int.TryParse(Request.Query["begin"], out var begin);
+		begin = Math.Max(begin, 0);
 		Next = begin + pageSize;
 
 		var query = db.PublicationMaintenanceLogs.OrderByDescending(l => l.TimeStamp).AsQueryable();
