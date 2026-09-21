@@ -46,7 +46,6 @@ public class ReactionsModel(ApplicationDbContext db) : BasePageModel
 		var post = await db.ForumPosts
 			.Include(p => p.Reactions)
 			.ExcludeRestricted(userCanSeeRestricted)
-			.Where(p => p.PosterId != SiteGlobalConstants.TASVideoAgentId && p.PosterId != SiteGlobalConstants.TASVideosGrueId)
 			.FirstOrDefaultAsync(p => p.Id == Id);
 
 		if (post is null)
