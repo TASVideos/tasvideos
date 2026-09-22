@@ -5,9 +5,7 @@ namespace TASVideos.Middleware;
 
 public class PermissionMiddleware(RequestDelegate next)
 {
-	private static readonly ConcurrentDictionary<int, List<PermissionTo>> _userPermissionsCache = new();
-
-	public async Task Invoke(HttpContext context, IUserManager userManager)
+	public async Task Invoke(HttpContext context, IPermissionCacheService permissionCache)
 	{
 		if (context.User.IsLoggedIn())
 		{
@@ -15,16 +13,10 @@ public class PermissionMiddleware(RequestDelegate next)
 			if (claimsIdentity is not null)
 			{
 				var userId = context.User.GetUserId();
-				if (!_userPermissionsCache.TryGetValue(userId, out var userPermissions))
-				{
-					userPermissions = (await userManager.GetUserPermissionsById(userId)).ToList();
-					_userPermissionsCache[userId] = userPermissions;
-				}
+				var userPermissions = await permissionCache.GetUserPermissions(userId);
 
-				// this should be empty, but just in case, remove existing permissions
-				foreach (var claim in claimsIdentity.Claims
-							.ThatArePermissions()
-							.ToList())
+				// this should usually be empty, but remove existing permissions anyway, in case old valid tokens still contain claims
+				foreach (var claim in claimsIdentity.Claims.ThatArePermissions().ToList())
 				{
 					claimsIdentity.RemoveClaim(claim);
 				}
@@ -34,10 +26,5 @@ public class PermissionMiddleware(RequestDelegate next)
 		}
 
 		await next(context);
-	}
-
-	public static void ClearAllUsersPermissionsCache()
-	{
-		_userPermissionsCache.Clear();
 	}
 }

@@ -1,7 +1,7 @@
 namespace TASVideos.Pages.Roles;
 
 [RequirePermission(PermissionTo.EditRoles)]
-public class AddEditModel(ApplicationDbContext db, IRoleService roleService, IExternalMediaPublisher publisher) : BasePageModel
+public class AddEditModel(ApplicationDbContext db, IRoleService roleService, IExternalMediaPublisher publisher, IPermissionCacheService permissionCache) : BasePageModel
 {
 	[FromRoute]
 	public int? Id { get; set; }
@@ -76,6 +76,7 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, IEx
 
 		await AddUpdateRole(Role);
 		SetMessage(await db.TrySaveChanges(), $"Role {Id} updated", $"Unable to update Role {Id}");
+		permissionCache.ClearAllUsersPermissionsCache();
 
 		return BasePageRedirect("List");
 	}
@@ -103,6 +104,7 @@ public class AddEditModel(ApplicationDbContext db, IRoleService roleService, IEx
 		SetMessage(result, $"Role {Id} deleted", $"Unable to delete Role {Id}");
 		if (result.IsSuccess())
 		{
+			permissionCache.ClearAllUsersPermissionsCache();
 			await publisher.SendAdminMessage(PostGroups.UserManagement, $"Role {Id} deleted by {User.Name()}");
 		}
 

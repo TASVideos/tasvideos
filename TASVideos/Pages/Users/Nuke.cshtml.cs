@@ -1,7 +1,7 @@
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(matchAny: false, PermissionTo.SeeEmails, PermissionTo.EditUsers)]
-public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaintenanceLogger) : BasePageModel
+public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaintenanceLogger, IPermissionCacheService permissionCache) : BasePageModel
 {
 	[FromRoute]
 	public int Id { get; set; }
@@ -84,6 +84,8 @@ public class NukeModel(ApplicationDbContext db, IUserMaintenanceLogger userMaint
 
 		db.UserMaintenanceLogs.RemoveRange(logs);
 		await db.SaveChangesAsync();
+
+		permissionCache.ClearUserPermissionsCache(user.Id);
 
 		// The simple solution to having the correct data for pubs and subs is to save changes first
 		// This is a repeatable process, so we aren't worried about partial successes

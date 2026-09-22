@@ -29,7 +29,6 @@ public interface IUserManager
 	Task PermaBanUser(int userId);
 	void ClearCustomLocaleCache(int userId);
 	Task<string> GenerateChangeEmailToken(ClaimsPrincipal claimsUser, string newEmail);
-	Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId, bool getRawPermissions = false);
 	Task<IList<Claim>> GetClaims(User user);
 	bool IsConfirmedEmailRequired();
 	Task<IdentityResult> Create(User user, string password);
@@ -58,7 +57,8 @@ internal class UserManager(
 	ILookupNormalizer keyNormalizer,
 	IdentityErrorDescriber errors,
 	IServiceProvider services,
-	ILogger<UserManager<User>> logger)
+	ILogger<UserManager<User>> logger,
+	IPermissionCacheService permissionCache)
 	: UserManager<User>(store,
 		optionsAccessor,
 		passwordHasher,
@@ -105,36 +105,6 @@ internal class UserManager(
 
 	public Task<IList<Claim>> GetClaims(User user) => GetClaimsAsync(user);
 
-	/// <summary>
-	/// Returns a list of all permissions of the <seea cref="User"/> with the given id. <br />
-	/// By default, "effective" permissions are returned. I.e. even if a banned user has roles with permissions, we still return none. <br />
-	/// Set <paramref name="getRawPermissions"/> to return "raw" permissions from the database, which is useful when modifying permissions.
-	/// </summary>
-	public async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId, bool getRawPermissions = false)
-	{
-		if (!getRawPermissions)
-		{
-			// effective permissions
-			return await db.Users
-				.Where(u => u.Id == userId)
-				.ThatAreNotBanned()
-				.SelectMany(u => u.UserRoles)
-				.SelectMany(ur => ur.Role!.RolePermission)
-				.Select(rp => rp.PermissionId)
-				.Distinct()
-				.ToListAsync();
-		}
-
-		// raw permissions
-		return await db.Users
-			.Where(u => u.Id == userId)
-			.SelectMany(u => u.UserRoles)
-			.SelectMany(ur => ur.Role!.RolePermission)
-			.Select(rp => rp.PermissionId)
-			.Distinct()
-			.ToListAsync();
-	}
-
 	public async Task AddStandardRoles(int userId)
 	{
 		var user = await db.Users
@@ -162,6 +132,8 @@ internal class UserManager(
 		}
 
 		await db.SaveChangesAsync();
+
+		permissionCache.ClearUserPermissionsCache(userId);
 	}
 
 	/// <summary>
@@ -294,7 +266,7 @@ internal class UserManager(
 			return;
 		}
 
-		var userPermissions = (await GetUserPermissionsById(userId, getRawPermissions: true)).ToList();
+		var userPermissions = (await permissionCache.GetLiveUserPermissions(userId, getRawPermissions: true)).ToList();
 
 		var assignableRoles = await db.Roles
 			.Include(r => r.RolePermission)
@@ -321,6 +293,7 @@ internal class UserManager(
 				try
 				{
 					await db.SaveChangesAsync();
+					permissionCache.ClearUserPermissionsCache(userId);
 				}
 				catch (DbUpdateConcurrencyException)
 				{
@@ -359,7 +332,7 @@ internal class UserManager(
 				continue;
 			}
 
-			var userPermissions = (await GetUserPermissionsById(userId, getRawPermissions: true)).ToList();
+			var userPermissions = (await permissionCache.GetLiveUserPermissions(userId, getRawPermissions: true)).ToList();
 
 			foreach (var role in assignableRoles)
 			{
@@ -377,6 +350,7 @@ internal class UserManager(
 						UserId = userId,
 						RoleId = role.Id
 					});
+					permissionCache.ClearUserPermissionsCache(userId);
 
 					await tasVideoAgent.SendPublishedAuthorRole(userId, role.Name, publicationTitle);
 				}
@@ -474,6 +448,7 @@ internal class UserManager(
 
 		user.BannedUntil = DateTime.UtcNow.AddYears(100);
 		await db.TrySaveChanges();
+		permissionCache.ClearUserPermissionsCache(userId);
 	}
 
 	public async Task<bool> CanRenameUser(string oldUserName, string newUserName)

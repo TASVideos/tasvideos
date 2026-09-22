@@ -3,7 +3,7 @@ using TASVideos.Core.Services.Wiki;
 namespace TASVideos.Pages.Diagnostics;
 
 [RequirePermission(PermissionTo.SeeDiagnostics)]
-public class CacheControlModel(IWikiPages wikiPages, IAwards awards, ICacheService cache) : BasePageModel
+public class CacheControlModel(IWikiPages wikiPages, IAwards awards, ICacheService cache, IPermissionCacheService permissionCache) : BasePageModel
 {
 	public IActionResult OnGetCacheValue(string key)
 	{
@@ -20,6 +20,12 @@ public class CacheControlModel(IWikiPages wikiPages, IAwards awards, ICacheServi
 	public IActionResult OnPostClearAwardsCache()
 	{
 		awards.FlushCache();
+		return BasePageRedirect("CacheControl");
+	}
+
+	public IActionResult OnPostClearUserPermissionsCache()
+	{
+		permissionCache.ClearAllUsersPermissionsCache();
 		return BasePageRedirect("CacheControl");
 	}
 }
