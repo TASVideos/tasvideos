@@ -22,7 +22,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	{
 		_tasVideoAgent = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
-		_permissionCache = Substitute.For<IPermissionCacheService>();
+		_permissionCache = new PermissionCacheService(_db);
 		_userManager = new UserManager(
 			_db,
 			new TestCache(),
