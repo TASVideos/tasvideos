@@ -90,7 +90,6 @@ public class ConfirmEmailChangeTests : BasePageModelTests
 		_cache.Received(1).Remove(code);
 		await _userMaintenanceLogger.Received(1).Log(user.Id, Arg.Is<string>(s => s.Contains("User changed email from")));
 		await _userManager.DidNotReceive().AddStandardRoles(Arg.Any<int>());
-		await _userManager.DidNotReceive().AddUserPermissionsToClaims(Arg.Any<User>());
 		await _signInManager.DidNotReceive().SignIn(Arg.Any<User>(), Arg.Any<bool>());
 		await _publisher.DidNotReceive().Send(Arg.Any<Post>());
 		await _tasVideoAgent.DidNotReceive().SendWelcomeMessage(Arg.Any<int>());
@@ -121,7 +120,6 @@ public class ConfirmEmailChangeTests : BasePageModelTests
 
 		_cache.Received(1).Remove(code);
 		await _userManager.Received(1).AddStandardRoles(user.Id);
-		await _userManager.Received(1).AddUserPermissionsToClaims(user);
 		await _signInManager.Received(1).SignIn(user, false);
 		await _publisher.Received(1).Send(Arg.Any<Post>());
 		await _userMaintenanceLogger.Received(1).Log(user.Id, Arg.Is<string>(s => s.Contains("User activated from")));

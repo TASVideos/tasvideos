@@ -259,7 +259,4 @@ public class NewModelTests : BasePageModelTests
 
 	[TestMethod]
 	public void HasAuthorizeAttribute() => AssertRequiresAuthorization(typeof(NewModel));
-
-	[TestMethod]
-	public void HasRequireCurrentPermissionsAttribute() => AssertRequiresCurrentPermissions(typeof(NewModel));
 }

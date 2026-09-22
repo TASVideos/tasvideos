@@ -41,7 +41,6 @@ public class ConfirmEmailModel(
 	public static async Task FirstTimeConfirmation(User user, IUserManager userManager, ISignInManager signInManager, IExternalMediaPublisher publisher, IUserMaintenanceLogger userMaintenanceLogger, ITASVideoAgent tasVideoAgent, string ipAddress)
 	{
 		await userManager.AddStandardRoles(user.Id);
-		await userManager.AddUserPermissionsToClaims(user);
 		await signInManager.SignIn(user, isPersistent: false);
 		await publisher.SendUserManagement($"User [{user.UserName}]({{0}}) activated", user.UserName);
 		await userMaintenanceLogger.Log(user.Id, $"User activated from {ipAddress}");

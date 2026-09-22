@@ -1,3 +1,5 @@
+using TASVideos.Middleware;
+
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditUsers)]

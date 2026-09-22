@@ -3,7 +3,6 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Forum.Posts;
 
 [Authorize]
-[RequireCurrentPermissions]
 public class NewModel(ApplicationDbContext db, IUserManager userManager) : BasePageModel
 {
 	[FromQuery]

@@ -25,22 +25,6 @@ public class RequireBase : Attribute
 		}
 	}
 
-	protected static async Task<IReadOnlyCollection<PermissionTo>> GetUserPermissions(PageHandlerExecutingContext context)
-	{
-		// On Post calls, we are potentially changing data, which could be malicious
-		// Let's take the database hit to get the most recent permissions rather than relying
-		// on the user cookie, in case the user's permissions have recently changed, such as from being "banned"
-		// We are assuming we don't have malicious GET calls, and that for GETs we can afford to wait f
-		// for the cookie expiration
-		if (context.HandlerMethod?.HttpMethod == "Post")
-		{
-			var userManager = context.HttpContext.RequestServices.GetRequiredService<IUserManager>();
-			return await userManager.GetUserPermissionsById(context.HttpContext.User.GetUserId());
-		}
-
-		return context.HttpContext.User.Permissions();
-	}
-
 	protected static void SetRequiredPermissionsView(PageHandlerExecutingContext context, HashSet<PermissionTo> requiredPermissions, bool matchAny)
 	{
 		context.HttpContext.SetRequiredPermissionsView(new RequirePermissionsView { Permissions = requiredPermissions, MatchAny = matchAny });

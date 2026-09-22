@@ -27,27 +27,5 @@ public static class ClaimsPrincipalExtensions
 			var userPermissions = user?.Claims.Permissions() ?? [];
 			return permissions.Any(permission => userPermissions.Contains(permission));
 		}
-
-		public void ReplacePermissionClaims(IEnumerable<Claim> permissions)
-		{
-			if (user is null || !user.IsLoggedIn())
-			{
-				return;
-			}
-
-			if (user.Identity is not ClaimsIdentity ci)
-			{
-				return;
-			}
-
-			foreach (var claim in user.Claims
-						.ThatArePermissions()
-						.ToList())
-			{
-				ci.RemoveClaim(claim);
-			}
-
-			ci.AddClaims(permissions);
-		}
 	}
 }

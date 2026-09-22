@@ -30,7 +30,6 @@ public interface IUserManager
 	void ClearCustomLocaleCache(int userId);
 	Task<string> GenerateChangeEmailToken(ClaimsPrincipal claimsUser, string newEmail);
 	Task<IReadOnlyCollection<PermissionTo>> GetUserPermissionsById(int userId, bool getRawPermissions = false);
-	Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user);
 	Task<IList<Claim>> GetClaims(User user);
 	bool IsConfirmedEmailRequired();
 	Task<IdentityResult> Create(User user, string password);
@@ -105,25 +104,6 @@ internal class UserManager(
 	public Task<bool> IsEmailConfirmed(User user) => IsEmailConfirmedAsync(user);
 
 	public Task<IList<Claim>> GetClaims(User user) => GetClaimsAsync(user);
-
-	/// <summary>
-	/// Clears the user claims, and adds a distinct list of user permissions, so they can be stored and retrieved from their cookie
-	/// </summary>
-	public async Task<IEnumerable<Claim>> AddUserPermissionsToClaims(User user)
-	{
-		await db.UserClaims
-			.Where(u => u.UserId == user.Id)
-			.Where(c => c.ClaimType == CustomClaimTypes.Permission)
-			.ExecuteDeleteAsync();
-
-		var permissions = await GetUserPermissionsById(user.Id);
-
-		var claims = permissions
-			.Select(p => new Claim(CustomClaimTypes.Permission, ((int)p).ToString()))
-			.ToList();
-		await AddClaimsAsync(user, claims);
-		return claims;
-	}
 
 	/// <summary>
 	/// Returns a list of all permissions of the <seea cref="User"/> with the given id. <br />

@@ -124,9 +124,6 @@ public static class RazorTestHelpers
 	public static void AssertRequiresAuthorization(Type pageModelType)
 		=> AssertHasAttribute(pageModelType, typeof(AuthorizeAttribute));
 
-	public static void AssertRequiresCurrentPermissions(Type pageModelType)
-		=> AssertHasAttribute(pageModelType, typeof(RequireCurrentPermissions));
-
 	private static void AssertHasAttribute(Type pageModelType, Type attributeType)
 	{
 		var attribute = pageModelType
