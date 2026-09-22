@@ -29,7 +29,7 @@ public class JwtAuthenticatorTests : TestDbBase
 			}
 		};
 
-		_jwtAuthenticator = new JwtAuthenticator(_signInManager, _userManager, _appSettings);
+		_jwtAuthenticator = new JwtAuthenticator(_signInManager, _appSettings, Substitute.For<IPermissionCacheService>());
 	}
 
 	[TestMethod]
@@ -39,7 +39,6 @@ public class JwtAuthenticatorTests : TestDbBase
 		const string password = "TestPassword";
 		const int userId = 123;
 		const string email = "test@example.com";
-		const string customClaimValue = "custom-value";
 		var user = new User
 		{
 			Id = userId,
@@ -47,15 +46,6 @@ public class JwtAuthenticatorTests : TestDbBase
 			Email = email
 		};
 
-		var claims = new List<Claim>
-		{
-			new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-			new(ClaimTypes.Name, user.UserName),
-			new(ClaimTypes.Email, user.Email),
-			new("custom-claim", customClaimValue)
-		};
-
-		_userManager.GetClaims(user).Returns(claims);
 		_signInManager.SignIn(username, password).Returns((SignInResult.Success, user, false));
 
 		var result = await _jwtAuthenticator.Authenticate(username, password);
@@ -76,12 +66,6 @@ public class JwtAuthenticatorTests : TestDbBase
 
 		var validationResult = await tokenHandler.ValidateTokenAsync(result, validationParameters);
 		Assert.IsTrue(validationResult.IsValid);
-
-		var jsonWebToken = new JsonWebToken(result);
-		Assert.IsTrue(jsonWebToken.Claims.Any(c => c.Type == ClaimTypes.NameIdentifier && c.Value == userId.ToString()));
-		Assert.IsTrue(jsonWebToken.Claims.Any(c => c.Type == ClaimTypes.Name && c.Value == username));
-		Assert.IsTrue(jsonWebToken.Claims.Any(c => c.Type == ClaimTypes.Email && c.Value == email));
-		Assert.IsTrue(jsonWebToken.Claims.Any(c => c.Type == "custom-claim" && c.Value == customClaimValue));
 	}
 
 	[TestMethod]
@@ -132,7 +116,6 @@ public class JwtAuthenticatorTests : TestDbBase
 			Email = "noclaims@example.com"
 		};
 
-		_userManager.GetClaims(user).Returns([]);
 		_signInManager.SignIn(username, password).Returns((SignInResult.Success, user, false));
 
 		var result = await _jwtAuthenticator.Authenticate(username, password);
@@ -172,7 +155,6 @@ public class JwtAuthenticatorTests : TestDbBase
 			new(ClaimTypes.NameIdentifier, user.Id.ToString())
 		};
 
-		_userManager.GetClaims(user).Returns(claims);
 		_signInManager.SignIn(username, password)
 			.Returns((SignInResult.Success, user, false));
 
@@ -208,7 +190,6 @@ public class JwtAuthenticatorTests : TestDbBase
 			new(ClaimTypes.NameIdentifier, user.Id.ToString())
 		};
 
-		_userManager.GetClaims(user).Returns(claims);
 		_signInManager.SignIn(username, password).Returns((SignInResult.Success, user, false));
 
 		var token1 = await _jwtAuthenticator.Authenticate(username, password);
@@ -237,7 +218,6 @@ public class JwtAuthenticatorTests : TestDbBase
 			new(ClaimTypes.NameIdentifier, user.Id.ToString())
 		};
 
-		_userManager.GetClaims(user).Returns(claims);
 		_signInManager.SignIn(username, password).Returns((SignInResult.Success, user, false));
 
 		var result = await _jwtAuthenticator.Authenticate(username, password);

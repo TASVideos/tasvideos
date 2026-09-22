@@ -29,7 +29,6 @@ public interface IUserManager
 	Task PermaBanUser(int userId);
 	void ClearCustomLocaleCache(int userId);
 	Task<string> GenerateChangeEmailToken(ClaimsPrincipal claimsUser, string newEmail);
-	Task<IList<Claim>> GetClaims(User user);
 	bool IsConfirmedEmailRequired();
 	Task<IdentityResult> Create(User user, string password);
 	Task<IdentityResult> ConfirmEmail(User user, string token);
@@ -102,8 +101,6 @@ internal class UserManager(
 		=> ChangePasswordAsync(user, currentPassword, newPassword);
 
 	public Task<bool> IsEmailConfirmed(User user) => IsEmailConfirmedAsync(user);
-
-	public Task<IList<Claim>> GetClaims(User user) => GetClaimsAsync(user);
 
 	public async Task AddStandardRoles(int userId)
 	{
