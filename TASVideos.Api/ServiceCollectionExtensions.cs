@@ -59,10 +59,6 @@ public static class ServiceCollectionExtensions
 						Version = $"v{version.Major}.{version.Minor}.{version.Revision}",
 						Description = "API For tasvideos.org content"
 					});
-				c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-				{
-					Name = "Authorization"
-				});
 			});
 		}
 	}
