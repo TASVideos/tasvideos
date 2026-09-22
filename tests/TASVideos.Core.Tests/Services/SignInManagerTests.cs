@@ -30,7 +30,8 @@ public sealed class SignInManagerTests : TestDbBase
 			Substitute.For<ILookupNormalizer>(),
 			new IdentityErrorDescriber(),
 			Substitute.For<IServiceProvider>(),
-			Substitute.For<ILogger<UserManager<User>>>());
+			Substitute.For<ILogger<UserManager<User>>>(),
+			Substitute.For<IPermissionCacheService>());
 
 		_signInManager = new SignInManager(
 			_db,

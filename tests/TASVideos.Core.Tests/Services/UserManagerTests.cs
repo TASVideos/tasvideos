@@ -14,6 +14,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 {
 	private readonly ITASVideoAgent _tasVideoAgent;
 	private readonly IWikiPages _wikiPages;
+	private readonly IPermissionCacheService _permissionCache;
 
 	private readonly UserManager _userManager;
 
@@ -21,6 +22,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 	{
 		_tasVideoAgent = Substitute.For<ITASVideoAgent>();
 		_wikiPages = Substitute.For<IWikiPages>();
+		_permissionCache = Substitute.For<IPermissionCacheService>();
 		_userManager = new UserManager(
 			_db,
 			new TestCache(),
@@ -35,7 +37,8 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 			Substitute.For<ILookupNormalizer>(),
 			new IdentityErrorDescriber(),
 			Substitute.For<IServiceProvider>(),
-			Substitute.For<ILogger<UserManager<User>>>());
+			Substitute.For<ILogger<UserManager<User>>>(),
+			_permissionCache);
 	}
 
 	[TestMethod]
@@ -60,7 +63,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		_db.UserRoles.Add(new UserRole { User = user.Entity, Role = role2.Entity });
 		await _db.SaveChangesAsync();
 
-		var actual = await _userManager.GetUserPermissionsById(user.Entity.Id);
+		var actual = await _permissionCache.GetLiveUserPermissions(user.Entity.Id);
 		Assert.IsEmpty(actual);
 	}
 
@@ -78,7 +81,7 @@ public sealed class UserManagerTests : TestDbBase, IDisposable
 		_db.UserRoles.Add(new UserRole { User = user.Entity, Role = role2.Entity });
 		await _db.SaveChangesAsync();
 
-		var actual = await _userManager.GetUserPermissionsById(user.Entity.Id);
+		var actual = await _permissionCache.GetLiveUserPermissions(user.Entity.Id);
 		Assert.HasCount(3, actual);
 	}
 
