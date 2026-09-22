@@ -134,7 +134,7 @@ public class PermissionTests
 		var removeRoleToken = await GetToken(_modClient, "/Users/Edit/1");
 		var removeRoleResponse = await _modClient.PostAsync("/Users/Edit/1", new FormUrlEncodedContent(new Dictionary<string, string>
 		{
-			// no UserToEdit.SelectedRoles
+			{ "UserToEdit.SelectedRoles", ((int)PermissionTo.CreateForumPosts).ToString() }, // this removes CreateForumTopics but leaves CreateForumPosts
 			{ "__RequestVerificationToken", removeRoleToken },
 		}));
 		Assert.IsTrue(removeRoleResponse.IsSuccessStatusCode);
