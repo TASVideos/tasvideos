@@ -6,6 +6,8 @@ namespace TASVideos.TagHelpers;
 [HtmlTargetElement(Attributes = nameof(Permission))]
 public class PermissionTagHelper : TagHelper
 {
+	public override int Order => 10; // output suppression must happen last
+
 	public PermissionTo Permission { get; set; }
 
 	[HtmlAttributeNotBound]
@@ -21,9 +23,22 @@ public class PermissionTagHelper : TagHelper
 	}
 }
 
+[HtmlTargetElement(Attributes = nameof(Permission))]
+public class PermissionResultSetterTagHelper : PermissionTagHelper
+{
+	public override int Order => -10; // this makes sure this runs before other tag helpers. they can avoid creating antiforgery tokens that don't get used.
+
+	public override void Process(TagHelperContext context, TagHelperOutput output)
+	{
+		context.SetPermissionResult(ViewContext.HttpContext.User.Has(Permission));
+	}
+}
+
 [HtmlTargetElement(Attributes = nameof(Permissions))]
 public class PermissionsTagHelper : TagHelper
 {
+	public override int Order => 10; // output suppression must happen last
+
 	public PermissionTo[] Permissions { get; set; } = [];
 
 	[HtmlAttributeNotBound]
@@ -36,5 +51,16 @@ public class PermissionsTagHelper : TagHelper
 		{
 			output.SuppressOutput();
 		}
+	}
+}
+
+[HtmlTargetElement(Attributes = nameof(Permissions))]
+public class PermissionsResultSetterTagHelper : PermissionsTagHelper
+{
+	public override int Order => -10; // this makes sure this runs before other tag helpers. they can avoid creating antiforgery tokens that don't get used.
+
+	public override void Process(TagHelperContext context, TagHelperOutput output)
+	{
+		context.SetPermissionResult(ViewContext.HttpContext.User.HasAny(Permissions));
 	}
 }
