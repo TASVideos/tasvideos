@@ -47,6 +47,21 @@
 			</card-body>
 		</card>
 	</column>
+	<column md="6">
+		<card>
+			<card-header>
+				User Permissions Cache
+			</card-header>
+			<card-body>
+				<div class="card-title">
+                    This will clear the cache of the user permissions, and will reload them from the database on the next request
+				</div>
+				<form method="post" asp-page-handler="ClearUserPermissionsCache">
+					<button id="clear-user-permissions" class="btn btn-danger">Clear</button>
+				</form>
+			</card-body>
+		</card>
+	</column>
 </row>
 
 @section Scripts {

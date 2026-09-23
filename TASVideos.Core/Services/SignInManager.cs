@@ -62,9 +62,8 @@ internal class SignInManager(
 			}
 
 			user.LastLoggedInTimeStamp = DateTime.UtcNow;
+			await db.SaveChangesAsync();
 
-			// Note: This runs a save changes so LastLoggedInTimeStamp will get updated too
-			await userManager.AddUserPermissionsToClaims(user);
 			await SignInAsync(user, rememberMe);
 		}
 

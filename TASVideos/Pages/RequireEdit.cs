@@ -26,7 +26,7 @@ public class RequireEdit : RequireBase, IAsyncPageFilter
 			pageToEdit = WebUtility.UrlDecode((context.HttpContext.Request.QueryString.Value ?? "path=").Split("path=")[1]);
 		}
 
-		var userPerms = await GetUserPermissions(context);
+		var userPerms = context.HttpContext.User.Permissions();
 		var canEdit = WikiHelper
 			.UserCanEditWikiPage(pageToEdit, user.Name(), userPerms, out var relevantPermissions);
 

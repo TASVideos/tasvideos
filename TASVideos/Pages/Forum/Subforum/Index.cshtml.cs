@@ -4,7 +4,6 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Forum.Subforum;
 
 [AllowAnonymous]
-[RequireCurrentPermissions]
 public class IndexModel(ApplicationDbContext db, IForumService forumService) : BasePageModel
 {
 	[FromQuery]

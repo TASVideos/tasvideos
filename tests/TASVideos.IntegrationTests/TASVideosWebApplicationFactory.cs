@@ -55,7 +55,10 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 	/// </summary>
 	public HttpClient CreateClientWithFollowRedirects()
 	{
-		var client = CreateClient();
+		var client = CreateClient(new WebApplicationFactoryClientOptions
+		{
+			BaseAddress = new Uri("https://localhost"),
+		});
 		InitializeDatabase();
 		return client;
 	}
@@ -67,6 +70,7 @@ internal class TASVideosWebApplicationFactory(bool usePostgreSql = false) : WebA
 	{
 		var client = CreateClient(new WebApplicationFactoryClientOptions
 		{
+			BaseAddress = new Uri("https://localhost"),
 			AllowAutoRedirect = false
 		});
 		InitializeDatabase();

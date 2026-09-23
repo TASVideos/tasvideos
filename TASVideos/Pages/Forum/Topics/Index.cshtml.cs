@@ -4,7 +4,6 @@ using TASVideos.Data.Entity.Forum;
 namespace TASVideos.Pages.Forum.Topics;
 
 [AllowAnonymous]
-[RequireCurrentPermissions]
 public class IndexModel(
 	ApplicationDbContext db,
 	IAwards awards,

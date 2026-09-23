@@ -70,6 +70,7 @@ try
 		.UseWebOptimizer()
 		.UseStaticFilesWithExtensionMapping(builder.Environment)
 		.UseAuthentication()
+		.UseMiddleware<PermissionMiddleware>()
 		.UseMiddleware<CustomLocalizationMiddleware>()
 		.UseSerilogRequestLogging()
 		.UseMvcWithOptions(app.Environment, settings);

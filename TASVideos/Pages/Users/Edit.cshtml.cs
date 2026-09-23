@@ -1,3 +1,5 @@
+using TASVideos.Middleware;
+
 namespace TASVideos.Pages.Users;
 
 [RequirePermission(PermissionTo.EditUsers)]
@@ -6,7 +8,8 @@ public class EditModel(
 	ApplicationDbContext db,
 	IExternalMediaPublisher publisher,
 	IUserMaintenanceLogger userMaintenanceLogger,
-	IUserManager userManager)
+	IUserManager userManager,
+	IPermissionCacheService permissionCache)
 	: BasePageModel
 {
 	[FromRoute]
@@ -118,6 +121,8 @@ public class EditModel(
 			return BasePageRedirect("List");
 		}
 
+		permissionCache.ClearUserPermissionsCache(user.Id);
+
 		db.UserRoles.AddRange(UserToEdit.SelectedRoles
 			.Select(r => new UserRole
 			{
@@ -131,6 +136,8 @@ public class EditModel(
 			ErrorStatusMessage($"Unable to update user data for {user.UserName}");
 			return BasePageRedirect("List");
 		}
+
+		permissionCache.ClearUserPermissionsCache(user.Id);
 
 		if (userNameChange is not null)
 		{

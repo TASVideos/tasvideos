@@ -24,6 +24,7 @@ public static class CacheKeys
 	public const string MovieTokens = "MovieTokenData";
 	public const string UsersWithCustomLocale = "UsersWithCustomLocale";
 	public const string CustomUserLocalePrefix = "CustomUserLocale-";
+	public const string UserPermissions = "UserPermissions";
 }
 
 // These perform site functions, maybe they should be in the database?

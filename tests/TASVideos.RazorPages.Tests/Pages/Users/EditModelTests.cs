@@ -22,7 +22,7 @@ public class EditModelTests : TestDbBase
 		_publisher = Substitute.For<IExternalMediaPublisher>();
 		_userMaintenanceLogger = Substitute.For<IUserMaintenanceLogger>();
 		_userManager = Substitute.For<IUserManager>();
-		_model = new EditModel(_roleService, _db, _publisher, _userMaintenanceLogger, _userManager);
+		_model = new EditModel(_roleService, _db, _publisher, _userMaintenanceLogger, _userManager, Substitute.For<IPermissionCacheService>());
 	}
 
 	#region OnGet

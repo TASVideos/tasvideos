@@ -33,7 +33,7 @@ public class RequirePermissionAttribute : RequireBase, IAsyncPageFilter
 			return;
 		}
 
-		var userPerms = await GetUserPermissions(context);
+		var userPerms = context.HttpContext.User.Permissions();
 
 		if ((MatchAny && RequiredPermissions.Any(r => userPerms.Contains(r)))
 			|| RequiredPermissions.IsSubsetOf(userPerms))
