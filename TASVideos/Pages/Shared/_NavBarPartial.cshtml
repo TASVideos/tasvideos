@@ -1,5 +1,6 @@
 <navbar class="flex-wrap me-2 me-md-0 fw-bold">
 	@* IMPORTANT when adding/removing links to wiki pages: also update the lists at the end of `/TASVideos/TagHelpers/NavbarTagHelpers.cs` *@
+@*
 	<nav-item activate="Home">
 		<a class="nav-link" href="/">Home</a>
 	</nav-item>
@@ -42,13 +43,18 @@
 		<a class="dropdown-item" href="/Helping">How to Help</a>
 		<a class="dropdown-item" href="/SiteHistory">Site History</a>
 	</nav-dropdown>
+	*@
+	@* @await Html.RenderWiki(SystemWiki.NavbarMain) *@
 	<nav-dropdown activate="Wiki"
 				  permissions="new[] { PermissionTo.EditWikiPages, PermissionTo.EditSystemPages, PermissionTo.MoveWikiPages, PermissionTo.DeleteWikiPages }">
+		@*
 		<a class="dropdown-item" href="/SandBox">SandBox</a>
 		<a class="dropdown-item" href="/RecentChanges">Recent Changes</a>
 		<a class="dropdown-item" href="/WikiOrphans">Orphans</a>
 		<a class="dropdown-item" href="/TODO">To Do</a>
 		<a class="dropdown-item" href="/System">System Pages</a>
+		*@
+		@* @await Html.RenderWiki(SystemWiki.NavbarWikiTop) *@
 		<a permission="SeeDeletedWikiPages" asp-page="/Wiki/DeletedPages" class="dropdown-item">Deleted Pages</a>
 		<a permission="EditWikiRedirects" asp-page="/Wiki/Redirects/Index" class="dropdown-item">Redirects</a>
 	</nav-dropdown>

@@ -34,7 +34,7 @@ public static class Util
 		}
 	}
 
-	public static async Task RenderHtmlAsync(string content, TextWriter w, IWriterHelper h)
+	public static async Task RenderHtmlAsync(string content, TextWriter w, IWriterHelper h, bool allowMoreStyling = false)
 	{
 		List<INode> results;
 		try
@@ -44,6 +44,18 @@ public static class Util
 		catch (NewParser.SyntaxException e)
 		{
 			results = Builtins.MakeErrorPage(content, e);
+		}
+
+		// could also use this flag to limit, for example, `%%DIV` to system pages, but for now it's just nav
+		if (allowMoreStyling)
+		{
+			const string NavItemIncantation = "/"/*added by `Builtins.NormalizeImageUrl`*/
+				+ "%%NAV_ITEM"/*sigils and magic word*/ + ".svg"/*required to smuggle this through `Builtins.IsImage`*/;
+			NodeUtils.Replace(
+				results,
+				node => node is Element { Children: [Element { Tag: "img" } linkedImg] }
+					&& linkedImg.Attributes.TryGetValue("src", out var src) && src is NavItemIncantation,
+				node => Builtins.PromoteNavItem((Element)((Element)node).Children[0]));
 		}
 
 		var ctx = new WriterContext(h);

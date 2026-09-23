@@ -59,6 +59,8 @@ public static class SystemWiki
 	public const string MovieLinkInstruction = "System/MovieLinkInstruction";
 	public const string MovieRatingGuidelines = "System/MovieRatingGuidelines";
 	public const string NameChanges = "System/NameChanges";
+	public const string NavbarMain = "System/NavbarMain";
+	public const string NavbarWikiTop = "System/NavbarWikiTop";
 	public const string PlayersHeader = "System/PlayersHeader";
 	public const string RejectionReasonsHeader = "System/RejectionReasonsHeader";
 	public const string SearchTerms = "System/SearchTerms";

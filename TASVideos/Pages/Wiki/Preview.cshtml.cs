@@ -26,6 +26,7 @@ public class PreviewModel(IWikiPages pages) : BasePageModel
 			}
 
 			PageData = pageData;
+			Console.WriteLine($"===== in PreviewModel: PageData.PageName is {PageData.PageName}");
 		}
 
 		return Page();
