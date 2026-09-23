@@ -20,6 +20,11 @@ public class DeleteButtonTagHelper(IHtmlHelper helper) : TagHelper
 
 	public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
 	{
+		if (context.IsSuppressedDueToConditionOrPermission())
+		{
+			return;
+		}
+
 		var existingClassAttr = output.Attributes.FirstOrDefault(a => a.Name == "class");
 		var existingCssClass = existingClassAttr?.Value.ToString() ?? "";
 		if (existingClassAttr is not null)
