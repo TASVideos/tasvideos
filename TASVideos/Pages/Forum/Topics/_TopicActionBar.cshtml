@@ -43,23 +43,25 @@
 	title="Merge this topic into an existing topic">
 	<i class="fa fa-object-group"></i> Merge
 </a>
-<form permission="LockTopics"
-	asp-page="Index"
-	asp-page-handler="Lock"
-	asp-route-id="@Model.Id"
-	asp-route-topictitle="@Model.Title"
-	asp-route-locked="@(!Model.IsLocked)"
-	method="post"
-	style="display: inline">
-	<submit-button btn-class-override="@(Model.IsLocked ? "btn-success" : "btn-warning")" class="btn-sm">
-		<span condition="Model.IsLocked" title="Unlock this topic">
-			<i class="fa fa-unlock"></i> Unlock
-		</span>
-		<span condition="!Model.IsLocked" title="Lock this topic">
-			<i class="fa fa-lock"></i> Lock
-		</span>
-	</submit-button>
-</form>
+@if (User.Has(PermissionTo.LockTopics)) // can't use permission attribute, otherwise the form sets a slow antiforgerytoken cache header
+{
+	<form asp-page="Index"
+		  asp-page-handler="Lock"
+		  asp-route-id="@Model.Id"
+		  asp-route-topictitle="@Model.Title"
+		  asp-route-locked="@(!Model.IsLocked)"
+		  method="post"
+		  style="display: inline">
+		<submit-button btn-class-override="@(Model.IsLocked ? "btn-success" : "btn-warning")" class="btn-sm">
+			<span condition="Model.IsLocked" title="Unlock this topic">
+				<i class="fa fa-unlock"></i> Unlock
+			</span>
+			<span condition="!Model.IsLocked" title="Lock this topic">
+				<i class="fa fa-lock"></i> Lock
+			</span>
+		</submit-button>
+	</form>
+}
 <a permission="CreateForumPolls"
 	asp-page="AddEditPoll"
 	asp-route-topicId="@Model.Id"
