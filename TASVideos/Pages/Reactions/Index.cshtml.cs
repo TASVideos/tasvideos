@@ -135,7 +135,7 @@ public class IndexModel(ApplicationDbContext db) : BasePageModel
 			.ExcludeRestricted(userCanSeeRestricted)
 			.FirstAsync(p => p.Id == request.PostId);
 
-		return Partial("/Pages/Forum/Topics/_ReactionBar.cshtml", new ReactionSummary
+		return Partial("/Pages/Shared/_ReactionBar.cshtml", new ReactionSummary
 		{
 			PostId = request.PostId,
 			IsTopicLocked = updatedPost.Topic!.IsLocked,
