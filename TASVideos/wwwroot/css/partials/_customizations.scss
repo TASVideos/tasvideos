@@ -213,6 +213,7 @@ body {
 
 .embed {
 	border: 0;
+	max-width: 100%;
 
 	&left, &right {
 		display: flex;
