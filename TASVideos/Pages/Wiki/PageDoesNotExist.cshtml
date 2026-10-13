@@ -12,7 +12,13 @@
 Want to create the page?
 <br />
 <ul>
-	@if (!User.IsLoggedIn())
+	@if (!WikiHelper.IsValidWikiPageName(url))
+	{
+		<li>This page can not be created because the name <tt>@url</tt> is invalid.</li>
+		<li>Wiki page names must start with an uppercase letter and must not contain spaces.</li>
+		<li>Subpage name sections after each / (slash) must start with an uppercase letter or a digit.</li>
+	}
+	else if (!User.IsLoggedIn())
 	{
 		<li>
 			If you are an editor or have rights to edit this page,
@@ -24,8 +30,7 @@ Want to create the page?
 	{
 		<li>You do not currently have permissions to create this page. If you are not an editor, become an <a asp-page="/Roles/Index" asp-route-role="Editor">editor!</a></li>
 	}
-
-	@if (User.IsLoggedIn() && canEdit)
+	else
 	{
 		<li>
 			Click here to
