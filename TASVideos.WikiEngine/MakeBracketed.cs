@@ -203,9 +203,13 @@ public static partial class Builtins
 	private static IEnumerable<INode> MakeLinkOrImage(int charStart, int charEnd, string text)
 	{
 		var pp = text.Split('|');
-		if (pp.Length >= 2 && IsLink(pp[0]) && IsImage(pp[1]))
+		if (pp.Length >= 2)
 		{
-			return [MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _))];
+			Console.WriteLine($"===== {pp[0]} -> {IsLink(pp[0])}; {pp[1]} -> {IsImage(pp[1])}");
+			if (IsLink(pp[0]) && IsImage(pp[1]))
+			{
+				return [MakeLink(charStart, charEnd, pp[0], MakeImage(charStart, charEnd, pp, 1, out _))];
+			}
 		}
 
 		if (IsImage(pp[0]))
@@ -275,6 +279,7 @@ public static partial class Builtins
 		{
 			Attr("src", NormalizeImageUrl(pp[index++]))
 		};
+		Console.WriteLine($"===== {attrs[0].Value}");
 		StringBuilder classString = new("embed");
 		for (; index < pp.Length; index++)
 		{
