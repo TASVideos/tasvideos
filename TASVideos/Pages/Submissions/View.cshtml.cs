@@ -52,7 +52,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 
 	public async Task<IActionResult> OnGetDownload() => ZipFile(await fileService.GetSubmissionFile(Id));
 
-	public class SubmissionDisplay : ISubmissionDisplay
+	public class SubmissionDisplay : ISubmissionDisplay, ITimeable
 	{
 		public bool IsCataloged => SystemId.HasValue
 			&& SystemFrameRateId.HasValue
@@ -74,7 +74,7 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 
 		[Url]
 		public string? EncodeEmbedLink { get; init; }
-		public int FrameCount { get; init; }
+		public int Frames { get; init; }
 		public long? CycleCount { get; init; }
 		public double FrameRate { get; init; }
 		public int RerecordCount { get; init; }
