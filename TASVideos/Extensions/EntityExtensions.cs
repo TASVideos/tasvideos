@@ -396,7 +396,7 @@ public static class EntityExtensions
 					? s.GameGoal!.DisplayName
 					: null,
 				Emulator = s.EmulatorVersion,
-				FrameCount = s.Frames,
+				Frames = s.Frames,
 				FrameRate = s.SystemFrameRate!.FrameRate,
 				RerecordCount = s.RerecordCount,
 				Date = s.CreateTimestamp,

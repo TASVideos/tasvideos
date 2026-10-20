@@ -145,7 +145,7 @@
 			<div class="sub-info-cell">
 				<label>Frame Count</label>
 				<div>
-					@Model.Submission.FrameCount
+					@Model.Submission.Frames
 					<small condition="Model.Submission.CycleCount.HasValue">(cycle count @Model.Submission.CycleCount)</small>
 				</div>
 			</div>
@@ -202,7 +202,7 @@
 			</div>
 			<div condition="Model.Submission.Metric != OptimizationMetric.TASTiming" class="sub-info-cell">
 				<label>TAS Time</label>
-				<div>@(TimeSpan.FromSeconds(Model.Submission.FrameCount / Model.Submission.FrameRate).ToStringWithOptionalDaysAndHours())</div>
+				<div>@Model.Submission.Time().ToStringWithOptionalDaysAndHours()</div>
 			</div>
 		</div>
 
