@@ -19,6 +19,7 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 				FileName = uf.FileName,
 				Author = uf.Author!.UserName,
 				GameId = uf.GameId,
+				System = uf.System!.Code,
 				Game = uf.Game != null ? uf.Game.DisplayName : "",
 				Frames = uf.Frames,
 				Rerecords = uf.Rerecords,
@@ -46,6 +47,9 @@ public class ListModel(ApplicationDbContext db) : BasePageModel
 
 		[TableIgnore]
 		public int? GameId { get; init; }
+
+		[Sortable]
+		public string System { get; init; } = "";
 
 		[Sortable]
 		public string Game { get; init; } = "";
