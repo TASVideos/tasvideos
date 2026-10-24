@@ -14,6 +14,7 @@
 				<a asp-page="Info" asp-route-id="@userFile.Id">@(string.IsNullOrWhiteSpace(userFile.Title) ? userFile.FileName : userFile.Title)</a>
 			</td>
 			<td><a asp-page="ForUser" asp-route-username="@userFile.Author">@userFile.Author</a></td>
+			<td>@userFile.System</td>
 			<td>
 				<a asp-page="Game" condition="userFile.GameId is not null" asp-route-id="@userFile.GameId">@userFile.Game</a>
 			</td>
