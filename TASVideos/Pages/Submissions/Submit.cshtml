@@ -111,26 +111,35 @@
 			</div>
 		</fieldset>
 	</fullrow>
-	<row class="text-center justify-content-center mb-1 fs-6">
-		<div class="col-auto">
-			<div class="form-check">
-				<input asp-for="AgreeToInstructions" class="form-check-input" />
-				<label asp-for="AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
-				<br />
-				<span asp-validation-for="AgreeToInstructions"></span>
-			</div>
-		</div>
-	</row>
-	<row class="text-center justify-content-center mb-3 fs-6">
-		<div class="col-auto">
-			<div class="form-check">
-				<input asp-for="AgreeToLicense" class="form-check-input" />
-				<label asp-for="AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
-				<br />
-				<span asp-validation-for="AgreeToLicense"></span>
-			</div>
-		</div>
-	</row>
+    <row class="justify-content-center mb-3 fs-6">
+        <div class="col-auto">
+            <row>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input asp-for="AgreeToInstructions" class="form-check-input" />
+                        <label asp-for="AgreeToInstructions" class="form-check-label">
+                            I have read and upheld the TASVideos
+                            <a href="/MovieRules">Movie Rules</a>,
+                            <a href="/SiteRules">Site Rules</a>,
+                            and <a href="/AIPolicy">AI Policy</a>.
+                        </label>
+                        <br />
+                        <span asp-validation-for="AgreeToInstructions"></span>
+                    </div>
+                </div>
+			</row>
+			<row>
+                <div class="col-auto">
+                    <div class="form-check">
+                        <input asp-for="AgreeToLicense" class="form-check-input" />
+                        <label asp-for="AgreeToLicense" class="form-check-label">I agree to publishing this content under the <a href="https://creativecommons.org/licenses/by/2.0/">Creative Commons Attribution 2.0</a> license.</label>
+                        <br />
+                        <span asp-validation-for="AgreeToLicense"></span>
+                    </div>
+                </div>
+            </row>
+        </div>
+    </row>
 	<form-button-bar>
 		<preview-button></preview-button>
 		<submit-button id="submit-btn">Submit</submit-button>
