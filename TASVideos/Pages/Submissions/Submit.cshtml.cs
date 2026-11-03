@@ -67,7 +67,7 @@ public class SubmitModel(
 	public IEnumerable<string> MovieFileAccepts { get; init; } = movieParser.SupportedMovieExtensions;
 
 	[BindProperty]
-	[MustBeTrue(ErrorMessage = "You must read and follow the instructions.")]
+	[MustBeTrue(ErrorMessage = "You must read and uphold the rules and policies.")]
 	public bool AgreeToInstructions { get; init; }
 
 	[BindProperty]

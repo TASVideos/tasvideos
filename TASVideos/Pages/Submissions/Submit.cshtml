@@ -115,7 +115,12 @@
 		<div class="col-auto">
 			<div class="form-check">
 				<input asp-for="AgreeToInstructions" class="form-check-input" />
-				<label asp-for="AgreeToInstructions" class="form-check-label">I have read and followed the TASVideos <a href="/SubmissionInstructions">Submission Instructions</a>.</label>
+                <label asp-for="AgreeToInstructions" class="form-check-label">
+					I have read and upheld the TASVideos
+					<a href="/MovieRules">Movie Rules</a>,
+					<a href="/SiteRules">Site Rules</a>,
+					and <a href="/AIPolicy">AI Policy</a>.
+                </label>
 				<br />
 				<span asp-validation-for="AgreeToInstructions"></span>
 			</div>
