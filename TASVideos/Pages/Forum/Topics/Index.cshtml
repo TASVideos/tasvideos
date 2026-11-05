@@ -66,9 +66,10 @@
 		<div class="d-flex flex-wrap gap-1">
 			<partial name="_TopicActionBar" model="Model.Topic" />
 			<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
-			   asp-page="/Forum/Posts/Create"
-			   asp-route-topicId="@Model.Id"
-			   class="btn btn-primary btn-sm ms-auto">
+				asp-page="/Forum/Posts/Create"
+				asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
+				asp-route-topicId="@Model.Id"
+				class="btn btn-primary btn-sm ms-auto">
 				<span class="fa fa-plus"></span> New Post
 			</a>
 		</div>
@@ -119,9 +120,10 @@
 	<div class="d-flex flex-wrap gap-1">
 		<partial name="_TopicActionBar" model="Model.Topic" />
 		<a condition="User.Has(PermissionTo.PostInLockedTopics) || (!Model.Topic.IsLocked && User.Has(PermissionTo.CreateForumPosts))"
-		   asp-page="/Forum/Posts/Create"
-		   asp-route-topicId="@Model.Id"
-		   class="btn btn-primary btn-sm ms-auto">
+			asp-page="/Forum/Posts/Create"
+			asp-route-returnUrl="@HttpContext.CurrentPathToReturnUrl()"
+			asp-route-topicId="@Model.Id"
+			class="btn btn-primary btn-sm ms-auto">
 			<span class="fa fa-plus"></span> New Post
 		</a>
 	</div>
