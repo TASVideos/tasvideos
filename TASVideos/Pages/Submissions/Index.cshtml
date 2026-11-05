@@ -48,11 +48,13 @@
 	{
 		var showPublicationClass = !string.IsNullOrWhiteSpace(item.IntendedClass) && item.IntendedClass != "Standard";
 		var hoursRemaining = QueueService.HoursRemainingForJudging(item);
+		var showPublisher = item.Publisher is not null && item.Status == SubmissionStatus.PublicationUnderway;
+		var showJudge = item.Judge is not null && !showPublisher;
 		<tr>
 			<td>@item.System</td>
 			<td><sub-link id="item.Id">@item.Game</sub-link></td>
 			<td>@(item.Goal == "baseline" ? "" : item.Goal)</td>
-			<td>@(item.Metric != OptimizationMetric.TASTiming ? item.MetricValue : item.Time.ToStringWithOptionalDaysAndHours()) 
+			<td>@(item.Metric != OptimizationMetric.TASTiming ? item.MetricValue : item.Time.ToStringWithOptionalDaysAndHours())
 				<small condition="item.Metric != OptimizationMetric.TASTiming ">
 					(@(item.Metric != OptimizationMetric.TASTiming ? item.Metric.EnumDisplayName() : ""))
 				</small>
@@ -64,10 +66,10 @@
 				<small condition="showPublicationClass">
 					(@item.IntendedClass)
 				</small>
-				<small condition="item.Judge is not null && item.Publisher is null">
+				<small condition="showJudge">
 					<br /><profile-link username="@item.Judge"></profile-link>
 				</small>
-				<small condition="item.Publisher is not null">
+				<small condition="showPublisher">
 					<br /><profile-link username="@item.Publisher"></profile-link>
 				</small>
 				<small condition="hoursRemaining > 0">
