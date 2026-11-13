@@ -37,9 +37,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 			{
 				MultiSelect = topic.Poll.MultiSelect,
 				Question = topic.Poll.Question,
-				DaysOpen = topic.Poll.CloseDate.HasValue
-					? (int)(topic.Poll.CloseDate.Value - DateTime.UtcNow).TotalDays
-					: null,
+				CloseDate = topic.Poll.CloseDate,
 				PollOptions = topic.Poll.PollOptions
 					.OrderBy(o => o.Ordinal)
 					.Select(o => o.Text)
@@ -86,9 +84,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 
 		if (topic.Poll is not null)
 		{
-			topic.Poll.CloseDate = Poll.DaysOpen.HasValue
-				? DateTime.UtcNow.AddDays(Poll.DaysOpen.Value)
-				: null;
+			topic.Poll.CloseDate = Poll.CloseDate;
 
 			var hasVotes = topic.Poll.PollOptions.SelectMany(o => o.Votes).Any();
 			if (!hasVotes)
@@ -110,7 +106,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 		{
 			await forumService.CreatePoll(
 				topic,
-				new Core.Services.PollCreate(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
+				new Core.Services.PollCreate(Poll.Question, Poll.CloseDate, Poll.MultiSelect, Poll.PollOptions));
 		}
 
 		return RedirectToPage("Index", new { Id = TopicId });
@@ -121,8 +117,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 		[StringLength(200, MinimumLength = 8)]
 		public string? Question { get; init; }
 
-		[Range(0, 365)]
-		public int? DaysOpen { get; init; }
+		public DateTime? CloseDate { get; init; }
 
 		public bool MultiSelect { get; init; }
 
@@ -138,7 +133,7 @@ public class AddEditPollModel(ApplicationDbContext db, IForumService forumServic
 			&& PollOptions.All(o => o.Length <= 250);
 
 		public bool HasAnyField => !string.IsNullOrWhiteSpace(Question)
-			|| DaysOpen.HasValue
+			|| CloseDate.HasValue
 			|| PollOptions.Any(o => !string.IsNullOrWhiteSpace(o));
 
 		public bool HasVotes { get; set; }

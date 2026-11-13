@@ -10,10 +10,9 @@
 			<span asp-validation-for="Question"></span>
 		</fieldset>
 		<fieldset>
-			<label asp-for="DaysOpen">Days to Run for</label>
-			<input asp-for="DaysOpen" min="0" max="365" />
-			<div>0 or empty for a never-ending poll</div>
-			<span asp-validation-for="DaysOpen"></span>
+			<label asp-for="CloseDate">Close Date (UTC)</label>
+			<input asp-for="CloseDate"/>
+			<span asp-validation-for="CloseDate"></span>
 		</fieldset>
 		<fieldset condition="!Model.HasVotes">
 			<label asp-for="PollOptions">Options</label>

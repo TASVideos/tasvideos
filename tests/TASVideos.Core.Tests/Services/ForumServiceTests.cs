@@ -203,13 +203,13 @@ public class ForumServiceTests : TestDbBase
 		await _db.SaveChangesAsync();
 
 		const string question = "Is this a question?";
-		const int daysOpen = 5;
+		DateTime closeDate = DateTime.UtcNow.AddDays(5);
 		const bool multiSelect = false;
 		const string option1 = "1";
 		const string option2 = "2";
 		const string option3 = "3";
 		var options = new List<string> { option1, option2, option3 };
-		var poll = new PollCreate(question, daysOpen, multiSelect, options);
+		var poll = new PollCreate(question, closeDate, multiSelect, options);
 
 		await _forumService.CreatePoll(topic, poll);
 
@@ -221,7 +221,7 @@ public class ForumServiceTests : TestDbBase
 		Assert.IsNotNull(actualTopic.Poll);
 		Assert.AreEqual(question, actualTopic.Poll.Question);
 		Assert.IsNotNull(actualTopic.Poll.CloseDate);
-		Assert.AreEqual(DateTime.UtcNow.AddDays(daysOpen).Day, actualTopic.Poll.CloseDate.Value.Day);
+		Assert.AreEqual(closeDate.Ticks, actualTopic.Poll.CloseDate.Value.Ticks);
 		Assert.AreEqual(multiSelect, actualTopic.Poll.MultiSelect);
 		var actualOptions = actualTopic.Poll.PollOptions;
 		Assert.That.AreSameLength(options, actualOptions);

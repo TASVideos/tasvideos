@@ -51,6 +51,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		var voter = _db.AddUser("Test User").Entity;
 		var topic = _db.AddTopic().Entity;
 		topic.Title = "Topic with Poll";
+		var utcNow = DateTime.UtcNow;
 		var poll = _db.CreatePollForTopic(topic).Entity;
 		poll.MultiSelect = true;
 		_db.VoteForOption(poll.PollOptions.First(), voter);
@@ -64,9 +65,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		Assert.AreEqual(poll.Id, _model.PollId);
 		Assert.AreEqual(poll.Question, _model.Poll.Question);
 		Assert.IsTrue(_model.Poll.MultiSelect);
-#pragma warning disable MSTEST0037 // false positive; value is nullable
-		Assert.IsTrue(_model.Poll.DaysOpen > 0);
-#pragma warning restore MSTEST0037
+		Assert.IsTrue(_model.Poll.CloseDate > utcNow);
 		Assert.HasCount(2, _model.Poll.PollOptions);
 		Assert.IsTrue(_model.Poll.HasVotes);
 	}
@@ -107,7 +106,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "",
 			PollOptions = ["Option 1", "Option 2"],
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		var result = await _model.OnPost();
@@ -123,7 +122,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "Valid question?",
 			PollOptions = ["Only one option"], // Need at least 2
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		var result = await _model.OnPost();
@@ -177,7 +176,7 @@ public class AddEditPollModelTests : BasePageModelTests
 			Arg.Is<ForumTopic>(t => t.Id == topic.Id),
 			Arg.Is<PollCreate>(p =>
 				p.Question == _model.Poll.Question &&
-				p.DaysOpen == _model.Poll.DaysOpen));
+				p.CloseDate == _model.Poll.CloseDate));
 	}
 
 	[TestMethod]
@@ -196,7 +195,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "New question?",
 			PollOptions = ["New Option 1", "New Option 2"],
-			DaysOpen = 14,
+			CloseDate = DateTime.UtcNow.AddDays(14),
 			MultiSelect = true
 		};
 
@@ -234,7 +233,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "New question?", // This should be ignored due to votes
 			PollOptions = ["New Option 1", "New Option 2"], // Valid options for validation
-			DaysOpen = 10,
+			CloseDate = DateTime.UtcNow.AddDays(10),
 			MultiSelect = true // This should be ignored due to votes
 		};
 
@@ -263,7 +262,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = new string('a', 201), // Too long (max 200 characters),
 			PollOptions = ["Option 1", "Option 2"],
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		Assert.IsFalse(poll.IsValid);
@@ -276,7 +275,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "Valid question?",
 			PollOptions = ["Only one option"],
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		Assert.IsFalse(poll.OptionsAreValid);
@@ -291,7 +290,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "Valid question?",
 			PollOptions = ["Option 1", longOption],
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		Assert.IsFalse(poll.OptionsAreValid);
@@ -305,19 +304,19 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "Some question?",
 			PollOptions = ["", ""],
-			DaysOpen = null
+			CloseDate = null
 		};
 
 		Assert.IsTrue(poll.HasAnyField);
 	}
 
 	[TestMethod]
-	public void PollCreate_HasAnyField_ReturnsTrueWhenDaysOpenExists()
+	public void PollCreate_HasAnyField_ReturnsTrueWhenCloseDateExists()
 	{
 		var poll = new AddEditPollModel.PollCreate
 		{
 			PollOptions = ["", ""],
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		Assert.IsTrue(poll.HasAnyField);
@@ -329,7 +328,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		var poll = new AddEditPollModel.PollCreate
 		{
 			PollOptions = ["Some option", ""],
-			DaysOpen = null
+			CloseDate = null
 		};
 
 		Assert.IsTrue(poll.HasAnyField);
@@ -342,7 +341,7 @@ public class AddEditPollModelTests : BasePageModelTests
 		{
 			Question = "",
 			PollOptions = ["", ""],
-			DaysOpen = null,
+			CloseDate = null,
 			MultiSelect = false
 		};
 
@@ -353,6 +352,6 @@ public class AddEditPollModelTests : BasePageModelTests
 	{
 		Question = "Valid question?",
 		PollOptions = ["Option 1", "Option 2"],
-		DaysOpen = 7
+		CloseDate = DateTime.UtcNow.AddDays(7)
 	};
 }

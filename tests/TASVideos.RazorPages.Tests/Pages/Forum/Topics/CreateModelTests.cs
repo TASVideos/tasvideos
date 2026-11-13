@@ -134,7 +134,7 @@ public class CreateModelTests : BasePageModelTests
 		{
 			Question = "", // Missing question
 			PollOptions = ["Option 1", "Option 2"],
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		var result = await _model.OnPost();
@@ -150,7 +150,7 @@ public class CreateModelTests : BasePageModelTests
 		{
 			Question = "Test question?",
 			PollOptions = ["Option 1"], // Only one option
-			DaysOpen = 7
+			CloseDate = DateTime.UtcNow.AddDays(7)
 		};
 
 		var result = await _model.OnPost();
@@ -233,7 +233,7 @@ public class CreateModelTests : BasePageModelTests
 			{
 				Question = "What do you think?",
 				PollOptions = ["Option 1", "Option 2", "Option 3"],
-				DaysOpen = 7
+				CloseDate = DateTime.UtcNow.AddDays(7)
 			}
 		};
 		AddAuthenticatedUser(createModel, user, [PermissionTo.CreateForumTopics, PermissionTo.CreateForumPolls]);
@@ -263,7 +263,7 @@ public class CreateModelTests : BasePageModelTests
 			{
 				Question = "What do you think?",
 				PollOptions = ["Option 1", "Option 2"],
-				DaysOpen = 7
+				CloseDate = DateTime.UtcNow.AddDays(7)
 			}
 		};
 		AddAuthenticatedUser(createModel, user, [PermissionTo.CreateForumTopics]);

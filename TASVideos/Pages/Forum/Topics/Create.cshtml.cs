@@ -132,7 +132,7 @@ public class CreateModel(
 		{
 			await forumService.CreatePoll(
 				topic,
-				new PollCreate(Poll.Question, Poll.DaysOpen, Poll.MultiSelect, Poll.PollOptions));
+				new PollCreate(Poll.Question, Poll.CloseDate, Poll.MultiSelect, Poll.PollOptions));
 		}
 
 		await userManager.AssignAutoAssignableRolesByPost(User.GetUserId());

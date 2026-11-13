@@ -165,9 +165,7 @@ internal class ForumService(
 		{
 			TopicId = topic.Id,
 			Question = pollDto.Question ?? "",
-			CloseDate = pollDto.DaysOpen > 0
-				? DateTime.UtcNow.AddDays(pollDto.DaysOpen.Value)
-				: null,
+			CloseDate = pollDto.CloseDate,
 			MultiSelect = pollDto.MultiSelect,
 			PollOptions = [.. pollDto.Options
 				.Select((po, i) => new ForumPollOption
@@ -385,7 +383,7 @@ public class ForumCategoryDisplay
 
 public record PostPosition(int Page, int TopicId);
 
-public record PollCreate(string? Question, int? DaysOpen, bool MultiSelect, IEnumerable<string> Options);
+public record PollCreate(string? Question, DateTime? CloseDate, bool MultiSelect, IEnumerable<string> Options);
 public record PostCreate(
 	int ForumId,
 	int TopicId,
