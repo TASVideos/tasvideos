@@ -24,7 +24,7 @@ public class RenderModel(IWikiPages wikiPages, ApplicationDbContext db, ILogger<
 			}
 		}
 
-		if (!WikiHelper.IsValidWikiPageName(url, validateLoosely: true)) // allow wrong url casing to navigate to the wiki page, we will show a proper canonical url in the html, and rewrite the browser url with javascript
+		if (!WikiHelper.IsValidWikiPageName(url, validateLoosely: true)) // allow wrong url casing to navigate to the wiki page, we will show a proper canonical url in the HTML, and rewrite the browser url with JavaScript
 		{
 			// Support legacy links like [adelikat] that should have been [user:adelikat]
 			if (await wikiPages.Exists(LinkConstants.HomePages + url))

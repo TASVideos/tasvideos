@@ -204,6 +204,20 @@ public static class WikiHelper
 		return false;
 	}
 
+	public static bool IsGamePage(string? pageName, out int id)
+	{
+		if (!string.IsNullOrWhiteSpace(pageName) && pageName.StartsWith(LinkConstants.GameWikiPage))
+		{
+			return int.TryParse(pageName[LinkConstants.GameWikiPage.Length..], out id);
+		}
+
+		id = 0;
+		return false;
+	}
+
+	public static bool IsInternalPage(string? pageName)
+		=> !string.IsNullOrWhiteSpace(pageName) && pageName.StartsWith(LinkConstants.InternalSystem);
+
 	/// <summary>
 	/// Fixes Internal system page links to be their public counterparts ex: InternalSystem/SubmissionContent/S4084 to 4084S.
 	/// </summary>

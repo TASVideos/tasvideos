@@ -2,8 +2,13 @@
 @model RenderModel
 @{
 	Layout = "_WikiLayout";
+	var showOldRevisionAlert = !Model.WikiPage.IsCurrent();
+	var showInternalAlert = WikiHelper.IsInternalPage(Model.WikiPage.PageName);
+	var isSub = WikiHelper.IsSubmissionPage(Model.WikiPage.PageName, out var subId);
+	var isPub = WikiHelper.IsPublicationPage(Model.WikiPage.PageName, out var pubId);
+	var isGame = WikiHelper.IsGamePage(Model.WikiPage.PageName, out var gameId);
 }
-<warning-alert condition="!Model.WikiPage.IsCurrent()">
+<warning-alert condition="showOldRevisionAlert">
 	<div>
 		This is an old revision of this page, as edited by <profile-link username="@Model.WikiPage.AuthorName"></profile-link> at <timezone-convert asp-for="@Model.WikiPage.CreateTimestamp" relative-time="false" />
 		<span condition="!string.IsNullOrEmpty(Model.WikiPage.RevisionMessage)">(<span class="text-body-secondary">@Model.WikiPage.RevisionMessage</span>)</span>
@@ -12,4 +17,16 @@
 		This revision may differ significantly from the <a href="/@Model.WikiPage.PageName">current revision</a>.
 	</div>
 </warning-alert>
+<info-alert condition="showInternalAlert">
+	This is an internal system page, and should not be edited directly
+	<div class="p-2" condition="isSub">
+		<sub-link id="subId" class="btn btn-primary">Back to Submission</sub-link>
+	</div>
+	<div class="p-2" condition="isPub">
+		<pub-link id="pubId" class="btn btn-primary">Back to Publication</pub-link>
+	</div>
+	<div class="p-2" condition="isGame">
+		<game-link id="gameId" class="btn btn-primary">Back to Game</game-link>
+	</div>
+</info-alert>
 <wiki-markup markup="@Model.WikiPage.Markup" page-data="@Model.WikiPage"></wiki-markup>

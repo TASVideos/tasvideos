@@ -2,9 +2,10 @@ namespace TASVideos;
 
 public static class LinkConstants
 {
-	public const string SubmissionWikiPage = "InternalSystem/SubmissionContent/S";
-	public const string PublicationWikiPage = "InternalSystem/PublicationContent/M";
-	public const string GameWikiPage = "InternalSystem/GameContent/G";
+	public const string SubmissionWikiPage = InternalSystem + "/SubmissionContent/S";
+	public const string PublicationWikiPage = InternalSystem + "/PublicationContent/M";
+	public const string GameWikiPage = InternalSystem + "/GameContent/G";
+	public const string InternalSystem = "InternalSystem";
 	public const string HomePages = "HomePages/";
 }
 

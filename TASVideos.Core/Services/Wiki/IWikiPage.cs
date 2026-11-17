@@ -15,3 +15,4 @@ public interface IWikiPage
 	DateTime CreateTimestamp { get; }
 	bool MinorEdit { get; }
 }
+
