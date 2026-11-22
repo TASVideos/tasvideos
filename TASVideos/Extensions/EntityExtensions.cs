@@ -375,6 +375,7 @@ public static class EntityExtensions
 				Metric = s.Metric,
 				MetricValue = s.MetricValue,
 				Title = s.Title,
+				UseAuthorOnlineWatchingUrl = s.UseAuthorOnlineWatchingUrl ?? false,
 				Authors = s.SubmissionAuthors
 					.OrderBy(sa => sa.Ordinal)
 					.Select(sa => sa.Author!.UserName)
@@ -430,7 +431,8 @@ public static class EntityExtensions
 				SyncedBy = s.SyncedByUser != null ? s.SyncedByUser.UserName : null,
 				AdditionalSyncNotes = s.AdditionalSyncNotes,
 				HashType = s.HashType,
-				Hash = s.Hash
+				Hash = s.Hash,
+				UseAuthorOnlineWatchingUrl = s.UseAuthorOnlineWatchingUrl
 			});
 	}
 

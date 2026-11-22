@@ -74,12 +74,18 @@
 				<input asp-for="EncodeEmbeddedLink" placeholder="https://www.youtube.com/embed/0mregEW6kVU" />
 				<div>Embedded link to a video of your movie. Must be YouTube or niconico.</div>
 				<span asp-validation-for="EncodeEmbeddedLink"></span>
+				<div class="form-check mt-1">
+					<input asp-for="UseAuthorOnlineWatchingUrl" class="form-check-input" />
+					<label asp-for="UseAuthorOnlineWatchingUrl" class="form-check-label">Use my encode instead of the TASVideos youtube channel in the event this is accepted for publication.</label>
+					<br />
+					<span asp-validation-for="UseAuthorOnlineWatchingUrl"></span>
+				</div>
 			</fieldset>
 			<fieldset>
 				<label asp-for="Metric"></label>
 				<select asp-for="Metric" asp-items="Html.GetEnumSelectList<OptimizationMetric>()" data-id="metric"></select>
 				<div>What your movie is optimized for. Can be time (such as in-game time or some speedrun timer) or score. By default, we use
-					TAS timing as measured by the site parser. 
+					TAS timing as measured by the site parser.
 				</div>
 				<span asp-validation-for="Metric"></span>
 			</fieldset>

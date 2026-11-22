@@ -81,6 +81,11 @@ public class EditModel(
 			return Page();
 		}
 
+		if (Submission.UseAuthorOnlineWatchingUrl && string.IsNullOrWhiteSpace(Submission.EncodeEmbedLink))
+		{
+			ModelState.AddModelError($"{nameof(Submission)}.{nameof(Submission.EncodeEmbedLink)}", "In order to use your encode instead of the TASVideos youtube channel, a link must be provided");
+		}
+
 		if (User.Has(PermissionTo.ReplaceSubmissionMovieFile) && Submission.ReplaceMovieFile is not null)
 		{
 			Submission.ReplaceMovieFile?.AddModelErrorIfOverSizeLimit(ModelState, User, movieFieldName: FileFieldName);
@@ -177,7 +182,8 @@ public class EditModel(
 			Markup,
 			Submission.RevisionMessage,
 			HttpContext.Request.MinorEdit(),
-			User.GetUserId());
+			User.GetUserId(),
+			Submission.UseAuthorOnlineWatchingUrl);
 
 		var updateResult = await queueService.UpdateSubmission(updateRequest);
 		if (!updateResult.Success)
@@ -331,5 +337,6 @@ public class EditModel(
 		public string? Publisher { get; init; }
 		public string? ExternalAuthors { get; init; }
 		public string Title { get; init; } = "";
+		public bool UseAuthorOnlineWatchingUrl { get; init; }
 	}
 }

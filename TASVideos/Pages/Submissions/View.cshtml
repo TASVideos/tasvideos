@@ -30,6 +30,9 @@
 
 	var isNicoEmbed = hasEncode && Model.Submission.EncodeEmbedLink!.Contains("nicovideo");
 	var hoursRemaining = QueueService.HoursRemainingForJudging(Model.Submission);
+	var encodePreferenceDisplay = Model.Submission.UseAuthorOnlineWatchingUrl == true
+		? "Use Author's Encode"
+		: "TASVideos Channel";
 
 	ViewData.SetMetaTags(new MetaTag
 	{
@@ -43,21 +46,17 @@
 @functions{
 	static string StatusColor(SubmissionStatus status)
 	{
-		switch (status)
+		return status switch
 		{
-			default:
-				return "info";
-			case SubmissionStatus.Accepted:
-			case SubmissionStatus.PublicationUnderway:
-			case SubmissionStatus.Published:
-			case SubmissionStatus.Playground:
-				return "success";
-			case SubmissionStatus.Rejected:
-				return "danger";
-			case SubmissionStatus.NeedsMoreInfo:
-			case SubmissionStatus.Delayed:
-				return "warning";
-		}
+			SubmissionStatus.Accepted
+				or SubmissionStatus.PublicationUnderway
+				or SubmissionStatus.Published
+				or SubmissionStatus.Playground => "success",
+			SubmissionStatus.Rejected => "danger",
+			SubmissionStatus.NeedsMoreInfo
+				or SubmissionStatus.Delayed => "warning",
+			_ => "info"
+		};
 	}
 }
 
@@ -203,6 +202,10 @@
 			<div condition="Model.Submission.Metric != OptimizationMetric.TASTiming" class="sub-info-cell">
 				<label>TAS Time</label>
 				<div>@Model.Submission.Time().ToStringWithOptionalDaysAndHours()</div>
+			</div>
+			<div class="sub-info-cell">
+				<label>Encode Preference</label>
+				<div>@encodePreferenceDisplay</div>
 			</div>
 		</div>
 

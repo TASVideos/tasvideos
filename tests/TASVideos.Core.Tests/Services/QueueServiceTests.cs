@@ -742,6 +742,7 @@ public class QueueServiceTests : TestDbBase
 		Assert.AreEqual(expectedTopicId, actualSub.TopicId);
 		Assert.AreEqual(gameSystem.Id, actualSub.SystemId);
 		Assert.Contains(request.GameName, actualSub.Title);
+		Assert.IsTrue(actualSub.UseAuthorOnlineWatchingUrl);
 
 		var actualSubAuthors = await _db.SubmissionAuthors
 			.Where(sa => sa.SubmissionId == result.Id)
@@ -985,7 +986,8 @@ public class QueueServiceTests : TestDbBase
 			Markup: "Test submission markup content",
 			MovieFile: "MOVIE_FILE_CONTENT"u8.ToArray(),
 			ParseResult: parseResult,
-			Submitter: submitter);
+			Submitter: submitter,
+			UseAuthorOnlineWatchingUrl: true);
 	}
 
 	private class SubmitTestParseResult : IParseResult
@@ -1362,7 +1364,8 @@ public class QueueServiceTests : TestDbBase
 			markup,
 			revisionMessage,
 			minorEdit,
-			userId);
+			userId,
+			true);
 	}
 
 	#endregion

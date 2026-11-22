@@ -458,6 +458,7 @@ internal class QueueService(
 		submission.EncodeEmbedLink = youtubeSync.ConvertToEmbedLink(request.EncodeEmbedLink);
 		submission.Status = request.Status;
 		submission.AdditionalAuthors = request.ExternalAuthors.NormalizeCsv();
+		submission.UseAuthorOnlineWatchingUrl = request.UseAuthorOnlineWatchingUrl;
 
 		submission.Metric = request.Metric;
 		submission.MetricValue = request.MetricValue;
@@ -604,7 +605,8 @@ internal class QueueService(
 				CycleCount = mapResult.CycleCount,
 				Annotations = mapResult.Annotations,
 				Warnings = mapResult.Warnings,
-				SystemFrameRate = mapResult.SystemFrameRate
+				SystemFrameRate = mapResult.SystemFrameRate,
+				UseAuthorOnlineWatchingUrl = request.UseAuthorOnlineWatchingUrl
 			}).Entity;
 
 			if (request.ParseResult.Hashes.Count > 0)
@@ -1028,7 +1030,8 @@ public record SubmitRequest(
 	string Markup,
 	byte[] MovieFile,
 	IParseResult ParseResult,
-	User Submitter);
+	User Submitter,
+	bool UseAuthorOnlineWatchingUrl);
 
 public record SubmitResult(string? ErrorMessage, int Id, string Title, byte[]? Screenshot)
 {
@@ -1094,7 +1097,8 @@ public record UpdateSubmissionRequest(
 	string? Markup,
 	string? RevisionMessage,
 	bool MinorEdit,
-	int UserId);
+	int UserId,
+	bool UseAuthorOnlineWatchingUrl);
 
 public record UpdateSubmissionResult(
 	string? ErrorMessage,

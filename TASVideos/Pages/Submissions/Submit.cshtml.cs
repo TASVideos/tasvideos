@@ -1,6 +1,4 @@
 using System.Globalization;
-using Microsoft.ClearScript.JavaScript;
-using Npgsql.Internal;
 using TASVideos.Core.Services.Wiki;
 using TASVideos.MovieParsers;
 
@@ -74,6 +72,9 @@ public class SubmitModel(
 	[MustBeTrue(ErrorMessage = "You must agree to the license.")]
 	public bool AgreeToLicense { get; init; }
 
+	[BindProperty]
+	public bool UseAuthorOnlineWatchingUrl { get; init; }
+
 	public string BackupSubmissionDeterminator { get; set; } = "";
 
 	public async Task<IActionResult> OnGet()
@@ -139,7 +140,8 @@ public class SubmitModel(
 			Markup,
 			zippedMovieFileBytes,
 			parseResult,
-			await userManager.GetRequiredUser(User));
+			await userManager.GetRequiredUser(User),
+			UseAuthorOnlineWatchingUrl);
 
 		var result = await queueService.Submit(request);
 		if (result.Success)
@@ -160,6 +162,11 @@ public class SubmitModel(
 
 	private async Task ValidateModel()
 	{
+		if (UseAuthorOnlineWatchingUrl && string.IsNullOrWhiteSpace(EncodeEmbeddedLink))
+		{
+			ModelState.AddModelError(nameof(EncodeEmbeddedLink), "In order to use your encode instead of the TASVideos youtube channel, a link must be provided");
+		}
+
 		if (MovieFile.FileExtension() == ".zip")
 		{
 			ModelState.AddModelError(nameof(MovieFile), "ZIP files are not supported. Please upload the original movie file.");

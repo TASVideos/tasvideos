@@ -108,6 +108,8 @@ public class Submission : BaseEntity, ITimeable
 	public string? HashType { get; set; }
 	public string? Hash { get; set; }
 
+	public bool? UseAuthorOnlineWatchingUrl { get; set; }
+
 	public void GenerateTitle()
 	{
 		var authorList = SubmissionAuthors

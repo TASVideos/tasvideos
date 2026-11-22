@@ -106,5 +106,6 @@ public class ViewModel(ApplicationDbContext db, IWikiPages wikiPages, IFileServi
 		public string? HashType { get; init; }
 		public string? Hash { get; init; }
 		public string? TASTime { get; init; }
+		public bool? UseAuthorOnlineWatchingUrl { get; init; }
 	}
 }

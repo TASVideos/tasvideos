@@ -19,7 +19,7 @@ namespace TASVideos.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.12")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
@@ -1870,6 +1870,10 @@ namespace TASVideos.Data.Migrations
                     b.Property<int?>("TopicId")
                         .HasColumnType("integer")
                         .HasColumnName("topic_id");
+
+                    b.Property<bool?>("UseAuthorOnlineWatchingUrl")
+                        .HasColumnType("boolean")
+                        .HasColumnName("use_author_online_watching_url");
 
                     b.Property<string>("Warnings")
                         .HasColumnType("citext")
