@@ -610,7 +610,9 @@ public static class EntityExtensions
 			Status = s.Status,
 			EmulatorVersion = s.EmulatorVersion,
 			Goal = s.GameGoal != null ? s.GameGoal.DisplayName : s.Branch,
-			GameGoalId = s.GameGoalId
+			GameGoalId = s.GameGoalId,
+			UseAuthorOnlineWatchingUrl = s.UseAuthorOnlineWatchingUrl ?? false,
+			OnlineWatchingUrl = s.UseAuthorOnlineWatchingUrl == true ? s.EncodeEmbedLink ?? "" : ""
 		});
 
 	public static IQueryable<AddEditModel.RoleEdit> ToRoleEditModel(this IQueryable<Role> query)

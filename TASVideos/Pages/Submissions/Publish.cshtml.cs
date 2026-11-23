@@ -127,6 +127,7 @@ public class PublishModel(
 	public class SubmissionPublishModel
 	{
 		public int? MovieToObsolete { get; init; }
+		public bool UseAuthorOnlineWatchingUrl { get; init; }
 
 		[DoNotTrim]
 		public string MovieDescription { get; init; } = SiteGlobalConstants.DefaultPublicationText;

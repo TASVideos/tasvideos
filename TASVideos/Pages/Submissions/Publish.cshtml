@@ -2,6 +2,7 @@
 @model PublishModel
 @{
 	ViewData.SetTitle($"Publishing Submission {Model.Submission.Title}");
+	var useAuthorEncode = Model.Submission.UseAuthorOnlineWatchingUrl;
 }
 <card class="mb-3">
 	<card-body>
@@ -61,8 +62,10 @@
 				<span id="obsoleted-by"></span>
 			</fieldset>
 			<fieldset>
+				<div class="p-1 text-danger" condition="useAuthorEncode">Author has requested to use their encode</div>
 				<label asp-for="Submission.OnlineWatchingUrl">Online-watching URL</label>
-				<input asp-for="Submission.OnlineWatchingUrl" />
+				<input condition="!useAuthorEncode" asp-for="Submission.OnlineWatchingUrl" />
+				<input condition="useAuthorEncode" asp-for="Submission.OnlineWatchingUrl" readonly />
 				<span asp-validation-for="Submission.OnlineWatchingUrl"></span>
 			</fieldset>
 			<fieldset>
